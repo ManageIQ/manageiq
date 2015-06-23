@@ -79,8 +79,7 @@ module MiqReport::Search
     if ref.nil? || ref.kind_of?(VirtualReflection)
       targets = parent.send(assoc).collect(&:id) # assoc is either a virtual reflection or a method so just call the association and collect the ids
     else
-      #TODO: Can we use the pre-built _ids methods that come with Rails?
-      targets = parent.send(assoc).send(:find, :all, :select => 'id').collect(&:id)
+      targets = parent.send(assoc).ids
     end
     return targets
   end
@@ -103,11 +102,15 @@ module MiqReport::Search
     search_options = options.merge(:class => self.db, :conditions => self.conditions, :results_format => :objects, :include_for_find => includes)
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if apply_sortby_in_search
 
-    unless options[:parent]
-      search_results, attrs = Rbac.search(search_options)
-    else
+    if options[:parent]
       targets = get_parent_targets(options)
-      search_results, attrs = targets.empty? ? [targets, {:auth_count => 0, :total_count => 0}] : Rbac.search(search_options.merge(:targets => targets))
+      if targets.empty?
+        search_results, attrs = [targets, {:auth_count => 0, :total_count => 0}]
+      else
+        search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
+      end
+    else
+      search_results, attrs = Rbac.search(search_options)
     end
 
     search_results ||= []

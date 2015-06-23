@@ -16,7 +16,7 @@ module MiqAeMethodService
       end
     end
 
-    def status
+    def statemachine_task_status
       ar_method do
         if @object.state == 'finished'
           @object.status.to_s.downcase

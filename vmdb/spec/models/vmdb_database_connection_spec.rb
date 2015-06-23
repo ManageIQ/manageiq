@@ -5,6 +5,15 @@ describe VmdbDatabaseConnection do
     @db = FactoryGirl.create(:vmdb_database)
   end
 
+  after :all do
+    # HACK: Some other tests (around Automate) rely on the fact there's
+    # only one connection in the pool. It's totally unfair to blame this
+    # spec for using the API in a perfectly ordinary way.. but it solves
+    # the immediate problem.
+
+    VmdbDatabaseConnection.connection_pool.disconnect!
+  end
+
   it 'can find connections' do
     connections = VmdbDatabaseConnection.all
     expect(connections.length).to be > 0
@@ -72,6 +81,12 @@ describe VmdbDatabaseConnection do
   it 'computes wait_time' do
     setting = VmdbDatabaseConnection.all.first
     expect(setting.wait_time).to be_kind_of(Fixnum)
+  end
+
+  it 'wait_time_ms defaults to 0 on nil query_start' do
+    conn = VmdbDatabaseConnection.first
+    conn.stub(:query_start => nil)
+    expect(conn.wait_time_ms).to eq 0
   end
 
   [

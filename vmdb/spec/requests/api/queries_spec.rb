@@ -28,8 +28,8 @@ describe ApiController do
     count.times { FactoryGirl.create(:vm_vmware) }
   end
 
-  context "Query collections" do
-    it "to return resource lists with only hrefs" do
+  describe "Query collections" do
+    it "returns resource lists with only hrefs" do
       api_basic_authorize
       create_vms(3)
 
@@ -40,7 +40,7 @@ describe ApiController do
       expect_result_resource_keys_to_match_pattern("resources", "href", :vm_href_pattern)
     end
 
-    it "to return seperate ids and href when expanded" do
+    it "returns seperate ids and href when expanded" do
       api_basic_authorize
       create_vms(3)
 
@@ -52,7 +52,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("resources", %w(guid))
     end
 
-    it "to always return ids and href when asking for specific attributes" do
+    it "always return ids and href when asking for specific attributes" do
       api_basic_authorize
       vm1   # create resource
 
@@ -63,8 +63,8 @@ describe ApiController do
     end
   end
 
-  context "Query resource" do
-    it "to return both id and href" do
+  describe "Query resource" do
+    it "returns both id and href" do
       api_basic_authorize
       vm1   # create resource
 
@@ -74,7 +74,7 @@ describe ApiController do
     end
   end
 
-  context "Query subcollections" do
+  describe "Query subcollections" do
     let(:acct1) { FactoryGirl.create(:account, :vm_or_template_id => vm1.id, :name => "John") }
     let(:acct2) { FactoryGirl.create(:account, :vm_or_template_id => vm1.id, :name => "Jane") }
     let(:vm1_accounts_url) { "#{vm1_url}/accounts" }
@@ -82,7 +82,7 @@ describe ApiController do
     let(:acct2_url)        { "#{vm1_accounts_url}/#{acct2.id}" }
     let(:vm1_accounts_url_list) { [acct1_url, acct2_url] }
 
-    it "to return just href when not expanded" do
+    it "returns just href when not expanded" do
       api_basic_authorize
       # create resources
       acct1
@@ -94,7 +94,7 @@ describe ApiController do
       expect_result_resources_to_include_hrefs("resources", :vm1_accounts_url_list)
     end
 
-    it "to include both id and href when getting a single resource" do
+    it "includes both id and href when getting a single resource" do
       api_basic_authorize
 
       run_get acct1_url
@@ -102,7 +102,7 @@ describe ApiController do
       expect_single_resource_query("id" => acct1.id, "href" => acct1_url, "name" => acct1.name)
     end
 
-    it "to include both id and href when expanded" do
+    it "includes both id and href when expanded" do
       api_basic_authorize
       # create resources
       acct1
@@ -114,6 +114,68 @@ describe ApiController do
       expect_result_resources_to_include_keys("resources", %w(id href))
       expect_result_resources_to_include_hrefs("resources", :vm1_accounts_url_list)
       expect_result_resources_to_include_data("resources", "id" => [acct1.id, acct2.id])
+    end
+  end
+
+  describe "Querying encrypted attributes" do
+    it "hides them from database records" do
+      api_basic_authorize
+
+      credentials = {:userid => "admin", :password => "super_password"}
+
+      provider = FactoryGirl.create(:ext_management_system, :name => "sample", :hostname => "sample.com")
+      provider.update_authentication(:default => credentials)
+
+      run_get(providers_url(provider.id), :attributes => "authentications")
+
+      expect_request_success
+      expect_result_to_match_hash(@result, "name" => "sample", "hostname" => "sample.com")
+      expect_result_to_have_keys(%w(authentications))
+      authentication = @result["authentications"].first
+      expect(authentication["userid"]).to eq("admin")
+      expect(authentication.key?("password")).to be_false
+    end
+
+    it "hides them from configuration hashes" do
+      api_basic_authorize
+
+      password_field = ::Vmdb::ConfigurationEncoder::PASSWORD_FIELDS.last.to_s
+      config = {:authentication => {:userid => "admin", password_field.to_sym => "super_password"}}
+
+      Configuration.create_or_update(miq_server, config, "authentications")
+
+      run_get(servers_url(miq_server.id), :attributes => "configurations")
+
+      expect_request_success
+      expect_result_to_have_keys(%w(configurations))
+      configuration = @result["configurations"].first
+      authentication = configuration.fetch_path("settings", "authentication")
+      expect(authentication).to_not be_nil
+      expect(authentication["userid"]).to eq("admin")
+      expect(authentication.key?(password_field)).to be_false
+    end
+
+    it "hides them from provisioning hashes" do
+      api_basic_authorize
+
+      password_field = ::MiqRequestWorkflow.all_encrypted_options_fields.last.to_s
+      options = {:attrs => {:userid => "admin", password_field.to_sym => "super_password"}}
+
+      template = FactoryGirl.create(:template_vmware, :name => "template1")
+      request  = FactoryGirl.create(:miq_provision_request,
+                                    :userid      => api_config(:user),
+                                    :description => "sample provision",
+                                    :src_vm_id   => template.id,
+                                    :options     => options)
+
+      run_get provision_requests_url(request.id)
+
+      expect_request_success
+      expect_result_to_match_hash(@result, "description" => "sample provision")
+      provision_attrs = @result.fetch_path("options", "attrs")
+      expect(provision_attrs).to_not be_nil
+      expect(provision_attrs["userid"]).to eq("admin")
+      expect(provision_attrs.key?(password_field)).to be_false
     end
   end
 end

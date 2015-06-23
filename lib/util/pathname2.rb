@@ -14,7 +14,7 @@
 # == Usage
 #
 # require "pathname2"
-# 
+#
 # # Unix
 # path1 = Pathname2.new("/foo/bar/baz")
 # path2 = Pathname2.new("../zap")
@@ -29,16 +29,6 @@
 # path1 + path2 # "C:\\foo\\bar\\zap"
 # path1.exists? # Does the path exist?
 #
-# == Author
-#
-# Daniel J. Berger
-# djberg96 at gmail dot com
-# imperator on IRC (irc.freenode.net)
-#
-# == Copyright
-# Copyright (c) 2005-2006 Daniel J. Berger.
-# Licensed under the same terms as Ruby itself.
-#
 require 'rubygems'
 require 'facade'
 require 'fileutils'
@@ -51,7 +41,7 @@ class Pathname2 < String
    facade Dir
 
    alias :_plus_ :+ # Used to prevent infinite loops in some cases
-   
+
    if RUBY_PLATFORM.match('mswin') || RUBY_PLATFORM.match('mingw')
       require 'windows/path'
       require 'windows/file'
@@ -61,7 +51,7 @@ class Pathname2 < String
 
    VERSION  = '1.5.2'
    MAX_PATH = 260
-   
+
    # Creates and returns a new Pathname2 object.
    #
    # On platforms that define File::ALT_SEPARATOR, all forward slashes are
@@ -83,7 +73,7 @@ class Pathname2 < String
 
       # Handle File URL's.  The separate methods for Windows are necessary
       # because Ruby's URI class does not (currently) parse absolute file URL's
-      # properly when they include a drive letter. 
+      # properly when they include a drive letter.
       if @win
          if PathIsURL(path)
             buf = 0.chr * MAX_PATH
@@ -105,7 +95,7 @@ class Pathname2 < String
       path = path.tr("/", @sep) if @win
       super(path)
    end
-	 
+
    # Returns a real (absolute) pathname of +self+ in the actual filesystem.
    #
    # Unlike most Pathname2 methods, this one assumes that the path actually
@@ -128,7 +118,7 @@ class Pathname2 < String
          self.class.new(Dir.pwd) + self
       end
    end
-   
+
    # Returns the children of the directory, files and subdirectories, as an
    # array of Pathname2 objects. If you set +with_directory+ to +false+, then
    # the returned pathnames will contain the filename only.
@@ -165,7 +155,7 @@ class Pathname2 < String
       PathUndecorate(buf)
       self.class.new(buf.split(0.chr).first)
    end
-   
+
    # Windows only
    #
    # Performs the substitution of Pathname2#undecorate in place.
@@ -180,7 +170,7 @@ class Pathname2 < String
       replace(buf.split(0.chr).first)
       self
    end
-   
+
    # Windows only
    #
    # Returns the short path for a long path name.  For example,
@@ -195,7 +185,7 @@ class Pathname2 < String
       GetShortPathName(self, buf, buf.length)
       self.class.new(buf.split(0.chr).first)
    end
-   
+
    # Windows only
    #
    # Returns the long path for a long path name.  For example,
@@ -210,7 +200,7 @@ class Pathname2 < String
       GetLongPathName(self, buf, buf.length)
       self.class.new(buf.split(0.chr).first)
    end
-   
+
    # Removes trailing slash, if present.  Non-destructive.
    #
    def pstrip
@@ -226,7 +216,7 @@ class Pathname2 < String
       end
       self.class.new(str)
    end
-   
+
    # Removes trailing slash, if present.  Destructive.
    #
    def pstrip!
@@ -250,7 +240,7 @@ class Pathname2 < String
       array.delete("")    # Remove empty elements
       array
    end
-   
+
    # Yields each component of the path name to a block.
    #
    def each
@@ -269,7 +259,7 @@ class Pathname2 < String
          yield root
          return
       end
-   
+
       if @win
          path = unc? ? "#{root}\\" : ""
       else
@@ -302,7 +292,7 @@ class Pathname2 < String
          yield root
          return
       end
-      
+
       n = to_a.length
 
       while n > 0
@@ -310,7 +300,7 @@ class Pathname2 < String
          if absolute?
             if @win && unc?
                path = "\\\\" << path
-            end     
+            end
             unless @win
                path = root << path
             end
@@ -318,11 +308,11 @@ class Pathname2 < String
 
          path = self.class.new(path)
          yield path
-         
+
          if @win && unc?
             break if path.root?
          end
-         
+
          n -= 1
       end
 
@@ -340,11 +330,11 @@ class Pathname2 < String
    # UNC path.
    #
    def root
-      dir = "."   
+      dir = "."
       if @win
          buf = 0.chr * MAX_PATH
          buf[0..self.length-1] = self
-      
+
          if PathStripToRoot(buf)
             dir = buf.split(0.chr).first
          end
@@ -363,7 +353,7 @@ class Pathname2 < String
          self == root
       end
    end
-   
+
    # Windows only
    #
    # Determines if the string is a valid Universal Naming Convention (UNC)
@@ -376,7 +366,7 @@ class Pathname2 < String
 
       PathIsUNC(self)
    end
-   
+
    # Windows only
    #
    # Returns the drive number that corresponds to the root, or nil if not
@@ -426,7 +416,7 @@ class Pathname2 < String
 
       return self.class.new(".") if self == base
       return self if base == "."
-      
+
       # Because of the way the Windows version handles Pathname2#clean, we need
       # a little extra help here.
       if @win
@@ -446,7 +436,7 @@ class Pathname2 < String
 					raise ArgumentError, "different prefix: #{self.inspect} and #{base.inspect}"
 				end
 			end
-			
+
       diff_arr = dest_arr - base_arr
 
       while !base_arr.empty? && !dest_arr.empty? && base_arr[0] == dest_arr[0]
@@ -487,7 +477,7 @@ class Pathname2 < String
       # Any path plus "." is the same directory
       return self if string == "."
       return string if self == "."
-      
+
       # Use the builtin PathAppend() function if on Windows - much easier
       if @win
          buf = 0.chr * MAX_PATH
@@ -496,18 +486,18 @@ class Pathname2 < String
          buf = buf.split("\0").first
          return self.class.new(buf) # PathAppend cleans automatically
       end
-      
+
       # If the string is an absolute directory, return it
       return string if string.absolute?
 
       array = to_a + string.to_a
       new_string = array.join(@sep)
-      
+
       unless relative? || @win
          temp = @sep + new_string # Add root path back if needed
          new_string.replace(temp)
       end
-      
+
       self.class.new(new_string).clean
    end
    alias :/ :+
@@ -517,7 +507,7 @@ class Pathname2 < String
    def absolute?
       !relative?
    end
-   
+
    # Returns whether or not the path is a relative path.
    #
    def relative?
@@ -557,7 +547,7 @@ class Pathname2 < String
       self.class.new(final)
    end
    alias :cleanpath :clean
-   
+
    # Removes unnecessary '.' paths and ellides '..' paths appropriately.
    # Modifies the receiver in place.
    #
@@ -609,7 +599,7 @@ class Pathname2 < String
    end
 
    #-- IO methods not handled by facade
-   
+
    # IO.foreach
    def foreach(*args, &block)
       IO.foreach(self, *args, &block)
@@ -622,7 +612,7 @@ class Pathname2 < String
 
    # IO.readlines
    def readlines(*args)
-      IO.readlines(self, *args)  
+      IO.readlines(self, *args)
    end
 
    # IO.sysopen
@@ -847,7 +837,7 @@ class Pathname2 < String
    def remove_file(*args)
       FileUtils.remove_dir(self, *args)
    end
-   
+
    # FileUtils.copy_entry
    def copy_entry(*args)
       FileUtils.copy_entry(self, *args)
@@ -855,7 +845,7 @@ class Pathname2 < String
 end
 
 module Kernel
-   # Usage: pn{ path } 
+   # Usage: pn{ path }
    #
    # A shortcut for Pathname2.new
    #

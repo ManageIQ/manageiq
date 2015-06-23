@@ -33,6 +33,14 @@ describe DialogImportValidator do
         [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"type" => field_type}]}]}]}].to_yaml
       end
 
+      context "when the dialog fields type is an old type" do
+        let(:field_type) { "DialogFieldDynamicList" }
+
+        it "does not raise an error" do
+          expect { dialog_import_validator.determine_validity(import_file_upload) }.to_not raise_error
+        end
+      end
+
       context "when the dialog fields type is not nil" do
         let(:field_type) { "test" }
 

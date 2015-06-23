@@ -55,7 +55,6 @@ RSpec.configure do |config|
   config.include MigrationSpecHelper, :migrations => :up
   config.include MigrationSpecHelper, :migrations => :down
 
-  config.include ActionWebServiceInvokeHelper, :apis => true
   config.include ApiSpecHelper,                :type => :request, :rest_api => true, :example_group => {
     :file_path => config.escaped_path(%w(spec requests api))
   }
@@ -64,6 +63,8 @@ RSpec.configure do |config|
   config.include ViewSpecHelper, :type => :view
   config.include UiConstants, :type => :controller
   config.include AuthHelper,  :type => :controller
+  config.include AuthHelper,  :type => :view
+  config.include AuthHelper,  :type => :helper
   config.include AuthRequestHelper, :type => :request
   config.include UiConstants, :type => :view
 

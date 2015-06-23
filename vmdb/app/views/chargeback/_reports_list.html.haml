@@ -5,24 +5,24 @@
     - if @html
       = render :partial => 'layouts/report_html'
 
-  - elsif @temp[:parent_reports]
+  - elsif @parent_reports
     = render :partial => "layouts/flash_msg"
-    - if @temp[:parent_reports].empty?
+    - if @parent_reports.empty?
       %br
       %strong=_('No Reports available.')
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody
-        - @temp[:parent_reports].each do |r|
+        - @parent_reports.each do |r|
           %tr{:title => _("View this Report"), :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', 'xx-#{r[1]}');"}
             %td.narrow
               %img{:src => "/images/icons/new/report.png"}
             %td
               = r[0]
 
-  - elsif @temp[:saved_reports]
+  - elsif @saved_reports
     = render :partial => "layouts/flash_msg"
-    - if @temp[:saved_reports].empty?
+    - if @saved_reports.empty?
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Reports available.")}
     - else
       %table.table.table-striped.table-bordered.table-hover
@@ -33,7 +33,7 @@
             %th=_('Name')
             %th=_('Source')
         %tbody
-          - @temp[:saved_reports].each_with_index do |row,i|
+          - @saved_reports.each_with_index do |row,i|
             - row_id = "#{x_node}_rr-#{to_cid(row['id'])}"
             %tr
               - t = _("Click to view saved report")

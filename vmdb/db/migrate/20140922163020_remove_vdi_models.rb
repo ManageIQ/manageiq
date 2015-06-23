@@ -19,28 +19,18 @@ class RemoveVdiModels < ActiveRecord::Migration
     remove_column "ldap_users",  "vdi_user_id"
     remove_column "miq_proxies", "vdi_farm_id"
 
-    remove_index "vdi_controllers", "vdi_farm_id"
     drop_table   "vdi_controllers"
 
-    remove_index "vdi_desktop_pools", "vdi_farm_id"
     drop_table   "vdi_desktop_pools"
 
-    remove_index "vdi_desktop_pools_vdi_users", "vdi_desktop_pool_id"
-    remove_index "vdi_desktop_pools_vdi_users", "vdi_user_id"
     drop_table   "vdi_desktop_pools_vdi_users"
 
-    remove_index "vdi_desktops", "vdi_desktop_pool_id"
-    remove_index "vdi_desktops", :name => "index_vdi_desktops_on_vm_id"
     drop_table   "vdi_desktops"
 
     drop_table "vdi_desktops_vdi_users"
     drop_table "vdi_endpoint_devices"
     drop_table "vdi_farms"
 
-    remove_index "vdi_sessions", "vdi_controller_id"
-    remove_index "vdi_sessions", "vdi_desktop_id"
-    remove_index "vdi_sessions", "vdi_endpoint_device_id"
-    remove_index "vdi_sessions", "vdi_user_id"
     drop_table   "vdi_sessions"
     drop_table   "vdi_users"
 

@@ -1,13 +1,4 @@
 class DialogFieldRadioButton < DialogFieldSortedItem
-  has_one :resource_action, :as => :resource, :dependent => :destroy
-
-  after_initialize :default_resource_action
-
-  def refresh_button_pressed
-    @raw_values = @default_value = nil
-    values
-  end
-
   def initialize_with_values(dialog_values)
     if load_values_on_init?
       raw_values
@@ -25,15 +16,25 @@ class DialogFieldRadioButton < DialogFieldSortedItem
     [["", "<None>"]]
   end
 
+  def refresh_json_value(checked_value)
+    @raw_values = @default_value = nil
+
+    refreshed_values = values
+
+    if refreshed_values.collect { |value_pair| value_pair[0].to_s }.include?(checked_value)
+      @value = checked_value
+    else
+      @value = default_value
+    end
+
+    {:refreshed_values => refreshed_values, :checked_value => @value, :read_only => read_only}
+  end
+
   private
 
   def load_values_on_init?
     return true unless show_refresh_button
     load_values_on_init
-  end
-
-  def default_resource_action
-    build_resource_action if resource_action.nil?
   end
 
   def raw_values

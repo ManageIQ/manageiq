@@ -21,7 +21,6 @@ class MiqServer < ActiveRecord::Base
   belongs_to              :vm
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
-  has_and_belongs_to_many :product_updates
   has_many                :miq_groups, :as => :resource
 
   cattr_accessor          :my_guid_cache
@@ -46,6 +45,10 @@ class MiqServer < ActiveRecord::Base
   STATUSES_STOPPED = [STATUS_STOPPED, STATUS_KILLED]
   STATUSES_ACTIVE  = [STATUS_STARTING, STATUS_STARTED]
   STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
+
+  def self.active_miq_servers
+    where(:status => STATUSES_ACTIVE)
+  end
 
   def self.atStartup
     log_prefix = "MIQ(MiqServer.atStartup)"
@@ -262,8 +265,6 @@ class MiqServer < ActiveRecord::Base
     $log.info "#{log_prefix} Database Latency: #{self.db_ping} ms"
 
     Vmdb::Appliance.log_config_on_startup
-
-    ProductUpdate.server_link_to_current_update(svr)
 
     svr.ntp_reload(svr.server_ntp_settings)
     # Update the config settings in the db table for MiqServer
@@ -679,19 +680,19 @@ class MiqServer < ActiveRecord::Base
   end
 
   def find_other_started_servers_in_region
-    MiqRegion.my_region.active_miq_servers.delete_if { |s| s.id == self.id }
+    MiqRegion.my_region.active_miq_servers.to_a.delete_if { |s| s.id == self.id }
   end
 
   def find_other_servers_in_region
-    MiqRegion.my_region.miq_servers.delete_if { |s| s.id == self.id }
+    MiqRegion.my_region.miq_servers.to_a.delete_if { |s| s.id == self.id }
   end
 
   def find_other_started_servers_in_zone
-    self.zone.active_miq_servers.delete_if { |s| s.id == self.id }
+    self.zone.active_miq_servers.to_a.delete_if { |s| s.id == self.id }
   end
 
   def find_other_servers_in_zone
-    self.zone.miq_servers.delete_if { |s| s.id == self.id }
+    self.zone.miq_servers.to_a.delete_if { |s| s.id == self.id }
   end
 
   # Determines the average time to the database in milliseconds

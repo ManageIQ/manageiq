@@ -49,6 +49,7 @@ namespace :evm do
       exit if $final_rake_task && $final_rake_task == :prepare_replication
     end
 
+    desc "Add Rubyrep triggers and tables but don't do an initial sync"
     task :prepare_replication_without_sync => :environment do
       require 'rubyrep'
       puts "Preparing Replication in Region (#{MiqRegion.my_region_number})..."
@@ -126,27 +127,28 @@ namespace :evm do
     end
 
     #
-    # Tasks for manual syncing
+    # Tasks for bulk syncing
     #
 
-    desc "Run a manual sync"
-    task :sync_manual => [:environment, :prepare_replication_without_sync, :sync_manual_started, :sync_manual_export, :sync_manual_import, :sync_manual_complete, :sync_manual_export_cleanup]
+    desc "Run a bulk sync"
+    task :sync_bulk => [:environment, :prepare_replication_without_sync, :sync_bulk_started, :sync_bulk_export, :sync_bulk_import, :sync_bulk_complete, :sync_bulk_export_cleanup]
 
-    task :sync_manual_export => [:environment, :sync_manual_export_cleanup] do
-      puts "Exporting tables for manual sync..."
+    task :sync_bulk_export => [:environment, :sync_bulk_export_cleanup] do
+      puts "Exporting tables for bulk sync..."
       t = Time.now
 
       db_conf = VMDB::Config.new("database").config[Rails.env.to_sym]
       adapter, database, username, password, host, port = db_conf.values_at(:adapter, :database, :username, :password, :host, :port)
 
       tables = sync_tables
+      puts "Exporting #{tables.join(", ")}..."
       do_pg_copy(:export, tables, database, username, password, host, port)
 
-      puts "Exporting tables for manual sync...Complete (#{Time.now - t}s)"
+      puts "Exporting tables for bulk sync...Complete (#{Time.now - t}s)"
     end
 
-    task :sync_manual_import => :environment do
-      puts "Importing tables for manual sync..."
+    task :sync_bulk_import => :environment do
+      puts "Importing tables for bulk sync..."
       t = Time.now
 
       rp_conf = VMDB::Config.new("vmdb").config.fetch_path(:workers, :worker_base, :replication_worker, :replication)
@@ -154,17 +156,18 @@ namespace :evm do
       database, adapter = MiqRegionRemote.prepare_default_fields(database, adapter)
 
       tables = sync_tables_from_exported_files
+      puts "Importing #{tables.join(", ")}..."
       do_pg_copy(:import, tables, database, username, password, host, port)
 
-      puts "Importing tables for manual sync...Complete (#{Time.now - t}s)"
+      puts "Importing tables for bulk sync...Complete (#{Time.now - t}s)"
     end
 
-    task :sync_manual_export_cleanup do
+    task :sync_bulk_export_cleanup do
       require 'fileutils'
       FileUtils.rm_rf(File.join(Rails.root, "tmp", "sync"))
     end
 
-    task :sync_manual_started => :environment do
+    task :sync_bulk_started => :environment do
       puts "Marking sync state as 'started'..."
       c = ActiveRecord::Base.connection
       c.execute("DELETE FROM rr#{MiqRegion.my_region_number}_sync_state")
@@ -173,7 +176,7 @@ namespace :evm do
       puts "Marking sync state as 'started'...Complete"
     end
 
-    task :sync_manual_complete => :environment do
+    task :sync_bulk_complete => :environment do
       puts "Marking sync state as 'complete'..."
       c = ActiveRecord::Base.connection
       tables = sync_tables_from_exported_files.collect { |t| c.quote(t) }.join(",")
@@ -192,14 +195,15 @@ namespace :evm do
 
     def sync_tables
       rp_conf = VMDB::Config.new("vmdb").config.fetch_path(:workers, :worker_base, :replication_worker, :replication)
-      exclude_tables = rp_conf[:exclude_tables] + ["^rr"]
-      exclude_tables = /#{exclude_tables.collect {|t| "(#{t})"}.join("|")}/
-
-      ActiveRecord::Base.connection.tables.reject { |t| t =~ exclude_tables }
+      ActiveRecord::Base.connection.tables
+        .reject { |t| t.start_with?("rr") || rp_conf[:exclude_tables].include?(t) }
+        .sort
     end
 
     def sync_tables_from_exported_files
-      Dir[File.expand_path(File.join(Rails.root, "tmp", "sync", "*.sql"))].collect { |f| File.basename(f, ".sql") }
+      Dir.glob(Rails.root.join("tmp/sync/*.sql"))
+        .collect { |f| File.basename(f, ".sql") }
+        .sort
     end
 
     # TODO: possible overlap with MiqPostgresAdmin

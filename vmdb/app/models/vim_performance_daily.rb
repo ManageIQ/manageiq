@@ -22,64 +22,45 @@ class VimPerformanceDaily < MetricRollup
     EXCLUDED_COLS_FOR_EXPRESSIONS
   end
 
-  def self.all(*args)
-    self.find(:all, *args)
+  def self.find(cnt, *args)
+    raise "Unsupported finder value #{cnt}" unless cnt == :all
+
+    ActiveSupport::Deprecation.warn "VimPerformanceDaily#find(:all) is deprecated; please use #find_entries instead", caller
+
+    options = args.last.is_a?(Hash) ? args.last : {}
+    ext_options = options.delete(:ext_options) || {}
+    find_entries(ext_options)
+      .apply_legacy_finder_options(options)
+      .to_a
   end
 
-  def self.find(*args)
-    options = args.last.is_a?(Hash) ? args.last : {}
-    tp = options.fetch_path(:ext_options, :time_profile)
-
-    if tp.nil? && (tz = Metric::Helper.get_time_zone(options[:ext_options]))
+  def self.default_time_profile(ext_options)
+    if (tz = Metric::Helper.get_time_zone(ext_options))
       # Determine if this search falls into an existing valid TimeProfile
-      tp = TimeProfile.rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
-
-      if tp
-        options.store_path(:ext_options, :time_profile, tp)
-        args << options unless args.last.is_a?(Hash)
-      end
+      TimeProfile.rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
     end
-
-    tp && tp.rollup_daily_metrics ? find_by_time_profile(*args) : []
   end
 
-  def self.find_by_time_profile(*args)
-    cnt = args.first
-    options = args.last.is_a?(Hash) ? args.last : {}
+  def self.find_entries(ext_options)
+    ext_options[:time_profile] ||= default_time_profile(ext_options)
 
-    ext_options = options.delete(:ext_options)
+    find_by_time_profile(ext_options)
+  end
+
+  def self.find_by_time_profile(ext_options)
+    klass = ext_options[:class] || MetricRollup
 
     # Support for multi-region DB. We need to try to find a time profile in each
     # region that matches the selected profile to ensure that we get results for
     # all the regions in the database. We only want one match from each region
     # otherwise we'll end up with duplicate daily rows.
-    tp     = ext_options[:time_profile]
-    tps    = TimeProfile.rollup_daily_metrics.all.select { |p| p.profile == tp.profile }.group_by(&:region_id).values.flatten if tp
-    tp_ids = tps.nil? ? [] : tps.collect(&:id)
-    #
+    if (tp = ext_options[:time_profile]) && tp.rollup_daily_metrics
+      tps = TimeProfile.rollup_daily_metrics.select { |p| p.profile == tp.profile }.group_by(&:region_id).values.flatten
+      tp_ids = tps.collect(&:id)
 
-    klass = ext_options[:class] || MetricRollup
-    wheres = klass.merge_conditions(options[:conditions], {:time_profile_id => tp_ids, :capture_interval_name => 'daily'})
-
-    # FIXME we should push these up to the callers
-    options.delete :conditions
-    select   = options.delete :select
-    order    = options.delete :order
-    includes = options.delete :include
-    limit    = options.delete :limit
-    raise "Unsupported options #{options.keys}" unless options.empty?
-
-    case cnt
-    when :all
-      scope = klass
-      scope = scope.select(select)     if select
-      scope = scope.order(order)       if order
-      scope = scope.includes(includes) if includes
-      scope = scope.limit(limit)       if limit
-      scope = scope.where(wheres)      if wheres
-      scope.to_a
+      klass.where(:time_profile_id => tp_ids, :capture_interval_name => 'daily')
     else
-      raise "Unsupported finder value #{cnt}"
+      klass.none
     end
   end
 

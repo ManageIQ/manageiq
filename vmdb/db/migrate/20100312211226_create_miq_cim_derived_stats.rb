@@ -24,7 +24,7 @@ class CreateMiqCimDerivedStats < ActiveRecord::Migration
 
       t.column :miq_cim_stat_id,        :integer
       t.column :position,           :integer
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :miq_cim_derived_stats, :miq_cim_stat_id
   end

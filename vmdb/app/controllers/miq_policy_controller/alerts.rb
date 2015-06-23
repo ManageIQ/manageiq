@@ -105,7 +105,7 @@ module MiqPolicyController::Alerts
       @edit[:new][:repeat_time] = alert_default_repeat_time
     end
 
-    @edit[:new][:expression][:options][:event_types] = [params[:event_types]] if params[:event_types]
+    @edit[:new][:expression][:options][:event_types] = [params[:event_types]].reject(&:blank?) if params[:event_types]
     @edit[:new][:expression][:options][:time_threshold] = params[:time_threshold].to_i if params[:time_threshold]
     @edit[:new][:expression][:options][:hourly_time_threshold] = params[:hourly_time_threshold].to_i if params[:hourly_time_threshold]
     @edit[:new][:expression][:options][:freq_threshold] = params[:freq_threshold] if params[:freq_threshold]
@@ -175,10 +175,10 @@ module MiqPolicyController::Alerts
 
     if params[:user_email] || params[:button] == "add_email" || params[:remove_email]
       # rebuild hash to hold user's email along with name if user record was found for display, defined as hash so only email id can be sent from form to be deleted from array above
-      @temp[:email_to] = Hash.new
+      @email_to = Hash.new
       @edit[:new][:email][:to].each_with_index do |e, e_idx|
         u = User.find_by_email(e)
-        @temp[:email_to][e] = u ? "#{u.name} (#{e})" : e
+        @email_to[e] = u ? "#{u.name} (#{e})" : e
       end
     end
 
@@ -229,11 +229,11 @@ module MiqPolicyController::Alerts
       @edit[:new][:email] = copy_hash(@alert.options[:notifications][:email])
       @edit[:new][:send_email] = true
       # build hash to hold user's email along with name if user record was found for display, defined as hash so only email id can be sent from form to be deleted from array above
-      @temp[:email_to] = Hash.new
+      @email_to = Hash.new
       if @edit[:new][:email] && @edit[:new][:email][:to]
         @edit[:new][:email][:to].each_with_index do |e, e_idx|
           u = User.find_by_email(e)
-          @temp[:email_to][e] = u ? "#{u.name} (#{e})" : e
+          @email_to[e] = u ? "#{u.name} (#{e})" : e
         end
       end
     end
@@ -534,6 +534,10 @@ module MiqPolicyController::Alerts
     if alert.options[:notifications][:automate]
       add_flash(_("%s is required") % "Event Name", :error) if alert.options[:notifications][:automate][:event_name].blank?
     end
+    if alert.expression.is_a?(Hash) && alert.expression[:eval_method] == 'event_threshold'
+      add_flash(_("%s is required") % "Event to Check", :error) if alert.expression[:options][:event_types].blank?
+    end
+
     if @edit.fetch_path(:new, :expression, :eval_method) == "realtime_performance"
       vt = @edit.fetch_path(:new, :expression, :options, :value_threshold)
       unless vt && is_integer?(vt)
@@ -574,17 +578,17 @@ module MiqPolicyController::Alerts
   # Get information for an alert
   def alert_get_info(alert)
     @record = @alert = alert
-    @temp[:email_to] = Array.new
+    @email_to = Array.new
     if @alert.responds_to_events == "_hourly_timer_"
-      @temp[:event] = "Hourly Timer"
+      @event = "Hourly Timer"
     else
       e = MiqEvent.find_by_name(@alert.responds_to_events)
-      @temp[:event] = e.nil? ? "<No Event configured>" : e.etype.description + ": " + e.description
+      @event = e.nil? ? "<No Event configured>" : e.etype.description + ": " + e.description
     end
     if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:email] && @alert.options[:notifications][:email][:to]
       @alert.options[:notifications][:email][:to].each_with_index do |e, e_idx|
         u = User.find_by_email(e)
-        @temp[:email_to].push(u ? "#{u.name} (#{e})" : e)
+        @email_to.push(u ? "#{u.name} (#{e})" : e)
       end
     end
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlert"), :name=>alert.description}
@@ -598,13 +602,13 @@ module MiqPolicyController::Alerts
     end
 
     unless @alert.expression.is_a?(MiqExpression) # Get the EMS if it's in the expression
-      @temp[:ems] = ExtManagementSystem.find_by_id(@alert.expression[:options][:ems_id].to_i)
+      @ems = ExtManagementSystem.find_by_id(@alert.expression[:options][:ems_id].to_i)
     end
     if @alert.expression.kind_of?(Hash) && @alert.expression[:eval_method]
       MiqAlert.expression_options(@alert.expression[:eval_method]).each do |eo|
         case eo[:name]
         when :perf_column
-          @temp[:perf_column_unit] = alert_get_perf_column_unit(eo[:values][@alert.db][@alert.expression[:options][:perf_column]])
+          @perf_column_unit = alert_get_perf_column_unit(eo[:values][@alert.db][@alert.expression[:options][:perf_column]])
         end
       end
     end
@@ -620,7 +624,7 @@ module MiqPolicyController::Alerts
     root[:tooltip] = "All Alerts"
     root[:icon] = "folder.png"
 
-    @temp[name] = tree_nodes.to_json  # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
   end
 

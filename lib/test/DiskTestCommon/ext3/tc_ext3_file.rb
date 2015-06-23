@@ -9,7 +9,7 @@ require 'MiqDisk'
 $:.push("#{File.dirname(__FILE__)}/../../../fs/MiqFS")
 require 'MiqFS'
 
-class Ext3TestFile < Test::Unit::TestCase
+class Ext3TestFile < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'ext3']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

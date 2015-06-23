@@ -1,5 +1,5 @@
 #assignments_div
-  %table.table.table-striped.table-bordered.table-hover
+  %table.table.table-striped.table-bordered
     %thead
       %tr
         %th.narrow
@@ -27,8 +27,8 @@
                 :complete => "miqSparkle(false);")
               %td{:onclick => cl, :title => t = _("Click to remove this assignment")}
                 = image_tag("/images/toolbars/delete.png",
-                  :class => "rollover small",
-                  :alt   => t)
+                  :class       => "rollover small pointer",
+                  :alt         => t)
             - else
               %td
                 %ul#list

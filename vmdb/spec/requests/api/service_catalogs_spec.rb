@@ -1,11 +1,13 @@
 #
 # Rest API Request Tests - Service Catalogs specs
 #
+# - Creating single new service catalog   /api/service_catalogs                 POST
 # - Creating single new service catalog   /api/service_catalogs                 action "add"
 # - Creating multiple service catalogs    /api/service_catalogs                 action "add"
 # - Edit a service catalog                /api/service_catalogs/:id             action "edit"
 # - Edit multiple service catalogs        /api/service_catalogs                 action "edit"
 # - Delete a service catalog              /api/service_catalogs/:id             DELETE
+# - Delete a service catalog              /api/service_catalogs/:id             action "delete"
 # - Delete service catalogs               /api/service_catalogs                 action "delete"
 #
 # - Assign service templates    /api/service_catalogs/:id/service_templates     action "assign"
@@ -40,6 +42,14 @@ describe ApiController do
       expect_request_forbidden
     end
 
+    it "rejects resource creation via create action without appropriate role" do
+      api_basic_authorize
+
+      run_post(service_catalogs_url, "name" => "sample service catalog")
+
+      expect_request_forbidden
+    end
+
     it "rejects resource creation with id specified" do
       api_basic_authorize collection_action_identifier(:service_catalogs, :add)
 
@@ -52,6 +62,20 @@ describe ApiController do
       api_basic_authorize collection_action_identifier(:service_catalogs, :add)
 
       run_post(service_catalogs_url, gen_request(:add, "name" => "sample service catalog"))
+
+      expect_request_success
+      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
+      expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
+
+      sc_id = @result["results"].first["id"]
+
+      expect(ServiceTemplateCatalog.find(sc_id)).to be_true
+    end
+
+    it "supports single resource creation via create action" do
+      api_basic_authorize collection_action_identifier(:service_catalogs, :add)
+
+      run_post(service_catalogs_url, "name" => "sample service catalog")
 
       expect_request_success
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
@@ -184,6 +208,17 @@ describe ApiController do
       expect { sc.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it "supports resource deletes via action" do
+      api_basic_authorize collection_action_identifier(:service_catalogs, :delete)
+
+      sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
+
+      run_post(service_catalogs_url(sc.id), gen_request(:delete))
+
+      expect_single_action_result(:success => true, :message => "deleting", :href => service_catalogs_url(sc.id))
+      expect { sc.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
     it "supports multiple resource deletes" do
       api_basic_authorize collection_action_identifier(:service_catalogs, :delete)
 
@@ -225,7 +260,8 @@ describe ApiController do
 
       run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(999_999)))
 
-      expect_resource_not_found
+      expect_request_success
+      expect_results_to_match_hash("results", [{"success" => false, "href" => service_catalogs_url(sc.id)}])
     end
 
     it "supports assign requests" do
@@ -237,6 +273,11 @@ describe ApiController do
       run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(st.id)))
 
       expect_request_success
+      expect_results_to_match_hash("results", [{"success"               => true,
+                                                "href"                  => service_catalogs_url(sc.id),
+                                                "service_template_id"   => st.id,
+                                                "service_template_href" => /^.*#{service_templates_url(st.id)}$/,
+                                                "message"               => /assigning/i}])
       expect(sc.reload.service_templates.pluck(:id)).to eq([st.id])
     end
 
@@ -251,6 +292,11 @@ describe ApiController do
       run_post(sc_templates_url(sc.id), gen_request(:unassign, "href" => service_templates_url(st1.id)))
 
       expect_request_success
+      expect_results_to_match_hash("results", [{"success"               => true,
+                                                "href"                  => service_catalogs_url(sc.id),
+                                                "service_template_id"   => st1.id,
+                                                "service_template_href" => /^.*#{service_templates_url(st1.id)}$/,
+                                                "message"               => /unassigning/i}])
       expect(sc.reload.service_templates.pluck(:id)).to eq([st2.id])
     end
   end

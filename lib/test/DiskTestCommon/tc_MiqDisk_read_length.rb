@@ -6,7 +6,7 @@ require 'VmsFromYaml'
 $:.push("#{File.dirname(__FILE__)}/../../disk")
 require 'MiqDisk'
 
-class TestMiqDiskReadLen < Test::Unit::TestCase
+class TestMiqDiskReadLen < Minitest::Test
 	
 	TEST_DB = "#{File.dirname(__FILE__)}/../vms.yml"	
 	
@@ -42,7 +42,7 @@ class TestMiqDiskReadLen < Test::Unit::TestCase
 					end
 				end
 				res, h = dk.close
-				assert_not_equal(h, -1) if h
+				refute_equal(h, -1) if h
 			else
 				puts "\ntc_MiqDisk_read_length: no disk for #{di.fileName}"
 				puts "Spec is:\n#{spec.inspect}"

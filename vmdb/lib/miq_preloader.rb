@@ -1,5 +1,6 @@
 module MiqPreloader
   def self.preload(records, associations, options = {})
-    ActiveRecord::Associations::Preloader.new(records, associations, options).run
+    preloader = ActiveRecord::Associations::Preloader.new
+    preloader.preload(records, associations)
   end
 end

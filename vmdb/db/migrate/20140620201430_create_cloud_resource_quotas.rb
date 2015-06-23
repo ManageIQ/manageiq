@@ -10,7 +10,7 @@ class CreateCloudResourceQuotas < ActiveRecord::Migration
       t.belongs_to :ems,          :type => :bigint
       t.belongs_to :cloud_tenant, :type => :bigint
 
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

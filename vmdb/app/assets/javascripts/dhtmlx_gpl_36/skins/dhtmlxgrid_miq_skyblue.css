@@ -82,7 +82,7 @@ div.gridbox_style3 table.obj tr.no-hover:hover {
 div.gridbox_style3 table.obj tr.no-hover:hover td{
   cursor: default !important;
 }
-<% if @temp && @temp[:ro_grid] %>
+<% if @ro_grid %>
   div.gridbox_style3 table.obj tr td:hover {
     background: #d5ecf8 !important; 
     cursor: default;
@@ -238,4 +238,10 @@ div.gridbox_miq div.ftr td {
   font-style : italic;
   font-size: 12px;
   text-align: center;
+}
+
+/* removes cursor from header column */
+
+#disks_grid div.hdrcell { 
+  cursor: default !important;
 }

@@ -71,7 +71,7 @@ class ServiceTemplate < ActiveRecord::Base
     self.service_resources.each do |sr|
       nh = sr.attributes.dup
       %W{id created_at updated_at service_template_id}.each {|key| nh.delete(key)}
-      svc.add_resource(sr.resource, nh)
+      svc.add_resource(sr.resource, nh) unless sr.resource.nil?
     end
 
     parent_svc.add_resource!(svc) unless parent_svc.nil?
@@ -134,7 +134,7 @@ class ServiceTemplate < ActiveRecord::Base
       scaling_min = child_svc_rsc.scaling_min
       1.upto(scaling_min).each do |scaling_idx|
         nh = parent_service_task.attributes.dup
-        %w{created_on updated_on type state status message}.each {|key| nh.delete(key)}
+        %w{id created_on updated_on type state status message}.each {|key| nh.delete(key)}
         nh['options'] = parent_service_task.options.dup
         nh['options'].delete(:child_tasks)
         # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
@@ -171,5 +171,13 @@ class ServiceTemplate < ActiveRecord::Base
       $log.info "Setting Service Owning User to Name=#{user.name}, ID=#{user.id}"
     end
     service.save
+  end
+
+  def self.default_provisioning_entry_point
+    '/Service/Provisioning/StateMachines/ServiceProvision_Template/default'
+  end
+
+  def self.default_retirement_entry_point
+    '/Service/Retirement/StateMachines/ServiceRetirement/default'
   end
 end

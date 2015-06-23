@@ -5,6 +5,7 @@ class Filesystem < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
   belongs_to :miq_set    #ScanItemSet
   belongs_to :scan_item
+  belongs_to :host_service_group
 
   has_one :binary_blob, :as => :resource, :dependent => :destroy
 
@@ -13,6 +14,10 @@ class Filesystem < ActiveRecord::Base
 
   virtual_column :contents,           :type => :string,  :uses => {:binary_blob => :binary_blob_parts}
   virtual_column :contents_available, :type => :boolean, :uses => :binary_blob
+
+  def self.host_service_group_condition(host_service_group_id)
+    arel_table[:host_service_group_id].eq(host_service_group_id)
+  end
 
   def self.add_elements(miq_set, scan_item, parent, xmlNode)
     options = {}
@@ -104,6 +109,15 @@ class Filesystem < ActiveRecord::Base
     return !self.binary_blob.nil?
   end
   alias contents_available has_contents?
+
+  def contents_displayable?
+    return false if name.nil?
+    # We will display max 20k characters in the UI textarea
+    return false if size > 20_000
+    mime_type = MIME::Types.of(name).first
+    return has_contents? && contents.force_encoding("UTF-8").ascii_only? if mime_type.nil?
+    !mime_type.binary?
+  end
 
   [
     [:suid_bit,    04000],

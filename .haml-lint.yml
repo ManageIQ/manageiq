@@ -1,1 +1,95 @@
-.rubocop.yml
+skip_frontmatter: false
+
+linters:
+  AltText:
+    enabled: false
+
+  ClassAttributeWithStaticValue:
+    enabled: true
+    severity: convention
+
+  ClassesBeforeIds:
+    enabled: false
+
+  ConsecutiveComments:
+    enabled: false
+
+  ConsecutiveSilentScripts:
+    enabled: false
+
+  EmptyScript:
+    enabled: true
+    severity: convention
+
+  HtmlAttributes:
+    enabled: true
+    severity: convention
+
+  ImplicitDiv:
+    enabled: true
+    severity: convention
+
+  LeadingCommentSpace:
+    enabled: true
+    severity: convention
+
+  LineLength:
+    enabled: true
+    max: 120
+    severity: refactor
+
+  MultilinePipe:
+    enabled: false
+
+  MultilineScript:
+    enabled: false
+
+  ObjectReferenceAttributes:
+    enabled: true
+    severity: convention
+
+  RuboCop:
+    enabled: true
+    ignored_cops:
+      - Lint/BlockAlignment
+      - Lint/EndAlignment
+      - Lint/Void
+      - Metrics/LineLength
+      - Style/AlignParameters
+      - Style/BlockNesting
+      - Style/FileName
+      - Style/FinalNewline
+      - Style/IfUnlessModifier
+      - Style/IndentationWidth
+      - Style/Next
+      - Style/TrailingBlankLines
+      - Style/TrailingWhitespace
+      - Style/WhileUntilModifier
+
+  RubyComments:
+    enabled: true
+    severity: convention
+
+  SpaceBeforeScript:
+    enabled: true
+    severity: convention
+
+  SpaceInsideHashAttributes:
+    enabled: true
+    style: no_space
+    severity: convention
+
+  TagName:
+    enabled: true
+    severity: convention
+
+  TrailingWhitespace:
+    enabled: false
+
+  UnnecessaryInterpolation:
+    enabled: true
+    severity: convention
+
+  UnnecessaryStringOutput:
+    enabled: true
+    severity: convention

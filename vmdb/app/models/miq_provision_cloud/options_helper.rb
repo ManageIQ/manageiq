@@ -8,7 +8,7 @@ module MiqProvisionCloud::OptionsHelper
   end
 
   def security_groups
-    @security_groups ||= SecurityGroup.where(:id => self.options[:security_groups])
+    @security_groups ||= SecurityGroup.where(:id => options[:security_groups])
   end
 
   def instance_type

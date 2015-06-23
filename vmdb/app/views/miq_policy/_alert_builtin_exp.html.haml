@@ -16,7 +16,11 @@
           "data-miq_sparkle_off" => true,
           "data-miq_observe"     => observe)
       - else
-        = h(@sb[:alert][:events][@alert.expression[:options][:event_types].first])
+        - if @alert.expression[:options][:event_types].nil?
+          %span.bg-warning
+            =_("No type set")
+        - else
+          = h(@sb[:alert][:events][@alert.expression[:options][:event_types].first])
   - when :time_threshold
     %td.key
       = h(option[:description])
@@ -105,7 +109,7 @@
         = h(option[:values][@alert.expression[:options][:trend_direction] || "none"])
         - if @alert.expression[:options][:trend_direction].to_s.ends_with?("more_than")
           = h(@alert.expression[:options][:trend_steepness])
-          = h(@temp[:perf_column_unit])
+          = h(@perf_column_unit)
           = _('Per Minute')
   - when :debug_trace
     %td.key
@@ -175,13 +179,13 @@
             "data-miq_sparkle_off" => true,
             "data-miq_observe"     => observe)
       - else
-        - if @temp[:ems].blank?
+        - if @ems.blank?
           %span{:style => "color: red;"}
             = _("%s no longer exists, this alert must be reconfigured") % ui_lookup(:model => "ExtManagementSystem")
         - else
-          = h(@temp[:ems].name)
+          = h(@ems.name)
   - when :ems_alarm_mor
-    - if @edit || @temp[:ems]
+    - if @edit || @ems
       - # Show if editing or a valid EMS is configured
       %td.key
         = h(option[:description])
@@ -191,7 +195,7 @@
             - if @edit[:ems_alarms].length == 0
               = _("No alarms found for the selected %s") % ui_lookup(:table => "ext_management_system")
             - else
-              - opts [["<#{_('Choose')}>", nil]] + @edit[:ems_alarms].invert.sort_by { |a| a.first.downcase }
+              - opts = [["<#{_('Choose')}>", nil]] + @edit[:ems_alarms].invert.sort_by { |a| a.first.downcase }
               = select_tag('select_ems_alarm_mor',
                 options_for_select(opts, @edit[:new][:expression][:options][:ems_alarm_mor]),
                 "data-miq_sparkle_on"  => true,

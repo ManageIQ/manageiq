@@ -36,8 +36,7 @@ namespace :build do
 
   task :precompile_assets do
     Dir.chdir(File.expand_path(File.join(File.dirname(__FILE__), '..', 'vmdb')))
-    load 'Rakefile'
-    Rake::Task["evm:compile_assets"].invoke
+    puts `bundle exec rake evm:compile_assets`
     Dir.chdir(File.dirname(__FILE__))
   end
 
@@ -62,4 +61,3 @@ namespace :build do
 end
 
 task :default => "build:tar"
-

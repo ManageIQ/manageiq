@@ -15,6 +15,7 @@ class ProviderForeman < Provider
   before_validation :ensure_managers
 
   validates :name, :presence => true, :uniqueness => true
+  validates :url,  :presence => true, :uniqueness => true
 
   def self.ems_type
     @ems_type ||= "foreman".freeze
@@ -22,6 +23,7 @@ class ProviderForeman < Provider
 
   def self.raw_connect(base_url, username, password, verify_ssl)
     require 'manageiq_foreman'
+    ManageiqForeman.logger ||= $log
     ManageiqForeman::Connection.new(
       :base_url   => base_url,
       :username   => username,

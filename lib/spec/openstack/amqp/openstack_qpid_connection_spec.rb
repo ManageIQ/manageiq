@@ -12,12 +12,7 @@ describe OpenstackQpidConnection do
 
     OpenstackQpidConnection.stub(:available?).and_return(true)
     OpenstackQpidConnection.any_instance.stub(:create_connection).and_return(@qconnection)
-    @connection = OpenstackQpidConnection.new(:hostname => "hostname", :port => 5672)
-  end
-
-  it "complains that host and port are not provided when they are not included in options" do
-    @bad_connection = OpenstackQpidConnection.new
-    expect { @bad_connection.open }.to raise_error
+    @connection = OpenstackQpidConnection.new("hostname", 5672)
   end
 
   it "opens a connection to qpid" do

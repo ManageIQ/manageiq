@@ -63,25 +63,24 @@ module ApplicationHelper
 
   # Check role based authorization for a UI task
   def role_allows(options={})
-    role_allows_intern(options) rescue false
+    ApplicationHelper.role_allows_intern(options) rescue false
   end
+  module_function :role_allows
 
   def role_allows_intern(options = {})
+    userid  = User.current_userid
     role_id = User.current_user.miq_user_role.try(:id)
     if options[:feature]
       auth = options[:any] ? User.current_user.role_allows_any?(:identifiers => [options[:feature]]) :
                              User.current_user.role_allows?(:identifier => options[:feature])
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
-    elsif options[:main_tab_id] # FIXME: used only in tab definition
-      tab = Menu::Manager.tab_features_by_id(options[:main_tab_id])
-      auth = User.current_user.role_allows_any?(:identifiers => tab)
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], main tab [#{options[:main_tab]}]")
+      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
     else
       auth = false
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], no main tab or feature passed to role_allows")
+      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], no main tab or feature passed to role_allows")
     end
     auth
   end
+  module_function :role_allows_intern
 
   # Check group based filtered authorization for a UI task
   def group_allows(options={})
@@ -131,7 +130,7 @@ module ApplicationHelper
       return url_for(:controller=>@record.class.to_s.underscore, :action=>"snia_local_file_systems", :id=>@record, :show=>@id)
     elsif db == "MiqCimInstance" && @db && @db == "cim_base_storage_extent"
       return url_for(:controller=>@record.class.to_s.underscore, :action=>"cim_base_storage_extents", :id=>@record, :show=>@id)
-    elsif db == "ConfiguredSystem"
+    elsif %w(ConfiguredSystem ConfigurationProfile).include?(db)
       return url_for(:controller => "provider_foreman", :action => @lastaction, :id => @record, :show => @id)
     else
       controller, action = db_to_controller(db, action)
@@ -245,9 +244,6 @@ module ApplicationHelper
     when "MiqCimInstance"
       controller = @view ? @view.db.underscore : @record.class.to_s.underscore
       action = "show"
-    when "ProductUpdate"
-      controller = "ops"
-      action = "show_product_update"
     when "SecurityGroup"
       controller = "security_group"
       action = "show"
@@ -259,6 +255,8 @@ module ApplicationHelper
     when "MiqWorker"
       controller = request.parameters[:controller]
       action = "diagnostics_worker_selected"
+    when "CloudNetwork", "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
+      controller = request.parameters[:controller]
     else
       controller = db.underscore
     end
@@ -551,7 +549,7 @@ module ApplicationHelper
 
   def get_image(img, b_name)
     # to change summary screen button to green image
-    return "summary-green" if b_name == "show_summary" && ["scan_profile","miq_schedule","miq_proxy"].include?(@layout)
+    return "summary-green" if b_name == "show_summary" && %w(miq_schedule miq_task scan_profile).include?(@layout)
     img
   end
 
@@ -695,6 +693,22 @@ module ApplicationHelper
   def build_toolbar_hide_button(id)
     return true if id == "blank_button" # Always hide the blank button placeholder
 
+    # Hide configuration buttons for specific Container* entities
+    return true if %w(container_node_edit container_node_delete container_node_new).include?(id) &&
+                   (@record.kind_of?(ContainerNode) || @record.nil?)
+
+    return true if %w(container_service_edit container_service_delete container_service_new).include?(id) &&
+                   (@record.kind_of?(ContainerService) || @record.nil?)
+
+    return true if %w(container_group_edit container_group_delete container_group_new).include?(id) &&
+                   (@record.kind_of?(ContainerGroup) || @record.nil?)
+
+    return true if %w(container_edit container_delete container_new).include?(id) &&
+                   (@record.kind_of?(Container) || @record.nil?)
+
+    return true if %w(container_replicator_edit container_replicator_delete container_replicator_new).include?(id) &&
+                   (@record.kind_of?(ContainerReplicator) || @record.nil?)
+
     # hide timelines button for Amazon provider and instances
     # TODO: extend .is_available? support via refactoring task to cover this scenario
     return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(EmsAmazon) || @record.kind_of?(VmAmazon))
@@ -704,9 +718,9 @@ module ApplicationHelper
     return true if id == 'miq_request_edit' &&
                    %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
 
-    # only hide gtl button if they are not in @temp
-    return @temp[:gtl_buttons].include?(id) ? false : true if @temp &&
-                                                @temp[:gtl_buttons] && ["view_grid","view_tile","view_list"].include?(id)
+    # only hide gtl button if they are not in @gtl_buttons
+    return @gtl_buttons.include?(id) ? false : true if @gtl_buttons &&
+                                                       ["view_grid","view_tile","view_list"].include?(id)
 
     #don't hide view buttons in toolbar
     return false if %( view_grid view_tile view_list refresh_log fetch_log common_drift
@@ -828,6 +842,12 @@ module ApplicationHelper
       return true if @is_redhat
     end
 
+    # Scale is only supported by OpenStack Infrastructure Provider
+    return true if id == "ems_infra_scale" &&
+                   (@record.class.name != "EmsOpenstackInfra" ||
+                    !role_allows(:feature => "ems_infra_scale") ||
+                   (@record.class.name == "EmsOpenstackInfra" && @record.orchestration_stacks.count == 0))
+
     # Now check model/record specific rules
     case get_record_cls(@record)
     when "AssignedServerRole"
@@ -925,17 +945,7 @@ module ApplicationHelper
       when "profile_delete"
         return true unless role_allows(:feature => "profile_delete")
       end
-    when "MiqProxy"
-      case id
-      when "miq_proxy_edit"
-        return true if params[:action] == "log_viewer"
-      when "miq_proxy_deploy"
-        return true if !@record.host.smart? || params[:action] == "log_viewer"
-      end
-    when "MiqProvisionRequest", "MiqHostProvisionRequest", "VmReconfigureRequest",
-        "VmMigrateRequest", "AutomationRequest",
-        "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest"
-
+    when "MiqRequest"
       # Don't hide certain buttons on AutomationRequest screen
       return true if @record.resource_type == "AutomationRequest" &&
           !["miq_request_approve", "miq_request_deny", "miq_request_delete"].include?(id)
@@ -943,15 +953,18 @@ module ApplicationHelper
       case id
       when "miq_request_approve", "miq_request_deny"
         return true if ["approved", "denied"].include?(@record.approval_state) || @showtype == "miq_provisions"
-      when "miq_request_delete"
-        requester = User.find_by_userid(session[:userid])
-        return true if requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
       when "miq_request_edit"
         requester = User.find_by_userid(session[:userid])
         return true if requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
       when "miq_request_copy"
         requester = User.find_by_userid(session[:userid])
-        return true if !["MiqProvisionRequest", "MiqHostProvisionRequest"].include?(@record.resource_type) || ((requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)) && @showtype == "miq_provisions")
+        resource_types_for_miq_request_copy = %w(MiqProvisionRequest
+                                                 MiqHostProvisionRequest
+                                                 MiqProvisionConfiguredSystemRequest)
+        return true if !resource_types_for_miq_request_copy.include?(@record.resource_type) ||
+                       ((requester.name != @record.requester_name ||
+                         !@record.request_pending_approval?) &&
+                        @showtype == "miq_provisions")
       end
     when "MiqServer", "MiqRegion"
       case id
@@ -1042,10 +1055,6 @@ module ApplicationHelper
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
-        return true unless @report
-      when "orchestration_template_add"
-        return true unless role_allows(:feature => "orchestration_template_add")
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
       when "profile_new"
@@ -1201,16 +1210,15 @@ module ApplicationHelper
       when "host_restart"
         return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
       end
-    when "MiqProxy"
+    when "ContainerNodeKubernetes"
       case id
-      when "miq_proxy_deploy"
-        if !@record.host.state.blank? && @record.host.state != "on"
-          return "The SmartProxy can not be managed because the Host is not powered on"
-        else
-          if @record.host.available_builds.length == 0
-            return "Host OS is unknown or there are no available SmartProxy versions for the Host's OS"
-          end
-        end
+      when "container_node_timeline"
+        return "No Timeline data has been collected for this Node" unless @record.has_events? || @record.has_events?(:policy_events)
+      end
+    when "ContainerGroupKubernetes"
+      case id
+      when "container_group_timeline"
+        return "No Timeline data has been collected for this ContainerGroup" unless @record.has_events? || @record.has_events?(:policy_events)
       end
     when "MiqAction"
       case id
@@ -1242,6 +1250,14 @@ module ApplicationHelper
       when "policy_delete"
         return "Policies that belong to Profiles can not be deleted" if @policy.memberof.length > 0
       end
+    when "MiqRequest"
+      case id
+      when "miq_request_delete"
+        requester = User.find_by_userid(session[:userid])
+        return false if requester.admin_user?
+        return _("Users are only allowed to delete their own requests") if requester.name != @record.requester_name
+        return _("%s requests cannot be deleted" % @record.approval_state.titleize) if %w(approved denied).include?(@record.approval_state)
+      end
     when "MiqGroup"
       case id
       when "rbac_group_delete"
@@ -1254,7 +1270,7 @@ module ApplicationHelper
       when "collect_logs", "collect_current_logs"
         return "Cannot collect current logs unless the #{ui_lookup(:table=>"miq_servers")} is started" if @record.status != "started"
         return "Log collection is already in progress for this #{ui_lookup(:table=>"miq_servers")}" if @record.log_collection_active_recently?
-        return "Log collection requires the Log Depot settings to be configured" if !@record.log_depot_configured? && !@record.zone.log_depot_configured?
+        return "Log collection requires the Log Depot settings to be configured" unless @record.log_depot
       when "delete_server"
         return "Server #{@record.name} [#{@record.id}] can only be deleted if it is stopped or has not responded for a while" if !@record.is_deleteable?
       when "restart_workers"
@@ -1264,7 +1280,7 @@ module ApplicationHelper
       case id
       when "widget_generate_content"
         return "Widget has to be assigned to a dashboard to generate content" if @record.memberof.count <= 0
-        return "This Widget content generation is already running or queued up" if @temp[:widget_running]
+        return "This Widget content generation is already running or queued up" if @widget_running
       end
     when "MiqWidgetSet"
       case id
@@ -1398,7 +1414,7 @@ module ApplicationHelper
       case id
       when "collect_logs", "collect_current_logs"
         return "Cannot collect current logs unless there are started #{ui_lookup(:tables=>"miq_servers")} in the Zone" if @record.miq_servers.collect { |s| s.status == "started" ? true : nil }.compact.length == 0
-        return "This Zone and one or more active #{ui_lookup(:tables=>"miq_servers")} in this Zone do not have Log Depot settings configured, collection not allowed" if !@record.log_depot_configured? && @record.miq_servers.collect { |s| s.log_depot_configured? ? true : nil }.compact.length == 0
+        return "This Zone and one or more active #{ui_lookup(:tables=>"miq_servers")} in this Zone do not have Log Depot settings configured, collection not allowed" if @record.miq_servers.select(&:log_depot).blank?
         return "Log collection is already in progress for one or more #{ui_lookup(:tables=>"miq_servers")} in this Zone" if @record.log_collection_active_recently?
       when "zone_delete"
         if @selected_zone.name.downcase == "default"
@@ -1428,12 +1444,12 @@ module ApplicationHelper
       when "ae_copy_simulate"
         return "Object attribute must be specified to copy object details for use in a Button" if @resolve[:button_class].blank?
       when "customization_template_new"
-        return "No System Image Types available, Customization Template cannot be added" if @temp[:pxe_image_types_count] <= 0
+        return "No System Image Types available, Customization Template cannot be added" if @pxe_image_types_count <= 0
       #following 2 are checks for buttons in Reports/Dashboard accordion
       when "db_new"
-        return "Only #{MAX_DASHBOARD_COUNT} Dashboards are allowed for a group" if @temp[:widgetsets].length >= MAX_DASHBOARD_COUNT
+        return "Only #{MAX_DASHBOARD_COUNT} Dashboards are allowed for a group" if @widgetsets.length >= MAX_DASHBOARD_COUNT
       when "db_seq_edit"
-        return "There should be atleast 2 Dashboards to Edit Sequence" if @temp[:widgetsets].length <= 1
+        return "There should be atleast 2 Dashboards to Edit Sequence" if @widgetsets.length <= 1
       when "render_report_csv", "render_report_pdf",
           "render_report_txt", "report_only"
         if (@html || @zgraph) && (!@report.extras[:grouping] || (@report.extras[:grouping] && @report.extras[:grouping][:_total_][:count] > 0))
@@ -1465,6 +1481,8 @@ module ApplicationHelper
 
   def get_record_cls(record)
     if record.kind_of?(AvailabilityZone)
+      record.class.base_class.name
+    elsif MiqRequest.descendants.include?(record.class)
       record.class.base_class.name
     else
       klass = case record
@@ -1580,10 +1598,11 @@ module ApplicationHelper
     if layout.blank?  # no layout, leave title alone
     elsif ["configuration", "dashboard", "chargeback", "about"].include?(layout)
       title += ": #{layout.titleize}"
-
+    elsif @layout == "ems_cluster"
+      title += ": #{title_for_clusters}"
+    elsif @layout == "host"
+      title += ": #{title_for_hosts}"
     # Specific titles for certain layouts
-    elsif layout == "miq_proxy"
-      title += ": SmartProxies"
     elsif layout == "miq_server"
       title += ": Servers"
     elsif layout == "usage"
@@ -1594,12 +1613,16 @@ module ApplicationHelper
       title += ": Policy Simulation"
     elsif layout == "all_ui_tasks"
       title += ": All UI Tasks"
+    elsif layout == "my_ui_tasks"
+      title += ": My UI Tasks"
     elsif layout == "rss"
       title += ": RSS"
     elsif layout == "storage_manager"
       title += ": Storage - Storage Managers"
     elsif layout == "ops"
       title += ": Configuration"
+    elsif layout == "provider_foreman"
+      title += ": #{ui_lookup(:ui_title => "foreman")} #{ui_lookup(:model => "ExtManagementSystem")}"
     elsif layout == "pxe"
       title += ": PXE"
     elsif layout == "explorer"
@@ -1622,7 +1645,8 @@ module ApplicationHelper
     elsif layout.starts_with?("cim_") ||
           layout.starts_with?("snia_")
       title += ": Storage - #{ui_lookup(:tables=>layout)}"
-
+    elsif layout == "login"
+      title += ": Login"
     # Assume layout is a table name and look up the plural version
     else
       title += ": #{ui_lookup(:tables=>layout)}"
@@ -1726,13 +1750,25 @@ module ApplicationHelper
 
   # Reload toolbars using new buttons object and xml
   def javascript_for_toolbar_reload(tb, buttons, xml)
-    js = ""
-    js << "#{tb}.unload();"
-    js << "#{tb} = null;"
-    js << "#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');"
-    js << "miq_toolbars['#{tb}'] = {obj:#{tb}, buttons:#{buttons}, xml:\"#{xml}\"};"
-    js << "miqInitToolbar(miq_toolbars['#{tb}']);"
-    return js
+    %Q{
+      if (miq_toolbars.#{tb} && miq_toolbars.#{tb}.obj)
+        miq_toolbars.#{tb}.obj.unload();
+
+      if (document.getElementById('#{tb}') == null) {
+        var tb_div = $('<div id="#{tb}" />');
+        parent_div_id = '#{tb}'.split('_')[0] + '_buttons_div';
+        $("#" + parent_div_id).append(tb_div);
+      }
+
+      window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
+      miq_toolbars['#{tb}'] = {
+        obj: window.#{tb},
+        buttons: #{buttons},
+        xml: "#{xml}"
+      };
+
+      miqInitToolbar(miq_toolbars['#{tb}']);
+    }
   end
 
   def javascript_for_ae_node_selection(id, prev_id, select)
@@ -1769,7 +1805,7 @@ module ApplicationHelper
       @edit[:new][:timer_weeks]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "weekly"
       @edit[:new][:timer_days]   = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "daily"
       @edit[:new][:timer_hours]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "hourly"
-      t                          = schedule.run_at[:start_time].to_time(:utc).in_time_zone(@edit[:tz])
+      t                          = schedule.run_at[:start_time].utc.in_time_zone(@edit[:tz])
       @edit[:new][:start_hour]   = t.strftime("%H")
       @edit[:new][:start_min]    = t.strftime("%M")
     end
@@ -1806,13 +1842,12 @@ module ApplicationHelper
     if @show_taskbar.nil?
       @show_taskbar = false
       if ! (@layout == ""  &&
-      # if ! (@layout == "dashboard"  &&
-          ["show","change_tab","auth_error"].include?(controller.action_name) ||
-          ["about","rss","server_build","product_update","miq_policy","miq_ae_class",
-           "miq_capacity_utilization","miq_capacity_planning","miq_capacity_bottlenecks","miq_capacity_waste","chargeback",
-           "miq_ae_export","miq_ae_automate_button","miq_ae_tools","miq_policy_export","miq_policy_rsop","report",
-           "ops", "pxe", "exception"].include?(@layout) ||
-          (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
+        %w(auth_error change_tab show).include?(controller.action_name) ||
+        %w(about chargeback exception miq_ae_automate_button miq_ae_class miq_ae_export
+           miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
+           miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
+           server_build).include?(@layout) ||
+        (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
         end
@@ -1862,7 +1897,7 @@ module ApplicationHelper
   TRUNC_TO = 10
   def truncate_for_quad(value)
     return value if value.to_s.length < TRUNC_AT
-    case @settings[:display][:quad_truncate]
+    case @settings.fetch_path(:display, :quad_truncate)
     when "b"  # Old version, used first x chars followed by ...
       return value[0...TRUNC_TO] + "..."
     when "f"  # Chop off front
@@ -2047,12 +2082,6 @@ module ApplicationHelper
       else
         return "servicetemplates_center_tb"
       end
-    elsif x_active_tree == :svccat_tree
-      if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplate"
-        return "servicetemplate-catalog_center_tb"
-      else
-        return "servicetemplates-catalogs_center_tb"
-      end
     elsif x_active_tree == :stcat_tree
       if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplateCatalog"
         return "servicetemplatecatalog_center_tb"
@@ -2067,9 +2096,9 @@ module ApplicationHelper
       end
     elsif x_active_tree == :ot_tree
       if %w(root xx-otcfn xx-othot).include?(x_node)
-        return "ot_list_center_tb"
+        return "orchestration_templates_center_tb"
       else
-        return "ot_center_tb"
+        return "orchestration_template_center_tb"
       end
     end
   end
@@ -2132,17 +2161,13 @@ module ApplicationHelper
         return "ldap_region_center_tb"
       elsif x_node.split('-').first == "ld"
         return "ldap_domain_center_tb"
-      elsif x_node.split('-').first == "svr" &&
-          @sb[:active_tab] == "settings_maintenance"
-        return "product_updates_center_tb"
       elsif x_node.split('-').last == "sis"
         return "scan_profiles_center_tb"
       elsif x_node.split('-').first == "sis"
         return "scan_profile_center_tb"
       elsif x_node.split('-').last == "z"
         return "zones_center_tb"
-      elsif x_node.split('-').first == "z" &&
-          @sb[:active_tab] != "settings_smartproxy_affinity"
+      elsif x_node.split('-').first == "z"
         return "zone_center_tb"
       end
     elsif x_active_tree == :diagnostics_tree
@@ -2291,8 +2316,9 @@ module ApplicationHelper
     else
       #show_list and show screens
       if !@in_a_form
-        if %w(availability_zone container_group container_node container_service ems_cloud ems_cluster
-              ems_container ems_infra flavor host miq_proxy ontap_file_share ontap_logical_disk
+        if %w(availability_zone cloud_tenant container_group container_node container_service ems_cloud ems_cluster
+              ems_container container_project container_route container_replicator ems_infra flavor host
+              ontap_file_share ontap_logical_disk
               ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
               timeline usage security_group).include?(@layout)
           if ["show_list"].include?(@lastaction)
@@ -2332,8 +2358,9 @@ module ApplicationHelper
   def foreman_providers_tree_center_tb(nodes)
     case nodes.first
     when "root" then  "provider_foreman_center_tb"
-    when "e"  then  "configuration_profile_foreman_center_tb"
-    when "cp"   then  "configured_systems_foreman_center_tb"
+    when "e"    then  "configuration_profile_foreman_center_tb"
+    when "cp"   then  configuration_profile_center_tb
+    else unassigned_configuration_profile_node(nodes)
     end
   end
 
@@ -2341,6 +2368,18 @@ module ApplicationHelper
     case nodes.first
     when "root", "ms" then  "configured_system_foreman_center_tb"
     end
+  end
+
+  def configuration_profile_center_tb
+    if @sb[:active_tab] == "configured_systems"
+      "configured_systems_foreman_center_tb"
+    else
+      "blank_view_tb"
+    end
+  end
+
+  def unassigned_configuration_profile_node(nodes)
+    configuration_profile_center_tb if nodes[2] == "unassigned"
   end
 
   # check if back to summary button needs to be show
@@ -2359,6 +2398,7 @@ module ApplicationHelper
 
   def display_adv_search?
     %w(availability_zone container_group container_node container_service
+       container_route container_project container_replicator
        ems_container vm miq_template offline retired templates
        host service repository storage ems_cloud ems_cluster flavor
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
@@ -2404,9 +2444,8 @@ module ApplicationHelper
 
   def saved_report_paging?
     # saved report doesn't use miq_report object,
-    #need to use a different paging view to page thru a saved report
-    return @sb[:pages] && @html &&
-        [:reports_tree,:savedreports_tree].include?(x_active_tree) ? true : false
+    # need to use a different paging view to page thru a saved report
+    @sb[:pages] && @html && [:reports_tree, :savedreports_tree, :cb_reports_tree].include?(x_active_tree)
   end
 
   def pressed2model_action(pressed)
@@ -2604,7 +2643,6 @@ module ApplicationHelper
   def render_flash_msg?
     # Don't render flash message in gtl, partial is already being rendered on screen
     return false if request.parameters[:controller] == "miq_request" && @lastaction == "show_list"
-    return false if request.parameters[:controller] == "ops" && @lastaction == "product_updates_list"
     return false if request.parameters[:controller] == "service" && @lastaction == "show" && @view
     return true
   end
@@ -2636,16 +2674,17 @@ module ApplicationHelper
   end
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
+                        container_route container_project container_replicator
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
-                        flavor host miq_proxy miq_schedule miq_template offline ontap_file_share
+                        flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
                         policy policy_group policy_profile repository resource_pool retired scan_profile
                         service snia_local_file_system storage storage_manager templates)
 
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&
-    !@ownershipitems && !@retireitems && !@politems && !@new_policy &&
-    !@in_a_form
+      !@ownershipitems && !@retireitems && !@politems && !@in_a_form &&
+      %w(show show_list).include?(params[:action])
   end
 
   def update_url_parms(url_parm)
@@ -2691,16 +2730,19 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(ems_cloud ems_cluster ems_infra host miq_template offline orchestration_stack repository
+       %w(container_node container_service ems_container container_group ems_cloud ems_cluster
+          container_route container_project container_replicator
+          ems_infra host miq_template offline orchestration_stack repository
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition ontainer_group
+    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
+             container_route container_project container_replicator
              container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
-             host miq_proxy miq_schedule miq_template policy ontap_file_share ontap_logical_disk
+             host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
              scan_profile security_group service snia_local_file_system storage
              storage_manager timeline).include?(@layout)
@@ -2712,6 +2754,7 @@ module ApplicationHelper
 
   def show_adv_search?
     show_search = %w(availability_zone cim_base_storage_extent container_group container_node container_service
+                     container_route container_project container_replicator
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      orchestration_stack repository resource_pool retired security_group service
@@ -2735,6 +2778,145 @@ module ApplicationHelper
       :ems_cloud
     else
       :ems_container
+    end
+  end
+
+  def x_gtl_view_tb_render?
+    no_gtl_view_buttons = %w(chargeback miq_ae_class miq_ae_customization miq_ae_tools miq_capacity_planning
+                             miq_capacity_utilization miq_policy miq_policy_rsop report ops provider_foreman pxe)
+    @record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout)
+  end
+
+  def explorer_controller?
+    %w(vm_cloud vm_infra vm_or_template).include?(controller_name)
+  end
+
+  def vm_quad_link_attributes(record)
+    attributes = vm_cloud_attributes(record) if record.kind_of?(VmCloud)
+    attributes ||= vm_infra_attributes(record) if record.kind_of?(VmInfra)
+    attributes
+  end
+
+  def vm_cloud_attributes(record)
+    attributes = vm_cloud_explorer_accords_attributes(record)
+    attributes ||= service_workload_attributes(record)
+    attributes
+  end
+
+  def vm_cloud_explorer_accords_attributes(record)
+    if role_allows(:feature => "instances_accord") || role_allows(:feature => "instances_filter_accord")
+      attributes = {}
+      attributes[:link] = true
+      attributes[:controller] = "vm_cloud"
+      attributes[:action] = "show"
+      attributes[:id] = record.id
+    end
+    attributes
+  end
+
+  def vm_infra_attributes(record)
+    attributes = vm_infra_explorer_accords_attributes(record)
+    attributes ||= service_workload_attributes(record)
+    attributes
+  end
+
+  def vm_infra_explorer_accords_attributes(record)
+    if role_allows(:feature => "vandt_accord") || role_allows(:feature => "vms_filter_accord")
+      attributes = {}
+      attributes[:link] = true
+      attributes[:controller] = "vm_infra"
+      attributes[:action] = "show"
+      attributes[:id] = record.id
+    end
+    attributes
+  end
+
+  def service_workload_attributes(record)
+    attributes = {}
+    if role_allows(:feature => "vms_instances_filter_accord")
+      attributes[:link] = true
+      attributes[:controller] = "vm_or_template"
+      attributes[:action] = "explorer"
+      attributes[:id] = "v-#{record.id}"
+    end
+    attributes
+  end
+
+  def title_for_hosts
+    title_for_host(true)
+  end
+
+  def title_for_host(plural = false)
+    key = case Host.node_types
+          when :non_openstack
+            "host_infra"
+          when :openstack
+            "host_openstack"
+          else
+            "host"
+          end
+    ui_lookup(:host_types => plural ? key.pluralize : key)
+  end
+
+  def title_for_clusters
+    title_for_cluster(true)
+  end
+
+  def title_for_cluster(plural = false)
+    key = case EmsCluster.node_types
+          when :non_openstack
+            "cluster_infra"
+          when :openstack
+            "cluster_openstack"
+          else
+            "cluster"
+          end
+    ui_lookup(:ems_cluster_types => plural ? key.pluralize : key)
+  end
+
+  def title_for_host_record(record)
+    record.openstack_host? ? ui_lookup(:host_types => 'host_openstack') : ui_lookup(:host_types => 'host_infra')
+  end
+
+  def title_for_cluster_record(record)
+    record.openstack_cluster? ?
+      ui_lookup(:ems_cluster_types => 'cluster_openstack') :
+      ui_lookup(:ems_cluster_types => 'cluster_infra')
+  end
+
+  def start_page_allowed?(start_page)
+    storage_start_pages = %w(cim_storage_extent_show_list
+                             ontap_file_share_show_list
+                             ontap_logical_disk_show_list
+                             ontap_storage_system_show_list
+                             ontap_storage_volume_show_list
+                             storage_manager_show_list)
+    return false if storage_start_pages.include?(start_page) && !get_vmdb_config[:product][:storage]
+    containers_start_pages = %w(ems_container_show_list
+                                container_node_show_list
+                                container_group_show_list
+                                container_service_show_list
+                                container_view)
+    return false if containers_start_pages.include?(start_page) && !get_vmdb_config[:product][:containers]
+    role_allows(:feature => start_page, :any => true)
+  end
+
+  def allowed_filter_db?(db)
+    return false if db.start_with?('Container') && !get_vmdb_config[:product][:containers]
+    true
+  end
+
+  def patternfly_tab_header(id, active, &block)
+    content_tag(:li, :class => active == id ? 'active' : '') do
+      content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
+        yield
+      end
+    end
+  end
+
+  def patternfly_tab_content(id, active, &block)
+    content_tag(:div, :id => id, :class => "tab-pane#{active == id ? ' active' : ''}") do
+      yield
     end
   end
 

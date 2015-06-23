@@ -18,7 +18,7 @@
             - if @edit[:vm_columns][i] == @edit[:vm_sortcol]
               %img{:src => "/images/icons/16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
     %tbody
-      - @temp[:vms].each do |row|
+      - @vms.each do |row|
         - @id = row.id
         - cls =  @edit[:src_vm_id] && @edit[:src_vm_id] == @id ? "selected" : ""
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/pre_prov/?sel_id=#{@id}');", :id => "row_#{@id}"}
@@ -26,10 +26,6 @@
             = h(row.name)
           %td
             = h(row.operating_system.try(:product_name))
-          - if @edit[:vm_headers].include?("cloud_tenant")
-            %td
-              - if row.respond_to?(:cloud_tenant)
-                = h(row.cloud_tenant.try(:name))
           %td
             = h(row.platform)
           %td
@@ -43,3 +39,7 @@
               = h(row.ext_management_system.name)
           %td
             = h(row.v_total_snapshots)
+          - if @edit[:vm_headers].include?("cloud_tenant")
+            %td
+              - if row.respond_to?(:cloud_tenant)
+                = h(row.cloud_tenant.try(:name))

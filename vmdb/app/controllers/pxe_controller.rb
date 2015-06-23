@@ -108,7 +108,7 @@ class PxeController < ApplicationController
     @right_cell_div  ||= "pxe_server_list"
     @right_cell_text ||= "All PXE Servers"
     get_node_info(x_node)
-    @temp[:pxe_image_types_count] = PxeImageType.count
+    @pxe_image_types_count = PxeImageType.count
 
     render :layout => "explorer"
   end
@@ -142,7 +142,6 @@ class PxeController < ApplicationController
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
     )
     r = proc { |opts| render_to_string(opts) }
 

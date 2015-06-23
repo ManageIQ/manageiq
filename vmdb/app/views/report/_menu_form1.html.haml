@@ -1,6 +1,6 @@
-- unless @temp[:grid_xml].blank?
+- unless @grid_xml.blank?
   :javascript
-    grid_xml = "#{@temp[:grid_xml]}"
+    grid_xml = "#{@grid_xml}"
 #menu_div1
   = form_tag(:action => 'menu_update', :id => "report_menu_form1") do
     %fieldset{:style => "width: 320px; height: 450px;"}
@@ -12,14 +12,14 @@
         %table{:class => "form", :cellspacing => "3"}
           %tr
             %td{:valign => "top"}
-              - @temp[:grid_xml] = params[:grid] if params[:grid]
+              - @grid_xml = params[:grid] if params[:grid]
               = render(:partial => 'layouts/dhtmlxgrid',
                 :locals         => {:options => {:grid_id => "folder_grid",
                   :grid_name                              => "folder_list_grid",
                   :menu_grid_edit                         => true,
                   :row_edit                               => true,
                   :autosize                               => true,
-                  :grid_xml                               => @temp[:grid_xml],
+                  :grid_xml                               => @grid_xml,
                   :no_resize                              => true,
                   :skin                                   => "menueditor",
                   :div_in_js                              => true}})

@@ -1,14 +1,9 @@
 require "spec_helper"
 
 describe MiqSchedule do
+  before { EvmSpecHelper.create_guid_miq_server_zone }
   context 'with schedule infrastructure and valid run_ats' do
     before(:each) do
-      @zone  = FactoryGirl.create(:zone)
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid)
-      MiqServer.my_server_clear_cache
-
       @valid_run_ats =  [ {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "daily", :value => "1"  } },
         {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "once" } } ]
     end
@@ -483,18 +478,6 @@ describe MiqSchedule do
       end
     end
 
-    it "should verify_depot_hash with good hash and FileDepot.verify_depot_hash good" do
-      @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
-      FileDepotSmb.stub(:validate_settings).and_return(true)
-      MiqSchedule.verify_depot_hash(@depot_hash).should be_true
-    end
-
-    it "should verify_depot_hash with good hash and FileDepot.verify_depot_hash bad" do
-      @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
-      FileDepotSmb.stub(:validate_settings).and_return(false)
-      MiqSchedule.verify_depot_hash(@depot_hash).should_not be_true
-    end
-
     context "valid db_gc unsaved schedule, run_adhoc_db_gc" do
       before(:each) do
         @task_id = MiqSchedule.run_adhoc_db_gc(:userid => "admin", :aggressive => true)
@@ -505,13 +488,13 @@ describe MiqSchedule do
       end
 
       it "should create 1 miq task" do
-        tasks = MiqTask.where(:name => "Database GC", :userid => "admin").all
+        tasks = MiqTask.where(:name => "Database GC", :userid => "admin")
         tasks.length.should == 1
         tasks.first.id.should == @task_id
       end
 
       it "should create one gc queue message for the database role" do
-        MiqQueue.count(:conditions => {:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations"} ).should == 1
+        MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").count.should == 1
       end
 
       context "deliver DatabaseBackup.gc message and gc is supported" do
@@ -527,7 +510,7 @@ describe MiqSchedule do
 
         it "should have queue message ok, and task is Ok and Finished" do
           @status.should == "ok"
-          MiqTask.count(:conditions => {:state => "Finished", :status => "Ok"} ).should == 1
+          MiqTask.where(:state => "Finished", :status => "Ok").count.should == 1
         end
       end
 
@@ -544,52 +527,17 @@ describe MiqSchedule do
 
         it "should have queue message in error, and task is Error and Finished" do
           @status.should == "error"
-          MiqTask.count(:conditions => { :state => "Finished", :status => "Error"} ).should == 1
-        end
-      end
-    end
-
-    context "valid db_backup schedule that hasn't been saved yet" do
-      before(:each) do
-        @valid_schedules = []
-        @valid_run_ats.each do |run_at|
-          @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
-          @valid_schedules << FactoryGirl.build(:miq_schedule_validation, :run_at => run_at, :sched_action=> {:method => "db_backup"})
-        end
-        @unsaved_schedule = @valid_schedules.first
-      end
-
-      it "should be valid using depot_hash=" do
-        @valid_schedules.each do |sch|
-          sch.depot_hash = @depot_hash
-          sch.valid?.should be_true
-        end
-      end
-
-      it "should be invalid using depot= with missing username" do
-        @valid_schedules.each do |sch|
-          sch.depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :password => "Zug-drep5s" }
-          sch.valid?.should_not be_true
-        end
-      end
-
-      it "should be invalid using depot= with missing uri" do
-        @valid_schedules.each do |sch|
-          sch.depot_hash = {:username => "samba_one", :password => "Zug-drep5s" }
-          sch.valid?.should_not be_true
+          MiqTask.where(:state => "Finished", :status => "Error").count.should == 1
         end
       end
     end
 
     context "valid schedules for db_backup" do
-      before(:each) do
+      let(:file_depot) { FactoryGirl.create(:file_depot_ftp_with_authentication) }
+      before do
         @valid_schedules = []
         @valid_run_ats.each do |run_at|
-          @depot_hash = {:uri      => "smb://dev005.manageiq.com/share1",
-                         :username => "samba_one",
-                         :password => "Zug-drep5s",
-                         :name     => "ManageIQSamba1"}
-          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :depot_hash => @depot_hash, :sched_action=> {:method => "db_backup"}, :towhat => "DatabaseBackup")
+          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :towhat => "DatabaseBackup")
         end
         @schedule = @valid_schedules.first
       end
@@ -650,11 +598,11 @@ describe MiqSchedule do
           end
 
           it "should create 1 miq task" do
-            MiqTask.count(:conditions => {:name => "Database backup", :userid => @schedule.userid } ).should == 1
+            MiqTask.where(:name => "Database backup", :userid => @schedule.userid).count.should == 1
           end
 
           it "should create one backup queue message for our db backup instance for the database role" do
-            MiqQueue.count(:conditions => {:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} ).should == 1
+            MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count.should == 1
           end
 
           context "deliver DatabaseBackup.backup message and backup is unsupported" do
@@ -671,7 +619,7 @@ describe MiqSchedule do
             it "should create 1 database backup, queue message is in error, and task is Error and Finished" do
               @status.should == "error"
               @region.database_backups.count.should == 1
-              MiqTask.count(:conditions => { :state => "Finished", :status => "Error"} ).should == 1
+              MiqTask.where(:state => "Finished", :status => "Error").count.should == 1
             end
           end
 
@@ -692,7 +640,7 @@ describe MiqSchedule do
               it "should create 1 database backup, queue message is ok, and task is Ok and Finished" do
                 @status.should == "ok"
                 @region.database_backups.count.should == 1
-                MiqTask.count(:conditions => {:state => "Finished", :status => "Ok"} ).should == 1
+                MiqTask.where(:state => "Finished", :status => "Ok").count.should == 1
               end
             end
 
@@ -725,64 +673,35 @@ describe MiqSchedule do
         end
       end
 
-      it "should have file depots" do
-        @valid_schedules.each { |sch| sch.file_depot.is_a?(FileDepot).should be_true }
-      end
-
       it "should have valid depots" do
         @valid_schedules.each { |sch| sch.valid?.should be_true }
       end
 
-      it "should return the expected depot_hash" do
-        @valid_schedules.each { |sch| sch.depot_hash.should == @depot_hash }
+      it "should return the expected FileDepot subclass" do
+        @valid_schedules.each { |sch| expect(sch.file_depot).to be_kind_of(FileDepotFtp) }
       end
+    end
+  end
 
-      it "should set and get the depot_hash" do
-        @valid_schedules.each do |sch|
-          sch.depot_hash = nil
-          sch.save
-          hsh = sch.depot_hash
-          hsh.is_a?(Hash).should be_true
-          hsh.has_key?(:uri).should be_true
-          hsh[:uri].should be_nil
-          hsh.has_key?(:username).should be_true
-          hsh.has_key?(:password).should be_true
-          sch.depot_hash = @depot_hash
-          sch.save
-          sch.depot_hash.should == @depot_hash
-        end
-      end
+  context "#verify_file_depot" do
+    let(:params) { {:uri_prefix => "ftp", :uri => "ftp://ftp.example.com", :name => "Test Backup Depot", :username => "user", :password => "password"} }
 
-      it "should do nothing if setting the depot_hash to it's existing values" do
-        @valid_schedules.each do |sch|
-          FileDepot.should_receive(:verify_depot_hash).never
-          before = sch.depot_hash
-          sch.depot_hash = before
-          sch.save
-        end
-      end
+    it "builds a file_depot of the correct type and validates it, does not save" do
+      FileDepotFtp.any_instance.should_receive(:verify_credentials).and_return(true)
 
-      it "should update the file depot and it's authentication if the depot_hash is changed but not actually test the depot" do
-        @valid_schedules.each do |sch|
-          FileDepot.should_receive(:verify_depot_hash).never
-          before = sch.depot_hash
-          before[:uri] = "smb://someotherhost/share1"
-          before[:username] = "test1"
-          sch.depot_hash = before
-          sch.save
-          sch.reload
-          sch.depot_hash[:uri].should == before[:uri]
-          sch.depot_hash[:username].should == before[:username]
-        end
-      end
+      MiqSchedule.new.verify_file_depot(params)
 
-      it "should support update_attributes" do
-        @valid_schedules.each do |sch|
-          @depot_hash[:uri] = "smb://blah"
-          sch.update_attribute(:depot_hash, @depot_hash)
-          sch.depot_hash.should == @depot_hash
-        end
-      end
+      expect(Authentication.count).to eq(0)
+      expect(FileDepot.count).to      eq(0)
+      expect(MiqSchedule.count).to    eq(0)
+    end
+
+    it "saves the file_depot when params[:save] is passed in, does not validate" do
+      MiqSchedule.new.verify_file_depot(params.merge(:save => true))
+
+      expect(Authentication.count).to eq(1)
+      expect(FileDepot.count).to      eq(1)
+      expect(MiqSchedule.count).to    eq(0)
     end
   end
 end

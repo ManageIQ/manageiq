@@ -4,6 +4,7 @@ class DialogField < ActiveRecord::Base
   attr_accessor :dialog
 
   belongs_to :dialog_group
+  has_one :resource_action, :as => :resource, :dependent => :destroy
 
   alias_attribute :order, :position
 
@@ -18,6 +19,8 @@ class DialogField < ActiveRecord::Base
   serialize :display_method_options,  Hash
   serialize :required_method_options, Hash
   serialize :options,                 Hash
+
+  after_initialize :default_resource_action
 
   # Sample data from V4 dialog.rb files
   # :data_type          # => :string / :integer / :button / :boolean / :time
@@ -50,14 +53,14 @@ class DialogField < ActiveRecord::Base
     "DialogFieldTagControl"      => "Tag Control",
     "DialogFieldDateControl"     => "Date Control",
     "DialogFieldDateTimeControl" => "Date/Time Control",
-    "DialogFieldRadioButton"     => "Radio Button",
-    "DialogFieldDynamicList"     => "Drop Down Dynamic List",
+    "DialogFieldRadioButton"     => "Radio Button"
   }
 
   DIALOG_FIELD_DYNAMIC_CLASSES = %w(
     DialogFieldCheckBox
     DialogFieldDateControl
     DialogFieldDateTimeControl
+    DialogFieldDropDownList
     DialogFieldRadioButton
     DialogFieldTextAreaBox
     DialogFieldTextBox
@@ -86,7 +89,7 @@ class DialogField < ActiveRecord::Base
   end
 
   def automate_output_value
-    @value
+    data_type == "integer" ? @value.to_i : @value
   end
 
   def automate_key_name
@@ -103,6 +106,10 @@ class DialogField < ActiveRecord::Base
 
   private
 
+  def default_resource_action
+    build_resource_action if resource_action.nil?
+  end
+
   def validate_error_message(dialog_tab, dialog_group)
     "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required"
   end
@@ -112,7 +119,7 @@ class DialogField < ActiveRecord::Base
   end
 
   def value_from_dialog_fields(dialog_values)
-    dialog_values[automate_key_name]
+    dialog_values[automate_key_name] || dialog_values[name]
   end
 
   def get_default_value

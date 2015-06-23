@@ -36,9 +36,48 @@ module EmsClusterHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_openstack_status
+    return nil unless @record.kind_of?(EmsClusterOpenstackInfra)
+    ret = textual_generate_openstack_status
+
+    ret.blank? ? nil : ret
+  end
+
   #
   # Items
   #
+
+  def textual_generate_openstack_status
+    @record.service_group_names.collect do |x|
+      running_count = @record.host_ids_with_running_service_group(x.name).count
+      failed_count  = @record.host_ids_with_failed_service_group(x.name).count
+      all_count     = @record.host_ids_with_service_group(x.name).count
+
+      running = {:title => _("Show list of hosts with running %s") % (x.name), :value => _("Running (%s)") % running_count,
+                 :image => failed_count == 0 && running_count > 0 ? 'status_complete' : nil,
+                 :link => running_count > 0 ? url_for(:controller => controller.controller_name,
+                                                      :action => 'show', :id => @record, :display => 'hosts',
+                                                      :host_service_group_name => x.name,
+                                                      :status => :running) : nil}
+
+      failed = {:title => _("Show list of hosts with failed %s") % (x.name), :value => _("Failed (%s)") % failed_count,
+                :image => failed_count > 0 ? 'status_error' : nil,
+                :link => failed_count > 0 ? url_for(:controller => controller.controller_name,
+                                                    :action => 'show', :id => @record, :display => 'hosts',
+                                                    :host_service_group_name => x.name,
+                                                    :status => :failed) : nil}
+
+      all = {:title => _("Show list of hosts with %s") % (x.name), :value => _("All (%s)") % all_count,
+             :image => 'host',
+             :link => all_count > 0 ? url_for(:controller => controller.controller_name, :action => 'show',
+                                              :display => 'hosts', :id => @record,
+                                              :host_service_group_name => x.name, :status => :all) : nil}
+
+      sub_items = [running, failed, all]
+
+      {:value => x.name, :sub_items => sub_items}
+    end
+  end
 
   def textual_aggregate_cpu_speed
     {:label => "Total CPU Resources", :value => "#{mhz_to_human_size(@record.aggregate_cpu_speed)}"}
@@ -53,7 +92,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_aggregate_logical_cpus
-    {:label => "Total Host CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
+    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
   end
 
   def textual_aggregate_vm_memory
@@ -82,9 +121,9 @@ module EmsClusterHelper::TextualSummary
 
   def textual_total_hosts
     num = @record.total_hosts
-    h = {:label => "Hosts", :image => "host", :value => num}
+    h = {:label => title_for_hosts, :image => "host", :value => num}
     if num > 0 && role_allows(:feature => "host_show_list")
-      h[:title] = "Show all Hosts"
+      h[:title] = "Show all #{title_for_hosts}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'hosts')
     end
     h
@@ -94,7 +133,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.total_direct_vms
     h = {:label => "Direct VMs", :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show VMs in this Cluster, but not in Resource Pools below"
+      h[:title] = "Show VMs in this #{cluster_title}, but not in Resource Pools below"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'vms')
     end
     h
@@ -104,7 +143,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.total_vms
     h = {:label => "All VMs", :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show all VMs in this Cluster"
+      h[:title] = "Show all VMs in this #{cluster_title}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'all_vms')
     end
     h
@@ -114,7 +153,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.total_miq_templates
     h = {:label => "All Templates", :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:title] = "Show all Templates in this Cluster"
+      h[:title] = "Show all Templates in this #{cluster_title}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'miq_templates')
     end
     h
@@ -124,7 +163,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.total_vms
     h = {:label => "All VMs (Tree View)", :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show tree of all VMs by Resource Pool in this Cluster"
+      h[:title] = "Show tree of all VMs by Resource Pool in this #{cluster_title}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'descendant_vms')
     end
     h
@@ -145,7 +184,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.number_of(:drift_states)
     h = {:label => "Drift History", :image => "drift", :value => (num == 0 ? "None" : num)}
     if num > 0
-      h[:title] = "Show cluster drift history"
+      h[:title] = "Show #{cluster_title} drift history"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'drift_history', :id => @record)
     end
     h
@@ -236,5 +275,9 @@ module EmsClusterHelper::TextualSummary
     value = @record.drs_migration_threshold
     return nil if value.nil?
     {:label => "DRS Migration Threshold", :value => value}
+  end
+
+  def cluster_title
+    title_for_cluster_record(@record)
   end
 end

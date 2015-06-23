@@ -23,7 +23,7 @@
           = "<#{_('None')}>"
         %td
         %td
-      - @temp[:datastores].each do |row|
+      - @datastores.each do |row|
         - @id = row.id
         - if %w(miq_template service_template vm).include?(@edit[:org_controller])
           - cls = @edit[:new][:placement_ds_name] && @edit[:new][:placement_ds_name][0] == @id ? "selected" : ""

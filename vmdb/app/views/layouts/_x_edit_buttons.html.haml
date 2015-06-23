@@ -33,10 +33,6 @@
 - apply_text ||= nil
 - # should apply :get or :post the request
 - apply_method ||= :get
-- # need to show download button on product updates screen
-- download_button ||= nil
-- # need to show title on download button on product updates screen
-- download_text ||= nil
 - # need to show export button on Reports-import/export screen
 - export_button ||= nil
 - # need to pass this as true if need to send up serialized form data when save is pressed
@@ -69,21 +65,6 @@
                 :type   => "application/txt",
                 :alt    => t,
                 :title  => t)
-            - elsif download_button
-              - if @build.component.downcase != "smartproxy"
-                = button_tag(t = _('Download'),
-                  :class   => "btn btn-primary",
-                  :alt     => t,
-                  :title   => download_text,
-                  :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "download")}');")
-              - else
-                - t = _("Download SmartProxy version for manual installation")
-                = link_to(_("Download"),
-                  {:action => 'fetch_build', :id => record_id},
-                  :class => "btn btn-primary",
-                  :type  => "application/txt",
-                  :alt   => t,
-                  :title => t)
             - elsif submit_button
               = button_tag(t = _('Submit'),
                 :class   => "btn btn-primary",
@@ -194,7 +175,7 @@
           - else
             - # export_button
             = button_tag(_("Export"),
-              :class  => "btn btn-primary",
+              :class  => "btn btn-primary #{@export_reports.empty? ? "btn-disabled" : ""}",
               :type   => "application/txt",
               :id     => "export_button",
               :alt    => _("Download Report to YAML"))

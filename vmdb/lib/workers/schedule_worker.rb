@@ -165,6 +165,12 @@ class ScheduleWorker < WorkerBase
       @queue.enq :vm_retirement_check
     end
 
+    # Schedule - Check for Retired Orchestration Stacks
+    every = worker_setting_or_default(:orchestration_stack_retired_interval)
+    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |_rufus_job|
+      @queue.enq :orchestration_stack_retirement_check
+    end
+
     # Schedule - Periodic validation of authentications
     every = worker_setting_or_default(:authentication_check_interval, 1.day)
     @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
@@ -379,7 +385,7 @@ class ScheduleWorker < WorkerBase
 
   def sync_all_user_schedules
     self.rufus_remove_stale_schedules
-    schedules = MiqSchedule.in_my_region.all
+    schedules = MiqSchedule.in_my_region.to_a
     @last_checked = Time.now.utc
     self.reload_schedules(schedules)
   end

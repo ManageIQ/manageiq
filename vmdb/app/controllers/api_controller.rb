@@ -4,6 +4,17 @@ class ApiController < ApplicationController
   class BadRequestError           < StandardError; end
   class UnsupportedMediaTypeError < StandardError; end
 
+  def handle_options_request
+    head(:ok) if request.request_method == "OPTIONS"
+  end
+
+  after_filter :set_access_control_headers
+  def set_access_control_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Headers'] = 'origin, content-type, authorization, x-auth-token'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH'
+  end
+
   # Order *Must* be from most generic to most specific
   ERROR_MAPPING = {
     StandardError                            => :internal_server_error,
@@ -45,6 +56,7 @@ class ApiController < ApplicationController
   include_concern 'Events'
   include_concern 'ProvisionRequests'
   include_concern 'RequestTasks'
+  include_concern 'ServiceCatalogs'
   include_concern 'ServiceRequests'
   include_concern 'Software'
   include_concern 'ServiceTemplates'
@@ -57,7 +69,7 @@ class ApiController < ApplicationController
   extend ApiHelper::ErrorHandler::ClassMethods
   respond_to :json
   rescue_from_api_errors
-  before_filter :require_api_user_or_token
+  before_filter :require_api_user_or_token, :except => [:handle_options_request]
 
   TAG_NAMESPACE = "/managed"
 
@@ -66,8 +78,11 @@ class ApiController < ApplicationController
   # Converted to @attr_<type> hashes at init, much faster access.
   #
   ATTR_TYPES = {
-    :time => %w(expires_on),
-    :url  => %w(href)
+    :time      => %w(expires_on),
+    :url       => %w(href),
+    :encrypted => %w(password) |
+                  ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
+                  ::Vmdb::ConfigurationEncoder::PASSWORD_FIELDS
   }
 
   #
@@ -80,7 +95,7 @@ class ApiController < ApplicationController
   # not have these. They would instead dealing with the /api/auth
   # mechanism.
   #
-  skip_before_filter :verify_authenticity_token, :only => [:show, :update, :destroy]
+  skip_before_filter :verify_authenticity_token, :only => [:show, :update, :destroy, :handle_options_request]
 
   delegate :base_config, :version_config, :collection_config, :to => self
 

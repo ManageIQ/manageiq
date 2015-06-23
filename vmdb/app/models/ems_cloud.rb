@@ -1,9 +1,4 @@
 class EmsCloud < ExtManagementSystem
-  SUBCLASSES = %w{
-    EmsAmazon
-    EmsOpenstack
-  }
-
   has_many :availability_zones,            :foreign_key => :ems_id, :dependent => :destroy
   has_many :flavors,                       :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_tenants,                 :foreign_key => :ems_id, :dependent => :destroy
@@ -15,10 +10,10 @@ class EmsCloud < ExtManagementSystem
   has_many :cloud_volume_snapshots,        :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
-  has_many :orchestration_stacks,          :foreign_key => :ems_id, :dependent => :destroy
   has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
 
   validates_presence_of :zone
+  include HasManyOrchestrationStackMixin
 
   # Development helper method for Rails console for opening a browser to the EMS.
   #
@@ -29,7 +24,3 @@ class EmsCloud < ExtManagementSystem
     MiqSystem.open_browser(browser_url)
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-EmsCloud::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

@@ -8,7 +8,7 @@ describe Metric::Purging do
       Timecop.freeze(Time.now) do
         described_class.purge_all_timer
 
-        q = MiqQueue.all.to_a
+        q = MiqQueue.all
         q.length.should == 3
 
         q.each do |qi|
@@ -55,8 +55,8 @@ describe Metric::Purging do
       context "#purge" do
         it "without block" do
           described_class.purge(6.months.ago, "hourly")
-          MetricRollup.where(:resource_id => 1).all.should == [@metrics1.last]
-          MetricRollup.where(:resource_id => 2).all.should == [@metrics2.last]
+          MetricRollup.where(:resource_id => 1).should == [@metrics1.last]
+          MetricRollup.where(:resource_id => 2).should == [@metrics2.last]
         end
 
         it "with a block" do
@@ -65,8 +65,8 @@ describe Metric::Purging do
           @vmdb_config.store_path(:performance, :history, :purge_window_size, 2)
 
           described_class.purge(6.months.ago, "hourly") { |count, total| callbacks << [count, total] }
-          MetricRollup.where(:resource_id => 1).all.should == [@metrics1.last]
-          MetricRollup.where(:resource_id => 2).all.should == [@metrics2.last]
+          MetricRollup.where(:resource_id => 1).should == [@metrics1.last]
+          MetricRollup.where(:resource_id => 2).should == [@metrics2.last]
 
           callbacks.should == [[2, 2], [1, 3]]
         end

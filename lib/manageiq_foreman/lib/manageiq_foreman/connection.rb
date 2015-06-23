@@ -1,5 +1,6 @@
 module ManageiqForeman
   class Connection
+    include ManageiqForeman::Logging
     # some foreman servers don't have locations or organizations, just return nil
     ALLOW_404 = [:locations, :organizations]
     attr_accessor :connection_attrs
@@ -9,7 +10,8 @@ module ManageiqForeman
       connection_attrs[:uri] = connection_attrs.delete(:base_url)
       connection_attrs[:api_version] ||= 2
       connection_attrs[:apidoc_cache_dir] ||= tmpdir
-      @api = ApipieBindings::API.new(connection_attrs)
+      options = {:verify_ssl => connection_attrs.delete(:verify_ssl)}
+      @api = ApipieBindings::API.new(connection_attrs, options)
     end
 
     def verify?
@@ -43,6 +45,7 @@ module ManageiqForeman
     # filter: "page" => 2, "per_page" => 50, "search" => "field=value", "value"
     def fetch(resource, action = :index, filter = {})
       action, filter = :index, action if action.kind_of?(Hash)
+      logger.info("#{self.class.name}##{__method__} Calling Apipie Resource: #{resource.inspect} Action: #{action.inspect} Params: #{dump_hash(filter)}")
       PagedResponse.new(@api.resource(resource).action(action).call(filter))
     rescue RestClient::ResourceNotFound
       raise unless ALLOW_404.include?(resource)

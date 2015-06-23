@@ -10,9 +10,9 @@ class MiqWorker < ActiveRecord::Base
 
   belongs_to :miq_server
   has_many   :messages,           :as => :handler, :class_name => 'MiqQueue'
-  has_many   :active_messages,    :as => :handler, :class_name => 'MiqQueue', :conditions => [ "state = ?", "dequeue"]
-  has_many   :ready_messages,     :as => :handler, :class_name => 'MiqQueue', :conditions => [ "state = ?", "ready"]
-  has_many   :processed_messages, :as => :handler, :class_name => 'MiqQueue', :conditions => [ "state != ?", "ready"], :dependent => :destroy
+  has_many   :active_messages,    -> { where [ "state = ?", "dequeue"] }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :ready_messages,     -> { where [ "state = ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :processed_messages, -> { where [ "state != ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
 
   virtual_column :friendly_name, :type => :string
   virtual_column :uri_or_queue_name, :type => :string
@@ -83,7 +83,7 @@ class MiqWorker < ActiveRecord::Base
   self.required_roles         = []
 
   def self.server_scope(server_id = nil)
-    return current_scope if current_scope && current_scope.where_values_hash.include?(:miq_server_id)
+    return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')
     if server_id.nil?
       server = MiqServer.my_server
       server_id = server.id unless server.nil?
@@ -348,15 +348,23 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def is_current?
-    STATUSES_CURRENT.include?(self.status)
+    STATUSES_CURRENT.include?(status)
   end
 
   def is_alive?
-    STATUSES_ALIVE.include?(self.status) && MiqProcess.is_worker?(self.pid)
+    STATUSES_ALIVE.include?(status) && actually_running?
   end
 
   def is_stopped?
-    STATUSES_STOPPED.include?(self.status)
+    STATUSES_STOPPED.include?(status)
+  end
+
+  def actually_running?
+    MiqProcess.is_worker?(pid)
+  end
+
+  def enabled_or_running?
+    !is_stopped? || actually_running?
   end
 
   def validate_active_messages
@@ -481,14 +489,9 @@ class MiqWorker < ActiveRecord::Base
     params = params.first || {}
     raise ArgumentError, "params must contain :guid" unless params.has_key?(:guid)
 
-    cl =
-      if MiqEnvironment::Command.is_encrypted_appliance?
-        "#{self.nice_prefix}"
-      else
-        "#{self.nice_prefix} #{Gem.ruby}"
-      end
-
     rr = File.expand_path(Rails.root)
+
+    cl = "#{self.nice_prefix} #{Gem.ruby}"
     cl << " " << File.join(rr, "bin/rails runner")
     cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self.corresponding_helper}")
     cl << " " << self.name

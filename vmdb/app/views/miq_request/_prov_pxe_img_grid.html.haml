@@ -19,7 +19,7 @@
         %td
           = "<#{_('None')}>"
         %td
-      - @temp[:pxe_imgs].each do |row|
+      - @pxe_imgs.each do |row|
         - @id = row.id
         - cls = @edit[:new][:pxe_image_id] && @edit[:new][:pxe_image_id][0] == @id ? "selected" : ""
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');"}

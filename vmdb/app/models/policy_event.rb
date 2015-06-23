@@ -4,8 +4,6 @@ class PolicyEvent < ActiveRecord::Base
   belongs_to  :miq_event
   belongs_to  :miq_policy
   has_many    :contents,        :class_name => "PolicyEventContent", :dependent => :destroy
-  # has_many    :miq_actions,     :class_name => "PolicyEventContent", :conditions => "resource_type = 'MiqAction"
-  # has_many    :miq_policy_sets, :class_name => "PolicyEventContent", :conditions => "resource_type = 'MiqPolicySet"
 
   include ReportableMixin
 

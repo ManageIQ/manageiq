@@ -19,7 +19,8 @@
   %td.wide
     = @customer.company_name
 %tr
-  %td.key=_("Update Repository")
+  - label = @customer.registration_type == "rhn_satellite" ? _("Channel Name(s)") : _("Repository Name(s)")
+  %td.key=label
   %td.wide
     = @customer.update_repo_name
 -# to be enabled later

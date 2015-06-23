@@ -85,7 +85,7 @@ describe ApplianceConsole::Cli do
     it "should handle uninstalling ipa" do
       subject.should_receive(:say)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-        .and_return(double(:ipa_client_configured? => true, :ipa_client_unconfigure => nil))
+        .and_return(double(:ipa_client_configured? => true, :deactivate => nil))
       subject.parse(%w(--uninstall-ipa)).run
     end
 
@@ -103,9 +103,10 @@ describe ApplianceConsole::Cli do
           .with('client.domain.com',
                 :ipaserver => 'ipa.domain.com',
                 :principal => 'admin',
-                :realm     => 'domain.com',
+                :domain    => 'domain.com',
+                :realm     => 'DOMAIN.COM',
                 :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
-      subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --iparealm domain.com)).run
+      subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --iparealm DOMAIN.COM --ipadomain domain.com)).run
     end
 
     it "should not post_activate install ipa (aside: testing passing in host" do
@@ -116,6 +117,7 @@ describe ApplianceConsole::Cli do
           .with('client.domain.com',
                 :ipaserver => 'ipa.domain.com',
                 :principal => 'admin',
+                :domain    => nil,
                 :realm     => nil,
                 :password  => 'pass').and_return(double(:activate => false))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com)).run
@@ -142,11 +144,11 @@ describe ApplianceConsole::Cli do
           :ca_name  => "ipa",
           :pgclient => true,
           :pgserver => false,
-          :api      => true,
+          :http     => true,
           :verbose  => false,
         ).and_return(double(:activate => true, :status_string => "good", :complete? => true))
 
-      subject.parse(%w(--postgres-client-cert --api-cert)).run
+      subject.parse(%w(--postgres-client-cert --http-cert)).run
     end
 
     it "should basic install waiting (manual ca_name, verbose)" do
@@ -161,7 +163,7 @@ describe ApplianceConsole::Cli do
           :ca_name  => "super",
           :pgclient => false,
           :pgserver => true,
-          :api      => false,
+          :http     => false,
           :verbose  => true,
         ).and_return(double(:activate => true, :status_string => "good", :complete? => false))
 
@@ -178,6 +180,35 @@ describe ApplianceConsole::Cli do
       .and_return(double(:activate => true))
 
       subject.parse(%w(--tmpdisk x)).run
+    end
+
+    it "configures disk with auto" do
+      subject.should_receive(:disk_from_string).with('auto').and_return('/dev/x')
+      subject.should_receive(:say)
+      ApplianceConsole::TempStorageConfiguration.should_receive(:new)
+        .with(:disk      => '/dev/x')
+      .and_return(double(:activate => true))
+
+      subject.parse(%w(--tmpdisk auto)).run
+    end
+
+    it "suggests disk with unknown disk" do
+      subject.should_receive(:disk_from_string).with('abc').and_return(nil)
+      subject.should_receive(:disk).and_return(double(:path => 'dev-good'))
+      subject.should_receive(:say).with(/abc/)
+      subject.should_receive(:say).with(/dev-good/)
+      expect(ApplianceConsole::TempStorageConfiguration).not_to receive(:new)
+
+      subject.parse(%w(--tmpdisk abc)).run
+    end
+
+    it "complains when no disks available" do
+      subject.should_receive(:disk_from_string).with('abc').and_return(nil)
+      subject.should_receive(:disk).and_return(nil)
+      subject.should_receive(:say).with(/no disk/)
+      expect(ApplianceConsole::TempStorageConfiguration).not_to receive(:new)
+
+      subject.parse(%w(--tmpdisk abc)).run
     end
   end
 
@@ -315,12 +346,12 @@ describe ApplianceConsole::Cli do
         expect(subject.parse(%w(--postgres-server-cert))).to be_certs
       end
 
-      it "should install certs if a api is specified" do
-        expect(subject.parse(%w(--api-cert))).to be_certs
+      it "should install certs if a http is specified" do
+        expect(subject.parse(%w(--http-cert))).to be_certs
       end
 
       it "should install certs if all params are specified" do
-        expect(subject.parse(%w(--postgres-client-cert --postgres-server-cert --api-cert))).to be_certs
+        expect(subject.parse(%w(--postgres-client-cert --postgres-server-cert --http-cert))).to be_certs
       end
     end
   end

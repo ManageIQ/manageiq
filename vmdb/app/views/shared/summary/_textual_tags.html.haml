@@ -10,14 +10,14 @@
           - item[:value].each_with_index do |subitem, i|
             %tr
               - if i == 0
-                %th{:rowspan => item[:value].length}
+                %td.label{:rowspan => item[:value].length}
                   = item[:label]
               %td
                 %img{:src => "/images/icons/new/#{subitem[:image]}.png"}
-                = "#{subitem[:label]}: #{subitem[:value].collect { |t| h(t) }.join("&nbsp;<b>|</b>&nbsp;").html_safe}"
+                = "#{subitem[:label]}: #{subitem[:value].collect { |t| h(t) }.join("&nbsp;<b>|</b>&nbsp;")}".html_safe
         - else
           %tr
-            %td
+            %td.label
               = item[:label]
             %td
               - if item[:image]

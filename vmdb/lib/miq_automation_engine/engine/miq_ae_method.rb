@@ -86,12 +86,15 @@ module MiqAeEngine
 
       ENV['MIQ_TOKEN'] = ws.guid unless ws.nil?
 
+      rc = nil
+      final_stderr = nil
       begin
         require 'open4'
         status = Open4.popen4(*cmd) do |pid, stdin, stdout, stderr|
           stdin.close
+          final_stderr = stderr.each_line.map(&:strip)
           stdout.each_line { |msg| $miq_ae_logger.info  "Method STDOUT: #{msg.strip}" }
-          stderr.each_line { |msg| $miq_ae_logger.error "Method STDERR: #{msg.strip}" }
+          final_stderr.each { |msg| $miq_ae_logger.error "Method STDERR: #{msg}" }
         end
 
         unless ws.nil?
@@ -103,23 +106,11 @@ module MiqAeEngine
         msg = "Method exited with rc=#{verbose_rc(rc)}"
       rescue => err
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
-        rc = 16
+        rc = MIQ_ABORT
         msg = "Method execution failed"
       end
 
-      case rc
-      when MIQ_OK
-        $miq_ae_logger.info(msg)
-      when MIQ_WARN
-        $miq_ae_logger.warn(msg)
-      when MIQ_STOP
-        raise MiqAeException::StopInstantiation,  msg
-      when MIQ_ABORT
-        raise MiqAeException::AbortInstantiation, msg
-      else
-        raise MiqAeException::UnknownMethodRc,    msg
-      end
-      return rc
+      process_ruby_method_results(rc, msg, final_stderr)
     end
 
     MIQ_OK    = 0
@@ -140,6 +131,7 @@ begin
   Socket.do_not_reverse_lookup = true  # turn off reverse DNS resolution
 
   require 'drb'
+  require 'yaml'
 
   MIQ_OK    = 0
   MIQ_WARN  = 4
@@ -209,6 +201,7 @@ RUBY
         ActiveRecord::Base.connection_pool.release_connection
 
         rc = nil
+        final_stderr = nil
         Bundler.with_clean_env do
           status = Open4.popen4(Gem.ruby) do |pid, stdin, stdout, stderr|
             stdin.puts(preamble.to_s)
@@ -216,8 +209,9 @@ RUBY
             stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
             stdin.close
 
+            final_stderr = stderr.each_line.map(&:strip)
             stdout.each_line { |msg| $miq_ae_logger.info  "Method STDOUT: #{msg.strip}" }
-            stderr.each_line { |msg| $miq_ae_logger.error "Method STDERR: #{msg.strip}" }
+            final_stderr.each { |msg| $miq_ae_logger.error "Method STDERR: #{msg}" }
           end
 
           rc = status.exitstatus
@@ -226,13 +220,13 @@ RUBY
         msg = "Method exited with rc=#{verbose_rc(rc)}"
       rescue => err
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
-        rc = 16
+        rc = MIQ_ABORT
         msg = "Method execution failed"
       end
-      return rc, msg
+      return rc, msg, final_stderr
     end
 
-    def self.process_ruby_method_results(rc, msg)
+    def self.process_ruby_method_results(rc, msg, stderr)
       case rc
       when MIQ_OK
         $miq_ae_logger.info(msg)
@@ -243,7 +237,7 @@ RUBY
       when MIQ_ABORT
         raise MiqAeException::AbortInstantiation, msg
       else
-        raise MiqAeException::UnknownMethodRc,    msg
+        raise MiqAeException::UnknownMethodRc, msg, stderr
       end
       return rc
     end
@@ -282,9 +276,10 @@ RUBY
           svc.preamble   = method_preamble(DRb.uri, svc.object_id)
           svc.body       = aem.data
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Starting ")
-          rc, msg        = run_ruby_method(svc.body, svc.preamble)
+          rc, msg, stderr = run_ruby_method(svc.body, svc.preamble)
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Ending")
-          process_ruby_method_results(rc, msg)
+
+          process_ruby_method_results(rc, msg, stderr)
         ensure
           svc.destroy  # Reset inputs to empty to avoid storing object references
           obj.workspace.num_drb_methods -= 1

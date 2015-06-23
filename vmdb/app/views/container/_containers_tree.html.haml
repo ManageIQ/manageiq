@@ -6,7 +6,7 @@
       = render(:partial => "layouts/dynatree",
         :locals         => {:tree_id => "containers_treebox",
           :tree_name                 => "containers_tree",
-          :json_tree                 => @temp[:containers_tree],
+          :json_tree                 => @containers_tree,
           :onclick                   => "cfmeOnClick_SelectTreeNode",
           :select_node               => "#{x_node(:containers_tree)}",
           :base_id                   => "root",

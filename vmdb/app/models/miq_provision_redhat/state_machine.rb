@@ -4,7 +4,7 @@ module MiqProvisionRedhat::StateMachine
   end
 
   def determine_placement
-    self.placement
+    placement
 
     signal :prepare_provision
   end
@@ -12,9 +12,9 @@ module MiqProvisionRedhat::StateMachine
   def start_clone_task
     update_and_notify_parent(:message => "Starting Clone of #{clone_direction}")
 
-    log_clone_options(self.phase_context[:clone_options])
-    start_clone(self.phase_context[:clone_options])
-    self.phase_context.delete(:clone_options)
+    log_clone_options(phase_context[:clone_options])
+    start_clone(phase_context[:clone_options])
+    phase_context.delete(:clone_options)
 
     signal :poll_clone_complete
   end
@@ -23,7 +23,7 @@ module MiqProvisionRedhat::StateMachine
     update_and_notify_parent(:message => "Waiting for clone of #{clone_direction}")
 
     if clone_complete?
-      self.phase_context.delete(:clone_task_ref)
+      phase_context.delete(:clone_task_ref)
       EmsRefresh.queue_refresh(dest_cluster.ext_management_system)
       signal :poll_destination_in_vmdb
     else
@@ -42,18 +42,23 @@ module MiqProvisionRedhat::StateMachine
       configure_container
       attach_floppy_payload
 
+      signal :poll_destination_powered_off_in_provider
+    end
+  end
+
+  def poll_destination_powered_off_in_provider
+    update_and_notify_parent(:message => "Waiting for provider PowerOff of #{for_destination}")
+
+    if powered_off_in_provider?
       signal :poll_destination_powered_off_in_vmdb
+    else
+      requeue_phase
     end
   end
 
   private
 
-  def clone_direction
-    "[#{self.source.name}] to #{destination_type} [#{dest_name}]"
+  def powered_off_in_provider?
+    destination.with_provider_object(&:status)[:state] == "down"
   end
-
-  def for_destination
-    "#{destination_type} id: [#{self.destination.id}], name: [#{dest_name}]"
-  end
-
 end

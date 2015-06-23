@@ -56,6 +56,7 @@
                             :ng_reqd_userid    => "sambaRequired(scheduleModel.log_userid)",
                             :ng_reqd_password  => "sambaRequired(scheduleModel.log_password)",
                             :ng_reqd_verify    => "sambaRequired(scheduleModel.log_verify)",
-                            :validate_url      => "log_depot_edit",
+                            :validate_url      => "log_depot_validate",
                             :id                => @schedule.id || "new",
-                            :valtype           => "log"}
+                            :valtype           => "log",
+                            :basic_info_needed => true}

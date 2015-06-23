@@ -140,8 +140,8 @@ class MiqAlert < ActiveRecord::Base
     # assignments = MiqAlert.assignments(:conditions => ["enabled = ? and responds_to_events like ?", true, "%#{HOURLY_TIMER_EVENT}%"])
     # TODO: Optimize to filter out sets that don't have any enabled alerts that respond to HOURLY_TIMER_EVENT
     assignments = MiqAlertSet.assignments
-    #
-    zone = MiqServer.my_zone
+
+    zone = MiqServer.my_server.zone
 
     # Get list of targets from assigned profiles
     targets = []
@@ -150,12 +150,11 @@ class MiqAlert < ActiveRecord::Base
       prof.miq_alerts.each do |a|
         next unless a.enabled? && a.responds_to_events && a.responds_to_events.include?(HOURLY_TIMER_EVENT)
 
-        model = a.db.constantize
-        unless model.name == "Storage" # No clean way to get zone from storage
-          targets += model.includes(:ext_management_system).select { |i| i.my_zone == zone }
-        else
-          targets += model.all
-        end
+        # Targets may come from tables such as:
+        # ems_clusters, storages, hosts, ext_management_systems, miq_servers, vms
+        table_name = a.db.constantize.table_name
+        targets += zone.public_send(table_name)
+        targets += Zone.public_send("#{table_name}_without_a_zone") if Zone.respond_to?("#{table_name}_without_a_zone")
       end
     end
 
@@ -185,7 +184,7 @@ class MiqAlert < ActiveRecord::Base
     delay_next_evaluation = (self.options || {}).fetch_path(:notifications, :delay_next_evaluation)
     start_skipping_at = Time.now.utc - (delay_next_evaluation || 10.minutes).to_i
 
-    statuses_not_expired = self.miq_alert_statuses.count(:conditions => ["result = ? AND resource_type = ? AND resource_id = ? AND evaluated_on > ?", true, target.class.base_class.name, target.id, start_skipping_at])
+    statuses_not_expired = self.miq_alert_statuses.where("result = ? AND resource_type = ? AND resource_id = ? AND evaluated_on > ?", true, target.class.base_class.name, target.id, start_skipping_at).count
     if statuses_not_expired > 0
       $log.info("MIQ(Alert-postpone_evaluation?): Skipping re-evaluation of Alert [#{self.description}] for target: [#{target.name}] with delay_next_evaluation [#{delay_next_evaluation}]")
       return true
@@ -496,7 +495,7 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def self.alarm_has_alerts?(alarm_event)
-    self.count(:conditions => ["responds_to_events LIKE ?", "%#{alarm_event}%"]) > 0
+    self.where("responds_to_events LIKE ?", "%#{alarm_event}%").count > 0
   end
 
   def responds_to_events_from_expression

@@ -199,7 +199,7 @@ module VmCommon
     end
 
     if @record.class.base_model.to_s == "MiqTemplate"
-      rec_cls = @record.class.base_model.to_s.underscore
+      rec_cls = "miq_template"
     else
       rec_cls = "vm"
     end
@@ -209,7 +209,7 @@ module VmCommon
       drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb( {:name=>@record.name + " (Summary)", :url=>"/#{rec_cls}/show/#{@record.id}"} )
       @showtype = "main"
-      @button_group = "#{rec_cls}"
+      @button_group = rec_cls
       set_summary_pdf_data if ["download_pdf","summary_only"].include?(@display)
     elsif @display == "networks"
       drop_breadcrumb( {:name=>@record.name+" (Networks)", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}"} )
@@ -223,21 +223,14 @@ module VmCommon
       drop_breadcrumb( {:name=>@record.name+" (Snapshots)", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}"} )
       build_snapshot_tree
       @button_group = "snapshot"
-    elsif @display == "miq_proxies"
-      drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb( {:name=>@record.name+" (Managing SmartProxies)", :url=>"/#{rec_cls}/show/#{@record.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@record)  # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-      @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
-
     elsif @display == "vmtree_info"
       @tree_vms = Array.new                     # Capture all VM ids in the tree
       drop_breadcrumb( {:name=>@record.name, :url=>"/#{rec_cls}/show/#{@record.id}"}, true )
       drop_breadcrumb( {:name=>@record.name+" (Genealogy)", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}"} )
       #session[:base_id] = @record.id
       vmtree_nodes = vmtree(@record)
-      @temp[:vm_tree] = vmtree_nodes.to_json
-      @temp[:tree_name] = "genealogy_tree"
+      @vm_tree = vmtree_nodes.to_json
+      @tree_name = "genealogy_tree"
       @button_group = "vmtree"
     elsif @display == "compliance_history"
       count = params[:count] ? params[:count].to_i : 10
@@ -306,14 +299,13 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     return if record_no_longer_exists?(@vm)
 
-    rec_cls = "vm"
+    @button_group = "vm"
 
-    @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
+    @gtl_url = "/#{@button_group}/show/" << @record.id.to_s << "?"
     get_tagdata(@record)
-    drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
-    drop_breadcrumb( {:name=>@record.name + " (Summary)", :url=>"/#{rec_cls}/show/#{@record.id}"} )
+    drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{@button_group}/show_list?page=#{@current_page}&refresh=y"}, true)
+    drop_breadcrumb( {:name=>@record.name + " (Summary)", :url=>"/#{@button_group}/show/#{@record.id}"} )
     @showtype = "main"
-    @button_group = "#{rec_cls}"
     @report_only = true
     @showtype = "summary_only"
     @title = @record.name + " (Summary)"
@@ -418,7 +410,7 @@ module VmCommon
   end
 
   def build_snapshot_tree
-    vms = @record.snapshots.all
+    vms = @record.snapshots
     parent = TreeNodeBuilder.generic_tree_node(
       "snaproot",
       @record.name,
@@ -436,7 +428,7 @@ module VmCommon
     end
     @root = @record.snapshots.first.id if @root.nil? && @record.snapshots.size > 0
     session[:snap_selected] = @root if params[:display] == "snapshot_info"
-    @temp[:snap_selected] = Snapshot.find(session[:snap_selected]) unless session[:snap_selected].nil?
+    @snap_selected = Snapshot.find(session[:snap_selected]) unless session[:snap_selected].nil?
     snapshots = Array.new
     vms.each do |snap|
       if snap.parent_id.nil?
@@ -480,14 +472,14 @@ module VmCommon
 
   def snap_pressed
     session[:snap_selected] = params[:id]
-    @temp[:snap_selected] = Snapshot.find_by_id(session[:snap_selected])
+    @snap_selected = Snapshot.find_by_id(session[:snap_selected])
     @vm = @record = identify_record(x_node.split('-').last, VmOrTemplate)
-    if @temp[:snap_selected].nil?
+    if @snap_selected.nil?
       @display = "snapshot_info"
       add_flash(_("Last selected %s no longer exists") %  "Snapshot", :error)
     end
     build_snapshot_tree
-    @active = @temp[:snap_selected].current.to_i == 1 if @temp[:snap_selected]
+    @active = @snap_selected.current.to_i == 1 if @snap_selected
     @button_group = "snapshot"
     @explorer = true
     c_buttons, c_xml = build_toolbar_buttons_and_xml("x_vm_center_tb")
@@ -509,7 +501,7 @@ module VmCommon
 
   def disks
     #flag to show cursor as default in grid so rows don't look clickable
-    @temp[:ro_grid] = true
+    @ro_grid = true
     @grid_xml = build_disks_tree(@record)
   end
 
@@ -927,9 +919,6 @@ module VmCommon
     build_policy_tree(@polArr)
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "#{session[:tree_name]}.saveOpenStates('#{session[:tree_name]}','path=/');"
-      page << "#{session[:tree_name]}.loadOpenStates('#{session[:tree_name]}');"
-      #page.replace("policy_options_div", :partial=>"vm/policy_options")
       page.replace("main_div", :partial=>"vm_common/policies")
     end
   end
@@ -1252,8 +1241,7 @@ module VmCommon
     if params[:all_checked]
       ids = params[:all_checked].split(',')
       ids.each do |id|
-        id = id.split('-')
-        id = id[1].slice(0,id[1].length-1)
+        id = id.split('-')[1]
         session[:checked_items].push(id) unless session[:checked_items].include?(id)
       end
     end
@@ -1331,7 +1319,7 @@ module VmCommon
     @vm = @record = identify_record(id, VmOrTemplate) if ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype)) && !@record
 
     # Handle filtered tree nodes
-    if x_tree[:type] == :filter &&
+    if x_active_tree.to_s =~ /_filter_tree$/ && # FIXME: create some property on trees for this
         !["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
       search_id = @nodetype == "root" ? 0 : from_cid(id)
       adv_search_build(vm_model_from_active_tree(x_active_tree))
@@ -1350,7 +1338,8 @@ module VmCommon
       self.x_node = params[:id]
       replace_right_cell
     else
-      add_flash("User is not authorized to view #{ui_lookup(:model=>@record.class.base_model.to_s)} \"#{@record.name}\"", :error)
+      add_flash("User is not authorized to view #{ui_lookup(:model => @record.class.base_model.to_s)} \"#{@record.name}\"",
+                :error) unless flash_errors?
       render :partial => "shared/tree_select_error", :locals => {:options => {:select_node => x_node}}
     end
   end
@@ -1496,7 +1485,7 @@ module VmCommon
       if x_node == "root"
         # TODO: potential to move this into a model with a scope built into it
         options[:where_clause] =
-          ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
+          ["vms.type IN (?)", VmInfra.subclasses.collect(&:name) + TemplateInfra.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
         process_show_list(options)  # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
@@ -1504,7 +1493,7 @@ module VmCommon
       else
         if TreeBuilder.get_model_for_prefix(@nodetype) == "Hash"
           options[:where_clause] =
-            ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
+            ["vms.type IN (?)", VmInfra.subclasses.collect(&:name) + TemplateInfra.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
           if id == "orph"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ORPHANED_CONDITIONS)
             process_show_list(options)
@@ -1590,17 +1579,17 @@ module VmCommon
 
     unless x_active_tree == :vandt_tree
       # Clicked on right cell record, open the tree enough to show the node, if not already showing
-      if params[:action] == "x_show" && @record &&          # Showing a record
-          !@in_a_form &&                                     # Not in a form
-          x_tree[:type] != :filter                           # Not in a filter tree
-        add_nodes = open_parent_nodes(@record)              # Open the parent nodes of selected record, if not open
+      if params[:action] == "x_show" &&
+         @record &&                            # Showing a record
+         !@in_a_form &&                        # Not in a form
+         x_active_tree.to_s !~ /_filter_tree$/ # Not in a filter tree; FIXME: create some property on trees for this
+        add_nodes = open_parent_nodes(@record) # Open the parent nodes of selected record, if not open
       end
     end
 
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
       :add_nodes   => add_nodes,         # Update the tree with any new nodes
       :delete_node => @delete_node,      # Remove a new node from the tree
     )
@@ -1751,9 +1740,6 @@ module VmCommon
     presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
-
-    # Save open nodes, if any were added
-    presenter[:save_open_states_trees] = [x_active_tree.to_s] if add_nodes
 
     presenter[:set_visible_elements][:blocker_div] = false unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true
@@ -2004,7 +1990,7 @@ module VmCommon
         @detail_sortdir = "ASC"
       else
         if @detail_sortcol == params[:sortby].to_i                        # if same column was selected
-          @detail_sortdir = @detail_sortdir == "ASC" ? "DESC" : "ASC"     #   switch around ascending/descending
+          @detail_sortdir = flip_sort_direction(@detail_sortdir)
         else
           @detail_sortdir = "ASC"
         end

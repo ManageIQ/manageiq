@@ -12,6 +12,10 @@ class FirewallRule < ActiveRecord::Base
     self.resource = os
   end
 
+  def port_range
+    port..(end_port || port)
+  end
+
   include ReportableMixin
 
   def self.add_elements(target, xmlNode)

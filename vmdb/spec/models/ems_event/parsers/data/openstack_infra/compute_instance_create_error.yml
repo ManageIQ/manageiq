@@ -1,0 +1,80 @@
+---
+:content:
+  event_type: compute.instance.create.error
+  timestamp: '2015-05-12 07:22:19.122336'
+  _unique_id: 5ed2a2792dc64d35adca83ae23c55013
+  payload:
+    state_description: spawning
+    code: 400
+    availability_zone:
+    terminated_at: ''
+    ephemeral_gb: 0
+    instance_type_id: 6
+    message: 'Failed to provision instance 3a0c66d5-d762-4b60-b604-850bc9a13cff: Failed
+      to deploy. Error: Failed to execute command via SSH: LC_ALL=C /usr/bin/virsh
+      --connect qemu:///system start baremetal_2.'
+    deleted_at: ''
+    reservation_id: r-36dfs67z
+    instance_id: 3a0c66d5-d762-4b60-b604-850bc9a13cff
+    display_name: ov-ifnbu77aer-1-i3nt6by46wbx-NovaCompute-pp4mpjceebtj
+    hostname: ov-ifnbu77aer-1-i3nt6by46wbx-novacompute-pp4mpjceebtj
+    state: building
+    progress: ''
+    launched_at: ''
+    metadata: {}
+    node: b94ebb7a-34f2-4146-94c3-5bbc46b4d5ff
+    ramdisk_id: d41afee6-20b1-4864-a95c-22b9e7b3ec9e
+    access_ip_v6:
+    disk_gb: 30
+    access_ip_v4:
+    kernel_id: 537c2c9a-5283-455a-a1a6-b9fbb08d679b
+    host: undercloud
+    user_id: c4fbb27d71844a51b5d3fa98226ec06d
+    image_ref_url: http://192.0.2.1:9292/images/2d72f1f3-72d1-428d-bf81-c94cd0e450ca
+    cell_name: ''
+    exception:
+      kwargs:
+        code: 400
+    root_gb: 30
+    tenant_id: bb5c2277f9d04c16ab19cd70766aeba1
+    created_at: '2015-05-12 07:20:04+00:00'
+    memory_mb: 4096
+    instance_type: baremetal
+    vcpus: 1
+    image_meta:
+      kernel_id: 537c2c9a-5283-455a-a1a6-b9fbb08d679b
+      container_format: bare
+      min_ram: '0'
+      ramdisk_id: d41afee6-20b1-4864-a95c-22b9e7b3ec9e
+      disk_format: qcow2
+      min_disk: '30'
+      type: overcloud provisioning
+      base_image_ref: 2d72f1f3-72d1-428d-bf81-c94cd0e450ca
+    architecture:
+    os_type:
+    instance_flavor_id: e3c3bc86-ae9e-4085-bd78-b81e474f9703
+  priority: ERROR
+  publisher_id: compute.undercloud
+  message_id: e9048c51-8f3d-4785-b626-be4ba32cf4d8
+:context:
+  _context_roles:
+  - _member_
+  - admin
+  _context_request_id: req-d850f290-590a-4cd8-870c-9db2042b0b06
+  _context_quota_class:
+  _context_service_catalog: []
+  _context_user: c4fbb27d71844a51b5d3fa98226ec06d
+  _context_instance_lock_checked: false
+  _context_user_id: c4fbb27d71844a51b5d3fa98226ec06d
+  _context_project_name: admin
+  _context_read_deleted: 'no'
+  _context_auth_token: 9266472252f8462caceaf60d7204eda7
+  _context_tenant: bb5c2277f9d04c16ab19cd70766aeba1
+  _context_is_admin: true
+  _context_project_id: bb5c2277f9d04c16ab19cd70766aeba1
+  _context_timestamp: '2015-05-12T07:20:03.878657'
+  _context_user_name: admin
+  _context_remote_address: 192.0.2.1
+:user_id:
+:priority:
+:content_type:

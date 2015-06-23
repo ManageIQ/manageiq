@@ -4,12 +4,10 @@ module SetupMethods
   end
 
   def settings
-    @settings ||= settings_from_file.deep_merge(settings_from_file(@environment))
+    @settings ||= settings_from_file(@environment)
   end
 
-  def settings_from_file(file = "base")
-    path = File.join(base_dir, "#{file}.yml")
-
-    YAML.load_file(path)
+  def settings_from_file(file)
+    YAML.load_file(File.join(base_dir, "#{file}.yml"))
   end
 end

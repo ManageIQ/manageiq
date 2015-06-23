@@ -10,20 +10,22 @@ class MiqRequestTask < ActiveRecord::Base
   belongs_to :miq_request_task
 
   serialize   :phase_context, Hash
-  serialize   :options, Hash
+  serialize   :options,       Hash
 
   default_value_for :phase_context, {}
-  default_value_for :options, {}
+  default_value_for :options,       {}
 
-  validates_inclusion_of :status,         :in => %w{ Ok Warn Error Timeout }
+  delegate :request_class, :task_description, :to => :class
+
+  validates_inclusion_of :status, :in => %w{ Ok Warn Error Timeout }
 
   include MiqRequestMixin
 
   def approved?
-    if self.miq_request.class.name.include?('Template') && self.miq_request_task
-      self.miq_request_task.miq_request.approved?
+    if miq_request.class.name.include?('Template') && miq_request_task
+      miq_request_task.miq_request.approved?
     else
-      self.miq_request.approved?
+      miq_request.approved?
     end
   end
 
@@ -31,19 +33,19 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def update_and_notify_parent(upd_attr)
-    upd_attr[:message] = upd_attr[:message][0,255] if upd_attr.has_key?(:message)
+    upd_attr[:message] = upd_attr[:message][0, 255] if upd_attr.key?(:message)
     self.update_attributes!(upd_attr)
 
     # If this request has a miq_request_task parent use that, otherwise the parent is the miq_request
-    parent = self.miq_request_task.nil? ? self.miq_request(true) : self.miq_request_task(true)
+    parent = miq_request_task.nil? ? miq_request(true) : miq_request_task(true)
     parent.update_request_status
   end
 
   def update_request_status
-    states = Hash.new {|h,k| h[k] = 0}
-    status = Hash.new {|h,k| h[k] = 0}
+    states = Hash.new { |h, k| h[k] = 0 }
+    status = Hash.new { |h, k| h[k] = 0 }
 
-    child_requests = self.miq_request_tasks
+    child_requests = miq_request_tasks
     task_count = child_requests.size
     child_requests.each do |child_req|
       states[child_req.state] += 1
@@ -53,20 +55,12 @@ class MiqRequestTask < ActiveRecord::Base
     total = states.delete(:total).to_i
     unknown_state = task_count - total
     states["unknown"] = unknown_state unless unknown_state.zero?
-    msg = states.sort.collect {|s| "#{s[0].capitalize} = #{s[1]}"}.join("; ")
+    msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
 
     req_state = (states.length == 1) ? states.keys.first : "active"
 
     # Determine status to report
-    req_status = if status.keys.include?('Error')
-      'Error'
-    elsif status.keys.include?('Timeout')
-      'Timeout'
-    elsif status.keys.include?('Warn')
-      'Warn'
-    else
-      'Ok'
-    end
+    req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
     if req_state == "finished"
       msg = (req_status == 'Ok') ? "Task complete" : "Task completed with errors"
@@ -81,14 +75,10 @@ class MiqRequestTask < ActiveRecord::Base
     update_and_notify_parent(:state => req_state, :status => req_status, :message => display_message(msg))
   end
 
-  def execute_callback(state, message, result)
+  def execute_callback(state, message, _result)
     unless state.to_s.downcase == "ok"
       update_and_notify_parent(:state => "finished", :status => "Error", :message => "Error: #{message}")
     end
-  end
-
-  def request_class
-    self.class.request_class
   end
 
   def self.request_class
@@ -97,16 +87,12 @@ class MiqRequestTask < ActiveRecord::Base
     elsif self.is_or_subclass_of?(MiqHostProvision)
       MiqHostProvisionRequest
     else
-      self.name.underscore.gsub(/_task$/, "_request").camelize.constantize
+      name.underscore.gsub(/_task$/, "_request").camelize.constantize
     end
   end
 
   def self.task_description
-    self.request_class::TASK_DESCRIPTION
-  end
-
-  def task_description
-    self.class.task_description
+    request_class::TASK_DESCRIPTION
   end
 
   def get_description
@@ -114,25 +100,26 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def task_check_on_execute
-    raise "#{self.request_class::TASK_DESCRIPTION} request is already being processed" if self.request_class::ACTIVE_STATES.include?(self.state)
-    raise "#{self.request_class::TASK_DESCRIPTION} request has already been processed" if self.state == "finished"
-    raise "approval is required for #{self.request_class::TASK_DESCRIPTION}"           unless self.approved?
+    raise "#{request_class::TASK_DESCRIPTION} request is already being processed" if request_class::ACTIVE_STATES.include?(state)
+    raise "#{request_class::TASK_DESCRIPTION} request has already been processed" if state == "finished"
+    raise "approval is required for #{request_class::TASK_DESCRIPTION}"           unless self.approved?
   end
 
-  def deliver_to_automate(req_type = self.request_type, zone = nil)
+  def deliver_to_automate(req_type = request_type, zone = nil)
     log_header = "MIQ(#{self.class.name}.deliver_to_automate)"
-    self.task_check_on_execute
+    task_check_on_execute
 
-    $log.info("#{log_header} Queuing #{self.request_class::TASK_DESCRIPTION}: [#{self.description}]...")
+    $log.info("#{log_header} Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if self.class::AUTOMATE_DRIVES
       args = {}
       args[:object_type]   = self.class.name
-      args[:object_id]     = self.id
+      args[:object_id]     = id
       args[:attrs]         = {"request" => req_type}
       args[:instance_name] = "AUTOMATION"
-      args[:user_id]       = self.get_user.id
+      args[:user_id]       = get_user.id
 
+      zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
@@ -147,28 +134,28 @@ class MiqRequestTask < ActiveRecord::Base
     end
   end
 
-  def execute_queue(queue_options={})
+  def execute_queue(queue_options = {})
     log_header = "MIQ(#{self.class.name}.execute_queue)"
-    self.task_check_on_execute
+    task_check_on_execute
 
-    $log.info("#{log_header} Queuing #{self.request_class::TASK_DESCRIPTION}: [#{self.description}]...")
+    $log.info("#{log_header} Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     deliver_on = nil
-    if self.get_option(:schedule_type) == "schedule"
-      deliver_on = self.get_option(:schedule_time).utc rescue nil
+    if get_option(:schedule_type) == "schedule"
+      deliver_on = get_option(:schedule_time).utc rescue nil
     end
 
     zone = source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
 
     queue_options.reverse_merge!(
-      :class_name  => self.class.name,
-      :instance_id => self.id,
-      :method_name => "execute",
-      :zone        => options.fetch(:miq_zone, zone),
-      :role        => self.miq_request.my_role,
-      :task_id     => my_task_id,
-      :deliver_on  => deliver_on,
-      :miq_callback => { :class_name => self.class.name, :instance_id => self.id, :method_name => :execute_callback }
+      :class_name   => self.class.name,
+      :instance_id  => id,
+      :method_name  => "execute",
+      :zone         => options.fetch(:miq_zone, zone),
+      :role         => miq_request.my_role,
+      :task_id      => my_task_id,
+      :deliver_on   => deliver_on,
+      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
     MiqQueue.put(queue_options)
 
@@ -178,23 +165,37 @@ class MiqRequestTask < ActiveRecord::Base
   def execute
     log_header = "MIQ(#{self.class.name}.execute)"
 
-    $log.info("#{log_header} Executing #{self.request_class::TASK_DESCRIPTION} request: [#{self.description}]")
+    $log.info("#{log_header} Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
     update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
 
     begin
-      message = "#{self.request_class::TASK_DESCRIPTION} initiated"
+      message = "#{request_class::TASK_DESCRIPTION} initiated"
       $log.info("#{log_header} #{message}")
       update_and_notify_parent(:message => message)
 
       # Process the request
-      self.do_request
+      do_request
 
     rescue => err
       message = "Error: #{err.message}"
-      $log.error("#{log_header} [#{message}] encountered during #{self.request_class::TASK_DESCRIPTION}")
+      $log.error("#{log_header} [#{message}] encountered during #{request_class::TASK_DESCRIPTION}")
       $log.log_backtrace(err)
       update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
       return
     end
+  end
+
+  private
+
+  def validate_request_type
+    errors.add(:request_type, "should be #{request_class.request_types.join(", ")}") unless request_class.request_types.include?(request_type)
+  end
+
+  def validate_state
+    errors.add(:state, "should be #{valid_states.join(", ")}") unless valid_states.include?(state)
+  end
+
+  def valid_states
+    %w(pending finished) + request_class::ACTIVE_STATES
   end
 end

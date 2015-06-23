@@ -104,7 +104,7 @@ describe Host do
       vms = zone.vms_and_templates
       MiqServer.stub(:my_server).and_return(zone.miq_servers.first)
       Host.check_for_vms_to_scan
-      jobs = Job.all(:conditions => {:target_class => 'VmOrTemplate'})
+      jobs = Job.where(:target_class => 'VmOrTemplate')
       jobs.length.should == 2
       jobs.collect(&:target_id).should match_array vms.collect(&:id)
     end
@@ -430,6 +430,75 @@ describe Host do
         @data[:default] = {:userid => "root", :password => @password}
         assert_default_credentials_validated
       end
+    end
+  end
+
+  context "#get_ports" do
+    before do
+      @host = FactoryGirl.create(:host_vmware)
+      os = FactoryGirl.create(:operating_system, :name => 'XUNIL')
+      @host.operating_system = os
+      fr1 = FactoryGirl.create(:firewall_rule, :name => 'fr1', :host_protocol => 'udp',
+                               :direction => "in", :enabled => true, :port => 1001)
+      fr2 = FactoryGirl.create(:firewall_rule, :name => 'fr2', :host_protocol => 'udp',
+                               :direction => "out", :enabled => true, :port => 1002)
+      fr3 = FactoryGirl.create(:firewall_rule, :name => 'fr3', :host_protocol => 'tcp',
+                               :direction => "in", :enabled => true, :port => 1003)
+      [fr1, fr2, fr3].each do |fr|
+        fr.update_attributes(:resource_type => os.class.name, :resource_id => os.id)
+      end
+    end
+
+    it "#enabled_udp_outbound_ports" do
+      @host.enabled_udp_outbound_ports.should match_array([1002])
+    end
+
+    it "#enabled_inbound_ports" do
+      @host.enabled_inbound_ports.should match_array([1003, 1001])
+    end
+  end
+
+  context "#node_types" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns :mixed_hosts when there are both openstack & non-openstack hosts in db" do
+      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = Host.node_types
+      result.should eq(:mixed_hosts)
+    end
+
+    it "returns :openstack when there are only openstack hosts in db" do
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+      result = Host.node_types
+      result.should eq(:openstack)
+    end
+
+    it "returns :non_openstack when there are non-openstack hosts in db" do
+      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+      result = Host.node_types
+      result.should eq(:non_openstack)
+    end
+  end
+
+  context "#openstack_host?" do
+    it "returns true for openstack host" do
+      ems = FactoryGirl.create(:ems_openstack_infra)
+      host = FactoryGirl.create(:host_redhat, :ems_id => ems.id)
+
+      result = host.openstack_host?
+      result.should be_true
+    end
+
+    it "returns false for non-openstack host" do
+      ems = FactoryGirl.create(:ems_vmware)
+      host = FactoryGirl.create(:host_vmware_esx, :ems_id => ems.id)
+      result = host.openstack_host?
+      result.should be_false
     end
   end
 

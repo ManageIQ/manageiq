@@ -367,9 +367,9 @@ module XmlBaseParserTests
 
     count = 0
     node.attributes.each_attrib do |k,v|
-      assert_not_nil(k)
+      refute_nil(k)
       assert_instance_of(String, k)
-      assert_not_nil(v)
+      refute_nil(v)
       assert_instance_of(String, v)
       count += 1
     end
@@ -377,9 +377,9 @@ module XmlBaseParserTests
 
     count = 0
     node.attributes.to_h.each do|k,v|
-      assert_not_nil(k)
+      refute_nil(k)
       assert_instance_of(Symbol, k)
-      assert_not_nil(v)
+      refute_nil(v)
       count += 1
     end
     assert_equal(3, count)
@@ -438,7 +438,7 @@ module XmlBaseParserTests
     node = xml.root.elements[6]
     assert_equal("5", node.attributes["id"].to_s)
 
-    assert_raise(RuntimeError) {xml.root.elements[0]}
+    assert_raises(RuntimeError) {xml.root.elements[0]}
 
     assert_nil(xml.root.elements[7])
 
@@ -469,7 +469,7 @@ module XmlBaseParserTests
     xml_new = MiqXml.newDoc(@xml_klass)
     assert_nil(xml_new.root)
     xml_new.add_element('root')
-    assert_not_nil(xml_new.root)
+    refute_nil(xml_new.root)
     assert_equal("root", xml_new.root.name.to_s)
 
     new_node = xml_new.root.add_element("node1", "enabled"=>true, "disabled"=>false, "nothing"=>nil)
@@ -486,11 +486,11 @@ module XmlBaseParserTests
 
     assert_kind_of(@xml_klass::Document, xml_new.document)
     assert_kind_of(@xml_klass::Document, xml_new.doc)
-    assert_not_equal(@xml_klass::Document, xml_new.root.class)
+    refute_equal(@xml_klass::Document, xml_new.root.class)
     assert_kind_of(@xml_klass::Document, xml_new.root.doc)
     assert_equal(xml_new.document, xml_new.doc)
     assert_kind_of(@xml_klass::Document, xml_new.root.doc)
-    assert_not_equal(@xml_klass::Document, xml_new.root.root.class)
+    refute_equal(@xml_klass::Document, xml_new.root.root.class)
 
     # Create an empty document with the utf-8 encoding
     # During assert allow for single quotes and new line char.
@@ -531,24 +531,24 @@ module XmlBaseParserTests
   def test_find_first()
     xml = @xml
     x = REXML::XPath.first(xml, "//row")
-    assert_not_nil(x)
+    refute_nil(x)
     assert_equal("8", x.attributes["id"])
 
     x = xml.find_first("//row")
-    assert_not_nil(x)
+    refute_nil(x)
     assert_equal("8", x.attributes["id"])
   end
 
   def test_find_match()
     xml = @xml
     x = REXML::XPath.match(xml, "//row")
-    assert_not_nil(x)
+    refute_nil(x)
     assert_equal(5, x.length)
     assert_equal("8", x[0].attributes["id"])
     assert_equal("4", x[3].attributes["id"])
 
     x = xml.find_match("//row")
-    assert_not_nil(x)
+    refute_nil(x)
     assert_equal(5, x.length)
     assert_equal("8", x[0].attributes["id"])
     assert_equal("4", x[3].attributes["id"])
@@ -557,7 +557,7 @@ module XmlBaseParserTests
   def test_deep_clone()
     xml = @xml
     xml2 = xml.deep_clone()
-    assert_not_equal(xml.object_id, xml2.object_id)
+    refute_equal(xml.object_id, xml2.object_id)
     xml.write(xml_str1='')
     xml2.write(xml_str2='')
     assert_equal(xml_str1, xml_str2)
@@ -628,22 +628,22 @@ module XmlBaseParserTests
     assert_kind_of(@xml_klass::Document, xml)
 
     frozen_text = "A&P".freeze
-    assert_nothing_raised {xml.root.text = frozen_text}
+    xml.root.text = frozen_text
     assert_equal("A&P", xml.root.text)
   end
 
   def test_write_method()
     # Test writing from the document
     @xml.write(test_string = "")
-    assert_not_equal("", test_string)
+    refute_equal("", test_string)
     test_string = @xml.to_s
-    assert_not_equal("", test_string)
+    refute_equal("", test_string)
 
 
     # Test writing from an element
     @xml.root.write(test_string = "")
-    assert_not_equal("", test_string)
+    refute_equal("", test_string)
     test_string = @xml.root.to_s
-    assert_not_equal("", test_string)
+    refute_equal("", test_string)
   end
 end

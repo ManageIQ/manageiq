@@ -16,9 +16,9 @@ class JqplotThemes
       :grid           => {
         :drawGridlines => true,     # mind the lowecase 'l'
         :gridLineColor => '#e1e1e1',
-        :borderWidth => 0,
-        :background => 'transparent',
-        :shadow => false,
+        :borderWidth   => 0,
+        :background    => '#fff',
+        :shadow        => false,
       },
       # use EnhancedLegendRenderer by default
       # http://www.jqplot.com/docs/files/plugins/jqplot-enhancedLegendRenderer-js.html

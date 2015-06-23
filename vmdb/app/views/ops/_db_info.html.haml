@@ -1,13 +1,13 @@
 = render :partial => "layouts/flash_msg"
-- if @temp[:vmdb_index]
+- if @vmdb_index
   %h3
-    = "#{_("Index")}: #{h(@temp[:vmdb_index].name)}"
+    = "#{_("Index")}: #{h(@vmdb_index.name)}"
   %table.style1
     %tr
       %td.key= _("Name")
-      %td= h(@temp[:vmdb_index].name)
+      %td= h(@vmdb_index.name)
   %hr/
-  - metrics = @temp[:vmdb_index].latest_hourly_metric
+  - metrics = @vmdb_index.latest_hourly_metric
   - if metrics
     %h3= _("Metrics")
     %table.style1
@@ -24,14 +24,14 @@
         %td.key= _("Percent Bloat")
         %td= h(metrics.percent_bloat)
     %hr/
-- elsif @temp[:table]
+- elsif @table
   %h3
-    = "#{_("Table")}: #{h(@temp[:table].name)}"
+    = "#{_("Table")}: #{h(@table.name)}"
   %table.style1
     %tr
       %td.key= _("Name")
-      %td= h(@temp[:table].name)
-    - metrics = @temp[:table].latest_hourly_metric
+      %td= h(@table.name)
+    - metrics = @table.latest_hourly_metric
     - if metrics
       %tr
         %td.key= _("Rows")
@@ -46,9 +46,9 @@
         %td.key= _("Percent Bloat")
         %td= h(metrics.percent_bloat)
   %hr/
-- if @temp[:indexes]
+- if @indexes
   %h3= _("Indexes")
-  - if @temp[:indexes].blank?
+  - if @indexes.blank?
     = _("No Indexes found for this table.")
   - else
     %table.table.table-striped.table-bordered.table-hover
@@ -60,9 +60,9 @@
         %th= _("Wasted")
         %th= _("Percent Bloat")
       %tbody
-        - @temp[:indexes].each_with_index do |ind, _|
+        - @indexes.each_with_index do |ind, _|
           %tr{:onclick => "#{remote_function(:url => "/ops/x_show/#{ind.id}")}",
-            :onmouseover => "this.style.cursor = 'pointer'", :title => _("Click to view index")}
+            :title => _("Click to view index")}
             %td.narrow
               %img{:src => "/images/icons/new/vmdbindex.png"}/
             %td= ind.name

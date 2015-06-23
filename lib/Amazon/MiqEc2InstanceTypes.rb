@@ -8,6 +8,8 @@ require 'active_support/core_ext/numeric/bytes'
 #   http://docs.amazonwebservices.com/AWSEC2/latest/UserGuide/instance-types.html
 #   http://aws.amazon.com/ec2/previous-generation
 #   http://www.ec2instances.info/
+#   http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/t2-instances.html
+#   http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/c4-instances.html
 #     NOTE: We may want to consider using the source data directly, however
 #           there aren't the discontinued types.
 #           https://raw.githubusercontent.com/powdahound/ec2instances.info/master/www/instances.json
@@ -28,7 +30,7 @@ module MiqEc2InstanceTypes
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
-      :processor_clock_speed   => 2.5, # GHz
+      :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
       :intel_avx2              => nil,
@@ -36,6 +38,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => true,
     },
 
     "t2.small" => {
@@ -51,7 +54,7 @@ module MiqEc2InstanceTypes
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
-      :processor_clock_speed   => 2.5, # GHz
+      :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
       :intel_avx2              => nil,
@@ -59,6 +62,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => true,
     },
 
     "t2.medium" => {
@@ -74,7 +78,7 @@ module MiqEc2InstanceTypes
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
-      :processor_clock_speed   => 2.5, # GHz
+      :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
       :intel_avx2              => nil,
@@ -82,6 +86,31 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => true,
+    },
+
+    "t2.large" => {
+      :name                    => "t2.large",
+      :family                  => "General Purpose",
+      :description             => "T2 Large",
+      :memory                  => 8.gigabyte,
+      :vcpu                    => 2,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :low_to_moderate,
+      :physical_processor      => "Intel Xeon Family",
+      :processor_clock_speed   => 3.0, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => nil,
+      :intel_turbo             => true,
+      :ebs_optimized_available => nil,
+      :enhanced_networking     => nil,
+      :cluster_networking      => nil,
+      :vpc_only                => true,
     },
 
     "m3.medium" => {
@@ -105,6 +134,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m3.large" => {
@@ -128,6 +158,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m3.xlarge" => {
@@ -151,6 +182,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m3.2xlarge" => {
@@ -174,6 +206,127 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
+    },
+
+    "m4.large" => {
+      :name                    => "m4.large",
+      :family                  => "General Purpose",
+      :description             => "M4 General Purpose Large",
+      :memory                  => 8.gigabytes,
+      :vcpu                    => 2,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :moderate,
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
+      :vpc_only                => true,
+    },
+
+    "m4.xlarge" => {
+      :name                    => "m4.xlarge",
+      :family                  => "General Purpose",
+      :description             => "M4 General Purpose Extra Large",
+      :memory                  => 16.gigabytes,
+      :vcpu                    => 4,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :high,
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
+      :vpc_only                => true,
+    },
+
+    "m4.2xlarge" => {
+      :name                    => "m4.2xlarge",
+      :family                  => "General Purpose",
+      :description             => "M4 General Purpose Double Extra Large",
+      :memory                  => 32.gigabytes,
+      :vcpu                    => 8,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :high,
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
+      :vpc_only                => true,
+    },
+
+    "m4.4xlarge" => {
+      :name                    => "m4.4xlarge",
+      :family                  => "General Purpose",
+      :description             => "M4 General Purpose Quadruple Extra Large",
+      :memory                  => 64.gigabytes,
+      :vcpu                    => 16,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :high,
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
+      :vpc_only                => true,
+    },
+
+    "m4.10xlarge" => {
+      :name                    => "m4.10xlarge",
+      :family                  => "General Purpose",
+      :description             => "M4 General Purpose Ten Extra Large",
+      :memory                  => 160.gigabytes,
+      :vcpu                    => 40,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :very_high,
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c3.large" => {
@@ -197,6 +350,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c3.xlarge" => {
@@ -220,6 +374,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c3.2xlarge" => {
@@ -243,6 +398,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c3.4xlarge" => {
@@ -266,6 +422,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c3.8xlarge" => {
@@ -289,6 +446,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c4.large" => {
@@ -312,6 +470,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c4.xlarge" => {
@@ -335,6 +494,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c4.2xlarge" => {
@@ -358,6 +518,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c4.4xlarge" => {
@@ -381,6 +542,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c4.8xlarge" => {
@@ -404,6 +566,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "g2.2xlarge" => {
@@ -427,6 +590,31 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => true,
+      :vpc_only                => false,
+    },
+
+    "g2.8xlarge" => {
+      :name                    => "g2.8xlarge",
+      :family                  => "GPU Instances",
+      :description             => "G2 Eight Extra Large",
+      :memory                  => 60.gigabytes,
+      :vcpu                    => 32,
+      :ebs_only                => false,
+      :instance_store_size     => 240.gigabytes,
+      :instance_store_volumes  => 2, # SSD
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :very_high,
+      :physical_processor      => "Intel Xeon E5-2670",
+      :processor_clock_speed   => 2.6, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => nil,
+      :intel_turbo             => true,
+      :ebs_optimized_available => nil,
+      :enhanced_networking     => nil,
+      :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "r3.large" => {
@@ -450,6 +638,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "r3.xlarge" => {
@@ -473,6 +662,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "r3.2xlarge" => {
@@ -496,6 +686,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "r3.4xlarge" => {
@@ -519,6 +710,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "r3.8xlarge" => {
@@ -542,6 +734,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "i2.xlarge" => {
@@ -565,6 +758,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "i2.2xlarge" => {
@@ -574,7 +768,7 @@ module MiqEc2InstanceTypes
       :memory                  => 61.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
-      :instance_store_size     => 1600.gigabytes,
+      :instance_store_size     => 1_600.gigabytes,
       :instance_store_volumes  => 2, # SSD
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
@@ -588,6 +782,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "i2.4xlarge" => {
@@ -597,7 +792,7 @@ module MiqEc2InstanceTypes
       :memory                  => 122.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
-      :instance_store_size     => 3200.gigabytes,
+      :instance_store_size     => 3_200.gigabytes,
       :instance_store_volumes  => 4, # SSD
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
@@ -611,6 +806,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "i2.8xlarge" => {
@@ -620,7 +816,7 @@ module MiqEc2InstanceTypes
       :memory                  => 244.gigabytes,
       :vcpu                    => 32,
       :ebs_only                => false,
-      :instance_store_size     => 6400.gigabytes,
+      :instance_store_size     => 6_400.gigabytes,
       :instance_store_volumes  => 8, # SSD
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
@@ -634,29 +830,103 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
-    "hs1.8xlarge" => {
-      :name                    => "hs1.8xlarge",
+    "d2.xlarge" => {
+      :name                    => "d2.xlarge",
       :family                  => "Storage Optimized",
-      :description             => "High Storage Eight Extra Large",
-      :memory                  => 117.gigabytes,
+      :description             => "D2 Extra Large",
+      :memory                  => 30.5.gigabytes,
+      :vcpu                    => 4,
+      :ebs_only                => false,
+      :instance_store_size     => 6_000.gigabytes,
+      :instance_store_volumes  => 3,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :moderate,
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
+      :vpc_only                => false,
+    },
+
+    "d2.2xlarge" => {
+      :name                    => "d2.2xlarge",
+      :family                  => "Storage Optimized",
+      :description             => "D2 Double Extra Large",
+      :memory                  => 61.gigabytes,
+      :vcpu                    => 8,
+      :ebs_only                => false,
+      :instance_store_size     => 12_000.gigabytes,
+      :instance_store_volumes  => 6,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :high,
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
+      :vpc_only                => false,
+    },
+
+    "d2.4xlarge" => {
+      :name                    => "d2.4xlarge",
+      :family                  => "Storage Optimized",
+      :description             => "D2 Quadruple Extra Large",
+      :memory                  => 122.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
-      :instance_store_size     => 48.terabytes,
+      :instance_store_size     => 24_000.gigabytes,
+      :instance_store_volumes  => 12,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :high,
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
+      :vpc_only                => false,
+    },
+
+    "d2.8xlarge" => {
+      :name                    => "d2.8xlarge",
+      :family                  => "Storage Optimized",
+      :description             => "D2 Eight Extra Large",
+      :memory                  => 244.gigabytes,
+      :vcpu                    => 36,
+      :ebs_only                => false,
+      :instance_store_size     => 48_000.gigabytes,
       :instance_store_volumes  => 24,
       :architecture            => [:x86_64],
-      :virtualization_type     => [:paravirtual, :hvm],
+      :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2650",
-      :processor_clock_speed   => 2.0, # GHz
+      :physical_processor      => "Intel Xeon E5-2676v3",
+      :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
-      :intel_avx               => nil,
-      :intel_avx2              => nil,
-      :intel_turbo             => nil,
-      :ebs_optimized_available => nil,
-      :enhanced_networking     => nil,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
   }
 
@@ -683,6 +953,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m1.small" => {
@@ -706,6 +977,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m1.medium" => {
@@ -729,6 +1001,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m1.large" => {
@@ -752,6 +1025,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m1.xlarge" => {
@@ -775,6 +1049,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "c1.medium" => {
@@ -798,6 +1073,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "c1.xlarge" => {
@@ -821,6 +1097,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "cc2.8xlarge" => {
@@ -844,6 +1121,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "cg1.4xlarge" => {
@@ -867,6 +1145,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m2.xlarge" => {
@@ -890,6 +1169,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m2.2xlarge" => {
@@ -913,6 +1193,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m2.4xlarge" => {
@@ -936,6 +1217,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "cr1.8xlarge" => {
@@ -959,6 +1241,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "hi1.4xlarge" => {
@@ -982,6 +1265,31 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
+    },
+
+    "hs1.8xlarge" => {
+      :name                    => "hs1.8xlarge",
+      :family                  => "Storage Optimized",
+      :description             => "High Storage Eight Extra Large",
+      :memory                  => 117.gigabytes,
+      :vcpu                    => 16,
+      :ebs_only                => false,
+      :instance_store_size     => 48.terabytes,
+      :instance_store_volumes  => 24,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:paravirtual, :hvm],
+      :network_performance     => :very_high,
+      :physical_processor      => "Intel Xeon E5-2650",
+      :processor_clock_speed   => 2.0, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => nil,
+      :intel_avx2              => nil,
+      :intel_turbo             => nil,
+      :ebs_optimized_available => nil,
+      :enhanced_networking     => nil,
+      :cluster_networking      => true,
+      :vpc_only                => false,
     },
   }
 
@@ -1009,6 +1317,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     # cc1.4xlarge is not available in any of the documentation, but if you
@@ -1034,6 +1343,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
   }
 

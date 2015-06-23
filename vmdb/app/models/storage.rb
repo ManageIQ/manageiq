@@ -4,9 +4,9 @@ class Storage < ActiveRecord::Base
   has_many :miq_templates,     :foreign_key => :storage_id
   has_many :vms,               :foreign_key => :storage_id
   has_and_belongs_to_many :hosts
-  has_and_belongs_to_many :all_vms_and_templates, :class_name => "VmOrTemplate"
-  has_and_belongs_to_many :all_miq_templates, :class_name => "MiqTemplate",  :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
-  has_and_belongs_to_many :all_vms, :class_name => "Vm", :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
+  has_and_belongs_to_many :all_vms_and_templates, :class_name => "VmOrTemplate", :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
+  has_and_belongs_to_many :all_miq_templates,     :class_name => "MiqTemplate",  :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
+  has_and_belongs_to_many :all_vms,               :class_name => "Vm",           :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
   has_many :disks
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
@@ -14,8 +14,8 @@ class Storage < ActiveRecord::Base
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
   has_many :storage_files,       :dependent => :destroy
-  has_many :storage_files_files, :class_name => "StorageFile", :foreign_key => "storage_id", :conditions => "rsc_type = 'file'"
-  has_many :files,               :class_name => "StorageFile", :foreign_key => "storage_id", :conditions => "rsc_type = 'file'"
+  has_many :storage_files_files, -> { where "rsc_type = 'file'" }, :class_name => "StorageFile", :foreign_key => "storage_id"
+  has_many :files,               -> { where "rsc_type = 'file'" }, :class_name => "StorageFile", :foreign_key => "storage_id"
   has_many :hosts_storages
 
   has_one  :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
@@ -65,10 +65,6 @@ class Storage < ActiveRecord::Base
   virtual_column :count_of_vmdk_disk_files,       :type => :integer
 
   SUPPORTED_STORAGE_TYPES = ["VMFS", "NFS"]
-
-  def miq_proxies
-    MiqProxy.all.select { |p| p.storages.include?(self) }
-  end
 
   def to_s
     self.name
@@ -305,7 +301,7 @@ class Storage < ActiveRecord::Base
     zone_caption = zone_name ? " for zone [#{zone_name}]" : ""
     $log.info "#{log_header} Computing#{zone_caption} Started"
     storages = []
-    self.find(:all, :conditions => { :store_type => SUPPORTED_STORAGE_TYPES }).each do |storage|
+    where(:store_type => SUPPORTED_STORAGE_TYPES).each do |storage|
       unless storage.perf_capture_enabled?
         $log.info "#{log_header} Skipping scan of Storage: [#{storage.name}], performance capture is not enabled"
         next
@@ -422,7 +418,7 @@ class Storage < ActiveRecord::Base
 
   cache_with_timeout(:unmanaged_vm_counts_by_storage_id, 15.seconds) do
     Vm.all(
-      :conditions => ["((template = ? AND ems_id IS NOT NULL) OR host_id IS NOT NULL)", true],
+      :conditions => ["((vms.template = ? AND vms.ems_id IS NOT NULL) OR vms.host_id IS NOT NULL)", true],
       :select     => "COUNT(id) AS vm_count, storage_id",
       :group      => "storage_id"
     ).each_with_object(Hash.new(0)) { |v, h| h[v.storage_id] = v.vm_count.to_i }
@@ -438,7 +434,7 @@ class Storage < ActiveRecord::Base
 
   cache_with_timeout(:unregistered_vm_counts_by_storage_id, 15.seconds) do
     Vm.all(
-      :conditions => ["((template = ? AND ems_id IS NULL) OR host_id IS NOT NULL)", true],
+      :conditions => ["((vms.template = ? AND vms.ems_id IS NULL) OR vms.host_id IS NOT NULL)", true],
       :select     => "COUNT(id) AS vm_count, storage_id",
       :group      => "storage_id"
     ).each_with_object(Hash.new(0)) { |v, h| h[v.storage_id] = v.vm_count.to_i }
@@ -454,7 +450,7 @@ class Storage < ActiveRecord::Base
 
   cache_with_timeout(:managed_unregistered_vm_counts_by_storage_id, 15.seconds) do
     Vm.all(
-      :conditions => ["((template = ? AND ems_id IS NOT NULL) OR host_id IS NOT NULL)", true],
+      :conditions => ["((vms.template = ? AND vms.ems_id IS NOT NULL) OR vms.host_id IS NOT NULL)", true],
       :select     => "COUNT(id) AS vm_count, storage_id",
       :group      => "storage_id"
     ).each_with_object(Hash.new(0)) { |v, h| h[v.storage_id] = v.vm_count.to_i }

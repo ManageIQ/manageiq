@@ -1,8 +1,4 @@
 - content_for :trees do
-  = render(:partial=>"layouts/x_adv_searchbox",
-    :locals=>{:nameonly=>[:containers_tree, :containers_filters_tree].include?(x_active_tree)})
-  = render(:partial=>'layouts/quick_search')
-
   - @built_trees.each do |tree|
     %div{:style => "display: none;"}
       = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}

@@ -124,4 +124,20 @@ describe EmsClusterController do
       expect(post("/ems_cluster/show_list")).to route_to("ems_cluster#show_list")
     end
   end
+
+  describe '#tree_autoload_dynatree' do
+    it 'routes with POST' do
+      expect(
+        post("/#{controller_name}/tree_autoload_dynatree")
+      ).to route_to("#{controller_name}#tree_autoload_dynatree")
+    end
+  end
+
+  describe '#tree_autoload_quads' do
+    it 'routes with POST' do
+      expect(
+        post("/#{controller_name}/tree_autoload_quads")
+      ).to route_to("#{controller_name}#tree_autoload_quads")
+    end
+  end
 end

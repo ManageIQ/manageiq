@@ -9,17 +9,9 @@ describe OrchestrationTemplateCfn do
     end
   end
 
-  let(:sample) do
-    'spec/fixtures/orchestration_templates/cfn_parameters.json'
-  end
-
-  let(:valid_template) do
-    OrchestrationTemplateCfn.new(:content => IO.read(sample))
-  end
+  let(:valid_template) { FactoryGirl.create(:orchestration_template_cfn_with_content) }
 
   context "when a raw template in JSON format is given" do
-
-
     it "parses parameters from a template" do
       groups = valid_template.parameter_groups
       groups.size.should == 1

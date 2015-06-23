@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/../..")
@@ -10,7 +10,7 @@ require 'MiqDisk'
 $:.push("#{File.dirname(__FILE__)}/../../../fs/fat32")
 require 'Fat32BootSect'
 
-class Fat32TestBoot < Test::Unit::TestCase
+class Fat32TestBoot < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'fat32']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"
@@ -55,7 +55,7 @@ class Fat32TestBoot < Test::Unit::TestCase
 	
 	def test_fat32_boot_sect_empty
 		@num_tests += 1
-		assert_raise(RuntimeError) {Fat32::BootSect.new(nil)}
+		assert_raises(RuntimeError) {Fat32::BootSect.new(nil)}
 	end
 	
 	def test_fat32_boot_sect

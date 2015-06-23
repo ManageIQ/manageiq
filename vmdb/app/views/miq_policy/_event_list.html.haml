@@ -8,7 +8,7 @@
       %table.table.table-striped.table-bordered.table-hover
         %tbody
           - @events.each do |e|
-            %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => ("View this Event"),
+            %tr{:title => ("View this Event"),
               :onclick => "cfmeDynatree_activateNode('event_tree', 'ev-#{to_cid(e.id)}');"}
               %td.narrow
                 %img{:src => "/images/icons/new/event-#{e.name}.png"}

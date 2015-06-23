@@ -1,4 +1,10 @@
-require 'workers/event_catcher_openstack'
+require 'workers/event_catcher'
+require 'workers/mixins/event_catcher_openstack_mixin'
 
-class EventCatcherOpenstackInfra < EventCatcherOpenstack
+class EventCatcherOpenstackInfra < EventCatcher
+  include EventCatcherOpenstackMixin
+
+  def add_openstack_queue(event_hash)
+    EmsEvent.add_queue('add_openstack_infra', @cfg[:ems_id], event_hash)
+  end
 end

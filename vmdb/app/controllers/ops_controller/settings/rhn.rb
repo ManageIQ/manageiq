@@ -96,6 +96,7 @@ module OpsController::Settings::RHN
     username, = db.auth_user_pwd(:registration)
     MiqHashStruct.new(
       :registered        => !username.blank?,
+      :registration_type => db.registration_type,
       :user_name         => username,
       :server            => db.registration_server,
       :company_name      => db.registration_organization_display_name,
@@ -128,7 +129,7 @@ module OpsController::Settings::RHN
     auth    = {:registration =>  {:userid => credentials[:userid], :password => credentials[:password]}}
     options = {:required => [:userid, :password]}
     db.update_authentication(auth, options)
-    db.registration_organization = @edit[:new][:customer_org]
+    db.registration_organization = credentials[:registration_type] == "sm_hosted" ? nil : @edit[:new][:customer_org]
     db.registration_organization_display_name = @edit[:organizations].try(:key, @edit[:new][:customer_org])
 
     begin

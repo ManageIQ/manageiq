@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-require 'MiqMemory'
-
+require 'memory_buffer'
 
 module Iso9660
 	
@@ -52,7 +50,7 @@ module Iso9660
 			end
 			
 			# Span sectors.
-			out = MiqMemory.create_zero_buffer(bytes)
+			out = MemoryBuffer.create(bytes)
 			totalLen = 0
 			(startSector..endSector).each do |sect|
 				offset = 0; len = ss

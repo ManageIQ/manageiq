@@ -12,10 +12,23 @@
     :text: Lifecycle
     :enabled: 'true'
     :items:
-    - :button: provider_foreman_provision
+    - :button: configured_system_provision
       :image: new
       :text: "Provision Configured System"
       :title: "Provision Configured System"
       :url: provision
+      :url_parms: 'main_div'
+      :enabled: 'true'
+  - :buttonSelect: provider_foreman_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'true'
+    :items:
+    - :button: configured_system_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Configured System"
+      :url: tagging
       :url_parms: 'main_div'
       :enabled: 'true'

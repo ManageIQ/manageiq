@@ -11,6 +11,8 @@ describe OpenstackQpidEventMonitor do
     @original_log = $log
     $log = double.as_null_object
 
+    @qpid_session = double("qpid session")
+
     @nova_events = [{:name => "nova 1", :description => "first nova event"},
                {:name => "nova 2", :description => "second nova event"}]
     @glance_events = [{:name => "glance 1", :description => "first glance event"},
@@ -18,13 +20,20 @@ describe OpenstackQpidEventMonitor do
     @all_events = @nova_events + @glance_events
 
     @notification_connection = double("notification_connection", :open => nil, :close => nil)
-    @nova_receiver = double("nova_receiver", :get_notifications => @nova_events)
-    @glance_receiver = double("glance_receiver", :get_notifications => @glance_events)
+    @notification_connection.stub(:session).and_return(@qpid_session)
+    @notification_connection.stub(:hostname).and_return("10.10.10.10")
+
+    @nova_receiver = double("nova_receiver",
+       :get_notifications => @nova_events,
+       :exchange_name     => "nova")
+    @glance_receiver = double("glance_receiver",
+       :get_notifications => @glance_events,
+       :exchange_name     => "glance")
 
     @receivers = {"nova" => @nova_receiver, "glance" => @glance_receiver}
     @topics = {"nova" => "nova_topic", "glance" => "glance_topic"}
     @receiver_options = {:capacity => 1, :duration => 1}
-    @options = @receiver_options.merge({:topics => @topics})
+    @options = @receiver_options.merge({:topics => @topics, :client_ip => "10.11.12.13"})
 
     @monitor = OpenstackQpidEventMonitor.new(@options)
     @monitor.stub(:create_connection).and_return(@notification_connection)
@@ -36,8 +45,10 @@ describe OpenstackQpidEventMonitor do
   end
 
   it "initializes receivers based on given topics" do
-    @monitor.should_receive(:create_receiver).with("nova", "nova_topic").and_return(@nova_receiver)
-    @monitor.should_receive(:create_receiver).with("glance", "glance_topic").and_return(@glance_receiver)
+    @monitor.should_receive(:create_v1_receiver).with("nova", "nova_topic").and_return(@nova_receiver)
+    @monitor.should_receive(:create_v2_receiver).with("nova", "nova_topic").and_return(@nova_receiver)
+    @monitor.should_receive(:create_v1_receiver).with("glance", "glance_topic").and_return(@glance_receiver)
+    @monitor.should_receive(:create_v2_receiver).with("glance", "glance_topic").and_return(@glance_receiver)
     @monitor.start
     @monitor.each_batch { @monitor.stop }
   end

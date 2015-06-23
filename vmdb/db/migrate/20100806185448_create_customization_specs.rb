@@ -8,7 +8,7 @@ class CreateCustomizationSpecs < ActiveRecord::Migration
       t.datetime :last_update_time
       t.text     :spec
       t.text     :reserved
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

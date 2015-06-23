@@ -3,6 +3,7 @@ Vmdb::Application.configure do
 
   # Code is not reloaded between requests
   config.cache_classes = true
+  config.eager_load = false
 
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
@@ -10,7 +11,7 @@ Vmdb::Application.configure do
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
   # TODO: enable static asset server for now so rails serves the images/css, etc.
-  config.serve_static_assets = true
+  config.serve_static_files = true
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
@@ -71,10 +72,4 @@ Vmdb::Application.configure do
   config.action_controller.include_all_helpers = false
 
   config.action_controller.allow_forgery_protection = true
-
-  # Disable Rack::Cache verbose miss/hit logging
-  # TODO: Use dalli to store cached pages
-  require 'rack/cache'
-  config.middleware.delete ::Rack::Cache
-  config.middleware.use ::Rack::Cache, :metastore => "rails:/", :entitystore => "rails:/", :verbose => false
 end

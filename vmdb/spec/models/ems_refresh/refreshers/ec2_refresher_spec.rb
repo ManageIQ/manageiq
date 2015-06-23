@@ -40,7 +40,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
 
   def assert_table_counts
     ExtManagementSystem.count.should         == 1
-    Flavor.count.should                      == 43
+    Flavor.count.should                      == 54
     AvailabilityZone.count.should            == 5
     FloatingIp.count.should                  == 5
     AuthPrivateKey.count.should              == 7
@@ -76,7 +76,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
       :uid_ems     => nil
     )
 
-    @ems.flavors.size.should              == 43
+    @ems.flavors.size.should              == 54
     @ems.availability_zones.size.should   == 5
     @ems.floating_ips.size.should         == 5
     @ems.key_pairs.size.should            == 7
@@ -86,6 +86,8 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     @ems.vms.size.should                  == 27
     @ems.miq_templates.size.should        == 19
     @ems.orchestration_stacks.size.should == 2
+
+    @ems.direct_orchestration_stacks.size.should == 1
   end
 
   def assert_specific_flavor
@@ -443,6 +445,9 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_orchestration_stack
+    OrchestrationStackAmazon.where(:name => "cloudformation-spec").first.status_reason.should ==
+      "The following resource(s) failed to create: [IPAddress, WebServerWaitCondition]. "
+
     @orch_stack = OrchestrationStackAmazon.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6").first
     @orch_stack.should have_attributes(
       :status  => "CREATE_COMPLETE",
@@ -457,7 +462,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_orchestration_stack_parameters
-    parameters = @orch_stack.parameters.all(:order => "ems_ref")
+    parameters = @orch_stack.parameters.order("ems_ref")
     parameters.should have(2).items
 
     # assert one of the parameter models
@@ -468,11 +473,12 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_orchestration_stack_resources
-    resources = @orch_stack.resources.all(:order => "ems_ref")
+    resources = @orch_stack.resources.order("ems_ref")
     resources.should have(4).items
 
     # assert one of the resource models
     resources[3].should have_attributes(
+      :name                   => "WebServer",
       :logical_resource       => "WebServer",
       :physical_resource      => "i-b98fdd57",
       :resource_category      => "AWS::EC2::Instance",

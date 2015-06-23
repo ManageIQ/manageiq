@@ -1,9 +1,4 @@
 class Vm < VmOrTemplate
-  SUBCLASSES = %w{
-    VmInfra
-    VmCloud
-  }
-
   default_scope { where(:template => false) }
 
   include_concern 'Operations'
@@ -30,25 +25,32 @@ class Vm < VmOrTemplate
     return [] if mac_address.nil? && hostname.nil? && ipaddress.nil?
 
     include = [:vm_or_template]
+    references = []
     conds = [["hardwares.vm_or_template_id IS NOT NULL"]]
     if mac_address
       conds[0] << "guest_devices.address = ?"
       conds    << mac_address
       include  << :nics
+      references << :guest_devices
     end
     if hostname
       conds[0] << "networks.hostname = ?"
       conds    << hostname
       include  << :networks
+      references << :networks
     end
     if ipaddress
       conds[0] << "networks.ipaddress = ?"
       conds    << ipaddress
       include  << :networks
+      references << :networks
     end
     conds[0] = "(#{conds[0].join(" AND ")})"
 
-    Hardware.includes(include.uniq).where(conds).collect { |h|  h.vm_or_template.kind_of?(Vm) ? h.vm_or_template : nil}.compact
+    Hardware.includes(include.uniq)
+            .references(references.uniq)
+            .where(conds)
+            .collect { |h|  h.vm_or_template.kind_of?(Vm) ? h.vm_or_template : nil}.compact
   end
 
   def running_processes
@@ -81,7 +83,3 @@ class Vm < VmOrTemplate
   end
 
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-Vm::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

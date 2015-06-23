@@ -152,27 +152,6 @@ describe MiqTask do
       @miq_task.task_results.should == results
     end
 
-    it "should cleanup_log properly" do
-      l = FactoryGirl.create(:log_file, :miq_task_id => @miq_task.id)
-      @miq_task.reload
-      @miq_task.log_file.should == l
-
-      @miq_task.cleanup_log
-      @miq_task.reload
-      @miq_task.log_file.should be_nil
-      LogFile.count.should == 0
-    end
-
-    it "should get log_data properly" do
-      log_data = "test log data" * 100000
-      l = FactoryGirl.create(:log_file, :miq_task_id => @miq_task.id)
-      l.binary_blob = FactoryGirl.create(:binary_blob, :name => "logs", :data_type => "zip")
-      l.binary_blob.binary = log_data.dup # BinaryBlob#binary= method destroys the input data
-
-      @miq_task.reload
-      @miq_task.log_data.should == log_data
-    end
-
     it "should queue callback properly" do
       state   = MiqTask::STATE_QUEUED
       message = 'Message for testing: queue_callback'
@@ -236,7 +215,7 @@ describe MiqTask do
       task.message.should == "Queued the action: [#{task.name}] being run for user: [#{task.userid}]"
 
       MiqQueue.count.should == 1
-      message = MiqQueue.find(:first)
+      message = MiqQueue.first
       message.class_name.should  == "MyClass"
       message.method_name.should == "my_method"
       message.args.should        == [1, 2, 3]
@@ -256,7 +235,7 @@ describe MiqTask do
     it "should queue up deletes when calling MiqTask.delete_by_id" do
       MiqTask.delete_by_id([@miq_task1.id, @miq_task3.id])
       MiqQueue.count.should == 1
-      message = MiqQueue.find(:first)
+      message = MiqQueue.first
 
       message.class_name.should  == "MiqTask"
       message.method_name.should == "destroy_all"
@@ -276,7 +255,7 @@ describe MiqTask do
       MiqTask.delete_older(5.minutes.ago.utc, nil)
 
       MiqQueue.count.should == 1
-      message = MiqQueue.find(:first)
+      message = MiqQueue.first
 
       message.class_name.should  == "MiqTask"
       message.method_name.should == "destroy_all"
@@ -294,7 +273,7 @@ describe MiqTask do
       MiqTask.delete_older(11.minutes.ago.utc, nil)
 
       MiqQueue.count.should == 1
-      message = MiqQueue.find(:first)
+      message = MiqQueue.first
 
       message.class_name.should  == "MiqTask"
       message.method_name.should == "destroy_all"

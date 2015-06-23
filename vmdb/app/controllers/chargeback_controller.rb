@@ -92,9 +92,9 @@ class ChargebackController < ApplicationController
 
   def set_form_locals
     if x_active_tree == :cb_rates_tree
-      @temp[:x_edit_buttons_locals] = {:action_url => 'cb_rate_edit'}
+      @x_edit_buttons_locals = {:action_url => 'cb_rate_edit'}
     elsif x_active_tree == :cb_assignments_tree
-      @temp[:x_edit_buttons_locals] = {
+      @x_edit_buttons_locals = {
         :action_url   => 'cb_assign_update',
         :no_cancel    => true,
         :multi_record => true
@@ -147,7 +147,9 @@ class ChargebackController < ApplicationController
       @sb[:rate] = @edit[:rate] if @edit && @edit[:rate]
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("%s is required") % "Description", :error)
-        replace_right_cell
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
         return
       end
       @sb[:rate].description = @edit[:new][:description]
@@ -226,7 +228,7 @@ class ChargebackController < ApplicationController
       else
         session[:changed] = false
         @sb[:rate] = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(obj[0])
-        @sb[:rate_details] = @sb[:rate].chargeback_rate_details
+        @sb[:rate_details] = @sb[:rate].chargeback_rate_details.to_a
         if @sb[:rate_details].blank?
           fixture_file = File.join(@@fixture_dir, "chargeback_rates.yml")
           if File.exist?(fixture_file)
@@ -274,7 +276,7 @@ class ChargebackController < ApplicationController
 
   def cb_rate_show
     @display = "main"
-    @sb[:selected_rate_details] = @record.chargeback_rate_details
+    @sb[:selected_rate_details] = @record.chargeback_rate_details.to_a
     @sb[:selected_rate_details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
     if @record == nil
       redirect_to :action=>"cb_rates_list", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
@@ -297,7 +299,7 @@ class ChargebackController < ApplicationController
       process_cb_rates(rates, "destroy")  unless rates.empty?
       add_flash(_("The selected %s were deleted") % ui_lookup(:models=>"ChargebackRate"), :info, true) if ! flash_errors?
       cb_rates_list
-      @right_cell_text = _("%{typ} %{model}") % {:typ=>x_node, :model=>ui_lookup(:models=>"ChargebackRate")}
+      @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
       replace_right_cell([:cb_rates])
     else # showing 1 rate, delete it
       if params[:id] == nil || ChargebackRate.find_by_id(params[:id]).nil?
@@ -375,7 +377,7 @@ class ChargebackController < ApplicationController
     @right_cell_text ||= "Saved Chargeback Report [#{rr.name}]"
     if rr.userid != session[:userid]
       add_flash(_("Report is not authorized for the logged in user"), :error)
-      @temp[:saved_reports] = cb_rpts_get_all_reps(id.split('-')[1])
+      @saved_reports = cb_rpts_get_all_reps(id.split('-')[1])
       return
     else
       @report_result_id = session[:report_result_id] = rr.id
@@ -383,8 +385,9 @@ class ChargebackController < ApplicationController
       @report = rr.report_results
       session[:rpt_task_id] = nil
       if @report.blank?
-        add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") % format_timezone(report.last_run_on,Time.zone,"gtl"), :error)
-        @temp[:saved_reports] = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
+        add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") %
+          format_timezone(rr.last_run_on, Time.zone, "gtl"), :error)
+        @saved_reports = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
         rep = MiqReport.find_by_id(rr.miq_report_id)
         if x_active_tree == :cb_reports
           self.x_node = "reports-#{rep.id}"
@@ -466,8 +469,8 @@ class ChargebackController < ApplicationController
       # On a saved reports parent node
       else
         #saved reports under report node on saved report accordion
-        @temp[:saved_reports] = cb_rpts_get_all_reps(nodes[0].split('-')[1])
-        unless @temp[:saved_reports].empty?
+        @saved_reports = cb_rpts_get_all_reps(nodes[0].split('-')[1])
+        unless @saved_reports.empty?
           @sb[:sel_saved_rep_id] = nodes[1]
           @right_cell_div = "reports_list_div"
           miq_report = MiqReport.find(@sb[:miq_report_id])
@@ -476,7 +479,7 @@ class ChargebackController < ApplicationController
         else
           add_flash(_("Selected %s Report no longer exists") % "Chargeback", :warning)
           self.x_node = nodes[0]
-          @temp[:saved_reports] = nil
+          @saved_reports = nil
           cb_rpts_build_tree # Rebuild tree
         end
       end
@@ -484,7 +487,7 @@ class ChargebackController < ApplicationController
   end
 
   def cb_rpt_build_folder_nodes
-    @temp[:parent_reports] = Hash.new
+    @parent_reports = Hash.new
     srs = MiqReportResult.all(:conditions=>["db=? AND userid=? AND report_source!=?",
                                             "Chargeback",
                                             session[:userid],
@@ -492,7 +495,7 @@ class ChargebackController < ApplicationController
                               :select => "miq_report_id, name",
                               :group=>"miq_report_id, name")
     srs.sort_by { |sr| sr.name.downcase }.each_with_index do |sr, sr_idx|
-      @temp[:parent_reports][sr.name] = "#{to_cid(sr.miq_report_id)}-#{sr_idx}"
+      @parent_reports[sr.name] = "#{to_cid(sr.miq_report_id)}-#{sr_idx}"
     end
   end
 
@@ -503,7 +506,8 @@ class ChargebackController < ApplicationController
     @sb[:last_run_on] = Hash.new
     @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr  #Saving converted time to be displayed on saved reports list view
     saved_reports.each do |s|
-      @sb[:last_run_on][s.last_run_on] = "#{convert_time_from_utc(s.last_run_on).strftime('%m/%d/%Y %I:%M')} #{@sb[:timezone_abbr]}"
+      @sb[:last_run_on][s.last_run_on] =
+        "#{convert_time_from_utc(s.last_run_on).strftime('%m/%d/%Y %I:%M')} #{@sb[:timezone_abbr]}" if s.last_run_on
     end
     @sb[:tree_typ] = "reports"
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Reports", :name=>miq_report.name}
@@ -737,7 +741,6 @@ class ChargebackController < ApplicationController
     # Build a presenter to render the JS
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp
     )
     r = proc { |opts| render_to_string(opts) }
 
@@ -783,6 +786,13 @@ class ChargebackController < ApplicationController
         presenter[:expand_collapse_cells][:a] = 'collapse'
       end
       presenter[:update_partials][:main_div] = r[:partial => 'reports_list']
+      if @html
+        presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar',
+                                                     :locals  => @sb[:pages]]
+        presenter[:set_visible_elements][:paging_div] = true
+      else
+        presenter[:set_visible_elements][:paging_div] = false
+      end
     end
 
     if @record || @in_a_form ||

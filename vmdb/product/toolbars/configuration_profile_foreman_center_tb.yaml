@@ -10,14 +10,23 @@
     :image: vmdb
     :title: Configuration
     :text: Configuration
-    :enabled: 'false'
+    :enabled: 'true'
     :items:
-    - :button: tbd
-      :image: tbd
-      :text: tbd
-      :title: tbd
-      :url_parms: tbd
-      :confirm: tbd
-      :enabled: 'false'
-      :onwhen: '1+'
+    - :button: provider_foreman_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power states"
+      :title: "Refresh relationships for all items related to this Provider"
+      :url: refresh
+      :confirm: "Refresh relationships for all items related to this Provider?"
     - :separator:
+    - :button: provider_foreman_edit
+      :image: edit
+      :text: Edit this Provider
+      :title: Edit this Provider
+      :url: edit
+    - :button: provider_foreman_delete
+      :image: remove
+      :text: Remove this Provider from the VMDB
+      :title: Remove this Provider from the VMDB
+      :url: delete
+      :confirm: "Warning: The selected Provider and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Provider?"

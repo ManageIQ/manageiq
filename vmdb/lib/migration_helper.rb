@@ -35,37 +35,9 @@ module MigrationHelper
     id_cols.each { |c| change_id_column(table, c, type) }
   end
 
-  def change_id_columns_for_large_tables(table, id_cols, type)
-    if sqlserver? && !table_empty?(table)
-      change_id_columns_via_table_copy_for_sqlserver table, id_cols, type
-    else
-      change_id_columns table, id_cols, type
-    end
-  end
-
-  def change_id_columns_via_table_copy_for_sqlserver(table, id_cols, type)
-    orig = "#{table}_orig".to_sym
-    rename_table table, orig
-    copy_schema_only orig, table
-    id_cols.each do |c|
-      change_column table, c, type
-    end
-    add_pk table
-    copy_data orig, table
-    drop_table orig
-  end
-
   #
   # Helper methods
   #
-
-  def sqlserver?
-    connection.adapter_name == "SQLServer"
-  end
-
-  def postgresql?
-    connection.adapter_name == "PostgreSQL"
-  end
 
   def add_pk(*args)
     meth = "add_pk_#{connection.adapter_name.downcase}"
@@ -252,22 +224,21 @@ module MigrationHelper
 
   def change_data_batches(table, column, from_value, to_value, options = {})
     batch_size = options[:batch_size] || 100_000
-    from_value = sanitize_sql_for_conditions({column => from_value}, table)
-    to_value   = "#{connection.quote_column_name(column)} = #{connection.quote(to_value)}"
-    table      = connection.quote_table_name(table)
 
-    rows = connection.select_value("SELECT COUNT(id) FROM #{table} WHERE #{from_value}").to_i
+    model = Class.new(ActiveRecord::Base) do
+      self.table_name = table
+    end
+
+    base_relation = model.where(column => from_value)
+    rows = base_relation.size
+
     say_batch_started(rows)
     return if rows == 0
 
-    select_sql = Arel::Table.new(table).project(:id).where(Arel.sql(from_value)).take(batch_size).to_sql
     loop do
-      ids = connection.select_all(select_sql).collect { |r| r["id"] }
-      break if ids.length == 0
-      ids_clause = sanitize_sql_for_conditions({:id => ids}, table)
-      count = connection.update("UPDATE #{table} SET #{to_value} WHERE #{ids_clause}")
+      count = base_relation.limit(batch_size).update_all(column => to_value)
       say_batch_processed(count)
-      break if count < batch_size
+      break if count == 0
     end
   end
 

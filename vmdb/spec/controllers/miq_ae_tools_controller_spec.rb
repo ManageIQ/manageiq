@@ -24,7 +24,7 @@ describe MiqAeToolsController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:automate_import_service) { instance_double("AutomateImportService") }
+    let(:automate_import_service) { auto_loaded_instance_double("AutomateImportService") }
 
     before do
       bypass_rescue
@@ -51,7 +51,7 @@ describe MiqAeToolsController do
   describe "#automate_json" do
     include_context "valid session"
 
-    let(:automate_import_json_serializer) { instance_double("AutomateImportJsonSerializer") }
+    let(:automate_import_json_serializer) { auto_loaded_instance_double("AutomateImportJsonSerializer") }
     let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
     let(:params) { {:import_file_upload_id => "123"} }
 
@@ -91,7 +91,7 @@ describe MiqAeToolsController do
     end
 
     context "when the selected namespaces is not nil" do
-      let(:automate_import_service) { instance_double("AutomateImportService") }
+      let(:automate_import_service) { auto_loaded_instance_double("AutomateImportService") }
       let(:selected_namespaces) { ["datastore/namespace", "datastore/namespace/test"] }
 
       before do
@@ -214,7 +214,7 @@ Methods updated/added: 10
     end
 
     context "when an upload file is given" do
-      let(:automate_import_service) { instance_double("AutomateImportService") }
+      let(:automate_import_service) { auto_loaded_instance_double("AutomateImportService") }
       let(:params) { {:upload => {:file => upload_file}} }
       let(:upload_file) { fixture_file_upload(Rails.root.join("spec/fixtures/files/import_automate.yml"), "text/yml") }
 

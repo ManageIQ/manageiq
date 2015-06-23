@@ -4,7 +4,6 @@ describe ExplorerPresenter do
   context "partial methods" do
     before :each do
       @presenter = ExplorerPresenter.new
-      @presenter[:temp] = { :foo_tree => 'bar' }
       @el        = "test_element"
       @content   = "<div>Sample div element</div>"
     end
@@ -45,24 +44,6 @@ describe ExplorerPresenter do
           :record_id  => 42,
         )
         js_str.should == "miqAsyncAjax('/foo/bar/42');"
-      end
-    end
-
-    context "#replace_tree" do
-      it 'returns JS to replace tree nodes' do
-        js_str = @presenter.replace_tree(:foo, {})
-
-        expected = <<EOD
-var sel_node = foo_tree.getSelectedItemId();
-var root_id = 'root';
-foo_tree.deleteChildItems(0);
-foo_tree.loadJSONObject(bar);
-foo_tree.setItemCloseable(root_id,0);
-foo_tree.showItemSign(root_id,false);
-foo_tree.selectItem(sel_node);
-foo_tree.openItem(sel_node);
-EOD
-        (js_str + "\n").should == expected
       end
     end
 

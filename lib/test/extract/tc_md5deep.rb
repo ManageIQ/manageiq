@@ -1,10 +1,10 @@
 $:.push("#{File.dirname(__FILE__)}/../../metadata/util/")
 require 'md5deep'
-require 'test/unit'
+require 'minitest/unit'
 
 module Extract
 	
-class TestVersionInfo < Test::Unit::TestCase
+class TestVersionInfo < Minitest::Test
 
   def test_md5deep
     md5 = MD5deep.new
@@ -20,7 +20,7 @@ class TestVersionInfo < Test::Unit::TestCase
     assert_equal(:dir, xml.root.elements[1].name)
     
     # Base element should have a valid MD5 sig.
-    assert_not_nil(xml.root.elements[1].attributes['md5'])
+    refute_nil(xml.root.elements[1].attributes['md5'])
 
     # MD5 sig should be 32 bits in length
     assert_in_delta(32, xml.root.elements[1].attributes['md5'].strip.length, 0)

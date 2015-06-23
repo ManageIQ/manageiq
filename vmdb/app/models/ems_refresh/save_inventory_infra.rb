@@ -153,9 +153,6 @@ module EmsRefresh::SaveInventoryInfra
           ip_part  =  %r{[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+}
           ip_whole = %r{^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$}
 
-          #   Keep the previous name unless it's nil
-          h[:name] = found.name unless found.name.nil?
-
           # Keep the previous ip address if we don't have a new one or the new one is not an ip address
           h[:ipaddress] = found.ipaddress if h[:ipaddress].nil? || (h[:ipaddress] !~ ip_whole)
 

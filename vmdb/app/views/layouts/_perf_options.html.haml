@@ -1,7 +1,7 @@
 - url = url_for(:action => 'perf_chart_chooser',
                 :id     => @record.id)
 #perf_options_div{:onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
-  - if @temp[:charts] || @perf_options[:chart_type] != :performance
+  - if @charts || @perf_options[:chart_type] != :performance
     %h3= _("Options %s") % (@record != @perf_record ? "(#{ui_lookup(:model => @perf_record.class.to_s)}: #{@perf_record.name})" : "")
     %dl.dl-horizontal
       %dt
@@ -69,7 +69,7 @@
                            "data-miq_sparkle_on" => true,
                            "data-miq_observe"    => {:url => url}.to_json)
         - unless @perf_options[:cat]
-          - if @perf_options[:vmtypes] && (@perf_options[:index].nil? || @temp[:charts].first[:title].include?("by Type"))
+          - if @perf_options[:vmtypes] && (@perf_options[:index].nil? || @charts.first[:title].include?("by Type"))
             %dt
               = _("Show VM Types")
             %dd
@@ -96,8 +96,8 @@
 
       - if @perf_options[:model] == "VmOrTemplate" && @perf_options[:typ] != "realtime"
         - compare_choices = []
-        - compare_choices.push(["Parent Host", "Host"]) if @perf_record.host
-        - compare_choices.push(["Parent Cluster", "EmsCluster"]) if @perf_record.ems_cluster
+        - compare_choices.push(["Parent '#{title_for_host}'", "Host"]) if @perf_record.host
+        - compare_choices.push(["Parent '#{title_for_cluster}'", "EmsCluster"]) if @perf_record.ems_cluster
 
         - unless compare_choices.empty?
           %dt

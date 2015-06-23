@@ -20,7 +20,7 @@ Trollop::die :hourly,   "must be a number with method (e.g. 6.months)" unless op
 opts[:no_generate] = opts[:no_import] = opts[:no_delete] = true if opts[:dry_run]
 
 require 'progressbar'
-require 'fastercsv'
+require 'csv'
 
 NUM_VMS, NUM_HOSTS, NUM_CLUSTERS, NUM_EMS, NUM_STORAGES, IMPORT_WINDOW =
   opts.values_at(:vms, :hosts, :clusters, :ems, :storages, :window)
@@ -45,12 +45,12 @@ IMPORT_HOURLY_FNAME = File.expand_path(File.join(File.dirname(__FILE__), "import
 METRICS_COLS = [:capture_interval_name, :resource_type, :resource_id, :timestamp]
 
 puts <<-EOL
-Importing vim_performances for:
-  VMs:            #{NUM_VMS}
-  Hosts:          #{NUM_HOSTS}
-  Clusters:       #{NUM_CLUSTERS}
+Importing metrics for:
   EMS:            #{NUM_EMS}
   Storages:       #{NUM_STORAGES}
+  Clusters:       #{NUM_CLUSTERS}
+  Hosts:          #{NUM_HOSTS}
+  VMs:            #{NUM_VMS}
 
   Realtime from:  #{REALTIME_START.iso8601}
   Hourly from:    #{HOURLY_START.iso8601}
@@ -62,9 +62,9 @@ EOL
 
 unless opts[:no_generate]
   $pbar = ProgressBar.new("generate", realtime_count + hourly_count)
-  $out_csv_realtime = FasterCSV.open(IMPORT_REALTIME_FNAME, "wb", :row_sep => "\n")
+  $out_csv_realtime = CSV.open(IMPORT_REALTIME_FNAME, "wb", :row_sep => "\n")
   $out_csv_realtime << METRICS_COLS
-  $out_csv_hourly   = FasterCSV.open(IMPORT_HOURLY_FNAME, "wb", :row_sep => "\n")
+  $out_csv_hourly   = CSV.open(IMPORT_HOURLY_FNAME, "wb", :row_sep => "\n")
   $out_csv_hourly   << METRICS_COLS
 
   def insert_realtime(klass, id, timestamp)

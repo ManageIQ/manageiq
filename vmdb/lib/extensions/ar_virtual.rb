@@ -1,6 +1,33 @@
 class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
   attr_reader :options
 
+  module Type
+    # TODO: do we actually need symbol types?
+    class Symbol < ActiveRecord::Type::String
+      def type; :symbol; end
+    end
+
+    class StringSet < ActiveRecord::Type::Value
+      def type; :string_set; end
+    end
+
+    class NumericSet < ActiveRecord::Type::Value
+      def type; :numeric_set; end
+    end
+  end
+
+  TYPE_MAP = {
+    :boolean     => ActiveRecord::Type::Boolean.new,
+    :datetime    => ActiveRecord::Type::Time.new,
+    :float       => ActiveRecord::Type::Float.new,
+    :integer     => ActiveRecord::Type::Integer.new, # TODO: does a virtual_column :integer care if it's a Integer or BigInteger
+    :numeric_set => Type::NumericSet.new,
+    :string      => ActiveRecord::Type::String.new,
+    :string_set  => Type::StringSet.new,
+    :symbol      => Type::Symbol.new,                # TODO: is this correct?
+    :time        => ActiveRecord::Type::Time.new,
+  }
+
   def initialize(name, options)
     @options = options
 
@@ -17,9 +44,11 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
       options[:type] = type
     end
 
+    type = TYPE_MAP.fetch(type) unless type.kind_of?(ActiveRecord::Type::Value)
+
     raise ArgumentError, "type must be specified" if type.nil?
 
-    super(name.to_s, options[:default], type.to_s)
+    super(name.to_s, options[:default], type)
   end
 
   def simplified_type(field_type)
@@ -80,20 +109,26 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
   end
 end
 
-class VirtualReflection < ActiveRecord::Reflection::AssociationReflection
-  def uses
-    options[:uses]
-  end
+class VirtualReflection < SimpleDelegator
+  attr_accessor :uses
 
-  def uses=(val)
-    options[:uses] = val
+  def initialize(reflection, uses)
+    super(reflection)
+    @uses = uses
   end
-
-  alias to_s inspect # Changes to_s to include all of the instance variables
 end
 
 module VirtualFields
+  module NonARModels
+    def dangerous_attribute_method?(_); false; end
+    def generated_association_methods; self; end
+    def add_autosave_association_callbacks(*args); self; end
+  end
+
   def self.extended(other)
+    unless other.respond_to?(:dangerous_attribute_method?)
+      other.extend NonARModels
+    end
     other.class_eval { @virtual_fields_base = true }
   end
 
@@ -118,15 +153,21 @@ module VirtualFields
   #
 
   def virtual_has_one(name, options = {})
-    add_virtual_reflection(:has_one, name, options)
+    uses = options.delete :uses
+    reflection = ActiveRecord::Associations::Builder::HasOne.build(self, name, nil, options)
+    add_virtual_reflection(reflection, name, uses, options)
   end
 
   def virtual_has_many(name, options = {})
-    add_virtual_reflection(:has_many, name, options)
+    uses = options.delete :uses
+    reflection = ActiveRecord::Associations::Builder::HasMany.build(self, name, nil, options)
+    add_virtual_reflection(reflection, name, uses, options)
   end
 
   def virtual_belongs_to(name, options = {})
-    add_virtual_reflection(:belongs_to, name, options)
+    uses = options.delete :uses
+    reflection = ActiveRecord::Associations::Builder::BelongsTo.build(self, name, nil, options)
+    add_virtual_reflection(reflection, name, uses, options)
   end
 
   def virtual_reflection?(name)
@@ -158,7 +199,7 @@ module VirtualFields
   end
 
   def reflections_with_virtual
-    reflections.merge(virtual_reflections)
+    reflections.symbolize_keys.merge(virtual_reflections)
   end
 
   def reflection_with_virtual(association)
@@ -199,6 +240,9 @@ module VirtualFields
 
   def add_virtual_column(name, options)
     reset_virtual_column_information
+    options[:type] = VirtualColumn::TYPE_MAP.fetch(options[:type]) {
+      raise ArgumentError, "unknown type #{options[:type]}"
+    }
     _virtual_columns_hash[name.to_s] = VirtualColumn.new(name, options)
   end
 
@@ -206,10 +250,10 @@ module VirtualFields
     @virtual_columns = @virtual_column_names = @virtual_column_names_symbols = nil
   end
 
-  def add_virtual_reflection(macro, name, options)
-    raise ArgumentError, "macro must be specified" if macro.nil?
+  def add_virtual_reflection(reflection, name, uses, options)
+    raise ArgumentError, "macro must be specified" unless reflection
     reset_virtual_reflection_information
-    _virtual_reflections[name.to_sym] = VirtualReflection.new(macro.to_sym, name.to_sym, options, self)
+    _virtual_reflections[name.to_sym] = VirtualReflection.new(reflection, uses)
   end
 
   def reset_virtual_reflection_information
@@ -273,8 +317,10 @@ module ActiveRecord
 
   module Associations
     class Preloader
-      def preload_with_virtual(association)
+      def preloaders_on_with_virtual(association, records, preload_scope = nil)
+        records = records.compact
         records_model = records.first.class
+        return preloaders_on_without_virtual(association, records, preload_scope) if records.empty?
 
         case association
         when Hash
@@ -286,7 +332,7 @@ module ActiveRecord
 
           virtual_association.each do |parent, child|
             field = records_model.virtual_field(parent)
-            Array.wrap(field.uses).each { |f| preload(f) }
+            Array.wrap(field.uses).each { |f| preload(records, f) }
 
             raise "child must be blank if parent is a virtual column" if field.kind_of?(VirtualColumn) && !child.blank?
             next unless field.kind_of?(VirtualReflection)
@@ -296,36 +342,44 @@ module ActiveRecord
           end
         when String, Symbol
           field = records_model.virtual_field(association)
-          return Array.wrap(field.uses).each { |f| preload(f) } if field
+          return Array.wrap(field.uses).each { |f| preload(records, f) } if field
         end
 
-        preload_without_virtual(association)
+        preloaders_on_without_virtual(association, records, preload_scope)
       end
-      alias_method_chain :preload, :virtual
+      alias_method_chain :preloaders_on, :virtual
     end
   end
 
   module FinderMethods
+    def without_virtual_includes
+      if includes_values
+        spawn.without_virtual_includes!
+      else
+        self
+      end
+    end
+
+    def without_virtual_includes!
+      self.includes_values = klass.remove_virtual_fields(includes_values) if includes_values
+      self
+    end
+
     def find_with_associations_with_virtual
-      original, self.includes_values = includes_values, klass.remove_virtual_fields(includes_values) if includes_values
+      recs = without_virtual_includes.send(:find_with_associations_without_virtual)
 
-      recs = find_with_associations_without_virtual
-
-      if original
-        self.includes_values = original
+      if includes_values
         MiqPreloader.preload(recs, preload_values + includes_values)
       end
-      return recs
+
+      recs
     end
     alias_method_chain :find_with_associations, :virtual
   end
 
   module Calculations
     def calculate_with_virtual(operation, column_name, options = {})
-      original, self.includes_values = includes_values, klass.remove_virtual_fields(includes_values) if includes_values
-      result = calculate_without_virtual(operation, column_name, options)
-      self.includes_values = original if original
-      return result
+      without_virtual_includes.send(:calculate_without_virtual, operation, column_name, options)
     end
     alias_method_chain :calculate, :virtual
   end

@@ -44,18 +44,18 @@ describe MiqUserRole do
         vm
       ))
 
-      @idents1 = ["dashboard_admin"]
-      @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents1))
+      feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
+      @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => feature1)
       @group1  = FactoryGirl.create(:miq_group, :description => "Group1", :miq_user_role => @role1)
       @user1   = FactoryGirl.create(:user, :userid => "user1", :miq_groups => [@group1])
 
-      @idents2 = ["everything"]
-      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents2))
+      feature2 = MiqProductFeature.find_all_by_identifier("everything")
+      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => feature2)
       @group2  = FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
       @user2   = FactoryGirl.create(:user, :userid => "user2", :miq_groups => [@group2])
 
-      @idents3 = ["host_show_list", "host_scan", "host_edit"]
-      @role3   = FactoryGirl.create(:miq_user_role, :name => "Role3", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents3))
+      feature3 = MiqProductFeature.find_all_by_identifier(%w(host_show_list host_scan host_edit))
+      @role3   = FactoryGirl.create(:miq_user_role, :name => "Role3", :miq_product_features => feature3)
       @group3  = FactoryGirl.create(:miq_group, :description => "Group3", :miq_user_role => @role3)
       @user3   = FactoryGirl.create(:user, :userid => "user3", :miq_groups => [@group3])
     end

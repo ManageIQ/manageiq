@@ -3,7 +3,6 @@ require "spec_helper"
 silence_warnings { MiqProvisionVmwareWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe MiqProvisionVmwareWorkflow do
-
   before do
     MiqRegion.seed
   end
@@ -31,6 +30,5 @@ describe MiqProvisionVmwareWorkflow do
 
       MiqProvisionVmwareWorkflow.new({}, admin.userid)
     end
-
   end
 end

@@ -5,11 +5,11 @@
       %p{:class => "legend"}=_('Filters')
       =_('Checked default filters will be visible.')
       - tree_id = "#{session[:tree_name]}box"
-      %div{:id => "#{tree_id}", :style => "color:#000; height:#{center_div_height}px;color:#000;overflow-Y:scroll"}
+      %div{:id => "#{tree_id}", :style => "color:#000; height:#{center_div_height}px;"}
         = render(:partial => "layouts/dynatree",
                  :locals => {:tree_id                     => tree_id,
                              :tree_name                   => session[:tree_name],
-                             :json_tree                   => @temp[:all_views_tree],
+                             :json_tree                   => @all_views_tree,
                              :onselect                    => "miqOnCheck_Sections",
                              :check_url                   => "/configuration/filters_field_changed/",
                              :exp_tree                    => true,

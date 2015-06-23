@@ -81,21 +81,17 @@ module Rbac
     return nil
   end
 
-  def self.get_self_service_objects(user_or_group, klass, find_options = {})
+  def self.get_self_service_objects(user_or_group, klass)
     return nil unless user_or_group && user_or_group.self_service?
     return nil unless klass.ancestors.include?(OwnershipMixin)
 
-    include_for_find = find_options.delete(:include)
-    where_clause     = find_options.delete(:conditions)
-
-    # Get the list of objects that are owned by him or his LDAP group and include any filters that were passed into search
+    # Get the list of objects that are owned by the user or their LDAP group
     cond = user_or_group.limited_self_service? ? klass.conditions_for_owned(user_or_group) : klass.conditions_for_owned_or_group_owned(user_or_group)
-    cond, incl = MiqExpression.merge_where_clauses_and_includes([where_clause, cond].compact, [include_for_find].compact)
-    klass.find(:all, find_options.merge(:conditions => cond, :include => incl))
+    klass.select(minimum_columns_for(klass)).where(cond)
   end
 
   def self.get_self_service_object_ids(user_or_group, klass)
-    targets = get_self_service_objects(user_or_group, klass, :select => self.minimum_columns_for(klass))
+    targets = get_self_service_objects(user_or_group, klass)
     targets = targets.collect(&:id) if targets.respond_to?(:collect)
     targets
   end
@@ -144,15 +140,20 @@ module Rbac
       if extra_target_ids.nil?
         conditions
       else
-        ids_clause = klass.send(:sanitize_sql_for_conditions, {:id => extra_target_ids})
-        if conditions.nil?
-          ids_clause
-        else
-          original_conditions = klass.send(:sanitize_sql_for_conditions, conditions)
-          "(#{original_conditions}) OR (#{ids_clause})"
+        # sanitize_sql_for_conditions is deprecated (at least when given
+        # a hash).. but we can ignore it for now. When it goes away,
+        # we'll be on Rails 5.0, and can use Relation#or instead.
+        ActiveSupport::Deprecation.silence do
+          ids_clause = klass.send(:sanitize_sql_for_conditions, :id => extra_target_ids)
+          if conditions.nil?
+            ids_clause
+          else
+            original_conditions = klass.send(:sanitize_sql_for_conditions, conditions)
+            "(#{original_conditions}) OR (#{ids_clause})"
+          end
         end
       end
-    scope.where(cond_for_count).includes(includes).count
+    scope.where(cond_for_count).includes(includes).references(includes).count
   end
 
   def self.find_reflection(klass, association_to_match)
@@ -164,7 +165,7 @@ module Rbac
   end
 
   def self.find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
-    total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).count
+    total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
     if filtered_ids.kind_of?(Array)
       reflection = find_reflection(klass, parent_class.name.underscore.to_sym)
       if reflection
@@ -177,7 +178,7 @@ module Rbac
       $log.debug("MIQ(RBAC.find_targets_filtered_by_parent_ids): New Find options: #{find_options.inspect}")
     end
     targets     = self.method_with_scope(scope, find_options)
-    auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).count
+    auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
 
     return targets, total_count, auth_count
   end
@@ -191,7 +192,7 @@ module Rbac
       $log.debug("MIQ(RBAC.find_targets_filtered_by_ids): New Find options: #{find_options.inspect}")
     end
     targets     = self.method_with_scope(scope, find_options)
-    auth_count  = klass.count(:conditions => find_options[:conditions], :include => find_options[:include])
+    auth_count  = klass.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
 
     return targets, total_count, auth_count
   end
@@ -230,7 +231,7 @@ module Rbac
       end
 
       cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
-      targets = klass.all(find_options.merge(:conditions => cond, :include => incl))
+      targets = klass.all(find_options.except(:conditions, :include)).where(cond).includes(incl).references(incl)
 
       [targets, targets.length, targets.length]
     else
@@ -247,7 +248,7 @@ module Rbac
 
   def self.find_targets_without_rbac(klass, scope, find_options = {})
     targets     = self.method_with_scope(scope, find_options)
-    total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).count : targets.length
+    total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
 
     return targets, total_count, total_count
   end
@@ -275,8 +276,7 @@ module Rbac
 
   def self.filtered(objects, options = {})
     unless objects.empty?
-      options[:targets] = objects
-      objects, _ = Rbac.search(options)
+      objects, _attrs = Rbac.search(options.merge(:targets => objects, :results_format => :objects))
     end
     objects
   end
@@ -442,25 +442,13 @@ module Rbac
     return targets, attrs
   end
 
-  def self.apply_options(ar_scope, options)
-    [
-      [:conditions, :where],
-      [:include, :includes],
-      [:limit, :limit],
-      [:order, :order],
-      [:offset, :offset],
-    ].inject(ar_scope) { |scope, (key, method)|
-      scope.send(method, options[key])
-    }
-  end
-
   def self.method_with_scope(ar_scope, options)
     if ar_scope == VmdbDatabaseConnection
       ar_scope.all
     elsif ar_scope < ActsAsArModel
       ar_scope.find(:all, options)
     else
-      apply_options(ar_scope, options).all
+      ar_scope.apply_legacy_finder_options(options)
     end
   end
 

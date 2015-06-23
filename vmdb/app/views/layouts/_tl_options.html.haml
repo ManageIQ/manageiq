@@ -1,10 +1,10 @@
 - url = url_for(:action => 'tl_chooser', :id => @record.id)
 #tl_options_div
-  - if @temp[:timeline]
+  - if @timeline
     %fieldset
       %h3
         - if @record != @tl_record
-          = _("Options %s: %s") % [ui_lookup(:model => @tl_record.class), @tl_record.name]
+          = _("Options %s: %s") % [ui_lookup(:model => @tl_record.class.to_s), @tl_record.name]
         - else
           = _("Options")
       %table.style1

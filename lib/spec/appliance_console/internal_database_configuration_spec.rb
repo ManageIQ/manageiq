@@ -35,10 +35,9 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
   end
 
   it "#post_activation" do
-    LinuxAdmin.stub(:run).with("chkconfig", :params => {"--add" => "miqtop"})
-    LinuxAdmin::Service.stub(:new => double.as_null_object)
-    ApplianceConsole::ServiceGroup.any_instance.stub(:start_command)
-    LinuxAdmin::Service.should_receive(:new).with(ApplianceConsole::POSTGRESQL_SERVICE).and_return(double(:enable => true))
+    expect(ApplianceConsole::ServiceGroup).to(
+      receive(:new).with(:internal_postgresql => true).and_return(double(:restart_services => true))
+    )
     @config.post_activation
   end
 

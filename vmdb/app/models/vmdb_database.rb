@@ -2,7 +2,7 @@ class VmdbDatabase < ActiveRecord::Base
   has_many :vmdb_tables,           :dependent => :destroy
   has_many :evm_tables,            :class_name => 'VmdbTableEvm'
   has_many :vmdb_database_metrics, :dependent => :destroy
-  has_one  :latest_hourly_metric,  :class_name => 'VmdbDatabaseMetric', :conditions => {:capture_interval_name => 'hourly'}, :order => "timestamp DESC"
+  has_one  :latest_hourly_metric,  -> { where(:capture_interval_name => 'hourly').order "timestamp DESC" }, :class_name => 'VmdbDatabaseMetric'
 
   virtual_has_many :vmdb_database_settings
   virtual_has_many :vmdb_database_connections
@@ -49,7 +49,7 @@ class VmdbDatabase < ActiveRecord::Base
     #   MAX(timestamp).
     table_ids  = self.evm_tables.collect(&:id)
     latest_ids = VmdbMetric.where(:resource_type => "VmdbTable", :resource_id => table_ids, :capture_interval_name => "hourly").select("MAX(id) AS id").group(:resource_type, :resource_id).collect(&:id)
-    metrics    = VmdbMetric.where(:id => latest_ids).all
+    metrics    = VmdbMetric.where(:id => latest_ids).to_a
 
     metrics = metrics.sort_by { |m| m.send(sorted_by) }.reverse
     metrics = metrics[0, limit] if limit.kind_of?(Numeric)

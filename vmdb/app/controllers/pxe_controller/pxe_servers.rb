@@ -310,7 +310,7 @@ module PxeController::PxeServers
         add_flash(_("%s is required") % "URI", :error)
       end
       if @edit[:new][:log_userid].blank?
-        add_flash(_("%s is required") % "User ID", :error)
+        add_flash(_("%s is required") % "Username", :error)
       end
       if @edit[:new][:log_password].blank?
         add_flash(_("%s is required") % "Password", :error)

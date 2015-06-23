@@ -39,6 +39,7 @@ class EmsClusterController < ApplicationController
                       :url=>"/ems_cluster/show/#{@ems_cluster.id}?display=descendant_vms&treestate=true"})
       @showtype = "config"
       build_dc_tree
+      build_vm_host_array
 
     when "all_vms"
       drop_breadcrumb( {:name=>@ems_cluster.name+" (All VMs)", :url=>"/ems_cluster/show/#{@ems_cluster.id}?display=all_vms"} )
@@ -60,8 +61,10 @@ class EmsClusterController < ApplicationController
       end
 
     when "hosts"
-      drop_breadcrumb( {:name=>@ems_cluster.name+" (All Hosts)", :url=>"/ems_cluster/show/#{@ems_cluster.id}?display=hosts"} )
-      @view, @pages = get_view(Host, :parent=>@ems_cluster) # Get the records (into a view) and the paginator
+      label, condition, breadcrumb_suffix = hosts_subsets
+
+      drop_breadcrumb( {:name => label, :url => "/ems_cluster/show/#{@ems_cluster.id}?display=hosts#{breadcrumb_suffix}"} )
+      @view, @pages = get_view(Host, :parent=>@ems_cluster, :conditions => condition) # Get the records (into a view) and the paginator
       @showtype = "hosts"
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]
@@ -260,10 +263,42 @@ class EmsClusterController < ApplicationController
 
   private ############################
 
+  def hosts_subsets
+    condition         = nil
+    label             = _("%s (All %s)" % [@ems_cluster.name, title_for_hosts])
+    breadcrumb_suffix = ""
+
+    host_service_group_name = params[:host_service_group_name]
+    if host_service_group_name
+      case params[:status]
+        when 'running'
+          hosts_filter =  @ems_cluster.host_ids_with_running_service_group(host_service_group_name)
+          label     = _("Hosts with running %s") % host_service_group_name
+        when 'failed'
+          hosts_filter =  @ems_cluster.host_ids_with_failed_service_group(host_service_group_name)
+          label     = _("Hosts with failed %s") % host_service_group_name
+        when 'all'
+          hosts_filter = @ems_cluster.host_ids_with_service_group(host_service_group_name)
+          label     = _("All %s with %s") % [title_for_hosts, host_service_group_name]
+      end
+
+      if hosts_filter
+        condition = ["hosts.id IN (#{hosts_filter.to_sql})"]
+        breadcrumb_suffix = "&host_service_group_name=#{host_service_group_name}&status=#{params[:status]}"
+      end
+    end
+
+    return label, condition, breadcrumb_suffix
+  end
+
+  def breadcrumb_name
+    title_for_clusters
+  end
+
   # Build the tree object to display the ems_cluster datacenter info
   def build_dc_tree
-    @sb[:tree_hosts]  = []                    # Capture all Host ids in the tree
-    @sb[:tree_vms]    = []                    # Capture all VM ids in the tree
+    @sb[:tree_hosts]    = []                    # Capture all Host ids in the tree
+    @sb[:tree_vms_hash] = {}                    # Capture all VM ids in the tree
     @sb[:cl_id] = @ems_cluster.id if @ems_cluster   # do not want to store cl object in session hash, need to get record incase coming from treesize to rebuild refreshed tree
     if !@ems_cluster
       @ems_cluster = EmsCluster.find(@sb[:cl_id])

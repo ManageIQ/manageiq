@@ -6,6 +6,7 @@ module EmsRefresh
           return @resources[stack.id] if @resources && !@resources.fetch_path(stack.id).blank?
           @resources = {} unless @resources
           # TODO(lsmola) catch exception when nested-depth is not supported, it's supported from Juno OpenStack
+          # TODO(lsmola) @resources[stack.id] = stack.resources(:nested_depth => 50)
           @resources[stack.id] = @orchestration_service.list_resources(stack, :nested_depth => 50).body['resources']
         end
 
@@ -21,10 +22,16 @@ module EmsRefresh
         end
 
         def detailed_stacks
+          return [] unless @orchestration_service
           # TODO(lsmola) We need a support of GET /{tenant_id}/stacks/detail in FOG, it was implemented here
           # https://review.openstack.org/#/c/35034/, but never documented in API reference, so right now we
           # can't get list of detailed stacks in one API call.
           @orchestration_service.stacks.collect(&:details)
+        rescue Excon::Errors::Forbidden
+          # Orchestration service is detected but not open to the user
+          log_prefix = "MIQ(OrchestrationStacks.detailed_stacks)"
+          $log.warn("#{log_prefix} Skip refreshing stacks because the user cannot access the orchestration service")
+          []
         end
 
         def parse_stack(stack)
@@ -46,6 +53,7 @@ module EmsRefresh
             :name                   => stack.stack_name,
             :description            => stack.description,
             :status                 => stack.stack_status,
+            :status_reason          => stack.stack_status_reason,
             :children               => child_stacks,
             :resources              => resources,
             :outputs                => find_stack_outputs(stack),
@@ -95,6 +103,7 @@ module EmsRefresh
           uid = resource['physical_resource_id']
           new_result = {
             :ems_ref                => uid,
+            :name                   => resource['resource_name'],
             :logical_resource       => resource['logical_resource_id'],
             :physical_resource      => uid,
             :resource_category      => resource['resource_type'],
@@ -139,7 +148,7 @@ module EmsRefresh
         end
 
         def find_stack_outputs(stack)
-          raw_outputs = stack.outputs
+          raw_outputs = stack.outputs || []
           get_stack_outputs(stack.id, raw_outputs)
           raw_outputs.collect do |output|
             @data_index.fetch_path(:orchestration_stack_outputs, compose_ems_ref(stack.id, output['output_key']))
@@ -158,6 +167,7 @@ module EmsRefresh
           child_stacks = []
           resources = raw_resources.collect do |resource|
             physical_id = resource['physical_resource_id']
+            @resource_to_stack[physical_id] = stack.id
             # TODO(lsmola) this condition doesn't apply for OpenStack, resource is nested stack when it has child
             # resources nested resources will be solved in followup PR. There is 'rel' => 'nested' in links, when
             # resource has children.
@@ -181,6 +191,11 @@ module EmsRefresh
             end
             stack.delete(:children)
           end
+        end
+
+        # Compose an ems_ref combining some existing keys
+        def compose_ems_ref(*keys)
+          keys.join('_')
         end
       end
     end

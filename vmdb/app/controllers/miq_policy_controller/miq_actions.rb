@@ -12,6 +12,7 @@ module MiqPolicyController::MiqActions
       else
         add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAction"))
       end
+      @sb[:action] = nil
       get_node_info(x_node)
       replace_right_cell(@nodetype)
       return
@@ -49,6 +50,7 @@ module MiqPolicyController::MiqActions
         @nodetype = "a"
         @new_action_node = "a-#{to_cid(action.id)}"
         replace_right_cell("a", params[:button] == "save" ? [:policy_profile, :policy, :action] : [:action])
+        @sb[:action] = nil
       else
         action.errors.each do |field,msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -336,7 +338,7 @@ module MiqPolicyController::MiqActions
       end
       r_node[:children] = r_kids
     end
-    @temp[:cat_tree] = r_node.to_json
+    @cat_tree = r_node.to_json
   end
 
   # Set action record variables to new values
@@ -425,11 +427,11 @@ module MiqPolicyController::MiqActions
     @record = @action = action
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAction"), :name=>action.description}
     @right_cell_div = "action_details"
-    @temp[:alert_guids] = Array.new
+    @alert_guids = Array.new
     if action.options && action.options[:alert_guids]
       action.options[:alert_guids].each do |ag|
         alert = MiqAlert.find_by_guid(ag)
-        @temp[:alert_guids].push(alert) unless alert.nil?
+        @alert_guids.push(alert) unless alert.nil?
       end
     end
 
@@ -437,9 +439,10 @@ module MiqPolicyController::MiqActions
       @action_policies = @action.miq_policies.sort_by { |p| p.description.downcase }
     end
 
-    if ["inherit_parent_tags","remove_tags"].include?(@action.action_type)
-      cats = Classification.where(:name => @action.options[:cats]).pluck(:description)
-      @temp[:cats] = cats.sort_by(&:downcase).join(" | ")
+    if %w(inherit_parent_tags remove_tags).include?(@action.action_type)
+      tag = Tag.find_by_classification_name(@action.options[:cats])
+      cats = Classification.where(:tag_id => tag.id).pluck(:description)
+      @cats = cats.sort_by(&:downcase).join(" | ")
     end
   end
 
@@ -453,7 +456,7 @@ module MiqPolicyController::MiqActions
     root[:tooltip] = "All Actions"
     root[:icon] = "folder.png"
 
-    @temp[name] = tree_nodes.to_json  # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
   end
 

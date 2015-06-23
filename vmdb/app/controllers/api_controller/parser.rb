@@ -11,18 +11,18 @@ class ApiController
       path_split = @req[:path].split('/')
       @req[:prefix]        = "/#{path_split[1]}"           # /api
       @req[:version]       = @version                      # Default API Version
-      cidx                 = 2                             # collection starts @ index 2
-      if path_split[2]
-        ver = path_split[2]
+      if params[:version]
+        ver = params[:version]
         if ver.match(version_config[:regex])               # v#.# version signature
           @req[:version]   = ver[1..-1]                    # Switching API Version
           @req[:prefix]    = "#{@req[:prefix]}/#{ver}"     # /api/v#.#
-          cidx            += 1
         end
       end
 
-      @req[:collection],    @req[:c_id] = path_split[cidx..cidx + 1]
-      @req[:subcollection], @req[:s_id] = path_split[cidx + 2..cidx + 3]
+      @req[:collection]    = params[:collection]
+      @req[:c_id]          = params[:c_id]
+      @req[:subcollection] = params[:subcollection]
+      @req[:s_id]          = params[:s_id]
 
       log_api_request
     end
@@ -42,6 +42,8 @@ class ApiController
     end
 
     def validate_api_request
+      validate_optional_collection_classes
+
       # API Version Validation
       if @req[:version]
         vname = @req[:version]
@@ -63,6 +65,20 @@ class ApiController
       end
 
       validate_api_parameters
+    end
+
+    def validate_optional_collection_classes
+      @collection_klasses = {}  # Default all to config classes
+      param = params['provider_class']
+      return unless param.present?
+
+      raise BadRequestError, "Unsupported provider_class #{param} specified" if param != "provider"
+      %w(tags policies policy_profiles).each do |cname|
+        if @req[:subcollection] == cname || expand?(cname)
+          raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
+        end
+      end
+      @collection_klasses[:providers] = "Provider"
     end
 
     def validate_api_action

@@ -490,7 +490,6 @@ class MiqCapacityController < ApplicationController
     end
 
     presenter[:expand_collapse_cells][:a] = 'expand'
-    presenter[:save_open_states_trees] << :utilization_tree
     presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
     presenter[:right_cell_text] = @right_cell_text
     presenter[:build_calendar]  = {
@@ -628,7 +627,6 @@ class MiqCapacityController < ApplicationController
     presenter[:update_partials][:main_div] = r[:partial => 'bottlenecks_tabs']
     presenter[:replace_partials][:tl_div]  = r[:partial => 'bottlenecks_tl_detail']
     presenter[:build_calendar] = true
-    presenter[:save_open_states_trees] << :bottlenecks_tree
     presenter[:right_cell_text] = @right_cell_text
 
     presenter[:extra_js] << "curTab = $('#bottlenecks_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
@@ -660,11 +658,9 @@ class MiqCapacityController < ApplicationController
 
   def bottleneck_show_timeline(refresh = nil)
     unless (refresh == "n" || params[:refresh] == "n") #||
-      #store object_where_clause in @temp so it can be retrieved after intializing @sb[:bottlenecks]
-      @temp[:objects_where_clause] = @sb[:bottlenecks][:objects_where_clause]
+      objects_where_clause = @sb[:bottlenecks][:objects_where_clause]
       @sb[:bottlenecks] = Hash.new
-      #restore object_where_clause from @temp
-      @sb[:bottlenecks][:objects_where_clause] = @temp[:objects_where_clause]
+      @sb[:bottlenecks][:objects_where_clause] = objects_where_clause
       @sb[:bottlenecks][:tl_options] = Hash.new
       @sb[:bottlenecks][:tl_options][:model] = "BottleNeck"
       @sb[:bottlenecks][:tl_options][:tz] = session[:user_tz]
@@ -741,7 +737,7 @@ class MiqCapacityController < ApplicationController
         blob.binary=(@sb[:bottlenecks][:report].to_timeline)
         session[:tl_xml_blob_id] = blob.id
       else
-        @temp[:tl_json] = @sb[:bottlenecks][:report].to_timeline
+        @tl_json = @sb[:bottlenecks][:report].to_timeline
       end
 #         START of TIMELINE TIMEZONE Code
 #     session[:tl_position] = @sb[:bottlenecks][:report].extras[:tl_position]
@@ -768,7 +764,7 @@ class MiqCapacityController < ApplicationController
   def util_build_tree(type, name)
     utilization = TreeBuilderUtilization.new(name, type, @sb)
     @right_cell_text = "#{type == :bottlenecks ? "Bottlenecks": "Utilization"} Summary"
-    @temp[name] = utilization.tree_nodes
+    instance_variable_set :"@#{name}", utilization.tree_nodes
   end
 
   # Create an array of hashes from the Utilization summary report tab information

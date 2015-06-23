@@ -20,10 +20,8 @@ class SupportController < ApplicationController
   def about
 #   @tabs ||= [ ["1", ""] ]
 #   @tabs.push( ["1", "Help"] )
-    session[:vmdb] ||= Hash.new
-    session[:vmdb][:version] ||= Vmdb::Appliance.VERSION
-    session[:vmdb][:build]   ||= Vmdb::Appliance.BUILD
-    @temp[:user_role] = User.current_user.miq_user_role_name
+    @vmdb = {:version => Vmdb::Appliance.VERSION, :build => Vmdb::Appliance.BUILD}
+    @user_role = User.current_user.miq_user_role_name
     @layout = "about"
   end
 

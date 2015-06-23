@@ -18,7 +18,7 @@ module EmsCloudHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
-  def textual_group_tags
+  def textual_group_smart_management
     items = %w{zone tags}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end

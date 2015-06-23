@@ -8,8 +8,7 @@
     %tbody
       - # CI node level
       - @sb[:obj_list].sort.each do |obj|
-        %tr{:title => _("Click to view details"),
-          :onclick => "cfmeDynatree_activateNode('ab_tree', 'xx-#{obj[1].split('_').first}_#{@sb[:target_classes][obj[0]]}')"}
+        %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('ab_tree', 'xx-#{obj[1].split('_').first}_#{@sb[:target_classes][obj[0]]}')"}
           %td
             = obj[0]
 
@@ -110,7 +109,7 @@
               = obj[:name]
             %td
               = obj[:description]
-- elsif @temp && @temp[:custom_button]
+- elsif @custom_button
   = render :partial => 'shared/buttons/ab_show'
 - elsif %w(ab_group_edit ab_group_new).include?(params[:pressed]) || (params[:button] == "reset" && params[:action] == "group_update")
   = render :partial => 'shared/buttons/group_form'

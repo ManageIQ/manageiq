@@ -32,6 +32,14 @@
           = text_field_tag("port", @edit[:new][:port],
             :maxlength         => 15,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      - if @edit[:new][:emstype] && @edit[:new][:emstype] == 'openstack' && @edit[:openstack_infra_providers].length > 1
+        %tr
+          %td.key
+            = _('Openstack Infra provider')
+          %td.wide
+            = select_tag("provider_id",
+              options_for_select(@edit[:openstack_infra_providers], @edit[:new][:provider_id]),
+              "data-miq_observe" => {:url => url}.to_json)
       %tr
         %td.key
           = _('Zone')
@@ -59,14 +67,16 @@
             :maxlength         => 6,
             :size              => 6,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %hr
-  = render :partial => "/layouts/multi_auth_credentials", :locals  => {:record => @ems}
+  - unless @ems.kind_of?(EmsContainer)
+    %hr
+      = render :partial => "/layouts/multi_auth_credentials", :locals  => {:record => @ems}
   - if @edit[:ems_id].nil?
     %table{:width => "100%"}
       %tr
         %td{:align => "right"}
           #buttons_on
-            - t = _("Add this %s") % ui_lookup(:model => model_for_ems(@ems).to_s)
+            - name = ui_lookup(:model => model_for_ems(@ems).to_s)
+            - t = _("Add this %s") % name
             = button_tag(_('Add'),
               :class   => "btn btn-primary save",
               :alt     => t,
@@ -77,6 +87,7 @@
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => "create", :id => "new", :button => "cancel")}');")
+              :href    => url_for(:action => "show_list", :flash_msg=>_("Add of new %s was cancelled by the user") % name),
+              :onclick => 'window.location = this.getAttribute("href");')
   - else
     = render :partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @ems.id, :ajax_buttons => true, :restful => true}

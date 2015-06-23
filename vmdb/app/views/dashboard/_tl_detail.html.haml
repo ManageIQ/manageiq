@@ -8,7 +8,7 @@
     #miq_timeline{:style => "height: 500px; border: 1px solid #aaa;"}
     = render(:partial => "layouts/timeline",
       :locals  => {:bands => @report.timeline[:bands],
-        :tl_json => @temp[:tl_json].to_s.html_safe,
+        :tl_json => @tl_json.to_s.html_safe,
         :data_action => "getTLdata",
         :position_time => session[:tl_position]})
     - if @report.filter_summary

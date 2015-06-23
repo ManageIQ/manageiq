@@ -273,7 +273,7 @@ class StorageManagerController < ApplicationController
     valid = true
     @edit[:errors] = Array.new
     if !sm.authentication_password.blank? && sm.authentication_userid.blank?
-      @edit[:errors].push("User ID must be entered if Password is entered")
+      @edit[:errors].push("Username must be entered if Password is entered")
       valid = false
     end
     if @edit[:new][:password] != @edit[:new][:verify]

@@ -1,12 +1,4 @@
 class ExtManagementSystem < ActiveRecord::Base
-  SUBCLASSES = %w(
-    ConfigurationManager
-    EmsInfra
-    EmsCloud
-    EmsContainer
-    ProvisioningManager
-  )
-
   def self.types
     leaf_subclasses.collect(&:ems_type)
   end
@@ -38,8 +30,8 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :miq_templates,     :foreign_key => :ems_id
   has_many :vms,               :foreign_key => :ems_id
 
-  has_many :ems_events,     :class_name => "EmsEvent",    :foreign_key => "ems_id", :order => "timestamp"
-  has_many :policy_events,  :class_name => "PolicyEvent", :foreign_key => "ems_id", :order => "timestamp"
+  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id"
+  has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy
@@ -156,6 +148,10 @@ class ExtManagementSystem < ActiveRecord::Base
     false
   end
 
+  def supports_provider_id?
+    false
+  end
+
   def supports_authentication?(authtype)
     authtype.to_s == "default"
   end
@@ -251,10 +247,6 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def clustered_hosts
     self.hosts.select { |h| !h.ems_cluster.nil? }
-  end
-
-  def miq_proxies
-    MiqProxy.all.select { |p| p.ext_management_system == self }
   end
 
   def clear_association_cache_with_storages
@@ -443,7 +435,3 @@ class ExtManagementSystem < ActiveRecord::Base
     end
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-ExtManagementSystem::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

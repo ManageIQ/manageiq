@@ -52,8 +52,8 @@ module ConfigurationHelper
     end
 
     def compare_or_drift_mode_exists(resource)
-      inactive_icon("view_list.png", _('Details View'), resource, "details") +
-      active_icon("exists.png", _('Exist Mode'))
+      inactive_icon("view_list.png", _('Details Mode'), resource, "details") +
+      active_icon("exists.png", _('Exists Mode'))
     end
 
     def compare_or_drift_mode_details(resource)

@@ -131,7 +131,7 @@
           %h3=_("SNMP Trap")
           %table.style1
             %tr
-              %td.key=_("Host")
+              %td.key=title_for_host
               %td
                 = h(@action.options[:host])
             %tr
@@ -176,15 +176,15 @@
           %hr
         - when "evaluate_alerts"
           %h3=_("Alerts to Evaluate")
-          - if @temp[:alert_guids].empty?
+          - if @alert_guids.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts have been selected.")}
           - else
             %table.table.table-striped.table-bordered.table-hover
               %tbody
-                - @temp[:alert_guids].sort_by(&:description).each do |alert|
+                - @alert_guids.sort_by(&:description).each do |alert|
                   - id = "al-#{to_cid(alert.id)}"
-                  %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert"),
-                    :onmouseover => "this.style.cursor='pointer'", :title => _('View This Alert')}
+                  %tr{:title => _('View This Alert'),
+                    :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert")}
                     %td.narrow
                       %img{:src => "/images/icons/new/miq_alert.png"}
                     %td
@@ -199,15 +199,15 @@
                 = h(ui_lookup(:table => @action.options[:parent_type]))
             %tr
               %td.key=_("Categories")
-              %td= h(@temp[:cats])
+              %td= h(@cats)
           %hr
         - when "remove_tags"
-          %h3=_("Inherit Tags")
+          %h3=_("Remove Tags")
           %table.style1
             %tr
               %td.key=_("Categories")
               %td
-                = h(@temp[:cats])
+                = h(@cats)
           %hr
 
         - if x_active_tree == :action_tree
@@ -219,8 +219,8 @@
               %tbody
                 - @action_policies.each do |p|
                   - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
-                  %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
-                    :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view Policy")}
+                  %tr{:title => _("Click to view Policy"),
+                    :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy")}
                     %td.narrow
                       - src = "#{p.towhat.downcase}#{p.active ? '' : '_inactive'}"
                       %img{:src => "/images/icons/new/miq_policy_#{src}.png"}

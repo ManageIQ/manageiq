@@ -1,15 +1,15 @@
 - unless @edit[:new][:emstype].blank?
   %tr
-    %td.key=_('Host Name')
+    %td.key=_('Host Name (or IPv4 or IPv6 address)')
     %td.wide
       = text_field_tag("hostname",
         @edit[:new][:hostname],
         :maxlength => MAX_HOSTNAME_LEN,
         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %tr
-    %td.key=_('IP Address')
+    %td.key=_('Port')
     %td.wide
-      = text_field_tag("ipaddress",
-        @edit[:new][:ipaddress],
-        :maxlength => 15,
+      = text_field_tag("port",
+        @edit[:new][:port],
+        :maxlength => 5,
         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

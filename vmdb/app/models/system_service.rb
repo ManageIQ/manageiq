@@ -3,6 +3,7 @@ class SystemService < ActiveRecord::Base
   belongs_to :vm,           :foreign_key => :vm_or_template_id
   belongs_to :miq_template, :foreign_key => :vm_or_template_id
   belongs_to :host
+  belongs_to :host_service_group
 
   serialize :dependencies, Hash
 
@@ -31,6 +32,18 @@ class SystemService < ActiveRecord::Base
     "3" =>    "Manual",
     "4" =>    "Disabled"
   }
+
+  def self.running_systemd_services_condition
+    arel_table[:systemd_active].eq('active').and(arel_table[:systemd_sub].eq('running'))
+  end
+
+  def self.failed_systemd_services_condition
+    arel_table[:systemd_active].eq('failed').or(arel_table[:systemd_sub].eq('failed'))
+  end
+
+  def self.host_service_group_condition(host_service_group_id)
+    arel_table[:host_service_group_id].eq(host_service_group_id)
+  end
 
   def self.add_elements(parent, xmlNode)
     add_missing_elements(parent, xmlNode, "services")

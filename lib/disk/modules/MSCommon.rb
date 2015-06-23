@@ -4,7 +4,7 @@ require 'MiqLargeFile'
 $:.push("#{File.dirname(__FILE__)}/../../util")
 require 'miq-unicode'
 require 'binary_struct'
-require 'MiqMemory'
+require 'memory_buffer'
 
 
 module MSCommon
@@ -131,7 +131,7 @@ module MSCommon
 				allocStat = getAllocStatus(blockNum, secNum)
 				if allocStat == false
 					if parent == nil
-  					buf << MiqMemory.create_zero_buffer(thisLen) 
+  					buf << MemoryBuffer.create(thisLen) 
   				else
 					  buf << parent.d_read(pos + buf.length, thisLen, mark_dirty)
 				  end
@@ -287,7 +287,7 @@ module MSCommon
 	def MSCommon.allocSector(blockNum, sectorNum, pos, parent)
 		allocBlock(blockNum) if getBAE(blockNum) == BLOCK_NOT_ALLOCATED
 		if parent.nil?
-			buf = MiqMemory.create_zero_buffer(@blockSize)
+			buf = MemoryBuffer.create(@blockSize)
 		else
 			sector = pos.divmod(@blockSize)[0]
 			buf = parent.d_read(sector, @blockSize)
@@ -303,7 +303,7 @@ module MSCommon
 		sector = findFreeSector
 		putBAE(blockNum, sector)
 		# Write sector alloc bitmap.
-		bmp = MiqMemory.create_zero_buffer(@blockSectorBitmapByteCount)
+		bmp = MemoryBuffer.create(@blockSectorBitmapByteCount)
 		@file.seek(sector * @blockSize, IO::SEEK_SET)
 		@file.write(bmp, bmp.size)
 		# Footer has to move. Total size is 2048 + size of data blocks.

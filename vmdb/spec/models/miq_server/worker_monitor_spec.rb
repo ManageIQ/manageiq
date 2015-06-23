@@ -107,7 +107,7 @@ describe "MiqWorker Monitor" do
 
         it "on worker destroy, will no longer associate the 'ready' message with the worker" do
           @worker.destroy
-          MiqQueue.count(:conditions => {:state => 'ready'}).should == 1
+          MiqQueue.where(:state => 'ready').count.should == 1
           @worker.messages(true).size.should    ==  0
 
           m = @messages.first.reload

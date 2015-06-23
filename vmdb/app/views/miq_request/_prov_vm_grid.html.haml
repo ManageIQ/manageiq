@@ -1,5 +1,5 @@
 #prov_vm_div
-  - if @temp[:vms]
+  - if @vms
     %table.table.table-bordered.table-striped.table-hover.table-selectable
       %thead
         %tr
@@ -30,7 +30,7 @@
             %td
             %td
             %td
-        - @temp[:vms].each do |row|
+        - @vms.each do |row|
           - @id = row.id
           - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0] == @id ? "selected" : ""
           - clk = "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');"
@@ -52,7 +52,7 @@
                 = h(row.ext_management_system.name)
             %td
               = h(row.v_total_snapshots)
-  - elsif @temp[:vm]
+  - elsif @vm
     - # grid with only one record for Redhat provisioning
     %table.table.table-striped.table-bordered.table-selectable
       %thead
@@ -64,19 +64,19 @@
       %tbody
         %tr.selected
           %td
-            = h(@temp[:vm].name)
+            = h(@vm.name)
           %td
-            = h(@temp[:vm].operating_system.try(:product_name))
+            = h(@vm.operating_system.try(:product_name))
           %td
-            = h(@temp[:vm].platform)
+            = h(@vm.platform)
           %td
-            = h(@temp[:vm].num_cpu)
+            = h(@vm.num_cpu)
           %td
-            = h(number_to_human_size(@temp[:vm].mem_cpu.to_i * 1024 * 1024))
+            = h(number_to_human_size(@vm.mem_cpu.to_i * 1024 * 1024))
           %td
-            = h(number_to_human_size(@temp[:vm].allocated_disk_storage))
+            = h(number_to_human_size(@vm.allocated_disk_storage))
           %td
-            - if @temp[:vm].ext_management_system
-              = h(@temp[:vm].ext_management_system.name)
+            - if @vm.ext_management_system
+              = h(@vm.ext_management_system.name)
           %td
-            = h(@temp[:vm].v_total_snapshots)
+            = h(@vm.v_total_snapshots)

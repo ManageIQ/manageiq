@@ -90,7 +90,7 @@
         = render(:partial => "layouts/dynatree",
           :locals         => {:tree_id   => tree_id,
             :tree_name                   => session[:tree_name],
-            :json_tree                   => @temp[:all_sections_tree],
+            :json_tree                   => @all_sections_tree,
             :onselect                    => "miqOnCheck_Sections",
             :check_url                   => "/#{controller_name}/sections_field_changed/",
             :exp_tree                    => false,

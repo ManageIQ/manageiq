@@ -192,13 +192,14 @@ module MiqAeCustomizationController::Dialogs
     assert_privileges("dialog_edit")
     case params[:button]
     when 'cancel'
+      if params[:id]
+        dialog_label = session[:edit][:current][:label]
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Dialog"), :name => dialog_label})
+      else
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "Dialog"))
+      end
       @edit = session[:edit] = nil # clean out the saved info
       self.x_active_tree = :dialogs_tree
-      if !@record || @record.id.blank?
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"Dialog"))
-      else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"Dialog"), :name=>@record.label})
-      end
       get_node_info
       replace_right_cell(x_node)
 
@@ -425,8 +426,8 @@ module MiqAeCustomizationController::Dialogs
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("field_values_div", :partial=>"field_values", :locals=>{:entry=>"new", :edit=>true})
-        page << javascript_focus('entry_name')
-        page << "$('#entry_name').select();"
+        page << javascript_focus("entry_value")
+        page << "$('#entry_#{j_str(params[:field])}').select();"
       end
       session[:entry] = "new"
     else
@@ -460,27 +461,27 @@ module MiqAeCustomizationController::Dialogs
     key = fields[id]
 
     if session[:entry] == "new"
-      if params["entry"]["value"].strip! != "" && params["entry"]["description"].strip != ""
-
+      entry_value       = params["entry"]["value"].strip
+      entry_description = params["entry"]["description"].strip
+      if entry_value != "" && entry_description != ""
         if key[:values].include?([params["entry"]["value"],params["entry"]["description"]])
           add_flash(_("%{field} '%{value}' is already in use") % {:field=>params["entry"]["description"], :value=>params["entry"]["value"]}, :error)
           render_flash do |page|
-            page << javascript_focus('entry_name')
+            page << "$('#entry_value').focus();"
           end
           return
         else
           key[:values].push([params["entry"]["value"],params["entry"]["description"]])
           @edit[:field_values] = copy_array(key[:values])
         end
-
       else
         add_flash(_("%{field1} and %{field2} fields can't be blank") % {:field1=>"Value", :field2=>"Description"}, :error)
+        focus_field = entry_value == "" ? "entry_value" : "entry_description"
         render_flash do |page|
-          page << javascript_focus('entry_value')
+          page << "$('##{focus_field}').focus();"
         end
         return
       end
-
     else
       key[:values].each_with_index do |entry, i|
 
@@ -489,7 +490,7 @@ module MiqAeCustomizationController::Dialogs
           add_flash(_("%{field} '%{value}' is already in use") % {:field=>params["entry"]["description"], :value=>params["entry"]["value"]}, :error)
 
           render_flash do |page|
-            page << javascript_focus('entry_name')
+            page << "$('#entry_value').focus();"
           end
           return
         else
@@ -770,7 +771,7 @@ module MiqAeCustomizationController::Dialogs
 
     base_node[:children] = tab_nodes unless tab_nodes.empty?
 
-    @temp[:dialog_edit_tree] = base_node.to_json # JSON object for tree loading
+    @dialog_edit_tree = base_node.to_json # JSON object for tree loading
 
     x_node_set("root", :dialog_edit_tree) unless x_node(:dialog_edit_tree)
 
@@ -876,6 +877,9 @@ module MiqAeCustomizationController::Dialogs
     copy_checkbox_field_param.call(:past_dates)
     copy_checkbox_field_param.call(:reconfigurable)
     copy_checkbox_field_param.call(:dynamic)
+    copy_checkbox_field_param.call(:read_only)
+    copy_checkbox_field_param.call(:auto_refresh)
+    copy_checkbox_field_param.call(:trigger_auto_refresh)
 
     [:data_typ, :required, :sort_by, :sort_by, :sort_order].each { |key| copy_field_param.call(key) }
 
@@ -895,6 +899,7 @@ module MiqAeCustomizationController::Dialogs
 
       if @edit[:field_typ] != params[:field_typ]
         @edit[:field_dynamic] = key[:dynamic] = false
+        @edit[:field_read_only] = key[:read_only] = false
 
         if params[:field_typ].include?("TextBox")
           @edit[:field_protected]      = key[:protected] = false
@@ -906,10 +911,6 @@ module MiqAeCustomizationController::Dialogs
           @edit[:field_required]      = key[:required]  = false
         elsif params[:field_typ] =~ /Drop|Radio/
           @edit[:field_default_value] = key[:default_value] = nil
-        elsif params[:field_typ] =~ /DialogFieldDynamicList/
-          @edit[:field_entry_point]         = key[:entry_point] = ''
-          @edit[:field_show_refresh_button] = key[:show_refresh_button] = false
-          @edit[:field_load_on_init]        = key[:load_on_init] = false
         else
           @edit[:field_default_value] = key[:default_value] = false
         end
@@ -1025,14 +1026,16 @@ module MiqAeCustomizationController::Dialogs
       get_field_types
       field = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields][ids.last.to_i]
       @edit.update(
-        :field_label          => field[:label],
-        :field_name           => field[:name],
-        :field_description    => field[:description],
-        :field_typ            => field[:typ],
-        :field_dynamic        => field[:dynamic],
-        :field_default_value  => field[:default_value],
-        :field_reconfigurable => field[:reconfigurable],
-        :field_required       => field[:required]
+        :field_label                => field[:label],
+        :field_name                 => field[:name],
+        :field_description          => field[:description],
+        :field_typ                  => field[:typ],
+        :field_dynamic              => field[:dynamic],
+        :field_default_value        => field[:default_value],
+        :field_read_only            => field[:read_only],
+        :field_reconfigurable       => field[:reconfigurable],
+        :field_required             => field[:required],
+        :field_trigger_auto_refresh => field[:trigger_auto_refresh]
       )
 
       if field[:typ].include?('TextBox')
@@ -1040,7 +1043,10 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_validator_type] = field[:validator_type]
         @edit[:field_validator_rule] = field[:validator_rule]
       end
-      @edit[:field_required]  = field[:required]  if field[:typ].include?('Text')
+
+      if field[:typ].include?('Text')
+        @edit[:field_required]             = field[:required]
+      end
 
       if field[:typ].include?("TagControl")
         @edit[:field_single_value] = field[:single_value]
@@ -1052,6 +1058,7 @@ module MiqAeCustomizationController::Dialogs
           :field_load_on_init        => field[:load_on_init],
           :field_show_refresh_button => field[:show_refresh_button],
           :field_entry_point         => field[:entry_point],
+          :field_auto_refresh        => field[:auto_refresh]
         )
       end
 
@@ -1136,23 +1143,26 @@ module MiqAeCustomizationController::Dialogs
           g.ordered_dialog_resources.each do |field|
             f = field.resource
             fld = {
-              :id             => f.id,
-              :label          => f.label,
-              :description    => f.description,
-              :typ            => f.type,
-              :tab_id         => t.id,
-              :group_id       => g.id,
-              :order          => field.order,
-              :name           => f.name,
-              :reconfigurable => f.reconfigurable,
-              :dynamic        => f.dynamic
+              :id                   => f.id,
+              :label                => f.label,
+              :description          => f.description,
+              :typ                  => f.type,
+              :tab_id               => t.id,
+              :group_id             => g.id,
+              :order                => field.order,
+              :name                 => f.name,
+              :reconfigurable       => f.reconfigurable,
+              :dynamic              => f.dynamic,
+              :read_only            => f.read_only,
+              :trigger_auto_refresh => f.trigger_auto_refresh
             }
 
             if dynamic_field?(fld)
               fld.update(
                 :load_on_init        => f.load_values_on_init,
                 :show_refresh_button => f.show_refresh_button,
-                :entry_point         => f.resource_action.fqname
+                :entry_point         => f.resource_action.fqname,
+                :auto_refresh        => f.auto_refresh
               )
             end
 
@@ -1177,8 +1187,8 @@ module MiqAeCustomizationController::Dialogs
                 fld[:validator_type] = f.validator_type
                 fld[:validator_rule] = f.validator_rule
               end
-              fld[:required]      = f.required
-              fld[:default_value] = f.default_value.nil? ? "": f.default_value
+              fld[:required]             = f.required
+              fld[:default_value]        = f.default_value.nil? ? "" : f.default_value
 
             elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(f.type)
               fld[:past_dates] = f.show_past_dates.nil? ? false : f.show_past_dates
@@ -1242,12 +1252,14 @@ module MiqAeCustomizationController::Dialogs
               if group[:fields]
                 group[:fields].each_with_index do |field,k|
                   fld = {
-                    :label          => field[:label],
-                    :description    => field[:description],
-                    :name           => field[:name],
-                    :reconfigurable => field[:reconfigurable],
-                    :dynamic        => field[:dynamic],
-                    :display        => :edit
+                    :label                => field[:label],
+                    :description          => field[:description],
+                    :name                 => field[:name],
+                    :reconfigurable       => field[:reconfigurable],
+                    :dynamic              => field[:dynamic],
+                    :read_only            => field[:read_only],
+                    :trigger_auto_refresh => field[:trigger_auto_refresh],
+                    :display              => :edit
                   }
 
                   if field[:typ] =~ /Drop|Radio/ && field[:dynamic] != true
@@ -1265,6 +1277,7 @@ module MiqAeCustomizationController::Dialogs
                     fld[:values]              = []
                     fld[:load_values_on_init] = field[:load_on_init]
                     fld[:show_refresh_button] = field[:show_refresh_button]
+                    fld[:auto_refresh]        = field[:auto_refresh]
                   end
 
                   if field[:typ] == "DialogFieldCheckBox"
@@ -1277,8 +1290,8 @@ module MiqAeCustomizationController::Dialogs
                       fld[:validator_type] = field[:validator_type]
                       fld[:validator_rule] = field[:validator_rule]
                     end
-                    fld[:required]      = field[:required]  if field[:typ].include?('Text')
-                    fld[:default_value] = field[:default_value].to_s
+                    fld[:required]             = field[:required]  if field[:typ].include?('Text')
+                    fld[:default_value]        = field[:default_value].to_s
 
                   elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field[:typ])
                     fld[:show_past_dates] = field[:past_dates]
@@ -1369,10 +1382,10 @@ module MiqAeCustomizationController::Dialogs
   end
 
   def dynamic_field?(field)
-    field[:typ] == 'DialogFieldDynamicList' || field[:dynamic]
+    field[:dynamic]
   end
 
   def needs_entry_point?
-    (@edit[:field_typ].to_s == 'DialogFieldDynamicList' || @edit[:field_dynamic]) && @edit[:field_entry_point].blank?
+    @edit[:field_dynamic] && @edit[:field_entry_point].blank?
   end
 end

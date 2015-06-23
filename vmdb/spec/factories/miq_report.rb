@@ -20,4 +20,8 @@ FactoryGirl.define do
   factory :miq_report_with_non_nil_condition, :parent => :miq_report  do
     conditions MiqExpression.new({"FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]}})
   end
+
+  factory :miq_report_with_results, :parent => :miq_report do
+    miq_report_results { [FactoryGirl.create(:miq_report_result)] }
+  end
 end

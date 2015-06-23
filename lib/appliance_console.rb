@@ -166,12 +166,17 @@ loop do
   begin
     ip = Env["IP"]
     # Because it takes a few seconds, get the database information once in the outside loop
-    dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database
+    configured = ApplianceConsole::DatabaseConfiguration.configured?
+    dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database if configured
 
     clear_screen
 
+    # Calling stty to provide the equivalent line settings when the console is run via an ssh session or
+    # over the virtual machine console.
+    system("stty -echoprt ixany iexten echoe echok")
+
     say("#{I18n.t("product.name")} Virtual Appliance\n")
-    say("To administer this appliance, browse to https://#{ip}\n") if ApplianceConsole::DatabaseConfiguration.configured?
+    say("To administer this appliance, browse to https://#{ip}\n") if configured
     if $MIQDEBUG
       $MIQDEBUG_FILES.each { |f| puts "Modified #{(Time.now - File.mtime(f)).to_i / 60} minutes ago - #{f}" }
     end
@@ -505,6 +510,7 @@ Date and Time Configuration
           if database_configuration.activate
             database_configuration.post_activation
             say("\nConfiguration activated successfully.\n")
+            dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database
             press_any_key
           else
             say("\nConfiguration activation failed!\n")

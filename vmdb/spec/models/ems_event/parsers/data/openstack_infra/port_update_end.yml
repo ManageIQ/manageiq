@@ -1,0 +1,57 @@
+---
+:content:
+  event_type: port.update.end
+  timestamp: '2015-05-12 07:22:43.948145'
+  _unique_id: 0d46021e485b42f48accda89e33e0dc1
+  payload:
+    port:
+      status: DOWN
+      binding:host_id: undercloud
+      allowed_address_pairs: []
+      extra_dhcp_opts:
+      - opt_value: pxelinux.0
+        opt_name: bootfile-name
+      - opt_value: 192.0.2.1
+        opt_name: server-ip-address
+      - opt_value: 192.0.2.1
+        opt_name: tftp-server
+      device_owner: compute:None
+      binding:profile: {}
+      fixed_ips:
+      - subnet_id: 772419ec-126c-4252-89be-8d995da16ecd
+        ip_address: 192.0.2.19
+      id: db544577-c240-4a7a-a772-e56f8dc43eab
+      security_groups:
+      - 7603033c-66ce-4f47-885c-489b2d4dc9e2
+      device_id: a9811ecc-f6e9-4dfe-b78b-a7437c9d3c1b
+      name: ''
+      admin_state_up: true
+      network_id: 3f6c3325-6f8f-4bdc-b093-328008a7099e
+      tenant_id: bb5c2277f9d04c16ab19cd70766aeba1
+      binding:vif_details: {}
+      binding:vnic_type: normal
+      binding:vif_type: binding_failed
+      mac_address: 00:5a:08:fe:8a:50
+  priority: INFO
+  publisher_id: network.localhost.localdomain
+  message_id: b97c82d7-cbbe-4d2f-92ee-dda8b52d2b09
+:context:
+  _context_roles:
+  - _member_
+  - admin
+  _context_request_id: req-bad495ae-61b4-4b67-983a-792f4d7caa1c
+  _context_tenant_id: 61d55da9190d415797dff343913a5c19
+  _context_user: 42cd84d84ee64402a6dc92f5beeb7419
+  _context_tenant_name: service
+  _context_user_id: 42cd84d84ee64402a6dc92f5beeb7419
+  _context_project_name: service
+  _context_read_deleted: 'no'
+  _context_auth_token: c406daa895fd45b1b37263895981d5b3
+  _context_tenant: 61d55da9190d415797dff343913a5c19
+  _context_is_admin: true
+  _context_project_id: 61d55da9190d415797dff343913a5c19
+  _context_timestamp: '2015-05-12 07:22:43.742466'
+  _context_user_name: ironic
+:user_id:
+:priority:
+:content_type:

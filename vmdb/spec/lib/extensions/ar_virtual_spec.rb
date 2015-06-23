@@ -97,32 +97,15 @@ describe VirtualReflection do
     end
   end
 
-  context ".options[:uses]" do
-    it("without uses on .new") do
-      klass = model_with_virtual_fields { virtual_has_one :vref1 }
-      reflection = klass.virtual_field(:vref1)
-      reflection.options[:uses].should be_nil
-    end
-    it("with uses on .new") do
-      klass = model_with_virtual_fields do
-        virtual_has_one :vref1, :uses => :ref1
-      end
-      reflection = klass.virtual_field(:vref1)
-      reflection.options[:uses].should == :ref1
-    end
-  end
-
   it ".uses=" do
     c = model_with_virtual_fields { virtual_has_one :vref1 }.virtual_field(:vref1)
     c.uses = :ref1
     c.uses.should           == :ref1
-    c.options[:uses].should == :ref1
   end
 
   it ".options[:uses]=" do
     c = model_with_virtual_fields { virtual_has_one :vref1 }.virtual_field(:vref1)
     c.options[:uses] = :ref1
-    c.uses.should           == :ref1
     c.options[:uses].should == :ref1
   end
 end
@@ -132,6 +115,12 @@ describe VirtualFields do
     before(:each) do
       class TestClassBase
         def self.pluralize_table_names; false; end
+
+        # HACK: Simulate a real model by defining some methods expected by
+        # ActiveRecord::Associations::Builder::Association.build
+        def self.dangerous_attribute_method?(_); false; end
+        def self.generated_association_methods(*args); []; end
+        def self.add_autosave_association_callbacks(*args); end
         extend VirtualFields
       end
 
@@ -436,7 +425,6 @@ describe VirtualFields do
       it "with uses" do
         c = TestClass.virtual_has_one :vref1, :uses => :ref1
         c.uses.should           == :ref1
-        c.options[:uses].should == :ref1
       end
     end
 
@@ -453,13 +441,11 @@ describe VirtualFields do
         it "without uses" do
           c = TestClass.send(virtual_method, :vref1)
           c.uses.should           be_nil
-          c.options[:uses].should be_nil
         end
 
         it "with uses" do
           c = TestClass.send(virtual_method, :vref1, :uses => :ref1)
           c.uses.should           == :ref1
-          c.options[:uses].should == :ref1
         end
       end
     end
@@ -645,47 +631,42 @@ describe VirtualFields do
 
     context "virtual column" do
       it "as Symbol" do
-        lambda { Vm.all(:include => :platform) }.should_not raise_error
+        lambda { Vm.includes(:platform).load }.should_not raise_error
       end
 
       it "as Array" do
-        lambda { Vm.all(:include => [:platform]) }.should_not raise_error
-        lambda { Vm.all(:include => [:platform, :host]) }.should_not raise_error
+        lambda { Vm.includes([:platform]).load }.should_not raise_error
+        lambda { Vm.includes([:platform, :host]).load }.should_not raise_error
       end
 
       it "as Hash" do
-        lambda { Vm.all(:include => {:platform => {}}) }.should_not raise_error
-        lambda { Vm.all(:include => {:platform => {}, :host => :hardware}) }.should_not raise_error
+        lambda { Vm.includes(:platform => {}).load }.should_not raise_error
+        lambda { Vm.includes(:platform => {}, :host => :hardware).load }.should_not raise_error
       end
     end
 
     context "virtual reflection" do
       it "as Symbol" do
-        lambda { Vm.all(:include => :lans) }.should_not raise_error
+        lambda { Vm.includes(:lans).load }.should_not raise_error
       end
 
       it "as Array" do
-        lambda { Vm.all(:include => [:lans]) }.should_not raise_error
-        lambda { Vm.all(:include => [:lans, :host]) }.should_not raise_error
+        lambda { Vm.includes([:lans]).load }.should_not raise_error
+        lambda { Vm.includes([:lans, :host]).load }.should_not raise_error
       end
 
       it "as Hash" do
-        lambda { Vm.all(:include => {:lans => :switch}) }.should_not raise_error
-        lambda { Vm.all(:include => {:lans => :switch, :host => :hardware}) }.should_not raise_error
+        lambda { Vm.includes(:lans => :switch).load }.should_not raise_error
+        lambda { Vm.includes(:lans => :switch, :host => :hardware).load }.should_not raise_error
       end
     end
 
     it "nested virtual fields" do
-      lambda { Vm.all(:include => {:host => :ems_cluster}) }.should_not raise_error
+      lambda { Vm.includes(:host => :ems_cluster).load }.should_not raise_error
     end
 
     it "virtual field that has nested virtual fields in its :uses clause" do
-      lambda { Vm.all(:include => :ems_cluster) }.should_not raise_error
-    end
-
-    it "virtual fields as Hash when :conditions are also present" do
-      lambda { Vm.includes([:platform, :host]).where("hosts.name = 'test'") }.should_not raise_error
-      lambda { Vm.includes([:platform, :host]).where("hosts.id IS NOT NULL") }.should_not raise_error
+      lambda { Vm.includes(:ems_cluster).load }.should_not raise_error
     end
 
     it "should handle virtual fields in :include when :conditions are also present in calculations" do

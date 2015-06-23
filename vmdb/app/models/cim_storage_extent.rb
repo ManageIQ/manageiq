@@ -42,15 +42,6 @@ class CimStorageExtent < MiqCimInstance
   virtual_has_many  :hosts,           :class_name => 'Host'
   virtual_belongs_to  :storage_system,      :class_name => 'CimComputerSystem'
 
-  MODEL_SUBCLASSES  = [
-    'CimLogicalDisk',
-    'CimStorageVolume',
-    'OntapConcreteExtent',
-    'OntapFlexVolExtent',
-    'OntapPlexExtent',
-    'OntapRaidGroupExtent'
-  ]
-
   SeToBaseSe          = CimProfiles.storage_extent_to_base_storage_extent
   SeToTopSe         = CimProfiles.base_storage_extent_to_top_storage_extent
   SeToStorageSystem     = CimAssociations.CIM_StorageExtent_TO_CIM_ComputerSystem
@@ -241,9 +232,4 @@ class CimStorageExtent < MiqCimInstance
   def primordial?
     property('Primordial')
   end
-
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-# conditions that are generated on queries against this class.
-CimStorageExtent::MODEL_SUBCLASSES.each { |sc| require_dependency File.join(Rails.root, 'app', 'models', sc.underscore + '.rb')}

@@ -32,7 +32,13 @@ class MiqRequestController < ApplicationController
       end
     elsif ["miq_request_copy","miq_request_edit"].include?(params[:pressed])
       render :update do |page|
-        page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :prov_type=>@prov_type, :req_id=>@req_id, :org_controller=>@org_controller
+        page.redirect_to :controller     => @redirect_controller,
+                         :action         => @refresh_partial,
+                         :id             => @redirect_id,
+                         :prov_type      => @prov_type,
+                         :req_id         => @req_id,
+                         :org_controller => @org_controller,
+                         :prov_id        => @prov_id
       end
     elsif params[:pressed].ends_with?("_edit")
       if @refresh_partial == "show_list"
@@ -83,15 +89,11 @@ class MiqRequestController < ApplicationController
 
   def request_edit
     assert_privileges("miq_request_edit")
-    prov = MiqRequest.find_by_id(params[:id])
-    if prov.workflow_class
-      @org_controller = prov.resource_type == "MiqHostProvisionRequest" ? "host" : "vm"                           #request originated for resource_type
-      @redirect_controller = "miq_request"
-      @refresh_partial = "prov_edit"
-      @req_id = params[:id]
-      @prov_type = prov.resource_type
+    provision_request = MiqRequest.find_by_id(params[:id])
+    if provision_request.workflow_class || provision_request.kind_of?(MiqProvisionConfiguredSystemRequest)
+      request_edit_settings(provision_request)
     else
-      session[:checked_items] = prov.options[:src_ids]
+      session[:checked_items] = provision_request.options[:src_ids]
       @refresh_partial = "reconfigure"
       @_params[:controller] = "vm"
       reconfigurevms
@@ -100,12 +102,9 @@ class MiqRequestController < ApplicationController
 
   def request_copy
     assert_privileges("miq_request_copy")
-    prov = MiqRequest.find_by_id(params[:id])
-    @redirect_controller = "miq_request"
+    provision_request = MiqRequest.find_by_id(params[:id])
     @refresh_partial = "prov_copy"
-    @org_controller = prov.kind_of?(MiqHostProvisionRequest) ? "host" : "vm"                            #request originated for resource_type
-    @req_id = params[:id]
-    @prov_type = prov.resource_type
+    request_settings_for_edit_or_copy(provision_request)
   end
 
   # Show the main Requests list view
@@ -142,8 +141,9 @@ class MiqRequestController < ApplicationController
       gv_options = {:filter=>prov_condition(@sb[:def_prov_options][resource_type.to_sym])}
       @view, @pages = get_view(kls, gv_options) # Get view and paginator, based on the selected options
     else
-      requester = User.find_by_userid(session[:userid])
-      gv_options = {:filter=>prov_condition({:resource_type=>resource_type, :time_period=>time_period, :requester_id=>requester ? requester.id : nil})}
+      gv_options = {:filter => prov_condition(:resource_type => resource_type,
+                                              :time_period   => time_period,
+                                              :requester_id  => current_user.try(:id))}
       @view, @pages = get_view(kls, gv_options)     # Get requests for this user
     end
     @sb[:prov_options] ||= Hash.new
@@ -255,7 +255,7 @@ class MiqRequestController < ApplicationController
     # couldn't set this in new hash becasue that's being set by model
     @edit[:current][:description] = "Copy of #{org_req.description}"
     session[:changed] = true                                # Turn on the submit button
-    drop_breadcrumb( {:name=>"Copy of VM Provision Request", :url=>"/vm/provision"} )
+    drop_breadcrumb(:name => "Copy of #{org_req.request_type_display} Request")
     @in_a_form = true
     render :action=>"prov_edit"
   end
@@ -297,7 +297,7 @@ class MiqRequestController < ApplicationController
   end
 
   def prov_load_tab
-    if @options && @options[:current_tab_key] == :purpose # Need to build again for purpose tab, since it's stored in @temp
+    if @options && @options[:current_tab_key] == :purpose # Need to build again for purpose tab
       fld = @options[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
       build_tags_tree(@options[:wf],@options["#{fld}".to_sym],false)
     end
@@ -327,7 +327,7 @@ class MiqRequestController < ApplicationController
       end
     else
       render :update do |page|                    # Use JS to update the display
-        page.replace_html("requester_div", :partial => "prov_dialog",
+        page.replace_html("requester_div", :partial => "shared/views/prov_dialog",
                                            :locals  => {:wf => @edit[:wf], :dialog => :requester})
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
@@ -419,8 +419,7 @@ class MiqRequestController < ApplicationController
     cond = [{"AFTER" => {"value" => "#{opts[:time_period].to_i} Days Ago", "field" => "MiqRequest-created_on"}}]  # Start with setting time
 
     if !is_approver
-      requester = User.find_by_userid(session[:userid])
-      cond.push("=" => {"value" => requester.try(:id), "field" => "MiqRequest-requester_id"})
+      cond.push("=" => {"value" => current_user.try(:id), "field" => "MiqRequest-requester_id"})
     end
 
     if opts[:user_choice] && opts[:user_choice] != "all"
@@ -477,9 +476,14 @@ class MiqRequestController < ApplicationController
     opts[:states] = PROV_STATES
     opts[:reason_text] = nil
     opts[:types] = request_types_for_dropdown
-    time_period = 30        # fetch uniq requesters from this time frame, since that's the highest time period in pull down.
-    conditions = ["created_on>=? AND created_on<=? AND type IN (?)", time_period.days.ago.utc, Time.now.utc, request_types_for_model.keys]
-    opts[:users] = MiqRequest.all_requesters(conditions)
+
+    opts[:users] = MiqRequest.where(
+      :type       => request_types_for_model.keys,
+      :created_on => (30.days.ago.utc)..(Time.now.utc)
+    ).each_with_object({}) do |r, h|
+      h[r.requester_id] = (r.requester.nil? ? "#{r.requester_name} (no longer exists)" : r.requester_name)
+    end
+
     unless is_approver
       username = session[:username]
       opts[:users] = opts[:users].value?(username) ? {opts[:users].key(username) => username} : {}
@@ -499,6 +503,7 @@ class MiqRequestController < ApplicationController
   end
 
   def is_approver
+    # TODO: this should be current_user
     User.current_user.role_allows?(:identifier => 'miq_request_approval')
   end
 
@@ -549,6 +554,19 @@ class MiqRequestController < ApplicationController
         end
       end
     end
+  end
+
+  def request_settings_for_edit_or_copy(provision_request)
+    @org_controller = provision_request.originating_controller
+    @redirect_controller = "miq_request"
+    @req_id = provision_request.id
+    @prov_type = provision_request.resource_type
+    @prov_id = provision_request.options[:src_configured_system_ids]
+  end
+
+  def request_edit_settings(provision_request)
+    @refresh_partial = "prov_edit"
+    request_settings_for_edit_or_copy(provision_request)
   end
 
   def get_session_data

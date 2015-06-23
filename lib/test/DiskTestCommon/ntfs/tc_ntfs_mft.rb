@@ -1,6 +1,6 @@
 # encoding: US-ASCII
 
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/../..")
@@ -61,7 +61,7 @@ class MftEntry
 	end
 end
 
-class NtfsTestMft < Test::Unit::TestCase
+class NtfsTestMft < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'ntfs']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"
@@ -132,7 +132,7 @@ class NtfsTestMft < Test::Unit::TestCase
 	
 	def test_emtpy
 		@num_tests += 1
-		assert_raise(RuntimeError) {NTFS::MftEntry.new(nil, nil)}
+		assert_raises(RuntimeError) {NTFS::MftEntry.new(nil, nil)}
 	end
 	
 	def id(line, disk)

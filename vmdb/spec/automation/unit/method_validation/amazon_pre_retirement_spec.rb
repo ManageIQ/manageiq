@@ -11,7 +11,7 @@ describe "amazon_pre_retirement Method Validation" do
                                                   :virtualization_type => 'paravirtual',
                                                   :root_device_type    => 'instance_store')
     @vm   = FactoryGirl.create(:vm_amazon,
-                               :name => "testVM", :power_state => "on", :ems_id => @ems.id,
+                               :name => "testVM", :raw_power_state => "running", :ems_id => @ems.id,
                                :registered => true)
     @ins  = "/Cloud/VM/Retirement/StateMachines/Methods/PreRetirement"
   end

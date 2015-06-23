@@ -4,8 +4,7 @@ module ApiHelper
     # Helper proc for rendering a collection of type specified.
     #
     def render_collection_type(type, id, is_subcollection = false)
-      cspec = collection_config[type]
-      klass = cspec[:klass].constantize
+      klass = collection_class(type)
       opts  = {
         :name               => type.to_s,
         :is_subcollection   => is_subcollection,
@@ -98,7 +97,7 @@ module ApiHelper
       return reftype unless resource.respond_to?(:attributes)
 
       rclass = resource.class
-      if collection_config.fetch_path(type.to_sym, :klass).constantize != rclass
+      if collection_class(type) != rclass
         matched_type, _ = collection_config.detect do |_collection, spec|
           spec[:klass] && spec[:klass].constantize == rclass
         end
@@ -168,12 +167,7 @@ module ApiHelper
     private
 
     def resource_search(id, type, klass)
-      options = {
-        :targets        => Array(klass.find(id)),
-        :userid         => @auth_user,
-        :results_format => :objects
-      }
-      res = Rbac.search(options).first.first
+      res = Rbac.filtered([klass.find(id)], :userid => @auth_user).first
       raise ApiController::Forbidden, "Access to the resource #{type}/#{id} is forbidden" unless res
       res
     end
@@ -185,22 +179,21 @@ module ApiHelper
         elsif by_tag_param
           klass.find_tagged_with(:all => by_tag_param, :ns  => ApiController::TAG_NAMESPACE)
         else
-          klass.scoped
+          klass.all
         end
       filter_options = filter_param(klass)
       res = res.where(filter_options)             if filter_options.present? && res.respond_to?(:where)
 
-      sort_options = sort_params(klass)
-      res = res.reorder(sort_options)             if sort_options.present? && res.respond_to?(:reorder)
+      sort_options = sort_params(klass)           if res.respond_to?(:reorder)
+      res = res.reorder(sort_options)             if sort_options.present?
 
       options = {
-        :targets        => res,
         :userid         => @auth_user,
-        :results_format => :objects
       }
+      options[:order] = sort_options              if sort_options.present?
       options[:offset], options[:limit] = expand_paginate_params if paginate_params?
 
-      Rbac.search(options).first
+      Rbac.filtered(res, options)
     end
 
     #

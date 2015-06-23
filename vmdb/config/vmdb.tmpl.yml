@@ -75,6 +75,10 @@ ems_refresh:
   foreman_provisioning:
     :refresh_interval: 1.hour
   full_refresh_threshold: 100
+  kubernetes:
+    :refresh_interval: 15.minutes
+  openshift:
+    :refresh_interval: 15.minutes
   raise_vm_snapshot_complete_if_created_within: 15.minutes
   refresh_interval: 24.hours
   scvmm:
@@ -120,6 +124,8 @@ log:
   level_fog_in_evm: error
   level_rhevm: info
   level_rhevm_in_evm: error
+  level_scvmm: info
+  level_scvmm_in_evm: error
   level_vim: warn
   level_vim_in_evm: error
   path:
@@ -133,7 +139,7 @@ performance:
   capture_threshold:
     :ems_cluster: 50.minutes
     :host: 50.minutes
-    :storage: 120.minutes
+    :storage: 60.minutes
     :vm: 50.minutes
   capture_threshold_with_alerts:
     :host: 20.minutes
@@ -188,7 +194,7 @@ server:
   monitor_poll: 5.seconds
   name: EVM
   remote_console_type: VMRC
-  role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,web_services
+  role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,web_services,automate
   server_dequeue_frequency: 5.seconds
   session_store: cache
   startup_timeout: 300
@@ -293,11 +299,38 @@ workers:
         :duration: 10.seconds
         :capacity: 50
         :amqp_port: 5672
-        :event_catcher_openstack_infra: {}
+      :event_catcher_openstack_infra:
+        :poll: 15.seconds
+        :topics:
+          :nova: "notifications.*"
+          :cinder: "notifications.*"
+          :glance: "notifications.*"
+          :neutron: "notifications.*"
+          :heat: "notifications.*"
+          :ironic: "notifications.*"
+        :duration: 10.seconds
+        :capacity: 50
+        :amqp_port: 5672
       :event_catcher_amazon:
         :poll: 15.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
+        :enabled_events:
+          Node:
+            - NodeReady
+            - NodeNotReady
+            - rebooted
+          Pod:
+            - scheduled
+      :event_catcher_openshift:
+        :poll: 1.seconds
+        :enabled_events:
+          Node:
+            - NodeReady
+            - NodeNotReady
+            - rebooted
+          Pod:
+            - scheduled
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
@@ -337,6 +370,7 @@ workers:
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_kubernetes: {}
+        :ems_refresh_worker_openshift: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_redhat: {}
         :ems_refresh_worker_openstack: {}
@@ -444,8 +478,6 @@ workers:
         - miq_policies
         - miq_policy_contents
         - miq_product_features
-        - miq_proxies_product_updates
-        - miq_proxies
         - miq_queue
         - miq_roles_features
         - miq_report_result_details
@@ -461,8 +493,6 @@ workers:
         - miq_widgets
         - miq_widget_contents
         - miq_workers
-        - product_updates
-        - proxy_tasks
         - rss_feeds
         - schema_migrations
         - server_roles
@@ -478,6 +508,7 @@ workers:
         - vmdb_tables
         :options:
           :replication_trace: false
+          :debug_sql: false
     :schedule_worker:
       :authentication_check_interval: 1.day
       :db_diagnostics_interval: 30.minutes
@@ -492,6 +523,7 @@ workers:
       :log_database_statistics_interval: 1.days
       :memory_threshold: 250.megabytes
       :nice_delta: 3
+      :orchestration_stack_retired_interval: 10.minutes
       :performance_collection_interval: 3.minutes
       :performance_collection_start_delay: 5.minutes
       :performance_realtime_purging_interval: 15.minutes

@@ -5,78 +5,157 @@ require "appliance_console/service_group"
 require "linux_admin"
 
 describe ApplianceConsole::ServiceGroup do
-  before do
-    @group = described_class.new
-    @common_services  = %w{evminit memcached miqtop evmserverd}
-    @postgres_service = %w{postgresql92-postgresql}
-  end
+  let(:group)             { described_class.new }
+  let(:common_services)   { %w(evminit memcached miqtop evmserverd) }
+  let(:postgres_service)  { "postgresql92-postgresql" }
 
-  it "#postgresql?" do
-    expect(described_class.new(:internal_postgresql => true).postgresql?).to be_true
-    expect(described_class.new(:internal_postgresql => false).postgresql?).to be_false
-    expect(described_class.new.postgresql?).to be_false
-  end
+  describe "#postgresql?" do
+    it { expect(group).not_to be_postgresql }
 
-  context "postgresql" do
-    before do
-      @group.stub(:postgresql? => true)
+    context "when internal postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+      it { expect(group).to be_postgresql }
     end
 
-    it "#to_enable" do
-      expect(@group.to_enable).to eq(@common_services | @postgres_service)
-    end
-
-    it "#to_start" do
-      expect(@group.to_start).to eq(@common_services)
-    end
-
-    it "#to_disable" do
-      expect(@group.to_disable).to eq([])
-    end
-
-    it "#to_stop" do
-      expect(@group.to_stop).to eq([])
+    context "when not internal postgres" do
+      let(:group) { described_class.new(:internal_postgresql => false) }
+      it { expect(group).not_to be_postgresql }
     end
   end
 
-  context "without postgresql" do
-    it "#to_enable" do
-      expect(@group.to_enable).to eq(@common_services)
-    end
+  describe "#enable" do
+    let(:group) { described_class.new(:internal_postgresql => false) }
 
-    it "#to_start" do
-      expect(@group.to_start).to eq(@common_services)
-    end
-
-    it "#to_disable" do
-      expect(@group.to_disable).to eq(@postgres_service)
-    end
-
-    it "#to_stop" do
-      expect(@group.to_stop).to eq(@postgres_service)
-    end
-  end
-
-  shared_examples_for "service management" do |command|
-    it "##{command}" do
-      LinuxAdmin.should_receive(:run).with("chkconfig", :params => {"--add" => "miqtop"}) if command == "enable"
-      expected_calls = @group.send("to_#{command}")
-
-      # Hack until LinuxAdmin::Service start handles detaching.
-      if command == "start"
-        @group.should_receive(:start_command)
-      else
-        expected_calls.each do |service|
-          LinuxAdmin::Service.should_receive(:new).with(service).and_return(double(command => true))
-        end
+    it "enables all but postgres" do
+      expect(group).to receive(:enable_miqtop)
+      common_services.each do |service|
+        expect_run_service(service, "enable")
       end
 
-      @group.send(command)
+      group.enable
+    end
+
+    context "with postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+
+      it "enables all including postgres" do
+        expect(group).to receive(:enable_miqtop)
+        common_services.each do |service|
+          expect_run_service(service, "enable")
+        end
+        expect_run_service(postgres_service, "enable")
+
+        group.enable
+      end
     end
   end
 
-  include_examples "service management", "enable"
-  include_examples "service management", "disable"
-  include_examples "service management", "stop"
-  include_examples "service management", "start"
+  describe "#start" do
+    let(:group) { described_class.new(:internal_postgresql => false) }
+
+    it "starts all but postgres" do
+      common_services.each do |service|
+        expect_run_detached_service(service, "start")
+      end
+
+      group.start
+    end
+
+    context "with postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+
+      it "starts all including postgres" do
+        common_services.each do |service|
+          expect_run_detached_service(service, "start")
+        end
+
+        group.start
+      end
+    end
+  end
+
+  describe "#disable" do
+    let(:group) { described_class.new(:internal_postgresql => false) }
+
+    it "disables postgres" do
+      expect_run_service(postgres_service, "disable")
+
+      group.disable
+    end
+
+    context "with postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+
+      it "does nothing" do
+        expect_no_service_calls
+
+        group.disable
+      end
+    end
+  end
+
+  describe "#stop" do
+    let(:group) { described_class.new(:internal_postgresql => false) }
+
+    it "stops postgres" do
+      expect_run_service(postgres_service, "stop")
+
+      group.stop
+    end
+
+    context "with postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+
+      it "stops nothing" do
+        expect_no_service_calls
+
+        group.stop
+      end
+    end
+  end
+
+  # this is private, but since we are stubbing it, make sure it works
+  context "#enable_miqtop" do
+    it "calls chkconfig" do
+      expect(LinuxAdmin).to receive(:run).with("chkconfig", :params => {"--add" => "miqtop"})
+      group.send(:enable_miqtop)
+    end
+  end
+
+  # this is private, but since we are stubbing it, make sure it works
+  context "#run_service" do
+    it "invokes LinuxAdmin service call" do
+      stub = double
+      expect(stub).to receive('start').and_return(true)
+      expect(LinuxAdmin::Service).to receive(:new).with('service').and_return(stub)
+      group.send(:run_service, 'service', 'start')
+    end
+  end
+
+  # this is private, but since we are stubbing it, make sure it works
+  context "#detached_service" do
+    it "invokes Spawn" do
+      spwn = double
+      expect(Kernel).to receive(:spawn).with(
+        "/sbin/service service start", [:out, :err] => ["/dev/null", "w"]
+      ).and_return(spwn)
+      expect(Process).to receive(:detach).with(spwn)
+
+      group.send(:run_detached_service, "service", "start")
+    end
+  end
+
+  private
+
+  def expect_no_service_calls
+    expect(group).not_to receive(:run_service)
+  end
+
+  def expect_run_detached_service(service, command)
+    expect(group).to receive(:run_detached_service).with(service, command)
+  end
+
+  def expect_run_service(service, command)
+    expect(group).to receive(:run_service).with(service, command)
+  end
 end

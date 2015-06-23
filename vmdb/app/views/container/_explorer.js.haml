@@ -1,10 +1,2 @@
 - # Renders JS to replace the contents of the miq_policy explorer view as directed by the controller
-
-- # Pull options into local vars
-- object_tree_json = options.delete(:object_tree)
-
-- if object_tree_json
-  obj_tree.loadJSONObject(#{object_tree_json});
-  obj_tree.loadOpenStates('obj_tree');
-
 = render :partial => "shared/explorer", :locals => {:options => options}

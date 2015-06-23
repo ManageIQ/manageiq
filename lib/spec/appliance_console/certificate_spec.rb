@@ -63,8 +63,14 @@ describe ApplianceConsole::Certificate do
 
   # private methods
 
-  it "should create key filename from certificate" do
+  it "should create key filename from certificate name" do
     expect(subject.send(:key_filename)).to eq(key_filename)
+  end
+
+  it "should allow override of key filename" do
+    subject = described_class.new(:cert_filename => cert_filename,
+                                  :key_filename  => "other.key")
+    expect(subject.send(:key_filename)).to eq("other.key")
   end
 
   private

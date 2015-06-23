@@ -5,7 +5,7 @@ module MiqAeServiceMethodsSpec
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
-      @ae_method     = ::MiqAeMethod.find(:first)
+      @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
     end
 
@@ -115,20 +115,6 @@ module MiqAeServiceMethodsSpec
       ae_object.should be_kind_of(Array)
       ae_object.length.should == 1
       ae_object.first.id.should == t1.id
-    end
-
-    it "#active_miq_proxies" do
-      method   = "$evm.root['#{@ae_result_key}'] = $evm.execute(:active_miq_proxies)"
-      @ae_method.update_attributes(:data => method)
-
-      invoke_ae.root(@ae_result_key).should be_empty
-
-      a1 = FactoryGirl.create(:active_cos_proxy)
-      i1 = FactoryGirl.create(:inactive_cos_proxy)
-      ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(Array)
-      ae_object.length.should == 1
-      ae_object.first.id.should == a1.id
     end
 
     it "#category_exists?" do

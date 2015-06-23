@@ -742,10 +742,6 @@ describe ReportController do
           assigns(:tl_repaint).should be_true
         end
       end
-      # TODO: Need to add tests for params with starting prefixes like hdr_, calc_, etc...
-      it "Tests for params with prefixed keys, like hdr_ and calc_" do
-        pending "To be written later ..."
-      end
     end
   end
 
@@ -807,27 +803,6 @@ describe ReportController do
         @sch.reload
         @sch.should_not be_enabled
         @sch.updated_at.should be > 10.minutes.ago.utc
-      end
-    end
-  end
-
-  context "ReportController#build_js_options" do
-    context "check replace trees" do
-      before do
-        controller.stub(:get_node_info)
-        controller.stub(:rebuild_trees).and_return(nil)
-      end
-
-      it "rebuild dashboards tree" do
-        pending "placeholder for future tests"
-        controller.instance_variable_set(:@sb,
-                                         {:trees => {
-                                             :db_tree => {:active_node => "root"}
-                                         },
-                                          :active_tree => :db_tree
-                                         })
-        controller.stub(:build_db_tree)
-        js_options = controller.send(:build_js_options, {:replace_trees => [:db]})
       end
     end
   end
@@ -914,7 +889,7 @@ describe ReportController do
   describe "#upload_widget_import_file" do
     include_context "valid session"
 
-    let(:widget_import_service) { instance_double("WidgetImportService") }
+    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
 
     before do
       bypass_rescue
@@ -1050,7 +1025,7 @@ describe ReportController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:widget_import_service) { instance_double("WidgetImportService") }
+    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
 
     before do
       bypass_rescue
@@ -1077,7 +1052,7 @@ describe ReportController do
   describe "#import_widgets" do
     include_context "valid session"
 
-    let(:widget_import_service) { instance_double("WidgetImportService") }
+    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
     let(:params) { {:import_file_upload_id => "123", :widgets_to_import => ["potato"]} }
 
     before do
@@ -1094,9 +1069,7 @@ describe ReportController do
     end
 
     context "when the import file upload exists" do
-      let(:import_file_upload) do
-        instance_double("ImportFileUpload")
-      end
+      let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
 
       before do
         widget_import_service.stub(:import_widgets)

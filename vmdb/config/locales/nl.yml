@@ -1,0 +1,6 @@
+# Sample localization file for Nederlands. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+nl:
+  product:
+    name: ManageIQ

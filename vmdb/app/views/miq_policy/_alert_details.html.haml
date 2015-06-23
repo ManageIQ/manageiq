@@ -87,7 +87,7 @@
               %td.key
                 = _("Driving Event")
               %td
-                = h(@temp[:event])
+                = h(@event)
         - # Repeat Time
         %tr
           %td.key=_("Notification Frequency")
@@ -171,14 +171,14 @@
             %tr
               %td.key=_("To")
               %td
-                - unless @temp[:email_to].blank?
-                  = h(@temp[:email_to].join(';'))
+                - unless @email_to.blank?
+                  = h(@email_to.join(';'))
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:snmp].blank?
           %h3=_('Send SNMP Trap')
           %table.style1
             %tr
-              %td.key=_("Host")
+              %td.key=title_for_host
               %td
                 - @alert.options[:notifications][:snmp][:host].each do |host|
                   = h(host)
@@ -242,8 +242,8 @@
                   %tbody
                     - @alert_profiles.each do |ap|
                       - id = "xx-#{@alert.db}_ap-#{to_cid(ap.id)}"
-                      %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert_profile",
-                        :onmouseover => "this.style.cursor='pointer'", :title => _("View this Alert Profile"))}
+                      %tr{:title => _("View this Alert Profile"),
+                          :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert_profile")}
                         %td
                           %img{:src => "/images/icons/new/miq_alert_profile.png"}
                         %td
@@ -261,8 +261,8 @@
                   %tbody
                     - @alert.owning_miq_actions.each do |oa|
                       - id = "a-#{to_cid(oa.id)}"
-                      %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=action"),
-                        :onmouseover => "this.style.cursor='pointer'", :title => _("View this Action")}
+                      %tr{:title => _("View this Action"),
+                        :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")}
                         %td.narrow
                           - if oa.action_type == "default"
                             %img{:src => "/images/icons/new/miq_action.png"}

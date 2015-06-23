@@ -10,12 +10,12 @@ module VmOpenstack::Operations::Guest
   def raw_reboot_guest
     with_provider_object(&:reboot)
     # Temporarily update state for quick UI response until refresh comes along
-    self.update_attributes!(:raw_power_state => "SUSPENDED")
+    self.update_attributes!(:raw_power_state => "REBOOT")
   end
 
   def raw_reset
     with_provider_object { |instance| instance.reboot("HARD") }
     # Temporarily update state for quick UI response until refresh comes along
-    self.update_attributes!(:raw_power_state => "SUSPENDED")
+    self.update_attributes!(:raw_power_state => "HARD_REBOOT")
   end
 end

@@ -226,8 +226,7 @@ module ApplicationController::PolicySupport
   def assigned_filters
     assigned_filters = Array.new
     #adding assigned filters for a user into hash to display categories bold and gray out subcategory if checked
-    @get_filters = [User.find_by_userid(session[:userid]).get_managed_filters]
-    @get_filters = @get_filters.flatten
+    @get_filters = [current_user.get_managed_filters].flatten
     h = Hash[*@get_filters.collect { |v| [@get_filters.index(v), v] }.flatten]
     @get_filters = h.invert
     h.invert.each do | val, key |
@@ -257,16 +256,16 @@ module ApplicationController::PolicySupport
     @pol_view.table = MiqFilter.records2table(@tagitems, :only=>@pol_view.cols + ['id'])
 
     # Build the profiles selection list
-    @temp[:all_profs] = Hash.new
+    @all_profs = Hash.new
     MiqPolicySet.all.each do |ps|
       unless session[:policies].has_key?(ps.id)
-        @temp[:all_profs][ps.id] = ps.description
+        @all_profs[ps.id] = ps.description
       end
     end
-    if @temp[:all_profs].length > 0
-      @temp[:all_profs]["<select>"] = ""
+    if @all_profs.length > 0
+      @all_profs["<select>"] = ""
     else
-      @temp[:all_profs]["<select>"] = "No Policy Profiles are available"
+      @all_profs["<select>"] = "No Policy Profiles are available"
     end
     build_targets_hash(@tagitems)
   end

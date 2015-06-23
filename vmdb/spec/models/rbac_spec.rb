@@ -459,7 +459,7 @@ describe Rbac do
         vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
       end
 
-      Vm.scope :group_scope,   lambda { |group_num| {:conditions => ["name LIKE ?", "Test Group #{group_num}%"]} }
+      Vm.scope :group_scope,   lambda { |group_num| Vm.where("name LIKE ?", "Test Group #{group_num}%") }
     end
 
     context ".search" do

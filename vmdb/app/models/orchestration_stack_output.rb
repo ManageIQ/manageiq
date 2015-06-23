@@ -3,4 +3,6 @@ class OrchestrationStackOutput < ActiveRecord::Base
 
   belongs_to :stack, :class_name => "OrchestrationStack"
   include ReportableMixin
+
+  alias_attribute :name, :key
 end

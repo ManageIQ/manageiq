@@ -1,11 +1,6 @@
 require 'active_support/deprecation'
 
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
-  SUBCLASSES = %w{
-    MiqProvisionCloudWorkflow
-    MiqProvisionInfraWorkflow
-  }
-
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
   end
@@ -70,7 +65,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super(request, values, requester_id, 'Vm', 'vm_migrate_request_updated', event_message)
   end
 
-  def refresh_field_values(values, requester_id)
+  def refresh_field_values(values, _requester_id)
     log_header = "MIQ(#{self.class.name}#refresh_field_values)"
 
     begin
@@ -168,6 +163,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     validate_length(field, values, dlg, fld, value)
   end
 
+  def validate_memory_reservation(_field, values, dlg, fld, _value)
+    allocated = get_value(values[:vm_memory]).to_i
+    reserved  = get_value(values[:memory_reserve]).to_i
+    "#{required_description(dlg, fld)} Reservation is larger than VM Memory" if reserved > allocated
+  end
+
   def validate_pxe_image_id(_field, _values, dlg, fld, _value)
     return nil unless supports_pxe?
     return nil unless get_pxe_image.nil?
@@ -217,7 +218,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     number_of_vms = get_value(@values[:number_of_vms]).to_i
 
     # Show/Hide Fields
-    f = Hash.new { |h, k| h[k] = Array.new }
+    f = Hash.new { |h, k| h[k] = [] }
 
     if get_value(@values[:service_template_request])
       f[:hide] = [:number_of_vms, :vm_description, :schedule_type, :schedule_time]
@@ -226,7 +227,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     auto_placement = show_flag = auto_placement_enabled? ? :hide : :edit
     f[show_flag] += [:placement_host_name, :placement_ds_name, :host_filter, :ds_filter, :cluster_filter, :placement_cluster_name, :rp_filter, :placement_rp_name]
 
-    show_flag = get_value(@values[:sysprep_enabled]).in?('fields', 'file') || self.supports_pxe? || self.supports_iso? ? :edit : :hide
+    show_flag = get_value(@values[:sysprep_enabled]).in?(%w(fields file)) || self.supports_pxe? || self.supports_iso? ? :edit : :hide
     f[show_flag] += [:addr_mode]
 
     # If we are hiding the network fields always hide.  If available then the show_flag depends on the addr_mode
@@ -278,7 +279,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     f.each { |k, v| show_fields(k, v) }
 
     # Show/Hide Notes
-    f = Hash.new { |h, k| h[k] = Array.new }
+    f = Hash.new { |h, k| h[k] = [] }
 
     show_flag = number_of_vms > 1 ? :edit : :hide
     f[show_flag] += [:ip_addr]
@@ -404,7 +405,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
 
         # Remove certain networks
-        vlans.delete_if { |_k, v| v.in?('Service Console', 'VMkernel') }
+        vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
         rails_logger('allowed_vlans', 1)
       end
 
@@ -433,20 +434,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     unless missing_hosts.blank?
       begin
         st = Time.now
-        return switches if @dvs_ems_connect_ok[src[:ems].id] == false
+        return switches if src[:ems] && @dvs_ems_connect_ok[src[:ems].id] == false
         vim = load_ar_obj(src[:ems]).connect
         missing_hosts.each { |dest_host| @dvs_by_host[dest_host.id] = get_host_dvs(dest_host, vim) }
       rescue
-        @dvs_ems_connect_ok[src[:ems].id] = false
+        @dvs_ems_connect_ok[src[:ems].id] = false if src[:ems]
         return switches
       ensure
         vim.disconnect if vim rescue nil
         $log.info "MIQ(#{self.class.name}.allowed_dvs) Network DVS collection completed in [#{Time.now - st}] seconds"
       end
     end
-
-    hosts.each { |h| switches.merge!(@dvs_by_host[h.id]) }
-    switches
+    create_unified_pg(@dvs_by_host, hosts)
   end
 
   def get_host_dvs(dest_host, vim)
@@ -456,23 +455,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # List the names of the non-uplink portgroups.
     unless dvs.nil? || dvs.distributedVirtualPortgroup.nil?
       nupga = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false')
-      nupga.each { |nupg| switches[URI.decode("dvs_#{nupg.portgroupName}")] = URI.decode("#{nupg.portgroupName} (#{nupg.switchName})") }
+      nupga.each { |nupg| switches[URI.decode(nupg.portgroupName)] = [URI.decode(nupg.switchName)] }
     end
 
     switches
-  end
-
-  def get_selected_hosts(src)
-    # Add all the Lans for the available host(s)
-    if src[:host_id]
-      raise "Unable to find Host with Id: [#{src[:host_id]}]" if src[:host].nil?
-      hosts = [load_ar_obj(src[:host])]
-    else
-      raise "Source VM [#{src[:vm].name}] does not belong to a #{ui_lookup(:table => "ext_management_systems")}" if src[:ems].nil?
-      hosts = load_ar_obj(src[:ems]).hosts
-    end
-
-    Rbac.search(:targets => hosts, :class => Host, :results_format => :objects, :userid => @requester.userid).first
   end
 
   def filter_by_tags(target, options)
@@ -611,7 +597,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     log_header = "MIQ(#{self.class.name}#source_vm_rbac)"
 
     filter_id = get_value(@values[:vm_filter]).to_i
-    search_options = {:results_format => :objects, :userid => @requester.userid}
+    search_options = {:userid => @requester.userid}
     search_options[:conditions] = condition unless condition.blank?
     template_msg =  "User: <#{@requester.userid}>"
     template_msg += " Role: <#{@requester.current_group.nil? ? "none" : @requester.current_group.miq_user_role.name}>  Group: <#{@requester.current_group.nil? ? "none" : @requester.current_group.description}>"
@@ -619,9 +605,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     template_msg += "  Passing inital template IDs: <#{vms.collect(&:id).inspect}>" unless vms.blank?
     $log.info "#{log_header} Checking for allowed templates for #{template_msg}"
     if filter_id.zero?
-      Rbac.search(search_options.merge(:targets => vms, :class => VmOrTemplate)).first
+      if vms.empty?
+        Rbac.search(search_options.merge(:class => VmOrTemplate, :results_format => :objects)).first
+      else
+        Rbac.filtered(vms, search_options.merge(:class => VmOrTemplate))
+      end
     else
-      MiqSearch.find(filter_id).search(vms, search_options).first
+      if vms.empty?
+        MiqSearch.find(filter_id).search([], search_options.merge(:results_format => :objects)).first
+      else
+        MiqSearch.find(filter_id).filtered(vms, search_options)
+      end
     end
   end
 
@@ -655,15 +649,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
-    if vm_id.to_i.zero?
+    rails_logger('get_source_and_targets', 0)
+    svm = VmOrTemplate.where(:id => vm_id).first
+
+    if svm.nil?
       @vm_snapshot_count = 0
       return @target_resource = {}
-    else
-      rails_logger('get_source_and_targets', 0)
-      svm = VmOrTemplate.find_by_id(vm_id)
-      raise "Unable to find VM with Id: [#{vm_id}]" if svm.nil?
-      raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is archived and cannot be used with provisioning." if svm.archived?
-      raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is orphaned and cannot be used with provisioning." if svm.orphaned?
     end
 
     @vm_snapshot_count = svm.v_total_snapshots
@@ -672,6 +663,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result[:ems] = ci_to_hash_struct(svm.ext_management_system)
 
     result
+  end
+
+  def source_valid?
+    obj = VmOrTemplate.where(:id => get_value(@values[:src_vm_id])).first
+    return "Unable to find VM with Id: [#{obj.id}]" if obj.nil?
+    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is archived and cannot be used with provisioning." if obj.archived?
+    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is orphaned and cannot be used with provisioning." if obj.orphaned?
   end
 
   def resources_for_ui
@@ -883,7 +881,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     $log.info "#{log_header} Custom spec changed from [#{@current_spec}] to [#{selected_spec}].  Customize option:[#{@customize_option}]"
 
-    if selected_spec.nil?
+    if selected_spec
       src = get_source_and_targets
       ems_id = src[:ems].id
 
@@ -891,7 +889,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       if cs_data.nil?
         selected_spec_int = selected_spec.to_i
         cs_data = @customization_specs[ems_id].detect { |s| s.id == selected_spec_int }
-      else
+      end
+
+      if cs_data
         cs_data = load_ar_obj(cs_data)
 
         if @customize_option == 'file'
@@ -917,17 +917,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     spec      = cs_data[:spec]
     dialog    = @dialogs.fetch_path(:dialogs, :customize)
 
-    collect_customization_spec_settings(spec, spec_hash, ['identity', 'guiUnattended'],
+    collect_customization_spec_settings(spec, spec_hash, %w(identity guiUnattended),
       [:sysprep_timezone, 'timeZone', :sysprep_auto_logon, 'autoLogon', :sysprep_auto_logon_count, 'autoLogonCount'])
 
-    collect_customization_spec_settings(spec, spec_hash, ['identity', 'identification'],
+    collect_customization_spec_settings(spec, spec_hash, %w(identity identification),
       [:sysprep_domain_name, 'joinDomain', :sysprep_domain_admin, 'domainAdmin', :sysprep_workgroup_name, 'joinWorkgroup'])
 
     # PATH:[identity][userData][computerName][name] (VimString) = "VI25Test"
-    collect_customization_spec_settings(spec, spec_hash, ['identity', 'userData'],
+    collect_customization_spec_settings(spec, spec_hash, %w(identity userData),
       [:sysprep_organization, 'orgName', :sysprep_full_name, 'fullName', :sysprep_product_id, 'productId'])
 
-    collect_customization_spec_settings(spec, spec_hash, ['identity', 'licenseFilePrintData'],
+    collect_customization_spec_settings(spec, spec_hash, %w(identity licenseFilePrintData),
       [:sysprep_server_license_mode, 'autoMode', :sysprep_per_server_max_connections, 'autoUsers'])
 
     collect_customization_spec_settings(spec, spec_hash, ['options'],
@@ -975,7 +975,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def collect_customization_spec_settings(spec, spec_hash, spec_path, fields)
-    return unless (section = spec.fetch_path(spec_path)).nil?
+    return unless (section = spec.fetch_path(spec_path))
     fields.each_slice(2) { |dlg_field, prop| spec_hash[dlg_field] = section[prop] }
   end
 
@@ -1019,8 +1019,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     version = args.first.to_f
     return from_ws_ver_1_0(*args) if version == 1.0
 
-    # Move optional arguments into the VmdbwsSupport::ProvisionOptions object
-    prov_options = VmdbwsSupport::ProvisionOptions.new(
+    # Move optional arguments into the MiqHashStruct object
+    prov_options = MiqHashStruct.new(
       :values                => args[6],
       :ems_custom_attributes => args[7],
       :miq_custom_attributes => args[8],
@@ -1205,7 +1205,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     data.keys.each do |k|
       key_name = k.to_s.split('.').first
       next unless key_name =~ regex_filter
-      item_id = $1.to_i
+      item_id = Regexp.last_match(1).to_i
       v = data.delete(k)
       $log.info "#{log_header} processing key <hardware:#{k}(#{v.class})> with value <#{v.inspect}>"
 
@@ -1243,7 +1243,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
-    options = VmdbwsSupport::ProvisionOptions.new if options.nil?
+    options = MiqHashStruct.new if options.nil?
     log_header = "#{name}.from_ws_ver_1_x"
     $log.warn "#{log_header} Web-service provisioning starting with interface version <#{version}> by requester <#{userid}>"
 
@@ -1295,8 +1295,40 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       @values[:forced_sysprep_domain_name] = [sdn]
     end
   end
-end
 
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-MiqProvisionVirtWorkflow::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }
+  def get_selected_hosts(src)
+    # Add all the Lans for the available host(s)
+    hosts = if auto_placement_enabled?
+              all_provider_hosts(src)
+            elsif src[:host_id]
+              selected_host(src)
+            else
+              load_ar_obj(allowed_hosts)
+            end
+    Rbac.filtered(hosts, :class => Host, :userid => @requester.userid)
+  end
+
+  def all_provider_hosts(src)
+    load_ar_obj(src[:ems]).try(:hosts) || []
+  end
+
+  def selected_host(src)
+    raise "Unable to find Host with Id: [#{src[:host_id]}]" if src[:host].nil?
+    [load_ar_obj(src[:host])]
+  end
+
+  def create_unified_pg(dvs_by_host, hosts)
+    all_pgs = Hash.new { |h, k| h[k] = [] }
+    hosts.each do |host|
+      pgs = dvs_by_host[host.id]
+      next if pgs.blank?
+      pgs.each { |k, v| all_pgs[k].concat(v) }
+    end
+
+    switches = {}
+    all_pgs.each do |pg, switch|
+      switches["dvs_#{pg}"] = "#{pg} (#{switch.uniq.sort.join('/')})"
+    end
+    switches
+  end
+end

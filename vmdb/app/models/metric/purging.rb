@@ -3,9 +3,13 @@ module Metric::Purging
     value = VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, type.to_sym)
     return if value.nil?
 
-    value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
-    value = value.to_i_with_method.ago.utc unless value.nil?
-    return value
+    case value
+    when Numeric
+      value.days.ago.utc
+    when String
+      value.to_i_with_method.seconds.ago.utc
+    when nil
+    end
   end
 
   def self.purge_all_timer
@@ -55,7 +59,7 @@ module Metric::Purging
     oldest = klass.select(:timestamp).where(conditions).order(:timestamp).first
     oldest = oldest.nil? ? older_than : oldest.timestamp
 
-    klass.count(:conditions => conditions.merge(:timestamp => oldest..older_than))
+    klass.where(conditions).where(:timestamp => oldest..older_than).count
   end
 
   def self.purge(older_than, interval, window = nil, limit = nil)
@@ -80,7 +84,7 @@ module Metric::Purging
 
       loop do
         batch, _ = Benchmark.realtime_block(:query_batch) do
-          klass.select(:id).where(conditions.merge(:timestamp => (oldest..older_than))).limit(window)
+          klass.select(:id).where(conditions).where(:timestamp => (oldest..older_than)).limit(window)
         end
         break if batch.empty?
 

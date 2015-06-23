@@ -62,6 +62,9 @@ event_groups:
     - image.update
     - image.create
     - image.upload
+    - orchestration.stack.create.end
+    - orchestration.stack.create.error
+    - servergroup.create
     :detail:
     - CloneVM_Task
     - CloneVM_Task_Complete
@@ -112,6 +115,18 @@ event_groups:
     - VmReconfiguredEvent
     - VmResourcePoolMovedEvent
     - VmToTemplate
+    - compute.instance.rebuild.end
+    - compute.instance.resize.end
+    - orchestration.stack.update.end
+    - orchestration.stack.update.error
+    - orchestration.stack.suspend.end
+    - orchestration.stack.suspend.error
+    - orchestration.stack.resume.end
+    - orchestration.stack.resume.error
+    - orchestration.autoscaling.end
+    - orchestration.autoscaling.error
+    - servergroup.update
+    - servergroup.addmemeber
     :detail:
     - EnterMaintenanceMode_Task
     - ExitMaintenanceMode_Task
@@ -156,6 +171,9 @@ event_groups:
     - VmDisconnectedEvent
     - VmRemovedEvent
     - image.delete
+    - orchestration.stack.delete.end
+    - orchestration.stack.delete.error
+    - servergroup.delete
     :detail:
     - Destroy_Task
     - Destroy_Task_Complete
@@ -298,6 +316,7 @@ event_groups:
     - VM_SET_TO_UNKNOWN_STATUS
     - VM_WAS_SET_DOWN_DUE_TO_HOST_REBOOT_OR_MANUAL_FENCE
     - VM_RENAMED
+    - hardware.ipmi.metrics.update
     :detail: []
     :name: General Activity
   import_export:
@@ -493,7 +512,9 @@ event_groups:
     - VmStoppedEvent
     - VmSuspendedEvent
     - compute.instance.create.end
+    - compute.instance.create.error
     - compute.instance.shutdown.end
+    - compute.instance.shutdown.error
     - compute.instance.delete.end
     - compute.instance.power_off.end
     - compute.instance.power_on.end
@@ -501,6 +522,8 @@ event_groups:
     - compute.instance.reboot.end
     - compute.instance.suspend
     - compute.instance.resume
+    - NODE_REBOOT
+    - POD_SCHEDULED
     :detail:
     - PowerOffVM_Task
     - PowerOffVM_Task_Complete
@@ -539,6 +562,7 @@ event_groups:
     - USER_TRY_BACK_TO_SNAPSHOT
     - USER_TRY_BACK_TO_SNAPSHOT_FINISH_FAILURE
     - USER_TRY_BACK_TO_SNAPSHOT_FINISH_SUCCESS
+    - compute.instance.snapshot.end
     :detail: []
     :name: Snapshot Activity
   status:
@@ -577,6 +601,8 @@ event_groups:
     - VM_FAILURE
     - VM_NOT_RESPONDING
     - VmConfigMissingEvent
+    - NODE_NODEREADY
+    - NODE_NODENOTREADY
     :detail:
     - DatacenterRenamedEvent
     - GeneralUserEvent
@@ -632,6 +658,8 @@ event_groups:
     - USER_UPDATE_STORAGE_DOMAIN_FAILED
     - USER_UPDATE_STORAGE_POOL
     - USER_UPDATE_STORAGE_POOL_FAILED
+    - volume.create.end
+    - volume.delete.end
     :detail: []
     :name: Storage
 
@@ -1258,12 +1286,24 @@ event_handling:
   compute.instance.delete.end:
   - refresh:
     - ems
+  compute.instance.rebuild.end:
+  - refresh:
+    - ems
+  compute.instance.resize.end:
+  - refresh:
+    - ems
   compute.instance.shutdown.end:
   - refresh:
     - ems
   - policy:
     - src_vm
     - vm_shutdown_guest
+  compute.instance.snapshot.end:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_snapshot
   compute.instance.power_off.end:
   - refresh:
     - ems
@@ -1282,6 +1322,24 @@ event_handling:
   image.delete:
   - refresh:
     - ems
+  orchestration.stack.create.end:
+  - refresh:
+    - ems
+  orchestration.stack.update.end:
+  - refresh:
+    - ems
+  orchestration.stack.delete.end:
+  - refresh:
+    - ems
+  orchestration.stack.suspend.end:
+  - refresh:
+    - ems
+  orchestration.stack.resume.end:
+  - refresh:
+    - ems
+  orchestration.autoscaling.end:
+  - refresh:
+    - ems
   network.floating_ip.allocate:
   - refresh:
     - ems
@@ -1294,16 +1352,34 @@ event_handling:
   network.floating_ip.disassociate:
   - refresh:
     - ems
+  servergroup.create:
+  - refresh:
+    - ems
+  servergroup.delete:
+  - refresh:
+    - ems
+  servergroup.update:
+  - refresh:
+    - ems
+  servergroup.addmember:
+  - refresh:
+    - ems
+  volume.create.end:
+  - refresh:
+    - ems
+  volume.delete.end:
+  - refresh:
+    - ems
   ConfigurationItemChangeNotification:
   - refresh:
     - ems
   AWS_EC2_Instance_CREATE:
-  - policy:
-    - src_vm
-    - vm_create
   - refresh:
     - ems
   AWS_EC2_Instance_UPDATE:
+  - refresh:
+    - ems
+  AWS_EC2_Instance_DELETE:
   - refresh:
     - ems
   AWS_EC2_Instance_running:
@@ -1315,13 +1391,25 @@ event_handling:
   AWS_EC2_Instance_stopped:
   - policy:
     - src_vm
-    - vm_power_off
+    - vm_poweroff
   - refresh:
     - ems
   AWS_EC2_Instance_shutting-down:
   - policy:
     - src_vm
-    - vm_power_off
+    - vm_poweroff
+  - refresh:
+    - ems
+  NODE_REBOOT:
+  - refresh:
+    - ems
+  NODE_NODEREADY:
+  - refresh:
+    - ems
+  NODE_NODENOTREADY:
+  - refresh:
+    - ems
+  POD_SCHEDULED:
   - refresh:
     - ems
 

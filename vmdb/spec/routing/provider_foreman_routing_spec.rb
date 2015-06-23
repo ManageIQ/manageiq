@@ -11,6 +11,7 @@ describe 'routes for ProviderForeman' do
     download_data
     explorer
     provider_foreman_form_fields
+    tagging_edit
     show
     show_list
   ).each do |task|
@@ -25,6 +26,7 @@ describe 'routes for ProviderForeman' do
     accordion_select
     authentication_validate
     button
+    change_tab
     delete
     edit
     explorer
@@ -41,6 +43,9 @@ describe 'routes for ProviderForeman' do
     save_col_widths
     show
     show_list
+    tagging
+    tagging_edit
+    tag_edit_form_field_changed
     tree_autoload_dynatree
     tree_select
     users
@@ -48,6 +53,7 @@ describe 'routes for ProviderForeman' do
     x_button
     x_history
     x_search_by_name
+    x_settings_changed
     x_show
   ).each do |task|
     describe "##{task}" do

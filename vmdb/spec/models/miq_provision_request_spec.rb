@@ -135,7 +135,7 @@ describe MiqProvisionRequest do
         it "should add and delete tags from a request" do
           @pr.get_tags.length.should == 0
 
-          t = Classification.find(:first, :conditions => {:description => 'Department', :parent_id => 0}, :include => :tag)
+          t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
           @pr.get_tags[t.name.to_sym].should be_kind_of(String) # Single tag returns as a String
           @pr.get_tags[t.name.to_sym].should == t.children.first.name
@@ -148,13 +148,13 @@ describe MiqProvisionRequest do
           # Verify that #get_tag with classification returns the single child tag name
           @pr.get_tags[t.name.to_sym].should == @pr.get_tag(t.name)
 
-          t.children.each {|c| @pr.add_tag(t.name, c.name)}
+          t.children.each { |c| @pr.add_tag(t.name, c.name) }
           @pr.get_tags[t.name.to_sym].should be_kind_of(Array)
           @pr.get_tags[t.name.to_sym].length.should == t.children.length
 
           child_names = t.children.collect(&:name)
           # Make sure each child name is yield from the tag method
-          @pr.tags {|tag_name, classification| child_names.delete(tag_name)}
+          @pr.tags { |tag_name, _classification| child_names.delete(tag_name) }
           child_names.should be_empty
 
           tags = @pr.get_classification(t.name)
@@ -182,7 +182,7 @@ describe MiqProvisionRequest do
         it "should return classifications for tags" do
           @pr.get_tags.length.should == 0
 
-          t = Classification.find(:first, :conditions => {:description => 'Department', :parent_id => 0}, :include => :tag)
+          t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
           @pr.get_tags[t.name.to_sym].should be_kind_of(String)
 

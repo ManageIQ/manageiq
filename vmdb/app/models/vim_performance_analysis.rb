@@ -62,26 +62,40 @@ module VimPerformanceAnalysis
       elsif @options[:target_tags]
         topts = @options[:target_tags]
         includes = topts[:compute_type].to_sym == :Host ? {:hardware => {}, :vms => {:hardware => {}}} : nil
+        search_options = {
+          :class            => topts[:compute_type].to_s,
+          :results_format   => :objects,
+          :include_for_find => includes,
+          :userid           => @options[:userid],
+          :miq_group_id     => @options[:miq_group_id],
+        }
         if topts[:compute_filter]
-          search = topts[:compute_filter].kind_of?(MiqSearch) ? topts[:compute_filter] : MiqSearch.find(topts[:compute_filter])
-          @compute, attrs = Rbac.search(:class => topts[:compute_type].to_s ,:filter => search.filter, :results_format => :objects, :include_for_find => includes, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
+          search = if topts[:compute_filter].kind_of?(MiqSearch)
+                     topts[:compute_filter]
+                   else
+                     MiqSearch.find(topts[:compute_filter])
+                   end
+          search_options[:filter] = search.filter
         elsif topts[:compute_tags]
-          @compute, attrs = Rbac.search(:class => topts[:compute_type].to_s ,:tag_filters => {"managed" => topts[:compute_tags]}, :results_format => :objects, :include_for_find => includes, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
-        else
-          @compute, attrs = Rbac.search(:class => topts[:compute_type].to_s ,:results_format => :objects, :include_for_find => includes, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
+          search_options[:tag_filters] = {"managed" => topts[:compute_tags]}
         end
+        @compute, _attrs = Rbac.search(search_options)
 
         MiqPreloader.preload(@compute, :storages)
-        stores = @compute.collect {|c| storages_for_compute_target(c)}.flatten.uniq
+        stores = @compute.collect { |c| storages_for_compute_target(c) }.flatten.uniq
 
+        filter_options = {:class => Storage, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id]}
         if topts[:storage_filter]
-          search = topts[:storage_filter].kind_of?(MiqSearch) ? topts[:storage_filter] : MiqSearch.find(topts[:compute_filter])
-          @storage, attrs = Rbac.search(:targets => stores, :class => Storage, :filter => search.filter, :results_format => :objects, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
+          search = if topts[:storage_filter].kind_of?(MiqSearch)
+                     topts[:storage_filter]
+                   else
+                     MiqSearch.find(topts[:storage_filter])
+                   end
+          filter_options[:filter] = search.filter
         elsif topts[:storage_tags]
-          @storage, attrs = Rbac.search(:targets => stores, :class => Storage, :tag_filters =>  {"managed" => topts[:storage_tags]}, :results_format => :objects, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
-        else
-          @storage, attrs = Rbac.search(:targets => stores, :class => Storage, :results_format => :objects, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
+          filter_options[:tag_filters] = {"managed" => topts[:storage_tags]}
         end
+        @storage = Rbac.filtered(stores, filter_options)
       end
       return @compute, @storage
     end
@@ -457,21 +471,21 @@ module VimPerformanceAnalysis
     start_time = (options[:start_date] || (options[:end_date].utc - options[:days].days)).utc
     end_time   = options[:end_date].utc
 
-    user_cond = nil
-    user_cond = obj.class.send(:sanitize_sql_for_conditions, options[:conditions]) if options[:conditions]
-    cond =  obj.class.send(:sanitize_sql_for_conditions, ["(timestamp > ? and timestamp <= ?)", start_time.utc, end_time.utc])
-    cond += obj.class.send(:sanitize_sql_for_conditions, [" AND resource_type = ? AND resource_id = ?", obj.class.base_class.name, obj.id])
-    cond += "AND capture_interval_name = #{interval_name}" unless interval_name == "daily"
-    cond =  "(#{user_cond}) AND (#{cond})" if user_cond
+    rel = if interval_name == "daily"
+            VimPerformanceDaily.find_entries(options[:ext_options])
+          else
+            klass, _meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+            klass.where(:capture_interval_name => interval_name)
+          end
 
-    # puts "find_perf_for_time_period: cond: #{cond.inspect}"
+    rel = rel.where(options[:conditions]) if options[:conditions]
 
-    if interval_name == "daily"
-      VimPerformanceDaily.all(:conditions => cond, :order => "timestamp", :ext_options => options[:ext_options], :select => options[:select])
-    else
-      klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
-      klass.where(cond).order("timestamp").select(options[:select]).to_a
-    end
+    rel
+      .where("timestamp > ? and timestamp <= ?", start_time.utc, end_time.utc)
+      .where(:resource_type => obj.class.base_class.name, :resource_id => obj.id)
+      .order("timestamp")
+      .select(options[:select])
+      .to_a
   end
 
   def self.find_child_perf_for_time_period(obj, interval_name, options = {})
@@ -512,7 +526,7 @@ module VimPerformanceAnalysis
     # puts "find_child_perf_for_time_period: cond: #{cond.inspect}"
 
     if interval_name == "daily"
-      VimPerformanceDaily.all(:conditions => cond, :ext_options => options[:ext_options], :select => options[:select])
+      VimPerformanceDaily.find(:all, :conditions => cond, :ext_options => options[:ext_options], :select => options[:select])
     else
       klass.where(cond).select(options[:select]).to_a
     end

@@ -16,8 +16,6 @@ class EmsEvent < ActiveRecord::Base
   belongs_to :dest_miq_template,   :class_name => "MiqTemplate", :foreign_key => :dest_vm_or_template_id
   belongs_to :dest_host,           :class_name => "Host"
 
-  belongs_to :service
-
   include_concern 'Automate'
   include ReportableMixin
 
@@ -98,8 +96,16 @@ class EmsEvent < ActiveRecord::Base
     self.add(ems_id, EmsEvent::Parsers::Openstack.event_to_hash(event, ems_id))
   end
 
+  def self.add_openstack_infra(ems_id, event)
+    self.add(ems_id, EmsEvent::Parsers::OpenstackInfra.event_to_hash(event, ems_id))
+  end
+
   def self.add_amazon(ems_id, event)
     self.add(ems_id, EmsEvent::Parsers::Amazon.event_to_hash(event, ems_id))
+  end
+
+  def self.add_kubernetes(ems_id, event)
+    add(ems_id, EmsEvent::Parsers::Kubernetes.event_to_hash(event, ems_id))
   end
 
   def self.add(ems_id, event_hash)
@@ -393,8 +399,7 @@ class EmsEvent < ActiveRecord::Base
     oldest = oldest.nil? ? older_than : oldest.timestamp
 
     total = 0
-    until (batch = self.all(:select => :id, :conditions => {:timestamp => oldest..older_than}, :limit => window)).empty?
-      ids = batch.collect(&:id)
+    until (ids = where(:timestamp => oldest..older_than).limit(window).ids).empty?
       ids = ids[0, limit - total] if limit && total + ids.length > limit
 
       $log.info("#{log_header} Purging #{ids.length} events.")

@@ -3,7 +3,7 @@ class CreateConfigurationManagers < ActiveRecord::Migration
     create_table :configuration_managers do |t|
       t.string     :type
       t.belongs_to :provider, :type => :bigint
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :configuration_managers, :provider_id
 
@@ -16,7 +16,7 @@ class CreateConfigurationManagers < ActiveRecord::Migration
       t.belongs_to :customization_script_ptable, :type => :bigint
       t.belongs_to :customization_script_medium, :type => :bigint
       t.string     :manager_ref
-      t.timestamps
+      t.timestamps :null => true
     end
 
     add_index :configuration_profiles, :operating_system_flavor_id
@@ -32,7 +32,7 @@ class CreateConfigurationManagers < ActiveRecord::Migration
       t.belongs_to :configuration_profile,   :type => :bigint
       t.belongs_to :configuration_manager,   :type => :bigint
       t.string     :manager_ref
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :configured_systems, :operating_system_flavor_id
     add_index :configured_systems, [:configuration_manager_id, :type]

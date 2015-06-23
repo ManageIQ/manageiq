@@ -25,9 +25,9 @@ describe MiqProvisionRedhatViaPxe do
         @ems         = FactoryGirl.create(:ems_redhat_with_authentication)
         @vm_template = FactoryGirl.create(:template_redhat, :name => "template1", :ext_management_system => @ems, :operating_system => @os, :cpu_limit => -1, :cpu_reserve => 0)
         @vm          = FactoryGirl.create(:vm_redhat, :name => "vm1",       :location => "abc/def.vmx")
-        @pr          = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id )
+        @pr          = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id)
         @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
-        @vm_prov = FactoryGirl.create(:miq_provision_redhat_via_pxe, :userid => @user.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options )
+        @vm_prov = FactoryGirl.create(:miq_provision_redhat_via_pxe, :userid => @user.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
       end
 
       context "#prepare_for_clone_task" do

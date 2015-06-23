@@ -3,7 +3,7 @@ require "spec_helper"
 describe MiqRequestController do
   context "#post_install_callback should render nothing" do
     before do
-      described_class.any_instance.stub(:set_user_time_zone)
+      EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "when called with a task id" do
@@ -20,7 +20,8 @@ describe MiqRequestController do
   end
 
   context "#prov_condition builds correct MiqExpression hash" do
-    before { User.current_userid = FactoryGirl.create(:user_admin).userid }
+    let(:user) { FactoryGirl.create(:user_admin) }
+    before { login_as user }
 
     it "MiqRequest-created_on" do
       content = {"value" => "9 Days Ago", "field" => "MiqRequest-created_on"}
@@ -30,14 +31,14 @@ describe MiqRequestController do
 
     context "MiqRequest-requester_id set based on user_id" do
       it "user with approver priveleges" do
-        content = {"value" => nil, "field" => "MiqRequest-requester_id"}
+        content = {"value" => user.id, "field" => "MiqRequest-requester_id"}
         MiqExpression.should_receive(:new).with { |h| expect(h.fetch_path("and", 1, "=")).to eq(content) }
         controller.send(:prov_condition, {})
       end
 
       it "user without approver priveleges" do
         user             = FactoryGirl.create(:user)
-        session[:userid] = user.userid
+        login_as user
         content          = {"value" => user.id, "field" => "MiqRequest-requester_id"}
         MiqExpression.should_receive(:new).with { |h| expect(h.fetch_path("and", 1, "=")).to eq(content) }
         controller.send(:prov_condition, {})
@@ -99,6 +100,28 @@ describe MiqRequestController do
         expect(h.fetch_path("and", 3, "INCLUDES")).to                                           be_nil  # Doesn't set reason_text
       end
       controller.send(:prov_condition, {})
+    end
+  end
+
+  context "#button" do
+    before(:each) do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @miq_request = MiqProvisionConfiguredSystemRequest.create(:description    => "Foreman provision",
+                                                                :approval_state => "pending_approval",
+                                                                :userid         => User.current_user.userid)
+    end
+    it "when edit request button is pressed" do
+      post :button, :pressed => "miq_request_edit", :id => @miq_request.id, :format => :js
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+
+    it "when copy request button is pressed" do
+      post :button, :pressed => "miq_request_copy", :id => @miq_request.id, :format => :js
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
     end
   end
 end

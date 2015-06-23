@@ -3,10 +3,9 @@ require "spec_helper"
 describe OrchestrationTemplateDialogService do
   let(:dialog_service) { described_class.new }
 
-  let(:template) do
-    file = 'spec/fixtures/orchestration_templates/hot_parameters.yml'
-    OrchestrationTemplateHot.new(:content => IO.read(file))
-  end
+  let(:template) { FactoryGirl.create(:orchestration_template_hot_with_content) }
+
+  let(:empty_template) { FactoryGirl.create(:orchestration_template_cfn) }
 
   describe "#create_dialog" do
     it "creates a dialog with stack basic info and parameters" do
@@ -21,13 +20,18 @@ describe OrchestrationTemplateDialogService do
       tabs.size.should == 1
       assert_stack_tab(tabs[0])
     end
+
+    it "creates a dialog from a template without parameters" do
+      dialog = dialog_service.create_dialog("test", empty_template)
+
+      tabs = dialog.dialog_tabs
+      assert_tab_attributes(tabs[0])
+      assert_stack_group(tabs[0].dialog_groups[0])
+    end
   end
 
   def assert_stack_tab(tab)
-    tab.should have_attributes(
-      :label   => "Basic Information",
-      :display => "edit"
-    )
+    assert_tab_attributes(tab)
 
     groups = tab.dialog_groups
     groups.size.should == 3
@@ -35,6 +39,13 @@ describe OrchestrationTemplateDialogService do
     assert_stack_group(groups[0])
     assert_parameter_group1(groups[1])
     assert_parameter_group2(groups[2])
+  end
+
+  def assert_tab_attributes(tab)
+    tab.should have_attributes(
+      :label   => "Basic Information",
+      :display => "edit"
+    )
   end
 
   def assert_stack_group(group)
@@ -66,7 +77,7 @@ describe OrchestrationTemplateDialogService do
     fields.size.should == 3
 
     assert_field(fields[0], DialogFieldTextBox,      :name => "param_flavor",     :default_value => "m1.small")
-    assert_field(fields[1], DialogFieldDropDownList, :name => "param_image_id",   :values => [%w(F18-i386-cfntools F18-i386-cfntools), %w(F18-x86_64-cfntools F18-x86_64-cfntools)])
+    assert_field(fields[1], DialogFieldDropDownList, :name => "param_image_id",   :default_value => "F18-x86_64-cfntools", :values => [%w(F18-i386-cfntools F18-i386-cfntools), %w(F18-x86_64-cfntools F18-x86_64-cfntools)])
     assert_field(fields[2], DialogFieldTextBox,      :name => "param_cartridges", :default_value => "cron,diy,haproxy,mysql,nodejs,perl,php,postgresql,python,ruby")
   end
 

@@ -41,12 +41,12 @@ module VmHelper::TextualSummary
   end
 
   def textual_group_datastore_allocation
-    items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_memory allocated_total}
+    items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_total}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_datastore_usage
-    items = %w{usage_disks usage_memory usage_snapshots usage_disk_storage usage_overcommitted}
+    items = %w{usage_disks usage_snapshots usage_disk_storage usage_overcommitted}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -151,16 +151,23 @@ module VmHelper::TextualSummary
       h[:value] = "None"
     else
       h[:image] = "vendor-#{vendor.downcase}"
-      h[:value] = "#{vendor} (#{pluralize(@record.num_cpu, 'CPU')}, #{@record.mem_cpu} MB)"
       h[:title] = "Show VMM container information"
       h[:explorer] = true
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')
+
+      cpu_details =
+        if @record.num_cpu && @record.cores_per_socket
+          " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cores_per_socket, 'core')})"
+        else
+          ""
+        end
+      h[:value] = "#{vendor}: #{pluralize(@record.logical_cpus, 'CPU')}#{cpu_details}, #{@record.mem_cpu} MB"
     end
     h
   end
 
   def textual_host_platform
-    {:label => "Parent Host Platform", :value => (@record.host.nil? ? "N/A" : @record.v_host_vmm_product)}
+    {:label => "Parent #{title_for_host} Platform", :value => (@record.host.nil? ? "N/A" : @record.v_host_vmm_product)}
   end
 
   def textual_tools_status
@@ -263,9 +270,9 @@ module VmHelper::TextualSummary
 
   def textual_cluster
     cluster = @record.ems_cluster
-    h = {:label => "Cluster", :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
+    h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
     if cluster && role_allows(:feature => "ems_cluster_show")
-      h[:title] = "Show this VM's Cluster"
+      h[:title] = "Show this VM's #{title_for_cluster}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)
     end
     h
@@ -273,9 +280,9 @@ module VmHelper::TextualSummary
 
   def textual_host
     host = @record.host
-    h = {:label => "Host", :image => "host", :value => (host.nil? ? "None" : host.name)}
+    h = {:label => title_for_host, :image => "host", :value => (host.nil? ? "None" : host.name)}
     if host && role_allows(:feature => "host_show")
-      h[:title] = "Show this VM's Host"
+      h[:title] = "Show this VM's #{title_for_host}"
       h[:link]  = url_for(:controller => 'host', :action => 'show', :id => host)
     end
     h

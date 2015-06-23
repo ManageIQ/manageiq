@@ -4,16 +4,10 @@ class MiqHostProvisionRequest < MiqRequest
 
   TASK_DESCRIPTION  = 'Host Provisioning'
   SOURCE_CLASS_NAME = 'Host'
-  REQUEST_TYPES     = %w{ host_pxe_install }
   ACTIVE_STATES     = %w{ migrated } + self.base_class::ACTIVE_STATES
 
-  validates_inclusion_of :request_type,   :in => REQUEST_TYPES,                          :message => "should be #{REQUEST_TYPES.join(", ")}"
   validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
-
-  default_value_for :provision_type, REQUEST_TYPES.first
-  default_value_for :message,        "#{TASK_DESCRIPTION} - Request Created"
-  default_value_for(:requester)      { |r| r.get_user }
 
   virtual_column :provision_type, :type => :string
 
@@ -66,6 +60,10 @@ class MiqHostProvisionRequest < MiqRequest
 
   def my_role
     'ems_operations'
+  end
+
+  def originating_controller
+    "host"
   end
 
   private

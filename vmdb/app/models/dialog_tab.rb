@@ -1,7 +1,6 @@
 class DialogTab < ActiveRecord::Base
-
   include DialogMixin
-  has_many   :dialog_groups, :dependent => :destroy, :order => :position
+  has_many   :dialog_groups, -> { order(:position) }, :dependent => :destroy
   belongs_to :dialog
 
   alias_attribute :order, :position

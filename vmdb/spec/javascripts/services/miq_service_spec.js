@@ -112,6 +112,30 @@ describe('miqService', function() {
           expect(testService.saveable(scheduleForm)).toBe(false);
         });
       });
+
+      describe('when the passed in model contains few attributes with null vaues', function() {
+        beforeEach(function() {
+          model = {
+          depot_name:   'my_nfs_depot',
+          uri:          'nfs://nfs_location',
+          uri_prefix:   'nfs',
+          log_userid:   null,
+          log_password: null,
+          log_verify:   null,
+          log_protocol: 'NFS'
+          };
+        });
+
+        it('it returns an object with null attributes excluded', function() {
+          returnedObj = {
+            depot_name:   'my_nfs_depot',
+            uri:          'nfs://nfs_location',
+            uri_prefix:   'nfs',
+            log_protocol: 'NFS'
+          };
+          expect(testService.serializeModel(model)).toEqual(returnedObj);
+        });
+      });
     });
   });
 });

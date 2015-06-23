@@ -45,20 +45,22 @@ class TreeBuilderForemanConfiguredSystems  < TreeBuilder
     when "global" # Global filters
       objects = x_get_global_filter_search_results(options)
     when "my"     # My filters
-      objects = x_get_my_filter_seacrh_results(options)
+      objects = x_get_my_filter_search_results(options)
     end
     objects
   end
 
   def x_get_global_filter_search_results(options)
-    MiqSearch.all(:conditions => ["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and
-      db=?", "global", "default", "_hidden_", options[:leaf]]).sort_by { |a| a.description.downcase }
+    MiqSearch
+      .where(:db => options[:leaf])
+      .where("search_type=? or (search_type=? and (search_key is null or search_key<>?))", "global", "default", "_hidden_")
+      .sort_by { |a| a.description.downcase }
   end
 
-  def x_get_my_filter_seacrh_results(options)
-    MiqSearch.all(:conditions => ["search_type=? and search_key=? and db=?",
-                                  "user",
-                                  User.current_user.userid,
-                                  options[:leaf]]).sort_by { |a| a.description.downcase }
+  def x_get_my_filter_search_results(options)
+    MiqSearch
+      .where(:db => options[:leaf])
+      .where(:search_type => "user", :search_key => User.current_user.userid)
+      .sort_by { |a| a.description.downcase }
   end
 end

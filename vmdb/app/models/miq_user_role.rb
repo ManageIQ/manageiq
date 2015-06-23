@@ -1,5 +1,5 @@
 class MiqUserRole < ActiveRecord::Base
-  has_many                :miq_groups, :dependent => :restrict
+  has_many                :miq_groups, :dependent => :restrict_with_exception
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
 
   virtual_column :group_count,                      :type => :integer
@@ -133,10 +133,14 @@ class MiqUserRole < ActiveRecord::Base
   end
 
   def self.get_role(role)
-    return role if role.kind_of?(self) || role.nil?
-
-    find_method = role.kind_of?(Integer) ? :find_by_id : :find_by_name
-    self.send(find_method, role, :include => :miq_product_features)
+    case role
+    when self, nil
+      role
+    when Integer
+      includes(:miq_product_features).find_by_id(role)
+    else
+      includes(:miq_product_features).find_by_name(role)
+    end
   end
 
   def self_service_role?
@@ -163,14 +167,14 @@ class MiqUserRole < ActiveRecord::Base
       feature_ids = hash.delete(:miq_product_feature_identifiers)
 
       hash[:miq_product_features] = MiqProductFeature.where(:identifier => feature_ids).to_a
-      role = self.find_by_name(hash[:name]) || self.new(hash)
+      role = self.find_by_name(hash[:name]) || self.new(hash.except(:id))
       new_role = role.new_record?
       hash[:miq_product_features] &&= role.miq_product_features if !new_role && merge_features
       unless role.settings.nil? # Makse sure existing settings are merged in with the new ones.
         new_settings = hash.delete(:settings) || {}
         role.settings.merge!(new_settings)
       end
-      role.update_attributes(hash)
+      role.update_attributes(hash.except(:id))
 
       new_roles << role if new_role
     end
@@ -189,7 +193,7 @@ class MiqUserRole < ActiveRecord::Base
       end
 
       # Migrate widgets that may reference old role name
-      widgets ||= MiqWidget.in_my_region.all
+      widgets ||= MiqWidget.in_my_region
       widgets.each do |w|
         if w.visibility.kind_of?(Hash) && w.visibility.has_key?(:roles) && w.visibility[:roles].include?(old_role_name)
           idx = w.visibility[:roles].index(old_role_name)

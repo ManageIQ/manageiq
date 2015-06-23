@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe WidgetImportService do
   let(:widget_import_service) { described_class.new(widget_import_validator) }
-  let(:widget_import_validator) { instance_double("WidgetImportValidator") }
+  let(:widget_import_validator) { auto_loaded_instance_double("WidgetImportValidator") }
 
   before do
     MiqServer.stub(:my_server).and_return(active_record_instance_double("MiqServer", :zone_id => 1))

@@ -48,10 +48,10 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
   end
 
   def up
-    return unless postgresql? && VimPerformance.table_exists? && RrPendingChange.table_exists?
+    return unless VimPerformance.table_exists? && RrPendingChange.table_exists?
 
     say_with_time("Converting vim_performances records in #{RrPendingChange.table_name}") do
-      rows = RrPendingChange.count(:conditions => {:change_table => "vim_performances"})
+      rows = RrPendingChange.where(:change_table => "vim_performances").count
       say_batch_started(rows)
       return if rows == 0
 
@@ -75,7 +75,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
           rrpcs_to_delete    = vp_ids_to_rrpcs.values_at(*deleted_vp_ids).flatten
           rrpc_ids_to_delete = rrpcs_to_delete.collect(&:id)
 
-          conditions = sanitize_sql_for_conditions({:id => rrpc_ids_to_delete}, :vim_performances)
+          conditions = "vim_performances.id IN (#{rrpc_ids_to_delete.join(',')})"
 
           if remote_settings
             MiqRegionRemote.with_remote_connection(*remote_settings) do |c|
@@ -83,7 +83,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
             end
           end
 
-          conditions = sanitize_sql_for_conditions({:id => rrpc_ids_to_delete}, rrpc_table)
+          conditions = "#{rrpc_table}.id IN (#{rrpc_ids_to_delete.join(',')})"
           connection.execute("DELETE FROM #{rrpc_table} WHERE #{conditions}")
         end
 
@@ -95,7 +95,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
           rrpc_ids_for_month = rrpcs_for_month.collect(&:id)
 
           subtable   = connection.quote(subtable_name(:metric_rollups, month))
-          conditions = sanitize_sql_for_conditions({:id => rrpc_ids_for_month}, rrpc_table)
+          conditions = "#{rrpc_table}.id IN (#{rrpc_ids_for_month.join(',')})"
           connection.execute("UPDATE #{rrpc_table} SET change_table = #{subtable} WHERE #{conditions}")
         end
 
@@ -105,7 +105,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
   end
 
   def down
-    return unless postgresql? && RrPendingChange.table_exists?
+    return unless RrPendingChange.table_exists?
   end
 
   def subtable_name(inherit_from, index)
@@ -113,7 +113,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
   end
 
   def discover_replication_settings
-    configs = Configuration.where(:typ => 'vmdb').select(:settings).all
+    configs = Configuration.where(:typ => 'vmdb').select(:settings).to_a
 
     settings = nil
     configs.each do |c|

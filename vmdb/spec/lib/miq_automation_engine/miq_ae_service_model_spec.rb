@@ -93,7 +93,6 @@ end
 #   models.  These tests test the basic service model methods and can be removed
 #   in favor of the same tests against any single one of those classes.
 #
-require "spec_helper"
 #  require "#{File.dirname(__FILE__)}/../lib/engine/miq_ae_service"
 #  require "#{File.dirname(__FILE__)}/../lib/engine/miq_ae_service_model_base"
 #  Dir.new("#{File.dirname(__FILE__)}/../lib/service_models").each { |fname|
@@ -182,7 +181,7 @@ require "spec_helper"
 #  end
 #
 #  # Add another test to the EmsEvent test
-#  class MiqAeServiceEmsEventTest < Test::Unit::TestCase
+#  class MiqAeServiceEmsEventTest < MiniTest::Unit::TestCase
 #
 #    def test_wrap_object_call
 #      e = @klass.new(@o1)

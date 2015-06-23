@@ -6,7 +6,7 @@ class MiqReportResult < ActiveRecord::Base
   belongs_to :miq_task
   has_one    :binary_blob, :as => :resource, :dependent => :destroy
   has_many   :miq_report_result_details, :dependent => :delete_all
-  has_many   :html_details, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id", :conditions => "data_type = 'html'"
+  has_many   :html_details, -> { where "data_type = 'html'" }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
 
   serialize :report
 
@@ -95,9 +95,9 @@ class MiqReportResult < ActiveRecord::Base
       options[:offset] = ((page - 1) * per_page)
       options[:limit]  = per_page
     end
-    self.update_attribute(:last_accessed_on, Time.now.utc)
-    self.purge_for_user
-    self.html_details.all(options.merge(:order => "id asc")).collect(&:data)
+    update_attribute(:last_accessed_on, Time.now.utc)
+    purge_for_user
+    html_details.apply_legacy_finder_options(options.merge(:order => "id asc")).collect(&:data)
   end
 
   def save_for_user(userid)

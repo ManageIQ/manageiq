@@ -23,24 +23,24 @@ module MiqProvisionVmware::Customization
     spec = VimHash.new("CustomizationSpec") if spec.nil?
 
     # Create customization spec based on platform
-    case self.source.platform
+    case source.platform
     when 'linux', 'windows'
-      identity = self.send("customization_identity_#{self.source.platform}", spec)
+      identity = send("customization_identity_#{source.platform}", spec)
       return if identity.nil?
       spec.identity = identity
     else
-      $log.warn "#{log_header} VM Customization will be skipped.  Not supported for platform type [#{self.source.platform}]"
+      $log.warn "#{log_header} VM Customization will be skipped.  Not supported for platform type [#{source.platform}]"
       return
     end
 
     globalIPSettings = find_build_spec_path(spec, 'CustomizationGlobalIPSettings', 'globalIPSettings')
     # In Linux, DNS server settings are global.  In Windows, these settings are adapter-specific
-    set_spec_array_option(globalIPSettings, :dnsServerList, :dns_servers)  if self.source.platform == "linux"
+    set_spec_array_option(globalIPSettings, :dnsServerList, :dns_servers)  if source.platform == "linux"
     set_spec_array_option(globalIPSettings, :dnsSuffixList, :dns_suffixes)
 
-    customization_nicSettingMap(self.source.platform, spec)
+    customization_nicSettingMap(source.platform, spec)
 
-    if self.source.platform == "windows"
+    if source.platform == "windows"
       options = find_build_spec_path(spec, 'CustomizationWinOptions', 'options')
       set_spec_option(options, :changeSID, :sysprep_change_sid)
       # From: What's New in the VI SDK 2.5?
@@ -49,7 +49,7 @@ module MiqProvisionVmware::Customization
       set_spec_option(options, :deleteAccounts, :sysprep_delete_accounts)
     end
 
-    return spec
+    spec
   end
 
   def customization_identity_windows(spec)
@@ -95,42 +95,41 @@ module MiqProvisionVmware::Customization
       set_spec_option(userData, :fullName, :sysprep_full_name)
       set_spec_option(userData, :orgName, :sysprep_organization)
       set_spec_option(userData, :productId, :sysprep_product_id)
-      userData.computerName = customization_hostname()
+      userData.computerName = customization_hostname
     end
-    return identity
+    identity
   end
 
   def customization_identity_linux(spec)
     log_header = "MIQ(#{self.class.name}.customization_identity_linux)"
     identity = find_build_spec_path(spec, 'CustomizationLinuxPrep', 'identity')
     set_spec_option(identity, :domain, :linux_domain_name)
-    identity.hostName = customization_hostname()
-    return identity
+    identity.hostName = customization_hostname
+    identity
   end
 
   def collect_nic_settings
-    nics = self.options[:nic_settings].to_miq_a
+    nics = options[:nic_settings].to_miq_a
     nic = nics[0]
     nic = {} if nic.blank?
     [:dns_domain, :dns_servers, :sysprep_netbios_mode, :wins_servers, :addr_mode,
-     :gateway, :subnet_mask, :ip_addr].each {|key| nic[key] = self.options[key]}
+     :gateway, :subnet_mask, :ip_addr].each { |key| nic[key] = options[key] }
     nics[0] = nic
 
-    self.options[:nic_settings]   = nics
-    self.update_attribute(:options, self.options)
+    options[:nic_settings] = nics
+    update_attribute(:options, options)
     nics
   end
 
   def customization_nicSettingMap(source_platform, spec)
     log_header = "MIQ(#{self.class.name}.customization_nicSettingMap)"
-    nic_settings = self.collect_nic_settings
+    nic_settings = collect_nic_settings
 
     spec.nicSettingMap ||= VimArray.new("ArrayOfCustomizationAdapterMapping")
 
-    requested_network_adapter_count = self.options[:requested_network_adapter_count].to_i
+    requested_network_adapter_count = options[:requested_network_adapter_count].to_i
 
     nic_settings.each_with_index do |nic, idx|
-
       break if idx >= requested_network_adapter_count
       $log.warn "#{log_header} Nic index:<#{idx}> -- settings:<#{nic.inspect}>"
       spec.nicSettingMap[idx] = VimHash.new("CustomizationAdapterMapping") if spec.nicSettingMap[idx].blank?
@@ -173,12 +172,12 @@ module MiqProvisionVmware::Customization
   def adjust_nicSettingMap(spec)
     return if spec.blank?
 
-    requested_network_adapter_count = self.options[:requested_network_adapter_count].to_i
+    requested_network_adapter_count = options[:requested_network_adapter_count].to_i
     nic_count = spec.nicSettingMap.to_miq_a.length
 
     if requested_network_adapter_count < nic_count
       # Remove nicSettings to match network adapter count
-      nic_count.downto(requested_network_adapter_count + 1) {spec.nicSettingMap.pop}
+      nic_count.downto(requested_network_adapter_count + 1) { spec.nicSettingMap.pop }
     elsif requested_network_adapter_count > nic_count
       # Add DHCP nicSettings to match network adapter count
       spec.nicSettingMap ||= VimArray.new("ArrayOfCustomizationAdapterMapping")
@@ -207,10 +206,10 @@ module MiqProvisionVmware::Customization
     custom_spec_name = nil if custom_spec_name == "__VC__NONE__"
     unless custom_spec_name.blank?
       $log.info "#{log_header} Using customization spec [#{custom_spec_name}]"
-      cs = self.source.ext_management_system.customization_specs.find_by_id(custom_spec_name)
-      cs = self.source.ext_management_system.customization_specs.find_by_name(custom_spec_name) if cs.nil?
+      cs = source.ext_management_system.customization_specs.find_by_id(custom_spec_name)
+      cs = source.ext_management_system.customization_specs.find_by_name(custom_spec_name) if cs.nil?
       raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] does not exist." if cs.nil?
-      raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] for OS type [#{cs[:typ]}] does not match the template VM OS" if cs[:typ].downcase != self.source.platform
+      raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] for OS type [#{cs[:typ]}] does not match the template VM OS" if cs[:typ].downcase != source.platform
       $log.info "#{log_header} Using customization spec [#{cs.name}]"
       return cs
     else
@@ -226,10 +225,10 @@ module MiqProvisionVmware::Customization
       parent = path.blank? ? spec : spec.fetch_path(path)
       found = parent[new_path.to_s] = VimHash.new(end_type)
     end
-    return found
+    found
   end
 
-  def customization_hostname()
+  def customization_hostname
     log_header = "MIQ(#{self.class.name}.customization_hostname)"
     VimHash.new("CustomizationFixedName") do |mach_name|
       computer_name = get_option(:vm_target_hostname)
@@ -261,7 +260,7 @@ module MiqProvisionVmware::Customization
     end
   end
 
-  def set_spec_array_option(obj, property, key, override_value=nil)
+  def set_spec_array_option(obj, property, key, override_value = nil)
     log_header = "MiqProvision.set_spec_array_option"
     if key.nil?
       value = get_option(nil, override_value)
@@ -270,7 +269,7 @@ module MiqProvisionVmware::Customization
     end
     values = value.to_s.split(",")
     unless values.blank?
-      value = VimArray.new {|l| values.each {|i| l << i.strip}}
+      value = VimArray.new { |l| values.each { |i| l << i.strip } }
       $log.info "#{log_header} #{property} was set to #{value.inspect} (#{value.class})"
       obj.send("#{property}=", value)
     else

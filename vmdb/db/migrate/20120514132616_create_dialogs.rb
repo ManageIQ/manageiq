@@ -4,21 +4,21 @@ class CreateDialogs < ActiveRecord::Migration
       t.string      :name
       t.string      :description
       t.string      :buttons
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :dialog_tabs do |t|
       t.string      :name
       t.string      :description
       t.string      :display
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :dialog_groups do |t|
       t.string      :name
       t.string      :description
       t.string      :display
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :dialog_fields do |t|
@@ -39,7 +39,7 @@ class CreateDialogs < ActiveRecord::Migration
       t.string      :values_method
       t.text        :values_options     # => {:category => :Vm}
       t.text        :options
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :dialog_resources do |t|

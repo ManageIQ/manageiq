@@ -21,23 +21,6 @@ describe "JobProxyDispatcherVmProxies4Job" do
         @vm = @vms.first
       end
 
-      context "with 2 cos based proxies, a 'running' vmware vm on one of them, and both hosts are on vm's storage, " do
-        before(:each) do
-          @vms_host, other_host = @hosts[0..1]
-          @vm.raw_power_state = "poweredOn"
-          @vm.host = @vms_host
-          @vm.save
-          vm_storage = @vm.storage
-          vm_storage.hosts = [] << @vms_host << other_host
-          vm_storage.save
-          @vm.reload
-        end
-
-        it "should exclude any proxy hosts other than the vm's host" do
-          @vm.proxies4job[:proxies].should == [@vms_host]
-        end
-      end
-
       context "with no eligible active proxies, " do
         before(:each) do
           @vm.stub(:storage2active_proxies => [])

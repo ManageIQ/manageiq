@@ -11,16 +11,16 @@
 
 - if multi_mode
   - modes.each do |mode|
-    = javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js"
+    = javascript_include_tag "codemirror/modes/#{mode}"
 - elsif mode == "htmlmixed"
-  = javascript_include_tag "codemirror-4.2/mode/javascript/javascript.js"
-  = javascript_include_tag "codemirror-4.2/mode/css/css.js"
-  = javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js"
-  = javascript_include_tag "codemirror-4.2/mode/xml/xml.js"
+  = javascript_include_tag "codemirror/modes/javascript"
+  = javascript_include_tag "codemirror/modes/css"
+  = javascript_include_tag "codemirror/modes/#{mode}"
+  = javascript_include_tag "codemirror/mode/xml"
 - else
-  = javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js"
+  = javascript_include_tag "codemirror/modes/#{mode}"
 - unless theme == "default"
-  = stylesheet_link_tag "codemirror-4.2/theme/#{theme}.css"
+  = stylesheet_link_tag "codemirror/themes/#{theme}"
 %script{:type => "text/javascript"}
   if (miqDomElementExists('#{text_area_id}')) {
   miqEditor = CodeMirror.fromTextArea($('##{text_area_id}')[0],

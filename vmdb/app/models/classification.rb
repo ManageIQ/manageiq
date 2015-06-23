@@ -37,11 +37,11 @@ class Classification < ActiveRecord::Base
   def self.hash_all_by_type_and_name(conditions = {})
     ret = {}
 
-    self.find(:all, :conditions => conditions.merge(:parent_id => 0), :include => :tag).each do |c|
+    where(conditions).where(:parent_id => 0).includes(:tag).each do |c|
       ret.store_path(c.name, :category, c)
     end
 
-    self.find(:all, :conditions => merge_conditions(conditions, "parent_id != 0"), :include => [:tag, { :parent => :tag }]).each do |e|
+    where(conditions).where.not(:parent_id => 0).includes(:tag, :parent => :tag).each do |e|
       ret.store_path(e.parent.name, :entry, e.name, e) unless e.parent.nil?
     end
 
@@ -113,12 +113,12 @@ class Classification < ActiveRecord::Base
     log_prefix = "MIQ(Classification.bulk_reassignment)"
 
     model = options[:model].constantize
-    targets = model.find_all_by_id(options[:object_ids], :include => [:taggings, :tags])
+    targets = model.where(:id => options[:object_ids]).includes(:taggings, :tags)
 
-    adds = self.find_all_by_id(options[:add_ids], :include => [:tag])
+    adds = where(:id => options[:add_ids]).includes(:tag)
     adds.each {|a| raise "Classification add id: [#{a.id}] is not an entry" if a.category?}
 
-    deletes = self.find_all_by_id(options[:delete_ids], :include => [:tag])
+    deletes = where(:id => options[:delete_ids]).includes(:tag)
     deletes.each {|d| raise "Classification delete id: [#{d.id}] is not an entry" if d.category?}
 
     failed_deletes = Hash.new { |h, k| h[k] = [] }
@@ -198,7 +198,7 @@ class Classification < ActiveRecord::Base
     raise "Class '#{obj.class}' is not eligible for classification" unless obj.respond_to?("tag_with")
 
     tag_ids = obj.tagged_with(:ns => ns).collect(&:id)
-    self.find_all_by_tag_id(tag_ids) rescue []
+    where(:tag_id => tag_ids) rescue []
   end
 
   def self.first_cat_entry(name, obj)
@@ -311,11 +311,7 @@ class Classification < ActiveRecord::Base
   end
 
   def self.find_by_name(name, region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
-    if region_id.nil?
-      tag = Tag.find_by_name(Classification.name2tag(name, 0, ns))
-    else
-      tag = Tag.in_region(region_id).find_by_name(Classification.name2tag(name, 0, ns))
-    end
+    tag = Tag.find_by_classification_name(name, region_id, ns)
     tag.nil? ? nil : self.find_by_tag_id(tag.id)
   end
 

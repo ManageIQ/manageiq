@@ -3,7 +3,6 @@
 .tags
 *.cmd
 *.pyc
-/bin/
 /data/
 /productization
 BUILD
@@ -27,6 +26,9 @@ app/views/vm/.fuse_hidden0000208f00000004
 app/views/vm/_main_old.rhtml
 app/views/vm/_main_new.rhtml
 app/views/vm/.fuse_hidden0000228d0000000a
+
+# bin/
+bin/*
 
 # config/
 config/apache
@@ -56,6 +58,7 @@ public/dhtmlx_test_cal.html
 public/test_grid.xml
 public/test_grid-0.xml
 public/upload
+public/pictures/
 
 # public/dhtmlx/
 public/dhtmlx/dhtmlxtoolbar.js.orig
@@ -114,3 +117,6 @@ vendor/plugins/princely/.gitignore
 
 # vendor/plugins/rails_sql_views/
 vendor/plugins/rails_sql_views/.gitignore
+
+# ignore included plugins in bundler.d
+bundler.d/*

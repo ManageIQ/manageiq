@@ -7,9 +7,9 @@
           %h3=_('Session Information')
           %table.style1
             - [[_("Server Name"),     h(session[:vmdb_name])],
-               [_("Version"),         h(session[:vmdb][:version] + "." + session[:vmdb][:build])],
+               [_("Version"),         h(@vmdb[:version] + "." + @vmdb[:build])],
                [_("User Name"),       h(session[:username])],
-               [_("User Role"),       h(@temp[:user_role])],
+               [_("User Role"),       h(@user_role)],
                [_("Browser"),         h(browser_info("name"))],
                [_("Browser Version"), h(browser_info("version"))],
                [_("Browser OS"),      h(browser_info("os"))]].each do |session_info|

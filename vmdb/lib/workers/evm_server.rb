@@ -2,8 +2,7 @@ require 'miq-process'
 require 'pid_file'
 
 class EvmServer
-  SOFT_INTERRUPT_SIGNALS = ["TERM", "USR1", "USR2"]
-  HARD_INTERRUPT_SIGNALS = ["INT", "KILL"]
+  SOFT_INTERRUPT_SIGNALS = ["SIGTERM", "SIGUSR1", "SIGUSR2"]
 
   OPTIONS_PARSER_SETTINGS = [
     [:mode, 'EVM Server Mode', String],
@@ -11,9 +10,6 @@ class EvmServer
 
   def initialize(cfg = {})
     @cfg = cfg
-
-    HARD_INTERRUPT_SIGNALS.each { |s| Signal.trap(s) { self.process_hard_signal(s) } if Signal.list.keys.include?(s) }
-    SOFT_INTERRUPT_SIGNALS.each { |s| Signal.trap(s) { self.process_soft_signal(s) } if Signal.list.keys.include?(s) }
 
     $log ||= Rails.logger
   end
@@ -63,12 +59,18 @@ class EvmServer
     end
 
     at_exit {
+      # TODO: should this be called on SOFT ints and SystemExit, not SIGINT?
       # register a shutdown method to run when server exits
       MiqServer.stop
     }
 
     PidFile.create(MiqServer.pidfile)
     MiqServer.start
+  rescue Interrupt => e
+    process_hard_signal(e.message)
+  rescue SignalException => e
+    raise unless SOFT_INTERRUPT_SIGNALS.include?(e.message)
+    process_soft_signal(e.message)
   end
 
   def self.start(*args)
@@ -85,5 +87,3 @@ class EvmServer
     self.new(cfg).start
   end
 end
-
-EvmServer.start(*ARGV) if MiqEnvironment::Process.is_rails_runner?

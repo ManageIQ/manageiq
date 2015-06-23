@@ -52,7 +52,7 @@ module ApplianceConsole
     end
 
     def certs?
-      options[:postgres_client_cert] || options[:postgres_server_cert] || options[:api_cert]
+      options[:postgres_client_cert] || options[:postgres_server_cert] || options[:http_cert]
     end
 
     def initialize(options = {})
@@ -96,11 +96,12 @@ module ApplianceConsole
         opt :ipaserver,  "IPA Server FQDN",  :type => :string
         opt :ipaprincipal,  "IPA Server principal", :type => :string,          :default => "admin"
         opt :ipapassword,   "IPA Server password",  :type => :string
+        opt :ipadomain,     "IPA Server domain (optional)", :type => :string
         opt :iparealm,      "IPA Server realm (optional)", :type => :string
         opt :ca,                   "CA name used for certmonger",       :type => :string,  :default => "ipa"
         opt :postgres_client_cert, "install certs for postgres client", :type => :boolean
         opt :postgres_server_cert, "install certs for postgres server", :type => :boolean
-        opt :api_cert,             "install certs for regional api",    :type => :boolean
+        opt :http_cert,            "install certs for http server",     :type => :boolean
       end
       Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && local_database?
       self
@@ -194,7 +195,7 @@ module ApplianceConsole
         :ca_name  => options[:ca],
         :pgclient => options[:postgres_client_cert],
         :pgserver => options[:postgres_server_cert],
-        :api      => options[:api_cert],
+        :http     => options[:http_cert],
         :verbose  => options[:verbose],
       )
 
@@ -210,6 +211,7 @@ module ApplianceConsole
       config = ExternalHttpdAuthentication.new(
         host,
         :ipaserver => options[:ipaserver],
+        :domain    => options[:ipadomain],
         :realm     => options[:iparealm],
         :principal => options[:ipaprincipal],
         :password  => options[:ipapassword],
@@ -221,17 +223,22 @@ module ApplianceConsole
     def uninstall_ipa
       say "Uninstalling IPA-client"
       config = ExternalHttpdAuthentication.new
-      config.ipa_client_unconfigure if config.ipa_client_configured?
+      config.deactivate if config.ipa_client_configured?
     end
 
     def config_tmp_disk
-      say "creating temp disk"
       if (tmp_disk = disk_from_string(options[:tmpdisk]))
+        say "creating temp disk"
         config = ApplianceConsole::TempStorageConfiguration.new(:disk => tmp_disk)
         config.activate
       else
-        say "could not find disk #{options[:tmpdisk]}"
-        say "if you pass auto, it will choose: #{disk.try(:path) || "no disks with a free partition"}"
+        choose_disk = disk.try(:path)
+        if choose_disk
+          say "could not find disk #{options[:tmpdisk]}"
+          say "if you pass auto, it will choose: #{choose_disk}"
+        else
+          say "no disks with a free partition"
+        end
       end
     end
 

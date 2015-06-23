@@ -62,7 +62,6 @@ module FixAuth
         begin
           ActiveRecord::Base.establish_connection(db_attributes(database)) if please_establish_connection
           models.each do |model|
-            puts "fixing #{model.table_name}.#{model.password_columns.join(", ")}"
             model.run(run_options)
           end
         ensure
@@ -73,15 +72,21 @@ module FixAuth
 
     def fix_database_yml
       FixDatabaseYml.file_name = "#{options[:root]}/config/database.yml"
-      FixDatabaseYml.run(run_options.merge(:hardcode => options[:password]))
+      FixDatabaseYml.run({:hardcode => options[:password]}.merge(run_options))
+    end
+
+    def set_passwords
+      MiqPassword.key_root = cert_dir if cert_dir
+      MiqPassword.add_legacy_key("v0_key", :v0)
+      MiqPassword.add_legacy_key("v1_key", :v1)
     end
 
     def run
-      MiqPassword.key_root = cert_dir if cert_dir
+      set_passwords
 
       generate_password if options[:key]
       fix_database_yml if options[:databaseyml]
-      fix_database_passwords if !options[:key] && !options[:databaseyml]
+      fix_database_passwords if options[:db]
     end
   end
 end

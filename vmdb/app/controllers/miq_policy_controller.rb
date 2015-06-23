@@ -238,8 +238,6 @@ class MiqPolicyController < ApplicationController
     build_policy_tree(@polArr)
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "#{session[:tree_name]}.saveOpenStates('#{session[:tree_name]}','path=/');"
-      page << "#{session[:tree_name]}.loadOpenStates('#{session[:tree_name]}');"
       page.replace("main_div", :partial=>"vm/policies")
     end
   end
@@ -356,14 +354,14 @@ class MiqPolicyController < ApplicationController
     @download_action = "fetch_log"
     @server_options ||= Hash.new
     @server_options[:server_id] ||= MiqServer.my_server.id
-    @temp[:server] = MiqServer.my_server
+    @server = MiqServer.my_server
     drop_breadcrumb( {:name=>"Log", :url=>"/miq_ae_policy/log"} )
     render :action=>"show"
   end
 
   def refresh_log
     @log = $policy_log.contents(nil,1000)
-    @temp[:server] = MiqServer.my_server
+    @server = MiqServer.my_server
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("main_div", :partial=>"layouts/log_viewer")
@@ -386,12 +384,12 @@ class MiqPolicyController < ApplicationController
 
   def iterate_status(items = nil, result = [], parent_id = nil, indent = nil)
     items.each do |item|
-      entry = { "id"     => result.count.to_s,
-                "title"  => "<b>#{I18n.t("model_name.#{item[:class].underscore}")}:</b>" +
-                             " #{item[:description]}",
-                "parent" => parent_id,
-                "status_icon" => get_status_icon(item[:status]),
-                "indent" => (indent.nil? ? 0 : indent + 1)}
+      entry = {"id"          => result.count.to_s,
+               "title"       => "<b>#{Dictionary.gettext(item[:class].underscore, :type => :model_name, :notfound => :titleize)}:</b>" +
+                              " #{item[:description]}",
+               "parent"      => parent_id,
+               "status_icon" => get_status_icon(item[:status]),
+               "indent"      => (indent.nil? ? 0 : indent + 1)}
 
       entry["_collapsed"] = false if item[:children]
 
@@ -462,6 +460,7 @@ class MiqPolicyController < ApplicationController
     if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|                    # Use RJS to update the display
         page.replace("gtl_div", :partial => "layouts/gtl", :locals => { :action_url=>"#{what}_get_all",:button_div=>'policy_bar' } )
+        page << "miqSparkleOff();"
       end
     end
 
@@ -553,7 +552,6 @@ class MiqPolicyController < ApplicationController
     replace_trees = @replace_trees if @replace_trees  #get_node_info might set this
     @explorer = true
 
-    # Build the JSON objects in @temp for trees to be replaced
     if replace_trees
       profile_build_tree        if replace_trees.include?(:policy_profile)
       policy_build_tree         if replace_trees.include?(:policy)
@@ -570,7 +568,6 @@ class MiqPolicyController < ApplicationController
     # Build a presenter to render the JS
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
     )
     r = proc { |opts| render_to_string(opts) }
 
@@ -764,7 +761,7 @@ class MiqPolicyController < ApplicationController
     presenter[:miq_record_id] = @record.try(:id)
 
     # Lock current tree if in edit or assign, else unlock all trees
-    if @edit || @assign
+    if (@edit || @assign) && params[:action] != "x_search_by_name"
       presenter[:lock_unlock_trees][x_active_tree] = true
     else
       [:policy_profile_tree, :policy_tree, :condition_tree,
@@ -986,7 +983,7 @@ class MiqPolicyController < ApplicationController
       @right_cell_text = _("All %{typ} %{model}") % {:typ=>ui_lookup(:model=>@sb[:folder]), :model=>ui_lookup(:models=>"Condition")}
       @right_cell_div = "condition_list"
     elsif x_active_tree == :alert_profile_tree
-      @alert_profiles = MiqAlertSet.all(:conditions=>["mode = ?", @sb[:folder]]).sort_by { |as| as.description.downcase }
+      @alert_profiles = MiqAlertSet.where(:mode => @sb[:folder]).sort_by { |as| as.description.downcase }
       set_search_text
       @alert_profiles = apply_search_filter(@search_text, @alert_profiles) if !@search_text.blank?
       @right_cell_text = "All #{ui_lookup(:model=>@sb[:folder])} Alert Profiles"
@@ -1034,7 +1031,7 @@ class MiqPolicyController < ApplicationController
         when "p"  then MiqPolicy
         when "al" then MiqAlert
         end
-      @sb[:new][:chosen] = chooser_class.all.sort_by { |c| c.description.downcase }.collect { |c| [c.description, c.id] }
+      @sb[:new][:choices] = chooser_class.all.sort_by { |c| c.description.downcase }.collect { |c| [c.description, c.id] }
     else
       @sb[:import_file] = ""
     end

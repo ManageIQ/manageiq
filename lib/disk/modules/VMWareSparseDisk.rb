@@ -1,9 +1,6 @@
 require 'MiqLargeFile'
-
-$:.push("#{File.dirname(__FILE__)}/../util")
-
 require 'binary_struct'
-require 'MiqMemory'
+require 'memory_buffer'
 
 module VMWareSparseDisk
 
@@ -69,7 +66,7 @@ module VMWareSparseDisk
 			grainPos = getGTE(gnStart)
 			# Mods for parent link.
 			if grainPos == 0
-				return MiqMemory.create_zero_buffer(len) if @dInfo.parent == nil
+				return MemoryBuffer.create(len) if @dInfo.parent == nil
 				return @dInfo.parent.d_read(pos, len)
 			else
 				@vmwareSparseDisk_file.seek(grainPos + goStart, IO::SEEK_SET)
@@ -93,7 +90,7 @@ module VMWareSparseDisk
 			# Mods for parent link.
 			if gp == 0
 				if @dInfo.parent.nil?
-					rv << MiqMemory.create_zero_buffer(l)
+					rv << MemoryBuffer.create(l)
 				else
 					rv << @dInfo.parent.d_read(pos + bytesRead, l)
 				end
@@ -163,7 +160,7 @@ module VMWareSparseDisk
 	
 	def allocGrain(gn)
 		sector = findFreeSector; byte = gn * @grainBytes
-		buf = @dInfo.parent.nil? ? MiqMemory.create_zero_buffer(@grainBytes) : @dInfo.parent.d_read(byte, @grainBytes)
+		buf = @dInfo.parent.nil? ? MemoryBuffer.create(@grainBytes) : @dInfo.parent.d_read(byte, @grainBytes)
 		seekGTE(gn)
 		@vmwareSparseDisk_file.write([sector].pack('L'), GTE_SIZE)
 		@vmwareSparseDisk_file.seek(sector * self.blockSize, IO::SEEK_SET)

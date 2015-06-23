@@ -1,14 +1,15 @@
-- url = url_for(:action=>'cu_collection_field_changed')
 - if @sb[:active_tab] == "settings_cu_collection"
+  - url = url_for(:action=>'cu_collection_field_changed')
+  - clusters_title = title_for_clusters
   = form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do
     = render :partial => "layouts/flash_msg"
     .row
       .col-sm-12.col-md-12.col-lg-6
         %fieldset
-          %h3=_("Clusters")
+          %h3=clusters_title
           %table.style1
             %tr
-              %td.key=_("Collect for All Clusters")
+              %td.key=_("Collect for All %s") % clusters_title
               %td
                 = check_box_tag("all_clusters", value="1",
                   checked=@edit[:new][:all_clusters],
@@ -16,13 +17,14 @@
                   "data-miq_observe_checkbox"=>{:url=>url}.to_json)
           .note
             Note:
-            %b=_("Collect for All Clusters must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2")
+            %b=_("Collect for All %s must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % clusters_title
           #clusters_div{:style => "display:#{@edit[:new][:all_clusters] ? "none" : ""}"}
+            - cluster_title = title_for_cluster
             - if @edit[:new][:clusters].blank? && @edit[:new][:non_cl_hosts].blank?
-              =_("No Clusters found in the current region.")
+              =_("No %s found in the current region.") % clusters_title
             - else
               %br/
-              %b=_("Enable Collection by Cluster")
+              %b=_("Enable Collection by %s") % cluster_title
               %br/
               %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheck_CU_All(this,'#{session[:tree_name]}');", :type => "checkbox"}/
               =(_("Check All"))
@@ -30,14 +32,14 @@
               = render(:partial => "layouts/dynatree",
                   :locals => {:tree_id => "clhosts_treebox",
                   :tree_name => "clhosts_tree",
-                  :json_tree => @temp[:clhosts_tree],
+                  :json_tree => @clhosts_tree,
                   :onselect => "miqOnCheck_CU_Filters",
                   :check_url => "/ops/cu_collection_field_changed/",
                   :three_checks => true,
                   :exp_tree => true,
                   :checkboxes => true})
               %br/
-              .note=_("VM data will be collected for VMs under selected Hosts only. Data is collected for a Cluster and all of its Hosts when at least one Host is selected.")
+              .note=_("VM data will be collected for VMs under selected %s only. Data is collected for a %s and all of its %s when at least one %s is selected.") % [title_for_hosts, cluster_title, title_for_hosts, title_for_host]
       .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %h3= ui_lookup(:tables=>"storages")
@@ -62,7 +64,7 @@
               = render(:partial => "layouts/dynatree",
                   :locals => {:tree_id => "cu_datastore_treebox",
                   :tree_name => "cu_datastore_tree",
-                  :json_tree => @temp[:cu_datastore_tree],
+                  :json_tree => @cu_datastore_tree,
                   :onselect => "miqOnCheck_CU_Filters",
                   :check_url => "/ops/cu_collection_field_changed/",
                   :exp_tree => false,

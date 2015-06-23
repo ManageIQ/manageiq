@@ -371,6 +371,13 @@ describe ApplianceConsole::DatabaseConfiguration do
         end
       end
     end
+
+    it "#post_activation" do
+      expect(ApplianceConsole::ServiceGroup).to(
+        receive(:new).with(no_args).and_return(double(:restart_services => true))
+      )
+      @config.post_activation
+    end
   end
 
   def stubbed_say(clazz)

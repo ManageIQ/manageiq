@@ -48,11 +48,19 @@ class TreeNodeBuilder
   def build
     case object
     when AvailabilityZone     then generic_node(object.name, "availability_zone.png", "Availability Zone: #{object.name}")
-    when ExtManagementSystem  then generic_node(object.name, "vendor-#{object.image_name}.png",
-      "#{ui_lookup(:table=>object.kind_of?(EmsInfra) ? "ems_infra" : "ems_cloud")}: #{object.name}")
+    when ExtManagementSystem  then
+      # TODO: This should really leverage .base_model on an EMS
+      prefix_model =
+        case object
+        when EmsCloud then "EmsCloud"
+        when EmsInfra then "EmsInfra"
+        else               "ExtManagementSystem"
+        end
+
+      generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rates.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
-    when ConfigurationProfile then generic_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
+    when ConfigurationProfile then configuration_profile_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
     when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")
     when Container            then generic_node(object.name, "container.png")
     when CustomButton         then generic_node(object.name, object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
@@ -69,7 +77,7 @@ class TreeNodeBuilder
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
     when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
-    when Vm                   then generic_node(object.name, "#{object.normalized_state.downcase}.png")
+    when Vm                   then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
     when LdapDomain           then generic_node("Domain: #{object.name}", "ldap_domain.png", "LDAP Domain: #{object.name}")
     when LdapRegion           then generic_node("Region: #{object.name}", "ldap_region.png", "LDAP Region: #{object.name}")
     when MiqAeClass           then node_with_display_name("ae_class.png")
@@ -82,7 +90,7 @@ class TreeNodeBuilder
                                                    get_rr_status_image(object), object.name, object.status.downcase)
     when MiqSchedule          then generic_node(object.name, "miq_schedule.png")
     when MiqServer            then miq_server_node
-    when MiqTemplate          then generic_node(object.name, "#{object.normalized_state.downcase}.png")
+    when MiqTemplate          then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
     when MiqAlert             then generic_node(object.description, "miq_alert.png")
     when MiqAction            then miq_action_node
     when MiqEvent             then generic_node(object.description, "event-#{object.name}.png")
@@ -93,7 +101,6 @@ class TreeNodeBuilder
     when MiqUserRole          then generic_node(object.name, "miq_user_role.png")
     when OrchestrationTemplateCfn then generic_node(object.name, "orchestration_template_cfn.png")
     when OrchestrationTemplateHot then generic_node(object.name, "orchestration_template_hot.png")
-    when ConfigurationManagerForeman             then generic_node(object.name, "vendor-foreman.png", "Provider: #{object.name}")
     when PxeImage             then generic_node(object.name, object.default_for_windows ? "win32service.png" : "pxeimage.png")
     when WindowsImage         then generic_node(object.name, "os-windows_generic.png")
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
@@ -191,6 +198,18 @@ class TreeNodeBuilder
     tooltip(tip)
   end
 
+  def configuration_profile_node(text, image, tip = nil)
+    text = ERB::Util.html_escape(text) unless text.html_safe?
+    title = text.split('|').first
+    @node = {
+      :key   => build_object_id,
+      :title => title,
+      :icon  => title == _("Unassigned Profiles Group") ? "folder.png" : image
+    }
+    @node[:expand] = true if options[:open_all]  # Start with all nodes open
+    tooltip(tip)
+  end
+
   def image_for_node(object, image)
     case object
     when MiqAeNamespace
@@ -210,7 +229,7 @@ class TreeNodeBuilder
   end
 
   def custom_button_set_node
-    text  = options[:active_tree] == :sandt_tree ? "#{object.name.split("|").first} (Group)" : object.name.split("|").first
+    text  = options[:type] == :sandt ? "#{object.name.split("|").first} (Group)" : object.name.split("|").first
     image = object.set_data && object.set_data[:button_image] ? "custom-#{object.set_data[:button_image]}.png" : "folder.png"
     tip   = object.description ? "Button Group: #{object.description}" : object.name.split("|").first
     generic_node(text, image, tip)
@@ -297,6 +316,7 @@ class TreeNodeBuilder
 
   def build_object_id
     if object.id.nil?
+      # FIXME: this makes problems in tests
       # to handle "Unassigned groups" node in automate buttons tree
       "-#{object.name.split('|').last}"
     else

@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   has_many   :miq_reports, :dependent => :nullify
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
-  scope      :admin, where(:userid => "admin")
+  scope      :admin, -> { where(:userid => "admin") }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
 
@@ -903,15 +903,18 @@ class User < ActiveRecord::Base
   def self.with_userid(userid)
     saved_user   = Thread.current[:user]
     saved_userid = Thread.current[:userid]
+    saved_filters = Thread.current[:user_has_filters]
     self.current_userid = userid
     yield
   ensure
     Thread.current[:user]   = saved_user
     Thread.current[:userid] = saved_userid
+    Thread.current[:user_has_filters] = saved_filters
   end
 
   def self.current_userid=(userid)
     Thread.current[:user]   = nil
+    Thread.current[:user_has_filters] = nil
     Thread.current[:userid] = userid
   end
 

@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: /Cloud/Orchestration/Provisioning/StateMachines/Methods/Preprovision
+      default_value: "/Cloud/Orchestration/Provisioning/StateMachines/Methods/Preprovision"
       substitute: true
       message: create
       visibility: 
@@ -26,9 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Processing Pre1')
-      on_exit: update_serviceprovision_status(status => 'Processed Pre1')
-      on_error: update_serviceprovision_status(status => 'Error Processing Pre1')
+      on_entry: update_serviceprovision_status(status => 'Processing Preprovision')
+      on_exit: update_serviceprovision_status(status => 'Processed Preprovision')
+      on_error: update_serviceprovision_status(status => 'Error Processing Preprovision')
       max_retries: '100'
       max_time: 
   - field:
@@ -118,7 +118,7 @@ object:
       datatype: string
       priority: 6
       owner: 
-      default_value: /Cloud/Orchestration/Provisioning/StateMachines/Methods/Provision
+      default_value: "/Cloud/Orchestration/Provisioning/StateMachines/Methods/Provision"
       substitute: true
       message: create
       visibility: 
@@ -126,8 +126,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Creating Service')
-      on_exit: update_serviceprovision_status(status => 'Creating Service')
+      on_entry: update_serviceprovision_status(status => 'Creating Stack')
+      on_exit: update_serviceprovision_status(status => 'Creating Stack')
       on_error: update_serviceprovision_status(status => '${/#ae_reason}')
       max_retries: '100'
       max_time: 
@@ -138,7 +138,7 @@ object:
       datatype: string
       priority: 7
       owner: 
-      default_value: /Cloud/Orchestration/Provisioning/StateMachines/Methods/CheckProvisioned
+      default_value: "/Cloud/Orchestration/Provisioning/StateMachines/Methods/CheckProvisioned"
       substitute: true
       message: create
       visibility: 
@@ -147,7 +147,7 @@ object:
       description: 
       condition: 
       on_entry: 
-      on_exit: update_serviceprovision_status(status => 'Creating Service')
+      on_exit: update_serviceprovision_status(status => 'Creating Stack')
       on_error: update_serviceprovision_status(status => '${/#ae_reason}')
       max_retries: '100'
       max_time: 
@@ -158,7 +158,7 @@ object:
       datatype: string
       priority: 8
       owner: 
-      default_value: 
+      default_value: "/Cloud/Orchestration/Provisioning/StateMachines/Methods/PostProvision"
       substitute: true
       message: create
       visibility: 
@@ -258,7 +258,7 @@ object:
       datatype: string
       priority: 13
       owner: 
-      default_value: /Cloud/Orchestration/Provisioning/Email/ServiceProvision_complete?event=service_provisioned
+      default_value: "/Cloud/Orchestration/Provisioning/Email/ServiceProvision_complete?event=service_provisioned"
       substitute: true
       message: create
       visibility: 
@@ -278,7 +278,7 @@ object:
       datatype: string
       priority: 14
       owner: 
-      default_value: /System/CommonMethods/StateMachineMethods/service_provision_finished
+      default_value: "/System/CommonMethods/StateMachineMethods/service_provision_finished"
       substitute: true
       message: create
       visibility: 

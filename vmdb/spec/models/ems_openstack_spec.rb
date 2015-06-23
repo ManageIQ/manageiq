@@ -1,6 +1,10 @@
 require "spec_helper"
 
 describe EmsOpenstack do
+  context "Class Methods" do
+    it("from mixin") { expect(described_class.methods).to include(:auth_url, :raw_connect) }
+  end
+
   it ".ems_type" do
     described_class.ems_type.should == 'openstack'
   end
@@ -50,5 +54,19 @@ describe EmsOpenstack do
     require 'openstack/openstack_event_monitor'
 
     @ems.event_monitor_options.should == {:hostname => "host", :port => 1234}
+  end
+
+  context "translate_exception" do
+    it "preserves and logs message for unknown exceptions" do
+      ems = FactoryGirl.build(:ems_openstack, :hostname => "host", :ipaddress => "::1")
+
+      creds = {:default => {:userid => "fake_user", :password => "fake_password"}}
+      ems.update_authentication(creds, :save => false)
+
+      ems.stub(:with_provider_connection).and_raise(StandardError, "unlikely")
+
+      $log.should_receive(:error).with(/unlikely/)
+      expect { ems.verify_credentials }.to raise_error(MiqException::MiqEVMLoginError, /Unexpected.*unlikely/)
+    end
   end
 end

@@ -108,7 +108,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
   # This is for summary screen display purposes only
   def update_selected_storage_names(values)
-    values[:attached_ds_names] = Storage.find_all_by_id(values[:attached_ds], :select => "name").collect(&:name)
+    values[:attached_ds_names] = Storage.where(:id => values[:attached_ds]).pluck(:name)
   end
 
   def ws_template_fields(values, fields)
@@ -123,7 +123,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     raise "No host search criteria values were passed.  input data:<#{data.inspect}>" if name.nil? && mac_address.nil? && ipmi_address.nil?
 
     $log.info "#{log_header} Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>"
-    srcs = self.send(:allowed_ws_hosts, {:include_datacenter => true}).find_all do |v|
+    srcs = allowed_ws_hosts({:include_datacenter => true}).find_all do |v|
       $log.info "#{log_header} Host Detected: <#{v.name.downcase}> <#{v.mac_address}> <#{v.ipmi_address}>"
       (name.nil? || name == v.name.downcase) && (mac_address.nil? || mac_address == v.mac_address.to_s.downcase) && (ipmi_address.nil? || ipmi_address == v.ipmi_address.to_s)
     end
@@ -216,9 +216,9 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   def self.from_ws(*args)
     version = args.first.to_f
 
-    # Move optional arguments into the VmdbwsSupport::ProvisionOptions object
+    # Move optional arguments into the MiqHashStruct object
     prov_args = args[0,6]
-    prov_options = VmdbwsSupport::ProvisionOptions.new(:values => args[6], :ems_custom_attributes => args[7], :miq_custom_attributes => args[8])
+    prov_options = MiqHashStruct.new(:values => args[6], :ems_custom_attributes => args[7], :miq_custom_attributes => args[8])
     prov_args << prov_options
     MiqHostProvisionWorkflow.from_ws_ver_1_x(*prov_args)
   end
@@ -230,7 +230,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
     log_header = "#{self.class.name}.from_ws"
     begin
-      options = VmdbwsSupport::ProvisionOptions.new if options.nil?
+      options = MiqHashStruct.new if options.nil?
       $log.warn "#{log_header} Web-service host provisioning starting with interface version <#{version}> by requester <#{userid}>"
 
       init_options = {:use_pre_dialog => false, :request_type => self.request_type(parse_ws_string(template_fields)[:request_type])}

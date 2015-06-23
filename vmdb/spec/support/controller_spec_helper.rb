@@ -7,11 +7,13 @@ module ControllerSpecHelper
     end
   end
 
-  def set_user_privileges
+  def set_user_privileges(user = FactoryGirl.create(:user))
+    allow(User).to receive(:server_timezone).and_return("UTC")
     described_class.any_instance.stub(:set_user_time_zone)
+
+    # TODO: remove these stubs
     controller.stub(:check_privileges).and_return(true)
-    user = FactoryGirl.create(:user)
-    User.stub(:current_user => user)
+    login_as user
     User.any_instance.stub(:role_allows?).and_return(true)
   end
 
@@ -41,17 +43,29 @@ module ControllerSpecHelper
     @test_user = FactoryGirl.create(:user,
                                     :name       => 'test_user',
                                     :miq_groups => [test_group])
-    User.stub(:current_user => @test_user)
+    login_as @test_user
   end
 
   shared_context "valid session" do
-    let(:privilege_checker_service) { instance_double("PrivilegeCheckerService", :valid_session?  => true) }
-    let(:request_referer_service)   { instance_double("RequestRefererService",   :allowed_access? => true) }
+    let(:privilege_checker_service) { auto_loaded_instance_double("PrivilegeCheckerService", :valid_session?  => true) }
+    let(:request_referer_service)   { auto_loaded_instance_double("RequestRefererService",   :allowed_access? => true) }
 
     before do
       controller.stub(:set_user_time_zone)
       PrivilegeCheckerService.stub(:new).and_return(privilege_checker_service)
       RequestRefererService.stub(:new).and_return(request_referer_service)
     end
+  end
+
+  def seed_session_trees(a_controller, active_tree, node = nil)
+    session[:sandboxes] = {
+      a_controller => {
+        :trees => {
+          active_tree => {}
+        },
+        :active_tree => active_tree
+      }
+    }
+    session[:sandboxes][a_controller][:trees][active_tree][:active_node] = node unless node.nil?
   end
 end

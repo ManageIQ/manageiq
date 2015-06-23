@@ -89,4 +89,104 @@ describe DialogFieldDropDownList do
       @df.automate_key_name.should == "dialog_drop_down_list"
     end
   end
+
+  describe "#refresh_json_value" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+
+    context "when the dialog_field is dynamic" do
+      let(:dynamic) { true }
+
+      before do
+        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return(
+          [["123", 456], ["789", 101]]
+        )
+        dialog_field.value = "123"
+      end
+
+      it "sets the value" do
+        dialog_field.refresh_json_value("789")
+        expect(dialog_field.value).to eq("789")
+      end
+
+      it "returns the values from automate" do
+        expect(dialog_field.refresh_json_value("789")).to eq(
+          :refreshed_values => [["789", 101], ["123", 456]],
+          :checked_value    => "789"
+        )
+      end
+    end
+
+    context "when the dialog_field is not dynamic" do
+      let(:dynamic) { false }
+
+      before do
+        dialog_field.values = [["123", 456], ["789", 101]]
+        dialog_field.value = "123"
+      end
+
+      it "sets the value" do
+        dialog_field.refresh_json_value("789")
+        expect(dialog_field.value).to eq("789")
+      end
+
+      it "returns the values" do
+        expect(dialog_field.refresh_json_value("789")).to eq(
+          :refreshed_values => [["789", 101], ["123", 456]],
+          :checked_value    => "789"
+        )
+      end
+    end
+  end
+
+  describe "#values" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+
+    context "when the dialog_field is dynamic" do
+      let(:dynamic) { true }
+
+      before do
+        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return(%w(automate values))
+      end
+
+      context "when the raw values are already set" do
+        before do
+          dialog_field.instance_variable_set(:@raw_values, %w(potato potato))
+        end
+
+        it "returns the raw values" do
+          expect(dialog_field.values).to eq(%w(potato potato))
+        end
+      end
+
+      context "when the raw values are not already set" do
+        it "returns the values from automate" do
+          expect(dialog_field.values).to eq(%w(automate values))
+        end
+      end
+    end
+
+    context "when the dialog_field is not dynamic" do
+      let(:dynamic) { false }
+
+      context "when the raw values are already set" do
+        before do
+          dialog_field.instance_variable_set(:@raw_values, %w(potato potato))
+        end
+
+        it "returns the raw values" do
+          expect(dialog_field.values).to eq(%w(potato potato))
+        end
+      end
+
+      context "when the raw values are not already set" do
+        before do
+          dialog_field.values = %w(original values)
+        end
+
+        it "returns the values" do
+          expect(dialog_field.values).to eq(%w(original values))
+        end
+      end
+    end
+  end
 end

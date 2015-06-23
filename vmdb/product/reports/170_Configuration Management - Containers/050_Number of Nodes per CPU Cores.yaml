@@ -1,0 +1,52 @@
+title: Number of Nodes per CPU Cores
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: ContainerNode
+cols:
+- name
+include:
+  computer_system:
+    include:
+      hardware:
+        columns:
+        - logical_cpus
+col_order:
+- name
+- hardware.logical_cpus
+headers:
+- Number of Nodes per CPU Cores
+- Hardware Number of CPU Cores
+conditions:
+order: Descending
+sortby:
+- hardware.logical_cpus
+group:
+graph:
+  :type: ColumnThreed
+  :count: 10
+  :other: true
+dims: 1
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+miq_group_id: 1
+user_id: 1
+menu_name: Number of Nodes per CPU Cores

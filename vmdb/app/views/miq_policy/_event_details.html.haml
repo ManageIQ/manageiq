@@ -19,7 +19,7 @@
           %tr
             %td.key=_("Attached to Policy")
             %td
-              = h(@temp[:policy].description)
+              = h(@policy.description)
       %hr
 
       - if x_active_tree == :event_tree
@@ -31,8 +31,8 @@
             %tbody
               - @event_policies.each do |p|
                 - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
-                %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
-                  :onmouseover => "this.style.cursor = 'pointer'", :title => _("Click to view Policy")}
+                %tr{:title => _("Click to view Policy"),
+                  :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy")}
                   %td.narrow
                     %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase}#{p.active ? '' : '_inactive'}.png"}
                   %td
@@ -142,8 +142,8 @@
                   - id = "a-#{to_cid(a.id)}"
                   - t = remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")
                   - f = "cfmeDynatree_activateNode(#{x_active_tree}', '#{x_node}_#{id}');"
-                  %tr{:onclick => (x_active_tree == :action_tree) ? t : f,
-                    :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action")}
+                  %tr{:title => _("View this Event Action"),
+                    :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
                       %img{:src => "/images/icons/new/check.png"}
                     %td
@@ -262,8 +262,8 @@
                   - id = "a-#{to_cid(a.id)}"
                   - t = remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")
                   - f = "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_#{id}');"
-                  %tr{:onmouseover => "this.style.cursor = 'pointer'",
-                     :onclick => (x_active_tree == :action_tree) ? t : f, :title => _("View this Event Action")}
+                  %tr{:title => _("View this Event Action"),
+                     :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
                       %img{:src => "/images/icons/new/x.png"}
                     %td

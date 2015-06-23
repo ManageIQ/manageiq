@@ -61,11 +61,11 @@ describe MiqAlert do
 
       it "should queue up the correct alert for each event" do
         guids = @events_to_alerts.collect(&:last).uniq
-        messages =  MiqQueue.all(:order => "id")
+        messages = MiqQueue.order("id")
         messages.length.should == @events_to_alerts.length
 
         messages.each_with_index do |msg, i|
-          alert = MiqAlert.find_by_id(msg.instance_id)
+          alert = MiqAlert.find_by(:id => msg.instance_id)
           alert.should_not be_nil
 
           event, guid = @events_to_alerts[i]
@@ -116,7 +116,7 @@ describe MiqAlert do
       end
 
       it "should have a miq alert status for MiqAlert with a result of true" do
-        @alert.miq_alert_statuses.first(:conditions => {:resource_type => @vm.class.base_class.name, :resource_id => @vm.id}).result.should be_true
+        @alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result.should be_true
       end
 
       it "should have a link from the Vm to the miq alert status" do
@@ -124,7 +124,7 @@ describe MiqAlert do
       end
 
       it "should have a miq alert status for Vm with a result of true" do
-        @vm.miq_alert_statuses.first(:conditions => {:miq_alert_id => @alert.id}).result.should be_true
+        @vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result.should be_true
       end
 
       context "with the alert now evaluated to false" do
@@ -139,7 +139,7 @@ describe MiqAlert do
         end
 
         it "should have a miq alert status for MiqAlert with a result of false" do
-          @alert.miq_alert_statuses.first(:conditions => {:resource_type => @vm.class.base_class.name, :resource_id => @vm.id}).result.should be_false
+          @alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result.should be_false
         end
 
         it "should have the Vm's miq_alert_statuses" do
@@ -147,7 +147,7 @@ describe MiqAlert do
         end
 
         it "should have a miq alert status for Vm with a result of false" do
-          @vm.miq_alert_statuses.first(:conditions => {:miq_alert_id => @alert.id}).result.should be_false
+          @vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result.should be_false
         end
       end
 
@@ -309,5 +309,67 @@ describe MiqAlert do
     end
   end
 
+  context ".evaluate_hourly_timer" do
+    before do
+      MiqAlert.any_instance.stub(:validate => true)
+      @guid = MiqUUID.new_guid
+      MiqServer.stub(:my_guid).and_return(@guid)
 
+      @zone            = FactoryGirl.create(:zone)
+      @miq_server      = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
+      MiqServer.stub(:my_server).and_return(@miq_server)
+
+      @ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
+      @ems_other = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
+      @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :responds_to_events => "_hourly_timer_")
+      @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}")
+      @alert_prof.add_member(@alert)
+    end
+
+    it "evaluates for ext_management_system" do
+      @alert.update_attributes(:db => "ExtManagementSystem")
+      @alert_prof.mode = @ems.class.base_model.name
+      @alert_prof.assign_to_objects(@ems.id, "ExtManagementSystem")
+
+      MiqAlert.should_receive(:evaluate_alerts).with(@ems, "_hourly_timer_")
+      MiqAlert.evaluate_hourly_timer
+    end
+
+    it "evaluates for vm" do
+      vm_in_zone = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
+      vm_in_other = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems_other)
+      vm_no_ems = FactoryGirl.create(:vm_vmware)
+      @alert.update_attributes(:db => "Vm")
+      @alert_prof.mode = vm_in_zone.class.base_model.name
+      @alert_prof.assign_to_objects(vm_in_zone.id, "Vm")
+
+      MiqAlert.should_receive(:evaluate_alerts).once.with(vm_in_zone, "_hourly_timer_")
+      MiqAlert.should_receive(:evaluate_alerts).once.with(vm_no_ems, "_hourly_timer_")
+      MiqAlert.should_not_receive(:evaluate_alerts).with(vm_in_other, "_hourly_timer_")
+      MiqAlert.evaluate_hourly_timer
+    end
+
+    it "evaluates for storage" do
+      storage_in_zone = FactoryGirl.create(:storage_vmware)
+      FactoryGirl.create(:host, :ext_management_system => @ems, :storages => [storage_in_zone])
+
+      storage_in_another = FactoryGirl.create(:storage_vmware)
+      FactoryGirl.create(:host, :ext_management_system => @ems_other, :storages => [storage_in_another])
+
+      storage_in_host_no_ems = FactoryGirl.create(:storage_vmware)
+      FactoryGirl.create(:host, :storages => [storage_in_host_no_ems])
+
+      storage_no_ems = FactoryGirl.create(:storage_vmware)
+
+      @alert.update_attributes(:db => "Storage")
+      @alert_prof.mode = storage_in_zone.class.base_model.name
+      @alert_prof.assign_to_objects(storage_in_zone.id, "Storage")
+
+      MiqAlert.should_receive(:evaluate_alerts).once.with(storage_in_zone, "_hourly_timer_")
+      MiqAlert.should_receive(:evaluate_alerts).once.with(storage_in_host_no_ems, "_hourly_timer_")
+      MiqAlert.should_receive(:evaluate_alerts).once.with(storage_no_ems, "_hourly_timer_")
+      MiqAlert.should_not_receive(:evaluate_alerts).with(storage_in_another, "_hourly_timer_")
+      MiqAlert.evaluate_hourly_timer
+    end
+  end
 end

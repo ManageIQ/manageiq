@@ -180,7 +180,7 @@ describe VmdbwsController, :apis => true do
   it 'should return tagged Clusters' do
     cluster = FactoryGirl.create(:ems_cluster)
     cluster.tag_with("/managed/cc/test", :ns=>"*")
-    EmsCluster.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
+    EmsCluster.find_tagged_with(:all => 'cc/test', :ns => '/managed').should have(1).thing
     invoke(:GetClustersByTag, "cc/test").should have(1).thing
   end
 
@@ -250,7 +250,7 @@ describe VmdbwsController, :apis => true do
     pool.set_parent(cluster)
 
     pool.tag_with("/managed/cc/test", :ns=>"*")
-    ResourcePool.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
+    ResourcePool.find_tagged_with(:all => 'cc/test', :ns => '/managed').should have(1).thing
     invoke(:GetResourcePoolsByTag, "cc/test").should have(1).thing
   end
 
@@ -334,7 +334,7 @@ describe VmdbwsController, :apis => true do
   it 'should return tagged Datastores' do
     datastore = FactoryGirl.create(:storage)
     datastore.tag_with("/managed/cc/test", :ns=>"*")
-    Storage.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
+    Storage.find_tagged_with(:all => 'cc/test', :ns => '/managed').should have(1).thing
     invoke(:GetDatastoresByTag, "cc/test").should have(1).thing
   end
 
@@ -417,14 +417,14 @@ describe VmdbwsController, :apis => true do
   it 'should return tagged VMs' do
     vm = FactoryGirl.create(:vm_vmware)
     template = FactoryGirl.create(:miq_template, :name => "template", :location => "abc/abc.vmtx", :template => true, :vendor => "vmware")
-    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should be_empty
+    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').should be_empty
     invoke(:GetVmsByTag, "cc/001").should be_empty
     vm.tag_with("/managed/cc/001", :ns=>"*")
-    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should have(1).thing
+    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').should have(1).thing
     invoke(:GetVmsByTag, "cc/001").should have(1).thing
     # In v 4.x templates are returned with VMs
     template.tag_with("/managed/cc/001", :ns=>"*")
-    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should have(1).thing
+    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').should have(1).thing
     invoke(:GetVmsByTag, "cc/001").should have(1).thing
   end
 
@@ -481,7 +481,7 @@ describe VmdbwsController, :apis => true do
     vm = FactoryGirl.create(:vm_vmware)
     template = FactoryGirl.create(:miq_template, :name => "template", :location => "abc/abc.vmtx", :template => true, :vendor => "vmware")
 
-    MiqTemplate.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should be_empty
+    MiqTemplate.find_tagged_with(:all => 'cc/001', :ns => '/managed').should be_empty
     invoke(:GetTemplatesByTag, "cc/001").should be_empty
     vm.tag_with("/managed/cc/001", :ns=>"*")
     invoke(:GetTemplatesByTag, "cc/001").should be_empty
@@ -507,15 +507,12 @@ describe VmdbwsController, :apis => true do
       ems.vms.first.should be_kind_of(VmdbwsSupport::VmList)
       db_vm = Vm.find_by_guid(ems.vms.first.guid)
       ems.vms.first.guid.should == db_vm.guid
-      ems.hosts.count.should == db_ems.hosts.count
+      expect(ems.hosts.map(&:guid)).to match_array(db_ems.hosts.map(&:guid))
       ems.hosts.first.should be_kind_of(VmdbwsSupport::HostList)
-      ems.hosts.first.guid.should == Host.first.guid.to_s
-      ems.resource_pools.count.should == db_ems.resource_pools.count
+      expect(ems.resource_pools.map(&:id).map(&:to_i)).to match_array(db_ems.resource_pools.map(&:id))
       ems.resource_pools.first.should be_kind_of(VmdbwsSupport::ResourcePoolList)
-      ems.resource_pools.first.id.should == ResourcePool.first.id.to_s
-      ems.datastores.count.should == db_ems.storages.count
+      expect(ems.datastores.map(&:id).map(&:to_i)).to match_array(db_ems.datastores.map(&:id))
       ems.datastores.first.should be_kind_of(VmdbwsSupport::DatastoreList)
-      ems.datastores.first.id.should == Storage.first.id.to_s
     end
 
     it 'should return Host relationships' do

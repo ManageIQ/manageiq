@@ -25,8 +25,7 @@ class MiqProductFeature < ActiveRecord::Base
   end
 
   def self.feature_parent(identifier)
-    feat = self.features[identifier.to_s]
-    feat[:parent] if feat
+    features[identifier.to_s].try(:[], :parent)
   end
 
   def self.parent_for_feature(identifier)
@@ -57,12 +56,11 @@ class MiqProductFeature < ActiveRecord::Base
 
   def self.features
     @feature_cache ||= begin
-      self.all(:include => [:parent, :children]).inject({}) do |h,f|
+      includes(:parent, :children).each_with_object({}) do |f, h|
         child_idents = f.children.collect(&:identifier)
         parent_ident = f.parent.identifier if f.parent
-        details      = DETAIL_ATTRS.inject({}) {|dh,a| dh[a] = f.send(a); dh}
+        details      = DETAIL_ATTRS.each_with_object({}) { |a, dh| dh[a] = f.send(a) }
         h[f.identifier] = {:parent => parent_ident, :children => child_idents, :details => details}
-        h
       end
     end
   end
@@ -113,7 +111,7 @@ class MiqProductFeature < ActiveRecord::Base
       end
     else
       $log.info("#{log_header} Creating product feature: Identifier: [#{hash[:identifier]}], Name: [#{hash[:name]}]")
-      feature = self.create(hash)
+      feature = self.create(hash.except(:id))
       feature.seed_vm_explorer_for_custom_roles
     end
     seen << hash[:identifier]
@@ -130,5 +128,9 @@ class MiqProductFeature < ActiveRecord::Base
       role.miq_product_features << self
       role.save!
     end
+  end
+
+  def self.find_all_by_identifier(features)
+    where(:identifier => features)
   end
 end

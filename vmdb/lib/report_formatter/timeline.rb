@@ -25,8 +25,7 @@ module ReportFormatter
       if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
         tl_xml = MiqXml.load("<data/>")
       else
-        @temp ||= Hash.new
-        @temp[:events] = Array.new
+        @events = Array.new
       end
       tlfield = mri.timeline[:field].split("-") # Split the table and field
       if tlfield.first.include?(".")                    # If table has a period (from a sub table)
@@ -43,7 +42,7 @@ module ReportFormatter
       if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
         output << tl_xml.to_s
       else
-        output << @temp.to_json
+        output << { :events => @events }.to_json
       end
     end
 
@@ -105,7 +104,7 @@ module ReportFormatter
           ems_cloud = false
           if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
             ems = ExtManagementSystem.find(rec[:ems_id])
-            ems_cloud =  true if EmsCloud::SUBCLASSES.include?(ems.class.name)
+            ems_cloud =  true if ems.kind_of?(EmsCloud)
           end
           if rec[:vm_name] && !ems_cloud             # Create the title using VM name
             e_title = rec[:vm_name]
@@ -285,7 +284,7 @@ module ReportFormatter
         })
         event.text = e_text
       else
-        @temp[:events].push({
+        @events.push({
             "start"=>format_timezone(row[col],tz,'view').to_time,
             "title"=>CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
             "icon"=>e_icon,

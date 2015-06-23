@@ -6,7 +6,7 @@ module StorageMixin
   included do
     STORAGE_FILE_TYPES.each do |m|
       virtual_column   "#{m}_size",  :type => :integer,            :uses => :"#{m}_files"
-      virtual_has_many "#{m}_files", :class_name => "StorageFile", :uses => :storage_files_files
+      virtual_has_many :"#{m}_files", :class_name => "StorageFile", :uses => :storage_files_files
     end
   end
 

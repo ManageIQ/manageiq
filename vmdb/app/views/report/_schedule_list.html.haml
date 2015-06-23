@@ -3,7 +3,7 @@
     = render :partial => 'schedule_form'
   - elsif @schedule && !@in_a_form
     = render :partial => "show_schedule"
-  - elsif @temp[:schedules] && @view
+  - elsif @schedules && @view
     - if @view.table.data.empty?
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Schedules available.")}
     - else

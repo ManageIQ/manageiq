@@ -14,13 +14,13 @@ describe MiqWidget do
     before(:each) do
       MiqReport.seed_report("Vendor and Guest OS")
 
-      @idents1 = ["dashboard_admin"]
-      @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents1))
+      feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
+      @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => feature1)
       @group1  = FactoryGirl.create(:miq_group, :miq_user_role => @role1)
       @user1   = FactoryGirl.create(:user, :miq_groups => [@group1], :name => "Administrator", :userid => "admin")
 
-      @idents2 = ["everything"]
-      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents2))
+      feature2 = MiqProductFeature.find_all_by_identifier("everything")
+      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => feature2)
       @group2  = FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
       @user2   = FactoryGirl.create(:user, :userid => "user2", :miq_groups => [@group2])
 
@@ -93,19 +93,6 @@ describe MiqWidget do
         @widget_report_vendor_and_guest_os.grouped_subscribers.should be_empty
       end
 
-      it "returns non-empty array when widget has subscribers" do
-        ws = FactoryGirl.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
-        @widget_report_vendor_and_guest_os.make_memberof(ws)
-
-        user_temp = add_user("test", @group1)
-        ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
-        @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
-        result = @widget_report_vendor_and_guest_os.grouped_subscribers
-
-        result.size.should eq(1)
-        result[@group1].should match_array([@user1, user_temp])
-      end
-
       it "ignores the legacy format admin|db_name" do
         ws = FactoryGirl.create(:miq_widget_set, :name => "#{@user1.userid}|Home")
         @widget_report_vendor_and_guest_os.make_memberof(ws)
@@ -113,23 +100,56 @@ describe MiqWidget do
         @widget_report_vendor_and_guest_os.grouped_subscribers.should be_empty
       end
 
-      it "with multiple groups and users" do
-        ws = FactoryGirl.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
-        @widget_report_vendor_and_guest_os.make_memberof(ws)
-
-        users = []
-        (1..3).each do |i|
-          user_i = add_user("user_#{i}", @group2)
-          ws_i   = add_dashboard_for_user("Home", user_i.userid, @group2.id)
-          @widget_report_vendor_and_guest_os.make_memberof(ws_i)
-          users << user_i
+      context 'with subscribers' do
+        before do
+          ws = FactoryGirl.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
+          @widget_report_vendor_and_guest_os.make_memberof(ws)
         end
 
-        result = @widget_report_vendor_and_guest_os.grouped_subscribers
+        it "returns non-empty array when widget has subscribers" do
+          user_temp = add_user("test", @group1)
+          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
+          @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
 
-        result.size.should eq(2)
-        result[@group1].should eq([@user1])
-        result[@group2].should match_array(users)
+          result.size.should eq(1)
+          result[@group1].should match_array([@user1, user_temp])
+        end
+
+        it "with multiple groups and users" do
+          users = []
+          (1..3).each do |i|
+            user_i = add_user("user_#{i}", @group2)
+            ws_i   = add_dashboard_for_user("Home", user_i.userid, @group2.id)
+            @widget_report_vendor_and_guest_os.make_memberof(ws_i)
+            users << user_i
+          end
+
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
+
+          result.size.should eq(2)
+          result[@group1].should eq([@user1])
+          result[@group2].should match_array(users)
+        end
+
+        it 'ignores the user that does not exist any more' do
+          user_temp = add_user("test", @group1)
+          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
+          @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
+
+          user_temp.delete
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
+
+          result.size.should eq(1)
+          result[@group1].should match_array([@user1])
+
+        end
+
+        it 'ignores the group that has no members' do
+          @user1.delete
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
+          result.size.should eq(0)
+        end
       end
 
       def add_user(userid, group)
@@ -205,17 +225,6 @@ describe MiqWidget do
     end
   end
 
-  it "should not delete schedule when zone is gone" do
-    pending "issue reported in FB#15499"
-    @zone = FactoryGirl.create(:zone, :name => "testing")
-    @schedule = FactoryGirl.create(:miq_schedule, :zone_id => @zone.id)
-    @schedule_id = @schedule.id
-    @widget = FactoryGirl.create(:miq_widget, :miq_schedule_id => @schedule_id)
-
-    @zone.destroy
-    MiqSchedule.exists?(@schedule_id).should be_true
-  end
-
   context "#queue_generate_content" do
     before(:each) do
       MiqReport.seed_report("Top CPU Consumers weekly")
@@ -287,21 +296,21 @@ describe MiqWidget do
     it "creates a new task when previous task is finished" do
       @widget.queue_generate_content
       MiqTask.first.state_finished
-      message = MiqQueue.find(:first, :conditions => @q_options)
+      message = MiqQueue.where(@q_options).first
       message.update_attribute(:state, MiqQueue::STATE_ERROR)
 
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 2
+      MiqQueue.where(@q_options).count.should == 2
       MiqTask.count.should == 2
     end
 
     it "does nothing if an active task's messages have not yet run" do
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 1
+      MiqQueue.where(@q_options).count.should == 1
       MiqTask.first.state_active
 
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 1
+      MiqQueue.where(@q_options).count.should == 1
       MiqTask.count.should == 1
     end
 
@@ -310,7 +319,7 @@ describe MiqWidget do
       task = MiqTask.first
       task.state_active
 
-      message = MiqQueue.find(:first, :conditions => @q_options)
+      message = MiqQueue.where(@q_options).first
       message.destroy
       MiqQueue.count.should == 0
 
@@ -328,7 +337,7 @@ describe MiqWidget do
       task = MiqTask.first
       task.state_active
 
-      message = MiqQueue.find(:first, :conditions => @q_options)
+      message = MiqQueue.where(@q_options).first
       message.update_attribute(:state, MiqQueue::STATE_ERROR)
       MiqQueue.count.should == 1
 
@@ -384,13 +393,13 @@ describe MiqWidget do
 
     it "with single group" do
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 1
+      MiqQueue.where(@q_options).count.should == 1
     end
 
     it "with multiple groups" do
       @widget.visibility[:roles] = "_ALL_"
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 2
+      MiqQueue.where(@q_options).count.should == 2
     end
 
     it "with multiple timezones in one group" do
@@ -401,7 +410,7 @@ describe MiqWidget do
 
       MiqWidget.any_instance.should_receive(:generate_content).with("MiqGroup", @group2.name, nil, ["Eastern Time (US & Canada)", "UTC"])
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 1
+      MiqQueue.where(@q_options).count.should == 1
 
       MiqQueue.first.deliver
     end
@@ -416,7 +425,7 @@ describe MiqWidget do
 
       MiqWidget.any_instance.should_receive(:generate_content).with("MiqGroup", @group2.name, nil, ["Eastern Time (US & Canada)", "UTC"])
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 0
+      MiqQueue.where(@q_options).count.should == 0
     end
 
     context "user's group specified in MiqWidgetSet" do
@@ -464,7 +473,7 @@ describe MiqWidget do
 
   context "#generate_content_options" do
     let(:widget) { described_class.new }
-    let(:content_option_generator) { instance_double("MiqWidget::ContentOptionGenerator") }
+    let(:content_option_generator) { auto_loaded_instance_double("MiqWidget::ContentOptionGenerator") }
     let(:group) { "group" }
     let(:users) { "users" }
 
@@ -480,7 +489,7 @@ describe MiqWidget do
 
   context "#generate_content" do
     let(:widget) { described_class.new(:miq_task => miq_task) }
-    let(:content_generator) { instance_double("MiqWidget::ContentGenerator") }
+    let(:content_generator) { auto_loaded_instance_double("MiqWidget::ContentGenerator") }
     let(:klass) { "klass" }
     let(:userids) { "userids" }
     let(:timezones) { "timezones" }

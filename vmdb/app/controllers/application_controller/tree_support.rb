@@ -20,31 +20,6 @@ module ApplicationController::TreeSupport
     end
   end
 
-  def tree_autoload
-    nodes = tree_add_child_nodes(params[:id])
-    build_vm_host_array     if !@sb[:tree_hosts].blank? || !@sb[:tree_vms].blank?   #set temp list of hosts/vms to be shown on DC tree on mousein event
-    render :update do |page|
-      if !@sb[:tree_hosts].blank? || !@sb[:tree_vms].blank?
-        page.replace("dc_tree_quads_div", :partial=>"layouts/dc_tree_quads")
-      end
-      page << "#{j_str(params[:tree])}.loadJSONObject(#{nodes.to_json});"
-      if @sb[:node_tooltip] && @sb[:node_text]
-        page << "#{j_str(params[:tree])}.setItemText('#{j_str(params[:id])}', '#{j_str(@sb[:node_text])}', '#{j_str(@sb[:node_tooltip])}');"
-      end
-      # select an item in tree, when new report is added or a report has been queued to run so the report node is expanded
-      # to fix an issue where when newly added report was run, it doesnt go to saved report show screen because that node is not loaded yet in the tree
-      if @sb[:select_node]
-        page << "reports_tree.openItem('xx-#{@sb[:rpt_menu].length-1}_xx-#{@sb[:rpt_menu].length-1}-0');"
-        page << "reports_tree.selectItem('#{j_str(x_node)}');"
-      end
-      # expand indexes folder as well when a table name is clicked in the vmdb_tree, in Database accordion
-      if params[:tree] == "vmdb_tree" && @sb[:auto_select_node]
-        page << "#{j_str(params[:tree])}.openItem('#{j_str(@sb[:auto_select_node])}');"
-      end
-      page << "if (typeof #{j_str(params[:tree])} != 'undefined'){#{j_str(params[:tree])}.saveOpenStates('#{j_str(params[:tree])}','path=/');};"
-    end
-  end
-
   def tree_autoload_dynatree
     @edit ||= session[:edit]  # Remember any previous @edit
     klass_name = x_tree[:klass_name] if x_active_tree
@@ -57,9 +32,9 @@ module ApplicationController::TreeSupport
 
   def tree_autoload_quads
     # set temp list of hosts/vms to be shown on DC tree on mousein event
-    build_vm_host_array if !@sb[:tree_hosts].blank? || !@sb[:tree_vms].blank?
+    build_vm_host_array if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
     render :update do |page|
-      if !@sb[:tree_hosts].blank? || !@sb[:tree_vms].blank?
+      if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
         page.replace("dc_tree_quads_div", :partial => "layouts/dc_tree_quads")
       end
       page << "miqSparkle(false);"
@@ -181,8 +156,11 @@ module ApplicationController::TreeSupport
 
   # Return datacenter tree node(s) for the passed in folder/datacenter/host/vm/cluster/resource pool
   def get_dc_node(folder, pid, vat=false)       # Called with folder node, parent tree node id, VM & Templates flag
-    @temp[:tree_vms]   ||= []
-    @temp[:tree_hosts] ||= []
+    @sb[:tree_vms_hash]   ||= {}
+    @sb[:tree_hosts_hash] ||= {}
+
+    @tree_vms   ||= []
+    @tree_hosts ||= []
     @sb[:vat] = vat
     kids = []                            # Return node(s) as an array
     # Handle folder with the name "Datacenters"
@@ -286,7 +264,7 @@ module ApplicationController::TreeSupport
 
     # Handle Hosts
     elsif folder.kind_of?(Host) && folder.authorized_for_user?(session[:userid])
-      @sb[:tree_hosts].push(folder.id) unless @sb[:tree_hosts].include?(folder.id)
+      @sb[:tree_hosts_hash][folder.id] = folder.id unless @sb[:tree_hosts_hash].key?(folder.id)
       # Build the host node
       node = TreeNodeBuilder.generic_tree_node(
         "#{pid}_h-#{to_cid(folder.id)}",
@@ -318,7 +296,7 @@ module ApplicationController::TreeSupport
 
     # Handle VMs
     elsif folder.kind_of?(Vm) && folder.authorized_for_user?(session[:userid])
-      @sb[:tree_vms].push(folder.id) unless @sb[:tree_vms].include?(folder.id)
+      @sb[:tree_vms_hash][folder.id] = folder.id unless @sb[:tree_vms_hash].key?(folder.id)
       # Build the VM node
       if folder.template?
         if folder.host
@@ -408,8 +386,7 @@ module ApplicationController::TreeSupport
       kids.push(node)
     end
     # build vms/hosts array on initial load incase vms/hosts are being shown on initial display
-    build_vm_host_array if %w{show treesize}.include?(params[:action])
-    return kids
+    kids
   end
 
   def set_node_tooltip_and_is_lazy(node, tooltip, children)
@@ -523,11 +500,11 @@ module ApplicationController::TreeSupport
     ExtManagementSystem.all.each do |ems| # Go thru all of the providers
       if !@rp_only || (@rp_only && ems.resource_pools.count > 0)
         ems_node = {
-          :key        => "#{ems.class.name}_#{ems.id}",
-          :title      => ems.name,
-          :tooltip    => "#{ui_lookup(:table=>"ems_infras")}: #{ems.name}",
-          :addClass   => "cfme-no-cursor-node",      # No cursor pointer
-          :icon       => "ems.png"
+          :key      => "#{ems.class.name}_#{ems.id}",
+          :title    => ems.name,
+          :tooltip  => "#{ui_lookup(:table => "ems_infras")}: #{ems.name}",
+          :addClass => "cfme-no-cursor-node",      # No cursor pointer
+          :icon     => "vendor-#{ems.image_name}.png"
         }
         if @vat || @rp_only
           ems_node[:hideCheckbox] = true

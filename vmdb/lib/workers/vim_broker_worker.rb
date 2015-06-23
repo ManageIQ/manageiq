@@ -9,7 +9,7 @@ class VimBrokerWorker < WorkerBase
     # Global Work Queue
     @queue = Queue.new
 
-    @initial_emses_to_monitor, invalid_emses = MiqVimBrokerWorker.emses_to_monitor.partition(&:authentication_check)
+    @initial_emses_to_monitor, invalid_emses = MiqVimBrokerWorker.emses_to_monitor.partition { |e| e.authentication_check.first }
     start_broker_server(@initial_emses_to_monitor)
     @worker.update_attributes(:uri => DRb.uri)
     $log.info("#{self.log_prefix} DRb URI: #{DRb.uri}")

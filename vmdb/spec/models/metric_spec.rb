@@ -112,7 +112,7 @@ describe Metric do
               task.reload
               task.state.should == "Finished"
 
-              message = MiqQueue.first(:conditions => {:method_name => "perf_rollup_range", :class_name => "EmsCluster", :instance_id => cluster.id})
+              message = MiqQueue.find_by(:method_name => "perf_rollup_range", :class_name => "EmsCluster", :instance_id => cluster.id)
               message.should_not be_nil
               message.args.should == [task.context_data[:start], task.context_data[:end], task.context_data[:interval], nil]
             end
@@ -351,9 +351,9 @@ describe Metric do
 
             # Check a few specific values
             expected = [
-              {"timestamp" => Time.parse("2011-08-12T20:33:20Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 184728.0, "disk_usage_rate_average" => 8.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 41.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 19048.0, "cpu_used_delta_summation" => 265.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => 0.0, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 3.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => 0.0, "cpu_ready_delta_summation" => 40.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.38, "cpu_system_delta_summation" => 2.0},
-              {"timestamp" => Time.parse("2011-08-12T21:03:00Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 186508.0, "disk_usage_rate_average" => 8.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 54.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 18928.0, "cpu_used_delta_summation" => 342.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => 0.0, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 5.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => 0.0, "cpu_ready_delta_summation" => 169.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.81, "cpu_system_delta_summation" => 2.0},
-              {"timestamp" => Time.parse("2011-08-12T21:33:00Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 188307.0, "disk_usage_rate_average" => 10.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 45.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 19028.0, "cpu_used_delta_summation" => 286.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => 0.0, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 5.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => 0.0, "cpu_ready_delta_summation" => 40.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.5, "cpu_system_delta_summation" => 2.0}
+              {"timestamp" => Time.parse("2011-08-12T20:33:20Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 184728.0, "disk_usage_rate_average" => 8.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 41.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 19048.0, "cpu_used_delta_summation" => 265.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => nil, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 3.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => nil, "cpu_ready_delta_summation" => 40.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.38, "cpu_system_delta_summation" => 2.0},
+              {"timestamp" => Time.parse("2011-08-12T21:03:00Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 186508.0, "disk_usage_rate_average" => 8.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 54.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 18928.0, "cpu_used_delta_summation" => 342.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => nil, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 5.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => nil, "cpu_ready_delta_summation" => 169.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.81, "cpu_system_delta_summation" => 2.0},
+              {"timestamp" => Time.parse("2011-08-12T21:33:00Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 188307.0, "disk_usage_rate_average" => 10.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 45.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 19028.0, "cpu_used_delta_summation" => 286.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => nil, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 5.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => nil, "cpu_ready_delta_summation" => 40.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.5, "cpu_system_delta_summation" => 2.0}
             ]
 
             selected = Metric.where(:timestamp => ["2011-08-12T20:33:20Z", "2011-08-12T21:03:00Z", "2011-08-12T21:33:00Z"]).order(:timestamp)
@@ -370,7 +370,7 @@ describe Metric do
 
             # perf_rollup is queued unconditionally
             # evaluate_alerts is queued only if there's an alert defined for "vm_perf_complete"
-            q_all = MiqQueue.order(:id).all
+            q_all = MiqQueue.order(:id)
 
             if MiqAlert.alarm_has_alerts?(@alarm_event)
               MiqQueue.count.should == 3
@@ -639,7 +639,7 @@ describe Metric do
           end
 
           it "should rollup Vm hourly into Vm daily rows correctly" do
-            perfs = MetricRollup.daily.all
+            perfs = MetricRollup.daily
             perfs.length.should == 3
             perfs.collect { |r| r.timestamp.iso8601 }.sort.should == ["2010-04-13T00:00:00Z", "2010-04-14T00:00:00Z", "2010-04-15T00:00:00Z"]
           end
@@ -654,22 +654,22 @@ describe Metric do
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is passed" do
-            rec = VimPerformanceDaily.find(:all, :ext_options => {:time_profile => @time_profile})
+            rec = VimPerformanceDaily.find_entries(:time_profile => @time_profile)
             rec.should == [@perf]
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is not passed, but an associated tz is" do
-            rec = VimPerformanceDaily.find(:all, :ext_options => {:tz => "UTC"})
+            rec = VimPerformanceDaily.find_entries(:tz => "UTC")
             rec.should == [@perf]
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when defaulting to UTC time zone" do
-            rec = VimPerformanceDaily.find(:all)
+            rec = VimPerformanceDaily.find_entries({})
             rec.should == [@perf]
           end
 
           it "VimPerformanceDaily.find should return an empty array when a time_profile is not passed" do
-            rec = VimPerformanceDaily.find(:all, :ext_options => {:tz => "Alaska"})
+            rec = VimPerformanceDaily.find_entries(:tz => "Alaska")
             rec.length.should == 0
           end
         end
@@ -771,8 +771,8 @@ describe Metric do
             end
 
             it "should rollup Host realtime and Vm hourly into Host hourly rows correctly" do
-              MetricRollup.hourly.count(:conditions => {:resource_type => 'Host', :resource_id => @host1.id}).should == 1
-              perf = MetricRollup.hourly.first(:conditions => {:resource_type => 'Host', :resource_id => @host1.id})
+              MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).count.should == 1
+              perf = MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).first
 
               perf.resource_type.should         == 'Host'
               perf.resource_id.should           == @host1.id
@@ -888,14 +888,14 @@ describe Metric do
       context "calling perf_rollup_to_parent" do
         it "should queue up from Vm realtime to Vm hourly" do
           @vm.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
         end
 
         it "should queue up from Host realtime to Host hourly" do
           @host.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 1
           # assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'realtime')
           # assert_queue_item_rollup_chain(q_all[1], @host, 'hourly')
@@ -904,7 +904,7 @@ describe Metric do
 
         it "should queue up from Vm hourly to Host hourly and Vm daily" do
           @vm.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @vm,   'daily', @time_profile)
@@ -912,7 +912,7 @@ describe Metric do
 
         it "should queue up from Host hourly to EmsCluster hourly and Host daily" do
           @host.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @host,        'daily', @time_profile)
@@ -920,7 +920,7 @@ describe Metric do
 
         it "should queue up from EmsCluster hourly to EMS hourly and EmsCluster daily" do
           @ems_cluster.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_vmware,         'hourly')
           assert_queue_item_rollup_chain(q_all[1], @ems_cluster, 'daily', @time_profile)
@@ -1243,7 +1243,7 @@ describe Metric do
         end
 
         it "should have queued rollups for vm hourly" do
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 2
           assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmOpenstack")
         end
@@ -1254,7 +1254,7 @@ describe Metric do
           end
 
           it "should have one set of queued rollups" do
-            q_all = MiqQueue.order(:id).all
+            q_all = MiqQueue.order(:id)
             q_all.length.should == 2
             assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmOpenstack")
           end
@@ -1275,21 +1275,21 @@ describe Metric do
       context "calling perf_rollup_to_parent" do
         it "should queue up from Vm realtime to Vm hourly" do
           @vm.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
         end
 
         it "should queue up from AvailabilityZone realtime to AvailabilityZone hourly" do
           @availability_zone.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
         end
 
         it "should queue up from Vm hourly to AvailabilityZone hourly and Vm daily" do
           @vm.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
           assert_queue_item_rollup_chain(q_all[1], @vm,   'daily', @time_profile)
@@ -1297,7 +1297,7 @@ describe Metric do
 
         it "should queue up from AvailabilityZone hourly to EMS hourly and AvailabilityZone daily" do
           @availability_zone.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
-          q_all = MiqQueue.order(:id).all
+          q_all = MiqQueue.order(:id)
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_openstack,  'hourly')
           assert_queue_item_rollup_chain(q_all[1], @availability_zone, 'daily', @time_profile)

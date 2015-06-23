@@ -1,4 +1,5 @@
 - if @record && !@in_a_form
+  - host_title = title_for_host
   -  regexosname = Regexp.new(/linux/)
   - linuxos = regexosname.match(@record.os_image_name.downcase)
   #accordion.panel-group
@@ -100,12 +101,12 @@
         - if role_allows(:feature => "host_show")
           - if @record.host.nil?
             %li
-              = link_to_with_icon("Host: #{@record.host.name}",
+              = link_to_with_icon("#{host_title}: #{@record.host.name}",
                 {:controller => "host", :action => 'show', :id => @record.host.id.to_s},
-                :title => _("Show this VM's parent Host"))
+                :title => _("Show this VM's parent %s") % host_title)
           - else
             %li.disabled
-              = link_to(_('Parent Host: None'), "#")
+              = link_to(_('Parent %s: None') % host_title, "#")
 
         - if @record.kind_of?(VmInfra) && role_allows(:feature => "storage_show")
           = li_link_if_condition(:cond => !@record.storage.nil?,

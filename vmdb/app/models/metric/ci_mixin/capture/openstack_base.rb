@@ -227,7 +227,7 @@ module Metric::CiMixin::Capture::OpenstackBase
       multi_counter_aligned_start        ||= last_period
       multi_counter_aligned_end          ||= period
       multi_counter_aligned_start_guard  ||= last_period
-      multi_counter_aligned_start_guard    = period if multi_counter_aligned_start_guard == 'initialize_with_period'
+      multi_counter_aligned_start_guard    = period if multi_counter_aligned_start_guard == Time.at(0)
 
       multi_counter_metrics              ||= {}
       last_multi_counter_metrics         ||= {}
@@ -334,7 +334,7 @@ module Metric::CiMixin::Capture::OpenstackBase
       # Moving multi_counter_aligned_start to next period, this period has been already covered
       multi_counter_aligned_start       = multi_counter_aligned_end
       # Moving also guard to next period, will be initialized when next period begins
-      multi_counter_aligned_start_guard = 'initialize_with_period'
+      multi_counter_aligned_start_guard = Time.at(0)
       # Reset multi_counter_aligned_end, which will be initialized to period in next period
       multi_counter_aligned_end         = nil
       # Moving completed multi_counter_metrics to last_multi_counter_metrics and nullifying multi_counter_metrics,

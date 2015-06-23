@@ -10,17 +10,16 @@ class Zone < ActiveRecord::Base
   alias_attribute :log_depot, :log_file_depot
 
   has_many :miq_servers
-  has_many :active_miq_servers, :class_name => "MiqServer", :conditions => {:status => MiqServer::STATUSES_ACTIVE}
   has_many :ext_management_systems
-  has_many :file_depots, :dependent => :destroy, :as => :resource
   has_many :miq_groups, :as => :resource
   has_many :miq_schedules, :dependent => :destroy
   has_many :storage_managers
   has_many :ldap_regions
   has_many :providers
 
-  virtual_has_many :hosts,             :uses => {:ext_management_systems => :hosts}
-  virtual_has_many :vms_and_templates, :uses => {:ext_management_systems => :vms_and_templates}
+  virtual_has_many :hosts,              :uses => {:ext_management_systems => :hosts}
+  virtual_has_many :active_miq_servers, :class_name => "MiqServer"
+  virtual_has_many :vms_and_templates,  :uses => {:ext_management_systems => :vms_and_templates}
 
   include ReportableMixin
 
@@ -35,6 +34,10 @@ class Zone < ActiveRecord::Base
   # we must also override the :uses portion of the virtual columns.
   override_aggregation_mixin_virtual_columns_uses(:all_hosts, :hosts)
   override_aggregation_mixin_virtual_columns_uses(:all_vms_and_templates, :vms_and_templates)
+
+  def active_miq_servers
+    MiqServer.active_miq_servers.where(:zone_id => self.id)
+  end
 
   def find_master_server
     active_miq_servers.detect(&:is_master?)
@@ -62,7 +65,7 @@ class Zone < ActiveRecord::Base
   end
 
   def assigned_roles
-    self.miq_servers.collect(&:assigned_roles).flatten.uniq.compact
+    miq_servers.flat_map(&:assigned_roles).uniq.compact
   end
 
   def role_active?(role_name)
@@ -74,7 +77,7 @@ class Zone < ActiveRecord::Base
   end
 
   def active_role_names
-    self.miq_servers.collect(&:active_role_names).flatten.uniq
+    miq_servers.flat_map(&:active_role_names).uniq
   end
 
   def self.default_zone
@@ -93,7 +96,7 @@ class Zone < ActiveRecord::Base
   end
 
   def synchronize_logs(*args)
-    active_miq_servers.all.each { |s| s.synchronize_logs(*args) }
+    active_miq_servers.each { |s| s.synchronize_logs(*args) }
   end
 
   def last_log_sync_on
@@ -113,40 +116,36 @@ class Zone < ActiveRecord::Base
     self.miq_servers.any? { |s| s.log_collection_active_recently?(since) }
   end
 
-  def log_depot_uri
-    get_log_depot_settings.try(:fetch_path, :uri)
-  end
-
-  def log_depot_configured?
-    get_log_depot_settings
-  end
-
-  def get_log_depot_settings
-    log_file_depot.try(:depot_hash)
-  end
-
   def host_ids
     hosts.collect(&:id)
   end
 
   def hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect(&:hosts).flatten
+    ext_management_systems.flat_map(&:hosts)
+  end
+
+  def self.hosts_without_a_zone
+    Host.where(:ems_id => nil).to_a
   end
 
   def non_clustered_hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect(&:non_clustered_hosts).flatten
+    ext_management_systems.flat_map(&:non_clustered_hosts)
   end
 
   def clustered_hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect(&:clustered_hosts).flatten
+    ext_management_systems.flat_map(&:clustered_hosts)
   end
 
   def ems_clusters
     MiqPreloader.preload(self, :ext_management_systems => :ems_clusters)
-    self.ext_management_systems.collect(&:ems_clusters).flatten
+    ext_management_systems.flat_map(&:ems_clusters)
+  end
+
+  def self.clusters_without_a_zone
+    EmsCluster.where(:ems_id => nil).to_a
   end
 
   def ems_infras
@@ -163,29 +162,33 @@ class Zone < ActiveRecord::Base
 
   def availability_zones
     MiqPreloader.preload(self.ems_clouds, :availability_zones)
-    self.ems_clouds.collect(&:availability_zones).flatten
+    ems_clouds.flat_map(&:availability_zones)
   end
 
   def vms_without_availability_zone
     MiqPreloader.preload(self, :ext_management_systems => :vms)
-    self.ext_management_systems.collect do |e|
+    ext_management_systems.flat_map do |e|
       e.kind_of?(EmsCloud) ? e.vms.select { |vm| vm.availability_zone.nil? } : []
-    end.flatten
+    end
   end
 
   def vms_and_templates
     MiqPreloader.preload(self, :ext_management_systems => :vms_and_templates)
-    self.ext_management_systems.collect(&:vms_and_templates).flatten
+    ext_management_systems.flat_map(&:vms_and_templates)
   end
 
   def vms
     MiqPreloader.preload(self, :ext_management_systems => :vms)
-    self.ext_management_systems.collect(&:vms).flatten
+    ext_management_systems.flat_map(&:vms)
+  end
+
+  def self.vms_without_a_zone
+    Vm.where(:ems_id => nil).to_a
   end
 
   def miq_templates
     MiqPreloader.preload(self, :ext_management_systems => :miq_templates)
-    self.ext_management_systems.collect(&:miq_templates).flatten
+    ext_management_systems.flat_map(&:miq_templates)
   end
 
   def vm_or_template_ids
@@ -202,12 +205,13 @@ class Zone < ActiveRecord::Base
 
   def storages
     MiqPreloader.preload(self, :ext_management_systems => {:hosts => :storages})
-    self.ext_management_systems.collect(&:storages).flatten.uniq
+    ext_management_systems.flat_map(&:storages).uniq
   end
 
-  def miq_proxies
-    ems_ids = self.ext_management_systems.collect(&:id)
-    MiqProxy.includes(:host).references(:host).where("hosts.ems_id in (?)", ems_ids).to_a
+  def self.storages_without_a_zone
+    storage_without_hosts = Storage.includes(:hosts).where(:hosts_storages => {:storage_id => nil}).to_a
+    storage_without_ems = Host.where(:ems_id => nil).includes(:storages).flat_map(&:storages).uniq
+    storage_without_hosts + storage_without_ems
   end
 
   # Used by AggregationMixin

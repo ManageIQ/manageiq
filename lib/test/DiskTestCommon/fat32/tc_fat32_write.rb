@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/../..")
@@ -16,7 +16,7 @@ require 'Fat32BootSect'
 $:.push("#{File.dirname(__FILE__)}/..")
 require 'FSTestUtil'
 
-class Fat32TestWrite < Test::Unit::TestCase
+class Fat32TestWrite < Minitest::Test
 	
 	TEST_SHORT_DIR = "/test"
 	TEST_LONG_DIR  = "/Test Directory"
@@ -77,30 +77,30 @@ class Fat32TestWrite < Test::Unit::TestCase
 				if disk.fs
 					#puts "\nFat32: Testing write directory on #{disk.info.fileName}"
 					# Test short name.
-					assert_raise(RuntimeError) {disk.fs.dirRmdir(TEST_SHORT_DIR)}
+					assert_raises(RuntimeError) {disk.fs.dirRmdir(TEST_SHORT_DIR)}
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.dirMkdir(TEST_SHORT_DIR)}
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileCtime(TEST_SHORT_DIR)}
 					disk.fs.chdir(TEST_SHORT_DIR)
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.dirRmdir(TEST_SHORT_DIR)}
-					assert_raise(RuntimeError) {disk.fs.dirEntries("*.*")}
+					assert_raises(RuntimeError) {disk.fs.dirEntries("*.*")}
 					disk.fs.chdir("/")
 					
 					# Test long name.
-					assert_raise(RuntimeError) {disk.fs.dirRmdir(TEST_LONG_DIR)}
+					assert_raises(RuntimeError) {disk.fs.dirRmdir(TEST_LONG_DIR)}
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.dirMkdir(TEST_LONG_DIR)}
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileCtime(TEST_LONG_DIR)}
 					disk.fs.chdir(TEST_LONG_DIR)
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.dirRmdir(TEST_LONG_DIR)}
-					assert_raise(RuntimeError) {disk.fs.dirEntries("*.*")}
+					assert_raises(RuntimeError) {disk.fs.dirEntries("*.*")}
 					disk.fs.chdir("/")
 					
 					# Test gray name.
-					assert_raise(RuntimeError) {disk.fs.dirRmdir(TEST_GRAY_DIR)}
+					assert_raises(RuntimeError) {disk.fs.dirRmdir(TEST_GRAY_DIR)}
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.dirMkdir(TEST_GRAY_DIR)}
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileCtime(TEST_GRAY_DIR)}
 					disk.fs.chdir(TEST_GRAY_DIR)
 					assert_nothing_raised(id(__LINE__, disk)) {disk.fs.dirRmdir(TEST_GRAY_DIR)}
-					assert_raise(RuntimeError) {disk.fs.dirEntries("*.*")}
+					assert_raises(RuntimeError) {disk.fs.dirEntries("*.*")}
 					disk.fs.chdir("/")
 				else
 					puts "\ntc_fat32_write: FS is nil at line #{__LINE__} on #{disk.info.fileName}"
@@ -122,7 +122,7 @@ class Fat32TestWrite < Test::Unit::TestCase
 				assert_nothing_raised(id(__LINE__, disk)) {f.close}
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileCtime(TEST_SHORT_FILE)}
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileDelete(TEST_SHORT_FILE)}
-				assert_raise(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_FILE, "r")}
+				assert_raises(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_FILE, "r")}
 				
 				# Test long name.
 				f = nil
@@ -130,7 +130,7 @@ class Fat32TestWrite < Test::Unit::TestCase
 				assert_nothing_raised(id(__LINE__, disk)) {f.close}
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileCtime(TEST_LONG_FILE)}
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileDelete(TEST_LONG_FILE)}
-				assert_raise(RuntimeError) {f = disk.fs.fileOpen(TEST_LONG_FILE, "r")}
+				assert_raises(RuntimeError) {f = disk.fs.fileOpen(TEST_LONG_FILE, "r")}
 				
 				# Test gray name.
 				f = nil
@@ -138,7 +138,7 @@ class Fat32TestWrite < Test::Unit::TestCase
 				assert_nothing_raised(id(__LINE__, disk)) {f.close}
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileCtime(TEST_GRAY_FILE)}
 				assert_nothing_raised {disk.fs.fileDelete(TEST_GRAY_FILE)}
-				assert_raise(RuntimeError) {f = disk.fs.fileOpen(TEST_GRAY_FILE, "r")}
+				assert_raises(RuntimeError) {f = disk.fs.fileOpen(TEST_GRAY_FILE, "r")}
 			else
 				puts "\ntc_fat32_write: FS is nil at line #{__LINE__} on #{disk.info.fileName}"
 			end
@@ -153,14 +153,14 @@ class Fat32TestWrite < Test::Unit::TestCase
 				#puts "\nFat32: Testing write file modes on #{disk.info.fileName}"
 				# Open directory should always raise error.
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.dirMkdir(TEST_SHORT_DIR)}
-				assert_raise(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_DIR, "r")}
-				assert_raise(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_DIR, "w")}
-				assert_raise(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_DIR, "a")}
+				assert_raises(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_DIR, "r")}
+				assert_raises(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_DIR, "w")}
+				assert_raises(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_DIR, "a")}
 
 				disk.fs.chdir(TEST_SHORT_DIR)
 				f = nil; buf = nil
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileDelete(TEST_SHORT_FILE)}
-				assert_raise(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_FILE, "r")}
+				assert_raises(RuntimeError) {f = disk.fs.fileOpen(TEST_SHORT_FILE, "r")}
 				assert_nothing_raised(id(__LINE__, disk)) {f = disk.fs.fileOpen(TEST_SHORT_FILE, "w")}
 				assert_nothing_raised(id(__LINE__, disk)) {f.write(TEST_FIRST)}
 				assert_nothing_raised(id(__LINE__, disk)) {f.close}
@@ -191,7 +191,7 @@ class Fat32TestWrite < Test::Unit::TestCase
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.dirRmdir(TEST_SHORT_DIR)}
 				
 				assert_nothing_raised(id(__LINE__, disk)) {disk.fs.fileDelete(TEST_LONG_FILE)}
-				assert_raise(RuntimeError) {f = disk.fs.fileOpen(TEST_LONG_FILE, "r")}
+				assert_raises(RuntimeError) {f = disk.fs.fileOpen(TEST_LONG_FILE, "r")}
 				assert_nothing_raised(id(__LINE__, disk)) {f = disk.fs.fileOpen(TEST_LONG_FILE, "w")}
 				assert_nothing_raised(id(__LINE__, disk)) {f.write(TEST_FIRST)}
 				assert_nothing_raised(id(__LINE__, disk)) {f.close}

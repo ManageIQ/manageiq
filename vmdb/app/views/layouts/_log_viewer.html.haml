@@ -1,4 +1,4 @@
-- legend_text ||= "Last 1000 lines from server #{@temp[:server].name} [#{@server_options[:server_id]}] in zone #{@temp[:server].my_zone}"
+- legend_text ||= "Last 1000 lines from server #{@server.name} [#{@server_options[:server_id]}] in zone #{@server.my_zone}"
 = render :partial => "layouts/flash_msg"
 %h3= legend_text
 - h = @winH < 627 ? 200 : @winH - 427

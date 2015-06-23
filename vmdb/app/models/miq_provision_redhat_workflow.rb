@@ -29,23 +29,23 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
     true
   end
 
-  def allowed_provision_types(options={})
+  def allowed_provision_types(_options = {})
     {
-      "pxe"            => "PXE",
-      "iso"            => "ISO",
-      "native_clone"   => "Native Clone"
+      "pxe"          => "PXE",
+      "iso"          => "ISO",
+      "native_clone" => "Native Clone"
     }
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name')
-    super(message, { 'platform' => 'redhat' })
+    super(message, {'platform' => 'redhat'})
   end
 
-  def update_field_visibility()
+  def update_field_visibility
     super(:force_platform => 'linux')
   end
 
-  def update_field_visibility_linked_clone(options={}, f)
+  def update_field_visibility_linked_clone(_options = {}, f)
     show_flag = supports_native_clone? ? :edit : :hide
     f[show_flag] << :linked_clone
 
@@ -53,7 +53,7 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
     f[show_flag] << :disk_format
   end
 
-  def allowed_customization_templates(options={})
+  def allowed_customization_templates(options = {})
     if supports_native_clone?
       return allowed_cloud_init_customization_templates(options)
     else
@@ -61,24 +61,25 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
     end
   end
 
-  def allowed_hosts_obj(options={})
+  def allowed_hosts_obj(options = {})
     return [] if (src = resources_for_ui).blank?
+    return [] unless src[:vm]
 
     hosts = super
-    hosts = hosts & load_ar_obj(src[:vm]).ems_cluster.hosts if supports_native_clone?
+    ems_cluster = load_ar_obj(src[:vm]).ems_cluster
+    hosts &= ems_cluster.hosts if supports_native_clone? && ems_cluster
     hosts
   end
 
-  def allowed_storages(options={})
+  def allowed_storages(options = {})
     return [] if (src = resources_for_ui).blank?
     result = super
 
     if supports_linked_clone?
       s_id = load_ar_obj(src[:vm]).storage_id
-      result = result.select {|s| s.id == s_id}
+      result = result.select { |s| s.id == s_id }
     end
 
-    result.select {|s| s.storage_domain_type == "data"}
+    result.select { |s| s.storage_domain_type == "data" }
   end
-
 end

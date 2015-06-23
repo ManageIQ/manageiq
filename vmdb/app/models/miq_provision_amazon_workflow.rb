@@ -1,6 +1,5 @@
 class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
-
-  def allowed_instance_types(options={})
+  def allowed_instance_types(_options = {})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)
     architecture = source.try(:hardware).try(:bitness)
@@ -17,20 +16,20 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
     available.each_with_object({}) { |f, hash| hash[f.id] = display_name_for_name_description(f) }
   end
 
-  def allowed_security_groups(options={})
+  def allowed_security_groups(_options = {})
     src = resources_for_ui
     return {} if src[:ems].nil?
 
     security_groups = if src[:cloud_network]
-      load_ar_obj(src[:cloud_network]).security_groups
-    else
-      load_ar_obj(src[:ems]).security_groups.non_cloud_network
+                        load_ar_obj(src[:cloud_network]).security_groups
+                      else
+                        load_ar_obj(src[:ems]).security_groups.non_cloud_network
     end
 
     security_groups.each_with_object({}) { |sg, hash| hash[sg.id] = display_name_for_name_description(sg) }
   end
 
-  def allowed_floating_ip_addresses(options={})
+  def allowed_floating_ip_addresses(_options = {})
     src = resources_for_ui
     return {} if src[:ems].nil?
 
@@ -40,7 +39,7 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
     end
   end
 
-  def allowed_availability_zones(options={})
+  def allowed_availability_zones(_options = {})
     allowed_ci(:availability_zones, [:cloud_network, :cloud_subnet, :security_group])
   end
 
@@ -48,13 +47,13 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
     return nil unless value.blank?
     return nil if get_value(values[:cloud_network]).to_i.zero?
     return nil unless get_value(values[field]).blank?
-    return "#{required_description(dlg, fld)} is required"
+    "#{required_description(dlg, fld)} is required"
   end
 
   private
 
   def dialog_name_from_automate(message = 'get_dialog_name')
-    super(message, { 'platform' => 'amazon' })
+    super(message, {'platform' => 'amazon'})
   end
 
   def self.allowed_templates_vendor

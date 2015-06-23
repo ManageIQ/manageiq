@@ -4,7 +4,7 @@ module OrchestrationStackHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name description type status)
+    items = %w(name description type status status_reason)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -38,6 +38,10 @@ module OrchestrationStackHelper::TextualSummary
     {:label => "Status", :value => @record.status}
   end
 
+  def textual_status_reason
+    {:label => "Status Reason", :value => @record.status_reason}
+  end
+
   def textual_ems_cloud
     ems = @record.ext_management_system
     return nil if ems.nil?
@@ -54,7 +58,12 @@ module OrchestrationStackHelper::TextualSummary
     template = @record.orchestration_template
     return nil if template.nil?
     label = ui_lookup(:table => "orchestration_template")
-    {:label => label, :image => "orchestration_template", :value => template.name}
+    h = {:label => label, :image => "orchestration_template", :value => template.name}
+    if role_allows(:feature => "orchestration_templates_view")
+      h[:title] = "Show this Orchestration Template"
+      h[:link] = url_for(:controller => 'catalog', :action => 'ot_show', :id => template.id)
+    end
+    h
   end
 
   def textual_instances

@@ -29,7 +29,7 @@
           %td
           %td
           %td
-      - @temp[:hosts].each do |row|
+      - @hosts.each do |row|
         - @id = row.id
         - if options[:wf].kind_of?(MiqHostProvisionWorkflow)
           %tr

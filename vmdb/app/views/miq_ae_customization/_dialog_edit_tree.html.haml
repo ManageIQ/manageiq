@@ -4,7 +4,7 @@
   = render(:partial => "layouts/dynatree",
     :locals         => {:tree_id  =>  "dialog_edit_treebox",
       :tree_name                  =>  "dialog_edit_tree",
-      :json_tree                  =>  @temp[:dialog_edit_tree],
+      :json_tree                  =>  @dialog_edit_tree,
       :onclick                    =>  "cfmeOnClick_SelectDlgEditTreeNode",
       :select_node                =>  "#{x_node(:dialog_edit_tree)}",
       :base_id                    =>  "root",

@@ -566,26 +566,6 @@ module MiqAeEngineSpec
       roots.length.should == 0
     end
 
-    it "properly processes service_vmdb" do
-      e = ExtManagementSystem.find :first
-      if e.nil?
-        warn "test_service_vmdb can only be run if there is at least 1 "\
-          "record in ext_management_systems and the first record's id is set in "\
-          "service_vmdb yaml model"
-      else
-        EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "service_vmdb"), @domain)
-
-        ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/ems_test")
-        ws.should_not be_nil
-        ws.roots.first.attributes["attr1"].should == e.name
-
-        ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/bad_vmdb_type_test")
-        ws.should_not be_nil
-        ws.roots.first.attributes["attr1"].should be_true
-      end
-
-    end
-
     it "properly processes substitution" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "substitution"), @domain)
       ws = MiqAeEngine.instantiate("/EVM/A/a1")

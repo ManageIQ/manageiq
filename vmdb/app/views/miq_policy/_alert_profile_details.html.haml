@@ -32,8 +32,8 @@
           %table.table.table-striped.table-bordered.table-hover
             %tbody
               - @alert_profile_alerts.each do |a|
-                %tr{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');",
-                  :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Alert")}
+                %tr{:title => _("View this Alert"),
+                  :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');"}
                   %td.narrow
                     %img{:src => "/images/icons/new/miq_alert.png"}
                   %td
@@ -133,7 +133,7 @@
                           - objs.push(o.absolute_path(:exclude_hidden => true))
                         - else
                           - objs.push(o.name)
-                      - objs.sort(&:downcase).each do |obj|
+                      - objs.sort_by(&:downcase).each do |obj|
                         %tr
                           %td
                             = h(obj)
@@ -142,7 +142,7 @@
           %table.style1
             %tr
               %td.key
-                = _("%s with %s Tags") % [ui_lookup(:tables => aa[:tags].first.last), @temp[:alert_profile_tag].description]
+                = _("%s with %s Tags") % [ui_lookup(:tables => aa[:tags].first.last), @alert_profile_tag.description]
               %td
                 - aa[:tags].sort_by { |a| a.first.description.downcase }.each do |tag|
                   = h(tag.first.description)

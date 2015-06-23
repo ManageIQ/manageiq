@@ -18,10 +18,16 @@
                 :accord_select_function => "miqAccordProviderForemanSelect"})
 
 - # These are the initial divs that will go inside center_cell_div
-- if @record
-  - # Showing a specific VM or Template record
+- if @configuration_profile_record
+  #main_div.main_div
+    - @pages = nil if @sb[:active_tab] == 'summary'
+    = render(:partial => 'provider_foreman/configuration_profile')
+- elsif @configured_system_record
   #main_div.main_div
     = render(:partial => 'provider_foreman/main', :locals => {:controller => "provider_foreman"})
 - else
   #main_div.main_div
     = render(:partial => 'layouts/x_gtl')
+    :javascript
+      var miq_after_onload = "if (miqDomElementExists('adv_searchbox_div')) $('#adv_searchbox_div').show();"
+

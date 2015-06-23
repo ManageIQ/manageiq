@@ -24,7 +24,7 @@ module MiqProvisionRedhat::Configuration
     sockets = 1 if sockets.zero?
     cores = get_option(:cores_per_socket).to_i
     cores = 1 if cores.zero?
-    set_container_cpu({ :cores => cores, :sockets => sockets }, rhevm_vm)
+    set_container_cpu({:cores => cores, :sockets => sockets}, rhevm_vm)
   end
 
   def configure_host_affinity(rhevm_vm)

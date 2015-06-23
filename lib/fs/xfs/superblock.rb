@@ -4,7 +4,7 @@ $LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 require 'miq-uuid'
 require 'stringio'
-require 'MiqMemory'
+require 'memory_buffer'
 require 'allocation_group'
 require 'inode_map'
 require 'inode'
@@ -485,7 +485,7 @@ module XFS
 
     def get_cluster(block)
       raise "XFS::Superblock.get_cluster: block is nil" if block.nil?
-      @cluster_cache[block] = MiqMemory.create_zero_buffer(@block_size * icluster_size_fsb) if block == 0
+      @cluster_cache[block] = MemoryBuffer.create(@block_size * icluster_size_fsb) if block == 0
       unless @cluster_cache.key?(block)
         @stream.seek(fsb_to_b(block))
         @cluster_cache[block] = @stream.read(@block_size * icluster_size_fsb)
@@ -495,7 +495,7 @@ module XFS
 
     def get_block(block)
       raise "XFS::Superblock.get_block: block is nil" if block.nil?
-      @block_cache[block] = MiqMemory.create_zero_buffer(@block_size) if block == 0
+      @block_cache[block] = MemoryBuffer.create(@block_size) if block == 0
       unless @block_cache.key?(block)
         @stream.seek(fsb_to_b(block))
         @block_cache[block] = @stream.read(@block_size)

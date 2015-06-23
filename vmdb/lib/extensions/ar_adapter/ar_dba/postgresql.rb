@@ -5,6 +5,10 @@ module ActiveRecord
         select_value("SELECT version()")
       end
 
+      def spid
+        select_value("SELECT pg_backend_pid()").to_i
+      end
+
       def client_connections
         data = select(<<-SQL, "Client Connections")
                       SELECT client_addr   AS client_address
@@ -25,7 +29,7 @@ module ActiveRecord
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
         end
 
-        data
+        data.to_a
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -123,7 +127,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -218,7 +222,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -377,7 +381,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       def table_statistics
@@ -424,10 +428,10 @@ module ActiveRecord
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
-          timestamp_columns.each { |c| datum[c] = ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_time(datum[c]) }
+          timestamp_columns.each { |c| datum[c] = ActiveRecord::Type::Time.new.type_cast_from_user(datum[c]) }
         end
 
-        data
+        data.to_a
       end
 
       # Provide the database statistics for all tables and indexes
@@ -447,7 +451,7 @@ module ActiveRecord
           s["average_row_size"] = s["pages"].to_f / (s["rows"] + 1) * 8 * 1024
         end
 
-        stats
+        stats.to_a
       end
 
       def table_size
@@ -469,7 +473,7 @@ module ActiveRecord
           s["average_row_size"] = s["pages"].to_f / (s["rows"] + 1) * 8 * 1024
         end
 
-        stats
+        stats.to_a
       end
 
       def table_total_size(table)
@@ -643,7 +647,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       def table_metrics_analysis(table_name)
@@ -690,10 +694,10 @@ module ActiveRecord
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
-          timestamp_columns.each { |c| datum[c] = ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_time(datum[c]) }
+          timestamp_columns.each { |c| datum[c] = ActiveRecord::Type::Time.new.type_cast_from_user(datum[c]) }
         end
 
-        data
+        data.to_a
       end
 
       def table_metrics_total_size(table_name)
@@ -794,7 +798,7 @@ module ActiveRecord
           float_columns.each     { |c| datum[c] = datum[c].to_f }
         end
 
-        data
+        data.to_a
       end
 
       def index_metrics_analysis(index_name)
@@ -824,7 +828,7 @@ module ActiveRecord
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
         end
 
-        data
+        data.to_a
       end
 
       def index_metrics_total_size(index_name)
@@ -851,7 +855,7 @@ module ActiveRecord
         start_time = select_value(<<-SQL, "Select last start date/time")
                                      SELECT pg_postmaster_start_time()
                                   SQL
-        last_start_time = ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_time(start_time)
+        ActiveRecord::Type::Time.new.type_cast_from_user(start_time)
       end
 
       def analyze_table(table)

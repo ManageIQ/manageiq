@@ -12,35 +12,6 @@ module OpsController::Settings
   include_concern 'Zones'
   include_concern 'RHN'
 
-  # Send the smartproxy build file
-  def fetch_build
-    prd_update = ProductUpdate.find(from_cid(params[:id]))
-    download_file = prd_update.file_from_db
-    disable_client_cache
-    send_file(download_file)
-  end
-
-  def activate
-    @server = MiqServer.find(@sb[:selected_server_id])
-    @product_update = ProductUpdate.find(from_cid(params[:id]))
-    @build = @product_update
-    if params[:button] == "activate"
-      message = "Feature Disabled, see RHN tab on Region."
-      product_updates_list
-      add_flash(_("Error during %s: ") % "Build activation" << message, :error)
-      get_node_info(x_node)
-      replace_right_cell(@nodetype)
-    else      #cancel button is pressed
-      audit = {:event=>"productupdate_record_activated", :message=>"[#{@product_update.name}] Build activated", :target_id=>@product_update.id, :target_class=>"ProductUpdate", :userid => session[:userid]}
-        AuditEvent.success(audit)
-      @sb[:buildinfo] = nil
-      @sb[:activating] = false
-      @build = nil
-      get_node_info(x_node)
-      replace_right_cell(@nodetype)
-    end
-  end
-
   # Apply the good records from an uploaded import file
   def apply_imports
     if session[:imports]
@@ -62,70 +33,15 @@ module OpsController::Settings
     redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
   end
 
-  def delete_build
-    assert_privileges("delete_build")
-    builds = Array.new
-    builds = find_checked_items
-    if builds.empty?
-      add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:models=>"ProductUpdate"), :task=>"deletion"}, :error)
-      render :update do |page|                    # Use RJS to update the display
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-      end
-    else
-      process_builds(builds,'destroy')
-      product_updates_list
-      settings_get_info(x_node)
-      replace_right_cell(x_node,[:settings])
-    end
-  end
-
-  # Show the main Builds list view
-  def product_updates_list
-    @gtl_type = "list"
-    if params[:ppsetting]                                       # User selected new per page value
-      @items_per_page = params[:ppsetting].to_i                 # Set the new per page value
-      @settings[:perpage][@gtl_type.to_sym] = @items_per_page   # Set the per page setting for this gtl type
-    end
-
-    @no_listicon = true   # Don't show icons in list view
-    @showlinks = true     # Don't show links, read only
-    @ajax_paging_buttons = true
-    @lastaction = "product_updates_list"
-    @view, @pages = get_view(ProductUpdate) # Get the records (into a view) and the paginator
-
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
-      render :update do |page|
-        page.replace_html("gtl_div", :partial=>"layouts/x_gtl", :locals=>{:action_url=>"product_updates_list"})
-        page.replace_html("paging_div", :partial=>"layouts/x_pagingcontrols")
-        page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
-      end
-    end
-  end
-
-  def show_product_update
-    @sb[:activating] = true
-    @build = ProductUpdate.find(from_cid(params[:id]))
-    @sb[:buildinfo] = [
-      ["Name", @build.name],
-      ["Description", @build.description],
-      ["Type", @build.update_type],
-      ["Platform", @build.platform],
-      ["Component", @build.component],
-      ["Architecture", @build.arch],
-      ["Version", @build.version]
-    ]
-    redirect_to :action => 'explorer', :no_refresh=>true, :cls_id=>"b_#{@build.id}"
-  end
-
   def forest_get_form_vars
     @edit = session[:edit]
-    @temp = Hash.new
-    @temp[:mode] = params[:user_proxies][:mode] if params[:user_proxies] && params[:user_proxies][:mode]
-    @temp[:ldaphost] = params[:user_proxies][:ldaphost] if params[:user_proxies] && params[:user_proxies][:ldaphost]
-    @temp[:ldapport] = params[:user_proxies][:ldapport] if params[:user_proxies] && params[:user_proxies][:ldapport]
-    @temp[:basedn] = params[:user_proxies][:basedn] if params[:user_proxies] && params[:user_proxies][:basedn]
-    @temp[:bind_dn] = params[:user_proxies][:bind_dn] if params[:user_proxies] && params[:user_proxies][:bind_dn]
-    @temp[:bind_pwd] = params[:user_proxies][:bind_pwd] if params[:user_proxies] && params[:user_proxies][:bind_pwd]
+    @ldap_info = Hash.new
+    @ldap_info[:mode] = params[:user_proxies][:mode] if params[:user_proxies] && params[:user_proxies][:mode]
+    @ldap_info[:ldaphost] = params[:user_proxies][:ldaphost] if params[:user_proxies] && params[:user_proxies][:ldaphost]
+    @ldap_info[:ldapport] = params[:user_proxies][:ldapport] if params[:user_proxies] && params[:user_proxies][:ldapport]
+    @ldap_info[:basedn] = params[:user_proxies][:basedn] if params[:user_proxies] && params[:user_proxies][:basedn]
+    @ldap_info[:bind_dn] = params[:user_proxies][:bind_dn] if params[:user_proxies] && params[:user_proxies][:bind_dn]
+    @ldap_info[:bind_pwd] = params[:user_proxies][:bind_pwd] if params[:user_proxies] && params[:user_proxies][:bind_pwd]
     return
   end
 
@@ -179,14 +95,14 @@ module OpsController::Settings
   def forest_accept
     forest_get_form_vars
     no_changes = true
-    if @temp[:ldaphost] == ""
+    if @ldap_info[:ldaphost] == ""
       add_flash(_("%s is required") % "LDAP Host", :error)
       no_changes = false
     elsif @edit[:new][:authentication][:user_proxies].blank? || @edit[:new][:authentication][:user_proxies][0].blank?   # if adding forest first time, delete a blank record
       @edit[:new][:authentication][:user_proxies].delete_at(0)
     else
       @edit[:new][:authentication][:user_proxies].each do |f|
-        if f[:ldaphost] == @temp[:ldaphost] && session[:entry][:ldaphost] != @temp[:ldaphost]   #check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
+        if f[:ldaphost] == @ldap_info[:ldaphost] && session[:entry][:ldaphost] != @ldap_info[:ldaphost]   #check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
           no_changes = false
           add_flash(_("%s should be unique") % "LDAP Host", :error)
           break
@@ -195,10 +111,10 @@ module OpsController::Settings
     end
     if no_changes
       if session[:entry] == "new"
-        @edit[:new][:authentication][:user_proxies].push(@temp)
+        @edit[:new][:authentication][:user_proxies].push(@ldap_info)
       else
         @edit[:new][:authentication][:user_proxies].each_with_index do |f,i|
-          @edit[:new][:authentication][:user_proxies][i] = @temp if f[:ldaphost] == session[:entry][:ldaphost]
+          @edit[:new][:authentication][:user_proxies][i] = @ldap_info if f[:ldaphost] == session[:entry][:ldaphost]
         end
       end
     end
@@ -296,11 +212,6 @@ module OpsController::Settings
 
   def region_get_form_vars
     @edit[:new][:description] = params[:region_description] if params[:region_description]
-  end
-
-  # Common Product Updates button handler routines follow
-  def process_builds(builds, task)
-    process_elements(builds, ProductUpdate, task)
   end
 
   # Set filters in the user record from the @edit[:new] hash values

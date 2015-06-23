@@ -4,7 +4,6 @@ class Service < ActiveRecord::Base
   belongs_to :service_template               # Template this service was cloned from
   belongs_to :service                        # Parent Service
   has_many :services, :dependent => :destroy # Child services
-  has_many :ems_events
 
   virtual_belongs_to :parent_service
   virtual_has_many   :direct_service_children
@@ -17,6 +16,7 @@ class Service < ActiveRecord::Base
   include OwnershipMixin
   include CustomAttributeMixin
   include NewWithTypeStiMixin
+  include ProcessTasksMixin
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
@@ -80,69 +80,6 @@ class Service < ActiveRecord::Base
     self.direct_vms + self.indirect_vms
   end
   alias :vms :all_vms
-
-  # Processes tasks received from the UI and queues them
-  def self.process_tasks(options)
-    raise "No ids given to process_tasks" if options[:ids].blank?
-    raise "Unknown task, #{options[:task]}" unless self.instance_methods.collect(&:to_s).include?(options[:task])
-    options[:userid] ||= "system"
-    self.invoke_tasks_queue(options)
-  end
-
-  def self.invoke_tasks_queue(options)
-    MiqQueue.put(:class_name => self.name, :method_name => "invoke_tasks", :args => [options])
-  end
-
-  # Performs tasks received from the UI via the queue
-  def self.invoke_tasks(options)
-    local, remote = self.partition_ids_by_remote_region(options[:ids])
-    self.invoke_tasks_local(options.merge(:ids => local)) unless local.empty?
-  end
-
-  def self.invoke_tasks_local(options)
-    options[:invoke_by] = :task
-    args = []
-
-    services, tasks = self.validate_tasks(options)
-
-    audit = {:event => options[:task], :target_class => self.name, :userid => options[:userid]}
-
-    services.each_with_index do |service, idx|
-      task = MiqTask.find_by_id(tasks[idx])
-
-      if task && task.status == "Error"
-        AuditEvent.failure(audit.merge(:target_id => service.id, :message => task.message))
-        task.state_finished
-        next
-      end
-
-      cb = { :class_name => task.class.to_s, :instance_id => task.id, :method_name => :queue_callback, :args => ["Finished"] } if task
-
-      MiqQueue.put(:class_name => self.name, :instance_id => service.id, :method_name => options[:task], :args => args, :miq_callback => cb)
-      AuditEvent.success(audit.merge(:target_id => service.id, :message => "#{service.name}: '#{options[:task]}' successfully initiated"))
-      task.update_status("Queued", "Ok", "Task has been queued") if task
-    end
-  end
-
-  # Helper method for invoke_tasks, to determine the services and the tasks associated
-  def self.validate_tasks(options)
-    tasks = []
-
-    services = self.find_all_by_id(options[:ids], :order => "lower(name)")
-    return services, tasks unless options[:invoke_by] == :task # jobs will be used instead of tasks for feedback
-
-    services.each do |service|
-      # create a task instance for each VM
-      task = MiqTask.create(:name => "#{service.name}: '" + options[:task] + "'", :userid => options[:userid])
-      tasks.push(task.id)
-
-      if options[:task] == "retire_now" && service.retired?
-        task.error("#{service.name}: Service is already retired")
-        next
-      end
-    end
-    return services, tasks
-  end
 
   def start
     self.raise_request_start_event
@@ -229,29 +166,23 @@ class Service < ActiveRecord::Base
   end
 
   def raise_request_start_event
-    self.raise_event(:request_service_start, "Request Service #{self.name} start")
+    MiqEvent.raise_evm_event(self, :request_service_start)
   end
 
   def raise_started_event
-    self.raise_event(:service_started, "Service #{self.name} started")
+    MiqEvent.raise_evm_event(self, :service_started)
   end
 
   def raise_request_stop_event
-    self.raise_event(:request_service_stop, "Request Service #{self.name} stop")
+    MiqEvent.raise_evm_event(self, :request_service_stop)
   end
 
   def raise_stopped_event
-    self.raise_event(:service_stopped, "Service #{self.name} stopped")
+    MiqEvent.raise_evm_event(self, :service_stopped)
   end
 
   def raise_provisioned_event
-    event = self.ems_events.where(:event_type => "service_provisioned")
-    return event.first unless event.blank?
-    self.raise_event(:service_provisioned, "Service #{self.name} provisioned")
-  end
-
-  def raise_event(event_type, message)
-    EmsEvent.add(nil, {:service_id => self.id, :event_type => event_type, :timestamp => Time.now, :message => message})
+    MiqEvent.raise_evm_event(self, :service_provisioned)
   end
 
   def v_total_vms

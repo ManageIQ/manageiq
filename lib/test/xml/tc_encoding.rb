@@ -1,10 +1,10 @@
 $:.push("#{File.dirname(__FILE__)}")
 $:.push("#{File.dirname(__FILE__)}/../../util/")
 require 'rubygems'
-require 'test/unit'
+require 'minitest/unit'
 require 'miq-xml'
 
-class XmlEncoding < Test::Unit::TestCase
+class XmlEncoding < Minitest::Test
 
   def test_attribute_encoding
     xml = REXML::Document.new("<test/>")

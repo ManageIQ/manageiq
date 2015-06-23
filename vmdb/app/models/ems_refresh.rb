@@ -70,11 +70,13 @@ module EmsRefresh
             when t.respond_to?(:manager)               then t.manager
             else                                            t
             end
+      next if ems.nil? # archived Vm
       ems.kind_of?(EmsVmware) ? "vc" : ems.emstype.to_s
     end
 
     # Do the refreshes
     groups.each do |g, group_targets|
+      next if g.nil?
       self::Refreshers.const_get("#{g.to_s.camelize}Refresher").refresh(group_targets)
     end
   end
@@ -102,9 +104,8 @@ module EmsRefresh
     return targets_by_type.each_with_object([]) do |(c, ids), a|
       ids.uniq!
 
-      opts = {:conditions => {:id => ids}}
-      opts[:include] = :ext_management_system unless c.ancestors.include?(ExtManagementSystem)
-      recs = c.find(:all, opts)
+      recs = c.where(:id => ids)
+      recs = recs.includes(:ext_management_system) unless c.ancestors.include?(ExtManagementSystem)
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)

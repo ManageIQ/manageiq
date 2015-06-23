@@ -13,6 +13,10 @@ describe OpenstackQpidReceiver do
     qreceiver = double("qpid receiver")
     qsession = double("qpid session")
 
+    qconnection = double("qpid connection")
+    qconnection.stub(:hostname).and_return("10.10.10.10")
+    qconnection.stub(:session).and_return(qsession)
+
     qsession.should_receive(:create_receiver).and_return(qreceiver)
     qreceiver.should_receive(:capacity=)
 
@@ -29,7 +33,7 @@ describe OpenstackQpidReceiver do
     qreceiver.stub(:available).and_return(3, 2, 1, 0)
     qreceiver.stub(:get).and_return(qpid_messages[0], qpid_messages[1], qpid_messages[2])
 
-    receiver = OpenstackQpidReceiver.new(qsession, "exchange", "topic")
+    receiver = OpenstackQpidReceiver.new(qconnection, "service", "exchange", "topic", "10.11.12.13")
     receiver.stub(:address).and_return("")
     receiver.stub(:duration).and_return(0)
 

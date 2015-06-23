@@ -14,7 +14,6 @@
             - [[role_allows(:feature => "ems_infra_show_list"), ui_lookup(:table => "ems_infra"),          "ems"],
                [role_allows(:feature => "ems_cloud_show_list"), ui_lookup(:table => "ems_cloud"),          "ems_cloud"],
                [role_allows(:feature => "host_show_list"),      _("Host"),                                 "host"],
-               [false,                                          _("Host Item"),                            "hostitem"],
                [role_allows(:feature => "storage_show_list"),   ui_lookup(:table => "storages"),           "storage"],
                [true,                                           _("VM"),                                   "vm"],
                [true,                                           _("Template"),                             "miq_template"]].each do |icons_checkbox|
@@ -73,4 +72,4 @@
                                options_for_select(display_settings[2], @edit[:new][:display][display_settings[3]]),
                                "data-miq_observe" => url_json)
 
-      = render :partial => '/layouts/form_buttons'
+    = render :partial => '/layouts/form_buttons'

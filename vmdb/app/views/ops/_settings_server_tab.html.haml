@@ -1,5 +1,5 @@
-- url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_server"
+  - url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
   = render :partial => "layouts/flash_msg"
   .row
     .col-sm-12.col-md-12.col-lg-6
@@ -8,20 +8,21 @@
         %table.style1
           %tr
             %td.key=_("Hostname")
-            %td.wide= @temp[:selected_server].hostname
+            %td.wide= @selected_server.hostname
           %tr
             %td.key=_("IP Address")
-            %td.wide= @temp[:selected_server].ipaddress
+            %td.wide= @selected_server.ipaddress
           %tr
             %td.key=_("Resides on VM")
             %td{:style => "padding: 0px"}
               %table{:cellpadding => "0", :cellspacing => "0"}
                 %tr
-                  - vm = @temp[:selected_server].vm
+                  - vm = @selected_server.vm
                   - if vm
-                    %td.image{:onclick => "DoNav('#{"/vm/show/" << vm.id.to_s}');", :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view this VM")}
+                    %td.image.pointer{:onclick => "DoNav('/vm/show/#{vm.id}');", :title => _("Click to view this VM")}
                       %img{:align => "left", :height => "20", :src => "/images/icons/new/vm.png", :width => "20"}/
-                    %td{:class => "#{cycle('row0','row1',:name=>'rel')} hover-text", :onclick => "DoNav('#{"/vm/show/" << vm.id.to_s}');", :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view this VM")}
+                    %td.pointer.hover-text{:class => cycle('row0','row1'), :onclick => "DoNav('/vm/show/#{vm.id}');",
+                      :title => _("Click to view this VM")}
                       = h(vm.name)
                   - else
                     %td.wide=_("Not Available")
@@ -82,7 +83,7 @@
           %tr
             %td.key=_("Default Repository SmartProxy")
             %td{:style => "width: 350px"}
-              - if @smartproxy_choices.empty?
+              - if @smartproxy_choices.blank?
                 =_("None Available")
               - else
                 = select_tag('repository_scanning_defaultsmartproxy',

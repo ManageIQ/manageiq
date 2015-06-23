@@ -10,9 +10,11 @@ module Metric::Common
     belongs_to  :parent_storage,     :class_name => "Storage"
     belongs_to  :parent_ems,         :class_name => "ExtManagementSystem"
 
-    scope :daily,    :conditions => {:capture_interval_name => 'daily'}
-    scope :hourly,   :conditions => {:capture_interval_name => 'hourly'}
-    scope :realtime, :conditions => {:capture_interval_name => 'realtime'}
+    validates :timestamp, :presence => true
+
+    scope :daily,    -> { where(:capture_interval_name => 'daily') }
+    scope :hourly,   -> { where(:capture_interval_name => 'hourly') }
+    scope :realtime, -> { where(:capture_interval_name => 'realtime') }
 
     include ReportableMixin
 

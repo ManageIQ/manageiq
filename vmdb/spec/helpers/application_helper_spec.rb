@@ -53,14 +53,15 @@ describe ApplicationHelper do
   end
 
   describe "#role_allows" do
+    let(:features) { MiqProductFeature.find_all_by_identifier("everything") }
     before(:each) do
       MiqRegion.seed
       EvmSpecHelper.seed_specific_product_features("miq_report", "service")
 
-      @admin_role  = FactoryGirl.create(:miq_user_role, :name => "admin", :miq_product_features => MiqProductFeature.find_all_by_identifier(["everything"]))
+      @admin_role  = FactoryGirl.create(:miq_user_role, :name => "admin", :miq_product_features => features)
       @admin_group = FactoryGirl.create(:miq_group, :miq_user_role => @admin_role)
       @user        = FactoryGirl.create(:user, :name => 'wilma', :miq_groups => [@admin_group])
-      User.stub(:current_user => @user)
+      login_as  @user
     end
 
     context "when with :feature" do
@@ -90,12 +91,12 @@ describe ApplicationHelper do
     context "when with :main_tab_id" do
       include UiConstants
       it "and entitled" do
-        role_allows(:main_tab_id => :svc).should be_true
+        Menu::DefaultMenu.services_menu_section.visible?.should be_true
       end
 
       it "and not entitled" do
         User.stub_chain(:current_user, :role_allows_any?).and_return(false)
-        role_allows(:main_tab_id => :svc).should be_false
+        Menu::DefaultMenu.services_menu_section.visible?.should be_false
       end
     end
 
@@ -723,22 +724,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with ProductUpdate" do
-      before { @db = "ProductUpdate" }
-
-      it "and @explorer" do
-        @explorer = true
-        subject[0].should == "ops"
-        subject[1].should == "show_product_update"
-      end
-
-      it "and not @explorer" do
-        @explorer = nil
-        subject[0].should == "ops"
-        subject[1].should == "show_product_update"
-      end
-    end
-
     ["ServiceResource", "ServiceTemplate"].each do |db|
       context "when with #{db}" do
         before { @db = db }
@@ -800,7 +785,7 @@ describe ApplicationHelper do
     before do
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
       @record = double("record")
-      User.stub(:current_user).and_return(@user)
+      login_as @user
       @settings = {
         :views => {
           :compare      => 'compressed',
@@ -1567,17 +1552,17 @@ describe ApplicationHelper do
 
           it "and requester.name != @record.requester_name" do
             @record.stub(:requester_name => 'admin')
-            subject.should == true
+            subject.should == false
           end
 
           it "and approval_state = approved" do
             @record.stub(:approval_state => "approved")
-            subject.should == true
+            subject.should == false
           end
 
           it "and approval_state = denied" do
             @record.stub(:approval_state => "denied")
-            subject.should == true
+            subject.should == false
           end
 
           it "and requester.name = @record.requester_name & approval_state != approved|denied" do
@@ -1620,7 +1605,9 @@ describe ApplicationHelper do
         context "and id = miq_request_copy" do
           before do
             @id = "miq_request_copy"
-            @record.stub(:resource_type => "MiqProvisionRequest", :approval_state => "xx", :requester_name => @user.name)
+            @record.stub(:resource_type  => "MiqProvisionRequest",
+                         :approval_state => "pending_approval",
+                         :requester_name => @user.name)
             User.stub(:find_by_userid).and_return(@user)
           end
 
@@ -2230,6 +2217,51 @@ describe ApplicationHelper do
         end
       end
     end
+
+    context "when id = ems_infra_scale" do
+      before do
+        @id = "ems_infra_scale"
+      end
+
+      context "when @record = EmsOpenstackInfra" do
+        before do
+          @record = FactoryGirl.create(:ems_openstack_infra_with_stack)
+        end
+
+        it "user allowed" do
+          @user.stub(:role_allows?).and_return(true)
+          subject.should == false
+        end
+
+        it "user not allowed" do
+          @user.stub(:role_allows?).and_return(false)
+          subject.should == true
+        end
+
+        it "button hidden if provider has no stacks" do
+          @record = FactoryGirl.create(:ems_openstack_infra)
+          @user.stub(:role_allows?).and_return(true)
+          subject.should == true
+        end
+
+      end
+
+      context "when @record != EmsOpenstackInfra" do
+        before do
+          @record = EmsVmware.new
+        end
+
+        it "user allowed but hide button because wrong provider" do
+          @user.stub(:role_allows?).and_return(true)
+          subject.should == true
+        end
+
+        it "user not allowed" do
+          @user.stub(:role_allows?).and_return(false)
+          subject.should == true
+        end
+      end
+    end
   end # end of build_toolbar_hide_button
 
   describe "#build_toolbar_disable_button" do
@@ -2524,30 +2556,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when record class = MiqProxy" do
-      before { @record = MiqProxy.new }
-
-      context "and id = miq_proxy_deploy" do
-        before do
-          @id = "miq_proxy_deploy"
-        end
-        it "when host state not blank and host not on" do
-          @record.stub(:host => double(:state => 'suspend'))
-          subject.should == "The SmartProxy can not be managed because the Host is not powered on"
-        end
-
-        context "when host state blank or host is on" do
-          before { @record.stub(:host => double(:state => 'on', :available_builds => ['1.1'] )) }
-
-          it "and no available builds for the host" do
-            @record.stub(:host => double(:state => 'on', :available_builds => [] ))
-            subject.should == "Host OS is unknown or there are no available SmartProxy versions for the Host's OS"
-          end
-          it_behaves_like 'default case'
-        end
-      end
-    end
-
     context "when record class = MiqServer" do
       context "and id = delete_server" do
         before do
@@ -2574,8 +2582,7 @@ describe ApplicationHelper do
         end
 
         it "when Widget content generation is already running or queued up" do
-          @temp = Hash.new
-          @temp[:widget_running] = true
+          @widget_running = true
           db = FactoryGirl.create(:miq_widget_set)
           db.replace_children([@record])
           subject.should == "This Widget content generation is already running or queued up"
@@ -2901,6 +2908,69 @@ describe ApplicationHelper do
       end
     end
 
+    context "and id = miq_request_delete" do
+      let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
+      before(:each) do
+        # create User Role record...
+        @miq_user_role = FactoryGirl.create(
+          :miq_user_role,
+          :name      => "EvmRole-super_administrator",
+          :read_only => true
+        )
+
+        @miq_group = FactoryGirl.create(
+          :miq_group,
+          :guid          => "guid",
+          :description   => "EvmGroup-super_administrator",
+          :miq_user_role => @miq_user_role
+        )
+
+        MiqServer.stub(:my_server).with(true).and_return(server)
+
+        # create User record...
+        @user = FactoryGirl.create(
+          :user_admin,
+          :miq_groups => [@miq_group],
+        )
+
+        @test_role = FactoryGirl.create(
+          :miq_user_role,
+          :name => "test_role"
+        )
+
+        @id = "miq_request_delete"
+        User.stub(:current_user).and_return(@user)
+        session[:userid] = @user.userid
+        @record = MiqProvisionRequest.new
+        @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
+      end
+
+      it "and requester.name != @record.requester_name" do
+        @record.stub(:requester_name => 'admin')
+        res = build_toolbar_disable_button("miq_request_delete")
+        res.should == false
+      end
+
+      it "and approval_state = approved" do
+        @record.stub(:approval_state => "approved")
+        subject.should == false
+      end
+
+      it "and requester.name = @record.requester_name & approval_state != approved|denied" do
+        subject.should == false
+      end
+
+      it "and requester.name != @record.requester_name" do
+        @miq_group.update_attributes(:miq_user_role => @test_role)
+        user = FactoryGirl.create(
+          :user,
+          :miq_groups     => [@miq_group],
+        )
+        session[:userid] = user.userid
+        res = build_toolbar_disable_button("miq_request_delete")
+        res.should include("Users are only allowed to delete their own requests")
+      end
+    end
   end #end of disable button
 
   describe "#get_record_cls"  do
@@ -3053,13 +3123,6 @@ describe ApplicationHelper do
         @tb_buttons["#{parent}__#{@item[:button]}"].should have_key(:title)
       end
 
-      it "when item[:popup] exists" do
-        pending "**** can't mock request"
-        @item[:popup] = true
-        subject.should have_key(:popup)
-        subject.should have_key(:console_url)
-      end
-
       it "when item[:url_parms] exists" do
         subject.should have_key(:url_parms)
       end
@@ -3140,11 +3203,6 @@ describe ApplicationHelper do
     it "when layout is blank" do
       @layout = ""
       subject.should == title
-    end
-
-    it "when layout = 'miq_proxy'" do
-      @layout = "miq_proxy"
-      subject.should == title + ": SmartProxies"
     end
 
     it "when layout = 'miq_server'" do
@@ -3371,12 +3429,11 @@ describe ApplicationHelper do
     let(:test_xml)    {"x_xml"}
     subject { javascript_for_toolbar_reload(test_tab, test_buttons, test_xml)}
 
-    it { should include("#{test_tab}.unload();") }
-    it { should include("#{test_tab} = null;")}
-    it { should include("#{test_tab} = new dhtmlXToolbarObject('#{test_tab}', 'miq_blue');")}
-    it { should include("miq_toolbars['some_center_tb'] = {obj:#{test_tab}, buttons:#{test_buttons}, xml:\"#{test_xml}\"};")}
-    it { should include("miqInitToolbar(miq_toolbars['some_center_tb']);")}
-    it { should_not include("anything else")}
+    it { should include("miq_toolbars.#{test_tab}.obj.unload();") }
+    it { should include("#{test_tab} = new dhtmlXToolbarObject('#{test_tab}', 'miq_blue');") }
+    it { should include("buttons: #{test_buttons}") }
+    it { should include("xml: \"#{test_xml}\"") }
+    it { should include("miqInitToolbar(miq_toolbars['some_center_tb']);") }
   end
 
   context "#javascript_set_value" do
@@ -3394,8 +3451,8 @@ describe ApplicationHelper do
       @date = "6/28/2012"
       @hour = "0#{11-4}"
       @min = "14"
-      @run_at = { :start_time => "2012-06-28 11:14:00",
-                  :interval => {:value => @interval }}
+      @run_at = {:start_time => "2012-06-28 11:14:00".to_time(:utc),
+                 :interval   => {:value => @interval}}
       @schedule = double( :run_at => @run_at )
     end
 
@@ -4021,6 +4078,185 @@ describe ApplicationHelper do
       it "excludes specific parameters and adds the new one" do
         update_url_parms("?type=list").should eq("?type=list")
       end
+    end
+  end
+
+  context "#title_for_clusters" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Clusters / Deployment Roles' when there are both openstack & non-openstack clusters" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = title_for_clusters
+      result.should eq("Clusters / Deployment Roles")
+    end
+
+    it "returns 'Clusters' when there are only non-openstack clusters" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+
+      result = title_for_clusters
+      result.should eq("Clusters")
+    end
+
+    it "returns 'Deployment Roles' when there are only openstack clusters" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = title_for_clusters
+      result.should eq("Deployment Roles")
+    end
+  end
+
+  context "#title_for_cluster" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Cluster' for non-openstack cluster" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+
+      result = title_for_cluster
+      result.should eq("Cluster")
+    end
+
+    it "returns 'Deployment Role' for openstack cluster" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = title_for_cluster
+      result.should eq("Deployment Role")
+    end
+  end
+
+  context "#title_for_cluster_record" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Cluster' for non-openstack host" do
+      cluster = FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+
+      result = title_for_cluster_record(cluster)
+      result.should eq("Cluster")
+    end
+
+    it "returns 'Deployment Role' for openstack host" do
+      cluster = FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = title_for_cluster_record(cluster)
+      result.should eq("Deployment Role")
+    end
+  end
+
+  context "#title_for_hosts" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Hosts / Nodes' when there are both openstack & non-openstack hosts" do
+      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = title_for_hosts
+      result.should eq("Hosts / Nodes")
+    end
+
+    it "returns 'Hosts' when there are only non-openstack hosts" do
+      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+
+      result = title_for_hosts
+      result.should eq("Hosts")
+    end
+
+    it "returns 'Nodes' when there are only openstack hosts" do
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = title_for_hosts
+      result.should eq("Nodes")
+    end
+  end
+
+  context "#title_for_host" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Host' for non-openstack host" do
+      FactoryGirl.create(:host_vmware, :ems_id => @ems1.id)
+
+      result = title_for_host
+      result.should eq("Host")
+    end
+
+    it "returns 'Node' for openstack host" do
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = title_for_host
+      result.should eq("Node")
+    end
+  end
+
+  context "#title_for_host_record" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Host' for non-openstack host" do
+      host = FactoryGirl.create(:host_vmware, :ems_id => @ems1.id)
+
+      result = title_for_host_record(host)
+      result.should eq("Host")
+    end
+
+    it "returns 'Node' for openstack host" do
+      host = FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = title_for_host_record(host)
+      result.should eq("Node")
+    end
+  end
+
+  context "#start_page_allowed?" do
+    def role_allows(_)
+      true
+    end
+
+    it "should return true for storage start pages when product flag is set" do
+      cfg = VMDB::Config.new("vmdb")
+      cfg.config.store_path(:product, :storage, true)
+      VMDB::Config.stub(:new).and_return(cfg)
+      result = start_page_allowed?("cim_storage_extent_show_list")
+      result.should be_true
+    end
+
+    it "should return false for storage start pages when product flag is not set" do
+      result = start_page_allowed?("cim_storage_extent_show_list")
+      result.should be_false
+    end
+
+    it "should return true for containers start pages when product flag is set" do
+      cfg = VMDB::Config.new("vmdb")
+      cfg.config.store_path(:product, :containers, true)
+      VMDB::Config.stub(:new).and_return(cfg)
+      result = start_page_allowed?("ems_container_show_list")
+      result.should be_true
+    end
+
+    it "should return false for containers start pages when product flag is not set" do
+      result = start_page_allowed?("ems_container_show_list")
+      result.should be_false
+    end
+
+    it "should return true for host start page" do
+      result = start_page_allowed?("host_show_list")
+      result.should be_true
     end
   end
 end

@@ -134,6 +134,9 @@
   debugLevel: 0
   });
 
+  - if @reselect_node
+    cfmeDynatree_activateNodeSilently('#{tree_name}', '#{@reselect_node}');
+
   - if @expand_parent_nodes
     cfme_expand_parent_nodes("#{tree_name}", "#{@expand_parent_nodes}");
 

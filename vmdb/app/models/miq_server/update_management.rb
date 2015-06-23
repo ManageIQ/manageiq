@@ -1,62 +1,63 @@
 require 'linux_admin'
+LinuxAdmin.logger = $log
 
 module MiqServer::UpdateManagement
   extend ActiveSupport::Concern
 
   module ClassMethods
     def queue_update_registration_status(*ids)
-      self.where(:id => ids.flatten).each(&:queue_update_registration_status)
+      where(:id => ids.flatten).each(&:queue_update_registration_status)
     end
 
     def queue_check_updates(*ids)
       ids     = [MiqServer.my_server.id] if ids.blank?
-      self.where(:id => ids.flatten).each(&:queue_check_updates)
+      where(:id => ids.flatten).each(&:queue_check_updates)
     end
 
     def queue_apply_updates(*ids)
-      self.where(:id => ids.flatten).each(&:queue_apply_updates)
+      where(:id => ids.flatten).each(&:queue_apply_updates)
     end
   end
 
   def queue_update_registration_status
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => "update_registration_status",
-      :server_guid => self.guid,
-      :zone        => self.my_zone
+      :server_guid => guid,
+      :zone        => my_zone
     )
   end
 
   def queue_check_updates
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => "check_updates",
-      :server_guid => self.guid,
-      :zone        => self.my_zone
+      :server_guid => guid,
+      :zone        => my_zone
     )
   end
 
   def queue_apply_updates
     MiqQueue.put_unless_exists(
-      :class_name   => self.class.name,
-      :instance_id  => self.id,
-      :method_name  => "apply_updates",
-      :server_guid  => self.guid,
-      :zone         => self.my_zone
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "apply_updates",
+      :server_guid => guid,
+      :zone        => my_zone
     )
   end
 
   def update_registration_status
     attempt_registration unless rhn_mirror?
 
-    self.check_updates
+    check_updates
   end
 
   def attempt_registration
     return unless register
-    attach_products
+    attach_products unless MiqDatabase.first.registration_type == "rhn_satellite"  # There is no concept of attaching products in Satellite 5
     # HACK: #enable_repos is not always successful immediately after #attach_products, retry to ensure they are enabled.
     5.times { repos_enabled? ? break : enable_repos }
   end
@@ -65,7 +66,7 @@ module MiqServer::UpdateManagement
     update_attributes(:upgrade_message => "registering")
     if LinuxAdmin::RegistrationSystem.registered?
       $log.info("Appliance already registered")
-      self.update_attributes(:rh_registered => true)
+      update_attributes(:rh_registered => true)
     else
       $log.info("MIQ(#{self.class.name}##{__method__}) Registering appliance...")
       registration_type = MiqDatabase.first.registration_type
@@ -88,7 +89,7 @@ module MiqServer::UpdateManagement
       # Reload the registration_type
       LinuxAdmin::RegistrationSystem.registration_type(true)
 
-      self.update_attributes(:rh_registered => LinuxAdmin::RegistrationSystem.registered?)
+      update_attributes(:rh_registered => LinuxAdmin::RegistrationSystem.registered?)
     end
 
     if rh_registered?
@@ -104,9 +105,6 @@ module MiqServer::UpdateManagement
 
   def attach_products
     update_attributes(:upgrade_message => "attaching products")
-    # There is no concept of attaching products in rhn_satellite
-    return if MiqDatabase.first.registration_type == "rhn_satellite"
-
     $log.info("MIQ(#{self.class.name}##{__method__}) Attaching products based on installed certificates")
     LinuxAdmin::RegistrationSystem.subscribe(assemble_registration_options)
   end
@@ -114,9 +112,8 @@ module MiqServer::UpdateManagement
   def repos_enabled?
     enabled = LinuxAdmin::RegistrationSystem.enabled_repos
     if MiqDatabase.first.update_repo_names.all? { |desired| enabled.include?(desired) }
-      update_attributes(:rh_subscribed => true)
       $log.info("MIQ(#{self.class.name}##{__method__}) Desired update repository is enabled")
-      update_attributes(:upgrade_message => "registered")
+      update_attributes(:rh_subscribed => true, :upgrade_message => "registered")
       return true
     end
     false
@@ -124,12 +121,11 @@ module MiqServer::UpdateManagement
 
   def enable_repos
     MiqDatabase.first.update_repo_names.each do |repo|
-      update_attributes(:upgrade_message => "enabling repo #{repo}")
-      $log.info("MIQ(#{self.class.name}##{__method__}) Enabling Repository: #{repo}")
+      update_attributes(:upgrade_message => "enabling #{repo}")
       begin
         LinuxAdmin::RegistrationSystem.enable_repo(repo, assemble_registration_options)
       rescue AwesomeSpawn::CommandResultError
-        update_attributes(:upgrade_message => "failed to enable repo #{repo}")
+        update_attributes(:upgrade_message => "failed to enable #{repo}")
       end
     end
   end
@@ -144,7 +140,7 @@ module MiqServer::UpdateManagement
       end
     end
 
-    return nil
+    nil
   end
 
   def check_updates
@@ -161,8 +157,8 @@ module MiqServer::UpdateManagement
   end
 
   def apply_updates
-    self.check_updates
-    return unless self.updates_available?
+    check_updates
+    return unless updates_available?
 
     import_gpg_certificates
 
@@ -177,8 +173,7 @@ module MiqServer::UpdateManagement
   private
 
   def check_platform_updates
-    self.update_attributes( :updates_available => LinuxAdmin::Yum.updates_available?,
-                            :last_update_check => Time.now.utc)
+    update_attributes(:updates_available => LinuxAdmin::Yum.updates_available?, :last_update_check => Time.now.utc)
   end
 
   def check_postgres_updates
@@ -193,21 +188,18 @@ module MiqServer::UpdateManagement
   def assemble_registration_options
     db = MiqDatabase.first
     options = {}
-    options[:username], options[:password]             = db.auth_user_pwd(:registration)
+    options[:username],       options[:password]       = db.auth_user_pwd(:registration)
     options[:proxy_username], options[:proxy_password] = db.auth_user_pwd(:registration_http_proxy)
-    options[:org]             = db.registration_organization
-    options[:proxy_address]   = db.registration_http_proxy_server
-    options[:server_url]      = db.registration_server
+    options[:org]                                      = db.registration_organization
+    options[:proxy_address]                            = db.registration_http_proxy_server
+    options[:server_url]                               = db.registration_server
 
     options.delete_blanks
   end
 
   def import_gpg_certificates
-    files = File.join("/etc/pki/rpm-gpg/**","{RPM-GPG-KEY-*}")
-    Dir.glob(files).each do |key|
-      $log.info("MIQ(#{self.class.name}##{__method__}) Importing RPM-GPG-KEY: #{key}")
-      LinuxAdmin::Rpm.import_key(key)
-    end
+    files = File.join("/etc/pki/rpm-gpg/**", "{RPM-GPG-KEY-*}")
+    Dir.glob(files).each { |key| LinuxAdmin::Rpm.import_key(key) }
   end
 
   def parse_product_version_number(version)

@@ -64,8 +64,8 @@ module ApplicationController::Tags
   end
 
   # Edit user or group tags
-  def tagging_edit(db=nil)
-    assert_privileges("#{controller_for_common_methods}_tag")
+  def tagging_edit(db = nil, assert = true)
+    assert_privileges("#{controller_for_common_methods}_tag") if assert
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
     case params[:button]
     when "cancel"
@@ -109,7 +109,7 @@ module ApplicationController::Tags
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
 
     if params[:tag_cat]
-      @edit[:cat] = Classification.find_by_name(params[:tag_cat])
+      @edit[:cat] = Classification.find_by_id(params[:tag_cat])
       tag_edit_build_entries_pulldown
     elsif params[:tag_add]
       @edit[:new][:assignments].push(params[:tag_add].to_i)
@@ -219,7 +219,7 @@ module ApplicationController::Tags
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
-    if @explorer && ["service","vm_cloud","vm_infra","vm_or_template"].include?(request.parameters[:controller])
+    if tagging_explorer_controller?
       @refresh_partial = "layouts/tagging"
       replace_right_cell(@sb[:action]) if params[:button]
     else
@@ -246,7 +246,7 @@ module ApplicationController::Tags
     add_flash(_("%s was cancelled by the user") % "Tag Edit")
     session[:flash_msgs] = @flash_array.dup                   # Put msg in session for next transaction to display
     session[:tag_items] = nil                                 # reset tag_items in session
-    if @explorer && ["vm_infra","vm_cloud","service","vm_or_template"].include?(request.parameters[:controller])
+    if tagging_explorer_controller?
       @edit = nil # clean out the saved info
       @sb[:action] = nil
       replace_right_cell
@@ -265,7 +265,7 @@ module ApplicationController::Tags
     tagging_save_tags
 
     session[:flash_msgs] = @flash_array.dup                   # Put msg in session for next transaction to display
-    if @explorer && ["service","vm_cloud","vm_infra","vm_or_template"].include?(request.parameters[:controller])
+    if tagging_explorer_controller?
       @edit = nil # clean out the saved info
       @sb[:action] = nil
       replace_right_cell
@@ -392,9 +392,9 @@ module ApplicationController::Tags
     cats.delete_if{ |c| c.read_only? || c.entries.length == 0}  # Remove categories that are read only or have no entries
     cats.each do |c|
         if c.single_value?
-          @categories[c.description + " *"] = c.name
+          @categories[c.description + " *"] = c.id
         else
-          @categories[c.description] = c.name
+          @categories[c.description] = c.id
         end
     end
 
@@ -408,7 +408,8 @@ module ApplicationController::Tags
       end
     end
 
-    @edit[:cat] ||= cats.first                                    # Set to first category, if not already set
+    # Set to first category, if not already set
+    @edit[:cat] ||= cats.sort_by(&:description).first
 
     @tagitems = @tagging.constantize.find(@object_ids).sort_by { |t| t.name.downcase } unless @object_ids.blank?
 

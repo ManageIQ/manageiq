@@ -42,12 +42,11 @@ class RssFeed < ActiveRecord::Base
   def self.to_html(feed, options)
     limit = options[:limit_to_count]
     output = ""
-    output << '<table class="style3">'
+    output << '<table class="table table-striped table-bordered table-hover">'
     output << '<tbody>'
     items = options[:limit_to_count] ? feed.items[0..options[:limit_to_count] - 1] : feed.items
     items.each_with_index do |i,idx|
-      row_class = idx % 2 == 0 ? 'row0' : 'row1'
-      output << "<tr class=\"#{row_class}\" onclick='window.location=\"#{i.link}\";'>"
+      output << "<tr onclick='window.location=\"#{i.link}\";'>"
       output << '<td>'
       output << i.title
       output << '<br/>'
@@ -99,13 +98,13 @@ class RssFeed < ActiveRecord::Base
         items.limit(self.options[:limit_to_count]) if self.options[:limit_to_count]
         items.includes(self.options[:include])     if self.options[:include]
       else
-        items = item_class.scoped
+        items = item_class.all
         items = items.where(self.options[:search_conditions]) if self.options[:search_conditions]
         items = items.order(self.options[:orderby])           if self.options[:orderby]
         items = items.limit(self.options[:limit_to_count])    if self.options[:limit_to_count]
         items = items.includes(self.options[:include])        if self.options[:include]
       end
-      items.all
+      items
     else  # Custom find method
       items = item_class.send(self.options[:search_method].to_sym, self.name, self.options)
     end
@@ -142,19 +141,17 @@ class RssFeed < ActiveRecord::Base
   end
 
   def self.sync_from_yml_dir
-    begin
-      # Add missing feeds to model
-      Dir.glob(File.join(YML_DIR, "*.yml")).each {|f|
-        self.sync_from_yml_file(File.basename(f, ".*"))
-      }
-
-      # Remove deleted feeds from model
-      RssFeed.find(:all).each {|f|
-        f.destroy unless File.exist?(RssFeed.yml_file_name(f.name))
-      }
-    rescue => err
-      $log.log_backtrace(err)
+    # Add missing feeds to model
+    Dir.glob(File.join(YML_DIR, "*.yml")).each do |f|
+      sync_from_yml_file(File.basename(f, ".*"))
     end
+
+    # Remove deleted feeds from model
+    RssFeed.all.each do |f|
+      f.destroy unless File.exist?(RssFeed.yml_file_name(f.name))
+    end
+  rescue => err
+    $log.log_backtrace(err)
   end
 
   def self.seed

@@ -9,6 +9,13 @@
       .form-horizontal#login_div
         = render(:partial => "layouts/spinner", 
                  :locals  => {:login => true})
+        #invalid_sso_credentials_flash(style="display: none;")
+          #flash_text_div(title="Click to remove message")
+            .alert.alert-danger
+              %span.pficon-layered
+                %span.pficon.pficon-error-octagon
+                %span.pficon.pficon-warning-exclamation
+              %strong=_("Invalid Single Sign-On credentials")
         = render :partial => "layouts/flash_msg"
         .form-group
           %label.col-sm-3.col-md-3.control-label=_('Username')

@@ -2,15 +2,15 @@ module MiqRequestTask::Dumping
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def dumpObj(obj, prefix=nil, prnt_obj=STDOUT, prnt_meth=:puts, options={})
+    def dumpObj(obj, prefix = nil, prnt_obj = STDOUT, prnt_meth = :puts, options = {})
       meth = "dump#{obj.class.name}".to_sym
       if self.respond_to?(meth)
         prnt_obj.send(prnt_meth, "#{prefix}(#{obj.class}) = EMPTY") if obj.respond_to?(:blank?) && obj.blank?
-        self.send(meth, obj, prefix, prnt_obj, prnt_meth, options)
+        send(meth, obj, prefix, prnt_obj, prnt_meth, options)
       else
         protected = false
         if options[:protected].kind_of?(Hash)
-          protected = options[:protected][:path].to_miq_a.any? {|filter| prefix =~ filter}
+          protected = options[:protected][:path].to_miq_a.any? { |filter| prefix =~ filter }
         end
         if protected == true
           prnt_obj.send(prnt_meth, "#{prefix}(#{obj.class}) = <PROTECTED>")
@@ -20,32 +20,30 @@ module MiqRequestTask::Dumping
       end
     end
 
-    def dumpWIN32OLE(obj, prefix, prnt_obj, prnt_meth, options)
+    def dumpWIN32OLE(obj, prefix, prnt_obj, prnt_meth, _options)
       prnt_obj.send(prnt_meth, "#{prefix} (WIN32OLE)\n#{obj.GetObjectText_.strip} #{obj.Path_.Path}\n\n")
     end
 
     def dumpHash(hd, prefix, prnt_obj, prnt_meth, options)
-      hd.each {|k,v| self.dumpObj(v, "#{prefix}[#{Symbol === k ? ":#{k}" : k}]", prnt_obj, prnt_meth, options)}
+      hd.each { |k, v| dumpObj(v, "#{prefix}[#{k.inspect}]", prnt_obj, prnt_meth, options) }
     end
 
     def dumpVimHash(hd, prefix, prnt_obj, prnt_meth, options)
       prnt_obj.send(prnt_meth, "#{prefix} (#{hd.class}) xsiType: <#{hd.xsiType}>  vimType: <#{hd.vimType}>")
-      self.dumpHash(hd, prefix, prnt_obj, prnt_meth, options)
+      dumpHash(hd, prefix, prnt_obj, prnt_meth, options)
     end
 
     def dumpArray(ad, prefix, prnt_obj, prnt_meth, options)
-      ad.inject(0) {|i, d| self.dumpObj(d, "#{prefix}[#{i}]", prnt_obj, prnt_meth, options);  i += 1}
+      ad.each_with_index { |d, i| dumpObj(d, "#{prefix}[#{i}]", prnt_obj, prnt_meth, options) }
     end
 
     def dumpVimArray(ad, prefix, prnt_obj, prnt_meth, options)
       prnt_obj.send(prnt_meth, "#{prefix} (#{ad.class}) xsiType: <#{ad.xsiType}>  vimType: <#{ad.vimType}>")
-      self.dumpArray(ad, prefix, prnt_obj, prnt_meth, options)
+      dumpArray(ad, prefix, prnt_obj, prnt_meth, options)
     end
   end
 
-  def dumpObj(obj, prefix=nil, prnt_obj=STDOUT, prnt_meth=:puts, options={})
+  def dumpObj(obj, prefix = nil, prnt_obj = STDOUT, prnt_meth = :puts, options = {})
     self.class.dumpObj(obj, prefix, prnt_obj, prnt_meth, options)
   end
-
-
 end

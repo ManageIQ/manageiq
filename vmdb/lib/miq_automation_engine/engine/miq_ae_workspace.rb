@@ -153,12 +153,12 @@ module MiqAeEngine
       rescue MiqAeException::StopInstantiation => err
         $miq_ae_logger.info("Stopping instantiation because [#{err.message}]")
         delete(obj)
+      rescue MiqAeException::UnknownMethodRc => err
+        $miq_ae_logger.error("Aborting instantiation (unknown method return code) because [#{err.message}]")
+        raise
       rescue MiqAeException::AbortInstantiation => err
         $miq_ae_logger.info("Aborting instantiation because [#{err.message}]")
         raise
-      rescue MiqAeException::UnknownMethodRc => err
-        $miq_ae_logger.error("Aborting instantiation (unknown method return code) because [#{err.message}]")
-        raise MiqAeException::AbortInstantiation, err.message
       ensure
         @current.pop if pushed
       end

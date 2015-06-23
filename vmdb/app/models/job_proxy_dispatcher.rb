@@ -27,7 +27,7 @@ class JobProxyDispatcher
         vms_for_jobs = jobs_to_dispatch.collect(&:target_id)
         @vms_for_dispatch_jobs, = Benchmark.realtime_block(:vm_find) do
           VmOrTemplate.where(:id => vms_for_jobs)
-            .includes(:ext_management_system => :zone, :storage => {:hosts => :miq_proxy})
+            .includes(:ext_management_system => :zone, :storage => :hosts)
             .order(:id)
         end
         zone = Zone.find_by_name(@zone)
@@ -199,7 +199,7 @@ class JobProxyDispatcher
   def active_scans
     @active_scans ||= begin
       actives = Hash.new(0)
-      actives[@zone] = Job.count(:conditions => ["dispatch_status = ? AND state != ? AND zone = ?", "active", "finished", @zone])
+      actives[@zone] = Job.where(:zone => @zone, :dispatch_status => "active").where.not(:state => "finished").count
       actives
     end
   end

@@ -1,11 +1,11 @@
 $:.push("#{File.dirname(__FILE__)}")
 $:.push("#{File.dirname(__FILE__)}/../../util/")
 require 'rubygems'
-require 'test/unit'
+require 'minitest/unit'
 require 'miq-xml'
 require 'xmlsimple'
 
-class TestXmlHashMethods < Test::Unit::TestCase
+class TestXmlHashMethods < Minitest::Test
   require 'xml_base_parser_tests'
   include XmlBaseParserTests
 
@@ -43,9 +43,9 @@ class TestXmlHashMethods < Test::Unit::TestCase
 
     count = 0
     node.attributes.each_pair do |k,v|
-      assert_not_nil(k)
+      refute_nil(k)
       assert_instance_of(Symbol, k)
-      assert_not_nil(v)
+      refute_nil(v)
       assert_instance_of(String, v)
       count += 1
     end
@@ -53,9 +53,9 @@ class TestXmlHashMethods < Test::Unit::TestCase
     
     count = 0
     node.attributes.to_h.each do|k,v|
-      assert_not_nil(k)
+      refute_nil(k)
       assert_instance_of(Symbol, k)
-      assert_not_nil(v)
+      refute_nil(v)
       count += 1
     end
     assert_equal(3, count)
@@ -86,7 +86,7 @@ class TestXmlHashMethods < Test::Unit::TestCase
     xml_new = MiqXml.newDoc(@xml_klass)
     assert_nil(xml_new.root)
     xml_new.add_element('root')
-    assert_not_nil(xml_new.root)
+    refute_nil(xml_new.root)
     assert_equal("root", xml_new.root.name.to_s)
 
     new_node = xml_new.root.add_element("node1", "enabled"=>true, "disabled"=>false, "nothing"=>nil)
@@ -103,11 +103,11 @@ class TestXmlHashMethods < Test::Unit::TestCase
 
     assert_kind_of(@xml_klass::Document, xml_new.document)
     assert_kind_of(@xml_klass::Document, xml_new.doc)
-    assert_not_equal(@xml_klass::Document, xml_new.root.class)
+    refute_equal(@xml_klass::Document, xml_new.root.class)
     assert_kind_of(@xml_klass::Document, xml_new.root.doc)
     assert_equal(xml_new.document, xml_new.doc)
     assert_kind_of(@xml_klass::Document, xml_new.root.doc)
-    assert_not_equal(@xml_klass::Document, xml_new.root.root.class)
+    refute_equal(@xml_klass::Document, xml_new.root.root.class)
 
     # Create an empty document with the utf-8 encoding
     # During assert allow for single quotes and new line char.

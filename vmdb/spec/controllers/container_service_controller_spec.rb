@@ -13,21 +13,20 @@ describe ContainerServiceController do
   end
 
   it "renders show screen" do
-    ems = FactoryGirl.create(:ext_management_system)
+    MiqServer.stub(:my_zone).and_return("default")
+    ems = FactoryGirl.create(:ems_kubernetes)
     container_service = ContainerService.create(:ext_management_system => ems, :name => "Test Service")
     get :show, :id => container_service.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(assigns(:breadcrumbs)).to eq([{:name => "Test Service (Summary)",
-                                          :url  => "/container_service/show/#{container_service.id}"}])
+    expect(assigns(:breadcrumbs)).to eq([:name => "Test Service (Summary)",
+                                         :url  => "/container_service/show/#{container_service.id}"])
   end
 
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
-                          :views          => {:containernode => 'list'},
+                          :views          => {:containerservice => 'list'},
                           :perpage        => {:list => 10}}
-    session[:eligible_groups] = []
-    session[:userid] = User.current_user.userid
 
     FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone

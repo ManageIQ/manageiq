@@ -1,8 +1,9 @@
 module JobProxyDispatcherHelper
 
   def build_hosts_proxies_storages_vms(options = {})
-    options = {:hosts=>2, :proxies => 2, :storages => 2, :vms => 3, :repo_vms => 3}.merge(options)
+    options = {:hosts=>2, :storages => 2, :vms => 3, :repo_vms => 3}.merge(options)
 
+    proxies = []
     storages = []
     options[:storages].times do |i|
       storage = FactoryGirl.create(:storage, :name => "test_storage_#{i}", :store_type => "VMFS")
@@ -18,15 +19,6 @@ module JobProxyDispatcherHelper
       host.ext_management_system = ems
       host.save
       hosts << host
-    end
-
-    proxies = []
-    options[:proxies].times do |i|
-      proxy = FactoryGirl.create(:active_cos_proxy, :name => "test_cos_proxy_#{i}")
-      host = hosts[i]
-      host.miq_proxy = proxy
-      host.save
-      proxies <<  proxy
     end
 
     vms = []

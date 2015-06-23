@@ -3,7 +3,7 @@ module CustomAttributeMixin
 
   included do
     has_many   :custom_attributes,     :as => :resource, :dependent => :destroy
-    has_many   :miq_custom_attributes, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute", :conditions => {:source => 'EVM'}
+    has_many   :miq_custom_attributes, -> { where(:source => 'EVM') }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
 
     # This is a set of helper getter and setter methods to support the transition
     # between "custom_*" fields in the model and using the custom_attributes table.

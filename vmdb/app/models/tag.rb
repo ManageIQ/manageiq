@@ -90,7 +90,7 @@ class Tag < ActiveRecord::Base
 
   def self.filter_ns(tags, ns)
     if ns.nil?
-      tags = tags.all     if tags.kind_of?(ActiveRecord::Relation)
+      tags = tags.to_a    if tags.kind_of?(ActiveRecord::Relation)
       tags = tags.compact if tags.respond_to?(:compact)
       return tags
     end
@@ -102,6 +102,14 @@ class Tag < ActiveRecord::Base
       list.push(name) unless name.blank?
     end
     list
+  end
+
+  def self.find_by_classification_name(name, region_id = Classification.my_region_number, ns = Classification::DEFAULT_NAMESPACE)
+    if region_id.nil?
+      Tag.find_by_name(Classification.name2tag(name, 0, ns))
+    else
+      Tag.in_region(region_id).find_by_name(Classification.name2tag(name, 0, ns))
+    end
   end
 
   def ==(comparison_object)

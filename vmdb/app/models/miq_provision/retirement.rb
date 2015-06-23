@@ -1,5 +1,4 @@
 module MiqProvision::Retirement
-
   def set_retirement(vm)
     log_header = "MIQ(#{self.class.name}.set_retirement)"
 

@@ -126,7 +126,7 @@ module MiqServer::LogManagement
     task = MiqTask.find(taskid)
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
-    raise "Log depot settings not configured" unless self.log_depot_configured?
+    raise "Log depot settings not configured" unless log_depot
     log_depot.update_attributes(:support_case => options[:support_case].presence)
 
     self.post_historical_logs(taskid) unless options[:only_current]
@@ -215,7 +215,7 @@ module MiqServer::LogManagement
     end
 
     # Since a task is created before a logfile, there's a chance we have a task without a logfile
-    MiqTask.find(:all, :conditions => ["miq_server_id = ? and name like ? and state != ?", self.id, "Zipped log retrieval for %", "Finished"]).each do |task|
+    MiqTask.where(:miq_server_id => id).where("name like ?", "Zipped log retrieval for %").where("state != ?", "Finished").each do |task|
       task.update_attributes(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
     end
   end
@@ -233,18 +233,6 @@ module MiqServer::LogManagement
 
   def log_depot
     log_file_depot || zone.log_file_depot
-  end
-
-  def log_depot_uri
-    get_log_depot_settings.try(:fetch_path, :uri)
-  end
-
-  def log_depot_configured?
-    get_log_depot_settings
-  end
-
-  def get_log_depot_settings
-    log_file_depot.try(:depot_hash) || zone.log_file_depot.try(:depot_hash).try(:merge, {:from_zone => true})
   end
 
   def base_zip_log_name

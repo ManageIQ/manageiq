@@ -1,4 +1,5 @@
 class EmsCluster < ActiveRecord::Base
+  include NewWithTypeStiMixin
   include_concern 'CapacityPlanning'
   include ReportableMixin
   include EventMixin
@@ -15,7 +16,7 @@ class EmsCluster < ActiveRecord::Base
   has_many    :metric_rollups,         :as => :resource  # Destroy will be handled by purger
   has_many    :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_many    :policy_events,          :order => "timestamp"
+  has_many    :policy_events, -> { order "timestamp" }
 
   virtual_column :v_ram_vr_ratio,      :type => :float,   :uses => [:aggregate_memory, :aggregate_vm_memory]
   virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_logical_cpus, :aggregate_vm_cpus]
@@ -374,5 +375,25 @@ class EmsCluster < ActiveRecord::Base
       self.hosts << host
       host.refresh_ems
     end
+  end
+
+  def self.node_types
+    return :mixed_clusters if count_of_openstack_clusters > 0 && count_of_non_openstack_clusters > 0
+    return :openstack      if count_of_openstack_clusters > 0
+    :non_openstack
+  end
+
+  def self.count_of_openstack_clusters
+    ems = EmsOpenstackInfra.pluck(:id)
+    EmsCluster.where(:ems_id => ems).count
+  end
+
+  def self.count_of_non_openstack_clusters
+    ems = EmsOpenstackInfra.pluck(:id)
+    EmsCluster.where(EmsCluster.arel_table[:ems_id].not_in(ems)).count
+  end
+
+  def openstack_cluster?
+    ext_management_system.class == EmsOpenstackInfra
   end
 end

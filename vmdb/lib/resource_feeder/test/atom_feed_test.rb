@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/test_helper'
-class AtomFeedTest < Test::Unit::TestCase
+class AtomFeedTest < MiniTest::Unit::TestCase
   attr_reader :request
 
   def setup

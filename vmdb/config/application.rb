@@ -45,12 +45,6 @@ module Vmdb
     # like if you have constraints or database-specific column types
     # config.active_record.schema_format = :sql
 
-    # Enforce whitelist mode for mass assignment.
-    # This will create an empty whitelist of attributes available for mass-assignment for all models
-    # in your app. As such, your models will need to explicitly whitelist or blacklist accessible
-    # parameters by using an attr_accessible or attr_protected declaration.
-    config.active_record.whitelist_attributes = false
-
     # Enable the asset pipeline
     config.assets.enabled = true
 
@@ -74,7 +68,6 @@ module Vmdb
     config.autoload_paths << Rails.root.join("app", "models", "mixins")
     config.autoload_paths << Rails.root.join("app", "controllers", "mixins")
     config.autoload_paths << Rails.root.join("lib")
-    config.autoload_paths << Rails.root.join('app', 'presenters')
 
     # config.eager_load_paths accepts an array of paths from which Rails will eager load on boot if cache classes is enabled.
     # Defaults to every folder in the app directory of the application.

@@ -5,7 +5,7 @@ class WorkerBase
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :vmdb_config, :active_roles
 
-  INTERRUPT_SIGNALS = ["INT", "TERM"]
+  INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
 
   OPTIONS_PARSER_SETTINGS = [
     [:guid,       'EVM Worker GUID',       String],
@@ -46,12 +46,15 @@ class WorkerBase
     @cfg = cfg
     @cfg[:guid] ||= ENV['MIQ_GUID']
 
-    self.class.interrupt_signals.each do |s|
-      trap(s) { do_exit("Interrupt signal (#{s}) received.") } if Signal.list.keys.include?(s)
-    end
-
     $log ||= Rails.logger
 
+    worker_initialization
+    after_initialize
+
+    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
+  end
+
+  def worker_initialization
     starting_worker_record
 
     # Sync the config and roles early since heartbeats and logging require the configuration
@@ -59,10 +62,6 @@ class WorkerBase
     sync_config
 
     set_connection_pool_size
-
-    after_initialize
-
-    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
   end
 
   def set_connection_pool_size
@@ -121,6 +120,13 @@ class WorkerBase
   def start
     prepare
     run
+
+  rescue SignalException => e
+    if e.kind_of?(Interrupt) || self.class.interrupt_signals.include?(e.message)
+      do_exit("Interrupt signal (#{e}) received.")
+    else
+      raise
+    end
   end
 
   def prepare
@@ -339,7 +345,7 @@ class WorkerBase
       do_heartbeat_work
     rescue DRb::DRbError => err
       do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
-    rescue SystemExit
+    rescue SystemExit, SignalException
       raise
     rescue Exception => err
       do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
@@ -442,7 +448,7 @@ class WorkerBase
     types = Hash.new { |h, k| h[k] = Hash.new(0) }
     ObjectSpace.each_object do |obj|
       types[obj.class][:count] += 1
-      next if obj.kind_of?(DRbObject)
+      next if obj.kind_of?(DRbObject) || obj.kind_of?(WeakRef)
       if obj.respond_to?(:length)
         len = obj.length
         if len.kind_of?(Numeric)

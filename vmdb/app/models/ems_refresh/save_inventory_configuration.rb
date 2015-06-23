@@ -20,6 +20,8 @@ module EmsRefresh
     def save_configuration_profiles_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
       save_inventory_assoc(:configuration_profiles, manager, hashes, delete_missing_records, [:manager_ref])
+
+      link_children_references(manager.configuration_profiles)
     end
 
     def save_configured_systems_inventory(manager, hashes, target)

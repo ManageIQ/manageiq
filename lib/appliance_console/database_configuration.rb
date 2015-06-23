@@ -83,7 +83,7 @@ module ApplianceConsole
 
     def join_region
       require 'tempfile'
-      temp = Tempfile.new(RAILS_ROOT.join("tmp").to_s)
+      temp = Tempfile.new(["joinregion", ".rb"], RAILS_ROOT.join("tmp").to_s)
       params = { nil => ['runner', temp.path]}
 
       output = nil

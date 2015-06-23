@@ -14,4 +14,17 @@ describe ConfigurationController do
       end
     end
   end
+
+  context "#set_form_vars" do
+    before do
+      MiqRegion.seed
+      MiqSearch.seed
+    end
+
+    it "#successfully sets all_view_tree for default filters tree" do
+      controller.instance_variable_set(:@tabform, "ui_3")
+      controller.send(:set_form_vars)
+      assigns(:all_views_tree).should_not be_nil
+    end
+  end
 end

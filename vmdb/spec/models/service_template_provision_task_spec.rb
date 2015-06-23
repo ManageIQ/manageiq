@@ -84,10 +84,10 @@ describe ServiceTemplateProvisionTask do
       end
 
       it "raise provisioned event" do
+        expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_provisioned)
+
         @task_1_2.destination = @service
         @task_1_2.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
-        @service.ems_events.count.should == 1
-        @service.ems_events.first.event_type.should == "service_provisioned"
       end
     end
   end

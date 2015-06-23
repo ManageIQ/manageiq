@@ -4,6 +4,6 @@ class RemoveTimestampsFromMiqCimAssociations < ActiveRecord::Migration
   end
 
   def down
-    add_timestamps :miq_cim_associations
+    add_timestamps :miq_cim_associations, :null => true
   end
 end

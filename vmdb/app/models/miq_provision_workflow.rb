@@ -1,9 +1,4 @@
 class MiqProvisionWorkflow < MiqRequestWorkflow
-  SUBCLASSES = %w{
-    MiqProvisionConfiguredSystemWorkflow
-    MiqProvisionVirtWorkflow
-  }
-
   def self.base_model
     MiqProvisionWorkflow
   end
@@ -62,8 +57,10 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
 
     true
   end
-end
 
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-MiqProvisionWorkflow::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }
+  def update_request(request, values, requester_id, target_class, event_name, event_message)
+    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+    request.src_vm_id = request.get_option(:src_vm_id)
+    super
+  end
+end

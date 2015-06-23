@@ -3,46 +3,6 @@ module ReportController::Reports
 
   include_concern 'Editor'
 
-  def show_report
-    self.x_active_tree = :reports_tree
-    unless params[:task_id]                       # First time thru, kick off the report generate task
-      @parent_report = MiqReport.find(params[:id])
-      initiate_wait_for_task(:task_id => @parent_report.async_generate_table(
-        :userid     => session[:userid],
-        :session_id => request.session_options[:id],
-        :mode       => "adhoc"))
-      return
-    end
-    miq_task              = MiqTask.find(params[:task_id])      # Not first time, read the task record
-    session[:rpt_id]      = params[:id]
-    session[:rpt_task_id] = params[:task_id]
-    session[:rpt_count]   = nil
-    build_report_listnav
-    @report_result_id = MiqReportResult.find_by_miq_task_id(session[:rpt_task_id]).id       #need to save this for download buttons
-    if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status=>miq_task.status, :message=>miq_task.message},
-                :error)
-      title = MiqReport.find(session[:rpt_id]).name
-    else
-      @html = report_first_page(miq_task.miq_report_result) # Get the first page of the results
-      unless @report.graph.blank?
-        @zgraph   = true
-        @ght_type = "hybrid"
-      else
-        @ght_type = "tabular"
-      end
-      title = @report.name
-    end
-    render :update do |page|                      # Use JS to update the display
-      page.replace_html("report_list_div", :partial=>"report_list")
-      page << "reports_tree.saveOpenStates('reports_tree','path=/');"
-      page << "reports_tree.selectItem('#{x_node(:reports_tree)}');"
-      cell_text = _("%{model} \"%{name}\"") % {:name=>title, :model=>ui_lookup(:model=>"MiqReport")}
-      page << "dhxLayout.cells('b').setText(\'#{j_str(cell_text)}\');"
-      page << "miqSparkle(false);"
-    end
-  end
-
   def miq_report_run
     assert_privileges("miq_report_run")
     self.x_active_tree = :reports_tree
@@ -220,7 +180,7 @@ module ReportController::Reports
       @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr
       #Saving converted time to be displayed on saved reports list view
       @view.table.data.each_with_index do |s,s_idx|
-        @temp[:report_running] = true if s.status.downcase == "running" || s.status.downcase == "queued"
+        @report_running = true if s.status.downcase == "running" || s.status.downcase == "queued"
       end
 
       @current_page = @pages[:current] unless @pages.nil? # save the current page number
@@ -234,14 +194,14 @@ module ReportController::Reports
       else
         schedules = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])
       end
-      @temp[:schedules] = Array.new
+      @schedules = Array.new
       schedules.sort_by(&:name).each do |s|
         if s.filter.exp["="]["value"].to_i == @miq_report.id.to_i
-         @temp[:schedules].push(s)
+         @schedules.push(s)
         end
       end
 
-      @temp[:widget_nodes] = MiqWidget.all(:conditions=>["resource_id = ?", @miq_report.id.to_i])
+      @widget_nodes = MiqWidget.all(:conditions=>["resource_id = ?", @miq_report.id.to_i])
     end
 
     @sb[:tree_typ]   = "reports"
@@ -525,7 +485,7 @@ module ReportController::Reports
     root[:title]   = "All Reports"
     root[:tooltip] = "All Reports"
     root[:icon]    = "folder.png"
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 

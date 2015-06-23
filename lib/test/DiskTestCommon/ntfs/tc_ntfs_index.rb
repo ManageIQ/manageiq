@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/../..")
@@ -11,7 +11,7 @@ $:.push("#{File.dirname(__FILE__)}/../../../fs/ntfs")
 require 'NtfsBootSect'
 require 'NtfsMftEntry'
 
-class NtfsTestIndex < Test::Unit::TestCase
+class NtfsTestIndex < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'ntfs']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"
@@ -75,9 +75,9 @@ class NtfsTestIndex < Test::Unit::TestCase
 	
 	def test_ntfs_index_empty_index
 		@num_tests += 1
-		assert_raise(RuntimeError) {NTFS::IndexRoot.new(nil, nil)}
-		assert_raise(RuntimeError) {NTFS::IndexRoot.new(1, nil)}
-		assert_raise(RuntimeError) {NTFS::IndexRoot.new(nil, 1)}
+		assert_raises(RuntimeError) {NTFS::IndexRoot.new(nil, nil)}
+		assert_raises(RuntimeError) {NTFS::IndexRoot.new(1, nil)}
+		assert_raises(RuntimeError) {NTFS::IndexRoot.new(nil, 1)}
 	end
 	
 	def id(line, disk)

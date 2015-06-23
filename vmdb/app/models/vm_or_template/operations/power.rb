@@ -12,7 +12,7 @@ module VmOrTemplate::Operations::Power
   end
 
   def stop
-    raw_stop unless policy_prevented?(:request_vm_stop)
+    raw_stop unless policy_prevented?(:request_vm_poweroff)
   end
 
   # Suspend saves the state of the VM to disk and shuts it down

@@ -9,7 +9,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(infrastructure_folders folders clusters hosts datastores vms templates orchestration_stacks)
+    items = %w(infrastructure_folders folders clusters hosts used_tenants used_availability_zones datastores vms templates orchestration_stacks)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -18,7 +18,7 @@ module EmsInfraHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
-  def textual_group_tags
+  def textual_group_smart_management
     items = %w{zone tags}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
@@ -44,19 +44,20 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_cpu_resources
-    {:label => "Aggregate Host CPU Resources", :value => mhz_to_human_size(@ems.aggregate_cpu_speed)}
+    {:label => "Aggregate #{title_for_host} CPU Resources", :value => mhz_to_human_size(@ems.aggregate_cpu_speed)}
   end
 
   def textual_memory_resources
-    {:label => "Aggregate Host Memory", :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte,:precision=>0)}
+    {:label => "Aggregate #{title_for_host} Memory",
+     :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte, :precision => 0)}
   end
 
   def textual_cpus
-    {:label => "Aggregate Host CPUs", :value => @ems.aggregate_physical_cpus}
+    {:label => "Aggregate #{title_for_host} CPUs", :value => @ems.aggregate_physical_cpus}
   end
 
   def textual_cpu_cores
-    {:label => "Aggregate Host CPU Cores", :value => @ems.aggregate_logical_cpus}
+    {:label => "Aggregate #{title_for_host} CPU Cores", :value => @ems.aggregate_logical_cpus}
   end
 
   def textual_guid
@@ -64,7 +65,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_infrastructure_folders
-    label     = "Hosts & Clusters"
+    label     = "#{title_for_hosts} & #{title_for_clusters}"
     available = @ems.number_of(:ems_folders) > 0 && @ems.ems_folder_root
     h         = {:label => label, :image => "hosts_and_clusters", :value => available ? "Available" : "N/A"}
     if available
@@ -86,7 +87,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_clusters
-    label = "Clusters"
+    label = title_for_clusters
     num   = @ems.number_of(:ems_clusters)
     h     = {:label => label, :image => "cluster", :value => num}
     if num > 0 && role_allows(:feature => "ems_cluster_show_list")
@@ -97,12 +98,38 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_hosts
-    label = "Hosts"
+    label = title_for_hosts
     num   = @ems.number_of(:hosts)
     h     = {:label => label, :image => "host", :value => num}
     if num > 0 && role_allows(:feature => "host_show_list")
       h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'hosts')
       h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_used_tenants
+    return nil if !@record.respond_to?(:cloud_tenants) || !@record.cloud_tenants
+
+    label = ui_lookup(:tables => "cloud_tenants")
+    num   = @record.cloud_tenants.count
+    h     = {:label => label, :image => "cloud_tenants", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
+      h[:title] = "Show all#{label} of this provider"
+      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
+    end
+    h
+  end
+
+  def textual_used_availability_zones
+    return nil if !@record.respond_to?(:availability_zones) || !@record.availability_zones
+
+    label = ui_lookup(:tables => "availability_zones")
+    num   = @record.availability_zones.count
+    h     = {:label => label, :image => "availability_zone", :value => num}
+    if num > 0 && role_allows(:feature => "availability_zone_show_list")
+      h[:title] = "Show all #{label} of this provider"
+      h[:link]  = url_for(:action => "show", :id => @record, :display => "availability_zones")
     end
     h
   end
@@ -214,7 +241,7 @@ module EmsInfraHelper::TextualSummary
     value = @ems.host_default_vnc_port_start.blank? ?
         "" :
         "#{@ems.host_default_vnc_port_start} - #{@ems.host_default_vnc_port_end}"
-    {:label => "Host Default VNC Port Range", :value => value}
+    {:label => "#{title_for_host} Default VNC Port Range", :value => value}
   end
 
 end

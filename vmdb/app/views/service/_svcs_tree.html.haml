@@ -6,7 +6,7 @@
       = render(:partial => "layouts/dynatree",
         :locals         => {:tree_id => "svcs_treebox",
           :tree_name                 => "svcs_tree",
-          :json_tree                 => @temp[:svcs_tree],
+          :json_tree                 => @svcs_tree,
           :onclick                   => "cfmeOnClick_SelectTreeNode",
           :select_node               => "#{x_node(:svcs_tree)}",
           :base_id                   => "root",

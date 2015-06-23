@@ -22,12 +22,18 @@ module EmsRefresh
       # but the local data needs to link to it.
       # this method makes it available
       def fetch_provisioning_manager_data(hash, manager)
-        scripts = manager.customization_scripts.to_a.group_by(&:type)
-        hash[:ptables] = manager_ref_hash(scripts["CustomizationScriptPtable"] || [])
-        hash[:media] = manager_ref_hash(scripts["CustomizationScriptMedium"] || [])
-        hash[:operating_system_flavors] = manager_ref_hash(manager.operating_system_flavors)
-        hash[:locations] = manager_ref_hash(manager.configuration_locations)
-        hash[:organizations] = manager_ref_hash(manager.configuration_organizations)
+        hash.merge!(
+          :ptables                  => manager_ref_hash(manager.customization_script_ptables),
+          :media                    => manager_ref_hash(manager.customization_script_media),
+          :operating_system_flavors => manager_ref_hash(manager.operating_system_flavors),
+          :locations                => manager_ref_hash(manager.configuration_locations),
+          :organizations            => manager_ref_hash(manager.configuration_organizations),
+          :architectures            => manager_ref_hash(manager.configuration_architectures),
+          :compute_profiles         => manager_ref_hash(manager.configuration_compute_profiles),
+          :domains                  => manager_ref_hash(manager.configuration_domains),
+          :environments             => manager_ref_hash(manager.configuration_environments),
+          :realms                   => manager_ref_hash(manager.configuration_realms),
+        )
       end
 
       def manager_ref_hash(records)

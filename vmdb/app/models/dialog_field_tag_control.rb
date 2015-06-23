@@ -27,7 +27,7 @@ class DialogFieldTagControl < DialogFieldSortedItem
   end
 
   def self.allowed_tag_categories
-    tag_cats = Classification.where(:show => true, :parent_id => 0, :read_only => false).includes(:tag).all
+    tag_cats = Classification.where(:show => true, :parent_id => 0, :read_only => false).includes(:tag).to_a
 
     return [] if tag_cats.blank?
 

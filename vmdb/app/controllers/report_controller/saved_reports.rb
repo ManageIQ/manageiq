@@ -24,8 +24,7 @@ module ReportController::SavedReports
       return
     end
     @right_cell_text ||= _("%{model} \"%{name}\"") % {:name=>"#{rr.name} - #{format_timezone(rr.created_on,Time.zone,"gt")}", :model=>"Saved Report"}
-    user = User.find_by_userid(session[:userid])
-    if user.admin_user? || rr.miq_group_id == session[:group]
+    if current_user.admin_user? || rr.miq_group_id == session[:group]
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime] = rr.last_run_on
       task = MiqTask.find_by_id(rr.miq_task_id)
@@ -80,7 +79,7 @@ module ReportController::SavedReports
           end
         end
       else      #report is queued/running/error
-        @temp[:report_result] = rr
+        @report_result = rr
       end
     else
       add_flash(_("Report is not authorized for the logged in user"), :error)
@@ -148,7 +147,7 @@ module ReportController::SavedReports
     root[:title]   = "All Saved Reports"
     root[:tooltip] = "All Saved Reports"
     root[:icon]    = "folder.png"
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 
@@ -158,7 +157,6 @@ module ReportController::SavedReports
   end
 
   def set_saved_reports_condition(rep_id=nil)
-    u = User.find_by_userid(session[:userid])
     cond = Array.new
 
     # Replaced this code as all saved, requested, scheduled reports have miq_report_id set, others don't
@@ -175,7 +173,7 @@ module ReportController::SavedReports
     end
 
     # Admin users can see all saved reports
-    unless u.admin_user?
+    unless current_user.admin_user?
       cond[0] << " AND miq_group_id=?"
       cond.push(session[:group])
     end

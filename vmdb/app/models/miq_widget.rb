@@ -315,12 +315,10 @@ class MiqWidget < ActiveRecord::Base
     $log.info("#{log_prefix} for group: [#{group.name}] users: [#{userid}]...")
 
     user = userid
-    if userid.kind_of?(String)
-      user = User.in_my_region.where(:userid => userid).first
-      if user.nil?
-        $log.error("#{log_prefix} User #{userid} was not found")
-        return
-      end
+    user = User.in_my_region.where(:userid => userid).first if userid.kind_of?(String)
+    if user.nil?
+      $log.error("#{log_prefix} User #{userid} was not found")
+      return
     end
 
     timezone = user.get_timezone
@@ -443,7 +441,8 @@ class MiqWidget < ActiveRecord::Base
     groups_by_id    = MiqGroup.where(:id => grouped_users.keys).index_by(&:id)
     users_by_userid = User.in_my_region.where(:userid => grouped_users.values.flatten.uniq).index_by(&:userid)
     grouped_users.each_with_object({}) do |(k, v), h|
-      h[groups_by_id[k]] = users_by_userid.values_at(*v)
+      user_objs = users_by_userid.values_at(*v).reject(&:blank?)
+      h[groups_by_id[k]] = user_objs unless user_objs.blank?
     end
   end
 
@@ -494,6 +493,8 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def self.get_group(group)
+    return nil if group.nil?
+
     original = group
 
     case group
@@ -517,6 +518,7 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def self.sync_from_hash(attrs)
+    attrs.delete "id"
     filename = attrs.delete("filename")
     rname = attrs.delete("resource_name")
     if rname && attrs["resource_type"]

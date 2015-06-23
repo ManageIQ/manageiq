@@ -28,7 +28,7 @@ class ConfigurationController < ApplicationController
     end
     @tabform = params[:load_edit_err] ? @tabform : @config_tab + "_#{active_tab}"
     case @config_tab
-    when "operations", "ui", "filters", "smartproxies"
+    when "operations", "ui", "filters"
       if @tabform == "operations_1" || @tabform == "operations_2"
         init_server_options
         @server_options[:server_id] = MiqServer.my_server.id
@@ -242,7 +242,7 @@ class ConfigurationController < ApplicationController
         # Remove any old settings hashes *****************************
         @settings[:display].delete(:pres_mode)                    # :pres_mode replaced by :theme
 
-        db_user = User.find_by_userid(session[:userid])
+        db_user = current_user
         unless db_user.nil?                                       # Only if userid is in the DB
           db_user.settings = db_user.settings == nil ? @settings : db_user.settings.merge(@settings)  # Create or merge the settings into the db
           # Remove any old settings hashes *****************************
@@ -277,7 +277,7 @@ class ConfigurationController < ApplicationController
         @settings[:views].delete(:vm_summary_cool)                # :views/:vm_summary_cool changed to :dashboards
         @settings[:views].delete(:dashboards)                    # :dashboards is obsolete now
 
-        db_user = User.find_by_userid(session[:userid])
+        db_user = current_user
         unless db_user.nil?                                       # Only if userid is in the DB
           db_user.settings = db_user.settings == nil ? @settings : db_user.settings.merge(@settings)  # Create or merge the settings into the db
           # Remove any old settings hashes *****************************
@@ -358,24 +358,24 @@ class ConfigurationController < ApplicationController
   def show_timeprofiles
     build_tabs if params[:action] == "change_tab" || ["cancel","add","save"].include?(params[:button])
     if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
-      @temp[:timeprofiles] = TimeProfile.in_my_region.all(:order => "lower(description) ASC")
+      @timeprofiles = TimeProfile.in_my_region.all(:order => "lower(description) ASC")
     else
-      @temp[:timeprofiles] = TimeProfile.in_my_region.all(:conditions=> ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
+      @timeprofiles = TimeProfile.in_my_region.all(:conditions=> ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
     end
     timeprofile_set_days_hours
     drop_breadcrumb( {:name=>"Time Profiles", :url=>"/configuration/change_tab/?tab=4"})
   end
 
   def timeprofile_set_days_hours(timeprofile=@timeprofile)
-    @temp[:timeprofile_details] = Hash.new
-    @temp[:timeprofiles].each do |timeprofile|
-      @temp[:timeprofile_details][timeprofile.description] = Hash.new
-      @temp[:timeprofile_details][timeprofile.description][:days] = Array.new
+    @timeprofile_details = Hash.new
+    @timeprofiles.each do |timeprofile|
+      @timeprofile_details[timeprofile.description] = Hash.new
+      @timeprofile_details[timeprofile.description][:days] = Array.new
       timeprofile.profile[:days].each do |day|
-        @temp[:timeprofile_details][timeprofile.description][:days].push(
+        @timeprofile_details[timeprofile.description][:days].push(
           DateTime::ABBR_DAYNAMES[day.to_i])
       end
-      @temp[:timeprofile_details][timeprofile.description][:hours] = Array.new
+      @timeprofile_details[timeprofile.description][:hours] = Array.new
       temp_arr = Array.new
       timeprofile.profile[:hours].each do |h|
         temp_arr.push(h.to_i)
@@ -387,18 +387,18 @@ class ConfigurationController < ApplicationController
           st = "#{get_hr_str(hr).split('-').first}-" if st == ""
         else
           if st != ""
-            @temp[:timeprofile_details][timeprofile.description][:hours].push(st + get_hr_str(hr).split('-').last)
+            @timeprofile_details[timeprofile.description][:hours].push(st + get_hr_str(hr).split('-').last)
           else
-            @temp[:timeprofile_details][timeprofile.description][:hours].push(get_hr_str(hr))
+            @timeprofile_details[timeprofile.description][:hours].push(get_hr_str(hr))
           end
           st = ""
         end
       end
-      if @temp[:timeprofile_details][timeprofile.description][:hours].length > 1 && @temp[:timeprofile_details][timeprofile.description][:hours].first.split('-').first == "12AM" && @temp[:timeprofile_details][timeprofile.description][:hours].last.split('-').last == "12AM"      #manipulating midnight hours to be displayed on show screen
-        @temp[:timeprofile_details][timeprofile.description][:hours][0] = @temp[:timeprofile_details][timeprofile.description][:hours].last.split('-').first + '-' + @temp[:timeprofile_details][timeprofile.description][:hours].first.split('-').last
-        @temp[:timeprofile_details][timeprofile.description][:hours].delete_at(@temp[:timeprofile_details][timeprofile.description][:hours].length-1)
+      if @timeprofile_details[timeprofile.description][:hours].length > 1 && @timeprofile_details[timeprofile.description][:hours].first.split('-').first == "12AM" && @timeprofile_details[timeprofile.description][:hours].last.split('-').last == "12AM"      #manipulating midnight hours to be displayed on show screen
+        @timeprofile_details[timeprofile.description][:hours][0] = @timeprofile_details[timeprofile.description][:hours].last.split('-').first + '-' + @timeprofile_details[timeprofile.description][:hours].first.split('-').last
+        @timeprofile_details[timeprofile.description][:hours].delete_at(@timeprofile_details[timeprofile.description][:hours].length-1)
       end
-      @temp[:timeprofile_details][timeprofile.description][:tz] = timeprofile.profile[:tz]
+      @timeprofile_details[timeprofile.description][:tz] = timeprofile.profile[:tz]
     end
   end
 
@@ -706,28 +706,30 @@ class ConfigurationController < ApplicationController
       when "ui_5"
         @tabs[0] = ["5", ""]  # Start with first tab array entry set to tab 1 as active
       end
-      @tabs.push( ["1", "Visual"] ) if role_allows(:feature=>"my_settings_visuals")
-      @tabs.push( ["2", "Default Views"] ) if role_allows(:feature=>"my_settings_default_views")
-      @tabs.push( ["3", "Default Filters"] ) if role_allows(:feature=>"my_settings_default_filters")
-      @tabs.push( ["4", "Time Profiles"] ) if role_allows(:feature=>"my_settings_time_profiles")
-      @tabs.push( ["5", "MyTags"] ) if role_allows(:feature=>"my_settings_my_tags") if false
+      @tabs.push( ["1", _("Visual")] )          if role_allows(:feature => "my_settings_visuals")
+      @tabs.push( ["2", _("Default Views")] )   if role_allows(:feature => "my_settings_default_views")
+      @tabs.push( ["3", _("Default Filters")] ) if role_allows(:feature => "my_settings_default_filters")
+      @tabs.push( ["4", _("Time Profiles")] )   if role_allows(:feature => "my_settings_time_profiles")
+      @tabs.push( ["5", _("MyTags")] )          if role_allows(:feature => "my_settings_my_tags") if false
     end
   end
 
   NAV_TAB_PATH =  {
-                    :container     => %w(Containers Containers),
-                    :host          => %w(Infrastructure Hosts),
-                    :miqtemplate   => %w(Services Workloads Templates\ &\ Images),
-                    :storage       => %w(Infrastructure Datastores),
-                    :templatecloud => %w(Cloud Instances Images),
-                    :templateinfra => %w(Infrastructure Virtual\ Machines Templates),
-                    :vm            => %w(Services Workloads VMs\ &\ Instances),
-                    :vmcloud       => %w(Cloud Instances Instances),
-                    :vminfra       => %w(Infrastructure Virtual\ Machines VMs)
+                    :container        => %w(Containers Containers),
+                    :containergroup   => %w(Containers Containers\ Groups),
+                    :containerservice => %w(Containers Services),
+                    :host             => %w(Infrastructure Hosts),
+                    :miqtemplate      => %w(Services Workloads Templates\ &\ Images),
+                    :storage          => %w(Infrastructure Datastores),
+                    :templatecloud    => %w(Cloud Instances Images),
+                    :templateinfra    => %w(Infrastructure Virtual\ Machines Templates),
+                    :vm               => %w(Services Workloads VMs\ &\ Instances),
+                    :vmcloud          => %w(Cloud Instances Instances),
+                    :vminfra          => %w(Infrastructure Virtual\ Machines VMs)
                   }
 
   def merge_in_user_settings(settings)
-    db_user = User.find_by_userid(session[:userid])
+    db_user = current_user
     if db_user.try(:settings)
       settings.each do |key, value|
         value.merge!(db_user.settings[key]) unless db_user.settings[key].nil?
@@ -762,7 +764,7 @@ class ConfigurationController < ApplicationController
 
       # Build the start pages pulldown list
       session[:start_pages] = MiqShortcut.start_pages.each_with_object([]) do |page, pages|
-        pages.push([page[1], page[0]]) if role_allows(:feature => page[2], :any => true)
+        pages.push([page[1], page[0]]) if start_page_allowed?(page[2])
       end
     when 'ui_2'
       @edit = {
@@ -770,7 +772,9 @@ class ConfigurationController < ApplicationController
         :key     => 'config_edit__ui2',
       }
     when 'ui_3'
-      current = MiqSearch.all(:conditions=>["search_type=?", "default"]).sort_by do |a|
+      filters = []
+      MiqSearch.where(:search_type => "default").collect { |search| filters.push(search) if allowed_filter_db?(search.db) }
+      current = filters.sort_by do |a|
         [NAV_TAB_PATH[a.db.downcase.to_sym], a.description.downcase]
       end
       @edit = {
@@ -866,7 +870,7 @@ class ConfigurationController < ApplicationController
       @main_tab_node[:children] = @main_tab_children   unless @main_tab_children.blank?
       all_views.push(@main_tab_node).uniq!
     end
-    @temp[:all_views_tree] = all_views.to_json
+    @all_views_tree = all_views.to_json
     session[:tree_name]    = "all_views_tree"
   end
 

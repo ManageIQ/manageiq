@@ -181,6 +181,7 @@ module EmsRefresh::Parsers
         :supports_hvm             => flavor[:virtualization_type].include?(:hvm),
         :supports_paravirtual     => flavor[:virtualization_type].include?(:paravirtual),
         :block_storage_based_only => flavor[:ebs_only],
+        :cloud_subnet_required    => flavor[:vpc_only],
 
         # Extra keys
         :disk_size                => flavor[:instance_store_size],
@@ -426,15 +427,16 @@ module EmsRefresh::Parsers
       uid = stack.stack_id.to_s
       child_stacks, resources = find_stack_resources(stack)
       new_result = {
-        :type        => "OrchestrationStackAmazon",
-        :ems_ref     => uid,
-        :name        => stack.name,
-        :description => stack.description,
-        :status      => stack.status,
-        :children    => child_stacks,
-        :resources   => resources,
-        :outputs     => find_stack_outputs(stack),
-        :parameters  => find_stack_parameters(stack),
+        :type          => "OrchestrationStackAmazon",
+        :ems_ref       => uid,
+        :name          => stack.name,
+        :description   => stack.description,
+        :status        => stack.status,
+        :status_reason => stack.status_reason,
+        :children      => child_stacks,
+        :resources     => resources,
+        :outputs       => find_stack_outputs(stack),
+        :parameters    => find_stack_parameters(stack),
 
         :orchestration_template => find_stack_template(stack)
       }
@@ -518,6 +520,7 @@ module EmsRefresh::Parsers
       uid = resource[:physical_resource_id]
       new_result = {
         :ems_ref                => uid,
+        :name                   => resource[:logical_resource_id],
         :logical_resource       => resource[:logical_resource_id],
         :physical_resource      => uid,
         :resource_category      => resource[:resource_type],

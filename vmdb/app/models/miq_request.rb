@@ -11,14 +11,17 @@ class MiqRequest < ActiveRecord::Base
 
   serialize   :options, Hash
 
+  default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   default_value_for :options,       {}
-  default_value_for :status,        'Ok'
+  default_value_for(:requester)     { |r| r.get_user }
   default_value_for :request_state, 'pending'
+  default_value_for(:request_type)  { |r| r.request_types.first }
+  default_value_for :status,        'Ok'
 
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
 
-  #  validate :must_have_valid_requester
+  validate :validate_class, :validate_request_type
 
   include ReportableMixin
 
@@ -35,25 +38,25 @@ class MiqRequest < ActiveRecord::Base
   include MiqRequestMixin
 
   MODEL_REQUEST_TYPES = {
-    :Service => {
-      :MiqProvisionRequest => {
+    :Service        => {
+      :MiqProvisionRequest                 => {
         :template          => "VM Provision",
         :clone_to_vm       => "VM Clone",
         :clone_to_template => "VM Publish",
       },
       :MiqProvisionConfiguredSystemRequest => {
-        :provision_via_foreman => "Foreman Provision"
+        :provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"
       },
-      :VmReconfigureRequest => {
+      :VmReconfigureRequest                => {
         :vm_reconfigure => "VM Reconfigure"
       },
-      :VmMigrateRequest => {
+      :VmMigrateRequest                    => {
         :vm_migrate => "VM Migrate"
       },
-      :ServiceTemplateProvisionRequest => {
+      :ServiceTemplateProvisionRequest     => {
         :clone_to_service => "Service Provision"
       },
-      :ServiceReconfigureRequest => {
+      :ServiceReconfigureRequest           => {
         :service_reconfigure => "Service Reconfigure"
       }
     },
@@ -62,7 +65,7 @@ class MiqRequest < ActiveRecord::Base
         :host_pxe_install => "Host Provision"
       },
     },
-    :Automate => {
+    :Automate       => {
       :AutomationRequest => {
         :automation => "Automation"
       }
@@ -71,6 +74,10 @@ class MiqRequest < ActiveRecord::Base
 
   REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
+
+  delegate :deny, :reason, :stamped_on, :to => :first_approval
+  delegate :userid, :to => :requester, :prefix => true
+  delegate :request_task_class, :request_types, :task_description, :to => :class
 
   # Supports old-style requests where specific request was a seperate table connected as a resource
   def resource
@@ -102,10 +109,6 @@ class MiqRequest < ActiveRecord::Base
   # after_update do
   #   self.call_automate_event_queue("request_updated")
   # end
-
-  def must_have_valid_requester
-    errors.add(:requester, "must have valid requester") unless self.requester.kind_of?(User)
-  end
 
   def must_have_user
     errors.add(:userid, "must have valid user") unless userid && User.exists?(:userid => userid)
@@ -185,8 +188,7 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def approved?
-    miq_approvals.each { |a| return false unless a.state == "approved" }
-    true
+    miq_approvals.all? { |a| a.state == "approved" }
   end
 
   def v_approved_by
@@ -206,6 +208,10 @@ class MiqRequest < ActiveRecord::Base
     request_type.nil? ? "Unknown" : REQUEST_TYPES.fetch_path(type.to_sym, request_type.to_sym)
   end
 
+  def self.request_types
+    REQUEST_TYPES[name.to_sym].keys.collect(&:to_s)
+  end
+
   def request_status
     return status if self.approval_state == 'approved' && !status.nil?
     case self.approval_state
@@ -219,24 +225,6 @@ class MiqRequest < ActiveRecord::Base
     MiqApproval.new(:description => "Default Approval")
   end
 
-  def self.requests_for_userid(userid)
-    requester = User.find_by_userid(userid)
-    return [] unless requester
-    find_all_by_requester_id(requester.id)
-  end
-
-  def self.all_requesters(conditions = nil)
-    find(:all,
-         :conditions => conditions,
-         :select     => "requester_id, requester_name",
-         :group      => "requester_id, requester_name",
-         :include    => "requester"
-    ).inject({}) do |h, r|
-      h[r.requester_id] = (r.requester.nil? ? "#{r.requester_name} (no longer exists)" : r.requester_name)
-      h
-    end
-  end
-
   # TODO: Helper methods to support UI in legacy mode - single approval by role
   #       These should be removed once multi-approver is fully supported.
   def first_approval
@@ -247,25 +235,14 @@ class MiqRequest < ActiveRecord::Base
     first_approval.approve(userid, reason) unless self.approved?
   end
 
-  delegate :deny, :to => :first_approval
-
   def stamped_by
     first_approval.stamper ? first_approval.stamper.userid : nil
   end
-
-  delegate :reason, :to => :first_approval
-
-  delegate :stamped_on, :to => :first_approval
 
   def approver
     first_approval.approver.try(:name)
   end
   alias_method :approver_role, :approver  # TODO: Is this needed anymore?
-
-  def requester_userid
-    self.requester.userid
-  end
-  #######
 
   def workflow_class
     klass = self.class.workflow_class
@@ -275,10 +252,6 @@ class MiqRequest < ActiveRecord::Base
 
   def self.workflow_class
     @workflow_class ||= name.underscore.chomp("_template").gsub(/_request$/, "_workflow").camelize.constantize rescue nil
-  end
-
-  def request_task_class
-    self.class.request_task_class
   end
 
   def self.request_task_class
@@ -331,16 +304,7 @@ class MiqRequest < ActiveRecord::Base
     req_state = (states.length == 1) ? states.keys.first : "active"
 
     # Determine status to report
-    req_status =
-      if status.keys.include?('Error')
-        'Error'
-      elsif status.keys.include?('Timeout')
-        'Timeout'
-      elsif status.keys.include?('Warn')
-        'Warn'
-      else
-        'Ok'
-      end
+    req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
     if req_state == "finished"
       update_attribute(:fulfilled_on, Time.now.utc)
@@ -430,12 +394,15 @@ class MiqRequest < ActiveRecord::Base
 
     req_task_attribs = attributes.dup
     req_task_attribs['state'] = req_task_attribs.delete('request_state')
-    (req_task_attribs.keys - MiqRequestTask.column_names + %w(created_on updated_on type)).each { |key| req_task_attribs.delete(key) }
+    (req_task_attribs.keys - MiqRequestTask.column_names + %w(id created_on updated_on type)).each { |key| req_task_attribs.delete(key) }
     $log.debug("#{log_header} #{self.class.name} Attributes: [#{req_task_attribs.inspect}]...")
 
     customize_request_task_attributes(req_task_attribs, idx)
     req_task = self.class.new_request_task(req_task_attribs)
     req_task.miq_request = self
+
+    yield req_task if block_given?
+
     req_task.save!
     req_task.after_request_task_create
 
@@ -476,8 +443,28 @@ class MiqRequest < ActiveRecord::Base
     request
   end
 
+  def request_pending_approval?
+    approval_state == "pending_approval"
+  end
+
+  def request_approved?
+    approval_state == "approved"
+  end
+
+  def request_denied?
+    approval_state == "denied"
+  end
+
   private
 
   def default_description
+  end
+
+  def validate_class
+    errors.add(:type, "should be a descendant of MiqRequest") if instance_of?(MiqRequest)
+  end
+
+  def validate_request_type
+    errors.add(:request_type, "should be #{request_types.join(", ")}") unless request_types.include?(request_type)
   end
 end

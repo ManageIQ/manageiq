@@ -233,13 +233,16 @@ module MiqReport::Generator
 
       start_time, end_time = Metric::Helper.get_time_range_from_offset(self.db_options[:start_offset], self.db_options[:end_offset], :tz => self.tz)
       time_range_cond = ["timestamp BETWEEN ? AND ?", start_time, end_time]
-      results = VimPerformanceDaily.find(:all,
-        :conditions  => klass.merge_conditions(where_clause, time_range_cond),
-        :include     => includes,
-        :limit       => options[:limit],
-        :ext_options => ext_options.merge(:reflections => associations, :class => klass)
-      )
-      results, attrs = !results.empty? ? Rbac.search(:targets => results, :class => self.db, :filter => self.conditions, :results_format => :objects, :userid => options[:userid], :miq_group_id => options[:miq_group_id]) : [results, {}]
+      results = VimPerformanceDaily
+                .find_entries(ext_options.merge(:reflections => associations, :class => klass))
+                .where(where_clause)
+                .where(time_range_cond)
+                .includes(includes)
+                .limit(options[:limit])
+      results = Rbac.filtered(results, :class        => db,
+                                       :filter       => conditions,
+                                       :userid       => options[:userid],
+                                       :miq_group_id => options[:miq_group_id])
       results = Metric::Helper.remove_duplicate_timestamps(results)
     elsif !self.db_options.blank? && self.db_options.has_key?(:interval)
       # Ad-hoc performance reports
@@ -260,7 +263,10 @@ module MiqReport::Generator
         :limit => options[:limit]
       )
 
-      results, attrs = !results.empty? ? Rbac.search(:targets => results, :class => self.db, :filter => self.conditions, :results_format => :objects, :userid => options[:userid], :miq_group_id => options[:miq_group_id]) : [results, {}]
+      results = Rbac.filtered(results, :class        => db,
+                                       :filter       => conditions,
+                                       :userid       => options[:userid],
+                                       :miq_group_id => options[:miq_group_id])
       results = Metric::Helper.remove_duplicate_timestamps(results)
     else
       # Basic report
@@ -342,6 +348,7 @@ module MiqReport::Generator
 
   def build_table(data, db, options={})
     klass = db.respond_to?(:constantize) ? db.constantize : db
+    data = data.to_a
     objs = data[0] && data[0].is_a?(Integer) ? klass.find_all_by_id(data) : data.compact
 
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support

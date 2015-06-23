@@ -11,7 +11,7 @@ describe VmOrTemplateController do
                                                 :description       => "Some Description"
       )
       vm.snapshots = [@snapshot]
-      @tree_hash = {
+      tree_hash = {
         :trees       => {
           :vandt_tree => {
             :active_node => "v-#{vm.id}"
@@ -19,31 +19,29 @@ describe VmOrTemplateController do
         },
         :active_tree => :vandt_tree
       }
+
+      session[:sandboxes] = { "vm_or_template" => tree_hash }
     end
+
     it "snapshot node exists in tree" do
-      controller.instance_variable_set(:@_params, :id => @snapshot.id)
-      controller.instance_variable_set(:@temp, {})
-      controller.instance_variable_set(:@sb, @tree_hash)
-      controller.should_receive(:render)
-      controller.snap_pressed
-      controller.send(:flash_errors?).should_not be_true
+      post :snap_pressed, :id => @snapshot.id
+      expect(response).to render_template('vm_common/_snapshots_tree')
+      expect(assigns(:flash_array)).to be_blank
     end
 
     it "when snapshot is selected center toolbars are replaced" do
-      session[:sandboxes] = HashWithIndifferentAccess.new.merge!(:vm_or_template => @tree_hash)
-      controller.instance_variable_set(:@temp, {})
       post :snap_pressed, :id => @snapshot.id
+      expect(response).to render_template('vm_common/_snapshots_tree')
       expect(response.body).to include("center_buttons_div")
+      expect(assigns(:flash_array)).to be_blank
     end
 
     it "deleted node pressed in snapshot tree" do
-      controller.instance_variable_set(:@_params, :id => "some_id")
-      controller.instance_variable_set(:@temp, {})
-      controller.instance_variable_set(:@sb, @tree_hash)
       controller.should_receive(:build_snapshot_tree)
-      controller.should_receive(:render)
-      controller.snap_pressed
-      controller.send(:flash_errors?).should be_true
+      post :snap_pressed, :id => "some_id"
+      expect(response).to render_template('vm_common/_snapshots_tree')
+      expect(assigns(:flash_array).first[:message]).to eq("Last selected Snapshot no longer exists")
+      expect(assigns(:flash_array).first[:level]).to eq(:error)
     end
   end
 end

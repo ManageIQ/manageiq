@@ -3,11 +3,11 @@ $:.push("#{File.dirname(__FILE__)}/../../metadata/util/")
 require 'MiqLargeFile'
 require 'md5deep'
 require 'enumerator'
-require 'test/unit'
+require 'minitest/unit'
 require 'tmpdir'
 
 module DiskTestCommon
-  class TestMiqLargeFile < Test::Unit::TestCase
+  class TestMiqLargeFile < Minitest::Test
     FILE_PATH = (Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
 
     FILE_1MB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1MB"
@@ -40,7 +40,7 @@ module DiskTestCommon
         next unless File.exist?(filename)
 
         f = MiqLargeFile.open(filename, "r")
-        assert_not_nil(MiqLargeFile, f)
+        refute_nil(MiqLargeFile, f)
         f.close
       end
     end

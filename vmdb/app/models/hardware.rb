@@ -7,20 +7,20 @@ class Hardware < ActiveRecord::Base
 
   has_many    :networks, :dependent => :destroy
 
-  has_many    :disks, :dependent => :destroy, :order => :location
-  has_many    :hard_disks, :class_name => "Disk", :foreign_key => :hardware_id, :conditions => "device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'", :order => :location
-  has_many    :floppies, :class_name => "Disk", :foreign_key => :hardware_id, :conditions => "device_type = 'floppy'", :order => :location
-  has_many    :cdroms, :class_name => "Disk", :foreign_key => :hardware_id, :conditions => "device_type LIKE '%cdrom%'", :order => :location
+  has_many    :disks, -> { order :location }, :dependent => :destroy
+  has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
 
-  has_many    :hard_disk_storages, :through => :hard_disks, :source => :storage, :uniq => true
+  has_many    :hard_disk_storages, -> { distinct }, :through => :hard_disks, :source => :storage
 
   has_many    :partitions, :dependent => :destroy
   has_many    :volumes, :dependent => :destroy
 
   has_many    :guest_devices, :dependent => :destroy
-  has_many    :storage_adapters, :class_name => "GuestDevice", :foreign_key => :hardware_id, :conditions => "device_type = 'storage'"
-  has_many    :nics, :class_name => "GuestDevice", :foreign_key => :hardware_id, :conditions => "device_type = 'ethernet'"
-  has_many    :ports, :class_name => "GuestDevice", :foreign_key => :hardware_id, :conditions => "device_type != 'storage'"
+  has_many    :storage_adapters, -> { where "device_type = 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :nics, -> { where "device_type = 'ethernet'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :ports, -> { where "device_type != 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks

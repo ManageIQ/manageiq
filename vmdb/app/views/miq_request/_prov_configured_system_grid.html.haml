@@ -20,7 +20,7 @@
           - else
             = h(header)
     %tbody
-    - @temp[:configured_systems].each do |row|
+    - @configured_systems.each do |row|
       - @id = row.id
       %tr
         - options[:configured_system_headers].each do |col, _|

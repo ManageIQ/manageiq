@@ -80,7 +80,8 @@
                 = text_field_tag("#{prefix}fields_value_#{i}", flds["default_value"],
                   :style             => flds["datatype"] == "password" ? "display:none" : "",
                   "data-miq_observe" => obs)
-                = password_field_tag("#{prefix}fields_password_value_#{i}", flds["default_value"],
+                = password_field_tag("#{prefix}fields_password_value_#{i}", '',
+                  :placeholder       => placeholder_if_present(flds['default_value']),
                   :style             => flds["datatype"] == "password" ? "" : "display:none",
                   "data-miq_observe" => obs)
               %td
@@ -116,8 +117,8 @@
                 session[:field_data][:default_value],
                 :style             => session[:field_data][:datatype] == "password" ? "display:none" : "",
                 "data-miq_observe" => obs)
-              = password_field_tag("#{prefix}field_password_value",
-                session[:field_data][:data_value],
+              = password_field_tag("#{prefix}field_password_value", '',
+                :placeholder       => placeholder_if_present(session[:field_data][:data_value]),
                 :style             => session[:field_data][:datatype] == "password" ? "" : "display:none",
                 "data-miq_observe" => obs)
             %td

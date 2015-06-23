@@ -17,17 +17,17 @@ module ReportController::Schedules
     @breadcrumbs = Array.new
     drop_breadcrumb( {:name=>@schedule.name, :url=>"/report/show_schedule/#{@schedule.id}"} )
     if @schedule.sched_action[:options] && @schedule.sched_action[:options][:email]
-      @temp[:email_to] = Array.new
+      @email_to = Array.new
       @schedule.sched_action[:options][:email][:to].each_with_index do |e, e_idx|
         u = User.find_by_email(e)
-        @temp[:email_to].push(u ? "#{u.name} (#{e})" : e)
+        @email_to.push(u ? "#{u.name} (#{e})" : e)
       end
     end
     #render :action=>"show_schedule"
   end
 
   def schedule_get_all
-    @temp[:schedules]    = true
+    @schedules    = true
     @force_no_grid_xml   = true
     @gtl_type            = "list"
     @ajax_paging_buttons = true
@@ -335,10 +335,10 @@ module ReportController::Schedules
 
     if @schedule.sched_action && @schedule.sched_action[:options] && @schedule.sched_action[:options][:email]
       # rebuild hash to hold user's email along with name if user record was found for display, defined as hash so only email id can be sent from form to be deleted from array above
-      @temp[:email_to] = Hash.new
+      @email_to = Hash.new
       @schedule.sched_action[:options][:email][:to].each_with_index do |e, e_idx|
         u = User.find_by_email(e)
-        @temp[:email_to][e] = u ? "#{u.name} (#{e})" : e
+        @email_to[e] = u ? "#{u.name} (#{e})" : e
       end
     end
 
@@ -426,10 +426,10 @@ module ReportController::Schedules
 
     if params[:user_email] || params[:button] == "add_email" || params[:remove_email]
       # rebuild hash to hold user's email along with name if user record was found for display, defined as hash so only email id can be sent from form to be deleted from array above
-      @temp[:email_to] = Hash.new
+      @email_to = Hash.new
       @edit[:new][:email][:to].each_with_index do |e, e_idx|
         u = User.find_by_email(e)
-        @temp[:email_to][e] = u ? "#{u.name} (#{e})" : e
+        @email_to[e] = u ? "#{u.name} (#{e})" : e
       end
     end
 
@@ -514,7 +514,7 @@ module ReportController::Schedules
     root[:title]   = "All Schedules"
     root[:tooltip] = "All Schedules"
     root[:icon]    = "miq_schedule.png"
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 

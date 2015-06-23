@@ -9,7 +9,6 @@ module JobProxyDispatcherEmbeddedScanSpec
     NUM_REPO_VMS = 0
     NUM_HOSTS = 3
     NUM_SERVERS = 3
-    NUM_COS_PROXIES = 0
     NUM_STORAGES = 3
 
     def assert_at_most_x_scan_jobs_per_y_resource(x_scans, y_resource)
@@ -29,7 +28,7 @@ module JobProxyDispatcherEmbeddedScanSpec
           hsh
         end
       else
-        vms = VmOrTemplate.find_all_by_id(vms_in_embedded_scanning)
+        vms = VmOrTemplate.where(:id => vms_in_embedded_scanning)
         resource_hsh = vms.inject({}) do |hsh, v|
           hsh[v.send(method)] ||= 0
           hsh[v.send(method)] += 1
@@ -59,9 +58,8 @@ module JobProxyDispatcherEmbeddedScanSpec
         MiqServer.any_instance.stub(:has_active_role? => true)
         EmsVmware.any_instance.stub(:authentication_status_ok? => true)
         Host.any_instance.stub(:authentication_status_ok? => true)
-        MiqProxy.any_instance.stub(:state).and_return("on")
 
-        @hosts, @proxies, @storages, @vms, @repo_vms = self.build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :proxies => NUM_COS_PROXIES, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
+        @hosts, @proxies, @storages, @vms, @repo_vms = self.build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
       end
 
       context "and a scan job for each vm" do

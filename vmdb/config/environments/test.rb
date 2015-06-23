@@ -6,9 +6,10 @@ Vmdb::Application.configure do
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
   config.cache_classes = true
+  config.eager_load = false
 
   # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_assets = true
+  config.serve_static_files = true
   config.static_cache_control = "public, max-age=3600"
 
   # Log error messages when you accidentally call methods on nil
@@ -35,15 +36,22 @@ Vmdb::Application.configure do
   # config.active_record.mass_assignment_sanitizer = :strict
 
   # Print deprecation notices to the stderr
-  config.active_support.deprecation = :stderr
+  config.active_support.deprecation = lambda do |message, callstack|
+    unless message =~ /named_routes\.helpers.*rspec-rails.*controller_example_group/
+      ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr].call(message, callstack)
+    end
+  end
 
 
   # Customize any additional options below...
 
   # Do not include all helpers for all views
   config.action_controller.include_all_helpers = false
+  config.secret_key_base = SecureRandom.random_bytes(32)
+  config.secret_token = SecureRandom.random_bytes(32)
 end
 
+require "minitest"
 require "shoulda-matchers"
 require "factory_girl"
 require "timecop"

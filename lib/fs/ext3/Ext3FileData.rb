@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-require 'MiqMemory'
+require 'memory_buffer'
 
 require 'Ext3BlockPointersPath'
 
@@ -76,7 +75,7 @@ module Ext3
 		
 		def getBlocks(startBlock, nblocks = 1)
       @path.block = startBlock
-			out = MiqMemory.create_zero_buffer(nblocks * @blockSize)
+			out = MemoryBuffer.create(nblocks * @blockSize)
 			nblocks.times do |i|
 				out[i * @blockSize, @blockSize] = getBlock(@path)
 				@path.succ!

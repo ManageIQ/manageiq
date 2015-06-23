@@ -17,6 +17,10 @@ class EmsOpenstack < EmsCloud
     %w(default amqp)
   end
 
+  def supports_provider_id?
+    true
+  end
+
   def supports_authentication?(authtype)
     supported_auth_types.include?(authtype.to_s)
   end
@@ -118,5 +122,9 @@ class EmsOpenstack < EmsCloud
     $log.error "#{log_prefix}, error: #{err}"
     $log.debug err.backtrace.join("\n") if $log.debug?
     raise
+  end
+
+  def self.event_monitor_class
+    MiqEventCatcherOpenstack
   end
 end

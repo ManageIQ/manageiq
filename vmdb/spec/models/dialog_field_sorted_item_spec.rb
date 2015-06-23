@@ -30,6 +30,7 @@ describe DialogFieldSortedItem do
         "data_type"     => "datatype",
         "default_value" => "default",
         "required"      => true,
+        "read_only"     => true,
         "values"        => values
       }
     end
@@ -56,7 +57,11 @@ describe DialogFieldSortedItem do
       end
 
       it "sets the required" do
-        expect(dialog_field.required).to eq(true)
+        expect(dialog_field.required).to be_true
+      end
+
+      it "sets the read_only" do
+        expect(dialog_field.read_only).to be_true
       end
     end
 

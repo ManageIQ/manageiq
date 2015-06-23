@@ -139,6 +139,9 @@ en:
   dictionary:
     column:
       # "." character not allowed in column key
+      User:
+        name: Full Name
+      userid: Username
       availability_zone:
         total_vms: Total Instances
 
@@ -800,9 +803,25 @@ en:
       virtualcenter:   VMware vCenter
       vmwareserver:    VMware Server
 
+    ems_cluster_types:
+      cluster:            Cluster / Deployment Role
+      clusters:           Clusters / Deployment Roles
+      cluster_infra:      Cluster
+      cluster_infras:     Clusters
+      cluster_openstack:  Deployment Role
+      cluster_openstacks: Deployment Roles
+
     host_os_type:
       linux_generic:   Linux
       windows_generic: Windows
+
+    host_types:
+      host:            Host / Node
+      hosts:           Hosts / Nodes
+      host_infra:      Host
+      host_infras:     Hosts
+      host_openstack:  Node
+      host_openstacks: Nodes
 
     model:
       AuditEvent:               EVM Audit Event
@@ -817,8 +836,9 @@ en:
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
       EmsCloud:                 Cloud Provider
-      EmsCluster:               Cluster
+      EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
+      EmsContainer:             Container Provider
       EmsEvent:                 Management Event
       EmsFolder:                Folder
       EmsInfra:                 Infrastructure Provider
@@ -829,6 +849,7 @@ en:
       FileDepotSmb:             Samba
       Filesystem:               File
       Flavor:                   Flavor
+      Host:                     Host / Node
       HostPerformance:          Performance - Host
       IsoDatastore:             ISO Datastore
       IsoImage:                 ISO Image
@@ -930,16 +951,22 @@ en:
       containers:                  Containers
       container_group:             Container Group
       container_groups:            Container Groups
+      container_replicator:        Replicator
+      container_replicators:       Replicators
       container_node:              Node
       container_nodes:             Nodes
       container_service:           Service
       container_services:          Services
+      container_route:             Route
+      container_routes:            Routes
+      container_project:           Project
+      container_projects:          Projects
       custom_button:               Button
       custom_button_set:           Buttons Group
       ems_cloud:                   Cloud Provider
       ems_clouds:                  Cloud Providers
-      ems_cluster:                 Cluster
-      ems_clusters:                Clusters
+      ems_cluster:                 Cluster / Deployment Role
+      ems_clusters:                Clusters / Deployment Roles
       ems_custom_attribute:        VC Custom Attribute
       ems_custom_attributes:       VC Custom Attributes
       ems_event:                   Management Event
@@ -948,8 +975,8 @@ en:
       ems_folders:                 Folders
       ems_infra:                   Infrastructure Provider
       ems_infras:                  Infrastructure Providers
-      ems_container:               Provider
-      ems_containers:              Providers
+      ems_container:               Containers Provider
+      ems_containers:              Containers Providers
       evm_owner:                   EVM Owner
       ext_management_system:       Cloud/Infrastructure Provider
       ext_management_systems:      Cloud/Infrastructure Providers
@@ -959,6 +986,8 @@ en:
       flavors:                     Flavors
       floppies:                    Floppy Drives
       guest_devices:               Devices
+      host:                        Host / Node
+      hosts:                       Hosts / Nodes
       host_services:               Services
       iso_datastore:               ISO Datastore
       iso_image:                   ISO Image
@@ -978,7 +1007,6 @@ en:
       miq_provision_template:      Provisioned From Template
       miq_provision_vms:           Provisioned VMs
       miq_provisions:              Provisions
-      miq_proxy:                   SmartProxy
       miq_proxy_builds:            SmartProxy Builds
       miq_region:                  Region
       miq_regions:                 Regions
@@ -1060,3 +1088,5 @@ en:
       users:               Users
       vmtree_info:         Genealogy
       win32_services:      Win32 Services
+    ui_title:
+      foreman:             Foreman

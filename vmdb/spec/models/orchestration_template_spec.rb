@@ -22,7 +22,7 @@ describe OrchestrationTemplate do
         @existing_record = FactoryGirl.create(:orchestration_template)
         # prepare the query with different name and description; it is considered the same template
         # because the body (:template and :md5) does not change
-        @query_hash = @existing_record.as_json.symbolize_keys
+        @query_hash = @existing_record.as_json.symbolize_keys.except(:id)
         @query_hash[:name]        = "renamed"
         @query_hash[:description] = "modified description"
       end
@@ -167,6 +167,33 @@ describe OrchestrationTemplate do
       existing_template.should == OrchestrationTemplate.find_or_create_by_contents(:content => raw_text)[0]
       existing_template.should == OrchestrationTemplate.find_or_create_by_contents(:content => content)[0]
       OrchestrationTemplate.count.should == 1
+    end
+  end
+
+  describe ".save_with_format_validation!" do
+    let(:template) { FactoryGirl.build(:orchestration_template) }
+
+    context "when format validation fails" do
+      it "raises an error showing the failure reason" do
+        template.stub(:validate_format => "format is invalid")
+        expect { template.save_with_format_validation! }
+          .to raise_error(MiqException::MiqParsingError, "format is invalid")
+      end
+    end
+
+    context "when format validation passes" do
+      it "saves the template" do
+        template.stub(:validate_format => nil)
+        template.save_with_format_validation!.should be_true
+      end
+    end
+
+    context "when the template is draft" do
+      it "always saves the template" do
+        template.draft = true
+        template.stub(:validate_format => "format is invalid")
+        template.save_with_format_validation!.should be_true
+      end
     end
   end
 end

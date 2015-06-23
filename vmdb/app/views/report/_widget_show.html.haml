@@ -191,28 +191,10 @@
     %hr
   %h3
     = _('Visibility')
-  - if @widget.visibility && @widget.visibility[:groups]
-    - show_to = @widget.visibility
-  - elsif @widget.visibility && @widget.visibility[:roles] && @widget.visibility[:roles][0] == "_ALL_"
-    - show_to = _("To All Users")
-  - else
-    - show_to = _("By Role")
   %table.style1
     %td.key
       = _('Show')
     %td
-      = h(show_to)
-  - if show_to == _("By Role") && !@sb[:user_roles].blank?
-    %tr
-      %td.key
-        = _('User Roles')
-      %td
-        = h(@sb[:user_roles].join(", "))
-  - elsif show_to == _("By Group") && !@sb[:groups].blank?
-    %tr
-      %td.key
-        = _('Groups')
-      %td
-        = h(@sb[:groups].join(", "))
+      = visibility_options(@widget)
   - if @widget.read_only
     = _('* Fields are read only for default Widgets')

@@ -33,19 +33,22 @@ module ResourcePoolHelper::TextualSummary
 
   def textual_aggregate_cpu_speed
     # TODO: Why aren't we using mhz_to_human_size here?
-    {:label => "Total Host CPU Resources", :value => "#{number_with_delimiter(@record.aggregate_cpu_speed)} MHz"}
+    {:label => "Total #{title_for_host} CPU Resources",
+     :value => "#{number_with_delimiter(@record.aggregate_cpu_speed)} MHz"}
   end
 
   def textual_aggregate_cpu_memory
-    {:label => "Total Host Memory", :value => number_to_human_size(@record.aggregate_memory.megabytes, :precision => 0)}
+    {:label => "Total #{title_for_host} Memory",
+     :value => number_to_human_size(@record.aggregate_memory.megabytes, :precision => 0)}
   end
 
   def textual_aggregate_physical_cpus
-    {:label => "Total Host CPUs", :value => number_with_delimiter(@record.aggregate_physical_cpus)}
+    {:label => "Total #{title_for_host} CPUs",
+     :value => number_with_delimiter(@record.aggregate_physical_cpus)}
   end
 
   def textual_aggregate_logical_cpus
-    {:label => "Total Host CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
+    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
   end
 
   def textual_aggregate_vm_memory
@@ -62,9 +65,11 @@ module ResourcePoolHelper::TextualSummary
 
   def textual_parent_cluster
     cluster = @record.parent_cluster
-    h = {:label => "Parent Cluster", :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
+    h = {:label => "Parent '#{title_for_cluster}'",
+         :image => "ems_cluster",
+         :value => (cluster.nil? ? "None" : cluster.name)}
     if cluster && role_allows(:feature => "ems_cluster_show")
-      h[:title] = "Show Parent Cluster '#{cluster.name}'"
+      h[:title] = "Show Parent #{title_for_cluster} #{cluster.name}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)
     end
     h
@@ -72,9 +77,9 @@ module ResourcePoolHelper::TextualSummary
 
   def textual_parent_host
     host = @record.parent_host
-    h = {:label => "Parent Host", :image => "host", :value => (host.nil? ? "None" : host.name)}
+    h = {:label => "Parent #{title_for_host}", :image => "host", :value => (host.nil? ? "None" : host.name)}
     if host && role_allows(:feature => "host_show")
-      h[:title] = "Show Parent Host '#{host.name}'"
+      h[:title] = "Show Parent #{title_for_host} '#{host.name}'"
       h[:link]  = url_for(:controller => 'host', :action => 'show', :id => host)
     end
     h

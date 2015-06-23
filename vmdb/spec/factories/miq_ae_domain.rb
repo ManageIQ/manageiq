@@ -10,7 +10,7 @@ FactoryGirl.define do
 
   factory :miq_ae_domain, :parent => :miq_ae_namespace do
     trait :with_methods do
-      ignore do
+      transient do
         ae_methods do {'method1' => {:scope => 'instance', :location => 'inline',
                                       'params' => {'name' => {:aetype        => 'attribute',
                                                               :datatype      => 'string',
@@ -26,7 +26,7 @@ FactoryGirl.define do
     end
 
     trait :with_instances do
-      ignore do
+      transient do
         ae_fields do {'field1' => {:aetype => 'state', :datatype => 'string'},
                       'field2' => {:aetype => 'relationship', :datatype => 'string'},
                       'field3' => {:aetype => 'method', :datatype => 'string'},
@@ -45,7 +45,7 @@ FactoryGirl.define do
     end
 
     trait :with_small_model do
-      ignore do
+      transient do
         ae_class 'CLASS1'
         ae_namespace 'NS1/NS2'
       end

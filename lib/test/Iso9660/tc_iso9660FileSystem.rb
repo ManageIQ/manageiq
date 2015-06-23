@@ -1,5 +1,5 @@
 require 'ostruct'
-require 'test/unit'
+require 'minitest/unit'
 
 $:.push("#{File.dirname(__FILE__)}/../../disk")
 require 'MiqDisk'
@@ -49,7 +49,7 @@ def Dir(fs)
 	end
 end
 
-class TestIso9660FileSystem < Test::Unit::TestCase
+class TestIso9660FileSystem < Minitest::Test
 	
 	def test_miq_fs
 		puts "Testing file system"

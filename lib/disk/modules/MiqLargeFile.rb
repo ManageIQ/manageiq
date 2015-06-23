@@ -6,9 +6,9 @@ require 'miq-system'
 
 if Platform::IMPL == :linux
 	if MiqSystem.arch == :x86
-		require 'MiqLargeFileLinux'
+		require 'large_file_linux'
 	elsif MiqSystem.arch == :x86_64
-		require 'MiqBlockDevOps'
+		require 'linux_block_device'
 		require 'RawBlockIO'
 	end
 elsif Platform::OS == :win32
@@ -22,7 +22,7 @@ module MiqLargeFile
 			return(MiqLargeFileWin32.new(file_name, flags))
 		when :unix
 			if Platform::IMPL == :linux
-				return(MiqLargeFileLinux.new(file_name, flags)) if MiqSystem.arch == :x86
+				return(LargeFileLinux.new(file_name, flags)) if MiqSystem.arch == :x86
 				return(RawBlockIO.new(file_name, flags)) if MiqLargeFileStat.new(file_name).blockdev?
 			end
 			return(MiqLargeFileOther.new(file_name, flags))
@@ -63,7 +63,7 @@ module MiqLargeFile
       
         def size
             return self.stat.size unless self.stat.blockdev?
-			return MiqBlockDevOps.blkgetsize64(self.fileno)
+			return LinuxBlockDevice.size(self.fileno)
         end
     end
 end

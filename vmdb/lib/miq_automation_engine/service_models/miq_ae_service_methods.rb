@@ -61,17 +61,8 @@ module MiqAeMethodService
 
     def self.vm_templates
       ar_method do
-        condition = ["template = ? AND vendor = 'vmware' AND ems_id is not NULL", true]
-        #vms = Rbac.search(:class => Vm, :conditions => condition, :results_format => :objects, :userid => @userid).first
-        vms = VmOrTemplate.find(:all, :conditions => condition)
+        vms = VmOrTemplate.where(:template => true, :vendor => 'vmware').where.not(:ems_id => nil)
         MiqAeServiceModelBase.wrap_results(vms)
-      end
-    end
-
-    def self.active_miq_proxies
-      ar_method do
-        proxies = MiqProxy.all.collect { |p| p.is_active? ? p : nil }.compact
-        MiqAeServiceModelBase.wrap_results(proxies)
       end
     end
 

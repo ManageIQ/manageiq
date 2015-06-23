@@ -10,7 +10,7 @@ class HostController < ApplicationController
     redirect_to :action => 'show_list'
   end
 
-  def drift_history
+  def show_association(action, display_name, listicon, method, klass, association = nil, conditions = nil)
     set_config(identify_record(params[:id]))
     super
   end
@@ -81,11 +81,6 @@ class HostController < ApplicationController
       drop_breadcrumb( {:name=>@host.name+" (Storage Adapters)", :url=>"/host/show/#{@host.id}?display=storage_adapters"} )
       build_sa_tree
 
-    when "miq_proxies"
-      drop_breadcrumb( {:name=>@host.name+" (Managing SmartProxies)", :url=>"/host/show/#{@host.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@host)  # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-
     when "miq_templates", "vms"
       title = @display == "vms" ? "VMs" : "Templates"
       kls = @display == "vms" ? Vm : MiqTemplate
@@ -96,6 +91,12 @@ class HostController < ApplicationController
           @view.extras[:total_count] > @view.extras[:auth_count]
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this Host"
       end
+
+    when "cloud_tenants"
+      drop_breadcrumb(:name => _("%s (All cloud tenants present on this host)") % @host.name,
+                      :url => "/host/show/#{@host.id}?display=cloud_tenants")
+      @view, @pages = get_view(CloudTenant, :parent => @host) # Get the records (into a view) and the paginator
+      @showtype = "cloud_tenants"
 
     when "resource_pools"
       drop_breadcrumb( {:name=>@host.name+" (All Resource Pools)", :url=>"/host/show/#{@host.id}?display=resource_pools"} )
@@ -140,12 +141,71 @@ class HostController < ApplicationController
     end
   end
 
+  def filesystems_subsets
+    condition = nil
+    label     = _('Files')
+
+    host_service_group = HostServiceGroup.where(:id => params['host_service_group']).first
+    if host_service_group
+      condition = host_service_group.host_service_group_filesystems_condition
+      label     = _("Configuration files of %s") % 'nova service'
+    end
+
+    # HACK: UI get_view can't do arel relations, so I need to expose conditions
+    condition = condition.to_sql if condition
+
+    return label, condition
+  end
+
+  def set_config_local
+    set_config(identify_record(params[:id]))
+    super
+  end
+  alias set_config_local drift_history
+  alias set_config_local groups
+  alias set_config_local patches
+  alias set_config_local users
+
   def filesystems
-    show_association('filesystems', 'Files', 'filesystems', :filesystems, Filesystem)
+    label, condition = filesystems_subsets
+    show_association('filesystems', label, 'filesystems', :filesystems, Filesystem, nil, condition)
+  end
+
+  def host_services_subsets
+    condition = nil
+    label     = _('Services')
+
+    host_service_group = HostServiceGroup.where(:id => params['host_service_group']).first
+    if host_service_group
+      case params[:status]
+      when 'running'
+        condition = host_service_group.running_system_services_condition
+        label     = _("Running system services of %s") % host_service_group.name
+      when 'failed'
+        condition =  host_service_group.failed_system_services_condition
+        label     = _("Failed system services of %s") % host_service_group.name
+      when 'all'
+        condition = nil
+        label     = _("All system services of %s") % host_service_group.name
+      end
+
+      if condition
+        # Amend the condition with the openstack host service foreign key
+        condition = condition.and(host_service_group.host_service_group_system_services_condition)
+      else
+        condition = host_service_group.host_service_group_system_services_condition
+      end
+    end
+
+    # HACK: UI get_view can't do arel relations, so I need to expose conditions
+    condition = condition.to_sql if condition
+
+    return label, condition
   end
 
   def host_services
-    show_association('host_services', 'Services', 'service', :host_services, SystemService)
+    label, condition = host_services_subsets
+    show_association('host_services', label, 'service', :host_services, SystemService, nil, condition)
   end
 
   def advanced_settings
@@ -153,6 +213,7 @@ class HostController < ApplicationController
   end
 
   def firewall_rules
+    @display = "main"
     show_association('firewall_rules', 'Firewall Rules', 'firewallrule', :firewall_rules, FirewallRule)
   end
 
@@ -569,25 +630,29 @@ class HostController < ApplicationController
 
   private ############################
 
+  def breadcrumb_name
+    title_for_hosts
+  end
+
   # Build the tree object to display the host network info
   def build_network_tree
     @tree_vms = []                   # Capture all VM ids in the tree
     host_node = TreeNodeBuilder.generic_tree_node(
-      "h_#{@host.id}|",
+      "h_#{@host.id}",
       @host.name,
       "host.png",
       "Host: #{@host.name}",
       :expand => true
     )
     host_node[:children] = add_host_branch if @host.switches.length > 0
-    @temp[:network_tree] = [host_node].to_json
+    @network_tree = [host_node].to_json
     session[:tree_name]  = "network_tree"
   end
 
   def add_host_branch
     @host.switches.collect do |s|
       switch_node = TreeNodeBuilder.generic_tree_node(
-        "s_#{s.id}|",
+        "s_#{s.id}",
         s.name,
         "switch.png",
         "Switch: #{s.name}"
@@ -603,7 +668,7 @@ class HostController < ApplicationController
   def add_guest_devices(switch)
     switch.guest_devices.collect do |p|
       TreeNodeBuilder.generic_tree_node(
-        "n_#{p.id}|",
+        "n_#{p.id}",
         p.device_name,
         "pnic.png",
         "Physical NIC: #{p.device_name}"
@@ -614,7 +679,7 @@ class HostController < ApplicationController
   def add_lans(switch)
     switch.lans.collect do |l|
       lan_node = TreeNodeBuilder.generic_tree_node(
-        "l_#{l.id}|",
+        "l_#{l.id}",
         l.name,
         "lan.png",
         "Port Group: #{l.name}"
@@ -635,7 +700,7 @@ class HostController < ApplicationController
           image = "#{v.current_state.downcase}.png"
         end
         TreeNodeBuilder.generic_tree_node(
-          "v-#{v.id}|",
+          "v-#{v.id}",
           v.name,
           image,
           "VM: #{v.name} (Click to view)"
@@ -647,7 +712,7 @@ class HostController < ApplicationController
   # Build the tree object to display the host storage adapter info
   def build_sa_tree
     host_node = TreeNodeBuilder.generic_tree_node(
-      "h_#{@host.id}|",
+      "h_#{@host.id}",
       @host.name,
       "host.png",
       "Host: #{@host.name}",
@@ -656,7 +721,7 @@ class HostController < ApplicationController
     )
     host_node[:children] = storage_adapters_node if !@host.hardware.nil? &&
         @host.hardware.storage_adapters.length > 0
-    @temp[:sa_tree] = [host_node].to_json
+    @sa_tree = [host_node].to_json
     session[:tree] = "sa"
     session[:tree_name] = "sa_tree"
   end
@@ -664,7 +729,7 @@ class HostController < ApplicationController
   def storage_adapters_node
     @host.hardware.storage_adapters.collect do |storage_adapter|
       storage_adapter_node = TreeNodeBuilder.generic_tree_node(
-          "sa_#{storage_adapter.id}|",
+          "sa_#{storage_adapter.id}",
           storage_adapter.device_name,
           "sa_#{storage_adapter.controller_type.downcase}.png",
           "#{storage_adapter.controller_type} Storage Adapter: #{storage_adapter.device_name}",
@@ -682,7 +747,7 @@ class HostController < ApplicationController
       name = name + " (#{scsi_target.iscsi_name})" unless scsi_target.iscsi_name.blank?
       target_text = name.blank? ? "[empty]" : name
       target_node = TreeNodeBuilder.generic_tree_node(
-          "t_#{scsi_target.id}|",
+          "t_#{scsi_target.id}",
           target_text,
           "target_scsi.png",
           "Target: #{target_text}",
@@ -696,7 +761,7 @@ class HostController < ApplicationController
   def add_miq_scsi_luns_nodes(target)
     target.miq_scsi_luns.collect do |l|
       TreeNodeBuilder.generic_tree_node(
-        "l_#{l.id}|",
+        "l_#{l.id}",
         l.canonical_name,
         "lun.png",
         "LUN: #{l.canonical_name}",
@@ -715,7 +780,7 @@ class HostController < ApplicationController
       @tabnum = "1"
     end
     if host.authentication_userid.blank? && (!host.authentication_userid(:remote).blank? || !host.authentication_userid(:ws).blank?)
-      @edit[:errors].push("Default User ID must be entered if a Remote Login or Web Services User ID is entered")
+      @edit[:errors].push("Default Username must be entered if a Remote Login or Web Services Username is entered")
       valid = false
       @tabnum = "1"
     end
@@ -755,7 +820,6 @@ class HostController < ApplicationController
 
     @edit[:new][:name]              = @host.name
     @edit[:new][:hostname]          = @host.hostname
-    @edit[:new][:ipaddress]         = @host.ipaddress
     @edit[:new][:ipmi_address]      = @host.ipmi_address
     @edit[:new][:custom_1]          = @host.custom_1
     @edit[:new][:user_assigned_os]  = @host.user_assigned_os
@@ -801,7 +865,6 @@ class HostController < ApplicationController
 
     @edit[:new][:name]              = params[:name]             if params[:name]
     @edit[:new][:hostname]          = params[:hostname]         if params[:hostname]
-    @edit[:new][:ipaddress]         = params[:ipaddress]        if params[:ipaddress]
     @edit[:new][:ipmi_address]      = params[:ipmi_address]     if params[:ipmi_address]
     @edit[:new][:mac_address]       = params[:mac_address]      if params[:mac_address]
     @edit[:new][:custom_1]          = params[:custom_1]         if params[:custom_1]
@@ -837,19 +900,19 @@ class HostController < ApplicationController
   end
 
   def set_verify_status
-    if @edit[:new][:default_userid].blank? || @edit[:new][:ipaddress].blank?
+    if @edit[:new][:default_userid].blank? || @edit[:new][:hostname].blank?
       @edit[:default_verify_status] = false
     else
       @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
     end
 
-    if @edit[:new][:remote_userid].blank? || @edit[:new][:ipaddress].blank?
+    if @edit[:new][:remote_userid].blank? || @edit[:new][:hostname].blank?
       @edit[:remote_verify_status] = false
     else
       @edit[:remote_verify_status] = (@edit[:new][:remote_password] == @edit[:new][:remote_verify])
     end
 
-    if @edit[:new][:ws_userid].blank? || @edit[:new][:ipaddress].blank?
+    if @edit[:new][:ws_userid].blank? || @edit[:new][:hostname].blank?
       @edit[:ws_verify_status] = false
     else
       @edit[:ws_verify_status] = (@edit[:new][:ws_password] == @edit[:new][:ws_verify])
@@ -867,19 +930,19 @@ class HostController < ApplicationController
       @edit[:default_verify_status] = @edit[:ws_verify_status] = @edit[:remote_verify_status]= @edit[:ipmi_verify_status] = false
     else
       host = find_by_id_filtered(Host, id.to_i)
-      if @edit[:new][:default_userid].blank? || host.ipaddress.blank?
+      if @edit[:new][:default_userid].blank? || host.hostname.blank?
         @edit[:default_verify_status] = false
       else
         @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
       end
 
-      if @edit[:new][:remote_userid].blank? || host.ipaddress.blank?
+      if @edit[:new][:remote_userid].blank? || host.hostname.blank?
         @edit[:remote_verify_status] = false
       else
         @edit[:remote_verify_status] = (@edit[:new][:remote_password] == @edit[:new][:remote_verify])
       end
 
-      if @edit[:new][:ws_userid].blank? || host.ipaddress.blank?
+      if @edit[:new][:ws_userid].blank? || host.hostname.blank?
         @edit[:ws_verify_status] = false
       else
         @edit[:ws_verify_status] = (@edit[:new][:ws_password] == @edit[:new][:ws_verify])
@@ -896,8 +959,7 @@ class HostController < ApplicationController
   # Set record variables to new values
   def set_record_vars(host, mode = nil)
     host.name             = @edit[:new][:name]
-    host.hostname         = @edit[:new][:hostname]
-    host.ipaddress        = @edit[:new][:ipaddress]
+    host.hostname         = @edit[:new][:hostname].strip
     host.ipmi_address     = @edit[:new][:ipmi_address]
     host.mac_address      = @edit[:new][:mac_address]
     host.custom_1         = @edit[:new][:custom_1]

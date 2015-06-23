@@ -1,7 +1,6 @@
-- url = url_for(:action => 'cu_repair_field_changed')
-- url_json = {:url => url}.to_json
-
 - if @sb[:active_tab] == "diagnostics_cu_repair"
+  - url = url_for(:action => 'cu_repair_field_changed')
+  - url_json = {:url => url}.to_json
   = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
   -# Create from/to date JS vars to limit calendar starting from
   :javascript

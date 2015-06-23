@@ -21,7 +21,7 @@ class EvmApplication
     MiqServer.kill_all_workers
     rr      = File.expand_path(Rails.root)
     runner  = File.join(rr, "bin/rails runner")
-    program = File.join(rr, "lib/workers/evm_server.rb")
+    program = File.join(rr, "lib/workers/bin/evm_server.rb")
     command_line = "#{runner} #{program}"
 
     env_options = {}

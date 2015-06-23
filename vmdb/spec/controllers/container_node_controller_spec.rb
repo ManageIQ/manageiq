@@ -13,21 +13,20 @@ describe ContainerNodeController do
   end
 
   it "renders show screen" do
-    ems = FactoryGirl.create(:ext_management_system)
-    container_node = ContainerNode.create(:ext_management_system => ems, :name => "Test Node")
+    MiqServer.stub(:my_zone).and_return("default")
+    ems = FactoryGirl.create(:ems_kubernetes)
+    container_node = FactoryGirl.create(:container_node, :ext_management_system => ems, :name => "Test Node")
     get :show, :id => container_node.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(assigns(:breadcrumbs)).to eq([{:name => "Test Node (Summary)",
-                                          :url  => "/container_node/show/#{container_node.id}"}])
+    expect(assigns(:breadcrumbs)).to eq([:name => "Test Node (Summary)",
+                                         :url  => "/container_node/show/#{container_node.id}"])
   end
 
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containernode => 'list'},
                           :perpage        => {:list => 10}}
-    session[:userid] = User.current_user.userid
-    session[:eligible_groups] = []
     FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
 

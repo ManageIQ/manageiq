@@ -19,7 +19,7 @@ module ManageiqForeman
       end
       {
         :hosts      => hosts,
-        :hostgroups => hostgroups.denormalize
+        :hostgroups => hostgroups
       }
     end
 
@@ -29,7 +29,12 @@ module ManageiqForeman
         :media             => connection.all(:media),
         :ptables           => connection.all(:ptables),
         :locations         => connection.all(:locations),
-        :organizations     => connection.all(:organizations)
+        :organizations     => connection.all(:organizations),
+        :architectures     => connection.all(:architectures),
+        :compute_profiles  => connection.all(:compute_profiles),
+        :domains           => connection.all(:domains),
+        :environments      => connection.all(:environments),
+        :realms            => connection.all(:realms),
       }
     end
   end

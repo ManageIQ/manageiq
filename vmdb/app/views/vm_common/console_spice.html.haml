@@ -5,8 +5,15 @@
     %title
       = _('SPICE Console')
     = stylesheet_link_tag 'application'
-    = javascript_include_tag 'jquery/jquery-1.8.3.min', 'jquery/jquery-ui-1.9.2.custom.min'
-    = javascript_include_tag 'application'
+    = javascript_include_tag 'application', 'spiceHTML5/enums', 'spiceHTML5/atKeynames', 'spiceHTML5/utils',
+    'spiceHTML5/png', 'spiceHTML5/lz', 'spiceHTML5/quic', 'spiceHTML5/bitmap',
+    'spiceHTML5/spicedataview', 'spiceHTML5/spicetype', 'spiceHTML5/spicemsg', 'spiceHTML5/wire',
+    'spiceHTML5/spiceconn', 'spiceHTML5/display', 'spiceHTML5/main', 'spiceHTML5/inputs',
+    'spiceHTML5/cursor', 'spiceHTML5/thirdparty/jsbn', 'spiceHTML5/thirdparty/rsa',
+    'spiceHTML5/thirdparty/prng4', 'spiceHTML5/thirdparty/rng', 'spiceHTML5/thirdparty/sha1',
+    'spiceHTML5/ticket', 'spice-html5'
+    - if Rails.env.development?
+      = javascript_include_tag 'miq_debug'
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default', :onclick => 'sendCtrlAltDel()')
@@ -59,7 +66,7 @@
 
         function spice_connecting() {
           var enc_text = encrypt ? 'encrypted' : 'unencrypted';
-          $('#spice-status').text('Connecteding ('+ enc_text + ') to: ' +
+          $('#spice-status').text('Connecting ('+ enc_text + ') to: ' +
             $('#spice-status').attr('data-host'));
           $('#spice-status').addClass('label-success');
         }

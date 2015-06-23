@@ -1,8 +1,8 @@
 $:.push("#{File.dirname(__FILE__)}/../../util/")
 require 'miq-xml'
-require 'test/unit'
+require 'minitest/unit'
 
-class TestBaseXmlMethods < Test::Unit::TestCase
+class TestBaseXmlMethods < Minitest::Test
 	def setup
 	end
 	
