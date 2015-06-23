@@ -26,10 +26,8 @@ module VmShowMixin
     end
 
     # Build the Explorer screen from scratch
-    allowed_features = features.select { |f| role_allows(:feature => f.role) }
-    allowed_features.each { |feature| build_vm_tree(feature.name, feature.tree_name) }
-
-    @trees = allowed_features.map(&:tree_list_name)
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
     @accords = allowed_features.map(&:accord_hash)
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
@@ -93,7 +91,7 @@ module VmShowMixin
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
   def tree_add_child_nodes(id)
-    return x_get_child_nodes_dynatree(x_active_tree, id)
+    TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id)
   end
 
   def show_record(id = nil)
@@ -166,21 +164,5 @@ module VmShowMixin
     session[:vm_display]      = @display unless @display.nil?
     session[:polArr]          = @polArr unless @polArr.nil?
     session[:policy_options]  = @policy_options unless @policy_options.nil?
-  end
-
-  # Build a VM & Template explorer tree
-  def build_vm_tree(type, name)
-    x_tree_init(name, type, vm_model_from_active_tree(name),
-      :open_all => type == :filter
-    )
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    # Fill in root node details
-    root = tree_nodes.first
-    root[:icon] = "vm.png"
-    root[:title], root[:tooltip] = TreeBuilder.root_options(name)
-
-    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 end

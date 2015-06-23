@@ -346,9 +346,10 @@ module ApplicationController::Explorer
   end
 
   # Get the children of a dynatree node that is being expanded (autoloaded)
+  # FIXME: still used by reports and control, replace with TreeBuilder.x_get_child_nodes
   def x_get_child_nodes_dynatree(tree, id)
-    prefix, rec_id = id.split("_").last.split('-')      # Get this nodes model and id
-    model = TreeBuilder.get_model_for_prefix(prefix)                # Get this nodes model (folder, Vm, Cluster, etc)
+    model, rec_id, prefix = TreeBuilder.extract_node_model_and_id(id)
+
     if model == "Hash"
       object = {:type=>prefix, :id=>rec_id, :full_id=>id}
     elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   #creating empty record to show items under unassigned catalog node
@@ -367,7 +368,7 @@ module ApplicationController::Explorer
       kids += x_build_node_dynatree(o, id, options)
     end
 
-    return kids                                         # Return the node's children
+    kids
   end
 
   # Get root nodes count/array for explorer tree
@@ -463,19 +464,8 @@ module ApplicationController::Explorer
         objects = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])
       end
       return options[:count_only] ? objects.count : objects.sort_by { |a| a.name.downcase }
-    when :vandt # :vandt is partially built in a "new" full tree way
-      objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
-
-      if count_only
-        return objects.length + 2
-      else
-        objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options).tree }
-        return objects +
-          [
-            {:id=>"arch", :text=>"<Archived>", :image=>"currentstate-archived", :tip=>"Archived VMs and Templates"},
-            {:id=>"orph", :text=>"<Orphaned>", :image=>"currentstate-orphaned", :tip=>"Orphaned VMs and Templates"}
-          ]
-      end
+    when :vandt, :images, :instances, :filter
+      raise "x_get_tree_roots called for #{options[:type]} tree"
     when :handc
       objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
       if count_only
@@ -486,28 +476,6 @@ module ApplicationController::Explorer
             {:id=>"arch", :text=>"<Archived>", :image=>"currentstate-archived", :tip=>"Archived VMs and Templates"},
             {:id=>"orph", :text=>"<Orphaned>", :image=>"currentstate-orphaned", :tip=>"Orphaned VMs and Templates"}
           ]
-      end
-    when :images
-      objects = rbac_filtered_objects(EmsCloud.order("lower(name)"), :match_via_descendants => "TemplateCloud")
-      if count_only
-        return objects.length + 2
-      else
-        return objects +
-            [
-                {:id=>"arch", :text=>"<Archived>", :image=>"currentstate-archived", :tip=>"Archived Images"},
-                {:id=>"orph", :text=>"<Orphaned>", :image=>"currentstate-orphaned", :tip=>"Orphaned Images"}
-            ]
-      end
-    when :instances
-      objects = rbac_filtered_objects(EmsCloud.order("lower(name)"), :match_via_descendants => "VmCloud")
-      if count_only
-        return objects.length + 2
-      else
-        return objects +
-            [
-                {:id=>"arch", :text=>"<Archived>", :image=>"currentstate-archived", :tip=>"Archived Instances"},
-                {:id=>"orph", :text=>"<Orphaned>", :image=>"currentstate-orphaned", :tip=>"Orphaned Instances"}
-            ]
       end
     when :savedreports
       # Saving the unique folder id's that hold reports under them, to use them in view to generate link
@@ -533,13 +501,6 @@ module ApplicationController::Explorer
         filtered_objects.push(object) if !items.empty?
       end
       return count_only ? filtered_objects.length : filtered_objects
-    when :filter
-      objects =
-        [
-          {:id=>"global", :text=>"Global Filters", :image=>"folder", :tip=>"Global Shared Filters", :cfmeNoClick=>true},
-          {:id=>"my", :text=>"My Filters", :image=>"folder", :tip=>"My Personal Filters", :cfmeNoClick=>true}
-        ]
-      return objects
     when :bottlenecks, :utilization
       ent = MiqEnterprise.my_enterprise
       objects = ent.miq_regions.sort_by { |a| a.description.to_s.downcase }
@@ -555,57 +516,9 @@ module ApplicationController::Explorer
     end
   end
 
-  # Get AvailabilityZone children count/array
-  def x_get_tree_az_kids(object, options)
-    count_only = options[:count_only]
-    case options[:type]
-      when :instances
-        objects = rbac_filtered_objects(object.vms.order("name"))
-        return count_only ? objects.length : objects
-      else
-        return count_only ? 0 : []
-    end
-  end
-
   # Get ems children count/array
   def x_get_tree_ems_kids(object, options)
-    count_only = options[:count_only]
-    case options[:type]
-    when :vandt, :handc
-      if object.is_a?(EmsOpenstack)
-        objects = rbac_filtered_objects(object.vms_and_templates.order("name"))
-      else
-        objects = object.ems_folder_root ?
-          rbac_filtered_objects(object.ems_folder_root.children, :match_via_descendants => "VmOrTemplate").sort_by { |a| a.name.downcase } :
-          []
-      end
-      return count_only ? objects.length : objects
-    when :images
-      objects = rbac_filtered_objects(object.miq_templates.order("name"))
-      return count_only ? objects.length : objects
-    when :instances
-      objects = Array.new
-      objects += rbac_filtered_objects(object.availability_zones.order("name"))
-      objects += rbac_filtered_objects(object.vms.where(:availability_zone_id => nil).order("name"))
-      return count_only ? objects.length : objects
-    when :bottlenecks, :utilization
-      ems_clusters = rbac_filtered_objects(object.ems_clusters)
-      non_clustered_hosts = rbac_filtered_objects(object.non_clustered_hosts)
-      if options[:count_only]
-        return ems_clusters.count + non_clustered_hosts.count
-      else
-        objects = Array.new
-        if ems_clusters.count > 0 || non_clustered_hosts.count > 0
-          objects.push(:id    => "folder_c_xx-#{to_cid(object.id)}",
-                       :text  => ui_lookup(:ems_cluster_types => "cluster"),
-                       :image => "folder",
-                       :tip   => "#{ui_lookup(:ems_cluster_types => "cluster")} (Click to open)")
-        end
-        return objects
-      end
-    else
-      return count_only ? 0 : []
-    end
+    raise "x_get_tree_roots called for #{options[:type]} tree"
   end
 
   def x_get_tree_datacenter_kids(object, options)
@@ -668,6 +581,7 @@ module ApplicationController::Explorer
 
   def x_get_tree_host_kids(object, options)
     if [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
+      raise "ERROR: should not get here"
       objects = Array.new
     else
       objects = rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }.delete_if(&:is_default)
@@ -994,24 +908,6 @@ module ApplicationController::Explorer
         end
       end
       return options[:count_only] ? objects.count : objects
-    when :sandt   #build node showing any button groups or buttons under selected CatalogItem
-      @resolve ||= Hash.new
-      @resolve[:target_classes] = Hash.new
-      CustomButton.button_classes.each{|db| @resolve[:target_classes][db] = ui_lookup(:model=>db)}
-      @sb[:target_classes] = @resolve[:target_classes].invert
-      @resolve[:target_classes] = Array(@resolve[:target_classes].invert).sort
-      st = ServiceTemplate.find_by_id(object[:id])
-      items = st.custom_button_sets + st.custom_buttons
-      objects = Array.new
-      if st.options && st.options[:button_order]
-        st.options[:button_order].each do |item_id|
-          items.each do |g|
-            rec_id = "#{g.kind_of?(CustomButton) ? 'cb' : 'cbg'}-#{g.id}"
-            objects.push(g) if item_id == rec_id
-          end
-        end
-      end
-      return count_only ? objects.length : objects
     when :savedreports
       view, pages = get_view(MiqReportResult, :where_clause=>set_saved_reports_condition(from_cid(object[:id].split('-').last)), :all_pages=>true)
       objects = Array.new
@@ -1030,6 +926,7 @@ module ApplicationController::Explorer
       end
       options[:count_only] ? objects.length : objects.sort_by { |a| a.name.downcase }
     when :images # Images by Provider tree has orphaned and archived nodes
+      # FIXME: orphaned, archived
       case object[:id]
         when "orph" # Orphaned
           objects = rbac_filtered_objects(TemplateCloud.all_orphaned).sort_by { |a| a.name.downcase }
@@ -1038,6 +935,7 @@ module ApplicationController::Explorer
       end
       return options[:count_only] ? objects.length : objects
     when :instances # Instances by Provider tree has orphaned and archived nodes
+      # FIXME: orphaned, archived
       case object[:id]
         when "orph" # Orphaned
           objects = rbac_filtered_objects(VmCloud.all_orphaned).sort_by { |a| a.name.downcase }
@@ -1046,6 +944,7 @@ module ApplicationController::Explorer
       end
       return options[:count_only] ? objects.length : objects
     when :filter  # Filter trees have global and my filter nodes
+      # FIXME: filter vms_filter templater_filter
       objects = MiqSearch.where(:db => options[:leaf])
       case object[:id]
       when "global" # Global filters
@@ -1091,30 +990,19 @@ module ApplicationController::Explorer
     TreeBuilder.rbac_filtered_objects(objects, options)
   end
 
+  # FIXME: move partly to Tree once Trees are made from TreeBuilder
   def valid_active_node(treenodeid)
-    nodetype, id = treenodeid.split("_").last.split("-")
+    modelname, rec_id, nodetype = TreeBuilder.extract_node_model_and_id(treenodeid)
     return treenodeid if ["root",""].include?(nodetype) #incase node is root or doesn't have a prefix
-    kls = model_from_nodetype(nodetype)
+    raise _("No Class found for explorer tree node id '%s'") % treenodeid if modelname.nil?
+    kls = modelname.constantize
     return treenodeid if kls == Hash
 
-    unless kls.where(:id => from_cid(id)).exists?
-      @replace_trees = [@sb[:active_accord]]      #refresh trees
+    unless kls.where(:id => from_cid(rec_id)).exists?
+      @replace_trees = [@sb[:active_accord]] # refresh trees
       self.x_node = "root"
-      add_flash(_("Last selected %s no longer exists") %  ui_lookup(:model => kls.to_s),:error)
+      add_flash(_("Last selected %s no longer exists") % ui_lookup(:model => kls.to_s), :error)
     end
-    return x_node
+    x_node
   end
-
-  def model_from_nodetype(nodetype)
-    model_name = TreeBuilder.get_model_for_prefix(nodetype)
-    raise _("No Class found for explorer tree node type '%s'") %  nodetype if model_name.nil?
-    return model_name.constantize
-  end
-
-  def nodetype_from_model(model)
-    nodetype = TreeBuilder.get_prefix_for_model(model)
-    raise _("No explorer tree node type found for '%s'") %  model.to_s if nodetype.nil?
-    return nodetype
-  end
-
 end

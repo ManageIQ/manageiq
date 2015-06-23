@@ -9,80 +9,62 @@ describe VmInfraController do
   end
 
   context "VMs & Templates #tree_select" do
-    it "renders VM and Template list for vandt_tree root node" do
-      FactoryGirl.create(:vm_vmware)
-
-      session[:settings] = {}
-      session[:sandboxes] = {
-        "vm_infra" => {
-          :trees => {
-            :vandt_tree => {}
-          },
-          :active_tree => :vandt_tree
-        }
-      }
-      post :tree_select, :id => 'root', :format => :js
-
-      response.should render_template('layouts/gtl/_list')
-      expect(response.status).to eq(200)
-    end
-  end
-
-  context "VMs & Templates #tree_select" do
     it "renders list Archived nodes in VMs & Templates tree" do
       FactoryGirl.create(:vm_vmware)
 
       session[:settings] = {}
-      session[:sandboxes] = {
-        "vm_infra" => {
-          :trees       => {
-            :vandt_tree => {}
-          },
-          :active_tree => :vandt_tree
-        }
-      }
+      seed_session_trees('vm_infra', :vandt_tree)
+
       post :tree_select, :id => 'xx-arch', :format => :js
-      response.should render_template('layouts/gtl/_list')
-      expect(response.status).to eq(200)
-    end
-  end
-
-  context "VMs #tree_select" do
-    it "renders list with VMS for vms_filter_tree root node" do
-      FactoryGirl.create(:vm_vmware)
-
-      session[:settings] = {}
-      session[:sandboxes] = {
-        "vm_infra" => {
-          :trees => {
-            :vms_filter_tree => {}
-          },
-          :active_tree => :vms_filter_tree
-        }
-      }
-      post :tree_select, :id => 'root', :format => :js
 
       response.should render_template('layouts/gtl/_list')
       expect(response.status).to eq(200)
     end
   end
 
-  context "Templates #tree_select" do
-    it "renders list with templates for templates_filter_tree root node" do
-      FactoryGirl.create(:template_vmware)
+  context "#tree_select" do
+    [
+      ['Vms & Templates', 'vandt_tree'],
+      %w(VMS vms_filter_tree),
+      %w(Templates templates_filter_tree),
+    ].each do |elements, tree|
+      it "renders list of #{elements} for #{tree} root node" do
+        FactoryGirl.create(:vm_vmware)
+        FactoryGirl.create(:template_vmware)
+
+        session[:settings] = {}
+        seed_session_trees('vm_infra', tree.to_sym)
+
+        post :tree_select, :id => 'root', :format => :js
+
+        response.should render_template('layouts/gtl/_list')
+        expect(response.status).to eq(200)
+      end
+    end
+
+    it "renders VM details for VM node" do
+      vm = FactoryGirl.create(:vm_vmware)
 
       session[:settings] = {}
-      session[:sandboxes] = {
-        "vm_infra" => {
-          :trees => {
-            :templates_filter_tree => {}
-          },
-          :active_tree => :templates_filter_tree
-        }
-      }
-      post :tree_select, :id => 'root', :format => :js
+      seed_session_trees('vm_infra', 'vandt_tree')
 
-      response.should render_template('layouts/gtl/_list')
+      post :tree_select, :id => "v-#{vm.compressed_id}", :format => :js
+
+      response.should render_template('vm_common/_main')
+      response.should render_template('shared/summary/_textual_tags')
+      expect(response.status).to eq(200)
+    end
+
+    it "renders Template details for Template node" do
+      template = FactoryGirl.create(:template_vmware)
+
+      session[:settings] = {}
+      seed_session_trees('vm_infra', 'vandt_tree')
+
+      post :tree_select, :id => "t-#{template.compressed_id}", :format => :js
+
+      response.should render_template('vm_common/_main')
+      response.should render_template('shared/summary/_textual_tags')
       expect(response.status).to eq(200)
     end
   end

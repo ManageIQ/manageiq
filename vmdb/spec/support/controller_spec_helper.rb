@@ -56,4 +56,16 @@ module ControllerSpecHelper
       RequestRefererService.stub(:new).and_return(request_referer_service)
     end
   end
+
+  def seed_session_trees(a_controller, active_tree, node = nil)
+    session[:sandboxes] = {
+      a_controller => {
+        :trees => {
+          active_tree => {}
+        },
+        :active_tree => active_tree
+      }
+    }
+    session[:sandboxes][a_controller][:trees][active_tree][:active_node] = node unless node.nil?
+  end
 end
