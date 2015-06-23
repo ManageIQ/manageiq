@@ -59,7 +59,7 @@ module Metric::Purging
     oldest = klass.select(:timestamp).where(conditions).order(:timestamp).first
     oldest = oldest.nil? ? older_than : oldest.timestamp
 
-    klass.count(:conditions => conditions.merge(:timestamp => oldest..older_than))
+    klass.where(conditions).where(:timestamp => oldest..older_than).count
   end
 
   def self.purge(older_than, interval, window = nil, limit = nil)
@@ -84,7 +84,7 @@ module Metric::Purging
 
       loop do
         batch, _ = Benchmark.realtime_block(:query_batch) do
-          klass.select(:id).where(conditions.merge(:timestamp => (oldest..older_than))).limit(window)
+          klass.select(:id).where(conditions).where(:timestamp => (oldest..older_than)).limit(window)
         end
         break if batch.empty?
 

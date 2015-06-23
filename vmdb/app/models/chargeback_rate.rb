@@ -26,12 +26,12 @@ class ChargebackRate < ActiveRecord::Base
     #Returns[{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
     self.validate_rate_type(type)
     result = []
-    ChargebackRate.find(:all, :conditions => {:rate_type => type.to_s.capitalize}).each do |rate|
+    ChargebackRate.where(:rate_type => type.to_s.capitalize).each do |rate|
       assigned_tos = rate.get_assigned_tos
-      assigned_tos[:tags].each    {|tag|    result << {:cb_rate => rate, :tag => tag}}
-      assigned_tos[:objects].each {|object| result << {:cb_rate => rate, :object => object}}
+      assigned_tos[:tags].each    { |tag|    result << {:cb_rate => rate, :tag => tag} }
+      assigned_tos[:objects].each { |object| result << {:cb_rate => rate, :object => object} }
     end
-    return result
+    result
   end
 
   def self.set_assignments(type, cb_rates)

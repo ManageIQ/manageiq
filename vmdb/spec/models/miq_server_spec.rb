@@ -140,9 +140,9 @@ describe MiqServer do
       end
 
       it "will not requeue if one exists" do
-        MiqQueue.count(:conditions => @cond).should == 1
+        MiqQueue.where(@cond).count.should == 1
         @miq_server.ntp_reload_queue
-        MiqQueue.count(:conditions => @cond).should == 1
+        MiqQueue.where(@cond).count.should == 1
       end
     end
 
@@ -188,7 +188,7 @@ describe MiqServer do
 
       it "will queue only one restart_apache" do
         @miq_server.queue_restart_apache
-        MiqQueue.count(:conditions => @cond).should == 1
+        MiqQueue.where(@cond).count.should == 1
       end
 
       it "delivering will restart apache" do

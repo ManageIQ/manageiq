@@ -494,7 +494,7 @@ describe MiqSchedule do
       end
 
       it "should create one gc queue message for the database role" do
-        MiqQueue.count(:conditions => {:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations"} ).should == 1
+        MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").count.should == 1
       end
 
       context "deliver DatabaseBackup.gc message and gc is supported" do
@@ -510,7 +510,7 @@ describe MiqSchedule do
 
         it "should have queue message ok, and task is Ok and Finished" do
           @status.should == "ok"
-          MiqTask.count(:conditions => {:state => "Finished", :status => "Ok"} ).should == 1
+          MiqTask.where(:state => "Finished", :status => "Ok").count.should == 1
         end
       end
 
@@ -527,7 +527,7 @@ describe MiqSchedule do
 
         it "should have queue message in error, and task is Error and Finished" do
           @status.should == "error"
-          MiqTask.count(:conditions => { :state => "Finished", :status => "Error"} ).should == 1
+          MiqTask.where(:state => "Finished", :status => "Error").count.should == 1
         end
       end
     end
@@ -598,11 +598,11 @@ describe MiqSchedule do
           end
 
           it "should create 1 miq task" do
-            MiqTask.count(:conditions => {:name => "Database backup", :userid => @schedule.userid } ).should == 1
+            MiqTask.where(:name => "Database backup", :userid => @schedule.userid).count.should == 1
           end
 
           it "should create one backup queue message for our db backup instance for the database role" do
-            MiqQueue.count(:conditions => {:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations"} ).should == 1
+            MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count.should == 1
           end
 
           context "deliver DatabaseBackup.backup message and backup is unsupported" do
@@ -619,7 +619,7 @@ describe MiqSchedule do
             it "should create 1 database backup, queue message is in error, and task is Error and Finished" do
               @status.should == "error"
               @region.database_backups.count.should == 1
-              MiqTask.count(:conditions => { :state => "Finished", :status => "Error"} ).should == 1
+              MiqTask.where(:state => "Finished", :status => "Error").count.should == 1
             end
           end
 
@@ -640,7 +640,7 @@ describe MiqSchedule do
               it "should create 1 database backup, queue message is ok, and task is Ok and Finished" do
                 @status.should == "ok"
                 @region.database_backups.count.should == 1
-                MiqTask.count(:conditions => {:state => "Finished", :status => "Ok"} ).should == 1
+                MiqTask.where(:state => "Finished", :status => "Ok").count.should == 1
               end
             end
 

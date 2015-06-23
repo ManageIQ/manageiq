@@ -127,7 +127,7 @@ module MiqExpressionToSqlSpec
 
       sql, incl, attrs = exp.to_sql
       sql.should == "((vms.name IS NOT NULL) AND (vms.description IS NOT NULL))"
-      lambda { Vm.count(:conditions=>sql, :include=>incl) }.should_not raise_error
+      lambda { Vm.where(sql).includes(incl).count }.should_not raise_error
       attrs[:supported_by_sql].should_not be_true
     end
 
@@ -207,7 +207,7 @@ module MiqExpressionToSqlSpec
 
       sql, incl, attrs = exp.to_sql
       sql.should == "((vms.name IS NOT NULL) AND (vms.description IS NOT NULL))"
-      lambda { Vm.count(:conditions=>sql, :include=>incl) }.should_not raise_error
+      lambda { Vm.where(sql).includes(incl).count }.should_not raise_error
       attrs[:supported_by_sql].should_not be_true
     end
 
@@ -230,7 +230,7 @@ module MiqExpressionToSqlSpec
 
       sql, incl, attrs = exp.to_sql
       sql.should == "((vms.name IS NOT NULL) AND (vms.description IS NOT NULL))"
-      lambda { Vm.count(:conditions=>sql, :include=>incl) }.should_not raise_error
+      lambda { Vm.where(sql).includes(incl).count }.should_not raise_error
       attrs[:supported_by_sql].should_not be_true
     end
 
@@ -247,7 +247,7 @@ module MiqExpressionToSqlSpec
       sql, incl, attrs = exp.to_sql
       attrs[:supported_by_sql].should_not be_true
       sql.should be_nil
-      lambda { Vm.count(:conditions=>sql, :include=>incl) }.should_not raise_error
+      lambda { Vm.where(sql).includes(incl).count }.should_not raise_error
     end
 
     it "should test_fb10191" do

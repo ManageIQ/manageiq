@@ -1,5 +1,5 @@
 require "spec_helper"
-describe ConfigurationHelper, :helper do
+describe ConfigurationHelper do
   [[:compare, "compressed", 1],
    [:compare, "expanded", 1],
    [:tagging, "tile", 2]].each do |resource, view, inactive_icon_count|

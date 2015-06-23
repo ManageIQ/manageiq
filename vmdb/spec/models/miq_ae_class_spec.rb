@@ -41,8 +41,8 @@ describe MiqAeClass do
     c1.save!.should be_true
     c1_id = c1.id
     c1.destroy
-    MiqAeField.find_all_by_class_id(c1_id).should be_empty
-    MiqAeInstance.find_all_by_class_id(c1_id).should be_empty
+    MiqAeField.where(:class_id => c1_id).should be_empty
+    MiqAeInstance.where(:class_id => c1_id).should be_empty
     # TODO Check for miq_ae_values
   end
 

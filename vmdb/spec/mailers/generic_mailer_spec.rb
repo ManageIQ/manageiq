@@ -37,7 +37,7 @@ describe GenericMailer do
       # raises error when delivered
       msg = @args.merge({ :to => 'me@bedrock.gov, you@bedrock.gov' })
       notification = GenericMailer.generic_notification(msg)
-      notification.stub(:deliver).and_raise(Net::SMTPFatalError)
+      notification.stub(:deliver_now).and_raise(Net::SMTPFatalError)
 
       # send error msg first...
       GenericMailer.
@@ -64,7 +64,7 @@ describe GenericMailer do
     it "returns gracefully" do
       # generate message that will raise connection error when delivered
       notification = GenericMailer.generic_notification(@args)
-      notification.stub(:deliver).and_raise(Errno::ECONNREFUSED)
+      notification.stub(:deliver_now).and_raise(Errno::ECONNREFUSED)
 
       # generate error message on request
       GenericMailer.

@@ -18,7 +18,7 @@ describe CustomButtonSet do
       button_sets = CustomButtonSet.find_all_by_class_name("ServiceTemplate", 1)
       button_sets.count.should == 2
 
-      all_button_sets = CustomButtonSet.find(:all)
+      all_button_sets = CustomButtonSet.all
       all_button_sets.count.should == 3
     end
   end

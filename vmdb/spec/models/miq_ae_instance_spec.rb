@@ -136,7 +136,7 @@ describe MiqAeInstance do
       f2.destroy
       i1.reload
 
-      MiqAeValue.find_all_by_field_id(f2_id).should be_empty
+      MiqAeValue.where(:field_id => f2_id).should be_empty
       lambda { i1.set_field_value(fname2, value1) }.should raise_error(MiqAeException::FieldNotFound)
       lambda { i1.get_field_value(fname2)         }.should raise_error(MiqAeException::FieldNotFound)
     end

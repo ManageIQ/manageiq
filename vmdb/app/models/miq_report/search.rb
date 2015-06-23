@@ -79,8 +79,7 @@ module MiqReport::Search
     if ref.nil? || ref.kind_of?(VirtualReflection)
       targets = parent.send(assoc).collect(&:id) # assoc is either a virtual reflection or a method so just call the association and collect the ids
     else
-      #TODO: Can we use the pre-built _ids methods that come with Rails?
-      targets = parent.send(assoc).send(:find, :all, :select => 'id').collect(&:id)
+      targets = parent.send(assoc).ids
     end
     return targets
   end

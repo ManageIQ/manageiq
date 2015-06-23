@@ -1649,46 +1649,43 @@ class Host < ActiveRecord::Base
   end
 
   def enabled_inbound_ports
-    self.get_ports(true, "in")
+    get_ports("in")
   end
 
   def enabled_outbound_ports
-    self.get_ports(true, "out")
+    get_ports("out")
   end
 
   def enabled_tcp_inbound_ports
-    self.get_ports(true, "tcp", "in")
+    get_ports("in", "tcp")
   end
 
   def enabled_tcp_outbound_ports
-    self.get_ports(true, "tcp", "out")
+    get_ports("out", "tcp")
   end
 
   def enabled_udp_inbound_ports
-    self.get_ports(true, "udp", "in")
+    get_ports("in", "udp")
   end
 
   def enabled_udp_outbound_ports
-    self.get_ports(true, "udp", "out")
+    get_ports("out", "udp")
   end
 
   def all_enabled_ports
-    self.get_ports(true)
+    get_ports
   end
 
-  def get_ports(*args)
-    return [] if self.operating_system.nil?
-    if args.length == 3
-      rules = operating_system.firewall_rules.find_all_by_enabled_and_host_protocol_and_direction(*args)
-    elsif args.length == 2
-      rules = operating_system.firewall_rules.find_all_by_enabled_and_direction(*args)
-    elsif args.length == 1
-      rules = operating_system.firewall_rules.find_all_by_enabled(*args)
-    else
-      return []
-    end
+  def get_ports(direction = nil, host_protocol = nil)
+    return [] if operating_system.nil?
 
-    rules.collect { |f| f.end_port.nil? ? f.port : (f.port..f.end_port).to_a }.flatten.uniq.sort
+    conditions = {:enabled => true}
+    conditions[:direction] = direction if direction
+    conditions[:host_protocol] = host_protocol if host_protocol
+
+    operating_system.firewall_rules.where(conditions)
+      .flat_map { |rule| rule.port_range.to_a }
+      .uniq.sort
   end
 
   def service_names

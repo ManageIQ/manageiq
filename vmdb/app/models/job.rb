@@ -202,7 +202,11 @@ class Job < ActiveRecord::Base
     return job.is_active? unless job.nil?
 
     # If Job is NOT found, consider active if timestamp is newer than (now - delay)
-    timestamp = timestamp.to_time rescue nil
+    if timestamp.kind_of?(String)
+      timestamp = timestamp.to_time(:utc)
+    else
+      timestamp = timestamp.to_time rescue nil
+    end
     return false if timestamp.nil?
     return (timestamp >= job_not_found_delay.seconds.ago)
   end

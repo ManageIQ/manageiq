@@ -161,7 +161,7 @@ namespace :evm do
       # remove the connection in the event of a failed create, so we drop the connection
       # and reestablish it to the environment's database.
       ActiveRecord::Base.connection.disconnect! if ActiveRecord::Base.connected?
-      ActiveRecord::Base.connection_handler.connection_pools.delete("ActiveRecord::Base")
+      ActiveRecord::Base.connection_handler.clear_all_connections!
       ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations[Rails.env])
     end
 

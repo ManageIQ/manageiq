@@ -140,12 +140,17 @@ module Rbac
       if extra_target_ids.nil?
         conditions
       else
-        ids_clause = klass.send(:sanitize_sql_for_conditions, :id => extra_target_ids)
-        if conditions.nil?
-          ids_clause
-        else
-          original_conditions = klass.send(:sanitize_sql_for_conditions, conditions)
-          "(#{original_conditions}) OR (#{ids_clause})"
+        # sanitize_sql_for_conditions is deprecated (at least when given
+        # a hash).. but we can ignore it for now. When it goes away,
+        # we'll be on Rails 5.0, and can use Relation#or instead.
+        ActiveSupport::Deprecation.silence do
+          ids_clause = klass.send(:sanitize_sql_for_conditions, :id => extra_target_ids)
+          if conditions.nil?
+            ids_clause
+          else
+            original_conditions = klass.send(:sanitize_sql_for_conditions, conditions)
+            "(#{original_conditions}) OR (#{ids_clause})"
+          end
         end
       end
     scope.where(cond_for_count).includes(includes).references(includes).count
@@ -437,26 +442,13 @@ module Rbac
     return targets, attrs
   end
 
-  def self.apply_options(ar_scope, options)
-    [
-      [:conditions, :where],
-      [:include, :includes],
-      [:include, :references],
-      [:limit, :limit],
-      [:order, :order],
-      [:offset, :offset],
-    ].inject(ar_scope) { |scope, (key, method)|
-      scope.send(method, options[key])
-    }
-  end
-
   def self.method_with_scope(ar_scope, options)
     if ar_scope == VmdbDatabaseConnection
       ar_scope.all
     elsif ar_scope < ActsAsArModel
       ar_scope.find(:all, options)
     else
-      apply_options(ar_scope, options)
+      ar_scope.apply_legacy_finder_options(options)
     end
   end
 

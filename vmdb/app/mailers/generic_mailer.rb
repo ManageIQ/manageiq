@@ -8,7 +8,7 @@ class GenericMailer < ActionMailer::Base
 
     msg = self.send(method,options)
     begin
-      msg.deliver
+      msg.deliver_now
 
     # catch delivery errors if raised,
     rescue Net::SMTPError => e
@@ -21,7 +21,7 @@ class GenericMailer < ActionMailer::Base
           options.merge! :to => to
           individual =  self.send(method, options)
           begin
-            individual.deliver
+            individual.deliver_now
           rescue Net::SMTPError
             invalid << to
           end
@@ -36,7 +36,7 @@ class GenericMailer < ActionMailer::Base
 
       # attempt to deliver one more time
       begin
-        msg.deliver
+        msg.deliver_now
       rescue => e
         $log.error("MIQ(GenericMailer-deliver) method: #{method} options: #{options} delivery-error #{e}")
       end

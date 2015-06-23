@@ -147,8 +147,8 @@ describe MiqReport do
           FactoryGirl.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
         end
 
-        Vm.scope :group_3_scope, :conditions => ["name LIKE ?", "Test Group 3%"]
-        Vm.scope :group_scope,   lambda { |group_num| {:conditions => ["name LIKE ?", "Test Group #{group_num}%"]} }
+        Vm.scope :group_3_scope, -> { where("name LIKE ?", "Test Group 3%") }
+        Vm.scope :group_scope,   ->(group_num) { where("name LIKE ?", "Test Group #{group_num}%") }
       end
 
       context "in folders" do
