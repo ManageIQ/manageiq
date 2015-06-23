@@ -65,6 +65,7 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
   end
 
   def post_provision
+    update_and_notify_parent(:message => "Applying tags on #{source.name}")
     apply_tags(source)
 
     signal :mark_as_completed
