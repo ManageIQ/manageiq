@@ -66,7 +66,7 @@ module EvmWatchdog
 
   def self.start_evm
     self.log_info("Starting EVM server...")
-    `/etc/init.d/evmserverd start`
+    `systemctl start evmserverd`
   end
 
   def self.log_info(message)

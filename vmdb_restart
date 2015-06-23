@@ -1,14 +1,13 @@
 #!/bin/bash
 
 PIDFILE=/var/www/miq/vmdb/tmp/pids/evm.pid
-SERVICE=/sbin/service
 
 # sleep for 15 seconds to allow the UI to return a result
 echo "Sleeping for 15 seconds"
 sleep 15
 
 echo "[$(date)] Stopping EVM Server"
-${SERVICE} evmserverd stop
+systemctl stop evmserverd
 
 # close all open file descriptors
 for FD in /proc/$$/fd/*
@@ -31,5 +30,5 @@ do
 done
 
 echo "[$(date)] Starting EVM Server"
-${SERVICE} evmserverd start
+systemctl start evmserverd
 echo "[$(date)] Complete"
