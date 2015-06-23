@@ -903,15 +903,18 @@ class User < ActiveRecord::Base
   def self.with_userid(userid)
     saved_user   = Thread.current[:user]
     saved_userid = Thread.current[:userid]
+    saved_filters = Thread.current[:user_has_filters]
     self.current_userid = userid
     yield
   ensure
     Thread.current[:user]   = saved_user
     Thread.current[:userid] = saved_userid
+    Thread.current[:user_has_filters] = saved_filters
   end
 
   def self.current_userid=(userid)
     Thread.current[:user]   = nil
+    Thread.current[:user_has_filters] = nil
     Thread.current[:userid] = userid
   end
 
