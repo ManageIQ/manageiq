@@ -14,6 +14,8 @@ module ApplianceConsole
     # 5 => :waiting  -- waiting for CA to send back the certificate
     STATUS_RETURN_CODES = [:complete, :no_key, :rejected, :waiting, :error, :waiting]
 
+    # key filename defaults to certificate name w/ different extension
+    attr_writer   :key_filename
     attr_accessor :cert_filename
     # root certificate filename
     attr_accessor :root_filename
@@ -128,7 +130,7 @@ module ApplianceConsole
     end
 
     def key_filename
-      "#{cert_filename.chomp(File.extname(cert_filename))}.key"
+      @key_filename || "#{cert_filename.chomp(File.extname(cert_filename))}.key"
     end
 
     def key_status
