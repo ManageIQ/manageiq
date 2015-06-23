@@ -12,7 +12,7 @@
              :locals  => {:div_num => "2"})
     %br
     - if @edit && @edit[@expkey][:expression]
-      = render(:partial => 'layouts/exp_editor')
+      = render(:partial => 'layouts/exp_editor', :locals => { :target_controller => target_controller })
   - elsif mode == "load"
     - if @exp_to_load
       %fieldset

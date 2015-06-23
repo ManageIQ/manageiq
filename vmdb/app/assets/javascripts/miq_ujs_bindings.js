@@ -75,8 +75,13 @@ $(document).ready(function () {
         } else if (oneTrans) {
           miqSendOneTrans(url);
         } else {
+          var urlstring;
           // tack on the id and value to the URL
-          var urlstring = url + "?" + el.attr('id') + "=" + encodeURIComponent(el.prop('value'));
+          if(url.indexOf("?") >= 0) {
+            urlstring = url + "&" + el.attr('id') + "=" + encodeURIComponent(el.prop('value'));
+          } else {
+            urlstring = url + "?" + el.attr('id') + "=" + encodeURIComponent(el.prop('value'));
+          }
           miqJqueryRequest(urlstring, {no_encoding: true});
         }
       });

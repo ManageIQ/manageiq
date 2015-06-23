@@ -55,7 +55,9 @@ class AdvancedSearchesController < ApplicationController
       else
         @edit[:adv_search_open] = true
         page << "$('#clear_search').#{clear_search_show_or_hide}();"
-        page.replace("adv_search_body", :partial => "layouts/adv_search_body")
+        page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {
+          :target_controller => params[:target_controller]
+        })
         page.replace("adv_search_footer", :partial => "layouts/adv_search_footer", :locals => {
           :target_controller => params[:target_controller]
         })
@@ -244,7 +246,7 @@ class AdvancedSearchesController < ApplicationController
         replace_right_cell
       else
         render :update do |page|
-          page.redirect_to :action => 'show_list'                 # redirect to build the list screen
+          page.redirect_to :controller => params[:target_controller], :action => 'show_list'                 # redirect to build the list screen
         end
       end
       return
@@ -281,14 +283,21 @@ class AdvancedSearchesController < ApplicationController
 
     render :update do |page|
       if ["load","save"].include?(params[:button])
-        page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {:mode => params[:button]})
+        page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {
+          :mode => params[:button],
+          :target_controller => params[:target_controller]
+        })
         page.replace("adv_search_footer", :partial => "layouts/adv_search_footer",
-                                          :locals  => {:mode => params[:button]})
+                                          :locals  => {:mode => params[:button], :target_controller => params[:target_controller]})
       else
         @edit[@expkey][:exp_chosen_report] = nil
         @edit[@expkey][:exp_chosen_search] = nil
-        page.replace("adv_search_body", :partial => "layouts/adv_search_body")
-        page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
+        page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {
+          :target_controller => params[:target_controller]
+        })
+        page.replace("adv_search_footer", :partial => "layouts/adv_search_footer", :locals => {
+          :target_controller => params[:target_controller]
+        })
       end
 
       if ["delete","saveit"].include?(params[:button])
@@ -327,8 +336,14 @@ class AdvancedSearchesController < ApplicationController
       end
     end
     render :update do |page|
-      page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {:mode => 'load'})
-      page.replace("adv_search_footer", :partial => "layouts/adv_search_footer", :locals => {:mode => 'load'})
+    page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {
+      :mode => 'load',
+      :target_controller => params[:target_controller]
+    })
+    page.replace("adv_search_footer", :partial => "layouts/adv_search_footer", :locals => {
+      :mode => 'load',
+      :target_controller => params[:target_controller]
+    })
     end
   end
 
@@ -404,8 +419,12 @@ class AdvancedSearchesController < ApplicationController
         page.replace("flash_msg_div#{div_num}", :partial=>"layouts/flash_msg", :locals=>{:div_num=>div_num})
 #       page.replace("form_expression_div", :partial=>"form_expression")
         if @edit[:adv_search_open] != nil
-          page.replace("adv_search_body", :partial => "layouts/adv_search_body")
-          page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
+          page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {
+            :target_controller => params[:target_controller]
+          })
+          page.replace("adv_search_footer", :partial => "layouts/adv_search_footer", :locals => {
+            :target_controller => params[:target_controller]
+          })
         else
           page.replace("exp_editor_div", :partial=>"layouts/exp_editor")
         end
@@ -760,7 +779,7 @@ class AdvancedSearchesController < ApplicationController
           end
         else
           page.replace("flash_msg_div" + div_num, :partial=>"layouts/flash_msg", :locals=>{:div_num=>div_num})
-          page.replace("exp_atom_editor_div", :partial=>"layouts/exp_atom/editor")
+          page.replace("exp_atom_editor_div", :partial=>"layouts/exp_atom/editor", :locals => { :target_controller => params[:target_controller] })
 
           if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
               [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))

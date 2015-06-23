@@ -13,7 +13,7 @@
         %li
           = link_to(image_tag('/images/toolbars/undo.png',
                               :alt => 'Undo the previous change'),
-                    advanced_searches_exp_button_path(:pressed => 'undo'),
+                    advanced_searches_exp_button_path(:pressed => 'undo', :target_controller => target_controller),
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
@@ -27,6 +27,7 @@
           = link_to(image_tag('/images/toolbars/redo.png',
                               :alt => 'Redo the next change'),
                     {:action  => 'exp_button',
+                     :target_controller  => target_controller,
                      :pressed => 'redo'},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -53,7 +54,7 @@
             %li
               = link_to(image_tag("/images/toolbars/#{image}.png",
                                   :alt => title),
-                        advanced_searches_exp_button_path(:pressed => pressed),
+                        advanced_searches_exp_button_path(:pressed => pressed, :target_controller => target_controller),
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
@@ -67,7 +68,7 @@
           %li
             = link_to(image_tag("/images/toolbars/#{image}.png",
                                 :alt => title),
-                      advanced_searches_exp_button_path(:pressed => pressed),
+                      advanced_searches_exp_button_path(:pressed => pressed, :target_controller => target_controller),
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       :remote                => true,
@@ -85,7 +86,7 @@
                     :id                    => "exp_#{token.last}")
         - elsif [token].flatten.first == "???"
           = link_to(token.first,
-                    advanced_searches_exp_token_pressed_path(:token => token.last),
+                    advanced_searches_exp_token_pressed_path(:token => token.last, :target_controller => target_controller),
                     :style                 => "color: black; background-color: yellow",
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -97,4 +98,4 @@
               = token
 
   - if @edit[@expkey][:exp_token]
-    = render(:partial => 'layouts/exp_atom/editor')
+    = render(:partial => 'layouts/exp_atom/editor', :locals => { :target_controller => target_controller })
