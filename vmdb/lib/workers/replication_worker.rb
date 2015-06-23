@@ -120,6 +120,7 @@ class ReplicationWorker < WorkerBase
       Process.kill(9, @pid)
     end
 
+    $log.info("#{self.log_prefix} rubyrep Waiting for process with pid=#{@pid}")
     pid, status = Process.waitpid2(@pid)
     $log.info("#{self.log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
 
@@ -140,7 +141,8 @@ class ReplicationWorker < WorkerBase
   def rubyrep_alive?
     begin
       pid_state = MiqProcess.state(@pid) unless @pid.nil?
-    rescue SystemCallError
+    rescue SystemCallError => err
+      $log.error("#{self.log_prefix} rubyrep Process with pid=#{@pid} SystemCallError '#{err.message}' while checking process state")
       return false
     end
 
@@ -151,6 +153,7 @@ class ReplicationWorker < WorkerBase
       $log.info("#{self.log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
     end
 
+    $log.info("#{self.log_prefix} rubyrep Process with pid=#{@pid} is not alive pid_state=#{pid_state}")
     return false
   end
 
