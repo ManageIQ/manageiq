@@ -28,6 +28,25 @@ describe VmInfraController do
     end
   end
 
+  context "VMs & Templates #tree_select" do
+    it "renders list Archived nodes in VMs & Templates tree" do
+      FactoryGirl.create(:vm_vmware)
+
+      session[:settings] = {}
+      session[:sandboxes] = {
+        "vm_infra" => {
+          :trees       => {
+            :vandt_tree => {}
+          },
+          :active_tree => :vandt_tree
+        }
+      }
+      post :tree_select, :id => 'xx-arch', :format => :js
+      response.should render_template('layouts/gtl/_list')
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "VMs #tree_select" do
     it "renders list with VMS for vms_filter_tree root node" do
       FactoryGirl.create(:vm_vmware)
