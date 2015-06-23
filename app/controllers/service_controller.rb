@@ -381,7 +381,7 @@ class ServiceController < ApplicationController
         presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
         r[:partial => "layouts/x_gtl"]
       end
-    if ["dialog_provision","ownership","retire","service_edit", "tag"].include?(action)
+    if %w(dialog_provision ownership service_edit tag).include?(action)
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = false
       presenter[:expand_collapse_cells][:a] = 'collapse'
@@ -391,13 +391,7 @@ class ServiceController < ApplicationController
                                                            :locals  => {:action_url => action_url,
                                                                         :record_id  => @edit[:rec_id]}]
       else
-        if action == "retire"
-          locals = {:action_url => action, :record_id => @record ? @record.id : nil}
-          locals[:no_reset] = true
-          locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
-          date_tz = Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")
-          presenter[:build_calendar] = {:date_from => date_tz}
-        elsif action == "tag"
+        if action == "tag"
           locals = {:action_url => action_url}
           locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
           locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
@@ -408,8 +402,8 @@ class ServiceController < ApplicationController
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
       end
-    elsif record_showing ||
-        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
+    elsif (action != "retire") && (record_showing ||
+        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0)))
       # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box
       # when trying to change a node on tree after saving a record
       presenter[:set_visible_elements][:buttons_on] = false

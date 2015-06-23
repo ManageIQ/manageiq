@@ -1,7 +1,7 @@
 describe('update-drop-down-for-filter initialization', function() {
   var $scope, form;
   beforeEach(module('ManageIQ.angularApplication'));
-  beforeEach(inject(function($compile, $rootScope, $timeout) {
+  beforeEach(inject(function($compile, $rootScope, $timeout, miqService) {
     $scope = $rootScope;
     var element = angular.element(
       '<form name="angularForm">' +
@@ -20,8 +20,7 @@ describe('update-drop-down-for-filter initialization', function() {
 
     $scope.filterValuesEmpty = false;
 
-    $scope.miqService = { miqFlashClear: function (){}};
-    spyOn($scope.miqService, 'miqFlashClear');
+    spyOn(miqService, 'miqFlashClear');
     elem = $compile(element)($rootScope);
     form = $scope.angularForm;
   }));

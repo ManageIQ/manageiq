@@ -227,6 +227,28 @@ module ApplicationController::CiProcessing
   alias service_retire retirevms
   alias orchestration_stack_retire retirevms
 
+  def retirement_info
+    case request.parameters[:controller]
+    when "orchestration_stack"
+      assert_privileges("orchestration_stack_retire")
+      kls = OrchestrationStack
+    when "service"
+      assert_privileges("service_retire")
+      kls = Service
+    when "vm_cloud"
+      assert_privileges("instance_retire")
+      kls = Vm
+    when "vm_infra"
+      assert_privileges("vm_retire")
+      kls = Vm
+    end
+    obj = kls.find_by_id(params[:id])
+    render :json => {
+      :retirement_date    => obj.retires_on,
+      :retirement_warning => obj.retirement_warn
+    }
+  end
+
   # Build the retire VMs screen
   def retire
     @sb[:explorer] = true if @explorer
@@ -243,16 +265,24 @@ module ApplicationController::CiProcessing
         flash = "Set/remove retirement date was cancelled by the user"
         @sb[:action] = nil
       elsif params[:button] == "save"
-        d = session[:retire_items].length == 1 ? "date" : "dates"
-        if session[:retire_date].blank?
+        if params[:retire_date].blank?
           t = nil
-          session[:retire_warn] = nil
-          flash = _("Retirement %s removed") % d
+          w = nil
+          if session[:retire_items].length == 1
+            flash = _("Retirement date removed")
+          else
+            flash = _("Retirement dates removed")
+          end
         else
-          t = "#{session[:retire_date]} 00:00:00 Z"
-          flash = _("Retirement %{date_text} set to %{rdate}") % {:date_text=>d, :rdate=>session[:retire_date]}
+          t = "#{params[:retire_date]} 00:00:00 Z"
+          w = params[:retire_warn].to_i
+          if session[:retire_items].length == 1
+            flash = _("Retirement date set to %s") % params[:retire_date]
+          else
+            flash = _("Retirement dates set to %s") % params[:retire_date]
+          end
         end
-        kls.retire(session[:retire_items], :date=>t, :warn=>session[:retire_warn].to_i)       # Call the model to retire the VM(s)
+        kls.retire(session[:retire_items], :date => t, :warn => w) # Call the model to retire the VM(s)
         @sb[:action] = nil
       end
       add_flash(flash)
@@ -260,7 +290,9 @@ module ApplicationController::CiProcessing
         replace_right_cell
       else
         session[:flash_msgs] = @flash_array.dup
-        redirect_to @breadcrumbs[-2][:url]
+        render :update do |page|
+          page.redirect_to @breadcrumbs[-2][:url]
+        end
       end
       return
     end
@@ -281,33 +313,6 @@ module ApplicationController::CiProcessing
     session[:retire_warn] = w
     @in_a_form = true
     @refresh_partial = "shared/views/retire" if @explorer || @layout == "orchestration_stack"
-  end
-
-  # Ajax method fired when retire date is changed
-  def retire_date_changed
-    changed = (params[:miq_date_1] != session[:retire_date])
-
-    if params[:miq_date_1]
-      session[:retire_date] = params[:miq_date_1] if params[:miq_date_1]
-    end
-    session[:retire_warn] = params[:retirement_warn] if params[:retirement_warn]
-    if !params[:miq_date_1] && !params[:retirement_warn]
-      session[:retire_date] = nil
-      session[:retire_warn] = nil
-    end
-    render :update do |page|
-      if session[:retire_date].blank?
-        session[:retire_warn] = ""
-        page << javascript_hide("remove_button")
-        page << javascript_disable_field('retirement_warn')
-        page << "$('#retirement_warn').val('');"
-      else
-        page << javascript_show("remove_button")
-        page << javascript_enable_field('retirement_warn')
-      end
-      page << javascript_for_miq_button_visibility_changed(changed)
-      page << "miqSparkle(false);"
-    end
   end
 
   def vm_right_size
@@ -1105,7 +1110,8 @@ module ApplicationController::CiProcessing
 
     # Either a list or coming from a different controller (eg from host screen, go to its vms)
     if @lastaction == "show_list" ||
-       !%w(orchestration_stack service vm_cloud vm_infra vm miq_template vm_or_template).include?(request.parameters["controller"]) # showing a list
+       !%w(orchestration_stack service vm_cloud vm_infra vm miq_template vm_or_template).include?(
+         request.parameters["controller"]) # showing a list
 
       vms = find_checked_items
       if method == 'retire_now' && VmOrTemplate.includes_template?(vms)
@@ -1188,7 +1194,7 @@ module ApplicationController::CiProcessing
       add_flash(_("Error during '%s': ") % task << bang.message, :error)
     else
       add_flash(_("%{task} initiated for %{model} from the CFME Database") %
-        {:task  => display_name ? display_name.titleize : Dictionary::gettext(task, :type => :task).titleize,
+        {:task  => display_name ? display_name.titleize : Dictionary.gettext(task, :type => :task).titleize,
          :model => pluralize(objs.length, ui_lookup(:model => klass.to_s))})
     end
   end

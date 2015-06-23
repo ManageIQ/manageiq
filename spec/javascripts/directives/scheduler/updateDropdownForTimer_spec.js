@@ -1,7 +1,7 @@
 describe('update-drop-down-for-timer initialization', function() {
   var $scope, form, model;
   beforeEach(module('ManageIQ.angularApplication'));
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, miqService) {
     $scope = $rootScope;
     var element = angular.element(
       '<form name="angularForm">' +
@@ -13,9 +13,8 @@ describe('update-drop-down-for-timer initialization', function() {
     $scope.timer_items = [{text:'Week', value: 0},
                           {text:'2 Weeks', value: 1}];
 
-    $scope.miqService = { miqFlashClear: function (){} };
     $scope.scheduleModel = {};
-    spyOn($scope.miqService, 'miqFlashClear');
+    spyOn(miqService, 'miqFlashClear');
     elem = $compile(element)($rootScope);
     form = $scope.angularForm;
     model = $scope.scheduleModel;

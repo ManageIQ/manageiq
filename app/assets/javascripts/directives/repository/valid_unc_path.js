@@ -1,4 +1,4 @@
-ManageIQ.angularApplication.directive('checkpath', function (){
+ManageIQ.angularApplication.directive('checkpath', ['miqService', function (miqService){
   return {
     require: 'ngModel',
        link: function (scope, elem, attrs, ctrl) {
@@ -26,9 +26,9 @@ ManageIQ.angularApplication.directive('checkpath', function (){
         }
         else {
           if(scope.formId == "new") {
-            scope.miqService.miqFlash("warn", "Need a valid UNC path");
+            miqService.miqFlash("warn", "Need a valid UNC path");
           } else {
-            scope.miqService.miqFlash("error", "Incorrect UNC path");
+            miqService.miqFlash("error", "Incorrect UNC path");
           }
           return false;
         }
@@ -43,4 +43,4 @@ ManageIQ.angularApplication.directive('checkpath', function (){
       };
     }
   }
-});
+}]);

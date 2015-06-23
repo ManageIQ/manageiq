@@ -1,7 +1,7 @@
 describe('selectpicker-for-select-tag initialization', function() {
   var $scope, form;
   beforeEach(module('ManageIQ.angularApplication'));
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, miqService) {
     $scope = $rootScope;
     var element = angular.element(
       '<form name="angularForm">' +
@@ -9,8 +9,7 @@ describe('selectpicker-for-select-tag initialization', function() {
       '</form>'
     );
 
-    $scope.miqService = { miqFlashClear: function (){}};
-    spyOn($scope.miqService, 'miqFlashClear');
+    spyOn(miqService, 'miqFlashClear');
     elem = $compile(element)($rootScope);
     form = $scope.angularForm;
   }));

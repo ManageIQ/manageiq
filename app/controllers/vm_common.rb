@@ -1597,6 +1597,7 @@ module VmCommon
       :add_nodes   => add_nodes,         # Update the tree with any new nodes
       :delete_node => @delete_node,      # Remove a new node from the tree
     )
+
     r = proc { |opts| render_to_string(opts) }
 
     add_ajax = false
@@ -1610,7 +1611,7 @@ module VmCommon
       presenter[:update_partials][:main_div] = r[:partial=>partial, :locals=>partial_locals]
 
       locals = {:action_url => action, :record_id => @record ? @record.id : nil}
-      if ['clone', 'migrate', 'miq_request_new', 'pre_prov', 'publish', 'reconfigure', 'retire'].include?(@sb[:action])
+      if %w(clone migrate miq_request_new pre_prov publish reconfigure).include?(@sb[:action])
         locals[:no_reset]        = true                                                                               # don't need reset button on the screen
         locals[:submit_button]   = ['clone', 'migrate', 'publish', 'reconfigure', 'pre_prov'].include?(@sb[:action])  # need submit button on the screen
         locals[:continue_button] = ['miq_request_new'].include?(@sb[:action])                                         # need continue button on the screen
@@ -1712,7 +1713,7 @@ module VmCommon
               :record_id  => @edit[:rec_id],
             }
           ]
-        else
+        elsif action != "retire"
           presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
         end
         presenter[:set_visible_elements][:pc_div_1] = false
