@@ -1,10 +1,7 @@
 .jqplot-target {
-  font-family: $base-font-family;
-  font-size: $base-font-size;
   position: relative !important;
   width: auto !important;
 }
-
 
 .jqplot-data-label { /*pie and donut charts*/
   color: #fff;
@@ -25,7 +22,6 @@ div.jqplot-table-legend-swatch-outline {
 .jqplot-highlighter-tooltip {
   background: #4c4c4c;
   border: 0px solid #1d1d1d;
-  font-size: $base-font-size*.9;
   font-weight: normal;
   padding: 8px;
   color: #fff;

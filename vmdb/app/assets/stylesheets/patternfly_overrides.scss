@@ -8,12 +8,11 @@ body, html {
   padding-top: 2px;
   border-bottom: 1px solid #c7c7c7;
   background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffededed', GradientType=0);
 }
 
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
-@media (max-width: @screen-sm) {
+@media (max-width: $screen-sm) {
   body {
     padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
     padding-bottom: 30px !important;
@@ -35,7 +34,7 @@ body, html {
 
 /* This media query makes the left column and the main area independently scrollable and sets the footer at the bottom of the column */
 
-@media (min-width: @screen-sm) {
+@media (min-width: $screen-sm) {
   body {
     padding-top: 100px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
     padding-bottom: 30px !important;
@@ -74,7 +73,6 @@ body, html {
   color: #FFF;
   text-align: center;
 }
-
 
 /* Overrides patternfly style for disabled accordion items */
 
@@ -126,16 +124,11 @@ li.brand-white-label.whitelabeled {
 /* Login overrides */
 
 .login-pf body {
-  padding-top: 0 !imporant;
-  padding-bottom: 0 !imporant;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
-.ie8 > body > .container {
-  background-color: none !important;
-  background: url(/images/layout/overlay_dark.png) !important;
-}
-
-#notification { 
+#notification {
   position:absolute;
   left:0;
   bottom:0;
@@ -143,13 +136,9 @@ li.brand-white-label.whitelabeled {
   display: block;
   margin:0;
   padding:0;
-  width: 100%; 
+  width: 100%;
   height:100%;
   background-color: rgba(0, 0, 0, 0.5);
-}
-
-.ie8 #notification {
-  background-image: url(/images/layout/overlay_dark.png);
 }
 
 #spinner_div {
@@ -220,7 +209,7 @@ table.table-hover tbody tr:nth-child(odd).no-hover:hover td {
 }
 
 table.table-hover tbody tr:nth-child(even).no-hover:hover td {
-  background-color: @table-bg-accent; cursor:default
+  background-color: $table-bg-accent; cursor:default
 }
 
 /* summary screen formatting */
@@ -228,7 +217,7 @@ table.table-hover tbody tr:nth-child(even).no-hover:hover td {
 table .label {display: table-cell;width: 20% !important; min-width: 200px; font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;cursor: default;color: #333; text-align: left;}
 
 table.table.table-selectable tbody tr.selected td {
-  background-color: @link-color;
+  background-color: $link-color;
   color: #fff
 }
 
@@ -257,10 +246,10 @@ table.table.table-selectable tbody tr.selected td {
   .dl-horizontal.tile {
     dt {
       float: left;
-      width: (@component-offset-horizontal - 80);
+      width: ($component-offset-horizontal - 80);
       clear: left;
       text-align: right;
-      .text-overflow();
+      @include text-overflow();
     }
     dd {
       margin-left: 110px;
@@ -272,4 +261,23 @@ table.table.table-selectable tbody tr.selected td {
 
 .tab-content {
   margin-top: 10px
+}
+
+/* fixes leftnav highlight padding issue - temporary */
+
+@media (min-width: $screen-sm) {
+  .sidebar-pf .nav-stacked {
+    margin-right: 0px;
+  }
+}
+
+@media (max-width: $screen-sm) {
+  .sidebar-pf .nav-stacked {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+}
+
+iframe, .iframe {
+  width: 100%; height: 100%;
 }

@@ -1,14 +1,8 @@
 .icons {
-  float: left;
-  list-style: none outside none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
-.icons .fa, .icons .glyphicon, .icons .pficon, .icons .product, .alert .pficon{
   font-size: 20px;
+  height: 18px;
 }
-/*begin icon class customizations*/
+/* begin icon class customizations */
 .fa-bar-chart-o:before, .fa-chart:before {
   content: "\f080";
 }
@@ -30,13 +24,12 @@
 .pficon-ok:before, .pficon-complete:before {
   color: #57a81c;
   content: "\e602";
-} 
+}
 .pficon-folder-close-blue:before {
   content: "\e607";
   color: #3188c5;
 }
 /*end icon class customizations*/
-
 
 /* custom font for this product */
 
@@ -52,6 +45,17 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: 'product';
+  font-style: normal;
+  font-weight: 300;
+  src: url('#{$font-path}/../product.eot');
+  src: url('#{$font-path}/../product.eot?#iefix') format('embedded-opentype'),
+       url('#{$font-path}/../product.woff') format('woff'),
+       url('#{$font-path}/../product.ttf') format('truetype'),
+       url('#{$font-path}/../product.svg') format('svg');
 }
 
 .product-arrow-right:before {
@@ -73,4 +77,3 @@
   content: "\e604";
 }
 /*end icon customizations*/
-
