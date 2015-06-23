@@ -1,4 +1,5 @@
 require "spec_helper"
+require "timecop"
 include AutomationSpecHelper
 
 describe "MiqAeStateMachineRetry" do
@@ -128,13 +129,20 @@ describe "MiqAeStateMachineRetry" do
   it "check max_time" do
     setup_model(perpetual_retry_script)
     send_ae_request_via_queue(@automate_args)
-    2.times do
+
+    status, _message, ws = deliver_ae_request_from_queue
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws).to be
+
+    Timecop.travel(@max_time + 1) do
       status, _message, ws = deliver_ae_request_from_queue
-      status.should_not eq(MiqQueue::STATUS_ERROR)
-      ws.should_not be_nil
-      sleep(@max_time)
-      sleep(1)
+      expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+      expect(ws).to be
     end
-    deliver_ae_request_from_queue.should be_nil
+
+    Timecop.travel(@max_time*2 + 2) do
+      status, _message, ws = deliver_ae_request_from_queue
+      expect(status).not_to be
+    end
   end
 end

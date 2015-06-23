@@ -86,14 +86,14 @@ module MiqAeEngine
           $miq_ae_logger.warn "Error in State=[#{f['name']}]"
           # Process on_error method
 
-          return process_state_step_with_error_handling(f, 'on_error') { 
+          return process_state_step_with_error_handling(f, 'on_error') do
                process_state_method(f, 'on_error')
                if @workspace.root['ae_result'] == 'continue'
                  $miq_ae_logger.warn "Resetting Error in State=[#{f['name']}]"
                  @workspace.root['ae_result'] = 'ok'
                  set_next_state(f, message)
                end
-          }
+          end
         end
 
         
@@ -133,11 +133,12 @@ module MiqAeEngine
     end
 
     def next_state(current, message)
-      state_name = @workspace.root['ae_next_state'].present? ? @workspace.root['ae_next_state'] : current
+      state_name = @workspace.root['ae_next_state'].presence || current
       states = fields(message).collect { |f| f['name'] if f['aetype'] == 'state' }.compact
       validate_state(states)
       index  = states.index(state_name)
-      return index.nil? ? nil : @workspace.root['ae_next_state'].blank? ? states[index+1] : states[index]
+      return nil if index.nil?
+      @workspace.root['ae_next_state'].blank? ? states[index+1] : states[index]
     end
 
     def set_next_state(f, message)
