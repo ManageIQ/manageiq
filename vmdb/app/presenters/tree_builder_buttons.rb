@@ -8,7 +8,7 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
     resolve = {}
-    CustomButton.button_classes.each{|db| resolve[db] = ui_lookup(:model => db)}
+    CustomButton.button_classes.each{ |db| resolve[db] = ui_lookup(:model => db) }
     @sb[:target_classes] = resolve.invert
     resolve = Array(resolve.invert).sort
     resolve.collect { |typ| {:id => "ab_#{typ[1]}", :text => typ[0], :image => buttons_node_image(typ[1]), :tip => typ[0]} }
