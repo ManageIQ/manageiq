@@ -5,38 +5,20 @@
 - else
   = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))
 
-- if field.dynamic && field.show_refresh_button?
-  = button_tag(_('Refresh'), :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
+- if field.dynamic
+  - if field.auto_refresh
+    :javascript
+      dialogFieldRefresh.listenForAutoRefreshMessages("#{field.id}", function() {
+        var selectedValue = $('select[name="#{field.name}"]').val();
+        dialogFieldRefresh.refreshDropDownList("#{field.name}", "#{field.id}", selectedValue);
+      });
+
+  - if field.show_refresh_button?
+    = button_tag(_('Refresh'), :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
 
   :javascript
     $('#refresh-dynamic-field-#{field.id}').click(function() {
-      miqSparkleOn();
-
-      var fieldId = "#{field.id}";
-      var fieldName = "#{field.name}";
       var selectedValue = $('select[name="#{field.name}"]').val();
-
-      $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: selectedValue}, function(data) {
-        var dropdownOptions = [];
-
-        $.each(data.values.refreshed_values, function(index, value) {
-          var option = '<option ';
-          option += 'value="' + value[0] + '" ';
-          if (data.values.checked_value !== null) {
-            if (data.values.checked_value.toString() === value[0].toString()) {
-              option += 'selected="selected" ';
-            }
-          } else {
-            if (index === 0) {
-              option += 'selected="selected" ';
-            }
-          }
-          option += '> ' + value[1] + '</option>';
-          dropdownOptions.push(option);
-        });
-
-        $('.dynamic-drop-down-' + fieldId).html(dropdownOptions);
-
-        miqSparkleOff();
-      });
+      dialogFieldRefresh.refreshDropDownList("#{field.name}", "#{field.id}", selectedValue);
+      dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
     });

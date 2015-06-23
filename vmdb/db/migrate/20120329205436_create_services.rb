@@ -24,7 +24,7 @@ class CreateServices < ActiveRecord::Migration
       t.belongs_to  :service_template,              :type => :bigint
       t.text        :options
       t.boolean     :display
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

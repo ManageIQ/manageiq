@@ -3,7 +3,7 @@ class CreateMiqRegions < ActiveRecord::Migration
     create_table :miq_regions do |t|
       t.integer :region
       t.text    :reserved
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

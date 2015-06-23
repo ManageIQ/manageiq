@@ -15,6 +15,8 @@ class MiqRequestTask < ActiveRecord::Base
   default_value_for :phase_context, {}
   default_value_for :options,       {}
 
+  delegate :request_class, :task_description, :to => :class
+
   validates_inclusion_of :status, :in => %w{ Ok Warn Error Timeout }
 
   include MiqRequestMixin
@@ -58,15 +60,7 @@ class MiqRequestTask < ActiveRecord::Base
     req_state = (states.length == 1) ? states.keys.first : "active"
 
     # Determine status to report
-    req_status = if status.keys.include?('Error')
-                   'Error'
-                 elsif status.keys.include?('Timeout')
-                   'Timeout'
-                 elsif status.keys.include?('Warn')
-                   'Warn'
-                 else
-                   'Ok'
-    end
+    req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
     if req_state == "finished"
       msg = (req_status == 'Ok') ? "Task complete" : "Task completed with errors"
@@ -87,10 +81,6 @@ class MiqRequestTask < ActiveRecord::Base
     end
   end
 
-  def request_class
-    self.class.request_class
-  end
-
   def self.request_class
     if self.is_or_subclass_of?(MiqProvision)
       MiqProvisionRequest
@@ -103,10 +93,6 @@ class MiqRequestTask < ActiveRecord::Base
 
   def self.task_description
     request_class::TASK_DESCRIPTION
-  end
-
-  def task_description
-    self.class.task_description
   end
 
   def get_description
@@ -202,7 +188,7 @@ class MiqRequestTask < ActiveRecord::Base
   private
 
   def validate_request_type
-    errors.add(:request_type, "should be #{request_class::REQUEST_TYPES.join(", ")}") unless request_class::REQUEST_TYPES.include?(request_type)
+    errors.add(:request_type, "should be #{request_class.request_types.join(", ")}") unless request_class.request_types.include?(request_type)
   end
 
   def validate_state

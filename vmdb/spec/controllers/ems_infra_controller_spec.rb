@@ -8,15 +8,6 @@ describe EmsInfraController do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
-    it "can use the cancel button on create" do
-      controller.instance_variable_set(:@edit, {:new => {},
-                                                :key => "ems_edit__new"})
-      session[:edit] = assigns(:edit)
-      controller.stub(:drop_breadcrumb)
-      post :create, :button => "cancel"
-      expect(response.status).to eq(200)
-    end
-
     it "when VM Right Size Recommendations is pressed" do
       controller.should_receive(:vm_right_size)
       post :button, :pressed => "vm_right_size", :format => :js

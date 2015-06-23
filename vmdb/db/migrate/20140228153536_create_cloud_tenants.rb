@@ -8,7 +8,7 @@ class CreateCloudTenants < ActiveRecord::Migration
 
       t.belongs_to :ems, :type => :bigint
 
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 end

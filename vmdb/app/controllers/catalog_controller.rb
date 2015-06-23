@@ -263,7 +263,7 @@ class CatalogController < ApplicationController
       set_form_locals_for_sysprep
     end
 
-    render :layout => "explorer"
+    render :layout => "explorer", :action => "explorer"
   end
 
   def set_form_locals_for_sysprep
@@ -820,6 +820,20 @@ class CatalogController < ApplicationController
     when "save"
       service_dialog_from_ot_submit_save
     end
+  end
+
+  def ot_show
+    assert_privileges("orchestration_templates_view")
+    id = params.delete(:id)
+    ot = OrchestrationTemplate.find_by_id(id)
+    self.x_active_tree = :ot_tree
+    self.x_active_accord = 'ot'
+    x_tree_init(:ot_tree, :ot, "OrchestrationTemplate") unless x_tree
+    ot_type = ot.type == "OrchestrationTemplateHot" ? "othot" : "otcfn"
+    x_tree[:open_nodes].push("xx-#{ot_type}") unless x_tree[:open_nodes].include?("xx-#{ot_type}")
+    self.x_node = "ot-#{to_cid(ot.id)}"
+    x_tree[:open_nodes].push(self.x_node)
+    explorer
   end
 
   private

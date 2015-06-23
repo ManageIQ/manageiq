@@ -28,12 +28,16 @@ module OpenstackHandle
 
     # Tries both non-SSL and SSL connections to Openstack
     def self.try_connection
-      # attempt to connect without SSL
-      yield "http", {}
-    rescue Excon::Errors::SocketError => err
-      raise unless err.message.include?("end of file reached (EOFError)")
-      # attempt the same connection with SSL
+      # attempt to connect with SSL
       yield "https", {:ssl_verify_peer => false}
+    rescue Excon::Errors::SocketError => err
+      # TODO recognizing something in exception message is not very reliable. But somebody would need to go to excon gem
+      # and do proper exceptions like Excon::Errors::SocketError::UnknownProtocolSSL,
+      # Excon::Errors::SocketError::BadCertificate, etc. all of them inheriting from Excon::Errors::SocketError
+      raise unless (err.message.include?("end of file reached (EOFError)") ||
+                    err.message.include?("unknown protocol (OpenSSL::SSL::SSLError)"))
+      # attempt the same connection without SSL
+      yield "http", {}
     end
 
     def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil)
@@ -66,8 +70,9 @@ module OpenstackHandle
       else
         Fog.const_get(service).new(opts)
       end
-    rescue Fog::Errors::NotFound => err
+    rescue ArgumentError, Fog::Errors::NotFound => err
       raise MiqException::ServiceNotAvailable if err.message.include?("Could not find service")
+      raise MiqException::ServiceNotAvailable if err.message =~ /\w+ has no \w+ service/
       raise
     end
 

@@ -27,7 +27,7 @@ class RecreateRelationships < ActiveRecord::Migration
       t.bigint  :resource_id
       t.string  :ancestry,    :limit => 2000
       t.string  :relationship
-      t.timestamps
+      t.timestamps :null => true
     end
 
     # Transfer existing relationships to the new table
@@ -73,7 +73,7 @@ class RecreateRelationships < ActiveRecord::Migration
   private
 
   def self.collect_relationships
-    relats = RelationshipsOrig.includes(:parent, :child).all
+    relats = RelationshipsOrig.includes(:parent, :child).to_a
     tree = Hash.new { |h,k| h[k] = Hash.new }
     roots = Hash.new { |h,k| h[k] = Array.new }
 

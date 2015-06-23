@@ -1,20 +1,16 @@
 require "spec_helper"
 
 describe ApplicationController do
-  before do
-    controller.instance_variable_set(:@sb, {})
-    ur = FactoryGirl.create(:miq_user_role)
-    rptmenu = {:report_menus => [
-                                    ["Configuration Management",["Hosts",["Hosts Summary", "Hosts Summary"]]]
-                                ]
-              }
-    group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => rptmenu)
-    user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
-    session[:group] = user.current_group.id
-    session[:userid] = user.userid
-  end
-
   context "#find_by_id_filtered" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      controller.instance_variable_set(:@sb, {})
+      ur = FactoryGirl.create(:miq_user_role)
+      rptmenu = {:report_menus => [["Configuration Management", ["Hosts", ["Hosts Summary", "Hosts Summary"]]]]}
+      group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => rptmenu)
+      login_as FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+    end
+
     it "Verify Invalid input flash error message when invalid id is passed in" do
       lambda { controller.send(:find_by_id_filtered, ExtManagementSystem, "invalid") }.should raise_error(RuntimeError, "Invalid input")
     end
@@ -25,7 +21,6 @@ describe ApplicationController do
 
     it "Verify record gets set when valid id is passed in" do
       ems = FactoryGirl.create(:ext_management_system)
-      session[:userid] = "test"
       record = controller.send(:find_by_id_filtered, ExtManagementSystem, ems.id)
       record.should be_a_kind_of(ExtManagementSystem)
     end
@@ -39,8 +34,7 @@ describe ApplicationController do
                                            :name                 => "test_user_role",
                                            :miq_product_features => feature)
       test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
     end
 
     it "should not raise an error for feature that user has access to" do
@@ -72,8 +66,7 @@ describe ApplicationController do
                                             :name                 => "test_user_role",
                                             :miq_product_features => feature)
       test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
     end
 
     it "should return restricted view yaml for restricted user" do

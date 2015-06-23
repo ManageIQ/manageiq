@@ -48,7 +48,6 @@ describe MiqProvisionWorkflow do
 
         it "should encrypt fields" do
           password_input = "secret"
-          pending "requires actionwebservice"
           request = MiqProvisionVmwareWorkflow.from_ws("1.1", "admin", "name=template", "vm_name=spec_test|root_password=#{password_input}",
                                                        "owner_email=admin|owner_first_name=test|owner_last_name=test", nil, nil, nil, nil)
 

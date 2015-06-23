@@ -57,4 +57,10 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
 
     true
   end
+
+  def update_request(request, values, requester_id, target_class, event_name, event_message)
+    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+    request.src_vm_id = request.get_option(:src_vm_id)
+    super
+  end
 end

@@ -1474,7 +1474,7 @@ class VmOrTemplate < ActiveRecord::Base
     operator = options[:operator] || ">"
     operator = operator.downcase == "increased" ? ">" : operator.downcase == "decreased" ? "<" : operator
 
-    current_state, prev_state = self.drift_states.order("timestamp DESC").limit(2).all
+    current_state, prev_state = drift_states.order("timestamp DESC").limit(2)
     if current_state.nil? || prev_state.nil?
       $log.info("#{log_header} Unable to evaluate, not enough state data available")
       return false
@@ -1494,7 +1494,7 @@ class VmOrTemplate < ActiveRecord::Base
 
     operator = options[:operator]
 
-    data0, data1 = self.drift_states.order("timestamp DESC").limit(2).all
+    data0, data1 = drift_states.order("timestamp DESC").limit(2)
 
     if data0.nil? || data1.nil?
       $log.info("MIQ(Vm-changed_vm_value?) Unable to evaluate, not enough state data available")
@@ -1814,13 +1814,13 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   # Return all archived VMs
-  ARCHIVED_CONDITIONS = "ems_id IS NULL AND storage_id IS NULL"
+  ARCHIVED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NULL"
   def self.all_archived
     self.where(ARCHIVED_CONDITIONS).to_a
   end
 
   # Return all orphaned VMs
-  ORPHANED_CONDITIONS = "ems_id IS NULL AND storage_id IS NOT NULL"
+  ORPHANED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NOT NULL"
   def self.all_orphaned
     self.where(ORPHANED_CONDITIONS).to_a
   end

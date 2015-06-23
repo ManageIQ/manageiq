@@ -228,7 +228,7 @@ class ChargebackController < ApplicationController
       else
         session[:changed] = false
         @sb[:rate] = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(obj[0])
-        @sb[:rate_details] = @sb[:rate].chargeback_rate_details
+        @sb[:rate_details] = @sb[:rate].chargeback_rate_details.to_a
         if @sb[:rate_details].blank?
           fixture_file = File.join(@@fixture_dir, "chargeback_rates.yml")
           if File.exist?(fixture_file)
@@ -276,7 +276,7 @@ class ChargebackController < ApplicationController
 
   def cb_rate_show
     @display = "main"
-    @sb[:selected_rate_details] = @record.chargeback_rate_details
+    @sb[:selected_rate_details] = @record.chargeback_rate_details.to_a
     @sb[:selected_rate_details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
     if @record == nil
       redirect_to :action=>"cb_rates_list", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true

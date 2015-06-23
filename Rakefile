@@ -18,8 +18,6 @@ namespace :build do
       base = Pathname.new(File.dirname(__FILE__)).freeze
 
       artifacts_dirs = %w(
-        lib/disk/modules/MiqBlockDevOps
-        lib/SlpLib/SlpLib_raw/
         lib/NetappManageabilityAPI/NmaCore/NmaCore_raw
       )
 
@@ -36,7 +34,6 @@ namespace :build do
 
       so_dirs = %w(
         lib/disk/modules/
-        lib/SlpLib/lib/
         lib/NetappManageabilityAPI/NmaCore/
       )
 
@@ -77,44 +74,6 @@ namespace :build do
     base      = Pathname.new(File.dirname(__FILE__)).freeze
     platform  = RUBY_PLATFORM.match(/(.+?)[0-9\.]*$/)[1] # => "x86_64-linux" or "x86_64-darwin"
     _arch, os = platform.split("-")                      # => ["x86_64", "linux"]
-
-    #
-    # MiqBlockDevOps
-    #
-
-    if platform == "x86_64-linux"
-      build_shared_objects(
-        "MiqBlockDevOps.so",
-        base.join("lib/disk/modules/MiqBlockDevOps/"),
-        base.join("lib/disk/modules/")
-      )
-    else
-      puts "** Skipping build of MiqBlockDevOps.so since it is only built on x86_64-linux."
-    end
-
-    #
-    # SlpLib
-    #
-
-    if os == "darwin"
-      include_file = "/usr/local/include/slp.h"
-      lib_file     = "/usr/local/lib/libslp.dylib"
-      so_name      = "SlpLib_raw.bundle"
-    else # RHEL, Fedora
-      include_file = "/usr/include/slp.h"
-      lib_file     = "/usr/lib64/libslp.so"
-      so_name      = "SlpLib_raw.so"
-    end
-
-    if File.exist?(include_file) && File.exist?(lib_file)
-      build_shared_objects(
-        so_name,
-        base.join("lib/SlpLib/SlpLib_raw/"),
-        base.join("lib/SlpLib/lib/#{platform}/")
-      )
-    else
-      puts "** Skipping build of #{so_name} due to missing header or library."
-    end
 
     #
     # NmaCore

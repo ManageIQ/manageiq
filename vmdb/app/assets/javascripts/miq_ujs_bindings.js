@@ -36,8 +36,11 @@ $(document).ready(function () {
     if (typeof interval == "undefined") {
       // No interval passed, use event observer
       var el = $(this);
-      el.unbind('change');
-      el.change(function () {
+      el.unbind('change')
+      el.change(function() {
+        if (parms.auto_refresh === true) {
+          dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+        }
         var data = el.attr('id') + '=';
         if (el.prop('multiple')) {
           data += el.val();
@@ -61,6 +64,10 @@ $(document).ready(function () {
       $(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
       var el = $(this);
       el.observe_field(interval, function () {
+        if (parms.auto_refresh === true) {
+          dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+        }
+
         var oneTrans = this.getAttribute('data-miq_send_one_trans'); // Grab one trans URL, if present
         if (typeof submit != "undefined") {
           // If submit element passed in
@@ -83,6 +90,11 @@ $(document).ready(function () {
     var options = {
       data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? el.val() : 'null')
     };
+
+    if (parms.auto_refresh === true) {
+      dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+    }
+
     if (el.attr('data-miq_sparkle_on')) {
       options.beforeSend = true;
     }
@@ -90,6 +102,10 @@ $(document).ready(function () {
       options.complete = true;
     }
     miqJqueryRequest(url, options);
+  });
+
+  $(document).on('change', '[data-miq_observe_date]', function() {
+    miqSendDateRequest($(this));
   });
 
   // Run this last to be sure all other UJS bindings have been run in case the focus field is observed

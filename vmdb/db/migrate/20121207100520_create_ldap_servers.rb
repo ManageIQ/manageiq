@@ -16,7 +16,7 @@ class CreateLdapServers < ActiveRecord::Migration
       t.boolean    :get_direct_groups
       t.boolean    :follow_referrals
       t.belongs_to :ldap_server, :type => :bigint
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

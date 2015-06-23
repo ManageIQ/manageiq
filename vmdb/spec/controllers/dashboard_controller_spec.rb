@@ -1,29 +1,22 @@
 require "spec_helper"
 
 describe DashboardController do
-  before(:each) do
-    described_class.any_instance.stub(:set_user_time_zone)
-  end
-
   context "POST authenticate" do
     it "validates user" do
+      EvmSpecHelper.create_guid_miq_server_zone
+
       role = FactoryGirl.create(:miq_user_role, :name => 'test_role')
       group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
-      User.stub(:authenticate).and_return(user)
-      controller.stub(:get_vmdb_config).and_return({:product => {}})
       UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
-      controller.stub(:start_url_for_user).and_return('some_url')
-      post :authenticate, :user_name => user.userid, :user_password => 'secret'
+      post :authenticate, :user_name => user.userid, :user_password => 'dummy'
       session[:userid].should == user.userid
     end
   end
 
   context "#validate_user" do
-    let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
-
     before do
-      MiqServer.stub(:my_server).with(true).and_return(server)
+      EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "returns flash message when user's group is missing" do
@@ -70,13 +63,11 @@ describe DashboardController do
 
       controller.instance_variable_set(:@sb, {:active_db => ws.name})
       controller.instance_variable_set(:@tabs, [])
-      controller.stub(:role_allows)
-      session[:group] = user.current_group.id
-      session[:userid] = user.userid
+      login_as user
       #create a user's dashboard using group dashboard name.
-      user_ws = FactoryGirl.create(:miq_widget_set, :name => "#{session[:userid]}|#{session[:group]}|#{ws.name}",
-                                   :set_data => {:last_group_db_updated => Time.now.utc,
-                                                 :col1 => [1], :col2 => [], :col3 =>[]})
+      FactoryGirl.create(:miq_widget_set,
+                         :name     => "#{user.userid}|#{group.id}|#{ws.name}",
+                         :set_data => {:last_group_db_updated => Time.now.utc, :col1 => [1], :col2 => [], :col3 => []})
       controller.show
       controller.send(:flash_errors?).should_not be_true
     end
@@ -110,7 +101,6 @@ describe DashboardController do
     before do
       MiqRegion.seed
       MiqShortcut.seed
-      described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
     end
 

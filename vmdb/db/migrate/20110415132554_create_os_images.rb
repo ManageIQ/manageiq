@@ -7,7 +7,7 @@ class CreateOsImages < ActiveRecord::Migration
       t.string      :path
       t.datetime    :mtime
       t.integer     :size,        :limit => 8
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

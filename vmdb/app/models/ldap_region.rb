@@ -17,18 +17,18 @@ class LdapRegion < ActiveRecord::Base
   end
 
   def self.valid_regions
-    self.all.find_all(&:is_valid?)
+    all.find_all(&:is_valid?)
   end
 
   def valid_domains
-    self.ldap_domains.all.find_all(&:is_valid?)
+    ldap_domains.find_all(&:is_valid?)
   end
 
   def user_search(options)
     log_header = "LdapRegion#user_search"
 
     results = {}
-    self.ldap_domains.all.each do |domain|
+    ldap_domains.each do |domain|
       next unless domain.is_valid?
       begin
         users = domain.user_search(options)

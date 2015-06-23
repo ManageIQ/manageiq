@@ -1,6 +1,6 @@
 module ImageMethods
   def fog_image
-    @fog_image ||= connect("Image")
+    @fog_image ||= ems.connect(:tenant_name => "EmsRefreshSpec-Project", :service => "Image")
   end
 
   def find_or_create_image(collection, attributes)
@@ -88,11 +88,11 @@ module ImageMethods
   end
 
   def image_path
-    "/tmp/cirros-image-#{SecureRandom.hex}.tar.gz"
+    @image_path ||= "/tmp/cirros-image-#{SecureRandom.hex}.tar.gz"
   end
 
   def extract_path
-    "/tmp/cirros-#{SecureRandom.hex}-dir"
+    @extract_path ||= "/tmp/cirros-#{SecureRandom.hex}-dir"
   end
 
   def image_name

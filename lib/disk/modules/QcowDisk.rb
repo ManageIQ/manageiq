@@ -1,6 +1,6 @@
 $:.push("#{File.dirname(__FILE__)}")
 require 'MiqLargeFile'
-require 'MiqMemory'
+require 'memory_buffer'
 require 'binary_struct'
 
 require 'zlib'
@@ -371,7 +371,7 @@ module QcowDisk
       raise "QCOW Backing File read returned #{rbuf.length} bytes - requested #{nbytes} bytes" if backing_buffer.length != nbytes
     end
 
-    backing_buffer << MiqMemory.create_zero_buffer(SECTOR_SIZE * (nb_sectors - n))
+    backing_buffer << MemoryBuffer.create(SECTOR_SIZE * (nb_sectors - n))
     backing_buffer
   end
 
@@ -397,7 +397,7 @@ module QcowDisk
 
       if cluster_offset == 0
         if backing_file_name.empty?
-          rbuf = MiqMemory.create_zero_buffer(nbytes)
+          rbuf = MemoryBuffer.create(nbytes)
         else
           rbuf = read_backing_file(sector_num, n)
         end

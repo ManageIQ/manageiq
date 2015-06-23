@@ -9,7 +9,7 @@ class CreateMiqCimAssociations < ActiveRecord::Migration
       t.column :result_obj_name,    :string
       t.column :miq_cim_instance_id,  :integer
       t.column :result_instance_id, :integer
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :miq_cim_associations, :miq_cim_instance_id
     add_index :miq_cim_associations, :result_instance_id

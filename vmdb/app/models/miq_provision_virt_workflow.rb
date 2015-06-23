@@ -434,11 +434,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     unless missing_hosts.blank?
       begin
         st = Time.now
-        return switches if @dvs_ems_connect_ok[src[:ems].id] == false
+        return switches if src[:ems] && @dvs_ems_connect_ok[src[:ems].id] == false
         vim = load_ar_obj(src[:ems]).connect
         missing_hosts.each { |dest_host| @dvs_by_host[dest_host.id] = get_host_dvs(dest_host, vim) }
       rescue
-        @dvs_ems_connect_ok[src[:ems].id] = false
+        @dvs_ems_connect_ok[src[:ems].id] = false if src[:ems]
         return switches
       ensure
         vim.disconnect if vim rescue nil
@@ -597,7 +597,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     log_header = "MIQ(#{self.class.name}#source_vm_rbac)"
 
     filter_id = get_value(@values[:vm_filter]).to_i
-    search_options = {:results_format => :objects, :userid => @requester.userid}
+    search_options = {:userid => @requester.userid}
     search_options[:conditions] = condition unless condition.blank?
     template_msg =  "User: <#{@requester.userid}>"
     template_msg += " Role: <#{@requester.current_group.nil? ? "none" : @requester.current_group.miq_user_role.name}>  Group: <#{@requester.current_group.nil? ? "none" : @requester.current_group.description}>"
@@ -605,9 +605,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     template_msg += "  Passing inital template IDs: <#{vms.collect(&:id).inspect}>" unless vms.blank?
     $log.info "#{log_header} Checking for allowed templates for #{template_msg}"
     if filter_id.zero?
-      Rbac.search(search_options.merge(:targets => vms, :class => VmOrTemplate)).first
+      if vms.empty?
+        Rbac.search(search_options.merge(:class => VmOrTemplate, :results_format => :objects)).first
+      else
+        Rbac.filtered(vms, search_options.merge(:class => VmOrTemplate))
+      end
     else
-      MiqSearch.find(filter_id).search(vms, search_options).first
+      if vms.empty?
+        MiqSearch.find(filter_id).search([], search_options.merge(:results_format => :objects)).first
+      else
+        MiqSearch.find(filter_id).filtered(vms, search_options)
+      end
     end
   end
 
@@ -641,15 +649,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
-    if vm_id.to_i.zero?
+    rails_logger('get_source_and_targets', 0)
+    svm = VmOrTemplate.where(:id => vm_id).first
+
+    if svm.nil?
       @vm_snapshot_count = 0
       return @target_resource = {}
-    else
-      rails_logger('get_source_and_targets', 0)
-      svm = VmOrTemplate.find_by_id(vm_id)
-      raise "Unable to find VM with Id: [#{vm_id}]" if svm.nil?
-      raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is archived and cannot be used with provisioning." if svm.archived?
-      raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is orphaned and cannot be used with provisioning." if svm.orphaned?
     end
 
     @vm_snapshot_count = svm.v_total_snapshots
@@ -658,6 +663,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result[:ems] = ci_to_hash_struct(svm.ext_management_system)
 
     result
+  end
+
+  def source_valid?
+    obj = VmOrTemplate.where(:id => get_value(@values[:src_vm_id])).first
+    return "Unable to find VM with Id: [#{obj.id}]" if obj.nil?
+    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is archived and cannot be used with provisioning." if obj.archived?
+    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is orphaned and cannot be used with provisioning." if obj.orphaned?
   end
 
   def resources_for_ui
@@ -1007,8 +1019,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     version = args.first.to_f
     return from_ws_ver_1_0(*args) if version == 1.0
 
-    # Move optional arguments into the VmdbwsSupport::ProvisionOptions object
-    prov_options = VmdbwsSupport::ProvisionOptions.new(
+    # Move optional arguments into the MiqHashStruct object
+    prov_options = MiqHashStruct.new(
       :values                => args[6],
       :ems_custom_attributes => args[7],
       :miq_custom_attributes => args[8],
@@ -1231,7 +1243,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
-    options = VmdbwsSupport::ProvisionOptions.new if options.nil?
+    options = MiqHashStruct.new if options.nil?
     log_header = "#{name}.from_ws_ver_1_x"
     $log.warn "#{log_header} Web-service provisioning starting with interface version <#{version}> by requester <#{userid}>"
 
@@ -1293,14 +1305,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
             else
               load_ar_obj(allowed_hosts)
             end
-    Rbac.search(:targets => hosts, :class => Host, :results_format => :objects,
-                :userid => @requester.userid).first
+    Rbac.filtered(hosts, :class => Host, :userid => @requester.userid)
   end
 
   def all_provider_hosts(src)
-    ui_str = ui_lookup(:table => "ext_management_systems")
-    raise "Source VM [#{src[:vm].name}] does not belong to a #{ui_str}" if src[:ems].nil?
-    load_ar_obj(src[:ems]).hosts
+    load_ar_obj(src[:ems]).try(:hosts) || []
   end
 
   def selected_host(src)

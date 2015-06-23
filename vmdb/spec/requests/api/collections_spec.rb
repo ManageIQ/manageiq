@@ -106,7 +106,7 @@ describe ApiController do
     end
 
     it "query Requests" do
-      FactoryGirl.create(:miq_request)
+      FactoryGirl.create(:vm_migrate_request, :userid => FactoryGirl.create(:user).userid)
       test_collection_query(:requests, requests_url, MiqRequest)
     end
 

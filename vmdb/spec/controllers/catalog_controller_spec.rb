@@ -1,8 +1,9 @@
 require "spec_helper"
 
 describe CatalogController do
+  let(:user) { FactoryGirl.create(:user) }
   before(:each) do
-    set_user_privileges
+    set_user_privileges user
   end
 
   # some methods should not be accessible through the legacy routes
@@ -331,9 +332,7 @@ describe CatalogController do
   describe "#tags_edit" do
     before(:each) do
       @ot = FactoryGirl.create(:orchestration_template, :name => "foo")
-      user = FactoryGirl.create(:user, :userid => 'testuser')
-      session[:userid] = user.userid
-      @ot.stub(:tagged_with).with(:cat => "testuser").and_return("my tags")
+      @ot.stub(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
       @tag1 = FactoryGirl.create(:classification_tag,
                                  :name   => "tag1",
@@ -422,7 +421,6 @@ describe CatalogController do
       EvmSpecHelper.create_guid_miq_server_zone
       expect(MiqServer.my_guid).to be
       expect(MiqServer.my_server).to be
-      session[:userid] = User.current_user.userid
       session[:settings] = {
         :views => {:orchestrationtemplate => "grid"}
       }

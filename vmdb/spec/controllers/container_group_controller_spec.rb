@@ -13,7 +13,7 @@ describe ContainerGroupController do
   end
 
   it "renders show screen" do
-    MiqServer.stub(:my_zone).and_return("default")
+    EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_group = ContainerGroup.create(:ext_management_system => ems, :name => "Test Group")
     get :show, :id => container_group.id
@@ -27,8 +27,6 @@ describe ContainerGroupController do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containergroup => 'list'},
                           :perpage        => {:list => 10}}
-    session[:userid] = User.current_user.userid
-    session[:eligible_groups] = []
     FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
 

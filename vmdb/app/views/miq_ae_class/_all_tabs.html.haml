@@ -1,68 +1,75 @@
-#ae_tabs{:style => "display:none;width:auto;height:99%;overflow:auto;"}
-  - #  Toplevel Tabbar
+#ae_tabs
+  -# Toplevel Tabbar
   - nodes = x_node.split('-')
   - case nodes.first
   - when "aec"
-    %ul.tab
-      %li
-        %a{:href => "#instances"}=_('Instances')
-      %li
-        %a{:href => "#methods"}=_('Methods')
-      %li
-        %a{:href => "#props"}=_('Properties')
-      %li
-        %a{:href => "#schema"}=_('Schema')
-    #instances{:name => "instances"}
-      = render :partial => "class_instances"
-    #methods{:name => "methods"}
-      = render :partial => "class_methods"
-    #props{:name => "props"}
-      = render :partial => "class_props"
-    #schema{:name => "schema"}
-      = render :partial => "class_fields"
+    %ul.nav.nav-tabs
+      = patternfly_tab_header("instances", @sb[:active_tab]) do
+        = _('Instances')
+      = patternfly_tab_header("methods", @sb[:active_tab]) do
+        = _('Methods')
+      = patternfly_tab_header("props", @sb[:active_tab]) do
+        = _('Properties')
+      = patternfly_tab_header("schema", @sb[:active_tab]) do
+        = _('Schema')
+    .tab-content
+      = patternfly_tab_content("instances", @sb[:active_tab]) do
+        = render :partial => "class_instances"
+      = patternfly_tab_content("methods", @sb[:active_tab]) do
+        = render :partial => "class_methods"
+      = patternfly_tab_content("props", @sb[:active_tab]) do
+        = render :partial => "class_props"
+      = patternfly_tab_content("schema", @sb[:active_tab]) do
+        = render :partial => "class_fields"
   - when "aei"
-    %ul
-      %li
-        %a{:href => "#instances"}=_('Instances')
-    #instances{:name => "instances"}
-      = render :partial => "instance_fields"
+    %ul.nav.nav-tabs
+      = patternfly_tab_header("instances", @sb[:active_tab]) do
+        = _('Instances')
+    .tab-content
+      = patternfly_tab_content("instances", @sb[:active_tab]) do
+        = render :partial => "instance_fields"
   - when "aem"
-    %ul
-      %li
-        %a{:href => "#methods"}=_("Method Inputs")
-    #methods{:name => "methods"}
-      = render :partial => "method_inputs"
+    %ul.nav.nav-tabs
+      = patternfly_tab_header("methods", @sb[:active_tab]) do
+        = _("Method Inputs")
+    .tab-content
+      = patternfly_tab_content("methods", @sb[:active_tab]) do
+        = render :partial => "method_inputs"
   - when "aen"
     - if @in_a_form && @edit.key?(:ae_class_id)
-      - # class add
-      %ul
-        %li
-          %a{:href => "#props"}=_('Properties')
-      #props{:name => "props"}
-        = render :partial => "class_add"
+      -# class add
+      %ul.nav.nav-tabs
+        = patternfly_tab_header("props", @sb[:active_tab]) do
+          = _('Properties')
+      .tab-content
+        = patternfly_tab_content("props", @sb[:active_tab]) do
+          = render :partial => "class_add"
     - else
-      %ul
-        %li
-          %a{:href => "#details"}=_('Namespace Details')
-      #details{:name => "Details"}
-        - if !@in_a_form
-          = render :partial => "ns_details"
-        - else
-          = render :partial => "ns_list"
+      %ul.nav.nav-tabs
+        = patternfly_tab_header("details", @sb[:active_tab]) do
+          = _('Namespace Details')
+      .tab-content
+        = patternfly_tab_content("details", @sb[:active_tab]) do
+          - if !@in_a_form
+            = render :partial => "ns_details"
+          - else
+            = render :partial => "ns_list"
   - when "root"
-    - # ns_list_div
-    %ul
-      %li
-        %a{:href => "#namespaces"}=_('Namespaces')
-    #namespaces{:name => "namespaces"}
-      = render :partial => "ns_list"
+    -# ns_list_div
+    %ul.nav.nav-tabs
+      = patternfly_tab_header("namespaces", @sb[:active_tab]) do
+        = _('Namespaces')
+    .tab-content
+      = patternfly_tab_content("namespaces", @sb[:active_tab]) do
+        = render :partial => "ns_list"
 
 :javascript
   // method takes hash that can have 4 keys: tabs div id, active_tab label,
   // url to go to when tab is changed, and whether to check for abandon changes or not
-  miq_jquery_tabs_init({tabs_div: "ae_tabs", active_tab: "#{@sb[:active_tab]}", url: "/miq_ae_class/change_tab/", tab_changes: true});
+  miq_patternfly_tabs_init("#ae_tabs", "/miq_ae_class/change_tab");
   if (typeof miqEditor != "undefined") miqEditor.refresh();
-  #{
-  # disable any other tabs on screen when in edit
-  "miq_jquery_disable_inactive_tabs('ae_tabs');" if @in_a_form
-  }
+
+-# disable any other tabs on screen when in edit
+- if @in_a_form
+  :javascript
+    miq_patternfly_disable_inactive_tabs('#ae_tabs');

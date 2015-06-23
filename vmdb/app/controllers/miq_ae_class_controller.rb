@@ -191,7 +191,7 @@ class MiqAeClassController < ApplicationController
           set_right_cell_text(x_node, @record)
         end
       else
-        rec = MiqAeNamespace.all(:conditions => {:parent_id=>nil})
+        rec = MiqAeNamespace.where(:parent_id => nil)
         @record = nil
         @grid_xml = build_toplevel_grid(rec)
         @right_cell_text = "Datastore"
@@ -825,24 +825,6 @@ class MiqAeClassController < ApplicationController
     get_instances_form_vars
 
     render :update do |page|                    # Use JS to update the display
-
-      params.each do |var, val|
-        # for instance tab on class screen
-        if var.starts_with?("cls_inst_value") || var.starts_with?("cls_inst_password_value") ||
-            var.starts_with?("cls_inst_collect") || var.starts_with?("cls_inst_on_entry") ||
-            var.starts_with?("cls_inst_on_exit") || var.starts_with?("cls_inst_on_error") ||
-            var.starts_with?("cls_inst_max_retries") || var.starts_with?("cls_inst_max_time")
-          @ae_class.ae_fields.sort_by! { |f| f.priority.to_i } if @ae_class
-        end
-        # for instance node selected in the left tree
-        if var.starts_with?("inst_value") || var.starts_with?("inst_password_value") ||
-            var.starts_with?("inst_collect") || var.starts_with?("inst_on_entry") ||
-            var.starts_with?("inst_on_exit") || var.starts_with?("inst_on_error") ||
-            var.starts_with?("inst_max_retries") || var.starts_with?("inst_max_time")
-          @ae_class.ae_fields.sort_by! { |f| f.priority.to_i } if @ae_class
-        end
-      end
-
       @changed = (@edit[:current] != @edit[:new])
       page << javascript_for_miq_button_visibility(@changed)
     end
@@ -2772,7 +2754,6 @@ private
       set_root_node
     else
       @ae_class             = @record.ae_class
-      @ae_class_id   = @ae_class.id
       @grid_inst_xml = build_fields_grid(@ae_class.ae_fields, @record)
       @sb[:active_tab]      = "instances"
       domain_overrides
@@ -2786,7 +2767,6 @@ private
       set_root_node
     else
       @ae_class = @record.ae_class
-      @ae_class_id = @ae_class.id
       inputs = @record.inputs
       @grid_methods_xml = inputs.blank? ? nil : build_methods_grid(inputs)
       @sb[:squash_state] = true
@@ -2799,7 +2779,6 @@ private
   def get_class_node_info(id)
     @sb[:active_tab] = "instances" if !@in_a_form && !params[:button] && !params[:pressed]
     @record = @ae_class = MiqAeClass.find_by_id(from_cid(id[1]))
-    @ae_class_id = @record.id
     if @record.nil?
       set_root_node
     else

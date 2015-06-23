@@ -140,7 +140,7 @@ module ApiSpecHelper
   def update_user_role(role, *identifiers)
     return if identifiers.blank?
     product_features = identifiers.collect do |identifier|
-      MiqProductFeature.find_or_create_by_identifier(identifier)
+      MiqProductFeature.find_or_create_by(:identifier => identifier)
     end
     role.update_attributes!(:miq_product_features => product_features)
   end

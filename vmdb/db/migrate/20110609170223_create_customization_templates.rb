@@ -4,7 +4,7 @@ class CreateCustomizationTemplates < ActiveRecord::Migration
       t.string      :name
       t.string      :description
       t.text        :script
-      t.timestamps
+      t.timestamps :null => true
     end
 
     add_column    :pxe_servers, :access_url, :string

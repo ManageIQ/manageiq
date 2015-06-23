@@ -897,7 +897,7 @@ module ApplicationController::CiProcessing
   def process_elements(elements, klass, task, display_name = nil, order_field = nil)
     ['name', 'description', 'title'].each { |key| order_field ||= key if klass.column_names.include?(key) }
 
-    klass.find_all_by_id(elements, :order => order_field == "ems_id" ? order_field : "lower(#{order_field})").each do |elem|
+    klass.where(:id => elements).order(order_field == "ems_id" ? order_field : "lower(#{order_field})").each do |elem|
       id          = elem.id
       description = get_record_display_name(elem)
       name        = elem.send(order_field.to_sym)
@@ -1551,7 +1551,7 @@ module ApplicationController::CiProcessing
           :message=>"'#{display_name || task}' successfully initiated for #{pluralize(hosts.length,"Host")}",
           :target_class=>"Host")
     elsif task == "destroy"
-      Host.find_all_by_id(hosts, :order => "lower(name)").each do |host|
+      Host.where(:id => hosts).order("lower(name)").each do |host|
         id = host.id
         host_name = host.name
         audit = {:event=>"host_record_delete_initiated", :message=>"[#{host_name}] Record delete initiated", :target_id=>id, :target_class=>"Host", :userid => session[:userid]}
@@ -1559,7 +1559,7 @@ module ApplicationController::CiProcessing
       end
       Host.destroy_queue(hosts)
     else
-      Host.find_all_by_id(hosts, :order => "lower(name)").each do |host|
+      Host.where(:id => hosts).order("lower(name)").each do |host|
         id = host.id
         host_name = host.name
         begin

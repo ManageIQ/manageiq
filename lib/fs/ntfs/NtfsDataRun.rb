@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-require 'MiqMemory'
+require 'memory_buffer'
 
 module NTFS
 	
@@ -160,7 +159,7 @@ module NTFS
 
       # Multiple clusters (part of which may be cached)
       num = end_vcn - start_vcn + 1
-      ret = MiqMemory.create_zero_buffer(num * @bytesPerCluster)
+      ret = MemoryBuffer.create(num * @bytesPerCluster)
       offset = 0
       
       to_read = findCachedClusters(start_vcn, end_vcn)
@@ -281,7 +280,7 @@ module NTFS
           @boot_sector.stream.seek(@boot_sector.lcn2abs(lcn))
           @boot_sector.stream.read(len)
         else
-          MiqMemory.create_zero_buffer(len)
+          MemoryBuffer.create(len)
         end
 
         ret << clusters

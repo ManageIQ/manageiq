@@ -1,14 +1,4 @@
 module InteractionMethods
-  def connect(service = "Compute")
-    auth_url = EmsOpenstack.auth_url(settings[:connection][:ems_ip], settings[:connection][:ems_port])
-    EmsOpenstack.raw_connect(
-      settings[:connection][:ems_username],
-      settings[:connection][:ems_password],
-      auth_url,
-      service
-    )
-  end
-
   def find_all(collection, lookup_pairs)
     puts "Finding #{lookup_pairs} in #{collection.class.name}"
     collection.select do |i|
@@ -27,12 +17,16 @@ module InteractionMethods
     end
   end
 
+  def ems
+    EmsOpenstack.where(:id => settings[:connection][:ems_id]).first
+  end
+
   def fog
-    @fog ||= connect
+    @fog ||= ems.connect(:tenant_name => "EmsRefreshSpec-Project")
   end
 
   def fog_volume
-    @fog_volume ||= connect("Volume")
+    @fog_volume ||= ems.connect(:tenant_name => "EmsRefreshSpec-Project", :service => "Volume")
   end
 
   def find(collection, lookup_pairs)
@@ -54,6 +48,10 @@ module InteractionMethods
       yield new_obj if block_given?
       new_obj
     end
+  end
+
+  def find_or_create_project
+    find_or_create(ems.connect.tenants, :name => "EmsRefreshSpec-Project")
   end
 
   def find_or_create_server(collection, attributes)

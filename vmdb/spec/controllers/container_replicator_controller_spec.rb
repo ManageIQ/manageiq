@@ -27,8 +27,6 @@ describe ContainerReplicatorController do
     session[:settings] = {:default_search => 'foo',
                           :views          => {:containerreplicator => 'list'},
                           :perpage        => {:list => 10}}
-    session[:eligible_groups] = []
-    session[:userid] = User.current_user.userid
 
     FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone

@@ -167,12 +167,7 @@ module ApiHelper
     private
 
     def resource_search(id, type, klass)
-      options = {
-        :targets        => Array(klass.find(id)),
-        :userid         => @auth_user,
-        :results_format => :objects
-      }
-      res = Rbac.search(options).first.first
+      res = Rbac.filtered([klass.find(id)], :userid => @auth_user).first
       raise ApiController::Forbidden, "Access to the resource #{type}/#{id} is forbidden" unless res
       res
     end
@@ -184,7 +179,7 @@ module ApiHelper
         elsif by_tag_param
           klass.find_tagged_with(:all => by_tag_param, :ns  => ApiController::TAG_NAMESPACE)
         else
-          klass.scoped
+          klass.all
         end
       filter_options = filter_param(klass)
       res = res.where(filter_options)             if filter_options.present? && res.respond_to?(:where)
@@ -193,14 +188,12 @@ module ApiHelper
       res = res.reorder(sort_options)             if sort_options.present?
 
       options = {
-        :targets        => res,
         :userid         => @auth_user,
-        :results_format => :objects
       }
       options[:order] = sort_options              if sort_options.present?
       options[:offset], options[:limit] = expand_paginate_params if paginate_params?
 
-      Rbac.search(options).first
+      Rbac.filtered(res, options)
     end
 
     #

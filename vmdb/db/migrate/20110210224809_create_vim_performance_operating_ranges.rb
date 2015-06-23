@@ -10,7 +10,7 @@ class CreateVimPerformanceOperatingRanges < ActiveRecord::Migration
       t.float       :derived_memory_used_high_over_time_period
       t.float       :derived_memory_used_low_over_time_period
 
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

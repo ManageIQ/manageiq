@@ -224,32 +224,25 @@ module ApplicationController::DialogRunner
   def dialog_get_form_vars
     @record = Dialog.find_by_id(@edit[:rec_id])
 
-    params.each do |p|
-      #if p[0] contains name w/ __protected(password field), so remove it
-      p[0] = p[0].split("__protected").first if p[0].ends_with?("__protected")
+    params.each do |parameter_key, parameter_value|
+      parameter_key = parameter_key.split("__protected").first if parameter_key.ends_with?("__protected")
 
-      #if date/datetime field came in
-      if p[0].starts_with?("miq_date__")
+      if parameter_key.starts_with?("miq_date__") && @record.field_name_exist?(parameter_key.split("miq_date__").last)
+        @edit[:wf].set_value(parameter_key.split("miq_date__").last, parameter_value)
 
-        @edit[:wf].set_value(p[0].split("miq_date__").last,p[1]) if @record.field_name_exist?(p[0].split("miq_date__").last)
-
-      #if start hour/min came in for date/datetime field
-      elsif ["start_hour", "start_min"].include?(p[0])
+      elsif %w(start_hour start_min).include?(parameter_key)
         field_name = ""
 
-        @edit[:wf].dialog.dialog_tabs.each do |tab|
-          tab.dialog_groups.each do |group|
-            group.dialog_fields.each_with_index do |field,i|
-              field_name = field.name if ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field.type)
-            end
-          end
+        @edit[:wf].dialog.dialog_fields.each_with_index do |field, _|
+          field_name = field.name if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field.type)
         end
 
-        #if user didnt choose the date and goes with default shown in the textbox, need to set that value in wf before adding hour/min
+        # if user didnt choose the date and goes with default shown in the textbox,
+        # need to set that value in wf before adding hour/min
         if @edit[:wf].value(field_name).nil?
           t = Time.now.in_time_zone(session[:user_tz]) + 1.day
           date_val = ["#{t.month}/#{t.day}/#{t.year}"]
-          @edit[:wf].set_value(field_name,date_val)
+          @edit[:wf].set_value(field_name, date_val)
         else
           date_val = @edit[:wf].value(field_name).split(" ")
         end
@@ -257,18 +250,23 @@ module ApplicationController::DialogRunner
         start_hour = date_val.length >= 2 ? date_val[1].split(":").first : 0
         start_min = date_val.length >= 3 ? date_val[1].split(":").last : 0
 
-        if p[0] == "start_hour"
-          @edit[:wf].set_value(field_name,"#{date_val[0]} #{p[1]}:#{start_min}")
+        if parameter_key == "start_hour"
+          time_value = "#{parameter_value}:#{start_min}"
         else
-          @edit[:wf].set_value(field_name,"#{date_val[0]} #{start_hour}:#{p[1]}")
+          time_value = "#{start_hour}:#{parameter_value}"
         end
 
-      elsif @edit[:wf].dialog.field(p[0]).try(:type) == "DialogFieldCheckBox"
-        checkbox_value = p[1] == "1" ? "t" : "f"
-        @edit[:wf].set_value(p[0], checkbox_value) if @record.field_name_exist?(p[0])
+        @edit[:wf].set_value(field_name, "#{date_val[0]} #{time_value}")
+
+      elsif @edit[:wf].dialog.field(parameter_key).try(:type) == "DialogFieldCheckBox"
+        checkbox_value = parameter_value == "1" ? "t" : "f"
+        @edit[:wf].set_value(parameter_key, checkbox_value) if @record.field_name_exist?(parameter_key)
 
       else
-        @edit[:wf].set_value(p[0],p[1]) if @record.field_name_exist?(p[0])
+        if @record.field_name_exist?(parameter_key)
+          parameter_value = parameter_value.to_i if @edit[:wf].dialog_field(parameter_key).data_type == "integer"
+          @edit[:wf].set_value(parameter_key, parameter_value)
+        end
       end
     end
   end

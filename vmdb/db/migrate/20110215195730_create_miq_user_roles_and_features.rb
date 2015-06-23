@@ -8,14 +8,14 @@ class CreateMiqUserRolesAndFeatures < ActiveRecord::Migration
       t.boolean       :protected, :default => false
       t.bigint        :parent_id
 
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :miq_user_roles do |t|
       t.string        :name
       t.boolean       :read_only
 
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :miq_roles_features, :id => false do |t|

@@ -2348,13 +2348,6 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    # Set version info, if it doesn't exist
-    if session[:vmdb] == nil
-      session[:vmdb] = Hash.new
-      session[:vmdb][:version] = Vmdb::Appliance.VERSION
-      session[:vmdb][:build]   = Vmdb::Appliance.BUILD_NUMBER
-    end
-
     # Get customer name
     session[:customer_name] = get_vmdb_config[:server][:company] if session[:customer_name] == nil
     session[:vmdb_name] = get_vmdb_config[:server][:name] if session[:vmdb_name] == nil

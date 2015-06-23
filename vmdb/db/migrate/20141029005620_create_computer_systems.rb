@@ -2,7 +2,7 @@ class CreateComputerSystems < ActiveRecord::Migration
   def up
     create_table :computer_systems do |t|
       t.belongs_to :managed_entity, :type => :bigint, :polymorphic => true
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :computer_systems,  [:managed_entity_id, :managed_entity_type],
               :name => :index_computer_systems_managed_entity

@@ -2,8 +2,7 @@ require 'stringio'
 
 require 'Fat32DirectoryEntry'
 
-$:.push("#{File.dirname(__FILE__)}/../../util")
-require 'MiqMemory'
+require 'memory_buffer'
 
 # ////////////////////////////////////////////////////////////////////////////
 # // Data definitions.
@@ -169,7 +168,7 @@ module Fat32
 			
 			# Must allocate another cluster.
 			cluster = @bs.allocClusters(@cluster)
-			@data += MiqMemory.create_zero_buffer(@bs.bytesPerCluster)
+			@data += MemoryBuffer.create(@bs.bytesPerCluster)
 			@all_clusters << mkClusterStatus(cluster, 0)
 			return 0, cluster
 		end

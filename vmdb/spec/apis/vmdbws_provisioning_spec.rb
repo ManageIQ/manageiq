@@ -79,7 +79,7 @@ describe VmdbwsController, :apis => true do
 
     it "should create an MiqProvisionRequest when calling WS version 2.0 with a ProvisionOptions object" do
       params = @params[0,5]
-      params << VmdbwsSupport::ProvisionOptions.new(:values => @params[5], :ems_custom_attributes => @params[6], :miq_custom_attributes => @params[7])
+      params << MiqHashStruct.new(:values => @params[5], :ems_custom_attributes => @params[6], :miq_custom_attributes => @params[7])
       req = invoke(:VmProvisionRequest, *params)
       req.should be_an_instance_of(VmdbwsSupport::ProxyMiqProvisionRequest)
       req.approval_state.should == 'pending_approval'
@@ -104,7 +104,7 @@ describe VmdbwsController, :apis => true do
         )
 
         params = @params[0,5]
-        params << VmdbwsSupport::ProvisionOptions.new(:values => @params[5], :ems_custom_attributes => @params[6], :miq_custom_attributes => @params[7])
+        params << MiqHashStruct.new(:values => @params[5], :ems_custom_attributes => @params[6], :miq_custom_attributes => @params[7])
         @proxy_request = invoke(:VmProvisionRequest, *params)
         @miq_request = MiqRequest.find_by_id(@proxy_request.id)
 

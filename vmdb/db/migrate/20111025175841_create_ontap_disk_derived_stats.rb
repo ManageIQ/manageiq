@@ -34,7 +34,7 @@ class CreateOntapDiskDerivedStats < ActiveRecord::Migration
 
       t.column :miq_storage_stat_id,      :bigint
       t.column :position,                 :integer
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :ontap_disk_derived_stats, :miq_storage_stat_id
   end

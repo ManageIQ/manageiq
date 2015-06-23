@@ -3,9 +3,8 @@ require 'Ext4Extent'
 require 'Ext4ExtentHeader'
 require 'Ext4ExtentIndex'
 
-$:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
-require 'MiqMemory'
+require 'memory_buffer'
 
 module Ext4
 
@@ -350,7 +349,7 @@ module Ext4
     end
 
     def read_blocks(startBlock, nblocks = 1)
-      out = MiqMemory.create_zero_buffer(nblocks * @sb.blockSize)
+      out = MemoryBuffer.create(nblocks * @sb.blockSize)
       raise "Ext4::Inode.read_blocks: startBlock=<#{startBlock}> is greater than #{data_block_pointers.length}" if startBlock > data_block_pointers.length - 1
       1.upto(nblocks) do |i|
         block_index = startBlock + i - 1

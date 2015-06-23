@@ -5,7 +5,7 @@ class CreateTftpServers < ActiveRecord::Migration
       t.string      :uri_prefix
       t.string      :uri
 
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

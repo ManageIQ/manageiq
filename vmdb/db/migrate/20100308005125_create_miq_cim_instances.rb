@@ -14,7 +14,7 @@ class CreateMiqCimInstances < ActiveRecord::Migration
       t.column :agent_id,         :integer
       t.column :stat_id,          :integer
       t.column :stat_top_id,        :integer
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :miq_cim_instances, :top_managed_element_id
     add_index :miq_cim_instances, :agent_top_id

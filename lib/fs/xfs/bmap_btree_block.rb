@@ -2,7 +2,6 @@ $LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 require 'miq-uuid'
 require 'stringio'
-require 'MiqMemory'
 
 require 'rufus/lru'
 

@@ -385,7 +385,7 @@ class ScheduleWorker < WorkerBase
 
   def sync_all_user_schedules
     self.rufus_remove_stale_schedules
-    schedules = MiqSchedule.in_my_region.all
+    schedules = MiqSchedule.in_my_region.to_a
     @last_checked = Time.now.utc
     self.reload_schedules(schedules)
   end

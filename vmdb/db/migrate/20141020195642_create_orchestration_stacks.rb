@@ -7,7 +7,7 @@ class CreateOrchestrationStacks < ActiveRecord::Migration
       t.text     :content
       t.string   :ems_ref
 
-      t.timestamps
+      t.timestamps :null => true
     end
 
     add_index :orchestration_templates, :ems_ref, :unique => true
@@ -23,7 +23,7 @@ class CreateOrchestrationStacks < ActiveRecord::Migration
       t.belongs_to :ems,                    :type => :bigint
       t.belongs_to :orchestration_template, :type => :bigint
 
-      t.timestamps
+      t.timestamps :null => true
     end
 
     add_index :orchestration_stacks, :orchestration_template_id

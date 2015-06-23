@@ -1,36 +1,17 @@
 require 'spec_helper'
 
 describe "Orchestration check_provisioned Method Validation" do
-  let(:stack_ems_ref) { "12345" }
-  let(:deploy_result) { "deploy result" }
-  let(:failure_msg) { "failure message" }
-
-  let(:ws_url) do
-    "/Cloud/Orchestration/Provisioning/StateMachines/Methods/CheckProvisioned?" \
-    "MiqRequestTask::service_template_provision_task=#{miq_request_task.id}"
-  end
-
-  let(:ws) do
-    MiqAeEngine.instantiate(ws_url)
-  end
-
-  let(:ws_with_refresh_started) do
-    @ae_state   = {'provider_last_refresh' => Time.now, 'deploy_result' => deploy_result}
-    MiqAeEngine.instantiate("#{ws_url}&ae_state_data=#{URI.escape(YAML.dump(@ae_state))}")
-  end
-
-  let(:miq_request_task) do
-    FactoryGirl.create(:miq_request_task,
-                       :destination => service_orchestration,
-                       :miq_request => FactoryGirl.create(:miq_request),
-                       :state       => 'active',
-                       :status      => 'Ok')
-  end
-
-  let(:service_orchestration) do
-    FactoryGirl.create(:service_orchestration,
-                       :orchestration_manager => FactoryGirl.create(:ems_amazon, :last_refresh_date => Time.now - 100))
-  end
+  let(:deploy_result)           { "deploy result" }
+  let(:ems_amazon)              { FactoryGirl.create(:ems_amazon, :last_refresh_date => Time.now - 100) }
+  let(:failure_msg)             { "failure message" }
+  let(:miq_request_task)        { FactoryGirl.create(:miq_request_task, :destination => service_orchestration, :miq_request => request) }
+  let(:request)                 { FactoryGirl.create(:service_template_provision_request, :userid => user.userid) }
+  let(:service_orchestration)   { FactoryGirl.create(:service_orchestration, :orchestration_manager => ems_amazon) }
+  let(:stack_ems_ref)           { "12345" }
+  let(:user)                    { FactoryGirl.create(:user) }
+  let(:ws)                      { MiqAeEngine.instantiate(ws_url) }
+  let(:ws_url)                  { "/Cloud/Orchestration/Provisioning/StateMachines/Methods/CheckProvisioned?MiqRequestTask::service_template_provision_task=#{miq_request_task.id}" }
+  let(:ws_with_refresh_started) { MiqAeEngine.instantiate("#{ws_url}&ae_state_data=#{URI.escape(YAML.dump('provider_last_refresh' => Time.now, 'deploy_result' => deploy_result))}") }
 
   it "waits for the deployment to complete" do
     ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATING', nil] }

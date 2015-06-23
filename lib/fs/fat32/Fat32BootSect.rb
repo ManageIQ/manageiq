@@ -1,8 +1,7 @@
 # encoding: US-ASCII
 
-$:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
-require 'MiqMemory'
+require 'memory_buffer'
 
 # ////////////////////////////////////////////////////////////////////////////
 # // Data definitions.
@@ -193,7 +192,7 @@ module Fat32
 		def getToLimit(clus, limit)
 			
 			# Init.
-			out = MiqMemory.create_zero_buffer(limit)
+			out = MemoryBuffer.create(limit)
 			pos = 0
 			cur_clus = clus
 			
@@ -261,7 +260,7 @@ module Fat32
 				nxt = getNextAvailableCluster(clus)
 				first = nxt if first == 0
 				putFatEntry(clus, nxt)
-				putCluster(nxt, MiqMemory.create_zero_buffer(@bytesPerCluster))
+				putCluster(nxt, MemoryBuffer.create(@bytesPerCluster))
 				clus = nxt
 				putFatEntry(clus, CC_END_MARK)
 			end

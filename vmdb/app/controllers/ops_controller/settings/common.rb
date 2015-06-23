@@ -1000,7 +1000,7 @@ module OpsController::Settings::Common
         case nodes[1]
           when "z"
             @right_cell_text = _("%{typ} %{model}") % {:typ=>"Settings", :model=>ui_lookup(:models=>"Zone")}
-            @zones = Zone.in_my_region.all
+            @zones = Zone.in_my_region
           when "sis"
             @right_cell_text = _("%{typ} %{model}") % {:typ=>"Settings", :model=>ui_lookup(:models=>"ScanItemSet")}
             aps_list
@@ -1060,8 +1060,8 @@ module OpsController::Settings::Common
     if @sb[:active_tab] == "settings_details"
       # Enterprise Details tab
       @scan_items = ScanItemSet.all
-      @zones = Zone.in_my_region.all
-      @ldap_regions = LdapRegion.in_my_region.all
+      @zones = Zone.in_my_region
+      @ldap_regions = LdapRegion.in_my_region
       @miq_schedules = Array.new
       MiqSchedule.all(:conditions=>"prod_default != 'system' or prod_default is null").sort_by { |s| s.name.downcase }.each do |s|
         if s.adhoc.nil? && (s.towhat != "DatabaseBackup" || (s.towhat == "DatabaseBackup" && DatabaseBackup.backup_supported?))

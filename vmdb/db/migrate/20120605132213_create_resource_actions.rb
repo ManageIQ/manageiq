@@ -4,7 +4,7 @@ class CreateResourceActions < ActiveRecord::Migration
       t.string      :action
       t.belongs_to  :dialog,                         :type => :bigint
       t.belongs_to  :resource, :polymorphic => true, :type => :bigint
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 end

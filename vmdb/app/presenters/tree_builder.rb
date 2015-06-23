@@ -315,8 +315,7 @@ class TreeBuilder
     check_vm_descendants = false
     check_vm_descendants = options.delete(:match_via_descendants) if options[:match_via_descendants] == "VmOrTemplate"
 
-    options.merge!(:targets => objects, :results_format => :objects)
-    results, _attrs = Rbac.search(options)
+    results = Rbac.filtered(objects, options)
 
     # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
     if check_vm_descendants && User.current_user_has_filters?

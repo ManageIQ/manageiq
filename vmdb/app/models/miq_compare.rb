@@ -520,7 +520,7 @@ class MiqCompare
   # Retrieve all records from the source for the set of ids (compare mode)
   def get_compare_records
     return unless @mode == :compare
-    recs = @model.find_all_by_id(@ids)
+    recs = @model.where(:id => @ids)
     error_recs = []
 
     # Sort the recs to match the order of the ids, since they could be

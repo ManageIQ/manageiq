@@ -40,6 +40,43 @@ describe Vm do
     lambda { vm.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
   end
 
+  context ".find_all_by_mac_address_and_hostname_and_ipaddress" do
+    before do
+      @hardware1 = FactoryGirl.create(:hardware)
+      @vm1 = FactoryGirl.create(:vm_vmware, :hardware => @hardware1)
+
+      @hardware2 = FactoryGirl.create(:hardware)
+      @vm2 = FactoryGirl.create(:vm_vmware, :hardware => @hardware2)
+    end
+
+    it "mac_address" do
+      address = "ABCDEFG"
+      guest_device = FactoryGirl.create(:guest_device, :address => address, :device_type => "ethernet")
+      @hardware1.guest_devices << guest_device
+
+      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(address, nil, nil))
+        .to eql([@vm1])
+    end
+
+    it "hostname" do
+      hostname = "ABCDEFG"
+      network = FactoryGirl.create(:network, :hostname => hostname)
+      @hardware1.networks << network
+
+      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, hostname, nil))
+        .to eql([@vm1])
+    end
+
+    it "ipaddress" do
+      ipaddress = "127.0.0.1"
+      network = FactoryGirl.create(:network, :ipaddress => ipaddress)
+      @hardware1.networks << network
+
+      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, nil, ipaddress))
+        .to eql([@vm1])
+    end
+  end
+
   context "with relationships of multiple types" do
     before(:each) do
       @rp        = FactoryGirl.create(:resource_pool, :name => "RP")

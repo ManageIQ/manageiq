@@ -62,26 +62,40 @@ module VimPerformanceAnalysis
       elsif @options[:target_tags]
         topts = @options[:target_tags]
         includes = topts[:compute_type].to_sym == :Host ? {:hardware => {}, :vms => {:hardware => {}}} : nil
+        search_options = {
+          :class            => topts[:compute_type].to_s,
+          :results_format   => :objects,
+          :include_for_find => includes,
+          :userid           => @options[:userid],
+          :miq_group_id     => @options[:miq_group_id],
+        }
         if topts[:compute_filter]
-          search = topts[:compute_filter].kind_of?(MiqSearch) ? topts[:compute_filter] : MiqSearch.find(topts[:compute_filter])
-          @compute, attrs = Rbac.search(:class => topts[:compute_type].to_s ,:filter => search.filter, :results_format => :objects, :include_for_find => includes, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
+          search = if topts[:compute_filter].kind_of?(MiqSearch)
+                     topts[:compute_filter]
+                   else
+                     MiqSearch.find(topts[:compute_filter])
+                   end
+          search_options[:filter] = search.filter
         elsif topts[:compute_tags]
-          @compute, attrs = Rbac.search(:class => topts[:compute_type].to_s ,:tag_filters => {"managed" => topts[:compute_tags]}, :results_format => :objects, :include_for_find => includes, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
-        else
-          @compute, attrs = Rbac.search(:class => topts[:compute_type].to_s ,:results_format => :objects, :include_for_find => includes, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
+          search_options[:tag_filters] = {"managed" => topts[:compute_tags]}
         end
+        @compute, _attrs = Rbac.search(search_options)
 
         MiqPreloader.preload(@compute, :storages)
-        stores = @compute.collect {|c| storages_for_compute_target(c)}.flatten.uniq
+        stores = @compute.collect { |c| storages_for_compute_target(c) }.flatten.uniq
 
+        filter_options = {:class => Storage, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id]}
         if topts[:storage_filter]
-          search = topts[:storage_filter].kind_of?(MiqSearch) ? topts[:storage_filter] : MiqSearch.find(topts[:compute_filter])
-          @storage, attrs = Rbac.search(:targets => stores, :class => Storage, :filter => search.filter, :results_format => :objects, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
+          search = if topts[:storage_filter].kind_of?(MiqSearch)
+                     topts[:storage_filter]
+                   else
+                     MiqSearch.find(topts[:storage_filter])
+                   end
+          filter_options[:filter] = search.filter
         elsif topts[:storage_tags]
-          @storage, attrs = Rbac.search(:targets => stores, :class => Storage, :tag_filters =>  {"managed" => topts[:storage_tags]}, :results_format => :objects, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
-        else
-          @storage, attrs = Rbac.search(:targets => stores, :class => Storage, :results_format => :objects, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id])
+          filter_options[:tag_filters] = {"managed" => topts[:storage_tags]}
         end
+        @storage = Rbac.filtered(stores, filter_options)
       end
       return @compute, @storage
     end

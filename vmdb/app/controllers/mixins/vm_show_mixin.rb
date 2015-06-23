@@ -111,16 +111,12 @@ module VmShowMixin
       return
     end
 
-    if @record.class.base_model.to_s == "MiqTemplate"
-      rec_cls = @record.class.base_model.to_s.underscore
-    else
-      rec_cls = "vm"
-    end
     case @display
     when "download_pdf", "main", "summary_only"
+      @button_group = @record.kind_of?(MiqTemplate) ? "miq_template" : "vm"
+
       get_tagdata(@record)
       @showtype = "main"
-      @button_group = "#{rec_cls}"
       set_summary_pdf_data if ["download_pdf","summary_only"].include?(@display)
 
     when "performance"

@@ -27,10 +27,10 @@ describe 'miq_request/_prov_options.html.haml' do
       @users = [@admin, @vm_user, @desktop, @approver]
 
       # Create requests
-      FactoryGirl.create(:miq_request, :requester => @admin)
-      FactoryGirl.create(:miq_request, :requester => @vm_user)
-      FactoryGirl.create(:miq_request, :requester => @desktop)
-      FactoryGirl.create(:miq_request, :requester => @approver)
+      FactoryGirl.create(:vm_migrate_request, :userid => @admin.userid)
+      FactoryGirl.create(:vm_migrate_request, :userid => @vm_user.userid)
+      FactoryGirl.create(:vm_migrate_request, :userid => @desktop.userid)
+      FactoryGirl.create(:vm_migrate_request, :userid => @approver.userid)
 
       # Set instance variables
       sb = {:prov_options => {
@@ -52,7 +52,7 @@ describe 'miq_request/_prov_options.html.haml' do
     end
 
     it 'for admin' do
-      User.stub(:current_user => @admin)
+      login_as @admin
       render
       @users.each do |u|
         rendered.should have_selector('select#user_choice option', :text => u.name)
@@ -60,7 +60,7 @@ describe 'miq_request/_prov_options.html.haml' do
     end
 
     it 'for approver' do
-      User.stub(:current_user => @approver)
+      login_as @approver
       render
       @users.each do |u|
         rendered.should have_selector('select#user_choice option', :text => u.name)
@@ -80,7 +80,7 @@ describe 'miq_request/_prov_options.html.haml' do
       role    = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-desktop')
       group   = FactoryGirl.create(:miq_group, :description => 'EvmGroup-desktop',  :miq_user_role => role)
       desktop = FactoryGirl.create(:user, :name => 'Desktop',  :userid => 'desktop',  :miq_groups => [group])
-      FactoryGirl.create(:miq_request, :requester => desktop)
+      FactoryGirl.create(:vm_migrate_request, :userid => desktop.userid)
 
       sb = {:prov_options => {
           :resource_type => :MiqProvisionRequest,
@@ -96,7 +96,7 @@ describe 'miq_request/_prov_options.html.haml' do
       sb[:def_prov_options][:MiqProvisionRequest][:applied_states] = %w(pending_approval)
       view.instance_variable_set(:@sb, sb)
 
-      User.stub(:current_user => desktop)
+      login_as desktop
       render
       rendered.should have_selector('td', :text => desktop.name)
       rendered.should_not have_selector('select#user_choice option')
@@ -106,7 +106,7 @@ describe 'miq_request/_prov_options.html.haml' do
       role    = FactoryGirl.create(:miq_user_role, :name => 'EvmRole-vm_user')
       group   = FactoryGirl.create(:miq_group, :description => 'EvmGroup-vm_user', :miq_user_role => role)
       vm_user = FactoryGirl.create(:user, :name => 'VM User', :userid => 'vm_user', :miq_groups => [group])
-      FactoryGirl.create(:miq_request, :requester => vm_user)
+      FactoryGirl.create(:vm_migrate_request, :userid => vm_user.userid)
 
       # Set instance variables
       sb = {:prov_options => {
@@ -123,7 +123,7 @@ describe 'miq_request/_prov_options.html.haml' do
       sb[:def_prov_options][:MiqProvisionRequest][:applied_states] = %w(pending_approval)
       view.instance_variable_set(:@sb, sb)
 
-      User.stub(:current_user => vm_user)
+      login_as vm_user
       render
       rendered.should have_selector('td', :text => vm_user.name)
       rendered.should_not have_selector('select#user_choice option')

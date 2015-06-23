@@ -173,12 +173,13 @@ describe VmInfraController do
 
     context "#rbac_filtered_objects" do
       it "properly calls RBAC" do
+        EvmSpecHelper.create_guid_miq_server_zone
         ems_folder = FactoryGirl.create(:ems_folder)
         ems = FactoryGirl.create(:ems_vmware, :ems_folders => [ems_folder])
 
         user = FactoryGirl.create(:user_admin)
         user.current_group.set_managed_filters([["/managed/service_level/gold"]])
-        User.stub(:current_user => user)
+        login_as user
 
         Rbac.should_receive(:search).with(:targets => [ems_folder], :results_format=>:objects).and_call_original
 
@@ -282,13 +283,12 @@ describe VmInfraController do
     end
 
     context "#x_settings_changed" do
+      let(:user) { FactoryGirl.create(:user, :userid => 'wilma', :settings => {}) }
       before(:each) do
-        set_user_privileges
+        set_user_privileges user
       end
 
       it "sets the width of left pane for session's user" do
-        user = FactoryGirl.create(:user, :userid => 'wilma', :settings => {})
-        session[:userid]   = user.userid
         session[:settings] = {}
         User.stub(:find_by_userid).and_return(user)
 

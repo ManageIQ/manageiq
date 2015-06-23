@@ -28,7 +28,7 @@ module MiqAeServiceMiqRequestTaskSpec
 
       fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
       approver_role = FactoryGirl.create(:ui_task_set_approver)
-      miq_request   = FactoryGirl.create(:miq_request, :requester => fred)
+      miq_request   = FactoryGirl.create(:vm_migrate_request, :userid => fred.userid)
       @miq_request_task.update_attributes(:miq_request => miq_request)
 
       result = invoke_ae.root(@ae_result_key)
