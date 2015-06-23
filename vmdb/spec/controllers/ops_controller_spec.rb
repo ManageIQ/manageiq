@@ -177,6 +177,28 @@ describe OpsController do
     end
 
   end
+
+  it "executes action schedule_edit" do
+    schedule = FactoryGirl.create(:miq_schedule, :name => "test_schedule", :description => "old_schedule_desc")
+    controller.stub(:get_node_info)
+    controller.stub(:replace_right_cell)
+    controller.stub(:render)
+
+    post :schedule_edit,
+         :id                 => schedule.id,
+         :button             => "save",
+         :name               => "test_schedule",
+         :description        => "new_description",
+         :action_typ         => "vm",
+         :miq_angular_date_1 => "06/25/2015",
+         :timer_typ          => "Once",
+         :timer_value        => ""
+
+    expect(response.status).to eq(200)
+
+    audit_event = AuditEvent.where(:target_id => schedule.id).first
+    expect(audit_event.attributes['message']).to include("description changed to new_description")
+  end
 end
 
 describe OpsController do

@@ -235,7 +235,8 @@ module OpsController::Settings::Schedules
     msg   = "[#{name}] Record #{add ? "added" : "updated"} ("
     event = "#{new_schedule.class.to_s.downcase}_record_#{add ? "add" : "update"}"
 
-    attribute_difference = old_schedule_attributes.diff(new_schedule.attributes)
+    attribute_difference = new_schedule.attributes.to_a - old_schedule_attributes.to_a
+    attribute_difference = Hash[*attribute_difference.flatten]
 
     difference_messages = []
 
