@@ -198,6 +198,8 @@ module ApplicationController::CiProcessing
       rec_cls = "vm"
     elsif request.parameters[:controller] == "service"
       rec_cls =  "service"
+    elsif request.parameters[:controller] == "orchestration_stack"
+      rec_cls = "orchestration_stack"
     end
     if vms.blank?
       session[:retire_items] = [params[:id]]
@@ -220,15 +222,22 @@ module ApplicationController::CiProcessing
       end
     end
   end
-  alias image_retire retirevms
   alias instance_retire retirevms
   alias vm_retire retirevms
   alias service_retire retirevms
+  alias orchestration_stack_retire retirevms
 
   # Build the retire VMs screen
   def retire
     @sb[:explorer] = true if @explorer
-    kls = request.parameters[:controller] == "service" ? Service : Vm
+    kls = case request.parameters[:controller]
+          when "orchestration_stack"
+            OrchestrationStack
+          when "service"
+            Service
+          when "vm_infra", "vm_cloud"
+            Vm
+          end
     if params[:button]
       if params[:button] == "cancel"
         flash = "Set/remove retirement date was cancelled by the user"
@@ -255,7 +264,6 @@ module ApplicationController::CiProcessing
       end
       return
     end
-    @gtl_url = "/vm/retire?"
     session[:changed] = @changed = false
     drop_breadcrumb( {:name=>"Retire #{kls.to_s.pluralize}", :url=>"/#{session[:controller]}/tagging"} )
     session[:cat] = nil                 # Clear current category
@@ -264,16 +272,15 @@ module ApplicationController::CiProcessing
     @view = get_db_view(kls)              # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@retireitems, :only=>@view.cols + ['id'])
     if @retireitems.length == 1 && @retireitems[0].retires_on != nil
-      t = @retireitems[0].retires_on      # Single VM, set to current time
-      #w = @retireitems[0].retirement[:warn]  if @retireitems[0].retirement   # Single VM, get retirement warn
-      w = @retireitems[0].retirement_warn if @retireitems[0].retirement_warn    # Single VM, get retirement warn
+      t = @retireitems[0].retires_on                                         # Single VM, set to current time
+      w = @retireitems[0].retirement_warn if @retireitems[0].retirement_warn # Single VM, get retirement warn
     else
       t = nil
     end
     session[:retire_date] = t == nil ? nil : "#{t.month}/#{t.day}/#{t.year}"
     session[:retire_warn] = w
     @in_a_form = true
-    @refresh_partial = "shared/views/retire" if @explorer
+    @refresh_partial = "shared/views/retire" if @explorer || @layout == "orchestration_stack"
   end
 
   # Ajax method fired when retire date is changed
@@ -1098,7 +1105,7 @@ module ApplicationController::CiProcessing
 
     # Either a list or coming from a different controller (eg from host screen, go to its vms)
     if @lastaction == "show_list" ||
-       !["vm_cloud","vm_infra","vm","miq_template","vm_or_template","service"].include?(request.parameters["controller"]) # showing a list
+       !%w(orchestration_stack service vm_cloud vm_infra vm miq_template vm_or_template).include?(request.parameters["controller"]) # showing a list
 
       vms = find_checked_items
       if method == 'retire_now' && VmOrTemplate.includes_template?(vms)
@@ -1110,11 +1117,7 @@ module ApplicationController::CiProcessing
       if vms.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>request.parameters["controller"]), :task=>display_name}, :error)
       else
-        if request.parameters["controller"] == "service"
-          process_services(vms, method)
-        else
-          process_vms(vms, method, display_name)
-        end
+        process_objects(vms, method)
       end
 
       if @lastaction == "show_list" # In vm controller, refresh show_list, else let the other controller handle it
@@ -1130,11 +1133,7 @@ module ApplicationController::CiProcessing
         @refresh_partial = "layouts/gtl"
       else
         vms.push(params[:id])
-        if request.parameters["controller"] == "service"
-          process_services(vms, method) unless vms.empty?
-        else
-          process_vms(vms, method, display_name) unless vms.empty?
-        end
+        process_objects(vms, method) unless vms.empty?
 
         # TODO: tells callers to go back to show_list because this VM may be gone
         # Should be refactored into calling show_list right here
@@ -1157,6 +1156,8 @@ module ApplicationController::CiProcessing
     case request.parameters["controller"]
     when "miq_template"
       return MiqTemplate
+    when "orchestration_stack"
+      return OrchestrationStack
     when "service"
       return Service
     else
@@ -1164,36 +1165,31 @@ module ApplicationController::CiProcessing
     end
   end
 
-  def process_vms(vms, task, display_name = nil)
+  def process_objects(objs, task, display_name = nil)
     begin
-      unless VmOrTemplate::POWER_OPS.include?(task)
-        vms, = filter_ids_in_region(vms, "VM")
-        return if vms.empty?
+      case get_rec_cls.to_s
+      when "OrchestrationStack"
+        objs = filter_ids_in_region(objs, "OrchestrationStack")
+        klass = OrchestrationStack
+      when "Service"
+        objs = filter_ids_in_region(objs, "Service")
+        klass = Service
+      when "VmOrTemplate"
+        objs = filter_ids_in_region(objs, "VM") unless VmOrTemplate::POWER_OPS.include?(task)
+        klass = Vm
       end
 
-      options = {:ids=>vms, :task=>task, :userid => session[:userid]}
+      return if objs.empty?
+
+      options = {:ids => objs, :task => task, :userid => session[:userid]}
       options[:snap_selected] = session[:snap_selected] if task == "remove_snapshot" || task == "revert_to_snapshot"
-      kls = VmOrTemplate.find_by_id(vms.first).class.base_model
-      Vm.process_tasks(options)
-    rescue StandardError => bang                            # Catch any errors
+      klass.process_tasks(options)
+    rescue StandardError => bang
       add_flash(_("Error during '%s': ") % task << bang.message, :error)
     else
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => display_name ? display_name.titleize : Dictionary::gettext(task, :type=>:task).titleize, :count_model=>pluralize(vms.length,ui_lookup(:model=>kls.to_s))})
-    end
-  end
-
-  def process_services(services, task)
-    begin
-      services, services_out_region = filter_ids_in_region(services, "Service")
-      return if services.empty?
-
-      options = {:ids=>services, :task=>task, :userid => session[:userid]}
-      kls = Service.find_by_id(services.first).class.base_model
-      Service.process_tasks(options)
-    rescue StandardError => bang                            # Catch any errors
-      add_flash(_("Error during '%s': ") % task << bang.message, :error)
-    else
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>Dictionary::gettext(task, :type=>:task).titleize, :count_model=>pluralize(services.length,ui_lookup(:model=>kls.to_s))})
+      add_flash(_("%{task} initiated for %{model} from the CFME Database") %
+        {:task  => display_name ? display_name.titleize : Dictionary::gettext(task, :type => :task).titleize,
+         :model => pluralize(objs.length, ui_lookup(:model => klass.to_s))})
     end
   end
 
@@ -1283,10 +1279,10 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     vm_button_operation('retire_now', 'retire')
   end
-  alias image_retire_now retirevms_now
   alias instance_retire_now retirevms_now
   alias vm_retire_now retirevms_now
   alias service_retire_now retirevms_now
+  alias orchestration_stack_retire_now retirevms_now
 
   def check_compliance_vms
     assert_privileges(params[:pressed])

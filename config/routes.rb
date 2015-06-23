@@ -1319,6 +1319,7 @@ Vmdb::Application.routes.draw do
         outputs
         parameters
         resources
+        retire
         show
         show_list
         tagging_edit
@@ -1341,7 +1342,8 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         exp_post +
-        save_post
+        save_post +
+        retire_post
     },
 
     :provider_foreman => {

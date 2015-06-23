@@ -39,7 +39,9 @@
   %h3
     - if request.parameters[:controller] == "service"
       = n_("New setting will affect Service", "New setting will affect Services", @retireitems.length)
-    - else
+    - elsif request.parameters[:controller] == "orchestration_stack"
+      = n_("New setting will affect Orchestration Stack", "New setting will affect Orchestration Stacks", @retireitems.length)
+    - elsif %(vm_cloud vm_infra).include?(request.parameters[:controller])
       = n_("New setting will affect VM", "New setting will affect VMs", @retireitems.length)
   %table.admintable{:height => "75"}
     %tbody

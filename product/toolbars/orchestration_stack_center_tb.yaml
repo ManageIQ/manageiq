@@ -33,3 +33,19 @@
       :image: tag
       :text: "Edit Tags"
       :title: 'Edit Tags for this #{ui_lookup(:tables=>"orchestration_stack")}'
+- :name: orchestration_stack_lifecycle
+  :items:
+  - :buttonSelect: orchestration_stack_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+    :items:
+    - :button: orchestration_stack_retire
+      :image: retire
+      :text: "Set Retirement Date"
+      :title: "Set Retirement Dates for this Orchestration Stack"
+    - :button: orchestration_stack_retire_now
+      :image: retire_now
+      :text: "Retire this Orchestration Stack"
+      :title: "Retire this Orchestration Stack"
+      :confirm: "Retire this Orchestration Stack"
