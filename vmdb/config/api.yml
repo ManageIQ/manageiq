@@ -655,7 +655,7 @@
       - :name: assign
       - :name: unassign
   :tasks:
-    :description: Request Tasks
+    :description: Tasks
     :options:
     - :collection
     - :subcollection

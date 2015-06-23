@@ -4,7 +4,7 @@ class AdvancedSearchesController < ApplicationController
     respond_to do |format|
       format.js do
         @explorer = true
-        if x_tree[:type] == :filter &&
+        if x_active_tree.to_s =~ /_filter_tree$/ &&
             !["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
           search_id = 0
           if x_active_tree == :cs_filter_tree

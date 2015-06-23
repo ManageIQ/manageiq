@@ -19,7 +19,7 @@ class TreeBuilderRegion  < TreeBuilder
   end
 
   def x_get_tree_region_kids(object, options)
-    emstype = if [:bottlenecks, :utilization].include?(options[:type])
+    emstype = if [:bottlenecks, :utilization].include?(@type)
                 object.ems_infras
               else
                 object.ext_management_systems

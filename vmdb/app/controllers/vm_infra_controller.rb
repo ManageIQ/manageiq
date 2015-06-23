@@ -25,7 +25,7 @@ class VmInfraController < ApplicationController
 
       ApplicationController::Feature.new_with_hash(
         :role        => "vms_filter_accord",
-        :name        => :filter,
+        :name        => :vms_filter,
         :accord_name => "vms_filter",
         :tree_name   => :vms_filter_tree,
         :title       => "VMs",
@@ -33,7 +33,7 @@ class VmInfraController < ApplicationController
 
       ApplicationController::Feature.new_with_hash(
         :role        => "templates_filter_accord",
-        :name        => :filter,
+        :name        => :templates_filter,
         :accord_name => "templates_filter",
         :tree_name   => :templates_filter_tree,
         :title       => "Templates",

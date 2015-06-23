@@ -71,10 +71,25 @@ describe TreeNodeBuilder do
       node.should_not be_nil
     end
 
-    it 'EmsCluster node' do
-      cluster = FactoryGirl.build(:ems_cluster)
+    it 'valid EmsCluster node' do
+      cluster = FactoryGirl.create(:ems_cluster, :name => "My Cluster")
       node = TreeNodeBuilder.build(cluster, nil, {})
       node.should_not be_nil
+
+      node[:key].should eq("c-#{MiqRegion.compress_id(cluster.id)}")
+      node[:title].should eq(cluster.name)
+      node[:icon].should eq("cluster.png")
+      node[:tooltip].should eq("Cluster / Deployment Role: #{cluster.name}")
+    end
+
+    it 'valid Host Node' do
+      host = FactoryGirl.create(:host, :name => "My Host")
+      node = TreeNodeBuilder.build(host, nil, {})
+
+      node[:key].should eq("h-#{MiqRegion.compress_id(host.id)}")
+      node[:title].should eq(host.name)
+      node[:icon].should eq("host.png")
+      node[:tooltip].should eq("Host / Node: #{host.name}")
     end
 
     it 'IsoDatastore node' do

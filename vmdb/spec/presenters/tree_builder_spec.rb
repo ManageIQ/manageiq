@@ -42,4 +42,11 @@ describe TreeBuilder do
     end
   end
 
+  context '#x_get_child_nodes' do
+    it 'returns for Hash models' do
+      builder = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
+      nodes = builder.x_get_child_nodes('tf_xx-10')
+      expect(nodes).to be_empty
+    end
+  end
 end

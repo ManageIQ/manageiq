@@ -65,6 +65,7 @@ module ApplicationHelper
   def role_allows(options={})
     ApplicationHelper.role_allows_intern(options) rescue false
   end
+  module_function :role_allows
 
   def role_allows_intern(options = {})
     userid  = User.current_userid

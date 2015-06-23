@@ -1,25 +1,24 @@
 class TreeBuilderUtilization  < TreeBuilderRegion
-  attr_reader :tree_nodes
-
   private
 
   def x_get_tree_ems_kids(object, options)
-    ems_clusters = rbac_filtered_objects(object.ems_clusters)
+    ems_clusters        = rbac_filtered_objects(object.ems_clusters)
     non_clustered_hosts = rbac_filtered_objects(object.non_clustered_hosts)
-    ems_clusters_count = ems_clusters.count
-    non_clustered_hosts_count = non_clustered_hosts.count
-    if options[:count_only]
-      ems_clusters_count + non_clustered_hosts_count
-    else
-      objects = []
-      if ems_clusters_count > 0 || non_clustered_hosts_count > 0
-        objects.push(:id    => "folder_c_xx-#{to_cid(object.id)}",
-                     :text  => ui_lookup(:ems_cluster_types => "cluster"),
-                     :image => "folder",
-                     :tip   => "#{ui_lookup(:ems_cluster_types => "cluster")} (Click to open)")
-      end
-      objects
-    end
+
+    total = ems_clusters.count + non_clustered_hosts.count
+
+    return total if options[:count_only]
+    return [] if total == 0
+
+    click_to_open = _('Click to open')
+    [
+      {
+        :id    => "folder_c_xx-#{to_cid(object.id)}",
+        :text  => ui_lookup(:ems_cluster_types => "cluster"),
+        :image => "folder",
+        :tip   => "#{ui_lookup(:ems_cluster_types => "cluster")} (#{click_to_open})"
+      }
+    ]
   end
 
   def x_get_tree_datacenter_kids(object, options)
@@ -74,7 +73,8 @@ class TreeBuilderUtilization  < TreeBuilderRegion
 
   def x_get_tree_cluster_kids(object, options)
     objects =  rbac_filtered_sorted_objects(object.hosts, "name")
-    unless [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
+    # FIXME: is the condition below ever false?
+    unless [:bottlenecks, :utilization].include?(@type)
       objects += rbac_filtered_sorted_objects(object.resource_pools, "name")
       objects += rbac_filtered_sorted_objects(object.vms, "name")
     end
