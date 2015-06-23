@@ -521,7 +521,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def tag_symbol_for_workflow
-    (@edit || @options)[:wf].kind_of?(MiqHostProvisionWorkflow) ? :tag_ids : :vm_tags
+    (@edit || @options)[:wf].tag_symbol
   end
 
   def validate_fields
