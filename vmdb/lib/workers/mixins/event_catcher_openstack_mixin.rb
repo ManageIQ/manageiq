@@ -14,7 +14,7 @@ module EventCatcherOpenstackMixin
       options[:duration] = self.worker_settings[:duration]
       options[:capacity] = self.worker_settings[:capacity]
 
-      options[:client_ip] = MiqServer.my_server.ipaddress
+      options[:client_ip] = server.ipaddress
       @event_monitor_handle = OpenstackEventMonitor.new(options)
     end
     @event_monitor_handle
