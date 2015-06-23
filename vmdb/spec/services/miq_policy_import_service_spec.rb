@@ -67,30 +67,44 @@ describe MiqPolicyImportService do
     let(:file_contents) { "file contents" }
     let(:import_file_upload) { active_record_instance_double("ImportFileUpload", :id => 1).as_null_object }
 
-    before do
-      MiqPolicy.stub(:import).with("file contents", :preview => true).and_return(:uploaded => "content")
-      MiqQueue.stub(:put_or_update)
-      ImportFileUpload.stub(:create).and_return(import_file_upload)
-    end
+    context "when the import does not raise an error" do
+      before do
+        MiqPolicy.stub(:import).with("file contents", :preview => true).and_return(:uploaded => "content")
+        MiqQueue.stub(:put_or_update)
+        ImportFileUpload.stub(:create).and_return(import_file_upload)
+      end
 
-    it "stores the import file upload" do
-      import_file_upload.should_receive(:store_binary_data_as_yml).with("---\n:uploaded: content\n", "Policy import")
-      miq_policy_import_service.store_for_import(file_contents)
-    end
-
-    it "returns the import file upload" do
-      miq_policy_import_service.store_for_import(file_contents).should == import_file_upload
-    end
-
-    it "queues deletion of the object" do
-      Timecop.freeze(2014, 3, 4) do
-        MiqQueue.should_receive(:put_or_update).with(
-          :class_name  => "ImportFileUpload",
-          :instance_id => 1,
-          :deliver_on  => 1.day.from_now,
-          :method_name => "destroy"
-        )
+      it "stores the import file upload" do
+        import_file_upload.should_receive(:store_binary_data_as_yml).with("---\n:uploaded: content\n", "Policy import")
         miq_policy_import_service.store_for_import(file_contents)
+      end
+
+      it "returns the import file upload" do
+        miq_policy_import_service.store_for_import(file_contents).should == import_file_upload
+      end
+
+      it "queues deletion of the object" do
+        Timecop.freeze(2014, 3, 4) do
+          MiqQueue.should_receive(:put_or_update).with(
+            :class_name  => "ImportFileUpload",
+            :instance_id => 1,
+            :deliver_on  => 1.day.from_now,
+            :method_name => "destroy"
+          )
+          miq_policy_import_service.store_for_import(file_contents)
+        end
+      end
+    end
+
+    context "when the import does raise an error" do
+      before do
+        MiqPolicy.stub(:import).with("file contents", :preview => true).and_raise
+      end
+
+      it "reraises an InvalidMiqPolicyYaml error with a message" do
+        expect { miq_policy_import_service.store_for_import(file_contents) }.to raise_error(
+          MiqPolicyImportService::InvalidMiqPolicyYaml, "Invalid YAML file"
+        )
       end
     end
   end
