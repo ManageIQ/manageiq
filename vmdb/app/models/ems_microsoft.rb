@@ -100,7 +100,11 @@ class EmsMicrosoft < EmsInfra
     return unless vm_uid_ems.guid?
 
     params  = parameters.join(" ")
-    command = "powershell #{cmdlet}-SCVirtualMachine -VM (Get-SCVirtualMachine -ID #{vm_uid_ems}) #{params}"
+
+    # TODO: If localhost could feasibly be changed to an IPv6 address such as "::1", we need to
+    # wrap the IPv6 address in square brackets,  similar to the a URIs's host field, "[::1]".
+    command = "powershell Import-Module VirtualMachineManager; Get-SCVMMServer localhost;\
+      #{cmdlet}-SCVirtualMachine -VM (Get-SCVirtualMachine -ID #{vm_uid_ems}) #{params}"
     run_dos_command(command)
   end
 
