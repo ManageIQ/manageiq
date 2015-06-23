@@ -4,7 +4,6 @@ class Service < ActiveRecord::Base
   belongs_to :service_template               # Template this service was cloned from
   belongs_to :service                        # Parent Service
   has_many :services, :dependent => :destroy # Child services
-  has_many :ems_events
 
   virtual_belongs_to :parent_service
   virtual_has_many   :direct_service_children
@@ -167,29 +166,23 @@ class Service < ActiveRecord::Base
   end
 
   def raise_request_start_event
-    self.raise_event(:request_service_start, "Request Service #{self.name} start")
+    MiqEvent.raise_evm_event(self, :request_service_start)
   end
 
   def raise_started_event
-    self.raise_event(:service_started, "Service #{self.name} started")
+    MiqEvent.raise_evm_event(self, :service_started)
   end
 
   def raise_request_stop_event
-    self.raise_event(:request_service_stop, "Request Service #{self.name} stop")
+    MiqEvent.raise_evm_event(self, :request_service_stop)
   end
 
   def raise_stopped_event
-    self.raise_event(:service_stopped, "Service #{self.name} stopped")
+    MiqEvent.raise_evm_event(self, :service_stopped)
   end
 
   def raise_provisioned_event
-    event = self.ems_events.where(:event_type => "service_provisioned")
-    return event.first unless event.blank?
-    self.raise_event(:service_provisioned, "Service #{self.name} provisioned")
-  end
-
-  def raise_event(event_type, message)
-    EmsEvent.add(nil, {:service_id => self.id, :event_type => event_type, :timestamp => Time.now, :message => message})
+    MiqEvent.raise_evm_event(self, :service_provisioned)
   end
 
   def v_total_vms

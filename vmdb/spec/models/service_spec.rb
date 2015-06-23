@@ -19,49 +19,45 @@ describe Service do
     end
 
     it "raise_request_start_event" do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_start)
+
       @service.raise_request_start_event
-      EmsEvent.count.should ==1
-      EmsEvent.first.event_type.should == "request_service_start"
     end
 
     it "raise_started_event" do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_started)
+
       @service.raise_started_event
-      EmsEvent.count.should ==1
-      EmsEvent.first.event_type.should == "service_started"
     end
 
     it "raise_request_stop_event" do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_stop)
+
       @service.raise_request_stop_event
-      EmsEvent.count.should ==1
-      EmsEvent.first.event_type.should == "request_service_stop"
     end
 
     it "raise_stopped_event" do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_stopped)
+
       @service.raise_stopped_event
-      EmsEvent.count.should ==1
-      EmsEvent.first.event_type.should == "service_stopped"
     end
 
     it "raise_provisioned_event" do
-      @service.raise_provisioned_event
-      EmsEvent.count.should ==1
-      EmsEvent.first.event_type.should == "service_provisioned"
-    end
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_provisioned)
 
-    it "provisioned event raised once for a service" do
       @service.raise_provisioned_event
-      @service.raise_provisioned_event
-      @service.ems_events.count.should == 1
     end
 
     it "raise_final_process_event start" do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_started)
+
       @service.raise_final_process_event('start')
-      EmsEvent.first.event_type.should == "service_started"
     end
 
     it "raise_final_process_event stop" do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_stopped)
+
       @service.raise_final_process_event('stop')
-      EmsEvent.first.event_type.should == "service_stopped"
     end
   end
 
@@ -144,20 +140,6 @@ describe Service do
       expect { @service << @service }.to raise_error
     end
 
-    # it "should not allow MiqTemplate resources to be added to the service" do
-    #   template = FactoryGirl.create(:miq_template, :name => "template", :location => "abc/abc.vmtx", :template => true, :vendor => "vmware")
-    #   lambda {@service.add_resource(template)}.should raise_error(RuntimeError)
-    # end
-
-    # it "should not allow ServiceTemplate resources to be added to the service" do
-    #   service_template = FactoryGirl.create(:service_template, :name => "Service Template")
-    #   lambda {@service.add_resource(service_template)}.should raise_error(RuntimeError)
-    # end
-
-    # it "should not allow Host resources to be added to the service" do
-    #   lambda {@service.add_resource(Host.first)}.should raise_error(RuntimeError)
-    # end
-
     it "should set the group index when adding a resource" do
       @service.last_group_index.should equal(0)
       @service.add_resource(Vm.first, :group_idx => 1)
@@ -167,13 +149,15 @@ describe Service do
     end
 
     it "start" do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_start)
+
       @service.start
-      EmsEvent.first.event_type.should == "request_service_start"
     end
 
     it "stop" do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_stop)
+
       @service.stop
-      EmsEvent.first.event_type.should == "request_service_stop"
     end
 
     context "with VM resources" do
