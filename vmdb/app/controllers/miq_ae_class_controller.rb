@@ -2754,7 +2754,6 @@ private
       set_root_node
     else
       @ae_class             = @record.ae_class
-      @ae_class_id   = @ae_class.id
       @grid_inst_xml = build_fields_grid(@ae_class.ae_fields, @record)
       @sb[:active_tab]      = "instances"
       domain_overrides
@@ -2768,7 +2767,6 @@ private
       set_root_node
     else
       @ae_class = @record.ae_class
-      @ae_class_id = @ae_class.id
       inputs = @record.inputs
       @grid_methods_xml = inputs.blank? ? nil : build_methods_grid(inputs)
       @sb[:squash_state] = true
@@ -2781,7 +2779,6 @@ private
   def get_class_node_info(id)
     @sb[:active_tab] = "instances" if !@in_a_form && !params[:button] && !params[:pressed]
     @record = @ae_class = MiqAeClass.find_by_id(from_cid(id[1]))
-    @ae_class_id = @record.id
     if @record.nil?
       set_root_node
     else
