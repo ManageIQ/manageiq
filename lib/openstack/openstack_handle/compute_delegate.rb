@@ -41,6 +41,10 @@ module OpenstackHandle
       @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :addresses, :id)
     end
 
+    def flavors_for_accessible_tenants
+      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :flavors, :id)
+    end
+
     def quotas_for_current_tenant
       @tenant_id ||= current_tenant['id']
       q = get_quota(@tenant_id).body['quota_set']

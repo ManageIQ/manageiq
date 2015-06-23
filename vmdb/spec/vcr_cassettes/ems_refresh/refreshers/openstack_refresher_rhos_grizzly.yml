@@ -716,6 +716,72 @@ http_interactions:
   recorded_at: Tue, 16 Dec 2014 00:15:40 GMT
 - request:
     method: get
+    uri: http://1.2.3.4:8774/v2/ac0a6059e6d545cf98b9b5e9913936e5/flavors/detail.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.26.0 fog-core/1.27.1
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 0027b3e049524b018f0944e34f22b65a
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-d3a9b0f1-9cfc-494f-900f-c681e008ffc8
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '5125'
+      Date:
+      - Tue, 16 Dec 2014 00:05:38 GMT
+    body:
+      encoding: UTF-8
+      string: '{"flavors": []}'
+    http_version: 
+  recorded_at: Tue, 16 Dec 2014 00:15:41 GMT
+- request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/af041f5a5e214930980603e26a63f754/flavors/detail.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.26.0 fog-core/1.27.1
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 0027b3e049524b018f0944e34f22b65a
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-d3a9b0f1-9cfc-494f-900f-c681e008ffc8
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '5125'
+      Date:
+      - Tue, 16 Dec 2014 00:05:38 GMT
+    body:
+      encoding: UTF-8
+      string: '{"flavors": []}'
+    http_version:
+  recorded_at: Tue, 16 Dec 2014 00:15:41 GMT
+- request:
+    method: get
     uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/flavors/detail.json
     body:
       encoding: US-ASCII
@@ -793,7 +859,7 @@ http_interactions:
         "rel": "bookmark"}], "ram": 1024, "OS-FLV-DISABLED:disabled": false, "vcpus":
         1, "swap": "", "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "feb39543-3a95-4144-8e6d-c56021967619"}]}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 16 Dec 2014 00:15:41 GMT
 - request:
     method: get
