@@ -1814,13 +1814,13 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   # Return all archived VMs
-  ARCHIVED_CONDITIONS = "ems_id IS NULL AND storage_id IS NULL"
+  ARCHIVED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NULL"
   def self.all_archived
     self.where(ARCHIVED_CONDITIONS).to_a
   end
 
   # Return all orphaned VMs
-  ORPHANED_CONDITIONS = "ems_id IS NULL AND storage_id IS NOT NULL"
+  ORPHANED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NOT NULL"
   def self.all_orphaned
     self.where(ORPHANED_CONDITIONS).to_a
   end

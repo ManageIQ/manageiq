@@ -1,12 +1,12 @@
 class MiqEnterprise < ActiveRecord::Base
-  has_many :miq_regions,            lambda { |_| MiqRegion.scoped }
-  has_many :ext_management_systems, lambda { |_| ExtManagementSystem.scoped }
-  has_many :vms_and_templates,      lambda { |_| VmOrTemplate.where("ems_id IS NOT NULL") }
-  has_many :vms,                    lambda { |_| Vm.where("ems_id IS NOT NULL") }
-  has_many :miq_templates,          lambda { |_| MiqTemplate.where("ems_id IS NOT NULL") }
-  has_many :hosts,                  lambda { |_| Host.where("ems_id IS NOT NULL") }
-  has_many :storages,               lambda { |_| Storage.scoped }
-  has_many :policy_events,          lambda { |_| PolicyEvent.scoped }
+  has_many :miq_regions,            -> { MiqRegion.scoped }
+  has_many :ext_management_systems, -> { ExtManagementSystem.scoped }
+  has_many :vms_and_templates,      -> { VmOrTemplate.where.not(:ems_id => nil) }
+  has_many :vms,                    -> { Vm.where.not(:ems_id => nil) }
+  has_many :miq_templates,          -> { MiqTemplate.where.not(:ems_id => nil) }
+  has_many :hosts,                  -> { Host.where.not(:ems_id => nil) }
+  has_many :storages,               -> { Storage.scoped }
+  has_many :policy_events,          -> { PolicyEvent.scoped }
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
