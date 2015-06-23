@@ -6,11 +6,11 @@ module Authenticator
 
     def authorize_queue(username, request)
       user_attrs = {:username  => username,
-                    :fullname  => request.headers['X_REMOTE_USER_FULLNAME'],
-                    :firstname => request.headers['X_REMOTE_USER_FIRSTNAME'],
-                    :lastname  => request.headers['X_REMOTE_USER_LASTNAME'],
-                    :email     => request.headers['X_REMOTE_USER_EMAIL']}
-      membership_list = (request.headers['X_REMOTE_USER_GROUPS'] || '').split(":")
+                    :fullname  => request.headers['X-REMOTE-USER-FULLNAME'],
+                    :firstname => request.headers['X-REMOTE-USER-FIRSTNAME'],
+                    :lastname  => request.headers['X-REMOTE-USER-LASTNAME'],
+                    :email     => request.headers['X-REMOTE-USER-EMAIL']}
+      membership_list = (request.headers['X-REMOTE-USER-GROUPS'] || '').split(":")
 
       super(username, request, user_attrs, membership_list)
     end
@@ -23,12 +23,12 @@ module Authenticator
 
     def _authenticate(username, _password, request)
       request.present? &&
-        request.headers['X_REMOTE_USER'].present? &&
-        request.headers['X_REMOTE_USER'] == username
+        request.headers['X-REMOTE-USER'].present? &&
+        request.headers['X-REMOTE-USER'] == username
     end
 
     def failure_reason(_username, request)
-      request.headers['X_EXTERNAL_AUTH_ERROR']
+      request.headers['X-EXTERNAL-AUTH-ERROR']
     end
 
     def find_external_identity(_username, user_attrs, membership_list)
