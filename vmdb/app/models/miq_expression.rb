@@ -1601,8 +1601,7 @@ class MiqExpression
   def self.col_type(model, col)
     model = model_class(model)
     col = model.columns_hash_with_virtual[col.to_s]
-    # TODO: This is a hack to get past a difference in behavior between virtual and real columns. Need to figure it out and fix it in the VC implementation
-    return col.nil? ? nil : col.type rescue col.cast_type
+    return col.nil? ? nil : col.type
   end
 
   def self.parse_field(field)
