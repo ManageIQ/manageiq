@@ -15,30 +15,40 @@
           = _('Request Info')
   .tab-content
     = patternfly_tab_content('basic', 'basic') do
-      %h3=_('Basic Information')
+      %h3
+        = _('Basic Information')
       %table.style1
         %tr
-          %td.key=_('Name / Description')
+          %td.key
+            = _('Name / Description')
           %td
             #{@record.name} / #{@record.description}
             = check_box_tag(display, true, @record.display, :disabled => true)
             &nbsp;
-            =_('Display in Catalog')
+            = _('Display in Catalog')
         - if @record.display
           %tr
-            %td.key=_('Catalog')
-            %td= h(@record.service_template_catalog ? @record.service_template_catalog.name : "<#{_('Unassigned')}>")
+            %td.key
+              = _('Catalog')
+            %td
+              = h(@record.service_template_catalog ? @record.service_template_catalog.name : "<#{_('Unassigned')}>")
         %tr
-          %td.key=_('Dialog')
-          %td= h(@sb[:dialog_label])
+          %td.key
+            = _('Dialog')
+          %td
+            = h(@sb[:dialog_label])
         - if @record.prov_type == "generic_orchestration"
           %tr
-            %td.key=_('Orchestration Template')
-            %td= h(@record.try(:orchestration_template).try(:name))
+            %td.key
+              = _('Orchestration Template')
+            %td
+              = h(@record.try(:orchestration_template).try(:name))
           - if @record.orchestration_manager
             %tr
-              %td.key=_('Provider')
-              %td= h(@record.orchestration_manager.name)
+              %td.key
+                = _('Provider')
+              %td
+                = h(@record.orchestration_manager.name)
         - entry_points = [[_("Provisioning"), :fqname]]
         - unless @record.prov_type == "generic_orchestration"
           - entry_points.push([_("Reconfigure"),  :reconfigure_fqname],
@@ -46,17 +56,19 @@
         - entry_points.each do |entry_points_op|
           %tr
             %td.key{:title => _("%s Entry Point (NameSpace/Class/Instance)") % entry_points_op[0]}
-              ="#{entry_points_op[0]} #{_('Entry Point')}"
+              #{entry_points_op[0]} #{_('Entry Point')}
               %br
-              =_('(NS/Cls/Inst)')
-            %td= h(@sb[entry_points_op[1]])
+              = _('(NS/Cls/Inst)')
+            %td
+              = h(@sb[entry_points_op[1]])
       %hr
-      %h3=_('Custom Image')
+      %h3
+        = _('Custom Image')
       - if @record.picture
         %table
           %tr
             %td
-              = image_tag("#{@record.picture.url_path}?#{rand(99_999_999).to_s}",
+              = image_tag("#{@record.picture.url_path}?#{rand(99_999_999)}",
                           :style => "width:100px; height:100px;")
             %td{:valign => "bottom"}
               = link_to(image_tag("/images/toolbars/remove.png",
@@ -71,7 +83,7 @@
                         :confirm               => _("Are you sure you want to remove this Custom Image?"),
                         :title                 => t)
       - else
-        =_('No custom image has been uploaded')
+        = _('No custom image has been uploaded')
         %br
         %br
       - if is_browser_ie?
@@ -80,29 +92,35 @@
                     :multipart => true) do
           = file_field("upload", "image")
           = submit_tag(_("Upload"), :id => "upload", :class => "upload")
-          =_('* Requirements: File-type - PNG; Dimensions - 350x70.')
+          = _('* Requirements: File-type - PNG; Dimensions - 350x70.')
       - else
         = form_tag({:action  => "st_upload_image",
                     :id      => @record.id},
                    :id        => "uploadForm",
                    :multipart => true) do
           = file_field("upload", "image")
-          =_('* Requirements - Type: jpg/png  Size: 100x100')
+          = _('* Requirements - Type: jpg/png  Size: 100x100')
         %script{:type => "text/javascript"} miqInitJqueryForm();
 
     - if @record.display && @record.prov_type != "generic_orchestration"
       = patternfly_tab_content('details', 'basic') do
-        %h3=_('Basic Information')
+        %h3
+          = _('Basic Information')
         %table.style1
           %tr
-            %td.key=_('Long Description')
-            %td.wide= @record.long_description.to_s.html_safe
+            %td.key
+              = _('Long Description')
+            %td.wide
+              = @record.long_description.to_s.html_safe
 
     - if @record.composite?
       = patternfly_tab_content('resources', 'basic') do
-        %h3=_('Resources')
+        %h3
+          = _('Resources')
         - resources = @record.service_resources
-        - unless resources.empty?
+        - if resources.empty?
+          = _('No Resources found.')
+        - else
           %table.table.table-bordered.table-hover.table-striped
             %thead
               %tr
@@ -115,7 +133,8 @@
               %tr
                 %th{:colspan => "5"}
                 - sub_titles.each do |st|
-                  %th= st
+                  %th
+                    = st
             %tbody
               - prev_group = 0
               - resources.sort_by { |rsc| [rsc.group_idx, rsc.resource_name.downcase] }.each_with_index do |r, i|
@@ -130,22 +149,19 @@
                                                     :url      => "/catalog/x_show/#{to_cid(r.resource_id)}")}
                   %td.narrow
                     %img{:src => "/images/icons/new/service_template.png"}
-                  - keys = ["resource_name", "resource_description", "group_idx", "provision_index",
-                            "start_action", "stop_action", "start_delay", "stop_delay"]
+                  - keys = %w(resource_name resource_description group_idx provision_index start_action stop_action start_delay stop_delay)
                   - keys.each do |key|
                     %td
-                      - if ["start_delay", "stop_delay"].include?(key)
+                      - if %w(start_delay stop_delay).include?(key)
                         = r.send(key) / 60
                       - else
-                        = ["group_idx", "provision_index"].include?(key) ? r.send(key).to_i + 1 : r.send(key)
-        - else
-          =_('No Resources found.')
+                        = %w(group_idx provision_index).include?(key) ? r.send(key).to_i + 1 : r.send(key)
     - else
       - if !@record.prov_type || (@record.prov_type && need_prov_dialogs?(@record.prov_type))
         = patternfly_tab_content('request', 'basic') do
           - if @options[:wf]
             %h3
-              =_('Request Info')
+              = _('Request Info')
               = render :partial => "miq_request/prov_wf",
                        :locals  => {:wf   => @options[:wf],
                                     :show => true}
