@@ -12,7 +12,7 @@ class BinaryBlobFixSerializedReport < ActiveRecord::Migration
       if val.include?("!ruby/object:MiqReport")
         val.sub!(/MiqReport/, 'Hash')
       else
-        raise "unexpected format of binary data encountered,  '#{val.inspect}'"
+        raise "unexpected format of binary data encountered, '#{val.inspect}'"
       end
 
       raw_hash = YAML.load(val)
@@ -23,11 +23,10 @@ class BinaryBlobFixSerializedReport < ActiveRecord::Migration
 
     def serialize_hash_to_report
       val = binary
-
       if val.starts_with?("---")
-        YAML.dump([MiqReport.new(YAML.load(val))])
+        YAML.dump(MiqReport.new(YAML.load(val)))
       else
-        raise "unexpected format of report attribute encountered,  '#{val.inspect}'"
+        raise "unexpected format of report attribute encountered, '#{val.inspect}'"
       end
     end
 
@@ -38,7 +37,6 @@ class BinaryBlobFixSerializedReport < ActiveRecord::Migration
     end
 
     def binary
-      # TODO: Change this to collect the binary_blob_parts in batches, so we are not pulling in every row into memory at once
       data = self.binary_blob_parts.inject("") { |d, b| d << b.data; d }
       raise "size of #{self.class.name} id [#{self.id}] is incorrect" unless self.size.nil? || self.size == data.bytesize
       raise "md5 of #{self.class.name} id [#{self.id}] is incorrect" unless self.md5.nil? || self.md5 == Digest::MD5.hexdigest(data)
@@ -79,7 +77,7 @@ class BinaryBlobFixSerializedReport < ActiveRecord::Migration
   def down
     say_with_time("Converting BinaryBlob report results back to a serialized MiqReport") do
       BinaryBlob.where(:resource_type=>'MiqReportResult').each do |bb|
-        bb.binary = bb.serialize_report_to_hash
+        bb.binary = bb.serialize_hash_to_report
       end
     end
   end

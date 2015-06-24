@@ -11,7 +11,7 @@ class MiqReportResultFixSerializedReport < ActiveRecord::Migration
       if val.include?("!ruby/object:MiqReport")
         val.sub!(/MiqReport/, 'Hash')
       else
-        raise "unexpected format of report attribute encountered,  '#{val.inspect}'"
+        raise "unexpected format of report attribute encountered, '#{val.inspect}'"
       end
       raw_hash = YAML.load(val).last
       new_hash = YAML_ATTRS.each_with_object(raw_hash['attributes'].to_hash) { |k, h| h[k.to_s] = raw_hash[k.to_s] }
@@ -25,7 +25,7 @@ class MiqReportResultFixSerializedReport < ActiveRecord::Migration
       if val.starts_with?("---")
         YAML.dump([MiqReport.new(YAML.load(val))])
       else
-        raise "unexpected format of report attribute encountered,  '#{val.inspect}'"
+        raise "unexpected format of report attribute encountered, '#{val.inspect}'"
       end
     end
   end
