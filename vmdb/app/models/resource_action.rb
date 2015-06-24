@@ -55,7 +55,7 @@ class ResourceAction < ActiveRecord::Base
     log_header = "MIQ(#{self.class.name}.deliver_to_automate_from_dialog_field)"
     $log.info("#{log_header} Running <#{self.class.name}:#{self.id}> for <#{self.resource_type}:#{self.resource_id}>")
 
-    MiqAeEngine.deliver(prepare_automate_args(dialog_hash_values, target))
+    MiqAeEngine.deliver_synchronous(prepare_automate_args(dialog_hash_values, target))
   end
 
   def prepare_automate_args(dialog_hash_values, target)

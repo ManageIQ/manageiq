@@ -682,5 +682,21 @@ module MiqAeEngineSpec
       my_objects_array.length.should  == 0
       my_objects_array.should == []
     end
+
+    context ".deliver_synchronous" do
+      it "check task results" do
+        MiqServer.stub(:my_zone).and_return("default")
+        root = {'ae_result' => 'error', 'test' => 1}
+        MiqAeEngine.stub(:deliver).and_return(root)
+        original_method = MiqTask.method(:wait_for_taskid)
+        MiqTask.stub(:wait_for_taskid) do |task_id, options = {}|
+          MiqQueue.first.deliver
+          original_method.call(task_id, options)
+        end
+
+        MiqAeEngine.deliver_synchronous('a' => 1, 'b' => 2).should eql(root)
+        MiqTask.first.task_results.should be_nil
+      end
+    end
   end
 end

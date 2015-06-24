@@ -892,7 +892,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_custom_automation): Now executing MiqAeEngine.deliver for #{automate_attrs[:request]} with args=#{args.inspect}")
-      MiqAeEngine.deliver(args)
+      MiqAeEngine.deliver_synchronous(args)
     else
       MiqPolicy.logger.info("MIQ(action_custom_automation): Queuing MiqAeEngine.deliver for #{automate_attrs[:request]} with args=#{args.inspect}")
       MiqQueue.put(

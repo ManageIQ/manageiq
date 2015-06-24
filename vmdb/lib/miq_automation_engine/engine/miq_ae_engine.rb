@@ -27,6 +27,48 @@ module MiqAeEngine
     return workspace
   end
 
+  def self.deliver_synchronous(args)
+    log_header = "MIQ(#{name}.deliver_synchronous)"
+    options       = {:action => "Automate Request", :userid => 'system'}
+    attrs = args[:attrs]
+    request = "#{attrs['request']}##{attrs['message']}" if attrs
+    options[:action] = options[:action] + " " + request.to_s
+    queue_options = {:class_name  => name,
+                     :method_name => 'deliver_from_queue',
+                     :args        => [args],
+                     :priority    => MiqQueue::HIGH_PRIORITY,
+                     :role        => 'automate',
+                     :msg_timeout => 60,
+                     :queue_name  => 'automate',
+                     :task_id     => 'automate'
+                    }
+    $log.info("#{log_header} Queuing MiqAeEngine deliver_from_queue with options: <#{options}>  Queue Options: #{queue_options}")
+    task = MiqTask.wait_for_taskid(MiqTask.generic_action_with_callback(options, queue_options))
+    raise "#{log_header} Error while processing deliver_from_queue." if task.nil?
+    task_results = task.task_results.duplicable? ? task.task_results.dup : task.task_results
+    task.task_results = nil
+    task.save
+    return task_results if task.status == "Ok"
+    raise task_results
+  end
+
+  def self.deliver_from_queue(args)
+    $log.info("Starting deliver_from_queue with args:  <#{args}>  ")
+    begin
+      task = MiqTask.find_by_id(args.delete(:task_id))
+      task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Running task")
+
+      results = MiqAeEngine.deliver(args)
+      task.task_results = results
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, "Task Complete")
+      results
+    rescue => err
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, err.to_s)
+      task.task_results = err
+      $log.log_backtrace(err)
+    end
+  end
+
   def self.deliver_queue(args, options = {})
     options = {
       :class_name  => 'MiqAeEngine',
@@ -56,13 +98,14 @@ module MiqAeEngine
     log_header = 'MIQ(MiqAeEngine.deliver)'
 
     options = {}
-
     case args.length
     when 0
       # options = nil
     when 1
       # options = Hash
       options = args.first
+      options[:class_name] ||= options[:class] # ?? why different
+      options[:automate_message] ||= options['message'] # ?? why different
     else
       # Legacy
       options[:object_type]      = args.shift
@@ -260,6 +303,11 @@ module MiqAeEngine
   end
 
   def self.create_automation_object(name, attrs, options = {})
+    options = create_automation_args(name, attrs, options)
+    create_automation_uri(options)
+  end
+
+  def self.create_automation_args(name, attrs, options = {})
     if options[:fqclass]
       options[:namespace], options[:class], _ = MiqAePath.split(options[:fqclass], :has_instance_name => false)
     else
@@ -269,6 +317,7 @@ module MiqAeEngine
 
     ae_attrs  = attrs.dup
     ae_attrs['object_name'] = name
+    options[:instance_name] = name
 
     vmdb_object = options[:vmdb_object]
 
@@ -288,9 +337,16 @@ module MiqAeEngine
     array_objects.each do |o|
       ae_attrs[o] = ae_attrs[o].first   if ae_attrs[o].kind_of?(Array)
     end
+    options[:attrs] = ae_attrs
+    options[:message] = ae_attrs[:message]
+    options
+  end
 
-    path = MiqAePath.new(:ae_namespace => options[:namespace], :ae_class => options[:class], :ae_instance => name).to_s
-    MiqAeUri.join(nil, nil, nil, nil, nil, path, nil, ae_attrs, options[:message])
+  def self.create_automation_uri(options)
+    path = MiqAePath.new(:ae_namespace => options[:namespace],
+                         :ae_class     => options[:class],
+                         :ae_instance  => options[:instance_name]).to_s
+    MiqAeUri.join(nil, nil, nil, nil, nil, path, nil, options[:attrs], options[:message])
   end
 
   def self.resolve_automation_object(uri, result_type = :ws, readonly = false)
@@ -300,4 +356,8 @@ module MiqAeEngine
     return ws
   end
 
+  def self.automation_workspace(attrs, options = {}, instance_name = "REQUEST")
+    args  = create_automation_args(instance_name, attrs, options)
+    deliver_synchronous(args)
+  end
 end
