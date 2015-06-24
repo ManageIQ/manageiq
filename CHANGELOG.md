@@ -2,14 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+# Unreleased
 
-### Sprint 24 end 2015-06-01
+## Sprint 25 end 2015-06-22
 
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+25+Ending+June+22%2C+2015%22+label%3Aenhancement)
 
-#### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+24+Ending+June+1%2C+2015%22+label%3Aenhancement)
+- Container Integration: Kubernetes Events
+- Amazon: Added M4 and t2.large instance types
+- UI: Added donut charts
 
-- Kubernetes inventory: 
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+25+Ending+June+22%2C+2015%22+label%3Aenhancement)
+
+- Automate: Automate Server Role enabled by default
+- Service Dialogs: Auto-refresh for dynamic dialog fields
+- UI: Upgraded to jQuery 1.9.1
+- UI: Increased chart responsiveness
+- Appliance: Extracting C code to external gems
+  - MiqLargeFileLinux => [large\_file\_linux]( https://github.com/ManageIQ/large_file_linux) gem
+  - MiqBlockDevOps => [linux\_block\_device](https://github.com/ManageIQ/linux_block_device) and [memory\_buffer](https://github.com/ManageIQ/memory_buffer) gems
+  - MiqMemory => [memory\_buffer](https://github.com/ManageIQ/memory_buffer) gem
+  - SlpLib => [slp](https://github.com/ManageIQ/slp) gem
+
+## Sprint 24 end 2015-06-01
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+24+Ending+June+1%2C+2015%22+label%3Aenhancement)
+
+- Kubernetes inventory 
   - Replicators
   - Routes
   - Projects
@@ -19,7 +38,7 @@ All notable changes to this project will be documented in this file.
   - Enabled SCVMM Auto placement
   - Provision dialog field validation for non-required fields
 
-#### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+24+Ending+June+1%2C+2015%22+label%3Abug)
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+24+Ending+June+1%2C+2015%22+label%3Abug)
 
 Notable fixes include:
 - Provisioning: Fixed unique names for provisioned VMs when ordered through a service
@@ -27,15 +46,15 @@ Notable fixes include:
   - Fixes for Japanese I18n support
   - Fixed alignment of Foreman explorer RBAC features with the UI
 
-### Sprint 23 end 2015-05-11
+## Sprint 23 end 2015-05-11
 
-#### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement)
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement)
 
 - Foreman
   - Filtering of available Configuration Profiles based on selected Configured Systems in provisioning dialog
   - Exposed additional properties to reporting
 
-#### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement) 
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement) 
 
 - UI: Foreman Enhancements
 
@@ -48,7 +67,7 @@ Notable fixes include:
   - Added refresh status and errors, viewable on Provider Summary Page.
   - Added collection of raw power state and exposed to reporting.
   - Orchestration: Support for Retirement
-  - Update authentication status when clicking validate for existing Providers
+  - Update authentication status when clicking validate for existing Providers.
   - Hosts and Providers now default to use the hostname column for communication instead of IP address.    
 - SCVMM
   - Provisioning from template, Kerberos Authentication
@@ -63,13 +82,13 @@ Notable fixes include:
   - Exposed Foreman models as Automate service models
   - Zone enablement
   - EMS Refresh scheduling
-  - Added tag processing during provisioning
-  - Added inventory collection of direct and inherited host/host-group settings
+  - Added tag processing during provisioning.
+  - Added inventory collection of direct and inherited host/host-group settings.
   - Organization and location inventory
 - Cloud Providers
- - Cloud images and instances: Added root device type to summary screens.
- - Cloud flavors: Added block storage restriction to summary screens.
- - Enabled Reporting
+ - Cloud Images and Instances: Added root device type to summary screens.
+ - Cloud Flavors: Added block storage restriction to summary screens.
+ - Enabled Reporting.
 - OpenStack
   - Inventory for Heat Stacks (Cloud and Infrastructure)
   - Connect Cloud provider to Infrastructure provider
@@ -85,21 +104,21 @@ Notable fixes include:
   - Inventory collection for AWS CloudFormation
   - Parsing of parameters from orchestration templates
   - Amazon Events via AWS Config service
-  - Enables event-based policies for AWS
+  - Event-based policies for AWS
   - Added a backend attribute to identify public images.
   - Added C4, D2, and G2 instance types.
   - Virtualization type collected during EMS refresh for better
     filtering of available types during provisioning.
   - Handling of power states
 - Orchestration
- - Orchestration Stacks includes tagging
+ - Orchestration Stacks include tagging
  - Cloud Stacks: Summary and list views.
  - Orchestration templates
      - Create, edit, delete, tagging, 'draft' support
      - Create Service Dialog from template contents
- - Enabled Reporting / Tagging
- - Improved rollback error message in UI
- - Collect Stack Resource name and status reason message
+ - Enabled Reporting / Tagging.
+ - Improved rollback error message in UI.
+ - Collect Stack Resource name and status reason message.
      
 ### Provisioning
 - Heat Orchestration provisioning through services
@@ -109,7 +128,7 @@ Notable fixes include:
 - Allow removing keys from :clone_options by setting value to nil
 - OpenStack: Added tenant filtering on security groups, floating IPs, and
     networks.
-- Amazon: Filtering of flavors based on root device type and block
+- Amazon: Filter of flavors based on root device type and block
     storage restrictions.
 
 ### User Interface
@@ -154,19 +173,18 @@ Notable fixes include:
 ### Automate 
 - Enhanced UI import to allow granularity down to the namespace.
 - Cloud Objects exposed to Automate. 
-- Allow Automate methods to override or extend parameters passed to provider by
-  updating the clone_options during provisioning.  
+- Allow Automate methods to override or extend parameters passed to provider by updating the clone_options during provisioning.  
 - New service model for CloudResourceQuota.
 - Exposed relationships through EmsCloud and CloudTenant models.
 - Exposed cloud relationships in automate service models.
 - Persist state data through automate state machine retries.
 - Moved auto-placement into an Automate state-machine step for Cloud and Infrastructure provisioning.
 - Added common "Finished" step to all Automate state machine classes.
-- Added eligible_* and set_* methods for cloud resources to provision task service model.
+- Added eligible\_* and set\_* methods for cloud resources to provision task service model.
 - Ability to specify zone for web service automation request
 - Ability to override request message
 - Updated provisioning/retirement entry point in a catalog item or bundle.
-- Disabled domains clearly marked in UI.
+- Disabled domains now clearly marked in UI.
 - Automate entry point selection reduced to state machine classes.
 - Retirement
   - New workflow
@@ -254,14 +272,14 @@ Notable fixes include:
 - Support for repository refreshes, since they are not used.
 - Support for Host-only refreshes.  Instead, an ESX/ESXi server should be added as a Provider.
 - Rails Fork removal
-  - Backport disable_ddl_transaction! from Rails master to our fork
-  - Update the main app to use disable_ddl_transaction!
+  - Backport disable\_ddl_transaction! from Rails master to our fork
+  - Update the main app to use disable\_ddl_transaction!
   - Add bigserial support for primary keys to Rails (including table creation and FK column creation)
   - Backport bigserial API to our fork
   - Update application to use new API
 - Old C-Language VixDiskLib binding code
-- Reduce need for Rails fork
-- Testing: Removed have_same_elements custom matcher in favor of built-in match_array
+- Reduced need for Rails fork.
+- Testing: Removed have\_same\_elements custom matcher in favor of built-in match_array
 - Graphical summary screens
 - VDI support
 - Various monkey patches to prepare for Ruby 2 and Rails 4 upgrades  
