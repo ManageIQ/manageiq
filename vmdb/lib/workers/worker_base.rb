@@ -414,26 +414,6 @@ class WorkerBase
     end
   end
 
-  def parent_is_alive?(parent)
-    return false unless parent && parent.last_heartbeat
-    $log.info("#{self.log_prefix} Checking parent #{parent.class.name}. time_threshold [#{self.worker_settings[:parent_time_threshold].seconds.ago.utc}] last_heartbeat [#{parent.last_heartbeat}]")
-    self.worker_settings[:parent_time_threshold].seconds.ago.utc < parent.last_heartbeat
-  end
-
-  def check_parent_process
-    # ensure attributes like "last_heartbeat" are up to date
-    server.reload if server
-    return if self.parent_is_alive?(server)
-    if server.nil?
-      svr_msg = "Unable to find instance for parent MiqServer guid [#{MiqServer.my_guid}]."
-    else
-      svr_msg = "Parent MiqServer ID [#{server.id}] GUID [#{server.guid}] has not responded in #{self.worker_settings[:parent_time_threshold]} seconds."
-    end
-    $log.warn("#{self.log_prefix} #{svr_msg}")
-
-    do_exit("#{svr_msg}", 1)
-  end
-
   def clean_broker_connection
     begin
       if $vim_broker_client
