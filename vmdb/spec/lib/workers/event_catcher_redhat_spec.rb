@@ -5,7 +5,7 @@ require "workers/event_catcher_redhat"
 describe EventCatcherRedhat do
   context "#event_monitor_options" do
     let(:ems)     { FactoryGirl.create(:ems_redhat, :hostname => "hostname") }
-    let(:catcher) { described_class.new(:ems_id => ems) }
+    let(:catcher) { described_class.new(:ems_id => ems.id) }
 
     before do
       EmsRedhat.any_instance.stub(:authentication_check => [true, ""])

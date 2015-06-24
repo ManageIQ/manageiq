@@ -29,7 +29,7 @@
   - if entry == "new"
     %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'ce_select', :id=>'new'}), :title => "Click to add a new entry"}
       %td.icon
-        %ul.icons
+        %ul.icons.list-unstyled
           %li
             %span.glyphicon.glyphicon-plus
       %td
@@ -41,7 +41,7 @@
                                                     :id     => entry.id},
                                            :confirm =>_("Deleting the '%s' entry will also unassign it from all items, are you sure?") % entry.name),
                                            :title => _("Click to delete this entry")}
-        %ul.icons
+        %ul.icons.list-unstyled
           %li
             %span.pficon.pficon-delete
       %td{:onclick => remote_function(:url=>{:action=>'ce_select', :id=>entry.id, :field=>"name"}), :title => _("Click to update this entry")}

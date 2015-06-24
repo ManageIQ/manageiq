@@ -31,7 +31,7 @@
     %label(for='toggle-all')= _('All')
     %input#toggle-all(type='checkbox')
 
-    #import-grid
+    #import-grid{:style => "width: #{@winW - 50}px; height: #{center_div_height + 5}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
 
     %table(width="100%")
       %tr

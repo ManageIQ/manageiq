@@ -184,24 +184,29 @@ module MiqProvisionQuotaMixin
     scheduled_range = self.quota_get_time_range(options[:scheduled_time])
     scheduled_today = scheduled_range.first == self.quota_get_time_range().first
 
-    queued_requests = MiqQueue.find(:all, :conditions => ["class_name = 'MiqProvisionRequest' and method_name = 'create_provision_instances' and state = 'ready' and (deliver_on >= ? and deliver_on < ?)",
-                                *scheduled_range])
+    queued_requests = MiqQueue.where(
+                        :class_name  => 'MiqProvisionRequest',
+                        :method_name => 'create_provision_instances',
+                        :state       => 'ready',
+                        :deliver_on  => scheduled_range,
+                      )
+
     # Make sure we skip the current MiqProvisionRequest in the calculation.
     skip_id = self.class.name == "MiqProvisionRequest" ? self.id : self.miq_provision_request.id
-    load_ids = queued_requests.collect(&:instance_id)
+    load_ids = queued_requests.pluck(:instance_id)
     load_ids.delete(skip_id)
-    provisions = MiqProvisionRequest.find_all_by_id(load_ids)
+    provisions = MiqProvisionRequest.where(:id => load_ids).to_a
 
     # If the schedule is for today we need to add in provisions that ran today (scheduled or immediate)
     if scheduled_today
       today_range = (scheduled_range.first..scheduled_range.last)
-      MiqProvisionRequest.find(:all, :conditions => ["request_state != 'pending' and (updated_on >= ? and updated_on < ?)", *scheduled_range]).each do |prov_req|
+      MiqProvisionRequest.where.not(:request_state => 'pending').where(:updated_on => today_range).each do |prov_req|
         next if prov_req.id == skip_id
         provisions << prov_req if today_range.include?(prov_req.options[:delivered_on])
       end
     end
 
-    return provisions
+    provisions
   end
 
   def quota_find_provision_by_owner(options)

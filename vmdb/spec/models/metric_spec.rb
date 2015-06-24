@@ -112,7 +112,7 @@ describe Metric do
               task.reload
               task.state.should == "Finished"
 
-              message = MiqQueue.first(:conditions => {:method_name => "perf_rollup_range", :class_name => "EmsCluster", :instance_id => cluster.id})
+              message = MiqQueue.find_by(:method_name => "perf_rollup_range", :class_name => "EmsCluster", :instance_id => cluster.id)
               message.should_not be_nil
               message.args.should == [task.context_data[:start], task.context_data[:end], task.context_data[:interval], nil]
             end
@@ -639,7 +639,7 @@ describe Metric do
           end
 
           it "should rollup Vm hourly into Vm daily rows correctly" do
-            perfs = MetricRollup.daily.all
+            perfs = MetricRollup.daily
             perfs.length.should == 3
             perfs.collect { |r| r.timestamp.iso8601 }.sort.should == ["2010-04-13T00:00:00Z", "2010-04-14T00:00:00Z", "2010-04-15T00:00:00Z"]
           end
@@ -654,22 +654,22 @@ describe Metric do
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is passed" do
-            rec = VimPerformanceDaily.find(:all, :ext_options => {:time_profile => @time_profile})
+            rec = VimPerformanceDaily.find_entries(:time_profile => @time_profile)
             rec.should == [@perf]
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when a time_profile is not passed, but an associated tz is" do
-            rec = VimPerformanceDaily.find(:all, :ext_options => {:tz => "UTC"})
+            rec = VimPerformanceDaily.find_entries(:tz => "UTC")
             rec.should == [@perf]
           end
 
           it "VimPerformanceDaily.find should return existing daily performances when defaulting to UTC time zone" do
-            rec = VimPerformanceDaily.find(:all)
+            rec = VimPerformanceDaily.find_entries({})
             rec.should == [@perf]
           end
 
           it "VimPerformanceDaily.find should return an empty array when a time_profile is not passed" do
-            rec = VimPerformanceDaily.find(:all, :ext_options => {:tz => "Alaska"})
+            rec = VimPerformanceDaily.find_entries(:tz => "Alaska")
             rec.length.should == 0
           end
         end
@@ -771,8 +771,8 @@ describe Metric do
             end
 
             it "should rollup Host realtime and Vm hourly into Host hourly rows correctly" do
-              MetricRollup.hourly.count(:conditions => {:resource_type => 'Host', :resource_id => @host1.id}).should == 1
-              perf = MetricRollup.hourly.first(:conditions => {:resource_type => 'Host', :resource_id => @host1.id})
+              MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).count.should == 1
+              perf = MetricRollup.hourly.where(:resource_type => 'Host', :resource_id => @host1.id).first
 
               perf.resource_type.should         == 'Host'
               perf.resource_id.should           == @host1.id

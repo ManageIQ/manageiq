@@ -108,7 +108,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
   # This is for summary screen display purposes only
   def update_selected_storage_names(values)
-    values[:attached_ds_names] = Storage.find_all_by_id(values[:attached_ds], :select => "name").collect(&:name)
+    values[:attached_ds_names] = Storage.where(:id => values[:attached_ds]).pluck(:name)
   end
 
   def ws_template_fields(values, fields)

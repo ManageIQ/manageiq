@@ -28,11 +28,11 @@ describe Zone do
     end
 
     it "hosts in virtual reflections" do
-      described_class.all(:include => :aggregate_cpu_speed).should_not be_nil
+      described_class.includes(:aggregate_cpu_speed).should_not be_nil
     end
 
     it "vms_and_templates in virtual reflections" do
-      described_class.all(:include => :aggregate_vm_cpus).should_not be_nil
+      described_class.includes(:aggregate_vm_cpus).should_not be_nil
     end
   end
 

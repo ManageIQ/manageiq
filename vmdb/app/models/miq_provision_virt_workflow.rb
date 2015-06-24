@@ -506,6 +506,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
   end
 
+  def tag_symbol
+    :vm_tags
+  end
+
   def self.allowed_templates_vendor
     nil
   end

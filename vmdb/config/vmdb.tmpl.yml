@@ -322,6 +322,15 @@ workers:
             - rebooted
           Pod:
             - scheduled
+      :event_catcher_openshift:
+        :poll: 1.seconds
+        :enabled_events:
+          Node:
+            - NodeReady
+            - NodeNotReady
+            - rebooted
+          Pod:
+            - scheduled
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
@@ -499,6 +508,7 @@ workers:
         - vmdb_tables
         :options:
           :replication_trace: false
+          :debug_sql: false
     :schedule_worker:
       :authentication_check_interval: 1.day
       :db_diagnostics_interval: 30.minutes

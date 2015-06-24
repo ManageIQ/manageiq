@@ -300,17 +300,17 @@ describe MiqWidget do
       message.update_attribute(:state, MiqQueue::STATE_ERROR)
 
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 2
+      MiqQueue.where(@q_options).count.should == 2
       MiqTask.count.should == 2
     end
 
     it "does nothing if an active task's messages have not yet run" do
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 1
+      MiqQueue.where(@q_options).count.should == 1
       MiqTask.first.state_active
 
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 1
+      MiqQueue.where(@q_options).count.should == 1
       MiqTask.count.should == 1
     end
 
@@ -393,13 +393,13 @@ describe MiqWidget do
 
     it "with single group" do
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 1
+      MiqQueue.where(@q_options).count.should == 1
     end
 
     it "with multiple groups" do
       @widget.visibility[:roles] = "_ALL_"
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 2
+      MiqQueue.where(@q_options).count.should == 2
     end
 
     it "with multiple timezones in one group" do
@@ -410,7 +410,7 @@ describe MiqWidget do
 
       MiqWidget.any_instance.should_receive(:generate_content).with("MiqGroup", @group2.name, nil, ["Eastern Time (US & Canada)", "UTC"])
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 1
+      MiqQueue.where(@q_options).count.should == 1
 
       MiqQueue.first.deliver
     end
@@ -425,7 +425,7 @@ describe MiqWidget do
 
       MiqWidget.any_instance.should_receive(:generate_content).with("MiqGroup", @group2.name, nil, ["Eastern Time (US & Canada)", "UTC"])
       @widget.queue_generate_content
-      MiqQueue.count(:conditions => @q_options).should == 0
+      MiqQueue.where(@q_options).count.should == 0
     end
 
     context "user's group specified in MiqWidgetSet" do

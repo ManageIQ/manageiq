@@ -149,10 +149,11 @@ class TimeProfile < ActiveRecord::Base
   end
 
   def self.profiles_for_user(user_id, region_id)
-    TimeProfile.in_region(region_id).all(
-        :conditions => ["(profile_type = ? or (profile_type = ? and  profile_key = ?)) and rollup_daily_metrics = ?",
-                        "global", "user", user_id, true],
-        :order      => "lower(description) ASC")
+    TimeProfile
+      .in_region(region_id)
+      .where("profile_type = ? or (profile_type = ? and profile_key = ?)", "global", "user", user_id)
+      .where(:rollup_daily_metrics => true)
+      .order("lower(description) ASC")
   end
 
   def self.profile_for_user_tz(user_id, user_tz)

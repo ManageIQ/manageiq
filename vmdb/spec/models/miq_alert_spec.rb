@@ -61,11 +61,11 @@ describe MiqAlert do
 
       it "should queue up the correct alert for each event" do
         guids = @events_to_alerts.collect(&:last).uniq
-        messages =  MiqQueue.all(:order => "id")
+        messages = MiqQueue.order("id")
         messages.length.should == @events_to_alerts.length
 
         messages.each_with_index do |msg, i|
-          alert = MiqAlert.find_by_id(msg.instance_id)
+          alert = MiqAlert.find_by(:id => msg.instance_id)
           alert.should_not be_nil
 
           event, guid = @events_to_alerts[i]
@@ -116,7 +116,7 @@ describe MiqAlert do
       end
 
       it "should have a miq alert status for MiqAlert with a result of true" do
-        @alert.miq_alert_statuses.first(:conditions => {:resource_type => @vm.class.base_class.name, :resource_id => @vm.id}).result.should be_true
+        @alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result.should be_true
       end
 
       it "should have a link from the Vm to the miq alert status" do
@@ -124,7 +124,7 @@ describe MiqAlert do
       end
 
       it "should have a miq alert status for Vm with a result of true" do
-        @vm.miq_alert_statuses.first(:conditions => {:miq_alert_id => @alert.id}).result.should be_true
+        @vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result.should be_true
       end
 
       context "with the alert now evaluated to false" do
@@ -139,7 +139,7 @@ describe MiqAlert do
         end
 
         it "should have a miq alert status for MiqAlert with a result of false" do
-          @alert.miq_alert_statuses.first(:conditions => {:resource_type => @vm.class.base_class.name, :resource_id => @vm.id}).result.should be_false
+          @alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result.should be_false
         end
 
         it "should have the Vm's miq_alert_statuses" do
@@ -147,7 +147,7 @@ describe MiqAlert do
         end
 
         it "should have a miq alert status for Vm with a result of false" do
-          @vm.miq_alert_statuses.first(:conditions => {:miq_alert_id => @alert.id}).result.should be_false
+          @vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result.should be_false
         end
       end
 

@@ -13,7 +13,7 @@
     %tbody
       %tr#new_tr{:onclick => remote_function(:url=>{:action=>'category_edit',:id=>nil}), :title => "Click to add a new category"}
         %td.narrow
-          %ul.icons
+          %ul.icons.list-unstyled
             %li
               %span.glyphicon.glyphicon-plus
         %td
@@ -27,7 +27,7 @@
         %tr
           - if cat[:default] == "t" || cat[:default].to_s == "1"
             %td.narrow{:title => _("Category '%s' cannot be deleted") % cat[:name]}
-              %ul.icons
+              %ul.icons.list-unstyled
                 %li
                   %span.pficon.pficon-delete
           - else
@@ -35,7 +35,7 @@
               :id      => cat[:id]},
               :confirm =>_("Are you sure you want to delete category '%s'?") % cat[:name]),
               :title   => _("Click to delete this category")}
-              %ul.icons
+              %ul.icons.list-unstyled
                 %li
                   %span.pficon.pficon-delete
           %td{:onclick => remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}), :title => "Click to edit this category"}

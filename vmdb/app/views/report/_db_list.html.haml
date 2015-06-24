@@ -12,7 +12,7 @@
           %tr{:title => _("Click to view '%s'") % @db_nodes[node][:title],
             :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', '#{@db_nodes[node][:id]}');"}
             %td.narrow{:nowrap => 1}
-              %ul.icons
+              %ul.icons.list-unstyled
                 %li
                   %span{:class => @db_nodes[node][:glyph]}
             %td
@@ -31,7 +31,7 @@
           %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
               :url => {:action => 'tree_select', :id => "xx-g_g-#{to_cid(g.id)}"}), :title => _("Click to view %s ") % g.description, :class => "icon"}
             %td.narrow
-              %ul.icons
+              %ul.icons.list-unstyled
                 %li
                   %span.product.product-group
             %td
@@ -52,7 +52,7 @@
             %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
                 :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%s (%s)'") % [ws.description, ws.name], :class => "icon"}
               %td.narrow
-                %ul.icons
+                %ul.icons.list-unstyled
                   %li
                     %span.fa.fa-dashboard{:title => ws.description}
               %td

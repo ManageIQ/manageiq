@@ -644,6 +644,10 @@ class MiqRequestWorkflow
     tag_cats
   end
 
+  def tag_symbol
+    :tag_ids
+  end
+
   def build_ci_hash_struct(ci, props)
     nh = MiqHashStruct.new(:id => ci.id, :evm_object_class => ci.class.base_class.name.to_sym)
     props.each { |p| nh.send("#{p}=", ci.send(p)) }

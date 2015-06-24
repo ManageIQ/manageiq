@@ -124,7 +124,7 @@ class MiqPolicy < ActiveRecord::Base
 
   def actions_for_event(event, on=:failure)
     order = on == :success ? "success_sequence" : "failure_sequence"
-    self.miq_policy_contents.find(:all, :conditions => ["miq_event_id = ?", event.id], :order => order).collect do |pe|
+    miq_policy_contents.where(:miq_event_id => event.id).order(order).collect do |pe|
       next unless pe.qualifier == on.to_s
       pe.get_action(on)
     end.compact

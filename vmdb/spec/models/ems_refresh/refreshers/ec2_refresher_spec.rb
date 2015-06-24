@@ -462,7 +462,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_orchestration_stack_parameters
-    parameters = @orch_stack.parameters.all(:order => "ems_ref")
+    parameters = @orch_stack.parameters.order("ems_ref")
     parameters.should have(2).items
 
     # assert one of the parameter models
@@ -473,7 +473,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_orchestration_stack_resources
-    resources = @orch_stack.resources.all(:order => "ems_ref")
+    resources = @orch_stack.resources.order("ems_ref")
     resources.should have(4).items
 
     # assert one of the resource models

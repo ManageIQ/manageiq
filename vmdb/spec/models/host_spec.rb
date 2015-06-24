@@ -104,7 +104,7 @@ describe Host do
       vms = zone.vms_and_templates
       MiqServer.stub(:my_server).and_return(zone.miq_servers.first)
       Host.check_for_vms_to_scan
-      jobs = Job.all(:conditions => {:target_class => 'VmOrTemplate'})
+      jobs = Job.where(:target_class => 'VmOrTemplate')
       jobs.length.should == 2
       jobs.collect(&:target_id).should match_array vms.collect(&:id)
     end

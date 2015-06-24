@@ -81,7 +81,7 @@ module EmsRefresh::Parsers
     end
 
     def get_flavors
-      flavors = @connection.flavors
+      flavors = @connection.flavors_for_accessible_tenants
       process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
     end
 
