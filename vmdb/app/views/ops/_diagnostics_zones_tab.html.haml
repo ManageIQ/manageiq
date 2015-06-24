@@ -11,7 +11,7 @@
               %td.narrow
                 %img{:src => "/images/icons/new/zone.png"}/
               %td
-                - if @sb[:my_zone] == z.name
+                - if my_zone_name == z.name
                   %b
                     = h(ui_lookup(:model => z.class.to_s))
                     = ": #{h(z.description)}"

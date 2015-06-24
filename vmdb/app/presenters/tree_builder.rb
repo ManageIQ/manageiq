@@ -281,12 +281,9 @@ class TreeBuilder
 
   # Return a tree node for the passed in object
   def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
-    my_server_id = MiqServer.my_server(true).id      if object.kind_of?(MiqServer)
-    my_zone      = MiqServer.my_server(true).my_zone if object.kind_of?(Zone)
-
     options[:is_current] =
-        ((object.kind_of?(MiqServer) && my_server_id == object.id) ||
-         (object.kind_of?(Zone)      && my_zone      == object.name))
+        ((object.kind_of?(MiqServer) && MiqServer.my_server(true).id == object.id) ||
+         (object.kind_of?(Zone)      && MiqServer.my_server(true).my_zone == object.name))
 
     # # open nodes to show selected automate entry point
     # x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
