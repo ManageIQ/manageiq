@@ -95,10 +95,10 @@ class TreeBuilder
     model, rec_id, prefix = self.class.extract_node_model_and_id(id)
     object = if model == "Hash"
                {:type => prefix, :id => rec_id, :full_id => id}
-             elsif model.nil? && [:sandt, :svccat, :stcat].include?(options[:tree])
+             elsif model.nil? && [:sandt, :svccat, :stcat].include?(@type)
                # Creating empty record to show items under unassigned catalog node
                ServiceTemplateCatalog.new
-             elsif model.nil? && [:foreman_providers_tree].include?(x_active_tree)
+             elsif model.nil? && [:foreman_providers_tree].include?(@type)
                # Creating empty record to show items under unassigned catalog node
                ConfigurationProfile.new
              else
