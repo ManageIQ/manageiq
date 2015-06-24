@@ -160,8 +160,7 @@ class CatalogController < ApplicationController
       page.replace_html("form_div", :partial=>"st_form") if params[:st_prov_type]
       page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:display] || params[:template_id]
       if params[:display]
-        show_or_hide = (params[:display] == "1") ? "show" : "hide"
-        page << "miq_jquery_show_hide_tab('li_details','#{show_or_hide}')"
+        page << "miq_patternfly_show_hide_tab('#details_tab', '#{(params[:display] == "1")}')"
       end
       if changed != session[:changed]
         page << javascript_for_miq_button_visibility(changed)
@@ -432,8 +431,7 @@ class CatalogController < ApplicationController
       #end
 
       if params[:display]
-        show_or_hide = (params[:display] == "1") ? "show" : "hide"
-        page << "miq_jquery_show_hide_tab('li_details','#{show_or_hide}')"
+        page << "miq_patternfly_show_hide_tab('#details_tab', '#{(params[:display] == "1")}')"
       end
       if changed != session[:changed]
         session[:changed] = changed

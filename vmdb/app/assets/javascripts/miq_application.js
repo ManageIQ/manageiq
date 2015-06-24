@@ -1319,14 +1319,23 @@ function miqClickAndPop(el) {
 }
 
 function miq_patternfly_tabs_init(id, url) {
-  if ($(id + ' ul.nav-tabs > li').length > 1) {
+  if ($(id + ' ul.nav-tabs > li:not(.hidden)').length > 1) {
     $(id + ' ul.nav-tabs a[data-toggle="tab"]').on('click.bs.tab.data-api', function (e) {
       if ($(e.target).parent().hasClass('disabled')) {
         e.preventDefault();
         return false;
       } else {
-        var currTabTarget = $(e.target).attr('href').substring(1);
-        miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
+        // Load remote tab if an URL is specified
+        if (typeof(url) != 'undefined') {
+          var currTabTarget = $(e.target).attr('href').substring(1);
+          miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
+        }
+      }
+    });
+    $(id + ' ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      // Refresh CodeMirror when its tab is toggled
+      if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(miqEditor) != 'undefined') {
+        miqEditor.refresh();
       }
     });
   } else {
@@ -1338,6 +1347,9 @@ function miq_patternfly_disable_inactive_tabs(id) {
   $(id + ' ul.nav-tabs > li:not(.active)').addClass('disabled');
 }
 
+function miq_patternfly_show_hide_tab(tab_id, show) {
+  $(tab_id).toggleClass('hidden', !show);
+}
 
 // method takes 4 parameters tabs div id, active tab label, url to go to when
 // tab is changed, and whether to check for abandon changes or not
