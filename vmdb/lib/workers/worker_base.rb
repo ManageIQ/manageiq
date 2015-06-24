@@ -3,7 +3,7 @@ require 'thread'
 
 class WorkerBase
   attr_accessor :last_hb, :worker, :worker_settings
-  attr_reader   :vmdb_config, :active_roles
+  attr_reader   :vmdb_config, :active_roles, :server
 
   INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
 
@@ -48,6 +48,8 @@ class WorkerBase
 
     $log ||= Rails.logger
 
+    @server = MiqServer.my_server(true)
+
     worker_initialization
     after_initialize
 
@@ -88,16 +90,14 @@ class WorkerBase
 
   def my_monitor_started?
     return @monitor_started unless @monitor_started.nil?
-    server = MiqServer.my_server(true)
     return false if     server.nil?
-    return false unless server.started?
+    return false unless server.reload.started?
     @monitor_started = true
   end
 
   def worker_monitor_drb
-    server = MiqServer.my_server(true)
     raise "#{self.log_prefix} No MiqServer found to establishing DRb Connection to" if server.nil?
-    drb_uri = server.drb_uri
+    drb_uri = server.reload.drb_uri
     raise "#{self.log_prefix} Blank DRb_URI for MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}]"    if drb_uri.blank?
     $log.info("#{self.log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
     require 'drb'
@@ -421,7 +421,8 @@ class WorkerBase
   end
 
   def check_parent_process
-    server = MiqServer.my_server(true)
+    # ensure attributes like "last_heartbeat" are up to date
+    server.reload if server
     return if self.parent_is_alive?(server)
     if server.nil?
       svr_msg = "Unable to find instance for parent MiqServer guid [#{MiqServer.my_guid}]."
