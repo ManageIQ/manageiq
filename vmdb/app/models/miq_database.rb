@@ -58,29 +58,13 @@ class MiqDatabase < ActiveRecord::Base
     end
   end
 
-  def self.database_name
-    @name ||= begin
-      instance_variable = ActiveRecord::Base.connection.adapter_name == "SQLServer" ? "@connection_options" : "@config"
-      ActiveRecord::Base.connection.instance_variable_get(instance_variable)[:database]
-    end
-  end
-
   def name
-    self.class.database_name
-  end
-
-  def size_postgresql
-    conn = ActiveRecord::Base.connection
-    conn.select_value("SELECT pg_database_size('#{self.name}')").to_i
+    ActiveRecord::Base.connection.current_database
   end
 
   def size
-    adapter = ActiveRecord::Base.connection.adapter_name.downcase
-    case adapter
-    when "postgres", "postgresql"; size_postgresql
-    else
-       raise "#{adapter} is not supported"
-    end
+    conn = ActiveRecord::Base.connection
+    conn.select_value("SELECT pg_database_size(#{conn.quote(name)})").to_i
   end
 
   def self.adapter

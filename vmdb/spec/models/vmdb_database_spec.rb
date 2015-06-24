@@ -7,6 +7,11 @@ describe VmdbDatabase do
     @text  = FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :name => 'accounts', :parent_id => @table.id)
   end
 
+  it "#size" do
+    @db.name = ActiveRecord::Base.connection.current_database
+    expect(@db.size).to be >= 0
+  end
+
   it "#evm_tables" do
     @db.evm_tables.should == [@table]
   end
