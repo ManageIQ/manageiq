@@ -22,18 +22,19 @@ class TreeBuilderPxeServers < TreeBuilder
   def x_get_tree_pxe_server_kids(object,options)
     pxe_images = object.pxe_images
     win_images = object.windows_images
+    open_nodes = @tree_state.x_tree(@name)[:open_nodes]
     if options[:count_only]
-      x_tree[:open_nodes].push("xx-pxe_xx-#{to_cid(object.id)}") unless x_tree[:open_nodes].include?("xx-pxe_xx-#{to_cid(object.id)}")
-      x_tree[:open_nodes].push("xx-win_xx-#{to_cid(object.id)}") unless x_tree[:open_nodes].include?("xx-win_xx-#{to_cid(object.id)}")
+      open_nodes.push("xx-pxe_xx-#{to_cid(object.id)}") unless open_nodes.include?("xx-pxe_xx-#{to_cid(object.id)}")
+      open_nodes.push("xx-win_xx-#{to_cid(object.id)}") unless open_nodes.include?("xx-win_xx-#{to_cid(object.id)}")
       pxe_images.size + win_images.size
     else
       objects = []
       if pxe_images.size > 0
-        x_tree[:open_nodes].push("pxe_xx-#{to_cid(object.id)}") unless x_tree[:open_nodes].include?("pxe_xx-#{to_cid(object.id)}")
+        open_nodes.push("pxe_xx-#{to_cid(object.id)}") unless open_nodes.include?("pxe_xx-#{to_cid(object.id)}")
         objects.push(:id => "pxe_xx-#{to_cid(object.id)}", :text => "PXE Images", :image => "folder", :tip => "PXE Images")
       end
       if win_images.size > 0
-        x_tree[:open_nodes].push("win_xx-#{to_cid(object.id)}") unless x_tree[:open_nodes].include?("win_xx-#{to_cid(object.id)}")
+        open_nodes.push("win_xx-#{to_cid(object.id)}") unless open_nodes.include?("win_xx-#{to_cid(object.id)}")
         objects.push(:id => "win_xx-#{to_cid(object.id)}", :text => "Windows Images", :image => "folder", :tip => "Windows Images")
       end
       objects

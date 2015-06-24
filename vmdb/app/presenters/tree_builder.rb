@@ -81,10 +81,11 @@ class TreeBuilder
     @sb = sandbox # FIXME: some subclasses still access @sb
 
     @locals_for_render  = {}
-    @name               = name.to_sym
+    @name               = name.to_sym                     # includes _tree
     @options            = tree_init_options(name.to_sym)
     @tree_nodes         = {}
-    @type               = type.to_sym
+    # FIXME: remove @name or @tree, unify
+    @type               = type.to_sym                     # *usually* same as @name but w/o _tree
 
     add_to_sandbox
     build_tree if build
@@ -95,10 +96,10 @@ class TreeBuilder
     model, rec_id, prefix = self.class.extract_node_model_and_id(id)
     object = if model == "Hash"
                {:type => prefix, :id => rec_id, :full_id => id}
-             elsif model.nil? && [:sandt, :svccat, :stcat].include?(options[:tree])
+             elsif model.nil? && [:sandt, :svccat, :stcat].include?(@type)
                # Creating empty record to show items under unassigned catalog node
                ServiceTemplateCatalog.new
-             elsif model.nil? && [:foreman_providers_tree].include?(x_active_tree)
+             elsif model.nil? && [:foreman_providers_tree].include?(@name)
                # Creating empty record to show items under unassigned catalog node
                ConfigurationProfile.new
              else
