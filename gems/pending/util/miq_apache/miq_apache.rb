@@ -98,7 +98,7 @@ module MiqApache
       begin
         MiqUtil.runcmd('killall -9 httpd')
       rescue => err
-        raise unless err.to_s =~ /httpd: no process killed/
+        raise unless err.to_s =~ /httpd: no process found/
       else
         MiqUtil.runcmd("for i in `ipcs -s | awk '/apache/ {print $2}'`; do (ipcrm -s $i); done")
       end
