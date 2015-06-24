@@ -61,8 +61,10 @@ module OpsController::Settings::Common
 
         if @smtp_auth_none
           page << javascript_disable_field('smtp_user_name')
+          page << javascript_disable_field('smtp_password')
         else
           page << javascript_enable_field('smtp_user_name')
+          page << javascript_enable_field('smtp_password')
         end
 
         if @changed || @login_text_changed
