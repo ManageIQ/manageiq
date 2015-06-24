@@ -61,23 +61,11 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def report_results
-    if self.report.kind_of?(String)
-      # support legacy reports that saved results in the report column
-      return nil if self.report.nil?
-      Marshal.load(Base64.decode64(self.report.split("\n").join))
-    elsif self.binary_blob
+    if self.binary_blob
       serializer_name = self.binary_blob.data_type
       serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
       serializer = serializer_name.constantize
-      raw = self.binary_blob.binary.sub(/MiqReport/, 'Hash')
-      # MiqReport.from_hash(serializer.load(raw))
-      h=serializer.load(raw)
-
-      h.merge!('attributes' => h.delete('attributes').to_hash)
-      h.delete('new_record')
-      h.delete('raw_attributes')
-
-      MiqReport.from_hash(h)
+      MiqReport.from_hash(serializer.load(self.binary_blob.binary))
     elsif self.report.kind_of?(MiqReport)
       return self.report
     else
@@ -87,7 +75,7 @@ class MiqReportResult < ActiveRecord::Base
 
   def report_results=(value)
     self.binary_blob = BinaryBlob.new(:name => "report_results", :data_type => "YAML")
-    self.binary_blob.binary = YAML.dump(value)
+    self.binary_blob.binary = YAML.dump(value.to_hash)
   end
 
   def report_html=(html)
