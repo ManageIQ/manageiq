@@ -2913,5 +2913,13 @@ module ApplicationHelper
     end
   end
 
+  def controller_referrer?
+    controller_name == Rails.application.routes.recognize_path(request.referrer)[:controller]
+  end
+
+  def breadcrumb_prohibited_for_action?
+    !%w(accordion_select tree_select).include?(action_name)
+  end
+
   attr_reader :big_iframe
 end

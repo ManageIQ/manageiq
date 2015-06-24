@@ -1253,6 +1253,7 @@ class ApplicationController < ActionController::Base
   # Handle the breadcrumb array by either adding, or resetting to, the passed in breadcrumb
   def drop_breadcrumb(new_bc, onlyreplace=false) # if replace = true, only add this bc if it was already there
     # if the breadcrumb is in the array, remove it and all below by counting how many to pop
+    return if skip_breadcrumb?
     remove = 0
     @breadcrumbs.each do |bc|
       if remove > 0         # already found a match,
@@ -2737,5 +2738,9 @@ class ApplicationController < ActionController::Base
 
   def flip_sort_direction(direction)
     direction == "ASC" ? "DESC" : "ASC" # flip ascending/descending
+  end
+
+  def skip_breadcrumb?
+    false
   end
 end

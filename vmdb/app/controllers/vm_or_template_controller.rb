@@ -56,4 +56,8 @@ class VmOrTemplateController < ApplicationController
   def tagging_explorer_controller?
     @explorer
   end
+
+  def skip_breadcrumb?
+    controller_referrer? && breadcrumb_prohibited_for_action?
+  end
 end

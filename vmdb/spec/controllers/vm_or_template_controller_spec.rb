@@ -114,4 +114,33 @@ describe VmOrTemplateController do
       end
     end
   end
+
+  context "skip or drop breadcrumb" do
+    before do
+      session[:settings] = {:views => {}, :perpage => {:list => 10}}
+      session[:userid] = User.current_user.userid
+      session[:eligible_groups] = []
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @vm_or_template = VmOrTemplate.create(:name     => "test_vm_or_template",
+                                            :location => "test_vm_or_template_location",
+                                            :vendor   => "vmware")
+      get :explorer
+      request.env['HTTP_REFERER'] = request.fullpath
+    end
+
+    it 'skips dropping a breadcrumb when a button action is executed' do
+      post :x_button, :id => @vm_or_template.id, :pressed => 'miq_template_ownership'
+      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+      expect(breadcrumbs.size).to eq(1)
+      expect(breadcrumbs).to include(:name => "VMs and Instances", :url => "/vm_or_template/explorer")
+    end
+
+    it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
+      post :accordion_select, :id => "templates_images_filter"
+      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+      expect(breadcrumbs.size).to eq(1)
+      expect(breadcrumbs).to include(:name => "VM Templates and Images", :url => "/vm_or_template/explorer")
+    end
+  end
 end

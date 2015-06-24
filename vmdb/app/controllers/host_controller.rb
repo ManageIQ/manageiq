@@ -630,7 +630,7 @@ class HostController < ApplicationController
 
   private ############################
 
-  def breadcrumb_name
+  def breadcrumb_name(_model)
     title_for_hosts
   end
 
