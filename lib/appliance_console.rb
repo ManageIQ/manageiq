@@ -102,7 +102,7 @@ $MIQDEBUG_FILES = %W(#{ROOT}/lib/appliance_console.rb
 
 require 'appliance_console/errors.rb'
 
-[:INT, :TERM, :KILL, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } } if LOCK_CONSOLE
+[:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } } if LOCK_CONSOLE
 
 # Disabled in order to allow rescue of timeout error
 HighLine.track_eof = false
