@@ -1,16 +1,17 @@
 class MiqEnterprise < ActiveRecord::Base
-  has_many :miq_regions,            -> { MiqRegion.scoped }
-  has_many :ext_management_systems, -> { ExtManagementSystem.scoped }
-  has_many :vms_and_templates,      -> { VmOrTemplate.where.not(:ems_id => nil) }
-  has_many :vms,                    -> { Vm.where.not(:ems_id => nil) }
-  has_many :miq_templates,          -> { MiqTemplate.where.not(:ems_id => nil) }
-  has_many :hosts,                  -> { Host.where.not(:ems_id => nil) }
-  has_many :storages,               -> { Storage.scoped }
-  has_many :policy_events,          -> { PolicyEvent.scoped }
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+
+  virtual_has_many :miq_regions,             :class_name => "MiqRegion"
+  virtual_has_many :ext_management_systems,  :class_name => "ExtManagementSystem"
+  virtual_has_many :vms_and_templates,       :class_name => "VmOrTemplate"
+  virtual_has_many :vms,                     :class_name => "Vm"
+  virtual_has_many :miq_templates,           :class_name => "MiqTemplate"
+  virtual_has_many :hosts,                   :class_name => "Host"
+  virtual_has_many :storages,                :class_name => "Storage"
+  virtual_has_many :policy_events,           :class_name => "PolicyEvent"
 
   serialize :settings
 
@@ -55,6 +56,38 @@ class MiqEnterprise < ActiveRecord::Base
 
   def my_zone
     MiqServer.my_zone
+  end
+
+  def miq_regions
+    MiqRegion.all
+  end
+
+  def ext_management_systems
+    ExtManagementSystem.all
+  end
+
+  def vms_and_templates
+    VmOrTemplate.where.not(:ems_id => nil)
+  end
+
+  def vms
+    Vm.where.not(:ems_id => nil)
+  end
+
+  def miq_templates
+    MiqTemplate.where.not(:ems_id => nil)
+  end
+
+  def hosts
+    Host.where.not(:ems_id => nil)
+  end
+
+  def storages
+    Storage.all
+  end
+
+  def policy_events
+    PolicyEvent.all
   end
 
   alias all_vms_and_templates  vms_and_templates
