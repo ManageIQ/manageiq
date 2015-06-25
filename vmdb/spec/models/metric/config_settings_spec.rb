@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Metric::ConfigSettings do
   before(:each) do
-    EvmSpecHelper.seed_for_miq_queue # TODO: Rename this method
+    EvmSpecHelper.create_guid_miq_server_zone
   end
 
   it ".host_overhead_cpu" do

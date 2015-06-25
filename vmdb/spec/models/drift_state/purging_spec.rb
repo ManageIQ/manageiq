@@ -30,7 +30,7 @@ describe DriftState do
     end
 
     it "#purge_timer" do
-      EvmSpecHelper.seed_for_miq_queue
+      EvmSpecHelper.create_guid_miq_server_zone
 
       Timecop.freeze(Time.now) do
         described_class.purge_timer
@@ -48,7 +48,7 @@ describe DriftState do
 
     context "#purge_queue" do
       before(:each) do
-        EvmSpecHelper.seed_for_miq_queue
+        EvmSpecHelper.create_guid_miq_server_zone
         described_class.purge_queue(:remaining, 1)
       end
 

@@ -3,7 +3,7 @@ require "spec_helper"
 describe EmsRefresh do
   context ".queue_refresh" do
     before(:each) do
-      guid, server, zone = EvmSpecHelper.seed_for_miq_queue
+      guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
     end
 
