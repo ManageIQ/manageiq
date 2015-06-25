@@ -274,7 +274,6 @@ class HostController < ApplicationController
         render :update do |page|
           page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"Host"), :name=>add_host.name}
         end
-        return
       else
         @in_a_form = true
         @edit[:errors].each { |msg| add_flash(msg, :error) }
@@ -959,10 +958,10 @@ class HostController < ApplicationController
   # Set record variables to new values
   def set_record_vars(host, mode = nil)
     host.name             = @edit[:new][:name]
-    host.hostname         = @edit[:new][:hostname].strip
+    host.hostname         = @edit[:new][:hostname].to_s.strip
     host.ipmi_address     = @edit[:new][:ipmi_address]
     host.mac_address      = @edit[:new][:mac_address]
-    host.custom_1         = @edit[:new][:custom_1]
+    host.custom_1         = @edit[:new][:custom_1] unless mode == :validate
     host.user_assigned_os = @edit[:new][:user_assigned_os]
     host.scan_frequency   = @edit[:new][:scan_frequency]
 
