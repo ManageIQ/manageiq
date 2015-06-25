@@ -84,6 +84,26 @@ describe HostController do
     end
   end
 
+  context "#create" do
+    it "can create a host with custom id and no host name" do
+      set_user_privileges
+      controller.instance_variable_set(:@breadcrumbs, [])
+      controller.new
+
+      edit = {:new => {:name     => 'foobar',
+                       :hostname => nil,
+                       :custom_1 => 'bar'},
+              :key => 'host_edit__new'}
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
+
+      expect_any_instance_of(Host).to receive(:save).and_call_original
+      post :create, :button => "add", :id => 'new '
+      expect(response.status).to eq(200)
+      expect(response.body).to match(/window.location.href.*host\/show_list.*foobar.*added/)
+    end
+  end
+
   context "#set_record_vars" do
     it "strips leading/trailing whitespace from hostname/ipaddress when adding infra host" do
       set_user_privileges
