@@ -272,10 +272,7 @@ class TreeBuilder
                         when Zone                then x_get_tree_zone_kids(parent, options)
                         when MiqSearch           then nil
                         when VmOpenstack         then nil
-                        else
-                          Rails.logger.error "PARENT TYPE NOT FOUND for #{parent.inspect}"
-                          nil
-                        end
+                        else                          nil end
     children_or_count || (count_only ? 0 : [])
   end
 

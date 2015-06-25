@@ -518,25 +518,12 @@ module ApplicationController::Explorer
 
   # Get ems children count/array
   def x_get_tree_ems_kids(object, options)
-    raise "x_get_tree_roots called for #{options[:type]} tree"
+    raise "x_get_tree_ems_kids called for #{options[:type]} tree"
   end
 
   def x_get_tree_datacenter_kids(object, options)
     count_only = options[:count_only]
     case options[:type]
-    when :vandt
-      # Count clusters directly in this folder
-      objects = rbac_filtered_objects(object.clusters, :match_via_descendants => "VmOrTemplate").sort_by { |a| a.name.downcase }
-      object.folders.each do |f|
-        if f.name == "vm"                 # Count vm folder children
-          objects += rbac_filtered_objects(f.folders, :match_via_descendants => "VmOrTemplate").sort_by { |a| a.name.downcase }
-          objects += rbac_filtered_objects(f.vms_and_templates).sort_by { |a| a.name.downcase }
-        elsif f.name == "host"            # Don't count host folder children
-        else                              # add in other folders
-          objects += rbac_filtered_objects([f], :match_via_descendants => "VmOrTemplate")
-        end
-      end
-      return count_only ? objects.length : objects
     when :handc
       objects = rbac_filtered_objects(object.clusters).sort_by { |a| a.name.downcase }
       object.folders.each do |f|
@@ -558,7 +545,7 @@ module ApplicationController::Explorer
   def x_get_tree_folder_kids(object, options)
     count_only = options[:count_only]
     case options[:type]
-    when :vandt, :handc
+    when :handc
       objects =  rbac_filtered_objects(object.folders_only, :match_via_descendants => "VmOrTemplate").sort_by { |a| a.name.downcase }
       objects += rbac_filtered_objects(object.datacenters_only, :match_via_descendants => "VmOrTemplate").sort_by { |a| a.name.downcase }
       objects += rbac_filtered_objects(object.clusters, :match_via_descendants => "VmOrTemplate").sort_by { |a| a.name.downcase }
