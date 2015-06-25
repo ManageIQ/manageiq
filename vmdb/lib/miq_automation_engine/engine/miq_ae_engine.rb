@@ -57,13 +57,8 @@ module MiqAeEngine
     begin
       task = MiqTask.find_by_id(args.delete(:task_id))
       task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Running task")
-
-      results = MiqAeEngine.deliver(args)
-      task.task_results = results
-      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, "Task Complete")
-      results
+      MiqAeEngine.deliver(args)
     rescue => err
-      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, err.to_s)
       task.task_results = err
       $log.log_backtrace(err)
     end

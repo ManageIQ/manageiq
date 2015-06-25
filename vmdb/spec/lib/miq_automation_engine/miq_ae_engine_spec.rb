@@ -690,7 +690,9 @@ module MiqAeEngineSpec
         MiqAeEngine.stub(:deliver).and_return(root)
         original_method = MiqTask.method(:wait_for_taskid)
         MiqTask.stub(:wait_for_taskid) do |task_id, options = {}|
-          MiqQueue.first.deliver
+          q = MiqQueue.first
+          state, message, result = q.deliver
+          q.delivered(state, message, result)
           original_method.call(task_id, options)
         end
 
