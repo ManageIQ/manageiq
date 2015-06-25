@@ -958,7 +958,7 @@ class HostController < ApplicationController
   # Set record variables to new values
   def set_record_vars(host, mode = nil)
     host.name             = @edit[:new][:name]
-    host.hostname         = @edit[:new][:hostname].strip
+    host.hostname         = @edit[:new][:hostname].to_s.strip
     host.ipmi_address     = @edit[:new][:ipmi_address]
     host.mac_address      = @edit[:new][:mac_address]
     host.custom_1         = @edit[:new][:custom_1] unless mode == :validate
