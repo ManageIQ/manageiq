@@ -1319,8 +1319,8 @@ function miqClickAndPop(el) {
 }
 
 function miq_patternfly_tabs_init(id, url) {
-  if ($(id + ' ul.nav-tabs > li:not(.hidden)').length > 1) {
-    $(id + ' ul.nav-tabs a[data-toggle="tab"]').on('click.bs.tab.data-api', function (e) {
+  if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
+    $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
       if ($(e.target).parent().hasClass('disabled')) {
         e.preventDefault();
         return false;
@@ -1332,14 +1332,19 @@ function miq_patternfly_tabs_init(id, url) {
         }
       }
     });
-    $(id + ' ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       // Refresh CodeMirror when its tab is toggled
       if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(miqEditor) != 'undefined') {
         miqEditor.refresh();
       }
     });
+    // If no active tab is present, set the first tab as active
+    if ($(id + ' > ul.nav-tabs li.active').length != 1) {
+      $(id + ' > ul.nav-tabs li').first().addClass('active');
+      $(id + ' > .tab-content div.tab-pane').first().addClass('active');
+    }
   } else {
-    $(id + ' ul.nav-tabs').hide();
+    $(id + ' > ul.nav-tabs').hide();
   }
 }
 
