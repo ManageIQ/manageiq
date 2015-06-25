@@ -31,8 +31,7 @@ class VmdbDatabase < ActiveRecord::Base
   end
 
   def size
-    conn = ActiveRecord::Base.connection
-    conn.select_value("SELECT pg_database_size(#{conn.quote(name)})").to_i
+    ActiveRecord::Base.connection.database_size name
   end
 
   def top_tables_by(sorted_by, limit = nil)
