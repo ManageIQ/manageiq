@@ -32,25 +32,25 @@
       .form-group
         %label.col-sm-2.control-label
           = _("Filter")
-
-        - if @selected_schedule.miq_search
-          %p.form-control-static
-            - search = @selected_schedule.miq_search
-            - description = "Filter: #{search.description}"
-            = search.search_type == "user" ? "My #{description}" : "Global #{description}"
-
-        - else
-          - if @selected_schedule.filter.is_a?(MiqExpression)
+        .col-sm-10
+          - if @selected_schedule.miq_search
             %p.form-control-static
-              - @exp_table.each do |token|
-                - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
-                  = h([token].flatten.first)
-                - else
-                  %font{:color => "black"}
-                    %b= h([token].flatten.first)
+              - search = @selected_schedule.miq_search
+              - description = "Filter: #{search.description}"
+              = search.search_type == "user" ? "My #{description}" : "Global #{description}"
+
           - else
-            %p.form-control-static
-              = h(MiqExpression.to_human(@selected_schedule.expression))
+            - if @selected_schedule.filter.is_a?(MiqExpression)
+              %p.form-control-static
+                - @exp_table.each do |token|
+                  - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+                    = h([token].flatten.first)
+                  - else
+                    %font{:color => "black"}
+                      %b= h([token].flatten.first)
+            - else
+              %p.form-control-static
+                = h(MiqExpression.to_human(@selected_schedule.expression))
       .form-group
         %label.col-sm-2.control-label
           = _("Run At")
@@ -63,7 +63,7 @@
         .col-sm-10
           %p.form-control-static
             - unless @selected_schedule.last_run_on.blank?
-              = h(format_timezone(@selected_schedule.last_run_on, @timezone,"view"))
+              = h(format_timezone(@selected_schedule.last_run_on, @timezone, "view"))
       .form-group
         %label.col-sm-2.control-label
           = _("Next Run Time")
