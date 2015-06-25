@@ -221,23 +221,21 @@ class TreeBuilder
     [{:key => 'root', :children => child_nodes, :expand => true}]
   end
 
-  # Get objects (or count) to put into a tree under a parent node, based on the tree type
-  # TODO: Make the called methods honor RBAC for passed in userid -- verify
-  # TODO: Perhaps push the object sorting down to SQL, if possible -- no point where there are few items
-  # Options used:
-  # :parent                 # Parent object for which we need child tree nodes returned
-  # :count_only             # Return only the count if true
-  # :type                   # Type of tree, i.e. :handc, :vandt, :filtered, etc
-  # :leaf                   # Model name of leaf nodes, i.e. "Vm"
-  # :open_all               # if true open all node (no autoload)
+  # Get objects (or count) to put into a tree under a parent node.
+  # TODO: Perhaps push the object sorting down to SQL, if possible -- no point where there are few items.
+  # parent  --- Parent object for which we need child tree nodes returned
+  # options --- Options:
+  #   :count_only           # Return only the count if true -- remove this
+  #   :leaf                 # Model name of leaf nodes, i.e. "Vm"
+  #   :open_all             # if true open all node (no autoload)
+  #   :load_children
   def x_get_tree_objects(parent, options, count_only = false)
-    if options[:count_only]
-      Rails.logger.error("OBSOLETE CALL TO x_get_tree_parents")
-      count_only = options[:count_only]
-    end
-
+    # FIXME: To limit the use of options and make mandatory arguments explitic,
+    # we need to fix all the callers and functions to pass count_only as an
+    # argument and not part of options.
+    count_only = options[:count_only] if options[:count_only]
     options = options.dup
-    options[:count_only] = count_only # FIXME -- push the count_only to functions below as an argument
+    options[:count_only] = count_only
 
     children_or_count = case parent
                         when nil                 then x_get_tree_roots(options)
