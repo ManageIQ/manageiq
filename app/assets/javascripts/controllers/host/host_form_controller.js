@@ -1,8 +1,7 @@
-miqAngularApplication.controller('hostFormController', ['$http', '$scope', 'hostFormId', 'miqService', function($http, $scope, hostFormId, miqService) {
+ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope', 'hostFormId', 'miqService', function($http, $scope, hostFormId, miqService) {
   var init = function() {
     $scope.hostModel = {
       name: '',
-      ipaddress: '',
       hostname: '',
       ipmi_address: '',
       custom_1: '',
@@ -19,21 +18,16 @@ miqAngularApplication.controller('hostFormController', ['$http', '$scope', 'host
       ws_verify: '',
       ipmi_userid: '',
       ipmi_password: '',
-      ipmi_verify: '',
-      log_userid: '',
-      log_password: '',
-      log_verify: ''
-
+      ipmi_verify: ''
     };
 
     $scope.modelCopy = angular.copy( $scope.hostModel );
     $scope.afterGet = false;
     $scope.formId = hostFormId;
-    miqAngularApplication.$scope = $scope;
+    ManageIQ.angularApplication.$scope = $scope;
 
     if (hostFormId == 'new') {
       $scope.hostModel.name = "";
-      $scope.hostModel.ipaddress = "";
       $scope.hostModel.hostname = "";
       $scope.hostModel.ipmi_address = "";
       $scope.hostModel.custom_1 = "";
@@ -51,10 +45,6 @@ miqAngularApplication.controller('hostFormController', ['$http', '$scope', 'host
       $scope.hostModel.ipmi_userid = "";
       $scope.hostModel.ipmi_password = "";
       $scope.hostModel.ipmi_verify = "";
-      $scope.hostModel.log_userid = "";
-      $scope.hostModel.log_password = "";
-      $scope.hostModel.log_verify = "";
-
       $scope.afterGet = true;
 
     } else {
@@ -62,7 +52,6 @@ miqAngularApplication.controller('hostFormController', ['$http', '$scope', 'host
 
         $http.get('/host/host_form_fields/' + hostFormId).success(function(data) {
           $scope.hostModel.name = data.name;
-          $scope.hostModel.ipaddress = data.ipaddress;
           $scope.hostModel.hostname = data.hostname;
           $scope.hostModel.ipmi_address = data.ipmi_address;
           $scope.hostModel.custom_1 = data.custom_1;
@@ -81,10 +70,6 @@ miqAngularApplication.controller('hostFormController', ['$http', '$scope', 'host
           $scope.hostModel.ipmi_password = data.ipmi_password;
           $scope.hostModel.ipmi_verify = data.ipmi_verify;
 
-          $scope.hostModel.log_userid = data.default_userid;
-          $scope.hostModel.log_password = data.default_password;
-          $scope.hostModel.log_verify = data.default_verify;
-
           $scope.afterGet = true;
 
           $scope.modelCopy = angular.copy( $scope.hostModel );
@@ -92,9 +77,7 @@ miqAngularApplication.controller('hostFormController', ['$http', '$scope', 'host
         });
      }
 
-     $scope.currentTab = "Default";
-
-
+     $scope.currentTab = "default";
 
     $scope.$watch("hostModel.name", function() {
       $scope.form = $scope.angularForm;
@@ -102,31 +85,41 @@ miqAngularApplication.controller('hostFormController', ['$http', '$scope', 'host
     });
   };
 
-  $scope.assignDefaultUser = function() {
-   if($scope.currentTab == "Remote") {
-     $scope.hostModel.remote_userid = $scope.hostModel.log_userid;
-     $scope.hostModel.remote_password = $scope.hostModel.log_password;
-     $scope.hostModel.remote_verify = $scope.hostModel.log_verify;
-     $scope.currentTab = "Default";
-   }
-    $scope.angularForm.log_verify.$setPristine(true);
-    $scope.hostModel.log_userid = $scope.hostModel.default_userid;
-    $scope.hostModel.log_password = $scope.hostModel.default_password;
-    $scope.hostModel.log_verify = $scope.hostModel.default_verify;
-  }
+  $scope.changeAuthTab = function(id) {
+    $scope.currentTab = id;
+//    if (id == "default") {
+//      alert(id)
+//      alert($scope.angularForm.default_password.value)
+//      alert($scope.angularForm.default_verify.value)
+//      if ($scope.angularForm.default_password.value == $scope.angularForm.default_verify.value)
+//        alert("hiii")
+//        $scope.logVerifyCtrl = undefined
+//      else
+//        $scope.logVerifyCtrl = $scope.angularForm.default_password
+//    } else if (id == "remote") {
+//      if ($scope.angularForm.remote_password.value == $scope.angularForm.remote_verify.value)
+//        $scope.logVerifyCtrl = undefined
+//      else
+//        $scope.logVerifyCtrl = $scope.angularForm.remote_password
+//    } else if (id == "ws") {
+//      if ($scope.angularForm.ws_password.value == $scope.angularForm.ws_verify.value)
+//        $scope.logVerifyCtrl = undefined
+//      else
+//        $scope.logVerifyCtrl = $scope.angularForm.ws_password
+//    } else if (id == "ipmi") {
+//      if ($scope.angularForm.ipmi_password.value == $scope.angularForm.ipmi_verify.value)
+//        $scope.logVerifyCtrl = undefined
+//      else
+//        $scope.logVerifyCtrl = $scope.angularForm.ipmi_password
+//    }
+    if ($scope.angularForm[id + '_password'].value == $scope.angularForm[id + '_verify'].value)
+      $scope.logVerifyCtrl = undefined
+    else
+      $scope.logVerifyCtrl = $scope.angularForm[id + '_password']
 
-  $scope.assignRemoteUser = function() {
-    if($scope.currentTab == "Default") {
-      $scope.hostModel.default_userid = $scope.hostModel.log_userid;
-      $scope.hostModel.default_password = $scope.hostModel.log_password;
-      $scope.hostModel.default_verify = $scope.hostModel.log_verify;
-      $scope.currentTab = "Remote";
-    }
-
-    $scope.angularForm.log_verify.$setPristine(true);
-    $scope.hostModel.log_userid = $scope.hostModel.remote_userid;
-    $scope.hostModel.log_password = $scope.hostModel.remote_password;
-    $scope.hostModel.log_verify = $scope.hostModel.remote_verify;
+    //alert($scope.logVerifyCtrl.$error.verifypasswd)
+    //$scope.logVerifyCtrl.$error.verifypasswd  logVerifyCtrl.$error.verifypasswd
+    !miqService.canValidate(angularForm, id);
   }
 
   $scope.addClicked = function() {
@@ -167,11 +160,23 @@ miqAngularApplication.controller('hostFormController', ['$http', '$scope', 'host
     }
 
   $scope.isBasicInfoValid = function() {
-    if($scope.angularForm.log_userid.$valid &&
-       $scope.angularForm.log_password.$valid &&
-       $scope.angularForm.log_verify.$valid)
+    if(($scope.currentTab == "default") && ($scope.angularForm.default_userid.$valid &&
+          $scope.angularForm.default_password.$valid &&
+          $scope.angularForm.default_verify.$valid)) {
+        return true;
+    } else if(($scope.currentTab == "remote") && ($scope.angularForm.remote_userid.$valid &&
+        $scope.angularForm.remote_password.$valid &&
+        $scope.angularForm.remote_verify.$valid)) {
       return true;
-    else
+    } else if(($scope.currentTab == "ws") && ($scope.angularForm.ws_userid.$valid &&
+        $scope.angularForm.ws_password.$valid &&
+        $scope.angularForm.ws_verify.$valid)) {
+      return true;
+    } else if(($scope.currentTab == "ipmi") && ($scope.angularForm.ipmi_userid.$valid &&
+        $scope.angularForm.ipmi_password.$valid &&
+        $scope.angularForm.ipmi_verify.$valid)) {
+      return true;
+    } else
       return false;
   };
 

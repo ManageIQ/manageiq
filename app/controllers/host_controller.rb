@@ -263,11 +263,12 @@ class HostController < ApplicationController
       end
     when "add"
       @host = Host.new
+      old_host_attributes = @host.attributes.clone
       set_record_vars(@host, :validate)                        # Set the record variables, but don't save
       @host.vmm_vendor = "unknown"
       if valid_record?(@host) && @host.save
         set_record_vars(@host)                                 # Save the authentication records for this host
-        AuditEvent.success(build_created_audit(@host, @edit))
+        AuditEvent.success(build_saved_audit_hash(old_host_attributes, @host, params[:button] == "add"))
         render :update do |page|
           page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"Host"), :name=>@host.name}
         end
@@ -332,9 +333,9 @@ class HostController < ApplicationController
 
   def update
     assert_privileges("host_edit")
-    @host = find_by_id_filtered(Host, params[:id])
     case params[:button]
     when "cancel"
+      @host = find_by_id_filtered(Host, params[:id])
       session[:edit] = nil  # clean out the saved info
       flash = "Edit for Host \""
       @breadcrumbs.pop if @breadcrumbs
@@ -354,14 +355,13 @@ class HostController < ApplicationController
     when "save"
       if session[:host_items].nil?
         @host = find_by_id_filtered(Host, params[:id])
+        old_host_attributes = @host.attributes.clone
         valid_host = find_by_id_filtered(Host, params[:id])
-        edit = {:current => @host.attributes.clone }
         set_record_vars(valid_host, :validate)                      # Set the record variables, but don't save
-        edit[:new] = @host.attributes.clone
         if valid_record?(valid_host) && set_record_vars(@host) && @host.save
           add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"host"), :name=>@host.name})
           @breadcrumbs.pop if @breadcrumbs
-          AuditEvent.success(build_saved_audit(@host, edit))
+          AuditEvent.success(build_saved_audit_hash(old_host_attributes, @host, false))
           session[:edit] = nil  # clean out the saved info
           session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
           render :update do |page|
@@ -573,7 +573,6 @@ class HostController < ApplicationController
     host_hash = {
       :name             => host.name,
       :hostname         => host.hostname,
-      :ipaddress        => host.ipaddress,
       :ipmi_address     => host.ipmi_address,
       :custom_1         => host.custom_1,
       :user_assigned_os => host.user_assigned_os,
@@ -605,8 +604,6 @@ class HostController < ApplicationController
       set_credentials_verify_status(@validate_against, host_hash) if @validate_against
     end
 
-    # @edit[:current] = @edit[:new].dup
-    # @edit[:edittype] = params[:edittype] == nil ? "basic" : params[:edittype]
     render  :json => host_hash
   end
 
@@ -776,7 +773,7 @@ class HostController < ApplicationController
       valid = false
       @tabnum ||= "3"
     end
-    if !host.authentication_userid(:ipmi).blank? && @edit[:new][:ipmi_password] != @edit[:new][:ipmi_verify]
+    if !host.authentication_userid(:ipmi).blank? && params[:ipmi_password] != params[:ipmi_verify]
       @errors.push("IPMI Password and Verify Password fields do not match")
       valid = false
       @tabnum ||= "4"
@@ -790,55 +787,6 @@ class HostController < ApplicationController
       valid = false
     end
     return valid
-  end
-
-  # Set form variables for edit
-  def set_form_vars
-    @edit = Hash.new
-    @edit[:host_id]    = @host.id
-    @edit[:key]     = "host_edit__#{@host.id || "new"}"
-    @edit[:new]     = Hash.new
-    @edit[:current] = Hash.new
-
-    @edit[:new][:name]              = @host.name
-    @edit[:new][:hostname]          = @host.hostname
-    @edit[:new][:ipmi_address]      = @host.ipmi_address
-    @edit[:new][:custom_1]          = @host.custom_1
-    @edit[:new][:user_assigned_os]  = @host.user_assigned_os
-    @edit[:new][:scan_frequency]    = @host.scan_frequency
-    @edit[:new][:mac_address]       = @host.mac_address
-
-    @edit[:new][:default_userid]            = @host.authentication_userid.to_s
-    @edit[:new][:default_password]          = @host.authentication_password.to_s
-    @edit[:new][:default_verify]            = @host.authentication_password.to_s
-
-    @edit[:new][:remote_userid]     = @host.has_authentication_type?(:remote) ? @host.authentication_userid(:remote).to_s : ""
-    @edit[:new][:remote_password]   = @host.has_authentication_type?(:remote) ? @host.authentication_password(:remote).to_s : ""
-    @edit[:new][:remote_verify]     = @host.has_authentication_type?(:remote) ? @host.authentication_password(:remote).to_s : ""
-
-    @edit[:new][:ws_userid]         = @host.has_authentication_type?(:ws) ? @host.authentication_userid(:ws).to_s : ""
-    @edit[:new][:ws_password]       = @host.has_authentication_type?(:ws) ? @host.authentication_password(:ws).to_s : ""
-    @edit[:new][:ws_verify]         = @host.has_authentication_type?(:ws) ? @host.authentication_password(:ws).to_s : ""
-
-    @edit[:new][:ipmi_userid]       = @host.has_authentication_type?(:ipmi) ? @host.authentication_userid(:ipmi).to_s : ""
-    @edit[:new][:ipmi_password]     = @host.has_authentication_type?(:ipmi) ? @host.authentication_password(:ipmi).to_s : ""
-    @edit[:new][:ipmi_verify]       = @host.has_authentication_type?(:ipmi) ? @host.authentication_password(:ipmi).to_s : ""
-
-    # Clear saved verify status flags
-    session[:host_default_verify_status]  = nil
-    session[:host_remote_verify_status]   = nil
-    session[:host_ws_verify_status]       = nil
-    session[:host_ipmi_verify_status]     = nil
-    @edit[:validate_against] = session[:edit][:validate_against] if session[:edit] && session[:edit][:validate_against] && params[:button] != "reset" #if editing credentials for multi host
-
-    if session[:host_items].nil?
-      set_verify_status
-    else
-      set_credentials_verify_status(@edit[:validate_against]) if @edit[:validate_against]
-    end
-
-    @edit[:current] = @edit[:new].dup
-    @edit[:edittype] = params[:edittype] == nil ? "basic" : params[:edittype]
   end
 
   def set_verify_status(host)
@@ -905,7 +853,6 @@ class HostController < ApplicationController
   def set_record_vars(host, mode = nil)
     host.name             = params[:name]
     host.hostname         = params[:hostname]
-    host.ipaddress        = params[:ipaddress]
     host.ipmi_address     = params[:ipmi_address]
     host.mac_address      = params[:mac_address]
     host.custom_1         = params[:custom_1]
@@ -927,17 +874,17 @@ class HostController < ApplicationController
   # Set record variables to new values
   def set_credentials_record_vars(host, mode = nil)
     settings = Hash.new
-    settings[:scan_frequency] = @edit[:new][:scan_frequency]
+    settings[:scan_frequency] = params[:scan_frequency]
 
 #   creds = {:default=>{:userid=>nil, :password=>nil},
 #             :remote=>{:userid=>nil, :password=>nil},
 #             :ws=>{:userid=>nil, :password=>nil},
 #             :ipmi=>{:userid=>nil, :password=>nil}}
     creds = Hash.new
-    creds[:default] = {:userid=>@edit[:new][:default_userid],        :password=>@edit[:new][:default_password]}        unless @edit[:new][:default_userid].blank?
-    creds[:remote]  = {:userid=>@edit[:new][:remote_userid], :password=>@edit[:new][:remote_password]} unless @edit[:new][:remote_userid].blank?
-    creds[:ws]      = {:userid=>@edit[:new][:ws_userid],     :password=>@edit[:new][:ws_password]}     unless @edit[:new][:ws_userid].blank?
-    creds[:ipmi]    = {:userid=>@edit[:new][:ipmi_userid],   :password=>@edit[:new][:ipmi_password]}   unless @edit[:new][:ipmi_userid].blank?
+    creds[:default] = {:userid => params[:default_userid], :password => params[:default_password]} unless params[:default_userid].blank?
+    creds[:remote]  = {:userid => params[:remote_userid],  :password => params[:remote_password]}  unless params[:remote_userid].blank?
+    creds[:ws]      = {:userid => params[:ws_userid],      :password => params[:ws_password]}      unless params[:ws_userid].blank?
+    creds[:ipmi]    = {:userid => params[:ipmi_userid],    :password => params[:ipmi_password]}    unless params[:ipmi_userid].blank?
     host.update_authentication(creds, {:save=>(mode != :validate) })
     return settings, creds, true
   end

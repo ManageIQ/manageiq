@@ -1,7 +1,7 @@
 describe('hostFormController', function() {
   var $scope, $controller, $httpBackend, miqService;
 
-  beforeEach(module('miqAngularApplication'));
+  beforeEach(module('ManageIQ.angularApplication'));
 
   beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_, _miqService_) {
     miqService = _miqService_;
