@@ -4,7 +4,7 @@ describe PolicyEvent do
   context "::Purging" do
     context ".purge_queue" do
       before do
-        EvmSpecHelper.seed_for_miq_queue
+        EvmSpecHelper.create_guid_miq_server_zone
       end
 
       it "with nothing in the queue" do

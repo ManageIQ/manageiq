@@ -11,7 +11,7 @@ describe EmsAmazon do
 
   context ".discover" do
     before do
-      EvmSpecHelper.seed_for_miq_queue
+      EvmSpecHelper.create_guid_miq_server_zone
       @ec2_user = "0123456789ABCDEFGHIJ"
       @ec2_pass = "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"
       @ec2_user2 = "testuser"

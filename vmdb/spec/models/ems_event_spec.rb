@@ -186,7 +186,7 @@ describe EmsEvent do
       let(:purge_time) { (Time.now + 10).round }
 
       before(:each) do
-        EvmSpecHelper.seed_for_miq_queue
+        EvmSpecHelper.create_guid_miq_server_zone
         described_class.purge_queue(purge_time)
       end
 

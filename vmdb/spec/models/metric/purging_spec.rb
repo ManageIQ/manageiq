@@ -3,7 +3,7 @@ require "spec_helper"
 describe Metric::Purging do
   context "::Purging" do
     it "#purge_all_timer" do
-      EvmSpecHelper.seed_for_miq_queue
+      EvmSpecHelper.create_guid_miq_server_zone
 
       Timecop.freeze(Time.now) do
         described_class.purge_all_timer
