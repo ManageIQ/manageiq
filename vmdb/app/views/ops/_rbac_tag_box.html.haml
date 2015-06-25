@@ -1,11 +1,11 @@
-%h3=_("Smart Management")
-#table_div
-  %table.style1
-    %tr
-      %td.key
+%fieldset
+  %h3 =_("Smart Management")
+  .form-horizontal.static
+    .form-group
+      %label.col-sm-2.control-label
         = session[:customer_name]
         =_("Tags")
-      %td{:align => "left", :style => "padding: 0px;", :valign => "top"}
+      .col-sm-10
         %table{:style => "padding: 0px; margin: 0px; border: 0px; width: 100%"}
           - if session[:assigned_filters].empty?
             %tr

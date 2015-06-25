@@ -1,28 +1,38 @@
-%tr
-  %td{:colspan => 2}=_("Appliances in this region can be registered with:")
-%tr
-  %td{:colspan => 2} &nbsp;
-%tr
-  %td.key=_("Service")
-  %td.wide
-    = @customer.subscription
-%tr
-  %td.key=_("Server Address")
-  %td.wide
-    = @customer.server
-%tr
-  %td.key=_("Account")
-  %td.wide
-    = @customer.user_name
-%tr
-  %td.key=_("Organization")
-  %td.wide
-    = @customer.company_name
-%tr
-  - label = @customer.registration_type == "rhn_satellite" ? _("Channel Name(s)") : _("Repository Name(s)")
-  %td.key=label
-  %td.wide
-    = @customer.update_repo_name
+%p
+  = _("Appliances in this region can be registered with:")
+
+.form-horizontal
+  .form-group
+    %label.control-label.col-sm-2
+      = _("Service")
+    .col-sm-10
+      %p.form-control-static
+        = @customer.subscription
+  .form-group
+    %label.control-label.col-sm-2
+      = _("Server Address")
+    .col-sm-10
+      %p.form-control-static
+        = @customer.server
+  .form-group
+    %label.control-label.col-sm-2
+      = _("Account")
+    .col-sm-10
+      %p.form-control-static
+        = @customer.user_name
+  .form-group
+    %label.control-label.col-sm-2
+      = _("Organization")
+    .col-sm-10
+      %p.form-control-static
+        = @customer.company_name
+  .form-group
+    - label = @customer.registration_type == "rhn_satellite" ? _("Channel Name(s)") : _("Repository Name(s)")
+    %label.control-label.col-sm-2
+      = label
+    .col-sm-10
+      %p.form-control-static
+        = @customer.update_repo_name
 -# to be enabled later
 -#    %tr
 -#      %td{:class => 'key'} E-mail Address:
