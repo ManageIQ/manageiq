@@ -1,20 +1,32 @@
 - if @sb[:active_tab] == "settings_evm_servers"
   - if @servers
     = render(:partial=>"layouts/flash_msg")
-    %h3=_("Relationships")
-    %table.style1
-      %tr
-        %td.key=_("Servers")
-        %td.wide= @selected_zone.miq_servers.count
-      %tr
-        %td.key= ui_lookup(:tables => "ext_management_system")
-        %td.wide= @selected_zone.ext_management_systems.count
-      %tr
-        %td.key=_("Storage Managers")
-        %td.wide= @selected_zone.storage_managers.count
-      %tr
-        %td.key=_("Schedules")
-        %td.wide= @selected_zone.miq_schedules.count
+    %h3= _("Relationships")
+    .form-horizontal.static
+      .form-group
+        %label.col-sm-2.control-label
+          = _("Servers")
+        .col-sm-10
+          %p.form-control-static
+            = @selected_zone.miq_servers.count
+      .form-group
+        %label.col-sm-2.control-label
+          = ui_lookup(:tables => "ext_management_system")
+        .col-sm-10
+          %p.form-control-static
+            = @selected_zone.ext_management_systems.count
+      .form-group
+        %label.col-sm-2.control-label
+          = _("Storage Managers")
+        .col-sm-10
+          %p.form-control-static
+            = @selected_zone.storage_managers.count
+      .form-group
+        %label.col-sm-2.control-label
+          = _("Schedules")
+        .col-sm-10
+          %p.form-control-static
+            = @selected_zone.miq_schedules.count
     %hr/
     %h3=_("Servers")
     - if @servers.empty?
