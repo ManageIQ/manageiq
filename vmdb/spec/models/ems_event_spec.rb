@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe EmsEvent do
   context ".add_vc" do
-    DATA_DIR = Rails.root.join("spec", "models", "ems_event", "parsers", "data")
+    DATA_DIR = Rails.root.join("spec/models/manageiq/providers/vmware/infra_manager/event_data")
 
     before(:each) do
       @zone = FactoryGirl.create(:small_environment)

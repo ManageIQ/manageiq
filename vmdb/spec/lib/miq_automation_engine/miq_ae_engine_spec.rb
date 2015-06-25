@@ -287,8 +287,8 @@ module MiqAeEngineSpec
 
       it "with an array of Vms" do
         hash          = {"vms" => Vm.all}
-        result_str    = "Array::vms=" + hash["vms"].collect { |v| "VmVmware::#{v.id}" }.join(",")
-        result_arr    = hash["vms"].collect { |v| "VmVmware::#{v.id}" }.join(",")
+        result_str    = "Array::vms=" + hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
+        result_arr    = hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
         result        = MiqAeEngine.create_automation_attributes(hash)
         MiqAeEngine.create_automation_attributes_string(hash).should == result_str
         result["Array::vms"].should == result_arr
@@ -296,8 +296,8 @@ module MiqAeEngineSpec
 
       it "with an array containing a single Vm" do
         hash          = {"vms" => [Vm.first]}
-        result_str    = "Array::vms=" + hash["vms"].collect { |v| "VmVmware::#{v.id}" }.join(",")
-        result_arr    = hash["vms"].collect { |v| "VmVmware::#{v.id}" }.join(",")
+        result_str    = "Array::vms=" + hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
+        result_arr    = hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
         result        = MiqAeEngine.create_automation_attributes(hash)
         MiqAeEngine.create_automation_attributes_string(hash).should == result_str
         result["Array::vms"].should == result_arr
@@ -327,8 +327,8 @@ module MiqAeEngineSpec
 
      it "with multiple arrays" do
         hash            = {"vms" => Vm.all}
-        vm_result_str   = "Array::vms=" + hash["vms"].collect { |v| "VmVmware::#{v.id}" }.join(",")
-        vm_result_arr   = hash["vms"].collect { |v| "VmVmware::#{v.id}" }.join(",")
+        vm_result_str   = "Array::vms=" + hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
+        vm_result_arr   = hash["vms"].collect { |v| "ManageIQ::Providers::Vmware::InfraManager::Vm::#{v.id}" }.join(",")
         hash["hosts"]   = Host.all
         host_result_str = "Array::hosts=" + hash["hosts"].collect { |h| "Host::#{h.id}" }.join(",")
         host_result_arr = hash["hosts"].collect { |h| "Host::#{h.id}" }.join(",")

@@ -1,0 +1,1 @@
+::EmsInfra = ::ManageIQ::Providers::InfraManager

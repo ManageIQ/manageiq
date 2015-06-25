@@ -10,10 +10,10 @@ class OrchestrationStack < ActiveRecord::Base
 
   has_ancestry
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :orchestration_template
 
-  has_many   :vms, :class_name => "VmCloud"
+  has_many   :vms, :class_name => "ManageIQ::Providers::CloudManager::Vm"
   has_many   :security_groups
   has_many   :cloud_networks
   has_many   :parameters, :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackParameter"

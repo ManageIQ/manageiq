@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :template_vmware, :class => "TemplateVmware", :parent => "template_infra" do
+  factory :template_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::Template", :parent => "template_infra" do
     location { |x| "[storage] #{x.name}/#{x.name}.vmtx" }
     vendor   "vmware"
   end

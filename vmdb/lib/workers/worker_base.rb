@@ -35,7 +35,11 @@ class WorkerBase
   end
 
   def self.corresponding_model
-    @corresponding_model ||= Object.const_get(self == WorkerBase ? "MiqWorker" : "Miq#{self.name}")
+    if parent == Object
+      @corresponding_model ||= Object.const_get(self == WorkerBase ? "MiqWorker" : "Miq#{self.name}")
+    else
+      parent
+    end
   end
 
   def self.interrupt_signals

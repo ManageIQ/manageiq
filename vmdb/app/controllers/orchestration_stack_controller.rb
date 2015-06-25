@@ -31,7 +31,7 @@ class OrchestrationStackController < ApplicationController
       title = ui_lookup(:tables => "vm_cloud")
       drop_breadcrumb(:name => "#{@orchestration_stack.name} (All #{title})",
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
-      @view, @pages = get_view(VmCloud, :parent => @orchestration_stack)
+      @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @orchestration_stack)
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]

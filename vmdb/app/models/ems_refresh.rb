@@ -22,7 +22,7 @@ module EmsRefresh
 
   # Development helper method for setting up the selector specs for VC
   def self.init_console(use_vim_broker = false)
-    EmsRefresh::Refreshers::VcRefresher.init_console(use_vim_broker)
+    ManageIQ::Providers::Vmware::InfraManager::Refresher.init_console(use_vim_broker)
   end
 
   cache_with_timeout(:queue_timeout) { MiqEmsRefreshWorker.worker_settings[:queue_timeout] || 60.minutes }
@@ -70,14 +70,12 @@ module EmsRefresh
             when t.respond_to?(:manager)               then t.manager
             else                                            t
             end
-      next if ems.nil? # archived Vm
-      ems.kind_of?(EmsVmware) ? "vc" : ems.emstype.to_s
+      ems.refresher if ems.respond_to?(:refresher)
     end
 
     # Do the refreshes
-    groups.each do |g, group_targets|
-      next if g.nil?
-      self::Refreshers.const_get("#{g.to_s.camelize}Refresher").refresh(group_targets)
+    groups.each do |refresher, group_targets|
+      refresher.refresh(group_targets) if refresher
     end
   end
 
@@ -173,7 +171,7 @@ module EmsRefresh
   #
 
   def self.reconfig_refresh(vm)
-    EmsRefresh::Refreshers::VcRefresher.reconfig_refresh(vm)
+    ManageIQ::Providers::Vmware::InfraManager::Refresher.reconfig_refresh(vm)
   end
 
   def self.reconfig_save_vm_inventory(vm, hashes)

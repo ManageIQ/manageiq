@@ -1008,7 +1008,7 @@ class Host < ActiveRecord::Base
           $log.warn "#{log_header} Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{self.authentication_userid(:ws)}] because #{err.message}"
         end
       end
-      self.type = %w(esx esxi).include?(self.vmm_product.to_s.downcase) ? "HostVmwareEsx" : "HostVmware"
+      self.type = %w(esx esxi).include?(self.vmm_product.to_s.downcase) ? "ManageIQ::Providers::Vmware::InfraManager::HostEsx" : "ManageIQ::Providers::Vmware::InfraManager::Host"
     elsif ost.hypervisor.include?(:ipmi)
       find_method       = :find_by_ipmi_address
       self.name         = "IPMI (#{ipaddr})"

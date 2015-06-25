@@ -4,7 +4,7 @@ module MiqAeServiceVmSpec
   describe MiqAeMethodService::MiqAeServiceVm do
 
     let(:vm)         { FactoryGirl.create(:vm_vmware, :name => "template1", :location => "abc/abc.vmx") }
-    let(:service_vm) { MiqAeMethodService::MiqAeServiceVmVmware.find(vm.id) }
+    let(:service_vm) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.find(vm.id) }
 
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',

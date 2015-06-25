@@ -71,14 +71,14 @@ describe ApplicationController do
 
     it "should return restricted view yaml for restricted user" do
       @test_user_role[:settings] = {:restrictions => {:vms => :user_or_group}}
-      view_yaml = controller.send(:view_yaml_filename, "VmCloud", {})
+      view_yaml = controller.send(:view_yaml_filename, VmCloud.name, {})
       view_yaml.should include("Vm__restricted.yaml")
     end
 
     it "should return VmCloud view yaml for non-restricted user" do
       @test_user_role[:settings] = {}
-      view_yaml = controller.send(:view_yaml_filename, "VmCloud", {})
-      view_yaml.should include("VmCloud.yaml")
+      view_yaml = controller.send(:view_yaml_filename, VmCloud.name, {})
+      view_yaml.should include("ManageIQ_Providers_CloudManager_Vm.yaml")
     end
   end
 

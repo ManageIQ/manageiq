@@ -91,7 +91,8 @@ module Metric::Capture::Vim
       raise
     end
 
-    #TODO: Move this to some generic parsing class, such as EmsRefresh::Parsers::Vc
+    #TODO: Move this to some generic parsing class, such as
+    #ManageIQ::Providers::Vmware::InfraManager::RefreshParser
     results = counter_info.each_with_object({}) do |(id, c), h|
       group    = c.fetch_path('groupInfo', 'key').to_s.downcase
       name     = c.fetch_path('nameInfo', 'key').to_s.downcase

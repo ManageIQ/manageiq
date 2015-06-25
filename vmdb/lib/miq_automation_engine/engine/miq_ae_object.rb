@@ -191,7 +191,7 @@ module MiqAeEngine
       when 'Fixnum'                   then xml.Fixnum   value
       when 'Symbol'                   then xml.Symbol   value.to_s
       when 'TrueClass', 'FalseClass'  then xml.Boolean  value.to_s
-      when /MiqAeMethodService::(.*)/ then xml.tag!($1, :object_id => value.object_id, :id => value.id)
+      when /MiqAeMethodService::(.*)/ then xml.tag!($1.gsub(/::/, '-'), :object_id => value.object_id, :id => value.id)
       when 'Array'                    then xml.Array  {
         value.each_index { |i|
           xml.Element(:index => i+1) { attribute_value_to_xml(value[i], xml) }
@@ -206,7 +206,7 @@ module MiqAeEngine
         $miq_ae_logger.error "Found DRbUnknown for value: #{value.inspect} in XML: #{xml.inspect}"
         xml.String value
       else
-        xml.tag!(value.class.to_s) { xml.cdata! value.inspect }
+        xml.tag!(value.class.to_s.gsub(/::/, '-')) { xml.cdata! value.inspect }
       end
     end
 
@@ -599,10 +599,9 @@ module MiqAeEngine
       return value.gsub(/[\[\]]/,'').strip.split(/\s*,\s*/)  if datatype == 'array' && value.class == String
       return MiqAePassword.new(MiqAePassword.decrypt(value)) if datatype == 'password'
 
-      begin
-        service_model = MiqAeMethodService.const_get("MiqAeService#{SM_LOOKUP[datatype]}")
+      if datatype &&
+          (service_model = "MiqAeMethodService::MiqAeService#{SM_LOOKUP[datatype]}".safe_constantize)
         return service_model.find(value)
-      rescue NameError
       end
 
       # default datatype => 'string'

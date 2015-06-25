@@ -47,7 +47,7 @@
       exp: 
         "=":
           field: Vm-type
-          value: VmVmware
+          value: ManageIQ::Providers::Vmware::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
@@ -445,7 +445,7 @@
       exp:
         "=":
           field: MiqTemplate-type
-          value: TemplateVmware
+          value: ManageIQ::Providers::Vmware::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: MiqTemplate
@@ -604,7 +604,7 @@
       exp:
         "=":
           field: TemplateInfra-type
-          value: TemplateVmware
+          value: ManageIQ::Providers::Vmware::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: TemplateInfra
@@ -1056,7 +1056,7 @@
       exp:
         "=":
           field: VmInfra-type
-          value: VmVmware
+          value: ManageIQ::Providers::Vmware::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: VmInfra

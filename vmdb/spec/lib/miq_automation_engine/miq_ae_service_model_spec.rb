@@ -5,15 +5,15 @@ module MiqAeServiceModelSpec
   describe MiqAeMethodService::MiqAeServiceVm do
     before(:each) do
       @vm = FactoryGirl.create(:vm_vmware)
-      @ae_vm = MiqAeMethodService::MiqAeServiceVmVmware.new(@vm.id)
+      @ae_vm = MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.new(@vm.id)
     end
 
     it ".base_model" do
-      MiqAeMethodService::MiqAeServiceVmVmware.base_model.should == MiqAeMethodService::MiqAeServiceVm
+      MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.base_model.should == MiqAeMethodService::MiqAeServiceVm
     end
 
     it ".base_class" do
-      MiqAeMethodService::MiqAeServiceVmVmware.base_class.should == MiqAeMethodService::MiqAeServiceVmOrTemplate
+      MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.base_class.should == MiqAeMethodService::MiqAeServiceVmOrTemplate
     end
 
     it "vm should be valid" do

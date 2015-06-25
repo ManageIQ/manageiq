@@ -28,7 +28,7 @@ class VmdbStorageBridge
 
     $log.info "VmdbStorageBridge.collectData entered"
 
-    EmsVmware.where(:zone_id => @zone).find_each do |ems|
+    ManageIQ::Providers::Vmware::InfraManager.where(:zone_id => @zone).find_each do |ems|
       $log.info "VmdbStorageBridge.collectData: found EmsVmware #{ems.hostname}"
       begin
         begin

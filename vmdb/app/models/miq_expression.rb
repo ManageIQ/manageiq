@@ -15,11 +15,11 @@ class MiqExpression
     Container
     ContainerGroup
     ContainerNode
-    EmsCloud
+    ManageIQ::Providers::CloudManager
     EmsCluster
     EmsClusterPerformance
     EmsEvent
-    EmsInfra
+    ManageIQ::Providers::InfraManager
     ExtManagementSystem
     Flavor
     Host
@@ -46,13 +46,13 @@ class MiqExpression
     Storage
     StorageFile
     StoragePerformance
-    TemplateCloud
-    TemplateInfra
+    ManageIQ::Providers::CloudManager::Template
+    ManageIQ::Providers::InfraManager::Template
     User
     VimPerformanceTrend
     Vm
-    VmCloud
-    VmInfra
+    ManageIQ::Providers::CloudManager::Vm
+    ManageIQ::Providers::InfraManager::Vm
     VmPerformance
     Zone
   }
@@ -212,9 +212,9 @@ class MiqExpression
   }
 
   TAG_CLASSES = {
-    'EmsCloud'            => 'ext_management_system',
+    'ManageIQ::Providers::CloudManager'            => 'ext_management_system',
     'EmsCluster'          => 'ems_cluster',
-    'EmsInfra'            => 'ext_management_system',
+    'ManageIQ::Providers::InfraManager'            => 'ext_management_system',
     'ExtManagementSystem' => 'ext_management_system',
     'Host'                => 'host',
     'MiqGroup'            => 'miq_group',
@@ -223,16 +223,16 @@ class MiqExpression
     'ResourcePool'        => 'resource_pool',
     'Service'             => 'service',
     'Storage'             => 'storage',
-    'TemplateCloud'       => 'miq_template',
-    'TemplateInfra'       => 'miq_template',
+    'ManageIQ::Providers::CloudManager::Template'       => 'miq_template',
+    'ManageIQ::Providers::InfraManager::Template'       => 'miq_template',
     'User'                => 'user',
     'Vm'                  => 'vm',
     'VmOrTemplate'        => 'vm',
-    'VmCloud'             => 'vm',
-    'VmInfra'             => 'vm',
+    'ManageIQ::Providers::CloudManager::Vm'             => 'vm',
+    'ManageIQ::Providers::InfraManager::Vm'             => 'vm',
   }
   EXCLUDE_FROM_RELATS = {
-    "EmsCloud" => ["hosts", "ems_clusters", "resource_pools"]
+    "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]
   }
 
   FORMAT_SUB_TYPES = {

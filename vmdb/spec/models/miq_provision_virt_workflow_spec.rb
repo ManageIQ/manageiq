@@ -76,7 +76,7 @@ describe MiqProvisionVirtWorkflow do
         @host1_dvs = {'pg1' => ['switch1'],  'pg2' => ['switch2']}
         @host1_dvs_hash    = {'dvs_pg1' => 'pg1 (switch1)',
                               'dvs_pg2' => 'pg2 (switch2)'}
-        EmsVmware.any_instance.stub(:connect)
+        ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:connect)
         workflow.stub(:get_host_dvs).with(@host1, nil).and_return(@host1_dvs)
       end
 

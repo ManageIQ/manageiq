@@ -165,14 +165,34 @@ class MiqWorker < ActiveRecord::Base
   end
 
   # Convert the Models name from MiqGenericWorker to :generic_worker
-  def self.corresponding_helper
-    @corresponding_helper ||= self == MiqWorker ? :worker_base  : self.name.underscore[4..-1].to_sym
+  def self.settings_name
+    @settings_name ||=
+      if parent == ManageIQ::Providers::BaseManager
+        normalized_type.to_sym
+      elsif parent.parent == ManageIQ::Providers
+        :"#{normalized_type}_#{parent.name.demodulize.sub(/Manager$/, '').underscore}"
+      elsif parent != Object
+        :"#{normalized_type}_#{parent.parent.name.demodulize.underscore}"
+      elsif self == MiqWorker
+        :worker_base
+      else
+        self.name.underscore[4..-1].to_sym
+      end
+  end
+
+  def self.corresponding_runner
+    @corresponding_runner ||=
+      if const_defined?(:Runner)
+        self::Runner.name
+      else
+        settings_name.to_s.camelize
+      end
   end
 
   # Grab all the classes in the hierarchy but ActiveRecord::Base and Object (and BasicObject on 1.9)
   def self.path_to_my_worker_settings
     excluded = %w(ActiveRecord::Base Object BasicObject)
-    @path_to_my_worker_settings ||= self.hierarchy.reject {|c| excluded.include?(c.name)}.reverse.collect(&:corresponding_helper)
+    @path_to_my_worker_settings ||= self.hierarchy.reject {|c| excluded.include?(c.name)}.reverse.collect(&:settings_name)
   end
 
   def self.fetch_worker_settings_from_server(miq_server, options = {})
@@ -493,7 +513,7 @@ class MiqWorker < ActiveRecord::Base
 
     cl = "#{self.nice_prefix} #{Gem.ruby}"
     cl << " " << File.join(rr, "bin/rails runner")
-    cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self.corresponding_helper}")
+    cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self.corresponding_runner}")
     cl << " " << self.name
     params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
 

@@ -54,7 +54,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
 
         context "with no proxies for job, " do
           before(:each) do
-            VmVmware.any_instance.stub(:proxies4job => {:proxies => [], :message => "blah"} )
+            ManageIQ::Providers::Vmware::InfraManager::Vm.any_instance.stub(:proxies4job => {:proxies => [], :message => "blah"} )
           end
 
           it "should return an empty array" do

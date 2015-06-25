@@ -64,12 +64,12 @@ class EmsCluster < ActiveRecord::Base
   # TODO: Vmware specific - Fix when we subclass EmsCluster
 
   def provider_object(connection)
-    raise NotImplementedError unless self.ext_management_system.kind_of?(EmsVmware)
+    raise NotImplementedError unless self.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     connection.getVimClusterByMor(self.ems_ref_obj)
   end
 
   def provider_object_release(handle)
-    raise NotImplementedError unless self.ext_management_system.kind_of?(EmsVmware)
+    raise NotImplementedError unless self.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     handle.release if handle rescue nil
   end
 

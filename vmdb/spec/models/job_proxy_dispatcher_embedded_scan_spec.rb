@@ -56,7 +56,7 @@ module JobProxyDispatcherEmbeddedScanSpec
         MiqServer.any_instance.stub(:is_vix_disk? => true)
         MiqServer.any_instance.stub(:is_a_proxy? => true)
         MiqServer.any_instance.stub(:has_active_role? => true)
-        EmsVmware.any_instance.stub(:authentication_status_ok? => true)
+        ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_status_ok? => true)
         Host.any_instance.stub(:authentication_status_ok? => true)
 
         @hosts, @proxies, @storages, @vms, @repo_vms = self.build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
@@ -72,7 +72,7 @@ module JobProxyDispatcherEmbeddedScanSpec
 
         context "and embedded scans on ems" do
           before(:each) do
-            VmVmware.stub(:scan_via_ems?).and_return(true)
+            ManageIQ::Providers::Vmware::InfraManager::Vm.stub(:scan_via_ems?).and_return(true)
           end
 
           context "and scans against ems limited to 2 and up to 10 scans per miqserver" do
@@ -120,7 +120,7 @@ module JobProxyDispatcherEmbeddedScanSpec
 
         context "and embedded scans on hosts" do
           before(:each) do
-            VmVmware.stub(:scan_via_ems?).and_return(false)
+            ManageIQ::Providers::Vmware::InfraManager::Vm.stub(:scan_via_ems?).and_return(false)
           end
 
           context "and scans against host limited to 2 and up to 10 scans per miqserver" do

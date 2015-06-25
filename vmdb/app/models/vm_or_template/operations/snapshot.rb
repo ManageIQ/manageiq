@@ -98,7 +98,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def remove_snapshot_by_description(description, refresh=false, retry_time=nil)
-    if (self.ext_management_system.kind_of?(EmsVmware) && EmsVmware.use_vim_broker? && MiqVimBrokerWorker.available?) || self.host.nil? || self.host.state == "on"
+    if (self.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager) && ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && MiqVimBrokerWorker.available?) || self.host.nil? || self.host.state == "on"
       raw_remove_snapshot_by_description(description, refresh)
     else
       raise "The VM's Host system is unavailable to remove the snapshot.  VM id:[#{self.id}]  Snapshot description:[#{description}]" if retry_time.nil?

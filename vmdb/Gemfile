@@ -79,6 +79,8 @@ gem "uglifier",                       "~>2.4.0",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
 
+gem 'ruby_parser',                  :require => false
+
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
 # Only add gems here that we do not need on an appliance.
@@ -90,12 +92,10 @@ unless ENV['APPLIANCE']
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
     # used for finding translations
     gem "gettext",          "3.1.4",    :require => false
-    # used for finding translations inside HAML
-    gem 'ruby_parser',                  :require => false
   end
 
   group :test do
-    gem "brakeman",         "~>2.0",    :require => false
+    gem "brakeman",         "~>3.0",    :require => false
 
     gem "shoulda-matchers", "~>1.0.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false

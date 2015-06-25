@@ -4,7 +4,7 @@ class MiqEmsRefreshCoreWorker < MiqWorker
   self.required_roles = ["ems_inventory"]
 
   def self.ems_class
-    EmsVmware
+    ManageIQ::Providers::Vmware::InfraManager
   end
 
   def friendly_name

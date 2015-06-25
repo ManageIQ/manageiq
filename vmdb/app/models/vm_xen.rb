@@ -1,2 +1,2 @@
-class VmXen < VmInfra
+class VmXen < ManageIQ::Providers::InfraManager::Vm
 end

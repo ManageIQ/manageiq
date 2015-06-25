@@ -120,12 +120,12 @@ describe ApplicationHelper do
 
   describe "#object_types_for_flash_message" do
     before do
-      @record_1 = FactoryGirl.create(:vm_openstack, :type => "VmOpenstack",       :template => false )
-      @record_2 = FactoryGirl.create(:vm_openstack, :type => "VmOpenstack",       :template => false )
-      @record_3 = FactoryGirl.create(:vm_openstack, :type => "TemplateOpenstack", :template => true )
-      @record_4 = FactoryGirl.create(:vm_openstack, :type => "TemplateOpenstack", :template => true )
-      @record_5 = FactoryGirl.create(:vm_redhat,    :type => "VmRedhat")
-      @record_6 = FactoryGirl.create(:vm_vmware,    :type => "VmVmware")
+      @record_1 = FactoryGirl.create(:vm_openstack, :type => VmOpenstack.name,       :template => false )
+      @record_2 = FactoryGirl.create(:vm_openstack, :type => VmOpenstack.name,       :template => false )
+      @record_3 = FactoryGirl.create(:vm_openstack, :type => TemplateOpenstack.name, :template => true )
+      @record_4 = FactoryGirl.create(:vm_openstack, :type => TemplateOpenstack.name, :template => true )
+      @record_5 = FactoryGirl.create(:vm_redhat,    :type => VmRedhat.name)
+      @record_6 = FactoryGirl.create(:vm_vmware,    :type => ManageIQ::Providers::Vmware::InfraManager::Vm.name)
     end
 
     context "when formatting flash message for VM or Templates class" do
@@ -2024,7 +2024,7 @@ describe ApplicationHelper do
         end
 
         it "record is cloneable" do
-          @record =  MiqTemplate.create(:type     => "TemplateVmware",
+          @record =  MiqTemplate.create(:type     => "ManageIQ::Providers::Vmware::InfraManager::Template",
                                         :name     => "vm",
                                         :location => "loc2",
                                         :vendor   => "vmware")
@@ -2248,7 +2248,7 @@ describe ApplicationHelper do
 
       context "when @record != EmsOpenstackInfra" do
         before do
-          @record = EmsVmware.new
+          @record = ManageIQ::Providers::Vmware::InfraManager.new
         end
 
         it "user allowed but hide button because wrong provider" do
@@ -2994,7 +2994,7 @@ describe ApplicationHelper do
       end
 
       it "and with 'VmOrTemplate'" do
-        record = TemplateVmware.new
+        record = ManageIQ::Providers::Vmware::InfraManager::Template.new
         get_record_cls(record).should eql(record.class.base_model.to_s)
       end
 

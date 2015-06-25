@@ -13,13 +13,13 @@ describe EmsRefreshCoreWorker do
     described_class.any_instance.stub(:sync_config)
     described_class.any_instance.stub(:set_connection_pool_size)
     described_class.any_instance.stub(:heartbeat_using_drb?).and_return(false)
-    EmsVmware.any_instance.stub(:authentication_check).and_return([true, ""])
+    ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_check).and_return([true, ""])
 
     @worker = EmsRefreshCoreWorker.new({:guid => @worker_record.guid, :ems_id => @ems.id})
   end
 
   context "#process_update" do
-    context "against a VmVmware" do
+    context "against a ManageIQ::Providers::Vmware::InfraManager::Vm" do
       before(:each) do
         Timecop.travel(1.day.ago) do
           @vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :raw_power_state => "unknown")
@@ -148,7 +148,7 @@ describe EmsRefreshCoreWorker do
       end
     end
 
-    context "against a TemplateVmware" do
+    context "against a ManageIQ::Providers::Vmware::InfraManager::Template" do
       before(:each) do
         Timecop.travel(1.day.ago) do
           @template = FactoryGirl.create(:template_vmware_with_ref, :ext_management_system => @ems)

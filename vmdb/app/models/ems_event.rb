@@ -85,7 +85,7 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.add_vc(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::Vc.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Vmware::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_rhevm(ems_id, event)

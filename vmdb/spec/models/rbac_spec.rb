@@ -154,12 +154,12 @@ describe Rbac do
       end
 
       it "honors ems_id conditions" do
-        results = Rbac.search(:class => "TemplateVmware", :conditions => ["ems_id IS NULL"], :results_format => :objects)
+        results = Rbac.search(:class => "ManageIQ::Providers::Vmware::InfraManager::Template", :conditions => ["ems_id IS NULL"], :results_format => :objects)
         objects = results.first
         objects.should == []
 
         @template.update_attributes(:ext_management_system => nil)
-        results = Rbac.search(:class => "TemplateVmware", :conditions => ["ems_id IS NULL"], :results_format => :objects)
+        results = Rbac.search(:class => "ManageIQ::Providers::Vmware::InfraManager::Template", :conditions => ["ems_id IS NULL"], :results_format => :objects)
         objects = results.first
         objects.should == [@template]
       end

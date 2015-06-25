@@ -1176,7 +1176,7 @@ class VmOrTemplate < ActiveRecord::Base
     #   available, to determine the VM create time
     ems = vms_to_update.first.ext_management_system
     #TODO: Vmware specific
-    return unless ems && ems.kind_of?(EmsVmware)
+    return unless ems && ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
 
     vms_list = vms_to_update.collect { |v| {:id => v.id, :name => v.name, :uid_ems => v.uid_ems} }
     found = ems.find_vm_create_events(vms_list)

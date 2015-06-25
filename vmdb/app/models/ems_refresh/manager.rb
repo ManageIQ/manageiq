@@ -13,5 +13,13 @@ module EmsRefresh
         self.class.ems_type
       end
     end
+
+    def refresher
+      if defined?(self.class::Refresher) && self.class::Refresher != BaseManager::Refresher
+        self.class::Refresher
+      else
+        ::EmsRefresh::Refreshers.const_get("#{emstype.to_s.camelize}Refresher")
+      end
+    end
   end
 end
