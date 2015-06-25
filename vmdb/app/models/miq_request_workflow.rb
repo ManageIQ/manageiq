@@ -47,7 +47,7 @@ class MiqRequestWorkflow
   def instance_var_init(values, requester, options)
     @values       = values
     @filters      = {}
-    @requester    = MiqLdap.using_ldap? ? User.find_or_create_by_ldap_upn(requester) : User.find_by_userid(requester)
+    @requester    = User.lookup_by_identity(requester)
     @values.merge!(options) unless options.blank?
   end
 

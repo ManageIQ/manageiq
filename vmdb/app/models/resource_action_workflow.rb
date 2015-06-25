@@ -7,7 +7,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   def initialize(values, requester, resource_action, options={})
     @settings        = {}
-    @requester       = MiqLdap.using_ldap? ? User.find_or_create_by_ldap_upn(requester) : User.find_by_userid(requester)
+    @requester       = User.lookup_by_identity(requester)
     @target          = options[:target]
     @dialog          = load_dialog(resource_action, values)
 

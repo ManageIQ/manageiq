@@ -24,10 +24,21 @@ class EmsAmazon < EmsCloud
   # Connections
   #
 
-  def self.raw_connect(access_key_id, secret_access_key, service = nil, region = nil, proxy_uri = nil)
+  def self.raw_connect(access_key_id, secret_access_key, service, region = nil, proxy_uri = nil)
     service   ||= "EC2"
     proxy_uri ||= VMDB::Util.http_proxy_uri
-    AmazonConnection.raw_connect(access_key_id, secret_access_key, service, region, proxy_uri)
+
+    require 'aws-sdk'
+    AWS.const_get(service).new(
+      :access_key_id => access_key_id,
+      :secret_access_key => secret_access_key,
+      :region => region,
+      :proxy_uri => proxy_uri,
+
+      :logger        => $aws_log,
+      :log_level     => :debug,
+      :log_formatter => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp)
+    )
   end
 
   def browser_url
@@ -176,7 +187,7 @@ class EmsAmazon < EmsCloud
     known_emses = all_emses.select { |e| e.authentication_userid == access_key_id }
     known_ems_regions = known_emses.index_by(&:provider_region)
 
-    ec2 = raw_connect(access_key_id, secret_access_key)
+    ec2 = raw_connect(access_key_id, secret_access_key, "EC2")
     ec2.regions.each do |region|
       next if known_ems_regions.include?(region.name)
       next if region.instances.count == 0 &&                 # instances

@@ -1,5 +1,3 @@
-require 'Amazon/amazon_connection'
-
 #
 # Uses the AWS Config service to monitor for events.
 #
@@ -155,10 +153,24 @@ class AmazonEventMonitor
   end
 
   def sns
-    @sns ||= AmazonConnection.sns(@aws_access_key_id, @aws_secret_access_key, @aws_region)
+    @sns ||= aws_connect(:SNS)
   end
 
   def sqs
-    @sqs ||= AmazonConnection.sqs(@aws_access_key_id, @aws_secret_access_key, @aws_region)
+    @sqs ||= aws_connect(:SQS)
+  end
+
+  def aws_connect(service)
+    require 'aws-sdk'
+
+    AWS.const_get(service).new(
+      :access_key_id     => @aws_access_key_id,
+      :secret_access_key => @aws_secret_access_key,
+      :region            => @aws_region,
+
+      :logger            => $aws_log,
+      :log_level         => :debug,
+      :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp),
+    )
   end
 end

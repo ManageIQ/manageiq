@@ -726,7 +726,7 @@ module VmdbwsOps
 
   def VmSetOwner(vmGuid, owner)
     vm = FindVmByGuid(vmGuid)
-    user = User.find_or_create_by_ldap_upn(owner)
+    user = User.lookup_by_identity(owner)
     vm.evm_owner = user
     vm.miq_group = user.current_group unless user.nil?
     vm.save!

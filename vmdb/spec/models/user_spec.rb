@@ -229,7 +229,7 @@ describe User do
       before(:each) do
         @fq_user = "thin1@manageiq.com"
         @task = MiqTask.create(:name => "LDAP User Authorization of '#{@fq_user}'", :userid => @fq_user)
-        auth_config =
+        @auth_config =
           {:authentication =>
             {:ldapport=>"389",
               :basedn=>"dc=manageiq,dc=com",
@@ -246,7 +246,7 @@ describe User do
             }
           }
         vmdb_config = double("vmdb_config")
-        vmdb_config.stub(:config => auth_config)
+        vmdb_config.stub(:config => @auth_config)
         VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
         @miq_ldap = double('miq_ldap')
         @miq_ldap.stub(:bind => false)
@@ -254,10 +254,12 @@ describe User do
 
       it "will fail task if user object not found in ldap" do
         @miq_ldap.stub(:get_user_object => nil)
-        MiqLdap.stub(:new).and_return(@miq_ldap)
 
         AuditEvent.should_receive(:failure).once
-        User.authorize_ldap(@task.id, @fq_user).should be_nil
+        authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
+        authenticate.stub(:ldap => @miq_ldap)
+
+        authenticate.authorize(@task.id, @fq_user).should be_nil
 
         @task.reload
         @task.state.should == "Finished"
@@ -269,11 +271,13 @@ describe User do
         @miq_ldap.stub(:get_user_object => "user object")
         @miq_ldap.stub(:get_attr => nil)
         @miq_ldap.stub(:normalize => "a-username")
-        MiqLdap.stub(:new).and_return(@miq_ldap)
-        User.stub(:getUserMembership).and_return([])
+
+        authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
+        authenticate.stub(:ldap => @miq_ldap)
+        authenticate.stub(:groups_for => [])
 
         AuditEvent.should_receive(:failure).once
-        User.authorize_ldap(@task.id, @fq_user).should be_nil
+        authenticate.authorize(@task.id, @fq_user).should be_nil
 
         @task.reload
         @task.state.should == "Finished"

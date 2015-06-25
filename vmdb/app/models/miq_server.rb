@@ -707,4 +707,11 @@ class MiqServer < ActiveRecord::Base
   def display_name
     "#{name} [#{id}]"
   end
+
+  def permitted_groups
+    groups = miq_groups.order(:sequence).to_a
+    groups = zone.miq_groups.order(:sequence).to_a if groups.empty?
+    groups = MiqGroup.where(:resource_id => nil, :resource_type => nil).order(:sequence).to_a if groups.empty?
+    groups
+  end
 end #class MiqServer

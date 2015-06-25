@@ -214,7 +214,7 @@ module OpsController::Settings::Common
       @validate.config[category] = @edit[:new][category].dup
     end
 
-    valid, errors = AmazonAuth.validate_connection(@validate.config)
+    valid, errors = Authenticator::Amazon.validate_connection(@validate.config)
     if valid
       add_flash(_("Amazon Settings validation was successful"))
     else
