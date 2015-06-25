@@ -38,6 +38,12 @@ module OpenstackHandle
                     err.message.include?("unknown protocol (OpenSSL::SSL::SSLError)"))
       # attempt the same connection without SSL
       yield "http", {}
+    rescue MiqException::ServiceNotAvailable => err
+      # For some reason Ironic raises #<ArgumentError: openstack has no baremetal service>, when SSL is missing, which
+      # is different behaviour than the others, which raises SocketError. We are re-raising
+      # MiqException::ServiceNotAvailable, so just catch that. If it's really missing service, it will be raised again
+      # for non ssl
+      yield "http", {}
     end
 
     def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil)
