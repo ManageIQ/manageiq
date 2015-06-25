@@ -100,9 +100,6 @@ class MiqReportResult < ActiveRecord::Base
     self.update_attributes(:userid => userid, :report_source => "Saved by user")
   end
 
-  # Encapsulate report in an array to prevent AR from serializing it as its ID
-  # => See line 8 of vendor/gems/activerecord-2.2.2/lib/active_record/connection_adapters/abstract/quoting.rb -
-  # => "records are quoted as their primary key"
   def report
     val = read_attribute(:report)
     return if val.nil?

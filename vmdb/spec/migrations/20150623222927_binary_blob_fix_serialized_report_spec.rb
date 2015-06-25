@@ -8,13 +8,11 @@ describe BinaryBlobFixSerializedReport do
   migration_context :up do
     before(:each) do
       @raw_report = File.read(File.join(data_dir, 'miq_report_obj.yaml'))
-      # BinaryBlob.any_instance.stub(:binary).and_return(@raw_report)
     end
 
     it "migrates existing reports serialized as MiqReport objects to Hashes" do
       bb = binary_blob.create!(
           :resource_type => "MiqReportResult",
-          # :resource_id => 7,
           :md5 => "b540c6aec8a7726c1154d71c06017150",
           :size => 67124,
           :part_size => 1048576,
@@ -40,7 +38,6 @@ describe BinaryBlobFixSerializedReport do
     it "migrates existing reports serialized as Hashes objects to MiqReports" do
       bb = binary_blob.create!(
           :resource_type => "MiqReportResult",
-          # :resource_id => 7,
           :md5 => "b540c6aec8a7726c1154d71c06017150",
           :size => 67124,
           :part_size => 1048576,

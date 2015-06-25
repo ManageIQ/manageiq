@@ -23,7 +23,12 @@ class MiqReportResultFixSerializedReport < ActiveRecord::Migration
       val = read_attribute(:report)
 
       if val.starts_with?("---")
-        YAML.dump([MiqReport.new(YAML.load(val))])
+        new_hash = {'attributes' => {}}
+        YAML.load(val).each do |k,v|
+          YAML_ATTRS.include?(k.to_sym) ? new_hash[k.to_s] = v : new_hash['attributes'][k.to_s] = v
+        end
+
+        YAML.dump([new_hash]).sub(/---\n- attributes:/, "---\n- !ruby/object:MiqReport\n  attributes:")
       else
         raise "unexpected format of report attribute encountered, '#{val.inspect}'"
       end

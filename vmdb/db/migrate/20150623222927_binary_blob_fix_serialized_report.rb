@@ -24,7 +24,12 @@ class BinaryBlobFixSerializedReport < ActiveRecord::Migration
     def serialize_hash_to_report
       val = binary
       if val.starts_with?("---")
-        YAML.dump(MiqReport.new(YAML.load(val)))
+        new_hash = {'attributes' => {}}
+        YAML.load(val).each do |k,v|
+          YAML_ATTRS.include?(k.to_sym) ? new_hash[k.to_s] = v : new_hash['attributes'][k.to_s] = v
+        end
+
+        YAML.dump(new_hash).sub(/---/, "--- !ruby/object:MiqReport")
       else
         raise "unexpected format of report attribute encountered, '#{val.inspect}'"
       end
