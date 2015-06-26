@@ -905,6 +905,12 @@ class ProviderForemanController < ApplicationController
     @grid_xml = view_to_xml(@view, 0, -1, :association => nil)
   end
 
+  def process_show_list(options = {})
+    options[:dbname] = :cm_providers if x_active_accord == :foreman_providers
+    options[:dbname] = :cm_configured_systems if x_active_accord == :cs_filter
+    super
+  end
+
   def set_root_node
     self.x_node = "root"
     get_node_info(x_node)
