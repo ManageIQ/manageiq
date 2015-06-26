@@ -36,7 +36,7 @@ module MiqAeEngine
   end
 
   class MiqAeWorkspaceRuntime
-    attr_accessor :graph, :num_drb_methods, :class_methods 
+    attr_accessor :graph, :num_drb_methods, :class_methods
     attr_accessor :datastore_cache, :persist_state_hash, :current_state_info
     include MiqAeStateInfo
 
@@ -148,7 +148,7 @@ module MiqAeEngine
           if obj.state_machine?
             save_current_state_info(@state_machine_objects.last) unless @state_machine_objects.empty?
             @state_machine_objects.push(obj.object_name)
-                                    reset_state_info(obj.object_name)
+            reset_state_info(obj.object_name)
           end
 
           obj.process_assertions(message)
@@ -185,13 +185,13 @@ module MiqAeEngine
 
     def pop_state_machine_info
       last_state_machine = @state_machine_objects.pop
-        case root['ae_result']
-          when 'ok' then
-            @current_state_info.delete(last_state_machine)
-          when 'retry' then
-             save_current_state_info(last_state_machine)
-          end
-          reset_state_info(@state_machine_objects.last) unless @state_machine_objects.empty?
+      case root['ae_result']
+      when 'ok' then
+        @current_state_info.delete(last_state_machine)
+      when 'retry' then
+        save_current_state_info(last_state_machine)
+      end
+      reset_state_info(@state_machine_objects.last) unless @state_machine_objects.empty?
     end
 
     def to_expanded_xml(path=nil)
