@@ -39,7 +39,7 @@
               %td.narrow
                 %img{:src => "/images/icons/new/miq_server.png"}/
               %td
-                - if @sb[:my_server_id] == s.id
+                - if my_server_id == s.id
                   %b
                     = h(ui_lookup(:model=>s.class.to_s))
                     \: #{h(s.name)} [#{h(s.id)}] (current)

@@ -2921,5 +2921,17 @@ module ApplicationHelper
     !%w(accordion_select tree_select).include?(action_name)
   end
 
+  def my_server_id
+    my_server.id
+  end
+
+  def my_zone_name
+    my_server.my_zone
+  end
+
+  def my_server
+    @my_server ||= MiqServer.my_server(true)
+  end
+
   attr_reader :big_iframe
 end

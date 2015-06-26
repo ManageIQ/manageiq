@@ -127,14 +127,14 @@ class OpsController < ApplicationController
       self.x_active_accord ||= 'diagnostics'
       self.x_active_tree   ||= 'diagnostics_tree'
       @built_trees << diagnostics_build_tree
-      x_node_set("svr-#{to_cid(@sb[:my_server_id])}", :diagnostics_tree) unless x_node(:diagnostics_tree)
+      x_node_set("svr-#{to_cid(my_server_id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
       @sb[:active_tab] ||= "diagnostics_summary"
     end
     if get_vmdb_config[:product][:analytics]
       @accords.push(:name => "analytics", :title => "Analytics", :container => "analytics_tree_div")
       self.x_active_accord ||= 'analytics'
       @built_trees << analytics_build_tree
-      x_node_set("svr-#{to_cid(@sb[:my_server_id])}", :analytics_tree) unless x_node(:analytics_tree)
+      x_node_set("svr-#{to_cid(my_server_id)}", :analytics_tree) unless x_node(:analytics_tree)
     end
     if role_allows(:feature => "ops_db")
       @accords.push(:name => "vmdb", :title => "Database", :container => "vmdb_tree_div")
@@ -327,7 +327,7 @@ class OpsController < ApplicationController
         record_id = @record && @record.id ? @record.id : "new"
       else
         action_url = "old_dialogs_update"
-        record_id = @sb[:my_server_id]
+        record_id = my_server_id
       end
     elsif x_active_tree == :settings_tree
       if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
@@ -657,12 +657,12 @@ class OpsController < ApplicationController
               end
               active_id = from_cid(x_node.split("-").last)
               # server node
-              if x_node.split("-").first == "svr" && @sb[:my_server_id] == active_id.to_i
+              if x_node.split("-").first == "svr" && my_server_id == active_id.to_i
                 #show all the tabs if on current server node
                 @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
                 page << "miqOneTrans = 0;"          #resetting miqOneTrans when tab loads
                 page << "miqIEButtonPressed = true" if %w(save reset).include?(params[:button]) && is_browser_ie?
-              elsif x_node.split("-").first.split("__")[1] == "svr" && @sb[:my_server_id] != active_id.to_i
+              elsif x_node.split("-").first.split("__")[1] == "svr" && my_server_id != active_id.to_i
                 #show only 4 tabs if not on current server node
                 @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
               end

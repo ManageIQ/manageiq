@@ -752,11 +752,11 @@ module OpsController::Settings::Common
 
   def settings_set_form_vars
     if x_node.split("-").first == "z"
-      @right_cell_text = @sb[:my_zone] == @selected_zone.name ?
+      @right_cell_text = my_zone_name == @selected_zone.name ?
         _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)} :
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)}
     else
-      @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
+      @right_cell_text = my_server_id == @sb[:selected_server_id] ?
         _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)} :
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)}
     end
@@ -1042,7 +1042,7 @@ module OpsController::Settings::Common
         @servers = Array.new
         @record = @zone = @selected_zone = Zone.find(from_cid(nodes.last))
         @sb[:tab_label] = @selected_zone.description
-        @right_cell_text = @sb[:my_zone] == @selected_zone.name ?
+        @right_cell_text = my_zone_name == @selected_zone.name ?
             _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)} :
             _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)}
         MiqServer.all.each do |ms|
