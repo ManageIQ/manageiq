@@ -1,4 +1,4 @@
-class VmAmazon < VmCloud
+class VmAmazon < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
 
   def provider_object(connection = nil)

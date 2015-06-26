@@ -21,7 +21,7 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
     # Pass along the start_algorithm, the worker, and the worker's settings overriding any worker monitor settings
     base    = {:type => :start, :worker_name => worker_class.name}
     monitor = worker_monitor_settings[:start_algorithm]
-    child   = child_worker_settings.fetch_path(worker_class.corresponding_helper, :start_algorithm) || {}
+    child   = child_worker_settings.fetch_path(worker_class.settings_name, :start_algorithm) || {}
     options = base.merge(monitor).merge(child)
 
     invoke_algorithm(options)

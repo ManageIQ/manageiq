@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :vm_vmware, :class => "VmVmware", :parent => :vm_infra do
+  factory :vm_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::Vm", :parent => :vm_infra do
     location        { |x| "[storage] #{x.name}/#{x.name}.vmx" }
     vendor          "vmware"
     raw_power_state "poweredOn"

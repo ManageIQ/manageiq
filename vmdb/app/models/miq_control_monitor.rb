@@ -4,7 +4,7 @@ class MiqControlMonitor < MiqWorker
   self.required_roles = ["control"]
 
   def self.ems_class
-    EmsVmware
+    ManageIQ::Providers::Vmware::InfraManager
   end
 
   def friendly_name

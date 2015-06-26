@@ -1,4 +1,4 @@
-class VmRedhat < VmInfra
+class VmRedhat < ManageIQ::Providers::InfraManager::Vm
   include_concern 'Operations'
   include_concern 'RemoteConsole'
 

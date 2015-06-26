@@ -10,7 +10,7 @@ module MiqServer::WorkerManagement::Dequeue
   end
 
   def get_worker_dequeue_method(worker_class)
-    (@child_worker_settings[worker_class.corresponding_helper][:dequeue_method] || :drb).to_sym
+    (@child_worker_settings[worker_class.settings_name][:dequeue_method] || :drb).to_sym
   end
 
   def reset_queue_messages

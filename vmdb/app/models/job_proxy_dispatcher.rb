@@ -45,7 +45,7 @@ class JobProxyDispatcher
             next
           end
 
-          if @vm.kind_of?(VmVmware) || @vm.kind_of?(TemplateVmware)
+          if @vm.kind_of?(ManageIQ::Providers::Vmware::InfraManager::Vm) || @vm.kind_of?(ManageIQ::Providers::Vmware::InfraManager::Template)
             unless broker_available
               unless logged_broker_unavailable
                 $log.warn("MIQ(JobProxyDispatcher-dispatch) Skipping dispatch because broker is currently unavailable")

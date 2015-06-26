@@ -7,7 +7,7 @@ module VimConnectMixin
 
     options[:fault_tolerant] = true unless options.has_key?(:fault_tolerant)
 
-    options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : EmsVmware.use_vim_broker?) if options[:fault_tolerant] && !options.has_key?(:use_broker)
+    options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) if options[:fault_tolerant] && !options.has_key?(:use_broker)
     options[:check_broker_worker] = !!options[:use_broker] unless options.has_key?(:check_broker_worker)
     if options[:check_broker_worker] && !MiqVimBrokerWorker.available?
       msg = "#{log_header} Broker Worker is not available"

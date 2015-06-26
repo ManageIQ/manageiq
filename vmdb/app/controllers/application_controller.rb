@@ -1849,7 +1849,7 @@ class ApplicationController < ActionController::Base
   # Create view and paginator for a DB records with/without tags
   def get_view(db, options = {})
     db     = db.to_s
-    dbname = options[:dbname] || db.split("::").last.downcase # Get db name as text
+    dbname = options[:dbname] || db.gsub('::', '_').downcase # Get db name as text
     db_sym = dbname.to_sym                                    # Get db name as symbol
     refresh_view = false
 
@@ -1869,7 +1869,7 @@ class ApplicationController < ActionController::Base
     # Build the advanced search @edit hash
     if (@explorer && !@in_a_form && !["adv_search_clear", "tree_select"].include?(action_name)) ||
        (action_name == "show_list" && !session[:menu_click])
-      adv_search_build(db.split("::").last)
+      adv_search_build(db)
     end
     if @edit && !@edit[:selected] &&                  # Load default search if search @edit hash exists
        @settings.fetch_path(:default_search, db.to_sym) # and item in listnav not selected
@@ -1893,7 +1893,7 @@ class ApplicationController < ActionController::Base
     @gtl_type = get_view_calculate_gtl_type(options[:gtl_dbname] || db_sym)
 
     # Get the view for this db or use the existing one in the session
-    view = refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
+    view = refresh_view ? get_db_view(db.gsub('::', '_'), :association => association, :view_suffix => view_suffix) : session[:view]
 
     # Check for changed settings in params
     if params[:ppsetting]                             # User selected new per page value
@@ -2055,6 +2055,17 @@ class ApplicationController < ActionController::Base
 
   def view_yaml_filename(db, options)
     suffix = options[:association] || options[:view_suffix]
+    db = db.to_s
+
+    # Special code to build the view file name for users of VM restricted roles
+    if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
+      role = User.current_user.miq_user_role
+      if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
+        viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
+      end
+    end
+
+    db = db.gsub(/::/, '_')
 
     # Build the view file name
     if suffix
@@ -2063,14 +2074,6 @@ class ApplicationController < ActionController::Base
     else
       viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
       viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{session[:userrole]}.yaml"
-    end
-
-    # Special code to build the view file name for users of VM restricted roles
-    if %w(TemplateCloud TemplateInfra VmCloud VmInfra VmOrTemplate).include?(db)
-      role = User.current_user.miq_user_role
-      if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
-        viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
-      end
     end
 
     if viewfilerestricted && File.exist?(viewfilerestricted)

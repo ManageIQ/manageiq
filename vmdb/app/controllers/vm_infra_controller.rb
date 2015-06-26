@@ -11,6 +11,10 @@ class VmInfraController < ApplicationController
 
   skip_before_filter :set_csp_header, :only => :launch_html5_console
 
+  def self.table_name
+    @table_name ||= "vm_infra"
+  end
+
   private
 
   def features

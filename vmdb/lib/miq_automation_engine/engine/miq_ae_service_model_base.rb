@@ -75,7 +75,7 @@ module MiqAeMethodService
 
     def self.model
       # Set a class-instance variable to get the appropriate model
-      @model ||= Object.const_get(/MiqAeService(.+)$/.match(self.name)[1])
+      @model ||= Object.const_get(/MiqAeService(.+)$/.match(self.name)[1].gsub(/_/, '::'))
     end
     private_class_method :model
 
@@ -112,7 +112,7 @@ module MiqAeMethodService
         elsif results.kind_of?(ActiveRecord::Relation)
           ret = results.collect { |r| self.wrap_results(r) }
         elsif results.kind_of?(ActiveRecord::Base)
-          klass = MiqAeMethodService.const_get("MiqAeService#{results.class.name}")
+          klass = MiqAeMethodService.const_get("MiqAeService#{results.class.name.gsub(/::/, '_')}")
           ret = self.drb_return(klass.new(results))
         else
           ret = results
@@ -278,5 +278,6 @@ end
 # Register all of the service models for autoload on first use
 Dir.glob("#{File.dirname(__FILE__)}/../service_models/miq_ae_service_*.rb").each do |f|
   f = File.basename(f, '.*')
-  MiqAeMethodService.autoload(f.camelize.to_sym, "service_models/#{f}")
+  const = f.split('-').map(&:camelize).join('_')
+  MiqAeMethodService.autoload(const, "service_models/#{f}")
 end

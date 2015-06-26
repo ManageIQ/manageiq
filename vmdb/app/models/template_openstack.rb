@@ -1,4 +1,4 @@
-class TemplateOpenstack < TemplateCloud
+class TemplateOpenstack < ManageIQ::Providers::CloudManager::Template
   belongs_to :cloud_tenant
 
   has_and_belongs_to_many :cloud_tenants,

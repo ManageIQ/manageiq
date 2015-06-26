@@ -1,4 +1,4 @@
-class TemplateRedhat < TemplateInfra
+class TemplateRedhat < ManageIQ::Providers::InfraManager::Template
   def self.supports_kickstart_provisioning?
     true
   end

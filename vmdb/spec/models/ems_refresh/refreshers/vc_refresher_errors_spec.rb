@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::VcRefresher do
+describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   before(:each) do
     EmsRefresh.debug_failures = false
 
@@ -26,7 +26,7 @@ describe EmsRefresh::Refreshers::VcRefresher do
   end
 
   def refresh_ems(ems, error)
-    EmsRefresh::Refreshers::VcRefresher.any_instance.stub(:refresh_targets_for_ems).and_raise(StandardError.new(error))
+    ManageIQ::Providers::Vmware::InfraManager::Refresher.any_instance.stub(:refresh_targets_for_ems).and_raise(StandardError.new(error))
     EmsRefresh.refresh(ems)
   end
 end

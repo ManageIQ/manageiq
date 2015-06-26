@@ -1,4 +1,4 @@
-class VmOpenstack < VmCloud
+class VmOpenstack < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
   include_concern 'RemoteConsole'
 

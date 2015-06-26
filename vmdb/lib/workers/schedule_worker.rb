@@ -571,6 +571,8 @@ class ScheduleWorker < WorkerBase
     config = VMDB::Config.new("vmdb").config.fetch(:ems_refresh, {})
 
     ExtManagementSystem.leaf_subclasses.each.with_object({}) do |klass, hash|
+      next unless klass.ems_type
+
       every   = config.fetch_path(klass.ems_type.to_sym, :refresh_interval)
       every ||= config.fetch(:refresh_interval, 24.hours)
 

@@ -98,7 +98,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
             context "a vm template and invalid VC authentication" do
               before(:each) do
-                EmsVmware.any_instance.stub(:missing_credentials? => true)
+                ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:missing_credentials? => true)
                 @vm.stub(:template? => true)
                 @ems1 = FactoryGirl.create(:ems_vmware, :name => "Ems1")
                 @vm.ext_management_system = @ems1

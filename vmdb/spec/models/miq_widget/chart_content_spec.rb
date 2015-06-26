@@ -25,13 +25,13 @@ describe "Widget Chart Content" do
 
   it "#generate_content_for_user" do
     content = widget.generate_one_content_for_user(@group, @user)
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(VmVmware.count)
+    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(ManageIQ::Providers::Vmware::InfraManager::Vm.count)
     widget.contents_for_user(@user).should eq(content)
   end
 
   it "#generate_content for group" do
     content = widget.generate_one_content_for_group(@user.current_group, @user.get_timezone)
-    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(VmVmware.count)
+    content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }.should eq(ManageIQ::Providers::Vmware::InfraManager::Vm.count)
     widget.contents_for_user(@user).should eq(content)
   end
 

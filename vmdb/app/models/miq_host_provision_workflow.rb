@@ -81,7 +81,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   def allowed_ems(options={})
     result = {}
 
-    EmsVmware.select("id, name").each do |e|
+    ManageIQ::Providers::Vmware::InfraManager.select("id, name").each do |e|
       result[e.id] = e.name
     end
     return result

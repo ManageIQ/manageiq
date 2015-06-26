@@ -10,7 +10,7 @@ describe Host do
     DriftState.count.should == 1
 
     host.drift_states.first.data.should == {
-      :class              => "HostVmware",
+      :class              => "ManageIQ::Providers::Vmware::InfraManager::Host",
       :id                 => host.id,
       :name               => host.name,
       :vmm_vendor         => "VMware",

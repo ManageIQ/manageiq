@@ -195,7 +195,7 @@ module MiqProvisionMixin
   def set_customization_spec(custom_spec_name, override=false)
     log_header = "MIQ(#{self.class.name}.set_customization_spec)"
 
-    if !self.source.ext_management_system.kind_of?(EmsVmware)
+    if !self.source.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
       $log.info "#{log_header} Specifying a Customization spec is not valid for provision type #{self.class.name}.  Spec name: <#{custom_spec_name.inspect}>"
       return false
     end

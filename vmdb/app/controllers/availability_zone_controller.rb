@@ -34,13 +34,13 @@ class AvailabilityZoneController < ApplicationController
 
     when "ems_cloud"
       drop_breadcrumb( {:name=>@availability_zone.name+" (#{ui_lookup(:table=>"ems_cloud")}(s))", :url=>"/availability_zone/show/#{@availability_zone.id}?display=ems_cloud"} )
-      @view, @pages = get_view(EmsCloud, :parent=>@availability_zone)  # Get the records (into a view) and the paginator
+      @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent=>@availability_zone)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
 
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
       drop_breadcrumb( {:name=>@availability_zone.name+" (All #{title})", :url=>"/availability_zone/show/#{@availability_zone.id}?display=#{@display}"} )
-      @view, @pages = get_view(VmCloud, :parent=>@availability_zone)  # Get the records (into a view) and the paginator
+      @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent=>@availability_zone)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]

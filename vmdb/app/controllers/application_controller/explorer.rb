@@ -467,7 +467,7 @@ module ApplicationController::Explorer
     when :vandt, :images, :instances, :filter
       raise "x_get_tree_roots called for #{options[:type]} tree"
     when :handc
-      objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
+      objects = rbac_filtered_objects(ManageIQ::Providers::InfraManager.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
       if count_only
         return objects.length + 2
       else
@@ -918,29 +918,29 @@ module ApplicationController::Explorer
     when :vandt # VMs & Templates tree has orphaned and archived nodes
       case object[:id]
       when "orph" # Orphaned
-        objects = rbac_filtered_objects(VmInfra.all_orphaned) +
-            rbac_filtered_objects(TemplateInfra.all_orphaned)
+        objects = rbac_filtered_objects(ManageIQ::Providers::InfraManager::Vm.all_orphaned) +
+            rbac_filtered_objects(ManageIQ::Providers::InfraManager::Template.all_orphaned)
       when "arch" # Archived
-        objects = rbac_filtered_objects(VmInfra.all_archived) +
-            rbac_filtered_objects(TemplateInfra.all_archived)
+        objects = rbac_filtered_objects(ManageIQ::Providers::InfraManager::Vm.all_archived) +
+            rbac_filtered_objects(ManageIQ::Providers::InfraManager::Template.all_archived)
       end
       options[:count_only] ? objects.length : objects.sort_by { |a| a.name.downcase }
     when :images # Images by Provider tree has orphaned and archived nodes
       # FIXME: orphaned, archived
       case object[:id]
         when "orph" # Orphaned
-          objects = rbac_filtered_objects(TemplateCloud.all_orphaned).sort_by { |a| a.name.downcase }
+          objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Template.all_orphaned).sort_by { |a| a.name.downcase }
         when "arch" # Archived
-          objects = rbac_filtered_objects(TemplateCloud.all_archived).sort_by { |a| a.name.downcase }
+          objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Template.all_archived).sort_by { |a| a.name.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :instances # Instances by Provider tree has orphaned and archived nodes
       # FIXME: orphaned, archived
       case object[:id]
         when "orph" # Orphaned
-          objects = rbac_filtered_objects(VmCloud.all_orphaned).sort_by { |a| a.name.downcase }
+          objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Vm.all_orphaned).sort_by { |a| a.name.downcase }
         when "arch" # Archived
-          objects = rbac_filtered_objects(VmCloud.all_archived).sort_by { |a| a.name.downcase }
+          objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Vm.all_archived).sort_by { |a| a.name.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :filter  # Filter trees have global and my filter nodes

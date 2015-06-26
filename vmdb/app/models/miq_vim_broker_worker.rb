@@ -9,7 +9,7 @@ class MiqVimBrokerWorker < MiqWorker
                                   }
   self.check_for_minimal_role = false
   self.workers                = lambda {
-    return 0 unless EmsVmware.use_vim_broker?
+    return 0 unless ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?
     return self.has_minimal_env_option? ? 1 : 0 if MiqServer.minimal_env?
     return 1
   }
@@ -20,7 +20,7 @@ class MiqVimBrokerWorker < MiqWorker
   end
 
   def self.emses_to_monitor
-    EmsVmware.where(:zone_id => MiqServer.my_server.zone_id).includes(:authentications).select(&:authentication_status_ok?)
+    ManageIQ::Providers::Vmware::InfraManager.where(:zone_id => MiqServer.my_server.zone_id).includes(:authentications).select(&:authentication_status_ok?)
   end
 
   def self.available?

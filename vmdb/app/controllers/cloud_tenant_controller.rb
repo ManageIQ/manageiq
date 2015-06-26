@@ -56,12 +56,12 @@ class CloudTenantController < ApplicationController
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
     when "ems_cloud"
       drop_breadcrumb({:name => @cloud_tenant.name + " (#{ui_lookup(:table => "ems_cloud")}(s))", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=ems_cloud"})
-      @view, @pages = get_view(EmsCloud, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
+      @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
     when "instances", "images"
       table = @display == "instances" ? "vm_cloud" : "template_cloud"
       title = ui_lookup(:tables => table)
-      kls   = @display == "instances" ? VmCloud : TemplateCloud
+      kls   = @display == "instances" ? ManageIQ::Providers::CloudManager::Vm : ManageIQ::Providers::CloudManager::Template
       drop_breadcrumb({:name => @cloud_tenant.name + " (All #{title})", :url => "/cloud_tenant/show/#{@cloud_tenant.id}?display=#{@display}"})
       @view, @pages = get_view(kls, :parent => @cloud_tenant)  # Get the records (into a view) and the paginator
       @showtype = @display

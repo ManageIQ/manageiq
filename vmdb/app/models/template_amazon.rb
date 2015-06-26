@@ -1,4 +1,4 @@
-class TemplateAmazon < TemplateCloud
+class TemplateAmazon < ManageIQ::Providers::CloudManager::Template
 
   def provider_object(connection = nil)
     connection ||= self.ext_management_system.connect

@@ -104,7 +104,7 @@ class VimBrokerWorker < WorkerBase
     key = [address, userid]
     ret = @ems_ids_for_notify[key] || begin
       zone_id = MiqServer.my_server.zone_id
-      ems = EmsVmware.
+      ems = ManageIQ::Providers::Vmware::InfraManager.
               includes(:authentications).
               where(:zone_id => zone_id).
               where(:hostname => address).
@@ -189,7 +189,7 @@ class VimBrokerWorker < WorkerBase
 
     $log.info("#{self.log_prefix} Attempting to reconnect broker for EMS with address: [#{event[:server]}] due to error: #{event[:error]}")
 
-    ems = EmsVmware.where(:hostname => event[:server]).first
+    ems = ManageIQ::Providers::Vmware::InfraManager.where(:hostname => event[:server]).first
     if ems.nil?
       $log.error "#{self.log_prefix} Unable to find EMS with address: [#{event[:server]}]"
       return
@@ -301,7 +301,7 @@ class VimBrokerWorker < WorkerBase
     return if args.empty?
     ems_id = args.first.to_i
 
-    ems = EmsVmware.where(:id => ems_id).first
+    ems = ManageIQ::Providers::Vmware::InfraManager.where(:id => ems_id).first
     if ems.nil?
       $log.error "#{self.log_prefix} Unable to find EMS with id: [#{ems_id}]"
       return

@@ -103,7 +103,7 @@ module MiqAeServiceMiqRequestSpec
       @miq_request.save!
 
       ae_resource = invoke_ae.root(@ae_result_key)
-      ae_class    = "MiqAeMethodService::MiqAeService#{resource.class.name}".constantize
+      ae_class    = "MiqAeMethodService::MiqAeService#{resource.class.name.gsub(/::/, '_')}".constantize
       ae_resource.should be_kind_of(ae_class)
       [:userid, :src_vm_id].each { |method| ae_resource.send(method).should == resource.send(method) }
     end

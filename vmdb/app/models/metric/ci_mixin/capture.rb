@@ -8,7 +8,7 @@ module Metric::CiMixin::Capture
 
   def perf_collect_metrics(*args)
     case self
-    when HostVmware, VmVmware then perf_collect_metrics_vim(*args)
+    when ManageIQ::Providers::Vmware::InfraManager::Host, ManageIQ::Providers::Vmware::InfraManager::Vm then perf_collect_metrics_vim(*args)
     when HostRedhat, VmRedhat then perf_collect_metrics_rhevm(*args)
     when VmAmazon             then perf_collect_metrics_amazon(*args)
     when VmOpenstack          then perf_collect_metrics_openstack('perf_capture_data_openstack', *args)

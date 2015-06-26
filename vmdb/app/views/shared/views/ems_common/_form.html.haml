@@ -53,7 +53,7 @@
             = select_tag("server_zone",
               options_for_select(@edit[:server_zones], @edit[:new][:zone]),
               "data-miq_observe" => {:url => url}.to_json)
-      - if @ems.kind_of?(EmsVmware)
+      - if @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
         %tr
           %td.key
             = _('Host Default VNC Port Range')
@@ -75,7 +75,7 @@
       %tr
         %td{:align => "right"}
           #buttons_on
-            - name = ui_lookup(:model => model_for_ems(@ems).to_s)
+            - name = ui_lookup(:model => @ems.class.base_manager.name)
             - t = _("Add this %s") % name
             = button_tag(_('Add'),
               :class   => "btn btn-primary",

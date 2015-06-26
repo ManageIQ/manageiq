@@ -36,7 +36,7 @@ module JobProxyDispatcherSpec
           MiqServer.any_instance.stub(:is_vix_disk? => true)
           MiqServer.any_instance.stub(:is_a_proxy? => true)
           MiqServer.any_instance.stub(:has_active_role? => true)
-          EmsVmware.any_instance.stub(:missing_credentials? => false)
+          ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:missing_credentials? => false)
           Host.any_instance.stub(:missing_credentials? => false)
 
           @hosts, @proxies, @storages, @vms, @repo_vms = self.build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)

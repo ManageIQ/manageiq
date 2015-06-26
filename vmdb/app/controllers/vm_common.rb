@@ -1412,7 +1412,7 @@ module VmCommon
       parents = [{:type=>"x", :id=>"#{record.orphaned ? "orph" : "arch"}"}]
     else
       if x_active_tree == :instances_tree
-        parents = record.kind_of?(VmCloud) && record.availability_zone ? [record.availability_zone] : [record.ext_management_system]
+        parents = record.kind_of?(ManageIQ::Providers::CloudManager::Vm) && record.availability_zone ? [record.availability_zone] : [record.ext_management_system]
       else
         parents = record.parent_blue_folders({:exclude_non_display_folders=>true})
       end
@@ -1450,13 +1450,13 @@ module VmCommon
     @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
     model, title =  case x_active_tree.to_s
                       when "images_filter_tree"
-                        ["TemplateCloud", "Images"]
+                        ["ManageIQ::Providers::CloudManager::Template", "Images"]
                       when "images_tree"
-                        ["TemplateCloud", "Images by Provider"]
+                        ["ManageIQ::Providers::CloudManager::Template", "Images by Provider"]
                       when "instances_filter_tree"
-                        ["VmCloud", "Instances"]
+                        ["ManageIQ::Providers::CloudManager::Vm", "Instances"]
                       when "instances_tree"
-                        ["VmCloud", "Instances by Provider"]
+                        ["ManageIQ::Providers::CloudManager::Vm", "Instances by Provider"]
                       when "vandt_tree"
                         ["VmOrTemplate", "VMs & Templates"]
                       when "vms_instances_filter_tree"
@@ -1464,9 +1464,9 @@ module VmCommon
                       when "templates_images_filter_tree"
                         ["MiqTemplate", "Templates & Images"]
                       when "templates_filter_tree"
-                        ["TemplateInfra", "Templates"]
+                        ["ManageIQ::Providers::InfraManager::Template", "Templates"]
                       when "vms_filter_tree"
-                        ["VmInfra", "VMs"]
+                        ["ManageIQ::Providers::InfraManager::Vm", "VMs"]
                       else
                         [nil, nil]
                     end
@@ -1489,7 +1489,7 @@ module VmCommon
       if x_node == "root"
         # TODO: potential to move this into a model with a scope built into it
         options[:where_clause] =
-          ["vms.type IN (?)", VmInfra.subclasses.collect(&:name) + TemplateInfra.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
+          ["vms.type IN (?)", ManageIQ::Providers::InfraManager::Vm.subclasses.collect(&:name) + ManageIQ::Providers::InfraManager::Template.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
         process_show_list(options)  # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
@@ -1497,7 +1497,7 @@ module VmCommon
       else
         if TreeBuilder.get_model_for_prefix(@nodetype) == "Hash"
           options[:where_clause] =
-            ["vms.type IN (?)", VmInfra.subclasses.collect(&:name) + TemplateInfra.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
+            ["vms.type IN (?)", ManageIQ::Providers::InfraManager::Vm.subclasses.collect(&:name) + ManageIQ::Providers::InfraManager::Template.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
           if id == "orph"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ORPHANED_CONDITIONS)
             process_show_list(options)
@@ -1516,7 +1516,7 @@ module VmCommon
           process_show_list(options)
           model_name = @nodetype == "d" ? "Datacenter" : ui_lookup(:model=>rec.class.base_class.to_s)
           @is_redhat = case model_name
-          when 'Datacenter' then EmsInfra.find(rec.ems_id).type == 'EmsRedhat'
+          when 'Datacenter' then ManageIQ::Providers::InfraManager.find(rec.ems_id).type == 'EmsRedhat'
           when 'Provider'   then rec.type == 'EmsRedhat'
           else false
           end
@@ -1602,7 +1602,7 @@ module VmCommon
     add_ajax = false
     if record_showing
       presenter[:set_visible_elements][:form_buttons_div] = false
-      path_dir = @record.kind_of?(VmCloud) || @record.kind_of?(TemplateCloud) ? "vm_cloud" : "vm_common"
+      path_dir = @record.kind_of?(ManageIQ::Providers::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::CloudManager::Template) ? "vm_cloud" : "vm_common"
       presenter[:update_partials][:main_div] = r[:partial=>"#{path_dir}/main", :locals=>{:controller=>'vm'}]
     elsif @in_a_form
       partial_locals = {:controller=>'vm'}

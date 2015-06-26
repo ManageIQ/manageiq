@@ -22,7 +22,7 @@ class EmsFolder < ActiveRecord::Base
 
   def hidden?(overrides = {})
     ems = overrides[:ext_management_system] || ext_management_system
-    return false unless ems.kind_of?(EmsVmware)
+    return false unless ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
 
     p = overrides[:parent] || self.parent if NON_DISPLAY_FOLDERS.include?(name)
 

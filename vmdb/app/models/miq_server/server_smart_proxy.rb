@@ -14,7 +14,7 @@ module MiqServer::ServerSmartProxy
 
     def use_broker_for_embedded_proxy?(type=nil)
       cores_settings = MiqServer.my_server.get_config("vmdb").config[:coresident_miqproxy].dup
-      result = EmsVmware.use_vim_broker? && cores_settings[:use_vim_broker]
+      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && cores_settings[:use_vim_broker]
 
       # Check for a specific type (host/ems) if passed
       unless type.blank?

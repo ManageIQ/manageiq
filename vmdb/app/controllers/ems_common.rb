@@ -41,10 +41,10 @@ module EmsCommon
     elsif ["instances","images","miq_templates","vms"].include?(@display) || session[:display] == "vms" && params[:display].nil?
       if @display == "instances"
         title = "Instances"
-        kls = VmCloud
+        kls = ManageIQ::Providers::CloudManager::Vm
       elsif @display == "images"
         title = "Images"
-        kls = TemplateCloud
+        kls = ManageIQ::Providers::CloudManager::Template
       elsif @display == "miq_templates"
         title = "Templates"
         kls = MiqTemplate
@@ -287,7 +287,7 @@ module EmsCommon
         page.replace_html("form_div", :partial => "shared/views/ems_common/form")
       end
       if params[:server_emstype]              # Server type changed
-        unless @ems.kind_of?(EmsCloud)
+        unless @ems.kind_of?(ManageIQ::Providers::CloudManager)
           # Hide/show C&U credentials tab
           page << "$('#metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
         end
@@ -619,7 +619,7 @@ module EmsCommon
     if ems.supports_authentication?(:metrics) && @edit[:new][:metrics_password] != @edit[:new][:metrics_verify]
       @edit[:errors].push("C & U Database Login Password and Verify Password fields do not match")
     end
-    if ems.is_a?(EmsVmware)
+    if ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
       unless @edit[:new][:host_default_vnc_port_start] =~ /^\d+$/ || @edit[:new][:host_default_vnc_port_start].blank?
         @edit[:errors].push(_("%s must be numeric") % "Default Host VNC Port Range Start")
       end
@@ -696,7 +696,7 @@ module EmsCommon
     @edit[:new][:ssh_keypair_userid] = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
     @edit[:new][:ssh_keypair_password] = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_key(:ssh_keypair).to_s : ""
 
-    if @ems.is_a?(EmsVmware)
+    if @ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
       @edit[:new][:host_default_vnc_port_start] = @ems.host_default_vnc_port_start.to_s
       @edit[:new][:host_default_vnc_port_end] = @ems.host_default_vnc_port_end.to_s
     end
@@ -781,7 +781,7 @@ module EmsCommon
       ems.realm = @edit[:new][:realm]
     end
 
-    if ems.is_a?(EmsVmware)
+    if ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
       ems.host_default_vnc_port_start = @edit[:new][:host_default_vnc_port_start].blank? ? nil : @edit[:new][:host_default_vnc_port_start].to_i
       ems.host_default_vnc_port_end = @edit[:new][:host_default_vnc_port_end].blank? ? nil : @edit[:new][:host_default_vnc_port_end].to_i
     end

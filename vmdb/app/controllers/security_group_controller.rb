@@ -32,13 +32,13 @@ class SecurityGroupController < ApplicationController
 
     when "ems_cloud"
       drop_breadcrumb( {:name=>@security_group.name+" (#{ui_lookup(:table=>"ems_cloud")}(s))", :url=>"/security_group/show/#{@security_group.id}?display=ems_cloud"} )
-      @view, @pages = get_view(EmsCloud, :parent=>@security_group)  # Get the records (into a view) and the paginator
+      @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent=>@security_group)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
 
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
       drop_breadcrumb( {:name=>@security_group.name+" (All #{title})", :url=>"/security_group/show/#{@security_group.id}?display=#{@display}"} )
-      @view, @pages = get_view(VmCloud, :parent=>@security_group)  # Get the records (into a view) and the paginator
+      @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent=>@security_group)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]

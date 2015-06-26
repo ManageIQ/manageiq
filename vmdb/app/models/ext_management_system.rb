@@ -119,7 +119,7 @@ class ExtManagementSystem < ActiveRecord::Base
       elsif ost.hypervisor.include?(:rhevm)
         [EmsRedhat, 'RHEV-M']
       else
-        [EmsVmware, 'Virtual Center']
+        [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
       end
 
       ems = ems_klass.create(
@@ -141,6 +141,24 @@ class ExtManagementSystem < ActiveRecord::Base
   def self.model_from_emstype(emstype)
     emstype = emstype.downcase
     ExtManagementSystem.leaf_subclasses.detect { |k| k.ems_type == emstype }
+  end
+
+  def self.short_name
+    if parent == ManageIQ::Providers
+      "Ems#{name.demodulize.sub(/Manager$/, '')}"
+    elsif parent != Object
+      "Ems#{parent.name.demodulize}"
+    else
+      name
+    end
+  end
+
+  def self.base_manager
+    (ancestors.select { |klass| klass < ::ExtManagementSystem } - [::ManageIQ::Providers::BaseManager]).last
+  end
+
+  def self.db_name
+    base_manager.short_name
   end
 
   # UI methods for determining availability of fields
