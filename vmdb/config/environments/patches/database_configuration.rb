@@ -8,13 +8,20 @@
 #      require 'erb'
 #      YAML::load(ERB.new(IO.read(paths["config/database"].first)).result)
 #    end
-module Rails
-  class Application
-    class Configuration
-      def database_configuration
-        data = IO.read(paths["config/database"].first)
-        Vmdb::ConfigurationEncoder.load(data, false)
+require 'rails/application/configuration'
+Rails::Application::Configuration.module_eval do
+  # sorry for the multi line {}
+  # block needs to be associated with module not prepend
+  prepend Module.new {
+    def database_configuration
+      path = paths["config/database"].existent.first
+      yaml = Pathname.new(path) if path
+
+      if yaml && yaml.exist?
+        Vmdb::ConfigurationEncoder.load(IO.read(yaml), false)
+      else
+        super
       end
     end
-  end
+  }
 end
