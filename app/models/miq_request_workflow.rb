@@ -704,8 +704,7 @@ class MiqRequestWorkflow
 
     input_fields.each { |k| attrs["dialog_input_#{k.to_s.downcase}"] = send(k).to_s }
 
-    uri  = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => @requester)
-    ws   = MiqAeEngine.resolve_automation_object(uri)
+    ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs, :vmdb_object => @requester)
 
     if ws && ws.root
       dialog_option_prefix = 'dialog_option_'
