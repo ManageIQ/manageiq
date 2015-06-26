@@ -70,9 +70,8 @@ module OpenstackHandle
       else
         Fog.const_get(service).new(opts)
       end
-    rescue ArgumentError, Fog::Errors::NotFound => err
+    rescue Fog::Errors::NotFound => err
       raise MiqException::ServiceNotAvailable if err.message.include?("Could not find service")
-      raise MiqException::ServiceNotAvailable if err.message =~ /\w+ has no \w+ service/
       raise
     end
 
