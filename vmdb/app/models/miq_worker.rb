@@ -426,7 +426,7 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def log_status(level=:info)
-    $log.send(level, "MIQ(MiqWorker.log_status) #{self.class.name}: [#{self.friendly_name}] Worker ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], Last Heartbeat [#{self.last_heartbeat}], Process Info: Memory Usage [#{self.memory_usage}], Memory Size [#{self.memory_size}], Memory % [#{self.percent_memory}], CPU Time [#{self.cpu_time}], CPU % [#{self.percent_cpu}], Priority [#{self.os_priority}]")
+    _log.send(level, "[#{self.friendly_name}] Worker ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], Last Heartbeat [#{self.last_heartbeat}], Process Info: Memory Usage [#{self.memory_usage}], Memory Size [#{self.memory_size}], Memory % [#{self.percent_memory}], CPU Time [#{self.cpu_time}], CPU % [#{self.percent_cpu}], Priority [#{self.os_priority}]")
   end
 
   def current_timeout

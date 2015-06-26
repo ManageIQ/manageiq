@@ -1496,7 +1496,7 @@ class Host < ActiveRecord::Base
       # Skip SSH for ESXi hosts
       unless self.is_vmware_esxi?
         if self.hostname.blank?
-          $log.warn "#{log_header} No hostname defined for #{log_target}"
+          _log.warn "No hostname defined for #{log_target}"
           task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
           return
         end
@@ -1537,7 +1537,7 @@ class Host < ActiveRecord::Base
 
             # refresh_openstack_services should run after refresh_services and refresh_fs_files
             if self.respond_to?(:refresh_openstack_services)
-              $log.info("#{log_header} Refreshing OpenStack Services for #{log_target}")
+              _log.info("Refreshing OpenStack Services for #{log_target}")
               task.update_status("Active", "Ok", "Refreshing OpenStack Services") if task
               Benchmark.realtime_block(:refresh_openstack_services) { refresh_openstack_services(ssu) }
             end

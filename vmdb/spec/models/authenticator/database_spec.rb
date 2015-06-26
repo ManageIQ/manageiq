@@ -66,7 +66,7 @@ describe Authenticator::Database do
       end
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
-        expect($log).to receive(:warn).with("Authentication failed")
+        expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
       end
       it "doesn't change lastlogon" do
@@ -92,7 +92,7 @@ describe Authenticator::Database do
       end
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
-        expect($log).to receive(:warn).with("Authentication failed")
+        expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
       end
     end

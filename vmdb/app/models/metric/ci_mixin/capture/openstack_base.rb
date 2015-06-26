@@ -37,7 +37,7 @@ module Metric::CiMixin::Capture::OpenstackBase
   end
 
   def perf_capture_data_openstack_base(metric_capture_module, start_time, end_time, resource_filter, metadata_filter)
-    log_header = "MIQ(#{self.class.name}.perf_collect_data_openstack_base) [#{start_time} - #{end_time}]"
+    log_header = "#{_log.prefix} [#{start_time} - #{end_time}]"
     $log.debug "#{log_header} id:[#{name}] start_time: #{start_time}, end_time: #{end_time}"
 
     counters = find_meter_counters(metric_capture_module, resource_filter, metadata_filter, log_header)

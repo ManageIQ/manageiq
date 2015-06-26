@@ -1,6 +1,8 @@
 module EmsRefresh
   module Parsers
     class OpenstackInfra < Infra
+      include Vmdb::NewLogging
+
       include EmsRefresh::Parsers::OpenstackCommon::Images
       include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
 
@@ -81,7 +83,7 @@ module EmsRefresh
               compute_hosts = connection.hosts.select { |x| x.service_name == "compute" }
             end
           rescue StandardError => err
-            $log.error "MIQ(#{self.class.name}.#{__method__}) Error Class=#{err.class.name}, Message=#{err.message}"
+            _log.error "Error Class=#{err.class.name}, Message=#{err.message}"
             $log.error err.backtrace.join("\n")
             # Just log the error and continue the refresh, we don't want error in cloud side to affect infra refresh
             next

@@ -111,7 +111,7 @@ class Service < ActiveRecord::Base
           _log.info "Skipping action <#{action}> for Service:<#{self.name}:#{self.id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>"
         end
       rescue => err
-        $log.error "Error while processing Service:<#{self.name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>"
+        _log.error "Error while processing Service:<#{self.name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>"
       end
     end
 

@@ -384,11 +384,11 @@ class Classification < ActiveRecord::Base
     if classification["parent_id"] == 0 # category
       cat = self.find_by_name(classification["name"])
       if cat
-        $log.info("Skipping Classification (already in DB): Category: name=[#{classification["name"]}]")
+        _log.info("Skipping Classification (already in DB): Category: name=[#{classification["name"]}]")
         return stats
       end
 
-      $log.info("Importing Classification: Category: name=[#{classification["name"]}]")
+      _log.info("Importing Classification: Category: name=[#{classification["name"]}]")
 
       entries = classification.delete("entries")
       cat = self.create(classification)
@@ -402,11 +402,11 @@ class Classification < ActiveRecord::Base
     else
       entry = parent.find_entry_by_name(classification["name"])
       if entry
-        $log.info("Skipping Classification (already in DB): Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
+        _log.info("Skipping Classification (already in DB): Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
         return stats
       end
 
-      $log.info("Importing Classification: Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
+      _log.info("Importing Classification: Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
       entry = self.create(classification.merge("parent_id" => parent.id))
       stats["entries"] += 1
 

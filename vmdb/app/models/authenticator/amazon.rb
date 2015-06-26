@@ -24,9 +24,8 @@ module Authenticator
     def admin_connect
       @admin_iam ||=
         begin
-          log_prefix = "MIQ(Authenticator.admin_connect)"
           log_auth = VMDB::Config.clone_auth_for_log(config)
-          $log.info("#{log_prefix} Server Settings: #{log_auth.inspect}")
+          _log.info("Server Settings: #{log_auth.inspect}")
 
           verify_credentials(config[:amazon_key], config[:amazon_secret])
           iam = aws_connect(config[:amazon_key], config[:amazon_secret])
@@ -41,8 +40,7 @@ module Authenticator
     def _authenticate(username, password, _request)
       return if password.blank?
 
-      log_prefix = "MIQ(Authenticator.iam_authenticate)"
-      $log.info("#{log_prefix} Verifying IAM User: [#{username}]...")
+      _log.info("Verifying IAM User: [#{username}]...")
       begin
         verify_credentials(username, password)
         iam = aws_connect(username, password)
@@ -50,22 +48,21 @@ module Authenticator
           iam_user_for_access_key(username)
           true
         else
-          $log.error("#{log_prefix} Verifying IAM User: [#{username}], Access key #{username} belongs to the AWS account holder, not to an IAM user.")
+          _log.error("Verifying IAM User: [#{username}], Access key #{username} belongs to the AWS account holder, not to an IAM user.")
           false
         end
       rescue Exception => err
-        $log.error("#{log_prefix} Verifying IAM User: [#{username}], '#{err.message}'")
+        _log.error("Verifying IAM User: [#{username}], '#{err.message}'")
         false
       end
     end
 
     def find_external_identity(username)
-      log_prefix = "MIQ(Authenticator.find_external_identity)"
       # Amazon IAM will be used for authentication and role assignment
-      $log.info("#{log_prefix} AWS key: [#{config[:amazon_key]}]")
-      $log.info("#{log_prefix}  User: [#{username}]")
+      _log.info("AWS key: [#{config[:amazon_key]}]")
+      _log.info(" User: [#{username}]")
       amazon_user = iam_user_for_access_key(username)
-      $log.debug("#{log_prefix} User obj from Amazon: #{amazon_user.inspect}")
+      _log.debug("User obj from Amazon: #{amazon_user.inspect}")
 
       amazon_user
     end
@@ -111,7 +108,7 @@ module Authenticator
         # user unauthorized for ec2, but still a valid IAM login
         return true
       rescue Exception => err
-        $log.error("MIQ(#{self.class.name}.verify_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
+        _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
         raise MiqException::MiqHostError, "Unexpected response returned from system, see log for details"
       end
       true

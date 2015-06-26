@@ -65,7 +65,7 @@ module MiqServer::UpdateManagement
   def register
     update_attributes(:upgrade_message => "registering")
     if LinuxAdmin::RegistrationSystem.registered?
-      $log.info("Appliance already registered")
+      _log.info("Appliance already registered")
       update_attributes(:rh_registered => true)
     else
       _log.info("Registering appliance...")
