@@ -4,14 +4,11 @@
     = render :partial => "layouts/perf_options"
     = render :partial => "layouts/perf_charts", :locals => {:chart_data => @chart_data, :chart_set => "candu"}
   - else
-    .alert.alert-info
-      %span.pficon.pficon-info
-      %strong
-        - if @record.vm && !@perf_record
-          = _("No Utilization data available for this Server's Virtual Machine.")
-        - else
-          = _("This Server's Virtual Machine has not been identified.")
-
+    - if @record.vm && !@perf_record
+      - msg = _("No Utilization data available for this Server's Virtual Machine.")
+    - else
+      - msg = _("This Server's Virtual Machine has not been identified.")
+    = render :partial => 'layouts/info_msg', :locals => {:message => msg}
   - if @ajax_action
     :javascript
       var miq_after_onload = "miqAsyncAjax('#{url_for :action => @ajax_action, :id => @record}');"
