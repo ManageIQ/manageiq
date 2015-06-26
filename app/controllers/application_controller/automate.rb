@@ -168,13 +168,16 @@ module ApplicationController::Automate
   end
 
   def build_results
-    @resolve[:uri] = MiqAeEngine.create_automation_object(
-      @sb[:name], @sb[:attrs],
+    options = {
       :vmdb_object => @sb[:obj],
       :fqclass     => @resolve[:new][:starting_object],
       :message     => @resolve[:new][:object_message]
-    )
-    @results = MiqAeEngine.resolve_automation_object(@resolve[:uri], @resolve[:new][:readonly]).to_expanded_xml
+    }
+    @results = MiqAeEngine.resolve_automation_object(@sb[:name],
+                                                     @sb[:attrs],
+                                                     options,
+                                                     @resolve[:new][:readonly]).to_expanded_xml
+    @resolve[:uri] = options[:uri]
     @json_tree = ws_tree_from_xml(@results)
   end
 

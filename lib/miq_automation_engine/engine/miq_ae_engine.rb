@@ -295,7 +295,9 @@ module MiqAeEngine
     MiqAeUri.join(nil, nil, nil, nil, nil, path, nil, options[:attrs], options[:message])
   end
 
-  def self.resolve_automation_object(uri, readonly = false)
+  def self.resolve_automation_object(uri, attr = nil, options = {}, readonly = false)
+    uri = create_automation_object(uri, attr, options) if attr
+    options[:uri] = uri
     ws = readonly ? MiqAeWorkspaceRuntime.instantiate_readonly(uri) : MiqAeWorkspaceRuntime.instantiate(uri)
     $miq_ae_logger.debug(ws.to_expanded_xml) if $miq_ae_logger.debug?
     return ws
