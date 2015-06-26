@@ -264,6 +264,7 @@ module MiqAeEngine
       options[:namespace] ||= "System"
       options[:class]     ||= "Process"
     end
+    options[:instance_name] = name
 
     ae_attrs  = attrs.dup
     ae_attrs['object_name'] = name
@@ -286,9 +287,12 @@ module MiqAeEngine
     array_objects.each do |o|
       ae_attrs[o] = ae_attrs[o].first   if ae_attrs[o].kind_of?(Array)
     end
-
-    path = MiqAePath.new(:ae_namespace => options[:namespace], :ae_class => options[:class], :ae_instance => name).to_s
-    MiqAeUri.join(nil, nil, nil, nil, nil, path, nil, ae_attrs, options[:message])
+    options[:attrs] = ae_attrs
+    options[:message] = ae_attrs[:message]
+    path = MiqAePath.new(:ae_namespace => options[:namespace],
+                         :ae_class     => options[:class],
+                         :ae_instance  => options[:instance_name]).to_s
+    MiqAeUri.join(nil, nil, nil, nil, nil, path, nil, options[:attrs], options[:message])
   end
 
   def self.resolve_automation_object(uri, readonly = false)
@@ -296,5 +300,4 @@ module MiqAeEngine
     $miq_ae_logger.debug(ws.to_expanded_xml) if $miq_ae_logger.debug?
     return ws
   end
-
 end
