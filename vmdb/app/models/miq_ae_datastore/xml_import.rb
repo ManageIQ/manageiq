@@ -1,6 +1,6 @@
 module MiqAeDatastore
   class XmlImport
-    include Vmdb::NewLogging
+    include Vmdb::Logging
     def self.process_class(input)
       fields    = input.delete("MiqAeSchema")
       instances = input.delete("MiqAeInstance")

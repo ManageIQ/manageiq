@@ -3,7 +3,7 @@ require 'cim_association_defs'
 require 'lun_durable_names'
 
 class VmdbStorageBridge
-  include Vmdb::NewLogging
+  include Vmdb::Logging
 
   include MiqStorageDefs
 

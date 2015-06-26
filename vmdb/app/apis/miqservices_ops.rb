@@ -2,7 +2,7 @@ require 'xmldata_helper'
 require 'yaml'
 
 module MiqservicesOps
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   WS_TIMEOUT = 60
 
   def save_vmmetadata(vmId, xmlFile, type, jobid=nil)

@@ -1,5 +1,5 @@
 class MiqWidget::ContentGenerator
-  include Vmdb::NewLogging
+  include Vmdb::Logging
 
   def generate(widget, klass, group_description, userids, timezones = nil)
     raise "Unsupported: #{klass}" if unsupported_class?(klass)

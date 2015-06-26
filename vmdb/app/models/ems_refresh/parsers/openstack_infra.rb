@@ -1,7 +1,7 @@
 module EmsRefresh
   module Parsers
     class OpenstackInfra < Infra
-      include Vmdb::NewLogging
+      include Vmdb::Logging
 
       include EmsRefresh::Parsers::OpenstackCommon::Images
       include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks

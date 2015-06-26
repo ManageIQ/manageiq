@@ -1,7 +1,7 @@
 require 'pid_file'
 
 class EvmApplication
-  include Vmdb::NewLogging
+  include Vmdb::Logging
 
   def self.start
     if self.server_state == :no_db

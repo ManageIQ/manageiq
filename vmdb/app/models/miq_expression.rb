@@ -1,5 +1,5 @@
 class MiqExpression
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
   @@proto = VMDB::Config.new("vmdb").config[:product][:proto]

@@ -1,6 +1,6 @@
 require 'awesome_spawn'
 class MiqPostgresAdmin
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   $:.push(File.expand_path(File.join(File.dirname(__FILE__), "../../../lib/util")))
 
   # From /etc/init.d/postgresql script

@@ -7,7 +7,7 @@ module MiqServer::LogManagement
   end
 
   def sync_log_level
-    Vmdb::Logging.apply_config(@vmdb_config.config[:log])
+    Vmdb::Loggers.apply_config(@vmdb_config.config[:log])
   end
 
   def format_log_time(time)

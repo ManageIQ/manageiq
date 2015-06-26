@@ -1,5 +1,5 @@
 class MiqDbConfig
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   @@common_options = [
     # note sure if this is required (blank == localhost)
     {:name => :host,     :description => "Hostname",          :required => false},

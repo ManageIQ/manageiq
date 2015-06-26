@@ -2,7 +2,7 @@ $:.push(File.expand_path(File.join(File.dirname(__FILE__) ) ) )
 require 'db_administration/miq_postgres_admin'
 
 class EvmDatabaseOps
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   BACKUP_TMP_FILE = "/tmp/miq_backup"
 
   DEFAULT_OPTS = {:dbname => 'vmdb_production'}

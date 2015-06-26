@@ -1,5 +1,5 @@
 class ClassificationImport
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   attr_accessor :errors
   attr_accessor :stats
 

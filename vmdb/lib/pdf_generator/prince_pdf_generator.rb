@@ -1,5 +1,5 @@
 class PrincePdfGenerator < PdfGenerator
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   def self.executable
     return @executable if defined?(@executable)
     @executable = `which prince`.chomp

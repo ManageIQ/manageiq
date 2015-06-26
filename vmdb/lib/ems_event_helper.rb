@@ -1,5 +1,5 @@
 class EmsEventHelper
-  include Vmdb::NewLogging
+  include Vmdb::Logging
 
   def initialize(event)
     raise ArgumentError, "event must be an EmsEvent" unless event.kind_of?(EmsEvent)

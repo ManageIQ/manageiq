@@ -1,7 +1,7 @@
 module EmsRefresh
   module Parsers
     class Foreman
-      include Vmdb::NewLogging
+      include Vmdb::Logging
 
       # we referenced a record that does not exist in the database
       attr_accessor :needs_provisioning_refresh

@@ -1,6 +1,6 @@
-require 'vmdb/logging/mirrored_logger'
+require 'vmdb/loggers/mirrored_logger'
 
-module Vmdb::Logging
+module Vmdb::Loggers
   class FogLogger < MirroredLogger
     def initialize(path)
       super(path, "<Fog> ")

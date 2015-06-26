@@ -2,7 +2,7 @@ require "builder"
 
 module MiqAeDatastore
   class XmlExport
-    include Vmdb::NewLogging
+    include Vmdb::Logging
     def self.to_xml
       _log.info("Exporting to XML")
       xml = Builder::XmlMarkup.new(:indent => 2)

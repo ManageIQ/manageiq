@@ -1,7 +1,7 @@
 require 'net/ldap'
 
 class MiqLdap
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   DEFAULT_LDAP_PORT      = 389
   DEFAULT_LDAPS_PORT     = 636
   DEFAULT_BIND_TIMEOUT   = 30

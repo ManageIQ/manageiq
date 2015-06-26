@@ -1,6 +1,6 @@
 require 'haml-rails'
 class GenericMailer < ActionMailer::Base
-  include Vmdb::NewLogging
+  include Vmdb::Logging
 
   def self.deliver(method, options = {})
     _log.info("starting: method: #{method} options: #{options} ")

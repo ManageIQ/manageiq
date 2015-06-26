@@ -1,5 +1,5 @@
 class MiqCompare
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   EMPTY = '(empty)'
   TAG_PREFIX = '_tag_'
 

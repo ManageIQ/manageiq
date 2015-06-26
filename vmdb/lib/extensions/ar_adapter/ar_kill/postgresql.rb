@@ -1,7 +1,7 @@
 module ActiveRecord
   module ConnectionAdapters
     class PostgreSQLAdapter < AbstractAdapter
-      include Vmdb::NewLogging
+      include Vmdb::Logging
 
       def kill(pid)
         pid_numeric = pid.to_i

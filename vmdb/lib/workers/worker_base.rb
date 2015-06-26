@@ -2,7 +2,7 @@ require 'miq-process'
 require 'thread'
 
 class WorkerBase
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :vmdb_config, :active_roles, :server
 
@@ -289,7 +289,7 @@ class WorkerBase
   end
 
   def sync_log_level
-    Vmdb::Logging.apply_config(@vmdb_config.config[:log])
+    Vmdb::Loggers.apply_config(@vmdb_config.config[:log])
   end
 
   def sync_worker_settings

@@ -1,7 +1,7 @@
 require 'snmp'
 
 class MiqSnmp
-  include Vmdb::NewLogging
+  include Vmdb::Logging
 
   AVAILABLE_TYPES_HASH = {
     "Null"        => SNMP::Null,

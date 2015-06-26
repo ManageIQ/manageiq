@@ -13,7 +13,7 @@ module MiqAeMethodService
 
     include DRbUndumped    # Ensure that Automate Method can get at instances over DRb
     include MiqAeServiceObjectCommon
-    include Vmdb::NewLogging
+    include Vmdb::Logging
 
     def self.method_missing(m, *args)
       return wrap_results(model.send(m, *args)) if class_method_exposed?(m)

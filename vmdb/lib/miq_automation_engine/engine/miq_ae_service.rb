@@ -7,7 +7,7 @@ module MiqAeMethodService
   end
 
   class MiqAeService
-    include Vmdb::NewLogging
+    include Vmdb::Logging
     include DRbUndumped
     @@id_hash = Hash.new
     @@current = Array.new

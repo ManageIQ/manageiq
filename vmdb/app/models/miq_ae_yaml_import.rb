@@ -1,5 +1,5 @@
 class MiqAeYamlImport
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   include MiqAeYamlImportExportMixin
 
   attr_reader :import_stats

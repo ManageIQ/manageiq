@@ -92,7 +92,7 @@ module VMDB
 
       def log(data)
         data = data.instance_variable_get(:@table) if data.kind_of?(OpenStruct)
-        Vmdb::Logging.validate_config(data)
+        Vmdb::Loggers.validate_config(data)
       end
 
       def session(data)

@@ -38,7 +38,7 @@ END_OF_CONFIG
   end
 
   class Control
-    include Vmdb::NewLogging
+    include Vmdb::Logging
     #  > memcached -help
     #  memcached 1.4.5
     #  -p <num>      TCP port number to listen on (default: 11211)

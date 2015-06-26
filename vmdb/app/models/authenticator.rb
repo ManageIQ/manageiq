@@ -15,7 +15,7 @@ module Authenticator
   end
 
   class Base
-    include Vmdb::NewLogging
+    include Vmdb::Logging
 
     def self.authorize(config, *args)
       new(config).authorize(*args)

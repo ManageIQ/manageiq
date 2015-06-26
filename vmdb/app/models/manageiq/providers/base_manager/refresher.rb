@@ -3,7 +3,7 @@ require_dependency 'manageiq/providers/base_manager'
 module ManageIQ::Providers
 class BaseManager
   class Refresher
-    include Vmdb::NewLogging
+    include Vmdb::Logging
     DEBUG_TRACE = false
 
     attr_accessor :ems_by_ems_id, :targets_by_ems_id

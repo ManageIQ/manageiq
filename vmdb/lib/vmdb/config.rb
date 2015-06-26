@@ -1,6 +1,6 @@
 module VMDB
   class Config
-    include Vmdb::NewLogging
+    include Vmdb::Logging
 
     @@sync_cfile = Sync.new()
     @@cached_configs = {}

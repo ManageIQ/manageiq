@@ -1,6 +1,6 @@
 module VimPerformanceAnalysis
   class Planning
-    include Vmdb::NewLogging
+    include Vmdb::Logging
     attr_accessor :options, :vm
     attr_reader   :compute, :storage
 

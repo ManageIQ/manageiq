@@ -1,5 +1,5 @@
 class JobProxyDispatcher
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   def self.dispatch
     self.new.dispatch
   end

@@ -1,10 +1,10 @@
 require "spec_helper"
 
-describe Vmdb::Logging::MirroredLogger do
+describe Vmdb::Loggers::MirroredLogger do
   before(:each) do
     @mirror_stream = StringIO.new
     @log_stream = StringIO.new
-    @log = Vmdb::Logging::MirroredLogger.new(@log_stream, "<MirrorPrefix> ")
+    @log = Vmdb::Loggers::MirroredLogger.new(@log_stream, "<MirrorPrefix> ")
     @log.mirror_logger = VMDBLogger.new(@mirror_stream)
   end
 

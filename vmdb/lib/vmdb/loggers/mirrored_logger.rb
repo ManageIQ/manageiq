@@ -1,4 +1,4 @@
-module Vmdb::Logging
+module Vmdb::Loggers
   class MirroredLogger < VMDBLogger
     attr_accessor :mirror_logger, :mirror_prefix, :mirror_level
 

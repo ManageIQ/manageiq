@@ -1,5 +1,5 @@
 class EvmDatabase
-  include Vmdb::NewLogging
+  include Vmdb::Logging
 
   PRIMORDIAL_CLASSES = %w{
     MiqDatabase

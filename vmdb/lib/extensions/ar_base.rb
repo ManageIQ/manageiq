@@ -1,6 +1,6 @@
 module ActiveRecord
   class Base
-    include Vmdb::NewLogging
+    include Vmdb::Logging
 
     # Truncates the table.
     #

@@ -2,7 +2,7 @@ require 'enumerator'
 require 'miq-hash_struct'
 
 class MiqRequestWorkflow
-  include Vmdb::NewLogging
+  include Vmdb::Logging
 
   attr_accessor :dialogs, :requester, :values, :last_vm_id
 

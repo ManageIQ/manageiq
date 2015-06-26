@@ -1,5 +1,5 @@
 class MiqAeYamlExport
-  include Vmdb::NewLogging
+  include Vmdb::Logging
   include MiqAeYamlImportExportMixin
   attr_accessor :namespace, :klass, :instance, :method, :zip
   NEW_LINE = "\n"
