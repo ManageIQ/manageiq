@@ -61,11 +61,11 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def report_results
-    if self.binary_blob
+    if binary_blob
       serializer_name = self.binary_blob.data_type
       serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
       serializer = serializer_name.constantize
-      MiqReport.from_hash(serializer.load(self.binary_blob.binary))
+      MiqReport.from_hash(serializer.load(binary_blob.binary))
     elsif self.report.kind_of?(MiqReport)
       return self.report
     else
@@ -74,8 +74,8 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def report_results=(value)
-    self.binary_blob = BinaryBlob.new(:name => "report_results", :data_type => "YAML")
-    self.binary_blob.binary = YAML.dump(value.to_hash)
+    binary_blob = BinaryBlob.new(:name => "report_results", :data_type => "YAML")
+    binary_blob.binary = YAML.dump(value.to_hash)
   end
 
   def report_html=(html)

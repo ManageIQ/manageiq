@@ -14,8 +14,8 @@ describe FixSerializedReportsForRailsFour do
 
     it "migrates existing reports serialized as MiqReport objects to Hashes" do
       rr = report_result_stub.create!(
-          :db     => 'Chargeback',
-          :report => @raw_report
+        :db     => 'Chargeback',
+        :report => @raw_report
       )
 
       migrate
@@ -28,12 +28,12 @@ describe FixSerializedReportsForRailsFour do
 
     it "migrates existing binary blobs serialized as MiqReport objects to Hashes" do
       bb = binary_blob.create!(
-          :resource_type => "MiqReportResult",
-          :md5 => "b540c6aec8a7726c1154d71c06017150",
-          :size => 67124,
-          :part_size => 1048576,
-          :name => "report_results",
-          :data_type => "YAML"
+        :resource_type => "MiqReportResult",
+        :md5           => "b540c6aec8a7726c1154d71c06017150",
+        :size          => 67_124,
+        :part_size     => 1_048_576,
+        :name          => "report_results",
+        :data_type     => "YAML"
       )
       bb.binary = @raw_blob
 
@@ -54,8 +54,8 @@ describe FixSerializedReportsForRailsFour do
 
     it "migrates existing reports serialized as Hashes objects to MiqReports" do
       rr = report_result_stub.create!(
-          :db     => 'Chargeback',
-          :report => @raw_report
+        :db     => 'Chargeback',
+        :report => @raw_report
       )
 
       migrate
@@ -69,12 +69,12 @@ describe FixSerializedReportsForRailsFour do
 
     it "migrates existing binary blobs serialized as Hashes objects to MiqReports" do
       bb = binary_blob.create!(
-          :resource_type => "MiqReportResult",
-          :md5 => "b540c6aec8a7726c1154d71c06017150",
-          :size => 67124,
-          :part_size => 1048576,
-          :name => "report_results",
-          :data_type => "YAML"
+        :resource_type => "MiqReportResult",
+        :md5 => "b540c6aec8a7726c1154d71c06017150",
+        :size => 67124,
+        :part_size => 1048576,
+        :name => "report_results",
+        :data_type => "YAML"
       )
       bb.binary = @raw_blob
 
