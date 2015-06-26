@@ -28,10 +28,7 @@ module MiqProvisionRedhatViaPxe::StateMachine
       $log.info("MIQ(#{self.class.name}#boot_from_network) #{destination_type} [#{dest_name}] is not yet ready to boot, will retry")
       requeue_phase
     else
-      # Temporarily set the database raw_power_state in case the refresh has not come along yet.
-      destination.update_attributes(:raw_power_state => "wait_for_launch")
-
-      signal :poll_destination_powered_off_in_provider
+      signal :poll_destination_powered_on_in_provider
     end
   end
 
