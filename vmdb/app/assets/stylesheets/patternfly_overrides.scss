@@ -232,6 +232,23 @@ table.table.table-selectable tbody tr.selected td {
   cursor: pointer;
 }
 
+/* static class form-horizontal for displaying static info with reduced row height */
+.form-horizontal.static .form-group {
+  min-height: 28px;
+  margin-bottom: 5px;
+}
+
+/* Ensure .form-control-static doesn't change height when it's empty - Bootstrap fix #15699 */
+.form-control-static {
+  min-height: ($line-height-computed + $font-size-small - 20);
+}
+
+/* image styling for inside form */
+.form-control-static img {
+  width: 20px;
+  height: 20px;
+}
+
 /* prevents empty dd from collapsing */
 
 .dl-horizontal > dd:after {
