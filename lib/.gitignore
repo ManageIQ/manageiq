@@ -6,13 +6,3 @@ SyntaxCheck
 
 # Log files generated from running test:miq_disk
 mdfs*.log
-
-# Compilation artifacts
-/VixDiskLib/VixDiskLib_raw
-!/VixDiskLib/VixDiskLib_raw/**/*.c
-!/VixDiskLib/VixDiskLib_raw/**/extconf.rb
-!/VixDiskLib/VixDiskLib_raw/**/*.patch
-!/VixDiskLib/VixDiskLib_raw/**/*.def
-/VixDiskLib/lib
-/VixDiskLib/vddklib
-

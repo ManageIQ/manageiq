@@ -23,7 +23,6 @@ before_install:
 - echo "1" > vmdb/REGION
 - cp vmdb/config/database.pg.yml vmdb/config/database.yml
 - psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
-- rake build:shared_objects
 - cd $TEST_ROOT
 before_script: bundle exec rake test:$TEST_SUITE:setup
 script: bundle exec rake test:$TEST_SUITE
