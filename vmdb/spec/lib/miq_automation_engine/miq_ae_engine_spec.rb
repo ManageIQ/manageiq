@@ -684,7 +684,7 @@ module MiqAeEngineSpec
     end
 
     context ".deliver_synchronous" do
-      it "check task results" do
+      xit "check task results" do
         MiqServer.stub(:my_zone).and_return("default")
         root = {'ae_result' => 'error', 'test' => 1}
         MiqAeEngine.stub(:deliver).and_return(root)
