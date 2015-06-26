@@ -1,4 +1,4 @@
-require 'NetappManageabilityAPI/NmaTypes'
+require 'net_app_manageability/types'
 
 class MiqStorageMetric < ActiveRecord::Base
   has_one   :miq_cim_instance,
