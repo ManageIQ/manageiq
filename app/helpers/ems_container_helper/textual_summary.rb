@@ -4,8 +4,7 @@ module EmsContainerHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name type hostname ipaddress port cpu_cores
-               memory_resources)
+    items = %w(name type hostname port cpu_cores memory_resources)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -41,10 +40,6 @@ module EmsContainerHelper::TextualSummary
 
   def textual_hostname
     {:label => "Hostname", :value => @ems.hostname}
-  end
-
-  def textual_ipaddress
-    {:label => "IP Address", :value => @ems.ipaddress}
   end
 
   def textual_memory_resources
