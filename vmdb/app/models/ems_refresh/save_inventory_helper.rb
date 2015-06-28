@@ -43,7 +43,8 @@ module EmsRefresh::SaveInventoryHelper
     # Find the record, and update if found, else create it
     found = parent.send(type)
     if found.nil?
-      found = parent.send("create_#{type}!", hash.except(:id))
+      found = parent.send("build_#{type}", hash.except(:id))
+      parent.send("#{type}=", found)
     else
       found.update_attributes!(hash.except(:id, :type))
     end
