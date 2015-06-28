@@ -2,25 +2,20 @@ require "spec_helper"
 include JsHelper
 
 describe ApplicationHelper do
+  before do
+    # mimic config.include ApplicationController::CurrentUser :type => :controller
+
+    controller.send(:extend, ApplicationHelper)
+
+    # mimic config.include ApplicationController::CurrentUser :type => :helper
+    self.class.send(:include, ApplicationHelper)
+  end
+
   context "build_custom_buttons_toolbar" do
-    class Controller
-      include ApplicationHelper
-
-      attr_reader :request
-
-      def initialize(sb, request)
-        @sb      = sb
-        @request = request
-      end
-
-      def role_allows(options)
-        true
-      end
-    end
-
     it 'should substitute dynamic function values' do
       req        = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
-      controller = Controller.new({:active_tree => :cb_reports_tree}, req)
+      allow(controller).to receive(:role_allows).and_return(true)
+      allow(controller).to receive(:request).and_return(req)
       json,      = controller.build_toolbar_buttons_and_xml 'storages_center_tb'
       title_text = ui_lookup(:tables => "storages")
       menu_info  = JSON.parse json
@@ -36,9 +31,12 @@ describe ApplicationHelper do
 
     it 'should substitute dynamic ivar values' do
       req = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
-      controller = Controller.new({:active_tree => :cb_reports_tree,
-                                   :nodeid      => 'storages',
-                                   :mode        => 'foo' }, req)
+      allow(controller).to receive(:role_allows).and_return(true)
+      allow(controller).to receive(:request).and_return(req)
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :cb_reports_tree,
+                                       :nodeid      => 'storages',
+                                       :mode        => 'foo')
 
       json, = controller.build_toolbar_buttons_and_xml 'miq_policies_center_tb'
       title_text = ui_lookup(:model => "storages")
@@ -71,7 +69,7 @@ describe ApplicationHelper do
         end
 
         it "and not entitled" do
-          User.stub_chain(:current_user, :role_allows_any?).and_return(false)
+          @user.stub(:role_allows_any? => false)
           role_allows(:feature=>"miq_report", :any=>true).should be_false
         end
       end
@@ -82,7 +80,7 @@ describe ApplicationHelper do
         end
 
         it "and not entitled" do
-          User.stub_chain(:current_user, :role_allows?).and_return(false)
+          @user.stub(:role_allows? => false)
           role_allows(:feature=>"miq_report").should be_false
         end
       end
@@ -95,7 +93,7 @@ describe ApplicationHelper do
       end
 
       it "and not entitled" do
-        User.stub_chain(:current_user, :role_allows_any?).and_return(false)
+        @user.stub(:role_allows_any? => false)
         Menu::DefaultMenu.services_menu_section.visible?.should be_false
       end
     end
@@ -245,7 +243,7 @@ describe ApplicationHelper do
         before(:each) do
           @set_data = { :applies_to_class => 'Vm' }
           @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
-          CustomButton.stub(:get_user).and_return(@user)
+          login_as @user
           @button1 = FactoryGirl.create(:custom_button, :applies_to_class => 'Vm', :visibility => { :roles => ["_ALL_"]}, :options => {})
           @button_set.add_member @button1
           @button_set.save!
@@ -361,7 +359,7 @@ describe ApplicationHelper do
         before(:each) do
           @set_data = { :applies_to_class => 'ServiceTemplate' , :applies_to_id => @service_template.id}
           @button_set = FactoryGirl.create(:custom_button_set, :set_data => @set_data)
-          CustomButton.stub(:get_user).and_return(@user)
+          login_as @user
           @button1 = FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate', :visibility => { :roles => ["_ALL_"]}, :options => {})
           @button_set.add_member @button1
           @button_set.save!
@@ -2939,8 +2937,7 @@ describe ApplicationHelper do
         )
 
         @id = "miq_request_delete"
-        User.stub(:current_user).and_return(@user)
-        session[:userid] = @user.userid
+        login_as @user
         @record = MiqProvisionRequest.new
         @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
       end
@@ -2966,7 +2963,7 @@ describe ApplicationHelper do
           :user,
           :miq_groups     => [@miq_group],
         )
-        session[:userid] = user.userid
+        login_as user
         res = build_toolbar_disable_button("miq_request_delete")
         res.should include("Users are only allowed to delete their own requests")
       end
