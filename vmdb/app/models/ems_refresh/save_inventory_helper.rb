@@ -23,12 +23,8 @@ module EmsRefresh::SaveInventoryHelper
 
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
     child_keys, extra_keys, remove_keys = self.save_inventory_prep(child_keys, extra_keys)
-    if hash.blank?
-      parent.send(type).try(:destroy)
-    else
-      save_inventory(type, parent, hash.except(*remove_keys))
-      save_child_inventory(parent.send(type), hash, child_keys)
-    end
+    save_inventory(type, parent, hash.except(*remove_keys))
+    save_child_inventory(parent.send(type), hash, child_keys)
   end
 
   def save_inventory_prep(child_keys, extra_keys)
