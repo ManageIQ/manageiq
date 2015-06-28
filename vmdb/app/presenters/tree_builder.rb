@@ -1,6 +1,6 @@
 class TreeBuilder
   include CompressedIds
-  attr_reader :locals_for_render, :name, :type, :tree_nodes
+  attr_reader :name, :type, :tree_nodes
 
   def self.class_for_type(type)
     case type
@@ -141,6 +141,10 @@ class TreeBuilder
     [model, record_id, prefix]
   end
 
+  def locals_for_render
+    @locals_for_render.update(:select_node => "#{@tree_state.x_node(@name)}")
+  end
+
   private
 
   def build_tree
@@ -186,7 +190,6 @@ class TreeBuilder
       :tree_id        => "#{@name}box",
       :tree_name      => @name.to_s,
       :json_tree      => @tree_nodes,
-      :select_node    => "#{@tree_state.x_node(@name)}",
       :onclick        => "cfmeOnClick_SelectTreeNode",
       :id_prefix      => "#{@name}_",
       :base_id        => "root",
