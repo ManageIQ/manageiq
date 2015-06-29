@@ -13,7 +13,7 @@ module EmsContainerHelper::TextualSummary
     # Order of items should be from parent to child
     items = []
     items.concat(%w(container_projects container_routes)) if @ems.kind_of?(EmsOpenshift)
-    items.concat(%w(container_services container_replicators container_groups container_nodes))
+    items.concat(%w(container_services container_replicators container_groups container_nodes containers))
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -141,6 +141,17 @@ module EmsContainerHelper::TextualSummary
     h     = {:label => label, :image => "container_replicator", :value => count_of_replicators}
     if count_of_replicators > 0 && role_allows(:feature => "container_replicator_show_list")
       h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'container_replicators')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_containers
+    count_of_containers = @ems.number_of(:containers)
+    label = ui_lookup(:tables => "containers")
+    h     = {:label => label, :image => "container", :value => count_of_containers}
+    if count_of_containers > 0 && role_allows(:feature => "containers")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'containers')
       h[:title] = "Show all #{label}"
     end
     h
