@@ -435,334 +435,305 @@ class OpsController < ApplicationController
                          end
   end
 
-  def replace_right_cell(nodetype, replace_trees = false) # replace_trees can be an array of tree symbols to be replaced
-    replace_trees = @replace_trees if @replace_trees  #get_node_info might set this
-    @explorer = true
-    if replace_trees
-      settings_tree = settings_build_tree if replace_trees.include?(:settings)
-      rbac_tree = rbac_build_tree if replace_trees.include?(:rbac)
-      diagnostics_tree = diagnostics_build_tree if replace_trees.include?(:diagnostics)
-      vmdb_tree = db_build_tree if replace_trees.include?(:vmdb)
-      if get_vmdb_config[:product][:analytics]
-        analytics_tree = analytics_build_tree if replace_trees.include?(:analytics)
-      end
-    end
+  def open_parent_nodes
+    existing_node = nil                     # Init var
 
-    # Clicked on right cell record, open the tree enough to show the node, if not already showing
-    if params[:action] == "x_show" && @record &&          # Showing a record
-       !@in_a_form                                      # Not in a form
-      existing_node = nil                     # Init var
-
-      parent_rec = VmdbTableEvm.find_by_id(@record.vmdb_table_id)
-      parents = [parent_rec, {:id=>"#{@record.vmdb_table_id}"}]
-      #parents = [parent_rec]
-
-      # Go up thru the parents and find the highest level unopened, mark all as opened along the way
-      unless parents.empty? ||  # Skip if no parents or parent already open
-             x_tree[:open_nodes].include?(x_build_node_id(parents.last))
-        parents.reverse.each do |p|
-          p_node = x_build_node_id(p)
-          unless x_tree[:open_nodes].include?(p_node)
-            x_tree[:open_nodes].push(p_node)
-            existing_node = p_node
-          end
+    parent_rec = VmdbTableEvm.find_by_id(@record.vmdb_table_id)
+    parents = [parent_rec, {:id => "#{@record.vmdb_table_id}"}]
+    # Go up thru the parents and find the highest level unopened, mark all as opened along the way
+    # Skip if no parents or parent already open
+    unless parents.empty? || x_tree[:open_nodes].include?(x_build_node_id(parents.last))
+      parents.reverse_each do |p|
+        p_node = x_build_node_id(p)
+        unless x_tree[:open_nodes].include?(p_node)
+          x_tree[:open_nodes].push(p_node)
+          existing_node = p_node
         end
-        add_nodes = tree_add_child_nodes(existing_node) # Build the new nodes hash
+      end
+      tree_add_child_nodes(existing_node) # Build the new nodes hash
+    end
+  end
+
+  def replace_right_cell(nodetype, replace_trees = []) # replace_trees can be an array of tree symbols to be replaced
+    # get_node_info might set this
+    replace_trees = @replace_trees if @replace_trees
+    @explorer = true
+
+    # Clicked on right cell record, open the tree enough to show the node,
+    # if not already showing a record
+    # Not in a form
+    add_nodes = open_parent_nodes if params[:action] == "x_show" && @record && !@in_a_form
+    locals = set_form_locals if @in_a_form
+    build_supported_depots_for_select
+
+    presenter = ExplorerPresenter.new(
+      :active_tree => x_active_tree,
+    )
+    # Update the tree with any new nodes
+    presenter[:add_nodes] = add_nodes if add_nodes
+    presenter[:set_visible_elements][:buttons_on] = false
+
+    r = proc { |opts| render_to_string(opts) }
+
+    replace_explorer_trees(replace_trees, presenter, r)
+    rebuild_toolbars(presenter)
+    handle_bottom_cell(presenter, r, locals)
+    x_active_tree_replace_cell(nodetype, presenter, r)
+    extra_js_commands(presenter)
+    # Render the JS responses to update the explorer screen
+    render :js => presenter.to_html
+  end
+
+  def x_active_tree_replace_cell(nodetype, presenter, r)
+    case x_active_tree
+    when :rbac_tree
+      rbac_replace_right_cell(nodetype, presenter, r)
+    when :settings_tree
+      settings_replace_right_cell(nodetype, presenter, r)
+    when :diagnostics_tree
+      diagnostics_replace_right_cell(nodetype, presenter, r)
+    when :vmdb_tree # "root","tb", "ti","xx" # Check if vmdb root or table is selected
+      # Need to replace all_tabs to show table name as tab label
+      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+    when :analytics_tree
+      analytics_replace_right_cell(presenter, r)
+    end
+  end
+
+  def diagnostics_replace_right_cell(nodetype, presenter, r)
+    # need to refresh all_tabs for server by roles and roles by servers screen
+    # to show correct buttons on screen when tree node is selected
+    if %w(accordion_select change_tab explorer tree_select).include?(params[:action]) ||
+       %w(diagnostics_roles_servers diagnostics_servers_roles).include?(@sb[:active_tab])
+      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+    elsif nodetype == "log_depot_edit"
+      @right_cell_text = "Editing Log Depot settings"
+      presenter[:update_partials][:diagnostics_collect_logs] = r[:partial => "ops/log_collection"]
+    else
+      presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
+    end
+    # zone level
+    presenter[:build_calendar] = {} if x_node.split("-").first == "z"
+  end
+
+  def analytics_replace_right_cell(presenter, r)
+    if params[:action] == "accordion_select"
+      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+    else
+      presenter[:update_partials][:analytics_details] = r[:partial => "analytics_details_tab"]
+    end
+    if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
+      # setting changed here to enable/disable Apply button
+      @changed = @sb[:good] && @sb[:good] > 0 ? true : false
+    end
+    presenter[:set_visible_elements][:buttons_on] = @changed if @in_a_form
+  end
+
+  def settings_replace_right_cell(nodetype, presenter, r)
+    case nodetype
+    when "ze"     # zone edit
+      # when editing zone in settings tree
+      if @zone.id.blank?
+        partial_div = :settings_list
+        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "Zone")
+      else
+        partial_div = :settings_evm_servers
+        @right_cell_text = @edit ?
+          _("Editing %{model} \"%{name}\"") % {:name => @zone.description, :model => ui_lookup(:model => "Zone")} :
+          _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "Zone"), :name => @zone.description}
+      end
+      presenter[:update_partials][partial_div] = r[:partial => "zone_form"]
+    when "ce"     # category edit
+      # when editing/adding category in settings tree
+      presenter[:update_partials][:settings_co_categories] = r[:partial => "category_form"]
+      if !@category
+        @right_cell_text = _("Adding a new %s") % "Category"
+      else
+        @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @category.description, :model => "Category"}
+      end
+    when "sie"        # scanitemset edit
+      #  editing/adding scanitem in settings tree
+      presenter[:update_partials][:settings_list] = r[:partial => "ap_form"]
+      if !@scan.id
+        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "ScanItemSet")
+      else
+        @right_cell_text = @edit ?
+          _("Editing %{model} \"%{name}\"") % {:name => @scan.name, :model => ui_lookup(:model => "ScanItemSet")} :
+          _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "ScanItemSet"), :name => @scan.name}
+      end
+    when "se"         # schedule edit
+      # when editing/adding schedule in settings tree
+      presenter[:update_partials][:settings_list] = r[:partial => "schedule_form"]
+      presenter[:build_calendar]  = {
+        :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]).to_i * 1000
+      }
+      if !@schedule.id
+        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "MiqSchedule")
+      else
+        model = ui_lookup(:model => "MiqSchedule")
+        @right_cell_text = @edit ?
+          _("Editing %{model} \"%{name}\"") % {:name => @schedule.name, :model => model} :
+          _("%{model} \"%{name}\"") % {:model => model, :name => @schedule.name}
+      end
+    when "lde"          # ldap_region edit
+      # when editing/adding ldap domain in settings tree
+      presenter[:update_partials][:settings_list] = r[:partial => "ldap_domain_form"]
+      if !@ldap_domain.id
+        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapDomain")
+      else
+        model = ui_lookup(:model => "LdapDomain")
+        @right_cell_text = @edit ?
+          _("Editing %{model} \"%{name}\"") % {:name => @ldap_domain.name, :model => model} :
+          _("%{model} \"%{name}\"") % {:model => model, :name => @ldap_domain.name}
+      end
+    when "lre"          # ldap_region edit
+      # when edi ting/adding ldap region in settings tree
+      presenter[:update_partials][:settings_list] = r[:partial => "ldap_region_form"]
+      if !@ldap_region.id
+        @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "LdapRegion")
+      else
+        model = ui_lookup(:model => "LdapRegion")
+        @right_cell_text = @edit ?
+          _("Editing %{model} \"%{name}\"") % {:name => @ldap_region.name, :model => model} :
+          _("%{model} \"%{name}\"") % {:model => model, :name => @ldap_region.name}
+      end
+    when 'rhn'          # rhn subscription edit
+      presenter[:update_partials][:settings_rhn] = r[:partial => "#{@sb[:active_tab]}_tab"]
+    else
+      if %w(accordion_select change_tab tree_select).include?(params[:action]) &&
+         params[:tab_id] != "settings_advanced"
+        presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      elsif %w(zone_delete).include?(params[:pressed])
+        presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+      else
+        presenter[:update_partials][@sb[:active_tab.to_sym]] = r[:partial => "#{@sb[:active_tab]}_tab"]
+      end
+      active_id = from_cid(x_node.split("-").last)
+      # server node
+      if x_node.split("-").first == "svr" && @sb[:my_server_id] == active_id.to_i
+        # show all the tabs if on current server node
+        @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
+        if %w(save reset).include?(params[:button]) && is_browser_ie?
+          presenter[:extra_js] << "miqIEButtonPressed = true;"
+        end
+      elsif x_node.split("-").first.split("__")[1] == "svr" && @sb[:my_server_id] != active_id.to_i
+        # show only 4 tabs if not on current server node
+        @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       end
     end
-    locals = set_form_locals if @in_a_form
-    if !@in_a_form
+  end
+
+  def rbac_replace_right_cell(nodetype, presenter, r)
+    @sb[:tab_label] = @tagging ? "Tagging" : rbac_set_tab_label
+    # Make sure the double_click var is there
+    presenter[:extra_js] << "var miq_double_click = false;"
+    if %w(accordion_select change_tab tree_select).include?(params[:action])
+      presenter[:replace_partials][:ops_tabs] = r[:partial => "all_tabs"]
+    elsif nodetype == "group_seq"
+      presenter[:replace_partials][:flash_msg_div] = r[:partial => "layouts/flash_msg"]
+      presenter[:update_partials][:rbac_details] = r[:partial => "ldap_seq_form"]
+    else
+      presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
+    end
+  end
+
+  def rbac_set_tab_label
+    nodes = x_node.split("-")
+    case nodes.first
+    when "xx"
+      case nodes.last
+      when "u"
+        "Users"
+      when "g"
+        "Groups"
+      when "ur"
+        "Roles"
+      end
+    when "u"
+      @user.name || "Users"
+    when "g"
+      if @record && @record.id
+        @record.description
+      elsif @group && @group.id
+        @group.description
+      else
+        "Groups"
+      end
+    when "ur"
+      @role.name || "Roles"
+    else
+      "Details"
+    end
+  end
+
+  def extra_js_commands(presenter)
+    presenter[:right_cell_text] = @right_cell_text
+    presenter[:osf_node] = x_node
+    presenter[:extra_js] << "miqOneTrans = 0;"                  # resetting miqOneTrans when tab loads
+    presenter[:extra_js] << "if ($('#server_company').length) $('#server_company').focus();"
+    presenter[:ajax_action] = {
+      :action    => @ajax_action,
+      :record_id => @record.id
+    } if @ajax_action
+  end
+
+  def rebuild_toolbars(presenter)
+    unless @in_a_form
       @sb[:center_tb_filename] = center_toolbar_filename
       c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
     end
-    build_supported_depots_for_select
-    render :update do |page|
-      # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
-      page << javascript_for_miq_button_visibility(false)
-      if replace_trees
-        if replace_trees.include?(:settings)
-          self.x_node  = @new_settings_node if @new_settings_node
-          page.replace("settings_tree_div", :partial=>"shared/tree",
-                       :locals  => {:tree => settings_tree,
-                                    :name => settings_tree.name.to_s
-                       }
-          )
-        end
-        if replace_trees.include?(:rbac)
-          self.x_node  = @new_role_node if @new_role_node
-          page.replace("rbac_tree_div", :partial=>"shared/tree",
-                       :locals  => {:tree => rbac_tree,
-                                    :name => rbac_tree.name.to_s
-                       }
-          )
-        end
-        if replace_trees.include?(:diagnostics)
-          self.x_node  = @new_diagnostics_node if @new_diagnostics_node
-          page.replace("diagnostics_tree_div", :partial=>"shared/tree",
-                       :locals  => {:tree => diagnostics_tree,
-                                    :name => diagnostics_tree.name.to_s
-                       }
-          )
-        end
-       if replace_trees.include?(:vmdb)
-         @sb[:active_node][:vmdb_tree] = @new_db_node if @new_db_node
-         page.replace("vmdb_tree_div", :partial=>"shared/tree",
-                      :locals  => {:tree => vmdb_tree,
-                                   :name => vmdb_tree.name.to_s
-                      }
-         )
-       end
-        if get_vmdb_config[:product][:analytics]
-          if replace_trees.include?(:analytics)
-            self.x_node  = @new_analytics_node if @new_analytics_node
-            page.replace("analytics_tree_div", :partial=>"shared/tree",
-                         :locals  => {:tree => analytics_tree,
-                                      :name => analytics_tree.name.to_s
-                         }
-            )
-          end
-        end
-        if params[:action].ends_with?("_delete") && x_node == "root"
-          nodes = x_node.split("-")
-          nodes.pop
-          #self.x_node = nodes.join("-")
-          if params[:action] == "schedule_delete"
-            self.x_node = "xx-msc"
-         elsif params[:action] == "ldap_region_delete"
-            self.x_node = "l"
-          elsif params[:action] == "zone_delete"
-            self.x_node = "xx-z"
-          elsif params[:action] == "ap_delete"
-            self.x_node = "xx-sis"
-          end
-        end
-      end
-      case x_active_tree
-        when :rbac_tree
-          unless @tagging
-            nodes = x_node.split("-")
-            @sb[:tab_label] = case nodes.first
-              when "xx"
-                case nodes.last
-                  when "u"
-                    "Users"
-                  when "g"
-                    "Groups"
-                  when "ur"
-                    "Roles"
-                end
-              when "u"
-                @user.name || "Users"
-              when "g"
-                @record && @record.id ? @record.description : (@group && @group.id ? @group.description : "Groups")
-              when "ur"
-                @role.name || "Roles"
-              else
-                "Details"
-            end
-          else
-            @sb[:tab_label] = "Tagging"
-          end
-          page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
-          page << "var miq_double_click = false;" # Make sure the double_click var is there
-          if %w(accordion_select change_tab tree_select).include?(params[:action])
-            page.replace("ops_tabs", :partial=>"all_tabs")
-          elsif nodetype == "group_seq"
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-            page.replace_html("rbac_details", :partial => "ldap_seq_form")
-          else
-            page.replace_html(@sb[:active_tab], :partial=>"#{@sb[:active_tab]}_tab")
-          end
-        when :settings_tree
-          case nodetype
-            when "ze"     #zone edit
-              #when editing zone in settings tree
-              if @zone.id.blank?
-                partial_div = "settings_list"
-                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"Zone")
-              else
-                partial_div = "settings_evm_servers"
-                right_cell_text = @edit ?
-                  _("Editing %{model} \"%{name}\"") % {:name=>@zone.description, :model=>ui_lookup(:model=>"Zone")} :
-                  _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"Zone"), :name=>@zone.description}
-              end
-              page.replace_html(partial_div, :partial=>"zone_form")
-              page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
-            when "ce"     #category edit
-              #when editing/adding category in settings tree
-              page.replace_html("settings_co_categories", :partial=>"category_form")
-              if !@category
-                right_cell_text = _("Adding a new %s") % "Category"
-              else
-                right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>@category.description, :model=>"Category"}
-              end
-              page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
-            when "sie"        #scanitemset edit
-              #when editing/adding scanitem in settings tree
-              page.replace_html("settings_list", :partial=>"ap_form")
-              if !@scan.id
-                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"ScanItemSet")
-              else
-                right_cell_text = @edit ?
-                  _("Editing %{model} \"%{name}\"") % {:name=>@scan.name, :model=>ui_lookup(:model=>"ScanItemSet")} :
-                  _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"ScanItemSet"), :name=>@scan.name}
-              end
-              page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
-            when "se"         #schedule edit
-              #when editing/adding schedule in settings tree
-              page.replace_html("settings_list", :partial=>"schedule_form")
-              page << "miq_cal_dateFrom = new Date(#{(Time.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
-              page << "miq_cal_dateTo = null;"
-              page << "miqBuildCalendar();"
-              if !@schedule.id
-                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"MiqSchedule")
-              else
-                right_cell_text = @edit ?
-                  _("Editing %{model} \"%{name}\"") % {:name=>@schedule.name, :model=>ui_lookup(:model=>"MiqSchedule")} :
-                  _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name}
-              end
-              page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
-            when "lde"          #ldap_region edit
-              #when editing/adding ldap domain in settings tree
-              page.replace_html("settings_list", :partial=>"ldap_domain_form")
-              if !@ldap_domain.id
-                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"LdapDomain")
-              else
-                right_cell_text = @edit ?
-                    _("Editing %{model} \"%{name}\"") % {:name=>@ldap_domain.name, :model=>ui_lookup(:model=>"LdapDomain")} :
-                    _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"LdapDomain"), :name=>@ldap_domain.name}
-              end
-              page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
-            when "lre"          #ldap_region edit
-                                #when editing/adding ldap region in settings tree
-              page.replace_html("settings_list", :partial=>"ldap_region_form")
-              if !@ldap_region.id
-                right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"LdapRegion")
-              else
-                right_cell_text = @edit ?
-                    _("Editing %{model} \"%{name}\"") % {:name=>@ldap_region.name, :model=>ui_lookup(:model=>"LdapRegion")} :
-                    _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"LdapRegion"), :name=>@ldap_region.name}
-              end
-              page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(right_cell_text))}');"
-            when 'rhn'          # rhn subscription edit
-                page.replace_html('settings_rhn', :partial=>"#{@sb[:active_tab]}_tab")
-            else
-              if %w(accordion_select change_tab tree_select).include?(params[:action]) &&
-                  params[:tab_id] != "settings_advanced"
-                page.replace("ops_tabs", :partial=>"all_tabs")
-              elsif %w(zone_delete).include?(params[:pressed])
-                page.replace("ops_tabs", :partial=>"all_tabs")
-              else
-                page.replace_html(@sb[:active_tab], :partial=>"#{@sb[:active_tab]}_tab")
-              end
-              active_id = from_cid(x_node.split("-").last)
-              # server node
-              if x_node.split("-").first == "svr" && my_server_id == active_id.to_i
-                #show all the tabs if on current server node
-                @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
-                page << "miqOneTrans = 0;"          #resetting miqOneTrans when tab loads
-                page << "miqIEButtonPressed = true" if %w(save reset).include?(params[:button]) && is_browser_ie?
-              elsif x_node.split("-").first.split("__")[1] == "svr" && my_server_id != active_id.to_i
-                #show only 4 tabs if not on current server node
-                @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
-              end
-              page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
-          end
-        when :diagnostics_tree
-          #need to refresh all_tabs for server by roles and roles by servers screen
-          #to show correct buttons on screen when tree node is selected
-          if %w(accordion_select change_tab explorer tree_select).include?(params[:action]) ||
-             %w(diagnostics_roles_servers diagnostics_servers_roles).include?(@sb[:active_tab])
-            page.replace("ops_tabs", :partial=>"all_tabs")
-          elsif nodetype == "log_depot_edit"
-            @right_cell_text = "Editing Log Depot settings"
-            page.replace_html("diagnostics_collect_logs", :partial => "ops/log_collection")
-          else
-            page.replace_html(@sb[:active_tab], :partial=>"#{@sb[:active_tab]}_tab")
-          end
-          page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
-          # zone level
-          if x_node.split("-").first == "z"
-            page << "miq_cal_dateFrom = null;"
-            page << "miq_cal_dateTo = new Date();"
-            page << "miqBuildCalendar();"
-          end
-        when :vmdb_tree #"root","tb", "ti","xx" # Check if vmdb root or table is selected
-          # Need to replace all_tabs to show table name as tab label
-          page.replace("ops_tabs", :partial=>"all_tabs")
-          page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
-        when :analytics_tree
-          page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
-          if params[:action] == "accordion_select"
-            page.replace("ops_tabs", :partial=>"all_tabs")
-          else
-            page.replace_html("analytics_details", :partial=>"analytics_details_tab")
-          end
-          if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
-            #setting changed here to enable/disable Apply button
-            @changed = @sb[:good] && @sb[:good] > 0 ? true : false
-          end
-          page << javascript_for_miq_button_visibility(@changed) if @in_a_form
-      end
+    # Rebuild the toolbars
+    presenter[:set_visible_elements][:center_buttons_div] = c_buttons && c_xml
+    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons, :xml => c_xml}  if c_buttons && c_xml
+    presenter[:expand_collapse_cells][:a] = c_buttons ? 'expand' : 'collapse'
+    presenter[:expand_collapse_cells][:a] = 'collapse' if @sb[:center_tb_filename] == "blank_view_tb"
 
-      # Handle bottom cell
-      if @pages || @in_a_form
-        if @pages
-          page.replace_html("paging_div",:partial=>"layouts/x_pagingcontrols")
-          page << javascript_hide_if_exists("form_buttons_div")
-          page << javascript_show_if_exists("pc_div_1")
-        elsif @in_a_form
-          page.replace_html("form_buttons_div", :partial => "layouts/x_edit_buttons", :locals => locals)
-          page << javascript_hide_if_exists("pc_div_1")
-          page << javascript_show_if_exists("form_buttons_div")
-        end
-        page << "dhxLayoutB.cells('c').expand();"
-      else
-        page << "dhxLayoutB.cells('c').collapse();"
-      end
+    if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
+      # Create miq_record_id JS var, if @record is present
+      presenter[:miq_record_id] =  @record ? @record.id : @edit[:rec_id]
+    else
+      # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
+      presenter[:miq_record_id] = nil
+    end
+  end
 
-      if c_buttons && c_xml
-        page << "dhxLayoutB.cells('a').expand();"
-        page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << javascript_show_if_exists("center_buttons_div")
-      else
-        page << "dhxLayoutB.cells('a').collapse();"
-        page << javascript_hide_if_exists("center_buttons_div")
+  def handle_bottom_cell(presenter, r, locals)
+    # Handle bottom cell
+    if @pages || @in_a_form
+      if @pages
+        presenter[:set_visible_elements][:form_buttons_div] = false
+        presenter[:set_visible_elements][:pc_div_1] = true
+        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+      elsif @in_a_form
+        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter[:set_visible_elements][:pc_div_1] = false
       end
+      presenter[:expand_collapse_cells][:c] = 'expand'
+    else
+      presenter[:expand_collapse_cells][:c] = 'collapse'
+    end
+  end
 
-      page << "dhxLayoutB.cells('a').collapse();" if @sb[:center_tb_filename] == "blank_view_tb"
-
-      if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
-        page << "miq_record_id = '#{@record ? @record.id : @edit[:rec_id]}';" # Create miq_record_id JS var, if @record is present
-      else
-        page << "miq_record_id = undefined;"  # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
-      end
-
-      if role_allows(:feature=>"ops_settings")
-        page << javascript_dim("settings_tree_div", false)
-      end
-      if role_allows(:feature=>"ops_rbac")
-        page << javascript_dim("rbac_tree_div", false)
-      end
-      if role_allows(:feature=>"ops_diagnostics")
-        page << javascript_dim("diagnostics_tree_div", false)
-      end
-      if role_allows(:feature=>"ops_db")
-        page << javascript_dim("vmdb_tree_div", false)
-      end
-      if get_vmdb_config[:product][:analytics]
-        page << javascript_dim("analytics_tree_div", false)
-      end
-
-      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}', '#{x_node}');"
-      page << "miqSparkleOff();"
-      page << javascript_focus_if_exists('server_company')
-      page << "if (miqDomElementExists('flash_msg_div')) {"
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "}"
-      if @ajax_action
-        page << "miqAsyncAjax('#{url_for(:action=>@ajax_action, :id=>@record)}');"
-      end
+  def replace_explorer_trees(replace_trees, presenter, r)
+    # Build hash of trees to replace and optional new node to be selected
+    trees = {}
+    if replace_trees
+      trees[:settings]    = settings_build_tree     if replace_trees.include?(:settings)
+      trees[:rbac]        = rbac_build_tree         if replace_trees.include?(:rbac)
+      trees[:diagnostics] = diagnostics_build_tree  if replace_trees.include?(:diagnostics)
+      trees[:vmdb]        = db_build_tree           if replace_trees.include?(:vmdb)
+      trees[:analytics]   = analytics_build_tree    if get_vmdb_config[:product][:analytics] &&
+                                                       replace_trees.include?(:analytics)
+    end
+    replace_trees.each do |t|
+      tree = trees[t]
+      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+        :partial => 'shared/tree',
+        :locals  => {:tree => tree,
+                     :name => tree.name.to_s
+        }
+      ]
     end
   end
 
