@@ -104,26 +104,6 @@ class EmsAmazon < EmsCloud
   # Operations
   #
 
-  def extract_queue
-    @extract_queue ||= begin
-      require 'ec2Extract/Ec2ExtractQueue'
-      Ec2ExtractQueue.new(
-        :sqs            => sqs,
-        :s3             => s3,
-        :request_queue  => 'evm_extract_request',
-        :reply_queue    => 'evm_extract_reply',
-        :reply_prefix   => 'extract/queue-reply/',
-        :account_info   => {
-          :account_id   => self.authentication_userid(:default)
-        }
-      )
-    end
-  end
-
-  def request_metadata_scan(ec2_id, ost)
-    extract_queue.send_extract_request(ec2_id, ost.taskid, ost.category.split(','))
-  end
-
   def vm_start(vm, options = {})
     vm.start
   rescue => err

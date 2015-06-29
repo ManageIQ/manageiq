@@ -95,7 +95,7 @@ module MiqServer::ServerSmartProxy
     if %w{ScanMetadata SyncMetadata}.include?(ost.method_name)
       v = VmOrTemplate.find(ost.vm_id)
 
-      if v.vendor == "OpenStack" || v.vendor == "Amazon"
+      if v.respond_to?(:perform_metadata_scan)
         job = Job.find_by_guid(ost.taskid)
         begin
           _log.debug "OpenStack (#{v.class.name})"
