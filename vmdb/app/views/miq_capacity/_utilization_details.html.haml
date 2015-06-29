@@ -8,14 +8,11 @@
         :chart_data               => @sb[:util][:chart_data]["utiltrend"],
         :perf_options             => @sb[:util][:options]})
   - else
-    .alert.alert-info
-      %span.pficon.pficon-info
-      %strong
-        - if x_node == ""
-          = _("Select a node on the left to view Utilization information.")
-        - else
-          = _("No performance data is available for the selected item.")
-
+    - if x_node == ""
+      - msg = _("Select a node on the left to view Utilization information.")
+    - else
+      - msg = _("No performance data is available for the selected item.")
+    = render :partial => 'layouts/info_msg', :locals => {:message => msg}
   - if @sb[:util] && @sb[:util][:trend_rpt]
     %br{:clear => "all"}
     %hr
