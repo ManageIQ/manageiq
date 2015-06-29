@@ -59,8 +59,7 @@ module Metric::CiMixin
   #
 
   def performances_maintains_value_for_duration?(options)
-    log_header = "MIQ(#{self.class.name}.performances_maintains_value_for_duration?)"
-    $log.info("#{log_header} options: #{options.inspect}")
+    _log.info("options: #{options.inspect}")
     raise "Argument must be an options hash" unless options.is_a?(Hash)
     column = options[:column]
     value = options[:value].to_f
@@ -106,7 +105,7 @@ module Metric::CiMixin
     # Extend the window one duration back to enable handling overlap - consecutive matches that span the boundary
     # between the current and previous evaluations.
     window_starting_on = starting_on - duration
-    $log.info("#{log_header} Reading performance records from: #{window_starting_on} to: #{now}")
+    _log.info("Reading performance records from: #{window_starting_on} to: #{now}")
 
     scope = send(meth)
     if Metric.column_names.include?(column.to_s)
@@ -129,13 +128,13 @@ module Metric::CiMixin
     if colvalue && colvalue.send(operator, value)
       # If there is a match at the start_on timestamp then we need to check the records going backwards to find the first one that doesnt match.
       # This will become the new starting point for evaluation.
-      $log.info("#{log_header} First record at Index: #{start_on_idx}, ts: #{rec_at_start_on.timestamp} is a match, reading backwards to find first non-matching record")
+      _log.info("First record at Index: #{start_on_idx}, ts: #{rec_at_start_on.timestamp} is a match, reading backwards to find first non-matching record")
       first_miss = total_records[start_on_idx..-1].detect(lambda{total_records.last}) do |rec|
         colvalue = rec.send(column)
         !(colvalue.nil? ? false : colvalue.send(operator, value))
       end
       first_miss_idx = total_records.index {|r| r.timestamp == first_miss.timestamp}
-      $log.info("#{log_header} Found non-matching record: Index: #{first_miss_idx}, ts: #{first_miss.timestamp}, #{column}: #{colvalue}")
+      _log.info("Found non-matching record: Index: #{first_miss_idx}, ts: #{first_miss.timestamp}, #{column}: #{colvalue}")
       # Adjust the range to the latest ts back to the ts of the first non-matching ts
       total_records = total_records[0..first_miss_idx]
     else
@@ -144,39 +143,39 @@ module Metric::CiMixin
     end
 
     slope, yint = VimPerformanceAnalysis.calc_slope_from_data(total_records.dup, :timestamp, column)
-    $log.info("#{log_header} [#{total_records.length}] total records found, slope: #{slope}, counter: [#{column}] criteria: #{interval_name} from [#{total_records.last.timestamp}] to [#{now}]")
+    _log.info("[#{total_records.length}] total records found, slope: #{slope}, counter: [#{column}] criteria: #{interval_name} from [#{total_records.last.timestamp}] to [#{now}]")
 
     # Honor trend direction option by comparing with the calculated slope value
     if trend
       case trend.to_sym
       when :up
         unless slope > 0
-           $log.info("#{log_header} Returning false result because slope #{slope} is not trending up")
+           _log.info("Returning false result because slope #{slope} is not trending up")
            return false
         end
       when :down
         unless slope < 0
-           $log.info("#{log_header} Returning false result because slope #{slope} is not trending down")
+           _log.info("Returning false result because slope #{slope} is not trending down")
            return false
         end
       when :not_up
         unless slope <= 0
-           $log.info("#{log_header} Returning false result because slope #{slope} is trending up")
+           _log.info("Returning false result because slope #{slope} is trending up")
            return false
         end
       when :not_down
         unless slope >= 0
-           $log.info("#{log_header} Returning false result because slope #{slope} is trending down")
+           _log.info("Returning false result because slope #{slope} is trending down")
            return false
         end
       when :up_more_than
         if slope <= (slope_steepness / Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE)
-          $log.info("#{log_header} Returning false result because slope #{slope} is not up more than #{slope_steepness} per minute")
+          _log.info("Returning false result because slope #{slope} is not up more than #{slope_steepness} per minute")
           return false
         end
       when :down_more_than
         if slope >= ((slope_steepness * -1.0) / Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE)
-          $log.info("#{log_header} Returning false result because slope #{slope} is not down more than #{slope_steepness} per minute")
+          _log.info("Returning false result because slope #{slope} is not down more than #{slope_steepness} per minute")
           return false
         end
       when :none
@@ -191,7 +190,7 @@ module Metric::CiMixin
     recs_in_window = duration / cap_int
     recs_to_match  = percentage.nil? ? recs_in_window : (recs_in_window * (percentage / 100.0)).to_i
 
-    $log.info("#{log_header} Need at least #{recs_to_match} matches out of #{recs_in_window} consecutive records for the duration #{duration}")
+    _log.info("Need at least #{recs_to_match} matches out of #{recs_in_window} consecutive records for the duration #{duration}")
     match_history = []
     matches_in_window = 0
     total_records.each_with_index do |rec, i|
@@ -202,10 +201,10 @@ module Metric::CiMixin
       match_history[i] = res ? 1 : 0
       if res
         matches_in_window += match_history[i]
-        $log.info("#{log_header} Matched?: true,  Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
+        _log.info("Matched?: true,  Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
         return true if matches_in_window >= recs_to_match
       else
-        $log.info("#{log_header} Matched?: false, Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
+        _log.info("Matched?: false, Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
       end
     end
     false

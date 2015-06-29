@@ -1,9 +1,8 @@
 module EmsEvent::Parsers::OpenstackInfra
   def self.event_to_hash(event, ems_id)
-    log_header = "MIQ(#{self.name}.event_to_hash)"
-    log_header << " ems_id: [#{ems_id}]" unless ems_id.nil?
+    log_header = "ems_id: [#{ems_id}] " unless ems_id.nil?
 
-    $log.debug("#{log_header} event: [#{event[:content]["event_type"]}]") if $log && $log.debug?
+    _log.debug("#{log_header}event: [#{event[:content]["event_type"]}]") if $log && $log.debug?
 
     # attributes that are common to all notifications
     event_hash = {

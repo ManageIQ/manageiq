@@ -3,7 +3,6 @@ class MiqShortcut < ActiveRecord::Base
   has_many :miq_widgets, :through => :miq_widget_shortcuts
 
   def self.seed
-    log_header = "MIQ(MiqShortcut.seed)"
     MiqRegion.my_region.lock do
       names = []
       seed_data.each_with_index do |s, index|
@@ -11,12 +10,12 @@ class MiqShortcut < ActiveRecord::Base
         s[:sequence] = index
         rec = self.find_by_name(s[:name])
         if rec.nil?
-          $log.info("#{log_header} Creating #{s.inspect}")
+          _log.info("Creating #{s.inspect}")
           rec = self.create(s)
         else
           rec.attributes = s
           if rec.changed?
-            $log.info("#{log_header} Updating #{s.inspect}")
+            _log.info("Updating #{s.inspect}")
             rec.save
           end
         end
@@ -24,7 +23,7 @@ class MiqShortcut < ActiveRecord::Base
 
       self.all.each do |rec|
         next if names.include?(rec.name)
-        $log.info("#{log_header} Deleting #{rec.inspect}")
+        _log.info("Deleting #{rec.inspect}")
         rec.destroy
       end
     end

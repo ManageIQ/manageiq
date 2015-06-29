@@ -15,6 +15,8 @@ module Authenticator
   end
 
   class Base
+    include Vmdb::Logging
+
     def self.authorize(config, *args)
       new(config).authorize(*args)
     end
@@ -70,10 +72,10 @@ module Authenticator
         end
 
       rescue MiqException::MiqEVMLoginError => err
-        $log.warn err.message
+        _log.warn err.message
         raise
       rescue Exception => err
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
         raise MiqException::MiqEVMLoginError, err.message
       end
 
@@ -94,7 +96,6 @@ module Authenticator
     end
 
     def authorize(taskid, username, *args)
-      log_prefix = "MIQ(Authenticator#authorize):"
       audit = {:event => "authorize", :userid => username}
 
       run_task(taskid, "Authorizing") do |task|
@@ -103,7 +104,7 @@ module Authenticator
 
           unless identity
             msg = "Authentication failed for userid #{username}, unable to find user object in #{self.class.proper_name}"
-            $log.warn("#{log_prefix}: #{msg}")
+            _log.warn("#{msg}")
             AuditEvent.failure(audit.merge(:message => msg))
             task.error(msg)
             task.state_finished
@@ -118,7 +119,7 @@ module Authenticator
           if matching_groups.empty?
             msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role"
             AuditEvent.failure(audit.merge(:message => msg))
-            $log.warn("#{log_prefix}: #{msg}")
+            _log.warn("#{msg}")
             task.error(msg)
             task.state_finished
             return nil
@@ -128,7 +129,7 @@ module Authenticator
           user.miq_groups = matching_groups
           user.save!
 
-          $log.info("#{log_prefix}: Authorized User: [#{user.userid}]")
+          _log.info("Authorized User: [#{user.userid}]")
           task.userid = user.userid
           task.update_status("Finished", "Ok", "User authorized successfully")
 
@@ -218,12 +219,10 @@ module Authenticator
     end
 
     def run_task(taskid, status)
-      log_prefix = "MIQ(Authenticator#run_task):"
-
       task = MiqTask.find_by_id(taskid)
       if task.nil?
-        message = "#{log_prefix} Unable to find task with id: [#{taskid}]"
-        $log.error(message)
+        message = "Unable to find task with id: [#{taskid}]"
+        _log.error(message)
         raise message
       end
       task.update_status("Active", "Ok", status)
@@ -231,7 +230,7 @@ module Authenticator
       begin
         yield task
       rescue Exception => err
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
         task.error(err.message)
         task.state_finished
         raise
@@ -239,15 +238,13 @@ module Authenticator
     end
 
     def match_groups(external_group_names)
-      log_prefix  = "MIQ(Authenticator#match_groups)"
-
       return [] if external_group_names.empty?
       external_group_names = external_group_names.collect(&:downcase)
 
       internal_groups = MiqServer.my_server.permitted_groups
 
-      external_group_names.each { |g| $log.debug("#{log_prefix} External Group: #{g}") }
-      internal_groups.each      { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }
+      external_group_names.each { |g| _log.debug("External Group: #{g}") }
+      internal_groups.each      { |g| _log.debug("Internal Group: #{g.description.downcase}") }
 
       internal_groups.select { |g| external_group_names.include?(g.description.downcase) }
     end

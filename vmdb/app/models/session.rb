@@ -25,7 +25,7 @@ class Session < ActiveRecord::Base
 
       s.destroy
     }
-    $log.info("MIQ(session-purge) purged stale session data, #{ses.length} entries deleted") unless ses.length == 0
+    _log.info("purged stale session data, #{ses.length} entries deleted") unless ses.length == 0
   end
 
   def self.timeout(ttl=nil)

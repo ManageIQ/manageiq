@@ -43,7 +43,7 @@ class PxeMenuIpxe < PxeMenu
     items << current_item
 
     bad, good = items.compact.partition { |i| i[:kernel].blank? }
-    bad.each { |i| $log.warn "MIQ(#{self.name}.parse_labels) Image #{i[:label]} missing kernel - Skipping" }
+    bad.each { |i| _log.warn "Image #{i[:label]} missing kernel - Skipping" }
     good
   end
 

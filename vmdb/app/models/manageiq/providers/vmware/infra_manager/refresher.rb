@@ -31,44 +31,44 @@ class Vmware::InfraManager
         ems_in_list = list.any? { |t| t.kind_of?(ExtManagementSystem) }
 
         if ems_in_list
-          $log.info "MIQ(VcRefresher.initialize) Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]." if list.length > 1
+          _log.info "Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]." if list.length > 1
           list.clear << ems
         elsif !ems_in_list && list.length >= @full_refresh_threshold
-          $log.info "MIQ(VcRefresher.initialize) Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]."
+          _log.info "Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]."
           list.clear << ems
         end
       end
     end
 
     def refresh
-      $log.info "MIQ(VcRefresher.refresh) Refreshing all targets..."
+      _log.info "Refreshing all targets..."
       outer_time = Time.now
 
       @targets_by_ems_id.each do |ems_id, targets|
         # Get the ems object
         @ems = @ems_by_ems_id[ems_id]
-        log_header = "MIQ(VcRefresher.refresh) EMS: [#{@ems.name}], id: [#{@ems.id}]"
+        log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
 
         begin
-          $log.info "#{log_header} Refreshing targets for EMS..."
-          targets.each { |t| $log.info "#{log_header}   #{t.class}: [#{t.name}], id: [#{t.id}]" }
+          _log.info "#{log_header} Refreshing targets for EMS..."
+          targets.each { |t| _log.info "#{log_header}   #{t.class}: [#{t.name}], id: [#{t.id}]" }
 
           dummy, timings = Benchmark.realtime_block(:total_time) { refresh_targets_for_ems(targets) }
 
-          $log.info "#{log_header} Refreshing targets for EMS...Complete - Timings: #{timings.inspect}"
+          _log.info "#{log_header} Refreshing targets for EMS...Complete - Timings: #{timings.inspect}"
         rescue => e
           raise if EmsRefresh.debug_failures
 
-          $log.log_backtrace(e)
-          $log.error("#{log_header} Unable to perform refresh for the following targets:" )
-          targets.each { |t| $log.error "#{log_header}   #{t.class}: [#{t.name}], id: [#{t.id}]" }
+          _log.log_backtrace(e)
+          _log.error("#{log_header} Unable to perform refresh for the following targets:" )
+          targets.each { |t| _log.error "#{log_header}   #{t.class}: [#{t.name}], id: [#{t.id}]" }
           @ems.update_attributes(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
         else
           @ems.update_attributes(:last_refresh_error => nil, :last_refresh_date => Time.now.utc)
         end
       end
 
-      $log.info "MIQ(VcRefresher.refresh) Refreshing all targets...Completed in #{Time.now - outer_time}s"
+      _log.info "Refreshing all targets...Completed in #{Time.now - outer_time}s"
     end
 
     private
@@ -103,30 +103,30 @@ class Vmware::InfraManager
     end
 
     def refresh_target(target, filtered_data)
-      log_header = "MIQ(VcRefresher.refresh) EMS: [#{@ems.name}], id: [#{@ems.id}]"
-      $log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
+      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
+      _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
 
-      $log.debug "#{log_header} Parsing VC inventory..."
+      _log.debug "#{log_header} Parsing VC inventory..."
       hashes, = Benchmark.realtime_block(:parse_vc_data) do
         RefreshParser.ems_inv_to_hashes(filtered_data)
       end
-      $log.debug "#{log_header} Parsing VC inventory...Complete"
+      _log.debug "#{log_header} Parsing VC inventory...Complete"
 
       Benchmark.realtime_block(:db_save_inventory) do
         @ems.update_attributes(@ems_data) unless @ems_data.nil?
         EmsRefresh.save_ems_inventory(@ems, hashes, target)
       end
 
-      $log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
+      _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
     end
 
     def post_refresh_ems(start_time)
-      log_header = "MIQ(VcRefresher.refresh) EMS: [#{@ems.name}], id: [#{@ems.id}]"
+      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
       [VmOrTemplate, Host].each do |klass|
         next unless klass.respond_to?(:post_refresh_ems)
-        $log.info "#{log_header} Performing post-refresh operations for #{klass} instances..."
+        _log.info "#{log_header} Performing post-refresh operations for #{klass} instances..."
         klass.post_refresh_ems(@ems.id, start_time)
-        $log.info "#{log_header} Performing post-refresh operations for #{klass} instances...Complete"
+        _log.info "#{log_header} Performing post-refresh operations for #{klass} instances...Complete"
       end
     end
 
@@ -147,7 +147,7 @@ class Vmware::InfraManager
     ]
 
     def get_vc_data
-      log_header = "MIQ(VcRefresher.get_vc_data) EMS: [#{@ems.name}], id: [#{@ems.id}]"
+      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
 
       cleanup_callback = Proc.new { @vc_data = nil }
 
@@ -155,12 +155,12 @@ class Vmware::InfraManager
         @vc_data = Hash.new { |h, k| h[k] = Hash.new }
 
         VC_ACCESSORS.each do |acc, type|
-          $log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...")
+          _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...")
           inv_hash = @vi.send(acc, :"ems_refresh_#{type}")
-          EmsRefresh.log_inv_debug_trace(inv_hash, "#{log_header} inv_hash:")
+          EmsRefresh.log_inv_debug_trace(inv_hash, "#{_log.prefix} #{log_header} inv_hash:")
 
           @vc_data[type] = inv_hash unless inv_hash.blank?
-          $log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...Complete - Count: [#{inv_hash.blank? ? 0 : inv_hash.length}]")
+          _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...Complete - Count: [#{inv_hash.blank? ? 0 : inv_hash.length}]")
         end
       end
 
@@ -170,44 +170,44 @@ class Vmware::InfraManager
         @vc_data[:rp].merge!(@vc_data.delete(:vapp))
       end
 
-      EmsRefresh.log_inv_debug_trace(@vc_data, "#{log_header} @vc_data:", 2)
+      EmsRefresh.log_inv_debug_trace(@vc_data, "#{_log.prefix} #{log_header} @vc_data:", 2)
     end
 
     def get_vc_data_ems_customization_specs
-      log_header = "MIQ(VcRefresher.get_vc_data_ems_customization_specs) EMS: [#{@ems.name}], id: [#{@ems.id}]"
+      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
 
       cleanup_callback = Proc.new { @vc_data = nil }
 
       retrieve_from_vc(cleanup_callback) do
-        $log.info("#{log_header} Retrieving Customization Spec inventory...")
+        _log.info("#{log_header} Retrieving Customization Spec inventory...")
         begin
           vim_csm = @vi.getVimCustomizationSpecManager
           @vc_data[:customization_specs] = vim_csm.getAllCustomizationSpecs
         rescue RuntimeError => err
           raise unless err.message.include?("not supported on this system")
-          $log.info("#{log_header} #{err}")
+          _log.info("#{log_header} #{err}")
         ensure
           vim_csm.release if vim_csm rescue nil
         end
-        $log.info("#{log_header} Retrieving Customization Spec inventory...Complete - Count: [#{@vc_data[:customization_specs].length}]")
+        _log.info("#{log_header} Retrieving Customization Spec inventory...Complete - Count: [#{@vc_data[:customization_specs].length}]")
 
-        EmsRefresh.log_inv_debug_trace(@vc_data[:customization_specs], "#{log_header} customization_spec_inv:")
+        EmsRefresh.log_inv_debug_trace(@vc_data[:customization_specs], "#{_log.prefix} #{log_header} customization_spec_inv:")
       end
     end
 
     def get_vc_data_host_scsi(host_mors)
-      log_header = "MIQ(VcRefresher.get_vc_data_host_scsi) EMS: [#{@ems.name}], id: [#{@ems.id}]"
-      return $log.info("#{log_header} Not retrieving Storage Device inventory for hosts...") if host_mors.empty?
+      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
+      return _log.info("#{log_header} Not retrieving Storage Device inventory for hosts...") if host_mors.empty?
 
       cleanup_callback = Proc.new { @vc_data = nil }
 
       retrieve_from_vc(cleanup_callback) do
-        $log.info("#{log_header} Retrieving Storage Device inventory for [#{host_mors.length}] hosts...")
+        _log.info("#{log_header} Retrieving Storage Device inventory for [#{host_mors.length}] hosts...")
         host_mors.each do |mor|
           data = @vc_data.fetch_path(:host, mor)
           next if data.nil?
 
-          $log.info("#{log_header} Retrieving Storage Device inventory for Host [#{mor}]...")
+          _log.info("#{log_header} Retrieving Storage Device inventory for Host [#{mor}]...")
           begin
             vim_host = @vi.getVimHostByMor(mor)
             sd = vim_host.storageDevice(:ems_refresh_host_scsi)
@@ -215,27 +215,27 @@ class Vmware::InfraManager
           ensure
             vim_host.release if vim_host rescue nil
           end
-          $log.info("#{log_header} Retrieving Storage Device inventory for Host [#{mor}]...Complete")
+          _log.info("#{log_header} Retrieving Storage Device inventory for Host [#{mor}]...Complete")
         end
-        $log.info("#{log_header} Retrieving Storage Device inventory for [#{host_mors.length}] hosts...Complete")
+        _log.info("#{log_header} Retrieving Storage Device inventory for [#{host_mors.length}] hosts...Complete")
 
-        EmsRefresh.log_inv_debug_trace(@vc_data[:host], "#{log_header} host_inv:")
+        EmsRefresh.log_inv_debug_trace(@vc_data[:host], "#{_log.prefix} #{log_header} host_inv:")
       end
     end
 
     def get_ems_data
-      log_header = "MIQ(VcRefresher.get_ems_data) EMS: [#{@ems.name}], id: [#{@ems.id}]"
+      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
 
       cleanup_callback = Proc.new { @ems_data = nil }
 
       retrieve_from_vc(cleanup_callback) do
-        $log.info("#{log_header} Retrieving EMS information...")
+        _log.info("#{log_header} Retrieving EMS information...")
         about = @vi.about
         @ems_data = {:api_version => about['apiVersion'], :uid_ems => about['instanceUuid']}
-        $log.info("#{log_header} Retrieving EMS information...Complete")
+        _log.info("#{log_header} Retrieving EMS information...Complete")
       end
 
-      EmsRefresh.log_inv_debug_trace(@ems_data, "#{log_header} ext_management_system_inv:")
+      EmsRefresh.log_inv_debug_trace(@ems_data, "#{_log.prefix} #{log_header} ext_management_system_inv:")
     end
 
     MAX_RETRIES = 5
@@ -244,7 +244,7 @@ class Vmware::InfraManager
     def retrieve_from_vc(cleanup_callback = nil)
       return unless block_given?
 
-      log_header = "MIQ(VcRefresher.retrieve_from_vc) EMS: [#{@ems.name}], id: [#{@ems.id}]"
+      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
 
       retries = 0
       begin
@@ -252,7 +252,7 @@ class Vmware::InfraManager
         yield
       rescue HTTPAccess2::Session::KeepAliveDisconnected => httperr
         # Handle this error by trying again multiple times and sleeping between attempts
-        $log.log_backtrace(httperr)
+        _log.log_backtrace(httperr)
 
         cleanup_callback.call unless cleanup_callback.nil?
 
@@ -262,9 +262,9 @@ class Vmware::InfraManager
           # disconnect before trying again
           disconnect_from_ems
 
-          $log.warn("#{log_header} Abnormally disconnected from VC...Retrying in #{RETRY_SLEEP_TIME} seconds")
+          _log.warn("#{log_header} Abnormally disconnected from VC...Retrying in #{RETRY_SLEEP_TIME} seconds")
           sleep RETRY_SLEEP_TIME
-          $log.warn("#{log_header} Beginning EMS refresh retry \##{retries}")
+          _log.warn("#{log_header} Beginning EMS refresh retry \##{retries}")
           retry
         end
 
@@ -278,10 +278,10 @@ class Vmware::InfraManager
 
     def disconnect_from_ems
       return if @vi.nil?
-      $log.info("MIQ(VcRefresher.disconnect_from_ems) Disconnecting from EMS: [#{@ems.name}], id: [#{@ems.id}]...")
+      _log.info("Disconnecting from EMS: [#{@ems.name}], id: [#{@ems.id}]...")
       @vi.disconnect
       @vi = nil
-      $log.info("MIQ(VcRefresher.disconnect_from_ems) Disconnecting from EMS: [#{@ems.name}], id: [#{@ems.id}]...Complete")
+      _log.info("Disconnecting from EMS: [#{@ems.name}], id: [#{@ems.id}]...Complete")
     end
 
     VC_ACCESSORS_BY_MOR = {
@@ -297,7 +297,7 @@ class Vmware::InfraManager
     }
 
     def get_vc_data_by_mor(type, mor)
-      log_header = "MIQ(VcRefresher.get_vc_data_by_mor) EMS: [#{@ems.name}], id: [#{@ems.id}]"
+      log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
 
       accessor = VC_ACCESSORS_BY_MOR[type]
       raise ArgumentError, "Invalid type" if accessor.nil?
@@ -309,15 +309,15 @@ class Vmware::InfraManager
       retrieve_from_vc(cleanup_callback) do
         @vc_data = Hash.new { |h, k| h[k] = Hash.new } if @vc_data.nil?
 
-        $log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...")
+        _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...")
         inv_hash = mor.each_with_object({}) do |m, h|
           data = @vi.send(accessor, m)
           h[m] = data unless data.nil?
         end
-        EmsRefresh.log_inv_debug_trace(inv_hash, "#{log_header} inv_hash:")
+        EmsRefresh.log_inv_debug_trace(inv_hash, "#{_log.prefix} #{log_header} inv_hash:")
 
         @vc_data[type] = inv_hash unless inv_hash.blank?
-        $log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...Complete - Count: [#{inv_hash.blank? ? 0 : inv_hash.length}]")
+        _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...Complete - Count: [#{inv_hash.blank? ? 0 : inv_hash.length}]")
       end
     end
 
@@ -332,14 +332,12 @@ class Vmware::InfraManager
     end
 
     def reconfig_refresh
-      log_header = "MIQ(VcRefresher.reconfig_refresh)"
-
       ems_id = @targets_by_ems_id.keys.first
       vm = @targets_by_ems_id[ems_id].first
       @ems = vm.ext_management_system
 
-      $log.info "#{log_header} Refreshing target VM for reconfig..."
-      $log.info "#{log_header}   #{vm.class}: [#{vm.name}], id: [#{vm.id}]"
+      _log.info "Refreshing target VM for reconfig..."
+      _log.info "#{vm.class}: [#{vm.name}], id: [#{vm.id}]"
 
       dummy, timings = Benchmark.realtime_block(:total_time) do
         Benchmark.realtime_block(:get_vc_data_total) do
@@ -352,18 +350,18 @@ class Vmware::InfraManager
           end
         end
 
-        $log.debug "#{log_header} Parsing VC inventory..."
+        _log.debug "Parsing VC inventory..."
         hashes, = Benchmark.realtime_block(:parse_vc_data) do
           RefreshParser.reconfig_inv_to_hashes(@vc_data)
         end
-        $log.debug "#{log_header} Parsing VC inventory...Complete"
+        _log.debug "Parsing VC inventory...Complete"
 
         Benchmark.realtime_block(:db_save_inventory) do
           EmsRefresh.reconfig_save_vm_inventory(vm, hashes)
         end
       end
 
-       $log.info "#{log_header} Refreshing target VM for reconfig...Complete - Timings: #{timings.inspect}"
+       _log.info "Refreshing target VM for reconfig...Complete - Timings: #{timings.inspect}"
     end
   end
 end

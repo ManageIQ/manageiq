@@ -21,7 +21,6 @@ class IsoDatastore < ActiveRecord::Base
   end
 
   def advertised_images
-    log_header = "MIQ(#{self.class.name}#advertised_images)"
     return [] unless self.ext_management_system.kind_of?(EmsRedhat)
 
     begin
@@ -29,16 +28,15 @@ class IsoDatastore < ActiveRecord::Base
         rhevm.iso_images.collect { |image| image[:name] }
       end
     rescue Ovirt::Error => err
-      $log.error("#{log_header} Error Getting ISO Images on ISO Datastore on Management System <#{self.name}>: #{err.class.name}: #{err}")
+      _log.error("Error Getting ISO Images on ISO Datastore on Management System <#{self.name}>: #{err.class.name}: #{err}")
       raise
     end
   end
 
   def synchronize_advertised_images
-    log_header = "MIQ(#{self.class.name}#synchronize_advertised_images)"
     log_for    = "ISO Datastore on Management System <#{self.name}>"
 
-    $log.info("#{log_header} Synchronizing images on #{log_for}...")
+    _log.info("Synchronizing images on #{log_for}...")
     db_image_hash = self.iso_images.index_by(&:name)
     advertised_images.each do |image_name|
       if db_image_hash.include?(image_name)
@@ -52,7 +50,7 @@ class IsoDatastore < ActiveRecord::Base
 
     clear_association_cache
     self.update_attribute(:last_refresh_on, Time.now.utc)
-    $log.info("#{log_header} Synchronizing images on #{log_for}...Complete")
+    _log.info("Synchronizing images on #{log_for}...Complete")
   rescue Ovirt::Error
   end
 

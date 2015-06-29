@@ -7,8 +7,6 @@ module MiqProvision::Naming
 
   module ClassMethods
     def get_next_vm_name(prov_obj, determine_index = true)
-      log_header = "MiqProvision.get_next_vm_name"
-
       unresolved_vm_name = nil
 
       if NAME_VIA_AUTOMATE == true
@@ -33,7 +31,7 @@ module MiqProvision::Naming
       if prov_obj.get_option(:miq_force_unique_name) == true && unresolved_vm_name !~ NAME_SEQUENCE_REGEX
         unresolved_vm_name += '_' unless unresolved_vm_name.ends_with?('_')
         unresolved_vm_name += '$n{4}'
-        $log.info "#{log_header} Forced unique provision name to #{unresolved_vm_name} for #{prov_obj.class}:#{prov_obj.id}"
+        _log.info "Forced unique provision name to #{unresolved_vm_name} for #{prov_obj.class}:#{prov_obj.id}"
       end
 
       vm_name = get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)

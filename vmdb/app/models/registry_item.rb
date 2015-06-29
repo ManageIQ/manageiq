@@ -28,7 +28,7 @@ class RegistryItem < ActiveRecord::Base
 
     vm.registry_items.build(new_reg)
     # Delete the IDs that correspond to the remaining names in the current list.
-    $log.info("MIQ(RegistryItem-add_elements) RegistryItem deletes: #{deletes.inspect}") unless deletes.empty?
+    _log.info("RegistryItem deletes: #{deletes.inspect}") unless deletes.empty?
     RegistryItem.delete(deletes.transpose[0])
 
   end

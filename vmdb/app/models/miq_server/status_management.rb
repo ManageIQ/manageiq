@@ -14,26 +14,24 @@ module MiqServer::StatusManagement
     end
 
     def log_status
-      log_prefix = "MIQ(MiqServer.log_status)"
       self.log_system_status
       svr = self.my_server(true)
-      $log.info("#{log_prefix} [#{svr.friendly_name}] Process info: Memory Usage [#{svr.memory_usage}], Memory Size [#{svr.memory_size}], Memory % [#{svr.percent_memory}], CPU Time [#{svr.cpu_time}], CPU % [#{svr.percent_cpu}], Priority [#{svr.os_priority}]") unless svr.nil?
+      _log.info("[#{svr.friendly_name}] Process info: Memory Usage [#{svr.memory_usage}], Memory Size [#{svr.memory_size}], Memory % [#{svr.percent_memory}], CPU Time [#{svr.cpu_time}], CPU % [#{svr.percent_cpu}], Priority [#{svr.os_priority}]") unless svr.nil?
     end
 
     def log_system_status
-      log_prefix = "MIQ(MiqServer.log_system_status)"
       svr        = self.my_server
       svr_name   = svr ? svr.friendly_name : "EVM Server (Unidentified)"
 
       status = MiqSystem.memory
       unless status.empty?
-        $log.info("#{log_prefix} [#{svr_name}] System Status:")
-        status.keys.sort_by(&:to_s).each { |k| $log.info("#{log_prefix} [#{svr_name}]     #{k}: #{status[k]}") }
+        _log.info("[#{svr_name}] System Status:")
+        status.keys.sort_by(&:to_s).each { |k| _log.info("[#{svr_name}]     #{k}: #{status[k]}") }
       end
 
       disks = MiqSystem.disk_usage
       unless disks.empty?
-        $log.info("#{log_prefix} [#{svr_name}] Disk Usage:")
+        _log.info("[#{svr_name}] Disk Usage:")
         format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"
         header = format(format_string,
           "Filesystem",
@@ -48,7 +46,7 @@ module MiqServer::StatusManagement
           "%iUsed",
           "Mounted on"
         )
-        $log.info("#{log_prefix} [#{svr_name}] #{header}")
+        _log.info("[#{svr_name}] #{header}")
 
         disks.each do |disk|
           formatted = format(format_string,
@@ -64,7 +62,7 @@ module MiqServer::StatusManagement
             "#{disk[:used_inodes_percent]}%",
             disk[:mount_point]
           )
-          $log.info("#{log_prefix} [#{svr_name}] #{formatted}")
+          _log.info("[#{svr_name}] #{formatted}")
         end
 
         # Raise events if disk usage above threshold
@@ -73,11 +71,11 @@ module MiqServer::StatusManagement
 
       queue_count = MiqQueue.nested_count_by(%w(state zone role))
       states = queue_count.keys.sort_by(&:to_s)
-      states.each { |state| $log.info("#{log_prefix} [#{svr_name}] MiqQueue count for state=[#{state.inspect}] by zone and role: #{queue_count[state].inspect}") }
+      states.each { |state| _log.info("[#{svr_name}] MiqQueue count for state=[#{state.inspect}] by zone and role: #{queue_count[state].inspect}") }
 
       job_count = Job.nested_count_by(%w(state zone type))
       states = job_count.keys.sort_by(&:to_s)
-      states.each { |state| $log.info("#{log_prefix} [#{svr_name}] Job count for state=[#{state.inspect}] by zone and process_type: #{job_count[state].inspect}") }
+      states.each { |state| _log.info("[#{svr_name}] Job count for state=[#{state.inspect}] by zone and process_type: #{job_count[state].inspect}") }
     end
   end
 

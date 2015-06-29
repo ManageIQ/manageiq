@@ -28,9 +28,9 @@ class MiqEnterprise < ActiveRecord::Base
   def self.seed
     MiqRegion.my_region.lock do
       if self.in_my_region.first.nil?
-        $log.info("MIQ(MiqEnterprise.seed) Creating Enterprise Root Object")
+        _log.info("Creating Enterprise Root Object")
         self.create(:name => "Enterprise", :description => "Enterprise Root Object")
-        $log.info("MIQ(MiqEnterprise.seed) Creating Enterprise Root Object... Complete")
+        _log.info("Creating Enterprise Root Object... Complete")
       end
     end
   end

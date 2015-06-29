@@ -82,8 +82,6 @@ module RefreshParser
     scsi_lun_uids = {}
     return result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids if inv.nil?
 
-    log_header = "MIQ(#{self.name.split("::").last}-host_inv_to_hashes)"
-
     inv.each do |mor, host_inv|
       mor = host_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
@@ -99,7 +97,7 @@ module RefreshParser
       connection_state = summary.fetch_path("runtime", "connectionState") unless summary.nil?
       maintenance_mode = summary.fetch_path("runtime", "inMaintenanceMode") unless summary.nil?
       if ['disconnected', 'notResponding', nil, ''].include?(connection_state)
-        $log.warn "#{log_header} Host [#{mor}] connection state is [#{connection_state.inspect}].  Inventory data may be missing."
+        _log.warn "Host [#{mor}] connection state is [#{connection_state.inspect}].  Inventory data may be missing."
       end
 
       # Determine if the data from VC is valid.
@@ -120,7 +118,7 @@ module RefreshParser
       end
 
       if invalid
-        $log.warn "#{log_header} #{err} Skipping."
+        _log.warn "#{err} Skipping."
 
         new_result = {
           :invalid     => true,
@@ -227,8 +225,7 @@ module RefreshParser
   end
 
   def self.host_inv_to_ip(inv, hostname = nil)
-    log_header = "MIQ(#{self.name.split("::").last}.host_inv_to_ip)"
-    $log.debug("#{log_header} IP lookup for host in VIM inventory data...")
+    _log.debug("IP lookup for host in VIM inventory data...")
     ipaddress = nil
 
     default_gw = inv.fetch_path("config", "network", "ipRouteConfig", "defaultGateway")
@@ -245,29 +242,29 @@ module RefreshParser
 
         if default_gw.mask(subnet_mask).include?(ip)
           ipaddress = ip
-          $log.debug("#{log_header} IP lookup for host in VIM inventory data...Complete: IP found: [#{ipaddress}]")
+          _log.debug("IP lookup for host in VIM inventory data...Complete: IP found: [#{ipaddress}]")
           break
         end
       end
     end
 
     if ipaddress.nil?
-      warn_msg = "#{log_header} IP lookup for host in VIM inventory data...Failed."
+      warn_msg = "IP lookup for host in VIM inventory data...Failed."
       if [nil, "localhost", "localhost.localdomain", "127.0.0.1"].include?(hostname)
-        $log.warn warn_msg
+        _log.warn warn_msg
       else
-        $log.warn "#{warn_msg} Falling back to reverse lookup."
+        _log.warn "#{warn_msg} Falling back to reverse lookup."
         begin
           # IPSocket.getaddress(hostname) is not used because it was appending
           #   a ".com" to the "esxdev001.localdomain" which resolved to a real
           #   internet address. Socket.getaddrinfo does the right thing.
           # TODO: Can this moved to MiqSockUtil?
 
-          $log.debug "#{log_header} IP lookup by hostname [#{hostname}]..."
+          _log.debug "IP lookup by hostname [#{hostname}]..."
           ipaddress = Socket.getaddrinfo(hostname, nil)[0][3]
-          $log.debug "#{log_header} IP lookup by hostname [#{hostname}]...Complete: IP found: [#{ipaddress}]"
+          _log.debug "IP lookup by hostname [#{hostname}]...Complete: IP found: [#{ipaddress}]"
         rescue => err
-          $log.warn "#{log_header} IP lookup by hostname [#{hostname}]...Failed with the following error: #{err}"
+          _log.warn "IP lookup by hostname [#{hostname}]...Failed with the following error: #{err}"
         end
       end
     end
@@ -633,8 +630,6 @@ module RefreshParser
     guest_device_uids = {}
     return result, result_uids if inv.nil?
 
-    log_header = "MIQ(#{self.name.split("::").last}-vm_inv_to_hashes)"
-
     inv.each do |mor, vm_inv|
       mor = vm_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
@@ -651,14 +646,14 @@ module RefreshParser
       elsif summary_config["uuid"].blank?
         [true, "Missing UUID for VM [#{mor}]."]
       elsif pathname.blank?
-        $log.debug "#{log_header} vmPathname class: [#{pathname.class}] inspect: [#{pathname.inspect}]"
+        _log.debug "vmPathname class: [#{pathname.class}] inspect: [#{pathname.inspect}]"
         [true, "Missing pathname location for VM [#{mor}]."]
       else
         false
       end
 
       if invalid
-        $log.warn "#{log_header} #{err} Skipping."
+        _log.warn "#{err} Skipping."
 
         new_result = {
           :invalid     => true,
@@ -677,8 +672,8 @@ module RefreshParser
       begin
         storage_name, location, = Repository.parse_path(pathname)
       rescue => err
-        $log.warn("#{log_header} Warning: [#{err.message}]")
-        $log.debug("#{log_header} Problem processing location for VM [#{summary_config["name"]}] location: [#{pathname}]")
+        _log.warn("Warning: [#{err.message}]")
+        _log.debug("Problem processing location for VM [#{summary_config["name"]}] location: [#{pathname}]")
         location = VmOrTemplate.location2uri(pathname)
       end
 
@@ -1210,7 +1205,7 @@ module RefreshParser
     unless found.nil?
       data[:ems_root] = found
     else
-      $log.warn "MIQ(#{self.name.split('::').last}-link_root_folder) Unable to find a root folder."
+      _log.warn "Unable to find a root folder."
     end
   end
 
@@ -1535,8 +1530,6 @@ module RefreshParser
     result = []
     return result if inv.nil?
 
-    log_header = "MIQ(#{self.name.split("::").last}.reconfig_vm_inv_to_hashes)"
-
     inv.each do |mor, vm_inv|
       mor = vm_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
@@ -1553,14 +1546,14 @@ module RefreshParser
       elsif summary_config["uuid"].blank?
         [true, "Missing UUID for VM [#{mor}]."]
       elsif pathname.blank?
-        $log.debug "#{log_header} vmPathname class: [#{pathname.class}] inspect: [#{pathname.inspect}]"
+        _log.debug "vmPathname class: [#{pathname.class}] inspect: [#{pathname.inspect}]"
         [true, "Missing pathname location for VM [#{mor}]."]
       else
         false
       end
 
       if invalid
-        $log.warn "#{log_header} #{err} Skipping."
+        _log.warn "#{err} Skipping."
 
         result << {
           :invalid     => true,

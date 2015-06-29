@@ -7,7 +7,7 @@ class MetricRollup < ActiveRecord::Base
     passed_cond = options.delete(:conditions)
     options[:conditions] = passed_cond.nil? ? my_cond : "( #{self.send(:sanitize_sql_for_conditions, my_cond)} ) AND ( #{self.send(:sanitize_sql, passed_cond)} )"
 
-    $log.debug("#{self.name}.find_all_by_interval_and_time_range: Find options: #{options.inspect}")
+    _log.debug("Find options: #{options.inspect}")
     self.find(count, options)
   end
 

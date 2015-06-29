@@ -15,10 +15,8 @@ class TemplateOpenstack < ManageIQ::Providers::CloudManager::Template
   def perform_metadata_scan(ost)
     require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackImage'
 
-    log_pref = "MIQ(#{self.class.name}##{__method__})"
-
     image_id = self.ems_ref
-    $log.debug "#{log_pref} image_id = #{image_id}"
+    _log.debug "image_id = #{image_id}"
     ost.scanTime = Time.now.utc unless ost.scanTime
 
     ems = self.ext_management_system

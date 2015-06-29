@@ -71,28 +71,24 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def create_child_tasks
-    log_header = "MIQ(#{self.class.name}.after_create_callback)"
-
     parent_svc = Service.find_by_id(self.options[:parent_service_id])
     parent_name = parent_svc.nil? ? 'none' : "#{parent_svc.class.name}:#{parent_svc.id}"
-    $log.info "#{log_header} - creating service tasks for service <#{self.class.name}:#{self.id}> with parent service <#{parent_name}>"
+    _log.info "- creating service tasks for service <#{self.class.name}:#{self.id}> with parent service <#{parent_name}>"
 
     tasks = self.source.create_tasks_for_service(self, parent_svc)
     tasks.each {|t| self.miq_request_tasks << t}
-    $log.info "#{log_header} - created <#{tasks.length}> service tasks for service <#{self.class.name}:#{self.id}> with parent service <#{parent_name}>"
+    _log.info "- created <#{tasks.length}> service tasks for service <#{self.class.name}:#{self.id}> with parent service <#{parent_name}>"
   end
 
   def do_request
-    log_header = "MIQ(#{self.class.name}.do_request)"
-
     if self.miq_request_tasks.size.zero?
       message = "Service does not have children processes"
-      $log.info("#{log_header} #{message}")
+      _log.info("#{message}")
       update_and_notify_parent(:state => 'provisioned', :message => message)
     else
       self.miq_request_tasks.each(&:deliver_to_automate)
       message = "Service Provision started"
-      $log.info("#{log_header} #{message}")
+      _log.info("#{message}")
       update_and_notify_parent(:message => message)
       self.queue_post_provision
     end
@@ -115,10 +111,9 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def deliver_to_automate(req_type = self.request_type, zone = nil)
-    log_header = "MIQ(#{self.class.name}.deliver_to_automate)"
     self.task_check_on_execute
 
-    $log.info("#{log_header} Queuing #{self.request_class::TASK_DESCRIPTION}: [#{self.description}]...")
+    _log.info("Queuing #{self.request_class::TASK_DESCRIPTION}: [#{self.description}]...")
 
     if self.class::AUTOMATE_DRIVES
       dialog_values = self.options[:dialog] || {}
@@ -173,9 +168,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def after_ae_delivery(ae_result)
-    log_header = "MIQ(#{self.class.name}.after_ae_delivery)"
-
-    $log.info("#{log_header} ae_result=#{ae_result.inspect}")
+    _log.info("ae_result=#{ae_result.inspect}")
     reload
 
     return if ae_result == 'retry'

@@ -20,7 +20,7 @@ class MiqAeYamlImportConsolidated < MiqAeYamlImport
   def domain_entries(dom_name)
     entries = domain_files(dom_name)
     if entries.empty?
-      $log.info("#{self.class} domain: <#{dom_name}> yaml file not found") if $log
+      _log.info("domain: <#{dom_name}> yaml file not found")
       raise MiqAeException::NamespaceNotFound, "domain: #{dom_name}"
     end
     entries

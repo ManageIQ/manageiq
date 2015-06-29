@@ -11,20 +11,19 @@ class AutomationRequest < MiqRequest
   # parameters: var1=vvvvv|var2=wwww|var3=xxxxx
   ##############################################
   def self.create_from_ws(version, userid, uri_parts, parameters, requester)
-    log_header = "AutomationRequest.create_from_ws"
-    $log.info "#{log_header} Starting with interface version=<#{version}> for user=<#{userid}> with uri_parts=<#{uri_parts.inspect}>, parameters=<#{parameters.inspect}> and requester=<#{requester.inspect}>"
+    _log.info "Starting with interface version=<#{version}> for user=<#{userid}> with uri_parts=<#{uri_parts.inspect}>, parameters=<#{parameters.inspect}> and requester=<#{requester.inspect}>"
 
     options = {}
     requester_options = MiqRequestWorkflow.parse_ws_string(requester)
     auto_approve = (requester_options[:auto_approve] == 'true' || requester_options[:auto_approve] == true)
     unless requester_options[:user_name].blank?
       userid = requester_options[:user_name]
-      $log.warn "#{log_header} Web-service requester changed to <#{userid}>"
+      _log.warn "Web-service requester changed to <#{userid}>"
     end
 
     uri_options = MiqRequestWorkflow.parse_ws_string(uri_parts)
     [:namespace, :class, :instance, :message].each { |key| options[key] = uri_options.delete(key) if uri_options.has_key?(key) }
-    uri_options.keys.each { |key| $log.warn "#{log_header} invalid keyword <#{key}> specified in uri_parts" }
+    uri_options.keys.each { |key| _log.warn "invalid keyword <#{key}> specified in uri_parts" }
     options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, "")  # Strip blanks and slashes from beginning and end of string
     options[:class_name]    = (options.delete(:class)     || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
     options[:instance_name] = (options.delete(:instance)  || DEFAULT_INSTANCE).strip

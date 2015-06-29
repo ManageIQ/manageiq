@@ -26,7 +26,6 @@ class MiqDialog < ActiveRecord::Base
   end
 
   def self.sync_from_file(filename)
-    log_header = "MiqDialog.sync_from_file"
     item = YAML.load_file(filename)
 
     item[:filename] = filename.sub(DIALOG_DIR.to_path + "/", "")
@@ -37,12 +36,12 @@ class MiqDialog < ActiveRecord::Base
 
     if rec
       if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < item[:file_mtime])
-        $log.info("#{log_header}: [#{rec.name}] file has been updated on disk, synchronizing with model")
+        _log.info("[#{rec.name}] file has been updated on disk, synchronizing with model")
         rec.update_attributes(item)
         rec.save
       end
     else
-      $log.info("#{log_header}: [#{item[:name]}] file has been added to disk, adding to model")
+      _log.info("[#{item[:name]}] file has been added to disk, adding to model")
       self.create(item)
     end
   end

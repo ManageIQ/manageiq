@@ -19,7 +19,7 @@ module VMDB
       private
 
       def log(_data)
-        Vmdb::Logging.init
+        Vmdb::Loggers.init
       end
 
       def session(data)

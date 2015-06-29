@@ -1,4 +1,5 @@
 class MiqAeYamlExport
+  include Vmdb::Logging
   include MiqAeYamlImportExportMixin
   attr_accessor :namespace, :klass, :instance, :method, :zip
   NEW_LINE = "\n"
@@ -37,7 +38,7 @@ class MiqAeYamlExport
   end
 
   def write_domain
-    $log.info("#{self.class} Exporting domain:    <#{@domain}>")
+    _log.info("Exporting domain:    <#{@domain}>")
     write_domain_file(@domain_object)
     write_all_namespaces(@domain_object)
   end
@@ -45,7 +46,7 @@ class MiqAeYamlExport
   def write_namespace(namespace)
     write_multipart_namespace_files(namespace) if namespace.split('/').count > 0
     ns_obj = get_namespace_object(namespace)
-    $log.info("#{self.class} Exporting domain:    <#{@domain}> namespace: <#{namespace}>")
+    _log.info("Exporting domain:    <#{@domain}> namespace: <#{namespace}>")
     write_domain_file(@domain_object)
     write_namespace_file(ns_obj)
     write_all_classes(ns_obj)
@@ -64,7 +65,7 @@ class MiqAeYamlExport
   def write_class(namespace, class_name)
     ns_obj = get_namespace_object(namespace)
     class_obj = get_class_object(ns_obj, class_name)
-    $log.info("#{self.class} Exporting domain:    <#{@domain}> ns: <#{namespace}> class: <#{class_name}>")
+    _log.info("Exporting domain:    <#{@domain}> ns: <#{namespace}> class: <#{class_name}>")
     write_domain_file(@domain_object)
     write_namespace_file(ns_obj)
     write_class_components(ns_obj.fqname, class_obj)
@@ -91,7 +92,7 @@ class MiqAeYamlExport
   end
 
   def write_namespace_file(ns_obj)
-    $log.info("#{self.class} Exporting namespace: <#{ns_obj.fqname}>")
+    _log.info("Exporting namespace: <#{ns_obj.fqname}>")
     envelope_hash = setup_envelope(ns_obj, NAMESPACE_OBJ_TYPE).to_yaml
     write_export_file('fqname'          => swap_domain_path(ns_obj.fqname),
                       'output_filename' => NAMESPACE_YAML_FILENAME,
@@ -123,7 +124,7 @@ class MiqAeYamlExport
   end
 
   def write_class_components(ns_fqname, class_obj)
-    $log.info("#{self.class} Exporting class:     <#{ns_fqname}/#{class_obj.name}>")
+    _log.info("Exporting class:     <#{ns_fqname}/#{class_obj.name}>")
     write_class_schema(ns_fqname, class_obj)
     write_all_instances(ns_fqname, class_obj)
     write_all_methods(ns_fqname, class_obj)
@@ -230,7 +231,7 @@ class MiqAeYamlExport
   def domain_object
     MiqAeNamespace.find_by_fqname(@domain).tap do |dom|
       if dom.nil?
-        $log.error("#{self.class} Domain: <#{@domain}> not found.")
+        _log.error("Domain: <#{@domain}> not found.")
         raise MiqAeException::DomainNotFound, "Domain [#{@domain}] not found in MiqAeDatastore"
       end
       raise MiqAeException::InvalidDomain, "Domain [#{@domain}] is not a valid domain" unless dom.domain?
@@ -240,14 +241,14 @@ class MiqAeYamlExport
   def get_namespace_object(namespace)
     fqname = File.join(@domain, namespace)
     MiqAeNamespace.find_by_fqname(fqname) || begin
-      $log.error("#{self.class} Namespace: <#{fqname}> not found.")
+      _log.error("Namespace: <#{fqname}> not found.")
       raise MiqAeException::NamespaceNotFound, "Namespace: [#{fqname}] not found in MiqAeDatastore"
     end
   end
 
   def get_class_object(ns_obj, klass)
     ns_obj.ae_classes.detect { |cls| cls.name.downcase == klass } || begin
-      $log.error("#{self.class} Class: <#{klass}> not found in <#{ns_obj.fqname}>.")
+      _log.error("Class: <#{klass}> not found in <#{ns_obj.fqname}>.")
       raise MiqAeException::ClassNotFound, "Class: [#{klass}] not found in [#{ns_obj.fqname}]"
     end
   end

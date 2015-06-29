@@ -87,7 +87,7 @@ module Vmdb
     MiqPassword.key_root=Rails.root.join("certs")
 
     require 'vmdb/logging'
-    Vmdb::Logging.init
+    Vmdb::Loggers.init
     config.logger = Vmdb.rails_logger
     config.colorize_logging = false
 

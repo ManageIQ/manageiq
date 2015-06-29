@@ -175,7 +175,7 @@ module Rbac
       end
 
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
-      $log.debug("MIQ(RBAC.find_targets_filtered_by_parent_ids): New Find options: #{find_options.inspect}")
+      _log.debug("New Find options: #{find_options.inspect}")
     end
     targets     = self.method_with_scope(scope, find_options)
     auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
@@ -189,7 +189,7 @@ module Rbac
     if filtered_ids.kind_of?(Array)
       ids_clause  = [ "#{klass.table_name}.id IN (?)", filtered_ids ]
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
-      $log.debug("MIQ(RBAC.find_targets_filtered_by_ids): New Find options: #{find_options.inspect}")
+      _log.debug("New Find options: #{find_options.inspect}")
     end
     targets     = self.method_with_scope(scope, find_options)
     auth_count  = klass.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
@@ -331,7 +331,7 @@ module Rbac
     key = "#{descendant_klass.base_class}::#{klass.base_class}"
     method_name = MATCH_VIA_DESCENDANT_RELATIONSHIPS[key]
     if method_name.nil?
-      $log.warn "MIQ(Rbac.lookup_method_for_descendant_class) could not find method name for #{key}"
+      _log.warn "could not find method name for #{key}"
     end
     method_name
   end
@@ -401,7 +401,7 @@ module Rbac
     find_options.merge!(:limit => options[:limit], :offset => options[:offset]) if attrs[:apply_limit_in_sql]
     find_options[:ext_options] = options[:ext_options] if options[:ext_options] && klass.respond_to?(:instances_are_derived?) && klass.instances_are_derived?
 
-    $log.debug("MIQ(RBAC.search): Find options: #{find_options.inspect}")
+    _log.debug("Find options: #{find_options.inspect}")
 
     if klass.respond_to?(:find)
       scope = apply_scope(klass, scope)

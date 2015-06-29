@@ -348,7 +348,6 @@ class EmsCluster < ActiveRecord::Base
 
   # Vmware specific
   def register_host(host)
-    log_header = "MIQ(EmsCluster.register_host)"
     host = Host.extract_objects(host)
     raise "Host cannot be nil" if host.nil?
     userid, password = host.auth_user_pwd(:default)
@@ -356,7 +355,7 @@ class EmsCluster < ActiveRecord::Base
 
     with_provider_object do |vim_cluster|
       begin
-        $log.info "#{log_header} Invoking addHost with options: address => #{network_address}, #{userid}"
+        _log.info "Invoking addHost with options: address => #{network_address}, #{userid}"
         host_mor = vim_cluster.addHost(network_address, userid, password)
       rescue VimFault => verr
         fault = verr.vimFaultInfo.fault
@@ -364,7 +363,7 @@ class EmsCluster < ActiveRecord::Base
         raise unless fault.xsiType == "SSLVerifyFault"
 
         ssl_thumbprint = fault.thumbprint
-        $log.info "#{log_header} Invoking addHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
+        _log.info "Invoking addHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
         host_mor = vim_cluster.addHost(network_address, userid, password, :sslThumbprint => ssl_thumbprint)
       end
 

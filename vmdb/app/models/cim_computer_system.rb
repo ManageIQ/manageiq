@@ -301,50 +301,49 @@ class CimComputerSystem < MiqCimInstance
   def create_logical_disk(name, aggrName, size, spaceReserve="none")
     # Returns: Array of true || false, If false, object will have errors attached
 
-    log_prefix = "MIQ(#{self.class.name}.create_logical_disk)"
-    $log.info("#{log_prefix} Create logical disk: #{name} ...")
+    _log.info("Create logical disk: #{name} ...")
 
     # Get the management inteface for the storage system.
     nrs = self.storage_managers.first
     if nrs.nil?
       field, message = ["NetAppFiler:", "Could not find manager entry: #{self.evm_display_name}"]
-      $log.error("#{log_prefix} #{field} #{message}")
+      _log.error("#{field} #{message}")
       self.errors.add(field, message)
       return false
     end
-    $log.info("#{log_prefix} Found service entry for NetApp filer: #{self.evm_display_name} -> #{nrs.ipaddress}")
+    _log.info("Found service entry for NetApp filer: #{self.evm_display_name} -> #{nrs.ipaddress}")
 
     # Check to see if the volume already exists.
     if nrs.has_volume?(name)
       field, message = ["LogicalDisk:", "#{name} already exists"]
-      $log.error("#{log_prefix} #{field} #{message}")
+      _log.error("#{field} #{message}")
       self.errors.add(field, message)
       return false
     end
-    $log.info("#{log_prefix} Logical Disk  #{name} does not exist, continuing...")
+    _log.info("Logical Disk  #{name} does not exist, continuing...")
 
     # Make sure there's enough free space in the aggregate for the new volume.
-    $log.info("#{log_prefix} Checking space on containing aggregate: #{aggrName}")
+    _log.info("Checking space on containing aggregate: #{aggrName}")
     begin
       aggr_info = nrs.aggr_list_info(aggrName)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       self.errors.add("Aggregate:", err.message)
       return false
     end
     aggr_free_space = aggr_info.size_available.to_i
     if aggr_free_space < size.to_i.gigabytes
       field, message = ["Size:", "Insufficient free space in #{aggrName}: #{aggr_free_space}"]
-      $log.error("#{log_prefix} #{field} #{message}")
+      _log.error("#{field} #{message}")
       self.errors.add(field, message)
       return false
     end
-    $log.info("#{log_prefix} Containing aggregate: #{aggrName} has sufficient free space")
+    _log.info("Containing aggregate: #{aggrName} has sufficient free space")
 
     # Create the volume within the given aggregate.
-    $log.info("#{log_prefix} Queuing creation of logical disk: #{name} in aggregate: #{aggrName} on NAS server: #{self.evm_display_name}...")
+    _log.info("Queuing creation of logical disk: #{name} in aggregate: #{aggrName} on NAS server: #{self.evm_display_name}...")
     nrs.queue_volume_create(name, aggrName, "#{size}g")
-    $log.info("#{log_prefix} Create logical disk: #{name} ... Complete")
+    _log.info("Create logical disk: #{name} ... Complete")
 
     return true
   end

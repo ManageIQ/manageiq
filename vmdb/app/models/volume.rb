@@ -86,9 +86,9 @@ class Volume < ActiveRecord::Base
     parent.hardware.partitions.build(new_partitions)
     parent.hardware.volumes.build(new_volumes)
     # Delete the IDs that correspond to the remaining names in the current list.
-    $log.info("MIQ(Volume-add_elements) Partition deletes: #{deletes[:partitions].inspect}") unless deletes[:partitions].empty?
+    _log.info("Partition deletes: #{deletes[:partitions].inspect}") unless deletes[:partitions].empty?
     Partition.delete(deletes[:partitions].transpose[0])
-    $log.info("MIQ(Volume-add_elements) Volume deletes: #{deletes[:volumes].inspect}") unless deletes[:volumes].empty?
+    _log.info("Volume deletes: #{deletes[:volumes].inspect}") unless deletes[:volumes].empty?
     Volume.delete(deletes[:volumes].transpose[0])
   end
 

@@ -129,7 +129,7 @@ class ExtManagementSystem < ActiveRecord::Base
         :zone_id   => MiqServer.my_server.zone.id
       )
 
-      $log.info "MIQ(#{self.name}.create_discovered): #{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
+      _log.info "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
       AuditEvent.success(:event => "ems_created", :target_id => ems.id, :target_class => "ExtManagementSystem", :message => "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
     end
   end
@@ -207,7 +207,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
-    $log.info("MIQ(#{self.class.name}.with_provider_connection) Connecting through #{self.class.name}: [#{self.name}]")
+    _log.info("Connecting through #{self.class.name}: [#{self.name}]")
     yield connect(options)
   end
 
@@ -424,7 +424,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def stop_event_monitor
     return if event_monitor_class.nil?
-    $log.info "MIQ(#{self.class.name}#stop_event_monitor) EMS [#{self.name}] id [#{self.id}]: Stopping event monitor."
+    _log.info "EMS [#{self.name}] id [#{self.id}]: Stopping event monitor."
     event_monitor_class.stop_worker_for_ems(self)
   end
 
@@ -441,14 +441,14 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def stop_event_monitor_queue_on_change
     if !self.event_monitor_class.nil? && !self.new_record? && self.changed.include_any?("hostname", "ipaddress")
-      $log.info("MIQ(#{self.class.name}#stop_event_monitor_queue) EMS: [#{self.name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
+      _log.info("EMS: [#{self.name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       self.stop_event_monitor_queue
     end
   end
 
   def stop_event_monitor_queue_on_credential_change
     if !self.event_monitor_class.nil? && !self.new_record? && self.credentials_changed?
-      $log.info("MIQ(#{self.class.name}#stop_event_monitor_queue) EMS: [#{self.name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
+      _log.info("EMS: [#{self.name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       self.stop_event_monitor_queue
     end
   end

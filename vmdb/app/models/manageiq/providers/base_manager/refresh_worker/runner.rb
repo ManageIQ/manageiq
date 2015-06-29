@@ -6,7 +6,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::QueueWorkerBas
   ]
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
+    @log_prefix ||= "EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
   end
 
   def after_initialize
@@ -16,7 +16,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::QueueWorkerBas
   end
 
   def do_before_work_loop
-    $log.info("#{self.log_prefix} Queueing initial refresh for EMS.")
+    _log.info("#{self.log_prefix} Queueing initial refresh for EMS.")
     EmsRefresh.queue_refresh(@ems)
   end
 

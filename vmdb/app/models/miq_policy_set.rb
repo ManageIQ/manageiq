@@ -119,7 +119,7 @@ class MiqPolicySet < ActiveRecord::Base
     MiqRegion.my_region.lock do
       self.all.each do |ps|
         if ps.mode.nil?
-          $log.info("MIQ(MiqPolicySet.seed) Updating [#{ps.name}]")
+          _log.info("Updating [#{ps.name}]")
           ps.update_attribute(:mode, "control")
         end
       end

@@ -46,7 +46,7 @@ class MiqTask < ActiveRecord::Base
 
   def update_status(state, status, message)
     status = STATUS_ERROR if status == STATUS_EXPIRED
-    $log.info("MIQ(MiqTask.update_status) Task: [#{self.id}] [#{state}] [#{status}] [#{message}]")
+    _log.info("Task: [#{self.id}] [#{state}] [#{status}] [#{message}]")
     self.update_attributes!(:state => state, :status => status, :message => self.class.trim_message(message))
   end
 
@@ -56,7 +56,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def update_message(message)
-    $log.info("MIQ(MiqTask.update_message) Task: [#{self.id}] [#{message}]")
+    _log.info("Task: [#{self.id}] [#{message}]")
     self.update_attributes!(:message => self.class.trim_message(message))
   end
 
@@ -193,7 +193,6 @@ class MiqTask < ActiveRecord::Base
     #   :role (role of the server to run the action)
     #   :msg_timeout => how long you want to wait before pulling the plug on the action (seconds)
 
-    log_prefix = 'MIQ(MiqTask.generic_action_with_callback)'
     task = MiqTask.create(:name => options[:action], :userid => options[:userid])
 
     # Set the callback for this task to set the status based on the results of the actions
@@ -205,7 +204,7 @@ class MiqTask < ActiveRecord::Base
     # return task id to the UI
     msg =  "Queued the action: [#{options[:action]}] being run for user: [#{options[:userid]}]"
     task.update_status(STATE_QUEUED, STATUS_OK, msg)
-    $log.info("#{log_prefix} Task: [#{task.id}] #{msg}")
+    _log.info("Task: [#{task.id}] #{msg}")
     task.id
   end
 
@@ -232,8 +231,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def self.delete_older(ts, condition)
-    log_prefix = 'MIQ(MiqTask.delete_older)'
-    $log.info("#{log_prefix} Queuing deletion of tasks older than: #{ts}")
+    _log.info("Queuing deletion of tasks older than: #{ts}")
     cond = condition.blank? ? [] : [[condition].flatten.first, [condition].flatten[1..-1]]
     cond[0] ||= []
     cond[1] ||= []
@@ -242,7 +240,7 @@ class MiqTask < ActiveRecord::Base
     cond[0].empty? ? cond[0] << ts_clause : cond[0] = "(#{cond[0]}) AND #{ts_clause}"
     cond[1] << ts.utc
 
-    $log.info("#{log_prefix} cond.flatten: #{cond.flatten.inspect}")
+    _log.info("cond.flatten: #{cond.flatten.inspect}")
     ids = where(cond.flatten).select("id").collect(&:id)
 
     self.delete_by_id(ids)
@@ -250,7 +248,7 @@ class MiqTask < ActiveRecord::Base
 
   def self.delete_by_id(ids)
     ids = [ids].flatten
-    $log.info("MIQ(MiqTask.delete_by_id) Queuing deletion of tasks with the following ids: #{ids.inspect}")
+    _log.info("Queuing deletion of tasks with the following ids: #{ids.inspect}")
     MiqQueue.put(
       :class_name  => self.name,
       :method_name => "destroy_all",

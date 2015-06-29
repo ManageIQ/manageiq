@@ -1,4 +1,5 @@
 class JobProxyDispatcher
+  include Vmdb::Logging
   def self.dispatch
     self.new.dispatch
   end
@@ -35,12 +36,12 @@ class JobProxyDispatcher
 
         jobs_to_dispatch.each do |job|
           if concurrent_vm_scans_limit > 0 && @active_scans[@zone] >= concurrent_vm_scans_limit
-            $log.warn "MIQ(JobProxyDispatcher-dispatch) SKIPPING remaining jobs in dispatch since there are [#{@active_scans[@zone]}] active scans in the zone [#{@zone}]"
+            _log.warn "SKIPPING remaining jobs in dispatch since there are [#{@active_scans[@zone]}] active scans in the zone [#{@zone}]"
             break
           end
           @vm = @vms_for_dispatch_jobs.detect {|v| v.id == job.target_id}
           if @vm.nil? # Handle job for VM that was deleted
-            $log.warn("MIQ(JobProxyDispatcher-dispatch) VM with id: [#{job.target_id}] no longer exists, aborting job [#{job.guid}]" )
+            _log.warn("VM with id: [#{job.target_id}] no longer exists, aborting job [#{job.guid}]" )
             job.signal(:abort, "VM with id: [#{job.target_id}] no longer exists, job aborted.", "warn")
             next
           end
@@ -48,7 +49,7 @@ class JobProxyDispatcher
           if @vm.kind_of?(ManageIQ::Providers::Vmware::InfraManager::Vm) || @vm.kind_of?(ManageIQ::Providers::Vmware::InfraManager::Template)
             unless broker_available
               unless logged_broker_unavailable
-                $log.warn("MIQ(JobProxyDispatcher-dispatch) Skipping dispatch because broker is currently unavailable")
+                _log.warn("Skipping dispatch because broker is currently unavailable")
                 logged_broker_unavailable = true
               end
               next
@@ -57,7 +58,7 @@ class JobProxyDispatcher
 
           proxy = nil
           if @all_busy_by_host_id_storage_id["#{@vm.host_id}_#{@vm.storage_id}"]
-            $log.debug("MIQ(JobProxyDispatcher-dispatch) Skipping job id [#{job.id}] guid [#{job.guid}] for vm: [#{@vm.id}] in this dispatch since a prior job with the same host [#{@vm.host_id}] and storage [#{@vm.storage_id}] determined that all resources are busy.")
+            _log.debug("Skipping job id [#{job.id}] guid [#{job.guid}] for vm: [#{@vm.id}] in this dispatch since a prior job with the same host [#{@vm.host_id}] and storage [#{@vm.storage_id}] determined that all resources are busy.")
             next
           end
 
@@ -69,24 +70,24 @@ class JobProxyDispatcher
               !busy
             end
           rescue => err
-            $log.warn("MIQ(JobProxyDispatcher-dispatch) #{err}, attempting to dispatch job [#{job.guid}], aborting job")
+            _log.warn("#{err}, attempting to dispatch job [#{job.guid}], aborting job")
             job.signal(:abort, "Error [#{err}], attempting to dispatch, aborting job [#{job.guid}].", "error")
           end
 
           if proxy
             # Skip this embedded scan if the host/vc we'd need has already exceeded the limit
             next if proxy.kind_of?(MiqServer) && self.embedded_resource_limit_exceeded?(job)
-            $log.info "MIQ(JobProxyDispatcher-dispatch) STARTING job: [#{job.guid}] on proxy: [#{proxy.name}]"
+            _log.info "STARTING job: [#{job.guid}] on proxy: [#{proxy.name}]"
             Benchmark.current_realtime[:start_job_on_proxy_count] += 1
             Benchmark.realtime_block(:start_job_on_proxy){ self.start_job_on_proxy(job, proxy) }
           elsif @vm.host_id && @vm.storage_id && !@vm.template?
-            $log.debug("MIQ(JobProxyDispatcher-dispatch) Skipping job id [#{job.id}] guid [#{job.guid}] for vm: [#{@vm.id}] in this dispatch since no proxies/servers are available. Caching result for Vm's host [#{@vm.host_id}] and storage [#{@vm.storage_id}].")
+            _log.debug("Skipping job id [#{job.id}] guid [#{job.guid}] for vm: [#{@vm.id}] in this dispatch since no proxies/servers are available. Caching result for Vm's host [#{@vm.host_id}] and storage [#{@vm.storage_id}].")
             @all_busy_by_host_id_storage_id["#{@vm.host_id}_#{@vm.storage_id}"] = true
           end
         end
       end
     end
-    $log.info "MIQ(JobProxyDispatcher-dispatch) Complete - Timings: #{t.inspect}"
+    _log.info "Complete - Timings: #{t.inspect}"
   end
 
   def queue_signal(job, options)
@@ -105,14 +106,14 @@ class JobProxyDispatcher
       default_opts[:zone] = job.zone if job.zone
       options = default_opts.merge(options)
       MiqQueue.put_unless_exists(options) do |msg|
-        $log.warn("MIQ(JobProxyDispatcher.queue_signal) Previous Job signal [#{options[:args].first}] for Job: [#{job.guid}] is still running, skipping...") unless msg.nil?
+        _log.warn("Previous Job signal [#{options[:args].first}] for Job: [#{job.guid}] is still running, skipping...") unless msg.nil?
       end
     end
   end
 
   def start_job_on_proxy(job, proxy)
     self.assign_proxy_to_job(proxy, job)
-    $log.info "MIQ(JobProxyDispatcher-start_job_on_proxy) Job [#{job.guid}] update: userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}]"
+    _log.info "Job [#{job.guid}] update: userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}]"
     job_options = { :args => ["start"], :zone => @zone }
     job_options.merge!(:server_guid => proxy.guid, :role => "smartproxy") if proxy.kind_of?(MiqServer)
     @active_scans[@zone] += 1
@@ -170,7 +171,7 @@ class JobProxyDispatcher
 
     # Return if the active job count meets or exceeds the max allowed concurrent jobs for the agent
     if active_job_count >= concurrent_job_max
-      #$log.debug("MIQ(JobProxyDispatcher.busy_proxy?) Too many active scans using resource: [#{proxy.class}]:[#{proxy.id}]. Count/Limit: [#{active_job_count} / #{concurrent_job_max}]")
+      #_log.debug("Too many active scans using resource: [#{proxy.class}]:[#{proxy.id}]. Count/Limit: [#{active_job_count} / #{concurrent_job_max}]")
       return true
     end
 
@@ -207,7 +208,7 @@ class JobProxyDispatcher
   def busy_resources_for_embedded_scanning
     return @busy_resources_for_embedded_scanning_hash unless @busy_resources_for_embedded_scanning_hash.nil?
 
-    $log.debug("MIQ(JobProxyDispatcher.busy_resources_for_embedded_scanning) Initializing busy_resources_for_embedding_scanning hash")
+    _log.debug("Initializing busy_resources_for_embedding_scanning hash")
     @busy_resources_for_embedded_scanning_hash ||= {}
 
     vms_in_embedded_scanning =
@@ -262,7 +263,7 @@ class JobProxyDispatcher
       target_resource = self.embedded_scan_resource(@vm)
       count = self.busy_resources_for_embedded_scanning[target_resource]
       if count && count >= count_allowed
-        #$log.debug("MIQ(JobProxyDispatcher.embedded_resource_limit_exceeded?) Too many active scans using resource: [#{target_resource}], Count/Limit: [#{count} / #{count_allowed}]")
+        #_log.debug("Too many active scans using resource: [#{target_resource}], Count/Limit: [#{count} / #{count_allowed}]")
         return true
       end
     rescue

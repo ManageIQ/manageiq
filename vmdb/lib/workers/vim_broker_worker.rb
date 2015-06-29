@@ -12,10 +12,10 @@ class VimBrokerWorker < WorkerBase
     @initial_emses_to_monitor, invalid_emses = MiqVimBrokerWorker.emses_to_monitor.partition { |e| e.authentication_check.first }
     start_broker_server(@initial_emses_to_monitor)
     @worker.update_attributes(:uri => DRb.uri)
-    $log.info("#{self.log_prefix} DRb URI: #{DRb.uri}")
+    _log.info("#{self.log_prefix} DRb URI: #{DRb.uri}")
 
     invalid_emses.each do |e|
-      $log.warn("#{self.log_prefix} Not monitoring Management System #{e.name} since it failed authentication check")
+      _log.warn("#{self.log_prefix} Not monitoring Management System #{e.name} since it failed authentication check")
     end
 
     reset_broker_update_notification
@@ -43,7 +43,7 @@ class VimBrokerWorker < WorkerBase
     waitForUpdates_sleep = nil if     waitForUpdates_sleep == 0
     if @waitForUpdates_sleep != waitForUpdates_sleep
       pretty = waitForUpdates_sleep.nil? ? "NONE" : "#{waitForUpdates_sleep} seconds"
-      $log.info("#{self.log_prefix} Setting Broker's Update Manager's Sleep Interval to [#{pretty}]")
+      _log.info("#{self.log_prefix} Setting Broker's Update Manager's Sleep Interval to [#{pretty}]")
       @vim_broker_server.updateDelay = waitForUpdates_sleep
       @waitForUpdates_sleep = waitForUpdates_sleep
     end
@@ -56,15 +56,15 @@ class VimBrokerWorker < WorkerBase
   def enable_broker_update_notification
     return if @notification_enabled
 
-    $log.info("#{self.log_prefix} Enabling Broker's Update Manager Notification")
+    _log.info("#{self.log_prefix} Enabling Broker's Update Manager Notification")
 
     @exclude_props = VMDB::Config.new("broker_notify_properties").config[:exclude] || {}
     @exclude_props.stringify_keys! # TODO: Remove when we clean up cfg yamls
 
     if @exclude_props.empty?
-      $log.info("#{self.log_prefix} Not excluding any properties for broker notification.")
+      _log.info("#{self.log_prefix} Not excluding any properties for broker notification.")
     else
-      $log.info("#{self.log_prefix} Using the following broker properties exclude list:")
+      _log.info("#{self.log_prefix} Using the following broker properties exclude list:")
       $log.log_hashes(@exclude_props)
     end
 
@@ -80,7 +80,7 @@ class VimBrokerWorker < WorkerBase
   def disable_broker_update_notification
     return unless @notification_enabled
 
-    $log.info("#{self.log_prefix} Disabling Broker's Update Manager Notification")
+    _log.info("#{self.log_prefix} Disabling Broker's Update Manager Notification")
 
     # Set notify method at the class level for new connections, and at the
     #   instance level for existing connections.
@@ -110,7 +110,7 @@ class VimBrokerWorker < WorkerBase
               where(:hostname => address).
               detect { |e| e.authentication_userid == userid }
       ems_id = ems.nil? ? :ignore : ems.id
-      $log.warn("#{self.log_prefix} Ignoring updates for unknown connection, address: [#{address}], userid: [#{userid}]") if ems_id == :ignore
+      _log.warn("#{self.log_prefix} Ignoring updates for unknown connection, address: [#{address}], userid: [#{userid}]") if ems_id == :ignore
       @ems_ids_for_notify[key] = ems_id
     end
     ret == :ignore ? nil : ret
@@ -118,7 +118,7 @@ class VimBrokerWorker < WorkerBase
 
   def do_before_work_loop
     if @active_roles.include?("ems_inventory") && @initial_emses_to_monitor.length > 0
-      $log.info("#{self.log_prefix} Queueing initial refresh for EMS.")
+      _log.info("#{self.log_prefix} Queueing initial refresh for EMS.")
       EmsRefresh.queue_refresh(@initial_emses_to_monitor)
     end
   end
@@ -144,7 +144,7 @@ class VimBrokerWorker < WorkerBase
 
   def do_heartbeat_work
     t = Benchmark.realtime { check_broker_server }
-    $log.warn("#{self.log_prefix} Elapsed time for [check_broker_server] was #{t} seconds") if t > 30
+    _log.warn("#{self.log_prefix} Elapsed time for [check_broker_server] was #{t} seconds") if t > 30
     log_status
   end
 
@@ -159,7 +159,7 @@ class VimBrokerWorker < WorkerBase
   def on_notify_event(event)
     ems_id = self.ems_ids_for_notify(event[:server], event[:username])
     return if ems_id.nil?
-    $log.info("MIQ(VimBrokerWorker.on_notify_event) Queueing update for EMS id: [#{ems_id}] on event [#{event[:objType]}-#{event[:op]}]#{" for properties: #{event[:changedProps].inspect}" if event.has_key?(:changedProps)}")
+    _log.info("Queueing update for EMS id: [#{ems_id}] on event [#{event[:objType]}-#{event[:op]}]#{" for properties: #{event[:changedProps].inspect}" if event.has_key?(:changedProps)}")
     EmsRefresh.queue_vc_update(ems_id, event)
   end
   alias on_create_event on_notify_event
@@ -187,11 +187,11 @@ class VimBrokerWorker < WorkerBase
   def on_miq_vim_removed_event(event)
     return unless event[:op] == 'MiqVimRemoved'
 
-    $log.info("#{self.log_prefix} Attempting to reconnect broker for EMS with address: [#{event[:server]}] due to error: #{event[:error]}")
+    _log.info("#{self.log_prefix} Attempting to reconnect broker for EMS with address: [#{event[:server]}] due to error: #{event[:error]}")
 
     ems = ManageIQ::Providers::Vmware::InfraManager.where(:hostname => event[:server]).first
     if ems.nil?
-      $log.error "#{self.log_prefix} Unable to find EMS with address: [#{event[:server]}]"
+      _log.error "#{self.log_prefix} Unable to find EMS with address: [#{event[:server]}]"
       return
     end
 
@@ -227,28 +227,28 @@ class VimBrokerWorker < WorkerBase
     MiqVimBroker.cacheScope   = expected_broker_cache_scope
     MiqVimBroker.setSelector(EmsRefresh::VcUpdates::VIM_SELECTOR_SPEC)
 
-    $log.info("#{self.log_prefix} Creating broker server with [#{MiqVimBroker.cacheScope}]")
+    _log.info("#{self.log_prefix} Creating broker server with [#{MiqVimBroker.cacheScope}]")
 
     @vim_broker_server = MiqVimBroker.new(:server, 0)   # Port 0 means to let it pick any available port
   end
 
   def start_broker_server(emses_to_prime = nil)
     begin
-      $log.info("#{self.log_prefix} Starting broker server...")
+      _log.info("#{self.log_prefix} Starting broker server...")
 
       @waitForUpdates_sleep = nil
       @notification_enabled = false
       self.create_miq_vim_broker_server
       self.prime_all_ems(emses_to_prime) if emses_to_prime
 
-      $log.info("#{self.log_prefix} Starting broker server...Complete")
+      _log.info("#{self.log_prefix} Starting broker server...Complete")
     rescue => err
-      $log.warn("#{self.log_prefix} Unable to start broker server, '#{err.message}', will retry later")
+      _log.warn("#{self.log_prefix} Unable to start broker server, '#{err.message}', will retry later")
     end
   end
 
   def prime_all_ems(emses)
-    $log.info("#{self.log_prefix} Priming cache with data from attached Management Systems") unless emses.blank?
+    _log.info("#{self.log_prefix} Priming cache with data from attached Management Systems") unless emses.blank?
     emses.each do |ems|
       @worker.update_heartbeat # heartbeat in between each EMS to prevent long timeout
       prime_ems(ems)
@@ -256,25 +256,25 @@ class VimBrokerWorker < WorkerBase
   end
 
   def prime_ems(ems)
-    $log.info("#{self.log_prefix} Preloading broker for EMS: [#{ems.name}]...")
+    _log.info("#{self.log_prefix} Preloading broker for EMS: [#{ems.name}]...")
     preload(ems)
-    $log.info("#{self.log_prefix} Preloading broker for EMS: [#{ems.name}]...Complete")
+    _log.info("#{self.log_prefix} Preloading broker for EMS: [#{ems.name}]...Complete")
   rescue Timeout::Error, StandardError => err
-    $log.warn("#{self.log_prefix} Preloading broker for EMS: [#{ems.name}]...Failed. Error: #{err.message}")
+    _log.warn("#{self.log_prefix} Preloading broker for EMS: [#{ems.name}]...Failed. Error: #{err.message}")
   end
 
   def reconnect_ems(ems)
     begin
-      $log.info("#{self.log_prefix} Reconnecting broker for EMS: [#{ems.name}]...")
+      _log.info("#{self.log_prefix} Reconnecting broker for EMS: [#{ems.name}]...")
       preload(ems)
-      $log.info("#{self.log_prefix} Reconnecting broker for EMS: [#{ems.name}]...Complete")
+      _log.info("#{self.log_prefix} Reconnecting broker for EMS: [#{ems.name}]...Complete")
     rescue Timeout::Error, StandardError => err
-      $log.warn("#{self.log_prefix} Reconnecting broker for EMS: [#{ems.name}]...Failed. Retrying. Error: #{err.message}")
+      _log.warn("#{self.log_prefix} Reconnecting broker for EMS: [#{ems.name}]...Failed. Retrying. Error: #{err.message}")
       self.class.corresponding_model.queue_reconnect_ems(ems)
       return
     end
 
-    $log.info("#{self.log_prefix} Queueing full refresh for EMS: [#{ems.name}] due to reconnect")
+    _log.info("#{self.log_prefix} Queueing full refresh for EMS: [#{ems.name}] due to reconnect")
     EmsRefresh.queue_refresh(ems)
   end
 
@@ -289,11 +289,11 @@ class VimBrokerWorker < WorkerBase
   end
 
   def message_broker_unavailable(*args)
-    $log.warn("#{self.log_prefix} 'broker unavailable' was reported, connection will be restored on next heartbeat")
+    _log.warn("#{self.log_prefix} 'broker unavailable' was reported, connection will be restored on next heartbeat")
   end
 
   def message_broker_too_many_files(*args)
-    $log.warn("#{self.log_prefix} 'broker Errno::EMFILE' was reported, broker worker restarting")
+    _log.warn("#{self.log_prefix} 'broker Errno::EMFILE' was reported, broker worker restarting")
     do_exit("'broker Errno::EMFILE' was reported", 1)
   end
 
@@ -303,7 +303,7 @@ class VimBrokerWorker < WorkerBase
 
     ems = ManageIQ::Providers::Vmware::InfraManager.where(:id => ems_id).first
     if ems.nil?
-      $log.error "#{self.log_prefix} Unable to find EMS with id: [#{ems_id}]"
+      _log.error "#{self.log_prefix} Unable to find EMS with id: [#{ems_id}]"
       return
     end
 
@@ -321,7 +321,7 @@ class VimBrokerWorker < WorkerBase
       # Find all EMSes and Hosts to which we could have connections.
       connections = self.class.emses_and_hosts_to_monitor.collect { |e| [e.address, e.authentication_userid] }
       (@vim_broker_server.connectionInfo - connections).each do |c|
-        $log.info("#{self.log_prefix} Connection #{c.inspect} is no longer active.  Reporting to broker.")
+        _log.info("#{self.log_prefix} Connection #{c.inspect} is no longer active.  Reporting to broker.")
         @vim_broker_server.removeMiqVim(*c)
       end
     end

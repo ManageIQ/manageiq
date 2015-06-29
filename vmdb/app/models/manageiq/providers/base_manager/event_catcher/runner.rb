@@ -19,7 +19,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
     # Get the filtered events from the event_handling config
     @filtered_events = VMDB::Config.new("event_handling").config[:filtered_events]
     @filtered_events = @filtered_events.each_with_object([]) { |(k, v), ary| ary << k.to_s if v.nil? }
-    $log.info "#{log_prefix} Event Catcher skipping the following events:"
+    _log.info "#{log_prefix} Event Catcher skipping the following events:"
     $log.log_hashes(@filtered_events.sort)
 
     # Global Work Queue
@@ -31,7 +31,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
   end
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
+    @log_prefix ||= "EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
   end
 
   def before_exit(message, exit_code)
@@ -85,14 +85,14 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
     @exit_requested = false
 
     begin
-      $log.info("#{self.log_prefix} Validating Connection/Credentials")
+      _log.info("#{self.log_prefix} Validating Connection/Credentials")
       @ems.verify_credentials
     rescue => err
-      $log.warn("#{self.log_prefix} #{err.message}")
+      _log.warn("#{self.log_prefix} #{err.message}")
       return nil
     end
 
-    $log.info("#{self.log_prefix} Starting Event Monitor Thread")
+    _log.info("#{self.log_prefix} Starting Event Monitor Thread")
 
     tid = Thread.new do
       begin
@@ -100,13 +100,13 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
       rescue EventCatcherHandledException
         Thread.exit
       rescue => err
-        $log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
-        $log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
+        _log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
+        _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
       end
     end
 
-    $log.info("#{self.log_prefix} Started Event Monitor Thread")
+    _log.info("#{self.log_prefix} Started Event Monitor Thread")
 
     return tid
   end
@@ -127,7 +127,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
 
   def do_work
     if @tid.nil? || !@tid.alive?
-      $log.info("#{self.log_prefix} Event Monitor Thread gone. Restarting...")
+      _log.info("#{self.log_prefix} Event Monitor Thread gone. Restarting...")
       @tid = start_event_monitor
     end
 

@@ -1,5 +1,4 @@
 class LdapServer < ActiveRecord::Base
-
   belongs_to :ldap_domain
 
   default_value_for :mode, "ldaps"
@@ -30,7 +29,7 @@ class LdapServer < ActiveRecord::Base
 
   def self.sync_data_from_timer(timestamp = Time.now)
     # Stub for now
-    $log.info "MIQ(LDAP sync_data_from_timer): time: #{timestamp}"
+    _log.info "time: #{timestamp}"
   end
 
 end

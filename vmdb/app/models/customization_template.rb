@@ -19,7 +19,6 @@ class CustomizationTemplate < ActiveRecord::Base
   def self.seed
     return unless self == base_class # Prevent subclasses from seeding
 
-    log_header = "MIQ(#{self.name}.seed)"
     MiqRegion.my_region.lock do
       current = self.where(:system => true).index_by(&:name)
 
@@ -28,12 +27,12 @@ class CustomizationTemplate < ActiveRecord::Base
 
         rec = current.delete(s[:name])
         if rec.nil?
-          $log.info("#{log_header} Creating #{log_attrs.inspect}")
+          _log.info("Creating #{log_attrs.inspect}")
           self.create!(s)
         else
           rec.attributes = s.except(:type)
           if rec.changed?
-            $log.info("#{log_header} Updating #{log_attrs.inspect}")
+            _log.info("Updating #{log_attrs.inspect}")
             rec.save!
           end
         end
@@ -41,7 +40,7 @@ class CustomizationTemplate < ActiveRecord::Base
 
       current.values.each do |rec|
         log_attrs = rec.attributes.slice("id", "name", "type", "description").symbolize_keys
-        $log.info("#{log_header} Deleting #{log_attrs.inspect}")
+        _log.info("Deleting #{log_attrs.inspect}")
         rec.destroy
       end
     end

@@ -1,8 +1,8 @@
 class ManageIQ::Providers::Vmware::InfraManager
 module RefreshParser::Filter
   def find_relats_vc_data(filtered_data, mappings)
-    log_header = "MIQ(VcRefresher-find_relats_vc_data) EMS: [#{@ems.name}], id: [#{@ems.id}]"
-    $log.info "#{log_header} Getting relationships from VC data..."
+    log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
+    _log.info "#{log_header} Getting relationships from VC data..."
 
     vr = {
       :ems_id => @ems.id,
@@ -100,15 +100,15 @@ module RefreshParser::Filter
       end
     end
 
-    $log.info "#{log_header} Getting relationships from VC data...Complete"
+    _log.info "#{log_header} Getting relationships from VC data...Complete"
     return vr
   end
 
   def filter_vc_data(target)
-    log_header = "MIQ(VcRefresher-filter_vc_data) EMS: [#{@ems.name}], id: [#{@ems.id}]"
+    log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
 
     # Find the target in the data
-    $log.info "#{log_header} Filtering inventory for #{target.class} [#{target.name}] id: [#{target.id}]..."
+    _log.info "#{log_header} Filtering inventory for #{target.class} [#{target.name}] id: [#{target.id}]..."
     case target
     when ExtManagementSystem
       filtered_data = @vc_data
@@ -145,9 +145,9 @@ module RefreshParser::Filter
     end
 
     filtered_counts = filtered_data.inject({}) {|h, (k, v)| h[k] = v.blank? ? 0 : v.length; h}
-    $log.info "#{log_header} Filtering inventory for #{target.class} [#{target.name}] id: [#{target.id}]...Complete - Counts: #{filtered_counts.inspect}"
+    _log.info "#{log_header} Filtering inventory for #{target.class} [#{target.name}] id: [#{target.id}]...Complete - Counts: #{filtered_counts.inspect}"
 
-    EmsRefresh.log_inv_debug_trace(filtered_data, "#{log_header} filtered_data:", 2)
+    EmsRefresh.log_inv_debug_trace(filtered_data, "#{_log.prefix} #{log_header} filtered_data:", 2)
 
     return filtered_data
   end

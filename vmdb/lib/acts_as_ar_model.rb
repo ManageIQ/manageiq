@@ -12,6 +12,8 @@ class ActsAsArModelColumn < ActiveRecord::ConnectionAdapters::Column
 end
 
 class ActsAsArModel
+  include Vmdb::Logging
+
   def self.connection
     ActiveRecord::Base.connection
   end

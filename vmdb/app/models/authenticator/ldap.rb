@@ -52,7 +52,7 @@ module Authenticator
       update_user_attributes(user, username, lobj)
       user.miq_groups = groups
       user.save!
-      $log.info("MIQ(Authenticator#create_user_from_ldap): Created User: [#{user.userid}]")
+      _log.info("MIQ(Authenticator#create_user_from_ldap): Created User: [#{user.userid}]")
 
       user
     end
@@ -67,12 +67,11 @@ module Authenticator
     end
 
     def find_external_identity(username)
-      log_prefix = "MIQ(Authenticator#find_external_identity)"
       # Ldap will be used for authentication and role assignment
-      $log.info("#{log_prefix} Bind DN: [#{config[:bind_dn]}]")
-      $log.info("#{log_prefix}  User FQDN: [#{username}]")
+      _log.info("Bind DN: [#{config[:bind_dn]}]")
+      _log.info(" User FQDN: [#{username}]")
       lobj = ldap.get_user_object(username)
-      $log.debug("#{log_prefix} User obj from LDAP: #{lobj.inspect}")
+      _log.debug("User obj from LDAP: #{lobj.inspect}")
 
       lobj
     end
@@ -89,7 +88,7 @@ module Authenticator
 
       if authentication.key?(:user_proxies)       && !authentication[:user_proxies].blank?  &&
          authentication.key?(:get_direct_groups)  && authentication[:get_direct_groups] == false
-        $log.info("MIQ(Authenticator#groups_for) Skipping getting group memberships directly assigned to user bacause it has been disabled in the configuration")
+        _log.info("Skipping getting group memberships directly assigned to user bacause it has been disabled in the configuration")
         groups = []
       else
         groups = ldap.get_memberships(obj, authentication[:group_memberships_max_depth])
@@ -101,11 +100,11 @@ module Authenticator
             begin
               groups += user_proxy_membership(auth, MiqLdap.sid_to_s(sid))
             rescue Exception => err
-              $log.warn("MIQ(Authenticator#groups_for) #{err.message} (from Authenticator#user_proxy_membership)")
+              _log.warn("#{err.message} (from Authenticator#user_proxy_membership)")
             end
           end
         else
-          $log.warn("MIQ(Authenticator#groups_for) User Object has no objectSID")
+          _log.warn("User Object has no objectSID")
         end
       end
 
@@ -123,8 +122,6 @@ module Authenticator
 
     REQUIRED_LDAP_USER_PROXY_KEYS = [:basedn, :bind_dn, :bind_pwd, :ldaphost, :ldapport, :mode]
     def user_proxy_membership(auth, sid)
-      log_prefix = "MIQ(Authenticator#user_proxy_membership)"
-
       authentication    = config
       auth[:bind_dn]  ||= authentication[:bind_dn]
       auth[:bind_pwd] ||= authentication[:bind_pwd]
@@ -138,12 +135,12 @@ module Authenticator
 
       ldap_up = MiqLdap.new(:auth => {:ldaphost => auth[:ldaphost], :ldapport => auth[:ldapport], :mode => auth[:mode], :basedn => auth[:basedn]})
 
-      $log.info("#{log_prefix} Bind DN: [#{auth[:bind_dn]}], Host: [#{auth[:ldaphost]}], Port: [#{auth[:ldapport]}], Mode: [#{auth[:mode]}]")
+      _log.info("Bind DN: [#{auth[:bind_dn]}], Host: [#{auth[:ldaphost]}], Port: [#{auth[:ldapport]}], Mode: [#{auth[:mode]}]")
       raise "Cannot Bind" unless ldap_up.bind(auth[:bind_dn], auth[:bind_pwd]) # now bind with bind_dn so that we can do our searches.
-      $log.info("#{log_prefix} User SID: [#{sid}], FSP DN: [#{fsp_dn}]")
+      _log.info("User SID: [#{sid}], FSP DN: [#{fsp_dn}]")
       user_proxy_object = ldap_up.search(:base => fsp_dn, :scope => :base).first
       raise "Unable to find user proxy object in LDAP" if user_proxy_object.nil?
-      $log.debug("#{log_prefix} UserProxy obj from LDAP: #{user_proxy_object.inspect}")
+      _log.debug("UserProxy obj from LDAP: #{user_proxy_object.inspect}")
       ldap_up.get_memberships(user_proxy_object, auth[:group_memberships_max_depth])
     end
   end

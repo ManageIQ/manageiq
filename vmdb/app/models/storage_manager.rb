@@ -83,27 +83,27 @@ class StorageManager < ActiveRecord::Base
     end
 
     agent_ids_by_class(agents).each do |klass, ids|
-      $log.info "StorageManager.refresh_inventory: requesting refresh for instances of subclass #{klass.name}"
+      _log.info "requesting refresh for instances of subclass #{klass.name}"
       klass.refresh_inventory_by_subclass(ids, args)
     end
   end
 
   def self.refresh_inventory_by_subclass(ids, args={})
-    $log.info "StorageManager.refresh_inventory_by_subclass: skipping instances of non-refreshable subclass #{self.name}"
+    _log.info "skipping instances of non-refreshable subclass #{self.name}"
   end
 
   def self.cleanup_by_agent(agent)
-    $log.info "StorageManager.cleanup_by_agent: #{agent.hostname} start"
-    $log.info "StorageManager.cleanup_by_agent: #{agent.hostname} agent.last_update_status = #{agent.last_update_status}"
+    _log.info "#{agent.hostname} start"
+    _log.info "#{agent.hostname} agent.last_update_status = #{agent.last_update_status}"
     agent.managed_elements.where(:last_update_status => STORAGE_UPDATE_AGENT_OK_NO_INSTANCE).find_each(:batch_size => 500) do |inst|
-      $log.info "StorageManager.cleanup_by_agent: deleting instance #{inst.class_name} (#{inst.id}) - #{inst.evm_display_name}, last_update_status = #{inst.last_update_status}"
+      _log.info "deleting instance #{inst.class_name} (#{inst.id}) - #{inst.evm_display_name}, last_update_status = #{inst.last_update_status}"
       inst.destroy
     end if agent.last_update_status == STORAGE_UPDATE_OK
-    $log.info "StorageManager.cleanup_by_agent: #{agent.hostname} end"
+    _log.info "#{agent.hostname} end"
   end
 
   def self.queue_refresh_vmdb_cim(zone_name)
-    $log.info "#{self.name}.refresh_vmdb_cim: queueing requests to zone #{zone_name}"
+    _log.info "queueing requests to zone #{zone_name}"
     MiqQueue.put_unless_exists(
       :zone     => zone_name,
       :msg_timeout  => 36000,
@@ -117,19 +117,19 @@ class StorageManager < ActiveRecord::Base
     zoneId = MiqServer.my_server.zone.id
     agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
-    $log.info "#{self.name}.refresh_vmdb_cim: zone = #{zoneId} - STORAGE_UPDATE_IN_PROGRESS"
+    _log.info "zone = #{zoneId} - STORAGE_UPDATE_IN_PROGRESS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_IN_PROGRESS)
 
     agent.managed_elements.update_all(:last_update_status => STORAGE_UPDATE_AGENT_OK_NO_INSTANCE)
 
     begin
       agent.update_from_vmdb
-      $log.info "#{self.name}.refresh_vmdb_cim: zone = #{zoneId} - STORAGE_UPDATE_OK"
+      _log.info "zone = #{zoneId} - STORAGE_UPDATE_OK"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
     rescue Exception => err
-      $log.error "#{self.name}.refresh_vmdb_cim: #{err}"
+      _log.error "#{err}"
       $log.error err.backtrace.join("\n")
-      $log.info "#{self.name}.refresh_vmdb_cim: zone = #{zoneId} - STORAGE_UPDATE_FAILED"
+      _log.info "zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
     end
     self.cleanup_by_agent(agent)
@@ -142,7 +142,7 @@ class StorageManager < ActiveRecord::Base
   end
 
   def self.queue_bridge_associations(zone_name)
-    $log.info "#{self.name}.queue_bridge_associations: queueing requests to zone #{zone_name}"
+    _log.info "queueing requests to zone #{zone_name}"
     MiqQueue.put_unless_exists(
       :zone     => zone_name,
       :msg_timeout  => 36000,
@@ -156,17 +156,17 @@ class StorageManager < ActiveRecord::Base
     zoneId = MiqServer.my_server.zone.id
     agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
-    $log.info "#{self.name}.bridge_associations: zone = #{zoneId} - STORAGE_UPDATE_BRIDGE_ASSOCIATIONS"
+    _log.info "zone = #{zoneId} - STORAGE_UPDATE_BRIDGE_ASSOCIATIONS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_BRIDGE_ASSOCIATIONS)
 
     begin
       agent.bridge_associations
-      $log.info "#{self.name}.bridge_associations: zone = #{zoneId} - STORAGE_UPDATE_OK"
+      _log.info "zone = #{zoneId} - STORAGE_UPDATE_OK"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
     rescue Exception => err
-      $log.error "#{self.name}.bridge_associations: #{err}"
+      _log.error "#{err}"
       $log.error err.backtrace.join("\n")
-      $log.info "#{self.name}.bridge_associations: zone = #{zoneId} - STORAGE_UPDATE_FAILED"
+      _log.info "zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
     end
     self.queue_update_association_shortcuts(MiqServer.my_server.zone.name)
@@ -178,7 +178,7 @@ class StorageManager < ActiveRecord::Base
   end
 
   def self.queue_update_association_shortcuts(zone_name)
-    $log.info "#{self.name}.queue_update_association_shortcuts: queueing requests to zone #{zone_name}"
+    _log.info "queueing requests to zone #{zone_name}"
     MiqQueue.put_unless_exists(
       :zone     => zone_name,
       :msg_timeout  => 36000,
@@ -192,30 +192,30 @@ class StorageManager < ActiveRecord::Base
     zoneId = MiqServer.my_server.zone.id
     agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
-    $log.info "#{self.name}.update_association_shortcuts: zone = #{zoneId} - STORAGE_UPDATE_ASSOCIATION_SHORTCUTS"
+    _log.info "zone = #{zoneId} - STORAGE_UPDATE_ASSOCIATION_SHORTCUTS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_ASSOCIATION_SHORTCUTS)
 
     begin
       SHORTCUT_FROM_CLASSES.each do |sfc|
         sfclass = sfc.to_s.constantize
         next unless sfclass.const_defined?(:SHORTCUT_DEFS)
-        $log.info "#{self.name}.update_association_shortcuts: updating shortcuts for instances of #{sfc} in zone #{zoneId}"
+        _log.info "updating shortcuts for instances of #{sfc} in zone #{zoneId}"
 
         sfclass.where(:zone_id => zoneId).find_each do |sfi|
           sfclass::SHORTCUT_DEFS.each do |accessor, assoc|
             sfi.send(accessor).each do |ti|
-              $log.debug "#{self.name}.update_association_shortcuts: #{sfi.evm_display_name} --> (#{assoc[:AssocClass]}) --> #{ti.evm_display_name}"
+              _log.debug "#{sfi.evm_display_name} --> (#{assoc[:AssocClass]}) --> #{ti.evm_display_name}"
               sfi.addAssociation(ti, assoc)
             end
           end
         end
       end
-      $log.info "#{self.name}.update_association_shortcuts: zone = #{zoneId} - STORAGE_UPDATE_OK"
+      _log.info "zone = #{zoneId} - STORAGE_UPDATE_OK"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
     rescue Exception => err
-      $log.error "#{self.name}.update_association_shortcuts: #{err}"
+      _log.error "#{err}"
       $log.error err.backtrace.join("\n")
-      $log.info "#{self.name}.update_association_shortcuts: zone = #{zoneId} - STORAGE_UPDATE_FAILED"
+      _log.info "zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
     end
     self.queue_association_cleanup_by_zone(MiqServer.my_server.zone.name)
@@ -223,7 +223,7 @@ class StorageManager < ActiveRecord::Base
   end
 
   def self.queue_association_cleanup_by_zone(zone_name)
-    $log.info "#{self.name}.queue_association_cleanup_by_zone: queueing requests to zone #{zone_name}"
+    _log.info "queueing requests to zone #{zone_name}"
     MiqQueue.put_unless_exists(
       :zone     => zone_name,
       :msg_timeout  => 36000,
@@ -237,17 +237,17 @@ class StorageManager < ActiveRecord::Base
     zoneId = MiqServer.my_server.zone.id
     agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
-    $log.info "#{self.name}.association_cleanup_by_zone: zone = #{zoneId} - STORAGE_UPDATE_ASSOCIATION_CLEANUP"
+    _log.info "zone = #{zoneId} - STORAGE_UPDATE_ASSOCIATION_CLEANUP"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_ASSOCIATION_CLEANUP)
 
     begin
       MiqCimAssociation.cleanup_by_zone(zoneId)
-      $log.info "#{self.name}.association_cleanup_by_zone: zone = #{zoneId} - STORAGE_UPDATE_OK"
+      _log.info "zone = #{zoneId} - STORAGE_UPDATE_OK"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_OK)
     rescue Exception => err
-      $log.error "#{self.name}.association_cleanup_by_zone: #{err}"
+      _log.error "#{err}"
       $log.error err.backtrace.join("\n")
-      $log.info "#{self.name}.association_cleanup_by_zone: zone = #{zoneId} - STORAGE_UPDATE_FAILED"
+      _log.info "zone = #{zoneId} - STORAGE_UPDATE_FAILED"
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_FAILED)
     end
     return nil
@@ -256,42 +256,42 @@ class StorageManager < ActiveRecord::Base
   def self.refresh_metrics
     statistic_time = Time.now.utc
     agent_ids_by_class.each do |klass, ids|
-      $log.info "StorageManager.refresh_metrics: requesting refresh for instances of subclass #{klass.name}"
+      _log.info "requesting refresh for instances of subclass #{klass.name}"
       klass.refresh_metrics_by_subclass(statistic_time, ids)
     end
   end
 
   def self.refresh_metrics_by_subclass(statistic_time, ids)
-    $log.info "StorageManager.refresh_metrics_by_subclass: skipping instances of non-refreshable subclass #{self.name}"
+    _log.info "skipping instances of non-refreshable subclass #{self.name}"
   end
 
   def self.metrics_rollup_hourly
-    $log.info "StorageManager.metrics_rollup_hourly called"
+    _log.info "called"
     t = Time.now.utc
     rollup_time = Time.utc(t.year, t.month, t.day, t.hour, 0, 0, 0)
     agent_ids_by_class.each do |klass, ids|
-      $log.info "StorageManager.metrics_rollup_hourly: requesting rollup for instances of subclass #{klass.name}"
+      _log.info "requesting rollup for instances of subclass #{klass.name}"
       klass.metrics_rollup_hourly_by_subclass(rollup_time, ids)
     end
   end
 
   def self.metrics_rollup_hourly_by_subclass(rollup_time, ids)
-    $log.info "StorageManager.metrics_rollup_hourly_by_subclass: skipping instances of subclass #{self.name}"
+    _log.info "skipping instances of subclass #{self.name}"
   end
 
   def self.metrics_rollup_daily(time_profile_id)
-    $log.info "StorageManager.metrics_rollup_daily called: timeProfileId = #{time_profile_id}"
+    _log.info "called: timeProfileId = #{time_profile_id}"
     t = Time.now.utc
     # Do not clear t.hour - it's needed for non-UTC time zones.
     rollup_time = Time.utc(t.year, t.month, t.day, t.hour, 0, 0, 0)
     agent_ids_by_class.each do |klass, ids|
-      $log.info "StorageManager.metrics_rollup_daily: requesting rollup for instances of subclass #{klass.name}"
+      _log.info "requesting rollup for instances of subclass #{klass.name}"
       klass.metrics_rollup_daily_by_subclass(rollup_time, time_profile_id, ids)
     end
   end
 
   def self.metrics_rollup_daily_by_subclass(rollup_time, time_profile_id, ids)
-    $log.info "StorageManager.metrics_rollup_daily_by_subclass: skipping instances of subclass #{self.name}"
+    _log.info "skipping instances of subclass #{self.name}"
   end
 
   def last_update_status_str

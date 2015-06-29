@@ -9,49 +9,49 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
 
   def vim_shutdown(force = false)
     with_provider_object do |vim_host|
-      $log.info "MIQ(Host.vim_shutdown) Invoking with: force: [#{force}]"
+      _log.info "Invoking with: force: [#{force}]"
       vim_host.shutdownHost(force)
     end
   end
 
   def vim_reboot(force = false)
     with_provider_object do |vim_host|
-      $log.info "MIQ(Host.vim_reboot) Invoking with: force: [#{force}]"
+      _log.info "Invoking with: force: [#{force}]"
       vim_host.rebootHost(force)
     end
   end
 
   def vim_enter_maintenance_mode(timeout = 0, evacuate_powered_off_vms = false)
     with_provider_object do |vim_host|
-      $log.info "MIQ(Host.vim_enter_maintenance_mode) Invoking with: timeout: [#{timeout}], evacuate_powered_off_vms: [#{evacuate_powered_off_vms}]"
+      _log.info "Invoking with: timeout: [#{timeout}], evacuate_powered_off_vms: [#{evacuate_powered_off_vms}]"
       vim_host.enterMaintenanceMode(timeout, evacuate_powered_off_vms)
     end
   end
 
   def vim_exit_maintenance_mode(timeout = 0)
     with_provider_object do |vim_host|
-      $log.info "MIQ(Host.vim_exit_maintenance_mode) Invoking with: timeout: [#{timeout}]"
+      _log.info "Invoking with: timeout: [#{timeout}]"
       vim_host.exitMaintenanceMode(timeout)
     end
   end
 
   def vim_in_maintenance_mode?
     with_provider_object do |vim_host|
-      $log.info "MIQ(Host.vim_in_maintenance_mode?) Invoking"
+      _log.info "Invoking"
       vim_host.inMaintenanceMode?
     end
   end
 
   def vim_power_down_to_standby(timeout = 0, evacuate_powered_off_vms = false)
     with_provider_object do |vim_host|
-      $log.info "MIQ(Host.vim_power_down_to_standby) Invoking with: timeout: [#{timeout}], evacuate_powered_off_vms: [#{evacuate_powered_off_vms}]"
+      _log.info "Invoking with: timeout: [#{timeout}], evacuate_powered_off_vms: [#{evacuate_powered_off_vms}]"
       vim_host.powerDownHostToStandBy(timeout, evacuate_powered_off_vms)
     end
   end
 
   def vim_power_up_from_standby(timeout = 0)
     with_provider_object do |vim_host|
-      $log.info "MIQ(Host.vim_power_up_from_standby) Invoking with: timeout: [#{timeout}]"
+      _log.info "Invoking with: timeout: [#{timeout}]"
       vim_host.powerUpHostFromStandBy(timeout)
     end
   end
@@ -69,7 +69,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     with_provider_object do |vim_host|
       vnm      = vim_host.hostVirtualNicManager
       device ||= vnm.candidateVnicsByType("vmotion").first.device rescue nil
-      $log.info "MIQ(Host.vim_enable_vmotion) Invoking for device=<#{device}>"
+      _log.info "Invoking for device=<#{device}>"
       vnm.selectVnicForNicType("vmotion", device) unless device.nil?
     end
   end
@@ -78,7 +78,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     with_provider_object do |vim_host|
       vnm      = vim_host.hostVirtualNicManager
       device ||= vnm.candidateVnicsByType("vmotion").first.device rescue nil
-      $log.info "MIQ(Host.vim_disable_vmotion) Invoking for device=<#{device}>"
+      _log.info "Invoking for device=<#{device}>"
       vnm.deselectVnicForNicType("vmotion", device) unless device.nil?
     end
   end
@@ -114,14 +114,14 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
       raise MiqException::MiqUnreachableError, $!.message
     rescue Handsoap::Fault
-      $log.warn("MIQ(Host-verify_credentials_with_ws): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       if $!.respond_to?(:reason)
         raise MiqException::MiqInvalidCredentialsError, $!.reason if $!.reason =~ /Authorize Exception|incorrect user name or password/
         raise $!.reason
       end
       raise $!.message
     rescue Exception
-      $log.warn("MIQ(Host-verify_credentials_with_ws): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       raise "Unexpected response returned from system, see log for details"
     else
       true
@@ -130,7 +130,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
 
   def refresh_logs
     if self.missing_credentials?
-      $log.warn "MIQ(Host.refresh_logs) No credentials defined for Host [#{self.name}]"
+      _log.warn "No credentials defined for Host [#{self.name}]"
       return
     end
 
@@ -142,12 +142,12 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
         EventLog.add_elements(self, hashes)
       end
     rescue
-      $log.log_backtrace($!)
+      _log.log_backtrace($!)
     rescue MiqException::MiqVimBrokerUnavailable => err
       MiqVimBrokerWorker.broker_unavailable(err.class.name,  err.to_s)
-      $log.warn("MIQ(Host.refresh_logs) Reported the broker unavailable")
+      _log.warn("Reported the broker unavailable")
     rescue TimeoutError
-      $log.warn "(Host.refresh_logs) Timeout encountered during log collection for Host [#{self.name}]"
+      _log.warn "Timeout encountered during log collection for Host [#{self.name}]"
     ensure
       vim.disconnect rescue nil
     end

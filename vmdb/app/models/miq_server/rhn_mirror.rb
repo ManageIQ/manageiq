@@ -9,38 +9,38 @@ module MiqServer::RhnMirror
   def configure_rhn_mirror_client
     if self.has_assigned_role?("rhn_mirror")
       FileUtils.rm_f(YUM_MIRROR_CONF_FILE)  # Remove the mirror config file if running the mirror server
-      $log.info("#{self.class.name}##{__method__} Skipping configuration of mirror client due to this server acting as a mirror server")
+      _log.info("Skipping configuration of mirror client due to this server acting as a mirror server")
       return
     end
 
-    $log.info("#{self.class.name}##{__method__} Configuring RHN Mirror client...")
+    _log.info("Configuring RHN Mirror client...")
     MiqServer.my_server.update_attribute(:rhn_mirror, true)
     update_hosts_file
     configure_yum_repo
-    $log.info("#{self.class.name}##{__method__} Configuring RHN Mirror client... Complete")
+    _log.info("Configuring RHN Mirror client... Complete")
   end
 
   def resync_rhn_mirror
-    $log.info("#{self.class.name}##{__method__} Resync RHN Mirror...")
-    $log.error("#{self.class.name}##{__method__} Role: rhn_mirror is not assigned to this server") unless self.has_assigned_role?("rhn_mirror")
+    _log.info("Resync RHN Mirror...")
+    _log.error("Role: rhn_mirror is not assigned to this server") unless self.has_assigned_role?("rhn_mirror")
     MiqServer.my_server.update_attribute(:rhn_mirror, false)
     configure_rhn_mirror_server
     LinuxAdmin::Yum.download_packages(local_mirror_directory, MiqDatabase.cfme_package_name)
     remove_duplicate_files
     LinuxAdmin::Yum.create_repo(local_mirror_directory)
-    $log.info("#{self.class.name}##{__method__} Resync RHN Mirror... Complete")
+    _log.info("Resync RHN Mirror... Complete")
   end
 
   private
 
   def configure_rhn_mirror_server
-    $log.info("#{self.class.name}##{__method__} Configuring RHN Mirror server...")
+    _log.info("Configuring RHN Mirror server...")
     FileUtils.mkdir_p(local_mirror_directory)
     # TODO: ensure selinux context is properly set on repo directory
     create_apache_vhost
-    $log.info("#{self.class.name}##{__method__} Configuring RHN Mirror server... Complete")
+    _log.info("Configuring RHN Mirror server... Complete")
 
-    $log.info("#{self.class.name}##{__method__} Queueing RHN Mirror client configuration")
+    _log.info("Queueing RHN Mirror client configuration")
     configure_rhn_mirror_client_queue
   end
 
@@ -89,7 +89,7 @@ module MiqServer::RhnMirror
     mirrors_servers = MiqServer.order(:ipaddress).select { |s| s.has_assigned_role?("rhn_mirror") }
 
     if mirrors_servers.blank?
-      $log.info("#{self.class.name}##{__method__} No mirror servers found")
+      _log.info("No mirror servers found")
     else
       write_yum_repo_file(mirrors_servers)
     end
@@ -142,7 +142,7 @@ module MiqServer::RhnMirror
   end
 
   def remove_old_versions(h, keep = 1)
-    $log.info("#{self.class.name}##{__method__} Removing old versions of packages...")
+    _log.info("Removing old versions of packages...")
 
     h.each_value do |versions|
       # TODO: Don't need to v.dup on rubygems v1.8.25 and above
@@ -153,7 +153,7 @@ module MiqServer::RhnMirror
       end
     end
 
-    $log.info("#{self.class.name}##{__method__} Removing old versions of packages... Complete")
+    _log.info("Removing old versions of packages... Complete")
   end
 
   # Example:

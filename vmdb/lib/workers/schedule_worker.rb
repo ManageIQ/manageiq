@@ -75,11 +75,10 @@ class ScheduleWorker < WorkerBase
   end
 
   def system_schedule_every(*args, &block)
-    log_prefix = "MIQ(ScheduleWorker.system_schedule_every)"
     begin
       @system_scheduler.schedule_every(*args, &block)
     rescue ArgumentError => err
-      $log.error("#{log_prefix} #{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
+      _log.error("#{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
     end
   end
 
@@ -244,19 +243,19 @@ class ScheduleWorker < WorkerBase
     cfg.merge_from_template_if_missing(*database_metrics_purge_schedule)
 
     sched = cfg.config.fetch_path(*database_metrics_collection_schedule)
-    $log.info("MIQ(Schedule.schedules_for_database_operations_role) database_metrics_collection_schedule: #{sched}")
+    _log.info("database_metrics_collection_schedule: #{sched}")
     @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_collection_schedule]) do |rufus_job|
       @queue.enq :vmdb_database_capture_metrics_timer
     end
 
     sched = cfg.config.fetch_path(*database_metrics_daily_rollup_schedule)
-    $log.info("MIQ(Schedule.schedules_for_database_operations_role) database_metrics_daily_rollup_schedule: #{sched}")
+    _log.info("database_metrics_daily_rollup_schedule: #{sched}")
     @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_daily_rollup_schedule]) do |rufus_job|
       @queue.enq :vmdb_database_rollup_metrics_timer
     end
 
     sched = cfg.config.fetch_path(*database_metrics_purge_schedule)
-    $log.info("MIQ(Schedule.schedules_for_database_operations_role) database_metrics_purge_schedule: #{sched}")
+    _log.info("database_metrics_purge_schedule: #{sched}")
     @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_purge_schedule]) do |rufus_job|
       @queue.enq :metric_purge_all_timer
     end
@@ -273,7 +272,7 @@ class ScheduleWorker < WorkerBase
     ldap_synchronization_schedule         = [ :ldap_synchronization, :ldap_synchronization_schedule ]
 
     sched = VMDB::Config.new("vmdb").config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
-    $log.info("MIQ(Schedule.schedules_for_ldap_synchronization_role) ldap_synchronization_schedule: #{sched}")
+    _log.info("ldap_synchronization_schedule: #{sched}")
 
     @schedules[:ldap_synchronization] << @system_scheduler.cron(sched, :tags => [:ldap_synchronization, :ldap_synchronization_schedule]) do |rufus_job|
       @queue.enq :ldap_server_sync_data_from_timer
@@ -345,14 +344,14 @@ class ScheduleWorker < WorkerBase
 
     # Schedule - Storage metrics collection
     sched = cfg.config.fetch_path(*storage_metrics_collection_schedule)
-    $log.info("MIQ(Schedule.schedules_for_storage_metrics_coordinator_role) storage_metrics_collection_schedule: #{sched}")
+    _log.info("storage_metrics_collection_schedule: #{sched}")
     @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
       @queue.enq :storage_refresh_metrics
     end
 
     # Schedule - Storage metrics hourly rollup
     sched = cfg.config.fetch_path(*storage_metrics_hourly_rollup_schedule)
-    $log.info("MIQ(Schedule.schedules_for_storage_metrics_coordinator_role) storage_metrics_hourly_rollup_schedule: #{sched}")
+    _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
     @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
       @queue.enq :storage_metrics_rollup_hourly
     end
@@ -362,7 +361,7 @@ class ScheduleWorker < WorkerBase
     TimeProfile.rollup_daily_metrics.each do |tp|
       tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
       sched = "#{base_sched} #{tz}"
-      $log.info("MIQ(Schedule.schedules_for_storage_metrics_coordinator_role) storage_metrics_daily_rollup_schedule: #{sched}")
+      _log.info("storage_metrics_daily_rollup_schedule: #{sched}")
       @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
         @queue.enq [:storage_metrics_rollup_daily, tp.id]
       end
@@ -370,14 +369,14 @@ class ScheduleWorker < WorkerBase
 
     # Schedule - Storage metrics purge
     sched = cfg.config.fetch_path(*storage_metrics_purge_schedule)
-    $log.info("MIQ(Schedule.schedules_for_storage_metrics_coordinator_role) storage_metrics_purge_schedule: #{sched}")
+    _log.info("storage_metrics_purge_schedule: #{sched}")
     @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
       @queue.enq :miq_storage_metric_purge_all_timer
     end
 
     # Schedule - Storage inventory collection
     sched = cfg.config.fetch_path(*storage_inventory_full_refresh_schedule)
-    $log.info("MIQ(Schedule.schedules_for_storage_metrics_coordinator_role) storage_inventory_full_refresh_schedule: #{sched}")
+    _log.info("storage_inventory_full_refresh_schedule: #{sched}")
     @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
       @queue.enq :storage_refresh_inventory
     end
@@ -400,7 +399,7 @@ class ScheduleWorker < WorkerBase
 
   def reload_schedules(schedules)
     schedules.each do |sch|
-      $log.info("MIQ(Schedule.reload_schedules) Reloading schedule: [#{sch.name}] with id: [#{sch.id}]")
+      _log.info("Reloading schedule: [#{sch.name}] with id: [#{sch.id}]")
       self.rufus_remove_schedules_by_tag(sch.tag)
       self.rufus_add_schedule(sch.rufus_schedule_opts) if sch.enabled == true
     end
@@ -461,7 +460,7 @@ class ScheduleWorker < WorkerBase
     active_tags = MiqSchedule.in_zone(MiqServer.my_zone).collect(&:tag)
     @user_scheduler.find_jobs(CLASS_TAG).each do |rufus_job|
       if (active_tags & rufus_job.tags).empty?
-        $log.info("MIQ(Schedule.rufus_remove_stale_schedules) Unscheduling Tag: #{rufus_job.tags.inspect}")
+        _log.info("Unscheduling Tag: #{rufus_job.tags.inspect}")
         rufus_job.unschedule
       end
     end
@@ -469,7 +468,7 @@ class ScheduleWorker < WorkerBase
 
   def rufus_remove_schedules_by_tag(tag)
     rufus_jobs = @user_scheduler.find_jobs(tag)
-    $log.info("MIQ(Schedule.rufus_remove_schedules_by_tag) Unscheduling #{rufus_jobs.length} jobs with tag: #{tag}") unless rufus_jobs.empty?
+    _log.info("Unscheduling #{rufus_jobs.length} jobs with tag: #{tag}") unless rufus_jobs.empty?
     rufus_jobs.each(&:unschedule)
   end
 
@@ -479,8 +478,6 @@ class ScheduleWorker < WorkerBase
 
   BRUTE_FORCE = false
   def check_roles_changed
-    log_prefix = "MIQ(ScheduleWorker.check_roles_changed)"
-
     added   = @active_roles  - @current_roles
     removed = @current_roles - @active_roles
 
@@ -495,7 +492,7 @@ class ScheduleWorker < WorkerBase
         added.each do |r|
           m = "schedules_for_#{r}_role"
           next unless self.respond_to?(m)
-          $log.info("#{log_prefix} Adding Schedules for Role=[#{r}]")
+          _log.info("Adding Schedules for Role=[#{r}]")
           self.send(m)
         end
 
@@ -504,7 +501,7 @@ class ScheduleWorker < WorkerBase
         removed.each do |r|
           rs = r.to_sym
           next unless @schedules.has_key?(rs)
-          $log.info("#{log_prefix} Removing Schedules for Role=[#{r}]")
+          _log.info("Removing Schedules for Role=[#{r}]")
           @schedules[rs].each do |j|
             # In Rufus::Scheduler Version 1, schedule returns a JobID
             # In Rufus::Scheduler Version 2, schedule returns a Job
@@ -513,7 +510,7 @@ class ScheduleWorker < WorkerBase
             else
               if j.respond_to?(:tags)
                 if j.tags.any? {|t| t.to_s.starts_with?("miq_schedules_")}
-                  $log.info("#{log_prefix} Removing user schedule with Tags: #{j.tags.inspect}")
+                  _log.info("Removing user schedule with Tags: #{j.tags.inspect}")
                 end
                 j.unschedule
               end
@@ -523,13 +520,13 @@ class ScheduleWorker < WorkerBase
         end
       rescue Exception => err
         msg = "Error adjusting schedules: #{err.message}"
-        $log.error("#{log_prefix} #{msg}")
-        $log.log_backtrace(err)
+        _log.error("#{msg}")
+        _log.log_backtrace(err)
         do_exit("#{msg}. Restarting.", 1)
       end
     end
 
-    $log.info("#{log_prefix} Roles added: #{added.inspect}, Roles removed: #{removed.inspect}") unless added.empty? && removed.empty?
+    _log.info("Roles added: #{added.inspect}, Roles removed: #{removed.inspect}") unless added.empty? && removed.empty?
     @current_roles = @active_roles.dup
   end
 
@@ -541,8 +538,7 @@ class ScheduleWorker < WorkerBase
   end
 
   def do_work
-    log_prefix = "MIQ(ScheduleWorker.#{__method__})"
-    $log.info("#{log_prefix} Number of scheduled items to be processed: #{queue_length}.")
+    _log.info("Number of scheduled items to be processed: #{queue_length}.")
 
     schedule_worker_jobs = ScheduleWorker::Jobs.new
     while @queue.length > 0
@@ -553,8 +549,8 @@ class ScheduleWorker < WorkerBase
       rescue ActiveRecord::StatementInvalid, SystemExit
         raise
       rescue Exception => err
-        $log.error("#{self.log_prefix} #{err.message}")
-        $log.log_backtrace(err)
+        _log.error("#{err.message}")
+        _log.log_backtrace(err)
       end
       Thread.pass
     end

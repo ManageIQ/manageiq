@@ -308,7 +308,7 @@ module MiqReport::Generator
       :miq_report_id    => self.id
     }
 
-    $log.info("MIQ(MiqReport-build_create_results) Creating report results with hash: [#{attrs.inspect}]")
+    _log.info("Creating report results with hash: [#{attrs.inspect}]")
     res   = MiqReportResult.find_by_miq_task_id(taskid) unless taskid.nil?
     res ||= MiqReportResult.find_by_userid(options[:userid]) if options[:userid].include?("|") # replace results if adhoc (<userid>|<session_id|<mode>) user report
     res ||= MiqReportResult.new
@@ -341,7 +341,7 @@ module MiqReport::Generator
     report.table = nil
     res.report = report
     res.save
-    $log.info("MIQ(MiqReport-build_create_results) Finished creating report result with id [#{res.id}] for report id: [#{self.id}], name: [#{self.name}]")
+    _log.info("Finished creating report result with id [#{res.id}] for report id: [#{self.id}], name: [#{self.name}]")
 
     return res
   end
@@ -727,7 +727,7 @@ module MiqReport::Generator
 
   def queue_report_result(options, res_opts)
     options[:userid] ||= "system"
-    $log.info("MIQ(MiqReport-queue_report_result) Adding generate report task to the message queue...")
+    _log.info("Adding generate report task to the message queue...")
     task = MiqTask.create(:name => "Generate Report: '#{self.name}'", :userid => options[:userid])
 
     MiqQueue.put(
@@ -742,7 +742,7 @@ module MiqReport::Generator
     AuditEvent.success(:event => "generate_table", :target_class => self.class.base_class.name, :target_id => self.id, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
     task.update_status("Queued", "Ok", "Task has been queued")
 
-    $log.info("MIQ(MiqReport-queue_report_result) Finished adding generate report task with id [#{task.id}] to the message queue")
+    _log.info("Finished adding generate report task with id [#{task.id}] to the message queue")
     return task.id
   end
 
@@ -751,16 +751,16 @@ module MiqReport::Generator
 
     # Generate the table only if the task does not already contain a MiqReport object
     if task.task_results.blank?
-      $log.info("MIQ(MiqReport-build_report_result) Generating report table with taskid [#{taskid}] and options [#{options.inspect}]")
+      _log.info("Generating report table with taskid [#{taskid}] and options [#{options.inspect}]")
       self._async_generate_table(taskid, options.merge(:mode => "schedule", :report_source => res_opts[:source]))
 
       # Reload the task after the _async_generate_table has updated it
       task.reload
       if task.status != "Ok"
-        $log.warn("MIQ(MiqReport-build_report_result) Generating report table with taskid [#{taskid}]... Failed to complete, '#{task.message}'")
+        _log.warn("Generating report table with taskid [#{taskid}]... Failed to complete, '#{task.message}'")
         return
       else
-        $log.info("MIQ(MiqReport-build_report_result) Generating report table with taskid [#{taskid}]... Complete")
+        _log.info("Generating report table with taskid [#{taskid}]... Complete")
       end
     end
 
@@ -776,9 +776,9 @@ module MiqReport::Generator
 
     res = task.miq_report_result
     nh = {:miq_task_id => taskid, :scheduled_on => at}
-    $log.info("MIQ(MiqReport-build_report_result) Updating report results with hash: [#{nh.inspect}]")
+    _log.info("Updating report results with hash: [#{nh.inspect}]")
     res.update_attributes(nh)
-    $log.info("MIQ(MiqReport-build_report_result) Finished creating report result with id [#{res.id}] for report id: [#{self.id}], name: [#{self.name}]")
+    _log.info("Finished creating report result with id [#{res.id}] for report id: [#{self.id}], name: [#{self.name}]")
 
     notify_user_of_report(res_last_run_on, res, options) if options[:send_email]
 

@@ -366,7 +366,7 @@ class MiqPolicy < ActiveRecord::Base
         attrs[:active] = true      if p.active.nil?
         attrs[:mode]   = "control" if p.mode.nil?
         if attrs.empty?
-          $log.info("MIQ(MiqPolicy.seed) Updating [#{p.name}]")
+          _log.info("Updating [#{p.name}]")
           p.update_attributes(attrs)
         end
       end
@@ -434,7 +434,7 @@ class MiqPolicy < ActiveRecord::Base
   def add_action_for_event(event, action, opt_hash = nil)
     # we now expect an options hash provided by the UI, merge the qualifier with the options_hash
     # overwriting with the values from the options hash
-    #    $log.debug("add_miq_action opt_hash: #{opt_hash.inspect}")
+    #    _log.debug("opt_hash: #{opt_hash.inspect}")
     opt_hash = {:qualifier => :failure}.merge(opt_hash)
 
     # update the correct DB sequence and synchronous value with the value from the UI

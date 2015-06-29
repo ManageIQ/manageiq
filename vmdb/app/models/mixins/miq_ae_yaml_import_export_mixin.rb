@@ -44,7 +44,7 @@ module MiqAeYamlImportExportMixin
   def add_instance(class_obj, instance_yaml)
     instance_attributes = instance_yaml.fetch_path('object', 'attributes')
     instance_attributes['class_id'] = class_obj.id
-    $log.info("#{self.class} Importing instance:  <#{instance_attributes['name']}>")
+    _log.info("Importing instance:  <#{instance_attributes['name']}>")
     fields = instance_yaml.fetch_path('object', 'fields')
     MiqAeInstance.new(instance_attributes).tap do |instance_obj|
       fields.each { |f| process_field_value(instance_obj, f) } unless fields.nil?
@@ -54,7 +54,7 @@ module MiqAeYamlImportExportMixin
 
   def add_method(class_obj, method_yaml)
     method_attributes = method_yaml.fetch_path('object', 'attributes')
-    $log.info("#{self.class} Importing method:    <#{method_attributes['name']}>")
+    _log.info("Importing method:    <#{method_attributes['name']}>")
     fields  = method_yaml.fetch_path('object', 'inputs')
     method_attributes['class_id'] = class_obj.id
     MiqAeMethod.new(method_attributes).tap do |method_obj|

@@ -60,7 +60,6 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   #
 
   def allowed_hosts(options={})
-    log_header = "MiqHostProvisionWorkflow.allowed_hosts"
     return @allowed_hosts_cache unless @allowed_hosts_cache.nil?
 
     rails_logger('allowed_hosts', 0)
@@ -112,9 +111,8 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def ws_template_fields(values, fields)
-    log_header = "#{self.class.name}.ws_template_fields"
     data = parse_ws_string(fields)
-    $log.info "#{log_header} data:<#{data.inspect}>"
+    _log.info "data:<#{data.inspect}>"
 
     name         =     data[:name].blank?         ? nil : data[:name].downcase
     mac_address  =     data[:mac_address].blank?  ? nil : data[:mac_address].downcase
@@ -122,35 +120,33 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
     raise "No host search criteria values were passed.  input data:<#{data.inspect}>" if name.nil? && mac_address.nil? && ipmi_address.nil?
 
-    $log.info "#{log_header} Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>"
+    _log.info "Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>"
     srcs = allowed_ws_hosts({:include_datacenter => true}).find_all do |v|
-      $log.info "#{log_header} Host Detected: <#{v.name.downcase}> <#{v.mac_address}> <#{v.ipmi_address}>"
+      _log.info "Host Detected: <#{v.name.downcase}> <#{v.mac_address}> <#{v.ipmi_address}>"
       (name.nil? || name == v.name.downcase) && (mac_address.nil? || mac_address == v.mac_address.to_s.downcase) && (ipmi_address.nil? || ipmi_address == v.ipmi_address.to_s)
     end
     raise "Multiple source template were found from input data:<#{data.inspect}>" if srcs.length > 1
     src = srcs.first
 
     raise "No target host was found from input data:<#{data.inspect}>" if src.nil?
-    $log.info "#{log_header} Host Found: <#{src.name}> MAC:<#{src.mac_address}> IPMI:<#{src.ipmi_address}>"
+    _log.info "Host Found: <#{src.name}> MAC:<#{src.mac_address}> IPMI:<#{src.ipmi_address}>"
     return src
   end
 
   def ws_host_fields(values, fields, userid)
-    log_header = "#{self.class.name}.ws_host_fields"
     data = parse_ws_string(fields)
 
-    $log.info "#{log_header} data:<#{data.inspect}>"
+    _log.info "data:<#{data.inspect}>"
     ws_service_fields(values, fields, data)
     ws_environment_fields(values, fields, data)
     self.refresh_field_values(values, userid)
     ws_customize_fields(values, fields, data)
     ws_schedule_fields(values, fields, data)
 
-    data.each {|k, v| $log.warn "#{log_header} Unprocessed key <#{k}> with value <#{v.inspect}>"}
+    data.each {|k, v| _log.warn "Unprocessed key <#{k}> with value <#{v.inspect}>"}
   end
 
   def ws_service_fields(values, fields, data)
-    log_header = "#{self.class.name}.ws_service_fields"
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :service)).nil?
     dlg_keys = dlg_fields.keys
 
@@ -163,7 +159,6 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def ws_environment_fields(values, fields, data)
-    log_header = "#{self.class.name}.ws_environment_fields"
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :service)).nil?
     dlg_keys = dlg_fields.keys
 
@@ -180,7 +175,6 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def ws_customize_fields(values, fields, data)
-    log_header = "#{self.class.name}.ws_customize_fields"
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :customize)).nil?
     dlg_keys = dlg_fields.keys
 
@@ -199,7 +193,6 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def ws_find_matching_ci(allowed_method, keys, match_str, klass)
-    log_header = "#{self.class.name}.ws_find_matching_ci"
     return nil if match_str.blank?
     match_str = match_str.to_s.downcase
 
@@ -207,7 +200,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
       ci = item.kind_of?(Array) ? klass.find_by_id(item[0]) : item
       keys.any? do |key|
         value = ci.send(key).to_s.downcase
-        #$log.warn "#{log_header} <#{allowed_method}> - comparing <#{value}> to <#{match_str}>"
+        #_log.warn "<#{allowed_method}> - comparing <#{value}> to <#{match_str}>"
         value.include?(match_str)
       end
     end
@@ -228,16 +221,15 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
-    log_header = "#{self.class.name}.from_ws"
     begin
       options = MiqHashStruct.new if options.nil?
-      $log.warn "#{log_header} Web-service host provisioning starting with interface version <#{version}> by requester <#{userid}>"
+      _log.warn "Web-service host provisioning starting with interface version <#{version}> by requester <#{userid}>"
 
       init_options = {:use_pre_dialog => false, :request_type => self.request_type(parse_ws_string(template_fields)[:request_type])}
       data = parse_ws_string(requester)
       unless data[:user_name].blank?
         userid = data[:user_name]
-        $log.warn "#{log_header} Web-service requester changed to <#{userid}>"
+        _log.warn "Web-service requester changed to <#{userid}>"
       end
 
       p = self.new(values = {}, userid, init_options)
@@ -261,7 +253,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
       p.create_request(values, userid, values[:auto_approve])
     rescue => err
-      $log.error "#{log_header}: <#{err}>"
+      _log.error "<#{err}>"
       raise err
     end
   end

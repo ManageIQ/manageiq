@@ -20,7 +20,7 @@ class PxeImageType < ActiveRecord::Base
 
     MiqRegion.my_region.lock do
       seed_data.each do |s|
-        $log.info("MIQ(#{self.name}.seed) Creating #{s.inspect}")
+        _log.info("Creating #{s.inspect}")
         self.create(s)
       end
     end

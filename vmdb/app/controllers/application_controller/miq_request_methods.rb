@@ -933,7 +933,7 @@ module ApplicationController::MiqRequestMethods
   rescue => bang
     # only add this message if showing a list of Catalog items, show screen already handles this
     @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
-    $log.log_backtrace(bang)
+    _log.log_backtrace(bang)
     nil
   end
 

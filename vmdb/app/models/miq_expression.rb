@@ -1,4 +1,5 @@
 class MiqExpression
+  include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
   @@proto = VMDB::Config.new("vmdb").config[:product][:proto]
@@ -996,11 +997,11 @@ class MiqExpression
 
   def self.evaluate(expression, obj, inputs = {}, tz = nil)
     ruby_exp = expression.is_a?(Hash) ? self.new(expression).to_ruby(tz) : expression.to_ruby(tz)
-    $log.debug("MIQ(Expression-evaluate) Expression before substitution: #{ruby_exp}")
+    _log.debug("Expression before substitution: #{ruby_exp}")
     subst_expr = self.subst(ruby_exp, obj, inputs)
-    $log.debug("MIQ(Expression-evaluate) Expression after substitution: #{subst_expr}")
+    _log.debug("Expression after substitution: #{subst_expr}")
     result = eval(subst_expr) ? true : false
-    $log.debug("MIQ(Expression-evaluate) Expression evaluation result: [#{result}]")
+    _log.debug("Expression evaluation result: [#{result}]")
     return result
   end
 
@@ -1448,7 +1449,7 @@ class MiqExpression
   end
 
   def self.build_lists(model)
-    $log.info("MIQ(MiqExpression-build_lists) Building lists for: [#{model}]...")
+    _log.info("Building lists for: [#{model}]...")
 
     # Build expression lists
     [:exp_available_fields, :exp_available_counts, :exp_available_finds].each {|what| self.miq_adv_search_lists(model, what)}
@@ -1484,7 +1485,7 @@ class MiqExpression
   end
 
   def self.build_relats(model, parent={}, seen=[])
-    $log.info("MIQ(MiqExpression.build_relats) Building relationship tree for: [#{parent[:path]} => #{model}]...")
+    _log.info("Building relationship tree for: [#{parent[:path]} => #{model}]...")
 
     model = model_class(model)
 

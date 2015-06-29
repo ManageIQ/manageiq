@@ -26,21 +26,19 @@ class ManageIQ::Providers::InfraManager::Vm < ::Vm
   def inherit_host_mgt_tags
     return unless host.try(:inherit_mgt_tags)
 
-    log_header = "MIQ(#{self.class.name}#inherit_host_mgt_tags)"
-    $log.info("#{log_header} Applying tags from [(#{host.class.name}) #{host.name}] to [(#{self.class.name}) #{name}]")
+    _log.info("Applying tags from [(#{host.class.name}) #{host.name}] to [(#{self.class.name}) #{name}]")
     tags = host.tag_list(:ns => "/managed").split
     tags.delete_if { |t| t =~ /^power_state/ } # omit power state since this is assigned by the system
 
     tag_add(tags, :ns => "/managed")
   rescue => err
-    $log.log_backtrace(err)
+    _log.log_backtrace(err)
   end
 
   def post_create_autoscan
     return unless host.try(:autoscan)
 
-    log_header = "MIQ(#{self.class.name}#post_create_autoscan)"
-    $log.info("#{log_header} Creating scan job on [(#{self.class.name}) #{name}]")
+    _log.info("Creating scan job on [(#{self.class.name}) #{name}]")
     scan
   end
 

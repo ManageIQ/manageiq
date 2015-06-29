@@ -66,8 +66,6 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   def remote_console_vnc_acquire_ticket(proxy_miq_server = nil)
     validate_remote_console_acquire_ticket("vnc")
 
-    log_header = "MIQ(#{self.class.name}#remote_console_vnc_acquire_ticket)"
-
     if proxy_miq_server
       proxy_miq_server = MiqServer.extract_objects(proxy_miq_server)
       config = proxy_miq_server.get_config.config
@@ -89,7 +87,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     # Determine if any Vms on this Host already have this port, and if so, disable them
     old_vms = self.host.vms_and_templates.where(:vnc_port => host_port)
     old_vms.each do |old_vm|
-      $log.info "#{log_header} Disabling VNC on #{old_vm.class.name} id: [#{old_vm.id}] name: [#{old_vm.name}], since the port is being reused."
+      _log.info "Disabling VNC on #{old_vm.class.name} id: [#{old_vm.id}] name: [#{old_vm.name}], since the port is being reused."
       old_vm.with_provider_object do |vim_vm|
         vim_vm.setRemoteDisplayVncAttributes(:enabled => false, :port => nil, :password => nil)
       end
@@ -97,7 +95,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     old_vms.update_all(:vnc_port => nil)
 
     # Enable on this Vm with the requested port and random password
-    $log.info "#{log_header} Enabling VNC on #{self.class.name} id: [#{self.id}] name: [#{self.name}]"
+    _log.info "Enabling VNC on #{self.class.name} id: [#{self.id}] name: [#{self.name}]"
     self.with_provider_object do |vim_vm|
       vim_vm.setRemoteDisplayVncAttributes(:enabled => true, :port => host_port, :password => password)
     end

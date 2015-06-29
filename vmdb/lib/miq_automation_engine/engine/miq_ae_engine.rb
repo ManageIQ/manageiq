@@ -53,8 +53,6 @@ module MiqAeEngine
   end
 
   def self.deliver(*args)
-    log_header = 'MIQ(MiqAeEngine.deliver)'
-
     options = {}
 
     case args.length
@@ -93,7 +91,7 @@ module MiqAeEngine
 
     begin
       object_name = "#{object_type}.#{object_id}"
-      $log.info("#{log_header} Delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate")
+      _log.info("Delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate")
       automate_attrs = options[:attrs].dup
 
       if object_type
@@ -119,7 +117,7 @@ module MiqAeEngine
 
       if ws.nil? || ws.root.nil?
         message = "Error delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate: Empty Workspace"
-        $log.error("#{log_header} #{message}")
+        _log.error("#{message}")
         return nil
       end
 
@@ -137,12 +135,12 @@ module MiqAeEngine
           options[:ae_state_data]    = YAML.dump(ws.persist_state_hash) unless ws.persist_state_hash.empty?
 
           message = "Requeuing #{options.inspect} for object [#{object_name}] with state [#{options[:state]}] to Automate for delivery in [#{ae_retry_interval}] seconds"
-          $log.info("#{log_header} #{message}")
+          _log.info("#{message}")
           self.deliver_queue(options, :deliver_on => deliver_on)
         else
           if ae_result.casecmp('error').zero?
             message = "Error delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate: #{ws.root['ae_message']}"
-            $log.error("#{log_header} #{message}")
+            _log.error("#{message}")
           end
           MiqAeEvent.process_result(ae_result, automate_attrs) if options[:instance_name].to_s.casecmp('EVENT').zero?
         end
@@ -151,7 +149,7 @@ module MiqAeEngine
       return ws
     rescue MiqAeException::Error => err
       message = "Error delivering #{automate_attrs.inspect} for object [#{object_name}] with state [#{state}] to Automate: #{err.message}"
-      $log.error("#{log_header} #{message}")
+      _log.error("#{message}")
     ensure
       vmdb_object.after_ae_delivery(ae_result.to_s.downcase) if vmdb_object.respond_to?(:after_ae_delivery)
     end

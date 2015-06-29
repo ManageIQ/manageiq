@@ -144,7 +144,7 @@ module Metric::Common
     unless profile.ts_in_profile?(self.timestamp)
       self.inside_time_profile = false
       self.nil_out_values_for_apply_time_profile
-      $log.debug("MIQ(#{self.class.name}.apply_time_profile_hourly) Hourly Timestamp: [#{self.timestamp}] is outside of time profile: [#{profile.description}]")
+      _log.debug("Hourly Timestamp: [#{self.timestamp}] is outside of time profile: [#{profile.description}]")
     else
       self.inside_time_profile = true
     end
@@ -155,7 +155,7 @@ module Metric::Common
     unless profile.ts_day_in_profile?(self.timestamp)
       self.inside_time_profile = false
       self.nil_out_values_for_apply_time_profile
-      $log.debug("MIQ(#{self.class.name}.apply_time_profile_daily) Daily Timestamp: [#{self.timestamp}] is outside of time profile: [#{profile.description}]")
+      _log.debug("Daily Timestamp: [#{self.timestamp}] is outside of time profile: [#{profile.description}]")
     else
       self.inside_time_profile = true
     end

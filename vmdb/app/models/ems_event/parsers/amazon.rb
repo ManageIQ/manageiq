@@ -1,10 +1,9 @@
 module EmsEvent::Parsers::Amazon
   def self.event_to_hash(event, ems_id)
-    log_header = "MIQ(#{self.name}.event_to_hash)"
-    log_header << " ems_id: [#{ems_id}]" unless ems_id.nil?
+    log_header = "ems_id: [#{ems_id}] " unless ems_id.nil?
 
-    $log.debug("#{log_header} event: [#{event["configurationItem"]["resourceType"]} - " \
-               "#{event["configurationItem"]["resourceId"]}]") if $log.debug?
+    _log.debug("#{log_header}event: [#{event["configurationItem"]["resourceType"]} - " \
+               "#{event["configurationItem"]["resourceId"]}]")
 
     event_hash = {
       :event_type => event["eventType"],

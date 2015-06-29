@@ -67,7 +67,7 @@ class NetappRcu < StorageManager
     unless cRcuData[:aggregates] && cRcuData[:volumes]
       # TODO: Use hostname, not ipaddress
       unless (oss = NetappRemoteService.find_controller_by_ip(ipaddress))
-        $log.info "NetappRcu.add_controller: could not find controller #{ipaddress}"
+        _log.info "could not find controller #{ipaddress}"
       else
         cRcuData[:aggregates] ||= NetappRemoteService.aggregate_names(oss)  || []
         cRcuData[:volumes]    ||= NetappRemoteService.volume_names(oss)   || []
@@ -143,8 +143,6 @@ class NetappRcu < StorageManager
   end
 
   def create_datastore(params)
-    log_header = "MIQ(#{self.class.name}.create_datastore)"
-
     begin
       container         = params[:container]
       aggregate_or_volume_name  = params[:aggregate_or_volume_name]
@@ -198,17 +196,17 @@ class NetappRcu < StorageManager
         ds.volAutoGrowMax = auto_grow_maximum.to_i   / 1.megabyte
       end
 
-      $log.info("#{log_header} Creating #{protocol} containerName=<#{aggregate_or_volume_name}> with size=<#{size}> as datastore=<#{datastore_name}> on NetApp Controller=<#{self.controller_name}>")
-      $log.info("#{log_header} rcu.createDatastore parameters: ds.containerName=<#{datastoreSpec.aggrOrVolName}>, ds.datastoreNames=<#{datastoreSpec.datastoreNames}>, ds.numDatastores=<#{datastoreSpec.numDatastores}>, ds.protocol=<#{datastoreSpec.protocol}>, ds.sizeInMB=<#{datastoreSpec.sizeInMB}>, ds.targetMor=<#{datastoreSpec.targetMor}>, ds.thinProvision=<#{datastoreSpec.thinProvision}>, ds.volAutoGrow=<#{datastoreSpec.volAutoGrow}>, ds.volAutoGrowInc=<#{datastoreSpec.volAutoGrowInc}>, ds.volAutoGrowMax=<#{datastoreSpec.volAutoGrowMax}>")
+      _log.info("Creating #{protocol} containerName=<#{aggregate_or_volume_name}> with size=<#{size}> as datastore=<#{datastore_name}> on NetApp Controller=<#{self.controller_name}>")
+      _log.info("rcu.createDatastore parameters: ds.containerName=<#{datastoreSpec.aggrOrVolName}>, ds.datastoreNames=<#{datastoreSpec.datastoreNames}>, ds.numDatastores=<#{datastoreSpec.numDatastores}>, ds.protocol=<#{datastoreSpec.protocol}>, ds.sizeInMB=<#{datastoreSpec.sizeInMB}>, ds.targetMor=<#{datastoreSpec.targetMor}>, ds.thinProvision=<#{datastoreSpec.thinProvision}>, ds.volAutoGrow=<#{datastoreSpec.volAutoGrow}>, ds.volAutoGrowInc=<#{datastoreSpec.volAutoGrowInc}>, ds.volAutoGrowMax=<#{datastoreSpec.volAutoGrowMax}>")
       rv = rcu_client.createDatastore(datastoreSpec)
-      $log.info("#{log_header} Return Value=<#{rv}> of class=<#{rv.class.name}>")
+      _log.info("Return Value=<#{rv}> of class=<#{rv.class.name}>")
       return rv
     rescue Handsoap::Fault => hserr
-      $log.error "#{log_header} Handsoap::Fault { :code => '#{hserr.code}', :reason => '#{hserr.reason}', :details => '#{hserr.details.inspect}' }"
+      _log.error "Handsoap::Fault { :code => '#{hserr.code}', :reason => '#{hserr.reason}', :details => '#{hserr.details.inspect}' }"
       $log.error hserr.backtrace.join("\n")
       raise
     rescue => err
-      $log.error "#{log_header} #{err}"
+      _log.error "#{err}"
       $log.error err.backtrace.join("\n")
       raise
     end

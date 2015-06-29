@@ -6,7 +6,7 @@ class MiqAeYamlImportFs < MiqAeYamlImport
   def read_domain_yaml(dom_folder, domain_name)
     domain_yaml_filename = File.join(dom_folder, DOMAIN_YAML_FILENAME)
     unless File.exist?(domain_yaml_filename)
-      $log.info("#{self.class} domain: <#{domain_name}> yaml file not found: <#{domain_yaml_filename}>")
+      _log.info("domain: <#{domain_name}> yaml file not found: <#{domain_yaml_filename}>")
       raise MiqAeException::NamespaceNotFound, "domain: #{domain_name} yaml file not found: #{domain_yaml_filename}"
     end
     load_file(domain_yaml_filename)

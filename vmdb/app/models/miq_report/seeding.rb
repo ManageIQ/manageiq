@@ -70,12 +70,12 @@ module MiqReport::Seeding
 
       if rec
         if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < rpt[:file_mtime])
-          $log.info("MIQ(MiqReport.sync_from_file) #{typ.titleize}: [#{rec.name}] file has been updated on disk, synchronizing with model")
+          _log.info("#{typ.titleize}: [#{rec.name}] file has been updated on disk, synchronizing with model")
           rec.update_attributes(rpt)
           rec.save
         end
       else
-        $log.info("MIQ(MiqReport.sync_from_file) #{typ.titleize}: [#{rpt[:name]}] file has been added to disk, adding to model")
+        _log.info("#{typ.titleize}: [#{rpt[:name]}] file has been added to disk, adding to model")
         self.create(rpt)
       end
     end

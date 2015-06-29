@@ -262,11 +262,9 @@ class SniaFileShare < MiqCimInstance
   end
 
   def queue_create_datastore(ds_name, hosts)
-    log_prefix         = "MIQ(#{self.class.name}.queue_create_datastore)"
-
     unless /^[a-zA-Z0-9\-]+$/ =~ ds_name
       message          = "#{ds_name} is not valid"
-      $log.error("#{log_prefix} #{message}")
+      _log.error("#{message}")
       self.errors.add("name", message)
       return false
     end
@@ -275,7 +273,7 @@ class SniaFileShare < MiqCimInstance
     nrs       = storage_system.storage_managers.first
     if nrs.nil?
       message   = "No available manager entry for NetApp filer: #{self.evm_display_name}"
-      $log.error("#{log_prefix} #{message}")
+      _log.error("#{message}")
       self.errors.add("netapp_filer", message)
       return false
     end
@@ -301,8 +299,7 @@ class SniaFileShare < MiqCimInstance
   def create_datastore(ds_name, hosts)
     # Returns: Array of true || false, If false, object will have errors attached
 
-    log_prefix         = "MIQ(#{self.class.name}.create_datastore)"
-    $log.info("#{log_prefix} Create Datastore: #{name} ...")
+    _log.info("Create Datastore: #{name} ...")
 
     hosts              = hosts.to_miq_a
     nfs_path           = self.name
@@ -314,46 +311,46 @@ class SniaFileShare < MiqCimInstance
     raise "Could not find manager entry for NetApp filer: #{self.evm_display_name}" if nrs.nil?
 
     # TODO: Log hostname, not ipaddress
-    $log.info("#{log_prefix} Found service entry for NetApp filer: #{self.evm_display_name} -> #{nrs.ipaddress}")
+    _log.info("Found service entry for NetApp filer: #{self.evm_display_name} -> #{nrs.ipaddress}")
 
     # Add the ESX hosts to the root hosts list for the NFS share.
-    $log.info("#{log_prefix} Adding the following to the root hosts list for #{nfs_path}: [ #{hosts.join(', ')} ]")
+    _log.info("Adding the following to the root hosts list for #{nfs_path}: [ #{hosts.join(', ')} ]")
     nrs.nfs_add_root_hosts(nfs_path, hosts.collect(&:hostname))
 
     # Get a list of the storage system's IP addresses. Multi-homed systems will have more than one.
     addresses          = nrs.get_addresses
-    $log.info("#{log_prefix} Addresses: #{addresses.join(', ')}")
+    _log.info("Addresses: #{addresses.join(', ')}")
 
     # For each host, attach the share as a datastore.
     hosts.each do |host|
       # Get the EMS that manages the host.
       if (hems         = host.ext_management_system).nil?
-        $log.error("#{log_prefix} Host: #{host.hostname} is not connected to an EMS, skipping")
+        _log.error("Host: #{host.hostname} is not connected to an EMS, skipping")
         next
       end
 
       # Connect to the EMS.
-      $log.info("#{log_prefix} Connecting to EMS #{hems.hostname}...")
+      _log.info("Connecting to EMS #{hems.hostname}...")
       begin
         vim            = hems.connect
       rescue Exception => verr
-        $log.error("#{log_prefix} Could not connect to ems - #{hems.hostname}, skipping")
+        _log.error("Could not connect to ems - #{hems.hostname}, skipping")
         next
       end
 
       # Get the VIM object for the host.
       begin
         miqHost        = vim.getVimHost(host.hostname)
-        $log.info("#{log_prefix} Got object for host: #{miqHost.name}")
+        _log.info("Got object for host: #{miqHost.name}")
       rescue           => err
-        $log.error("#{log_prefix} Could not find host: #{host.hostname}, skipping")
+        _log.error("Could not find host: #{host.hostname}, skipping")
         next
       end
 
       # Get the datastore system interface for the host.
       miqDss           = miqHost.datastoreSystem
 
-      $log.info("#{log_prefix} Creating datastore: #{local_path} on host: #{host.hostname}...")
+      _log.info("Creating datastore: #{local_path} on host: #{host.hostname}...")
 
       # Given that most Filers will be multihomed, we need to select an address that's
       # accessible by the host in question. Target hosts can be multihomed as well, making
@@ -363,18 +360,18 @@ class SniaFileShare < MiqCimInstance
       # createNasDatastore() succeeds.
       addresses.each do |address|
         begin
-          $log.info("#{log_prefix} Trying address: #{address}...")
+          _log.info("Trying address: #{address}...")
           miqDss.createNasDatastore(address, nfs_path, local_path, access_mode)
         rescue
-          $log.info("#{log_prefix} Failed.")
+          _log.info("Failed.")
           next
         end
-        $log.info("#{log_prefix} Success.")
+        _log.info("Success.")
         break
       end
 
       miqHost.release
-      $log.info("#{log_prefix} Create Datastore: #{name} ... Complete")
+      _log.info("Create Datastore: #{name} ... Complete")
 
       vim.disconnect
     end

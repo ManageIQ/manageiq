@@ -1,4 +1,4 @@
-module Vmdb::Logging
+module Vmdb::Loggers
   class AuditLogger < VMDBLogger
     def success(msg)
       info("Success") { msg }
