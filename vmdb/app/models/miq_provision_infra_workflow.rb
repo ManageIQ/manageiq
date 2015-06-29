@@ -45,7 +45,6 @@ class MiqProvisionInfraWorkflow < MiqProvisionVirtWorkflow
       add_target(:placement_dc_name, :datacenter, EmsFolder, result)
     end
 
-    rails_logger('get_source_and_targets', 1)
     @target_resource = result
   end
 

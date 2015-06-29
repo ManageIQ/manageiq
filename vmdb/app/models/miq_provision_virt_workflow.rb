@@ -381,11 +381,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   # => New methods can be added as as needed
   #
   def allowed_cat_entries(options)
-    rails_logger('allowed_cat_entries', 0)
     @values["#{options[:prov_field_name]}_category".to_sym] = options[:category]
     cat = Classification.find_by_name(options[:category].to_s)
     result = cat ? cat.entries.each_with_object({}) { |e, h| h[e.name] = e.description } : {}
-    rails_logger('allowed_cat_entries', 1)
     result
   end
 
@@ -398,7 +396,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       hosts = nil
       unless @vlan_options[:vlans] == false
-        rails_logger('allowed_vlans', 0)
         hosts = get_selected_hosts(src)
         # TODO: Use Active Record to preload this data?
         MiqPreloader.preload(hosts, :switches => :lans)
@@ -406,14 +403,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
         # Remove certain networks
         vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
-        rails_logger('allowed_vlans', 1)
       end
 
       unless @vlan_options[:dvs] == false
-        rails_logger('allowed_dvs', 0)
         vlans_dvs = allowed_dvs(@vlan_options, hosts)
         vlans.merge!(vlans_dvs)
-        rails_logger('allowed_dvs', 1)
       end
       @allowed_vlan_cache = vlans
     end
@@ -519,7 +513,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
-      return [VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))].compact
+      vm_or_template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
+      return [create_hash_struct_from_vm_or_template(vm_or_template, options)].compact
     end
 
     filter_id = get_value(@values[:vm_filter]).to_i
@@ -527,7 +522,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       return @allowed_templates_cache
     end
 
-    rails_logger('allowed_templates', 0)
     vms = []
     condition = if self.class.allowed_templates_vendor
       ["vms.template = ? AND vms.vendor = ? AND vms.ems_id IS NOT NULL", true, self.class.allowed_templates_vendor]
@@ -567,7 +561,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     allowed_templates_list = run_search ? source_vm_rbac_filter(vms, condition) : []
     @allowed_templates_filter = filter_id
     @allowed_templates_tag_filters = @values[:vm_tags]
-    rails_logger('allowed_templates', 1)
     if allowed_templates_list.blank?
       $log.warn "#{log_header} Allowed Templates is returning an empty list"
     else
@@ -576,24 +569,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     MiqPreloader.preload(allowed_templates_list, [:operating_system, :ext_management_system, {:hardware => :disks}])
-    @allowed_templates_cache = allowed_templates_list.collect do |v|
-      nh = MiqHashStruct.new(
-        :id                     => v.id,
-        :name                   => v.name,
-        :guid                   => v.guid,
-        :uid_ems                => v.uid_ems,
-        :platform               => v.platform,
-        :num_cpu                => v.num_cpu,
-        :mem_cpu                => v.mem_cpu,
-        :allocated_disk_storage => v.allocated_disk_storage,
-        :v_total_snapshots      => v.v_total_snapshots,
-        :evm_object_class       => :Vm
-        )
-      nh.operating_system = MiqHashStruct.new(:product_name => v.operating_system.product_name) if v.operating_system
-      nh.ext_management_system = MiqHashStruct.new(:name => v.ext_management_system.name) if v.ext_management_system
-      nh.datacenter_name = v.owning_blue_folder.parent_datacenter.name rescue nil if options[:include_datacenter] == true
-      nh
-    end
+    allowed_template = allowed_templates_list.detect { |template| template.id == @values[:src_vm_id].first }
+    @allowed_templates_cache = [create_hash_struct_from_vm_or_template(allowed_template, options)]
     @allowed_templates_cache
   end
 
@@ -653,7 +630,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
-    rails_logger('get_source_and_targets', 0)
     svm = VmOrTemplate.where(:id => vm_id).first
 
     if svm.nil?
@@ -690,9 +666,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @customization_specs ||= {}
     ems_id = src[:ems].id
     unless @customization_specs.key?(ems_id)
-      rails_logger('allowed_customization_specs', 0)
       @customization_specs[ems_id] = ci_to_hash_struct(load_ar_obj(src[:ems]).customization_specs)
-      rails_logger('allowed_customization_specs', 1)
     end
 
     result = @customization_specs[ems_id].dup
@@ -1288,6 +1262,34 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   private
+
+  def create_hash_struct_from_vm_or_template(vm_or_template, options)
+    hash_struct = MiqHashStruct.new(
+      :id                     => vm_or_template.id,
+      :name                   => vm_or_template.name,
+      :guid                   => vm_or_template.guid,
+      :uid_ems                => vm_or_template.uid_ems,
+      :platform               => vm_or_template.platform,
+      :num_cpu                => vm_or_template.num_cpu,
+      :mem_cpu                => vm_or_template.mem_cpu,
+      :allocated_disk_storage => vm_or_template.allocated_disk_storage,
+      :v_total_snapshots      => vm_or_template.v_total_snapshots,
+      :evm_object_class       => :Vm
+    )
+    hash_struct.operating_system = MiqHashStruct.new(
+      :product_name => vm_or_template.operating_system.product_name
+    ) if vm_or_template.operating_system
+    hash_struct.ext_management_system = MiqHashStruct.new(
+      :name => vm_or_template.ext_management_system.name
+    ) if vm_or_template.ext_management_system
+    if options[:include_datacenter] == true
+      hash_struct.datacenter_name = vm_or_template.owning_blue_folder.parent_datacenter.name
+    end
+
+    hash_struct
+  rescue
+    nil
+  end
 
   def exit_pre_dialog
     @running_pre_dialog              = false

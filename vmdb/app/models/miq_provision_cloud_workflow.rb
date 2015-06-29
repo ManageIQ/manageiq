@@ -99,7 +99,6 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
     add_target(:cloud_subnet,                :cloud_subnet,      CloudSubnet,      result)
     add_target(:cloud_tenant,                :cloud_tenant,      CloudTenant,      result)
 
-    rails_logger('get_source_and_targets', 1)
     @target_resource = result
   end
 

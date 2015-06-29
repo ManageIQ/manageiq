@@ -117,37 +117,43 @@ class MiqRequestWorkflow
     options = values
     values_new = options
 
-    get_all_dialogs.keys.each do |d|                         # Go thru all dialogs
-      get_all_fields(d).keys.each do |f|                     # Go thru all field
-        if !options[f].nil?
-          values_new[f] = options[f]                              # Set the existing option value
+    @dialogs[:dialogs].keys.each do |dialog_name|
+      get_all_fields(dialog_name).keys.each do |field_name|
+        if !options[field_name].nil?
+          values_new[field_name] = options[field_name]
         else
-          field = get_field(f, d)
+          field = get_field(field_name, dialog_name)
           if field[:display] != :ignore
             if !field[:default].nil?
-              val = field[:default]                               # Set to default value
-            elsif field[:values] && field[:values].length == 1    # if default is not set to anything and there is only one value in hash, use set element to be displayed default
+              val = field[:default]
+
+            # if default is not set to anything and there is only one value in hash,
+            # use set element to be displayed default
+            elsif field[:values] && field[:values].length == 1
               field[:values].each do |v|
                 val = v[0]
               end
             end
-            if field[:values]                                     # If this field has values
+            if field[:values]
               if field[:values].kind_of?(Hash)
-                values_new[f] = [val, field[:values][val]]        # Save [value, description], skip for timezones array
+                # Save [value, description], skip for timezones array
+                values_new[field_name] = [val, field[:values][val]]
               else
                 field[:values].each do |tz|
                   if tz[1].to_i_with_method == val.to_i_with_method
-                    values_new[f] = [val, tz[0]]                  # Save [value, description] for timezones array
+                    # Save [value, description] for timezones array
+                    values_new[field_name] = [val, tz[0]]
                   end
                 end
               end
             else
-              values_new[f] = val                                 # Set to default value
+              # Set to default value
+              values_new[field_name] = val
             end
           end
         end
-      end # get_all_fields
-    end # get_all_dialogs
+      end
+    end
   end
 
   def validate(values)
@@ -232,6 +238,26 @@ class MiqRequestWorkflow
     @dialogs[:dialog_order]
   end
 
+  def provisioning_tab_list
+    dialog_names = @dialogs[:dialog_order].map(&:to_s)
+    dialog_descriptions = dialog_names.map do |dialog_name|
+      @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :description)
+    end
+    dialog_display = dialog_names.map { |dialog_name| @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :display) }
+
+    tab_list = []
+    dialog_names.each_with_index do |dialog_name, index|
+      next if dialog_display[index] == :hide || dialog_display[index] == :ignore
+
+      tab_list << {
+        :name        => dialog_name,
+        :description => dialog_descriptions[index]
+      }
+    end
+
+    tab_list
+  end
+
   def get_buttons
     @dialogs[:buttons] || [:submit, :cancel]
   end
@@ -310,11 +336,6 @@ class MiqRequestWorkflow
         end
       end
     end
-  end
-
-  # Helper method to write message to the rails log (production.log) for debugging
-  def rails_logger(_name, _start)
-    # Rails.logger.warn("#{name} #{start.zero? ? 'start' : 'end'}")
   end
 
   def parse_ws_string(text_input, options = {})
@@ -475,9 +496,7 @@ class MiqRequestWorkflow
   def allowed_filters(options = {})
     model_name = options[:category]
     return @filters[model_name] unless @filters[model_name].nil?
-    rails_logger("allowed_filters - #{model_name}", 0)
     @filters[model_name] = @requester.get_expressions(model_name).invert
-    rails_logger("allowed_filters - #{model_name}", 1)
     @filters[model_name]
   end
 
@@ -571,7 +590,6 @@ class MiqRequestWorkflow
     field_options = @dialogs.fetch_path(:dialogs, :purpose, :fields, :vm_tags, :options)
     options = field_options unless field_options.nil?
 
-    rails_logger('allowed_tags', 0)
     st = Time.now
     @tags = {}
     class_tags = Classification.where(:show => true).includes(:tag).to_a
@@ -619,7 +637,6 @@ class MiqRequestWorkflow
       end
     end
 
-    rails_logger('allowed_tags', 1)
     $log.info "MIQ(#{self.class.name}.allowed_tags) allowed_tags returned [#{@tags.length}] objects in [#{Time.now - st}] seconds"
     @tags
   end
@@ -811,9 +828,7 @@ class MiqRequestWorkflow
 
     result = nil
     relats.each do |rsc_type|
-      rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 0)
       rc = send("#{rsc_type}_to_#{ci}", sources)
-      rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 1)
       unless rc.nil?
         rc = rc.to_a
         result = result.nil? ? rc : result & rc
@@ -830,14 +845,12 @@ class MiqRequestWorkflow
   end
 
   def process_filter_all(filter_prop, ci_klass, targets = [])
-    rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
     result = if filter_id.zero?
                Rbac.filtered(targets, :class => ci_klass, :userid => @requester.userid)
              else
                MiqSearch.find(filter_id).filtered(targets, :userid => @requester.userid)
              end
-    rails_logger("process_filter - [#{ci_klass}]", 1)
     result
   end
 
@@ -963,15 +976,15 @@ class MiqRequestWorkflow
       log_header = "MIQ(#{self.class.name}.get_ems_metadata_tree)"
       return if src[:ems].nil?
       st = Time.now
-      rails_logger('get_ems_metadata_tree', 0)
       result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
       ems_metadata_tree_add_hosts_under_clusters!(result)
-      rails_logger("get_ems_metadata_tree completed in [#{Time.now - st}] seconds.  ", 1)
       @ems_xml_nodes = {}
       xml = MiqXml.newDoc(:xmlhash)
       convert_to_xml(xml, result)
-      $log.info "#{log_header} Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
-      $log.info "#{log_header} EMS metadata collection completed in [#{Time.now - st}] seconds"
+      if $log.debug?
+        $log.info "#{log_header} Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
+      end
+      $log.info "#{log_header} EMS metadata collection completed in [#{Time.zone.now - st}] seconds"
       xml
     end
   end
@@ -1056,8 +1069,8 @@ class MiqRequestWorkflow
   def allowed_hosts_obj(_options = {})
     log_header = "MIQ(#{self.class.name}.allowed_hosts_obj)"
     return [] if (src = resources_for_ui).blank?
+    return @allowed_hosts_obj_cache unless @allowed_hosts_obj_cache.nil?
 
-    rails_logger('allowed_hosts_obj', 0)
     st = Time.now
     hosts_ids = find_all_ems_of_type(Host).collect(&:id)
     hosts_ids &= load_ar_obj(src[:storage]).hosts.collect(&:id) unless src[:storage].nil?
@@ -1069,18 +1082,17 @@ class MiqRequestWorkflow
 
     # Remove any hosts that are no longer in the list
     all_hosts = load_ar_obj(src[:ems]).hosts.find_all { |h| hosts_ids.include?(h.id) }
-    allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
-    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds"
-    rails_logger('allowed_hosts_obj', 1)
-    allowed_hosts_obj_cache
+    @allowed_hosts_obj_cache ||= process_filter(:host_filter, Host, all_hosts)
+    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{@allowed_hosts_obj_cache.length}] objects in [#{Time.zone.now - st}] seconds"
+    @allowed_hosts_obj_cache
   end
 
   def allowed_storages(_options = {})
     return [] if (src = resources_for_ui).blank?
     hosts = src[:host].nil? ? allowed_hosts_obj({}) : [load_ar_obj(src[:host])]
     return [] if hosts.blank?
+    return @allowed_storages_cache unless @allowed_storages_cache.nil?
 
-    rails_logger('allowed_storages', 0)
     st = Time.now
     MiqPreloader.preload(hosts, :storages)
 
@@ -1088,13 +1100,12 @@ class MiqRequestWorkflow
       host.storages.each { |s| hash[s.id] = s }
     end.values
 
-    allowed_storages_cache = process_filter(:ds_filter, Storage, storages).collect do |s|
+    @allowed_storages_cache = process_filter(:ds_filter, Storage, storages).collect do |s|
       ci_to_hash_struct(s)
     end
 
-    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now - st}] seconds"
-    rails_logger('allowed_storages', 1)
-    allowed_storages_cache
+    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{@allowed_storages_cache.length}] objects in [#{Time.zone.now - st}] seconds"
+    @allowed_storages_cache
   end
 
   def allowed_hosts(_options = {})
@@ -1221,16 +1232,12 @@ class MiqRequestWorkflow
   def host_to_folder(src)
     sources = src[:host].nil? ? allowed_hosts_obj : [src[:host]]
     datacenters = sources.collect do |h|
-      rails_logger("host_to_folder for host #{h.name}", 0)
       result = find_datacenter_for_ci(h)
-      rails_logger("host_to_folder for host #{h.name}", 1)
       result
     end.compact
     folders = {}
     datacenters.each do |dc|
-      rails_logger("host_to_folder for dc #{dc.name}", 0)
       folders.merge!(get_ems_folders(dc))
-      rails_logger("host_to_folder for dc #{dc.name}", 1)
     end
     folders
   end
