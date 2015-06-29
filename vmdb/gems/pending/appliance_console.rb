@@ -198,6 +198,24 @@ loop do
         version  = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
         configured = ApplianceConsole::DatabaseConfiguration.configured?
 
+        summary_attributes = [
+          "Hostname:", host,
+          "IP Address:", ip,
+          "Netmask:", mask,
+          "Gateway:", gw,
+          "Primary DNS:", dns1,
+          "Secondary DNS:", dns2,
+          "Search Order:", order,
+          "MAC Address:", mac,
+          "Timezone:", timezone,
+          "Local Database:", ApplianceConsole::Utilities.pg_status,
+          "#{I18n.t("product.name")} Database:", configured ? "#{dbtype} @ #{dbhost}" : "not configured",
+          "Database/Region:", configured ? "#{database} / #{region || 0}" : "not configured",
+          "External Auth:", ExternalHttpdAuthentication.config_status,
+          "#{I18n.t("product.name")} Version:", version,
+          "#{I18n.t("product.name")} Console:", configured ? "https://#{ip}" : "not configured"
+        ]
+
         clear_screen
 
         say(<<-EOL)
@@ -205,21 +223,7 @@ Welcome to the #{I18n.t("product.name")} Virtual Appliance.
 
 To modify the configuration, use a web browser to access the management page.
 
-        Hostname:          #{host}
-        IP Address:        #{ip}
-        Netmask:           #{mask}
-        Gateway:           #{gw}
-        Primary DNS:       #{dns1}
-        Secondary DNS:     #{dns2}
-        Search Order:      #{order}
-        MAC Address:       #{mac}
-        Timezone:          #{timezone}
-        Local Database:    #{ApplianceConsole::Utilities.pg_status}
-        EVM Database:      #{configured ? "#{dbtype} @ #{dbhost}" : "not configured"}
-        Database/Region:   #{configured ? "#{database} / #{region || 0}" : "not configured"}
-        External Auth:     #{ExternalHttpdAuthentication.config_status}
-        EVM Version:       #{version}
-        EVM Console:       #{configured ? "https://#{ip}" : "not configured"}
+#{$terminal.list(summary_attributes, :columns_across, 2)}
         EOL
 
         say("Note: Use the Ctrl-Alt-Del to exit out of any screen and return to the summary screen.")
