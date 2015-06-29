@@ -39,10 +39,10 @@
     - if @in_a_form && @edit.key?(:ae_class_id)
       -# class add
       %ul.nav.nav-tabs
-        = patternfly_tab_header("props", @sb[:active_tab]) do
+        = patternfly_tab_header("details", @sb[:active_tab]) do
           = _('Properties')
       .tab-content
-        = patternfly_tab_content("props", @sb[:active_tab]) do
+        = patternfly_tab_content("details", @sb[:active_tab]) do
           = render :partial => "class_add"
     - else
       %ul.nav.nav-tabs
