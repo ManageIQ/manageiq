@@ -3,7 +3,7 @@ require 'fileutils'
 require 'net/scp'
 require 'active_support/all'
 
-RAILS_ROOT ||= Pathname.new(File.dirname(__FILE__)).join("../../vmdb")
+RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
 require 'util/miq-password'
 
 module ApplianceConsole

@@ -1,4 +1,4 @@
-$:.push(File.expand_path(File.join(Rails.root, %w{.. lib util ntp})))
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/ntp")
 require 'miq-ntp'
 
 module MiqServer::NtpManagement

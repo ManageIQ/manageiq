@@ -1,5 +1,5 @@
 class PxeServer < ActiveRecord::Base
-  autoload :WimParser, File.join(File.dirname(__FILE__), %w{.. .. .. lib util win32 wim_parser})
+  autoload :WimParser, "win32/wim_parser" # via gems/pending
 
   include FileDepotMixin
   include ReportableMixin

@@ -1,5 +1,10 @@
-$:.push(File.expand_path(File.join(File.dirname(__FILE__) ) ) )
+require 'vmdb-logger'
+
+$LOAD_PATH << File.expand_path(__dir__)
 require 'db_administration/miq_postgres_admin'
+
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/mount")
+require 'miq_generic_mount_session'
 
 class EvmDatabaseOps
   include Vmdb::Logging
@@ -7,13 +12,7 @@ class EvmDatabaseOps
 
   DEFAULT_OPTS = {:dbname => 'vmdb_production'}
 
-  $:.push(File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "lib", "util")))
-  require 'vmdb-logger'
-
-  $:.push(File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "lib", "util", "mount") ) )
-  require 'miq_generic_mount_session'
-
-  LOGFILE = File.expand_path(File.join(File.dirname(__FILE__), "..", "log", "evm.log") )
+  LOGFILE = File.expand_path(File.join(__dir__, "../log/evm.log") )
   $log ||=  VMDBLogger.new(LOGFILE)
 
   def self.backup_destination_free_space(file_location)

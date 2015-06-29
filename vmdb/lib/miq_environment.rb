@@ -117,7 +117,7 @@ module MiqEnvironment
 
     def self.supports_command?(cmd)
       return false unless EVM_KNOWN_COMMANDS.include?(cmd)
-      require "#{File.join(File.dirname(__FILE__), "../../lib/util/runcmd")}"
+      require "runcmd"
 
       begin
         # If 'which apachectl' returns non-zero, it wasn't found

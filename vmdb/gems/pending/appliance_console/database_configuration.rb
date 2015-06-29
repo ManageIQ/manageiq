@@ -8,7 +8,8 @@ require_relative "errors"
 require_relative "utilities"
 require_relative "logging"
 
-RAILS_ROOT ||= Pathname.new(File.dirname(__FILE__)).join("../../vmdb")
+RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
+
 module ApplianceConsole
   MiqPassword.key_root = "#{RAILS_ROOT}/certs"
 

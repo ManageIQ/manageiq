@@ -11,7 +11,7 @@ require 'MiqFsUtil'
 require 'MetakitFS'
 require 'LocalFS'
 
-SRC_DIR = "../../../vmdb"
+SRC_DIR = "../../../.."
 DST_DIR = "copy_dst"
 MK_FILE = "mkfs"
 

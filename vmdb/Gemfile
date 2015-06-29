@@ -1,7 +1,6 @@
 require File.expand_path('Gemfile.global.rb', File.dirname(__FILE__))
 
-# Load the lib Gemfile (includes the source)
-MiqBundler.include_gemfile("../lib/Gemfile", binding)
+MiqBundler.include_gemfile("gems/pending/Gemfile", binding)
 
 #
 # VMDB specific gems

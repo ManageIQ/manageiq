@@ -1,7 +1,8 @@
-logfile = ARGV[0] || File.expand_path("#{__FILE__}/../../log/vim.log")
-
-$:.push(File.expand_path("#{File.dirname(__FILE__)}/../../../lib/util/")) unless ENV["RAILS_ENV"]
+RAILS_ROOT = ENV["RAILS_ENV"] ? Rails.root : File.expand_path(File.join(__dir__, %w(.. ..)))
+$:.push File.join(RAILS_ROOT, "gems/pending/util") unless ENV["RAILS_ENV"]
 require 'miq_logger_processor'
+
+logfile = ARGV[0] || File.join(RAILS_ROOT, "log/vim.log")
 
 counts = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Array.new } }
 invalid = {}

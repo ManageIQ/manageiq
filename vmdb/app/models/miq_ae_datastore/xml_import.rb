@@ -1,3 +1,5 @@
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
+
 module MiqAeDatastore
   class XmlImport
     include Vmdb::Logging
@@ -118,7 +120,6 @@ module MiqAeDatastore
       v.to_s >= MiqAeDatastore::XML_VERSION_MIN_SUPPORTED
     end
 
-    $:.push File.expand_path(File.join(Rails.root, %w(.. lib util xml)))
     def self.load_xml(f, domain_name = nil)
       _, t = Benchmark.realtime_block(:total_load_xml_time) do
         classes = buttons = nil

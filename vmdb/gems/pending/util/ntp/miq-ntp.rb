@@ -1,6 +1,6 @@
 class MiqNtp
   NTP_CONF = "/etc/ntp.conf"
-  SCRIPT = "/var/www/miq/lib/util/ntp/cron_ntpdate"
+  SCRIPT = "/var/www/miq/vmdb/gems/pending/util/ntp/cron_ntpdate"
   DEFAULT_INTERVAL = 15  # run ntpdate every 15 minutes
 
   class << self

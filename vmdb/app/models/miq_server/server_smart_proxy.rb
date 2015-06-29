@@ -1,5 +1,5 @@
-$:.push(File.expand_path(File.join(Rails.root, %w{.. lib Verbs})))
-$:.push(File.expand_path(File.join(Rails.root, %w{.. lib VixDiskLib})))
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Verbs")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VixDiskLib")
 require 'yaml'
 
 module MiqServer::ServerSmartProxy

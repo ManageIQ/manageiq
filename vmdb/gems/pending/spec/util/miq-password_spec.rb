@@ -5,7 +5,7 @@ require 'util/miq-password'
 
 describe MiqPassword do
   before do
-    MiqPassword.key_root = "#{LIB_ROOT}/spec/support/"
+    MiqPassword.key_root = File.join(GEMS_PENDING_ROOT, "spec/support")
   end
 
   after do

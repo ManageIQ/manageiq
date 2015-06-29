@@ -1,4 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../../lib/util/xml")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
 
 require 'xml_utils'
 
