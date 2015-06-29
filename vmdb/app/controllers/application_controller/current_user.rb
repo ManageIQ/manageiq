@@ -37,24 +37,27 @@ module ApplicationController::CurrentUser
   protected :current_group=
 
   def current_user
-    User.find_by_userid(session[:userid])
+    @current_user ||= User.find_by_userid(session[:userid])
   end
   protected :current_user
 
+  # current_user.userid
   def current_userid
     session[:userid]
   end
   protected :current_userid
 
+  # current_user.username
   def current_username
     session[:username]
   end
   protected :current_username
 
   def current_group
-    MiqGroup.find_by_id(session[:group])
+    @current_group ||= MiqGroup.find_by_id(session[:group])
   end
 
+  # current_group.id
   def current_groupid
     session[:group]
   end
