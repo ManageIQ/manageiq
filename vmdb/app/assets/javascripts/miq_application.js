@@ -1337,6 +1337,12 @@ function miq_patternfly_tabs_init(id, url) {
       if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(miqEditor) != 'undefined') {
         miqEditor.refresh();
       }
+      // Show buttons according to the show/hide-buttons class
+      if ($($(e.target).attr('href')).hasClass('show-buttons')) {
+        $("#center_buttons_div").show();
+      } else if ($($(e.target).attr('href')).hasClass('hide-buttons')) {
+        $("#center_buttons_div").hide();
+      }
     });
   } else {
     $(id + ' ul.nav-tabs').hide();
