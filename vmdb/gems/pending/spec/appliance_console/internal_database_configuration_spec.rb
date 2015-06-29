@@ -1,11 +1,9 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. lib})))
 require "appliance_console/internal_database_configuration"
 
 describe ApplianceConsole::InternalDatabaseConfiguration do
   before do
-    MiqPassword.key_root = "#{LIB_ROOT}/spec/support/"
+    MiqPassword.key_root = File.join(GEMS_PENDING_ROOT, "spec/support")
     @config = described_class.new
   end
 

@@ -1,7 +1,8 @@
 require 'awesome_spawn'
 require 'active_support/all'
 
-RAILS_ROOT ||= Pathname.new(File.dirname(__FILE__)).join("../../vmdb")
+RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
+
 module ApplianceConsole
 
   module Logging

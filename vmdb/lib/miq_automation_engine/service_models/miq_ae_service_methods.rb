@@ -1,5 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../../../../lib/ServiceNowWebService")
-$:.push("#{File.dirname(__FILE__)}/../../../../lib/RcuWebService")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "ServiceNowWebService")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "RcuWebService")
 
 #####################################################
 # This is for $evm.execute from an Automate method

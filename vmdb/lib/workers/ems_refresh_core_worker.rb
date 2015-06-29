@@ -1,7 +1,7 @@
 require 'workers/worker_base'
 require 'thread'
 
-$:.push("#{File.dirname(__FILE__)}/../../../lib/VMwareWebService")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VMwareWebService")
 
 class EmsRefreshCoreWorker < WorkerBase
   self.wait_for_worker_monitor = false

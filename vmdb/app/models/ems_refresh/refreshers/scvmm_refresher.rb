@@ -1,5 +1,5 @@
 #TODO: is this required?  never seemed to be used anywhere
-$:.push("#{File.dirname(__FILE__)}/../../../../../lib/Scvmm")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
 require 'MiqScvmmInventory'
 
 module EmsRefresh::Refreshers

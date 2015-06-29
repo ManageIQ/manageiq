@@ -8,7 +8,7 @@ require "appliance_console/logging"
 
 describe ApplianceConsole::DatabaseConfiguration do
   before do
-    MiqPassword.key_root = "#{LIB_ROOT}/spec/support/"
+    MiqPassword.key_root = File.join(GEMS_PENDING_ROOT, "spec/support")
     @config = described_class.new
   end
 

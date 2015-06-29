@@ -1,9 +1,9 @@
 require_relative '../bundler_setup'
 require 'rspec/autorun'
 
-# Push the lib directory onto the load path
-LIB_ROOT ||= File.expand_path(File.dirname(__FILE__)+"../..")
-$:.push(LIB_ROOT)
+# Push the gems/pending directory onto the load path
+GEMS_PENDING_ROOT ||= File.expand_path(File.join(__dir__, ".."))
+$LOAD_PATH << GEMS_PENDING_ROOT
 
 # Initialize the global logger that might be expected
 require 'logger'
@@ -11,7 +11,7 @@ $log ||= Logger.new("/dev/null")
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-Dir[File.expand_path(File.join(File.dirname(__FILE__),'support','**','*.rb'))].each {|f| require f}
+Dir[File.expand_path(File.join(__dir__, 'support/**/*.rb'))].each { |f| require f }
 
 begin
   require 'simplecov'

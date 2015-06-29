@@ -9,8 +9,8 @@ require 'vcr'
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
-# include the lib matchers
-Dir[Rails.root.join("../lib/spec/support/custom_matchers/*.rb")].each { |f| require f }
+# include the gems/pending matchers
+Dir[File.join(GEMS_PENDING_ROOT, "spec/support/custom_matchers/*.rb")].each { |f| require f }
 
 begin
   require 'simplecov'

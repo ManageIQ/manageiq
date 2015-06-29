@@ -1,6 +1,6 @@
 require 'camcorder'
 
-Camcorder.config.recordings_dir = File.join(LIB_ROOT, 'spec/recordings')
+Camcorder.config.recordings_dir = File.join(GEMS_PENDING_ROOT, 'spec/recordings')
 
 module Camcorder
   def self.intercept(cls, *methods)

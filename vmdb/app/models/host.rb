@@ -1,6 +1,6 @@
-$:.push("#{File.dirname(__FILE__)}/../../../lib/util/xml")
-$:.push(File.expand_path(File.join(Rails.root, %w{.. lib util win32})))
-$:.push("#{File.dirname(__FILE__)}/../../../lib/metadata/linux")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/win32")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/linux")
 
 require 'ostruct'
 require 'MiqSockUtil'
@@ -9,7 +9,7 @@ require 'cgi'               # Used for URL encoding/decoding
 require 'LinuxUsers'
 require 'LinuxUtils'
 
-$:.push("#{File.dirname(__FILE__)}/../../../lib/metadata/ScanProfile")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/ScanProfile")
 require 'HostScanProfiles'
 
 class Host < ActiveRecord::Base

@@ -1,7 +1,6 @@
 require 'awesome_spawn'
 class MiqPostgresAdmin
   include Vmdb::Logging
-  $:.push(File.expand_path(File.join(File.dirname(__FILE__), "../../../lib/util")))
 
   # From /etc/init.d/postgresql script
   # Installation prefix
@@ -179,7 +178,7 @@ class MiqPostgresAdmin
     runcmd("reindexdb", opts, args)
   end
 
-  # TODO: overlaps with lib/applance_console/service_group.rb
+  # TODO: overlaps with appliance_console/service_group.rb
 
   def self.start(opts)
     runcmd_with_logging("service #{PGSERVICE} start", opts)

@@ -1,4 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../../lib/metadata/linux")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/linux")
 require 'LinuxUtils'
 
 class Filesystem < ActiveRecord::Base

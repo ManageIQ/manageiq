@@ -1,5 +1,9 @@
+RAILS_ROOT = ENV["RAILS_ENV"] ? Rails.root : File.expand_path(File.join(__dir__, %w(.. ..)))
+$:.push File.join(RAILS_ROOT, "gems/pending/util") unless ENV["RAILS_ENV"]
+require 'miq_logger_processor'
+
 logfile = ARGV.shift if ARGV[0] && File.file?(ARGV[0])
-logfile ||= "#{__FILE__}/../../log/evm.log"
+logfile ||= File.join(RAILS_ROOT, "log/evm.log")
 logfile = File.expand_path(logfile)
 
 $outdir = ARGV.shift if ARGV[0] && File.directory?(ARGV[0])
@@ -8,11 +12,7 @@ $outdir.chomp!("/")
 $outdir.chomp!("\\")
 $outdir = File.expand_path($outdir)
 
-require 'rubygems'
 require 'fastercsv'
-
-$:.push(File.expand_path("#{File.dirname(__FILE__)}/../../../lib/util/")) unless ENV["RAILS_ENV"]
-require 'miq_logger_processor'
 
 def dump_csv(type, hashes)
   output = "#{$outdir}/#{type}.csv"
