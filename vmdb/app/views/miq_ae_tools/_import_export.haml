@@ -45,13 +45,13 @@
 
       %p.import-label=_('Select namespaces you wish to import:')
       %input#toggle-all(type="checkbox")
-      %label(for="toggle-all")=_('Toggle All/None')
+      %label{:for => "toggle-all"}= _('Toggle All/None')
 
       .domain-tree(name="selected_namespaces[]")
 
-      %table(width="100%")
+      %table{:width => "100%"}
         %tr
-          %td(align="right")
+          %td{:align => "right"}
             = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
             = button_tag(_("Commit"), :class => "import-commit btn btn-primary")
 

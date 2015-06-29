@@ -1,4 +1,4 @@
-%iframe.import-hidden-iframe(name="upload_target")
+%iframe.import-hidden-iframe{:name => "upload_target"}
 
 .import-flash-message
   .alert
@@ -46,7 +46,7 @@
     %h3
       = _('Import Widgets')
 
-    %label(for='toggle-all')
+    %label{:for => 'toggle-all'}
       = _('All')
     %input#toggle-all(type='checkbox')
 
