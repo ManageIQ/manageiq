@@ -32,6 +32,23 @@ describe VmInfraController do
     response.should render_template('vm_common/_vmtree')
   end
 
+  # http://localhost:3000/vm_infra/show/10000000000449
+  it 'can open a VM and select it in the left tree' do
+    vm = FactoryGirl.create(:vm_vmware, :name => 'gabelstaplerfahrer')
+
+    get :show, :id => vm.id
+    response.should redirect_to(:action => 'explorer')
+
+    post :explorer
+    node_id = "v-#{vm.compressed_id}"
+    expect(response.body).to match(/cfmeDynatree_activateNodeSilently\('vandt_tree', '#{node_id}'\);/)
+
+    response.should render_template('shared/summary/_textual_tags')
+    expect(response.body).to match(/VM and Instance &quot;#{vm.name}&quot;/)
+
+    expect(response.status).to eq(200)
+  end
+
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
