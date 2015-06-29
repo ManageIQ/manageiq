@@ -29,6 +29,9 @@ module AsConstMissingWithSti
     parsed = RubyParser.for_current_ruby.parse(content)
 
     collect_classes(parsed)
+  rescue Racc::ParseError
+    puts "\nSyntax error in #{filename}\n\n"
+    raise
   end
 
   # Rails +const_missing+ only loads the requested constant and any of its
