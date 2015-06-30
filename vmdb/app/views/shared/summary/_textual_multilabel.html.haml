@@ -11,5 +11,9 @@
     - items[:values].each do |item|
       %tr
         - item.each do |value|
-          %td
-            = value
+          - if value.is_a?(Hash)
+            %td{:title => value[:title]}
+              = value[:text]
+          - else
+            %td
+              = value
