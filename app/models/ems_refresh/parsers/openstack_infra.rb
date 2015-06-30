@@ -155,7 +155,7 @@ module EmsRefresh
           :vmm_vendor           => 'RedHat',
           :vmm_product          => identify_product(indexed_resources, host.instance_uuid),
           # Can't get this from ironic, maybe from Glance metadata, when it will be there, or image fleecing?
-          :vmm_version          => normalize_blank_property(""),
+          :vmm_version          => nil,
           :ipaddress            => ip_address,
           :hostname             => hostname,
           :mac_address          => identify_primary_mac_address(host, indexed_servers),
@@ -164,7 +164,7 @@ module EmsRefresh
           :connection_state     => lookup_connection_state(host.power_state),
           :hardware             => process_host_hardware(host, extra_attributes),
           :hypervisor_hostname  => hypervisor_hostname,
-          :service_tag          => normalize_blank_property(extra_attributes.fetch_path('system', 'product', 'serial')),
+          :service_tag          => extra_attributes.fetch_path('system', 'product', 'serial'),
           # Attributes taken from the Cloud provider
           :availability_zone_id => cloud_host_attributes.try(:[], :availability_zone_id)
         }
@@ -173,28 +173,26 @@ module EmsRefresh
       end
 
       def process_host_hardware(host, extra_attributes)
-        numvcpus = normalize_blank_property_num(extra_attributes.fetch_path('cpu', 'physical', 'number'))
-        logical_cpus = normalize_blank_property_num(extra_attributes.fetch_path('cpu', 'logical', 'number'))
-        cores_per_socket = numvcpus && logical_cpus && numvcpus > 0 ? logical_cpus / numvcpus : 0
-        cpu_speed = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency')
+        numvcpus         = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
+        logical_cpus     = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
+        cores_per_socket = numvcpus > 0 ? logical_cpus / numvcpus : 0
         # Get Cpu speed in Mhz
-        cpu_speed = cpu_speed ? cpu_speed.to_i / 10**6 : 0
-
+        cpu_speed        = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency').to_i / 10**6
         {
-          :memory_cpu         => normalize_blank_property(host.properties['memory_mb']),
-          :disk_capacity      => normalize_blank_property(host.properties['local_gb']),
+          :memory_cpu         => host.properties['memory_mb'],
+          :disk_capacity      => host.properties['local_gb'],
           :logical_cpus       => logical_cpus,
           :numvcpus           => numvcpus,
           :cores_per_socket   => cores_per_socket,
-          :cpu_speed          => normalize_blank_property_num(cpu_speed),
-          :cpu_type           => normalize_blank_property(extra_attributes.fetch_path('cpu', 'physical_0', 'version')),
-          :manufacturer       => normalize_blank_property(extra_attributes.fetch_path('system', 'product', 'vendor')),
-          :model              => normalize_blank_property(extra_attributes.fetch_path('system', 'product', 'name')),
-          :number_of_nics     => normalize_blank_property_num(extra_attributes.fetch_path('network').try(:keys).try(:count)),
-          :bios               => normalize_blank_property(extra_attributes.fetch_path('firmware', 'bios', 'version')),
+          :cpu_speed          => cpu_speed,
+          :cpu_type           => extra_attributes.fetch_path('cpu', 'physical_0', 'version'),
+          :manufacturer       => extra_attributes.fetch_path('system', 'product', 'vendor'),
+          :model              => extra_attributes.fetch_path('system', 'product', 'name'),
+          :number_of_nics     => extra_attributes.fetch_path('network').try(:keys).try(:count).to_i,
+          :bios               => extra_attributes.fetch_path('firmware', 'bios', 'version'),
           # Can't get these 2 from ironic, maybe from Glance metadata, when it will be there, or image fleecing?
-          :guest_os_full_name => normalize_blank_property(""),
-          :guest_os           => normalize_blank_property(""),
+          :guest_os_full_name => nil,
+          :guest_os           => nil,
           :disks              => process_host_hardware_disks(extra_attributes),
         }
       end
@@ -350,14 +348,6 @@ module EmsRefresh
       #
       # Helper methods
       #
-
-      def normalize_blank_property_num(property)
-        property.try(:to_i)
-      end
-
-      def normalize_blank_property(property)
-        property.blank? ? nil : property
-      end
 
       def process_collection(collection, key)
         @data[key] ||= []
