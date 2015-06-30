@@ -2,7 +2,6 @@ require "spec_helper"
 
 describe "MiqAeStateMachineSteps" do
   before do
-    MiqAeDatastore.reset_default_namespace
     @instance1           = 'instance1'
     @instance2           = 'instance2'
     @instance3           = 'instance3'
