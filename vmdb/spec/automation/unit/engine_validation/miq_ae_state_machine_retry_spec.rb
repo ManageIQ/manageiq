@@ -1,10 +1,7 @@
 require "spec_helper"
-require "timecop"
-include AutomationSpecHelper
 
 describe "MiqAeStateMachineRetry" do
   before do
-    MiqAeDatastore.reset_default_namespace
     @method_name     = 'MY_RETRY_METHOD'
     @method_instance = 'MY_RETRY_INSTANCE'
     @retry_class     = 'MY_RETRY_CLASS'
