@@ -35,23 +35,25 @@
       - else
         - case @action.action_type
         - when "create_snapshot"
-          %h3=_('Snapshot Settings')
-          %table.style1
-            %tr
-              %td.key=_('Name')
-              %td
-                = h(@action.options[:name])
+          %h3= _('Snapshot Settings')
+          .form-horizontal.static
+            .form-group
+              %label.control-label.col-sm-2= _('Name')
+              .col-sm-10
+                %p.form-control-static= h(@action.options[:name])
+
           %hr
         - when "delete_snapshots_by_age"
-          %h3=_('Snapshot Age Settings')
-          %table.style1
-            %tr
-              %td.key=_('Delete if older than')
-              %td
-                = h(SNAPSHOT_AGES[@action.options[:age]])
+          %h3= _('Snapshot Age Settings')
+          .form-horizontal.static
+            .form-group
+              %label.control-label.col-sm-2= _('Delete if older than')
+              .col-sm-10
+                %p.form-control-static= h(SNAPSHOT_AGES[@action.options[:age]])
+
           %hr
         - when "custom_automation"
-          %h3=_('Custom Automation')
+          %h3= _('Custom Automation')
           %table.style1
             %tr
               %td{:width => '50%'}

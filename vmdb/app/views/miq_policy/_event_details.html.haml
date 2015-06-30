@@ -2,24 +2,25 @@
   - if @event
     #event_info_div
       = render :partial => "layouts/flash_msg"
-      %h3=_("Basic Information")
-      %table.style1
+      %h3= _("Basic Information")
+      .form-horizontal.static
         - if false
           - # Don't show description (event descriptions can not be edited)
-          %tr
-            %td.key=_("Description")
-            %td
-              %img{:src => "/images/icons/new/event-#{h(@event.name)}.png", :align => "left", :width => "16", :height => "16"}
-              = h(@event.description)
-        %tr
-          %td.key=_("Event Group")
-          %td
-            = h(@event.memberof.first.description)
+          .form-group
+            %label.control-label.col-sm-2= _("Description")
+            .col-sm-10
+              %p.form-control-static
+                %img{:src => "/images/icons/new/event-#{h(@event.name)}.png"}
+                = h(@event.description)
+        .form-group
+          %label.control-label.col-sm-2= _("Event Group")
+          .col-sm-10
+            %p.form-control-static= h(@event.memberof.first.description)
         - unless x_active_tree == :event_tree
-          %tr
-            %td.key=_("Attached to Policy")
-            %td
-              = h(@policy.description)
+          .form-group
+            %label.control-label.col-sm-2= _("Attached to Policy")
+            .col-sm-10
+              %p.form-control-static= h(@policy.description)
       %hr
 
       - if x_active_tree == :event_tree
