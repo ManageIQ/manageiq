@@ -21,14 +21,18 @@ module MiqServer::ConfigurationManagement
 
   def get_config(typ = "vmdb", force_reload = false)
     VMDB::Config.invalidate(typ) if force_reload
-    if self.is_local?
-      cfg        = VMDB::Config.new(typ)
-    else
-      cfg        = VMDB::Config.new(typ, false)
-      c          = configurations.find_by_typ(typ)
-      cfg.config = c.settings unless c.nil?
+
+    config = nil
+
+    if self.is_remote?
+      record = configurations.find_by_typ(typ)
+      if record
+        config = VMDB::Config.new(typ, false)
+        config.config = record.settings
+      end
     end
-    cfg
+
+    config || VMDB::Config.new(typ)
   end
 
   def set_config(cfg)

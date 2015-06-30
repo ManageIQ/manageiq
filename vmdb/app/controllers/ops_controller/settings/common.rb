@@ -773,7 +773,6 @@ module OpsController::Settings::Common
     when "settings_server"                                  # Server Settings tab
       @edit = Hash.new
       @edit[:new] = Hash.new
-      @edit[:current] = Hash.new
       @edit[:current] = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
       @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
       @sb[:new_to] = nil
