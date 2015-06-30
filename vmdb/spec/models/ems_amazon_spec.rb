@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsAmazon do
+describe ManageIQ::Providers::Amazon::CloudManager do
   it ".ems_type" do
     described_class.ems_type.should == 'ec2'
   end
@@ -21,7 +21,7 @@ describe EmsAmazon do
     def recorded_discover(example)
       cassette_name = example.description.tr(" ", "_").gsub(",", "").underscore
       VCR.use_cassette("#{described_class.name.underscore}/discover/#{cassette_name}") do
-        EmsAmazon.discover(@ec2_user, @ec2_pass)
+        ManageIQ::Providers::Amazon::CloudManager.discover(@ec2_user, @ec2_pass)
       end
     end
 
@@ -42,7 +42,7 @@ describe EmsAmazon do
       found = recorded_discover(example)
       found.count.should == 2
 
-      emses = EmsAmazon.order(:name)
+      emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
       emses.count.should == 2
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
@@ -52,7 +52,7 @@ describe EmsAmazon do
       found = recorded_discover(example)
       found.count.should == 1
 
-      emses = EmsAmazon.order(:name)
+      emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
       emses.count.should == 1
       assert_region(emses[0], "us-east-1")
     end
@@ -63,7 +63,7 @@ describe EmsAmazon do
       found = recorded_discover(example)
       found.count.should == 1
 
-      emses = EmsAmazon.order(:name)
+      emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
       emses.count.should == 2
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
@@ -76,7 +76,7 @@ describe EmsAmazon do
       found = recorded_discover(example)
       found.count.should == 0
 
-      emses = EmsAmazon.order(:name)
+      emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
       emses.count.should == 2
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
@@ -89,7 +89,7 @@ describe EmsAmazon do
         found = recorded_discover(example)
         found.count.should == 2
 
-        emses = EmsAmazon.order(:name).includes(:authentications)
+        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
         emses.count.should == 3
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")
@@ -103,7 +103,7 @@ describe EmsAmazon do
         found = recorded_discover(example)
         found.count.should == 2
 
-        emses = EmsAmazon.order(:name).includes(:authentications)
+        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
         emses.count.should == 4
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")
@@ -119,7 +119,7 @@ describe EmsAmazon do
         found = recorded_discover(example)
         found.count.should == 2
 
-        emses = EmsAmazon.order(:name).includes(:authentications)
+        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
         emses.count.should == 5
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")

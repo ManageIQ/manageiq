@@ -1,4 +1,4 @@
 module MiqAeMethodService
-  class MiqAeServiceEmsOpenstack <  MiqAeServiceEmsCloud
+  class MiqAeServiceEmsOpenstack <  MiqAeServiceManageIQ_Providers_CloudManager
   end
 end

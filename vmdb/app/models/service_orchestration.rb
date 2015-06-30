@@ -47,7 +47,7 @@ class ServiceOrchestration < Service
     template_from_dialog = OptionConverter.get_template(options[:dialog] || {})
     self.orchestration_template = template_from_dialog if template_from_dialog
 
-    converter = OptionConverter.get_converter(options[:dialog] || {}, orchestration_manager.class.name)
+    converter = OptionConverter.get_converter(options[:dialog] || {}, orchestration_manager.class)
     converter.stack_create_options
   end
 

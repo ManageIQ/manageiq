@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module MiqAeServiceEmsCloudSpec
-  describe MiqAeMethodService::MiqAeServiceEmsCloud do
+  describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_CloudManager do
     it "#availability_zones" do
       described_class.instance_methods.should include(:availability_zones)
     end

@@ -109,7 +109,7 @@ describe ExtManagementSystem do
 
   context "validates" do
     described_class.leaf_subclasses.each do |ems|
-      next if ems == EmsAmazon # Amazon is tested in ems_amazon_spec.rb
+      next if ems == ManageIQ::Providers::Amazon::CloudManager # Amazon is tested in ems_amazon_spec.rb
       t = ems.name.underscore
 
       context "for #{ems}" do

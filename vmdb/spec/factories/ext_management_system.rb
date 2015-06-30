@@ -71,7 +71,7 @@ FactoryGirl.define do
 
   # Leaf classes for ems_cloud
 
-  factory :ems_amazon, :class => "EmsAmazon", :parent => :ems_cloud do
+  factory :ems_amazon, :aliases => ["manageiq/providers/amazon/cloud_manager"], :class => "ManageIQ::Providers::Amazon::CloudManager", :parent => :ems_cloud do
     provider_region "us-east-1"
   end
 

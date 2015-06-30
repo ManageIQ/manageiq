@@ -101,7 +101,7 @@ module EmsRefresh::SaveInventory
 
         link_habtm(found, key_backup[:storages], :storages, Storage)
         link_habtm(found, key_backup[:security_groups], :security_groups, SecurityGroup)
-        link_habtm(found, key_backup[:key_pairs], :key_pairs, AuthKeyPairCloud)
+        link_habtm(found, key_backup[:key_pairs], :key_pairs, ManageIQ::Providers::CloudManager::AuthKeyPair)
         save_child_inventory(found, key_backup, child_keys)
 
         found.save!

@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_CloudManager_AuthKeyPair < MiqAeServiceAuthPrivateKey
+  end
+end

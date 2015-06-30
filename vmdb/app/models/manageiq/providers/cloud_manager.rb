@@ -1,5 +1,7 @@
 module ManageIQ::Providers
 class CloudManager < BaseManager
+  require_dependency 'manageiq/providers/cloud_manager/auth_key_pair'
+  require_dependency 'manageiq/providers/cloud_manager/refresh_parser'
   require_dependency 'manageiq/providers/cloud_manager/template'
   require_dependency 'manageiq/providers/cloud_manager/vm'
 

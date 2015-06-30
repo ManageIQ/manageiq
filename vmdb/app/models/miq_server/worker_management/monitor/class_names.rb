@@ -2,14 +2,14 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
   extend ActiveSupport::Concern
 
   MONITOR_CLASS_NAMES = %w{
-    MiqEmsMetricsCollectorWorkerAmazon
+    ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     MiqEmsMetricsCollectorWorkerRedhat
     ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
     MiqEmsMetricsCollectorWorkerOpenstack
     MiqEmsMetricsCollectorWorkerOpenstackInfra
     MiqEmsMetricsProcessorWorker
     MiqEmsRefreshCoreWorker
-    MiqEmsRefreshWorkerAmazon
+    ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
     MiqEmsRefreshWorkerForemanConfiguration
     MiqEmsRefreshWorkerForemanProvisioning
     MiqEmsRefreshWorkerKubernetes
@@ -19,7 +19,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerOpenstack
     MiqEmsRefreshWorkerOpenstackInfra
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
-    MiqEventCatcherAmazon
+    ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     MiqEventCatcherKubernetes
     MiqEventCatcherOpenshift
     MiqEventCatcherRedhat
@@ -46,7 +46,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
   MONITOR_CLASS_NAMES_IN_KILL_ORDER = %w{
     MiqAutomateWorker
     MiqEmsMetricsProcessorWorker
-    MiqEmsMetricsCollectorWorkerAmazon
+    ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     MiqEmsMetricsCollectorWorkerRedhat
     ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
     MiqEmsMetricsCollectorWorkerOpenstack
@@ -60,7 +60,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqNetappRefreshWorker
     MiqVmdbStorageBridgeWorker
     MiqStorageMetricsCollectorWorker
-    MiqEmsRefreshWorkerAmazon
+    ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
     MiqEmsRefreshWorkerForemanConfiguration
     MiqEmsRefreshWorkerForemanProvisioning
     MiqEmsRefreshWorkerKubernetes
@@ -79,7 +79,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEventCatcherRedhat
     MiqEventCatcherOpenstack
     MiqEventCatcherOpenstackInfra
-    MiqEventCatcherAmazon
+    ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     MiqEventCatcherKubernetes
     MiqEventCatcherOpenshift
     MiqUiWorker

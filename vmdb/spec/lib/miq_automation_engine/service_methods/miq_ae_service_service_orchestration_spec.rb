@@ -19,7 +19,7 @@ module MiqAeServiceServiceOrchestrationSpec
     it "sets and gets orchestration_manager" do
       service_service.orchestration_manager = ae_orch_manager
       service.orchestration_manager.should == orch_manager
-      service_service.orchestration_manager.object_class.name.should == 'EmsAmazon'
+      service_service.orchestration_manager.object_class.name.should == 'ManageIQ::Providers::Amazon::CloudManager'
     end
 
     it "sets and gets stack_name" do
