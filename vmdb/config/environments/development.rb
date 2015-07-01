@@ -34,6 +34,8 @@ Vmdb::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
+  # Raise exceptions in transactional callbacks
+  config.active_record.raise_in_transactional_callbacks = true
 
   # Customize any additional options below...
 

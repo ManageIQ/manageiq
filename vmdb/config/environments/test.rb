@@ -42,6 +42,8 @@ Vmdb::Application.configure do
     end
   end
 
+  # Raise exceptions in transactional callbacks
+  config.active_record.raise_in_transactional_callbacks = true
 
   # Customize any additional options below...
 
