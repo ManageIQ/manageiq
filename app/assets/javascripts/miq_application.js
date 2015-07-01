@@ -1318,7 +1318,7 @@ function miqClickAndPop(el) {
   return false;
 }
 
-function miq_patternfly_tabs_init(id, url) {
+function miq_tabs_init(id, url) {
   if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
     $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
       if ($(e.target).parent().hasClass('disabled')) {
@@ -1354,11 +1354,11 @@ function miq_patternfly_tabs_init(id, url) {
   }
 }
 
-function miq_patternfly_disable_inactive_tabs(id) {
+function miq_tabs_disable_inactive(id) {
   $(id + ' ul.nav-tabs > li:not(.active)').addClass('disabled');
 }
 
-function miq_patternfly_show_hide_tab(tab_id, show) {
+function miq_tabs_show_hide(tab_id, show) {
   $(tab_id).toggleClass('hidden', !show);
 }
 
