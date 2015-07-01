@@ -5,12 +5,12 @@
     #dialog_tabs
       %ul.nav.nav-tabs
         - @record.ordered_dialog_resources.each do |dt|
-          = miq_tab_header("#{dt.resource.id}_tab", nil) do
+          = miq_tab_header("#{dt.resource.id}_tab") do
             = dt.resource.label
       .tab-content
         - @record.ordered_dialog_resources.each do |dt|
           -# dialog tabs
-          = miq_tab_content("#{dt.resource.id}_tab", nil) do
+          = miq_tab_content("#{dt.resource.id}_tab") do
             - dt.resource.ordered_dialog_resources.each do |tg|
               -# dialog groups/fields
               - group = tg.resource
