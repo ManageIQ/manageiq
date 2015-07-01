@@ -53,6 +53,7 @@ gem 'mime-types'
 gem "jbuilder",                       "~>2.0.7"
 gem "gettext_i18n_rails"
 gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
+gem 'paperclip',                      "~>4.3.0"
 
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",      :require => false
