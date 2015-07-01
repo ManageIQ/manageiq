@@ -5,6 +5,10 @@ class Tenant < ActiveRecord::Base
 
   default_value_for :company_name, "My Company"
 
+  has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
+  has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
+  has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
+
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
                     :url  => "/uploads/#{HARDCODED_LOGO}",

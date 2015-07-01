@@ -24,6 +24,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   belongs_to :provider
+  belongs_to :tenant_owner, :class_name => 'Tenant'
 
   has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate"
@@ -47,8 +48,11 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  validates :name,     :presence => true, :uniqueness => true
-  validates :hostname, :presence => true, :uniqueness => {:case_sensitive => false}, :if => :hostname_required?
+  validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_owner_id]}
+  validates :hostname,
+            :presence   => true,
+            :uniqueness => {:scope => [:tenant_owner_id], :case_sensitive => false},
+            :if         => :hostname_required?
 
   # TODO: Remove all callers of address
   alias_attribute :address, :hostname

@@ -1,6 +1,7 @@
 class MiqGroup < ActiveRecord::Base
   default_scope { where(self.conditions_for_my_region_default_scope) }
 
+  belongs_to :tenant_owner, :class_name => "Tenant"
   belongs_to :miq_user_role
   belongs_to :role, :class_name => "UiTaskSet", :foreign_key => :ui_task_set_id
   belongs_to :resource, :polymorphic => true

@@ -166,7 +166,31 @@ describe ExtManagementSystem do
           end
         end
       end
+
+      it "allows duplicate name across tenants" do
+        tenant = FactoryGirl.create(:tenant)
+        expect do
+          FactoryGirl.create(:ems_vmware,
+                             :name         => @ems.name,
+                             :hostname     => @different_host_name,
+                             :tenant_owner => tenant)
+        end.not_to raise_error
+      end
+
+      it "allows duplicate hostname across tenants" do
+        tenant = FactoryGirl.create(:tenant)
+        expect do
+          FactoryGirl.create(:ems_vmware, :hostname => @same_host_name, :tenant_owner => tenant)
+        end.not_to raise_error
+      end
     end
   end
 
+  context "#tenant_owner" do
+    let(:tenant) { FactoryGirl.create(:tenant) }
+    it "has a tenant owner" do
+      ems = FactoryGirl.create(:ext_management_system, :tenant_owner => tenant)
+      expect(tenant.owned_ext_management_systems).to include(ems)
+    end
+  end
 end

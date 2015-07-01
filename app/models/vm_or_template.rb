@@ -44,7 +44,6 @@ class VmOrTemplate < ActiveRecord::Base
   POWER_OPS = %w{start stop suspend reset shutdown_guest standby_guest reboot_guest}
 
   validates_presence_of     :name, :location
-  #validates_uniqueness_of   :name
   validates_inclusion_of    :vendor, :in => VENDOR_TYPES.values
 
   has_one                   :miq_server, :foreign_key => :vm_id
@@ -112,7 +111,7 @@ class VmOrTemplate < ActiveRecord::Base
   has_many                  :service_resources, :as => :resource
 #  has_many                  :service_templates, :through => :service_resources, :source => :service_template
   has_many                  :direct_services, :through => :service_resources, :source => :service
-
+  belongs_to                :tenant_owner, :class_name => 'Tenant'
 
   acts_as_miq_taggable
   include ReportableMixin

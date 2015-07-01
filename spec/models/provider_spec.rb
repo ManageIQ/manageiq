@@ -47,4 +47,12 @@ describe Provider do
       end
     end
   end
+
+  context "#tenant_owner" do
+    let(:tenant) { FactoryGirl.create(:tenant) }
+    it "has a tenant owner" do
+      provider = FactoryGirl.create(:provider, :tenant_owner => tenant)
+      expect(tenant.owned_providers).to include(provider)
+    end
+  end
 end

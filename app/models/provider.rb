@@ -5,6 +5,7 @@ class Provider < ActiveRecord::Base
   include AsyncDeleteMixin
   include EmsRefresh::Manager
 
+  belongs_to :tenant_owner, :class_name => 'Tenant'
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
 
