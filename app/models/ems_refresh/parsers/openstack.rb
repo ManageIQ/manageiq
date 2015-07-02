@@ -367,6 +367,7 @@ module EmsRefresh::Parsers
       new_result = {
         :name                => network.name,
         :ems_ref             => uid,
+        :shared              => network.shared,
         :status              => status,
         :enabled             => network.admin_state_up,
         :external_facing     => network.router_external,
