@@ -200,6 +200,44 @@ describe OpsController do
     audit_event = AuditEvent.where(:target_id => schedule.id).first
     expect(audit_event.attributes['message']).to include("description changed to new_description")
   end
+
+  describe "#settings_update" do
+    context "when the zone is changed" do
+      it "updates the server's zone" do
+        server = MiqServer.first
+
+        zone = FactoryGirl.create(:zone,
+                                  :name => "not the default",
+                                  :description => "Not the Default Zone")
+
+        current = double("current", :[] => {:server => {:zone => "default"}}).as_null_object
+        new = double("new").as_null_object
+
+        allow(new).to receive(:[]) do |arg|
+          case arg
+          when :authentication then {}
+          when :server then {:zone => zone.name}
+          else double.as_null_object
+          end
+        end
+
+        edit = {:new  => new, :current => current}
+        sb = {:active_tab => "settings_server", :selected_server_id => server.id}
+
+        controller.instance_variable_set(:@edit, edit)
+        controller.instance_variable_set(:@sb, sb)
+        allow(controller).to receive(:settings_get_form_vars)
+        allow(controller).to receive(:x_node).and_return(double("x_node").as_null_object)
+        allow(controller).to receive(:settings_server_validate)
+        allow(controller).to receive(:get_node_info)
+        allow(controller).to receive(:replace_right_cell)
+
+        # expect { post :settings_update, :id => "server", :button => "save" }
+        expect { controller.send(:settings_update_save) }
+          .to change { server.reload.zone }.to(zone)
+      end
+    end
+  end
 end
 
 describe OpsController do
