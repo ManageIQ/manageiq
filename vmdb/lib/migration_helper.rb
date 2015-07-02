@@ -246,29 +246,6 @@ module MigrationHelper
   # Adapter specific methods
   #
 
-  def with_identity_insert_sqlserver(table)
-    connection.transaction do
-      connection.execute("SET IDENTITY_INSERT #{table} ON")
-      begin
-        yield
-      ensure
-        connection.execute("SET IDENTITY_INSERT #{table} OFF") rescue nil
-      end
-    end
-  end
-
-  def add_pk_sqlserver(table)
-    say_with_time("add_pk(:#{table})") do
-      connection.execute("ALTER TABLE #{connection.quote_table_name(table)} ADD PRIMARY KEY (id)").to_s
-    end
-  end
-
-  def drop_pk_sqlserver(table)
-    say_with_time("drop_pk(:#{table})") do
-      connection.send(:remove_pk_constraint, table)
-    end
-  end
-
   def add_trigger_postgresql(direction, table, name, body)
     say_with_time("add_trigger(:#{direction}, :#{table}, :#{name})") do
       add_trigger_function_postgresql(name, body)
