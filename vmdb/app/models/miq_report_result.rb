@@ -61,15 +61,11 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def report_results
-    if self.report.kind_of?(String)
-      # support legacy reports that saved results in the report column
-      return nil if self.report.nil?
-      Marshal.load(Base64.decode64(self.report.split("\n").join))
-    elsif self.binary_blob
+    if binary_blob
       serializer_name = self.binary_blob.data_type
       serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
       serializer = serializer_name.constantize
-      return serializer.load(self.binary_blob.binary)
+      MiqReport.from_hash(serializer.load(binary_blob.binary))
     elsif self.report.kind_of?(MiqReport)
       return self.report
     else
@@ -78,8 +74,8 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def report_results=(value)
-    self.binary_blob = BinaryBlob.new(:name => "report_results", :data_type => "YAML")
-    self.binary_blob.binary = YAML.dump(value)
+    binary_blob = BinaryBlob.new(:name => "report_results", :data_type => "YAML")
+    binary_blob.binary = YAML.dump(value.to_hash)
   end
 
   def report_html=(html)
@@ -104,16 +100,15 @@ class MiqReportResult < ActiveRecord::Base
     self.update_attributes(:userid => userid, :report_source => "Saved by user")
   end
 
-  # Encapsulate report in an array to prevent AR from serializing it as its ID
-  # => See line 8 of vendor/gems/activerecord-2.2.2/lib/active_record/connection_adapters/abstract/quoting.rb -
-  # => "records are quoted as their primary key"
   def report
     val = read_attribute(:report)
-    val.nil? ? nil : val.first
+    return if val.nil?
+
+    MiqReport.from_hash(val)
   end
 
   def report=(val)
-    write_attribute(:report, val.nil? ? nil : [val])
+    write_attribute(:report, val.nil? ? nil : val.to_hash)
   end
   #
 
