@@ -248,55 +248,6 @@ module MigrationHelper
     end
   end
 
-  def bulk_copy_export(table, options = {})
-    bulk_copy(:export, table, options)
-  end
-
-  def bulk_copy_import(table, options = {})
-    bulk_copy(:import, table, options)
-  end
-
-  # TODO: possible overlap with MiqPostgresAdmin
-  def bulk_copy(direction, table, options = {})
-    raise ArgumentError, "direction must be either :export or :import" unless [:export, :import].include?(direction)
-
-    options = options.reverse_merge(Rails.configuration.database_configuration[Rails.env].symbolize_keys)
-
-    file = bulk_copy_filename(table, options)
-
-    case direction
-    when :export
-      pre     = "PGPASSWORD=#{options[:password]}" if options[:password]
-      to_from = "STDOUT"
-      post    = "| gzip -c - > #{file}"
-    when :import
-      pre     = "gunzip -c #{file} |"
-      pre    += " PGPASSWORD=#{options[:password]}" if options[:password]
-      to_from = "STDIN"
-      post    = ""
-    end
-    copy = "\\\\COPY"
-
-    conditions =
-      if direction == :export && options[:conditions]
-        "(SELECT * FROM #{table} WHERE #{sanitize_sql_for_conditions(options[:conditions], table)})"
-      else
-        table
-      end
-    psql_host = ""
-    psql_host << "-h #{options[:host]} " if options[:host]
-    psql_host << "-p #{options[:port]} " if options[:port]
-    psql_cmd = "#{copy} #{conditions} #{direction == :export ? "TO" : "FROM"} #{to_from} WITH BINARY"
-    psql = "psql #{psql_host} -U #{options[:username]} -w -d #{options[:database]} -c \"#{psql_cmd}\""
-    cmd = "#{pre} #{psql} #{post}"
-
-    require 'fileutils'
-    FileUtils.mkdir_p(BULK_COPY_DIRECTORY)
-    `#{cmd}`
-    status = $?.to_i
-    raise "postgresql command failed with status #{status}: #{cmd}" unless status == 0
-  end
-
   def bulk_copy_transfer(from_table, to_table, options = {})
     options = options.reverse_merge(Rails.configuration.database_configuration[Rails.env].symbolize_keys)
 
