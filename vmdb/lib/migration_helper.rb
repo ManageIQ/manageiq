@@ -26,9 +26,7 @@ module MigrationHelper
   #
 
   def change_id_column(table, column, type)
-    drop_pk(table) if column == :id
     change_column table, column, type
-    add_pk(table) if column == :id
   end
 
   def change_id_columns(table, id_cols, type)
@@ -38,16 +36,6 @@ module MigrationHelper
   #
   # Helper methods
   #
-
-  def add_pk(*args)
-    meth = "add_pk_#{connection.adapter_name.downcase}"
-    self.send(meth, *args) if self.respond_to?(meth)
-  end
-
-  def drop_pk(*args)
-    meth = "drop_pk_#{connection.adapter_name.downcase}"
-    self.send(meth, *args) if self.respond_to?(meth)
-  end
 
   def bulk_copy_export(*args)
     meth = "bulk_copy_export_#{connection.adapter_name.downcase}"
