@@ -124,13 +124,21 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   def up
     say_with_time("Converting MiqReportResult#report to a serialized hash") do
       MiqReportResult.where('report IS NOT NULL').each do |rr|
-        rr.update_attribute(:report, rr.serialize_report_to_hash(rr.read_attribute(:report)))
+        begin
+          rr.update_attribute(:report, rr.serialize_report_to_hash(rr.read_attribute(:report)))
+        rescue => err
+          say "Unable to convert report result with id: [#{rr.id}], '#{err.message}'"
+        end
       end
     end
 
     say_with_time("Converting BinaryBlob report results to a serialized hash") do
       BinaryBlob.where(:resource_type => 'MiqReportResult').each do |bb|
-        bb.binary = bb.serialize_report_to_hash(bb.binary)
+        begin
+          bb.binary = bb.serialize_report_to_hash(bb.binary)
+        rescue => err
+          say "Unable to convert binary blob with id: [#{bb.id}], '#{err.message}'"
+        end
       end
     end
   end
