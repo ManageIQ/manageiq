@@ -47,6 +47,50 @@ module ContainersCommonMixin
         pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
         + " on this " + ui_lookup(:tables => @table_name)
       end
+    elsif @display == "container_services" || session[:display] == "container_services" && params[:display].nil?
+      title = ui_lookup(:tables => "container_services")
+      drop_breadcrumb(:name => record.name + " (All #{title})",
+                      :url  => "/#{controller_name}/show/#{record.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerService, :parent => record)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras.fetch(:total_count, 0) > @view.extras.fetch(:auth_count, 0)
+        @bottom_msg = "* You are not authorized to view "
+        + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
+        + " on this " + ui_lookup(:tables => @table_name)
+      end
+    elsif @display == "container_routes" || session[:display] == "container_routes" && params[:display].nil?
+      title = ui_lookup(:tables => "container_routes")
+      drop_breadcrumb(:name => record.name + " (All #{title})",
+                      :url  => "/#{controller_name}/show/#{record.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerRoute, :parent => record)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras.fetch(:total_count, 0) > @view.extras.fetch(:auth_count, 0)
+        @bottom_msg = "* You are not authorized to view "
+        + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
+        + " on this " + ui_lookup(:tables => @table_name)
+      end
+    elsif @display == "container_replicators" || session[:display] == "container_replicators" && params[:display].nil?
+      title = ui_lookup(:tables => "container_replicators")
+      drop_breadcrumb(:name => record.name + " (All #{title})",
+                      :url  => "/#{controller_name}/show/#{record.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerReplicator, :parent => record) # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras.fetch(:total_count, 0) > @view.extras.fetch(:auth_count, 0)
+        @bottom_msg = "* You are not authorized to view "
+        + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
+        + " on this " + ui_lookup(:tables => @table_name)
+      end
+    elsif @display == "container_projects" || session[:display] == "container_projects" && params[:display].nil?
+      title = ui_lookup(:tables => "container_projects")
+      drop_breadcrumb(:name => record.name + " (All #{title})",
+                      :url  => "/#{controller_name}/show/#{record.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerProject, :parent => record)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras.fetch(:total_count, 0) > @view.extras.fetch(:auth_count, 0)
+        @bottom_msg = "* You are not authorized to view "
+        + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
+        + " on this " + ui_lookup(:tables => @table_name)
+      end
     elsif @display == "containers"
       title = ui_lookup(:tables => "containers")
       drop_breadcrumb(:name => record.name + " (All #{title})",
