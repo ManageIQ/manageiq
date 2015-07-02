@@ -69,6 +69,13 @@ class Vmware::InfraManager < InfraManager
     self::EventCatcher
   end
 
+  def self.provision_class(via)
+    case via
+    when "pxe" then MiqProvisionVmwareViaPxe
+    else            MiqProvisionVmware
+    end
+  end
+
   def control_monitor
     MiqControlMonitor.find_by_ems(self)
   end

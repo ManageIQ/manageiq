@@ -32,21 +32,8 @@ class MiqProvisionRequest < MiqRequest
     vm_or_template = VmOrTemplate.find_by_id(source_id)
     raise MiqException::MiqProvisionError, "Unable to find source Template/Vm with id [#{source_id}]" if vm_or_template.nil?
 
-    suffix = vm_or_template.class.model_suffix.dup
-
-    case suffix
-    when "Vmware"
-      case MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-      when "pxe" then suffix << "ViaPxe"
-      end
-    when "Redhat"
-      case MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-      when "iso" then suffix << "ViaIso"
-      when "pxe" then suffix << "ViaPxe"
-      end
-    end
-
-    "MiqProvision#{suffix}".constantize
+    via = MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
+    vm_or_template.ext_management_system.class.provision_class(via)
   end
 
   def self.new_request_task(attribs)
