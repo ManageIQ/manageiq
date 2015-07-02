@@ -26,6 +26,9 @@ src_files:
   - javascripts/directives/repository/valid_unc_path.js
   - javascripts/directives/checkchange.js
   - javascripts/directives/miqrequired.js
+  - javascripts/directives/selectpickerForSelectTag.js
+  - javascripts/directives/scheduler/updateDropdownForFilter.js
+  - javascripts/directives/scheduler/updateDropdownForTimer.js
   - javascripts/import.js
 
 # stylesheets

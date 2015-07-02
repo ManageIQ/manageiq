@@ -1,33 +1,55 @@
 - @angularForm = true
 
-%form#form_div(name="angularForm" ng-controller="scheduleFormController" ng-show="afterGet")
+%form.form-horizontal#form_div{"name"          => "angularForm",
+                               "ng-controller" => "scheduleFormController",
+                               "ng-show"       => "afterGet"}
   = render :partial => "layouts/flash_msg"
-  %fieldset
-    %h3
-      = _("Basic Information")
-      %table.style1
-        %tr
-          %td.key= _("Name")
-          %td
-            %input(type="text" name="name" ng-model="scheduleModel.name" maxlength="#{MAX_NAME_LEN}" miqrequired checkchange)
-        %tr
-          %td.key= _("Description")
-          %td
-            %input(type="text" name="description" ng-model="scheduleModel.description" maxlength="#{MAX_DESC_LEN}" miqrequired checkchange)
-
-        %tr
-          %td.key= _("Active")
-          %td
-            %input(type="checkbox" name="enabled" ng-model="scheduleModel.enabled" ng-true-value="1" ng-false-value="0" checkchange)
-
-        %tr
-          %td.key= _("Action")
-          %td
-            = select_tag('action_typ',
-                         options_for_select(@action_type_options_for_select),
-                         "ng-model"    => "scheduleModel.action_typ",
-                         "ng-change"   => "actionTypeChanged()",
-                         "checkchange" => @schedule.id ? "" : "filter_typ,filter_value")
+  %div
+    %div
+      .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+          = _("Name")
+        .col-sm-8
+          %input.form-control{"type"        => "text",
+                              "id"          => "textInput-markup",
+                              "name"        => "name",
+                              "ng-model"    => "scheduleModel.name",
+                              "maxlength"   => "#{MAX_NAME_LEN}",
+                              "miqrequired" => "",
+                              "checkchange" => ""}
+          %span.help-block{"ng-show" => "angularForm.name.$error.miqrequired"}
+            = _("Required")
+      .form-group{"ng-class" => "{'has-error': angularForm.description.$invalid}"}
+        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+          = _("Description")
+        .col-sm-8
+          %input.form-control{"type"        => "text",
+                              "id"          => "textInput-markup",
+                              "name"        => "description",
+                              "ng-model"    => "scheduleModel.description",
+                              "maxlength"   => "#{MAX_DESC_LEN}",
+                              "miqrequired" => "",
+                              "checkchange" => ""}
+            %span.help-block{"ng-show" => "angularForm.description.$error.miqrequired"}
+              = _("Required")
+      .form-group
+        %label.col-sm-2.control-label
+          = _("Active")
+        .col-sm-10
+          %input#enabled{"type"        => "checkbox",
+                         "name"        => "enabled",
+                         "ng-model"    => "scheduleModel.enabled",
+                         "checkchange" => ""}
+      .form-group
+        %label.col-sm-2.control-label
+          = _("Action")
+        .col-sm-10
+          = select_tag('action_typ',
+                       options_for_select(@action_type_options_for_select),
+                       "ng-model"                    => "scheduleModel.action_typ",
+                       "ng-change"                   => "actionTypeChanged()",
+                       "checkchange"                 => "",
+                       "selectpicker-for-select-tag" => "")
 
   = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
@@ -35,5 +57,8 @@
 
 :javascript
   miqAngularApplication.value('scheduleFormId', '#{@schedule.id || "new"}');
-  miqAngularApplication.value('oneMonthAgo', {year: '#{@one_month_ago[:year]}', month: '#{@one_month_ago[:month]}', date: '#{@one_month_ago[:date]}'});
+  miqAngularApplication.value('oneMonthAgo',
+                              {year: '#{@one_month_ago[:year]}',
+                               month: '#{@one_month_ago[:month]}',
+                               date: '#{@one_month_ago[:date]}'});
   angular.bootstrap(jQuery('#form_div'), ['miqAngularApplication']);

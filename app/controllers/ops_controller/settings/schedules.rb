@@ -640,7 +640,7 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_set_start_time_record_vars(schedule)
-    run_at = create_time_in_utc("#{params[:miq_angular_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00",
+    run_at = create_time_in_utc("#{params[:start_date]} #{params[:start_hour]}:#{params[:start_min]}:00",
                                 params[:time_zone])
     schedule.run_at[:start_time] = "#{run_at} Z"
   end

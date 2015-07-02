@@ -7,8 +7,9 @@ miqAngularApplication.directive('checkpath', function (){
              setValidity(scope, ctrl, ctrl.$modelValue, false);
            }
          });
-         ctrl.$parsers.unshift(function() {
+         ctrl.$parsers.push(function(value) {
            setValidity(scope, ctrl, ctrl.$viewValue, true);
+           return value;
           });
 
       validPath = function(scope, path, bClearMsg) {

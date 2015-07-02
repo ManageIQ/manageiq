@@ -186,14 +186,14 @@ describe OpsController do
     controller.stub(:render)
 
     post :schedule_edit,
-         :id                 => schedule.id,
-         :button             => "save",
-         :name               => "test_schedule",
-         :description        => "new_description",
-         :action_typ         => "vm",
-         :miq_angular_date_1 => "06/25/2015",
-         :timer_typ          => "Once",
-         :timer_value        => ""
+         :id          => schedule.id,
+         :button      => "save",
+         :name        => "test_schedule",
+         :description => "new_description",
+         :action_typ  => "vm",
+         :start_date  => "06/25/2015",
+         :timer_typ   => "Once",
+         :timer_value => ""
 
     expect(response.status).to eq(200)
 

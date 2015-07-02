@@ -1,0 +1,19 @@
+miqAngularApplication.directive('selectpickerForSelectTag', function() {
+  return {
+    require: 'ngModel',
+    link: function (scope, elem, attr, ctrl) {
+      scope['form_' + ctrl.$name] = elem[0];
+
+      scope.$watch(attr.ngModel, function() {
+        if((ctrl.$modelValue != undefined)) {
+          $(scope['form_' + ctrl.$name]).selectpicker({
+            dropupAuto: false
+          });
+          $(scope['form_' + ctrl.$name]).selectpicker('show');
+          $(scope['form_' + ctrl.$name]).selectpicker('refresh');
+          $(scope['form_' + ctrl.$name]).addClass('span12').selectpicker('setStyle');
+        }
+      });
+    }
+  }
+});

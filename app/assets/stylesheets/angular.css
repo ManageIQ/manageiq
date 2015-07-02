@@ -13,3 +13,7 @@ input.ng-invalid-checkpath, select.ng-invalid-checkpath {
 input.ng-invalid-verifypasswd, select.ng-invalid-verifypasswd {
   border: 1px solid red
 }
+
+button.btn-red-border {
+  border: 2px solid red;
+}

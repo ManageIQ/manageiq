@@ -4,7 +4,7 @@ describe('checkpath initialization', function() {
   beforeEach(inject(function($compile, $rootScope) {
     $scope = $rootScope;
     var element = angular.element(
-      '<form name="form">' +
+      '<form name="angularForm">' +
       '<input checkpath type="text" ng-model="repo.path" name="repo_path"/>' +
       '</form>'
     );
@@ -12,7 +12,7 @@ describe('checkpath initialization', function() {
     spyOn($scope.miqService, 'miqFlash');
     $compile(element)($scope);
     $scope.$digest();
-    form = $scope.form;
+    form = $scope.angularForm;
   }));
 
   describe('checkpath', function() {

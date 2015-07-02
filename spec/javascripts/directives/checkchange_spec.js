@@ -4,23 +4,25 @@ describe('checkchange initialization', function() {
   beforeEach(inject(function($compile, $rootScope) {
     $scope = $rootScope;
     var element = angular.element(
-      '<form name="form">' +
+      '<form name="angularForm">' +
       '<input checkchange type="text" ng-model="repo.path" name="repo_path"/>' +
       '</form>'
     );
+    $scope.repoModel = {repo_path : "//a/a2"};
     $scope.modelCopy = {repo_path : "//a/a2"};
+    $scope.model = "repoModel";
     $scope.miqService = { miqFlashClear: function (){}};
     spyOn($scope.miqService, 'miqFlashClear');
     $compile(element)($scope);
     $scope.$digest();
-    form = $scope.form;
+    form = $scope.angularForm;
   }));
 
   describe('checkchange', function() {
     it('should set value and form to a non-pristine state when a different value is detected', function() {
       form.repo_path.$setViewValue('//storage/b1');
-      expect(form.repo_path.$pristine).toBe(false);
-      expect(form.$pristine).toBe(false);
+      expect($scope.angularForm['repo_path'].$untouched).toBe(false);
+      expect($scope.angularForm.$pristine).toBe(false);
     });
     it('should set value and form to a pristine state when same value is detected', function() {
       form.repo_path.$setViewValue('//a/a2');
