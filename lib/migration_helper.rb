@@ -37,21 +37,6 @@ module MigrationHelper
   # Helper methods
   #
 
-  def bulk_copy_export(*args)
-    meth = "bulk_copy_export_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
-  def bulk_copy_import(*args)
-    meth = "bulk_copy_import_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
-  def bulk_copy_transfer(*args)
-    meth = "bulk_copy_transfer_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
   def bulk_copy_filename(table, options = {})
     File.join(BULK_COPY_DIRECTORY, options[:filename] || "#{table}.sql")
   end
@@ -263,16 +248,16 @@ module MigrationHelper
     end
   end
 
-  def bulk_copy_export_postgresql(table, options = {})
-    bulk_copy_postgresql(:export, table, options)
+  def bulk_copy_export(table, options = {})
+    bulk_copy(:export, table, options)
   end
 
-  def bulk_copy_import_postgresql(table, options = {})
-    bulk_copy_postgresql(:import, table, options)
+  def bulk_copy_import(table, options = {})
+    bulk_copy(:import, table, options)
   end
 
   # TODO: possible overlap with MiqPostgresAdmin
-  def bulk_copy_postgresql(direction, table, options = {})
+  def bulk_copy(direction, table, options = {})
     raise ArgumentError, "direction must be either :export or :import" unless [:export, :import].include?(direction)
 
     options = options.reverse_merge(Rails.configuration.database_configuration[Rails.env].symbolize_keys)
@@ -312,7 +297,7 @@ module MigrationHelper
     raise "postgresql command failed with status #{status}: #{cmd}" unless status == 0
   end
 
-  def bulk_copy_transfer_postgresql(from_table, to_table, options = {})
+  def bulk_copy_transfer(from_table, to_table, options = {})
     options = options.reverse_merge(Rails.configuration.database_configuration[Rails.env].symbolize_keys)
 
     pre  = "PGPASSWORD=#{options[:password]}" if options[:password]
