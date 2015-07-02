@@ -110,8 +110,10 @@ class Host < ActiveRecord::Base
   virtual_column :v_total_storages,             :type => :integer,     :uses => :storages
   virtual_column :v_total_vms,                  :type => :integer,     :uses => :vms
   virtual_column :v_total_miq_templates,        :type => :integer,     :uses => :miq_templates
-  virtual_column :total_vcpus,                  :type => :integer
-  virtual_column :total_cores,                  :type => :integer
+  virtual_column :total_vcpus,                  :type => :integer,     :uses => :logical_cpus
+  virtual_column :num_cpu,                      :type => :integer,     :uses => :hardware
+  virtual_column :logical_cpus,                 :type => :integer,     :uses => :hardware
+  virtual_column :cores_per_socket,             :type => :integer,     :uses => :hardware
   virtual_column :ram_size,                     :type => :integer
   virtual_column :enabled_inbound_ports,        :type => :numeric_set  # The following are not set to use anything
   virtual_column :enabled_outbound_ports,       :type => :numeric_set  # because get_ports ends up re-querying the
@@ -1775,25 +1777,15 @@ class Host < ActiveRecord::Base
   end
 
   def total_vcpus
-    return 0 unless self.hardware
-
-    cpus  = self.hardware.numvcpus         || 0
-    cores = self.hardware.cores_per_socket || 1
-    return cpus * cores
+    logical_cpus || 0
   end
 
   def vcpus_per_core
-    cores          = self.total_vcpus
+    cores = total_vcpus
+    return 0 if cores == 0
+
     total_vm_vcpus = self.vms.inject(0) {|t, vm| t += (vm.num_cpu || 0) }
     (total_vm_vcpus / cores)
-  end
-
-  def total_cores
-    return 0 unless self.hardware
-
-    cores_per_socket = self.hardware.cores_per_socket || 1
-    sockets          = self.hardware.numvcpus         || 1
-    (cores_per_socket * sockets)
   end
 
   def num_cpu

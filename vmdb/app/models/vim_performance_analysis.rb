@@ -378,7 +378,7 @@ module VimPerformanceAnalysis
         # avail = (limit_ratio - vcpus_per_core) * cores => (10 - 4) * 5 = 30
         usage   = 0
         reserve = 0
-        avail   = (options[:limit_ratio] - target.vcpus_per_core) * target.total_cores
+        avail   = (options[:limit_ratio] - target.vcpus_per_core) * target.total_vcpus
       else
         usage   = measure_object(target, options[:mode], options[:metric],    perf, ts, type) || 0
         reserve = measure_object(target, :current,       options[:reserve],   perf, ts, type) || 0
