@@ -20,7 +20,7 @@ module MiqApache
       ###################################################################
       # Start the Apache httpd daemon. Gives an error if it is already running.
       #
-      # Command line: apachectl -k start
+      # Command line: apachectl start
       ###################################################################
       self.run_apache_cmd 'start'
     end
@@ -36,11 +36,11 @@ module MiqApache
         # configuration files as in configtest before initiating the restart to make sure Apache
         # doesn't die.
         #
-        # Command line: apachectl -k graceful
+        # Command line: apachectl graceful
         ###################################################################
         #
         #FIXME: apache doesn't re-read the proxy balancer members on a graceful restart, so do a graceful stop and start
-        #        system('apachectl -k graceful')
+        #        system('apachectl graceful')
         #http://www.gossamer-threads.com/lists/apache/users/383770
         #https://issues.apache.org/bugzilla/show_bug.cgi?id=45950
         #https://issues.apache.org/bugzilla/show_bug.cgi?id=39811
@@ -55,7 +55,7 @@ module MiqApache
         # command automatically checks the configuration files as in configtest before initiating
         # the restart to make sure the daemon doesn't die.
         #
-        # Command line: apachectl -k restart
+        # Command line: apachectl restart
         ###################################################################
         self.run_apache_cmd 'restart'
       end
@@ -68,14 +68,14 @@ module MiqApache
         # currently open connections are not aborted. A side effect is that old log files
         # will not be closed immediately.
         #
-        # Command line: apachectl -k graceful-stop
+        # Command line: apachectl graceful-stop
         ###################################################################
         self.run_apache_cmd 'graceful-stop'
       else
         ###################################################################
         # Stops the Apache httpd daemon
         #
-        # Command line: apachectl -k stop
+        # Command line: apachectl stop
         ###################################################################
         self.run_apache_cmd 'stop'
       end
@@ -83,13 +83,13 @@ module MiqApache
 
     def self.httpd_status
       begin
-        res = MiqUtil.runcmd('/etc/init.d/httpd status')
+        res = MiqUtil.runcmd('/usr/bin/systemctl status httpd')
       rescue RuntimeError => err
         res = err.to_s
-        return false, res if res =~ /^httpd (is stopped|dead but pid file exists)$/
+        return false, res if res =~ /Active: inactive/
 
       else
-        return true, res if res =~ /is running...\n/
+        return true, res if res =~ /Active: active/
       end
       raise "Unknown apache status: #{res}"
     end
@@ -151,8 +151,7 @@ module MiqApache
     def self.run_apache_cmd(command)
       Dir.mkdir(File.dirname(APACHE_CONTROL_LOG)) unless File.exist?(File.dirname(APACHE_CONTROL_LOG))
       begin
-        cmd = "apachectl -E #{APACHE_CONTROL_LOG} -k #{command}"
-        cmd << " -e debug" if $log && $log.debug?
+        cmd = "apachectl #{command}"
         res = MiqUtil.runcmd(cmd)
       rescue => err
         $log.warn("MIQ(MiqApache::Control.run_apache_cmd) Apache command #{command} with result: #{res} failed with error: #{err}") if $log
