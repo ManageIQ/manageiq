@@ -297,8 +297,7 @@ module MiqExpressionToSqlSpec
       sql, incl, attrs = exp.to_sql
       attrs[:supported_by_sql].should be_true
 
-      sqlserver = ActiveRecord::Base.connection.adapter_name == "SQLServer"
-      sql.should == "(vms.autostart = #{'N' if sqlserver}'1' AND NOT (vms.busy = #{'N' if sqlserver}'true' AND vms.cpu_limit = 2))"
+      sql.should == "(vms.autostart = '1' AND NOT (vms.busy = 'true' AND vms.cpu_limit = 2))"
     end
 
     it "should test_preprocess_options_for_vim_performance_daily" do
@@ -320,8 +319,7 @@ module MiqExpressionToSqlSpec
       sql, incl, attrs = exp.to_sql
       attrs[:supported_by_sql].should_not be_true
 
-      sqlserver = ActiveRecord::Base.connection.adapter_name == "SQLServer"
-      sql.should == "(metric_rollups.resource_name = #{'N' if sqlserver}'Anti-Spam1_D1')"
+      sql.should == "(metric_rollups.resource_name = 'Anti-Spam1_D1')"
     end
 
     it "should test_fb11080" do
