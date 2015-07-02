@@ -49,16 +49,6 @@ module MigrationHelper
     self.send(meth, *args) if self.respond_to?(meth)
   end
 
-  def add_table_inheritance(*args)
-    meth = "add_table_inheritance_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
-  def drop_table_inheritance(*args)
-    meth = "drop_table_inheritance_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
   def bulk_copy_export(*args)
     meth = "bulk_copy_export_#{connection.adapter_name.downcase}"
     self.send(meth, *args)
@@ -270,7 +260,7 @@ module MigrationHelper
     end
   end
 
-  def add_table_inheritance_postgresql(table, inherit_from, options = {})
+  def add_table_inheritance(table, inherit_from, options = {})
     say_with_time("add_table_inheritance(:#{table}, :#{inherit_from})") do
       conditions = sanitize_sql_for_conditions(options[:conditions], table)
       connection.execute("ALTER TABLE #{table} ADD CONSTRAINT #{table}_inheritance_check CHECK (#{conditions})", 'Add inheritance check constraint')
@@ -278,7 +268,7 @@ module MigrationHelper
     end
   end
 
-  def drop_table_inheritance_postgresql(table, inherit_from)
+  def drop_table_inheritance(table, inherit_from)
     say_with_time("drop_table_inheritance(:#{table}, :#{inherit_from})") do
       connection.execute("ALTER TABLE #{table} DROP CONSTRAINT #{table}_inheritance_check", 'Drop inheritance check constraint')
       connection.execute("ALTER TABLE #{table} NO INHERIT #{inherit_from}", 'Drop table inheritance')
