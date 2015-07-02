@@ -6,12 +6,12 @@ var grid;
 function cfmeInitSlickGrid(grid_name, dataJson, columnsJson, options) {
   for (var i in columnsJson) {
     columnsJson[i].asyncPostRender = applyCSS;
-    if (i == 0) {
-      columnsJson[i].formatter = TreeFormatter;
-    } else {
-      columnsJson[i].formatter = HtmlFormatter;
-    }
+    columnsJson[i].formatter = HtmlFormatter;
   }
+  if (columsJson.length) {
+    columnsJson[0].formatter = TreeFormatter;
+  }
+
   rows = dataJson;
   columns = columnsJson;
 
@@ -65,7 +65,7 @@ function HtmlFormatter(row, cell, value, columnDef, dataContext) {
 }
 
 function TreeFormatter(row, cell, value, columnDef, dataContext) {
-  if (dataContext.indent == undefined) {
+  if (dataContext.indent === undefined) {
     return value;
   }
 
@@ -88,7 +88,7 @@ function TreeFormatter(row, cell, value, columnDef, dataContext) {
 }
 
 function myFilter(item, rows) {
-  if (item.parent != null) {
+  if (item.parent != null) { // null or undefined
     var parent = rows[item.parent];
 
     while (parent) {

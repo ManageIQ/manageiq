@@ -9,8 +9,8 @@ function miqTreeState(rowId, state) {
 // Handle row click (ajax or normal html trans)
 function miqRowClick(row_id, cell_idx) {
   cell = this.cells(row_id, cell_idx);
-  if (cell_idx != 0 && cell.getAttribute('is_button') != 1) {
-    if (typeof row_url_ajax != "undefined" && row_url_ajax == true) {
+  if (cell_idx && !cell.getAttribute('is_button')) {
+    if (typeof row_url_ajax != "undefined" && row_url_ajax) {
       miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
     } else {
       DoNav(row_url + row_id);
@@ -20,7 +20,7 @@ function miqRowClick(row_id, cell_idx) {
 
 // Handle row click - used by AE
 function miqAeRowSelected(row_id, cell_idx) {
-  if (cell_idx != 0) {
+  if (cell_idx) {
     selected_id = this.getSelectedRowId();
     if (selected_id != null) {
       if (selected_id.split("_")[0] == "Field") {
@@ -50,7 +50,7 @@ function miqRequestRowSelected(row_id) {
 function miqGridOnCheck(row_id, cell_idx, state) {
   crows = gtl_list_grid.getCheckedRows(0);
   $('#miq_grid_checks').val(crows);
-  count = crows == "" ? 0 : crows.split(",").length;
+  count = crows ? crows.split(",").length : 0;
   if (miqDomElementExists('center_tb')) {
     miqSetButtons(count, "center_tb");
   } else {
@@ -64,19 +64,19 @@ function miqCheck_AE_All(button_div, gridname) {
   var crows = "";
   if (typeof ns_list_grid != "undefined" && gridname == "ns_list_grid") {
     state = $('#Toggle1').prop('checked');
-    ns_list_grid.checkAll(state ? true : false);
+    ns_list_grid.checkAll(state);
     crows = ns_list_grid.getCheckedRows(0);
   } else if (typeof ns_grid != "undefined" && gridname == "ns_grid") {
     state = $('#Toggle2').prop('checked');
-    ns_grid.checkAll(state ? true : false);
+    ns_grid.checkAll(state);
     crows = ns_grid.getCheckedRows(0);
   } else if (typeof instance_grid != "undefined" && gridname == "instance_grid") {
     state = $('#Toggle3').prop('checked');
-    instance_grid.checkAll(state ? true : false);
+    instance_grid.checkAll(state);
     crows = instance_grid.getCheckedRows(0);
   } else if (typeof class_methods_grid != "undefined" && gridname == "class_methods_grid") {
     state = $('#Toggle4').prop('checked');
-    class_methods_grid.checkAll(state ? true : false);
+    class_methods_grid.checkAll(state);
     crows = class_methods_grid.getCheckedRows(0);
   }
   if (miqDomElementExists('miq_grid_checks')) {
@@ -85,7 +85,7 @@ function miqCheck_AE_All(button_div, gridname) {
   if (miqDomElementExists('miq_grid_checks2')) {
     $('#miq_grid_checks2').val(crows);
   }
-  count = crows == "" ? 0 : crows.split(",").length;
+  count = crows ? crows.split(",").length : 0;
   miqSetButtons(count, button_div);
   miqSparkle(false);
 }
@@ -136,7 +136,7 @@ function miqInitGrid(grid_name) {
   }
 
   // Load the grid with XML data, if present
-  if (grid_hash.xml != "") {
+  if (grid_hash.xml) {
     grid.parse(grid_hash.xml);
   }
 
@@ -206,7 +206,7 @@ function miqOnAECheck(row_id, cell_idx, state) {
     this.value = crows;
   });
 
-  count = crows == "" ? 0 : crows.split(",").length;
+  count = crows ? crows.split(",").length : 0;
   if (miqDomElementExists('center_tb')) {
     miqSetButtons(count, "center_tb");
   } else {
