@@ -667,7 +667,7 @@ module EmsCommon
     @edit[:new][:provider_region] = @ems.provider_region
     @edit[:new][:hostname] = @ems.hostname
     @edit[:new][:emstype] = @ems.emstype
-    @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(EmsAmazon)
+    @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
     @edit[:new][:port] = @ems.port
     @edit[:new][:provider_id] = @ems.provider_id
     @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]

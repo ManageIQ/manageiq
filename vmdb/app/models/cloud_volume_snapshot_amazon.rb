@@ -1,2 +1,0 @@
-class CloudVolumeSnapshotAmazon < CloudVolumeSnapshot
-end

@@ -805,7 +805,7 @@ module ApplicationController::CiProcessing
             end
             Host.discoverByIpRange(from_ip, to_ip, options)
           else
-            EmsAmazon.discover_queue(@userid, @password)
+            ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
           end
         rescue StandardError=>bang
   #       @flash_msg = "'Host Discovery' returned: " + bang.message; @flash_error = true

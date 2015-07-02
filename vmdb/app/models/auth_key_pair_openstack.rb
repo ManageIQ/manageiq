@@ -1,2 +1,2 @@
-class AuthKeyPairOpenstack < AuthKeyPairCloud
+class AuthKeyPairOpenstack < ManageIQ::Providers::CloudManager::AuthKeyPair
 end

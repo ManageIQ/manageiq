@@ -1,7 +1,15 @@
 module MiqProvisionCloud::Cloning
   def find_destination_in_vmdb(ems_ref)
-    platform = "Vm" + self.class.name.split("MiqProvision").last
-    platform.constantize.where(:ems_id => source.ext_management_system.id, :ems_ref => ems_ref).first
+    vm_model_class.where(:ems_id => source.ext_management_system.id, :ems_ref => ems_ref).first
+  end
+
+  def vm_model_class
+    case self.class.name
+    when "MiqProvisionAmazon"
+      ManageIQ::Providers::Amazon::CloudManager::Vm
+    when "MiqProvisionOpenstack"
+      VmOpenstack
+    end
   end
 
   def validate_dest_name

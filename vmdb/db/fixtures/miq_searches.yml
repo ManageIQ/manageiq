@@ -36,7 +36,7 @@
       exp: 
         "=":
           field: Vm-type
-          value: VmAmazon
+          value: ManageIQ::Providers::Amazon::CloudManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
@@ -434,7 +434,7 @@
       exp:
         "=":
           field: MiqTemplate-type
-          value: TemplateAmazon
+          value: ManageIQ::Providers::Amazon::CloudManager::Template
     search_type: default
     search_key: _hidden_
     db: MiqTemplate
@@ -807,7 +807,7 @@
       exp:
         "=":
           field: TemplateCloud-type
-          value: TemplateAmazon
+          value: ManageIQ::Providers::Amazon::CloudManager::Template
     search_type: default
     search_key: _hidden_
     db: TemplateCloud
@@ -949,7 +949,7 @@
       exp:
         "=":
           field: VmCloud-type
-          value: VmAmazon
+          value: ManageIQ::Providers::Amazon::CloudManager::Vm
     search_type: default
     search_key: _hidden_
     db: VmCloud

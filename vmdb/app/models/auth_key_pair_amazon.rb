@@ -1,2 +1,0 @@
-class AuthKeyPairAmazon < AuthKeyPairCloud
-end

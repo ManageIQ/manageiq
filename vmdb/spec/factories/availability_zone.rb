@@ -3,7 +3,7 @@ FactoryGirl.define do
     sequence(:name)     { |n| "availability_zone_#{seq_padded_for_sorting(n)}" }
   end
 
-  factory :availability_zone_amazon, :parent => :availability_zone, :class => "AvailabilityZoneAmazon" do
+  factory :availability_zone_amazon, :parent => :availability_zone, :class => "ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone" do
   end
 
   factory :availability_zone_openstack, :parent => :availability_zone, :class => "AvailabilityZoneOpenstack" do

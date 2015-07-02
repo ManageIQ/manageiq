@@ -19,6 +19,13 @@ module AsConstMissingWithSti
       body.flat_map { |n| collect_classes(n, parents + [name]) }
     when :block
       rest.flat_map { |n| collect_classes(n, parents) }
+    when :cdecl
+      name, superklass = rest
+      if %i(const colon2 colon3).include?(superklass.first)
+        [[parents, [type, name, superklass]]]
+      else
+        []
+      end
     else
       []
     end
@@ -71,9 +78,7 @@ module AsConstMissingWithSti
   def const_missing_with_sti(constant)
     AsConstMissingWithSti.nest do
       const_missing_without_sti(constant).tap do
-        AsConstMissingWithSti.class_inheritance_relationships[constant.to_s].each do |c|
-          AsConstMissingWithSti.enqueue_subclass(c)
-        end
+        AsConstMissingWithSti.enqueue_subclasses constant
       end
     end
   end
@@ -127,11 +132,20 @@ module AsConstMissingWithSti
           name = flatten_name(name)
           sklass &&= flatten_name(sklass)
 
-          sklasses = combos.map do |c|
-            c.empty? ? sklass : "#{c}::#{sklass}"
+          if sklass =~ /^::(.*)/
+            sklasses = [$1]
+          else
+            sklasses = combos.map do |c|
+              c.empty? ? sklass : "#{c}::#{sklass}"
+            end
           end
-          names = combos.map do |c|
-            c.empty? ? name : "#{c}::#{name}"
+
+          if name =~ /^::(.*)/
+            names = [$1]
+          else
+            names = combos.map do |c|
+              c.empty? ? name : "#{c}::#{name}"
+            end
           end
 
           sklasses.each do |fqsklass|
@@ -150,8 +164,10 @@ module AsConstMissingWithSti
   end
 
   @queue = []
-  def self.enqueue_subclass(relat)
-    @queue << relat
+  def self.enqueue_subclasses(constant)
+    class_inheritance_relationships[constant.to_s].each do |relat|
+      @queue << relat
+    end
   end
 
   @depth = 0
@@ -170,6 +186,9 @@ module AsConstMissingWithSti
 
   def self.load_subclass(relat)
     relat.subclass.safe_constantize unless ActiveSupport::Dependencies.loaded.include?(relat.file_path.sub(/\.rb\z/, ''))
+    nest do
+      enqueue_subclasses(relat.subclass)
+    end
   end
 end
 

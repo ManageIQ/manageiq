@@ -708,7 +708,7 @@ module ApplicationHelper
 
     # hide timelines button for Amazon provider and instances
     # TODO: extend .is_available? support via refactoring task to cover this scenario
-    return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(EmsAmazon) || @record.kind_of?(VmAmazon))
+    return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(ManageIQ::Providers::Amazon::CloudManager) || @record.kind_of?(ManageIQ::Providers::Amazon::CloudManager::Vm))
 
     # hide edit button for MiqRequest instances of type ServiceReconfigureRequest/ServiceTemplateProvisionRequest
     # TODO: extend .is_available? support via refactoring task to cover this scenario

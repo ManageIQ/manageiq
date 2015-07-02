@@ -11,7 +11,7 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
     methods = ["supports_#{architecture}_bit?".to_sym, "supports_#{virtualization_type}?".to_sym]
     methods << :supports_instance_store? if root_device_type == 'instance_store'
 
-    methods.each { |m| available = available.select(&m) if FlavorAmazon.method_defined?(m) }
+    methods.each { |m| available = available.select(&m) if ManageIQ::Providers::Amazon::CloudManager::Flavor.method_defined?(m) }
 
     available.each_with_object({}) { |f, hash| hash[f.id] = display_name_for_name_description(f) }
   end

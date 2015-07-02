@@ -1,7 +1,7 @@
 # TODO: Separate collection from parsing (perhaps collecting in parallel a la RHEVM)
 
 module EmsRefresh::Parsers
-  class Openstack < Cloud
+  class Openstack < ManageIQ::Providers::CloudManager::RefreshParser
     include EmsRefresh::Parsers::OpenstackCommon::Images
     include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
 

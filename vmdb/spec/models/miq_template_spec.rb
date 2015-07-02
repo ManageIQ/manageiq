@@ -36,13 +36,13 @@ describe MiqTemplate do
   end
 
   it ".supports_kickstart_provisioning?" do
-    TemplateAmazon.supports_kickstart_provisioning?.should be_false
+    ManageIQ::Providers::Amazon::CloudManager::Template.supports_kickstart_provisioning?.should be_false
     TemplateRedhat.supports_kickstart_provisioning?.should be_true
     ManageIQ::Providers::Vmware::InfraManager::Template.supports_kickstart_provisioning?.should be_false
   end
 
   it "#supports_kickstart_provisioning?" do
-    TemplateAmazon.new.supports_kickstart_provisioning?.should be_false
+    ManageIQ::Providers::Amazon::CloudManager::Template.new.supports_kickstart_provisioning?.should be_false
     TemplateRedhat.new.supports_kickstart_provisioning?.should be_true
     ManageIQ::Providers::Vmware::InfraManager::Template.new.supports_kickstart_provisioning?.should be_false
   end

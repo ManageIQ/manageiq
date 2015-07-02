@@ -90,7 +90,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
 
         context "with VmAmazon, " do
           before(:each) do
-            @vm.type = "VmAmazon"
+            @vm.type = "ManageIQ::Providers::Amazon::CloudManager::Vm"
             @vm.save
             @vm = VmOrTemplate.find(@vm.id)
             MiqServer.stub(:my_server => @server1)

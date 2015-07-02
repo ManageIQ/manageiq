@@ -6,7 +6,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   belongs_to :orchestration_stack
   has_one    :floating_ip, :foreign_key => :vm_id
   has_and_belongs_to_many :security_groups, :join_table => :security_groups_vms, :foreign_key => :vm_id
-  has_and_belongs_to_many :key_pairs,       :join_table => :key_pairs_vms,       :foreign_key => :vm_id, :association_foreign_key => :authentication_id, :class_name => "AuthKeyPairCloud"
+  has_and_belongs_to_many :key_pairs,       :join_table => :key_pairs_vms,       :foreign_key => :vm_id, :association_foreign_key => :authentication_id, :class_name => "ManageIQ::Providers::CloudManager::AuthKeyPair"
 
   default_value_for :cloud, true
 
