@@ -1,4 +1,4 @@
-module MiqProvisionAmazon::Cloning
+module ManageIQ::Providers::Amazon::CloudManager::Provision::Cloning
   def do_clone_task_check(clone_task_ref)
     source.with_provider_connection do |ec2|
       instance = ec2.instances[clone_task_ref]

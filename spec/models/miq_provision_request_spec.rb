@@ -17,7 +17,7 @@ describe MiqProvisionRequest do
 
     ems = FactoryGirl.create(:ems_amazon)
     vm = FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq MiqProvisionAmazon
+    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Amazon::CloudManager::Provision
   end
 
   context "A new provision request," do

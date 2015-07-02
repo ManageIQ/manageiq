@@ -1,4 +1,4 @@
-module MiqProvisionAmazon::StateMachine
+module ManageIQ::Providers::Amazon::CloudManager::Provision::StateMachine
   def customize_destination
     message = "Setting New #{destination_type} Name"
     _log.info("#{message} #{for_destination}")

@@ -1,4 +1,4 @@
-class MiqProvisionAmazon < MiqProvisionCloud
+class ManageIQ::Providers::Amazon::CloudManager::Provision < ::MiqProvisionCloud
   include_concern 'Cloning'
   include_concern 'StateMachine'
   include_concern 'Configuration'

@@ -5,10 +5,10 @@ module MiqProvisionCloud::Cloning
 
   def vm_model_class
     case self.class.name
-    when "MiqProvisionAmazon"
-      ManageIQ::Providers::Amazon::CloudManager::Vm
     when "MiqProvisionOpenstack"
       VmOpenstack
+    else
+      self.class.parent::Vm
     end
   end
 
