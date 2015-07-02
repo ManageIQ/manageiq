@@ -1796,6 +1796,18 @@ class Host < ActiveRecord::Base
     (cores_per_socket * sockets)
   end
 
+  def num_cpu
+    hardware.nil? ? 0 : hardware.numvcpus
+  end
+
+  def logical_cpus
+    hardware.nil? ? 0 : hardware.logical_cpus
+  end
+
+  def cores_per_socket
+    hardware.nil? ? 0 : hardware.cores_per_socket
+  end
+
   def domain()
     names = self.hostname.to_s.split(',').first.to_s.split('.')
     return names[1..-1].join('.') unless names.blank?
