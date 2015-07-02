@@ -83,15 +83,6 @@ module MigrationHelper
   # Table copy methods
   #
 
-  # Copies the schema of the table, but not the primary key, seed values, nor indexes.
-  def copy_schema_only(from_table, to_table)
-    say_with_time("copy_schema_only(:#{from_table}, :#{to_table})") do
-      from_table = connection.quote_table_name(from_table)
-      to_table   = connection.quote_table_name(to_table)
-      connection.execute("SELECT * INTO #{to_table} FROM #{from_table} WHERE 1 = 2")
-    end
-  end
-
   def copy_data(from_table, to_table, options = {})
     say_with_time("copy_data(:#{from_table}, :#{to_table})") do
       via = options[:via] || "insert_select_batches"
