@@ -7,7 +7,7 @@
       %tr
         %td.key= _('Retirement Date')
         %td#retirement_date
-          = text_field_tag("miq_date_1", h(session[:retire_date]), :class => "css1", :readonly => "true")
+          = datepicker_input_tag("miq_date_1", h(session[:retire_date]), :class => "css1", :readonly => "true")
           = observe_field("miq_date_1",
             :loading => "miqSparkle(true);",
             :complete => "miqSparkle(false);",

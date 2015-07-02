@@ -461,7 +461,7 @@
         %td
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
-            = text_field_tag("miq_date_1", options[:start_date],
+            = datepicker_input_tag("miq_date_1", options[:start_date],
               :class                  => "css1",
               :readonly               => "true",
               "data-miq_observe_date" => {:url => url}.to_json)

@@ -40,7 +40,7 @@
       %tr
         %td.key{:style => "width: 120px;"}= _('Selected Day')
         %td.wide{:style => "padding-right: 5px;"}
-          = text_field_tag("miq_date_1",
+          = datepicker_input_tag("miq_date_1",
             @sb[:util][:options][:chart_date],
             :readonly               => "true",
             "data-miq_sparkle_on"   => true,
@@ -49,7 +49,7 @@
       %tr
         %td.key{:style => "width: 120px;"}= _('Selected Day')
         %td.wide{:style => "padding-right: 5px;"}
-          = text_field_tag("miq_date_2",
+          = datepicker_input_tag("miq_date_2",
             @sb[:util][:options][:chart_date],
             :readonly               => "true",
             "data-miq_sparkle_on"   => true,

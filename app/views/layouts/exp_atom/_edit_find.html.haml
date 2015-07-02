@@ -67,10 +67,11 @@
 
       - elsif [:date, :datetime].include?(@edit[@expkey][:val1][:type])
         - if @edit[@expkey][:val1][:date_format] == 's'
-          = text_field_tag("miq_date_1_0", (@edit[@expkey][:exp_value][0] ? @edit[@expkey][:exp_value][0].split(" ").first : ""),
-          :readonly               => "true",
-          :size                   => 10,
-          "data-miq_observe_date" => {:interval => '.5', :url => url}.to_json)
+          = datepicker_input_tag("miq_date_1_0",
+            @edit[@expkey][:exp_value][0] ? @edit[@expkey][:exp_value][0].split(" ").first : "",
+            :readonly               => "true",
+            :size                   => 10,
+            "data-miq_observe_date" => {:interval => '.5', :url => url}.to_json)
           - if @edit[@expkey][:exp_value][0].to_s.include?(":")
             = select_tag("miq_time_1_0",
               options_for_select(Array.new(24) { |i| ["#{i}:00", "#{i}:15", "#{i}:30", "#{i}:45"] }.flatten, @edit[@expkey][:exp_value][0].split(" ").last),
@@ -90,10 +91,11 @@
         - if @edit[@expkey][:exp_skey] == EXP_FROM && @edit[@expkey][:exp_value][0]
           = ('THROUGH')
           - if @edit[@expkey][:val1][:date_format] == 's'
-            = text_field_tag("miq_date_1_1", (@edit[@expkey][:exp_value][1] ? @edit[@expkey][:exp_value][1].split(" ").first : ""),
-              :readonly                => "true",
-              :size                    => 10,
-              "data-miq_observe_date"  => {:interval => '.5', :url => url}.to_json)
+            = datepicker_input_tag("miq_date_1_1",
+              @edit[@expkey][:exp_value][1] ? @edit[@expkey][:exp_value][1].split(" ").first : "",
+              :readonly               => "true",
+              :size                   => 10,
+              "data-miq_observe_date" => {:interval => '.5', :url => url}.to_json)
             - if @edit[@expkey][:exp_value][1].to_s.include?(":")
               = select_tag("miq_time_1_1",
                 options_for_select(Array.new(24) { |i| ["#{i}:00", "#{i}:15", "#{i}:30", "#{i}:45"] }.flatten, @edit[@expkey][:exp_value][1].split(" ").last),
@@ -202,7 +204,7 @@
           - elsif [:date, :datetime].include?(@edit[@expkey][:val2][:type])
             - if @edit[@expkey][:val2][:date_format] == 's'
               - v = @edit[@expkey][:exp_cvalue][0] ? @edit[@expkey][:exp_cvalue][0].split(" ").first : ""
-              = text_field_tag("miq_date_2_0", v,
+              = datepicker_input_tag("miq_date_2_0", v,
                 :readonly               => "true",
                 :size                   => 10,
                 "data-miq_observe_date" => {:interval => '.5', :url => url}.to_json)
@@ -227,7 +229,7 @@
               = _('THROUGH')
               - if @edit[@expkey][:val2][:date_format] == 's'
                 - val = @edit[@expkey][:exp_cvalue][1] ? @edit[@expkey][:exp_cvalue][1].split(" ").first : ""
-                = text_field_tag("miq_date_2_1", val,
+                = datepicker_input_tag("miq_date_2_1", val,
                   :readonly               => "true",
                   :size                   => 10,
                   "data-miq_observe_date" => {:interval => '.5', :url => url}.to_json)

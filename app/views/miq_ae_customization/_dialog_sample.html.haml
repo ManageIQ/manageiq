@@ -46,8 +46,7 @@
                                 ManageIQ.calendar.calDateFrom = new Date("#{Time.now.in_time_zone(session[:user_tz]).strftime("%Y, %m, %d")}");
                             - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
                             - date_val = field.value ? field.value.split(" ") : ["#{t.month}/#{t.day}/#{t.year}"]
-                            = text_field_tag("miq_date_1",
-                              h(date_val[0]),
+                            = datepicker_input_tag("miq_date_1", h(date_val[0]),
                               :class    => "css1",
                               :readonly => "true")
                             - if field.type == "DialogFieldDateTimeControl"

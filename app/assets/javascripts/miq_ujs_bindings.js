@@ -104,7 +104,7 @@ $(document).ready(function () {
     miqJqueryRequest(url, options);
   });
 
-  $(document).on('change', '[data-miq_observe_date]', function() {
+  $(document).on('changeDate clearDate', '[data-miq_observe_date]', function() {
     miqSendDateRequest($(this));
   });
 
