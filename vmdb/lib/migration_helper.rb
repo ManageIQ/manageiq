@@ -49,16 +49,6 @@ module MigrationHelper
     self.send(meth, *args) if self.respond_to?(meth)
   end
 
-  def add_trigger(*args)
-    meth = "add_trigger_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
-  def drop_trigger(*args)
-    meth = "drop_trigger_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
   def add_table_inheritance(*args)
     meth = "add_table_inheritance_#{connection.adapter_name.downcase}"
     self.send(meth, *args)
@@ -246,14 +236,14 @@ module MigrationHelper
   # Adapter specific methods
   #
 
-  def add_trigger_postgresql(direction, table, name, body)
+  def add_trigger(direction, table, name, body)
     say_with_time("add_trigger(:#{direction}, :#{table}, :#{name})") do
-      add_trigger_function_postgresql(name, body)
-      add_trigger_hook_postgresql(direction, name, table, name)
+      add_trigger_function(name, body)
+      add_trigger_hook(direction, name, table, name)
     end
   end
 
-  def add_trigger_function_postgresql(name, body)
+  def add_trigger_function(name, body)
     connection.execute <<-EOSQL, 'Create trigger function'
       CREATE OR REPLACE FUNCTION #{name}()
       RETURNS TRIGGER AS $$
@@ -265,7 +255,7 @@ module MigrationHelper
     EOSQL
   end
 
-  def add_trigger_hook_postgresql(direction, name, table, function)
+  def add_trigger_hook(direction, name, table, function)
     connection.execute <<-EOSQL, 'Create trigger'
       CREATE TRIGGER #{name}
       #{direction.to_s.upcase} INSERT ON #{table}
@@ -273,7 +263,7 @@ module MigrationHelper
     EOSQL
   end
 
-  def drop_trigger_postgresql(table, name)
+  def drop_trigger(table, name)
     say_with_time("drop_trigger(:#{table}, :#{name})") do
       connection.execute("DROP TRIGGER IF EXISTS #{name} ON #{table};", 'Drop trigger')
       connection.execute("DROP FUNCTION IF EXISTS #{name}();", 'Drop trigger function')
