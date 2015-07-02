@@ -34,10 +34,10 @@
           - num_containers = @record.number_of(:containers)
           - if num_containers == 0
             %li.disabled
-              = link_to(_("%s (0)") % ui_lookup(:table => "containers"), "#")
+              = link_to(_("%s (0)") % ui_lookup(:tables => "containers"), "#")
           - else
             %li
-              = link_to(_("%s (%s)") % [ui_lookup(:table => "containers"), num_containers],
+              = link_to(_("%s (%s)") % [ui_lookup(:tables => "containers"), num_containers],
                   {:action => 'show', :id => @record, :display => 'containers'},
                   :title => _("View %s") % ui_lookup(:table => "containers"))
         - if role_allows(:feature => "container_node") && !@record.container_node.nil?
@@ -49,9 +49,9 @@
           - num_services = @record.number_of(:container_services)
           - if num_services == 0
             %li.disabled
-              = link_to(_("%s (0)") % ui_lookup(:table => "container_service"), "#")
+              = link_to(_("%s (0)") % ui_lookup(:tables => "container_service"), "#")
           - else
             %li
-              = link_to(_("%s (%s)") % [ui_lookup(:table => "container_service"), num_services],
+              = link_to(_("%s (%s)") % [ui_lookup(:tables => "container_service"), num_services],
                 {:action => 'show', :id => @record, :display => 'container_services'},
                   :title => _("Show Container Services"))

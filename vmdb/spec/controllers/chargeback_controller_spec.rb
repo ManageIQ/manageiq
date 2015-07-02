@@ -82,4 +82,18 @@ describe ChargebackController do
       expect(response.status).to eq(200)
     end
   end
+
+  render_views
+
+  context "#explorer" do
+    before(:each) do
+      session[:settings] = {}
+    end
+
+    it 'can render the explorer' do
+      get :explorer
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+  end
 end

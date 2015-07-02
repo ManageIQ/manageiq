@@ -161,12 +161,12 @@ module ApplicationController::MiqRequestMethods
   def get_template_kls
     # when clone/migrate buttons are pressed from a sub list view,
     # these buttons are only available on Infra side
-    return TemplateInfra if params[:prov_type]
+    return ManageIQ::Providers::InfraManager::Template if params[:prov_type]
     case request.parameters[:controller]
       when "vm_cloud"
-        return TemplateCloud
+        return ManageIQ::Providers::CloudManager::Template
       when "vm_infra"
-        return TemplateInfra
+        return ManageIQ::Providers::InfraManager::Template
       else
         return MiqTemplate
     end
@@ -933,7 +933,7 @@ module ApplicationController::MiqRequestMethods
   rescue => bang
     # only add this message if showing a list of Catalog items, show screen already handles this
     @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
-    $log.log_backtrace(bang)
+    _log.log_backtrace(bang)
     nil
   end
 

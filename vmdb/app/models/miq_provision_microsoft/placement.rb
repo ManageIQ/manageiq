@@ -15,19 +15,17 @@ module MiqProvisionMicrosoft::Placement
   private
 
   def manual_placement
-    log_header = "MIQ(#{self.class.name}.manual_placement)"
-    $log.info("#{log_header} Manual placement...")
+    _log.info("Manual placement...")
     return selected_placement_obj(:placement_host_name, Host),
            selected_placement_obj(:placement_ds_name, Storage)
   end
 
   def automatic_placement
-    log_header = "MIQ(#{self.class.name}.automatic_placement)"
     # get most suitable host and datastore for new VM
-    $log.info("#{log_header} Getting most suitable host and datastore for new VM from automate...")
+    _log.info("Getting most suitable host and datastore for new VM from automate...")
     host, datastore = get_most_suitable_host_and_storage
-    $log.info("#{log_header} Host Name: [#{host.name}] Id: [#{host.id}]") if host
-    $log.info("#{log_header} Datastore Name: [#{datastore.name}] ID : [#{datastore.id}]") if datastore
+    _log.info("Host Name: [#{host.name}] Id: [#{host.id}]") if host
+    _log.info("Datastore Name: [#{datastore.name}] ID : [#{datastore.id}]") if datastore
     host      ||= selected_placement_obj(:placement_host_name, Host)
     datastore ||= selected_placement_obj(:placement_ds_name, Storage)
     return host, datastore
@@ -36,8 +34,7 @@ module MiqProvisionMicrosoft::Placement
   def selected_placement_obj(key, klass)
     klass.where(:id => get_option(key)).first.tap do |obj|
       raise MiqException::MiqProvisionError, "Destination #{key} not provided" unless obj
-      log_header = "MIQ(#{self.class.name}.selected_placement_obj)"
-      $log.info("#{log_header} Using selected #{key} : [#{obj.name}] id : [#{obj.id}]")
+      _log.info("Using selected #{key} : [#{obj.name}] id : [#{obj.id}]")
     end
   end
 end

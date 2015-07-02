@@ -3,9 +3,9 @@ module EmsEvent::Parsers::KubernetesMixin
 
   included do
     def self.event_to_hash(event, ems_id = nil)
-      log_header = "MIQ(#{name}.event_to_hash) ems_id: [#{ems_id}]"
+      log_header = "ems_id: [#{ems_id}]"
 
-      $log.debug("#{log_header} event: [#{event.inspect}]")
+      _log.debug("#{log_header} event: [#{event.inspect}]")
 
       event_type = "#{event[:kind].upcase}_#{event[:reason].upcase}"
 

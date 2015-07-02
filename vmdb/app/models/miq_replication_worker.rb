@@ -62,12 +62,12 @@ class MiqReplicationWorker < MiqWorker
   def kill
     MiqProcess.get_child_pids(self.pid).each do |child_pid|
       begin
-        $log.info("MIQ(#{self.class.name}.kill) #{self.format_full_log_msg} -- killing child process: PID [#{child_pid}]")
+        _log.info("#{self.format_full_log_msg} -- killing child process: PID [#{child_pid}]")
         Process.kill(9, child_pid)
       rescue Errno::ESRCH
-        $log.info("MIQ(#{self.class.name}.kill) #{self.format_full_log_msg} -- child process with PID [#{child_pid}] has been killed")
+        _log.info("#{self.format_full_log_msg} -- child process with PID [#{child_pid}] has been killed")
       rescue => err
-        $log.info("MIQ(#{self.class.name}.kill) #{self.format_full_log_msg} -- child process with PID [#{child_pid}] has been killed, but with the following error: #{err}")
+        _log.info("#{self.format_full_log_msg} -- child process with PID [#{child_pid}] has been killed, but with the following error: #{err}")
       end
     end
 

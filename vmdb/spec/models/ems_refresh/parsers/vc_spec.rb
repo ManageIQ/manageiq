@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Parsers::Vc do
+describe ManageIQ::Providers::Vmware::InfraManager::RefreshParser do
   context ".vm_inv_to_hardware_hash" do
     context "properly calculates cores and sockets" do
       let(:inv) { {"summary" => {"config" => {"name" => "a"}}} }

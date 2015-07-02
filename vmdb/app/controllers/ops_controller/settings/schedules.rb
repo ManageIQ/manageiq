@@ -235,7 +235,8 @@ module OpsController::Settings::Schedules
     msg   = "[#{name}] Record #{add ? "added" : "updated"} ("
     event = "#{new_schedule.class.to_s.downcase}_record_#{add ? "add" : "update"}"
 
-    attribute_difference = old_schedule_attributes.diff(new_schedule.attributes)
+    attribute_difference = new_schedule.attributes.to_a - old_schedule_attributes.to_a
+    attribute_difference = Hash[*attribute_difference.flatten]
 
     difference_messages = []
 
@@ -382,8 +383,6 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_build_edit_screen
-    @in_a_form = true
-
     @vm_global_filters, @vm_my_filters                     = build_global_and_my_filters("Vm")
     @miq_template_global_filters, @miq_template_my_filters = build_global_and_my_filters("MiqTemplate")
     @host_global_filters, @host_my_filters                 = build_global_and_my_filters("Host")

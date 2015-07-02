@@ -1,4 +1,5 @@
 class MiqDbConfig
+  include Vmdb::Logging
   @@common_options = [
     # note sure if this is required (blank == localhost)
     {:name => :host,     :description => "Hostname",          :required => false},
@@ -82,7 +83,7 @@ class MiqDbConfig
     valid = self.valid?(:from_save => true)
     return @errors unless valid == true
 
-    $log.info("MIQ(DbConfig-save) Validation was successful, saving new settings: #{self.options.merge(@@pwd_mask).inspect}")
+    _log.info("Validation was successful, saving new settings: #{self.options.merge(@@pwd_mask).inspect}")
     vmdb_config = self.save_without_verify
     MiqRegion.sync_with_db_region(Vmdb::ConfigurationEncoder.stringify(vmdb_config.config))
     return true
@@ -202,36 +203,36 @@ class MiqDbConfig
 
   def verify_config(from_save = nil)
     curr = self.class.current
-    $log.info("MIQ(DbConfig-verify_config) Backing up current settings: #{curr.options.merge(@@pwd_mask).inspect}")
+    _log.info("Backing up current settings: #{curr.options.merge(@@pwd_mask).inspect}")
     same = self.options == curr.options
 
     unless same
-      $log.info("MIQ(DbConfig-verify_config) Saving new settings: #{self.options.merge(@@pwd_mask).inspect}")
+      _log.info("Saving new settings: #{self.options.merge(@@pwd_mask).inspect}")
       self.save_without_verify
     end
 
     @errors ||= ActiveModel::Errors.new(self)
     script = File.join(File.expand_path(Rails.root), "script/verify_db_config.rb")
     begin
-      $log.info("MIQ(DbConfig-verify_config) Testing new settings: #{self.options.merge(@@pwd_mask).inspect}")
+      _log.info("Testing new settings: #{self.options.merge(@@pwd_mask).inspect}")
       delete_io_files
       opt_file_for_conn_test(from_save) { MiqUtil.runcmd("ruby #{script}")}
       output, error_message = get_output_and_error
       output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exist?(IO_DOLLAR_STDOUT)
-      msg = "MIQ(DbConfig-verify_config) Output:\n#{output}"
+      msg = "Output:\n#{output}"
       msg << "\nError: #{error_message}" if error_message && error_message.length > 0
-      $log.info(msg)
+      _log.info(msg)
     rescue => err
       output, error_message = get_output_and_error
       error_message ||= err.message
       error_message = "of database settings not saved: #{error_message}"
-      $log.warn("MIQ(DbConfig-verify_config) Error: #{error_message}\nOutput:\n#{output}")
+      _log.warn("Error: #{error_message}\nOutput:\n#{output}")
       @errors.add(:configuration, error_message)
       return false
     ensure
       delete_io_files
       unless same
-        $log.info("MIQ(DbConfig-verify_config) Restoring original settings: #{curr.options.merge(@@pwd_mask).inspect}")
+        _log.info("Restoring original settings: #{curr.options.merge(@@pwd_mask).inspect}")
         curr.save_without_verify
       end
     end

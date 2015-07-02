@@ -26,9 +26,7 @@ class AutomationTask < MiqRequestTask
   end
 
   def after_ae_delivery(ae_result)
-    log_header = "MIQ(#{self.class.name}.after_ae_delivery)"
-
-    $log.info("#{log_header} ae_result=#{ae_result.inspect}")
+    _log.info("ae_result=#{ae_result.inspect}")
 
     return if ae_result == 'retry'
     return if self.miq_request.state == 'finished'

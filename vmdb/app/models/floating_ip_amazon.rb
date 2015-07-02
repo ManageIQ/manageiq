@@ -1,2 +1,0 @@
-class FloatingIpAmazon < FloatingIp
-end

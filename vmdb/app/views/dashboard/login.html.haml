@@ -1,3 +1,4 @@
+- auth_mode   = get_vmdb_config[:authentication][:mode]
 %span#badge
   %img{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("login-screen-logo.png")}"}
 .container
@@ -33,7 +34,7 @@
               :autocomplete => "off",
               :class        => "form-control")
 
-        - if User.mode == 'database'
+        - if auth_mode == 'database'
           = render :partial => 'login_more'
 
         -# Fields collected via JS functions, sent up with credentials
@@ -44,7 +45,7 @@
 
         .form-group
           .col-xs-8.col-sm-offset-2.col-sm-6.col-md-offset-3.col-md-6
-            - if User.mode == "database"
+            - if auth_mode == "database"
               #back_button{:style => "display:none"}
                 = link_to({:action => "authenticate", 
                            :button => "back", 
@@ -111,7 +112,6 @@
   miqClearTreeState();
 
 - auto_login  = session[:auto_login]  # Set to false via dashboard/logout
-- auth_mode   = get_vmdb_config[:authentication][:mode]
 - sso_enabled = get_vmdb_config[:authentication][:sso_enabled]
 - session[:auto_login] = true
 - if auth_mode == "httpd" && sso_enabled

@@ -351,148 +351,110 @@ class ServiceController < ApplicationController
     end
     h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
 
-    render :update do |page|
-      # Build hash of trees to replace and optional new node to be selected
-      trees.each do |tree_name, tree|
-        page.replace(
-          "#{tree_name}_tree_div",
+    presenter = ExplorerPresenter.new(
+      :active_tree => x_active_tree,
+    )
+    r = proc { |opts| render_to_string(opts) }
+
+    # Build hash of trees to replace and optional new node to be selected
+    trees.each do |t|
+      tree = trees[t]
+      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
           :partial => 'shared/tree',
-          :locals  => {
-            :tree => tree,
-            :name => tree.name
+          :locals  => {:tree => tree,
+                       :name => tree.name.to_s
           }
-        )
-      end
-      page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
-
-      # Replace right cell divs
-      if ["dialog_provision","ownership","retire","service_edit","tag"].include?(action)
-        page.replace_html("main_div", :partial=>partial)
-      elsif params[:display]
-        partial_locals = Hash.new
-        partial_locals[:controller] = "vm"
-        partial = "layouts/x_gtl"
-        if partial == "layouts/x_gtl"
-          partial_locals[:action_url] = @lastaction
-          page << "miq_parent_id = '#{@record.id}';"  # Set parent rec id for JS function miqGridSort to build URL
-          page << "miq_parent_class = '#{request[:controller]}';" # Set parent class for URL also
-        end
-        page.replace_html("main_div", :partial=>partial, :locals=>partial_locals)
-
-      elsif record_showing
-        page.replace_html("main_div", :partial=>"service/svcs_show", :locals=>{:controller=>"service"})
-      else
-        page.replace_html("main_div", :partial=>"layouts/x_gtl")
-        page.replace_html("paging_div", :partial=>"layouts/x_pagingcontrols")
-      end
-
-#     # Decide whether to show paging controls
-      if ["dialog_provision","ownership","retire","service_edit", "tag"].include?(action)
-        page << "dhxLayoutB.cells('a').collapse();"
-        page << "dhxLayoutB.cells('c').expand();" #incase it was collapsed for summary screen, and incase there were no records on show_list
-        page << javascript_show("form_buttons_div")
-        page << javascript_hide_if_exists("pc_div_1")
-        if action == "dialog_provision"
-          page.replace_html("form_buttons_div", :partial => "layouts/x_dialog_buttons", :locals => {:action_url =>action_url, :record_id => @edit[:rec_id]})
-        else
-          if action == "retire"
-            locals = {:action_url => action, :record_id => @record ? @record.id : nil}
-            locals[:no_reset] = true
-            locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
-            date_tz = Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")
-            page << "miq_cal_dateFrom = new Date('#{date_tz}');"
-            page << "miqBuildCalendar();"
-          elsif action == "tag"
-            locals = {:action_url => action_url}
-            locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
-            locals[:record_id] = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
-          else
-            locals = {:record_id => @edit[:rec_id], :action_url => action_url}
-            if action == "ownership"
-              locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
-            end
-          end
-          page.replace_html("form_buttons_div", :partial => "layouts/x_edit_buttons", :locals => locals)
-        end
-      elsif record_showing ||
-          (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
-        #Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
-        page << javascript_hide_if_exists("buttons_on")
-        page << "dhxLayoutB.cells('a').expand();"
-        page << "dhxLayoutB.cells('c').collapse();"
-      else
-        page << javascript_hide_if_exists("form_buttons_div")
-        page << javascript_show("pc_div_1")
-        page << "dhxLayoutB.cells('a').expand();"
-        page << "dhxLayoutB.cells('c').expand();"
-      end
-
-      page << "$('#main_div').scrollTop();"  # Scroll to top of main div
-
-      # Clear the JS gtl_list_grid var if changing to a type other than list
-      if @gtl_type && @gtl_type != "list"
-        page << "if (typeof gtl_list_grid != 'undefined') gtl_list_grid = undefined;"
-      end
-
-      # Rebuild the toolbars
-      if cb_buttons && cb_xml
-        page << javascript_for_toolbar_reload('custom_tb', cb_buttons, cb_xml)
-        page << javascript_show_if_exists("custom_buttons_div")
-      else
-        page << javascript_hide_if_exists("custom_buttons_div")
-      end
-
-      # Rebuild the toolbars
-      if h_buttons && h_xml
-        page << javascript_for_toolbar_reload('history_tb', h_buttons, h_xml)
-        page << javascript_show_if_exists("history_buttons_div")
-      else
-        page << javascript_hide_if_exists("history_buttons_div")
-      end
-
-      if v_buttons && v_xml
-        page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml)
-        page << javascript_show_if_exists("view_buttons_div")
-      else
-        page << javascript_hide_if_exists("view_buttons_div")
-      end
-
-      if c_buttons && c_xml
-        page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << javascript_show_if_exists("center_buttons_div")
-      else
-        page << javascript_hide_if_exists("center_buttons_div")
-      end
-
-      if h_buttons || c_buttons || v_buttons
-        page << "dhxLayoutB.cells('a').expand();"
-      else
-        page << "dhxLayoutB.cells('a').collapse();"
-      end
-
-      if @record
-        page << "miq_record_id = '#{@record.id}';"  # Create miq_record_id JS var, if @record is present
-      else
-        page << "miq_record_id = undefined;"  # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
-      end
-
-      if @record.kind_of?(Dialog)
-        @record.dialog_fields.each do |field|
-          if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field.type)
-            date_from = field.show_past_dates ? nil : Time.now.in_time_zone(session[:user_tz]).to_i * 1000
-            page << "miq_cal_dateFrom = new Date(#{date_from});"
-
-            page << 'miqBuildCalendar();'
-          end
-        end
-      end
-
-      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}','#{x_node}');" if params[:id]
-      page << "$('##{x_active_tree}box').dynatree('#{@in_a_form && @edit ? 'disable' : 'enable'}');"
-      dim_div = @in_a_form && @edit && @edit[:current] ? true : false
-      page << javascript_dim("#{x_active_tree}_div", dim_div)
-      page << "miqSparkle(false);"
+      ]
     end
+
+    presenter[:right_cell_text] = @right_cell_text
+
+    # Replace right cell divs
+    presenter[:update_partials][:main_div] =
+      if ["dialog_provision","ownership","retire","service_edit","tag"].include?(action)
+        r[:partial => partial]
+      elsif params[:display]
+        r[:partial => 'layouts/x_gtl', :locals => {:controller => "vm", :action_url => @lastaction}]
+      elsif record_showing
+        r[:partial => "service/svcs_show", :locals => {:controller => "service"}]
+      else
+        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        r[:partial => "layouts/x_gtl"]
+      end
+    if ["dialog_provision","ownership","retire","service_edit", "tag"].include?(action)
+      presenter[:set_visible_elements][:form_buttons_div] = true
+      presenter[:set_visible_elements][:pc_div_1] = false
+      presenter[:expand_collapse_cells][:a] = 'collapse'
+      presenter[:expand_collapse_cells][:c] = 'expand'
+      if action == "dialog_provision"
+        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons",
+                                                           :locals  => {:action_url => action_url,
+                                                                        :record_id  => @edit[:rec_id]}]
+      else
+        if action == "retire"
+          locals = {:action_url => action, :record_id => @record ? @record.id : nil}
+          locals[:no_reset] = true
+          locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
+          date_tz = Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")
+          presenter[:build_calendar] = {:date_from => date_tz}
+        elsif action == "tag"
+          locals = {:action_url => action_url}
+          locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
+          locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
+        else
+          locals = {:record_id => @edit[:rec_id], :action_url => action_url}
+          # need save/cancel buttons on edit screen even tho @record.id is not there
+          locals[:multi_record] = true if action == "ownership"
+        end
+        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+      end
+    elsif record_showing ||
+        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
+      # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box
+      # when trying to change a node on tree after saving a record
+      presenter[:set_visible_elements][:buttons_on] = false
+      presenter[:expand_collapse_cells][:a]         = 'expand'
+      presenter[:expand_collapse_cells][:c]         = 'collapse'
+    else
+      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter[:set_visible_elements][:pc_div_1]         = true
+      presenter[:expand_collapse_cells][:a]               = 'expand'
+      presenter[:expand_collapse_cells][:c]               = 'expand'
+    end
+
+    # Clear the JS gtl_list_grid var if changing to a type other than list
+    presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
+
+    if @record.kind_of?(Dialog)
+      @record.dialog_fields.each do |field|
+        if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field.type)
+          presenter[:build_calendar]  = {
+            :date_from => field.show_past_dates ? nil : Time.now.in_time_zone(session[:user_tz]).to_i * 1000
+          }
+        end
+      end
+    end
+
+    # Rebuild the toolbars
+    presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
+    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons  && c_xml
+    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons  && v_xml
+    presenter[:set_visible_elements][:custom_buttons_div]  = cb_buttons && cb_xml
+    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
+    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
+    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
+    presenter[:reload_toolbars][:custom]  = {:buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
+    
+    presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
+
+    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
+    presenter[:osf_node] = x_node
+    # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
+    presenter[:extra_js] << "miq_changes = undefined;"
+
+    # Render the JS responses to update the explorer screen
+    render :js => presenter.to_html
   end
 
   # Build a Services explorer tree

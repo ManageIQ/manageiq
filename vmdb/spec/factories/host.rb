@@ -50,11 +50,11 @@ FactoryGirl.define do
   end
 
   # Type specific subclasses
-  factory :host_vmware, :parent => :host, :class => "HostVmware" do
+  factory :host_vmware, :parent => :host, :class => "ManageIQ::Providers::Vmware::InfraManager::Host" do
     vmm_vendor "vmware"
   end
 
-  factory :host_vmware_esx, :parent => :host_vmware, :class => "HostVmwareEsx" do
+  factory :host_vmware_esx, :parent => :host_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::HostEsx" do
   end
 
   factory :host_redhat, :parent => :host, :class => "HostRedhat" do

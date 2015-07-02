@@ -1,7 +1,7 @@
 module Metric::CiMixin::Capture::Amazon
   def perf_collect_metrics_amazon(interval_name, start_time = nil, end_time = nil)
     target = "[#{self.class.name}], [#{self.id}], [#{self.name}]"
-    log_header = "MIQ(#{self.class.name}.perf_collect_metrics) [#{interval_name}] for: #{target}"
+    log_header = "[#{interval_name}] for: #{target}"
 
     end_time   ||= Time.now
     end_time     = end_time.utc
@@ -12,9 +12,9 @@ module Metric::CiMixin::Capture::Amazon
       perf_init_amazon
       perf_capture_data_amazon(start_time, end_time)
     rescue Exception => err
-      $log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
-      $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
-      $log.log_backtrace(err)
+      _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
+      _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
+      _log.log_backtrace(err)
       raise
     ensure
       perf_release_amazon

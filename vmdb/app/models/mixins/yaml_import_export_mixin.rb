@@ -6,7 +6,7 @@ module YAMLImportExportMixin
       begin
         klass = klass.is_a?(Class) ? klass : Object.const_get(klass)
       rescue => err
-        $log.error("MIQ(export_to_array) List: [#{list}], Class: [#{klass}] - #{err.message}")
+        _log.error("List: [#{list}], Class: [#{klass}] - #{err.message}")
         return []
       end
 
@@ -29,13 +29,11 @@ module YAMLImportExportMixin
     # @return [Array<Hash>, Array<String>] The array of objects to be imported, 
     #   and the array of importing status.
     def import(fd, options = {})
-      log_prefix = "MIQ(#{self.name}).#{__method__}"
-
       fd.rewind   # ensure to be at the beginning as the file is read multiple times
       begin
         reps = YAML.load(fd.read)
       rescue Psych::SyntaxError => err
-        $log.error("#{log_prefix} Failed to load from #{fd}: #{err}")
+        _log.error("Failed to load from #{fd}: #{err}")
         raise "Invalid YAML file"
       end
 

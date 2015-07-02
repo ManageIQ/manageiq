@@ -43,8 +43,7 @@ module DriftState::Purging
     end
 
     def purge_by_remaining(remaining, window = nil, &block)
-      log_header = "MIQ(#{self.name}.purge)"
-      $log.info("#{log_header} Purging drift states older than last #{remaining} results...")
+      _log.info("Purging drift states older than last #{remaining} results...")
 
       window ||= purge_window_size
       total = 0
@@ -54,7 +53,7 @@ module DriftState::Purging
         total += purge_in_batches(conditions, window, total, &block)
       end
 
-      $log.info("#{log_header} Purging drift states older than last #{remaining} results...Complete - Deleted #{total} records")
+      _log.info("Purging drift states older than last #{remaining} results...Complete - Deleted #{total} records")
     end
 
     def purge_counts_for_remaining(remaining)
@@ -82,14 +81,13 @@ module DriftState::Purging
     end
 
     def purge_by_date(older_than, window = nil, &block)
-      log_header = "MIQ(#{self.name}.purge)"
-      $log.info("#{log_header} Purging drift states older than [#{older_than}]...")
+      _log.info("Purging drift states older than [#{older_than}]...")
 
       window ||= purge_window_size
       conditions = self.arel_table[:timestamp].lt(older_than)
       total = purge_in_batches(conditions, window, &block)
 
-      $log.info("#{log_header} Purging drift states older than [#{older_than}]...Complete - Deleted #{total} records")
+      _log.info("Purging drift states older than [#{older_than}]...Complete - Deleted #{total} records")
     end
 
     #
@@ -103,7 +101,7 @@ module DriftState::Purging
       until (batch = query.dup.to_a).empty?
         ids = batch.collect(&:id)
 
-        $log.info("MIQ(#{self.name}.purge) Purging #{ids.length} drift states.")
+        _log.info("Purging #{ids.length} drift states.")
         count  = self.delete_all(:id => ids)
         total += count
 

@@ -23,16 +23,15 @@ module MiqServer::WorkerManagement::Monitor::Stop
   end
 
   def stop_worker(worker, monitor_status = :waiting_for_stop, monitor_reason = nil)
-    log_prefix = "MIQ(#{self.class.name}.stop_worker)"
     w = worker.kind_of?(Integer) ? self.miq_workers.find_by_id(worker) : worker
 
     if w.nil?
-      $log.warn("#{log_prefix} Cannot find Worker <#{w.inspect}>")
+      _log.warn("Cannot find Worker <#{w.inspect}>")
       return
     end
 
     msg = "Stopping #{w.format_full_log_msg}, status [#{w.status}]..."
-    $log.info("#{log_prefix} #{msg}")
+    _log.info(msg)
     MiqEvent.raise_evm_event_queue(self, "evm_worker_stop", :event_details => msg, :type => w.type)
 
     worker_set_monitor_status(w.pid, monitor_status)

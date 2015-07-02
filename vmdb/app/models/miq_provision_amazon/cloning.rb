@@ -37,20 +37,18 @@ module MiqProvisionAmazon::Cloning
   end
 
   def log_clone_options(clone_options)
-    log_header = "MIQ(#{self.class.name}#log_clone_options)"
-
-    $log.info("#{log_header} Provisioning [#{source.name}] to [#{dest_name}]")
-    $log.info("#{log_header} Source Template:                 [#{self[:options][:src_vm_id].last}]")
+    _log.info("Provisioning [#{source.name}] to [#{dest_name}]")
+    _log.info("Source Template:                 [#{self[:options][:src_vm_id].last}]")
     if dest_availability_zone
-      $log.info("#{log_header} Destination Availability Zone:   [#{dest_availability_zone.name} (#{dest_availability_zone.ems_ref})]")
+      _log.info("Destination Availability Zone:   [#{dest_availability_zone.name} (#{dest_availability_zone.ems_ref})]")
     else
-      $log.info("#{log_header} Destination Availability Zone:  Default selection from provider")
+      _log.info("Destination Availability Zone:  Default selection from provider")
     end
-    $log.info("#{log_header} Guest Access Key Pair:           [#{clone_options[:key_name].inspect}]")
-    $log.info("#{log_header} Security Group:                  [#{clone_options[:security_group_ids].inspect}]")
-    $log.info("#{log_header} Instance Type:                   [#{clone_options[:instance_type].inspect}]")
-    $log.info("#{log_header} Cloud Subnet:                    [#{clone_options[:subnet].inspect}]")
-    $log.info("#{log_header} Cloud Watch:                     [#{clone_options[:monitoring_enabled].inspect}]")
+    _log.info("Guest Access Key Pair:           [#{clone_options[:key_name].inspect}]")
+    _log.info("Security Group:                  [#{clone_options[:security_group_ids].inspect}]")
+    _log.info("Instance Type:                   [#{clone_options[:instance_type].inspect}]")
+    _log.info("Cloud Subnet:                    [#{clone_options[:subnet].inspect}]")
+    _log.info("Cloud Watch:                     [#{clone_options[:monitoring_enabled].inspect}]")
 
     dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
     dumpObj(options, "#{log_header} Prov Options:  ", $log, :info)

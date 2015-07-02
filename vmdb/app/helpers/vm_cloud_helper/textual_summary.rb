@@ -278,7 +278,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_key_pairs
-    return nil if @record.kind_of?(TemplateCloud)
+    return nil if @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
     h = {:label => "Key Pairs"}
     key_pairs = @record.key_pairs
     h[:value] = key_pairs.blank? ? "N/A" : key_pairs.collect(&:name).join(", ")

@@ -7,13 +7,11 @@ module MiqServer::ConfigurationManagement
 
   module ClassMethods
     def activate_configuration
-      log_prefix = "MIQ(MiqServer.activate_configuration)"
-
       cfg = VMDB::Config.new("vmdb")
       cfg.activate
 
       up_to_date, *message = SchemaMigration.up_to_date?
-      message.to_miq_a.each { |msg| $log.send(up_to_date ? :info : :warn, "#{log_prefix} #{msg}") }
+      message.to_miq_a.each { |msg| _log.send(up_to_date ? :info : :warn, msg) }
 
       VMDB::Config.refresh_configs
 
@@ -23,14 +21,18 @@ module MiqServer::ConfigurationManagement
 
   def get_config(typ = "vmdb", force_reload = false)
     VMDB::Config.invalidate(typ) if force_reload
-    if self.is_local?
-      cfg        = VMDB::Config.new(typ)
-    else
-      cfg        = VMDB::Config.new(typ, false)
-      c          = configurations.find_by_typ(typ)
-      cfg.config = c.settings unless c.nil?
+
+    config = nil
+
+    if self.is_remote?
+      record = configurations.find_by_typ(typ)
+      if record
+        config = VMDB::Config.new(typ, false)
+        config.config = record.settings
+      end
     end
-    cfg
+
+    config || VMDB::Config.new(typ)
   end
 
   def set_config(cfg)

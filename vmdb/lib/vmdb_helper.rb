@@ -15,7 +15,8 @@ require 'miq-exception'
 require 'miq-system'
 require 'miq-xml'
 
-$:.push(File.expand_path(File.join(Rails.root, %w{.. lib VMwareWebService})))
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VMwareWebService")
+
 require 'vmdb_extensions'
 require 'active_record_query_parts'
 

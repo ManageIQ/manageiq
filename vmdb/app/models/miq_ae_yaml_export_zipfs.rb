@@ -14,7 +14,7 @@ class MiqAeYamlExportZipfs < MiqAeYamlExport
     @zip_file.dir.mkdir(base_path) unless @zip_file.file.directory?(base_path)
     fq_filename = File.join(base_path, export_hash['output_filename'].downcase)
     @zip_file.file.open(fq_filename, "w") { |zipf| zipf.puts export_hash['export_data'] }
-    $log.info("#{self.class} writing zip fqfilename: #{fq_filename}")
+    _log.info("writing zip fqfilename: #{fq_filename}")
   end
 
   def export

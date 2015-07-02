@@ -22,12 +22,12 @@ describe MiqExpression do
 
     context "with :typ=>tag" do
       it "VmInfra" do
-        result = described_class.model_details("VmInfra", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager::Vm", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
         result.map(&:first).should include("Virtual Machine.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "VmCloud" do
-        result = described_class.model_details("VmCloud", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager::Vm", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
         result.map(&:first).should include("Instance.My Company Tags : Auto Approve - Max CPU")
         result.map(&:first).should_not include("Instance.VM and Instance.My Company Tags : Auto Approve - Max CPU")
       end
@@ -43,12 +43,12 @@ describe MiqExpression do
       end
 
       it "TemplateInfra" do
-        result = described_class.model_details("TemplateInfra", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager::Template", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
         result.map(&:first).should include("Template.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "TemplateCloud" do
-        result = described_class.model_details("TemplateCloud", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager::Template", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
         result.map(&:first).should include("Image.My Company Tags : Auto Approve - Max CPU")
       end
 
@@ -58,12 +58,12 @@ describe MiqExpression do
       end
 
       it "EmsInfra" do
-        result = described_class.model_details("EmsInfra", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::InfraManager", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
         result.map(&:first).should include("Infrastructure Provider.My Company Tags : Auto Approve - Max CPU")
       end
 
       it "EmsCloud" do
-        result = described_class.model_details("EmsCloud", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
+        result = described_class.model_details("ManageIQ::Providers::CloudManager", :typ=>"tag", :include_model=>true, :include_my_tags=>true, :userid=>"admin")
         result.map(&:first).should include("Cloud Provider.My Company Tags : Auto Approve - Max CPU")
       end
     end
@@ -87,12 +87,12 @@ describe MiqExpression do
   context ".build_relats" do
     it "AvailabilityZone" do
       result = described_class.build_relats("AvailabilityZone")
-      expect(result.fetch_path(:reflections, :ext_management_system, :parent, :class_path).split(".").last).to eq("ems_cloud")
+      expect(result.fetch_path(:reflections, :ext_management_system, :parent, :class_path).split(".").last).to eq("manageiq_providers_cloud_manager")
       expect(result.fetch_path(:reflections, :ext_management_system, :parent, :assoc_path).split(".").last).to eq("ext_management_system")
     end
 
     it "VmInfra" do
-      result = described_class.build_relats("VmInfra")
+      result = described_class.build_relats("ManageIQ::Providers::InfraManager::Vm")
       expect(result.fetch_path(:reflections, :evm_owner, :parent, :class_path).split(".").last).to eq("evm_owner")
       expect(result.fetch_path(:reflections, :evm_owner, :parent, :assoc_path).split(".").last).to eq("evm_owner")
       expect(result.fetch_path(:reflections, :linux_initprocesses, :parent, :class_path).split(".").last).to eq("linux_initprocesses")
@@ -107,7 +107,7 @@ describe MiqExpression do
 
     it "OrchestrationStack" do
       result = described_class.build_relats("OrchestrationStack")
-      expect(result.fetch_path(:reflections, :vms, :parent, :class_path).split(".").last).to eq("vm_clouds")
+      expect(result.fetch_path(:reflections, :vms, :parent, :class_path).split(".").last).to eq("manageiq_providers_cloud_manager_vms")
       expect(result.fetch_path(:reflections, :vms, :parent, :assoc_path).split(".").last).to eq("vms")
     end
   end

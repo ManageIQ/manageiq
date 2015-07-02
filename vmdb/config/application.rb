@@ -65,6 +65,7 @@ module Vmdb
     # ActiveSupport::Dependencies.autoload_paths empty, thus breaking autoloading.  Thus, in
     # order to prevent eager loading, but still populate autoload_paths, we copy them.
     config.autoload_paths += config.eager_load_paths
+    config.autoload_paths << Rails.root.join("app", "models", "aliases")
     config.autoload_paths << Rails.root.join("app", "models", "mixins")
     config.autoload_paths << Rails.root.join("app", "controllers", "mixins")
     config.autoload_paths << Rails.root.join("lib")
@@ -86,7 +87,7 @@ module Vmdb
     MiqPassword.key_root=Rails.root.join("certs")
 
     require 'vmdb/logging'
-    Vmdb::Logging.init
+    Vmdb::Loggers.init
     config.logger = Vmdb.rails_logger
     config.colorize_logging = false
 

@@ -1,9 +1,9 @@
 
 require "spec_helper"
 
-module MiqAeServiceEmsAmazonSpec
+module MiqAeServiceManageIQ_Providers_Amazon_CloudManagerSpec
   include MiqAeEngine
-  describe MiqAeMethodService::MiqAeServiceEmsAmazon do
+  describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Amazon_CloudManager do
 
     before(:each) do
       @ems                    = FactoryGirl.create(:ems_amazon)
@@ -11,7 +11,7 @@ module MiqAeServiceEmsAmazonSpec
       @availability_zone      = FactoryGirl.create(:availability_zone)
       @ems.availability_zones << @availability_zone
       @ems.flavors            << @flavor
-      @ems_amazon             = MiqAeMethodService::MiqAeServiceEmsAmazon.find(@ems.id)
+      @ems_amazon             = MiqAeMethodService::MiqAeServiceManageIQ_Providers_Amazon_CloudManager.find(@ems.id)
     end
 
     it "#flavors" do

@@ -1,4 +1,6 @@
 class MiqWidget::ContentGenerator
+  include Vmdb::Logging
+
   def generate(widget, klass, group_description, userids, timezones = nil)
     raise "Unsupported: #{klass}" if unsupported_class?(klass)
 
@@ -8,7 +10,7 @@ class MiqWidget::ContentGenerator
     if result.length != expected_count
       name = klass == "MiqGroup" ? "Group: #{group_description}" : userids.inspect
       error_message = "Expected #{expected_count} contents, received #{result.length} contents for #{name[0,256]}"
-      $log.error("#{log_prefix(widget)} #{error_message}")
+      _log.error("#{widget.log_prefix} #{error_message}")
       raise MiqException::Error, error_message
     end
 
@@ -41,15 +43,11 @@ class MiqWidget::ContentGenerator
     group = MiqGroup.where(:description => group_description).first
     if group.nil?
       error_message = "MiqGroup #{group_description} was not found"
-      $log.error("#{log_prefix(widget)} #{error_message}")
+      _log.error("#{widget.log_prefix} #{error_message}")
       raise MiqException::Error, error_message
     end
 
     group
-  end
-
-  def log_prefix(widget)
-    "MIQ(MiqWidget.generate_content) Widget: [#{widget.title}] ID: [#{widget.id}]"
   end
 
   def unsupported_class?(klass)

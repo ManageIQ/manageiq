@@ -53,11 +53,11 @@ class Job < ActiveRecord::Base
 
   def check_active_on_destroy
     if self.is_active?
-      $log.warn "MIQ(Job.destroy) Job is active, delete not allowed - guid: [#{self.guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{self.target_class}], target id: [#{self.target_id}], process type: [#{self.type}], agent class: [#{self.agent_class}], agent id: [#{self.agent_id}], zone: [#{self.zone}]"
+      _log.warn "Job is active, delete not allowed - guid: [#{self.guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{self.target_class}], target id: [#{self.target_id}], process type: [#{self.type}], agent class: [#{self.agent_class}], agent id: [#{self.agent_id}], zone: [#{self.zone}]"
       return false
     end
 
-    $log.info "MIQ(Job.destroy) Job deleted: guid: [#{self.guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{self.target_class}], target id: [#{self.target_id}], process type: [#{self.type}], agent class: [#{self.agent_class}], agent id: [#{self.agent_id}], zone: [#{self.zone}]"
+    _log.info "Job deleted: guid: [#{self.guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{self.target_class}], target id: [#{self.target_id}], process type: [#{self.type}], agent class: [#{self.agent_class}], agent id: [#{self.agent_id}], zone: [#{self.zone}]"
     return true
   end
 
@@ -67,11 +67,11 @@ class Job < ActiveRecord::Base
       unless job.nil?
         job.agent_state_update(state, message)
       else
-        $log.warn "MIQ(Job.agent_job_state): jobid: [#{jobid}] not found"
+        _log.warn "jobid: [#{jobid}] not found"
       end
     rescue => err
-      $log.warn "MIQ(Job.agent_job_state): Error '#{err.message}', updating jobid: [#{jobid}]"
-      $log.log_backtrace(err)
+      _log.warn "Error '#{err.message}', updating jobid: [#{jobid}]"
+      _log.log_backtrace(err)
     end
   end
 
@@ -92,7 +92,7 @@ class Job < ActiveRecord::Base
     # send a signal to job by guid
     return if guid.nil?
 
-    $log.info("MIQ(job-signal_by_taskid) Guid: [#{guid}], Signal: [#{signal}]")
+    _log.info("Guid: [#{guid}], Signal: [#{signal}]")
 
     job = self.find_by_guid(guid)
     return if job.nil?
@@ -100,7 +100,7 @@ class Job < ActiveRecord::Base
     begin
       job.signal(signal, *args)
     rescue => err
-      $log.info("MIQ(job-signal_by_taskid) Guid: [#{guid}], Signal: [#{signal}], unable to deliver signal, #{err}")
+      _log.info("Guid: [#{guid}], Signal: [#{signal}], unable to deliver signal, #{err}")
     end
   end
 
@@ -113,7 +113,7 @@ class Job < ActiveRecord::Base
   end
 
   def dispatch_start
-    $log.info "dispatch_start: Dispatch Status is 'pending'"
+    _log.info "Dispatch Status is 'pending'"
     self.dispatch_status = "pending"
     self.save
     @storage_dispatcher_process_finish_flag = false
@@ -121,7 +121,7 @@ class Job < ActiveRecord::Base
 
   def dispatch_finish
     return if @storage_dispatcher_process_finish_flag
-    $log.info "dispatch_finish: Dispatch Status is 'finished'"
+    _log.info "Dispatch Status is 'finished'"
     self.dispatch_status = "finished"
     self.save
     @storage_dispatcher_process_finish_flag = true
@@ -131,26 +131,26 @@ class Job < ActiveRecord::Base
     options = args.first || {}
     options[:message] ||= options[:userid] ? "Job canceled by user [#{options[:useid]}] on #{Time.now}" : "Job canceled on #{Time.now}"
     options[:status] ||= "ok"
-    $log.info "action-cancel: job canceling, #{options[:message]}"
+    _log.info "job canceling, #{options[:message]}"
     signal(:finish, options[:message], options[:status])
   end
 
   def process_error(*args)
     message, status = args
-    $log.error "action-error: #{message}"
+    _log.error "#{message}"
     set_status(message, status, 1)
   end
 
   def process_abort(*args)
     message, status = args
-    $log.error "action-abort: job aborting, #{message}"
+    _log.error "job aborting, #{message}"
     set_status(message, status, 1)
     signal(:finish, message, status)
   end
 
   def process_finished(*args)
     message, status = args
-    $log.info "action-finished: job finished, #{message}"
+    _log.info "job finished, #{message}"
     set_status(message, status)
     dispatch_finish
   end
@@ -165,7 +165,7 @@ class Job < ActiveRecord::Base
       :zone          => MiqServer.my_zone
     ) do |msg, find_options|
       message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
-      $log.warn("MIQ(job-check_jobs_for_timeout) Job: guid: [#{guid}], #{message}, aborting")
+      _log.warn("Job: guid: [#{guid}], #{message}, aborting")
       find_options.merge(:args => [:abort, message, "error"])
     end
   end
@@ -187,7 +187,7 @@ class Job < ActiveRecord::Base
           job.timeout!
         end
     rescue Exception
-      $log.error("MIQ(job-check_jobs_for_timeout) #{$!}")
+      _log.error("#{$!}")
     end
   end
 
@@ -216,7 +216,7 @@ class Job < ActiveRecord::Base
     job_guids = jobs.collect { |j| j[:taskid] }
     unless job_guids.empty?
       Job.find(:all, :conditions => ["state != 'finished' and guid in (?)", job_guids]).each do |job|
-        $log.debug("MIQ(job-extend_timeout) Job: guid: [#{job.guid}], job timeout extended due to work pending.")
+        _log.debug("Job: guid: [#{job.guid}], job timeout extended due to work pending.")
         job.updated_on = Time.now.utc
         job.save
       end
@@ -228,7 +228,7 @@ class Job < ActiveRecord::Base
   end
 
   def self.delete_older(ts, condition)
-    $log.info("MIQ(job-delete_older) Queuing deletion of jobs older than: #{ts}")
+    _log.info("Queuing deletion of jobs older than: #{ts}")
     cond = condition.blank? ? [] : [[condition].flatten.first, [condition].flatten[1..-1]]
     cond[0] ||= []
     cond[1] ||= []
@@ -237,7 +237,7 @@ class Job < ActiveRecord::Base
     cond[0].empty? ? cond[0] << ts_clause : cond[0] = "(#{cond[0]}) AND #{ts_clause}"
     cond[1] << ts.utc
 
-    $log.info("MIQ(job-delete_older) cond.flatten: #{cond.flatten.inspect}")
+    _log.info("cond.flatten: #{cond.flatten.inspect}")
     ids = self.where(cond.flatten).pluck(:id)
 
     self.delete_by_id(ids)
@@ -245,7 +245,7 @@ class Job < ActiveRecord::Base
 
   def self.delete_by_id(ids)
     ids = [ids].flatten
-    $log.info("MIQ(job-delete_by_id) Queuing deletion of jobs with the following ids: #{ids.inspect}")
+    _log.info("Queuing deletion of jobs with the following ids: #{ids.inspect}")
     MiqQueue.put(
       :class_name  => self.name,
       :method_name => "destroy",

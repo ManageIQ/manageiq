@@ -1,4 +1,4 @@
-class TemplateOpenstack < TemplateCloud
+class TemplateOpenstack < ManageIQ::Providers::CloudManager::Template
   belongs_to :cloud_tenant
 
   has_and_belongs_to_many :cloud_tenants,
@@ -15,10 +15,8 @@ class TemplateOpenstack < TemplateCloud
   def perform_metadata_scan(ost)
     require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackImage'
 
-    log_pref = "MIQ(#{self.class.name}##{__method__})"
-
     image_id = self.ems_ref
-    $log.debug "#{log_pref} image_id = #{image_id}"
+    _log.debug "image_id = #{image_id}"
     ost.scanTime = Time.now.utc unless ost.scanTime
 
     ems = self.ext_management_system

@@ -1,6 +1,5 @@
-require 'rubygems'
 require 'wbem'
-require 'NetappManageabilityAPI/NmaClient'
+require 'net_app_manageability'
 require 'miq_storage_defs'
 require 'cim_association_defs'
 require 'yaml'
@@ -80,9 +79,9 @@ module MiqOntapClient
       @username = username
       @password = password
 
-      @conn = NmaClient.new { |c|
+      @conn = NetAppManageability::Client.new { |c|
         c.server    = @server
-        c.auth_style  = NmaClient::NA_STYLE_LOGIN_PASSWORD
+        c.auth_style  = NetAppManageability::Client::NA_STYLE_LOGIN_PASSWORD
         c.username    = @username
         c.password    = @password
       }
@@ -218,7 +217,7 @@ module MiqOntapClient
         ifIdx = @conn.snmp_get { nma_object_id "#{IpAdEntIfIndex}.#{ip}"  }.value
         ifName  = @conn.snmp_get { nma_object_id "#{IfDescr}.#{ifIdx}"    }.value
 
-        ra << NmaHash.new {
+        ra << NetAppManageability::NAMHash.new {
           v4_primary_address  ip
           v6_primary_address  nil
           subnet_mask     netMask
@@ -723,11 +722,11 @@ module MiqOntapClient
       perf_obj_names = CLASS_TO_PERF_OBJECT_NAMES[className]
 
       ikeys = []
-      metricHash = NmaHash.new
+      metricHash = NetAppManageability::NAMHash.new
       metricHash.statistic_time = perfHash.statistic_time
       perf_obj_names.each do |pon|
         if (poh = perfHash[pon]).nil?
-          $log.warn "#{self.class}.updateMetricsForNode: perf object type #{pon} not found for #{node.obj_name_str}"
+          _log.warn "perf object type #{pon} not found for #{node.obj_name_str}"
           next
         end
         ikey = OBJECT_NAME_TO_INST_KEY[pon].call(node.type_spec_obj)
@@ -735,11 +734,11 @@ module MiqOntapClient
           metricHash[pon] = poh
         else
           if (iv = poh[ikey]).nil?
-            $log.warn "#{self.class}.updateMetricsForNode: perf instance #{ikey} not found for #{node.obj_name_str}"
+            _log.warn "perf instance #{ikey} not found for #{node.obj_name_str}"
             return
           end
           ikeys << ikey
-          metricHash[pon] = NmaHash.new { |h| h[ikey] = iv }
+          metricHash[pon] = NetAppManageability::NAMHash.new { |h| h[ikey] = iv }
         end
       end
 
@@ -791,10 +790,10 @@ module MiqOntapClient
     def getPerfData(objectname, counters=nil, instances=nil)
       rv = @conn.perf_object_get_instances_iter_start { |ah|
         ah.objectname = objectname
-        ah.counters   = NmaHash.new { |h|
+        ah.counters   = NetAppManageability::NAMHash.new { |h|
           h.counter = counters
         } unless counters.nil?
-        ah.instances  = NmaHash.new { |h|
+        ah.instances  = NetAppManageability::NAMHash.new { |h|
           h.instance  = instances
         } unless instances.nil?
       }
@@ -814,17 +813,17 @@ module MiqOntapClient
     end
 
     def collectPerf(statistic_time)
-      rh = NmaHash.new
+      rh = NetAppManageability::NAMHash.new
       rh.statistic_time = statistic_time
       PERF_OBJECT_NAMES.each do |pon|
         oh = rh[pon]
-        rh[pon] = oh = NmaHash.new unless oh
+        rh[pon] = oh = NetAppManageability::NAMHash.new unless oh
         ts, rv = getPerfData(pon, OBJECT_NAME_TO_COUNTERS[pon])
         rv.each do |inst|
-          oh[inst.name] = ih = NmaHash.new
+          oh[inst.name] = ih = NetAppManageability::NAMHash.new
           ih.timestamp = ts
           ih.name = inst.name
-          ih.counters = ch = NmaHash.new
+          ih.counters = ch = NetAppManageability::NAMHash.new
           inst.counters.counter_data.to_ary.each do |ce|
             ch[ce.name] = ce.value
           end
@@ -835,7 +834,7 @@ module MiqOntapClient
 
     def getCounterInfoForObj(objectname)
       rv = @conn.perf_object_counter_list_info(:objectname, objectname)
-      rh = NmaHash.new
+      rh = NetAppManageability::NAMHash.new
 
       rv.counters.counter_info.to_ary.each do |ci|
         rh[ci.name] = ci
@@ -844,7 +843,7 @@ module MiqOntapClient
     end
 
     def getCounterInfo
-      rh = NmaHash.new
+      rh = NetAppManageability::NAMHash.new
       PERF_OBJECT_NAMES.each { |on| rh[on] = getCounterInfoForObj(on) }
       return rh
     end
@@ -864,19 +863,21 @@ if $0 == "script/runner"
 
   require "util/MiqDumpObj"
 
-  class NmaHash
+module NetAppManageability
+  class NAMHash
     include MiqDumpObj
     def __dump
       dumpObj(self)
     end
   end
 
-  class NmaArray
+  class NAMArray
     include MiqDumpObj
     def __dump
       dumpObj(self)
     end
   end
+end
 
   begin
 

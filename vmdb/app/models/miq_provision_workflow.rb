@@ -4,7 +4,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def self.class_for_platform(platform)
-    "MiqProvision#{platform.titleize}Workflow".constantize
+    "MiqProvision#{platform.classify}Workflow".constantize
   end
 
   def self.class_for_source(source_or_id)

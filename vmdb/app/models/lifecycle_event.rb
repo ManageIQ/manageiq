@@ -4,7 +4,7 @@ class LifecycleEvent < ActiveRecord::Base
   include UuidMixin
 
   def self.create_event(vm, event_hash)
-    $log.debug("event_hash: #{event_hash.inspect}")
+    _log.debug("#{event_hash.inspect}")
 
     # Update the location if not provided by getting the value from the vm
     event_hash[:location] = vm.path if event_hash[:location].blank? && !vm.blank?

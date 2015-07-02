@@ -117,9 +117,9 @@ class MiqRegion < ActiveRecord::Base
     end
 
     unless self.exists?(:region => my_region)
-      $log.info("MIQ(MiqRegion.seed) Creating Region [#{my_region}]")
+      _log.info("Creating Region [#{my_region}]")
       self.create!(:region => my_region, :description => "Region #{my_region}")
-      $log.info("MIQ(MiqRegion.seed) Creating Region... Complete")
+      _log.info("Creating Region... Complete")
     end
   end
 
@@ -127,7 +127,7 @@ class MiqRegion < ActiveRecord::Base
     # Establish a connection to a different database so that we can sync with the new DB's region
     if config
       raise "Failed to retrieve database configuration for Rails.env [#{Rails.env}] in config with keys: #{config.keys.inspect}" unless config.has_key?(Rails.env)
-      $log.info("MIQ(#{self.name}.#{__method__}) establishing connection with #{config[Rails.env].merge("password" => "[PASSWORD]").inspect}")
+      _log.info("establishing connection with #{config[Rails.env].merge("password" => "[PASSWORD]").inspect}")
       MiqDatabase.establish_connection(config[Rails.env])
     end
 
@@ -137,7 +137,7 @@ class MiqRegion < ActiveRecord::Base
     my_region = self.my_region_number(true)
     region = db.region_id
     if region != my_region
-      $log.info("MIQ(MiqRegion.sync_new_db_region) Changing region file from: [#{my_region}] to: [#{region}]... restart to use new region")
+      _log.info("Changing region file from: [#{my_region}] to: [#{region}]... restart to use new region")
       MiqRegion.sync_region_to_file(region)
     end
   end
@@ -219,7 +219,7 @@ class MiqRegion < ActiveRecord::Base
 
   def self.atStartup
     region = self.my_region
-    prefix = "MIQ(MiqRegion.atStartup) Region: [#{region.region}], name: [#{region.name}]"
+    prefix = "#{_log.prefix} Region: [#{region.region}], name: [#{region.name}]"
     self.log_under_management(prefix)
     self.log_not_under_management(prefix)
   end

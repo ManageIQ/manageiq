@@ -291,7 +291,7 @@ class EmsClusterController < ApplicationController
     return label, condition, breadcrumb_suffix
   end
 
-  def breadcrumb_name
+  def breadcrumb_name(_model)
     title_for_clusters
   end
 

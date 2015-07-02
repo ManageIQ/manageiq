@@ -65,10 +65,10 @@ module MiqServer::UpdateManagement
   def register
     update_attributes(:upgrade_message => "registering")
     if LinuxAdmin::RegistrationSystem.registered?
-      $log.info("Appliance already registered")
+      _log.info("Appliance already registered")
       update_attributes(:rh_registered => true)
     else
-      $log.info("MIQ(#{self.class.name}##{__method__}) Registering appliance...")
+      _log.info("Registering appliance...")
       registration_type = MiqDatabase.first.registration_type
 
       registration_class =
@@ -94,10 +94,10 @@ module MiqServer::UpdateManagement
 
     if rh_registered?
       update_attributes(:upgrade_message => "registration successful")
-      $log.info("MIQ(#{self.class.name}##{__method__}) Registration Successful")
+      _log.info("Registration Successful")
     else
       update_attributes(:upgrade_message => "registration failed")
-      $log.error("MIQ(#{self.class.name}##{__method__}) Registration Failed")
+      _log.error("Registration Failed")
     end
 
     rh_registered?
@@ -105,14 +105,14 @@ module MiqServer::UpdateManagement
 
   def attach_products
     update_attributes(:upgrade_message => "attaching products")
-    $log.info("MIQ(#{self.class.name}##{__method__}) Attaching products based on installed certificates")
+    _log.info("Attaching products based on installed certificates")
     LinuxAdmin::RegistrationSystem.subscribe(assemble_registration_options)
   end
 
   def repos_enabled?
     enabled = LinuxAdmin::RegistrationSystem.enabled_repos
     if MiqDatabase.first.update_repo_names.all? { |desired| enabled.include?(desired) }
-      $log.info("MIQ(#{self.class.name}##{__method__}) Desired update repository is enabled")
+      _log.info("Desired update repository is enabled")
       update_attributes(:rh_subscribed => true, :upgrade_message => "registered")
       return true
     end
@@ -144,16 +144,16 @@ module MiqServer::UpdateManagement
   end
 
   def check_updates
-    $log.info("MIQ(#{self.class.name}##{__method__}) Checking for platform updates...")
+    _log.info("Checking for platform updates...")
     check_platform_updates
 
-    $log.info("MIQ(#{self.class.name}##{__method__}) Checking for postgres updates...")
+    _log.info("Checking for postgres updates...")
     check_postgres_updates
 
-    $log.info("MIQ(#{self.class.name}##{__method__}) Checking for CFME updates...")
+    _log.info("Checking for CFME updates...")
     check_cfme_version_available
 
-    $log.info("MIQ(#{self.class.name}##{__method__}) Checking for updates... Complete")
+    _log.info("Checking for updates... Complete")
   end
 
   def apply_updates
@@ -162,7 +162,7 @@ module MiqServer::UpdateManagement
 
     import_gpg_certificates
 
-    $log.info("MIQ(#{self.class.name}##{__method__}) Applying Updates, Services will restart when complete.")
+    _log.info("Applying Updates, Services will restart when complete.")
 
     # MiqDatabase.cfme_package_name will update only the CFME package tree.  (Won't disturb the database)
     # "" will update everything

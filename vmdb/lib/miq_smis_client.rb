@@ -123,12 +123,12 @@ module MiqSmisClient
 
             skip = false
             unless mei
-              $log.info "MiqSmisClient: (nil) skipping #{me}"
+              _log.info "(nil) skipping #{me}"
               skip = true
             else
               mei['OperationalStatus'].each do |os|
                 if os.value == OperationalStatusNoContact || os.value == OperationalStatusLostCommunication
-                  $log.info "MiqSmisClient: (OperationalStatus) skipping #{me}"
+                  _log.info "(OperationalStatus) skipping #{me}"
                   skip = true
                   break
                 end
@@ -138,7 +138,7 @@ module MiqSmisClient
               self.default_namespace = dnss
               next
             end
-            $log.info "MiqSmisClient: saving #{me}"
+            _log.info "saving #{me}"
 
             @meNameToProfile[me] = [ api['RegisteredName'] ]
             node, prior_status = newNode(nil, me, true)
@@ -225,7 +225,7 @@ module MiqSmisClient
         if (s = getAssociatedMetrics(objName))
           if s['StatisticTime'].to_i == 0
             nn = MiqCimInstance.find(node.id) # get the proper sub-class
-            $log.info "SmisClient.newNode: zero StatisticTime for (#{nn.class}, #{nn.id}, #{nn.evm_display_name})"
+            _log.info "zero StatisticTime for (#{nn.class}, #{nn.id}, #{nn.evm_display_name})"
           else
             metric = MiqCimMetric.new
             metric.metric_obj = s
@@ -453,7 +453,7 @@ module MiqSmisClient
       @sysNode.elements_with_metrics.each do |metricInstance|
         curMetricObj = @client.getAssociatedMetrics(metricInstance.obj_name)
         unless curMetricObj
-          $log.warn "SmisMetricManager.updateMetrics: Could not retrieve metrics for #{metricInstance.obj_name}"
+          _log.warn "Could not retrieve metrics for #{metricInstance.obj_name}"
           next
         end
 
@@ -477,7 +477,7 @@ module MiqSmisClient
         if deltaSecs <= 0.0
           name = metricInstance.evm_display_name
           zn = (deltaSecs == 0 ? "zero" : "negative")
-          $log.warn "SmisMetricManager.updateMetrics: #{zn} Delta Time for (#{metricInstance.class}, #{metricInstance.id}, #{name})"
+          _log.warn "#{zn} Delta Time for (#{metricInstance.class}, #{metricInstance.id}, #{name})"
           next
         end
 

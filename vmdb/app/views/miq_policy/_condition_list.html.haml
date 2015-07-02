@@ -3,9 +3,9 @@
     %div{:style => "padding-top: 10px;"}
     = render :partial => "layouts/flash_msg"
     - if @conditions.empty?
-      %div.note
-        - t = @search_text.blank? ? "" : _(" that match the entered search string")
-        = _("No %s Conditions are defined%s.") % [ui_lookup(:model => @sb[:folder]), t]
+      - t = @search_text.blank? ? "" : _(" that match the entered search string")
+      - msg = _("No %s Conditions are defined %s.") % [ui_lookup(:model => @sb[:folder]), t]
+      = render :partial => 'layouts/info_msg', :locals => {:message => msg}
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody

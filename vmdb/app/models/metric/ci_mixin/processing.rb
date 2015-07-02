@@ -2,14 +2,14 @@ module Metric::CiMixin::Processing
   def perf_process(interval_name, start_time, end_time, counters, counter_values)
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
 
-    log_header = "MIQ(#{self.class.name}.perf_process) [#{interval_name}]"
+    log_header = "[#{interval_name}]"
     log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
 
     interval_orig = interval_name
     interval_name = 'hourly' if interval_name == 'historical'
 
     affected_timestamps = []
-    $log.info("#{log_header} Processing for #{log_target}, for range [#{start_time} - #{end_time}]...")
+    _log.info("#{log_header} Processing for #{log_target}, for range [#{start_time} - #{end_time}]...")
 
     dummy, t = Benchmark.realtime_block(:total_time) do
       # Take the raw metrics and create hashes out of them
@@ -26,7 +26,7 @@ module Metric::CiMixin::Processing
 
             col = counter[:counter_key].to_sym
             unless Metric.column_names_symbols.include?(col)
-              $log.debug("#{log_header} Column [#{col}] is not defined, skipping")
+              _log.debug("#{log_header} Column [#{col}] is not defined, skipping")
               next
             end
 
@@ -51,7 +51,7 @@ module Metric::CiMixin::Processing
                 :timestamp             => ts
               })
             rt[col], message = Metric::Helper.normalize_value(value, counter)
-            $log.warn("#{log_header} #{log_target} Timestamp: [#{ts}], Column [#{col}]: '#{message}'") if message
+            _log.warn("#{log_header} #{log_target} Timestamp: [#{ts}], Column [#{col}]: '#{message}'") if message
           end
         end
       end
@@ -64,7 +64,7 @@ module Metric::CiMixin::Processing
       klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
       # Create or update the performance rows from the hashes
-      $log.info("#{log_header} Processing #{rt_rows.length} performance rows...")
+      _log.info("#{log_header} Processing #{rt_rows.length} performance rows...")
       a = u = 0
       rt_rows.each do |ts, v|
         perf = nil
@@ -88,12 +88,12 @@ module Metric::CiMixin::Processing
       end
 
       self.update_attribute(:last_perf_capture_on, end_time) if self.last_perf_capture_on.nil? || self.last_perf_capture_on.utc.iso8601 < end_time
-      $log.info("#{log_header} Processing #{rt_rows.length} performance rows...Complete - Added #{a} / Updated #{u}")
+      _log.info("#{log_header} Processing #{rt_rows.length} performance rows...Complete - Added #{a} / Updated #{u}")
 
       if interval_name == 'hourly'
-        $log.info("#{log_header} Adding missing timestamp intervals...")
+        _log.info("#{log_header} Adding missing timestamp intervals...")
         Benchmark.realtime_block(:add_missing_intervals) { Metric::Processing.add_missing_intervals(self, "hourly", start_time, end_time) }
-        $log.info("#{log_header} Adding missing timestamp intervals...Complete")
+        _log.info("#{log_header} Adding missing timestamp intervals...Complete")
       end
 
       # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
@@ -101,7 +101,7 @@ module Metric::CiMixin::Processing
 
       self.perf_rollup_to_parent(interval_orig, start_time, end_time)
     end
-    $log.info("#{log_header} Processing for #{log_target}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
+    _log.info("#{log_header} Processing for #{log_target}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
 
     return affected_timestamps
   end

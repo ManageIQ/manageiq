@@ -39,7 +39,7 @@ module MiqProvision::Pxe
     require 'ipaddr'
     Integer(32 - Math.log2((IPAddr.new(subnet_mask.to_s, Socket::AF_INET).to_i ^ 0xffffffff) + 1))
   rescue ArgumentError => err
-    $log.warn "MIQ(#{self.class.name}#cidr) Cannot convert subnet #{subnet_mask.inspect} to CIDR because #{err.message}"
+    _log.warn "Cannot convert subnet #{subnet_mask.inspect} to CIDR because #{err.message}"
     return nil
   end
 

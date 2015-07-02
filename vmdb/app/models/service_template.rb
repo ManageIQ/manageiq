@@ -19,7 +19,9 @@ class ServiceTemplate < ActiveRecord::Base
   belongs_to :service_template_catalog
 
   virtual_has_many :custom_buttons
-  virtual_column   :type_display, :type => :string
+  virtual_column   :type_display,                 :type => :string
+  virtual_column   :template_valid,               :type => :boolean
+  virtual_column   :template_valid_error_message, :type => :string
 
   default_value_for :service_type,  'unknown'
 
@@ -179,5 +181,21 @@ class ServiceTemplate < ActiveRecord::Base
 
   def self.default_retirement_entry_point
     '/Service/Retirement/StateMachines/ServiceRetirement/default'
+  end
+
+  def template_valid?
+    validate_template[:valid]
+  end
+  alias template_valid template_valid?
+
+  def template_valid_error_message
+    validate_template[:message]
+  end
+
+  def validate_template
+    service_resources.detect do |s|
+      r = s.resource
+      r.respond_to?(:template_valid?) && !r.template_valid?
+    end.try(:resource).try(:validate_template) || {:valid => true, :message => nil}
   end
 end

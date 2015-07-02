@@ -26,12 +26,12 @@ class ServerRole < ActiveRecord::Base
 
         rec = self.where(:name => action[:name]).first
         if rec.nil?
-          $log.info("MIQ(ServerRole.seed) Creating Server Role [#{action[:name]}]")
+          _log.info("Creating Server Role [#{action[:name]}]")
           rec = self.create(action)
         else
           rec.attributes = action
           if rec.changed?
-            $log.info("MIQ(ServerRole.seed) Updating Server Role [#{action[:name]}]")
+            _log.info("Updating Server Role [#{action[:name]}]")
             rec.save
           end
         end

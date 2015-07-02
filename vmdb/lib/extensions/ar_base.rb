@@ -1,5 +1,6 @@
 module ActiveRecord
   class Base
+    include Vmdb::Logging
 
     # Truncates the table.
     #
@@ -9,5 +10,6 @@ module ActiveRecord
     def self.truncate
       connection.truncate(table_name, "#{name} Truncate")
     end
+
   end
 end

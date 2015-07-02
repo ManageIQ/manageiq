@@ -45,7 +45,7 @@ describe ServiceTemplate do
 
   context "#stack_options" do
     before do
-      allow_any_instance_of(ServiceOrchestration::OptionConverterAmazon).to(
+      allow_any_instance_of(ManageIQ::Providers::Amazon::CloudManager::OrchestrationServiceOptionConverter).to(
         receive(:stack_create_options).and_return(dialog_options))
     end
 
@@ -74,7 +74,7 @@ describe ServiceTemplate do
 
   context '#deploy_orchestration_stack' do
     it 'creates a stack through cloud manager' do
-      EmsAmazon.any_instance.stub(:stack_create) do |name, template, opts|
+      ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_create) do |name, template, opts|
         name.should == 'test123'
         template.should be_kind_of OrchestrationTemplate
         opts.should be_kind_of Hash
@@ -85,7 +85,7 @@ describe ServiceTemplate do
 
     it 'always saves options even when the manager fails to create a stack' do
       ProvisionError = MiqException::MiqOrchestrationProvisionError
-      EmsAmazon.any_instance.stub(:stack_create).and_raise(ProvisionError, 'test failure')
+      ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_create).and_raise(ProvisionError, 'test failure')
 
       service_mix_dialog_setter.should_receive(:save_options)
       expect { service_mix_dialog_setter.deploy_orchestration_stack }.to raise_error(ProvisionError)
@@ -99,7 +99,7 @@ describe ServiceTemplate do
     end
 
     it 'returns current stack status through provider' do
-      EmsAmazon.any_instance.stub(:stack_status).and_return(['create_complete', 'no error'])
+      ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_status).and_return(['create_complete', 'no error'])
 
       service_mix_dialog_setter.options[:stack_ems_ref] = 'abc'  # simulate stack deployed
       status, message = service_mix_dialog_setter.orchestration_stack_status
@@ -109,7 +109,7 @@ describe ServiceTemplate do
     end
 
     it 'returns an error message when the provider fails to retrieve the status' do
-      EmsAmazon.any_instance.stub(:stack_status)
+      ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_status)
         .and_raise(MiqException::MiqOrchestrationStatusError, 'test failure')
 
       service_mix_dialog_setter.options[:stack_ems_ref] = 'abc'  # simulate stack deployed

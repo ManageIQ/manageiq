@@ -7,7 +7,7 @@
   - elsif item.kind_of?(ConfigurationManagerForeman)
     - img = "vendor-#{item.image_name}"
   - elsif item.kind_of?(ConfigurationProfile)
-    - img = controller.send(:list_row_image, nil, item.class.base_class.to_s.underscore, "configuration_profile", item.name)
+    - img = controller.send(:list_row_image, nil, item.class.base_class.to_s.underscore, "configuration_profile", item)
   - else
     - img = item.class.base_class.to_s.underscore
   .flobj

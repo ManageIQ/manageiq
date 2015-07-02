@@ -40,9 +40,7 @@ class PxeMenu < ActiveRecord::Base
   end
 
   def synchronize_images
-    log_header = "MIQ(#{self.class.name}#synchronize_images)"
-
-    $log.info("#{log_header} Synchronizing Menu Items in Menu [#{self.file_name}] on PXE Server [#{self.pxe_server.name}]")
+    _log.info("Synchronizing Menu Items in Menu [#{self.file_name}] on PXE Server [#{self.pxe_server.name}]")
 
     stats = {:adds => 0, :updates => 0, :deletes => 0}
     current = self.pxe_images.index_by(&:name)
@@ -53,7 +51,7 @@ class PxeMenu < ActiveRecord::Base
     incoming = items.group_by { |h| h[:label] }
     incoming.each_key do |name|
       array = incoming[name]
-      $log.warn("#{log_header} duplicate name <#{name}> in menu <#{self.file_name}> on PXE Server <#{self.pxe_server.name}>") if array.length > 1
+      _log.warn("duplicate name <#{name}> in menu <#{self.file_name}> on PXE Server <#{self.pxe_server.name}>") if array.length > 1
       incoming[name] = array.first
     end
 
@@ -71,6 +69,6 @@ class PxeMenu < ActiveRecord::Base
     stats[:deletes] = current.length
     self.pxe_images.delete(current.values)
 
-    $log.info("#{log_header} Synchronizing Menu Items in Menu [#{self.file_name}] on PXE Server [#{self.pxe_server.name}]... Complete - #{stats.inspect}")
+    _log.info("Synchronizing Menu Items in Menu [#{self.file_name}] on PXE Server [#{self.pxe_server.name}]... Complete - #{stats.inspect}")
   end
 end

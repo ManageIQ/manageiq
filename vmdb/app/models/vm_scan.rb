@@ -35,7 +35,7 @@ class VmScan < Job
   end
 
   def call_snapshot_create
-    $log.info "action-call_snapshot: Enter"
+    _log.info "Enter"
 
     begin
       vm = VmOrTemplate.find(self.target_id)
@@ -60,7 +60,7 @@ class VmScan < Job
       if vm.kind_of?(VmOpenstack)
         if vm.ext_management_system
           sn_description = snapshotDescription
-          $log.info("MIQ(scan-action-call_snapshot_create) Creating snapshot, description: [#{sn_description}]")
+          _log.info("Creating snapshot, description: [#{sn_description}]")
           user_event = start_user_event_message(vm, false)
           options[:snapshot] = :server
           begin
@@ -68,12 +68,12 @@ class VmScan < Job
             sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
           rescue Exception => err
             msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
-            $log.error("MIQ(scan-call_snapshot_create #{msg}")
+            _log.error("#{msg}")
             err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
             return
           end
           context[:snapshot_mor] = sn
-          $log.info("MIQ(scan-action-call_snapshot_create) Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
+          _log.info("Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
           set_status("Snapshot created: reference: [#{context[:snapshot_mor]}]")
           options[:snapshot] = :created
           options[:use_existing_snapshot] = true
@@ -87,14 +87,14 @@ class VmScan < Job
 
         # Check if the broker is available
         if MiqServer.use_broker_for_embedded_proxy? && !MiqVimBrokerWorker.available?
-          $log.warn("MIQ(scan-call_snapshot_create) VimBroker is not available")
+          _log.warn("VimBroker is not available")
           signal(:broker_unavailable)
           return
         end
 
         if proxy && proxy.forceVmScan
           self.options[:snapshot] = :smartProxy
-          $log.info("MIQ(scan-action-call_snapshot_create) Skipping snapshot creation, it will be performed by the SmartProxy")
+          _log.info("Skipping snapshot creation, it will be performed by the SmartProxy")
           self.context[:snapshot_mor] = self.options[:snapshot_description] = self.snapshotDescription("(embedded)")
           self.start_user_event_message(vm)
         else
@@ -102,7 +102,7 @@ class VmScan < Job
 
           if vm.ext_management_system
             sn_description = self.snapshotDescription()
-            $log.info("MIQ(scan-action-call_snapshot_create) Creating snapshot, description: [#{sn_description}]")
+            _log.info("Creating snapshot, description: [#{sn_description}]")
             user_event = self.start_user_event_message(vm, false)
             self.options[:snapshot] = :server
             begin
@@ -110,12 +110,12 @@ class VmScan < Job
               sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
             rescue Exception => err
               msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
-              $log.error("MIQ(scan-call_snapshot_create #{msg}")
+              _log.error("#{msg}")
               err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
               return
             end
             self.context[:snapshot_mor] = sn
-            $log.info("MIQ(scan-action-call_snapshot_create) Created snapshot, description: [#{sn_description}], reference: [#{self.context[:snapshot_mor]}]")
+            _log.info("Created snapshot, description: [#{sn_description}], reference: [#{self.context[:snapshot_mor]}]")
             set_status("Snapshot created: reference: [#{self.context[:snapshot_mor]}]")
             self.options[:snapshot] = :created
             self.options[:use_existing_snapshot] = true
@@ -129,7 +129,7 @@ class VmScan < Job
       end
       signal(:snapshot_complete)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       signal(:abort, err.message, "error")
       return
     rescue TimeoutError
@@ -137,18 +137,18 @@ class VmScan < Job
             when :smartProxy, :skipped then "Request to log snapshot user event with EMS timed out."
             else "Request to create snapshot timed out"
             end
-      $log.error("MIQ(scan-action-call_snapshot_create) #{msg}")
+      _log.error("#{msg}")
       signal(:abort, msg, "error")
     end
   end
 
   def wait_for_vim_broker
-    $log.info "action-wait_for_vim_broker: Enter"
+    _log.info "Enter"
     i = 0
     loop do
       set_status("Waiting for VimBroker to become available (#{i += 1})")
       sleep(60)
-      $log.info "Checking VimBroker connection status.  Count=[#{i}]"
+      _log.info "Checking VimBroker connection status.  Count=[#{i}]"
       break if MiqVimBrokerWorker.available?
     end
 
@@ -156,7 +156,7 @@ class VmScan < Job
   end
 
   def call_scan
-    $log.info "action-call_scan: Enter"
+    _log.info "Enter"
 
     begin
       host = Object.const_get(self.agent_class).find(self.agent_id)
@@ -175,16 +175,16 @@ class VmScan < Job
         end
       end
 
-      $log.info "MIQ(scan-action-call_scan) [#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" if self.agent_class == "MiqServer" && !ems_list[scan_ci_type].nil?
+      _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" if self.agent_class == "MiqServer" && !ems_list[scan_ci_type].nil?
       vm.scan_metadata(self.options[:categories], "taskid" => jobid, "host" => host, "args" => [YAML.dump(scan_args)])
     rescue TimeoutError
       message = "timed out attempting to scan, aborting"
-      $log.error("MIQ(scan-action-call_scan) #{message}")
+      _log.error("#{message}")
       signal(:abort, message, "error")
       return
     rescue => message
-      $log.error("MIQ(scan-action-call_scan) #{message}")
-      $log.error("MIQ(scan-action-call_scan) #{message.backtrace.join("\n")}")
+      _log.error("#{message}")
+      _log.error("#{message.backtrace.join("\n")}")
       signal(:abort, message.message, "error")
     end
 
@@ -221,7 +221,7 @@ class VmScan < Job
   end
 
   def call_snapshot_delete
-    $log.info "action-call_snapshot_delete: Enter"
+    _log.info "Enter"
 
     #TODO: remove snapshot here if Vm was running
     vm = VmOrTemplate.find(self.target_id)
@@ -236,7 +236,7 @@ class VmScan < Job
       end
 
       if vm.ext_management_system
-        $log.info("MIQ(scan-action-call_snapshot_delete) Deleting snapshot: reference: [#{mor}]")
+        _log.info("Deleting snapshot: reference: [#{mor}]")
         begin
           # TODO: should this logic be moved to a VM subclass implementation?
           #       or, make type-specific Job classes.
@@ -246,19 +246,19 @@ class VmScan < Job
             delete_snapshot(mor)
           end
         rescue => err
-          $log.error("MIQ(scan-action-call_snapshot_delete) #{err}")
+          _log.error("#{err}")
           return
         rescue TimeoutError
           msg = "Request to delete snapshot timed out"
-          $log.error("MIQ(scan-action-call_snapshot_create) #{msg}")
+          _log.error("#{msg}")
         end
 
         unless self.options[:snapshot] == :smartProxy
-          $log.info("MIQ(scan-action-call_snapshot_delete) Deleted snapshot: reference: [#{mor}]")
+          _log.info("Deleted snapshot: reference: [#{mor}]")
           set_status("Snapshot deleted: reference: [#{mor}]")
         end
       else
-        $log.error("MIQ(scan-action-call_snapshot_delete) Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot")
+        _log.error("Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot")
         set_status("No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping", "error", 1)
       end
     else
@@ -270,7 +270,7 @@ class VmScan < Job
   end
 
   def call_synchronize
-    $log.info "action-call_synchronize: Enter"
+    _log.info "Enter"
 
     begin
       host = Object.const_get(self.agent_class).find(self.agent_id)
@@ -281,11 +281,11 @@ class VmScan < Job
       )
     rescue TimeoutError
       message = "timed out attempting to synchronize, aborting"
-      $log.error("MIQ(scan-action-call_synchronize) #{message}")
+      _log.error("#{message}")
       signal(:abort, message, "error")
       return
     rescue => message
-      $log.error("MIQ(scan-action-call_synchronize) #{message}")
+      _log.error("#{message}")
       signal(:abort, message.message, "error")
       return
     end
@@ -295,22 +295,22 @@ class VmScan < Job
   end
 
   def synchronizing
-    $log.info "action-synchronizing"
+    _log.info "."
   end
 
   def scanning
-    $log.info "action-scanning" if self.context[:scan_attempted]
+    _log.info "." if self.context[:scan_attempted]
     self.context[:scan_attempted] = true
   end
 
   def process_data(*args)
-    $log.info "action-process_data: starting..."
+    _log.info "starting..."
 
     data = args.first
     set_status("Processing VM data")
 
     doc = MiqXml.load(data)
-    $log.info "action-process_data: Document=#{doc.root.name.downcase}"
+    _log.info "Document=#{doc.root.name.downcase}"
 
     if doc.root.name.downcase == "summary"
       doc.root.each_element do |s|
@@ -319,16 +319,16 @@ class VmScan < Job
           request_docs = []
           all_docs = []
           s.each_element { |e|
-            $log.info("action-process_data: Summary XML [#{e}]")
+            _log.info("Summary XML [#{e}]")
             request_docs << e.attributes['original_filename'] if e.attributes['items_total'] && e.attributes['items_total'].to_i.zero?
             all_docs << e.attributes['original_filename']
           }
           unless request_docs.empty? || (request_docs.length != all_docs.length)
             message = "scan operation yielded no data. aborting"
-            $log.error("action-process_data: #{message}")
+            _log.error("#{message}")
             signal(:abort, message, "error")
           else
-            $log.info("action-process_data: sending :finish")
+            _log.info("sending :finish")
             vm = VmOrTemplate.find_by_id(self.target_id)
 
             # Collect any VIM data here
@@ -337,8 +337,8 @@ class VmScan < Job
               begin
                 vm.refresh_on_scan
               rescue => err
-                $log.error("action-process_data: refreshing data from VIM: #{err.message}")
-                $log.log_backtrace(err)
+                _log.error("refreshing data from VIM: #{err.message}")
+                _log.log_backtrace(err)
               end
 
               vm.reload
@@ -348,8 +348,8 @@ class VmScan < Job
             begin
               vm.save_drift_state unless vm.nil?
             rescue => err
-              $log.error("action-process_data: saving VM drift state: #{err.message}")
-              $log.log_backtrace(err)
+              _log.error("saving VM drift state: #{err.message}")
+              _log.log_backtrace(err)
             end
             signal(:finish, "Process completed successfully", "ok")
 
@@ -358,11 +358,11 @@ class VmScan < Job
               inputs = {:vm => vm, :host => vm.host}
               MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "complete"}, inputs)
             rescue => err
-              $log.warn("action-process_data: #{err.message}, unable to raise policy event: [vm_scan_complete]")
+              _log.warn("#{err.message}, unable to raise policy event: [vm_scan_complete]")
             end
           end
         when "scanmetadata"
-          $log.info("action-process_data: sending :synchronize")
+          _log.info("sending :synchronize")
           vm = VmOrTemplate.find(self.options[:target_id])
           result = vm.save_scan_history(s.attributes.to_h(false).merge("taskid" => doc.root.attributes["taskid"])) if s.attributes
           if result.status_code == 16 #fatal error on proxy
@@ -371,7 +371,7 @@ class VmScan < Job
             signal(:snapshot_delete)
           end
         else
-          $log.info("action-process_data: no action taken")
+          _log.info("no action taken")
         end
       end
     end
@@ -394,8 +394,8 @@ class VmScan < Job
           raise "No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot"
         end
       rescue => err
-        $log.error("scan-delete_snapshot: #{err.message}")
-        $log.debug err.backtrace.join("\n")
+        _log.error("#{err.message}")
+        _log.debug err.backtrace.join("\n")
       end
     else
       self.end_user_event_message(vm)
@@ -457,12 +457,12 @@ class VmScan < Job
   def process_cancel(*args)
     options = args.first || {}
 
-    $log.info "action-cancel: job canceling, #{options[:message]}"
+    _log.info "job canceling, #{options[:message]}"
 
     begin
       delete_snapshot(self.context[:snapshot_mor])
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     super
@@ -478,7 +478,7 @@ class VmScan < Job
       vm = VmOrTemplate.find(self.target_id)
       EmsRefresh.refresh(vm)
       vm.reload
-      $log.info("MIQ(scan-action-call_scan) Retrying VM scan for [#{vm.name}] due to error [#{message}]")
+      _log.info("Retrying VM scan for [#{vm.name}] due to error [#{message}]")
       signal(:scan_retry)
     else
       signal(:abort, *args[0,2])
@@ -503,7 +503,7 @@ class VmScan < Job
         MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "abort"}, inputs)
       end
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     super
@@ -557,7 +557,7 @@ class VmScan < Job
       begin
         vm.ext_management_system.vm_log_user_event(vm, user_event)
       rescue => err
-        $log.warn "Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]"
+        _log.warn "Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]"
       end
     end
   end

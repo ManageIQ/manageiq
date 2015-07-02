@@ -51,7 +51,7 @@ module VmdbDatabase::Seeding
     end
 
     mine.each do |name, t|
-      $log.info("MIQ(VmdbDatabase#seed) Table <#{name}> is no longer in Database <#{self.name}> - deleting")
+      _log.info("Table <#{name}> is no longer in Database <#{self.name}> - deleting")
       t.destroy
     end
   end

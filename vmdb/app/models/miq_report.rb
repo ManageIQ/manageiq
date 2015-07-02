@@ -193,4 +193,13 @@ class MiqReport < ActiveRecord::Base
 
     self.send("#{key}=", value)
   end
+
+  def to_hash
+    keys = self.class.attr_accessor_that_yamls
+    keys.each_with_object(attributes.to_hash) { |k, h| h[k] = send(k) }
+  end
+
+  def self.from_hash(h)
+    new(h)
+  end
 end

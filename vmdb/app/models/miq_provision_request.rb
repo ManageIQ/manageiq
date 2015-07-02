@@ -120,4 +120,28 @@ class MiqProvisionRequest < MiqRequest
   def originating_controller
     "vm"
   end
+
+  def template_valid?
+    validate_template[:valid]
+  end
+
+  def template_valid_error_message
+    validate_template[:message]
+  end
+
+  def validate_template
+    return {:valid   => false,
+            :message => "Unable to find VM with Id [#{source_id}]"
+    } if source.nil?
+
+    return {:valid   => false,
+            :message => "VM/Template <#{source.name}> with Id <#{source.id}> is archived and cannot be used with provisioning."
+    } if source.archived?
+
+    return {:valid   => false,
+            :message => "VM/Template <#{source.name}> with Id <#{source.id}> is orphaned and cannot be used with provisioning."
+    } if source.orphaned?
+
+    {:valid => true, :message => nil}
+  end
 end

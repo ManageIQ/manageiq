@@ -1,6 +1,10 @@
 module ActiveRecord
   module ConnectionAdapters
     class PostgreSQLAdapter < AbstractAdapter
+      def database_size(name)
+        select_value("SELECT pg_database_size(#{quote(name)})").to_i
+      end
+
       def database_version
         select_value("SELECT version()")
       end

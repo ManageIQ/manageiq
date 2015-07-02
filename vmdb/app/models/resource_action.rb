@@ -42,8 +42,7 @@ class ResourceAction < ActiveRecord::Base
   end
 
   def deliver_to_automate_from_dialog(dialog_hash_values, target)
-    log_header = "MIQ(#{self.class.name}.deliver_to_automate_from_dialog)"
-    $log.info("#{log_header} Queuing <#{self.class.name}:#{self.id}> for <#{self.resource_type}:#{self.resource_id}>")
+    _log.info("Queuing <#{self.class.name}:#{self.id}> for <#{self.resource_type}:#{self.resource_id}>")
     zone = target.respond_to?(:my_zone) ? target.my_zone : nil
     MiqAeEngine.deliver_queue(prepare_automate_args(dialog_hash_values, target),
                               :zone     => zone,
@@ -52,8 +51,7 @@ class ResourceAction < ActiveRecord::Base
   end
 
   def deliver_to_automate_from_dialog_field(dialog_hash_values, target)
-    log_header = "MIQ(#{self.class.name}.deliver_to_automate_from_dialog_field)"
-    $log.info("#{log_header} Running <#{self.class.name}:#{self.id}> for <#{self.resource_type}:#{self.resource_id}>")
+    _log.info("Running <#{self.class.name}:#{self.id}> for <#{self.resource_type}:#{self.resource_id}>")
 
     MiqAeEngine.deliver(prepare_automate_args(dialog_hash_values, target))
   end

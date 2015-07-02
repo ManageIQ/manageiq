@@ -121,7 +121,7 @@ module Metric::Helper
             rec.resource_type == last_rec.resource_type &&
             rec.resource_id   == last_rec.resource_id   &&
             rec.timestamp     == last_rec.timestamp)
-        $log.warn("MIQ(#{self.name}.remove_duplicate_timestamps) Multiple rows found for the same timestamp: [#{rec.timestamp}], ids: [#{rec.id}, #{last_rec.id}], resource and id: [#{rec.resource_type}:#{rec.resource_id}]")
+        _log.warn("Multiple rows found for the same timestamp: [#{rec.timestamp}], ids: [#{rec.id}, #{last_rec.id}], resource and id: [#{rec.resource_type}:#{rec.resource_id}]")
 
         # Merge records with the same timestamp
         last_rec.attributes.each { |a| last_rec[a] ||= rec[a] }

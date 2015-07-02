@@ -106,6 +106,6 @@ class MiqCimAssociation < ActiveRecord::Base
       ids = aa.collect(&:id)
       total += self.delete_all(:id => ids)
     end
-    $log.info "MiqCimAssociation.cleanup_by_zone: deleted #{total} stale associations for zone id #{zoneId}"
+    _log.info "deleted #{total} stale associations for zone id #{zoneId}"
   end
 end

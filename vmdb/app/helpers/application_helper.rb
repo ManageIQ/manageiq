@@ -95,7 +95,7 @@ module ApplicationHelper
 
   def controller_to_model
     case self.class.model.to_s
-    when "TemplateCloud", "VmCloud", "TemplateInfra", "VmInfra"
+    when "ManageIQ::Providers::CloudManager::Template", "ManageIQ::Providers::CloudManager::Vm", "ManageIQ::Providers::InfraManager::Template", "ManageIQ::Providers::InfraManager::Vm"
       VmOrTemplate
     else
       self.class.model
@@ -106,8 +106,8 @@ module ApplicationHelper
     @id = to_cid(record.id)
     if record.kind_of?(VmOrTemplate)
       return url_for_db(controller_for_vm(model_for_vm(record)), action)
-    elsif record.kind_of?(ExtManagementSystem)
-      return url_for_db(model_for_ems(record).to_s, action)
+    elsif record.class.respond_to?(:db_name)
+      return url_for_db(record.class.db_name, action)
     else
       return url_for_db(record.class.base_class.to_s, action)
     end
@@ -708,7 +708,7 @@ module ApplicationHelper
 
     # hide timelines button for Amazon provider and instances
     # TODO: extend .is_available? support via refactoring task to cover this scenario
-    return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(EmsAmazon) || @record.kind_of?(VmAmazon))
+    return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(ManageIQ::Providers::Amazon::CloudManager) || @record.kind_of?(ManageIQ::Providers::Amazon::CloudManager::Vm))
 
     # hide edit button for MiqRequest instances of type ServiceReconfigureRequest/ServiceTemplateProvisionRequest
     # TODO: extend .is_available? support via refactoring task to cover this scenario
@@ -1338,7 +1338,7 @@ module ApplicationHelper
         return "No Capacity & Utilization data has been collected for this VM" unless @record.has_perf_data?
       when "instance_check_compliance", "vm_check_compliance"
         model = model_for_vm(@record).to_s
-        return "No Compliance Policies assigned to this #{model == "VmInfra" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
+        return "No Compliance Policies assigned to this #{model == "ManageIQ::Providers::InfraManager::Vm" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
       when "vm_collect_running_processes"
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"
@@ -1374,7 +1374,7 @@ module ApplicationHelper
         return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
       when "instance_retire", "instance_retire_now",
               "vm_retire", "vm_retire_now"
-        return "#{@record.kind_of?(VmCloud) ? "Instance" : "VM"} is already retired" if @record.retired == true
+        return "#{@record.kind_of?(ManageIQ::Providers::CloudManager::Vm) ? "Instance" : "VM"} is already retired" if @record.retired == true
       when "vm_scan", "instance_scan"
         return @record.active_proxy_error_message if !@record.has_active_proxy?
       when "vm_timeline"
@@ -1949,9 +1949,9 @@ module ApplicationHelper
   def center_toolbar_filename_explorer
     if @record && @button_group &&
         !["catalogs","chargeback","miq_capacity_utilization","miq_capacity_planning","services"].include?(@layout)
-      if @record.kind_of?(VmCloud)
+      if @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
         return "x_vm_cloud_center_tb"
-      elsif @record.kind_of?(TemplateCloud)
+      elsif @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
         return "x_template_cloud_center_tb"
       else
         return "x_#{@button_group}_center_tb"
@@ -2447,33 +2447,33 @@ module ApplicationHelper
 
   def model_for_ems(record)
     raise "Record is not ExtManagementSystem class" unless record.kind_of?(ExtManagementSystem)
-    if record.kind_of?(EmsCloud)
-      EmsCloud
+    if record.kind_of?(ManageIQ::Providers::CloudManager)
+      ManageIQ::Providers::CloudManager
     elsif record.kind_of?(EmsContainer)
       EmsContainer
     else
-      EmsInfra
+      ManageIQ::Providers::InfraManager
     end
   end
 
   def model_for_vm(record)
     raise "Record is not VmOrTemplate class" unless record.kind_of?(VmOrTemplate)
-    if record.kind_of?(VmCloud)
-      VmCloud
-    elsif record.kind_of?(VmInfra)
-      VmInfra
-    elsif record.kind_of?(TemplateCloud)
-      TemplateCloud
-    elsif record.kind_of?(TemplateInfra)
-      TemplateInfra
+    if record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
+      ManageIQ::Providers::CloudManager::Vm
+    elsif record.kind_of?(ManageIQ::Providers::InfraManager::Vm)
+      ManageIQ::Providers::InfraManager::Vm
+    elsif record.kind_of?(ManageIQ::Providers::CloudManager::Template)
+      ManageIQ::Providers::CloudManager::Template
+    elsif record.kind_of?(ManageIQ::Providers::InfraManager::Template)
+      ManageIQ::Providers::InfraManager::Template
     end
   end
 
   def controller_for_vm(model)
     case model.to_s
-      when "TemplateCloud", "VmCloud"
+      when "ManageIQ::Providers::CloudManager::Template", "ManageIQ::Providers::CloudManager::Vm"
         "vm_cloud"
-      when "TemplateInfra", "VmInfra"
+      when "ManageIQ::Providers::InfraManager::Template", "ManageIQ::Providers::InfraManager::Vm"
         "vm_infra"
       else
         "vm_or_template"
@@ -2483,15 +2483,15 @@ module ApplicationHelper
   def vm_model_from_active_tree(tree)
     case tree
       when :instances_filter_tree
-        "VmCloud"
+        "ManageIQ::Providers::CloudManager::Vm"
       when :images_filter_tree
-        "TemplateCloud"
+        "ManageIQ::Providers::CloudManager::Template"
       when :vms_filter_tree
-        "VmInfra"
+        "ManageIQ::Providers::InfraManager::Vm"
       when :templates_filter_tree
-        "TemplateInfra"
+        "ManageIQ::Providers::InfraManager::Template"
       when :instances_filter_tree
-        "VmCloud"
+        "ManageIQ::Providers::CloudManager::Vm"
       when :templates_images_filter_tree
         "MiqTemplate"
       when :vms_instances_filter_tree
@@ -2785,8 +2785,8 @@ module ApplicationHelper
   end
 
   def vm_quad_link_attributes(record)
-    attributes = vm_cloud_attributes(record) if record.kind_of?(VmCloud)
-    attributes ||= vm_infra_attributes(record) if record.kind_of?(VmInfra)
+    attributes = vm_cloud_attributes(record) if record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
+    attributes ||= vm_infra_attributes(record) if record.kind_of?(ManageIQ::Providers::InfraManager::Vm)
     attributes
   end
 
@@ -2900,17 +2900,37 @@ module ApplicationHelper
   end
 
   def patternfly_tab_header(id, active, &block)
-    content_tag(:li, :class => active == id ? 'active' : '') do
+    content_tag(:li, :class => active == id ? 'active' : '', :id => "#{id}_tab") do
       content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
         yield
       end
     end
   end
 
-  def patternfly_tab_content(id, active, &block)
-    content_tag(:div, :id => id, :class => "tab-pane#{active == id ? ' active' : ''}") do
+  def patternfly_tab_content(id, active, options = {}, &block)
+    content_tag(:div, :id => id, :class => "tab-pane #{options[:class]} #{active == id ? 'active' : ''}") do
       yield
     end
+  end
+
+  def controller_referrer?
+    controller_name == Rails.application.routes.recognize_path(request.referrer)[:controller]
+  end
+
+  def breadcrumb_prohibited_for_action?
+    !%w(accordion_select tree_select).include?(action_name)
+  end
+
+  def my_server_id
+    my_server.id
+  end
+
+  def my_zone_name
+    my_server.my_zone
+  end
+
+  def my_server
+    @my_server ||= MiqServer.my_server(true)
   end
 
   attr_reader :big_iframe

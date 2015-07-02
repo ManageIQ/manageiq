@@ -20,7 +20,7 @@ class ReplicationWorker < WorkerBase
     stop_rubyrep
 
     unless valid_destination_settings?
-      $log.error("#{self.log_prefix} Replication configuration is invalid.")
+      _log.error("#{self.log_prefix} Replication configuration is invalid.")
       return
     end
 
@@ -49,7 +49,7 @@ class ReplicationWorker < WorkerBase
     if @last_log_status.nil? || Time.now.utc > (@last_log_status + log_status_interval)
       @last_log_status = Time.now.utc
       count, added, deleted = @worker.class.check_status
-      $log.info("#{self.log_prefix} Replication Status: Current Backlog=[#{count}], Added=[#{added}], Deleted=[#{deleted}]")
+      _log.info("#{self.log_prefix} Replication Status: Current Backlog=[#{count}], Added=[#{added}], Deleted=[#{deleted}]")
     end
   end
 
@@ -59,7 +59,7 @@ class ReplicationWorker < WorkerBase
 
   def start_replicate
     unless self.valid_destination_settings?
-      $log.error("#{self.log_prefix} Replication configuration is invalid.")
+      _log.error("#{self.log_prefix} Replication configuration is invalid.")
       return
     end
 
@@ -71,7 +71,7 @@ class ReplicationWorker < WorkerBase
       @stdout.readpartial(1.megabyte).split("\n").each { |msg| $log.info  "rubyrep: #{msg.rstrip}" } if @stdout && @stdout.ready?
       @stderr.readpartial(1.megabyte).split("\n").each { |msg| $log.error "rubyrep: #{msg.rstrip}" } if @stderr && @stderr.ready?
     else
-      $log.info("#{self.log_prefix} Replicate Process gone. Restarting...")
+      _log.info("#{self.log_prefix} Replicate Process gone. Restarting...")
       start_replicate
     end
   end
@@ -82,26 +82,26 @@ class ReplicationWorker < WorkerBase
 
   def start_rubyrep(verb)
     raise "Cannot call start_rubyrep if a process already exists" if rubyrep_alive?
-    $log.info("#{self.log_prefix} Starting #{verb.to_s.humanize} Process")
+    _log.info("#{self.log_prefix} Starting #{verb.to_s.humanize} Process")
     start_rubyrep_process(verb)
-    $log.info("#{self.log_prefix} Started  #{verb.to_s.humanize} Process")
+    _log.info("#{self.log_prefix} Started  #{verb.to_s.humanize} Process")
   end
 
   def start_rubyrep_process(verb)
     begin
       @pid, @stdout, @stderr = rubyrep_run(verb)
     rescue => err
-      $log.error("#{self.log_prefix} #{verb.to_s.humanize} Process aborted because [#{err.message}]")
-      $log.log_backtrace(err)
+      _log.error("#{self.log_prefix} #{verb.to_s.humanize} Process aborted because [#{err.message}]")
+      _log.log_backtrace(err)
     end
   end
 
   def stop_rubyrep
     if rubyrep_alive?
-      $log.info("#{self.log_prefix} Shutting down replication process...pid=#{@pid}")
+      _log.info("#{self.log_prefix} Shutting down replication process...pid=#{@pid}")
       Process.kill("INT", @pid)
       wait_on_rubyrep
-      $log.info("#{self.log_prefix} Shutting down replication process...Complete")
+      _log.info("#{self.log_prefix} Shutting down replication process...Complete")
     end
   end
 
@@ -116,13 +116,13 @@ class ReplicationWorker < WorkerBase
         end
       end
     rescue TimeoutError
-      $log.info("#{self.log_prefix} Killing replication process with pid=#{@pid}")
+      _log.info("#{self.log_prefix} Killing replication process with pid=#{@pid}")
       Process.kill(9, @pid)
     end
 
     $log.info("#{self.log_prefix} rubyrep Waiting for process with pid=#{@pid}")
     pid, status = Process.waitpid2(@pid)
-    $log.info("#{self.log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
+    _log.info("#{self.log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
 
     @pid = @stdout = @stderr = nil
   end
@@ -133,7 +133,7 @@ class ReplicationWorker < WorkerBase
 
   def stop_active_replication_processes
     find_rubyrep_processes.each do |pid|
-      $log.info("#{self.log_prefix} Killing active replication process with pid=#{pid}")
+      _log.info("#{self.log_prefix} Killing active replication process with pid=#{pid}")
       Process.kill(9, pid)
     end
   end
@@ -150,7 +150,7 @@ class ReplicationWorker < WorkerBase
 
     if pid_state == :zombie
       pid, status = Process.waitpid2(@pid)
-      $log.info("#{self.log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
+      _log.info("#{self.log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
     end
 
     $log.info("#{self.log_prefix} rubyrep Process with pid=#{@pid} is not alive pid_state=#{pid_state}")
@@ -166,7 +166,7 @@ class ReplicationWorker < WorkerBase
     pid, stdin, stdout, stderr = Open4.popen4(*(MiqEnvironment::Command.rake_command).split, "evm:dbsync:#{verb}")
     stdin.close
 
-    $log.info("#{self.log_prefix} rubyrep process for verb=#{verb} started - pid=#{pid}")
+    _log.info("#{self.log_prefix} rubyrep process for verb=#{verb} started - pid=#{pid}")
     return pid, stdout, stderr
   end
 end

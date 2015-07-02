@@ -2,7 +2,7 @@
 
 // common function to pass ajax request to server
 function miqAjaxRequest(itemId, path) {
-  if (miqCheckForChanges() == false) {
+  if (!miqCheckForChanges()) {
     return false;
   } else {
     miqJqueryRequest(path + '?id=' + itemId, {beforeSend: true, complete: true});

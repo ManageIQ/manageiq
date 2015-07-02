@@ -11,7 +11,7 @@ describe VmScan do
 
       #TODO: We should be able to set values so we don't need to stub behavior
       MiqServer.any_instance.stub(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)
-      EmsVmware.any_instance.stub(:authentication_status_ok? => true)
+      ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_status_ok? => true)
       Vm.stub(:scan_via_ems? => true)
 
       @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @zone)

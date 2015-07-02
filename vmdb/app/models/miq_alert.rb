@@ -121,20 +121,19 @@ class MiqAlert < ActiveRecord::Base
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
 
-    log_header = "MIQ(#{self.name}.evaluate_alerts) [#{event}]"
+    log_header = "[#{event}]"
     log_target = "Target: #{target.class.name} Name: [#{target.name}], Id: [#{target.id}]"
-    $log.info("#{log_header} #{log_target}")
+    _log.info("#{log_header} #{log_target}")
 
     self.assigned_to_target(target, event).each do |a|
       next if a.postpone_evaluation?(target)
-      $log.info("#{log_header} #{log_target} Queuing evaluation of Alert: [#{a.description}]")
+      _log.info("#{log_header} #{log_target} Queuing evaluation of Alert: [#{a.description}]")
       a.evaluate_queue(target, inputs)
     end
   end
 
   def self.evaluate_hourly_timer
-    log_header = "MIQ(#{self.name}.evaluate_hourly_timer)"
-    $log.info("#{log_header} Starting")
+    _log.info("Starting")
 
     # Find all active alerts that respond to _hourly_timer_ that have assignments
     # assignments = MiqAlert.assignments(:conditions => ["enabled = ? and responds_to_events like ?", true, "%#{HOURLY_TIMER_EVENT}%"])
@@ -161,7 +160,7 @@ class MiqAlert < ActiveRecord::Base
     # Call evaluate_queue for each alert/target
     targets.uniq.each {|t| self.evaluate_alerts(t, HOURLY_TIMER_EVENT)}
 
-    $log.info("#{log_header} Complete")
+    _log.info("Complete")
   end
 
   def evaluate_queue(targets, inputs={})
@@ -186,7 +185,7 @@ class MiqAlert < ActiveRecord::Base
 
     statuses_not_expired = self.miq_alert_statuses.where("result = ? AND resource_type = ? AND resource_id = ? AND evaluated_on > ?", true, target.class.base_class.name, target.id, start_skipping_at).count
     if statuses_not_expired > 0
-      $log.info("MIQ(Alert-postpone_evaluation?): Skipping re-evaluation of Alert [#{self.description}] for target: [#{target.name}] with delay_next_evaluation [#{delay_next_evaluation}]")
+      _log.info("Skipping re-evaluation of Alert [#{self.description}] for target: [#{target.name}] with delay_next_evaluation [#{delay_next_evaluation}]")
       return true
     else
       return false
@@ -203,9 +202,9 @@ class MiqAlert < ActiveRecord::Base
 
     return if self.postpone_evaluation?(target)
 
-    $log.info("MIQ(Alert-evaluate): Evaluating Alert [#{self.description}] for target: [#{target.name}]...")
+    _log.info("Evaluating Alert [#{self.description}] for target: [#{target.name}]...")
     result = eval_expression(target, inputs)
-    $log.info("MIQ(Alert-evaluate): Evaluating Alert [#{self.description}] for target: [#{target.name}]... Result: [#{result}]")
+    _log.info("Evaluating Alert [#{self.description}] for target: [#{target.name}]... Result: [#{result}]")
 
     # If we are alerting, invoke the alert actions, then add a status so we can limit how often to alert
     # Otherwise, destroy this alert's statuses for our target
@@ -235,20 +234,20 @@ class MiqAlert < ActiveRecord::Base
           next if a == :delay_next_evaluation
           method = "invoke_#{a}"
           unless self.respond_to?(method)
-            $log.warn("MIQ(Alert-invoke_actions): Unknown notification type: [#{a}], skipping invocation")
+            _log.warn("Unknown notification type: [#{a}], skipping invocation")
             next
           end
           self.send(method, target, inputs)
         end
       end
     rescue MiqException::StopAction => err
-      $log.error("MIQ(Alert-invoke) Stopping action invocation [#{err.message}]")
+      _log.error("Stopping action invocation [#{err.message}]")
       return
     rescue MiqException::UnknownActionRc => err
-      $log.error("MIQ(Alert-invoke) Aborting action invocation [#{err.message}]")
+      _log.error("Aborting action invocation [#{err.message}]")
       raise
     rescue MiqException::PolicyPreventAction => err
-      $log.info "MIQ(Alert-invoke) [#{err}]"
+      _log.info "[#{err}]"
       raise
     end
   end
@@ -526,7 +525,7 @@ class MiqAlert < ActiveRecord::Base
     begin
       result = MiqAeEvent.eval_alert_expression(aevent)
     rescue => err
-      $log.error("MIQ(alert-evaluate_in_automate) #{err.message}")
+      _log.error("#{err.message}")
       result = false
     end
     return result
@@ -626,13 +625,13 @@ class MiqAlert < ActiveRecord::Base
 
     val_col_name = "#{options[:perf_column]}_#{typ}_over_time_period"
     unless target.respond_to?(val_col_name)
-      $log.warn("MIQ(alert-evaluate_method_operating_range_exceptions) Target class [#{target.class.name}] does not support operating range, skipping")
+      _log.warn("Target class [#{target.class.name}] does not support operating range, skipping")
       return false
     end
 
     eval_options[:value] = target.send(val_col_name)
     if eval_options[:value].nil?
-      $log.info("MIQ(alert-evaluate_method_operating_range_exceptions) Target class [#{target.class.name}] has no data for operating range column '#{val_col_name}', skipping")
+      _log.info("Target class [#{target.class.name}] has no data for operating range column '#{val_col_name}', skipping")
       return false
     end
 
@@ -654,7 +653,7 @@ class MiqAlert < ActiveRecord::Base
 
   def evaluate_performance(target, eval_options)
     unless target.respond_to?(:performances_maintains_value_for_duration?)
-      $log.warn("MIQ(alert-evaluate_method_hourly_performance) Target class [#{target.class.name}] does not support duration based evaluation, skipping")
+      _log.warn("Target class [#{target.class.name}] does not support duration based evaluation, skipping")
       return false
     end
 
@@ -720,7 +719,6 @@ class MiqAlert < ActiveRecord::Base
 
   def self.seed
     MiqRegion.my_region.lock do
-      log_prefix = "MIQ(MiqAlert.seed)"
       action_fixture_file = File.join(FIXTURE_DIR, "miq_alert_default_action.yml")
       if File.exist?(action_fixture_file)
         action_hash = YAML.load_file(action_fixture_file)
@@ -738,7 +736,7 @@ class MiqAlert < ActiveRecord::Base
           rec = self.find_by_guid(guid)
           if rec.nil?
             alert = self.create(alert_hash)
-            $log.info("#{log_prefix} Added sample Alert: #{alert.description}")
+            _log.info("Added sample Alert: #{alert.description}")
             if action
               alert.options = {:notifications => {action.action_type.to_sym => action.options}}
               alert.save

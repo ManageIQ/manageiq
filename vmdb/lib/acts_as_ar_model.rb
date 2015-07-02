@@ -7,11 +7,13 @@ class ActsAsArModelColumn < ActiveRecord::ConnectionAdapters::Column
 
     @options = options.kind_of?(Hash) ? options : {}
 
-    super(name.to_s, @options[:default], type.to_s)
+    super(name.to_s, @options[:default], VirtualColumn::TYPE_MAP[type.to_sym])
   end
 end
 
 class ActsAsArModel
+  include Vmdb::Logging
+
   def self.connection
     ActiveRecord::Base.connection
   end

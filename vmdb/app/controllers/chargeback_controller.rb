@@ -54,7 +54,7 @@ class ChargebackController < ApplicationController
       self.x_active_tree   ||= 'cb_reports_tree'
       self.x_active_accord ||= 'cb_reports'
       tree = cb_rpts_build_tree
-      cb_rpt_build_folder_nodes if tree.x_node == "root"
+      cb_rpt_build_folder_nodes if x_node(:cb_reports_tree) == "root"
       @built_trees << tree
       @accords << {:name => "cb_reports", :title => "Reports", :container => "cb_reports_tree_div"}
     end

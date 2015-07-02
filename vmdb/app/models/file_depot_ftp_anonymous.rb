@@ -4,7 +4,7 @@ class FileDepotFtpAnonymous < FileDepotFtp
   end
 
   def remove_file(_file)
-    $log.info("MIQ(#{self.class.name}##{__method__}) Removing log file not supported on this depot type")
+    _log.info("Removing log file not supported on this depot type")
   end
 
   private

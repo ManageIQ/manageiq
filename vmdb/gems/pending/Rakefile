@@ -1,0 +1,4 @@
+require_relative './bundler_setup'
+
+GEMS_PENDING_ROOT = File.expand_path(__dir__)
+Dir[File.join(GEMS_PENDING_ROOT, "lib/tasks/**/*.rake")].sort.each { |ext| load ext }

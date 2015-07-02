@@ -2,14 +2,14 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
   extend ActiveSupport::Concern
 
   MONITOR_CLASS_NAMES = %w{
-    MiqEmsMetricsCollectorWorkerAmazon
+    ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     MiqEmsMetricsCollectorWorkerRedhat
-    MiqEmsMetricsCollectorWorkerVmware
+    ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
     MiqEmsMetricsCollectorWorkerOpenstack
     MiqEmsMetricsCollectorWorkerOpenstackInfra
     MiqEmsMetricsProcessorWorker
     MiqEmsRefreshCoreWorker
-    MiqEmsRefreshWorkerAmazon
+    ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
     MiqEmsRefreshWorkerForemanConfiguration
     MiqEmsRefreshWorkerForemanProvisioning
     MiqEmsRefreshWorkerKubernetes
@@ -18,14 +18,14 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerRedhat
     MiqEmsRefreshWorkerOpenstack
     MiqEmsRefreshWorkerOpenstackInfra
-    MiqEmsRefreshWorkerVmware
-    MiqEventCatcherAmazon
+    ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
+    ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     MiqEventCatcherKubernetes
     MiqEventCatcherOpenshift
     MiqEventCatcherRedhat
     MiqEventCatcherOpenstack
     MiqEventCatcherOpenstackInfra
-    MiqEventCatcherVmware
+    ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     MiqEventHandler
     MiqGenericWorker
     MiqNetappRefreshWorker
@@ -40,13 +40,15 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqVimBrokerWorker
     MiqVmdbStorageBridgeWorker
     MiqWebServiceWorker
+    MiqAutomateWorker
   }.freeze
 
   MONITOR_CLASS_NAMES_IN_KILL_ORDER = %w{
+    MiqAutomateWorker
     MiqEmsMetricsProcessorWorker
-    MiqEmsMetricsCollectorWorkerAmazon
+    ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     MiqEmsMetricsCollectorWorkerRedhat
-    MiqEmsMetricsCollectorWorkerVmware
+    ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
     MiqEmsMetricsCollectorWorkerOpenstack
     MiqEmsMetricsCollectorWorkerOpenstackInfra
     MiqReportingWorker
@@ -58,7 +60,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqNetappRefreshWorker
     MiqVmdbStorageBridgeWorker
     MiqStorageMetricsCollectorWorker
-    MiqEmsRefreshWorkerAmazon
+    ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
     MiqEmsRefreshWorkerForemanConfiguration
     MiqEmsRefreshWorkerForemanProvisioning
     MiqEmsRefreshWorkerKubernetes
@@ -67,17 +69,17 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerRedhat
     MiqEmsRefreshWorkerOpenstack
     MiqEmsRefreshWorkerOpenstackInfra
-    MiqEmsRefreshWorkerVmware
+    ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     MiqScheduleWorker
     MiqPriorityWorker
     MiqWebServiceWorker
     MiqEmsRefreshCoreWorker
     MiqVimBrokerWorker
-    MiqEventCatcherVmware
+    ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     MiqEventCatcherRedhat
     MiqEventCatcherOpenstack
     MiqEventCatcherOpenstackInfra
-    MiqEventCatcherAmazon
+    ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     MiqEventCatcherKubernetes
     MiqEventCatcherOpenshift
     MiqUiWorker

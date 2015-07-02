@@ -103,7 +103,7 @@ module MiqAeServiceMiqProvisionCloudSpec
               result = ae_svc_prov.eligible_availability_zones
 
               result.should be_kind_of(Array)
-              result.first.class.should eq("MiqAeMethodService::MiqAeServiceAvailabilityZone#{t.camelize}".constantize)
+              result.first.class.should eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
             end
 
             it "#set_availability_zone" do
@@ -129,7 +129,7 @@ module MiqAeServiceMiqProvisionCloudSpec
               result = ae_svc_prov.eligible_instance_types
 
               result.should be_kind_of(Array)
-              result.first.class.should eq("MiqAeMethodService::MiqAeServiceFlavor#{t.camelize}".constantize)
+              result.first.class.should eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
             end
 
             it "#set_instance_type" do
@@ -155,7 +155,7 @@ module MiqAeServiceMiqProvisionCloudSpec
               result = ae_svc_prov.eligible_security_groups
 
               result.should be_kind_of(Array)
-              result.first.class.should eq("MiqAeMethodService::MiqAeServiceSecurityGroup#{t.camelize}".constantize)
+              result.first.class.should eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
             end
 
             it "#set_security_group" do
@@ -233,7 +233,7 @@ module MiqAeServiceMiqProvisionCloudSpec
               result = ae_svc_prov.eligible_floating_ip_addresses
 
               result.should be_kind_of(Array)
-              result.first.class.should eq("MiqAeMethodService::MiqAeServiceFloatingIp#{t.camelize}".constantize)
+              result.first.class.should eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
             end
 
             it "#set_floating_ip_address" do
@@ -259,7 +259,7 @@ module MiqAeServiceMiqProvisionCloudSpec
               result = ae_svc_prov.eligible_guest_access_key_pairs
 
               result.should be_kind_of(Array)
-              result.first.class.should eq("MiqAeMethodService::MiqAeServiceAuthKeyPair#{t.camelize}".constantize)
+              result.first.class.should eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
             end
 
             it "#set_guest_access_key_pairs" do

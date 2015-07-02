@@ -1,2 +1,2 @@
-class TemplateXen < TemplateInfra
+class TemplateXen < ManageIQ::Providers::InfraManager::Template
 end

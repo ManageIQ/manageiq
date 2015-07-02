@@ -10,7 +10,7 @@ describe Metric do
   end
 
   context "as vmware" do
-    require File.expand_path(File.join(File.dirname(__FILE__), %w{.. tools vim_data vim_data_test_helper}))
+    require Rails.root.join('spec/tools/vim_data/vim_data_test_helper')
 
     before :each do
       @ems_vmware = FactoryGirl.create(:ems_vmware, :zone => @zone)
@@ -42,12 +42,12 @@ describe Metric do
       context "executing capture_targets" do
         it "should find enabled targets" do
           targets = Metric::Targets.capture_targets
-          assert_infra_targets_enabled targets, %w{VmVmware Host Host VmVmware Host Storage}
+          assert_infra_targets_enabled targets, %w{ManageIQ::Providers::Vmware::InfraManager::Vm Host Host ManageIQ::Providers::Vmware::InfraManager::Vm Host Storage}
         end
 
         it "should find enabled targets excluding storages" do
           targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
-          assert_infra_targets_enabled targets, %w{VmVmware Host Host VmVmware Host}
+          assert_infra_targets_enabled targets, %w{ManageIQ::Providers::Vmware::InfraManager::Vm Host Host ManageIQ::Providers::Vmware::InfraManager::Vm Host}
         end
 
         it "should find enabled targets excluding vms" do
@@ -213,7 +213,7 @@ describe Metric do
           msg = MiqQueue.first
           msg.priority.should    == MiqQueue::HIGH_PRIORITY
           msg.instance_id.should == @vm.id
-          msg.class_name.should  == "VmVmware"
+          msg.class_name.should  == "ManageIQ::Providers::Vmware::InfraManager::Vm"
         end
 
         context "with an existing queue item at a lower priority" do
@@ -228,7 +228,7 @@ describe Metric do
             msg = MiqQueue.first
             msg.priority.should    == MiqQueue::HIGH_PRIORITY
             msg.instance_id.should == @vm.id
-            msg.class_name.should  == "VmVmware"
+            msg.class_name.should  == "ManageIQ::Providers::Vmware::InfraManager::Vm"
           end
         end
 
@@ -244,7 +244,7 @@ describe Metric do
             msg = MiqQueue.first
             msg.priority.should    == MiqQueue::MAX_PRIORITY
             msg.instance_id.should == @vm.id
-            msg.class_name.should  == "VmVmware"
+            msg.class_name.should  == "ManageIQ::Providers::Vmware::InfraManager::Vm"
           end
         end
       end
@@ -257,8 +257,8 @@ describe Metric do
 
       context "and a fake vim handle" do
         before(:each) do
-          EmsVmware.any_instance.stub(:connect).and_return(FakeMiqVimHandle.new)
-          EmsVmware.any_instance.stub(:disconnect).and_return(true)
+          ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:connect).and_return(FakeMiqVimHandle.new)
+          ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:disconnect).and_return(true)
         end
 
         context "collecting vm realtime data" do
@@ -377,11 +377,11 @@ describe Metric do
               q = q_all.shift
               q.class_name.should == "MiqAlert"
               q.method_name.should == "evaluate_alerts"
-              q.args.should == [["VmVmware", @vm.id], @alarm_event, {}]
+              q.args.should == [["ManageIQ::Providers::Vmware::InfraManager::Vm", @vm.id], @alarm_event, {}]
             else
               MiqQueue.count.should == 2
             end
-            assert_queue_items_are_hourly_rollups(q_all, "2011-08-12T20:00:00Z", @vm.id, "VmVmware")
+            assert_queue_items_are_hourly_rollups(q_all, "2011-08-12T20:00:00Z", @vm.id, "ManageIQ::Providers::Vmware::InfraManager::Vm")
           end
 
           it "should normalize percent values > 100 to 100" do
@@ -460,7 +460,7 @@ describe Metric do
         it "should have queued rollups for vm hourly" do
           q_all = MiqQueue.order(:id)
           q_all.length.should == 2
-          assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmVmware")
+          assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "ManageIQ::Providers::Vmware::InfraManager::Vm")
         end
 
         context "twice" do
@@ -471,7 +471,7 @@ describe Metric do
           it "should have one set of queued rollups" do
             q_all = MiqQueue.order(:id)
             q_all.length.should == 2
-            assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmVmware")
+            assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "ManageIQ::Providers::Vmware::InfraManager::Vm")
           end
         end
       end
@@ -712,7 +712,7 @@ describe Metric do
           end
 
           it "should calculate the correct right-size values" do
-            VmVmware.stub(:mem_recommendation_minimum).and_return(0)
+            ManageIQ::Providers::Vmware::InfraManager::Vm.stub(:mem_recommendation_minimum).and_return(0)
 
             @vm1.recommended_vcpus.should       == 1
             @vm1.recommended_mem.should         == 4

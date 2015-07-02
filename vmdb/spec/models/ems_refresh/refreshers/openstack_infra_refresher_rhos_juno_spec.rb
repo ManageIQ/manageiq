@@ -134,7 +134,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       :present         => true,
       :filename        => 'ata-QEMU_HARDDISK_QM00005',
       :location        => nil,
-      :size            => 44,
+      :size            => 47_244_640_256,
       :disk_type       => nil,
       :mode            => 'persistent')
   end

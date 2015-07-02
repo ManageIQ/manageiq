@@ -1,10 +1,6 @@
 #!/bin/bash
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 
-pushd /var/www/miq
-  rake build:shared_objects --trace
-popd
-
 pushd /var/www/miq/vmdb
   # rails compile tasks loads environment which needs above shared objects
   # There is no database.yml. Bogus database parameters appeases rails.

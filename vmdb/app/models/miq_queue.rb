@@ -18,7 +18,6 @@ require 'digest'
 #     get: Defaults to "generic" but is typically overridden by the caller (a worker)
 #
 class MiqQueue < ActiveRecord::Base
-
   belongs_to :handler, :polymorphic => true
 
   attr_accessor :last_exception
@@ -83,17 +82,6 @@ class MiqQueue < ActiveRecord::Base
 
   @@delete_command_file = File.join(File.expand_path(Rails.root), "miq_queue_delete_cmd_file")
 
-  LOG_PREFIX = {
-    :put       => "MIQ(MiqQueue.put)       ",
-    :get       => "MIQ(MiqQueue.get)       ",
-    :unget     => "MIQ(MiqQueue.unget)     ",
-    :deliver   => "MIQ(MiqQueue.deliver)   ",
-    :delivered => "MIQ(MiqQueue.delivered) ",
-    :callback  => "MIQ(MiqQueue.m_callback)",
-    :atStartup => "MIQ(MiqQueue.atStartup) ",
-    :dev_null  => "MIQ(MiqQueue.dev_null)  ",
-  }
-
   def data
     msg_data && Marshal.load(msg_data)
   end
@@ -107,14 +95,12 @@ class MiqQueue < ActiveRecord::Base
     data_size = data ? data.length : 0
 
     if (args_size + data_size) > 512
-      log_prefix = LOG_PREFIX[:put]
       culprit = caller.detect {|r| ! (r =~ /miq_queue.rb/) } || ""
-      $log.warn("#{log_prefix} #{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
+      _log.warn("#{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
     end
   end
 
   def self.put(options)
-    log_prefix = LOG_PREFIX[:put]
     options = options.reverse_merge(
       :args         => [],
       :miq_callback => {},
@@ -135,7 +121,7 @@ class MiqQueue < ActiveRecord::Base
 
     msg = MiqQueue.create!(options)
     msg.warn_if_large_payload
-    $log.info("#{log_prefix} #{MiqQueue.format_full_log_msg(msg)}")
+    _log.info("#{MiqQueue.format_full_log_msg(msg)}")
     msg
   end
 
@@ -159,7 +145,6 @@ class MiqQueue < ActiveRecord::Base
   EOL
 
   def self.get(options={})
-    log_prefix = LOG_PREFIX[:get]
     cond = [
       MIQ_QUEUE_GET,
       options[:zone] || MiqServer.my_server.zone.name,
@@ -178,7 +163,7 @@ class MiqQueue < ActiveRecord::Base
     result = nil
     msgs.each do |msg|
       begin
-        $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
+        _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
         w = MiqWorker.server_scope.where(:pid => Process.pid).first
         if w.nil?
           msg.update_attributes!(:state => STATE_DEQUEUE, :handler => MiqServer.my_server)
@@ -190,22 +175,21 @@ class MiqQueue < ActiveRecord::Base
       rescue ActiveRecord::StaleObjectError
         result = :stale
       rescue => err
-        raise "#{log_prefix} \"#{err}\" attempting to get next message"
+        raise "#{_log.prefix} \"#{err}\" attempting to get next message"
       end
     end
     if result == :stale
-      $log.debug("#{log_prefix} All #{prefetch_max_per_worker} messages stale, returning...")
+      _log.debug("All #{prefetch_max_per_worker} messages stale, returning...")
     else
-      $log.info("#{log_prefix} #{MiqQueue.format_full_log_msg(result)}, Dequeued in: [#{Time.now - result.created_on}] seconds")
+      _log.info("#{MiqQueue.format_full_log_msg(result)}, Dequeued in: [#{Time.now - result.created_on}] seconds")
     end
     result
   end
 
   def unget(options = {})
-    log_prefix = LOG_PREFIX[:unget]
     update_attributes!(options.merge(:state => STATE_READY, :handler => nil))
     @delivered_on = nil
-    $log.info("#{log_prefix} #{MiqQueue.format_full_log_msg(self)}, Requeued")
+    _log.info("#{MiqQueue.format_full_log_msg(self)}, Requeued")
   end
 
   MIQ_QUEUE_PEEK = <<-EOL
@@ -245,8 +229,6 @@ class MiqQueue < ActiveRecord::Base
   #   will allow multiple records found by the find options to further be
   #   searched against the args column, which is normally not easily searchable.
   def self.put_or_update(find_options)
-    log_prefix = LOG_PREFIX[:merge]
-
     find_options  = default_get_options(find_options)
     args_selector = find_options.delete(:args_selector)
     conds = find_options.dup
@@ -288,19 +270,19 @@ class MiqQueue < ActiveRecord::Base
         # Update the queue item based on the returned save options.
         unless save_options.nil?
           if save_options.key?(:msg_timeout) && (msg.msg_timeout > save_options[:msg_timeout])
-            $log.warn("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} ignoring request to decrease timeout from <#{msg.msg_timeout}> to <#{save_options[:msg_timeout]}>")
+            _log.warn("#{MiqQueue.format_short_log_msg(msg)} ignoring request to decrease timeout from <#{msg.msg_timeout}> to <#{save_options[:msg_timeout]}>")
             save_options.delete(:msg_timeout)
           end
 
           msg.update_attributes!(save_options)
-          $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.inspect}")
-          $log.info("#{log_prefix} #{MiqQueue.format_full_log_msg(msg)}, Requeued")
+          _log.info("#{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.inspect}")
+          _log.info("#{MiqQueue.format_full_log_msg(msg)}, Requeued")
         end
         break
       rescue ActiveRecord::StaleObjectError
-        $log.debug("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
+        _log.debug("#{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
       rescue => err
-        raise RuntimeError, "#{log_prefix} \"#{err}\" attempting merge next message", err.backtrace
+        raise RuntimeError, "#{_log.prefix} \"#{err}\" attempting merge next message", err.backtrace
       end
     end
     msg
@@ -323,10 +305,9 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def deliver(requester = nil)
-    log_prefix = LOG_PREFIX[:deliver]
     result = nil
     delivered_on
-    $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, Delivering...")
+    _log.info("#{MiqQueue.format_short_log_msg(self)}, Delivering...")
 
     begin
       raise MiqException::MiqQueueExpired if expires_on && (Time.now.utc > expires_on)
@@ -343,10 +324,10 @@ class MiqQueue < ActiveRecord::Base
             obj = obj.find(instance_id)
           end
         rescue ActiveRecord::RecordNotFound => err
-          $log.warn  "#{log_prefix} #{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.warn  "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
           return STATUS_WARN, nil, nil
         rescue => err
-          $log.error "#{log_prefix} #{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.error "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
           return STATUS_ERROR, err.message, nil
         end
       end
@@ -367,22 +348,22 @@ class MiqQueue < ActiveRecord::Base
       rescue MiqException::MiqQueueRetryLater => err
         self.unget(err.options)
         message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
-        $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, #{message}")
+        _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_RETRY
       rescue TimeoutError
         message = "timed out after #{Time.now - delivered_on} seconds.  Timeout threshold [#{msg_timeout}]"
-        $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, #{message}")
+        _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_TIMEOUT
       end
     rescue SystemExit
       raise
     rescue MiqException::MiqQueueExpired
       message = "Expired on [#{expires_on}]"
-      $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, #{message}")
+      _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
       status = STATUS_EXPIRED
     rescue Exception => error
-      $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
-      $log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
+      _log.error("#{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
+      _log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
       status = STATUS_ERROR
       self.last_exception = error
       message = error.message
@@ -397,12 +378,11 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def delivered(state, msg, result)
-    log_prefix = LOG_PREFIX[:delivered]
     self.state = state
-    $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - delivered_on}] seconds")
+    _log.info("#{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - delivered_on}] seconds")
     m_callback(msg, result) unless miq_callback.blank?
   rescue => err
-    $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, #{err.message}")
+    _log.error("#{MiqQueue.format_short_log_msg(self)}, #{err.message}")
   ensure
     destroy
   end
@@ -412,7 +392,6 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def m_callback(msg, result)
-    log_prefix = LOG_PREFIX[:callback]
     if miq_callback[:class_name] && miq_callback[:method_name]
       begin
         klass = miq_callback[:class_name].constantize
@@ -420,7 +399,7 @@ class MiqQueue < ActiveRecord::Base
           obj = klass.find(miq_callback[:instance_id])
         else
           obj = klass
-          $log.debug("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, Could not find callback in Class: [#{miq_callback[:class_name]}]") unless obj
+          _log.debug("#{MiqQueue.format_short_log_msg(self)}, Could not find callback in Class: [#{miq_callback[:class_name]}]") unless obj
         end
         if obj.respond_to?(miq_callback[:method_name])
           miq_callback[:args] ||= []
@@ -428,20 +407,20 @@ class MiqQueue < ActiveRecord::Base
           log_args = result.inspect
           log_args = "#{log_args[0, 500]}..." if log_args.length > 500  # Trim long results
           log_args = miq_callback[:args] + [state, msg, log_args]
-          $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, Invoking Callback with args: #{log_args.inspect}") unless obj.nil?
+          _log.info("#{MiqQueue.format_short_log_msg(self)}, Invoking Callback with args: #{log_args.inspect}") unless obj.nil?
 
           cb_args = miq_callback[:args] + [state, msg, result]
           cb_args << self if cb_args.length == (obj.method(miq_callback[:method_name]).arity - 1)
           obj.send(miq_callback[:method_name], *cb_args)
         else
-          $log.warn("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, Instance: [#{obj}], does not respond to Method: [#{miq_callback[:method_name]}], skipping")
+          _log.warn("#{MiqQueue.format_short_log_msg(self)}, Instance: [#{obj}], does not respond to Method: [#{miq_callback[:method_name]}], skipping")
         end
       rescue => err
-        $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}: #{err}")
-        $log.debug("#{log_prefix} backtrace: #{err.backtrace.join("\n")}")
+        _log.error("#{MiqQueue.format_short_log_msg(self)}: #{err}")
+        _log.debug("backtrace: #{err.backtrace.join("\n")}")
       end
     else
-      $log.warn "#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping"
+      _log.warn "#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping"
     end
   end
 
@@ -468,37 +447,36 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def self.dev_null(id, data)
-    msg = "#{LOG_PREFIX[:dev_null]} Id: #{id} delivered, data: \"#{data}\""
-    $log.info msg
+    msg = "Id: #{id} delivered, data: \"#{data}\""
+    _log.info msg
     puts      msg
   end
 
   def self.atStartup
-    log_prefix = LOG_PREFIX[:atStartup]
     if File.exist?(@@delete_command_file)
       options = YAML.load(ERB.new(File.read(@@delete_command_file)).result)
       if options[:required_role].nil? || MiqServer.my_server(true).has_active_role?(options[:required_role])
-        $log.info("#{log_prefix} Executing: [#{@@delete_command_file}], Options: [#{options.inspect}]")
+        _log.info("Executing: [#{@@delete_command_file}], Options: [#{options.inspect}]")
         deleted = delete_all(options[:conditions])
-        $log.info("#{log_prefix} Executing: [#{@@delete_command_file}] complete, #{deleted} rows deleted")
+        _log.info("Executing: [#{@@delete_command_file}] complete, #{deleted} rows deleted")
       end
       File.delete(@@delete_command_file)
     end
 
-    $log.info("#{log_prefix} Cleaning up queue messages...")
+    _log.info("Cleaning up queue messages...")
     MiqQueue.where(:state => STATE_DEQUEUE).each do |message|
       if message.handler.nil?
-        $log.warn("#{log_prefix} Cleaning message in dequeue state without worker: #{format_full_log_msg(message)}")
+        _log.warn("Cleaning message in dequeue state without worker: #{format_full_log_msg(message)}")
       else
         handler_server = message.handler            if message.handler.kind_of?(MiqServer)
         handler_server = message.handler.miq_server if message.handler.kind_of?(MiqWorker)
         next unless handler_server == MiqServer.my_server
 
-        $log.warn("#{log_prefix} Cleaning message: #{format_full_log_msg(message)}")
+        _log.warn("Cleaning message: #{format_full_log_msg(message)}")
       end
       message.update_attributes(:state => STATE_ERROR) rescue nil
     end
-    $log.info("#{log_prefix} Cleaning up queue messages... Complete")
+    _log.info("Cleaning up queue messages... Complete")
   end
 
   def self.format_full_log_msg(msg)

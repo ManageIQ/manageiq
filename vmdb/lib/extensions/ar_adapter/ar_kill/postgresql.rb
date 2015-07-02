@@ -1,6 +1,7 @@
 module ActiveRecord
   module ConnectionAdapters
     class PostgreSQLAdapter < AbstractAdapter
+      include Vmdb::Logging
 
       def kill(pid)
         pid_numeric = pid.to_i
@@ -18,9 +19,9 @@ module ActiveRecord
 
         item = data.first
         if item.nil?
-          $log.info "MIQ(#{adapter_name}.kill) SPID=[#{pid_numeric}] not found" if $log
+          _log.info "SPID=[#{pid_numeric}] not found"
         else
-          $log.info "MIQ(#{adapter_name}.kill) Sending CANCEL Request for SPID=[#{pid_numeric}], age=[#{item['age']}], query=[#{item['query']}]" if $log
+          _log.info "Sending CANCEL Request for SPID=[#{pid_numeric}], age=[#{item['age']}], query=[#{item['query']}]"
           result = select(<<-SQL, "Cancel SPID")
                                 SELECT pg_cancel_backend(#{pid_numeric})
                                 FROM   pg_stat_activity

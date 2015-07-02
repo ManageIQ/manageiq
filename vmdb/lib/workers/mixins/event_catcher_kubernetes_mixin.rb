@@ -16,9 +16,9 @@ module EventCatcherKubernetesMixin
   def stop_event_monitor
     @event_monitor_handle.stop unless @event_monitor_handle.nil?
   rescue => err
-    $log.error("#{log_prefix} Event Monitor error [#{err.message}]")
-    $log.error("#{log_prefix} Error details: [#{err.details}]")
-    $log.log_backtrace(err)
+    _log.error("#{log_prefix} Event Monitor error [#{err.message}]")
+    _log.error("#{log_prefix} Error details: [#{err.details}]")
+    _log.log_backtrace(err)
   ensure
     reset_event_monitor_handle
   end
@@ -51,7 +51,7 @@ module EventCatcherKubernetesMixin
     supported_reasons = @enabled_events[event_data[:kind]] || []
 
     unless supported_reasons.include?(event_data[:reason])
-      $log.debug "#{log_prefix} Discarding event [#{event_data}]"
+      _log.debug "#{log_prefix} Discarding event [#{event_data}]"
       return
     end
 
@@ -64,7 +64,7 @@ module EventCatcherKubernetesMixin
       event_data[:container_group_name] = event_data[:name]
     end
 
-    $log.info "#{log_prefix} Queuing event [#{event_data}]"
+    _log.info "#{log_prefix} Queuing event [#{event_data}]"
     EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
   end
 end

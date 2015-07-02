@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :zone do
-    name        "default"
-    description "Default Zone"
+    sequence(:name)        { |n| Zone.exists? ? "Zone #{n}" : "default" }
+    sequence(:description) { |n| Zone.exists? ? "Zone #{n}" : "Default Zone" }
   end
 end

@@ -47,14 +47,14 @@ class Authentication < ActiveRecord::Base
   #   error (for unpredictable errors)
   def validation_successful
     new_status = :valid
-    $log.info("MIQ(Authentication.validation_successful) [#{self.resource_type}] [#{self.resource_id}], previously valid/invalid on: [#{self.last_valid_on}]/[#{self.last_invalid_on}], previous status: [#{self.status}]") if self.status != new_status.to_s
+    _log.info("[#{self.resource_type}] [#{self.resource_id}], previously valid/invalid on: [#{self.last_valid_on}]/[#{self.last_invalid_on}], previous status: [#{self.status}]") if self.status != new_status.to_s
     self.update_attributes(:status => new_status.to_s.capitalize, :status_details => 'Ok', :last_valid_on => Time.now.utc)
     self.raise_event(new_status)
   end
 
   def validation_failed(status=:unreachable, message = nil )
     message ||= ERRORS[status]
-    $log.warn("MIQ(Authentication.validation_failed) [#{self.resource_type}] [#{self.resource_id}], previously valid on: #{self.last_valid_on}, previous status: [#{self.status}]")
+    _log.warn("[#{self.resource_type}] [#{self.resource_id}], previously valid on: #{self.last_valid_on}, previous status: [#{self.status}]")
     self.update_attributes(:status => status.to_s.capitalize, :status_details => message.to_s, :last_invalid_on => Time.now.utc)
     self.raise_event(status, message)
   end
@@ -78,7 +78,7 @@ class Authentication < ActiveRecord::Base
 
   def after_authentication_changed
     return unless @auth_changed
-    $log.info("MIQ(Authentication.after_authentication_changed) [#{self.resource_type}] [#{self.resource_id}], previously valid on: [#{self.last_valid_on}]")
+    _log.info("[#{self.resource_type}] [#{self.resource_id}], previously valid on: [#{self.last_valid_on}]")
 
     self.raise_event(:changed)
 

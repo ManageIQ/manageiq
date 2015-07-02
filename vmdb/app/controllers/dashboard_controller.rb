@@ -707,11 +707,6 @@ class DashboardController < ApplicationController
     session['referer'] = referer
 
     self.current_user = db_user
-    self.current_group = db_user.try(:current_group)
-
-    # Save an array of groups this user is eligible for, if more than 1
-    eligible_groups = db_user ? db_user.miq_groups.sort_by { |g| g.description.downcase } : []
-    session[:eligible_groups] = eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
 
     # Clear instance vars that end up in the session
     @sb = @edit = @view = @settings = @lastaction = @perf_options = @assign = nil

@@ -61,8 +61,10 @@ module OpsController::Settings::Common
 
         if @smtp_auth_none
           page << javascript_disable_field('smtp_user_name')
+          page << javascript_disable_field('smtp_password')
         else
           page << javascript_enable_field('smtp_user_name')
+          page << javascript_enable_field('smtp_password')
         end
 
         if @changed || @login_text_changed
@@ -212,7 +214,7 @@ module OpsController::Settings::Common
       @validate.config[category] = @edit[:new][category].dup
     end
 
-    valid, errors = AmazonAuth.validate_connection(@validate.config)
+    valid, errors = Authenticator::Amazon.validate_connection(@validate.config)
     if valid
       add_flash(_("Amazon Settings validation was successful"))
     else
@@ -325,6 +327,11 @@ module OpsController::Settings::Common
       w = wb[:web_service_worker]
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :count, w[:count].to_i)
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
+
+      w = qwb[:automate_worker]
+      @edit[:new].set_worker_setting!(:MiqAutomateWorker, :count, w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqAutomateWorker, :memory_threshold,
+                                      human_size_to_rails_method(w[:memory_threshold]))
 
       @update = MiqServer.find(@sb[:selected_server_id]).get_config
     when "settings_database"                                      # Database tab
@@ -689,6 +696,10 @@ module OpsController::Settings::Common
       w[:count] = params[:web_service_worker_count].to_i if params[:web_service_worker_count]
       w[:memory_threshold] = params[:web_service_worker_threshold] if params[:web_service_worker_threshold]
 
+      w = qwb[:automate_worker]
+      w[:count] = params[:automate_worker_count].to_i if params[:automate_worker_count]
+      w[:memory_threshold] = params[:automate_worker_threshold] if params[:automate_worker_threshold]
+
       set_workers_verify_status
     when "settings_database"                                        # database tab
       new[:name] = params[:production_dbtype]  if params[:production_dbtype]
@@ -750,11 +761,11 @@ module OpsController::Settings::Common
 
   def settings_set_form_vars
     if x_node.split("-").first == "z"
-      @right_cell_text = @sb[:my_zone] == @selected_zone.name ?
+      @right_cell_text = my_zone_name == @selected_zone.name ?
         _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)} :
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)}
     else
-      @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
+      @right_cell_text = my_server_id == @sb[:selected_server_id] ?
         _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)} :
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)}
     end
@@ -762,7 +773,6 @@ module OpsController::Settings::Common
     when "settings_server"                                  # Server Settings tab
       @edit = Hash.new
       @edit[:new] = Hash.new
-      @edit[:current] = Hash.new
       @edit[:current] = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
       @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
       @sb[:new_to] = nil
@@ -897,6 +907,13 @@ module OpsController::Settings::Common
       w[:memory_threshold] = rails_method_to_human_size(@edit[:current].get_raw_worker_setting(:MiqWebServiceWorker, :memory_threshold)) || rails_method_to_human_size(400.megabytes)
       @sb[:web_service_threshold] = Array.new
       @sb[:web_service_threshold] = copy_array(@sb[:threshold])
+
+      w = (qwb[:automate_worker] ||= {})
+      w[:count] = @edit[:current].get_raw_worker_setting(:MiqAutomateWorker, :count) || 2
+      mth = rails_method_to_human_size(@edit[:current].get_raw_worker_setting(:MiqAutomateWorker, :memory_threshold))
+      w[:memory_threshold] = mth || rails_method_to_human_size(400.megabytes)
+      @sb[:automate_threshold] = []
+      @sb[:automate_threshold] = copy_array(@sb[:threshold])
 
       @edit[:new].config = copy_hash(@edit[:current].config)
       session[:log_depot_default_verify_status] = true
@@ -1040,7 +1057,7 @@ module OpsController::Settings::Common
         @servers = Array.new
         @record = @zone = @selected_zone = Zone.find(from_cid(nodes.last))
         @sb[:tab_label] = @selected_zone.description
-        @right_cell_text = @sb[:my_zone] == @selected_zone.name ?
+        @right_cell_text = my_zone_name == @selected_zone.name ?
             _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)} :
             _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)}
         MiqServer.all.each do |ms|

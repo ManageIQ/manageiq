@@ -225,7 +225,7 @@ describe HostController do
     end
 
     it "plularizes breadcrumb name" do
-      expect(controller.send(:breadcrumb_name)).to eq("Hosts")
+      expect(controller.send(:breadcrumb_name, nil)).to eq("Hosts")
     end
   end
 end

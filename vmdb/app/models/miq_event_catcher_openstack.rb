@@ -11,7 +11,7 @@ class MiqEventCatcherOpenstack < MiqEventCatcher
     require 'openstack/openstack_event_monitor'
     super.select do |ems|
       ems.event_monitor_available?.tap do |available|
-        $log.info("MIQ(#{self.name}.#{__method__}) Event Monitor unavailable for #{ems.name}.  Check log history for more details.") unless available
+        _log.info("Event Monitor unavailable for #{ems.name}.  Check log history for more details.") unless available
       end
     end
   end

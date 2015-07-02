@@ -23,7 +23,7 @@ describe ApiController do
   let(:compound_credentials) { [default_credentials, metrics_credentials] }
   let(:sample_vmware) do
     {
-      "type"      => "EmsVmware",
+      "type"      => "ManageIQ::Providers::Vmware::InfraManager",
       "name"      => "sample vmware",
       "hostname"  => "sample_vmware.provider.com",
       "ipaddress" => "100.200.300.1"

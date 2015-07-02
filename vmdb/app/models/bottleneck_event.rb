@@ -11,10 +11,10 @@ class BottleneckEvent < ActiveRecord::Base
   end
 
   def self.generate_future_events(obj)
-    $log.info("MIQ(BottleneckEvent-generate_future_events) Generating future bottleneck events for: [#{obj.class} - #{obj.name}]...")
+    _log.info("Generating future bottleneck events for: [#{obj.class} - #{obj.name}]...")
     last = self.last_created_on(obj)
     if last && last >= 24.hours.ago.utc
-      $log.info("MIQ(BottleneckEvent-generate_future_events) Generating future bottleneck events for: [#{obj.class} - #{obj.name}]... Skipped, last creation [#{last}] was less than 24 hours ago")
+      _log.info("Generating future bottleneck events for: [#{obj.class} - #{obj.name}]... Skipped, last creation [#{last}] was less than 24 hours ago")
       return
     end
     dels = self.delete_future_events_for_obj(obj)
@@ -35,7 +35,7 @@ class BottleneckEvent < ActiveRecord::Base
       adds += 1
     end
 
-    $log.info("MIQ(BottleneckEvent-generate_future_events) Generating future bottleneck events for: [#{obj.class} - #{obj.name}]... Complete - Added #{adds} / Deleted #{dels}")
+    _log.info("Generating future bottleneck events for: [#{obj.class} - #{obj.name}]... Complete - Added #{adds} / Deleted #{dels}")
   end
 
   def self.calculate_future_event(obj, options)

@@ -79,7 +79,6 @@ class MiqProductFeature < ActiveRecord::Base
   end
 
   def self.seed_features
-    log_header = "MIQ(#{self.name}.seed_features)"
     idents_from_hash = []
     self.seed_from_hash(YAML.load_file(FIXTURE_YAML), idents_from_hash)
 
@@ -91,13 +90,12 @@ class MiqProductFeature < ActiveRecord::Base
     idents_from_db = self.all.collect(&:identifier)
     deletes = idents_from_db - (idents_from_db & idents_from_hash)
     unless deletes.empty?
-      $log.info("#{log_header} Deleting product features: #{deletes.inspect}")
+      _log.info("Deleting product features: #{deletes.inspect}")
       self.destroy_all(:identifier => deletes)
     end
   end
 
   def self.seed_from_hash(hash, seen = [], parent=nil)
-    log_header = "MIQ(#{self.name}.seed_from_hash)"
     children = hash.delete(:children) || []
     hash.delete(:parent_identifier)
 
@@ -106,11 +104,11 @@ class MiqProductFeature < ActiveRecord::Base
     if feature
       feature.attributes = hash
       if feature.changed?
-        $log.info("#{log_header} Updating product feature: Identifier: [#{hash[:identifier]}], Name: [#{hash[:name]}]")
+        _log.info("Updating product feature: Identifier: [#{hash[:identifier]}], Name: [#{hash[:name]}]")
         feature.save
       end
     else
-      $log.info("#{log_header} Creating product feature: Identifier: [#{hash[:identifier]}], Name: [#{hash[:name]}]")
+      _log.info("Creating product feature: Identifier: [#{hash[:identifier]}], Name: [#{hash[:name]}]")
       feature = self.create(hash.except(:id))
       feature.seed_vm_explorer_for_custom_roles
     end

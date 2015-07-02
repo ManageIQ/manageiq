@@ -38,6 +38,8 @@ Vmdb::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
+  # Raise exceptions in transactional callbacks
+  config.active_record.raise_in_transactional_callbacks = true
 
   # Customize any additional options below...
 
@@ -61,10 +63,6 @@ SimpleCov.start do
   root         Rails.root.to_s
   coverage_dir "tmp/metric_fu/coverage"
 
-  # TODO: metrics_ui filters
-  # /miq/lib/,db/fixtures/,vendor,features/*,app/models/*,lib/*,app/jobs/*
-
-  add_filter   "/miq/lib/"
   add_filter   "/vmdb/app/views/"
   add_filter   "/vmdb/db/fixtures/"
   add_filter   "/vmdb/spec/"

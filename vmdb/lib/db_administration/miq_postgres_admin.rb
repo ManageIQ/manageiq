@@ -1,6 +1,6 @@
 require 'awesome_spawn'
 class MiqPostgresAdmin
-  $:.push(File.expand_path(File.join(File.dirname(__FILE__), "../../../lib/util")))
+  include Vmdb::Logging
 
   # From /etc/init.d/postgresql script
   # Installation prefix
@@ -152,11 +152,11 @@ class MiqPostgresAdmin
     options = (options[:aggressive] ? GC_AGGRESSIVE_DEFAULTS : GC_DEFAULTS).merge(options)
 
     result = self.vacuum(options)
-    $log.info("MIQ(MiqPostgresAdmin.gc) Output... #{result}") if result.to_s.length > 0
+    _log.info("Output... #{result}") if result.to_s.length > 0
 
     if options[:reindex]
       result = self.reindex(options)
-      $log.info("MIQ(MiqPostgresAdmin.gc) Output... #{result}") if result.to_s.length > 0
+      _log.info("Output... #{result}") if result.to_s.length > 0
     end
   end
 
@@ -178,7 +178,7 @@ class MiqPostgresAdmin
     runcmd("reindexdb", opts, args)
   end
 
-  # TODO: overlaps with lib/applance_console/service_group.rb
+  # TODO: overlaps with appliance_console/service_group.rb
 
   def self.start(opts)
     runcmd_with_logging("service #{PGSERVICE} start", opts)
@@ -208,7 +208,7 @@ class MiqPostgresAdmin
   end
 
   def self.runcmd_with_logging(cmd_str, opts, params = {})
-    $log.info("MIQ(MiqPostgresAdmin.run_cmd) Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
+    _log.info("Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
     with_pgpass_file(opts) do
       AwesomeSpawn.run!(cmd_str, :params => params).output
     end

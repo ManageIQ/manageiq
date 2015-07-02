@@ -52,7 +52,7 @@ module MiqServer::WorkerManagement::Heartbeat
       return
     end
 
-    $log.info("MIQ(MiqServer.worker_set_message) #{w.format_full_log_msg} is being requested to #{message}")
+    _log.info("#{w.format_full_log_msg} is being requested to #{message}")
     @workers_lock.synchronize(:EX) do
       worker_add_message(w.pid, [message, *args]) if @workers.has_key?(w.pid)
     end unless @workers_lock.nil?

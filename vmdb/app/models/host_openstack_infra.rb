@@ -55,7 +55,7 @@ class HostOpenstackInfra < Host
       verified = self.verify_credentials_with_ssh
     rescue StandardError, NotImplementedError
       verified = false
-      $log.warn("MIQ(HostOpenstackInfra-verify_credentials_with_ssh_keypair): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
     end
 
     if verified
@@ -102,7 +102,7 @@ class HostOpenstackInfra < Host
       end
     end
   rescue => err
-    $log.log_backtrace(err)
+    _log.log_backtrace(err)
     raise err
   end
 end

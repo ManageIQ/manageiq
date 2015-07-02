@@ -8,10 +8,10 @@ FactoryGirl.define do
 
   # Intermediate classes
 
-  factory :ems_infra, :class => "EmsInfra", :parent => :ext_management_system do
+  factory :ems_infra, :aliases => ["manageiq/providers/infra_manager"], :class => "ManageIQ::Providers::InfraManager", :parent => :ext_management_system do
   end
 
-  factory :ems_cloud, :class => "EmsCloud", :parent => :ext_management_system do
+  factory :ems_cloud, :aliases => ["manageiq/providers/cloud_manager"], :class => "ManageIQ::Providers::CloudManager", :parent => :ext_management_system do
   end
 
   factory :ems_container, :class => "EmsContainer", :parent => :ext_management_system do
@@ -25,7 +25,7 @@ FactoryGirl.define do
 
   # Leaf classes for ems_infra
 
-  factory :ems_vmware, :class => "EmsVmware", :parent => :ems_infra do
+  factory :ems_vmware, :aliases => ["manageiq/providers/vmware/infra_manager"], :class => "ManageIQ::Providers::Vmware::InfraManager", :parent => :ems_infra do
   end
 
   factory :ems_vmware_with_authentication, :parent => :ems_vmware do
@@ -71,7 +71,7 @@ FactoryGirl.define do
 
   # Leaf classes for ems_cloud
 
-  factory :ems_amazon, :class => "EmsAmazon", :parent => :ems_cloud do
+  factory :ems_amazon, :aliases => ["manageiq/providers/amazon/cloud_manager"], :class => "ManageIQ::Providers::Amazon::CloudManager", :parent => :ems_cloud do
     provider_region "us-east-1"
   end
 

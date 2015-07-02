@@ -1,4 +1,5 @@
 class PrincePdfGenerator < PdfGenerator
+  include Vmdb::Logging
   def self.executable
     return @executable if defined?(@executable)
     @executable = `which prince`.chomp
@@ -26,9 +27,9 @@ class PrincePdfGenerator < PdfGenerator
     }
 
     require 'awesome_spawn'
-    if $log.debug?
+    _log.debug do
       command = AwesomeSpawn.build_command_line(executable, options[:params])
-      $log.debug "MIQ(#{self.class.name}##{__method__}) Executing: #{command}"
+      "Executing: #{command}"
     end
     AwesomeSpawn.run!(executable, options).output
   end

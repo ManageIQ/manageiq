@@ -9,7 +9,7 @@
     = render :partial => "layouts/flash_msg"
     - if @parent_reports.empty?
       %br
-      %strong=_('No Reports available.')
+      = render :partial => 'layouts/info_msg', :locals => {:message => _("No Reports available.")}
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody
@@ -54,4 +54,4 @@
 
   - else
     %br
-      %strong=_('No Reports available.')
+      = render :partial => 'layouts/info_msg', :locals => {:message => _("No Reports available.")}

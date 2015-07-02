@@ -1,6 +1,6 @@
 - if edit
   - if field.values.length > 1
-    %span(id="dynamic-radio-#{field.id}")
+    %span{:id => "dynamic-radio-#{field.id}"}
       - values = field.values
       - values = [['', "<#{_('None')}>"]] + values if !field.required && !field.dynamic
       - values.each_with_index do |rb, i|

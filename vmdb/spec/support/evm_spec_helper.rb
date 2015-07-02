@@ -68,12 +68,6 @@ module EvmSpecHelper
     return guid, server, zone
   end
 
-  # FIXXME - rename uses of this method
-  def self.seed_for_miq_queue
-    MiqRegion.seed
-    create_guid_miq_server_zone
-  end
-
   def self.seed_specific_product_features(*features)
     features.flatten!
     hashes   = YAML.load_file(MiqProductFeature::FIXTURE_YAML)
@@ -90,7 +84,7 @@ module EvmSpecHelper
   private_class_method :filter_specific_features
 
   def self.seed_admin_user_and_friends
-    guid, server, zone = seed_for_miq_queue
+    guid, server, zone = create_guid_miq_server_zone
 
     admin_role = FactoryGirl.create(:miq_user_role,
       #:name       => "EvmRole-administrator",

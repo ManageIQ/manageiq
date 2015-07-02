@@ -5,7 +5,7 @@
       .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %h3=_('Session Information')
-          %table.style1
+          .form-horizontal.static
             - [[_("Server Name"),     h(session[:vmdb_name])],
                [_("Version"),         h(@vmdb[:version] + "." + @vmdb[:build])],
                [_("User Name"),       h(session[:username])],
@@ -13,11 +13,13 @@
                [_("Browser"),         h(browser_info("name"))],
                [_("Browser Version"), h(browser_info("version"))],
                [_("Browser OS"),      h(browser_info("os"))]].each do |session_info|
-              %tr
-                %td.key
+              .form-group
+                %label.col-sm-3.control-label
                   = session_info[0]
-                %td.wide
-                  = session_info[1]
+                .col-sm-9
+                  %p.form-control-static
+                    = session_info[1]
+
       - desc = get_vmdb_config[:server][:custom_support_url_description]
       - url  = get_vmdb_config[:server][:custom_support_url]
       - cond_url      = desc.present? && url.present?

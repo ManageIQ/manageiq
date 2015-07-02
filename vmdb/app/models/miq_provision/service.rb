@@ -1,9 +1,7 @@
 module MiqProvision::Service
   def connect_to_service(vm, service, service_resource)
-    log_header = "MIQ(#{self.class.name}#connect_to_service)"
-
     unless service.nil? || service_resource.nil?
-      $log.info "#{log_header} Connecting VM #{vm.id}:#{vm.name} to service #{service.id}:#{service.name}"
+      _log.info "Connecting VM #{vm.id}:#{vm.name} to service #{service.id}:#{service.name}"
       service.add_resource!(vm, service_resource)
     end
   end

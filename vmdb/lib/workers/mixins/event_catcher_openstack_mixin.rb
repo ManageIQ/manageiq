@@ -14,7 +14,7 @@ module EventCatcherOpenstackMixin
       options[:duration] = self.worker_settings[:duration]
       options[:capacity] = self.worker_settings[:capacity]
 
-      options[:client_ip] = MiqServer.my_server.ipaddress
+      options[:client_ip] = server.ipaddress
       @event_monitor_handle = OpenstackEventMonitor.new(options)
     end
     @event_monitor_handle
@@ -28,9 +28,9 @@ module EventCatcherOpenstackMixin
     begin
       @event_monitor_handle.stop unless @event_monitor_handle.nil?
     rescue Exception => err
-      $log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
-      $log.warn("#{self.log_prefix} Error details: [#{err.details}]")
-      $log.log_backtrace(err)
+      _log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
+      _log.warn("#{self.log_prefix} Error details: [#{err.details}]")
+      _log.log_backtrace(err)
     ensure
       reset_event_monitor_handle
     end
@@ -40,7 +40,7 @@ module EventCatcherOpenstackMixin
     begin
       event_monitor_handle.start
       event_monitor_handle.each_batch do |events|
-        $log.debug("#{self.log_prefix} Received events #{events.collect { |e| e.payload["event_type"] }}") if $log.debug?
+        _log.debug("#{self.log_prefix} Received events #{events.collect { |e| e.payload["event_type"] }}") if _log.debug?
         @queue.enq events
         sleep_poll_normal
       end
@@ -51,9 +51,9 @@ module EventCatcherOpenstackMixin
 
   def process_event(event)
     if self.filtered_events.include?(event.payload[:event_type])
-      $log.info "#{self.log_prefix} Skipping caught event [#{event.payload["event_type"]}]"
+      _log.info "#{self.log_prefix} Skipping caught event [#{event.payload["event_type"]}]"
     else
-      $log.info "#{self.log_prefix} Caught event [#{event.payload["event_type"]}]"
+      _log.info "#{self.log_prefix} Caught event [#{event.payload["event_type"]}]"
 
       event_hash = {}
       # copy content
