@@ -1,4 +1,4 @@
-module MiqProvisionVmware::Customization
+module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
   def build_customization_spec
     sysprep_option = get_option(:sysprep_enabled)
     if sysprep_option.blank? || sysprep_option == 'disabled'

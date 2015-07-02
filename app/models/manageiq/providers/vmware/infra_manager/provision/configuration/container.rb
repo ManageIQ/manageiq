@@ -1,4 +1,4 @@
-module MiqProvisionVmware::Configuration::Container
+module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Container
   def build_config_spec
     VimHash.new("VirtualMachineConfigSpec") do |vmcs|
       vmcs.annotation = build_vm_notes

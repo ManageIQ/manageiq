@@ -1,4 +1,4 @@
-module MiqProvisionVmwareViaPxe::Pxe
+module ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe::Pxe
   def get_mac_address_of_nic_on_requested_vlan
     network_name = get_option(:vlan)
     # Remove the "dvs_" prefix from the vlan name that gets saved as part of the DV switches

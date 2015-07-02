@@ -8,6 +8,8 @@ class Vmware::InfraManager < InfraManager
   require_dependency 'manageiq/providers/vmware/infra_manager/refresher'
   require_dependency 'manageiq/providers/vmware/infra_manager/host'
   require_dependency 'manageiq/providers/vmware/infra_manager/host_esx'
+  require_dependency 'manageiq/providers/vmware/infra_manager/provision'
+  require_dependency 'manageiq/providers/vmware/infra_manager/provision_via_pxe'
   require_dependency 'manageiq/providers/vmware/infra_manager/template'
   require_dependency 'manageiq/providers/vmware/infra_manager/vm'
 
@@ -71,8 +73,8 @@ class Vmware::InfraManager < InfraManager
 
   def self.provision_class(via)
     case via
-    when "pxe" then MiqProvisionVmwareViaPxe
-    else            MiqProvisionVmware
+    when "pxe" then self::ProvisionViaPxe
+    else            self::Provision
     end
   end
 

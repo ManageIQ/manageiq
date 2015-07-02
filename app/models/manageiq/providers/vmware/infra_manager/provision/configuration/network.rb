@@ -1,4 +1,4 @@
-module MiqProvisionVmware::Configuration::Network
+module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Network
   def build_config_network_adapters(vmcs)
     requested_networks = normalize_network_adapter_settings
     template_networks  = get_network_adapters

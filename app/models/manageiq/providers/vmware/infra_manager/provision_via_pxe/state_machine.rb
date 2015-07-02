@@ -1,4 +1,4 @@
-module MiqProvisionVmwareViaPxe::StateMachine
+module ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe::StateMachine
   def customize_destination
     _log.info("Post-processing #{destination_type} id: [#{destination.id}], name: [#{dest_name}]")
     update_and_notify_parent(:message => "Starting New #{destination_type} Customization")

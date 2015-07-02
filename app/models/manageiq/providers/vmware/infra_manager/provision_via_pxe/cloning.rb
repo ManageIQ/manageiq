@@ -1,4 +1,4 @@
-module MiqProvisionVmwareViaPxe::Cloning
+module ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe::Cloning
   def build_config_disk_spec(vmcs)
     get_disks.each do |disk|
       remove_disk(vmcs, disk)

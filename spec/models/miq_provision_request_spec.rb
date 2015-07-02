@@ -4,8 +4,8 @@ describe MiqProvisionRequest do
   it ".request_task_class_from" do
     ems = FactoryGirl.create(:ems_vmware)
     vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq MiqProvisionVmware
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => "pxe"})).to eq MiqProvisionVmwareViaPxe
+    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Vmware::InfraManager::Provision
+    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => "pxe"})).to eq ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe
 
     ems = FactoryGirl.create(:ems_redhat)
     vm = FactoryGirl.create(:vm_redhat, :ext_management_system => ems)

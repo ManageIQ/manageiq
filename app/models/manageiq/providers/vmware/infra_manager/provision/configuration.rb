@@ -1,4 +1,4 @@
-module MiqProvisionVmware::Configuration
+module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration
   extend ActiveSupport::Concern
 
   include_concern 'Container'

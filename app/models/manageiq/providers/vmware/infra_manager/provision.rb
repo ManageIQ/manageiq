@@ -1,4 +1,4 @@
-class MiqProvisionVmware < MiqProvision
+class ManageIQ::Providers::Vmware::InfraManager::Provision < ::MiqProvision
   include_concern 'Cloning'
   include_concern 'Configuration'
   include_concern 'Customization'

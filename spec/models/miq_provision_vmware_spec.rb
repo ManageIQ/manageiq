@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionVmware do
+describe ManageIQ::Providers::Vmware::InfraManager::Provision do
   context "A new provision request," do
     before(:each) do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')

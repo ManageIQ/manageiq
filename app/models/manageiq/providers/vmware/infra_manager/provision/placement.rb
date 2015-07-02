@@ -1,4 +1,4 @@
-module MiqProvisionVmware::Placement
+module ManageIQ::Providers::Vmware::InfraManager::Provision::Placement
   extend ActiveSupport::Concern
 
   protected
