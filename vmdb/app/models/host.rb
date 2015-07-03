@@ -971,15 +971,21 @@ class Host < ActiveRecord::Base
 
   def detect_discovered_hypervisor(ost, ipaddr)
     find_method = :find_by_ipaddress
+
+    # TODO: break this apart, we probably want to only do the namelookup for hyperv, esx
+    hostname = Socket.getaddrinfo(ipaddr, nil)[0][2]
+
     if ost.hypervisor.include?(:hyperv)
       self.name        = "Microsoft Hyper-V (#{ipaddr})"
       self.type        = "HostMicrosoft"
       self.ipaddress   = ipaddr
+      self.hostname    = hostname
       self.vmm_vendor  = "microsoft"
       self.vmm_product = "Hyper-V"
     elsif ost.hypervisor.include?(:esx)
       self.name        = "VMware ESX Server (#{ipaddr})"
       self.ipaddress   = ipaddr
+      self.hostname    = hostname
       self.vmm_vendor  = "vmware"
       self.vmm_product = "Esx"
       if self.has_credentials?(:ws)
