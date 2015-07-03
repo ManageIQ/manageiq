@@ -1,4 +1,4 @@
-module MiqProvisionCloud::Cloning
+module ManageIQ::Providers::CloudManager::Provision::Cloning
   def find_destination_in_vmdb(ems_ref)
     vm_model_class.where(:ems_id => source.ext_management_system.id, :ems_ref => ems_ref).first
   end

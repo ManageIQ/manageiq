@@ -1,4 +1,4 @@
-module MiqProvisionCloud::Placement
+module ManageIQ::Providers::CloudManager::Provision::Placement
   protected
 
   def placement

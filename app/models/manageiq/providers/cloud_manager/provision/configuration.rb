@@ -1,4 +1,4 @@
-module MiqProvisionCloud::Configuration
+module ManageIQ::Providers::CloudManager::Provision::Configuration
   def userdata_payload
     return nil unless customization_template
     options  = prepare_customization_template_substitution_options

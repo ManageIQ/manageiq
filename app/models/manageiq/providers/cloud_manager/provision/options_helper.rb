@@ -1,4 +1,4 @@
-module MiqProvisionCloud::OptionsHelper
+module ManageIQ::Providers::CloudManager::Provision::OptionsHelper
   def dest_availability_zone
     @dest_availability_zone ||= AvailabilityZone.where(:id => get_option(:dest_availability_zone)).first
   end

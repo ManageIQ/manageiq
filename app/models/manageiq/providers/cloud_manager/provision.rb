@@ -1,4 +1,4 @@
-class MiqProvisionCloud < MiqProvision
+class ManageIQ::Providers::CloudManager::Provision < MiqProvision
   include_concern 'Cloning'
   include_concern 'OptionsHelper'
   include_concern 'Placement'
