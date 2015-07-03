@@ -77,7 +77,7 @@ describe MiqProvisionRequest do
       end
 
       it "should return a workflow class" do
-        @pr.workflow_class.should == MiqProvisionVmwareWorkflow
+        @pr.workflow_class.should == ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow
       end
 
       context "when calling call_automate_event_queue" do

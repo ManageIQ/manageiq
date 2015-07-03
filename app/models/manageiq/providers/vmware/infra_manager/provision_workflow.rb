@@ -1,4 +1,4 @@
-class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
+class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ::MiqProvisionInfraWorkflow
   def self.default_dialog_file
     'miq_provision_dialogs'
   end

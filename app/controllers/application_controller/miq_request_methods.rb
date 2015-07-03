@@ -878,7 +878,7 @@ module ApplicationController::MiqRequestMethods
             @edit[:prov_type] = "VM Provision"
             if @edit[:org_controller] == "service_template"
               options[:service_template_request] = true
-              MiqProvisionVmwareWorkflow
+              ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow
             else
               options[:src_vm_id]    = @edit[:prov_id]
               options[:request_type] = params[:prov_type].to_sym
@@ -889,7 +889,8 @@ module ApplicationController::MiqRequestMethods
         options[:initial_pass]             = true  unless req
         options[:service_template_request] = true  if @edit[:org_controller] == "service_template"
         options[:use_pre_dialog]           = false if @workflow_exists
-        # setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
+        # setting class to ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow for requests where src_vm_id is
+        # not already set, i.e catalogitem
         src_vm_id =
           if @edit.fetch_path(:new, :src_vm_id, 0).present?
             @edit[:new][:src_vm_id]

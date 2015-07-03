@@ -99,7 +99,7 @@
             :label                      => title_for_cluster,
             :prefix                     => prefix,
             :keys                       => keys})
-      - if wf.is_a?(MiqProvisionVmwareWorkflow)
+      - if wf.is_a?(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow)
         - keys = [:rp_filter, :placement_rp_name]
         = render(:partial => "#{prefix}prov_dialog_fieldset",
           :locals         => {:workflow => wf,
@@ -181,7 +181,7 @@
         :prefix                     => prefix,
         :keys                       => keys})
   - when :customize
-    - if wf.is_a?(MiqProvisionVmwareWorkflow) && !wf.supports_pxe? && !wf.supports_iso?
+    - if wf.is_a?(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow) && !wf.supports_pxe? && !wf.supports_iso?
       - keys = [:sysprep_enabled]
       = render(:partial => "#{prefix}prov_dialog_fieldset",
         :locals         => {:workflow => wf,

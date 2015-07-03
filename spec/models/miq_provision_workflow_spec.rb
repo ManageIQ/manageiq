@@ -26,7 +26,7 @@ describe MiqProvisionWorkflow do
 
       context "Without a Valid Template," do
         it "should not create an MiqRequest when calling from_ws" do
-          lambda { MiqProvisionVmwareWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "")}.should raise_error(RuntimeError)
+          lambda { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "")}.should raise_error(RuntimeError)
         end
       end
 
@@ -42,14 +42,15 @@ describe MiqProvisionWorkflow do
         end
 
         it "should create an MiqRequest when calling from_ws" do
-          request = MiqProvisionVmwareWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "")
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "")
           request.should be_a_kind_of(MiqRequest)
         end
 
         it "should encrypt fields" do
           password_input = "secret"
-          request = MiqProvisionVmwareWorkflow.from_ws("1.1", "admin", "name=template", "vm_name=spec_test|root_password=#{password_input}",
-                                                       "owner_email=admin|owner_first_name=test|owner_last_name=test", nil, nil, nil, nil)
+          request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
+            "1.1", "admin", "name=template", "vm_name=spec_test|root_password=#{password_input}",
+            "owner_email=admin|owner_first_name=test|owner_last_name=test", nil, nil, nil, nil)
 
           MiqPassword.encrypted?(request.options[:root_password]).should be_true
           MiqPassword.decrypt(request.options[:root_password]).should    == password_input
