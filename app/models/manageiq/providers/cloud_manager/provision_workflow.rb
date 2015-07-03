@@ -1,4 +1,4 @@
-class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
+class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtWorkflow
   include CloudInitTemplateMixin
 
   def allowed_availability_zones(_options = {})

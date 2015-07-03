@@ -61,7 +61,7 @@
           :keys                       => keys,
           :extra_table_attributes     => "width=100%"})
     - keys = [:number_of_vms]
-    - label = wf.is_a?(MiqProvisionCloudWorkflow) ? _("Number of Instances") : _("Number of VMs")
+    - label = wf.is_a?(ManageIQ::Providers::CloudManager::ProvisionWorkflow) ? _("Number of Instances") : _("Number of VMs")
     = render(:partial => "#{prefix}prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,
@@ -84,7 +84,7 @@
         :prefix                     => prefix,
         :keys                       => keys})
     - if (@edit && @edit[:new] && @edit[:new][:placement_auto] && !@edit[:new][:placement_auto][0]) || (@options && !@options[:placement_auto][0])
-      - unless wf.is_a?(MiqProvisionCloudWorkflow)
+      - unless wf.is_a?(ManageIQ::Providers::CloudManager::ProvisionWorkflow)
         - keys = [:placement_dc_name]
         = render(:partial => "#{prefix}prov_dialog_fieldset",
           :locals         => {:workflow => wf,
@@ -122,7 +122,7 @@
           :prefix                     => prefix,
           :keys                       => keys,
           :extra_table_attributes     => "width=100%"})
-      - unless wf.is_a?(MiqProvisionCloudWorkflow)
+      - unless wf.is_a?(ManageIQ::Providers::CloudManager::ProvisionWorkflow)
         - keys = [:ds_filter, :placement_ds_name]
         = render(:partial => "#{prefix}prov_dialog_fieldset",
           :locals         => {:workflow => wf,
@@ -131,7 +131,7 @@
             :prefix                     => prefix,
             :keys                       => keys,
             :extra_table_attributes     => "width=100%"})
-      - if wf.is_a?(MiqProvisionCloudWorkflow)
+      - if wf.is_a?(ManageIQ::Providers::CloudManager::ProvisionWorkflow)
         - keys = [:cloud_tenant, :availability_zone_filter, :placement_availability_zone, :cloud_network, :cloud_subnet, :security_groups, :floating_ip_address]
         = render(:partial => "#{prefix}prov_dialog_fieldset",
           :locals         => {:workflow => wf,
@@ -144,14 +144,14 @@
     - keys = [:instance_type, :number_of_cpus, :number_of_sockets, :cores_per_socket,
               :vm_memory, :network_adapters, :disk_format, :guest_access_key_pair, :monitoring,
               :vm_dynamic_memory, :vm_minimum_memory, :vm_maximum_memory]
-    - label = wf.is_a?(MiqProvisionCloudWorkflow) ? "Properties" : "Hardware"
+    - label = wf.is_a?(ManageIQ::Providers::CloudManager::ProvisionWorkflow) ? "Properties" : "Hardware"
     = render(:partial => "#{prefix}prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,
         :label                      => label,
         :prefix                     => prefix,
         :keys                       => keys})
-    - unless wf.is_a?(MiqProvisionCloudWorkflow)
+    - unless wf.is_a?(ManageIQ::Providers::CloudManager::ProvisionWorkflow)
       - keys = [:cpu_limit, :memory_limit]
       = render(:partial => "#{prefix}prov_dialog_fieldset",
         :locals         => {:workflow => wf,
