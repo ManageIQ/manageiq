@@ -24,8 +24,9 @@ describe MiqProvisionRequest do
     before            { User.any_instance.stub(:role).and_return("admin") }
     let(:approver)    { FactoryGirl.create(:user_miq_request_approver) }
     let(:user)        { FactoryGirl.create(:user) }
+    let(:ems)         { FactoryGirl.create(:ems_vmware) }
     let(:vm)          { FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx") }
-    let(:vm_template) { FactoryGirl.create(:template_vmware, :name => "template1") }
+    let(:vm_template) { FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems) }
 
     it "should not be created without userid being specified" do
       lambda { FactoryGirl.create(:miq_provision_request) }.should raise_error(ActiveRecord::RecordInvalid)

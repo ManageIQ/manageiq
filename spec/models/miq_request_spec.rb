@@ -26,7 +26,8 @@ describe MiqRequest do
     let(:event_name)   { "hello" }
     let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
     let(:request)      { FactoryGirl.create(:vm_migrate_request, :userid => fred.userid) }
-    let(:template)     { FactoryGirl.create(:template_vmware) }
+    let(:ems)          { FactoryGirl.create(:ems_vmware) }
+    let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
 
     it { expect(request).to be_valid }
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("VM Migrate") } }
