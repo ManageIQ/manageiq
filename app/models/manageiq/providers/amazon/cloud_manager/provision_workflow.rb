@@ -1,4 +1,4 @@
-class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
+class ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow < ::MiqProvisionCloudWorkflow
   def allowed_instance_types(_options = {})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)

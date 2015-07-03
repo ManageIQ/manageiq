@@ -105,6 +105,6 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
                                  :options      => options)
     MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
 
-    vm_prov.workflow.class.should eq MiqProvisionAmazonWorkflow
+    vm_prov.workflow.class.should eq ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow
   end
 end

@@ -20,7 +20,7 @@ module MiqAeServiceMiqProvisionCloudSpec
                                               :userid         => @user.userid)
         end
 
-        let(:workflow_klass) { "MiqProvision#{t.camelize}Workflow".constantize }
+        let(:workflow_klass) { MiqProvisionWorkflow.class_for_platform(t) }
         let(:ae_svc_prov) { MiqAeMethodService::MiqAeServiceMiqProvision.find(@miq_provision.id) }
 
         context "#request_type" do
