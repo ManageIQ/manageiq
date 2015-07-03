@@ -94,7 +94,9 @@ module EmsRefresh::Parsers
         :identity_system            => node.status.nodeInfo.systemUUID,
         :container_runtime_version  => node.status.nodeInfo.containerRuntimeVersion,
         :kubernetes_proxy_version   => node.status.nodeInfo.kubeProxyVersion,
-        :kubernetes_kubelet_version => node.status.nodeInfo.kubeletVersion
+        :kubernetes_kubelet_version => node.status.nodeInfo.kubeletVersion,
+        :lives_on_id                => nil,
+        :lives_on_type              => nil
       )
 
       node_memory = node.status.capacity.memory
@@ -114,6 +116,14 @@ module EmsRefresh::Parsers
       conditions = node.status.conditions
       new_result[:container_node_conditions] = conditions.collect do |condition|
         parse_node_condition(condition)
+      end
+
+      # Searching for the underlying instance. At the moment this search strategy
+      # is tested only with OpenStack.
+      vms = VmOpenstack.where(:uid_ems => new_result[:identity_system].downcase)
+      if vms.to_a.size == 1
+        new_result[:lives_on_id] = vms.first.id
+        new_result[:lives_on_type] = vms.first.type
       end
 
       new_result

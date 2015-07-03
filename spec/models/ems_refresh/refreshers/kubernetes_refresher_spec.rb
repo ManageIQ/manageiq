@@ -7,6 +7,11 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @ems = FactoryGirl.create(:ems_kubernetes, :hostname => "10.35.0.202",
                               :ipaddress => "10.35.0.202", :port => 6443,
                               :authentications => [auth])
+    # NOTE: the following :uid_ems should match (downcased) the kubernetes
+    #       node systemUUID in the VCR yaml file
+    @openstack_vm = FactoryGirl.create(
+      :vm_openstack,
+      :uid_ems => '7781b4be-f7b9-439f-92af-fb710a6311e0')
   end
 
   it "will perform a full refresh on k8s" do
@@ -102,8 +107,8 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @containernode = ContainerNode.first
     @containernode.should have_attributes(
       # :ems_ref       => "a3d2a008-e73f-11e4-b613-001a4a5f4a02",
-      :lives_on_type              => nil,
-      :lives_on_id                => nil,
+      :lives_on_type              => @openstack_vm.type,
+      :lives_on_id                => @openstack_vm.id,
       :container_runtime_version  => "docker://1.5.0-dev",
       :kubernetes_kubelet_version => "v0.17.0-441-g6b6b47a777b480",
       :kubernetes_proxy_version   => "v0.17.0-441-g6b6b47a777b480"
@@ -117,6 +122,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :distribution   => "CentOS Linux 7 (Core)",
       :kernel_version => "3.10.0-229.1.2.el7.x86_64"
     )
+    @containernode.lives_on.should == @openstack_vm
   end
 
   def assert_specific_container_service
