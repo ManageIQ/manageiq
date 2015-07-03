@@ -447,7 +447,7 @@ msgstr "(LDAP グループ検索)"
 msgid "(MB) memory"
 msgstr "(MB) メモリー"
 
-msgid "(NS/Cls/Inst)"
+msgid "State Machine (NS/Cls/Inst)"
 msgstr "(名前空間/クラス/インスタンス)"
 
 msgid "(Row %{start_number} of %{pages})"

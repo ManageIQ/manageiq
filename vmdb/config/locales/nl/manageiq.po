@@ -444,7 +444,7 @@ msgstr ""
 msgid "(MB) memory"
 msgstr ""
 
-msgid "(NS/Cls/Inst)"
+msgid "State Machine (NS/Cls/Inst)"
 msgstr ""
 
 msgid "(Row %{start_number} of %{pages})"
