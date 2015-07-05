@@ -178,7 +178,10 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def save_container_inventory(container_definition, hash, _target = nil)
-    hash[:container_group_id] = container_definition.container_group_id
+    # The hash could be nil when the container is in transition (still downloading
+    # the image, or stuck in Pending, or unable to fetch the image). Passing nil to
+    # save_inventory_single is used to delete any pre-existing entity in containers,
+    hash[:container_group_id] = container_definition.container_group_id unless hash.nil?
     save_inventory_single(:container, container_definition, hash)
   end
 
