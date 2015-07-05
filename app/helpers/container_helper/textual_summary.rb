@@ -40,16 +40,4 @@ module ContainerHelper::TextualSummary
   def textual_image_ref
     {:label => "Image Ref (Image ID)", :value => @record.image_ref}
   end
-
-  def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_container")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_container_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
-    end
-    h
-  end
 end
