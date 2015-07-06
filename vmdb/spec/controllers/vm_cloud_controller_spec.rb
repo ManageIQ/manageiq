@@ -55,8 +55,6 @@ describe VmCloudController do
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      session[:userid] = User.current_user.userid
-      session[:eligible_groups] = []
       FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       @vmcloud = VmCloud.create(:name     => "test_vmcloud",

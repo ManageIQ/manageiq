@@ -4,8 +4,6 @@ describe VmInfraController do
   before(:each) do
     set_user_privileges
 
-    session[:userid] = User.current_user.userid
-    session[:eligible_groups] = []
     session[:settings] = {:quadicons => nil}
 
     FactoryGirl.create(:vmdb_database)
@@ -52,8 +50,6 @@ describe VmInfraController do
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      session[:userid] = User.current_user.userid
-      session[:eligible_groups] = []
       FactoryGirl.create(:vmdb_database)
       @vm = VmInfra.create(:name => "testvm", :location => "testvm_location", :vendor => "vmware")
       get :explorer
