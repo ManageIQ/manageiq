@@ -1,7 +1,0 @@
-#!/bin/bash
-# description: ManageIQ appliance console launcher
-#
-
-[[ -s /etc/default/evm ]] && source /etc/default/evm
-
-ruby /var/www/miq/lib/appliance_console.rb $@

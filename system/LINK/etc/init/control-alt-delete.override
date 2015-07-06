@@ -1,3 +1,0 @@
-start on control-alt-delete
-
-exec /usr/bin/pkill appliance_console
