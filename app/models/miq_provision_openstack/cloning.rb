@@ -32,7 +32,7 @@ module MiqProvisionOpenstack::Cloning
     _log.info("Network:                         [#{clone_options[:nics]}]")
 
     dumpObj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
-    dumpObj(options, "#{_log.prefix} Prov Options:  ", $log, :info)
+    dumpObj(options, "#{_log.prefix} Prov Options:  ", $log, :info, :protected => {:path => workflow_class.encrypted_options_field_regs})
   end
 
   def start_clone(clone_options)
