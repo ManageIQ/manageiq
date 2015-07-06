@@ -8,20 +8,20 @@ env:
   global:
   - RUBY_GC_MALLOC_LIMIT=90000000
   matrix:
-  - "TEST_SUITE=gems_pending TEST_ROOT=vmdb/gems/pending"
-  - "TEST_SUITE=vmdb         TEST_ROOT=vmdb"
-  - "TEST_SUITE=migrations   TEST_ROOT=vmdb"
-  - "TEST_SUITE=replication  TEST_ROOT=vmdb"
-  - "TEST_SUITE=automation   TEST_ROOT=vmdb"
-  - "TEST_SUITE=javascript   TEST_ROOT=vmdb"
+  - "TEST_SUITE=gems_pending TEST_ROOT=gems/pending"
+  - "TEST_SUITE=vmdb         TEST_ROOT=."
+  - "TEST_SUITE=migrations   TEST_ROOT=."
+  - "TEST_SUITE=replication  TEST_ROOT=."
+  - "TEST_SUITE=automation   TEST_ROOT=."
+  - "TEST_SUITE=javascript   TEST_ROOT=."
 matrix:
   fast_finish: true
 addons:
   postgresql: '9.3'
 before_install:
 - "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
-- echo "1" > vmdb/REGION
-- cp vmdb/config/database.pg.yml vmdb/config/database.yml
+- echo "1" > REGION
+- cp config/database.pg.yml config/database.yml
 - psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
 - cd $TEST_ROOT
 before_script: bundle exec rake test:$TEST_SUITE:setup
