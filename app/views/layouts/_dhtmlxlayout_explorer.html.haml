@@ -98,7 +98,7 @@
     -    ["miq_capacity_bottlenecks"].include?(@layout)
       #{layoutb_name}.cells("a").collapse();
 
-    - if x_tree && (([:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record) || @show_adv_search)
+    - if show_advanced_search?
       #{javascript_show_if_exists("adv_searchbox_div")}
 
   - else
