@@ -91,14 +91,6 @@ alias agree agree_with_timeout
 $terminal.wrap_at = 80
 $terminal.page_at = 21
 
-$MIQDEBUG = false
-$MIQDEBUG_FILES = %W(#{ROOT}/lib/appliance_console.rb
-                     /bin/miqnet.sh
-                     #{ROOT}/vmdb/lib/tasks/evm_dba.rake
-                     #{ROOT}/lib/util/mount/miq_generic_mount_session.rb
-                     #{ROOT}/lib/util/mount/miq_smb_session.rb
-                     #{ROOT}/lib/util/mount/miq_nfs_session.rb
-                     #{ROOT}/vmdb/lib/evm_database_ops.rb)
 
 require 'appliance_console/errors.rb'
 
@@ -177,9 +169,6 @@ loop do
 
     say("#{I18n.t("product.name")} Virtual Appliance\n")
     say("To administer this appliance, browse to https://#{ip}\n") if configured
-    if $MIQDEBUG
-      $MIQDEBUG_FILES.each { |f| puts "Modified #{(Time.now - File.mtime(f)).to_i / 60} minutes ago - #{f}" }
-    end
 
     ask_without_timeout("Username: ") do |q|
       q.validate = /ADMIN/i
@@ -209,6 +198,24 @@ loop do
         version  = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
         configured = ApplianceConsole::DatabaseConfiguration.configured?
 
+        summary_attributes = [
+          "Hostname:", host,
+          "IP Address:", ip,
+          "Netmask:", mask,
+          "Gateway:", gw,
+          "Primary DNS:", dns1,
+          "Secondary DNS:", dns2,
+          "Search Order:", order,
+          "MAC Address:", mac,
+          "Timezone:", timezone,
+          "Local Database:", ApplianceConsole::Utilities.pg_status,
+          "#{I18n.t("product.name")} Database:", configured ? "#{dbtype} @ #{dbhost}" : "not configured",
+          "Database/Region:", configured ? "#{database} / #{region || 0}" : "not configured",
+          "External Auth:", ExternalHttpdAuthentication.config_status,
+          "#{I18n.t("product.name")} Version:", version,
+          "#{I18n.t("product.name")} Console:", configured ? "https://#{ip}" : "not configured"
+        ]
+
         clear_screen
 
         say(<<-EOL)
@@ -216,21 +223,7 @@ Welcome to the #{I18n.t("product.name")} Virtual Appliance.
 
 To modify the configuration, use a web browser to access the management page.
 
-        Hostname:          #{host}
-        IP Address:        #{ip}
-        Netmask:           #{mask}
-        Gateway:           #{gw}
-        Primary DNS:       #{dns1}
-        Secondary DNS:     #{dns2}
-        Search Order:      #{order}
-        MAC Address:       #{mac}
-        Timezone:          #{timezone}
-        Local Database:    #{ApplianceConsole::Utilities.pg_status}
-        EVM Database:      #{configured ? "#{dbtype} @ #{dbhost}" : "not configured"}
-        Database/Region:   #{configured ? "#{database} / #{region || 0}" : "not configured"}
-        External Auth:     #{ExternalHttpdAuthentication.config_status}
-        EVM Version:       #{version}
-        EVM Console:       #{configured ? "https://#{ip}" : "not configured"}
+#{$terminal.list(summary_attributes, :columns_across, 2)}
         EOL
 
         say("Note: Use the Ctrl-Alt-Del to exit out of any screen and return to the summary screen.")
@@ -245,7 +238,7 @@ To modify the configuration, use a web browser to access the management page.
           if agree("Apply DHCP network configuration? (Y/N): ")
             say("\nApplying DHCP network configuration...")
             Env['DHCP'] = true
-            say("\nAfter completing the appliance configuration, please restart EVM server processes.")
+            say("\nAfter completing the appliance configuration, please restart #{I18n.t("product.name")} server processes.")
           end
 
         when I18n.t("advanced_settings.static")
@@ -282,7 +275,7 @@ Static Network Configuration
             # so we can pass it on the command line to miqnet.sh without quoting it
             Env['SEARCHORDER'] = new_search_order.join("\\;") unless Env.error?
 
-            say("\nAfter completing the appliance configuration, please restart EVM server processes.")
+            say("\nAfter completing the appliance configuration, please restart #{I18n.t("product.name")} server processes.")
           end
 
         when I18n.t("advanced_settings.testnet")
@@ -370,19 +363,19 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.evmstop")
           say("#{selection}\n\n")
-          if agree("\nNote: It may take up to a few minutes for all EVM Server processes to exit gracefully.  Perform an EVM stop? (Y/N): ")
-            if File.exist?(EVM_PID_FILE)
-              say("\nStopping EVM...")
+          if File.exist?(EVM_PID_FILE)
+            if ask_yn? "\nNote: It may take up to a few minutes for all #{I18n.t("product.name")} server processes to exit gracefully. Stop #{I18n.t("product.name")}"
+              say("\nStopping #{I18n.t("product.name")} Server...")
               Env['STOP'] = true
-            else
-              say("\nNo EVM PID file.  EVM Server is not running...")
             end
+          else
+            say("\nNo #{I18n.t("product.name")} PID file. #{I18n.t("product.name")} Server is not running...")
           end
 
         when I18n.t("advanced_settings.evmstart")
           say("#{selection}\n\n")
-          if agree("\nPerform an EVM start? (Y/N): ")
-            say("\nStarting EVM...")
+          if ask_yn?("\nStart #{I18n.t("product.name")}")
+            say("\nStarting #{I18n.t("product.name")} Server...")
             Env['START'] = true
           end
 
@@ -452,7 +445,7 @@ Date and Time Configuration
             say("Setting Database Region...  This process may take a few minutes.\n\n")
 
             if Env.rake("evm:db:region -- --region #{region_number} 1>> #{LOGFILE}")
-              say("Database region setup complete...\nStart the EVM server processes via '#{I18n.t("advanced_settings.evmstart")}'.")
+              say("Database region setup complete...\nStart the #{I18n.t("product.name")} server processes via '#{I18n.t("advanced_settings.evmstart")}'.")
             end
             press_any_key
           else
