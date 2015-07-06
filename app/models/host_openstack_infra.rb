@@ -6,7 +6,7 @@ class HostOpenstackInfra < Host
   # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
   # DISTINCT id, with joined tables, id needs to be prefixed with table name. When this is figured out, replace
   # cloud tenant with rails relations
-  # in /vmdb/app/models/miq_report/search.rb:83 there is select(:id) by hard
+  # in /app/models/miq_report/search.rb:83 there is select(:id) by hard
   # has_many :vms, :class_name => 'VmOpenstack', :foreign_key => :host_id
   # has_many :cloud_tenants, :through => :vms, :uniq => true
 
