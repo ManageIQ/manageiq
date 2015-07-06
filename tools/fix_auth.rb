@@ -6,9 +6,9 @@
 # Alternatively, it will change all passwords to a known one with option -P
 
 if __FILE__ == $PROGRAM_NAME
-  $LOAD_PATH.push(File.expand_path(__dir__)) # /vmdb/tools
-  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w{.. lib}))) # /vmdb/lib
-  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w{.. gems pending}))) # /vmdb/gems/pending
+  $LOAD_PATH.push(File.expand_path(__dir__))
+  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w{.. lib})))
+  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w{.. gems pending})))
 end
 
 require 'active_support/all'

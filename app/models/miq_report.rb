@@ -175,7 +175,7 @@ class MiqReport < ActiveRecord::Base
 
   # Using bracket access has always been slow and is less clear than using method accessors
   def [](key)
-    if !Rails.env.production? && caller[0] =~ /vmdb\/(app|lib)/
+    if !Rails.env.production? && caller[0] =~ /\/(app|lib)/
       msg = "[DEPRECATION] #{self.class.name}#[] accessor should not be used.  Please use #{self.class.name}##{key} instead.  At #{caller[0]}"
       $log.warn msg
       warn msg
@@ -185,7 +185,7 @@ class MiqReport < ActiveRecord::Base
   end
 
   def []=(key, value)
-    if !Rails.env.production? && caller[0] =~ /vmdb\/(app|lib)/
+    if !Rails.env.production? && caller[0] =~ /\/(app|lib)/
       msg = "[DEPRECATION] #{self.class.name}#[]= accessor should not be used.  Please use #{self.class.name}##{key}= instead.  At #{caller[0]}"
       $log.warn msg
       warn msg

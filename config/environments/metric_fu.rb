@@ -63,8 +63,8 @@ SimpleCov.start do
   root         Rails.root.to_s
   coverage_dir "tmp/metric_fu/coverage"
 
-  add_filter   "/vmdb/app/views/"
-  add_filter   "/vmdb/db/fixtures/"
-  add_filter   "/vmdb/spec/"
-  add_filter   "/vmdb/vendor/"
+  add_filter   "/app/views/"
+  add_filter   "/db/fixtures/"
+  add_filter   "/spec/"
+  add_filter   "/vendor/"
 end
