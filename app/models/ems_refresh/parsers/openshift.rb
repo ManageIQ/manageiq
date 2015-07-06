@@ -23,20 +23,24 @@ module EmsRefresh
 
       def parse_project(project_item)
         project = @data_index.fetch_path(:container_projects, :by_name, project_item.metadata.name)
-        project.merge!(:display_name => project_item.metadata.annotations.displayName) unless
+        project.merge!(:display_name => project_item.metadata.annotations['openshift.io/display-name']) unless
             project_item.metadata.annotations.nil?
+      end
+
+      def get_service_name(route)
+        route.spec.try(:to).try(:kind) == 'Service' ? route.spec.try(:to).try(:name) : nil
       end
 
       def parse_route(route)
         new_result = parse_base_item(route)
 
         new_result.merge!(
-            # TODO: persist tls
-            :host_name    => route.host,
-            :labels       => parse_labels(route),
-            # TODO: this part needs to be modified to service_id instead
-            :service_name => route.serviceName,
-            :path         => route.path
+          # TODO: persist tls
+          :host_name    => route.spec.try(:host),
+          :labels       => parse_labels(route),
+          # TODO: this part needs to be modified to service_id instead
+          :service_name => get_service_name(route),
+          :path         => route.path
         )
 
         new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
