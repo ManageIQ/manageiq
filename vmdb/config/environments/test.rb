@@ -37,7 +37,7 @@ Vmdb::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = lambda do |message, callstack|
-    unless message =~ /named_routes\.helpers.*rspec-rails.*controller_example_group/
+    unless message =~ /named_routes\.helpers/ && callstack.grep(/rspec-rails.*controller_example_group/).any?
       ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr].call(message, callstack)
     end
   end
