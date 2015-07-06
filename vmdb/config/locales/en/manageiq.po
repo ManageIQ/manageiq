@@ -443,7 +443,7 @@ msgstr ""
 msgid "(MB) memory"
 msgstr ""
 
-msgid "State Machine (NS/Cls/Inst)"
+msgid "(NS/Cls/Inst)"
 msgstr ""
 
 msgid "(Row %{start_number} of %{pages})"
