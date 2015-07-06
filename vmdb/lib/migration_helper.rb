@@ -26,9 +26,7 @@ module MigrationHelper
   #
 
   def change_id_column(table, column, type)
-    drop_pk(table) if column == :id
     change_column table, column, type
-    add_pk(table) if column == :id
   end
 
   def change_id_columns(table, id_cols, type)
@@ -38,36 +36,6 @@ module MigrationHelper
   #
   # Helper methods
   #
-
-  def add_pk(*args)
-    meth = "add_pk_#{connection.adapter_name.downcase}"
-    self.send(meth, *args) if self.respond_to?(meth)
-  end
-
-  def drop_pk(*args)
-    meth = "drop_pk_#{connection.adapter_name.downcase}"
-    self.send(meth, *args) if self.respond_to?(meth)
-  end
-
-  def add_trigger(*args)
-    meth = "add_trigger_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
-  def drop_trigger(*args)
-    meth = "drop_trigger_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
-  def add_table_inheritance(*args)
-    meth = "add_table_inheritance_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
-
-  def drop_table_inheritance(*args)
-    meth = "drop_table_inheritance_#{connection.adapter_name.downcase}"
-    self.send(meth, *args)
-  end
 
   def bulk_copy_export(*args)
     meth = "bulk_copy_export_#{connection.adapter_name.downcase}"
@@ -246,37 +214,14 @@ module MigrationHelper
   # Adapter specific methods
   #
 
-  def with_identity_insert_sqlserver(table)
-    connection.transaction do
-      connection.execute("SET IDENTITY_INSERT #{table} ON")
-      begin
-        yield
-      ensure
-        connection.execute("SET IDENTITY_INSERT #{table} OFF") rescue nil
-      end
-    end
-  end
-
-  def add_pk_sqlserver(table)
-    say_with_time("add_pk(:#{table})") do
-      connection.execute("ALTER TABLE #{connection.quote_table_name(table)} ADD PRIMARY KEY (id)").to_s
-    end
-  end
-
-  def drop_pk_sqlserver(table)
-    say_with_time("drop_pk(:#{table})") do
-      connection.send(:remove_pk_constraint, table)
-    end
-  end
-
-  def add_trigger_postgresql(direction, table, name, body)
+  def add_trigger(direction, table, name, body)
     say_with_time("add_trigger(:#{direction}, :#{table}, :#{name})") do
-      add_trigger_function_postgresql(name, body)
-      add_trigger_hook_postgresql(direction, name, table, name)
+      add_trigger_function(name, body)
+      add_trigger_hook(direction, name, table, name)
     end
   end
 
-  def add_trigger_function_postgresql(name, body)
+  def add_trigger_function(name, body)
     connection.execute <<-EOSQL, 'Create trigger function'
       CREATE OR REPLACE FUNCTION #{name}()
       RETURNS TRIGGER AS $$
@@ -288,7 +233,7 @@ module MigrationHelper
     EOSQL
   end
 
-  def add_trigger_hook_postgresql(direction, name, table, function)
+  def add_trigger_hook(direction, name, table, function)
     connection.execute <<-EOSQL, 'Create trigger'
       CREATE TRIGGER #{name}
       #{direction.to_s.upcase} INSERT ON #{table}
@@ -296,14 +241,14 @@ module MigrationHelper
     EOSQL
   end
 
-  def drop_trigger_postgresql(table, name)
+  def drop_trigger(table, name)
     say_with_time("drop_trigger(:#{table}, :#{name})") do
       connection.execute("DROP TRIGGER IF EXISTS #{name} ON #{table};", 'Drop trigger')
       connection.execute("DROP FUNCTION IF EXISTS #{name}();", 'Drop trigger function')
     end
   end
 
-  def add_table_inheritance_postgresql(table, inherit_from, options = {})
+  def add_table_inheritance(table, inherit_from, options = {})
     say_with_time("add_table_inheritance(:#{table}, :#{inherit_from})") do
       conditions = sanitize_sql_for_conditions(options[:conditions], table)
       connection.execute("ALTER TABLE #{table} ADD CONSTRAINT #{table}_inheritance_check CHECK (#{conditions})", 'Add inheritance check constraint')
@@ -311,7 +256,7 @@ module MigrationHelper
     end
   end
 
-  def drop_table_inheritance_postgresql(table, inherit_from)
+  def drop_table_inheritance(table, inherit_from)
     say_with_time("drop_table_inheritance(:#{table}, :#{inherit_from})") do
       connection.execute("ALTER TABLE #{table} DROP CONSTRAINT #{table}_inheritance_check", 'Drop inheritance check constraint')
       connection.execute("ALTER TABLE #{table} NO INHERIT #{inherit_from}", 'Drop table inheritance')
