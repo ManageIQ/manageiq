@@ -9,19 +9,19 @@
       = render :partial => "layouts/flash_msg"
       - if @edit
         - # Show basic info box with description only in edit mode
-        %h3=_('Basic Information')
-        %table.style1
-          %tr
-            %td.key=_('Description')
-            - if @edit
-              %td.wider
+        %h3= _('Basic Information')
+        %div{:class => "form-horizontal#{@edit ? "" : ".static"} "}
+          .form-group
+            %label.control-label.col-sm-2= _("Description")
+            .col-sm-10
+              - if @edit
                 = text_field_tag("description", @edit[:new][:description],
                   :maxlength         => MAX_DESC_LEN,
-                  "data-miq_observe" => observe_with_interval)
-              = javascript_tag(javascript_focus('description'))
-            - else
-              %td
-                = h(@alert_profile.description)
+                  "data-miq_observe" => observe_with_interval,
+                  :class             => "form-control")
+                = javascript_tag(javascript_focus('description'))
+              - else
+                %p.form-control-static= h(@alert_profile.description)
         %hr
 
       - if !(@edit || @assign)

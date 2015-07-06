@@ -1,18 +1,19 @@
 -# tree type is servers by role
 - if rec.class == ServerRole
-  %table.style1
-    %tr
-      %td.keyimage{:rowspan => 9}
-        %img{:src => "/images/icons/new/role-#{rec.name}.png"}/
-      %td.key= _("Role")
-      %td.wide= rec.description
-    %tr
-      %td.key= _("Status")
-      %td.wide= h(@rec_status)
-    %tr
+  .form-horizontal.static
+    .form-group
+      %label.col-sm-2.control-label= _("Role")
+      .col-sm-10
+        %p.form-control-static= rec.description
+    .form-group
+      %label.col-sm-2.control-label= _("Status")
+      .col-sm-10
+        %p.form-control-static= h(@rec_status)
+    .form-group
       - max = rec.max_concurrent
-      %td.key= _("Max Concurrent")
-      %td.wide= h(max == 0 ? _("unlimited") : max)
+      %label.col-sm-2.control-label= _("Max Concurrent")
+      .col-sm-10
+        %p.form-control-static= h(max == 0 ? _("unlimited") : max)
 - else
   -# record class is AssignedServerRole
   %table.style1

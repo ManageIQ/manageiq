@@ -2,20 +2,15 @@
   = render(:partial=>"layouts/flash_msg")
   .form-horizontal.static
     .form-group
-      %label.control-label.col-sm-2
-        = _("Description")
+      %label.control-label.col-sm-2= _("Description")
       .col-sm-10
-        %p.form-control-static
-          = h(@selected_schedule.description)
+        %p.form-control-static= h(@selected_schedule.description)
     .form-group
-      %label.col-sm-2.control-label
-        = _("Active")
+      %label.col-sm-2.control-label= _("Active")
       .col-sm-10
-        %p.form-control-static
-          = h(@selected_schedule.enabled)
+        %p.form-control-static= h(@selected_schedule.enabled)
     .form-group
-      %label.col-sm-2.control-label
-        = _("Action")
+      %label.col-sm-2.control-label= _("Action")
       .col-sm-10
         %p.form-control-static
           - if @selected_schedule.sched_action[:method] && @selected_schedule.sched_action[:method] == "check_compliance"
@@ -27,11 +22,9 @@
             = h(ui_lookup(:model => @selected_schedule.towhat))
             = _("Analysis")
 
-
     - if @selected_schedule.sched_action[:method] != "db_backup"
       .form-group
-        %label.col-sm-2.control-label
-          = _("Filter")
+        %label.col-sm-2.control-label= _("Filter")
         .col-sm-10
           - if @selected_schedule.miq_search
             %p.form-control-static
@@ -49,31 +42,24 @@
                     %font{:color => "black"}
                       %b= h([token].flatten.first)
             - else
-              %p.form-control-static
-                = h(MiqExpression.to_human(@selected_schedule.expression))
+              %p.form-control-static= h(MiqExpression.to_human(@selected_schedule.expression))
       .form-group
-        %label.col-sm-2.control-label
-          = _("Run At")
+        %label.col-sm-2.control-label= _("Run At")
         .col-sm-10
-          %p.form-control-static
-            = h(@selected_schedule.run_at_to_human(@timezone).to_s)
+          %p.form-control-static= h(@selected_schedule.run_at_to_human(@timezone).to_s)
       .form-group
-        %label.col-sm-2.control-label
-          = _("Last Run Time")
+        %label.col-sm-2.control-label= _("Last Run Time")
         .col-sm-10
           %p.form-control-static
             - unless @selected_schedule.last_run_on.blank?
               = h(format_timezone(@selected_schedule.last_run_on, @timezone, "view"))
       .form-group
-        %label.col-sm-2.control-label
-          = _("Next Run Time")
+        %label.col-sm-2.control-label= _("Next Run Time")
         .col-sm-10
           %p.form-control-static
             - unless @selected_schedule.next_run_on.blank?
               = h(format_timezone(@selected_schedule.next_run_on, @timezone, "view"))
       .form-group
-        %label.col-sm-2.control-label
-          = _("Zone")
+        %label.col-sm-2.control-label= _("Zone")
         .col-sm-10
-          %p.form-control-static
-            = h(@selected_schedule.v_zone_name)
+          %p.form-control-static= h(@selected_schedule.v_zone_name)

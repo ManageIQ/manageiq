@@ -1,53 +1,41 @@
 #desc_content.desc_content
-  %fieldset
-    %h3
-      = h(@selected_server["name"])
-    .row
-      .col-sm-12.col-md-12.col-lg-6
-        %table.style1
-          %tr
-            %td.keyimage{:rowspan => 6}
-              %img{:src => "/images/icons/new/processmanager-evmserver.png"}
-            %td.key= _("Hostname")
-            %td.wide
-              = h(@selected_server[:hostname])
-          %tr
-            %td.key= _("IP Address")
-            %td.wide
-              = h(@selected_server[:ipaddress])
-          %tr
-            %td.key= _("Status")
-            %td.wide
-              = h(@selected_server[:status])
-          %tr
-            %td.key= _("Started On")
-            %td.wide
-              - t = @selected_server.started_on
-              = h(t.blank? ? "" : format_timezone(t))
-          %tr
-            %td.key= _("Stopped On")
-            %td.wide
-              - t = @selected_server.stopped_on
-              = h(t.blank? ? "" : format_timezone(t))
-      .col-sm-12.col-md-12.col-lg-6
-        %table.style1
-          %tr
-            %td.key= _("Memory Usage")
-            %td
-              = h(@selected_server["memory_usage"])
-          %tr
-            %td.key= _("Memory Size")
-            %td
-              = h(@selected_server["memory_size"])
-          %tr
-            %td.key= _("CPU Time")
-            %td
-              = h(@selected_server["cpu_time"])
-          %tr
-            %td.key= _("CPU Percent")
-            %td
-              = h(@selected_server["percent_cpu"])
-          %tr
-            %td.key= _("Version / Build")
-            %td
-              = h(@selected_server["version"])
+  %h3= h(@selected_server["name"])
+  .form-horizontal.static
+    .form-group
+      %label.col-sm-3.control-label= _("Hostname")
+      .col-sm-9
+        %p.form-control-static= h(@selected_server[:hostname])
+    .form-group
+      %label.col-sm-3.control-label= _("IP Address")
+      .col-sm-9
+        %p.form-control-static= h(@selected_server[:ipaddress])
+    .form-group
+      %label.col-sm-3.control-label= _("Status")
+      .col-sm-9
+        %p.form-control-static= h(@selected_server[:status])
+    .form-group
+      %label.col-sm-3.control-label= _("Started On")
+      .col-sm-9
+        %p.form-control-static
+          - t = @selected_server.started_on
+          = h(t.blank? ? "" : format_timezone(t))
+    .form-group
+      %label.col-sm-3.control-label= _("Memory Usage")
+      .col-sm-9
+        %p.form-control-static= h(@selected_server["memory_usage"])
+    .form-group
+      %label.col-sm-3.control-label= _("Memory Size")
+      .col-sm-9
+        %p.form-control-static= h(@selected_server["memory_size"])
+    .form-group
+      %label.col-sm-3.control-label= _("CPU Time")
+      .col-sm-9
+        %p.form-control-static= h(@selected_server["cpu_time"])
+    .form-group
+      %label.col-sm-3.control-label= _("CPU Percent")
+      .col-sm-9
+        %p.form-control-static= h(@selected_server["percent_cpu"])
+    .form-group
+      %label.col-sm-3.control-label= _("Version / Build")
+      .col-sm-9
+        %p.form-control-static= h(@selected_server["version"])
