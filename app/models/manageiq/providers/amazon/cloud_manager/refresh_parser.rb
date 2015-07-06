@@ -52,8 +52,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_flavors
-    require 'Amazon/MiqEc2InstanceTypes'
-    process_collection(MiqEc2InstanceTypes.all, :flavors) { |flavor| parse_flavor(flavor) }
+    process_collection(ManageIQ::Providers::Amazon::InstanceTypes.all, :flavors) { |flavor| parse_flavor(flavor) }
   end
 
   def get_availability_zones
