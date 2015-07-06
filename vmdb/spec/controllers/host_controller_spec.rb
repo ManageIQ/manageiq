@@ -136,4 +136,20 @@ describe HostController do
       expect(assigns(:devices)).to be_kind_of(Array)
     end
   end
+
+  it "#show" do
+    set_user_privileges
+    host = FactoryGirl.create(:host,
+      :hardware => FactoryGirl.create(:hardware,
+        :numvcpus         => 2,
+        :cores_per_socket => 4,
+        :logical_cpus     => 8
+      )
+    )
+
+    get :show, :id => host.id
+
+    expect(response.status).to eq(200)
+    expect(response).to render_template('host/show')
+  end
 end
