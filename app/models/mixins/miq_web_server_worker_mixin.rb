@@ -15,7 +15,7 @@ module MiqWebServerWorkerMixin
 
     def self.rails_server_command_line
       @rails_server_command_line ||= begin
-        "#{self.nice_prefix} #{Rails.root.join("bin", "rails")} server".freeze
+        "#{nice_prefix} #{Rails.root.join("bin", "rails")} server".freeze
       end
     end
 
@@ -30,7 +30,7 @@ module MiqWebServerWorkerMixin
       }
 
       params = defaults.merge(params)
-      params[:pid]  = self.thin_pid_file(params[:port])
+      params[:pid] = pid_file(params[:port])
 
       # Usage: rails server [mongrel, thin, etc] [options]
       #      -p, --port=port                  Runs Rails on the specified port.
@@ -105,12 +105,12 @@ module MiqWebServerWorkerMixin
       result
     end
 
-    def self.thin_pid_file(port)
-      Rails.root.join("tmp/pids/thin.#{port}.pid")
+    def self.pid_file(port)
+      Rails.root.join("tmp/pids/rails_server.#{port}.pid")
     end
 
-    def thin_pid_file
-      @thin_pid_file ||= self.class.thin_pid_file(self.port)
+    def pid_file
+      @pid_file ||= self.class.pid_file(port)
     end
 
     def self.install_apache_proxy_config
@@ -177,8 +177,7 @@ module MiqWebServerWorkerMixin
     end
 
     def start
-      pid_file = self.thin_pid_file
-      File.delete(pid_file) if File.exist?(pid_file)
+      delete_pid_file
       ENV['PORT'] = self.port.to_s
       super
     end
@@ -208,10 +207,13 @@ module MiqWebServerWorkerMixin
     end
 
     def kill
-      pid_file       = self.thin_pid_file
       deleted_worker = super
-      File.delete(pid_file) if File.exist?(pid_file)
+      delete_pid_file
       deleted_worker
+    end
+
+    def delete_pid_file
+      File.delete(pid_file) if File.exist?(pid_file)
     end
 
     def port

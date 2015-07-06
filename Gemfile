@@ -38,7 +38,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 gem "default_value_for",              "~>3.0.1"
-gem "thin",                           "~>1.3.1"  # Used by rails server through rack
+gem "puma"
 gem 'bcrypt-ruby', '3.1.2'
 gem 'outfielding-jqplot-rails',       "= 1.0.8"
 gem "responders",                     "~> 2.0"
