@@ -8,6 +8,7 @@ function miqInitToolbars() {
   $.each(miq_toolbars, function (key) {
     miqInitToolbar(miq_toolbars[key]);
   });
+  miqResizeTaskbarCell();
 }
 
 // Initialize a single toolbar
