@@ -8,7 +8,7 @@ function cfmeInitSlickGrid(grid_name, dataJson, columnsJson, options) {
     columnsJson[i].asyncPostRender = applyCSS;
     columnsJson[i].formatter = HtmlFormatter;
   }
-  if (columsJson.length) {
+  if (columnsJson.length) {
     columnsJson[0].formatter = TreeFormatter;
   }
 
