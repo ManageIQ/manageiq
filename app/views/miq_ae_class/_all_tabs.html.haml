@@ -4,52 +4,52 @@
   - case nodes.first
   - when "aec"
     %ul.nav.nav-tabs
-      = patternfly_tab_header("instances", @sb[:active_tab]) do
+      = miq_tab_header("instances", @sb[:active_tab]) do
         = _('Instances')
-      = patternfly_tab_header("methods", @sb[:active_tab]) do
+      = miq_tab_header("methods", @sb[:active_tab]) do
         = _('Methods')
-      = patternfly_tab_header("props", @sb[:active_tab]) do
+      = miq_tab_header("props", @sb[:active_tab]) do
         = _('Properties')
-      = patternfly_tab_header("schema", @sb[:active_tab]) do
+      = miq_tab_header("schema", @sb[:active_tab]) do
         = _('Schema')
     .tab-content
-      = patternfly_tab_content("instances", @sb[:active_tab]) do
+      = miq_tab_content("instances", @sb[:active_tab]) do
         = render :partial => "class_instances"
-      = patternfly_tab_content("methods", @sb[:active_tab]) do
+      = miq_tab_content("methods", @sb[:active_tab]) do
         = render :partial => "class_methods"
-      = patternfly_tab_content("props", @sb[:active_tab]) do
+      = miq_tab_content("props", @sb[:active_tab]) do
         = render :partial => "class_props"
-      = patternfly_tab_content("schema", @sb[:active_tab]) do
+      = miq_tab_content("schema", @sb[:active_tab]) do
         = render :partial => "class_fields"
   - when "aei"
     %ul.nav.nav-tabs
-      = patternfly_tab_header("instances", @sb[:active_tab]) do
+      = miq_tab_header("instances", @sb[:active_tab]) do
         = _('Instances')
     .tab-content
-      = patternfly_tab_content("instances", @sb[:active_tab]) do
+      = miq_tab_content("instances", @sb[:active_tab]) do
         = render :partial => "instance_fields"
   - when "aem"
     %ul.nav.nav-tabs
-      = patternfly_tab_header("methods", @sb[:active_tab]) do
+      = miq_tab_header("methods", @sb[:active_tab]) do
         = _("Method Inputs")
     .tab-content
-      = patternfly_tab_content("methods", @sb[:active_tab]) do
+      = miq_tab_content("methods", @sb[:active_tab]) do
         = render :partial => "method_inputs"
   - when "aen"
     - if @in_a_form && @edit.key?(:ae_class_id)
       -# class add
       %ul.nav.nav-tabs
-        = patternfly_tab_header("details", @sb[:active_tab]) do
+        = miq_tab_header("details", @sb[:active_tab]) do
           = _('Properties')
       .tab-content
-        = patternfly_tab_content("details", @sb[:active_tab]) do
+        = miq_tab_content("details", @sb[:active_tab]) do
           = render :partial => "class_add"
     - else
       %ul.nav.nav-tabs
-        = patternfly_tab_header("details", @sb[:active_tab]) do
+        = miq_tab_header("details", @sb[:active_tab]) do
           = _('Namespace Details')
       .tab-content
-        = patternfly_tab_content("details", @sb[:active_tab]) do
+        = miq_tab_content("details", @sb[:active_tab]) do
           - if !@in_a_form
             = render :partial => "ns_details"
           - else
@@ -57,19 +57,19 @@
   - when "root"
     -# ns_list_div
     %ul.nav.nav-tabs
-      = patternfly_tab_header("namespaces", @sb[:active_tab]) do
+      = miq_tab_header("namespaces", @sb[:active_tab]) do
         = _('Namespaces')
     .tab-content
-      = patternfly_tab_content("namespaces", @sb[:active_tab]) do
+      = miq_tab_content("namespaces", @sb[:active_tab]) do
         = render :partial => "ns_list"
 
 :javascript
   // method takes hash that can have 4 keys: tabs div id, active_tab label,
   // url to go to when tab is changed, and whether to check for abandon changes or not
-  miq_patternfly_tabs_init("#ae_tabs", "/miq_ae_class/change_tab");
+  miq_tabs_init("#ae_tabs", "/miq_ae_class/change_tab");
   if (typeof miqEditor != "undefined") miqEditor.refresh();
 
 -# disable any other tabs on screen when in edit
 - if @in_a_form
   :javascript
-    miq_patternfly_disable_inactive_tabs('#ae_tabs');
+    miq_tabs_disable_inactive('#ae_tabs');

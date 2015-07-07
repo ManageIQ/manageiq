@@ -2899,7 +2899,7 @@ module ApplicationHelper
     true
   end
 
-  def patternfly_tab_header(id, active, &block)
+  def miq_tab_header(id, active = nil, &block)
     content_tag(:li, :class => active == id ? 'active' : '', :id => "#{id}_tab") do
       content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
         yield
@@ -2907,7 +2907,7 @@ module ApplicationHelper
     end
   end
 
-  def patternfly_tab_content(id, active, options = {}, &block)
+  def miq_tab_content(id, active = nil, options = {}, &block)
     content_tag(:div, :id => id, :class => "tab-pane #{options[:class]} #{active == id ? 'active' : ''}") do
       yield
     end

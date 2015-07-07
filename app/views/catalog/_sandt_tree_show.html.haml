@@ -1,20 +1,20 @@
 = render :partial => "layouts/flash_msg"
 #st_tabs
   %ul.nav.nav-tabs
-    = patternfly_tab_header('basic', 'basic') do
+    = miq_tab_header('basic') do
       = _('Basic Info')
     - if @record.display && @record.prov_type != "generic_orchestration"
-      = patternfly_tab_header('details', 'basic') do
+      = miq_tab_header('details') do
         = _('Details')
     - if @record.composite?
-      = patternfly_tab_header('resources', 'basic') do
+      = miq_tab_header('resources') do
         = _('Selected Resources')
     - else
       - if need_prov_dialogs?(@record.prov_type)
-        = patternfly_tab_header('request', 'basic') do
+        = miq_tab_header('request') do
           = _('Request Info')
   .tab-content
-    = patternfly_tab_content('basic', 'basic') do
+    = miq_tab_content('basic') do
       %h3
         = _('Basic Information')
       %table.style1
@@ -103,7 +103,7 @@
         %script{:type => "text/javascript"} miqInitJqueryForm();
 
     - if @record.display && @record.prov_type != "generic_orchestration"
-      = patternfly_tab_content('details', 'basic') do
+      = miq_tab_content('details') do
         %h3
           = _('Basic Information')
         %table.style1
@@ -114,7 +114,7 @@
               = @record.long_description.to_s.html_safe
 
     - if @record.composite?
-      = patternfly_tab_content('resources', 'basic') do
+      = miq_tab_content('resources') do
         %h3
           = _('Resources')
         - resources = @record.service_resources
@@ -158,7 +158,7 @@
                         = %w(group_idx provision_index).include?(key) ? r.send(key).to_i + 1 : r.send(key)
     - else
       - if !@record.prov_type || (@record.prov_type && need_prov_dialogs?(@record.prov_type))
-        = patternfly_tab_content('request', 'basic') do
+        = miq_tab_content('request') do
           - if @options[:wf]
             %h3
               = _('Request Info')
@@ -168,4 +168,4 @@
           - else
             %span{:style => "color:red"}= @no_wf_msg
 :javascript
-  miq_patternfly_tabs_init("#st_tabs");
+  miq_tabs_init("#st_tabs");

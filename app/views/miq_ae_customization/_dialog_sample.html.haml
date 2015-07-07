@@ -5,12 +5,12 @@
     #dialog_tabs
       %ul.nav.nav-tabs
         - @record.ordered_dialog_resources.each do |dt|
-          = patternfly_tab_header("#{dt.resource.id}_tab", nil) do
+          = miq_tab_header("#{dt.resource.id}_tab") do
             = dt.resource.label
       .tab-content
         - @record.ordered_dialog_resources.each do |dt|
           -# dialog tabs
-          = patternfly_tab_content("#{dt.resource.id}_tab", nil) do
+          = miq_tab_content("#{dt.resource.id}_tab") do
             - dt.resource.ordered_dialog_resources.each do |tg|
               -# dialog groups/fields
               - group = tg.resource
@@ -36,7 +36,7 @@
                             = text_area_tag(field.id, field.sample_text, :size => "50x6", :disabled => true)
 
                           - when "DialogFieldCheckBox"
-                            = check_box_tag("field.id", value = "1", false, :disabled => true)
+                            = check_box_tag("field.id", "1", false, :disabled => true)
                           - when "DialogFieldDateControl", "DialogFieldDateTimeControl"
                             - if field.show_past_dates
                               :javascript
@@ -52,7 +52,7 @@
                               :readonly => "true")
                             - if field.type == "DialogFieldDateTimeControl"
                               &nbsp;
-                              =_('at')
+                              = _('at')
                               &nbsp;
                               = select_tag("start_hour", options_for_select(Array.new(24) { |i| i }, 0))
                               \:
@@ -94,7 +94,7 @@
                                         options_for_select([["<#{_('Choose')}>", nil]] + val.collect(&:reverse), field.default_value))
 
                                   - else
-                                    - # NOT REQUIRED
+                                    -# NOT REQUIRED
                                     = select_tag('field.id',
                                       options_for_select([["#{_('None')}", nil]] + val.collect(&:reverse), field.default_value))
 
@@ -124,4 +124,4 @@
                             - else
                               = select_tag('field.id', options_for_select(category_tags), :multiple => true)
 :javascript
-  miq_patternfly_tabs_init("#dialog_tabs");
+  miq_tabs_init("#dialog_tabs");

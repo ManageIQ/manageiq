@@ -7,14 +7,14 @@
     = render :partial => "layouts/flash_msg"
     #dialog_info_tabs
       %ul.nav.nav-tabs
-        = patternfly_tab_header('sample_tab', @sb[:active_tab]) do
+        = miq_tab_header('sample_tab', @sb[:active_tab]) do
           = _('Sample')
-        = patternfly_tab_header('info_tab', @sb[:active_tab]) do
+        = miq_tab_header('info_tab', @sb[:active_tab]) do
           = _('Basic Info')
       .tab-content
-        = patternfly_tab_content('sample_tab', @sb[:active_tab]) do
+        = miq_tab_content('sample_tab', @sb[:active_tab]) do
           = render :partial => "dialog_sample"
-        = patternfly_tab_content('info_tab', @sb[:active_tab]) do
+        = miq_tab_content('info_tab', @sb[:active_tab]) do
           = render :partial => "dialog_info"
     :javascript
-      miq_patternfly_tabs_init('#dialog_info_tabs', '/miq_ae_customization/change_tab/');
+      miq_tabs_init('#dialog_info_tabs', '/miq_ae_customization/change_tab/');

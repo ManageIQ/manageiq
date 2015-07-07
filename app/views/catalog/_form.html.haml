@@ -1,34 +1,34 @@
 #st_form_tabs
   %ul.nav.nav-tabs
-    = patternfly_tab_header('basic', @sb[:st_form_active_tab]) do
+    = miq_tab_header('basic', @sb[:st_form_active_tab]) do
       = _('Basic Info')
     - unless @edit[:new][:st_prov_type] == "generic_orchestration"
-      = patternfly_tab_header('details', @sb[:st_form_active_tab]) do
+      = miq_tab_header('details', @sb[:st_form_active_tab]) do
         = _('Details')
       - if @edit[:new][:service_type] == "composite"
-        = patternfly_tab_header('resources', @sb[:st_form_active_tab]) do
+        = miq_tab_header('resources', @sb[:st_form_active_tab]) do
           = _('Resources')
       - else
         - if @edit[:new][:service_type] == "atomic" && need_prov_dialogs?(@edit[:new][:st_prov_type])
-          = patternfly_tab_header('request', @sb[:st_form_active_tab]) do
+          = miq_tab_header('request', @sb[:st_form_active_tab]) do
             = _('Request Info')
 
   .tab-content
-    = patternfly_tab_content('basic', @sb[:st_form_active_tab]) do
+    = miq_tab_content('basic', @sb[:st_form_active_tab]) do
       = render :partial => "form_basic_info"
     - unless @edit[:new][:st_prov_type] == "generic_orchestration"
-      = patternfly_tab_content('details', @sb[:st_form_active_tab], :class => 'cm-tab') do
+      = miq_tab_content('details', @sb[:st_form_active_tab], :class => 'cm-tab') do
         = render :partial => "form_details_info"
       - if @edit[:new][:service_type] == "composite"
-        = patternfly_tab_content('resources', @sb[:st_form_active_tab]) do
+        = miq_tab_content('resources', @sb[:st_form_active_tab]) do
           = render :partial => "form_resources_info"
       - else
         - if @edit[:new][:service_type] == "atomic" && need_prov_dialogs?(@edit[:new][:st_prov_type])
-          = patternfly_tab_content('request', @sb[:st_form_active_tab]) do
+          = miq_tab_content('request', @sb[:st_form_active_tab]) do
             = render :partial => "form_request_info"
 
 - unless @edit[:new][:display]
   :javascript
-    miq_patternfly_show_hide_tab("#details_tab", false);
+    miq_tabs_show_hide("#details_tab", false);
 :javascript
-  miq_patternfly_tabs_init('#st_form_tabs');
+  miq_tabs_init('#st_form_tabs');
