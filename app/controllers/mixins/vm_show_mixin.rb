@@ -167,6 +167,6 @@ module VmShowMixin
   end
 
   def breadcrumb_name(model)
-    ui_lookup_for_model(model || self.class.model_name).pluralize
+    ui_lookup_for_model(model || self.class.model.name).pluralize
   end
 end
