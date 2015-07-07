@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ManageIQ/manageiq.svg)](https://travis-ci.org/ManageIQ/manageiq)
 [![Code Climate](http://img.shields.io/codeclimate/github/ManageIQ/manageiq.svg)](https://codeclimate.com/github/ManageIQ/manageiq)
+[![Dependency Status](https://gemnasium.com/ManageIQ/manageiq.svg)](https://gemnasium.com/ManageIQ/manageiq)
 
 ManageIQ is a Cloud Management Platform that delivers the insight, control, and
 automation that enterprises need to address the challenges of managing hybrid
