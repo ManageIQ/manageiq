@@ -142,58 +142,6 @@ class MiqReport < ActiveRecord::Base
       (table && table.data.length > 0)
   end
 
-  #
-  # HACK: Rails 3 added the association method which you would pass a name of
-  # an association.  This conflicts with an existing attr_accessor used in
-  # reporting. The new accessor is called scoped_association and this hack
-  # allows us find existing callers while still allowing them to work.
-  #
-
-  alias :rails_3_association :association
-
-  def association(*args)
-    return rails_3_association(*args) unless args.empty?
-
-    unless Rails.env.production?
-      msg = "[DEPRECATION] association accessor is deprecated.  Please use scoped_association instead.  At #{caller[0]}"
-      $log.warn msg
-      warn msg
-    end
-
-    scoped_association
-  end
-
-  def association=(val)
-    unless Rails.env.production?
-      msg = "[DEPRECATION] association= accessor is deprecated.  Please use scoped_association= instead.  At #{caller[0]}"
-      $log.warn msg
-      warn msg
-    end
-
-    scoped_association = val
-  end
-
-  # Using bracket access has always been slow and is less clear than using method accessors
-  def [](key)
-    if !Rails.env.production? && caller[0] =~ /\/(app|lib)/
-      msg = "[DEPRECATION] #{self.class.name}#[] accessor should not be used.  Please use #{self.class.name}##{key} instead.  At #{caller[0]}"
-      $log.warn msg
-      warn msg
-    end
-
-    self.send(key)
-  end
-
-  def []=(key, value)
-    if !Rails.env.production? && caller[0] =~ /\/(app|lib)/
-      msg = "[DEPRECATION] #{self.class.name}#[]= accessor should not be used.  Please use #{self.class.name}##{key}= instead.  At #{caller[0]}"
-      $log.warn msg
-      warn msg
-    end
-
-    self.send("#{key}=", value)
-  end
-
   def to_hash
     keys = self.class.attr_accessor_that_yamls
     keys.each_with_object(attributes.to_hash) { |k, h| h[k] = send(k) }
