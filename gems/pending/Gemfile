@@ -12,10 +12,6 @@ gem "activesupport", RAILS_VERSION
 # ActiveRecord is used by appliance_console
 gem "activerecord",  RAILS_VERSION
 
-
-# NOTE: Must use fully qualified paths here so that when vmdb/Gemfile pulls in
-#       this file, the directories resolve correctly.
-
 # Not locally modified and not required
 gem "awesome_spawn",           "~> 1.3",            :require => false
 gem "binary_struct",           "~> 2.0",            :require => false
