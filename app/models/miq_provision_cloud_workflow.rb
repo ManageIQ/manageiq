@@ -12,7 +12,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
   def allowed_cloud_networks(_options = {})
     return {} unless (src_obj = provider_or_tenant_object)
 
-    src_obj.cloud_networks.each_with_object({}) do |cn, hash|
+    src_obj.all_cloud_networks.each_with_object({}) do |cn, hash|
       hash[cn.id] = cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})"
     end
   end
