@@ -213,4 +213,133 @@ openstack-keystone:                     active
       host.filesystems.should include(*(host.host_service_group_openstacks.flat_map(&:filesystems)))
     end
   end
+
+  describe "Overriden auth methods for ssh fleecing" do
+    let(:ext_management_system) do
+      FactoryGirl.create(:ems_openstack_infra).tap do |ems|
+        ems.authentications << FactoryGirl.create(:authentication_ssh_keypair)
+        ems.authentications << FactoryGirl.create(:authentication)
+      end
+    end
+
+    let(:host) do
+      FactoryGirl.create(:host_openstack_infra).tap do |host|
+        host.ext_management_system = ext_management_system
+        host.authentications << FactoryGirl.create(:authentication_ssh_keypair_without_key)
+      end
+    end
+
+    it "#get_parent_keypair returns parent provider auth" do
+      expected_auth = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
+      expect(host.get_parent_keypair(:ssh_keypair)).to eq expected_auth
+    end
+
+    context "#authentication_status" do
+      it "returns host's auth status if auth is there" do
+        expect(host.authentication_status).to eq 'SomeMockedStatus'
+      end
+
+      it "returns 'None' if host's auth is nil" do
+        # Remove the host's auth record
+        host.authentications.where(:authtype => :ssh_keypair).first.destroy
+        host.reload
+        expect(host.authentication_status).to eq 'None'
+      end
+    end
+
+    context "#ssh_users_and_passwords" do
+      it "returns authentication_best_fit" do
+        auth        = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
+        expected_ret = auth.userid, nil, nil, nil, {:key_data => auth.auth_key, :passwordless_sudo => true}
+
+        expect(host.ssh_users_and_passwords).to eq expected_ret
+      end
+
+      it "passes passwordless sudo parameter if user is not 'root'" do
+        # Switch to auth with root user
+        ext_management_system.authentications.where(:authtype => :ssh_keypair).first.destroy
+        ext_management_system.authentications << FactoryGirl.create(:authentication_ssh_keypair_root)
+
+        auth = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
+
+        expected_ret = auth.userid, nil, nil, nil, {:key_data => auth.auth_key, :passwordless_sudo => false}
+
+        expect(host.ssh_users_and_passwords).to eq expected_ret
+      end
+    end
+
+    context "#authentication_best_fit" do
+      it "defaults to parent provider ssh_keypair auth" do
+        ems_auth  = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
+
+        expect(host.authentication_best_fit).to eq ems_auth
+      end
+
+      it "checks that if host's auth_key is nil, parent auth is returned" do
+        ems_auth  = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
+        host_auth = host.authentications.where(:authtype => :ssh_keypair).first
+
+        expect(host_auth.auth_key).to be_nil
+        expect(host.authentication_best_fit(:ssh_keypair)).to eq ems_auth
+      end
+
+      it "checks that if host's auth_key is not nil, host's auth is returned" do
+        host_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_auth.auth_key = 'host_private_key_content'
+        host_auth.save
+
+        expect(host.authentication_best_fit(:ssh_keypair)).to eq host_auth
+      end
+    end
+
+    context "#update_ssh_auth_status!" do
+      context "when ssh connection causes exception" do
+        before :each do
+          host.stub(:verify_credentials_with_ssh) { raise "some error" }
+        end
+
+        it "sets auth to 'Error' state if credentials exists" do
+          host_auth = host.authentications.where(:authtype => :ssh_keypair).first
+          expect(host_auth.status).to eq("SomeMockedStatus")
+          # Update status and observe it changes to error
+          host.update_ssh_auth_status!
+          host_auth.reload
+          expect(host_auth.status).to eq("Error")
+        end
+
+        it "sets auth to 'None' state when hostname or credentials are missing" do
+          # Remove the auth and observe the state is not error but none
+          ext_management_system.authentications.where(:authtype => :ssh_keypair).first.destroy
+          host.reload
+          # Update status and observe it changes to none
+          host.update_ssh_auth_status!
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("None")
+        end
+      end
+
+      context "when ssh connection succeeds an verification returns true" do
+        before :each do
+          host.stub(:verify_credentials_with_ssh).and_return(true)
+        end
+
+        it "sets auth to valid, when credentials verification succeeds" do
+
+          # Update status and observe it changes to Valid
+          host.update_ssh_auth_status!
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Valid")
+        end
+
+        it "creates new auth record for storing state if there is not any" do
+          host.authentications.where(:authtype => :ssh_keypair).first.destroy
+          # Check we have removed host's auth
+          expect(host.authentications.where(:authtype => :ssh_keypair)).to eq([])
+          # Update status and observe it creates new auth with Valid state
+          host.reload
+          host.update_ssh_auth_status!
+          host.reload
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Valid")
+        end
+      end
+    end
+  end
 end
