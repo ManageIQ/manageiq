@@ -67,6 +67,7 @@ RSpec.configure do |config|
   config.include AuthHelper,  :type => :helper
   config.include AuthRequestHelper, :type => :request
   config.include UiConstants, :type => :view
+  config.include QueueSpecHelper, :type => :automation
 
   config.include AutomationSpecHelper, :type => :automation
   config.include PresenterSpecHelper, :type => :presenter, :example_group => {
