@@ -98,6 +98,22 @@ describe MiqProvisionRedhat do
         end
       end
 
+      context "#log_clone_options" do
+        let(:ems_cluster) { FactoryGirl.create(:ems_cluster, :ems_ref => "test_ref") }
+        before do
+          @vm_prov.stub(:dest_cluster).and_return(ems_cluster)
+        end
+
+        it "doesnt display passwords for clone options" do
+          # dest_cluster
+          @vm_prov.options[:root_password] = "HIDDEN_PASSWORD"
+          clone_options = @vm_prov.prepare_for_clone_task
+
+          expect($log).not_to receive(:info).with(/HIDDEN_PASSWORD/)
+          @vm_prov.log_clone_options(clone_options)
+        end
+      end
+
       context "with a destination vm" do
         before do
           rhevm_vm = double(:attributes => {:status => {:state => "down"}})

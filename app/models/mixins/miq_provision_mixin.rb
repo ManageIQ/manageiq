@@ -77,8 +77,12 @@ module MiqProvisionMixin
     end
   end
 
+  def workflow_class
+    MiqProvisionWorkflow.class_for_source(source)
+  end
+
   def workflow(prov_options = options, flags = {})
-    MiqProvisionWorkflow.class_for_source(source).new(prov_options, userid, flags)
+    workflow_class.new(prov_options, userid, flags)
   end
 
   def eligible_resources(rsc_type)

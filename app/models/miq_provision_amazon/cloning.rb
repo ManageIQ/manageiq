@@ -51,7 +51,7 @@ module MiqProvisionAmazon::Cloning
     _log.info("Cloud Watch:                     [#{clone_options[:monitoring_enabled].inspect}]")
 
     dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
-    dumpObj(options, "#{log_header} Prov Options:  ", $log, :info)
+    dumpObj(options, "#{log_header} Prov Options:  ", $log, :info, :protected => {:path => workflow_class.encrypted_options_field_regs})
   end
 
   def start_clone(clone_options)

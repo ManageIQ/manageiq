@@ -22,6 +22,10 @@ class MiqRequestWorkflow
     []
   end
 
+  def self.encrypted_options_field_regs
+    encrypted_options_fields.map { |f| /\[:#{f}\]/ }
+  end
+
   def self.all_encrypted_options_fields
     descendants.flat_map(&:encrypted_options_fields).uniq
   end
