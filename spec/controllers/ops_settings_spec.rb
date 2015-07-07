@@ -104,7 +104,7 @@ describe OpsController do
           :time_zone          => "UTC",
           :start_hour         => "0",
           :start_min          => "0",
-          :miq_angular_date_1 => 2.days.from_now.utc.strftime("%m/%d/%Y")
+          :start_date         => 2.days.from_now.utc.strftime("%Y-%m-%d"),
         }
         controller.stub(:assert_privileges)
       end

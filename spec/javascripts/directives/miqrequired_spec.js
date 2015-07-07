@@ -26,4 +26,3 @@ describe('miqrequired initialization', function() {
     });
   });
 });
-

@@ -7,8 +7,9 @@ miqAngularApplication.directive('miqrequired', function() {
             setValidity(scope, ctrl, ctrl.$modelValue);
           }
         });
-        ctrl.$parsers.unshift(function() {
+        ctrl.$parsers.unshift(function(val) {
           setValidity(scope, ctrl, ctrl.$viewValue);
+          return val;
         });
 
         var setValidity = function(scope, ctrl, value) {

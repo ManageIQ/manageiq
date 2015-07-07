@@ -10,8 +10,8 @@ gem "rails",                           RAILS_VERSION
 gem "activerecord-deprecated_finders", "~>1.0.4",     :require => "active_record/deprecated_finders"
 
 gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
-gem 'angularjs-rails', '=1.2.4'
-gem 'jquery-rails', "=2.2.2"
+gem 'angularjs-rails', '~>1.3.15'
+gem 'jquery-rails', "~>2.2.2"
 gem 'jquery-hotkeys-rails'
 gem 'codemirror-rails', "=4.2"
 
