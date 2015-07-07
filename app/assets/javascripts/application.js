@@ -34,6 +34,8 @@
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap
 //= require bootstrap-hover-dropdown/bootstrap-hover-dropdown.min
+//= require c3/c3
+//= require d3/d3
 //= require patternfly
 //= require jquery.observe_field
 //= require miq_jquery_ujs_rails3
