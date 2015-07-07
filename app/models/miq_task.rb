@@ -193,7 +193,13 @@ class MiqTask < ActiveRecord::Base
     #   :role (role of the server to run the action)
     #   :msg_timeout => how long you want to wait before pulling the plug on the action (seconds)
 
-    task = MiqTask.create(:name => options[:action], :userid => options[:userid])
+    msg =  "Queued the action: [#{options[:action]}] being run for user: [#{options[:userid]}]"
+    task = MiqTask.create(
+      :name    => options[:action],
+      :userid  => options[:userid],
+      :state   => STATE_QUEUED,
+      :status  => STATUS_OK,
+      :message => msg)
 
     # Set the callback for this task to set the status based on the results of the actions
     queue_options[:miq_callback] = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback, :args => ['Finished']}
@@ -202,8 +208,6 @@ class MiqTask < ActiveRecord::Base
     MiqQueue.put(queue_options)
 
     # return task id to the UI
-    msg =  "Queued the action: [#{options[:action]}] being run for user: [#{options[:userid]}]"
-    task.update_status(STATE_QUEUED, STATUS_OK, msg)
     _log.info("Task: [#{task.id}] #{msg}")
     task.id
   end
