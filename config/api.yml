@@ -367,8 +367,6 @@
         :identifier: ems_infra_refresh
       - :name: delete
         :identifier: ems_infra_delete
-      - :name: scale
-        :identifier: ems_infra_scale
     :resource_actions:
       :post:
       - :name: edit
