@@ -1,6 +1,4 @@
-require File.expand_path('Gemfile.global.rb', File.dirname(__FILE__))
-
-MiqBundler.include_gemfile("gems/pending/Gemfile", binding)
+eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 
 #
 # VMDB specific gems
@@ -22,7 +20,6 @@ gem 'sass-rails'
 gem 'patternfly-sass', "~>1.3.1"
 
 # Vendored and required
-# TODO: Fix AWS tests now that our api specs and the soap4r 1.6.0 specs pass on 1.8.7/1.9.3
 gem "ruport",                         "=1.7.0",                          :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
 
 # Vendored but not required
@@ -111,25 +108,6 @@ unless ENV['APPLIANCE']
     gem "metric_fu",           :require => false, :git => "git://github.com/ManageIQ/metric_fu.git", :tag => "v3.0.0-3"
     gem "simplecov-rcov-text", ">= 0.0.3", :require => false
   end
-
-  # Debuggers:
-  #   Enable either the rubymine debugger OR one of the CLI debuggers in your Gemfile, not both.
-  #     http://devnet.jetbrains.net/thread/431168?tstart=0
-  #   After creating/updating the Gemfile.dev.rb as described below, run bundle install.
-  #
-  # for rubymine: the latest rubymine should install the correct debuggers and require them automatically, but if needed
-  # copy the following lines to Gemfile.dev.rb and start the debugger through rubymine
-  #   gem "ruby-debug-base19x", "~> 0.11.30.pre10", :require => false
-  #   gem "ruby-debug-ide",     "~> 0.4.17.beta14", :require => false
-  #
-  # for the CLI fast debugger: copy the following line to Gemfile.dev.rb and start the debugger via: require 'debugger'; debugger
-  #   gem "debugger",           "~>1.2.0",          :require => false
-  #
-  # for the Old CLI fast debugger: copy the following line to Gemfile.dev.rb and start the debugger via: require 'ruby-debug'; debugger
-  #   gem "ruby-debug19",       "~>0.11.6",         :require => false
-  #   gem "ruby-debug-base19",  "~>0.11.25",        :require => false
-  #
-  # for the ruby debug standard library start the debugger via: require 'debug'; debugger
 end
 
 # Assets from rails-assets.org
@@ -146,12 +124,8 @@ end
 #   their local development.  This can be any gem under evaluation that other
 #   developers may not need or may not easily install, such as rails-dev-boost,
 #   any git based gem, and compiled gems like rbtrace or memprof.
-if File.exist?(File.expand_path("Gemfile.dev.rb", File.dirname(__FILE__)))
-  MiqBundler.include_gemfile("Gemfile.dev.rb", binding)
-end
+dev_gemfile = File.expand_path("Gemfile.dev.rb", __dir__)
+eval_gemfile(dev_gemfile) if File.exist?(dev_gemfile)
 
-# Load plugins that are packaged as Gems
-Dir["#{File.dirname(__FILE__)}/bundler.d/*.rb"].each do |bundle|
-  MiqBundler.include_gemfile(bundle, binding)
-end
-
+# Load other additional Gemfiles
+Dir.glob("bundler.d/*.rb").each { |f| eval_gemfile(File.expand_path(f, __dir__)) }
