@@ -2453,7 +2453,7 @@ class ApplicationController < ActionController::Base
     line << " ActiveRecord Object!!" if value.kind_of?(ActiveRecord::Base)
     $log.warn("MIQ(#{controller_name}_controller-#{action_name}): " + line)
 
-    return unless value.kind_of?(Hash) || value.kind_of?(Array) || value.kind_of?(ActiveRecord::Base)
+    return if value.kind_of?(Hash) || value.kind_of?(Array) || value.kind_of?(ActiveRecord::Base)
 
     $log.debug { "Value #{value.inspect[0...2000]}" }
   end
