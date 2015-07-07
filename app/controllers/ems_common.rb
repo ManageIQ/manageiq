@@ -724,7 +724,7 @@ module EmsCommon
 
   def get_amazon_regions
     regions = Hash.new
-    Amazon::EC2::Regions.all.each do |region|
+    ManageIQ::Providers::Amazon::Regions.all.each do |region|
       regions[region[:name]] = region[:description]
     end
     return regions

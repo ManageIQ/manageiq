@@ -1,6 +1,3 @@
-require 'active_support'  #TODO - Make this work without Rails
-require 'active_support/core_ext/numeric/bytes'
-
 # Instance Types for EC2.  These types are not provided by the AWS SDK, and so
 #   are enumerated here manually from the following sources:
 #
@@ -13,7 +10,7 @@ require 'active_support/core_ext/numeric/bytes'
 #     NOTE: We may want to consider using the source data directly, however
 #           there aren't the discontinued types.
 #           https://raw.githubusercontent.com/powdahound/ec2instances.info/master/www/instances.json
-module MiqEc2InstanceTypes
+module ManageIQ::Providers::Amazon::InstanceTypes
   # Types that are currently advertised for use
   AVAILABLE_TYPES = {
     "t2.micro" => {

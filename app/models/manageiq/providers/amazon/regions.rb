@@ -1,8 +1,8 @@
 # The aws-sdk gem can get us this information, however it talks to EC2 to get it.
 # For cases where we don't yet want to contact EC2, this information is hardcoded.
 
-module Amazon
-  module EC2
+module ManageIQ
+  module Providers::Amazon
     module Regions
       # From http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
       REGIONS = {

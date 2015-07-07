@@ -1,6 +1,3 @@
-require 'Amazon/ec2/regions'
-require 'Amazon/amazon_connection'
-
 class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudManager
   require_dependency 'manageiq/providers/amazon/cloud_manager/auth_key_pair'
   require_dependency 'manageiq/providers/amazon/cloud_manager/availability_zone'
@@ -32,10 +29,10 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     false
   end
 
-  validates :provider_region, :inclusion => { :in => ::Amazon::EC2::Regions.names }
+  validates :provider_region, :inclusion => {:in => ManageIQ::Providers::Amazon::Regions.names}
 
   def description
-    ::Amazon::EC2::Regions.find_by_name(provider_region)[:description]
+    ManageIQ::Providers::Amazon::Regions.find_by_name(provider_region)[:description]
   end
 
   #

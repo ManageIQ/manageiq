@@ -6,9 +6,9 @@
 # doesn't exist, this event monitor will create the queue and subscribe the
 # queue to the AWS Config topic.
 #
-class AmazonEventMonitor
+class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   #
-  # Creates an AmazonEventMonitor
+  # Creates an event monitor
   #
   def initialize(aws_access_key_id, aws_secret_access_key, aws_region, queue_id, sns_aws_config_topic_name = "AWSConfig_topic")
     @aws_access_key_id     = aws_access_key_id

@@ -1,15 +1,12 @@
-require 'workers/event_catcher'
-require 'json'
-
 class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Runner < ManageIQ::Providers::BaseManager::EventCatcher::Runner
   def event_monitor_handle
-    require 'Amazon/events/amazon_event_monitor'
     unless @event_monitor_handle
       aws_access_key_id     = @ems.authentication_userid
       aws_secret_access_key = @ems.authentication_password
       aws_region            = @ems.provider_region
       queue_id              = @ems.guid
-      @event_monitor_handle = AmazonEventMonitor.new(aws_access_key_id, aws_secret_access_key, aws_region, queue_id)
+      @event_monitor_handle = ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream.new(
+        aws_access_key_id, aws_secret_access_key, aws_region, queue_id)
     end
     @event_monitor_handle
   end
