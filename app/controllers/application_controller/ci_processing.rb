@@ -975,7 +975,7 @@ module ApplicationController::CiProcessing
   end
 
   def breadcrumb_name(_model)
-    ui_lookup_for_model(self.class.model_name).pluralize
+    ui_lookup_for_model(self.class.model.name).pluralize
   end
 
   # Reconfigure selected VMs
