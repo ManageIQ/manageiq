@@ -325,6 +325,21 @@ module EmsCommon
     end
   end
 
+  def upload_key_file
+    upload_file = params.fetch_path(:upload, :file)
+
+    if upload_file.nil?
+      add_flash("Use the browse button to locate a key file", :warning)
+    else
+      @ssh_keypair_password = URI.encode(upload_file.read)
+      add_flash(_("Key file was uploaded successfully"), :info)
+
+      @edit = session[:edit]
+      params[:ssh_keypair_password] = @ssh_keypair_password
+      get_form_vars
+    end
+  end
+
   def update
     assert_privileges("#{model.to_s.underscore}_edit")
     return unless load_edit("ems_edit__#{params[:id]}")
@@ -768,7 +783,7 @@ module EmsCommon
     @edit[:new][:amqp_verify] = params[:amqp_verify] if params[:amqp_verify]
 
     @edit[:new][:ssh_keypair_userid] = params[:ssh_keypair_userid] if params[:ssh_keypair_userid]
-    @edit[:new][:ssh_keypair_password] = params[:ssh_keypair_password] if params[:ssh_keypair_password]
+    @edit[:new][:ssh_keypair_password] = URI.decode(params[:ssh_keypair_password]) if params[:ssh_keypair_password]
 
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]

@@ -20,6 +20,7 @@
 //= require dialog_import_export
 //= require widget_import_export
 //= require automate_import_export
+//= require key_import_export
 //= require dialog_field_refresh
 //= require excanvas
 //= require jquery.jqplot
