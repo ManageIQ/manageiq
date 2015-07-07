@@ -131,6 +131,11 @@ unless ENV['APPLIANCE']
   # for the ruby debug standard library start the debugger via: require 'debug'; debugger
 end
 
+# Assets from rails-assets.org
+source 'https://rails-assets.org' do
+  gem 'rails-assets-c3', '~> 0.4.10'
+end
+
 #
 # Custom Gemfile modifications
 #
