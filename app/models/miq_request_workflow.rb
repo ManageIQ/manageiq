@@ -949,16 +949,13 @@ class MiqRequestWorkflow
 
   def get_ems_metadata_tree(src)
     @ems_metadata_tree ||= begin
-      st = Time.now
-      rails_logger('get_ems_metadata_tree', 0)
+      st = Time.zone.now
       result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
       ems_metadata_tree_add_hosts_under_clusters!(result)
-      rails_logger("get_ems_metadata_tree completed in [#{Time.now - st}] seconds.  ", 1)
       @ems_xml_nodes = {}
       xml = MiqXml.newDoc(:xmlhash)
       convert_to_xml(xml, result)
-      _log.info "Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
-      _log.info "EMS metadata collection completed in [#{Time.now - st}] seconds"
+      _log.info "EMS metadata collection completed in [#{Time.zone.now - st}] seconds"
       xml
     end
   end

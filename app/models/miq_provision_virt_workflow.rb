@@ -568,7 +568,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       _log.warn "Allowed Templates is returning an empty list"
     else
       _log.warn "Allowed Templates is returning <#{allowed_templates_list.length}> template(s)"
-      allowed_templates_list.each { |vm| _log.info "Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>" }
+      allowed_templates_list.each do |vm|
+        _log.debug "Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>"
+      end
     end
 
     MiqPreloader.preload(allowed_templates_list, [:operating_system, :ext_management_system, {:hardware => :disks}])
