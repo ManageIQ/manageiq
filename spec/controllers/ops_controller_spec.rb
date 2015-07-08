@@ -207,7 +207,7 @@ describe OpsController do
         server = MiqServer.first
 
         zone = FactoryGirl.create(:zone,
-                                  :name => "not the default",
+                                  :name        => "not the default",
                                   :description => "Not the Default Zone")
 
         current = double("current", :[] => {:server => {:zone => "default"}}).as_null_object
