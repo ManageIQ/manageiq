@@ -226,8 +226,7 @@ To modify the configuration, use a web browser to access the management page.
 #{$terminal.list(summary_attributes, :columns_across, 2)}
         EOL
 
-        say("Note: Use the Ctrl-Alt-Del to exit out of any screen and return to the summary screen.")
-        say("You may need to use Ctrl-Alt-Ins to send a Ctrl-Alt-Del to the virtual machine.\n")
+        say("Note: Use Ctrl-C to exit out of any screen and return to the summary screen.\n")
         press_any_key
 
         clear_screen

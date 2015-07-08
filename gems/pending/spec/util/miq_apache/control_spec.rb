@@ -28,25 +28,25 @@ describe MiqApache::Control do
   end
 
 
-  it "should run_apache_cmd with /etc/init.d/httpd status when calling httpd_status" do
-    MiqUtil.should_receive(:runcmd).with('/etc/init.d/httpd status').and_return("is running...\n")
+  it "should run_apache_cmd with /usr/bin/systemctl status httpd status when calling httpd_status" do
+    MiqUtil.should_receive(:runcmd).with('/usr/bin/systemctl status httpd').and_return("Active: active")
     MiqApache::Control.httpd_status
   end
 
   it "should return false with result when calling httpd_status raising 'httpd is stopped' RuntimeError" do
-    result = "httpd is stopped"
+    result = "Active: inactive"
     MiqUtil.stub(:runcmd).and_raise(RuntimeError.new(result))
     MiqApache::Control.httpd_status.should == [false, result]
   end
 
-  it "should return false with result when calling httpd_status raising 'httpd dead but pid file exists' RuntimeError" do
-    result = "httpd dead but pid file exists"
+  it "should return false with result when calling httpd_status raising 'Active: inactive' RuntimeError" do
+    result = "Active: inactive"
     MiqUtil.stub(:runcmd).and_raise(RuntimeError.new(result))
     MiqApache::Control.httpd_status.should == [false, result]
   end
 
-  it "should return true with result when calling httpd_status raising 'httpd dead but pid file exists' RuntimeError" do
-    result = "is running...\n"
+  it "should return true with result when calling httpd_status raising 'Active: inactive' RuntimeError" do
+    result = "Active: active"
     MiqUtil.stub(:runcmd).and_return(result)
     MiqApache::Control.httpd_status.should == [true, result]
   end
@@ -69,8 +69,8 @@ describe MiqApache::Control do
     lambda { MiqApache::Control.kill_all }.should raise_error(RuntimeError)
   end
 
-  it "should not raise an error if the kill returned no process killed" do
-    result = "httpd: no process killed"
+  it "should not raise an error if the kill returned no process found" do
+    result = "httpd: no process found"
     MiqUtil.stub(:runcmd).and_raise(RuntimeError.new(result))
     lambda { MiqApache::Control.kill_all }.should_not raise_error
   end
@@ -128,7 +128,7 @@ describe MiqApache::Control do
     File.stub(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     $log.stub(:debug?).and_return(false)
-    MiqUtil.should_receive(:runcmd).with("apachectl -E #{MiqApache::Control::APACHE_CONTROL_LOG} -k #{cmd}")
+    MiqUtil.should_receive(:runcmd).with("apachectl #{cmd}")
     MiqApache::Control.run_apache_cmd("start")
   end
 
@@ -137,7 +137,7 @@ describe MiqApache::Control do
     File.stub(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     $log.stub(:debug?).and_return(true)
-    MiqUtil.should_receive(:runcmd).with("apachectl -E #{MiqApache::Control::APACHE_CONTROL_LOG} -k #{cmd} -e debug")
+    MiqUtil.should_receive(:runcmd).with("apachectl #{cmd}")
     MiqApache::Control.run_apache_cmd("start")
   end
 
