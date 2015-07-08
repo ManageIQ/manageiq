@@ -228,7 +228,7 @@ module EmsCommon
   end
 
   def new
-    assert_privileges("#{model.to_s.underscore}_new")
+    assert_privileges("#{permission_prefix}_new")
     @ems = model.new
     set_form_vars
     @in_a_form = true
@@ -237,7 +237,7 @@ module EmsCommon
   end
 
   def create
-    assert_privileges("#{model.to_s.underscore}_new")
+    assert_privileges("#{permission_prefix}_new")
     return unless load_edit("ems_edit__new")
     get_form_vars
     case params[:button]
@@ -280,7 +280,7 @@ module EmsCommon
   end
 
   def edit
-    assert_privileges("#{model.to_s.underscore}_edit")
+    assert_privileges("#{permission_prefix}_edit")
     @ems = find_by_id_filtered(model, params[:id])
     set_form_vars
     @in_a_form = true
@@ -326,7 +326,7 @@ module EmsCommon
   end
 
   def update
-    assert_privileges("#{model.to_s.underscore}_edit")
+    assert_privileges("#{permission_prefix}_edit")
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
     case params[:button]
@@ -980,5 +980,9 @@ module EmsCommon
 
   def model
     self.class.model
+  end
+
+  def permission_prefix
+    self.class.permission_prefix
   end
 end

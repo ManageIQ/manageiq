@@ -57,6 +57,10 @@ class ApplicationController < ActionController::Base
     @model ||= name[0..-11].constantize
   end
 
+  def self.permission_prefix
+    controller_name
+  end
+
   # Examples:
   #   CimBaseStorageExtentController => cim_base_storage_extent
   #   OntapFileShareController        => ontap_file_share
