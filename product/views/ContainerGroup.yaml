@@ -20,27 +20,30 @@ db: ContainerGroup
 # Columns to fetch from the main table
 cols:
 - name
-- namespace
 - restart_policy
 - dns_policy
 
 # Included tables (joined, has_one, has_many) and columns
 include:
+  container_project:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
+  :container_project: {}
 
 # Order of columns (from all tables)
 col_order: 
 - name
-- namespace
+- container_project.name
 - restart_policy
 - dns_policy
 
 # Column titles, in order
 headers:
 - Name
-- Namespace
+- Project Name
 - Restart Policy
 - DNS Policy
 
@@ -53,7 +56,7 @@ order: Ascending
 # Columns to sort the report on, in order
 sortby:
 - name
-- namespace
+- container_project.name
 - restart_policy
 - dns_policy
 

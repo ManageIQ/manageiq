@@ -20,6 +20,10 @@ db: ContainerProject
 # Columns to fetch from the main table
 cols:
 - name
+- groups_count
+- services_count
+- routes_count
+- replicators_count
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -30,11 +34,18 @@ include_for_find:
 # Order of columns (from all tables)
 col_order: 
 - name
-
+- groups_count
+- services_count
+- routes_count
+- replicators_count
 
 # Column titles, in order
 headers:
 - Name
+- Container Groups
+- Container Services
+- Container Routs
+- Container Replicators
 
 # Condition(s) string for the SQL query
 conditions: 

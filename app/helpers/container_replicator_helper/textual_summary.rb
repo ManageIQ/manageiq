@@ -10,7 +10,7 @@ module ContainerReplicatorHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems)
+    items = %w(ems container_project)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -38,6 +38,18 @@ module ContainerReplicatorHelper::TextualSummary
     if role_allows(:feature => "ems_container_show")
       h[:title] = "Show parent #{label} '#{ems.name}'"
       h[:link]  = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
+    end
+    h
+  end
+
+  def textual_container_project
+    project = @record.container_project
+    return nil if project.nil?
+    label = ui_lookup(:table => "container_project")
+    h = {:label => label, :image => "container_project", :value => project.name}
+    if role_allows(:feature => "container_project_show")
+      h[:title] = "Show parent #{label} '#{project.name}'"
+      h[:link] = url_for(:controller => 'container_project', :action => 'show', :id => project)
     end
     h
   end

@@ -55,3 +55,8 @@
               = link_to(_("%s (%s)") % [ui_lookup(:tables => "container_service"), num_services],
                 {:action => 'show', :id => @record, :display => 'container_services'},
                   :title => _("Show Container Services"))
+        - if role_allows(:feature => "container_project_show") && !@record.container_project.nil?
+          %li
+            = link_to("#{ui_lookup(:table => "container_project")}: #{@record.container_project.name}",
+                {:controller => "container_project", :action => 'show', :id => @record.container_project.id.to_s},
+                :title => _("Show this container groups's parent %s") % ui_lookup(:table => "container_project"))

@@ -13,6 +13,7 @@ class ContainerGroup < ActiveRecord::Base
   belongs_to :container_node
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services
   belongs_to :container_replicator
+  belongs_to :container_project
 
   # validates :restart_policy, :inclusion => { :in => %w(always onFailure never) }
   # validates :dns_policy, :inclusion => { :in => %w(ClusterFirst Default) }

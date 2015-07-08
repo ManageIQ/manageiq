@@ -1,4 +1,4 @@
-- if @display == 'containers'
+- if %w(containers container_projects).include?(@display)
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
 - elsif @display == 'container_services' && @showtype != "compare"
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
