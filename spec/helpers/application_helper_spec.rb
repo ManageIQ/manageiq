@@ -1444,4 +1444,79 @@ describe ApplicationHelper do
       result.should be_true
     end
   end
+
+  context "#vm_explorer_tree?" do
+    it 'should return true for VM explorer trees' do
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :vms_instances_filter_tree,
+                                       :trees       => {
+                                         :vms_instances_filter_tree => {
+                                           :tree => :vms_instances_filter_tree,
+                                           :type => :vms_instances_filter
+                                         }
+                                       }
+                                      )
+      result = controller.vm_explorer_tree?
+      result.should be_true
+    end
+
+    it 'should return false for non-VM explorer trees' do
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :reports_tree,
+                                       :trees       => {
+                                         :reports_tree => {
+                                           :tree => :reports_tree,
+                                           :type => :reports
+                                         }
+                                       }
+                                      )
+      result = controller.vm_explorer_tree?
+      result.should be_false
+    end
+  end
+
+  context "#show_advanced_search?" do
+    it 'should return true for VM explorer trees' do
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :vms_instances_filter_tree,
+                                       :trees       => {
+                                         :vms_instances_filter_tree => {
+                                           :tree => :vms_instances_filter_tree,
+                                           :type => :vms_instances_filter
+                                         }
+                                       }
+                                      )
+      result = controller.show_advanced_search?
+      result.should be_true
+    end
+
+    it 'should return false for non-VM explorer trees' do
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :reports_tree,
+                                       :trees       => {
+                                         :reports_tree => {
+                                           :tree => :reports_tree,
+                                           :type => :reports
+                                         }
+                                       }
+                                      )
+      result = controller.show_advanced_search?
+      result.should be_false
+    end
+
+    it 'should return true for non-VM explorer trees when @show_adv_search is set' do
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :reports_tree,
+                                       :trees       => {
+                                         :reports_tree => {
+                                           :tree => :reports_tree,
+                                           :type => :reports
+                                         }
+                                       }
+                                      )
+      controller.instance_variable_set(:@show_adv_search, true)
+      result = controller.show_advanced_search?
+      result.should be_true
+    end
+  end
 end

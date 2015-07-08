@@ -1246,5 +1246,13 @@ module ApplicationHelper
     @my_server ||= MiqServer.my_server(true)
   end
 
+  def vm_explorer_tree?
+    [:filter, :images, :instances, :templates_images_filter, :vandt, :vms_instances_filter].include?(x_tree[:type])
+  end
+
+  def show_advanced_search?
+    x_tree && ((vm_explorer_tree? && !@record) || @show_adv_search)
+  end
+
   attr_reader :big_iframe
 end
