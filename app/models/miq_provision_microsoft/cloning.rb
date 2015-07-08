@@ -116,6 +116,9 @@ module MiqProvisionMicrosoft::Cloning
 
   def build_ps_script
     <<-PS_SCRIPT
+      Import-Module VirtualMachineManager | Out-Null; \
+      Get-SCVMMServer localhost | Out-Null;\
+
       $vm = New-SCVirtualMachine \
         -Name #{dest_name} \
         -VMHost #{dest_host} \
