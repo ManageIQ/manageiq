@@ -988,4 +988,8 @@ module EmsCommon
                           :id         => ems.id))
 
   end
+
+  def permission_prefix
+    self.class.permission_prefix
+  end
 end
