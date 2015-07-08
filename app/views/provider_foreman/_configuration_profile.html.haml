@@ -1,20 +1,18 @@
-#configuration_profile_form_tabs{:style => "display: none;"}
-  %ul.tab
-    %li
-      %a{:href => "#summary"}=_("Summary")
-    %li
-      %a{:href => "#configured_systems"}=_("Configured Systems")
-
-  #configured_systems{:name => "configured_systems", :width => "80px"}
-    - if @sb[:active_tab] == "configured_systems"
-      = render :partial => "layouts/x_gtl"
-      :javascript
-        var miq_after_onload = "if (miqDomElementExists('adv_searchbox_div')) $('#adv_searchbox_div').show();"
-  #summary{:name => "summary", :width => "80px"}
-    - if @sb[:active_tab] == "summary"
-      = render :partial => "main_configuration_profile"
+#configuration_profile_form_tabs
+  %ul.nav.nav-tabs
+    = miq_tab_header('summary', @sb[:active_tab]) do
+      = _("Summary")
+    = miq_tab_header('configured_systems', @sb[:active_tab]) do
+      = _("Configured Systems")
+  .tab-content
+    = miq_tab_content('configured_systems', @sb[:active_tab]) do
+      - if @sb[:active_tab] == "configured_systems"
+        = render :partial => "layouts/x_gtl"
+        :javascript
+          var miq_after_onload = "if (miqDomElementExists('adv_searchbox_div')) $('#adv_searchbox_div').show();"
+    = miq_tab_content('summary', @sb[:active_tab]) do
+      - if @sb[:active_tab] == "summary"
+        = render :partial => "main_configuration_profile"
 
 :javascript
-  //method takes hash that can have 4 keys: tabs div id, active_tab label,
-  //url to go to when tab is changed, and whether to check for abandon changes or not
-  miq_jquery_tabs_init({tabs_div: "configuration_profile_form_tabs", url: "/provider_foreman/change_tab/", active_tab: "#{@sb[:active_tab]}", tab_changes: true})
+  miq_tabs_init('#configuration_profile_form_tabs', '/provider_foreman/change_tab');
