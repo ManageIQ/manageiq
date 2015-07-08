@@ -280,7 +280,13 @@ module OpsController::Settings::Common
       end
       @edit[:new][:authentication][:ldaphost].reject!(&:blank?) if @edit[:new][:authentication][:ldaphost]
       @changed = (@edit[:new] != @edit[:current].config)
-      @update = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
+      server = MiqServer.find(@sb[:selected_server_id])
+      zone = Zone.find_by_name(@edit[:new][:server][:zone])
+      unless zone.nil? || server.zone == zone
+        server.zone = zone
+        server.save
+      end
+      @update = server.get_config("vmdb")
     when "settings_workers"                                   # Workers Settings
       @changed = (@edit[:new] != @edit[:current].config)
       qwb = @edit[:new].config[:workers][:worker_base][:queue_worker_base]
