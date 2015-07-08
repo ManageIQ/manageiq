@@ -112,22 +112,20 @@
                   %td
                     = @sb[:rep_details][rep]["group"]
     - elsif x_active_tree == :reports_tree
-      #rep_tabs{:style => "display: none;"}
-        %ul.tab
+      #rep_tabs
+        %ul.nav.nav-tabs
+          = miq_tab_header('report_info', @sb[:active_tab]) do
+            = _('Report Info')
           %li
-            %a{:href => "#report_info"}
-              = _('Report Info')
-          %li
-            %a{:href => "#saved_reports"}
-              = _('Saved Reports')
-        #report_info{:name => "report_info", :width => "80px"}
-          = render :partial => "report_info"
-        #saved_reports{:name => "saved_reports", :width => "80px"}
-          = render :partial => "report_saved_reports"
-      - # method takes hash that can have 4 keys: tabs div id, active_tab label,
-      - # url to go to when tab is changed, and whether to check for abandon changes or not
+          = miq_tab_header('saved_reports', @sb[:active_tab]) do
+            = _('Saved Reports')
+        .tab-content
+          = miq_tab_content('report_info', @sb[:active_tab]) do
+            = render :partial => "report_info"
+          = miq_tab_content('saved_reports', @sb[:active_tab]) do
+            = render :partial => "report_saved_reports"
       :javascript
-        miq_jquery_tabs_init({tabs_div: "rep_tabs", url: "/report/rep_change_tab/", active_tab: "#{@sb[:active_tab]}", tab_changes: true})
+        miq_tabs_init('#rep_tabs', '/report/rep_change_tab');
     - elsif !@report && @report_result
       = render :partial => "report_status"
     - else
