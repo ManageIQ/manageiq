@@ -105,67 +105,63 @@
     .col-sm-12.col-md-12.col-lg-6
       %fieldset
         %h3= @edit ? _("Assign Filters") : _("Assigned Filters (read only)")
-        #rbac_group_tabs{"data-miq_url" => "_none_", :style => "display:none;"}
-          %ul.tab
-            %li
-              %a{:href => "#customer_tags"}
-                = escape_javascript(session[:customer_name])
-                =_("Tags")
-            %li
-              %a{:href => "#hosts_clusters"}
-                =_("%s & %s") % [title_for_hosts, title_for_clusters]
-            %li
-              %a{:href => "#vms_templates"}
-                =_("VMs & Templates")
-          #customer_tags{:name => "customer_tags", :width => "80px"}
-            %br/
-            =_("This user is limited to items with the selected tags.")
-            %br/
-            %br/
-            #myco_treebox{:style => "color:#000"}
-            = render(:partial => "layouts/dynatree",
-                     :locals  => {:tree_id        => "myco_treebox",
-                                  :tree_name      => "myco_tree",
-                                  :json_tree      => session[:myco_tree],
-                                  :onmousein      => "miqOnMouseIn_HostNet",
-                                  :onmouseout     => "miqOnMouseOut_HostNet",
-                                  :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
-                                  :disable_checks => @edit.nil?,
-                                  :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                                  :checkboxes     => true})
-          #hosts_clusters{:name => "hosts_clusters", :width => "80px"}
-            %br/
-            =_("This user is limited to the selected items and their children.")
-            %br/
-            %br/
-            #hac_treebox{:style => "color:#000"}
-            = render(:partial => "layouts/dynatree",
-                     :locals  => {:tree_id        => "hac_treebox",
-                                  :tree_name      => "hac_tree",
-                                  :json_tree      => session[:hac_tree],
-                                  :onmousein      => "miqOnMouseIn_HostNet",
-                                  :onmouseout     => "miqOnMouseOut_HostNet",
-                                  :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
-                                  :disable_checks => @edit.nil?,
-                                  :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                                  :checkboxes     => true})
-          #vms_templates{:name => "vms_templates", :width => "80px"}
-            %br/
-            =_("This user is limited to the selected folders and their children.")
-            %br/
-            %br/
-            #vat_treebox{:style => "color:#000"}
-            = render(:partial => "layouts/dynatree",
-                     :locals  => {:tree_id        => "vat_treebox",
-                                  :tree_name      => "vat_tree",
-                                  :json_tree      => session[:vat_tree],
-                                  :onmousein      => "miqOnMouseIn_HostNet",
-                                  :onmouseout     => "miqOnMouseOut_HostNet",
-                                  :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
-                                  :disable_checks => @edit.nil?,
-                                  :check_url      => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                                  :checkboxes     => true})
+        #rbac_group_tabs
+          %ul.nav.nav-tabs
+            = miq_tab_header('customer_tags') do
+              = escape_javascript(session[:customer_name])
+              = _("Tags")
+            = miq_tab_header('hosts_clusters') do
+              = _("#{title_for_hosts} & #{title_for_clusters}")
+            = miq_tab_header('vms_templates') do
+              = _("VMs & Templates")
+          .tab-content
+            = miq_tab_content('customer_tags') do
+              %br/
+              = _("This user is limited to items with the selected tags.")
+              %br/
+              %br/
+              #myco_treebox{:style => "color:#000"}
+              = render(:partial => "layouts/dynatree",
+                       :locals  => {:tree_id        => "myco_treebox",
+                                    :tree_name      => "myco_tree",
+                                    :json_tree      => session[:myco_tree],
+                                    :onmousein      => "miqOnMouseIn_HostNet",
+                                    :onmouseout     => "miqOnMouseOut_HostNet",
+                                    :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                    :disable_checks => @edit.nil?,
+                                    :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                                    :checkboxes     => true})
+            = miq_tab_content('hosts_clusters') do
+              %br/
+              = _("This user is limited to the selected items and their children.")
+              %br/
+              %br/
+              #hac_treebox{:style => "color:#000"}
+              = render(:partial => "layouts/dynatree",
+                       :locals  => {:tree_id        => "hac_treebox",
+                                    :tree_name      => "hac_tree",
+                                    :json_tree      => session[:hac_tree],
+                                    :onmousein      => "miqOnMouseIn_HostNet",
+                                    :onmouseout     => "miqOnMouseOut_HostNet",
+                                    :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                    :disable_checks => @edit.nil?,
+                                    :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                                    :checkboxes     => true})
+            = miq_tab_content('vms_templates') do
+              %br/
+              = _("This user is limited to the selected folders and their children.")
+              %br/
+              %br/
+              #vat_treebox{:style => "color:#000"}
+              = render(:partial => "layouts/dynatree",
+                       :locals  => {:tree_id        => "vat_treebox",
+                                    :tree_name      => "vat_tree",
+                                    :json_tree      => session[:vat_tree],
+                                    :onmousein      => "miqOnMouseIn_HostNet",
+                                    :onmouseout     => "miqOnMouseOut_HostNet",
+                                    :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                    :disable_checks => @edit.nil?,
+                                    :check_url      => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                                    :checkboxes     => true})
 :javascript
-  //method takes hash that can have 4 keys: tabs div id, active tab label,
-  //url to go to when tab is changed, and whether to check for abandon changes or not
-  miq_jquery_tabs_init({tabs_div: "rbac_group_tabs"})
+  miq_tabs_init('#rbac_group_tabs');
