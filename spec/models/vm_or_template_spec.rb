@@ -433,4 +433,13 @@ describe VmOrTemplate do
       expect(tenant.owned_vm_or_templates).to include(vm)
     end
   end
+
+  context "#tenants" do
+    let(:tenant) { FactoryGirl.create(:tenant) }
+    it "has a tenant owner" do
+      vm = FactoryGirl.create(:vm_vmware)
+      vm.tenants << tenant
+      expect(tenant.vm_or_templates).to include(vm)
+    end
+  end
 end

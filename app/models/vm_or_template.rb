@@ -112,6 +112,8 @@ class VmOrTemplate < ActiveRecord::Base
 #  has_many                  :service_templates, :through => :service_resources, :source => :service_template
   has_many                  :direct_services, :through => :service_resources, :source => :service
   belongs_to                :tenant_owner, :class_name => 'Tenant'
+  has_many                  :tenant_resources, :as => :resource
+  has_many                  :tenants, :through => :tenant_resources
 
   acts_as_miq_taggable
   include ReportableMixin

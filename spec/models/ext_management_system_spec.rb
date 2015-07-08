@@ -193,4 +193,13 @@ describe ExtManagementSystem do
       expect(tenant.owned_ext_management_systems).to include(ems)
     end
   end
+
+  context "#tenants" do
+    let(:tenant) { FactoryGirl.create(:tenant) }
+    it "has a tenant owner" do
+      ems = FactoryGirl.create(:ext_management_system)
+      ems.tenants << tenant
+      expect(tenant.ext_management_systems).to include(ems)
+    end
+  end
 end

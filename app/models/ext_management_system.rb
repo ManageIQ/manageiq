@@ -25,6 +25,8 @@ class ExtManagementSystem < ActiveRecord::Base
 
   belongs_to :provider
   belongs_to :tenant_owner, :class_name => 'Tenant'
+  has_many :tenant_resources, :as => :resource
+  has_many :tenants, :through => :tenant_resources
 
   has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate"

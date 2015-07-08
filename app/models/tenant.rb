@@ -9,6 +9,20 @@ class Tenant < ActiveRecord::Base
   has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
   has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
 
+  has_many :tenant_resources
+  has_many :vm_or_templates,
+           :through     => :tenant_resources,
+           :source      => :resource,
+           :source_type => "VmOrTemplate"
+  has_many :ext_management_systems,
+           :through     => :tenant_resources,
+           :source      => :resource,
+           :source_type => "ExtManagementSystem"
+  has_many :providers,
+           :through     => :tenant_resources,
+           :source      => :resource,
+           :source_type => "Provider"
+
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
                     :url  => "/uploads/#{HARDCODED_LOGO}",
