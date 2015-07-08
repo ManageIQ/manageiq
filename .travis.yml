@@ -20,6 +20,8 @@ addons:
   postgresql: '9.3'
 before_install:
 - "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
+- gem uninstall -x -i $GEM_HOME@global bundler
+- travis_retry gem install bundler -v ">= 1.8.4"
 - echo "1" > REGION
 - cp config/database.pg.yml config/database.yml
 - psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
