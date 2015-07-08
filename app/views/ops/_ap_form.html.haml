@@ -27,33 +27,32 @@
             %td.wide= h(@edit[:new][:scan_mode])
       - edit ||= false
       - entry = (@sb[:miq_tab].split("_")[0] == "edit" || session[:set_copy] == "copy") ? "edit" : "new"
-      #ap_tabs{"data-miq_url" => "/ops/ap_set_active_tab/", :style => "display:none;"}
-        %ul.tab
+      #ap_tabs
+        %ul.nav.nav-tabs
           - if @edit[:new][:scan_mode] == "Host"
-            %li
-              %a{:href => "#file"}=_("File")
-            %li
-              %a{:href => "#event_log"}=_("Event Log")
+            = miq_tab_header('file', @sb[:ap_active_tab]) do
+              = _("File")
+            = miq_tab_header('event_log', @sb[:ap_active_tab]) do
+              = _("Event Log")
           - else
-            %li
-              %a{:href => "#category"}=_("Category")
-            %li
-              %a{:href => "#file"}=_("File")
-            %li
-              %a{:href => "#registry"}=_("Registry")
-            %li
-              %a{:href => "#event_log"}=_("Event Log")
-        - if @edit[:new][:scan_mode] != "Host"
-          #category{:name => "category", :width => "80px"}
-            = render :partial => "ap_form_set"
-        #file{:name => "file", :width => "80px"}
-          = render :partial => "ap_form_file", :locals=>{:entry=>entry, :edit=>edit}
-        - if @edit[:new][:scan_mode] != "Host"
-          #registry{:name => "registry", :width => "80px"}
-            = render :partial => "ap_form_registry", :locals=>{:entry=>entry, :edit=>edit}
-        #event_log{:name => "event_log", :width => "80px"}
-          = render :partial => "ap_form_nteventlog", :locals=>{:entry=>entry, :edit=>edit}
+            = miq_tab_header('category', @sb[:ap_active_tab]) do
+              = _("Category")
+            = miq_tab_header('file', @sb[:ap_active_tab]) do
+              = _("File")
+            = miq_tab_header('registry', @sb[:ap_active_tab]) do
+              = _("Registry")
+            = miq_tab_header('event_log', @sb[:ap_active_tab]) do
+              = _("Event Log")
+        .tab-content
+          - if @edit[:new][:scan_mode] != "Host"
+            = miq_tab_content('category', @sb[:ap_active_tab]) do
+              = render :partial => "ap_form_set"
+          = miq_tab_content('file', @sb[:ap_active_tab]) do
+            = render :partial => "ap_form_file", :locals => {:entry => entry, :edit => edit}
+          - if @edit[:new][:scan_mode] != "Host"
+            = miq_tab_content('registry', @sb[:ap_active_tab]) do
+              = render :partial => "ap_form_registry", :locals => {:entry => entry, :edit => edit}
+          = miq_tab_content('event_log', @sb[:ap_active_tab]) do
+            = render :partial => "ap_form_nteventlog", :locals => {:entry => entry, :edit => edit}
 :javascript
-  //method takes hash that can have 4 keys: tabs div id, active_tab label,
-  //url to go to when tab is changed, and whether to check for abandon changes or not
-  miq_jquery_tabs_init({tabs_div: "ap_tabs", url: "/ops/ap_set_active_tab/", active_tab: "#{@sb[:ap_active_tab]}"})
+  miq_tabs_init('#ap_tabs', '/ops/ap_set_active_tab');
