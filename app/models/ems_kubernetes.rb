@@ -29,15 +29,15 @@ class EmsKubernetes < EmsContainer
   end
 
   def supported_auth_types
-    %w(basic)
+    %w(default password bearer)
   end
 
   def supports_authentication?(authtype)
     supported_auth_types.include?(authtype.to_s)
   end
 
-  def self.raw_connect(hostname, port, username = nil, password = nil, _service = nil)
-    kubernetes_connect(hostname, port, username, password)
+  def self.raw_connect(hostname, port, options)
+    kubernetes_connect(hostname, port, options)
   end
 
   def self.event_monitor_class

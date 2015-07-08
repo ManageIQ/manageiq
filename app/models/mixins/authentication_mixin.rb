@@ -22,6 +22,10 @@ module AuthenticationMixin
     authentications.select { |a| a.kind_of?(AuthUseridPassword) }
   end
 
+  def authentication_tokens
+    authentications.select { |a| a.kind_of?(AuthToken) }
+  end
+
   def authentication_key_pairs
     authentications.select { |a| a.kind_of?(AuthKeyPairOpenstackInfra) }
   end
@@ -39,6 +43,10 @@ module AuthenticationMixin
   end
 
   def authentication_key(type = nil)
+    authentication_component(type, :auth_key)
+  end
+
+  def authentication_token(type = nil)
     authentication_component(type, :auth_key)
   end
 
@@ -73,6 +81,12 @@ module AuthenticationMixin
     [cred.userid, cred.password]
   end
 
+  def auth_user_token(type = nil)
+    cred = authentication_best_fit(type)
+    return nil if cred.nil? || cred.userid.blank?
+    [cred.userid, cred.auth_key]
+  end
+
   def auth_user_keypair(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
@@ -93,7 +107,7 @@ module AuthenticationMixin
       cred = self.authentication_type(type)
       current = {:new => nil, :old => nil}
 
-      if value[:auth_key]
+      if value[:auth_key] && !self.kind_of?(EmsContainer)
         # TODO(lsmola) figure out if there is a better way. Password field is replacing \n with \s, I need to replace
         # them back
         fixed_auth_key = value[:auth_key].gsub(/-----BEGIN\sRSA\sPRIVATE\sKEY-----/, '')
@@ -128,12 +142,18 @@ module AuthenticationMixin
           cred = AuthKeyPairOpenstackInfra.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
           self.authentications << cred
+        elsif self.kind_of?(EmsContainer) && value[:auth_key]
+          cred = AuthToken.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
+                                               :resource_id => id, :resource_type => "ExtManagementSystem")
+          self.authentications << cred
         else
           cred = self.authentications.build(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
                                             :type => "AuthUseridPassword")
         end
       end
-      cred.userid, cred.password, cred.auth_key = value[:userid], value[:password], value[:auth_key]
+      cred.userid = value[:userid]
+      cred.password = value[:password]
+      cred.auth_key = value[:auth_key]
 
       cred.save if options[:save] && id
     end
@@ -263,7 +283,7 @@ module AuthenticationMixin
   end
 
   def available_authentications
-    authentication_userid_passwords + authentication_key_pairs
+    authentication_userid_passwords + authentication_key_pairs + authentication_tokens
   end
 
   def authentication_types

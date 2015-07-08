@@ -31,17 +31,18 @@ class EmsOpenshift < EmsContainer
     @description ||= "OpenShift".freeze
   end
 
-  def self.raw_connect(hostname, port, username = nil, password = nil, service = nil)
-    service   ||= "openshift"
-    send("#{service}_connect", hostname, port, username, password)
+  def self.raw_connect(hostname, port, options)
+    options[:service] ||= "openshift"
+    send("#{options[:service]}_connect", hostname, port, options)
   end
 
-  def self.openshift_connect(hostname, port, _username = nil, _password = nil)
+  def self.openshift_connect(hostname, port, options)
     require 'openshift_client'
     api_endpoint = raw_api_endpoint(hostname, port)
     osclient = OpenshiftClient::Client.new(api_endpoint, api_version)
     # TODO: support real authentication using certificates
     osclient.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+    osclient.bearer_token(options[:bearer]) if options[:bearer]
     osclient
   end
 
