@@ -29,13 +29,12 @@ module ApplicationController::MiqRequestMethods
         #Going thru all dialogs to see if model has set any of the dialog display to hide/ignore
         all_dialogs = @edit[:wf].get_all_dialogs
         all_dialogs.each do |dialog_name, dialog|
-          page << "li_id = '#{dialog_name}_li';"
-          page << "miq_jquery_show_hide_tab(li_id, #{dialog[:display] == :show ? "'show'" : "'hide'"});"
+          page << "miq_tabs_show_hide('#{dialog_name}_tab', #{dialog[:display] == :show});"
         end
         if refresh_divs
           all_dialogs.each do |dialog_name, dialog|
             if dialog[:display] == :show && dialog_name == @edit[:new][:current_tab_key]
-              page.replace_html("#{dialog_name}_div", :partial => dialog_partial_for_workflow, :locals => {:wf => @edit[:wf], :dialog => dialog_name})
+              page.replace_html(dialog_name, :partial => dialog_partial_for_workflow, :locals => {:wf => @edit[:wf], :dialog => dialog_name})
             end
           end
         end

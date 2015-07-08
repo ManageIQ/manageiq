@@ -1212,8 +1212,8 @@ module ApplicationHelper
     true
   end
 
-  def miq_tab_header(id, active = nil, &block)
-    content_tag(:li, :class => active == id ? 'active' : '', :id => "#{id}_tab") do
+  def miq_tab_header(id, active = nil, options = {}, &block)
+    content_tag(:li, :class => "#{options[:class]} #{active == id ? 'active' : ''}", :id => "#{id}_tab") do
       content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
         yield
       end
