@@ -34,9 +34,10 @@ module EmsRefresh
             :host_name    => route.host,
             :labels       => parse_labels(route),
             # TODO: this part needs to be modified to service_id instead
-            :service_name => route.serviceName,
             :path         => route.path
         )
+        new_result[:container_service] = @data_index.fetch_path(:container_services, :by_namespace_and_name,
+                                                                new_result[:namespace], route.serviceName)
         new_result
       end
     end

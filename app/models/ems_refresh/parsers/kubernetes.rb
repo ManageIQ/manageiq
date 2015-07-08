@@ -31,6 +31,9 @@ module EmsRefresh::Parsers
 
     def get_services(inventory)
       process_collection(inventory["service"], :container_services) { |s| parse_service(s) }
+      @data[:container_services].each do |se|
+        @data_index.store_path(:container_services, :by_namespace_and_name, se[:namespace], se[:name], se)
+      end
     end
 
     def get_replication_controllers(inventory)

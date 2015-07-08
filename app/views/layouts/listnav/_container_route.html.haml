@@ -20,3 +20,13 @@
             = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
                 {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
                 {:title => _("Show this container service's parent %s") % ui_lookup(:table => "ems_container")})
+        - if role_allows(:feature => "container_service_show_list")
+          - num_services = @record.number_of(:container_services)
+          - if num_services == 0
+            %li.disabled
+              = link_to(_('Container Service (0)'), "#")
+          - else
+            %li
+              = link_to(_("Container Service (%s)") % num_services,
+                        {:action  => 'show', :id => @record, :display => 'container_services'},
+                        :title => _("Show Container Service"))
