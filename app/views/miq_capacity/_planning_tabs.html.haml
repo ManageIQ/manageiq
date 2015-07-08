@@ -1,15 +1,14 @@
-#planning_tabs{:style => "display: none; width: auto; height: 99%; overflow: auto;"}
-  %ul.tab
-    %li
-      %a{:href => "#summary"}=_('Summary')
-    %li
-      %a{:href => "#report"}=_('Report')
-  #summary{:name => "Summary"}
-    = render :partial => "planning_summary"
-  #report{:name => "Report"}
-    = render :partial => "planning_report"
+#planning_tabs
+  %ul.nav.nav-tabs
+    = miq_tab_header('summary') do
+      = _('Summary')
+    = miq_tab_header('report') do
+      = _('Report')
+  .tab-content
+    = miq_tab_content('summary') do
+      = render :partial => "planning_summary"
+    = miq_tab_content('report') do
+      = render :partial => "planning_report"
 
-- # method takes hash that can have 4 keys: tabs div id, active_tab label,
-- # url to go to when tab is changed, and whether to check for abandon changes or not
 :javascript
-  miq_jquery_tabs_init({tabs_div: "planning_tabs", url: "/miq_capacity/change_tab/"})
+  miq_tabs_init('#planning_tabs', '/miq_capacity/change_tab');
