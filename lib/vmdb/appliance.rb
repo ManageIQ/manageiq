@@ -32,8 +32,6 @@ module Vmdb
       fh.info "RUBY Environment:  #{Object.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION : "ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} patchlevel #{RUBY_PATCHLEVEL}) [#{RUBY_PLATFORM}]"}"
       fh.info "RAILS Environment: #{Rails.env} version #{Rails.version}"
 
-      fh.info "Soap4r version: #{SOAP::VERSION}  Parser: [#{XSD::XMLParser.create_parser(self, {}).class}]" rescue nil
-
       fh.info "VMDB settings:"
       vmdb_config = VMDB::Config.new("vmdb").config
       VMDBLogger.log_hashes(fh, vmdb_config, :filter => Vmdb::ConfigurationEncoder::PASSWORD_FIELDS)

@@ -5,6 +5,7 @@ $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
 require 'xml_utils'
 
 require 'blackbox/VmBlackBox'
+require 'Verbs/miqservices_client'
 
 module VmOrTemplate::Scanning
   extend ActiveSupport::Concern
@@ -251,7 +252,7 @@ module VmOrTemplate::Scanning
     status = "OK"; statusCode = 0; scanMessage = "OK"
     categoriesProcessed = 0
     ost.xml_class = XmlHash::Document
-    driver = MiqservicesClientInternal.new
+    driver = MiqservicesClient.new
 
     UpdateAgentState(driver, ost, "Scanning", "Initializing scan")
     vmName, bb, vmId, lastErr, vmCfg = nil
@@ -344,7 +345,7 @@ module VmOrTemplate::Scanning
       ost.from_time = nil
 
       vmName, bb, vmId = nil
-      driver = MiqservicesClientInternal.new
+      driver = MiqservicesClient.new
       xml_summary = ost.xml_class.createDoc("<summary/>")
       _log.debug "xml_summary1 = #{xml_summary.class.name}"
       xmlNode = xml_summary.root.add_element("syncmetadata")

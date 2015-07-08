@@ -7,6 +7,8 @@ $:.push("#{File.dirname(__FILE__)}/implementations")
 $:.push("#{File.dirname(__FILE__)}/../util")
 $:.push("#{File.dirname(__FILE__)}/../util/diag")
 
+require_relative 'miqservices_client'
+
 if $log.nil?
   require 'log4r'
   $log = Log4r::Logger['toplog']

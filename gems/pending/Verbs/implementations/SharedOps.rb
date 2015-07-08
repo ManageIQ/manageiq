@@ -1,3 +1,5 @@
+require_relative '../miqservices_client'
+
 module SharedOps
 	def SyncMetadata(ost)
 		return if !checkArg(ost)
@@ -325,8 +327,8 @@ module SharedOps
 		File.join(dir, fbn + "_" + sfx)
 	end
 	
-	def get_ws_driver(ost)
-    @vmdbDriver ||= MiqservicesClient.get_driver(ost.config)
+	def get_ws_driver(_ost)
+    @vmdbDriver ||= MiqservicesClient.new
 	end
 		
 	def isSmart?(vmName)

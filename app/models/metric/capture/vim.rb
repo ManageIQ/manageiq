@@ -183,10 +183,7 @@ module Metric::Capture::Vim
 
     # The data is organized in an array such as [timestamp1, value1, timestamp2, value2, ...]
     vim_data.to_miq_a.each_slice(2) do |t, v|
-      if t.kind_of?(DateTime) # Soap4r
-        meth ||= t.zone == "+00:00" ? :utc : :local
-        t = Time.send(meth, t.year, t.month, t.day, t.hour, t.min, t.sec, 0).utc
-      elsif t.kind_of?(String) # Handsoap (VimString)
+      if t.kind_of?(String) # VimString
         t = t.to_s
       else
         _log.warn("Discarding unexpected time value in results: ts: [#{t.class.name}] [#{t}], value: #{v}")

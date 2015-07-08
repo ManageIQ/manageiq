@@ -23,10 +23,8 @@ gem 'patternfly-sass', "~>1.3.1"
 gem "ruport",                         "=1.7.0",                          :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
 
 # Vendored but not required
-#gem "actionwebservice",               "=3.1.0",       :require => false, :git => "git://github.com/ManageIQ/actionwebservice.git", :tag => "v3.1.0-1"
 gem "net-ldap",                       "~>0.7.0",      :require => false
 gem "rubyrep",                        "=1.2.0",       :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :branch => "rails4"
-gem "soap4r",                         "=1.6.0",       :require => false, :git => "git://github.com/ManageIQ/soap4r.git", :tag => "v1.6.0-2"
 gem "simple-rss",                     "~>1.3.1",      :require => false
 gem "winrm",                          "=1.1.3",       :require => false, :git => "git://github.com/ManageIQ/WinRM.git", :tag => "v1.1.3-1"
 gem "ziya",                           "=2.3.0",       :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"

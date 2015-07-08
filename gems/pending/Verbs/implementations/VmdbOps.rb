@@ -7,23 +7,11 @@ require 'VmBlackBox'
 require 'VmwareOps'
 require 'miqping'
 
-begin
-  # Try to load through Rails autoload if running under Rails
-  MiqservicesClient
-rescue NameError
-  # Load it directly, since we are not in a Rails env
-  require 'action_web_service'
-
-  $:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. vmdb app apis})))
-  require 'evm_webservices_client'
-  require 'miqservices_client'
-  require 'miqservices_api'
-end
+require_relative '../miqservices_client'
 
 class VmdbOps
-    def initialize(ost)
-        cfg = ost.config
-        @vmdbDriver ||= MiqservicesClient.new("#{cfg.vmdbHost}:#{cfg.vmdbPort}", cfg.webservices[:consumer_protocol])
+    def initialize(_ost)
+        @vmdbDriver ||= MiqservicesClient.new
     end # def initilaize
     
     def startService(ost)

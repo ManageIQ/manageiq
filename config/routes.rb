@@ -1054,10 +1054,6 @@ Vmdb::Application.routes.draw do
         ownership_post
     },
 
-    :miqservices            => {
-      :post => %w(api)
-    },
-
     :ontap_file_share       => {
       :get => %w(
         cim_base_storage_extents
@@ -1926,11 +1922,6 @@ Vmdb::Application.routes.draw do
         snap_post +
         retire_post
     },
-
-    :vmdbws                 => {
-      :get  => %w(wsdl),
-      :post => %w(api)
-    }
   }
 
   root :to => 'dashboard#login'

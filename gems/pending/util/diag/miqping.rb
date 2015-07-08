@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby script/runner
 
-require 'soap/rpc/driver'
 require 'ostruct'
 require 'optparse'
 
@@ -30,7 +29,7 @@ module Manageiq
 			
 			puts "Pinging [#{cfg.host}:#{cfg.port}] with [#{cfg.bytes}] bytes of data:"
 			
-			driver = SOAP::RPC::Driver.new("http://#{cfg.host}:#{cfg.port}/miqservices/api", 'urn:Miqws')
+			driver = nil # Was soap/rpc/driver from soap4r
 			# driver.add_method(ws, 'param0')
 			driver.add_method_with_soapaction_as(ws, ws, "/miqservices/api/MiqPing", 'data')
 			
