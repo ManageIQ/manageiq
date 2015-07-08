@@ -32,13 +32,13 @@ describe MiqApache::Conf do
 
   context "building redirects config" do
     before do
-      @default_options = {:cluster => 'evmcluster_ui', :redirects => ['/miqservices/', '/']}
+      @default_options = {:cluster => 'evmcluster_ui', :redirects => ['/api/', '/']}
     end
 
     it "sets balancer correctly" do
       output = MiqApache::Conf.create_redirects_config(@default_options).lines.to_a
-      expect(output).to include("ProxyPass /miqservices/ balancer://evmcluster_ui/miqservices/\n")
-      expect(output).to include("ProxyPassReverse /miqservices/ balancer://evmcluster_ui/miqservices/\n")
+      expect(output).to include("ProxyPass /api/ balancer://evmcluster_ui/api/\n")
+      expect(output).to include("ProxyPassReverse /api/ balancer://evmcluster_ui/api/\n")
       expect(output).to include("ProxyPass /proxy_pages !\n")
       expect(output).to include("ProxyPass / balancer://evmcluster_ui/\n")
       expect(output).to include("ProxyPassReverse / balancer://evmcluster_ui/\n")

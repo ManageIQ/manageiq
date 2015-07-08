@@ -1,8 +1,5 @@
 $:.push("#{File.dirname(__FILE__)}/../../util")
 
-require 'soap/wsdlDriver'
-require 'soap/rpc/driver'
-
 class WebSvcOps
   def initialize(ost)
     if ost.verbose
@@ -10,7 +7,7 @@ class WebSvcOps
     end
         
     proto = VMDB::Config.new("vmdb").config[:webservices][:consume_protocol] rescue "https"
-    @driver = SOAP::RPC::Driver.new("#{proto}://#{ost.host}:#{ost.port}", "urn:Miqws")
+    @driver = nil # Was soap/rpc/driver from soap4r
 
     ost.connect_timeout ||= 120
     ost.send_timeout ||= 120

@@ -1,7 +1,7 @@
 require 'xmldata_helper'
 require 'yaml'
 
-module MiqservicesOps
+module ScanningOperations
   include Vmdb::Logging
   WS_TIMEOUT = 60
 
@@ -32,7 +32,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       return false
     end
     true
@@ -47,7 +47,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       return false
     end
   end
@@ -66,7 +66,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       return false
     end
   end
@@ -82,7 +82,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       false
     end
     true
@@ -98,7 +98,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       false
     end
     true
@@ -120,7 +120,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       return false
     end
     true
@@ -136,7 +136,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       return false
     end
     true
@@ -151,7 +151,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
     end
   end
 
@@ -191,7 +191,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       false
     ensure
       return [ret, reason].inspect
@@ -214,7 +214,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       return false
     end
   end
@@ -235,7 +235,7 @@ module MiqservicesOps
       end
     rescue Exception => err
       _log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
+      ScanningOperations.reconnect_to_db
       return false
     end
     true

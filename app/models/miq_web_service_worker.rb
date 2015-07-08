@@ -6,7 +6,7 @@ class MiqWebServiceWorker < MiqWorker
   REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/cfme-redirects-ws'
   STARTING_PORT              = 4000
   LB_METHOD                  = :busy
-  REDIRECTS                  = ['/Miqservices/', '/miqservices/', '/vmdbws/', '/api']
+  REDIRECTS                  = ['/api']
   CLUSTER                    = 'evmcluster_ws'
 
   def friendly_name
