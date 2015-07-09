@@ -15,7 +15,7 @@ base: &base
   adapter: postgresql
   encoding: utf8
   username: root
-  pool: 1
+  pool: 5
   wait_timeout: 5
   min_messages: warning
 
