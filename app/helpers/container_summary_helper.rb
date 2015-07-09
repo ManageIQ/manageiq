@@ -21,6 +21,16 @@ module ContainerSummaryHelper
     )
   end
 
+  def textual_container_group
+    textual_single_relationship(
+      :container_group,
+      :name,
+      "container_group",
+      "container_group_show",
+      "container_group"
+    )
+  end
+
   def textual_container_projects
     textual_multiple_relationship(
       :container_projects,
