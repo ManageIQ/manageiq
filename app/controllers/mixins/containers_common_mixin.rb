@@ -36,17 +36,17 @@ module ContainersCommonMixin
                       :url  => "/#{controller_name}/show/#{record.id}" \
                                "?refresh=n&display=timeline")
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
-      show_container_display("container_groups", ContainerGroup)
+      show_container_display(record, "container_groups", ContainerGroup)
     elsif @display == "containers"
-      show_container_display("containers", Container, "container_group")
+      show_container_display(record, "containers", Container, "container_group")
     elsif @display == "container_services" || session[:display] == "container_services" && params[:display].nil?
-      show_container_display("container_services", ContainerService)
+      show_container_display(record, "container_services", ContainerService)
     elsif @display == "container_routes" || session[:display] == "container_routes" && params[:display].nil?
-      show_container_display("container_routes", ContainerRoute)
+      show_container_display(record, "container_routes", ContainerRoute)
     elsif @display == "container_replicators" || session[:display] == "container_replicators" && params[:display].nil?
-      show_container_display("container_replicators", ContainerReplicator)
+      show_container_display(record, "container_replicators", ContainerReplicator)
     elsif @display == "container_projects" || session[:display] == "container_projects" && params[:display].nil?
-      show_container_display("container_projects", ContainerProject)
+      show_container_display(record, "container_projects", ContainerProject)
     end
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
@@ -70,7 +70,7 @@ module ContainersCommonMixin
     session["#{prefix}_display".to_sym]    = @display unless @display.nil?
   end
 
-  def show_container_display(display, clazz, alt_controller_name = nil)
+  def show_container_display(record, display, clazz, alt_controller_name = nil)
     title = ui_lookup(:tables => display)
     drop_breadcrumb(:name => record.name + " (All #{title})",
                     :url  => "/#{alt_controller_name || controller_name}/show/#{record.id}?display=#{@display}")
