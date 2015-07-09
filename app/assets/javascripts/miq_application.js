@@ -335,36 +335,6 @@ function miqCheckForChanges() {
   return true;
 }
 
-// go to the specified URL when a download all log files button is pressed
-function miqDownloadLogFiles(theUrl, count) {
-  for (var i = 0; i < count; i++) {
-    var new_url = theUrl + "?i=" + i;
-    var winName = "log" + i;
-    window.open(new_url, winName,
-      'top=0,' +
-      'left=0,' +
-      'directories=0,' +
-      'location=0,' +
-      'menubar=0,' +
-      'resizable=0,' +
-      'scrollbars=0,' +
-      'status=0,' +
-      'toolbar=0'
-    );
-  }
-}
-
-// Prompt for new tags
-function miqNewTagPrompt() {
-  var text = prompt('Enter new tags, separated by blanks', '');
-  if (text !== null) {
-    $('#new_tag').val(text);
-    return true;
-  } else {
-    return false;
-  }
-}
-
 // Hide/show form buttons
 function miqButtons(h_or_s, prefix) {
   $('#flash_msg_div').hide();
@@ -567,28 +537,12 @@ function miqSetButtons(count, button_div) {
   }
 }
 
-// ChangeColor and DoNav are for making a full table row clickable and
-// highlight-able.  Found here:
-//   http://imar.spaanjaars.com/312/how-do-i-make-a-full-table-row-clickable
-// TODO: Convert to jQuery UJS, possibly like so:
-//   http://www.electrictoolbox.com/jquey-make-entire-table-row-clickable/
-
-// Change table cell colors as mouse moves
-function ChangeColor(tablecell, highLight) {
-  if (highLight) {
-    tablecell.style.backgroundColor = '#fff';
-  } else {
-    tablecell.style.backgroundColor = '';
-  }
-}
-
 // go to the specified URL when a table cell is clicked
 function DoNav(theUrl) {
   document.location.href = theUrl;
 }
 
 // Routines to get the size of the window
-// original reference: http://www.communitymx.com/blog/index.cfm?newsid=622
 ManageIQ.sizeTimer = false;
 
 function miqBrowserSizeTimeout() {
@@ -659,41 +613,6 @@ function miqGetSize() {
 // Pass fields to server given a URL and fields in name/value pairs
 function miqPassFields(url, args) {
   return url + '?' + $.param(args);
-}
-
-// Create a new div to put the notification area at the bottom of the screen whenever the page loads
-function wrapFish() {
-  var catfish = document.getElementById('notification');
-  var subelements = [];
-  var i;
-
-  for (i = 0; i < document.body.childNodes.length; i++) {
-    subelements[i] = document.body.childNodes[i];
-  }
-
-  // Create the outer-most div (zip)
-  var zip = document.createElement('div');
-  // call it zip
-  zip.id = 'zip';
-
-  for (i = 0; i < subelements.length; i++) {
-    zip.appendChild(subelements[i]);
-  }
-
-  // add the major div
-  document.body.appendChild(zip);
-  // add the catfish after the zip
-  document.body.appendChild(catfish);
-}
-
-// Load XML/SWF charts data (non-IE)
-// This method is called by the XML/SWF charts when a chart is loaded into the DOM
-
-function Loaded_Chart(chart_id) {
-  if ((ManageIQ.browser != 'Explorer') &&
-      (typeof (ManageIQ.charts.chartData) != 'undefined')) {
-    doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
-  }
 }
 
 function doLoadChart(chart_id, chart_object) {
@@ -906,14 +825,6 @@ function miqCheckMaxLength(obj) {
   }
 }
 
-function miqSetInputClass(fld, cname, typ) {
-  if (typ == "remove") {
-    $(fld).removeClass(cname);
-  } else {
-    $(fld).addClass(cname);
-  }
-}
-
 // Check for enter key pressed
 function miqEnterPressed(e) {
   var keycode;
@@ -959,36 +870,6 @@ function miqEnableLoginFields(enabled) {
   if ($('#user_verify_password').length) {
     $('#user_verify_password').prop('readonly', !enabled);
   }
-}
-
-// Attach text area with id = id + "_lines" to work with the text area id passed in
-function miqAttachTextAreaWithLines(id) {
-  var el = document.getElementById(id + "_lines");
-  var ta = document.getElementById(id);
-  var string = '';
-
-  for (var no = 1; no < 300; no++) {
-    if (string.length) {
-      string += '\n';
-    }
-    string += no;
-  }
-
-  el.style.height = (ta.offsetHeight - 3) + "px";
-  el.style.overflow = 'hidden';
-  el.style.textAlign = 'right';
-  el.innerHTML = string; // Firefox renders \n linebreak
-  el.innerText = string; // IE6 renders \n line break
-  el.scrollTop = ta.scrollTop;
-
-  ta.focus();
-  var scrollTop = function () {
-    el.scrollTop = ta.scrollTop;
-  }
-  ta.onkeydown = scrollTop;
-  ta.onmousedown = scrollTop;
-  ta.onmouseup = scrollTop;
-  ta.onmousemove = scrollTop;
 }
 
 // Initialize dashboard column jQuery sortables
@@ -1088,146 +969,6 @@ function miqSendDateRequest(el) {
   }
 }
 
-// Build an explorer view using a YUI layout and a jQuery accordion
-function miqBuildExplorerView(options) {
-  // Set the default values in the object, then extend it to include the values that we passed to it.
-  var settings = $.extend({
-    accord_url: null,
-    width: 1000,
-    divider: 4,
-    left: 0,
-    resize: false,
-    layout_div: 'layout_div',
-    left_div: 'accordion_div',
-    active_accord: null,
-    center_div: null,
-    header: null
-  }, options || {}); // If no options, pass an empty object
-
-  $(function() {
-    // On doc ready, build the layout and accordion
-    // Build object for center layout unit settings
-    var centerHash = {
-      position: 'center'
-    };
-
-    // Only add header if option specified (because passing header:null still shows a thin header)
-    if (settings.header != null) {
-      centerHash.header = settings.header;
-    }
-
-    // Build the layout
-    if (!settings.left) {
-      // If no saved width, calculate
-      settings.left = settings.width / settings.divider;
-    }
-
-    var expLayout = new YAHOO.widget.Layout(settings.layout_div, {
-      units: [
-        {
-          position: 'left',
-          width: settings.left,
-          body: settings.left_div,
-          collapse: false,
-          gutter: '0 5 0 0',
-          resize: settings.resize,
-          minWidth: settings.width / 8,
-          maxWidth: settings.width / 2
-        },
-        centerHash
-      ]
-    });
-
-    expLayout.on('render', function () {
-      if ($('#main_div').length) {
-        miqBuildMainLayout(this, settings.header);
-      }
-    });
-
-    expLayout.render();
-
-    // Show the layout divs right after layout rendering
-    $("#" + settings.center_div).show();
-    $("#" + settings.left_div).show();
-
-    // Set up event to capture center layout resize
-    var clu = expLayout.getUnitByPosition('center');
-    clu.addListener('leftChange', miqExplorerResize);
-
-    // Build the accordion
-    $("#" + settings.left_div).accordion({
-      change: function (event, ui) {
-        miqAccordionChange(event, ui, settings.accord_url);
-      },
-      fillSpace: true,
-      active: "#" + settings.active_accord,
-      icons: false,
-      animated: false
-    });
-  });
-}
-
-// Build the nested GTL layout inside the explorer layout
-function miqBuildMainLayout(parentLayout, header) {
-  var el = parentLayout.getUnitByPosition('center').get('wrap');
-  var paging_height;
-
-  if ($('#paging_div').length) {
-    paging_height = 35;
-  } else {
-    paging_height = 0;
-  }
-
-  var mainLayout = new YAHOO.widget.Layout(el, {
-    parent: parentLayout,
-    id: 'main_layout',
-    units: [
-      {
-        position: 'top',
-        body: 'taskbar_div',
-        height: 40,
-        collapse: false
-      },
-      {
-        position: 'bottom',
-        body: 'paging_div',
-        height: paging_height,
-        gutter: "0px 0px 5px 0px",
-        collapse: false
-      },
-      {
-        position: 'center',
-        header: header,
-        body: 'main_div',
-        scroll: true,
-        gutter: "5px 0px 5px 0px",
-        collapse: false
-      }
-    ]
-  });
-
-  mainLayout.render();
-
-  $("#main_div").show();
-  $("#taskbar_div").show();
-  $("#paging_div").show();
-}
-
-function miqExplorerResize(e) {
-  var url = "/dashboard/window_sizes";
-  var args = {'exp_controller': ManageIQ.controller, 'exp_left': e.newValue}
-  // Send the new values to the server
-  miqJqueryRequest(miqPassFields(url, args));
-}
-
-function miqAccordionChange(event, ui, url) {
-  return miqAjaxRequest(ui.newHeader.context.id, url);
-}
-
-function miqSetLayoutHeader(unitId, text) {
-  return YAHOO.widget.LayoutUnit.getLayoutUnitById(unitId).set('header', text);
-}
-
 // common function to pass ajax request to server
 function miqAjaxRequest(itemId, path) {
   if (miqCheckForChanges()) {
@@ -1302,13 +1043,6 @@ function miqSearchByName(button) {
   }
 }
 
-// Send search by filter via ajax
-function miqSearchByFilter(button) {
-  if (button == null) {
-    miqJqueryRequest('list_view_filter', {beforeSend: true, data: miqSerializeForm('filterbox')});
-  }
-}
-
 // Send transaction to server so automate tree selection box can be made active
 // and rest of the screen can be blocked
 function miqShowAE_Tree(typ) {
@@ -1326,18 +1060,6 @@ function miqInitJqueryForm() {
       }
     });
   });
-}
-
-// Launch the VNC Console using the miqvncplugin
-function miqLaunchMiqVncConsole(pwd, hostAddress, hostPort, proxyAddress, proxyPort) {
-  if (typeof miqvncplugin != "undefined" &&
-      typeof miqvncplugin.launchVnc != "undefined") {
-    miqSparkleOn();
-    miqvncplugin.launchVnc(pwd, hostAddress, hostPort, proxyAddress, proxyPort);
-    miqSparkleOff();
-  } else {
-    alert("The MIQ VNC plugin is not installed");
-  }
 }
 
 // Toggle the user options div in the page header
