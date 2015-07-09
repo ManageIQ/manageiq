@@ -7,7 +7,7 @@ describe ApplicationHelper do
   end
 
   def method_missing(sym, *args)
-    b = _toolbar_builder
+    b = toolbar_builder
     if b.respond_to?(sym, true)
       b.send(sym, *args)
     else
