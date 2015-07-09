@@ -171,7 +171,7 @@
       - :name: Add a new Button Group
         :description: Add a new Button Group
         :feature_type: admin
-        :identifier: ab_group_new
+        :identifier: catalogitem_group_new
       - :name: Edit Button Group
         :description: Edit Button Group
         :feature_type: admin
@@ -183,7 +183,7 @@
       - :name: Add a new Button
         :description: Add a new Button
         :feature_type: admin
-        :identifier: ab_button_new
+        :identifier: catalogitem_button_new
       - :name: Edit Button
         :description: Edit Button
         :feature_type: admin

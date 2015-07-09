@@ -779,6 +779,8 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "Service", "ServiceOrchestration"
       return build_toolbar_hide_button_service(id)
+    when "ServiceTemplate"
+      return !role_allows(:feature => id)
     when "Vm"
       case id
       when "vm_clone"
