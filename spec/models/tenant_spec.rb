@@ -12,7 +12,7 @@ describe Tenant do
   end
 
   context "#logo" do
-    let(:tenant) { described_class.create(:logo_file_name => "image.png") }
+    let(:tenant) { FactoryGirl.create(:tenant, :logo_file_name => "image.png") }
 
     # NOTE: this currently returns a bogus url.
     # it { expect(described_class.create.logo.url).to be_nil }
@@ -40,7 +40,7 @@ describe Tenant do
   context "#login_logo" do
     # NOTE: initializers/paperclip.rb sets up :default_login_logo
 
-    let(:tenant) { described_class.create }
+    let(:tenant) { FactoryGirl.create(:tenant) }
 
     it "has a default login image" do
       expect(tenant.login_logo.url).to match(/login-screen-logo.png/)

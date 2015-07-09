@@ -5,8 +5,11 @@ class Provider < ActiveRecord::Base
   include AsyncDeleteMixin
   include EmsRefresh::Manager
 
+  belongs_to :tenant_owner, :class_name => 'Tenant'
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
+  has_many :tenant_resources, :as => :resource
+  has_many :tenants, :through => :tenant_resources
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
