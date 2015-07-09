@@ -89,7 +89,7 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.add_rhevm(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::Rhevm.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_openstack(ems_id, event)

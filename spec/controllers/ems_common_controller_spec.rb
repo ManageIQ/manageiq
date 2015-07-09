@@ -101,7 +101,7 @@ describe EmsCloudController do
 
         it "when adding infra EMS" do
           @type = 'rhevm'
-          @ems  = EmsRedhat.new
+          @ems  = ManageIQ::Providers::Redhat::InfraManager.new
         end
       end
     end
