@@ -67,8 +67,12 @@ describe VmdbDatabaseConnection do
 
     connections = VmdbDatabaseConnection.all
 
-    blocked_conn = connections.detect(&:blocked_by)
-    expect(blocked_conn).to be
+    give_up = 10.seconds.from_now
+    until (blocked_conn = connections.detect(&:blocked_by))
+      raise "Lock is not blocking" if Time.current > give_up
+      sleep 1
+    end
+
     blocked_by = connections.detect { |conn| conn.spid == blocked_conn.blocked_by }
     expect(blocked_by).to be
     expect(blocked_conn.spid).not_to eq(blocked_by.spid)
