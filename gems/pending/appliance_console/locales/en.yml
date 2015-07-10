@@ -17,7 +17,7 @@ en:
     - restart
     - shutdown
     - summary
-    - logoff
+    - quit
     dhcp: Set DHCP Network Configuration
     static: Set Static Network Configuration
     testnet: Test Network Configuration
@@ -31,4 +31,4 @@ en:
     restart: Restart Appliance
     shutdown: Shut Down Appliance
     summary: Summary Information
-    logoff: Log Off
+    quit: Quit
