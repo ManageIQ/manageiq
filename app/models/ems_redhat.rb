@@ -137,6 +137,14 @@ class EmsRedhat < EmsInfra
     MiqEventCatcherRedhat
   end
 
+  def self.provision_class(via)
+    case via
+    when "iso" then MiqProvisionRedhatViaIso
+    when "pxe" then MiqProvisionRedhatViaPxe
+    else            MiqProvisionRedhat
+    end
+  end
+
   def history_database_name
     @history_database_name ||= begin
       require 'ovirt_metrics'

@@ -1,6 +1,7 @@
 module ManageIQ::Providers
 class InfraManager < BaseManager
   require_dependency 'manageiq/providers/infra_manager/template'
+  require_dependency 'manageiq/providers/infra_manager/provision_workflow'
   require_dependency 'manageiq/providers/infra_manager/vm'
 
   #

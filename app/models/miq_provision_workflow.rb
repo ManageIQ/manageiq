@@ -4,13 +4,15 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def self.class_for_platform(platform)
-    "MiqProvision#{platform.classify}Workflow".constantize
+    "MiqProvision#{platform.classify}Workflow".safe_constantize ||
+      "ManageIQ::Providers::#{platform.classify}::CloudManager::ProvisionWorkflow".safe_constantize ||
+      "ManageIQ::Providers::#{platform.classify}::InfraManager::ProvisionWorkflow".constantize
   end
 
   def self.class_for_source(source_or_id)
-    source = source_or_id.kind_of?(ActiveRecord) ? source_or_id : VmOrTemplate.find_by_id(source_or_id)
+    source = VmOrTemplate.find_by_id(source_or_id)
     return nil if source.nil?
-    class_for_platform(source.class.model_suffix)
+    source.ext_management_system.class.provision_workflow_class
   end
 
   def self.encrypted_options_fields

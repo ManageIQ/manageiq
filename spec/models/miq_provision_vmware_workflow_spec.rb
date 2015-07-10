@@ -1,8 +1,8 @@
 require "spec_helper"
 
-silence_warnings { MiqProvisionVmwareWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
+silence_warnings { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
-describe MiqProvisionVmwareWorkflow do
+describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
   before do
     MiqRegion.seed
   end
@@ -28,7 +28,7 @@ describe MiqProvisionVmwareWorkflow do
         )
       end
 
-      MiqProvisionVmwareWorkflow.new({}, admin.userid)
+      ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.new({}, admin.userid)
     end
   end
 end

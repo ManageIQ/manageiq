@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionAmazon do
+describe ManageIQ::Providers::Amazon::CloudManager::Provision do
   let(:provider) { FactoryGirl.create(:ems_amazon_with_authentication) }
   let(:template) { FactoryGirl.create(:template_amazon, :ext_management_system => provider) }
 
@@ -105,6 +105,6 @@ describe MiqProvisionAmazon do
                                  :options      => options)
     MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
 
-    vm_prov.workflow.class.should eq MiqProvisionAmazonWorkflow
+    vm_prov.workflow.class.should eq ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow
   end
 end

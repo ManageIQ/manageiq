@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionVmware do
+describe ManageIQ::Providers::Vmware::InfraManager::Provision do
   context "::Placement" do
     before do
       ems      = FactoryGirl.create(:ems_vmware_with_authentication)
