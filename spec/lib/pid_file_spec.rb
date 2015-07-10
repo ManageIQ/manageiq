@@ -23,6 +23,11 @@ describe PidFile do
         @pid_file.pid.should be_nil
       end
 
+      it "returns nil when file contents are non numeric" do
+        IO.stub(:read).with(@fname).and_return("text")
+        @pid_file.pid.should be_nil
+      end
+
       it "returns pid when file contents have pid" do
         pid = 42
         IO.stub(:read).with(@fname).and_return("#{pid} ")
