@@ -1,57 +1,85 @@
 miqAngularApplication.directive('checkchange', function() {
   return {
     require: 'ngModel',
-      link: function (scope, elem, attr, ctrl) {
-        if(scope.skipCheck == undefined)
-          scope.skipCheck = new Object();
-        if(attr.checkchange != "" && !scope.skipCheck.hasOwnProperty(ctrl.$name))
-          scope.skipCheck[ctrl.$name] = attr.checkchange.split(',');
+    link: function (scope, elem, attr, ctrl) {
+      scope['formchange_' + ctrl.$name] = elem[0].name
+      scope['elemType_' + ctrl.$name] = attr.type;
 
-        ctrl.$parsers.unshift(function() {
-          scope.miqService.miqFlashClear();
-
-          scope.ctrl = ctrl;
-
-          for (var name in scope.modelCopy) {
-            if(ctrl.$name == name) {
-              if(typeof (ctrl.$viewValue) == "boolean") {
-                int_value = parseInt(scope.modelCopy[name], 10);
-                var bool_value = int_value != 0 ? true : false;
-                if(ctrl.$viewValue == bool_value) {
-                  scope.form[name].$setPristine(true);
-                  break;
-                }
-              } else {
-                if (ctrl.$viewValue == scope.modelCopy[name]) {
-                  scope.form[name].$setPristine(true);
-                  break;
-                }
-              }
-            }
+      scope.$watch(attr.ngModel, function() {
+        if(ctrl.$viewValue != undefined) {
+          if(scope['elemType_' + ctrl.$name] != "date") {
+            viewModelComparison(scope, ctrl);
           }
-
-          if(scope.form[ctrl.$name].$pristine) {
-            scope.form.$pristine = true;
-            for (var name in scope.form) {
-              if (ctrl.$name != name && scope.modelCopy[name] != scope.form[name].$modelValue) {
-                if (scope.skipCheck[ctrl.$name] == undefined || scope.skipCheck[ctrl.$name].indexOf(name) == -1) {
-                  scope.form.$pristine = false;
-                  break;
-                }
-              }
-            }
-          } else {
-            scope.form.$pristine = false;
+          else {
+            viewModelDateComparison(scope, ctrl);
           }
-          if(scope.form.$pristine)
-            scope.form.$setPristine(true);
-        });
+        }
+        if(scope.angularForm.$pristine )
+          checkForOverallFormPristinity(scope, ctrl);
+      });
 
-        ctrl.$parsers.push(function(updatedModelValue) {
-          if (updatedModelValue === undefined || scope.form[ctrl.$name].$modelValue === undefined) {
-            return ctrl.$viewValue;
-          }
-        });
-      }
+      ctrl.$parsers.push(function(value) {
+        scope.miqService.miqFlashClear();
+
+        if (value == scope.modelCopy[ctrl.$name]) {
+          scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(true);
+        }
+        if(scope.angularForm[scope['formchange_' + ctrl.$name]].$pristine) {
+          checkForOverallFormPristinity(scope, ctrl);
+        }
+        scope.angularForm[scope['formchange_' + ctrl.$name]].$setTouched(true);
+        return value;
+      });
+
+      if(scope.angularForm.$pristine)
+        scope.angularForm.$setPristine(true);
+    }
   }
 });
+
+var viewModelComparison = function(scope, ctrl) {
+  if (ctrl.$viewValue == scope.modelCopy[ctrl.$name]) {
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(true);
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched(true);
+    scope.angularForm.$pristine = true;
+  }
+  else {
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(false);
+    scope.angularForm.$pristine = false;
+  }
+};
+
+var viewModelDateComparison = function(scope, ctrl) {
+  var viewValueDate = new Date(ctrl.$viewValue);
+  var viewValueDateCmp = viewValueDate.getUTCMonth() + 1 + "/" + viewValueDate.getUTCDate() + "/" + viewValueDate.getUTCFullYear();
+
+  var modelCopyDate = new Date(scope.modelCopy[ctrl.$name]);
+  var modelCopyDateCmp = modelCopyDate.getUTCMonth() + 1 + "/" + modelCopyDate.getUTCDate() + "/" + modelCopyDate.getUTCFullYear();
+
+  if(viewValueDateCmp == modelCopyDateCmp) {
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(true);
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched(true);
+    scope.angularForm.$pristine = true;
+  }
+  else {
+    scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(false);
+    scope.angularForm.$pristine = false;
+  }
+};
+
+var checkForOverallFormPristinity = function(scope, ctrl) {
+  var modelCopyObject = JSON.parse(JSON.stringify(scope.modelCopy));
+  delete modelCopyObject[ctrl.$name];
+
+  var modelObject = JSON.parse(JSON.stringify(scope[scope.model]))
+  delete modelObject[ctrl.$name];
+
+  if(JSON.stringify(modelCopyObject) != JSON.stringify(modelObject)) {
+    scope.angularForm.$pristine = false;
+  }
+  else {
+    scope.angularForm.$pristine = true;
+  }
+  if(scope.angularForm.$pristine)
+    scope.angularForm.$setPristine(true);
+};

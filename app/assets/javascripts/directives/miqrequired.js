@@ -3,12 +3,13 @@ miqAngularApplication.directive('miqrequired', function() {
     require: 'ngModel',
       link: function (scope, elem, attrs, ctrl) {
         scope.$watch(attrs.ngModel, function() {
-          if((ctrl.$modelValue != undefined && scope.afterGet) || scope.formId == "new") {
+          if((ctrl.$modelValue != undefined)) {
             setValidity(scope, ctrl, ctrl.$modelValue);
           }
         });
-        ctrl.$parsers.unshift(function() {
+        ctrl.$parsers.push(function(value) {
           setValidity(scope, ctrl, ctrl.$viewValue);
+          return value;
         });
 
         var setValidity = function(scope, ctrl, value) {

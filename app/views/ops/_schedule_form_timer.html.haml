@@ -1,51 +1,80 @@
 #form_timer_div
-  %fieldset
-    %h3=_("Timer")
-    %table.style1
-      %tr
-        %td.key=_("Run")
-        %td
+  %div
+    %div
+      .form-group
+        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+          = _("Run")
+        .col-sm-10
           = select_tag("timer_typ",
                        options_for_select(%w(Once Hourly Daily Weekly Monthly)),
-                       "ng-model"    => "scheduleModel.timer_typ",
-                       "ng-change"   => "scheduleTimerTypeChanged()",
-                       "checkchange" => "timer_value")
+                       "ng-model"                    => "scheduleModel.timer_typ",
+                       "ng-change"                   => "scheduleTimerTypeChanged()",
+                       "checkchange"                 => "",
+                       "selectpicker-for-select-tag" => "")
 
-          %span(ng-show="timerNotOnce()")=_("every")
-          %select#timer_value(ng-model="scheduleModel.timer_value" name="timer_value" ng-options="timerItem.value as timerItem.text for timerItem in scheduleModel.timer_items" ng-show="timerNotOnce()" checkchange)
-          %input(type="hidden" ng-value="scheduleModel.timer_value" name="timer_value")
-
-      %tr
-        %td.key=_("Time Zone")
-        %td
+          %span{"ng-show" => "!timerTypeOnce"}= _("every")
+          %select#timer_value{"update-dropdown-for-timer" => "",
+                              "ng-model"                  => "scheduleModel.timer_value",
+                              "name"                      => "timer_value",
+                              "ng-options"                => "timerItem.value as timerItem.text for timerItem in timer_items",
+                              "timer-hide"                => "timerTypeOnce",
+                              "checkchange"               => ""}
+          %input{"type" => "hidden", "ng-value" => "scheduleModel.timer_value", "name" => "timer_value"}
+      .form-group
+        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+          = _("Time Zone")
+        .col-sm-10
           = select_tag("time_zone",
                        options_for_select(ALL_TIMEZONES),
                        "ng-model"    => "scheduleModel.time_zone",
-                       "checkchange" => "")
+                       "checkchange" => "",
+                       "selectpicker-for-select-tag" => "")
           \&nbsp;&nbsp;
-          =_("* Changing the Time Zone will reset the Starting Date and Time fields below")
+          = _("* Changing the Time Zone will reset the Starting Date and Time fields below")
 
-      %tr
-        %td.key=_("Starting Date")
-        %td#start_date
-          %input#miq_angular_date_1.css1(readonly="true" ng-model="scheduleModel.miq_angular_date_1" name="miq_angular_date_1" data-miq_observe_date="execAngular" checkchange)
+      .form-group{"ng-controller" => "DatepickerCtrl"}
+        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+          = _("Starting Date")
+        .col-sm-2
+          #start_date
+            %div
+              %p.input-group
+                %input.form-control{"type"             => "date",
+                                    "class"            => "form-control",
+                                    "id"               => "start_date",
+                                    "name"             => "start_date",
+                                    "datepicker-popup" => "",
+                                    "ng-model"         => "scheduleModel.start_date",
+                                    "is-open"          => "opened",
+                                    "min-date"         => "minDate",
+                                    "ng-required"      => "true",
+                                    "show-button-bar"  => "false",
+                                    "readonly"         => "true",
+                                    "checkchange"      => ""}
+                  %span.input-group-btn
+                    %button{"type"     => "button",
+                            "class"    => "btn btn-default",
+                            "ng-click" => "open($event)"}
+                      %i{"class" => "glyphicon glyphicon-calendar"}
 
-      %tr
-        %td.key
-          =_("Starting Time")
+      .form-group
+        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+          = _("Starting Time")
           (
           %span#tz_span {{scheduleModel.time_zone}}
           )
-        %td
+        .col-sm-10
           = select_tag("start_hour",
-                       options_for_select(Array.new(24) {|i| i}),
+                       options_for_select(Array.new(24) { |i| i }),
                        :class        => "threedigit",
                        "ng-model"    => "scheduleModel.start_hour",
-                       "checkchange" => "")
+                       "checkchange" => "",
+                       "selectpicker-for-select-tag" => "")
           %span h
           = select_tag("start_min",
-                       options_for_select(Array.new(12) {|i| i*5}),
+                       options_for_select(Array.new(12) { |i| i * 5 }),
                        :class        => "threedigit",
                        "ng-model"    => "scheduleModel.start_min",
-                       "checkchange" => "")
+                       "checkchange" => "",
+                       "selectpicker-for-select-tag" => "")
           %span m

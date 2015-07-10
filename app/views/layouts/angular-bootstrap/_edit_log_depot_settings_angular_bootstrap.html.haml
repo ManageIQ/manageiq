@@ -1,0 +1,32 @@
+- ng_readonly ||= false
+%div{"ng-show" => "#{ng_show}"}
+  .form-group{"ng-class" => "{'has-error': angularForm.depot_name.$invalid}"}
+    %label.col-sm-2.control-label{"for" => "textInput-markup"}
+      = _("Depot Name")
+    .col-sm-4
+      %input.form-control{"type"        => "text",
+                          "id"          => "textInput-markup",
+                          "ng-required" => "#{ng_reqd_depot_name}",
+                          "name"        => "depot_name",
+                          "ng-model"    => "#{ng_model_depot_name}",
+                          "ng-readonly" => "#{ng_readonly}",
+                          "checkchange" => ""}
+      %span.help-block{"ng-show" => "angularForm.depot_name.$invalid"}
+        = _("Required")
+%div{"ng-show" => "#{ng_show}"}
+  .form-group{"ng-class" => "{'has-error': angularForm.uri.$invalid}"}
+    %label.col-sm-2.control-label{"for" => "textInput-markup"}
+      = _("URI")
+    .col-sm-4
+      %label
+        = uri_prefix_display
+      %input.form-control{"type"        => "text",
+                          "id"          => "textInput-markup",
+                          "ng-required" => "#{ng_reqd_uri}",
+                          "name"        => "uri",
+                          "ng-model"    => "#{ng_model_uri}",
+                          "ng-readonly" => "#{ng_readonly}",
+                          "checkchange" => ""}
+      %span.help-block{"ng-show" => "angularForm.uri.$invalid"}
+        = _("Required")
+      %input{"type" => "hidden", "name" => "uri_prefix", "ng-value" => "#{ng_model_uri_prefix}"}
