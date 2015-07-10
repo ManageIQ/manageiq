@@ -118,41 +118,38 @@ class MiqRequestWorkflow
     request
   end
 
-  def init_from_dialog(values, _userid)
-    options = values
-    values_new = options
+  def init_from_dialog(init_values, _userid)
+    @dialogs[:dialogs].keys.each do |dialog_name|
+      get_all_fields(dialog_name).each_pair do |field_name, field_values|
+        next if field_values[:display] == :ignore
 
-    get_all_dialogs.keys.each do |d|                         # Go thru all dialogs
-      get_all_fields(d).keys.each do |f|                     # Go thru all field
-        if !options[f].nil?
-          values_new[f] = options[f]                              # Set the existing option value
-        else
-          field = get_field(f, d)
-          if field[:display] != :ignore
-            if !field[:default].nil?
-              val = field[:default]                               # Set to default value
-            elsif field[:values] && field[:values].length == 1    # if default is not set to anything and there is only one value in hash, use set element to be displayed default
-              field[:values].each do |v|
-                val = v[0]
+        if !field_values[:default].nil?
+          val = field_values[:default]
+
+        # if default is not set to anything and there is only one value in hash,
+        # use set element to be displayed default
+        elsif field_values[:values] && field_values[:values].length == 1
+          val = field_values[:values].first[0]
+        end
+
+        if field_values[:values]
+          if field_values[:values].kind_of?(Hash)
+            # Save [value, description], skip for timezones array
+            init_values[field_name] = [val, field_values[:values][val]]
+          else
+            field_values[:values].each do |tz|
+              if tz[1].to_i_with_method == val.to_i_with_method
+                # Save [value, description] for timezones array
+                init_values[field_name] = [val, tz[0]]
               end
-            end
-            if field[:values]                                     # If this field has values
-              if field[:values].kind_of?(Hash)
-                values_new[f] = [val, field[:values][val]]        # Save [value, description], skip for timezones array
-              else
-                field[:values].each do |tz|
-                  if tz[1].to_i_with_method == val.to_i_with_method
-                    values_new[f] = [val, tz[0]]                  # Save [value, description] for timezones array
-                  end
-                end
-              end
-            else
-              values_new[f] = val                                 # Set to default value
             end
           end
+        else
+          # Set to default value
+          init_values[field_name] = val
         end
-      end # get_all_fields
-    end # get_all_dialogs
+      end
+    end
   end
 
   def validate(values)

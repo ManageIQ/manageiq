@@ -47,4 +47,84 @@ describe MiqRequestWorkflow do
       end
     end
   end
+
+  describe "#init_from_dialog" do
+    let(:dialogs) { workflow.instance_variable_get(:@dialogs) }
+    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
+    let(:init_values) { {} }
+
+    context "when the dialog fields ignore display" do
+      before do
+        dialogs[:dialogs].keys.each do |dialog_name|
+          workflow.get_all_fields(dialog_name).each_pair do |_, field_values|
+            field_values[:display] = :ignore
+          end
+        end
+      end
+
+      it "does not modify the initial values" do
+        workflow.init_from_dialog(init_values, 123)
+
+        expect(init_values).to eq({})
+      end
+    end
+
+    context "when the dialog field values default is not nil" do
+      before do
+        dialogs[:dialogs].keys.each do |dialog_name|
+          workflow.get_all_fields(dialog_name).each_pair do |_, field_values|
+            field_values[:default] = "not nil"
+          end
+        end
+      end
+
+      it "modifies the initial values with the default value" do
+        workflow.init_from_dialog(init_values, 123)
+
+        expect(init_values).to eq(:root_password => "not nil")
+      end
+    end
+
+    context "when the dialog field values default is nil" do
+      before do
+        dialogs[:dialogs].keys.each do |dialog_name|
+          workflow.get_all_fields(dialog_name).each_pair do |_, field_values|
+            field_values[:default] = nil
+          end
+        end
+      end
+
+      context "when the field values are a hash" do
+        before do
+          dialogs[:dialogs].keys.each do |dialog_name|
+            workflow.get_all_fields(dialog_name).each_pair do |_, field_values|
+              field_values[:values] = {:something => "test"}
+            end
+          end
+        end
+
+        it "uses the first field value" do
+          workflow.init_from_dialog(init_values, 123)
+
+          expect(init_values).to eq(:root_password => [:something, "test"])
+        end
+      end
+
+      context "when the field values are not a hash" do
+        before do
+          dialogs[:dialogs].keys.each do |dialog_name|
+            workflow.get_all_fields(dialog_name).each_pair do |_, field_values|
+              field_values[:values] = [["test", "100"], ["test2", "0"]]
+            end
+          end
+        end
+
+        it "uses values as [value, description] for timezones aray" do
+          workflow.init_from_dialog(init_values, 123)
+
+          expect(init_values).to eq(:root_password => [nil, "test2"])
+        end
+      end
+    end
+  end
 end
