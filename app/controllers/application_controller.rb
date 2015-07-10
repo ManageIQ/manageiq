@@ -1525,7 +1525,7 @@ class ApplicationController < ActionController::Base
       if db_record.hardware.logical_cpus
         cpu_details =
           if db_record.num_cpu && db_record.cores_per_socket
-            " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cores_per_socket, 'core')})"
+            " (#{pluralize(db_record.num_cpu, 'socket')} x #{pluralize(db_record.cores_per_socket, 'core')})"
           else
             ""
           end

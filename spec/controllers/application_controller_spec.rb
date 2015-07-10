@@ -127,4 +127,23 @@ describe ApplicationController do
       result.should eq(false)
     end
   end
+
+  context "#set_config" do
+    before(:each) do
+      set_user_privileges
+      @host = FactoryGirl.create(:host,
+                                 :hardware => FactoryGirl.create(:hardware,
+                                                                 :numvcpus         => 2,
+                                                                 :cores_per_socket => 4,
+                                                                 :logical_cpus     => 8),
+                                )
+      @host_service = FactoryGirl.create(:system_service, :name => "foo", :host_id => @host.id)
+    end
+
+    it "sets Processors details successfully" do
+      controller.send(:set_config, @host)
+      expect(response.status).to eq(200)
+      expect(assigns(:devices)).to_not be_empty
+    end
+  end
 end
