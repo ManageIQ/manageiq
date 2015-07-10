@@ -841,6 +841,8 @@ class ApplicationHelper::ToolbarBuilder
         return true if !@report
       when "timeline_txt"
         return true if !@report
+      else
+        return !role_allows(:feature => id)
       end
     end
     return false  # No reason to hide, allow the button to show
