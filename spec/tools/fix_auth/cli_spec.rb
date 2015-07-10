@@ -66,16 +66,8 @@ describe FixAuth::Cli do
     end
 
     describe "v2" do
-      it "defaults to true" do
-        expect(described_class.new.parse(%w()).options[:v2]).to be_true
-      end
-
-      it "allows v2 to be passed" do
-        expect(described_class.new.parse(%w(--v2)).options[:v2]).to be_true
-      end
-
-      it "allows v2 to be negative" do
-        expect(described_class.new.parse(%w(--no-v2)).options[:v2]).to be_false
+      it "exists" do
+        expect { described_class.new.parse(%w(--v2)) }.not_to raise_error
       end
     end
   end

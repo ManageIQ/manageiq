@@ -53,13 +53,7 @@ describe FixAuth::AuthModel do
 
     it "should build selection criteria (non selects)" do
       expect(subject.selection_criteria).to match(/OR/)
-      expect(subject.selection_criteria).to match(/password.*!~ 'v2.*OR.*auth_key.*!~ 'v2/)
-    end
-
-    it "should build selection criteria (non selects)" do
-      expect(subject.selection_criteria(true)).to match(/OR/)
-      expect(subject.selection_criteria(true)).not_to match(/password.*!~ 'v2.*OR.*auth_key.*!~ 'v2/)
-      expect(subject.selection_criteria(true)).to match(/password.*<>.*''.*OR.*auth_key.*<>.*''/)
+      expect(subject.selection_criteria).to match(/password.*<>.*''.*OR.*auth_key.*<>.*''/)
     end
 
     it "should not find empty records" do
@@ -69,13 +63,8 @@ describe FixAuth::AuthModel do
 
     it "should find records with encrypted passwords" do
       [v1, v2, leg, nls].each(&:save!)
-      expect(contenders).to include(v1.name, leg.name)
-      expect(contenders).not_to include(v2.name, nls.name)
-    end
-
-    it "finds records already encryped when requested" do
-      [v1, v2].each(&:save!)
-      expect(subject.contenders(true).collect(&:name)).to include(v2.name)
+      expect(contenders).to include(v1.name, leg.name, v2.name)
+      expect(contenders).not_to include(nls.name)
     end
 
     it "should find viable records among mixed mode records" do
