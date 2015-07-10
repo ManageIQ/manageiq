@@ -127,4 +127,20 @@ describe MiqRequestWorkflow do
       end
     end
   end
+
+  describe "#provisioning_tab_list" do
+    let(:dialogs) { workflow.instance_variable_get(:@dialogs) }
+    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
+
+    before do
+      dialogs[:dialog_order] = [:test, :test2, :test3]
+      dialogs[:dialogs][:test] = {:description => "test description", :display => :hide}
+      dialogs[:dialogs][:test2] = {:description => "test description 2", :display => :ignore}
+      dialogs[:dialogs][:test3] = {:description => "test description 3", :display => :edit}
+    end
+
+    it "returns a list of tabs without the hidden or ignored ones" do
+      expect(workflow.provisioning_tab_list).to eq([{:name => "test3", :description => "test description 3"}])
+    end
+  end
 end

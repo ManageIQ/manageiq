@@ -238,6 +238,24 @@ class MiqRequestWorkflow
     @dialogs[:buttons] || [:submit, :cancel]
   end
 
+  def provisioning_tab_list
+    dialog_names = @dialogs[:dialog_order].map { |dialog| dialog.to_s }
+    dialog_descriptions = dialog_names.map { |dialog_name| @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :description) }
+    dialog_display = dialog_names.map { |dialog_name| @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :display) }
+
+    tab_list = []
+    dialog_names.each_with_index do |dialog_name, index|
+      unless dialog_display[index] == :hide || dialog_display[index] == :ignore
+        tab_list << {
+          :name => dialog_name,
+          :description => dialog_descriptions[index]
+        }
+      end
+    end
+
+    tab_list
+  end
+
   def get_all_dialogs
     @dialogs[:dialogs].each_key { |d| get_dialog(d) }
     @dialogs[:dialogs]
