@@ -31,9 +31,43 @@ module ActiveRecord
       unknown_keys = options.keys - LEGACY_FINDER_METHODS.map(&:first)
       raise "Unsupported options #{unknown_keys}" unless unknown_keys.empty?
 
+      # Determine whether any of the included associations are polymorphic
+      has_polymorphic = included_associations(options[:include]).any? { |name| self.reflection_is_polymorphic?(name) }
+
       LEGACY_FINDER_METHODS.inject(all) { |scope, (key, method)|
+        # Don't call references method on scope if polymorphic associations are
+        # included to avoid ActiveRecord::EagerLoadPolymorphicError
+        next(scope) if method == :references && has_polymorphic
+        #
         options[key] ? scope.send(method, options[key]) : scope
       }
+    end
+
+    def self.reflection_is_polymorphic?(name)
+      reflection = self._reflect_on_association(name)
+      reflection ? reflection.polymorphic? : false
+    end
+
+    def self.included_associations(includes)
+      arr = []
+      _included_associations includes, arr
+      arr
+    end
+
+    def self._included_associations(includes, arr)
+      case includes
+        when Symbol, String
+          arr << includes.to_sym
+        when Array
+          includes.each do |assoc|
+            _included_associations assoc, arr
+          end
+        when Hash
+          includes.each do |k,v|
+            cache = arr << k
+            _included_associations v, cache
+          end
+      end
     end
   end
 end
