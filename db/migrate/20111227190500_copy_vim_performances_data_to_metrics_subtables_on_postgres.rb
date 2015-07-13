@@ -31,13 +31,13 @@ class CopyVimPerformancesDataToMetricsSubtablesOnPostgres < ActiveRecord::Migrat
 
   def self.copy_vim_performances_data_to_metrics_subtables
     (0..23).each do |n|
-      copy_data :vim_performances, subtable_name(:metrics, n), :via => :bulk_copy, :conditions => ["capture_interval_name = ? AND EXTRACT(HOUR FROM timestamp) = ?", "realtime", n]
+      copy_data :vim_performances, subtable_name(:metrics, n), :via => :insert_select_direct, :conditions => ["capture_interval_name = ? AND EXTRACT(HOUR FROM timestamp) = ?", "realtime", n]
     end
   end
 
   def self.copy_vim_performances_data_to_metric_rollups_subtables
     (1..12).each do |n|
-      copy_data :vim_performances, subtable_name(:metric_rollups, n), :via => :bulk_copy, :conditions => ["capture_interval_name != ? AND EXTRACT(MONTH FROM timestamp) = ?", "realtime", n]
+      copy_data :vim_performances, subtable_name(:metric_rollups, n), :via => :insert_select_direct, :conditions => ["capture_interval_name != ? AND EXTRACT(MONTH FROM timestamp) = ?", "realtime", n]
     end
   end
 
