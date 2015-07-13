@@ -13,7 +13,7 @@ module Vmdb
       end
 
       def load
-        require "permission_stores/#{backend}"
+        require "vmdb/permission_stores/#{backend}"
       end
     end
 

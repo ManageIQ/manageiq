@@ -1,4 +1,4 @@
-require 'permission_stores'
+require 'vmdb/permission_stores'
 
 Vmdb::PermissionStores.configure do |config|
   if Rails.env.test?

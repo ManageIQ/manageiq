@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'permission_stores'
+require 'vmdb/permission_stores'
 require 'tempfile'
 
 describe Vmdb::PermissionStores do
