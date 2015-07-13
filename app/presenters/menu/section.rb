@@ -9,7 +9,8 @@ module Menu
     end
 
     def visible?(userid)
-      auth  = store.can?(id) && User.current_user.role_allows_any?(:identifiers => tab)
+      store = Vmdb::PermissionStores.instance
+      auth  = store.can?(id) && User.current_user.role_allows_any?(:identifiers => features)
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], main tab [#{id}]")
       auth
     end
