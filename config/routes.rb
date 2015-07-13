@@ -1848,11 +1848,9 @@ Vmdb::Application.routes.draw do
         x_search_by_name
         x_show
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
         evm_relationship_post +
-        exp_post +
         policy_post +
         pre_prov_post +
         snap_post +
