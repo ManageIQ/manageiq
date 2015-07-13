@@ -114,7 +114,7 @@ describe MiqRequestWorkflow do
         before do
           dialogs[:dialogs].keys.each do |dialog_name|
             workflow.get_all_fields(dialog_name).each_pair do |_, field_values|
-              field_values[:values] = [["test", "100"], ["test2", "0"]]
+              field_values[:values] = [%w(test 100), %w(test2 0)]
             end
           end
         end
