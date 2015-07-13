@@ -85,7 +85,17 @@ class ApplicationHelper::ToolbarBuilder
             props["enabled"] = "false"
             props["title"] = _("No records found for this report")
           end
-
+          if bgi[:buttonSelect] == "host_vmdb_choice" && x_active_tree == :old_dialogs_tree && @record && @record[:default]
+            bgi[:items].each do |bgsi|
+              if bgsi[:button] == "old_dialogs_edit"
+                bgsi[:enabled] = 'false'
+                bgsi[:title] = _('Default dialogs cannot be edited')
+              elsif bgsi[:button] == "old_dialogs_delete"
+                bgsi[:enabled] = 'false'
+                bgsi[:title] = _('Default dialogs cannot be removed from the VMDB')
+              end
+            end
+          end
           # Add a separator, if needed, before this buttonSelect
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1

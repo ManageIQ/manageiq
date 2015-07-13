@@ -115,7 +115,7 @@ class ApplicationHelper::ToolbarChooser
   end
 
   def center_toolbar_filename_automate_customization
-    if x_active_tree == :old_dialogs_tree && x_node != "root"
+    if x_active_tree == :old_dialogs_tree
       return @dialog ? "miq_dialog_center_tb" : "miq_dialogs_center_tb"
     elsif x_active_tree == :dialogs_tree
       if x_node == "root"
