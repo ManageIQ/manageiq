@@ -1,6 +1,6 @@
 %ul{:class => "nav navbar-nav navbar-primary persistent-secondary", :id => "maintab"}
   -Menu::Manager.menu do |menu_section|
-    -if menu_section.visible?
+    -if menu_section.visible?(User.current_userid)
       %li{:class => primary_nav_class(menu_section.id)}
         %a{:href         => menu_section.url,
            :class        => "dropdown-toggle visible-xs visible-sm",
