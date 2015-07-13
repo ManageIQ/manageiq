@@ -1,0 +1,34 @@
+#!/bin/bash
+
+PIDFILE=/var/www/miq/vmdb/tmp/pids/evm.pid
+
+# sleep for 15 seconds to allow the UI to return a result
+echo "Sleeping for 15 seconds"
+sleep 15
+
+echo "[$(date)] Stopping EVM Server"
+systemctl stop evmserverd
+
+# close all open file descriptors
+for FD in /proc/$$/fd/*
+do
+	FD=$(basename ${FD})
+
+	[ ${FD} -le 1 ] && continue
+	
+	echo "Closing FD: $FD"
+	eval "exec ${FD}>&-"
+	eval "exec ${FD}<&-"
+done
+echo "Open FDs"
+/usr/sbin/lsof -p $$
+
+while [ -f ${PIDFILE} ]
+do
+  echo "Sleeping for 5 seconds due to existance of: ${PIDFILE}"
+  sleep 5
+done
+
+echo "[$(date)] Starting EVM Server"
+systemctl start evmserverd
+echo "[$(date)] Complete"
