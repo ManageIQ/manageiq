@@ -63,14 +63,12 @@ module ApplicationHelper
 
   # Check role based authorization for a UI task
   def role_allows(options={})
-    store = Vmdb::PermissionStores.instance
-    ApplicationHelper.role_allows_intern(options) && store.can?(options[:feature]) rescue false
+    ApplicationHelper.role_allows_intern(User.current_userid, options) rescue false
   end
   module_function :role_allows
   public :role_allows
 
-  def role_allows_intern(options = {})
-    userid  = User.current_userid
+  def role_allows_intern(userid, options = {})
     role_id = User.current_user.miq_user_role.try(:id)
     if options[:feature]
       auth = options[:any] ? User.current_user.role_allows_any?(:identifiers => [options[:feature]]) :

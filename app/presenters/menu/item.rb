@@ -9,7 +9,7 @@ module Menu
       @name.call
     end
 
-    def visible?
+    def visible?(userid)
       ApplicationHelper.role_allows_intern(rbac_feature)
     end
 

@@ -66,16 +66,24 @@ describe ApplicationHelper do
       it 'consults the permission store' do
         begin
           current_store = Vmdb::PermissionStores.instance
-          Vmdb::PermissionStores.configure do |config|
-            config.backend = 'yaml'
-            config.options[:filename] = File.join Rails.root, 'config', 'permissions.yml'
+          Tempfile.open('foo') do |tf|
+            menu = Menu::DefaultMenu.services_menu_section
+
+            tf.write Psych.dump [menu.id]
+            tf.close
+
+            Vmdb::PermissionStores.configure do |config|
+              config.backend = 'yaml'
+              config.options[:filename] = tf.path
+            end
+            Vmdb::PermissionStores.initialize!
+
+            Menu::DefaultMenu.services_menu_section.visible?(nil).should be_true
+            Menu::DefaultMenu.cloud_inteligence_menu_section.visible?(nil).should be_false
+
+            User.stub_chain(:current_user, :role_allows?).and_return(true)
+            Menu::DefaultMenu.cloud_inteligence_menu_section.visible?(nil).should be_false
           end
-          Vmdb::PermissionStores.initialize!
-
-          role_allows(:feature=>"miq_report").should be_true
-
-          User.stub_chain(:current_user, :role_allows?).and_return(true)
-          role_allows(:feature=>"miq_report2").should be_false
         ensure
           Vmdb::PermissionStores.instance = current_store
         end
@@ -110,10 +118,12 @@ describe ApplicationHelper do
       include UiConstants
       it "and entitled" do
         Menu::DefaultMenu.services_menu_section.visible?.should be_true
+        role_allows(:main_tab_id => :svc).should be_true
       end
 
       it "and not entitled" do
         @user.stub(:role_allows_any? => false)
+        role_allows(:main_tab_id => :svc).should be_false
         Menu::DefaultMenu.services_menu_section.visible?.should be_false
       end
     end
