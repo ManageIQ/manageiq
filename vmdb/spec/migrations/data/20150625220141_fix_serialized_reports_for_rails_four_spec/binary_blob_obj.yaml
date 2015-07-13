@@ -1,0 +1,134 @@
+--- !ruby/object:MiqReport
+attributes:
+  id: 7
+  name: Vendor and Guest OS
+  title: Vendor and Guest OS
+  rpt_group: Configuration Management - Virtual Machines
+  rpt_type: Default
+  priority: 22
+  db: Vm
+  cols:
+  - vendor
+  - name
+  include:
+    operating_system:
+      columns:
+      - product_name
+      - name
+  col_order:
+  - vendor
+  - operating_system.product_name
+  - name
+  - operating_system.name
+  headers:
+  - Container
+  - OS Product Name
+  - Name
+  - OS Name
+  conditions: 
+  order: Ascending
+  sortby:
+  - vendor
+  - operating_system.product_name
+  group: c
+  graph:
+    :type: ParallelThreedColumn
+    :count: 10
+    :other: true
+  dims: 2
+  created_on: 2008-08-14 15:05:45.108115000 Z
+  updated_on: 2008-08-14 15:19:12.682978000 Z
+  filename: 100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
+  file_mtime: 2015-06-05 20:03:21.000000000 Z
+  categories: 
+  timeline: 
+  template_type: report
+  where_clause: 
+  db_options: 
+  generate_cols: 
+  generate_rows: 
+  col_formats: 
+  tz: 
+  time_profile_id: 
+  display_filter: 
+  col_options: 
+  rpt_options: 
+  miq_group_id: 
+  user_id: 
+table: !ruby/object:Ruport::Data::Table
+  column_names: &1
+  - vendor
+  - name
+  - operating_system.product_name
+  - operating_system.name
+  - id
+  record_class: Ruport::Data::Record
+  data:
+  - !ruby/object:Ruport::Data::Record
+    data:
+      vendor: OpenStack
+      name: s_appl_downstream-54z_150605_rosMD5Ry
+      operating_system.product_name: 
+      operating_system.name: 
+      id: 409
+    attributes: *1
+  - !ruby/object:Ruport::Data::Record
+    data:
+      vendor: OpenStack
+      name: s_appl_downstream-54z_150605_C9N35HpL
+      operating_system.product_name: 
+      operating_system.name: 
+      id: 410
+    attributes: *1
+  - !ruby/object:Ruport::Data::Record
+    data:
+      vendor: OpenStack
+      name: s_appl_downstream-54z_150605_hoJKJuCJ
+      operating_system.product_name: 
+      operating_system.name: 
+      id: 411
+    attributes: *1
+sub_table:
+filter_summary: 
+extras:
+  :grouping:
+    OpenStack:
+      :count: 11
+      :row:
+        vendor: OpenStack
+        name: s_appl_downstream-54z_150605_rosMD5Ry
+        operating_system.product_name: 
+        operating_system.name: 
+        id: 409
+    RedHat:
+      :count: 77
+      :row:
+        vendor: RedHat
+        name: psav-scapy
+        operating_system.product_name: other
+        operating_system.name: 
+        id: 286
+    VMware:
+      :count: 194
+      :row:
+        vendor: VMware
+        name: jkrocil-centos66-fvm
+        operating_system.product_name: CentOS 4/5/6 (64-bit)
+        operating_system.name: 
+        id: 211
+    :_total_:
+      :count: 282
+      :row: {}
+ids: 
+scoped_association: 
+html_title: 
+file_name: 
+record_id: 
+tl_times: 
+user_categories: []
+trend_data: {}
+performance: 
+include_for_find: 
+report_run_time: 
+chart: 
+reserved: 

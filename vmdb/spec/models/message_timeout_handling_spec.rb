@@ -9,7 +9,7 @@ describe "Message Timeout Handling" do
     @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
     MiqServer.stub(:my_server).and_return(@miq_server)
 
-    @worker = FactoryGirl.create(:miq_ems_refresh_worker_vmware, :miq_server_id => @miq_server.id)
+    @worker = FactoryGirl.create(:vmware_refresh_worker, :miq_server_id => @miq_server.id)
   end
 
   context "A Worker Handling a Message with a timeout of 3600 seconds" do

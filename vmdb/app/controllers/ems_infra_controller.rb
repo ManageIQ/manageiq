@@ -7,7 +7,7 @@ class EmsInfraController < ApplicationController
   after_filter :set_session_data
 
   def self.model
-    EmsInfra
+    ManageIQ::Providers::InfraManager
   end
 
   def self.table_name

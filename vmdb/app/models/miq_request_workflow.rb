@@ -2,6 +2,8 @@ require 'enumerator'
 require 'miq-hash_struct'
 
 class MiqRequestWorkflow
+  include Vmdb::Logging
+
   attr_accessor :dialogs, :requester, :values, :last_vm_id
 
   def self.automate_dialog_request
@@ -47,12 +49,11 @@ class MiqRequestWorkflow
   def instance_var_init(values, requester, options)
     @values       = values
     @filters      = {}
-    @requester    = MiqLdap.using_ldap? ? User.find_or_create_by_ldap_upn(requester) : User.find_by_userid(requester)
+    @requester    = User.lookup_by_identity(requester)
     @values.merge!(options) unless options.blank?
   end
 
   def create_request(values, requester_id, target_class, event_name, event_message, auto_approve = false)
-    log_header = "MIQ(#{self.class.name}#create_request)"
     return false unless validate(values)
 
     # Ensure that tags selected in the pre-dialog get applied to the request
@@ -66,7 +67,7 @@ class MiqRequestWorkflow
     begin
       request.save!  # Force validation errors to raise now
     rescue => err
-      $log.error "#{log_header} [#{err}]"
+      _log.error "[#{err}]"
       $log.error err.backtrace.join("\n")
       return request
     end
@@ -420,23 +421,22 @@ class MiqRequestWorkflow
   end
 
   def set_value_from_list(fn, f, value, values = nil, partial_key = false)
-    header = "MIQ(#{self.class.name}.set_value_from_list)"
     @values[fn] = [nil, nil]
     values = f[:values] if values.nil?
     unless value.nil?
       @values[fn] = values.to_a.detect do |v|
         if partial_key
-          $log.warn "#{header} comparing [#{v[0]}] to [#{value}]"
+          _log.warn "comparing [#{v[0]}] to [#{value}]"
           v[0].to_s.downcase.include?(value.to_s.downcase)
         else
           v.include?(value)
         end
       end
       if @values[fn].nil?
-        $log.info "#{header} set_value_from_list did not matched an item" if partial_key
+        _log.info "set_value_from_list did not matched an item" if partial_key
         @values[fn] = [nil, nil]
       else
-        $log.info "#{header} set_value_from_list matched item value:[#{value}] to item:[#{@values[fn][0]}]" if partial_key
+        _log.info "set_value_from_list matched item value:[#{value}] to item:[#{@values[fn][0]}]" if partial_key
       end
     end
   end
@@ -620,7 +620,7 @@ class MiqRequestWorkflow
     end
 
     rails_logger('allowed_tags', 1)
-    $log.info "MIQ(#{self.class.name}.allowed_tags) allowed_tags returned [#{@tags.length}] objects in [#{Time.now - st}] seconds"
+    _log.info "allowed_tags returned [#{@tags.length}] objects in [#{Time.now - st}] seconds"
     @tags
   end
 
@@ -644,6 +644,10 @@ class MiqRequestWorkflow
     tag_cats
   end
 
+  def tag_symbol
+    :tag_ids
+  end
+
   def build_ci_hash_struct(ci, props)
     nh = MiqHashStruct.new(:id => ci.id, :evm_object_class => ci.class.base_class.name.to_sym)
     props.each { |p| nh.send("#{p}=", ci.send(p)) }
@@ -651,11 +655,9 @@ class MiqRequestWorkflow
   end
 
   def get_dialogs
-    log_header = "MIQ(#{self.class.name}.get_dialogs)"
-
     @values[:miq_request_dialog_name] ||= @values[:provision_dialog_name] || dialog_name_from_automate || self.class.default_dialog_file
     dp = @values[:miq_request_dialog_name] = File.basename(@values[:miq_request_dialog_name], ".rb")
-    $log.info "#{log_header} Loading dialogs <#{dp}> for user <#{@requester.userid}>"
+    _log.info "Loading dialogs <#{dp}> for user <#{@requester.userid}>"
     d = MiqDialog.where("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name).first
     raise MiqException::Error, "Dialog cannot be found.  Name:[#{@values[:miq_request_dialog_name]}]  Type:[#{self.class.base_model.name}]" if d.nil?
     prov_dialogs = d.content
@@ -664,14 +666,13 @@ class MiqRequestWorkflow
   end
 
   def get_pre_dialogs
-    log_header = "MIQ(#{self.class.name}.get_pre_dialogs)"
     pre_dialogs = nil
     pre_dialog_name = dialog_name_from_automate('get_pre_dialog_name')
     unless pre_dialog_name.blank?
       pre_dialog_name = File.basename(pre_dialog_name, ".rb")
       d = MiqDialog.find_by_name_and_dialog_type(pre_dialog_name, self.class.base_model.name)
       unless d.nil?
-        $log.info "#{log_header} Loading pre-dialogs <#{pre_dialog_name}> for user <#{@requester.userid}>"
+        _log.info "Loading pre-dialogs <#{pre_dialog_name}> for user <#{@requester.userid}>"
         pre_dialogs = d.content
       end
     end
@@ -680,21 +681,19 @@ class MiqRequestWorkflow
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name', input_fields = [:request_type], extra_attrs = {})
-    log_header = "MIQ(#{self.class.name}.dialog_name_from_automate)"
-
     return nil if self.class.automate_dialog_request.nil?
 
-    $log.info "#{log_header}: Querying Automate Profile for dialog name"
+    _log.info "Querying Automate Profile for dialog name"
     attrs = {'request' => self.class.automate_dialog_request, 'message' => message}
     extra_attrs.each { |k, v| attrs[k] = v }
 
     @values.each_key do |k|
       key = "dialog_input_#{k.to_s.downcase}"
       if attrs.key?(key)
-        $log.info "#{log_header}: Skipping key=<#{key}> because already set to <#{attrs[key]}>"
+        _log.info "Skipping key=<#{key}> because already set to <#{attrs[key]}>"
       else
         value = (k == :vm_tags) ? get_tags : get_value(@values[k]).to_s
-        $log.info "#{log_header}: Setting attrs[#{key}]=<#{value}>"
+        _log.info "Setting attrs[#{key}]=<#{value}>"
         attrs[key] = value
       end
     end
@@ -711,7 +710,7 @@ class MiqRequestWorkflow
         next unless key.downcase.starts_with?(dialog_option_prefix)
         next unless key.length > dialog_option_prefix_length
         key = key[dialog_option_prefix_length..-1].downcase
-        $log.info "#{log_header}: Setting @values[#{key}]=<#{value}>"
+        _log.info "Setting @values[#{key}]=<#{value}>"
         @values[key.to_sym] = value
       end
 
@@ -775,8 +774,6 @@ class MiqRequestWorkflow
   end
 
   def refresh_field_values(values, _requester_id)
-    log_header = "MIQ(#{self.class.name}.refresh_field_values)"
-
     begin
       st = Time.now
 
@@ -792,9 +789,9 @@ class MiqRequestWorkflow
       # Update the display flag for fields based on current settings
       update_field_visibility
 
-      $log.info "MIQ(#{self.class.name}.refresh_field_values) refresh completed in [#{Time.now - st}] seconds"
+      _log.info "refresh completed in [#{Time.now - st}] seconds"
     rescue => err
-      $log.error "#{log_header} [#{err}]"
+      _log.error "[#{err}]"
       $log.error err.backtrace.join("\n")
       raise err
     end
@@ -852,10 +849,9 @@ class MiqRequestWorkflow
   end
 
   def find_classes_under_ci(item, klass)
-    log_header = "MIQ(#{self.class.name}.find_classes_under_ci)"
     results = []
     return results if item.nil?
-    node = load_ems_node(item, log_header)
+    node = load_ems_node(item, _log.prefix)
     each_ems_metadata(node.attributes[:object], klass) { |ci| results << ci } unless node.nil?
     results
   end
@@ -874,14 +870,13 @@ class MiqRequestWorkflow
   end
 
   def get_ems_folders(folder, dh = {}, full_path = "")
-    log_header = "MIQ(#{self.class.name}.get_ems_folders)"
     if folder.evm_object_class == :EmsFolder && !EmsFolder::NON_DISPLAY_FOLDERS.include?(folder.name)
       full_path += full_path.blank? ? "#{folder.name}" : " / #{folder.name}"
       dh[folder.id] = full_path unless folder.is_datacenter?
     end
 
     # Process child folders
-    node = load_ems_node(folder, log_header)
+    node = load_ems_node(folder, _log.prefix)
     node.children.each { |child| get_ems_folders(child.attributes[:object], dh, full_path) } unless node.nil?
 
     dh
@@ -922,9 +917,8 @@ class MiqRequestWorkflow
   end
 
   def find_class_above_ci(item, klass, _ems_src = nil, datacenter = false)
-    log_header = "MIQ(#{self.class.name}.find_class_above_ci)"
     result = nil
-    node = load_ems_node(item, log_header)
+    node = load_ems_node(item, _log.prefix)
     klass_name = klass.name.to_sym
     # Walk the xml document parents to find the requested class
     while node.kind_of?(XmlHash::Element)
@@ -940,13 +934,12 @@ class MiqRequestWorkflow
   end
 
   def each_ems_metadata(ems_ci = nil, klass = nil, &_blk)
-    log_header = "MIQ(#{self.class.name}.each_ems_metadata)"
     if ems_ci.nil?
       src = get_source_and_targets
       ems_xml = get_ems_metadata_tree(src)
       ems_node = ems_xml.try(:root)
     else
-      ems_node = load_ems_node(ems_ci, log_header)
+      ems_node = load_ems_node(ems_ci, _log.prefix)
     end
     klass_name = klass.name.to_sym unless klass.nil?
     unless ems_node.nil?
@@ -956,8 +949,6 @@ class MiqRequestWorkflow
 
   def get_ems_metadata_tree(src)
     @ems_metadata_tree ||= begin
-      log_header = "MIQ(#{self.class.name}.get_ems_metadata_tree)"
-      return if src[:ems].nil?
       st = Time.now
       rails_logger('get_ems_metadata_tree', 0)
       result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
@@ -966,8 +957,8 @@ class MiqRequestWorkflow
       @ems_xml_nodes = {}
       xml = MiqXml.newDoc(:xmlhash)
       convert_to_xml(xml, result)
-      $log.info "#{log_header} Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
-      $log.info "#{log_header} EMS metadata collection completed in [#{Time.now - st}] seconds"
+      _log.info "Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
+      _log.info "EMS metadata collection completed in [#{Time.now - st}] seconds"
       xml
     end
   end
@@ -1050,7 +1041,6 @@ class MiqRequestWorkflow
   end
 
   def allowed_hosts_obj(_options = {})
-    log_header = "MIQ(#{self.class.name}.allowed_hosts_obj)"
     return [] if (src = resources_for_ui).blank?
 
     rails_logger('allowed_hosts_obj', 0)
@@ -1058,7 +1048,7 @@ class MiqRequestWorkflow
     hosts_ids = find_all_ems_of_type(Host).collect(&:id)
     hosts_ids &= load_ar_obj(src[:storage]).hosts.collect(&:id) unless src[:storage].nil?
     unless src[:datacenter].nil?
-      dc_node = load_ems_node(src[:datacenter], log_header)
+      dc_node = load_ems_node(src[:datacenter], _log.prefix)
       hosts_ids &= find_hosts_under_ci(dc_node.attributes[:object]).collect(&:id)
     end
     return [] if hosts_ids.blank?
@@ -1066,7 +1056,7 @@ class MiqRequestWorkflow
     # Remove any hosts that are no longer in the list
     all_hosts = load_ar_obj(src[:ems]).hosts.find_all { |h| hosts_ids.include?(h.id) }
     allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
-    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds"
+    _log.info "allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds"
     rails_logger('allowed_hosts_obj', 1)
     allowed_hosts_obj_cache
   end
@@ -1088,7 +1078,7 @@ class MiqRequestWorkflow
       ci_to_hash_struct(s)
     end
 
-    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now - st}] seconds"
+    _log.info "allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now - st}] seconds"
     rails_logger('allowed_storages', 1)
     allowed_storages_cache
   end
@@ -1251,7 +1241,6 @@ class MiqRequestWorkflow
   end
 
   def set_ws_field_value(values, key, data, dialog_name, dlg_fields)
-    log_header = "#{self.class.name}.set_field_value"
     value = data.delete(key)
 
     dlg_field = dlg_fields[key]
@@ -1268,7 +1257,7 @@ class MiqRequestWorkflow
     result = nil
     if dlg_field.key?(:values)
       field_values = dlg_field[:values]
-      $log.info "#{log_header} processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
+      _log.info "processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
       if field_values.present?
         result = if field_values.first.kind_of?(MiqHashStruct)
                    found = field_values.detect { |v| v.id == set_value }
@@ -1281,13 +1270,12 @@ class MiqRequestWorkflow
       end
     end
 
-    $log.warn "#{log_header} Unable to find value for key <#{dialog_name}:#{key}(#{data_type})> with input value <#{set_value.inspect}>.  No matching item found." if result.nil?
-    $log.info "#{log_header} setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
+    _log.warn "Unable to find value for key <#{dialog_name}:#{key}(#{data_type})> with input value <#{set_value.inspect}>.  No matching item found." if result.nil?
+    _log.info "setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
     values[key] = set_value
   end
 
   def set_ws_field_value_by_display_name(values, key, data, dialog_name, dlg_fields, obj_key = :name)
-    log_header = "#{self.class.name}.set_ws_field_value_by_display_name"
     value = data.delete(key)
 
     dlg_field = dlg_fields[key]
@@ -1296,7 +1284,7 @@ class MiqRequestWorkflow
 
     if dlg_field.key?(:values)
       field_values = dlg_field[:values]
-      $log.info "#{log_header} processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
+      _log.info "processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
       if field_values.present?
         result = if field_values.first.kind_of?(MiqHashStruct)
                    found = field_values.detect { |v| v.send(obj_key).to_s.downcase == find_value }
@@ -1307,10 +1295,10 @@ class MiqRequestWorkflow
 
         unless result.nil?
           set_value = [result.first, result.last]
-          $log.info "#{log_header} setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
+          _log.info "setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
           values[key] = set_value
         else
-          $log.warn "#{log_header} Unable to set key <#{dialog_name}:#{key}(#{data_type})> to value <#{find_value.inspect}>.  No matching item found."
+          _log.warn "Unable to set key <#{dialog_name}:#{key}(#{data_type})> to value <#{find_value.inspect}>.  No matching item found."
         end
       end
     end
@@ -1334,7 +1322,7 @@ class MiqRequestWorkflow
 
   def get_ws_dialog_fields(dialog_name)
     dlg_fields = @dialogs.fetch_path(:dialogs, dialog_name, :fields)
-    $log.info "#{self.class.name}##{__method__} <#{dialog_name}> dialog not found in dialogs.  Field updates will be skipped." if dlg_fields.nil?
+    _log.info "<#{dialog_name}> dialog not found in dialogs.  Field updates will be skipped." if dlg_fields.nil?
     dlg_fields
   end
 
@@ -1423,16 +1411,15 @@ class MiqRequestWorkflow
   end
 
   def ws_requester_fields(values, fields)
-    log_header = "MIQ(#{self.class.name}#ws_requester_fields)"
     dialog_name = :requester
     dlg_fields = @dialogs.fetch_path(:dialogs, :requester, :fields)
     if dlg_fields.nil?
-      $log.info "#{log_header} <#{dialog_name}> dialog not found in dialogs.  Field updates be skipped."
+      _log.info "<#{dialog_name}> dialog not found in dialogs.  Field updates be skipped."
       return
     end
 
     data = parse_ws_string(fields)
-    $log.info "#{log_header} data:<#{data.inspect}>"
+    _log.info "data:<#{data.inspect}>"
     values[:auto_approve] = data.delete(:auto_approve) == 'true'
     data.delete(:user_name)
 
@@ -1450,16 +1437,15 @@ class MiqRequestWorkflow
     dlg_keys = dlg_fields.keys
     data.keys.each do |key|
       if dlg_keys.include?(key)
-        $log.info "#{log_header} processing key <#{dialog_name}:#{key}> with value <#{data[key].inspect}>"
+        _log.info "processing key <#{dialog_name}:#{key}> with value <#{data[key].inspect}>"
         values[key] = data[key]
       else
-        $log.warn "#{log_header} Skipping key <#{dialog_name}:#{key}>.  Key name not found in dialog"
+        _log.warn "Skipping key <#{dialog_name}:#{key}>.  Key name not found in dialog"
       end
     end
   end
 
   def ws_schedule_fields(values, _fields, data)
-    log_header = "MIQ(#{self.class.name}#ws_schedule_fields)"
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :schedule)).nil?
 
     unless data[:schedule_time].blank?
@@ -1468,7 +1454,7 @@ class MiqRequestWorkflow
         data_type = :time
         time_value = data.delete(key)
         set_value = time_value.blank? ? nil : Time.parse(time_value)
-        $log.info "#{log_header} setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
+        _log.info "setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
         values[key] = set_value
       end
     end
@@ -1479,11 +1465,10 @@ class MiqRequestWorkflow
 
   def validate_values(values)
     if validate(values) == false
-      log_header = "MIQ(#{self.class.name}#validate_values)"
       errors = []
       fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
       err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
-      $log.error "#{log_header}: <#{err_text}>"
+      _log.error "<#{err_text}>"
       raise err_text
     end
   end

@@ -2,8 +2,9 @@ require 'miq-process'
 require 'thread'
 
 class WorkerBase
+  include Vmdb::Logging
   attr_accessor :last_hb, :worker, :worker_settings
-  attr_reader   :vmdb_config, :active_roles
+  attr_reader   :vmdb_config, :active_roles, :server
 
   INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
 
@@ -35,7 +36,11 @@ class WorkerBase
   end
 
   def self.corresponding_model
-    @corresponding_model ||= Object.const_get(self == WorkerBase ? "MiqWorker" : "Miq#{self.name}")
+    if parent == Object
+      @corresponding_model ||= Object.const_get(self == WorkerBase ? "MiqWorker" : "Miq#{self.name}")
+    else
+      parent
+    end
   end
 
   def self.interrupt_signals
@@ -47,6 +52,8 @@ class WorkerBase
     @cfg[:guid] ||= ENV['MIQ_GUID']
 
     $log ||= Rails.logger
+
+    @server = MiqServer.my_server(true)
 
     worker_initialization
     after_initialize
@@ -70,7 +77,7 @@ class WorkerBase
     return if cur_size == new_size
 
     ActiveRecord::Base.connection_pool.instance_variable_set(:@size, new_size)
-    $log.info("#{self.log_prefix} Changed connection_pool size from #{cur_size} to #{new_size}")
+    _log.info("#{self.log_prefix} Changed connection_pool size from #{cur_size} to #{new_size}")
   end
 
   ###############################
@@ -88,18 +95,16 @@ class WorkerBase
 
   def my_monitor_started?
     return @monitor_started unless @monitor_started.nil?
-    server = MiqServer.my_server(true)
     return false if     server.nil?
-    return false unless server.started?
+    return false unless server.reload.started?
     @monitor_started = true
   end
 
   def worker_monitor_drb
-    server = MiqServer.my_server(true)
     raise "#{self.log_prefix} No MiqServer found to establishing DRb Connection to" if server.nil?
-    drb_uri = server.drb_uri
+    drb_uri = server.reload.drb_uri
     raise "#{self.log_prefix} Blank DRb_URI for MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}]"    if drb_uri.blank?
-    $log.info("#{self.log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
+    _log.info("#{self.log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
     require 'drb'
     DRbObject.new(nil, drb_uri)
   end
@@ -142,7 +147,7 @@ class WorkerBase
   end
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name})"
+    @log_prefix ||= ""
   end
 
   #
@@ -257,17 +262,17 @@ class WorkerBase
   end
 
   def message_sync_active_roles(*args)
-    $log.info("#{self.log_prefix} Synchronizing active roles...")
+    _log.info("#{self.log_prefix} Synchronizing active roles...")
     opts = args.extract_options!
     sync_active_roles(opts[:roles])
-    $log.info("#{self.log_prefix} Synchronizing active roles complete...")
+    _log.info("#{self.log_prefix} Synchronizing active roles complete...")
   end
 
   def message_sync_config(*args)
-    $log.info("#{self.log_prefix} Synchronizing configuration...")
+    _log.info("#{self.log_prefix} Synchronizing configuration...")
     opts = args.extract_options!
     sync_config(opts[:config])
-    $log.info("#{self.log_prefix} Synchronizing configuration complete...")
+    _log.info("#{self.log_prefix} Synchronizing configuration complete...")
   end
 
   def sync_config(config = nil)
@@ -275,7 +280,7 @@ class WorkerBase
     @my_zone ||= MiqServer.my_zone
     sync_log_level
     sync_worker_settings
-    $log.info("MIQ(#{self.class.name}) ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
+    _log.info("ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
     $log.log_hashes(@worker_settings)
     $log.info("---")
     $log.log_hashes(@cfg)
@@ -284,7 +289,7 @@ class WorkerBase
   end
 
   def sync_log_level
-    Vmdb::Logging.apply_config(@vmdb_config.config[:log])
+    Vmdb::Loggers.apply_config(@vmdb_config.config[:log])
   end
 
   def sync_worker_settings
@@ -307,13 +312,13 @@ class WorkerBase
   end
 
   def do_wait_for_worker_monitor
-    $log.info("#{self.log_prefix} Checking that worker monitor has started before doing work")
+    _log.info("#{self.log_prefix} Checking that worker monitor has started before doing work")
     loop do
       break if self.my_monitor_started?
       heartbeat
       sleep 3
     end
-    $log.info("#{self.log_prefix} Starting work since worker monitor has started")
+    _log.info("#{self.log_prefix} Starting work since worker monitor has started")
   end
 
   def do_work_loop
@@ -410,27 +415,8 @@ class WorkerBase
     if self.respond_to?(meth)
       self.send(meth, *args)
     else
-      $log.warn("#{self.log_prefix} Message [#{message}] is not recognized, ignoring")
+      _log.warn("#{self.log_prefix} Message [#{message}] is not recognized, ignoring")
     end
-  end
-
-  def parent_is_alive?(parent)
-    return false unless parent && parent.last_heartbeat
-    $log.info("#{self.log_prefix} Checking parent #{parent.class.name}. time_threshold [#{self.worker_settings[:parent_time_threshold].seconds.ago.utc}] last_heartbeat [#{parent.last_heartbeat}]")
-    self.worker_settings[:parent_time_threshold].seconds.ago.utc < parent.last_heartbeat
-  end
-
-  def check_parent_process
-    server = MiqServer.my_server(true)
-    return if self.parent_is_alive?(server)
-    if server.nil?
-      svr_msg = "Unable to find instance for parent MiqServer guid [#{MiqServer.my_guid}]."
-    else
-      svr_msg = "Parent MiqServer ID [#{server.id}] GUID [#{server.guid}] has not responded in #{self.worker_settings[:parent_time_threshold]} seconds."
-    end
-    $log.warn("#{self.log_prefix} #{svr_msg}")
-
-    do_exit("#{svr_msg}", 1)
   end
 
   def clean_broker_connection
@@ -440,7 +426,7 @@ class WorkerBase
         $vim_broker_client = nil
       end
     rescue => err
-      $log.info("#{self.log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
+      _log.info("#{self.log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
     end
   end
 

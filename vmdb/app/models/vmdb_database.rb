@@ -30,17 +30,8 @@ class VmdbDatabase < ActiveRecord::Base
     self.vmdb_database_metrics
   end
 
-  def size_postgresql
-    self.class.connection.select_value("SELECT pg_database_size('#{self.name}')").to_i
-  end
-
   def size
-    adapter = self.class.connection.adapter_name.downcase
-    case adapter
-    when "postgres", "postgresql"; size_postgresql
-    else
-       raise "#{adapter} is not supported"
-    end
+    ActiveRecord::Base.connection.database_size name
   end
 
   def top_tables_by(sorted_by, limit = nil)

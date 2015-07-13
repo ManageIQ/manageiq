@@ -7,6 +7,7 @@ module MiqAeMethodService
   end
 
   class MiqAeService
+    include Vmdb::Logging
     include DRbUndumped
     @@id_hash = Hash.new
     @@current = Array.new
@@ -217,22 +218,20 @@ module MiqAeMethodService
     CUSTOMER_ROOT = File.expand_path(File.join(Rails.root, "..", "customer"))
     $:.push CUSTOMER_ROOT
     def new_object(what, *args)
-      log_prefix = "MIQ(MiqAeService.new_object)"
-
       begin
         require what.underscore
       rescue LoadError => err
-        $log.warn("#{log_prefix} Error requiring <#{what}> from #{CUSTOMER_ROOT} because <#{err.message}>")
+        _log.warn("Error requiring <#{what}> from #{CUSTOMER_ROOT} because <#{err.message}>")
         return nil
       end
 
       begin
         klass = what.constantize
       rescue NameError => err
-        $log.warn("#{log_prefix} Error converting <#{what}> to a constant because <#{err.message}>")
+        _log.warn("Error converting <#{what}> to a constant because <#{err.message}>")
         ruby_file = File.join(CUSTOMER_ROOT, "#{what.underscore}.rb")
         contents  = File.read(ruby_file) rescue nil
-        $log.warn("#{log_prefix} Contents of Customer Library <#{ruby_file}> are:\n#{contents}")
+        _log.warn("Contents of Customer Library <#{ruby_file}> are:\n#{contents}")
         return nil
       end
 
@@ -249,12 +248,12 @@ module MiqAeMethodService
     end
 
     def instance_exists?(path)
-      $log.info "MiqAeService#instance_exists? << path=#{path.inspect}"
+      _log.info "<< path=#{path.inspect}"
       __find_instance_from_path(path) ? true : false
     end
 
     def instance_create(path, values_hash = {})
-      $log.info "MiqAeService#instance_create << path=#{path.inspect}, values_hash=#{values_hash.inspect}"
+      _log.info "<< path=#{path.inspect}, values_hash=#{values_hash.inspect}"
 
       return false unless editable_instance?(path)
 
@@ -274,13 +273,13 @@ module MiqAeMethodService
     end
 
     def instance_get_display_name(path)
-      $log.info "MiqAeService#instance_get_display_name << path=#{path.inspect}"
+      _log.info "<< path=#{path.inspect}"
       aei = __find_instance_from_path(path)
       aei ? aei.display_name : nil
     end
 
     def instance_set_display_name(path, display_name)
-      $log.info "MiqAeService#instance_set_display_name << path=#{path.inspect}, display_name=#{display_name.inspect}"
+      _log.info "<< path=#{path.inspect}, display_name=#{display_name.inspect}"
       aei = __find_instance_from_path(path)
       return false if aei.nil?
 
@@ -289,7 +288,7 @@ module MiqAeMethodService
     end
 
     def instance_update(path, values_hash)
-      $log.info "MiqAeService#instance_update << path=#{path.inspect}, values_hash=#{values_hash.inspect}"
+      _log.info "<< path=#{path.inspect}, values_hash=#{values_hash.inspect}"
       return false unless editable_instance?(path)
 
       aei = __find_instance_from_path(path)
@@ -300,7 +299,7 @@ module MiqAeMethodService
     end
 
     def instance_find(path, options = {})
-      $log.info "MiqAeService#instance_find << path=#{path.inspect}"
+      _log.info "<< path=#{path.inspect}"
       result = {}
 
       ns, klass, instance = MiqAeEngine::MiqAePath.split(path)
@@ -325,7 +324,7 @@ module MiqAeMethodService
     end
 
     def instance_get(path)
-      $log.info "MiqAeService#instance_get << path=#{path.inspect}"
+      _log.info "<< path=#{path.inspect}"
       aei = __find_instance_from_path(path)
       return nil if aei.nil?
 
@@ -333,7 +332,7 @@ module MiqAeMethodService
     end
 
     def instance_delete(path)
-      $log.info "MiqAeService#instance_delete << path=#{path.inspect}"
+      _log.info "<< path=#{path.inspect}"
       return false unless editable_instance?(path)
 
       aei = __find_instance_from_path(path)

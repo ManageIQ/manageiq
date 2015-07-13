@@ -1,3 +1,3 @@
 type = ARGV.shift
-require "workers/#{type}"
-type.camelize.constantize.start_worker(*ARGV)
+require "workers/#{type.underscore}" unless type.include?("::")
+type.constantize.start_worker(*ARGV)

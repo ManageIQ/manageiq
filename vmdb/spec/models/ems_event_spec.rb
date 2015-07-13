@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe EmsEvent do
   context ".add_vc" do
-    DATA_DIR = Rails.root.join("spec", "models", "ems_event", "parsers", "data")
+    DATA_DIR = Rails.root.join("spec/models/manageiq/providers/vmware/infra_manager/event_data")
 
     before(:each) do
       @zone = FactoryGirl.create(:small_environment)
@@ -186,7 +186,7 @@ describe EmsEvent do
       let(:purge_time) { (Time.now + 10).round }
 
       before(:each) do
-        EvmSpecHelper.seed_for_miq_queue
+        EvmSpecHelper.create_guid_miq_server_zone
         described_class.purge_queue(purge_time)
       end
 

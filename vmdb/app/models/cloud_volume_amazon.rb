@@ -1,2 +1,0 @@
-class CloudVolumeAmazon < CloudVolume
-end

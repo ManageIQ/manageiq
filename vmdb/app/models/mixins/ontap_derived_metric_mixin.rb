@@ -77,7 +77,7 @@ module OntapDerivedMetricMixin
 
       interval = @storageMetricsCollectionInterval.to_f
       nInterval = (deltaSecs / interval + 0.5).to_i
-      $log.info "#{self.name}.derive_metrics_common: nIntrval = #{nInterval}"
+      _log.info "nIntrval = #{nInterval}"
       deltaSecs /= nInterval
 
       #
@@ -185,7 +185,7 @@ module OntapDerivedMetricMixin
       end
       baseCounterName = counterInfo[bcn].base_counter
       if (bc = deltaVals[baseCounterName]) == 0
-        $log.info "#{self.class.name}.derive_metrics: counter = #{bcn} (#{cdelta}), base counter (#{baseCounterName}) is zero."
+        _log.info "counter = #{bcn} (#{cdelta}), base counter (#{baseCounterName}) is zero."
         self[bcn] = 0
       else
         self[bcn] = cdelta.to_f / bc

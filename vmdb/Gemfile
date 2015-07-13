@@ -1,30 +1,29 @@
 require File.expand_path('Gemfile.global.rb', File.dirname(__FILE__))
 
-# Load the lib Gemfile (includes the source)
-MiqBundler.include_gemfile("../lib/Gemfile", binding)
+MiqBundler.include_gemfile("gems/pending/Gemfile", binding)
 
 #
 # VMDB specific gems
 #
 
+gem "rails",                           RAILS_VERSION
+gem "activerecord-deprecated_finders", "~>1.0.4",     :require => "active_record/deprecated_finders"
+
 gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 gem 'angularjs-rails', '=1.2.4'
-gem 'jquery-rails', "~>2.2.2"
+gem 'jquery-rails', "=2.2.2"
 gem 'jquery-hotkeys-rails'
 gem 'codemirror-rails', "=4.2"
 
 # On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
 
 gem "sprockets-sass",  "~>1.2.0"
-gem "sprockets-less",  "~>0.6.1"
-gem 'therubyracer', :require => false, :platform => :ruby
-gem 'less-rails',   :require => false
+gem 'sass-rails'
+gem 'patternfly-sass', "~>1.3.1"
 
 # Vendored and required
 # TODO: Fix AWS tests now that our api specs and the soap4r 1.6.0 specs pass on 1.8.7/1.9.3
-gem "rails",                          :git => "git://github.com/rails/rails.git", :branch => "4-2-stable"
 gem "ruport",                         "=1.7.0",                          :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
-gem 'activerecord-deprecated_finders', :require => 'active_record/deprecated_finders', :git => "git://github.com/rails/activerecord-deprecated_finders"
 
 # Vendored but not required
 #gem "actionwebservice",               "=3.1.0",       :require => false, :git => "git://github.com/ManageIQ/actionwebservice.git", :tag => "v3.1.0-1"
@@ -43,7 +42,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "default_value_for",             :git => 'https://github.com/FooBarWidget/default_value_for.git'
+gem "default_value_for",              "~>3.0.1"
 gem "thin",                           "~>1.3.1"  # Used by rails server through rack
 gem 'bcrypt-ruby', '3.1.2'
 gem 'outfielding-jqplot-rails',       "= 1.0.8"
@@ -64,13 +63,14 @@ gem "haml",                           "~>4.0.5",      :require => false
 gem 'haml-rails',                     "~> 0.4",       :require => false
 gem "inifile",                        "~>3.0",        :require => false
 gem "logging",                        "~>1.6.1",      :require => false  # Ziya depends on this
+gem "net_app_manageability",          ">=0.1.0",      :require => false
 gem "net-ping",                       "~>1.7.4",      :require => false
 gem "net-sftp",                       "~>2.0.5",      :require => false
 gem "net-ssh",                        "~>2.9.1",      :require => false
 gem "open4",                          "~>1.3.0",      :require => false
 #gem "ovirt_metrics",                  "~>1.0.1",      :require => false
 gem "pg",                             "~>0.15.0",     :require => false
-
+gem 'ruby_parser',                    "~>3.7",        :require => false
 gem "ruby-progressbar",               "~>0.0.10",     :require => false
 gem "rufus-scheduler",                "~>2.0.19",     :require => false
 gem "savon",                          "~>2.2.0",      :require => false  # Automate uses this for simple SOAP Integration
@@ -78,6 +78,7 @@ gem "snmp",                           "~>1.1.0",      :require => false
 gem "uglifier",                       "~>2.4.0",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
+
 
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
@@ -90,12 +91,10 @@ unless ENV['APPLIANCE']
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
     # used for finding translations
     gem "gettext",          "3.1.4",    :require => false
-    # used for finding translations inside HAML
-    gem 'ruby_parser',                  :require => false
   end
 
   group :test do
-    gem "brakeman",         "~>2.0",    :require => false
+    gem "brakeman",         "~>3.0",    :require => false
 
     gem "shoulda-matchers", "~>1.0.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false

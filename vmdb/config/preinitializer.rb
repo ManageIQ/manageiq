@@ -1,6 +1,7 @@
-# lib and lib/util are required so often, we just make it globally available
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. lib})))
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. lib util})))
+# gems/pending and gems/pending/util are required so often, we just make it globally available
+GEMS_PENDING_ROOT = File.expand_path(File.join(__dir__, %w(.. gems pending)))
+$LOAD_PATH << GEMS_PENDING_ROOT
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util")
 
 # To evaluate ERB from database.yml containing encrypted passwords
 require 'miq-password'

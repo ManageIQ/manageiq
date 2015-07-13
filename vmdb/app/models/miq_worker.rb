@@ -148,7 +148,7 @@ class MiqWorker < ActiveRecord::Base
     result  = { :adds => [], :deletes => [] }
 
     if current != desired
-      $log.info("MIQ(#{self.name}.sync_workers) Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
+      _log.info("Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
 
       if desired > current && enough_resource_to_start_worker?
         (desired - current).times { result[:adds] << self.start_worker.pid }
@@ -165,14 +165,34 @@ class MiqWorker < ActiveRecord::Base
   end
 
   # Convert the Models name from MiqGenericWorker to :generic_worker
-  def self.corresponding_helper
-    @corresponding_helper ||= self == MiqWorker ? :worker_base  : self.name.underscore[4..-1].to_sym
+  def self.settings_name
+    @settings_name ||=
+      if parent == ManageIQ::Providers::BaseManager
+        normalized_type.to_sym
+      elsif parent.parent == ManageIQ::Providers
+        :"#{normalized_type}_#{parent.name.demodulize.sub(/Manager$/, '').underscore}"
+      elsif parent != Object
+        :"#{normalized_type}_#{parent.parent.name.demodulize.underscore}"
+      elsif self == MiqWorker
+        :worker_base
+      else
+        self.name.underscore[4..-1].to_sym
+      end
+  end
+
+  def self.corresponding_runner
+    @corresponding_runner ||=
+      if const_defined?(:Runner)
+        self::Runner.name
+      else
+        settings_name.to_s.camelize
+      end
   end
 
   # Grab all the classes in the hierarchy but ActiveRecord::Base and Object (and BasicObject on 1.9)
   def self.path_to_my_worker_settings
     excluded = %w(ActiveRecord::Base Object BasicObject)
-    @path_to_my_worker_settings ||= self.hierarchy.reject {|c| excluded.include?(c.name)}.reverse.collect(&:corresponding_helper)
+    @path_to_my_worker_settings ||= self.hierarchy.reject {|c| excluded.include?(c.name)}.reverse.collect(&:settings_name)
   end
 
   def self.fetch_worker_settings_from_server(miq_server, options = {})
@@ -316,7 +336,7 @@ class MiqWorker < ActiveRecord::Base
     Process.detach(pid)
     self.save
 
-    $log.info("MIQ(#{self.class.name}.start) #{msg}")
+    _log.info("#{msg}")
   end
 
   def stop
@@ -329,12 +349,12 @@ class MiqWorker < ActiveRecord::Base
   def kill
     unless self.pid.nil?
       begin
-        $log.info("MIQ(#{self.class.name}.kill) Killing worker: ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], status [#{self.status}]")
+        _log.info("Killing worker: ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], status [#{self.status}]")
         Process.kill(9, self.pid)
       rescue Errno::ESRCH
-        $log.warn("MIQ(#{self.class.name}.kill) Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed")
+        _log.warn("Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed")
       rescue => err
-        $log.warn("MIQ(#{self.class.name}.kill) Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed, but with the following error: #{err}")
+        _log.warn("Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed, but with the following error: #{err}")
       end
     end
 
@@ -368,25 +388,24 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def validate_active_messages
-    log_prefix = "MIQ(#{self.class.name}.validate_active_messages)"
-    self.active_messages.each { |msg| msg.check_for_timeout(log_prefix) }
+    self.active_messages.each { |msg| msg.check_for_timeout(_log.prefix) }
   end
 
   def clean_active_messages
     self.active_messages.each do |m|
-      $log.warn("MIQ(#{self.class.name}.clean_active_messages) Message id: [#{m.id}] Setting state to 'error'")
+      _log.warn("Message id: [#{m.id}] Setting state to 'error'")
       m.delivered_in_error('Clean Active Messages')
     end
   end
 
   def log_destroy_of_worker_messages
     self.ready_messages.each do |m|
-      $log.warn("MIQ(#{self.class.name}.log_destroy_of_worker_messages) Nullifying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
+      _log.warn("Nullifying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
       m.update_attributes(:handler_id => nil, :handler_type => nil) rescue nil
     end
 
     self.processed_messages.each do |m|
-      $log.warn("MIQ(#{self.class.name}.log_destroy_of_worker_messages) Destroying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
+      _log.warn("Destroying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
     end
   end
 
@@ -396,7 +415,7 @@ class MiqWorker < ActiveRecord::Base
     rescue => err
       # Calling ps on Linux with a pid that does not exist fails with a RuntimeError containing an empty message.
       # We will ignore this since we may be asking for the status of a worker who has exited.
-      $log.warn("MIQ(MiqWorker.status_update) #{self.class.name}: #{err.message}, while requesting process info for [#{self.friendly_name}] with PID=[#{self.pid}]") unless err.message.blank?
+      _log.warn("#{self.class.name}: #{err.message}, while requesting process info for [#{self.friendly_name}] with PID=[#{self.pid}]") unless err.message.blank?
       return
     end
 
@@ -407,7 +426,7 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def log_status(level=:info)
-    $log.send(level, "MIQ(MiqWorker.log_status) #{self.class.name}: [#{self.friendly_name}] Worker ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], Last Heartbeat [#{self.last_heartbeat}], Process Info: Memory Usage [#{self.memory_usage}], Memory Size [#{self.memory_size}], Memory % [#{self.percent_memory}], CPU Time [#{self.cpu_time}], CPU % [#{self.percent_cpu}], Priority [#{self.os_priority}]")
+    _log.send(level, "[#{self.friendly_name}] Worker ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], Last Heartbeat [#{self.last_heartbeat}], Process Info: Memory Usage [#{self.memory_usage}], Memory Size [#{self.memory_size}], Memory % [#{self.percent_memory}], CPU Time [#{self.cpu_time}], CPU % [#{self.percent_cpu}], Priority [#{self.os_priority}]")
   end
 
   def current_timeout
@@ -493,7 +512,7 @@ class MiqWorker < ActiveRecord::Base
 
     cl = "#{self.nice_prefix} #{Gem.ruby}"
     cl << " " << File.join(rr, "bin/rails runner")
-    cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self.corresponding_helper}")
+    cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self.corresponding_runner}")
     cl << " " << self.name
     params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
 

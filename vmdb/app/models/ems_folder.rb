@@ -22,7 +22,7 @@ class EmsFolder < ActiveRecord::Base
 
   def hidden?(overrides = {})
     ems = overrides[:ext_management_system] || ext_management_system
-    return false unless ems.kind_of?(EmsVmware)
+    return false unless ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
 
     p = overrides[:parent] || self.parent if NON_DISPLAY_FOLDERS.include?(name)
 
@@ -123,7 +123,6 @@ class EmsFolder < ActiveRecord::Base
 
   # TODO: refactor by vendor/hypervisor (currently, this assumes VMware)
   def register_host(host)
-    log_header = "MIQ(EmsCluster.register_host)"
     host = Host.extract_objects(host)
     raise "Host cannot be nil" if host.nil?
     userid, password = host.auth_user_pwd(:default)
@@ -132,7 +131,7 @@ class EmsFolder < ActiveRecord::Base
     with_provider_connection do |vim|
       handle = provider_object(vim)
       begin
-        $log.info "#{log_header} Invoking addStandaloneHost with options: address => #{network_address}, #{userid}"
+        _log.info "Invoking addStandaloneHost with options: address => #{network_address}, #{userid}"
         cr_mor = handle.addStandaloneHost(network_address, userid, password)
       rescue VimFault => verr
         fault = verr.vimFaultInfo.fault
@@ -140,7 +139,7 @@ class EmsFolder < ActiveRecord::Base
         raise unless fault.xsiType == "SSLVerifyFault"
 
         ssl_thumbprint = fault.thumbprint
-        $log.info "#{log_header} Invoking addStandaloneHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
+        _log.info "Invoking addStandaloneHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
         cr_mor = handle.addStandaloneHost(network_address, userid, password, :sslThumbprint => ssl_thumbprint)
       end
 

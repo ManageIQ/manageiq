@@ -254,6 +254,86 @@ describe ServiceTemplate do
       end
     end
   end
+
+  context 'validate template' do
+    before do
+      @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
+
+      user         = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
+      @vm_template = FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
+      @ptr = FactoryGirl.create(:miq_provision_request_template, :userid => user.userid, :src_vm_id => @vm_template.id)
+    end
+
+    it 'unknown' do
+      expect(@st1.service_type).to eq "unknown"
+      expect(@st1.template_valid?).to be_true
+      expect(@st1.template_valid_error_message).to be_nil
+    end
+
+    context 'atomic' do
+      before { @st1.add_resource(@ptr) }
+
+      it 'valid template' do
+        expect(@st1.template_valid?).to be_true
+        expect(@st1.template_valid_error_message).to be_nil
+      end
+
+      it 'orphaned template' do
+        VmOrTemplate.any_instance.stub(:orphaned?).and_return(true)
+        expect(@st1.template_valid?).to be_false
+        expect(@st1.template_valid_error_message).to include("Id <#{@vm_template.id}> is orphaned")
+      end
+
+      it 'archived template' do
+        VmOrTemplate.any_instance.stub(:archived?).and_return(true)
+        expect(@st1.template_valid?).to be_false
+        expect(@st1.template_valid_error_message).to include("Id <#{@vm_template.id}> is archived")
+      end
+
+      it 'not existing template' do
+        @ptr.update_attributes(:src_vm_id => 999)
+        expect(@st1.template_valid?).to be_false
+        expect(@st1.template_valid_error_message).to include("Unable to find VM with Id [999]")
+      end
+
+      it 'generic' do
+        @st1.remove_resource(@ptr)
+        expect(@st1.template_valid?).to be_true
+        expect(@st1.template_valid_error_message).to be_nil
+      end
+    end
+
+    context 'composite' do
+      before do
+        @st1.add_resource(@ptr)
+        @st2 = FactoryGirl.create(:service_template, :name => 'Service Template 2')
+        @st2.add_resource(@st1)
+      end
+
+      it 'valid template' do
+        expect(@st2.template_valid?).to be_true
+        expect(@st2.template_valid_error_message).to be_nil
+      end
+
+      it 'orphaned template' do
+        VmOrTemplate.any_instance.stub(:orphaned?).and_return(true)
+        expect(@st2.template_valid?).to be_false
+        expect(@st2.template_valid_error_message).to include("Id <#{@vm_template.id}> is orphaned")
+      end
+
+      it 'archived template' do
+        VmOrTemplate.any_instance.stub(:archived?).and_return(true)
+        expect(@st2.template_valid?).to be_false
+        expect(@st2.template_valid_error_message).to include("Id <#{@vm_template.id}> is archived")
+      end
+
+      it 'not existing template' do
+        @ptr.update_attributes(:src_vm_id => 999)
+        expect(@st2.template_valid?).to be_false
+        expect(@st2.template_valid_error_message).to include("Unable to find VM with Id [999]")
+      end
+    end
+  end
 end
 
 def add_and_save_service(p,c)

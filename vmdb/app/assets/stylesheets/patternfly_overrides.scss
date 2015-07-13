@@ -1,0 +1,300 @@
+/* needed for scrollable rows */
+body, html {
+  height: 100%;
+  overflow: hidden;
+}
+#main_taskbar {
+  height: 34px;
+  padding-top: 2px;
+  border-bottom: 1px solid #c7c7c7;
+  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+}
+
+/* This media query makes the entire main row scrollable once the columns have collapsed */
+
+@media (max-width: $screen-sm) {
+  body {
+    padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
+    padding-bottom: 30px !important;
+  }
+  .scrollable-sm {
+    height: 100%;
+    overflow: auto;
+  }
+
+  #main_content {
+    overflow: auto;
+    height: 100%;
+  }
+  #main_footer {
+    background: #f9f9f9;
+    height: 50px;
+  }
+}
+
+/* This media query makes the left column and the main area independently scrollable and sets the footer at the bottom of the column */
+
+@media (min-width: $screen-sm) {
+  body {
+    padding-top: 100px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
+    padding-bottom: 30px !important;
+  }
+
+  .login-pf body {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+  .scrollable {
+    height: 100%;
+    overflow: auto;
+  }
+  #main_content {
+    overflow: auto;
+    height: calc(100% - 30px);
+    padding-bottom: 25px
+  }
+  #main_footer {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    margin-bottom: 10px;
+    border-top: 1px solid #c7c7c7;
+    background: #f9f9f9;
+  }
+  .max-height {
+    height: 100%;
+  }
+}
+
+.navbar.navbar-default.navbar-fixed-bottom {
+  min-height: 30px;
+  background: #333;
+  color: #FFF;
+  text-align: center;
+}
+
+/* Overrides patternfly style for disabled accordion items */
+
+.nav-stacked > li.disabled > a {
+  color: #ccc;
+}
+
+.nav-stacked > li.disabled:hover > a {
+  background: transparent;
+  border: transparent;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  color: #ccc;
+}
+
+/* Style changes applied when customer logo is active */
+
+nav.whitelabeled .navbar-header {
+  height: 39px !important;
+}
+
+nav.whitelabeled .navbar-utility > li > a {
+  padding: 14px 10px;
+}
+
+nav.whitelabeled .navbar-utility span.pficon-user {
+  padding-top: 5px;
+}
+
+li.brand-white-label.whitelabeled {
+  width: 350px;
+  height: 38px;
+  background: url(/upload/custom_logo.png) right top no-repeat;
+  background-size: auto 38px;
+}
+
+/* Navigation overrides */
+
+.persistent-secondary .dropdown-menu {
+  top: auto;
+  left: auto;
+}
+
+.navbar-pf .navbar-primary.persistent-secondary > li > .navbar-persistent > li {
+  font-size: 12px;
+  padding-bottom: 1px;
+}
+
+/* Login overrides */
+
+.login-pf body {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#notification {
+  position:absolute;
+  left:0;
+  bottom:0;
+  z-index:1000;
+  display: block;
+  margin:0;
+  padding:0;
+  width: 100%;
+  height:100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#spinner_div {
+  position: absolute;
+  top: 20px;
+  left:0;
+  width:100%;
+  height: 180px;
+  z-index:1;
+}
+
+/* Adjust search styling for 2nd button (adv search)  */
+
+.search-pf.has-button .form-group {
+  width: auto;
+}
+
+/* Instead of using <br> */
+.spacer {
+    margin-top: 20px;
+}
+
+/* overrides dhtmlx layout conflicts with patternfly accordion */
+#custom_left_cell_div .panel-group .panel-default {
+  border-right: 0;
+}
+
+/* prevents Bootstrap row class horizontal scrolling within dhtmlx layout  */
+.dhtmlxLayoutSinglePoly .row {
+  margin-right: 0;
+}
+
+#custom_left_cell_div h4.panel-title {
+  font-size: 12px !important
+}
+
+/* Table customizations */
+
+table.table td {
+  word-break: break-all
+ }
+
+table.table tbody td img {
+  height: 20px;
+  width: 20px;
+}
+
+.table > thead > tr > th {
+  font-family: inherit !important;
+  vertical-align: top;
+}
+
+/* override font-weight for dropdowns withing table headers */
+
+.table thead th select {
+  font-weight: normal
+}
+
+table .narrow {
+  width: 1%;
+  white-space: nowrap;
+}
+
+/* disables hover and pointer on row */
+
+table.table-hover tbody tr:nth-child(odd).no-hover:hover td {
+  background: transparent; cursor:default
+}
+
+table.table-hover tbody tr:nth-child(even).no-hover:hover td {
+  background-color: $table-bg-accent; cursor:default
+}
+
+/* summary screen formatting */
+
+table .label {display: table-cell;width: 20% !important; min-width: 200px; font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;cursor: default;color: #333; text-align: left;}
+
+table.table.table-selectable tbody tr.selected td {
+  background-color: $link-color;
+  color: #fff
+}
+
+/* instead of using onmouseover="this.style.cursor='pointer'" */
+.table-hover tbody tr:hover > td {
+  cursor: pointer;
+  cursor: hand;
+}
+
+/* same for other tables than originally style3 */
+.pointer:hover {
+  cursor: pointer;
+}
+
+/* static class form-horizontal for displaying static info with reduced row height */
+.form-horizontal.static .form-group {
+  min-height: 28px;
+  margin-bottom: 5px;
+}
+
+/* Ensure .form-control-static doesn't change height when it's empty - Bootstrap fix #15699 */
+.form-control-static {
+  min-height: ($line-height-computed + $font-size-small - 20);
+}
+
+/* image styling for inside form */
+.form-control-static img {
+  width: 20px;
+  height: 20px;
+}
+
+/* prevents empty dd from collapsing */
+
+.dl-horizontal > dd:after {
+  display: table;
+  content: "";
+  clear: both;
+}
+
+/* modified dl styling for tile view */
+
+@media (min-width: 400px) {
+  .dl-horizontal.tile {
+    dt {
+      float: left;
+      width: ($component-offset-horizontal - 80);
+      clear: left;
+      text-align: right;
+      @include text-overflow();
+    }
+    dd {
+      margin-left: 110px;
+    }
+  }
+}
+
+/* Adds vertical space between tabs and content */
+
+.tab-content {
+  margin-top: 10px
+}
+
+/* fixes leftnav highlight padding issue - temporary */
+
+@media (min-width: $screen-sm) {
+  .sidebar-pf .nav-stacked {
+    margin-right: 0px;
+  }
+}
+
+@media (max-width: $screen-sm) {
+  .sidebar-pf .nav-stacked {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+}
+
+iframe, .iframe {
+  width: 100%; height: 100%;
+}

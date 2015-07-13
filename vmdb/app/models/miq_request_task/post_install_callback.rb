@@ -7,7 +7,7 @@ module MiqRequestTask::PostInstallCallback
       if p
         p.provision_completed_queue
       else
-        $log.warn("#{self.class.name}##{__method__} task_id=#{id.inspect} not found")
+        _log.warn("task_id=#{id.inspect} not found")
       end
     end
   end

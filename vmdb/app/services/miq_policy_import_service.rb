@@ -1,4 +1,6 @@
 class MiqPolicyImportService
+  class InvalidMiqPolicyYaml < StandardError; end
+
   def cancel_import(import_file_upload_id)
     import_file_upload = ImportFileUpload.find(import_file_upload_id)
 
@@ -29,6 +31,8 @@ class MiqPolicyImportService
     ImportFileUpload.create.tap do |import_file_upload|
       import_file_upload.store_binary_data_as_yml(uploaded_content.to_yaml, "Policy import")
     end
+  rescue
+    raise InvalidMiqPolicyYaml, "Invalid YAML file"
   end
 
   def destroy_queued_deletion(import_file_upload_id)

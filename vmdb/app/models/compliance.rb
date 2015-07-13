@@ -40,13 +40,12 @@ class Compliance < ActiveRecord::Base
 
     raise "Scan and Compliance check not supported for #{target.class.name} objects" unless target.kind_of?(Host)
 
-    log_prefix = "MIQ(Compliance.scan_and_check_compliance)"
     log_target = "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
-    $log.info("#{log_prefix} Requesting scan of #{log_target}")
+    _log.info("Requesting scan of #{log_target}")
     begin
       MiqEvent.raise_evm_job_event(target, :type => "scan", :prefix => "request")
     rescue => err
-      $log.error("#{log_prefix} Error raising request scan event for #{log_target}: #{err.message}")
+      _log.error("Error raising request scan event for #{log_target}: #{err.message}")
       return
     end
 
@@ -63,14 +62,13 @@ class Compliance < ActiveRecord::Base
     end
     target_class = target.class.base_model.name.downcase
 
-    log_prefix = "MIQ(Compliance.check_compliance): Target: [#{target.name}]"
     raise "Compliance check not supported for #{target.class.name} objects" unless target.respond_to?(:compliances)
     check_event = "#{target_class}_compliance_check"
-    $log.info("#{log_prefix} Checking compliance...")
+    _log.info("Checking compliance...")
     results = MiqPolicy.enforce_policy(target, check_event)
 
     if results[:details].empty?
-      $log.info("#{log_prefix} No compliance policies were assigned or in scope, compliance status will not be set")
+      _log.info("No compliance policies were assigned or in scope, compliance status will not be set")
       return
     end
 
@@ -79,16 +77,15 @@ class Compliance < ActiveRecord::Base
 
     # Raise EVM event for result asynchronously
     event = results[:result] ? "#{target_class}_compliance_passed" : "#{target_class}_compliance_failed"
-    $log.info("#{log_prefix} Raising EVM Event: #{event}")
+    _log.info("Raising EVM Event: #{event}")
     MiqEvent.raise_evm_event_queue(target, event)
     #
     return results[:result]
   end
 
   def self.set_compliancy(compliant, target, event, details)
-    log_prefix = "MIQ(Compliance.set_compliancy)"
     name = target.respond_to?(:name) ? target.name : "NA"
-    $log.info("#{log_prefix} Marking as #{compliant ? "" : "Non-"}Compliant Object with Class: [#{target.class}], Id: [#{target.id}], Name: [#{name}]")
+    _log.info("Marking as #{compliant ? "" : "Non-"}Compliant Object with Class: [#{target.class}], Id: [#{target.id}], Name: [#{name}]")
 
     comp  = self.create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
 

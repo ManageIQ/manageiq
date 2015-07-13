@@ -1,4 +1,4 @@
 module MiqAeMethodService
-  class MiqAeServiceAuthKeyPairOpenstack < MiqAeServiceAuthKeyPairCloud
+  class MiqAeServiceAuthKeyPairOpenstack < MiqAeServiceManageIQ_Providers_CloudManager_AuthKeyPair
   end
 end

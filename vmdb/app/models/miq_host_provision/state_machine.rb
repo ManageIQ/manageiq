@@ -57,20 +57,19 @@ module MiqHostProvision::StateMachine
 
   def post_install_callback
     message = "PXE Provisioning Complete"
-    $log.info("MIQ(#{self.class.name}#post_install_callback) #{message} #{for_destination}")
+    _log.info("#{message} #{for_destination}")
     update_and_notify_parent(:message => message)
 
     signal :delete_pxe_configuration_files
   end
 
   def delete_pxe_configuration_files
-    log_header = "MIQ(#{self.class.name}#delete_pxe_configuration_files)"
     if get_option(:stateless)
       message = "Stateless, NOT deleting PXE and Customization Files on PXE Server"
-      $log.info("#{log_header} #{message} #{for_destination}")
+      _log.info("#{message} #{for_destination}")
     else
       message = "Deleting PXE and Customization Files on PXE Server"
-      $log.info("#{log_header} #{message} #{for_destination}")
+      _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       delete_pxe_files
     end
@@ -87,7 +86,7 @@ module MiqHostProvision::StateMachine
       self.source = self.destination
       signal :configure_destination
     else
-      $log.info("MIQ(#{self.class.name}#poll_destination_in_vmdb) Unable to find Host with IP Address [#{ip_address}], will retry")
+      _log.info("Unable to find Host with IP Address [#{ip_address}], will retry")
       requeue_phase
     end
   end
@@ -112,7 +111,7 @@ module MiqHostProvision::StateMachine
       inputs = {:host => self.destination}
       MiqEvent.raise_evm_event(self.destination, 'host_provisioned', inputs)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     message = "Finished New Host Placement"
@@ -128,7 +127,7 @@ module MiqHostProvision::StateMachine
 
   def finish
     if self.status != 'Error'
-      $log.info("MIQ(#{self.class.name}#finish) Executing provision request ... Complete")
+      _log.info("Executing provision request ... Complete")
     end
   end
 

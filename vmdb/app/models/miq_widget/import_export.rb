@@ -5,7 +5,6 @@ module MiqWidget::ImportExport
     def import_from_hash(widget, options={})
       raise "No Widget to Import" if widget.nil?
 
-      log_header = "MIQ(#{self.name}.#{__method__})"
       status = { :class => self.name, :description => widget["description"], :children => [] }
 
       if rep = widget.delete("MiqReportContent")
@@ -14,7 +13,7 @@ module MiqWidget::ImportExport
 
         if status[:children][:level] == "error"
           status[:status] = :error
-          $log.error("#{log_header} Importing widget: [#{widget["description"]}] - Aborted. Status: #{status[:children][:message]}")
+          _log.error("Importing widget: [#{widget["description"]}] - Aborted. Status: #{status[:children][:message]}")
           return nil, status
         end
       end
@@ -39,14 +38,14 @@ module MiqWidget::ImportExport
         status[:messages] << w.errors.full_messages
       end
 
-      msg = "#{log_header} #{msg}"
+      msg = "#{msg}"
       msg << ", Messages: #{status[:messages].join(",")}" if status[:messages]
-      $log.info(msg)
+      _log.info(msg)
 
       if options[:save]
         w.resource = report if report
         w.save!
-        $log.info("#{log_header} - Completed.")
+        _log.info("- Completed.")
       end
 
       return w, status

@@ -1,9 +1,8 @@
 require 'miq_storage_defs'
 
 # Required for loading serialized objects in 'obj' column
-add_to_load_path Rails.root.join("..", "lib", "wbem")
 require 'wbem'
-require 'NetappManageabilityAPI/NmaTypes'
+require 'net_app_manageability/types'
 
 class MiqCimInstance < ActiveRecord::Base
 

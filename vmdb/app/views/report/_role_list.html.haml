@@ -18,7 +18,6 @@
                 :json_tree                 => @menu_roles_tree,
                 :id_prefix                 => 'menu_roles_',
                 :click_url                 => '/report/menu_editor/',
-                :id_prefix                 => 'menu_',
                 :onclick                   => 'miqMenuEditor',
                 :div_width                 => '216px',
                 :div_height                => '328px',
@@ -43,7 +42,7 @@
             - @sb[:menu].invert.each do |pp|
               %tr{:title => _("View this Profile"), :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', 'g-#{to_cid(pp[1])}');"}
                 %td.narrow
-                  %ul.icons
+                  %ul.icons.list-unstyled
                     %li
                       %span.product.product-group
                 %td

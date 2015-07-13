@@ -38,4 +38,21 @@ class TreeBuilderVandt < TreeBuilder
               end
     count_only_or_objects(options[:count_only], objects, "name")
   end
+
+  def x_get_child_nodes(id)
+    model, rec_id, prefix = self.class.extract_node_model_and_id(id)
+    model == "Hash" ? super : find_child_recursive(x_get_tree_roots({}), id)
+  end
+
+  private
+
+  def find_child_recursive(children, id)
+    children.each do |t|
+      return t[:children] if t[:key] == id
+
+      found = find_child_recursive(t[:children], id) if t[:children]
+      return found unless found.nil?
+    end
+    nil
+  end
 end

@@ -295,7 +295,7 @@ describe AuthenticationMixin do
 
       it "should not raise :changed event or queue authentication_check if creds unchanged" do
         @auth.should_receive(:raise_event).with(:changed).never
-        EmsVmware.any_instance.should_receive(:authentication_check_types_queue).never
+        ManageIQ::Providers::Vmware::InfraManager.any_instance.should_receive(:authentication_check_types_queue).never
         @auth.send(:after_authentication_changed)
       end
 
@@ -324,7 +324,7 @@ describe AuthenticationMixin do
         conditions = {:class_name => @ems.class.base_class.name, :instance_id => @ems.id, :method_name => 'authentication_check_types', :role => @ems.authentication_check_role}
         queued_auth_checks = MiqQueue.where(conditions)
         queued_auth_checks.length.should == 1
-        EmsVmware.any_instance.should_receive(:verify_credentials).with(:default)
+        ManageIQ::Providers::Vmware::InfraManager.any_instance.should_receive(:verify_credentials).with(:default)
         queued_auth_checks.first.deliver
       end
 
@@ -481,7 +481,7 @@ describe AuthenticationMixin do
         end
 
         it "should call authentication_check when processing the validation check" do
-          EmsVmware.any_instance.should_receive(:authentication_check)
+          ManageIQ::Providers::Vmware::InfraManager.any_instance.should_receive(:authentication_check)
           @queued_auth_checks.first.deliver
         end
       end

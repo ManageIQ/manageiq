@@ -18,12 +18,12 @@
           = _("Authentication")
         = patternfly_tab_header("settings_workers", @sb[:active_tab]) do
           = _("Workers")
-        - if cur_svr_id == @sb[:my_server_id]
+        - if cur_svr_id == my_server_id
           = patternfly_tab_header("settings_database", @sb[:active_tab]) do
             = _("Database")
           = patternfly_tab_header("settings_custom_logos", @sb[:active_tab]) do
             = _("Custom Logos")
-        - if cur_svr_id == @sb[:my_server_id]
+        - if cur_svr_id == my_server_id
           = patternfly_tab_header("settings_advanced", @sb[:active_tab]) do
             = _("Advanced")
       .tab-content
@@ -33,12 +33,12 @@
           = render :partial => "settings_authentication_tab"
         = patternfly_tab_content("settings_workers", @sb[:active_tab]) do
           = render :partial => "settings_workers_tab"
-        - if cur_svr_id == @sb[:my_server_id]
+        - if cur_svr_id == my_server_id
           = patternfly_tab_content("settings_database", @sb[:active_tab]) do
             = render :partial => "settings_database_tab"
           = patternfly_tab_content("settings_custom_logos", @sb[:active_tab]) do
             = render :partial => "settings_custom_logos_tab"
-        - if cur_svr_id == @sb[:my_server_id]
+        - if cur_svr_id == my_server_id
           = patternfly_tab_content("settings_advanced", @sb[:active_tab]) do
             = render :partial => "settings_advanced_tab"
     - else
@@ -106,14 +106,14 @@
           = render :partial => "diagnostics_cu_repair_tab"
     - elsif x_node.split("__").last.split("-")[0] == "svr"
       %ul.nav.nav-tabs
-        - if @sb[:selected_server_id] == @sb[:my_server_id] || @selected_server.started?
+        - if @sb[:selected_server_id] == my_server_id || @selected_server.started?
           = patternfly_tab_header("diagnostics_summary", @sb[:active_tab]) do
             = _("Summary")
           = patternfly_tab_header("diagnostics_workers", @sb[:active_tab]) do
             = _("Workers")
         = patternfly_tab_header("diagnostics_collect_logs", @sb[:active_tab]) do
           = _("Collect Logs")
-        - if @sb[:selected_server_id] == @sb[:my_server_id]
+        - if @sb[:selected_server_id] == my_server_id
           = patternfly_tab_header("diagnostics_evm_log", @sb[:active_tab]) do
             = _("CFME Log")
           = patternfly_tab_header("diagnostics_audit_log", @sb[:active_tab]) do
@@ -126,14 +126,14 @@
         = patternfly_tab_header("diagnostics_timelines", @sb[:active_tab]) do
           = _("Timelines")
       .tab-content
-        - if @sb[:selected_server_id] == @sb[:my_server_id] || @selected_server.started?
+        - if @sb[:selected_server_id] == my_server_id || @selected_server.started?
           = patternfly_tab_content("diagnostics_summary", @sb[:active_tab]) do
             = render :partial => "diagnostics_summary_tab"
           = patternfly_tab_content("diagnostics_workers", @sb[:active_tab]) do
             = render :partial => "diagnostics_workers_tab"
         = patternfly_tab_content("diagnostics_collect_logs", @sb[:active_tab]) do
           = render :partial => "diagnostics_collect_logs_tab"
-        - if @sb[:selected_server_id] == @sb[:my_server_id]
+        - if @sb[:selected_server_id] == my_server_id
           = patternfly_tab_content("diagnostics_evm_log", @sb[:active_tab]) do
             = render :partial => "diagnostics_evm_log_tab"
           = patternfly_tab_content("diagnostics_audit_log", @sb[:active_tab]) do

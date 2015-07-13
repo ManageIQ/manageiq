@@ -181,7 +181,7 @@ module AuthenticationMixin
       help = "Check for a running server"
       help << " in zone: [#{options[:zone]}]"   if options[:zone]
       help << " with role: [#{options[:role]}]" if options[:role]
-      $log.warn("MIQ(#{self.class.name}.authentication_check_types_queue) Previous authentication_check_types for [#{self.name}] [#{self.id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
+      _log.warn("Previous authentication_check_types for [#{self.name}] [#{self.id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
     end
   end
 
@@ -226,7 +226,7 @@ module AuthenticationMixin
   private
 
   def authentication_check_no_validation(type, options)
-    header  = "MIQ(#{self.class.name}.#{__method__}) type: [#{type.inspect}] for [#{self.id}] [#{self.name}]"
+    header  = "type: [#{type.inspect}] for [#{self.id}] [#{self.name}]"
     verify_args = self.is_a?(Host) ? [type, options] : type
 
     status, details =
@@ -246,7 +246,7 @@ module AuthenticationMixin
 
     details &&= details.to_s.truncate(200)
 
-    $log.warn("#{header} Validation failed: #{status}, #{details}") unless status == :valid
+    _log.warn("#{header} Validation failed: #{status}, #{details}") unless status == :valid
     return status, details
   end
 

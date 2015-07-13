@@ -107,8 +107,8 @@ class MiqAction < ActiveRecord::Base
 
   def self.invoke_actions(apply_policies_to, inputs, succeeded, failed)
     deferred = []
-    # $log.info("XXX(action-invoke_actions) succeeded policies: #{succeeded.inspect}")
-    # $log.info("XXX(action-invoke_actions) failed policies: #{failed.inspect}")
+    # _log.info("succeeded policies: #{succeeded.inspect}")
+    # _log.info("failed policies: #{failed.inspect}")
 
     results = {}
 
@@ -119,11 +119,11 @@ class MiqAction < ActiveRecord::Base
         else            p.actions_for_event
         end
 
-        #        $log.debug("MIQ(action-invoke_actions) actions on failure: #{actions.inspect}")
+        #        _log.debug("actions on failure: #{actions.inspect}")
         actions.each {|a|
           # merge in the synchronous flag and possibly the sequence if not already sorted by this
           inputs = inputs.merge(:policy => p, :result => false, :sequence => a.sequence, :synchronous => a.synchronous)
-          $log.debug("MIQ(action-invoke_actions) action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
+          _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
 
           if a.name == "prevent"
             deferred.push([a, apply_policies_to, inputs])
@@ -139,10 +139,10 @@ class MiqAction < ActiveRecord::Base
       succeeded.each {|p|
         next unless p.is_a?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on failure
         actions = p.actions_for_event(inputs[:event], :success).uniq
-        # $log.info("MIQ(action-invoke_actions) actions on success: #{actions.inspect}")
+        # _log.info("actions on success: #{actions.inspect}")
         actions.each {|a|
           inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
-          $log.debug("MIQ(action-invoke_actions) action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
+          _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
 
           if a.name == "prevent"
             deferred.push([a, apply_policies_to, inputs])
@@ -1045,12 +1045,12 @@ class MiqAction < ActiveRecord::Base
 
       action = self.find_by_name(rec[:name])
       if action.nil?
-        $log.info("MIQ(MiqAction.create_script_actions_from_directory) Creating [#{rec[:name]}]")
+        _log.info("Creating [#{rec[:name]}]")
         action = self.create(rec)
       else
         action.attributes = rec
         if action.changed? || action.options_was != actions.options
-          $log.info("MIQ(MiqAction.create_script_actions_from_directory) Updating [#{rec[:name]}]")
+          _log.info("Updating [#{rec[:name]}]")
           action.save
         end
       end
@@ -1098,12 +1098,12 @@ class MiqAction < ActiveRecord::Base
 
       rec = self.find_by_name(action[:name])
       if rec.nil?
-        $log.info("MIQ(MiqAction.create_default_actions) Creating [#{action[:name]}]")
+        _log.info("Creating [#{action[:name]}]")
         rec = self.create(action.merge(:action_type => "default"))
       else
         rec.attributes = action.merge(:action_type => "default")
         if rec.changed? || (rec.options_was != rec.options)
-          $log.info("MIQ(MiqAction.create_default_actions) Updating [#{action[:name]}]")
+          _log.info("Updating [#{action[:name]}]")
           rec.save
         end
       end

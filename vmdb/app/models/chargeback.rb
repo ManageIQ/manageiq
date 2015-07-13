@@ -54,8 +54,7 @@ class Chargeback < ActsAsArModel
     #   :owner => <userid>
     #   :tag => /managed/environment/prod (Mutually exclusive with :user)
     #   :chargeback_type => detail | summary
-    log_prefix = "MIQ(Chargeback.build_results_for_report_chargeback)"
-    $log.info("#{log_prefix} Calculating chargeback costs...")
+    _log.info("Calculating chargeback costs...")
 
     tz = Metric::Helper.get_time_zone(options[:ext_options])
     # TODO: Support time profiles via options[:ext_options][:time_profile]
@@ -68,7 +67,7 @@ class Chargeback < ActsAsArModel
     if options[:owner]
       user = User.find_by_userid(options[:owner])
       if user.nil?
-        $log.error("#{log_prefix} Unable to find user '#{options[:owner]}'. Calculating chargeback costs aborted.")
+        _log.error("Unable to find user '#{options[:owner]}'. Calculating chargeback costs aborted.")
         raise MiqException::Error, "Unable to find user '#{options[:owner]}'"
       end
       vms = user.vms
@@ -113,7 +112,7 @@ class Chargeback < ActsAsArModel
                 "hourly"
                ]
       end
-      $log.debug("#{log_prefix} Conditions: #{cond.inspect}")
+      _log.debug("Conditions: #{cond.inspect}")
 
       recs = MetricRollup
              .where(cond)
@@ -127,7 +126,7 @@ class Chargeback < ActsAsArModel
              .select(*options[:ext_options][:only_cols])
              .order("resource_id, timestamp")
       recs = Metric::Helper.remove_duplicate_timestamps(recs)
-      $log.info("#{log_prefix} Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
+      _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
       unless recs.empty?
         ts_key = self.get_group_key_ts(recs.first, interval, tz)
@@ -154,7 +153,7 @@ class Chargeback < ActsAsArModel
         end
       end
     end
-    $log.info("#{log_prefix} Calculating chargeback costs...Complete")
+    _log.info("Calculating chargeback costs...Complete")
 
     return [data.map {|r| new(r.last)}]
   end

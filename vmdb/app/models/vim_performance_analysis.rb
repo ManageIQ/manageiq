@@ -1,5 +1,6 @@
 module VimPerformanceAnalysis
   class Planning
+    include Vmdb::Logging
     attr_accessor :options, :vm
     attr_reader   :compute, :storage
 
@@ -377,7 +378,7 @@ module VimPerformanceAnalysis
         # avail = (limit_ratio - vcpus_per_core) * cores => (10 - 4) * 5 = 30
         usage   = 0
         reserve = 0
-        avail   = (options[:limit_ratio] - target.vcpus_per_core) * target.total_cores
+        avail   = (options[:limit_ratio] - target.vcpus_per_core) * target.total_vcpus
       else
         usage   = measure_object(target, options[:mode], options[:metric],    perf, ts, type) || 0
         reserve = measure_object(target, :current,       options[:reserve],   perf, ts, type) || 0
@@ -616,7 +617,7 @@ module VimPerformanceAnalysis
       arr[0] ||= []; arr[1] ||= []
       next(arr) unless  r.respond_to?(x_attr) && r.respond_to?(y_attr)
       if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
-        $log.debug("MIQ(VimPerformanceAnalysis.calc_slope_from_data) Class: [#{r.class}], [#{r.resource_type} - #{r.resource_id}], Timestamp: [#{r.timestamp}] is outside of time profile")
+        _log.debug("Class: [#{r.class}], [#{r.resource_type} - #{r.resource_id}], Timestamp: [#{r.timestamp}] is outside of time profile")
         next(arr)
       end
       arr[0] << r.send(y_attr).to_f
@@ -636,7 +637,7 @@ module VimPerformanceAnalysis
     rescue ZeroDivisionError
       slope_arr = []
     rescue => err
-      $log.warn("MIQ(VimPerformanceAnalysis.calc_slope_from_data) #{err.message}, calculating slope")
+      _log.warn("#{err.message}, calculating slope")
       slope_arr = []
     end
     return slope_arr
@@ -660,7 +661,7 @@ module VimPerformanceAnalysis
     rescue RangeError
       return nil
     rescue => err
-      $log.warn("MIQ(VimPerformanceAnalysis-calc_trend_value_at_timestamp) #{err.message}, calculating trend value")
+      _log.warn("#{err.message}, calculating trend value")
       return nil
     end
   end
@@ -674,7 +675,7 @@ module VimPerformanceAnalysis
     rescue RangeError
       return nil
     rescue => err
-      $log.warn("MIQ(VimPerformanceAnalysis-calc_timestamp_at_trend_value) #{err.message}, calculating timestamp at trend value")
+      _log.warn("#{err.message}, calculating timestamp at trend value")
       return nil
     end
   end

@@ -7,7 +7,7 @@ class EmsCloudController < ApplicationController
   after_filter :set_session_data
 
   def self.model
-    EmsCloud
+    ManageIQ::Providers::CloudManager
   end
 
   def self.table_name

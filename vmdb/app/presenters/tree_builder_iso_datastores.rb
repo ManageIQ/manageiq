@@ -22,12 +22,12 @@ class TreeBuilderIsoDatastores < TreeBuilder
   def x_get_tree_iso_datastore_kids(object,options)
     iso_images = object.iso_images
     if options[:count_only]
-      x_tree[:open_nodes].push("xx-isd_xx-#{to_cid(object.id)}")
+      @tree_state.x_tree(@name)[:open_nodes].push("xx-isd_xx-#{to_cid(object.id)}")
       iso_images.size
     else
       objects = []
       if iso_images.size > 0
-        x_tree(options[:tree])[:open_nodes].push("isd_xx-#{to_cid(object.id)}")
+        @tree_state.x_tree(@name)[:open_nodes].push("isd_xx-#{to_cid(object.id)}")
         objects.push(
           :id    => "isd_xx-#{to_cid(object.id)}",
           :text  => "ISO Images",

@@ -835,13 +835,13 @@ en:
       Condition:                Condition
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
-      EmsCloud:                 Cloud Provider
+      #EmsCloud:                 Cloud Provider
       EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
       EmsContainer:             Container Provider
       EmsEvent:                 Management Event
       EmsFolder:                Folder
-      EmsInfra:                 Infrastructure Provider
+      #EmsInfra:                 Infrastructure Provider
       ExtManagementSystem:      Provider
       FileDepotFtp:             FTP
       FileDepotFtpAnonymous:    Anonymous FTP
@@ -856,6 +856,15 @@ en:
       LdapDomain:               LDAP Domain
       LdapRegion:               LDAP Region
       LdapServer:               LDAP Server
+      ManageIQ::Providers::BaseManager:               Provider
+      #ManageIQ::Providers::BaseManager::VmOrTemplate: VM or Template
+      #ManageIQ::Providers::BaseManager::Vm:           VM and Instance
+      ManageIQ::Providers::CloudManager:              Cloud Provider
+      ManageIQ::Providers::CloudManager::Vm:          Instance
+      ManageIQ::Providers::CloudManager::Template:    Image
+      ManageIQ::Providers::InfraManager:              Infrastructure Provider
+      ManageIQ::Providers::InfraManager::Vm:          Virtual Machine
+      ManageIQ::Providers::InfraManager::Template:    Template
       MiqAction:                Action
       MiqAeClass:               Automate Class
       MiqAeDomain:              Automate Domain
@@ -910,15 +919,15 @@ en:
       StorageFile:              Datastore File
       StorageManager:           Storage Manager
       StoragePerformance:       Performance - Datastore
-      TemplateCloud:            Image
-      TemplateInfra:            Template
+      #TemplateCloud:            Image
+      #TemplateInfra:            Template
       TimeProfile:              Time Profile
       User:                     EVM User
       VimPerformanceTrend:      Performance Trend
       Vm:                       VM and Instance
-      VmCloud:                  Instance
+      #VmCloud:                  Instance
       VmdbTable:                VMDB Table
-      VmInfra:                  Virtual Machine
+      #VmInfra:                  Virtual Machine
       VmOrTemplate:             VM or Template
       VmPerformance:            Performance - VM
       Zone:                     Zone

@@ -3,10 +3,10 @@
 /* to keep text in grid from overlapping in cells */
 div.gridbox table.hdr td {
   border: 0 solid;
-  padding: 4px 0 4px 0; 
+  padding: 4px 0 4px 0;
   overflow: hidden;
   font-size: 12px;
-}  
+}
 div.gridbox table.obj td {
   border: 0 solid;
   font-size: 12px;
@@ -32,7 +32,7 @@ div.gridbox_style3 {
   border-left: 1px solid  #d1d1d1;
 }
 div.gridbox_style3 table.hdr {
-  text-align: center; 
+  text-align: center;
   vertical-align:top;
 }
 div.gridbox_style3 table.hdr td {
@@ -47,17 +47,17 @@ div.gridbox_style3 table.hdr td {
   font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif !important;
   line-height: 19px;
 }
-div.gridbox_style3 table.hdr td { 
+div.gridbox_style3 table.hdr td {
   background-image: -webkit-linear-gradient(top, #fafafa, #ededed); /* For Chrome and Safari */
   background-image:    -moz-linear-gradient(top, #fafafa, #ededed); /* For old Fx (3.6 to 15) */
   background-image:     -ms-linear-gradient(top, #fafafa, #ededed); /* For pre-releases of IE 10*/
-  background-image:      -o-linear-gradient(top, #fafafa, #ededed); /* For old Opera (11.1 to 12.0) */ 
+  background-image:      -o-linear-gradient(top, #fafafa, #ededed); /* For old Opera (11.1 to 12.0) */
   background-image:         linear-gradient(top, #fafafa, #ededed); /* Standard syntax; must be last */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */  
-} 
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+}
 
 div.gridbox_style3 table.hdr td div.hdrcell {
-  overflow: hidden; 
+  overflow: hidden;
   padding: 4px;
 }
 div.gridbox_style3 table.hdr td div.hdrcell:hover{
@@ -82,25 +82,6 @@ div.gridbox_style3 table.obj tr.no-hover:hover {
 div.gridbox_style3 table.obj tr.no-hover:hover td{
   cursor: default !important;
 }
-<% if @ro_grid %>
-  div.gridbox_style3 table.obj tr td:hover {
-    background: #d5ecf8 !important; 
-    cursor: default;
-  }
-  div.gridbox_style3 table.obj tr:hover {
-    background: #d5ecf8 !important;
-    cursor: default;
-  }
-<% else %>
-  div.gridbox_style3 table.obj tr td:hover {
-    background: #d5ecf8 !important; 
-    cursor: pointer;
-  }
-  div.gridbox_style3 table.obj tr:hover {
-    background: #d5ecf8 !important;
-    cursor: pointer;
-  }
-<% end %>
 
 div.gridbox_style3 .dhx_combo_edit {
   font-size: 12px;
@@ -126,14 +107,14 @@ div.gridbox_menueditor {border:1px solid  #cfcfcf; }
 div.gridbox_menueditor .objbox {background-color: #f8f8f8;width:216px;overflow: hidden;}
 div.gridbox_menueditor table.hdr td {display: none;}
 div.gridbox_menueditor table.hdr td div.hdrcell{xwidth:auto;padding-left:0px;}
-div.gridbox_menueditor table.hdr .filter{padding-left:0px !important;text-align:center;-moz-user-select:text; }   
-div.gridbox_menueditor table.obj td {background: #f8f8f8 url('/images/layout/accordion_bg.png');color:#4b4b4b;font: normal 93% OpenSansSemibold,Arial,Helvetica,sans-serif;height:22px;line-height: 22px;text-decoration:none;text-indent: 8px;vertical-align: top;}  
+div.gridbox_menueditor table.hdr .filter{padding-left:0px !important;text-align:center;-moz-user-select:text; }
+div.gridbox_menueditor table.obj td {background: #f8f8f8 url('/images/layout/accordion_bg.png');color:#4b4b4b;font: normal 93% OpenSansSemibold,Arial,Helvetica,sans-serif;height:22px;line-height: 22px;text-decoration:none;text-indent: 8px;vertical-align: top;}
 div.gridbox_menueditor table.row20px tr td {padding-right:4px;padding-left:4px;}
 div.gridbox_menueditor .dhx_combo_edit{font-size: 93%; /*12px*/}
 div.gridbox_menueditor table.obj tr.rowselected td{color:black;}
-div.gridbox_menueditor table.obj tr.rowselected td.cellselected, div.gridbox_light table.obj td.cellselected {background: <%# @css[:font_color] %> #4b4b4b; url('/images/layout/accordion_bg.png') left bottom;}  
+div.gridbox_menueditor table.obj tr.rowselected td.cellselected, div.gridbox_light table.obj td.cellselected {background: #4b4b4b url('/images/layout/accordion_bg.png') left bottom;}
 div.gridbox_menueditor .odd_menueditor{border-top: 0px solid #FFF;}
-div.gridbox_menueditor div.ftr td {empty-cells:show;} 
+div.gridbox_menueditor div.ftr td {empty-cells:show;}
 div.gridbox_menueditor2 {border:1px solid  #cfcfcf;}
 div.gridbox_menueditor2 .objbox {background: url('/images/layout/stripe_bg3.png') top left;min-width:216px;overflow: hidden;}
 div.gridbox_menueditor2 .xhdr{background:  url('/images/layout/accordion_bg.png') left bottom;}
@@ -146,11 +127,11 @@ div.gridbox_menueditor2 table.row20px tr td {padding-right:4px;padding-left:4px;
 div.gridbox_menueditor2 .dhx_combo_edit{font-size: 93%; /*12px*/}
 div.gridbox_menueditor2 table.obj tr.rowselected td{color:black;}
 div.gridbox_menueditor2 table.obj tr.rowselected td.cellselected, div.gridbox_light table.obj td.cellselected {background-image: url('/images/icons/16/folder.png');background-repeat: no-repeat;background-color: #d5d5d5; }
-div.gridbox_menueditor2 table.obj  td:hover {  background-color: #d5d5d5; } 
+div.gridbox_menueditor2 table.obj  td:hover {  background-color: #d5d5d5; }
 div.gridbox_menueditor2 .odd_menueditor2{border-top: 0px solid #FFF}
 div.gridbox_menueditor2 div.ftr td {empty-cells:show;}
 
-/*miq*/  
+/*miq*/
 
 /* entire compare area */
 
@@ -159,7 +140,7 @@ div.gridbox_miq {
   padding-right: 0;
   border: 1px solid #e7e7e7;
 }
-  
+
 /* entire header row */
 div.gridbox_miq .xhdr{border:0px solid #e7e7e7;background-color:#fff;}
 div.gridbox_miq div.topMumba{position:absolute;left:0px;width:100%;height:3px;background-image:url(imgs/skinC_header.png);overflow:hidden;padding:0px;margin:0px;}
@@ -180,15 +161,15 @@ div.gridbox_miq table.hdr td {
 
 /* Text Rotation for Compressed View */
 
-div.gridbox_miq table.hdr td a.rotated-text, 
+div.gridbox_miq table.hdr td a.rotated-text,
 div.gridbox_miq table.hdr td span.rotated-text {
   display: block;
   margin-bottom: 10px;
   white-space: nowrap;
   text-align: left;
-  -webkit-transform: rotate(-90deg); 
-  -moz-transform: rotate(-90deg); 
-  -ms-transform: rotate(-90deg);  
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
 }
 .ie8 div.gridbox_miq table.hdr td a.rotated-text,
 .ie8 div.gridbox_miq table.hdr td span.rotated-text {
@@ -242,6 +223,6 @@ div.gridbox_miq div.ftr td {
 
 /* removes cursor from header column */
 
-#disks_grid div.hdrcell { 
+#disks_grid div.hdrcell {
   cursor: default !important;
 }

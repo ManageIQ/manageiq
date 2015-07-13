@@ -21,7 +21,7 @@
         :label                      => _("Manager"),
         :keys                       => keys})
   - when :purpose
-    - keys = [:vm_tags]
+    - keys = [:tag_ids]
     = render(:partial => "#{pfx}prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,

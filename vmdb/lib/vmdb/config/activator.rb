@@ -18,20 +18,8 @@ module VMDB
 
       private
 
-      def authentication(data)
-        case data.mode
-        when "ldap", "ldaps"
-          User.ldaphost data.ldaphost
-          User.basedn   data.basedn
-        when "database"
-          User.ldaphost "database"
-        when "none"
-          User.ldaphost ""
-        end
-      end
-
       def log(_data)
-        Vmdb::Logging.init
+        Vmdb::Loggers.init
       end
 
       def session(data)

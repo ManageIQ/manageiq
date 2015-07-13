@@ -42,6 +42,17 @@ describe TreeBuilder do
     end
   end
 
+  context "#locals_for_render" do
+    it "returns the active node x_node from the TreeState as select_node" do
+      tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
+
+      active_node = 'foobar'
+      TreeState.any_instance.stub(:x_node).and_return(active_node)
+
+      expect(tree.locals_for_render[:select_node]).to eq(active_node)
+    end
+  end
+
   context '#x_get_child_nodes' do
     it 'returns for Hash models' do
       builder = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})

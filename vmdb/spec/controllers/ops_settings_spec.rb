@@ -133,4 +133,30 @@ describe OpsController do
       end
     end
   end
+
+  context "replace_right_cell" do
+    before do
+      MiqRegion.seed
+      zone       = FactoryGirl.create(:zone)
+      MiqRegion.my_region.stub(:zones).and_return([zone])
+      miq_server = FactoryGirl.create(:miq_server, :guid => 'guid', :zone => zone)
+      MiqServer.stub(:my_server).and_return(miq_server)
+    end
+
+    it "it renders replace_right_cell" do
+      controller.instance_variable_set(:@sb,
+                                       :trees         => {:settings_tree => {:open_nodes => []}},
+                                       :active_accord => 'active_accord',
+                                       :active_tab    => 'settings_server',
+                                       :active_tree   => :settings_tree)
+      controller.should_receive(:x_active_tree_replace_cell)
+      controller.should_receive(:replace_explorer_trees)
+      controller.should_receive(:rebuild_toolbars)
+      controller.should_receive(:handle_bottom_cell)
+      controller.should_receive(:extra_js_commands)
+      controller.should_receive(:render)
+      controller.send(:replace_right_cell, 'svr', [:settings])
+      expect(response.status).to eq(200)
+    end
+  end
 end

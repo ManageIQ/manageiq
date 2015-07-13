@@ -14,7 +14,7 @@ class MiqEmsMetricsProcessorWorker < MiqQueueWorkerBase
 
     processor_worker_settings = configuration.config.fetch_path(*old_path)
     unless processor_worker_settings.nil?
-      $log.info("MIQ(#{self.name}) Migrating Settings")
+      _log.info("Migrating Settings")
       configuration.config.delete_path(*old_path)
       configuration.config.store_path(new_path, processor_worker_settings)
     end

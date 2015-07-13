@@ -148,7 +148,7 @@ function miqToolbarOnClick(id) {
     }
     
     // See if a url is defined
-    if (button.url.indexOf("/") == 0) {
+    if (button.url.indexOf("/") === 0) {
       // If url starts with / it is non-ajax
       tb_url = "/" + miq_controller + button.url;
       if (typeof miq_record_id != "undefined" && miq_record_id != null) {
@@ -162,7 +162,7 @@ function miqToolbarOnClick(id) {
     } else {
       // An ajax url was defined
       tb_url = "/" + miq_controller + "/" + button.url;
-      if (button.url.indexOf("x_history") != 0) {
+      if (button.url.indexOf("x_history") !== 0) {
         // If not an explorer history button
         if (typeof miq_record_id != "undefined" && miq_record_id != null) {
           tb_url += "/" + miq_record_id;
@@ -237,7 +237,7 @@ function miqToolbarOnClick(id) {
 
 function miqSupportCasePrompt(tb_url) {
   var support_case = prompt('Enter Support Case:', '');
-  if (support_case == null) {
+  if (support_case === null) {
     return false;
   } else if (support_case.trim() == '') {
     alert('Support Case must be provided to collect logs');

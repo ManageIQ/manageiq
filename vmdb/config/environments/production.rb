@@ -65,6 +65,8 @@ Vmdb::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
+  # Raise exceptions in transactional callbacks
+  config.active_record.raise_in_transactional_callbacks = true
 
   # Customize any additional options below...
 

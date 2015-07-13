@@ -33,16 +33,29 @@ module MiqProvisionRedhat::StateMachine
 
   def customize_destination
     if destination_image_locked?
-      $log.info("MIQ(#{self.class.name}#customize_destination) Destination image locked; re-queuing")
+      _log.info("Destination image locked; re-queuing")
       requeue_phase
     else
       message = "Starting New #{destination_type} Customization"
-      $log.info("MIQ(#{self.class.name}#customize_destination) #{message} #{for_destination}")
+      _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       configure_container
       attach_floppy_payload
 
       signal :poll_destination_powered_off_in_provider
+    end
+  end
+
+  def poll_destination_powered_on_in_provider
+    update_and_notify_parent(:message => "Waiting for provider PowerOn of #{for_destination}")
+    raise MiqException::MiqProvisionError, "VM Failed to start" if phase_context[:power_on_wait_count].to_i > 120
+
+    if destination.with_provider_object(&:status)[:state] == "up"
+      signal :poll_destination_powered_off_in_provider
+    else
+      phase_context[:power_on_wait_count] ||= 0
+      phase_context[:power_on_wait_count]  += 1
+      requeue_phase
     end
   end
 

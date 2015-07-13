@@ -1,22 +1,22 @@
 module Metric::CiMixin::Capture::OpenstackBase
   def perf_collect_metrics_openstack(capture_data_method, interval_name, start_time = nil, end_time = nil)
     target = "[#{self.class.name}], [#{id}], [#{name}]"
-    log_header = "MIQ(#{self.class.name}.perf_collect_metrics_openstack) [#{interval_name}] for: #{target}"
+    log_header = "[#{interval_name}] for: #{target}"
 
     end_time   ||= Time.now
     end_time     = end_time.utc
     start_time ||= end_time - 4.hours # 4 hours for symmetry with VIM
     start_time   = start_time.utc
 
-    $log.debug "#{log_header} start_time: #{start_time}, end_time: #{end_time}"
+    _log.debug "#{log_header} start_time: #{start_time}, end_time: #{end_time}"
 
     begin
       @perf_ems = perf_init_openstack
       send(capture_data_method, start_time, end_time)
     rescue Exception => err
-      $log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
-      $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
-      $log.log_backtrace(err)
+      _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
+      _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
+      _log.log_backtrace(err)
       raise
     ensure
       perf_release_openstack
@@ -37,7 +37,7 @@ module Metric::CiMixin::Capture::OpenstackBase
   end
 
   def perf_capture_data_openstack_base(metric_capture_module, start_time, end_time, resource_filter, metadata_filter)
-    log_header = "MIQ(#{self.class.name}.perf_collect_data_openstack_base) [#{start_time} - #{end_time}]"
+    log_header = "#{_log.prefix} [#{start_time} - #{end_time}]"
     $log.debug "#{log_header} id:[#{name}] start_time: #{start_time}, end_time: #{end_time}"
 
     counters = find_meter_counters(metric_capture_module, resource_filter, metadata_filter, log_header)

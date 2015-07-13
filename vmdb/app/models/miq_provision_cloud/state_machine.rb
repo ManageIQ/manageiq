@@ -22,7 +22,7 @@ module MiqProvisionCloud::StateMachine
 
     status_message = "completed; post provision work queued" if clone_status
     message = "Clone of #{clone_direction} is #{status_message}"
-    $log.info("MIQ(#{self.class.name}#poll_clone_complete) #{message}")
+    _log.info("#{message}")
     update_and_notify_parent(:message => message)
 
     if clone_status
@@ -37,11 +37,11 @@ module MiqProvisionCloud::StateMachine
 
   def customize_destination
     message = "Customizing #{for_destination}"
-    $log.info("MIQ(#{self.class.name}#customize_destination) #{message} #{for_destination}")
+    _log.info("#{message} #{for_destination}")
     update_and_notify_parent(:message => message)
 
     if floating_ip
-      $log.info("MIQ(#{self.class.name}#customize_destination) Associating floating IP address [#{floating_ip.address}] to #{for_destination}")
+      _log.info("Associating floating IP address [#{floating_ip.address}] to #{for_destination}")
       associate_floating_ip(floating_ip.address)
     end
 

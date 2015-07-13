@@ -63,7 +63,7 @@ module Metric::LongTermAverages
       begin
         results[:dev][c]  = vals[c].deviation
       rescue => err
-        $log.warn("MIQ(#{self.name}.get_averages_over_time_period) Unable to calculate deviation, '#{err.message}', values: #{vals[c].inspect}")
+        _log.warn("Unable to calculate deviation, '#{err.message}', values: #{vals[c].inspect}")
         results[:dev][c] = 0
       end
     end

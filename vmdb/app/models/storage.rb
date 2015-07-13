@@ -101,11 +101,9 @@ class Storage < ActiveRecord::Base
   end
 
   def scan_starting(miq_task_id, host)
-    log_header = "MIQ(Storage.scan_starting)"
-
     miq_task = MiqTask.find_by_id(miq_task_id)
     if miq_task.nil?
-      $log.warn("#{log_header} MiqTask with ID: [#{miq_task_id}] cannot be found")
+      _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
     end
 
@@ -114,12 +112,11 @@ class Storage < ActiveRecord::Base
   end
 
   def scan_complete_callback(miq_task_id, status, message, result)
-    log_header = "MIQ(Storage.scan_complete_callback)"
-    $log.info "#{log_header} Storage ID: [#{self.id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]"
+    _log.info "Storage ID: [#{self.id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]"
 
     miq_task = MiqTask.find_by_id(miq_task_id)
     if miq_task.nil?
-      $log.warn("#{log_header} MiqTask with ID: [#{miq_task_id}] cannot be found")
+      _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
     end
 
@@ -158,9 +155,8 @@ class Storage < ActiveRecord::Base
   end
 
   def scan_queue_item(miq_task_id)
-    log_header = "MIQ(Storage.scan_queue_item)"
     MiqEvent.raise_evm_job_event(self, :type => "scan", :prefix => "request")
-    $log.info "#{log_header} Queueing SmartState Analysis for Storage ID: [#{self.id}], MiqTask ID: [#{miq_task_id}]"
+    _log.info "Queueing SmartState Analysis for Storage ID: [#{self.id}], MiqTask ID: [#{miq_task_id}]"
     cb = { :class_name => self.class.name, :instance_id => self.id, :method_name => :scan_complete_callback, :args => [miq_task_id] }
     MiqQueue.put(
       :class_name   => self.class.name,
@@ -175,8 +171,6 @@ class Storage < ActiveRecord::Base
   end
 
   def self.scan_queue(miq_task, queue_limit = 1)
-    log_header = "MIQ(Storage.scan_queue)"
-
     queued = 0
     unprocessed = scan_storages_unprocessed(miq_task)
     loop do
@@ -185,7 +179,7 @@ class Storage < ActiveRecord::Base
 
       storage = Storage.find_by_id(storage_id.to_i)
       if storage.nil?
-        $log.warn("#{log_header} Storage with ID: [#{storage_id}] cannot be found - removing from target list")
+        _log.warn("Storage with ID: [#{storage_id}] cannot be found - removing from target list")
         miq_task.context_data[:targets] = miq_task.context_data[:targets].reject { |sid| sid == storage_id }
         next
       end
@@ -196,7 +190,7 @@ class Storage < ActiveRecord::Base
         queued += 1
         break if queued >= queue_limit
       rescue => err
-        $log.warn("#{log_header} Storage name: [#{storage.name}], id: [#{storage.id}]: rejected for scan because <#{err.message}> - removing from target list")
+        _log.warn("Storage name: [#{storage.name}], id: [#{storage.id}]: rejected for scan because <#{err.message}> - removing from target list")
         miq_task.context_data[:targets] = miq_task.context_data[:targets].reject { |sid| sid == storage_id }
         next
       end
@@ -246,16 +240,14 @@ class Storage < ActiveRecord::Base
   end
 
   def self.scan_watchdog(miq_task_id)
-    log_header = "MIQ(Storage.scan_watchdog)"
-
     miq_task = MiqTask.find_by_id(miq_task_id)
     if miq_task.nil?
-      $log.warn("#{log_header} MiqTask with ID: [#{miq_task_id}] cannot be found")
+      _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
     end
 
     if scan_complete?(miq_task)
-      $log.info "#{log_header} #{scan_complete_message(miq_task)}"
+      _log.info "#{scan_complete_message(miq_task)}"
       return
     end
 
@@ -263,7 +255,7 @@ class Storage < ActiveRecord::Base
       locked_miq_task.context_data[:pending].each do |storage_id, qitem_id|
         qitem = MiqQueue.find_by_id(qitem_id)
         if qitem.nil?
-          $log.warn "#{log_header} Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue"
+          _log.warn "Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue"
           locked_miq_task.context_data[:pending].delete(storage_id)
           locked_miq_task.save!
           scan_queue(locked_miq_task)
@@ -297,30 +289,28 @@ class Storage < ActiveRecord::Base
   end
 
   def self.scan_eligible_storages(zone_name = nil)
-    log_header = "MIQ(Storage.scan_eligible_storages)"
     zone_caption = zone_name ? " for zone [#{zone_name}]" : ""
-    $log.info "#{log_header} Computing#{zone_caption} Started"
+    _log.info "Computing#{zone_caption} Started"
     storages = []
     where(:store_type => SUPPORTED_STORAGE_TYPES).each do |storage|
       unless storage.perf_capture_enabled?
-        $log.info "#{log_header} Skipping scan of Storage: [#{storage.name}], performance capture is not enabled"
+        _log.info "Skipping scan of Storage: [#{storage.name}], performance capture is not enabled"
         next
       end
 
       if zone_name && storage.ext_management_systems_in_zone(zone_name).empty?
-        $log.info "#{log_header} Skipping scan of Storage: [#{storage.name}], storage under EMS in a different zone from [#{zone_name}]"
+        _log.info "Skipping scan of Storage: [#{storage.name}], storage under EMS in a different zone from [#{zone_name}]"
         next
       end
 
       storages << storage
     end
 
-    $log.info "#{log_header} Computing#{zone_caption} Complete -- Storage IDs: #{storages.collect(&:id).sort.inspect}"
+    _log.info "Computing#{zone_caption} Complete -- Storage IDs: #{storages.collect(&:id).sort.inspect}"
     storages
   end
 
   def self.create_scan_task(task_name, userid, storages)
-    log_header = "MIQ(Storage.create_scan_task)"
     context_data = { :targets  => storages.collect(&:id).sort, :complete => [], :pending  => {} }
     miq_task     = MiqTask.create(
                       :name         => task_name,
@@ -332,7 +322,7 @@ class Storage < ActiveRecord::Base
                       :context_data => context_data
                     )
 
-    $log.info "#{log_header} Created MiqTask ID: [#{miq_task.id}], Name: [#{task_name}]"
+    _log.info "Created MiqTask ID: [#{miq_task.id}], Name: [#{task_name}]"
 
     max_qitems = max_qitems_per_scan_request
     max_qitems = storages.length unless max_qitems.kind_of?(Numeric) && (max_qitems > 0) # Queue them all (unlimited) unless greater than 0
@@ -342,11 +332,10 @@ class Storage < ActiveRecord::Base
   end
 
   def self.scan_timer(zone_name = nil)
-    log_header = "MIQ(Storage.scan_timer)"
     storages = scan_eligible_storages(zone_name)
 
     if storages.empty?
-      $log.info "#{log_header} No Eligible Storages"
+      _log.info "No Eligible Storages"
       return nil
     end
 
@@ -355,7 +344,6 @@ class Storage < ActiveRecord::Base
   end
 
   def scan(userid = "system", role = "ems_operations")
-    log_header = "MIQ(Storage.scan)"
     raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table => "storages")} type [#{self.store_type}], [#{self.name}] with id: [#{self.id}]") unless SUPPORTED_STORAGE_TYPES.include?(self.store_type)
 
     hosts = self.active_hosts_with_authentication_status_ok
@@ -520,7 +508,6 @@ class Storage < ActiveRecord::Base
 
   def smartstate_analysis(miq_task_id=nil)
     method_name = "smartstate_analysis"
-    log_header = "MIQ(Storage.#{method_name})"
 
     unless miq_task_id.nil?
       miq_task = MiqTask.find_by_id(miq_task_id)
@@ -530,7 +517,7 @@ class Storage < ActiveRecord::Base
     hosts = active_hosts_with_authentication_status_ok_in_zone(MiqServer.my_zone)
     if hosts.empty?
       message = "There are no active Hosts with valid credentials connected to Storage: [#{self.name}] in Zone: [#{MiqServer.my_zone}]."
-      $log.warn "#{log_header} #{message}"
+      _log.warn "#{message}"
       raise MiqException::MiqUnreachableStorage, message
     end
 
@@ -551,20 +538,20 @@ class Storage < ActiveRecord::Base
 
     st = Time.now
     message = "Storage [#{self.name}] via Host [#{host.name}]"
-    $log.info "#{log_header} #{message}...Starting"
+    _log.info "#{message}...Starting"
     scan_starting(miq_task_id, host)
     if host.respond_to?(:refresh_files_on_datastore)
       host.refresh_files_on_datastore(self)
     else
-      $log.warn "#{log_header} #{message}...Not Supported for #{host.class.name}"
+      _log.warn "#{message}...Not Supported for #{host.class.name}"
     end
     self.update_attribute(:last_scan_on, Time.now.utc)
-    $log.info "#{log_header} #{message}...Completed in [#{Time.now - st}] seconds"
+    _log.info "#{message}...Completed in [#{Time.now - st}] seconds"
 
     begin
       MiqEvent.raise_evm_job_event(self, :type => "scan", :suffix => "complete")
     rescue => err
-      $log.warn("#{log_header} Error raising complete scan event for #{self.class.name} name: [#{self.name}], id: [#{self.id}]: #{err.message}")
+      _log.warn("Error raising complete scan event for #{self.class.name} name: [#{self.name}], id: [#{self.id}]: #{err.message}")
     end
 
     return nil
@@ -713,10 +700,10 @@ class Storage < ActiveRecord::Base
   def perf_capture(interval_name)
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
 
-    log_header = "MIQ(#{self.class.name}.perf_capture) [#{interval_name}]"
+    log_header = "[#{interval_name}]"
     log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
 
-    $log.info "#{log_header} Capture for #{log_target}..."
+    _log.info "#{log_header} Capture for #{log_target}..."
 
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
@@ -838,7 +825,7 @@ class Storage < ActiveRecord::Base
       self.perf_rollup_to_parent(interval_name, hour)
     end
 
-    $log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
+    _log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
   end
 
   def vm_scan_affinity

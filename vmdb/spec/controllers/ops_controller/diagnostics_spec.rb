@@ -3,6 +3,8 @@ include UiConstants
 
 shared_examples "logs_collect" do |type|
   let(:klass) { type.classify.constantize }
+  let(:zone) { active_record_instance_double("Zone", :name => "foo") }
+  let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready, :id => 1, :my_zone => zone) }
   before do
     sb_hash = {
       :trees            => {:diagnostics_tree => {:active_node => active_node}},
@@ -11,6 +13,7 @@ shared_examples "logs_collect" do |type|
       :active_tab       => "diagnostics_roles_servers"
     }
     controller.instance_variable_set(:@sb, sb_hash)
+    MiqServer.stub(:my_server).with(true).and_return(server)
   end
 
   it "not running" do

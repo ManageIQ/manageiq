@@ -63,8 +63,7 @@ module Metric::Purging
   end
 
   def self.purge(older_than, interval, window = nil, limit = nil)
-    log_header = "MIQ(#{self.name}.purge)"
-    $log.info("#{log_header} Purging #{limit.nil? ? "all" : limit} #{interval} metrics older than [#{older_than}]...")
+    _log.info("Purging #{limit.nil? ? "all" : limit} #{interval} metrics older than [#{older_than}]...")
 
     klass, conditions = case interval
     when 'realtime'; [Metric,       {}]
@@ -91,7 +90,7 @@ module Metric::Purging
         ids = batch.collect(&:id)
         ids = ids[0, limit - total] if limit && total + ids.length > limit
 
-        $log.info("#{log_header} Purging #{ids.length} #{interval} metrics.")
+        _log.info("Purging #{ids.length} #{interval} metrics.")
         count, _ = Benchmark.realtime_block(:purge_metrics) do
           klass.delete_all(:id => ids)
         end
@@ -101,7 +100,7 @@ module Metric::Purging
           # Since VimPerformanceTagValues are 6 * number of tags per performance
           # record, we need to batch in smaller trips.
           count_tag_values = 0
-          $log.info("#{log_header} Purging associated tag values.")
+          _log.info("Purging associated tag values.")
           ids.each_slice(50) do |vp_ids|
             tv_count, _ = Benchmark.realtime_block(:purge_vim_performance_tag_values) do
               VimPerformanceTagValue.delete_all(:metric_id => vp_ids, :metric_type => klass.name)
@@ -109,7 +108,7 @@ module Metric::Purging
             count_tag_values += tv_count
             total_tag_values += tv_count
           end
-          $log.info("#{log_header} Purged #{count_tag_values} associated tag values.")
+          _log.info("Purged #{count_tag_values} associated tag values.")
         end
 
         yield(count, total) if block_given?
@@ -118,6 +117,6 @@ module Metric::Purging
       end
     end
 
-    $log.info("#{log_header} Purging #{limit.nil? ? "all" : limit} #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records and #{total_tag_values} associated tag values - Timings: #{timings.inspect}")
+    _log.info("Purging #{limit.nil? ? "all" : limit} #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records and #{total_tag_values} associated tag values - Timings: #{timings.inspect}")
   end
 end

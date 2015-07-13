@@ -17,15 +17,15 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:intervals, ems.id)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.intervals) EMS: [#{ems.hostname}]"
+    log_header = "EMS: [#{ems.hostname}]"
     begin
       results = vim_hist.intervals
     rescue Handsoap::Fault, StandardError => err
-      $log.error("#{log_header} The following error occurred: [#{err}]")
+      _log.error("#{log_header} The following error occurred: [#{err}]")
       raise
     end
 
-    $log.debug("#{log_header} Available sampling intervals: [#{results.length}]")
+    _log.debug("#{log_header} Available sampling intervals: [#{results.length}]")
     return phr.store_path(:intervals, ems.id, results)
   end
 
@@ -34,21 +34,21 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:realtime_interval, ems.id, mor)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.realtime_interval) EMS: [#{ems.hostname}]"
+    log_header = "EMS: [#{ems.hostname}]"
 
     begin
       summary = vim_hist.queryProviderSummary(mor)
     rescue Handsoap::Fault, StandardError => err
-      $log.error("#{log_header} The following error occurred: [#{err}]")
+      _log.error("#{log_header} The following error occurred: [#{err}]")
       raise
     end
 
     if summary.kind_of?(Hash) && summary['currentSupported'].to_s == "true"
       interval = summary['refreshRate'].to_s
-      $log.debug("#{log_header} Found realtime interval: [#{interval}] for mor: [#{mor}]")
+      _log.debug("#{log_header} Found realtime interval: [#{interval}] for mor: [#{mor}]")
     else
       interval = nil
-      $log.debug("#{log_header} Realtime is not supported for mor: [#{mor}], summary: [#{summary.inspect}]")
+      _log.debug("#{log_header} Realtime is not supported for mor: [#{mor}], summary: [#{summary.inspect}]")
     end
 
     return phr.store_path(:realtime_interval, ems.id, mor, interval)
@@ -59,7 +59,7 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:hourly_interval, ems.id)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.hourly_interval) EMS: [#{ems.hostname}]"
+    log_header = "EMS: [#{ems.hostname}]"
 
     # Using the reporting value of 'hourly', get the vim interval 'Past Month'
     #   and look for that in the intervals data
@@ -69,10 +69,10 @@ module Metric::Capture::Vim
 
     interval = intervals.detect { |i| i['name'].to_s.downcase == vim_interval.downcase }
     if interval.nil?
-      $log.debug("#{log_header} Unable to find hourly interval [#{vim_interval}] in intervals: #{intervals.collect { |i| i['name'] }.inspect}")
+      _log.debug("#{log_header} Unable to find hourly interval [#{vim_interval}] in intervals: #{intervals.collect { |i| i['name'] }.inspect}")
     else
       interval = interval['samplingPeriod'].to_s
-      $log.debug("#{log_header} Found hourly interval: [#{interval}] for vim interval: [#{vim_interval}]")
+      _log.debug("#{log_header} Found hourly interval: [#{interval}] for vim interval: [#{vim_interval}]")
     end
 
     return phr.store_path(:hourly_interval, ems.id, interval)
@@ -83,15 +83,16 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:counter_info_by_id, ems.id)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.counter_info_by_id) EMS: [#{ems.hostname}]"
+    log_header = "EMS: [#{ems.hostname}]"
     begin
       counter_info = vim_hist.id2Counter
     rescue Handsoap::Fault, StandardError => err
-      $log.error("#{log_header} The following error occurred: [#{err}]")
+      _log.error("#{log_header} The following error occurred: [#{err}]")
       raise
     end
 
-    #TODO: Move this to some generic parsing class, such as EmsRefresh::Parsers::Vc
+    #TODO: Move this to some generic parsing class, such as
+    #ManageIQ::Providers::Vmware::InfraManager::RefreshParser
     results = counter_info.each_with_object({}) do |(id, c), h|
       group    = c.fetch_path('groupInfo', 'key').to_s.downcase
       name     = c.fetch_path('nameInfo', 'key').to_s.downcase
@@ -120,11 +121,11 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:avail_metrics_for_entity, ems.id, mor, interval)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.avail_metrics_for_entity) EMS: [#{ems.hostname}]"
+    log_header = "EMS: [#{ems.hostname}]"
     begin
       avail_metrics = vim_hist.availMetricsForEntity(mor, :intervalId => interval)
     rescue Handsoap::Fault, StandardError => err
-      $log.error("#{log_header} The following error occurred: [#{err}]")
+      _log.error("#{log_header} The following error occurred: [#{err}]")
       raise
     end
 
@@ -161,8 +162,6 @@ module Metric::Capture::Vim
   #
 
   def self.preprocess_data(data, counter_values_by_mor_and_ts = {})
-    log_header = "MIQ(#{self.name}.preprocess_data)"
-
     # First process the results into a format we can consume
     processed_res = self.perf_raw_data_to_hashes(data)
     return unless processed_res.kind_of?(Array)
@@ -170,7 +169,7 @@ module Metric::Capture::Vim
     # Next process each of the those results
     processed_res.each do |res|
       full_vim_key = "#{res[:counter_id]}_#{res[:instance]}"
-      $log.debug("#{log_header} Processing [#{res[:results].length / 2}] results for MOR: [#{res[:mor]}], instance: [#{res[:instance]}], capture interval [#{res[:interval]}], counter vim key: [#{res[:counter_id]}]")
+      _log.debug("Processing [#{res[:results].length / 2}] results for MOR: [#{res[:mor]}], instance: [#{res[:instance]}], capture interval [#{res[:interval]}], counter vim key: [#{res[:counter_id]}]")
 
       hashes = self.perf_vim_data_to_hashes(res[:results])
       next if hashes.nil?
@@ -190,7 +189,7 @@ module Metric::Capture::Vim
       elsif t.kind_of?(String) # Handsoap (VimString)
         t = t.to_s
       else
-        $log.warn("MIQ(#{self.name}.perf_vim_data_to_hashes) Discarding unexpected time value in results: ts: [#{t.class.name}] [#{t}], value: #{v}")
+        _log.warn("Discarding unexpected time value in results: ts: [#{t.class.name}] [#{t}], value: #{v}")
         next
       end
       ret << {:timestamp => t, :counter_value => v}

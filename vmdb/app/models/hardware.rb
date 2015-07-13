@@ -46,7 +46,7 @@ class Hardware < ActiveRecord::Base
     "generatedaddress" => "address", "disk_type" => "disk_type"}
 
   def self.add_elements(parent, xmlNode)
-    $log.info("MIQ(hardware-add_elements) Adding Hardware XML elements for VM[id]=[#{parent.id}] from XML doc [#{xmlNode.root.name}]")
+    _log.info("Adding Hardware XML elements for VM[id]=[#{parent.id}] from XML doc [#{xmlNode.root.name}]")
     parent.hardware = Hardware.new if parent.hardware == nil
     # Record guest_devices so we can delete any removed items.
     deletes = {:gd => [], :disk => []}
@@ -65,7 +65,7 @@ class Hardware < ActiveRecord::Base
       begin
         parent.hardware.send("m_#{e.name}", parent, e, deletes) if parent.hardware.respond_to?("m_#{e.name}")
       rescue => err
-        $log.warn "MIQ(hardware-add_elements) #{err}"
+        _log.warn "#{err}"
       end
     }
 

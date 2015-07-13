@@ -1,4 +1,4 @@
-%iframe.import-hidden-iframe(name="upload_target")
+%iframe.import-hidden-iframe{:name => "upload_target"}
 
 .import-flash-message
   .alert
@@ -46,11 +46,11 @@
     %h3
       = _('Import Widgets')
 
-    %label(for='toggle-all')
+    %label{:for => 'toggle-all'}
       = _('All')
     %input#toggle-all(type='checkbox')
 
-    #import-grid
+    #import-grid{:style => "width: #{@winW - 50}px; height: #{center_div_height + 5}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
 
     = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
 

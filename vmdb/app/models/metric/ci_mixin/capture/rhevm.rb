@@ -29,7 +29,7 @@ module Metric::CiMixin::Capture::Rhevm
   def perf_collect_metrics_rhevm(interval_name, start_time = nil, end_time = nil)
     objects = self.to_miq_a
     target = "[#{self.class.name}], [#{self.id}], [#{self.name}]"
-    log_header = "MIQ(#{self.class.name}.perf_collect_metrics) [#{interval_name}] for: #{target}"
+    log_header = "[#{interval_name}] for: #{target}"
 
     start_time ||= 1.week.ago
 
@@ -43,9 +43,9 @@ module Metric::CiMixin::Capture::Rhevm
       end
       return *counters
     rescue Exception => err
-      $log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
-      $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
-      $log.log_backtrace(err)
+      _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
+      _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
+      _log.log_backtrace(err)
       raise
     ensure
       self.perf_release_rhevm

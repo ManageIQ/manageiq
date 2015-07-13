@@ -44,7 +44,6 @@ describe DashboardController do
       UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
       validation = controller.send(:validate_user, user)
       session[:group].should eq(group.id)
-      session[:role].should eq(role.id)
       expect(validation.flash_msg).to be_nil
       expect(validation.url).to eq('some_url')
     end

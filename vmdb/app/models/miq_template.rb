@@ -8,11 +8,21 @@ class MiqTemplate < VmOrTemplate
   end
 
   def self.model_suffix
-    self == MiqTemplate ? "" : self.name[8..-1]
+    if parent == Object
+      self == MiqTemplate ? "" : self.name[8..-1]
+    elsif parent.parent == ManageIQ::Providers
+      parent.name.demodulize.sub(/Manager$/, '')
+    else
+      parent.parent.name.demodulize
+    end
   end
 
   def self.corresponding_model
-    @corresponding_model ||= "Vm#{self.model_suffix}".constantize
+    if parent == Object
+      @corresponding_model ||= "Vm#{self.model_suffix}".constantize
+    else
+      parent::Vm
+    end
   end
   class << self; alias corresponding_vm_model corresponding_model; end
 

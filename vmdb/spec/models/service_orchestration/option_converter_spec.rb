@@ -17,7 +17,7 @@ describe ServiceOrchestration::OptionConverter do
   let(:klass) { ServiceOrchestration::OptionConverter }  # alias to save typing
 
   it '#stack_create_options' do
-    converter = klass.get_converter(dialog_options, 'EmsAmazon')
+    converter = klass.get_converter(dialog_options, ManageIQ::Providers::Amazon::CloudManager)
     converter.stack_create_options.should have_attributes(
       :timeout          => 100,
       :disable_rollback => false,
@@ -27,7 +27,7 @@ describe ServiceOrchestration::OptionConverter do
 
   it 'parses other dialog options correctly' do
     klass.get_stack_name(dialog_options).should == 'test_stack_name'
-    klass.get_manager(dialog_options).should be_kind_of(EmsAmazon)
+    klass.get_manager(dialog_options).should be_kind_of(ManageIQ::Providers::Amazon::CloudManager)
     klass.get_template(dialog_options).should be_kind_of(OrchestrationTemplate)
   end
 end

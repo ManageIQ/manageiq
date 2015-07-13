@@ -4,34 +4,6 @@ class SplitAndRenameVimPerformancesToMetricsOnSqlserver < ActiveRecord::Migratio
   extend MigrationHelper
 
   def self.up
-    self.send("up_for_#{connection.adapter_name.downcase}")
-  end
-
-  def self.down
-    self.send("down_for_#{connection.adapter_name.downcase}")
-  end
-
-  def self.up_for_sqlserver
-    create_performances_table :metrics
-    copy_data :vim_performances, :metrics, :conditions => {:capture_interval_name => "realtime"}
-    add_performances_indexes :metrics
-
-    create_performances_table :metric_rollups
-    copy_data :vim_performances, :metric_rollups, :conditions => ["capture_interval_name != ?", "realtime"]
-    add_performances_indexes :metric_rollups
-
-    drop_table :vim_performances
-  end
-
-  def self.down_for_sqlserver
-    create_performances_table :vim_performances
-    add_performances_indexes :vim_performances, :timestamp
-
-    drop_table :metrics
-    drop_table :metric_rollups
-  end
-
-  def self.up_for_postgresql
     drop_inheritance_trigger :vim_performances
     drop_trigger :metrics,        :metrics_inheritance
     drop_trigger :metric_rollups, :metric_rollups_inheritance
@@ -51,7 +23,7 @@ class SplitAndRenameVimPerformancesToMetricsOnSqlserver < ActiveRecord::Migratio
     connection.set_pk_sequence! :metric_rollups, max_id.to_i + 1 unless max_id.nil?
   end
 
-  def self.down_for_postgresql
+  def self.down
     create_performances_table :vim_performances
 
     drop_inheritance_trigger :metrics

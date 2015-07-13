@@ -3,10 +3,11 @@ require "spec_helper"
 describe ApplicationController  do
   describe "#get_tagdata" do
     let(:record) { active_record_instance_double("Host") }
+    let(:user) { FactoryGirl.create(:user, :userid => "testuser") }
 
     before do
-      session[:userid] = "testuser"
-      record.stub(:tagged_with).with(:cat => "testuser").and_return("my tags")
+      login_as user
+      record.stub(:tagged_with).with(:cat => user.userid).and_return("my tags")
       Classification.stub(:find_assigned_entries).with(record).and_return(classifications)
     end
 

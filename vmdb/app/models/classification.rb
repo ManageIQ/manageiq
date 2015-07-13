@@ -110,7 +110,6 @@ class Classification < ActiveRecord::Base
     #   :add_ids    => Array of entry ids to be assigned to targets
     #   :delete_ids => Array of entry ids to be unassigned from targets
     # }
-    log_prefix = "MIQ(Classification.bulk_reassignment)"
 
     model = options[:model].constantize
     targets = model.where(:id => options[:object_ids]).includes(:taggings, :tags)
@@ -126,25 +125,25 @@ class Classification < ActiveRecord::Base
 
     targets.each do |t|
       deletes.each do |d|
-        $log.info("#{log_prefix} Removing entry name: [#{d.name}] from #{options[:model]} name: #{t.name}")
+        _log.info("Removing entry name: [#{d.name}] from #{options[:model]} name: #{t.name}")
 
         begin
           d.remove_entry_from(t)
         rescue => err
-          $log.error("#{log_prefix} Error occurred while removing entry name: [#{d.name}] from #{options[:model]} name: #{t.name}")
-          $log.error("#{log_prefix} #{err.class} - #{err}")
+          _log.error("Error occurred while removing entry name: [#{d.name}] from #{options[:model]} name: #{t.name}")
+          _log.error("#{err.class} - #{err}")
           failed_deletes[t] << d
         end
       end
 
       adds.each do |a|
-        $log.info("#{log_prefix} Adding entry name: [#{a.name}] to #{options[:model]} name: #{t.name}")
+        _log.info("Adding entry name: [#{a.name}] to #{options[:model]} name: #{t.name}")
 
         begin
           a.assign_entry_to(t)
         rescue => err
-          $log.error("#{log_prefix} Error occurred while adding entry name: [#{a.name}] to #{options[:model]} name: #{t.name}")
-          $log.error("#{log_prefix} #{err.class} - #{err}")
+          _log.error("Error occurred while adding entry name: [#{a.name}] to #{options[:model]} name: #{t.name}")
+          _log.error("#{err.class} - #{err}")
           failed_adds[t] << a
         end
       end
@@ -340,11 +339,11 @@ class Classification < ActiveRecord::Base
     rescue MiqException::PolicyPreventAction => err
       if mode == "request"
         # if it's the "before_..." event we can still prevent it from proceeding. Otherwise it's too late.
-        $log.info("MIQ(Classification#enforce_policy) Event: [#{event}], #{err.message}")
+        _log.info("Event: [#{event}], #{err.message}")
         raise
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       raise
     end
   end
@@ -385,11 +384,11 @@ class Classification < ActiveRecord::Base
     if classification["parent_id"] == 0 # category
       cat = self.find_by_name(classification["name"])
       if cat
-        $log.info("Skipping Classification (already in DB): Category: name=[#{classification["name"]}]")
+        _log.info("Skipping Classification (already in DB): Category: name=[#{classification["name"]}]")
         return stats
       end
 
-      $log.info("Importing Classification: Category: name=[#{classification["name"]}]")
+      _log.info("Importing Classification: Category: name=[#{classification["name"]}]")
 
       entries = classification.delete("entries")
       cat = self.create(classification)
@@ -403,11 +402,11 @@ class Classification < ActiveRecord::Base
     else
       entry = parent.find_entry_by_name(classification["name"])
       if entry
-        $log.info("Skipping Classification (already in DB): Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
+        _log.info("Skipping Classification (already in DB): Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
         return stats
       end
 
-      $log.info("Importing Classification: Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
+      _log.info("Importing Classification: Category: name: [#{parent.name}], Entry: name=[#{classification["name"]}]")
       entry = self.create(classification.merge("parent_id" => parent.id))
       stats["entries"] += 1
 
@@ -433,7 +432,7 @@ class Classification < ActiveRecord::Base
         cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
         next if cat
 
-        $log.info("MIQ(Classification.seed) Creating #{c[:name]}")
+        _log.info("Creating #{c[:name]}")
         add_entries_from_hash(create(c.except(:entries)), c[:entries])
       end
     end

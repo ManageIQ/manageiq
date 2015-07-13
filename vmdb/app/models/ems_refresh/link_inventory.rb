@@ -1,18 +1,18 @@
 module EmsRefresh::LinkInventory
   # Link EMS inventory through the relationships table
   def link_ems_inventory(ems, target, prev_relats, new_relats)
-    log_header = "MIQ(#{self.name}.link_ems_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
-    $log.info "#{log_header} Linking EMS Inventory..."
-    $log.debug "#{log_header} prev_relats: #{prev_relats.inspect}"
-    $log.debug "#{log_header} new_relats:  #{new_relats.inspect}"
+    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
+    _log.info "#{log_header} Linking EMS Inventory..."
+    _log.debug "#{log_header} prev_relats: #{prev_relats.inspect}"
+    _log.debug "#{log_header} new_relats:  #{new_relats.inspect}"
 
     if prev_relats == new_relats
-      $log.info "#{log_header} Linking EMS Inventory...Complete"
+      _log.info "#{log_header} Linking EMS Inventory...Complete"
       return
     end
 
     # Hook up a relationship from the EMS to the root folder
-    $log.info "#{log_header} Updating EMS root folder relationship."
+    _log.info "#{log_header} Updating EMS root folder relationship."
     root_id = new_relats[:ext_management_systems_to_folders][ems.id][0]
     if root_id.nil?
       ems.remove_all_children
@@ -98,7 +98,7 @@ module EmsRefresh::LinkInventory
         Proc.new { |v| rp.add_vm(VmOrTemplate.find_by_id(v)) } ]   # Connect proc
     end
 
-    $log.info "#{log_header} Linking EMS Inventory...Complete"
+    _log.info "#{log_header} Linking EMS Inventory...Complete"
   end
 
   # Link HABTM relationships for the object, via the accessor, for the records
@@ -119,8 +119,7 @@ module EmsRefresh::LinkInventory
   #
 
   def update_relats(type, prev_relats, new_relats)
-    log_header = "MIQ(#{self.name}.update_relats)"
-    $log.info "#{log_header} Updating #{type.to_s.titleize} relationships."
+    _log.info "Updating #{type.to_s.titleize} relationships."
 
     if new_relats[type].kind_of?(Array) || prev_relats[type].kind_of?(Array)
       # Case where we have a single set of ids
@@ -136,8 +135,6 @@ module EmsRefresh::LinkInventory
   end
 
   def update_relats_by_ids(prev_ids, new_ids, disconnect_proc, connect_proc)
-    log_header = "MIQ(#{self.name}.update_relats_by_ids)"
-
     common = prev_ids & new_ids unless prev_ids.nil? || new_ids.nil?
     unless common.nil?
       prev_ids -= common
@@ -149,8 +146,8 @@ module EmsRefresh::LinkInventory
         begin
           disconnect_proc.call(p)
         rescue => err
-          $log.error "#{log_header} An error occurred while disconnecting id [#{p}]: #{err}"
-          $log.log_backtrace(err)
+          _log.error "An error occurred while disconnecting id [#{p}]: #{err}"
+          _log.log_backtrace(err)
         end
       end
     end
@@ -160,8 +157,8 @@ module EmsRefresh::LinkInventory
         begin
           connect_proc.call(n)
         rescue => err
-          $log.error "#{log_header} An error occurred while connecting id [#{n}]: #{err}"
-          $log.log_backtrace(err)
+          _log.error "An error occurred while connecting id [#{n}]: #{err}"
+          _log.log_backtrace(err)
         end
       end
     end

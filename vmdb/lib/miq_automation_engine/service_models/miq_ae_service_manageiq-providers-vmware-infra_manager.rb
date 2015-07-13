@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Vmware_InfraManager < MiqAeServiceManageIQ_Providers_InfraManager
+  end
+end

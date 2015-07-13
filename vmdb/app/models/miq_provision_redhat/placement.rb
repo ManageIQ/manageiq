@@ -2,7 +2,6 @@ module MiqProvisionRedhat::Placement
   protected
 
   def placement
-    log_header = "MIQ(#{self.class.name}.placement)"
     desired = get_option(:placement_auto) ? automatic_placement : manual_placement
 
     raise MiqException::MiqProvisionError, "Unable to find a suitable cluster" if desired[:cluster].nil?
@@ -10,7 +9,7 @@ module MiqProvisionRedhat::Placement
     [:cluster, :host, :storage].each do |key|
       object = desired[key]
       next if object.nil?
-      $log.info("#{log_header} Using #{key.to_s.titleize} Id: [#{object.id}], Name: [#{object.name}]")
+      _log.info("Using #{key.to_s.titleize} Id: [#{object.id}], Name: [#{object.name}]")
       options["dest_#{key}".to_sym] = [object.id, object.name]
     end
   end

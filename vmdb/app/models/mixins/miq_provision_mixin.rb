@@ -20,7 +20,7 @@ module MiqProvisionMixin
     "SecurityGroup"         => [:security_groups,         :security_groups],
     "FloatingIp"            => [:floating_ip_addresses,   :floating_ip_address],
     "Flavor"                => [:instance_types,          :instance_type],
-    "AuthKeyPairCloud"      => [:guest_access_key_pairs,  :guest_access_key_pair]
+    "ManageIQ::Providers::CloudManager::AuthKeyPair"      => [:guest_access_key_pairs,  :guest_access_key_pair]
   }.freeze
 
   def tag_ids
@@ -32,8 +32,7 @@ module MiqProvisionMixin
   end
 
   def register_automate_callback(callback_name, automate_uri)
-    log_header = "MIQ(#{self.class.name}.register_automate_callback)"
-    $log.info("#{log_header} Registering callback: [#{callback_name}] with Automate entry point: [#{automate_uri}]")
+    _log.info("Registering callback: [#{callback_name}] with Automate entry point: [#{automate_uri}]")
     self.options[:callbacks] ||= {}
     self.options[:callbacks][callback_name.to_sym] = automate_uri
     self.update_attribute(:options, self.options)
@@ -44,18 +43,17 @@ module MiqProvisionMixin
   end
 
   def call_automate_event(event_name, continue_on_error = true)
-    log_header = "MIQ(#{self.class.name}.call_automate_event)"
     begin
-      $log.info("#{log_header} Raising event [#{event_name}] to Automate")
+      _log.info("Raising event [#{event_name}] to Automate")
       ws = MiqAeEvent.raise_evm_event(event_name, self)
-      $log.info("#{log_header} Raised  event [#{event_name}] to Automate")
+      _log.info("Raised  event [#{event_name}] to Automate")
       return ws
     rescue MiqAeException::Error => err
       message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
       if continue_on_error
-        $log.warn("#{log_header} [#{message}] encountered during provisioning - continuing")
+        _log.warn("[#{message}] encountered during provisioning - continuing")
       else
-        $log.error("#{log_header} [#{message}] encountered during provisioning")
+        _log.error("[#{message}] encountered during provisioning")
       end
       return nil
     end
@@ -84,7 +82,6 @@ module MiqProvisionMixin
   end
 
   def eligible_resources(rsc_type)
-    log_header = "MIQ(#{self.class.name}.eligible_resources)"
     prov_options = options.dup
     prov_options[:placement_auto] = [false, 0]
     prov_wf = workflow(prov_options, :skip_dialog_load => true)
@@ -97,7 +94,7 @@ module MiqProvisionMixin
     result = result.collect {|rsc| eligible_resource_lookup(klass, rsc)}
 
     data = result.collect { |rsc| "#{rsc.id}:#{resource_display_name(rsc)}" }
-    $log.info("#{log_header} returning <#{rsc_type}>:<#{data.join(', ')}>")
+    _log.info("returning <#{rsc_type}>:<#{data.join(', ')}>")
     result
   end
 
@@ -113,7 +110,6 @@ module MiqProvisionMixin
   private :eligible_resource_lookup
 
   def set_resource(rsc, options={})
-    log_header = "MIQ(#{self.class.name}.set_resource)"
     return if rsc.nil?
 
     rsc_class = resource_class(rsc)
@@ -125,7 +121,7 @@ module MiqProvisionMixin
     raise "Resource <#{rsc_class}> <#{rsc.id}:#{rsc_name}> is not an eligible resource for this provisioning instance." if result == false
 
     value = construct_value(key, rsc_class, rsc.id, rsc_name)
-    $log.info("#{log_header} option <#{key}> being set to <#{value.inspect}>")
+    _log.info("option <#{key}> being set to <#{value.inspect}>")
     self.options[key] = value
 
     post_customization_templates(rsc.id) if rsc_type == :customization_templates
@@ -152,7 +148,7 @@ module MiqProvisionMixin
       end
       self.update_attribute(:options, self.options.merge({:placement_folder_name => result})) unless result.nil?
     rescue => err
-      $log.error "MIQ(MiqProvision.set_folder) #{err}\n#{err.backtrace.join("\n")}"
+      _log.error "#{err}\n#{err.backtrace.join("\n")}"
     end
     return result
   end
@@ -193,10 +189,8 @@ module MiqProvisionMixin
   end
 
   def set_customization_spec(custom_spec_name, override=false)
-    log_header = "MIQ(#{self.class.name}.set_customization_spec)"
-
-    if !self.source.ext_management_system.kind_of?(EmsVmware)
-      $log.info "#{log_header} Specifying a Customization spec is not valid for provision type #{self.class.name}.  Spec name: <#{custom_spec_name.inspect}>"
+    if !self.source.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+      _log.info "Specifying a Customization spec is not valid for provision type #{self.class.name}.  Spec name: <#{custom_spec_name.inspect}>"
       return false
     end
 
@@ -224,7 +218,7 @@ module MiqProvisionMixin
       self.options.keys.each do |key|
         v_old = self.options[key]
         v_new = options[key]
-        $log.info "#{log_header} option <#{key}> was changed from <#{v_old.inspect}> to <#{v_new.inspect}>" unless v_old == v_new
+        _log.info "option <#{key}> was changed from <#{v_old.inspect}> to <#{v_new.inspect}>" unless v_old == v_new
       end
 
       self.update_attribute(:options, options)
@@ -321,7 +315,7 @@ module MiqProvisionMixin
   end
 
   def resource_class(rsc)
-    return "AuthKeyPairCloud" if rsc.kind_of?(MiqAeMethodService::MiqAeServiceAuthKeyPairCloud)
+    return "ManageIQ::Providers::CloudManager::AuthKeyPair" if rsc.kind_of?(MiqAeMethodService::MiqAeServiceManageIQ_Providers_CloudManager_AuthKeyPair)
     $1 if rsc.class.base_class.name =~ /::MiqAeService(.*)/
   end
 end

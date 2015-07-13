@@ -31,7 +31,7 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
   end
 
   def self.eligible_manager_types
-    [EmsAmazon, EmsOpenstack]
+    [ManageIQ::Providers::Amazon::CloudManager, EmsOpenstack]
   end
 
   # return the parsing error message if not valid JSON; otherwise nil

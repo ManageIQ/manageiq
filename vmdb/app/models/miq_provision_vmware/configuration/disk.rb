@@ -1,12 +1,11 @@
 module MiqProvisionVmware::Configuration::Disk
   def build_config_disk_spec(vmcs)
-    log_header = "MIQ(#{self.class.name}.build_config_disk_spec)"
     new_disks = get_new_disks
     return if new_disks.blank?
-    $log.info "#{log_header} New disk info: <#{new_disks.inspect}>"
+    _log.info "New disk info: <#{new_disks.inspect}>"
 
     source_controllers = get_scsi_controller_info
-    $log.info "#{log_header} Source SCSI controller info: <#{source_controllers.inspect}>"
+    _log.info "Source SCSI controller info: <#{source_controllers.inspect}>"
 
     new_disks.each do |disk|
       bus_pos = disk[:bus]
@@ -35,9 +34,8 @@ module MiqProvisionVmware::Configuration::Disk
   end
 
   def add_scsi_controller(vmcs, busNumber, new_dev_key)
-    log_header = "MIQ(#{self.class.name}.add_scsi_controller)"
     controller_settings = options[:ctrl_scsi].to_miq_a.detect { |c| c[:busnumber] == busNumber.to_i } || {}
-    $log.info "#{log_header} Adding SCSI controller on bus <#{busNumber}>  Settings: <#{controller_settings.inspect}>"
+    _log.info "Adding SCSI controller on bus <#{busNumber}>  Settings: <#{controller_settings.inspect}>"
     device_type = get_config_spec_value(controller_settings, 'VirtualLsiLogicController', nil, [:devicetype])
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Add) do |vdcs|
       vdcs.device = VimHash.new(device_type) do |vDev|

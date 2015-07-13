@@ -1,5 +1,5 @@
-$:.push(File.expand_path(File.join(Rails.root, %w{.. lib Verbs})))
-$:.push(File.expand_path(File.join(Rails.root, %w{.. lib VixDiskLib})))
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Verbs")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VixDiskLib")
 require 'yaml'
 
 module MiqServer::ServerSmartProxy
@@ -14,7 +14,7 @@ module MiqServer::ServerSmartProxy
 
     def use_broker_for_embedded_proxy?(type=nil)
       cores_settings = MiqServer.my_server.get_config("vmdb").config[:coresident_miqproxy].dup
-      result = EmsVmware.use_vim_broker? && cores_settings[:use_vim_broker]
+      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && cores_settings[:use_vim_broker]
 
       # Check for a specific type (host/ems) if passed
       unless type.blank?
@@ -70,8 +70,6 @@ module MiqServer::ServerSmartProxy
   end
 
   def call_ws(ost)
-    log_prefix = "MIQ(MiqServer.call_ws)"
-
     case ost.method_name
     when "ScanMetadata", "SyncMetadata"
       worker_setting = MiqSmartProxyWorker.worker_settings
@@ -88,33 +86,31 @@ module MiqServer::ServerSmartProxy
       end
       MiqQueue.put(:class_name => self.class.name, :instance_id => id, :method_name => "scan_sync_vm", :args => ost, :server_guid => guid, :role => "smartproxy", :queue_name => "smartproxy", :msg_timeout => worker_setting[:queue_timeout] * timeout_adj)
     else
-      $log.error "#{log_prefix} Unsupported method [#{ost.method_name}]"
+      _log.error "Unsupported method [#{ost.method_name}]"
     end
   end
 
   # TODO: XXX break this into 2 methods?
   def scan_sync_vm(ost)
-    log_prefix = "MIQ(MiqServer.scan_sync_vm)"
-
     if %w{ScanMetadata SyncMetadata}.include?(ost.method_name)
       v = VmOrTemplate.find(ost.vm_id)
 
-      if v.vendor == "OpenStack" || v.vendor == "Amazon"
+      if v.respond_to?(:perform_metadata_scan)
         job = Job.find_by_guid(ost.taskid)
         begin
-          $log.debug "MiqServer::ServerSmartProxy.scan_sync_vm: OpenStack (#{v.class.name})"
+          _log.debug "OpenStack (#{v.class.name})"
           case ost.method_name
           when "ScanMetadata"
-            $log.debug "MiqServer::ServerSmartProxy.scan_sync_vm: OpenStack ScanMetadata"
+            _log.debug "OpenStack ScanMetadata"
             v.perform_metadata_scan(ost)
           when "SyncMetadata"
-            $log.debug "MiqServer::ServerSmartProxy.scan_sync_vm: OpenStack SyncMetadata"
+            _log.debug "OpenStack SyncMetadata"
             v.perform_metadata_sync(ost)
           end
 
           return
         rescue Exception => err
-          $log.error "MiqServer::ServerSmartProxy.scan_sync_vm: #{err}"
+          _log.error "#{err}"
           $log.debug err.backtrace.join("\n")
           job.signal(:abort_retry, err.to_s, "error", true)
           return
@@ -138,7 +134,7 @@ module MiqServer::ServerSmartProxy
       end
 
       startTime = Time.now
-      $log.info "#{log_prefix} Running Command: [#{args.flatten.join(" ")[0..255].tr("\n"," ")}]"
+      _log.info "Running Command: [#{args.flatten.join(" ")[0..255].tr("\n"," ")}]"
 
       $miqHostCfg ||= OpenStruct.new()
       data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
@@ -161,14 +157,14 @@ module MiqServer::ServerSmartProxy
       ret = miqp.miqRet
 
       if ret.error
-        $log.error "#{log_prefix} Command [#{args[0]}] failed after [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
+        _log.error "Command [#{args[0]}] failed after [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
         print_backtrace(ret.error)
         if ost.taskid
           job = Job.find_by_guid(ost.taskid)
           job.signal(:abort_retry, ret.error.strip.split("\n")[0], "error", true)
         end
       else
-        $log.info "#{log_prefix} Command [#{args[0]}] completed successfully in [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
+        _log.info "Command [#{args[0]}] completed successfully in [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
       end
     end
   end

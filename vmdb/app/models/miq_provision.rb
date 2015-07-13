@@ -31,7 +31,7 @@ class MiqProvision < MiqProvisionTask
 
   CLONE_SYNCHRONOUS     = false
   CLONE_TIME_LIMIT      = 4.hours
-  SUPPORTED_EMS_CLASSES = %w(EmsVmware EmsRedhat EmsAmazon EmsOpenstack EmsMicrosoft)
+  SUPPORTED_EMS_CLASSES = %w(ManageIQ::Providers::Vmware::InfraManager EmsRedhat ManageIQ::Providers::Amazon::CloudManager EmsOpenstack EmsMicrosoft)
 
   def self.base_model
     MiqProvision
@@ -66,9 +66,7 @@ class MiqProvision < MiqProvisionTask
   end
 
   def after_ae_delivery(ae_result)
-    log_header = "MIQ(#{self.class.name}.after_ae_delivery)"
-
-    $log.info("#{log_header} ae_result=#{ae_result.inspect}")
+    _log.info("ae_result=#{ae_result.inspect}")
 
     return if ae_result == 'retry'
     return if miq_request.state == 'finished'

@@ -28,13 +28,13 @@ class FlavorController < ApplicationController
 
     when "ems_cloud"
       drop_breadcrumb(:name => @flavor.name + " (#{ui_lookup(:table => "ems_cloud")}(s))", :url => "/flavor/show/#{@flavor.id}?display=ems_cloud")
-      @view, @pages = get_view(EmsCloud, :parent => @flavor)  # Get the records (into a view) and the paginator
+      @view, @pages = get_view(ManageIQ::Providers::CloudManager, :parent => @flavor)  # Get the records (into a view) and the paginator
       @showtype = "ems_cloud"
 
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
       drop_breadcrumb(:name => @flavor.name + " (All #{title})", :url => "/flavor/show/#{@flavor.id}?display=#{@display}")
-      @view, @pages = get_view(VmCloud, :parent => @flavor) # Get the records (into a view) and the paginator
+      @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @flavor) # Get the records (into a view) and the paginator
       @showtype   = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
          @view.extras[:total_count] > @view.extras[:auth_count]

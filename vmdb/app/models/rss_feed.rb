@@ -125,11 +125,11 @@ class RssFeed < ActiveRecord::Base
     rec = self.find_by_name(rss[:name])
     if rec
       if rec.yml_file_mtime && rec.yml_file_mtime < rss[:yml_file_mtime]
-        $log.info("MIQ(RssFeed.sync_from_yml_file) [#{rec.name}] file has been updated on disk, synchronizing with model")
+        _log.info("[#{rec.name}] file has been updated on disk, synchronizing with model")
         rec.update_attributes(rss)
       end
     else
-      $log.info("MIQ(RssFeed.sync_from_yml_file) [#{rss[:name]}] file has been added to disk, adding to model")
+      _log.info("[#{rss[:name]}] file has been added to disk, adding to model")
       rec = self.create!(rss)
     end
 
@@ -151,7 +151,7 @@ class RssFeed < ActiveRecord::Base
       f.destroy unless File.exist?(RssFeed.yml_file_name(f.name))
     end
   rescue => err
-    $log.log_backtrace(err)
+    _log.log_backtrace(err)
   end
 
   def self.seed

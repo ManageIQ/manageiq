@@ -8,9 +8,9 @@ module Metric::CiMixin::Capture
 
   def perf_collect_metrics(*args)
     case self
-    when HostVmware, VmVmware then perf_collect_metrics_vim(*args)
+    when ManageIQ::Providers::Vmware::InfraManager::Host, ManageIQ::Providers::Vmware::InfraManager::Vm then perf_collect_metrics_vim(*args)
     when HostRedhat, VmRedhat then perf_collect_metrics_rhevm(*args)
-    when VmAmazon             then perf_collect_metrics_amazon(*args)
+    when ManageIQ::Providers::Amazon::CloudManager::Vm             then perf_collect_metrics_amazon(*args)
     when VmOpenstack          then perf_collect_metrics_openstack('perf_capture_data_openstack', *args)
     when HostOpenstackInfra   then perf_collect_metrics_openstack('perf_capture_data_openstack_infra', *args)
     else raise "Unsupported type #{self.class.name} (id: #{self.id})"
@@ -44,11 +44,10 @@ module Metric::CiMixin::Capture
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
 
-    log_header = "MIQ(#{self.class.name}.perf_capture_queue)"
     log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
 
     if interval_name != 'historical' && start_time.nil? && !force && !self.perf_capture_now?
-      $log.debug "#{log_header} Skipping capture of #{log_target} - Performance last captured on [#{self.last_perf_capture_on}] is within threshold"
+      _log.debug "Skipping capture of #{log_target} - Performance last captured on [#{self.last_perf_capture_on}] is within threshold"
       return
     end
 
@@ -103,7 +102,7 @@ module Metric::CiMixin::Capture
           end
           qi
         else
-          $log.debug "#{log_header} Skipping capture of #{log_target} - Performance capture for interval #{qi[:args].inspect} is still running"
+          _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{qi[:args].inspect} is still running"
           #NOTE: do not update the message queue
           nil
         end
@@ -118,7 +117,7 @@ module Metric::CiMixin::Capture
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
 
-    log_header = "MIQ(#{self.class.name}.perf_capture) [#{interval_name}]"
+    log_header = "[#{interval_name}]"
     log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
     log_target << ", start_time: [#{start_time}]" unless start_time.nil?
     log_target << ", end_time: [#{end_time}]" unless end_time.nil?
@@ -155,7 +154,7 @@ module Metric::CiMixin::Capture
       expected_start_range = expected_start_range.iso8601
     end
 
-    $log.info "#{log_header} Capture for #{log_target}..."
+    _log.info "#{log_header} Capture for #{log_target}..."
 
     start_range = end_range = counters = counter_values = nil
     dummy, t = Benchmark.realtime_block(:total_time) do
@@ -171,13 +170,13 @@ module Metric::CiMixin::Capture
       end_range   = ts.last
     end
 
-    $log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
+    _log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
 
     if start_range.nil?
-      $log.info "#{log_header} Skipping processing for #{log_target} as no metrics were captured."
+      _log.info "#{log_header} Skipping processing for #{log_target} as no metrics were captured."
     else
       if expected_start_range && start_range > expected_start_range
-        $log.warn "#{log_header} For #{log_target}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
+        _log.warn "#{log_header} For #{log_target}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
 
         # Raise ems_performance_gap_detected alert event to enable notification.
         MiqEvent.raise_evm_alert_event_queue(self.ext_management_system, "ems_performance_gap_detected",
@@ -194,7 +193,6 @@ module Metric::CiMixin::Capture
   end
 
   def perf_capture_callback(task_ids, status, message, result)
-    log_header = "MIQ(#{self.class.name}.perf_capture_callback)"
     tasks = MiqTask.where(:id => task_ids)
     tasks.each do |t|
       t.lock do |task|
@@ -208,14 +206,14 @@ module Metric::CiMixin::Capture
 
           pclass, pid = task.context_data[:parent].split(":")
           parent = pclass.constantize.find(pid)
-          msg = "#{log_header} Queueing [#{task.context_data[:interval]}] rollup to #{parent.class.name} id: [#{parent.id}] for time range: [#{task.context_data[:start]} - #{task.context_data[:end]}]"
-          $log.info "#{msg}..."
+          msg = "Queueing [#{task.context_data[:interval]}] rollup to #{parent.class.name} id: [#{parent.id}] for time range: [#{task.context_data[:start]} - #{task.context_data[:end]}]"
+          _log.info "#{msg}..."
           parent.perf_rollup_range_queue(task.context_data[:start], task.context_data[:end], task.context_data[:interval])
-          $log.info "#{msg}...Complete"
+          _log.info "#{msg}...Complete"
         else
           task.state, task.status, task.message = [MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, task.message = "Performance collection active, #{task.context_data[:complete].length} out of #{task.context_data[:targets].length} collections completed"]
         end
-        $log.info("#{log_header} Updating task id: [#{task.id}] #{task.message}")
+        _log.info("Updating task id: [#{task.id}] #{task.message}")
         task.save!
       end
     end
@@ -227,10 +225,9 @@ module Metric::CiMixin::Capture
 
   def perf_capture_realtime_now
     # For UI to enable refresh of realtime charts on demand
-    log_header = "MIQ(#{self.class.name}.perf_capture_realtime_now)"
     log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
 
-    $log.info "#{log_header} Realtime capture requested for #{log_target}"
+    _log.info "Realtime capture requested for #{log_target}"
 
     self.perf_capture_queue('realtime', :force => true, :priority => MiqQueue::HIGH_PRIORITY)
   end

@@ -13,8 +13,6 @@ module MiqServer::WorkerManagement::Monitor
   include_concern 'Validation'
 
   def monitor_workers
-    log_prefix = "MIQ(MiqServer.monitor_workers)"
-
     resync_needed, sync_message = sync_needed?
 
     # Sync the workers after sync'ing the child worker settings
@@ -38,7 +36,7 @@ module MiqServer::WorkerManagement::Monitor
 
   def worker_not_responding(w)
     msg = "#{w.format_full_log_msg} being killed because it is not responding"
-    $log.warn("#{self.log_prefix} #{msg}")
+    _log.warn(msg)
     MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_killed", :event_details => msg, :type => w.class.name)
     w.kill
     MiqVimBrokerWorker.cleanup_for_pid(w.pid)
@@ -64,7 +62,7 @@ module MiqServer::WorkerManagement::Monitor
       next unless class_name.nil? || (w.type == class_name)
       next unless w.is_stopped?
       next if worker_get_monitor_status(w.pid) == :pending_restart
-      $log.info("#{self.log_prefix} SQL Record for #{w.format_full_log_msg}, Status: [#{w.status}] is being deleted")
+      _log.info("SQL Record for #{w.format_full_log_msg}, Status: [#{w.status}] is being deleted")
       processed_workers << w
       worker_delete(w.pid)
       w.destroy
@@ -110,7 +108,7 @@ module MiqServer::WorkerManagement::Monitor
 
       w = workers.last
       msg = "#{w.format_full_log_msg} is being stopped because system resources exceeded threshold, it will be restarted once memory has freed up"
-      $log.warn("#{self.log_prefix} #{msg}")
+      _log.warn(msg)
       MiqEvent.raise_evm_event_queue_in_region(w.miq_server, "evm_server_memory_exceeded", :event_details => msg, :type => w.class.name)
       self.restart_worker(w, :memory_exceeded)
       break

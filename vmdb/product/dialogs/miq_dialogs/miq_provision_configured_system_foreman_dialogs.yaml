@@ -112,7 +112,7 @@
     :purpose:
       :description: Purpose
       :fields:
-        :vm_tags:
+        :tag_ids:
           :required_method: :validate_tags
           :description: Tags
           :required: false

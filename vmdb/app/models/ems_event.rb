@@ -36,7 +36,7 @@ class EmsEvent < ActiveRecord::Base
     begin
       EmsEventHelper.new(self).handle
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 
@@ -85,7 +85,7 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.add_vc(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::Vc.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Vmware::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_rhevm(ems_id, event)
@@ -144,10 +144,10 @@ class EmsEvent < ActiveRecord::Base
   def self.events_filtered?(event_hash, filter)
     return false if filter.nil?
 
-    log_prefix = "MIQ(EmsEvent.events_filtered?) Skipping caught event [#{event_hash[:event_type]}] chainId [#{event_hash[:chain_id]}]"
+    log_prefix = "Skipping caught event [#{event_hash[:event_type]}] chainId [#{event_hash[:chain_id]}]"
     FILTER_KEYS.each do |filter_key, event_key, object_description|
       if event_filtered?(event_hash, event_key, filter, filter_key)
-        $log.info "#{log_prefix} for #{object_description} [#{event_hash[event_key]}]"
+        _log.info "#{log_prefix} for #{object_description} [#{event_hash[event_key]}]"
         return true
       end
     end
@@ -390,8 +390,7 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.purge(older_than, window = nil, limit = nil)
-    log_header = "MIQ(#{self.name}.purge)"
-    $log.info("#{log_header} Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...")
+    _log.info("Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...")
 
     window ||= purge_window_size
 
@@ -402,12 +401,12 @@ class EmsEvent < ActiveRecord::Base
     until (ids = where(:timestamp => oldest..older_than).limit(window).ids).empty?
       ids = ids[0, limit - total] if limit && total + ids.length > limit
 
-      $log.info("#{log_header} Purging #{ids.length} events.")
+      _log.info("Purging #{ids.length} events.")
       total += self.delete_all(:id => ids)
 
       break if limit && total >= limit
     end
 
-    $log.info("#{log_header} Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...Complete - Deleted #{total} records")
+    _log.info("Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...Complete - Deleted #{total} records")
   end
 end

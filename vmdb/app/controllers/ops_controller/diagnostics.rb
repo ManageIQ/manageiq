@@ -842,7 +842,7 @@ module OpsController::Diagnostics
       end
       cu_repair_set_form_vars if @sb[:active_tab] == "diagnostics_cu_repair"
       diagnostics_server_list if @sb[:active_tab] == "diagnostics_server_list"
-      @right_cell_text = @sb[:my_zone] == @selected_server.name ?
+      @right_cell_text = my_zone_name == @selected_server.name ?
         _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>@selected_server.description, :model=>ui_lookup(:model=>@selected_server.class.to_s)} :
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>@selected_server.description, :model=>ui_lookup(:model=>@selected_server.class.to_s)}
     elsif x_node == "root"
@@ -870,7 +870,7 @@ module OpsController::Diagnostics
       @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
     elsif active_node && active_node.split('-').first == "svr"
       @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
-      if @sb[:selected_server_id] == @sb[:my_server_id]
+      if @sb[:selected_server_id] == my_server_id
         if @sb[:active_tab] == "diagnostics_evm_log"
           @log = $log.contents(120,1000)
           add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
@@ -903,7 +903,7 @@ module OpsController::Diagnostics
           @sb[:selected_server_id] = @selected_server.id
           @sb[:selected_typ] = "miq_server"
         end
-      elsif @sb[:selected_server_id] == @sb[:my_server_id]  || @selected_server.started?
+      elsif @sb[:selected_server_id] == my_server_id  || @selected_server.started?
         if @sb[:active_tab] == "diagnostics_workers"
           pm_get_workers
           @record = @selected_server
@@ -928,7 +928,7 @@ module OpsController::Diagnostics
           @sb[:selected_typ] = "miq_server"
         end
       end
-      @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
+      @right_cell_text = my_server_id == @sb[:selected_server_id] ?
         _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)} :
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)}
     end

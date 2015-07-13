@@ -25,7 +25,7 @@ module MiqProvision::StateMachine
       phase_context.delete(:new_vm_ems_ref)
       signal :customize_destination
     else
-      $log.info("MIQ(#{self.class.name}#poll_destination_in_vmdb) Unable to find #{destination_type} [#{dest_name}] with ems_ref [#{phase_context[:new_vm_ems_ref]}], will retry")
+      _log.info("Unable to find #{destination_type} [#{dest_name}] with ems_ref [#{phase_context[:new_vm_ems_ref]}], will retry")
       requeue_phase
     end
   end
@@ -36,7 +36,7 @@ module MiqProvision::StateMachine
     if destination.power_state == 'off'
       signal :post_provision
     else
-      $log.info("MIQ(#{self.class.name}#poll_destination_powered_off_in_vmdb) #{destination_type} [#{dest_name}] is not yet powered off, will retry")
+      _log.info("#{destination_type} [#{dest_name}] is not yet powered off, will retry")
       EmsRefresh.queue_refresh(destination)
       requeue_phase
     end
@@ -49,7 +49,7 @@ module MiqProvision::StateMachine
   def autostart_destination
     if get_option(:vm_auto_start)
       message = "Starting"
-      $log.info("MIQ(#{self.class.name}#autostart_destination) #{message} #{for_destination}")
+      _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       destination.start
     end
@@ -58,9 +58,7 @@ module MiqProvision::StateMachine
   end
 
   def post_create_destination
-    log_header = "MIQ(#{self.class.name}#post_create_destination)"
-
-    $log.info "#{log_header} Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}"
+    _log.info "Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}"
 
     set_description(destination, get_option(:vm_description))
     set_ownership(destination, get_owner)
@@ -86,7 +84,7 @@ module MiqProvision::StateMachine
       inputs = {:vm => destination, :host => destination.host}
       MiqEvent.raise_evm_event(destination, 'vm_provisioned', inputs)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     if MiqProvision::AUTOMATE_DRIVES
@@ -102,7 +100,7 @@ module MiqProvision::StateMachine
     if status != 'Error'
       number_of_vms = get_option(:number_of_vms).to_i
       pass = get_option(:pass)
-      $log.info("MIQ(#{self.class.name}#finish) Executing provision request: [#{description}], Pass: #{pass} of #{number_of_vms}... Complete")
+      _log.info("Executing provision request: [#{description}], Pass: #{pass} of #{number_of_vms}... Complete")
     end
   end
 

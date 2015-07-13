@@ -9,7 +9,7 @@
       %tbody
         - @osinfo.each do |item|
           %tr
-            %th
+            %td.label
               = h(item[:osinfo])
             %td
               %img{:src => "/images/icons/new/os-#{h(@record.os_image_name.downcase)}.png"}
@@ -45,7 +45,7 @@
       %tbody
         - @vmminfo.each do |item|
           %tr
-            %th
+            %td.label
               = h(item[:vmminfo])
             %td
               = h(item[:description])
@@ -58,7 +58,7 @@
       %tbody
         - @devices.each do |item|
           %tr
-            %th
+            %td.label
               = h(item[:device])
             %td
               %img{:src => "/images/icons/new/hardware-#{item[:icon].downcase}.png"}

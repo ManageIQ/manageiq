@@ -1,4 +1,4 @@
-class VmOpenstack < VmCloud
+class VmOpenstack < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
   include_concern 'RemoteConsole'
 
@@ -26,9 +26,7 @@ class VmOpenstack < VmCloud
   def perform_metadata_scan(ost)
     require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance'
 
-    log_pref = "MIQ(#{self.class.name}##{__method__})"
-
-    $log.debug "#{log_pref} instance_id = #{ems_ref}"
+    _log.debug "instance_id = #{ems_ref}"
     ost.scanTime = Time.now.utc unless ost.scanTime
 
     ems = ext_management_system
@@ -47,11 +45,9 @@ class VmOpenstack < VmCloud
   end
 
   def remove_evm_snapshot(snapshot_ci_id)
-    log_pref = "MIQ(#{self.class.name}##{__method__})"
-
     # need vm_ci and os_id of snapshot
     unless (snapshot_ci = ::Snapshot.where(:id => snapshot_ci_id).first)
-      $log.warn "#{log_pref}: snapshot with id #{snapshot_ci_id}, not found"
+      _log.warn "snapshot with id #{snapshot_ci_id}, not found"
       return
     end
 

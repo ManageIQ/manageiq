@@ -1,5 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../../../../lib/ServiceNowWebService")
-$:.push("#{File.dirname(__FILE__)}/../../../../lib/RcuWebService")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "ServiceNowWebService")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "RcuWebService")
 
 #####################################################
 # This is for $evm.execute from an Automate method
@@ -96,7 +96,6 @@ module MiqAeMethodService
     end
 
     def self.service_now_eccq_insert(server, username, password, agent, queue, topic, name, source, *params)
-      log_header = "MIQAE(MiqAeServiceMethods.service_now_eccq_insert)"
       begin
         require 'SnEccqClientBase'
         service_now_drb_undumped
@@ -104,18 +103,18 @@ module MiqAeMethodService
         payload = params.empty? ? {} : Hash[*params]
         password = MiqAePassword.decrypt_if_password(password)
 
-        $log.info("#{log_header} Connecting to host=<#{server}> with username=<#{username}>")
+        _log.info("Connecting to host=<#{server}> with username=<#{username}>")
         sn = SnEccqClientBase.new(server, username, password)
-        $log.info("#{log_header} Inserting agent=<#{agent}>, queue=<#{queue}>, topic=<#{topic}>, name=<#{name}>, source=<#{source}>, payload=<#{payload.inspect}>")
+        _log.info("Inserting agent=<#{agent}>, queue=<#{queue}>, topic=<#{topic}>, name=<#{name}>, source=<#{source}>, payload=<#{payload.inspect}>")
         rv = sn.insert(agent, queue, topic, name, source, payload)
-        $log.info("#{log_header} Return Value=<#{sn.dumpObj(rv)}>")
+        _log.info("Return Value=<#{sn.dumpObj(rv)}>")
         return rv
       rescue Handsoap::Fault => hserr
-        $log.error "#{log_header} Handsoap::Fault { :code => '#{hserr.code}', :reason => '#{hserr.reason}', :details => '#{hserr.details.inspect}' }"
+        _log.error "Handsoap::Fault { :code => '#{hserr.code}', :reason => '#{hserr.reason}', :details => '#{hserr.details.inspect}' }"
         $log.error hserr.backtrace.join("\n")
         raise
       rescue => err
-        $log.error "#{log_header} #{err}"
+        _log.error "#{err}"
         $log.error err.backtrace.join("\n")
         raise
       end
@@ -140,14 +139,12 @@ module MiqAeMethodService
     private
 
     def self.service_now_drb_undumped
-      log_header = "MIQAE(MiqAeServiceMethods.service_now_drb_undumped)"
-      $log.info "#{log_header} Entered"
+      _log.info "Entered"
       [SnsHash, SnsArray].each { |klass| drb_undumped(klass) }
     end
 
     def self.drb_undumped(klass)
-      log_header = "MIQAE(MiqAeServiceMethods.drb_undumped)"
-      $log.info "#{log_header} Entered: klass=#{klass.name}"
+      _log.info "Entered: klass=#{klass.name}"
       klass.send(:include, DRbUndumped) unless klass.ancestors.include?(DRbUndumped)
     end
 
@@ -164,7 +161,7 @@ module MiqAeMethodService
     end
 
     def self.service_now_task_service(service, server, username, password, *params)
-      log_prefix = "MIQAE(MiqAeServiceMethods.service_now_task_#{service.underscore})"
+      log_prefix = "[#{service.underscore}]"
       begin
         require 'SnSctaskClientBase'
         service_now_drb_undumped
@@ -172,18 +169,18 @@ module MiqAeMethodService
         payload = params.empty? ? {} : Hash[*params]
         password = MiqAePassword.decrypt_if_password(password)
 
-        $log.info("#{log_prefix} Connecting to host=<#{server}> with username=<#{username}>")
+        _log.info("#{log_prefix} Connecting to host=<#{server}> with username=<#{username}>")
         sn = SnSctaskClientBase.new(server, username, password)
-        $log.info("#{log_prefix} Updating with params=<#{payload.inspect}>")
+        _log.info("#{log_prefix} Updating with params=<#{payload.inspect}>")
         rv = sn.send(service, payload)
-        $log.info("#{log_prefix} Return Value=<#{sn.dumpObj(rv)}>")
+        _log.info("#{log_prefix} Return Value=<#{sn.dumpObj(rv)}>")
         return rv
       rescue Handsoap::Fault => hserr
-        $log.error "#{log_prefix} Handsoap::Fault { :code => '#{hserr.code}', :reason => '#{hserr.reason}', :details => '#{hserr.details.inspect}' }"
+        _log.error "#{log_prefix} Handsoap::Fault { :code => '#{hserr.code}', :reason => '#{hserr.reason}', :details => '#{hserr.details.inspect}' }"
         $log.error hserr.backtrace.join("\n")
         raise
       rescue => err
-        $log.error "#{log_prefix} #{err}"
+        _log.error "#{log_prefix} #{err}"
         $log.error err.backtrace.join("\n")
         raise
       end

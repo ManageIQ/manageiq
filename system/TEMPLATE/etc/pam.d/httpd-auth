@@ -1,2 +1,0 @@
-auth    required pam_sss.so
-account required pam_sss.so

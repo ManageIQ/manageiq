@@ -1,5 +1,4 @@
-
-$:.push(File.expand_path(File.join(Rails.root, %w{.. lib Scvmm})))
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
 
 class EmsMicrosoft < EmsInfra
   include_concern "Powershell"

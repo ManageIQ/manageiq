@@ -5,7 +5,7 @@ describe MiqVimBrokerWorker do
     guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
     other_ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
-    EmsVmware.any_instance.stub(:authentication_status_ok? => true)
+    ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_status_ok? => true)
   end
 
   it ".emses_to_monitor" do

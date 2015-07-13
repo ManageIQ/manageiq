@@ -6,10 +6,6 @@ describe VmCloudController do
     set_user_privileges
     FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
-    expect(MiqServer.my_guid).to be
-    expect(MiqServer.my_server).to be
-
-    session[:userid] = User.current_user.userid
   end
 
   context "#tree_select" do

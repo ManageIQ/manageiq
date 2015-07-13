@@ -1,8 +1,7 @@
 module Vmdb
   module Initializer
     def self.init
-      log_prefix = "Vmdb::Initializer.init"
-      $log.info "#{log_prefix} - Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}"
+      _log.info "- Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}"
 
       if MiqEnvironment::Process.is_web_server_worker?
         require 'haml-rails'
@@ -25,7 +24,7 @@ module Vmdb
       #
       ####################################################
       if MiqEnvironment::Process.is_ui_worker_via_command_line?
-        Vmdb::Logging.apply_config
+        Vmdb::Loggers.apply_config
         EvmDatabase.seed_primordial
         MiqServer.my_server.starting_server_record
         MiqServer.my_server.update_attributes(:status => "started")

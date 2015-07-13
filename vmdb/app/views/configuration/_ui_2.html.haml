@@ -168,6 +168,17 @@
                   %td.key= _('Repositories')
                   %td
                     %ul#toolbars= render_view_buttons(:repository, @edit[:new][:views][:repository])
+              - if role_allows(:feature => "providers_accord")
+                %tr
+                  %td.key= _('Configuration Management Providers')
+                  %td
+                    %ul#toolbars= render_view_buttons(:cm_providers, @edit[:new][:views][:cm_providers])
+              - if role_allows(:feature => "configured_systems_filter_accord")
+                %tr
+                  %td.key= _('Configuration Management Configured Systems')
+                  %td
+                    %ul#toolbars= render_view_buttons(:cm_configured_systems,
+                                                      @edit[:new][:views][:cm_configured_systems])
         - if get_vmdb_config[:product][:storage]
           %fieldset
             %h3= _('Storage')

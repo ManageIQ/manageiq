@@ -12,7 +12,7 @@ module VmdbTable::Seeding
     end
 
     mine.each do |name, i|
-      $log.info("MIQ(VmdbTable#seed_indexes) Index <#{name}> for Table <#{self.name}> is no longer in Database <#{self.vmdb_database.name}> - deleting")
+      _log.info("Index <#{name}> for Table <#{self.name}> is no longer in Database <#{self.vmdb_database.name}> - deleting")
       i.destroy
     end
   end

@@ -52,6 +52,7 @@ end
 def generic_dialog_value(dialog_key, dialog_value, options_hash)
   return false unless /^dialog_(?<option_key>.*)/i =~ dialog_key
   add_hash_value(0, option_key.to_sym, dialog_value, options_hash)
+  add_hash_value(0, dialog_key.to_sym, dialog_value, options_hash)
   true
 end
 

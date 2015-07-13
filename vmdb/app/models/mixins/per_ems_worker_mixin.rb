@@ -35,10 +35,10 @@ module PerEmsWorkerMixin
       result  = { :adds => [], :deletes => [] }
 
       if current != desired
-        $log.info("MIQ(#{self.name}.sync_workers) Workers are being synchronized: Current: #{current.inspect}, Desired: #{desired.inspect}")
+        _log.info("Workers are being synchronized: Current: #{current.inspect}, Desired: #{desired.inspect}")
 
         dups = current.uniq.find_all { |u| current.find_all {|c| c == u }.length > 1 }
-        $log.info("MIQ(#{self.name}.sync_workers) Duplicate workers found: Current: #{current.inspect}, Desired: #{desired.inspect}, Dups: #{dups.inspect}") unless dups.empty?
+        _log.info("Duplicate workers found: Current: #{current.inspect}, Desired: #{desired.inspect}, Dups: #{dups.inspect}") unless dups.empty?
         current = current - dups
 
         dups.each { |d| result[:deletes] << self.stop_worker_for_ems(d) }

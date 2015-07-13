@@ -21,7 +21,7 @@ module MiqAeObjectSpec
     it "#to_xml" do
       args = {'nil_arg' => nil, 'float_arg' => 5.98,
               'int_arg' => 10,  'string_arg' => 'Stringy',
-              'svc_vm'  => MiqAeMethodService::MiqAeServiceVmVmware.find(@vm.id)}
+              'svc_vm'  => MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.find(@vm.id)}
 
       @miq_obj.process_args_as_attributes(args)
       validate_xml(@miq_obj.to_xml, args)
@@ -45,6 +45,7 @@ module MiqAeObjectSpec
     end
 
     def type_match(original_class, xml_class_name)
+      xml_class_name = xml_class_name.gsub(/-/, '::')
       /MiqAeMethodService::(?<cls>.*)/ =~ original_class.name
       cls &&= "MiqAeMethodService::#{xml_class_name}"
       cls ||= xml_class_name

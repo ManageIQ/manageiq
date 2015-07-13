@@ -60,7 +60,7 @@ describe MiqHostProvision do
         host.update_authentication(:ipmi    => { :userid => ipmi_userid,    :password => ipmi_password    })
         host.update_authentication(:default => { :userid => default_userid, :password => default_password })
 
-        mhp.host.should be_kind_of(HostVmwareEsx)
+        mhp.host.should be_kind_of(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
         mhp.stub(:get_option).with(:root_password).and_return(dialog_password)
         mhp.should_receive(:signal).with(:reset_host_credentials)
         mhp.reset_host_in_vmdb

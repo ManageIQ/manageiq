@@ -8,18 +8,20 @@
       - if @edit
         - # Don't show basic info box with description only unless in edit mode
         %h3=_("Basic Information")
-        %table.style1
-          %tr
-            %td.key=_("Description")
-            - if @edit
-              %td.wider
+        .form-horizontal
+          .form-group
+            %label.control-label.col-sm-2
+              = _("Description")
+            .col-sm-10
+              - if @edit
                 = text_field_tag("description", @edit[:new][:description],
                   :maxlength         => MAX_DESC_LEN,
-                  "data-miq_observe" => observe_with_interval)
-              = javascript_tag(javascript_focus('description'))
-            - else
-              %td
-                = h(@condition.description)
+                  "data-miq_observe" => observe_with_interval,
+                  :class             => "form-control")
+                = javascript_tag(javascript_focus('description'))
+              - else
+                %p.form-control-static
+                  = h(@condition.description)
         %hr
 
       - if @edit

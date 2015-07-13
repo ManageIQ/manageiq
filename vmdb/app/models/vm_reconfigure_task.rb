@@ -38,10 +38,8 @@ class VmReconfigureTask < MiqRequestTask
   end
 
   def do_request
-    log_header = "MIQ(#{self.class.name}.do_request)"
-
     config = self.build_config_spec
-    self.dumpObj(config, "#{log_header} Config spec: ", $log, :info)
+    self.dumpObj(config, "#{_log.prefix} Config spec: ", $log, :info)
     self.vm.spec_reconfigure(config)
 
     if AUTOMATE_DRIVES
@@ -61,7 +59,6 @@ class VmReconfigureTask < MiqRequestTask
 
   # Set the value if it is not nil
   def set_spec_option(obj, property, key, default_value=nil, modifier=nil, override_value=nil)
-    log_header = "MiqProvision.set_spec_option"
     if key.nil?
       value = get_option(nil, override_value)
     else
@@ -72,14 +69,14 @@ class VmReconfigureTask < MiqRequestTask
       # Modifier is a method like :to_s or :to_i
       value = value.to_s if [true,false].include?(value)
       value = value.send(modifier) unless modifier.nil?
-      $log.info "#{log_header} #{property} was set to #{value} (#{value.class})"
+      _log.info "#{property} was set to #{value} (#{value.class})"
       obj.send("#{property}=", value)
     else
       value = obj.send("#{property}")
       if value.nil?
-        $log.info "#{log_header} #{property} was NOT set due to nil"
+        _log.info "#{property} was NOT set due to nil"
       else
-        $log.info "#{log_header} #{property} inheriting value from spec: #{value} (#{value.class})"
+        _log.info "#{property} inheriting value from spec: #{value} (#{value.class})"
       end
     end
   end

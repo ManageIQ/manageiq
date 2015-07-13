@@ -3,13 +3,13 @@ require "spec_helper"
 describe Vm do
   it "#corresponding_model" do
     Vm.corresponding_model.should == MiqTemplate
-    VmVmware.corresponding_model.should == TemplateVmware
+    ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_model.should == ManageIQ::Providers::Vmware::InfraManager::Template
     VmRedhat.corresponding_model.should == TemplateRedhat
   end
 
   it "#corresponding_template_model" do
     Vm.corresponding_template_model.should == MiqTemplate
-    VmVmware.corresponding_template_model.should == TemplateVmware
+    ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_template_model.should == ManageIQ::Providers::Vmware::InfraManager::Template
     VmRedhat.corresponding_template_model.should == TemplateRedhat
   end
 
@@ -18,20 +18,20 @@ describe Vm do
 
     it "false" do
       @vm.update_attribute(:template, false)
-      @vm.type.should     == "VmVmware"
+      @vm.type.should     == "ManageIQ::Providers::Vmware::InfraManager::Vm"
       @vm.template.should == false
       @vm.state.should    == "on"
       lambda { @vm.reload }.should_not raise_error
-      lambda { TemplateVmware.find(@vm.id) }.should raise_error ActiveRecord::RecordNotFound
+      lambda { ManageIQ::Providers::Vmware::InfraManager::Template.find(@vm.id) }.should raise_error ActiveRecord::RecordNotFound
     end
 
     it "true" do
       @vm.update_attribute(:template, true)
-      @vm.type.should     == "TemplateVmware"
+      @vm.type.should     == "ManageIQ::Providers::Vmware::InfraManager::Template"
       @vm.template.should == true
       @vm.state.should    == "never"
       lambda { @vm.reload }.should raise_error ActiveRecord::RecordNotFound
-      lambda { TemplateVmware.find(@vm.id) }.should_not raise_error
+      lambda { ManageIQ::Providers::Vmware::InfraManager::Template.find(@vm.id) }.should_not raise_error
     end
   end
 
@@ -163,7 +163,7 @@ describe Vm do
     end
 
     it "queue message with powerops_callback calls MiqTask#queue_callback when Broker is Available" do
-      VmVmware.any_instance.stub(:run_command_via_parent).and_return(true)
+      ManageIQ::Providers::Vmware::InfraManager::Vm.any_instance.stub(:run_command_via_parent).and_return(true)
       status, message, result = @msg.deliver
       status.should == MiqQueue::STATUS_OK
       MiqTask.any_instance.should_receive(:queue_callback).with("Finished", status, message, result)
@@ -171,7 +171,7 @@ describe Vm do
     end
 
     it "queue message with powerops_callback retries in 1 minute when Broker is NOT Available" do
-      VmVmware.any_instance.stub(:run_command_via_parent).and_raise(MiqException::MiqVimBrokerUnavailable)
+      ManageIQ::Providers::Vmware::InfraManager::Vm.any_instance.stub(:run_command_via_parent).and_raise(MiqException::MiqVimBrokerUnavailable)
       status, message, result = @msg.deliver
       status.should == MiqQueue::STATUS_ERROR
       @msg.should_receive(:requeue)
@@ -188,7 +188,7 @@ describe Vm do
     DriftState.count.should == 1
 
     vm.drift_states.first.data.should == {
-      :class               => "VmVmware",
+      :class               => "ManageIQ::Providers::Vmware::InfraManager::Vm",
       :id                  => vm.id,
       :location            => vm.location,
       :name                => vm.name,
@@ -224,7 +224,7 @@ describe Vm do
       status, message, result = @msg1.deliver
 
       @msg1.state.should      == "ready"
-      @msg1.class_name.should == "VmVmware"
+      @msg1.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
       @msg1.args.each do |h|
         h[:task].should   == "destroy"
         h[:ids].should    == [@vm1.id]

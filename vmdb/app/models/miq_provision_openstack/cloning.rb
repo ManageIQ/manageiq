@@ -23,18 +23,16 @@ module MiqProvisionOpenstack::Cloning
   end
 
   def log_clone_options(clone_options)
-    log_header = "MIQ(#{self.class.name}#log_clone_options)"
+    _log.info("Provisioning [#{source.name}] to [#{clone_options[:name]}]")
+    _log.info("Source Image:                    [#{clone_options[:image_ref]}]")
+    _log.info("Destination Availability Zone:   [#{clone_options[:availability_zone]}]")
+    _log.info("Flavor:                          [#{clone_options[:flavor_ref]}]")
+    _log.info("Guest Access Key Pair:           [#{clone_options[:key_name]}]")
+    _log.info("Security Group:                  [#{clone_options[:security_groups]}]")
+    _log.info("Network:                         [#{clone_options[:nics]}]")
 
-    $log.info("#{log_header} Provisioning [#{source.name}] to [#{clone_options[:name]}]")
-    $log.info("#{log_header} Source Image:                    [#{clone_options[:image_ref]}]")
-    $log.info("#{log_header} Destination Availability Zone:   [#{clone_options[:availability_zone]}]")
-    $log.info("#{log_header} Flavor:                          [#{clone_options[:flavor_ref]}]")
-    $log.info("#{log_header} Guest Access Key Pair:           [#{clone_options[:key_name]}]")
-    $log.info("#{log_header} Security Group:                  [#{clone_options[:security_groups]}]")
-    $log.info("#{log_header} Network:                         [#{clone_options[:nics]}]")
-
-    dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
-    dumpObj(options, "#{log_header} Prov Options:  ", $log, :info)
+    dumpObj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
+    dumpObj(options, "#{_log.prefix} Prov Options:  ", $log, :info)
   end
 
   def start_clone(clone_options)

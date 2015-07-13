@@ -1,2 +1,0 @@
-class SecurityGroupAmazon < SecurityGroup
-end

@@ -165,4 +165,8 @@ module VmShowMixin
     session[:polArr]          = @polArr unless @polArr.nil?
     session[:policy_options]  = @policy_options unless @policy_options.nil?
   end
+
+  def breadcrumb_name(model)
+    ui_lookup_for_model(model || self.class.model_name).pluralize
+  end
 end

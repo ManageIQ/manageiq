@@ -40,8 +40,6 @@ class VmMigrateTask < MiqRequestTask
   end
 
   def do_request
-    log_header = "MIQ(#{self.class.name}.do_request)"
-
     host_id = get_option(:placement_host_name)
     host = Host.find_by_id(host_id)
 
@@ -66,7 +64,7 @@ class VmMigrateTask < MiqRequestTask
       :migrate
     end
 
-    $log.warn "#{log_header} Calling VM #{vc_method} for #{self.vm.id}:#{self.vm.name}"
+    _log.warn "Calling VM #{vc_method} for #{self.vm.id}:#{self.vm.name}"
     if vc_method == :migrate
       self.vm.migrate(host, respool)
     else

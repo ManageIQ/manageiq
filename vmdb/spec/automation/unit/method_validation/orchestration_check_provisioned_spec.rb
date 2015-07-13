@@ -33,7 +33,7 @@ describe "Orchestration check_provisioned Method Validation" do
   it "refreshes the provider and waits for it to complete" do
     ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATE_COMPLETE', nil] }
     ServiceOrchestration.any_instance.stub(:stack_ems_ref) { stack_ems_ref }
-    EmsAmazon.any_instance.should_receive(:refresh_ems)
+    ManageIQ::Providers::Amazon::CloudManager.any_instance.should_receive(:refresh_ems)
     ws.root['ae_result'].should == 'retry'
   end
 

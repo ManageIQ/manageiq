@@ -1,3 +1,4 @@
+= render :partial => "layouts/flash_msg"
 - if @sb[:active_accord] == :schedules || params[:pressed] == "miq_report_schedule_add"
   - if @in_a_form
     = render :partial => 'schedule_form'
