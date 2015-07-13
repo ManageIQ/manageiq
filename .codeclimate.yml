@@ -7,7 +7,7 @@ exclude_paths:
 - "app/assets/javascripts/dhtmlx*/*"
 - "app/assets/javascripts/dynatree*/*"
 - "app/assets/javascripts/SlickGrid*/*"
-- "gems/pendings/spec/*"
+- "gems/pending/spec/*"
 - "gems/pending/test/*"
 - "gems/pending/*/test/*"
 - "public/javascripts/timeline/*"

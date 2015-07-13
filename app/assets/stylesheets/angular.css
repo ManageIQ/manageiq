@@ -1,19 +1,7 @@
-input.ng-invalid-required, select.ng-invalid-required {
-  border: 1px solid red
-}
-
-input.ng-invalid-miqrequired, select.ng-invalid-miqrequired {
-  border: 1px solid red
-}
-
-input.ng-invalid-checkpath, select.ng-invalid-checkpath {
-  border: 1px solid red
-}
-
-input.ng-invalid-verifypasswd, select.ng-invalid-verifypasswd {
-  border: 1px solid red
-}
-
+input.ng-invalid-required, select.ng-invalid-required,
+input.ng-invalid-miqrequired, select.ng-invalid-miqrequired,
+input.ng-invalid-checkpath, select.ng-invalid-checkpath,
+input.ng-invalid-verifypasswd, select.ng-invalid-verifypasswd,
 button.btn-red-border {
-  border: 2px solid red;
+  border-color: #a94442;
 }
