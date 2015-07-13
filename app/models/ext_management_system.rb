@@ -19,7 +19,9 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def self.supported_types_and_descriptions_hash
     supported_subclasses.each_with_object({}) do |klass, hash|
-      hash[klass.ems_type] = klass.description
+      if Vmdb::PermissionStores.instance.supported_ems_type?(klass.ems_type)
+        hash[klass.ems_type] = klass.description
+      end
     end
   end
 

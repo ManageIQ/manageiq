@@ -10,7 +10,7 @@ module Menu
     end
 
     def visible?(userid)
-      ApplicationHelper.role_allows_intern(rbac_feature)
+      ApplicationHelper.role_allows_intern userid, rbac_feature
     end
 
     def url

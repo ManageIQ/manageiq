@@ -8,6 +8,10 @@ module Vmdb
       def can?(permission)
         true
       end
+
+      def supported_ems_type?(type)
+        true
+      end
     end
   end
 end
