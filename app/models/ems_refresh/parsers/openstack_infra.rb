@@ -4,6 +4,7 @@ module EmsRefresh
       include Vmdb::Logging
 
       include EmsRefresh::Parsers::OpenstackCommon::Images
+      include EmsRefresh::Parsers::OpenstackCommon::Networks
       include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
 
       def self.ems_inv_to_hashes(ems, options = nil)
@@ -20,14 +21,17 @@ module EmsRefresh
 
         @known_flavors = Set.new
 
-        @os_handle              = ems.openstack_handle
-        @compute_service        = @connection # for consistency
-        @baremetal_service      = @os_handle.detect_baremetal_service
-        @baremetal_service_name = @os_handle.baremetal_service_name
+        @os_handle                  = ems.openstack_handle
+        @compute_service            = @connection # for consistency
+        @baremetal_service          = @os_handle.detect_baremetal_service
+        @baremetal_service_name     = @os_handle.baremetal_service_name
         @orchestration_service      = @os_handle.detect_orchestration_service
         @orchestration_service_name = @os_handle.orchestration_service_name
-        @image_service        = @os_handle.detect_image_service
-        @image_service_name   = @os_handle.image_service_name
+        @image_service              = @os_handle.detect_image_service
+        @image_service_name         = @os_handle.image_service_name
+        @identity_service           = @os_handle.identity_service
+        @network_service            = @os_handle.detect_network_service
+        @network_service_name       = @os_handle.network_service_name
       end
 
       def ems_inv_to_hashes
@@ -40,6 +44,10 @@ module EmsRefresh
         load_orchestration_stacks
         # Cluster processing needs to run after host and stacks processing
         get_clusters
+        get_networks
+        get_security_groups
+        # TODO(lsmola) Floating IPs are not used in OpenstackInfra yet
+        # get_floating_ips
 
         $fog_log.info("#{log_header}...Complete")
         @data
@@ -100,7 +108,11 @@ module EmsRefresh
       end
 
       def hosts_ports
-        @hosts_ports ||= @baremetal_service.ports.details
+        @hosts_ports ||= @network_service.ports
+      end
+
+      def subnets
+        @subnets ||= @network_service.subnets
       end
 
       def load_hosts
@@ -109,17 +121,21 @@ module EmsRefresh
         indexed_servers = {}
         servers.each { |s| indexed_servers[s.id] = s }
 
-        # Hosts ports contains MAC addresses of host interfaces. There can
-        # be multiple interfaces for each host
+        # Hosts ports contains MAC addresses of host interfaces, ip address and a connection to the neutron subnet.
+        # There is one interface per mac address
         indexed_hosts_ports = {}
-        hosts_ports.each { |p|  (indexed_hosts_ports[p.uuid] ||= []) <<  p }
+        hosts_ports.each { |p| indexed_hosts_ports[p.mac_address] = p }
+
+        # Indexed subnets containing e.g. cidr and dns
+        indexed_subnets = {}
+        subnets.each { |p| indexed_subnets[p.id] = p }
 
         # Indexed Heat resources, we are interested only in OS::Nova::Server
         indexed_resources = {}
         all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
         process_collection(hosts, :hosts) do  |host|
-          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources, cloud_ems_hosts_attributes)
+          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_subnets, indexed_resources, cloud_ems_hosts_attributes)
         end
       end
 
@@ -130,7 +146,7 @@ module EmsRefresh
         extra_attrs.each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
       end
 
-      def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
+      def parse_host(host, indexed_servers, indexed_hosts_ports, indexed_subnets, indexed_resources, cloud_hosts_attributes)
         uid                 = host.uuid
         host_name           = identify_host_name(indexed_resources, host.instance_uuid, uid)
         hypervisor_hostname = identify_hypervisor_hostname(host, indexed_servers)
@@ -162,9 +178,11 @@ module EmsRefresh
           :ipmi_address         => identify_ipmi_address(host),
           :power_state          => lookup_power_state(host.power_state),
           :connection_state     => lookup_connection_state(host.power_state),
-          :hardware             => process_host_hardware(host, extra_attributes),
+          :hardware             => process_host_hardware(host, extra_attributes, indexed_hosts_ports, indexed_subnets),
           :hypervisor_hostname  => hypervisor_hostname,
           :service_tag          => extra_attributes.fetch_path('system', 'product', 'serial'),
+          # TODO(lsmola) need to add column for connection to SecurityGroup
+          # :security_group_id  => security_group_id
           # Attributes taken from the Cloud provider
           :availability_zone_id => cloud_host_attributes.try(:[], :availability_zone_id)
         }
@@ -172,12 +190,15 @@ module EmsRefresh
         return uid, new_result
       end
 
-      def process_host_hardware(host, extra_attributes)
+      def process_host_hardware(host, extra_attributes, indexed_hosts_ports, indexed_subnets)
         numvcpus         = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
         logical_cpus     = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
         cores_per_socket = numvcpus > 0 ? logical_cpus / numvcpus : 0
         # Get Cpu speed in Mhz
         cpu_speed        = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency').to_i / 10**6
+
+        guest_devices, guest_devices_uids = process_host_hardware_device_hashes(extra_attributes)
+
         {
           :memory_cpu         => host.properties['memory_mb'],
           :disk_capacity      => host.properties['local_gb'],
@@ -194,6 +215,9 @@ module EmsRefresh
           :guest_os_full_name => nil,
           :guest_os           => nil,
           :disks              => process_host_hardware_disks(extra_attributes),
+          :guest_devices      => guest_devices,
+          :networks           => process_host_hardware_network_hashes(extra_attributes, guest_devices_uids,
+                                                                      indexed_hosts_ports, indexed_subnets)
         }
       end
 
@@ -218,6 +242,69 @@ module EmsRefresh
             :mode            => 'persistent'
           }
         end
+      end
+
+      def process_host_hardware_device_hashes(extra_attributes)
+        result = []
+        result_uids = {}
+
+        return result, result_uids if extra_attributes.nil? || (interfaces = extra_attributes.fetch_path('network')).blank?
+
+        interfaces.keys.each do |interface_name|
+          uid = address = interfaces.fetch_path(interface_name, 'serial')
+          name = interface_name
+
+          new_result = {
+            :uid_ems         => uid,
+            :device_name     => name,
+            :device_type     => 'ethernet',
+            :controller_type => 'ethernet',
+            :present         => nil,
+            :start_connected => nil,
+            :address         => address,
+          }
+
+          result << new_result
+          result_uids[uid] = new_result
+        end
+        return result, result_uids
+      end
+
+      def process_host_hardware_network_hashes(extra_attributes, guest_devices, indexed_hosts_ports, indexed_subnets)
+        result = []
+        return result if extra_attributes.nil? || (interfaces = extra_attributes.fetch_path('network')).blank?
+
+        interfaces.keys.each do |interface_name|
+          mac_address = interfaces.fetch_path(interface_name, 'serial')
+          neutron_port = indexed_hosts_ports.fetch_path(mac_address)
+          next if neutron_port.blank?
+
+          ip_address = neutron_port.fixed_ips.try(:first).try(:[], "ip_address")
+          subnet = indexed_subnets ? indexed_subnets[neutron_port.fixed_ips.try(:first).try(:[], "subnet_id")] : nil
+
+          new_result = {
+            # TODO(lsmola) fill the proper hostname when we have it from some reliable source for all hosts
+            :hostname        => ip_address,
+            :ipaddress       => ip_address,
+            :ipv6address     => ip_address,
+            :subnet_mask     => subnet.try(:cidr),
+            :dns_server      => subnet.try(:dns_nameservers).try(:first),
+            :default_gateway => subnet.try(:gateway_ip),
+            # TODO(lsmola) add dhcp_server, but I don't see API action dhcp-agent-list-hosting-net documented, nor it
+            # it is in Fog, or get it from port list where it is marked as device_owner="network:dhcp", investigate
+            # :dhcp_server      => dhcp_server
+            # TODO(lsmola) need to add column for connection to CloudNetwork and CloudSubnet, then most of the
+            # attributes can be delegated to cloud_subnet
+            # :cloud_network_id => subnet.try(:network_id),
+            # :cloud_subnet_id  => subnet.try(:subnet_id),
+          }
+          result << new_result
+
+          guest_device = guest_devices[mac_address]
+          guest_device[:network] = new_result unless guest_device.nil?
+        end
+
+        return result
       end
 
       def server_address(server, key)
@@ -343,6 +430,10 @@ module EmsRefresh
         hosts.each do |host|
           host[:ems_cluster] = @data_index.fetch_path(:clusters, cluster_index_for_host(host))
         end
+      end
+
+      def self.security_group_type
+        'SecurityGroupOpenstackInfra'
       end
 
       #

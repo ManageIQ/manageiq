@@ -1,0 +1,2 @@
+class SecurityGroupOpenstackInfra < SecurityGroup
+end
