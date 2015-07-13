@@ -44,7 +44,7 @@ headers:
 - Name
 - Container Groups
 - Container Services
-- Container Routs
+- Container Routes
 - Container Replicators
 
 # Condition(s) string for the SQL query

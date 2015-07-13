@@ -25,7 +25,6 @@ class MiqServer < ActiveRecord::Base
 
   cattr_accessor          :my_guid_cache
 
-  after_create            :sync_admin_password_queue
   before_destroy          :validate_is_deleteable
 
   default_value_for       :rhn_mirror, false
@@ -279,16 +278,6 @@ class MiqServer < ActiveRecord::Base
       _log.error("#{msg}")
       raise msg
     end
-  end
-
-  def sync_admin_password_queue
-    MiqQueue.put_unless_exists(
-      :class_name  => "User",
-      :method_name => "sync_admin_password",
-      :server_guid => self.guid,
-      :zone        => self.zone.name,
-      :priority    => MiqQueue::HIGH_PRIORITY
-    )
   end
 
   def heartbeat

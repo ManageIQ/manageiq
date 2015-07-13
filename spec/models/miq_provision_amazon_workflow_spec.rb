@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionAmazonWorkflow do
+describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
   before(:each) do
     MiqRegion.seed
   end
@@ -23,7 +23,7 @@ describe MiqProvisionAmazonWorkflow do
         )
       end
 
-      MiqProvisionAmazonWorkflow.new({}, admin.userid)
+      ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow.new({}, admin.userid)
     end
 
     context "With a Valid Template" do
@@ -31,8 +31,8 @@ describe MiqProvisionAmazonWorkflow do
       let(:template) { FactoryGirl.create(:template_amazon, :name => "template", :ext_management_system => provider) }
       let(:workflow) do
         MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-        MiqProvisionCloudWorkflow.any_instance.stub(:update_field_visibility)
-        wf = MiqProvisionAmazonWorkflow.new({:src_vm_id => template.id}, admin.userid)
+        ManageIQ::Providers::CloudManager::ProvisionWorkflow.any_instance.stub(:update_field_visibility)
+        wf = ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow.new({:src_vm_id => template.id}, admin.userid)
         wf.instance_variable_set("@ems_xml_nodes", {})
         wf
       end

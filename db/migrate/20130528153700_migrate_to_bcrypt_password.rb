@@ -14,10 +14,6 @@ class MigrateToBcryptPassword < ActiveRecord::Migration
 
       password = BCrypt::Password.create(decrypted_password)
       user.update_attribute(:password_digest, password)
-      # sync admin password
-      if user.userid == "admin"
-        sync_admin_password(user)
-      end
     end
     remove_column :users, :password
   end
@@ -25,12 +21,5 @@ class MigrateToBcryptPassword < ActiveRecord::Migration
   def down
     remove_column :users, :password_digest
     add_column    :users, :password, :string
-  end
-
-  def sync_admin_password(user)
-    fd = File.open(File.join(Rails.root, "config/miq_pass"), 'w')
-    fd.puts user.read_attribute(:password_digest)
-  ensure
-    fd.close unless fd.nil?
   end
 end

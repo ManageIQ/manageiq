@@ -14,13 +14,12 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
       name: '',
       timer_typ: '',
       timer_value: '',
-      miq_angular_date_1: '',
+      start_date: '',
       start_hour: '',
       start_min: '',
       time_zone: '',
       uri: '',
       uri_prefix: '',
-      timer_items: '',
       filter_value: ''
     };
     $scope.formId = scheduleFormId;
@@ -33,17 +32,16 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
       $scope.newRecord                         = true;
       $scope.scheduleModel.action_typ          = 'vm';
       $scope.scheduleModel.filter_typ          = 'all';
-      $scope.scheduleModel.enabled             = '1';
-      $scope.scheduleModel.filterValuesEmpty   = true;
-      var today                                 = new Date();
-      var tomorrowsDate                         = parseInt(today.getDate()) + 1;
-      $scope.scheduleModel.miq_angular_date_1  = today.getMonth() + 1 + "/" + tomorrowsDate + "/" + today.getFullYear();
+      $scope.scheduleModel.enabled             = true;
+      $scope.filterValuesEmpty                 = true;
+      $scope.scheduleModel.start_date          = moment().add(1, 'days').toDate();
       $scope.scheduleModel.timer_typ           = 'Once';
       $scope.scheduleModel.time_zone           = 'UTC';
       $scope.scheduleModel.start_hour          = '0';
       $scope.scheduleModel.start_min           = '0';
       $scope.afterGet                           = true;
       $scope.modelCopy                          = angular.copy( $scope.scheduleModel );
+      $scope.setTimerType();
     } else {
       $scope.newRecord = false;
 
@@ -58,25 +56,28 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
         $scope.scheduleModel.log_verify         = data.log_verify;
         $scope.scheduleModel.log_protocol       = data.protocol;
         $scope.scheduleModel.description        = data.schedule_description;
-        $scope.scheduleModel.enabled            = data.schedule_enabled;
+        $scope.scheduleModel.enabled            = data.schedule_enabled == "1" ? true : false;
         $scope.scheduleModel.name               = data.schedule_name;
         $scope.scheduleModel.timer_typ          = data.schedule_timer_type;
         $scope.scheduleModel.timer_value        = data.schedule_timer_value;
-        $scope.scheduleModel.miq_angular_date_1 = data.schedule_start_date;
-        $scope.scheduleModel.start_hour         = data.schedule_start_hour;
-        $scope.scheduleModel.start_min          = data.schedule_start_min;
+        $scope.scheduleModel.start_date         = new Date(data.schedule_start_date);
+        $scope.scheduleModel.start_hour         = data.schedule_start_hour.toString();
+        $scope.scheduleModel.start_min          = data.schedule_start_min.toString();
         $scope.scheduleModel.time_zone          = data.schedule_time_zone;
         $scope.scheduleModel.uri                = data.uri;
         $scope.scheduleModel.uri_prefix         = data.uri_prefix;
 
-        $scope.scheduleModel.timer_items        = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
+        $scope.setTimerType();
+
+
+        $scope.timer_items        = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
 
         if (data.filter_type === 'all' || (data.protocol !== undefined && data.protocol !== null)) {
-          $scope.scheduleModel.filterValuesEmpty = true;
+          $scope.filterValuesEmpty = true;
         } else {
           buildFilterList(data);
 
-          $scope.scheduleModel.filterValuesEmpty = false;
+          $scope.filterValuesEmpty = false;
           $scope.scheduleModel.filter_value     = data.filter_value;
         }
 
@@ -95,6 +96,7 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
 
     $scope.$watch("scheduleModel.name", function() {
       $scope.form = $scope.angularForm;
+      $scope.model = "scheduleModel";
       $scope.miqService = miqService;
     });
   };
@@ -180,11 +182,13 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
     if ($scope.dbBackup()) {
       $scope.scheduleModel.log_protocol = 'Network File System';
       $scope.scheduleModel.uri_prefix = 'nfs';
+      $scope.scheduleModel.filter_typ = null;
     } else {
       $scope.scheduleModel.filter_typ = 'all';
     }
+    $scope.scheduleModel.filter_value = '';
 
-    $scope.scheduleModel.filterValuesEmpty = true;
+    $scope.filterValuesEmpty = true;
   };
 
   $scope.filterTypeChanged = function() {
@@ -192,15 +196,13 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
       miqService.sparkleOn();
       $http.post('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.scheduleModel.filter_typ}).success(function(data) {
         buildFilterList(data);
-        $scope.scheduleModel.filterValuesEmpty = false;
+        $scope.filterValuesEmpty = false;
         miqService.sparkleOff();
       });
     } else {
-      $scope.scheduleModel.filterValuesEmpty = true;
+      $scope.scheduleModel.filter_value = '';
+      $scope.filterValuesEmpty = true;
     }
-
-    $scope.scheduleModel.filter_value = '';
-    $scope.angularForm.filter_value.$setViewValue('');
   };
 
   $scope.logProtocolChanged = function() {
@@ -217,14 +219,15 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
   };
 
   $scope.scheduleTimerTypeChanged = function() {
-    $scope.scheduleModel.timer_items = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
+    $scope.setTimerType();
+
+    $scope.timer_items = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
 
     if ($scope.timerNotOnce()) {
       $scope.scheduleModel.timer_value = 1;
     } else {
-      $scope.scheduleModel.timer_value = null;
+      $scope.scheduleModel.timer_value = 0;
     }
-    $scope.angularForm.timer_value.$setViewValue($scope.scheduleModel.timer_value);
   };
 
   $scope.timerNotOnce = function() {
@@ -238,10 +241,25 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
 
   $scope.resetClicked = function() {
     $scope.scheduleModel = angular.copy( $scope.modelCopy );
-    if($scope.form.action_typ.$dirty || ($scope.form.filter_typ != undefined && $scope.form.filter_typ.$dirty)) {
+    if($scope.dbBackup())
+        $scope.filterValuesEmpty = true;
+
+      if($scope.scheduleModel.filter_typ &&
+          ($scope.form.action_typ.$untouched && $scope.form.filter_typ.$untouched)) {
+
+        //AJAX-less Reset
+        $scope.toggleValueForWatch('filterValuesEmpty', false);
+      }
+
+    if($scope.scheduleModel.filter_typ &&
+      ($scope.form.action_typ.$touched || $scope.form.filter_typ.$touched)) {
       $scope.filterTypeChanged();
     }
-    $scope.scheduleModel.filter_value = $scope.modelCopy.filter_value;
+    if($scope.scheduleModel.timer_typ && $scope.form.timer_typ.$touched) {
+      $scope.setTimerType();
+      $scope.timer_items = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
+    }
+    $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", "All changes have been reset");
   };
@@ -255,15 +273,8 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
     $scope.saveClicked();
   };
 
-  $scope.triggerCheckChange = function(date) {
-    $scope.miq_angular_date_1 = date;
-    $scope.$apply(function() {
-      $scope.angularForm.miq_angular_date_1.$setViewValue($scope.miq_angular_date_1);
-    });
-  };
-
   $scope.filterValueRequired = function(value) {
-    return !$scope.scheduleModel.filterValuesEmpty &&
+    return !$scope.filterValuesEmpty &&
       ($scope.isModelValueNil(value));
   };
 
@@ -290,6 +301,21 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
       return true;
     else
       return false;
+  };
+
+  $scope.setTimerType = function() {
+    if ($scope.scheduleModel.timer_typ == "Once")
+      $scope.timerTypeOnce = true;
+    else {
+      $scope.timerTypeOnce = false;
+    }
+  };
+
+  $scope.toggleValueForWatch =   function(watchValue, initialValue) {
+    if($scope[watchValue] == initialValue)
+      $scope[watchValue] = "NO-OP";
+    else if($scope[watchValue] == "NO-OP")
+      $scope[watchValue] = initialValue;
   };
 
   init();

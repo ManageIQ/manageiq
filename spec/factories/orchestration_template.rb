@@ -5,7 +5,7 @@ FactoryGirl.define do
     sequence(:description) { |n| "some description #{seq_padded_for_sorting(n)}" }
   end
 
-  factory :orchestration_template_cfn, :parent => :orchestration_template, :class => OrchestrationTemplateCfn do
+  factory :orchestration_template_cfn, :parent => :orchestration_template, :class => "OrchestrationTemplateCfn" do
     sequence(:content)     { |n| "{\"AWSTemplateFormatVersion\" : \"version(#{seq_padded_for_sorting(n)})\"}" }
   end
 
@@ -23,7 +23,7 @@ FactoryGirl.define do
 
   factory :orchestration_template_hot_with_content,
           :parent => :orchestration_template,
-          :class  => OrchestrationTemplateHot do
+          :class  => "OrchestrationTemplateHot" do
     content File.read('spec/fixtures/orchestration_templates/hot_parameters.yml')
   end
 end

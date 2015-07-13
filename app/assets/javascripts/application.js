@@ -1,15 +1,22 @@
 //= require jquery
 //= require jquery_overrides
 //= require angular
+//= require angular-ui-bootstrap
+//= require angular-ui-bootstrap-tpls
+//= require moment
 //= require miq_angular_application
 //= require services/miq_service
 //= require services/miq_db_backup_service
+//= require directives/scheduler/updateDropdownForFilter
+//= require directives/scheduler/updateDropdownForTimer
 //= require directives/miqrequired
 //= require directives/checkchange
 //= require directives/verifypasswd
+//= require directives/selectpickerForSelectTag
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
 //= require services/timer_option_service
+//= require controllers/angular-bootstrap/DatepickerCtrl
 //= require controllers/provider_foreman/provider_foreman_form_controller
 //= require controllers/repository/repository_form_controller
 //= require controllers/schedule/schedule_form_controller
@@ -33,6 +40,7 @@
 //= require miq_jqplot
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap
+//= require bootstrap-ui-components/bootstrap-select.min.js
 //= require bootstrap-hover-dropdown/bootstrap-hover-dropdown.min
 //= require c3/c3
 //= require d3/d3
@@ -56,3 +64,4 @@
 //= require codemirror/modes/yaml
 //= require spin
 //= require jquery-hotkeys
+//= require lodash

@@ -74,7 +74,7 @@ describe('scheduleFormController', function() {
     });
 
     it('sets the scheduleEnabled to the enabled attribute returned from the http request', function() {
-      expect($scope.scheduleModel.enabled).toEqual('1');
+      expect($scope.scheduleModel.enabled).toEqual(true);
     });
 
     it('sets the scheduleTimerType', function() {
@@ -86,7 +86,7 @@ describe('scheduleFormController', function() {
     });
 
     it('sets the scheduleDate', function() {
-      expect($scope.scheduleModel.miq_angular_date_1).toEqual('now');
+      expect($scope.scheduleModel.start_date).toEqual(new Date('01/01/2015'));
     });
 
     it('sets the scheduleStartHour', function() {
@@ -110,7 +110,7 @@ describe('scheduleFormController', function() {
     });
 
     it('sets the timer items', function() {
-      expect($scope.scheduleModel.timer_items).toEqual(["some", "options"]);
+      expect($scope.timer_items).toEqual(["some", "options"]);
     });
 
     it('sets afterGet', function() {
@@ -141,11 +141,11 @@ describe('scheduleFormController', function() {
       });
 
       it('sets the filterValuesEmpty to true', function() {
-        expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
+        expect($scope.filterValuesEmpty).toBe(true);
       });
 
       it('sets the scheduleDate to today', function() {
-        expect($scope.scheduleModel.miq_angular_date_1).toEqual("1/3/2014");
+        expect($scope.scheduleModel.start_date).toEqual(new Date("01/03/2014"));
       });
 
       it('sets the scheduleTimerType to once', function() {
@@ -153,7 +153,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets the scheduleEnabled to the truthy value', function() {
-        expect($scope.scheduleModel.enabled).toEqual('1');
+        expect($scope.scheduleModel.enabled).toEqual(true);
       });
 
       it('sets the scheduleTimeZone to UTC', function() {
@@ -186,10 +186,10 @@ describe('scheduleFormController', function() {
         log_verify: 'logVerify',
         schedule_name: 'scheduleName',
         schedule_description: 'scheduleDescription',
-        schedule_enabled: '1',
+        schedule_enabled: true,
         schedule_timer_type: 'Hourly',
         schedule_timer_value: '8',
-        schedule_start_date: 'now',
+        schedule_start_date: '01/01/2015',
         schedule_start_hour: '12',
         schedule_start_min: '25',
         schedule_time_zone: 'UTC',
@@ -217,7 +217,7 @@ describe('scheduleFormController', function() {
         });
 
         it('sets the filterValuesEmpty to true', function() {
-          expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
+          expect($scope.filterValuesEmpty).toBe(true);
         });
       });
 
@@ -234,7 +234,7 @@ describe('scheduleFormController', function() {
         sharedBehaviorForInitialization();
 
         it('sets the filterValuesEmpty to true', function() {
-          expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
+          expect($scope.filterValuesEmpty).toBe(true);
         });
 
         it('sets the log protocol', function() {
@@ -268,7 +268,7 @@ describe('scheduleFormController', function() {
         });
 
         it('sets the filterValuesEmpty to false', function() {
-          expect($scope.scheduleModel.filterValuesEmpty).toBe(false);
+          expect($scope.filterValuesEmpty).toBe(false);
         });
       });
     });
@@ -304,11 +304,23 @@ describe('scheduleFormController', function() {
       $scope.form = {
         action_typ: {
           $name:  'action_typ',
-          $dirty: true
+          $dirty: true,
+          $touched: true
+        },
+        filter_typ: {
+          $name:  'filter_typ',
+          $dirty: true,
+          $touched: true
+        },
+        timer_typ: {
+          $name:  'timer_typ',
+          $dirty: true,
+          $touched: true
         }
       };
       $scope.angularForm = {
         $setPristine: function (value){},
+        $setUntouched: function (value){},
         filter_value: {
           $name:       'filter_value',
           $setViewValue: function (value){}
@@ -458,7 +470,7 @@ describe('scheduleFormController', function() {
     describe('when the filter type is all', function() {
       beforeEach(function() {
         $scope.scheduleModel.filter_typ = 'all';
-        $scope.scheduleModel.filterValuesEmpty = false;
+        $scope.filterValuesEmpty = false;
         $scope.angularForm = {
           filter_value: {
             $name:       'filter_value',
@@ -469,7 +481,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets filter values empty to true', function() {
-        expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
+        expect($scope.filterValuesEmpty).toBe(true);
       });
 
       it('sets the filterValue to ""', function() {
@@ -501,7 +513,7 @@ describe('scheduleFormController', function() {
           });
 
           it('sets the filterValuesEmpty to false', function() {
-            expect($scope.scheduleModel.filterValuesEmpty).toBe(false);
+            expect($scope.filterValuesEmpty).toBe(false);
           });
 
           it('turns the sparkle on', function() {
@@ -529,7 +541,7 @@ describe('scheduleFormController', function() {
           });
 
           it('sets the filterValuesEmpty to false', function() {
-            expect($scope.scheduleModel.filterValuesEmpty).toBe(false);
+            expect($scope.filterValuesEmpty).toBe(false);
           });
 
           it('turns the sparkle on', function() {
@@ -584,7 +596,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets filter values empty to true', function() {
-        expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
+        expect($scope.filterValuesEmpty).toBe(true);
       });
     });
 
@@ -592,7 +604,7 @@ describe('scheduleFormController', function() {
       beforeEach(function() {
         $scope.scheduleModel.action_typ = 'not_db_backup';
         $scope.scheduleModel.filter_typ = 'not_all';
-        $scope.scheduleModel.filterValuesEmpty = false;
+        $scope.filterValuesEmpty = false;
         $scope.actionTypeChanged();
       });
 
@@ -601,7 +613,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets filter values empty to true', function() {
-        expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
+        expect($scope.filterValuesEmpty).toBe(true);
       });
     });
   });
@@ -650,12 +662,12 @@ describe('scheduleFormController', function() {
         $scope.scheduleTimerTypeChanged();
       });
 
-      it('sets the scheduleTimerValue to null', function() {
-        expect($scope.scheduleModel.timer_value).toBeNull();
+      it('sets the scheduleTimerValue to zero', function() {
+        expect($scope.scheduleModel.timer_value).toEqual(0);
       });
 
       it('sets timerItems to the return value of the timerOptionService', function() {
-        expect($scope.scheduleModel.timer_items).toEqual(['some', 'options']);
+        expect($scope.timer_items).toEqual(['some', 'options']);
       });
     });
 
@@ -677,7 +689,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets timerItems to the return value of the timerOptionService', function() {
-        expect($scope.scheduleModel.timer_items).toEqual(['some', 'options']);
+        expect($scope.timer_items).toEqual(['some', 'options']);
       });
     });
   });

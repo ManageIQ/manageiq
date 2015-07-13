@@ -1,0 +1,15 @@
+languages:
+  Ruby: true
+  JavaScript: true
+exclude_paths:
+- "app/assets/javascripts/bootstrap-hover-dropdown/*"
+- "app/assets/javascripts/bootstrap-ui-components/*"
+- "app/assets/javascripts/dhtmlx*/*"
+- "app/assets/javascripts/dynatree*/*"
+- "app/assets/javascripts/SlickGrid*/*"
+- "gems/pending/spec/*"
+- "gems/pending/test/*"
+- "gems/pending/*/test/*"
+- "public/javascripts/timeline/*"
+- "spec/*"
+- "test/*"

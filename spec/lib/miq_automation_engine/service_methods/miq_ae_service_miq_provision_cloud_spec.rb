@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module MiqAeServiceMiqProvisionCloudSpec
+module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
   describe MiqAeMethodService::MiqAeServiceMiqProvision do
 
     %w(amazon openstack).each  do |t|
@@ -20,7 +20,7 @@ module MiqAeServiceMiqProvisionCloudSpec
                                               :userid         => @user.userid)
         end
 
-        let(:workflow_klass) { "MiqProvision#{t.camelize}Workflow".constantize }
+        let(:workflow_klass) { MiqProvisionWorkflow.class_for_platform(t) }
         let(:ae_svc_prov) { MiqAeMethodService::MiqAeServiceMiqProvision.find(@miq_provision.id) }
 
         context "#request_type" do

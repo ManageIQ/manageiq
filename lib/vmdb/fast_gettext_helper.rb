@@ -65,7 +65,8 @@ module Vmdb
                                   :path           => locale_path,
                                   :type           => :po,
                                   :report_warning => false)
-      FastGettext.available_locales = find_available_locales
+
+      FastGettext.default_available_locales = find_available_locales
 
       # temporary hack to fix a problem with locales including "_"
       fix_i18n_available_locales

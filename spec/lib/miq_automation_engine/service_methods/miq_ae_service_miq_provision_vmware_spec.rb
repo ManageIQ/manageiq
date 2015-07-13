@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-module MiqAeServiceMiqProvisionVmwareSpec
-  describe MiqAeMethodService::MiqAeServiceMiqProvisionVmware do
+module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
+  describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Provision do
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
@@ -204,7 +204,7 @@ module MiqAeServiceMiqProvisionVmwareSpec
 
       it "return sub class" do
         result = invoke_ae.root(@ae_result_key)
-        result.class.should eq MiqAeMethodService::MiqAeServiceMiqProvisionVmware
+        result.class.should eq MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Provision
       end
 
       it "#status" do

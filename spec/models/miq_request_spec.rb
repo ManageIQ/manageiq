@@ -26,7 +26,8 @@ describe MiqRequest do
     let(:event_name)   { "hello" }
     let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
     let(:request)      { FactoryGirl.create(:vm_migrate_request, :userid => fred.userid) }
-    let(:template)     { FactoryGirl.create(:template_vmware) }
+    let(:ems)          { FactoryGirl.create(:ems_vmware) }
+    let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
 
     it { expect(request).to be_valid }
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("VM Migrate") } }
@@ -106,7 +107,7 @@ describe MiqRequest do
     context "using Polymorphic Resource" do
       let(:provision_request) { FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id).create_request }
 
-      it { expect(provision_request.workflow_class).to eq(MiqProvisionVmwareWorkflow) }
+      it { expect(provision_request.workflow_class).to eq(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow) }
       describe("#get_options")          { it { expect(provision_request.get_options).to eq(:number_of_vms => 1) } }
       describe("#request_type")         { it { expect(provision_request.request_type).to eq(provision_request.provision_type) } }
       describe("#request_type_display") { it { expect(provision_request.request_type_display).to eq("VM Provision") } }

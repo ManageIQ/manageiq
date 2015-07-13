@@ -95,16 +95,16 @@ describe OpsController do
         controller.should_receive(:render)
         @schedule = FactoryGirl.create(:miq_schedule, :userid => "test", :towhat => "Vm")
         @params = {
-          :button             => "add",
-          :description        => "description01",
-          :enabled            => "on",
-          :filter_typ         => "all",
-          :action_typ         => "vm",
-          :timer_typ          => "Once",
-          :time_zone          => "UTC",
-          :start_hour         => "0",
-          :start_min          => "0",
-          :miq_angular_date_1 => 2.days.from_now.utc.strftime("%m/%d/%Y")
+          :button      => "add",
+          :description => "description01",
+          :enabled     => "on",
+          :filter_typ  => "all",
+          :action_typ  => "vm",
+          :timer_typ   => "Once",
+          :time_zone   => "UTC",
+          :start_hour  => "0",
+          :start_min   => "0",
+          :start_date  => 2.days.from_now.utc.strftime("%m/%d/%Y")
         }
         controller.stub(:assert_privileges)
       end

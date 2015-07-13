@@ -169,6 +169,24 @@ class ExtManagementSystem < ActiveRecord::Base
     base_manager.short_name
   end
 
+  def self.provision_class(_via)
+    if const_defined?(:Provision, false)
+      self::Provision
+    else
+      suffix = short_name.sub(/^Ems/, '')
+      "MiqProvision#{suffix}".constantize
+    end
+  end
+
+  def self.provision_workflow_class
+    if const_defined?(:ProvisionWorkflow, false)
+      self::ProvisionWorkflow
+    else
+      suffix = short_name.sub(/^Ems/, '')
+      "MiqProvision#{suffix}Workflow".constantize
+    end
+  end
+
   # UI methods for determining availability of fields
   def supports_port?
     false

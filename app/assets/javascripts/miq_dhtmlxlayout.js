@@ -14,7 +14,7 @@ function miqResizeTaskbarCell() {
     return;
   }
   $('#taskbar_buttons_div').children('div').each(function () {
-    if (this.offsetTop > 0) {
+    if (this.offsetTop > 1) {
       dhxLayoutB.cells("a").setHeight(64);
       return false;
     } else {

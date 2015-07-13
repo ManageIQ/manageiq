@@ -1,24 +1,32 @@
 .button-group
   = button_tag("Add",
+               :class        => "btn btn-primary btn-disabled",
+               :alt          => "Add",
+               :title        => "Add",
+               "ng-show"     => "newRecord && !miqService.saveable(angularForm)")
+
+  = button_tag("Add",
                :class        => "btn btn-primary",
                :alt          => "Add",
                :title        => "Add",
-               "ng-class"    => "{'btn-disabled': !angularForm.$valid}",
                "ng-click"    => "addClicked()",
-               "ng-disabled" => "!miqService.saveable(angularForm)",
-               "ng-show"     => "newRecord")
+               "ng-show"     => "newRecord && miqService.saveable(angularForm)")
+
+  = button_tag("Save",
+               :class        => "btn btn-primary btn-disabled",
+               :alt          => "Save changes",
+               :title        => "Save changes",
+               "ng-show"     => "!newRecord && !miqService.saveable(angularForm)")
 
   = button_tag("Save",
                :class        => "btn btn-primary",
                :alt          => "Save changes",
                :title        => "Save changes",
-               "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}",
                "ng-click"    => "saveClicked()",
-               "ng-disabled" => "!miqService.saveable(angularForm)",
-               "ng-hide"     => "newRecord")
+               "ng-show"     => "!newRecord && miqService.saveable(angularForm)")
 
   = button_tag("Reset",
-               :class        => "btn btn-primary",
+               :class        => "btn btn-default btn-disabled",
                :alt          => "Reset changes",
                :title        => "Reset changes",
                "ng-class"    => "{'btn-disabled': angularForm.$pristine}",

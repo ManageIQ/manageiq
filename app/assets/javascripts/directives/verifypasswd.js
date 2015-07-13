@@ -16,12 +16,13 @@ miqAngularApplication.directive('verifypasswd', function() {
         }
       });
 
-      ctrl.$parsers.unshift(function() {
+      ctrl.$parsers.push(function(value) {
         if(ctrl.$name == "log_verify") {
           setValidity(scope, ctrl, ctrl.$viewValue, scope[modelName].log_password);
         }else if(ctrl.$name == "log_password" && scope.logVerifyCtrl != undefined) {
           setValidity(scope, scope.logVerifyCtrl, ctrl.$viewValue, scope[modelName].log_verify);
         }
+        return value;
       });
 
       var setValidity = function(scope, logVerifyCtrl, valueNew, valueOrig) {

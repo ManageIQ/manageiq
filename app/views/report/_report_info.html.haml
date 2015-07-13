@@ -1,62 +1,50 @@
 = render :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"}
 - if @sb[:active_tab] == "report_info"
   - if @sb[:miq_report_id] && @miq_report
-    %h3
-      = @miq_report.name
-    %table.style1
-      %tbody
-        %tr
-          %td.key
-            = _('Title')
-          %td.notwide
-            = @miq_report.title
-        - if @miq_report.conditions
-          %tr
-            %td.key
-              = _('Primary (Record) Filter')
-            %td.notwide
-              = @miq_report.conditions.to_human
-        - if @miq_report.display_filter
-          %tr
-            %td.key
-              = _('Secondary (Display) Filter')
-            %td.notwide
-              = @miq_report.display_filter.to_human
-        - if @miq_report.sortby
-          - sortby = []
-          - @miq_report.sortby.each do |s|
-            - sortby.push(Dictionary::gettext(s, :type => :column, :notfound => :titleize))
-          %tr
-            %td.key
-              = _('Sort By')
-            %td.notwide
-              = sortby.join(", ")
-        - if @miq_report.graph
-          %tr
-            %td.key
-              = _('Chart')
-            %td.notwide
-              = @miq_report.graph[:type]
-        %tr
-          %td.key
-            = _('Based On')
-          %td.notwide
-            = Dictionary::gettext(@miq_report.db, :type => :model, :notfound => :titleize)
-        %tr
-          %td.key
-            = _('User')
-          %td.notwide
-            = @miq_report.user ? @miq_report.user.userid : ""
-        %tr
-          %td.key
-            = Dictionary::gettext("MiqGroup", :type => :model, :notfound => :titleize)
-          %td.notwide
-            = @miq_report.miq_group ? @miq_report.miq_group.description : ""
-        %tr
-          %td.key
-            = _('Updated On')
-          %td.notwide
-            = format_timezone(@miq_report.updated_on, Time.zone, "gtl")
+    .form-horizontal.static
+      .form-group
+        %label.control-label.col-sm-2= _('Title')
+        .col-sm-10
+          %p.form-control-static= @miq_report.title
+      - if @miq_report.conditions
+        .form-group
+          %label.control-label.col-sm-2= _('Primary (Record) Filter')
+          .col-sm-10
+            %p.form-control-static= @miq_report.conditions.to_human
+      - if @miq_report.display_filter
+        .form-group
+          %label.control-label.col-sm-2= _('Secondary (Display) Filter')
+          .col-sm-10
+            %p.form-control-static= @miq_report.display_filter.to_human
+      - if @miq_report.sortby
+        - sortby = []
+        - @miq_report.sortby.each do |s|
+          - sortby.push(Dictionary.gettext(s, :type => :column, :notfound => :titleize))
+        .form-group
+          %label.control-label.col-sm-2= _('Sort By')
+          .col-sm-10
+            %p.form-control-static= sortby.join(", ")
+      - if @miq_report.graph
+        .form-group
+          %label.control-label.col-sm-2= _('Chart')
+          .col-sm-10
+            %p.form-control-static= @miq_report.graph[:type]
+      .form-group
+        %label.control-label.col-sm-2= _('Based On')
+        .col-sm-10
+          %p.form-control-static= Dictionary.gettext(@miq_report.db, :type => :model, :notfound => :titleize)
+      .form-group
+        %label.control-label.col-sm-2= _('User')
+        .col-sm-10
+          %p.form-control-static= @miq_report.user ? @miq_report.user.userid : ""
+      .form-group
+        %label.control-label.col-sm-2= Dictionary.gettext("MiqGroup", :type => :model, :notfound => :titleize)
+        .col-sm-10
+          %p.form-control-static= @miq_report.miq_group ? @miq_report.miq_group.description : ""
+      .form-group
+        %label.control-label.col-sm-2= _('Updated On')
+        .col-sm-10
+          %p.form-control-static= format_timezone(@miq_report.updated_on, Time.zone, "gtl")
     %hr
   %h3
     = _('Schedules')

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionVmware do
+describe ManageIQ::Providers::Vmware::InfraManager::Provision do
   context "A new provision request," do
     before(:each) do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
@@ -31,7 +31,7 @@ describe MiqProvisionVmware do
       it "#workflow" do
         MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
 
-        @vm_prov.workflow.class.should eq MiqProvisionVmwareWorkflow
+        @vm_prov.workflow.class.should eq ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow
       end
 
       it "should return a config spec" do

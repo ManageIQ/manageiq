@@ -2,42 +2,6 @@
 # description: ManageIQ appliance console
 #
 
-# TODO: Move the Service Support (start/stop/restart/status) to it's own file (appliance_console_service.rb)
-# and update callers to appliance_console.rb to use the appliance_console_service.rb.
-console_title = 'Appliance Console [appliance_console.rb]'
-ARGV << "start" if ARGV.empty?
-
-# developers can turn this off
-LOCK_CONSOLE = !(ENV["LOCK_CONSOLE"].to_s.strip.downcase == "false")
-
-def bail_if_running(message = "running...")
-  pids = `pgrep -f "ruby.*appliance_console.rb"`.chomp.split
-  pids.each do |pid|
-    if Process.pid != pid.to_i
-      puts "Evm Appliance Console (pid #{pid}) is #{message}"
-      exit 0
-    end
-  end
-end
-
-case ARGV.first
-when "start"
-  bail_if_running if LOCK_CONSOLE
-when "stop"
-  puts "Stopping #{console_title} disabled"
-  exit 1
-when "status"
-  bail_if_running
-  puts "#{console_title} is stopped..."
-  exit 0
-when "restart"
-  puts "Restarting #{console_title} is disabled..."
-  exit 1
-else
-  puts "Invalid command: #{ARGV.first}: Usage: #{__FILE__} {start,stop,status,restart}"
-  exit 1
-end
-
 # Simulate rubygems adding the top level appliance_console.rb's directory to the path.
 $LOAD_PATH.push(File.dirname(__FILE__))
 
@@ -94,7 +58,7 @@ $terminal.page_at = 21
 
 require 'appliance_console/errors.rb'
 
-[:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } } if LOCK_CONSOLE
+[:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
 
 # Disabled in order to allow rescue of timeout error
 HighLine.track_eof = false
@@ -106,8 +70,6 @@ VERSION_FILE  = RAILS_ROOT.join("VERSION")
 BUILD_FILE    = RAILS_ROOT.join("BUILD")
 LOGFILE       = File.join(RAILS_ROOT, "log", "appliance_console.log")
 DB_RESTORE_FILE = "/tmp/evm_db.backup"
-PASS_FILE     = RAILS_ROOT.join("config/miq_pass")
-DEF_PASS_FILE = RAILS_ROOT.join("config/miq_pass_default")
 
 AS_OPTIONS = I18n.t("advanced_settings.menu_order").collect do |item|
   I18n.t("advanced_settings.#{item}")
@@ -154,8 +116,6 @@ require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
 
 module ApplianceConsole
-loop do
-  begin
     ip = Env["IP"]
     # Because it takes a few seconds, get the database information once in the outside loop
     configured = ApplianceConsole::DatabaseConfiguration.configured?
@@ -169,18 +129,6 @@ loop do
 
     say("#{I18n.t("product.name")} Virtual Appliance\n")
     say("To administer this appliance, browse to https://#{ip}\n") if configured
-
-    ask_without_timeout("Username: ") do |q|
-      q.validate = /ADMIN/i
-      q.responses[:not_valid] = "Username invalid"
-    end
-
-    ask_without_timeout("Password: ") do |q|
-      q.echo = '*'
-      filename = File.exist?(PASS_FILE) ? PASS_FILE : DEF_PASS_FILE
-      q.validate = ->(p) { BCrypt::Password.new(File.read(filename).chomp) == p }
-      q.responses[:not_valid] = "Password invalid: "
-    end
 
     loop do
       begin
@@ -226,7 +174,6 @@ To modify the configuration, use a web browser to access the management page.
 #{$terminal.list(summary_attributes, :columns_across, 2)}
         EOL
 
-        say("Note: Use Ctrl-C to exit out of any screen and return to the summary screen.\n")
         press_any_key
 
         clear_screen
@@ -542,9 +489,8 @@ Date and Time Configuration
         when I18n.t("advanced_settings.summary")
           # Do nothing
 
-        when I18n.t("advanced_settings.logoff")
-          say("#{selection}\n\n")
-          break if are_you_sure?("log off the appliance")
+        when I18n.t("advanced_settings.quit")
+          break
         end
       rescue Timeout::Error
         break
@@ -564,9 +510,4 @@ Date and Time Configuration
         Env.clear_errors
       end
     end
-  rescue MiqSignalError
-    # If a signal is caught anywhere in the outer loop (before login), go back to the login screen
-    next
-  end
-end
 end
