@@ -64,3 +64,4 @@
 //= require codemirror/modes/yaml
 //= require spin
 //= require jquery-hotkeys
+//= require lodash

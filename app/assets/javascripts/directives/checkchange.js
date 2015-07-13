@@ -68,18 +68,18 @@ var viewModelDateComparison = function(scope, ctrl) {
 };
 
 var checkForOverallFormPristinity = function(scope, ctrl) {
-  var modelCopyObject = JSON.parse(JSON.stringify(scope.modelCopy));
+  // don't do anything before the model and modelCopy are actually initialized
+  if (! ('modelCopy' in scope) || ! scope.modelCopy || ! scope.model || ! (scope.model in scope))
+    return;
+
+  var modelCopyObject = _.cloneDeep(scope.modelCopy);
   delete modelCopyObject[ctrl.$name];
 
-  var modelObject = JSON.parse(JSON.stringify(scope[scope.model]))
+  var modelObject = _.cloneDeep(scope[scope.model]);
   delete modelObject[ctrl.$name];
 
-  if(JSON.stringify(modelCopyObject) != JSON.stringify(modelObject)) {
-    scope.angularForm.$pristine = false;
-  }
-  else {
-    scope.angularForm.$pristine = true;
-  }
-  if(scope.angularForm.$pristine)
+  scope.angularForm.$pristine = _.isEqual(modelCopyObject, modelObject);
+
+  if (scope.angularForm.$pristine)
     scope.angularForm.$setPristine(true);
 };
