@@ -118,12 +118,10 @@ describe ApplicationHelper do
       include UiConstants
       it "and entitled" do
         Menu::DefaultMenu.services_menu_section.visible?(User.current_userid).should be_true
-        role_allows(:main_tab_id => :svc).should be_true
       end
 
       it "and not entitled" do
         @user.stub(:role_allows_any? => false)
-        role_allows(:main_tab_id => :svc).should be_false
         Menu::DefaultMenu.services_menu_section.visible?(User.current_userid).should be_false
       end
     end
