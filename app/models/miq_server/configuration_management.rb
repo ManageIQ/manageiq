@@ -64,6 +64,7 @@ module MiqServer::ConfigurationManagement
   end
 
   def sync_config
+    @blacklisted_events = true
     @vmdb_config = VMDB::Config.new("vmdb")
     sync_log_level
     sync_worker_monitor_settings
@@ -77,7 +78,10 @@ module MiqServer::ConfigurationManagement
       VMDB::Config.invalidate("vmdb")
       @vmdb_config = VMDB::Config.new("vmdb")
     end
-    stale
+    stale || @blacklisted_events.nil?
   end
 
+  def sync_blacklisted_event_names
+    @blacklisted_events = nil
+  end
 end

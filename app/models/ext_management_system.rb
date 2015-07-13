@@ -482,4 +482,15 @@ class ExtManagementSystem < ActiveRecord::Base
       self.stop_event_monitor_queue
     end
   end
+
+  def blacklisted_event_names
+    (
+      self.class.blacklisted_events.where(:enabled => true).pluck(:event_name) +
+      blacklisted_events.where(:enabled => true).pluck(:event_name)
+    ).uniq.sort
+  end
+
+  def self.blacklisted_events
+    BlacklistedEvent.where(:provider_model => name, :ems_id => nil)
+  end
 end
