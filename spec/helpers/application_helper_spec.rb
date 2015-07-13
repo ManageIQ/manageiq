@@ -62,6 +62,26 @@ describe ApplicationHelper do
       login_as  @user
     end
 
+    context "permission store" do
+      it 'consults the permission store' do
+        begin
+          current_store = Vmdb::PermissionStores.instance
+          Vmdb::PermissionStores.configure do |config|
+            config.backend = 'yaml'
+            config.options[:filename] = File.join Rails.root, 'config', 'permissions.yml'
+          end
+          Vmdb::PermissionStores.initialize!
+
+          role_allows(:feature=>"miq_report").should be_true
+
+          User.stub_chain(:current_user, :role_allows?).and_return(true)
+          role_allows(:feature=>"miq_report2").should be_false
+        ensure
+          Vmdb::PermissionStores.instance = current_store
+        end
+      end
+    end
+
     context "when with :feature" do
       context "and :any" do
         it "and entitled" do
