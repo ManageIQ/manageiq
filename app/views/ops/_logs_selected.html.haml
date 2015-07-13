@@ -1,0 +1,23 @@
+- record               = @selected_server
+- icon                 = record.class == MiqServer ? "evmserver" : "zone"
+- icon_string          = "/images/icons/new/#{icon}.png"
+- log_depot_uri        = "#{record.log_depot.try(:uri) || "N/A"} #{"(from Zone)" unless record.log_file_depot}"
+- last_time            = record.last_log_sync_on
+- last_collection_time = last_time.blank? ? "Never" : format_timezone(last_time.to_time, Time.zone, "gtl")
+
+#selected_div
+  %h3= _("Basic Info")
+  .form-horizontal.static
+    .form-group
+      %label.col-sm-2.control-label= _("Log Depot URI")
+      .col-sm-10
+        %p.form-control-static= h(log_depot_uri)
+    .form-group
+      %label.col-sm-2.control-label= _("Last Log Collection")
+      .col-sm-10
+        %p.form-control-static= h(last_collection_time)
+    - if record.respond_to?(:last_log_sync_message)
+      .form-group
+        %label.col-sm-2.control-label= _("Last Message")
+        .col-sm-10
+          %p.form-control-static= h(record.last_log_sync_message)

@@ -1,12 +1,14 @@
-namespace :build do
-  desc "Upload the build files to an imagefactory instance"
-  task :upload do
-    raise "must set ENV['SCP_USER_HOST'], such as root@your_host" if ENV['SCP_USER_HOST'].nil?
+#!/usr/bin/env rake
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
-    require 'pathname'
-    build_dir = Pathname.new(File.join(File.dirname(__FILE__), 'build'))
+require File.expand_path('../config/application', __FILE__)
 
-    `ssh #{ENV['SCP_USER_HOST']} "rm -rf ~/manageiq && mkdir -p ~/manageiq"`
-    `scp -qr #{build_dir} #{ENV['SCP_USER_HOST']}:~/manageiq/build`
-  end
+include Rake::DSL
+Vmdb::Application.load_tasks
+
+begin
+  require 'jasmine'
+  load 'jasmine/tasks/jasmine.rake'
+rescue LoadError
 end

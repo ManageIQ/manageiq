@@ -66,6 +66,10 @@ Documentation:
   Enabled: false
 Encoding:
   Enabled: false
+GuardClause:
+  Enabled: false
+IfUnlessModifier:
+  Enabled: false
 SingleLineBlockParams:
   Enabled: false
 SingleSpaceBeforeFirstArg:
@@ -75,4 +79,6 @@ StringLiterals:
 StringLiteralsInInterpolation:
   Enabled: false
 TrailingComma:
+  Enabled: false
+WhileUntilModifier:
   Enabled: false

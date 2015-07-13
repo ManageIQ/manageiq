@@ -1,0 +1,70 @@
+-# tree type is servers by role
+- if rec.class == ServerRole
+  .form-horizontal.static
+    .form-group
+      %label.col-sm-2.control-label= _("Role")
+      .col-sm-10
+        %p.form-control-static= rec.description
+    .form-group
+      %label.col-sm-2.control-label= _("Status")
+      .col-sm-10
+        %p.form-control-static= h(@rec_status)
+    .form-group
+      - max = rec.max_concurrent
+      %label.col-sm-2.control-label= _("Max Concurrent")
+      .col-sm-10
+        %p.form-control-static= h(max == 0 ? _("unlimited") : max)
+- else
+  -# record class is AssignedServerRole
+  %table.style1
+    %tr
+      %td.key{:rowspan => 13}
+        %img{:src => "/images/icons/new/evmserver.png"}/
+      %td.key= Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)
+      %td.wide= h("#{rec.miq_server.name} [#{rec.miq_server.id}]")
+    %tr
+      %td.key= _("Status")
+      %td.wide= h(rec.miq_server.status)
+    - if rec.master_supported?
+      %tr
+        %td.key= _("Priority")
+        %td.wide
+          - if rec.priority == 1
+            = _("primary")
+          - elsif rec.priority == 2
+            = _("secondary")
+          - else
+            = _("normal")
+    %tr
+      %td.key= _("Process ID")
+      %td.wide= h(rec.miq_server.pid)
+    %tr
+      %td.key= _("Started On")
+      %td.wide
+        - t = rec.miq_server.started_on
+        = h(t.blank? ? "" : format_timezone(t))
+    %tr
+      %td.key= _("Stopped On")
+      %td.wide
+        - t = rec.miq_server.stopped_on
+        = h(t.blank? ? "" : format_timezone(t))
+    %tr
+      %td.key= _("Memory Usage")
+      %td.wide
+        = h(rec.miq_server["memory_usage"])
+    %tr
+      %td.key= _("Memory Size")
+      %td.wide
+        = h(rec.miq_server["memory_size"])
+    %tr
+      %td.key= _("CPU Time")
+      %td.wide
+        = h(rec.miq_server["cpu_time"])
+    %tr
+      %td.key= _("CPU Percent")
+      %td.wide
+        = h(rec.miq_server["percent_cpu"])
+    %tr
+      %td.key= _("Version / Build")
+      %td.wide
+        = h(rec.miq_server["version"])
