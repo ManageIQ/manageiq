@@ -17,7 +17,7 @@ ul.dynatree-container
 
 /*formatting for old html accordions in DHTMLX layout (ie, compare) */
 
-#accordion ul.dynatree-container 
+#accordion ul.dynatree-container
 {
 	overflow: hidden
 }
@@ -136,7 +136,7 @@ span.dynatree-drag-helper-img,
 	vertical-align: top;
 	background-repeat: no-repeat;
 	background-position: left;
-	background-image: url("<%= image_path("dynatree_1.2.4/skin-cfme/icons.gif") %>");
+	background-image: image_path('dynatree/icons.gif');
 	background-position: 0 0;
 }
 
@@ -218,7 +218,7 @@ span.dynatree-expander:hover
 .dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
 {
 	background-position: 0 0;
-	background-image: url("<%= image_path("dynatree_1.2.4/skin-cfme/loading.gif") %>");
+	background-image: image_path('dynatree/loading.gif');
 }
 
 /* white arrows on active item - for accordion trees only*/
@@ -335,7 +335,7 @@ span.dynatree-icon /* Default icon */
 
 .dynatree-statusnode-wait span.dynatree-icon
 {
-	background-image: url("<%= image_path("dynatree_1.2.4/skin-cfme/loading.gif") %>");
+	background-image: image_path('dynatree/loading.gif');
 }
 
 .dynatree-statusnode-error span.dynatree-icon
