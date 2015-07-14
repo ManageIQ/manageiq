@@ -44,7 +44,7 @@ module ActiveRecord
     end
 
     def self.reflection_is_polymorphic?(name)
-      reflection = self._reflect_on_association(name)
+      reflection = _reflect_on_association(name)
       reflection ? reflection.polymorphic? : false
     end
 
@@ -56,17 +56,17 @@ module ActiveRecord
 
     def self._included_associations(includes, arr)
       case includes
-        when Symbol, String
-          arr << includes.to_sym
-        when Array
-          includes.each do |assoc|
-            _included_associations assoc, arr
-          end
-        when Hash
-          includes.each do |k,v|
-            cache = arr << k
-            _included_associations v, cache
-          end
+      when Symbol, String
+        arr << includes.to_sym
+      when Array
+      includes.each do |assoc|
+          _included_associations assoc, arr
+        end
+      when Hash
+        includes.each do |k, v|
+          cache = arr << k
+          _included_associations v, cache
+        end
       end
     end
   end
