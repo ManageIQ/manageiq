@@ -7,7 +7,6 @@ class User < ActiveRecord::Base
   include ActiveVmAggregationMixin
   include TimezoneMixin
 
-  belongs_to :role, :class_name => "UiTaskSet", :foreign_key => :ui_task_set_id
   has_many   :miq_approvals, :as => :approver
   has_many   :miq_approval_stamps,  :class_name => "MiqApproval", :foreign_key => :stamper_id
   has_many   :miq_requests, :foreign_key => :requester_id

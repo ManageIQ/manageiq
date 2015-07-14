@@ -1091,9 +1091,6 @@ module OpsController::Settings::Common
           @miq_schedules.push(s) unless @miq_schedules.include?(s)
         end
       end
-#   # Enterprise Roles tab
-#   elsif @sb[:tabform] == "operations_4"
-#     @roles = UiTaskSet.all.sort_by{ |role| role[:description] }
     end
   end
 
