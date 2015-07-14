@@ -3,7 +3,6 @@ languages:
   JavaScript: true
 exclude_paths:
 - "app/assets/javascripts/bootstrap-hover-dropdown/*"
-- "app/assets/javascripts/bootstrap-ui-components/*"
 - "app/assets/javascripts/dhtmlx*/*"
 - "app/assets/javascripts/dynatree*/*"
 - "app/assets/javascripts/SlickGrid*/*"
