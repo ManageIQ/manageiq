@@ -144,6 +144,17 @@
     - :subcollection
     :methods: *70174834086080
     :klass: MiqEventDefinition
+  :features:
+    :description: Product Features
+    :options:
+    - :subcollection
+    - :show
+    :methods: *70174834085860
+    :klass: MiqProductFeature
+    :subcollection_actions:
+      :post:
+      - :name: assign
+      - :name: unassign
   :flavors:
     :description: Flavors
     :options:
@@ -492,10 +503,14 @@
     :description: Roles
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085620
     :klass: MiqUserRole
+    :subcollections:
+    - :features
     :collection_actions:
       :post:
+      - :name: create
+        :identifier: rbac_role_add
       - :name: add
         :identifier: rbac_role_add
       - :name: edit
@@ -506,6 +521,8 @@
       :post:
       - :name: edit
         :identifier: rbac_role_edit
+      - :name: delete
+        :identifier: rbac_role_delete
       :delete:
       - :name: delete
         :identifier: rbac_role_delete
