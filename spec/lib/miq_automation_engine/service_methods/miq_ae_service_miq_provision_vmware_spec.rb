@@ -31,7 +31,6 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
 
     context "check requests" do
       before(:each) do
-        FactoryGirl.create(:ui_task_set_approver)
         @miq_provision_request = FactoryGirl.create(:miq_provision_request,
                                                     :provision_type => 'template',
                                                     :state => 'pending', :status => 'Ok',

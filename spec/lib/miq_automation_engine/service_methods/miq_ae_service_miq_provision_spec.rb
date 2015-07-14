@@ -23,7 +23,6 @@ module MiqAeServiceMiqProvisionSpec
     end
 
     it "#miq_request" do
-      approver_role         = FactoryGirl.create(:ui_task_set_approver)
       miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :userid => @user.userid)
 
       miq_request = miq_provision_request.create_request
@@ -40,7 +39,6 @@ module MiqAeServiceMiqProvisionSpec
     end
 
     it "#miq_provision_request" do
-      approver_role         = FactoryGirl.create(:ui_task_set_approver)
       miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :userid => @user.userid)
       @miq_provision.miq_provision_request = miq_provision_request
       @miq_provision.save!
