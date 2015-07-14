@@ -8,7 +8,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
       if val.include?("!ruby/object:MiqReport")
         val.sub!(/MiqReport/, 'Hash')
       elsif val.starts_with?('--- !')
-        puts "#{self.class} Id: #{self.id} is not an MiqReport object, skipping conversion"
+        puts "#{self.class} Id: #{id} is not an MiqReport object, skipping conversion"
         return
       else
         raise "unexpected format of report attribute encountered, '#{val.inspect}'"
@@ -24,7 +24,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
 
     def serialize_hash_to_report(val, from)
       if val.starts_with?('--- !')
-        puts "#{self.class} Id: #{self.id} is not a Hash, skipping conversion"
+        puts "#{self.class} Id: #{id} is not a Hash, skipping conversion"
       elsif val.starts_with?("---")
         new_hash = {'attributes' => {}}
         YAML.load(val).each do |k, v|
@@ -129,23 +129,15 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   def up
     say_with_time("Converting MiqReportResult#report to a serialized hash") do
       MiqReportResult.where('report IS NOT NULL').each do |rr|
-        begin
-          val = rr.serialize_report_to_hash(rr.read_attribute(:report))
-          rr.update_attribute(:report, val) if val
-        rescue => err
-          say "Unable to convert report result with id: [#{rr.id}], '#{err.message}'"
-        end
+        val = rr.serialize_report_to_hash(rr.read_attribute(:report))
+        rr.update_attribute(:report, val) if val
       end
     end
 
     say_with_time("Converting BinaryBlob report results to a serialized hash") do
       BinaryBlob.where(:resource_type => 'MiqReportResult').each do |bb|
-        begin
-          val = bb.serialize_report_to_hash(bb.binary)
-          bb.binary = val if val
-        rescue => err
-          say "Unable to convert binary blob with id: [#{bb.id}], '#{err.message}'"
-        end
+        val = bb.serialize_report_to_hash(bb.binary)
+        bb.binary = val if val
       end
     end
   end

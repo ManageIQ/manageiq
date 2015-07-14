@@ -48,12 +48,12 @@ describe FixSerializedReportsForRailsFour do
 
     it "skips existing binary blobs serialized as CSV" do
       bb = binary_blob.create!(
-          :resource_type => "MiqReportResult",
-          :md5           => "b540c6aec8a7726c1154d71c06017150",
-          :size          => 67_124,
-          :part_size     => 1_048_576,
-          :name          => "report_results",
-          :data_type     => "YAML"
+        :resource_type => "MiqReportResult",
+        :md5           => "b540c6aec8a7726c1154d71c06017150",
+        :size          => 67_124,
+        :part_size     => 1_048_576,
+        :name          => "report_results",
+        :data_type     => "YAML"
       )
       bb.binary = @raw_blob_csv.dup
 
@@ -67,7 +67,7 @@ describe FixSerializedReportsForRailsFour do
 
   migration_context :down do
     before(:each) do
-      @raw_report   = File.read(File.join(data_dir, 'miq_report_hash.yaml'))
+      @raw_report  = File.read(File.join(data_dir, 'miq_report_hash.yaml'))
       @raw_blob     = File.read(File.join(data_dir, 'binary_blob_hash.yaml'))
       @raw_blob_csv = File.read(File.join(data_dir, 'binary_blob_csv.yaml'))
     end
@@ -106,15 +106,14 @@ describe FixSerializedReportsForRailsFour do
       expect(raw_report).to be_a(MiqReport)
     end
 
-
     it "skips existing binary blobs serialized as CSV" do
       bb = binary_blob.create!(
-          :resource_type => "MiqReportResult",
-          :md5           => "b540c6aec8a7726c1154d71c06017150",
-          :size          => 67_124,
-          :part_size     => 1_048_576,
-          :name          => "report_results",
-          :data_type     => "YAML"
+        :resource_type => "MiqReportResult",
+        :md5           => "b540c6aec8a7726c1154d71c06017150",
+        :size          => 67_124,
+        :part_size     => 1_048_576,
+        :name          => "report_results",
+        :data_type     => "YAML"
       )
       bb.binary = @raw_blob_csv.dup
 
