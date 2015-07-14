@@ -27,7 +27,7 @@ class OpenstackEventMonitor
   # ordering of plugins.
   def self.subclasses
     # sort plugins on plugin_priorty
-    super.sort_by(&:plugin_priority)
+    super.sort_by(&:plugin_priority).reverse
   end
 
   # TODO: when ceilometer event integration is in place, this will likely have
