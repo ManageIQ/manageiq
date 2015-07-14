@@ -59,7 +59,7 @@ module ActiveRecord
       when Symbol, String
         arr << includes.to_sym
       when Array
-      includes.each do |assoc|
+        includes.each do |assoc|
           _included_associations assoc, arr
         end
       when Hash

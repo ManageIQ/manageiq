@@ -6,9 +6,9 @@ describe MetricRollup do
       pending "until ActiveRecord is fixed"
       # TODO: A fix in ActiveRecord will make this test pass
       expect do
-        MetricRollup.where(:id => 1000000544893)
-            .includes(:resource => {}, :time_profile => {})
-            .references(:time_profile => {}).last
+        MetricRollup.where(:id => 1)
+          .includes(:resource => {}, :time_profile => {})
+          .references(:time_profile => {}).last
       end.not_to raise_error
 
       # TODO: Also, there is a bug that exists in only the manageiq repo and not rails

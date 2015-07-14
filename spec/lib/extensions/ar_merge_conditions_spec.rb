@@ -13,25 +13,25 @@ describe ActiveRecord::Base do
 
       # Typical includes for rendering daily metrics charts
       @include = {
-        :max_derived_cpu_available => {},
-        :max_derived_cpu_reserved => {},
-        :min_cpu_usagemhz_rate_average => {},
-        :max_cpu_usagemhz_rate_average => {},
-        :min_cpu_usage_rate_average => {},
-        :max_cpu_usage_rate_average => {},
+        :max_derived_cpu_available       => {},
+        :max_derived_cpu_reserved        => {},
+        :min_cpu_usagemhz_rate_average   => {},
+        :max_cpu_usagemhz_rate_average   => {},
+        :min_cpu_usage_rate_average      => {},
+        :max_cpu_usage_rate_average      => {},
         :v_pct_cpu_ready_delta_summation => {},
-        :v_pct_cpu_wait_delta_summation => {},
-        :v_pct_cpu_used_delta_summation => {},
-        :max_derived_memory_available => {},
-        :max_derived_memory_reserved => {},
-        :min_derived_memory_used => {},
-        :max_derived_memory_used => {},
-        :min_disk_usage_rate_average => {},
-        :max_disk_usage_rate_average => {},
-        :min_net_usage_rate_average => {},
-        :max_net_usage_rate_average => {},
-        :v_derived_storage_used => {},
-        :resource => {}
+        :v_pct_cpu_wait_delta_summation  => {},
+        :v_pct_cpu_used_delta_summation  => {},
+        :max_derived_memory_available    => {},
+        :max_derived_memory_reserved     => {},
+        :min_derived_memory_used         => {},
+        :max_derived_memory_used         => {},
+        :min_disk_usage_rate_average     => {},
+        :max_disk_usage_rate_average     => {},
+        :min_net_usage_rate_average      => {},
+        :max_net_usage_rate_average      => {},
+        :v_derived_storage_used          => {},
+        :resource                        => {}
 
       }
     end
@@ -45,4 +45,3 @@ describe ActiveRecord::Base do
     end
   end
 end
-
