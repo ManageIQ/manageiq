@@ -259,6 +259,14 @@ class VmOrTemplate < ActiveRecord::Base
   include FilterableMixin
   include StorageMixin
 
+  def self.manager_class
+    if parent == Object
+      "Ems#{model_suffix}".constantize
+    else
+      parent
+    end
+  end
+
   def to_s
     self.name
   end
