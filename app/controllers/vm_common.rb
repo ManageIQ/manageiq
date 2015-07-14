@@ -1516,8 +1516,8 @@ module VmCommon
           process_show_list(options)
           model_name = @nodetype == "d" ? "Datacenter" : ui_lookup(:model=>rec.class.base_class.to_s)
           @is_redhat = case model_name
-          when 'Datacenter' then ManageIQ::Providers::InfraManager.find(rec.ems_id).type == 'EmsRedhat'
-          when 'Provider'   then rec.type == 'EmsRedhat'
+          when 'Datacenter' then ManageIQ::Providers::InfraManager.find(rec.ems_id).type == 'ManageIQ::Providers::Redhat::InfraManager'
+          when 'Provider'   then rec.type == 'ManageIQ::Providers::Redhat::InfraManager'
           else false
           end
 #       @right_cell_text = "#{ui_lookup(:models=>"VmOrTemplate")} under #{model_name} \"#{rec.name}\""

@@ -21,7 +21,7 @@ class IsoDatastore < ActiveRecord::Base
   end
 
   def advertised_images
-    return [] unless self.ext_management_system.kind_of?(EmsRedhat)
+    return [] unless self.ext_management_system.kind_of?(ManageIQ::Providers::Redhat::InfraManager)
 
     begin
       self.ext_management_system.with_provider_connection do |rhevm|

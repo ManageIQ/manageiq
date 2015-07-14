@@ -43,7 +43,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_redhat, :class => "EmsRedhat", :parent => :ems_infra do
+  factory :ems_redhat, :aliases => ["manageiq/providers/redhat/infra_manager"], :class => "ManageIQ::Providers::Redhat::InfraManager", :parent => :ems_infra do
   end
 
   factory :ems_redhat_with_authentication, :parent => :ems_redhat do

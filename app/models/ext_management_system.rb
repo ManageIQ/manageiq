@@ -123,7 +123,7 @@ class ExtManagementSystem < ActiveRecord::Base
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
         [EmsMicrosoft, 'SCVMM']
       elsif ost.hypervisor.include?(:rhevm)
-        [EmsRedhat, 'RHEV-M']
+        [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
       else
         [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
       end

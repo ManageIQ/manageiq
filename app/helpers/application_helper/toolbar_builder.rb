@@ -754,7 +754,7 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_clone"
         return true unless @record.cloneable?
       when "vm_publish"
-        return true if %w(VmMicrosoft VmRedhat).include?(@record.type)
+        return true if %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm).include?(@record.type)
       when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
       when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
@@ -859,7 +859,7 @@ class ApplicationHelper::ToolbarBuilder
 
     #need to add this here, since this button is on list view screen
     if @layout == "pxe" && id == "iso_datastore_new"
-      return "No #{ui_lookup(:tables => "ext_management_system")} are available to create an ISO Datastore on" if EmsRedhat.find(:all).delete_if{|e| e.iso_datastore != nil}.count <= 0
+      return "No #{ui_lookup(:tables => "ext_management_system")} are available to create an ISO Datastore on" if ManageIQ::Providers::Redhat::InfraManager.find(:all).delete_if{|e| e.iso_datastore != nil}.count <= 0
     end
 
     case get_record_cls(@record)
