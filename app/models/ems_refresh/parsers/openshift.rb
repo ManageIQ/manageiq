@@ -38,13 +38,13 @@ module EmsRefresh
           # TODO: persist tls
           :host_name    => route.spec.try(:host),
           :labels       => parse_labels(route),
-          # TODO: this part needs to be modified to service_id instead
-          :service_name => get_service_name(route),
           :path         => route.path
         )
 
         new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
                                                       route.metadata["table"][:namespace])
+        new_result[:container_service] = @data_index.fetch_path(:container_services, :by_namespace_and_name,
+                                                                new_result[:namespace], get_service_name(route))
         new_result
       end
     end

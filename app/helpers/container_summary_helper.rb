@@ -47,6 +47,15 @@ module ContainerSummaryHelper
     )
   end
 
+  def textual_container_service
+    textual_single_relationship(
+      :container_service,
+      :name,
+      "container_service",
+      "container_service_show"
+    )
+  end
+
   def textual_container_services
     textual_multiple_relationship(
       :container_services,
