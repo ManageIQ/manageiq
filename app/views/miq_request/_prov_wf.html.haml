@@ -4,17 +4,17 @@
   #prov_wf_div
     - options = @options || @edit[:new]
     - wf = options[:wf] || @edit[:wf]
-    - tabname = @tabactive || "#{options[:current_tab_key]}_div"
+    - tabname = (@tabactive || options[:current_tab_key]).to_s
     #prov_tabs
       %ul.nav.nav-tabs
         - wf.get_dialog_order.each do |d|
           - unless wf.get_dialog(d).blank? || wf.get_dialog(d)[:display] == :ignore
-            = miq_tab_header(d, tabname, :class => wf.get_dialog(d)[:display] == :hide ? 'hidden' : '') do
+            = miq_tab_header(d.to_s, tabname, :class => wf.get_dialog(d)[:display] == :hide ? 'hidden' : '') do
               = wf.get_dialog(d)[:description]
       .tab-content
         - wf.get_dialog_order.each do |d|
           - unless wf.get_dialog(d).blank? || wf.get_dialog(d)[:display] == :ignore
-            = miq_tab_content(d, tabname) do
+            = miq_tab_content(d.to_s, tabname) do
               - if wf.kind_of?(MiqProvisionWorkflow)
                 = render :partial => "/shared/views/prov_dialog", :locals => {:wf => wf, :dialog => d}
               - elsif wf.kind_of?(VmMigrateWorkflow)

@@ -281,7 +281,7 @@ class MiqRequestController < ApplicationController
       @edit[:wf].get_dialog_order.each do |d|
         if @edit[:wf].get_dialog(d)[:display] == :show
           @edit[:new][:current_tab_key] = d
-          @tabactive = "#{d}_div" # Use JS to update the display
+          @tabactive = d # Use JS to update the display
           break
         end
       end
