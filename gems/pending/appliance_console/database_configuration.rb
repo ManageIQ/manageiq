@@ -4,9 +4,9 @@ require 'linux_admin'
 require 'pathname'
 require 'util/miq-password'
 require 'fileutils'
-require_relative "errors"
-require_relative "utilities"
-require_relative "logging"
+require 'appliance_console/errors'
+require 'appliance_console/utilities'
+require 'appliance_console/logging'
 
 RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
 
