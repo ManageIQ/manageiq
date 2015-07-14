@@ -3,7 +3,6 @@ class MiqGroup < ActiveRecord::Base
 
   belongs_to :tenant_owner, :class_name => "Tenant"
   belongs_to :miq_user_role
-  belongs_to :role, :class_name => "UiTaskSet", :foreign_key => :ui_task_set_id
   belongs_to :resource, :polymorphic => true
   has_and_belongs_to_many :users
   has_many   :vms,         :dependent => :nullify
@@ -17,7 +16,7 @@ class MiqGroup < ActiveRecord::Base
   virtual_column :read_only,          :type => :boolean
   virtual_column :user_count,         :type => :integer
 
-  # TODO: Commented out :ui_task_set_idfor work for implementing new RBAC design. This should be replaced with miq_group_id.
+  # TODO: Commented out :ui_task_set_id for work for implementing new RBAC design. This should be replaced with miq_group_id.
   validates_presence_of   :description, :guid #, :ui_task_set_id
   validates_uniqueness_of :description, :guid
 

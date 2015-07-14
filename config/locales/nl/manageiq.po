@@ -13064,63 +13064,6 @@ msgstr ""
 msgid "URL (i.e. www.mypage.com)"
 msgstr ""
 
-msgid "Ui task"
-msgstr ""
-
-msgid "Ui task set"
-msgstr ""
-
-msgid "UiTaskSet|Created on"
-msgstr ""
-
-msgid "UiTaskSet|Description"
-msgstr ""
-
-msgid "UiTaskSet|Guid"
-msgstr ""
-
-msgid "UiTaskSet|Mode"
-msgstr ""
-
-msgid "UiTaskSet|Name"
-msgstr ""
-
-msgid "UiTaskSet|Owner type"
-msgstr ""
-
-msgid "UiTaskSet|Read only"
-msgstr ""
-
-msgid "UiTaskSet|Set data"
-msgstr ""
-
-msgid "UiTaskSet|Set type"
-msgstr ""
-
-msgid "UiTaskSet|Updated on"
-msgstr ""
-
-msgid "UiTaskSet|Userid"
-msgstr ""
-
-msgid "UiTask|Area"
-msgstr ""
-
-msgid "UiTask|Created on"
-msgstr ""
-
-msgid "UiTask|Name"
-msgstr ""
-
-msgid "UiTask|Task"
-msgstr ""
-
-msgid "UiTask|Typ"
-msgstr ""
-
-msgid "UiTask|Updated on"
-msgstr ""
-
 msgid ""
 "Unable to create a new template copy \"%s\": new template content cannot be empt"
 "y."

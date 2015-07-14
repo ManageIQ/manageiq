@@ -16,8 +16,7 @@ module MiqAeServiceMiqHostProvisionSpec
     end
 
     it "#miq_host_provision_request" do
-      user = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      approver_role              = FactoryGirl.create(:ui_task_set_approver)
+      user = FactoryGirl.create(:user)
       miq_host_provision_request = FactoryGirl.create(:miq_host_provision_request, :provision_type => 'host_pxe_install', :state => 'pending', :status => 'Ok', :userid => user.userid)
       @miq_host_provision.miq_host_provision_request = miq_host_provision_request
       @miq_host_provision.save!

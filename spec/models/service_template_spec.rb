@@ -229,13 +229,10 @@ describe ServiceTemplate do
 
     context "with a VM Provision Request Template" do
       before(:each) do
-        User.any_instance.stub(:role).and_return("admin")
-        @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-        @approver    = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
-        UiTaskSet.stub(:find_by_name).and_return(@approver)
+        admin = FactoryGirl.create(:user_admin)
 
         vm_template = Vm.first
-        ptr = FactoryGirl.create(:miq_provision_request_template, :userid => @user.userid, :src_vm_id => vm_template.id)
+        ptr = FactoryGirl.create(:miq_provision_request_template, :userid => admin.userid, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
       end
 

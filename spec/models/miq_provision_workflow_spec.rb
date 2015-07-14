@@ -15,11 +15,7 @@ describe MiqProvisionWorkflow do
         @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :status => "started")
         MiqServer.stub(:my_server => @server)
 
-        super_role   = FactoryGirl.create(:ui_task_set, :name => 'super_administrator', :description => 'Super Administrator')
-        @admin       = FactoryGirl.create(:user, :name => 'admin',            :userid => 'admin',    :ui_task_set_id => super_role.id)
-        @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred',     :ui_task_set_id => super_role.id)
-        @approver    = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver', :ui_task_set_id => super_role.id)
-        UiTaskSet.stub(:find_by_name).and_return(@approver)
+        @admin = FactoryGirl.create(:user_admin)
 
         FactoryGirl.create(:miq_dialog_provision)
       end

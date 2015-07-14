@@ -499,7 +499,6 @@ workers:
         - schema_migrations
         - server_roles
         - sessions
-        - ui_tasks
         - vim_performances
         - vim_performance_states
         - vim_performance_tag_values

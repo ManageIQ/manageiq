@@ -11,9 +11,8 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
                                                     'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
-      @user          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @approver_role = FactoryGirl.create(:ui_task_set_approver)
-      @service_template_provision_request = FactoryGirl.create(:service_template_provision_request,  :requester => @user, :userid => @user.userid)
+      user           = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
+      @service_template_provision_request = FactoryGirl.create(:service_template_provision_request, :requester => user, :userid => user.userid)
     end
 
     def invoke_ae
