@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
   include_concern 'Automate'
   include_concern 'CiProcessing'
   include_concern 'Compare'
+  include_concern 'CurrentUser'
   include_concern 'Buttons'
   include_concern 'DialogRunner'
   include_concern 'Explorer'
@@ -37,11 +38,12 @@ class ApplicationController < ActionController::Base
   include_concern 'Performance'
   include_concern 'PolicySupport'
   include_concern 'Tags'
+  include_concern 'Tenancy'
   include_concern 'Timelines'
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
-  include_concern 'CurrentUser'
 
+  before_filter :set_session_tenant, :except => [:window_sizes]
   before_filter :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_filter :set_user_time_zone
   before_filter :set_gettext_locale
@@ -2352,11 +2354,6 @@ class ApplicationController < ActionController::Base
         add_flash(params[:flash_msg])
       end
     end
-
-    # Get customer name
-    session[:customer_name] = get_vmdb_config[:server][:company] if session[:customer_name] == nil
-    session[:vmdb_name] = get_vmdb_config[:server][:name] if session[:vmdb_name] == nil
-    session[:custom_logo] = get_vmdb_config[:server][:custom_logo] if session[:custom_logo] == nil
 
     # Get settings hash from the session
     @settings = session[:settings]
