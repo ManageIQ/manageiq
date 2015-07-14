@@ -44,12 +44,10 @@ module Vmdb
 
       private
 
-      def log_resolved_asset(path, include = true)
-        resolved = resolved_asset(path)
-        if include
-          puts "  + #{resolved}"
-        elsif ENV["DEBUG_PRECOMPILE"]
-          puts "  - #{resolved}"
+      def log_resolved_asset(path, included = true)
+        if ENV["DEBUG_PRECOMPILE"]
+          resolved = resolved_asset(path)
+          puts "  #{included ? "+" : "-"} #{resolved}"
         end
       end
 

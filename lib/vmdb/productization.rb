@@ -26,19 +26,17 @@ module Vmdb
     def prepare_asset_precompilation
       Rails.application.config.assets.precompile = [
         Proc.new do |path|
-          include =
+          file =
             !File.extname(path).in?(['.js', '.css', '']) ||
             path =~ /(?:\/|\\|\A)(application|productization)\.(css|js)$/
 
-          resolved = Rails.application.assets.resolve(path)
-          resolved = resolved.relative_path_from(Rails.root) if resolved.to_s.start_with?(Rails.root.to_s)
-          if include
-            puts "+ #{resolved}"
-          elsif
-            puts "- #{resolved}"
+          if ENV["DEBUG_PRECOMPILE"]
+            resolved = Rails.application.assets.resolve(path)
+            resolved = resolved.relative_path_from(Rails.root) if resolved.to_s.start_with?(Rails.root.to_s)
+            puts " #{file ? "+" : "-"} #{resolved}"
           end
 
-          include
+          file
         end
       ]
     end
