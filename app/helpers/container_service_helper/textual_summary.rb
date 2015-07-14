@@ -18,10 +18,10 @@ module ContainerServiceHelper::TextualSummary
     h = {:labels => labels}
     h[:values] = @record.container_service_port_configs.collect do |config|
       [
-        config.name || _("<Unnamed>"),
-        config.port,
-        config.target_port,
-        config.protocol
+        {:value => config.name || _("<Unnamed>")},
+        {:value => config.port},
+        {:value => config.target_port},
+        {:value => config.protocol}
       ]
     end
     h
