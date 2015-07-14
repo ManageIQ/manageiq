@@ -52,7 +52,7 @@
 //= require jquery.cookie
 //= require dhtmlx_gpl_36/dhtmlxcommon
 //= require dhtmlx_gpl_36/dhtmlxcontainer
-//= require dynatree_1.2.4/jquery.dynatree
+//= require dynatree/jquery.dynatree
 //= require miq_dynatree
 //= require SlickGrid-2.1/jquery.event.drag-2.2
 //= require SlickGrid-2.1/slick.core
