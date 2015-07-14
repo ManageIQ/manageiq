@@ -18,8 +18,7 @@ module EmsRefresh
     def save_orchestration_stacks_inventory(ems, hashes, target = nil)
       target = ems if target.nil?
 
-      ems.orchestration_stacks(true)
-      deletes = target == ems ? ems.orchestration_stacks.dup : []
+      deletes = target == ems ? ems.orchestration_stacks(true).dup : []
 
       hashes.each do |h|
         h[:orchestration_template_id] = h.fetch_path(:orchestration_template, :id)
@@ -32,7 +31,8 @@ module EmsRefresh
                                     [:ems_ref],
                                     [:parameters, :outputs, :resources],
                                     [:parent, :orchestration_template])
-      store_ids_for_new_records(ems.orchestration_stacks, hashes, :ems_ref)
+
+      store_ids_for_new_records(ems.orchestration_stacks(true), hashes, :ems_ref)
 
       save_orchestration_stack_nesting(stacks.index_by(&:id), hashes)
     end
@@ -40,7 +40,7 @@ module EmsRefresh
     def save_orchestration_stack_nesting(stacks, hashes)
       hashes.each do |hash|
         next unless hash[:parent]
-        stacks[hash[:id]].update_attribute(:parent_id, hash[:parent][:id])
+        stacks[hash[:id]].update_attribute(:parent_id, hash[:parent][:id]) if stacks[hash[:id]]
       end
     end
 
