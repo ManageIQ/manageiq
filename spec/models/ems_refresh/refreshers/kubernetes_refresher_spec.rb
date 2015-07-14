@@ -32,6 +32,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       assert_specific_container_service
       assert_specific_container_replicator
       assert_specific_container_project
+      assert_specific_container_image_and_registry
     end
   end
 
@@ -45,6 +46,8 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     ContainerDefinition.count.should == 3
     ContainerReplicator.count.should == 2
     ContainerProject.count.should == 1
+    ContainerImage.count.should == 3
+    ContainerImageRegistry.count.should == 1
   end
 
   def assert_ems
@@ -68,16 +71,17 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       # :ems_ref       => "a7566742-e73f-11e4-b613-001a4a5f4a02_heapster_kubernetes/heapster:v0.9",
       :name          => "heapster",
       :restart_count => 0,
-      :image         => "kubernetes/heapster:v0.11.0",
       # :backing_ref   => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
     )
+
+    @container.container_image.name.should == "kubernetes/heapster"
 
     @container2 = Container.find_by_name("influxdb")
     @container2.should have_attributes(
       # :ems_ref       => "a7649eaa-e73f-11e4-b613-001a4a5f4a02_influxdb_kubernetes/heapster_influxdb:v0.3",
       :name          => "influxdb",
       :restart_count => 0,
-      :image         => "kubernetes/heapster_influxdb:v0.3",
+
       # :backing_ref   => "docker://af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6"
     )
 
@@ -85,6 +89,8 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @container2.container_group.should have_attributes(
       :name => "monitoring-influx-grafana-controller-mdyqf"
     )
+
+    @container2.container_image.name.should == "kubernetes/heapster_influxdb"
   end
 
   def assert_specific_container_group
@@ -187,6 +193,21 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @container_pr.should have_attributes(
       # :ems_ref => "581874d7-e385-11e4-9d96-f8b156af4ae1",
       :name    => "default"
+    )
+  end
+
+  def assert_specific_container_image_and_registry
+    @image = ContainerImage.where(:name => "kubernetes/heapster").first
+    @image.should have_attributes(
+      :name      => "kubernetes/heapster",
+      :tag       => "v0.11.0",
+      :image_ref => "docker://6207b36028f56023248abaaa8ed68c964c2364f731c24299cff8a904f1b33cfa",
+    )
+
+    @image.container_image_registry.should_not be_nil
+    @image.container_image_registry.should have_attributes(
+      :host => "example.com",
+      :port => "1234",
     )
   end
 end

@@ -18,7 +18,7 @@ module ContainerHelper::TextualSummary
   #
 
   def textual_image
-    {:label => "Image", :value => @record.image}
+    {:label => "Image", :value => @record.container_image.name}
   end
 
   def textual_name
@@ -38,6 +38,6 @@ module ContainerHelper::TextualSummary
   end
 
   def textual_image_ref
-    {:label => "Image Ref (Image ID)", :value => @record.image_ref}
+    {:label => "Image Ref (Image ID)", :value => @record.container_image.image_ref}
   end
 end
