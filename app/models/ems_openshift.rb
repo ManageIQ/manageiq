@@ -20,7 +20,7 @@ class EmsOpenshift < EmsContainer
   end
 
   def self.api_version
-    'v1beta1'
+    'v1'
   end
 
   def self.ems_type
