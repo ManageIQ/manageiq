@@ -130,6 +130,16 @@ class ApplicationController < ActionController::Base
     redirect_to(:action=>params[:tab], :id=>params[:id])
   end
 
+  def resize_layout
+    if params[:sidebar]
+      session[:sidebar] ||= {}
+      session[:sidebar][params[:controller]] ||= 2
+      sidebar = params[:sidebar].to_i
+      session[:sidebar][params[:controller]] = sidebar if [0, 2, 3, 4, 5].include?(sidebar)
+    end
+    render :nothing => true # No response required
+  end
+
   def build_targets_hash(items,typ=true)
     @targets_hash ||= Hash.new
     #if array of objects came in
