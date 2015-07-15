@@ -19,7 +19,6 @@ gem 'lodash-rails', '~> 3.10.0'
 
 # On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
 
-gem "sprockets-sass",  "~>1.2.0"
 gem 'sass-rails'
 gem 'patternfly-sass', "~>1.3.1"
 
