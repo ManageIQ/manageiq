@@ -15,15 +15,6 @@ Builds of ManageIQ are released under GPLv2.
 Third-Party Legal Notices
 =========================
 
-app/assets/fonts/ includes files from Font Awesome by Dave Gandy
-(http://fontawesome.io) which are licensed under SIL OFL 1.1
-(http://scripts.sil.org/OFL).
-
-
-app/assets/fonts/ includes Open Sans font files which are
-licensed under the Apache License 2.0.
-
-
 public/javascripts/timeline/* is covered by the following
 copyright and license notice:
 
