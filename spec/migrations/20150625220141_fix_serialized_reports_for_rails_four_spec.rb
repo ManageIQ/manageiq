@@ -67,7 +67,7 @@ describe FixSerializedReportsForRailsFour do
 
   migration_context :down do
     before(:each) do
-      @raw_report  = File.read(File.join(data_dir, 'miq_report_hash.yaml'))
+      @raw_report   = File.read(File.join(data_dir, 'miq_report_hash.yaml'))
       @raw_blob     = File.read(File.join(data_dir, 'binary_blob_hash.yaml'))
       @raw_blob_csv = File.read(File.join(data_dir, 'binary_blob_csv.yaml'))
     end

@@ -4,11 +4,11 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
                   :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
                   :report_run_time, :chart, :reserved]
 
-    def serialize_report_to_hash(val)
+    def serialize_report_to_hash(val, migration)
       if val.include?("!ruby/object:MiqReport")
         val.sub!(/MiqReport/, 'Hash')
       elsif val.starts_with?('--- !')
-        puts "#{self.class} Id: #{id} is not an MiqReport object, skipping conversion"
+        migration.say "#{self.class} Id: #{id} is not an MiqReport object, skipping conversion"
         return
       else
         raise "unexpected format of report attribute encountered, '#{val.inspect}'"
@@ -22,9 +22,9 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
       YAML.dump(new_hash)
     end
 
-    def serialize_hash_to_report(val, from)
+    def serialize_hash_to_report(val, from, migration)
       if val.starts_with?('--- !')
-        puts "#{self.class} Id: #{id} is not a Hash, skipping conversion"
+        migration.say "#{self.class} Id: #{id} is not a Hash, skipping conversion"
       elsif val.starts_with?("---")
         new_hash = {'attributes' => {}}
         YAML.load(val).each do |k, v|
@@ -127,16 +127,17 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   end
 
   def up
+    say "hello"
     say_with_time("Converting MiqReportResult#report to a serialized hash") do
       MiqReportResult.where('report IS NOT NULL').each do |rr|
-        val = rr.serialize_report_to_hash(rr.read_attribute(:report))
+        val = rr.serialize_report_to_hash(rr.read_attribute(:report), self)
         rr.update_attribute(:report, val) if val
       end
     end
 
     say_with_time("Converting BinaryBlob report results to a serialized hash") do
       BinaryBlob.where(:resource_type => 'MiqReportResult').each do |bb|
-        val = bb.serialize_report_to_hash(bb.binary)
+        val = bb.serialize_report_to_hash(bb.binary, self)
         bb.binary = val if val
       end
     end
@@ -145,14 +146,14 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   def down
     say_with_time("Converting MiqReportResult#report back to a serialized MiqReport") do
       MiqReportResult.where('report IS NOT NULL').each do |rr|
-        val = rr.serialize_hash_to_report(rr.read_attribute(:report), :miq_report_result)
+        val = rr.serialize_hash_to_report(rr.read_attribute(:report), :miq_report_result, self)
         rr.update_attribute(:report, val) if val
       end
     end
 
     say_with_time("Converting BinaryBlob report results back to a serialized MiqReport") do
       BinaryBlob.where(:resource_type => 'MiqReportResult').each do |bb|
-        val = bb.serialize_hash_to_report(bb.binary, :binary_blob)
+        val = bb.serialize_hash_to_report(bb.binary, :binary_blob, self)
         bb.binary = val if val
       end
     end
