@@ -1303,37 +1303,37 @@ function miqClickAndPop(el) {
 }
 
 function miq_tabs_init(id, url) {
-  if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
-    $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-      if ($(e.target).parent().hasClass('disabled')) {
-        e.preventDefault();
-        return false;
-      } else {
-        // Load remote tab if an URL is specified
-        if (typeof(url) != 'undefined') {
-          var currTabTarget = $(e.target).attr('href').substring(1);
-          miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
-        }
+  $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+    if ($(e.target).parent().hasClass('disabled')) {
+      e.preventDefault();
+      return false;
+    } else {
+      // Load remote tab if an URL is specified
+      if (typeof(url) != 'undefined') {
+        var currTabTarget = $(e.target).attr('href').substring(1);
+        miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
       }
-    });
-    $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      // Refresh CodeMirror when its tab is toggled
-      if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(miqEditor) != 'undefined') {
-        miqEditor.refresh();
-      }
-      // Show buttons according to the show/hide-buttons class
-      if ($($(e.target).attr('href')).hasClass('show-buttons')) {
-        $("#center_buttons_div").show();
-      } else if ($($(e.target).attr('href')).hasClass('hide-buttons')) {
-        $("#center_buttons_div").hide();
-      }
-    });
-    // If no active tab is present, set the first tab as active
-    if ($(id + ' > ul.nav-tabs li.active').length != 1) {
-      $(id + ' > ul.nav-tabs li').first().addClass('active');
-      $(id + ' > .tab-content div.tab-pane').first().addClass('active');
     }
-  } else {
+  });
+  $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    // Refresh CodeMirror when its tab is toggled
+    if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(miqEditor) != 'undefined') {
+      miqEditor.refresh();
+    }
+    // Show buttons according to the show/hide-buttons class
+    if ($($(e.target).attr('href')).hasClass('show-buttons')) {
+      $("#center_buttons_div").show();
+    } else if ($($(e.target).attr('href')).hasClass('hide-buttons')) {
+      $("#center_buttons_div").hide();
+    }
+  });
+  // If no active tab is present, set the first tab as active
+  if ($(id + ' > ul.nav-tabs li.active:not(.hidden)').length != 1) {
+    var tab = $(id + ' > ul.nav-tabs li:not(.hidden)').first().addClass('active');
+    $(tab.find('a').attr('href')).addClass('active');
+  }
+  // Hide the tab header when there is only one visible tab available
+  if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length == 1) {
     $(id + ' > ul.nav-tabs').hide();
   }
 }
