@@ -11,6 +11,8 @@ describe FixSerializedReportsForRailsFour do
       @raw_report   = File.read(File.join(data_dir, 'miq_report_obj.yaml'))
       @raw_blob     = File.read(File.join(data_dir, 'binary_blob_obj.yaml'))
       @raw_blob_csv = File.read(File.join(data_dir, 'binary_blob_csv.yaml'))
+
+      FixSerializedReportsForRailsFour::BinaryBlob.any_instance.stub(:resource).and_return(true)
     end
 
     it "migrates existing reports serialized as MiqReport objects to Hashes" do
@@ -70,6 +72,8 @@ describe FixSerializedReportsForRailsFour do
       @raw_report   = File.read(File.join(data_dir, 'miq_report_hash.yaml'))
       @raw_blob     = File.read(File.join(data_dir, 'binary_blob_hash.yaml'))
       @raw_blob_csv = File.read(File.join(data_dir, 'binary_blob_csv.yaml'))
+
+      FixSerializedReportsForRailsFour::BinaryBlob.any_instance.stub(:resource).and_return(true)
     end
 
     it "migrates existing reports serialized as Hashes objects to MiqReports" do

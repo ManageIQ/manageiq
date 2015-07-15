@@ -84,6 +84,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   class BinaryBlob < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
     has_many :binary_blob_parts, -> { order(:id) }, :class_name => 'FixSerializedReportsForRailsFour::BinaryBlobPart'
+    belongs_to :resource, :class_name => 'FixSerializedReportsForRailsFour::MiqReportResult'
 
     include Serializer
 
@@ -135,9 +136,11 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
     end
 
     say_with_time("Converting BinaryBlob report results to a serialized hash") do
-      BinaryBlob.where(:resource_type => 'MiqReportResult').each do |bb|
-        val = bb.serialize_report_to_hash(bb.binary, self)
-        bb.binary = val if val
+      BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').each do |bb|
+        if bb.resource
+          val = bb.serialize_report_to_hash(bb.binary, self)
+          bb.binary = val if val
+        end
       end
     end
   end
@@ -151,9 +154,11 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
     end
 
     say_with_time("Converting BinaryBlob report results back to a serialized MiqReport") do
-      BinaryBlob.where(:resource_type => 'MiqReportResult').each do |bb|
-        val = bb.serialize_hash_to_report(bb.binary, :binary_blob, self)
-        bb.binary = val if val
+      BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').each do |bb|
+        if bb.resource
+          val = bb.serialize_hash_to_report(bb.binary, :binary_blob, self)
+          bb.binary = val if val
+        end
       end
     end
   end
