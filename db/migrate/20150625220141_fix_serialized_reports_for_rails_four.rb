@@ -127,7 +127,6 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   end
 
   def up
-    say "hello"
     say_with_time("Converting MiqReportResult#report to a serialized hash") do
       MiqReportResult.where('report IS NOT NULL').each do |rr|
         val = rr.serialize_report_to_hash(rr.read_attribute(:report), self)
