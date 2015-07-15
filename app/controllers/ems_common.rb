@@ -322,6 +322,10 @@ module EmsCommon
         @edit[:saved_amqp_verify_status] = @edit[:amqp_verify_status]
         page << "miqValidateButtons('#{@edit[:amqp_verify_status] ? 'show' : 'hide'}', 'amqp_');"
       end
+      if @edit[:bearer_verify_status] != @edit[:saved_bearer_verify_status]
+        @edit[:saved_bearer_verify_status] = @edit[:bearer_verify_status]
+        page << "miqValidateButtons('#{@edit[:bearer_verify_status] ? 'show' : 'hide'}', 'bearer_');"
+      end
     end
   end
 
@@ -565,6 +569,12 @@ module EmsCommon
       @edit[:metrics_verify_status] = (edit_new[:metrics_password] == edit_new[:metrics_verify])
     end
 
+    if edit_new[:bearer_token].blank? || edit_new[:hostname].blank? || edit_new[:emstype].blank?
+      @edit[:bearer_verify_status] = false
+    else
+      @edit[:bearer_verify_status] = true
+    end
+
     # check if any of amqp_userid, amqp_password, amqp_verify, :hostname, :emstype are blank
     if any_blank_fields?(edit_new, [:amqp_userid, :amqp_password, :amqp_verify, :hostname, :emstype])
       @edit[:amqp_verify_status] = false
@@ -708,6 +718,9 @@ module EmsCommon
     @edit[:new][:ssh_keypair_userid] = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
     @edit[:new][:ssh_keypair_password] = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_key(:ssh_keypair).to_s : ""
 
+    @edit[:new][:bearer_token] = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
+    @edit[:new][:bearer_verify] = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
+
     if @ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
       @edit[:new][:host_default_vnc_port_start] = @ems.host_default_vnc_port_start.to_s
       @edit[:new][:host_default_vnc_port_end] = @ems.host_default_vnc_port_end.to_s
@@ -715,6 +728,7 @@ module EmsCommon
     @edit[:ems_types] = model.supported_types_and_descriptions_hash
     @edit[:saved_default_verify_status] = nil
     @edit[:saved_metrics_verify_status] = nil
+    @edit[:saved_bearer_verify_status] = nil
     @edit[:saved_amqp_verify_status] = nil
     set_verify_status
 
@@ -770,6 +784,9 @@ module EmsCommon
     @edit[:new][:ssh_keypair_userid] = params[:ssh_keypair_userid] if params[:ssh_keypair_userid]
     @edit[:new][:ssh_keypair_password] = params[:ssh_keypair_password] if params[:ssh_keypair_password]
 
+    @edit[:new][:bearer_token] = params[:bearer_token] if params[:bearer_token]
+    @edit[:new][:bearer_verify] = params[:bearer_verify] if params[:bearer_verify]
+
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
@@ -808,6 +825,9 @@ module EmsCommon
     end
     if ems.supports_authentication?(:ssh_keypair) && !@edit[:new][:ssh_keypair_userid].blank?
       creds[:ssh_keypair] = {:userid => @edit[:new][:ssh_keypair_userid], :auth_key => @edit[:new][:ssh_keypair_password]}
+    end
+    if ems.supports_authentication?(:bearer) && !@edit[:new][:bearer_token].blank?
+      creds[:bearer] = {:auth_key => @edit[:new][:bearer_token], :userid => "_"} # Must have userid
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})
   end
