@@ -70,4 +70,26 @@ describe MiqProvisionWorkflow do
       it("with class #{sub_klass}") { sub_klass.encrypted_options_fields.should include(:root_password) }
     end
   end
+
+  context '.class_for_source' do
+    let(:provider)       { FactoryGirl.create(:ems_amazon) }
+    let(:template)       { FactoryGirl.create(:template_amazon, :name => "template") }
+    let(:workflow_class) { provider.class.provision_workflow_class }
+
+    it 'with valid source' do
+      template.update_attributes(:ext_management_system => provider)
+      expect(described_class.class_for_source(template.id)).to eq(workflow_class)
+    end
+
+    it 'with orphaned source' do
+      template.stub(:storage).and_return([])
+      expect(template.orphaned?).to be_true
+      expect(described_class.class_for_source(template.id)).to eq(workflow_class)
+    end
+
+    it 'with archived source' do
+      expect(template.archived?).to be_true
+      expect(described_class.class_for_source(template.id)).to eq(workflow_class)
+    end
+  end
 end

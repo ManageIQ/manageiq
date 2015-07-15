@@ -12,7 +12,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   def self.class_for_source(source_or_id)
     source = VmOrTemplate.find_by_id(source_or_id)
     return nil if source.nil?
-    source.ext_management_system.class.provision_workflow_class
+    source.class.manager_class.provision_workflow_class
   end
 
   def self.encrypted_options_fields
