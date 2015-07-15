@@ -54,6 +54,22 @@ module ContainerSummaryHelper
   def textual_container_selectors
     textual_key_value(@record.selector_parts.to_a)
   end
+  
+  def textual_container_image
+    textual_link(@record.container_image)
+  end
+
+  def textual_container_images
+    textual_link(@record.container_images)
+  end
+
+  def textual_container_image_registry
+    textual_link(@record.container_image_registry)
+  end
+
+  def textual_container_image_registries
+    textual_link(@record.container_image_registries)
+  end
 
   private
 

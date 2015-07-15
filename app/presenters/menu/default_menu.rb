@@ -75,7 +75,21 @@ module Menu
           Menu::Item.new('container_route',   ui_lookup(:tables => 'container_route'),   'container_route',   {:feature => 'container_route_show_list'},   '/container_route'),
           Menu::Item.new('container_replicator', ui_lookup(:tables => 'container_replicator'),   'container_replicator',   {:feature => 'container_replicator_show_list'},   '/container_replicator'),
           Menu::Item.new('container_service', ui_lookup(:tables => 'container_service'), 'container_service', {:feature => 'container_service_show_list'}, '/container_service'),
-          Menu::Item.new('container',         ui_lookup(:tables => 'container'),         'containers',        {:feature => 'containers', :any => true},     '/container/explorer')
+          Menu::Item.new('container',
+                         ui_lookup(:tables => 'container'),
+                         'containers',
+                         {:feature => 'containers', :any => true},
+                         '/container/explorer'),
+          Menu::Item.new('container_image',
+                         ui_lookup(:tables => 'container_image'),
+                         'container_image',
+                         {:feature => 'container_image_show_list'},
+                         '/container_image'),
+          Menu::Item.new('container_image_registry',
+                         ui_lookup(:tables => 'container_image_registry'),
+                         'container_image_registry',
+                         {:feature => 'container_image_registry_show_list'},
+                         '/container_image_registry'),
         ])
       end
 

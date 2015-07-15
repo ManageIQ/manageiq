@@ -58,6 +58,12 @@ module ContainersCommonMixin
       show_container_display(record, "container_replicators", ContainerReplicator)
     elsif @display == "container_projects" || session[:display] == "container_projects" && params[:display].nil?
       show_container_display(record, "container_projects", ContainerProject)
+    elsif @display == "container_images" || session[:display] == "container_images" && params[:display].nil?
+      show_container_display(record, "container_images", ContainerImage)
+    elsif @display == "container_image_registries" ||
+          session[:display] == "container_image_registries" &&
+          params[:display].nil?
+      show_container_display(record, "container_image_registries", ContainerImageRegistry)
     end
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

@@ -1,0 +1,52 @@
+- if @record.try(:host)
+  #accordion.panel-group
+    = patternfly_accordion_panel(truncate(@record.host, :length => truncate_length), true, "icon") do
+      = render(:partial => "layouts/quadicon",
+               :locals  => {:mode => :icon,
+               :item    => @record,
+               :size    => 72,
+               :typ     => :listnav})
+
+    = patternfly_accordion_panel(_("Properties"), false, "container_image_registry_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
+
+    = patternfly_accordion_panel(_("Relationships"), false, "container_image_registry_rel") do
+      %ul.nav.nav-pills.nav-stacked
+        - if role_allows(:feature => "container_images")
+          - num_images = @record.numb_of(:container_images)
+          - if num_images == 0
+            %li.disabled
+              = link_to(_("%s (0)") % ui_lookup(:table => "container_images"), "#")
+          - else
+            %li
+              = link_to(_("#{ui_lookup(:table => "container_images")} (#{num_images})"),
+                  {:action => 'show', :id => @record, :display => 'container_images'},
+                  :title => _("View %s") % ui_lookup(:table => "container_images"))
+        - if role_allows(:feature => "container_image_show_list")
+          - num_images = @record.number_of(:container_images)
+          - if num_images == 0
+            %li.disabled
+              = link_to(_('Images (0)'), "#")
+          - else
+            %li
+              = link_to(_("Images (%s)") % num_images,
+                  {:action  => 'show', :id => @record, :display => 'container_images'},
+                  :title => _("Show Images"))
+        - if role_allows(:feature => "containers")
+          - num_containers = @record.number_of(:containers)
+          - if num_containers == 0
+            %li.disabled
+              = link_to(_('Containers (0)'), "#")
+          - else
+            %li
+              = link_to(_("Containers (%s)") % num_containers,
+                  {:action  => 'show', :id => @record, :display => 'containers'},
+                  :title => _("Show Containers"))
+        - if role_allows(:feature => "ems_container_show") && !@record.ext_management_system.nil?
+          %li
+            = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
+                {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
+                :title => _("Show this container group's parent %s") % ui_lookup(:table => "ems_container"))
+

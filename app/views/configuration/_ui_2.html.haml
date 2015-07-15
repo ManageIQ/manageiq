@@ -40,26 +40,30 @@
                     %td
                       %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
         - if get_vmdb_config[:product][:containers]
-          - if role_allows(:feature => "ems_container_show_list")        ||
-          -    role_allows(:feature => "container_group_show_list")      ||
-          -    role_allows(:feature => "container_node_show_list")       ||
-          -    role_allows(:feature => "container_route_show_list")      ||
-          -    role_allows(:feature => "container_project_show_list")    ||
-          -    role_allows(:feature => "container_replicator_show_list") ||
-          -    role_allows(:feature => "container_service_accord")       ||
-          -    role_allows(:feature => "containers_filter_accord")       ||
+          - if role_allows(:feature => "ems_container_show_list")             ||
+          -    role_allows(:feature => "container_group_show_list")           ||
+          -    role_allows(:feature => "container_node_show_list")            ||
+          -    role_allows(:feature => "container_route_show_list")           ||
+          -    role_allows(:feature => "container_project_show_list")         ||
+          -    role_allows(:feature => "container_replicator_show_list")      ||
+          -    role_allows(:feature => "container_image_show_list")           ||
+          -    role_allows(:feature => "container_image_registry_show_list")  ||
+          -    role_allows(:feature => "container_service_accord")            ||
+          -    role_allows(:feature => "containers_filter_accord")            ||
           -    role_allows(:feature => "containers_accord")
             %fieldset
               %h3= _('Containers')
               %table.style1
-                - keys = {:emscontainer        => "ems_container",
-                          :containernode       => "container_node",
-                          :containergroup      => "container_group",
-                          :containerservice    => "container_service",
-                          :containerroute      => "container_route",
-                          :containerproject    => "container_project",
-                          :containerreplicator => "container_replicator",
-                          :container           => "container"}
+                - keys = {:emscontainer           => "ems_container",
+                          :containernode          => "container_node",
+                          :containergroup         => "container_group",
+                          :containerservice       => "container_service",
+                          :containerroute         => "container_route",
+                          :containerproject       => "container_project",
+                          :containerreplicator    => "container_replicator",
+                          :containerimage         => "container_image",
+                          :containerimageregistry => "container_image_registry",
+                          :container              => "container"}
                 - keys.each do |resource, table_view_name|
                   %tr
                     %td.key= ui_lookup(:tables => table_view_name)
