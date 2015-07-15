@@ -258,20 +258,31 @@ module MiqAeEngine
   end
 
   def self.create_automation_object(name, attrs, options = {})
+    # args
     if options[:fqclass]
       options[:namespace], options[:class], _ = MiqAePath.split(options[:fqclass], :has_instance_name => false)
     else
       options[:namespace] ||= "System"
       options[:class]     ||= "Process"
     end
+    options[:instance_name] = name
 
+    options[:attrs] = create_ae_attrs(attrs, name, options[:vmdb_object])
+    options[:message] = options[:attrs][:message]
+
+    # uri
+    path = MiqAePath.new(:ae_namespace => options[:namespace],
+                         :ae_class     => options[:class],
+                         :ae_instance  => options[:instance_name]).to_s
+    MiqAeUri.join(nil, nil, nil, nil, nil, path, nil, options[:attrs], options[:message])
+  end
+
+  def self.create_ae_attrs(attrs, name, vmdb_object, objects = [MiqServer.my_server, User.current_user])
     ae_attrs  = attrs.dup
     ae_attrs['object_name'] = name
 
-    vmdb_object = options[:vmdb_object]
-
     # Prepare for conversion to Automate MiqAeService objects (process vmdb_object first in case it is a User or MiqServer)
-    [vmdb_object, MiqServer.my_server, User.current_user].each do |object|
+    ([vmdb_object] + objects).each do |object|
       next if object.nil?
       key           = self.create_automation_attribute_key(object)
       partial_key   = ae_attrs.keys.detect { |k| k.to_s.ends_with?(key.split("::").last.downcase) }
@@ -287,15 +298,14 @@ module MiqAeEngine
       ae_attrs[o] = ae_attrs[o].first   if ae_attrs[o].kind_of?(Array)
     end
 
-    path = MiqAePath.new(:ae_namespace => options[:namespace], :ae_class => options[:class], :ae_instance => name).to_s
-    MiqAeUri.join(nil, nil, nil, nil, nil, path, nil, ae_attrs, options[:message])
+    ae_attrs
   end
 
-  def self.resolve_automation_object(uri, result_type = :ws, readonly = false)
+  def self.resolve_automation_object(uri, attr = nil, options = {}, readonly = false)
+    uri = create_automation_object(uri, attr, options) if attr
+    options[:uri] = uri
     ws = readonly ? MiqAeWorkspaceRuntime.instantiate_readonly(uri) : MiqAeWorkspaceRuntime.instantiate(uri)
     $miq_ae_logger.debug(ws.to_expanded_xml) if $miq_ae_logger.debug?
-    return ws.to_xml if result_type == :xml
     return ws
   end
-
 end

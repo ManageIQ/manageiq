@@ -16,7 +16,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
     end
 
     it "pass platform attributes to automate" do
-      MiqAeEngine.should_receive(:resolve_automation_object)
+      MiqAeEngine::MiqAeWorkspaceRuntime.should_receive(:instantiate)
       MiqAeEngine.should_receive(:create_automation_object) do |name, attrs, _options|
         name.should eq("REQUEST")
         attrs.should have_attributes(
