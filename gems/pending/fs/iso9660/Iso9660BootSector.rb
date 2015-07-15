@@ -1,8 +1,7 @@
-require 'Iso9660Util'
+require 'fs/iso9660/Iso9660Util'
 
-$:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
-require 'miq-unicode'
+require 'util/miq-unicode'
 
 module Iso9660
 	

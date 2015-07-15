@@ -1,15 +1,11 @@
-$:.push(File.join(File.dirname(__FILE__), "../.."))
-$:.push(File.join(File.dirname(__FILE__), "../../disk"))
-$:.push(File.join(File.dirname(__FILE__), "../../fs/MiqFS"))
-
-require 'bundler_setup'
+require_relative '../../bundler_setup'
 require 'openssl' # Required for 'Digest' in camcorder (< Ruby 2.1)
 require 'camcorder'
 require 'log4r'
 require 'ostruct'
-require 'MiqDisk'
-require 'MiqFS'
-require 'modules/MiqLargeFile'
+require 'disk/MiqDisk'
+require 'fs/MiqFS/MiqFS'
+require 'disk/modules/MiqLargeFile'
 
 #
 # Formatter to output log messages to the console.

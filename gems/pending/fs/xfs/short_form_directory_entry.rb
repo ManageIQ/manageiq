@@ -1,6 +1,5 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
-require 'inode'
+require 'fs/xfs/inode'
 
 module XFS
   # ////////////////////////////////////////////////////////////////////////////

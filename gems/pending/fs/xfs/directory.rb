@@ -1,9 +1,9 @@
-require 'inode'
-require 'directory_entry'
-require 'directory_block_tail'
-require 'directory_data_header'
-require 'short_form_header'
-require 'short_form_directory_entry'
+require 'fs/xfs/inode'
+require 'fs/xfs/directory_entry'
+require 'fs/xfs/directory_block_tail'
+require 'fs/xfs/directory_data_header'
+require 'fs/xfs/short_form_header'
+require 'fs/xfs/short_form_directory_entry'
 
 module XFS
   DIRECTORY_LEAF_ENTRY = BinaryStruct.new([

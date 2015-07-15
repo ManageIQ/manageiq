@@ -1,6 +1,6 @@
 require 'memory_buffer'
 
-require 'Ext3BlockPointersPath'
+require 'fs/ext3/Ext3BlockPointersPath'
 
 module Ext3
 

@@ -1,8 +1,7 @@
 require 'minitest/unit'
 require 'enumerator'
 
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'Ext3BlockPointersPath'
+require 'fs/ext3/Ext3BlockPointersPath'
 include  Ext3
 
 class TestBlockPointersPath < MiniTest::Unit::TestCase

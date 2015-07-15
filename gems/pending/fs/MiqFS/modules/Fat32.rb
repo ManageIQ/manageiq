@@ -1,12 +1,10 @@
 require 'rufus/lru'
 
 # Fat32 stuff.
-$:.push("#{File.dirname(__FILE__)}/../../fat32")
-$:.push("#{File.dirname(__FILE__)}/../fs/fat32") #This path is necessary when testing.
-require 'Fat32BootSect'
-require 'Fat32Directory'
-require 'Fat32DirectoryEntry'
-require 'Fat32FileData'
+require 'fs/fat32/Fat32BootSect'
+require 'fs/fat32/Fat32Directory'
+require 'fs/fat32/Fat32DirectoryEntry'
+require 'fs/fat32/Fat32FileData'
 
 # Fat32 file system interface to MiqFS.
 module Fat32

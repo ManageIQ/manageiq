@@ -1,7 +1,5 @@
-require 'NtUtil'
-
-$:.push("#{File.dirname(__FILE__)}/../../../util")
 require 'binary_struct'
+require 'fs/ntfs/NtUtil'
 
 module NTFS
 		

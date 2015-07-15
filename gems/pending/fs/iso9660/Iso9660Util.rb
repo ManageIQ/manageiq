@@ -2,7 +2,6 @@
 
 require 'ostruct'
 
-$:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 
 module Iso9660Util

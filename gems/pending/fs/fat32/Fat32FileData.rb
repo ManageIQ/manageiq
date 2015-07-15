@@ -1,4 +1,4 @@
-require 'Fat32BootSect'
+require 'fs/fat32/Fat32BootSect'
 require 'memory_buffer'
 
 module Fat32

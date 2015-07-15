@@ -1,6 +1,4 @@
-require 'Ext3DirectoryEntry'
-
-$:.push("#{File.dirname(__FILE__)}/../../util")
+require 'fs/ext3/Ext3DirectoryEntry'
 require 'binary_struct'
 
 module Ext3

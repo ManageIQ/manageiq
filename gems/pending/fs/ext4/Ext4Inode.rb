@@ -1,7 +1,7 @@
-require 'Ext4DirectoryEntry'
-require 'Ext4Extent'
-require 'Ext4ExtentHeader'
-require 'Ext4ExtentIndex'
+require 'fs/ext4/Ext4DirectoryEntry'
+require 'fs/ext4/Ext4Extent'
+require 'fs/ext4/Ext4ExtentHeader'
+require 'fs/ext4/Ext4ExtentIndex'
 
 require 'binary_struct'
 require 'memory_buffer'

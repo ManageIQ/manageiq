@@ -1,5 +1,4 @@
-require 'rubygems'
-require 'miq-uuid'
+require 'util/miq-uuid'
 
 module NTFS
 

@@ -1,13 +1,10 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../../MiqFS")
-
 require 'ostruct'
 require 'find'
 require 'fileutils'
 
-require 'MiqFS'
-require 'MetakitFS'
+require 'fs/MiqFS/MiqFS'
+require 'fs/MetakitFS/MetakitFS'
+
 
 # MK_FILE = "mk4test"
 MK_FILE = "newmkfs"

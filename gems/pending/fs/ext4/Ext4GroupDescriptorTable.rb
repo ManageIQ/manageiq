@@ -1,8 +1,5 @@
-require 'Ext4GroupDescriptorEntry'
-require 'Ext4AllocBitmap'
-
-$:.push("#{File.dirname(__FILE__)}/../../util")
-require 'binary_struct'
+require 'fs/ext4/Ext4GroupDescriptorEntry'
+require 'fs/ext4/Ext4AllocBitmap'
 
 module Ext4
 

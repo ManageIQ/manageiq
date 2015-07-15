@@ -1,6 +1,4 @@
-require 'Iso9660DirectoryEntry'
-
-$:.push("#{File.dirname(__FILE__)}/../util")
+require 'fs/iso9660/Iso9660DirectoryEntry'
 require 'binary_struct'
 
 module Iso9660

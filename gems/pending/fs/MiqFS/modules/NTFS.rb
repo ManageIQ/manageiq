@@ -1,8 +1,7 @@
 require 'rufus/lru'
 
 # NTFS stuff.
-$:.push("#{File.dirname(File.expand_path(__FILE__))}/../../ntfs")
-require 'NtfsBootSect'
+require 'fs/ntfs/NtfsBootSect'
 
 # NTFS file system interface to MiqFS.
 module NTFS
