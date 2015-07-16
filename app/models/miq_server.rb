@@ -487,7 +487,6 @@ class MiqServer < ActiveRecord::Base
     logfile = Rails.root.join("log/vmdb_restart.log")
     File.delete(logfile) if File.exist?(logfile)
 
-    File.chmod(0755, RESTART_SCRIPT)
     pid = spawn("nohup #{RESTART_SCRIPT}", [:out, :err] => [logfile, "a"])
     Process.detach(pid)
   end
