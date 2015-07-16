@@ -1,11 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../util/win32")
-require 'miq-xml'
-require 'miq-powershell'
-require 'miq-powershell-daemon'
-require 'MiqScvmm'
-require 'MiqScvmmHost'
-require 'MiqScvmmVm'
+require 'util/miq-xml'
+require 'util/win32/miq-powershell'
+require 'util/win32/miq-powershell-daemon'
+require 'Scvmm/MiqScvmm'
+require 'Scvmm/MiqScvmmHost'
+require 'Scvmm/MiqScvmmVm'
 
 class MiqScvmmInventory
   def initialize(server, username, password)
