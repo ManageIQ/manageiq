@@ -1,9 +1,7 @@
 # encoding: US-ASCII
 
-$:.push("#{File.dirname(__FILE__)}/../disk")
-
 require 'enumerator'
-require 'MiqDisk'
+require 'disk/MiqDisk'
 
 module Lvm2Scanner
     
