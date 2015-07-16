@@ -1,13 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/../fs/MiqFS")
-$:.push("#{File.dirname(__FILE__)}/../fs/VimDatastoreFS")
-$:.push("#{File.dirname(__FILE__)}/../util/")
-
 require 'sync'
 
-require 'MiqFS'
-require 'VimDatastoreFS'
-require 'miq-extensions'  # Required patch to open-uri for get_file_content
-require 'miq-encode'
+require 'fs/MiqFS/MiqFS'
+require 'fs/VimDatastoreFS/VimDatastoreFS'
+require 'util/miq-extensions'  # Required patch to open-uri for get_file_content
+require 'util/miq-encode'
 
 class MiqVimDataStore
     

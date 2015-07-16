@@ -13,11 +13,10 @@ end
 
 require_relative '../../bundler_setup'
 
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'MiqVimBroker'
+require 'VMwareWebService/MiqVimBroker'
 
 require 'benchmark'
-require_relative '../../util/miq-process'
+require 'util/miq-process'
 
 SERVER_PROCESS = "ruby #{File.join(File.dirname(__FILE__), "MiqVimBrokerServer.rb")}"
 SERVER_PASSES = 10
