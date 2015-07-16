@@ -1,10 +1,7 @@
 # Only run if we are calling this script directly
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../../MiqExtract")
-require 'miq-logger'
-require 'VmConfig'
-require 'MiqExtract'
+require 'util/miq-logger'
+require 'metadata/VmConfig/VmConfig'
+require 'metadata/MIQExtract/MIQExtract'
 $log = MIQLogger.get_log(nil, __FILE__)
 $log.level = Log4r::DEBUG
 

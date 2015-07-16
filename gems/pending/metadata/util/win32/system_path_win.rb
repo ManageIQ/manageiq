@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-require 'extensions/miq-file'
+require 'util/extensions/miq-file'
 require 'enumerator'
 
 module Win32

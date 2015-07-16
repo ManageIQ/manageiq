@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'platform'
 
 class VMPlatformMount
@@ -9,10 +8,10 @@ class VMPlatformMount
         @ost = ost
         
         if Platform::OS == :win32
-			require "VMPlatformMountWin"
+			require "metadata/VMMount/VMPlatformMountWin"
 			extend VMPlatformMountWin
 		else
-		    require "VMPlatformMountLinux"
+		    require "metadata/VMMount/VMPlatformMountLinux"
 		    extend VMPlatformMountLinux
 		end
 		init

@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'miq-xml'
+require 'util/miq-xml'
 
 module XmlMsHyperVConfig
 #  def logical_id(element)

@@ -1,7 +1,6 @@
 require 'minitest/unit'
 
-$:.push("#{File.dirname(__FILE__)}/../")
-require 'LinuxUtils'
+require 'metadata/linux/LinuxUtils'
 
 class TestLinuxUtils < MiniTest::Unit::TestCase
 

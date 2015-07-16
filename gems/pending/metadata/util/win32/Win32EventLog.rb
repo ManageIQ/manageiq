@@ -3,32 +3,28 @@
 # TODO:
 #      Provide collection of custom log names?
 
-$:.push("#{File.dirname(__FILE__)}")
-
 # Specifically use the Platform mod used in MiqDisk.
 require 'platform'
 
 # For message table resources.
-require 'peheader'
+require 'metadata/util/win32/peheader'
 
 # For registry export on MiqFS.
-require 'remote-registry'
+require 'metadata/util/win32/remote-registry'
 
 # Dev needs this.
 require 'Win32API' if Platform::OS == :win32
-require 'system_path_win'
+require 'metadata/util/win32/system_path_win'
 
 require 'digest/md5'
 
 # Common utilities.
-$:.push("#{File.dirname(__FILE__)}/../../../util")
 require 'binary_struct'
-require 'miq-unicode'
-require 'miq-xml'
-require 'miq-exception'
+require 'util/miq-unicode'
+require 'util/miq-xml'
+require 'util/miq-exception'
 
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'event_log_filter'
+require 'metadata/util/event_log_filter'
 
 class Win32EventLog
 

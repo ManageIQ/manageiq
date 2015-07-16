@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../encryption")
-
-require 'CryptString'
+require 'encryption/CryptString'
 
 module VMPlatformMountLinux
     

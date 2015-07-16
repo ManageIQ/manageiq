@@ -1,6 +1,6 @@
-require 'ScanProfilesBase'
-require 'VmScanProfile'
-require 'VmScanItem'
+require 'metadata/ScanProfile/ScanProfilesBase'
+require 'metadata/ScanProfile/VmScanProfile'
+require 'metadata/ScanProfile/VmScanItem'
 
 class VmScanProfiles < ScanProfilesBase
   SCAN_TYPE_CATEGORY = "category"

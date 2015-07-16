@@ -1,4 +1,4 @@
-require 'remote-registry'
+require 'metadata/util/win32/remote-registry'
 
 module Win32
 	class SystemPath
