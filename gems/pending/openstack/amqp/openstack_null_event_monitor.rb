@@ -1,4 +1,4 @@
-require_relative '../openstack_event_monitor'
+require 'openstack/openstack_event_monitor'
 
 class OpenstackNullEventMonitor < OpenstackEventMonitor
   def self.available?(options)
