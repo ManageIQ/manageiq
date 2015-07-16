@@ -30,7 +30,8 @@ module EmsRefresh
                                     hashes,
                                     deletes,
                                     [:ems_ref],
-                                    [:parameters, :outputs, :resources, :cloud_tenant])
+                                    [:parameters, :outputs, :resources],
+                                    [:parent, :orchestration_template, :cloud_tenant])
 
       store_ids_for_new_records(ems.orchestration_stacks(true), hashes, :ems_ref)
 
