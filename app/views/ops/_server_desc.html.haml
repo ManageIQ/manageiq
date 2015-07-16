@@ -2,40 +2,40 @@
   %h3= h(@selected_server["name"])
   .form-horizontal.static
     .form-group
-      %label.control-label= _("Hostname")
+      %label.col-md-3.control-label= _("Hostname")
       .col-md-9
         %p.form-control-static= h(@selected_server[:hostname])
     .form-group
-      %label.control-label= _("IP Address")
+      %label.col-md-3.control-label= _("IP Address")
       .col-md-9
         %p.form-control-static= h(@selected_server[:ipaddress])
     .form-group
-      %label.control-label= _("Status")
+      %label.col-md-3.control-label= _("Status")
       .col-md-9
         %p.form-control-static= h(@selected_server[:status])
     .form-group
-      %label.control-label= _("Started On")
+      %label.col-md-3.control-label= _("Started On")
       .col-md-9
         %p.form-control-static
           - t = @selected_server.started_on
           = h(t.blank? ? "" : format_timezone(t))
     .form-group
-      %label.control-label= _("Memory Usage")
+      %label.col-md-3.control-label= _("Memory Usage")
       .col-md-9
         %p.form-control-static= h(@selected_server["memory_usage"])
     .form-group
-      %label.control-label= _("Memory Size")
+      %label.col-md-3.control-label= _("Memory Size")
       .col-md-9
         %p.form-control-static= h(@selected_server["memory_size"])
     .form-group
-      %label.control-label= _("CPU Time")
+      %label.col-md-3.control-label= _("CPU Time")
       .col-md-9
         %p.form-control-static= h(@selected_server["cpu_time"])
     .form-group
-      %label.control-label= _("CPU Percent")
+      %label.col-md-3.control-label= _("CPU Percent")
       .col-md-9
         %p.form-control-static= h(@selected_server["percent_cpu"])
     .form-group
-      %label.control-label= _("Version / Build")
+      %label.col-md-3.control-label= _("Version / Build")
       .col-md-9
         %p.form-control-static= h(@selected_server["version"])

@@ -4,9 +4,9 @@
       -# %h4 {{buildLegend()}}
       %div{"ng-switch" => "", "on" => "scheduleModel.action_typ"}
         .form-group
-          %label.control-label{"for" => "textInput-markup", "ng-hide" => "dbBackup()"}
+          %label.col-md-2.control-label{"for" => "textInput-markup", "ng-hide" => "dbBackup()"}
             = _("Filter")
-          %label.control-label{"for" => "textInput-markup", "ng-show" => "dbBackup()"}
+          %label.col-md-2.control-label{"for" => "textInput-markup", "ng-show" => "dbBackup()"}
             = _("Type")
           .col-md-10
             = select_tag('filter_typ', options_for_select(@vm_options_for_select),

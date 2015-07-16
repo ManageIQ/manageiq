@@ -19,14 +19,14 @@
               %strong=_("Invalid Single Sign-On credentials")
         = render :partial => "layouts/flash_msg"
         .form-group
-          %label.col-md-3.control-label=_('Username')
+          %label.col-md-3.control-label= _('Username')
           .col-md-9
             = text_field_tag('user_name', @user_name, 
                              :class      => "form-control",
                              :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();")
             = javascript_tag(javascript_focus('user_name'))
         .form-group
-          %label.col-md-3.control-label=_('Password')
+          %label.col-md-3.control-label= _('Password')
           .col-md-9
             = password_field_tag('user_password',
               @user_password,

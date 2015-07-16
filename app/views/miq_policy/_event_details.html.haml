@@ -7,18 +7,18 @@
         - if false
           - # Don't show description (event descriptions can not be edited)
           .form-group
-            %label.control-label= _("Description")
+            %label.control-label.col-md-2= _("Description")
             .col-md-10
               %p.form-control-static
                 %img{:src => "/images/icons/new/event-#{h(@event.name)}.png"}
                 = h(@event.description)
         .form-group
-          %label.control-label= _("Event Group")
+          %label.control-label.col-md-2= _("Event Group")
           .col-md-10
             %p.form-control-static= h(@event.memberof.first.description)
         - unless x_active_tree == :event_tree
           .form-group
-            %label.control-label= _("Attached to Policy")
+            %label.control-label.col-md-2= _("Attached to Policy")
             .col-md-10
               %p.form-control-static= h(@policy.description)
       %hr

@@ -5,7 +5,7 @@
     .form-horizontal.static
       .form-group
         - @devices.each do |item|
-          %label.control-label
+          %label.col-md-2.control-label
             = h(item[:device])
           .col-md-10
             %p.form-control-static
@@ -16,19 +16,19 @@
     .form-horizontal.static
       .form-group
         - @osinfo.each do |item|
-          %label.control-label
+          %label.col-md-2.control-label
             = h(item[:osinfo])
           .col-md-10
             %p.form-control-static
               = h(item[:description])
       .form-group
-        %label.control-label
+        %label.col-md-2.control-label
           = _('Hostname')
         .col-md-10
           %p.form-control-static
             = h(@host.hostname)
       .form-group
-        %label.control-label
+        %label.col-md-2.control-label
           = _('IP Address')
         .col-md-10
           %p.form-control-static
@@ -39,7 +39,7 @@
     .form-horizontal.static
       .form-group
         - @vmminfo.each do |item|
-          %label.control-label
+          %label.col-md-2.control-label
             = h(item[:vmminfo])
           .col-md-10
             %p.form-control-static

@@ -38,7 +38,7 @@
           %h3= _('Snapshot Settings')
           .form-horizontal.static
             .form-group
-              %label.control-label= _('Name')
+              %label.control-label.col-md-2= _('Name')
               .col-md-10
                 %p.form-control-static= h(@action.options[:name])
 
@@ -47,7 +47,7 @@
           %h3= _('Snapshot Age Settings')
           .form-horizontal.static
             .form-group
-              %label.control-label= _('Delete if older than')
+              %label.control-label.col-md-2= _('Delete if older than')
               .col-md-10
                 %p.form-control-static= h(SNAPSHOT_AGES[@action.options[:age]])
 
