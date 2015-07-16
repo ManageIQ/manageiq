@@ -29,12 +29,8 @@
           %fieldset
             %h3=_('Product Assistance')
             - if cond_userrole
-              - [[_("Quick Start"),              "cfme_quickstart.pdf"],
-                 [_("Insight"),                  "cfme_insight.pdf"],
-                 [_("Control"),                  "cfme_control.pdf"],
-                 [_("Lifecycle and Automation"), "cfme_automate.pdf"],
-                 [_("Integration Services"),     "cfme_integrate.pdf"],
-                 [_("Settings and Operations"),  "cfme_settingandops.pdf"]].each do |title, filename|
+              - @pdf_documents.each do |filename, title|
+                - docfile_path = "/doc/#{filename}.pdf"
                 %br
                 = link_to(image_tag("/images/icons/new/acrobat.png",
                                     :border => "0",
@@ -42,7 +38,7 @@
                                     :height => "20",
                                     :align  => "left",
                                     :alt    => t = _("View the %s Guide") % title),
-                          docfile_path = "/doc/#{filename}",
+                          docfile_path,
                           :title   => t,
                           :onclick => "return miqClickAndPop(this);")
                 &nbsp;
