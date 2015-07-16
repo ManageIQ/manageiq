@@ -37,4 +37,8 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     else             super
     end
   end
+
+  def validate_migrate
+    validate_unsupported("Migrate")
+  end
 end

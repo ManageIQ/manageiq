@@ -1293,13 +1293,12 @@ describe ApplicationHelper do
           before { @id = id }
 
           it "and vendor is redhat" do
-            @record.stub(:vendor => "Redhat")
-            @record.stub(:type   => "ManageIQ::Providers::Redhat::InfraManager::Vm")
+            @record = FactoryGirl.create(:vm_redhat)
             subject.should == true
           end
 
           it "and vendor is not redhat" do
-            @record.stub(:vendor => "Vmware")
+            @record = FactoryGirl.create(:vm_vmware)
             subject.should == false
           end
         end

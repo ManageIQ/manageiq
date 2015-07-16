@@ -2158,24 +2158,38 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  def prov_redirect(typ=nil)
-    assert_privileges(params[:pressed])
-    if typ  # we need to do this check before doing anything to prevent
-            # history being updated
-      vm_ids = find_checked_items.map(&:to_i).uniq
-      if !typ.eql?("clone") && VmOrTemplate.includes_template?(vm_ids)
+  def task_supported?(typ)
+    vm_ids = find_checked_items.map(&:to_i).uniq
+    if %w(migrate publish).include?(typ) && VmOrTemplate.includes_template?(vm_ids)
+      render_flash_not_applicable_to_model(typ)
+      return
+    end
+
+    case typ
+    when "clone"
+      if vm_ids.present? && !VmOrTemplate.cloneable?(vm_ids)
         render_flash_not_applicable_to_model(typ)
         return
       end
-      if typ.eql?("clone") && vm_ids.present? && !VmOrTemplate.cloneable?(vm_ids)
+    when "migrate"
+      if vm_ids.present? && !VmOrTemplate.batch_operation_supported?('migrate', vm_ids)
         render_flash_not_applicable_to_model(typ)
         return
       end
-      if typ.eql?("publish") && VmOrTemplate.where(:id => vm_ids, :type => %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
+    when "publish"
+      if VmOrTemplate.where(:id => vm_ids, :type => %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
         render_flash_not_applicable_to_model(typ)
         return
       end
     end
+  end
+
+  def prov_redirect(typ=nil)
+    assert_privileges(params[:pressed])
+    # we need to do this check before doing anything to prevent
+    # history being updated
+    task_supported?(typ) if typ
+    return if performed?
 
     @in_a_form = true
     @redirect_controller = "miq_request"

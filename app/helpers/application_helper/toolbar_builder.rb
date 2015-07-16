@@ -765,7 +765,9 @@ class ApplicationHelper::ToolbarBuilder
         return true if !@record.is_available?(:shutdown_guest)
       when "vm_guest_restart", "instance_guest_restart"
         return true if !@record.is_available?(:reboot_guest)
-      when "vm_migrate", "vm_reconfigure"
+      when "vm_migrate"
+        return true unless @record.is_available?(:migrate)
+      when "vm_reconfigure"
         return true if @record.vendor.downcase == "redhat"
       when "vm_stop", "instance_stop"
         return true if !@record.is_available?(:stop)
