@@ -1,15 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../VolumeManager")
-$:.push("#{File.dirname(__FILE__)}/../../fs")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
-
-require 'rubygems'
 require 'log4r'
-require 'miq-xml'
-require 'runcmd'
-require 'VmConfig'
-require 'MiqNativeVolumeManager'
-require 'MiqMountManager'
+require 'util/miq-xml'
+require 'util/runcmd'
+require 'metadata/VmConfig/VmConfig'
+require 'VolumeManager/MiqNativeVolumeManager'
+require 'fs/MiqMountManager'
 
 module MiqNativeMountManager
 	
