@@ -1,8 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util win32})))
-require 'miq-powershell'
-
+require 'util/win32/miq-powershell'
 require 'time'
 
 describe MiqPowerShell do

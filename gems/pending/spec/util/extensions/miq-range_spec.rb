@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-range'
+require 'util/extensions/miq-range'
 
 describe Range do
   STEP_TIME = Time.local('2010', '12', '18', '12', '34', '56', '7890')

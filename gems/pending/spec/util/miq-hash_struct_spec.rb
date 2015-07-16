@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. util})))
-require 'miq-hash_struct'
+require 'util/miq-hash_struct'
 
 describe MiqHashStruct do
   it ".new" do

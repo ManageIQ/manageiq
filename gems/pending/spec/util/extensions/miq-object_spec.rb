@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-object'
+require 'util/extensions/miq-object'
 
 describe Object do
   context "#deep_send" do
