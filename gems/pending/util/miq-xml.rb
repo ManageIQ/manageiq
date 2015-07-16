@@ -1,10 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/xml")
 require 'time'
-require 'xml/miq_rexml'
-require 'xml/xml_hash'
-require 'miq-encode'
-require 'xml/xml_diff'
-require 'xml/xml_patch'
+require 'util/xml/miq_rexml'
+require 'util/xml/xml_hash'
+require 'util/miq-encode'
+require 'util/xml/xml_diff'
+require 'util/xml/xml_patch'
 
 class MiqXml  
 	#MIQ_XML_VERSION = 1.0
@@ -16,7 +15,7 @@ class MiqXml
   # Now test to see if nokogiri is available
   @@nokogiri_loaded = false
 	begin
-    require 'miq_nokogiri'
+    require 'util/xml/miq_nokogiri'
   	Nokogiri::XML::Document.new
     #@@defaultXmlType = :nokogiri
 		@@nokogiri_loaded = true

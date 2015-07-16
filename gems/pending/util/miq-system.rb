@@ -1,11 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}")
-require 'rubygems'
-require 'extensions/miq-blank'
+require 'util/extensions/miq-blank'
 require 'platform'
-require 'runcmd'
+require 'util/runcmd'
 if Platform::OS == :win32
-  $:.push("#{File.dirname(__FILE__)}/win32")
-  require 'miq-wmi'
+  require 'util/win32/miq-wmi'
 end
 
 class MiqSystem

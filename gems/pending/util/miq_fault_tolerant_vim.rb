@@ -1,6 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-require 'MiqVim'
-require 'MiqVimBroker'
+require 'VMwareWebService/MiqVim'
+require 'VMwareWebService/MiqVimBroker'
 
 class MiqFaultTolerantVim
   def initialize(*options)

@@ -1,6 +1,6 @@
 require 'enumerator'
 require 'rexml/document'
-require 'xml_utils'
+require 'util/xml/xml_utils'
 
 module XmlHash
   class Element < Hash
@@ -314,8 +314,8 @@ module XmlHash
 
   # There is no difference between a document and an element here
   class Document < Hash
-    require 'xml_diff'
-    require 'xml_patch'
+    require 'util/xml/xml_diff'
+    require 'util/xml/xml_patch'
 
     include MiqXmlDiff
     include MiqXmlPatch

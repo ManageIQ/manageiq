@@ -1,10 +1,10 @@
 require 'time'
 require 'rexml/document'
-require 'miq-encode'
-require 'xml_hash'
-require 'xml_utils'
-require 'xml_diff'
-require 'xml_patch'
+require 'util/miq-encode'
+require 'util/xml/xml_hash'
+require 'util/xml/xml_utils'
+require 'util/xml/xml_diff'
+require 'util/xml/xml_patch'
 
 class MIQRexml
 	#MIQ_XML_VERSION = 1.0

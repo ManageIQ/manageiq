@@ -1,11 +1,10 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'miq-xml'
-require 'miq-logger'
-require 'runcmd'
+require 'util/miq-xml'
+require 'util/miq-logger'
+require 'util/runcmd'
 require 'io/wait'
 require 'open-uri'
-require 'miq-encode'
-require 'miq-unicode'
+require 'util/miq-encode'
+require 'util/miq-unicode'
 require 'win32/registry' if Platform::OS == :win32
 
 module MiqPowerShell
