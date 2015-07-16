@@ -1,14 +1,9 @@
 require 'ostruct'
 
-$:.push("#{File.dirname(__FILE__)}/../..")
-require 'VmsFromYaml'
-
-$:.push("#{File.dirname(__FILE__)}/../../../disk")
-require 'MiqDisk'
-
-$:.push("#{File.dirname(__FILE__)}//../../../fs/ext3")
-require 'Ext3Superblock'
-require 'Ext3Directory'
+require_relative '../../VmsFromYaml'
+require 'disk/MiqDisk'
+require 'fs/ext3/Ext3Superblock'
+require 'fs/ext3/Ext3Directory'
 
 class Ext3TestDirectory < Minitest::Test
 	
