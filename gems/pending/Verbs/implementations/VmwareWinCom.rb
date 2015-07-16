@@ -1,14 +1,10 @@
-$:.push("#{File.dirname(__FILE__)}/../../metadata/util/win32")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
 require 'win32ole'
 require 'ostruct'
 require 'win32/registry'
 require "win32/service"
-require 'versioninfo'
-require 'VmConfig'
-require 'miq-extensions'
+require 'metadata/util/win32/versioninfo'
+require 'metadata/VmConfig/VmConfig'
+require 'util/miq-extensions'
 
 class VmwareCom
 	# Constants
