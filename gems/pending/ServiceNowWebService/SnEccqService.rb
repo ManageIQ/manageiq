@@ -1,8 +1,5 @@
-
-$:.push(File.dirname(__FILE__))
-
 require "handsoap"
-require "ServiceNowTypes"
+require 'ServiceNowWebService/ServiceNowTypes'
 
 class SnEccqService < Handsoap::Service
 
