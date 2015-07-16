@@ -1,6 +1,5 @@
 title: Container Groups per Ready Status
 rpt_group: Custom
-rpt_type: Custom
 priority:
 db: ContainerGroup
 cols:

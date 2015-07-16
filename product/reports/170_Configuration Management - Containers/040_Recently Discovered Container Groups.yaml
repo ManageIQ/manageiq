@@ -1,6 +1,5 @@
 title: Recently Discovered Container Groups
 rpt_group: Custom
-rpt_type: Custom
 priority:
 db: ContainerGroup
 cols:
