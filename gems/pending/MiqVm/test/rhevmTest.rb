@@ -1,12 +1,8 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../..")
-
-require 'bundler_setup'
+require_relative '../../bundler_setup'
 require 'log4r'
 require 'ostruct'
-require 'MiqVm'
-require 'rhevm_api'
+require 'MiqVm/MiqVm'
+require 'ovirt'
 
 RHEVM_SERVER        = raise "please define RHEVM_SERVER"
 RHEVM_PORT          = 443

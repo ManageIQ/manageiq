@@ -1,11 +1,7 @@
-
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/..")
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../..")
-
 require_relative '../../bundler_setup'
 require 'ostruct'
 require 'log4r'
-require 'MiqVm'
+require 'MiqVm/MiqVm'
 
 class ConsoleFormatter < Log4r::Formatter
 	def format(event)
