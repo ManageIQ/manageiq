@@ -1,5 +1,3 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/..")
-require 'rubygems'
 require "ffi-vix_disk_lib/api_wrapper"
 require 'log4r'
 

@@ -1,12 +1,8 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}")
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../util")
-
 require 'drb/drb'
 require 'log4r'
 require 'time'
-require 'vmdb-logger'
-require 'vdl_wrapper'
+require 'util/vmdb-logger'
+require 'VixDiskLib/vdl_wrapper'
 
 class VixDiskLibError < RuntimeError
 end
