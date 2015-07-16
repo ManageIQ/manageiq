@@ -5,9 +5,9 @@
     .form-horizontal.static
       .form-group
         - @devices.each do |item|
-          %label.col-sm-2.control-label
+          %label.control-label
             = h(item[:device])
-          .col-sm-10
+          .col-md-10
             %p.form-control-static
               %img{:src => "/images/icons/new/hardware-#{item[:icon].downcase}.png"}
               = h(item[:description])
@@ -16,21 +16,21 @@
     .form-horizontal.static
       .form-group
         - @osinfo.each do |item|
-          %label.col-sm-2.control-label
+          %label.control-label
             = h(item[:osinfo])
-          .col-sm-10
+          .col-md-10
             %p.form-control-static
               = h(item[:description])
       .form-group
-        %label.col-sm-2.control-label
+        %label.control-label
           = _('Hostname')
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = h(@host.hostname)
       .form-group
-        %label.col-sm-2.control-label
+        %label.control-label
           = _('IP Address')
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = h(@host.ipaddress)
 
@@ -39,9 +39,9 @@
     .form-horizontal.static
       .form-group
         - @vmminfo.each do |item|
-          %label.col-sm-2.control-label
+          %label.control-label
             = h(item[:vmminfo])
-          .col-sm-10
+          .col-md-10
             %p.form-control-static
               = h(item[:description])
 - when "network"

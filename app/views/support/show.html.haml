@@ -2,7 +2,7 @@
   #tab_div
     = render :partial => "layouts/flash_msg"
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %fieldset
           %h3=_('Session Information')
           .form-horizontal.static
@@ -14,9 +14,9 @@
                [_("Browser Version"), h(browser_info("version"))],
                [_("Browser OS"),      h(browser_info("os"))]].each do |session_info|
               .form-group
-                %label.col-sm-3.control-label
+                %label.control-label
                   = session_info[0]
-                .col-sm-9
+                .col-md-9
                   %p.form-control-static
                     = session_info[1]
 
@@ -25,7 +25,7 @@
       - cond_url      = desc.present? && url.present?
       - cond_userrole = ["super_administrator", "administrator"].include?(session[:userrole])
       - if cond_userrole || cond_url
-        .col-sm-12.col-md-12.col-lg-6
+        .col-md-12.col-lg-6
           %fieldset
             %h3=_('Product Assistance')
             - if cond_userrole

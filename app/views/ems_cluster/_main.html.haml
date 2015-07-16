@@ -1,10 +1,10 @@
 = render :partial => "layouts/flash_msg"
 .row
-  .col-sm-12.col-md-12.col-lg-6
+  .col-md-12.col-lg-6
     = render :partial => "shared/summary/textual", :locals => {:title => _("Relationships"), :items => textual_group_relationships}
     - if get_vmdb_config[:product][:storage]
       = render :partial => "shared/summary/textual", :locals => {:title => _("Storage Relationships"), :items => textual_group_storage_relationships}
-  .col-sm-12.col-md-12.col-lg-6
+  .col-md-12.col-lg-6
     = render :partial => "shared/summary/textual", :locals => {:title => _("Totals for %s") % title_for_hosts, :items => textual_group_host_totals}
     = render :partial => "shared/summary/textual", :locals => {:title => _("Totals for VMs"), :items => textual_group_vm_totals}
     = render :partial => "shared/summary/textual", :locals => {:title => _("Configuration"), :items => textual_group_configuration}

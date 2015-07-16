@@ -12,8 +12,8 @@
         %h3= _('Basic Information')
         %div{:class => "form-horizontal#{@edit ? "" : ".static"} "}
           .form-group
-            %label.control-label.col-sm-2= _("Description")
-            .col-sm-10
+            %label.control-label= _("Description")
+            .col-md-10
               - if @edit
                 = text_field_tag("description", @edit[:new][:description],
                   :maxlength         => MAX_DESC_LEN,

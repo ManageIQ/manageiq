@@ -2,7 +2,7 @@
   - url = url_for(:action =>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
   = render :partial => "layouts/flash_msg"
   .row
-    .col-sm-12.col-md-12.col-lg-6
+    .col-md-12.col-lg-6
       %fieldset
         %h3=_("Generic Workers")
         %table.style1
@@ -122,7 +122,7 @@
                 options_for_select(@sb[:automate_threshold],
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:automate_worker][:memory_threshold]),
                 "data-miq_observe" => {:url => url}.to_json)
-    .col-sm-12.col-md-12.col-lg-6
+    .col-md-12.col-lg-6
       %fieldset
         %h3=_("Priority Workers")
         %table.style1

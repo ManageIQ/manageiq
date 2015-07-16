@@ -4,27 +4,27 @@
     %h3= _("Relationships")
     .form-horizontal.static
       .form-group
-        %label.col-sm-2.control-label
+        %label.control-label
           = _("Servers")
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = @selected_zone.miq_servers.count
       .form-group
-        %label.col-sm-2.control-label
+        %label.control-label
           = ui_lookup(:tables => "ext_management_system")
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = @selected_zone.ext_management_systems.count
       .form-group
-        %label.col-sm-2.control-label
+        %label.control-label
           = _("Storage Managers")
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = @selected_zone.storage_managers.count
       .form-group
-        %label.col-sm-2.control-label
+        %label.control-label
           = _("Schedules")
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = @selected_zone.miq_schedules.count
     %hr/

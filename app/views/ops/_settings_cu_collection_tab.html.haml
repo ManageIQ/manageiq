@@ -4,7 +4,7 @@
   = form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do
     = render :partial => "layouts/flash_msg"
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %fieldset
           %h3=clusters_title
           %table.style1
@@ -40,7 +40,7 @@
                   :checkboxes => true})
               %br/
               .note=_("VM data will be collected for VMs under selected %s only. Data is collected for a %s and all of its %s when at least one %s is selected.") % [title_for_hosts, cluster_title, title_for_hosts, title_for_host]
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %fieldset
           %h3= ui_lookup(:tables=>"storages")
           %table.style1

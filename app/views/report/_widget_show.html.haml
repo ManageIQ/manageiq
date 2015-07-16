@@ -4,35 +4,35 @@
   %h3= _('Basic Information')
   .form-horizontal.static
     .form-group
-      %label.control-label.col-sm-2
+      %label.control-label
         - if @widget.read_only
           *
         = _('Title')
-      .col-sm-10
+      .col-md-10
         %p.form-control-static= h(@widget.title)
     .form-group
-      %label.control-label.col-sm-2
+      %label.control-label
         - if @widget.read_only
           *
         = _('Description')
-      .col-sm-10
+      .col-md-10
         %p.form-control-static= h(@widget.description)
     .form-group
-      %label.control-label.col-sm-2
+      %label.control-label
         = _('Active')
-      .col-sm-10
+      .col-md-10
         %p.form-control-static= h(@widget.enabled)
     .form-group
-      %label.control-label.col-sm-2= _('Default')
-      .col-sm-10
+      %label.control-label= _('Default')
+      .col-md-10
         %p.form-control-static= h(@widget.read_only)
   %hr
   - unless @sb[:wtype] == "m"
     %h3= _('Status')
     .form-horizontal.static
       .form-group
-        %label.control-label.col-sm-2= _('Current Status')
-        .col-sm-10
+        %label.control-label= _('Current Status')
+        .col-md-10
           %p.form-control-static
             - case @widget.status.downcase
             - when "complete"
@@ -47,12 +47,12 @@
               %img{:src => "/images/icons/new/status_#{img}.png"}
             = h(@widget.status)
       .form-group
-        %label.control-label.col-sm-2= _('Last Run Time')
-        .col-sm-10
+        %label.control-label= _('Last Run Time')
+        .col-md-10
           %p.form-control-static= h(@widget.last_run_on ? format_timezone(@widget.last_run_on, tz, "view") : "")
       .form-group
-        %label.control-label.col-sm-2= _('Message')
-        .col-sm-10
+        %label.control-label= _('Message')
+        .col-md-10
           %p.form-control-static= h(@widget.status_message)
     %hr
   - case @sb[:wtype]
@@ -68,11 +68,11 @@
   .form-horizontal.static
     - if @sb[:wtype] == "r"
       .form-group
-        %label.control-label.col-sm-2
+        %label.control-label
           - if @widget.read_only
             *
           = _('Report Filter')
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             - if @widget.resource
               = h(@widget.resource.name)
@@ -81,11 +81,11 @@
                 = "*** %s ***" % _('Report no longer exists')
     - elsif @sb[:wtype] == "c"
       .form-group
-        %label.control-label.col-sm-2
+        %label.control-label
           - if @widget.read_only
             *
           = _('Filter')
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             - if @widget.resource
               = h(@widget.resource.title)
@@ -95,19 +95,19 @@
     - elsif @sb[:wtype] == "rf"
       - typ = @widget.resource ? _("Internal") : _("External")
       .form-group
-        %label.control-label.col-sm-2
+        %label.control-label
           - if @widget.read_only
             *
           = _('Type')
-        .col-sm-10
+        .col-md-10
           %p.form-control-static= h(typ)
       - if typ == "Internal"
         .form-group
-          %label.control-label.col-sm-2
+          %label.control-label
             - if @widget.read_only
               *
             = _('Internal RSS Feed')
-          .col-sm-10
+          .col-md-10
             %p.form-control-static
               - if @widget.resource
                 = h(@widget.resource.name)
@@ -116,19 +116,19 @@
                   = "*** %s ***" % _("RSS Feed no longer exists")
       - else
         .form-group
-          %label.control-label.col-sm-2
+          %label.control-label
             - if @widget.read_only
               *
             = _('External RSS Feed/URL')
-          .col-sm-10
+          .col-md-10
             %p.form-control-static= h(@widget.options[:url])
     - elsif @sb[:wtype] == "m"
       .form-group
-        %label.control-label.col-sm-2
+        %label.control-label
           - if @widget.read_only
             *
           = _('Shortcuts')
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             - if true
               -# TODO: fix formatting to look like widget menu shortcuts (first attempt in ELSE)
@@ -152,14 +152,14 @@
     - if @sb[:wtype] == "r"
       - @sb[:col_order].each_with_index do |col, idx|
         .form-group
-          %label.control-label.col-sm-2= _("Column %s") % (idx + 1)
-          .col-sm-10
+          %label.control-label= _("Column %s") % (idx + 1)
+          .col-md-10
             %p.form-control-static= h(col)
 
     - if %w(r rf).include?(@sb[:wtype])
       .form-group
-        %label.control-label.col-sm-2= _('Row Count')
-        .col-sm-10
+        %label.control-label= _('Row Count')
+        .col-md-10
           %p.form-control-static= h(@widget.options[:row_count].to_s)
 
   %hr
@@ -168,19 +168,19 @@
     .form-horizontal.static
       - if s.kind_of?(MiqSchedule)
         .form-group
-          %label.control-label.col-sm-2= _('Run At')
-          .col-sm-10
+          %label.control-label= _('Run At')
+          .col-md-10
             %p.form-control-static= h(s.run_at_to_human(@timezone).to_s)
         .form-group
-          %label.control-label.col-sm-2= _('Next Run Time')
-          .col-sm-10
+          %label.control-label= _('Next Run Time')
+          .col-md-10
             %p.form-control-static
               - unless s.next_run_on.blank?
                 = h(format_timezone(s.next_run_on, tz, "view"))
       - else
         .form-group
-          %label.control-label.col-sm-2
-          .col-sm-10
+          %label.control-label
+          .col-md-10
             %p.form-control-static
               %b= _('No timer is attached to this Widget, its contents will not be updated.')
               %br= _('Edit this Widget to configure a timer.')
@@ -188,8 +188,8 @@
   %h3= _('Visibility')
   .form-horizontal.static
     .form-group
-      %label.control-label.col-sm-2= _('Show')
-      .col-sm-10
+      %label.control-label= _('Show')
+      .col-md-10
         %p.form-control-static= visibility_options(@widget)
   - if @widget.read_only
     = _('* Fields are read only for default Widgets')

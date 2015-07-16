@@ -1,9 +1,9 @@
 - ng_readonly ||= false
 %div{"ng-show" => "#{ng_show}"}
   .form-group{"ng-class" => "{'has-error': angularForm.depot_name.$invalid}"}
-    %label.col-sm-2.control-label{"for" => "textInput-markup"}
+    %label.control-label{"for" => "textInput-markup"}
       = _("Depot Name")
-    .col-sm-4
+    .col-md-4
       %input.form-control{"type"        => "text",
                           "id"          => "textInput-markup",
                           "ng-required" => "#{ng_reqd_depot_name}",
@@ -15,9 +15,9 @@
         = _("Required")
 %div{"ng-show" => "#{ng_show}"}
   .form-group{"ng-class" => "{'has-error': angularForm.uri.$invalid}"}
-    %label.col-sm-2.control-label{"for" => "textInput-markup"}
+    %label.control-label{"for" => "textInput-markup"}
       = _("URI")
-    .col-sm-4
+    .col-md-4
       %label
         = uri_prefix_display
       %input.form-control{"type"        => "text",

@@ -2,9 +2,9 @@
   %div
     %div
       .form-group
-        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+        %label.control-label{"for" => "textInput-markup"}
           = _("Run")
-        .col-sm-10
+        .col-md-10
           = select_tag("timer_typ",
                        options_for_select(%w(Once Hourly Daily Weekly Monthly)),
                        "ng-model"                    => "scheduleModel.timer_typ",
@@ -21,9 +21,9 @@
                               "checkchange"               => ""}
           %input{"type" => "hidden", "ng-value" => "scheduleModel.timer_value", "name" => "timer_value"}
       .form-group
-        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+        %label.control-label{"for" => "textInput-markup"}
           = _("Time Zone")
-        .col-sm-10
+        .col-md-10
           = select_tag("time_zone",
                        options_for_select(ALL_TIMEZONES),
                        "ng-model"    => "scheduleModel.time_zone",
@@ -33,9 +33,9 @@
           = _("* Changing the Time Zone will reset the Starting Date and Time fields below")
 
       .form-group{"ng-controller" => "DatepickerCtrl"}
-        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+        %label.control-label{"for" => "textInput-markup"}
           = _("Starting Date")
-        .col-sm-2
+        .col-md-2
           #start_date
             %div
               %p.input-group
@@ -58,12 +58,12 @@
                       %i{"class" => "glyphicon glyphicon-calendar"}
 
       .form-group
-        %label.col-sm-2.control-label{"for" => "textInput-markup"}
+        %label.control-label{"for" => "textInput-markup"}
           = _("Starting Time")
           (
           %span#tz_span {{scheduleModel.time_zone}}
           )
-        .col-sm-10
+        .col-md-10
           = select_tag("start_hour",
                        options_for_select(Array.new(24) { |i| i }),
                        :class        => "threedigit",

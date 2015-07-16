@@ -5,7 +5,7 @@
     %h3
       =_("Request Details")
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key
@@ -33,7 +33,7 @@
               = _("Request Type")
             %td.wide:nowrap
               = h(@miq_request.request_type_display)
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key
@@ -62,7 +62,7 @@
               - if @miq_request.fulfilled_on
                 = h(format_timezone(@miq_request.fulfilled_on))
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key

@@ -10,9 +10,9 @@
         %h3=_("Basic Information")
         .form-horizontal
           .form-group
-            %label.control-label.col-sm-2
+            %label.control-label
               = _("Description")
-            .col-sm-10
+            .col-md-10
               - if @edit
                 = text_field_tag("description", @edit[:new][:description],
                   :maxlength         => MAX_DESC_LEN,

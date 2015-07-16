@@ -4,7 +4,7 @@
     %h3
       = _('Timeline Settings')
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %fieldset
           %table.style1
             %tr
@@ -54,7 +54,7 @@
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         "data-miq_observe"     => {:url => url}.to_json)
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         - if @tl_field != NOTHING_STRING
           %fieldset
             %table.style1
