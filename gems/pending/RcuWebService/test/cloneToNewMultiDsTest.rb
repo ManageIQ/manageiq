@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require_relative '../../bundler_setup'
-require 'RcuClientBase'
+require 'RcuWebService/RcuClientBase'
 
 #
 # Create 2 NFS datastores and 4 clones, placing 2 clones on each datastore.

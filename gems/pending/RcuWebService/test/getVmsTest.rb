@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require_relative '../../bundler_setup'
-require 'RcuClientBase'
+require 'RcuWebService/RcuClientBase'
 
 VC				= raise "please define"
 VC_USER			= raise "please define"
