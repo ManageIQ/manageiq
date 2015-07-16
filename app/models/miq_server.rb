@@ -481,9 +481,6 @@ class MiqServer < ActiveRecord::Base
     _log.info("Server restart initiating...")
     self.update_attribute(:status, "restarting")
 
-    _log.info("Server shutting down...")
-    self.class.stop
-
     logfile = Rails.root.join("log/vmdb_restart.log")
     File.delete(logfile) if File.exist?(logfile)
 
