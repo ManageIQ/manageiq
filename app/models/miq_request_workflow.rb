@@ -121,6 +121,7 @@ class MiqRequestWorkflow
   def init_from_dialog(init_values, _userid)
     @dialogs[:dialogs].keys.each do |dialog_name|
       get_all_fields(dialog_name).each_pair do |field_name, field_values|
+        next unless init_values[field_name].nil?
         next if field_values[:display] == :ignore
 
         if !field_values[:default].nil?

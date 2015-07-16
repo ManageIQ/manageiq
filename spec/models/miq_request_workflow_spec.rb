@@ -53,6 +53,15 @@ describe MiqRequestWorkflow do
     let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
     let(:init_values) { {} }
 
+    context "when the initial values already have a value for the field name" do
+      let(:init_values) { {:root_password => "root"} }
+
+      it "does not modify the initial values" do
+        workflow.init_from_dialog(init_values, 123)
+        expect(init_values).to eq(:root_password => "root")
+      end
+    end
+
     context "when the dialog fields ignore display" do
       before do
         dialogs[:dialogs].keys.each do |dialog_name|
