@@ -15,16 +15,16 @@ Builds of ManageIQ are released under GPLv2.
 Third-Party Legal Notices
 =========================
 
-vmdb/app/assets/fonts/ includes files from Font Awesome by Dave Gandy
+app/assets/fonts/ includes files from Font Awesome by Dave Gandy
 (http://fontawesome.io) which are licensed under SIL OFL 1.1
 (http://scripts.sil.org/OFL).
 
 
-vmdb/app/assets/fonts/ includes Open Sans font files which are
+app/assets/fonts/ includes Open Sans font files which are
 licensed under the Apache License 2.0.
 
 
-vmdb/public/javascripts/timeline/* is covered by the following
+public/javascripts/timeline/* is covered by the following
 copyright and license notice:
 
   (c) Copyright The SIMILE Project 2006. All rights reserved.
@@ -55,8 +55,8 @@ copyright and license notice:
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-vmdb/spec/support/with_constants.rb and
-lib/spec/support/with_constants.rb are copyright (c) 2010 Michael
+spec/support/with_constants.rb and
+gems/pending/spec/support/with_constants.rb are copyright (c) 2010 Michael
 Portuesi and released under the MIT license:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -78,7 +78,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-Portions of vmdb/tools/dba.rb are covered by the following copyright
+Portions of tools/dba.rb are covered by the following copyright
 and license notice:
 
 Copyright (c) 2007-2012 Greg Sabino Mullane <greg@endpoint.com>.
@@ -104,7 +104,7 @@ modification, are permitted provided that the following conditions are met:
  OF SUCH DAMAGE.
 
 
-Portions of lib/util/duplicate_blocker.rb are adapted from code covered by the following
+Portions of gems/pending/util/duplicate_blocker.rb are adapted from code covered by the following
 copyright and license notice:
 
 Copyright (c) 2009, Will Sargent
