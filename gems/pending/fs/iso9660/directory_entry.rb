@@ -53,7 +53,7 @@ module Iso9660
 			@de = DIR_ENT.decode(data)
 			@length = @de['length']
 			@myEnt = data[0...@length]
-			@date = Iso9660Util.IsoShortToRubyDate(@de['date'])
+			@date = Util.IsoShortToRubyDate(@de['date'])
 			offset = SIZEOF_DIR_ENT
 			len = @de['name_len']
 			if len > 0
