@@ -671,7 +671,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_create_snapshot): Now executing Create Snapshot [#{action.options[:name]}] for VM [#{rec.name}]")
-      rec.send("create_snapshot", action.options[:name], action.options[:description])
+      rec.create_snapshot(action.options[:name], action.options[:description])
     else
       MiqPolicy.logger.info("MIQ(action_create_snapshot): Queueing Create Snapshot [#{action.options[:name]}] for VM [#{rec.name}]")
       MiqQueue.put(
