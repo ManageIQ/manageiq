@@ -263,7 +263,7 @@ module PxeController::IsoDatastores
   end
 
   def iso_datastore_set_record_vars(isd)
-    ems = EmsRedhat.find_by_id(@edit[:new][:ems_id])
+    ems = ManageIQ::Providers::Redhat::InfraManager.find_by_id(@edit[:new][:ems_id])
     isd.ext_management_system = ems
     #saving name to use in flash message
     @edit[:ems_name] = ems.name
@@ -286,7 +286,7 @@ module PxeController::IsoDatastores
     @edit[:rec_id] = @isd.id || nil
     @edit[:new][:ems_id] = @isd.ext_management_system ? @isd.ext_management_system.id : nil
 
-    emses_without_iso_datastores = EmsRedhat.includes(:iso_datastore).where(:iso_datastores => {:id => nil})
+    emses_without_iso_datastores = ManageIQ::Providers::Redhat::InfraManager.includes(:iso_datastore).where(:iso_datastores => {:id => nil})
     @edit[:emses] = emses_without_iso_datastores.sort_by(&:name).collect { |ems| [ems.name, ems.id] }
 
     @edit[:current] = copy_hash(@edit[:new])

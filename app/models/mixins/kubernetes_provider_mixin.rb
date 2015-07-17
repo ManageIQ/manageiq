@@ -3,11 +3,6 @@ module KubernetesProviderMixin
 
   include ContainerProviderMixin
 
-  included do
-    # TODO: support real authentication using certificates
-    before_validation :ensure_authentications_record
-  end
-
   module ClassMethods
     def raw_api_endpoint(hostname, port)
       URI::HTTPS.build(:host => hostname, :port => port.presence.try(:to_i))
@@ -43,7 +38,7 @@ module KubernetesProviderMixin
     options[:port] ||= self.port
     options[:user] ||= authentication_userid(options[:auth_type])
     options[:pass] ||= authentication_password(options[:auth_type])
-    options[:bearer] ||= authentication_token(options[:auth_type])
+    options[:bearer] ||= authentication_token(options[:auth_type] || 'bearer')
     self.class.raw_connect(options[:hostname], options[:port], options)
   end
 
@@ -61,7 +56,6 @@ module KubernetesProviderMixin
   end
 
   def ensure_authentications_record
-    # TODO: support real authentication using certificates
     return if authentications.present?
     update_authentication(:default => {:userid => "_", :save => false})
   end

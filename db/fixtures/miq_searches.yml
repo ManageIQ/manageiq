@@ -130,7 +130,7 @@
       exp:
         "=":
           field: Vm-type
-          value: VmRedhat
+          value: ManageIQ::Providers::Redhat::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
@@ -518,7 +518,7 @@
       exp:
         "=":
           field: MiqTemplate-type
-          value: TemplateRedhat
+          value: ManageIQ::Providers::Redhat::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: MiqTemplate
@@ -593,7 +593,7 @@
       exp:
         "=":
           field: TemplateInfra-type
-          value: TemplateRedhat
+          value: ManageIQ::Providers::Redhat::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: TemplateInfra
@@ -1035,7 +1035,7 @@
       exp:
         "=":
           field: VmInfra-type
-          value: VmRedhat
+          value: ManageIQ::Providers::Redhat::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: VmInfra

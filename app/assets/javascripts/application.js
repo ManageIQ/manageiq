@@ -40,7 +40,7 @@
 //= require miq_jqplot
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap
-//= require bootstrap-ui-components/bootstrap-select.min.js
+//= require bootstrap-select
 //= require bootstrap-hover-dropdown/bootstrap-hover-dropdown.min
 //= require c3/c3
 //= require d3/d3
@@ -52,7 +52,7 @@
 //= require jquery.cookie
 //= require dhtmlx_gpl_36/dhtmlxcommon
 //= require dhtmlx_gpl_36/dhtmlxcontainer
-//= require dynatree_1.2.4/jquery.dynatree
+//= require dynatree/jquery.dynatree
 //= require miq_dynatree
 //= require SlickGrid-2.1/jquery.event.drag-2.2
 //= require SlickGrid-2.1/slick.core
@@ -64,3 +64,4 @@
 //= require codemirror/modes/yaml
 //= require spin
 //= require jquery-hotkeys
+//= require lodash

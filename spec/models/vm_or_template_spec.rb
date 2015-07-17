@@ -350,7 +350,7 @@ describe VmOrTemplate do
     end
 
     context "when the vm_or_template does exist but is not cloneable" do
-      let(:vm_or_template) { VmOrTemplate.create(:type => "TemplateRedhat", :name => "aaa", :location => "bbb", :vendor => "redhat") }
+      let(:vm_or_template) { VmOrTemplate.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Template", :name => "aaa", :location => "bbb", :vendor => "redhat") }
 
       it "returns false" do
         expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(false)
@@ -358,7 +358,7 @@ describe VmOrTemplate do
     end
 
     context "when the vm_or_template exists and is cloneable" do
-      let(:vm_or_template) { VmRedhat.create(:type => "VmRedhat", :name => "aaa", :location => "bbb", :vendor   => "redhat") }
+      let(:vm_or_template) { ManageIQ::Providers::Redhat::InfraManager::Vm.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Vm", :name => "aaa", :location => "bbb", :vendor   => "redhat") }
 
       it "returns true" do
         expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(true)
@@ -440,6 +440,32 @@ describe VmOrTemplate do
       vm = FactoryGirl.create(:vm_vmware)
       vm.tenants << tenant
       expect(tenant.vm_or_templates).to include(vm)
+    end
+  end
+
+  context "#is_available?" do
+    it "returns true for SCVMM VM" do
+      vm =  FactoryGirl.create(:vm_vmware)
+      expect(vm.is_available?(:migrate)).to eq(true)
+    end
+
+    it "returns true for vmware VM" do
+      vm =  FactoryGirl.create(:vm_microsoft)
+      expect(vm.is_available?(:migrate)).to_not eq(true)
+    end
+  end
+
+  context "#self.batch_operation_supported?" do
+    it "when the vm_or_template supports migrate,  returns false" do
+      vm1 =  FactoryGirl.create(:vm_microsoft)
+      vm2 =  FactoryGirl.create(:vm_vmware)
+      expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(false)
+    end
+
+    it "when the vm_or_template exists and can be migrated, returns true" do
+      vm1 =  FactoryGirl.create(:vm_vmware)
+      vm2 =  FactoryGirl.create(:vm_vmware)
+      expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
     end
   end
 end

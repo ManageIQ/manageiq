@@ -11,6 +11,7 @@ miqAngularApplication.controller('providerForemanFormController', ['$http', '$sc
       $scope.formId = providerForemanFormId;
       $scope.afterGet = false;
       $scope.modelCopy = angular.copy( $scope.providerForemanModel );
+      $scope.model = 'providerForemanModel';
 
       miqAngularApplication.$scope = $scope;
 

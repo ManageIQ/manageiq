@@ -7,6 +7,7 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 gem "rails",                           RAILS_VERSION
 gem "activerecord-deprecated_finders", "~>1.0.4",     :require => "active_record/deprecated_finders"
 
+# Client-side dependencies
 gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 gem 'angularjs-rails', '~>1.3.15'
 gem 'angular-ui-bootstrap-rails', '~> 0.13.0'
@@ -14,10 +15,10 @@ gem 'momentjs-rails', '~> 2.10.3'
 gem 'jquery-rails', "~>4.0.4"
 gem 'jquery-hotkeys-rails'
 gem 'codemirror-rails', "=4.2"
+gem 'lodash-rails', '~> 3.10.0'
 
 # On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
 
-gem "sprockets-sass",  "~>1.2.0"
 gem 'sass-rails'
 gem 'patternfly-sass', "~>1.3.1"
 
@@ -40,8 +41,8 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 gem "default_value_for",              "~>3.0.1"
-gem "puma"
-gem 'bcrypt-ruby', '3.1.2'
+gem "thin",                           "~>1.3.1"  # Used by rails server through rack
+gem "bcrypt",                         "3.1.10"
 gem 'outfielding-jqplot-rails',       "= 1.0.8"
 gem "responders",                     "~> 2.0"
 gem 'secure_headers'
@@ -50,12 +51,13 @@ gem 'mime-types'
 gem "jbuilder",                       "~>2.0.7"
 gem "gettext_i18n_rails"
 gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
+gem 'acts_as_tenant',                 "~>0.3.9"
 gem 'paperclip',                      "~>4.3.0"
 
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",      :require => false
 gem "aws-sdk",                        "~>1.56.0",     :require => false
-gem 'dalli',                          "~>2.2.1",      :require => false
+gem 'dalli',                          "~>2.7.4",      :require => false
 gem "elif",                           "=0.1.0",       :require => false
 gem "haml",                           "~>4.0.5",      :require => false
 gem 'haml-rails',                     "~> 0.4",       :require => false
@@ -67,7 +69,7 @@ gem "net-sftp",                       "~>2.0.5",      :require => false
 gem "net-ssh",                        "~>2.9.1",      :require => false
 gem "open4",                          "~>1.3.0",      :require => false
 #gem "ovirt_metrics",                  "~>1.0.1",      :require => false
-gem "pg",                             "~>0.15.0",     :require => false
+gem "pg",                             "~>0.18.2",     :require => false
 gem 'ruby_parser',                    "~>3.7",        :require => false
 gem "ruby-progressbar",               "~>0.0.10",     :require => false
 gem "rufus-scheduler",                "~>2.0.19",     :require => false
@@ -113,6 +115,7 @@ end
 # Assets from rails-assets.org
 source 'https://rails-assets.org' do
   gem 'rails-assets-c3', '~> 0.4.10'
+  gem 'rails-assets-bootstrap-select', '~> 1.5.4'
 end
 
 #

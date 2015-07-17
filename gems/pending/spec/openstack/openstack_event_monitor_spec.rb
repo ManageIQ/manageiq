@@ -66,4 +66,11 @@ describe OpenstackEventMonitor do
     instance = OpenstackEventMonitor.new(rabbit_options)
     instance.should eq rabbit_instance
   end
+
+  it "orders the event monitor plugins correctly" do
+    plugins = OpenstackEventMonitor.subclasses
+
+    plugins.first.should eq OpenstackRabbitEventMonitor
+    plugins.last.should eq OpenstackNullEventMonitor
+  end
 end

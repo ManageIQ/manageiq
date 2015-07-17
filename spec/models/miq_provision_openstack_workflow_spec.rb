@@ -10,7 +10,7 @@ describe MiqProvisionOpenstackWorkflow do
 
     it "pass platform attributes to automate" do
       MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-      MiqAeEngine.should_receive(:resolve_automation_object)
+      MiqAeEngine::MiqAeWorkspaceRuntime.should_receive(:instantiate)
       MiqAeEngine.should_receive(:create_automation_object) do |name, attrs, _options|
         name.should eq("REQUEST")
         attrs.should have_attributes(

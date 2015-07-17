@@ -51,4 +51,8 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
     else                      "off"
     end
   end
+
+  def validate_migrate
+    validate_supported
+  end
 end

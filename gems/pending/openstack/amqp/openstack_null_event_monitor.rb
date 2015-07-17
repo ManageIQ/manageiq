@@ -5,6 +5,11 @@ class OpenstackNullEventMonitor < OpenstackEventMonitor
     false
   end
 
+  def self.plugin_priority
+    # make the null event monitor the lowest priority
+    DEFAULT_PLUGIN_PRIORITY - 1
+  end
+
   def initialize(options = {})
     @options = options
   end

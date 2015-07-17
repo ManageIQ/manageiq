@@ -8,8 +8,11 @@ describe FixSerializedReportsForRailsFour do
 
   migration_context :up do
     before(:each) do
-      @raw_report = File.read(File.join(data_dir, 'miq_report_obj.yaml'))
-      @raw_blob   = File.read(File.join(data_dir, 'binary_blob_obj.yaml'))
+      @raw_report   = File.read(File.join(data_dir, 'miq_report_obj.yaml'))
+      @raw_blob     = File.read(File.join(data_dir, 'binary_blob_obj.yaml'))
+      @raw_blob_csv = File.read(File.join(data_dir, 'binary_blob_csv.yaml'))
+
+      FixSerializedReportsForRailsFour::BinaryBlob.any_instance.stub(:resource).and_return(true)
     end
 
     it "migrates existing reports serialized as MiqReport objects to Hashes" do
@@ -44,12 +47,33 @@ describe FixSerializedReportsForRailsFour do
       raw_report = YAML.load(bb.binary)
       expect(raw_report).to be_a(Hash)
     end
+
+    it "skips existing binary blobs serialized as CSV" do
+      bb = binary_blob.create!(
+        :resource_type => "MiqReportResult",
+        :md5           => "b540c6aec8a7726c1154d71c06017150",
+        :size          => 67_124,
+        :part_size     => 1_048_576,
+        :name          => "report_results",
+        :data_type     => "YAML"
+      )
+      bb.binary = @raw_blob_csv.dup
+
+      migrate
+
+      bb.reload
+
+      expect(bb.binary).to eq(@raw_blob_csv)
+    end
   end
 
   migration_context :down do
     before(:each) do
-      @raw_report = File.read(File.join(data_dir, 'miq_report_hash.yaml'))
-      @raw_blob   = File.read(File.join(data_dir, 'binary_blob_hash.yaml'))
+      @raw_report   = File.read(File.join(data_dir, 'miq_report_hash.yaml'))
+      @raw_blob     = File.read(File.join(data_dir, 'binary_blob_hash.yaml'))
+      @raw_blob_csv = File.read(File.join(data_dir, 'binary_blob_csv.yaml'))
+
+      FixSerializedReportsForRailsFour::BinaryBlob.any_instance.stub(:resource).and_return(true)
     end
 
     it "migrates existing reports serialized as Hashes objects to MiqReports" do
@@ -84,6 +108,24 @@ describe FixSerializedReportsForRailsFour do
 
       raw_report = YAML.load(bb.binary)
       expect(raw_report).to be_a(MiqReport)
+    end
+
+    it "skips existing binary blobs serialized as CSV" do
+      bb = binary_blob.create!(
+        :resource_type => "MiqReportResult",
+        :md5           => "b540c6aec8a7726c1154d71c06017150",
+        :size          => 67_124,
+        :part_size     => 1_048_576,
+        :name          => "report_results",
+        :data_type     => "YAML"
+      )
+      bb.binary = @raw_blob_csv.dup
+
+      migrate
+
+      bb.reload
+
+      expect(bb.binary).to eq(@raw_blob_csv)
     end
   end
 end

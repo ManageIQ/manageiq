@@ -57,7 +57,7 @@ FactoryGirl.define do
   factory :host_vmware_esx, :parent => :host_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::HostEsx" do
   end
 
-  factory :host_redhat, :parent => :host, :class => "HostRedhat" do
+  factory :host_redhat, :parent => :host, :class => "ManageIQ::Providers::Redhat::InfraManager::Host" do
     vmm_vendor "redhat"
   end
 

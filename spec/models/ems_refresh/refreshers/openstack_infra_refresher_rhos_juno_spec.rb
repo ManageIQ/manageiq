@@ -38,11 +38,11 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     EmsFolder.count.should                   == 0 # HACK: Folder structure for UI a la VMware
     EmsCluster.count.should                  == 2
     Host.count.should                        == 5
-    OrchestrationStack.count.should          == 1
-    OrchestrationStackParameter.count.should == 168
+    OrchestrationStack.count.should          == 46
+    OrchestrationStackParameter.count.should == 459
     OrchestrationStackResource.count.should  == 88
-    OrchestrationStackOutput.count.should    == 1
-    OrchestrationTemplate.count.should       == 1
+    OrchestrationStackOutput.count.should    == 20
+    OrchestrationTemplate.count.should       == 30
     ResourcePool.count.should                == 0
     Vm.count.should                          == 0
     VmOrTemplate.count.should                == 5
@@ -70,16 +70,17 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       :uid_ems     => nil
     )
 
-    @ems.ems_folders.size.should          == 0 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should         == 2
-    @ems.resource_pools.size.should       == 0
-    @ems.storages.size.should             == 0
-    @ems.hosts.size.should                == 5
-    @ems.orchestration_stacks.size.should == 1
-    @ems.vms_and_templates.size.should    == 5
-    @ems.vms.size.should                  == 0
-    @ems.miq_templates.size.should        == 5
-    @ems.customization_specs.size.should  == 0
+    @ems.ems_folders.size.should                 == 0 # HACK: Folder structure for UI a la VMware
+    @ems.ems_clusters.size.should                == 2
+    @ems.resource_pools.size.should              == 0
+    @ems.storages.size.should                    == 0
+    @ems.hosts.size.should                       == 5
+    @ems.orchestration_stacks.size.should        == 46
+    @ems.direct_orchestration_stacks.size.should == 1
+    @ems.vms_and_templates.size.should           == 5
+    @ems.vms.size.should                         == 0
+    @ems.miq_templates.size.should               == 5
+    @ems.customization_specs.size.should         == 0
   end
 
   def assert_specific_host

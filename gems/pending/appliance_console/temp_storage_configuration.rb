@@ -1,4 +1,4 @@
-require_relative "logging"
+require "appliance_console/logging"
 
 module ApplianceConsole
   class TempStorageConfiguration

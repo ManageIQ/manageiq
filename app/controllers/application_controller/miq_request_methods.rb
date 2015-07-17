@@ -187,7 +187,7 @@ module ApplicationController::MiqRequestMethods
       @layout = layout_from_tab_name(params[:org_controller])
       if params[:commit] == "Upload" && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == "Sysprep Answer File"
         upload_sysprep_file
-        @tabactive = "customize_div"
+        @tabactive = "customize"
       else
         if params[:req_id]
           prov_set_form_vars(MiqRequest.find(params[:req_id]))    # Set vars from existing request
@@ -197,7 +197,7 @@ module ApplicationController::MiqRequestMethods
           session[:changed] = true                                # Turn on the submit button
         end
         @edit[:explorer] = true if @explorer
-        @tabactive = "#{@edit[:new][:current_tab_key]}_div"
+        @tabactive = @edit[:new][:current_tab_key]
       end
       drop_breadcrumb( {:name=>"#{params[:req_id] ? "Edit" : "Add"} #{@edit[:prov_type]} Request", :url=>"/vm/provision"} )
       @in_a_form = true

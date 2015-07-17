@@ -55,21 +55,6 @@ describe MiqAeCustomizationController do
         expect(response.body).to include("flash")
       end
     end
-
-    context "all buttons selected" do
-      pending "for when we redesign rotate functionality" do
-        it "moves up and rotate whole group" do
-          post :group_reorder_field_changed, :id => 'seq', :button => 'up', 'selected_fields'=> ['100','101','102','103']
-          expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['test1',101], ['test2',102], ['test3',103], ['test', 100]] }} )
-        end
-
-        it "moves down and rotate opposite whole group" do
-          post :group_reorder_field_changed, :id => 'seq', :button => 'down', 'selected_fields'=> ['100','101','102','103']
-          expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['test3',103], ['test',100], ['test1',101], ['test2', 102]] }} )
-        end
-      end
-    end
-
   end
 
   describe "#group_form_field_changed" do
@@ -125,18 +110,6 @@ describe MiqAeCustomizationController do
       end
 
       context "all buttons selected" do
-        pending "for when we redesign rotate functionality" do
-          it "moves up and rotate whole group" do
-            post :group_form_field_changed, :button => 'up', 'selected_fields'=> ['100','101','102','103']
-            expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value1',101], ['value2',102], ['value3',103], ['value', 100]] }} )
-          end
-
-          it "moves down and rotate opposite whole group" do
-            post :group_form_field_changed, :button => 'down', 'selected_fields'=> ['100','101','102','103']
-            expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value3',103], ['value',100], ['value1',101], ['value2', 102]] }} )
-          end
-        end
-
         it "moves to the top and nothing happen" do
           post :group_form_field_changed, :button => 'top', 'selected_fields'=> ['100','101','102','103']
           expect(controller.instance_variable_get(:@edit)).to eql({:new => {:fields => [['value',100], ['value1',101], ['value2',102], ['value3', 103]] }} )
