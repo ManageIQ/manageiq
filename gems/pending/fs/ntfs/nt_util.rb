@@ -3,17 +3,17 @@
 module NTFS
   module NtUtil
     # Make a reference (upper two bytes are seq num, lower six are entry).
-    def NtUtil.MkRef(ref)
+    def self.MkRef(ref)
       ref.divmod(2 ** 48)
     end
     
-    def NtUtil.gotBit?(flags, bit)
+    def self.gotBit?(flags, bit)
   		(flags & bit) == bit
   	end
   	
     # Process per-sector "fixups" that NTFS uses to detect corruption of
     # multi-sector data structures, like MFT records.
-    def NtUtil.process_fixups(buf, fixup_offset, usa_offset, usa_count)
+    def self.process_fixups(buf, fixup_offset, usa_offset, usa_count)
       #
       # The signature value we must look for is stored just before the fix-up array.
       #
@@ -32,7 +32,7 @@ module NTFS
       return buf
     end
 
-    def NtUtil.validate_signature(signature, expected)
+    def self.validate_signature(signature, expected)
       if signature != expected
         raise "Uninitialized"   if signature == "\000\000\000\000"
         raise "Bad Sector"      if signature == 'BAAD'
