@@ -1,6 +1,6 @@
 require 'binary_struct'
 require 'util/miq-unicode'
-require 'fs/ntfs/NtfsAttribType'
+require 'fs/ntfs/attrib_type'
 
 module NTFS
 		

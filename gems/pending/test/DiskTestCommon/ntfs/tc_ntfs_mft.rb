@@ -5,8 +5,8 @@ require 'ostruct'
 
 require_relative '../../VmsFromYaml'
 require 'disk/MiqDisk'
-require 'fs/ntfs/NtfsBootSect'
-require 'fs/ntfs/NtfsMftEntry'
+require 'fs/ntfs/boot_sect'
+require 'fs/ntfs/mft_entry'
 
 # NOTE: This version of initialize is used to:
 #   Load an entry with HEADER ONLY first.

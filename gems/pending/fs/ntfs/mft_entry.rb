@@ -2,27 +2,27 @@
 require 'binary_struct'
 
 # Attribute types & names.
-require 'fs/ntfs/NtfsAttribType'
+require 'fs/ntfs/attrib_type'
 
 # Classes.
 
 # An attribute header preceeds each attribute.
-require 'fs/ntfs/NtfsAttribHeader'
+require 'fs/ntfs/attrib_header'
 
 # A data run is storage for non-resident attributes.
-require 'fs/ntfs/NtfsDataRun'
+require 'fs/ntfs/data_run'
 
 # These are the attribute types (so far these are the only types processed).
-require 'fs/ntfs/NtfsAttribAttributeList'
-require 'fs/ntfs/NtfsAttribBitmap'
-require 'fs/ntfs/NtfsAttribStandardInformation'
-require 'fs/ntfs/NtfsAttribFileName'
-require 'fs/ntfs/NtfsAttribObjectId'
-require 'fs/ntfs/NtfsAttribVolumeName'
-require 'fs/ntfs/NtfsAttribVolumeInformation'
-require 'fs/ntfs/NtfsAttribData'
-require 'fs/ntfs/NtfsAttribIndexRoot'
-require 'fs/ntfs/NtfsAttribIndexAllocation'
+require 'fs/ntfs/attrib_attribute_list'
+require 'fs/ntfs/attrib_bitmap'
+require 'fs/ntfs/attrib_standard_information'
+require 'fs/ntfs/attrib_file_name'
+require 'fs/ntfs/attrib_object_id'
+require 'fs/ntfs/attrib_volume_name'
+require 'fs/ntfs/attrib_volume_information'
+require 'fs/ntfs/attrib_data'
+require 'fs/ntfs/attrib_index_root'
+require 'fs/ntfs/attrib_index_allocation'
 
 module NTFS
 

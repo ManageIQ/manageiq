@@ -1,6 +1,6 @@
 require 'binary_struct'
 
-require 'fs/ntfs/NtfsAttribFileName'
+require 'fs/ntfs/attrib_file_name'
 
 module NTFS
 

@@ -1,7 +1,7 @@
 # encoding: US-ASCII
 
 require 'binary_struct'
-require 'fs/ntfs/NtfsMftEntry'
+require 'fs/ntfs/mft_entry'
 
 
 require 'rufus/lru'

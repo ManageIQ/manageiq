@@ -4,7 +4,7 @@ require 'util/win32/nt_util'
 require 'binary_struct'
 require 'util/miq-unicode'
 
-require 'fs/ntfs/NtfsAttribStandardInformation'
+require 'fs/ntfs/attrib_standard_information'
 
 module NTFS
 		
