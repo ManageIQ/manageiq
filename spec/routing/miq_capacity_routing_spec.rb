@@ -64,6 +64,12 @@ describe MiqCapacityController do
     end
   end
 
+  describe "#timeline_data" do
+    it "routes with GET" do
+      expect(get("/miq_capacity/timeline_data")).to route_to("miq_capacity#timeline_data")
+    end
+  end
+
   describe "#tree_autoload_dynatree" do
     it "routes with POST" do
       expect(post("/miq_capacity/tree_autoload_dynatree")).to route_to("miq_capacity#tree_autoload_dynatree")

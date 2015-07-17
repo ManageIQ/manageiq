@@ -127,42 +127,12 @@ module ApplicationController::Timelines
     end
   end
 
-  def getTLdata
-    if session[:tl_xml_blob_id] != nil
-      blob = BinaryBlob.find(session[:tl_xml_blob_id])
-      render :xml=>blob.binary
-      blob.destroy
-      session[:tl_xml_blob_id] = session[:tl_position] = nil #if params[:controller] != "miq_capacity"
-    else
-      tl_xml = MiqXml.load("<data/>")
-      #   tl_event = tl_xml.root.add_element("event", {
-      #                                                   "start"=>"May 16 2007 08:17:23 GMT",
-      #                                                   "title"=>"Dans-XP-VM",
-      #                                                   "image"=>"images/icons/20/20-VMware.png",
-      #                                                   "text"=>"VM &lt;a href=\"/vm/guest_applications/3\"&gt;Dan-XP-VM&lt;/a&gt; cloned to &lt;a href=\"/vm/guest_applications/1\"&gt;WinXP Testcase&lt;/a&gt;."
-      #                                                   })
-      Vm.all.each do | vm |
-        event = tl_xml.root.add_element("event", {
-#           START of TIMELINE TIMEZONE Code
-#           "start"=>format_timezone(vm.created_on,Time.zone,"tl"),
-            "start"=>vm.created_on,
-#           END of TIMELINE TIMEZONE Code
-            #                                       "end" => Time.now,
-            #                                       "isDuration" => "true",
-            "title"=>vm.name.length < 25 ? vm.name : vm.name[0..22] + "...",
-            #                                       "title"=>vm.name,
-            #"image"=>"/images/icons/20/20-#{vm.vendor.downcase}.png"
-            "icon"=>"/images/icons/new/vendor-#{vm.vendor.downcase}.png",
-            "color"=>"blue",
-            #"image"=>"/images/icons/64/64-vendor-#{vm.vendor.downcase}.png"
-            "image"=>"/images/icons/new/os-#{vm.os_image_name.downcase}.png"
-            #                                       "text"=>"VM &lt;a href='/vm/guest_applications/#{vm.id}'&gt;#{h(vm.name)}&lt;/a&gt; discovered at location #{h(vm.location)}&gt;."
-          })
-        #     event.text = "VM #{vm.name} discovered on #{vm.created_on}"
-        event.text = "VM &lt;a href='/vm/guest_applications/#{vm.id}'&gt;#{vm.name}&lt;/a&gt; discovered at location #{vm.location}"
-      end
-      render :xml=>tl_xml.to_s
-    end
+  def timeline_data
+    return if session[:tl_xml_blob_id].nil?
+    blob = BinaryBlob.find_by_id(session[:tl_xml_blob_id])
+    return if blob.nil?
+    render :xml => blob.binary
+    blob.destroy
   end
 
   private ############################
