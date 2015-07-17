@@ -1,11 +1,6 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../../../MiqVm")
-
-require 'MIQExtract'
-require 'rubygems'
+require 'metadata/MIQExtract/MIQExtract'
 require 'log4r'
-require 'MiqVm'
+require 'MiqVm/MiqVm'
     
 # vmDir = "v:"
 vmDir = File.join(ENV.fetch("HOME", '.'), 'VMs')

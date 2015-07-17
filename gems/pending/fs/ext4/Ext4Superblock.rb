@@ -1,11 +1,10 @@
 # encoding: US-ASCII
 
-require 'Ext4GroupDescriptorTable'
-require 'Ext4Inode'
+require 'fs/ext4/Ext4GroupDescriptorTable'
+require 'fs/ext4/Ext4Inode'
 
-$:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
-require 'miq-uuid'
+require 'util/miq-uuid'
 require 'stringio'
 require 'memory_buffer'
 

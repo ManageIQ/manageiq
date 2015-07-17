@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. util})))
-require 'miq-unicode'
+require 'util/miq-unicode'
 
 describe 'miq-unicode' do
   context "with Unicode and UTF-8 data" do

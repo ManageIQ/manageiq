@@ -1,13 +1,8 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../..")
-$:.push("#{File.dirname(__FILE__)}/../../VmwareWebService")
-
-require 'bundler_setup'
+require_relative '../../bundler_setup'
 require 'ostruct'
 require 'log4r'
-require 'MiqVm'
-require 'MiqVim'
+require 'MiqVm/MiqVm'
+require 'VmwareWebService/MiqVim'
 
 class ConsoleFormatter < Log4r::Formatter
   def format(event)

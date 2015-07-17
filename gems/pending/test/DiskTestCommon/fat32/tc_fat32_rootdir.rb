@@ -1,17 +1,14 @@
 require 'minitest/unit'
 require 'ostruct'
 
-$:.push("#{File.dirname(__FILE__)}/../..")
-require 'VmsFromYaml'
+require_relative '../../VmsFromYaml'
 
 # FAT32 stuff.
-$:.push("#{File.dirname(__FILE__)}/../../../fs/fat32")
-require 'Fat32BootSect'
-require 'Fat32DirectoryEntry'
+require 'fs/fat32/Fat32BootSect'
+require 'fs/fat32/Fat32DirectoryEntry'
 
 # MiqDisk
-$:.push("#{File.dirname(__FILE__)}/../../../disk")
-require 'MiqDisk'
+require 'disk/MiqDisk'
 
 class Fat32TestRoot < Minitest::Test
 	

@@ -1,9 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 require 'stringio'
 
-require 'ReiserFSBlock'
-require 'ReiserFSUtils'
+require 'fs/ReiserFS/ReiserFSBlock'
+require 'fs/ReiserFS/ReiserFSUtils'
 
 require 'rufus/lru'
 

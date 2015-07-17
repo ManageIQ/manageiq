@@ -1,8 +1,6 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-string'
-require 'miq-array'
+require 'util/extensions/miq-string'
+require 'util/extensions/miq-array'
 
 describe NilClass do
   it '#to_miq_a' do

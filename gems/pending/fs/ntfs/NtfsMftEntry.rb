@@ -1,30 +1,28 @@
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-
 # Utilities.
 require 'binary_struct'
 
 # Attribute types & names.
-require 'NtfsAttribType'
+require 'fs/ntfs/NtfsAttribType'
 
 # Classes.
 
 # An attribute header preceeds each attribute.
-require 'NtfsAttribHeader'
+require 'fs/ntfs/NtfsAttribHeader'
 
 # A data run is storage for non-resident attributes.
-require 'NtfsDataRun'
+require 'fs/ntfs/NtfsDataRun'
 
 # These are the attribute types (so far these are the only types processed).
-require 'NtfsAttribAttributeList'
-require 'NtfsAttribBitmap'
-require 'NtfsAttribStandardInformation'
-require 'NtfsAttribFileName'
-require 'NtfsAttribObjectId'
-require 'NtfsAttribVolumeName'
-require 'NtfsAttribVolumeInformation'
-require 'NtfsAttribData'
-require 'NtfsAttribIndexRoot'
-require 'NtfsAttribIndexAllocation'
+require 'fs/ntfs/NtfsAttribAttributeList'
+require 'fs/ntfs/NtfsAttribBitmap'
+require 'fs/ntfs/NtfsAttribStandardInformation'
+require 'fs/ntfs/NtfsAttribFileName'
+require 'fs/ntfs/NtfsAttribObjectId'
+require 'fs/ntfs/NtfsAttribVolumeName'
+require 'fs/ntfs/NtfsAttribVolumeInformation'
+require 'fs/ntfs/NtfsAttribData'
+require 'fs/ntfs/NtfsAttribIndexRoot'
+require 'fs/ntfs/NtfsAttribIndexAllocation'
 
 module NTFS
 

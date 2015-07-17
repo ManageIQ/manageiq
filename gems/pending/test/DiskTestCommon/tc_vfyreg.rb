@@ -1,16 +1,10 @@
 require 'minitest/unit'
 require 'ostruct'
 
-require 'FSTestUtil'
-
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'VmsFromYaml'
-
-$:.push("#{File.dirname(__FILE__)}/../../disk")
-require 'MiqDisk'
-
-$:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
-require 'MiqFS'
+require_relative './FSTestUtil'
+require_relative '../VmsFromYaml'
+require 'disk/MiqDisk'
+require 'fs/MiqFS/MiqFS'
 
 # WINDOWS SPECIFIC.
 class TestReg < Minitest::Test

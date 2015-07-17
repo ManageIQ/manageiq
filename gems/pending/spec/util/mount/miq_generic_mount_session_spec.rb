@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util mount})))
-require 'miq_generic_mount_session'
+require 'util/mount/miq_generic_mount_session'
 
 describe MiqGenericMountSession do
   context "#connect" do

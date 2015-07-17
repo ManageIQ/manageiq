@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$LOAD_PATH.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. VMwareWebService})))
-require 'MiqVimClientBase'
+require 'VMwareWebService/MiqVimClientBase'
 
 describe MiqVimClientBase do
   before do

@@ -1,4 +1,4 @@
-require 'MSCommon'
+require 'disk/modules/MSCommon'
 
 module MSVSDynamicDisk
 	

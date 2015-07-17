@@ -1,4 +1,4 @@
-require 'ReiserFSUtils'
+require 'fs/ReiserFS/ReiserFSUtils'
 
 module ReiserFS
 	

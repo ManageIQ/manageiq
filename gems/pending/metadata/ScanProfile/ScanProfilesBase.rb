@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-
-require 'miq-xml'
-require 'miq-logger'
+require 'util/miq-xml'
+require 'util/miq-logger'
 
 class ScanProfilesBase
   def self.get_class(type, from)

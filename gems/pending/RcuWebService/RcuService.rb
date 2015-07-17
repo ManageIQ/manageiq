@@ -1,8 +1,5 @@
-
-$:.push(File.dirname(__FILE__))
-
 require "handsoap"
-require "RcuTypes"
+require 'RcuWebService/RcuTypes'
 
 class RcuService < Handsoap::Service
 

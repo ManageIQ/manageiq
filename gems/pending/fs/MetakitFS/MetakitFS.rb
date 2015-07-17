@@ -1,6 +1,5 @@
 # encoding: US-ASCII
 
-require 'rubygems'
 require 'mk4rb'
 
 module MetakitFS

@@ -2,13 +2,10 @@
 # This test assumes the NFS share of the storage in question is mounted on the appliance.
 #
 
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../..")
-
-require 'bundler_setup'
+require_relative '../../bundler_setup'
 require 'log4r'
 require 'ostruct'
-require 'MiqVm'
+require 'MiqVm/MiqVm'
 
 class ConsoleFormatter < Log4r::Formatter
 	def format(event)

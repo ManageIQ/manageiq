@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../util/")
-
-require 'miq-ipmi'
+require 'util/miq-ipmi'
 
 class IpmiProbe
 	def self.probe(ost)

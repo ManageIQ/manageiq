@@ -1,9 +1,6 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. openstack})))
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. openstack amqp})))
-require 'openstack_qpid_receiver'
-require 'openstack_amqp_event'
+require 'openstack/amqp/openstack_qpid_receiver'
+require 'openstack/amqp/openstack_amqp_event'
 
 describe OpenstackQpidReceiver do
 

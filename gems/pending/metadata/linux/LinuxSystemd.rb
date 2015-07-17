@@ -1,5 +1,4 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
-require 'miq-xml'
+require 'util/miq-xml'
 
 # iniparse needed to handle duplicate options (inifile will overwrite)
 require 'iniparse'

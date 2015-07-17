@@ -1,10 +1,7 @@
 # encoding: US-ASCII
 
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util win32})))
-require 'wim_parser'
-
+require 'util/win32/wim_parser'
 require 'time'
 
 describe WimParser do

@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(File.expand_path(__FILE__))}/../../ext4")
-require 'Ext4Superblock'
+require 'fs/ext4/Ext4Superblock'
 
 module Ext4Probe
 

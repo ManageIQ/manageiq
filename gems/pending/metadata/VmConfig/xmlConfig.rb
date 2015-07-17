@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'miq-xml'
-require 'runcmd'
+require 'util/miq-xml'
+require 'util/runcmd'
 
 module XmlConfig
 	def convert(filename)
@@ -44,7 +42,7 @@ module XmlConfig
     raise "Specified XML file [#{filename}] is not a valid VM configuration file." if xml_type.nil?
 
     if xml_type == :ms_hyperv
-      require "xmlMsHyperVConfig"
+      require "metadata/VmConfig/xmlMsHyperVConfig"
       extend  XmlMsHyperVConfig
     end
 

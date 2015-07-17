@@ -1,9 +1,8 @@
 # encoding: US-ASCII
 
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-
 require 'binary_struct'
-require 'NtfsMftEntry'
+require 'fs/ntfs/NtfsMftEntry'
+
 
 require 'rufus/lru'
 

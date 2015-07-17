@@ -1,18 +1,13 @@
-$:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/util/win32")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}")
-
 require 'ostruct'
-require 'miq-xml'
-require 'win32/registry'
-require 'runcmd'
-require 'VmConfig'
-require 'win32/miq-wmi'
-require 'VmwareWinCom'
-require 'MicrosoftWinCom'
+require 'util/miq-xml'
+require 'win32/registry'  
+require 'util/runcmd'
+require 'metadata/VmConfig/VmConfig'
+require 'util/win32/miq-wmi'
+require 'Verbs/implementations/VmwareWinCom'
+require 'Verbs/implementations/MicrosoftWinCom'
 require 'time'
-require 'miq-powershell-daemon'
+require 'util/win32/miq-powershell-daemon'
 
 module MiqWin
 	class HostConfigData

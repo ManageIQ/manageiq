@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'miq-hash_struct'
+require 'util/miq-hash_struct'
 require 'open3'
 
 module WmiLinux

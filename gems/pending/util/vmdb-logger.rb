@@ -64,7 +64,7 @@ class VMDBLogger < Logger
     if last.nil?
       contents = File.open(log, "rb") { |fh| fh.read }.split("\n")
     else
-      require 'miq-system'
+      require 'util/miq-system'
       contents = MiqSystem.tail(log, last)
     end
     return "" if contents.nil? || contents.empty?

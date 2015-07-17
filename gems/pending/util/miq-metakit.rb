@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'mk4rb'
 
 module Metakit

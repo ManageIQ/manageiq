@@ -1,9 +1,9 @@
 require 'active_support'
 require 'active_support/core_ext'
 
-require_relative '../openstack_event_monitor'
-require_relative './openstack_qpid_receiver'
-require_relative './openstack_qpid_connection'
+require 'openstack/openstack_event_monitor'
+require 'openstack/amqp/openstack_qpid_receiver'
+require 'openstack/amqp/openstack_qpid_connection'
 
 class OpenstackQpidEventMonitor < OpenstackEventMonitor
   # The qpid event monitor is available if:

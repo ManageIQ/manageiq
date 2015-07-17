@@ -1,9 +1,5 @@
-
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-
-require 'SnEccqService'
-require 'MiqVimDump'
+require 'ServiceNowWebService/SnEccqService'
+require 'VMwareWebService/MiqVimDump'
 
 # require 'profile'
 

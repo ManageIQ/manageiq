@@ -3,20 +3,16 @@ require 'sync'
 require 'enumerator'
 require "ostruct"
 
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../util/extensions")
-
-require 'miq-hash'
-require 'miq-exception'
-require 'MiqHostDatastoreSystem'
-require 'MiqHostStorageSystem'
-require 'MiqHostFirewallSystem'
-require 'MiqHostServiceSystem'
-require 'MiqHostNetworkSystem'
-require 'MiqHostVirtualNicManager'
-require 'MiqHostAdvancedOptionManager'
-require 'MiqHostSnmpSystem'
+require 'util/extensions/miq-hash'
+require 'util/miq-exception'
+require 'VMwareWebService/MiqHostDatastoreSystem'
+require 'VMwareWebService/MiqHostStorageSystem'
+require 'VMwareWebService/MiqHostFirewallSystem'
+require 'VMwareWebService/MiqHostServiceSystem'
+require 'VMwareWebService/MiqHostNetworkSystem'
+require 'VMwareWebService/MiqHostVirtualNicManager'
+require 'VMwareWebService/MiqHostAdvancedOptionManager'
+require 'VMwareWebService/MiqHostSnmpSystem'
 
 class MiqVimHost
 		

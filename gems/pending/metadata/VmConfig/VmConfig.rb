@@ -1,17 +1,11 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../disk/modules")
-$:.push("#{File.dirname(__FILE__)}/../VMMount")
-$:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
-
-require 'pathname2'
-require 'VMMount'
-require 'miq-unicode'
-require 'miq-xml'
-require 'MiqVimInventory'
+require 'util/pathname2'
+require 'metadata/VMMount/VMMount'
+require 'util/miq-unicode'
+require 'util/miq-xml'
+require 'VMwareWebService/MiqVimInventory'
 require 'timeout'
-require 'miq-extensions'
-require 'MiqVimBroker'
+require 'util/miq-extensions'
+require 'VMwareWebService/MiqVimBroker'
 
 class VmConfig
 
@@ -35,7 +29,7 @@ class VmConfig
         set_vmconfig_path(filename)
 
         configType = File.extname(filename).gsub(".", "").downcase
-        require configType + "Config"
+        require "metadata/VmConfig/#{configType}Config"
         extend Kernel.const_get(configType.capitalize + "Config")
         f = convert(filename)
       end

@@ -1,5 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
-
 module VimDatastoreFS
     
 	def fs_init

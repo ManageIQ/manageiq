@@ -1,5 +1,5 @@
-require 'Ext3FileData'
-require 'Ext3DirectoryEntry'
+require 'fs/ext3/Ext3FileData'
+require 'fs/ext3/Ext3DirectoryEntry'
 
 module Ext3
 	

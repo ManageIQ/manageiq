@@ -3,15 +3,10 @@
 require 'minitest/unit'
 require 'ostruct'
 
-$:.push("#{File.dirname(__FILE__)}/../..")
-require 'VmsFromYaml'
-
-$:.push("#{File.dirname(__FILE__)}/../../../disk")
-require 'MiqDisk'
-
-$:.push("#{File.dirname(__FILE__)}/../../../fs/ntfs")
-require 'NtfsBootSect'
-require 'NtfsMftEntry'
+require_relative '../../VmsFromYaml'
+require 'disk/MiqDisk'
+require 'fs/ntfs/NtfsBootSect'
+require 'fs/ntfs/NtfsMftEntry'
 
 # NOTE: This version of initialize is used to:
 #   Load an entry with HEADER ONLY first.

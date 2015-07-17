@@ -1,4 +1,4 @@
-require 'inode'
+require 'fs/xfs/inode'
 
 module XFS
   BMAP_BTREE_ROOT_NODE_HEADER = BinaryStruct.new([

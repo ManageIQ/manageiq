@@ -1,5 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}")
-require 'rubygems'
 require 'platform'
 
 class WMIHelper
@@ -8,7 +6,7 @@ class WMIHelper
   platform = Platform::IMPL
   unless platform == :macosx
     platform = :mswin if platform == :mingw
-    require "miq-wmi-#{platform}"
+    require "util/win32/miq-wmi-#{platform}"
     include Kernel.const_get("Wmi#{platform.to_s.capitalize}")
   end
   

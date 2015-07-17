@@ -1,11 +1,7 @@
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/../fs/MiqFS")
-$:.push("#{File.dirname(__FILE__)}/../fs/MiqFS/modules")
-
 require 'ostruct'
-require 'MiqVm'
-require 'MiqFS'
-require 'RealFS'
+require 'MiqVm/MiqVm'
+require 'fs/MiqFS/MiqFS'
+require 'fs/MiqFS/modules/RealFS'
 
 class MiqLocalVm < MiqVm
         

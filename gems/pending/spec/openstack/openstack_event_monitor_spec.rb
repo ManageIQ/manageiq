@@ -1,10 +1,7 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. openstack})))
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. openstack amqp})))
-require 'openstack_event_monitor'
-require 'openstack_qpid_event_monitor'
-require 'openstack_rabbit_event_monitor'
+require 'openstack/openstack_event_monitor'
+require 'openstack/amqp/openstack_qpid_event_monitor'
+require 'openstack/amqp/openstack_rabbit_event_monitor'
 
 describe OpenstackEventMonitor do
   before :each do

@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. VMwareWebService})))
-require 'MiqVim'
+require 'VMwareWebService/MiqVim'
 
 describe MiqVimVm do
   context 'snapshot disk size check' do

@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. VMwareWebService})))
-require 'VimMappingRegistry'
+require 'VMwareWebService/VimMappingRegistry'
 
 describe VimMappingRegistry do
   VMR_ABOUT_INFO = {

@@ -1,8 +1,5 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require_relative '../../bundler_setup'
-require 'MiqVcoClientBase'
+require 'VcoWebService/MiqVcoClientBase'
 
 begin
 	work_flow_name	= "Power off VM and wait"

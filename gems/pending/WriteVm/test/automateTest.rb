@@ -1,13 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
-$:.push("#{File.dirname(__FILE__)}/../../disk")
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'rubygems'
 require 'log4r'
-require 'MiqVim'
-require 'MiqVimBroker'
-require 'MiqDisk'
-require 'MiqPayloadOutputter'
+require 'VMwareWebService/MiqVim'
+require 'VMwareWebService/MiqVimBroker'
+require 'disk/MiqDisk'
+require 'WriteVm/MiqPayloadOutputter'
 
 #
 # Formatter to output log messages to the console.

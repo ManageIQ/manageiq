@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'platform'
 
 class VolMgrPlatformSupport

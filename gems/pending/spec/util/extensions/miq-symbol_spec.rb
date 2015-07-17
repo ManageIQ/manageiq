@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-symbol'
+require 'util/extensions/miq-symbol'
 
 describe Symbol do
   it "#to_i" do

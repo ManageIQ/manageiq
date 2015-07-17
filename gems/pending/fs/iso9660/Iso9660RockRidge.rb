@@ -1,8 +1,7 @@
 require 'platform'
 
-$:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
-require 'miq-unicode'
+require 'util/miq-unicode'
 
 module Iso9660
 	

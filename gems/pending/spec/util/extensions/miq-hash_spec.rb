@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-hash'
+require 'util/extensions/miq-hash'
 
 # Subclass of String to test []= substring complex key patch
 class SubString < String

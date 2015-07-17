@@ -1,4 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 
 module Ext4

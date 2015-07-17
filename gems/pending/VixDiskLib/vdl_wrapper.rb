@@ -1,13 +1,10 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../util")
-
 require 'drb/drb'
 require 'sync'
 require 'ffi-vix_disk_lib/api_wrapper'
-require 'VimTypes'
+require 'VMwareWebService/VimTypes'
 require 'log4r'
 require 'time'
-require 'vmdb-logger'
+require 'util/vmdb-logger'
 
 MIQ_ROOT    = "#{File.dirname(__FILE__)}/../../"
 LOG_DIR     = MIQ_ROOT + "vmdb/log/"

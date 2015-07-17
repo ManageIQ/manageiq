@@ -1,12 +1,7 @@
-$:.push("#{File.dirname(__FILE__)}/../../disk")
-$:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'MiqDisk'
-require 'MiqFS'
-require 'VixDiskLib'
+require 'disk/MiqDisk'
+require 'fs/MiqFS/MiqFS'
+require 'VixDiskLib/VixDiskLib'
 require 'ostruct'
-require 'rubygems'
 require 'log4r'
 
 #

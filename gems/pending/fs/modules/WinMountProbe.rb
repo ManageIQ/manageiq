@@ -1,8 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../MiqFS")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/util/win32")
-
-require 'MiqFS'
-require 'system_path_win'
+require 'fs/MiqFS/MiqFS'
+require 'metadata/util/win32/system_path_win'
 
 module WinMountProbe
     

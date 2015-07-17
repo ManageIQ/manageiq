@@ -1,5 +1,6 @@
+require_relative '../../bundler_setup'
 require 'log4r'
-require 'MiqVimCoreUpdater'
+require 'VMwareWebService/MiqVimCoreUpdater'
 
 SERVER   = raise "please define SERVER"
 USERNAME = raise "please define USERNAME"

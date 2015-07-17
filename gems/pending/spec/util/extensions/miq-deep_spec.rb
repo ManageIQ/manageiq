@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-deep'
+require 'util/extensions/miq-deep'
 
 describe 'miq-deep' do
   CASE_HASH  = {"BETWEEN"=>{:name=>"test", :value=>[1,2], :token=>1}}

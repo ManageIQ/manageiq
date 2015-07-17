@@ -1,8 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/../../util/")
-require 'rubygems'
 require 'minitest/unit'
-require 'miq-xml'
+require 'util/miq-xml'
 
 class XmlEncoding < Minitest::Test
 

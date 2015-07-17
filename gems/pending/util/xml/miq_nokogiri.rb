@@ -1,8 +1,8 @@
 begin
   # Try to load the nokogiri library bindings.  If it fails then we skip defining the methods below.
   require 'nokogiri'
-  require 'xml_diff'
-  require 'xml_patch'
+  require 'util/xml/xml_diff'
+  require 'util/xml/xml_patch'
 
   # Add class methods to nokogiri to have it behave more like REXML for easy replacement
   module Nokogiri

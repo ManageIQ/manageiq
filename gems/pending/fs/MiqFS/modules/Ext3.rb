@@ -1,11 +1,10 @@
 require 'rufus/lru'
 
 # Ext3 stuff.
-$:.push("#{File.dirname(File.expand_path(__FILE__))}/../../ext3")
-require 'Ext3Superblock'
-require 'Ext3DirectoryEntry'
-require 'Ext3Directory'
-require 'Ext3FileData'
+require 'fs/ext3/Ext3Superblock'
+require 'fs/ext3/Ext3DirectoryEntry'
+require 'fs/ext3/Ext3Directory'
+require 'fs/ext3/Ext3FileData'
 
 
 # Ext3 file system interface to MiqFS.

@@ -1,8 +1,5 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require_relative '../../bundler_setup'
-require 'MiqVimBroker'
+require 'VMwareWebService/MiqVimBroker'
 
 MAX_CLIENT        = 6
 BROKER_SERVER     = "MiqVimBrokerServer.rb"

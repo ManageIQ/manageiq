@@ -1,7 +1,6 @@
-require 'rubygems'
 require 'mk4rb'
 
-require "../MetakitFS"
+require "fs/MetakitFS/MetakitFS"
 
 TYPE_FILE = 1
 TYPE_DIR  = 2

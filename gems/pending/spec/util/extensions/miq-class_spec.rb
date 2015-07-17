@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-class'
+require 'util/extensions/miq-class'
 
 describe Class do
   it "#hierarchy" do

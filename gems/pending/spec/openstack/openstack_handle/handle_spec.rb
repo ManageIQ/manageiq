@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$LOAD_PATH.push(File.expand_path(File.join(File.dirname(__FILE__), %w(.. .. .. openstack))))
-require 'openstack_handle/handle'
+require 'openstack/openstack_handle/handle'
 require 'fog/openstack'
 
 describe OpenstackHandle::Handle do

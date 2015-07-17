@@ -1,8 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-module'
-
+require 'util/extensions/miq-module'
 require 'timecop'
 
 describe Module do

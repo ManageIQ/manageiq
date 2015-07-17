@@ -1,10 +1,8 @@
 require 'ostruct'
 
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'VmsFromYaml'
+require_relative '../VmsFromYaml'
 
-$:.push("#{File.dirname(__FILE__)}/../../disk")
-require 'MiqDisk'
+require 'disk/MiqDisk'
 
 class TestMiqDiskReadLen < Minitest::Test
 	

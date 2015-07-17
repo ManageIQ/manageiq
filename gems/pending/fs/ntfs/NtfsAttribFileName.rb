@@ -1,10 +1,9 @@
-require 'NtUtil'
+require 'fs/ntfs/NtUtil'
 
-$:.push("#{File.dirname(__FILE__)}/../../../util")
 require 'binary_struct'
-require 'miq-unicode'
+require 'util/miq-unicode'
 
-require 'NtfsAttribStandardInformation'
+require 'fs/ntfs/NtfsAttribStandardInformation'
 
 module NTFS
 		
