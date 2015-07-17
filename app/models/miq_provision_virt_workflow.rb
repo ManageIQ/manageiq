@@ -1037,7 +1037,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     values = {}
     p = new(values, userid, :use_pre_dialog => false)
     src_name_down = src_name.downcase
-    src = p.send(:allowed_templates).detect { |v| v.name.downcase == src_name_down }
+    src = p.allowed_templates.detect { |v| v.name.downcase == src_name_down }
     raise "Source template [#{src_name}] was not found" if src.nil?
     p = class_for_source(src.id).new(values, userid, :use_pre_dialog => false)
 
@@ -1084,7 +1084,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if [:clone_to_vm, :clone_to_template].include?(request_type)
       src = ws_find_template_or_vm(values, src_name, src_guid, ems_guid)
     else
-      srcs = send(:allowed_templates, :include_datacenter => true).find_all do |v|
+      srcs = allowed_templates(:include_datacenter => true).find_all do |v|
         _log.info "VM Detected: <#{v.name.downcase}> <#{v.guid}> <#{v.uid_ems}> Datacenter:<#{v.datacenter_name}>"
         (src_name.nil? || src_name == v.name.downcase) && (src_guid.nil? || src_guid == v.guid) && (ems_guid.nil? || ems_guid == v.uid_ems) && (data_centers.nil? || data_centers.include?(v.datacenter_name))
       end
