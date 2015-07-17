@@ -510,7 +510,7 @@ class MiqAction < ActiveRecord::Base
   def action_script(action, rec, inputs)
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_script): Now executing Action Script [#{rec[:name]}]")
-      action.send("run_script", rec)
+      action.run_script(rec)
     else
       MiqPolicy.logger.info("MIQ(action_script): Queueing Action Script [#{rec[:name]}]")
       MiqQueue.put(:class_name => "MiqAction",
