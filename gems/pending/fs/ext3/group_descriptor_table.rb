@@ -1,5 +1,5 @@
-require 'fs/ext3/Ext3GroupDescriptorEntry'
-require 'fs/ext3/Ext3AllocBitmap'
+require 'fs/ext3/group_descriptor_entry'
+require 'fs/ext3/alloc_bitmap'
 require 'binary_struct'
 
 module Ext3

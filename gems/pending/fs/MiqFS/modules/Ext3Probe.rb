@@ -1,4 +1,4 @@
-require 'fs/ext3/Ext3Superblock'
+require 'fs/ext3/superblock'
 
 module Ext3Probe
 
