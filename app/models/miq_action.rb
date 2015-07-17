@@ -329,7 +329,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_email): Now executing Email [#{rec[:name]}]")
-      MiqAction.send("queue_email", email_options)
+      MiqAction.queue_email(email_options)
     else
       MiqPolicy.logger.info("MIQ(action_email): Queueing Email [#{rec[:name]}]")
       MiqQueue.put(
