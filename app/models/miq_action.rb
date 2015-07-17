@@ -598,7 +598,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_vm_migrate): Now executing [#{action.description}] of VM [#{rec.name}]")
-      rec.send("migrate", action.options[:host], action.options[:pool], action.options[:priority], action.options[:state])
+      rec.migrate(action.options[:host], action.options[:pool], action.options[:priority], action.options[:state])
     else
       MiqPolicy.logger.info("MIQ(action_vm_migrate): Queueing [#{action.description}] of VM [#{rec.name}]")
       MiqQueue.put(
