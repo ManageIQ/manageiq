@@ -175,32 +175,6 @@ class MiqDbConfig
     end
   end
 
-  def opt_file_for_conn_test(from_save, &blk)
-    raise "must pass block" unless block_given?
-    opts = self.class.raw_config['production']
-
-    begin
-      FileUtils.mkdir_p(File.dirname(DB_FILE))
-      File.delete(DB_FILE) if File.exist?(DB_FILE)
-      opts[:from_save] = from_save
-      File.open(DB_FILE, "wb") {|f|f.write(Base64.encode64(Marshal.dump(opts)))}
-      res = yield
-    ensure
-      File.delete(DB_FILE) if File.exist?(DB_FILE)
-    end
-    res
-  end
-
-  def delete_io_files
-    [IO_DOLLAR_STDOUT, IO_DOLLAR_STDERR].each {|f| File.delete(f) if File.exist?(f)}
-  end
-
-  def get_output_and_error
-    output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exist?(IO_DOLLAR_STDOUT)
-    error_message = File.open(IO_DOLLAR_STDERR) {|f| f.read} if File.exist?(IO_DOLLAR_STDERR)
-    return output, error_message
-  end
-
   def verify_config(from_save = nil)
     with_temporary_connection do |conn|
       tables = conn.tables
