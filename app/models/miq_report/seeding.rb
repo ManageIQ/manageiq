@@ -61,7 +61,11 @@ module MiqReport::Seeding
       rpt[:rpt_group] = File.basename(File.dirname(filename)).split("_").last
       rpt[:rpt_type] = "Default"
       rpt[:filename] = filename.sub(dir + "/", "")
-      rpt[:file_mtime] = File.mtime(filename).utc
+      # DB and filesystem have different precision
+      # so calling round is done in order to eliminate the second fractions diff
+      # otherwise the comparison of the file time and the report time from db
+      # will always be different
+      rpt[:file_mtime] = File.mtime(filename).utc.round
       rpt[:priority] = File.basename(filename).split("_").first.to_i
       # rec = self.find_by_name_and_rpt_group(rpt[:name], rpt[:rpt_group])
       # rec = self.find_by_name_and_filename(rpt[:name], rpt[:filename])
