@@ -4,8 +4,8 @@ require 'ostruct'
 require_relative '../../VmsFromYaml'
 
 # FAT32 stuff.
-require 'fs/fat32/Fat32BootSect'
-require 'fs/fat32/Fat32DirectoryEntry'
+require 'fs/fat32/boot_sect'
+require 'fs/fat32/directory_entry'
 
 # MiqDisk
 require 'disk/MiqDisk'

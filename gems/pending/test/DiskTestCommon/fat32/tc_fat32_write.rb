@@ -4,7 +4,7 @@ require 'ostruct'
 require_relative '../../VmsFromYaml'
 require 'disk/MiqDisk'
 require 'fs/MiqFS/MiqFS'
-require 'fs/fat32/Fat32BootSect'
+require 'fs/fat32/boot_sect'
 require_relative '../FSTestUtil'
 
 class Fat32TestWrite < Minitest::Test
