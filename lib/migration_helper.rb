@@ -240,8 +240,13 @@ module MigrationHelper
   end
 
   def bulk_copy_transfer(from_table, to_table, options = {})
-    options = options.reverse_merge(Rails.configuration.database_configuration[Rails.env].symbolize_keys)
+    # Get it from customized configuration
+    config = ActiveRecord::Tasks::DatabaseTasks.database_configuration
 
+    # Otherwise, get it from the rails app configuration file
+    config ||= Rails.configuration.database_configuration
+
+    options = options.reverse_merge(config[Rails.env].symbolize_keys)
     pre  = "PGPASSWORD=#{options[:password]}" if options[:password]
     copy = "\\\\COPY"
     post = ""
