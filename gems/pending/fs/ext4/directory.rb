@@ -1,6 +1,6 @@
-require 'fs/ext4/Ext4DirectoryEntry'
-require 'fs/ext4/Ext4HashTreeHeader'
-require 'fs/ext4/Ext4HashTreeEntry'
+require 'fs/ext4/directory_entry'
+require 'fs/ext4/hash_tree_header'
+require 'fs/ext4/hash_tree_entry'
 
 module Ext4
 

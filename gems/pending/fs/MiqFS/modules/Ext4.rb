@@ -1,9 +1,9 @@
 require 'rufus/lru'
 
 # Ext4 stuff.
-require 'fs/ext4/Ext4Superblock'
-require 'fs/ext4/Ext4DirectoryEntry'
-require 'fs/ext4/Ext4Directory'
+require 'fs/ext4/superblock'
+require 'fs/ext4/directory_entry'
+require 'fs/ext4/directory'
 
 # Ext4 file system interface to MiqFS.
 module Ext4

@@ -1,4 +1,4 @@
-require 'fs/ext4/Ext4Superblock'
+require 'fs/ext4/superblock'
 
 module Ext4Probe
 

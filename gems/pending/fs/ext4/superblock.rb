@@ -1,7 +1,7 @@
 # encoding: US-ASCII
 
-require 'fs/ext4/Ext4GroupDescriptorTable'
-require 'fs/ext4/Ext4Inode'
+require 'fs/ext4/group_descriptor_table'
+require 'fs/ext4/inode'
 
 require 'binary_struct'
 require 'util/miq-uuid'
