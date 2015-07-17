@@ -1,39 +1,27 @@
 class AdvancedSearchesController < ApplicationController
   # Clear the applied search
   def clear
+    @edit = session[:edit]
+    @view = session[:view]
+    @edit[:adv_search_applied] = nil
+    @edit[:expression][:exp_last_loaded] = nil
+    session[:adv_search] ||= Hash.new                   # Create/reuse the adv search hash
+    session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
+    if @settings[:default_search] && @settings[:default_search][@view.db.to_s.to_sym] && @settings[:default_search][@view.db.to_s.to_sym].to_i != 0
+      s = MiqSearch.find(@settings[:default_search][@view.db.to_s.to_sym])
+      @edit[@expkey][:selected] = {:id=>s.id, :name=>s.name, :description=>s.description, :typ=>s.search_type}        # Save the last search loaded
+      @edit[:selected] = false
+    else
+      @edit[@expkey][:selected] = {:id=>0}
+      @edit[:selected] = true     # Set a flag, this is checked whether to load initial default or clear was clicked
+    end
+
     respond_to do |format|
       format.js do
-        @explorer = true
-        if x_active_tree.to_s =~ /_filter_tree$/ &&
-            !["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
-          search_id = 0
-          if x_active_tree == :cs_filter_tree
-            adv_search_build("ConfiguredSystem")
-          else
-            adv_search_build(vm_model_from_active_tree(x_active_tree))
-          end
-          session[:edit] = @edit              # Set because next method will restore @edit from session
-          listnav_search_selected(search_id)  # Clear or set the adv search filter
-          self.x_node = "root"
-        end
-        replace_right_cell
+        redirect_to(:controller => params[:target_controller], :action=>"explorer")
       end
       format.html do
-        @edit = session[:edit]
-        @view = session[:view]
-        @edit[:adv_search_applied] = nil
-        @edit[:expression][:exp_last_loaded] = nil
-        session[:adv_search] ||= Hash.new                   # Create/reuse the adv search hash
-        session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
-        if @settings[:default_search] && @settings[:default_search][@view.db.to_s.to_sym] && @settings[:default_search][@view.db.to_s.to_sym].to_i != 0
-          s = MiqSearch.find(@settings[:default_search][@view.db.to_s.to_sym])
-          @edit[@expkey][:selected] = {:id=>s.id, :name=>s.name, :description=>s.description, :typ=>s.search_type}        # Save the last search loaded
-          @edit[:selected] = false
-        else
-          @edit[@expkey][:selected] = {:id=>0}
-          @edit[:selected] = true     # Set a flag, this is checked whether to load initial default or clear was clicked
-        end
-        redirect_to(:action=>"show_list")
+        redirect_to(:controller => params[:target_controller], :action=>"show_list")
       end
       format.any {render :nothing=>true, :status=>404}  # Anything else, just send 404
     end
@@ -243,7 +231,9 @@ class AdvancedSearchesController < ApplicationController
       end
       if @edit[:in_explorer]
         self.x_node = "root"                                      # Position on root node
-        replace_right_cell
+        render :update do |page|
+          page.redirect_to :controller => params[:target_controller], :action => 'explorer'                 # redirect to build the list screen
+        end
       else
         render :update do |page|
           page.redirect_to :controller => params[:target_controller], :action => 'show_list'                 # redirect to build the list screen
