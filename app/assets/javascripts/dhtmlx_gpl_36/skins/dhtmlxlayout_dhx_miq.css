@@ -518,7 +518,7 @@ table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutSinglePoly div.dhtmlxPol
 	-moz-user-select: none;
 }
 
-.main_div {width:98%; height:98%; overflow: auto; padding-left: 15px; margin-top:18px !important}
+.main_div {width:98%; height:98%; overflow: auto; padding-left: 15px; margin-top:10px !important}
 
 #searchbox         { position: absolute; right: 20px; z-index: 20; width: 285px; height: 26px;}
 #advsearchbox      { position: absolute; top: 172px; right: 17px; z-index: 49; padding: 15px 0 0 0; min-width: 500px; width: auto;}
