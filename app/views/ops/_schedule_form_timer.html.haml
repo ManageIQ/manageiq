@@ -66,14 +66,12 @@
         .col-sm-10
           = select_tag("start_hour",
                        options_for_select(Array.new(24) { |i| i }),
-                       :class        => "threedigit",
                        "ng-model"    => "scheduleModel.start_hour",
                        "checkchange" => "",
                        "selectpicker-for-select-tag" => "")
           %span h
           = select_tag("start_min",
                        options_for_select(Array.new(12) { |i| i * 5 }),
-                       :class        => "threedigit",
                        "ng-model"    => "scheduleModel.start_min",
                        "checkchange" => "",
                        "selectpicker-for-select-tag" => "")
