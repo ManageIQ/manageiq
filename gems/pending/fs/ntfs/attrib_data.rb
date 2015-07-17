@@ -1,5 +1,5 @@
 require 'binary_struct'
-require 'fs/ntfs/NtUtil'
+require 'fs/ntfs/nt_util'
 
 module NTFS
 		

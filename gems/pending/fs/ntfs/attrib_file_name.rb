@@ -1,6 +1,5 @@
 require 'fs/ntfs/NtUtil'
 require 'util/win32/nt_util'
-
 require 'binary_struct'
 require 'util/miq-unicode'
 

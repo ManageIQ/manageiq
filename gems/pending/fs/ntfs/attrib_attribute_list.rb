@@ -1,4 +1,4 @@
-require 'fs/ntfs/NtUtil'
+require 'fs/ntfs/nt_util'
 
 require 'binary_struct'
 require 'util/miq-unicode'

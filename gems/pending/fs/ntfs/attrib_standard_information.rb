@@ -1,5 +1,4 @@
 require 'util/win32/nt_util'
-
 require 'binary_struct'
 
 module NTFS
