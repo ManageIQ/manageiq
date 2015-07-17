@@ -21,14 +21,9 @@
             .col-md-5
               %br
               = render :partial => 'layouts/searchbar'
-          .row#main_content
+          .row{:style => "overflow: auto;height: calc(100% - 150px);"}
             .col-md-12
               = yield
-              // the added space on the lines below are a fix for FF 
-              // which doesn't honor padding-bottom on a div that is preceded by overflow: auto
-              %h1 
-                &nbsp;
-
         .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left.scrollable-lg
           = render :partial => "layouts/listnav"
 
@@ -38,13 +33,6 @@
             %br
             = render :partial => '/layouts/tabs'
           = yield
-          // the added space on the lines below are a fix for FF 
-          // which doesn't honor padding-bottom on a div that is preceded by overflow: auto
-          %h1
-            &nbsp;      
-          /  .col-md-3.sidebar-pf.sidebar-pf-right
-          /  .sidebar-header.sidebar-header-bleed-left.sidebar-header-bleed-right
-
       - else
         .col-md-12.max-height
           - if taskbar_in_header?
@@ -55,14 +43,7 @@
             .col-md-12
               = render :partial => "layouts/breadcrumbs"
               - if layout_uses_tabs?
-
                 = render :partial => 'layouts/tabs'
-          .row.max-height
-            .col-md-12.scrollable
+          .row{:style => "overflow: auto;height: calc(100% - 90px);"}
+            .col-md-12
               = yield
-              // the added space on the lines below are a fix for FF 
-              // which does'nt honor padding-bottom on a div that is preceded by overflow: auto
-              %h1 
-                &nbsp;
-              %h1
-                &nbsp;
