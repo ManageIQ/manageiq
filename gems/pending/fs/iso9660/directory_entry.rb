@@ -1,5 +1,5 @@
-require 'fs/iso9660/Iso9660Util'
-require 'fs/iso9660/Iso9660RockRidge'
+require 'fs/iso9660/util'
+require 'fs/iso9660/rock_ridge'
 
 require 'binary_struct'
 require 'util/miq-unicode'

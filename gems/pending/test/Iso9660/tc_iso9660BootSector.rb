@@ -1,7 +1,7 @@
 require 'ostruct'
 require 'minitest/unit'
 require 'disk/MiqDisk'
-require 'fs/iso9660/Iso9660BootSector'
+require 'fs/iso9660/boot_sector'
 include Iso9660
 
 class TestIso9660BootSector < Minitest::Test

@@ -1,4 +1,4 @@
-require 'fs/iso9660/Iso9660Util'
+require 'fs/iso9660/util'
 
 require 'binary_struct'
 require 'util/miq-unicode'

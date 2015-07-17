@@ -1,4 +1,4 @@
-require 'fs/iso9660/Iso9660DirectoryEntry'
+require 'fs/iso9660/directory_entry'
 require 'binary_struct'
 
 module Iso9660
