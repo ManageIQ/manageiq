@@ -621,7 +621,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_vm_clone): Now executing [#{action.description}] of VM [#{rec.name}]")
-      rec.send("clone", action.options[:name], action.options[:folder], action.options[:pool], action.options[:host], action.options[:datastore], action.options[:powerOn], action.options[:template], action.options[:transform], action.options[:config], action.options[:customization], action.options[:disk])
+      rec.clone(action.options[:name], action.options[:folder], action.options[:pool], action.options[:host], action.options[:datastore], action.options[:powerOn], action.options[:template], action.options[:transform], action.options[:config], action.options[:customization], action.options[:disk])
     else
       MiqPolicy.logger.info("MIQ(action_vm_clone): Queueing [#{action.description}] of VM [#{rec.name}]")
       MiqQueue.put(
