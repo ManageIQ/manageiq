@@ -1,4 +1,4 @@
-class ConfigurationManager < ExtManagementSystem
+class ManageIQ::Providers::ConfigurationManager < ::ExtManagementSystem
   has_many :configured_systems,     :dependent => :destroy
   has_many :configuration_profiles, :dependent => :destroy
 

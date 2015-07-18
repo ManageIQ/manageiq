@@ -1218,12 +1218,12 @@ module ApplicationController::CiProcessing
   end
 
   def process_foreman(providers, task)
-    providers, _services_out_region = filter_ids_in_region(providers, "ConfigurationManagerForeman")
+    providers, _services_out_region = filter_ids_in_region(providers, "ManageIQ::Providers::Foreman::ConfigurationManager")
     return if providers.empty?
 
     options = {:ids => providers, :task => task, :userid => session[:userid]}
-    kls = ConfigurationManagerForeman.find_by_id(providers.first).class.base_model
-    ConfigurationManagerForeman.process_tasks(options)
+    kls = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_id(providers.first).class.base_model
+    ManageIQ::Providers::Foreman::ConfigurationManager.process_tasks(options)
     rescue StandardError => bang                            # Catch any errors
       add_flash(_("Error during '%s': ") % task << bang.message, :error)
   else

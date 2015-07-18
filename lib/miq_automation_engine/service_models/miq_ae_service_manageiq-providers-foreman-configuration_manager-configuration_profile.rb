@@ -1,5 +1,5 @@
 module MiqAeMethodService
-  class MiqAeServiceConfigurationProfileForeman < MiqAeServiceConfigurationProfile
+  class MiqAeServiceManageIQ_Providers_Foreman_ConfigurationManager_ConfigurationProfile < MiqAeServiceConfigurationProfile
     expose :parent,                            :association => true
 
     expose :direct_configuration_tags,            :association => true

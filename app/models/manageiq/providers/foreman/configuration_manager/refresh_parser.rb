@@ -1,51 +1,13 @@
-module EmsRefresh
-  module Parsers
-    class Foreman
+module ManageIQ::Providers
+  module Foreman
+    class ConfigurationManager::RefreshParser
       include Vmdb::Logging
 
       # we referenced a record that does not exist in the database
       attr_accessor :needs_provisioning_refresh
 
-      def self.provisioning_inv_to_hashes(inv)
-        new.provisioning_inv_to_hashes(inv)
-      end
-
       def self.configuration_inv_to_hashes(inv)
         new.configuration_inv_to_hashes(inv)
-      end
-
-      # data coming in from foreman:
-      #   :media
-      #   :ptables
-      #   :operating_systems
-      #   :locations
-      #   :organizations
-      def provisioning_inv_to_hashes(inv)
-        media            = media_inv_to_hashes(inv[:media])
-        ptables          = ptables_inv_to_hashes(inv[:ptables])
-        architectures    = architectures_inv_to_hashes(inv[:architectures])
-        compute_profiles = compute_profiles_inv_to_hashes(inv[:compute_profiles])
-        domains          = domains_inv_to_hashes(inv[:domains])
-        environments     = environments_inv_to_hashes(inv[:environments])
-        realms           = realms_inv_to_hashes(inv[:realms])
-
-        indexes = {
-          :media            => add_ids(media),
-          :ptables          => add_ids(ptables),
-          :architectures    => add_ids(architectures),
-          :compute_profiles => add_ids(compute_profiles),
-          :domains          => add_ids(domains),
-          :environments     => add_ids(environments),
-          :realms           => add_ids(realms),
-        }
-
-        {
-          :customization_scripts       => media + ptables,
-          :operating_system_flavors    => operating_system_flavors_inv_to_hashes(inv[:operating_systems], indexes),
-          :configuration_locations     => location_inv_to_hashes(inv[:locations]),
-          :configuration_organizations => organization_inv_to_hashes(inv[:organizations]),
-          :configuration_tags          => architectures + compute_profiles + domains + environments + realms,
-        }
       end
 
       # data coming in from foreman:
@@ -74,61 +36,13 @@ module EmsRefresh
         }
       end
 
-      def media_inv_to_hashes(media)
-        basic_hash(media, "CustomizationScriptMedium")
-      end
-
-      def ptables_inv_to_hashes(ptables)
-        basic_hash(ptables, "CustomizationScriptPtable")
-      end
-
-      def location_inv_to_hashes(locations)
-        backfill_parent_ref(basic_hash(locations || tax_refs, "ConfigurationLocation", "title"))
-      end
-
-      def organization_inv_to_hashes(organizations)
-        backfill_parent_ref(basic_hash(organizations || tax_refs, "ConfigurationOrganization", "title"))
-      end
-
-      def architectures_inv_to_hashes(architectures)
-        basic_hash(architectures, "ConfigurationArchitecture")
-      end
-
-      def compute_profiles_inv_to_hashes(compute_profiles)
-        basic_hash(compute_profiles, "ConfigurationComputeProfile")
-      end
-
-      def domains_inv_to_hashes(domains)
-        basic_hash(domains, "ConfigurationDomain")
-      end
-
-      def environments_inv_to_hashes(environments)
-        basic_hash(environments, "ConfigurationEnvironment")
-      end
-
-      def realms_inv_to_hashes(realms)
-        basic_hash(realms, "ConfigurationRealm")
-      end
-
-      def operating_system_flavors_inv_to_hashes(flavors_inv, indexes)
-        flavors_inv.collect do |os|
-          {
-            :manager_ref           => os["id"].to_s,
-            :name                  => os["fullname"],
-            :description           => os["description"],
-            :customization_scripts => ids_lookup(indexes[:media], os["media"]) +
-                                      ids_lookup(indexes[:ptables], os["ptables"])
-          }
-        end
-      end
-
       def configuration_profile_inv_to_hashes(recs, indexes)
         # if locations have a key with 0 (meaning we're using default), then lets assign a default location
         def_loc = tax_refs if indexes[:locations].keys == %w(0)
         def_org = tax_refs if indexes[:organizations].keys == %w(0)
         recs.collect do |profile|
           {
-            :type                                  => "ConfigurationProfileForeman",
+            :type                                  => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile",
             :manager_ref                           => profile["id"].to_s,
             :parent_ref                            => (profile["ancestry"] || "").split("/").last.presence,
             :name                                  => profile["name"],
@@ -174,7 +88,7 @@ module EmsRefresh
         def_org = 0 if indexes[:organizations].keys == %w(0)
         recs.collect do |cs|
           {
-            :type                                  => "ConfiguredSystemForeman",
+            :type                                  => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem",
             :manager_ref                           => cs["id"].to_s,
             :hostname                              => cs["name"],
             :configuration_profile                 => id_lookup(indexes[:profiles], cs["hostgroup_id"]),
@@ -237,31 +151,6 @@ module EmsRefresh
       # default taxonomy reference (locations and organizations)
       def tax_refs
         [{"id" => 0, "name" => "Default", "title" => "Default"}]
-      end
-
-      def basic_hash(collection, type, extra_field = nil)
-        collection.collect do |m|
-          {
-            :manager_ref => m["id"].to_s,
-            :type        => type,
-            :name        => m["name"],
-          }.tap do |h|
-            h[:parent_ref] = (m["ancestry"] || "").split("/").last.presence if m.key?("ancestry")
-            h[extra_field.to_sym] = m[extra_field] if extra_field
-          end
-        end
-      end
-
-      def backfill_parent_ref(collection)
-        collection.each do |rec|
-          rec[:parent_ref] = derive_parent_ref(rec, collection) unless rec.key?(:parent_ref)
-        end
-      end
-
-      # title = parent_title/name. we do this in reverse
-      def derive_parent_ref(rec, collection)
-        parent_title = (rec[:title] || "").sub(/\/?#{rec[:name]}/, "").presence
-        collection.detect { |c| c[:title].to_s == parent_title }.try(:[], :manager_ref) if parent_title
       end
 
       # given an array of hashes, squash the values together, last value taking precidence

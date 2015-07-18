@@ -11,8 +11,8 @@ class MiqExpression
     CloudResourceQuota
     CloudTenant
     Compliance
-    ConfiguredSystemForeman
-    ConfigurationManager
+    ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
+    ManageIQ::Providers::ConfigurationManager
     Container
     ContainerGroup
     ContainerNode

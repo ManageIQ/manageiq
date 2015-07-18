@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::ForemanRefresher do
+describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   before do
     unless provider.api_cached?
       VCR.use_cassette("ems_refresh/refreshers/foreman_refresher_api_doc") do

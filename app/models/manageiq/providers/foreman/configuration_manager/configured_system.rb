@@ -1,8 +1,9 @@
-class ConfiguredSystemForeman < ConfiguredSystem
+class ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem < ::ConfiguredSystem
   include ProviderObjectMixin
   include_concern 'Placement'
 
-  belongs_to :configuration_profile, :class_name => 'ConfigurationProfileForeman'
+  belongs_to :configuration_profile,
+             :class_name => 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile'
   belongs_to :direct_operating_system_flavor,
              :class_name  => 'OperatingSystemFlavor'
   belongs_to :direct_customization_script_medium,

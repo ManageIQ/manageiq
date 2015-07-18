@@ -1,12 +1,12 @@
-class ProviderForeman < Provider
+class ManageIQ::Providers::Foreman::Provider < ::Provider
   has_one :configuration_manager,
           :foreign_key => "provider_id",
-          :class_name  => "ConfigurationManagerForeman",
+          :class_name  => "ManageIQ::Providers::Foreman::ConfigurationManager",
           :dependent   => :destroy,
           :autosave    => true
   has_one :provisioning_manager,
           :foreign_key => "provider_id",
-          :class_name  => "ProvisioningManagerForeman",
+          :class_name  => "ManageIQ::Providers::Foreman::ProvisioningManager",
           :dependent   => :destroy,
           :autosave    => true
 
@@ -16,10 +16,6 @@ class ProviderForeman < Provider
 
   validates :name, :presence => true, :uniqueness => true
   validates :url,  :presence => true, :uniqueness => true
-
-  def self.ems_type
-    @ems_type ||= "foreman".freeze
-  end
 
   def self.raw_connect(base_url, username, password, verify_ssl)
     require 'manageiq_foreman'

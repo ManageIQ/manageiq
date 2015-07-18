@@ -1,13 +1,13 @@
-module EmsRefresh
-  module Refreshers
-    class ForemanConfigurationRefresher < BaseRefresher
-      include EmsRefresherMixin
+module ManageIQ::Providers
+  module Foreman
+    class ConfigurationManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
+      include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
       def parse_inventory(manager, targets)
         manager.with_provider_connection do |connection|
           raw_ems_data = connection.inventory.refresh_configuration(targets)
           fetch_provisioning_manager_data(raw_ems_data, manager.provider.provisioning_manager)
-          EmsRefresh::Parsers::Foreman.configuration_inv_to_hashes(raw_ems_data)
+          ConfigurationManager::RefreshParser.configuration_inv_to_hashes(raw_ems_data)
         end
       end
 

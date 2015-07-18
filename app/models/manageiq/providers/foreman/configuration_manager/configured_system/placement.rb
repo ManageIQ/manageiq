@@ -1,4 +1,4 @@
-module ConfiguredSystemForeman::Placement
+module ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem::Placement
   def available_configuration_profiles
     cl_history = configuration_location.try(:path) || []
     co_history = configuration_organization.try(:path) || []

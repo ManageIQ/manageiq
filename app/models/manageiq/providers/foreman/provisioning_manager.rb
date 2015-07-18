@@ -1,4 +1,8 @@
-class ProvisioningManagerForeman < ProvisioningManager
+class ManageIQ::Providers::Foreman::ProvisioningManager < ManageIQ::Providers::ProvisioningManager
+  require_dependency 'manageiq/providers/foreman/provisioning_manager/refresher'
+  require_dependency 'manageiq/providers/foreman/provisioning_manager/refresh_parser'
+  require_dependency 'manageiq/providers/foreman/provisioning_manager/refresh_worker'
+
   delegate :authentication_check,
            :authentication_status,
            :authentication_status_ok?,

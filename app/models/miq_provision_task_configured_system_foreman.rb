@@ -3,7 +3,7 @@ class MiqProvisionTaskConfiguredSystemForeman < MiqProvisionTask
   include_concern 'StateMachine'
 
   def model_class
-    ConfiguredSystemForeman
+    ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
   end
 
   def self.request_class
