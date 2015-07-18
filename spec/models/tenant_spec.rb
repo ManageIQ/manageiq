@@ -1,9 +1,9 @@
 require "spec_helper"
 
 describe Tenant do
-  context "#default_tenant" do
+  describe "#default_tenant" do
     before do
-      Tenant.seed
+      Tenant.create
     end
 
     it "has a default tenant" do
@@ -11,7 +11,27 @@ describe Tenant do
     end
   end
 
-  context "#logo" do
+  describe "#default?" do
+    before do
+      Tenant.create
+    end
+
+    it "is default" do
+      expect(described_class.default_tenant).to be_default
+    end
+
+    it "is not default" do
+      expect(FactoryGirl.build(:tenant, :domain => 'x.com')).not_to be_default
+    end
+  end
+
+  describe "#settings?" do
+    it "is false" do
+      expect(described_class.new).not_to be_settings
+    end
+  end
+
+  describe "#logo" do
     let(:tenant) { FactoryGirl.create(:tenant, :logo_file_name => "image.png") }
 
     # NOTE: this currently returns a bogus url.
@@ -27,7 +47,7 @@ describe Tenant do
     end
   end
 
-  context "#logo?" do
+  describe "#logo?" do
     it "knows when there is a logo" do
       expect(described_class.new(:logo_file_name => "image.png")).to be_logo
     end
@@ -37,7 +57,7 @@ describe Tenant do
     end
   end
 
-  context "#login_logo" do
+  describe "#login_logo" do
     # NOTE: initializers/paperclip.rb sets up :default_login_logo
 
     let(:tenant) { FactoryGirl.create(:tenant) }
@@ -47,7 +67,7 @@ describe Tenant do
     end
   end
 
-  context "#login_logo?" do
+  describe "#login_logo?" do
     it "knows when there is a login logo" do
       expect(described_class.new(:login_logo_file_name => "image.png")).to be_login_logo
     end
@@ -57,7 +77,7 @@ describe Tenant do
     end
   end
 
-  context "#nil_blanks" do
+  describe "#nil_blanks" do
     it "nulls out blank domain" do
       expect(described_class.create(:domain => "  ").domain).to be_nil
     end

@@ -3,8 +3,6 @@ require "spec_helper"
 describe DashboardController do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
-    Tenant.seed
-    ActsAsTenant.default_tenant = Tenant.default_tenant
   end
 
   context "#with unknown subdomain or domain" do
@@ -12,9 +10,10 @@ describe DashboardController do
       @request.host = "www.example.com"
     end
 
+    # assumes database is empty and has no tenant objects
     it "defaults to default_domain" do
       get :login
-      expect(controller.send(:current_tenant)).to eq(Tenant.default_tenant)
+      expect(controller.send(:current_tenant)).to be_a(TenantDefault)
     end
   end
 
