@@ -273,12 +273,6 @@ module UiConstants
 
   VIEW_RESOURCES = DEFAULT_SETTINGS[:views].keys.each_with_object({}) { |value, acc| acc[value.to_s] = value }.freeze
 
-  # Options for timeline event groups for pulldowns and where clause
-  TL_ETYPE_GROUPS = EmsEvent.event_groups
-
-  # Options for timeline event groups for pulldowns and where clause
-  BOTTLENECK_TL_ETYPE_GROUPS = EmsEvent.bottleneck_event_groups
-
   TIMER_DAYS = [
     ["Day", "1"],
     ["2 Days", "2"],

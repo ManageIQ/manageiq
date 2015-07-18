@@ -278,8 +278,9 @@ module ApplicationController::Timelines
   end
 
   def tl_build_filter(grp_name)             # hidden fields to highlight bands in timeline
-    arr = TL_ETYPE_GROUPS[grp_name][@tl_options[:fl_typ].downcase.to_sym]
-    arr.push(TL_ETYPE_GROUPS[grp_name][:critical]) if @tl_options[:fl_typ].downcase == "detail"
+    event_groups = EmsEvent.event_groups
+    arr = event_groups[grp_name][@tl_options[:fl_typ].downcase.to_sym]
+    arr.push(event_groups[grp_name][:critical]) if @tl_options[:fl_typ].downcase == "detail"
     filter = "(" << arr.join(")|(") << ")"
     return filter
   end
@@ -356,7 +357,7 @@ module ApplicationController::Timelines
     else
       @tl_options[:groups] = Array.new
       @tl_groups_hash = Hash.new
-      TL_ETYPE_GROUPS.each do |gname,list|
+      EmsEvent.event_groups.each do |gname,list|
         @tl_options[:groups].push(list[:name].to_s)
         @tl_groups_hash[list[:name].to_s] = gname
       end
@@ -435,23 +436,24 @@ module ApplicationController::Timelines
           end
         end
       else
+        event_groups = EmsEvent.event_groups
         if (!@tl_options[:filter1].nil? && @tl_options[:filter1] != "") ||
             (!@tl_options[:filter2].nil? && @tl_options[:filter2] != "") ||
             (!@tl_options[:filter3].nil? && @tl_options[:filter3] != "")
           if !@tl_options[:filter1].nil? && @tl_options[:filter1] != ""
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter1]]
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter1]]
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
           if !@tl_options[:filter2].nil? && @tl_options[:filter2] != ""
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter2]]
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter2]]
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
           if !@tl_options[:filter3].nil? && @tl_options[:filter3] != ""
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter3]]
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter3]]
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
         else
-          event_set.push(TL_ETYPE_GROUPS[:power][@tl_options[:fl_typ].to_sym])
+          event_set.push(event_groups[:power][@tl_options[:fl_typ].to_sym])
         end
       end
 
