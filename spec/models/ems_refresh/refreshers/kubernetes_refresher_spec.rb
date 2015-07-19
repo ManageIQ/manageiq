@@ -71,11 +71,22 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   def assert_specific_container
     @container = Container.find_by_name("heapster")
     @container.should have_attributes(
-      # :ems_ref       => "a7566742-e73f-11e4-b613-001a4a5f4a02_heapster_kubernetes/heapster:v0.9",
+      # :ems_ref     => "a7566742-e73f-11e4-b613-001a4a5f4a02_heapster_kubernetes/heapster:v0.9",
       :name          => "heapster",
       :restart_count => 2,
-      # :backing_ref   => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
+      :state         => "running",
+      :last_state    => "terminated",
+    # :backing_ref => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
     )
+
+    [
+      @container.started_at,
+      @container.finished_at,
+      @container.last_started_at,
+      @container.last_finished_at,
+    ].each do |date_|
+      (date_.kind_of?(ActiveSupport::TimeWithZone) || date_.kind_of?(NilClass)).should be_true
+    end
 
     @container.container_image.name.should == "kubernetes/heapster"
     @container.container_definition.command.should == "/heapster --source\\=kubernetes:https://kubernetes "\
