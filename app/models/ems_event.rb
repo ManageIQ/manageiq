@@ -41,19 +41,19 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.task_final_events
-    return VMDB::Config.new('event_handling').config[:task_final_events]
+    @task_final_events ||= VMDB::Config.new('event_handling').config[:task_final_events]
   end
 
   def self.event_groups
-    return VMDB::Config.new('event_handling').config[:event_groups]
+    @event_groups ||= VMDB::Config.new('event_handling').config[:event_groups]
   end
 
   def self.bottleneck_event_groups
-    return VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
+    @bottleneck_event_groups ||= VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
   end
 
   def self.filtered_events
-    return VMDB::Config.new('event_handling').config[:filtered_events]
+    @filtered_events ||= VMDB::Config.new('event_handling').config[:filtered_events]
   end
 
   def self.group_and_level(event_type)
