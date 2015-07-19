@@ -321,7 +321,7 @@ module EmsRefresh::Parsers
     end
 
     def parse_container(container, pod_id)
-      {
+      h = {
         :type          => 'ContainerKubernetes',
         :ems_ref       => "#{pod_id}_#{container.name}_#{container.image}",
         :name          => container.name,
@@ -330,7 +330,31 @@ module EmsRefresh::Parsers
         :backing_ref   => container.containerID,
         :image_ref     => container.imageID
       }
-      # TODO, state
+      Hash(container.state).each do |key, val|
+        h.merge!(
+          :state       => key,
+          :reason      => val.try('reason'),
+          :started_at  => val.try('startedAt'),
+          :finished_at => val.try('finishedAt'),
+          :exit_code   => val.try('exitCode'),
+          :signal      => val.try('signal'),
+          :message     => val.try('message')
+        )
+      end
+      Hash(container.last_state).each do |key, val|
+        h.merge!(
+            :last_state       => key,
+            :last_state_reason      => val.try('reason'),
+            :last_state_started_at  => val.try('startedAt'),
+            :last_state_finished_at => val.try('finishedAt'),
+            :last_state_exit_code   => val.try('exitCode'),
+            :last_state_signal      => val.try('signal'),
+            :last_state_message     => val.try('message')
+        )
+      end
+
+      $log.info("xxxxxxxxxxx34 container[]: #{h}")
+      h
     end
 
     def parse_container_port_config(port_config, pod_id, container_name)
