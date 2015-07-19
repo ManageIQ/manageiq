@@ -196,6 +196,7 @@ module EmsRefresh::Parsers
       unless pod.status.nil? || pod.status.containerStatuses.nil?
         pod.status.containerStatuses.each do |cn|
           containers_index[cn.name] = parse_container(cn, pod.metadata.uid)
+          $log.info("xxxxxxxxxxx34 containers_index[cn.name]: #{containers_index[cn.name]}")
         end
       end
 
@@ -318,7 +319,7 @@ module EmsRefresh::Parsers
     end
 
     def parse_container(container, pod_id)
-      {
+      h = {
         :type          => 'ContainerKubernetes',
         :ems_ref       => "#{pod_id}_#{container.name}_#{container.image}",
         :name          => container.name,
@@ -327,7 +328,17 @@ module EmsRefresh::Parsers
         :backing_ref   => container.containerID,
         :image_ref     => container.imageID
       }
-      # TODO, state
+      Hash(container.state).each do |key, val|
+        h.merge!(
+          :state       => key,
+          :reason      => val.try('Reason'),
+          :started_at  => val.try('StartedAt'),
+          :finished_at => val.try('FinishedAt'),
+          :exit_code   => val.try('ExitCode'),
+          :signal      => val.try('Signal'),
+          :message     => val.try('Message')
+        )
+      end
     end
 
     def parse_container_port_config(port_config, pod_id, container_name)
