@@ -356,7 +356,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def parse_container(container, pod_id)
-      {
+      h = {
         :type            => 'ManageIQ::Providers::Kubernetes::ContainerManager::Container',
         :ems_ref         => "#{pod_id}_#{container.name}_#{container.image}",
         :name            => container.name,
@@ -364,8 +364,28 @@ module ManageIQ::Providers::Kubernetes
         :backing_ref     => container.containerID,
         :container_image => parse_container_image(container.image, container.imageID)
       }
+      state_attributes = parse_container_state container.lastState
+      state_attributes.each { |key, val| h[key.to_s.prepend('last_').to_sym] = val } if state_attributes
+      h.merge! parse_container_state container.state
+    end
 
-      # TODO, state
+    def parse_container_state(state_hash)
+      return if state_hash.to_h.empty?
+      res = {}
+      # state_hash key is the state and value are attributes e.g 'running': {...}
+      (state, state_info), = state_hash.to_h.to_a
+      %w(finishedAt startedAt).each do |iso_date|
+        state_info[iso_date] = parse_date state_info[iso_date]
+      end
+      res[:state] = state
+      %w(reason started_at finished_at exit_code signal message).each do |attr|
+        res[attr.to_sym] = state_info[attr.camelize(:lower)]
+      end
+      res
+    end
+
+    def parse_date(date)
+      date.nil? ? nil : DateTime.iso8601(date)
     end
 
     def parse_container_image(image, imageID)
