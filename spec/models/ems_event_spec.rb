@@ -182,6 +182,20 @@ describe EmsEvent do
       end
     end
 
+    context ".purge_date" do
+      it "using '3.month' syntax" do
+        described_class.stub(:keep_ems_events => "3.months")
+
+        # Exposes 3.months.seconds.ago.utc != 3.months.ago.utc
+        described_class.purge_date.should be_within(2.days).of(3.months.ago.utc)
+      end
+
+      it "defaults to 6 months" do
+        described_class.stub(:keep_ems_events => nil)
+        described_class.purge_date.should be_within(1.day).of(6.months.ago.utc)
+      end
+    end
+
     context "#purge_queue" do
       let(:purge_time) { (Time.now + 10).round }
 
