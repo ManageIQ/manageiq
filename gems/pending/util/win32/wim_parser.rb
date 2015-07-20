@@ -97,11 +97,11 @@ class WimParser
       #   to an integer, and then converting that to a time object.
       high_part     = i.xpath("./CREATIONTIME/HIGHPART").text[2..-1].rjust(8, '0')
       low_part      = i.xpath("./CREATIONTIME/LOWPART").text[2..-1].rjust(8, '0')
-      creation_time = NtUtil.NtToRubyTime("#{high_part}#{low_part}".to_i(16))
+      creation_time = NtUtil.nt_filetime_to_ruby_time("#{high_part}#{low_part}".to_i(16))
 
       high_part     = i.xpath("./LASTMODIFICATIONTIME/HIGHPART").text[2..-1].rjust(8, '0')
       low_part      = i.xpath("./LASTMODIFICATIONTIME/LOWPART").text[2..-1].rjust(8, '0')
-      last_mod_time = NtUtil.NtToRubyTime("#{high_part}#{low_part}".to_i(16))
+      last_mod_time = NtUtil.nt_filetime_to_ruby_time("#{high_part}#{low_part}".to_i(16))
 
       {
         "index"                  => i["INDEX"].to_i,

@@ -1,15 +1,12 @@
 # encoding: US-ASCII
 
 module NtUtil
-
-  def NtUtil.NtToRubyTime(ntTime)
+  def self.nt_filetime_to_ruby_time(nt_time)
     # Convert an NT FILETIME to a Ruby Time object.
-    begin
-      ntTime = ntTime / 10000000 - 11644495200
-      ntTime = 0 if ntTime < 0
-      Time.at(ntTime).gmtime
-    rescue RangeError
-      ntTime
-    end
+    nt_time = nt_time / 10_000_000 - 11_644_495_200
+    nt_time = 0 if nt_time < 0
+    Time.at(nt_time).gmtime
+  rescue RangeError
+    nt_time
   end
 end

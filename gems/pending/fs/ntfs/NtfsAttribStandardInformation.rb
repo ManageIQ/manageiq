@@ -83,9 +83,9 @@ module NTFS
 			
 			buf          = buf.read(buf.length) if buf.kind_of?(DataRun)
 			@asi         = ATTRIB_STANDARD_INFORMATION.decode(buf)
-			@mTime       = NtUtil.NtToRubyTime(@asi['time_altered'])
-			@aTime       = NtUtil.NtToRubyTime(@asi['time_read'])
-			@cTime       = NtUtil.NtToRubyTime(@asi['time_created'])
+			@mTime       = NtUtil.nt_filetime_to_ruby_time(@asi['time_altered'])
+			@aTime       = NtUtil.nt_filetime_to_ruby_time(@asi['time_read'])
+			@cTime       = NtUtil.nt_filetime_to_ruby_time(@asi['time_created'])
 			@permissions = @asi['dos_permissions']
 		end
 	  
@@ -93,7 +93,7 @@ module NTFS
 			out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
 			out << "  Time created    : #{@cTime}\n"
 			out << "  Time altered    : #{@mTime}\n"
-			out << "  Time mft changed: #{NtUtil.NtToRubyTime(@asi['time_mft_changed'])}\n"
+			out << "  Time mft changed: #{NtUtil.nt_filetime_to_ruby_time(@asi['time_mft_changed'])}\n"
 			out << "  Time read       : #{@aTime}\n"
 			out << "  Permissions     : 0x#{'%08x' % @permissions}\n"
 			out << "  Max versions    : #{@asi['max_versions']}\n"
