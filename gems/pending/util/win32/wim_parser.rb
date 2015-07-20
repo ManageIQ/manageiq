@@ -13,7 +13,7 @@ require "binary_struct"
 #       http://msdn.microsoft.com/en-us/library/windows/desktop/aa373931%28v=vs.85%29.aspx
 #       http://stackoverflow.com/questions/679381/accessing-guid-members-in-c-sharp
 class WimParser
-  autoload :NtUtil,   "#{File.dirname(__FILE__)}/../../fs/ntfs/NtUtil"
+  autoload :NtUtil,   "util/win32/nt_util"
   autoload :Nokogiri, "nokogiri"
 
   HEADER_V1_STRUCT = BinaryStruct.new([
