@@ -170,7 +170,6 @@ class ContainerController < ApplicationController
     @sb[:action] = nil
     if x_node == "root" || TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
       typ = "Container"
-      @no_checkboxes = true
       process_show_list
       @right_cell_text = _("All %s") % ui_lookup(:models => typ)
     else

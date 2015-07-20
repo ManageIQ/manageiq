@@ -3507,6 +3507,10 @@
       :description: Refresh Containers Providers
       :feature_type: control
       :identifier: ems_container_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Containers Providers
+      :feature_type: control
+      :identifier: ems_container_tag
   - :name: Modify
     :description: Modify Containers Providers
     :feature_type: admin
@@ -3565,6 +3569,15 @@
       :description: Add a Container Groups
       :feature_type: admin
       :identifier: container_group_new
+  - :name: Operate
+    :description: Perform Operations on Container Groups
+    :feature_type: control
+    :identifier: container_group_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Groups
+      :feature_type: control
+      :identifier: container_group_tag
 
 # ContainerNode
 - :name: Nodes
@@ -3606,6 +3619,15 @@
       :description: Add a Container Nodes
       :feature_type: admin
       :identifier: container_node_new
+  - :name: Operate
+    :description: Perform Operations on Container Nodes
+    :feature_type: control
+    :identifier: container_node_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Nodes
+      :feature_type: control
+      :identifier: container_node_tag
 
 # ContainerReplicator
 - :name: Replicators
@@ -3643,6 +3665,15 @@
       :description: Add a Container Replicator
       :feature_type: admin
       :identifier: container_replicator_new
+  - :name: Operate
+    :description: Perform Operations on Container Replicators
+    :feature_type: control
+    :identifier: container_replicator_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Replicators
+      :feature_type: control
+      :identifier: container_replicator_tag
 
 # ContainerService
 - :name: Services
@@ -3680,6 +3711,15 @@
       :description: Add a Container Services
       :feature_type: admin
       :identifier: container_service_new
+  - :name: Operate
+    :description: Perform Operations on Container Services
+    :feature_type: control
+    :identifier: container_service_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Services
+      :feature_type: control
+      :identifier: container_service_tag
 
 # ContainerRoute
 - :name: Routes
@@ -3700,6 +3740,15 @@
       :description: Display Individual Container Routes
       :feature_type: view
       :identifier: container_route_show
+  - :name: Operate
+    :description: Perform Operations on Container Routes
+    :feature_type: control
+    :identifier: container_route_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Routes
+      :feature_type: control
+      :identifier: container_route_tag
 
 # ContainerProject
 - :name: Projects
@@ -3720,7 +3769,15 @@
       :description: Display Individual Container Routes
       :feature_type: view
       :identifier: container_project_show
-
+  - :name: Operate
+    :description: Perform Operations on Container Projects
+    :feature_type: control
+    :identifier: container_project_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Projects
+      :feature_type: control
+      :identifier: container_project_tag
 
 # Container
 - :name: Containers Explorer
@@ -3763,6 +3820,15 @@
         :description: Add a Container
         :feature_type: admin
         :identifier: container_new
+  - :name: Operate
+    :description: Perform Operations on Containers
+    :feature_type: control
+    :identifier: container_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Containers
+      :feature_type: control
+      :identifier: container_tag
 
 # Foreman
 - :name: Configuration Management

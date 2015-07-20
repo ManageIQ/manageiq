@@ -21,6 +21,8 @@ class ContainerGroup < ActiveRecord::Base
 
   include EventMixin
 
+  acts_as_miq_taggable
+
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
     when :ems_events
