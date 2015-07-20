@@ -176,6 +176,8 @@ class MiqDbConfig
   end
 
   def verify_config(from_save = nil)
+    @errors = ActiveModel::Errors.new(self)
+
     with_temporary_connection do |conn|
       tables = conn.tables
 
