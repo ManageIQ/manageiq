@@ -520,7 +520,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def tag_symbol_for_workflow
-    (@edit || @options)[:wf].tag_symbol
+    (@edit || @options)[:wf].try(:tag_symbol) || :vm_tags
   end
 
   def validate_fields
