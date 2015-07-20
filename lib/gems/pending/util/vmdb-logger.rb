@@ -35,29 +35,6 @@ class VMDBLogger < Logger
 
   alias filename= logdev=
 
-  # Log all or only some local + instance_variables. Optionally pass variables
-  # you want to be logged.
-  #
-  # Example:
-  #   $log.debug_variables(binding)
-  #   $log.debug_variables(binding, :var1, :var2)
-  #   $log.debug_variables(binding, [:var1, :var2])
-  #
-  # TODO: Revisit this by testing it from within a controller/model or if an
-  # exception was raised. Provide a mechanism so we don't print huge variables
-  def debug_variables(bind, *vars)
-    return unless debug?
-
-    vars = vars.first if vars.length == 1 && vars.first.kind_of?(Array)
-    vars = eval('local_variables + instance_variables', bind) if vars.empty?
-
-    obj = eval('[Module,Class].include?(self.class) ? self.name : self.class.name', bind)
-    meth = caller[0][/`([^']*)'/, 1]
-    vars.each do |var|
-      debug("[#{obj}.#{meth}] #{var} => #{eval(var.to_s, bind).inspect}")
-    end
-  end
-
   def self.contents(log, width = nil, last = 1000)
     return "" unless File.file?(log)
 
