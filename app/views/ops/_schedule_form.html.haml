@@ -61,4 +61,4 @@
                               {year: '#{@one_month_ago[:year]}',
                                month: '#{@one_month_ago[:month]}',
                                date: '#{@one_month_ago[:date]}'});
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication']);
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
