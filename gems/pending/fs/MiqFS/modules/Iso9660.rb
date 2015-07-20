@@ -1,10 +1,10 @@
 require 'rufus/lru'
 
 # Iso9660 stuff.
-require 'fs/iso9660/Iso9660BootSector'
-require 'fs/iso9660/Iso9660DirectoryEntry'
-require 'fs/iso9660/Iso9660Directory'
-require 'fs/iso9660/Iso9660FileData'
+require 'fs/iso9660/boot_sector'
+require 'fs/iso9660/directory_entry'
+require 'fs/iso9660/directory'
+require 'fs/iso9660/file_data'
 
 module Iso9660
 	

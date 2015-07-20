@@ -1,4 +1,4 @@
-require 'fs/iso9660/Iso9660Util'
+require 'fs/iso9660/util'
 
 require 'binary_struct'
 require 'util/miq-unicode'
@@ -104,10 +104,10 @@ module Iso9660
 			@volName.Ucs2ToAscii! if @isJoliet
 			# fsId can come from Rock Ridge ext if present.
 			# Don't forget there's a serial number too if RR isn't there.
-			@cTime = Iso9660Util.IsoToRubyDate(@bs['creation_date'])
-			@mTime = Iso9660Util.IsoToRubyDate(@bs['modification_date'])
-			@expirationDate = Iso9660Util.IsoToRubyDate(@bs['expiration_date'])
-			@effectiveDate = Iso9660Util.IsoToRubyDate(@bs['effective_date'])
+			@cTime = Util.IsoToRubyDate(@bs['creation_date'])
+			@mTime = Util.IsoToRubyDate(@bs['modification_date'])
+			@expirationDate = Util.IsoToRubyDate(@bs['expiration_date'])
+			@effectiveDate = Util.IsoToRubyDate(@bs['effective_date'])
 			
 			# Filesystem root.
 			@rootEntry = @bs['root_dir_record']
@@ -161,10 +161,10 @@ module Iso9660
 			out += "Copyright       : #{@bs['copyright_file_id'].strip}\n"
 			out += "Abstract        : #{@bs['abstract_file_id'].strip}\n"
 			out += "Biblographic    : #{@bs['biblographic_file_id'].strip}\n"
-			out += "Creation date   : #{@bs['creation_date'].strip} (#{@cTime}, tz = #{Iso9660Util.GetTimezone(@bs['creation_date'])})\n"
-			out += "Mod date        : #{@bs['modification_date'].strip} (#{@mTime}, tz = #{Iso9660Util.GetTimezone(@bs['modification_date'])})\n"
-			out += "Expiration date : #{@bs['experation_date'].strip} (#{@expirationDate}, tz = #{Iso9660Util.GetTimezone(@bs['experation_date'])})\n"
-			out += "Effective date  : #{@bs['effective_date'].strip} (#{@effectiveDate}, tz = #{Iso9660Util.GetTimezone(@bs['effective_date'])})\n"
+			out += "Creation date   : #{@bs['creation_date'].strip} (#{@cTime}, tz = #{Util.GetTimezone(@bs['creation_date'])})\n"
+			out += "Mod date        : #{@bs['modification_date'].strip} (#{@mTime}, tz = #{Util.GetTimezone(@bs['modification_date'])})\n"
+			out += "Expiration date : #{@bs['experation_date'].strip} (#{@expirationDate}, tz = #{Util.GetTimezone(@bs['experation_date'])})\n"
+			out += "Effective date  : #{@bs['effective_date'].strip} (#{@effectiveDate}, tz = #{Util.GetTimezone(@bs['effective_date'])})\n"
 			out += "File strct ver  : #{@bs['file_structure_version']}\n"
 			out += "Application data: #{@bs['application_data'].strip}\n"
 		end
