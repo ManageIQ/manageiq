@@ -2,17 +2,6 @@
 
 module NtUtil
 
-  def NtUtil.NtToRubyTime(ntTime)
-    # Convert an NT FILETIME to a Ruby Time object.
-    begin
-      ntTime = ntTime / 10000000 - 11644495200
-      ntTime = 0 if ntTime < 0
-      Time.at(ntTime).gmtime
-    rescue RangeError
-      ntTime
-    end
-  end
-
   # Make a reference (upper two bytes are seq num, lower six are entry).
   def NtUtil.MkRef(ref)
     ref.divmod(2 ** 48)

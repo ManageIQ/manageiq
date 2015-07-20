@@ -1,4 +1,5 @@
 require 'fs/ntfs/NtUtil'
+require 'util/win32/nt_util'
 
 require 'binary_struct'
 require 'util/miq-unicode'
@@ -78,15 +79,15 @@ module NTFS
 		end
 		
     def mTime
-      @mTime ||= NtUtil.NtToRubyTime(@afn['time_altered'])
+      @mTime ||= NtUtil.nt_filetime_to_ruby_time(@afn['time_altered'])
     end
 
     def aTime
-			@aTime ||= NtUtil.NtToRubyTime(@afn['time_read'])
+			@aTime ||= NtUtil.nt_filetime_to_ruby_time(@afn['time_read'])
     end
 
     def cTime
-			@cTime ||= NtUtil.NtToRubyTime(@afn['time_created'])
+			@cTime ||= NtUtil.nt_filetime_to_ruby_time(@afn['time_created'])
     end
 
 		# Returns nil if not directory.
@@ -99,7 +100,7 @@ module NTFS
 			out << "  Parent dir : seq #{@refParent[0]}, entry #{@refParent[1]}\n"
 			out << "  Created    : #{@cTime}\n"
 			out << "  Modified   : #{@mTime}\n"
-			out << "  MFT changed: #{NtUtil.NtToRubyTime(@afn['time_mft_changed'])}\n"
+			out << "  MFT changed: #{NtUtil.nt_filetime_to_ruby_time(@afn['time_mft_changed'])}\n"
 			out << "  Accessed   : #{@aTime}\n"
 			out << "  Allocated  : #{@afn['allocated_size']}\n"
 			out << "  Real size  : #{@length}\n"
