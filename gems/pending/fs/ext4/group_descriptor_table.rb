@@ -1,5 +1,5 @@
-require 'fs/ext4/Ext4GroupDescriptorEntry'
-require 'fs/ext4/Ext4AllocBitmap'
+require 'fs/ext4/group_descriptor_entry'
+require 'fs/ext4/alloc_bitmap'
 
 module Ext4
 
