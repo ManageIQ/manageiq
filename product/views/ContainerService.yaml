@@ -22,6 +22,7 @@ cols:
 - name
 - portal_ip
 - session_affinity
+- ext_management_system
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -34,12 +35,14 @@ col_order:
 - name
 - portal_ip
 - session_affinity
+- ext_management_system
 
 # Column titles, in order
 headers:
 - Name
 - Portal IP
 - Session Affinity
+- Provider
 
 # Condition(s) string for the SQL query
 conditions: 

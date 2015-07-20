@@ -24,6 +24,8 @@ cols:
 - services_count
 - routes_count
 - replicators_count
+- ext_management_system
+
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -38,6 +40,7 @@ col_order:
 - services_count
 - routes_count
 - replicators_count
+- ext_management_system
 
 # Column titles, in order
 headers:
@@ -46,6 +49,7 @@ headers:
 - Container Services
 - Container Routes
 - Container Replicators
+- Provider
 
 # Condition(s) string for the SQL query
 conditions: 
