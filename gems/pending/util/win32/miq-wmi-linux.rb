@@ -1,5 +1,6 @@
 require 'util/miq-hash_struct'
 require 'open3'
+require 'awesome_spawn'
 
 module WmiLinux
 
@@ -69,20 +70,11 @@ module WmiLinux
   end
 
   def run_query(wmiQuery)
-    command_line = "wmic -U #{self.logon_username()} --namespace=\"#{@namespace}\" //#{@server} \"#{wmiQuery}\""
-    stdout_text, stderr_text = "", ""
-    Open3.popen3(command_line) do |stdin, stdout, stderr|
-      #puts "#{stdin.inspect}:#{stdin.pid} - #{stdout.inspect}:#{stdout.pid} - #{stderr.inspect}:#{stderr.pid}"
-      Thread.new {loop {x = stderr.gets; stderr_text << x}} #; puts "Err stream:    #{x}"
-      Thread.new {loop {y = stdout.gets; stdout_text << y}} #; puts "Output stream: [#{y.class}] #{y}"
-      sleep(0.1)
-      #puts "Sending Password"
-      stdin.puts @password
-      loop  {break unless stdout_text.empty? && stderr_text.empty?; sleep(0.1)}
-      sleep(1)
-    end
+    command_result = AwesomeSpawn.run("wmic", :params => {"-U" => [self.logon_username()],
+                              :password => @password, :namespace => @namespace,
+                              nil => ["//#{@server}", wmiQuery]})
 
-    lines = stdout_text.collect {|l| l}
+    lines = command_result.output.lines
     raise lines.last unless lines[0].include?('CLASS: ')
 
     wmi_class_name = lines[0].split(": ").last.strip
