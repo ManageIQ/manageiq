@@ -1,6 +1,6 @@
 require 'stringio'
 
-require 'fs/fat32/Fat32DirectoryEntry'
+require 'fs/fat32/directory_entry'
 
 require 'memory_buffer'
 

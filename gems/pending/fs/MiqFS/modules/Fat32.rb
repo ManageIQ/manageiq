@@ -1,10 +1,10 @@
 require 'rufus/lru'
 
 # Fat32 stuff.
-require 'fs/fat32/Fat32BootSect'
-require 'fs/fat32/Fat32Directory'
-require 'fs/fat32/Fat32DirectoryEntry'
-require 'fs/fat32/Fat32FileData'
+require 'fs/fat32/boot_sect'
+require 'fs/fat32/directory'
+require 'fs/fat32/directory_entry'
+require 'fs/fat32/file_data'
 
 # Fat32 file system interface to MiqFS.
 module Fat32
