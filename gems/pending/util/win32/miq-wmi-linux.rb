@@ -70,7 +70,7 @@ module WmiLinux
   end
 
   def run_query(wmiQuery)
-    command_result = AwesomeSpawn.run("wmic", :params => {"-U" => [self.logon_username()],
+    command_result = AwesomeSpawn.run("wmic", :params => {"-U" => [logon_username],
                               :password => @password, :namespace => @namespace,
                               nil => ["//#{@server}", wmiQuery]})
 
