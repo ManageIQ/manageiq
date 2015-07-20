@@ -48,6 +48,7 @@ module Vmdb
     # Enable the asset pipeline
     config.assets.enabled = true
 
+    # TODO: Move to asset pipeline enabled by moving assets from public to app/assets
     config.asset_path = "%s"
 
     # Version of your assets, change this if you want to expire all your assets
