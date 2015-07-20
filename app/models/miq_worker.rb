@@ -153,6 +153,7 @@ class MiqWorker < ActiveRecord::Base
       if desired > current && enough_resource_to_start_worker?
         (desired - current).times { result[:adds] << self.start_worker.pid }
       elsif desired < current
+        w = w.to_a
         (current - desired).times do
           ww = w.pop
           result[:deletes] << ww.pid
