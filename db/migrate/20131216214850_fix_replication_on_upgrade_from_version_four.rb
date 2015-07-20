@@ -160,11 +160,11 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
       require 'awesome_spawn'
 
       say_with_time("Preparing rubyrep") do
-        AwesomeSpawn.run!("bin/rake evm:dbsync:prepare_replication_without_sync")
+        AwesomeSpawn.run!("bin/rake evm:db:environmentlegacykey evm:dbsync:prepare_replication_without_sync")
       end
 
       say_with_time("Uninstalling rubyrep for renamed tables") do
-        AwesomeSpawn.run!("bin/rake evm:dbsync:uninstall #{RENAMED_TABLES.values.join(" ")}")
+        AwesomeSpawn.run!("bin/rake evm:db:environmentlegacykey evm:dbsync:uninstall #{RENAMED_TABLES.values.join(" ")}")
       end
     end
   end
