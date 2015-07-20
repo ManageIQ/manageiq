@@ -29,10 +29,6 @@ MiqStdIo.std_io_to_files do
     $db_settings = Marshal.load(Base64.decode64(f_data.split("\n").join))
     from_save = $db_settings.delete(:from_save)
 
-    # force any connection errors to be raised immediately instead of retrying
-    require "active_record/connection_adapters/postgresql_adapter"
-    ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.auto_connect = false
-
     $conn = ActiveRecord::Base.establish_connection($db_settings).connection
 
     tables = $conn.tables
