@@ -1,7 +1,7 @@
 require 'minitest/unit'
 require 'enumerator'
 
-require 'fs/ext3/Ext3BlockPointersPath'
+require 'fs/ext3/block_pointers_path'
 include  Ext3
 
 class TestBlockPointersPath < MiniTest::Unit::TestCase

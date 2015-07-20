@@ -2,7 +2,7 @@ require 'ostruct'
 
 require_relative '../../VmsFromYaml'
 require 'disk/MiqDisk'
-require 'fs/ext3/Ext3Superblock'
+require 'fs/ext3/superblock'
 
 class Ext3TestSuperblock < Minitest::Test
 	

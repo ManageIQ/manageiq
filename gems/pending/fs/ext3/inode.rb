@@ -1,4 +1,4 @@
-require 'fs/ext3/Ext3DirectoryEntry'
+require 'fs/ext3/directory_entry'
 require 'binary_struct'
 
 module Ext3
