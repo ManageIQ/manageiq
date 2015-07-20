@@ -24,7 +24,7 @@ module EmsRefresh
           # TODO(lsmola) We need a support of GET /{tenant_id}/stacks/detail in FOG, it was implemented here
           # https://review.openstack.org/#/c/35034/, but never documented in API reference, so right now we
           # can't get list of detailed stacks in one API call.
-          @orchestration_service.stacks.all(:show_nested => true).collect(&:details)
+          @orchestration_service.stacks_for_accessible_tenants(:show_nested => true).collect(&:details)
         rescue Excon::Errors::Forbidden
           # Orchestration service is detected but not open to the user
           $log.warn("Skip refreshing stacks because the user cannot access the orchestration service")
@@ -55,7 +55,8 @@ module EmsRefresh
             :resources              => resources,
             :outputs                => find_stack_outputs(stack),
             :parameters             => find_stack_parameters(stack),
-            :orchestration_template => find_stack_template(stack)
+            :orchestration_template => find_stack_template(stack),
+            :cloud_tenant           => @data_index.fetch_path(:cloud_tenants, stack.service.current_tenant["id"])
           }
           return uid, new_result
         end

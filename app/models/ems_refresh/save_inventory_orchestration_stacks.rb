@@ -22,6 +22,7 @@ module EmsRefresh
 
       hashes.each do |h|
         h[:orchestration_template_id] = h.fetch_path(:orchestration_template, :id)
+        h[:cloud_tenant_id]           = h.fetch_path(:cloud_tenant, :id)
       end
 
       stacks = save_inventory_multi(:orchestration_stacks,
@@ -30,7 +31,7 @@ module EmsRefresh
                                     deletes,
                                     [:ems_ref],
                                     [:parameters, :outputs, :resources],
-                                    [:parent, :orchestration_template])
+                                    [:parent, :orchestration_template, :cloud_tenant])
 
       store_ids_for_new_records(ems.orchestration_stacks(true), hashes, :ems_ref)
 

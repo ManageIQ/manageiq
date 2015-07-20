@@ -1820,8 +1820,86 @@ http_interactions:
     http_version: 
   recorded_at: Thu, 04 Jun 2015 18:53:21 GMT
 - request:
+    method: post
+    uri: http://1.2.3.4:5000/v2.0/tokens
+    body:
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"admin"},"tenantName":"bd-project"}}'
+    headers:
+      User-Agent:
+      - fog/1.29.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '10914'
+      Date:
+      - Thu, 04 Jun 2015 18:53:21 GMT
+    body:
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2015-06-04T18:53:21.217261", "expires":
+        "2015-06-05T18:53:21Z", "id": "MIITBgYJKoZIhvcNAQcCoIIS9zCCEvMCAQExCTAHBgUrDgMCGjCCEVwGCSqGSIb3DQEHAaCCEU0EghFJeyJhY2Nlc3MiOiB7InRva2VuIjogeyJpc3N1ZWRfYXQiOiAiMjAxNS0wNi0wNFQxODo1MzoyMS4yMTcyNjEiLCAiZXhwaXJlcyI6ICIyMDE1LTA2LTA1VDE4OjUzOjIxWiIsICJpZCI6ICJwbGFjZWhvbGRlciIsICJ0ZW5hbnQiOiB7ImRlc2NyaXB0aW9uIjogIiIsICJlbmFibGVkIjogdHJ1ZSwgImlkIjogImM3ZTg5OTlkYTgwMzQzOGNhYzA2YWRlMTcxNTEyNGFlIiwgIm5hbWUiOiAiYmQtcHJvamVjdCJ9fSwgInNlcnZpY2VDYXRhbG9nIjogW3siZW5kcG9pbnRzIjogW3siYWRtaW5VUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4Nzc0L3YyL2M3ZTg5OTlkYTgwMzQzOGNhYzA2YWRlMTcxNTEyNGFlIiwgInJlZ2lvbiI6ICJSZWdpb25PbmUiLCAiaW50ZXJuYWxVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4Nzc0L3YyL2M3ZTg5OTlkYTgwMzQzOGNhYzA2YWRlMTcxNTEyNGFlIiwgImlkIjogIjRmYWJmYmFiYTI0NjQ3YzliODQ4YzU0ZTUyNTQ0NzA1IiwgInB1YmxpY1VSTCI6ICJodHRwOi8vMTAuOC45Ni40Ojg3NzQvdjIvYzdlODk5OWRhODAzNDM4Y2FjMDZhZGUxNzE1MTI0YWUifV0sICJlbmRwb2ludHNfbGlua3MiOiBbXSwgInR5cGUiOiAiY29tcHV0ZSIsICJuYW1lIjogIm5vdmEifSwgeyJlbmRwb2ludHMiOiBbeyJhZG1pblVSTCI6ICJodHRwOi8vMTAuOC45Ni40Ojk2OTYvIiwgInJlZ2lvbiI6ICJSZWdpb25PbmUiLCAiaW50ZXJuYWxVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo5Njk2LyIsICJpZCI6ICIzMWM2ODAzOTc3ZjM0ZmViOGViMDk1MDdlYzI5YmYyMCIsICJwdWJsaWNVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo5Njk2LyJ9XSwgImVuZHBvaW50c19saW5rcyI6IFtdLCAidHlwZSI6ICJuZXR3b3JrIiwgIm5hbWUiOiAibmV1dHJvbiJ9LCB7ImVuZHBvaW50cyI6IFt7ImFkbWluVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6ODc3Ni92Mi9jN2U4OTk5ZGE4MDM0MzhjYWMwNmFkZTE3MTUxMjRhZSIsICJyZWdpb24iOiAiUmVnaW9uT25lIiwgImludGVybmFsVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6ODc3Ni92Mi9jN2U4OTk5ZGE4MDM0MzhjYWMwNmFkZTE3MTUxMjRhZSIsICJpZCI6ICI2ZTM2YzE5ZTYzNzQ0MDNiOTg3ZjMwZDMxNDYzM2FmMyIsICJwdWJsaWNVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4Nzc2L3YyL2M3ZTg5OTlkYTgwMzQzOGNhYzA2YWRlMTcxNTEyNGFlIn1dLCAiZW5kcG9pbnRzX2xpbmtzIjogW10sICJ0eXBlIjogInZvbHVtZXYyIiwgIm5hbWUiOiAiY2luZGVyX3YyIn0sIHsiZW5kcG9pbnRzIjogW3siYWRtaW5VUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4MDgwIiwgInJlZ2lvbiI6ICJSZWdpb25PbmUiLCAiaW50ZXJuYWxVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4MDgwIiwgImlkIjogIjY5NzVmZjk2OWE3MjQwMDZiZGU5NjQzZDRhOTE5ODViIiwgInB1YmxpY1VSTCI6ICJodHRwOi8vMTAuOC45Ni40OjgwODAifV0sICJlbmRwb2ludHNfbGlua3MiOiBbXSwgInR5cGUiOiAiczMiLCAibmFtZSI6ICJzd2lmdF9zMyJ9LCB7ImVuZHBvaW50cyI6IFt7ImFkbWluVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6OTI5MiIsICJyZWdpb24iOiAiUmVnaW9uT25lIiwgImludGVybmFsVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6OTI5MiIsICJpZCI6ICI0ZWJkZGE2NThjNTQ0MzVjYTQwYmZkOTQ5OTJiYWJkNyIsICJwdWJsaWNVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo5MjkyIn1dLCAiZW5kcG9pbnRzX2xpbmtzIjogW10sICJ0eXBlIjogImltYWdlIiwgIm5hbWUiOiAiZ2xhbmNlIn0sIHsiZW5kcG9pbnRzIjogW3siYWRtaW5VUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4Nzc3IiwgInJlZ2lvbiI6ICJSZWdpb25PbmUiLCAiaW50ZXJuYWxVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4Nzc3IiwgImlkIjogIjM4NGI5NzY0Mjk5ODQyNzU5YjRiMTg2Y2FkZWI4MmJhIiwgInB1YmxpY1VSTCI6ICJodHRwOi8vMTAuOC45Ni40Ojg3NzcifV0sICJlbmRwb2ludHNfbGlua3MiOiBbXSwgInR5cGUiOiAibWV0ZXJpbmciLCAibmFtZSI6ICJjZWlsb21ldGVyIn0sIHsiZW5kcG9pbnRzIjogW3siYWRtaW5VUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4MDAwL3YxIiwgInJlZ2lvbiI6ICJSZWdpb25PbmUiLCAiaW50ZXJuYWxVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4MDAwL3YxIiwgImlkIjogIjAyZTJiMWFiNjQ3NzRjMTU5ZmZhMDMzNzg2YjM5ZjU2IiwgInB1YmxpY1VSTCI6ICJodHRwOi8vMTAuOC45Ni40OjgwMDAvdjEifV0sICJlbmRwb2ludHNfbGlua3MiOiBbXSwgInR5cGUiOiAiY2xvdWRmb3JtYXRpb24iLCAibmFtZSI6ICJoZWF0LWNmbiJ9LCB7ImVuZHBvaW50cyI6IFt7ImFkbWluVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6ODc3Ni92MS9jN2U4OTk5ZGE4MDM0MzhjYWMwNmFkZTE3MTUxMjRhZSIsICJyZWdpb24iOiAiUmVnaW9uT25lIiwgImludGVybmFsVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6ODc3Ni92MS9jN2U4OTk5ZGE4MDM0MzhjYWMwNmFkZTE3MTUxMjRhZSIsICJpZCI6ICIwMmM5OGU0YzZlZTY0MzY3YWIxZjMxNTMzNmVjZWM1YSIsICJwdWJsaWNVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4Nzc2L3YxL2M3ZTg5OTlkYTgwMzQzOGNhYzA2YWRlMTcxNTEyNGFlIn1dLCAiZW5kcG9pbnRzX2xpbmtzIjogW10sICJ0eXBlIjogInZvbHVtZSIsICJuYW1lIjogImNpbmRlciJ9LCB7ImVuZHBvaW50cyI6IFt7ImFkbWluVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6ODc3My9zZXJ2aWNlcy9BZG1pbiIsICJyZWdpb24iOiAiUmVnaW9uT25lIiwgImludGVybmFsVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6ODc3My9zZXJ2aWNlcy9DbG91ZCIsICJpZCI6ICIzMDY5MDIxYTVmMWY0MTEwODBlNTA3YzdiY2Y4NGVhMSIsICJwdWJsaWNVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4NzczL3NlcnZpY2VzL0Nsb3VkIn1dLCAiZW5kcG9pbnRzX2xpbmtzIjogW10sICJ0eXBlIjogImVjMiIsICJuYW1lIjogIm5vdmFfZWMyIn0sIHsiZW5kcG9pbnRzIjogW3siYWRtaW5VUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4MDA0L3YxLzVkMTM5ZDk1NTQ2MjQwNzQ4NTA4YjJhNTE4YWE1YmVmIiwgInJlZ2lvbiI6ICJSZWdpb25PbmUiLCAiaW50ZXJuYWxVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4MDA0L3YxLzVkMTM5ZDk1NTQ2MjQwNzQ4NTA4YjJhNTE4YWE1YmVmIiwgImlkIjogIjU0ZDFhZDY2NmZjYTQ4OTVhYjFhNzFhZTM5NTk2NzRkIiwgInB1YmxpY1VSTCI6ICJodHRwOi8vMTAuOC45Ni40OjgwMDQvdjEvNWQxMzlkOTU1NDYyNDA3NDg1MDhiMmE1MThhYTViZWYifV0sICJlbmRwb2ludHNfbGlua3MiOiBbXSwgInR5cGUiOiAib3JjaGVzdHJhdGlvbiIsICJuYW1lIjogImhlYXQifSwgeyJlbmRwb2ludHMiOiBbeyJhZG1pblVSTCI6ICJodHRwOi8vMTAuOC45Ni40OjgwODAvIiwgInJlZ2lvbiI6ICJSZWdpb25PbmUiLCAiaW50ZXJuYWxVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo4MDgwL3YxL0FVVEhfYzdlODk5OWRhODAzNDM4Y2FjMDZhZGUxNzE1MTI0YWUiLCAiaWQiOiAiMzE1OGNmYmQxNzFiNGM0YTg5MTE5NTY1YWJkMzYxMDkiLCAicHVibGljVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6ODA4MC92MS9BVVRIX2M3ZTg5OTlkYTgwMzQzOGNhYzA2YWRlMTcxNTEyNGFlIn1dLCAiZW5kcG9pbnRzX2xpbmtzIjogW10sICJ0eXBlIjogIm9iamVjdC1zdG9yZSIsICJuYW1lIjogInN3aWZ0In0sIHsiZW5kcG9pbnRzIjogW3siYWRtaW5VUkwiOiAiaHR0cDovLzEwLjguOTYuNDozNTM1Ny92Mi4wIiwgInJlZ2lvbiI6ICJSZWdpb25PbmUiLCAiaW50ZXJuYWxVUkwiOiAiaHR0cDovLzEwLjguOTYuNDo1MDAwL3YyLjAiLCAiaWQiOiAiNmNmYzc5YzMxMWM4NGQ5ZmEzOTk1MzVkZDEwOTdkN2MiLCAicHVibGljVVJMIjogImh0dHA6Ly8xMC44Ljk2LjQ6NTAwMC92Mi4wIn1dLCAiZW5kcG9pbnRzX2xpbmtzIjogW10sICJ0eXBlIjogImlkZW50aXR5IiwgIm5hbWUiOiAia2V5c3RvbmUifV0sICJ1c2VyIjogeyJ1c2VybmFtZSI6ICJhZG1pbiIsICJyb2xlc19saW5rcyI6IFtdLCAiaWQiOiAiYjI5MGExNGI4ZGEwNDJiYjk4OGQ3ODBiMjBiMjQ5NjMiLCAicm9sZXMiOiBbeyJuYW1lIjogIlN3aWZ0T3BlcmF0b3IifSwgeyJuYW1lIjogIk1lbWJlciJ9LCB7Im5hbWUiOiAiYWRtaW4ifSwgeyJuYW1lIjogIlJlc2VsbGVyQWRtaW4ifSwgeyJuYW1lIjogIl9tZW1iZXJfIn1dLCAibmFtZSI6ICJhZG1pbiJ9LCAibWV0YWRhdGEiOiB7ImlzX2FkbWluIjogMCwgInJvbGVzIjogWyJjZWJkN2JiYjhhM2E0NTM4YWY2ZDQ3ZjM3NDUzOThjMiIsICI1MTBhYjYyOGU0OWU0NGY0YWMyNTU0ZGQ1MzUxYTgyMCIsICI1MjM3NmMwMWIxOGM0YWZiODA1MWE3ZjljYzk0NGY4ZSIsICI3ZmY5MWE1MGNhYjI0ZjU0OGZkMTYwNDExMjQwNGNkZCIsICI5ZmUyZmY5ZWU0Mzg0YjE4OTRhOTA4NzhkM2U5MmJhYiJdfX19MYIBgTCCAX0CAQEwXDBXMQswCQYDVQQGEwJVUzEOMAwGA1UECAwFVW5zZXQxDjAMBgNVBAcMBVVuc2V0MQ4wDAYDVQQKDAVVbnNldDEYMBYGA1UEAwwPd3d3LmV4YW1wbGUuY29tAgEBMAcGBSsOAwIaMA0GCSqGSIb3DQEBAQUABIIBAEgm3pyz0tLp+NV5fE2uGeRvk0kauXNLERzdVGyMyFd0u4pwuqFwwih-5goyqAWSmXP7L9d1uuAAsDVgupVa31XfYgvm47qTxMR+ppsJ9kt67R4mewwTzMKB1LLOacJulFp+eCGs6lontSwGnc+uwKQ-pueHr2KysTkEdP8635esWwtGFYFxN2hHPy4h3g+DS6LXHvVMt9xsg7Mp3VMSwUMr6VD6hWfn-cVOXoEhqNGiuIyGd5HmtPa-Zyk1LUAWdvQ0060Zn5BWw98ROqlUmrwcz4P+OQCtv6FID8ZeS1EsIdP6scC1Z0WjNuyWD+mznKMXxaNrdpvYgGI6Y13SpuY=",
+        "tenant": {"description": "", "enabled": true, "id": "c7e8999da803438cac06ade1715124ae",
+        "name": "bd-project"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8774/v2/c7e8999da803438cac06ade1715124ae",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8774/v2/c7e8999da803438cac06ade1715124ae",
+        "id": "4fabfbaba24647c9b848c54e52544705", "publicURL": "http://1.2.3.4:8774/v2/c7e8999da803438cac06ade1715124ae"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://1.2.3.4:9696/", "region": "RegionOne", "internalURL": "http://1.2.3.4:9696/",
+        "id": "31c6803977f34feb8eb09507ec29bf20", "publicURL": "http://1.2.3.4:9696/"}],
+        "endpoints_links": [], "type": "network", "name": "neutron"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8776/v2/c7e8999da803438cac06ade1715124ae",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v2/c7e8999da803438cac06ade1715124ae",
+        "id": "6e36c19e6374403b987f30d314633af3", "publicURL": "http://1.2.3.4:8776/v2/c7e8999da803438cac06ade1715124ae"}],
+        "endpoints_links": [], "type": "volumev2", "name": "cinder_v2"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8080", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:8080", "id": "6975ff969a724006bde9643d4a91985b", "publicURL":
+        "http://1.2.3.4:8080"}], "endpoints_links": [], "type": "s3", "name": "swift_s3"},
+        {"endpoints": [{"adminURL": "http://1.2.3.4:9292", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:9292", "id": "4ebdda658c54435ca40bfd94992babd7",
+        "publicURL": "http://1.2.3.4:9292"}], "endpoints_links": [], "type": "image",
+        "name": "glance"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8777", "region":
+        "RegionOne", "internalURL": "http://1.2.3.4:8777", "id": "384b9764299842759b4b186cadeb82ba",
+        "publicURL": "http://1.2.3.4:8777"}], "endpoints_links": [], "type": "metering",
+        "name": "ceilometer"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8000/v1",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8000/v1", "id": "02e2b1ab64774c159ffa033786b39f56",
+        "publicURL": "http://1.2.3.4:8000/v1"}], "endpoints_links": [], "type":
+        "cloudformation", "name": "heat-cfn"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/c7e8999da803438cac06ade1715124ae",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/c7e8999da803438cac06ade1715124ae",
+        "id": "02c98e4c6ee64367ab1f315336ecec5a", "publicURL": "http://1.2.3.4:8776/v1/c7e8999da803438cac06ade1715124ae"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8773/services/Admin", "region": "RegionOne",
+        "internalURL": "http://1.2.3.4:8773/services/Cloud", "id": "3069021a5f1f411080e507c7bcf84ea1",
+        "publicURL": "http://1.2.3.4:8773/services/Cloud"}], "endpoints_links":
+        [], "type": "ec2", "name": "nova_ec2"}, {"endpoints": [{"adminURL": "http://1.2.3.4:8004/v1/5d139d95546240748508b2a518aa5bef",
+        "region": "RegionOne", "internalURL": "http://1.2.3.4:8004/v1/5d139d95546240748508b2a518aa5bef",
+        "id": "54d1ad666fca4895ab1a71ae3959674d", "publicURL": "http://1.2.3.4:8004/v1/5d139d95546240748508b2a518aa5bef"}],
+        "endpoints_links": [], "type": "orchestration", "name": "heat"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:8080/", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:8080/v1/AUTH_c7e8999da803438cac06ade1715124ae", "id": "3158cfbd171b4c4a89119565abd36109",
+        "publicURL": "http://1.2.3.4:8080/v1/AUTH_c7e8999da803438cac06ade1715124ae"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://1.2.3.4:35357/v2.0", "region": "RegionOne", "internalURL":
+        "http://1.2.3.4:5000/v2.0", "id": "6cfc79c311c84d9fa399535dd1097d7c", "publicURL":
+        "http://1.2.3.4:5000/v2.0"}], "endpoints_links": [], "type": "identity",
+        "name": "keystone"}], "user": {"username": "admin", "roles_links": [], "id":
+        "b290a14b8da042bb988d780b20b24963", "roles": [{"name": "SwiftOperator"}, {"name":
+        "Member"}, {"name": "admin"}, {"name": "ResellerAdmin"}, {"name": "_member_"}],
+        "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["cebd7bbb8a3a4538af6d47f3745398c2",
+        "510ab628e49e44f4ac2554dd5351a820", "52376c01b18c4afb8051a7f9cc944f8e", "7ff91a50cab24f548fd1604112404cdd",
+        "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
+    http_version: 
+  recorded_at: Thu, 04 Jun 2015 18:53:21 GMT
+- request:
     method: get
-    uri: http://1.2.3.4:8004/v1/5d139d95546240748508b2a518aa5bef/stacks
+    uri: http://1.2.3.4:8004/v1/5d139d95546240748508b2a518aa5bef/stacks?show_nested=true
     body:
       encoding: US-ASCII
       string: ''
