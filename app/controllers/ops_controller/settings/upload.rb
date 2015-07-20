@@ -43,8 +43,12 @@ module OpsController::Settings::Upload
   def upload_form_field_changed
     return unless load_edit("settings_#{params[:id]}_edit__#{@sb[:selected_server_id]}","replace_cell__explorer")
     @edit[:new][:upload_type] = !params[:upload_type].nil? && params[:upload_type] != "" ? params[:upload_type] : nil
-    msg = !params[:upload_type].nil? && params[:upload_type] != "" ? "Locate and upload a file to start the import process" : "Choose the type of custom variables to be imported"
-    add_flash(msg)
+    if !params[:upload_type].blank?
+      msg = _("Locate and upload a file to start the import process")
+    else
+      msg = _("Choose the type of custom variables to be imported")
+    end
+    add_flash(msg, :info)
     @sb[:good] = nil
     render :update do |page|                    # Use JS to update the display
       page.replace_html("settings_import", :partial=>"settings_import_tab")
