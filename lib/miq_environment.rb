@@ -4,7 +4,7 @@ module MiqEnvironment
   class Process
     def self.is_rails_server?
       return @is_rails_server unless @is_rails_server.nil?
-      return @is_rails_server = File.basename($PROGRAM_NAME) =~ /rackup|thin/ || (File.basename($PROGRAM_NAME) == "rails" && !!defined?(Rails::Server))
+      return @is_rails_server = File.basename($PROGRAM_NAME) =~ /rackup|puma|thin/ || (File.basename($PROGRAM_NAME) == "rails" && !!defined?(Rails::Server))
     end
 
     def self.is_rails_console?
