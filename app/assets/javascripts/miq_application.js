@@ -454,7 +454,8 @@ function miqUpdateAllCheckboxes(button_div, override) {
     if (typeof gtl_list_grid == "undefined" &&
         ($("input[id^='listcheckbox']").length)) {
       // No dhtmlx grid on the screen
-      $("input[id^='listcheckbox']").prop('checked', state);
+      var cbs = $("input[id^='listcheckbox']")
+      cbs.prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);
     } else if (typeof gtl_list_grid == "undefined" &&
                $("input[id^='storage_cb']").length) {
