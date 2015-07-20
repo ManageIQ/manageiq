@@ -368,8 +368,14 @@ class EmsEvent < ActiveRecord::Base
   # Purging methods
   #
 
+  def self.keep_ems_events
+    VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :keep_ems_events)
+  end
+
   def self.purge_date
-    (VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :keep_ems_events) || 6.months).to_i_with_method.ago.utc
+    keep = keep_ems_events.to_i_with_method.seconds
+    keep = 6.months if keep == 0
+    keep.ago.utc
   end
 
   def self.purge_window_size
