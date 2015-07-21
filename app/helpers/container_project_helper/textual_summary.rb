@@ -4,7 +4,7 @@ module ContainerProjectHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name creation_timestamp resource_version)
+    items = %w(name display_name creation_timestamp resource_version)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -19,6 +19,10 @@ module ContainerProjectHelper::TextualSummary
 
   def textual_name
     {:label => "Name", :value => @record.name}
+  end
+
+  def textual_display_name
+    {:label => "Display Name", :value => @record.display_name}
   end
 
   def textual_creation_timestamp
