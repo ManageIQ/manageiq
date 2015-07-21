@@ -101,10 +101,13 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
   def assert_specific_container_route
     @container_route = ContainerRoute.find_by_name("route-edge")
     @container_route.should have_attributes(
-      :ems_ref      => "f3b59d42-2870-11e5-b5bb-727174f8ab71",
-      :name         => "route-edge",
-      :host_name    => "www.example.com",
-      :service_name => "frontend",
+      :ems_ref   => "f3b59d42-2870-11e5-b5bb-727174f8ab71",
+      :name      => "route-edge",
+      :host_name => "www.example.com"
+    )
+
+    @container_route.container_service.should have_attributes(
+      :name => "frontend"
     )
 
     @container_route.container_project.should have_attributes(

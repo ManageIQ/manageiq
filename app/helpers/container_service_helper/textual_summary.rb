@@ -28,7 +28,7 @@ module ContainerServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems container_project container_groups)
+    items = %w(ems container_project container_routes container_groups)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
   #
