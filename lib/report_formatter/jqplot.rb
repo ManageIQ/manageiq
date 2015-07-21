@@ -136,6 +136,22 @@ module ReportFormatter
 
       # horizontal_legend(mri.chart) if mri.graph[:type] =~ /Bar/
       # default_legend(mri.chart)    if mri.graph[:type] =~ /Column/
+
+      #mri.chart.store_path(:options, :highlighter, :show, true)
+      #mri.chart.store_path(:options, :highlighter, :tooltipAxes, 'y')
+      binding.pry
+      mri.chart[:options].update(
+        :highlighter    => {
+          :show                 => true,
+          :useAxesFormatters    => false,
+          :tooltipAxes          => 'y',
+          :tooltipContentEditor => "foobar = function(str, seriesIndex, pointIndex, plot) {
+              return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
+                     plot.series[seriesIndex].data[pointIndex][1];
+          }",
+          :tooltipLocation      => 'n'
+        }
+      ) if is_pie_type
     end
 
     def build_reporting_chart_dim2_numeric
@@ -157,7 +173,7 @@ module ReportFormatter
           }",
           :tooltipLocation      => 'n'
         }
-      ) if @is_pie_type
+      ) if is_pie_type
     end
 
     def finalize_document
