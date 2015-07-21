@@ -2,10 +2,10 @@
   %h3= _("Smart Management")
   .form-horizontal.static
     .form-group
-      %label.col-sm-2.control-label
+      %label.col-md-2.control-label
         = session[:customer_name]
         =_("Tags")
-      .col-sm-10
+      .col-md-10
         %table{:style => "padding: 0px; margin: 0px; border: 0px; width: 100%"}
           - if session[:assigned_filters].empty?
             %tr

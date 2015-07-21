@@ -9,15 +9,15 @@
   %h3= _("Basic Info")
   .form-horizontal.static
     .form-group
-      %label.col-sm-2.control-label= _("Log Depot URI")
-      .col-sm-10
+      %label.col-md-2.control-label= _("Log Depot URI")
+      .col-md-10
         %p.form-control-static= h(log_depot_uri)
     .form-group
-      %label.col-sm-2.control-label= _("Last Log Collection")
-      .col-sm-10
+      %label.col-md-2.control-label= _("Last Log Collection")
+      .col-md-10
         %p.form-control-static= h(last_collection_time)
     - if record.respond_to?(:last_log_sync_message)
       .form-group
-        %label.col-sm-2.control-label= _("Last Message")
-        .col-sm-10
+        %label.col-md-2.control-label= _("Last Message")
+        .col-md-10
           %p.form-control-static= h(record.last_log_sync_message)

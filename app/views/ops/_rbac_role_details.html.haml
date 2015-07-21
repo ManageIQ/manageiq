@@ -4,7 +4,7 @@
 = render :partial => "layouts/flash_msg"
 #main_div
   .row
-    .col-sm-12.col-md-12.col-lg-6
+    .col-md-12.col-lg-6
       %fieldset
         %h3=_("Role Information")
         %table.style1
@@ -43,7 +43,7 @@
                         %img{:src => "/images/icons/new/miq_group.png"}/
                       %td
                         = h(g.description)
-    .col-sm-12.col-md-12.col-lg-6
+    .col-md-12.col-lg-6
       %fieldset
         - temp = @edit ? _("Editing") : _("Read Only")
         %h3=_("Product Features (%s)") % temp

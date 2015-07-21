@@ -3,10 +3,10 @@
   %img{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("login-screen-logo.png")}"}
 .container
   .row
-    .col-sm-12
+    .col-md-12
       #brand
         %img{:src => image_path("brand.svg"), :alt => "ManageIQ"}
-    .col-sm-7.col-md-6.col-lg-5.login
+    .col-md-6.col-lg-5.login
       .form-horizontal#login_div
         = render(:partial => "layouts/spinner", 
                  :locals  => {:login => true})
@@ -19,15 +19,15 @@
               %strong=_("Invalid Single Sign-On credentials")
         = render :partial => "layouts/flash_msg"
         .form-group
-          %label.col-sm-3.col-md-3.control-label=_('Username')
-          .col-sm-9.col-md-9
+          %label.col-md-3.control-label= _('Username')
+          .col-md-9
             = text_field_tag('user_name', @user_name, 
                              :class      => "form-control",
                              :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();")
             = javascript_tag(javascript_focus('user_name'))
         .form-group
-          %label.col-sm-3.col-md-3.control-label=_('Password')
-          .col-sm-9.col-md-9
+          %label.col-md-3.control-label= _('Password')
+          .col-md-9
             = password_field_tag('user_password',
               @user_password,
               :onkeypress   => "if(miqEnterPressed(event)) miqAjaxAuth();",
@@ -44,7 +44,7 @@
         %input{:type => "hidden", :id => "user_TZO", :name => "user_TZO"}
 
         .form-group
-          .col-xs-8.col-sm-offset-2.col-sm-6.col-md-offset-3.col-md-6
+          .col-xs-8.col-md-offset-3.col-md-6
             - if auth_mode == "database"
               #back_button{:style => "display:none"}
                 = link_to({:action => "authenticate", 
@@ -59,7 +59,7 @@
                 :remote => true,
                 :title => _("Update Password")) { _("Update password") }
 
-          .col-xs-4.col-sm-4.col-md-3.submit
+          .col-xs-4.col-md-3.submit
             = link_to("Login",
                       {:action => "authenticate",
                        :button => "login",
@@ -86,7 +86,7 @@
                       "data-miq_login_error" => true,
                       "data-submit"          => 'login_div')
 
-    .col-sm-5.col-md-6.col-lg-7.details
+    .col-md-6.col-lg-7.details
       - if get_vmdb_config[:session][:show_login_info]
         %p
           =_('Region:')

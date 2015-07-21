@@ -1,7 +1,7 @@
 -# if dialogs is selected
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
 .row
-  .col-sm-12.col-md-12.col-lg-12
+  .col-md-12.col-lg-12
     #dialog_tabs
       %ul.nav.nav-tabs
         - @record.ordered_dialog_resources.each do |dt|

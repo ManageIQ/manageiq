@@ -29,19 +29,19 @@
         %h3= _('Basic Information')
         .form-horizontal.static
           .form-group
-            %label.control-label.col-sm-2= _('Active')
-            .col-sm-10
+            %label.control-label.col-md-2= _('Active')
+            .col-md-10
               %p.form-control-static= h(@policy.active ? "Yes" : "No")
           .form-group
-            %label.control-label.col-sm-2= _('Created')
-            .col-sm-10
+            %label.control-label.col-md-2= _('Created')
+            .col-md-10
               %p.form-control-static
                 = h(_("By Username %s %s") % [@policy.created_by || _("N/A"), format_timezone(@policy.created_on, session[:user_tz], "on_at")])
 
           - if @policy.created_on != @policy.updated_on
             .form-group
-              %label.control-label.col-sm-2= _("Last Updated")
-              .col-sm-10
+              %label.control-label.col-md-2= _("Last Updated")
+              .col-md-10
                 %p.form-control-static
                   = h(_("By Username %s %s") % [@policy.updated_by || _("N/A"), format_timezone(@policy.updated_on, session[:user_tz], "on_at")])
       %hr

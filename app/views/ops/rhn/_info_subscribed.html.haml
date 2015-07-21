@@ -3,34 +3,34 @@
 
 .form-horizontal
   .form-group
-    %label.control-label.col-sm-2
+    %label.control-label.col-md-2
       = _("Service")
-    .col-sm-10
+    .col-md-10
       %p.form-control-static
         = @customer.subscription
   .form-group
-    %label.control-label.col-sm-2
+    %label.control-label.col-md-2
       = _("Server Address")
-    .col-sm-10
+    .col-md-10
       %p.form-control-static
         = @customer.server
   .form-group
-    %label.control-label.col-sm-2
+    %label.control-label.col-md-2
       = _("Account")
-    .col-sm-10
+    .col-md-10
       %p.form-control-static
         = @customer.user_name
   .form-group
-    %label.control-label.col-sm-2
+    %label.control-label.col-md-2
       = _("Organization")
-    .col-sm-10
+    .col-md-10
       %p.form-control-static
         = @customer.company_name
   .form-group
     - label = @customer.registration_type == "rhn_satellite" ? _("Channel Name(s)") : _("Repository Name(s)")
-    %label.control-label.col-sm-2
+    %label.control-label.col-md-2
       = label
-    .col-sm-10
+    .col-md-10
       %p.form-control-static
         = @customer.update_repo_name
 -# to be enabled later
