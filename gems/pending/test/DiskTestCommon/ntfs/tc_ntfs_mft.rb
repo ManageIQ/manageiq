@@ -108,7 +108,7 @@ class NtfsTestMft < Minitest::Test
 					# Load HEADER ONLY first.
 					assert_nothing_raised(id(__LINE__, disk)) {mh = NTFS::MftEntry.new(bs, rec, nil, false)}
 					next if mh.isDeleted?
-					next if NtUtil.MkRef(mh.mft_entry['ref_to_base_file_rec'])[1] != 0
+					next if NTFS::Utils.MkRef(mh.mft_entry['ref_to_base_file_rec'])[1] != 0
 					next if mh.mft_entry['signature'] == "\000\000\000\000"
 					# If this is not an extended entry or deleted, continue...
 					#assert_equal(rec.to_s, mh.to_s)

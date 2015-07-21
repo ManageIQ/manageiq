@@ -1,5 +1,6 @@
 require 'binary_struct'
 require 'util/miq-unicode'
+require 'fs/ntfs/utils'
 require 'fs/ntfs/attrib_type'
 
 module NTFS
@@ -135,15 +136,15 @@ module NTFS
 		end
 		
 		def isCompressed?
-			NtUtil.gotBit?(@flags, AF_COMPRESSED)
+			NTFS::Utils.gotBit?(@flags, AF_COMPRESSED)
 		end
 		
 		def isEncrypted?
-			NtUtil.gotBit?(@flags, AF_ENCRYPTED)
+			NTFS::Utils.gotBit?(@flags, AF_ENCRYPTED)
 		end
 		
 		def isSparse?
-			NtUtil.gotBit?(@flags, AF_SPARSE)
+			NTFS::Utils.gotBit?(@flags, AF_SPARSE)
 		end
 		
 		######################################################################################################

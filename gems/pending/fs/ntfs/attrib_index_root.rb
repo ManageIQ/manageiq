@@ -1,5 +1,3 @@
-require 'fs/ntfs/nt_util'
-
 require 'binary_struct'
 require 'util/miq-unicode'
 require 'fs/ntfs/index_node_header'

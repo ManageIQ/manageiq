@@ -1,12 +1,10 @@
-require 'fs/ntfs/NtUtil'
+require 'fs/ntfs/utils'
 require 'util/win32/nt_util'
 require 'binary_struct'
 require 'util/miq-unicode'
-
 require 'fs/ntfs/attrib_standard_information'
 
 module NTFS
-		
   # 
   # FILE_NAME_ATTR - Attribute: Filename (0x30)
   # 
@@ -20,7 +18,6 @@ module NTFS
   #   correct by practical experimentation on Windows NT4 SP6a and is hence
   #   assumed to be the one and only correct interpretation.
   # 		
-		
 	# The $FILE_NAME attribute.
 	ATTRIB_FILE_NAME = BinaryStruct.new([
 		'Q',  'ref_to_parent_dir',  # Directory this filename is referenced from
@@ -63,7 +60,7 @@ module NTFS
 			@permissions = @afn['flags']
 			@length      = @afn['data_size']
 			@namespace   = @afn['namespace']
-			@refParent   = NtUtil.MkRef(@afn['ref_to_parent_dir'])
+			@refParent   = NTFS::Utils.MkRef(@afn['ref_to_parent_dir'])
 	    
 			# If there's a name get it.
 			len          = @afn['name_length'] * 2
@@ -91,7 +88,7 @@ module NTFS
 
 		# Returns nil if not directory.
 		def isDir?
-			NtUtil.gotBit?(@permissions, StandardInformation.FP_DIRECTORY)
+			NTFS::Utils.gotBit?(@permissions, StandardInformation.FP_DIRECTORY)
 		end
 	  
 		def dump

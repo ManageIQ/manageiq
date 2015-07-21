@@ -1,5 +1,4 @@
-require 'fs/ntfs/nt_util'
-
+require 'fs/ntfs/utils'
 require 'binary_struct'
 
 module NTFS
@@ -53,9 +52,9 @@ module NTFS
 
       begin
         # Check for proper signature.
-        NtUtil.validate_signature(@irh['signature'], EXPECTED_SIGNATURE)
+        NTFS::Utils.validate_signature(@irh['signature'], EXPECTED_SIGNATURE)
         # Process per-sector "fixups" that NTFS uses to detect corruption of multi-sector data structures
-        @data = NtUtil.process_fixups(@data, @bps, @irh['usa_offset'], @irh['usa_count'])
+        @data = NTFS::Utils.process_fixups(@data, @bps, @irh['usa_offset'], @irh['usa_count'])
       rescue => err
         @valid = false
         $log.error("#{log_prefix} Invalid Index Record Header because: <#{err.message}>\n#{dump}")

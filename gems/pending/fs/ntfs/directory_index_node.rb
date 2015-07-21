@@ -1,6 +1,6 @@
 require 'binary_struct'
-
 require 'fs/ntfs/attrib_file_name'
+require 'fs/ntfs/utils'
 
 module NTFS
 
@@ -41,7 +41,7 @@ module NTFS
 	    
 			# Get accessor data.
 			@mftEntry   = nil
-			@refMft     = NtUtil.MkRef(@din['mft_ref'])
+			@refMft     = NTFS::Utils.MkRef(@din['mft_ref'])
 			@length     = @din['length']
 			@contentLen = @din['content_len']
 			@flags      = @din['flags']
@@ -50,7 +50,7 @@ module NTFS
 			@afn = FileName.new(buf[SIZEOF_DIR_INDEX_NODE, buf.size]) if @contentLen > 0
 
 			# If there's a child node VCN get it.
-			if NtUtil.gotBit?(@flags, IN_HAS_CHILD)
+			if NTFS::Utils.gotBit?(@flags, IN_HAS_CHILD)
 				# Child node VCN is located 8 bytes before 'length' bytes.
 				# NOTE: If the node has 0 contents, it's offset 16.
         @child = buf[@contentLen == 0 ? 16 : @length - 8, 8].unpack('Q')[0]
@@ -78,12 +78,12 @@ module NTFS
 	  
 		# Return true if has children.
 		def hasChild?
-			NtUtil.gotBit?(@flags, IN_HAS_CHILD)
+			NTFS::Utils.gotBit?(@flags, IN_HAS_CHILD)
 		end
 	  
 		# Return true if this is the last entry.
 		def isLast?
-			NtUtil.gotBit?(@flags, IN_LAST_ENTRY)
+			NTFS::Utils.gotBit?(@flags, IN_LAST_ENTRY)
 		end
   
 		# If content is 0, then obviously not a directory.
@@ -109,7 +109,7 @@ module NTFS
 			out << "  Content : #{@contentLen}\n"
 			out << "  Flags   : 0x#{'%08x' % @flags}\n"
 			out << @afn.dump if @contentLen > 0
-			out << "  Child ref: #{@child}\n" if NtUtil.gotBit?(@flags, IN_HAS_CHILD)
+			out << "  Child ref: #{@child}\n" if NTFS::Utils.gotBit?(@flags, IN_HAS_CHILD)
 			out << "---\n"
 		end
 	end

@@ -1,7 +1,7 @@
 # encoding: US-ASCII
 
 module NTFS
-  module NtUtil
+  module Utils
     # Make a reference (upper two bytes are seq num, lower six are entry).
     def self.MkRef(ref)
       ref.divmod(2 ** 48)

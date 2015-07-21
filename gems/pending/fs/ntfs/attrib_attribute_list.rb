@@ -1,5 +1,4 @@
-require 'fs/ntfs/nt_util'
-
+require 'fs/ntfs/utils'
 require 'binary_struct'
 require 'util/miq-unicode'
 
@@ -81,7 +80,7 @@ module NTFS
 				aal['name'] = buf[pos + aal['name_offset'], len].UnicodeToUtf8 if len > 0
 				
 				# Log instances of funky references.
-				aal['mft'] = NtUtil.MkRef(aal['mft_reference'])[1]
+				aal['mft'] = NTFS::Utils.MkRef(aal['mft_reference'])[1]
 				
 				# Store (if not bad)
 				@list << aal  if aal['mft'] <= @boot_sector.maxMft
@@ -118,7 +117,7 @@ module NTFS
 		end
 		
 		def dumpElement(at)
-			ref = NtUtil.MkRef(at['mft_reference'])
+			ref = NTFS::Utils.MkRef(at['mft_reference'])
 			out = "\#<#{at.class}:0x#{'%08x' % at.object_id}> (#{TypeName[at['attrib_type']]} - #{at['name'] ? at['name'] : '[unnamed]'})\n"
 			out << "Type    : 0x#{'%08x' % at['attrib_type']}\n"
 			out << "Length  : 0x#{'%04x' % at['length']}\n"

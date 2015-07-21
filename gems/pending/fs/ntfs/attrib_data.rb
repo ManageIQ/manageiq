@@ -1,10 +1,7 @@
 require 'binary_struct'
-require 'fs/ntfs/nt_util'
 
 module NTFS
-		
 	class AttribData
-	  
     # 
     # DATA_ATTR - Attribute: Data attribute (0x80)
     # 
@@ -12,7 +9,6 @@ module NTFS
     # 
     # Data contents of a file (i.e. the unnamed stream) or of a named stream.
     # 
-	  
     def self.create_from_header(header, buf)
       return AttribData.new(buf) if header.namelen == 0
       $log.debug("MFT Alternate Data Stream (#{header.name})") if $log
