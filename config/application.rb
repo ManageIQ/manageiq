@@ -93,6 +93,7 @@ module Vmdb
 
     config.after_initialize do
       Vmdb::Initializer.init
+      ActiveRecord::Base.connection_pool.release_connection
     end
   end
 end
