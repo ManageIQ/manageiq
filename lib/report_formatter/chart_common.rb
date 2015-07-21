@@ -417,12 +417,12 @@ module ReportFormatter
 
     def build_reporting_chart_other_numeric
       categories = []
-      (sort1,) = mri.sortby
+      (sort1, _) = mri.sortby
       (keep, show_other) = keep_and_show_other
       sorted_data = mri.table.data.sort_by { |row| row[data_column_name] }
 
       series = sorted_data.reverse.take(keep)
-               .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
+               .each_with_object(series_class.new(is_pie_type ? :pie : :flat)) do |row, a|
         tooltip = row[sort1]
         tooltip = _('no value') if tooltip.blank?
         a.push(:value   => row[data_column_name],
