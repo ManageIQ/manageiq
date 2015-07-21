@@ -27,9 +27,9 @@ describe ApiController do
   let(:expected_attributes) { %w(id name read_only settings) }
   let(:sample_role1) do
     {
-      "name"      => "sample_role_1",
-      "settings"  => {"restrictions"  => {"vms" => "user"}},
-      "features"  => [
+      "name"     => "sample_role_1",
+      "settings" => {"restrictions" => {"vms" => "user"}},
+      "features" => [
         {:identifier => "vm_explorer"},
         {:identifier => "ems_infra_tag"},
         {:identifier => "my_settings_time_profiles"}
@@ -38,9 +38,9 @@ describe ApiController do
   end
   let(:sample_role2) do
     {
-      "name"      => "sample_role_2",
-      "settings"  => {"restrictions"  => {"vms" => "user_or_group"}},
-      "features"  => [
+      "name"     => "sample_role_2",
+      "settings" => {"restrictions" => {"vms" => "user_or_group"}},
+      "features" => [
         {:identifier => "miq_request_view"},
         {:identifier => "miq_report_run"},
         {:identifier => "storage_manager_show_list"}
@@ -85,7 +85,8 @@ describe ApiController do
 
   describe "Features" do
     it "query available features" do
-      role = FactoryGirl.create(:miq_user_role, :name => "Test Role",
+      role = FactoryGirl.create(:miq_user_role,
+                                :name                 => "Test Role",
                                 :miq_product_features => @product_features)
       url = roles_url + "/#{role.id}/"
       test_features_query(role, url, MiqProductFeature, :identifier)
@@ -154,7 +155,8 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       results = @result["results"]
-      r1_id, r2_id = results.first["id"], results.second["id"]
+      r1_id = results.first["id"]
+      r2_id = results.second["id"]
       expect(MiqUserRole.exists?(r1_id)).to be_true
       expect(MiqUserRole.exists?(r2_id)).to be_true
 
@@ -192,12 +194,12 @@ describe ApiController do
 
       role = FactoryGirl.create(:miq_user_role)
 
-      run_post(roles_url(role.id), gen_request(:edit, "name"      => "updated role",
-                                                      "settings"  => {"restrictions"  => {"vms" => "user_or_group"}}))
+      run_post(roles_url(role.id), gen_request(:edit, "name"     => "updated role",
+                                                      "settings" => {"restrictions"  => {"vms" => "user_or_group"}}))
 
       expect_single_resource_query("id"       => role.id,
                                    "name"     => "updated role",
-                                   "settings" => {"restrictions"  => {"vms" => "user_or_group"}})
+                                   "settings" => {"restrictions" => {"vms" => "user_or_group"}})
       expect(role.reload.name).to eq("updated role")
       expect(role.settings[:restrictions][:vms]).to eq(:user_or_group)
     end
@@ -274,6 +276,7 @@ describe ApiController do
       run_post(url, gen_request(:unassign, removed_feature))
 
       expect_request_success
+      # Confirm that we've only removed ems_infra_tag
       expect_result_resources_to_include_keys("results", %w(id name read_only))
 
       # Refresh the role object
