@@ -1,4 +1,6 @@
 class OrchestrationStackOpenstackInfra < OrchestrationStack
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::InfraManager"
+
   def raw_update_stack(options)
     planning_data = {}
     ext_management_system.with_provider_connection(:service => "Planning") do |connection|
