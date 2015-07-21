@@ -354,30 +354,83 @@ module ReportFormatter
     end
 
     def build_reporting_chart_dim2_numeric
-      # FIXME: styling
-      binding.pry
+      (sort1, sort2) = mri.sortby
+      (keep, show_other) = keep_and_show_other
+
+      # Group values by sort1
+      # 3rd dimension in the chart is defined by sort2
+      groups = mri.table.data.group_by { |row| row[sort1] }
+
+      group_sums = groups.each_with_object({}) do |(key, rows), h|
+                     h[key] = rows.inject(0) { |sum, row| sum += row[data_column_name] }
+                   end
+      sorted_sums = group_sums.sort_by { |key, sum| sum }
+
+      selected_groups = sorted_sums.reverse.take(mri.graph[:count])
+
+      cathegory_texts = selected_groups.collect { |key, _| slice_legend(key, LABEL_LENGTH) }
+      cathegory_texts << _('Other') if show_other
+
+      add_axis_category_text(cathegory_texts)
+
+      groups_hash = selected_groups.each_with_object(Hash.new { |h, k| h[k] = {} }) do |(key, _), h|
+        groups[key].each { |row| h[key][row[sort2]] = row }
+      end
+
+      if show_other
+        other_groups = sorted_sums[0, sorted_sums.length - mri.graph[:count]]
+        other = other_groups.each_with_object(Hash.new(0)) do |(key, _), o|
+                  groups[key].each do |row|
+                    o[row[sort2]] += row[data_column_name]
+                  end
+                end
+      end
+
+      # For each value in sort2 column we create a series.
+      sort2_values = mri.table.data.each_with_object({}) { |row, h| h[row[sort2]] = true }
+      sort2_values.each_key do |val2|
+        series = selected_groups.each_with_object(series_class.new) do |(key1, _), a|
+
+          row = groups_hash.fetch_path(key1, val2)
+          value = row ? row[data_column_name] : 0
+          a.push(:value   => value,
+                 :tooltip => "#{key1} / #{val2}: #{value}")
+        end
+
+        series.push(:value   => other[val2],
+                    :tooltip => "Other / #{val2}: #{other[val2]}") if show_other
+
+        label = slice_legend(val2) if val2.kind_of?(String)
+        label = label.to_s.gsub(/\\/, ' \ ')
+        label = _('no value') if label.blank?
+        add_series(label, series)
+      end
+      groups
+    end
+
+    def data_column_name
+      @data_column_name ||= (
+        model, col  = mri.graph[:column].split('-', 2)
+        col, aggreg = col.split(':', 2)
+        "#{col}__#{aggreg}"
+      )
     end
 
     def build_reporting_chart_other_numeric
       categories = []
-
-      model, col  = mri.graph[:column].split('-', 2)
-      col, aggreg = col.split(':', 2)
-      data_col_name = "#{col}__#{aggreg}"
-
-      sorted_data = mri.table.data.sort_by { |row| row[data_col_name] }
+      (sort1, _) = mri.sortby
+      sorted_data = mri.table.data.sort_by { |row| row[data_column_name] }
 
       series = sorted_data.reverse.take(mri.graph[:count]).
                each_with_object(series_class.new(@is_pie_type ? :pie : :flat)) do |row, a|
-
-        a.push(:value   => row[data_col_name],
-               :tooltip => row[mri.col_order[0]])
-        categories.push([row[mri.col_order[0]], row[data_col_name]])
+        a.push(:value   => row[data_column_name],
+               :tooltip => row[sort1])
+        categories.push([row[sort1], row[data_column_name]])
       end
 
       if mri.graph[:other]
         ocount = sorted_data[0, sorted_data.length - mri.graph[:count]].
-                  inject(0) { |sum, row| sum += row[data_col_name] }
+                  inject(0) { |sum, row| sum += row[data_column_name] }
         series.push(:value => ocount, :tooltip => _('Other'))
         categories.push([_('Other'), ocount])
       end
