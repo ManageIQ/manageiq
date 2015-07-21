@@ -1,6 +1,8 @@
 class ManageIQ::Providers::Foreman::ConfigurationManager < ManageIQ::Providers::ConfigurationManager
   require_dependency 'manageiq/providers/foreman/configuration_manager/configuration_profile'
   require_dependency 'manageiq/providers/foreman/configuration_manager/configured_system'
+  require_dependency 'manageiq/providers/foreman/configuration_manager/provision_task'
+  require_dependency 'manageiq/providers/foreman/configuration_manager/provision_workflow'
   require_dependency 'manageiq/providers/foreman/configuration_manager/refresher'
   require_dependency 'manageiq/providers/foreman/configuration_manager/refresh_parser'
   require_dependency 'manageiq/providers/foreman/configuration_manager/refresh_worker'

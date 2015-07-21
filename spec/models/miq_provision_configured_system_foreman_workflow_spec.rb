@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MiqProvisionConfiguredSystemForemanWorkflow do
+describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow do
   it "#allowed_configuration_profiles" do
     cp       = FactoryGirl.build(:configuration_profile, :name => "test profile")
     cs       = FactoryGirl.build(:configured_system_foreman)

@@ -1,4 +1,4 @@
-class MiqProvisionTaskConfiguredSystemForeman < MiqProvisionTask
+class ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask < MiqProvisionTask
   include_concern 'OptionsHelper'
   include_concern 'StateMachine'
 

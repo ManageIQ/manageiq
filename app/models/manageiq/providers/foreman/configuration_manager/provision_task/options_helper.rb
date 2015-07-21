@@ -1,4 +1,4 @@
-module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
+module ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask::OptionsHelper
   def log_provider_options
     _log.info("Provisioning [#{source.name}]")
   end
@@ -22,6 +22,6 @@ module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
   end
 
   def dest_configuration_profile
-    @dest_configuration_profile ||= ConfigurationProfile.where(:id => get_option(:src_configuration_profile_id)).first
+    @dest_configuration_profile ||= ::ConfigurationProfile.where(:id => get_option(:src_configuration_profile_id)).first
   end
 end

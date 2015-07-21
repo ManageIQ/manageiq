@@ -1,4 +1,4 @@
-module MiqProvisionTaskConfiguredSystemForeman::StateMachine
+module ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask::StateMachine
   def run_provision
     validate_source
     signal :prepare_provision
