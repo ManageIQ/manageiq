@@ -1540,3 +1540,19 @@ function miqSerializeField(element, field_name) {
   return $("#" + element + " :input[id=" + field_name + "]").serialize();
 }
 
+function miqInitSelectPicker() {
+  $('.selectpicker').selectpicker();
+  $('.selectpicker').selectpicker({
+    style: 'btn-info',
+    size: 4
+  });
+}
+
+function miqSelectPickerEvent(element, url){
+  $('#' + element).on('change', function(){
+    var selected = $('#' + element).val();
+    miqJqueryRequest(url + '?' + element + '=' + selected);
+    return true;
+  });
+}
+
