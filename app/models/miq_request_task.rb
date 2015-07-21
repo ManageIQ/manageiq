@@ -62,6 +62,11 @@ class MiqRequestTask < ActiveRecord::Base
     # Determine status to report
     req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
+    if req_state == "finished" && state != "finished"
+      req_state = (req_status == 'Ok') ? 'provisioned' : "finished"
+      $log.info("Child tasks finished but current task still processing. Setting state to: [#{req_state}]...")
+    end
+
     if req_state == "finished"
       msg = (req_status == 'Ok') ? "Task complete" : "Task completed with errors"
     end

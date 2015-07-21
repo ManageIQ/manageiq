@@ -64,13 +64,15 @@ describe ServiceTemplateProvisionRequest do
     it "partial tasks finished" do
       @task_1_1.update_and_notify_parent({:state => "finished", :status => "Ok", :message => "Test Message"})
       @request.reload
-      @request.message.should == "Finished = 2; Pending = 2"
+      @request.message.should == "Finished = 1; Pending = 2; Provisioned = 1"
       @request.state.should   == "active"
       @request.status.should  == "Ok"
     end
 
     it "finished state" do
+      @task_1.update_attributes(:state => "finished")
       @task_1_1.update_and_notify_parent({:state => "finished", :status => "Ok", :message => "Test Message"})
+      @task_2.update_attributes(:state => "finished")
       @task_2_1.update_and_notify_parent({:state => "finished", :status => "Ok", :message => "Test Message"})
       @request.reload
       @request.message.should == "Request complete"
@@ -96,7 +98,7 @@ describe ServiceTemplateProvisionRequest do
 
     it "finished with errors state" do
       @task_1_1.update_and_notify_parent({:state => "finished", :status => "Error", :message => "Error Message"})
-      @task_2_1.update_and_notify_parent({:state => "finished", :status => "Ok", :message => "Test Message"})
+      @task_2_1.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Test Message")
       @request.reload
       @request.message.should == "Request completed with errors"
       @request.state.should   == "finished"
