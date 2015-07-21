@@ -133,6 +133,8 @@ begin
   require 'drb'
   require 'yaml'
 
+  Time.zone = 'UTC'
+
   MIQ_OK    = 0
   MIQ_WARN  = 4
   MIQ_ERROR = 8
