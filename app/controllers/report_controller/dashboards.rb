@@ -154,7 +154,7 @@ module ReportController::Dashboards
   # A widget has been dropped
   def db_widget_dd_done
     set_edit_new_cols
-    db_available_widgets_xml
+    db_available_widgets_options
     render :update do |page|                    # Use JS to update the display
       changed = (@edit[:new] != @edit[:current])
       if params[:widget]
@@ -175,7 +175,7 @@ module ReportController::Dashboards
     @edit[:new][:col1].delete(w) if @edit[:new][:col1].include?(w)
     @edit[:new][:col2].delete(w) if @edit[:new][:col2].include?(w)
     @edit[:new][:col3].delete(w) if @edit[:new][:col3].include?(w)
-    db_available_widgets_xml
+    db_available_widgets_options
     @in_a_form = true
     render :update do |page|                    # Use JS to update the display
       changed = (@edit[:new] != @edit[:current])
@@ -291,7 +291,7 @@ module ReportController::Dashboards
         else
           @edit[:new][:col1].insert(0, w)
         end
-        db_available_widgets_xml
+        db_available_widgets_options
       end
       set_edit_new_cols
     end
@@ -367,7 +367,7 @@ module ReportController::Dashboards
     @edit[:new][:col1] = @db[:set_data] && @db[:set_data][:col1] ? @db[:set_data][:col1] : Array.new
     @edit[:new][:col2] = @db[:set_data] && @db[:set_data][:col2] ? @db[:set_data][:col2] : Array.new
     @edit[:new][:col3] = @db[:set_data] && @db[:set_data][:col3] ? @db[:set_data][:col3] : Array.new
-    db_available_widgets_xml
+    db_available_widgets_options
     @edit[:current] = copy_hash(@edit[:new])
   end
 
@@ -397,7 +397,7 @@ module ReportController::Dashboards
     session[:edit] = @edit
   end
 
-  def db_available_widgets_xml
+  def db_available_widgets_options
     # Build the available widgets for the pulldown
     col_widgets = @edit[:new][:col1] +
                   @edit[:new][:col2] +
@@ -411,36 +411,29 @@ module ReportController::Dashboards
     end
     @available_widgets.sort_by! { |w| [w.content_type, w.title.downcase] }
 
-    xml = REXML::Document.load("")
-    xml << REXML::XMLDecl.new(1.0, "UTF-8")
-    # Create root element
-    root = xml.add_element("complete")
-    opt = root.add_element("option", {"value"=>"","img_src"=>"/images/icons/24/add_widget.png"})
-    opt.text = "Add a Widget"
-    opt.add_attribute("selected","true")
-    @available_widgets.each do |w|
-      unless col_widgets.include?(w.id) || !w.enabled
-        image, tip = case w.content_type
-                      when "rss"
-                        ["rssfeed", "Add this RSS Feed Widget"]
-                      when "chart"
-                        ["piechart", "Add this Chart Widget"]
-                      when "report"
-                        ["report", "Add this Report Widget"]
-                      when "menu"
-                        ["menu", "Add this Menu Widget"]
+    if @available_widgets.blank?
+      @widgets_options = ["No Widgets available to add", {"data-content" => "<span class='product product-arrow-right'> No Widgets available to add</span>"}]
+    else
+      @widgets_options = [["Add a Widget", "", {"data-content" => "<span class='product product-arrow-right'> Add a Widget</span>"}]]
+
+      @available_widgets.each do |w|
+        unless col_widgets.include?(w.id) || !w.enabled
+          image = case w.content_type
+                  when "rss"
+                    "fa fa-rss"
+                  when "chart"
+                   "product product-chart"
+                  when "report"
+                    "product product-report"
+                  when "menu"
+                    "fa fa-share-square-o"
+                  end
+          w.title.gsub!(/'/,"&apos;")     # Need to escape single quote in title to load toolbar
+          @widgets_options.push([w.title, w.id, {"data-icon" => "#{image}"}])
         end
-        w.title.gsub!(/'/,"&apos;")     # Need to escape single quote in title to load toolbar
-        opt = root.add_element("option", {"value"=>w.id,"img_src"=>"/images/icons/24/button_#{image}.png"})
-        opt.text = CGI.escapeHTML(w.title)
       end
     end
-
-    if @available_widgets.blank?
-      opt = root.add_element("option", {"value"=>"","img_src"=>"/images/icons/24/add_widget.png"})
-      opt.text = "No Widgets available to add"
-    end
-    @widgets_menu_xml = xml.to_s.html_safe
+    @widgets_options
   end
 
   def db_move_cols_up

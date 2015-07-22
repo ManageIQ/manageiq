@@ -60,16 +60,16 @@
                 - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
                   %td
                     - if %w(aetype datatype).include?(fname)
-                      - combo_id   = "fields_#{fname}_id#{i}"
                       - combo_name = "fields_#{fname}#{i}"
-                      - xml_combo  = (fname == 'aetype' ? @combo_xml : @dtype_combo_xml)[i]
+                      - combo_options  = (fname == 'aetype' ? @combo_xml : @dtype_combo_xml)
                       - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
-                      %div{:id => combo_id}
-                      = render(:partial => 'layouts/dhtmlxcombo',
-                        :locals     => {:combo_id => combo_id,
-                          :combo_name             => combo_name,
-                          :xml_combo              => xml_combo,
-                          :combo_url              => combo_url})
+                      #form-group
+                        = select_tag(combo_name,
+                          options_for_select(combo_options, field[fname]),
+                          "title" => "Choose",
+                          :class  => "selectpicker")
+                      :javascript
+                        miqSelectPickerEvent("#{combo_name}", "#{combo_url}")
                     - elsif fname == 'substitute'
                       = check_box_tag("fields_#{fname}_#{i}", value = "1", checked = field['substitute'],
                         "data-miq_observe_checkbox" => {:url => url}.to_json)
@@ -109,16 +109,16 @@
               - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
                 %td
                   - if %w(aetype datatype).include?(fname)
-                    - combo_id   = "field_#{fname}_id"
                     - combo_name = "field_#{fname}"
-                    - xml_combo  = @edit[:new]["#{fname}s".to_sym][0]
+                    - combo_options  = @edit[:new]["#{fname}s".to_sym]
                     - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
-                    %div{:id => combo_id}
-                    = render(:partial => 'layouts/dhtmlxcombo',
-                      :locals => {:combo_id => combo_id,
-                        :combo_name          => combo_name,
-                        :xml_combo           => xml_combo,
-                        :combo_url           => combo_url})
+                    #form-group
+                      = select_tag(combo_name,
+                          options_for_select(combo_options, session[:field_data][fname]),
+                          "title" => "Choose",
+                          :class  => "selectpicker")
+                    :javascript
+                      miqSelectPickerEvent("#{combo_name}", "#{combo_url}")
                   - elsif fname == 'substitute'
                     - checked = !session[:field_data].blank? && session[:field_data][:substitute]
                     = check_box_tag("field_#{fname}", value = "1", checked = checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
@@ -133,4 +133,6 @@
                   - else
                     = text_field_tag("field_#{fname}", session[:field_data][fname.to_sym],
                       "data-miq_observe" => obs)
+:javascript
+  miqInitSelectPicker();
 

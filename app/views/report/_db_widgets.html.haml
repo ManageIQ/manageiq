@@ -8,14 +8,11 @@
         %tr
           %td.wider
             - combo_url = "/report/db_form_field_changed/#{@db.id || 'new'}"
-            #widget_div{:style => "width: 500px;"}
-            = render(:partial => 'layouts/dhtmlxcombo',
-              :locals         => {:combo_id => "widget_div",
-                :combo_name                 => "widget",
-                :xml_combo                  => @widgets_menu_xml,
-                :combo_url                  => combo_url,
-                :combo_width                => 250,
-                :combo_onchange             => true})
+            #form-group
+              = select_tag('widget',
+                options_for_select(@widgets_options, @edit[:new][:widget].to_s),
+                "title" => "Add a Widget",
+                :class => "selectpicker")
   #modules
     .yui-b
       .yui-gb
@@ -34,3 +31,6 @@
             - widget = MiqWidget.find_by_id(w)
             - if widget && widget.enabled
               = render :partial => 'db_widget', :locals => {:widget => widget}
+:javascript
+  miqInitSelectPicker();
+  miqSelectPickerEvent("widget", "#{combo_url}")
