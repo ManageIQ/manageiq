@@ -76,4 +76,34 @@ describe Tenant do
       expect(described_class.new(:appliance_name => 'vmdb').vmdb_name).to eq('vmdb')
     end
   end
+
+  context "#admins" do
+    let(:self_service_role) { FactoryGirl.create(:miq_user_role, :settings => {:restrictions => {:vms => :user}}) }
+
+    let(:brand_feature) { FactoryGirl.create(:miq_product_feature, :identifier => "edit-brand") }
+    let(:admin_with_brand) { FactoryGirl.create(:miq_user_role, :name => "tenant_admin-brand-master") }
+
+    let(:tenant1) { FactoryGirl.create(:tenant) }
+    let(:tenant1_admins) do
+      FactoryGirl.create(:miq_group,
+                         :miq_user_role => admin_with_brand,
+                         :tenant_owner  => tenant1
+                         )
+    end
+    let(:tenant1_users) do
+      FactoryGirl.create(:miq_group,
+                         :tenant_owner  => tenant1,
+                         :miq_user_role => self_service_role)
+    end
+    let(:admin) { FactoryGirl.create(:user, :userid => 'admin', :miq_groups => [tenant1_users, tenant1_admins]) }
+    let(:user1) { FactoryGirl.create(:user, :userid => 'user',  :miq_groups => [tenant1_users]) }
+    let(:user2) { FactoryGirl.create(:user, :userid => 'user2') }
+
+    it "has users" do
+      admin ; user1 ; user2
+      expect(tenant1.users).to include(admin)
+      expect(tenant1.users).to include(user1)
+      expect(tenant1.users).not_to include(user2)
+    end
+  end
 end
