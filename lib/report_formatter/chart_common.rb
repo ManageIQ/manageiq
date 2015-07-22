@@ -424,9 +424,12 @@ module ReportFormatter
 
       series = sorted_data.reverse.take(keep).
                each_with_object(series_class.new(is_pie_type ? :pie : :flat)) do |row, a|
+
+        tooltip = row[sort1]
+        tooltip = _('no value') if tooltip.blank?
         a.push(:value   => row[data_column_name],
-               :tooltip => row[sort1])
-        categories.push([row[sort1], row[data_column_name]])
+               :tooltip => tooltip)
+        categories.push([tooltip, row[data_column_name]])
       end
 
       if show_other
