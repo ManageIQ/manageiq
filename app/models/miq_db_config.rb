@@ -175,69 +175,36 @@ class MiqDbConfig
     end
   end
 
-  def opt_file_for_conn_test(from_save, &blk)
-    raise "must pass block" unless block_given?
-    opts = self.class.raw_config['production']
-
-    begin
-      FileUtils.mkdir_p(File.dirname(DB_FILE))
-      File.delete(DB_FILE) if File.exist?(DB_FILE)
-      opts[:from_save] = from_save
-      File.open(DB_FILE, "wb") {|f|f.write(Base64.encode64(Marshal.dump(opts)))}
-      res = yield
-    ensure
-      File.delete(DB_FILE) if File.exist?(DB_FILE)
-    end
-    res
-  end
-
-  def delete_io_files
-    [IO_DOLLAR_STDOUT, IO_DOLLAR_STDERR].each {|f| File.delete(f) if File.exist?(f)}
-  end
-
-  def get_output_and_error
-    output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exist?(IO_DOLLAR_STDOUT)
-    error_message = File.open(IO_DOLLAR_STDERR) {|f| f.read} if File.exist?(IO_DOLLAR_STDERR)
-    return output, error_message
-  end
-
   def verify_config(from_save = nil)
-    curr = self.class.current
-    _log.info("Backing up current settings: #{curr.options.merge(@@pwd_mask).inspect}")
-    same = self.options == curr.options
+    @errors = ActiveModel::Errors.new(self)
 
-    unless same
-      _log.info("Saving new settings: #{self.options.merge(@@pwd_mask).inspect}")
-      self.save_without_verify
-    end
+    with_temporary_connection do |conn|
+      tables = conn.tables
 
-    @errors ||= ActiveModel::Errors.new(self)
-    script = File.join(File.expand_path(Rails.root), "script/verify_db_config.rb")
-    begin
-      _log.info("Testing new settings: #{self.options.merge(@@pwd_mask).inspect}")
-      delete_io_files
-      opt_file_for_conn_test(from_save) { MiqUtil.runcmd("ruby #{script}")}
-      output, error_message = get_output_and_error
-      output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exist?(IO_DOLLAR_STDOUT)
-      msg = "Output:\n#{output}"
-      msg << "\nError: #{error_message}" if error_message && error_message.length > 0
-      _log.info(msg)
-    rescue => err
-      output, error_message = get_output_and_error
-      error_message ||= err.message
-      error_message = "of database settings not saved: #{error_message}"
-      _log.warn("Error: #{error_message}\nOutput:\n#{output}")
-      @errors.add(:configuration, error_message)
-      return false
-    ensure
-      delete_io_files
-      unless same
-        _log.info("Restoring original settings: #{curr.options.merge(@@pwd_mask).inspect}")
-        curr.save_without_verify
+      # If we're not saving, return only if we were able to issue a query or not
+      return !!tables unless from_save
+
+      if tables.empty?
+        _log.info("No migrations have been run... migrating")
+        ActiveRecord::Tasks::DatabaseTasks.migrate
+        true
+      else
+        _log.info("#{conn.tables} tables exist")
+        pending_count = pending_migrations.length
+        if pending_count == 0
+          true
+        else
+          msg = "The requested database is not empty and has #{pending_count} migrations to apply."
+          _log.error("Error: #{msg}")
+          @errors.add(:configuration, msg)
+          false
+        end
       end
     end
-
-    return true
+  rescue => err
+    _log.error("Error: #{err}")
+    @errors.add(:configuration, err.message)
+    false
   end
 
   def self.log_statistics
@@ -264,5 +231,26 @@ class MiqDbConfig
     rescue => err
       output.warn("MIQ(DbConfig.log_activity_statistics) Unable to log stats, '#{err.message}'")
     end
+  end
+
+  private
+
+  def with_temporary_connection
+    config_hash = options.stringify_keys
+
+    config_before     = ActiveRecord::Tasks::DatabaseTasks.database_configuration
+    connection_before = ActiveRecord::Base.remove_connection
+
+    ActiveRecord::Tasks::DatabaseTasks.database_configuration = {Rails.env => config_hash}
+    conn = ActiveRecord::Base.establish_connection(config_hash).connection
+    yield conn
+  ensure
+    ActiveRecord::Tasks::DatabaseTasks.database_configuration = config_before
+    ActiveRecord::Base.remove_connection
+    ActiveRecord::Base.establish_connection(connection_before)
+  end
+
+  def pending_migrations
+    ActiveRecord::Migrator.open(ActiveRecord::Tasks::DatabaseTasks.migrations_paths).pending_migrations
   end
 end
