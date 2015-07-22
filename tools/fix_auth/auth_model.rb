@@ -11,17 +11,14 @@ module FixAuth
         column_names & password_columns
       end
 
-      def contenders(include_v2 = false)
-        where(selection_criteria(include_v2))
+      def contenders
+        where(selection_criteria)
       end
 
-      # bring back anything with a password column that is not nil, blank, or v2:{.*}
-      # include_v2 states that v2 encrypted passwords should come back too
-      def selection_criteria(include_v2 = false)
+      # bring back anything with a password column that is not nil or blank
+      def selection_criteria
         available_columns.collect do |column|
-          col = ["COALESCE(#{column},'') <> ''"]
-          col << "#{column} !~ 'v2:\{[^\}]*\}'" unless include_v2
-          "(#{col.join(" AND ")})"
+          "(COALESCE(#{column},'') <> '')"
         end.join(" OR ")
       end
 
@@ -84,7 +81,7 @@ module FixAuth
       def run(options = {})
         return if available_columns.empty?
         puts "fixing #{table_name}.#{available_columns.join(", ")}" unless options[:silent]
-        contenders(options[:v2]).each do |r|
+        contenders.each do |r|
           fix_passwords(r, options)
           if options[:verbose]
             display_record(r)
