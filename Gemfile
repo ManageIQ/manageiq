@@ -117,6 +117,7 @@ end
 source 'https://rails-assets.org' do
   gem 'rails-assets-c3', '~> 0.4.10'
   gem 'rails-assets-bootstrap-select', '~> 1.5.4'
+  gem 'rails-assets-bootstrap-hover-dropdown', '~> 2.0.11'
 end
 
 #

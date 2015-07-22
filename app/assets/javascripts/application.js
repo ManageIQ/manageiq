@@ -41,7 +41,7 @@
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap
 //= require bootstrap-select
-//= require bootstrap-hover-dropdown/bootstrap-hover-dropdown.min
+//= require bootstrap-hover-dropdown
 //= require c3/c3
 //= require d3/d3
 //= require patternfly
