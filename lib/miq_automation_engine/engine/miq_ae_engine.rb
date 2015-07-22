@@ -86,6 +86,7 @@ module MiqAeEngine
     ae_state_started = options[:ae_state_started]
     ae_state_retries = options[:ae_state_retries]
     ae_state_data    = options[:ae_state_data]
+    ae_state_previous = options[:ae_state_previous]
     vmdb_object      = nil
     ae_result        = 'error'
 
@@ -105,6 +106,7 @@ module MiqAeEngine
       automate_attrs[:ae_state_started] = ae_state_started   unless ae_state_started.nil?
       automate_attrs[:ae_state_retries] = ae_state_retries   unless ae_state_retries.nil?
       automate_attrs['ae_state_data']   = ae_state_data      unless ae_state_data.nil?
+      automate_attrs['ae_state_previous'] = ae_state_previous  unless ae_state_previous.nil?
 
       create_automation_object_options = {}
       create_automation_object_options[:vmdb_object] = vmdb_object                unless vmdb_object.nil?
@@ -133,6 +135,7 @@ module MiqAeEngine
           options[:ae_state_started] = ws.root['ae_state_started']
           options[:ae_state_retries] = ws.root['ae_state_retries']
           options[:ae_state_data]    = YAML.dump(ws.persist_state_hash) unless ws.persist_state_hash.empty?
+          options[:ae_state_previous] = YAML.dump(ws.current_state_info) unless ws.current_state_info.empty?
 
           message = "Requeuing #{options.inspect} for object [#{object_name}] with state [#{options[:state]}] to Automate for delivery in [#{ae_retry_interval}] seconds"
           _log.info("#{message}")

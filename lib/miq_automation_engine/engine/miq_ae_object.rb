@@ -186,6 +186,10 @@ module MiqAeEngine
       end.first
     end
 
+    def state_machine?
+      @aec.state_machine?
+    end
+
     def attribute_value_to_xml(value, xml)
       case value.class.to_s
       when 'MiqAePassword'            then xml.Password OPAQUE_PASSWORD
