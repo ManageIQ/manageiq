@@ -134,12 +134,6 @@ module ReportFormatter
 
       # x_axis_category_labels if mri.graph[:type] =~ /(Bar|Column)/
 
-      # horizontal_legend(mri.chart) if mri.graph[:type] =~ /Bar/
-      # default_legend(mri.chart)    if mri.graph[:type] =~ /Column/
-
-      #mri.chart.store_path(:options, :highlighter, :show, true)
-      #mri.chart.store_path(:options, :highlighter, :tooltipAxes, 'y')
-      binding.pry
       mri.chart[:options].update(
         :highlighter    => {
           :show                 => true,
@@ -155,7 +149,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart_dim2_numeric
-      # FIXME
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
     end
 

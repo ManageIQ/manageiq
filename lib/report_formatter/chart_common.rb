@@ -378,7 +378,7 @@ module ReportFormatter
       end
 
       if show_other
-        other_groups = sorted_sums[0, sorted_sums.length - keep]
+        other_groups = Array(sorted_sums[0, sorted_sums.length - keep])
         other = other_groups.each_with_object(Hash.new(0)) do |(key, _), o|
                   groups[key].each do |row|
                     o[row[sort2]] += row[data_column_name]
