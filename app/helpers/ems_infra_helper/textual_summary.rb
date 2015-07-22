@@ -65,6 +65,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_infrastructure_folders
+    return nil if @record.kind_of?(EmsOpenstackInfra)
     label     = "#{title_for_hosts} & #{title_for_clusters}"
     available = @ems.number_of(:ems_folders) > 0 && @ems.ems_folder_root
     h         = {:label => label, :image => "hosts_and_clusters", :value => available ? "Available" : "N/A"}
@@ -76,6 +77,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_folders
+    return nil if @record.kind_of?(EmsOpenstackInfra)
     label     = "VMs & Templates"
     available = @ems.number_of(:ems_folders) > 0 && @ems.ems_folder_root
     h         = {:label => label, :image => "vms_and_templates", :value => available ? "Available" : "N/A"}
@@ -135,6 +137,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_datastores
+    return nil if @record.kind_of?(EmsOpenstackInfra)
     label = ui_lookup(:tables=>"storages")
     num   = @ems.number_of(:storages)
     h     = {:label => label, :image => "storage", :value => num}
@@ -146,6 +149,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_vms
+    return nil if @record.kind_of?(EmsOpenstackInfra)
     label = "VMs"
     num   = @ems.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
@@ -186,8 +190,8 @@ module EmsInfraHelper::TextualSummary
   def textual_orchestration_stacks_status
     return nil if !@ems.respond_to?(:orchestration_stacks) || !@ems.orchestration_stacks
 
-    label         = "States of Orchestration Stacks"
-    stacks_states = @ems.orchestration_stacks.collect { |x| "#{x.name} status: #{x.status}" }.join(", ")
+    label         = "States of Root Orchestration Stacks"
+    stacks_states = @ems.direct_orchestration_stacks.collect { |x| "#{x.name} status: #{x.status}" }.join(", ")
 
     {:label => label, :value => stacks_states}
   end
