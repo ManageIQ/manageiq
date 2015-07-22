@@ -1,14 +1,21 @@
 require 'spec_helper'
 require 'timecop'
 
-TestClass = Class.new do
-  include MiqAeEngine::MiqAeStateMachine
-  def initialize(workspace)
-    @workspace = workspace
-  end
-end
 
 describe "MiqAeStateMachine" do
+  before do
+    TestClass = Class.new do
+      include MiqAeEngine::MiqAeStateMachine
+      def initialize(workspace)
+        @workspace = workspace
+      end
+    end
+  end
+
+  after do
+    Object.send(:remove_const, :TestClass)
+  end
+
   let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
   let(:test_class) { TestClass.new(workspace) }
 
