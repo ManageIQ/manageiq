@@ -1,7 +1,7 @@
 require 'rufus/lru'
 
 # NTFS stuff.
-require 'fs/ntfs/NtfsBootSect'
+require 'fs/ntfs/boot_sect'
 
 # NTFS file system interface to MiqFS.
 module NTFS

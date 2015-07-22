@@ -3,7 +3,7 @@ require 'ostruct'
 
 require_relative '../../VmsFromYaml'
 require 'disk/MiqDisk'
-require 'fs/ntfs/NtfsBootSect'
+require 'fs/ntfs/boot_sect'
 
 class NtfsTestDisk < Minitest::Test
 	

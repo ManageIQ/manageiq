@@ -1,28 +1,29 @@
 # Utilities.
 require 'binary_struct'
+require 'fs/ntfs/utils'
 
 # Attribute types & names.
-require 'fs/ntfs/NtfsAttribType'
+require 'fs/ntfs/attrib_type'
 
 # Classes.
 
 # An attribute header preceeds each attribute.
-require 'fs/ntfs/NtfsAttribHeader'
+require 'fs/ntfs/attrib_header'
 
 # A data run is storage for non-resident attributes.
-require 'fs/ntfs/NtfsDataRun'
+require 'fs/ntfs/data_run'
 
 # These are the attribute types (so far these are the only types processed).
-require 'fs/ntfs/NtfsAttribAttributeList'
-require 'fs/ntfs/NtfsAttribBitmap'
-require 'fs/ntfs/NtfsAttribStandardInformation'
-require 'fs/ntfs/NtfsAttribFileName'
-require 'fs/ntfs/NtfsAttribObjectId'
-require 'fs/ntfs/NtfsAttribVolumeName'
-require 'fs/ntfs/NtfsAttribVolumeInformation'
-require 'fs/ntfs/NtfsAttribData'
-require 'fs/ntfs/NtfsAttribIndexRoot'
-require 'fs/ntfs/NtfsAttribIndexAllocation'
+require 'fs/ntfs/attrib_attribute_list'
+require 'fs/ntfs/attrib_bitmap'
+require 'fs/ntfs/attrib_standard_information'
+require 'fs/ntfs/attrib_file_name'
+require 'fs/ntfs/attrib_object_id'
+require 'fs/ntfs/attrib_volume_name'
+require 'fs/ntfs/attrib_volume_information'
+require 'fs/ntfs/attrib_data'
+require 'fs/ntfs/attrib_index_root'
+require 'fs/ntfs/attrib_index_allocation'
 
 module NTFS
 
@@ -127,9 +128,9 @@ module NTFS
 
       begin
         # Check for proper signature.
-        NtUtil.validate_signature(@mft_entry['signature'], EXPECTED_SIGNATURE)
+        NTFS::Utils.validate_signature(@mft_entry['signature'], EXPECTED_SIGNATURE)
         # Process per-sector "fixups" that NTFS uses to detect corruption of multi-sector data structures
-        @buf = NtUtil.process_fixups(@buf, @boot_sector.bytesPerSector, @mft_entry['usa_offset'], @mft_entry['usa_count'])
+        @buf = NTFS::Utils.process_fixups(@buf, @boot_sector.bytesPerSector, @mft_entry['usa_offset'], @mft_entry['usa_count'])
       rescue => err
         emsg = "#{log_prefix} Invalid MFT Entry <#{recordNumber}> because: <#{err.message}>"
         $log.error("#{emsg}\n#{dump}")
@@ -147,11 +148,11 @@ module NTFS
 		end
 
 		def isDeleted?
-		  !NtUtil.gotBit?(@flags, MFT_RECORD_IN_USE)
+		  !NTFS::Utils.gotBit?(@flags, MFT_RECORD_IN_USE)
 		end
 
 		def isDir?
-		  NtUtil.gotBit?(@flags, MFT_RECORD_IS_DIRECTORY)
+		  NTFS::Utils.gotBit?(@flags, MFT_RECORD_IS_DIRECTORY)
 		end
 
 		def indexRoot
@@ -254,7 +255,7 @@ module NTFS
 	  end
 
 		def dump
-			ref = NtUtil.MkRef(@mft_entry['base_mft_record'])
+			ref = NTFS::Utils.MkRef(@mft_entry['base_mft_record'])
 
 			out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
 			out << "  Signature       : #{@mft_entry['signature']}\n"

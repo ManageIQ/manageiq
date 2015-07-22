@@ -1,4 +1,3 @@
-require 'binary_struct'
 require 'util/miq-unicode'
 
 module NTFS
