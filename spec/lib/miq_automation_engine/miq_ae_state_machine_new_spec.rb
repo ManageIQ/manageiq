@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'timecop'
 
-
 describe "MiqAeStateMachine" do
   before do
     TestClass = Class.new do

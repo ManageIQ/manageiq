@@ -31,7 +31,6 @@ module MiqAeEngine
       raise "number of retries <#{@workspace.root['ae_state_retries']}> exceeded maximum of <#{f['max_retries']}>"
     end
 
-     
     def enforce_max_time(f)
       return if f['max_time'].blank?
       lapsed = Time.zone.now.utc - Time.zone.parse(@workspace.root['ae_state_started'])
