@@ -1,67 +1,74 @@
 require 'spec_helper'
 require 'timecop'
 
+TestClass = Class.new do
+  include MiqAeEngine::MiqAeStateMachine
+  def initialize(workspace)
+    @workspace = workspace
+  end
+end
+
 describe "MiqAeStateMachine" do
-  before do
-    DummyWorkspace = Class.new do
-      def initialize(options = {})
-        @options = options
-      end
+  let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
+  let(:test_class) { TestClass.new(workspace) }
 
-      def root
-        @options
+  describe "#enforce_max_retries" do
+    context "retries exceeded" do
+      let(:options) { {'ae_state_retries' => 3} }
+
+      it "should raise error" do
+        expect { test_class.enforce_max_retries('max_retries' => 2) }.to raise_error
       end
     end
 
-    TestClass = Class.new do
-      include MiqAeEngine::MiqAeStateMachine
-      def initialize(options = {})
-        @workspace = DummyWorkspace.new(options)
+    context "retries empty" do
+      let(:options) { {} }
+
+      it "should not raise error" do
+        expect { test_class.enforce_max_retries({}) }.to_not raise_error
+      end
+    end
+
+    context "retries within limits" do
+      let(:options) { {'ae_state_retries' => 2} }
+
+      it "should not raise error" do
+        expect { test_class.enforce_max_retries('max_retries' => 4) }.to_not raise_error
       end
     end
   end
 
-  after do
-    Object.send(:remove_const, :TestClass)
-    Object.send(:remove_const, :DummyWorkspace)
-  end
+  describe "#enforce_max_time" do
+    context "time exceeded" do
+      let(:options) { {'ae_state_started' => Time.zone.now.utc.to_s} }
 
-  context "enforce_max_retries" do
-    it "exceeds retry count" do
-      obj = TestClass.new('ae_state_retries' => 3)
-      expect { obj.enforce_max_retries('max_retries' => 2) }.to raise_error
-    end
-
-    it "missing max_retries" do
-      obj = TestClass.new
-      obj.enforce_max_retries({})
-    end
-
-    it "max_retries within limits" do
-      obj = TestClass.new('ae_state_retries' => 2)
-      obj.enforce_max_retries('max_retries' => 4)
-    end
-  end
-
-  context "enforce_max_time" do
-    it "exceeds retry time" do
-      Timecop.freeze
-      obj = TestClass.new('ae_state_started' => Time.zone.now.utc.to_s)
-      Timecop.travel(5) do
-        expect { obj.enforce_max_time('max_time' => 2) }.to raise_error
+      it "should raise error" do
+        Timecop.freeze do
+          obj = test_class
+          Timecop.travel(5) do
+            expect { obj.enforce_max_time('max_time' => 2) }.to raise_error
+          end
+        end
       end
     end
 
-    it "missing max_time" do
-      obj = TestClass.new
-      obj.enforce_max_time({})
+    context "time empty" do
+      let(:options) { {} }
+      it "should not raise error" do
+        expect { test_class.enforce_max_time({}) }.to_not raise_error
+      end
     end
 
-    it "max_time within limits" do
-      Timecop.freeze
-      obj = TestClass.new('ae_state_started' => Time.zone.now.utc.to_s)
-      Timecop.travel(5) do
-        obj.enforce_max_time('max_time' => '6.seconds')
+    context "time within limits" do
+      let(:options) { {'ae_state_started' => Time.zone.now.utc.to_s} }
+
+      it "should not raise error" do
+        Timecop.freeze do
+          obj = test_class
+          Timecop.travel(5) do
+            expect { obj.enforce_max_time('max_time' => '6.seconds') }.to_not raise_error
+          end
+        end
       end
     end
   end
