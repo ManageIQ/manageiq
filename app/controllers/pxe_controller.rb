@@ -215,8 +215,11 @@ class PxeController < ApplicationController
             @edit ? _("Editing %{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/,"\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")} :
                     _("%{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/,"\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")}
           end
-        presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;' # resetting ManageIQ.oneTransition.oneTrans when tab loads
-        presenter[:extra_js] << 'ManageIQ.oneTransition.IEButtonPressed = true' if %(save reset).include?(params[:button]) && is_browser_ie?
+        # resetting ManageIQ.oneTransition.oneTrans when tab loads
+        presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;'
+        if %(save reset).include?(params[:button]) && is_browser_ie?
+          presenter[:extra_js] << 'ManageIQ.oneTransition.IEButtonPressed = true'
+        end
       end
     when :iso_datastores_tree
       presenter[:update_partials][:main_div] = r[:partial=>"iso_datastore_list"]
@@ -284,9 +287,9 @@ class PxeController < ApplicationController
     end
 
     if @record && !@in_a_form
-      presenter[:recordId] = @record.id
+      presenter[:record_id] = @record.id
     else
-      presenter[:recordId] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
     end
 
     # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list

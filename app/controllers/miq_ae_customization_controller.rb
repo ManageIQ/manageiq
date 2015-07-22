@@ -371,7 +371,7 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   def set_miq_record_id(presenter)
-    presenter[:recordId] = determine_miq_record_id
+    presenter[:record_id] = determine_miq_record_id
   end
 
   def determine_miq_record_id
@@ -461,8 +461,11 @@ class MiqAeCustomizationController < ApplicationController
     end
 
     presenter[:build_calendar] = true
-    presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;' # resetting ManageIQ.oneTransition.oneTrans when tab loads
-    presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true" if %w(save reset).include?(params[:button]) && is_browser_ie?
+    # resetting ManageIQ.oneTransition.oneTrans when tab loads
+    presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;'
+    if %w(save reset).include?(params[:button]) && is_browser_ie?
+      presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true"
+    end
   end
 
   def setup_presenter_for_old_dialogs_tree(nodetype, presenter)

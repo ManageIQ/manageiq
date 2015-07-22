@@ -1658,8 +1658,8 @@ module VmCommon
       }
       if partial == 'layouts/x_gtl'
         partial_locals[:action_url]  = @lastaction
-        presenter[:parentId]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
-        presenter[:parentClass] = request[:controller] # Set parent class for URL also
+        presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+        presenter[:parent_class] = request[:controller] # Set parent class for URL also
       end
       presenter[:update_partials][:main_div] = r[:partial=>partial, :locals=>partial_locals]
 
@@ -1737,7 +1737,7 @@ module VmCommon
 
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:recordId] = @record ? @record.id : nil
+    presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)

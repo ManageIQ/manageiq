@@ -1952,9 +1952,9 @@ class CatalogController < ApplicationController
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
     if @record && !@in_a_form
-      presenter[:recordId] = @record.id
+      presenter[:record_id] = @record.id
     else
-      presenter[:recordId] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
     end
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
@@ -1963,7 +1963,8 @@ class CatalogController < ApplicationController
 
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
     presenter[:extra_js] << "ManageIQ.changes = null;"
-    presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;"  # resetting ManageIQ.oneTransition.oneTrans when tab loads
+    # resetting ManageIQ.oneTransition.oneTrans when tab loads
+    presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;"
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

@@ -161,7 +161,7 @@ class ExplorerPresenter
     end
 
     # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view
-    [:recordId, :parentId, :parentClass].each { |variable| @out << set_or_undef(variable) }
+    [:record_id, :parent_id, :parent_class].each { |variable| @out << set_or_undef(variable.to_s) }
 
     # Open, select, and focus node in current tree
     #   using dynatree if dhtmlxtree object is undefined
@@ -209,7 +209,11 @@ class ExplorerPresenter
 
   # Set a JS variable to value from options or 'undefined'
   def set_or_undef(variable)
-    @options[variable] ? "ManageIQ.record.#{variable} = '#{@options[variable]}';" : "ManageIQ.record.#{variable} = null;"
+    if @options[variable]
+      "ManageIQ.record.#{variable.camelize(:lower)} = '#{@options[variable]}';"
+    else
+      "ManageIQ.record.#{variable.camelize(:lower)} = null;"
+    end
   end
 
   # Replaces an element (div) using options :partial and :locals

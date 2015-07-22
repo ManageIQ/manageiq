@@ -831,9 +831,9 @@ class ChargebackController < ApplicationController
     end
 
     if @record && !@in_a_form
-      presenter[:recordId] = @record.id
+      presenter[:record_id] = @record.id
     else
-      presenter[:recordId] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
     end
 
     # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list

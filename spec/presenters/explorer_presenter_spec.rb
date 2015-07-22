@@ -24,14 +24,14 @@ describe ExplorerPresenter do
 
     context "#set_or_undef" do
       it 'return proper JS for nil' do
-        js_str = @presenter.set_or_undef(:var1)
-        js_str.should == 'var1 = null;'
+        js_str = @presenter.set_or_undef("var1")
+        js_str.should == 'ManageIQ.record.var1 = null;'
       end
 
       it 'return proper JS for a random value' do
         random_value = 'xxx' + rand(10).to_s
         @presenter['var2'] = random_value
-        js_str = @presenter.set_or_undef(:var2)
+        js_str = @presenter.set_or_undef("var2")
         js_str.should == "ManageIQ.record.var2 = '#{random_value}';"
       end
     end

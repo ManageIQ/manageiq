@@ -18,8 +18,10 @@ function miqOnLoad() {
     miqInitDhtmlxLayout();
   }
 
+  // Track the mouse coordinates for popup menus
   $(document).mousemove(function (e) {
-    miqGetMouseXY(e.pageX, e.pageY);
+    ManageIQ.mouse.x = e.pageX;
+    ManageIQ.mouse.y = e.pageY;
   });
 
   // Need to do this here for IE, rather then right after the grid is initialized
@@ -96,12 +98,6 @@ function miqInitWidgetPulldown() {
 
 function miqCalendarDateConversion(server_offset) {
   return moment().utcOffset(Number(server_offset) / 60);
-}
-
-// Track the mouse coordinates for popup menus
-function miqGetMouseXY(positionX, positionY) {
-  ManageIQ.mouse.x = positionX;
-  ManageIQ.mouse.y = positionY;
 }
 
 // Prefill text entry field when blank

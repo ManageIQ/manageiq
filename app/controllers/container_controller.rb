@@ -249,8 +249,8 @@ class ContainerController < ApplicationController
     elsif params[:display]
       partial_locals = {:controller => "container", :action_url => @lastaction}
       partial = "layouts/x_gtl"
-      presenter[:parentId]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
-      presenter[:parentClass] = request[:controller] # Set parent class for URL also
+      presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+      presenter[:parent_class] = request[:controller] # Set parent class for URL also
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
     elsif record_showing
       presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
@@ -280,7 +280,7 @@ class ContainerController < ApplicationController
 
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:recordId] = @record ? @record.id : nil
+    presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)

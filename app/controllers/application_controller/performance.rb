@@ -51,11 +51,19 @@ module ApplicationController::Performance
 
     render :update do |page|
       if @parent_chart_data
-        page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data, "parent"    => @parent_chart_data}.to_json + ';'
+        page << 'ManageIQ.charts.chartData = ' + {
+          "candu"  => @chart_data,
+          "parent" => @parent_chart_data
+        }.to_json + ';'
       elsif @compare_vm_chart_data
-        page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data, "comparevm" => @compare_vm_chart_data}.to_json + ';'
+        page << 'ManageIQ.charts.chartData = ' + {
+          "candu"     => @chart_data,
+          "comparevm" => @compare_vm_chart_data
+        }.to_json + ';'
       else
-        page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data}.to_json + ';'
+        page << 'ManageIQ.charts.chartData = ' + {
+          "candu" => @chart_data
+        }.to_json + ';'
       end
 
 # Cannot replace button divs that contain dhtmlx toolbars, use code below to turn on/off individual buttons
@@ -391,11 +399,19 @@ module ApplicationController::Performance
 
       render :update do |page|
         if @parent_chart_data
-          page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data, "parent" => @parent_chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu"  => @chart_data,
+            "parent" => @parent_chart_data
+          }.to_json + ';'
         elsif @parent_chart_data
-          page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data, "compare_vm" => @compare_vm_chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu"      => @chart_data,
+            "compare_vm" => @compare_vm_chart_data
+          }.to_json + ';'
         else
-          page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu" => @chart_data
+          }.to_json + ';'
         end
         page.replace("perf_options_div", :partial=>"layouts/perf_options")
         page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@chart_data, :chart_set=>"candu"})
@@ -423,9 +439,14 @@ module ApplicationController::Performance
 
       render :update do |page|
         if @parent_chart_data
-          page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data, "parent" => @parent_chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu"  => @chart_data,
+            "parent" => @parent_chart_data
+          }.to_json + ';'
         else
-          page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu" => @chart_data
+          }.to_json + ';'
         end
         page.replace("perf_options_div", :partial=>"layouts/perf_options")
         page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@chart_data, :chart_set=>"candu"})

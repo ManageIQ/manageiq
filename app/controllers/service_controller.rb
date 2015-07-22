@@ -448,9 +448,9 @@ class ServiceController < ApplicationController
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
     if @record && !@in_a_form
-      presenter[:recordId] = @record.id
+      presenter[:record_id] = @record.id
     else
-      presenter[:recordId] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
     end
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]

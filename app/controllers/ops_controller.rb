@@ -690,10 +690,10 @@ class OpsController < ApplicationController
 
     if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
       # Create ManageIQ.record.recordId JS var, if @record is present
-      presenter[:recordId] =  @record ? @record.id : @edit[:rec_id]
+      presenter[:record_id] =  @record ? @record.id : @edit[:rec_id]
     else
       # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
-      presenter[:recordId] = nil
+      presenter[:record_id] = nil
     end
   end
 
