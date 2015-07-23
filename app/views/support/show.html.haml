@@ -2,7 +2,7 @@
   #tab_div
     = render :partial => "layouts/flash_msg"
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %fieldset
           %h3=_('Session Information')
           .form-horizontal.static
@@ -14,9 +14,9 @@
                [_("Browser Version"), h(browser_info("version"))],
                [_("Browser OS"),      h(browser_info("os"))]].each do |session_info|
               .form-group
-                %label.col-sm-3.control-label
+                %label.col-md-3.control-label
                   = session_info[0]
-                .col-sm-9
+                .col-md-9
                   %p.form-control-static
                     = session_info[1]
 
@@ -25,16 +25,12 @@
       - cond_url      = desc.present? && url.present?
       - cond_userrole = ["super_administrator", "administrator"].include?(session[:userrole])
       - if cond_userrole || cond_url
-        .col-sm-12.col-md-12.col-lg-6
+        .col-md-12.col-lg-6
           %fieldset
             %h3=_('Product Assistance')
             - if cond_userrole
-              - [[_("Quick Start"),              "cfme_quickstart.pdf"],
-                 [_("Insight"),                  "cfme_insight.pdf"],
-                 [_("Control"),                  "cfme_control.pdf"],
-                 [_("Lifecycle and Automation"), "cfme_automate.pdf"],
-                 [_("Integration Services"),     "cfme_integrate.pdf"],
-                 [_("Settings and Operations"),  "cfme_settingandops.pdf"]].each do |title, filename|
+              - @pdf_documents.each do |filename, title|
+                - docfile_path = "/doc/#{filename}.pdf"
                 %br
                 = link_to(image_tag("/images/icons/new/acrobat.png",
                                     :border => "0",
@@ -42,7 +38,7 @@
                                     :height => "20",
                                     :align  => "left",
                                     :alt    => t = _("View the %s Guide") % title),
-                          docfile_path = "/doc/#{filename}",
+                          docfile_path,
                           :title   => t,
                           :onclick => "return miqClickAndPop(this);")
                 &nbsp;

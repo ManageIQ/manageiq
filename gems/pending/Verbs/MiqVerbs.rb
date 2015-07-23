@@ -3,29 +3,25 @@ require 'ostruct'
 require 'rubygems'
 require 'platform'
 
-$:.push("#{File.dirname(__FILE__)}/implementations")
-$:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../util/diag")
-
-require_relative 'miqservices_client'
+require 'Verbs/miqservices_client'
 
 if $log.nil?
   require 'log4r'
   $log = Log4r::Logger['toplog']
 end
 
-require 'VmwareOps'
-require 'VmdbOps'
-require 'MicrosoftOps'
-require 'miqping'
-require 'miq-password'
-require 'miq-option-parser'
+require 'Verbs/implementations/VmwareOps'
+require 'Verbs/implementations/VmdbOps'
+require 'Verbs/implementations/MicrosoftOps'
+require 'util/diag/miqping'
+require 'util/miq-password'
+require 'util/miq-option-parser'
 
 case Platform::OS
 when :win32
-    require 'HostWinOps'
+    require_relative 'implementations/HostWinOps'
 when :unix
-    require 'HostLinuxOps'
+    require_relative 'implementations/HostLinuxOps'
 end
 
 class MiqParser < MiqOptionParser::MiqCommandParser

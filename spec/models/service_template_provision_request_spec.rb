@@ -3,17 +3,14 @@ require "spec_helper"
 describe ServiceTemplateProvisionRequest do
   context "with multiple tasks" do
     before(:each) do
-      User.any_instance.stub(:role).and_return("admin")
-      @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @approver    = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
-      UiTaskSet.stub(:find_by_name).and_return(@approver)
+      admin      = FactoryGirl.create(:user_admin)
 
-      @request   = FactoryGirl.create(:service_template_provision_request, :description => 'Service Request', :userid => @user.userid)
+      @request   = FactoryGirl.create(:service_template_provision_request, :description => 'Service Request', :userid => admin.userid)
 
-      @task_1    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1'         , :userid => @user.userid, :status => "Ok",:state => "pending", :miq_request_id => @request.id, :request_type => "clone_to_service")
-      @task_1_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1 - 1'     , :userid => @user.userid, :status => "Ok",:state => "pending", :miq_request_id => @request.id, :request_type => "clone_to_service")
-      @task_2    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2'         , :userid => @user.userid, :status => "Ok",:state => "pending", :miq_request_id => @request.id, :request_type => "clone_to_service")
-      @task_2_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2 - 1'     , :userid => @user.userid, :status => "Ok",:state => "pending", :miq_request_id => @request.id, :request_type => "clone_to_service")
+      @task_1    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1'         , :userid => admin.userid, :status => "Ok",:state => "pending", :miq_request_id => @request.id, :request_type => "clone_to_service")
+      @task_1_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1 - 1'     , :userid => admin.userid, :status => "Ok",:state => "pending", :miq_request_id => @request.id, :request_type => "clone_to_service")
+      @task_2    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2'         , :userid => admin.userid, :status => "Ok",:state => "pending", :miq_request_id => @request.id, :request_type => "clone_to_service")
+      @task_2_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2 - 1'     , :userid => admin.userid, :status => "Ok",:state => "pending", :miq_request_id => @request.id, :request_type => "clone_to_service")
 
       @task_1.miq_request_tasks << @task_1_1
       @task_2.miq_request_tasks << @task_2_1
@@ -67,13 +64,15 @@ describe ServiceTemplateProvisionRequest do
     it "partial tasks finished" do
       @task_1_1.update_and_notify_parent({:state => "finished", :status => "Ok", :message => "Test Message"})
       @request.reload
-      @request.message.should == "Finished = 2; Pending = 2"
+      @request.message.should == "Finished = 1; Pending = 2; Provisioned = 1"
       @request.state.should   == "active"
       @request.status.should  == "Ok"
     end
 
     it "finished state" do
+      @task_1.update_attributes(:state => "finished")
       @task_1_1.update_and_notify_parent({:state => "finished", :status => "Ok", :message => "Test Message"})
+      @task_2.update_attributes(:state => "finished")
       @task_2_1.update_and_notify_parent({:state => "finished", :status => "Ok", :message => "Test Message"})
       @request.reload
       @request.message.should == "Request complete"
@@ -99,7 +98,7 @@ describe ServiceTemplateProvisionRequest do
 
     it "finished with errors state" do
       @task_1_1.update_and_notify_parent({:state => "finished", :status => "Error", :message => "Error Message"})
-      @task_2_1.update_and_notify_parent({:state => "finished", :status => "Ok", :message => "Test Message"})
+      @task_2_1.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Test Message")
       @request.reload
       @request.message.should == "Request completed with errors"
       @request.state.should   == "finished"

@@ -1,9 +1,6 @@
-$:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'miq-xml'
-require 'VimInventory'
-require 'miq-password'
+require 'util/miq-xml'
+require 'VMwareWebService/VimInventory'
+require 'util/miq-password'
 
 class VMWareWebSvcOps
     

@@ -1,12 +1,8 @@
-$: << File.join(File.dirname(__FILE__), "../..")
-$: << File.join(File.dirname(__FILE__), "../../disk")
-$: << File.join(File.dirname(__FILE__), "../../fs/MiqFS")
-
-require 'bundler_setup'
+require_relative '../../bundler_setup'
 require 'log4r'
 require 'ostruct'
-require 'MiqDisk'
-require 'MiqFS'
+require 'disk/MiqDisk'
+require 'fs/MiqFS/MiqFS'
 
 #
 # Formatter to output log messages to the console.

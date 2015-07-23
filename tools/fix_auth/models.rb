@@ -32,7 +32,7 @@ module FixAuth
 
     # only bring back columns that store passwords
     # we want to use joins, but using joins makes this readonly, so we're using includes instead
-    def self.contenders(_ = nil)
+    def self.contenders
       super.includes(:field).where(:miq_ae_fields => {:datatype => 'password'})
     end
   end
@@ -43,7 +43,7 @@ module FixAuth
     self.password_columns = %w(default_value)
 
     # only fix columns with password values
-    def self.contenders(_ = nil)
+    def self.contenders
       super.where(:datatype => 'password')
     end
   end
@@ -59,7 +59,7 @@ module FixAuth
     end
 
     # only bring back rows that store passwords
-    def self.contenders(_ = nil)
+    def self.contenders
       where("typ = 'vmdb'")
     end
   end
@@ -74,7 +74,7 @@ module FixAuth
     self.symbol_keys = true
     self.table_name = "miq_requests"
 
-    def self.contenders(_ = nil)
+    def self.contenders
       where("options like '%password%'")
     end
   end
@@ -89,7 +89,7 @@ module FixAuth
     self.symbol_keys = true
     self.table_name = "miq_request_tasks"
 
-    def self.contenders(_ = nil)
+    def self.contenders
       where("options like '%password%'")
     end
   end
@@ -121,7 +121,7 @@ module FixAuth
     self.password_fields = %w(password)
     self.available_columns = %w(yaml)
 
-    def self.contenders(_options = {})
+    def self.contenders
       [new(:id => file_name).load]
     end
   end

@@ -22,6 +22,7 @@ cols:
 - name
 - restart_policy
 - dns_policy
+- ext_management_system
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -39,6 +40,7 @@ col_order:
 - container_project.name
 - restart_policy
 - dns_policy
+- ext_management_system
 
 # Column titles, in order
 headers:
@@ -46,6 +48,7 @@ headers:
 - Project Name
 - Restart Policy
 - DNS Policy
+- Provider
 
 # Condition(s) string for the SQL query
 conditions: 

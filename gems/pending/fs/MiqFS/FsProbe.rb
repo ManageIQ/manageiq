@@ -1,5 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/modules")
-
 module FsProbe
 	MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
 
@@ -27,11 +25,11 @@ module FsProbe
 
 		probes.each do |pmod|
       $log.debug "MIQ(FsProbe-getFsMod) FS probe attempting [#{pmod}] for [#{fname}] [partition: #{partNum}]"
-			require pmod
+			require_relative "modules/#{pmod}"
       if Object.const_get(pmod).probe(dobj)
         mod = pmod.chomp("Probe")
         $log.info "MIQ(FsProbe-getFsMod) FS probe detected [#{mod}] for [#{fname}] [partition: #{partNum}]"
-        require mod
+        require_relative "modules/#{mod}"
         return Object.const_get(mod)
       end
 		end

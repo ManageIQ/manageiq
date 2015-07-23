@@ -1,10 +1,6 @@
-$:.push("#{File.dirname(__FILE__)}/../MiqFS")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/util/win32")
-
-require 'rubygems'
 require 'platform'
-require 'MiqFS'
-require 'boot_info_win'
+require 'fs/MiqFS/MiqFS'
+require 'metadata/util/win32/boot_info_win'
 
 module WinMount
 

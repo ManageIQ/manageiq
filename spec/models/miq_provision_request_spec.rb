@@ -9,7 +9,7 @@ describe MiqProvisionRequest do
 
     ems = FactoryGirl.create(:ems_redhat)
     vm = FactoryGirl.create(:vm_redhat, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq MiqProvisionRedhat
+    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Redhat::InfraManager::Provision
 
     ems = FactoryGirl.create(:ems_openstack)
     vm = FactoryGirl.create(:vm_openstack, :ext_management_system => ems)

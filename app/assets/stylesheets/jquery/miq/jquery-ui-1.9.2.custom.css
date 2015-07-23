@@ -345,7 +345,7 @@
  *
  * http://docs.jquery.com/UI/Autocomplete#theming
  */
-.ui-autocomplete { position: absolute; cursor: default; }	
+.ui-autocomplete { position: absolute; cursor: default; }
 
 /* workarounds */
 * html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
@@ -401,8 +401,8 @@
 .ui-button { display: inline-block; position: relative; padding: 0; margin-right: .1em; text-decoration: none !important; cursor: pointer; text-align: center; zoom: 1; overflow: visible; } /* the overflow property removes extra width in IE */
 .ui-button-icon-only { width: 2.2em; } /* to make room for the icon, a width needs to be set here */
 button.ui-button-icon-only { width: 2.4em; } /* button elements seem to need a little more width */
-.ui-button-icons-only { width: 3.4em; } 
-button.ui-button-icons-only { width: 3.7em; } 
+.ui-button-icons-only { width: 3.4em; }
+button.ui-button-icons-only { width: 3.7em; }
 
 /*button text element */
 .ui-button .ui-button-text { display: block; line-height: 1.4;  }
@@ -438,7 +438,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  */
 .ui-dialog { background-color:white; position: absolute; padding: .2em; width: 300px; overflow: hidden; }
 .ui-dialog .ui-dialog-titlebar { padding: .4em 1em; position: relative;  }
-.ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .1em 0; } 
+.ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .1em 0; }
 .ui-dialog .ui-dialog-titlebar-close { position: absolute; right: .3em; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }
 .ui-dialog .ui-dialog-titlebar-close span { display: block; margin: 1px; }
 .ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus { padding: 0; }
@@ -481,28 +481,6 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://docs.jquery.com/UI/Tabs#theming
  */
 
-.ui-tabs { position: relative; padding-left: 0; } /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
-ul.tab {border-bottom: 1px solid #cecdcd !important; margin-bottom: 15px !important }
-.ui-tabs .ui-tabs-nav { margin: 0; border: 0; margin-left: 0px; background: none}
-.ui-tabs .ui-tabs-nav li { 
-  list-style: none;
-  float: left;
-  position: relative;
-  padding: 3px 40px 0 0px;
-  border: 0;
-  background: none; 
-  white-space: nowrap;
-}
-.ui-tabs .ui-tabs-nav li a { float: left; margin-bottom: -1px; padding-bottom: 5px; outline:0px; font: normal 12px OpenSansRegular,Arial,Helvetica,sans-serif; }
-.ui-tabs .ui-tabs-nav li a:hover { border-bottom: 2px #2289ba solid ; color: #000; }	
-.ui-tabs .ui-tabs-nav li.ui-tabs-active a { border-bottom: 2px #2289ba solid; color: #2289ba; }			
-.ui-tabs .ui-tabs-nav li.ui-tabs-active a:hover { border-bottom: 2px #2289ba solid ;color: #000; }	
-																													
-.ui-tabs .ui-tabs-nav li.ui-tabs-active a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text;}
-.ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-active a { cursor: pointer; } /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
-.ui-tabs .ui-tabs-panel { display: block; border-width: 0; background: none; }
-.ui-tabs .ui-tabs-hide { display: none !important; }
-
 /*
  * jQuery UI Datepicker 1.8.16
  *
@@ -524,7 +502,7 @@ ul.tab {border-bottom: 1px solid #cecdcd !important; margin-bottom: 15px !import
 .ui-datepicker .ui-datepicker-title { margin: 0 2.3em; line-height: 1.8em; text-align: center; }
 .ui-datepicker .ui-datepicker-title select { font-size:1em; margin:1px 0; }
 .ui-datepicker select.ui-datepicker-month-year {width: 100%;}
-.ui-datepicker select.ui-datepicker-month, 
+.ui-datepicker select.ui-datepicker-month,
 .ui-datepicker select.ui-datepicker-year { width: 49%;}
 .ui-datepicker table {width: 100%; font-size: .9em; border-collapse: collapse; margin:0 0 .4em; }
 .ui-datepicker th { padding: .7em .3em; text-align: center; font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif; border: 0;  }

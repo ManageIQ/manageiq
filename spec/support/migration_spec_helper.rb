@@ -26,7 +26,7 @@ module MigrationSpecHelper
 
   def migrate(options = {})
     clearing_caches do
-      if options[:verbose]
+      if options[:verbose] || ENV['VERBOSE_MIGRATION_TESTS']
         migrate_under_test
       else
         suppress_migration_messages { migrate_under_test }

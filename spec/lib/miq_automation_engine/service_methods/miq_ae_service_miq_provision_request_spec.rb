@@ -16,8 +16,7 @@ module MiqAeServiceMiqProvisionRequestSpec
 
       @ems                   = FactoryGirl.create(:ems_vmware_with_authentication)
       @vm_template           = FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
-      @user                  = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      approver_role          = FactoryGirl.create(:ui_task_set_approver)
+      @user                  = FactoryGirl.create(:user)
       @miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :userid => @user.userid)
     end
 

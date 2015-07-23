@@ -60,14 +60,10 @@ class MiqVmFsUtil
 end # class MiqVmFsUtil
 
 if __FILE__ == $0
-    $:.push("#{File.dirname(__FILE__)}/../metadata/util/win32")
-    $:.push("#{File.dirname(__FILE__)}/../MiqVm")
-    
-    require 'rubygems'
     require 'log4r'
-    require 'boot_info_win'
-    require 'MiqVm'
-    require "MiqFS"
+    require 'metadata/util/win32/boot_info_win'
+    require 'MiqVm/MiqVm'
+    require 'fs/MiqFS/MiqFS'
     
     #
     # *** Change this to point to the VM directory.

@@ -1,7 +1,3 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../..")
-
 CREDS = [
   {
     :ems_ip       => "1.2.3.4",
@@ -40,8 +36,8 @@ ACCESSORS = [
   ['Storage', 'directories_for_accessible_tenants',     nil]
 ]
 
-require 'bundler_setup'
-require 'openstack_handle'
+require_relative '../../bundler_setup'
+require 'openstack/openstack_handle'
 
 begin
   CREDS.each do |cred|

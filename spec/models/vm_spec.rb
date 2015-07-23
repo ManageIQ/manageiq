@@ -4,13 +4,13 @@ describe Vm do
   it "#corresponding_model" do
     Vm.corresponding_model.should == MiqTemplate
     ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_model.should == ManageIQ::Providers::Vmware::InfraManager::Template
-    VmRedhat.corresponding_model.should == TemplateRedhat
+    ManageIQ::Providers::Redhat::InfraManager::Vm.corresponding_model.should == ManageIQ::Providers::Redhat::InfraManager::Template
   end
 
   it "#corresponding_template_model" do
     Vm.corresponding_template_model.should == MiqTemplate
     ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_template_model.should == ManageIQ::Providers::Vmware::InfraManager::Template
-    VmRedhat.corresponding_template_model.should == TemplateRedhat
+    ManageIQ::Providers::Redhat::InfraManager::Vm.corresponding_template_model.should == ManageIQ::Providers::Redhat::InfraManager::Template
   end
 
   context "#template=" do

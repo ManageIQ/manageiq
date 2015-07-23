@@ -243,7 +243,7 @@ class TreeBuilder
     children_or_count = case parent
                         when nil                 then x_get_tree_roots(options)
                         when AvailabilityZone    then x_get_tree_az_kids(parent, options)
-                        when ConfigurationManagerForeman then x_get_tree_cmf_kids(parent, options)
+                        when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, options)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, options)
                         when CustomButtonSet     then x_get_tree_aset_kids(parent, options)
                         when Dialog              then x_get_tree_dialog_kids(parent, options)

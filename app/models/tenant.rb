@@ -23,6 +23,9 @@ class Tenant < ActiveRecord::Base
            :source      => :resource,
            :source_type => "Provider"
 
+  has_many :miq_groups, :foreign_key => :tenant_owner_id
+  has_many :users, :through => :miq_groups
+
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
                     :url  => "/uploads/#{HARDCODED_LOGO}",

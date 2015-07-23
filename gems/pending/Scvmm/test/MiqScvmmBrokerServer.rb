@@ -1,9 +1,5 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'rubygems'
 require 'log4r'
-require 'MiqScvmmBroker'
+require 'Scvmm/MiqScvmmBroker'
 
 #
 # Formatter to output log messages to the console.

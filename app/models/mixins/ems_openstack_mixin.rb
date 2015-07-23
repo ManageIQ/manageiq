@@ -135,15 +135,15 @@ module EmsOpenstackMixin
   end
 
   def stack_create(stack_name, template, options = {})
-    create_options = {:stack_name => stack_name, :template => template.content}.merge(options)
-    openstack_handle.orchestration_service.stacks.new.save(create_options)["id"]
+    create_options = {:stack_name => stack_name, :template => template.content}.merge(options.except(:tenant_name))
+    openstack_handle.orchestration_service(options[:tenant_name]).stacks.new.save(create_options)["id"]
   rescue => err
     _log.error "stack=[#{stack_name}], error: #{err}"
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
   end
 
-  def stack_status(stack_name, stack_id)
-    stack = openstack_handle.orchestration_service.stacks.get(stack_name, stack_id)
+  def stack_status(stack_name, stack_id, options = {})
+    stack = openstack_handle.orchestration_service(options[:tenant_name]).stacks.get(stack_name, stack_id)
     return stack.stack_status, stack.stack_status_reason if stack
   rescue => err
     _log.error "stack=[#{stack_name}], error: #{err}"

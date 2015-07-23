@@ -176,39 +176,41 @@ class Host < ActiveRecord::Base
   end
 
   def to_s
-    self.name
+    name
   end
 
   def v_annotation
-    return nil if self.hardware.nil?
-    self.hardware.annotation
+    hardware.try(:annotation)
   end
 
   # host settings
   def autoscan
-    self.settings[:autoscan]
+    settings[:autoscan]
   end
+
   def autoscan=(switch)
-    self.settings[:autoscan] = switch
+    settings[:autoscan] = switch
   end
 
   def inherit_mgt_tags
-    self.settings[:inherit_mgt_tags]
+    settings[:inherit_mgt_tags]
   end
+
   def inherit_mgt_tags=(switch)
-    self.settings[:inherit_mgt_tags] = switch
+    settings[:inherit_mgt_tags] = switch
   end
 
   def scan_frequency
-    self.settings[:scan_frequency]
+    settings[:scan_frequency]
   end
+
   def scan_frequency=(switch)
-    self.settings[:scan_frequency] = switch
+    settings[:scan_frequency] = switch
   end
   # end host settings
 
   def my_zone
-    ems = self.ext_management_system
+    ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
   end
 
@@ -217,15 +219,15 @@ class Host < ActiveRecord::Base
   end
 
   def process_events
-    if ems_cluster_id_changed?
-      raise_cluster_event(self.ems_cluster_id_was, "host_remove_from_cluster") if self.ems_cluster_id_was
-      raise_cluster_event(self.ems_cluster, "host_add_to_cluster") if self.ems_cluster_id
-    end
-  end #after_save
+    return unless ems_cluster_id_changed?
+
+    raise_cluster_event(ems_cluster_id_was, "host_remove_from_cluster") if ems_cluster_id_was
+    raise_cluster_event(ems_cluster, "host_add_to_cluster") if ems_cluster_id
+  end # after_save
 
   def raise_cluster_event(ems_cluster, event)
     # accept ids or objects
-    ems_cluster = EmsCluster.find(ems_cluster) unless ems_cluster.is_a? EmsCluster
+    ems_cluster = EmsCluster.find(ems_cluster) unless ems_cluster.kind_of? EmsCluster
     inputs = {:ems_cluster => ems_cluster, :host => self}
     begin
       MiqEvent.raise_evm_event(self, event, inputs)
@@ -244,7 +246,7 @@ class Host < ActiveRecord::Base
   # even if a function is not 'currently' available due to some condition that is not
   # being met.
   def is_available?(request_type)
-    return self.send("validate_#{request_type}")[:available]
+    send("validate_#{request_type}")[:available]
   end
 
   # is_available_now_error_message
@@ -252,11 +254,11 @@ class Host < ActiveRecord::Base
   # Returns nil to indicate no errors.
   # This method is used by the UI along with the is_available? methods.
   def is_available_now_error_message(request_type)
-    return self.send("validate_#{request_type}")[:message]
+    send("validate_#{request_type}")[:message]
   end
 
   def raise_is_available_now_error_message(request_type)
-    msg = self.send("validate_#{request_type}")[:message]
+    msg = send("validate_#{request_type}")[:message]
     raise MiqException::MiqVmError, msg unless msg.nil?
   end
 
@@ -305,49 +307,47 @@ class Host < ActiveRecord::Base
   end
 
   def validate_ipmi(pstate = nil)
-    return {:available => false, :message => "The Host is not configured for IPMI"}   if self.ipmi_address.blank?
-    return {:available => false, :message => "The Host has no IPMI credentials"}      if self.authentication_type(:ipmi).nil?
-    return {:available => false, :message => "The Host has invalid IPMI credentials"} if self.authentication_userid(:ipmi).blank? || self.authentication_password(:ipmi).blank?
-    msg = self.validate_power_state(pstate)
+    return {:available => false, :message => "The Host is not configured for IPMI"}   if ipmi_address.blank?
+    return {:available => false, :message => "The Host has no IPMI credentials"}      if authentication_type(:ipmi).nil?
+    return {:available => false, :message => "The Host has invalid IPMI credentials"} if authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
+    msg = validate_power_state(pstate)
     return msg unless msg.nil?
-    return {:available => true,  :message => nil }
+    {:available => true,  :message => nil }
   end
 
   def validate_esx_host_connected_to_vc_with_power_state(pstate)
-    msg = self.validate_esx_host_connected_to_vc
+    msg = validate_esx_host_connected_to_vc
     return msg unless msg.nil?
-    msg = self.validate_power_state(pstate)
+    msg = validate_power_state(pstate)
     return msg unless msg.nil?
-    return {:available => true,   :message => nil }
+    {:available => true,   :message => nil }
   end
 
   def validate_power_state(pstate)
-    unless pstate.nil?
-      case pstate.class.name
-      when 'String'
-        return {:available => false,   :message => "The Host is not powered '#{pstate}'"} unless self.power_state == pstate
-      when 'Array'
-        return {:available => false,   :message => "The Host is not powered #{pstate.inspect}"} unless pstate.include?(self.power_state)
-      end
+    return nil if pstate.nil?
+    case pstate.class.name
+    when 'String'
+      return {:available => false,   :message => "The Host is not powered '#{pstate}'"} unless power_state == pstate
+    when 'Array'
+      return {:available => false,   :message => "The Host is not powered #{pstate.inspect}"} unless pstate.include?(power_state)
     end
-    return nil
   end
 
   def validate_esx_host_connected_to_vc
     # Check the basic require to interact with a VM.
-    return {:available => false, :message => "The Host is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"} unless self.has_active_ems?
-    return {:available => false, :message => "The Host is not VMware ESX"} unless self.is_vmware_esx?
-    return nil
+    return {:available => false, :message => "The Host is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"} unless has_active_ems?
+    return {:available => false, :message => "The Host is not VMware ESX"} unless is_vmware_esx?
+    nil
   end
 
   def has_active_ems?
-    !!self.ext_management_system
+    !!ext_management_system
   end
 
   def run_ipmi_command(verb)
     require 'miq-ipmi'
-    _log.info("Invoking [#{verb}] for Host: [#{self.name}], IPMI Address: [#{self.ipmi_address}], IPMI Username: [#{self.authentication_userid(:ipmi)}]")
-    ipmi = MiqIPMI.new(self.ipmi_address, *self.auth_user_pwd(:ipmi))
+    _log.info("Invoking [#{verb}] for Host: [#{name}], IPMI Address: [#{ipmi_address}], IPMI Username: [#{authentication_userid(:ipmi)}]")
+    ipmi = MiqIPMI.new(ipmi_address, *auth_user_pwd(:ipmi))
     ipmi.send(verb)
   end
 
@@ -382,7 +382,7 @@ class Host < ActiveRecord::Base
   end
 
   def start
-    if validate_start[:available] && self.power_state == 'standby' && self.respond_to?(:vim_power_up_from_standby)
+    if validate_start[:available] && power_state == 'standby' && respond_to?(:vim_power_up_from_standby)
       vim_power_up_from_standby unless policy_prevented?("request_host_start")
     else
       msg = validate_ipmi
@@ -411,10 +411,10 @@ class Host < ActiveRecord::Base
   def standby
     msg = validate_standby
     if msg[:available]
-      if self.power_state == 'on' && self.respond_to?(:vim_power_down_to_standby)
+      if power_state == 'on' && respond_to?(:vim_power_down_to_standby)
         vim_power_down_to_standby unless policy_prevented?("request_host_standby")
       else
-        _log.warn("Cannot go into standby mode from power state = <#{self.power_state.inspect}>")
+        _log.warn("Cannot go into standby mode from power state = <#{power_state.inspect}>")
       end
     else
       _log.warn("Cannot go into standby mode because <#{msg[:message]}>")
@@ -424,10 +424,10 @@ class Host < ActiveRecord::Base
   def enter_maint_mode
     msg = validate_enter_maint_mode
     if msg[:available]
-      if self.power_state == 'on' && self.respond_to?(:vim_enter_maintenance_mode)
+      if power_state == 'on' && respond_to?(:vim_enter_maintenance_mode)
         vim_enter_maintenance_mode unless policy_prevented?("request_host_enter_maintenance_mode")
       else
-        _log.warn("Cannot enter maintenance mode from power state = <#{self.power_state.inspect}>")
+        _log.warn("Cannot enter maintenance mode from power state = <#{power_state.inspect}>")
       end
     else
       _log.warn("Cannot enter maintenance mode because <#{msg[:message]}>")
@@ -436,7 +436,7 @@ class Host < ActiveRecord::Base
 
   def exit_maint_mode
     msg = validate_enter_maint_mode
-    if msg[:available] && self.respond_to?(:vim_exit_maintenance_mode)
+    if msg[:available] && respond_to?(:vim_exit_maintenance_mode)
       vim_exit_maintenance_mode unless policy_prevented?("request_host_exit_maintenance_mode")
     else
       _log.warn("Cannot exit maintenance mode because <#{msg[:message]}>")
@@ -445,7 +445,7 @@ class Host < ActiveRecord::Base
 
   def shutdown
     msg = validate_shutdown
-    if msg[:available] && self.respond_to?(:vim_shutdown)
+    if msg[:available] && respond_to?(:vim_shutdown)
       vim_shutdown unless policy_prevented?("request_host_shutdown")
     else
       _log.warn("Cannot shutdown because <#{msg[:message]}>")
@@ -454,7 +454,7 @@ class Host < ActiveRecord::Base
 
   def reboot
     msg = validate_reboot
-    if msg[:available] && self.respond_to?(:vim_reboot)
+    if msg[:available] && respond_to?(:vim_reboot)
       vim_reboot unless policy_prevented?("request_host_reboot")
     else
       _log.warn("Cannot reboot because <#{msg[:message]}>")
@@ -463,7 +463,7 @@ class Host < ActiveRecord::Base
 
   def enable_vmotion
     msg = validate_enable_vmotion
-    if msg[:available] && self.respond_to?(:vim_enable_vmotion)
+    if msg[:available] && respond_to?(:vim_enable_vmotion)
       vim_enable_vmotion unless policy_prevented?("request_host_enable_vmotion")
     else
       _log.warn("Cannot enable vmotion because <#{msg[:message]}>")
@@ -472,7 +472,7 @@ class Host < ActiveRecord::Base
 
   def disable_vmotion
     msg = validate_disable_vmotion
-    if msg[:available] && self.respond_to?(:vim_disable_vmotion)
+    if msg[:available] && respond_to?(:vim_disable_vmotion)
       vim_disable_vmotion unless policy_prevented?("request_host_disable_vmotion")
     else
       _log.warn("Cannot disable vmotion because <#{msg[:message]}>")
@@ -481,7 +481,7 @@ class Host < ActiveRecord::Base
 
   def vmotion_enabled?
     msg = validate_vmotion_enabled?
-    if msg[:available] && self.respond_to?(:vim_vmotion_enabled?)
+    if msg[:available] && respond_to?(:vim_vmotion_enabled?)
       vim_vmotion_enabled? unless policy_prevented?("request_host_vmotion_enabled")
     else
       _log.warn("Cannot check if vmotion is enabled because <#{msg[:message]}>")
@@ -489,81 +489,77 @@ class Host < ActiveRecord::Base
   end
 
   def resolve_hostname!
-    addr = MiqSockUtil.resolve_hostname(self.hostname)
-    self.update_attributes!(:ipaddress => addr) unless addr.nil?
+    addr = MiqSockUtil.resolve_hostname(hostname)
+    update_attributes!(:ipaddress => addr) unless addr.nil?
   end
 
   # Scan for VMs in a path defined in a repository
   def add_elements(data)
-    begin
-      if data.is_a?(Hash) && data[:type] == :ems_events
-        _log.info("Adding HASH elements for Host id:[#{self.id}]-[#{self.name}] from [#{data[:type]}]")
-        add_ems_events(data) 
-      end
-    rescue => err
-      _log.log_backtrace(err)
+    if data.kind_of?(Hash) && data[:type] == :ems_events
+      _log.info("Adding HASH elements for Host id:[#{id}]-[#{name}] from [#{data[:type]}]")
+      add_ems_events(data)
     end
+  rescue => err
+    _log.log_backtrace(err)
   end
 
   def ipaddresses
-    return self.hardware.nil? ? [] : self.hardware.ipaddresses
+    hardware.nil? ? [] : hardware.ipaddresses
   end
 
   def hostnames
-    return self.hardware.nil? ? [] : self.hardware.hostnames
+    hardware.nil? ? [] : hardware.hostnames
   end
 
   def mac_addresses
-    return self.hardware.nil? ? [] : self.hardware.mac_addresses
+    hardware.nil? ? [] : hardware.mac_addresses
   end
 
   def has_config_data?
-    return !self.operating_system.nil? && !self.hardware.nil?
+    !operating_system.nil? && !hardware.nil?
   end
 
   def os_image_name
-    return OperatingSystem.image_name(self)
+    OperatingSystem.image_name(self)
   end
 
   def platform
-    return OperatingSystem.platform(self)
+    OperatingSystem.platform(self)
   end
 
   def product_name
-    return self.operating_system.nil? ? "" : self.operating_system.product_name
+    operating_system.nil? ? "" : operating_system.product_name
   end
 
   def service_pack
-    return self.operating_system.nil? ? "" : self.operating_system.service_pack
+    operating_system.nil? ? "" : operating_system.service_pack
   end
 
   def arch
-    if self.vmm_product.to_s.include?('ESX')
-      return 'x86_64' if self.vmm_version.to_i >= 4
+    if vmm_product.to_s.include?('ESX')
+      return 'x86_64' if vmm_version.to_i >= 4
       return 'x86'
     end
 
-    return "unknown" unless self.hardware && !self.hardware.cpu_type.nil?
-    cpu = self.hardware.cpu_type.to_s.downcase
+    return "unknown" unless hardware && !hardware.cpu_type.nil?
+    cpu = hardware.cpu_type.to_s.downcase
     return cpu if cpu.include?('x86')
     return "x86" if cpu.starts_with? "intel"
-    return "unknown"
+    "unknown"
   end
 
   def platform_arch
-    ret = [self.os_image_name.split("_")[0], self.arch == "unknown" ? "x86" : self.arch]
-    return nil if ret.include?("unknown")
-    return ret
+    ret = [os_image_name.split("_")[0], arch == "unknown" ? "x86" : arch]
+    ret.include?("unknown") ? nil : ret
   end
 
   def acts_as_ems?
-    product = self.vmm_product.to_s.downcase
-    ['hyperv', 'hyper-v'].each {|p| return true if product.include?(p)}
-    return false
+    product = vmm_product.to_s.downcase
+    ['hyperv', 'hyper-v'].any? { |p| product.include?(p) }
   end
 
   def refreshable_status
-    if self.ext_management_system
+    if ext_management_system
       return {:show => true, :enabled => true, :message => ""}
     end
 
@@ -571,15 +567,15 @@ class Host < ActiveRecord::Base
   end
 
   def scannable_status
-    s = self.refreshable_status
+    s = refreshable_status
     return s if s[:show] || s[:enabled]
 
     s[:show] = true
-    if self.has_credentials?(:ipmi) && self.ipmi_address.present?
+    if has_credentials?(:ipmi) && ipmi_address.present?
       s.merge!(:enabled => true, :message => "")
-    elsif self.ipmi_address.blank?
+    elsif ipmi_address.blank?
       s.merge!(:enabled => false, :message => "Provide an IPMI Address")
-    elsif self.missing_credentials?(:ipmi)
+    elsif missing_credentials?(:ipmi)
       s.merge!(:enabled => false, :message => "Provide credentials for IPMI")
     end
 
@@ -587,15 +583,15 @@ class Host < ActiveRecord::Base
   end
 
   def is_refreshable?
-    return refreshable_status[:show]
+    refreshable_status[:show]
   end
 
   def is_refreshable_now?
-    return refreshable_status[:enabled]
+    refreshable_status[:enabled]
   end
 
   def is_refreshable_now_error_message
-    return refreshable_status[:message]
+    refreshable_status[:message]
   end
 
   def self.refresh_ems(host_ids)
@@ -605,47 +601,47 @@ class Host < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless self.ext_management_system
-    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless self.ext_management_system.has_credentials?
-    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.ext_management_system.authentication_status_ok?
+    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless ext_management_system
+    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless ext_management_system.has_credentials?
+    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless ext_management_system.authentication_status_ok?
     EmsRefresh.queue_refresh(self)
   end
 
   def is_scannable?
-    return scannable_status[:show]
+    scannable_status[:show]
   end
 
   def is_scannable_now?
-    return scannable_status[:enabled]
+    scannable_status[:enabled]
   end
 
   def is_scannable_now_error_message
-    return scannable_status[:message]
+    scannable_status[:message]
   end
 
   def is_vmware?
-    self.vmm_vendor.to_s.strip.downcase == 'vmware'
+    vmm_vendor.to_s.strip.downcase == 'vmware'
   end
 
   def is_vmware_esx?
-    self.is_vmware? && self.vmm_product.to_s.strip.downcase.starts_with?('esx')
+    is_vmware? && vmm_product.to_s.strip.downcase.starts_with?('esx')
   end
 
   def is_vmware_esxi?
-    product = self.vmm_product.to_s.strip.downcase
-    self.is_vmware? && product.starts_with?('esx') && product.ends_with?('i')
+    product = vmm_product.to_s.strip.downcase
+    is_vmware? && product.starts_with?('esx') && product.ends_with?('i')
   end
 
   def state
-    self.power_state
+    power_state
   end
 
   def state=(new_state)
-    unless self.power_state == new_state
-      #self.state_changed_on = Time.now.utc
-      #self.previous_state = self.power_state
-      self.power_state = new_state
-    end
+    return if power_state == new_state
+
+    # state_changed_on = Time.now.utc
+    # previous_state = power_state
+    self.power_state = new_state
   end
 
   def self.lookUpHost(hostname, ipaddr)
@@ -661,10 +657,10 @@ class Host < ActiveRecord::Base
   end
 
   def vmm_vendor=(v)
-    v = VENDOR_TYPES.key(v) if      VENDOR_TYPES.has_value?(v)
-    v = nil                 unless  VENDOR_TYPES.has_key?(v)
+    v = VENDOR_TYPES.key(v) if      VENDOR_TYPES.value?(v)
+    v = nil                 unless  VENDOR_TYPES.key?(v)
 
-    write_attribute(:vmm_vendor, v)
+    self[:vmm_vendor] = v
   end
 
   #
@@ -672,58 +668,58 @@ class Host < ActiveRecord::Base
   #
 
   def disconnect_inv
-    self.disconnect_ems
-    self.remove_all_parents(:of_type => ['EmsFolder', 'EmsCluster'])
+    disconnect_ems
+    remove_all_parents(:of_type => ['EmsFolder', 'EmsCluster'])
   end
 
   def connect_ems(e)
-    unless self.ext_management_system == e
-      _log.debug "Connecting Host [#{self.name}] id [#{self.id}] to EMS [#{e.name}] id [#{e.id}]"
-      self.ext_management_system = e
-      self.save
-    end
+    return if ext_management_system == e
+
+    _log.debug "Connecting Host [#{name}] id [#{id}] to EMS [#{e.name}] id [#{e.id}]"
+    self.ext_management_system = e
+    save
   end
 
   def disconnect_ems(e=nil)
     if e.nil? || self.ext_management_system == e
-      log_text = " from EMS [#{self.ext_management_system.name}] id [#{self.ext_management_system.id}]" unless self.ext_management_system.nil?
-      _log.info "Disconnecting Host [#{self.name}] id [#{self.id}]#{log_text}"
+      log_text = " from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]" unless ext_management_system.nil?
+      _log.info "Disconnecting Host [#{name}] id [#{id}]#{log_text}"
 
       self.ext_management_system = nil
       self.state = "unknown"
-      self.save
+      save
     end
   end
 
   def connect_storage(s)
-    unless self.storages.include?(s)
-      _log.debug "Connecting Host [#{self.name}] id [#{self.id}] to Storage [#{s.name}] id [#{s.id}]"
-      self.storages << s
-      self.save
+    unless storages.include?(s)
+      _log.debug "Connecting Host [#{name}] id [#{id}] to Storage [#{s.name}] id [#{s.id}]"
+      storages << s
+      save
     end
   end
 
   def disconnect_storage(s)
-    _log.info "Disconnecting Host [#{self.name}] id [#{self.id}] from Storage [#{s.name}] id [#{s.id}]"
-    self.storages.delete(s)
-    self.save
+    _log.info "Disconnecting Host [#{name}] id [#{id}] from Storage [#{s.name}] id [#{s.id}]"
+    storages.delete(s)
+    save
   end
 
   # Vm relationship methods
   def direct_vms
     # Look for only the Vms at the second depth (default RP + 1)
-    rels = self.descendant_rels(:of_type => 'Vm').select { |r| (r.depth - self.depth) == 2 }
+    rels = descendant_rels(:of_type => 'Vm').select { |r| (r.depth - depth) == 2 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
   end
 
   # Resource Pool relationship methods
   def default_resource_pool
-    Relationship.resource(self.child_rels(:of_type => 'ResourcePool').first)
+    Relationship.resource(child_rels(:of_type => 'ResourcePool').first)
   end
 
   def resource_pools
     # Look for only the resource_pools at the second depth (default depth + 1)
-    rels = self.descendant_rels(:of_type => 'ResourcePool')
+    rels = descendant_rels(:of_type => 'ResourcePool')
     min_depth = rels.collect(&:depth).min
     rels = rels.select { |r| r.depth == min_depth + 1 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
@@ -731,7 +727,7 @@ class Host < ActiveRecord::Base
 
   def resource_pools_with_default
     # Look for only the resource_pools up to the second depth (default depth + 1)
-    rels = self.descendant_rels(:of_type => 'ResourcePool')
+    rels = descendant_rels(:of_type => 'ResourcePool')
     min_depth = rels.collect(&:depth).min
     rels = rels.select { |r| r.depth <= min_depth + 1 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
@@ -739,31 +735,31 @@ class Host < ActiveRecord::Base
 
   # All RPs under this Host and all child RPs
   def all_resource_pools
-    self.descendants(:of_type => 'ResourcePool')[1..-1].sort_by { |r| r.name.downcase }
+    descendants(:of_type => 'ResourcePool')[1..-1].sort_by { |r| r.name.downcase }
   end
 
   def all_resource_pools_with_default
-    self.descendants(:of_type => 'ResourcePool').sort_by { |r| r.name.downcase }
+    descendants(:of_type => 'ResourcePool').sort_by { |r| r.name.downcase }
   end
 
   # Parent relationship methods
   def parent_folder
-    p = self.parent
+    p = parent
     p.kind_of?(EmsFolder) ? p : nil
   end
 
   def owning_folder
-    self.detect_ancestor(:of_type => "EmsFolder") { |a| !a.is_datacenter && !["host", "vm"].include?(a.name) }
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.is_datacenter && !["host", "vm"].include?(a.name) }
   end
 
   def parent_datacenter
-    self.detect_ancestor(:of_type => "EmsFolder") { |a| a.is_datacenter }
+    detect_ancestor(:of_type => "EmsFolder") { |a| a.is_datacenter }
   end
   alias owning_datacenter parent_datacenter
 
   def lans
     all_lans = []
-    self.switches.each { |s| all_lans += s.lans unless s.lans.nil? } unless self.switches.nil?
+    switches.each { |s| all_lans += s.lans unless s.lans.nil? } unless switches.nil?
     all_lans
   end
 
@@ -807,8 +803,8 @@ class Host < ActiveRecord::Base
         any_or_all = options[:tags_include].to_sym
         host = Host.find_tagged_with(
                       any_or_all => options[:tags],
-                      :ns        => options[:tag_ns]).
-                    where(:id => event.target_id).first
+                      :ns        => options[:tag_ns]
+                    ).where(:id => event.target_id).first
       else
         host = Host.find(event.target_id)
       end
@@ -842,14 +838,14 @@ class Host < ActiveRecord::Base
     raise MiqException::MiqHostError, "Logon to platform [#{self.os_image_name}] not supported" if auth_type.to_s != 'ipmi' && self.os_image_name !~ /linux_*/
 
     case auth_type.to_s
-    when 'remote'; verify_credentials_with_ssh(auth_type, options)
-    when 'ws';     verify_credentials_with_ws(auth_type)
-    when 'ipmi';   verify_credentials_with_ipmi(auth_type)
+    when 'remote' then verify_credentials_with_ssh(auth_type, options)
+    when 'ws'     then verify_credentials_with_ws(auth_type)
+    when 'ipmi'   then verify_credentials_with_ipmi(auth_type)
     else
-        verify_credentials_with_ws(auth_type)
-      end
+      verify_credentials_with_ws(auth_type)
+    end
 
-    return true
+    true
   end
 
   def verify_credentials_with_ws(_auth_type = nil, _options = {})
@@ -862,14 +858,14 @@ class Host < ActiveRecord::Base
 
     begin
       # connect_ssh logs address and user name(s) being used to make connection
-      _log.info "Verifying Host SSH credentials for [#{self.name}]"
-      self.connect_ssh(options) {|ssu| ssu.exec("uname -a")}
+      _log.info "Verifying Host SSH credentials for [#{name}]"
+      connect_ssh(options) {|ssu| ssu.exec("uname -a")}
     rescue Net::SSH::AuthenticationFailed
       raise MiqException::MiqInvalidCredentialsError, "Login failed due to a bad username or password."
     rescue Net::SSH::HostKeyMismatch
       raise # Re-raise the error so the UI can prompt the user to allow the keys to be reset.
-    rescue Exception
-      _log.warn("#{$!.inspect}")
+    rescue Exception => err
+      _log.warn("#{err.inspect}")
       raise MiqException::MiqHostError, "Unexpected response returned from system, see log for details"
     else
       true
@@ -877,14 +873,14 @@ class Host < ActiveRecord::Base
   end
 
   def verify_credentials_with_ipmi(auth_type=nil)
-    raise "No credentials defined for IPMI" if self.missing_credentials?(auth_type)
+    raise "No credentials defined for IPMI" if missing_credentials?(auth_type)
 
     require 'miq-ipmi'
-    address = self.ipmi_address
+    address = ipmi_address
     raise MiqException::MiqHostError, "IPMI address is not configured for this Host" if address.blank?
 
     if MiqIPMI.is_available?(address)
-      ipmi = MiqIPMI.new(address, *self.auth_user_pwd(auth_type))
+      ipmi = MiqIPMI.new(address, *auth_user_pwd(auth_type))
       raise MiqException::MiqInvalidCredentialsError, "Login failed due to a bad username or password." unless ipmi.connected?
     else
       raise MiqException::MiqHostError, "IPMI is not available on this Host"
@@ -914,11 +910,11 @@ class Host < ActiveRecord::Base
         next
       end
 
-      discover_options = {:ipaddr => ipaddr,
-        :usePing => options[:ping],
-        :timeout => options[:timeout],
-        :discover_types => options[:discover_types],
-        :credentials => options[:credentials]
+      discover_options = {:ipaddr         => ipaddr,
+                          :usePing        => options[:ping],
+                          :timeout        => options[:timeout],
+                          :discover_types => options[:discover_types],
+                          :credentials    => options[:credentials]
       }
 
       # Add Windows domain credentials for HyperV WMI checks
@@ -932,32 +928,32 @@ class Host < ActiveRecord::Base
   end
 
   def reset_discoverable_fields
-    raise "Host Not Resettable - No IPMI Address" if self.ipmi_address.blank?
+    raise "Host Not Resettable - No IPMI Address" if ipmi_address.blank?
     cred = self.authentication_type(:ipmi)
     raise "Host Not Resettable - No IPMI Credentials" if cred.nil?
 
     run_callbacks(:destroy) { false } # Run only the before_destroy callbacks to destroy all associations
-    self.reload
+    reload
 
-    self.attributes.each do |key, value|
+    attributes.each do |key, value|
       next if %w{id guid ipmi_address mac_address name created_on updated_on vmm_vendor}.include?(key)
-      self.send("#{key}=", nil)
+      send("#{key}=", nil)
     end
 
-    self.make_smart # before_create callback
+    make_smart # before_create callback
     self.settings   = VMDB::Config.new("hostdefaults").get(:host)
-    self.name       = "IPMI <#{self.ipmi_address}>"
+    self.name       = "IPMI <#{ipmi_address}>"
     self.vmm_vendor = 'unknown'
-    self.save!
+    save!
 
-    self.authentications.create(cred.attributes) unless cred.nil?
+    authentications.create(cred.attributes) unless cred.nil?
     self
   end
 
   def detect_discovered_os(ost)
     # Determine os
     os_type = nil
-    if self.vmm_vendor == "vmware"
+    if vmm_vendor == "vmware"
       os_name = "VMware ESX Server"
     elsif ost.os.include?(:linux)
       os_name = "linux"
@@ -984,7 +980,7 @@ class Host < ActiveRecord::Base
       self.ipaddress   = ipaddr
       self.vmm_vendor  = "vmware"
       self.vmm_product = "Esx"
-      if self.has_credentials?(:ws)
+      if has_credentials?(:ws)
         begin
           with_provider_connection(:ip => ipaddr) do |vim|
             _log.info "VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}"
@@ -994,10 +990,10 @@ class Host < ActiveRecord::Base
             self.name            = "#{vim.about['name']} (#{ipaddr})"
           end
         rescue => err
-          _log.warn "Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{self.authentication_userid(:ws)}] because #{err.message}"
+          _log.warn "Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{authentication_userid(:ws)}] because #{err.message}"
         end
       end
-      self.type = %w(esx esxi).include?(self.vmm_product.to_s.downcase) ? "ManageIQ::Providers::Vmware::InfraManager::HostEsx" : "ManageIQ::Providers::Vmware::InfraManager::Host"
+      self.type = %w(esx esxi).include?(vmm_product.to_s.downcase) ? "ManageIQ::Providers::Vmware::InfraManager::HostEsx" : "ManageIQ::Providers::Vmware::InfraManager::Host"
     elsif ost.hypervisor.include?(:ipmi)
       find_method       = :find_by_ipmi_address
       self.name         = "IPMI (#{ipaddr})"
@@ -1030,11 +1026,11 @@ class Host < ActiveRecord::Base
       _log.info "Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}"
 
       unless ost.hypervisor.empty?
-        self.detect_discovered_hypervisor(ost, ipaddr)
-        os_name, os_type = self.detect_discovered_os(ost)
-        EmsRefresh.save_operating_system_inventory(self, {:product_name => os_name, :product_type => os_type}) unless os_name.nil?
-        EmsRefresh.save_hardware_inventory(self, {:cpu_type => "intel"})
-        self.save!
+        detect_discovered_hypervisor(ost, ipaddr)
+        os_name, os_type = detect_discovered_os(ost)
+        EmsRefresh.save_operating_system_inventory(self, :product_name => os_name, :product_type => os_type) unless os_name.nil?
+        EmsRefresh.save_hardware_inventory(self, :cpu_type => "intel")
+        save!
       end
     rescue => err
       _log.log_backtrace(err)
@@ -1044,19 +1040,19 @@ class Host < ActiveRecord::Base
   def self.discoverHost(options)
     require 'discovery/MiqDiscovery'
     ost = OpenStruct.new(Marshal.load(options))
-    _log.info "Discovering Host: #{self.ost_inspect(ost)}"
+    _log.info "Discovering Host: #{ost_inspect(ost)}"
     begin
       MiqDiscovery.scanHost(ost)
 
       unless ost.hypervisor.empty?
-        _log.info "Discovered: #{self.ost_inspect(ost)}"
+        _log.info "Discovered: #{ost_inspect(ost)}"
 
         if [:virtualcenter, :scvmm, :rhevm].any? {|ems_type| ost.hypervisor.include?(ems_type)}
           ExtManagementSystem.create_discovered_ems(ost)
           return # only create ems instance, no host.
         end
 
-        host = self.new(
+        host = new(
           :name      => "#{ost.ipaddr} - discovered #{Time.now.utc.strftime("%Y-%m-%d %H:%M %Z")}",
           :ipaddress => ost.ipaddr,
           :hostname  => Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
@@ -1119,11 +1115,11 @@ class Host < ActiveRecord::Base
   end
 
   def ssh_users_and_passwords
-    if self.has_authentication_type?(:remote)
-      rl_user, rl_password = self.auth_user_pwd(:remote)
-      su_user, su_password = self.auth_user_pwd(:root)
+    if has_authentication_type?(:remote)
+      rl_user, rl_password = auth_user_pwd(:remote)
+      su_user, su_password = auth_user_pwd(:root)
     else
-      rl_user, rl_password = self.auth_user_pwd(:root)
+      rl_user, rl_password = auth_user_pwd(:root)
       su_user, su_password = nil, nil
     end
     return rl_user, rl_password, su_user, su_password, {}
@@ -1143,21 +1139,21 @@ class Host < ActiveRecord::Base
     logged_options = options.dup
     logged_options[:key_data] = "[FILTERED]" if logged_options[:key_data]
 
-    _log.info "Initiating SSH connection to Host:[#{self.name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]"
+    _log.info "Initiating SSH connection to Host:[#{name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]"
     begin
       MiqSshUtil.shell_with_su(hostname, rl_user, rl_password, su_user, su_password, options) do |ssu, shell|
         _log.info "SSH connection established to [#{hostname}]"
         yield(ssu)
       end
       _log.info "SSH connection completed to [#{hostname}]"
-    rescue Exception
-      _log.error "SSH connection failed for [#{hostname}] with [#{$!.class}: #{$!}]"
-      raise $!
+    rescue Exception => err
+      _log.error "SSH connection failed for [#{hostname}] with [#{err.class}: #{err}]"
+      raise err
     end
   end
 
   def refresh_patches(ssu)
-    return unless self.vmm_buildnumber && self.vmm_buildnumber != Patch.highest_patch_level(self)
+    return unless vmm_buildnumber && vmm_buildnumber != Patch.highest_patch_level(self)
 
     patches = []
     begin
@@ -1168,20 +1164,20 @@ class Host < ActiveRecord::Base
         data = line.split(" ")
         # Find the lines we should skip
         begin
-          next if data[1,2].nil?
-          dhash = {:name => data[0], :vendor => "VMware", :installed_on => Time.parse(data[1,2].join(" ")).utc}
+          next if data[1, 2].nil?
+          dhash = {:name => data[0], :vendor => "VMware", :installed_on => Time.parse(data[1, 2].join(" ")).utc}
           next if dhash[:installed_on] - t >= 0
           dhash[:description] = data[3..-1].join(" ") unless data[3..-1].nil?
           patches << dhash
-        rescue ArgumentError
-          _log.log_backtrace($!)
+        rescue ArgumentError => err
+          _log.log_backtrace(err)
           next
-        rescue
-          _log.log_backtrace($!)
+        rescue => err
+          _log.log_backtrace(err)
         end
       end
-    rescue
-      #_log.log_backtrace($!)
+    rescue => err
+      #_log.log_backtrace(err)
     end
 
     Patch.refresh_patches(self, patches)
@@ -1280,12 +1276,12 @@ class Host < ActiveRecord::Base
   end
 
   def refresh_ipmi_power_state
-    if self.ipmi_config_valid?
+    if ipmi_config_valid?
       require 'miq-ipmi'
-      address = self.ipmi_address
+      address = ipmi_address
 
       if MiqIPMI.is_available?(address)
-        ipmi = MiqIPMI.new(address, *self.auth_user_pwd(:ipmi))
+        ipmi = MiqIPMI.new(address, *auth_user_pwd(:ipmi))
         if ipmi.connected?
           self.power_state = ipmi.power_state
         else
@@ -1298,22 +1294,22 @@ class Host < ActiveRecord::Base
   end
 
   def refresh_ipmi
-    if self.ipmi_config_valid?
+    if ipmi_config_valid?
       require 'miq-ipmi'
-      address = self.ipmi_address
+      address = ipmi_address
 
       if MiqIPMI.is_available?(address)
-        ipmi = MiqIPMI.new(address, *self.auth_user_pwd(:ipmi))
+        ipmi = MiqIPMI.new(address, *auth_user_pwd(:ipmi))
         if ipmi.connected?
           self.power_state = ipmi.power_state
           mac = ipmi.mac_address
           self.mac_address = mac unless mac.blank?
 
           hw_info = {:manufacturer => ipmi.manufacturer, :model => ipmi.model}
-          if self.hardware.nil?
+          if hardware.nil?
             EmsRefresh.save_hardware_inventory(self, hw_info)
           else
-            self.hardware.update_attributes(hw_info)
+            hardware.update_attributes(hw_info)
           end
         else
           _log.warn("IPMI Login failed due to a bad username or password.")
@@ -1325,9 +1321,9 @@ class Host < ActiveRecord::Base
   end
 
   def ipmi_config_valid?(include_mac_addr=false)
-    if self.has_credentials?(:ipmi) && !self.ipmi_address.blank?
+    if has_credentials?(:ipmi) && !ipmi_address.blank?
       if include_mac_addr == true
-        if self.mac_address.blank?
+        if mac_address.blank?
           return false
         else
           return true
@@ -1343,7 +1339,7 @@ class Host < ActiveRecord::Base
 
   def self.ready_for_provisioning?(ids)
     errors = ActiveModel::Errors.new(self)
-    hosts = self.find_all_by_id(ids)
+    hosts = find_all_by_id(ids)
     missing = ids - hosts.collect(&:id)
     errors.add(:missing_ids, "Unable to find Hosts with the following ids #{missing.inspect}") unless missing.empty?
 
@@ -1361,20 +1357,20 @@ class Host < ActiveRecord::Base
   end
 
   def set_custom_field(attribute, value)
-    return unless self.vmm_vendor == "VMware"
-    raise "Host has no EMS, unable to set custom attribute" unless self.ext_management_system
+    return unless vmm_vendor == "VMware"
+    raise "Host has no EMS, unable to set custom attribute" unless ext_management_system
 
-    self.ext_management_system.set_custom_field(self, :attribute => attribute, :value => value)
+    ext_management_system.set_custom_field(self, :attribute => attribute, :value => value)
   end
 
   def quickStats
     return @qs if @qs
-    return {} unless self.vmm_vendor == "VMware"
+    return {} unless vmm_vendor == "VMware"
 
     begin
-      raise "Host has no EMS, unable to get host statistics" unless self.ext_management_system
+      raise "Host has no EMS, unable to get host statistics" unless ext_management_system
 
-      @qs = self.ext_management_system.host_quick_stats(self)
+      @qs = ext_management_system.host_quick_stats(self)
     rescue => err
       _log.warn("Error '#{err.message}' encountered attempting to get host quick statistics")
       return {}
@@ -1383,25 +1379,25 @@ class Host < ActiveRecord::Base
   end
 
   def current_memory_usage
-    self.quickStats["overallMemoryUsage"].to_i
+    quickStats["overallMemoryUsage"].to_i
   end
 
   def current_cpu_usage
-    self.quickStats["overallCpuUsage"].to_i
+    quickStats["overallCpuUsage"].to_i
   end
 
   def current_memory_headroom
-    self.ram_size - self.current_memory_usage
+    ram_size - current_memory_usage
   end
 
   def ram_size
-    return 0 if self.hardware.nil?
-    return self.hardware.memory_cpu.to_i
+    return 0 if hardware.nil?
+    return hardware.memory_cpu.to_i
   end
 
   def firewall_rules
-    return [] if self.operating_system.nil?
-    return self.operating_system.firewall_rules
+    return [] if operating_system.nil?
+    return operating_system.firewall_rules
   end
 
   def enforce_policy(vm, event)
@@ -1437,9 +1433,9 @@ class Host < ActiveRecord::Base
   # TODO: Rename this to scan_queue and rename scan_from_queue to scan to match
   #   standard from other places.
   def scan(userid = "system", options={})
-    log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
-    task = MiqTask.create(:name => "SmartState Analysis for '#{self.name}' ", :userid => userid)
+    task = MiqTask.create(:name => "SmartState Analysis for '#{name}' ", :userid => userid)
 
     _log.info("Requesting scan of #{log_target}")
     begin
@@ -1453,24 +1449,23 @@ class Host < ActiveRecord::Base
     timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_scan, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
-      :class_name => self.class.name,
-      :instance_id => self.id,
-      :args => [task.id],
-      :method_name => "scan_from_queue",
+      :class_name   => self.class.name,
+      :instance_id  => id,
+      :args         => [task.id],
+      :method_name  => "scan_from_queue",
       :miq_callback => cb,
-      :msg_timeout => timeout,
-      :zone => self.my_zone
+      :msg_timeout  => timeout,
+      :zone         => my_zone
     )
   end
 
   def scan_from_queue(taskid=nil)
-
     unless taskid.nil?
       task = MiqTask.find_by_id(taskid)
       task.state_active  if task
     end
 
-    log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
     _log.info("Scanning #{log_target}...")
 
@@ -1481,70 +1476,70 @@ class Host < ActiveRecord::Base
       # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
       _log.info("Refreshing Firewall Rules for #{log_target}")
       task.update_status("Active", "Ok", "Refreshing Firewall Rules") if task
-      Benchmark.realtime_block(:refresh_firewall_rules) { self.refresh_firewall_rules }
+      Benchmark.realtime_block(:refresh_firewall_rules) { refresh_firewall_rules }
 
       _log.info("Refreshing Advanced Settings for #{log_target}")
       task.update_status("Active", "Ok", "Refreshing Advanced Settings") if task
-      Benchmark.realtime_block(:refresh_advanced_settings) { self.refresh_advanced_settings }
+      Benchmark.realtime_block(:refresh_advanced_settings) { refresh_advanced_settings }
 
-      if self.ext_management_system.nil?
+      if ext_management_system.nil?
         _log.info("Refreshing IPMI information for #{log_target}")
         task.update_status("Active", "Ok", "Refreshing IPMI Information") if task
-        Benchmark.realtime_block(:refresh_ipmi) { self.refresh_ipmi }
+        Benchmark.realtime_block(:refresh_ipmi) { refresh_ipmi }
       end
 
-      self.save
+      save
 
       # Skip SSH for ESXi hosts
-      unless self.is_vmware_esxi?
-        if self.hostname.blank?
+      unless is_vmware_esxi?
+        if hostname.blank?
           _log.warn "No hostname defined for #{log_target}"
           task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
           return
         end
 
-        self.update_ssh_auth_status! if self.respond_to?(:update_ssh_auth_status!)
+        update_ssh_auth_status! if respond_to?(:update_ssh_auth_status!)
 
-        if self.missing_credentials?
+        if missing_credentials?
           _log.warn "No credentials defined for #{log_target}"
           task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
           return
         end
 
         begin
-          self.connect_ssh do |ssu|
+          connect_ssh do |ssu|
             _log.info("Refreshing Patches for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing Patches") if task
-            Benchmark.realtime_block(:refresh_patches) { self.refresh_patches(ssu) }
+            Benchmark.realtime_block(:refresh_patches) { refresh_patches(ssu) }
 
             _log.info("Refreshing Services for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing Services") if task
-            Benchmark.realtime_block(:refresh_services) { self.refresh_services(ssu) }
+            Benchmark.realtime_block(:refresh_services) { refresh_services(ssu) }
 
             _log.info("Refreshing Linux Packages for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing Linux Packages") if task
-            Benchmark.realtime_block(:refresh_linux_packages) { self.refresh_linux_packages(ssu) }
+            Benchmark.realtime_block(:refresh_linux_packages) { refresh_linux_packages(ssu) }
 
             _log.info("Refreshing User Groups for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing User Groups") if task
-            Benchmark.realtime_block(:refresh_user_groups) { self.refresh_user_groups(ssu) }
+            Benchmark.realtime_block(:refresh_user_groups) { refresh_user_groups(ssu) }
 
             _log.info("Refreshing SSH Config for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing SSH Config") if task
-            Benchmark.realtime_block(:refresh_ssh_config) { self.refresh_ssh_config(ssu) }
+            Benchmark.realtime_block(:refresh_ssh_config) { refresh_ssh_config(ssu) }
 
             _log.info("Refreshing FS Files for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing FS Files") if task
-            Benchmark.realtime_block(:refresh_fs_files) { self.refresh_fs_files(ssu) }
+            Benchmark.realtime_block(:refresh_fs_files) { refresh_fs_files(ssu) }
 
             # refresh_openstack_services should run after refresh_services and refresh_fs_files
-            if self.respond_to?(:refresh_openstack_services)
+            if respond_to?(:refresh_openstack_services)
               _log.info("Refreshing OpenStack Services for #{log_target}")
               task.update_status("Active", "Ok", "Refreshing OpenStack Services") if task
               Benchmark.realtime_block(:refresh_openstack_services) { refresh_openstack_services(ssu) }
             end
 
-            self.save
+            save
           end
         rescue Net::SSH::HostKeyMismatch
           # Keep from dumping stack trace for this error which is sufficiently logged in the connect_ssh method
@@ -1555,11 +1550,11 @@ class Host < ActiveRecord::Base
 
       _log.info("Refreshing Log information for #{log_target}")
       task.update_status("Active", "Ok", "Refreshing Log Information") if task
-      Benchmark.realtime_block(:refresh_logs) { self.refresh_logs }
+      Benchmark.realtime_block(:refresh_logs) { refresh_logs }
 
       _log.info("Saving state for #{log_target}")
       task.update_status("Active", "Ok", "Saving Drift State") if task
-      Benchmark.realtime_block(:save_driftstate) { self.save_drift_state }
+      Benchmark.realtime_block(:save_driftstate) { save_drift_state }
 
       begin
         MiqEvent.raise_evm_job_event(self, :type => "scan", :suffix => "complete")
@@ -1574,18 +1569,18 @@ class Host < ActiveRecord::Base
   end
 
   def ssh_run_script(script)
-    self.connect_ssh {|ssu| return ssu.shell_exec(script)}
+    connect_ssh {|ssu| return ssu.shell_exec(script)}
   end
 
   def add_ems_events(event_hash)
     event_hash[:events].each do |event|
-      event[:ems_id] = self.ems_id
-      event[:host_name] = self.name
-      event[:host_id] = self.id
+      event[:ems_id] = ems_id
+      event[:host_name] = name
+      event[:host_id] = id
       begin
-        EmsEvent.add(self.ems_id, event)
-      rescue
-        _log.log_backtrace($!)
+        EmsEvent.add(ems_id, event)
+      rescue => err
+        _log.log_backtrace(err)
       end
     end
   end
@@ -1593,42 +1588,42 @@ class Host < ActiveRecord::Base
   # Virtual columns for owning cluster, folder and datacenter
   def v_owning_cluster
     o = owning_cluster
-    return o ? o.name : ""
+    o ? o.name : ""
   end
 
   def v_owning_folder
     o = owning_folder
-    return o ? o.name : ""
+    o ? o.name : ""
   end
 
   def v_owning_datacenter
     o = owning_datacenter
-    return o ? o.name : ""
+    o ? o.name : ""
   end
 
   # Virtual cols for relationship counts
   def v_total_storages
-    return storages.size
+    storages.size
   end
 
   def v_total_vms
-    return vms.size
+    vms.size
   end
 
   def v_total_miq_templates
-    return miq_templates.size
+    miq_templates.size
   end
 
   def miq_scsi_luns
     luns = []
-    return luns if self.hardware.nil?
+    return luns if hardware.nil?
 
-    self.hardware.storage_adapters.each {|sa|
-      sa.miq_scsi_targets.each {|st|
+    hardware.storage_adapters.each do |sa|
+      sa.miq_scsi_targets.each do |st|
         luns.concat(st.miq_scsi_luns)
-      }
-    }
-    return luns
+      end
+    end
+    luns
   end
 
   def enabled_inbound_ports
@@ -1672,92 +1667,88 @@ class Host < ActiveRecord::Base
   end
 
   def service_names
-    self.system_services.collect(&:name).uniq.sort
+    system_services.collect(&:name).uniq.sort
   end
 
   def enabled_run_level_0_services
-    self.get_service_names(0)
+    get_service_names(0)
   end
 
   def enabled_run_level_1_services
-    self.get_service_names(2)
+    get_service_names(2)
   end
 
   def enabled_run_level_2_services
-    self.get_service_names(2)
+    get_service_names(2)
   end
 
   def enabled_run_level_3_services
-    self.get_service_names(3)
+    get_service_names(3)
   end
 
   def enabled_run_level_4_services
-    self.get_service_names(4)
+    get_service_names(4)
   end
 
   def enabled_run_level_5_services
-    self.get_service_names(5)
+    get_service_names(5)
   end
 
   def enabled_run_level_6_services
-    self.get_service_names(6)
+    get_service_names(6)
   end
 
   def get_service_names(*args)
     if args.length == 0
-      services = self.host_services
+      services = host_services
     elsif args.length == 1
-      services = self.host_services.where("enable_run_levels LIKE ?", "%#{args.first}%")
+      services = host_services.where("enable_run_levels LIKE ?", "%#{args.first}%")
     end
     services.order(:name).uniq.pluck(:name)
   end
 
   def control_supported?
-    return false if self.vmm_vendor == VENDOR_TYPES["vmware"] && self.vmm_product == "Workstation"
-    return true
+    !(vmm_vendor == VENDOR_TYPES["vmware"] && vmm_product == "Workstation")
   end
 
   def event_where_clause(assoc=:ems_events)
     case assoc.to_sym
     when :ems_events
-      ["host_id = ? OR dest_host_id = ?", self.id, self.id]
+      ["host_id = ? OR dest_host_id = ?", id, id]
     when :policy_events
-      ["host_id = ?", self.id]
+      ["host_id = ?", id]
     end
   end
 
   def has_vm_scan_affinity?
-    self.with_relationship_type("vm_scan_affinity") { self.parent_count > 0 }
+    with_relationship_type("vm_scan_affinity") { parent_count > 0 }
   end
 
   def vm_scan_affinity=(list)
     list = [list].flatten
-    self.with_relationship_type("vm_scan_affinity") do
-      self.remove_all_parents
-      list.each { |parent| self.set_parent(parent) }
+    with_relationship_type("vm_scan_affinity") do
+      remove_all_parents
+      list.each { |parent| set_parent(parent) }
     end
-    return true
+    true
   end
   alias set_vm_scan_affinity vm_scan_affinity=
 
   def vm_scan_affinity
-    self.with_relationship_type("vm_scan_affinity") { self.parents }
+    with_relationship_type("vm_scan_affinity") { parents }
   end
   alias get_vm_scan_affinity vm_scan_affinity
 
   def processes
-    return [] if self.operating_system.nil?
-    return self.operating_system.processes
+    operating_system.try(:processes) || []
   end
 
   def event_logs
-    return [] if self.operating_system.nil?
-    return self.operating_system.event_logs
+    operating_system.try(:event_logs) || []
   end
 
   def get_reserve(field)
-    rp = self.default_resource_pool
-    rp.nil? ? nil : rp.send(field)
+    default_resource_pool.try(:send, field)
   end
 
   def cpu_reserve
@@ -1769,11 +1760,11 @@ class Host < ActiveRecord::Base
   end
 
   def total_vm_cpu_reserve
-    self.vms.inject(0) {|t, vm| t += (vm.cpu_reserve || 0) }
+    vms.inject(0) { |t, vm| t + (vm.cpu_reserve || 0) }
   end
 
   def total_vm_memory_reserve
-    self.vms.inject(0) {|t, vm| t += (vm.memory_reserve || 0) }
+    vms.inject(0) { |t, vm| t + (vm.memory_reserve || 0) }
   end
 
   def total_vcpus
@@ -1784,7 +1775,7 @@ class Host < ActiveRecord::Base
     cores = total_vcpus
     return 0 if cores == 0
 
-    total_vm_vcpus = self.vms.inject(0) {|t, vm| t += (vm.num_cpu || 0) }
+    total_vm_vcpus = vms.inject(0) {|t, vm| t += (vm.num_cpu || 0) }
     (total_vm_vcpus / cores)
   end
 
@@ -1800,59 +1791,59 @@ class Host < ActiveRecord::Base
     hardware.nil? ? 0 : hardware.cores_per_socket
   end
 
-  def domain()
-    names = self.hostname.to_s.split(',').first.to_s.split('.')
+  def domain
+    names = hostname.to_s.split(',').first.to_s.split('.')
     return names[1..-1].join('.') unless names.blank?
     nil
   end
 
   def base_storage_extents
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.base_storage_extents
+    miq_cim_instance.try(:base_storage_extents) || []
   end
 
   def base_storage_extents_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.base_storage_extents_size
+    miq_cim_instance.try(:base_storage_extents_size) || 0
   end
 
   def storage_systems
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.storage_systems
+    miq_cim_instance.try(:storage_systems) || []
   end
 
   def storage_systems_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.storage_systems_size
+    miq_cim_instance.try(:storage_systems_size) || 0
   end
 
   def storage_volumes
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.storage_volumes
+    miq_cim_instance.try(:storage_volumes) || []
   end
 
   def storage_volumes_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.storage_volumes_size
+    miq_cim_instance.try(:storage_volumes_size) || 0
   end
 
   def file_shares
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.file_shares
+    miq_cim_instance.try(:file_shares) || []
   end
 
   def file_shares_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.file_shares_size
+    miq_cim_instance.try(:file_shares_size) || 0
   end
 
   def logical_disks
-    return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.logical_disks
+    miq_cim_instance.try(:logical_disks) || []
   end
 
   def logical_disks_size
-    return self.miq_cim_instance.nil? ? 0 : self.miq_cim_instance.logical_disks_size
+    miq_cim_instance.try(:logical_disks_size) || 0
   end
 
-  def create_pxe_install_request(values, requester_id, auto_approve=false)
-    values[:host_ids] = [self.id]
+  def create_pxe_install_request(values, requester_id, auto_approve = false)
+    values[:host_ids] = [id]
     MiqHostProvisionRequest.create_request(values, requester_id, auto_approve)
   end
 
   def update_pxe_install_request(request, values, requester_id)
-    values[:host_ids] = [self.id]
+    values[:host_ids] = [id]
     MiqHostProvisionRequest.update_request(request, values, requester_id)
   end
 
@@ -1862,41 +1853,37 @@ class Host < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = :vms
 
-  def perf_rollup_parent(interval_name=nil)
-    if interval_name == 'realtime'
-      self.ems_cluster if self.ems_cluster
-    else
-      self.ems_cluster || self.ext_management_system
-    end
+  def perf_rollup_parent(interval_name = nil)
+    ems_cluster || (ext_management_system if interval_name == 'realtime')
   end
 
-  def get_performance_metric(capture_interval, metric, range, function=nil)
+  def get_performance_metric(capture_interval, metric, range, function = nil)
     # => capture_interval = 'realtime' | 'hourly' | 'daily'
     # => metric = perf column name (real or virtual)
     # => function = :avg | :min | :max
     # => range = [start_time, end_time] | start_time | number in seconds to go back
 
     time_range = if range.kind_of?(Array)
-      range
-    elsif range.kind_of?(Time)
-      [range.utc, Time.now.utc]
-    elsif range.kind_of?(String)
-      [range.to_time(:utc), Time.now.utc]
-    elsif range.kind_of?(Integer)
-      [range.seconds.ago.utc, Time.now.utc]
-    else
-      raise "Range #{range} is invalid"
-    end
+                   range
+                 elsif range.kind_of?(Time)
+                   [range.utc, Time.now.utc]
+                 elsif range.kind_of?(String)
+                   [range.to_time(:utc), Time.now.utc]
+                 elsif range.kind_of?(Integer)
+                   [range.seconds.ago.utc, Time.now.utc]
+                 else
+                   raise "Range #{range} is invalid"
+                 end
 
     klass = case capture_interval.to_s
-    when 'realtime'; HostMetric
-    else             HostPerformance
-    end
+            when 'realtime' then HostMetric
+            else HostPerformance
+            end
 
     perfs = klass.where(
       [
         "resource_id = ? AND capture_interval_name = ? AND timestamp >= ? AND timestamp <= ?",
-        self.id,
+        id,
         capture_interval.to_s,
         time_range[0],
         time_range[1]
@@ -1904,8 +1891,8 @@ class Host < ActiveRecord::Base
     ).order "timestamp"
 
     if capture_interval.to_sym == :realtime && metric.to_s.starts_with?("v_pct_cpu_")
-      vm_vals_by_ts = self.get_pct_cpu_metric_from_child_vm_performances(metric, capture_interval, time_range)
-      values = perfs.collect {|p| vm_vals_by_ts[p.timestamp] || 0}
+      vm_vals_by_ts = get_pct_cpu_metric_from_child_vm_performances(metric, capture_interval, time_range)
+      values = perfs.collect { |p| vm_vals_by_ts[p.timestamp] || 0 }
     else
       values = perfs.collect(&metric.to_sym)
     end
@@ -1925,12 +1912,13 @@ class Host < ActiveRecord::Base
 
   def get_pct_cpu_metric_from_child_vm_performances(metric, capture_interval, time_range)
     klass = case capture_interval.to_s
-    when 'realtime'; VmMetric
-    else             VmPerformance
-    end
+            when 'realtime' then VmMetric
+            else VmPerformance
+            end
 
-    vm_perfs = klass.all(:conditions => ["parent_host_id = ? AND capture_interval_name = ? AND timestamp >= ? AND timestamp <= ?",
-      self.id,
+    vm_perfs = klass.all(:conditions => [
+      "parent_host_id = ? AND capture_interval_name = ? AND timestamp >= ? AND timestamp <= ?",
+      id,
       capture_interval.to_s,
       time_range[0],
       time_range[1]
@@ -1946,10 +1934,10 @@ class Host < ActiveRecord::Base
       tot = perf_hash[ts].compact.sum
       perf_hash[ts] = perf_hash[ts].empty? ? 0 : (tot / perf_hash[ts].length.to_f)
     end
-    return perf_hash
+    perf_hash
   end
 
-  # Host Discovery Types and Platforms
+  # Host Discovery Types and Platforms
 
   def self.host_discovery_types
     HOST_DISCOVERY_TYPES.values

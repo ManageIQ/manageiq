@@ -62,6 +62,8 @@ SpaceInsideHashLiteralBraces:
 #
 AllCops:
   RunRailsCops: true
+ClassAndModuleChildren:
+  Enabled: false
 Documentation:
   Enabled: false
 Encoding:
@@ -82,3 +84,10 @@ TrailingComma:
   Enabled: false
 WhileUntilModifier:
   Enabled: false
+
+ClassAndModuleCamelCase:
+  Exclude:
+    - lib/miq_automation_engine/service_models/*.rb
+FileName:
+  Exclude:
+    - lib/miq_automation_engine/service_models/*.rb

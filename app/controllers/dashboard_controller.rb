@@ -648,7 +648,7 @@ class DashboardController < ApplicationController
     db_user.update_attributes(:current_group => MiqGroup.find_by_id(params[:to_group]))
 
     # Rebuild the session
-    session_reset(db_user)
+    session_reset
     session_init(db_user)
     session[:group_changed] = true
     url = start_url_for_user(nil) || url_for(:controller => params[:controller], :action => 'show')
@@ -693,8 +693,7 @@ class DashboardController < ApplicationController
     @settings[:display][:startpage]
   end
 
-  # Reset and set the user vars in the session object
-  def session_reset(db_user)  # User record
+  def session_reset
     # Clear session hash just to be sure nothing is left (but copy over some fields)
     winh    = session[:winH]
     winw    = session[:winW]
@@ -706,19 +705,16 @@ class DashboardController < ApplicationController
     session[:winW]     = winw
     session['referer'] = referer
 
-    self.current_user = db_user
-
     # Clear instance vars that end up in the session
     @sb = @edit = @view = @settings = @lastaction = @perf_options = @assign = nil
     @current_page = @search_text = @detail_sortcol = @detail_sortdir = @exp_key = nil
     @server_options = @tl_options = @pp_choices = @panels = @breadcrumbs = nil
-
-    db_user && db_user.userid &&
-      db_user.current_group && db_user.current_group.miq_user_role && true
   end
 
   # Initialize session hash variables for the logged in user
   def session_init(db_user)
+    self.current_user = db_user
+
     # Load settings for this user, if they exist
     @settings = copy_hash(DEFAULT_SETTINGS)             # Start with defaults
     unless db_user == nil || db_user.settings == nil    # If the user has saved settings

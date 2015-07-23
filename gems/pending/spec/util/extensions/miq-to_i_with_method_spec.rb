@@ -1,8 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-to_i_with_method'
-
+require 'util/extensions/miq-to_i_with_method'
 require 'active_support/core_ext/numeric'
 
 describe "to_i_with_method" do

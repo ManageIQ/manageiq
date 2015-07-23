@@ -1,13 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/../../blackbox")
-$:.push("#{File.dirname(__FILE__)}/../../util/diag")
-
 require 'ostruct'
-require 'rubygems'
-require 'VmBlackBox'
-require 'VmwareOps'
-require 'miqping'
+require 'blackbox/VmBlackBox'
+require 'Verbs/implementations/VmwareOps'
+require 'util/diag/miqping'
 
-require_relative '../miqservices_client'
+require 'Verbs/miqservices_client'
 
 class VmdbOps
     def initialize(_ost)

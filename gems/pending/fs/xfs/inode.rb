@@ -1,11 +1,10 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 require 'memory_buffer'
 require 'more_core_extensions/all'
-require 'superblock'
-require 'bmap_btree_record'
-require 'bmap_btree_block'
-require 'bmap_btree_root_node'
+require 'fs/xfs/superblock'
+require 'fs/xfs/bmap_btree_record'
+require 'fs/xfs/bmap_btree_block'
+require 'fs/xfs/bmap_btree_root_node'
 
 module XFS
   TIMESTAMP = BinaryStruct.new([

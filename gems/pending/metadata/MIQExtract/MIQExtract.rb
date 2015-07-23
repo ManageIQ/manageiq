@@ -1,34 +1,22 @@
-#$:.push("#{File.dirname(__FILE__)}/../VMMount")
-#$:.push("#{File.dirname(__FILE__)}/../VmConfig")
-$:.push("#{File.dirname(__FILE__)}/../../MiqVm")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../util/mount")
-$:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../util/win32")
-$:.push("#{File.dirname(__FILE__)}/../linux")
-$:.push("#{File.dirname(__FILE__)}/../ScanProfile")
-$:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
-$:.push("#{File.dirname(__FILE__)}/../../RedHatEnterpriseVirtualizationManagerAPI")
-
-require 'MiqVm'
-require 'md5deep'
-require 'miq-xml'
-require 'miq-logger'
+require 'MiqVm/MiqVm'
+require 'metadata/util/md5deep'
+require 'util/miq-xml'
+require 'util/miq-logger'
 require 'ostruct'
-require 'Win32Accounts'
-require 'Win32Software'
-require 'Win32Services'
-require 'Win32System'
-require 'Win32EventLog'
-require 'LinuxUsers'
-require 'LinuxPackages'
-require 'LinuxInitProcs'
-require 'LinuxSystemd'
-require 'LinuxOSInfo'
-require 'VmScanProfiles'
-require 'MiqVim'
-require 'miq-password'
-require 'MiqVimBroker'
+require 'metadata/util/win32/Win32Accounts'
+require 'metadata/util/win32/Win32Software'
+require 'metadata/util/win32/Win32Services'
+require 'metadata/util/win32/Win32System'
+require 'metadata/util/win32/Win32EventLog'
+require 'metadata/linux/LinuxUsers'
+require 'metadata/linux/LinuxPackages'
+require 'metadata/linux/LinuxInitProcs'
+require 'metadata/linux/LinuxSystemd'
+require 'metadata/linux/LinuxOSInfo'
+require 'metadata/ScanProfile/VmScanProfiles'
+require 'VMwareWebService/MiqVim'
+require 'util/miq-password'
+require 'VMwareWebService/MiqVimBroker'
 
 class MIQExtract
 	attr_reader :systemFsMsg, :systemFs, :vm

@@ -1,9 +1,5 @@
-
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-
-require 'RcuService'
-require 'VimTypes'
+require 'RcuWebService/RcuService'
+require 'VMwareWebService/VimTypes'
 
 class RcuClientBase < RcuService
 	

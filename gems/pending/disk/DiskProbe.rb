@@ -1,5 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/modules")
-
 module DiskProbe
 	MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
 
@@ -22,12 +20,12 @@ module DiskProbe
     mod = nil
 		probes.each do |pmod|
       $log.debug "MIQ(DiskProbe-getDiskMod) Disk probe attempting [#{pmod}] for [#{fname}]"
-			require pmod
+			require_relative "modules/#{pmod}"
 			begin
         mod = Object.const_get(pmod).probe(dobj)
         if mod
           $log.info "MIQ(DiskProbe-getDiskMod) Disk probe detected [#{pmod.chomp("Probe")}-#{mod}] for [#{fname}]"
-          require mod
+          require_relative "modules/#{mod}"
           return Object.const_get(mod)
         end
 			rescue => err
@@ -46,7 +44,7 @@ module DiskProbe
     mod = nil
     probes.each do |pmodstr|
       $log.debug "MIQ(DiskProbe-getDiskModForDisk) Disk probe attempting [#{pmodstr}] for [#{fname}]"
-      require pmodstr
+      require_relative "modules/#{pmodstr}"
       begin
         pmod = Object.const_get(pmodstr)
         unless pmod.respond_to?(:stackable?) && pmod.stackable?
@@ -56,7 +54,7 @@ module DiskProbe
         dmodstr = pmod.probeByDisk(disk)
         if dmodstr
           $log.info "MIQ(DiskProbe-getDiskModForDisk) Disk probe detected [#{pmodstr.chomp("Probe")}-#{dmodstr}] for [#{fname}]"
-          require dmodstr
+          require_relative "modules/#{dmodstr}"
           return Object.const_get(dmodstr)
         end
       rescue => err

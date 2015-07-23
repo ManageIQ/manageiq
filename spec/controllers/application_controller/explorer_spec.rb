@@ -24,17 +24,6 @@ describe VmInfraController do
         res.should == active_node
       end
 
-      it "invalid node" do
-        pending("handling invalid nodes") do
-          active_node = "xxx"
-
-          controller.instance_variable_set(:@sb, {:trees => {active_tree => {:active_node => active_node}}, :active_tree => active_tree})
-          res = controller.send(:valid_active_node, active_node)
-          controller.send(:flash_errors?).should be_true
-          res.should == "root"
-        end
-      end
-
       it "node no longer exists" do
         rec = FactoryGirl.create(:service_template_catalog)
         active_node = "stc-#{rec.id + 1}"

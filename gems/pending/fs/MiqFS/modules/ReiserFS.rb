@@ -1,9 +1,8 @@
-# Ext3 stuff.
-$:.push("#{File.dirname(File.expand_path(__FILE__))}/../../ReiserFS")
-require 'ReiserFSSuperblock'
-require 'ReiserFSDirectory'
-require 'ReiserFSDirectoryEntry'
-require 'ReiserFSFileData'
+# ReiserFS stuff.
+require 'fs/ReiserFS/ReiserFSSuperblock'
+require 'fs/ReiserFS/ReiserFSDirectory'
+require 'fs/ReiserFS/ReiserFSDirectoryEntry'
+require 'fs/ReiserFS/ReiserFSFileData'
 
 require 'rufus/lru'
 

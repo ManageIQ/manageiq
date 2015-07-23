@@ -4,5 +4,6 @@ class Container < ActiveRecord::Base
 
   belongs_to :container_group
   delegate   :ext_management_system, :to => :container_group
+  delegate   :container_project, :to => :container_group
   belongs_to :container_definition
 end

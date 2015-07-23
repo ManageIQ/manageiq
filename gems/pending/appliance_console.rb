@@ -56,7 +56,7 @@ $terminal.wrap_at = 80
 $terminal.page_at = 21
 
 
-require 'appliance_console/errors.rb'
+require 'appliance_console/errors'
 
 [:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
 

@@ -667,7 +667,7 @@ class MiqCapacityController < ApplicationController
     end
     @sb[:bottlenecks][:groups] = Array.new
     @tl_groups_hash = Hash.new
-    BOTTLENECK_TL_ETYPE_GROUPS.each do |gname,list|
+    EmsEvent.bottleneck_event_groups.each do |gname,list|
       @sb[:bottlenecks][:groups].push(list[:name].to_s)
       @tl_groups_hash[gname] ||= Array.new
       @tl_groups_hash[gname].concat(list[:detail]).uniq!

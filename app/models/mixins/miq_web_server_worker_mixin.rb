@@ -13,9 +13,13 @@ module MiqWebServerWorkerMixin
       BINDING_ADDRESS
     end
 
+    def self.rails_server
+      VMDB::Config.new("vmdb").config.fetch_path(:server, :rails_server) || "thin"
+    end
+
     def self.rails_server_command_line
       @rails_server_command_line ||= begin
-        "#{nice_prefix} #{Rails.root.join("bin", "rails")} server".freeze
+        "#{nice_prefix} #{Rails.root.join("bin", "rails")} server #{rails_server}".freeze
       end
     end
 

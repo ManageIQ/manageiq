@@ -1,10 +1,7 @@
-$:.push("#{File.dirname(__FILE__)}/../../db/MiqBdb")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
 require 'binary_struct'
-require 'miq-hash_struct'
-require 'MiqBdb'
-require 'miq-unicode'
+require 'util/miq-hash_struct'
+require 'db/MiqBdb/MiqBdb'
+require 'util/miq-unicode'
 
 # RPM Specification located at: http://jrpm.sourceforge.net/rpmspec/index.html
 

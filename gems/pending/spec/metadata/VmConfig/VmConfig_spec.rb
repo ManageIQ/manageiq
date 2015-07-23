@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. metadata VmConfig})))
-require 'VmConfig'
+require 'metadata/VmConfig/VmConfig'
 
 describe VmConfig do
   context "#initialize" do

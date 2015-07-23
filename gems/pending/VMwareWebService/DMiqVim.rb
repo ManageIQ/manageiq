@@ -1,8 +1,6 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'MiqVim'
-require 'MiqVimUpdate'
-require 'DMiqVimSync'
+require 'VMwareWebService/MiqVim'
+require 'VMwareWebService/MiqVimUpdate'
+require 'VMwareWebService/DMiqVimSync'
 
 #
 # Class used to wrap locked object and return it through DRB.

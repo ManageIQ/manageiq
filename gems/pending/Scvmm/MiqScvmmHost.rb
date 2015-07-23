@@ -1,4 +1,4 @@
-require 'MiqScvmmVm'
+require 'Scvmm/MiqScvmmVm'
 
 class MiqScvmmHost
   def initialize(invObj, vmh)

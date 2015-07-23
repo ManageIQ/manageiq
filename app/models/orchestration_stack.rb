@@ -12,6 +12,7 @@ class OrchestrationStack < ActiveRecord::Base
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :orchestration_template
+  belongs_to :cloud_tenant
 
   has_many   :vms, :class_name => "ManageIQ::Providers::CloudManager::Vm"
   has_many   :security_groups
@@ -58,7 +59,9 @@ class OrchestrationStack < ActiveRecord::Base
   end
 
   def raw_status
-    ext_management_system.stack_status(name, ems_ref)
+    options = {}
+    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    ext_management_system.stack_status(name, ems_ref, options)
   end
 
   def raw_exists?

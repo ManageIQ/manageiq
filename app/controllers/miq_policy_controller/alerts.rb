@@ -420,7 +420,7 @@ module MiqPolicyController::Alerts
     unless @sb[:alert][:events] # Only create this once
       vm_events = MiqAlert.expression_options("event_threshold").find{|eo|eo[:name]==:event_types}[:values] # Get the allowed events
       @sb[:alert][:events] ||= Hash.new
-      TL_ETYPE_GROUPS.each do |k,v|
+      EmsEvent.event_groups.each do |k,v|
         name = v[:name]
         v[:detail].each do |d|
           @sb[:alert][:events][d] = name + ": " + d if vm_events.include?(d)

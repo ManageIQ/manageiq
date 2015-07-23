@@ -97,7 +97,7 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
 
     tree.sort_by! do |object, _children|
       datacenter = object.kind_of?(EmsFolder) ? object.is_datacenter? : false
-      [SORT_CLASSES.index(object.class.base_class), datacenter, object.name.downcase]
+      [SORT_CLASSES.index(object.class.base_class), datacenter ? 0 : 1, object.name.downcase]
     end
   end
 

@@ -1,9 +1,4 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../..")
-$:.push("#{File.dirname(__FILE__)}/../../disk")
-
-require 'bundler_setup'
+require_relative '../../bundler_setup'
 require 'ostruct'
 require 'log4r'
 

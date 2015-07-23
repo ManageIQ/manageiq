@@ -33,8 +33,8 @@
         :table_class                => "tagstable",
         :extra_table_attributes     => "cellspacing=1"})
   - when :service
-    - keys = wf.is_a?(MiqProvisionRedhatWorkflow) ? [:src_vm_id, :provision_type, :linked_clone] : [:vm_filter, :src_vm_id, :provision_type, :linked_clone, :snapshot]
-    - label = wf.is_a?(MiqProvisionRedhatWorkflow) ? _("Selected VM") : _("Select")
+    - keys = wf.is_a?(ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow) ? [:src_vm_id, :provision_type, :linked_clone] : [:vm_filter, :src_vm_id, :provision_type, :linked_clone, :snapshot]
+    - label = wf.is_a?(ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow) ? _("Selected VM") : _("Select")
     = render(:partial => "#{prefix}prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,

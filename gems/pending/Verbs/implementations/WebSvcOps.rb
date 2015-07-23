@@ -1,5 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
 class WebSvcOps
   def initialize(ost)
     if ost.verbose

@@ -1,8 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-
-require 'miq-password'
-require 'MiqVim'
+require 'util/miq-password'
+require 'VMwareWebService/MiqVim'
 
 module VolMgrPlatformSupportLinux
         

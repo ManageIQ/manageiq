@@ -2,7 +2,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require "../MiqPayloadOutputter"
+require "WriteVm/MiqPayloadOutputter"
 
 MB = 1024 * 1024
 BLOCK_SIZE = 512

@@ -1,10 +1,8 @@
 require 'rufus/lru'
 
 # XFS stuff.
-$LOAD_PATH.push("#{File.dirname(File.expand_path(__FILE__))}/../../xfs")
-require 'superblock'
-# require 'xfs_directory_entry'
-require 'directory'
+require 'fs/xfs/superblock'
+require 'fs/xfs/directory'
 
 # XFS file system interface to MiqFS.
 module XFS

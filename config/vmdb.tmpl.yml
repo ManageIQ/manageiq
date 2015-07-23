@@ -193,6 +193,7 @@ server:
   mks_version: 2.1.0.0
   monitor_poll: 5.seconds
   name: EVM
+  rails_server: "thin"
   remote_console_type: VMRC
   role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,web_services,automate
   server_dequeue_frequency: 5.seconds
@@ -499,7 +500,6 @@ workers:
         - schema_migrations
         - server_roles
         - sessions
-        - ui_tasks
         - vim_performances
         - vim_performance_states
         - vim_performance_tag_values

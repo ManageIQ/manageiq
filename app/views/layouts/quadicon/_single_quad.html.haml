@@ -4,7 +4,7 @@
       - img = "cim_base_storage_extent"
     - else
       - img = item.class.to_s.underscore
-  - elsif item.kind_of?(ConfigurationManagerForeman)
+  - elsif item.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager)
     - img = "vendor-#{item.image_name}"
   - elsif item.kind_of?(ConfigurationProfile)
     - img = controller.send(:list_row_image, nil, item.class.base_class.to_s.underscore, "configuration_profile", item)

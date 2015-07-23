@@ -122,7 +122,7 @@ describe ApplicationHelper do
       @record_2 = FactoryGirl.create(:vm_openstack, :type => VmOpenstack.name,       :template => false )
       @record_3 = FactoryGirl.create(:vm_openstack, :type => TemplateOpenstack.name, :template => true )
       @record_4 = FactoryGirl.create(:vm_openstack, :type => TemplateOpenstack.name, :template => true )
-      @record_5 = FactoryGirl.create(:vm_redhat,    :type => VmRedhat.name)
+      @record_5 = FactoryGirl.create(:vm_redhat,    :type => ManageIQ::Providers::Redhat::InfraManager::Vm.name)
       @record_6 = FactoryGirl.create(:vm_vmware,    :type => ManageIQ::Providers::Vmware::InfraManager::Vm.name)
     end
 

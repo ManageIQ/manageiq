@@ -2,7 +2,7 @@ class ManageIQ::Providers::InfraManager::Template < MiqTemplate
   default_value_for :cloud, false
 
   def self.eligible_for_provisioning
-    super.where(:type => %w(TemplateRedhat ManageIQ::Providers::Vmware::InfraManager::Template TemplateMicrosoft))
+    super.where(:type => %w(ManageIQ::Providers::Redhat::InfraManager::Template ManageIQ::Providers::Vmware::InfraManager::Template TemplateMicrosoft))
   end
 
   private

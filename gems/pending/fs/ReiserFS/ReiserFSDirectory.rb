@@ -1,7 +1,7 @@
 # encoding: US-ASCII
 
-require 'ReiserFSUtils'
-require 'ReiserFSDirectoryEntry'
+require 'fs/ReiserFS/ReiserFSUtils'
+require 'fs/ReiserFS/ReiserFSDirectoryEntry'
 
 module ReiserFS
 	

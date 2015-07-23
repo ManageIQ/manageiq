@@ -11,7 +11,7 @@ module WebServerWorkerMixin
   def do_before_work_loop
     @worker.release_db_connection
 
-    # Since puma traps interrupts, log that we're going away and update our worker row
+    # Since puma/thin traps interrupts, log that we're going away and update our worker row
     at_exit { do_exit("Exit request received.") }
   end
 end

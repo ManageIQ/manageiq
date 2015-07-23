@@ -26,9 +26,8 @@ module MiqAeServiceMiqRequestTaskSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request_task'].miq_request"
       @ae_method.update_attributes(:data => method)
 
-      fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      approver_role = FactoryGirl.create(:ui_task_set_approver)
-      miq_request   = FactoryGirl.create(:vm_migrate_request, :userid => fred.userid)
+      user        = FactoryGirl.create(:user)
+      miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
       @miq_request_task.update_attributes(:miq_request => miq_request)
 
       result = invoke_ae.root(@ae_result_key)

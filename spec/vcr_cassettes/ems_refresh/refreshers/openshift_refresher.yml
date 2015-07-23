@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://10.35.0.167:8443/osapi/v1beta1/projects
+    uri: https://10.35.0.174:8443/oapi/v1/projects
     body:
       encoding: US-ASCII
       string: ''
@@ -18,82 +18,22 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Cache-Control:
+      - no-store
       Content-Type:
       - application/json
       Date:
-      - Wed, 15 Apr 2015 23:13:53 GMT
+      - Sun, 12 Jul 2015 09:20:24 GMT
       Content-Length:
-      - '1399'
+      - '1663'
     body:
       encoding: UTF-8
-      string: |-
-        {
-          "kind": "ProjectList",
-          "apiVersion": "v1beta1",
-          "metadata": {
-            "selfLink": "/osapi/v1beta1/projects"
-          },
-          "items": [
-            {
-              "metadata": {
-                "name": "openshift",
-                "selfLink": "/osapi/v1beta1/projects/openshift",
-                "uid": "581874d7-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "37",
-                "creationTimestamp": "2015-04-15T15:37:37Z"
-              },
-              "spec": {
-                "finalizers": [
-                  "openshift.com/project",
-                  "kubernetes"
-                ]
-              },
-              "status": {
-                "phase": "Active"
-              }
-            },
-            {
-              "metadata": {
-                "name": "default",
-                "selfLink": "/osapi/v1beta1/projects/default",
-                "uid": "5535c522-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "3",
-                "creationTimestamp": "2015-04-15T15:37:32Z"
-              },
-              "spec": {
-                "finalizers": [
-                  "kubernetes"
-                ]
-              },
-              "status": {
-                "phase": "Active"
-              }
-            },
-            {
-              "metadata": {
-                "name": "master",
-                "selfLink": "/osapi/v1beta1/projects/master",
-                "uid": "580ef998-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "36",
-                "creationTimestamp": "2015-04-15T15:37:37Z"
-              },
-              "spec": {
-                "finalizers": [
-                  "openshift.com/project",
-                  "kubernetes"
-                ]
-              },
-              "status": {
-                "phase": "Active"
-              }
-            }
-          ]
-        }
+      string: '{"kind":"ProjectList","apiVersion":"v1","metadata":{"selfLink":"/oapi/v1/projects"},"items":[{"metadata":{"name":"default","selfLink":"/oapi/v1/projects/default","uid":"2099823d-286d-11e5-b5bb-727174f8ab71","resourceVersion":"84","creationTimestamp":"2015-07-12T08:08:06Z","annotations":{"openshift.io/sa.scc.mcs":"s0:c1,c0","openshift.io/sa.scc.uid-range":"1000000000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"openshift","selfLink":"/oapi/v1/projects/openshift","uid":"225dacb3-286d-11e5-b5bb-727174f8ab71","resourceVersion":"92","creationTimestamp":"2015-07-12T08:08:09Z","annotations":{"openshift.io/sa.scc.mcs":"s0:c3,c2","openshift.io/sa.scc.uid-range":"1000010000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"openshift-infra","selfLink":"/oapi/v1/projects/openshift-infra","uid":"221a012e-286d-11e5-b5bb-727174f8ab71","resourceVersion":"104","creationTimestamp":"2015-07-12T08:08:09Z","annotations":{"openshift.io/sa.scc.mcs":"s0:c5,c0","openshift.io/sa.scc.uid-range":"1000020000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"test","selfLink":"/oapi/v1/projects/test","uid":"9f2f3e05-286d-11e5-b5bb-727174f8ab71","resourceVersion":"195","creationTimestamp":"2015-07-12T08:11:39Z","annotations":{"openshift.io/description":"","openshift.io/display-name":"","openshift.io/sa.scc.mcs":"s0:c6,c0","openshift.io/sa.scc.uid-range":"1000030000/10000"}},"spec":{"finalizers":["openshift.io/origin","kubernetes"]},"status":{"phase":"Active"}}]}'
     http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:13:54 GMT
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
 - request:
     method: get
-    uri: https://10.35.0.167:8443/osapi/v1beta1/routes
+    uri: https://10.35.0.174:8443/oapi/v1/routes
     body:
       encoding: US-ASCII
       string: ''
@@ -109,51 +49,26 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Cache-Control:
+      - no-store
       Content-Type:
       - application/json
       Date:
-      - Wed, 15 Apr 2015 23:13:54 GMT
+      - Sun, 12 Jul 2015 09:20:24 GMT
       Transfer-Encoding:
       - chunked
     body:
       encoding: UTF-8
-      string: |-
-        {
-          "kind": "RouteList",
-          "apiVersion": "v1beta1",
-          "metadata": {
-            "selfLink": "/osapi/v1beta1/routes?namespace=",
-            "resourceVersion": "9641"
-          },
-          "items": [
-            {
-              "metadata": {
-                "name": "route-edge",
-                "namespace": "default",
-                "selfLink": "/osapi/v1beta1/routes/route-edge?namespace=default",
-                "uid": "ff8a8e45-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "78",
-                "creationTimestamp": "2015-04-15T15:42:18Z",
-                "labels": {
-                  "template": "application-template-dockerbuild"
-                }
-              },
-              "host": "www.example.com",
-              "serviceName": "frontend",
-              "tls": {
-                "termination": "edge",
-                "certificate": "-----BEGIN CERTIFICATE-----\nMIIDIjCCAgqgAwIBAgIBATANBgkqhkiG9w0BAQUFADCBoTELMAkGA1UEBhMCVVMx\nCzAJBgNVBAgMAlNDMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkxHDAaBgNVBAoME0Rl\nZmF1bHQgQ29tcGFueSBMdGQxEDAOBgNVBAsMB1Rlc3QgQ0ExGjAYBgNVBAMMEXd3\ndy5leGFtcGxlY2EuY29tMSIwIAYJKoZIhvcNAQkBFhNleGFtcGxlQGV4YW1wbGUu\nY29tMB4XDTE1MDExMjE0MTk0MVoXDTE2MDExMjE0MTk0MVowfDEYMBYGA1UEAwwP\nd3d3LmV4YW1wbGUuY29tMQswCQYDVQQIDAJTQzELMAkGA1UEBhMCVVMxIjAgBgkq\nhkiG9w0BCQEWE2V4YW1wbGVAZXhhbXBsZS5jb20xEDAOBgNVBAoMB0V4YW1wbGUx\nEDAOBgNVBAsMB0V4YW1wbGUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMrv\ngu6ZTTefNN7jjiZbS/xvQjyXjYMN7oVXv76jbX8gjMOmg9m0xoVZZFAE4XyQDuCm\n47VRx5Qrf/YLXmB2VtCFvB0AhXr5zSeWzPwaAPrjA4ebG+LUo24ziS8KqNxrFs1M\nmNrQUgZyQC6XIe1JHXc9t+JlL5UZyZQC1IfaJulDAgMBAAGjDTALMAkGA1UdEwQC\nMAAwDQYJKoZIhvcNAQEFBQADggEBAFCi7ZlkMnESvzlZCvv82Pq6S46AAOTPXdFd\nTMvrh12E1sdVALF1P1oYFJzG1EiZ5ezOx88fEDTW+Lxb9anw5/KJzwtWcfsupf1m\nV7J0D3qKzw5C1wjzYHh9/Pz7B1D0KthQRATQCfNf8s6bbFLaw/dmiIUhHLtIH5Qc\nyfrejTZbOSP77z8NOWir+BWWgIDDB2//3AkDIQvT20vmkZRhkqSdT7et4NmXOX/j\njhPti4b2Fie0LeuvgaOdKjCpQQNrYthZHXeVlOLRhMTSk3qUczenkKTOhvP7IS9q\n+Dzv5hqgSfvMG392KWh5f8xXfJNs4W5KLbZyl901MeReiLrPH3w=\n-----END CERTIFICATE-----",
-                "key": "-----BEGIN PRIVATE KEY-----\nMIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMrvgu6ZTTefNN7j\njiZbS/xvQjyXjYMN7oVXv76jbX8gjMOmg9m0xoVZZFAE4XyQDuCm47VRx5Qrf/YL\nXmB2VtCFvB0AhXr5zSeWzPwaAPrjA4ebG+LUo24ziS8KqNxrFs1MmNrQUgZyQC6X\nIe1JHXc9t+JlL5UZyZQC1IfaJulDAgMBAAECgYEAnxOjEj/vrLNLMZE1Q9H7PZVF\nWdP/JQVNvQ7tCpZ3ZdjxHwkvf//aQnuxS5yX2Rnf37BS/TZu+TIkK4373CfHomSx\nUTAn2FsLmOJljupgGcoeLx5K5nu7B7rY5L1NHvdpxZ4YjeISrRtEPvRakllENU5y\ngJE8c2eQOx08ZSRE4TkCQQD7dws2/FldqwdjJucYijsJVuUdoTqxP8gWL6bB251q\nelP2/a6W2elqOcWId28560jG9ZS3cuKvnmu/4LG88vZFAkEAzphrH3673oTsHN+d\nuBd5uyrlnGjWjuiMKv2TPITZcWBjB8nJDSvLneHF59MYwejNNEof2tRjgFSdImFH\nmi995wJBAMtPjW6wiqRz0i41VuT9ZgwACJBzOdvzQJfHgSD9qgFb1CU/J/hpSRIM\nkYvrXK9MbvQFvG6x4VuyT1W8mpe1LK0CQAo8VPpffhFdRpF7psXLK/XQ/0VLkG3O\nKburipLyBg/u9ZkaL0Ley5zL5dFBjTV2Qkx367Ic2b0u9AYTCcgi2DsCQQD3zZ7B\nv7BOm7MkylKokY2MduFFXU0Bxg6pfZ7q3rvg8gqhUFbaMStPRYg6myiDiW/JfLhF\nTcFT4touIo7oriFJ\n-----END PRIVATE KEY-----",
-                "caCertificate": "-----BEGIN CERTIFICATE-----\nMIIEFzCCAv+gAwIBAgIJALK1iUpF2VQLMA0GCSqGSIb3DQEBBQUAMIGhMQswCQYD\nVQQGEwJVUzELMAkGA1UECAwCU0MxFTATBgNVBAcMDERlZmF1bHQgQ2l0eTEcMBoG\nA1UECgwTRGVmYXVsdCBDb21wYW55IEx0ZDEQMA4GA1UECwwHVGVzdCBDQTEaMBgG\nA1UEAwwRd3d3LmV4YW1wbGVjYS5jb20xIjAgBgkqhkiG9w0BCQEWE2V4YW1wbGVA\nZXhhbXBsZS5jb20wHhcNMTUwMTEyMTQxNTAxWhcNMjUwMTA5MTQxNTAxWjCBoTEL\nMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlNDMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkx\nHDAaBgNVBAoME0RlZmF1bHQgQ29tcGFueSBMdGQxEDAOBgNVBAsMB1Rlc3QgQ0Ex\nGjAYBgNVBAMMEXd3dy5leGFtcGxlY2EuY29tMSIwIAYJKoZIhvcNAQkBFhNleGFt\ncGxlQGV4YW1wbGUuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA\nw2rK1J2NMtQj0KDug7g7HRKl5jbf0QMkMKyTU1fBtZ0cCzvsF4CqV11LK4BSVWaK\nrzkaXe99IVJnH8KdOlDl5Dh/+cJ3xdkClSyeUT4zgb6CCBqg78ePp+nN11JKuJlV\nIG1qdJpB1J5O/kCLsGcTf7RS74MtqMFo96446Zvt7YaBhWPz6gDaO/TUzfrNcGLA\nEfHVXkvVWqb3gqXUztZyVex/gtP9FXQ7gxTvJml7UkmT0VAFjtZnCqmFxpLZFZ15\n+qP9O7Q2MpsGUO/4vDAuYrKBeg1ZdPSi8gwqUP2qWsGd9MIWRv3thI2903BczDc7\nr8WaIbm37vYZAS9G56E4+wIDAQABo1AwTjAdBgNVHQ4EFgQUugLrSJshOBk5TSsU\nANs4+SmJUGwwHwYDVR0jBBgwFoAUugLrSJshOBk5TSsUANs4+SmJUGwwDAYDVR0T\nBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOCAQEAaMJ33zAMV4korHo5aPfayV3uHoYZ\n1ChzP3eSsF+FjoscpoNSKs91ZXZF6LquzoNezbfiihK4PYqgwVD2+O0/Ty7UjN4S\nqzFKVR4OS/6lCJ8YncxoFpTntbvjgojf1DEataKFUN196PAANc3yz8cWHF4uvjPv\nWkgFqbIjb+7D1YgglNyovXkRDlRZl0LD1OQ0ZWhd4Ge1qx8mmmanoBeYZ9+DgpFC\nj9tQAbS867yeOryNe7sEOIpXAAqK/DTu0hB6+ySsDfMo4piXCc2aA/eI2DCuw08e\nw17Dz9WnupZjVdwTKzDhFgJZMLDqn37HQnT6EemLFqbcR0VPEnfyhDtZIQ==\n-----END CERTIFICATE-----"
-              }
-            }
-          ]
-        }
+      string: '{"kind":"RouteList","apiVersion":"v1","metadata":{"selfLink":"/oapi/v1/routes","resourceVersion":"3336"},"items":[{"metadata":{"name":"route-edge","namespace":"test","selfLink":"/oapi/v1/namespaces/test/routes/route-edge","uid":"f3b59d42-2870-11e5-b5bb-727174f8ab71","resourceVersion":"388","creationTimestamp":"2015-07-12T08:35:29Z","labels":{"template":"application-template-dockerbuild"},"annotations":{"openshift.io/host.generated":"false"}},"spec":{"host":"www.example.com","to":{"kind":"Service","name":"frontend"},"tls":{"termination":"edge","certificate":"-----BEGIN
+        CERTIFICATE-----\nMIIDIjCCAgqgAwIBAgIBATANBgkqhkiG9w0BAQUFADCBoTELMAkGA1UEBhMCVVMx\nCzAJBgNVBAgMAlNDMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkxHDAaBgNVBAoME0Rl\nZmF1bHQgQ29tcGFueSBMdGQxEDAOBgNVBAsMB1Rlc3QgQ0ExGjAYBgNVBAMMEXd3\ndy5leGFtcGxlY2EuY29tMSIwIAYJKoZIhvcNAQkBFhNleGFtcGxlQGV4YW1wbGUu\nY29tMB4XDTE1MDExMjE0MTk0MVoXDTE2MDExMjE0MTk0MVowfDEYMBYGA1UEAwwP\nd3d3LmV4YW1wbGUuY29tMQswCQYDVQQIDAJTQzELMAkGA1UEBhMCVVMxIjAgBgkq\nhkiG9w0BCQEWE2V4YW1wbGVAZXhhbXBsZS5jb20xEDAOBgNVBAoMB0V4YW1wbGUx\nEDAOBgNVBAsMB0V4YW1wbGUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMrv\ngu6ZTTefNN7jjiZbS/xvQjyXjYMN7oVXv76jbX8gjMOmg9m0xoVZZFAE4XyQDuCm\n47VRx5Qrf/YLXmB2VtCFvB0AhXr5zSeWzPwaAPrjA4ebG+LUo24ziS8KqNxrFs1M\nmNrQUgZyQC6XIe1JHXc9t+JlL5UZyZQC1IfaJulDAgMBAAGjDTALMAkGA1UdEwQC\nMAAwDQYJKoZIhvcNAQEFBQADggEBAFCi7ZlkMnESvzlZCvv82Pq6S46AAOTPXdFd\nTMvrh12E1sdVALF1P1oYFJzG1EiZ5ezOx88fEDTW+Lxb9anw5/KJzwtWcfsupf1m\nV7J0D3qKzw5C1wjzYHh9/Pz7B1D0KthQRATQCfNf8s6bbFLaw/dmiIUhHLtIH5Qc\nyfrejTZbOSP77z8NOWir+BWWgIDDB2//3AkDIQvT20vmkZRhkqSdT7et4NmXOX/j\njhPti4b2Fie0LeuvgaOdKjCpQQNrYthZHXeVlOLRhMTSk3qUczenkKTOhvP7IS9q\n+Dzv5hqgSfvMG392KWh5f8xXfJNs4W5KLbZyl901MeReiLrPH3w=\n-----END
+        CERTIFICATE-----","key":"-----BEGIN PRIVATE KEY-----\nMIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMrvgu6ZTTefNN7j\njiZbS/xvQjyXjYMN7oVXv76jbX8gjMOmg9m0xoVZZFAE4XyQDuCm47VRx5Qrf/YL\nXmB2VtCFvB0AhXr5zSeWzPwaAPrjA4ebG+LUo24ziS8KqNxrFs1MmNrQUgZyQC6X\nIe1JHXc9t+JlL5UZyZQC1IfaJulDAgMBAAECgYEAnxOjEj/vrLNLMZE1Q9H7PZVF\nWdP/JQVNvQ7tCpZ3ZdjxHwkvf//aQnuxS5yX2Rnf37BS/TZu+TIkK4373CfHomSx\nUTAn2FsLmOJljupgGcoeLx5K5nu7B7rY5L1NHvdpxZ4YjeISrRtEPvRakllENU5y\ngJE8c2eQOx08ZSRE4TkCQQD7dws2/FldqwdjJucYijsJVuUdoTqxP8gWL6bB251q\nelP2/a6W2elqOcWId28560jG9ZS3cuKvnmu/4LG88vZFAkEAzphrH3673oTsHN+d\nuBd5uyrlnGjWjuiMKv2TPITZcWBjB8nJDSvLneHF59MYwejNNEof2tRjgFSdImFH\nmi995wJBAMtPjW6wiqRz0i41VuT9ZgwACJBzOdvzQJfHgSD9qgFb1CU/J/hpSRIM\nkYvrXK9MbvQFvG6x4VuyT1W8mpe1LK0CQAo8VPpffhFdRpF7psXLK/XQ/0VLkG3O\nKburipLyBg/u9ZkaL0Ley5zL5dFBjTV2Qkx367Ic2b0u9AYTCcgi2DsCQQD3zZ7B\nv7BOm7MkylKokY2MduFFXU0Bxg6pfZ7q3rvg8gqhUFbaMStPRYg6myiDiW/JfLhF\nTcFT4touIo7oriFJ\n-----END
+        PRIVATE KEY-----","caCertificate":"-----BEGIN CERTIFICATE-----\nMIIEFzCCAv+gAwIBAgIJALK1iUpF2VQLMA0GCSqGSIb3DQEBBQUAMIGhMQswCQYD\nVQQGEwJVUzELMAkGA1UECAwCU0MxFTATBgNVBAcMDERlZmF1bHQgQ2l0eTEcMBoG\nA1UECgwTRGVmYXVsdCBDb21wYW55IEx0ZDEQMA4GA1UECwwHVGVzdCBDQTEaMBgG\nA1UEAwwRd3d3LmV4YW1wbGVjYS5jb20xIjAgBgkqhkiG9w0BCQEWE2V4YW1wbGVA\nZXhhbXBsZS5jb20wHhcNMTUwMTEyMTQxNTAxWhcNMjUwMTA5MTQxNTAxWjCBoTEL\nMAkGA1UEBhMCVVMxCzAJBgNVBAgMAlNDMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkx\nHDAaBgNVBAoME0RlZmF1bHQgQ29tcGFueSBMdGQxEDAOBgNVBAsMB1Rlc3QgQ0Ex\nGjAYBgNVBAMMEXd3dy5leGFtcGxlY2EuY29tMSIwIAYJKoZIhvcNAQkBFhNleGFt\ncGxlQGV4YW1wbGUuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA\nw2rK1J2NMtQj0KDug7g7HRKl5jbf0QMkMKyTU1fBtZ0cCzvsF4CqV11LK4BSVWaK\nrzkaXe99IVJnH8KdOlDl5Dh/+cJ3xdkClSyeUT4zgb6CCBqg78ePp+nN11JKuJlV\nIG1qdJpB1J5O/kCLsGcTf7RS74MtqMFo96446Zvt7YaBhWPz6gDaO/TUzfrNcGLA\nEfHVXkvVWqb3gqXUztZyVex/gtP9FXQ7gxTvJml7UkmT0VAFjtZnCqmFxpLZFZ15\n+qP9O7Q2MpsGUO/4vDAuYrKBeg1ZdPSi8gwqUP2qWsGd9MIWRv3thI2903BczDc7\nr8WaIbm37vYZAS9G56E4+wIDAQABo1AwTjAdBgNVHQ4EFgQUugLrSJshOBk5TSsU\nANs4+SmJUGwwHwYDVR0jBBgwFoAUugLrSJshOBk5TSsUANs4+SmJUGwwDAYDVR0T\nBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOCAQEAaMJ33zAMV4korHo5aPfayV3uHoYZ\n1ChzP3eSsF+FjoscpoNSKs91ZXZF6LquzoNezbfiihK4PYqgwVD2+O0/Ty7UjN4S\nqzFKVR4OS/6lCJ8YncxoFpTntbvjgojf1DEataKFUN196PAANc3yz8cWHF4uvjPv\nWkgFqbIjb+7D1YgglNyovXkRDlRZl0LD1OQ0ZWhd4Ge1qx8mmmanoBeYZ9+DgpFC\nj9tQAbS867yeOryNe7sEOIpXAAqK/DTu0hB6+ySsDfMo4piXCc2aA/eI2DCuw08e\nw17Dz9WnupZjVdwTKzDhFgJZMLDqn37HQnT6EemLFqbcR0VPEnfyhDtZIQ==\n-----END
+        CERTIFICATE-----"}},"status":{}}]}'
     http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:13:55 GMT
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
 - request:
     method: get
-    uri: https://10.35.0.167:8443/api/v1beta3/pods
+    uri: https://10.35.0.174:8443/api/v1beta3/pods
     body:
       encoding: US-ASCII
       string: ''
@@ -169,223 +84,27 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Cache-Control:
+      - no-store
       Content-Type:
       - application/json
       Date:
-      - Wed, 15 Apr 2015 23:13:55 GMT
+      - Sun, 12 Jul 2015 09:20:24 GMT
       Transfer-Encoding:
       - chunked
     body:
       encoding: UTF-8
-      string: |-
-        {
-          "kind": "PodList",
-          "apiVersion": "v1beta3",
-          "metadata": {
-            "selfLink": "/api/v1beta3/pods",
-            "resourceVersion": "9642"
-          },
-          "items": [
-            {
-              "metadata": {
-                "name": "database-1-peca1",
-                "generateName": "database-1-",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/pods/database-1-peca1",
-                "uid": "6d7f94f4-e386-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "9642",
-                "creationTimestamp": "2015-04-15T15:45:23Z",
-                "labels": {
-                  "deployment": "database-1",
-                  "deploymentconfig": "database",
-                  "name": "database",
-                  "template": "application-template-dockerbuild"
-                },
-                "annotations": {
-                  "deployment": "database-1",
-                  "deploymentConfig": "database",
-                  "deploymentVersion": "1"
-                }
-              },
-              "spec": {
-                "volumes": null,
-                "containers": [
-                  {
-                    "name": "ruby-helloworld-database",
-                    "image": "mysql",
-                    "ports": [
-                      {
-                        "containerPort": 3306,
-                        "protocol": "TCP"
-                      }
-                    ],
-                    "env": [
-                      {
-                        "name": "MYSQL_USER",
-                        "value": "userNO1"
-                      },
-                      {
-                        "name": "MYSQL_PASSWORD",
-                        "value": "y2jq00EQ"
-                      },
-                      {
-                        "name": "MYSQL_DATABASE",
-                        "value": "root"
-                      }
-                    ],
-                    "resources": {},
-                    "terminationMessagePath": "/dev/termination-log",
-                    "imagePullPolicy": "IfNotPresent",
-                    "capabilities": {}
-                  }
-                ],
-                "restartPolicy": "Always",
-                "dnsPolicy": "ClusterFirst",
-                "host": "dhcp-0-167.tlv.redhat.com"
-              },
-              "status": {
-                "phase": "Running",
-                "Condition": [
-                  {
-                    "type": "Ready",
-                    "status": "False"
-                  }
-                ],
-                "hostIP": "10.35.0.167",
-                "podIP": "172.17.0.4",
-                "containerStatuses": [
-                  {
-                    "name": "ruby-helloworld-database",
-                    "state": {
-                      "termination": {
-                        "exitCode": 1,
-                        "startedAt": "2015-04-15T23:13:53Z",
-                        "finishedAt": "2015-04-15T23:13:53Z"
-                      }
-                    },
-                    "lastState": {},
-                    "ready": false,
-                    "restartCount": 7721,
-                    "image": "mysql",
-                    "imageID": "docker://0feafece277df54a766a41100dcba4a7abfae2219c06087c4f3b507e73860866",
-                    "containerID": "docker://139be9e3f41614fc8212314f44ada59ad6d48a3fd0011aeba37ea3b0e9313f9d"
-                  }
-                ]
-              }
-            },
-            {
-              "metadata": {
-                "name": "ruby-sample-build-1",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/pods/ruby-sample-build-1",
-                "uid": "01ebac76-e386-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "131",
-                "creationTimestamp": "2015-04-15T15:42:22Z",
-                "labels": {
-                  "build": "ruby-sample-build-1",
-                  "buildconfig": "ruby-sample-build",
-                  "name": "ruby-sample-build",
-                  "template": "application-template-dockerbuild"
-                }
-              },
-              "spec": {
-                "volumes": [
-                  {
-                    "name": "docker-socket",
-                    "hostPath": {
-                      "path": "/var/run/docker.sock"
-                    },
-                    "emptyDir": null,
-                    "gcePersistentDisk": null,
-                    "gitRepo": null,
-                    "secret": null,
-                    "nfs": null,
-                    "iscsi": null,
-                    "glusterfs": null
-                  }
-                ],
-                "containers": [
-                  {
-                    "name": "docker-build",
-                    "image": "openshift/origin-docker-builder:v0.4.3",
-                    "args": [
-                      "--loglevel=0"
-                    ],
-                    "env": [
-                      {
-                        "name": "BUILD",
-                        "value": "{\"kind\":\"Build\",\"apiVersion\":\"v1beta1\",\"metadata\":{\"name\":\"ruby-sample-build-1\",\"namespace\":\"default\",\"selfLink\":\"/osapi/v1beta1/builds/ruby-sample-build-1?namespace=default\",\"uid\":\"017dac7b-e386-11e4-9d96-f8b156af4ae1\",\"resourceVersion\":\"95\",\"creationTimestamp\":\"2015-04-15T15:42:21Z\",\"labels\":{\"buildconfig\":\"ruby-sample-build\",\"name\":\"ruby-sample-build\",\"template\":\"application-template-dockerbuild\"}},\"parameters\":{\"source\":{\"type\":\"Git\",\"git\":{\"uri\":\"git://github.com/openshift/ruby-hello-world.git\"}},\"strategy\":{\"type\":\"Docker\",\"dockerStrategy\":{}},\"output\":{\"to\":{\"kind\":\"ImageStream\",\"name\":\"origin-ruby-sample\"}}},\"status\":\"Pending\",\"config\":{\"kind\":\"BuildConfig\",\"namespace\":\"default\",\"name\":\"ruby-sample-build\"}}"
-                      }
-                    ],
-                    "resources": {},
-                    "volumeMounts": [
-                      {
-                        "name": "docker-socket",
-                        "mountPath": "/var/run/docker.sock"
-                      }
-                    ],
-                    "terminationMessagePath": "/dev/termination-log",
-                    "privileged": true,
-                    "imagePullPolicy": "IfNotPresent",
-                    "capabilities": {}
-                  }
-                ],
-                "restartPolicy": "Never",
-                "dnsPolicy": "ClusterFirst",
-                "host": "dhcp-0-167.tlv.redhat.com"
-              },
-              "status": {
-                "phase": "Failed",
-                "Condition": [
-                  {
-                    "type": "Ready",
-                    "status": "False"
-                  }
-                ],
-                "hostIP": "10.35.0.167",
-                "containerStatuses": [
-                  {
-                    "name": "docker-build",
-                    "state": {
-                      "termination": {
-                        "exitCode": 255,
-                        "startedAt": "2015-04-15T15:45:31Z",
-                        "finishedAt": "2015-04-15T15:45:31Z"
-                      }
-                    },
-                    "lastState": {},
-                    "ready": false,
-                    "restartCount": 0,
-                    "image": "openshift/origin-docker-builder:v0.4.3",
-                    "imageID": "docker://793f8f19947f0b3b7cf24ca61585564c2d47400ee8008a70cdfa9a9695e11927",
-                    "containerID": "docker://2ffe0c127b1fa8443adee1827fb214ee5130cd1b4d09917be5d52abb06e22701"
-                  },
-                  {
-                    "name": "POD",
-                    "state": {
-                      "termination": {
-                        "exitCode": 0,
-                        "startedAt": "2015-04-15T15:42:44Z",
-                        "finishedAt": "2015-04-15T15:45:33Z"
-                      }
-                    },
-                    "lastState": {},
-                    "ready": false,
-                    "restartCount": 0,
-                    "image": "openshift/origin-pod:v0.4.3",
-                    "imageID": "docker://ef6ab454cb62e01a0ff1f70368e8a0cee4e6c0f860559b8100b25f859cdaecd3",
-                    "containerID": "docker://bce63277ef68e96586958d0c9198d4fe3effd5ccbca61d64b78ba24577213e44"
-                  }
-                ]
-              }
-            }
-          ]
-        }
+      string: '{"kind":"PodList","apiVersion":"v1beta3","metadata":{"selfLink":"/api/v1beta3/pods","resourceVersion":"3336"},"items":[{"metadata":{"name":"database-1-3v6zu","generateName":"database-1-","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/pods/database-1-3v6zu","uid":"fc73bb4b-2870-11e5-b5bb-727174f8ab71","resourceVersion":"464","creationTimestamp":"2015-07-12T08:35:44Z","labels":{"deployment":"database-1","deploymentconfig":"database","name":"database"},"annotations":{"kubernetes.io/created-by":"{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicationController\",\"namespace\":\"test\",\"name\":\"database-1\",\"uid\":\"f40fe760-2870-11e5-b5bb-727174f8ab71\",\"apiVersion\":\"v1\",\"resourceVersion\":\"441\"}}","openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"database","openshift.io/deployment.name":"database-1","openshift.io/scc":"restricted"}},"spec":{"volumes":[{"name":"default-token-x87xi","secret":{"secretName":"default-token-x87xi"}}],"containers":[{"name":"ruby-helloworld-database","image":"openshift/mysql-55-centos7","ports":[{"containerPort":3306,"protocol":"TCP"}],"env":[{"name":"MYSQL_USER","value":"userBPI"},{"name":"MYSQL_PASSWORD","value":"vIhpssM8"},{"name":"MYSQL_DATABASE","value":"root"}],"resources":{},"volumeMounts":[{"name":"default-token-x87xi","readOnly":true,"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent","capabilities":{},"securityContext":{"capabilities":{},"privileged":false,"seLinuxOptions":{"level":"s0:c6,c0"},"runAsUser":1000030000}}],"restartPolicy":"Always","dnsPolicy":"ClusterFirst","serviceAccount":"default","host":"dhcp-0-129.tlv.redhat.com","imagePullSecrets":[{"name":"default-dockercfg-ompz0"}]},"status":{"phase":"Running","Condition":[{"type":"Ready","status":"True"}],"hostIP":"10.35.0.129","podIP":"172.17.0.10","startTime":"2015-07-12T08:35:49Z","containerStatuses":[{"name":"ruby-helloworld-database","state":{"running":{"startedAt":"2015-07-12T08:35:49Z"}},"lastState":{},"ready":true,"restartCount":0,"image":"openshift/mysql-55-centos7","imageID":"docker://5ebf3857e3c73987c6f95696f45297c83cd9fe0c24702f3394a068f957351847","containerID":"docker://bb608fb1575bcc1a5326517e6c4589df5160fa804daaa4990e837f1154f1c3c9"}]}},{"metadata":{"name":"docker-registry-1-31mzp","generateName":"docker-registry-1-","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/pods/docker-registry-1-31mzp","uid":"8068bdea-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2512","creationTimestamp":"2015-07-12T09:08:03Z","labels":{"deployment":"docker-registry-1","deploymentconfig":"docker-registry","docker-registry":"default"},"annotations":{"kubernetes.io/created-by":"{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicationController\",\"namespace\":\"test\",\"name\":\"docker-registry-1\",\"uid\":\"7dfe3d9b-2875-11e5-b5bb-727174f8ab71\",\"apiVersion\":\"v1\",\"resourceVersion\":\"2495\"}}","openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"docker-registry","openshift.io/deployment.name":"docker-registry-1","openshift.io/scc":"restricted"}},"spec":{"volumes":[{"name":"registry-storage","emptyDir":{}},{"name":"default-token-x87xi","secret":{"secretName":"default-token-x87xi"}}],"containers":[{"name":"registry","image":"openshift/origin-docker-registry:v1.0.1","ports":[{"containerPort":5000,"protocol":"TCP"}],"env":[{"name":"OPENSHIFT_CA_DATA","value":"-----BEGIN
+        CERTIFICATE-----\nMIIC5jCCAdCgAwIBAgIBATALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\naWZ0LXNpZ25lckAxNDM2Njg4NDc5MB4XDTE1MDcxMjA4MDc1OVoXDTE2MDcxMTA4\nMDgwMFowJjEkMCIGA1UEAwwbb3BlbnNoaWZ0LXNpZ25lckAxNDM2Njg4NDc5MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv32kIcGfCuyQqh2KZu5MlgXe\nX5Ib/37WsgSFOUEckhdtwlkA24XjfE+einm7l2SBwTgpVmZLFm+99i/a0lP4b0HZ\neVBfUgX7LiZ7v8jsFBnnxBkir9vDc47//E2HG09iGbilImKs8O4QyduTNsbF1dix\nltPiFKP2p5a/YHjRzB1ZXfYFvrAQHEdgiw0XCszf5s8C4mzsCwePzAmrNVjnLHV6\n7mC25Uj6r+9sjGPJVHIwKw2xkCt/wq2k/9KQGDGIJGKJrngKZkyL/PvZT+HMS8kd\ngV95oEGXqel8fiwXgpq/wU7fz/U+O3WfglbyPeOMKNof0+Sr/VE6V1LnwYHH7QID\nAQABoyMwITAOBgNVHQ8BAf8EBAMCAKQwDwYDVR0TAQH/BAUwAwEB/zALBgkqhkiG\n9w0BAQsDggEBAFKYXpBMHcLI5WrXIjAR1EgxRobMGi6OG5ha17AXyoI3IR4blnq9\nNGvrozC/Ong29jLgkOoCqpRV7bdOehXFdDOiNWgspDBLC1r8QswrlSMS2I7/NA9U\n9/WTdFlrEfog/YAq1oCtLgR/NL/VFU35U+9AooAA2Xq4OSyoZWLGXVx/vrGs7rLJ\nBv0ep+FgrPV2n83RrsmI78tAT1izlLpZs2WZ6x/Udc5y3eisqwMJM/5ohFjJeBg/\nGclV0qIhEIEvMMoYSexiDNGhBnwQCutAdDxT/5nEJlXkOwh85DN22rBsBsgx0+mT\nAVJkA+ru80ANSD+hQeVFydd9jaGb2lMVXS4=\n-----END
+        CERTIFICATE-----\n"},{"name":"OPENSHIFT_CERT_DATA","value":"-----BEGIN CERTIFICATE-----\nMIIDEjCCAfygAwIBAgIBBTALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\naWZ0LXNpZ25lckAxNDM2Njg4NDc5MB4XDTE1MDcxMjA4MDgwM1oXDTE2MDcxMTA4\nMDgwNFowQDEaMBgGA1UEChMRc3lzdGVtOnJlZ2lzdHJpZXMxIjAgBgNVBAMTGXN5\nc3RlbTpvcGVuc2hpZnQtcmVnaXN0cnkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQDFW7h9B4xwMARXCBhYdtkXskr8kEr4nnkNENOi4zedVtr0PppmtIR7\nX83TMrj+hGOt0SxS79OEydNbfW/ZtdjRvzjXS9wI/TjxkyjhwezS5f3BiLwbAjAx\nXGwMeu73vwlLZlbYTOYHfU/hXy+CNOrP4EHMQrAXOu+xzX+j1PkCBDOFZaeHNwbG\ntadoCgmgyKxOq38/WaIyIY9Py2g3YbWFOKlnlO0ZlN2p065zXCxcuruUgUBiJLI6\n003O0JEW6svrWlb/XjLnuX2Anil5+bvV1/Lraj8NEaVOncDelda7WnkRvINKd9uT\npbKxVjx3z9n0FzSPn24J+zBGxJQoixMjAgMBAAGjNTAzMA4GA1UdDwEB/wQEAwIA\noDATBgNVHSUEDDAKBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMAsGCSqGSIb3DQEB\nCwOCAQEAqrtDXcM3BzMUAszosG5gJFZUSOihiwU7a8O+RxiKBBj+0v7A+hEPxxHs\nwTxuW3fdl01HP3LnwUerer8Y1DfySHI8XC+6/cGELEdAQwVCY5ooSLClATgxxCIf\nrPl0+1SXqXVNyeeyV7Cj/cyRKdIGrdaTL8Q9JxioxIT2GEe+w3T+ut18aOZCzWCF\ndXvvTmNWQe6q+R2O9jHFeFI602Go8ZB5blPHd1529ZuWfKYcfJhhOkXug0YsBNkM\n90xiIGXRsHII8ctnn8IaO9E3hZm5y7DzTPY0YhdTzQLksItGgWGROZl7uCWJ0eom\n16pzmakKpaw9lo0UGADD7zLQAasoug==\n-----END
+        CERTIFICATE-----\n"},{"name":"OPENSHIFT_INSECURE","value":"false"},{"name":"OPENSHIFT_KEY_DATA","value":"-----BEGIN
+        RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAxVu4fQeMcDAEVwgYWHbZF7JK/JBK+J55DRDTouM3nVba9D6a\nZrSEe1/N0zK4/oRjrdEsUu/ThMnTW31v2bXY0b8410vcCP048ZMo4cHs0uX9wYi8\nGwIwMVxsDHru978JS2ZW2EzmB31P4V8vgjTqz+BBzEKwFzrvsc1/o9T5AgQzhWWn\nhzcGxrWnaAoJoMisTqt/P1miMiGPT8toN2G1hTipZ5TtGZTdqdOuc1wsXLq7lIFA\nYiSyOtNNztCRFurL61pW/14y57l9gJ4pefm71dfy62o/DRGlTp3A3pXWu1p5EbyD\nSnfbk6WysVY8d8/Z9Bc0j59uCfswRsSUKIsTIwIDAQABAoIBAEAO/VrX0GW5sC7v\nmbddHCns3RoNW8hG59Ot2oPMbIjNYFRW3ZbokPfaqNwcYp96KUCJ3HEvFuDLAad4\nl4160N2Dy9dV8B2a05jVwzdD0rLBpBPlZej+VNYwwYFrhZU0lLe8iAO9MgzMR9lH\nJAyHUJAYokLCgpWHs7Vqljt/LTPRx1YGQoC1Kt/ukVApegsezwm1CdwUvMAbD2Sz\nsYYzNOjCIoel0VaqNnkD3luticUSVLM8zoBnNbyR33dYXvpyP0KZ6AqjdKEKOauy\nXpLm5sAh5MZYrKI+WXVFqSMgcA5epxKFCSNEwWN4i5kUcvw83nFUY6+w6WvxFsgi\nLLR1C4ECgYEA5QLOgR/xRJ5SpmaTvb41IJoGTc/RixKNTwwUzO8XHLfcTC/mSaUd\nTL1e7tlBlnjZ7FR9bfIlDsSWcV9ie3xl8ould+ozjwixEGx8Z1EWkYyHCzh9c4L6\nmd1WDLfYhXYXCAATjXFRGRK2F7oBfgXjwHgh/hKH+/e6Ac2zuAqBxosCgYEA3J32\nQ+Bkhh2uwj+fkpfa9Qa4Z9GO6n0plRZUbPNRfcwGQMtd2bN8UXA7FhBhkn0yn59P\nkih+EoURrjUvPF6GFIaWm9OoAFbQpjIfIbL6imHb3qVhclobt7wAYbqaCrbKEUJs\nQw7+2FsTbnd5kasEIvDmbBDSNY0S1vFN11HokMkCgYEAgbtzTIbR4LNn0sgtTcHg\nytU2WQIvjH83+d24MtgG2cf2TlqcNIAK9xwYGWqN0zYnDdBXNd+EyrbnGtaULaws\n/JfLZwEPsCmWVN2AI+81v8JCBkM8HiHG4T8XriC/0esx5OBWMzxMWs3UxeAjVEb1\n3GSxrQLGciDGCJuFAe9B0T0CgYAt+vInpW3uEeOpco80g1fMN7FZWfC6aImxG+1O\no8u5NzuaZ4hQ5jqj0otOBu3/FP7nC9IOuUfFXlyX/Vex8lVpk79yDMP4BiAIc2vP\nnzjefJTRq5BKwAME4TcHJ1gRoZUt0bU0qLxupVTAckAxHv6GtcSgg0T8ikGB8Nrz\nZIvfGQKBgD4OcnS+0gUqO4vbTLIMXxTxKHFlZ6Ytj2JeXn4o1GS3lWf8kZ150oge\nKm8To2MGM0tRcQXFwHxpZKrO/TLsz3MIcCvMOcQzLwZGLuvI/xeTwMHmGd/RYlBR\n3ZCkXIlDZesKbyMdEf9zjt8I1vcNtZ3+6U+yBK98Qj2+eAzm/zHL\n-----END
+        RSA PRIVATE KEY-----\n"},{"name":"OPENSHIFT_MASTER","value":"https://10.35.0.174:8443"}],"resources":{},"volumeMounts":[{"name":"registry-storage","mountPath":"/registry"},{"name":"default-token-x87xi","readOnly":true,"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent","capabilities":{},"securityContext":{"capabilities":{},"privileged":false,"seLinuxOptions":{"level":"s0:c6,c0"},"runAsUser":1000030000}}],"restartPolicy":"Always","dnsPolicy":"ClusterFirst","serviceAccount":"default","host":"dhcp-0-129.tlv.redhat.com","imagePullSecrets":[{"name":"default-dockercfg-ompz0"}]},"status":{"phase":"Running","Condition":[{"type":"Ready","status":"True"}],"hostIP":"10.35.0.129","podIP":"172.17.0.12","startTime":"2015-07-12T09:08:07Z","containerStatuses":[{"name":"registry","state":{"running":{"startedAt":"2015-07-12T09:08:07Z"}},"lastState":{},"ready":true,"restartCount":0,"image":"openshift/origin-docker-registry:v1.0.1","imageID":"docker://dcb218a3e5ea8c67e0cb4a32b9e01313088032fdf5e0c1fc653ab7f1ae86b2ad","containerID":"docker://a78a8cfb7eb22c879f87bc493ee5cfaeb35515c0c37a492af6a898f59410ebaa"}]}}]}'
     http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:13:56 GMT
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
 - request:
     method: get
-    uri: https://10.35.0.167:8443/api/v1beta3/services
+    uri: https://10.35.0.174:8443/api/v1beta3/services
     body:
       encoding: US-ASCII
       string: ''
@@ -401,144 +120,22 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Cache-Control:
+      - no-store
       Content-Type:
       - application/json
       Date:
-      - Wed, 15 Apr 2015 23:13:56 GMT
+      - Sun, 12 Jul 2015 09:20:24 GMT
       Transfer-Encoding:
       - chunked
     body:
       encoding: UTF-8
-      string: |-
-        {
-          "kind": "ServiceList",
-          "apiVersion": "v1beta3",
-          "metadata": {
-            "selfLink": "/api/v1beta3/services",
-            "resourceVersion": "9642"
-          },
-          "items": [
-            {
-              "metadata": {
-                "name": "database",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/services/database",
-                "uid": "ffe464bf-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "83",
-                "creationTimestamp": "2015-04-15T15:42:19Z",
-                "labels": {
-                  "template": "application-template-dockerbuild"
-                }
-              },
-              "spec": {
-                "ports": [
-                  {
-                    "name": "",
-                    "protocol": "TCP",
-                    "port": 5434,
-                    "targetPort": 3306
-                  }
-                ],
-                "selector": {
-                  "name": "database"
-                },
-                "portalIP": "172.30.121.191",
-                "sessionAffinity": "None"
-              },
-              "status": {}
-            },
-            {
-              "metadata": {
-                "name": "frontend",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/services/frontend",
-                "uid": "ff7e7aa3-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "77",
-                "creationTimestamp": "2015-04-15T15:42:18Z",
-                "labels": {
-                  "template": "application-template-dockerbuild"
-                }
-              },
-              "spec": {
-                "ports": [
-                  {
-                    "name": "",
-                    "protocol": "TCP",
-                    "port": 5432,
-                    "targetPort": 8080
-                  }
-                ],
-                "selector": {
-                  "name": "frontend"
-                },
-                "portalIP": "172.30.208.102",
-                "sessionAffinity": "None"
-              },
-              "status": {}
-            },
-            {
-              "metadata": {
-                "name": "kubernetes",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/services/kubernetes",
-                "uid": "559c353b-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "6",
-                "creationTimestamp": "2015-04-15T15:37:33Z",
-                "labels": {
-                  "component": "apiserver",
-                  "provider": "kubernetes"
-                }
-              },
-              "spec": {
-                "ports": [
-                  {
-                    "name": "",
-                    "protocol": "TCP",
-                    "port": 443,
-                    "targetPort": 443
-                  }
-                ],
-                "selector": null,
-                "portalIP": "172.30.0.2",
-                "sessionAffinity": "None"
-              },
-              "status": {}
-            },
-            {
-              "metadata": {
-                "name": "kubernetes-ro",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/services/kubernetes-ro",
-                "uid": "5594903a-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "4",
-                "creationTimestamp": "2015-04-15T15:37:33Z",
-                "labels": {
-                  "component": "apiserver",
-                  "provider": "kubernetes"
-                }
-              },
-              "spec": {
-                "ports": [
-                  {
-                    "name": "",
-                    "protocol": "TCP",
-                    "port": 80,
-                    "targetPort": 80
-                  }
-                ],
-                "selector": null,
-                "portalIP": "172.30.0.1",
-                "sessionAffinity": "None"
-              },
-              "status": {}
-            }
-          ]
-        }
+      string: '{"kind":"ServiceList","apiVersion":"v1beta3","metadata":{"selfLink":"/api/v1beta3/services","resourceVersion":"3336"},"items":[{"metadata":{"name":"kubernetes","namespace":"default","selfLink":"/api/v1beta3/namespaces/default/services/kubernetes","resourceVersion":"6","creationTimestamp":null,"labels":{"component":"apiserver","provider":"kubernetes"}},"spec":{"ports":[{"protocol":"TCP","port":443,"targetPort":443,"nodePort":0}],"portalIP":"172.30.0.2","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"kubernetes-ro","namespace":"default","selfLink":"/api/v1beta3/namespaces/default/services/kubernetes-ro","resourceVersion":"8","creationTimestamp":null,"labels":{"component":"apiserver","provider":"kubernetes"}},"spec":{"ports":[{"protocol":"TCP","port":80,"targetPort":80,"nodePort":0}],"portalIP":"172.30.0.1","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"database","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/services/database","uid":"f3dcb05a-2870-11e5-b5bb-727174f8ab71","resourceVersion":"395","creationTimestamp":"2015-07-12T08:35:29Z","labels":{"template":"application-template-dockerbuild"}},"spec":{"ports":[{"name":"db","protocol":"TCP","port":5434,"targetPort":3306,"nodePort":0}],"selector":{"name":"database"},"portalIP":"172.30.204.123","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"docker-registry","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/services/docker-registry","uid":"7de3c2eb-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2481","creationTimestamp":"2015-07-12T09:07:59Z","labels":{"docker-registry":"default"}},"spec":{"ports":[{"protocol":"TCP","port":5000,"targetPort":5000,"nodePort":0}],"selector":{"docker-registry":"default"},"portalIP":"172.30.229.244","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"frontend","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/services/frontend","uid":"f3a3e170-2870-11e5-b5bb-727174f8ab71","resourceVersion":"386","creationTimestamp":"2015-07-12T08:35:29Z","labels":{"template":"application-template-dockerbuild"}},"spec":{"ports":[{"name":"web","protocol":"TCP","port":5432,"targetPort":8080,"nodePort":0}],"selector":{"name":"frontend"},"portalIP":"172.30.187.127","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}}]}'
     http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:13:57 GMT
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
 - request:
     method: get
-    uri: https://10.35.0.167:8443/api/v1beta3/replicationcontrollers
+    uri: https://10.35.0.174:8443/api/v1beta3/replicationcontrollers
     body:
       encoding: US-ASCII
       string: ''
@@ -554,112 +151,33 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Cache-Control:
+      - no-store
       Content-Type:
       - application/json
       Date:
-      - Wed, 15 Apr 2015 23:13:57 GMT
+      - Sun, 12 Jul 2015 09:20:24 GMT
       Transfer-Encoding:
       - chunked
     body:
       encoding: UTF-8
-      string: |-
-        {
-          "kind": "ReplicationControllerList",
-          "apiVersion": "v1beta3",
-          "metadata": {
-            "selfLink": "/api/v1beta3/replicationcontrollers",
-            "resourceVersion": "9642"
-          },
-          "items": [
-            {
-              "metadata": {
-                "name": "database-1",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/replicationcontrollers/database-1",
-                "uid": "009ba606-e386-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "127",
-                "creationTimestamp": "2015-04-15T15:42:20Z",
-                "labels": {
-                  "template": "application-template-dockerbuild"
-                },
-                "annotations": {
-                  "deploymentConfig": "database",
-                  "deploymentStatus": "Complete",
-                  "deploymentVersion": "1",
-                  "encodedDeploymentConfig": "{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"v1beta1\",\"metadata\":{\"name\":\"database\",\"namespace\":\"default\",\"selfLink\":\"/osapi/v1beta1/deploymentConfigs/database?namespace=default\",\"uid\":\"fff0254e-e385-11e4-9d96-f8b156af4ae1\",\"resourceVersion\":\"85\",\"creationTimestamp\":\"2015-04-15T15:42:19Z\",\"labels\":{\"template\":\"application-template-dockerbuild\"}},\"triggers\":[{\"type\":\"ConfigChange\"}],\"template\":{\"strategy\":{\"type\":\"Recreate\"},\"controllerTemplate\":{\"replicas\":1,\"replicaSelector\":{\"name\":\"database\"},\"podTemplate\":{\"desiredState\":{\"manifest\":{\"version\":\"v1beta2\",\"id\":\"\",\"volumes\":null,\"containers\":[{\"name\":\"ruby-helloworld-database\",\"image\":\"mysql\",\"ports\":[{\"containerPort\":3306,\"protocol\":\"TCP\"}],\"env\":[{\"name\":\"MYSQL_USER\",\"key\":\"MYSQL_USER\",\"value\":\"userNO1\"},{\"name\":\"MYSQL_PASSWORD\",\"key\":\"MYSQL_PASSWORD\",\"value\":\"y2jq00EQ\"},{\"name\":\"MYSQL_DATABASE\",\"key\":\"MYSQL_DATABASE\",\"value\":\"root\"}],\"resources\":{},\"terminationMessagePath\":\"/dev/termination-log\",\"imagePullPolicy\":\"PullIfNotPresent\",\"capabilities\":{}}],\"restartPolicy\":{\"always\":{}},\"dnsPolicy\":\"ClusterFirst\"}},\"labels\":{\"name\":\"database\",\"template\":\"application-template-dockerbuild\"}}}},\"latestVersion\":1,\"details\":{\"causes\":[{\"type\":\"ConfigChange\"}]}}",
-                  "pod": "deploy-database-1won7l"
-                }
-              },
-              "spec": {
-                "replicas": 1,
-                "selector": {
-                  "deployment": "database-1",
-                  "deploymentconfig": "database",
-                  "name": "database"
-                },
-                "template": {
-                  "metadata": {
-                    "creationTimestamp": null,
-                    "labels": {
-                      "deployment": "database-1",
-                      "deploymentconfig": "database",
-                      "name": "database",
-                      "template": "application-template-dockerbuild"
-                    },
-                    "annotations": {
-                      "deployment": "database-1",
-                      "deploymentConfig": "database",
-                      "deploymentVersion": "1"
-                    }
-                  },
-                  "spec": {
-                    "volumes": null,
-                    "containers": [
-                      {
-                        "name": "ruby-helloworld-database",
-                        "image": "mysql",
-                        "ports": [
-                          {
-                            "containerPort": 3306,
-                            "protocol": "TCP"
-                          }
-                        ],
-                        "env": [
-                          {
-                            "name": "MYSQL_USER",
-                            "value": "userNO1"
-                          },
-                          {
-                            "name": "MYSQL_PASSWORD",
-                            "value": "y2jq00EQ"
-                          },
-                          {
-                            "name": "MYSQL_DATABASE",
-                            "value": "root"
-                          }
-                        ],
-                        "resources": {},
-                        "terminationMessagePath": "/dev/termination-log",
-                        "imagePullPolicy": "IfNotPresent",
-                        "capabilities": {}
-                      }
-                    ],
-                    "restartPolicy": "Always",
-                    "dnsPolicy": "ClusterFirst"
-                  }
-                }
-              },
-              "status": {
-                "replicas": 1
-              }
-            }
-          ]
-        }
+      string: '{"kind":"ReplicationControllerList","apiVersion":"v1beta3","metadata":{"selfLink":"/api/v1beta3/replicationcontrollers","resourceVersion":"3336"},"items":[{"metadata":{"name":"database-1","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/replicationcontrollers/database-1","uid":"f40fe760-2870-11e5-b5bb-727174f8ab71","resourceVersion":"471","creationTimestamp":"2015-07-12T08:35:30Z","labels":{"openshift.io/deployment-config.name":"database","template":"application-template-dockerbuild"},"annotations":{"kubectl.kubernetes.io/desired-replicas":"1","openshift.io/deployer-pod.name":"database-1-deploy","openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"database","openshift.io/deployment.phase":"Complete","openshift.io/encoded-deployment-config":"{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"database\",\"namespace\":\"test\",\"selfLink\":\"/oapi/v1/namespaces/test/deploymentconfigs/database\",\"uid\":\"f3f64372-2870-11e5-b5bb-727174f8ab71\",\"resourceVersion\":\"398\",\"creationTimestamp\":\"2015-07-12T08:35:29Z\",\"labels\":{\"template\":\"application-template-dockerbuild\"}},\"spec\":{\"strategy\":{\"type\":\"Recreate\",\"resources\":{}},\"triggers\":[{\"type\":\"ConfigChange\"}],\"replicas\":1,\"selector\":{\"name\":\"database\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"name\":\"database\"}},\"spec\":{\"containers\":[{\"name\":\"ruby-helloworld-database\",\"image\":\"openshift/mysql-55-centos7\",\"ports\":[{\"containerPort\":3306,\"protocol\":\"TCP\"}],\"env\":[{\"name\":\"MYSQL_USER\",\"value\":\"userBPI\"},{\"name\":\"MYSQL_PASSWORD\",\"value\":\"vIhpssM8\"},{\"name\":\"MYSQL_DATABASE\",\"value\":\"root\"}],\"resources\":{},\"terminationMessagePath\":\"/dev/termination-log\",\"imagePullPolicy\":\"IfNotPresent\",\"securityContext\":{\"capabilities\":{},\"privileged\":false}}],\"restartPolicy\":\"Always\",\"dnsPolicy\":\"ClusterFirst\"}}},\"status\":{\"latestVersion\":1,\"details\":{\"causes\":[{\"type\":\"ConfigChange\"}]}}}"}},"spec":{"replicas":1,"selector":{"deployment":"database-1","deploymentconfig":"database","name":"database"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deployment":"database-1","deploymentconfig":"database","name":"database"},"annotations":{"openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"database","openshift.io/deployment.name":"database-1"}},"spec":{"containers":[{"name":"ruby-helloworld-database","image":"openshift/mysql-55-centos7","ports":[{"containerPort":3306,"protocol":"TCP"}],"env":[{"name":"MYSQL_USER","value":"userBPI"},{"name":"MYSQL_PASSWORD","value":"vIhpssM8"},{"name":"MYSQL_DATABASE","value":"root"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent","capabilities":{},"securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","dnsPolicy":"ClusterFirst"}}},"status":{"replicas":1}},{"metadata":{"name":"docker-registry-1","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/replicationcontrollers/docker-registry-1","uid":"7dfe3d9b-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2527","creationTimestamp":"2015-07-12T09:07:59Z","labels":{"docker-registry":"default","openshift.io/deployment-config.name":"docker-registry"},"annotations":{"kubectl.kubernetes.io/desired-replicas":"1","openshift.io/deployer-pod.name":"docker-registry-1-deploy","openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"docker-registry","openshift.io/deployment.phase":"Complete","openshift.io/encoded-deployment-config":"{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"docker-registry\",\"namespace\":\"test\",\"selfLink\":\"/oapi/v1/namespaces/test/deploymentconfigs/docker-registry\",\"uid\":\"7ddd1ef6-2875-11e5-b5bb-727174f8ab71\",\"resourceVersion\":\"2480\",\"creationTimestamp\":\"2015-07-12T09:07:59Z\",\"labels\":{\"docker-registry\":\"default\"}},\"spec\":{\"strategy\":{\"type\":\"Rolling\",\"rollingParams\":{\"updatePeriodSeconds\":1,\"intervalSeconds\":1,\"timeoutSeconds\":600},\"resources\":{}},\"triggers\":[{\"type\":\"ConfigChange\"}],\"replicas\":1,\"selector\":{\"docker-registry\":\"default\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"docker-registry\":\"default\"}},\"spec\":{\"volumes\":[{\"name\":\"registry-storage\",\"emptyDir\":{}}],\"containers\":[{\"name\":\"registry\",\"image\":\"openshift/origin-docker-registry:v1.0.1\",\"ports\":[{\"containerPort\":5000,\"protocol\":\"TCP\"}],\"env\":[{\"name\":\"OPENSHIFT_CA_DATA\",\"value\":\"-----BEGIN
+        CERTIFICATE-----\\nMIIC5jCCAdCgAwIBAgIBATALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\\naWZ0LXNpZ25lckAxNDM2Njg4NDc5MB4XDTE1MDcxMjA4MDc1OVoXDTE2MDcxMTA4\\nMDgwMFowJjEkMCIGA1UEAwwbb3BlbnNoaWZ0LXNpZ25lckAxNDM2Njg4NDc5MIIB\\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv32kIcGfCuyQqh2KZu5MlgXe\\nX5Ib/37WsgSFOUEckhdtwlkA24XjfE+einm7l2SBwTgpVmZLFm+99i/a0lP4b0HZ\\neVBfUgX7LiZ7v8jsFBnnxBkir9vDc47//E2HG09iGbilImKs8O4QyduTNsbF1dix\\nltPiFKP2p5a/YHjRzB1ZXfYFvrAQHEdgiw0XCszf5s8C4mzsCwePzAmrNVjnLHV6\\n7mC25Uj6r+9sjGPJVHIwKw2xkCt/wq2k/9KQGDGIJGKJrngKZkyL/PvZT+HMS8kd\\ngV95oEGXqel8fiwXgpq/wU7fz/U+O3WfglbyPeOMKNof0+Sr/VE6V1LnwYHH7QID\\nAQABoyMwITAOBgNVHQ8BAf8EBAMCAKQwDwYDVR0TAQH/BAUwAwEB/zALBgkqhkiG\\n9w0BAQsDggEBAFKYXpBMHcLI5WrXIjAR1EgxRobMGi6OG5ha17AXyoI3IR4blnq9\\nNGvrozC/Ong29jLgkOoCqpRV7bdOehXFdDOiNWgspDBLC1r8QswrlSMS2I7/NA9U\\n9/WTdFlrEfog/YAq1oCtLgR/NL/VFU35U+9AooAA2Xq4OSyoZWLGXVx/vrGs7rLJ\\nBv0ep+FgrPV2n83RrsmI78tAT1izlLpZs2WZ6x/Udc5y3eisqwMJM/5ohFjJeBg/\\nGclV0qIhEIEvMMoYSexiDNGhBnwQCutAdDxT/5nEJlXkOwh85DN22rBsBsgx0+mT\\nAVJkA+ru80ANSD+hQeVFydd9jaGb2lMVXS4=\\n-----END
+        CERTIFICATE-----\\n\"},{\"name\":\"OPENSHIFT_CERT_DATA\",\"value\":\"-----BEGIN
+        CERTIFICATE-----\\nMIIDEjCCAfygAwIBAgIBBTALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\\naWZ0LXNpZ25lckAxNDM2Njg4NDc5MB4XDTE1MDcxMjA4MDgwM1oXDTE2MDcxMTA4\\nMDgwNFowQDEaMBgGA1UEChMRc3lzdGVtOnJlZ2lzdHJpZXMxIjAgBgNVBAMTGXN5\\nc3RlbTpvcGVuc2hpZnQtcmVnaXN0cnkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\\nggEKAoIBAQDFW7h9B4xwMARXCBhYdtkXskr8kEr4nnkNENOi4zedVtr0PppmtIR7\\nX83TMrj+hGOt0SxS79OEydNbfW/ZtdjRvzjXS9wI/TjxkyjhwezS5f3BiLwbAjAx\\nXGwMeu73vwlLZlbYTOYHfU/hXy+CNOrP4EHMQrAXOu+xzX+j1PkCBDOFZaeHNwbG\\ntadoCgmgyKxOq38/WaIyIY9Py2g3YbWFOKlnlO0ZlN2p065zXCxcuruUgUBiJLI6\\n003O0JEW6svrWlb/XjLnuX2Anil5+bvV1/Lraj8NEaVOncDelda7WnkRvINKd9uT\\npbKxVjx3z9n0FzSPn24J+zBGxJQoixMjAgMBAAGjNTAzMA4GA1UdDwEB/wQEAwIA\\noDATBgNVHSUEDDAKBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMAsGCSqGSIb3DQEB\\nCwOCAQEAqrtDXcM3BzMUAszosG5gJFZUSOihiwU7a8O+RxiKBBj+0v7A+hEPxxHs\\nwTxuW3fdl01HP3LnwUerer8Y1DfySHI8XC+6/cGELEdAQwVCY5ooSLClATgxxCIf\\nrPl0+1SXqXVNyeeyV7Cj/cyRKdIGrdaTL8Q9JxioxIT2GEe+w3T+ut18aOZCzWCF\\ndXvvTmNWQe6q+R2O9jHFeFI602Go8ZB5blPHd1529ZuWfKYcfJhhOkXug0YsBNkM\\n90xiIGXRsHII8ctnn8IaO9E3hZm5y7DzTPY0YhdTzQLksItGgWGROZl7uCWJ0eom\\n16pzmakKpaw9lo0UGADD7zLQAasoug==\\n-----END
+        CERTIFICATE-----\\n\"},{\"name\":\"OPENSHIFT_INSECURE\",\"value\":\"false\"},{\"name\":\"OPENSHIFT_KEY_DATA\",\"value\":\"-----BEGIN
+        RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEAxVu4fQeMcDAEVwgYWHbZF7JK/JBK+J55DRDTouM3nVba9D6a\\nZrSEe1/N0zK4/oRjrdEsUu/ThMnTW31v2bXY0b8410vcCP048ZMo4cHs0uX9wYi8\\nGwIwMVxsDHru978JS2ZW2EzmB31P4V8vgjTqz+BBzEKwFzrvsc1/o9T5AgQzhWWn\\nhzcGxrWnaAoJoMisTqt/P1miMiGPT8toN2G1hTipZ5TtGZTdqdOuc1wsXLq7lIFA\\nYiSyOtNNztCRFurL61pW/14y57l9gJ4pefm71dfy62o/DRGlTp3A3pXWu1p5EbyD\\nSnfbk6WysVY8d8/Z9Bc0j59uCfswRsSUKIsTIwIDAQABAoIBAEAO/VrX0GW5sC7v\\nmbddHCns3RoNW8hG59Ot2oPMbIjNYFRW3ZbokPfaqNwcYp96KUCJ3HEvFuDLAad4\\nl4160N2Dy9dV8B2a05jVwzdD0rLBpBPlZej+VNYwwYFrhZU0lLe8iAO9MgzMR9lH\\nJAyHUJAYokLCgpWHs7Vqljt/LTPRx1YGQoC1Kt/ukVApegsezwm1CdwUvMAbD2Sz\\nsYYzNOjCIoel0VaqNnkD3luticUSVLM8zoBnNbyR33dYXvpyP0KZ6AqjdKEKOauy\\nXpLm5sAh5MZYrKI+WXVFqSMgcA5epxKFCSNEwWN4i5kUcvw83nFUY6+w6WvxFsgi\\nLLR1C4ECgYEA5QLOgR/xRJ5SpmaTvb41IJoGTc/RixKNTwwUzO8XHLfcTC/mSaUd\\nTL1e7tlBlnjZ7FR9bfIlDsSWcV9ie3xl8ould+ozjwixEGx8Z1EWkYyHCzh9c4L6\\nmd1WDLfYhXYXCAATjXFRGRK2F7oBfgXjwHgh/hKH+/e6Ac2zuAqBxosCgYEA3J32\\nQ+Bkhh2uwj+fkpfa9Qa4Z9GO6n0plRZUbPNRfcwGQMtd2bN8UXA7FhBhkn0yn59P\\nkih+EoURrjUvPF6GFIaWm9OoAFbQpjIfIbL6imHb3qVhclobt7wAYbqaCrbKEUJs\\nQw7+2FsTbnd5kasEIvDmbBDSNY0S1vFN11HokMkCgYEAgbtzTIbR4LNn0sgtTcHg\\nytU2WQIvjH83+d24MtgG2cf2TlqcNIAK9xwYGWqN0zYnDdBXNd+EyrbnGtaULaws\\n/JfLZwEPsCmWVN2AI+81v8JCBkM8HiHG4T8XriC/0esx5OBWMzxMWs3UxeAjVEb1\\n3GSxrQLGciDGCJuFAe9B0T0CgYAt+vInpW3uEeOpco80g1fMN7FZWfC6aImxG+1O\\no8u5NzuaZ4hQ5jqj0otOBu3/FP7nC9IOuUfFXlyX/Vex8lVpk79yDMP4BiAIc2vP\\nnzjefJTRq5BKwAME4TcHJ1gRoZUt0bU0qLxupVTAckAxHv6GtcSgg0T8ikGB8Nrz\\nZIvfGQKBgD4OcnS+0gUqO4vbTLIMXxTxKHFlZ6Ytj2JeXn4o1GS3lWf8kZ150oge\\nKm8To2MGM0tRcQXFwHxpZKrO/TLsz3MIcCvMOcQzLwZGLuvI/xeTwMHmGd/RYlBR\\n3ZCkXIlDZesKbyMdEf9zjt8I1vcNtZ3+6U+yBK98Qj2+eAzm/zHL\\n-----END
+        RSA PRIVATE KEY-----\\n\"},{\"name\":\"OPENSHIFT_MASTER\",\"value\":\"https://10.35.0.174:8443\"}],\"resources\":{},\"volumeMounts\":[{\"name\":\"registry-storage\",\"mountPath\":\"/registry\"}],\"terminationMessagePath\":\"/dev/termination-log\",\"imagePullPolicy\":\"IfNotPresent\",\"securityContext\":{\"capabilities\":{},\"privileged\":false}}],\"restartPolicy\":\"Always\",\"dnsPolicy\":\"ClusterFirst\"}}},\"status\":{\"latestVersion\":1,\"details\":{\"causes\":[{\"type\":\"ConfigChange\"}]}}}"}},"spec":{"replicas":1,"selector":{"deployment":"docker-registry-1","deploymentconfig":"docker-registry","docker-registry":"default"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deployment":"docker-registry-1","deploymentconfig":"docker-registry","docker-registry":"default"},"annotations":{"openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"docker-registry","openshift.io/deployment.name":"docker-registry-1"}},"spec":{"volumes":[{"name":"registry-storage","emptyDir":{}}],"containers":[{"name":"registry","image":"openshift/origin-docker-registry:v1.0.1","ports":[{"containerPort":5000,"protocol":"TCP"}],"env":[{"name":"OPENSHIFT_CA_DATA","value":"-----BEGIN
+        CERTIFICATE-----\nMIIC5jCCAdCgAwIBAgIBATALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\naWZ0LXNpZ25lckAxNDM2Njg4NDc5MB4XDTE1MDcxMjA4MDc1OVoXDTE2MDcxMTA4\nMDgwMFowJjEkMCIGA1UEAwwbb3BlbnNoaWZ0LXNpZ25lckAxNDM2Njg4NDc5MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv32kIcGfCuyQqh2KZu5MlgXe\nX5Ib/37WsgSFOUEckhdtwlkA24XjfE+einm7l2SBwTgpVmZLFm+99i/a0lP4b0HZ\neVBfUgX7LiZ7v8jsFBnnxBkir9vDc47//E2HG09iGbilImKs8O4QyduTNsbF1dix\nltPiFKP2p5a/YHjRzB1ZXfYFvrAQHEdgiw0XCszf5s8C4mzsCwePzAmrNVjnLHV6\n7mC25Uj6r+9sjGPJVHIwKw2xkCt/wq2k/9KQGDGIJGKJrngKZkyL/PvZT+HMS8kd\ngV95oEGXqel8fiwXgpq/wU7fz/U+O3WfglbyPeOMKNof0+Sr/VE6V1LnwYHH7QID\nAQABoyMwITAOBgNVHQ8BAf8EBAMCAKQwDwYDVR0TAQH/BAUwAwEB/zALBgkqhkiG\n9w0BAQsDggEBAFKYXpBMHcLI5WrXIjAR1EgxRobMGi6OG5ha17AXyoI3IR4blnq9\nNGvrozC/Ong29jLgkOoCqpRV7bdOehXFdDOiNWgspDBLC1r8QswrlSMS2I7/NA9U\n9/WTdFlrEfog/YAq1oCtLgR/NL/VFU35U+9AooAA2Xq4OSyoZWLGXVx/vrGs7rLJ\nBv0ep+FgrPV2n83RrsmI78tAT1izlLpZs2WZ6x/Udc5y3eisqwMJM/5ohFjJeBg/\nGclV0qIhEIEvMMoYSexiDNGhBnwQCutAdDxT/5nEJlXkOwh85DN22rBsBsgx0+mT\nAVJkA+ru80ANSD+hQeVFydd9jaGb2lMVXS4=\n-----END
+        CERTIFICATE-----\n"},{"name":"OPENSHIFT_CERT_DATA","value":"-----BEGIN CERTIFICATE-----\nMIIDEjCCAfygAwIBAgIBBTALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\naWZ0LXNpZ25lckAxNDM2Njg4NDc5MB4XDTE1MDcxMjA4MDgwM1oXDTE2MDcxMTA4\nMDgwNFowQDEaMBgGA1UEChMRc3lzdGVtOnJlZ2lzdHJpZXMxIjAgBgNVBAMTGXN5\nc3RlbTpvcGVuc2hpZnQtcmVnaXN0cnkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQDFW7h9B4xwMARXCBhYdtkXskr8kEr4nnkNENOi4zedVtr0PppmtIR7\nX83TMrj+hGOt0SxS79OEydNbfW/ZtdjRvzjXS9wI/TjxkyjhwezS5f3BiLwbAjAx\nXGwMeu73vwlLZlbYTOYHfU/hXy+CNOrP4EHMQrAXOu+xzX+j1PkCBDOFZaeHNwbG\ntadoCgmgyKxOq38/WaIyIY9Py2g3YbWFOKlnlO0ZlN2p065zXCxcuruUgUBiJLI6\n003O0JEW6svrWlb/XjLnuX2Anil5+bvV1/Lraj8NEaVOncDelda7WnkRvINKd9uT\npbKxVjx3z9n0FzSPn24J+zBGxJQoixMjAgMBAAGjNTAzMA4GA1UdDwEB/wQEAwIA\noDATBgNVHSUEDDAKBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMAsGCSqGSIb3DQEB\nCwOCAQEAqrtDXcM3BzMUAszosG5gJFZUSOihiwU7a8O+RxiKBBj+0v7A+hEPxxHs\nwTxuW3fdl01HP3LnwUerer8Y1DfySHI8XC+6/cGELEdAQwVCY5ooSLClATgxxCIf\nrPl0+1SXqXVNyeeyV7Cj/cyRKdIGrdaTL8Q9JxioxIT2GEe+w3T+ut18aOZCzWCF\ndXvvTmNWQe6q+R2O9jHFeFI602Go8ZB5blPHd1529ZuWfKYcfJhhOkXug0YsBNkM\n90xiIGXRsHII8ctnn8IaO9E3hZm5y7DzTPY0YhdTzQLksItGgWGROZl7uCWJ0eom\n16pzmakKpaw9lo0UGADD7zLQAasoug==\n-----END
+        CERTIFICATE-----\n"},{"name":"OPENSHIFT_INSECURE","value":"false"},{"name":"OPENSHIFT_KEY_DATA","value":"-----BEGIN
+        RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAxVu4fQeMcDAEVwgYWHbZF7JK/JBK+J55DRDTouM3nVba9D6a\nZrSEe1/N0zK4/oRjrdEsUu/ThMnTW31v2bXY0b8410vcCP048ZMo4cHs0uX9wYi8\nGwIwMVxsDHru978JS2ZW2EzmB31P4V8vgjTqz+BBzEKwFzrvsc1/o9T5AgQzhWWn\nhzcGxrWnaAoJoMisTqt/P1miMiGPT8toN2G1hTipZ5TtGZTdqdOuc1wsXLq7lIFA\nYiSyOtNNztCRFurL61pW/14y57l9gJ4pefm71dfy62o/DRGlTp3A3pXWu1p5EbyD\nSnfbk6WysVY8d8/Z9Bc0j59uCfswRsSUKIsTIwIDAQABAoIBAEAO/VrX0GW5sC7v\nmbddHCns3RoNW8hG59Ot2oPMbIjNYFRW3ZbokPfaqNwcYp96KUCJ3HEvFuDLAad4\nl4160N2Dy9dV8B2a05jVwzdD0rLBpBPlZej+VNYwwYFrhZU0lLe8iAO9MgzMR9lH\nJAyHUJAYokLCgpWHs7Vqljt/LTPRx1YGQoC1Kt/ukVApegsezwm1CdwUvMAbD2Sz\nsYYzNOjCIoel0VaqNnkD3luticUSVLM8zoBnNbyR33dYXvpyP0KZ6AqjdKEKOauy\nXpLm5sAh5MZYrKI+WXVFqSMgcA5epxKFCSNEwWN4i5kUcvw83nFUY6+w6WvxFsgi\nLLR1C4ECgYEA5QLOgR/xRJ5SpmaTvb41IJoGTc/RixKNTwwUzO8XHLfcTC/mSaUd\nTL1e7tlBlnjZ7FR9bfIlDsSWcV9ie3xl8ould+ozjwixEGx8Z1EWkYyHCzh9c4L6\nmd1WDLfYhXYXCAATjXFRGRK2F7oBfgXjwHgh/hKH+/e6Ac2zuAqBxosCgYEA3J32\nQ+Bkhh2uwj+fkpfa9Qa4Z9GO6n0plRZUbPNRfcwGQMtd2bN8UXA7FhBhkn0yn59P\nkih+EoURrjUvPF6GFIaWm9OoAFbQpjIfIbL6imHb3qVhclobt7wAYbqaCrbKEUJs\nQw7+2FsTbnd5kasEIvDmbBDSNY0S1vFN11HokMkCgYEAgbtzTIbR4LNn0sgtTcHg\nytU2WQIvjH83+d24MtgG2cf2TlqcNIAK9xwYGWqN0zYnDdBXNd+EyrbnGtaULaws\n/JfLZwEPsCmWVN2AI+81v8JCBkM8HiHG4T8XriC/0esx5OBWMzxMWs3UxeAjVEb1\n3GSxrQLGciDGCJuFAe9B0T0CgYAt+vInpW3uEeOpco80g1fMN7FZWfC6aImxG+1O\no8u5NzuaZ4hQ5jqj0otOBu3/FP7nC9IOuUfFXlyX/Vex8lVpk79yDMP4BiAIc2vP\nnzjefJTRq5BKwAME4TcHJ1gRoZUt0bU0qLxupVTAckAxHv6GtcSgg0T8ikGB8Nrz\nZIvfGQKBgD4OcnS+0gUqO4vbTLIMXxTxKHFlZ6Ytj2JeXn4o1GS3lWf8kZ150oge\nKm8To2MGM0tRcQXFwHxpZKrO/TLsz3MIcCvMOcQzLwZGLuvI/xeTwMHmGd/RYlBR\n3ZCkXIlDZesKbyMdEf9zjt8I1vcNtZ3+6U+yBK98Qj2+eAzm/zHL\n-----END
+        RSA PRIVATE KEY-----\n"},{"name":"OPENSHIFT_MASTER","value":"https://10.35.0.174:8443"}],"resources":{},"volumeMounts":[{"name":"registry-storage","mountPath":"/registry"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent","capabilities":{},"securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","dnsPolicy":"ClusterFirst"}}},"status":{"replicas":1}}]}'
     http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:13:58 GMT
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
 - request:
     method: get
-    uri: https://10.35.0.167:8443/api/v1beta3/nodes
+    uri: https://10.35.0.174:8443/api/v1beta3/nodes
     body:
       encoding: US-ASCII
       string: ''
@@ -675,73 +193,24 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Cache-Control:
+      - no-store
       Content-Type:
       - application/json
       Date:
-      - Wed, 15 Apr 2015 23:13:57 GMT
+      - Sun, 12 Jul 2015 09:20:24 GMT
       Content-Length:
-      - '1506'
+      - '1125'
     body:
       encoding: UTF-8
-      string: |-
-        {
-          "kind": "NodeList",
-          "apiVersion": "v1beta3",
-          "metadata": {
-            "selfLink": "/api/v1beta3/nodes",
-            "resourceVersion": "9642"
-          },
-          "items": [
-            {
-              "metadata": {
-                "name": "dhcp-0-167.tlv.redhat.com",
-                "selfLink": "/api/v1beta3/nodes/dhcp-0-167.tlv.redhat.com",
-                "uid": "58ffddce-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "9641",
-                "creationTimestamp": "2015-04-15T15:37:39Z"
-              },
-              "spec": {
-                "externalID": "dhcp-0-167.tlv.redhat.com"
-              },
-              "status": {
-                "capacity": {
-                  "cpu": "8",
-                  "memory": "16341880Ki"
-                },
-                "conditions": [
-                  {
-                    "type": "Ready",
-                    "status": "True",
-                    "lastHeartbeatTime": "2015-04-15T23:13:52Z",
-                    "lastTransitionTime": "2015-04-15T15:37:42Z",
-                    "reason": "kubelet is posting ready status"
-                  }
-                ],
-                "addresses": [
-                  {
-                    "type": "LegacyHostIP",
-                    "address": "10.35.0.167"
-                  }
-                ],
-                "nodeInfo": {
-                  "machineID": "",
-                  "systemUUID": "44454C4C-3400-1059-8034-B7C04F333032",
-                  "bootID": "2678a4fa-00b3-4c57-b048-1a155a11b050",
-                  "kernelVersion": "3.11.10-301.fc20.x86_64",
-                  "osImage": "CentOS Linux 7 (Core)",
-                  "containerRuntimeVersion": "docker://1.5.0",
-                  "kubeletVersion": "v0.14.1-582-gb12d75d",
-                  "KubeProxyVersion": "v0.14.1-582-gb12d75d"
-                }
-              }
-            }
-          ]
-        }
+      string: '{"kind":"NodeList","apiVersion":"v1beta3","metadata":{"selfLink":"/api/v1beta3/nodes","resourceVersion":"3336"},"items":[{"metadata":{"name":"dhcp-0-129.tlv.redhat.com","selfLink":"/api/v1beta3/nodes/dhcp-0-129.tlv.redhat.com","uid":"248c52a3-286d-11e5-b5bb-727174f8ab71","resourceVersion":"3331","creationTimestamp":"2015-07-12T08:08:13Z","labels":{"kubernetes.io/hostname":"dhcp-0-129.tlv.redhat.com"}},"spec":{"externalID":"dhcp-0-129.tlv.redhat.com"},"status":{"capacity":{"cpu":"2","memory":"3102276Ki","pods":"100"},"conditions":[{"type":"Ready","status":"True","lastHeartbeatTime":"2015-07-12T09:20:19Z","lastTransitionTime":"2015-07-12T08:08:13Z","reason":"kubelet
+        is posting ready status"}],"addresses":[{"type":"LegacyHostIP","address":"10.35.0.129"}],"nodeInfo":{"machineID":"8a0986bf47d34597a09d6ea5dd5d8f39","systemUUID":"8A0986BF-47D3-4597-A09D-6EA5DD5D8F39","bootID":"059d66de-4215-4491-b4dc-cc52b2f38b3c","kernelVersion":"4.0.6-200.fc21.x86_64","osImage":"Fedora
+        21 (Twenty One)","containerRuntimeVersion":"docker://1.6.0","kubeletVersion":"v0.17.1-804-g496be63","kubeProxyVersion":"v0.17.1-804-g496be63"}}}]}'
     http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:13:59 GMT
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
 - request:
     method: get
-    uri: https://10.35.0.167:8443/api/v1beta3/events
+    uri: https://10.35.0.174:8443/api/v1beta3/events
     body:
       encoding: US-ASCII
       string: ''
@@ -757,146 +226,73 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Cache-Control:
+      - no-store
       Content-Type:
       - application/json
       Date:
-      - Wed, 15 Apr 2015 23:13:58 GMT
-      Content-Length:
-      - '157'
-    body:
-      encoding: UTF-8
-      string: |-
-        {
-          "kind": "EventList",
-          "apiVersion": "v1beta3",
-          "metadata": {
-            "selfLink": "/api/v1beta3/events",
-            "resourceVersion": "9642"
-          },
-          "items": []
-        }
-    http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:14:00 GMT
-- request:
-    method: get
-    uri: https://10.35.0.167:8443/api/v1beta3/endpoints
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - "*/*"
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Content-Type:
-      - application/json
-      Date:
-      - Wed, 15 Apr 2015 23:13:59 GMT
+      - Sun, 12 Jul 2015 09:20:24 GMT
       Transfer-Encoding:
       - chunked
     body:
       encoding: UTF-8
-      string: |-
-        {
-          "kind": "EndpointsList",
-          "apiVersion": "v1beta3",
-          "metadata": {
-            "selfLink": "/api/v1beta3/endpoints",
-            "resourceVersion": "9643"
-          },
-          "items": [
-            {
-              "metadata": {
-                "name": "database",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/endpoints/database",
-                "uid": "06234fc8-e386-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "105",
-                "creationTimestamp": "2015-04-15T15:42:29Z",
-                "labels": {
-                  "template": "application-template-dockerbuild"
-                }
-              },
-              "subsets": []
-            },
-            {
-              "metadata": {
-                "name": "frontend",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/endpoints/frontend",
-                "uid": "00217e9d-e386-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "86",
-                "creationTimestamp": "2015-04-15T15:42:19Z",
-                "labels": {
-                  "template": "application-template-dockerbuild"
-                }
-              },
-              "subsets": []
-            },
-            {
-              "metadata": {
-                "name": "kubernetes",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/endpoints/kubernetes",
-                "uid": "55badd15-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "8",
-                "creationTimestamp": "2015-04-15T15:37:33Z"
-              },
-              "subsets": [
-                {
-                  "addresses": [
-                    {
-                      "IP": "10.35.0.167"
-                    }
-                  ],
-                  "ports": [
-                    {
-                      "port": 8443,
-                      "protocol": "TCP"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "metadata": {
-                "name": "kubernetes-ro",
-                "namespace": "default",
-                "selfLink": "/api/v1beta3/namespaces/default/endpoints/kubernetes-ro",
-                "uid": "55a3e2dc-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "7",
-                "creationTimestamp": "2015-04-15T15:37:33Z"
-              },
-              "subsets": [
-                {
-                  "addresses": [
-                    {
-                      "IP": "10.35.0.167"
-                    }
-                  ],
-                  "ports": [
-                    {
-                      "port": 8443,
-                      "protocol": "TCP"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
+      string: '{"kind":"EventList","apiVersion":"v1beta3","metadata":{"selfLink":"/api/v1beta3/events","resourceVersion":"3336"},"items":[{"metadata":{"name":"dhcp-0-129.tlv.redhat.com.13f024927d38c53a","namespace":"default","selfLink":"/api/v1beta3/namespaces/default/events/dhcp-0-129.tlv.redhat.com.13f024927d38c53a","uid":"24286334-286d-11e5-b5bb-727174f8ab71","resourceVersion":"122","creationTimestamp":"2015-07-12T08:08:12Z","deletionTimestamp":"2015-07-12T10:08:12Z"},"involvedObject":{"kind":"Node","name":"dhcp-0-129.tlv.redhat.com","uid":"dhcp-0-129.tlv.redhat.com"},"reason":"starting","message":"Starting
+        kubelet.","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:08:12Z","lastTimestamp":"2015-07-12T08:08:12Z","count":1},{"metadata":{"name":"dhcp-0-129.tlv.redhat.com.13f02492a8458b78","namespace":"default","selfLink":"/api/v1beta3/namespaces/default/events/dhcp-0-129.tlv.redhat.com.13f02492a8458b78","uid":"248fdf6e-286d-11e5-b5bb-727174f8ab71","resourceVersion":"136","creationTimestamp":"2015-07-12T08:08:13Z","deletionTimestamp":"2015-07-12T10:08:13Z"},"involvedObject":{"kind":"Node","name":"dhcp-0-129.tlv.redhat.com","uid":"dhcp-0-129.tlv.redhat.com"},"reason":"NodeReady","message":"Node
+        dhcp-0-129.tlv.redhat.com status is now: NodeReady","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:08:13Z","lastTimestamp":"2015-07-12T08:08:13Z","count":1},{"metadata":{"name":"database-1-3v6zu.13f026130b65baac","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-3v6zu.13f026130b65baac","uid":"fc946876-2870-11e5-b5bb-727174f8ab71","resourceVersion":"446","creationTimestamp":"2015-07-12T08:35:44Z","deletionTimestamp":"2015-07-12T10:35:44Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-3v6zu","uid":"fc73bb4b-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"442"},"reason":"scheduled","message":"Successfully
+        assigned database-1-3v6zu to dhcp-0-129.tlv.redhat.com","source":{"component":"scheduler"},"firstTimestamp":"2015-07-12T08:35:44Z","lastTimestamp":"2015-07-12T08:35:44Z","count":1},{"metadata":{"name":"database-1-3v6zu.13f026130ecc5a17","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-3v6zu.13f026130ecc5a17","uid":"fc9d0608-2870-11e5-b5bb-727174f8ab71","resourceVersion":"447","creationTimestamp":"2015-07-12T08:35:44Z","deletionTimestamp":"2015-07-12T10:35:44Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-3v6zu","uid":"fc73bb4b-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"443","fieldPath":"implicitly
+        required container POD"},"reason":"pulled","message":"Successfully pulled
+        image \"openshift/origin-pod:v1.0.1\"","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:44Z","lastTimestamp":"2015-07-12T08:35:44Z","count":1},{"metadata":{"name":"database-1-3v6zu.13f02613583c66a8","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-3v6zu.13f02613583c66a8","uid":"fd591fc2-2870-11e5-b5bb-727174f8ab71","resourceVersion":"449","creationTimestamp":"2015-07-12T08:35:45Z","deletionTimestamp":"2015-07-12T10:35:45Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-3v6zu","uid":"fc73bb4b-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"443","fieldPath":"implicitly
+        required container POD"},"reason":"created","message":"Created with docker
+        id f58b1099f527e51b632be6202046fbf5999f4fe24605ac906227dee7ffb60db9","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:45Z","lastTimestamp":"2015-07-12T08:35:45Z","count":1},{"metadata":{"name":"database-1-3v6zu.13f0261386cd161f","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-3v6zu.13f0261386cd161f","uid":"fdd04891-2870-11e5-b5bb-727174f8ab71","resourceVersion":"451","creationTimestamp":"2015-07-12T08:35:46Z","deletionTimestamp":"2015-07-12T10:35:46Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-3v6zu","uid":"fc73bb4b-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"443","fieldPath":"implicitly
+        required container POD"},"reason":"started","message":"Started with docker
+        id f58b1099f527e51b632be6202046fbf5999f4fe24605ac906227dee7ffb60db9","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:46Z","lastTimestamp":"2015-07-12T08:35:46Z","count":1},{"metadata":{"name":"database-1-3v6zu.13f02614350421f2","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-3v6zu.13f02614350421f2","uid":"ff8e4bc6-2870-11e5-b5bb-727174f8ab71","resourceVersion":"455","creationTimestamp":"2015-07-12T08:35:49Z","deletionTimestamp":"2015-07-12T10:35:49Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-3v6zu","uid":"fc73bb4b-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"443","fieldPath":"spec.containers{ruby-helloworld-database}"},"reason":"created","message":"Created
+        with docker id bb608fb1575bcc1a5326517e6c4589df5160fa804daaa4990e837f1154f1c3c9","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:49Z","lastTimestamp":"2015-07-12T08:35:49Z","count":1},{"metadata":{"name":"database-1-3v6zu.13f026144c06c7fe","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-3v6zu.13f026144c06c7fe","uid":"ffc92a17-2870-11e5-b5bb-727174f8ab71","resourceVersion":"456","creationTimestamp":"2015-07-12T08:35:49Z","deletionTimestamp":"2015-07-12T10:35:49Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-3v6zu","uid":"fc73bb4b-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"443","fieldPath":"spec.containers{ruby-helloworld-database}"},"reason":"started","message":"Started
+        with docker id bb608fb1575bcc1a5326517e6c4589df5160fa804daaa4990e837f1154f1c3c9","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:49Z","lastTimestamp":"2015-07-12T08:35:49Z","count":1},{"metadata":{"name":"database-1-deploy.13f0260fbe279776","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-deploy.13f0260fbe279776","uid":"f420a571-2870-11e5-b5bb-727174f8ab71","resourceVersion":"403","creationTimestamp":"2015-07-12T08:35:30Z","deletionTimestamp":"2015-07-12T10:35:30Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-deploy","uid":"f4170261-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"400"},"reason":"scheduled","message":"Successfully
+        assigned database-1-deploy to dhcp-0-129.tlv.redhat.com","source":{"component":"scheduler"},"firstTimestamp":"2015-07-12T08:35:30Z","lastTimestamp":"2015-07-12T08:35:30Z","count":1},{"metadata":{"name":"database-1-deploy.13f0260fc09677fa","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-deploy.13f0260fc09677fa","uid":"f426c2cd-2870-11e5-b5bb-727174f8ab71","resourceVersion":"404","creationTimestamp":"2015-07-12T08:35:30Z","deletionTimestamp":"2015-07-12T10:35:30Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-deploy","uid":"f4170261-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"401","fieldPath":"implicitly
+        required container POD"},"reason":"pulled","message":"Successfully pulled
+        image \"openshift/origin-pod:v1.0.1\"","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:30Z","lastTimestamp":"2015-07-12T08:35:30Z","count":1},{"metadata":{"name":"database-1-deploy.13f026102451db56","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-deploy.13f026102451db56","uid":"f5260bcc-2870-11e5-b5bb-727174f8ab71","resourceVersion":"405","creationTimestamp":"2015-07-12T08:35:31Z","deletionTimestamp":"2015-07-12T10:35:31Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-deploy","uid":"f4170261-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"401","fieldPath":"implicitly
+        required container POD"},"reason":"created","message":"Created with docker
+        id 9910ba427dc474b066b7d58e9ca0c92d49414d9226989d9e45e1075adc015970","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:31Z","lastTimestamp":"2015-07-12T08:35:31Z","count":1},{"metadata":{"name":"database-1-deploy.13f0261049745fdd","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-deploy.13f0261049745fdd","uid":"f5851c06-2870-11e5-b5bb-727174f8ab71","resourceVersion":"406","creationTimestamp":"2015-07-12T08:35:32Z","deletionTimestamp":"2015-07-12T10:35:32Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-deploy","uid":"f4170261-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"401","fieldPath":"implicitly
+        required container POD"},"reason":"started","message":"Started with docker
+        id 9910ba427dc474b066b7d58e9ca0c92d49414d9226989d9e45e1075adc015970","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:32Z","lastTimestamp":"2015-07-12T08:35:32Z","count":1},{"metadata":{"name":"database-1-deploy.13f02610db46f3b8","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-deploy.13f02610db46f3b8","uid":"f6fa7a10-2870-11e5-b5bb-727174f8ab71","resourceVersion":"426","creationTimestamp":"2015-07-12T08:35:34Z","deletionTimestamp":"2015-07-12T10:35:34Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-deploy","uid":"f4170261-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"401","fieldPath":"spec.containers{deployment}"},"reason":"created","message":"Created
+        with docker id b78625170c1989fda28889fd7943296f129f0e6b3f5206823272137ce47dbce7","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:34Z","lastTimestamp":"2015-07-12T08:35:34Z","count":1},{"metadata":{"name":"database-1-deploy.13f0261132001510","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-deploy.13f0261132001510","uid":"f7d87863-2870-11e5-b5bb-727174f8ab71","resourceVersion":"428","creationTimestamp":"2015-07-12T08:35:36Z","deletionTimestamp":"2015-07-12T10:35:36Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-deploy","uid":"f4170261-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"401","fieldPath":"spec.containers{deployment}"},"reason":"started","message":"Started
+        with docker id b78625170c1989fda28889fd7943296f129f0e6b3f5206823272137ce47dbce7","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:36Z","lastTimestamp":"2015-07-12T08:35:36Z","count":1},{"metadata":{"name":"database-1-deploy.13f026161239fa91","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1-deploy.13f026161239fa91","uid":"0453e28b-2871-11e5-b5bb-727174f8ab71","resourceVersion":"469","creationTimestamp":"2015-07-12T08:35:57Z","deletionTimestamp":"2015-07-12T10:35:57Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"database-1-deploy","uid":"f4170261-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"401","fieldPath":"implicitly
+        required container POD"},"reason":"killing","message":"Killing 9910ba427dc474b066b7d58e9ca0c92d49414d9226989d9e45e1075adc015970","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T08:35:57Z","lastTimestamp":"2015-07-12T08:35:57Z","count":1},{"metadata":{"name":"database-1.13f02613066c2383","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/database-1.13f02613066c2383","uid":"fc8b45a6-2870-11e5-b5bb-727174f8ab71","resourceVersion":"444","creationTimestamp":"2015-07-12T08:35:44Z","deletionTimestamp":"2015-07-12T10:35:44Z"},"involvedObject":{"kind":"ReplicationController","namespace":"test","name":"database-1","uid":"f40fe760-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"441"},"reason":"successfulCreate","message":"Created
+        pod: database-1-3v6zu","source":{"component":"replication-controller"},"firstTimestamp":"2015-07-12T08:35:44Z","lastTimestamp":"2015-07-12T08:35:44Z","count":1},{"metadata":{"name":"docker-registry-1-31mzp.13f027d6b8a28c67","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-31mzp.13f027d6b8a28c67","uid":"80df9b2c-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2500","creationTimestamp":"2015-07-12T09:08:04Z","deletionTimestamp":"2015-07-12T11:08:04Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-31mzp","uid":"8068bdea-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2496"},"reason":"scheduled","message":"Successfully
+        assigned docker-registry-1-31mzp to dhcp-0-129.tlv.redhat.com","source":{"component":"scheduler"},"firstTimestamp":"2015-07-12T09:08:04Z","lastTimestamp":"2015-07-12T09:08:04Z","count":1},{"metadata":{"name":"docker-registry-1-31mzp.13f027d6bb00ef23","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-31mzp.13f027d6bb00ef23","uid":"80e5427e-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2502","creationTimestamp":"2015-07-12T09:08:04Z","deletionTimestamp":"2015-07-12T11:08:04Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-31mzp","uid":"8068bdea-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2497","fieldPath":"implicitly
+        required container POD"},"reason":"pulled","message":"Successfully pulled
+        image \"openshift/origin-pod:v1.0.1\"","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:04Z","lastTimestamp":"2015-07-12T09:08:04Z","count":1},{"metadata":{"name":"docker-registry-1-31mzp.13f027d6ffa7971b","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-31mzp.13f027d6ffa7971b","uid":"8194fb52-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2504","creationTimestamp":"2015-07-12T09:08:05Z","deletionTimestamp":"2015-07-12T11:08:05Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-31mzp","uid":"8068bdea-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2497","fieldPath":"implicitly
+        required container POD"},"reason":"created","message":"Created with docker
+        id 7ac6bfd3bd39c71e267797dd7e1ee0f16de296ff7201bedb2c1dcb0a9f39c29b","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:05Z","lastTimestamp":"2015-07-12T09:08:05Z","count":1},{"metadata":{"name":"docker-registry-1-31mzp.13f027d704ef5865","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-31mzp.13f027d704ef5865","uid":"81a899a6-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2506","creationTimestamp":"2015-07-12T09:08:05Z","deletionTimestamp":"2015-07-12T11:08:05Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-31mzp","uid":"8068bdea-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2497","fieldPath":"implicitly
+        required container POD"},"reason":"started","message":"Started with docker
+        id 7ac6bfd3bd39c71e267797dd7e1ee0f16de296ff7201bedb2c1dcb0a9f39c29b","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:05Z","lastTimestamp":"2015-07-12T09:08:05Z","count":1},{"metadata":{"name":"docker-registry-1-31mzp.13f027d76a7ed478","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-31mzp.13f027d76a7ed478","uid":"82a67e1a-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2507","creationTimestamp":"2015-07-12T09:08:07Z","deletionTimestamp":"2015-07-12T11:08:07Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-31mzp","uid":"8068bdea-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2497","fieldPath":"spec.containers{registry}"},"reason":"created","message":"Created
+        with docker id a78a8cfb7eb22c879f87bc493ee5cfaeb35515c0c37a492af6a898f59410ebaa","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:07Z","lastTimestamp":"2015-07-12T09:08:07Z","count":1},{"metadata":{"name":"docker-registry-1-31mzp.13f027d779946204","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-31mzp.13f027d779946204","uid":"82cd2781-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2508","creationTimestamp":"2015-07-12T09:08:07Z","deletionTimestamp":"2015-07-12T11:08:07Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-31mzp","uid":"8068bdea-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2497","fieldPath":"spec.containers{registry}"},"reason":"started","message":"Started
+        with docker id a78a8cfb7eb22c879f87bc493ee5cfaeb35515c0c37a492af6a898f59410ebaa","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:07Z","lastTimestamp":"2015-07-12T09:08:07Z","count":1},{"metadata":{"name":"docker-registry-1-deploy.13f027d5a02ec7f9","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-deploy.13f027d5a02ec7f9","uid":"7e113514-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2487","creationTimestamp":"2015-07-12T09:07:59Z","deletionTimestamp":"2015-07-12T11:07:59Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-deploy","uid":"7e03da05-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2484"},"reason":"scheduled","message":"Successfully
+        assigned docker-registry-1-deploy to dhcp-0-129.tlv.redhat.com","source":{"component":"scheduler"},"firstTimestamp":"2015-07-12T09:07:59Z","lastTimestamp":"2015-07-12T09:07:59Z","count":1},{"metadata":{"name":"docker-registry-1-deploy.13f027d5a21928f4","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-deploy.13f027d5a21928f4","uid":"7e16227e-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2488","creationTimestamp":"2015-07-12T09:07:59Z","deletionTimestamp":"2015-07-12T11:07:59Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-deploy","uid":"7e03da05-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2485","fieldPath":"implicitly
+        required container POD"},"reason":"pulled","message":"Successfully pulled
+        image \"openshift/origin-pod:v1.0.1\"","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:07:59Z","lastTimestamp":"2015-07-12T09:07:59Z","count":1},{"metadata":{"name":"docker-registry-1-deploy.13f027d5e8eaa220","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-deploy.13f027d5e8eaa220","uid":"7ecb6cd5-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2489","creationTimestamp":"2015-07-12T09:08:00Z","deletionTimestamp":"2015-07-12T11:08:00Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-deploy","uid":"7e03da05-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2485","fieldPath":"implicitly
+        required container POD"},"reason":"created","message":"Created with docker
+        id 3d6b5d2f67cf0c60a7ef747c892582560240095e2c8c202799d3677b5c9b82d0","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:00Z","lastTimestamp":"2015-07-12T09:08:00Z","count":1},{"metadata":{"name":"docker-registry-1-deploy.13f027d5f1b33a09","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-deploy.13f027d5f1b33a09","uid":"7ee1e72b-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2490","creationTimestamp":"2015-07-12T09:08:00Z","deletionTimestamp":"2015-07-12T11:08:00Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-deploy","uid":"7e03da05-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2485","fieldPath":"implicitly
+        required container POD"},"reason":"started","message":"Started with docker
+        id 3d6b5d2f67cf0c60a7ef747c892582560240095e2c8c202799d3677b5c9b82d0","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:00Z","lastTimestamp":"2015-07-12T09:08:00Z","count":1},{"metadata":{"name":"docker-registry-1-deploy.13f027d636ca3dbe","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-deploy.13f027d636ca3dbe","uid":"7f92d73c-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2491","creationTimestamp":"2015-07-12T09:08:02Z","deletionTimestamp":"2015-07-12T11:08:02Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-deploy","uid":"7e03da05-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2485","fieldPath":"spec.containers{deployment}"},"reason":"created","message":"Created
+        with docker id 2d647e61d12b88d12c34258375c6ae74272b32c1ef2dd19b36b06ea0e917629e","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:02Z","lastTimestamp":"2015-07-12T09:08:02Z","count":1},{"metadata":{"name":"docker-registry-1-deploy.13f027d641421d0f","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-deploy.13f027d641421d0f","uid":"7fad9fe4-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2492","creationTimestamp":"2015-07-12T09:08:02Z","deletionTimestamp":"2015-07-12T11:08:02Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-deploy","uid":"7e03da05-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2485","fieldPath":"spec.containers{deployment}"},"reason":"started","message":"Started
+        with docker id 2d647e61d12b88d12c34258375c6ae74272b32c1ef2dd19b36b06ea0e917629e","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:02Z","lastTimestamp":"2015-07-12T09:08:02Z","count":1},{"metadata":{"name":"docker-registry-1-deploy.13f027db7ab1cd63","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1-deploy.13f027db7ab1cd63","uid":"8d0d68d2-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2524","creationTimestamp":"2015-07-12T09:08:24Z","deletionTimestamp":"2015-07-12T11:08:24Z"},"involvedObject":{"kind":"Pod","namespace":"test","name":"docker-registry-1-deploy","uid":"7e03da05-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2485","fieldPath":"implicitly
+        required container POD"},"reason":"killing","message":"Killing 3d6b5d2f67cf0c60a7ef747c892582560240095e2c8c202799d3677b5c9b82d0","source":{"component":"kubelet","host":"dhcp-0-129.tlv.redhat.com"},"firstTimestamp":"2015-07-12T09:08:24Z","lastTimestamp":"2015-07-12T09:08:24Z","count":1},{"metadata":{"name":"docker-registry-1.13f027d6b4a08c45","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/docker-registry-1.13f027d6b4a08c45","uid":"80d847eb-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2498","creationTimestamp":"2015-07-12T09:08:04Z","deletionTimestamp":"2015-07-12T11:08:04Z"},"involvedObject":{"kind":"ReplicationController","namespace":"test","name":"docker-registry-1","uid":"7dfe3d9b-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2495"},"reason":"successfulCreate","message":"Created
+        pod: docker-registry-1-31mzp","source":{"component":"replication-controller"},"firstTimestamp":"2015-07-12T09:08:04Z","lastTimestamp":"2015-07-12T09:08:04Z","count":1},{"metadata":{"name":"frontend.13f0260fa40602ae","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/frontend.13f0260fa40602ae","uid":"00734bb7-2877-11e5-b5bb-727174f8ab71","resourceVersion":"3227","creationTimestamp":"2015-07-12T09:18:47Z","deletionTimestamp":"2015-07-12T11:18:47Z"},"involvedObject":{"kind":"DeploymentConfig","namespace":"test","name":"frontend","uid":"f3d7a3df-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"392"},"reason":"failedCreate","message":"Couldn''t
+        create initial deployment: DeploymentConfig \"frontend\" is invalid: triggers[0].imageChange.tag:
+        invalid value ''latest'': no image recorded for test/origin-ruby-sample:latest","source":{"component":"deployer"},"firstTimestamp":"2015-07-12T08:35:29Z","lastTimestamp":"2015-07-12T09:18:47Z","count":23},{"metadata":{"name":"ruby-sample-build-1-1436692104.13f027db5dc0fff8","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/ruby-sample-build-1-1436692104.13f027db5dc0fff8","uid":"39ba5737-2877-11e5-b5bb-727174f8ab71","resourceVersion":"3336","creationTimestamp":"2015-07-12T09:20:23Z","deletionTimestamp":"2015-07-12T11:20:23Z"},"involvedObject":{"kind":"Build","namespace":"test","name":"ruby-sample-build-1-1436692104","uid":"8cbc9055-2875-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"2515"},"reason":"invalidOutput","message":"Error
+        starting build: the ImageStream test/origin-ruby-sample cannot be used as
+        the output for Build test/ruby-sample-build-1-1436692104 because the integrated
+        Docker registry is not configured, or the user forgot to set a valid external
+        registry","source":{"component":"build-controller"},"firstTimestamp":"2015-07-12T09:08:24Z","lastTimestamp":"2015-07-12T09:20:23Z","count":731},{"metadata":{"name":"ruby-sample-build-1.13f0261064629985","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/events/ruby-sample-build-1.13f0261064629985","uid":"274170d2-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2460","creationTimestamp":"2015-07-12T09:05:33Z","deletionTimestamp":"2015-07-12T11:05:33Z"},"involvedObject":{"kind":"Build","namespace":"test","name":"ruby-sample-build-1","uid":"f5c229c3-2870-11e5-b5bb-727174f8ab71","apiVersion":"v1","resourceVersion":"411"},"reason":"invalidOutput","message":"Error
+        starting build: the ImageStream test/origin-ruby-sample cannot be used as
+        the output for Build test/ruby-sample-build-1 because the integrated Docker
+        registry is not configured, or the user forgot to set a valid external registry","source":{"component":"build-controller"},"firstTimestamp":"2015-07-12T08:35:32Z","lastTimestamp":"2015-07-12T09:05:33Z","count":1812}]}'
     http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:14:01 GMT
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
 - request:
     method: get
-    uri: https://10.35.0.167:8443/api/v1beta3/namespaces
+    uri: https://10.35.0.174:8443/api/v1beta3/endpoints
     body:
       encoding: US-ASCII
       string: ''
@@ -912,78 +308,48 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Cache-Control:
+      - no-store
       Content-Type:
       - application/json
       Date:
-      - Wed, 15 Apr 2015 23:14:00 GMT
-      Content-Length:
-      - '1432'
+      - Sun, 12 Jul 2015 09:20:24 GMT
+      Transfer-Encoding:
+      - chunked
     body:
       encoding: UTF-8
-      string: |-
-        {
-          "kind": "NamespaceList",
-          "apiVersion": "v1beta3",
-          "metadata": {
-            "selfLink": "/api/v1beta3/namespaces",
-            "resourceVersion": "9643"
-          },
-          "items": [
-            {
-              "metadata": {
-                "name": "default",
-                "selfLink": "/api/v1beta3/namespaces/default",
-                "uid": "5535c522-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "3",
-                "creationTimestamp": "2015-04-15T15:37:32Z"
-              },
-              "spec": {
-                "finalizers": [
-                  "kubernetes"
-                ]
-              },
-              "status": {
-                "phase": "Active"
-              }
-            },
-            {
-              "metadata": {
-                "name": "master",
-                "selfLink": "/api/v1beta3/namespaces/master",
-                "uid": "580ef998-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "36",
-                "creationTimestamp": "2015-04-15T15:37:37Z"
-              },
-              "spec": {
-                "finalizers": [
-                  "openshift.com/project",
-                  "kubernetes"
-                ]
-              },
-              "status": {
-                "phase": "Active"
-              }
-            },
-            {
-              "metadata": {
-                "name": "openshift",
-                "selfLink": "/api/v1beta3/namespaces/openshift",
-                "uid": "581874d7-e385-11e4-9d96-f8b156af4ae1",
-                "resourceVersion": "37",
-                "creationTimestamp": "2015-04-15T15:37:37Z"
-              },
-              "spec": {
-                "finalizers": [
-                  "openshift.com/project",
-                  "kubernetes"
-                ]
-              },
-              "status": {
-                "phase": "Active"
-              }
-            }
-          ]
-        }
+      string: '{"kind":"EndpointsList","apiVersion":"v1beta3","metadata":{"selfLink":"/api/v1beta3/endpoints","resourceVersion":"3336"},"items":[{"metadata":{"name":"kubernetes","namespace":"default","selfLink":"/api/v1beta3/namespaces/default/endpoints/kubernetes","uid":"20a1532f-286d-11e5-b5bb-727174f8ab71","resourceVersion":"7","creationTimestamp":"2015-07-12T08:08:06Z"},"subsets":[{"addresses":[{"IP":"10.35.0.174"}],"ports":[{"port":8443,"protocol":"TCP"}]}]},{"metadata":{"name":"kubernetes-ro","namespace":"default","selfLink":"/api/v1beta3/namespaces/default/endpoints/kubernetes-ro","uid":"20a8e17e-286d-11e5-b5bb-727174f8ab71","resourceVersion":"9","creationTimestamp":"2015-07-12T08:08:06Z"},"subsets":[{"addresses":[{"IP":"10.35.0.174"}],"ports":[{"port":8443,"protocol":"TCP"}]}]},{"metadata":{"name":"database","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/endpoints/database","uid":"f3f6397d-2870-11e5-b5bb-727174f8ab71","resourceVersion":"466","creationTimestamp":"2015-07-12T08:35:29Z","labels":{"template":"application-template-dockerbuild"}},"subsets":[{"addresses":[{"IP":"172.17.0.10","targetRef":{"kind":"Pod","namespace":"test","name":"database-1-3v6zu","uid":"fc73bb4b-2870-11e5-b5bb-727174f8ab71","resourceVersion":"464"}}],"ports":[{"name":"db","port":3306,"protocol":"TCP"}]}]},{"metadata":{"name":"docker-registry","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/endpoints/docker-registry","uid":"7dff2935-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2513","creationTimestamp":"2015-07-12T09:07:59Z","labels":{"docker-registry":"default"}},"subsets":[{"addresses":[{"IP":"172.17.0.12","targetRef":{"kind":"Pod","namespace":"test","name":"docker-registry-1-31mzp","uid":"8068bdea-2875-11e5-b5bb-727174f8ab71","resourceVersion":"2512"}}],"ports":[{"port":5000,"protocol":"TCP"}]}]},{"metadata":{"name":"frontend","namespace":"test","selfLink":"/api/v1beta3/namespaces/test/endpoints/frontend","uid":"f3b27b66-2870-11e5-b5bb-727174f8ab71","resourceVersion":"387","creationTimestamp":"2015-07-12T08:35:29Z","labels":{"template":"application-template-dockerbuild"}},"subsets":[]}]}'
     http_version: 
-  recorded_at: Wed, 15 Apr 2015 20:14:01 GMT
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
+- request:
+    method: get
+    uri: https://10.35.0.174:8443/api/v1beta3/namespaces
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 12 Jul 2015 09:20:24 GMT
+      Content-Length:
+      - '1725'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"NamespaceList","apiVersion":"v1beta3","metadata":{"selfLink":"/api/v1beta3/namespaces","resourceVersion":"3336"},"items":[{"metadata":{"name":"default","selfLink":"/api/v1beta3/namespaces/default","uid":"2099823d-286d-11e5-b5bb-727174f8ab71","resourceVersion":"84","creationTimestamp":"2015-07-12T08:08:06Z","annotations":{"openshift.io/sa.scc.mcs":"s0:c1,c0","openshift.io/sa.scc.uid-range":"1000000000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"openshift","selfLink":"/api/v1beta3/namespaces/openshift","uid":"225dacb3-286d-11e5-b5bb-727174f8ab71","resourceVersion":"92","creationTimestamp":"2015-07-12T08:08:09Z","annotations":{"openshift.io/sa.scc.mcs":"s0:c3,c2","openshift.io/sa.scc.uid-range":"1000010000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"openshift-infra","selfLink":"/api/v1beta3/namespaces/openshift-infra","uid":"221a012e-286d-11e5-b5bb-727174f8ab71","resourceVersion":"104","creationTimestamp":"2015-07-12T08:08:09Z","annotations":{"openshift.io/sa.scc.mcs":"s0:c5,c0","openshift.io/sa.scc.uid-range":"1000020000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"test","selfLink":"/api/v1beta3/namespaces/test","uid":"9f2f3e05-286d-11e5-b5bb-727174f8ab71","resourceVersion":"195","creationTimestamp":"2015-07-12T08:11:39Z","annotations":{"openshift.io/description":"","openshift.io/display-name":"","openshift.io/sa.scc.mcs":"s0:c6,c0","openshift.io/sa.scc.uid-range":"1000030000/10000"}},"spec":{"finalizers":["openshift.io/origin","kubernetes"]},"status":{"phase":"Active"}}]}'
+    http_version: 
+  recorded_at: Sun, 12 Jul 2015 09:20:24 GMT
 recorded_with: VCR 2.9.3

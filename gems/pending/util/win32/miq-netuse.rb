@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'runcmd'
+require 'util/runcmd'
 
 class NetUseShare
 	attr_reader :cmdMsg, :cmdRc

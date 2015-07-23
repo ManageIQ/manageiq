@@ -1,18 +1,15 @@
-require 'rubygems'
-#gem 'Platform'
 require 'platform'
-$:.push("../../util")
-require 'miq-system'
+require 'util/miq-system'
 
 if Platform::IMPL == :linux
 	if MiqSystem.arch == :x86
 		require 'large_file_linux'
 	elsif MiqSystem.arch == :x86_64
 		require 'linux_block_device'
-		require 'RawBlockIO'
+		require 'disk/modules/RawBlockIO'
 	end
 elsif Platform::OS == :win32
-	require 'MiqLargeFileWin32'
+	require 'disk/modules/MiqLargeFileWin32'
 end
 
 module MiqLargeFile

@@ -1,5 +1,5 @@
-require_relative './openstack_amqp_event'
-require_relative './openstack_qpid_connection'
+require 'openstack/amqp/openstack_amqp_event'
+require 'openstack/amqp/openstack_qpid_connection'
 
 #
 # An AMQP Notification Receiver that uses Qpid to listen for messages.

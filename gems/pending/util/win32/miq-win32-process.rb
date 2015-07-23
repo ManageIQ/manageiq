@@ -1,6 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'rubygems'
 require 'win32/process'
 require 'binary_struct'
 

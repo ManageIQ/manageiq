@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'PortScan'
+require 'discovery/PortScan'
 
 class RedHatRhevmProbe
   def self.probe(ost)

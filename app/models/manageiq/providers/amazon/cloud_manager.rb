@@ -152,7 +152,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
   end
 
-  def stack_status(stack_name, _stack_id)
+  def stack_status(stack_name, _stack_id, _options = {})
     stack = cloud_formation.stacks[stack_name]
     return stack.status, stack.status_reason if stack
   rescue => err
