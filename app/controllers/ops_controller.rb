@@ -733,7 +733,7 @@ class OpsController < ApplicationController
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ]
+      ] if tree
     end
   end
 
