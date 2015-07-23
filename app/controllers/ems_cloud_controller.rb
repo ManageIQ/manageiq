@@ -21,7 +21,7 @@ class EmsCloudController < ApplicationController
   def update
     return super unless "save" == params[:button]
 
-    assert_privileges("#{model.to_s.underscore}_edit")
+    assert_privileges("#{permission_prefix}_edit")
 
     @ems = find_by_id_filtered(model, params[:id])
     set_model_data @ems, params
@@ -49,7 +49,7 @@ class EmsCloudController < ApplicationController
   def create
     return super unless "add" == params[:button]
 
-    assert_privileges("#{model.to_s.underscore}_new")
+    assert_privileges("#{permission_prefix}_new")
 
     if params[:server_emstype].blank?
       add_flash(_("%s is required") % "Type", :error)
@@ -71,7 +71,7 @@ class EmsCloudController < ApplicationController
           add_flash("#{@ems.class.human_attribute_name(field)} #{msg}", :error)
         end
 
-        drop_breadcrumb(:name => "Add New #{name}", :url => new_polymorphic_path(self.class.model))
+        drop_breadcrumb(:name => "Add New #{name}", :url => new_ems_cloud_path)
         render :update do |page|
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
@@ -118,7 +118,7 @@ class EmsCloudController < ApplicationController
     ems.port            = params[:port]
     ems.zone            = Zone.find_by_name(params[:server_zone] || "default")
 
-    if ems.kind_of?(EmsVmware)
+    if ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
       ems.host_default_vnc_port_start = no_blank(params[:host_default_vnc_port_start])
       ems.host_default_vnc_port_end = no_blank(params[:host_default_vnc_port_end])
     end
