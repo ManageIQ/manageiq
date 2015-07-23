@@ -26,7 +26,6 @@ module ReportHelper
     end
   end
 
-
   def chart_fields_options
     # @edit[:pivot_cols] => {"Vm-mem_cpu"=>[:avg, :total]}
     options = []

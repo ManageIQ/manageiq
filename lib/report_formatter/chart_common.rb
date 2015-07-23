@@ -362,9 +362,9 @@ module ReportFormatter
       groups = mri.table.data.group_by { |row| row[sort1] }
 
       group_sums = groups.each_with_object({}) do |(key, rows), h|
-                     h[key] = rows.inject(0) { |sum, row| sum += row[data_column_name] }
-                   end
-      sorted_sums = group_sums.sort_by { |key, sum| sum }
+        h[key] = rows.inject(0) { |sum, row| sum + row[data_column_name] }
+      end
+      sorted_sums = group_sums.sort_by { |_key, sum| sum }
 
       selected_groups = sorted_sums.reverse.take(keep)
 
@@ -380,17 +380,16 @@ module ReportFormatter
       if show_other
         other_groups = Array(sorted_sums[0, sorted_sums.length - keep])
         other = other_groups.each_with_object(Hash.new(0)) do |(key, _), o|
-                  groups[key].each do |row|
-                    o[row[sort2]] += row[data_column_name]
-                  end
-                end
+          groups[key].each do |row|
+            o[row[sort2]] += row[data_column_name]
+          end
+        end
       end
 
       # For each value in sort2 column we create a series.
       sort2_values = mri.table.data.each_with_object({}) { |row, h| h[row[sort2]] = true }
       sort2_values.each_key do |val2|
         series = selected_groups.each_with_object(series_class.new) do |(key1, _), a|
-
           row = groups_hash.fetch_path(key1, val2)
           value = row ? row[data_column_name] : 0
           a.push(:value   => value,
@@ -410,7 +409,7 @@ module ReportFormatter
 
     def data_column_name
       @data_column_name ||= (
-        model, col  = mri.graph[:column].split('-', 2)
+        _model, col  = mri.graph[:column].split('-', 2)
         col, aggreg = col.split(':', 2)
         "#{col}__#{aggreg}"
       )
@@ -418,13 +417,12 @@ module ReportFormatter
 
     def build_reporting_chart_other_numeric
       categories = []
-      (sort1, _) = mri.sortby
+      (sort1,) = mri.sortby
       (keep, show_other) = keep_and_show_other
       sorted_data = mri.table.data.sort_by { |row| row[data_column_name] }
 
-      series = sorted_data.reverse.take(keep).
-               each_with_object(series_class.new(is_pie_type ? :pie : :flat)) do |row, a|
-
+      series = sorted_data.reverse.take(keep)
+               .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
         tooltip = row[sort1]
         tooltip = _('no value') if tooltip.blank?
         a.push(:value   => row[data_column_name],
@@ -433,22 +431,22 @@ module ReportFormatter
       end
 
       if show_other
-        ocount = sorted_data[0, sorted_data.length - keep].
-                  inject(0) { |sum, row| sum += row[data_column_name] }
+        ocount = sorted_data[0, sorted_data.length - keep]
+                 .inject(0) { |sum, row| sum + row[data_column_name] }
         series.push(:value => ocount, :tooltip => _('Other'))
         categories.push([_('Other'), ocount])
       end
 
       # Pie charts put categories in legend, else in axis labels
-      limit = is_pie_type ? LEGEND_LENGTH : LABEL_LENGTH
+      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
       categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
 
       add_series(mri.headers[0], series)
     end
 
-    def is_pie_type
-      @is_pie_type ||= mri.graph[:type] =~ /^(Pie|Donut)/
+    def pie_type?
+      @pie_type ||= mri.graph[:type] =~ /^(Pie|Donut)/
     end
 
     def build_reporting_chart_other
@@ -477,12 +475,12 @@ module ReportFormatter
       end
 
       series = categories.each_with_object(
-        series_class.new(is_pie_type ? :pie : :flat)) do |cat, a|
+        series_class.new(pie_type? ? :pie : :flat)) do |cat, a|
         a.push(:value => cat.last, :tooltip => "#{cat.first}: #{cat.last}")
       end
 
       # Pie charts put categories in legend, else in axis labels
-      limit = is_pie_type ? LEGEND_LENGTH : LABEL_LENGTH
+      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
       categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
       add_series(mri.headers[0], series)
@@ -504,11 +502,11 @@ module ReportFormatter
       build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
     end
 
-    def build_reporting_chart_numeric(maxcols, divider)
+    def build_reporting_chart_numeric(_maxcols, _divider)
       mri.dims == 2 ?  build_reporting_chart_dim2_numeric : build_reporting_chart_other_numeric
     end
 
-    def build_reporting_chart(maxcols, divider)
+    def build_reporting_chart(_maxcols, _divider)
       mri.dims == 2 ?  build_reporting_chart_dim2 : build_reporting_chart_other
     end
   end

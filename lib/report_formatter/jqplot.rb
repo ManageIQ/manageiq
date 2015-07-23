@@ -145,7 +145,7 @@ module ReportFormatter
           }",
           :tooltipLocation      => 'n'
         }
-      ) if is_pie_type
+      ) if pie_type?
     end
 
     def build_reporting_chart_dim2_numeric
@@ -167,7 +167,7 @@ module ReportFormatter
           }",
           :tooltipLocation      => 'n'
         }
-      ) if is_pie_type
+      ) if pie_type?
     end
 
     def finalize_document

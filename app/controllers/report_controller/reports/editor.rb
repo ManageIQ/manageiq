@@ -1401,7 +1401,7 @@ module ReportController::Reports::Editor
 #   @edit[:new][:graph] = @rpt.graph
 # Replaced above line to handle new graph settings Hash
     if @rpt.graph.is_a?(Hash)
-    @edit[:new][:graph_type]     = @rpt.graph[:type]
+      @edit[:new][:graph_type]   = @rpt.graph[:type]
       @edit[:new][:graph_count]  = @rpt.graph[:count]
       @edit[:new][:chart_mode]   = @rpt.graph[:mode]
       @edit[:new][:chart_column] = @rpt.graph[:column]
