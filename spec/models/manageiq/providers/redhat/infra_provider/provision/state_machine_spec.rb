@@ -59,7 +59,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       @task.stub(:update_and_notify_parent)
 
       @task.should_receive(:configure_container)
-      @task.should_receive(:attach_floppy_payload)
+      @task.should_receive(:configure_cloud_init)
       @task.should_receive(:poll_destination_powered_off_in_provider)
 
       @task.customize_destination

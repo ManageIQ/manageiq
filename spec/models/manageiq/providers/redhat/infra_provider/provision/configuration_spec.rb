@@ -24,13 +24,26 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration do
       script = '#cloudinit'
       template = FactoryGirl.create(:customization_template_cloud_init, :script => script)
 
-      template_options = {'key' => 'value'}
-      @task.should_receive(:prepare_customization_template_substitution_options).and_return(template_options)
+      @task.should_receive(:prepare_customization_template_substitution_options).and_return('key' => 'value')
 
       @task.options[:customization_template_id] = template.id
       @rhevm_vm.should_receive(:attach_floppy).with(template.default_filename => script)
 
       @task.attach_floppy_payload
+    end
+  end
+
+  context "#configure_cloud_init" do
+    it "should configure cloudinit if customization template provided" do
+      script = '#cloudinit'
+      template = FactoryGirl.create(:customization_template_cloud_init, :script => script)
+
+      @task.should_receive(:prepare_customization_template_substitution_options).and_return('key' => 'value')
+
+      @task.options[:customization_template_id] = template.id
+      @rhevm_vm.should_receive(:cloud_init=).with(script)
+
+      @task.configure_cloud_init
     end
   end
 

@@ -5,8 +5,14 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
   include_concern 'Network'
 
   def attach_floppy_payload
-    payload = floppy_payload
-    get_provider_destination.attach_floppy(payload) if payload
+    return unless content = customization_template_content
+    filename = customization_template.default_filename
+    get_provider_destination.attach_floppy(filename => content)
+  end
+
+  def configure_cloud_init
+    return unless content = customization_template_content
+    get_provider_destination.cloud_init = content
   end
 
   def configure_memory(rhevm_vm)
@@ -47,11 +53,9 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
 
   private
 
-  def floppy_payload
-    return nil unless customization_template
-    options  = prepare_customization_template_substitution_options
-    filename = customization_template.default_filename
-    content  = customization_template.script_with_substitution(options)
-    {filename => content}
+  def customization_template_content
+    return unless customization_template
+    options = prepare_customization_template_substitution_options
+    customization_template.script_with_substitution(options)
   end
 end
