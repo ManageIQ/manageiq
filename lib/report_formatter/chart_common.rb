@@ -417,12 +417,9 @@ module ReportFormatter
 
     def build_reporting_chart_other_numeric
       categories = []
-      (sort1, _) = mri.sortby
+      (sort1,) = mri.sortby
       (keep, show_other) = keep_and_show_other
       sorted_data = mri.table.data.sort_by { |row| row[data_column_name] }
-
-      series = sorted_data.reverse.take(keep).
-               each_with_object(series_class.new(is_pie_type ? :pie : :flat)) do |row, a|
 
       series = sorted_data.reverse.take(keep)
                .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
@@ -434,8 +431,8 @@ module ReportFormatter
       end
 
       if show_other
-        other_sum = Array(sorted_data[0, sorted_data.length - keep]).
-                  inject(0) { |sum, row| sum += row[data_column_name] }
+        other_sum = Array(sorted_data[0, sorted_data.length - keep])
+                 .inject(0) { |sum, row| sum + row[data_column_name] }
         series.push(:value => other_sum, :tooltip => _('Other'))
         categories.push([_('Other'), other_sum])
       end
@@ -505,11 +502,11 @@ module ReportFormatter
       build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
     end
 
-    def build_reporting_chart_numeric(maxcols, divider)
+    def build_reporting_chart_numeric(_maxcols, _divider)
       mri.dims == 2 ?  build_reporting_chart_dim2_numeric : build_reporting_chart_other_numeric
     end
 
-    def build_reporting_chart(maxcols, divider)
+    def build_reporting_chart(_maxcols, _divider)
       mri.dims == 2 ?  build_reporting_chart_dim2 : build_reporting_chart_other
     end
   end
