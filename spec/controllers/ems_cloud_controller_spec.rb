@@ -15,6 +15,9 @@ describe EmsCloudController do
       allow(user).to receive(:server_timezone).and_return("UTC")
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
+      controller.stub(:assert_privileges).and_return(true)
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
       login_as user
     end
 
@@ -23,6 +26,16 @@ describe EmsCloudController do
       get :new
       expect(response.status).to eq(200)
       expect(controller.stub(:edit)).to_not be_nil
+    end
+
+    render_views
+
+    it 'shows the edit page' do
+      expect(MiqServer.my_server).to be
+      FactoryGirl.create(:ems_amazon, :zone => Zone.first)
+      ems = ManageIQ::Providers::Amazon::CloudManager.first
+      get :edit, :id => ems.id
+      expect(response.status).to eq(200)
     end
 
     it 'creates on post' do
