@@ -123,7 +123,56 @@ http_interactions:
       encoding: UTF-8
       string: '{"kind":"NodeList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/nodes","resourceVersion":"5302"},"items":[{"metadata":{"name":"10.35.0.169","selfLink":"/api/v1/nodes/10.35.0.169","uid":"6de77025-35f0-11e5-8917-001a4a5f4a00","resourceVersion":"5302","creationTimestamp":"2015-07-29T12:50:45Z","labels":{"kubernetes.io/hostname":"10.35.0.169"}},"spec":{"externalID":"10.35.0.169"},"status":{"capacity":{"cpu":"2","memory":"2048080Ki","pods":"40"},"conditions":[{"type":"Ready","status":"True","lastHeartbeatTime":"2015-07-29T15:53:23Z","lastTransitionTime":"2015-07-29T12:50:45Z","reason":"kubelet
         is posting ready status"}],"addresses":[{"type":"LegacyHostIP","address":"10.35.0.169"}],"nodeInfo":{"machineID":"8b6c70709abd41aca950e4cfac665673","systemUUID":"8B6C7070-9ABD-41AC-A950-E4CFAC665673","bootID":"da9a3173-328f-4bd6-a422-17189d74e3a4","kernelVersion":"3.18.9-100.fc20.x86_64","osImage":"Fedora
-        20 (Heisenbug)","containerRuntimeVersion":"docker://1.5.0","kubeletVersion":"v1.0.0-dirty","kubeProxyVersion":"v1.0.0-dirty"}}}]}'
+        20 (Heisenbug)","containerRuntimeVersion":"docker://1.5.0","kubeletVersion":"v1.0.0-dirty","kubeProxyVersion":"v1.0.0-dirty"}}},
+            {
+              "metadata": {
+                "name": "localhost.localdomain",
+                "selfLink": "/api/v1/nodes/localhost.localdomain",
+                "uid": "382935e0-311c-11e5-89f5-001a4a231380",
+                "resourceVersion": "4722",
+                "creationTimestamp": "2015-07-23T09:21:37Z",
+                "labels": {
+                  "kubernetes.io/hostname": "localhost.localdomain"
+                }
+              },
+              "spec": {
+                "externalID": "localhost.localdomain"
+              },
+              "status": {
+                "capacity": {
+                  "cpu": "2",
+                  "memory": "2047840Ki",
+                  "pods": "40"
+                },
+                "conditions": [
+                  {
+                    "type": "Ready",
+                    "status": "True",
+                    "lastHeartbeatTime": "2015-07-23T11:43:17Z",
+                    "lastTransitionTime": "2015-07-23T09:21:37Z",
+                    "reason": "kubelet is posting ready status"
+                  }
+                ],
+                "addresses": [
+                  {
+                    "type": "LegacyHostIP",
+                    "address": "::1"
+                  }
+                ],
+                "nodeInfo": {
+                  "machineID": "",
+                  "systemUUID": "CAD16607-FB88-4412-A993-5242030F6AFA",
+                  "bootID": "7d455499-6ab5-4a66-a550-de1f19be13b2",
+                  "kernelVersion": "3.17.4-301.fc21.x86_64",
+                  "osImage": "CentOS Linux 7 (Core)",
+                  "containerRuntimeVersion": "docker://1.6.0",
+                  "kubeletVersion": "v1.0.0",
+                  "kubeProxyVersion": "v1.0.0"
+                }
+              }
+            }
+          ]
+        }'
     http_version: 
   recorded_at: Wed, 29 Jul 2015 15:53:28 GMT
 - request:
