@@ -1965,7 +1965,7 @@ private
     model = @edit[:selected_items].count > 1 ? :models : :model
     @sb[:action] = session[:edit] = nil # clean out the saved info
     add_flash(_("Copy %s was cancelled by the user") %  ui_lookup(model => "#{@edit[:typ]}")
-              
+
     )
     @in_a_form = false
     replace_right_cell
