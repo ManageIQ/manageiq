@@ -515,7 +515,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
-      return [VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))].compact
+      vm_or_template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
+      return [create_hash_struct_from_vm_or_template(vm_or_template, options)].compact
     end
 
     filter_id = get_value(@values[:vm_filter]).to_i
@@ -574,24 +575,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     MiqPreloader.preload(allowed_templates_list, [:operating_system, :ext_management_system, {:hardware => :disks}])
-    @allowed_templates_cache = allowed_templates_list.collect do |v|
-      nh = MiqHashStruct.new(
-        :id                     => v.id,
-        :name                   => v.name,
-        :guid                   => v.guid,
-        :uid_ems                => v.uid_ems,
-        :platform               => v.platform,
-        :num_cpu                => v.num_cpu,
-        :mem_cpu                => v.mem_cpu,
-        :allocated_disk_storage => v.allocated_disk_storage,
-        :v_total_snapshots      => v.v_total_snapshots,
-        :evm_object_class       => :Vm
-        )
-      nh.operating_system = MiqHashStruct.new(:product_name => v.operating_system.product_name) if v.operating_system
-      nh.ext_management_system = MiqHashStruct.new(:name => v.ext_management_system.name) if v.ext_management_system
-      nh.datacenter_name = v.owning_blue_folder.parent_datacenter.name rescue nil if options[:include_datacenter] == true
-      nh
+    @allowed_templates_cache = allowed_templates_list.collect do |template|
+      create_hash_struct_from_vm_or_template(template, options)
     end
+
     @allowed_templates_cache
   end
 
@@ -1275,6 +1262,32 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   private
+
+  def create_hash_struct_from_vm_or_template(vm_or_template, options)
+    hash_struct = MiqHashStruct.new(
+      :id                     => vm_or_template.id,
+      :name                   => vm_or_template.name,
+      :guid                   => vm_or_template.guid,
+      :uid_ems                => vm_or_template.uid_ems,
+      :platform               => vm_or_template.platform,
+      :num_cpu                => vm_or_template.num_cpu,
+      :mem_cpu                => vm_or_template.mem_cpu,
+      :allocated_disk_storage => vm_or_template.allocated_disk_storage,
+      :v_total_snapshots      => vm_or_template.v_total_snapshots,
+      :evm_object_class       => :Vm
+    )
+    hash_struct.operating_system = MiqHashStruct.new(
+      :product_name => vm_or_template.operating_system.product_name
+    ) if vm_or_template.operating_system
+    hash_struct.ext_management_system = MiqHashStruct.new(
+      :name => vm_or_template.ext_management_system.name
+    ) if vm_or_template.ext_management_system
+    if options[:include_datacenter] == true
+      hash_struct.datacenter_name = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
+    end
+
+    hash_struct
+  end
 
   def exit_pre_dialog
     @running_pre_dialog              = false
