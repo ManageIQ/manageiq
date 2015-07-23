@@ -12,13 +12,12 @@
       - if @edit[@expkey][:exp_idx] > 0
         %li
           = link_to(image_tag('/images/toolbars/undo.png',
-                              :alt => 'Undo the last change'),
-                    {:action  => 'exp_button',
-                     :pressed => 'undo'},
+                              :alt => 'Undo the previous change'),
+                    advanced_searches_exp_button_path(:pressed => 'undo', :target_controller => target_controller),
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
-                    :title                 => _('Undo the last change'))
+                    :title                 => _('Undo the previous change'))
       - else
         %li.dimmed
           = image_tag("/images/toolbars/undo.png")
@@ -26,13 +25,14 @@
       - if @edit[@expkey][:exp_idx] < @edit[@expkey][:exp_array].length - 1
         %li
           = link_to(image_tag('/images/toolbars/redo.png',
-                              :alt => 'Re-apply the previous change'),
+                              :alt => 'Redo the next change'),
                     {:action  => 'exp_button',
+                     :target_controller  => target_controller,
                      :pressed => 'redo'},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
-                    :title                 => _('Re-apply the previous change'))
+                    :title                 => _('Redo the next change'))
       - else
         %li.dimmed
           = image_tag("/images/toolbars/redo.png")
@@ -54,8 +54,7 @@
             %li
               = link_to(image_tag("/images/toolbars/#{image}.png",
                                   :alt => title),
-                        {:action  => "exp_button",
-                         :pressed => pressed},
+                        advanced_searches_exp_button_path(:pressed => pressed, :target_controller => target_controller),
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
@@ -69,8 +68,7 @@
           %li
             = link_to(image_tag("/images/toolbars/#{image}.png",
                                 :alt => title),
-                      {:action  => 'exp_button',
-                       :pressed => pressed},
+                      advanced_searches_exp_button_path(:pressed => pressed, :target_controller => target_controller),
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       :remote                => true,
@@ -80,8 +78,7 @@
       - @edit[@expkey][:exp_table].each do |token|
         - if ! %w(AND OR ( ) ???).include?([token].flatten.first)
           = link_to(token.first,
-                    {:action => 'exp_token_pressed',
-                     :token  => token.last},
+                    advanced_searches_exp_token_pressed_path(:token => token.last),
                     :style                 => "color: black",
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -89,8 +86,7 @@
                     :id                    => "exp_#{token.last}")
         - elsif [token].flatten.first == "???"
           = link_to(token.first,
-                    {:action => 'exp_token_pressed',
-                     :token  => token.last},
+                    advanced_searches_exp_token_pressed_path(:token => token.last, :target_controller => target_controller),
                     :style                 => "color: black; background-color: yellow",
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -102,4 +98,4 @@
               = token
 
   - if @edit[@expkey][:exp_token]
-    = render(:partial => 'layouts/exp_atom/editor')
+    = render(:partial => 'layouts/exp_atom/editor', :locals => { :target_controller => target_controller })

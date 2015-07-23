@@ -36,20 +36,6 @@ describe "routes for AvailabilityZoneController" do
     end
   end
 
-  describe "#adv_search_toggle" do
-    it "routes with POST" do
-      expect(post("/#{controller_name}/adv_search_toggle")).to route_to("#{controller_name}#adv_search_toggle")
-    end
-  end
-
-  describe "#adv_search_load_choice" do
-    it "routes with POST" do
-      expect(post("/#{controller_name}/adv_search_load_choice")).to route_to(
-        "#{controller_name}#adv_search_load_choice"
-      )
-    end
-  end
-
   describe "#panel_control" do
     it "routes with POST" do
       expect(post("/#{controller_name}/panel_control")).to route_to("#{controller_name}#panel_control")

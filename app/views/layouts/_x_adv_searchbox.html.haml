@@ -47,7 +47,7 @@
         %span#clear_search{:style => "display:none"} 
           (
           = link_to("clear",
-                    {:action              => "adv_search_clear"},
+                    advanced_searches_clear_path(:target_controller => controller_name),
                     "data-miq_sparkle_on" => true,
                     :remote               => true,
                     :title                => "Remove the current filter",
@@ -76,7 +76,7 @@
           });
         });
         $("button[data-target='#advsearchModal']").click(function(){
-          miqJqueryRequest("adv_search_toggle", {beforeSend: true});
+          miqJqueryRequest("#{advanced_searches_toggle_path(:target_controller => controller_name)}", {beforeSend: true});
           return true;
         });
       });

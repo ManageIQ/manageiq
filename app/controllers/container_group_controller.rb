@@ -13,10 +13,6 @@ class ContainerGroupController < ApplicationController
 
   private ############################
 
-  def controller_name
-    "container_group"
-  end
-
   def display_name
     "Container Groups"
   end

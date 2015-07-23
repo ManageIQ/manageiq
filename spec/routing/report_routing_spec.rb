@@ -166,24 +166,6 @@ describe "routes for ReportController" do
     end
   end
 
-  describe "#exp_button" do
-    it "routes with POST" do
-      expect(post("/report/exp_button")).to route_to("report#exp_button")
-    end
-  end
-
-  describe "#exp_changed" do
-    it "routes with POST" do
-      expect(post("/report/exp_changed")).to route_to("report#exp_changed")
-    end
-  end
-
-  describe "#exp_token_pressed" do
-    it "routes with POST" do
-      expect(post("/report/exp_token_pressed")).to route_to("report#exp_token_pressed")
-    end
-  end
-
   describe "#export_field_changed" do
     it "routes with POST" do
       expect(post("/report/export_field_changed"))
