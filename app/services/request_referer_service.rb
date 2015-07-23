@@ -28,6 +28,8 @@ class RequestRefererService
     'container_group'   => %w(show:id show_list), # http://localhost:3000/container_group/show/400r1
     'container_node'    => %w(show:id show_list), # http://localhost:3000/container_node/show/400r1
     'container_service' => %w(show:id show_list), # http://localhost:3000/container_service/show/400r1
+    'dashboard'         => %w(report_only),       # needed for IE (multiple versions)
+    'report'            => %w(report_only),       # needed for IE (multiple versions)
   }.freeze
 
   ENTRY_POINTS =
