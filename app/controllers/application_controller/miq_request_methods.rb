@@ -485,7 +485,7 @@ module ApplicationController::MiqRequestMethods
   def dialog_partial_for_workflow
     case (@edit || @options).try(:[], :wf)
     when MiqProvisionVirtWorkflow                    then "shared/views/prov_dialog"
-    when MiqProvisionConfiguredSystemForemanWorkflow then "prov_configured_system_foreman_dialog"
+    when ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow then "prov_configured_system_foreman_dialog"
     when MiqHostProvisionWorkflow                    then "prov_host_dialog"
     when VmMigrateWorkflow                           then "prov_vm_migrate_dialog"
     end
@@ -818,7 +818,7 @@ module ApplicationController::MiqRequestMethods
         @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
       end
 
-      if @edit[:wf].kind_of?(MiqProvisionConfiguredSystemForemanWorkflow)
+      if @edit[:wf].kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow)
         # BD TODO
       else
         @edit[:ds_sortdir] ||= "DESC"
@@ -919,7 +919,7 @@ module ApplicationController::MiqRequestMethods
     elsif @edit[:org_controller] == "configured_system"
       @edit[:prov_type] = "ConfiguredSystem"
       @edit[:new][:src_configured_system_ids] = params[:prov_id].kind_of?(Array) ? params[:prov_id] : [params[:prov_id]]
-      wf_type = MiqProvisionConfiguredSystemForemanWorkflow
+      wf_type = ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow
     else
       @edit[:prov_type] = "Host"
       if @edit[:new].empty?

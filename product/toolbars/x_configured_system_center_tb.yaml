@@ -2,7 +2,7 @@
 # Toolbar config file
 #
 ---
-:model: ConfiguredSystemForeman
+:model: ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
 :button_groups:
 - :name: record_summary
   :items:

@@ -2,7 +2,7 @@ require "spec_helper"
 
 require "manageiq_foreman"
 
-describe ProviderForeman do
+describe ManageIQ::Providers::Foreman::Provider do
   let(:provider) { FactoryGirl.build(:provider_foreman) }
   let(:attrs)    do
     {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER}
