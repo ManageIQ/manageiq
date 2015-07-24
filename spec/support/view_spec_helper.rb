@@ -1,4 +1,4 @@
-require 'haml-rails'
+require 'hamlit-rails'
 
 module ViewSpecHelper
   def show_element(resp, id)

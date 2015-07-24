@@ -61,8 +61,8 @@ gem "ancestry",                       "~>2.1.0",      :require => false
 gem "aws-sdk",                        "~>1.56.0",     :require => false
 gem 'dalli',                          "~>2.7.4",      :require => false
 gem "elif",                           "=0.1.0",       :require => false
-gem "haml",                           "~>4.0.5",      :require => false
-gem 'haml-rails',                     "~> 0.4",       :require => false
+gem "hamlit",                         "~>1.7.2",      :require => false
+gem 'hamlit-rails',                   "~>0.1.0"
 gem "inifile",                        "~>3.0",        :require => false
 gem "logging",                        "~>1.6.1",      :require => false  # Ziya depends on this
 gem "net_app_manageability",          ">=0.1.0",      :require => false

@@ -4,7 +4,7 @@ module Vmdb
       _log.info "- Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}"
 
       if MiqEnvironment::Process.is_web_server_worker?
-        require 'haml-rails'
+        require 'hamlit-rails'
 
         # Make these constants globally available
         ::UiConstants
