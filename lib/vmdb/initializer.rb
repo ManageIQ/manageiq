@@ -34,26 +34,6 @@ module Vmdb
       if MiqEnvironment::Process.is_web_server_worker?
         Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
       end
-
-      ####################################################
-      # If this is intended to field Rails requests (called via mongrel_rails start),
-      # Then start a UiWorker, so that it can be monitored
-      ####################################################
-      if MiqEnvironment::Process.is_ui_worker_via_evm_server?
-        # Do all the SQL worker preparation in the main thread
-        ui_worker = MiqUiWorker::Runner.new.prepare
-
-        # The heartbeating will be done in a separate thread
-        Thread.new { ui_worker.run }
-      end
-
-      if MiqEnvironment::Process.is_web_service_worker_via_evm_server?
-        # Do all the SQL worker preparation in the main thread
-        ws_worker = MiqWebServiceWorker::Runner.new.prepare
-
-        # The heartbeating will be done in a separate thread
-        Thread.new { ws_worker.run }
-      end
     end
   end
 end

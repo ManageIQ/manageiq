@@ -17,12 +17,6 @@ module MiqWebServerWorkerMixin
       VMDB::Config.new("vmdb").config.fetch_path(:server, :rails_server) || "thin"
     end
 
-    def self.rails_server_command_line
-      @rails_server_command_line ||= begin
-        "#{nice_prefix} #{Rails.root.join("bin", "rails")} server #{rails_server}".freeze
-      end
-    end
-
     def self.build_command_line(*params)
       params = params.first || {}
 
@@ -51,10 +45,7 @@ module MiqWebServerWorkerMixin
       #
       #      -h, --help                       Show this help message.
       #
-      cl = rails_server_command_line.dup
-
-      params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
-      cl
+      params
     end
 
     def self.all_ports_in_use
@@ -176,7 +167,7 @@ module MiqWebServerWorkerMixin
     end
 
     def command_line_params
-      params = {}
+      params = super
       params[:port] = port if port.kind_of?(Numeric)
       params
     end
@@ -184,6 +175,7 @@ module MiqWebServerWorkerMixin
     def start
       delete_pid_file
       ENV['PORT'] = port.to_s
+      ENV['MIQ_GUID'] = guid
       super
     end
 
