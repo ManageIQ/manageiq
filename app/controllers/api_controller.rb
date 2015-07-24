@@ -55,6 +55,7 @@ class ApiController < ApplicationController
   include_concern 'Providers'
   include_concern 'Events'
   include_concern 'ProvisionRequests'
+  include_concern "Rates"
   include_concern 'RequestTasks'
   include_concern 'ServiceCatalogs'
   include_concern 'ServiceRequests'
