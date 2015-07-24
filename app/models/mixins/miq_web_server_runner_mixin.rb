@@ -37,10 +37,6 @@ module MiqWebServerRunnerMixin
 
       _log.info("With options: #{options.inspect}")
       Rails::Server.new(options).tap do |server|
-        # Use the already created Vmdb::Application, don't use a new one
-        # as it will require configuring the session store/secret and ???
-        # TODO: There has to be a way to create a Rails::Server with an existing Rails::Application.
-        server.instance_variable_set(:@app, Vmdb::Application)
         Dir.chdir(Vmdb::Application.root)
         server.start
       end

@@ -24,7 +24,7 @@ module MiqWebServerWorkerMixin
         :Port        => 3000,
         :Host        => binding_address,
         :environment => Rails.env.to_s,
-        :config      => Rails.root.join("config.ru").to_s
+        :app         => Vmdb::Application
       }
 
       params = defaults.merge(params)
