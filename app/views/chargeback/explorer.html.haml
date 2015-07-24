@@ -4,13 +4,13 @@
       = render(:partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s})
 
 - content_for :accords do
-  - # Create the explorer dhtmlx layout/accordion JS objects
+  -# Create the explorer dhtmlx layout/accordion JS objects
   = render(:partial => "layouts/dhtmlxlayout_explorer",
     :locals => {:accords => @accords,
       :active_accord => @sb[:active_accord],
       :accord_select_function => "miqAccordChargebackSelect"})
 
-- # These are the initial divs that will go inside center_cell_div
+-# These are the initial divs that will go inside center_cell_div
 #main_div.main_div
   - case x_active_tree
   - when :cb_reports_tree

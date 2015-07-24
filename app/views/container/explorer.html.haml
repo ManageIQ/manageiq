@@ -4,17 +4,17 @@
       = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}
 
 - content_for :accords do
-  - # Create the explorer dhtmlx layout/accordion JS objects
+  -# Create the explorer dhtmlx layout/accordion JS objects
   = render(:partial => "layouts/dhtmlxlayout_explorer",
     :locals         => {:accords => @accords,
       :active_accord             => @sb[:active_accord],
       :accord_select_function    => "miqAccordContainerSelect"})
 
 - if TreeBuilder.get_model_for_prefix(@nodetype) == "Container"
-  - # Showing a specific Service
+  -# Showing a specific Service
   #main_div.main_div
     = render :partial => "container_show", :locals => {:controller => "container"}
 - else
-  - # Showing a list of VMs
+  -# Showing a list of VMs
   #main_div.main_div
     = render :partial => 'layouts/x_gtl'

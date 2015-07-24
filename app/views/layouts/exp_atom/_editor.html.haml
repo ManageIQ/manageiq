@@ -1,5 +1,5 @@
 - if @exp_atom_errors
-  - # Errors in this atom, display them instead of the atom
+  -# Errors in this atom, display them instead of the atom
   %fieldset.adminform
     %ul#message{:style => "padding-left: 30px;"}
       %li#message.error
@@ -8,12 +8,12 @@
           %br
 - else
   - url = url_for(:action => 'exp_changed')
-  - # Grab the model for this expression
+  -# Grab the model for this expression
   - exp_model = @edit[@expkey][:exp_model]
 
-  - # Get all of the expression types, then remove the count and/or find based ones if model has none
+  -# Get all of the expression types, then remove the count and/or find based ones if model has none
   - unless exp_model == "_display_filter_"
-    - # Not valid for secondary display filter
+    -# Not valid for secondary display filter
     - exptypes = EXP_TYPES
     - unless MiqExpression.miq_adv_search_lists(exp_model, :exp_available_counts).length > 0
       - exptypes -= [EXP_COUNT_TYPE]
@@ -91,9 +91,9 @@
             "data-miq_observe_checkbox" => {:url => url}.to_json)
           = _('User will input the value')
   %script{:type => "text/javascript"}
-    - # Set the expression value prefill images and hover text
+    -# Set the expression value prefill images and hover text
     miqExpressionPrefill();
-    - # Clear the date from and to selection limiters
+    -# Clear the date from and to selection limiters
     miq_cal_dateFrom = null;
     miq_cal_dateTo = null;
 

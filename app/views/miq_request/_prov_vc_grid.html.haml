@@ -5,7 +5,7 @@
         - id = @edit[:req_id] || "new"
         - @edit[:vc_columns].each_with_index do |h, i|
           %th
-            - # Replaced to exclude non-view table fields from sorting
+            -# Replaced to exclude non-view table fields from sorting
             = link_to(h(@edit[:vc_headers][h]),
               {:action => "sort_vc_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
               "data-miq_sparkle_on"  => true,

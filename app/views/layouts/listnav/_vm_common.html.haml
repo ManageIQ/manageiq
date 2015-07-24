@@ -4,7 +4,7 @@
   - linuxos = regexosname.match(@record.os_image_name.downcase)
   #accordion.panel-group
     = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
-      - # Calculate the quadicon div height based on # of lines of text
+      -# Calculate the quadicon div height based on # of lines of text
       - if @record.product_name != "" && @record.service_pack != ""
         - height = 120
       - elsif @record.product_name != "" || @record.service_pack != ""
@@ -119,7 +119,7 @@
             :link_text                 => "#{ui_lookup(:table => 'storages')}: #{@record.storage.name}")
 
         - if get_vmdb_config[:product][:proto]
-          - # Hiding behind proto - Sprint 34
+          -# Hiding behind proto - Sprint 34
           - if @record.service
             %li
               = link_to_with_icon(_("Service: %s") % @record.service.name,

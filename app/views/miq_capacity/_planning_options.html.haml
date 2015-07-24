@@ -1,5 +1,5 @@
 - url = url_for(:action => 'planning_option_changed')
-- # Div to hold the planning options
+-# Div to hold the planning options
 #planning_options_div{:style => "width: 100%; height: 100%; overflow: auto;"}
   = render :partial => "layouts/flash_msg", :locals => {:div_num => "0"}
   %fieldset{:style => "background-color: #f0f0f0; padding: 10px;"}
@@ -225,7 +225,7 @@
           - if session[:time_profiles].blank?
             =_('No Time Profiles found')
           - elsif session[:time_profiles].length == 1
-            - # Only 1 choice, show the value
+            -# Only 1 choice, show the value
             = session[:time_profiles][@sb[:planning][:options][:time_profile].to_i]
           - else
             = select_tag("time_profile",

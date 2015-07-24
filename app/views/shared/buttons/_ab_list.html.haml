@@ -1,4 +1,4 @@
-- # showing list of CIs
+-# showing list of CIs
 - if @sb[:obj_list]
   = render :partial => "layouts/flash_msg"
   %table.table.table-bordered.table-hover.table-striped
@@ -6,7 +6,7 @@
       %th
         = _('Object Types')
     %tbody
-      - # CI node level
+      -# CI node level
       - @sb[:obj_list].sort.each do |obj|
         %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('ab_tree', 'xx-#{obj[1].split('_').first}_#{@sb[:target_classes][obj[0]]}')"}
           %td
@@ -60,10 +60,10 @@
               %td
                 = obj[:description]
 - elsif @sb[:buttons]
-  - # button node
+  -# button node
   = render :partial => "layouts/flash_msg"
   - if @record && @record.kind_of?(CustomButtonSet)
-    - # don't need basic info box for Unassigned button group
+    -# don't need basic info box for Unassigned button group
     %h3
       = _('Basic Information')
     %table.style1

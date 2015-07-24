@@ -5,15 +5,15 @@
   %tbody
     %tr
       %td.wider
-        - # combo_url  = "/report/widget_form_field_changed/#{@widget.id || 'new'}"
+        -# combo_url  = "/report/widget_form_field_changed/#{@widget.id || 'new'}"
         / #widget_div{:style => "width: 500px;"}
-        - # = render(:partial => 'layouts/dhtmlxcombo',
-        - #   :locals         => {:combo_id => "widget_div",
-        - #     :combo_name                 => "widget",
-        - #     :xml_combo                  => @widgets_menu_xml,
-        - #     :combo_url                  => combo_url,
-        - #     :combo_width                => 250,
-        - #     :combo_onchange             => true})
+        -# = render(:partial => 'layouts/dhtmlxcombo',
+        -#   :locals         => {:combo_id => "widget_div",
+        -#     :combo_name                 => "widget",
+        -#     :xml_combo                  => @widgets_menu_xml,
+        -#     :combo_url                  => combo_url,
+        -#     :combo_width                => 250,
+        -#     :combo_onchange             => true})
         = select_tag("add_shortcut",
           options_for_select([["Add a Shortcut", nil]] + @edit[:avail_shortcuts], nil),
           :disabled          => @edit[:read_only],
@@ -23,7 +23,7 @@
     .yui-gb
       #col1.yui-u.first{:style => "position: relative; min-height: 50px;"}
         - @edit[:new][:shortcuts].each do |s_id, s_desc|
-          - # :shortcuts is a hash of s.id => s.miq_widget_shortcut.description
+          -# :shortcuts is a hash of s.id => s.miq_widget_shortcut.description
           %div{:id => "s_#{s_id}", :title => _("Drag this Shortcut to a new location")}
             #test.modbox
               %h2.modtitle{:style => @edit ? "cursor: move;" : ""}

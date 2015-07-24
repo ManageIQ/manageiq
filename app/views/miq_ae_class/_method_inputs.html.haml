@@ -36,7 +36,7 @@
         :size     => "90x20",
         :disabled => true,
         :style    => "display:none;")
-      - # Create a MyCodeMirror editor for the text area
+      -# Create a MyCodeMirror editor for the text area
       = render :partial => "/layouts/my_code_mirror",
         :locals  => {:text_area_id => "method1_data",
           :mode                    => "ruby",
@@ -44,7 +44,7 @@
           :read_only               => true}
     - else
       = @ae_method.data
-    - # show inputs parameters grid if there are any inputs
+    -# show inputs parameters grid if there are any inputs
     #params_div{:style => @grid_methods_xml ? "" : "display: none;"}
       %hr
       %h3=_('Input Parameters')

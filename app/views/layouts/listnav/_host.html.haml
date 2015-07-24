@@ -2,7 +2,7 @@
   - host_title = title_for_host_record(@record)
   #accordion.panel-group
     = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
-      - # Calculate the quadicon div height based on # of lines of text
+      -# Calculate the quadicon div height based on # of lines of text
       - if @record.product_name != "" && @record.service_pack != ""
         - height = 100
       - elsif @record.product_name != "" || @record.service_pack != ""

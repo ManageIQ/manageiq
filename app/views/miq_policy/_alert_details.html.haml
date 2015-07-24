@@ -9,7 +9,7 @@
       = render :partial => "layouts/flash_msg"
       %h3=_('Info')
       %table.style1
-        - # Description
+        -# Description
         - if @edit
           %tr
             %td.key=_("Description")
@@ -19,7 +19,7 @@
                 :maxlength         => MAX_DESC_LEN,
                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
               = javascript_tag(javascript_focus('description'))
-        - # Enabled
+        -# Enabled
         %tr
           %td.key=_("Active")
           - if @edit
@@ -28,7 +28,7 @@
           - else
             %td
               = @alert.enabled ? _("Yes") : _("No")
-        - # Based on (model)
+        -# Based on (model)
         %tr
           %td.key=_("Based On")
           - if @edit
@@ -46,7 +46,7 @@
           - else
             %td
               = h(ui_lookup(:model => @alert.db))
-        - # Eval Method
+        -# Eval Method
         %tr
           %td.key=_("What to Evaluate")
           - if @edit
@@ -63,12 +63,12 @@
           - else
             %td
               - if @alert.expression.is_a?(MiqExpression)
-                - # Expression is an MiqExpression
+                -# Expression is an MiqExpression
                 =_('Expression')
               - else
                 = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
 
-        - # Expression driving event
+        -# Expression driving event
         - if @edit
           - unless @edit[:new][:expression][:eval_method] && @edit[:new][:expression][:eval_method] != "nothing"
             %tr
@@ -88,7 +88,7 @@
                 = _("Driving Event")
               %td
                 = h(@event)
-        - # Repeat Time
+        -# Repeat Time
         %tr
           %td.key=_("Notification Frequency")
           - if @edit
@@ -112,7 +112,7 @@
               - else
                 = h(@sb[:alert][:repeat_times][@alert.options[:notifications][:delay_next_evaluation]])
       %hr
-      - # Expression
+      -# Expression
       - if @edit
         - if !@edit[:new][:expression][:eval_method]
           %h3=_('Expression (Choose an element of the expression to edit)')
@@ -151,13 +151,13 @@
             %hr
 
       - if @edit
-        - # E-mail, SNMP, Timeline Event, Mgmt Event edit
+        -# E-mail, SNMP, Timeline Event, Mgmt Event edit
         = render :partial => "layouts/edit_email", :locals  => {:action_url => "alert_field_changed", :record => @alert}
         = render :partial => "alert_snmp"
         = render :partial => "alert_evm_event"
         = render :partial => "alert_mgmt_event"
       - else
-        - # E-mail, SNMP, Timeline Event, Mgmt Event show
+        -# E-mail, SNMP, Timeline Event, Mgmt Event show
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:email].blank?
           %h3=_('Send E-mail')
           %table.style1
@@ -229,7 +229,7 @@
               %td
                 = h(@alert.options[:notifications][:automate][:event_name])
           %hr
-      - # Alert Profiles alert is assigned to
+      -# Alert Profiles alert is assigned to
       - unless @edit
         - if x_active_tree == :alert_tree
           %tr
@@ -248,7 +248,7 @@
                           %img{:src => "/images/icons/new/miq_alert_profile.png"}
                         %td
                           = ap.description
-      - # Show any owning actions
+      -# Show any owning actions
       - unless @edit
         - if x_active_tree == :alert_tree && !@alert.owning_miq_actions.empty?
           %tr

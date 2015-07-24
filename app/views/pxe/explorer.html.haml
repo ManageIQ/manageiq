@@ -10,7 +10,7 @@
         :active_accord => @sb[:active_accord],
         :accord_select_function => "miqAccordPxeSelect"})
 
-- # These are the initial divs that will go inside center_cell_div
+-# These are the initial divs that will go inside center_cell_div
 #main_div.main_div
   - case x_active_tree
   - when :pxe_servers_tree
@@ -26,7 +26,7 @@
     = render :partial => "iso_datastore_list"
     </div>
 
-- # To include MyCodeMirror JS and CSS files
+-# To include MyCodeMirror JS and CSS files
 = render(:partial => "/layouts/my_code_mirror",
   :locals => {:text_area_id => "miq_none",
     :mode => "xml",
