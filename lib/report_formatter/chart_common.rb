@@ -2,7 +2,7 @@ module ReportFormatter
   module ChartCommon
     def slice_legend(string, limit = LEGEND_LENGTH)
       string = string.to_s
-      string.length > limit ? string.slice(0, limit) + "..." : string
+      string = string.length > limit ? string.slice(0, limit) + "..." : string
       string.gsub(/\n/, ' ')
     end
 
