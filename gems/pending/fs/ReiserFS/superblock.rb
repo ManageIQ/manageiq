@@ -1,8 +1,8 @@
 require 'binary_struct'
 require 'stringio'
 
-require 'fs/ReiserFS/ReiserFSBlock'
-require 'fs/ReiserFS/ReiserFSUtils'
+require 'fs/ReiserFS/block'
+require 'fs/ReiserFS/utils'
 
 require 'rufus/lru'
 
