@@ -1726,7 +1726,7 @@ class VmOrTemplate < ActiveRecord::Base
   # 'is_available_now_error_message' to determine if the button should be available
   # or greyed-out.  However, if the VM is a type that we cannot scan or we cannot get
   # to the storage to scan it then this method would be expected to return false.
-  def is_available?(request_type)
+  def supports_operation?(request_type)
     return self.send("validate_#{request_type}")[:available]
   end
 

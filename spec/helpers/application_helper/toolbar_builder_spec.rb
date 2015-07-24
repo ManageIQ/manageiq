@@ -988,7 +988,7 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:is_available? => false)
+            @record.stub(:supports_operation? => false)
           end
 
           it "and record is not available" do
@@ -996,7 +996,7 @@ describe ApplicationHelper do
           end
 
           it "and record is available" do
-            @record.stub(:is_available? => true)
+            @record.stub(:supports_operation? => true)
             subject.should == false
           end
         end
@@ -1322,22 +1322,22 @@ describe ApplicationHelper do
         before do
           @id = "vm_collect_running_processes"
           @record.stub(:retired => false, :current_state => "new")
-          @record.stub(:is_available?).with(:collect_running_processes).and_return(true)
+          @record.stub(:supports_operation?).with(:collect_running_processes).and_return(true)
         end
 
-        it "and @record.retired & !@record.is_available?(:collect_running_processes)" do
+        it "and @record.retired & !@record.supports_operation?(:collect_running_processes)" do
           @record.stub(:retired => true)
-          @record.stub(:is_available?).with(:collect_running_processes).and_return(false)
+          @record.stub(:supports_operation?).with(:collect_running_processes).and_return(false)
           subject.should == true
         end
 
-        it "and @record.current_state = never & !@record.is_available?(:collect_running_processes)" do
-          @record.stub(:is_available?).with(:collect_running_processes).and_return(false)
+        it "and @record.current_state = never & !@record.supports_operation?(:collect_running_processes)" do
+          @record.stub(:supports_operation?).with(:collect_running_processes).and_return(false)
           @record.stub(:current_state => "never")
           subject.should == true
         end
 
-        it "and @record.is_available?(:collect_running_processes)" do
+        it "and @record.supports_operation?(:collect_running_processes)" do
           subject.should == false
         end
 
@@ -1362,15 +1362,15 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            @record.stub(:is_available?).with(:start).and_return(true)
+            @record.stub(:supports_operation?).with(:start).and_return(true)
           end
 
-          it "and !@record.is_available?(:start)" do
-            @record.stub(:is_available?).with(:start).and_return(false)
+          it "and !@record.supports_operation?(:start)" do
+            @record.stub(:supports_operation?).with(:start).and_return(false)
             subject.should == true
           end
 
-          it "and @record.is_available?(:start)" do
+          it "and @record.supports_operation?(:start)" do
             subject.should == false
           end
         end
@@ -1379,15 +1379,15 @@ describe ApplicationHelper do
       context "and id = vm_guest_standby" do
         before do
           @id = "vm_guest_standby"
-          @record.stub(:is_available?).with(:standby_guest).and_return(true)
+          @record.stub(:supports_operation?).with(:standby_guest).and_return(true)
         end
 
-        it "and !@record.is_available?(:standby_guest)" do
-          @record.stub(:is_available?).with(:standby_guest).and_return(false)
+        it "and !@record.supports_operation?(:standby_guest)" do
+          @record.stub(:supports_operation?).with(:standby_guest).and_return(false)
           subject.should == true
         end
 
-        it "and @record.is_available?(:standby_guest)" do
+        it "and @record.supports_operation?(:standby_guest)" do
           subject.should == false
         end
       end
@@ -1395,15 +1395,15 @@ describe ApplicationHelper do
       context "and id = vm_guest_shutdown" do
         before do
           @id = "vm_guest_shutdown"
-          @record.stub(:is_available?).with(:shutdown_guest).and_return(true)
+          @record.stub(:supports_operation?).with(:shutdown_guest).and_return(true)
         end
 
-        it "and !@record.is_available?(:shutdown_guest)" do
-          @record.stub(:is_available?).with(:shutdown_guest).and_return(false)
+        it "and !@record.supports_operation?(:shutdown_guest)" do
+          @record.stub(:supports_operation?).with(:shutdown_guest).and_return(false)
           subject.should == true
         end
 
-        it "and @record.is_available?(:shutdown_guest)" do
+        it "and @record.supports_operation?(:shutdown_guest)" do
           subject.should == false
         end
       end
@@ -1411,15 +1411,15 @@ describe ApplicationHelper do
       context "and id = vm_guest_restart" do
         before do
           @id = "vm_guest_restart"
-          @record.stub(:is_available?).with(:reboot_guest).and_return(true)
+          @record.stub(:supports_operation?).with(:reboot_guest).and_return(true)
         end
 
-        it "and !@record.is_available?(:reboot_guest)" do
-          @record.stub(:is_available?).with(:reboot_guest).and_return(false)
+        it "and !@record.supports_operation?(:reboot_guest)" do
+          @record.stub(:supports_operation?).with(:reboot_guest).and_return(false)
           subject.should == true
         end
 
-        it "and @record.is_available?(:reboot_guest)" do
+        it "and @record.supports_operation?(:reboot_guest)" do
           subject.should == false
         end
       end
@@ -1427,15 +1427,15 @@ describe ApplicationHelper do
       context "and id = vm_stop" do
         before do
           @id = "vm_stop"
-          @record.stub(:is_available?).with(:stop).and_return(true)
+          @record.stub(:supports_operation?).with(:stop).and_return(true)
         end
 
-        it "and !@record.is_available?(:stop)" do
-          @record.stub(:is_available?).with(:stop).and_return(false)
+        it "and !@record.supports_operation?(:stop)" do
+          @record.stub(:supports_operation?).with(:stop).and_return(false)
           subject.should == true
         end
 
-        it "and @record.is_available?(:stop)" do
+        it "and @record.supports_operation?(:stop)" do
           subject.should == false
         end
       end
@@ -1443,15 +1443,15 @@ describe ApplicationHelper do
       context "and id = vm_reset" do
         before do
           @id = "vm_reset"
-          @record.stub(:is_available?).with(:reset).and_return(true)
+          @record.stub(:supports_operation?).with(:reset).and_return(true)
         end
 
-        it "and !@record.is_available?(:reset)" do
-          @record.stub(:is_available?).with(:reset).and_return(false)
+        it "and !@record.supports_operation?(:reset)" do
+          @record.stub(:supports_operation?).with(:reset).and_return(false)
           subject.should == true
         end
 
-        it "and @record.is_available?(:reset)" do
+        it "and @record.supports_operation?(:reset)" do
           subject.should == false
         end
       end
@@ -1459,15 +1459,15 @@ describe ApplicationHelper do
       context "and id = vm_suspend" do
         before do
           @id = "vm_suspend"
-          @record.stub(:is_available?).with(:suspend).and_return(true)
+          @record.stub(:supports_operation?).with(:suspend).and_return(true)
         end
 
-        it "and !@record.is_available?(:suspend)" do
-          @record.stub(:is_available?).with(:suspend).and_return(false)
+        it "and !@record.supports_operation?(:suspend)" do
+          @record.stub(:supports_operation?).with(:suspend).and_return(false)
           subject.should == true
         end
 
-        it "and @record.is_available?(:suspend)" do
+        it "and @record.supports_operation?(:suspend)" do
           subject.should == false
         end
       end
@@ -2351,24 +2351,24 @@ describe ApplicationHelper do
         context "and id = vm_snapshot_add" do
           before do
             @id = "vm_snapshot_add"
-            @record.stub(:is_available?).with(:create_snapshot).and_return(false)
+            @record.stub(:supports_operation?).with(:create_snapshot).and_return(false)
           end
 
           context "when number of snapshots <= 0" do
-            before { @record.stub(:is_available?).with(:create_snapshot).and_return(false) }
+            before { @record.stub(:supports_operation?).with(:create_snapshot).and_return(false) }
             it_behaves_like 'record with error message', 'create_snapshot'
           end
 
           context "when number of snapshots > 0" do
             before do
               @record.stub(:number_of).with(:snapshots).and_return(4)
-              @record.stub(:is_available?).with(:create_snapshot).and_return(false)
+              @record.stub(:supports_operation?).with(:create_snapshot).and_return(false)
             end
 
             it_behaves_like 'record with error message', 'create_snapshot'
 
             it "when no available message but active" do
-                @record.stub(:is_available?).with(:create_snapshot).and_return(false)
+                @record.stub(:supports_operation?).with(:create_snapshot).and_return(false)
                 @active = true
               subject.should == "The VM is not connected to a Host"
             end
@@ -2379,7 +2379,7 @@ describe ApplicationHelper do
         context "and id = vm_snapshot_delete" do
           before { @id = "vm_snapshot_delete" }
           context "when with available message" do
-            before { @record.stub(:is_available?).with(:remove_snapshot).and_return(false) }
+            before { @record.stub(:supports_operation?).with(:remove_snapshot).and_return(false) }
             it_behaves_like 'record with error message', 'remove_snapshot'
           end
           context "when without snapshots" do
@@ -2395,7 +2395,7 @@ describe ApplicationHelper do
         context "and id = vm_snapshot_delete_all" do
           before { @id = "vm_snapshot_delete_all" }
           context "when with available message" do
-            before { @record.stub(:is_available?).with(:remove_all_snapshots).and_return(false) }
+            before { @record.stub(:supports_operation?).with(:remove_all_snapshots).and_return(false) }
             it_behaves_like 'record with error message', 'remove_all_snapshots'
           end
           context "when without snapshots" do
@@ -2411,7 +2411,7 @@ describe ApplicationHelper do
         context "id = vm_snapshot_revert" do
           before { @id = "vm_snapshot_revert" }
           context "when with available message" do
-            before { @record.stub(:is_available?).with(:revert_to_snapshot).and_return(false) }
+            before { @record.stub(:supports_operation?).with(:revert_to_snapshot).and_return(false) }
             it_behaves_like 'record with error message', 'revert_to_snapshot'
           end
           context "when without snapshots" do

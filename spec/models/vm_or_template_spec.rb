@@ -443,15 +443,15 @@ describe VmOrTemplate do
     end
   end
 
-  context "#is_available?" do
+  context "#supports_operation?" do
     it "returns true for SCVMM VM" do
       vm =  FactoryGirl.create(:vm_vmware)
-      expect(vm.is_available?(:migrate)).to eq(true)
+      expect(vm.supports_operation?(:migrate)).to eq(true)
     end
 
     it "returns true for vmware VM" do
       vm =  FactoryGirl.create(:vm_microsoft)
-      expect(vm.is_available?(:migrate)).to_not eq(true)
+      expect(vm.supports_operation?(:migrate)).to_not eq(true)
     end
   end
 
