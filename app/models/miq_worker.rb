@@ -319,15 +319,20 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def start
+    pid = fork do
+      self.class::Runner.start_worker(command_line_params)
+      exit!
+    end
+
+    Process.detach(pid)
+    self.pid = pid
+    save
+
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
     MiqEvent.raise_evm_event_queue(miq_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
 
-    ENV['MIQ_GUID'] = guid
-    self.pid = Kernel.spawn(command_line, :out => "/dev/null", :err => [Rails.root.join("log", "evm.log"), "a"])
-    Process.detach(pid)
-    save
-
-    _log.info("#{msg}")
+    _log.info(msg)
+    self
   end
 
   def stop
@@ -497,19 +502,9 @@ class MiqWorker < ActiveRecord::Base
     delta.kind_of?(Integer) ? delta.to_s : "+10"
   end
 
+  # TODO: Rename this!!!
   def self.build_command_line(*params)
-    params = params.first || {}
-    raise ArgumentError, "params must contain :guid" unless params.key?(:guid)
-
-    rr = File.expand_path(Rails.root)
-
-    cl = "#{nice_prefix} #{Gem.ruby}"
-    cl << " " << File.join(rr, "bin/rails runner")
-    cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self::Runner}")
-    cl << " " << name
-    params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
-
-    cl
+    params.first || {}
   end
 
   def command_line_params
