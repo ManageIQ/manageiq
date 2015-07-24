@@ -148,8 +148,8 @@ class ReplicationWorker < WorkerBase
 
     return true unless pid_state.nil? || pid_state == :zombie || !child_process_recently_active?
     $log.info(
-        "#{self.log_prefix} rubyrep Process with pid=#{@pid} child has not heartbeat since #{child_process_last_heartbeat.to_s}"
-    ) if !child_process_recently_active?
+      "#{log_prefix} rubyrep Process with pid=#{@pid} child has not heartbeat since #{child_process_last_heartbeat}"
+    ) unless child_process_recently_active?
 
     if pid_state == :zombie
       pid, status = Process.waitpid2(@pid)
@@ -170,18 +170,18 @@ class ReplicationWorker < WorkerBase
 
   def child_process_last_heartbeat
     hb_file = child_process_heartbeat_settings[:file]
-    File.exists?(hb_file) ? File.mtime(hb_file).utc : nil
+    File.exist?(hb_file) ? File.mtime(hb_file).utc : nil
   end
 
   def child_process_heartbeat_settings
-    @default_settings ||= VMDB::Config.new("vmdb").retrieve_config(:tmpl).
-                          fetch_path(:workers, :worker_base, :replication_worker, :replication)
-    worker_settings   ||= @default_settings
+    @default_settings ||= VMDB::Config.new("vmdb").retrieve_config(:tmpl)
+                          .fetch_path(:workers, :worker_base, :replication_worker, :replication)
+    worker_settings ||= @default_settings
     {
-      :file      => worker_settings.fetch_path(:options, :heartbeat_file) ||
-                    @default_settings.fetch_path(:options, :heartbeat_file),
+      :file => worker_settings.fetch_path(:options, :heartbeat_file) ||
+        @default_settings.fetch_path(:options, :heartbeat_file),
       :threshold => worker_settings.fetch_path(:options, :heartbeat_threshold).to_i ||
-                    @default_settings.fetch_path(:options, :heartbeat_threshold).to_i
+        @default_settings.fetch_path(:options, :heartbeat_threshold).to_i
     }
   end
 
