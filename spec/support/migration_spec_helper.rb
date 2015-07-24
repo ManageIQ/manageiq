@@ -54,6 +54,7 @@ module MigrationSpecHelper
 
       s.inheritance_column = i
     end
+    ActiveRecord::Base.connection.schema_cache.clear!
   end
 
   def clearing_caches
