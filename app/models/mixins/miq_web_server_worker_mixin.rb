@@ -21,30 +21,49 @@ module MiqWebServerWorkerMixin
       params = params.first || {}
 
       defaults = {
-        :port        => 3000,
-        :binding     => binding_address,
+        :Port        => 3000,
+        :Host        => binding_address,
         :environment => Rails.env.to_s,
-        :config      => Rails.root.join("config.ru")
+        :config      => Rails.root.join("config.ru").to_s
       }
 
       params = defaults.merge(params)
-      params[:pid] = pid_file(params[:port])
+      params[:pid] = pid_file(params[:Port]).to_s
 
-      # Usage: rails server [mongrel, thin, etc] [options]
-      #      -p, --port=port                  Runs Rails on the specified port.
-      #                                       Default: 3000
-      #      -b, --binding=ip                 Binds Rails to the specified ip.
-      #                                       Default: 0.0.0.0
-      #      -c, --config=file                Use custom rackup configuration file
-      #      -d, --daemon                     Make server run as a Daemon.
-      #      -u, --debugger                   Enable ruby-debugging for the server.
-      #      -e, --environment=name           Specifies the environment to run this server under (test/development/production).
-      #                                       Default: development
-      #      -P, --pid=pid                    Specifies the PID file.
-      #                                       Default: tmp/pids/server.pid
-      #
-      #      -h, --help                       Show this help message.
-      #
+      # Rack::Server options:
+
+      # Options may include:
+      # * :app
+      #     a rack application to run (overrides :config)
+      # * :config
+      #     a rackup configuration file path to load (.ru)
+      # * :environment
+      #     this selects the middleware that will be wrapped around
+      #     your application. Default options available are:
+      #       - development: CommonLogger, ShowExceptions, and Lint
+      #       - deployment: CommonLogger
+      #       - none: no extra middleware
+      #     note: when the server is a cgi server, CommonLogger is not included.
+      # * :server
+      #     choose a specific Rack::Handler, e.g. cgi, fcgi, webrick
+      # * :daemonize
+      #     if true, the server will daemonize itself (fork, detach, etc)
+      # * :pid
+      #     path to write a pid file after daemonize
+      # * :Host
+      #     the host address to bind to (used by supporting Rack::Handler)
+      # * :Port
+      #     the port to bind to (used by supporting Rack::Handler)
+      # * :AccessLog
+      #     webrick access log options (or supporting Rack::Handler)
+      # * :debug
+      #     turn on debug output ($DEBUG = true)
+      # * :warn
+      #     turn on warnings ($-w = true)
+      # * :include
+      #     add given paths to $LOAD_PATH
+      # * :require
+      #     require the given libraries
       params
     end
 
@@ -168,7 +187,7 @@ module MiqWebServerWorkerMixin
 
     def command_line_params
       params = super
-      params[:port] = port if port.kind_of?(Numeric)
+      params[:Port] = port if port.kind_of?(Numeric)
       params
     end
 
