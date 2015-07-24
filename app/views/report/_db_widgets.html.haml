@@ -10,9 +10,8 @@
             - combo_url = "/report/db_form_field_changed/#{@db.id || 'new'}"
             #form-group
               = select_tag('widget',
-                options_for_select(@widgets_options, @edit[:new][:widget].to_s),
-                "title" => "Add a Widget",
-                :class => "selectpicker")
+                  options_for_select(@widgets_options, @edit[:new][:widget].to_s),
+                  :class => "selectpicker")
   #modules
     .yui-b
       .yui-gb

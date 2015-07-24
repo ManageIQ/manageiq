@@ -412,25 +412,23 @@ module ReportController::Dashboards
     @available_widgets.sort_by! { |w| [w.content_type, w.title.downcase] }
 
     if @available_widgets.blank?
-      @widgets_options = ["No Widgets available to add", {"data-content" => "<span class='product product-arrow-right'> No Widgets available to add</span>"}]
+      @widgets_options = [["No Widgets available to add", "", {"data-icon" => "product product-arrow-right"}]]
     else
-      @widgets_options = [["Add a Widget", "", {"data-content" => "<span class='product product-arrow-right'> Add a Widget</span>"}]]
+      @widgets_options = [["Add a Widget", "", {"data-icon" => "product product-arrow-right"}]]
 
       @available_widgets.each do |w|
-        unless col_widgets.include?(w.id) || !w.enabled
-          image = case w.content_type
-                  when "rss"
-                    "fa fa-rss"
-                  when "chart"
-                   "product product-chart"
-                  when "report"
-                    "product product-report"
-                  when "menu"
-                    "fa fa-share-square-o"
-                  end
-          w.title.gsub!(/'/,"&apos;")     # Need to escape single quote in title to load toolbar
-          @widgets_options.push([w.title, w.id, {"data-icon" => "#{image}"}])
-        end
+        next if col_widgets.include?(w.id) || !w.enabled
+        image = case w.content_type
+                when "rss"
+                  "fa fa-rss"
+                when "chart"
+                  "product product-chart"
+                when "report"
+                  "product product-report"
+                when "menu"
+                  "fa fa-share-square-o"
+                end
+        @widgets_options.push([w.title, w.id, {"data-icon" => "#{image}"}])
       end
     end
     @widgets_options

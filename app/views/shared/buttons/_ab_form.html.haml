@@ -46,8 +46,7 @@
       %td
         #form-group
           = select_tag('button_image',
-              options_for_select(@edit[:new][:button_images], @edit[:new][:button_image].to_s),
-              "title" => "No Image",
+              options_for_select([["No Image", nil]] + @edit[:new][:button_images], @edit[:new][:button_image].to_s),
               :class => "selectpicker")
     %tr
       %td.key
@@ -63,7 +62,7 @@
       :ae_custom_button          => true,
       :field_changed_url         => "automate_button_field_changed"})
   = render(:partial => "layouts/role_visibility",
-    :locals         => {:rec_id => "1", :action                   => "automate_button_field_changed"})
+           :locals  => {:rec_id => @custom_button.id, :action => "automate_button_field_changed"})
 :javascript
   miqInitSelectPicker();
   miqSelectPickerEvent("button_image", "#{url}")

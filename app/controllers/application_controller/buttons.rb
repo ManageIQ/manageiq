@@ -813,15 +813,8 @@ module ApplicationController::Buttons
   end
 
   def build_button_image_options
-    options = []
-    i = 1
-    15.times{
-      options.push(["Button Image #{i}", i, {"data-icon" => "product product-custom-#{i}"}])
-      i+=1
-    }
-    options
+    (1..15).collect { |i| ["Button Image #{i}", i, {"data-icon" => "product product-custom-#{i}"}] }
   end
-
 
   # Set form variables for button add/edit
   def button_set_form_vars

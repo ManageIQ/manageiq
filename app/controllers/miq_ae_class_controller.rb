@@ -186,7 +186,7 @@ class MiqAeClassController < ApplicationController
           end
           @grid_ns_xml = build_details_grid(records,false)
           @combo_xml = build_type_options([MiqAeField.new])
-          @dtype_combo_xml = build_dtype_options([MiqAeField.new])   # passing fields because that's how many combo boxes we need
+          @dtype_combo_xml = build_dtype_options([MiqAeField.new])
           @sb[:active_tab] = "details"
           set_right_cell_text(x_node, @record)
         end
@@ -391,7 +391,6 @@ class MiqAeClassController < ApplicationController
 
   def build_type_options(fields)
     aetypes = MiqAeField.available_aetypes
-    combo_options = []
     fields.each do |fld|
       if fld['aetype'].blank? && session.fetch_path(:field_data, :aetype).blank?
         fld['aetype'] = "attribute"
@@ -399,15 +398,11 @@ class MiqAeClassController < ApplicationController
         fld['aetype'] = session.fetch_path(:field_data, :aetype)
       end
     end
-    aetypes.each do |aetype|
-      combo_options.push([aetype.titleize, aetype, {"data-icon" => "product product-#{aetype}"}])
-    end
-    combo_options
+    aetypes.collect { |t| [t.titleize, t, {"data-icon" => "product product-#{t}"}] }
   end
 
   def build_dtype_options(fields)
     datatypes = MiqAeField.available_datatypes_for_ui
-    combo_options = []
     fields.each do |fld|
       if fld['datatype'].blank? && session.fetch_path(:field_data, :datatype).blank?
         fld['datatype'] = "string"
@@ -415,10 +410,7 @@ class MiqAeClassController < ApplicationController
         fld['datatype'] = session.fetch_path(:field_data, :datatype)
       end
     end
-    datatypes.each do |datatype|
-      combo_options.push([datatype.titleize, datatype, {"data-icon" => "product product-#{datatype}"}])
-    end
-    combo_options
+    datatypes.collect { |datatype| [datatype.titleize, datatype, {"data-icon" => "product product-#{datatype}"}] }
   end
 
   def set_cls(cls)
@@ -1557,7 +1549,7 @@ class MiqAeClassController < ApplicationController
   def field_select
     fields_get_form_vars
     @combo_xml = build_type_options(@edit[:new][:fields])
-    @dtype_combo_xml = build_dtype_options(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
+    @dtype_combo_xml = build_dtype_options(@edit[:new][:fields])
     session[:field_data] = Hash.new
     @edit[:new_field][:substitute] = session[:field_data][:substitute] = true
     @changed = (@edit[:new] != @edit[:current])
@@ -1573,7 +1565,7 @@ class MiqAeClassController < ApplicationController
     fields_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
     @combo_xml = build_type_options(@edit[:new][:fields])
-    @dtype_combo_xml = build_dtype_options(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
+    @dtype_combo_xml = build_dtype_options(@edit[:new][:fields])
     render :update do |page|                    # Use JS to update the display
       page.replace_html("class_fields_div", :partial=>"class_fields")
       page << javascript_for_miq_button_visibility(@changed)
