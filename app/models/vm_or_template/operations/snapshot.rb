@@ -37,7 +37,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def raw_remove_snapshot(snapshot_id)
-    raise_is_available_now_error_message(:remove_snapshot)
+    raise_unavailability_reason(:remove_snapshot)
     snapshot = self.snapshots.find_by_id(snapshot_id)
     raise "Requested VM snapshot not found, unable to remove snapshot" unless snapshot
     begin
@@ -93,7 +93,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def raw_remove_snapshot_by_description(description, refresh = false)
-    raise_is_available_now_error_message(:remove_snapshot_by_description)
+    raise_unavailability_reason(:remove_snapshot_by_description)
     run_command_via_parent(:vm_remove_snapshot_by_description, :description => description, :refresh => refresh)
   end
 
@@ -114,7 +114,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def raw_remove_all_snapshots
-    raise_is_available_now_error_message(:remove_all_snapshots)
+    raise_unavailability_reason(:remove_all_snapshots)
     run_command_via_parent(:vm_remove_all_snapshots)
   end
 
@@ -123,7 +123,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def raw_revert_to_snapshot(snapshot_id)
-    raise_is_available_now_error_message(:revert_to_snapshot)
+    raise_unavailability_reason(:revert_to_snapshot)
     snapshot = self.snapshots.find_by_id(snapshot_id)
     raise "Requested VM snapshot not found, unable to RevertTo snapshot" unless snapshot
     run_command_via_parent(:vm_revert_to_snapshot, :snMor => snapshot.uid_ems)

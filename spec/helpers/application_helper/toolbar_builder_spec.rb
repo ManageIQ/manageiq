@@ -2085,7 +2085,7 @@ describe ApplicationHelper do
       context "and id = host_shutdown" do
         before do
           @id = "host_shutdown"
-          @record.stub(:is_available_now_error_message => false)
+          @record.stub(:unavailability_reason => false)
         end
         it_behaves_like 'record with error message', 'shutdown'
         it_behaves_like 'default case'
@@ -2094,7 +2094,7 @@ describe ApplicationHelper do
       context "and id = host_restart" do
         before do
           @id = "host_restart"
-          @record.stub(:is_available_now_error_message => false)
+          @record.stub(:unavailability_reason => false)
         end
 
         it_behaves_like 'record with error message', 'reboot'
@@ -2196,7 +2196,7 @@ describe ApplicationHelper do
       context "id = vm_collect_running_processes" do
         before do
           @id = "vm_collect_running_processes"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'collect_running_processes'
         it_behaves_like 'default case'
@@ -2242,7 +2242,7 @@ describe ApplicationHelper do
       context "and id = vm_guest_startup" do
         before do
           @id = "vm_guest_startup"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'start'
         it_behaves_like 'default case'
@@ -2251,7 +2251,7 @@ describe ApplicationHelper do
       context "and id = vm_start" do
         before do
           @id = "vm_start"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'start'
         it_behaves_like 'default case'
@@ -2260,7 +2260,7 @@ describe ApplicationHelper do
       context "and id = vm_guest_standby" do
         before do
           @id = "vm_guest_standby"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'standby_guest'
         it_behaves_like 'default case'
@@ -2269,7 +2269,7 @@ describe ApplicationHelper do
       context "and id = vm_guest_shutdown" do
         before do
           @id = "vm_guest_shutdown"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'shutdown_guest'
         it_behaves_like 'default case'
@@ -2278,7 +2278,7 @@ describe ApplicationHelper do
       context "and id = vm_guest_restart" do
         before do
           @id = "vm_guest_restart"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'reboot_guest'
         it_behaves_like 'default case'
@@ -2287,7 +2287,7 @@ describe ApplicationHelper do
       context "and id = vm_stop" do
         before do
           @id = "vm_stop"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'stop'
         it_behaves_like 'default case'
@@ -2296,7 +2296,7 @@ describe ApplicationHelper do
       context "and id = vm_reset" do
         before do
           @id = "vm_reset"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'reset'
         it_behaves_like 'default case'
@@ -2305,7 +2305,7 @@ describe ApplicationHelper do
       context "and id = vm_suspend" do
         before do
           @id = "vm_suspend"
-          @record.stub(:is_available_now_error_message).and_return(false)
+          @record.stub(:unavailability_reason).and_return(false)
         end
         it_behaves_like 'record with error message', 'suspend'
         it_behaves_like 'default case'

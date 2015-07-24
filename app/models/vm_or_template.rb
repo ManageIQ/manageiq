@@ -1723,7 +1723,7 @@ class VmOrTemplate < ActiveRecord::Base
   #
   # For example: If the VM needs credentials to be scanning, but they are not
   # available this method should still return true.  The UI will call the method
-  # 'is_available_now_error_message' to determine if the button should be available
+  # 'unavailability_reason' to determine if the button should be available
   # or greyed-out.  However, if the VM is a type that we cannot scan or we cannot get
   # to the storage to scan it then this method would be expected to return false.
   def supports_operation?(request_type)
@@ -1732,11 +1732,11 @@ class VmOrTemplate < ActiveRecord::Base
 
   # Returns an error message string if there is an error.  Otherwise nil to
   # indicate no errors.
-  def is_available_now_error_message(request_type)
+  def unavailability_reason(request_type)
     return self.send("validate_#{request_type}")[:message]
   end
 
-  def raise_is_available_now_error_message(request_type)
+  def raise_unavailability_reason(request_type)
     msg = self.send("validate_#{request_type}")[:message]
     raise MiqException::MiqVmError, msg unless msg.nil?
   end

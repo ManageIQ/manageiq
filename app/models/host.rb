@@ -249,15 +249,15 @@ class Host < ActiveRecord::Base
     send("validate_#{request_type}")[:available]
   end
 
-  # is_available_now_error_message
+  # unavailability_reason
   # Returns an error message string if there is an error.
   # Returns nil to indicate no errors.
   # This method is used by the UI along with the supports_operation? methods.
-  def is_available_now_error_message(request_type)
+  def unavailability_reason(request_type)
     send("validate_#{request_type}")[:message]
   end
 
-  def raise_is_available_now_error_message(request_type)
+  def raise_unavailability_reason(request_type)
     msg = send("validate_#{request_type}")[:message]
     raise MiqException::MiqVmError, msg unless msg.nil?
   end

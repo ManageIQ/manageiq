@@ -25,6 +25,6 @@ end
 shared_examples_for "Vm operation is not supported" do
   it "is not available" do
     vm.supports_operation?(state).should be_false
-    vm.is_available_now_error_message(state).should include("not available")
+    vm.unavailability_reason(state).should include("not available")
   end
 end
