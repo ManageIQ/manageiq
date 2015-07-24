@@ -28,7 +28,7 @@
                 = st
         %tbody
           - @edit[:new][:rsc_groups].each_with_index do |groups,i|
-            - # add blank tr after each group
+            -# add blank tr after each group
             - if i != 0 && !groups.empty? && i < @edit[:new][:rsc_groups].length-1
               %tr#new_tr.separator
                 %td{:colspan => '9'}

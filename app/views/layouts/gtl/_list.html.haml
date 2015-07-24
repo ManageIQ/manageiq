@@ -1,10 +1,10 @@
-- # New code to use DHTMLXGRID below
+-# New code to use DHTMLXGRID below
 - if @grid_xml
   - url = @showlinks == false ? nil : view_to_url(view, @parent)
   - if @explorer
     #list_grid{:style => "cursor: hand;"}
     - ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
-    - # don't need a row url to be AJAX when displaying a list of other CI's inside explorer
+    -# don't need a row url to be AJAX when displaying a list of other CI's inside explorer
     = render(:partial => 'layouts/dhtmlxgrid',
       :locals         => {:options => {:grid_id => "list_grid",
         :grid_name                              => "gtl_list_grid",
@@ -19,7 +19,7 @@
         :sortdir                                => @sortdir ? @sortdir[0..2] : nil,
         :alt_row                                => true}})
   - else
-    - # substracting leftcol 219 from @winW to calculate width of div
+    -# substracting leftcol 219 from @winW to calculate width of div
     #list_grid{:style => "width: #{@winW - 219}; height: #{center_div_height}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
     = render(:partial => 'layouts/dhtmlxgrid',
       :locals  => {:options => {:grid_id => "list_grid",
@@ -42,7 +42,7 @@
           %th.narrow
         - view.headers.each_with_index do |h, i|
           - if !@embedded && @pages
-            - # Replaced to exclude non-view table fields from sorting
+            -# Replaced to exclude non-view table fields from sorting
             - if i == @sortcol
               %th{:class => (@sortdir == "ASC") ? "sorting_asc" : "sorting_desc"}
                 = link_to(h(h),
@@ -58,7 +58,7 @@
                   "data-miq_sparkle_off" => true,
                   :remote                => true)
           - else
-            - # Disable column sorting when embedded, for now
+            -# Disable column sorting when embedded, for now
             %th
               = h(h)
       - if get_vmdb_config[:product][:vmdb_connections_filter] && view.db == "VmdbDatabaseConnection"
@@ -93,7 +93,7 @@
             - title = ""
             - click = ""
             - unless (@embedded || @no_checkboxes) && ! @showlinks
-              - # Don't put a td URL for the server_build list view
+              -# Don't put a td URL for the server_build list view
               - case view.db
               - when "ServerBuild", "MiqTask", "MiqEvent", "VmdbDatabaseConnection", "VmdbDatabaseSetting"
               - when "MiqProvision"
@@ -207,7 +207,7 @@
                 - else
                   - case view.db
                   - when "VmdbDatabaseConnection", "VmdbDatabaseSetting"
-                    - # No onclick for DB settings
+                    -# No onclick for DB settings
                   - when "LdapRegion"
                     - click = "cfmeDynatree_activateNode('settings_tree', 'lr-#{to_cid(row['id'])}');"
                   - when "MiqAction"

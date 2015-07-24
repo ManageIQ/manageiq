@@ -8,7 +8,7 @@
     #alert_profile_info_div
       = render :partial => "layouts/flash_msg"
       - if @edit
-        - # Show basic info box with description only in edit mode
+        -# Show basic info box with description only in edit mode
         %h3= _('Basic Information')
         %div{:class => "form-horizontal#{@edit ? "" : ".static"} "}
           .form-group
@@ -83,7 +83,7 @@
                   :id       => "members_chosen")
         %hr
 
-      - # Notes field
+      -# Notes field
       - if @edit
         %h3
           =_("Notes")
@@ -108,13 +108,13 @@
         %hr
 
       - unless @edit
-        - # Show assignments
+        -# Show assignments
         %h3=_('Assigned To')
         - aa = @alert_profile.get_assigned_tos
         - if !aa[:objects].empty?
-          - # Objects are assigned
+          -# Objects are assigned
           - if aa[:objects].first.kind_of?(MiqEnterprise)
-            - # Assigned to Enterprise object
+            -# Assigned to Enterprise object
             =_('The Enterprise')
           - else
             -# Assigned to CIs
@@ -138,7 +138,7 @@
                           %td
                             = h(obj)
         - elsif !aa[:tags].empty?
-          - # Tags are assigned
+          -# Tags are assigned
           %table.style1
             %tr
               %td.key

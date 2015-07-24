@@ -1,11 +1,11 @@
 - url = url_for(:action => 'exp_changed')
 
-- # Parameters:
-- # exp_model    Model in use for this expression
+-# Parameters:
+-# exp_model    Model in use for this expression
 
 %br
 - if exp_model == "_display_filter_"
-  - # Use list in @edit for reporting display filter
+  -# Use list in @edit for reporting display filter
   = select_tag('chosen_field',
     options_for_select(["<#{_('Choose')}>"] + @edit[@expkey][:exp_available_fields], @edit[@expkey][:exp_field]),
     :multiple              => false,
@@ -150,7 +150,7 @@
             :title                 => t)
 
       - else
-        - # String field
+        -# String field
         - if @edit[@expkey][:exp_value] == :user_input
           = "<#{_('user input')}>"
         - else

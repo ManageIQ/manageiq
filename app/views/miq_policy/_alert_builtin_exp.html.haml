@@ -61,7 +61,7 @@
       - else
         = h(@sb[:alert][:rt_time_thresholds][@alert.expression[:options][:rt_time_threshold]])
   - when :operator, :value_threshold
-    - # Skip these, they are handled by perf_column
+    -# Skip these, they are handled by perf_column
   - when :perf_column
     %td.key
       = h(option[:description])
@@ -87,7 +87,7 @@
         = h(@alert.expression[:options][:operator])
         = h(@alert.expression[:options][:value_threshold])
   - when :trend_steepness
-    - # Skip, handled by trend_direction
+    -# Skip, handled by trend_direction
   - when :trend_direction
     %td.key
       = h(option[:description])
@@ -128,7 +128,7 @@
       - else
         = h(@alert.expression[:options][:debug_trace])
   - when :event_log_message_filter_value
-    - # Skip this, handled by event_log_message_filter_type
+    -# Skip this, handled by event_log_message_filter_type
   - when :event_log_message_filter_type
     %td.key=_('Message Filter')
     %td
@@ -186,7 +186,7 @@
           = h(@ems.name)
   - when :ems_alarm_mor
     - if @edit || @ems
-      - # Show if editing or a valid EMS is configured
+      -# Show if editing or a valid EMS is configured
       %td.key
         = h(option[:description])
       %td
@@ -206,7 +206,7 @@
         - else
           = h(@alert.expression[:options][:ems_alarm_name])
   - else
-    - # Set up as a text input field
+    -# Set up as a text input field
     %td.key
       = h(option[:description])
     %td
