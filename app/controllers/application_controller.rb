@@ -1730,7 +1730,6 @@ class ApplicationController < ActionController::Base
     else
       prefix = "check" if prefix == nil
       items = Array.new
-      session[:base_miq] = ""
       params.each do |var, val|
         vars = var.to_s.split("_")
         if vars[0]==prefix && val=="1"
