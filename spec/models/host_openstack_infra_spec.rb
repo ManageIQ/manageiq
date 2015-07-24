@@ -214,9 +214,10 @@ openstack-keystone:                     active
     end
   end
 
-  describe "Overriden auth methods for ssh fleecing" do
+  describe "Overriden auth methods for ssh fleecing," do
     let(:ext_management_system) do
-      FactoryGirl.create(:ems_openstack_infra).tap do |ems|
+      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      FactoryGirl.create(:ems_openstack_infra, :zone => zone).tap do |ems|
         ems.authentications << FactoryGirl.create(:authentication_ssh_keypair)
         ems.authentications << FactoryGirl.create(:authentication)
       end
@@ -226,7 +227,12 @@ openstack-keystone:                     active
       FactoryGirl.create(:host_openstack_infra).tap do |host|
         host.ext_management_system = ext_management_system
         host.authentications << FactoryGirl.create(:authentication_ssh_keypair_without_key)
+        host.save
       end
+    end
+
+    before :each do
+      Authentication.any_instance.stub(:raise_event)
     end
 
     it "#get_parent_keypair returns parent provider auth" do
@@ -237,6 +243,65 @@ openstack-keystone:                     active
     context "#authentication_status" do
       it "returns host's auth status if auth is there" do
         expect(host.authentication_status).to eq 'SomeMockedStatus'
+      end
+
+      it "returns status of ssh_keypair auth when credentials are defined" do
+        host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_ssh_keypair_auth.auth_key = 'auth_key'
+        host_ssh_keypair_auth.status = 'host_ssh_keypair_auth_status'
+        host_ssh_keypair_auth.save
+        expect(host.authentication_status).to eq host_ssh_keypair_auth.status
+      end
+
+      it "returns status of default auth when credentials are defined" do
+        host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_ssh_keypair_auth.auth_key = ''
+        host_ssh_keypair_auth.status = 'host_ssh_keypair_auth_status'
+        host_ssh_keypair_auth.save
+
+        host_default_auth = FactoryGirl.create(:authentication,
+                                               :password => 'pass',
+                                               :status   => 'host_default_auth_status')
+        host_default_auth.password = 'pass'
+        host_default_auth.status = 'host_default_auth_status'
+        host_default_auth.save
+        host.authentications << host_default_auth
+
+        expect(host.authentication_status).to eq host_default_auth.status
+      end
+
+      it "returns status of ssh_keypair auth when both default and ssh_keypair credentials are defined" do
+        host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_ssh_keypair_auth.auth_key = 'auth_key'
+        host_ssh_keypair_auth.status = 'host_ssh_keypair_auth_status'
+        host_ssh_keypair_auth.save
+
+        host_default_auth = FactoryGirl.create(:authentication,
+                                               :password => 'pass',
+                                               :status   => 'host_default_auth_status')
+        host.authentications << host_default_auth
+
+        expect(host.authentication_status).to eq host_ssh_keypair_auth.status
+      end
+
+      it "checks ws and ipmi credentials don't affect the host.authentication_status" do
+        host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_ssh_keypair_auth.auth_key = 'auth_key'
+        host_ssh_keypair_auth.status = 'host_ssh_keypair_auth_status'
+        host_ssh_keypair_auth.save
+
+        host.authentications << FactoryGirl.create(:authentication_ipmi, :status => 'host_ipmi_auth_status')
+        host.authentications << FactoryGirl.create(:authentication_ws, :status => 'host_ws_auth_status')
+        host_default_auth = FactoryGirl.create(:authentication, :status => 'host_default_auth_status')
+        host.authentications << host_default_auth
+
+        expect(host.authentication_status).to eq host_ssh_keypair_auth.status
+
+        host_ssh_keypair_auth.auth_key = ''
+        host_ssh_keypair_auth.save
+        host.reload
+
+        expect(host.authentication_status).to eq host_default_auth.status
       end
 
       it "returns 'None' if host's auth is nil" do
@@ -275,25 +340,78 @@ openstack-keystone:                     active
         expect(host.authentication_best_fit).to eq ems_auth
       end
 
-      it "checks that if host's auth_key is nil, parent auth is returned" do
+      it "checks that if host's auth_key and password is nil, parent auth is returned" do
         ems_auth  = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
-        host_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
 
-        expect(host_auth.auth_key).to be_nil
-        expect(host.authentication_best_fit(:ssh_keypair)).to eq ems_auth
+        host_default_auth = FactoryGirl.create(:authentication)
+        host_default_auth.password = ''
+        host_default_auth.save
+        host.authentications << host_default_auth
+
+        expect(host_ssh_keypair_auth.auth_key).to be_nil
+        expect(host.authentication_best_fit).to eq ems_auth
       end
 
-      it "checks that if host's auth_key is not nil, host's auth is returned" do
-        host_auth = host.authentications.where(:authtype => :ssh_keypair).first
-        host_auth.auth_key = 'host_private_key_content'
-        host_auth.save
+      it "checks that if host's ssh_keypair auth_key is not nil, host's auth is returned" do
+        host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_ssh_keypair_auth.auth_key = 'host_private_key_content'
+        host_ssh_keypair_auth.save
 
-        expect(host.authentication_best_fit(:ssh_keypair)).to eq host_auth
+        expect(host.authentication_best_fit).to eq host_ssh_keypair_auth
+      end
+
+      it "checks that if host's default auth password is not nil, host's auth is returned" do
+        host_default_auth = FactoryGirl.create(:authentication)
+        host.authentications << host_default_auth
+
+        expect(host.authentication_best_fit).to eq host_default_auth
+      end
+
+      it "checks that ssh keypair_takes precedence over default auth" do
+        host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_ssh_keypair_auth.auth_key = 'host_private_key_content'
+        host_ssh_keypair_auth.save
+
+        host_auth = FactoryGirl.create(:authentication)
+        host.authentications << host_auth
+
+        expect(host.authentication_best_fit).to eq host_ssh_keypair_auth
+      end
+
+      it "checks ws and ipmi credentials don't affect the host.authentication_best_fit" do
+        host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
+        host_ssh_keypair_auth.auth_key = 'auth_key'
+        host_ssh_keypair_auth.status = 'host_ssh_keypair_auth_status'
+        host_ssh_keypair_auth.save
+
+        host.authentications << FactoryGirl.create(:authentication_ipmi, :status => 'host_ipmi_auth_status')
+        host.authentications << FactoryGirl.create(:authentication_ws, :status => 'host_ws_auth_status')
+        host.authentications << FactoryGirl.create(:authentication, :status => 'host_default_auth_status')
+
+        # All credentials filled, ssh_keypair takes precedence
+        expect(host.authentication_best_fit).to eq host_ssh_keypair_auth
+
+        host_ssh_keypair_auth.auth_key = ''
+        host_ssh_keypair_auth.save
+        host.reload
+
+        host_default_auth = host.authentications.where(:authtype => :default).first
+        # Only default password filled
+        expect(host.authentication_best_fit).to eq host_default_auth
+
+        host_default_auth.password = ''
+        host_default_auth.save
+        host.reload
+
+        ems_auth  = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
+        # ssh_keypair nor default credetials are filled on host, taking parent auth
+        expect(host.authentication_best_fit).to eq ems_auth
       end
     end
 
     context "#update_ssh_auth_status!" do
-      context "when ssh connection causes exception" do
+      context "when ssh connection causes exception," do
         before :each do
           host.stub(:verify_credentials_with_ssh) { raise "some error" }
         end
@@ -307,23 +425,22 @@ openstack-keystone:                     active
           expect(host_auth.status).to eq("Error")
         end
 
-        it "sets auth to 'None' state when hostname or credentials are missing" do
+        it "sets auth to 'Incomplete' state when hostname or credentials are missing" do
           # Remove the auth and observe the state is not error but none
           ext_management_system.authentications.where(:authtype => :ssh_keypair).first.destroy
           host.reload
           # Update status and observe it changes to none
           host.update_ssh_auth_status!
-          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("None")
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Incomplete")
         end
       end
 
-      context "when ssh connection succeeds an verification returns true" do
+      context "when ssh connection succeeds and verification returns true," do
         before :each do
           host.stub(:verify_credentials_with_ssh).and_return(true)
         end
 
         it "sets auth to valid, when credentials verification succeeds" do
-
           # Update status and observe it changes to Valid
           host.update_ssh_auth_status!
           expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Valid")
