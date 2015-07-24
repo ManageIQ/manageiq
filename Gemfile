@@ -79,6 +79,7 @@ gem "snmp",                           "~>1.1.0",      :require => false
 gem "uglifier",                       "~>2.7.1",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
+gem 'sys-proctable',                                  :require => false
 
 
 ### Start of gems excluded from the appliances.
