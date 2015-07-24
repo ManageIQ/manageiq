@@ -6,9 +6,9 @@ module PxeController::PxeImageTypes
     typ, id = params[:id].split("_")
     case typ
     when "img"
-      @record = session[:tree_selection] = MiqServer.find(from_cid(id))
+      @record = MiqServer.find(from_cid(id))
     when "ps"
-      @record = session[:tree_selection] = ServerRole.find(from_cid(id))
+      @record = ServerRole.find(from_cid(id))
     end
   end
 

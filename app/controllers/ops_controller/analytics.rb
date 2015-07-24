@@ -6,11 +6,11 @@ module OpsController::Analytics
     typ, id = params[:id].split("_")
     case typ
     when "server"
-      @record = session[:tree_selection] = MiqServer.find(from_cid(id))
+      @record = MiqServer.find(from_cid(id))
     when "role"
-      @record = session[:tree_selection] = ServerRole.find(from_cid(id))
+      @record = ServerRole.find(from_cid(id))
     when "asr"
-      @record = session[:tree_selection] = AssignedServerRole.find(from_cid(id))
+      @record = AssignedServerRole.find(from_cid(id))
     end
     #@_params[:treestate] = true                  # Force restore of saved tree open state
     zone = Zone.find_by_id(from_cid(x_node.split('-').last))
