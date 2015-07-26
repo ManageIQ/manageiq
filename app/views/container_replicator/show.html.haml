@@ -1,4 +1,4 @@
-- if @display == 'containers'
+- if %w(containers container_groups).include?(@display)
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
 - else
     = render :partial => @showtype
