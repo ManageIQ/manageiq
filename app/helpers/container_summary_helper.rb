@@ -65,7 +65,7 @@ module ContainerSummaryHelper
 
     feature ||= "#{klass.name.underscore}_show"
 
-    label = ui_lookup(:class => klass.name)
+    label = ui_lookup(:table => klass.name)
     image = textual_object_icon(object)
     value = if block_given?
               yield object
@@ -90,7 +90,7 @@ module ContainerSummaryHelper
 
     feature ||= "#{klass.name.underscore}_show_list"
 
-    label = ui_lookup(:classes => klass.name)
+    label = ui_lookup(:tables => klass.name)
     image = textual_collection_icon(collection)
     count = collection.count
 
