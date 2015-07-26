@@ -52,6 +52,11 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
       :image         => "openshift/mysql-55-centos7",
       :backing_ref   => "docker://bb608fb1575bcc1a5326517e6c4589df5160fa804daaa4990e837f1154f1c3c9"
     )
+
+    # Check the relation to container node
+    @container.container_group.should have_attributes(
+      :ems_ref => "fc73bb4b-2870-11e5-b5bb-727174f8ab71"
+    )
   end
 
   def assert_specific_container_group
@@ -66,6 +71,12 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
     # Check the relation to container node
     @containergroup.container_node.should have_attributes(
       :ems_ref => "248c52a3-286d-11e5-b5bb-727174f8ab71"
+    )
+
+    # Check the relation to containers
+    @containergroup.containers.count.should == 1
+    @containergroup.containers.last.should have_attributes(
+      :ems_ref => "fc73bb4b-2870-11e5-b5bb-727174f8ab71_ruby-helloworld-database_openshift/mysql-55-centos7"
     )
   end
 
