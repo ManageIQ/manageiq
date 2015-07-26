@@ -47,7 +47,19 @@ module ContainerSummaryHelper
     textual_link(@record.container_node)
   end
 
+  def textual_container_labels
+    textual_key_value(@record.labels.to_a)
+  end
+
+  def textual_container_selectors
+    textual_key_value(@record.selector_parts.to_a)
+  end
+
   private
+
+  def textual_key_value(items)
+    items.collect { |item| {:label => item.name.to_s, :value => item.value.to_s} }.flatten.compact
+  end
 
   def textual_link(target, **opts, &blk)
     case target
