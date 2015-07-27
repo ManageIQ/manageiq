@@ -28,7 +28,7 @@
         - if session[:time_profiles].blank?
           = _('No Time Profiles found')
         - elsif session[:time_profiles].length == 1
-          - # Only 1 choice, show the value
+          -# Only 1 choice, show the value
           = session[:time_profiles][@edit[:new][:time_profile].to_i]
         - else
           = select_tag('chosen_time_profile',

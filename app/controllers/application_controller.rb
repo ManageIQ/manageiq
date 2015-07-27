@@ -1730,7 +1730,6 @@ class ApplicationController < ActionController::Base
     else
       prefix = "check" if prefix == nil
       items = Array.new
-      session[:base_miq] = ""
       params.each do |var, val|
         vars = var.to_s.split("_")
         if vars[0]==prefix && val=="1"
@@ -2099,7 +2098,6 @@ class ApplicationController < ActionController::Base
   # RJS code to show tag box effects and replace the main list view area
   def replace_gtl_main_div(options={})
     action_url = options[:action_url] || @lastaction
-    session[:adv_search_on] = false
     return if params[:action] == "button" && @lastaction == "show"
     render :update do |page|                        # Use RJS to update the display
 #     page.visual_effect(:blind_up,"tag_box_div") if session[:applied_tags] != nil && @applied_tags == nil      # Hide div if removing all tags
@@ -2289,7 +2287,6 @@ class ApplicationController < ActionController::Base
     # Get timelines hash, if it is in the session for the running controller
     @tl_options = session["#{controller_name}_tl".to_sym]
 
-    session[:adv_search_on] = false if action_name[0..3] != "adv_" # Turn off advanced search flag if not an adv search action
     session[:host_url] = request.env["HTTP_HOST"]   unless request.env["HTTP_HOST"] == nil
     session[:tab_url] ||= Hash.new
 

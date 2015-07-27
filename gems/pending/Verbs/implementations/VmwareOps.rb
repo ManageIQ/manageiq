@@ -11,11 +11,11 @@ class VMWareOps
 		extend SharedOps
         case Platform::OS
         when :win32
-            require 'VmwareOpsWin'
+            require 'Verbs/implementations/VmwareOpsWin'
             extend VMWareOpsWin
             initializeCOM
         when :unix
-            require 'VmwareOpsLinux'
+            require 'Verbs/implementations/VmwareOpsLinux'
             extend VMWareOpsLinux
         else
             raise "Unsupported platform: #{Platform::OS}-#{Platform::IMPL}"

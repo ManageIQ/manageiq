@@ -5,7 +5,7 @@
       %h3=_('Basic Information')
       %table.style1
         - if @edit
-          - # Don't show description unless in edit mode
+          -# Don't show description unless in edit mode
           - url = url_for(:action => 'action_field_changed', :id => "#{@action.id || 'new'}")
           %tr
             %td.key=_('Description')

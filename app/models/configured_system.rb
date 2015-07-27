@@ -4,7 +4,7 @@ class ConfiguredSystem < ActiveRecord::Base
 
   acts_as_miq_taggable
   belongs_to :configuration_location
-  belongs_to :configuration_manager
+  belongs_to :configuration_manager, :class_name => 'ManageIQ::Providers::ConfigurationManager'
   belongs_to :configuration_organization
   belongs_to :configuration_profile
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy

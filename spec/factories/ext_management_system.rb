@@ -17,10 +17,10 @@ FactoryGirl.define do
   factory :ems_container, :class => "EmsContainer", :parent => :ext_management_system do
   end
 
-  factory :configuration_manager, :class => "ConfigurationManager", :parent => :ext_management_system do
+  factory :configuration_manager, :aliases => ["manageiq/providers/configuration_manager"], :class => "ManageIQ::Providers::ConfigurationManager", :parent => :ext_management_system do
   end
 
-  factory :provisioning_manager, :class => "ProvisioningManager", :parent => :ext_management_system do
+  factory :provisioning_manager, :aliases => ["manageiq/providers/provisioning_manager"], :class => "ManageIQ::Providers::ProvisioningManager", :parent => :ext_management_system do
   end
 
   # Leaf classes for ems_infra
@@ -107,7 +107,7 @@ FactoryGirl.define do
 
   # Leaf classes for configuration_manager
 
-  factory :configuration_manager_foreman, :class => "ConfigurationManagerForeman", :parent => :configuration_manager do
+  factory :configuration_manager_foreman, :aliases => ["manageiq/providers/foreman/configuration_manager"], :class => "ManageIQ::Providers::Foreman::ConfigurationManager", :parent => :configuration_manager do
   end
 
   factory :configuration_manager_foreman_with_authentication, :parent => :configuration_manager_foreman do
@@ -118,7 +118,7 @@ FactoryGirl.define do
 
   # Leaf classes for provisioning_manager
 
-  factory :provisioning_manager_foreman, :class => "ProvisioningManagerForeman", :parent => :provisioning_manager do
+  factory :provisioning_manager_foreman, :aliases => ["manageiq/providers/foreman/provisioning_manager"], :class => "ManageIQ::Providers::Foreman::ProvisioningManager", :parent => :provisioning_manager do
   end
 
   factory :provisioning_manager_foreman_with_authentication, :parent => :provisioning_manager_foreman do

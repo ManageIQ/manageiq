@@ -1,10 +1,10 @@
 - url = url_for(:action => 'exp_changed')
 
-- # Parameters:
-- #     exp_model       Model in use for this expression
+-# Parameters:
+-#     exp_model       Model in use for this expression
 
 - if exp_model == "_display_filter_"
-  - # Use list in @edit for reporting display filter
+  -# Use list in @edit for reporting display filter
   = select_tag('chosen_tag',
     options_for_select(["<#{_('Choose')}>"] + @edit[@expkey][:exp_available_tags], @edit[@expkey][:exp_tag]),
     :multiple              => false,

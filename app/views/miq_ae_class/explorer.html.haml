@@ -4,11 +4,11 @@
       = render :partial  => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}
 
 - content_for :accords do
-  - # Create the explorer dhtmlx layout/accordion JS objects
+  -# Create the explorer dhtmlx layout/accordion JS objects
   = render :partial => "layouts/dhtmlxlayout_explorer", :locals => {:accords => @accords}
 
 #main_div.main_div
   = render :partial => "all_tabs"
 
-- # To include MyCodeMirror JS and CSS files
+-# To include MyCodeMirror JS and CSS files
 = render :partial => "/layouts/my_code_mirror", :locals => {:text_area_id => "miq_none", :mode => "ruby"}

@@ -2,7 +2,7 @@ class TreeBuilderForeman  < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "ConfigurationManagerForeman"}
+    {:leaf => "ManageIQ::Providers::Foreman::ConfigurationManager"}
   end
 
   def set_locals_for_render
@@ -12,7 +12,7 @@ class TreeBuilderForeman  < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
-    count_only_or_objects(options[:count_only], ConfigurationManagerForeman.all, "name")
+    count_only_or_objects(options[:count_only], ManageIQ::Providers::Foreman::ConfigurationManager.all, "name")
   end
 
   def x_get_tree_cmf_kids(object, options)

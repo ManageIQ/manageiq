@@ -26,7 +26,7 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   end
 
   def self.request_task_class_from(_attribs)
-    MiqProvisionTaskConfiguredSystemForeman
+    ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask
   end
 
   def self.new_request_task(attribs)

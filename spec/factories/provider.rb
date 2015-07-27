@@ -4,7 +4,7 @@ FactoryGirl.define do
     guid            { MiqUUID.new_guid }
   end
 
-  factory :provider_foreman, :class => "ProviderForeman", :parent => :provider do
+  factory :provider_foreman, :class => "ManageIQ::Providers::Foreman::Provider", :parent => :provider do
     url "example.com"
 
     after(:build) do |provider|

@@ -64,13 +64,13 @@
         = select_tag("start_hour",
           options_for_select((0..23).to_a, @edit[:new][:start_hour].to_i),
           "data-miq_observe" => {:url => url}.to_json)
-        - # TODO: Enable comments for the translators in the gettext parser
-        - # TRANSLATORS: this h means hours
+        -# TODO: Enable comments for the translators in the gettext parser
+        -# TRANSLATORS: this h means hours
         = _("h")
         = select_tag("start_min",
           options_for_select((0..55).step(5).to_a, @edit[:new][:start_min].to_i),
           "data-miq_observe" => {:url => url}.to_json)
-        - # TODO: Enable comments for the translators in the gettext parser
-        - # TRANSLATORS: this m means minutes
+        -# TODO: Enable comments for the translators in the gettext parser
+        -# TRANSLATORS: this m means minutes
         = _("m")
   %hr

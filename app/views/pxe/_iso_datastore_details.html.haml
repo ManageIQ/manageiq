@@ -1,8 +1,8 @@
 - binf = _('Basic Information')
 #iso_datastore_details_div{:style => "width: 100%; height: 100%; overflow: auto; position: relative;"}
-  - # Added position:relative so dhtmlxtree scrolls properly in IE7
+  -# Added position:relative so dhtmlxtree scrolls properly in IE7
   - if @isd
-    - # if PXE Server is selected %>
+    -# if PXE Server is selected %>
     #iso_datastore_info_div
       - if @edit
         = render :partial => "iso_datastore_form"
@@ -23,7 +23,7 @@
                     = h(i.name)
 
   - if @img
-    - # PXE Image is selected
+    -# PXE Image is selected
     #iso_img_info_div
       - if @edit
         = render :partial => "iso_img_form"

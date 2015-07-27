@@ -8,10 +8,10 @@ class VolMgrPlatformSupport
         @ost = ost
         
         if Platform::OS == :win32
-			require "VolMgrPlatformSupportWin"
+			require "VolumeManager/VolMgrPlatformSupportWin"
 			extend VolMgrPlatformSupportWin
 		else
-		    require "VolMgrPlatformSupportLinux"
+		    require "VolumeManager/VolMgrPlatformSupportLinux"
 		    extend VolMgrPlatformSupportLinux
 		end
 		init

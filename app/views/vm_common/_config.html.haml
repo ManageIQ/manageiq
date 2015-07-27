@@ -74,7 +74,7 @@
   = render :partial => "vm_common/snapshots_tree"
 
 - when "vmtree_info"
-  - # Create divs for each VM to display as the mouse hovers over each VM node
+  -# Create divs for each VM to display as the mouse hovers over each VM node
   - @tree_vms.each do |v|
     - prefix = session[:base_vm] == "_h-#{v.id.to_s}" ? 'h' : 'v'
     #outer

@@ -8,7 +8,7 @@
     %img{:src => "/images/icons/new/shield.png"}
 
 - unless typ == :listnav
-  - # Listnav, no clear image needed
+  -# Listnav, no clear image needed
   .flobj
     - if !@embedded || @showlinks
       %a{:href => url_for_record(item), :title => h(item.v_qualified_desc)}

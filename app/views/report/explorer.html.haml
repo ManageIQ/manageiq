@@ -1,4 +1,4 @@
-- # Create from/to date JS vars to limit calendar starting from
+-# Create from/to date JS vars to limit calendar starting from
 :javascript
   var miq_cal_dateFrom = miqCalendarDateConversion("#{@timezone_offset}");
 
@@ -10,10 +10,10 @@
   #main_div.main_div
     - @lists.each do |list|
       = render :partial => list
-      - # Include the center cell divs
+      -# Include the center cell divs
 
 - content_for :accords do
-  - # Create the explorer dhtmlx layout/accordion JS objects
+  -# Create the explorer dhtmlx layout/accordion JS objects
   = render(:partial => "layouts/dhtmlxlayout_explorer",
     :locals         => {:accords => @accords,
       :active_accord             => @sb[:active_accord],

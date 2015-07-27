@@ -4,7 +4,7 @@
       - img = "cim_base_storage_extent"
     - else
       - img = item.class.to_s.underscore
-  - elsif item.kind_of?(ConfigurationManagerForeman)
+  - elsif item.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager)
     - img = "vendor-#{item.image_name}"
   - elsif item.kind_of?(ConfigurationProfile)
     - img = controller.send(:list_row_image, nil, item.class.base_class.to_s.underscore, "configuration_profile", item)
@@ -16,7 +16,7 @@
     %img{:src => "/images/icons/new/#{img}.png", :border => 0}
 
   - unless typ == :listnav
-    - # Listnav, no clear image needed
+    -# Listnav, no clear image needed
     .flobj
       - name = item.kind_of?(MiqCimInstance) ? item.evm_display_name : item.name
       - if !@embedded || @showlinks
@@ -40,7 +40,7 @@
     %img{:src => "/images/icons/new/#{@listicon}.png", :width => width * 1.8, :border => 0}
 
   - unless typ == :listnav
-    - # Listnav, no clear image needed
+    -# Listnav, no clear image needed
     .flobj
       - if !@embedded || @showlinks
         - name = case @listicon

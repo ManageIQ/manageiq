@@ -3,7 +3,7 @@
     .col-md-6.col-lg-5
       - @id = row['id']
       - if @targets_hash
-        - # Get the record
+        -# Get the record
         - item = @targets_hash[@id]
       %table{:style => @gtl_small_tiles ? "height: 120px; float:left; padding-right: 10px" : "margin-top: 20px"}
         %tr

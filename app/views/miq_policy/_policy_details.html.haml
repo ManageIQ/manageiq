@@ -5,7 +5,7 @@
   - if @policy
     #policy_info_div
       = render :partial => "layouts/flash_msg"
-      - # Description and active fields
+      -# Description and active fields
       - if @edit
         - if @edit && @edit[:typ] == "basic"
           %h3=_("Basic Information")
@@ -46,7 +46,7 @@
                   = h(_("By Username %s %s") % [@policy.updated_by || _("N/A"), format_timezone(@policy.updated_on, session[:user_tz], "on_at")])
       %hr
 
-      - # Scope
+      -# Scope
       - if @edit
         - if @edit[:typ] == "basic"
           %h3= _("Scope (Choose an element of the Policy scope to edit)")
@@ -66,7 +66,7 @@
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policy scope defined, the scope of this policy includes all elements.")}
         %hr
 
-      - # Conditions for this policy
+      -# Conditions for this policy
       - if @edit
         - if @edit[:typ] == "conditions"
           %fieldset
@@ -220,7 +220,7 @@
                                   = h(a.description)
           %hr
 
-      - # Notes field
+      -# Notes field
       - if @edit
         - if @edit[:typ] == "basic"
           %h3
@@ -242,7 +242,7 @@
         - else
           = text_area_tag("notes", @policy.notes, :readonly => true, :rows => 4)
 
-      - # Profiles policy is assigned to
+      -# Profiles policy is assigned to
       - unless @edit
         - if x_active_tree == :policy_tree
           %h3=_("Belongs to Profiles")

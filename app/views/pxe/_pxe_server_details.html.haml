@@ -1,5 +1,5 @@
 #pxe_server_details_div{:style => "width: 100%; height: 100%; overflow: auto; position: relative;"}
-  - # if PXE Server is seleted
+  -# if PXE Server is seleted
   - if @ps
     #pxe_info_div
       - if @edit
@@ -13,7 +13,7 @@
           = render :partial => "shared/summary/textual",
             :locals  => {:title => _("PXE Image Menus"), :items => textual_group_pxe_image_menus}
         - if false
-          - # this code can be uncommented when we have multiple pxe_menus
+          -# this code can be uncommented when we have multiple pxe_menus
           - if !@ps.pxe_menus.empty?
             %hr
             %h3=_('PXE Image Menus')
@@ -69,7 +69,7 @@
                   %td
                     = h(i.index)
 
-  - # PXE Image is selected
+  -# PXE Image is selected
   - if @img
     #pxe_img__info_div
       - if @edit
@@ -79,7 +79,7 @@
         = render :partial => "shared/summary/textual",
           :locals  => {:title => _("Basic Information"), :items => textual_pxe_img_basicinfo}
 
-  - # Windows Image is selected
+  -# Windows Image is selected
   - if @wimg
     #pxe_wimg__info_div
       - if @edit

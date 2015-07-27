@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 
 # Unreleased
 
+## Sprint 26 end 2015-07-13
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+26+Ending+July+13%2C+2015%22+label%3Aenhancement)
+
+- OpenStack: Flavors for all tenants
+- Containers: Correlate nodes to OpenStack instances
+- Automate: Configurable automate worker added
+- Provisioning: OpenStack Shared Networks
+  - Identified during inventory refresh
+  - Available in the Cloud Network drop-down in Provisioning across all OpenStack Tenants
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+26+Ending+July+13%2C+2015%22+label%3Aenhancement)
+
+- Providers: Namespace changes
+  - app/models/ems\_vmware.rb becomes app/models/manageiq/providers/vmware/infra_manager.rb
+  - app/models/ems\_amazon.rb becomes app/models/manageiq/providers/amazon/cloud_manager.rb
+- UI: Technical Debt Progress
+  - Started replacing DHTMLX controls
+  - Remaining TreePresenter/ExplorerPresenter conversions in progress
+  - Switched from Patternfly LESS to SASS
+- UI: Updates
+  - Ongoing Patternfly styling
+  - Schedule Editor update
+- Automate: State Machine
+  - Allow for a state to be skipped (on_entry)
+  - Allow for continuation of a state machine in case of errors (on_error)
+  - Allow methods to set the next state to execute
+- Appliance 
+  - CentOS 7.1
+  - Apache 2.4
+  - thin => puma
+  - Build environment virtualized
+- Core Changes
+  - Reworked report serialization for Rails 4.2
+  - Replication: Added Diagnostics
+- Appliance Console
+  - Standard login: type root (not admin)
+  - Standard bash: type appliance_console
+- GitHub Repository
+  - vmdb rerooted to look like a Rails app
+  - lib moved into gems/pending
+  - Build and system directories extracted to new repositories
+
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+26+Ending+July+13%2C+2015%22+label%3A%22technical+debt%22)
+
+- Core: SOAP server side has been removed
+
 ## Sprint 25 end 2015-06-22
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+25+Ending+June+22%2C+2015%22+label%3Aenhancement)

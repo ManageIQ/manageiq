@@ -1,10 +1,10 @@
-- # Renders JS to replace the contents of the miq_policy explorer view as directed by the controller
+-# Renders JS to replace the contents of the miq_policy explorer view as directed by the controller
 
-- # Pull options into local vars
+-# Pull options into local vars
 - exp              = options.delete(:exp)
 
 - if exp
-  - # See if any miq expression vars need to be set
+  -# See if any miq expression vars need to be set
   - if exp[:val1_type]
     miq_val1_type = '#{exp[:val1_type]}';
   - if exp[:val1_title]

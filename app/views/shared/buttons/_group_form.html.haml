@@ -29,7 +29,7 @@
       %td.key
         = _('Button Group Image')
       %td
-        - #= select("button","id", Array.new(5) {|i| i+1}, {:selected=>@edit[:new][:button_id].to_i}, {:class=>"threedigit"})
+        -#= select("button","id", Array.new(5) {|i| i+1}, {:selected=>@edit[:new][:button_id].to_i}, {:class=>"threedigit"})
         #button_div
         = render(:partial => 'layouts/dhtmlxcombo',
           :locals         => {:combo_id => "button_div",

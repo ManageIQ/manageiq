@@ -1,6 +1,6 @@
 #control_searchbar{:style => "display: none;"}
   #control_searchbox
-    - # Name based search box
+    -# Name based search box
     = form_tag(:update => "search", :url => {:action => "search"}, :remote => true) do
       #searchtextbox
         = text_field("search", "text",

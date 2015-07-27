@@ -2,7 +2,7 @@
 # Toolbar config file
 #
 ---
-:model: ConfiguredSystemForeman
+:model: ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
 :button_groups:
 - :name: provider_foreman_lifecycle
   :items:

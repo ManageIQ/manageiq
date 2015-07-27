@@ -3,7 +3,7 @@ module ApplicationController::CurrentUser
 
   included do
     helper_method :current_user,  :current_userid, :current_username
-    helper_method :current_group, :current_groupid
+    helper_method :current_group, :current_groupid, :eligible_groups
   end
 
   def clear_current_user
@@ -22,7 +22,6 @@ module ApplicationController::CurrentUser
       session[:username]  = nil
     end
     self.current_group  = db_user.try(:current_group)
-    self.current_eligible_groups = db_user.try(:miq_groups)
   end
   protected :current_user=
 
@@ -36,12 +35,12 @@ module ApplicationController::CurrentUser
   end
   private :current_group=
 
-  def current_eligible_groups=(eligible_groups)
-    # Save an array of groups this user is eligible for, if more than 1
+  def eligible_groups
+    eligible_groups = current_user.try(:miq_groups)
     eligible_groups = eligible_groups ? eligible_groups.sort_by { |g| g.description.downcase } : []
-    session[:eligible_groups] = eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
+    eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
   end
-  private :current_eligible_groups=
+  private :eligible_groups
 
   def current_user
     @current_user ||= User.find_by_userid(session[:userid])
