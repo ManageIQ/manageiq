@@ -8,11 +8,11 @@ class OpenstackEventMonitor
 
   def self.new(options={})
     # plugin initializer
-    self == OpenstackEventMonitor ? select_event_monitor(options) : super
+    self == OpenstackEventMonitor ? event_monitor(options) : super
   end
 
   def self.available?(options)
-    !select_event_monitor_class(options).kind_of? OpenstackNullEventMonitor
+    !event_monitor_class(options).kind_of? OpenstackNullEventMonitor
   end
 
   DEFAULT_PLUGIN_PRIORITY = 0
@@ -63,39 +63,36 @@ class OpenstackEventMonitor
     end
   end
 
-  # this private marker is really here for looks
-  # private_class_methods are marked below
-  private
+  cache_with_timeout(:event_monitor_class_cache) { Hash.new }
+  cache_with_timeout(:event_monitor_cache) { Hash.new }
+
+  def self.event_monitor_class(options)
+    key = event_monitor_key(options)
+    event_monitor_class_cache[key] ||= begin
+      detected_event_monitor = subclasses.detect do |event_monitor|
+        begin
+          event_monitor.available?(options)
+        rescue => e
+          $log.warn("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor}
+                     for #{options[:hostname]}. Trying other AMQP clients.  #{e.message}")
+          false
+        end
+      end
+      detected_event_monitor || OpenstackNullEventMonitor
+    end
+  end
 
   # Select the best-fit plugin, or OpenstackNullEventMonitor if no plugin will
   # work Return the plugin instance
   # Caches plugin instances by openstack provider
-  def self.select_event_monitor(options)
-    cache_result(:instances, event_monitor_key(options)) do
-      select_event_monitor_class(options).new(options)
-    end
+  def self.event_monitor(options)
+    key = event_monitor_key(options)
+    event_monitor_cache[key] ||= event_monitor_class(options).new(options)
   end
-  private_class_method :select_event_monitor
 
-  def self.select_event_monitor_class(options)
-    cache_result(:plugin_classes, event_monitor_key(options)) do
-      self.subclasses.detect do |event_monitor|
-        begin
-          event_monitor.available?(options)
-        rescue => e
-          $log.error("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor} for #{options[:hostname]}. Trying other AMQP clients.  #{e.message}")
-          false
-        end
-      end || OpenstackNullEventMonitor
-    end
-  end
-  private_class_method :select_event_monitor_class
-
-  def self.cache_result(cache_name, key)
-    @cache ||= {}
-    @cache.fetch_path(cache_name, key) || @cache.store_path(cache_name, key, yield)
-  end
-  private_class_method :cache_result
+  # this private marker is really here for looks
+  # private_class_methods are marked below
+  private
 
   def self.event_monitor_key(options)
     options.values_at(:hostname, :username, :password)
