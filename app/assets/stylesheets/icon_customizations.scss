@@ -1,6 +1,7 @@
 .icons {
   font-size: 20px;
   height: 18px;
+  padding-right: 3px;
 }
 /* begin icon class customizations */
 .fa-bar-chart-o:before, .fa-chart:before {
@@ -70,6 +71,9 @@
 .product-report:before {
   content: "\e603";
 }
+.product-ae_instance:before {
+  content: "\e603";
+}
 .product-chart:before {
   content: "\e604";
 }
@@ -136,16 +140,31 @@
 .product-assertion:before {
   content: "\e619";
 }
+.product-ae_assertion:before {
+  content: "\e619";
+}
 .product-attribute:before {
+  content: "\e61a";
+}
+.product-ae_attribute:before {
   content: "\e61a";
 }
 .product-relationship:before {
   content: "\e61b";
 }
+.product-ae_relationship:before {
+  content: "\e61b";
+}
 .product-method:before {
   content: "\e61c";
 }
+.product-ae_method:before {
+  content: "\e61c";
+}
 .product-state:before {
+  content: "\e61d";
+}
+.product-ae_state:before {
   content: "\e61d";
 }
 .product-array:before {
@@ -160,6 +179,13 @@
 .product-password:before {
   content: "\e621";
 }
+.product-ae_class:before {
+  content: "\e622";
+}
+.product-ae_namespace:before {
+  content: "\e623";
+}
+
 
 /* define  colors */
 .product-custom-1:before {
