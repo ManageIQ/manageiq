@@ -23,11 +23,11 @@
       %td{:valign => "top"}
         %table.style1
           %tr
-            %td.key=_('Name')
+            %td.key= _('Name')
             %td.notwide= @record.name
           %tr
-            %td.key=_('Description')
+            %td.key= _('Description')
             %td.notwide= @record.description
           %tr
-            %td.key=_('Long Description')
+            %td.key= _('Long Description')
             %td.wide= @record.long_description.to_s.html_safe

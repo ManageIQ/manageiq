@@ -20,7 +20,7 @@
     - obs = {:interval => '.5', :url => url}.to_json
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
     #form_ns_div
-      %h3=_('Info')
+      %h3= _('Info')
       %table.style1
         - unless @ae_ns.domain?
           %tr
@@ -29,7 +29,7 @@
             %td.wide
               = h(@sb[:namespace_path])
         %tr
-          %td.key=_('Name')
+          %td.key= _('Name')
           %td.wide
             = text_field_tag("ns_name",
               @edit[:new][:ns_name],
@@ -37,7 +37,7 @@
               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             = javascript_tag(javascript_focus('ns_name'))
         %tr
-          %td.key=_('Description')
+          %td.key= _('Description')
           %td.wide
             = text_field_tag("ns_description",
               @edit[:new][:ns_description],
@@ -45,7 +45,7 @@
               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         - if @ae_ns.domain?
           %tr
-            %td.key=_('Enabled')
+            %td.key= _('Enabled')
             %td
               = check_box_tag("ns_enabled",
                 value   = "1",

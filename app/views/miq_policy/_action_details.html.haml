@@ -2,13 +2,13 @@
   - if @action
     #action_info_div
       = render :partial => "layouts/flash_msg"
-      %h3=_('Basic Information')
+      %h3= _('Basic Information')
       %table.style1
         - if @edit
           -# Don't show description unless in edit mode
           - url = url_for(:action => 'action_field_changed', :id => "#{@action.id || 'new'}")
           %tr
-            %td.key=_('Description')
+            %td.key= _('Description')
             %td
               - if @edit
                 = text_field_tag("description",
@@ -19,7 +19,7 @@
               - else
                 = h(@action.description)
         %tr
-          %td.key=_('Action Type')
+          %td.key= _('Action Type')
           %td
             - if @edit
               = select_tag('miq_action_type',
@@ -58,18 +58,18 @@
             %tr
               %td{:width => '50%'}
                 %fieldset
-                  %h3=_('Object Details')
+                  %h3= _('Object Details')
                   %table.style1
                     %tr
-                      %td.key=_('Starting Message')
+                      %td.key= _('Starting Message')
                       %td
                         = h(@action.options[:ae_message])
                     %tr
-                      %td.key=_('Request')
+                      %td.key= _('Request')
                       %td
                         = h(@action.options[:ae_request])
                 %fieldset
-                  %h3=_('Attribute/Value Pairs')
+                  %h3= _('Attribute/Value Pairs')
                   %table.style1
                     - if !@action.options[:ae_hash].blank?
                       - @action.options[:ae_hash].each do |k, v|
@@ -79,65 +79,65 @@
                           %td
                             = h(v)
                     - else
-                      =_('No Attribute/Value Pairs found')
+                      = _('No Attribute/Value Pairs found')
           %hr
         - when "email"
-          %h3=_('E-mail Settings')
+          %h3= _('E-mail Settings')
           %table.style1
             %tr
-              %td.key=_('From E-mail Address')
+              %td.key= _('From E-mail Address')
               %td
                 = h(@action.options[:from])
             %tr
-              %td.key=_('To E-mail Address')
+              %td.key= _('To E-mail Address')
               %td
                 = h(@action.options[:to])
           %hr
         - when "set_custom_attribute"
-          %h3=_('Set Custom Attribute Settings')
+          %h3= _('Set Custom Attribute Settings')
           %table.style1
             %tr
-              %td.key=_('Attribute Name')
+              %td.key= _('Attribute Name')
               %td
                 = h(@action.options[:attribute])
             %tr
-              %td.key=_("Value to Set")
+              %td.key= _("Value to Set")
               %td
                 = h(@action.options[:value])
           %hr
         - when "reconfigure_cpus"
-          %h3=_("Reconfigure CPU")
+          %h3= _("Reconfigure CPU")
           %table.style1
             %tr
-              %td.key=_("Number of CPU's")
+              %td.key= _("Number of CPU's")
               %td
                 = h(@action.options[:value])
           %hr
         - when "reconfigure_memory"
-          %h3=_("Reconfigure Memory")
+          %h3= _("Reconfigure Memory")
           %table.style1
             %tr
-              %td.key=_("Memory Size")
+              %td.key= _("Memory Size")
               %td
                 = "#{h(@action.options[:value])} MB"
           %hr
         - when "tag"
-          %h3=_("Applied Tag")
+          %h3= _("Applied Tag")
           %table.style1
             %tr
-              %td.key=_("Tag")
+              %td.key= _("Tag")
               %td
                 = h(Classification.tag2human(@action.options[:tags].first))
           %hr
         - when "snmp_trap"
-          %h3=_("SNMP Trap")
+          %h3= _("SNMP Trap")
           %table.style1
             %tr
-              %td.key=title_for_host
+              %td.key= title_for_host
               %td
                 = h(@action.options[:host])
             %tr
-              %td.key=_("Version")
+              %td.key= _("Version")
               %td
                 = h(@action.options[:snmp_version])
             - trap_text = @action.options[:snmp_version] == "v1" || @action.options[:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
@@ -147,16 +147,16 @@
               %td
                 = h(@action.options[:trap_id])
           %hr
-          %h3=_("Variables")
+          %h3= _("Variables")
           - if @action.options.fetch(:variables, []).empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _('No variables configured.')}
           - else
             %table.table.table-striped.table-bordered.table-hover
               %thead
                 %tr
-                  %th=_('Object ID')
-                  %th=_('Type')
-                  %th=_('Value')
+                  %th= _('Object ID')
+                  %th= _('Type')
+                  %th= _('Value')
               %tbody
                 - @action.options[:variables].each do |var|
                   - unless var[:oid].blank?
@@ -169,15 +169,15 @@
                         = h(var[:value])
           %hr
         - when "assign_scan_profile"
-          %h3=_("Analysis Profile")
+          %h3= _("Analysis Profile")
           %table.style1
             %tr
-              %td.key=_("Assigned Analysis Profile")
+              %td.key= _("Assigned Analysis Profile")
               %td
                 = h(@action.options[:scan_item_set_name])
           %hr
         - when "evaluate_alerts"
-          %h3=_("Alerts to Evaluate")
+          %h3= _("Alerts to Evaluate")
           - if @alert_guids.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts have been selected.")}
           - else
@@ -193,27 +193,27 @@
                       = alert.description
           %hr
         - when "inherit_parent_tags"
-          %h3=_("Inherit Tags")
+          %h3= _("Inherit Tags")
           %table.style1
             %tr
-              %td.key=_("Parent Type")
+              %td.key= _("Parent Type")
               %td
                 = h(ui_lookup(:table => @action.options[:parent_type]))
             %tr
-              %td.key=_("Categories")
+              %td.key= _("Categories")
               %td= h(@cats)
           %hr
         - when "remove_tags"
-          %h3=_("Remove Tags")
+          %h3= _("Remove Tags")
           %table.style1
             %tr
-              %td.key=_("Categories")
+              %td.key= _("Categories")
               %td
                 = h(@cats)
           %hr
 
         - if x_active_tree == :action_tree
-          %h3=_("Assigned to Policies")
+          %h3= _("Assigned to Policies")
           - if @action_policies.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Action is not assigned to any Policies.")}
           - else

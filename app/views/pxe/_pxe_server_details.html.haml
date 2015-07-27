@@ -5,7 +5,7 @@
       - if @edit
         = render(:partial => "pxe_form")
       - else
-        = render :partial=>"layouts/flash_msg"
+        = render :partial => "layouts/flash_msg"
         = render(:partial => "shared/summary/textual",
           :locals  => {:title => _("Basic Information"), :items => textual_group_basicinfo})
         - if @ps.pxe_menus.count > 0
@@ -16,11 +16,11 @@
           -# this code can be uncommented when we have multiple pxe_menus
           - if !@ps.pxe_menus.empty?
             %hr
-            %h3=_('PXE Image Menus')
+            %h3= _('PXE Image Menus')
             %table.table.table-bordered.table-striped
               %thead
                 %tr
-                  %th=_('Filename')
+                  %th= _('Filename')
               %tbody
                 - @ps.pxe_menus.sort_by{ |a| a.file_name }.each do |menu|
                   %tr
@@ -28,14 +28,14 @@
                       = h(menu.file_name)
         - unless @ps.pxe_images.empty?
           %hr
-          %h3=_('PXE Images')
+          %h3= _('PXE Images')
           %table.table.table-bordered.table-hover.table-striped
             %thead
               %tr
-                %th=_('Name')
-                %th=_('Description')
-                %th=_('Kernel')
-                %th=_('Windows Boot Env')
+                %th= _('Name')
+                %th= _('Description')
+                %th= _('Kernel')
+                %th= _('Windows Boot Env')
             %tbody
               - @ps.pxe_images.sort_by { |a| a.name.downcase }.each do |i|
                 %tr{:title => _("View this PXE Image"), :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');"}
@@ -49,14 +49,14 @@
                     = h(i.default_for_windows ? "Yes" : "")
         - unless @ps.windows_images.empty?
           %hr
-          %h3=_('Windows Images')
+          %h3= _('Windows Images')
           %table.table.table-bordered.table-hover.table-striped
             %thead
               %tr
-                %th=_('Name')
-                %th=_('Description')
-                %th=_('Path')
-                %th=_('Index')
+                %th= _('Name')
+                %th= _('Description')
+                %th= _('Path')
+                %th= _('Index')
             %tbody
               - @ps.windows_images.sort_by { |a| a.name.downcase }.each do |i|
                 %tr{:title => _("View this Windows Image"), :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');"}

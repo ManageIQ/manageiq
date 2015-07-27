@@ -7,7 +7,7 @@
         %td
           %table#formtest.form{:width => '50%'}
             %tr
-              %td.widthed{:align => "left"}=_('Class Schema Sequencing:')
+              %td.widthed{:align => "left"}= _('Class Schema Sequencing:')
               %td
             %tr
               %td{:align => "left", :valign => "top"}
@@ -35,7 +35,7 @@
                     "data-miq_sparkle_off"       => true,
                     "data-submit"                => 'column_lists',
                     :remote                      => true})
-          .note=_('* Select one or more consecutive fields to move up or down.')
+          .note= _('* Select one or more consecutive fields to move up or down.')
 :javascript
   // disable any other tabs on screen when in edit
   miq_patternfly_disable_inactive_tabs('#ae_tabs');

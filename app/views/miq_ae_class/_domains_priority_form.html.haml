@@ -6,7 +6,7 @@
         %td
           %table#formtest.form{:width => '50%'}
             %tr
-              %td.widthed{:align => "left"}=_("Domains:")
+              %td.widthed{:align => "left"}= _("Domains:")
               %td
             %tr
               %td{:align => "left", :valign => "top"}
@@ -26,4 +26,4 @@
                   :opts_false         => {:class => "rollover small", :alt => (t = _("Move selected fields down"))},
                   :link               => {:action => 'priority_form_field_changed', :button => 'down', :id => "priority__edit"},
                   :opts_link          => {"data-submit" => "domains_list", :remote => true, :title => t})
-          #div.note=_('* Select one or more consecutive groups to move up or down.')
+          #div.note= _('* Select one or more consecutive groups to move up or down.')

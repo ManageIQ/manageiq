@@ -2,7 +2,7 @@
 - if @edit && @edit[:current]
   = render :partial => "cb_rate_edit"
 - else
-  %h3=_('Basic Info')
+  %h3= _('Basic Info')
   %form.form-horizontal.static
     .form-group
       %label.col-md-2.control-label
@@ -11,15 +11,15 @@
         %p.form-control-static
           = h(@record.description)
   %hr
-  %h3=_('Rate Details')
+  %h3= _('Rate Details')
   %table.table.table-bordered
     %thead
       %tr
-        %th=_('Group')
-        %th=_('Description')
-        %th=_('Rate')
-        %th=_('Per Time')
-        %th=_('Per Unit')
+        %th= _('Group')
+        %th= _('Description')
+        %th= _('Rate')
+        %th= _('Per Time')
+        %th= _('Per Unit')
     %tbody
       - @sb[:selected_rate_details].each do |r|
         - @cur_group = r[:group] if @cur_group.nil?
@@ -29,7 +29,7 @@
             %td.active{:colspan => "6"} &nbsp;
         %tr
           %td
-            = h(Dictionary::gettext(r[:group],:type=>:rate_detail_group,:notfound=>:titleize))
+            = h(Dictionary::gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize))
           %td
             = r[:description]
           %td{:align => "right"}

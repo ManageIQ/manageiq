@@ -1,14 +1,14 @@
 #field_values_div
   = form_tag(url_for(:action => 'field_value_accept', :id => "#{@record.id || 'new'}"), :remote => true) do
     %fieldset
-      %h3=_('Entries')
+      %h3= _('Entries')
       = render :partial => "layouts/flash_msg"
       %table.table.table-striped.table-bordered.table-hover
         %thead
           %tr
             %th.narrow
-            %th.title=_('Value')
-            %th.title=_('Description')
+            %th.title= _('Value')
+            %th.title= _('Description')
         %tbody
           - if entry == "new"
             = render :partial => "field_value_entry", :locals => {:entry => "new", :edit => true}

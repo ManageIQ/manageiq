@@ -4,40 +4,40 @@
   = render :partial => "layouts/flash_msg"
   - if session[:rsop_tree]
     %fieldset{:style => "margin: 8px;"}
-      %h3=_("Display Options")
+      %h3= _("Display Options")
       %table.style1
         %tr
-          %td.key=_("Show out of scope items:")
+          %td.key= _("Show out of scope items:")
           %td
             = check_box_tag("out_of_scope", "1", @sb[:rsop][:out_of_scope],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
               "data-miq_observe_checkbox" => observe)
         %tr
-          %td.key=_("Show policies:")
+          %td.key= _("Show policies:")
           %td
             = check_box_tag("passed", "1", @sb[:rsop][:passed],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
               "data-miq_observe_checkbox" => observe)
             &nbsp;
-            =_("Passed")
+            = _("Passed")
             &nbsp;
             = check_box_tag("failed", "1", @sb[:rsop][:failed],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
               "data-miq_observe_checkbox" => observe)
             &nbsp;
-            =_("Failed")
+            = _("Failed")
     %fieldset{:style => "margin: 8px;"}
-      %h3=_("Policy Simulation Results")
+      %h3= _("Policy Simulation Results")
       &nbsp;
       %strong
-        =_("* Items in")
+        = _("* Items in")
         %font{:color => "red"}
           %i
-            =_("red italics")
-        =_("do not change the outcome of the scope or expression")
+            = _("red italics")
+        = _("do not change the outcome of the scope or expression")
       #rsop_treebox
       = render(:partial => "layouts/dynatree",
         :locals         => {:tree_id => "rsop_treebox",
@@ -53,4 +53,4 @@
   - else
     &nbsp;
     %strong
-      =_("* Enter Policy Simulation options on the left and press Submit")
+      = _("* Enter Policy Simulation options on the left and press Submit")

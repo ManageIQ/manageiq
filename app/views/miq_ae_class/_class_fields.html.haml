@@ -3,7 +3,7 @@
     - if !@in_a_form_fields
       / Show Schema
       = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
-      %h3=_('Schema')
+      %h3= _('Schema')
       %table.table.table-striped.table-bordered
         %thead
           %tr
@@ -36,7 +36,7 @@
       / Edit Schema
       #form_div
         = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
-        %h3=_('Schema')
+        %h3= _('Schema')
         %table.table.table-striped.table-bordered
           %thead
             %tr

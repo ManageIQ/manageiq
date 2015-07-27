@@ -3,10 +3,10 @@
 
   = render :partial => "layouts/flash_msg"
 
-  %h3=_('Basic Information')
+  %h3= _('Basic Information')
   %table.style1
     %tr
-      %td.key=_('Custom Identifier')
+      %td.key= _('Custom Identifier')
       %td.wide
         = text_field_tag("custom_1",
           @edit[:new][:custom_1],
@@ -15,7 +15,7 @@
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
       %td.key
-        =_('Description')
+        = _('Description')
         (
         %span#description_count>= @edit[:new][:description] ? @edit[:new][:description].length : 0
         \/100)
@@ -29,10 +29,10 @@
             "data-miq_check_max_length" => true,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %hr
-  %h3=_('Parent VM Selection')
+  %h3= _('Parent VM Selection')
   %table.style1
     %tr
-      %td.key=_('Parent VM')
+      %td.key= _('Parent VM')
       %td
         = select_tag("chosen_parent",
           options_for_select(@edit[:pchoices].sort, @edit[:new][:parent]),
@@ -43,12 +43,12 @@
           "data-miq_observe" => {:url => url}.to_json)
 
   %hr
-  %h3=_('Child VM Selection')
+  %h3= _('Child VM Selection')
   %table
     %tr
-      %td.widthed{:align => "left"}=_('Child VMs:')
+      %td.widthed{:align => "left"}= _('Child VMs:')
       %td
-      %td{:align => "left"}=_('Available VMs:')
+      %td{:align => "left"}= _('Available VMs:')
     %tr
       %td{:align => "right", :valign => "top"}
         %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}

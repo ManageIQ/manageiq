@@ -2,14 +2,14 @@
   = render :partial => "layouts/flash_msg",
            :locals  => {:div_num => "_entries"}
   %fieldset
-    %h3=_("LDAP Servers")
+    %h3= _("LDAP Servers")
     %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
           %th.narrow
-          %th=_("Host Name")
-          %th=_("Mode")
-          %th=_("Port")
+          %th= _("Host Name")
+          %th= _("Mode")
+          %th= _("Port")
           %th
       %tbody
         - edit_flag = !(entry.nil?) && entry == "new"

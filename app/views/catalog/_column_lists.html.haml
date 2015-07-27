@@ -1,9 +1,9 @@
 #column_lists
   %table.form#formtest{:width => "100%"}
     %tr
-      %td.widthed{:align => "left"}=_('Unassigned:')
+      %td.widthed{:align => "left"}= _('Unassigned:')
       %td
-      %td{:align => "left"}=_('Selected:')
+      %td{:align => "left"}= _('Selected:')
     %tr
       %td{:align => "right", :valign => "top"}
         = select_tag("available_fields[]",

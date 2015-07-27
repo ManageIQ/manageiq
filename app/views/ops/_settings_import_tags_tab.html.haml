@@ -2,14 +2,14 @@
   #tab_div
     %h3
       = _("Messages")
-    = render(:partial=>"layouts/flash_msg", :locals=>{:click_remove=>false})
+    = render(:partial => "layouts/flash_msg", :locals => {:click_remove => false})
     %hr/
     %h3
       = _("Upload #{h(session[:customer_name])} Tag Assignments for VMs")
     %table.style1
       %tr
         %td
-          = form_tag({:action=>"upload_csv", :typ=>"tag"}, :multipart => true) do
+          = form_tag({:action => "upload_csv", :typ => "tag"}, :multipart => true) do
             = file_field("upload", "file")
-            = submit_tag("Upload", :id=>"upload_tags")
+            = submit_tag("Upload", :id => "upload_tags")
             = _("* Requirements: CSV formatted file.")

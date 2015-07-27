@@ -1,10 +1,10 @@
--if big_iframe
+- if big_iframe
   = yield
--elsif inner_layout_present?
+- elsif inner_layout_present?
   .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
     .row{:style => "height: 100%"}
       .col-md-12#center_div{:style => "height: 100%"}
--else
+- else
   .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
     .row.scrollable-sm#center_div{:style => "height: 100%"}
       - if layout_uses_listnav?

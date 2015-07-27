@@ -6,10 +6,10 @@
   .row
     .col-md-12.col-lg-6
       %fieldset
-        %h3=_("Role Information")
+        %h3= _("Role Information")
         %table.style1
           %tr
-            %td.key=_("Name")
+            %td.key= _("Name")
             %td
               - if !@edit
                 = h(@role.name)
@@ -20,13 +20,13 @@
                                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
                 = javascript_tag(javascript_focus('name'))
           %tr
-            %td.key=_("VM & Template Access Restriction")
+            %td.key= _("VM & Template Access Restriction")
             %td
               - if !@edit
                 - if @role.settings.kind_of?(Hash) && @role.settings.fetch_path(:restrictions, :vms)
                   = h(MiqUserRole::RESTRICTIONS[@role.settings.fetch_path(:restrictions, :vms)])
                 - else
-                  =_("None")
+                  = _("None")
               - else
                 = select_tag('vm_restriction',
                              options_for_select([[_("None"), _("none")]] + MiqUserRole::RESTRICTIONS.invert.sort_by { |name, _value| name.downcase },
@@ -34,7 +34,7 @@
                              "data-miq_observe" => {:url => url}.to_json)
           - unless @edit
             %tr
-              %td.key=_("Groups Using this Role")
+              %td.key= _("Groups Using this Role")
               %td{:style => "padding: 0px"}
                 %table{:cellpadding => "0", :cellspacing => "0"}
                   - @role.miq_groups.sort_by { |a| a.description.downcase }.each do |g|
@@ -46,7 +46,7 @@
     .col-md-12.col-lg-6
       %fieldset
         - temp = @edit ? _("Editing") : _("Read Only")
-        %h3=_("Product Features (%s)") % temp
+        %h3= _("Product Features (%s)") % temp
         #features_treebox{:style => "width:100%;height:#{@winH - 435}px;color:#000"}
         = render(:partial => "layouts/dynatree",
                  :locals  => {:tree_id        => "features_treebox",
@@ -59,4 +59,4 @@
                               :oncheck        => @edit.nil? ? nil : "miqOnCheck_handler",
                               :open_close_all_on_dbl_click => true})
       &nbsp;&nbsp;*
-      =_("Double click a feature to open/close all children.")
+      = _("Double click a feature to open/close all children.")

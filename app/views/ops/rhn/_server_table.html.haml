@@ -1,23 +1,23 @@
 %fieldset
   %p{:class => 'legend'}
-    =_("Appliance Updates")
+    = _("Appliance Updates")
     #rhn_buttons
       %table
         %tr
           %td{:colspan => 2}
-            =_("Available Product version:")
+            = _("Available Product version:")
             = @customer.version_available
         %tr
           %td{:colspan => 2} &nbsp;
         %tr
           %td
-            =button_tag(_("Refresh List"),
+            = button_tag(_("Refresh List"),
                       :id      => 'rhn_refresh_button',
                       :class   => 'btn btn-default',
                       :onclick => "miqAjaxButton('#{url_for(:action => 'rhn_buttons',
                                                             :button => 'refresh')}');")
           %td
-            =button_tag(_("Check for Updates"),
+            = button_tag(_("Check for Updates"),
                       :id       => 'rhn_check_updates_button_on_1',
                       :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
@@ -25,7 +25,7 @@
                                                              :button => 'check')}',
                                                   true);")
           %td
-            =button_tag(_("Register"),
+            = button_tag(_("Register"),
                       :id       => 'rhn_register_button_on_1',
                       :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
@@ -33,7 +33,7 @@
                                                               :button => 'register')}',
                                                   true);")
           %td
-            =button_tag(_("Apply CFME Update"),
+            = button_tag(_("Apply CFME Update"),
                       :id       => 'rhn_update_button_on_1',
                       :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
@@ -47,15 +47,15 @@
           %th
             = check_box_tag('masterToggle', 1, @check_all,
                             :onclick => "miqUpdateAllCheckboxes('rhn_buttons', null);")
-          %th=_("Appliance")
-          %th=_("Zone")
-          %th=_("Update Status")
-          %th=_("Last Checked for updates")
-          %th=_("CFME Version")
-          %th=_("Platform Updates Available")
-          %th=_("Last Message")
+          %th= _("Appliance")
+          %th= _("Zone")
+          %th= _("Update Status")
+          %th= _("Last Checked for updates")
+          %th= _("CFME Version")
+          %th= _("Platform Updates Available")
+          %th= _("Last Message")
         %tbody
-          -Array(@updates).each do |update|
+          - Array(@updates).each do |update|
             %tr
               %td.narrow
                 = check_box_tag('check_server_'+update.id.to_s, 1,
@@ -66,6 +66,6 @@
               %td= update.zone
               %td= update.status
               %td= update.last_check
-              %td{:style=>"color: #{update.color}"}= update.version
+              %td{:style => "color: #{update.color}"}= update.version
               %td= update.updates_available
               %td= update.last_message.to_s.capitalize

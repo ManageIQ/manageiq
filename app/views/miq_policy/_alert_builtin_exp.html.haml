@@ -18,7 +18,7 @@
       - else
         - if @alert.expression[:options][:event_types].nil?
           %span.bg-warning
-            =_("No type set")
+            = _("No type set")
         - else
           = h(@sb[:alert][:events][@alert.expression[:options][:event_types].first])
   - when :time_threshold
@@ -123,14 +123,14 @@
           "data-miq_observe"     => observe)
         &nbsp;&nbsp;
         %b
-          =_('Caution:')
-        =_('Setting tracing to true may cause excessive log lines to be written')
+          = _('Caution:')
+        = _('Setting tracing to true may cause excessive log lines to be written')
       - else
         = h(@alert.expression[:options][:debug_trace])
   - when :event_log_message_filter_value
     -# Skip this, handled by event_log_message_filter_type
   - when :event_log_message_filter_type
-    %td.key=_('Message Filter')
+    %td.key= _('Message Filter')
     %td
       - if @edit
         = select_tag('select_event_log_message_filter_type',
@@ -146,7 +146,7 @@
         = h(@alert.expression[:options][:event_log_message_filter_type])
         = h(@alert.expression[:options][:event_log_message_filter_value])
   - when :hdw_attr
-    %td.key=_('Hardware Attribute')
+    %td.key= _('Hardware Attribute')
     %td
       - if @edit
         = select_tag('select_hdw_attr',
@@ -168,7 +168,7 @@
     %td
       - if @edit
         - if @edit[:emss].length == 0
-          =_("No %s found") % ui_lookup(:tables => "ext_management_system")
+          = _("No %s found") % ui_lookup(:tables => "ext_management_system")
         - elsif @edit[:emss].length == 1
           = h(@edit[:emss][@edit[:new][:expression][:options][:ems_id]])
         - else
@@ -202,7 +202,7 @@
                 "data-miq_sparkle_off" => true,
                 "data-miq_observe"     => observe)
           - else
-            =_("Choose a %s first") % ui_lookup(:table => "ext_management_system")
+            = _("Choose a %s first") % ui_lookup(:table => "ext_management_system")
         - else
           = h(@alert.expression[:options][:ems_alarm_name])
   - else

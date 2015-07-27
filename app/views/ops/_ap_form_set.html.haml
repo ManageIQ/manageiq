@@ -1,7 +1,7 @@
-- url = url_for(:action=>'ap_form_field_changed',:item_type=>"category", :id=>"#{@scan.id || "new"}")
+- url = url_for(:action => 'ap_form_field_changed', :item_type => "category", :id => "#{@scan.id || "new"}")
 #form_div
   %fieldset
-    %h3=_("Category Selection")
+    %h3= _("Category Selection")
     %table.style1
       %tr
         %td
@@ -12,12 +12,12 @@
                 - @selected.push(a["target"])
             - CATEGORY_CHOICES.each_slice(3) do |keyvalue|
               %tr
-                - keyvalue.each do |k,v|
+                - keyvalue.each do |k, v|
                   - checked = @selected.include? k if @selected
                   %td{:align => "left", :nowrap => "", :valign => "top"}
-                    = hidden_field("item", "type", :value=>"category")
+                    = hidden_field("item", "type", :value => "category")
                     = check_box_tag("check_#{k}", value=v,
                       checked=checked,
-                      "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                      "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                      "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
+                      "data-miq_observe_checkbox" => {:url => url}.to_json)
                     = v

@@ -11,11 +11,11 @@
         = render(:partial => "shared/summary/textual",
           :locals  => {:title => binf, :items => textual_iso_datastore_basicinfo})
         - unless @isd.iso_images.empty?
-          %h3=_('ISO Images')
+          %h3= _('ISO Images')
           %table.table.table-bordered.table-striped.table-hover
             %thead
               %tr
-                %th=_('Name')
+                %th= _('Name')
             %tbody
               - @isd.iso_images.sort_by { |a| a.name.downcase }.each do |i|
                 %tr{:title => _("View this ISO Image"), :onclick => "cfmeDynatree_activateNode('iso_datastores_tree', 'isi-#{to_cid(i.id)}');"}
