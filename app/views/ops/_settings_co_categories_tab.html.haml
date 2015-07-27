@@ -11,7 +11,7 @@
         %th= _("Capture C & U Data")
         %th= _("Default")
     %tbody
-      %tr#new_tr{:onclick => remote_function(:url=>{:action=>'category_edit', :id=>nil}), :title => _("Click to add a new category")}
+      %tr#new_tr{:onclick => remote_function(:url => {:action => 'category_edit', :id => nil}), :title => _("Click to add a new category")}
         %td.narrow
           %ul.icons.list-unstyled
             %li
@@ -31,7 +31,7 @@
                 %li
                   %span.pficon.pficon-delete
           - else
-            %td.narrow{:onclick => remote_function(:url=>{:action=>'category_delete',
+            %td.narrow{:onclick => remote_function(:url => {:action => 'category_delete',
               :id      => cat[:id]},
               :confirm =>_("Are you sure you want to delete category '%s'?") % cat[:name]),
               :title   => _("Click to delete this category")}
@@ -39,16 +39,16 @@
                 %li
                   %span.pficon.pficon-delete
           - t = _("Click to edit this category")
-          %td{:onclick => remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}), :title => t}
+          %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             = h(cat[:name])
-          %td{:onclick => remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}), :title => t}
+          %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             = h(cat[:description])
-          %td{:onclick => remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}), :title => t}
+          %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             = h(cat[:show])
-          %td{:onclick => remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}), :title => t}
+          %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             = h(cat[:single_value] ? true : false)
-          %td{:onclick => remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}), :title => t}
+          %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             = h(cat[:perf_by_tag] ? true : false)
-          %td{:onclick => remote_function(:url=>{:action=>'category_edit', :id=>cat[:id]}), :title => t}
+          %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             - default = cat[:default] ? true : false
             = h(default)

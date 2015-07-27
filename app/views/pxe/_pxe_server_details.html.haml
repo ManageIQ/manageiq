@@ -5,7 +5,7 @@
       - if @edit
         = render(:partial => "pxe_form")
       - else
-        = render :partial=>"layouts/flash_msg"
+        = render :partial => "layouts/flash_msg"
         = render(:partial => "shared/summary/textual",
           :locals  => {:title => _("Basic Information"), :items => textual_group_basicinfo})
         - if @ps.pxe_menus.count > 0

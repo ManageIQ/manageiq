@@ -66,8 +66,8 @@
         %td.wide
           = text_field_tag("authentication_domain_prefix",
             @edit[:new][:authentication][:domain_prefix],
-            :maxlength=>255,
-            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+            :maxlength => 255,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
       %tr#user_type_base
         %td.key
           = _("User Suffix:")

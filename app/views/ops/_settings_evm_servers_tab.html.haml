@@ -1,6 +1,6 @@
 - if @sb[:active_tab] == "settings_evm_servers"
   - if @servers
-    = render(:partial=>"layouts/flash_msg")
+    = render(:partial => "layouts/flash_msg")
     %h3= _("Relationships")
     .form-horizontal.static
       .form-group
@@ -41,8 +41,8 @@
               %td
                 - if my_server_id == s.id
                   %b
-                    = h(ui_lookup(:model=>s.class.to_s))
+                    = h(ui_lookup(:model => s.class.to_s))
                     \: #{h(s.name)} [#{h(s.id)}] (current)
                 - else
-                  = h(ui_lookup(:model=>s.class.to_s))
+                  = h(ui_lookup(:model => s.class.to_s))
                   \: #{h(s.name)} [#{h(s.id)}]

@@ -12,5 +12,5 @@
           "data-miq_observe" => {:url => url}.to_json)
       %td{:width => '100'}
   - unless @edit[:explorer]
-    = render(:partial=>'/layouts/edit_form_buttons',
-      :locals=>{:action_url => 'evm_relationship_update', :ajax_buttons => true})
+    = render(:partial => '/layouts/edit_form_buttons',
+      :locals => {:action_url => 'evm_relationship_update', :ajax_buttons => true})

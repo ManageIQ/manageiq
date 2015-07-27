@@ -9,14 +9,14 @@
         %th= _("Display Name")
     %tbody
       - if entry != nil && entry == "new"
-        = render :partial => "classification_entry", :locals=>{:entry=>"new", :edit=>true}
+        = render :partial => "classification_entry", :locals => {:entry => "new", :edit => true}
       - else
-        = render :partial => "classification_entry", :locals=>{:entry=>"new", :edit=>false}
+        = render :partial => "classification_entry", :locals => {:entry => "new", :edit => false}
       - @cat.entries.sort_by(&:name).each do |e|
         - if entry != nil && entry != "new" && entry.id == e.id
-          = render :partial => "classification_entry", :locals=>{:entry=>e, :edit=>true}
+          = render :partial => "classification_entry", :locals => {:entry => e, :edit => true}
         - else
-          = render :partial => "classification_entry", :locals=>{:entry=>e, :edit=>false}
+          = render :partial => "classification_entry", :locals => {:entry => e, :edit => false}
     %tfoot
       %tr
         %td{:colspan => "40"}

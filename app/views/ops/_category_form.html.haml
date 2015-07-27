@@ -45,7 +45,7 @@
             %td.key= _("Display Name")
             %td
               = text_field_tag("description", @edit[:new][:description],
-                :maxlength => 50, "data-miq_observe" => {:interval=>'.5', :url => url}.to_json)
+                :maxlength => 50, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           - if @category.nil?
             = javascript_tag(javascript_focus('name'))
           - else

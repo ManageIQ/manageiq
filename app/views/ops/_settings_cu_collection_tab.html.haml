@@ -1,5 +1,5 @@
 - if @sb[:active_tab] == "settings_cu_collection"
-  - url = url_for(:action=>'cu_collection_field_changed')
+  - url = url_for(:action => 'cu_collection_field_changed')
   - clusters_title = title_for_clusters
   = form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do
     = render :partial => "layouts/flash_msg"
@@ -13,8 +13,8 @@
               %td
                 = check_box_tag("all_clusters", value="1",
                   checked=@edit[:new][:all_clusters],
-                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                  "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                  "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
+                  "data-miq_observe_checkbox" => {:url => url}.to_json)
           .note
             Note:
             %b= _("Collect for All %s must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % clusters_title
@@ -42,15 +42,15 @@
               .note= _("VM data will be collected for VMs under selected %s only. Data is collected for a %s and all of its %s when at least one %s is selected.") % [title_for_hosts, cluster_title, title_for_hosts, title_for_host]
       .col-md-12.col-lg-6
         %fieldset
-          %h3= ui_lookup(:tables=>"storages")
+          %h3= ui_lookup(:tables => "storages")
           %table.style1
             %tr
               %td.key= _("Collect for All Datastores")
               %td
                 = check_box_tag("all_storages", value="1",
                   checked=@edit[:new][:all_storages],
-                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                  "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                  "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
+                  "data-miq_observe_checkbox" => {:url => url}.to_json)
           #storages_div{:style => "display:#{@edit[:new][:all_storages] ? "none" : ""}"}
             - if @edit[:new][:storages].blank?
               = _("No Datastores found in the current region.")

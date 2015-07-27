@@ -6,7 +6,7 @@
     = image_tag("/upload/custom_logo.png?#{rand(99999999).to_s}")
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => "No custom logo image has been uploaded yet."}
-  = form_tag({:action=>"upload_logo"}, :multipart => true) do
+  = form_tag({:action => "upload_logo"}, :multipart => true) do
     = file_field("upload", "logo")
     = submit_tag("Upload",
       :id    => "upload",

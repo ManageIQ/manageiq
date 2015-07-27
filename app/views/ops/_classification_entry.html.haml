@@ -3,8 +3,8 @@
     %tr#new_tr{:class => cycle('row0', 'row1')}
       %td
         = image_submit_tag("/images/toolbars/import.png",
-          :class=>"rollover small",
-          :id=>"accept", :name=>"accept", :alt=>"Add this entry", :title=>"Add this entry")
+          :class => "rollover small",
+          :id => "accept", :name => "accept", :alt => _("Add this entry"), :title => _("Add this entry"))
       %td
         = text_field("entry", "name", :maxlength => MAX_NAME_LEN, :style => "width: 100%;")
       %td
@@ -13,8 +13,8 @@
     %tr{:class => cycle('row0', 'row1'), :id => "#{entry.id}_tr"}
       %td
         = image_submit_tag("/images/toolbars/import.png",
-          :class=>"rollover small",
-          :id=>"accept", :name=>"accept", :alt=>"Update this entry", :title=>"Update this entry")
+          :class => "rollover small",
+          :id => "accept", :name => "accept", :alt => _("Update this entry"), :title => _("Update this entry"))
       %td
         = text_field("entry", "name",
           :maxlength => MAX_NAME_LEN,
@@ -27,7 +27,7 @@
           :style     => "width: 100%;")
 - else
   - if entry == "new"
-    %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'ce_select', :id=>'new'}), :title => "Click to add a new entry"}
+    %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => {:action => 'ce_select', :id => 'new'}), :title => _("Click to add a new entry")}
       %td.icon
         %ul.icons.list-unstyled
           %li
@@ -44,7 +44,7 @@
         %ul.icons.list-unstyled
           %li
             %span.pficon.pficon-delete
-      %td{:onclick => remote_function(:url=>{:action=>'ce_select', :id=>entry.id, :field=>"name"}), :title => _("Click to update this entry")}
+      %td{:onclick => remote_function(:url => {:action => 'ce_select', :id => entry.id, :field => "name"}), :title => _("Click to update this entry")}
         = entry.name
-      %td{:onclick => remote_function(:url=>{:action=>'ce_select', :id=>entry.id, :field=>"description"}), :title => _("Click to update this entry")}
+      %td{:onclick => remote_function(:url => {:action => 'ce_select', :id => entry.id, :field => "description"}), :title => _("Click to update this entry")}
         = entry.description

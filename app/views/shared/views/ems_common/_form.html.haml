@@ -88,7 +88,7 @@
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
-              :href    => url_for(:action => "show_list", :flash_msg=>_("Add of new %s was cancelled by the user") % name),
+              :href    => url_for(:action => "show_list", :flash_msg => _("Add of new %s was cancelled by the user") % name),
               :onclick => 'window.location = this.getAttribute("href");')
   - else
     = render :partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @ems.id, :ajax_buttons => true}

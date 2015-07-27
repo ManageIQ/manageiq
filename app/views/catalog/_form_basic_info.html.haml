@@ -3,7 +3,7 @@
 
 #basic_info_div
   = hidden_div_if(@edit && @edit[:ae_tree_select] != true, :id => "ae_tree_select_div" ) do
-    = render(:partial=>'layouts/ae_tree_select')
+    = render(:partial => 'layouts/ae_tree_select')
 
   %h3= _('Basic Info')
   %table.style1
