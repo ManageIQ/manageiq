@@ -29,17 +29,16 @@
       %td.key
         = _('Button Group Image')
       %td
-        -#= select("button","id", Array.new(5) {|i| i+1}, {:selected=>@edit[:new][:button_id].to_i}, {:class=>"threedigit"})
-        #button_div
-        = render(:partial => 'layouts/dhtmlxcombo',
-          :locals         => {:combo_id => "button_div",
-            :combo_name                 => "button_image",
-            :combo_width                => 50,
-            :combo_url                  => "/miq_ae_customization/group_form_field_changed/#{@custom_button_set.id || 'new'}",
-            :xml_combo                  => @edit[:new][:button_images]})
+        #form-group
+        = select_tag('button_image',
+            options_for_select([["No Image", nil]] + @edit[:new][:button_images], @edit[:new][:button_image].to_s),
+            :class  => "selectpicker")
 
   - if x_active_tree == :ab_tree || (x_active_tree == :sandt_tree && @edit[:rec_id])
     %hr
     %h3
       = _('Assign Buttons')
     = render :partial => "shared/buttons/column_lists"
+:javascript
+  miqInitSelectPicker();
+  miqSelectPickerEvent("button_image", "#{url}")

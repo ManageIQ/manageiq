@@ -490,8 +490,8 @@ module ApplicationHelper
   # Reload toolbars using new buttons object and xml
   def javascript_for_toolbar_reload(tb, buttons, xml)
     %Q{
-      if (miq_toolbars.#{tb} && miq_toolbars.#{tb}.obj)
-        miq_toolbars.#{tb}.obj.unload();
+      if (ManageIQ.toolbars.#{tb} && ManageIQ.toolbars.#{tb}.obj)
+        ManageIQ.toolbars.#{tb}.obj.unload();
 
       if (document.getElementById('#{tb}') == null) {
         var tb_div = $('<div id="#{tb}" />');
@@ -500,13 +500,13 @@ module ApplicationHelper
       }
 
       window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
-      miq_toolbars['#{tb}'] = {
+      ManageIQ.toolbars['#{tb}'] = {
         obj: window.#{tb},
         buttons: #{buttons},
         xml: "#{xml}"
       };
 
-      miqInitToolbar(miq_toolbars['#{tb}']);
+      miqInitToolbar(ManageIQ.toolbars['#{tb}']);
     }
   end
 

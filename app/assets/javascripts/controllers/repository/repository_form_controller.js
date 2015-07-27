@@ -1,11 +1,11 @@
-miqAngularApplication.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', function($http, $scope, repositoryFormId, miqService) {
+ManageIQ.angularApplication.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', function($http, $scope, repositoryFormId, miqService) {
   $scope.repoModel = { repo_name: '', repo_path: '' };
   $scope.path_type = '';
   $scope.formId = repositoryFormId;
   $scope.afterGet = false;
   $scope.modelCopy = angular.copy( $scope.repoModel );
 
-  miqAngularApplication.$scope = $scope;
+  ManageIQ.angularApplication.$scope = $scope;
 
   if (repositoryFormId == 'new') {
     $scope.repoModel.repo_name = "";

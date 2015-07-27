@@ -40,10 +40,10 @@
                           - when "DialogFieldDateControl", "DialogFieldDateTimeControl"
                             - if field.show_past_dates
                               :javascript
-                                miq_cal_dateFrom = undefined ;
+                                ManageIQ.calendar.calDateFrom = undefined;
                             - else
                               :javascript
-                                miq_cal_dateFrom = new Date("#{Time.now.in_time_zone(session[:user_tz]).strftime("%Y, %m, %d")}");
+                                ManageIQ.calendar.calDateFrom = new Date("#{Time.now.in_time_zone(session[:user_tz]).strftime("%Y, %m, %d")}");
                             - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
                             - date_val = field.value ? field.value.split(" ") : ["#{t.month}/#{t.day}/#{t.year}"]
                             = text_field_tag("miq_date_1",

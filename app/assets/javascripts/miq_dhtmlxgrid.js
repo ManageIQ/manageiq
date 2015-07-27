@@ -8,7 +8,7 @@ function miqTreeState(rowId, state) {
 
 // Handle row click (ajax or normal html trans)
 function miqRowClick(row_id, cell_idx) {
-  cell = this.cells(row_id, cell_idx);
+  var cell = this.cells(row_id, cell_idx);
   if (cell_idx && !cell.getAttribute('is_button')) {
     if (typeof row_url_ajax != "undefined" && row_url_ajax) {
       miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
@@ -21,7 +21,7 @@ function miqRowClick(row_id, cell_idx) {
 // Handle row click - used by AE
 function miqAeRowSelected(row_id, cell_idx) {
   if (cell_idx) {
-    selected_id = this.getSelectedRowId();
+    var selected_id = this.getSelectedRowId();
     if (selected_id != null) {
       if (selected_id.split("_")[0] == "Field") {
         this.clearSelection();
@@ -48,9 +48,9 @@ function miqRequestRowSelected(row_id) {
 
 // Handle checkbox
 function miqGridOnCheck(row_id, cell_idx, state) {
-  crows = gtl_list_grid.getCheckedRows(0);
+  var crows = ManageIQ.grids.grids['gtl_list_grid'].obj.getCheckedRows(0);
   $('#miq_grid_checks').val(crows);
-  count = crows ? crows.split(",").length : 0;
+  var count = crows ? crows.split(",").length : 0;
   if (miqDomElementExists('center_tb')) {
     miqSetButtons(count, "center_tb");
   } else {
@@ -62,21 +62,25 @@ function miqCheck_AE_All(button_div, gridname) {
   miqSparkle(true);
   var state = true;
   var crows = "";
-  if (typeof ns_list_grid != "undefined" && gridname == "ns_list_grid") {
+  if (typeof ManageIQ.grids.grids.ns_list_grid != "undefined" &&
+      gridname == "ns_list_grid") {
     state = $('#Toggle1').prop('checked');
-    ns_list_grid.checkAll(state);
-    crows = ns_list_grid.getCheckedRows(0);
-  } else if (typeof ns_grid != "undefined" && gridname == "ns_grid") {
+    ManageIQ.grids.grids.ns_list_grid.checkAll(state);
+    crows = ManageIQ.grids.grids.ns_list_grid.getCheckedRows(0);
+  } else if (typeof ManageIQ.grids.grids.ns_grid != "undefined" &&
+             gridname == "ns_grid") {
     state = $('#Toggle2').prop('checked');
-    ns_grid.checkAll(state);
+    ManageIQ.grids.grids.ns_grid.checkAll(state);
     crows = ns_grid.getCheckedRows(0);
-  } else if (typeof instance_grid != "undefined" && gridname == "instance_grid") {
+  } else if (typeof ManageIQ.grids.grids.instance_grid != "undefined" &&
+             gridname == "instance_grid") {
     state = $('#Toggle3').prop('checked');
-    instance_grid.checkAll(state);
+    ManageIQ.grids.grids.instance_grid.checkAll(state);
     crows = instance_grid.getCheckedRows(0);
-  } else if (typeof class_methods_grid != "undefined" && gridname == "class_methods_grid") {
+  } else if (typeof ManageIQ.grids.grids.class_methods_grid != "undefined" &&
+             gridname == "class_methods_grid") {
     state = $('#Toggle4').prop('checked');
-    class_methods_grid.checkAll(state);
+    ManageIQ.grids.grids.class_methods_grid.checkAll(state);
     crows = class_methods_grid.getCheckedRows(0);
   }
   if (miqDomElementExists('miq_grid_checks')) {
@@ -85,15 +89,15 @@ function miqCheck_AE_All(button_div, gridname) {
   if (miqDomElementExists('miq_grid_checks2')) {
     $('#miq_grid_checks2').val(crows);
   }
-  count = crows ? crows.split(",").length : 0;
+  var count = crows ? crows.split(",").length : 0;
   miqSetButtons(count, button_div);
   miqSparkle(false);
 }
 
 // This function is called in miqOnLoad to init any grids on the screen
 function miqInitGrids() {
-  if (typeof miq_grids != "undefined") {
-    $.each(miq_grids, function (key) {
+  if (ManageIQ.grids.grids !== null) {
+    $.each(ManageIQ.grids.grids, function (key) {
       miqInitGrid(key); // pass they key (grid name), called function will get the grid hash
     });
   }
@@ -101,12 +105,12 @@ function miqInitGrids() {
 
 // Initialize a single grid (is called directly after an AJAX trans)
 function miqInitGrid(grid_name) {
-  var grid_hash = miq_grids[grid_name]; // Get the hash for the passed in grid
+  var grid_hash = ManageIQ.grids.grids[grid_name]; // Get the hash for the passed in grid
   var miq_grid_checks = ""; // Keep track of the grid checkboxes
 
   // Build the grid object, then point a local var at it
-  eval(grid_name + " = new dhtmlXGridObject('" + grid_hash.g_id + "')");
-  var grid = eval(grid_name);
+  var grid = new dhtmlXGridObject(grid_hash.g_id);
+  ManageIQ.grids.grids[grid_name].obj = grid;
   var options = grid_hash.opts;
   // Start with a clear grid
   grid.clearAll(true);
@@ -189,7 +193,7 @@ function miqInitGrid(grid_name) {
   if (options.save_col_widths) {
     grid.attachEvent("onResize", miqResizeCol); // Method called when resize starts
     grid.attachEvent("onResizeEnd", miqResizeColEnd); // Medhod called when resize ends
-    miq_grid_col_widths = grid.cellWidthPX.join(","); // Save the original column widths
+    ManageIQ.grids.gridColumnWidths = grid.cellWidthPX.join(","); // Save the original column widths
   }
   grid.attachEvent("onXLE", function () {
     miqSparkle(false);
@@ -198,15 +202,11 @@ function miqInitGrid(grid_name) {
 
 // Handle checkbox
 function miqOnAECheck(row_id, cell_idx, state) {
-  crows = this.getCheckedRows(0);
-  $("#miq_grid_checks").each(function () {
-    this.value = crows;
-  });
-  $("#miq_grid_checks2").each(function () {
-    this.value = crows;
-  });
+  var crows = this.getCheckedRows(0);
+  $("#miq_grid_checks").val(crows);
+  $("#miq_grid_checks2").val(crows);
 
-  count = crows ? crows.split(",").length : 0;
+  var count = crows ? crows.split(",").length : 0;
   if (miqDomElementExists('center_tb')) {
     miqSetButtons(count, "center_tb");
   } else {
@@ -216,14 +216,14 @@ function miqOnAECheck(row_id, cell_idx, state) {
 
 // Handle sort
 function miqGridSort(col_id, grid_obj, dir) {
-  if (miq_action_url == "sort_ds_grid") {
+  if (ManageIQ.actionUrl == "sort_ds_grid") {
     var url = '/miq_request/sort_ds_grid?sortby=' + col_id;
     miqJqueryRequest(url, {beforeSend: true, complete: true});
   } else {
     if (grid_obj && col_id > 1) {
-      var url = miq_action_url;
-      if (typeof miq_parent_id != "undefined") {
-        url = "/" + miq_parent_class + "/" + url + "/" + miq_parent_id;
+      var url = ManageIQ.actionUrl;
+      if (ManageIQ.record.parentId !== null) {
+        url = "/" + ManageIQ.record.parentClass + "/" + url + "/" + ManageIQ.record.parentId;
       }
       url = url + "?sortby=" + (col_id - 1) + "&" + window.location.search.substring(1);
       miqJqueryRequest(url, {beforeSend: true, complete: true});
@@ -235,19 +235,15 @@ function miqGridSort(col_id, grid_obj, dir) {
 
 // Handle column resize
 function miqResizeCol(cell_idx, width, grid_obj) {
-  if (cell_idx < 2) {
-    return false;
-  } else {
-    return true;
-  }
+  return (cell_idx >= 2);
 }
 
 // Handle column resize end
 function miqResizeColEnd(grid_obj) {
-  if (typeof miq_grid_col_widths != "undefined") {
-    if (miq_grid_col_widths != grid_obj.cellWidthPX.join(",")) {
-      miq_grid_col_widths = grid_obj.cellWidthPX.join(",");
-      var url = '/' + miq_controller + '/save_col_widths/?col_widths=' + miq_grid_col_widths;
+  if (ManageIQ.grids.gridColumnWidths !== null) {
+    if (ManageIQ.grids.gridColumnWidths != grid_obj.cellWidthPX.join(",")) {
+      ManageIQ.grids.gridColumnWidths = grid_obj.cellWidthPX.join(",");
+      var url = '/' + ManageIQ.controller + '/save_col_widths/?col_widths=' + ManageIQ.grids.gridColumnWidths;
       miqJqueryRequest(url);
     }
   }
@@ -255,12 +251,12 @@ function miqResizeColEnd(grid_obj) {
 
 // Order a service from the catalog list view
 function miqOrderService(id) {
-  var url = '/' + miq_controller + '/x_button/' + id + '?pressed=svc_catalog_provision';
+  var url = '/' + ManageIQ.controller + '/x_button/' + id + '?pressed=svc_catalog_provision';
   miqJqueryRequest(url, {beforeSend: true, complete: true});
 }
 
 function miqDhtmlxgridSerialize(gridObj) {
-  dhtmlxgridXml = "<?xml version='1.0'?>";
+  var dhtmlxgridXml = "<?xml version='1.0'?>";
   dhtmlxgridXml += "<rows>";
   rowIds = gridObj.getAllRowIds().split(',');
   for (i = 0; i < rowIds.length; i++) {

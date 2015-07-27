@@ -225,8 +225,8 @@ module OpsController::Diagnostics
     render :update do |page|                    # Use JS to update the display
       page.replace("flash_msg_divcu_repair", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"cu_repair"})
       page.replace_html("diagnostics_cu_repair", :partial=>"diagnostics_cu_repair_tab")
-      page << "miq_cal_dateFrom = null;"
-      page << "miq_cal_dateTo = new Date();"
+      page << "ManageIQ.calendar.calDateFrom = null;"
+      page << "ManageIQ.calendar.calDateTo = new Date();"
       page << "miqBuildCalendar();"
       if @edit[:new][:start_date] == "" || @edit[:new][:end_date] == ""
         page << javascript_for_miq_button_visibility(false)
@@ -259,8 +259,8 @@ module OpsController::Diagnostics
     render :update do |page|                    # Use JS to update the display
       page.replace("flash_msg_divcu_repair", :partial => "layouts/flash_msg", :locals=>{:div_num=>"cu_repair"})
       page.replace_html("diagnostics_cu_repair", :partial=>"diagnostics_cu_repair_tab")
-      page << "miq_cal_dateFrom = null;"
-      page << "miq_cal_dateTo = new Date();"
+      page << "ManageIQ.calendar.calDateFrom = null;"
+      page << "ManageIQ.calendar.calDateTo = new Date();"
       page << "miqBuildCalendar();"
       page << "miqSparkle(false);"
       #disable button

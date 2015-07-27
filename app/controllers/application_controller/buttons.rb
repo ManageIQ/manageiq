@@ -124,7 +124,6 @@ module ApplicationController::Buttons
       @edit[:new][:display] = params[:display] == "1" if params[:display]
       @edit[:new][:description] = params[:description] if params[:description]
       @edit[:new][:button_image] = params[:button_image].to_i if params[:button_image]
-      @edit[:new][:button_images] = button_build_combo_xml(@resolve[:saved_buttons],@edit[:new][:button_image])
       @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
       visibility_box_edit
     end
@@ -662,7 +661,7 @@ module ApplicationController::Buttons
     @edit[:new][:description] = @custom_button_set.description
     @edit[:new][:button_image] = @custom_button_set[:set_data] && @custom_button_set[:set_data][:button_image] ? @custom_button_set[:set_data][:button_image] : ""
     @edit[:new][:display] = @custom_button_set[:set_data] && @custom_button_set[:set_data].has_key?(:display) ? @custom_button_set[:set_data][:display] : true
-    @edit[:new][:button_images] = button_build_combo_xml(@custom_button_set.members,@edit[:new][:button_image])
+    @edit[:new][:button_images] = build_button_image_options
     @edit[:new][:available_fields] = Array.new
     @edit[:new][:fields] = Array.new
     button_order = @custom_button_set[:set_data] && @custom_button_set[:set_data][:button_order] ? @custom_button_set[:set_data][:button_order] : nil
@@ -698,7 +697,7 @@ module ApplicationController::Buttons
       @edit[:new][:description] = params[:description] if params[:description]
       @edit[:new][:display] = params[:display] == "1" if params[:display]
       @edit[:new][:button_image] = params[:button_image].to_i if params[:button_image]
-      @edit[:new][:button_images] = button_build_combo_xml(@resolve[:saved_buttons],@edit[:new][:button_image])
+      @edit[:new][:button_images] = build_button_image_options
     end
   end
 
@@ -813,38 +812,8 @@ module ApplicationController::Buttons
     end
   end
 
-  def button_build_combo_xml(buttons,b_id)
-    xml = REXML::Document.load("")
-    xml << REXML::XMLDecl.new(1.0, "UTF-8")
-    # Create root element
-    root = xml.add_element("complete")
-    #creating pulldown with 5 buttons
-    opt = root.add_element("option", {"value"=>0})
-    if b_id.blank? || b_id.to_s == "0"
-      opt.add_attribute("selected","true")
-    end
-    #opt.text = "No Button Assigned"
-    opt.text = "<No Image>"
-    temp = Array.new
-    #   buttons.each do |b|
-    #     temp.push(b.button_id) unless temp.include?(b.button_id)
-    #     temp.delete(@edit[:current][:button_id]) if temp.include?(@edit[:current][:button_id]) #deleting the id that's being edited, so it is displayed in combo pull down
-    #   end
-
-    i = 1
-    15.times{
-      if !temp.include?(i)
-        #opt = root.add_element("option", {"value"=>i,"img_src"=>"/images/custom/custom-#{i}.png"})
-        opt = root.add_element("option", {"value"=>i,"img_src"=>"/images/icons/new/custom-#{i}.png"})
-        if i.to_s == b_id.to_s
-          opt.add_attribute("selected","true")
-        end
-        #opt.text = "Button #{i}"
-      end
-      i+=1
-    }
-
-    return xml.to_s
+  def build_button_image_options
+    (1..15).collect { |i| ["Button Image #{i}", i, {"data-icon" => "product product-custom-#{i}"}] }
   end
 
   # Set form variables for button add/edit
@@ -902,7 +871,7 @@ module ApplicationController::Buttons
     @edit[:new][:instance_name] ||= "Automation"
     @edit[:current] = copy_hash(@edit[:new])
 
-    @edit[:new][:button_images] = @edit[:current][:button_images] = button_build_combo_xml(@resolve[:saved_buttons],@edit[:new][:button_image])
+    @edit[:new][:button_images] = @edit[:current][:button_images] = build_button_image_options
 
     @edit[:visibility_types] = [["<To All>","all"],["<By Role>","role"]]
     #Visibility Box

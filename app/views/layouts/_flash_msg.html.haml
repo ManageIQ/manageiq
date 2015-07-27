@@ -24,6 +24,9 @@
               %span.pficon.pficon-warning-triangle
               %span.pficon.pficon-warning-exclamation
             %strong= h(fl[:message])
+        - when :info
+          = render :partial => "layouts/info_msg",
+                   :locals => {:message => h(fl[:message])}
         - else
           .alert.alert-success
             %span.pficon.pficon-ok

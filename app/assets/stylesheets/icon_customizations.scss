@@ -58,22 +58,141 @@
        url('#{$font-path}/../product.svg') format('svg');
 }
 
-.product-arrow-right:before {
-  content: "\e605";
-}
-.product-report:before {
-  content: "\e603";
-}
 .product-role:before {
-  content: "\e600";
+  content: "\e608";
 }
 .product-product:before {
-  content: "\e601";
+  content: "\e609";
 }
 .product-group:before {
   content: "\e602";
 }
+.product-report:before {
+  content: "\e603";
+}
 .product-chart:before {
   content: "\e604";
+}
+.product-arrow-right:before {
+  content: "\e60a";
+}
+.product-custom-1:before {
+  content: "\e611";
+}
+.product-custom-3:before {
+  content: "\e60b";
+}
+.product-custom-4:before {
+  content: "\e600";
+}
+.product-custom-6:before {
+  content: "\e612";
+}
+.product-custom-7:before {
+  content: "\e613";
+}
+.product-custom-8:before {
+  content: "\e60c";
+}
+.product-custom-9:before {
+  content: "\e606";
+}
+.product-custom-10:before {
+  content: "\e605";
+}
+.product-custom-11:before {
+  content: "\e607";
+}
+.product-custom-12:before {
+  content: "\e601";
+}
+.product-custom-13:before {
+  content: "\e614";
+}
+.product-custom-14:before {
+  content: "\e60d";
+}
+.product-custom-15:before {
+  content: "\e60e";
+}
+.product-float:before {
+  content: "\e616";
+}
+.product-integer:before {
+  content: "\e617";
+}
+.product-string:before {
+  content: "\e618";
+}
+.product-symbol:before {
+  content: "\e615";
+}
+.product-assertion:before {
+  content: "\e619";
+}
+.product-attribute:before {
+  content: "\e61a";
+}
+.product-relationship:before {
+  content: "\e61b";
+}
+.product-method:before {
+  content: "\e61c";
+}
+.product-state:before {
+  content: "\e61d";
+}
+.product-array:before {
+  content: "\e61e";
+}
+.product-boolean:before {
+  content: "\e61f";
+}
+.product-time:before {
+  content: "\e620";
+}
+.product-password:before {
+  content: "\e621";
+}
+.product-custom-2:before {
+  content: "\e60f";
+}
+.product-custom-5:before {
+  content: "\e610";
+}
+
+/* define  colors */
+.product-custom-1:before {
+  color: #009900;
+}
+.product-custom-3:before {
+  color: #cccc33
+}
+.product-custom-4:before {
+  color: #009900;
+}
+.product-custom-8:before {
+  color: red;
+}
+.product-custom-9:before {
+  color: #3333ff;
+}
+.product-custom-10:before {
+  color: #3333ff;
+}
+.product-custom-11:before {
+  color: #3333ff;
+}
+.product-custom-12:before {
+  color: #3333ff;
+}
+.product-custom-13:before {
+  color: #3333ff;
+}
+.product-custom-2:before {
+  color: #3333ff;
+}
+.product-custom-5:before {
+  color: orange;
 }
 /*end icon customizations*/

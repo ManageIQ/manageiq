@@ -6,7 +6,8 @@ class ContainerGroup < ActiveRecord::Base
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :restart_policy, :dns_policy
 
-  has_many :containers, :dependent => :destroy
+  has_many :containers,
+           :through => :container_definitions
   has_many :container_definitions, :dependent => :destroy
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource

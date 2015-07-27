@@ -16,7 +16,7 @@ $(document).ready(function () {
     miqSparkleOn(); // Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
   });
   $(document).on('ajax:error', 'a[data-miq_login_error]', function (xhr, status, error) {
-    js_mimetypes = [ "text/javascript", "application/javascript" ];
+    var js_mimetypes = [ "text/javascript", "application/javascript" ];
     if (status.status == 401 &&
         js_mimetypes.indexOf(status.getResponseHeader("Content-Type")) > -1 &&
         status.responseText.length > 0) {

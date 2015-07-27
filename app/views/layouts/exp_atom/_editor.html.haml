@@ -92,8 +92,8 @@
           = _('User will input the value')
   %script{:type => "text/javascript"}
     -# Set the expression value prefill images and hover text
-    miqExpressionPrefill();
+    miqExpressionPrefill(ManageIQ.expEditor, true);
     -# Clear the date from and to selection limiters
-    miq_cal_dateFrom = null;
-    miq_cal_dateTo = null;
+    ManageIQ.calendar.calDateFrom = null;
+    ManageIQ.calendar.calDateTo = null;
 

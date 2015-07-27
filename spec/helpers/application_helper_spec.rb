@@ -740,11 +740,11 @@ describe ApplicationHelper do
     let(:test_xml)    {"x_xml"}
     subject { javascript_for_toolbar_reload(test_tab, test_buttons, test_xml)}
 
-    it { should include("miq_toolbars.#{test_tab}.obj.unload();") }
+    it { should include("ManageIQ.toolbars.#{test_tab}.obj.unload();") }
     it { should include("#{test_tab} = new dhtmlXToolbarObject('#{test_tab}', 'miq_blue');") }
     it { should include("buttons: #{test_buttons}") }
     it { should include("xml: \"#{test_xml}\"") }
-    it { should include("miqInitToolbar(miq_toolbars['some_center_tb']);") }
+    it { should include("miqInitToolbar(ManageIQ.toolbars['some_center_tb']);") }
   end
 
   context "#javascript_set_value" do

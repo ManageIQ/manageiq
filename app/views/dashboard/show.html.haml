@@ -21,4 +21,4 @@
                 = WidgetPresenter.new(self, controller, widget).render_partial
 - if WidgetPresenter.chart_data.present?
   :javascript
-    miq_chart_data = #{{"widgetchart" => WidgetPresenter.chart_data}.to_json.html_safe};
+    ManageIQ.charts.chartData = #{{"widgetchart" => WidgetPresenter.chart_data}.to_json.html_safe};

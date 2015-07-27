@@ -29,8 +29,8 @@
 
 %script{:type => "text/javascript"}
   -# Create from/to date JS vars to limit calendar starting from
-  var miq_cal_dateFrom = miqCalendarDateConversion("#{@timezone_offset}");
-  var miq_cal_dateTo = null
+  ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}");
+  ManageIQ.calendar.calDateTo = null
 
   function miqOpsAfterOnload() {
   = javascript_dim("settings_tree_div", false) if role_allows(:feature=>"ops_settings")
