@@ -90,7 +90,10 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :name => "monitoring-influx-grafana-controller-22icy"
     )
 
+    # Check relation to provider, container definition and container image
     @container2.container_image.name.should == "kubernetes/heapster_influxdb"
+    @container2.container_definition.should_not be_nil
+    @container2.ext_management_system.should == @ems
   end
 
   def assert_specific_container_group
@@ -101,6 +104,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :restart_policy => "Always",
       :dns_policy     => "ClusterFirst",
     )
+    @containergroup.labels.count.should == 1
 
     # Check the relation to container node
     @containergroup.container_node.should_not be_nil
@@ -116,9 +120,11 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
 
     # Check the relation to containers
     @containergroup.containers.count.should == 1
-    @services.first.should have_attributes(
-      :name => "monitoring-heapster"
-    )
+
+    # Check relations to replicator, labels and provider
+    @containergroup.container_replicator.should ==
+      ContainerReplicator.find_by(:name => "monitoring-heapster-controller")
+    @containergroup.ext_management_system.should == @ems
   end
 
   def assert_specific_container_node
@@ -140,7 +146,17 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :distribution   => "Fedora 20 (Heisenbug)",
       :kernel_version => "3.18.9-100.fc20.x86_64"
     )
+
+    @containernode.hardware.should have_attributes(
+      :logical_cpus => 2,
+      :memory_cpu   => 2000
+    )
+
+    @containernode.ready_condition_status.should_not be_nil
+
     @containernode.lives_on.should == @openstack_vm
+    @containernode.container_groups.count.should == 2
+    @containernode.ext_management_system.should == @ems
   end
 
   def assert_specific_container_service
@@ -151,6 +167,8 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :session_affinity => "None",
       :portal_ip        => "10.0.0.1",
     )
+    @containersrv.labels.count.should == 2
+    @containersrv.selector_parts.count.should == 0
 
     @confs = @containersrv.container_service_port_configs
     @confs.count.should  == 1
@@ -172,6 +190,8 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :restart_policy => "Always",
       :dns_policy     => "ClusterFirst"
     )
+
+    @containersrv.ext_management_system.should == @ems
   end
 
   def assert_specific_container_replicator
@@ -181,19 +201,26 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :replicas         => 1,
       :current_replicas => 1
     )
-    @replicator.container_groups.count.should == 1
+    @replicator.labels.count.should == 1
+    @replicator.selector_parts.count.should == 1
 
     @group = ContainerGroup.where(:name => "monitoring-influx-grafana-controller-22icy").first
     @group.container_replicator.should_not be_nil
     @group.container_replicator.name.should == "monitoring-influx-grafana-controller"
+    @replicator.ext_management_system.should == @ems
   end
 
   def assert_specific_container_project
     @container_pr = ContainerProject.find_by_name("default")
     @container_pr.should have_attributes(
-      # :ems_ref => "581874d7-e385-11e4-9d96-f8b156af4ae1",
-      :name    => "default"
+      :name         => "default",
+      :display_name => nil
     )
+
+    @container_pr.container_groups.count.should == 2
+    @container_pr.container_replicators.count.should == 2
+    @container_pr.container_services.count.should == 5
+    @container_pr.ext_management_system.should == @ems
   end
 
   def assert_specific_container_image_and_registry
