@@ -178,7 +178,7 @@ class ReplicationWorker < WorkerBase
                           .fetch_path(:workers, :worker_base, :replication_worker, :replication)
     worker_settings ||= @default_settings
     {
-      :file => worker_settings.fetch_path(:options, :heartbeat_file) ||
+      :file      => worker_settings.fetch_path(:options, :heartbeat_file) ||
         @default_settings.fetch_path(:options, :heartbeat_file),
       :threshold => worker_settings.fetch_path(:options, :heartbeat_threshold).to_i ||
         @default_settings.fetch_path(:options, :heartbeat_threshold).to_i
