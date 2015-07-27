@@ -59,10 +59,10 @@
 }
 
 .product-role:before {
-  content: "\e608";
+  content: "\e600";
 }
 .product-product:before {
-  content: "\e609";
+  content: "\e601";
 }
 .product-group:before {
   content: "\e602";
@@ -74,58 +74,64 @@
   content: "\e604";
 }
 .product-arrow-right:before {
-  content: "\e60a";
-}
-.product-custom-1:before {
-  content: "\e611";
-}
-.product-custom-3:before {
-  content: "\e60b";
-}
-.product-custom-4:before {
-  content: "\e600";
-}
-.product-custom-6:before {
-  content: "\e612";
-}
-.product-custom-7:before {
-  content: "\e613";
-}
-.product-custom-8:before {
-  content: "\e60c";
-}
-.product-custom-9:before {
-  content: "\e606";
-}
-.product-custom-10:before {
   content: "\e605";
 }
-.product-custom-11:before {
+.product-custom-1:before {
+  content: "\e606";
+}
+.product-custom-2:before {
   content: "\e607";
 }
-.product-custom-12:before {
-  content: "\e601";
+.product-custom-3:before {
+  content: "\e608";
 }
-.product-custom-13:before {
-  content: "\e614";
+.product-custom-4:before {
+  content: "\e609";
 }
-.product-custom-14:before {
+.product-custom-5:before {
+  content: "\e60a";
+}
+.product-custom-6:before {
+  content: "\e60b";
+}
+.product-custom-7:before {
+  content: "\e60c";
+}
+.product-custom-8:before {
   content: "\e60d";
 }
-.product-custom-15:before {
+.product-custom-9:before {
   content: "\e60e";
 }
+.product-custom-10:before {
+  content: "\e60f";
+}
+.product-custom-11:before {
+  content: "\e610";
+}
+.product-custom-12:before {
+  content: "\e611";
+}
+.product-custom-13:before {
+  content: "\e612";
+}
+.product-custom-14:before {
+  content: "\e613";
+}
+.product-custom-15:before {
+  content: "\e614";
+}
 .product-float:before {
-  content: "\e616";
+  content: "\e615";
 }
 .product-integer:before {
-  content: "\e617";
+  content: "\e616";
 }
 .product-string:before {
-  content: "\e618";
+  content: "\e617";
 }
 .product-symbol:before {
-  content: "\e615";
+  content: "\e618";
 }
 .product-assertion:before {
   content: "\e619";
@@ -153,12 +159,6 @@
 }
 .product-password:before {
   content: "\e621";
-}
-.product-custom-2:before {
-  content: "\e60f";
-}
-.product-custom-5:before {
-  content: "\e610";
 }
 
 /* define  colors */
