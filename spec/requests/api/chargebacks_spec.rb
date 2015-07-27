@@ -47,7 +47,8 @@ RSpec.describe "chargebacks API" do
     expect(json["count"]).to be 1
     expect(json["subcount"]).to be 1
     expect(json["name"]).to eq("rates")
-    expect(json["resources"].first["href"]).to end_with("/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}")
+    expect(json["resources"].first["href"])
+      .to end_with("/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}")
     expect(last_response.status).to eq(200)
   end
 
@@ -61,7 +62,8 @@ RSpec.describe "chargebacks API" do
 
     json = JSON.parse(last_response.body)
     expect(json["chargeback_rate_id"]).to eq(chargeback_rate.id)
-    expect(json["href"]).to end_with("/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}")
+    expect(json["href"])
+      .to end_with("/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}")
     expect(json["id"]).to eq(chargeback_rate_detail.id)
     expect(json["rate"]).to eq("5")
     expect(last_response.status).to eq(200)
