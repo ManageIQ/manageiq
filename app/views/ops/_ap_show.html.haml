@@ -1,31 +1,31 @@
 #main_div
   = render(:partial=>"layouts/flash_msg")
-  %h3=_("Info")
+  %h3= _("Info")
   %table.style1
     %tr
-      %td.key=_("Name")
+      %td.key= _("Name")
       %td= h(@selected_scan.name)
     %tr
-      %td.key=_("Description")
+      %td.key= _("Description")
       %td= h(@selected_scan.description)
     %tr
-      %td.key=_("Type")
+      %td.key= _("Type")
       %td.wide= h(@selected_scan.mode)
   %hr/
   - unless @selected_scan.mode == "Host"
     - if @category
-      %h3=_("Categories")
+      %h3= _("Categories")
       %table.style1
         - @category.sort.each do |c|
           %tr
             %td= h(c)
       %hr/
   - if @file
-    %h3=_("File Items")
+    %h3= _("File Items")
     %table.table.table-striped.table-bordered
       %thead
         %tr
-          %th=_("Name")
+          %th= _("Name")
           %th Collect Contents?
       %tbody
         - @file.sort.each do |f|
@@ -35,7 +35,7 @@
     %hr/
   - unless @selected_scan.mode == "Host"
     - if @registry
-      %h3=_("Registry Items")
+      %h3= _("Registry Items")
       %table.style1
         - @registry.sort_by { |r| r["key"] }.each do |k|
           %tr
@@ -44,7 +44,7 @@
           %tr
       %hr/
   - if @nteventlog
-    %h3=_("Event Log Items")
+    %h3= _("Event Log Items")
     %table.style1
       - @nteventlog.sort_by{|l| l[:name]}.each do |k|
         %tr

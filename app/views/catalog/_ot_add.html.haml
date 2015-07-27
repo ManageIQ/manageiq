@@ -7,7 +7,7 @@
       %td{:valign => "top"}
         %table.style1
           %tr
-            %td.key=_('Name')
+            %td.key= _('Name')
             %td
               = text_field_tag("name",
                                @edit[:new][:name],
@@ -18,7 +18,7 @@
                                "data-miq_observe" => {:interval => '.5',
                                                       :url      => url}.to_json)
           %tr
-            %td.key=_('Description')
+            %td.key= _('Description')
             %td
               = text_area_tag("description",
                               @edit[:new][:description],
@@ -29,7 +29,7 @@
                               "data-miq_observe" => {:interval => '.5',
                                                      :url      => url}.to_json)
           %tr
-            %td.key=_('Template Type')
+            %td.key= _('Template Type')
             %td.select
               = select_tag("type",
                 options_for_select({"Amazon CloudFormation" => "OrchestrationTemplateCfn",
@@ -37,7 +37,7 @@
                 "data-miq_sparkle_on" => true,
                 "data-miq_observe"    => {:url => url}.to_json)
           %tr
-            %td.key=_('Draft')
+            %td.key= _('Draft')
             %td
               = check_box_tag("draft", value = true, checked = @edit[:new][:draft],
                 "data-miq_observe_checkbox" => {:url => url}.to_json)

@@ -24,7 +24,7 @@
       %hr
 
       - if x_active_tree == :event_tree
-        %h3=_("Assigned to Policies")
+        %h3= _("Assigned to Policies")
         - if @event_policies.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("This Event is not assigned to any Policies.")}
         - else
@@ -40,7 +40,7 @@
                     = p.description
           %hr
       - else
-        %h3=_("Order of Actions if ALL Conditions are True")
+        %h3= _("Order of Actions if ALL Conditions are True")
         - if @edit
           %table.admintable
             %tbody
@@ -48,9 +48,9 @@
                 %td
                   %table#formtest.form{:width => "100%"}
                     %tr
-                      %td{:align => "left"}=_('Available Actions:')
+                      %td{:align => "left"}= _('Available Actions:')
                       %td
-                      %td.widthed{:align => "left"}=_(' Selected Actions:')
+                      %td.widthed{:align => "left"}= _(' Selected Actions:')
                     %tr
                       %td.widthed{:align => "left", :valign => "top"}
                         %span#choices_chosen_true_div
@@ -135,9 +135,9 @@
               %thead
                 %tr
                   %th.narrow
-                  %th=_("Description")
-                  %th=_("Synchronous")
-                  %th=_("Type")
+                  %th= _("Description")
+                  %th= _("Synchronous")
+                  %th= _("Type")
               %tbody
                 - @event_true_actions.each do |a|
                   - id = "a-#{to_cid(a.id)}"
@@ -155,7 +155,7 @@
                       = a.action_type
           %hr
 
-        %h3=_("Order of Actions if ANY Conditions are False")
+        %h3= _("Order of Actions if ANY Conditions are False")
         - if @edit
           %table.admintable
             %tbody
@@ -163,9 +163,9 @@
                 %td
                   %table#formtest.form{:width => "100%"}
                     %tr
-                      %td{:align => "left"}=_("Available Actions:")
+                      %td{:align => "left"}= _("Available Actions:")
                       %td
-                      %td.widthed{:align => "left"}=_(" Selected Actions:")
+                      %td.widthed{:align => "left"}= _(" Selected Actions:")
                     %tr
                       %td.widthed{:align => "left", :valign => "top"}
                         %span#choices_chosen_false_div
@@ -255,9 +255,9 @@
               %thead
                 %tr
                   %th.narrow
-                  %th=_('Description')
-                  %th=_('Synchronous')
-                  %th=_('Type')
+                  %th= _('Description')
+                  %th= _('Synchronous')
+                  %th= _('Type')
               %tbody
                 - @event_false_actions.each do |a|
                   - id = "a-#{to_cid(a.id)}"

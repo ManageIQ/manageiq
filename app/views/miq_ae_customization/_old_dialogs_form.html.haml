@@ -1,10 +1,10 @@
 - url = url_for(:action => 'old_dialogs_form_field_changed', :id => "#{@dialog.id || 'new'}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %h3=_('Basic Information')
+  %h3= _('Basic Information')
   %table.style1
     %tr
-      %td.key=_('Name')
+      %td.key= _('Name')
       %td.wide
         = text_field_tag("name",
           @edit[:new][:name],
@@ -12,14 +12,14 @@
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         = javascript_tag(javascript_focus('name'))
     %tr
-      %td.key=_('Description')
+      %td.key= _('Description')
       %td.wide
         = text_field_tag("description",
           @edit[:new][:description],
           :maxlength         => 100,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key=_('Type')
+      %td.key= _('Type')
       - dialog_types = @dialog.dialog_type ? MiqDialog::DIALOG_TYPES.sort :  [["<#{_('Choose')}>", nil]] + MiqDialog::DIALOG_TYPES.sort
       %td.wide
         = select_tag('dialog_type',
@@ -27,7 +27,7 @@
           @edit[:new][:dialog_type]),
           "data-miq_observe" => {:url => url}.to_json)
   %hr
-  %h3=_('Content')
+  %h3= _('Content')
   = text_area_tag("content_data",
     @edit[:new][:content],
     :style => "display:none;")

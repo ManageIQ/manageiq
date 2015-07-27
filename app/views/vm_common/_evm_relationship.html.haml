@@ -1,10 +1,10 @@
 - url = url_for(:action =>'evm_relationship_field_changed')
 #tab_div
   = render :partial => "layouts/flash_msg"
-  %h3=_('Servers')
+  %h3= _('Servers')
   %table.style1
     %tr
-      %td.key=_('Select Server:')
+      %td.key= _('Select Server:')
       %td.wide
         = select_tag("server_id",
           options_for_select([["<#{_('Not a Server')}>",""]] + @servers.sort, @edit[:new][:server]),

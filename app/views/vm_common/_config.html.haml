@@ -5,7 +5,7 @@
     %table.table.table-bordered.table-striped
       %thead
         %tr
-          %th{:colspan => "2"}=_('Basic Information')
+          %th{:colspan => "2"}= _('Basic Information')
       %tbody
         - @osinfo.each do |item|
           %tr
@@ -21,12 +21,12 @@
     %table.table.table-bordered.table-striped
       %thead
         %tr
-          %th{:colspan => "2"}=_('Account Policies')
+          %th{:colspan => "2"}= _('Account Policies')
       %tbody
         - if @account_policy.nil? || @account_policy.empty?
           %tr
             %td
-              %strong=_('Not Available')
+              %strong= _('Not Available')
         - else
           - @account_policy.each_slice(2) do |items|
             %tr
@@ -41,7 +41,7 @@
     %table.table.table-bordered.table-striped
       %thead
         %tr
-          %th{:colspan => "2"}=_('Basic Information')
+          %th{:colspan => "2"}= _('Basic Information')
       %tbody
         - @vmminfo.each do |item|
           %tr
@@ -54,7 +54,7 @@
     %table.table.table-bordered.table-striped
       %thead
         %tr
-          %th{:colspan => "2"}=_('Devices')
+          %th{:colspan => "2"}= _('Devices')
       %tbody
         - @devices.each do |item|
           %tr
@@ -65,7 +65,7 @@
               = h(item[:description])
           - unless item[:mode].nil?
             %tr
-              %th=_('Network Type')
+              %th= _('Network Type')
               %td
                 = h(item[:mode])
 
@@ -93,14 +93,14 @@
 - when "networks"
   - if @vmminfo
     .modbox{:style => "margin: 0px 0px 20px 30px"}
-      %h2.modtitle=_('Network Adapters')
+      %h2.modtitle= _('Network Adapters')
       %table.table.table-bordered.table-striped
         - if @record.hardware.networks.blank?
           %tbody
             %tr
               %td
                 %strong
-                  =_("%s has no network adapters") % @record.name
+                  = _("%s has no network adapters") % @record.name
         - else
           %thead
             %tr
@@ -118,7 +118,7 @@
   %table.table.table-bordered.table-striped
     %thead
       %tr
-        %th{:colspan => "2"}=_('Account Policies')
+        %th{:colspan => "2"}= _('Account Policies')
     %tbody
       - {:cpu_limit => _("CPU Limit"),
           :cpu_reserve => _("CPU Reserve"),

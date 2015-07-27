@@ -3,7 +3,7 @@
 #tab_div
   = render :partial => "layouts/flash_msg"
 
-  %h3=_("Normal Operating Ranges (up to 30 days' data)")
+  %h3= _("Normal Operating Ranges (up to 30 days' data)")
   %table.table.table-bordered.table-striped
     %thead
       %tr
@@ -16,7 +16,7 @@
           = _("Average")
     %tbody
       %tr
-        %td=_('CPU')
+        %td= _('CPU')
         %td
           - if @record.cpu_usagemhz_rate_average_max_over_time_period
             = mhz_to_human_size(@record.cpu_usagemhz_rate_average_max_over_time_period, 2)
@@ -33,7 +33,7 @@
           - else
             = notavail
       %tr
-        %td=_('CPU Usage')
+        %td= _('CPU Usage')
         %td
           - if @record.max_cpu_usage_rate_average_max_over_time_period
             = number_to_percentage(@record.max_cpu_usage_rate_average_max_over_time_period, :precision => 2)
@@ -50,7 +50,7 @@
           - else
             = notavail
       %tr
-        %td=_("Memory")
+        %td= _("Memory")
         %td
           - if @record.derived_memory_used_max_over_time_period
             = number_to_human_size(@record.derived_memory_used_max_over_time_period * 1024 * 1024, :precision => 2)
@@ -67,7 +67,7 @@
           - else
             = notavail
       %tr
-        %td=_('Memory Usage')
+        %td= _('Memory Usage')
         %td
           - if @record.max_mem_usage_absolute_average_max_over_time_period
             = number_to_percentage(@record.max_mem_usage_absolute_average_max_over_time_period, :precision => 2)
@@ -85,19 +85,19 @@
             = notavail
 
   %hr
-  %h3=_('Right-Sizing (Conservative - derived from Absolute Maximum)')
+  %h3= _('Right-Sizing (Conservative - derived from Absolute Maximum)')
   %table.table.table-bordered.table-striped
     %thead
       %tr
         %th
-        %th=_("Current")
-        %th=_("Recommended")
-        %th=_("% Savings")
-        %th=_("Savings")
+        %th= _("Current")
+        %th= _("Recommended")
+        %th= _("% Savings")
+        %th= _("Savings")
     %tbody
       %tr
         %td
-          =_("Processors")
+          = _("Processors")
         %td{:align => "right"}
           = @record.num_cpu ? @record.num_cpu : notavail
         %td{:align => "right"}
@@ -108,7 +108,7 @@
           = @record.conservative_vcpus_recommended_change ? @record.conservative_vcpus_recommended_change : notavail
       %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
         %td
-          =_("Memory")
+          = _("Memory")
         %td{:align => "right"}
           = @record.mem_cpu ? "#{@record.mem_cpu} MB" : notavail
         %td{:align => "right"}
@@ -120,19 +120,19 @@
 
   %hr
 
-  %h3=_('Right-Sizing (Moderate - derived from High NORM)')
+  %h3= _('Right-Sizing (Moderate - derived from High NORM)')
   %table.table.table-bordered.table-striped
     %thead
       %tr
         %th
-        %th=_("Current")
-        %th=_("Recommended")
-        %th=_("% Savings")
-        %th=_("Savings")
+        %th= _("Current")
+        %th= _("Recommended")
+        %th= _("% Savings")
+        %th= _("Savings")
     %tbody
       %tr
         %td
-          =_("Processors")
+          = _("Processors")
         %td{:align => "right"}
           = @record.num_cpu ? @record.num_cpu : notavail
         %td{:align => "right"}
@@ -143,7 +143,7 @@
           = @record.moderate_vcpus_recommended_change ? @record.moderate_vcpus_recommended_change : notavail
       %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
         %td
-          =_("Memory")
+          = _("Memory")
         %td{:align => "right"}
           = @record.mem_cpu ? "#{@record.mem_cpu} MB" : notavail
         %td{:align => "right"}
@@ -154,19 +154,19 @@
           = @record.moderate_mem_recommended_change ? "#{@record.moderate_mem_recommended_change} MB" : notavail
 
   %hr
-  %h3=_('Right-Sizing (Aggressive - derived from Average NORM)')
+  %h3= _('Right-Sizing (Aggressive - derived from Average NORM)')
   %table.table.table-bordered.table-striped
     %thead
       %tr
         %th
-        %th=_("Current")
-        %th=_("Recommended")
-        %th=_("% Savings")
-        %th=_("Savings")
+        %th= _("Current")
+        %th= _("Recommended")
+        %th= _("% Savings")
+        %th= _("Savings")
     %tbody
       %tr
         %td
-          =_("Processors")
+          = _("Processors")
         %td{:align => "right"}
           = @record.num_cpu ? @record.num_cpu : notavail
         %td{:align => "right"}
@@ -177,7 +177,7 @@
           = @record.aggressive_vcpus_recommended_change ? @record.aggressive_vcpus_recommended_change : notavail
       %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
         %td
-          =_("Memory")
+          = _("Memory")
         %td{:align => "right"}
           = @record.mem_cpu ? "#{@record.mem_cpu} MB" : notavail
         %td{:align => "right"}

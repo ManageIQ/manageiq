@@ -2,10 +2,10 @@
 
 #form_div
   = render :partial => "layouts/flash_msg"
-  %h3=_('Basic Information')
+  %h3= _('Basic Information')
   %table.style1
     %tr
-      %td.key=_('Name')
+      %td.key= _('Name')
       %td.wide
         = text_field_tag("name",
           @edit[:new][:name],
@@ -13,19 +13,19 @@
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         = javascript_tag(javascript_focus('name'))
     %tr
-      %td.key=_('Description')
+      %td.key= _('Description')
       %td.wide
         = text_field_tag("description", @edit[:new][:description], :maxlength => 100,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key=_('Image Type')
+      %td.key= _('Image Type')
       %td.wide
         - img_types = (@ct.id ? [] : [["<#{_('Choose')}>",nil]]) + @edit[:pxe_image_types]
         = select_tag("img_typ",
           options_for_select(img_types, @edit[:new][:img_type]),
           "data-miq_observe" => {:url => url}.to_json)
     %tr
-      %td.key=_('Type')
+      %td.key= _('Type')
       - types = (@ct.id ? [] : [["<#{_('Choose')}>",nil]]) + [["Kickstart","CustomizationTemplateKickstart"],
         ["Sysprep","CustomizationTemplateSysprep"],
         ["CloudInit","CustomizationTemplateCloudInit"]]
@@ -34,5 +34,5 @@
           options_for_select(types, @edit[:new][:typ]),
           "data-miq_observe" => {:url => url}.to_json)
   %hr
-  %h3=_('Script')
+  %h3= _('Script')
   = render :partial => "template_script_data"

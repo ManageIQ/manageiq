@@ -28,7 +28,7 @@
           %p.form-control-static
             = @selected_zone.miq_schedules.count
     %hr/
-    %h3=_("Servers")
+    %h3= _("Servers")
     - if @servers.empty?
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Servers Found.")}
     - else

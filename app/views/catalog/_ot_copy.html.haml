@@ -8,7 +8,7 @@
       %td{:valign => "top"}
         %table.style1
           %tr
-            %td.key=_('Name')
+            %td.key= _('Name')
             %td
               = text_field_tag("name",
                                @edit[:current][:name],
@@ -19,7 +19,7 @@
                                "data-miq_observe" => {:interval => '.5',
                                                       :url      => url}.to_json)
           %tr
-            %td.key=_('Description')
+            %td.key= _('Description')
             %td
               = text_area_tag("description",
                               @edit[:current][:description],
@@ -30,7 +30,7 @@
                               "data-miq_observe" => {:interval => '.5',
                                                      :url      => url}.to_json)
           %tr
-            %td.key=_('Draft')
+            %td.key= _('Draft')
             %td
               = check_box_tag("draft", value = true, checked = @edit[:new][:draft],
                 "data-miq_observe_checkbox" => {:url => url}.to_json)

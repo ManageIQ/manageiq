@@ -33,8 +33,8 @@
           %li
             %span.glyphicon.glyphicon-plus
       %td
-        =_("<New Entry>")
-      %td=_("<Click on this row to create a new entry>")
+        = _("<New Entry>")
+      %td= _("<Click on this row to create a new entry>")
   - else
     %tr{:class => cycle('row0', 'row1'), :id => "#{entry.id}_tr"}
       %td.icon{:onclick => remote_function(:url => {:action =>'ce_delete',

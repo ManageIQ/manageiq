@@ -3,17 +3,17 @@
 
 #resources_info_div
   - if @edit[:new][:service_type] == "composite"
-    %h3=_('Resources')
+    %h3= _('Resources')
     %table.style1
       %tr
-        %td.key=_('Add a Resource')
+        %td.key= _('Add a Resource')
         %td.notwide
           = select_tag('resource_id',
             options_for_select(([["<#{_('Choose')}>",nil]]) + Array(@edit[:new][:available_resources].invert).sort_by{ |a,b| a.first.downcase }, nil),
             "data-miq_sparkle_on" => true,
             "data-miq_observe" => {:url => url}.to_json)
     - if !@edit[:new][:selected_resources].empty?
-      %h3=_('Selected Resources')
+      %h3= _('Selected Resources')
       %table.table.table-bordered.table-striped
         %thead
           %tr

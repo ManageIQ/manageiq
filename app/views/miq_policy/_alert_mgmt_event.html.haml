@@ -1,10 +1,10 @@
 #alert_mgmt_event_div
-  %h3=_('Management Event')
+  %h3= _('Management Event')
   %table.style1
     - if @edit
       - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")
       %tr
-        %td.key=_('Send a Management Event')
+        %td.key= _('Send a Management Event')
         %td
           = check_box_tag("send_event_cb", "1",  @edit[:new][:send_event],
             "data-miq_sparkle_on"       => true,
@@ -12,7 +12,7 @@
             "data-miq_observe_checkbox" => {:url => url}.to_json)
       - if @edit[:new][:send_event]
         %tr
-          %td.key=_('Event Name')
+          %td.key= _('Event Name')
           %td
             = text_field_tag("event_name", @edit[:new][:event_name],
               :maxlength => MAX_DESC_LEN,

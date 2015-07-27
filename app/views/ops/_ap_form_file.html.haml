@@ -1,11 +1,11 @@
 %fieldset
-  %h3=_("File Entry")
+  %h3= _("File Entry")
   %table.table.table-striped.table-bordered.table-hover
     %thead
       %tr
         %th.narrow
-        %th=_("Name")
-        %th=_("Collect Contents?")
+        %th= _("Name")
+        %th= _("Collect Contents?")
     %tbody
       - scan_id = "#{@scan.id || 'new'}"
       - if !params[:add] && params[:add] != "new"
@@ -13,8 +13,8 @@
           %td
             .rollover
               = image_tag("/images/toolbars/new.png", :class => "rollover small")
-          %td=_("<New Entry>")
-          %td=_("<New Entry>")
+          %td= _("<New Entry>")
+          %td= _("<New Entry>")
       - else
         %tr#new_tr
           %td

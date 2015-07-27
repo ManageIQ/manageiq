@@ -16,7 +16,7 @@
               %span.pficon-layered
                 %span.pficon.pficon-error-octagon
                 %span.pficon.pficon-warning-exclamation
-              %strong=_("Invalid Single Sign-On credentials")
+              %strong= _("Invalid Single Sign-On credentials")
         = render :partial => "layouts/flash_msg"
         .form-group
           %label.col-md-3.control-label= _('Username')
@@ -89,15 +89,15 @@
     .col-md-6.col-lg-7.details
       - if get_vmdb_config[:session][:show_login_info]
         %p
-          =_('Region:')
+          = _('Region:')
           %span
             = (MiqRegion.my_region.description)
         %p
-          =_('Zone:')
+          = _('Zone:')
           %span
             = (MiqServer.my_zone)
         %p
-          =_('Appliance:')
+          = _('Appliance:')
           %span
             = (MiqServer.my_server.name)
         %p.message

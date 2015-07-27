@@ -5,22 +5,22 @@
     %td{:valign => "top"}
       %table.style1
         %tr
-          %td.key=_('Name')
+          %td.key= _('Name')
           %td= @record.name
         %tr
-          %td.key=_('Description')
-          %td=@record.description
+          %td.key= _('Description')
+          %td= @record.description
         %tr
-          %td.key=_('Draft')
-          %td=@record.draft ? _("True") : _("False")
+          %td.key= _('Draft')
+          %td= @record.draft ? _("True") : _("False")
         %tr
-          %td.key=_('Read Only')
+          %td.key= _('Read Only')
           %td= @record.stacks.length > 0 ? _("True") : _("False")
         %tr
-          %td.key=_('Created On')
+          %td.key= _('Created On')
           %td= @record.created_at
         %tr
-          %td.key=_('Updated On')
+          %td.key= _('Updated On')
           %td= @record.updated_at
 
   %hr

@@ -1,5 +1,5 @@
 #main_div
-  %h3=_("Automations Tasks")
+  %h3= _("Automations Tasks")
   - at =  @miq_request.automation_tasks
   - if at.empty?
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
@@ -7,10 +7,10 @@
     %table.table.table-bordered.table-striped
       %thead
         %tr
-          %th=_("Description")
-          %th=_("State")
-          %th=_("Message")
-          %th=_("Status")
+          %th= _("Description")
+          %th= _("State")
+          %th= _("Message")
+          %th= _("Status")
       %tbody
         - at.each do |t|
           %tr

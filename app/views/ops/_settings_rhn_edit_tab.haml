@@ -26,18 +26,18 @@
           = text_field_tag('server_url', @edit[:new][:server_url], :maxlength => 200, 
             'data-miq_observe' => url_int_jsh, :id => 'server_url')
           - if rhn_default_enabled
-            =button_tag('Default',
+            = button_tag('Default',
                       :id      => 'rhn_default_button',
                       :class   => 'btn btn-default',
                       :onclick => "miqAjaxButton('#{url_for( :action => 'rhn_default_server', :id => 'rhn_edit')}');")
 
       %tr
         - label = @edit[:new][:register_to] == "rhn_satellite" ? _("Channel Name(s):") : _("Repository Name(s):")
-        %td.key=label
+        %td.key= label
         %td.wide
           = text_field_tag('repo_name', @edit[:new][:repo_name], :maxlength => 200,
             'data-miq_observe' => url_int_jsh, :id => 'repo_name')
-          =button_tag('Default',
+          = button_tag(_('Default'),
                     :id      => 'repo_default_name',
                     :class   => 'btn btn-default',
                     :onclick => "miqAjaxButton('#{url_for(:action => 'repo_default_name', :id => 'rhn_edit')}');")
@@ -86,7 +86,7 @@
           %td
             - if @edit[:organizations].length == 1
               = @edit[:new][:customer_org]
-            -else
+            - else
               = select_tag('customer_org',
                 options_for_select((@edit[:new][:customer_org] ? [] : [["<Choose>", nil]]) + Array(@edit[:organizations].sort_by { |k, _v| k.downcase }),
                                    @edit[:new][:customer_org]),

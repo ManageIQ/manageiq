@@ -25,7 +25,7 @@
         %hr
 
       - if !(@edit || @assign)
-        %h3=_('Alerts')
+        %h3= _('Alerts')
         - if @alert_profile_alerts.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts are defined.")}
         - else
@@ -40,12 +40,12 @@
                     = h(a.description)
         %hr
       - elsif @edit
-        %h3=_('Alert Selection')
+        %h3= _('Alert Selection')
         %table#formtest.form
           %tr
-            %td{:align => "left"}=_("Available %s Alerts:") % ui_lookup(:model => @edit[:new][:mode])
+            %td{:align => "left"}= _("Available %s Alerts:") % ui_lookup(:model => @edit[:new][:mode])
             %td
-            %td.widthed{:align => "left"}=_("Profile Alerts:")
+            %td.widthed{:align => "left"}= _("Profile Alerts:")
           %tr
             %td.widthed{:align => "left", :valign => "top"}
               %span#choices_chosen_div
@@ -86,7 +86,7 @@
       -# Notes field
       - if @edit
         %h3
-          =_("Notes")
+          = _("Notes")
           (
           %span#notes_count
             = @edit[:new][:notes] ? @edit[:new][:notes].length : 0
@@ -109,13 +109,13 @@
 
       - unless @edit
         -# Show assignments
-        %h3=_('Assigned To')
+        %h3= _('Assigned To')
         - aa = @alert_profile.get_assigned_tos
         - if !aa[:objects].empty?
           -# Objects are assigned
           - if aa[:objects].first.kind_of?(MiqEnterprise)
             -# Assigned to Enterprise object
-            =_('The Enterprise')
+            = _('The Enterprise')
           - else
             -# Assigned to CIs
             %table.style1
@@ -148,5 +148,5 @@
                   = h(tag.first.description)
                   %br
         - else
-          =_('Nothing')
+          = _('Nothing')
         %hr

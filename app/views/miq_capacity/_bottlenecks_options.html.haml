@@ -1,9 +1,9 @@
 - url = url_for :action => 'bottleneck_tl_chooser'
 #tl_options_div
-  %h3=_('Options')
+  %h3= _('Options')
   %table.style1
     %tr
-      %td.key{:style => "width: 150px;"}=_('Event Groups')
+      %td.key{:style => "width: 150px;"}= _('Event Groups')
       %td
         = select_tag("tl_#{typ}_fl_grp1",
           options_for_select([["<#{_('ALL')}> ", ""]] + @sb[:bottlenecks][:groups].sort, @sb[:bottlenecks][:tl_options][:filter1]),
@@ -12,7 +12,7 @@
           "data-miq_observe"     => {:url => url}.to_json)
     - unless %w(s h).include?(x_node.split("-").last.split("_").first)
       %tr
-        %td.key{:style => "width: 150px;"}=_('Show Host Events')
+        %td.key{:style => "width: 150px;"}= _('Show Host Events')
         %td
           = check_box_tag("tl_#{typ}_hosts", value = "1",
             checked=@sb[:bottlenecks][:tl_options][:hosts],
@@ -20,7 +20,7 @@
             "data-miq_sparkle_off"      => true,
             "data-miq_observe_checkbox" => {:url => url}.to_json)
     %tr
-      %td.key{:style => "width: 150px;"}=_('Time Zone')
+      %td.key{:style => "width: 150px;"}= _('Time Zone')
       %td
         = select_tag("tl_#{typ}_tz",
           options_for_select(ALL_TIMEZONES,

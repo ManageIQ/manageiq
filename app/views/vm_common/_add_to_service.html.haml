@@ -7,10 +7,10 @@
 
 = form_tag(:action => 'add_vm_to_service', :id => @vm) do
 
-  %h3=_('Service Selection')
+  %h3= _('Service Selection')
   %table.style1
     %tr
-      %td.key=_('Service')
+      %td.key= _('Service')
       %td
         = select_tag('chosen_service', options_for_select(@svcs.sort), {:multiple => false,
           :class => "widthed",

@@ -4,7 +4,7 @@
     .row
       .col-md-12.col-lg-6
         %fieldset
-          %h3=_('Session Information')
+          %h3= _('Session Information')
           .form-horizontal.static
             - [[_("Server Name"),     h(session[:vmdb_name])],
                [_("Version"),         h(@vmdb[:version] + "." + @vmdb[:build])],
@@ -27,7 +27,7 @@
       - if cond_userrole || cond_url
         .col-md-12.col-lg-6
           %fieldset
-            %h3=_('Product Assistance')
+            %h3= _('Product Assistance')
             - if cond_userrole
               - @pdf_documents.each do |filename, title|
                 - docfile_path = "/doc/#{filename}.pdf"
