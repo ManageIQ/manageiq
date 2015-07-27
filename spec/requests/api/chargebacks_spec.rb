@@ -52,7 +52,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can fetch an individual chargeback rate detail" do
-    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, rate: 5)
+    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 5)
     chargeback_rate = FactoryGirl.create(:chargeback_rate,
                                          :chargeback_rate_details => [chargeback_rate_detail])
 
