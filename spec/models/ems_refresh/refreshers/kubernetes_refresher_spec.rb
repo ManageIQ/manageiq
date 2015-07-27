@@ -80,6 +80,11 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :image         => "kubernetes/heapster_influxdb:v0.3",
       # :backing_ref   => "docker://af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6"
     )
+
+    # Check the relation to container group
+    @container2.container_group.should have_attributes(
+      :name => "monitoring-influx-grafana-controller-mdyqf"
+    )
   end
 
   def assert_specific_container_group
@@ -101,6 +106,12 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @services.first.should have_attributes(
       # :ems_ref => "49981230-e1b7-11e4-b7dc-001a4a5f4a02",
       :name    => "monitoring-heapster"
+    )
+
+    # Check the relation to containers
+    @containergroup.containers.count.should == 1
+    @services.first.should have_attributes(
+      :name => "monitoring-heapster"
     )
   end
 
