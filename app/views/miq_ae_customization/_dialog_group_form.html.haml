@@ -9,6 +9,7 @@
       = text_field_tag("group_label",
                         @edit[:group_label],
                         :maxlength         => MAX_NAME_LEN,
+                        :class => "form-control",
                         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
       = javascript_tag(javascript_focus('group_label'))
   .form-group
@@ -18,4 +19,5 @@
       = text_field_tag("group_description",
                         @edit[:group_description],
                         :maxlength         => 100,
+                        :class => "form-control",
                         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

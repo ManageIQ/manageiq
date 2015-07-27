@@ -8,6 +8,7 @@
     .col-md-8
       = text_field_tag("tab_label", @edit[:tab_label],
                         :maxlength         => MAX_NAME_LEN,
+                        :class => "form-control",
                         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
       = javascript_tag(javascript_focus('tab_label'))
   .form-group
@@ -16,4 +17,5 @@
     .col-md-8
       = text_field_tag("tab_description", @edit[:tab_description],
                         :maxlength         => 100,
+                        :class => "form-control",
                         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

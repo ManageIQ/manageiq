@@ -16,7 +16,7 @@
               - group = tg.resource
               %h3{:title => group.description}
                 = group.label
-              %form.form-horizontal
+              %form.form-horizontal.static
                 - group.ordered_dialog_resources.each do |g|
                   - field = g.resource
                   .form-group
@@ -87,12 +87,14 @@
                                     options_for_select(val.collect(&:reverse), field.default_value))
                                 - else
                                   = select_tag('field.id',
-                                    options_for_select([["<#{_('Choose')}>", nil]] + val.collect(&:reverse), field.default_value))
+                                              options_for_select([["<#{_('Choose')}>", nil]] + val.collect(&:reverse),
+                                                                  field.default_value))
 
                               - else
                                 -# NOT REQUIRED
                                 = select_tag('field.id',
-                                  options_for_select([["#{_('None')}", nil]] + val.collect(&:reverse), field.default_value))
+                                              options_for_select([["#{_('None')}", nil]] + val.collect(&:reverse),
+                                                                  field.default_value))
 
                             - else
                               - val.each_with_index do |rb, i|

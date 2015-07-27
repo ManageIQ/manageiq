@@ -37,11 +37,13 @@
         = _('Type')
       .col-md-8
         = select_tag('field_typ',
-                      options_for_select(([["<#{_('Choose')}>", nil]]) + Array(@edit[:field_types].invert).sort, @edit[:field_typ]),
+                      options_for_select(([["<#{_('Choose')}>", nil]]) + Array(@edit[:field_types].invert).sort,
+                                        @edit[:field_typ]),
                       :class    => "selectpicker")
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent("field_typ", "#{url}")
+
         - if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(@edit[:field_typ])
           &nbsp;
           = _('Only 1 Date or Date/Time element can be present in a Dialog')
@@ -51,7 +53,8 @@
         %label.col-md-2.control-label
           = _('Dynamic')
         .col-md-8
-          = check_box_tag('field_dynamic', '1', @edit[:field_dynamic], "data-miq_observe_checkbox" => {:url => url}.to_json)
+          = check_box_tag('field_dynamic', '1', @edit[:field_dynamic],
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
 
   - unless @edit[:field_typ].nil?
     %h3
@@ -141,8 +144,8 @@
         .form-group
           %label.col-md-2.control-label= _('Read only')
           .col-md-8
-            = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
-
+            = check_box_tag('field_read_only', '1', @edit[:field_read_only],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
         .form-group
           %label.col-md-2.control-label
             = _('Auto Refresh other fields when modified')
@@ -156,11 +159,11 @@
               = _('Validator Type')
             .col-md-8
               = select_tag('field_validator_type',
-                            options_for_select([[_("None"), nil], [_("Regular Expression"), 'regex']], @edit[:field_validator_type]),
+                            options_for_select([[_("None"), nil], [_("Regular Expression"), 'regex']],
+                                                @edit[:field_validator_type]),
                             "data-miq_sparkle_on" => true,
                             :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_validator_type', "#{url}")
           .form-group
             %label.col-md-2.control-label
@@ -180,7 +183,8 @@
           %label.col-md-2.control-label
             = _('Read only')
           .col-md-8
-            = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
+            = check_box_tag('field_read_only', '1', @edit[:field_read_only],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
 
         .form-group
           %label.col-md-2.control-label
@@ -208,13 +212,13 @@
                         "data-miq_sparkle_on" => true,
                         :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_required', "#{url}")
         .form-group
           %label.col-md-2.control-label
             = _('Read only')
           .col-md-8
-            = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
+            = check_box_tag('field_read_only', '1', @edit[:field_read_only],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
 
         .form-group
           %label.col-md-2.control-label
@@ -235,18 +239,17 @@
                           options_for_select(values, selected),
                           :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent("field_default_value", "#{url}")
         .form-group
           %label.col-md-2.control-label
             = _('Value Type')
           .col-md-8
             = select_tag('field_data_typ',
-                          options_for_select([[_("Integer"), "integer"], [_("String"), "string"]], @edit[:field_data_typ]),
+                          options_for_select([[_("Integer"), "integer"], [_("String"), "string"]],
+                                              @edit[:field_data_typ]),
                           "data-miq_sparkle_on" => true,
                           :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_data_typ', "#{url}")
         .form-group
           %label.col-md-2.control-label
@@ -256,7 +259,6 @@
                           options_for_select([[_("None"), "none"], [_("Description"), "description"], [_("Value"), "value"]], @edit[:field_sort_by]),
                           :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_sort_by', "#{url}")
         - if @edit[:field_sort_by] != "none"
           .form-group
@@ -267,7 +269,6 @@
                             options_for_select([[_("Ascending"), "ascending"], [_("Descending"), "descending"]], @edit[:field_sort_order]),
                             :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_sort_order', "#{url}")
       - elsif @edit[:field_typ].include?("TagControl")
         .form-group
@@ -280,7 +281,6 @@
                           options_for_select(values, @edit[:field_category]),
                           :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_category', "#{url}")
         .form-group
           %label.col-md-2.control-label
@@ -295,11 +295,11 @@
             = _('Value Type')
           .col-md-8
             = select_tag('field_data_typ',
-                          options_for_select([[_("Integer"), "integer"], [_("String"), "string"]], @edit[:field_data_typ]),
+                          options_for_select([[_("Integer"), "integer"], [_("String"), "string"]],
+                                              @edit[:field_data_typ]),
                           "data-miq_sparkle_on" => true,
                           :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_data_typ', "#{url}")
         .form-group
           %label.col-md-2.control-label
@@ -309,7 +309,6 @@
                           options_for_select([[_("None"), "none"], [_("Description"), "description"], [_("Value"), "value"]], @edit[:field_sort_by]),
                           :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_sort_by', "#{url}")
         .form-group
           %label.col-md-2.control-label
@@ -319,7 +318,6 @@
                           options_for_select([[_("Ascending"), "ascending"], [_("Descending"), "descending"]], @edit[:field_sort_order]),
                           :class    => "selectpicker")
             :javascript
-              miqInitSelectPicker();
               miqSelectPickerEvent('field_sort_order', "#{url}")
         .form-group
           %label.col-md-2.control-label
@@ -332,7 +330,8 @@
           %label.col-md-2.control-label
             = _('Read only')
           .col-md-8
-            = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
+            = check_box_tag('field_read_only', '1', @edit[:field_read_only],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
 
         .form-group
           %label.col-md-2.control-label
@@ -343,7 +342,7 @@
                             'data-miq_observe_checkbox' => {:url => url}.to_json)
 
   - if @edit[:field_typ] =~ /Drop|Radio/ && !@edit[:field_dynamic]
-    = render :partial => 'field_values', :locals=>{:entry=>nil}
+    = render :partial => 'field_values', :locals => {:entry => nil}
   - elsif @edit[:field_typ] && @edit[:field_typ].include?("TagControl") && @edit[:field_category]
     = render :partial => 'tag_field_values', :locals => {:entry => nil}
 
