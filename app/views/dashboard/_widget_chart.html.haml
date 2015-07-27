@@ -2,8 +2,8 @@
 -#   widget -- MiqWidget instance
 - width  ||= 350
 - height ||= 250
-%div.modboxin.chart_widget{:style => "text-align: center"}
-  %div.mc{:id => "dd_w#{widget.id}_box",
+.modboxin.chart_widget{:style => "text-align: center"}
+  .mc{:id => "dd_w#{widget.id}_box",
     :style => @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display:none' : ''}
 
     - if widget.contents_for_user(session[:userid]).contents.blank?
