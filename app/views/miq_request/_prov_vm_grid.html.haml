@@ -9,7 +9,7 @@
               - if [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type)
                 = h(@edit[:vm_headers][h])
               - else
-                -#  Replaced to exclude non-view table fields from sorting
+                -# Replaced to exclude non-view table fields from sorting
                 = link_to(h(@edit[:vm_headers][h]),
                   {:action => "sort_vm_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
                   "data-miq_sparkle_on"  => true,

@@ -61,7 +61,6 @@
                 "data-miq_observe"    => {:url => url}.to_json)
             %td.key{:style => "width: 90px;", :nowrap => true}
               = _("Event Type")
-              -#= select("tl","fl_grp1", [["<NONE> ", ""]] + @tl_options[:etypes].sort, :selected => @tl_options[:filter1])
             %td{:nowrap => true}
               = check_box_tag("tl_fl_grp_all", "1", @tl_options[:tl_filter_all],
                 "data-miq_sparkle_on"       => true,

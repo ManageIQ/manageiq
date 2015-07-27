@@ -14,7 +14,7 @@
     .yui-gb
       #col1.yui-u.first{:style => "position: relative; min-height: 50px;"}
         - @edit[:new][:shortcuts].each do |s_id, s_desc|
-          - # :shortcuts is a hash of s.id => s.miq_widget_shortcut.description
+          -# :shortcuts is a hash of s.id => s.miq_widget_shortcut.description
           %div{:id => "s_#{s_id}", :title => _("Drag this Shortcut to a new location")}
             #test.modbox
               %h2.modtitle{:style => @edit ? "cursor: move;" : ""}

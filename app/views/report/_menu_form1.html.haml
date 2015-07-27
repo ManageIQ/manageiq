@@ -8,7 +8,6 @@
         %span#menu1_legend
           = _('Manage Accordions')
       #folder_lists
-        -#= render :partial => "layouts/flash_msg"
         %table{:class => "form", :cellspacing => "3"}
           %tr
             %td{:valign => "top"}
@@ -45,13 +44,6 @@
           %tr
             %td{:colspan => "2", :style => "float: right;"}
               - t = _('Commit expression element changes')
-              -# = link_to(image_tag('/images/toolbars/commit.png', :class => "rollover small", :alt => t),
-              -#   "data-miq_sparkle_on"  => true,
-              -#   "data-miq_sparkle_off" => true,
-              -#   :remote                => true,
-              -#   :title                 => t,
-              -#   :id                    => "folder_commit",
-              -#   :onclick               => "return miqMenuChangeRow('folder_list_grid', 'serialize', '/report/menu_field_changed/')")
               = image_tag('/images/toolbars/commit.png',
                 :border                => "0",
                 :class                 => "rollover small",
@@ -73,7 +65,6 @@
   %fieldset{:style => "width: 300px; height: 450px;"}
     %h3
       = _('Manage Accordions & Folders')
-    -#= render :partial => "layouts/flash_msg"
     %table{:cellspacing => "1"}
       %tr
         %td{:align => "left"}
