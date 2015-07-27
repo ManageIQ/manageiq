@@ -7,7 +7,7 @@
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody
-          - @zones.sort_by(&:name).each do |z|
+          - @zones.sort_by(&:description).each do |z|
             %tr{:onclick => "cfmeDynatree_activateNode('settings_tree', 'z-#{to_cid(z.id)}');", :title => _("View this Zone's settings")}
               %td.narrow
                 %img{:src => "/images/icons/new/zone.png"}/
