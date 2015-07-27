@@ -20,15 +20,15 @@
     %tr
       %td.key= _('Image Type')
       %td.wide
-        - img_types = (@ct.id ? [] : [["<#{_('Choose')}>",nil]]) + @edit[:pxe_image_types]
+        - img_types = (@ct.id ? [] : [["<#{_('Choose')}>", nil]]) + @edit[:pxe_image_types]
         = select_tag("img_typ",
           options_for_select(img_types, @edit[:new][:img_type]),
           "data-miq_observe" => {:url => url}.to_json)
     %tr
       %td.key= _('Type')
-      - types = (@ct.id ? [] : [["<#{_('Choose')}>",nil]]) + [["Kickstart","CustomizationTemplateKickstart"],
-        ["Sysprep","CustomizationTemplateSysprep"],
-        ["CloudInit","CustomizationTemplateCloudInit"]]
+      - types = (@ct.id ? [] : [["<#{_('Choose')}>", nil]]) + [["Kickstart","CustomizationTemplateKickstart"],
+        ["Sysprep", "CustomizationTemplateSysprep"],
+        ["CloudInit", "CustomizationTemplateCloudInit"]]
       %td.wide
         = select_tag("typ",
           options_for_select(types, @edit[:new][:typ]),

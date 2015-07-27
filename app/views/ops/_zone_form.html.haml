@@ -87,6 +87,6 @@
           %td.key= _("Max Active VM Scans")
           %td
             = select_tag('max_scans',
-              options_for_select([[_("Unlimited"),0]] + [1,2,3,4] + Array.new(10) {|i| (i+1)*5},
+              options_for_select([[_("Unlimited"), 0]] + [1, 2, 3, 4] + Array.new(10) {|i| (i+1)*5},
                 @edit[:new][:concurrent_vm_scans]),
               "data-miq_observe"=>{:url=>url}.to_json)

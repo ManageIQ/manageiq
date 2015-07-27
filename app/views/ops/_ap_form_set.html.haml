@@ -1,4 +1,4 @@
-- url = url_for(:action=>'ap_form_field_changed',:item_type=>"category", :id=>"#{@scan.id || "new"}")
+- url = url_for(:action=>'ap_form_field_changed', :item_type=>"category", :id=>"#{@scan.id || "new"}")
 #form_div
   %fieldset
     %h3= _("Category Selection")
@@ -12,7 +12,7 @@
                 - @selected.push(a["target"])
             - CATEGORY_CHOICES.each_slice(3) do |keyvalue|
               %tr
-                - keyvalue.each do |k,v|
+                - keyvalue.each do |k, v|
                   - checked = @selected.include? k if @selected
                   %td{:align => "left", :nowrap => "", :valign => "top"}
                     = hidden_field("item", "type", :value=>"category")

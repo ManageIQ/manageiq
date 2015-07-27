@@ -14,7 +14,7 @@
         %td.key= _('Depot Type')
         %td.wide
           = select_tag("log_protocol",
-            options_for_select([["<#{_('Choose')}>",nil]] + @edit[:protocols_arr].sort, @edit[:new][:protocol]),
+            options_for_select([["<#{_('Choose')}>", nil]] + @edit[:protocols_arr].sort, @edit[:new][:protocol]),
             "data-miq_observe" => {:url => url}.to_json)
       - if !@edit[:new][:uri_prefix].nil?
         %tr
@@ -53,7 +53,7 @@
   %h3= _('PXE Image Menus')
   %table.style1
     %tbody
-      - @edit[:new][:pxe_menus].each_with_index do |menu,index|
+      - @edit[:new][:pxe_menus].each_with_index do |menu, index|
         %tr
           %td.key= _('Filename')
           %td.wide

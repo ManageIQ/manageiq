@@ -10,7 +10,7 @@
         %td.key= _("Type")
         %td
           = select_tag('upload_type',
-            options_for_select([["<Choose>",nil],[title_for_host,"host"],["Vm","vm"]],
+            options_for_select([["<Choose>", nil], [title_for_host, "host"], ["Vm", "vm"]],
             @edit[:new][:upload_type]),
             "data-miq_observe"=>{:url=>url}.to_json)
       - if @edit[:new][:upload_type]

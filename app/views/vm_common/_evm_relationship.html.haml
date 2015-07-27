@@ -7,7 +7,7 @@
       %td.key= _('Select Server:')
       %td.wide
         = select_tag("server_id",
-          options_for_select([["<#{_('Not a Server')}>",""]] + @servers.sort, @edit[:new][:server]),
+          options_for_select([["<#{_('Not a Server')}>", ""]] + @servers.sort, @edit[:new][:server]),
           "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
           "data-miq_observe" => {:url => url}.to_json)
       %td{:width => '100'}

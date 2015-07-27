@@ -23,7 +23,7 @@
         %td.wide
           = select("retirement",
             "warn",
-            [[_("None"),""],[_("1 Week before retirement"),7],[_("2 Weeks before retirement"),14],[_("30 Days before retirement"),30]],
+            [[_("None"), ""], [_("1 Week before retirement"), 7], [_("2 Weeks before retirement"), 14], [_("30 Days before retirement"), 30]],
             {:selected=>session[:retire_warn]},
             {:disabled=>disabled})
         = observe_field("retirement_warn",
@@ -37,7 +37,7 @@
 
 %fieldset.adminform
   %legend
-    = _("New setting will affect %s") % pluralize(@retireitems.length,'VM')
+    = _("New setting will affect %s") % pluralize(@retireitems.length, 'VM')
   %table.admintable{:cellspacing => "1", :height => "75"}
     %tbody
       %tr

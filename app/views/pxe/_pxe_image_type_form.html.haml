@@ -14,5 +14,5 @@
         %td.key= _('Type')
         %td.wide
           = select_tag("provision_type",
-            options_for_select([["<#{_('Any')}>",nil]] + @edit[:prov_types].invert.sort, @edit[:new][:provision_type]),
+            options_for_select([["<#{_('Any')}>", nil]] + @edit[:prov_types].invert.sort, @edit[:new][:provision_type]),
             "data-miq_observe" => {:url => url}.to_json)

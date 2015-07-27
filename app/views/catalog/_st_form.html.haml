@@ -10,7 +10,7 @@
         %td.key= _('Catalog Item Type')
         %td.notwide
           = select_tag('st_prov_type',
-            options_for_select(([["<#{_('Choose')}>",nil]]) + Array(@edit[:st_prov_types].invert).sort_by{ |a| a.first.downcase }, nil),
+            options_for_select(([["<#{_('Choose')}>", nil]]) + Array(@edit[:st_prov_types].invert).sort_by{ |a| a.first.downcase }, nil),
             "data-miq_sparkle_on" => true,
             "data-miq_observe" => {:url => url}.to_json)
   - else

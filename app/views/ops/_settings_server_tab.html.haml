@@ -21,7 +21,7 @@
                   - if vm
                     %td.image.pointer{:onclick => "DoNav('/vm/show/#{vm.id}');", :title => _("Click to view this VM")}
                       %img{:align => "left", :height => "20", :src => "/images/icons/new/vm.png", :width => "20"}/
-                    %td.pointer.hover-text{:class => cycle('row0','row1'), :onclick => "DoNav('/vm/show/#{vm.id}');",
+                    %td.pointer.hover-text{:class => cycle('row0', 'row1'), :onclick => "DoNav('/vm/show/#{vm.id}');",
                       :title => _("Click to view this VM")}
                       = h(vm.name)
                   - else
@@ -97,7 +97,7 @@
             %td.key= _("Use")
             %td.wide
               = select_tag('console_type',
-                options_for_select([["VMware MKS Plugin","MKS"],["VNC","VNC"],["VMware VMRC Plugin","VMRC"]],
+                options_for_select([["VMware MKS Plugin", "MKS"], ["VNC", "VNC"], ["VMware VMRC Plugin", "VMRC"]],
                 @edit[:new][:server][:remote_console_type]),
                 "data-miq_observe"=>{:url=>url}.to_json)
           - if @edit[:new][:server][:remote_console_type] == "MKS"
@@ -228,13 +228,13 @@
             %td.key= _("Mode")
             %td.wide
               = select_tag('webservices_mode',
-                options_for_select(["invoke","disable"], @edit[:new][:webservices][:mode]),
+                options_for_select(["invoke", "disable"], @edit[:new][:webservices][:mode]),
                 "data-miq_observe"=>{:url=>url}.to_json)
           %tr
             %td.key= _("Security")
             %td.wide
               = select_tag('webservices_security',
-                options_for_select(["none","ws-security"], @edit[:new][:webservices][:security]),
+                options_for_select(["none", "ws-security"], @edit[:new][:webservices][:security]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
         %h3= _("Logging")
@@ -243,7 +243,7 @@
             %td.key= _("Log Level")
             %td.wide
               = select_tag('log_level',
-                options_for_select(["fatal","error","warn","info","debug"], @edit[:new][:log][:level]),
+                options_for_select(["fatal", "error", "warn", "info", "debug"], @edit[:new][:log][:level]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
         %h3= _("Custom Support URL")

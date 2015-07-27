@@ -20,7 +20,7 @@
           = h(@edit[:new][:sm_type])
         - else
           = select_tag("sm_type",
-            options_for_select([["<#{_('Choose')}>",nil]] + @edit[:sm_types].invert.sort, @edit[:new][:sm_type]),
+            options_for_select([["<#{_('Choose')}>", nil]] + @edit[:sm_types].invert.sort, @edit[:new][:sm_type]),
             "data-miq_observe" => {:url => url}.to_json)
     %tr
       %td.key= _('Host Name')
@@ -103,4 +103,4 @@
               :title => t,
               :onclick => "miqAjaxButton('#{url_for(:action => "create", :id => "new", :button => "cancel")}');")
   - else
-    = render(:partial => '/layouts/edit_form_buttons',:locals => {:record_id => @sm.id, :ajax_buttons => true})
+    = render(:partial => '/layouts/edit_form_buttons', :locals => {:record_id => @sm.id, :ajax_buttons => true})

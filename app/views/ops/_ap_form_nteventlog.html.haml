@@ -56,7 +56,7 @@
               :style     => "width: 100%;")
           = hidden_field("item", "type3", :value=>"nteventlog")
       - if !session[:nteventlog_entries].nil? && !session[:nteventlog_entries].empty?
-        - session[:nteventlog_entries].sort_by { |r| r[:name] }.each_with_index do |nteventlog,i|
+        - session[:nteventlog_entries].sort_by { |r| r[:name] }.each_with_index do |nteventlog, i|
           - if session[:nteventlog_data][:name] == nteventlog[:name] && session[:nteventlog_data][:selected].to_i == i
             %tr{:id => "edit_tr"}
               %td

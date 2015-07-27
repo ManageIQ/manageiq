@@ -24,7 +24,7 @@
                   "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 
                 = select_tag("mem_typ",
-                  options_for_select(["MB","GB"],
+                  options_for_select(["MB", "GB"],
                   @edit[:new][:mem_typ]),
                   "data-miq_sparkle_on" => true,
                   "data-miq_sparkle_off" => true,
@@ -48,7 +48,7 @@
               #cpu_div{:style => display}
                 - if @edit[:cpu_options].length > 1
                   = select_tag("cpu_count",
-                     options_for_select((@edit[:new][:cpu_count].nil? ? [["<#{_('Choose')}>",nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
+                     options_for_select((@edit[:new][:cpu_count].nil? ? [["<#{_('Choose')}>", nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     "data-miq_observe" => {:url => url}.to_json)

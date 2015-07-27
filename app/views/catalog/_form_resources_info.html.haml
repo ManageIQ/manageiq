@@ -9,7 +9,7 @@
         %td.key= _('Add a Resource')
         %td.notwide
           = select_tag('resource_id',
-            options_for_select(([["<#{_('Choose')}>",nil]]) + Array(@edit[:new][:available_resources].invert).sort_by{ |a,b| a.first.downcase }, nil),
+            options_for_select(([["<#{_('Choose')}>", nil]]) + Array(@edit[:new][:available_resources].invert).sort_by{ |a, b| a.first.downcase }, nil),
             "data-miq_sparkle_on" => true,
             "data-miq_observe" => {:url => url}.to_json)
     - if !@edit[:new][:selected_resources].empty?
@@ -27,13 +27,13 @@
               %th
                 = st
         %tbody
-          - @edit[:new][:rsc_groups].each_with_index do |groups,i|
+          - @edit[:new][:rsc_groups].each_with_index do |groups, i|
             -# add blank tr after each group
             - if i != 0 && !groups.empty? && i < @edit[:new][:rsc_groups].length-1
               %tr#new_tr.separator
                 %td{:colspan => '9'}
 
-            - groups.sort_by { | g | g[:name].downcase }.each_with_index do |sr,k|
+            - groups.sort_by { | g | g[:name].downcase }.each_with_index do |sr, k|
               %tr
                 %td
                   = link_to(image_tag("/images/icons/16/notequal-red.png", :alt => _("Click to remove this Resource from the Catalog Item")),
@@ -62,7 +62,7 @@
                       "data-miq_observe" => {:url => url}.to_json)
                 - start_action_values = [_('Do Nothing'), _('Power On')]
                 - stop_action_values = [_('Do Nothing'), _('Suspend'), _('Shutdown'), _('Power Off')]
-                - delay_values = [[_("None"),0],[1,1],[2,2],[3,3],[4,4],[5,5],[10,10],[20,20],[30,30],[40,40],[50,50],[60,60]]
+                - delay_values = [[_("None"), 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [10, 10], [20, 20], [30, 30], [40, 40], [50, 50], [60, 60]]
                 %td
                   = select_tag("start_action_#{i}_#{k}",
                     options_for_select(start_action_values, sr[:start_action]),

@@ -25,12 +25,12 @@
           - unless selected_id[:total_size].blank?
             %td
               = number_to_human_size(selected_id[:total_size], :precision => 2)
-              = _("(%s bytes)") % number_with_delimiter(selected_id[:total_size], :delimiter => ",",:separator => ".")
+              = _("(%s bytes)") % number_with_delimiter(selected_id[:total_size], :delimiter => ",", :separator => ".")
         %tr
           %td.key= _('Created On')
           %td
             - if !selected_id[:create_time].blank?
-              = format_timezone(selected_id[:create_time].to_time,Time.zone,"view")
+              = format_timezone(selected_id[:create_time].to_time, Time.zone, "view")
       - else
         %tr{:class => cycle('row0', 'row1')}
           %td

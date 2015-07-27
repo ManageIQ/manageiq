@@ -10,8 +10,8 @@
           - if tab[0] == ""
             %a= h(tab[1])
           - else
-            - if ["new","edit"].include?(tab[0].split("_")[0])
-              - unless ["report","ops"].include?(@layout)
+            - if ["new", "edit"].include?(tab[0].split("_")[0])
+              - unless ["report", "ops"].include?(@layout)
                 = link_to(tab[1], {:action=>'change_tab', :tab=>tab[0], :id=>@tabs[0][1]})
               - else
                 = link_to(tab[1],
@@ -19,7 +19,7 @@
                   "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
                   :remote=>true)
             - else
-              - unless ["report","ops"].include?(@layout)
+              - unless ["report", "ops"].include?(@layout)
                 = link_to(tab[1], {:action=>'change_tab', :tab=>tab[0], :id=>@tabs[0][1]}, :onclick=>"return miqCheckForChanges()")
               - else
                 - if @layout == "ops"

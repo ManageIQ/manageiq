@@ -15,7 +15,7 @@
       %td.key= _('Aggregate (free space)')
       %td
         = select_tag("aggregate_name",
-          options_for_select([["<#{_('Choose')}>",nil]] + @edit[:aggregates].invert.sort,
+          options_for_select([["<#{_('Choose')}>", nil]] + @edit[:aggregates].invert.sort,
           @edit[:new][:aggregate_name]),
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,

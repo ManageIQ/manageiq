@@ -33,7 +33,7 @@
             %th= _('Name')
             %th= _('Source')
         %tbody
-          - @saved_reports.each_with_index do |row,i|
+          - @saved_reports.each_with_index do |row, i|
             - row_id = "#{x_node}_rr-#{to_cid(row['id'])}"
             %tr
               - t = _("Click to view saved report")

@@ -30,13 +30,13 @@
         %td.key= _('Catalog')
         %td.wide
           = select_tag('catalog_id',
-            options_for_select(([["<_#{('Unassigned')}>",nil]]) + @edit[:new][:available_catalogs], @edit[:new][:catalog_id]),
+            options_for_select(([["<_#{('Unassigned')}>", nil]]) + @edit[:new][:available_catalogs], @edit[:new][:catalog_id]),
             "data-miq_sparkle_on" => true,
             "data-miq_observe" => {:url => url}.to_json)
       %tr
         %td.key= _('Dialog')
         %td.wide
-          - options = [["<#{_('No Dialog')}>",nil]] + @edit[:new][:available_dialogs].invert.to_a.sort_by{ |a| a.first.downcase }
+          - options = [["<#{_('No Dialog')}>", nil]] + @edit[:new][:available_dialogs].invert.to_a.sort_by{ |a| a.first.downcase }
           = select_tag('dialog_id',
             options_for_select(options, @edit[:new][:dialog_id]),
             "data-miq_sparkle_on" => true, "data-miq_observe" => {:url => url}.to_json)
@@ -51,7 +51,7 @@
                     "data-miq_sparkle_on" => true,
                     "data-miq_observe" => {:url => url}.to_json)
         - if @edit[:new][:template_id]
-        - opts = [["<Choose>",nil]] + @edit[:new][:available_managers]
+        - opts = [["<Choose>", nil]] + @edit[:new][:available_managers]
           %tr
             %td.key= _('Provider')
             %td.wide
