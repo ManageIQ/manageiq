@@ -162,6 +162,7 @@ policy_events:
     :purge_window_size: 1000
 product:
   maindb: ExtManagementSystem
+  containers: true
 reporting:
   format_by_class:
     :Fixnum:
