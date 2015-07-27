@@ -49,7 +49,7 @@ gem "responders",                     "~> 2.0"
 gem 'secure_headers'
 gem 'mime-types'
 # Needed by the REST API
-gem "jbuilder",                       "~>2.0.7"
+gem "jbuilder",                       "~>2.3.1"
 gem "gettext_i18n_rails"
 gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
 gem 'acts_as_tenant',                 "~>0.3.9"
