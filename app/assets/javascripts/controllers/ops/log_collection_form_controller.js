@@ -1,4 +1,4 @@
-miqAngularApplication.controller('logCollectionFormController', ['$http', '$scope', 'serverId', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, serverId, $attrs, miqService, miqDBBackupService) {
+ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', '$scope', 'serverId', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, serverId, $attrs, miqService, miqDBBackupService) {
   var init = function() {
 
     $scope.logCollectionModel = {
@@ -17,7 +17,7 @@ miqAngularApplication.controller('logCollectionFormController', ['$http', '$scop
     $scope.logCollectionFormFieldsUrl = $attrs.logCollectionFormFieldsUrl;
     $scope.saveUrl = $attrs.saveUrl;
 
-    miqAngularApplication.$scope = $scope;
+    ManageIQ.angularApplication.$scope = $scope;
 
     if (serverId == 'new') {
       $scope.logCollectionModel.depot_name = '';

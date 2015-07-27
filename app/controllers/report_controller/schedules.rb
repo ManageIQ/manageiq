@@ -178,7 +178,7 @@ module ReportController::Schedules
       javascript_for_timer_type(params[:timer_typ]).each { |js| page << js }
 
       if params[:time_zone]
-        page << "miq_cal_dateFrom = new Date(#{(Time.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
+        page << "ManageIQ.calendar.calDateFrom = new Date(#{(Time.zone.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
         page << "miqBuildCalendar();"
         page << "$('#miq_date_1').val('#{@edit[:new][:start_date]}');"
         page << "$('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"

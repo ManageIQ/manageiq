@@ -53,7 +53,7 @@
 
     var importCallback = function() {
       $.get('dialog_accordion_json', function(data) {
-        miqDynatreeReplacement.replace(data.locals_for_render);
+        ManageIQ.dynatreeReplacement.replace(data.locals_for_render);
       });
     };
 

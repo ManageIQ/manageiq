@@ -65,19 +65,21 @@ function miqMenuEditor(id) {
 
 // Bind hover events to the tree's <a> tags
 function cfme_bind_hover_event(tree_name) {
+  var node_id;
+
   $("#" + tree_name + "box a").hover(function () {
     var node = $.ui.dynatree.getNode(this);
-    miqOnMouseIn_HostNet(node.data.key);
+    node_id = miqOnMouseIn_HostNet(node.data.key);
   }, function () {
     var node = $.ui.dynatree.getNode(this);
-    miqOnMouseOut_HostNet(node.data.key);
+    miqOnMouseOut_HostNet(node.data.key, node_id);
   });
 }
 
 // OnClick handler to run tree_select server method
 function cfmeOnClick_SelectTreeNode(id) {
   var rec_id = id.split('__');
-  var url = '/' + miq_controller + '/tree_select/?id=' + rec_id[0];
+  var url = '/' + ManageIQ.controller + '/tree_select/?id=' + rec_id[0];
   miqJqueryRequest(url, {beforeSend: true});
 }
 
@@ -186,11 +188,11 @@ function miqOnCheck_ProvTags(node, treename) {
 }
 
 function cfmeOnClick_SelectAETreeNode(id) {
-  miqJqueryRequest('/' + miq_controller + '/ae_tree_select/?id=' + id + '&tree=automate_tree');
+  miqJqueryRequest('/' + ManageIQ.controller + '/ae_tree_select/?id=' + id + '&tree=automate_tree');
 }
 
 function miqOnClick_IncludeDomainPrefix() {
-  miqJqueryRequest('/' + miq_controller + '/ae_tree_select_toggle?button=domain');
+  miqJqueryRequest('/' + ManageIQ.controller + '/ae_tree_select_toggle?button=domain');
 }
 
 function cfmeOnClick_SelectOptimizeTreeNode(id) {
@@ -245,16 +247,16 @@ function miqOnMouseIn_HostNet(id) {
     var top = getAbsoluteTop(node);
     $("#" + nid).css({top: (top - 220) + "px"}); // Set quad top location
     $("#" + nid).show(); // Show the quad div
-    last_id = nid; // Save current node id
+    return nid; // return current node id
   }
 }
 
 // For Host Network tree, clear selection and hide previously shown quad icon div
-function miqOnMouseOut_HostNet(id) {
+function miqOnMouseOut_HostNet(id, node_id) {
   if (hover_node_id(id)) {
     // div id exists
-    if (last_id) {
-      $("#" + last_id).hide(); // Hide the quad div
+    if (node_id) {
+      $("#" + node_id).hide(); // Hide the quad div
     }
   }
   return true;
@@ -270,8 +272,8 @@ function hover_node_id(id) {
 
 // OnClick handler for Host Network Tree
 function miqOnClick_HostNet(id) {
-  ids = id.split('|')[0].split('_'); // Break apart the node ids
-  nid = ids[ids.length - 1].split('-'); // Get the last part of the node id
+  var ids = id.split('|')[0].split('_'); // Break apart the node ids
+  var nid = ids[ids.length - 1].split('-'); // Get the last part of the node id
   switch (nid[0]) {
     case 'v':
       DoNav("/vm/show/" + nid[1]);
@@ -388,7 +390,7 @@ function cfmeOnDblClick_NoBaseExpand(node, event) {
 
 // OnClick handler for Server Roles Tree
 function miqOnClick_ServerRoles(id) {
-  typ = id.split('_')[0]; // Break apart the node ids
+  var typ = id.split('_')[0]; // Break apart the node ids
   switch (typ) {
     case 'server':
     case 'role':
@@ -400,7 +402,7 @@ function miqOnClick_ServerRoles(id) {
 
 // OnCheck handler for the belongsto tagging trees on the user edit screen
 function miqOnCheck_UserFilters(node, tree_name) {
-  tree_typ = tree_name.split('_')[0];
+  var tree_typ = tree_name.split('_')[0];
   var checked = Number(!node.isSelected());
   var url = check_url + node.data.key + "?check=" + checked + "&tree_typ=" + tree_typ;
   miqJqueryRequest(url);
@@ -430,6 +432,9 @@ function miqMenuChangeRow(grid, action, click_url) {
   var ids = folder_list_grid.getAllRowIds().split(',');
   var count = ids.length;
   var ret = false;
+  var temp_id;
+  var temp_text;
+
   switch (action) {
     case "up":
       folder_list_grid.moveRowUp(id);

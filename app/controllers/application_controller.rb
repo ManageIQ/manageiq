@@ -2104,7 +2104,7 @@ class ApplicationController < ActionController::Base
 #     page.replace_html("tag_box_div", :partial=>"layouts/tag_box")                                             # Replace the tag box contents
 #     page.visual_effect(:blind_down, "tag_box_div")  if session[:applied_tags] == nil && @applied_tags != nil  # Show div if not shown already
       page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")           # Replace the flash message
-      page << "if (typeof miq_toolbars != 'undefined'){";                 # Need to make sure toolbars exist on the screen before resetting buttons
+      page << "if (ManageIQ.toolbars !== null){"; # Make sure toolbars exist on the screen before resetting buttons
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
       page << "}";
       if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
@@ -2116,11 +2116,11 @@ class ApplicationController < ActionController::Base
       end
       if @grid_xml                                  # Replacing a grid
         page << "xml = \"#{j_str(@grid_xml)}\";"            # Set the XML data
-        page << "gtl_list_grid.clearAll(true);"     # Clear grid data, including headers
-        page << "gtl_list_grid.parse(xml);"         # Reload grid from XML
+        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);" # Clear grid data, including headers
+        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);" # Reload grid from XML
         if @sortcol
           dir = @sortdir ? @sortdir[0..2] : "asc"
-          page << "gtl_list_grid.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
+          page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
         end
         page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
         page.replace("pc_div_1", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>action_url, :db=>@view.db, :headers=>@view.headers})

@@ -705,7 +705,7 @@ class ProviderForemanController < ApplicationController
         r[:partial => 'layouts/x_adv_searchbox',
           :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}]
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
 
@@ -776,7 +776,7 @@ class ProviderForemanController < ApplicationController
 
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record ? @record.id : nil
+    presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = display_adv_searchbox

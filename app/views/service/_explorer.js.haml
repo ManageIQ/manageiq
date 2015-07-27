@@ -6,12 +6,12 @@
 - if exp
   -# See if any miq expression vars need to be set
   - if exp[:val1_type]
-    miq_val1_type = '#{exp[:val1_type]}';
+    ManageIQ.expEditor.first.type = '#{exp[:val1_type]}';
   - if exp[:val1_title]
-    miq_val1_title = '#{exp[:val1_title]}';
+    ManageIQ.expEditor.first.title = '#{exp[:val1_title]}';
   - if exp[:val2_type]
-    miq_val2_type = '#{exp[:val2_type]}';
+    ManageIQ.expEditor.second.type = '#{exp[:val2_type]}';
   - if exp[:val2_title]
-    miq_val2_title = '#{exp[:val2_title]}';
+    ManageIQ.expEditor.second.title = '#{exp[:val2_title]}';
 
 = render :partial => "shared/explorer", :locals => {:options => options}

@@ -385,12 +385,12 @@ class MiqRequestController < ApplicationController
         page << javascript_show("no_records_div")
         page << javascript_hide("records_div")
       end
-      page << "xml = \"#{j_str(@grid_xml)}\";"  # Set the XML data
-      page << "gtl_list_grid.clearAll(true);"               # Clear grid data, including headers
-      page << "gtl_list_grid.parse(xml);"                   # Reload grid from XML
+      page << "ManageIQ.grids.xml = \"#{j_str(@grid_xml)}\";"  # Set the XML data
+      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);"               # Clear grid data, including headers
+      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);"                   # Reload grid from XML
       if @sortcol
         dir = @sortdir ? @sortdir[0..2] : "asc"
-        page << "gtl_list_grid.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
+        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
       end
       page << "miqGridOnCheck(null, null, null);"           # Reset the center buttons
       page.replace("pc_div_1", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>"show_list", :db=>@view.db, :headers=>@view.headers})

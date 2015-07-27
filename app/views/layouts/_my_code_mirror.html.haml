@@ -23,7 +23,7 @@
   = stylesheet_link_tag "codemirror/themes/#{theme}"
 %script{:type => "text/javascript"}
   if (miqDomElementExists('#{text_area_id}')) {
-  miqEditor = CodeMirror.fromTextArea($('##{text_area_id}')[0],
+  ManageIQ.editor = CodeMirror.fromTextArea($('##{text_area_id}')[0],
   {mode: '#{mode}',
   lineNumbers: #{line_numbers},
   matchBrackets: true,
@@ -31,10 +31,10 @@
   readOnly: #{read_only ? "'nocursor'".html_safe : false}
   }
   );
-  miqEditor.on("change", function(cm, change) {miqSendOneTrans('#{url}')}),
-  miqEditor.on("blur", function(cm) {miqEditor.save()}),
+  ManageIQ.editor.on("change", function(cm, change) {miqSendOneTrans('#{url}')}),
+  ManageIQ.editor.on("blur", function(cm) {miqEditor.save()}),
   $('.CodeMirror-scroll')[0].style.height = '#{height}px';
   $('.CodeMirror-scroll')[0].style.width = '#{width}px';
   - unless no_focus
-    miqEditor.focus();
+    ManageIQ.editor.focus();
   }

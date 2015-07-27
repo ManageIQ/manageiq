@@ -139,7 +139,7 @@ module ReportController::Dashboards
       if params[:widget]
         page.replace("form_div", :partial=>"db_form")
         #url to be used in url in miqDropComplete method
-        page << "miq_widget_dd_url = 'report/db_widget_dd_done'"
+        page << "ManageIQ.widget.dashboardUrl = 'report/db_widget_dd_done'"
         page << "miqInitDashboardCols();"
       end
       if ["up","down"].include?(params[:button])
@@ -160,7 +160,7 @@ module ReportController::Dashboards
       if params[:widget]
         page.replace("form_div", :partial=>"db_form")
         #url to be used in url in miqDropComplete method
-        page << "miq_widget_dd_url = 'report/db_widget_dd_done'"
+        page << "ManageIQ.widget.dashboardUrl = 'report/db_widget_dd_done'"
         page << "miqInitDashboardCols();"
       end
       page << javascript_for_miq_button_visibility(changed)
@@ -182,7 +182,7 @@ module ReportController::Dashboards
       if params[:widget]
         page.replace("form_div", :partial=>"db_form")
         #url to be used in url in miqDropComplete method
-        page << "miq_widget_dd_url = 'report/db_widget_dd_done'"
+        page << "ManageIQ.widget.dashboardUrl = 'report/db_widget_dd_done'"
         page << "miqInitDashboardCols();"
       end
       page << javascript_for_miq_button_visibility(changed)

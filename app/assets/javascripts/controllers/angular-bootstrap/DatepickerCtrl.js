@@ -1,4 +1,4 @@
-miqAngularApplication.controller('DatepickerCtrl', function ($scope) {
+ManageIQ.angularApplication.controller('DatepickerCtrl', function ($scope) {
   if($scope.$parent.formId == "new")
     $scope.minDate = new Date();
 

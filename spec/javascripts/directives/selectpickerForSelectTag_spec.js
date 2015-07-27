@@ -1,6 +1,6 @@
 describe('selectpicker-for-select-tag initialization', function() {
   var $scope, form;
-  beforeEach(module('miqAngularApplication'));
+  beforeEach(module('ManageIQ.angularApplication'));
   beforeEach(inject(function($compile, $rootScope) {
     $scope = $rootScope;
     var element = angular.element(
