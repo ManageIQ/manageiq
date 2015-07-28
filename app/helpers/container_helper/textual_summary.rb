@@ -9,7 +9,7 @@ module ContainerHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems container_project container_replicator container_group container_image)
+    items = %w(ems container_project container_replicator container_group container_node container_image)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 

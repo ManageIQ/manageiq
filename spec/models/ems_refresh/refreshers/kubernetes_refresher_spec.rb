@@ -97,6 +97,10 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @container2.container_image.name.should == "kubernetes/heapster_influxdb"
     @container2.container_definition.should_not be_nil
     @container2.ext_management_system.should == @ems
+
+    @container.container_node.should have_attributes(
+      :name => "10.35.0.169"
+    )
   end
 
   def assert_specific_container_group
@@ -179,6 +183,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :lives_on_id   => @ovirt_vm.id,
     )
     @containernode.lives_on.should == @ovirt_vm
+    @containernode.containers.count.should == 0
   end
 
   def assert_specific_container_service
@@ -214,6 +219,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     )
 
     @containersrv.ext_management_system.should == @ems
+    @containersrv.container_nodes.count.should == 0
   end
 
   def assert_specific_container_replicator
@@ -230,6 +236,11 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @group.container_replicator.should_not be_nil
     @group.container_replicator.name.should == "monitoring-influx-grafana-controller"
     @replicator.ext_management_system.should == @ems
+
+    @replicator.container_nodes.count.should == 1
+    @replicator.container_nodes.first.should have_attributes(
+      :name => "10.35.0.169"
+    )
   end
 
   def assert_specific_container_project

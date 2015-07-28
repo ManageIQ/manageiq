@@ -11,7 +11,7 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems container_groups lives_on)
+    items = %w(ems container_services container_replicators container_groups containers lives_on)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 

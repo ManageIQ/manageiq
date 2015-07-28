@@ -6,6 +6,9 @@ class ContainerNode < ActiveRecord::Base
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many   :container_groups
   has_many   :container_conditions, :class_name => ContainerCondition, :as => :container_entity, :dependent => :destroy
+  has_many   :containers, :through => :container_groups
+  has_many   :container_services, -> { distinct }, :through => :container_groups
+  has_many   :container_replicators, -> { distinct }, :through => :container_groups
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
 
