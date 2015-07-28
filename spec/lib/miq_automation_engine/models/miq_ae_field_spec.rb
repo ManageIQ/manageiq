@@ -5,13 +5,13 @@ describe MiqAeField do
     let(:default_value) { nil }
     let(:miq_ae_field) do
       described_class.new(
-        :created_on    => Time.now,
+        :created_on    => Time.zone.now,
         :default_value => default_value,
         :display_name  => "display_name",
         :id            => 123,
         :method_id     => 321,
         :updated_by    => "me",
-        :updated_on    => Time.now
+        :updated_on    => Time.zone.now
       )
     end
 
@@ -47,7 +47,7 @@ describe MiqAeField do
     end
 
     it "should enforce necessary parameters upon create" do
-      lambda { @c1.ae_fields.new.save! }.should raise_error(ActiveRecord::RecordInvalid)
+      expect { @c1.ae_fields.new.save! }.to raise_error(ActiveRecord::RecordInvalid)
       # remove the invalid unsaved record in the association by clearing it
       @c1.ae_fields.clear
       f1 = @c1.ae_fields.build(:name => "TEST")
@@ -59,7 +59,7 @@ describe MiqAeField do
       ["fie ld1", "fie-ld1", "fie:ld1"].each do |name|
         f1 = @c1.ae_fields.build(:name => name)
         f1.should_not be_nil
-        lambda { f1.save! }.should raise_error(ActiveRecord::RecordInvalid)
+        expect { f1.save! }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
@@ -104,7 +104,7 @@ describe MiqAeField do
       f1 = @c1.ae_fields.build(:name => fname1)
       f1.save!.should be_true
       f2 = @c1.ae_fields.build(:name => fname2)
-      lambda { f2.save! }.should raise_error(ActiveRecord::RecordInvalid)
+      expect { f2.save! }.to raise_error(ActiveRecord::RecordInvalid)
 
       f2.destroy
       f1.destroy
@@ -117,37 +117,37 @@ describe MiqAeField do
       f2.save!.should be_true
       @c1.reload
       fields = @c1.ae_fields
-      fields.length.should == 1
-      fields[0].priority.should == 2
+      expect(fields.length).to eq(1)
+      expect(fields[0].priority).to eq(2)
 
       f1 = @c1.ae_fields.build(:name => fname1, :aetype => "attribute", :priority => 1)
       f1.save!.should be_true
       @c1.reload
 
       fields = @c1.ae_fields
-      fields.length.should == 2
-      fields[0].priority.should == 1
-      fields[1].priority.should == 2
+      expect(fields.length).to eq(2)
+      expect(fields[0].priority).to eq(1)
+      expect(fields[1].priority).to eq(2)
 
       f2.destroy
       f1.destroy
     end
 
     it "should validate datatypes" do
-      MiqAeField.available_datatypes.each { |datatype|
+      MiqAeField.available_datatypes.each do |datatype|
         f = @c1.ae_fields.build(:name => "fname_#{datatype}", :aetype => "attribute", :datatype => datatype)
         f.should be_valid
         f.save!.should be_true
-      }
-      @c1.reload.ae_fields.length.should == MiqAeField.available_datatypes.length
+      end
+      expect(@c1.reload.ae_fields.length).to eq(MiqAeField.available_datatypes.length)
 
       @c1.ae_fields.destroy_all
-      @c1.reload.ae_fields.length.should == 0
+      expect(@c1.reload.ae_fields.length).to eq(0)
 
-      ["foo", "bar"].each { |datatype|
+      %w(foo bar).each do |datatype|
         f = @c1.ae_fields.build(:name => "fname_#{datatype}", :aetype => "attribute", :datatype => datatype)
         f.should_not be_valid
-      }
+      end
     end
 
     it "should not change boolean value for substitute field when updating existing AE field record" do
