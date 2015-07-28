@@ -216,19 +216,18 @@ module ActsAsTaggable
   def vtag_list(options = {})
     ns = Tag.get_namespace(options)
 
-    subject = "self"
     predicate = ns.split("/")[2..-1] # throw away /virtual
 
     # p "ns: [#{ns}]"
     # p "predicate: [#{predicate.inspect}]"
 
     begin
-      value = eval(predicate.unshift(subject).join("."))
+      predicate.inject(self) do |target, method|
+        target.public_send method
+      end
     rescue NoMethodError => err
       return ""
     end
-
-    value
   end
 end
 
