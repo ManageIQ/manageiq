@@ -21,13 +21,19 @@
                                                              :id     => @record.id,
                                                              :button => "order")}');")
       %td{:valign => "top"}
-        %table.style1
-          %tr
-            %td.key= _('Name')
-            %td.notwide= @record.name
-          %tr
-            %td.key= _('Description')
-            %td.notwide= @record.description
-          %tr
-            %td.key= _('Long Description')
-            %td.wide= @record.long_description.to_s.html_safe
+        %form.form-horizontal.static
+          .form-group
+            %label.col-md-2.control-label
+              = _('Name')
+            .col-md-8
+              @record.name
+          .form-group
+            %label.col-md-2.control-label
+              = _('Description')
+            .col-md-8
+              @record.description
+          .form-group
+            %label.col-md-2.control-label
+              = _('Long Description')
+            .col-md-8
+              @record.long_description.to_s.html_safe
