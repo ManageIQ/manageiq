@@ -318,11 +318,19 @@ class MiqWorker < ActiveRecord::Base
     )
   end
 
+  def self.preload
+  end
+
+  def self.before_fork
+    preload
+  end
+
   def self.after_fork
     DRb.stop_service
   end
 
   def start
+    self.class.before_fork
     pid = fork do
       self.class.after_fork
       self.class::Runner.start_worker(command_line_params)

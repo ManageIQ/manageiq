@@ -5,12 +5,8 @@ module Vmdb
 
       Vmdb::Loggers.apply_config
 
-      if MiqEnvironment::Process.is_web_server_worker?
-        require 'hamlit-rails'
-
-        # Make these constants globally available
-        ::UiConstants
-      end
+      # For `rails server` invocation.  The server calls this before forking UI or Web Service Workers.
+      MiqUiWorker.preload if MiqEnvironment::Process.is_ui_worker_via_command_line?
 
       # When these classes are deserialized in ActiveRecord (e.g. EmsEvent, MiqQueue), they need to be preloaded
       require 'VimTypes'

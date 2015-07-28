@@ -13,6 +13,15 @@ module MiqWebServerWorkerMixin
       BINDING_ADDRESS
     end
 
+    def self.preload
+      super
+
+      require 'hamlit-rails'
+
+      # Make these constants globally available
+      ::UiConstants
+    end
+
     def self.rails_server
       VMDB::Config.new("vmdb").config.fetch_path(:server, :rails_server) || "thin"
     end
