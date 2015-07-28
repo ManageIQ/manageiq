@@ -109,4 +109,18 @@ describe MiqDatabase do
       end
     end
   end
+
+  context "#registration_organization_name" do
+    it "returns registration_organization when registration_organization_display_name is not available" do
+      db = FactoryGirl.create(:miq_database, :registration_organization => "foo")
+      expect(db.registration_organization_name).to eq("foo")
+    end
+
+    it "returns registration_organization_display_name when available" do
+      db = FactoryGirl.create(:miq_database,
+                              :registration_organization              => "foo",
+                              :registration_organization_display_name => "FOO")
+      expect(db.registration_organization_name).to eq("FOO")
+    end
+  end
 end
