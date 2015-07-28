@@ -612,6 +612,15 @@ function miqPassFields(url, args) {
   return url + '?' + $.param(args);
 }
 
+// Load XML/SWF charts data (non-IE)
+// This method is called by the XML/SWF charts when a chart is loaded into the DOM
+function Loaded_Chart(chart_id) {
+  if ((ManageIQ.browser != 'Explorer') &&
+      (typeof (ManageIQ.charts.chartData) != 'undefined')) {
+    doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
+  }
+}
+
 function doLoadChart(chart_id, chart_object) {
   var id_splitted = chart_id.split('_');
   var set = id_splitted[1];
