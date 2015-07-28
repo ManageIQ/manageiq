@@ -1004,8 +1004,8 @@ function miq_tabs_init(id, url) {
   });
   $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Refresh CodeMirror when its tab is toggled
-    if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(miqEditor) != 'undefined') {
-      miqEditor.refresh();
+    if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(ManageIQ.editor) != 'undefined') {
+      ManageIQ.editor.refresh();
     }
     // Show buttons according to the show/hide-buttons class
     if ($($(e.target).attr('href')).hasClass('show-buttons')) {

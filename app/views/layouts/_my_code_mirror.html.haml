@@ -32,7 +32,7 @@
   }
   );
   ManageIQ.editor.on("change", function(cm, change) {miqSendOneTrans('#{url}')}),
-  ManageIQ.editor.on("blur", function(cm) {miqEditor.save()}),
+  ManageIQ.editor.on("blur", function(cm) {ManageIQ.editor.save()}),
   $('.CodeMirror-scroll')[0].style.height = '#{height}px';
   $('.CodeMirror-scroll')[0].style.width = '#{width}px';
   - unless no_focus
