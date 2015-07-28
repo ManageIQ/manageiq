@@ -178,7 +178,7 @@ module ActsAsTaggable
         macro = subject.class.reflect_on_association(relationship.to_sym).macro
       end
       if macro == :has_one || macro == :belongs_to
-        value = subject.instance_eval([relationship, attr].join("."))
+        value = subject.public_send(relationship).public_send(attr)
         return object.downcase == value.to_s.downcase
       else
         subject.send(relationship).any? { |o| o.send(attr).to_s == object }
