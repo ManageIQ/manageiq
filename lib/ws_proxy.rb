@@ -46,10 +46,7 @@ class WsProxy
 
   def file_or_default(config_path, default)
     file_requested = vmdb_config.fetch_path(:server, *config_path)
-    if file_requested.present?
-      file_requested = File.join(Rails.root, cert_file_requested)
-      return file_requested if File.file?(file_requested)
-    end
+    return file_requested if file_requested.present? && File.file?(file_requested)
     default
   end
 
@@ -63,8 +60,8 @@ class WsProxy
       run_options[:'ssl-target'] = nil if ssl_target
 
       if encrypt
-        run_options[:cert] = file_or_default([:server, :websocket, :cert], DEFAULT_CERT_FILE)
-        run_options[:key]  = file_or_default([:server, :websocket, :key],  DEFAULT_KEY_FILE)
+        run_options[:cert] = file_or_default([:websocket, :cert], DEFAULT_CERT_FILE)
+        run_options[:key]  = file_or_default([:websocket, :key],  DEFAULT_KEY_FILE)
       end
 
       run_options
@@ -81,7 +78,7 @@ class WsProxy
   end
 
   def ws_proxy
-    "#{Rails.root}/extras/noVNC/websockify/websocketproxy.py"
+    File.join(Rails.root, 'extras/noVNC/websockify/websocketproxy.py')
   end
 
   def defaults
