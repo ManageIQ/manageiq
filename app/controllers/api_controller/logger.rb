@@ -1,4 +1,4 @@
-module ApiHelper
+class ApiController
   module Logger
     def api_log_debug?
       $api_log.debug?

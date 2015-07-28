@@ -1,4 +1,4 @@
-module ApiHelper
+class ApiController
   module Renderer
     #
     # Helper proc for rendering a collection of type specified.
@@ -161,14 +161,14 @@ module ApiHelper
     def validate_response_format
       accept = request.headers["Accept"]
       return :json if accept.blank? || accept.include?("json") || accept.include?("*/*")
-      raise ApiController::UnsupportedMediaTypeError, "Invalid Response Format #{accept} requested"
+      raise UnsupportedMediaTypeError, "Invalid Response Format #{accept} requested"
     end
 
     private
 
     def resource_search(id, type, klass)
       res = Rbac.filtered([klass.find(id)], :userid => @auth_user).first
-      raise ApiController::Forbidden, "Access to the resource #{type}/#{id} is forbidden" unless res
+      raise Forbidden, "Access to the resource #{type}/#{id} is forbidden" unless res
       res
     end
 
@@ -177,7 +177,7 @@ module ApiHelper
         if is_subcollection
           send("#{type}_query_resource", parent_resource_obj)
         elsif by_tag_param
-          klass.find_tagged_with(:all => by_tag_param, :ns  => ApiController::TAG_NAMESPACE)
+          klass.find_tagged_with(:all => by_tag_param, :ns  => TAG_NAMESPACE)
         else
           klass.all
         end
@@ -290,7 +290,7 @@ module ApiHelper
     end
 
     def attr_virtual?(object, attr)
-      return false if ApiController::ID_ATTRS.include?(attr)
+      return false if ID_ATTRS.include?(attr)
       primary = attr_split(attr).first
       return false unless object && object.respond_to?(:attributes) && object.respond_to?(primary)
       is_reflection     = object.class.reflection_with_virtual(primary.to_sym)
@@ -299,7 +299,7 @@ module ApiHelper
     end
 
     def attr_physical?(object, attr)
-      return true if ApiController::ID_ATTRS.include?(attr)
+      return true if ID_ATTRS.include?(attr)
       primary = attr_split(attr).first
       return true unless object && object.respond_to?(:attributes) && object.respond_to?(primary)
       object.class.columns_hash.key?(primary)
@@ -337,7 +337,7 @@ module ApiHelper
       return [] unless params['attributes']
 
       physical_attributes = params['attributes'].split(",").select { |attr| attr_physical?(resource, attr) }
-      physical_attributes.present? ? ApiController::ID_ATTRS | physical_attributes : []
+      physical_attributes.present? ? ID_ATTRS | physical_attributes : []
     end
 
     #

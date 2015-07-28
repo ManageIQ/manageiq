@@ -1,4 +1,4 @@
-module ApiHelper
+class ApiController
   module ErrorHandler
     #
     # Class Methods
@@ -6,7 +6,7 @@ module ApiHelper
 
     module ClassMethods
       def rescue_from_api_errors
-        ApiController::ERROR_MAPPING.each do |error, type|
+        ERROR_MAPPING.each do |error, type|
           rescue_from error do |e|
             api_exception_type(type, e)
           end

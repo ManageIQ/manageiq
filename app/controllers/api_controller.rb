@@ -30,14 +30,18 @@ class ApiController < ApplicationController
     ApiController::UnsupportedMediaTypeError => :unsupported_media_type
   }
 
-  include ApiHelper
-
   #
   # Support for REST API
   #
+  include_concern 'Parameters'
   include_concern 'Parser'
   include_concern 'Manager'
   include_concern 'Action'
+  include_concern 'Logger'
+  include_concern 'ErrorHandler'
+  include_concern 'Normalizer'
+  include_concern 'Renderer'
+  include_concern 'Results'
 
   #
   # Support for API Collections
@@ -66,7 +70,7 @@ class ApiController < ApplicationController
   #
   # Api Controller Hooks
   #
-  extend ApiHelper::ErrorHandler::ClassMethods
+  extend ErrorHandler::ClassMethods
   respond_to :json
   rescue_from_api_errors
   before_filter :require_api_user_or_token, :except => [:handle_options_request]

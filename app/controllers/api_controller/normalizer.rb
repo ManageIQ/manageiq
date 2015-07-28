@@ -1,4 +1,4 @@
-module ApiHelper
+class ApiController
   module Normalizer
     #
     # Object or Hash Normalizer
