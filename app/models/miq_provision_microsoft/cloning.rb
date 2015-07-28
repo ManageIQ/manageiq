@@ -95,7 +95,7 @@ module MiqProvisionMicrosoft::Cloning
   end
 
   def template_ps_script
-    "(Get-SCVMTemplate -Name #{source.name})"
+    "(Get-SCVMTemplate -Name '#{source.name}')"
   end
 
   def logical_network_ps_script
