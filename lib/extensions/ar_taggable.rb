@@ -178,7 +178,7 @@ module ActsAsTaggable
         macro = subject.class.reflect_on_association(relationship.to_sym).macro
       end
       if macro == :has_one || macro == :belongs_to
-        value = subject.instance_eval([relationship, attr].join("."))
+        value = subject.public_send(relationship).public_send(attr)
         return object.downcase == value.to_s.downcase
       else
         subject.send(relationship).any? { |o| o.send(attr).to_s == object }
@@ -216,19 +216,18 @@ module ActsAsTaggable
   def vtag_list(options = {})
     ns = Tag.get_namespace(options)
 
-    subject = "self"
     predicate = ns.split("/")[2..-1] # throw away /virtual
 
     # p "ns: [#{ns}]"
     # p "predicate: [#{predicate.inspect}]"
 
     begin
-      value = eval(predicate.unshift(subject).join("."))
+      predicate.inject(self) do |target, method|
+        target.public_send method
+      end
     rescue NoMethodError => err
       return ""
     end
-
-    value
   end
 end
 
