@@ -16,7 +16,7 @@ describe MiqAeInstance do
       @c2 = MiqAeClass.find(@c1.id)
       @c2.should_not be_nil
       @c2.ae_instances.should_not be_nil
-      @c2.ae_instances.count.should == 1
+      expect(@c2.ae_instances.count).to eq(1)
       i1.destroy
     end
 
@@ -29,7 +29,7 @@ describe MiqAeInstance do
       ["insta nce1", "insta:nce1"].each do |iname|
         i1 = @c1.ae_instances.build(:name => iname)
         i1.should_not be_nil
-        lambda { i1.save! }.should raise_error(ActiveRecord::RecordInvalid)
+        expect { i1.save! }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
@@ -37,7 +37,7 @@ describe MiqAeInstance do
       ["insta-nce1", "insta.nce1"].each do |iname|
         i1 = @c1.ae_instances.build(:name => iname)
         i1.should_not be_nil
-        lambda { i1.save! }.should_not raise_error
+        expect { i1.save! }.to_not raise_error
       end
     end
 
@@ -51,27 +51,27 @@ describe MiqAeInstance do
 
       # Set/Get a value that doesn't yet exist, by field name
       i1.get_field_value(@fname1).should be_nil
-      lambda { i1.set_field_value(@fname1, value1) }.should_not raise_error
-      i1.get_field_value(@fname1).should == value1
+      expect { i1.set_field_value(@fname1, value1) }.to_not raise_error
+      expect(i1.get_field_value(@fname1)).to eq(value1)
 
       # SetGet a value that already exists, by field name
-      lambda { i1.set_field_value(@fname1, value2) }.should_not raise_error
-      i1.get_field_value(@fname1).should == value2
+      expect { i1.set_field_value(@fname1, value2) }.to_not raise_error
+      expect(i1.get_field_value(@fname1)).to eq(value2)
 
       # Set/Get a value of a field that does not exist, by field name
-      lambda { i1.set_field_value(fname_bad, value1) }.should raise_error(MiqAeException::FieldNotFound)
-      lambda { i1.get_field_value(fname_bad) }.should raise_error(MiqAeException::FieldNotFound)
+      expect { i1.set_field_value(fname_bad, value1) }.to raise_error(MiqAeException::FieldNotFound)
+      expect { i1.get_field_value(fname_bad) }.to raise_error(MiqAeException::FieldNotFound)
 
       i1.ae_values.destroy_all
 
       # Set/Get a value that doesn't yet exist, by field
       i1.get_field_value(@f1).should be_nil
-      lambda { i1.set_field_value(@f1, value1) }.should_not raise_error
-      i1.get_field_value(@f1).should == value1
+      expect { i1.set_field_value(@f1, value1) }.to_not raise_error
+      expect(i1.get_field_value(@f1)).to eq(value1)
 
       # SetGet a value that already exists, by field
-      lambda { i1.set_field_value(@f1, value2) }.should_not raise_error
-      i1.get_field_value(@f1).should == value2
+      expect { i1.set_field_value(@f1, value2) }.to_not raise_error
+      expect(i1.get_field_value(@f1)).to eq(value2)
 
       # Set/Get a value of a field from a different class
       c2 = MiqAeClass.create(:namespace => "TEST", :name => "instance_test2")
@@ -79,12 +79,12 @@ describe MiqAeInstance do
       f2 = c2.ae_fields.create(:name => fname2)
 
       #   by field name
-      lambda { i1.set_field_value(fname2, value1) }.should raise_error(MiqAeException::FieldNotFound)
-      lambda { i1.get_field_value(fname2)         }.should raise_error(MiqAeException::FieldNotFound)
+      expect { i1.set_field_value(fname2, value1) }.to raise_error(MiqAeException::FieldNotFound)
+      expect { i1.get_field_value(fname2)         }.to raise_error(MiqAeException::FieldNotFound)
 
       #   by field
-      lambda { i1.set_field_value(f2, value1) }.should raise_error(MiqAeException::FieldNotFound)
-      lambda { i1.get_field_value(f2)         }.should raise_error(MiqAeException::FieldNotFound)
+      expect { i1.set_field_value(f2, value1) }.to raise_error(MiqAeException::FieldNotFound)
+      expect { i1.get_field_value(f2)         }.to raise_error(MiqAeException::FieldNotFound)
 
       f2.destroy
       c2.destroy
@@ -103,20 +103,20 @@ describe MiqAeInstance do
       value2 = "value2"
 
       # Set/Get a value that doesn't yet exist, by field name
-      MiqAePassword.decrypt(f1.default_value).should == default_value
+      expect(MiqAePassword.decrypt(f1.default_value)).to eq(default_value)
       f1.default_value = nil
       f1.default_value.should be_nil
       f1.default_value = default_value
-      MiqAePassword.decrypt(f1.default_value).should == default_value
+      expect(MiqAePassword.decrypt(f1.default_value)).to eq(default_value)
 
       # Set/Get a value that doesn't yet exist, by field name
       i1.get_field_value(fname1).should be_nil
-      lambda { i1.set_field_value(fname1, value1) }.should_not raise_error
-      MiqAePassword.decrypt(i1.get_field_value(fname1)).should == value1
+      expect { i1.set_field_value(fname1, value1) }.to_not raise_error
+      expect(MiqAePassword.decrypt(i1.get_field_value(fname1))).to eq(value1)
 
       # SetGet a value that already exists, by field name
-      lambda { i1.set_field_value(fname1, value2) }.should_not raise_error
-      MiqAePassword.decrypt(i1.get_field_value(fname1)).should == value2
+      expect { i1.set_field_value(fname1, value2) }.to_not raise_error
+      expect(MiqAePassword.decrypt(i1.get_field_value(fname1))).to eq(value2)
 
       i1.destroy
       f1.destroy
@@ -129,16 +129,16 @@ describe MiqAeInstance do
       f2 = @c1.ae_fields.create(:name => fname2)
       i1 = @c1.ae_instances.create(:name => iname1)
 
-      lambda { i1.set_field_value(f2, value1) }.should_not raise_error
-      i1.get_field_value(f2).should == value1
+      expect { i1.set_field_value(f2, value1) }.to_not raise_error
+      expect(i1.get_field_value(f2)).to eq(value1)
 
       f2_id = f2.id
       f2.destroy
       i1.reload
 
       MiqAeValue.where(:field_id => f2_id).should be_empty
-      lambda { i1.set_field_value(fname2, value1) }.should raise_error(MiqAeException::FieldNotFound)
-      lambda { i1.get_field_value(fname2)         }.should raise_error(MiqAeException::FieldNotFound)
+      expect { i1.set_field_value(fname2, value1) }.to raise_error(MiqAeException::FieldNotFound)
+      expect { i1.get_field_value(fname2)         }.to raise_error(MiqAeException::FieldNotFound)
     end
 
     it "should return editable as false if the parent namespace/class is not editable" do
@@ -161,11 +161,11 @@ describe MiqAeInstance do
       described_class.new(
         :ae_class           => ae_class,
         :ae_values          => ae_values,
-        :created_on         => Time.now,
+        :created_on         => Time.zone.now,
         :id                 => 123,
         :updated_by         => "me",
         :updated_by_user_id => 321,
-        :updated_on         => Time.now
+        :updated_on         => Time.zone.now
       )
     end
 
@@ -218,7 +218,7 @@ describe MiqAeInstance do
       }
 
       res = MiqAeInstance.copy(options)
-      res.count.should eq(2)
+      expect(res.count).to eq(2)
     end
 
     it "copy instances under same namespace raise error when class exists" do
@@ -241,7 +241,7 @@ describe MiqAeInstance do
       }
 
       res = MiqAeInstance.copy(options)
-      res.count.should eq(2)
+      expect(res.count).to eq(2)
     end
   end
 

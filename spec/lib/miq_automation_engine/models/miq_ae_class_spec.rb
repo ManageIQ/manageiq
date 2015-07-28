@@ -2,7 +2,6 @@ require "spec_helper"
 
 include AutomationSpecHelper
 describe MiqAeClass do
-
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:namespace_id) }
 
@@ -13,11 +12,11 @@ describe MiqAeClass do
   it { should_not allow_value("cla:ss1").for(:name) }
 
   it "should not create class without namespace" do
-    lambda { MiqAeClass.new(:name => "TEST").save! }.should raise_error(ActiveRecord::RecordInvalid)
+    expect { MiqAeClass.new(:name => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "should not create class without name" do
-    lambda { MiqAeClass.new(:namespace => "TEST").save! }.should raise_error(ActiveRecord::RecordInvalid)
+    expect { MiqAeClass.new(:namespace => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "should set the updated_by field on save" do
@@ -29,7 +28,7 @@ describe MiqAeClass do
     c1 = MiqAeClass.new(:namespace => "TEST", :name => "oleg")
     c1.should_not be_nil
     c1.save!.should be_true
-    lambda { MiqAeClass.new(:namespace => "TEST", :name => "OLEG").save! }.should raise_error(ActiveRecord::RecordInvalid)
+    expect { MiqAeClass.new(:namespace => "TEST", :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
     c2 = MiqAeClass.new(:namespace => "PROD", :name => "oleg")
     c2.should_not be_nil
     c2.save!.should be_true
@@ -43,7 +42,7 @@ describe MiqAeClass do
     c1.destroy
     MiqAeField.where(:class_id => c1_id).should be_empty
     MiqAeInstance.where(:class_id => c1_id).should be_empty
-    # TODO Check for miq_ae_values
+    # TODO: Check for miq_ae_values
   end
 
   it "should return editable as false if the parent namespace is not editable" do
@@ -213,11 +212,11 @@ describe MiqAeClass do
         :ae_fields    => ae_fields,
         :ae_instances => [ae_instance1, ae_instance2],
         :ae_methods   => [ae_method1, ae_method2],
-        :created_on   => Time.now,
+        :created_on   => Time.zone.now,
         :id           => 123,
         :namespace_id => 321,
         :updated_by   => "me",
-        :updated_on   => Time.now
+        :updated_on   => Time.zone.now
       )
     end
 
