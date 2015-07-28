@@ -15,6 +15,7 @@
 .tags
 /data/
 /productization
+/vmdb/
 BUILD
 ca/root
 coverage/
