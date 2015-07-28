@@ -7,11 +7,11 @@
     %p
     %table.style1
       %tr
-        %td.key=_('From Domain')
+        %td.key= _('From Domain')
         %td.wide
           = @edit[:domain_name]
       %tr
-        %td.key=_('To Domain')
+        %td.key= _('To Domain')
         %td.wide
           - if @edit[:domains].length == 1
             = @edit[:domains].first.last
@@ -22,13 +22,13 @@
               "data-miq_observe" => {:url => url}.to_json)
       - if @edit[:selected_items].length == 1 && @edit[:new][:domain].to_i == @edit[:domain_id]
         %tr
-          %td.key=_('New Name')
+          %td.key= _('New Name')
           %td.wider
             = text_field_tag("new_name", @edit[:new][:new_name],
               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 
       %tr
-        %td.key=_('Copy to same path')
+        %td.key= _('Copy to same path')
         %td
           = check_box_tag("override_source",
                           value   = "1",
@@ -37,7 +37,7 @@
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
       - if %w(MiqAeInstance MiqAeMethod).include?(@edit[:typ].to_s)
         %tr
-          %td.key=_('Replace items if they already exist?')
+          %td.key= _('Replace items if they already exist?')
           %td
             = check_box_tag("override_existing",
                            value   = "1",
@@ -46,7 +46,7 @@
                            "data-miq_observe_checkbox" => {:url => url}.to_json)
       - unless @edit[:new][:override_source]
         %tr
-          %td.key=_('Namespace')
+          %td.key= _('Namespace')
           %td.wider
             = text_field_tag("namespace",
                              @edit[:new][:namespace],

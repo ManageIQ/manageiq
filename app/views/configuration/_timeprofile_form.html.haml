@@ -3,11 +3,11 @@
   = render :partial => "layouts/flash_msg"
   - disabled = @tp_restricted
 
-  %h3=_('Time Profile Information')
+  %h3= _('Time Profile Information')
   %table.style1
     %tbody
       %tr
-        %td.key=_('Description')
+        %td.key= _('Description')
         %td.wider
           = text_field_tag("description",
                            @edit[:new][:description],
@@ -18,7 +18,7 @@
                                                   :url      => url}.to_json)
       - if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
         %tr
-          %td.key=_('Scope')
+          %td.key= _('Scope')
           %td
             = select_tag("profile_type",
                          options_for_select([["#{_('All Users')}", "global"],
@@ -31,7 +31,7 @@
   %table.style1
     %tbody
       %tr
-        %td.key=_('Timezone')
+        %td.key= _('Timezone')
         %td
           = select_tag("profile_tz",
                        options_for_select([["<#{_('Determine at Run Time')}>", nil]] + ALL_TIMEZONES,
@@ -42,7 +42,7 @@
                        "data-miq_observe"     => {:url => url}.to_json)
       - if ["super_administrator", "administrator"].include?(session[:userrole])
         %tr#rollup_daily_tr{:style => ("display:none;" unless @edit[:new][:profile][:tz])}
-          %td.key=_('Roll Up Daily Performance')
+          %td.key= _('Roll Up Daily Performance')
           %td
             - rollup_disabled = !@timeprofile.miq_reports.empty? || disabled
             = check_box_tag("rollup_daily",
@@ -51,7 +51,7 @@
                             :disabled                   => rollup_disabled,
                             "data-miq_observe_checkbox" => {:url => url}.to_json)
             - unless @timeprofile.miq_reports.empty?
-              .note=_("In use by %s reports, cannot be disabled") % @timeprofile.miq_reports.count
+              .note= _("In use by %s reports, cannot be disabled") % @timeprofile.miq_reports.count
 
 
   - if ["timeprofile_new", "timeprofile_copy", "timeprofile_create"].include?(controller.action_name)
@@ -78,7 +78,7 @@
 
   - unless @timeprofile.miq_reports.empty?
     %fieldset
-      %h3=_('Reports Currently Using This Time Profile')
+      %h3= _('Reports Currently Using This Time Profile')
       %table.table.table-striped.table-bordered.table-hover
         %tr
           %td
@@ -86,8 +86,8 @@
               %thead
                 %tr
                   %th.icon
-                  %th.nowrap=_('Name')
-                  %th.nowrap=_('Title')
+                  %th.nowrap= _('Name')
+                  %th.nowrap= _('Title')
               %tbody
                 - @timeprofile.miq_reports.sort_by { |a| a.name.downcase }.each do |r|
                   %tr

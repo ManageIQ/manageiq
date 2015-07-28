@@ -34,7 +34,7 @@
         %td
           = h(format_timezone(@miq_request.stamped_on))
       %tr
-        %td.key=_("Reason")
+        %td.key= _("Reason")
         - if @edit && @edit[:stamp_typ]
           %td.wide
             = text_field_tag("reason", @edit[:reason],

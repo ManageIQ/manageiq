@@ -1,10 +1,10 @@
 -# Parameters:
 -#   widget -- MiqWidget object
 .modboxin.report_widget
-  %div.mc{:id => "dd_w#{widget.id}_box",
+  .mc{:id => "dd_w#{widget.id}_box",
     :style => @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display: none;' : ''}
     - if widget.contents_for_user(session[:userid]).contents.blank?
-      =_('No Report data found')
+      = _('No Report data found')
       \. . .
     - else
       = widget.contents_for_user(session[:userid]).contents.html_safe

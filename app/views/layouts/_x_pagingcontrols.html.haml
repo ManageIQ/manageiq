@@ -9,7 +9,7 @@
     - action_method = action_url.split("/").first
     - action_id = action_url.split("/").last
     - db ||= nil
-  - url = action_id ? url_for(:action=>action_method, :id=>action_id) : url_for(:action=>action_url)
+  - url = action_id ? url_for(:action => action_method, :id => action_id) : url_for(:action => action_url)
   - @pc_occ ||= 0; @pc_occ+=1
   %div{:id => "pc_div_#{@pc_occ.to_s}"}
     %table{:border      => "0",
@@ -53,8 +53,8 @@
                 - if pages[:current] > 1
                   - if @ajax_paging_buttons
                     = link_to(image_tag('/images/toolbars/first.png',
-                                        :border=>"0",
-                                        :class=>"rollover small"),
+                                        :border => "0",
+                                        :class => "rollover small"),
                               {:action => action_url,
                                :id     => action_id,
                                :page   => 1},
@@ -77,8 +77,8 @@
                                         :border => "0",
                                         :class => "rollover small"),
                               {:action => action_method,
-                               :id=>action_id,
-                               :page=>1})
+                               :id => action_id,
+                               :page => 1})
                     = link_to(image_tag('/images/toolbars/previous.png',
                                         :border => "0",
                                         :class  => "rollover small"),
@@ -97,38 +97,38 @@
                               {:action => action_url,
                                :page   => pages[:current] - 1})
                 - else
-                  = image_tag('/images/toolbars/first.png', :class=>"dimmed small")
-                  = image_tag('/images/toolbars/previous.png', :class=>"dimmed small")
+                  = image_tag('/images/toolbars/first.png', :class => "dimmed small")
+                  = image_tag('/images/toolbars/previous.png', :class => "dimmed small")
                 - if pages[:current] < pages[:total]
                   - if @ajax_paging_buttons
-                    = link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
-                      {:action=>action_url, :id=>action_id, :page=>pages[:current] + 1},
+                    = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
+                      {:action => action_url, :id => action_id, :page => pages[:current] + 1},
                       "data-miq_sparkle_on" => true,
                       "data-miq_sparkle_off" => true,
-                      :remote=>true,
-                      :title=>"")
+                      :remote => true,
+                      :title => "")
                     -#
-                    = link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
-                      {:action=>action_url, :id=>action_id, :page=>pages[:total]},
+                    = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
+                      {:action => action_url, :id => action_id, :page => pages[:total]},
                       "data-miq_sparkle_on" => true,
                       "data-miq_sparkle_off" => true,
-                      :remote=>true,
-                      :title=>"")
+                      :remote => true,
+                      :title => "")
                   - elsif action_id
-                    = link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
-                      {:action=>action_method, :id=>action_id, :page=>pages[:current] + 1})
+                    = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
+                      {:action => action_method, :id => action_id, :page => pages[:current] + 1})
                     -#
-                    = link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
-                      {:action=>action_method, :id=>action_id, :page=>pages[:total]})
+                    = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
+                      {:action => action_method, :id => action_id, :page => pages[:total]})
                   - else
-                    = link_to(image_tag('/images/toolbars/next.png', :class=>"rollover small"),
-                      {:action=>action_url, :page=>pages[:current] + 1})
+                    = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
+                      {:action => action_url, :page => pages[:current] + 1})
                     -#
-                    = link_to(image_tag('/images/toolbars/last.png', :class=>"rollover small"),
-                      {:action=>action_url, :page=>pages[:total]})
+                    = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
+                      {:action => action_url, :page => pages[:total]})
                 - else
-                  = image_tag('/images/toolbars/next.png', :class=>"dimmed small")
-                  = image_tag('/images/toolbars/last.png', :class=>"dimmed small")
+                  = image_tag('/images/toolbars/next.png', :class => "dimmed small")
+                  = image_tag('/images/toolbars/last.png', :class => "dimmed small")
               %td{:style => "padding: 4px; padding-right: 20px", :valign => "middle"}
                 - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
                 - end_number = pages[:perpage] * pages[:current]

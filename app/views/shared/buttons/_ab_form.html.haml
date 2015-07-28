@@ -4,7 +4,7 @@
     - if @resolve[:uri] && Hash[*@resolve[:target_classes].flatten].invert[@resolve[:new][:target_class]] == @edit[:new][:target_class]
 
       %li
-        -t = _("Paste object details for use in a Button.")
+        - t = _("Paste object details for use in a Button.")
         = link_to(image_tag("/images/toolbars/paste.png", :border => "0", :class  => "", :alt => t),
           {:action => "resolve", :button => "paste"},
           "data-miq_sparkle_on"  => true,

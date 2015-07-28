@@ -2,7 +2,7 @@
   %html
     %head
       %title
-        =_("VM %s Remote Console") % @record.name
+        = _("VM %s Remote Console") % @record.name
       :javascript
         function connect() {
           mks.Connect("#{host}", 902, "#{cfgFile}", "#{ticket}", "#{ticket}");
@@ -46,7 +46,7 @@
   %html
     %head
       %title
-        =_("VM %s Remote Console") % @record.name
+        = _("VM %s Remote Console") % @record.name
     :javascript
       const IMessageListener = Components.interfaces.xpcomIMessageListener;
       const IGrabStateListener = Components.interfaces.xpcomIGrabStateListener;
@@ -142,5 +142,5 @@
     %object#mks{:height => "100%", :type => "application/x-vmware-mks;version=#{@mks_version}", :width => "100%"}
 
     #install{:style => "display:none"}
-      =_('This page requires the VMware MKS plugin. Install the plugin and try again.')
+      = _('This page requires the VMware MKS plugin. Install the plugin and try again.')
     %iframe#pluginDownload{:name => "pluginDownload", :style => "display:none"}

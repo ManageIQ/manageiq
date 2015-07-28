@@ -2,7 +2,7 @@
 - observe = {:url => url}.to_json
 #profile_export_div
   = render :partial => "layouts/flash_msg"
-  %h3=_("Import")
+  %h3= _("Import")
   - if @sb[:hide]
     %table{:width => "100%"}
       %tr
@@ -38,7 +38,7 @@
 
   - if @sb[:hide] == false
     %hr
-    %h3=_("Export")
+    %h3= _("Export")
     -# title = @sb[:dbtype] == "pp" ? "Profiles" : "Policies"
     - case @sb[:dbtype]
     - when "pp"
@@ -50,13 +50,13 @@
 
     %table.style1
       %tr
-        %td.key=_("Export:")
+        %td.key= _("Export:")
         %td{:align => "left", :valign => "top"}
           = select_tag('dbtype',
             options_for_select([[_("Policy Profiles"), "pp"], [_("Policies"), "p"], [_("Alerts"), "al"]], @sb[:dbtype]),
             "data-miq_observe" => observe)
       %tr
-        %td.key{:align => "left", :valign => "top"}=_("Available %s:") % title
+        %td.key{:align => "left", :valign => "top"}= _("Available %s:") % title
         %td{:align => "left", :valign => "top"}
           %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
             = select_tag('choices_chosen[]',

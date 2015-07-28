@@ -3,7 +3,7 @@
   - image_pfx = "/images/toolbars/"
   = render(:partial => 'vm_common/policy_options')
   %fieldset
-    %h3=_('Policy Simulation Details')
+    %h3= _('Policy Simulation Details')
     - squash_state = session[:squash_open] ? "false" : "true"
     - squash_title = session[:squash_open] ? _("Collapse All") : _("Expand All")
     = link_to(image_tag("/images/toolbars/squashed-all-#{squash_state}.png",
@@ -23,4 +23,4 @@
       :cookie_id_prefix            => "edit_treeOpenStatex",
       :open_close_all_on_dbl_click => true})
 
-  =_('* Items in <font color="red"><i>red italics</i></font> do not change the outcome of the scope or expression.').html_safe
+  = _('* Items in <font color="red"><i>red italics</i></font> do not change the outcome of the scope or expression.').html_safe

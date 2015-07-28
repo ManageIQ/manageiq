@@ -91,7 +91,7 @@
             %td
               %h3
                 %br
-                = "#{ui_lookup(:model=>@compare_vm.class.base_model.to_s)} #{@compare_vm.name}"
+                = "#{ui_lookup(:model => @compare_vm.class.base_model.to_s)} #{@compare_vm.name}"
             - ccharts = @compare_vm_charts
             - cchart_data = @compare_vm_chart_data
             - if ccharts && cchart_data.length > 0

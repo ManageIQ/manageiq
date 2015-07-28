@@ -23,7 +23,7 @@
                                                       :notfound => :titleize))
       - i += 1
   %hr
-  %div#discover_credentials{:style => ("display:none" unless display = @discover_type_checked.include?("ipmi"))}
+  #discover_credentials{:style => ("display:none" unless display = @discover_type_checked.include?("ipmi"))}
     = render :partial => "layouts/discover_credentials",
              :locals  => {:label => "IPMI Credentials"}
   %h3= _("Subnet Range")

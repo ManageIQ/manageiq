@@ -291,8 +291,8 @@
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -#  Display notes if available
             = field_hash[:notes]
-          %div.note
-            =_("* Only a single value can be assigned from these Tag Categories")
+          .note
+            = _("* Only a single value can be assigned from these Tag Categories")
       - elsif [:attached_ds, :iso_image_id, :placement_availability_zone, :placement_cluster_name, :placement_dc_name, :placement_ds_name, :placement_ems_name, :placement_host_name, :placement_rp_name, :pxe_image_id, :windows_image_id, :src_configured_system_ids, :src_host_ids, :src_vm_id, :sysprep_custom_spec, :customization_template_id].include?(field)
         -# ### Pull Down fields that need to be sorted on description
         %td.wide
@@ -469,7 +469,7 @@
             = options[:start_date]
         </tr><tr>
         %td.key
-          =_("Starting Time (%s)") % get_timezone_abbr("user")
+          = _("Starting Time (%s)") % get_timezone_abbr("user")
         %td
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field

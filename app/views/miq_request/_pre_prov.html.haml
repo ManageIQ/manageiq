@@ -2,7 +2,7 @@
 #pre_prov_div
   - typ = request.parameters[:controller] == "vm_cloud" ? ui_lookup(:table => "template_cloud") : ui_lookup(:table => "template_infra")
   %h3
-    =_("Provision %s based on the selected %s") % [ui_lookup(:tables => request.parameters[:controller]), typ]
+    = _("Provision %s based on the selected %s") % [ui_lookup(:tables => request.parameters[:controller]), typ]
   %table.table.table-bordered.table-hover.table-striped.table-selectable
     %thead
       %tr

@@ -1,4 +1,4 @@
--if @more
+- if @more
   #login_more_div
     .form-group
       %label.col-md-3.control-label
@@ -16,5 +16,5 @@
                              :onkeypress   => "if(miqEnterPressed(event)) miqAjaxAuth();",
                              :autocomplete => "off",
                              :class        => "form-control")
--else
+- else
   #login_more_div{:style => "display:none;"}

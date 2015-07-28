@@ -1,10 +1,10 @@
 - url = url_for(:action => 'create_ld_field_changed', :id => @sb[:ccs_id])
 #form_div
   = render :partial => "layouts/flash_msg"
-  %h3=_('Options')
+  %h3= _('Options')
   %table.admintable
     %tr
-      %td.key=_('Name')
+      %td.key= _('Name')
       %td
         = text_field_tag("ld_name",
           @edit[:new][:ld_name],
@@ -12,16 +12,16 @@
           "data-miq_focus"   => true,
           "data-miq_observe" => {:interval =>'.5', :url => url}.to_json)
     %tr
-      %td.key=_('Aggregate (free space)')
+      %td.key= _('Aggregate (free space)')
       %td
         = select_tag("aggregate_name",
-          options_for_select([["<#{_('Choose')}>",nil]] + @edit[:aggregates].invert.sort,
+          options_for_select([["<#{_('Choose')}>", nil]] + @edit[:aggregates].invert.sort,
           @edit[:new][:aggregate_name]),
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           "data-miq_observe"     => {:url => url}.to_json)
     %tr
-      %td.key=_('Size (GB)')
+      %td.key= _('Size (GB)')
       %td
         = text_field_tag("ld_size",
           @edit[:new][:ld_size],

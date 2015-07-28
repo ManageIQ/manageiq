@@ -7,7 +7,7 @@
 .row.pull-right
   .col-md-12.col-lg-12
     #buttons_on{:style => "display:#{@changed ? 'block' : 'none'}"}
-      -if ajax_buttons
+      - if ajax_buttons
         - if serialize
           = button_tag(_('Save'),
             :class   => 'btn btn-primary',

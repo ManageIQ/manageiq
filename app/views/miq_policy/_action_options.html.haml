@@ -5,53 +5,53 @@
 #action_options_div
   - case @edit[:new][:action_type]
   - when "email"
-    %h3=_('E-mail Settings')
+    %h3= _('E-mail Settings')
     %table.style1
       %tr
         %td.key
-          =_('From E-mail Address')
+          = _('From E-mail Address')
           %br
-          =_('(leave blank for default)')
+          = _('(leave blank for default)')
         %td
           = text_field_tag("from",
             @edit[:new][:options][:from],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
-          =_("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
+          = _("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
       %tr
-        %td.key=_('To E-mail Address')
+        %td.key= _('To E-mail Address')
         %td
           = text_field_tag("to",
             @edit[:new][:options][:to],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
   - when "set_custom_attribute"
-    %h3=_('Custom Attribute Settings')
+    %h3= _('Custom Attribute Settings')
     %table.style1
       %tr
-        %td.key=_('Attribute Name')
+        %td.key= _('Attribute Name')
         %td
           = text_field_tag("attribute",
             @edit[:new][:options][:attribute],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
       %tr
-        %td.key=_('Value to Set')
+        %td.key= _('Value to Set')
         %td
           = text_field_tag("value",
             @edit[:new][:options][:value],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
   - when "tag"
-    %h3=_('Applied Tag')
+    %h3= _('Applied Tag')
     %table.style1
       %tr
-        %td.key=_('Tag to Apply:')
+        %td.key= _('Tag to Apply:')
         %td
           %span#tag_selected
             = h(@tag_selected)
     %hr
-    %h3=_('Select a Tag to Apply')
+    %h3= _('Select a Tag to Apply')
     %table.style1
       %tr
         %td
@@ -67,41 +67,41 @@
               :cfme_changes_check          => true,
               :open_close_all_on_dbl_click => true})
   - when "create_snapshot"
-    %h3=_("Snapshot Settings")
+    %h3= _("Snapshot Settings")
     %table.style1
       %tr
-        %td.key=_("Snapshot Name")
+        %td.key= _("Snapshot Name")
         %td
           = text_field_tag("snapshot_name",
             @edit[:new][:options][:name],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
   - when "delete_snapshots_by_age"
-    %h3=_("Snapshot Age Settings")
+    %h3= _("Snapshot Age Settings")
     %table.style1
       %tr
-        %td.key=_("Delete if Older than")
+        %td.key= _("Delete if Older than")
         %td
           = select_tag('snapshot_age',
             options_for_select([["<#{_('Choose')}>", nil]] + SNAPSHOT_AGES.invert.to_a.sort_by(&:last),
             @edit[:new][:options][:age]),
             "data-miq_observe" => observe)
   - when "reconfigure_memory"
-    %h3=_("Reconfigure Memory")
+    %h3= _("Reconfigure Memory")
     %table.style1
       %tr
-        %td.key=_("Memory Size")
+        %td.key= _("Memory Size")
         %td
           = text_field_tag("memory_value",
             @edit[:new][:options][:value],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
-          =_('(Enter the value between 4 - 65636 MB)')
+          = _('(Enter the value between 4 - 65636 MB)')
   - when "reconfigure_cpus"
-    %h3=_("Reconfigure CPU")
+    %h3= _("Reconfigure CPU")
     %table.style1
       %tr
-        %td.key=_("Number of CPU's")
+        %td.key= _("Number of CPU's")
         %td
           = select_tag('cpu_value',
             options_for_select(%w(1 2 4),
@@ -109,7 +109,7 @@
             :style             => "width:50px",
             "data-miq_observe" => observe)
   - when "custom_automation"
-    %h3=_("Custom Automation")
+    %h3= _("Custom Automation")
     %table.style1
       %tr
         %td
@@ -119,16 +119,16 @@
             :field_changed_url           => "action_field_changed"})
   - when "evaluate_alerts"
 
-    %h3=_("Select Alerts to be Evaluated")
+    %h3= _("Select Alerts to be Evaluated")
     %table.style1
       %tbody
         %tr
           %td
             %table#formtest.form{:width => "100%"}
               %tr
-                %td{:align => "left"}=_('Available Alerts:')
+                %td{:align => "left"}= _('Available Alerts:')
                 %td
-                %td.widthed{:align => "left"}=_(' Selected Alerts:')
+                %td.widthed{:align => "left"}= _(' Selected Alerts:')
               %tr
                 %td.widthed{:align => "left", :valign => "top"}
                   %span#choices_chosen_div
@@ -162,17 +162,17 @@
                       :size     => 8,
                       :id       => "members_chosen")
   - when "snmp_trap"
-    %h3=_("SNMP Trap Settings")
+    %h3= _("SNMP Trap Settings")
     %table.style1
       %tr
-        %td.key=title_for_host
+        %td.key= title_for_host
         %td
           = text_field_tag("host",
             @edit[:new][:options][:host],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
       %tr
-        %td.key=_("Version")
+        %td.key= _("Version")
         %td
           = select_tag('snmp_version',
             options_for_select(%w(v1 v2),
@@ -190,13 +190,13 @@
             @edit[:new][:options][:trap_id],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
-    %h3=_("Variables")
+    %h3= _("Variables")
     %table.style1
       %thead
         %tr
-          %th=_('Object ID')
-          %th=_('Type')
-          %th=_('Value')
+          %th= _('Object ID')
+          %th= _('Type')
+          %th= _('Value')
       - 10.times do |i|
         - f = "oid__#{i + 1}"
         - t = "var_type__#{i + 1}"
@@ -224,10 +224,10 @@
               :disabled          => val_disabled,
               "data-miq_observe" => observe_with_interval)
   - when "assign_scan_profile"
-    %h3=_("Analysis Profiles")
+    %h3= _("Analysis Profiles")
     %table.style1
       %tr
-        %td.key=_("Analysis Profiles")
+        %td.key= _("Analysis Profiles")
         %td
           = select_tag('analysis_profile',
           options_for_select([["<#{_('Choose')}>", nil]] + @edit[:new][:scan_profiles],
@@ -235,17 +235,17 @@
           :style             => "width:150px",
           "data-miq_observe" => observe)
   - when "inherit_parent_tags"
-    %h3=_("Inherit Tags Settings")
+    %h3= _("Inherit Tags Settings")
     %table.style1
       %tr
-        %td.key=_("Parent Type")
+        %td.key= _("Parent Type")
         %td
           = select_tag('parent_type',
             options_for_select(@edit[:tag_parent_types],
             @edit[:new][:options][:parent_type]),
             "data-miq_observe" => observe)
       %tr
-        %td.key=_("Categories")
+        %td.key= _("Categories")
         %td
           %table
             - @edit[:cats].each_slice(3) do |cats|
@@ -256,10 +256,10 @@
                     = check_box_tag("cat_#{cat.first}", "1", checked, "data-miq_observe_checkbox" => observe)
                     = h(cat.last)
   - when "remove_tags"
-    %h3=_("Remove Tags Settings")
+    %h3= _("Remove Tags Settings")
     %table.style1
       %tr
-        %td.key=_("Categories")
+        %td.key= _("Categories")
         %td
           %table
             - @edit[:cats].each_slice(3) do |cats|

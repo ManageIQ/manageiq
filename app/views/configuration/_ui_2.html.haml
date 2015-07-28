@@ -133,12 +133,12 @@
                     %ul#toolbars= render_view_buttons(:emsinfra, @edit[:new][:views][:emsinfra])
               - if role_allows(:feature => "ems_cluster_show_list")
                 %tr
-                  %td.key=title_for_clusters
+                  %td.key= title_for_clusters
                   %td
                     %ul#toolbars= render_view_buttons(:emscluster, @edit[:new][:views][:emscluster])
               - if role_allows(:feature => "host_show_list")
                 %tr
-                  %td.key=title_for_hosts
+                  %td.key= title_for_hosts
                   %td
                     %ul#toolbars= render_view_buttons(:host, @edit[:new][:views][:host])
               - if role_allows(:feature => "vandt_accord")      ||
