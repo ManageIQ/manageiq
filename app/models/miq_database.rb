@@ -85,6 +85,10 @@ class MiqDatabase < ActiveRecord::Base
     MiqTask.wait_for_taskid(RegistrationSystem.verify_credentials_queue).task_results if auth_type == :registration
   end
 
+  def registration_organization_name
+    registration_organization_display_name || registration_organization
+  end
+
   private
 
   def registration_server_url_is_valid
