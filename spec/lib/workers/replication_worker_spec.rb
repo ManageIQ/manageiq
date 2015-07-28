@@ -32,7 +32,7 @@ describe ReplicationWorker do
     end
 
     it "should be alive if heartbeat within threshold" do
-      Timecop.freeze(Time.now.utc)
+      Timecop.freeze(Time.zone.now.utc)
 
       expect(@worker.child_process_recently_active?).to be_true
     end
