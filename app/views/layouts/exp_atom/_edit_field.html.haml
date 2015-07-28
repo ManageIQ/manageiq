@@ -87,7 +87,8 @@
 
       - elsif [:date, :datetime].include?(@edit[@expkey][:val1][:type])
         - if @edit[@expkey][:val1][:date_format] == 's'
-          = text_field_tag("miq_date_1_0", (@edit[@expkey][:exp_value][0] ? @edit[@expkey][:exp_value][0].split(" ").first : ""),
+          = datepicker_input_tag("miq_date_1_0",
+            @edit[@expkey][:exp_value][0] ? @edit[@expkey][:exp_value][0].split(" ").first : "",
             :readonly               => "true",
             :size                   => 10,
             "data-miq_observe_date" => {:interval => '.5', :url => url}.to_json)
@@ -112,7 +113,8 @@
           = _('THROUGH')
           %br
           - if @edit[@expkey][:val1][:date_format] == 's'
-            = text_field_tag("miq_date_1_1", (@edit[@expkey][:exp_value][1] ? @edit[@expkey][:exp_value][1].split(" ").first : ""),
+            = datepicker_input_tag("miq_date_1_1",
+              @edit[@expkey][:exp_value][1] ? @edit[@expkey][:exp_value][1].split(" ").first : "",
               :readonly               => "true",
               :size                   => 10,
               "data-miq_observe_date" => {:interval => '.5', :url => url}.to_json)

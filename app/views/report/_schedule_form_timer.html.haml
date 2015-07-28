@@ -49,7 +49,7 @@
       %td.key
         = _("Starting Date")
       %td#start_date
-        = text_field_tag("miq_date_1", @edit[:new][:start_date],
+        = datepicker_input_tag("miq_date_1", @edit[:new][:start_date],
           :class                  => "css1",
           :readonly               => "true",
           "data-miq_observe_date" => {:url => url}.to_json)

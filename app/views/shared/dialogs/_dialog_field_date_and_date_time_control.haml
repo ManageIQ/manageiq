@@ -1,13 +1,13 @@
 - if field.type == "DialogFieldDateControl"
   - if edit
-    = text_field_tag("miq_date__#{field.name}", field.value, date_tag_options(field, url))
+    = datepicker_input_tag("miq_date__#{field.name}", field.value, date_tag_options(field, url))
   - else
     = field.value
 
 - if field.type == "DialogFieldDateTimeControl"
   - date_val = field.refresh_json_value
   - if edit
-    = text_field_tag("miq_date__#{field.name}", date_val[:date], date_tag_options(field, url))
+    = datepicker_input_tag("miq_date__#{field.name}", date_val[:date], date_tag_options(field, url))
   - else
     = date_val[:date]
 

@@ -1,6 +1,7 @@
 module ApplicationHelper
   include_concern 'Dialogs'
   include_concern 'PageLayouts'
+  include_concern 'FormTags'
   include Sandbox
   include CompressedIds
 

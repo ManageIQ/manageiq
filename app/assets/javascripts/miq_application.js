@@ -907,44 +907,18 @@ function miqBuildCalendar() {
   var all = $('input[id^=miq_date_]');
 
   all.each(function () {
-    // Attach dhtmlxcalendars to each one
-    var el = $(this);
-    var cal = new dhtmlxCalendarObject(el.attr('id'));
-    cal.setDateFormat("%m/%d/%Y");
+    var element = $(this);
 
-    if ((!el.val()) && ManageIQ.calendar.calDateTo !== null) {
-      cal.setDate(ManageIQ.calendar.calDateTo);
-    } else {
-      cal.setDate(this.value);
+    if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
+      element.datepicker({startDate: ManageIQ.calendar.calDateFrom});
     }
 
-    cal.setSkin("dhx_skyblue");
-    cal.hideTime();
-    cal.setPosition('right');
-    // start week from sunday, default is (1) monday
-    cal.setWeekStartDay(7);
-
-    if ((typeof ManageIQ.calendar.calDateFrom != "undefined") &&
-        (typeof ManageIQ.calendar.calDateTo != "undefined")) {
-      cal.setSensitiveRange(ManageIQ.calendar.calDateFrom, ManageIQ.calendar.calDateTo);
-    } else if ((typeof ManageIQ.calendar.calDateFrom != "undefined") &&
-               (typeof ManageIQ.calendar.calDateTo == "undefined")) {
-      cal.setSensitiveRange(ManageIQ.calendar.calDateFrom);
-    }
-    if (typeof miq_cal_skipDays != "undefined" &&
-        miq_cal_skipDays != null &&
-        miq_cal_skipDays) {
-      cal.setInsensitiveRange(miq_cal_skipDays);
+    if (typeof ManageIQ.calendar.calDateTo != "undefined") {
+      element.datepicker({endDate: ManageIQ.calendar.calDateTo});
     }
 
-    // Create an observer for the date field if the html5 attr is specified
-    if (this.getAttribute('data-miq_observe_date')) {
-      el.change(function () {
-      miqSendDateRequest(el);
-    });
-      cal.attachEvent("onClick", function () {
-      miqSendDateRequest(el);
-      });
+    if (typeof miq_cal_skipDays != "undefined") {
+      element.datepicker({daysOfWeekDisabled: miq_cal_skipDays});
     }
   });
 }

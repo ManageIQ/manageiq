@@ -32,7 +32,7 @@
             = _("Date")
           %td.notwide{:style => "padding-right: 5px;"}
             - v = h(@tl_options[:typ] == "Hourly" ? @tl_options[:hourly_date] : @tl_options[:daily_date])
-            = text_field_tag("miq_date_1", v,
+            = datepicker_input_tag("miq_date_1", v,
               :readonly               => "true",
               "data-miq_sparkle_on"   => true,
               "data-miq_observe_date" => {:url => url}.to_json)

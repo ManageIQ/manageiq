@@ -9,7 +9,7 @@
           = _("Date")
         - if @usage_options[:date]
           %td.wide{:style => "padding-right: 5px;"}
-            = text_field_tag("miq_date_1", @usage_options[:date],
+            = datepicker_input_tag("miq_date_1", @usage_options[:date],
               :readonly               => "true",
               "data-miq_sparkle_on"   => true,
               "data-miq_sparkle_off"  => true,
@@ -34,7 +34,7 @@
                   "data-miq_observe"     => {:url => url}.to_json)
         - else
           %td.wide{:style => "padding-right: 5px;"}
-            = text_field_tag("miq_date_1", @usage_options[:date],
+            = datepicker_input_tag("miq_date_1", @usage_options[:date],
               :readonly               => "true",
               "data-miq_sparkle_on"   => true,
               "data-miq_sparkle_off"  => true,

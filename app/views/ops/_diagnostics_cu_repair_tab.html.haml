@@ -19,14 +19,14 @@
     %tr
       %td.key= _("Start Date")
       %td.wide{:style => "padding-right: 5px"}
-        = text_field_tag("miq_date_1",         |
+        = datepicker_input_tag("miq_date_1",   |
           @edit[:new][:start_date],            |
           :readonly               => true,     |
           "data-miq_observe_date" => url_json) |
     %tr
       %td.key= _("End Date")
       %td.wide{:style => "padding-right: 5px"}
-        = text_field_tag("miq_date_2",         |
+        = datepicker_input_tag("miq_date_2",   |
           @edit[:new][:end_date],              |
           :readonly               => true,     |
           "data-miq_observe_date" => url_json) |
