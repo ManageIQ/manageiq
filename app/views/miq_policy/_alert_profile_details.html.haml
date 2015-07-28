@@ -127,9 +127,9 @@
                     %tbody
                       - objs = []
                       - aa[:objects].each do |o|
-                        - if o.is_a?(EmsFolder)
+                        - if o.kind_of?(EmsFolder)
                           - objs.push("#{o.ext_management_system.name}/#{o.folder_path(:exclude_root_folder => true, :exclude_non_display_folders => true)}")
-                        - elsif o.is_a?(ResourcePool)
+                        - elsif o.kind_of?(ResourcePool)
                           - objs.push(o.absolute_path(:exclude_hidden => true))
                         - else
                           - objs.push(o.name)

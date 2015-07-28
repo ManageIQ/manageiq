@@ -37,7 +37,7 @@
               %td{:style => "width:35px", :align => "center"}
                 %b= _('AM:')
               - hours.length.times do |i|
-                %td{:style => "width:35px", :align => "center"} #{hours[i-1]}-#{hours[i]}
+                %td{:style => "width:35px", :align => "center"} #{hours[i - 1]}-#{hours[i]}
             %tr
               %td{:align => "center"}
                 = check_box_tag("all_hours",
@@ -60,7 +60,7 @@
               %td{:align => "center"}
                 %b= _('PM:')
               - hours.length.times do |i|
-                %td{:align => "center"} #{hours[i-1]}-#{hours[i]}
+                %td{:align => "center"} #{hours[i - 1]}-#{hours[i]}
             %tr
               %td &nbsp;
               %td &nbsp;

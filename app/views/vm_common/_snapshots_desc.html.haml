@@ -1,12 +1,8 @@
 - if session[:snap_selected].nil? && @record.snapshots.count > 0
   - selected_id = @record.snapshots.first
-  - display_name = selected_id[:name]
 - else
-  - if session[:snap_selected].nil?
-    - display_name = _("Basic Information")
-  - else
+  - unless session[:snap_selected].nil?
     - selected_id = @snap_selected
-    - display_name = selected_id[:name]
 
 #desc_content.desc_content
   - if session[:snap_selected].present? || @record.snapshots.count > 0

@@ -14,8 +14,7 @@
       %tr
         %td.key{:style => "width: 150px;"}= _('Show Host Events')
         %td
-          = check_box_tag("tl_#{typ}_hosts", value = "1",
-            checked=@sb[:bottlenecks][:tl_options][:hosts],
+          = check_box_tag("tl_#{typ}_hosts", "1", @sb[:bottlenecks][:tl_options][:hosts],
             "data-miq_sparkle_on"       => true,
             "data-miq_sparkle_off"      => true,
             "data-miq_observe_checkbox" => {:url => url}.to_json)

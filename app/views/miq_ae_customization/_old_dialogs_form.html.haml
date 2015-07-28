@@ -20,7 +20,7 @@
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
       %td.key= _('Type')
-      - dialog_types = @dialog.dialog_type ? MiqDialog::DIALOG_TYPES.sort :  [["<#{_('Choose')}>", nil]] + MiqDialog::DIALOG_TYPES.sort
+      - dialog_types = @dialog.dialog_type ? MiqDialog::DIALOG_TYPES.sort : [["<#{_('Choose')}>", nil]] + MiqDialog::DIALOG_TYPES.sort
       %td.wide
         = select_tag('dialog_type',
           options_for_select(dialog_types,

@@ -86,7 +86,7 @@
                   %th
                     = _('User')
                   %th
-                    = Dictionary::gettext("MiqGroup", :type => :model, :notfound => :titleize)
+                    = Dictionary.gettext("MiqGroup", :type => :model, :notfound => :titleize)
               - if @sb[:rep_details][rep]
                 %tr{:title => _('Click to view details'), :onclick => "cfmeDynatree_activateNode('reports_tree','xx-#{nodes[1].to_i}_xx-#{nodes[2].to_i}-#{nodes[3].to_i}_rep-#{to_cid(@sb[:rep_details][rep]["id"])}');"}
                   %td.narrow

@@ -24,8 +24,7 @@
                   "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 
                 = select_tag("mem_typ",
-                  options_for_select(["MB", "GB"],
-                  @edit[:new][:mem_typ]),
+                  options_for_select(%w(MB GB), @edit[:new][:mem_typ]),
                   "data-miq_sparkle_on" => true,
                   "data-miq_sparkle_off" => true,
                   "data-miq_observe" => {:url => url}.to_json)
@@ -55,7 +54,7 @@
                 - else
                   = @edit[:cpu_options][0]
 
-  - if !@edit[:explorer]
+  - unless @edit[:explorer]
     #buttons_div
       %table{:width => "100%"}
         %tr

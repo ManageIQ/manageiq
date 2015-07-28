@@ -12,7 +12,7 @@
               %td{:align => "left", :valign => "top"}
                 = select_tag('seq_fields[]',
                   options_for_select(@edit[:new][:domain_order], @selected),
-                  {:multiple => true, :style => "width: 450px", :size => 20, :id => "seq_fields"})
+                  :multiple => true, :style => "width: 450px", :size => 20, :id => "seq_fields")
               %td{:width => "30", :align => "left", :valign => "middle"}
                 = link_image_if(:cond => (@edit[:new][:domain_order].length < 2),
                   :image                => "/images/toolbars/up.png",

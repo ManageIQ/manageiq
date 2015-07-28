@@ -1,9 +1,14 @@
 - url = url_for(:action => 'dialog_field_changed', :id => @edit[:rec_id] || "new") if @edit
 - dialog_mode = @edit[:dialog_mode] if @edit
-- edit = case dialog_mode
-- when :reconfigure then field.reconfigurable
-- when :review      then false
-- else                   !@edit.nil?
+
+- case dialog_mode
+- when :reconfigure
+  - edit = field.reconfigurable
+- when :review
+  - edit = false
+- else
+  - edit = !@edit.nil?
+
 %tr{:id => "field_#{field.id}_tr"}
   %td.key{:title => field.description}
     = field.label

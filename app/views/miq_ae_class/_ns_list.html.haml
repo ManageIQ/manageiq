@@ -25,7 +25,7 @@
         - unless @ae_ns.domain?
           .form-group
             %label.col-md-2.control-label
-              = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+              = Dictionary.gettext('fqname', :type => :column, :notfound => :titleize)
             .col-md-8
               = h(@sb[:namespace_path])
         .form-group

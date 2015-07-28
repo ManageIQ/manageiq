@@ -23,7 +23,7 @@
         %td
         %td
         %td
-      - @categories.each do | cat |
+      - @categories.each do |cat|
         %tr
           - if cat[:default] == "t" || cat[:default].to_s == "1"
             %td.narrow{:title => _("Category '%s' cannot be deleted") % cat[:name]}
@@ -33,7 +33,7 @@
           - else
             %td.narrow{:onclick => remote_function(:url => {:action => 'category_delete',
               :id      => cat[:id]},
-              :confirm =>_("Are you sure you want to delete category '%s'?") % cat[:name]),
+              :confirm => _("Are you sure you want to delete category '%s'?") % cat[:name]),
               :title   => _("Click to delete this category")}
               %ul.icons.list-unstyled
                 %li

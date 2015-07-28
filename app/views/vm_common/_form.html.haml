@@ -54,11 +54,11 @@
         %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
           = select_tag('kids_chosen[]',
             options_for_select(@edit[:new][:kids].sort),
-            {:multiple => true,
-              :style => "width:auto; min-width:375px; border: 0px;",
-              :size => 15,
-              :style => "width: 400px",
-              :id => "kids_chosen"})
+            :multiple => true,
+            :style => "width:auto; min-width:375px; border: 0px;",
+            :size => 15,
+            :style => "width: 400px",
+            :id => "kids_chosen")
       %td{:width => "20"}
         = link_to(image_tag("/images/toolbars/right.png",
             :class => "rollover small",
@@ -99,10 +99,10 @@
         %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
           = select_tag('choices_chosen[]',
             options_for_select(@edit[:choices].sort),
-            {:multiple => true,
-              :style => "width: 400px; min-width:375px; border: 0px;",
-              :size => 15,
-              :id => "choices_chosen" })
+            :multiple => true,
+            :style => "width: 400px; min-width:375px; border: 0px;",
+            :size => 15,
+            :id => "choices_chosen")
 
   - unless @edit[:explorer]
     = render(:partial => '/layouts/edit_form_buttons', :locals  => {:action_url => "edit_vm", :ajax_buttons => true, :record_id => @record.id})

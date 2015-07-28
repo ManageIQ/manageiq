@@ -14,7 +14,7 @@
             :locals  => {:title => _("PXE Image Menus"), :items => textual_group_pxe_image_menus}
         - if false
           -# this code can be uncommented when we have multiple pxe_menus
-          - if !@ps.pxe_menus.empty?
+          - unless @ps.pxe_menus.empty?
             %hr
             %h3= _('PXE Image Menus')
             %table.table.table-bordered.table-striped
@@ -22,7 +22,7 @@
                 %tr
                   %th= _('Filename')
               %tbody
-                - @ps.pxe_menus.sort_by{ |a| a.file_name }.each do |menu|
+                - @ps.pxe_menus.sort_by(&:file_name).each do |menu|
                   %tr
                     %td
                       = h(menu.file_name)

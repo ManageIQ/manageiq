@@ -33,7 +33,7 @@
               = search.search_type == "user" ? "My #{description}" : "Global #{description}"
 
           - else
-            - if @selected_schedule.filter.is_a?(MiqExpression)
+            - if @selected_schedule.filter.kind_of?(MiqExpression)
               %p.form-control-static
                 - @exp_table.each do |token|
                   - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)

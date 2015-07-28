@@ -10,8 +10,8 @@
       .form-horizontal#login_div
         = render(:partial => "layouts/spinner", 
                  :locals  => {:login => true})
-        #invalid_sso_credentials_flash(style="display: none;")
-          #flash_text_div(title="Click to remove message")
+        #invalid_sso_credentials_flash{:style => "display: none;"}
+          #flash_text_div{:title => _("Click to remove message")}
             .alert.alert-danger
               %span.pficon-layered
                 %span.pficon.pficon-error-octagon

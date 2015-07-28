@@ -26,7 +26,7 @@
                   = link_to_remote(h(t), {:url => {:action => "mytag_delete", :tag => t},
                     :confirm => _("Deleting the MyTag '%s' will also unassign it from all items, are you sure?") % t},
                     :id => "mytag_#{t}",
-                    :title => _("Delete and unassign MyTag '%s'") % s )
+                    :title => _("Delete and unassign MyTag '%s'") % s)
     - unless session[:mytags].empty?
       %br
         = _('* Click on any MyTag to permanently delete and unassign it.')

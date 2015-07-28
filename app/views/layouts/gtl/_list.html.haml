@@ -292,7 +292,7 @@
               - elsif col == "group_count" && row[col].nil?
                 %center
                   = h(row[col])
-              - elsif row[col].is_a?(Time) && row[col].nil?
+              - elsif row[col].kind_of?(Time) && row[col].nil?
                 %center
                   - unless row[col].blank?
                     - if view.db == "MiqSchedule"

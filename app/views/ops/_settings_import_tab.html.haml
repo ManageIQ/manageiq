@@ -1,5 +1,5 @@
 - if @sb[:active_tab] == "settings_import"
-  - url = url_for(:action =>'upload_form_field_changed', :id => @sb[:active_tab].split('_').last)
+  - url = url_for(:action => 'upload_form_field_changed', :id => @sb[:active_tab].split('_').last)
   %h3= _("Messages")
   = render(:partial => "layouts/flash_msg", :locals => {:click_remove => false})
   %hr/
@@ -10,7 +10,7 @@
         %td.key= _("Type")
         %td
           = select_tag('upload_type',
-            options_for_select([["<Choose>", nil], [title_for_host, "host"], ["Vm", "vm"]],
+            options_for_select([["<#{_('Choose')}>", nil], [title_for_host, "host"], [_("Vm"), "vm"]],
             @edit[:new][:upload_type]),
             "data-miq_observe" => {:url => url}.to_json)
       - if @edit[:new][:upload_type]

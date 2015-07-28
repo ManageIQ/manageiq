@@ -84,7 +84,7 @@
                       :javascript
                         miqSelectPickerEvent("#{combo_name}", "#{combo_url}")
                     - elsif fname == 'substitute'
-                      = check_box_tag("fields_#{fname}_#{i}", value = "1", checked = field['substitute'],
+                      = check_box_tag("fields_#{fname}_#{i}", "1", field['substitute'],
                         "data-miq_observe_checkbox" => {:url => url}.to_json)
                     - elsif fname == 'default_value'
                       - default_value = field['default_value']
@@ -134,7 +134,7 @@
                       miqSelectPickerEvent("#{combo_name}", "#{combo_url}")
                   - elsif fname == 'substitute'
                     - checked = !session[:field_data].blank? && session[:field_data][:substitute]
-                    = check_box_tag("field_#{fname}", value = "1", checked = checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
+                    = check_box_tag("field_#{fname}", "1", checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
                   - elsif fname == 'default_value'
                     = text_field_tag("field_default_value", session[:field_data][:default_value],
                       :style             => session[:field_data][:datatype] == "password" ? "display:none" : "",

@@ -1,5 +1,5 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@sm.id || "new"}")
-- validate_url ||= ["new", "create"].include?(controller.action_name) ? "create" : "update"
+- validate_url ||= %w(new create).include?(controller.action_name) ? "create" : "update"
 
 #form_div
   = render :partial => "layouts/flash_msg"
@@ -87,7 +87,7 @@
         = render(:partial => "/layouts/form_buttons_verify",
           :locals => {:validate_url => validate_url, :record => @sm})
 
-  - if ["new", "create"].include?(controller.action_name)
+  - if %w(new create).include?(controller.action_name)
     %table{:width => '100%'}
       %tr
         %td{:align => 'right'}

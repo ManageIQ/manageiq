@@ -22,7 +22,7 @@
           @edit[:new][:authentication][:mode]),
           "data-miq_observe" => {:url => url}.to_json)
   %hr/
-  = hidden_div_if(!["ldap", "ldaps"].include?(@edit[:new][:authentication][:mode]), :id => "ldap_div") do
+  = hidden_div_if(!%w(ldap ldaps).include?(@edit[:new][:authentication][:mode]), :id => "ldap_div") do
     %h3= _("LDAP Settings")
     %table.style1
       %tr
@@ -107,7 +107,7 @@
             :placeholder       => placeholder_if_present(@edit[:new][:authentication][:amazon_secret]),
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %hr/
-  = hidden_div_if(!["ldap", "ldaps"].include?(@edit[:new][:authentication][:mode]), :id => "ldap_role_div") do
+  = hidden_div_if(!%w(ldap ldaps).include?(@edit[:new][:authentication][:mode]), :id => "ldap_role_div") do
     %h3= _("Role Settings")
     %table.style1
       %tr

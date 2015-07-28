@@ -4,7 +4,7 @@
     %tr
       %td{:align => "center", :valign => "top"}
         - if @record.picture
-          = image_tag("#{@record.picture.url_path}?#{rand(99_999_999).to_s}",
+          = image_tag("#{@record.picture.url_path}?#{rand(99_999_999)}",
                       :style => "width:100px; height:100px;")
         - else
           = image_tag("/images/icons/new/service_template.png",
@@ -12,7 +12,6 @@
         %br
         %br
         #buttons
-          - res_acts = @record.resource_actions.find_all { |ra| ra.action.downcase.eql? "provision" }
           = button_tag(_("Order"),
                        :class   => "btn btn-default",
                        :alt     => t = _("Order this Service"),

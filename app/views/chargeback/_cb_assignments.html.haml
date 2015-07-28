@@ -15,7 +15,7 @@
       %tr
         %td.key= _('Tag Category')
         %td
-          - options = Array(@edit[:cb_assign][:cats].invert).sort_by{ |a| a.first.downcase }
+          - options = Array(@edit[:cb_assign][:cats].invert).sort_by { |a| a.first.downcase }
           = select_tag("cbtag_cat", options_for_select([["<#{_('Choose a Category')}>", ""]] + options, @edit[:new][:cbtag_cat].to_s),
             "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, "data-miq_observe" => {:url => url}.to_json)
 
@@ -30,7 +30,7 @@
             %th= _('Rate')
         %tbody
           - if @edit[:new][:cbshow_typ].ends_with?("-tags")
-            - @edit[:cb_assign][:tags].invert.sort_by{ |a| a.first.downcase }.each do |tag, id|
+            - @edit[:cb_assign][:tags].invert.sort_by { |a| a.first.downcase }.each do |tag, id|
               %tr
                 %td
                   = h(tag)
@@ -40,7 +40,7 @@
                     options_for_select([[nothing, "nil"]] + options, @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{id}".to_sym].to_s),
                     "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, "data-miq_observe" => {:url => url}.to_json)
           - else
-            - @edit[:cb_assign][:cis].invert.sort_by{ |a| a.first.downcase }.each do |ci, id|
+            - @edit[:cb_assign][:cis].invert.sort_by { |a| a.first.downcase }.each do |ci, id|
               %tr#new_tr
                 %td
                   = h(ci)

@@ -1,4 +1,4 @@
-- url = url_for(:action =>'forest_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
+- url = url_for(:action => 'forest_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
 #forest_entries_div
   %h3= _("Trusted Forest Settings")
   = form_tag(url_for(:action => 'forest_accept', :id => "ldap_form"), :remote => true) do
@@ -13,7 +13,7 @@
           %th= _("Bind DN")
           %th= _("Bind Password")
       %tbody
-        - if entry == nil || entry != "new"
+        - if entry != "new"
           %tr{:onclick => remote_function(:url => {:action => 'forest_select', :ldaphost_id => "new"}), :title => _("Click to add a new forest")}
             %td
               = image_tag("/images/toolbars/new.png")
@@ -30,12 +30,12 @@
               = image_submit_tag("/images/toolbars/import.png",
                 :class => "listbutton",
                 :id => "accept", :name => "accept",
-                :alt => _("Add this entry"), :title=> _("Add this entry"))
+                :alt => _("Add this entry"), :title => _("Add this entry"))
             %td
               = text_field("user_proxies", "ldaphost", "maxlength" => 50)
             %td
               = select_tag('user_proxies_mode',
-                options_for_select([["ldap", "ldap"], ["ldaps", "ldaps"]], "ldap"),
+                options_for_select([[_("ldap"), "ldap"], [_("ldaps"), "ldaps"]], "ldap"),
                 "data-miq_observe" => {:url => url}.to_json)
             %td
               = text_field("user_proxies", "ldapport", "size" => 20, "maxlength" => 50, "value" => "389")
@@ -45,7 +45,7 @@
               = text_field("user_proxies", "bind_dn", "size" => 20, "maxlength" => 50)
             %td
               = password_field("user_proxies", "bind_pwd", "size" => 20, "maxlength" => 128)
-        - @edit[:new][:authentication][:user_proxies].sort_by{|a| a[:ldaphost]}.each do |forest|
+        - @edit[:new][:authentication][:user_proxies].sort_by { |a| a[:ldaphost] }.each do |forest|
           - if entry != nil && entry != "new" && entry[:ldaphost] == forest[:ldaphost]
             %tr
               %td
@@ -57,7 +57,7 @@
                 = text_field("user_proxies", "ldaphost", "maxlength" => 50, "value" => entry[:ldaphost])
               %td
                 = select_tag('user_proxies_mode',
-                  options_for_select([["ldap", "ldap"], ["ldaps", "ldaps"]], entry[:mode]),
+                  options_for_select([[_("ldap"), "ldap"], [_("ldaps"), "ldaps"]], entry[:mode]),
                   "data-miq_observe" => {:url => url}.to_json)
               %td
                 = text_field("user_proxies", "ldapport", "size" => 20, "maxlength" => 6, "value" => entry[:ldapport])
@@ -68,7 +68,7 @@
               %td
                 = password_field("user_proxies", "bind_pwd", "size" => 20, "maxlength" => 128, "value" => entry[:bind_pwd])
           - else
-            - if !forest.blank?
+            - unless forest.blank?
               %tr
                 %td{:onclick => remote_function(:url => {:action => 'forest_delete',
                 :ldaphost_id => forest[:ldaphost].to_s}, :confirm => _("Are you sure you want to delete forest %s ?") % forest[:ldaphost]),

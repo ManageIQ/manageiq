@@ -32,7 +32,6 @@
       @edit[:new][:file_data],
       :style => "display:none;")
   - if params[:action] != "explorer"
-    - w = @winW - 450
     = render :partial => "/layouts/my_code_mirror",
       :locals  => {:text_area_id => "file_data",
       :mode         => "yaml",

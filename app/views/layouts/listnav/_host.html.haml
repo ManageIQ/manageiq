@@ -107,14 +107,14 @@
           %li
             = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
               {:controller => "ems_infra", :action => 'show', :id => @record.ext_management_system.id.to_s},
-              {:title => _("Show this %s parent %s") % ["#{host_title}'s", ui_lookup(:table => "ems_infra")]})
+              :title => _("Show this %s parent %s") % ["#{host_title}'s", ui_lookup(:table => "ems_infra")])
 
         - if role_allows(:feature => "ems_cluster_show") && !@record.ems_cluster.nil?
           - cluster_title = title_for_cluster
           %li
             = link_to("#{cluster_title}: #{@record.ems_cluster.name}",
               {:controller => "ems_cluster", :action => 'show', :id => @record.ems_cluster.id.to_s},
-              {:title => _("Show %s parent %s") % ["#{host_title}'s", cluster_title]})
+              :title => _("Show %s parent %s") % ["#{host_title}'s", cluster_title])
 
         - if role_allows(:feature => "storage_show_list")
           = li_link_if_nonzero(:count => @record.number_of(:storages),

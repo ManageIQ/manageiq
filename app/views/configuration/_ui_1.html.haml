@@ -3,7 +3,7 @@
 = render :partial => "layouts/flash_msg"
 
 #tab_div
-  = form_tag({:action => "update"}, {:id => "config_form"}) do
+  = form_tag({:action => "update"}, :id => "config_form") do
     .row
       .col-md-12.col-lg-6
         %fieldset
