@@ -7,7 +7,11 @@ describe MiqAeClassCompareFields do
     @namespace   = 'NS1'
     @yaml_folder = File.join(File.dirname(__FILE__), 'miq_ae_copy_data')
     MiqAeDatastore.reset
-    @export_dir = File.join(Dir.tmpdir, 'rspec_copy_tests')
+    @export_dir = Dir.mktmpdir
+  end
+
+  after do
+    FileUtils.remove_entry_secure(@export_dir) if Dir.exist?(@export_dir)
   end
 
   context "same fields" do
