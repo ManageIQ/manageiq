@@ -58,6 +58,7 @@ FactoryGirl.define do
   end
 
   factory :host_redhat, :parent => :host, :class => "ManageIQ::Providers::Redhat::InfraManager::Host" do
+    sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
     vmm_vendor "redhat"
   end
 
