@@ -124,6 +124,45 @@ describe ApplicationController do
       controller.send(:reconfigure_update)
       controller.send(:flash_errors?).should_not be_true
     end
+
+    it "VM reconfigure for VMWare total CPU should not exceed the max_total CPU value" do
+      vm = FactoryGirl.create(:vm_vmware)
+      edit = Hash.new
+      edit[:key] = "reconfigure__new"
+      edit[:new] = Hash.new
+      edit[:new][:new_cpu_count] = "4"
+      edit[:new][:new_cores_per_socket_count] = "4"
+      edit[:new][:cb_cpu] = true
+      edit[:new][:cb_cores_per_socket] = true
+      edit[:errors] = []
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
+      controller.instance_variable_set(:@_params, {:button => "submit"})
+      controller.instance_variable_set(:@breadcrumbs, ["test",{:url => "test/show"}])
+      controller.should_receive(:render)
+      VmReconfigureRequest.stub(:create_request)
+      controller.send(:reconfigure_update)
+      controller.send(:flash_errors?).should be_true
+    end
+    it "VM reconfigure for RHEV total CPU should not exceed the max_total CPU value" do
+      vm = FactoryGirl.create(:vm_redhat)
+      edit = Hash.new
+      edit[:key] = "reconfigure__new"
+      edit[:new] = Hash.new
+      edit[:new][:new_cpu_count] = "15"
+      edit[:new][:new_cores_per_socket_count] = "15"
+      edit[:new][:cb_cpu] = true
+      edit[:new][:cb_cores_per_socket] = true
+      edit[:errors] = []
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
+      controller.instance_variable_set(:@_params, {:button => "submit"})
+      controller.instance_variable_set(:@breadcrumbs, ["test",{:url => "test/show"}])
+      controller.should_receive(:render)
+      VmReconfigureRequest.stub(:create_request)
+      controller.send(:reconfigure_update)
+      controller.send(:flash_errors?).should be_true
+    end
   end
 
   context "#discover" do

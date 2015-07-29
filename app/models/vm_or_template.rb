@@ -1877,6 +1877,17 @@ class VmOrTemplate < ActiveRecord::Base
     VmOrTemplate.where(:id => ids).all? { |v| v.public_send("validate_#{operation}")[:available] }
   end
 
+  # Stop showing Reconfigure VM task unless the subclass allows
+  def reconfigurable?
+    false
+  end
+
+  def self.reconfigurable?(ids)
+    vms = VmOrTemplate.where(:id => ids)
+    return false if vms.blank?
+    vms.all?(&:reconfigurable?)
+  end
+
   private
 
   def power_state=(new_power_state)
