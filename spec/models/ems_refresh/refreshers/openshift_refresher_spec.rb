@@ -49,7 +49,6 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
       :ems_ref       => "fc73bb4b-2870-11e5-b5bb-727174f8ab71_ruby-helloworld-database_openshift/mysql-55-centos7",
       :name          => "ruby-helloworld-database",
       :restart_count => 0,
-      :image         => "openshift/mysql-55-centos7",
       :backing_ref   => "docker://bb608fb1575bcc1a5326517e6c4589df5160fa804daaa4990e837f1154f1c3c9"
     )
 

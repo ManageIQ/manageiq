@@ -128,7 +128,7 @@ http_interactions:
                     "lastState": {},
                     "ready": true,
                     "restartCount": 0,
-                    "image": "kubernetes/heapster:v0.11.0",
+                    "image": "example.com:1234/kubernetes/heapster:v0.11.0",
                     "imageID": "docker://6207b36028f56023248abaaa8ed68c964c2364f731c24299cff8a904f1b33cfa",
                     "containerID": "docker://b1ddf3fb4c7f8df73f8cc1e40b62acbae59ea02ea517e6cbdd14e502edb29040"
                   }

@@ -1,8 +1,9 @@
 module EmsRefresh::SaveInventoryContainer
   def save_ems_container_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
-    child_keys = [:container_projects, :container_nodes, :container_replicators, :container_groups,
-                  :container_services, :container_routes]
+
+    child_keys = [:container_projects, :container_nodes, :container_image_registries, :container_images,
+                  :container_replicators, :container_groups, :container_services, :container_routes]
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -186,16 +187,51 @@ module EmsRefresh::SaveInventoryContainer
               else
                 []
               end
-
     save_inventory_multi(:container_env_vars, container_definition, hashes, deletes, [:name, :value, :field_path])
     store_ids_for_new_records(container_definition.container_env_vars, hashes, [:name, :value, :field_path])
+  end
+
+  def save_container_images_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+
+    ems.container_images(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                ems.container_images.dup
+              else
+                []
+              end
+
+    hashes.each do |h|
+      h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
+    end
+
+    save_inventory_multi(:container_images, ems, hashes, deletes, [:image_ref, :container_image_registry_id], [],
+                         :container_image_registry)
+    store_ids_for_new_records(ems.container_images, hashes,
+                              [:image_ref, :container_image_registry_id])
+  end
+
+  def save_container_image_registries_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+    target = ems if target.nil?
+
+    ems.container_image_registries(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                ems.container_image_registries.dup
+              else
+                []
+              end
+
+    save_inventory_multi(:container_image_registries, ems, hashes, deletes, [:host, :port])
+    store_ids_for_new_records(ems.container_image_registries, hashes, [:host, :port])
   end
 
   def save_container_inventory(container_definition, hash, _target = nil)
     # The hash could be nil when the container is in transition (still downloading
     # the image, or stuck in Pending, or unable to fetch the image). Passing nil to
     # save_inventory_single is used to delete any pre-existing entity in containers,
-    save_inventory_single(:container, container_definition, hash)
+    hash[:container_image_id] = hash[:container_image][:id]
+    save_inventory_single(:container, container_definition, hash, [], :container_image)
   end
 
   def save_container_node_conditions_inventory(container_node, hashes, target = nil)
