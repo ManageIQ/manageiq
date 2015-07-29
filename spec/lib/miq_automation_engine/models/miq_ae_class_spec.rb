@@ -34,17 +34,6 @@ describe MiqAeClass do
     c2.save!.should be_true
   end
 
-  it "should auto-destroy associated records" do
-    c1 = MiqAeClass.new(:namespace => "TEST", :name => "test_class")
-    c1.should_not be_nil
-    c1.save!.should be_true
-    c1_id = c1.id
-    c1.destroy
-    MiqAeField.where(:class_id => c1_id).should be_empty
-    MiqAeInstance.where(:class_id => c1_id).should be_empty
-    # TODO: Check for miq_ae_values
-  end
-
   it "should return editable as false if the parent namespace is not editable" do
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
