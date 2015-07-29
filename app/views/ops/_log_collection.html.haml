@@ -49,4 +49,4 @@
 
 :javascript
   ManageIQ.angularApplication.value('serverId', '#{@record.id || "new"}');
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication']);
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
