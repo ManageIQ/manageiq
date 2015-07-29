@@ -14,6 +14,7 @@ env:
   - "TEST_SUITE=replication  TEST_ROOT=."
   - "TEST_SUITE=automation   TEST_ROOT=."
   - "TEST_SUITE=javascript   TEST_ROOT=."
+  - "TEST_SUITE=brakeman     TEST_ROOT=."
 matrix:
   fast_finish: true
 addons:
