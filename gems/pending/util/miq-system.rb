@@ -1,6 +1,6 @@
 require 'util/extensions/miq-blank'
+require 'awesome_spawn'
 require 'platform'
-require 'util/runcmd'
 if Platform::OS == :win32
   require 'util/win32/miq-wmi'
 end
@@ -287,7 +287,7 @@ class MiqSystem
     case Platform::IMPL
     when :linux
       # Collect bytes
-      result = MiqUtil.runcmd("df -T -P #{file}").lines.each_with_object([]) do |line, array|
+      result = AwesomeSpawn.run!("df", :params => ["-T", "-P", file]).output.lines.each_with_object([]) do |line, array|
         lArray = line.strip.split(" ")
         next if lArray.length != 7
         fsname, type, total, used, free, used_percentage, mount_point = lArray
@@ -306,7 +306,7 @@ class MiqSystem
       end
 
       # Collect inodes
-      MiqUtil.runcmd("df -T -P -i #{file}").lines.each do |line|
+      AwesomeSpawn.run!("df", :params => ["-T", "-P", "-i", file]).output.lines.each do |line|
         lArray = line.strip.split(" ")
         next if lArray.length != 7
         fsname, type, total, used, free, used_percentage, mount_point = lArray
@@ -322,7 +322,7 @@ class MiqSystem
       result
 
     when :macosx
-      MiqUtil.runcmd("df -ki #{file}").lines.each_with_object([]) do |line, array|
+      AwesomeSpawn.run!("df", :params => ["-ki", file]).output.lines.each_with_object([]) do |line, array|
         lArray = line.strip.split(" ")
         next if lArray.length != 9
         fsname, total, used, free, use_percentage, iused, ifree, iuse_percentage, mount_point = lArray
