@@ -40,6 +40,11 @@ describe ApiController do
       test_collection_query(:availability_zones, availability_zones_url, AvailabilityZone)
     end
 
+    example "query Chargebacks" do
+      FactoryGirl.create(:chargeback_rate)
+      test_collection_query(:chargebacks, chargebacks_url, ChargebackRate)
+    end
+
     it "query Clusters" do
       FactoryGirl.create(:ems_cluster)
       test_collection_query(:clusters, clusters_url, EmsCluster)
