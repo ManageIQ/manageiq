@@ -17,37 +17,42 @@
         :div_in_js                          => true}}
   - else
     - url = url_for(:action => 'form_ns_field_changed', :id => "#{@ae_ns.id || 'new'}")
-    - obs = {:interval => '.5', :url => url}.to_json
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
     #form_ns_div
-      %h3= _('Info')
-      %table.style1
+      %h3
+      = _('Info')
+      %form.form-horizontal
         - unless @ae_ns.domain?
-          %tr
-            %td.key
+          .form-group
+            %label.col-md-2.control-label
               = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
-            %td.wide
+            .col-md-8
               = h(@sb[:namespace_path])
-        %tr
-          %td.key= _('Name')
-          %td.wide
+        .form-group
+          %label.col-md-2.control-label
+            = _('Name')
+          .col-md-8
             = text_field_tag("ns_name",
-              @edit[:new][:ns_name],
-              :maxlength         => MAX_NAME_LEN,
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                              @edit[:new][:ns_name],
+                              :maxlength         => MAX_NAME_LEN,
+                              :class => "form-control",
+                              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             = javascript_tag(javascript_focus('ns_name'))
-        %tr
-          %td.key= _('Description')
-          %td.wide
+        .form-group
+          %label.col-md-2.control-label
+            = _('Description')
+          .col-md-8
             = text_field_tag("ns_description",
-              @edit[:new][:ns_description],
-              :maxlength         => MAX_NAME_LEN,
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                              @edit[:new][:ns_description],
+                              :maxlength         => MAX_NAME_LEN,
+                              :class => "form-control",
+                              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         - if @ae_ns.domain?
-          %tr
-            %td.key= _('Enabled')
-            %td
+          .form-group
+            %label.col-md-2.control-label
+              = _('Enabled')
+            .col-md-8
               = check_box_tag("ns_enabled",
-                value   = "1",
-                checked = @edit[:new][:enabled],
-                "data-miq_observe_checkbox" => {:url => url}.to_json)
+                              "1",
+                              @edit[:new][:enabled],
+                              "data-miq_observe_checkbox" => {:url => url}.to_json)

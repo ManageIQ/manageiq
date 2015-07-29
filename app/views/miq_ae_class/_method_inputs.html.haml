@@ -1,32 +1,39 @@
 #method_inputs_div
   - if !@in_a_form && @ae_method
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_method_inputs"}
-    %h3= _('Main Info')
-    %table.style1
-      %tr
-        %td.key
+    %h3
+      = _('Main Info')
+    %form.form-horizontal.static
+      .form-group
+        %label.col-md-2.control-label
           = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
-        %td.wide
-          = h(@sb[:namespace_path])
-      %tr
-        %td.key= _('Name')
-        %td.wide
-          = @ae_method.name
-      </tr>
-      %tr
-        %td.key= _('Display Name')
-        %td.wide
-          = @ae_method.display_name
-      </tr>
-      %tr
-        %td.key= _('Location')
-        %td.wide
-          = @ae_method.location
-      </tr>
-      %tr
-        %td.key= _('Created On')
-        %td.wide
-          = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
+        .col-md-8
+          %p.form-control-static
+            = h(@sb[:namespace_path])
+      .form-group
+        %label.col-md-2.control-label
+          = _('Name')
+        .col-md-8
+          %p.form-control-static
+            = @ae_method.name
+      .form-group
+        %label.col-md-2.control-label
+          = _('Display Name')
+        .col-md-8
+          %p.form-control-static
+            = @ae_method.display_name
+      .form-group
+        %label.col-md-2.control-label
+          = _('Location')
+        .col-md-8
+          %p.form-control-static
+            = @ae_method.location
+      .form-group
+        %label.col-md-2.control-label
+          = _('Created On')
+        .col-md-8
+          %p.form-control-static
+            = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
     = render :partial => "domain_overrides", :locals => {:node_prefix => "aem", :model => "Method"}
     %h3= _('Data')
     - if @ae_method.location == "inline"
