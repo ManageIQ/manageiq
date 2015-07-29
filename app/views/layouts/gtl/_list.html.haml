@@ -164,7 +164,7 @@
               - else
                 - click = "DoNav('#{url_for_db(view.db)}');"
             %td.narrow{:title => title, :onclick => click}
-              = render :partial => "layouts/listicon", :locals => {:db => view.db, :row => row, :icon_image => listicon_image}
+              = listicon_tag(view.db, row)
           - view.col_order.each do |col|
             - title = ""
             - click = ""
