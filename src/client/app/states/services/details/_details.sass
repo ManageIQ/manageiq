@@ -1,0 +1,42 @@
++block(service-details-heading)
+
+  +element(aside)
+    text-align: right
+    height: 90px
+    position: absolute
+    right: 0
+    top: 0
+
+  +element(icon)
+    display: inline-block
+    width: 80px
+    height: 80px
+    position: static
+    background-color: $app-color-white
+    border: 2px solid $app-color-gray
+    border-radius: 3px
+    top: 10px
+    left: 0
+    margin-bottom: 4px
+
++block(service-pricing)
+  @extend .table-striped
+  width: 100%
+  background-color: $app-color-white
+
+  +element(heading)
+    height: 44px
+    font-weight: bold
+    text-transform: uppercase
+    color: $app-color-gray
+
+  +element(cell)
+    height: 44px
+    font-size: 14px
+    border: none
+    padding: 10px 10px 10px 0
+    vertical-align: top
+    position: relative
+
+    +modifier(padding)
+      width: 20px

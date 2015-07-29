@@ -1,0 +1,20 @@
+<div class="selected-products">
+  <div class="selected-products__item" ng-repeat="index in ::vm.indexes track by $index">
+    <div ng-if="vm.products[index]">
+      <div ng-if="vm.products[index].img">
+        <img class="selected-products__image" ng-src="images/assets/{{vm.products[index].img}}" />
+      </div>
+      <div ng-if="!vm.products[index].img">
+        <img class="selected-products__image" ng-src="images/jelly_alone.png" />
+      </div>
+      <a href="#" title="Remove" class="selected-products__remove" ng-click="vm.remove(vm.products[index])">
+        <img src="/images/ic_closecompare.png"/>
+      </a>
+    </div>
+  </div>
+</div>
+<button type="button" class="btn-rounded btn btn-primary text-uppercase"
+        ng-click="vm.showModal()"
+        ng-disabled="vm.disabled()">
+  Compare
+</button>

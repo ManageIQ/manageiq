@@ -1,0 +1,110 @@
++block(btn-rounded)
+  @extend .btn
+  border-radius: 20px
+  padding: 10px 20px
+  color: $app-color-white
+  background-color: $app-color-blue
+  border: none
+  text-transform: uppercase
+
+  &:hover, &:focus, &:active
+    outline: none
+    color: $app-color-white
+    background-color: $app-color-blue
+    text-decoration: none
+
+  +modifier(gray)
+    background-color: $app-color-gray
+
+    &:hover, &:focus, &:active
+      background-color: $app-color-gray
+
+  +modifier(success)
+    background-color: $app-color-green
+
+    &:hover, &:focus, &:active
+      background-color: $app-color-green
+
+  +modifier(danger)
+    background-color: $app-color-pink
+
+    &:hover, &:focus, &:active
+      background-color: $app-color-pink
+
+  +modifier(bold)
+    font-weight: bold
+
+  +modifier(capitalize)
+    text-transform: capitalize
+
+  +modifier(short)
+    padding: 5px 15px
+
++block(btn-link)
+  color: $app-color-blue
+  text-transform: uppercase
+
+  &:active, &:focus, &:hover
+    outline: none
+    color: $app-color-blue
+    text-decoration: none
+
++block(btn-bordered)
+  @extend .btn
+  border-radius: 20px
+  padding: 10px 20px
+  color: $app-color-blue
+  background-color: $app-color-light-gray-2
+  border: 2px solid
+  text-transform: uppercase
+
+  &.disabled, &[disabled]
+    color: lighten($app-color-blue, 20%)
+
+  &:hover, &:focus, &:active
+    outline: none
+    color: $app-color-blue
+    background-color: $app-color-light-gray-2
+    text-decoration: none
+
+  +modifier(gray)
+    color: $app-color-dark-gray
+    background-color: $app-color-light-gray-2
+
+    &.disabled, &[disabled]
+      color: lighten($app-color-dark-gray, 20%)
+
+    &:hover, &:focus, &:active
+      color: $app-color-dark-gray
+      background-color: $app-color-light-gray-2
+
+  +modifier(success)
+    color: $app-color-green
+    background-color: $app-color-light-gray-2
+
+    &.disabled, &[disabled]
+      color: lighten($app-color-green, 20%)
+
+    &:hover, &:focus, &:active
+      color: $app-color-green
+      background-color: $app-color-light-gray-2
+
+  +modifier(danger)
+    color: $app-color-pink
+    background-color: $app-color-light-gray-2
+
+    &.disabled, &[disabled]
+      color: lighten($app-color-pink, 20%)
+
+    &:hover, &:focus, &:active
+      color: $app-color-pink
+      background-color: $app-color-light-gray-2
+
+  +modifier(bold)
+    font-weight: bold
+
+  +modifier(capitalize)
+    text-transform: capitalize
+
+  +modifier(short)
+    padding: 5px 15px

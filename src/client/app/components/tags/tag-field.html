@@ -1,0 +1,18 @@
+<div class="tag-field" tabindex="-1" ng-click="vm.hostClick()">
+  <div class="tag-field__tags" ng-class="{focused: vm.hasFocus}">
+    <ul class="tag-field__list">
+      <li class="tag-field__item" ng-repeat="tag in vm.tagList.tags">
+        <tag-item text="tag" selected="tag === vm.tagList.selected" on-remove="vm.removeTag($index)"></tag-item>
+      </li>
+    </ul>
+    <input type="text" spellcheck="false" class="tag-input" autocomplete="off" ng-model="vm.newTag"
+           ng-change="vm.inputChange(vm.newTag)"
+           ng-keydown="vm.inputKeydown($event)"
+           ng-focus="vm.inputFocus($event)"
+           ng-blur="vm.inputBlur($event)"
+           ng-paste="vm.inputPaste($event)"
+           bind-attrs="{placeholder: vm.options.placeholder}"
+           ng-trim="false" ng-class="{'invalid-tag': vm.invalid}" ng-disabled="vm.disabled" tag-autosize/>
+  </div>
+  <div ng-transclude></div>
+</div>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+  <title>Spec Runner</title>
+  <style>
+    body {
+      font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+      padding-left: 20px;
+    }
+  </style>
+
+  <!--BEWARE of using any app styles as @media can screw up tests -->
+  <link rel="stylesheet" href="node_modules/mocha/mocha.css">
+</head>
+<body>
+  <h1><a href="specs.html">Spec Runner</a></h1>
+
+  <p><strong>Make sure the REMOTE server is running</strong><br/>
+    Click on a <em>description title</em> to narrow the scope to just its specs
+    (see "<a href="http://mochajs.github.io/mocha/#grep-option" target="_blank" title="MochaJS grep option">
+      ?grep</a>" in address bar).<br/>
+    Click on a <em>spec title</em> to see the test implementation.<br/>
+    Click on <em>page title</em> to start over.
+  </p>
+
+  <div id="mocha"></div>
+
+  <!-- inject:testlibraries:js -->
+  <script src="/node_modules/mocha/mocha.js"></script>
+  <script src="/node_modules/chai/chai.js"></script>
+  <script src="/node_modules/mocha-clean/index.js"></script>
+  <script src="/node_modules/sinon-chai/lib/sinon-chai.js"></script>
+  <!-- endinject -->
+
+  <script>
+    expect = chai.expect;
+    AssertionError = chai.AssertionError;
+    mocha.setup('bdd');
+    mocha.traceIgnores = ['mocha.js', 'chai.js', 'angular.js'];
+  </script>
+
+  <!-- bower:js -->
+  <script src="/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/bower_components/moment/moment.js"></script>
+  <script src="/bower_components/toastr/toastr.js"></script>
+  <script src="/bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+  <script src="/bower_components/angular/angular.js"></script>
+  <script src="/bower_components/angular-animate/angular-animate.js"></script>
+  <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="/bower_components/lodash/lodash.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.js"></script>
+  <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
+  <script src="/bower_components/angular-smart-table/dist/smart-table.js"></script>
+  <script src="/bower_components/angular-messages/angular-messages.js"></script>
+  <script src="/bower_components/tv4/tv4.js"></script>
+  <script src="/bower_components/objectpath/lib/ObjectPath.js"></script>
+  <script src="/bower_components/angular-schema-form/dist/schema-form.js"></script>
+  <script src="/bower_components/angular-schema-form/dist/bootstrap-decorator.js"></script>
+  <script src="/bower_components/jquery-ui/ui/core.js"></script>
+  <script src="/bower_components/jquery-ui/ui/widget.js"></script>
+  <script src="/bower_components/jquery-ui/ui/mouse.js"></script>
+  <script src="/bower_components/jquery-ui/ui/sortable.js"></script>
+  <script src="/bower_components/angular-ui-sortable/sortable.js"></script>
+  <script src="/bower_components/sinon/index.js"></script>
+  <script src="/bower_components/bardjs/dist/bard.js"></script>
+  <script src="/bower_components/bardjs/dist/bard-ngRouteTester.js"></script>
+  <!-- endbower -->
+
+  <!-- inject:js -->
+  <script src="/src/client/app/app.module.js"></script>
+  <script src="/src/client/app/blocks/bind-attrs/bind-attrs.module.js"></script>
+  <script src="/src/client/app/blocks/directive-options/directive-options.module.js"></script>
+  <script src="/src/client/app/blocks/exception/exception.module.js"></script>
+  <script src="/src/client/app/blocks/logger/logger.module.js"></script>
+  <script src="/src/client/app/blocks/multi-transclude/multi-transclude.module.js"></script>
+  <script src="/src/client/app/blocks/pub-sub/pub-sub.module.js"></script>
+  <script src="/src/client/app/blocks/recursion/recursion.module.js"></script>
+  <script src="/src/client/app/blocks/router/router.module.js"></script>
+  <script src="/src/client/app/components/components.module.js"></script>
+  <script src="/src/client/app/core/core.module.js"></script>
+  <script src="/src/client/app/mock-http-backend/mock.module.js"></script>
+  <script src="/src/client/app/resources/resources.module.js"></script>
+  <script src="/src/client/app/states/states.module.js"></script>
+  <script src="/src/client/app/blocks/bind-attrs/bind-attrs.directive.js"></script>
+  <script src="/src/client/app/blocks/directive-options/directive-options.factory.js"></script>
+  <script src="/src/client/app/blocks/exception/exception-handler.provider.js"></script>
+  <script src="/src/client/app/blocks/exception/exception.js"></script>
+  <script src="/src/client/app/blocks/logger/logger.js"></script>
+  <script src="/src/client/app/blocks/multi-transclude/multi-transclude.factory.js"></script>
+  <script src="/src/client/app/blocks/pub-sub/pub-sub.factory.js"></script>
+  <script src="/src/client/app/blocks/recursion/recursion-helper.factory.js"></script>
+  <script src="/src/client/app/blocks/router/router-helper.provider.js"></script>
+  <script src="/src/client/app/components/cart/cart.directive.js"></script>
+  <script src="/src/client/app/components/cart/nav-cart.directive.js"></script>
+  <script src="/src/client/app/components/catalog/catalog-category.directive.js"></script>
+  <script src="/src/client/app/components/catalog/catalog-service.factory.js"></script>
+  <script src="/src/client/app/components/catalog/tags.filter.js"></script>
+  <script src="/src/client/app/components/compare/compare.service.js"></script>
+  <script src="/src/client/app/components/compare/select-product.directive.js"></script>
+  <script src="/src/client/app/components/compare/selected-products.directive.js"></script>
+  <script src="/src/client/app/components/confirmation/confirmation.directive.js"></script>
+  <script src="/src/client/app/components/content-header/content-header.directive.js"></script>
+  <script src="/src/client/app/components/footer/footer.directive.js"></script>
+  <script src="/src/client/app/components/navigation/nav-item.directive.js"></script>
+  <script src="/src/client/app/components/navigation/navigation-helper.provider.js"></script>
+  <script src="/src/client/app/components/navigation/navigation.directive.js"></script>
+  <script src="/src/client/app/components/navigation/sidebar-item.directive.js"></script>
+  <script src="/src/client/app/components/product-form/product-form-decorator.config.js"></script>
+  <script src="/src/client/app/components/product-form/product-form-field.directive.js"></script>
+  <script src="/src/client/app/components/product-form/product-form.directive.js"></script>
+  <script src="/src/client/app/components/product-type-modal/product-type-show-modal.directive.js"></script>
+  <script src="/src/client/app/components/profile/nav-profile.directive.js"></script>
+  <script src="/src/client/app/components/project-question-form/project-question-form.directive.js"></script>
+  <script src="/src/client/app/components/project-question-form/project-question-option.directive.js"></script>
+  <script src="/src/client/app/components/project-question-form/project-question-options.directive.js"></script>
+  <script src="/src/client/app/components/site-layout/site-layout.directive.js"></script>
+  <script src="/src/client/app/components/site-layout/site-layout.factory.js"></script>
+  <script src="/src/client/app/components/tags/keys.constant.js"></script>
+  <script src="/src/client/app/components/tags/tag-autocomplete.directive.js"></script>
+  <script src="/src/client/app/components/tags/tag-autosize.directive.js"></script>
+  <script src="/src/client/app/components/tags/tag-field.directive.js"></script>
+  <script src="/src/client/app/components/tags/tag-item.directive.js"></script>
+  <script src="/src/client/app/components/tags/tag-match.directive.js"></script>
+  <script src="/src/client/app/components/tags/tag-show-modal.directive.js"></script>
+  <script src="/src/client/app/components/tags/tags.constants.js"></script>
+  <script src="/src/client/app/components/toasts/toasts.factory.js"></script>
+  <script src="/src/client/app/components/view-mode-switch/view-mode-switch.directive.js"></script>
+  <script src="/src/client/app/components/view-mode-switch/view-modes.constant.js"></script>
+  <script src="/src/client/app/components/widget/widget.directive.js"></script>
+  <script src="/src/client/app/core/config.js"></script>
+  <script src="/src/client/app/core/constants.js"></script>
+  <script src="/src/client/app/mock-http-backend/config.js"></script>
+  <script src="/src/client/app/mock-http-backend/mock-helpers.factory.js"></script>
+  <script src="/src/client/app/mock-http-backend/mock-product-categories.backend.js"></script>
+  <script src="/src/client/app/mock-http-backend/mock-product-types.backend.js"></script>
+  <script src="/src/client/app/mock-http-backend/mock-products.backend.js"></script>
+  <script src="/src/client/app/mock-http-backend/mock-project-questions.backend.js"></script>
+  <script src="/src/client/app/mock-http-backend/mock-tags.backend.js"></script>
+  <script src="/src/client/app/resources/product-category.factory.js"></script>
+  <script src="/src/client/app/resources/product-type.factory.js"></script>
+  <script src="/src/client/app/resources/product.factory.js"></script>
+  <script src="/src/client/app/resources/project-question.factory.js"></script>
+  <script src="/src/client/app/resources/tag.factory.js"></script>
+  <script src="/src/client/app/states/404/404.state.js"></script>
+  <script src="/src/client/app/states/admin/admin.state.js"></script>
+  <script src="/src/client/app/states/admin/products/create/create.state.js"></script>
+  <script src="/src/client/app/states/admin/products/list/list.state.js"></script>
+  <script src="/src/client/app/states/admin/products/products.state.js"></script>
+  <script src="/src/client/app/states/admin/project-questions/create/create.state.js"></script>
+  <script src="/src/client/app/states/admin/project-questions/list/list.state.js"></script>
+  <script src="/src/client/app/states/admin/project-questions/project-questions.state.js"></script>
+  <script src="/src/client/app/states/blank/blank.state.js"></script>
+  <script src="/src/client/app/states/dashboard/dashboard.state.js"></script>
+  <script src="/src/client/app/states/logout/logout.state.js"></script>
+  <script src="/src/client/app/states/marketplace/marketplace.state.js"></script>
+  <script src="/src/client/app/states/order-history/order-history.state.js"></script>
+  <script src="/src/client/app/states/projects/projects.state.js"></script>
+  <!-- endinject -->
+
+  <!-- inject:spechelpers:js -->
+  <script src="/src/client/test-helpers/bind-polyfill.js"></script>
+  <script src="/src/client/test-helpers/mock-data.js"></script>
+  <!-- endinject -->
+
+  <!-- inject:specs:js -->
+  <script src="/src/client/app/states/404/404.state.spec.js"></script>
+  <script src="/src/client/app/states/dashboard/dashboard.state.spec.js"></script>
+  <!-- endinject -->
+
+  <!-- inject:templates:js -->
+  <script src="/.tmp/templates.js"></script>
+  <!-- endinject -->
+
+  <script>
+    mocha.run();
+  </script>
+
+</body>
+</html>

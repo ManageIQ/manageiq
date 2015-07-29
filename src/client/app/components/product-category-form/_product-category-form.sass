@@ -1,0 +1,63 @@
++block(product-category-form)
+
+  +element(body)
+    +make-sm-column(7)
+    padding-bottom: 20px
+
+    &:after
+      content: ""
+      border-bottom: 1px solid $app-color-gray
+      position: absolute
+      left: 15px
+      right: 0
+
+  +element(aside)
+    +make-sm-column(5)
+    padding-left: 45px
+
+  +element(title)
+
+  +element(product-type)
+    text-transform: uppercase
+
+  +element(product-type-description)
+    color: $app-color-gray
+
+  +element(title-error)
+    padding-left: 15px
+    font-weight: bold
+    font-size: 15px
+    color: $app-color-pink
+    text-transform: uppercase
+
+  +element(submit)
+    min-width: 150px
+
+  +element(cancel)
+    text-transform: uppercase
+
++block(product-category-field)
+  @extend .form-group
+  @extend .field
+
+  +element(aside)
+    +make-sm-column(3)
+    @extend .field__aside
+
+  +element(body)
+    @extend .field__body
+
+  +element(label)
+    @extend .field__label
+
+  +element(body)
+    +make-sm-column(9)
+
+  +element(input)
+    @extend .field__input
+
+  +element(checkbox)
+    @extend .field__checkbox
+
+  +element(feedback)
+    @extend .field__feedback

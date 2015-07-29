@@ -1,0 +1,45 @@
++block(widget)
+  @extend .panel
+
+  +modifier(default)
+    @extend .panel-default
+    border: none
+    border-radius: 0
+
+    +element(header)
+      padding: 20px
+      background-color: $app-color-white
+      border: none
+
+    +element(title)
+      font-size: 22px
+      color: $app-color-blue
+      text-transform: uppercase
+      line-height: 1
+
+    +element(body)
+      padding: 0
+
+  +modifier(primary)
+    @extend .panel-primary
+
+  +modifier(success)
+    @extend .panel-success
+
+  +modifier(info)
+    @extend .panel-info
+
+  +modifier(warning)
+    @extend .panel-warning
+
+  +modifier(danger)
+    @extend .panel-danger
+
+  +element(header)
+    @extend .panel-heading
+
+  +element(body)
+    @extend .panel-body
+
+  +element(footer)
+    @extend .panel-footer

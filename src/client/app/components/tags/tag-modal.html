@@ -1,0 +1,53 @@
+<div class="tag-modal__header">
+  <button type="button" class="tag-modal__close" ng-click="$dismiss()" aria-label="Close">
+    <i class="fa fa-close" aria-hidden="true"></i>
+    <span class="sr-only">Close</span>
+  </button>
+  <div class="tag-modal__title">Active Filters</div>
+</div>
+<div class="tag-modal__body">
+  <div class="tag-modal__active-tags">
+    <ul class="tag-modal__active-list">
+      <li class="tag-modal__active-item" ng-repeat="tag in vm.tagList.tags track by tag">
+        <tag-item text="tag" selected="tag === vm.tagList.selected" on-remove="vm.removeTag($index)"></tag-item>
+      </li>
+    </ul>
+    <a ng-if="vm.tagList.tags.length > 0" href="#" title="Remove all tags" class="tag-modal__clear"
+       ng-click="vm.clearTags()">
+      <span class="tag-modal__clear-text">Clear</span>
+    </a>
+  </div>
+
+  <div class="tag-modal__shortcuts">
+    <div class="tag-modal__shortcut-title">All Filters</div>
+    <div class="tag-modal__shortcut-list">
+      <span class="tag-modal__shortcut-item" ng-repeat="letter in ::vm.shortcuts track by letter">
+        <a class="tag-modal__shortcut-item--link" ng-if="vm.tagsExistForLetter(letter)"
+           ng-click="vm.gotoHash(letter)">{{ ::letter }}</a>
+        <span class="tag-modal__shortcut-item--text" ng-if="!vm.tagsExistForLetter(letter)">{{
+          ::letter }}</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="tag-modal__letters">
+    <div class="tag-modal__letters-list">
+      <div class="tag-modal__letters-item" ng-repeat="(letter, tags) in ::vm.tags track by letter">
+        <a bind-attrs="{name: letter}" class="tag-modal__letter">{{ ::letter }}</a>
+        <ul class="tag-modal__list">
+          <li class="tag-modal__item" ng-repeat="tag in ::tags track by tag.id">
+            <button type="button" class="tag-modal__tag"
+                    ng-click="vm.addTag(tag)" ng-disabled="vm.tagUnavailable(tag)">
+              {{ ::tag.name }}
+              <span class="tag-modal__tag-results" ng-if="!vm.tagInUse(tag.name)">{{ ::tag.results }}</span>
+              <i class="tag-modal__tag-results fa fa-check" ng-if="vm.tagInUse(tag.name)"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="tag-modal__footer">
+  <button type="button" class="btn-rounded tag-modal__ok" ng-click="$close()">Ok</button>
+</div>
