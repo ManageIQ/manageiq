@@ -63,12 +63,13 @@ describe MiqProvisionMicrosoft do
 
     context "#parse mount point" do
       before do
-        @datastore = FactoryGirl.create(:storage, :name => "C:\\directoryname\\test_datastore")
+        ds_name = "file://server.local/C:/ClusterStorage/CLUSP04%20Prod%20Volume%203-1"
+        @datastore = FactoryGirl.create(:storage, :name => ds_name)
         vm_prov.stub(:dest_datastore).and_return(@datastore)
       end
 
       it "valid drive" do
-        vm_prov.dest_mount_point.should == "C:"
+        vm_prov.dest_mount_point.should == "C:\\ClusterStorage\\CLUSP04 Prod Volume 3-1"
       end
     end
 

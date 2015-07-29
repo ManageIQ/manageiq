@@ -1,5 +1,5 @@
 module MiqProvisionMicrosoft::Cloning
-  DRIVE_LETTER     = /[a-z][:]/i
+  MT_POINT_REGEX = %r{file://.*/([A-Z][:].*)}i
 
   def log_clone_options(clone_options)
     _log.info("Provisioning [#{source.name}] to [#{clone_options[:name]}]")
@@ -35,7 +35,8 @@ module MiqProvisionMicrosoft::Cloning
   end
 
   def dest_mount_point
-    dest_datastore.name.scan(DRIVE_LETTER).last.to_s
+    name = dest_datastore.name.scan(MT_POINT_REGEX).flatten.pop
+    URI.decode(name.to_s).gsub('/', '\\')
   end
 
   def dest_virtual_network
