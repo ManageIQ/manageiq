@@ -15,10 +15,14 @@ RSpec.describe "chargebacks API" do
     api_basic_authorize
     run_get "/api/chargebacks"
 
-    json = JSON.parse(last_response.body)
-    expect(json["count"]).to be 1
-    expect(json["resources"].first["href"]).to end_with("/api/chargebacks/#{chargeback_rate.id}")
-    expect(last_response.status).to eq(200)
+    expect_result_resources_to_include_data(
+      "resources",
+      "href" => [
+        "http://example.org/api/chargebacks/#{chargeback_rate.to_param}"
+      ]
+    )
+    expect_result_to_match_hash(@result, "count" => 1)
+    expect_request_success
   end
 
   it "can show an individual chargeback rate" do
@@ -27,12 +31,14 @@ RSpec.describe "chargebacks API" do
     api_basic_authorize
     run_get "/api/chargebacks/#{chargeback_rate.to_param}"
 
-    json = JSON.parse(last_response.body)
-    expect(json["description"]).to eq(chargeback_rate.description)
-    expect(json["guid"]).to eq(chargeback_rate.guid)
-    expect(json["id"]).to eq(chargeback_rate.id)
-    expect(json["href"]).to end_with("/api/chargebacks/#{chargeback_rate.id}")
-    expect(last_response.status).to eq(200)
+    expect_result_to_match_hash(
+      @result,
+      "description" => chargeback_rate.description,
+      "guid"        => chargeback_rate.guid,
+      "id"          => chargeback_rate.id,
+      "href"        => "http://example.org/api/chargebacks/#{chargeback_rate.to_param}"
+    )
+    expect_request_success
   end
 
   it "can fetch chargeback rate details" do
@@ -43,13 +49,20 @@ RSpec.describe "chargebacks API" do
     api_basic_authorize
     run_get "/api/chargebacks/#{chargeback_rate.to_param}/rates"
 
-    json = JSON.parse(last_response.body)
-    expect(json["count"]).to be 1
-    expect(json["subcount"]).to be 1
-    expect(json["name"]).to eq("rates")
-    expect(json["resources"].first["href"])
-      .to end_with("/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}")
-    expect(last_response.status).to eq(200)
+    expect_result_to_match_hash(
+      @result,
+      "count"    => 1,
+      "subcount" => 1,
+      "name"     => "rates"
+    )
+
+    expect_result_resources_to_include_data(
+      "resources",
+      "href" => [
+        "http://example.org/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}"
+      ]
+    )
+    expect_request_success
   end
 
   it "can fetch an individual chargeback rate detail" do
@@ -60,12 +73,13 @@ RSpec.describe "chargebacks API" do
     api_basic_authorize
     run_get "/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}"
 
-    json = JSON.parse(last_response.body)
-    expect(json["chargeback_rate_id"]).to eq(chargeback_rate.id)
-    expect(json["href"])
-      .to end_with("/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}")
-    expect(json["id"]).to eq(chargeback_rate_detail.id)
-    expect(json["rate"]).to eq("5")
-    expect(last_response.status).to eq(200)
+    expect_result_to_match_hash(
+      @result,
+      "chargeback_rate_id" => chargeback_rate.id,
+      "href"               => "/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}",
+      "id"                 => chargeback_rate_detail.id,
+      "rate"               => "5"
+    )
+    expect_request_success
   end
 end
