@@ -13,7 +13,7 @@ RSpec.describe "chargebacks API" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
     api_basic_authorize
-    run_get "/api/chargebacks"
+    run_get chargebacks_url
 
     expect_result_resources_to_include_data(
       "resources",
@@ -29,7 +29,7 @@ RSpec.describe "chargebacks API" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
     api_basic_authorize
-    run_get "/api/chargebacks/#{chargeback_rate.to_param}"
+    run_get chargebacks_url(chargeback_rate.id)
 
     expect_result_to_match_hash(
       @result,
@@ -47,7 +47,7 @@ RSpec.describe "chargebacks API" do
                                          :chargeback_rate_details => [chargeback_rate_detail])
 
     api_basic_authorize
-    run_get "/api/chargebacks/#{chargeback_rate.to_param}/rates"
+    run_get "#{chargebacks_url(chargeback_rate.id)}/rates"
 
     expect_result_to_match_hash(
       @result,
@@ -71,7 +71,7 @@ RSpec.describe "chargebacks API" do
                                          :chargeback_rate_details => [chargeback_rate_detail])
 
     api_basic_authorize
-    run_get "/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}"
+    run_get "#{chargebacks_url(chargeback_rate.id)}/rates/#{chargeback_rate_detail.to_param}"
 
     expect_result_to_match_hash(
       @result,
