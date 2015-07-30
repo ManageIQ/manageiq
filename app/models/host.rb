@@ -1959,16 +1959,16 @@ class Host < ActiveRecord::Base
   end
 
   def self.count_of_openstack_hosts
-    ems = EmsOpenstackInfra.pluck(:id)
+    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
     Host.where(:ems_id => ems).count
   end
 
   def self.count_of_non_openstack_hosts
-    ems = EmsOpenstackInfra.pluck(:id)
+    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
     Host.where(Host.arel_table[:ems_id].not_in(ems)).count
   end
 
   def openstack_host?
-    ext_management_system.class == EmsOpenstackInfra
+    ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
   end
 end

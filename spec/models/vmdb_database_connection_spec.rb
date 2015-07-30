@@ -1,4 +1,5 @@
 require "spec_helper"
+require "active_support/concurrency/latch"
 
 describe VmdbDatabaseConnection do
   before :each do

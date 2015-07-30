@@ -93,11 +93,11 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.add_openstack(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::Openstack.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Openstack::CloudManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_openstack_infra(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::OpenstackInfra.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Openstack::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_amazon(ems_id, event)

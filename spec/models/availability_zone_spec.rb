@@ -7,6 +7,6 @@ describe AvailabilityZone do
     FactoryGirl.create(:availability_zone_openstack_null)
 
     described_class.available.length.should == 2
-    described_class.available.each { |az| az.class.should_not == AvailabilityZoneOpenstackNull }
+    described_class.available.each { |az| az.class.should_not == ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull }
   end
 end

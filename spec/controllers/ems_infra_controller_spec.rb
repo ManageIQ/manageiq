@@ -95,7 +95,7 @@ describe EmsInfraController do
       @ems = FactoryGirl.create(:ems_openstack_infra_with_stack)
       @orchestration_stack_parameter_compute = FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_compute)
 
-      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_status).and_return(["CREATE_COMPLETE", nil])
+      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack.any_instance.stub(:raw_status).and_return(["CREATE_COMPLETE", nil])
     end
 
     it "when values are not changed" do
@@ -115,7 +115,7 @@ describe EmsInfraController do
     end
 
     it "when values are changed, and values do not exceed number of hosts available" do
-      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_update_stack)
+      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack.any_instance.stub(:raw_update_stack)
       post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
            @orchestration_stack_parameter_compute.name => 2
       controller.send(:flash_errors?).should be_false
@@ -133,7 +133,7 @@ describe EmsInfraController do
     end
 
     it "when patch operation fails, an error message should be displayed" do
-      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_update_stack) { raise _("my error") }
+      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack.any_instance.stub(:raw_update_stack) { raise _("my error") }
       post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
            @orchestration_stack_parameter_compute.name => 2
       controller.send(:flash_errors?).should be_true
@@ -142,7 +142,7 @@ describe EmsInfraController do
     end
 
     it "when operation in progress, an error message should be displayed" do
-      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_status).and_return(["CREATE_IN_PROGRESS", nil])
+      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack.any_instance.stub(:raw_status).and_return(["CREATE_IN_PROGRESS", nil])
       post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
            @orchestration_stack_parameter_compute.name => 2
       controller.send(:flash_errors?).should be_true

@@ -616,9 +616,9 @@ class ApplicationHelper::ToolbarBuilder
 
     # Scale is only supported by OpenStack Infrastructure Provider
     return true if id == "ems_infra_scale" &&
-                   (@record.class.name != "EmsOpenstackInfra" ||
+                   (@record.class != ManageIQ::Providers::Openstack::InfraManager ||
                     !role_allows(:feature => "ems_infra_scale") ||
-                   (@record.class.name == "EmsOpenstackInfra" && @record.orchestration_stacks.count == 0))
+                   (@record.class == ManageIQ::Providers::Openstack::InfraManager && @record.orchestration_stacks.count == 0))
 
     # Now check model/record specific rules
     case get_record_cls(@record)

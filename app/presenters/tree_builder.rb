@@ -272,7 +272,7 @@ class TreeBuilder
                         when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
                         when Zone                then x_get_tree_zone_kids(parent, options)
                         when MiqSearch           then nil
-                        when VmOpenstack         then nil
+                        when ManageIQ::Providers::Openstack::CloudManager::Vm         then nil
                         else                          nil end
     children_or_count || (count_only ? 0 : [])
   end

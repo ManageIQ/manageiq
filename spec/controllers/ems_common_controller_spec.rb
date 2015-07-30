@@ -96,7 +96,7 @@ describe EmsCloudController do
 
         it "when adding cloud EMS" do
           @type = 'openstack'
-          @ems  = EmsOpenstack.new
+          @ems  = ManageIQ::Providers::Openstack::CloudManager.new
         end
 
         it "when adding infra EMS" do

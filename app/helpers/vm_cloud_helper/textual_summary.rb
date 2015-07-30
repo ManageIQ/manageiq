@@ -130,7 +130,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_architecture
-    return nil if @record.kind_of?(VmOpenstack) || @record.kind_of?(TemplateOpenstack)
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     bitness = @record.hardware.try(:bitness)
     {:label => "Architecture ", :value => bitness.nil? ? "" : "#{bitness} bit"}
   end
@@ -521,13 +521,13 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_virtualization_type
-    return nil if @record.kind_of?(VmOpenstack) || @record.kind_of?(TemplateOpenstack)
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     v_type = @record.hardware.try(:virtualization_type)
     {:label => "Virtualization Type", :value => v_type.to_s}
   end
 
   def textual_root_device_type
-    return nil if @record.kind_of?(VmOpenstack) || @record.kind_of?(TemplateOpenstack)
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) || @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     rd_type = @record.hardware.try(:root_device_type)
     {:label => "Root Device Type", :value => rd_type.to_s}
   end

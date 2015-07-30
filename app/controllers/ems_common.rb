@@ -699,7 +699,7 @@ module EmsCommon
       @edit[:server_zones].push([zone.description, zone.name])
     end
     
-    @edit[:openstack_infra_providers] = ProviderOpenstack.order('lower(name)').each_with_object([["---", nil]]) do |openstack_infra_provider, x|
+    @edit[:openstack_infra_providers] = ManageIQ::Providers::Openstack::Provider.order('lower(name)').each_with_object([["---", nil]]) do |openstack_infra_provider, x|
       x.push([openstack_infra_provider.name, openstack_infra_provider.id])
     end
 

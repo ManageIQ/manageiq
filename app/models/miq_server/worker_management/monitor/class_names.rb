@@ -5,8 +5,8 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
-    MiqEmsMetricsCollectorWorkerOpenstack
-    MiqEmsMetricsCollectorWorkerOpenstackInfra
+    ManageIQ::Providers::Openstack::CloudManager::MetricsCollectorWorker
+    ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker
     MiqEmsMetricsProcessorWorker
     MiqEmsRefreshCoreWorker
     ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
@@ -16,15 +16,15 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerOpenshift
     MiqEmsRefreshWorkerMicrosoft
     ManageIQ::Providers::Redhat::InfraManager::RefreshWorker
-    MiqEmsRefreshWorkerOpenstack
-    MiqEmsRefreshWorkerOpenstackInfra
+    ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
+    ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     MiqEventCatcherKubernetes
     MiqEventCatcherOpenshift
     ManageIQ::Providers::Redhat::InfraManager::EventCatcher
-    MiqEventCatcherOpenstack
-    MiqEventCatcherOpenstackInfra
+    ManageIQ::Providers::Openstack::CloudManager::EventCatcher
+    ManageIQ::Providers::Openstack::InfraManager::EventCatcher
     ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     MiqEventHandler
     MiqGenericWorker
@@ -49,8 +49,8 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
-    MiqEmsMetricsCollectorWorkerOpenstack
-    MiqEmsMetricsCollectorWorkerOpenstackInfra
+    ManageIQ::Providers::Openstack::CloudManager::MetricsCollectorWorker
+    ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker
     MiqReportingWorker
     MiqSmartProxyWorker
     MiqReplicationWorker
@@ -67,8 +67,8 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerOpenshift
     MiqEmsRefreshWorkerMicrosoft
     ManageIQ::Providers::Redhat::InfraManager::RefreshWorker
-    MiqEmsRefreshWorkerOpenstack
-    MiqEmsRefreshWorkerOpenstackInfra
+    ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
+    ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     MiqScheduleWorker
     MiqPriorityWorker
@@ -77,8 +77,8 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqVimBrokerWorker
     ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     ManageIQ::Providers::Redhat::InfraManager::EventCatcher
-    MiqEventCatcherOpenstack
-    MiqEventCatcherOpenstackInfra
+    ManageIQ::Providers::Openstack::CloudManager::EventCatcher
+    ManageIQ::Providers::Openstack::InfraManager::EventCatcher
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     MiqEventCatcherKubernetes
     MiqEventCatcherOpenshift

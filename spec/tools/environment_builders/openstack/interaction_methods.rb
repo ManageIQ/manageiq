@@ -18,7 +18,7 @@ module InteractionMethods
   end
 
   def ems
-    EmsOpenstack.where(:id => settings[:connection][:ems_id]).first
+    ManageIQ::Providers::Openstack::CloudManager.where(:id => settings[:connection][:ems_id]).first
   end
 
   def fog

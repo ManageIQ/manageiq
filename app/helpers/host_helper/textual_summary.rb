@@ -67,7 +67,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_group_openstack_status
-    return nil unless @record.kind_of?(HostOpenstackInfra)
+    return nil unless @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::Host)
     ret = textual_generate_openstack_status
 
     ret.blank? ? nil : ret
