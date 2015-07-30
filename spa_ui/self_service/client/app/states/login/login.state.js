@@ -22,9 +22,6 @@
         controller: StateController,
         controllerAs: 'vm',
         title: 'Login',
-        resolve: {
-          motd: resolveMotd
-        },
         data: {
           layout: 'blank'
         }
@@ -33,16 +30,10 @@
   }
 
   /** @ngInject */
-  function resolveMotd(Motd) {
-    return Motd.get().$promise;
-  }
-
-  /** @ngInject */
-  function StateController(motd) {
+  function StateController() {
     var vm = this;
 
     vm.title = 'Login';
-    vm.motd = motd;
     activate();
 
     function activate() {

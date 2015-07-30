@@ -1,6 +1,6 @@
 <content-header>
   <div class="content-header__body">
-    <img ng-if="::vm.project.img" class="project-details__icon" ng-src="images/assets/{{vm.project.img}}"/>
+    <img ng-if="::vm.project.img" class="project-details__icon" ng-src="/images/assets/{{vm.project.img}}"/>
 
     <div ng-if="::!vm.project.img" class="project-details__icon project-details__icon--missing"></div>
     <span class="content-header__title">{{ ::vm.project.name }}</span>

@@ -1,6 +1,6 @@
 <div class="project-description">
   <div ng-if="::!vm.project.img" class="project-description__image project-description__image--missing"></div>
-  <img ng-if="::vm.project.img" class="project-description__image" ng-src="images/assets/{{ ::vm.project.img }}"/>
+  <img ng-if="::vm.project.img" class="project-description__image" ng-src="/images/assets/{{ ::vm.project.img }}"/>
   <a ui-sref="{{vm.linkTo}}">{{ ::vm.project.name }}</a>
   <span ng-if="::vm.project.description" class="project-description__description">
     &mdash; {{ ::vm.project.description }}

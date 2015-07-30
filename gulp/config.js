@@ -4,10 +4,10 @@ var wiredep = require('wiredep');
 var merge = require('merge');
 
 module.exports = (function() {
-  var src = './src/';
+  var src = './spa_ui/self_service/';
   var client = src + 'client/';
   var server = src + 'server/';
-  var build = './public/';
+  var build = './public/self_service/';
   var temp = './.tmp/';
   var reports = './reports/';
   var bower = './bower_components/';
@@ -38,7 +38,7 @@ module.exports = (function() {
   var wiredepOptions = {
     json: require('../bower.json'),
     directory: bower,
-    ignorePath: '../..',
+    ignorePath: '../../..',
     // Ignore CSS and JavaScript this is not needed or is undesired
     exclude: [
       // Exclude the bootstrap CSS, the Sass version will be @imported instead
@@ -301,6 +301,7 @@ module.exports = (function() {
     browserSyncOptions: {
       proxy: 'localhost:' + (process.env.PORT || '8001'),
       port: 3001,
+      startPath: '/self_service/',
       files: [],
       ghostMode: {
         clicks: true,

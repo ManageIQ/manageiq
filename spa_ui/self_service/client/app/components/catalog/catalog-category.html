@@ -2,7 +2,7 @@
   <div class="catalog-category__header">
     <span class="catalog-category__title">{{ ::vm.category.name }}</span>
     <a href="#" title="Collapse">
-      <img class="catalog-category__collapse-icon" src="images/ic_viewcategory_dropdown.png"
+      <img class="catalog-category__collapse-icon" src="/images/ic_viewcategory_dropdown.png"
            ng-click="vm.collapsed = !vm.collapsed">
     </a>
   </div>
@@ -37,7 +37,7 @@
           <computed-monthly-price  pricing="row"></computed-monthly-price>
         </td>
         <td ng-if="::vm.project" class="catalog-category__cell catalog-category__cell--actions">
-          <img src="images/ic_cart.png" class="catalog-category__action"
+          <img src="/images/ic_cart.png" class="catalog-category__action"
                alt="Add to cart" title="Add to cart"
                add-to-cart product="::row" project="::vm.project"/>
           <!--<add-to-cart product="::row" project="::vm.project" short="::true" text="Add"></add-to-cart>-->
@@ -50,7 +50,7 @@
            ng-class="::{'catalog-category__box--trim': !vm.comparable}">
         <div class="catalog-category__card">
           <div ng-if="row.img">
-            <img class="catalog-category__image catalog-category__image--large" ng-src="images/assets/{{row.img}}"/>
+            <img class="catalog-category__image catalog-category__image--large" ng-src="/images/assets/{{row.img}}"/>
           </div>
           <div ng-if="!row.img">
             <img class="catalog-category__image" ng-src="jelly_alone.png"/>

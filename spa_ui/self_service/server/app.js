@@ -4,6 +4,7 @@
 var express = require('express');
 var proxy = require('express-http-proxy');
 var app = express();
+var router = express.Router();
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -22,12 +23,12 @@ app.use('/api/v1', proxy('127.0.0.1:3000', {
   }
 }));
 
-app.use(favicon(__dirname + '/favicon.ico'));
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use(logger('dev'));
+router.use(favicon(__dirname + '/favicon.ico'));
+router.use(bodyParser.urlencoded({extended: true}));
+router.use(bodyParser.json());
+router.use(logger('dev'));
 
-app.use('/api', require('./routes'));
+app.use('/self_service/', router);
 
 console.log('About to crank up node');
 console.log('PORT=' + port);
@@ -36,31 +37,30 @@ console.log('NODE_ENV=' + environment);
 switch (environment) {
   case 'build':
     console.log('** BUILD **');
-    app.use(express.static('./build/'));
+    app.use(express.static('./public/self_service/'));
+    app.use(express.static('./public/'));
     // Any invalid calls for templateUrls are under app/* and should return 404
     app.use('/app/*', function(req, res) {
       four0four.send404(req, res);
     });
     // Any deep link calls should return index.html
-    app.use('/*', express.static('./public/index.html'));
+    router.use('/*', express.static('./public/self_service/index.html'));
     break;
   default:
     console.log('** DEV **');
-    app.use(express.static('./src/client/'));
-    app.use(express.static('./src/client/assets'));
+    router.use(express.static('./spa_ui/self_service/client/'));
+    app.use(express.static('./spa_ui/self_service/client/assets'));
     app.use(express.static('./'));
-    app.use(express.static('./tmp'));
     // Any invalid calls for templateUrls are under app/* and should return 404
-    app.use('/app/*', function(req, res) {
+    router.use('/app/*', function(req, res) {
       four0four.send404(req, res);
     });
     // Any deep link calls should return index.html
-    app.use('/*', express.static('./src/client/index.html'));
+    app.use('/*', express.static('./spa_ui/self_service/client/index.html'));
     break;
 }
 
 app.listen(port, function() {
   console.log('Express server listening on port ' + port);
-  console.log('env = ' + app.get('env') + '\n__dirname = '
-  + __dirname + '\nprocess.cwd = ' + process.cwd());
+  console.log('env = ' + app.get('env') + '\n__dirname = ' + __dirname + '\nprocess.cwd = ' + process.cwd());
 });

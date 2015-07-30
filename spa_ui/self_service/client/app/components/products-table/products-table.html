@@ -25,11 +25,11 @@
     </td>
     <td class="products-table__cell products-table__cell--product-type">{{ ::row.product_type }}</td>
     <td class="products-table__cell products-table__cell--available">
-      <img ng-if="::row.active" src="images/ic_required.png" alt="Active" title="Active"/>
+      <img ng-if="::row.active" src="/images/ic_required.png" alt="Active" title="Active"/>
     </td>
     <td class="products-table__cell products-table__cell--actions">
       <a ui-sref="admin.products.edit({productId: row.id})" class="products-table__action">
-        <img src="images/ic_edit.png" alt="Edit Product" title="Edit Product"/>
+        <img src="/images/ic_edit.png" alt="Edit Product" title="Edit Product"/>
       </a>
     </td>
   </tr>
