@@ -4,7 +4,7 @@ module ContainerGroupHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name creation_timestamp resource_version restart_policy dns_policy ip)
+    items = %w(name phase message reason creation_timestamp resource_version restart_policy dns_policy ip)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -20,6 +20,18 @@ module ContainerGroupHelper::TextualSummary
 
   def textual_name
     {:label => "Name", :value => @record.name}
+  end
+
+  def textual_phase
+    {:label => "Phase", :value => @record.phase}
+  end
+
+  def textual_message
+    {:label => "Message", :value => @record.message} if @record.message
+  end
+
+  def textual_reason
+    {:label => "Reason", :value => @record.reason} if @record.reason
   end
 
   def textual_creation_timestamp
