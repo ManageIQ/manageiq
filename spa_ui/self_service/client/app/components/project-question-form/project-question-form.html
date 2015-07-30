@@ -1,0 +1,99 @@
+<form name="vm.form" class="form-horizontal" role="form" novalidate autocomplete="off"
+      ng-submit="vm.onSubmit()"
+      ng-class="{'show-errors': vm.showErrors()}">
+  <content-header short="true">
+    <div>
+      <span class="content-header__title project-question-form__title">{{ ::vm.heading }}</span>
+      <span class="project-question-form__title-error" ng-if="vm.hasErrors()">Please complete required fields in
+        red</span>
+    </div>
+  </content-header>
+  <div class="project-question-form__body">
+
+    <div class="project-question-field">
+      <div class="project-question-field__aside">
+        <label class="project-question-field__label">Question</label>
+      </div>
+
+      <div class="project-question-field__body" ng-class="{'has-error': vm.hasErrors('question')}">
+        <input id="project-question-name" ng-model="vm.projectQuestion.question" name="question" type="text"
+               class="project-question-field__input" placeholder="" required/>
+
+        <div class="project-question-field__feedback" ng-messages="vm.form.question.$error">
+          <div ng-message="required">A question is required.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-question-field">
+      <div class="project-question-field__aside">
+        <label class="project-question-field__label">Help Text</label>
+      </div>
+
+      <div class="project-question-field__body" ng-class="{'has-error': vm.hasErrors('help')}">
+        <input id="project-question-help" ng-model="vm.projectQuestion.help_text" name="help" type="text"
+               class="project-question-field__input" placeholder=""/>
+      </div>
+    </div>
+
+    <div class="project-question-field">
+      <div class="project-question-field__aside">
+        <label class="project-question-field__label">Answer</label>
+      </div>
+
+      <div class="project-question-field__body">
+        <div class="project-question-field__checkbox">
+          <input id="project-question-required" ng-model="vm.projectQuestion.required" name="required"
+                 type="checkbox"/>
+          <label for="project-question-required">Required</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-question-field">
+      <div class="project-question-field__aside">
+        <label class="project-question-field__label">Question Type</label>
+      </div>
+      <div class="project-question-field__body project-question-field__body--type">
+        <select id="project-question-type" ng-model="vm.projectQuestion.field_type" name="type"
+                class="project-question-field__input"
+                confirmation
+                confirmation-trigger="change"
+                confirmation-message="Switching question types will clear the option content. Are you sure you want to switch?"
+                confirmation-ok-text="Yes, Switch It"
+                confirmation-ok-style="danger"
+                confirmation-show-cancel="false"
+                confirmation-on-ok="vm.typeChangeOk()"
+                confirmation-on-cancel="vm.typeChangeCancel()">
+          <option value="date">Date Picker</option>
+          <option value="select_option">Multiple Choice</option>
+          <option value="text">Text Input</option>
+          <option value="check_box">Checkbox</option>
+          <option value="radio">Yes/No</option>
+
+        </select>
+      </div>
+    </div>
+
+    <project-question-options ng-if="vm.projectQuestion.field_type === 'select_option'" options="vm.projectQuestion.options"
+                              options-type="vm.projectQuestion.field_type"></project-question-options>
+
+  </div>
+  <div class="row project-question-form__buttons">
+    <div class="col-sm-7">
+      <div class="col-sm-offset-3 col-sm-9">
+        <button type="submit" class="btn-rounded project-question-form__submit" ng-disabled="vm.hasErrors()">Save
+        </button>
+        <button type="button" class="btn btn-link project-question-form__cancel"
+                confirmation
+                confirmation-if="vm.form.$dirty"
+                confirmation-message="You have unsaved changes. Abandon them and leave the page?"
+                confirmation-ok-style="danger"
+                confirmation-ok-text="Yes, Leave"
+                confirmation-on-ok="vm.backToList()"
+                confirmation-show-cancel="false">Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,35 @@
++block(project-answers-table)
+  @extend .table-striped
+  width: 100%
+  background-color: $app-color-white
+
+  +element(heading)
+    height: 44px
+    font-weight: bold
+    text-transform: uppercase
+    color: $app-color-gray
+
+    +modifier(question)
+      padding-left: 20px
+
+    +modifier(when)
+      text-align: center
+
+  +element(cell)
+    height: 44px
+    font-size: 14px
+    border: none
+    padding: 10px 10px 10px 0
+    vertical-align: top
+    position: relative
+
+    +modifier(question)
+      padding: 10px 20px
+
+    +modifier(answer)
+      width: 260px
+
+    +modifier(when)
+      width: 140px
+      padding-right: 0
+      text-align: center
