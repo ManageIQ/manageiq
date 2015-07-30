@@ -139,7 +139,9 @@
                 %tr{:title => _("View this Condition"),
                   :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_co-#{to_cid(c.id)}');"}
                   %td.narrow
-                    %img{:src => "/images/icons/new/miq_condition.png"}
+                    %ul.icons.list-unstyled
+                      %li
+                        %span{:class => "product product-miq_condition"}
                   %td
                     = c.description
                   %td
