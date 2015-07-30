@@ -102,7 +102,7 @@ describe VMDB::Util do
     assert_zip_entry_from_path("ROOT/www/var/vmdb/miq/log/something.log", "/www/var/vmdb/miq/log/something.log")
     assert_zip_entry_from_path("log/apache/ssl_access.log", "/var/www/miq/vmdb/log/apache/ssl_access.log")
     assert_zip_entry_from_path("config/database.yml", "/var/www/miq/vmdb/config/database.yml")
-    assert_zip_entry_from_path("ROOT/opt/rh/postgresql92/root/var/lib/pgsql/data/pg_hba.conf", "/opt/rh/postgresql92/root/var/lib/pgsql/data/pg_hba.conf")
+    assert_zip_entry_from_path("ROOT/opt/rh/rh-postgresql94/root/var/lib/pgsql/data/pg_hba.conf", "/opt/rh/rh-postgresql94/root/var/lib/pgsql/data/pg_hba.conf")
     assert_zip_entry_from_path("GUID", "/var/www/miq/vmdb/GUID")
   end
 

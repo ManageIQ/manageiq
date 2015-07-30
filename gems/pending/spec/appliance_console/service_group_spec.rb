@@ -5,7 +5,7 @@ require "linux_admin"
 describe ApplianceConsole::ServiceGroup do
   let(:group)             { described_class.new }
   let(:common_services)   { %w(evminit memcached miqtop evmserverd) }
-  let(:postgres_service)  { "postgresql92-postgresql" }
+  let(:postgres_service)  { "rh-postgresql94-postgresql" }
 
   describe "#postgresql?" do
     it { expect(group).not_to be_postgresql }

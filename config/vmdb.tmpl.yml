@@ -100,8 +100,8 @@ log:
       - log/apache/*.log
       - log/*.txt
       - config/*
-      - /opt/rh/postgresql92/root/var/lib/pgsql/data/*.conf
-      - /opt/rh/postgresql92/root/var/lib/pgsql/data/pg_log/*
+      - /opt/rh/rh-postgresql94/root/var/lib/pgsql/data/*.conf
+      - /opt/rh/rh-postgresql94/root/var/lib/pgsql/data/pg_log/*
       - /var/log/syslog*
       - /var/log/daemon.log*
       - /etc/default/ntp*

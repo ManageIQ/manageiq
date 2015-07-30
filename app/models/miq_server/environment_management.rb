@@ -126,7 +126,7 @@ module MiqServer::EnvironmentManagement
         when '/'                                            then 'evm_server_system_disk_high_usage'
         when '/var/www/miq'                                 then 'evm_server_app_disk_high_usage'
         when '/var/www/miq/vmdb/log'                        then 'evm_server_log_disk_high_usage'
-        when '/opt/rh/postgresql92/root/var/lib/pgsql/data' then 'evm_server_db_disk_high_usage'
+        when '/opt/rh/rh-postgresql94/root/var/lib/pgsql/data' then 'evm_server_db_disk_high_usage'
         end
 
         next unless disk_usage_event

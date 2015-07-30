@@ -42,7 +42,7 @@ module ApplianceConsole
     end
 
     def self.pg_status
-      system("service postgresql92-postgresql status > /dev/null 2>&1")
+      system("service rh-postgresql94-postgresql status > /dev/null 2>&1")
       return $?.exitstatus == 0 ? "running" : "not running"
     end
 

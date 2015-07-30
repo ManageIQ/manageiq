@@ -1,5 +1,5 @@
 module ApplianceConsole
-  POSTGRESQL_SERVICE = "postgresql92-postgresql".freeze
+  POSTGRESQL_SERVICE = "rh-postgresql94-postgresql".freeze
 
   class ServiceGroup
     SERVICES  = %w{evminit memcached miqtop evmserverd}.freeze

@@ -4,10 +4,10 @@ class MiqPostgresAdmin
 
   # From /etc/init.d/postgresql script
   # Installation prefix
-  PREFIX='/opt/rh/postgresql92/root/usr'
+  PREFIX='/opt/rh/rh-postgresql94/root/usr'
 
   # Data directory
-  PGDATA="/opt/rh/postgresql92/root/var/lib/pgsql/data"
+  PGDATA="/opt/rh/rh-postgresql94/root/var/lib/pgsql/data"
 
   # Who to run the postmaster as, usually "postgres".  (NOT "root")
   PGUSER='postgres'
@@ -15,7 +15,7 @@ class MiqPostgresAdmin
   # What to use to shut down the postmaster
   PGCTL="#{PREFIX}/bin/pg_ctl"
 
-  PGSERVICE = "postgresql92-postgresql".freeze
+  PGSERVICE = "rh-postgresql94-postgresql".freeze
 
   def self.database_size(opts)
     result = runcmd("psql", opts, :command => "SELECT pg_database_size('#{opts[:dbname]}');")

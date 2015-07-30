@@ -5,16 +5,16 @@ module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration
     DATABASE_DISK_FILESYSTEM_TYPE = "xfs".freeze
     POSTGRES_USER                 = "postgres".freeze
-    POSTGRES_DIR                  = "opt/rh/postgresql92/root/var/lib/pgsql/data".freeze
+    POSTGRES_DIR                  = "opt/rh/rh-postgresql94/root/var/lib/pgsql/data".freeze
     DATABASE_DISK_MOUNT_POINT     = Pathname.new("/").join(POSTGRES_DIR).freeze
     VOLUME_GROUP_NAME             = "vg_data".freeze
     LOGICAL_VOLUME_NAME           = "lv_pg".freeze
     LOGICAL_VOLUME_PATH           = Pathname.new("/dev").join(VOLUME_GROUP_NAME, LOGICAL_VOLUME_NAME).freeze
-    SCL_ENABLE_PREFIX             = "scl enable postgresql92".freeze
+    SCL_ENABLE_PREFIX             = "scl enable rh-postgresql94".freeze
     CERT_LOCATION                 = Pathname.new("/var/www/miq/vmdb/certs").freeze
     POSTGRESQL_SAMPLE             = Pathname.new("/var/www/miq/system/COPY/").join(POSTGRES_DIR).freeze
     POSTGRESQL_TEMPLATE           = Pathname.new("/var/www/miq/system/TEMPLATE/").join(POSTGRES_DIR).freeze
-    POSTGRESQL_SERVICE            = "postgresql92-postgresql".freeze
+    POSTGRESQL_SERVICE            = "rh-postgresql94-postgresql".freeze
     attr_accessor :disk
     attr_accessor :ssl
 
