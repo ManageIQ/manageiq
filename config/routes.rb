@@ -309,6 +309,8 @@ Vmdb::Application.routes.draw do
         download_data
         explorer
         show
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         accordion_select
@@ -321,6 +323,8 @@ Vmdb::Application.routes.draw do
         save_col_widths
         tree_autoload_dynatree
         tree_select
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         exp_post +
@@ -336,6 +340,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -352,6 +358,8 @@ Vmdb::Application.routes.draw do
         tl_chooser
         update
         wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         exp_post +
@@ -366,6 +374,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -382,6 +392,8 @@ Vmdb::Application.routes.draw do
         tl_chooser
         update
         wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         exp_post +
@@ -389,38 +401,15 @@ Vmdb::Application.routes.draw do
     },
 
     :container_replicator => {
-       :get => %w(
-         download_data
-         edit
-         index
-         new
-         show
-         show_list
-      ),
-       :post => %w(
-         button
-         create
-         dynamic_checkbox_refresh
-         form_field_changed
-         listnav_search_selected
-         panel_control
-         quick_search
-         save_col_widths
-         sections_field_changed
-         show
-         show_list
-         update
-       ) + adv_search_post + exp_post + save_post
-    },
-
-    :container_service => {
-      :get => %w(
+      :get  => %w(
         download_data
         edit
         index
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -435,6 +424,37 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + adv_search_post + exp_post + save_post
+    },
+
+    :container_service => {
+      :get => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ),
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        save_col_widths
+        sections_field_changed
+        show
+        show_list
+        update
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         exp_post +
@@ -449,6 +469,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -463,6 +485,8 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
+        tagging_edit
+        tag_edit_form_field_changed
       ) + adv_search_post + exp_post + save_post
     },
 
@@ -474,6 +498,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -488,6 +514,8 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
+        tagging_edit
+        tag_edit_form_field_changed
       ) + adv_search_post + exp_post + save_post
     },
 
@@ -662,6 +690,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         compare_get,
       :post => %w(
@@ -679,6 +709,8 @@ Vmdb::Application.routes.draw do
         tl_chooser
         update
         wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         compare_post +

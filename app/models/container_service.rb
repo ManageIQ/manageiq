@@ -11,4 +11,6 @@ class ContainerService < ActiveRecord::Base
   belongs_to :container_project
   has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource
   has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => "CustomAttribute", :as => :resource
+
+  acts_as_miq_taggable
 end

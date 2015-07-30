@@ -13,6 +13,17 @@ module ContainersCommonMixin
     show_container(@record, controller_name, display_name)
   end
 
+  def button
+    @edit = session[:edit]                          # Restore @edit for adv search box
+    params[:display] = @display if ["#{params[:controller]}s"].include?(@display)  # displaying container_*
+    params[:page] = @current_page if @current_page.nil?   # Save current page for list refresh
+
+    # Handle Toolbar Policy Tag Button
+    @refresh_div = "main_div" # Default div for button.rjs to refresh
+    tag(self.class.model) if params[:pressed] == "#{params[:controller]}_tag"
+    return if ["#{params[:controller]}_tag"].include?(params[:pressed]) && @flash_array.nil? # Tag screen showing
+  end
+
   private
 
   def show_container(record, controller_name, display_name)

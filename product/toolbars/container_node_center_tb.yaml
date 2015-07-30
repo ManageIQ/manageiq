@@ -35,3 +35,14 @@
       :title: "Show Timelines for this Node"
       :url: '/show'
       :url_parms: '?display=timeline'
+- :name: container_node_policy
+  :items:
+  - :buttonSelect: container_node_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: container_node_tag
+      :image: tag
+      :text: 'Edit Tags'
+      :title: 'Edit Tags for this #{ui_lookup(:table=>"container_node")}'
