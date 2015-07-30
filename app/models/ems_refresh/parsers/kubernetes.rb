@@ -193,6 +193,9 @@ module EmsRefresh::Parsers
         :restart_policy        => pod.spec.restartPolicy,
         :dns_policy            => pod.spec.dnsPolicy,
         :ipaddress             => pod.status.podIP,
+        :phase                 => pod.status.phase,
+        :message               => pod.status.message,
+        :reason                => pod.status.reason,
         :container_node        => nil,
         :container_definitions => [],
         :container_replicator  => nil

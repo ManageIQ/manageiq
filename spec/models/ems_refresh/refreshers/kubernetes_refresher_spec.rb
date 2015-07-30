@@ -103,6 +103,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :name           => "monitoring-heapster-controller-4j5zu",
       :restart_policy => "Always",
       :dns_policy     => "ClusterFirst",
+      :phase          => "Running",
     )
     @containergroup.labels.count.should == 1
 
