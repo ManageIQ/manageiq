@@ -40,8 +40,10 @@ module EventCatcherOpenstackMixin
     begin
       event_monitor_handle.start
       event_monitor_handle.each_batch do |events|
-        _log.debug("#{self.log_prefix} Received events #{events.collect { |e| e.payload["event_type"] }}") if _log.debug?
-        @queue.enq events
+        if events && !events.empty?
+          _log.debug("#{self.log_prefix} Received events #{events.collect { |e| e.payload["event_type"] }}") if _log.debug?
+          @queue.enq events
+        end
         sleep_poll_normal
       end
     ensure
