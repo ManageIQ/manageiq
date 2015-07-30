@@ -27,17 +27,18 @@ describe ReplicationWorker do
   end
 
   context "testing child process heartbeat" do
-    before(:each) do
-      FileUtils.touch('/tmp/rubyrep_hb')
-    end
-
     it "should be alive if heartbeat within threshold" do
-      Timecop.freeze(Time.zone.now.utc)
+      Timecop.freeze(Time.current.utc)
 
+      FileUtils.touch('/tmp/rubyrep_hb')
       expect(@worker.child_process_recently_active?).to be_true
     end
 
     it "should not be alive if heartbeat beyond threshold" do
+      Timecop.freeze(Time.current.utc)
+
+      FileUtils.touch('/tmp/rubyrep_hb')
+
       Timecop.freeze(301.seconds.from_now.utc)
 
       expect(@worker.child_process_recently_active?).to be_false
