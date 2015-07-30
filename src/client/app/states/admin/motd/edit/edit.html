@@ -1,0 +1,55 @@
+<form name="vm.form" class="form-horizontal" role="form" novalidate autocomplete="off"
+        ng-submit="vm.onSubmit()"
+        ng-class="{'show-errors': vm.showErrors()}">
+    <content-header short="true">
+      <div>
+        <span class="content-header__title motd-form__title" ng-bind="::vm.title"></span>
+        <span class="motd-form__title-error" ng-if="vm.hasErrors()">Please complete required fields in red</span>
+      </div>
+    </content-header>
+
+    <div class="row">
+      <div class="motd-form__body">
+        <div class="motd-field">
+          <div class="motd-field__body" ng-class="{'has-error': vm.hasErrors('message')}">
+          <textarea id="motd" ng-model="vm.motd.message" name="message"
+                    class="motd-field__input field__textarea" rows="4"
+                    placeholder="Add a new message of the day." required></textarea>
+            <div class="motd-field__feedback" ng-messages="vm.form.message.$error">
+              <div ng-message="required">This field is required.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-7">
+        <div class="col-sm-offset-3 col-sm-9">
+          <button type="submit" class="btn-rounded motd-form__submit" ng-disabled="vm.hasErrors()">Save
+          </button>
+          <button type="button"
+                  class="btn-rounded btn-rounded--danger motd-form__delete"
+                  confirmation
+                  confirmation-ok-style="danger"
+                  confirmation-ok-text="Clear the message of the day."
+                  confirmation-on-ok="vm.onDelete()"
+                  confirmation-show-cancel="false">Delete
+          </button>
+          <button type="button"
+                  class="btn btn-link motd-form__cancel"
+                  confirmation
+                  confirmation-if="vm.form.$dirty"
+                  confirmation-message="You have unsaved changes. Abandon them and leave the page?"
+                  confirmation-ok-style="danger"
+                  confirmation-ok-text="Yes, Leave"
+                  confirmation-on-ok="vm.backToDash()"
+                  confirmation-show-cancel="false">Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+

@@ -1,0 +1,37 @@
+<table ng-if="::0 < vm.orders.length" st-table="vm.orders" class="orders-table">
+  <thead>
+  <tr>
+    <th class="orders-table__heading orders-table__heading--padding"></th>
+    <th class="orders-table__heading orders-table__heading--sortable" st-sort="id">Order Id</th>
+    <th class="orders-table__heading orders-table__heading--sortable" st-sort="order_items">Items</th>
+    <th class="orders-table__heading orders-table__heading--sortable" st-sort="total">
+      Projected Cost (monthly)
+    </th>
+    <th ng-if="::vm.orders[0].staff" class="orders-table__heading orders-table__heading--sortable" st-sort="staff_id">
+      Placed By
+    </th>
+    <th class="orders-table__heading orders-table__heading--sortable" st-sort="created_at" st-sort-default="true">
+      Request Date
+    </th>
+    <th class="orders-table__heading orders-table__heading--actions">Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr class="selectRow" ng-repeat="item in vm.orders">
+    <td class="orders-table__cell orders-table__cell--padding"></td>
+    <td class="orders-table__cell orders-table__cell">{{ ::item.id }}</td>
+    <td class="orders-table__cell orders-table__cell">{{ ::item.item_count || 0 }}</td>
+    <td class="orders-table__cell orders-table__cell">{{ ::item.total | currency }}</td>
+    <td ng-if="item.staff" class="orders-table__cell orders-table__cell">{{ ::item.staff.full_name }}</td>
+    <td class="orders-table__cell orders-table__cell">{{ ::item.created_at | date:'medium' }}</td>
+    <td class="orders-table__cell orders-table__cell--actions">
+      <a ui-sref="order-history.details({id: item.id})" class="orders-table__action">
+        <img src="images/ic_info.png" alt="Details" title="Details"/>
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div ng-if="::0 === vm.orders.length" class="orders-table__empty">
+  No orders at this time.
+</div>

@@ -1,0 +1,43 @@
++block(product-categories-table)
+  @extend .table-striped
+  width: 100%
+  background-color: $app-color-white
+
+  +element(row)
+    width: 100%
+    background-color: $app-color-white
+
+  +element(heading)
+    height: 44px
+    font-weight: bold
+    text-transform: uppercase
+    color: $app-color-gray
+
+    +modifier(description)
+      padding: 0 20px
+
+  +element(cell)
+    height: 44px
+    font-size: 14px
+    border: none
+    padding: 10px 10px 10px 0
+    vertical-align: top
+    position: relative
+
+    +modifier(description)
+      padding: 10px 20px
+
+    +modifier(actions)
+      width: 196px
+
+  +element(action)
+    margin-right: 20px
+
+    &:last-child
+      margin-right: 0
+
+  +element(empty)
+    font-size: 22px
+    font-weight: bold
+    text-align: center
+    padding: 10px

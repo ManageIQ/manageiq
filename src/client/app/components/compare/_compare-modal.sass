@@ -1,0 +1,100 @@
++block(compare-show-modal)
+
++block(compare-modal)
+  @extend .modal
+
+  +element(dialog)
+    @extend .modal-dialog
+    width: 945px
+
+  +element(content)
+    @extend .modal-content
+    border-radius: 0
+    border: none
+
+  +element(header)
+    @extend .modal-header
+    color: $app-color-white
+    background-color: $app-color-dark-green
+    border-bottom: none
+    position: relative
+
+  +element(title)
+    @extend .modal-title
+    text-align: center
+    font-size: 22px
+    text-transform: uppercase
+
+  +element(close)
+    margin-top: -2px
+    color: $app-color-white
+    font-size: 22px
+    line-height: 1em
+    background-color: transparent
+    border: none
+    position: absolute
+    top: 50%
+    right: 30px
+    transform: translateY(-50%)
+
+  +element(body)
+    @extend .modal-body
+    padding: 0
+
+  +element(table)
+
+  +element(table-body)
+    max-height: 350px
+    overflow: auto
+
+  +element(table-row)
+    display: table
+    border-bottom: 1px solid $app-color-gray
+    font-size: 0
+
+    &:last-child
+      border-bottom: none
+
+    +modifier(header)
+      border-bottom: 1px solid $app-color-gray
+
+    +modifier(footer)
+      border-bottom: none
+      border-top: 1px solid $app-color-gray
+
+  +element(name)
+    font-size: 14px
+    font-weight: bold
+    color: $app-color-dark-gray
+    text-align: center
+
+  +element(cell)
+    display: table-cell
+    min-height: 56px
+    font-size: 12px
+
+    +modifier(key)
+      width: 145px
+      color: $app-color-gray
+      font-weight: bold
+      text-transform: uppercase
+      text-align: right
+      padding-top: 16px
+      padding-right: 24px
+
+    +modifier(value)
+      width: 200px
+      color: $app-color-dark-gray
+      text-align: center
+      padding: 16px 24px
+
+    +modifier(header)
+      font-weight: bold
+
+    +modifier(even)
+      background-color: $app-color-light-gray
+
+  +element(footer)
+    @extend .modal-footer
+    text-align: center
+    border: none

@@ -1,0 +1,91 @@
+<div class="project-field" ng-repeat="answer in vm.projectOptions">
+  <div class="project-field__aside">
+    <label for="{{answer.project_question.id}}"
+           class="project-field__label">{{answer.project_question.question}}</label>
+  </div>
+                <div ng-switch on="answer.project_question.field_type">
+                  <div ng-switch-when="check_box">
+
+                      <div class="project-field__body"
+                           ng-class="{'has-error': vm.hasErrors({{answer.project_question_name}})}">
+                        <div class="project-field__checkbox">
+                          <input type="checkbox" name="{{answer.project_question_name}}"
+                                 ng-model='answer.answer'
+                                 id="{{answer.project_question.id}}" ng-true-value="'true'" ng-false-value="'false'"/>
+                          <label for="{{answer.project_question.id}}"></label>
+                        </div>
+                      </div>
+                  </div>
+                  <div ng-switch-when="date">
+                    <div class="project-field__body"
+                         ng-class="{'has-error': vm.hasErrors({{answer.project_question_name}})}">
+                      <div class="input-group">
+                        <span class="input-group-btn">
+                                <button type="button" class="btn btn-default project-field__group-input--button"
+                                        ng-click="vm.openAnswerDate($event, $index)"><i
+                                  class="fa fa-calendar"></i></button>
+                         </span>
+                        <input name="{{answer.project_question_name}}" ng-click="vm.openAnswerDate($event, $index)"
+                               ng-model='answer.answer' class="project-field__group-input--input"
+                               id="{{answer.project_question.id}}"
+                               placeholder="{{answer.project_question.help_text}}"
+                               name="{{answer.project_question_name}}"
+                               ng-required="{{answer.project_question.required}}" datepicker-popup="{{vm.format}}"
+                               is-open="vm.answerDateOpened[$index]" datepicker-options="vm.dateOptions"
+                               close-text="Close">
+                      </div>
+                    </div>
+                  </div>
+                  <div ng-switch-when="text">
+                       <div class="project-field__body"
+                            ng-class="{'has-error': vm.hasErrors({{answer.project_question_name}})}">
+                         <input name="{{answer.project_question_name}}" ng-model='answer.answer'
+                                class="project-field__input"
+                                id="{{answer.project_question.id}}"
+                                placeholder="{{answer.project_question.help_text}}"
+                                ng-required="{{answer.project_question.required}}">
+                       </div>
+                  </div>
+                  <div ng-switch-when="radio">
+                       <div class="project-field__body"
+                            ng-class="{'has-error': vm.hasErrors({{answer.project_question_name}})}">
+                         <div class="project-field__radio">
+
+                             <input type="radio"
+                                    name="{{answer.project_question_name}}"
+                                    value="Yes"
+                                    ng-model='answer.answer'
+                                    class="project-field__input"
+                                    id="yes"
+                                    ng-required="{{answer.project_question.required}}">
+                           <label for="yes">
+                             Yes
+                           </label>
+
+                             <input type="radio"
+                                    name="{{answer.project_question_name}}"
+                                    value="No"
+                                    ng-model='answer.answer'
+                                    class="project-field__input"
+                                    id="no"
+                                    ng-required="{{answer.project_question.required}}">
+                           <label for="no">
+                             No
+                           </label>
+                           </div>
+
+                       </div>
+                  </div>
+                  <div ng-switch-when="select_option">
+                       <div class="project-field__body"
+                            ng-class="{'has-error': vm.hasErrors({{answer.project_question_name}})}">
+                         <select name="{{answer.project_question_name}}" class="project-field__input"
+                                 ng-model="answer.answer"
+                                 ng-options="item.option for item in answer.project_question.options"
+                                 ng-required="{{answer.project_question.required}}">
+                           <option value="">Please select an option.</option>
+                         </select>
+                       </div>
+                  </div>
+                </div>
+</div>

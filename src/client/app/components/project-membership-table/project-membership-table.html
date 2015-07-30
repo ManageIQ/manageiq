@@ -1,0 +1,50 @@
+<table ng-if="0 < vm.memberships.length" class="membership-table ">
+  <thead>
+  <tr>
+    <th class="membership-table__heading membership-table__heading--padding"></th>
+    <th class="membership-table__heading membership-table__heading--name">Name</th>
+    <th class="membership-table__heading membership-table__heading--description">Description</th>
+    <th class="membership-table__heading membership-table__heading--members">Members</th>
+    <th class="membership-table__heading membership-table__heading--role">Role</th>
+    <th class="membership-table__heading membership-table__heading--actions">Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr class="membership-table__row" ng-repeat="row in vm.memberships track by row.id">
+
+    <td class="membership-table__cell membership-table__cell--padding"></td>
+    <td class="membership-table__cell membership-table__cell--name">
+      {{ ::vm.rowLookup(vm.groups, row.group_id, 'name')}}
+    </td>
+    <td class="membership-table__cell membership-table__cell--description">
+      {{ ::vm.rowLookup(vm.groups, row.group_id, 'description')}}
+    </td>
+    <td class="membership-table__cell membership-table__cell--members"></td>
+    {{ ::vm.rowLookup(vm.groups, row.group_id, 'staff_ids').length}}
+    <td class="membership-table__cell membership-table__cell--role">
+      {{ vm.rowLookup(vm.roles, row.role_id, 'name')}}
+    </td>
+    <td class="membership-table__cell membership-table__cell--actions">
+      <a href="#"
+         ng-click="vm.showMembershipModal(row)"
+         class="membership-table__action membership-table__action--edit"
+         title="Edit">
+        <img src="/images/ic_edit.png" alt="Edit"/>
+      </a>
+      <a href="#" class="membership-table__action membership-table__action"
+         confirmation
+         confirmation-position="left-center"
+         confirmation-message="Are you sure you want to remove this group?"
+         confirmation-ok-style="danger"
+         confirmation-ok-text="Yes, Delete It"
+         confirmation-on-ok="vm.deleteGroup(row)"
+         confirmation-show-cancel="false">
+        <img src="/images/ic_deletequestion.png" alt="Delete"/>
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div ng-if="0 === vm.memberships.length" class="membership-table__empty">
+  No groups at this time.
+</div>

@@ -1,0 +1,55 @@
+<nav class="navigation" role="navigation" ng-cloak>
+  <div class="navigation__header">
+    <button type="button" class="navigation__toggle" ng-click="vm.sidebarCollapsed = !vm.sidebarCollapsed">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navigation__brand" ui-sref="{{ vm.brandState() }}" transclude-id="navbar-brand"></a>
+  </div>
+
+  <ul class="navigation__nav navigation__nav--right">
+    <li ng-if="vm.navSearch.visible" class="navigation__item navigation__item--search">
+      <form class="navigation__form" ng-submit="vm.navSearch.onSubmit()">
+        <div class="input-group">
+          <input type="text" class="form-control search-input" placeholder="{{ vm.navSearch.placeholder }}"
+                 ng-model="vm.navSearch.value">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+              <i class="fa" ng-class="vm.navSearch.icon"></i>
+            </button>
+          </span>
+        </div>
+      </form>
+    </li>
+    <li class="navigation__item" dropdown ng-repeat="item in vm.navItems">
+      <nav-item item="::item"></nav-item>
+    </li>
+  </ul>
+
+  <div class="sidebar" role="navigation">
+    <div class="sidebar__filler"></div>
+    <div class="sidebar__wrapper" collapse="vm.sidebarCollapsed">
+      <ul class="sidebar__nav">
+        <li ng-if="vm.sidebarSearch.visible" class="sidebar__item sidebar__item--search">
+          <form class="sidebar__form" ng-submit="vm.sidebarSearch.onSubmit()">
+            <div class="input-group">
+              <input type="text" class="form-control search-input" placeholder="{{ ::vm.sidebarSearch.placeholder }}"
+                     ng-model="vm.sidebarSearch.value">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">
+                  <i class="fa" ng-class="::vm.sidebarSearch.icon"></i>
+                </button>
+              </span>
+            </div>
+          </form>
+        </li>
+        <li class="dropdown sidebar__item" ng-class="::'sidebar__item--' + item.type"
+            ng-repeat="item in vm.sidebarItems">
+          <sidebar-item item="::item"></sidebar-item>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

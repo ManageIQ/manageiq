@@ -1,0 +1,35 @@
++block(project-details)
+
+  +element(icon)
+    width: 80px
+    height: 80px
+    background-color: $app-color-white
+    border: 2px solid $app-color-gray
+    border-radius: 3px
+    margin-right: 20px
+    vertical-align: top
+
+    +modifier(missing)
+      background-color: $app-color-light-blue
+      display: inline-block
+
+  +element(budget-util)
+    color: $app-color-dark-gray
+    font-weight: bold
+
+  +element(service-buttons)
+    padding-right: 20px
+    text-align: right
+
+  +element(service-button)
+    margin-right: 20px
+
+  +element(alert-buttons)
+    padding-right: 20px
+    text-align: right
+
+  +element(alert-button)
+    margin-right: 20px
+
+    &:last-child
+      margin-right: 0
