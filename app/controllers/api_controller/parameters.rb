@@ -86,7 +86,11 @@ class ApiController
     end
 
     def attribute_selection
-      params['attributes'] ? params['attributes'].split(",") | ID_ATTRS : "all"
+      if params['attributes'] || @req[:additional_attributes]
+        params['attributes'].to_s.split(",") | Array(@req[:additional_attributes]) | ID_ATTRS
+      else
+        "all"
+      end
     end
 
     def render_attr(attr)

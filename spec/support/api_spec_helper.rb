@@ -101,8 +101,8 @@ module ApiSpecHelper
 
     collections  = %w(automation_requests availability_zones chargebacks clusters conditions
                       data_stores events flavors groups hosts policies policy_actions
-                      policy_profiles providers provision_requests request_tasks requests
-                      resource_pools roles security_groups servers service_catalogs
+                      policy_profiles providers provision_requests reports request_tasks
+                      requests resource_pools roles security_groups servers service_catalogs
                       service_requests service_templates services tags tasks templates users
                       vms zones)
 
