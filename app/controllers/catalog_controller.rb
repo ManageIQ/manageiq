@@ -1433,17 +1433,18 @@ class CatalogController < ApplicationController
   end
 
   def available_managers(template_id)
-    available_managers = OrchestrationTemplate.find_by_id(template_id).eligible_managers
-    @edit[:new][:available_managers] = []
-    available_managers.each do |manager|
-      @edit[:new][:available_managers].push([manager.name, manager.id])
-    end
-    @edit[:new][:available_managers].sort!
+    @edit[:new][:available_managers] = 
+      OrchestrationTemplate.find_by_id(template_id)
+                           .eligible_managers
+                           .collect { |m| [m.name, m.id] }
+                           .sort
   end
 
   def available_templates
     @edit[:new][:available_templates] =
-      OrchestrationTemplate.available.collect { |template| [template.name.to_s, template.id] }.sort!
+      OrchestrationTemplate.available
+                           .collect { |t| [t.name.to_s, t.id] }
+                           .sort
     @edit[:new][:template_id] = @record.orchestration_template.try(:id)
     @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
     available_managers(@record.orchestration_template.id) if @record.orchestration_template
