@@ -358,17 +358,14 @@ module ApplicationController::Explorer
       object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
     end
 
-    kids = Array.new
     x_tree(tree)[:open_nodes].push(id) unless x_tree(tree)[:open_nodes].include?(id) # Save node as open
 
     options = x_tree(tree)         # Get options from sandbox
 
     # Process the node's children
-    x_get_tree_objects(options.merge({:parent=>object})).each do |o|
-      kids += x_build_node_dynatree(o, id, options)
+    x_get_tree_objects(options.merge(:parent => object)).collect do |o|
+      x_build_node_dynatree(o, id, options)
     end
-
-    kids
   end
 
   # Get root nodes count/array for explorer tree
