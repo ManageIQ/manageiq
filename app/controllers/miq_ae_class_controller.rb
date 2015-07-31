@@ -2513,10 +2513,9 @@ private
     @edit[:rec_id] = @ae_class ? @ae_class.id : nil
     @edit[:ae_class_id] = @ae_class.id
     @edit[:new][:fields] = @ae_class.ae_fields.deep_clone
-    @edit[:new][:fields_list] = Array.new
-    @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each do |f|
-      @edit[:new][:fields_list].push("#{f.display_name} (#{f.name})")
-    end
+    @edit[:new][:fields_list] = @edit[:new][:fields]
+                                   .sort_by { |f| [f.priority.to_i] }
+                                   .collect { |f| "#{f.display_name} (#{f.name})" }
     @edit[:key] = "fields_edit__seq"
     @edit[:current] = copy_hash(@edit[:new])
     @right_cell_text = "Edit of Class Schema Sequence '#{@ae_class.name}'"
