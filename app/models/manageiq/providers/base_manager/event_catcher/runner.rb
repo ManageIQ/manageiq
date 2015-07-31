@@ -16,11 +16,9 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
     do_exit("Unable to find instance for EMS ID [#{@cfg[:ems_id]}].", 1) if @ems.nil?
     do_exit("EMS ID [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first
 
-    # Get the filtered events from the event_handling config
-    @filtered_events = VMDB::Config.new("event_handling").config[:filtered_events]
-    @filtered_events = @filtered_events.each_with_object([]) { |(k, v), ary| ary << k.to_s if v.nil? }
+    @filtered_events = @ems.blacklisted_event_names
     _log.info "#{log_prefix} Event Catcher skipping the following events:"
-    $log.log_hashes(@filtered_events.sort)
+    $log.log_hashes(@filtered_events)
 
     # Global Work Queue
     @queue = Queue.new
@@ -62,6 +60,22 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
 
   def filtered_events
     @filtered_events
+  end
+
+  # Called when there is any change in BlacklistedEvent
+  def sync_blacklisted_events
+    return unless @ems
+    filters = @ems.blacklisted_event_names
+
+    if @filtered_events.nil? || @filtered_events != filters
+      adds    = filters - @filtered_events
+      deletes = @filtered_events - filters
+
+      @filtered_events = filters
+      _log.info("Synchronizing blacklisted events: #{filters}")
+      _log.info("   Blacklisted events added: #{adds}")
+      _log.info("   Blacklisted events deleted: #{deletes}")
+    end
   end
 
   def stop_event_monitor
