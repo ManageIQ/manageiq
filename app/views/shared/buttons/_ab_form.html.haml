@@ -62,7 +62,7 @@
       :ae_custom_button          => true,
       :field_changed_url         => "automate_button_field_changed"})
   = render(:partial => "layouts/role_visibility",
-           :locals  => {:rec_id => @custom_button.id, :action => "automate_button_field_changed"})
+           :locals  => {:rec_id => @custom_button ? @custom_button.id : 'new', :action => "automate_button_field_changed"})
 :javascript
   miqInitSelectPicker();
   miqSelectPickerEvent("button_image", "#{url}")
