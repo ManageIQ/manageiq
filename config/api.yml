@@ -62,6 +62,14 @@
     - :collection
     :methods: *70174834086080
     :klass: AvailabilityZone
+  :chargebacks:
+    :description: Chargebacks
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: ChargebackRate
+    :subcollections:
+    - :rates
   :clusters:
     :description: Clusters
     :options:
@@ -409,6 +417,12 @@
       :post:
       - :name: create
         :identifier: vm_miq_request_new
+  :rates:
+    :description: Chargeback Rates
+    :options:
+    - :subcollection
+    :methods: *70174834086080
+    :klass: ChargebackRateDetail
   :request_tasks:
     :description: Request Tasks
     :options:
