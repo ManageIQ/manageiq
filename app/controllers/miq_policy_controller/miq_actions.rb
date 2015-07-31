@@ -423,7 +423,7 @@ module MiqPolicyController::MiqActions
     @right_cell_div = "action_details"
     @alert_guids = Array.new
     if action.options && action.options[:alert_guids]
-      @alert_guids = MiqAlert.where(:guid => action.options[:alert_guids]).compact
+      @alert_guids = MiqAlert.where(:guid => action.options[:alert_guids])
     end
 
     if x_active_tree == :action_tree

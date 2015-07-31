@@ -1843,9 +1843,7 @@ private
     @ae_class  = ae_class_for_instance_or_method(@ae_inst)
 
     @ae_values = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
-      val   = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
-      val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
-      val
+      MiqAeValue.find_or_initialize_by(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
     end
   end
 
@@ -2384,9 +2382,7 @@ private
     @ae_inst   = @edit[:ae_inst_id] ? MiqAeInstance.find(@edit[:ae_inst_id]) : MiqAeInstance.new
     @ae_class  = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
     @ae_values = @ae_class.ae_fields.sort_by { |a| a.priority.to_i }.collect do |fld|
-      val   = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
-      val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
-      val
+      MiqAeValue.find_or_initialize_by(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
     end
 
     if x_node.split('-').first == "aei"
