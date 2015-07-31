@@ -524,12 +524,8 @@ class MiqPolicyController < ApplicationController
   # Check for parent nodes missing from vandt tree and return them if any
   def open_parent_nodes
     existing_node = nil                     # Init var
-    nodes = params[:id].split('_')
-    nodes.pop
-    parents = Array.new
-    nodes.each do |node|
-      parents.push({:id=>node.split('xx-').last})
-    end
+    nodes   = params[:id].split('_').pop
+    parents = nodes.collect { |node| { :id => node.split('xx-').last } }
 
     # Go up thru the parents and find the highest level unopened, mark all as opened along the way
     unless parents.empty? ||  # Skip if no parents or parent already open
