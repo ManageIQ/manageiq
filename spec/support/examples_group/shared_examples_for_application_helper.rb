@@ -23,7 +23,7 @@ end
 shared_examples_for 'record with error message' do |name|
   it "returns the #{name} error message" do
     message = "xx #{name} message"
-    @record.stub(:is_available_now_error_message).with(name.to_sym).and_return(message)
+    @record.stub(:unavailability_reason).with(name.to_sym).and_return(message)
     subject.should == message
   end
 end

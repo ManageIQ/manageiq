@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Vmware::InfraManager::Vm do
-  context "#is_available?" do
+  context "#supports_operation?" do
     let(:ems)  { FactoryGirl.create(:ems_vmware) }
     let(:host) { FactoryGirl.create(:host_vmware_esx, :ext_management_system => ems) }
     let(:vm)   { FactoryGirl.create(:vm_vmware, :ext_management_system => ems, :host => host) }

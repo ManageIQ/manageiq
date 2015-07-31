@@ -238,26 +238,26 @@ class Host < ActiveRecord::Base
   end
   private :raise_cluster_event
 
-  # is_available?
+  # supports_operation?
   # Returns:  true or false
   #
   # The UI calls this method to determine if a feature is supported for this Host
   # and determines if a button should be displayed.  This method should return true
   # even if a function is not 'currently' available due to some condition that is not
   # being met.
-  def is_available?(request_type)
+  def supports_operation?(request_type)
     send("validate_#{request_type}")[:available]
   end
 
-  # is_available_now_error_message
+  # unavailability_reason
   # Returns an error message string if there is an error.
   # Returns nil to indicate no errors.
-  # This method is used by the UI along with the is_available? methods.
-  def is_available_now_error_message(request_type)
+  # This method is used by the UI along with the supports_operation? methods.
+  def unavailability_reason(request_type)
     send("validate_#{request_type}")[:message]
   end
 
-  def raise_is_available_now_error_message(request_type)
+  def raise_unavailability_reason(request_type)
     msg = send("validate_#{request_type}")[:message]
     raise MiqException::MiqVmError, msg unless msg.nil?
   end

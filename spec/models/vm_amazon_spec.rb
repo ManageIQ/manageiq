@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Amazon::CloudManager::Vm do
-  context "#is_available?" do
+  context "#supports_operation?" do
     let(:ems)                   { FactoryGirl.create(:ems_amazon) }
     let(:vm)                    { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
     let(:power_state_on)        { "running" }

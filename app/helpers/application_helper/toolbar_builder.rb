@@ -482,11 +482,11 @@ class ApplicationHelper::ToolbarBuilder
                    (@record.kind_of?(ContainerReplicator) || @record.nil?)
 
     # hide timelines button for Amazon provider and instances
-    # TODO: extend .is_available? support via refactoring task to cover this scenario
+    # TODO: extend .supports_operation? support via refactoring task to cover this scenario
     return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(ManageIQ::Providers::Amazon::CloudManager) || @record.kind_of?(ManageIQ::Providers::Amazon::CloudManager::Vm))
 
     # hide edit button for MiqRequest instances of type ServiceReconfigureRequest/ServiceTemplateProvisionRequest
-    # TODO: extend .is_available? support via refactoring task to cover this scenario
+    # TODO: extend .supports_operation? support via refactoring task to cover this scenario
     return true if id == 'miq_request_edit' &&
                    %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
 
@@ -652,7 +652,7 @@ class ApplicationHelper::ToolbarBuilder
           "host_enter_maint_mode", "host_exit_maint_mode",
           "host_start", "host_stop", "host_reset"
         btn_id = id.split("_")[1..-1].join("_")
-        return true if !@record.is_available?(btn_id.to_sym)
+        return true if !@record.supports_operation?(btn_id.to_sym)
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
@@ -766,27 +766,27 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_publish"
         return true if %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm).include?(@record.type)
       when "vm_collect_running_processes"
-        return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
+        return true if (@record.retired || @record.current_state == "never") && !@record.supports_operation?(:collect_running_processes)
       when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
-        return true if !@record.is_available?(:start)
+        return true if !@record.supports_operation?(:start)
       when "vm_guest_standby"
-        return true if !@record.is_available?(:standby_guest)
+        return true if !@record.supports_operation?(:standby_guest)
       when "vm_guest_shutdown", "instance_guest_shutdown"
-        return true if !@record.is_available?(:shutdown_guest)
+        return true if !@record.supports_operation?(:shutdown_guest)
       when "vm_guest_restart", "instance_guest_restart"
-        return true if !@record.is_available?(:reboot_guest)
+        return true if !@record.supports_operation?(:reboot_guest)
       when "vm_migrate"
-        return true unless @record.is_available?(:migrate)
+        return true unless @record.supports_operation?(:migrate)
       when "vm_reconfigure"
         return true if @record.vendor.downcase == "redhat"
       when "vm_stop", "instance_stop"
-        return true if !@record.is_available?(:stop)
+        return true if !@record.supports_operation?(:stop)
       when "vm_reset", "instance_reset"
-        return true if !@record.is_available?(:reset)
+        return true if !@record.supports_operation?(:reset)
       when "vm_suspend", "instance_suspend"
-        return true if !@record.is_available?(:suspend)
+        return true if !@record.supports_operation?(:suspend)
       when "instance_pause"
-        return true if !@record.is_available?(:pause)
+        return true if !@record.supports_operation?(:pause)
       when "vm_policy_sim", "vm_protect"
         return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
       when "vm_refresh"
@@ -982,9 +982,9 @@ class ApplicationHelper::ToolbarBuilder
       when "host_timeline"
         return "No Timeline data has been collected for this Host" unless @record.has_events? || @record.has_events?(:policy_events)
       when "host_shutdown"
-        return @record.is_available_now_error_message(:shutdown) if @record.is_available_now_error_message(:shutdown)
+        return @record.unavailability_reason(:shutdown) if @record.unavailability_reason(:shutdown)
       when "host_restart"
-        return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
+        return @record.unavailability_reason(:reboot) if @record.unavailability_reason(:reboot)
       end
     when "ContainerNodeKubernetes"
       case id
@@ -1119,7 +1119,7 @@ class ApplicationHelper::ToolbarBuilder
         model = model_for_vm(@record).to_s
         return "No Compliance Policies assigned to this #{model == "ManageIQ::Providers::InfraManager::Vm" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
       when "vm_collect_running_processes"
-        return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
+        return @record.unavailability_reason(:collect_running_processes) if @record.unavailability_reason(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"
         if !is_browser?(%w(explorer firefox mozilla chrome)) ||
           !is_browser_os?(%w(windows linux))
@@ -1138,19 +1138,19 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_vnc_console"
         return "The web-based VNC console is not available because the VM is not powered on" if @record.current_state != "on"
       when "vm_guest_startup", "vm_start"
-        return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)
+        return @record.unavailability_reason(:start) if @record.unavailability_reason(:start)
       when "vm_guest_standby"
-        return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
+        return @record.unavailability_reason(:standby_guest) if @record.unavailability_reason(:standby_guest)
       when "vm_guest_shutdown"
-        return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
+        return @record.unavailability_reason(:shutdown_guest) if @record.unavailability_reason(:shutdown_guest)
       when "vm_guest_restart"
-        return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
+        return @record.unavailability_reason(:reboot_guest) if @record.unavailability_reason(:reboot_guest)
       when "vm_stop"
-        return @record.is_available_now_error_message(:stop) if @record.is_available_now_error_message(:stop)
+        return @record.unavailability_reason(:stop) if @record.unavailability_reason(:stop)
       when "vm_reset"
-        return @record.is_available_now_error_message(:reset) if @record.is_available_now_error_message(:reset)
+        return @record.unavailability_reason(:reset) if @record.unavailability_reason(:reset)
       when "vm_suspend"
-        return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
+        return @record.unavailability_reason(:suspend) if @record.unavailability_reason(:suspend)
       when "instance_retire", "instance_retire_now",
               "vm_retire", "vm_retire_now"
         return "#{@record.kind_of?(ManageIQ::Providers::CloudManager::Vm) ? "Instance" : "VM"} is already retired" if @record.retired == true
@@ -1160,20 +1160,20 @@ class ApplicationHelper::ToolbarBuilder
         return "No Timeline data has been collected for this VM" unless @record.has_events? || @record.has_events?(:policy_events)
       when "vm_snapshot_add"
         if @record.number_of(:snapshots) <= 0
-          return @record.is_available_now_error_message(:create_snapshot) unless @record.is_available?(:create_snapshot)
+          return @record.unavailability_reason(:create_snapshot) unless @record.supports_operation?(:create_snapshot)
         else
-          unless @record.is_available?(:create_snapshot)
-            return @record.is_available_now_error_message(:create_snapshot)
+          unless @record.supports_operation?(:create_snapshot)
+            return @record.unavailability_reason(:create_snapshot)
           else
             return "Select the Active snapshot to create a new snapshot for this VM" unless @active
           end
         end
       when "vm_snapshot_delete"
-        return @record.is_available_now_error_message(:remove_snapshot) unless @record.is_available?(:remove_snapshot)
+        return @record.unavailability_reason(:remove_snapshot) unless @record.supports_operation?(:remove_snapshot)
       when "vm_snapshot_delete_all"
-        return @record.is_available_now_error_message(:remove_all_snapshots) unless @record.is_available?(:remove_all_snapshots)
+        return @record.unavailability_reason(:remove_all_snapshots) unless @record.supports_operation?(:remove_all_snapshots)
       when "vm_snapshot_revert"
-        return @record.is_available_now_error_message(:revert_to_snapshot) unless @record.is_available?(:revert_to_snapshot)
+        return @record.unavailability_reason(:revert_to_snapshot) unless @record.supports_operation?(:revert_to_snapshot)
       end
     when "MiqTemplate"
       case id
