@@ -1005,10 +1005,7 @@ module ApplicationController::CiProcessing
         render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
         return
       end
-      @edit[:reconfigure_items] = Array.new # Set the array of set ownership items
-      recs.each do |r|
-        @edit[:reconfigure_items].push(r.to_i)
-      end
+      @edit[:reconfigure_items] = recs.collect(&:to_i)
     end
     if @explorer
       reconfigure
