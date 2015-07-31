@@ -940,17 +940,16 @@ class MiqAeClassController < ApplicationController
 
     @edit[:new] = {
       :datatypes => build_dtype_options,    # setting dtype combo for adding a new field
-      :aetypes   => build_type_options,          # setting aetype combo for adding a new field
-      :fields    => []
+      :aetypes   => build_type_options      # setting aetype combo for adding a new field
     }
 
-    @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-      field = {}
-      field_attributes.each do |column|
-        field[column] = fld.send(column)
+    @edit[:new][:fields] = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }
+                                              .collect do |fld|
+      field_attributes.each_with_object({}) do |column, hash|
+        hash[column] = fld.send(column)
       end
-      @edit[:new][:fields].push(field)
     end
+
     # combo to show existing fields
     @combo_xml       = build_type_options
     # passing in fields because that's how many combo boxes we need
