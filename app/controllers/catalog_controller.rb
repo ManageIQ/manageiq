@@ -1160,19 +1160,12 @@ class CatalogController < ApplicationController
     @edit[:rec_id] = @record.id
     @edit[:new][:name] = @record.name
     @edit[:new][:description]  = @record.description
-    selected_service_templates = @record.service_templates
-    @edit[:new][:fields] = Array.new
-    selected_service_templates.each do |st|
-      @edit[:new][:fields].push([st.name,st.id])
-    end
-    @edit[:new][:fields].sort!
+    @edit[:new][:fields] = @record.service_templates.collect { |st| [st.name,st.id] }.sort
 
-    available_service_templates = ServiceTemplate.find(:all)
-    @edit[:new][:available_fields] = Array.new
-    available_service_templates.each do |st|
-      @edit[:new][:available_fields].push([st.name,st.id]) if st.service_template_catalog.nil? && st.display
-    end
-    @edit[:new][:available_fields].sort!                  # Sort the available fields array
+    @edit[:new][:available_fields] = ServiceTemplate.all
+              .select  { |st| st.service_template_catalog.nil? && st.display }
+              .collect { |st| [st.name,st.id] }
+              .sort
 
     @edit[:current] = copy_hash(@edit[:new])
     @in_a_form = true
@@ -1181,11 +1174,7 @@ class CatalogController < ApplicationController
   def st_catalog_set_record_vars(stc)
     stc.name = @edit[:new][:name]
     stc.description = @edit[:new][:description]
-    service_templates = Array.new
-    @edit[:new][:fields].each do |sf|
-      service_templates.push(ServiceTemplate.find_by_id(sf[1]))
-    end
-    stc.service_templates = service_templates
+    stc.service_templates = @edit[:new][:fields].collect { |sf| ServiceTemplate.find_by_id(sf[1]) }
   end
 
   def st_catalog_delete
