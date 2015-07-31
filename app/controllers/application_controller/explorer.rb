@@ -59,7 +59,7 @@ module ApplicationController::Explorer
     'refresh'          => :s1, 'scan'                      => :s1, 'guest_shutdown'      => :s1,
     'guest_restart'    => :s1, 'retire_now'                => :s1, 'snapshot_revert'     => :s1,
     'start'            => :s1, 'stop'                      => :s1, 'suspend'             => :s1,
-    'reset'            => :s1, 'terminate'                 => :s1,
+    'reset'            => :s1, 'terminate'                 => :s1, 'pause'               => :s1,
 
     # group 2
     'clone'     => :s2, 'compare'          => :s2, 'drift'           => :s2,
@@ -272,9 +272,9 @@ module ApplicationController::Explorer
     when Host		             then x_get_tree_host_kids(object, options)
     when LdapRegion		       then x_get_tree_lr_kids(object, options)
     when MiqAlertSet		     then x_get_tree_ap_kids(object, options)
-    when MiqEvent            then options[:tree] != :event_tree ? 
+    when MiqEvent            then options[:tree] != :event_tree ?
                                   x_get_tree_ev_kids(object, options) : nil
-    when MiqGroup            then options[:tree] == :db_tree ? 
+    when MiqGroup            then options[:tree] == :db_tree ?
                                   x_get_tree_g_kids(object, options) : nil
     when MiqPolicySet		     then x_get_tree_pp_kids(object, options)
     when MiqPolicy		       then x_get_tree_p_kids(object, options)
