@@ -919,15 +919,15 @@ function miqBuildCalendar() {
     var element = $(this);
 
     if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
-      element.datepicker({startDate: ManageIQ.calendar.calDateFrom});
+      element.datepicker('setStartDate', ManageIQ.calendar.calDateFrom);
     }
 
     if (typeof ManageIQ.calendar.calDateTo != "undefined") {
-      element.datepicker({endDate: ManageIQ.calendar.calDateTo});
+      element.datepicker('setEndDate', ManageIQ.calendar.calDateTo);
     }
 
     if (typeof miq_cal_skipDays != "undefined") {
-      element.datepicker({daysOfWeekDisabled: miq_cal_skipDays});
+      element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
     }
   });
 }
