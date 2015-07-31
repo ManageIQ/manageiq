@@ -21,6 +21,7 @@ db: ServiceTemplate
 cols:
 - name
 - description
+- template_valid
 #- provision_cost
 
 # Included tables (joined, has_one, has_many) and columns
