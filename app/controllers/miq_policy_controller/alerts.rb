@@ -581,7 +581,7 @@ module MiqPolicyController::Alerts
       @event = e.nil? ? "<No Event configured>" : e.etype.description + ": " + e.description
     end
     if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:email] && @alert.options[:notifications][:email][:to]
-      @alert.options[:notifications][:email][:to].each_with_index do |e, e_idx|
+      @alert.options[:notifications][:email][:to].each do |e|
         u = User.find_by_email(e)
         @email_to.push(u ? "#{u.name} (#{e})" : e)
       end
