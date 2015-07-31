@@ -14,6 +14,8 @@ class MiqReportResult < ActiveRecord::Base
   virtual_column :status,                :type => :string, :uses => :miq_task
   virtual_column :status_message,        :type => :string, :uses => :miq_task
 
+  virtual_has_one :result_set,           :class_name => "Hash"
+
   before_save do
     user_info = self.userid.to_s.split("|")
     if user_info.length == 1
@@ -23,6 +25,12 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   include ReportableMixin
+
+  delegate :table, :to => :report_results
+
+  def result_set
+    table.map(&:to_hash)
+  end
 
   def status
     return "Unknown" if self.miq_task.nil?

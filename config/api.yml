@@ -423,6 +423,14 @@
     - :subcollection
     :methods: *70174834086080
     :klass: ChargebackRateDetail
+  :reports:
+    :description: Reports
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqReport
+    :subcollections:
+    - :results
   :request_tasks:
     :description: Request Tasks
     :options:
@@ -473,6 +481,12 @@
         :identifier: resource_pool_protect
       - :name: unassign
         :identifier: resource_pool_protect
+  :results:
+    :description: Report Results
+    :options:
+    - :subcollection
+    :methods: *70174834086080
+    :klass: MiqReportResult
   :roles:
     :description: Roles
     :options:

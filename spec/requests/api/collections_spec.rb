@@ -105,6 +105,11 @@ describe ApiController do
       test_collection_query(:provision_requests, provision_requests_url, MiqProvisionRequest)
     end
 
+    example "query Reports" do
+      FactoryGirl.create(:miq_report)
+      test_collection_query(:reports, reports_url, MiqReport)
+    end
+
     it "query Request Tasks" do
       FactoryGirl.create(:miq_request_task)
       test_collection_query(:request_tasks, request_tasks_url, MiqRequestTask)
