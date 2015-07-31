@@ -2,6 +2,7 @@
 # subclass as a plugin based on the #available? class method implemented in each
 # subclass
 require 'more_core_extensions/core_ext/hash'
+require 'util/extensions/miq-module'
 
 class OpenstackEventMonitor
   DEFAULT_AMQP_PORT = 5672
