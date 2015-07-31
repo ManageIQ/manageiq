@@ -36,10 +36,7 @@ module ApplicationController::CiProcessing
       @refresh_partial = "layouts/flash_msg"
       return
     else
-      @edit[:ownership_items] = Array.new # Set the array of set ownership items
-      recs.each do |r|
-        @edit[:ownership_items].push(r.to_i)
-      end
+      @edit[:ownership_items] = recs.collect(&:to_i)
     end
 
     if @explorer
