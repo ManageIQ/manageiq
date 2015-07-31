@@ -407,13 +407,7 @@ module MiqPolicyController::MiqActions
     if edit[:action_type] == "snmp_trap"
       validate_snmp_options(options)
       unless @flash_array
-        temp = Array.new
-        options[:variables].each_with_index do |var,i|
-          if var[:oid] != ""
-            temp.push(var)
-          end
-        end
-        rec[:options][:variables] = temp
+        rec[:options][:variables] = options[:variables].reject { |var| var[:oid].blank? }
       end
     end
     if edit[:action_type] == "tag" && options[:tags].blank?
