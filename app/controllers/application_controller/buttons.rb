@@ -667,9 +667,10 @@ module ApplicationController::Buttons
         @edit[:new][:fields].push([mem.name,mem.id])
       end
     end
-    uri = CustomButton.buttons_for(@sb[:applies_to_class]).sort_by(&:name)
-    @edit[:new][:available_fields] = uri.select  { |u| u.parent.nil? }
-                                        .collect { |u| [u.name,u.id] }
+    @edit[:new][:available_fields] = CustomButton.buttons_for(@sb[:applies_to_class])
+                                                 .sort_by(&:name)
+                                                 .select  { |u| u.parent.nil? }
+                                                 .collect { |u| [u.name, u.id] }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
   end

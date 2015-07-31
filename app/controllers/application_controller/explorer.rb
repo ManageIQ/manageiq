@@ -363,7 +363,7 @@ module ApplicationController::Explorer
     options = x_tree(tree)         # Get options from sandbox
 
     # Process the node's children
-    x_get_tree_objects(options.merge(:parent => object)).collect do |o|
+    x_get_tree_objects(options.merge(:parent => object)).flat_map do |o|
       x_build_node_dynatree(o, id, options)
     end
   end

@@ -370,7 +370,7 @@ class ConfigurationController < ApplicationController
     @timeprofile_details = Hash.new
     @timeprofiles.each do |timeprofile|
       @timeprofile_details[timeprofile.description] = Hash.new
-      @timeprofile_details[timeprofile.description][:days] = 
+      @timeprofile_details[timeprofile.description][:days] =
         timeprofile.profile[:days].collect { |day| DateTime::ABBR_DAYNAMES[day.to_i] }
       @timeprofile_details[timeprofile.description][:hours] = Array.new
       temp_arr = timeprofile.profile[:hours].collect(&:to_i).sort
@@ -766,8 +766,8 @@ class ConfigurationController < ApplicationController
       }
     when 'ui_3'
       current = MiqSearch.where(:search_type => "default")
-                  .select  { |s| allowed_filter_db?(search.db) }
-                  .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
+                         .select  { |s| allowed_filter_db?(s.db) }
+                         .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,

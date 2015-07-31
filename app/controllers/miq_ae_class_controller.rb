@@ -943,8 +943,7 @@ class MiqAeClassController < ApplicationController
       :aetypes   => build_type_options      # setting aetype combo for adding a new field
     }
 
-    @edit[:new][:fields] = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }
-                                              .collect do |fld|
+    @edit[:new][:fields] = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
       field_attributes.each_with_object({}) do |column, hash|
         hash[column] = fld.send(column)
       end
@@ -2384,7 +2383,7 @@ private
     #resetting inst/class/values from id stored in @edit.
     @ae_inst   = @edit[:ae_inst_id] ? MiqAeInstance.find(@edit[:ae_inst_id]) : MiqAeInstance.new
     @ae_class  = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
-    @ae_values = @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.collect do |fld|
+    @ae_values = @ae_class.ae_fields.sort_by { |a| a.priority.to_i }.collect do |fld|
       val   = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
       val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
       val
@@ -2514,7 +2513,7 @@ private
     @edit[:ae_class_id] = @ae_class.id
     @edit[:new][:fields] = @ae_class.ae_fields.deep_clone
     @edit[:new][:fields_list] = @edit[:new][:fields]
-                                   .sort_by { |f| [f.priority.to_i] }
+                                   .sort_by { |f| f.priority.to_i }
                                    .collect { |f| "#{f.display_name} (#{f.name})" }
     @edit[:key] = "fields_edit__seq"
     @edit[:current] = copy_hash(@edit[:new])
@@ -2655,7 +2654,7 @@ private
     @in_a_form = true
     @edit = {
       :key => "priority__edit",
-      :new => { :domain_order => ordered_domains_for_priority_edit_screen }
+      :new => {:domain_order => ordered_domains_for_priority_edit_screen}
     }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit]  = @edit

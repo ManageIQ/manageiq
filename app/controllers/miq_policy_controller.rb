@@ -525,7 +525,7 @@ class MiqPolicyController < ApplicationController
   def open_parent_nodes
     existing_node = nil                     # Init var
     nodes   = params[:id].split('_').pop
-    parents = nodes.collect { |node| { :id => node.split('xx-').last } }
+    parents = nodes.collect { |node| {:id => node.split('xx-').last} }
 
     # Go up thru the parents and find the highest level unopened, mark all as opened along the way
     unless parents.empty? ||  # Skip if no parents or parent already open

@@ -1160,12 +1160,12 @@ class CatalogController < ApplicationController
     @edit[:rec_id] = @record.id
     @edit[:new][:name] = @record.name
     @edit[:new][:description]  = @record.description
-    @edit[:new][:fields] = @record.service_templates.collect { |st| [st.name,st.id] }.sort
+    @edit[:new][:fields] = @record.service_templates.collect { |st| [st.name, st.id] }.sort
 
     @edit[:new][:available_fields] = ServiceTemplate.all
-              .select  { |st| st.service_template_catalog.nil? && st.display }
-              .collect { |st| [st.name,st.id] }
-              .sort
+                                                    .select  { |st| st.service_template_catalog.nil? && st.display }
+                                                    .collect { |st| [st.name, st.id] }
+                                                    .sort
 
     @edit[:current] = copy_hash(@edit[:new])
     @in_a_form = true
@@ -1280,8 +1280,8 @@ class CatalogController < ApplicationController
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
     @edit[:new][:available_catalogs] = ServiceTemplateCatalog.all
-                                         .collect { |stc| [stc.name, stc.id] }
-                                         .sort
+                                                             .collect { |stc| [stc.name, stc.id] }
+                                                             .sort
     available_templates if @record.kind_of?(ServiceTemplateOrchestration)
 
     # initialize fqnames
@@ -1433,18 +1433,16 @@ class CatalogController < ApplicationController
   end
 
   def available_managers(template_id)
-    @edit[:new][:available_managers] = 
-      OrchestrationTemplate.find_by_id(template_id)
-                           .eligible_managers
-                           .collect { |m| [m.name, m.id] }
-                           .sort
+    @edit[:new][:available_managers] = OrchestrationTemplate.find_by_id(template_id)
+                                                            .eligible_managers
+                                                            .collect { |m| [m.name, m.id] }
+                                                            .sort
   end
 
   def available_templates
-    @edit[:new][:available_templates] =
-      OrchestrationTemplate.available
-                           .collect { |t| [t.name.to_s, t.id] }
-                           .sort
+    @edit[:new][:available_templates] = OrchestrationTemplate.available
+                                                             .collect { |t| [t.name.to_s, t.id] }
+                                                             .sort
     @edit[:new][:template_id] = @record.orchestration_template.try(:id)
     @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
     available_managers(@record.orchestration_template.id) if @record.orchestration_template
