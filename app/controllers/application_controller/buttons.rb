@@ -654,7 +654,6 @@ module ApplicationController::Buttons
     @edit[:new][:button_image] = @custom_button_set[:set_data] && @custom_button_set[:set_data][:button_image] ? @custom_button_set[:set_data][:button_image] : ""
     @edit[:new][:display] = @custom_button_set[:set_data] && @custom_button_set[:set_data].has_key?(:display) ? @custom_button_set[:set_data][:display] : true
     @edit[:new][:button_images] = build_button_image_options
-    @edit[:new][:available_fields] = Array.new
     @edit[:new][:fields] = Array.new
     button_order = @custom_button_set[:set_data] && @custom_button_set[:set_data][:button_order] ? @custom_button_set[:set_data][:button_order] : nil
     if button_order     # show assigned buttons in order they were saved
@@ -669,9 +668,8 @@ module ApplicationController::Buttons
       end
     end
     uri = CustomButton.buttons_for(@sb[:applies_to_class]).sort_by(&:name)
-    uri.each do |u|
-      @edit[:new][:available_fields].push([u.name,u.id]) if u.parent.nil?
-    end
+    @edit[:new][:available_fields] = uri.select  { |u| u.parent.nil? }
+                                        .collect { |u| [u.name,u.id] }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
   end
