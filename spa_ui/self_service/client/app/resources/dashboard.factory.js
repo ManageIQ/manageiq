@@ -106,7 +106,7 @@
         }
       },
       series: [{
-        name: 'Project Jellyfish',
+        name: 'ManageIQ Self Service',
         data: [40.3, 50.1, 40.3, 50.2, 50.4, 40.7, 30.5, 40.1, 50.6, 70.4, 60.9, 70.1,
           70.9, 70.9, 70.5, 60.7, 70.7, 70.7, 70.4, 70.0, 70.1, 50.8, 50.9, 70.4, 80.1],
         color: '#F88954'
@@ -184,7 +184,7 @@
           }
         },
         series: [{
-          name: 'Project Jellyfish',
+          name: 'ManageIQ Self Service',
           data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
           color: '#F88954'
 
@@ -262,7 +262,7 @@
           },
 
           xAxis: {
-            categories: ['Blog', 'Project Jellyfish', 'Cloud Exchange']
+            categories: ['Blog', 'ManageIQ Self Service', 'Cloud Exchange']
           },
 
           yAxis: {

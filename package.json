@@ -1,7 +1,7 @@
 {
-  "name": "project_jellyfish",
+  "name": "mange_iq",
   "version": "0.0.1",
-  "description": "Project Jellyfish dependencies",
+  "description": "ManageIQ Self Service dependencies",
   "authors": [
     "Michael Stack",
     "Allen Wight"

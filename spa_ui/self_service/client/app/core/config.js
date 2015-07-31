@@ -2,8 +2,8 @@
   'use strict';
 
   var config = {
-    appErrorPrefix: '[Jellyfish] ',
-    appTitle: 'Jellyfish'
+    appErrorPrefix: '[ManageIQ] ',
+    appTitle: 'ManageIQ'
   };
 
   angular.module('app.core')
