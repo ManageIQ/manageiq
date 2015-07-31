@@ -420,6 +420,7 @@
   :rates:
     :description: Chargeback Rates
     :options:
+    - :collection
     - :subcollection
     :methods: *70174834086080
     :klass: ChargebackRateDetail
