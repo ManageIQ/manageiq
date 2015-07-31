@@ -346,7 +346,8 @@ module ApplicationController::Buttons
     end
     group_set_record_vars(@custom_button_set)
 
-    mems = @edit[:new][:fields].collect { |field| CustomButton.find(field[1]) }
+    member_ids = @edit[:new][:fields].collect { |field| field[1] }
+    mems = CustomButton.where(:id => member_ids)
 
     if typ == "update"
       org_mems = @custom_button_set.members   #clean up existing members
