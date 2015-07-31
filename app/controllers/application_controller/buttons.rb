@@ -895,10 +895,7 @@ module ApplicationController::Buttons
     applies_to_id = @sb[:applies_to_id].to_i if x_active_tree == :sandt_tree
     group.name = "#{@edit[:new][:name]}|#{@edit[:new][:applies_to_class]}|#{to_cid(applies_to_id)}" if !@edit[:new][:name].blank?
     group.set_data ||= Hash.new
-    group.set_data[:button_order] = Array.new     # saves order of buttons/members
-    @edit[:new][:fields].each do |field|
-      group.set_data[:button_order].push(field[1])
-    end
+    group.set_data[:button_order] = @edit[:new][:fields].collect { |field| field[1] }
     if !@edit[:new][:button_image].blank? && @edit[:new][:button_image] != ""
       group.set_data[:button_image] ||= Hash.new
       group.set_data[:button_image] = @edit[:new][:button_image]
