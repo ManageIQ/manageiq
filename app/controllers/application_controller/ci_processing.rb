@@ -1390,7 +1390,6 @@ module ApplicationController::CiProcessing
   # Policy simulation for selected VMs
   def polsimvms
     assert_privileges(params[:pressed])
-    vms = Array.new
     vms = find_checked_items
     if vms.blank?
       vms = [params[:id]]
