@@ -765,11 +765,9 @@ class ConfigurationController < ApplicationController
         :key     => 'config_edit__ui2',
       }
     when 'ui_3'
-      filters = []
-      MiqSearch.where(:search_type => "default").collect { |search| filters.push(search) if allowed_filter_db?(search.db) }
-      current = filters.sort_by do |a|
-        [NAV_TAB_PATH[a.db.downcase.to_sym], a.description.downcase]
-      end
+      current = MiqSearch.where(:search_type => "default")
+                  .select  { |s| allowed_filter_db?(search.db) }
+                  .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,
