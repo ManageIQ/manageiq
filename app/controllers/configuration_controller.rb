@@ -370,17 +370,10 @@ class ConfigurationController < ApplicationController
     @timeprofile_details = Hash.new
     @timeprofiles.each do |timeprofile|
       @timeprofile_details[timeprofile.description] = Hash.new
-      @timeprofile_details[timeprofile.description][:days] = Array.new
-      timeprofile.profile[:days].each do |day|
-        @timeprofile_details[timeprofile.description][:days].push(
-          DateTime::ABBR_DAYNAMES[day.to_i])
-      end
+      @timeprofile_details[timeprofile.description][:days] = 
+        timeprofile.profile[:days].collect { |day| DateTime::ABBR_DAYNAMES[day.to_i] }
       @timeprofile_details[timeprofile.description][:hours] = Array.new
-      temp_arr = Array.new
-      timeprofile.profile[:hours].each do |h|
-        temp_arr.push(h.to_i)
-      end
-      temp_arr = temp_arr.sort
+      temp_arr = timeprofile.profile[:hours].collect(&:to_i).sort
       st = ""
       temp_arr.each_with_index do |hr,i|
         if hr.to_i+1 == temp_arr[i+1]
