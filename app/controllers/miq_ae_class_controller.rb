@@ -1842,12 +1842,11 @@ private
   def initial_setup_for_instances_form_vars(ae_inst_id)
     @ae_inst   =  ae_inst_id ? MiqAeInstance.find(ae_inst_id) : MiqAeInstance.new
     @ae_class  = ae_class_for_instance_or_method(@ae_inst)
-    @ae_values = []
 
-    @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
+    @ae_values = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
+      val   = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
       val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
-      @ae_values.push(val)
+      val
     end
   end
 
@@ -2383,14 +2382,12 @@ private
   # Get variables from edit form
   def get_instances_form_vars
     #resetting inst/class/values from id stored in @edit.
-    @ae_inst = @edit[:ae_inst_id] ? MiqAeInstance.find(@edit[:ae_inst_id]) : MiqAeInstance.new
-    @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
-    @ae_values = Array.new
-
-    @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
+    @ae_inst   = @edit[:ae_inst_id] ? MiqAeInstance.find(@edit[:ae_inst_id]) : MiqAeInstance.new
+    @ae_class  = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
+    @ae_values = @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.collect do |fld|
+      val   = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
       val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
-      @ae_values.push(val)
+      val
     end
 
     if x_node.split('-').first == "aei"
