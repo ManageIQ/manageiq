@@ -18,7 +18,7 @@ describe Module do
     end
 
     after(:each) do
-      $miq_cache_with_timeout.clear
+      Module.clear_all_cache_with_timeout
     end
 
     it 'will create the class method on that class/module only' do
