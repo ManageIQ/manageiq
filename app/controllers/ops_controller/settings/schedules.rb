@@ -264,16 +264,16 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_towhat_from_params_action
-    case params[:action]
+    case params[:action_typ]
     when "db_backup"          then "DatabaseBackup"
-    when /check_compliance\z/ then params[:action].split("_").first.capitalize
+    when /check_compliance\z/ then params[:action_typ].split("_").first.capitalize
     when "emscluster"         then "EmsCluster"
-    else                           params[:action].camelcase
+    else                           params[:action_typ].camelcase
     end
   end
 
   def schedule_method_from_params_action
-    case params[:action]
+    case params[:action_typ]
     when "vm", "miq_template" then "vm_scan"  # Default to vm_scan method for now
     when /check_compliance\z/ then "check_compliance"
     when "db_backup"          then "db_backup"
@@ -379,7 +379,7 @@ module OpsController::Settings::Schedules
 
   def schedule_validate?(sched)
     valid = true
-    if params[:action] != "db_backup"
+    if params[:action_typ] != "db_backup"
       if %w(global my).include?(params[:filter_typ])
         if params[:filter_value].blank?  # Check for search filter chosen
           add_flash(_("%s must be selected") % "filter", :error)
@@ -429,7 +429,7 @@ module OpsController::Settings::Schedules
     schedule.towhat       = schedule_towhat_from_params_action
     schedule.sched_action = {:method => schedule_method_from_params_action}
 
-    if params[:action] == "db_backup"
+    if params[:action_typ] == "db_backup"
       schedule.filter = nil
       schedule.verify_file_depot(
         :name       => params[:depot_name],
@@ -449,7 +449,7 @@ module OpsController::Settings::Schedules
   end
 
   def build_search_filter_from_params
-    case params[:action]
+    case params[:action_typ]
     when "storage"
       case params[:filter_typ]
       when "ems"     then {"CONTAINS" => {"field" => "Storage.ext_management_systems-name", "value" => params[:filter_value]}}
@@ -487,17 +487,17 @@ module OpsController::Settings::Schedules
       when "cluster"
         unless params[:filter_value].blank?
           {"AND" => [
-            {"=" => {"field" => "#{params[:action].split("_").first.capitalize}-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
-            {"=" => {"field" => "#{params[:action].split("_").first.capitalize}-v_owning_datacenter", "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}}
+            {"=" => {"field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
+            {"=" => {"field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_datacenter", "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}}
           ]}
         end
-      when "ems"  then {"=" => {"field" => "#{params[:action].split("_").first.capitalize}.ext_management_system-name", "value" => params[:filter_value]}}
+      when "ems"  then {"=" => {"field" => "#{params[:action_typ].split("_").first.capitalize}.ext_management_system-name", "value" => params[:filter_value]}}
       when "host" then {"=" => {"field" => "Host-name", "value" => params[:filter_value]}}
       when "vm"   then {"=" => {"field" => "Vm-name", "value" => params[:filter_value]}}
-      else             {"IS NOT NULL" => {"field" => "#{params[:action].split("_").first.capitalize}-name"}}
+      else             {"IS NOT NULL" => {"field" => "#{params[:action_typ].split("_").first.capitalize}-name"}}
       end
     else
-      model = params[:action].starts_with?("vm") ? "Vm" : "MiqTemplate"
+      model = params[:action_typ].starts_with?("vm") ? "Vm" : "MiqTemplate"
       case params[:filter_typ]
       when "cluster"
         unless params[:filter_value].blank?

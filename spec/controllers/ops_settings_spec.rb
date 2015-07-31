@@ -95,7 +95,7 @@ describe OpsController do
         controller.should_receive(:render)
         @schedule = FactoryGirl.create(:miq_schedule, :userid => "test", :towhat => "Vm")
         @params = {
-          :action      => "vm",
+          :action      => "schedule_edit",
           :button      => "add",
           :description => "description01",
           :enabled     => "on",
