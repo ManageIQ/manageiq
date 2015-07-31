@@ -988,13 +988,10 @@ class MiqAeClassController < ApplicationController
       @edit[:new][:data] = MiqAeMethod.default_method_text
     end
     @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
-    @edit[:new][:fields] = []
-    @ae_method.inputs.each do |input|
-      field_input = {}
-      method_input_column_names.each do |column|
-        field_input[column] = input.send(column)
+    @edit[:new][:fields] = @ae_method.inputs.collect do |input|
+      method_input_column_names.each_with_object({}) do |column, hash|
+        hash[column] = input.send(column)
       end
-      @edit[:new][:fields].push(field_input)
     end
     @edit[:new][:available_datatypes] = MiqAeField.available_datatypes_for_ui
     @edit[:current] = copy_hash(@edit[:new])
