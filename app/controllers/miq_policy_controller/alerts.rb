@@ -563,13 +563,8 @@ module MiqPolicyController::Alerts
     if alert.options[:notifications][:snmp]
       validate_snmp_options(alert.options[:notifications][:snmp])
       unless @flash_array
-        temp = Array.new
-        @edit[:new][:snmp][:variables].each_with_index do |var,i|
-          unless var[:oid].blank?
-            temp.push(var)
-          end
-        end
-        alert.options[:notifications][:snmp][:variables] = temp
+        alert.options[:notifications][:snmp][:variables] = 
+          @edit[:new][:snmp][:variables].reject { |var| var[:oid].blank? }
       end
     end
     return @flash_array == nil
