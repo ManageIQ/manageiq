@@ -15,11 +15,8 @@ RSpec.describe "chargebacks API" do
     api_basic_authorize
     run_get chargebacks_url
 
-    expect_result_resources_to_include_data(
-      "resources",
-      "href" => [
-        "http://example.org/api/chargebacks/#{chargeback_rate.to_param}"
-      ]
+    expect_result_resources_to_include_hrefs(
+      "resources", [chargebacks_url(chargeback_rate.id)]
     )
     expect_result_to_match_hash(@result, "count" => 1)
     expect_request_success
@@ -36,7 +33,7 @@ RSpec.describe "chargebacks API" do
       "description" => chargeback_rate.description,
       "guid"        => chargeback_rate.guid,
       "id"          => chargeback_rate.id,
-      "href"        => "http://example.org/api/chargebacks/#{chargeback_rate.to_param}"
+      "href"        => chargebacks_url(chargeback_rate.id)
     )
     expect_request_success
   end
@@ -49,18 +46,10 @@ RSpec.describe "chargebacks API" do
     api_basic_authorize
     run_get "#{chargebacks_url(chargeback_rate.id)}/rates"
 
-    expect_result_to_match_hash(
-      @result,
-      "count"    => 1,
-      "subcount" => 1,
-      "name"     => "rates"
-    )
-
-    expect_result_resources_to_include_data(
+    expect_query_result(:rates, 1, 1)
+    expect_result_resources_to_include_hrefs(
       "resources",
-      "href" => [
-        "http://example.org/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}"
-      ]
+      ["#{chargebacks_url(chargeback_rate.id)}/rates/#{chargeback_rate_detail.to_param}"]
     )
     expect_request_success
   end
@@ -76,7 +65,7 @@ RSpec.describe "chargebacks API" do
     expect_result_to_match_hash(
       @result,
       "chargeback_rate_id" => chargeback_rate.id,
-      "href"               => "/api/chargebacks/#{chargeback_rate.to_param}/rates/#{chargeback_rate_detail.to_param}",
+      "href"               => "#{chargebacks_url(chargeback_rate.id)}/rates/#{chargeback_rate_detail.to_param}",
       "id"                 => chargeback_rate_detail.id,
       "rate"               => "5"
     )
