@@ -1960,12 +1960,16 @@ Vmdb::Application.routes.draw do
 
   # Enablement for the REST API
   # OPTIONS requests for REST API pre-flight checks
-  match '/api/*path'   => 'api#handle_options_request', :via => [:options]
-  get '/api(/:version)'           => 'api#show',    :format => 'json', :version => /v\d.*/
 
-  get    '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#show',    :format => 'json', :version => /v\d.*/
-  match  '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#update',  :format => 'json', :via => [:post, :put, :patch], :version => /v\d.*/
-  delete '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#destroy', :format => 'json', :version => /v\d.*/
+  # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
+  apiver_regex = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
+
+  match '/api/*path'   => 'api#handle_options_request', :via => [:options]
+  get '/api(/:version)'           => 'api#show',    :format => 'json', :version => apiver_regex
+
+  get    '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#show',    :format => 'json', :version => apiver_regex
+  match  '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#update',  :format => 'json', :via => [:post, :put, :patch], :version => apiver_regex
+  delete '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#destroy', :format => 'json', :version => apiver_regex
 
   CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
 
