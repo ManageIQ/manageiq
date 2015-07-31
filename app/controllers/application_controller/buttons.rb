@@ -475,10 +475,7 @@ module ApplicationController::Buttons
           #find custombutton set in ab_tree or when adding button under a group
             group_id = x_active_tree == :ab_tree ? nodes[2].split('-').last : nodes[3].split('-').last
             @aset = CustomButtonSet.find_by_id(from_cid(group_id))
-            mems = Array.new
-            @aset.members.each do |m|
-              mems.push(m)
-            end
+            mems = @aset.members
           end
         end
 
