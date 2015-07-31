@@ -2645,17 +2645,18 @@ private
     name_for_msg % options
   end
 
+  def ordered_domains_for_priority_edit_screen
+    MiqAeDomain.order('priority DESC')
+               .reject  { |d| d.priority == 0 }
+               .collect { |d| d.editable? ? d.name : add_read_only_suffix(d, d.name) }
+  end
+
   def priority_edit_screen
     @in_a_form = true
     @edit = {
-      :key => "priority__edit"
+      :key => "priority__edit",
+      :new => { :domain_order => ordered_domains_for_priority_edit_screen }
     }
-    @edit[:new] = {
-      :domain_order => []
-    }
-    domains = MiqAeDomain.order('priority DESC')
-    order = @edit[:new][:domain_order]
-    domains.collect { |d| order.push("#{d.editable? ? d.name : add_read_only_suffix(d, d.name)}") unless d.priority == 0 }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit]  = @edit
   end
