@@ -1,0 +1,211 @@
++block(tag-show-modal)
+  text-align: right
+  margin-right: 20px
+
+  +element(link)
+    display: inline-block
+    font-weight: bold
+    font-size: 11px
+    text-align: right
+    margin-bottom: 10px
+
+    &:hover, &:focus, &:active
+      outline: none
+
+  +element(text)
+    color: $app-color-blue
+
++block(tag-modal)
+  @extend .modal
+
+  +element(dialog)
+    @extend .modal-dialog
+    //margin: 0 auto
+    width: 730px
+
+  //.in.tag-modal &
+  //  top: 50%
+  //  transform: translateY(-50%)
+
+  +element(content)
+    @extend .modal-content
+    border-radius: 0
+    border: none
+
+  +element(header)
+    @extend .modal-header
+    color: $app-color-white
+    background-color: $app-color-dark-green
+    border-bottom: none
+    position: relative
+
+  +element(title)
+    @extend .modal-title
+    text-align: center
+    font-size: 22px
+    text-transform: uppercase
+
+  +element(close)
+    margin-top: -2px
+    color: $app-color-white
+    font-size: 22px
+    line-height: 1em
+    background-color: transparent
+    border: none
+    position: absolute
+    top: 50%
+    right: 30px
+    transform: translateY(-50%)
+
+  +element(body)
+    @extend .modal-body
+    padding: 0 30px
+
+  +element(active-tags)
+    min-height: 62px
+    padding: 15px 57px 15px 0
+    border-bottom: 1px solid $app-color-gray
+    overflow: hidden
+    word-wrap: break-word
+    position: relative
+
+  +element(active-list)
+    margin: 0
+    padding: 0
+    list-style-type: none
+
+  +element(active-item)
+    display: inline-block
+    margin: 3px
+    float: left
+
+  +element(clear)
+    display: block
+    width: 57px
+    height: 100%
+    position: absolute
+    right: 0
+    top: 0
+
+    &:hover, &:focus, &:active
+      outline: none
+
+    &:after
+      content: ""
+      position: absolute
+      top: 16px
+      bottom: 16px
+      right: 57px
+      border-left: 1px solid $app-color-gray
+
+  +element(clear-text)
+    color: $app-color-blue
+    font-weight: bold
+    font-size: 11px
+    position: absolute
+    right: 16px
+    top: 50%
+    transform: translateY(-50%)
+
+  +element(shortcuts)
+
+  +element(shortcut-title)
+    font-size: 22px
+    color: $app-color-dark-gray
+    padding-top: 25px
+    line-height: 1em
+
+  +element(shortcut-list)
+    color: $app-color-gray
+    padding: 20px 0
+    text-align: center
+    text-transform: uppercase
+    position: relative
+
+  +element(shortcut-item)
+    color: $app-color-gray
+    font-weight: bold
+    font-size: 12px
+    padding: 0 7px 0 8px
+    position: relative
+
+    +modifier(link)
+      cursor: pointer
+
+      &:hover, &:focus, &:active
+        outline: none
+
+    &:before
+      content: ""
+      position: absolute
+      left: 0
+      top: 2px
+      bottom: 2px
+      border-left: 1px solid $app-color-gray
+
+    &:first-child
+      padding-left: 0
+
+    &:last-child
+      padding-right: 0
+
+    &:first-child:before
+      border-left: none
+
+  +element(letters)
+    max-height: 350px
+    border-bottom: 1px solid $app-color-gray
+    overflow: auto
+
+  +element(letters-list)
+
+  +element(letters-item)
+    position: relative
+
+  +element(letter)
+    font-size: 16px
+    color: $app-color-green
+    position: absolute
+    top: 10px
+    left: 0
+
+    &:hover, &:focus, &:active
+      color: $app-color-green
+      outline: none
+
+  +element(list)
+    padding: 5px 0 5px 30px
+    overflow: hidden
+    margin: 0
+    list-style-type: none
+
+  +element(item)
+    display: inline-block
+    margin: 0 3px
+    padding: 5px 0
+    float: left
+
+  +element(tag)
+    display: block
+    color: $app-color-white
+    background-color: $app-color-green
+    padding: 0 8px 0 8px
+    border: none
+    font-size: 12px
+    height: 2em
+    line-height: 2em
+    border-radius: 5px
+
+    &[disabled]
+      background-color: $app-color-gray
+
+  +element(tag-results)
+    padding-left: 2px
+
+  +element(footer)
+    @extend .modal-footer
+    text-align: center
+    border: none
+
+  +element(ok)
+    min-width: 120px

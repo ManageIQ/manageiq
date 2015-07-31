@@ -1,0 +1,66 @@
+<div class="cart-modal__header">
+  <button type="button" class="cart-modal__close" ng-click="$dismiss()" aria-label="Close">
+    <i class="fa fa-close" aria-hidden="true"></i>
+    <span class="sr-only">Close</span>
+  </button>
+  <div class="cart-modal__title">Cart</div>
+</div>
+<div class="cart-modal__body">
+  <table class="cart-table" ng-repeat="item in vm.items track by item.project.id">
+    <colgroup>
+      <col class="cart-table__col--quantity">
+      <col class="cart-table__col--product">
+      <col class="cart-table__col--setup_price">
+      <col class="cart-table__col--price">
+      <col class="cart-table__col--actions">
+    </colgroup>
+    <thead>
+    <tr>
+      <th class="cart-table__heading cart-table__heading--quantity">Quantity</th>
+      <th class="cart-table__heading cart-table__heading--product">Product</th>
+      <th class="cart-table__heading cart-table__heading--setup_price">Setup Price</th>
+      <th class="cart-table__heading cart-table__heading--price">Monthly Price</th>
+      <th class="cart-table__heading cart-table__heading--actions">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="line in item.products track by line.product.id">
+      <td class="cart-table__cell cart-table__cell--quantity">{{ line.quantity }}</td>
+      <td class="cart-table__cell cart-table__cell--product">
+        <product-description product="line.product" link-to="products.details({productId: {{line.product.id}}})"></product-description>
+      </td>
+      <td class="cart-table__cell cart-table__cell--setup_price">{{ ::line.product.setup_price | currency}}</td>
+      <td class="cart-table__cell cart-table__cell--price">
+        <computed-monthly-price
+          pricing="line.product"
+          quantity="line.quantity">
+        </computed-monthly-price></td>
+      <td class="cart-table__cell cart-table__cell--actions">
+        <a class="cart-table__action" href="#" title="Remove" ng-click="vm.remove(item.project, line.product)">
+          <img src="/images/ic_deletequestion.png" alt="Remove"/>
+        </a>
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="3" class="cart-table__footer cart-table__footer--total text-right">
+        Total for
+        <a ui-sref="projects.details({projectId : item.project.id})">{{ ::item.project.name }}</a>
+        : &nbsp;{{ item.total | currency }}
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+  <p ng-if="vm.isEmpty()" class="cart-modal__empty">Your cart is empty.</p>
+</div>
+<div class="cart-modal__footer">
+  <button type="button" class="btn-rounded btn-rounded--gray cart-modal__cancel" ng-click="$dismiss()">
+    Cancel
+  </button>
+  <button type="button" class="btn-rounded cart-modal__checkout"
+          ng-click="$close()"
+          ng-disabled="vm.isEmpty()">
+    Checkout
+  </button>
+</div>

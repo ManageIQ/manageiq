@@ -1,0 +1,86 @@
+<form name="vm.form" class="form-horizontal" role="form" novalidate autocomplete="off"
+      ng-submit="vm.onSubmit()"
+      ng-class="{'show-errors': vm.showErrors()}">
+  <content-header short="true">
+    <div>
+      <span class="content-header__title role-form__title" ng-bind="::vm.heading"></span>
+      <span class="role-form__title-error" ng-if="vm.hasErrors()">Please complete required fields in red</span>
+    </div>
+  </content-header>
+
+  <div class="row">
+    <div class="role-form__body">
+      <div class="role-field">
+        <div class="role-field__aside">
+          <label class="role-field__label">Name</label>
+        </div>
+        <div class="role-field__body" ng-class="{'has-error': vm.hasErrors('name')}">
+          <input id="role-name" ng-model="vm.role.name" name="name" type="text"
+                 class="role-field__input" placeholder="Enter a role name." required/>
+
+          <div class="role-field__feedback" ng-messages="vm.form.name.$error">
+            <div ng-message="required">A role name is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="role-field">
+        <div class="role-field__aside">
+          <label class="role-field__label">Description</label>
+        </div>
+        <div class="role-field__body" ng-class="{'has-error': vm.hasErrors('description')}">
+          <textarea id="role-description" ng-model="vm.role.description" name="description"
+                    class="role-field__input field__input--textarea" rows="3"
+                    placeholder="Enter a role description." required></textarea>
+
+          <div class="role-field__feedback" ng-messages="vm.form.description.$error">
+            <div ng-message="required">An role description is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="role-field" ng-repeat="(permission,value) in vm.permissions">
+        <div class="role-field__aside">
+          <label class="role-field__label">{{permission}}</label>
+        </div>
+        <div class="role-field__radio">
+
+            <input id="{{::[permission, value, 'read'].join('-')}}"
+                   name="{{::[permission, value, 'read'].join('-')}}'"
+                   type="radio"
+                   ng-model="vm.role.permissions[permission]"
+                   ng-value="['read']"
+                   class="role-field__radio"/>
+            <label for="{{::[permission, value, 'read'].join('-')}}">Read</label>
+
+            <input id="{{::[permission, value, 'write'].join('-')}}"
+                   name="{{::[permission, value, 'write'].join('-')}}"
+                   type="radio"
+                   ng-model="vm.role.permissions[permission]"
+                   ng-value="['read', 'write']"
+                   class="role-field__radio"/>
+          <label for="{{::[permission, value, 'write'].join('-')}}"> Read/Write  </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-7">
+      <div class="col-sm-offset-3 col-sm-9">
+        <button type="submit" class="btn-rounded role-form__submit" ng-disabled="vm.hasErrors()">Save
+        </button>
+        <button type="button" class="btn btn-link role-form__cancel"
+                confirmation
+                confirmation-if="vm.form.$dirty"
+                confirmation-message="You have unsaved changes. Abandon them and leave the page?"
+                confirmation-ok-style="danger"
+                confirmation-ok-text="Yes, Leave"
+                confirmation-on-ok="vm.backToList()"
+                confirmation-show-cancel="false">Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

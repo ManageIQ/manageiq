@@ -1,0 +1,136 @@
+<content-header>
+  <div class="content-header__body">
+    <img ng-if="::vm.project.img" class="project-details__icon" ng-src="/images/assets/{{vm.project.img}}"/>
+
+    <div ng-if="::!vm.project.img" class="project-details__icon project-details__icon--missing"></div>
+    <span class="content-header__title">{{ ::vm.project.name }}</span>
+  </div>
+  <div ng-if="::'approved' === vm.project.approval" class="content-header__aside">
+    <a ui-sref="projects.edit({projectId: vm.project.id})" class="btn-rounded">Edit Project</a>
+  </div>
+</content-header>
+
+<project-approval project="vm.project" on-approved="vm.approve()" on-rejected="vm.reject()"></project-approval>
+
+<region ng-if="::vm.project.latest_alerts" heading="Alerts">
+  <div class="project-details__alert-buttons">
+    <button type="button" class="btn-rounded btn-rounded--short project-details__alert-button"
+      ui-sref="projects.alerts.create({projectId: vm.project.id})">
+      Add Project Alerts
+    </button>
+  </div>
+  <latest-alerts-table alerts="vm.project.latest_alerts"></latest-alerts-table>
+</region>
+
+<details-table>
+  <div class="details-table__row">
+    <div class="details-table__label">Description</div>
+    <div class="details-table__detail">{{ ::vm.project.description }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Status</div>
+    <div class="details-table__detail">
+      <status type="{{ ::vm.project.status }}">{{ ::vm.project.status }}</status>
+    </div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Account</div>
+    <div class="details-table__detail">{{ ::vm.project.account_number }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Schedule</div>
+    <div class="details-table__detail">
+      {{ ::vm.project.start_date | date:'short' }} &mdash; {{ ::vm.project.end_date | date:'short' }}
+    </div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Months</div>
+    <div class="details-table__detail">{{ ::vm.project.scheduleRemaining() }} months remaining</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Creation Date</div>
+    <div class="details-table__detail">{{ ::vm.project.created_at | date:'medium' }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Last Updated</div>
+    <div class="details-table__detail">{{ ::vm.project.updated_at | date:'medium' }}</div>
+  </div>
+</details-table>
+
+<details-table heading="Budget">
+  <alert ng-if="::0 >= vm.project.budgetRemainder()" type="danger">
+    <strong>Budget Exceeded</strong> &mdash; The project budget has been exceeded!
+  </alert>
+
+  <alert ng-if="::vm.project.monthly_spend && vm.project.scheduleRemaining() > vm.project.monthsRemaining()"
+         type="danger">
+    <strong>Budget Overrun</strong>
+    &mdash; The monthly spend is projected to exceed the budget based on the number of months remaining.
+  </alert>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Budget</div>
+    <div class="details-table__detail">{{ ::vm.project.budget | currency }}</div>
+  </div>
+  <div class="details-table__row">
+    <div class="details-table__label">Available</div>
+    <div class="details-table__detail">
+      <progressbar animate="false" value="::vm.project.budgetRemainder()"
+                   type="{{ ::vm.project.budgetUtilizationStatus() }}"
+                   title="{{ ::vm.project.spent | currency }} of {{ ::vm.project.budget | currency }} spent"
+                   class="details-table__progressbar">
+        <span class="project-details__budget-util">{{ ::vm.project.budgetRemainder() }}%</span>
+      </progressbar>
+    </div>
+  </div>
+  <div class="details-table__row">
+    <div class="details-table__label">Monthly Spend</div>
+    <div class="details-table__detail">{{ ::vm.project.monthly_spend | currency }}</div>
+  </div>
+  <div class="details-table__row">
+    <div class="details-table__label">Projection</div>
+    <div class="details-table__detail">{{ ::vm.project.monthsRemaining() }} months of remaining funds</div>
+  </div>
+</details-table>
+
+<region heading="Order History">
+  <orders-table orders="vm.project.order_history"></orders-table>
+</region>
+
+<!-- Services -->
+<region ng-if="::vm.project.isApproved()" heading="Services">
+  <div class="project-details__service-buttons">
+    <button type="button" class="btn-rounded btn-rounded--short project-details__service-button"
+            ui-sref="projects.services({projectId: vm.project.id})">
+      Add Services
+    </button>
+  </div>
+  <services-table services="vm.project.services"></services-table>
+</region>
+
+<!-- Groups-->
+<region ng-if="::vm.project.isApproved()" heading="Group Membership">
+  <div class="project-details__service-buttons">
+    <button type="button"
+            class="btn-rounded btn-rounded--short project-details__service-button"
+            ng-click="vm.showMembershipModal()">
+      Add Group
+    </button>
+  </div>
+  <project-membership-table
+    memberships="vm.project.memberships"
+    groups="vm.groups"
+    roles="vm.roles">
+  </project-membership-table>
+</region>
+
+ <!--Project Answers-->
+<region heading="Project Specifications">
+  <project-answers-table answers="vm.project.project_answers"></project-answers-table>
+</region>

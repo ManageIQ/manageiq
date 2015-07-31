@@ -1,0 +1,11 @@
+<content-header short="true">
+  <div class="service-category__body">
+    <span class="content-header__title">Services</span>
+  </div>
+  <div class="service-category__aside">
+  </div>
+</content-header>
+
+<region ng-repeat="data in vm.projects track by data.project.id" heading="{{ ::data.project.name }}">
+  <services-table services="data.services"></services-table>
+</region>

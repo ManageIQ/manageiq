@@ -1,0 +1,16 @@
+<content-header short="true">
+  <div class="admin-products-list__body">
+    <span class="content-header__title">All Products</span>
+  </div>
+  <div class="admin-products-list__aside">
+      <product-type-show-modal
+        title="Add A Product"
+        message="Select the type of product you will be creating"
+        product-types="vm.productTypes"
+        on-ok="vm.createType(productType)"></product-type-show-modal>
+  </div>
+</content-header>
+
+<div class="admin-products-list__border">
+  <products-table products="vm.products"></products-table>
+</div>

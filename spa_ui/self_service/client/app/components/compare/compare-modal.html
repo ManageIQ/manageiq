@@ -1,0 +1,37 @@
+<div class="compare-modal__header">
+  <button type="button" class="compare-modal__close" ng-click="$dismiss()" aria-label="Close">
+    <i class="fa fa-close" aria-hidden="true"></i>
+    <span class="sr-only">Close</span>
+  </button>
+  <div class="compare-modal__title">Compare</div>
+</div>
+<div class="compare-modal__body">
+  <div class="compare-modal__table">
+    <div class="compare-modal__table-row compare-modal__table-row--header">
+      <div class="compare-modal__cell compare-modal__cell--key compare-modal__cell--header"></div>
+      <div class="compare-modal__cell compare-modal__cell--value compare-modal__cell--header"
+           ng-repeat="product in ::vm.products track by product.id"
+           ng-class="{'compare-modal__cell--even': $even}">
+        {{ ::product.name }}
+      </div>
+    </div>
+    <div class="compare-modal__table-body">
+      <div class="compare-modal__table-row" ng-repeat="row in ::vm.rowData">
+        <div class="compare-modal__cell compare-modal__cell--key">{{ ::row.name }}</div>
+        <div class="compare-modal__cell compare-modal__cell--value"
+             ng-repeat="value in ::row.values track by $index"
+             ng-class="{'compare-modal__cell--even': $even}">
+          {{ ::value }}
+        </div>
+      </div>
+    </div>
+    <div ng-if="::vm.project" class="compare-modal__table-row compare-modal__table-row--footer">
+      <div class="compare-modal__cell compare-modal__cell--key"></div>
+      <div class="compare-modal__cell compare-modal__cell--value compare-modal__cell--footer"
+           ng-repeat="product in ::vm.products track by product.id"
+           ng-class="{'compare-modal__cell--even': $even}">
+        <button type="button" class="btn-rounded" add-to-cart project="vm.project" product="product"></button>
+      </div>
+    </div>
+  </div>
+</div>
