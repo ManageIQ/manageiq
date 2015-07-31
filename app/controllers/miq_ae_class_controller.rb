@@ -756,27 +756,21 @@ class MiqAeClassController < ApplicationController
       :key         => "aeinst_edit__#{@ae_inst.id || "new"}",
       :new         => {}
     }
-    @edit[:new][:ae_inst]   = {}
-    @edit[:new][:ae_values] = []
-    @edit[:new][:ae_fields] = []
+    @edit[:new][:ae_inst] = {}
     instance_column_names.each do |fld|
       @edit[:new][:ae_inst][fld] = @ae_inst.send(fld)
     end
 
-    @ae_values.each do |ae_value|
-      values = {}
-      value_column_names.each do |fld|
-        values[fld] = ae_value.send(fld)
+    @edit[:new][:ae_values] = @ae_values.collect do |ae_value|
+      value_column_names.each_with_object({}) do |fld, hash|
+        hash[fld] = ae_value.send(fld)
       end
-      @edit[:new][:ae_values].push(values)
     end
 
-    @ae_class.ae_fields.each do |ae_field|
-      field = {}
-      field_column_names.each do |fld|
-        field[fld] = ae_field.send(fld)
+    @edit[:new][:ae_fields] = @ae_class.ae_fields.collect do |ae_field|
+      field_column_names.each_with_object({}) do |fld, hash|
+        hash[fld] = ae_field.send(fld)
       end
-      @edit[:new][:ae_fields].push(field)
     end
 
     @edit[:current] = copy_hash(@edit[:new])
