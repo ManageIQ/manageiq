@@ -1,13 +1,13 @@
 {
-  "name": "Project Jellyfish",
+  "name": "ManageIQ Self Service",
   "version": "0.0.1",
-  "description": "Project Jellyfish UX",
+  "description": "ManageIQ Self Service",
   "authors": [
     "Michael Stack",
     "Allen Wight"
   ],
   "license": "Apache 2.0",
-  "homepage": "https://bitbucket.com/chaoticmoon/bah-ux-prototype",
+  "homepage": "http://manageiq.org",
   "ignore": [
     "**/.*",
     "node_modules",
