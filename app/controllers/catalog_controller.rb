@@ -1279,12 +1279,9 @@ class CatalogController < ApplicationController
     @edit[:new][:provision_cost] = @record.provision_cost
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
-    available_catalogs = ServiceTemplateCatalog.find(:all)
-    @edit[:new][:available_catalogs] = Array.new
-    available_catalogs.each do |stc|
-      @edit[:new][:available_catalogs].push([stc.name,stc.id])
-    end
-    @edit[:new][:available_catalogs].sort!
+    @edit[:new][:available_catalogs] = ServiceTemplateCatalog.all
+                                         .collect { |stc| [stc.name, stc.id] }
+                                         .sort
     available_templates if @record.kind_of?(ServiceTemplateOrchestration)
 
     # initialize fqnames
