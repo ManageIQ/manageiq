@@ -104,8 +104,12 @@ $(document).ready(function () {
     miqJqueryRequest(url, options);
   });
 
+  ManageIQ.observeDate = function(el) {
+    miqSendDateRequest(el);
+  };
+
   $(document).on('changeDate clearDate', '[data-miq_observe_date]', function() {
-    miqSendDateRequest($(this));
+    ManageIQ.observeDate($(this));
   });
 
   // Run this last to be sure all other UJS bindings have been run in case the focus field is observed

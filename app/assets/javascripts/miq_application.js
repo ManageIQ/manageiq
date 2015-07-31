@@ -918,6 +918,13 @@ function miqBuildCalendar() {
   all.each(function () {
     var element = $(this);
 
+    if (! element.data('datepicker')) {
+      var observeDateBackup = ManageIQ.observeDate;
+      ManageIQ.observeDate = function() {};
+      element.datepicker();
+      ManageIQ.observeDate = observeDateBackup;
+    }
+
     if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
       element.datepicker('setStartDate', ManageIQ.calendar.calDateFrom);
     }
