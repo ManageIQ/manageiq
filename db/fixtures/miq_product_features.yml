@@ -3530,52 +3530,52 @@
       :identifier: ems_container_new
 
 # ContainerGroup
-- :name: Container Groups
-  :description: Everything under Container Groups
+- :name: Pods
+  :description: Everything under Pods
   :feature_type: node
   :identifier: container_group
   :children:
   - :name: View
-    :description: View Container Groups
+    :description: View Pods
     :feature_type: view
     :identifier: container_group_view
     :children:
     - :name: List
-      :description: Display Lists of Container Groups
+      :description: Display Lists of Pods
       :feature_type: view
       :identifier: container_group_show_list
     - :name: Show
-      :description: Display Individual Container Groups
+      :description: Display Individual Pods
       :feature_type: view
       :identifier: container_group_show
     - :name: Timeline
-      :description: Display Timelines for Container Groups
+      :description: Display Timelines for Pods
       :feature_type: view
       :identifier: container_group_timeline
   - :name: Modify
-    :description: Modify Container Groups
+    :description: Modify Pods
     :feature_type: admin
     :identifier: container_group_admin
     :children:
     - :name: Remove
-      :description: Remove Container Groups from the VMDB
+      :description: Remove Pods from the VMDB
       :feature_type: admin
       :identifier: container_group_delete
     - :name: Edit
-      :description: Edit a Container Groups
+      :description: Edit a Pod
       :feature_type: admin
       :identifier: container_group_edit
     - :name: Add
-      :description: Add a Container Groups
+      :description: Add a Pod
       :feature_type: admin
       :identifier: container_group_new
   - :name: Operate
-    :description: Perform Operations on Container Groups
+    :description: Perform Operations on Pods
     :feature_type: control
     :identifier: container_group_control
     :children:
     - :name: Edit Tags
-      :description: Edit Tags of Container Groups
+      :description: Edit Tags of Pods
       :feature_type: control
       :identifier: container_group_tag
 

@@ -117,7 +117,7 @@ module EmsCommon
                       " on this " + ui_lookup(:tables => @table_name)
       end
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
-      title = "Container Groups"
+      title = "Pods"
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
                       :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
       @view, @pages = get_view(ContainerGroup, :parent => @ems)  # Get the records (into a view) and the paginator

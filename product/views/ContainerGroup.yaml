@@ -9,10 +9,10 @@
 #
 
 # Report title
-title: Container Groups
+title: Pods
 
 # Menu name
-name: ContainerGroup
+name: Pod
 
 # Main DB table report is based on
 db: ContainerGroup
