@@ -838,7 +838,7 @@ en:
       #EmsCloud:                 Cloud Provider
       EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
-      EmsContainer:             Container Provider
+      EmsContainer:             Containers Provider
       EmsEvent:                 Management Event
       EmsFolder:                Folder
       #EmsInfra:                 Infrastructure Provider
