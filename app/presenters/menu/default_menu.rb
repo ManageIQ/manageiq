@@ -128,11 +128,10 @@ module Menu
 
       def default_menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
-        containers_enabled = VMDB::Config.new("vmdb").config[:product][:containers]
 
-        [cloud_inteligence_menu_section, services_menu_section, clouds_menu_section, infrastructure_menu_section, containers_enabled ? container_menu_section : nil,
-         storage_enabled ? storage_menu_section : nil, control_menu_section, automate_menu_section,
-         optimize_menu_section, configuration_menu_section].compact
+        [cloud_inteligence_menu_section, services_menu_section, clouds_menu_section, infrastructure_menu_section,
+         container_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
+         automate_menu_section, optimize_menu_section, configuration_menu_section].compact
       end
     end
   end
