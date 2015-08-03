@@ -32,13 +32,13 @@ if perf_ids_count > 0
   # Determine the orphaned tag values by finding deleted metric ids
   log "Finding deleted metric ids..."
   deleted_ids = Hash.new { |h, k| h[k] = Array.new }
-  pbar = ProgressBar.new("Searching", perf_ids_count)
+  pbar = ProgressBar.create(:title => "Searching", :total => perf_ids_count, :autofinish => false)
   perf_ids.each do |type, ids|
     klass = type.constantize
     ids.each_slice(opts[:search_window]) do |ids_window|
       found_ids = klass.all(:select => "id", :conditions => {:id => ids_window}).collect(&:id)
       deleted_ids[type] += (ids_window - found_ids)
-      pbar.inc(ids_window.length)
+      pbar.progress += ids_window.length
     end
   end
   pbar.finish
@@ -50,11 +50,11 @@ if perf_ids_count > 0
   if deleted_ids_count > 0
     # Delete the orphaned tag values by the known deleted metric ids
     log "Deleting orphaned tag values..."
-    pbar = ProgressBar.new("Deleting", deleted_ids_count)
+    pbar = ProgressBar.create(:title => "Deleting", :total => deleted_ids_count, :autofinish => false)
     deleted_ids.each do |type, ids|
       ids.each_slice(opts[:delete_window]) do |ids_window|
         VimPerformanceTagValue.delete_all(:metric_type => type, :metric_id => ids_window)
-        pbar.inc(ids_window.length)
+        pbar.progress += ids_window.length
       end
     end
     pbar.finish

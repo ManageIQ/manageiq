@@ -74,7 +74,7 @@ namespace :evm do
       unless (total = RrPendingChange.count) == 0
         require 'progressbar'
         require 'rubyrep'
-        pbar = ProgressBar.new("Backlog", total)
+        pbar = ProgressBar.create(:title => "Backlog", :total => total, :autofinish => false)
 
         begin
           pid     = Process.spawn("bin/rake evm:dbsync:replicate", :chdir => Rails.root)
@@ -82,7 +82,7 @@ namespace :evm do
 
           # Wait for the Backlog to empty before continuing
           until (count = RrPendingChange.count) == 0
-            pbar.set(total - count)
+            pbar.progress = (total - count)
             break unless waiting.status
             sleep 1
           end

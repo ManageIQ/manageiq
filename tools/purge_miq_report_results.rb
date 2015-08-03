@@ -45,7 +45,7 @@ exit if opts[:mode] != "purge"
 
 log "Purging..."
 require 'progressbar'
-pbar = ProgressBar.new("Purging", count)
-MiqReportResult.purge(purge_mode, purge_value, opts[:window]) { |count, total| pbar.inc count } if count > 0
+pbar = ProgressBar.create(:title => "Purging", :total => count, :autofinish => false)
+MiqReportResult.purge(purge_mode, purge_value, opts[:window]) { |count, total| pbar.progress += count } if count > 0
 pbar.finish
 log "Purging...Complete"
