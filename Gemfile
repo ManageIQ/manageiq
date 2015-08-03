@@ -76,7 +76,7 @@ gem 'ruby_parser',                    "~>3.7",        :require => false
 gem "ruby-progressbar",               "~>0.0.10",     :require => false
 gem "rufus-scheduler",                "~>2.0.19",     :require => false
 gem "savon",                          "~>2.2.0",      :require => false  # Automate uses this for simple SOAP Integration
-gem "snmp",                           "~>1.1.0",      :require => false
+gem "snmp",                           "~>1.2.0",      :require => false
 gem "uglifier",                       "~>2.7.1",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
