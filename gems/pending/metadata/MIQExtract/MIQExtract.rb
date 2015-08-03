@@ -430,6 +430,8 @@ class MIQExtract
 
       begin
         require 'ovirt'
+        Ovirt.logger = $rhevm_log if $rhevm_log
+
         ems_opt = {
           :server     => miqVimHost[:address],
           :username   => miqVimHost[:username],
