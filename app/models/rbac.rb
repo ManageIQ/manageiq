@@ -6,11 +6,18 @@ module Rbac
   # 3. Class contains acts_as_miq_taggable
   CLASSES_THAT_PARTICIPATE_IN_RBAC = %w{
     AvailabilityZone
+    CloudTenant
+    ConfiguredSystem
+    Container
+    ContainerGroup
+    ContainerNode
     EmsCluster
     EmsFolder
     ExtManagementSystem
+    Flavor
     Host
     MiqCimInstance
+    OrchestrationTemplate
     Repository
     ResourcePool
     SecurityGroup
