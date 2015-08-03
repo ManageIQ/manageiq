@@ -841,10 +841,6 @@ class MiqRequestWorkflow
   end
 
   def process_filter(filter_prop, ci_klass, targets)
-    process_filter_all(filter_prop, ci_klass, targets)
-  end
-
-  def process_filter_all(filter_prop, ci_klass, targets)
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
     result = if filter_id.zero?
