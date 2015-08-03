@@ -262,11 +262,7 @@ module MiqPowerShell
       lst = node.elements.find{ |e| e.name == 'LST' }
       dct = node.elements.find{ |e| e.name == 'DCT' }
 
-      if node.attributes['RefId'].respond_to?(:value)
-        refId = node.attributes['RefId'].value.to_i
-      else
-        refId = node.attributes['RefId'].to_i
-      end
+      refId = node.attributes['RefId'].to_i
 
       obj = nil
       if lst.nil? && dct.nil?
