@@ -611,7 +611,6 @@ class MiqPolicyController < ApplicationController
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
     @changed = session[:changed] if @edit   # to get save/reset buttons to highlight when fields are moved left/right
-    edit_str = @edit ? 'editing_' : ''
 
     # Replace right side with based on selected tree node type
     case nodetype
