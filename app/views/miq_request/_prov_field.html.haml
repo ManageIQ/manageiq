@@ -88,11 +88,7 @@
               = options[field]
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -#  Display notes if available
-            - if field == :vm_name
-              -#  Removing h() so that '<font color='red'>' can be displayed in field
-              = field_hash[:notes]
-            - else
-              = field_hash[:notes]
+            = field_hash[:notes]
         %td
           - if field == :owner_email
             - fh = wf.get_field(:owner_load_ldap, dialog)
