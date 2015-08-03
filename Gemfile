@@ -79,7 +79,10 @@ gem "snmp",                           "~>1.1.0",      :require => false
 gem "uglifier",                       "~>2.7.1",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
-gem 'sys-proctable',                                  :require => false
+
+if RUBY_PLATFORM =~ /darwin/i # This is only used on Mac
+  gem 'sys-proctable',                                :require => false
+end
 
 
 ### Start of gems excluded from the appliances.

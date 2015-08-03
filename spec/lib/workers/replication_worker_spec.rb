@@ -3,7 +3,7 @@ require "spec_helper"
 require "workers/replication_worker"
 
 describe ReplicationWorker do
-  before(:each) do
+  before do
     ReplicationWorker.any_instance.stub(:worker_initialization)
     @worker = ReplicationWorker.new
   end
@@ -42,6 +42,10 @@ describe ReplicationWorker do
       Timecop.freeze(301.seconds.from_now.utc)
 
       expect(@worker.child_process_recently_active?).to be_false
+    end
+
+    after do
+      File.delete('/tmp/rubyrep_hb') if File.exist?('/tmp/rubyrep_hb')
     end
   end
 end
