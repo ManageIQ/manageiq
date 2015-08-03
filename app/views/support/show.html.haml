@@ -23,7 +23,7 @@
       - desc = get_vmdb_config[:server][:custom_support_url_description]
       - url  = get_vmdb_config[:server][:custom_support_url]
       - cond_url      = desc.present? && url.present?
-      - cond_userrole = ["super_administrator", "administrator"].include?(session[:userrole])
+      - cond_userrole = %w(super_administrator administrator).include?(session[:userrole])
       - if cond_userrole || cond_url
         .col-md-12.col-lg-6
           %fieldset

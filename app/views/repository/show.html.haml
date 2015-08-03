@@ -4,7 +4,7 @@
   - elsif @showtype == "download_pdf"
     = render :partial => "layouts/show_pdf"
   - else
-    - if ["miq_templates", "vms"].include?(@display)
+    - if %w(miq_templates vms).include?(@display)
       = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@repo.id}"}
     - else
       = render :partial => @showtype

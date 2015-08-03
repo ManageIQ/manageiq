@@ -62,7 +62,7 @@
                   "data-miq_observe"     => observe)
           - else
             %td
-              - if @alert.expression.is_a?(MiqExpression)
+              - if @alert.expression.kind_of?(MiqExpression)
                 -# Expression is an MiqExpression
                 = _('Expression')
               - else
@@ -82,7 +82,7 @@
                   "data-miq_sparkle_off" => true,
                   "data-miq_observe"     => observe)
         - else
-          - if @alert.expression.is_a?(MiqExpression) || @alert.expression[:eval_method] == "nothing"
+          - if @alert.expression.kind_of?(MiqExpression) || @alert.expression[:eval_method] == "nothing"
             %tr
               %td.key
                 = _("Driving Event")
@@ -127,7 +127,7 @@
                 = render :partial => "alert_builtin_exp", :locals  => {:option => eo}
         %hr
       - else
-        - if @alert.expression.is_a?(MiqExpression)
+        - if @alert.expression.kind_of?(MiqExpression)
           %h3= _('Expression')
           - if !@expression_table.nil?
             - @expression_table.each do |token|

@@ -1,6 +1,6 @@
-- url = url_for(:action =>'category_field_changed', :id => "#{@category && @category.id ? @category.id : "new"}")
+- url = url_for(:action => 'category_field_changed', :id => "#{@category && @category.id ? @category.id : "new"}")
 #main_div
-  = form_tag( {:action => 'category_update'}, {:id => "category_form"}) do
+  = form_tag({:action => 'category_update'}, :id => "category_form") do
     = render :partial => "layouts/flash_msg"
     %fieldset
       %h3= _("Category Information")

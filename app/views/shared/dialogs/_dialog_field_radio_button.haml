@@ -3,13 +3,13 @@
     %span{:id => "dynamic-radio-#{field.id}"}
       - values = field.values
       - values = [['', "<#{_('None')}>"]] + values if !field.required && !field.dynamic
-      - values.each_with_index do |rb, i|
+      - values.each do |rb|
 
         %input{radio_options(field, url, rb[0])}
         %label.dynamic-radio-label= rb[1]
 
   - else
-    = h(field.values[0].last) if !field.values.empty?
+    = h(field.values[0].last) unless field.values.empty?
 
 - else
   = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))

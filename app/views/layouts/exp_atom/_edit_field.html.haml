@@ -131,7 +131,7 @@
                 :multiple              => false,
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
-                "data-miq_observe"     =>{:url => url}.to_json)
+                "data-miq_observe"     => {:url => url}.to_json)
             - else
               = h(@edit[@expkey][:exp_value][1])
         - if @edit[@expkey][:val1][:date_format] == 's'

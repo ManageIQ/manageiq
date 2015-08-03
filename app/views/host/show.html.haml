@@ -1,5 +1,5 @@
 #main_div
-  - if ["vms", "cloud_tenants", "storages", "miq_proxies", "miq_templates", "resource_pools", "ontap_logical_disks", "ontap_storage_systems", "ontap_storage_volumes", "ontap_file_shares"].include?(@display) && @showtype != "compare"
+  - if %w(vms cloud_tenants storages miq_proxies miq_templates resource_pools ontap_logical_disks ontap_storage_systems ontap_storage_volumes ontap_file_shares).include?(@display) && @showtype != "compare"
     = render(:partial => "layouts/gtl", :locals => {:action_url => "show/#{@host.id}"})
   - else
     - case @showtype

@@ -23,13 +23,13 @@
     %tbody
       - @sb[:selected_rate_details].each do |r|
         - @cur_group = r[:group] if @cur_group.nil?
-        - if @cur_group !=  r[:group]
+        - if @cur_group != r[:group]
           - @cur_group = r[:group]
           %tr
             %td.active{:colspan => "6"} &nbsp;
         %tr
           %td
-            = h(Dictionary::gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize))
+            = h(Dictionary.gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize))
           %td
             = r[:description]
           %td{:align => "right"}

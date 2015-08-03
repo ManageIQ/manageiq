@@ -50,12 +50,12 @@
             = h(@item.send(val.to_sym))
   - else
     - j = (%w(scan_histories registry_items filesystems).include?(@lastaction) ? 0 : 1)
-    - for i in j...@view.col_order.length
+    - @view.col_order[j..-1].each_with_index do |item, i|
       %tr{:class => "#{cycle('row0', 'row1')}"}
         %td.key
           = @view.headers[i]
         %td
-          - item_data = @item.send(@view.col_order[i])
+          - item_data = @item.send(item)
           - if %w(data name).include?(@view.headers[i].downcase)
             - if item_data.present?
               - item_data.scan(/.{1,125}/).each do |data_part|
@@ -71,13 +71,13 @@
       %tr{:class => "#{cycle('row0', 'row1')}"}
         %td.key= _("Groups")
         %td
-          - groups = @group_names.sort_by { |m| m[:name] }.collect { |group| group.name }
+          - groups = @group_names.sort_by { |m| m[:name] }.collect(&:name)
           = h(groups.join(", "))
     - elsif @lastaction == "groups"
       %tr{:class => "#{cycle('row0', 'row1')}"}
         %td.key= _("Users")
         %td
-          - users = @user_names.sort_by { |m| m[:name] }.collect { |user| user.name }
+          - users = @user_names.sort_by { |m| m[:name] }.collect(&:name)
           = h(users.join(", "))
     - elsif @lastaction == "filesystems"
       %tr{:class => "#{cycle('row0', 'row1')}"}

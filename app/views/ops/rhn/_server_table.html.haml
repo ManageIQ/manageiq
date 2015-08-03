@@ -29,16 +29,16 @@
                       :id       => 'rhn_register_button_on_1',
                       :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
-                      :onclick  => "miqAjaxButton('#{url_for( :action => 'rhn_buttons',
-                                                              :button => 'register')}',
+                      :onclick  => "miqAjaxButton('#{url_for(:action => 'rhn_buttons',
+                                                             :button => 'register')}',
                                                   true);")
           %td
             = button_tag(_("Apply CFME Update"),
                       :id       => 'rhn_update_button_on_1',
                       :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
-                      :onclick  => "miqAjaxButton('#{url_for( :action => 'rhn_buttons',
-                                                              :button => 'update')}',
+                      :onclick  => "miqAjaxButton('#{url_for(:action => 'rhn_buttons',
+                                                             :button => 'update')}',
                                                   true);")
     %br
     #form_div
@@ -58,7 +58,7 @@
           - Array(@updates).each do |update|
             %tr
               %td.narrow
-                = check_box_tag('check_server_'+update.id.to_s, 1,
+                = check_box_tag("check_server_#{update.id}", 1,
                                 update.checked,
                                 :id => 'listcheckbox',
                                 :onclick => "miqUpdateButtons(this,'rhn_buttons');")

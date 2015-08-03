@@ -5,7 +5,7 @@
 %form.form-horizontal
   .form-group
     %label.col-md-2.control-label
-      = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+      = Dictionary.gettext('fqname', :type => :column, :notfound => :titleize)
     .col-md-8
       = @sb[:namespace_path]
   .form-group

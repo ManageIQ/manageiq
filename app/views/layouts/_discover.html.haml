@@ -1,6 +1,6 @@
 - url = url_for :action => 'discover_field_changed'
 = render :partial => 'layouts/flash_msg'
-= form_tag({:action => 'discover'}, {:id => 'discover_form'}) do
+= form_tag({:action => 'discover'}, :id => 'discover_form') do
   %h3= _("Discover")
   %table.style1
     - i = 0
@@ -19,11 +19,11 @@
                             "1",
                             @discover_type_checked.include?(@discover_type[i]),
                             "data-miq_observe_checkbox" => {:url => url}.to_json)
-        %td= h(Dictionary::gettext(@discover_type[i], :type     => :discover_types,
+        %td= h(Dictionary.gettext(@discover_type[i], :type     => :discover_types,
                                                       :notfound => :titleize))
       - i += 1
   %hr
-  #discover_credentials{:style => ("display:none" unless display = @discover_type_checked.include?("ipmi"))}
+  #discover_credentials{:style => ("display:none" unless @discover_type_checked.include?("ipmi"))}
     = render :partial => "layouts/discover_credentials",
              :locals  => {:label => "IPMI Credentials"}
   %h3= _("Subnet Range")

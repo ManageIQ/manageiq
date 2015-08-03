@@ -1,10 +1,6 @@
 - @angularForm = true
 
-%form#form_div(name                                  = "angularForm"
-               ng-controller                         = "diagnosticsDatabaseFormController"
-               ng-show                               = "afterGet"
-               data-db-backup-form-field-changed-url = "/#{controller_name}/db_backup_form_field_changed/"
-               data-submit-url                       = "/#{controller_name}/db_backup/")
+%form#form_div{:name => "angularForm", 'ng-controller' => "diagnosticsDatabaseFormController", 'ng-show' => "afterGet", 'data-db-backup-form-field-changed-url' => "/#{controller_name}/db_backup_form_field_changed/", 'data-submit-url' => "/#{controller_name}/db_backup/"}
   - if @sb[:active_tab] == "diagnostics_database"
     -# created div with different name so database validation flash message can be shown in it's own box
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "database"}
@@ -92,8 +88,7 @@
                          "ng-class"    => "{'btn-disabled': !angularForm.$valid}",
                          "ng-disabled" => "!miqService.saveable(angularForm)",
                          "ng-show"     => true,
-                         "ng-click"    => "submitButtonClicked('#{confirm}')",
-                         )
+                         "ng-click"    => "submitButtonClicked('#{confirm}')")
 
     - if DatabaseBackup.gc_supported?
       %hr/

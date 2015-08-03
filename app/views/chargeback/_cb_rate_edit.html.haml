@@ -31,7 +31,7 @@
             %td.active{:colspan => "6"} &nbsp;
         %tr
           %td
-            = Dictionary::gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize)
+            = Dictionary.gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize)
           %td
             = r[:description]
           %td{:align => 'right'}

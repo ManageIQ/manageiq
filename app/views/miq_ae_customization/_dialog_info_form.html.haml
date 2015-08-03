@@ -23,7 +23,7 @@
       %td
         - @edit[:dialog_buttons].each do |b|
           - checked = !@edit[:new][:buttons].nil? && @edit[:new][:buttons].include?(b) ? true : false
-          = check_box_tag("chkbx_#{b}", value = "1", checked = checked,
+          = check_box_tag("chkbx_#{b}", "1", checked,
             "data-miq_observe_checkbox" => {:url => url}.to_json)
           = h(b.capitalize)
           &nbsp;

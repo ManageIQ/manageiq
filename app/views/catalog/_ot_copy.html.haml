@@ -35,9 +35,8 @@
             %label.col-md-2.control-label
               = _('Draft')
             .col-md-8
-              = check_box_tag("draft", value = true, checked = @edit[:new][:draft],
+              = check_box_tag("draft", true, @edit[:new][:draft],
                               "data-miq_observe_checkbox" => {:url => url}.to_json)
-
 
     %hr
 

@@ -16,7 +16,7 @@
           :disabled => true,
           :style => "display:none;")
         -# Create a MyCodeMirror editor for the text area
-        = render(:partial =>"/layouts/my_code_mirror",
+        = render(:partial => "/layouts/my_code_mirror",
           :locals => {:text_area_id => "script1_data",
             :mode => @ct.type == "CustomizationTemplateKickstart" ? "shell" : "xml",
             :line_numbers => true,

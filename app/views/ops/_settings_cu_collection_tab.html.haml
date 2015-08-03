@@ -1,7 +1,7 @@
 - if @sb[:active_tab] == "settings_cu_collection"
   - url = url_for(:action => 'cu_collection_field_changed')
   - clusters_title = title_for_clusters
-  = form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do
+  = form_tag({:action => 'cu_collection_update'}, :id => "config_form") do
     = render :partial => "layouts/flash_msg"
     .row
       .col-md-12.col-lg-6
@@ -11,8 +11,7 @@
             %tr
               %td.key= _("Collect for All %s") % clusters_title
               %td
-                = check_box_tag("all_clusters", value="1",
-                  checked=@edit[:new][:all_clusters],
+                = check_box_tag("all_clusters", "1", @edit[:new][:all_clusters],
                   "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
                   "data-miq_observe_checkbox" => {:url => url}.to_json)
           .note
@@ -47,8 +46,7 @@
             %tr
               %td.key= _("Collect for All Datastores")
               %td
-                = check_box_tag("all_storages", value="1",
-                  checked=@edit[:new][:all_storages],
+                = check_box_tag("all_storages", "1", @edit[:new][:all_storages],
                   "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
                   "data-miq_observe_checkbox" => {:url => url}.to_json)
           #storages_div{:style => "display:#{@edit[:new][:all_storages] ? "none" : ""}"}

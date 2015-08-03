@@ -29,7 +29,7 @@
           %li
             = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
                 {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                {:title => _("Show this container node's parent %s") % ui_lookup(:table => "ems_container")})
+                :title => _("Show this container node's parent %s") % ui_lookup(:table => "ems_container"))
         - if role_allows(:feature => "container_group_show_list")
           - num_groups = @record.number_of(:container_groups)
           - if num_groups == 0

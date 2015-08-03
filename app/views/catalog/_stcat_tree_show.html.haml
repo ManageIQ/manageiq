@@ -12,7 +12,9 @@
         = _('Description')
       .col-md-8
         %p.form-control-static= @record.description
-  - unless @record_service_templates.empty?
+  - if @record_service_templates.empty?
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("No Catalog Items found.")}
+  - else
     %hr
     %table.table.table-bordered.table-striped.table-hover
       %thead
@@ -29,5 +31,3 @@
           - else
             %tr
               %td= obj.name
-  - else
-    = render :partial => 'layouts/info_msg', :locals => {:message => _("No Catalog Items found.")}

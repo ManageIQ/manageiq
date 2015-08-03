@@ -46,7 +46,7 @@
   - if @nteventlog
     %h3= _("Event Log Items")
     %table.style1
-      - @nteventlog.sort_by{|l| l[:name]}.each do |k|
+      - @nteventlog.sort_by { |l| l[:name] }.each do |k|
         %tr
           %td= h(k[:name])
         %tr

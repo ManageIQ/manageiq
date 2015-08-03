@@ -1,6 +1,6 @@
 = render :partial => "layouts/flash_msg"
 = form_tag({:action => "discover"},
-           {:id     => "discover_form"}) do
+           :id     => "discover_form") do
   = render :partial => "layouts/discover_credentials",
            :locals  => {:label => _("Credentials")}
   %table{:width => "100%"}

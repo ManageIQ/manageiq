@@ -1,5 +1,5 @@
 - url = url_for(:action => 'form_field_changed', :id => (@host.id || 'new'))
-- observe = { :interval => '.5', :url => url }.to_json
+- observe = {:interval => '.5', :url => url}.to_json
 #form_div
   = render :partial => "layouts/flash_msg"
   - if session[:host_items].nil?
@@ -34,7 +34,7 @@
             = select_tag("user_assigned_os",
               options_for_select([["<#{_('not specified')}>", nil]] + Host.host_create_os_types.to_a,
               @edit[:new][:user_assigned_os]),
-              "data-miq_observe" => { :url => url }.to_json)
+              "data-miq_observe" => {:url => url}.to_json)
       %tr
         %td.key= _('IPMI IP Address')
         %td.wide
@@ -52,7 +52,7 @@
     %hr
 
   = render(:partial => "/layouts/multi_auth_credentials", :locals => {:record => @host})
-  - if ["new", "create"].include?(controller.action_name)
+  - if %w(new create).include?(controller.action_name)
     %table{:width => '100%'}
       %tr
         %td{:align => 'right'}
@@ -76,7 +76,7 @@
 
   - unless session[:host_items].nil?
     %h3
-      = pluralize(session[:host_items].length, Dictionary::gettext(Host.to_s, :type => :model, :notfound => :titleize))
+      = pluralize(session[:host_items].length, Dictionary.gettext(Host.to_s, :type => :model, :notfound => :titleize))
       = _('Selected')
     = _('Click on a Host to fetch its settings')
     %table.admittable{:height => '75'}

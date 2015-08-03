@@ -1,4 +1,4 @@
-- url = url_for(:action =>'zone_field_changed', :id => "#{@zone.id || "new"}")
+- url = url_for(:action => 'zone_field_changed', :id => "#{@zone.id || "new"}")
 = render :partial => "layouts/flash_msg"
 - disabled_name = !(@zone.name.nil? && @edit[:current][:name].nil?)
 .row
@@ -12,9 +12,9 @@
             = text_field_tag("name",
               @edit[:new][:name],
               :maxlength => 50,
-              :disabled =>disabled_name,
+              :disabled => disabled_name,
               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-            - if !@zone.id
+            - unless @zone.id
               = javascript_tag(javascript_focus('name'))
         %tr
           %td.key= _("Description")
@@ -87,6 +87,6 @@
           %td.key= _("Max Active VM Scans")
           %td
             = select_tag('max_scans',
-              options_for_select([[_("Unlimited"), 0]] + [1, 2, 3, 4] + Array.new(10) {|i| (i+1)*5},
+              options_for_select([[_("Unlimited"), 0]] + [1, 2, 3, 4] + (5..50).step(5).to_a,
                 @edit[:new][:concurrent_vm_scans]),
               "data-miq_observe" => {:url => url}.to_json)

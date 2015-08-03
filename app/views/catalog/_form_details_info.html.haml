@@ -1,5 +1,4 @@
 - action = @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed"
-- url = url_for(:action => action, :id => "#{@edit[:rec_id] || "new"}")
 - url_one_trans = url_for(:action => action, :id => "#{@edit[:rec_id] || "new"}", :transOne => '1')
 
 %h3= _('Long Description')

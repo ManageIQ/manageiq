@@ -93,7 +93,7 @@
               %td
                 = h(@miq_request.reason)
           - if !@edit && @miq_request.approval_state.downcase == "approved"
-            - if @miq_request.resource_type == "MiqProvisionRequest" &&  @miq_request.resource.miq_provisions.length > 0
+            - if @miq_request.resource_type == "MiqProvisionRequest" && @miq_request.resource.miq_provisions.length > 0
               %tr
                 %td.key
                   = _("Provisioned VMs")
@@ -101,7 +101,7 @@
                   :onclick            => "DoNav('#{'/miq_request/show/' << @miq_request.id.to_s << '?display=miq_provisions'}');",
                   :title              => _("Click to view details")}
                   = h(@miq_request.resource.miq_provisions.length)
-            - if @miq_request.resource_type == "MiqHostProvisionRequest" &&  @miq_request.resource.miq_host_provisions.length > 0
+            - if @miq_request.resource_type == "MiqHostProvisionRequest" && @miq_request.resource.miq_host_provisions.length > 0
               %tr
                 %td.key
                   = _("Provisioned Hosts")

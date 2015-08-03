@@ -26,9 +26,9 @@
           "data-miq_observe" => {:url => url}.to_json)
     %tr
       %td.key= _('Type')
-      - types = (@ct.id ? [] : [["<#{_('Choose')}>", nil]]) + [["Kickstart","CustomizationTemplateKickstart"],
-        ["Sysprep", "CustomizationTemplateSysprep"],
-        ["CloudInit", "CustomizationTemplateCloudInit"]]
+      - types = (@ct.id ? [] : [["<#{_('Choose')}>", nil]]) + [[_("Kickstart"), "CustomizationTemplateKickstart"],
+        [_("Sysprep"), "CustomizationTemplateSysprep"],
+        [_("CloudInit"), "CustomizationTemplateCloudInit"]]
       %td.wide
         = select_tag("typ",
           options_for_select(types, @edit[:new][:typ]),

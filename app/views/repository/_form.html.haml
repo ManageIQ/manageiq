@@ -1,4 +1,4 @@
-%form#form_div(name="repositoryForm" ng-controller="repositoryFormController")
+%form#form_div{:name => "repositoryForm", 'ng-controller' => "repositoryFormController"}
   = render :partial => "layouts/flash_msg"
   %fieldset
     %h3 Basic Information
@@ -7,11 +7,11 @@
         %tr
           %td.key Name
           %td.wide
-            %input(type="text" name="repo_name" ng-model="repoModel.repo_name"  ng-maxlength=10 miqrequired checkchange)
+            %input{:type => "text", :name => "repo_name", 'ng-model' => "repoModel.repo_name", 'ng-maxlength' => 10, :miqrequired => true, :checkchange => true}
         %tr
           %td.key Path
           %td.wide
-            %input(type="text" name="repo_path" ng-model="repoModel.repo_path" ng-maxlength=100 miqrequired checkpath checkchange)
+            %input{:type => "text", :name => "repo_path", 'ng-model' => "repoModel.repo_path", 'ng-maxlength' => 100, :miqrequired => true, :checkpath => true, :checkchange => true}
   %table{:width => '100%'}
     %tr
       %td{:align => 'right'}

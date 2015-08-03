@@ -1,4 +1,4 @@
-%iframe.import-hidden-iframe(name="upload_target")
+%iframe.import-hidden-iframe{:name => "upload_target"}
 
 = render :partial => "layouts/flash_msg"
 .import-flash-message
@@ -37,17 +37,17 @@
       %h3= _('Import Datastore classes')
 
       %p.import-label= _('Select existing domain to import into:')
-      %select.existing-domains(name="selected_domain_to_import_to")
+      %select.existing-domains{:name => "selected_domain_to_import_to"}
         = options_for_select(@importable_domain_options)
 
       %p.import-label= _('Select domain you wish to import from:')
-      %select.importing-domains(name="selected_domain_to_import_from")
+      %select.importing-domains{:name => "selected_domain_to_import_from"}
 
       %p.import-label= _('Select namespaces you wish to import:')
-      %input#toggle-all(type="checkbox")
+      %input#toggle-all{:type => "checkbox"}
       %label{:for => "toggle-all"}= _('Toggle All/None')
 
-      .domain-tree(name="selected_namespaces[]")
+      .domain-tree{:name => "selected_namespaces[]"}
 
       %table{:width => "100%"}
         %tr

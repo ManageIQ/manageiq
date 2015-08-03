@@ -36,7 +36,7 @@
         "data-miq_observe"     => {:url => url}.to_json)
     - elsif @sb[:planning][:options][:filter_typ] == "ems"
       %br
-      - options = [["<#{_('Choose a %s')}>" % ui_lookup(:table => "ext_management_systems"), "<Choose>"]] + Array(@sb[:planning][:emss].invert).sort_by{ |a| a.first.downcase }
+      - options = [["<#{_('Choose a %s')}>" % ui_lookup(:table => "ext_management_systems"), "<Choose>"]] + Array(@sb[:planning][:emss].invert).sort_by { |a| a.first.downcase }
       = select_tag("filter_value",
         options_for_select(options, @sb[:planning][:options][:filter_value]),
         :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
@@ -58,7 +58,7 @@
         &nbsp;
         = _('No VMs found')
       - else
-        - options = [["<#{_('Choose a VM')}>", "<Choose>"]] + Array(@sb[:planning][:vms].invert).sort_by{ |a| a.first.downcase }
+        - options = [["<#{_('Choose a VM')}>", "<Choose>"]] + Array(@sb[:planning][:vms].invert).sort_by { |a| a.first.downcase }
         = select_tag("chosen_vm",
           options_for_select(options, @sb[:planning][:options][:chosen_vm]),
           :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
@@ -82,7 +82,7 @@
         %tr
           %td.key{:style => "width: 120px;"}= _('CPU Speed')
           %td
-            = check_box_tag("trend_cpu", value = "1", checked = @sb[:planning][:options][:trend_cpu],
+            = check_box_tag("trend_cpu", "1", @sb[:planning][:options][:trend_cpu],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
               "data-miq_observe_checkbox" => {:url => url}.to_json)
@@ -99,7 +99,7 @@
         %tr
           %td.key{:style => "width: 120px;"}vCPU Count</td>
           %td
-            = check_box_tag("trend_vcpus", value = "1", checked = @sb[:planning][:options][:trend_vcpus],
+            = check_box_tag("trend_vcpus", "1", @sb[:planning][:options][:trend_vcpus],
             "data-miq_sparkle_on"       => true,
             "data-miq_sparkle_off"      => true,
             "data-miq_observe_checkbox" => {:url => url}.to_json)
@@ -115,7 +115,7 @@
         %tr
           %td.key{:style => "width: 120px;"}= _('Memory Size')
           %td
-            = check_box_tag("trend_memory", value = "1", checked = @sb[:planning][:options][:trend_memory],
+            = check_box_tag("trend_memory", "1", @sb[:planning][:options][:trend_memory],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
               "data-miq_observe_checkbox" => {:url => url}.to_json)
@@ -132,7 +132,7 @@
         %tr
           %td.key{:style => "width: 120px;"}= _('Disk Space')
           %td
-            = check_box_tag("trend_storage", value = "1", checked = @sb[:planning][:options][:trend_storage],
+            = check_box_tag("trend_storage", "1", @sb[:planning][:options][:trend_storage],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
               "data-miq_observe_checkbox" => {:url => url}.to_json)

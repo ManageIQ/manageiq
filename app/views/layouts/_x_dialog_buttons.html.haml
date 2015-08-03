@@ -39,7 +39,7 @@
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button =>"cancel")}');")
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
 
       #buttons_off{:style => session[:changed] ? "display: none;" : ""}
         - buttons.each do |b|
