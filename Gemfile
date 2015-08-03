@@ -80,10 +80,6 @@ gem "uglifier",                       "~>2.7.1",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
 
-if RUBY_PLATFORM =~ /darwin/i # This is only used on Mac
-  gem 'sys-proctable',                                :require => false
-end
-
 
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.

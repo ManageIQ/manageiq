@@ -43,6 +43,10 @@ gem "trollop",                 "~>2.0",             :require => false
 gem "psych",                   "~>2.0.12"
 gem "apipie-bindings",         "~>0.0.12",          :require => false
 
+if RUBY_PLATFORM =~ /darwin/i # This is only used on Mac
+  gem 'sys-proctable',                                :require => false
+end
+
 # Linux-only section
 if RbConfig::CONFIG["host_os"].include?("linux")
   gem "linux_block_device", ">=0.1.0", :require => false

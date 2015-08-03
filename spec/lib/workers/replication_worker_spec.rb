@@ -9,7 +9,7 @@ describe ReplicationWorker do
   end
 
   context "testing rubyrep_alive?" do
-    before(:each) do
+    before do
       Process.stub(:waitpid2)
       @worker.stub(:child_process_recently_active?).and_return(true)
       @worker.instance_variable_set(:@pid, 123)
@@ -27,6 +27,10 @@ describe ReplicationWorker do
   end
 
   context "testing child process heartbeat" do
+    after do
+      File.delete('/tmp/rubyrep_hb') if File.exist?('/tmp/rubyrep_hb')
+    end
+
     it "should be alive if heartbeat within threshold" do
       Timecop.freeze(Time.current.utc)
 
@@ -42,10 +46,6 @@ describe ReplicationWorker do
       Timecop.freeze(301.seconds.from_now.utc)
 
       expect(@worker.child_process_recently_active?).to be_false
-    end
-
-    after do
-      File.delete('/tmp/rubyrep_hb') if File.exist?('/tmp/rubyrep_hb')
     end
   end
 end
