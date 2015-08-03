@@ -30,7 +30,7 @@ gem "memoist",                 "~>0.11.0",          :require => false
 gem "memory_buffer",           ">=0.1.0",           :require => false
 gem "more_core_extensions",    "~>1.2.0",           :require => false
 gem "nokogiri",                "~>1.6.0",           :require => false
-gem "ovirt",                   "~>0.5.0",           :require => false
+gem "ovirt",                   "~>0.6.0",           :require => false
 gem "kubeclient",              "=0.1.17",           :require => false
 gem "openshift_client",        "=0.0.8",            :require => false
 gem "rest-client",                                  :require => false, :git => "git://github.com/rest-client/rest-client.git", :ref => "08480eb86aef1e"
