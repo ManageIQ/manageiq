@@ -117,7 +117,7 @@
           - else
             -# Just show the field value
             = "#{options[field]}_(%s)_#{options[:vm_suffix]}" % _("VM Number")
-          -#  Display notes if available
+          -# Display notes if available
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             = field_hash[:notes]
       - elsif [:vm_memory].include?(field)
@@ -211,7 +211,7 @@
             = options[field].last
             -# Description is in the second, last, array element
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
-            -#  Display notes if available
+            -# Display notes if available
             = field_hash[:notes]
       - elsif [:instance_type, :guest_access_key_pair, :security_groups, :monitoring, :vm_tag_1,
                :vm_tag_2, :vm_tag_3, :vm_tag_4, :vm_tag_5, :vm_tag_6, :vm_tag_7, :vm_tag_8,
@@ -258,7 +258,7 @@
               -# Description is in the second, last, array element
               = options[field].last
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
-            -#  Display notes if available
+            -# Display notes if available
             = field_hash[:notes]
       - elsif [:tag_ids, :vm_tags].include?(field)
         -# ### dhtmlxree control for tags fields
@@ -285,7 +285,7 @@
               :cookie_id_prefix            => "prov_trees",
               :tree_state                  => true})
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
-            -#  Display notes if available
+            -# Display notes if available
             = field_hash[:notes]
           .note
             = _("* Only a single value can be assigned from these Tag Categories")
@@ -341,7 +341,7 @@
           - else
             -# Just show the field value
             - if field == :src_host_ids
-              -#  read only grid for src_host_id
+              -# read only grid for src_host_id
               = render :partial => "#{pfx}prov_host_grid", :locals => {:field_id => field_id}
             - elsif field == :src_configured_system_ids
               -# read only grid for src_configured_system_ids
@@ -382,7 +382,7 @@
             -# Description is in the second, last, array element
             = options[field].last
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
-            -#  Display notes if available
+            -# Display notes if available
             = field_hash[:notes]
       - elsif [:sysprep_timezone].include?(field)
         -# Pull down with Array of Arrays
@@ -451,7 +451,7 @@
           - else
             = options[field][1]
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
-            -#  Display notes if available
+            -# Display notes if available
             = field_hash[:notes]
       - elsif [:schedule_time].include?(field)
         %td

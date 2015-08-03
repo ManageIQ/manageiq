@@ -104,7 +104,6 @@
                       "data-miq_sparkle_off" => true,
                       :remote => true,
                       :title => "")
-                    -#
                     = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
                       {:action => action_url, :id => action_id, :page => pages[:total]},
                       "data-miq_sparkle_on" => true,
@@ -114,13 +113,11 @@
                   - elsif action_id
                     = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
                       :action => action_method, :id => action_id, :page => pages[:current] + 1)
-                    -#
                     = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
                       :action => action_method, :id => action_id, :page => pages[:total])
                   - else
                     = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
                       :action => action_url, :page => pages[:current] + 1)
-                    -#
                     = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
                       :action => action_url, :page => pages[:total])
                 - else
