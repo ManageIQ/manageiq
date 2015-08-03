@@ -68,7 +68,7 @@ gem "logging",                        "~>1.6.1",      :require => false  # Ziya 
 gem "net_app_manageability",          ">=0.1.0",      :require => false
 gem "net-ping",                       "~>1.7.4",      :require => false
 gem "net-sftp",                       "~>2.0.5",      :require => false
-gem "net-ssh",                        "~>2.9.1",      :require => false
+gem "net-ssh",                        "~>2.9.2",      :require => false
 gem "open4",                          "~>1.3.0",      :require => false
 #gem "ovirt_metrics",                  "~>1.0.1",      :require => false
 gem "pg",                             "~>0.18.2",     :require => false
