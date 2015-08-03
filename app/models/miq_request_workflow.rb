@@ -1055,7 +1055,7 @@ class MiqRequestWorkflow
   end
 
   # Return empty hash if we are selecting placement automatically so we do not
-  # send time determining all the available resources
+  # spend time determining all the available resources
   def resources_for_ui
     get_source_and_targets
   end
