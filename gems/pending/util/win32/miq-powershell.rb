@@ -83,7 +83,11 @@ module MiqPowerShell
   end
 
   def self.is_error_object?(xml)
-    object_type = xml.root.elements[1].attributes['Type'] rescue ""
+    if MiqXml.is_nokogiri_loaded?
+      object_type = xml.root.elements[0].attributes['Type'].value rescue ""
+    else
+      object_type = xml.root.elements[1].attributes['Type'] rescue ""
+    end
     return true if !object_type.nil? && object_type.split('.').last == 'ErrorRecord'
     return false
   end
@@ -241,7 +245,12 @@ module MiqPowerShell
     def process_named_elements(node)
       hsh = {}
       node.each_element do |e|
-        name = e.attributes['N']
+        if e.attributes['N'].respond_to?(:value)
+          name = e.attributes['N'].value
+        else
+          name = e.attributes['N']
+        end
+
         name = e.name if name.nil?
         name = name.to_sym
 
