@@ -88,8 +88,7 @@ describe ApiController do
       role = FactoryGirl.create(:miq_user_role,
                                 :name                 => "Test Role",
                                 :miq_product_features => @product_features)
-      url = roles_url + "/#{role.id}/"
-      test_features_query(role, url, MiqProductFeature, :identifier)
+      test_features_query(role, roles_url(role.id), MiqProductFeature, :identifier)
     end
   end
 

@@ -18,7 +18,6 @@ class ApiController
       elsif data.key?('id') || data.key?('identifier')
         new_features = get_product_features(Array.wrap(data))
       else
-        api_log_info("BadRequestError, Invalid feature assignment format specified.")
         raise BadRequestError, "Invalid feature assignment format specified."
       end
 
@@ -48,7 +47,6 @@ class ApiController
       elsif data.key?('id') || data.key?('identifier')
         removed_features = get_product_features(Array.wrap(data))
       else
-        api_log_info("BadRequestError, Invalid feature un-assignment format specified.")
         raise BadRequestError, "Invalid feature un-assignment format specified."
       end
 

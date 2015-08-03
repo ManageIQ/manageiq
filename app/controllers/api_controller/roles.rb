@@ -3,16 +3,12 @@ class ApiController
     include FeatureHelper
     def create_resource_roles(type, _id = nil, data = {})
       if data.key?("id") || data.key?("href")
-        msg = "Resource id or href should not be specified for creating a new #{type}"
-        api_log_info("BadRequestError, #{msg}")
-        raise BadRequestError, msg
+        raise BadRequestError, "Resource id or href should not be specified for creating a new #{type}"
       end
 
       # Can't create a read-only role (reserved for out-of-box roles)
       if data ['read_only']
-        msg = "Cannot create a read-only role."
-        api_log_info("BadRequestError, #{msg}")
-        raise BadRequestError, msg
+        raise BadRequestError, "Cannot create a read-only role."
       end
 
       role_klass = collection_class(type)
@@ -29,25 +25,19 @@ class ApiController
 
     def edit_resource_roles(type, id = nil, data = {})
       unless id
-        msg = "Must specify an id for editing a #{type} resource"
-        api_log_info("BadRequestError, #{msg}")
-        raise BadRequestError, msg
+        raise BadRequestError, "Must specify an id for editing a #{type} resource"
       end
 
       # Can't set an existing role to read-only (reserved for out-of-box roles)
       if data['read_only']
-        msg = "Cannot set a non-system role to read-only."
-        api_log_info("BadRequestError, #{msg}")
-        raise BadRequestError, msg
+        raise BadRequestError, "Cannot set a non-system role to read-only."
       end
 
       role = resource_search(id, type, collection_class(:roles))
 
       # Can't edit a read-only role
       if role.read_only
-        msg = "Cannot edit a role that is read-only."
-        api_log_info("BadRequestError, #{msg}")
-        raise BadRequestError, msg
+        raise BadRequestError, "Cannot edit a role that is read-only."
       end
 
       get_settings_and_features(data)
