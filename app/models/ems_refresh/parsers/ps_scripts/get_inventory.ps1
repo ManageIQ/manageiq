@@ -88,4 +88,7 @@ $r["clusters"] = get_clusters($c)
 $e = Get-VMMServer -ComputerName "localhost"
 $r["ems"] = $e
 
-ConvertTo-XML -InputObject $r -As string
+$file = [System.IO.Path]::GetTempFileName()
+$r | Export-CLIXML -Path $file -Encoding UTF8
+Get-Content $file -ReadCount 0
+Remove-Item -Force $file
