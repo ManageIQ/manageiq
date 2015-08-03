@@ -221,9 +221,13 @@ module MiqPowerShell
     def process_hash(node)
       hsh = {}
       node.each_element do |e|
-        name = convert_type(e.elements[1])
+        # REXML starts its elements indexing at 1, Nokogiri at 0.
+        index1 = MiqXml.is_nokogiri_loaded? ? 0 : 1
+        index2 = MiqXml.is_nokogiri_loaded? ? 1 : 2
+
+        name = convert_type(e.elements[index1])
         name = name.to_sym if name.is_a?(String)
-        data = e.elements[2]
+        data = e.elements[index2]
 
         case data.name
         when 'Obj' then hsh[name] = process_obj(data)
