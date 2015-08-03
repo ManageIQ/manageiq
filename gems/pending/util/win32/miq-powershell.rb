@@ -192,7 +192,7 @@ module MiqPowerShell
     def initialize(xml)
       @refIds = []
       if xml.kind_of?(String)
-        @xml = MiqXml.load(xml)
+        @xml = MiqXml.load(xml, :nokogiri)
       else
         @xml = xml
       end
@@ -255,9 +255,14 @@ module MiqPowerShell
     end
 
     def process_obj(node)
-      lst = node.elements['LST']
-      dct = node.elements['DCT']
-      refId = node.attributes['RefId'].to_i
+      lst = node.elements.find{ |e| e.name == 'LST' }
+      dct = node.elements.find{ |e| e.name == 'DCT' }
+
+      if node.attributes['RefId'].respond_to?(:value)
+        refId = node.attributes['RefId'].value.to_i
+      else
+        refId = node.attributes['RefId'].to_i
+      end
 
       obj = nil
       if lst.nil? && dct.nil?
