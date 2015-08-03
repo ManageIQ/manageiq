@@ -156,7 +156,7 @@ node_modules
 npm-debug.log
 
 ### Plato Reports ###
-/reports
+spa_ui/self_service/reports
 
 ### Temp build directory ###
 .tmp
