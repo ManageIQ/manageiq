@@ -840,12 +840,11 @@ class MiqRequestWorkflow
     result.each_with_object({}) { |s, hash| hash[s[0]] = s[1] }
   end
 
-  def process_filter(filter_prop, ci_klass, targets = [])
-    return targets if targets.blank?
+  def process_filter(filter_prop, ci_klass, targets)
     process_filter_all(filter_prop, ci_klass, targets)
   end
 
-  def process_filter_all(filter_prop, ci_klass, targets = [])
+  def process_filter_all(filter_prop, ci_klass, targets)
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
     result = if filter_id.zero?
