@@ -87,7 +87,7 @@ class UserValidationService
   end
 
   def user_is_super_admin?
-    session[:userrole] == 'super_administrator'
+    @controller.send(:super_admin_user?)
   end
 
   def validate_user_handle_not_ready

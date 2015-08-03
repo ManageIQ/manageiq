@@ -70,7 +70,7 @@ class ApplicationHelper::ToolbarChooser
         elsif @layout == "chargeback"
           return center_toolbar_filename_chargeback
         elsif @layout == "miq_ae_tools"
-          return session[:userrole] == "super_administrator" ? "miq_ae_tools_simulate_center_tb" : "blank_view_tb"
+          return super_admin_user? ? "miq_ae_tools_simulate_center_tb" : "blank_view_tb"
         elsif @layout == "miq_policy"
           return center_toolbar_filename_miq_policy
         elsif @layout == "ops"

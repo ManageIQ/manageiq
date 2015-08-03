@@ -33,7 +33,7 @@
                 :remote                => true,
                 :title                 => t)
     - if @edit[@expkey][:selected] && @edit[@expkey][:selected][:typ] != "default" && @edit[@expkey][:selected][:id] != 0
-      - if (session[:userrole] == "super_administrator" || session[:userrole] == "administrator") || (session[:userrole] != "super_administrator" && session[:userrole] != "administrator" && @edit[@expkey][:selected][:typ] == "user")
+      - if admin_user? || @edit[@expkey][:selected][:typ] == "user"
         = link_to(_("Delete"),
                   {:action => "adv_search_button",
                    :button => "delete" },

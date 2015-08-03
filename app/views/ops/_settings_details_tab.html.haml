@@ -1,5 +1,5 @@
 - if @sb[:active_tab] == "settings_details"
-  - if session[:userrole] == "super_administrator"
+  - if super_admin_user?
     = render :partial => "layouts/flash_msg"
     - region = MiqRegion.my_region
     - if @edit

@@ -1946,10 +1946,10 @@ class ApplicationController < ActionController::Base
     # Build the view file name
     if suffix
       viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{session[:userrole]}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{current_role}.yaml"
     else
       viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{session[:userrole]}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{current_role}.yaml"
     end
 
     if viewfilerestricted && File.exist?(viewfilerestricted)
