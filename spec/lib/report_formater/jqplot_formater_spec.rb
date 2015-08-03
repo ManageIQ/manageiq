@@ -15,39 +15,41 @@ describe ReportFormatter::JqplotFormatter do
   end
 
   context '#build_reporting_chart_other_numeric' do
-    it 'builds 2d numeric charts' do
-      FactoryGirl.create(:vm_vmware, :host => host = FactoryGirl.create(:host, :name => 'host'))
+    [true, false].each do |other|
+      it "builds 2d numeric charts #{other ? 'with' : 'without'} 'other'" do
+        FactoryGirl.create(:vm_vmware, :host => host = FactoryGirl.create(:host, :name => 'host'))
 
-      report = MiqReport.new(
-        :db          => "Vm",
-        :sortby      => ["host_name"],
-        :order       => "Descending",
-        :cols        => %w(mem_cpu host_name),
-        :include     => {},
-        :col_order   => %w(mem_cpu__total host_name),
-        :headers     => ["Parent Host", "Memory (Avg)", "Memory (Total)", "OS Product Type"],
-        :dims        => 1,
-        :rpt_options => {:pivot => {:group_cols => ["host_name"]}},
-        :graph       => {:type => "Column", :mode => "values", :column => "Vm-mem_cpu:total", :count => 10, :other => false}
-      )
+        report = MiqReport.new(
+          :db          => "Vm",
+          :sortby      => ["host_name"],
+          :order       => "Descending",
+          :cols        => %w(mem_cpu host_name),
+          :include     => {},
+          :col_order   => %w(mem_cpu__total host_name),
+          :headers     => ["Parent Host", "Memory (Avg)", "Memory (Total)", "OS Product Type"],
+          :dims        => 1,
+          :rpt_options => {:pivot => {:group_cols => ["host_name"]}},
+          :graph       => {:type => "Column", :mode => "values", :column => "Vm-mem_cpu:total", :count => 10, :other => other}
+        )
 
-      report.generate_table(:userid => 'test')
-      report.table = Struct.new(:data).new
-      report.table.data = [
-        Ruport::Data::Record.new("mem_cpu__total" => 0.0, "host_name" => "host")
-      ]
+        report.generate_table(:userid => 'test')
+        report.table = Struct.new(:data).new
+        report.table.data = [
+          Ruport::Data::Record.new("mem_cpu__total" => 0.0, "host_name" => "host")
+        ]
 
-      expect_any_instance_of(described_class).to receive(:build_reporting_chart_other_numeric).once.and_call_original
+        expect_any_instance_of(described_class).to receive(:build_reporting_chart_other_numeric).once.and_call_original
 
-      ReportFormatter::ReportRenderer.render(Charting.format) do |e|
-        e.options.mri           = report
-        e.options.show_title    = true
-        e.options.graph_options = MiqReport.graph_options(600, 400)
-        e.options.theme         = 'miq'
+        ReportFormatter::ReportRenderer.render(Charting.format) do |e|
+          e.options.mri           = report
+          e.options.show_title    = true
+          e.options.graph_options = MiqReport.graph_options(600, 400)
+          e.options.theme         = 'miq'
+        end
+
+        expect(report.chart[:data][0][0]).to eq(0.0)
+        expect(report.chart[:options][:axes][:xaxis][:ticks][0]).to eq(host.name)
       end
-
-      expect(report.chart[:data][0][0]).to eq(0.0)
-      expect(report.chart[:options][:axes][:xaxis][:ticks][0]).to eq(host.name)
     end
   end
 

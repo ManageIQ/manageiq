@@ -431,10 +431,10 @@ module ReportFormatter
       end
 
       if show_other
-        ocount = sorted_data[0, sorted_data.length - keep]
-                 .inject(0) { |sum, row| sum + row[data_column_name] }
-        series.push(:value => ocount, :tooltip => _('Other'))
-        categories.push([_('Other'), ocount])
+        other_sum = Array(sorted_data[0, sorted_data.length - keep]).
+                  inject(0) { |sum, row| sum += row[data_column_name] }
+        series.push(:value => other_sum, :tooltip => _('Other'))
+        categories.push([_('Other'), other_sum])
       end
 
       # Pie charts put categories in legend, else in axis labels
