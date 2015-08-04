@@ -81,45 +81,13 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
 
     $scope.$watch("hostModel.name", function() {
       $scope.form = $scope.angularForm;
+      $scope.model = "hostModel";
       $scope.miqService = miqService;
     });
   };
 
   $scope.changeAuthTab = function(id) {
     $scope.currentTab = id;
-//    if (id == "default") {
-//      alert(id)
-//      alert($scope.angularForm.default_password.value)
-//      alert($scope.angularForm.default_verify.value)
-//      if ($scope.angularForm.default_password.value == $scope.angularForm.default_verify.value)
-//        alert("hiii")
-//        $scope.logVerifyCtrl = undefined
-//      else
-//        $scope.logVerifyCtrl = $scope.angularForm.default_password
-//    } else if (id == "remote") {
-//      if ($scope.angularForm.remote_password.value == $scope.angularForm.remote_verify.value)
-//        $scope.logVerifyCtrl = undefined
-//      else
-//        $scope.logVerifyCtrl = $scope.angularForm.remote_password
-//    } else if (id == "ws") {
-//      if ($scope.angularForm.ws_password.value == $scope.angularForm.ws_verify.value)
-//        $scope.logVerifyCtrl = undefined
-//      else
-//        $scope.logVerifyCtrl = $scope.angularForm.ws_password
-//    } else if (id == "ipmi") {
-//      if ($scope.angularForm.ipmi_password.value == $scope.angularForm.ipmi_verify.value)
-//        $scope.logVerifyCtrl = undefined
-//      else
-//        $scope.logVerifyCtrl = $scope.angularForm.ipmi_password
-//    }
-    if ($scope.angularForm[id + '_password'].value == $scope.angularForm[id + '_verify'].value)
-      $scope.logVerifyCtrl = undefined
-    else
-      $scope.logVerifyCtrl = $scope.angularForm[id + '_password']
-
-    //alert($scope.logVerifyCtrl.$error.verifypasswd)
-    //$scope.logVerifyCtrl.$error.verifypasswd  logVerifyCtrl.$error.verifypasswd
-    !miqService.canValidate(angularForm, id);
   }
 
   $scope.addClicked = function() {
@@ -160,21 +128,25 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
     }
 
   $scope.isBasicInfoValid = function() {
-    if(($scope.currentTab == "default") && ($scope.angularForm.default_userid.$valid &&
-          $scope.angularForm.default_password.$valid &&
-          $scope.angularForm.default_verify.$valid)) {
+    if(($scope.currentTab == "default") &&
+      ($scope.hostModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
+       $scope.hostModel.default_password != '' && $scope.angularForm.default_password.$valid &&
+      $scope.hostModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
         return true;
-    } else if(($scope.currentTab == "remote") && ($scope.angularForm.remote_userid.$valid &&
-        $scope.angularForm.remote_password.$valid &&
-        $scope.angularForm.remote_verify.$valid)) {
+    } else if(($scope.currentTab == "remote") &&
+      ($scope.hostModel.remote_userid != '' && $scope.angularForm.remote_userid.$valid &&
+       $scope.hostModel.remote_password != '' && $scope.angularForm.remote_password.$valid &&
+      $scope.hostModel.remote_verify != '' && $scope.angularForm.remote_verify.$valid)) {
       return true;
-    } else if(($scope.currentTab == "ws") && ($scope.angularForm.ws_userid.$valid &&
-        $scope.angularForm.ws_password.$valid &&
-        $scope.angularForm.ws_verify.$valid)) {
+    } else if(($scope.currentTab == "ws") &&
+      ($scope.hostModel.ws_userid != '' && $scope.angularForm.ws_userid.$valid &&
+       $scope.hostModel.ws_password != '' && $scope.angularForm.ws_password.$valid &&
+      $scope.hostModel.ws_verify != '' && $scope.angularForm.ws_verify.$valid)) {
       return true;
-    } else if(($scope.currentTab == "ipmi") && ($scope.angularForm.ipmi_userid.$valid &&
-        $scope.angularForm.ipmi_password.$valid &&
-        $scope.angularForm.ipmi_verify.$valid)) {
+    } else if(($scope.currentTab == "ipmi") &&
+      ($scope.hostModel.ipmi_userid != '' && $scope.angularForm.ipmi_userid.$valid &&
+       $scope.hostModel.ipmi_password != '' && $scope.angularForm.ipmi_password.$valid &&
+      $scope.hostModel.ipmi_verify != '' && $scope.angularForm.ipmi_verify.$valid)) {
       return true;
     } else
       return false;
