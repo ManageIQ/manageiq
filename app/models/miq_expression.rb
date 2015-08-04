@@ -1624,12 +1624,10 @@ class MiqExpression
                        "IS EMPTY",
                        "IS NOT EMPTY",
                        "REGULAR EXPRESSION MATCHES",
-                       "REGULAR EXPRESSION DOES NOT MATCH",
-                       "RUBY"]
+                       "REGULAR EXPRESSION DOES NOT MATCH"]
   SET_OPERATORS     = ["INCLUDES ALL",
                        "INCLUDES ANY",
-                       "LIMITED TO",
-                       "RUBY"]
+                       "LIMITED TO"]
   REGKEY_OPERATORS  = ["KEY EXISTS",
                        "VALUE EXISTS"]
   BOOLEAN_OPERATORS = ["=",

@@ -19,6 +19,7 @@ module MiqPolicyController::Conditions
     when "reset", nil # Reset or first time in
       condition_build_edit_screen
       @sb[:action] = "condition_edit"
+      add_flash(_("Ruby scripts are no longer supported in expressions, please change or remove them."), :warning) if @edit[:current][:expression].has_key?('RUBY')
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
@@ -246,6 +247,7 @@ module MiqPolicyController::Conditions
     else
       @condition_policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"]))
     end
+    add_flash(_("Ruby scripts are no longer supported in expressions, please change or remove them."), :warning) if @condition.expression.exp.has_key?('RUBY')
   end
 
   def condition_build_tree(type=:condition, name=:condition_tree)

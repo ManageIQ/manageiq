@@ -35,26 +35,7 @@
     "data-miq_observe"     => {:url => url}.to_json)
   - unless @edit[@expkey][:exp_skey].nil? || @edit[@expkey][:exp_skey].include?("NULL") || @edit[@expkey][:exp_skey].include?("EMPTY")
     %span#chosen_value_span
-      - if @edit[@expkey][:exp_skey] == "RUBY"
-        %br
-        %fieldset
-          %h3
-            = _("Ruby Script")
-            (
-            %span#ruby_count
-              = @edit[@expkey][:exp_value] ? @edit[@expkey][:exp_value].length : 0
-            \/ 1000
-            )
-          %div{:style => "margin:5px 10px 10px 10px;"}
-            = text_area_tag("chosen_value", @edit[@expkey][:exp_value],
-              :rows                       => 10,
-              :style                      => "width:100%",
-              :maxlength                  => "1000",
-              :counter                    => "ruby_count",
-              "data-miq_check_max_length" => true,
-              "data-miq_observe"          => {:interval => '.5', :url => url}.to_json)
-
-      - elsif @edit[@expkey][:val1][:type] == :boolean
+      - if @edit[@expkey][:val1][:type] == :boolean
         - values = [[_("true"), "true"], [_("false"), "false"]]
         - values.insert(0, ["<#{_('Choose')}>", ""]) if @edit[@expkey][:exp_value].blank?
         = select_tag('chosen_value',
@@ -171,26 +152,7 @@
         "data-miq_observe"     => {:url => url}.to_json)
       - unless @edit[@expkey][:exp_ckey].include?("NULL") || @edit[@expkey][:exp_ckey].include?("EMPTY")
         %span#chosen_cvalue_span
-          - if @edit[@expkey][:exp_ckey] == "RUBY"
-            %br
-            %fieldset
-              %h3
-                = _("Ruby Script")
-                (
-                %span#ruby_count
-                  = @edit[@expkey][:exp_value] ? @edit[@expkey][:exp_value].length : 0
-                \/ 1000
-                )
-              %div{:style => "margin: 5px 10px 10px 10px;"}
-                = text_area_tag("chosen_cvalue", @edit[@expkey][:exp_cvalue],
-                :rows                       => 10,
-                :style                      => "width:100%",
-                :maxlength                  => "1000",
-                :counter                    => "ruby_ccount",
-                "data-miq_check_max_length" => true,
-                "data-miq_observe"          => {:interval => '.5', :url => url}.to_json)
-
-          - elsif @edit[@expkey][:val2][:type] == :boolean
+          - if @edit[@expkey][:val2][:type] == :boolean
             - cvalues = [[_("true"), "true"], [_("false"), "false"]]
             - cvalues.insert(0, ["<Choose>", ""]) if @edit[@expkey][:exp_cvalue].blank?
             = select_tag('chosen_cvalue',
