@@ -18,12 +18,16 @@ class EvmDatabase
     VmdbDatabase
   }
 
-  EXTRA_CLASSES = %w(MiqAeDatastore)
+  RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
 
-  def self.seedable_model_class_names
-    @seedable_model_class_names ||= begin
+  def self.find_seedable_model_class_names
+    @found_model_class_names ||= begin
       Dir.glob(Rails.root.join("app/models/*.rb")).collect { |f| File.basename(f, ".*").camelize if File.read(f).include?("self.seed") }.compact.sort
     end
+  end
+
+  def self.seedable_model_class_names
+    find_seedable_model_class_names + RAILS_ENGINE_MODEL_CLASS_NAMES
   end
 
   def self.seed_primordial
@@ -31,13 +35,13 @@ class EvmDatabase
   end
 
   def self.seed_last
-    self.seed(seedable_model_class_names + EXTRA_CLASSES - PRIMORDIAL_CLASSES)
+    self.seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
   end
 
   def self.seed(classes = nil, exclude_list = [])
     _log.info("Seeding...")
 
-    classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names + EXTRA_CLASSES - PRIMORDIAL_CLASSES)
+    classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
     classes  -= exclude_list
 
     classes.each do |klass|
