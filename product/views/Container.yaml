@@ -41,7 +41,7 @@ col_order:
 # Column titles, in order
 headers:
 - Name
-- Container Group Name
+- Pod Name
 - Image
 
 # Condition(s) string for the SQL query

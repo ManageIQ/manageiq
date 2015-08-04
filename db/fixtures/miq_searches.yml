@@ -1254,8 +1254,8 @@
     search_type: default
     db: Container
 - attributes:
-    name: default_Namespace / ContainerGroup
-    description: Namespace / Container Group
+    name: default_Namespace / Pod
+    description: Namespace / Pod
     filter: !ruby/object:MiqExpression
       exp:
         "=":

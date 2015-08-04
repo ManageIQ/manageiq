@@ -17,6 +17,6 @@ class ContainerGroupController < ApplicationController
   end
 
   def display_name
-    "Container Groups"
+    "Pods"
   end
 end

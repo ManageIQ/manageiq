@@ -48,7 +48,7 @@ col_order:
 headers:
 - Name
 - Display Name
-- Container Groups
+- Pods
 - Container Services
 - Container Routes
 - Container Replicators
