@@ -253,6 +253,12 @@ describe "routes for HostController" do
     end
   end
 
+  describe "#timeline_data" do
+    it "routes with GET" do
+      expect(get("/host/timeline_data")).to route_to("host#timeline_data")
+    end
+  end
+
   describe "#toggle_policy_profile" do
     it "routes with POST" do
       expect(post("/host/toggle_policy_profile")).to route_to("host#toggle_policy_profile")

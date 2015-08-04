@@ -625,7 +625,6 @@ class MiqCapacityController < ApplicationController
 
     presenter[:osf_node] = x_node
     presenter[:update_partials][:main_div] = r[:partial => 'bottlenecks_tabs']
-    presenter[:replace_partials][:tl_div]  = r[:partial => 'bottlenecks_tl_detail']
     presenter[:build_calendar] = true
     presenter[:right_cell_text] = @right_cell_text
 
