@@ -301,7 +301,7 @@ module MiqPowerShell
       when :U16, :U32, :I32, :U64, :I64, :D, :By then c.text.to_i
       when :Db then c.text.to_f
       when :B then c.text.downcase == 'true'
-      when :S, :Version, :G, :Ref then c.text.chomp unless c.text.nil?
+      when :S, :Version, :G, :Ref then c.text.chomp unless (c.text.nil? || c.text.empty?)
       when :DT
         c_text = c.text
         if /\d+-\d+-\d+T\d+:\d+:\d+.\d+(.*)/ =~ c_text
