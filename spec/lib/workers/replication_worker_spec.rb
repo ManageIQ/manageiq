@@ -6,6 +6,7 @@ describe ReplicationWorker do
   before do
     ReplicationWorker.any_instance.stub(:worker_initialization)
     @worker = ReplicationWorker.new
+    @hb_file = Rails.root.join('tmp/rubyrep_hb')
   end
 
   context "testing rubyrep_alive?" do
@@ -28,20 +29,20 @@ describe ReplicationWorker do
 
   context "testing child process heartbeat" do
     after do
-      File.delete('/tmp/rubyrep_hb') if File.exist?('/tmp/rubyrep_hb')
+      File.delete(@hb_file) if File.exist?(@hb_file)
     end
 
     it "should be alive if heartbeat within threshold" do
       Timecop.freeze(Time.current.utc)
 
-      FileUtils.touch('/tmp/rubyrep_hb')
+      FileUtils.touch(@hb_file)
       expect(@worker.child_process_recently_active?).to be_true
     end
 
     it "should not be alive if heartbeat beyond threshold" do
       Timecop.freeze(Time.current.utc)
 
-      FileUtils.touch('/tmp/rubyrep_hb')
+      FileUtils.touch(@hb_file)
 
       Timecop.freeze(301.seconds.from_now.utc)
 

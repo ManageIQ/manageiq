@@ -14,7 +14,6 @@ class MiqRubyrep
   def self.prepare_configuration(config)
     db_conf  = VMDB::Config.new("database").config[Rails.env.to_sym]
 
-    defaults = VMDB::Config.new("vmdb").retrieve_config(:tmpl).fetch_path(:workers, :worker_base, :replication_worker, :replication)
     rp_conf  = MiqReplicationWorker.worker_settings[:replication]
     raise "Replication configuration missing" if rp_conf.blank?
     if db_conf.slice(:host, :port, :database) == rp_conf.slice(:host, :port, :database)
@@ -49,7 +48,7 @@ class MiqRubyrep
     config.options[:right_record_handling]         = :ignore
     config.options[:left_record_handling]          = :insert
     config.options[:sync_conflict_handling]        = :left_wins
-    config.options[:heartbeat_file]                = rp_conf.fetch_path(:options, :heartbeat_file) || defaults.fetch_path(:options, :heartbeat_file)
+    config.options[:heartbeat_file]                = heartbeat_file
 
     rp_conf[:include_tables] ||= %w{.+}
     include_tables = rp_conf[:include_tables].to_a.join("|")
@@ -79,5 +78,9 @@ class MiqRubyrep
         :exclude_tables => exclude_tables,
         :options        => config.options
       })
+  end
+
+  def self.heartbeat_file
+    Rails.root.join('tmp/rubyrep_hb')
   end
 end
