@@ -27,13 +27,14 @@ module ReportHelper
   end
 
   def chart_fields_options
-    # @edit[:pivot_cols] => {"Vm-mem_cpu"=>[:avg, :total]}
-    options = []
-    @edit[:pivot_cols].each do |field, agreg|
-      agreg.each do |fun|
-        options << ["#{field} (#{fun.to_s.titleize})", "#{field}:#{fun}"]
+    if @edit[:pivot_cols].empty?
+      @edit[:new][:fields]
+    else
+      @edit[:pivot_cols].each_with_object([]) do |(field, agreg), options|
+        agreg.each do |fun|
+          options << ["#{field} (#{fun.to_s.titleize})", "#{field}:#{fun}"]
+        end
       end
     end
-    options
   end
 end

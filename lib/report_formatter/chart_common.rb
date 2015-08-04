@@ -411,7 +411,7 @@ module ReportFormatter
       @data_column_name ||= (
         _model, col  = mri.graph[:column].split('-', 2)
         col, aggreg = col.split(':', 2)
-        "#{col}__#{aggreg}"
+        aggreg.blank? ? col : "#{col}__#{aggreg}"
       )
     end
 
@@ -419,7 +419,7 @@ module ReportFormatter
       categories = []
       (sort1,) = mri.sortby
       (keep, show_other) = keep_and_show_other
-      sorted_data = mri.table.data.sort_by { |row| row[data_column_name] }
+      sorted_data = mri.table.data.sort_by { |row| row[data_column_name] || 0 }
 
       series = sorted_data.reverse.take(keep)
                .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
