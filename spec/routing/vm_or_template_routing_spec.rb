@@ -38,6 +38,7 @@ describe VmOrTemplateController do
     drift_to_csv
     drift_to_pdf
     drift_to_txt
+    launch_html5_console
     launch_vmware_console
     vm_show
   ).each do |path|
