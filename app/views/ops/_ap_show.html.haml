@@ -1,24 +1,37 @@
 #main_div
   = render(:partial => "layouts/flash_msg")
-  %h3= _("Info")
-  %table.style1
-    %tr
-      %td.key= _("Name")
-      %td= h(@selected_scan.name)
-    %tr
-      %td.key= _("Description")
-      %td= h(@selected_scan.description)
-    %tr
-      %td.key= _("Type")
-      %td.wide= h(@selected_scan.mode)
+  %h3
+    = _("Info")
+  %form.form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _("Name")
+      .col-md-8
+        %p.form-control-static
+          = h(@selected_scan.name)
+    .form-group
+      %label.col-md-2.control-label
+        = _("Description")
+      .col-md-8
+        %p.form-control-static
+          = h(@selected_scan.description)
+    .form-group
+      %label.col-md-2.control-label
+        = _("Type")
+      .col-md-8
+        %p.form-control-static
+          = h(@selected_scan.mode)
   %hr/
   - unless @selected_scan.mode == "Host"
     - if @category
-      %h3= _("Categories")
-      %table.style1
+      %h3
+        = _("Categories")
+      %form.form-horizontal.static
         - @category.sort.each do |c|
-          %tr
-            %td= h(c)
+          .form-group
+            .col-md-8
+              %p.form-control-static
+                = h(c)
       %hr/
   - if @file
     %h3= _("File Items")
@@ -36,17 +49,18 @@
   - unless @selected_scan.mode == "Host"
     - if @registry
       %h3= _("Registry Items")
-      %table.style1
+      %form.form-horizontal.static
         - @registry.sort_by { |r| r["key"] }.each do |k|
-          %tr
-            %td
-              = h(k["hive"]) + "\\" + h(k["key"]) + " : " + h(k["value"])
-          %tr
-      %hr/
+          .form-group
+            .col-md-8
+              %p.form-control-static
+                = h(k["hive"]) + "\\" + h(k["key"]) + " : " + h(k["value"])
   - if @nteventlog
-    %h3= _("Event Log Items")
-    %table.style1
+    %h3
+      = _("Event Log Items")
+    %form.form-horizontal.static
       - @nteventlog.sort_by { |l| l[:name] }.each do |k|
-        %tr
-          %td= h(k[:name])
-        %tr
+        .form-group
+          .col-md-8
+            %p.form-control-static
+              = h(k[:name])
