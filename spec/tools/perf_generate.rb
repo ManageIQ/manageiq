@@ -61,7 +61,7 @@ Importing metrics for:
 EOL
 
 unless opts[:no_generate]
-  $pbar = ProgressBar.new(:title => "generate", :total => realtime_count + hourly_count, :autofinish => false)
+  $pbar = ProgressBar.create(:title => "generate", :total => realtime_count + hourly_count, :autofinish => false)
   $out_csv_realtime = CSV.open(IMPORT_REALTIME_FNAME, "wb", :row_sep => "\n")
   $out_csv_realtime << METRICS_COLS
   $out_csv_hourly   = CSV.open(IMPORT_HOURLY_FNAME, "wb", :row_sep => "\n")
@@ -123,7 +123,7 @@ unless opts[:no_generate]
 end
 
 unless opts[:no_import]
-  $pbar = ProgressBar.new(:title => "import", :total => realtime_count + hourly_count, :autofinish => false)
+  $pbar = ProgressBar.create(:title => "import", :total => realtime_count + hourly_count, :autofinish => false)
   # PostgreSQL specific
   ActiveRecord::Base.connection.execute(
     "COPY metrics (#{METRICS_COLS.join(",")}) FROM '#{IMPORT_REALTIME_FNAME}' WITH CSV HEADER"
