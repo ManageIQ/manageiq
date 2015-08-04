@@ -1873,6 +1873,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        launch_html5_console
         launch_vmware_console
         protect
         show
