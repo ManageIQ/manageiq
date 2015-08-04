@@ -68,6 +68,33 @@ module MigrationHelper
       connection.execute("ALTER TABLE #{table} NO INHERIT #{inherit_from}", 'Drop table inheritance')
     end
   end
+
+
+  def rename_class_references(mapping)
+    reversible do |dir|
+      dir.down { mapping = mapping.invert }
+
+      condition_list = mapping.keys.map { |s| connection.quote(s) }.join(',')
+      when_clauses = mapping.map { |before, after| "WHEN #{connection.quote before} THEN #{connection.quote after}" }.join(' ')
+
+      type_columns_query = <<-SQL
+        SELECT pg_class.oid::regclass::text, quote_ident(attname)
+        FROM pg_class JOIN pg_attribute ON pg_class.oid = attrelid
+        WHERE relkind = 'r'
+          AND (attname = 'type' OR attname LIKE '%\_type')
+          AND atttypid IN ('text'::regtype, 'varchar'::regtype)
+        ORDER BY relname, attname
+      SQL
+
+      select_rows(type_columns_query).each do |quoted_table, quoted_column|
+        execute <<-SQL
+          UPDATE #{quoted_table}
+          SET #{quoted_column} = CASE #{quoted_column} #{when_clauses} END
+          WHERE #{quoted_column} IN (#{condition_list})
+        SQL
+      end
+    end
+  end
 end
 
 Dir.glob(File.join(File.dirname(__FILE__), "migration_helper", "*.rb")).each { |f| require f }
