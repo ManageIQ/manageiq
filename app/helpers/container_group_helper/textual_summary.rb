@@ -10,7 +10,7 @@ module ContainerGroupHelper::TextualSummary
 
   def textual_group_relationships
     # Order of items should be from parent to child
-    items = %w(ems container_project container_services containers container_node lives_on)
+    items = %w(ems container_project container_replicator container_services containers container_node lives_on)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
