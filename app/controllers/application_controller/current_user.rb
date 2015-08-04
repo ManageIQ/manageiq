@@ -39,11 +39,10 @@ module ApplicationController::CurrentUser
   private :eligible_groups
 
   def current_role
-    @current_role ||=
-      begin
-        role = current_group.try(:miq_user_role)
-        role.try(:read_only?) ? role.name.split("-").last : ""
-      end
+    @current_role ||= begin
+      role = current_group.try(:miq_user_role)
+      role.try(:read_only?) ? role.name.split("-").last : ""
+    end
   end
   protected :current_role
 
