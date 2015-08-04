@@ -20,12 +20,15 @@ db: ContainerService
 # Columns to fetch from the main table
 cols:
 - name
+- ext_management_system
 - portal_ip
 - session_affinity
-- ext_management_system
 
 # Included tables (joined, has_one, has_many) and columns
 include:
+  container_project:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
@@ -33,16 +36,18 @@ include_for_find:
 # Order of columns (from all tables)
 col_order: 
 - name
+- ext_management_system
+- container_project.name
 - portal_ip
 - session_affinity
-- ext_management_system
 
 # Column titles, in order
 headers:
 - Name
+- Provider
+- Project Name
 - Portal IP
 - Session Affinity
-- Provider
 
 # Condition(s) string for the SQL query
 conditions: 
