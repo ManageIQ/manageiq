@@ -75,6 +75,9 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
     @containergroup.containers.last.should have_attributes(
       :name => "ruby-helloworld-database"
     )
+
+    @containergroup.container_project.should == ContainerProject.find_by(:name => "test")
+    @containergroup.ext_management_system.should == @ems
   end
 
   def assert_specific_container_node
@@ -84,6 +87,8 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
       :lives_on_type => nil,
       :lives_on_id   => nil
     )
+
+    @containernode.ext_management_system.should == @ems
   end
 
   def assert_specific_container_service
@@ -93,6 +98,9 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
       :session_affinity => "None",
       :portal_ip        => "172.30.141.69"
     )
+
+    @containersrv.container_project.should == ContainerProject.find_by(:name => "test")
+    @containersrv.ext_management_system.should == @ems
   end
 
   def assert_specific_container_project
@@ -101,6 +109,12 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
       :name         => "test",
       :display_name => ""
     )
+
+    @container_pr.container_groups.count.should == 4
+    @container_pr.container_routes.count.should == 1
+    @container_pr.container_replicators.count.should == 2
+    @container_pr.container_services.count.should == 2
+    @container_pr.ext_management_system.should == @ems
   end
 
   def assert_specific_container_route
@@ -117,5 +131,7 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
     @container_route.container_project.should have_attributes(
       :name    => "test"
     )
+
+    @container_route.ext_management_system.should == @ems
   end
 end
