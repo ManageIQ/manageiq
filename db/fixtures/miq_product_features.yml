@@ -4,7 +4,7 @@
 :feature_type: node
 :identifier: everything
 :children:
-  
+
 # Workloads Explorer
 - :name: Workloads
   :description: Workloads Views
@@ -485,6 +485,10 @@
         :description: Power Off Instance
         :feature_type: control
         :identifier: instance_stop
+      - :name: Pause
+        :description: Pause Instance
+        :feature_type: control
+        :identifier: instance_pause
       - :name: Suspend
         :description: Suspend Instance
         :feature_type: control
@@ -667,7 +671,7 @@
       :description: Edit a Request
       :feature_type: admin
       :identifier: miq_request_edit
-      
+
 # Catalog Items
 - :name: Catalogs Explorer
   :description: Everything under Catalogs
@@ -828,7 +832,7 @@
       :description: Create Service Dialog from Orchestration Template
       :identifier: service_dialog_from_ot
       :feature_type: admin
-      
+
 # My Services
 - :name: My Services
   :description: Everything under Services
@@ -2492,15 +2496,15 @@
       :description: Display Lists of All VM Analysis Tasks
       :feature_type: view
       :identifier: job_all_smartproxy
-    - :name: All Other Tasks 
+    - :name: All Other Tasks
       :description: Display Lists of All UI Tasks
       :feature_type: view
       :identifier: miq_task_all_ui
-    - :name: VM Analysis Tasks 
+    - :name: VM Analysis Tasks
       :description: Display Lists of VM Analysis Tasks
       :feature_type: view
       :identifier: job_my_smartproxy
-    - :name: Other UI Tasks 
+    - :name: Other UI Tasks
       :description: Display Lists of UI Tasks
       :feature_type: view
       :identifier: miq_task_my_ui
