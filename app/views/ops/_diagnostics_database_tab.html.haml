@@ -1,36 +1,52 @@
 - @angularForm = true
 
-%form#form_div{:name => "angularForm", 'ng-controller' => "diagnosticsDatabaseFormController", 'ng-show' => "afterGet", 'data-db-backup-form-field-changed-url' => "/#{controller_name}/db_backup_form_field_changed/", 'data-submit-url' => "/#{controller_name}/db_backup/"}
+%form#form_div.form-horizontal.static{:name => "angularForm", 'ng-controller' => "diagnosticsDatabaseFormController", 'ng-show' => "afterGet", 'data-db-backup-form-field-changed-url' => "/#{controller_name}/db_backup_form_field_changed/", 'data-submit-url' => "/#{controller_name}/db_backup/"}
   - if @sb[:active_tab] == "diagnostics_database"
     -# created div with different name so database validation flash message can be shown in it's own box
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "database"}
 
-    %h3= _("Basic Info")
-    %table.style1
-      %tr
-        %td.key= _("Type")
-        %td.wide= h(@database[:display_name])
-      %tr
-        %td.key= _("Hostname")
-        %td.wide= h(@database[:host])
-      %tr
-        %td.key= _("Database Name")
-        %td.wide= h(@database[:database])
-      %tr
-        %td.key= _("Username")
-        %td.wide= h(@database[:username])
+    %h3
+      = _("Basic Info")
+    .form-group
+      %label.col-md-2.control-label
+        = _("Type")
+      .col-md-8
+        %p.form-control-static
+          = h(@database[:display_name])
+    .form-group
+      %label.col-md-2.control-label
+        = _("Hostname")
+      .col-md-8
+        %p.form-control-static
+          = h(@database[:host])
+    .form-group
+      %label.col-md-2.control-label
+        = _("Database Name")
+      .col-md-8
+        %p.form-control-static
+          = h(@database[:database])
+    .form-group
+      %label.col-md-2.control-label
+        = _("Username")
+      .col-md-8
+        %p.form-control-static
+          = h(@database[:username])
 
     - if DatabaseBackup.backup_supported?
       %hr/
-      %h3= _("Run a Database Backup Now")
+      %h3
+        = _("Run a Database Backup Now")
       %fieldset
-        %h3= _("Backup Schedules")
-        %table.style1
-          %tr
-            %td.key= _("Fetch settings from a schedule")
-            %td.wide
+        %h3
+          = _("Backup Schedules")
+        %form.form-horizontal
+          .form-group
+            %label.col-md-2.control-label
+              = _("Fetch settings from a schedule")
+            .col-md-8
               - if @backup_schedules.length < 1
-                = _("No Backup Schedules are defined")
+                %p.form-control-static
+                  = _("No Backup Schedules are defined")
               - else
                 - default_option = [_("<Choose>"), nil]
                 - schedules_ary = Array(@backup_schedules.invert)
@@ -47,11 +63,11 @@
       %fieldset
         %h3
           = _("Database Backup Settings")
-        %table.style1
-          %tr
-            %td.key
+        %form.form-horizontal
+          .form-group
+            %label.col-md-2.control-label
               = _("Type")
-            %td.wide
+            .col-md-8
               - default_option = [_("<No Depot>"), nil]
               = select_tag('log_protocol', options_for_select([default_option] + @database_backup_options_for_select),
                           "ng-model"       => "diagnosticsDatabaseModel.log_protocol",
@@ -92,10 +108,12 @@
 
     - if DatabaseBackup.gc_supported?
       %hr/
-      %h3= _("Run Database Garbage Collection Now")
-      %table.style1
-        %tr
-          %td= _("Press submit to start the Database Vacuum process")
+      %h3
+        = _("Run Database Garbage Collection Now")
+      %form.form-horizontal
+        .form-group
+          .col-md-8
+            = _("Press submit to start the Database Vacuum process")
       %table{:width => "100%"}
         %tr
           %td{:align => "right"}
