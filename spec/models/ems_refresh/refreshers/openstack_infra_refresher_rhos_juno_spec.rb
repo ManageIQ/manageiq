@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
                               :ipaddress => "192.0.2.1", :port => 5000)
     @ems.update_authentication(
-        :default => {:userid => "admin", :password => "c9c9a1201fdf9fb217bff3a2f4e3fb89f589f355"})
+        :default => {:userid => "admin", :password => "3182d1c220549bdfdb50777666cdb1a2caa8472b"})
   end
 
   it "will perform a full refresh" do
@@ -36,13 +36,13 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   def assert_table_counts
     ExtManagementSystem.count.should         == 1
     EmsFolder.count.should                   == 0 # HACK: Folder structure for UI a la VMware
-    EmsCluster.count.should                  == 2
+    EmsCluster.count.should                  == 3
     Host.count.should                        == 5
-    OrchestrationStack.count.should          == 46
-    OrchestrationStackParameter.count.should == 459
-    OrchestrationStackResource.count.should  == 88
-    OrchestrationStackOutput.count.should    == 20
-    OrchestrationTemplate.count.should       == 30
+    OrchestrationStack.count.should          == 83
+    OrchestrationStackParameter.count.should == 780
+    OrchestrationStackResource.count.should  == 168
+    OrchestrationStackOutput.count.should    == 83
+    OrchestrationTemplate.count.should       == 56
     ResourcePool.count.should                == 0
     Vm.count.should                          == 0
     VmOrTemplate.count.should                == 5
@@ -71,11 +71,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     )
 
     @ems.ems_folders.size.should                 == 0 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should                == 2
+    @ems.ems_clusters.size.should                == 3
     @ems.resource_pools.size.should              == 0
     @ems.storages.size.should                    == 0
     @ems.hosts.size.should                       == 5
-    @ems.orchestration_stacks.size.should        == 46
+    @ems.orchestration_stacks.size.should        == 83
     @ems.direct_orchestration_stacks.size.should == 1
     @ems.vms_and_templates.size.should           == 5
     @ems.vms.size.should                         == 0

@@ -3,7 +3,9 @@ module ManageIQ
     class Openstack::InfraManager::RefreshParser < EmsRefresh::Parsers::Infra
       include Vmdb::Logging
 
+      include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
+      include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
       include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
       def self.ems_inv_to_hashes(ems, options = nil)
@@ -28,6 +30,8 @@ module ManageIQ
         @orchestration_service_name = @os_handle.orchestration_service_name
         @image_service              = @os_handle.detect_image_service
         @image_service_name         = @os_handle.image_service_name
+        @storage_service            = @os_handle.detect_storage_service
+        @storage_service_name       = @os_handle.storage_service_name
       end
 
       def ems_inv_to_hashes
@@ -35,11 +39,13 @@ module ManageIQ
                      " for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
         $fog_log.info("#{log_header}...")
 
+        get_object_store
+        # get_object_store needs to run before load hosts
         load_hosts
-        get_images
         load_orchestration_stacks
         # Cluster processing needs to run after host and stacks processing
         get_clusters
+        get_images
 
         $fog_log.info("#{log_header}...Complete")
         @data
@@ -129,10 +135,11 @@ module ManageIQ
       end
 
       def get_extra_host_attributes(host)
-        return {} if host.extra.blank? || (extra_attrs = host.extra.fetch_path('edeploy_facts')).blank?
+        extra_attrs = @data_index.fetch_path(:cloud_object_store_objects, 'extra_hardware-' + host.uuid, :content)
+        return {} if extra_attrs.blank?
         # Convert list of tuples from Ironic extra to hash. E.g. [[a1, a2, a3, a4], [a1, a2, b3, b4], ..] converts to
         # {a1 => {a2 => {a3 => a4, b3 => b4}}}, so we get constant access to sub indexes.
-        extra_attrs.each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
+        JSON.parse(extra_attrs).each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
       end
 
       def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
@@ -350,20 +357,8 @@ module ManageIQ
         end
       end
 
-      #
-      # Helper methods
-      #
-
-      def process_collection(collection, key)
-        @data[key] ||= []
-        return if collection.nil?
-
-        collection.each do |item|
-          uid, new_result = yield(item)
-
-          @data[key] << new_result
-          @data_index.store_path(key, uid, new_result)
-        end
+      def get_object_content(obj)
+        obj.body
       end
     end
   end
