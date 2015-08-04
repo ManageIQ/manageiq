@@ -1,9 +1,10 @@
 require "spec_helper"
 
 describe MiqRequestWorkflow do
+  let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
+
   context "#validate" do
     let(:dialog)   { workflow.instance_variable_get(:@dialogs) }
-    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
 
     context "validation_method" do
       it "skips validation if no validation_method is defined" do
@@ -50,7 +51,6 @@ describe MiqRequestWorkflow do
 
   describe "#init_from_dialog" do
     let(:dialogs) { workflow.instance_variable_get(:@dialogs) }
-    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
     let(:init_values) { {} }
 
     context "when the initial values already have a value for the field name" do
@@ -139,7 +139,6 @@ describe MiqRequestWorkflow do
 
   describe "#provisioning_tab_list" do
     let(:dialogs) { workflow.instance_variable_get(:@dialogs) }
-    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
 
     before do
       dialogs[:dialog_order] = [:test, :test2, :test3]
