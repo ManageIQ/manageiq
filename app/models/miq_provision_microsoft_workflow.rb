@@ -29,8 +29,9 @@ class MiqProvisionMicrosoftWorkflow < MiqProvisionInfraWorkflow
   end
 
   def allowed_clusters(_options = {})
-    filtered_targets = process_filter_all(:cluster_filter, EmsCluster)
-    filtered_ids = filtered_targets.collect(&:id)
+    all_clusters     = EmsCluster.where(:ems_id => get_source_and_targets[:ems].id)
+    filtered_targets = process_filter(:cluster_filter, EmsCluster, all_clusters)
+    filtered_ids     = filtered_targets.collect(&:id)
     allowed_ci(:cluster, [:host], filtered_ids)
   end
 end
