@@ -151,4 +151,30 @@ describe MiqRequestWorkflow do
       expect(workflow.provisioning_tab_list).to eq([{:name => "test3", :description => "test description 3"}])
     end
   end
+
+  context "'allowed_*' methods" do
+    let(:cluster)       { FactoryGirl.create(:ems_cluster, :ems_id => ems.id) }
+    let(:ems)           { FactoryGirl.create(:ext_management_system) }
+    let(:resource_pool) { FactoryGirl.create(:resource_pool, :ems_id => ems.id) }
+
+    it "#allowed_clusters" do
+      FactoryGirl.create(:ems_cluster)
+      allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
+      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+
+      expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [cluster.id])
+
+      workflow.allowed_clusters
+    end
+
+    it "#allowed_resource_pools" do
+      FactoryGirl.create(:resource_pool)
+      allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
+      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+
+      expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [resource_pool.id])
+
+      workflow.allowed_resource_pools
+    end
+  end
 end
