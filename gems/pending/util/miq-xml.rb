@@ -6,19 +6,12 @@ require 'util/xml/xml_diff'
 require 'util/xml/xml_patch'
 
 class MiqXml
-  #MIQ_XML_VERSION = 1.0
-  #MIQ_XML_VERSION = 1.1  # Added create_time to root in seconds for easier time conversions
   MIQ_XML_VERSION = 2.0 # Changed sub-xmls, added namespaces
 
   @@defaultXmlType = :rexml  # REXML is always available so default it here.
 
-  # Now test to see if nokogiri is available
+  # Set to true if nokogiri is set as parser.
   @@nokogiri_loaded = false
-  begin
-    require 'util/xml/miq_nokogiri'
-    @@nokogiri_loaded = true
-  rescue
-  end
 
   def self.loadFile(filename, xmlClass = @@defaultXmlType)
     self.xml_document(xmlClass).loadFile(filename)
@@ -49,10 +42,16 @@ class MiqXml
     return xmlClass::Document if xmlClass.kind_of?(Module)
     begin
       case xmlClass
-      when :rexml then REXML::Document
-      when :xmlhash then XmlHash::Document
-      when :nokogiri then Nokogiri::XML::Document
-      else REXML::Document
+      when :rexml
+        REXML::Document
+      when :xmlhash
+        XmlHash::Document
+      when :nokogiri
+        require 'util/xml/miq_nokogiri'
+        @@nokogiri_loaded = true
+        Nokogiri::XML::Document
+      else
+        REXML::Document
       end
     rescue
       REXML::Document
