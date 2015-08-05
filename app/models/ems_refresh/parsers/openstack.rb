@@ -77,6 +77,8 @@ module EmsRefresh::Parsers
     end
 
     def volumes
+      # TODO: support volumes through :nova as well?
+      return [] unless @volume_service_name == :cinder
       @volumes ||= @volume_service.volumes_for_accessible_tenants
     end
 
@@ -145,8 +147,6 @@ module EmsRefresh::Parsers
     end
 
     def get_volumes
-      # TODO: support volumes through :nova as well?
-      return unless @volume_service_name == :cinder
       process_collection(volumes, :cloud_volumes) { |volume| parse_volume(volume) }
     end
 
