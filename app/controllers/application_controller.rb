@@ -1283,7 +1283,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_invalid_session
-    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session)
+    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user)
     reset_session
 
     session[:start_url] = if RequestRefererService.access_whitelisted?(request, controller_name, action_name)
@@ -1354,7 +1354,7 @@ class ApplicationController < ActionController::Base
   # used as a before_filter for controller actions to check that
   # the currently logged in user has rights to perform the requested action
   def check_privileges
-    unless PrivilegeCheckerService.new.valid_session?(session)
+    unless PrivilegeCheckerService.new.valid_session?(session, current_user)
       handle_invalid_session
       return
     end
