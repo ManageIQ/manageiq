@@ -849,7 +849,7 @@ class Host < ActiveRecord::Base
   end
 
   def verify_credentials_with_ws(_auth_type = nil, _options = {})
-    raise NotImplementedError, "#{__method__} not implemented in #{self.class.name}"
+    raise MiqException::MiqHostError, "Web Services authentication is not supported for hosts of this type."
   end
 
   def verify_credentials_with_ssh(auth_type=nil, options={})
