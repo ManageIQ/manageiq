@@ -29,7 +29,6 @@ describe ReplicationWorker do
 
   context "testing child process heartbeat" do
     after do
-      Timecop.return
       File.delete(@hb_file) if File.exist?(@hb_file)
     end
 
