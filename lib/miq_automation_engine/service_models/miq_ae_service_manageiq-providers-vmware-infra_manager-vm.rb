@@ -13,8 +13,8 @@ module MiqAeMethodService
       sync_or_async_ems_operation(options[:sync], "add_disk", [disk_name, disk_size_mb])
     end
 
-    def create_snapshot(name, desc = nil)
-      snapshot_operation(:create_snapshot, {:name=>name, :description => desc})
+    def create_snapshot(name, desc = nil, memory = false)
+      snapshot_operation(:create_snapshot, {:name=>name, :description => desc, :memory => !!memory})
     end
 
     def remove_all_snapshots
