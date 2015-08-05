@@ -1,5 +1,7 @@
 # ManageIQ
 
+[![Join the chat at https://gitter.im/ManageIQ/manageiq](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/manageiq?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/ManageIQ/manageiq.svg)](https://travis-ci.org/ManageIQ/manageiq)
 [![Code Climate](http://img.shields.io/codeclimate/github/ManageIQ/manageiq.svg)](https://codeclimate.com/github/ManageIQ/manageiq)
 [![Dependency Status](https://gemnasium.com/ManageIQ/manageiq.svg)](https://gemnasium.com/ManageIQ/manageiq)
