@@ -23,7 +23,7 @@
             options_for_select([["<#{_('Choose')}>", nil]] + @edit[:sm_types].invert.sort, @edit[:new][:sm_type]),
             "data-miq_observe" => {:url => url}.to_json)
     %tr
-      %td.key= _('Host Name')
+      %td.key= _('Hostname')
       %td.wide
         = text_field_tag("hostname",
           @edit[:new][:hostname],

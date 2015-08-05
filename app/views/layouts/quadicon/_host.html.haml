@@ -43,14 +43,14 @@
   - if !@embedded || @showlinks
     - if @edit && @edit[:hostitems]
       .flobj
-        %a{:href => "/host/edit/?selected_host=#{item.id}", :title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+        %a{:href => "/host/edit/?selected_host=#{item.id}", :title => _("Name: %s | Hostname: %s") % [h(item.name), h(item.hostname)]}
           %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
     - else
       .flobj
-        %a{:href => url_for_record(item), :title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+        %a{:href => url_for_record(item), :title => _("Name: %s | Hostname: %s") % [h(item.name), h(item.hostname)]}
           %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
   - else
     .flobj
-      %a{:title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+      %a{:title => _("Name: %s | Hostname: %s") % [h(item.name), h(item.hostname)]}
         %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
 
