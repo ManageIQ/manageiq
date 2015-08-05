@@ -511,6 +511,7 @@ workers:
         :options:
           :replication_trace: false
           :debug_sql: false
+          :heartbeat_threshold: 300
     :schedule_worker:
       :authentication_check_interval: 1.day
       :db_diagnostics_interval: 30.minutes

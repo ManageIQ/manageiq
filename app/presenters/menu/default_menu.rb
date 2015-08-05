@@ -68,7 +68,7 @@ module Menu
 
       def container_menu_section
         Menu::Section.new(:cnt, N_("Containers"), [
-          Menu::Item.new('ems_container',     ui_lookup(:tables => 'ems_container'),     'ems_container',     {:feature => 'ems_container_show_list'},     '/ems_container'),
+          Menu::Item.new('ems_container',     N_('Providers'),     'ems_container',     {:feature => 'ems_container_show_list'},     '/ems_container'),
           Menu::Item.new('container_project', ui_lookup(:tables => 'container_project'), 'container_project', {:feature => 'container_project_show_list'}, '/container_project'),
           Menu::Item.new('container_node',    ui_lookup(:tables => 'container_node'),    'container_node',    {:feature => 'container_node_show_list'},    '/container_node'),
           Menu::Item.new('container_group',   ui_lookup(:tables => 'container_group'),   'container_group',   {:feature => 'container_group_show_list'},   '/container_group'),

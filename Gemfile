@@ -28,7 +28,7 @@ gem "ruport",                         "=1.7.0",                          :git =>
 
 # Vendored but not required
 gem "net-ldap",                       "~>0.7.0",      :require => false
-gem "rubyrep",                        "=1.2.0",       :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :branch => "rails4"
+gem "rubyrep",                        "=1.2.0",       :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-7"
 gem "simple-rss",                     "~>1.3.1",      :require => false
 gem "winrm",                          "=1.1.3",       :require => false, :git => "git://github.com/ManageIQ/WinRM.git", :tag => "v1.1.3-1"
 gem "ziya",                           "=2.3.0",       :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
@@ -42,7 +42,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 gem "default_value_for",              "~>3.0.1"
-gem "thin",                           "~>1.3.1"  # Used by rails server through rack
+gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 gem "puma",                                                              :git => "git://github.com/puma/puma.git", :ref => "7e5b78861097be62912245f93d0187bb975f7753"
 gem "bcrypt",                         "3.1.10"
 gem 'outfielding-jqplot-rails',       "= 1.0.8"
@@ -68,7 +68,7 @@ gem "logging",                        "~>1.6.1",      :require => false  # Ziya 
 gem "net_app_manageability",          ">=0.1.0",      :require => false
 gem "net-ping",                       "~>1.7.4",      :require => false
 gem "net-sftp",                       "~>2.0.5",      :require => false
-gem "net-ssh",                        "~>2.9.1",      :require => false
+gem "net-ssh",                        "~>2.9.2",      :require => false
 gem "open4",                          "~>1.3.0",      :require => false
 #gem "ovirt_metrics",                  "~>1.0.1",      :require => false
 gem "pg",                             "~>0.18.2",     :require => false

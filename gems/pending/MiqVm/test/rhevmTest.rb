@@ -3,6 +3,7 @@ require 'log4r'
 require 'ostruct'
 require 'MiqVm/MiqVm'
 require 'ovirt'
+Ovirt.logger = $rhevm_log if $rhevm_log
 
 RHEVM_SERVER        = raise "please define RHEVM_SERVER"
 RHEVM_PORT          = 443

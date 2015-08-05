@@ -535,6 +535,7 @@ Vmdb::Application.routes.draw do
         report_only
         show
         timeline
+        timeline_data
         widget_to_pdf
       ),
       :post => %w(
@@ -542,7 +543,7 @@ Vmdb::Application.routes.draw do
         authenticate
         change_group
         csp_report
-        getTLdata
+        timeline_data
         login_retry
         panel_control
         reset_widgets
@@ -755,6 +756,7 @@ Vmdb::Application.routes.draw do
         edit
         filesystems
         firewall_rules
+        timeline_data
         groups
         guest_applications
         host_services
@@ -936,6 +938,7 @@ Vmdb::Application.routes.draw do
     :miq_capacity => {
       :get => %w(
         bottlenecks
+        timeline_data
         index
         planning
         planning_report_download
@@ -1873,6 +1876,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        launch_html5_console
         launch_vmware_console
         protect
         show

@@ -35,10 +35,6 @@ module ContainerServiceHelper::TextualSummary
   # Items
   #
 
-  def textual_namespace
-    {:label => "Namespace", :value => @record.namespace.to_s}
-  end
-
   def textual_name
     {:label => "Name", :value => @record.name}
   end

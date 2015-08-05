@@ -35,6 +35,12 @@ class EmsOpenstack < EmsCloud
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
+  def vm_stop(vm, options = {})
+    vm.stop
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
   def vm_pause(vm, options = {})
     vm.pause
   rescue => err

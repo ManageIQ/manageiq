@@ -106,7 +106,7 @@
     :text: Power
     :items:
     - :button: instance_stop
-      :image: power_off
+      :image: guest_shutdown
       :text: "Stop"
       :title: "Stop this Instance"
       :confirm: "Stop this Instance?"

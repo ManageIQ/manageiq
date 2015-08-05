@@ -165,7 +165,8 @@ module EmsRefresh::Parsers
       end
 
       new_result.merge!(
-        :portal_ip        => service.spec.portalIP,
+        # TODO: We might want to change portal_ip to clusterIP
+        :portal_ip        => service.spec.clusterIP,
         :session_affinity => service.spec.sessionAffinity,
 
         :labels           => parse_labels(service),
@@ -192,14 +193,17 @@ module EmsRefresh::Parsers
         :restart_policy        => pod.spec.restartPolicy,
         :dns_policy            => pod.spec.dnsPolicy,
         :ipaddress             => pod.status.podIP,
+        :phase                 => pod.status.phase,
+        :message               => pod.status.message,
+        :reason                => pod.status.reason,
         :container_node        => nil,
         :container_definitions => [],
         :container_replicator  => nil
       )
 
-      unless pod.spec.host.nil?
+      unless pod.spec.nodeName.nil?
         new_result[:container_node] = @data_index.fetch_path(
-          :container_nodes, :by_name, pod.spec.host)
+          :container_nodes, :by_name, pod.spec.nodeName)
       end
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name, pod.metadata["table"][:namespace])

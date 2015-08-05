@@ -1326,6 +1326,8 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     vm_button_operation('pause', 'pause')
   end
+  alias instance_pause pausevms
+  alias vm_pause pausevms
 
   # Terminate all selected or single displayed vm(s)
   def terminatevms

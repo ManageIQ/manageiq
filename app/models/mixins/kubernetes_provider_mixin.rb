@@ -20,7 +20,7 @@ module KubernetesProviderMixin
     end
 
     def kubernetes_version
-      'v1beta3'
+      'v1'
     end
   end
 

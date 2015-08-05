@@ -51,6 +51,16 @@ class Tenant < ActiveRecord::Base
 
   before_save :nil_blanks
 
+  # @return [Boolean] Is this a default tenant?
+  def default?
+    subdomain == DEFAULT_URL && domain == DEFAULT_URL
+  end
+
+  # @return [Boolean] Is this a tenant reading out of settings?
+  def settings?
+    false
+  end
+
   def logo?
     !!logo_file_name
   end
@@ -63,9 +73,6 @@ class Tenant < ActiveRecord::Base
     Tenant.find_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
   end
 
-  def self.seed
-    Tenant.find_or_create_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
-  end
 
   private
 

@@ -835,10 +835,11 @@ en:
       Condition:                Condition
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
+      ContainerGroup:           Pod
       #EmsCloud:                 Cloud Provider
       EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
-      EmsContainer:             Container Provider
+      EmsContainer:             Containers Provider
       EmsEvent:                 Management Event
       EmsFolder:                Folder
       #EmsInfra:                 Infrastructure Provider
@@ -958,8 +959,8 @@ en:
       compliances:                 Compliance History
       container:                   Container
       containers:                  Containers
-      container_group:             Container Group
-      container_groups:            Container Groups
+      container_group:             Pod
+      container_groups:            Pods
       container_replicator:        Replicator
       container_replicators:       Replicators
       container_node:              Node

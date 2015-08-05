@@ -26,12 +26,12 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
   end
 
   def assert_table_counts
-    ContainerGroup.count.should == 2
+    ContainerGroup.count.should == 5
     ContainerNode.count.should == 1
-    Container.count.should == 2
-    ContainerService.count.should == 5
-    ContainerPortConfig.count.should == 2
-    ContainerDefinition.count.should == 2
+    Container.count.should == 5
+    ContainerService.count.should == 4
+    ContainerPortConfig.count.should == 4
+    ContainerDefinition.count.should == 5
     ContainerRoute.count.should == 1
     ContainerProject.count.should == 4
   end
@@ -46,72 +46,80 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
   def assert_specific_container
     @container = Container.find_by_name("ruby-helloworld-database")
     @container.should have_attributes(
-      :ems_ref       => "fc73bb4b-2870-11e5-b5bb-727174f8ab71_ruby-helloworld-database_openshift/mysql-55-centos7",
       :name          => "ruby-helloworld-database",
       :restart_count => 0,
-      :backing_ref   => "docker://bb608fb1575bcc1a5326517e6c4589df5160fa804daaa4990e837f1154f1c3c9"
     )
+    @container[:backing_ref].should_not be_nil
 
     # Check the relation to container node
     @container.container_group.should have_attributes(
-      :ems_ref => "fc73bb4b-2870-11e5-b5bb-727174f8ab71"
+      :name => "database-1-a20bt"
     )
   end
 
   def assert_specific_container_group
-    @containergroup = ContainerGroup.find_by_name("database-1-3v6zu")
+    @containergroup = ContainerGroup.find_by_name("database-1-a20bt")
     @containergroup.should have_attributes(
-      :ems_ref        => "fc73bb4b-2870-11e5-b5bb-727174f8ab71",
-      :name           => "database-1-3v6zu",
+      :name           => "database-1-a20bt",
       :restart_policy => "Always",
       :dns_policy     => "ClusterFirst",
     )
 
     # Check the relation to container node
     @containergroup.container_node.should have_attributes(
-      :ems_ref => "248c52a3-286d-11e5-b5bb-727174f8ab71"
+      :name => "dhcp-0-129.tlv.redhat.com"
     )
 
     # Check the relation to containers
     @containergroup.containers.count.should == 1
     @containergroup.containers.last.should have_attributes(
-      :ems_ref => "fc73bb4b-2870-11e5-b5bb-727174f8ab71_ruby-helloworld-database_openshift/mysql-55-centos7"
+      :name => "ruby-helloworld-database"
     )
+
+    @containergroup.container_project.should == ContainerProject.find_by(:name => "test")
+    @containergroup.ext_management_system.should == @ems
   end
 
   def assert_specific_container_node
     @containernode = ContainerNode.first
     @containernode.should have_attributes(
-      :ems_ref       => "248c52a3-286d-11e5-b5bb-727174f8ab71",
       :name          => "dhcp-0-129.tlv.redhat.com",
       :lives_on_type => nil,
       :lives_on_id   => nil
     )
+
+    @containernode.ext_management_system.should == @ems
   end
 
   def assert_specific_container_service
     @containersrv = ContainerService.find_by_name("frontend")
     @containersrv.should have_attributes(
-      :ems_ref          => "f3a3e170-2870-11e5-b5bb-727174f8ab71",
       :name             => "frontend",
       :session_affinity => "None",
-      :portal_ip        => "172.30.187.127"
+      :portal_ip        => "172.30.141.69"
     )
+
+    @containersrv.container_project.should == ContainerProject.find_by(:name => "test")
+    @containersrv.ext_management_system.should == @ems
   end
 
   def assert_specific_container_project
     @container_pr = ContainerProject.find_by_name("test")
     @container_pr.should have_attributes(
-      :ems_ref      => "9f2f3e05-286d-11e5-b5bb-727174f8ab71",
       :name         => "test",
       :display_name => ""
     )
+
+    @container_pr.container_groups.count.should == 4
+    @container_pr.container_routes.count.should == 1
+    @container_pr.container_replicators.count.should == 2
+    @container_pr.container_services.count.should == 2
+    @container_pr.ext_management_system.should == @ems
   end
 
   def assert_specific_container_route
     @container_route = ContainerRoute.find_by_name("route-edge")
     @container_route.should have_attributes(
-      :ems_ref   => "f3b59d42-2870-11e5-b5bb-727174f8ab71",
       :name      => "route-edge",
       :host_name => "www.example.com"
     )
@@ -121,8 +129,9 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
     )
 
     @container_route.container_project.should have_attributes(
-      :ems_ref => "9f2f3e05-286d-11e5-b5bb-727174f8ab71",
       :name    => "test"
     )
+
+    @container_route.ext_management_system.should == @ems
   end
 end

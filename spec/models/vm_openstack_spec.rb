@@ -14,7 +14,7 @@ describe VmOpenstack do
 
     context("with :stop") do
       let(:state) { :stop }
-      include_examples "Vm operation is not available"
+      include_examples "Vm operation is available when powered on"
     end
 
     context("with :suspend") do
