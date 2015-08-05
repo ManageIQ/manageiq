@@ -163,6 +163,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :status => "True"
     )
 
+    @containernode.labels.count.should == 1
+
     @containernode.computer_system.operating_system.should have_attributes(
       :distribution   => "Fedora 20 (Heisenbug)",
       :kernel_version => "3.18.9-100.fc20.x86_64"
