@@ -128,9 +128,7 @@ module ApplicationController::Timelines
   end
 
   def timeline_data
-    return if session[:tl_xml_blob_id].nil?
-    blob = BinaryBlob.find_by_id(session[:tl_xml_blob_id])
-    return if blob.nil?
+    blob = BinaryBlob.find(session[:tl_xml_blob_id])
     render :xml => blob.binary
     blob.destroy
   end
