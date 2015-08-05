@@ -119,7 +119,6 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
 
   # Moved from MIQExtract.rb
   def unmount_storage(mount_hash)
-    return # XXX
     log_header = "MIQ(MIQExtract.unmount_storage)"
     $log.debug "#{log_header}: mount_hash = #{mount_hash.class.name}"
     return if mount_hash.blank?
