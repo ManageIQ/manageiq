@@ -20,6 +20,7 @@ db: ContainerGroup
 # Columns to fetch from the main table
 cols:
 - name
+- phase
 - restart_policy
 - dns_policy
 - ext_management_system
@@ -38,6 +39,7 @@ include_for_find:
 col_order: 
 - name
 - container_project.name
+- phase
 - restart_policy
 - dns_policy
 - ext_management_system
@@ -46,6 +48,7 @@ col_order:
 headers:
 - Name
 - Project Name
+- Phase
 - Restart Policy
 - DNS Policy
 - Provider
@@ -60,6 +63,7 @@ order: Ascending
 sortby:
 - name
 - container_project.name
+- phase
 - restart_policy
 - dns_policy
 
