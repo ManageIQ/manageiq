@@ -1116,15 +1116,13 @@ class MiqRequestWorkflow
   def allowed_clusters(_options = {})
     all_clusters     = EmsCluster.where(:ems_id => get_source_and_targets[:ems].id)
     filtered_targets = process_filter(:cluster_filter, EmsCluster, all_clusters)
-    filtered_ids     = filtered_targets.collect(&:id)
-    allowed_ci(:cluster, [:respool, :host, :folder], filtered_ids)
+    allowed_ci(:cluster, [:respool, :host, :folder], filtered_targets.collect(&:id))
   end
 
   def allowed_respools(_options = {})
     all_resource_pools = ResourcePool.where(:ems_id => get_source_and_targets[:ems].id)
     filtered_targets   = process_filter(:rp_filter, ResourcePool, all_resource_pools)
-    filtered_ids       = filtered_targets.collect(&:id)
-    allowed_ci(:respool, [:cluster, :host, :folder], filtered_ids)
+    allowed_ci(:respool, [:cluster, :host, :folder], filtered_targets.collect(&:id))
   end
   alias_method :allowed_resource_pools, :allowed_respools
 
