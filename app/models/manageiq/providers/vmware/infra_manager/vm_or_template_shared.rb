@@ -1,6 +1,7 @@
 module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared
   extend ActiveSupport::Concern
   include_concern 'RefreshOnScan'
+  include_concern 'Scanning'
 
   module ClassMethods
     def calculate_power_state(raw_power_state)
