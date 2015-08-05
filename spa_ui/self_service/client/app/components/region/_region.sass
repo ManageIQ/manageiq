@@ -1,0 +1,24 @@
++block(region)
+  @extend .panel
+  border: 1px solid $app-color-gray
+  border-radius: 0
+
+  +element(header)
+    @extend .panel-heading
+    padding: 20px
+    background-color: $app-color-white
+    border: none
+
+  +element(body)
+    @extend .panel-body
+    padding: 0
+
+  +element(title)
+    font-size: 22px
+    font-weight: normal
+    color: $app-color-blue
+    text-transform: uppercase
+    line-height: 1
+
+  +element(collapse-icon)
+    @extend .pull-right
