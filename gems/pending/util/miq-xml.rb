@@ -5,43 +5,34 @@ require 'util/miq-encode'
 require 'util/xml/xml_diff'
 require 'util/xml/xml_patch'
 
-class MiqXml  
-	#MIQ_XML_VERSION = 1.0
-	#MIQ_XML_VERSION = 1.1	# Added create_time to root in seconds for easier time conversions
-	MIQ_XML_VERSION = 2.0	# Changed sub-xmls, added namespaces
+class MiqXml
+  MIQ_XML_VERSION = 2.0 # Changed sub-xmls, added namespaces
 
-	@@defaultXmlType = :rexml  # REXML is always available so default it here.
+  @@defaultXmlType = :rexml  # REXML is always available so default it here.
 
-  # Now test to see if nokogiri is available
+  # Set to true if nokogiri is set as parser.
   @@nokogiri_loaded = false
-	begin
-    require 'util/xml/miq_nokogiri'
-  	Nokogiri::XML::Document.new
-    #@@defaultXmlType = :nokogiri
-		@@nokogiri_loaded = true
-  rescue
+
+  def self.loadFile(filename, xmlClass = @@defaultXmlType)
+    self.xml_document(xmlClass).loadFile(filename)
   end
 
-	def self.loadFile(filename, xmlClass = @@defaultXmlType)
-		self.xml_document(xmlClass).loadFile(filename)
-	end
+  def self.load(data, xmlClass = @@defaultXmlType)
+    self.xml_document(xmlClass).load(data)
+  end
 
-	def self.load(data, xmlClass = @@defaultXmlType)
-		self.xml_document(xmlClass).load(data)
-	end
-
-	def self.createDoc(rootName, rootAttrs = nil, version = MIQ_XML_VERSION, xmlClass = @@defaultXmlType)
-		self.xml_document(xmlClass).createDoc(rootName, rootAttrs, version)
-	end
+  def self.createDoc(rootName, rootAttrs = nil, version = MIQ_XML_VERSION, xmlClass = @@defaultXmlType)
+    self.xml_document(xmlClass).createDoc(rootName, rootAttrs, version)
+  end
 
   def self.newDoc(xmlClass = @@defaultXmlType)
     self.xml_document(xmlClass).newDoc()
   end
 
-	def self.decode(encodedText, xmlClass = @@defaultXmlType)
-		return self.xml_document(xmlClass).load(MIQEncode.decode(encodedText)) if encodedText
-		self.newDoc()
-	end
+  def self.decode(encodedText, xmlClass = @@defaultXmlType)
+    return self.xml_document(xmlClass).load(MIQEncode.decode(encodedText)) if encodedText
+    self.newDoc()
+  end
 
   def self.newNode(data=nil, xmlClass = @@defaultXmlType)
     self.xml_document(xmlClass).newNode(data)
@@ -51,10 +42,16 @@ class MiqXml
     return xmlClass::Document if xmlClass.kind_of?(Module)
     begin
       case xmlClass
-      when :rexml then REXML::Document
-      when :xmlhash then XmlHash::Document
-      when :nokogiri then Nokogiri::XML::Document
-      else REXML::Document
+      when :rexml
+        REXML::Document
+      when :xmlhash
+        XmlHash::Document
+      when :nokogiri
+        require 'util/xml/miq_nokogiri'
+        @@nokogiri_loaded = true
+        Nokogiri::XML::Document
+      else
+        REXML::Document
       end
     rescue
       REXML::Document

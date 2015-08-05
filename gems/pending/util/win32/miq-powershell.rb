@@ -83,7 +83,11 @@ module MiqPowerShell
   end
 
   def self.is_error_object?(xml)
-    object_type = xml.root.elements[1].attributes['Type'] rescue ""
+    if MiqXml.is_nokogiri_loaded?
+      object_type = xml.root.elements[0].attributes['Type'].value rescue ""
+    else
+      object_type = xml.root.elements[1].attributes['Type'] rescue ""
+    end
     return true if !object_type.nil? && object_type.split('.').last == 'ErrorRecord'
     return false
   end
@@ -192,7 +196,7 @@ module MiqPowerShell
     def initialize(xml)
       @refIds = []
       if xml.kind_of?(String)
-        @xml = MiqXml.load(xml)
+        @xml = MiqXml.load(xml, :nokogiri)
       else
         @xml = xml
       end
@@ -221,9 +225,13 @@ module MiqPowerShell
     def process_hash(node)
       hsh = {}
       node.each_element do |e|
-        name = convert_type(e.elements[1])
+        # REXML starts its elements indexing at 1, Nokogiri at 0.
+        index1 = MiqXml.is_nokogiri_loaded? ? 0 : 1
+        index2 = MiqXml.is_nokogiri_loaded? ? 1 : 2
+
+        name = convert_type(e.elements[index1])
         name = name.to_sym if name.is_a?(String)
-        data = e.elements[2]
+        data = e.elements[index2]
 
         case data.name
         when 'Obj' then hsh[name] = process_obj(data)
@@ -237,7 +245,12 @@ module MiqPowerShell
     def process_named_elements(node)
       hsh = {}
       node.each_element do |e|
-        name = e.attributes['N']
+        if e.attributes['N'].respond_to?(:value)
+          name = e.attributes['N'].value
+        else
+          name = e.attributes['N']
+        end
+
         name = e.name if name.nil?
         name = name.to_sym
 
@@ -255,8 +268,9 @@ module MiqPowerShell
     end
 
     def process_obj(node)
-      lst = node.elements['LST']
-      dct = node.elements['DCT']
+      lst = node.elements.find{ |e| e.name == 'LST' }
+      dct = node.elements.find{ |e| e.name == 'DCT' }
+
       refId = node.attributes['RefId'].to_i
 
       obj = nil
@@ -287,7 +301,7 @@ module MiqPowerShell
       when :U16, :U32, :I32, :U64, :I64, :D, :By then c.text.to_i
       when :Db then c.text.to_f
       when :B then c.text.downcase == 'true'
-      when :S, :Version, :G, :Ref then c.text.chomp unless c.text.nil?
+      when :S, :Version, :G, :Ref then c.text.chomp unless (c.text.nil? || c.text.empty?)
       when :DT
         c_text = c.text
         if /\d+-\d+-\d+T\d+:\d+:\d+.\d+(.*)/ =~ c_text

@@ -7,6 +7,12 @@ begin
   # Add class methods to nokogiri to have it behave more like REXML for easy replacement
   module Nokogiri
     module XML
+      class Attr
+        def to_i
+          self.value.to_i
+        end
+      end
+
       class Node
         def add_attribute(key, value)
           self[key.to_s] = value.to_s unless value.nil?
