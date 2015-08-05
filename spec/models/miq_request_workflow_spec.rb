@@ -157,7 +157,7 @@ describe MiqRequestWorkflow do
     let(:ems)           { FactoryGirl.create(:ext_management_system) }
     let(:resource_pool) { FactoryGirl.create(:resource_pool, :ems_id => ems.id) }
 
-    it "#allowed_clusters" do
+    it "#allowed_clusters calls allowed_ci with the correct set of cluster ids" do
       FactoryGirl.create(:ems_cluster)
       allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
       allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
@@ -167,7 +167,7 @@ describe MiqRequestWorkflow do
       workflow.allowed_clusters
     end
 
-    it "#allowed_resource_pools" do
+    it "#allowed_resource_pools calls allowed_ci with the correct set of resource_pool ids" do
       FactoryGirl.create(:resource_pool)
       allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
       allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
