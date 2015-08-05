@@ -11,7 +11,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_vm_cloud_relationships
-    items = %w(ems availability_zone cloud_tenant flavor drift scan_history security_groups
+    items = %w(ems ems_infra cluster host availability_zone cloud_tenant flavor drift scan_history security_groups
                service cloud_network cloud_subnet orchestration_stack)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
@@ -163,6 +163,40 @@ module VmCloudHelper::TextualSummary
     if role_allows(:feature => "ems_cloud_show")
       h[:title] = "Show parent #{label} '#{ems.name}'"
       h[:link]  = url_for(:controller => 'ems_cloud', :action => 'show', :id => ems)
+    end
+    h
+  end
+
+  def textual_ems_infra
+    ems = @record.ext_management_system.try(:provider).try(:infra_ems)
+    return nil if ems.nil?
+    label = ui_lookup(:table => "ems_infra")
+    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
+    if role_allows(:feature => "ems_infra_show")
+      h[:title] = "Show parent #{label} '#{ems.name}'"
+      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
+    end
+    h
+  end
+
+  def textual_cluster
+    cluster = @record.host.try(:ems_cluster)
+    return nil if cluster.nil?
+    h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
+    if cluster && role_allows(:feature => "ems_cluster_show")
+      h[:title] = "Show this VM's #{title_for_cluster}"
+      h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)
+    end
+    h
+  end
+
+  def textual_host
+    host = @record.host
+    return nil if host.nil?
+    h = {:label => title_for_host, :image => "host", :value => (host.nil? ? "None" : host.name)}
+    if host && role_allows(:feature => "host_show")
+      h[:title] = "Show this VM's #{title_for_host}"
+      h[:link]  = url_for(:controller => 'host', :action => 'show', :id => host)
     end
     h
   end
