@@ -62,7 +62,7 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(:container_nodes, ems, hashes, deletes, [:ems_ref],
-                         [:computer_system, :container_conditions], [:namespace])
+                         [:labels, :computer_system, :container_conditions], [:namespace])
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
 
@@ -131,7 +131,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(:container_groups, ems, hashes, deletes, [:ems_ref],
-                         [:container_definitions, :containers, :labels, :container_conditions],
+                         [:container_definitions, :containers, :labels, :node_selector_parts, :container_conditions],
                          [:container_node, :container_replicator, :project, :namespace])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
@@ -274,5 +274,19 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(:selector_parts, entity, hashes, deletes, [:section, :name])
     store_ids_for_new_records(entity.selector_parts, hashes, [:section, :name])
+  end
+
+  def save_node_selector_parts_inventory(entity, hashes, target = nil)
+    return if hashes.nil?
+
+    entity.node_selector_parts(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                entity.node_selector_parts.dup
+              else
+                []
+              end
+
+    save_inventory_multi(:node_selector_parts, entity, hashes, deletes, [:section, :name])
+    store_ids_for_new_records(entity.node_selector_parts, hashes, [:section, :name])
   end
 end

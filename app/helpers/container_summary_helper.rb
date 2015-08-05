@@ -60,6 +60,10 @@ module ContainerSummaryHelper
     textual_key_value_group(@record.selector_parts.to_a)
   end
 
+  def textual_container_node_selectors
+    textual_key_value_group(@record.node_selector_parts.to_a)
+  end
+
   def textual_container_image
     textual_link(@record.container_image)
   end
