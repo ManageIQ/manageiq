@@ -55,7 +55,6 @@ ManageIQ.angularApplication.controller('logCollectionFormController', ['$http', 
 
     $scope.$watch("logCollectionModel.depot_name", function() {
       $scope.form = $scope.angularForm;
-      $scope.miqService = miqService;
       $scope.miqDBBackupService = miqDBBackupService;
     });
   };

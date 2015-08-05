@@ -54,7 +54,6 @@ ManageIQ.angularApplication.controller('providerForemanFormController', ['$http'
 
       $scope.$watch("providerForemanModel.name", function() {
         $scope.form = $scope.angularForm;
-        $scope.miqService = miqService;
       });
     };
 

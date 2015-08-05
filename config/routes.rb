@@ -99,11 +99,6 @@ Vmdb::Application.routes.draw do
     pre_prov_continue
   )
 
-  retire_post = %w(
-    retire
-    retire_date_changed
-  )
-
   save_post = %w(
     save_col_widths
     save_default_search
@@ -1318,10 +1313,12 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         cloud_networks
         download_data
+        retirement_info
         index
         outputs
         parameters
         resources
+        retire
         show
         show_list
         tagging_edit
@@ -1335,6 +1332,7 @@ Vmdb::Application.routes.draw do
         parameters
         quick_search
         resources
+        retire
         save_col_widths
         sections_field_changed
         show
@@ -1579,6 +1577,8 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        retirement_info
+        retire
         show
       ),
       :post => %w(
@@ -1587,6 +1587,7 @@ Vmdb::Application.routes.draw do
         ownership_field_changed
         ownership_update
         reload
+        retire
         save_col_widths
         service_edit
         service_form_field_changed
@@ -1599,8 +1600,7 @@ Vmdb::Application.routes.draw do
         x_settings_changed
         x_show
       ) +
-        dialog_runner_post +
-        retire_post
+        dialog_runner_post
     },
 
     # TODO: revisit this controller/route, might be removed after other storage issues are sorted out
@@ -1683,6 +1683,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         edit
+        retirement_info
         ownership
         policy_sim
         reconfigure
@@ -1701,14 +1702,14 @@ Vmdb::Application.routes.draw do
         reconfigure
         reconfigure_field_changed
         reconfigure_update
+        retire
         right_size
         set_checked_items
         show_list
         vmtree_selected
       ) +
         ownership_post +
-        pre_prov_post +
-        retire_post
+        pre_prov_post
     },
 
     :vm_cloud               => {
@@ -1718,9 +1719,11 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        retirement_info
         launch_html5_console
         perf_chart_chooser
         protect
+        retire
         show
         tagging_edit
       ) +
@@ -1754,6 +1757,7 @@ Vmdb::Application.routes.draw do
         quick_search
         registry_items
         reload
+        retire
         save_col_widths
         scan_histories
         sections_field_changed
@@ -1778,7 +1782,6 @@ Vmdb::Application.routes.draw do
         exp_post +
         policy_post +
         pre_prov_post +
-        retire_post +
         x_post
     },
 
@@ -1789,11 +1792,13 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        retirement_info
         launch_vmware_console
         launch_html5_console
         perf_chart_chooser
         policies
         protect
+        retire
         show
         tagging_edit
       ) +
@@ -1831,6 +1836,7 @@ Vmdb::Application.routes.draw do
         reconfigure_update
         registry_items
         reload
+        retire
         save_col_widths
         scan_histories
         sections_field_changed
@@ -1864,7 +1870,6 @@ Vmdb::Application.routes.draw do
         exp_post +
         policy_post +
         pre_prov_post +
-        retire_post +
         snap_post +
         x_post
     },
@@ -1877,8 +1882,10 @@ Vmdb::Application.routes.draw do
         drift_to_txt
         explorer
         launch_html5_console
+        retirement_info
         launch_vmware_console
         protect
+        retire
         show
         tagging_edit
         util_report_download
@@ -1924,6 +1931,7 @@ Vmdb::Application.routes.draw do
         reconfigure_update
         registry_items
         reload
+        retire
         save_col_widths
         scan_histories
         sections_field_changed
@@ -1955,8 +1963,7 @@ Vmdb::Application.routes.draw do
         exp_post +
         policy_post +
         pre_prov_post +
-        snap_post +
-        retire_post
+        snap_post
     },
   }
 

@@ -97,7 +97,6 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
     $scope.$watch("scheduleModel.name", function() {
       $scope.form = $scope.angularForm;
       $scope.model = "scheduleModel";
-      $scope.miqService = miqService;
     });
   };
 

@@ -755,11 +755,15 @@ function miqAjaxButtonSend(url, serialize_fields) {
 
 // Function to generate an Ajax request
 function miqAjax(url, serialize_fields) {
-  if (serialize_fields) {
-    miqJqueryRequest(url, {beforeSend: true, complete: true, data: miqSerializeForm('form_div')});
-  } else {
-    miqJqueryRequest(url, {beforeSend: true, complete: true});
+  var data = undefined;
+
+  if (serialize_fields === true) {
+    data = miqSerializeForm('form_div');
+  } else if (serialize_fields) {  // object or possibly FormData
+    data = serialize_fields;
   }
+
+  miqJqueryRequest(url, {beforeSend: true, complete: true, data: data});
 }
 
 // Function to generate an Ajax request for EVM async processing

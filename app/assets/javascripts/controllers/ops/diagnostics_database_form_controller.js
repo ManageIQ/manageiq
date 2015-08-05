@@ -21,7 +21,6 @@ ManageIQ.angularApplication.controller('diagnosticsDatabaseFormController', ['$h
 
     $scope.$watch("diagnosticsDatabaseModel.depot_name", function() {
         $scope.form = $scope.angularForm;
-        $scope.miqService = miqService;
         $scope.miqDBBackupService = miqDBBackupService;
     });
   };

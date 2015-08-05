@@ -1,7 +1,7 @@
 describe('checkchange initialization', function() {
   var $scope, form;
   beforeEach(module('ManageIQ.angularApplication'));
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(inject(function($compile, $rootScope, miqService) {
     $scope = $rootScope;
     var element = angular.element(
       '<form name="angularForm">' +
@@ -11,8 +11,7 @@ describe('checkchange initialization', function() {
     $scope.repoModel = {repo_path : "//a/a2"};
     $scope.modelCopy = {repo_path : "//a/a2"};
     $scope.model = "repoModel";
-    $scope.miqService = { miqFlashClear: function (){}};
-    spyOn($scope.miqService, 'miqFlashClear');
+    spyOn(miqService, 'miqFlashClear');
     $compile(element)($scope);
     $scope.$digest();
     form = $scope.angularForm;

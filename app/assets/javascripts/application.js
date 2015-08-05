@@ -20,6 +20,7 @@
 //= require controllers/angular-bootstrap/DatepickerCtrl
 //= require controllers/provider_foreman/provider_foreman_form_controller
 //= require controllers/repository/repository_form_controller
+//= require controllers/retirement/retirement_form_controller
 //= require controllers/schedule/schedule_form_controller
 //= require controllers/ops/diagnostics_database_form_controller
 //= require controllers/ops/log_collection_form_controller

@@ -3478,6 +3478,14 @@
       :description: Edit Tags of Orchestration Stack
       :feature_type: control
       :identifier: orchestration_stack_tag
+    - :name: Retire Orchestration Stack
+      :description: Retire Orchestration Stack
+      :feature_type: control
+      :identifier: orchestration_stack_retire_now
+    - :name: Set Retirement Date
+      :description: Set Retirement Date
+      :feature_type: control
+      :identifier: orchestration_stack_retire
 
 # EmsContainer
 - :name: Providers

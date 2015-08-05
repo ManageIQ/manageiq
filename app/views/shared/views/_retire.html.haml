@@ -1,50 +1,72 @@
-- url = url_for(:action => 'retire_date_changed')
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
 = render :partial => "layouts/flash_msg"
 
-%fieldset
-  %h3
-    = _('Set/Remove Retirement Date')
-  %table.style1
-    %tr
-      %td.key
-        = _('Retirement Date')
-      %td#retirement_date
-        = datepicker_input_tag("miq_date_1", session[:retire_date],
-          :class                  => "css1",
-          :readonly               => "true",
-          "data-miq_sparkle_on"   => true,
-          "data-miq_sparkle_off"  => true,
-          "data-miq_observe_date" => {:url => url}.to_json)
-        = hidden_span_if(session[:retire_date].nil?, :id => "remove_button")
-        = link_to_function(image_tag('/images/icons/16/clear.png', :border => "0", :alt => _("Set to blank")),
-                           "$('#miq_date_1').datepicker('clearDates');")
-        </span>
-    %tr
-      - disabled = session[:retire_date].nil?
-      %td.key
-        = _('Retirement Warning')
-      %td.wide
-        = select_tag("retirement_warn",
-          options_for_select([["#{_('None')}", ""], [_("1 Week before retirement"), 7], [_("2 Weeks before retirement"), 14], [_("30 Days before retirement"), 30]], session[:retire_warn]),
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          :disabled              => disabled,
-          "data-miq_observe"     => {:url => url}.to_json)
-  = _('* Saving a blank date will remove all retirement dates')
-- unless @explorer
-  = render :partial => '/layouts/edit_form_buttons', :locals => {:noreset => true, :action_url => "retire"}
+%form#form_div{"name"          => "angularForm",
+               "ng-controller" => "retirementFormController"}
+  %fieldset
+    %h3
+      = _('Set/Remove Retirement Date')
+    %table.style1
+      %tbody
+        %tr
+          %td.key
+            = _('Retirement Date')
+          %td#retirement_date
+            = datepicker_input_tag("retirementDate", session[:retire_date],
+              :id           => "miq_date_1",
+              :class        => "css1",
+              :readonly     => true,
+              "ng-model"    => "retirementInfo.retirementDate",
+              "checkchange" => true)
+            %a{'href'       => '#',
+               'ng-click'   => 'retirementInfo.retirementDate = ""; retirementInfo.retirementWarning = ""',
+               'ng-hide'    => '!retirementInfo.retirementDate'}
+              = image_tag('/images/icons/16/clear.png', :border => "0", :alt => _("Set to blank"))
+        %tr
+          %td.key
+            = _('Retirement Warning')
+          %td.wide
+            = select_tag("retirementWarning",
+              options_for_select([[_("None"), ""],
+                                  [_("1 Week before retirement"), 7],
+                                  [_("2 Weeks before retirement"), 14],
+                                  [_("30 Days before retirement"), 30]], ""),
+              "ng-model"    => "retirementInfo.retirementWarning",
+              "ng-disabled" => "!retirementInfo.retirementDate",
+              "checkchange" => true)
+    = _('* Saving a blank date will remove all retirement dates')
 
-%fieldset
-  %h3
-    - if request.parameters[:controller] == "service"
-      = n_("New setting will affect Service", "New setting will affect Services", @retireitems.length)
-    - else
-      = n_("New setting will affect VM", "New setting will affect VMs", @retireitems.length)
-  %table.admintable{:height => "75"}
-    %tbody
-      %tr
-        %td
-          - if @retireitems
-            - @embedded = true
-            = render :partial => "layouts/gtl"
+  %fieldset
+    %h3
+      - if request.parameters[:controller] == "service"
+        = n_("New setting will affect Service", "New setting will affect Services", @retireitems.length)
+      - elsif request.parameters[:controller] == "orchestration_stack"
+        = n_("New setting will affect Orchestration Stack", "New setting will affect Orchestration Stacks",
+             @retireitems.length)
+      - elsif %(vm_cloud vm_infra).include?(request.parameters[:controller])
+        = n_("New setting will affect VM", "New setting will affect VMs", @retireitems.length)
+    %table.admintable{:height => "75"}
+      %tbody
+        %tr
+          %td
+            - if @retireitems
+              - @embedded = true
+              = render :partial => "layouts/gtl"
+
+  %table{:width => "100%"}
+    %tr
+      %td#buttons_on{:align => "right"}
+        = button_tag(_("Save"),
+                     :class        => "btn btn-primary",
+                     "ng-click"    => "saveClicked()",
+                     "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
+                     "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+        = button_tag(_("Cancel"),
+                     :class     => "btn btn-default",
+                     "ng-click" => "cancelClicked()")
+
+:javascript
+  ManageIQ.angularApplication.value('objectIds', #{ @retireitems.collect(&:id) });
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication']);
+  ManageIQ.calendar = {calDateFrom: new Date(), calDateTo: null};
+  miqBuildCalendar();

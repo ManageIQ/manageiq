@@ -25,7 +25,6 @@ ManageIQ.angularApplication.controller('repositoryFormController', ['$http', '$s
 
   $scope.$watch("repoModel.repo_name", function() {
     $scope.form = $scope.repositoryForm;
-    $scope.miqService = miqService;
   });
 
   $scope.addClicked = function() {
