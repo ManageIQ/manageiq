@@ -58,7 +58,7 @@ col_order:
 headers:
 - Name
 - Type
-- Host Name
+- Hostname
 - IPAddress
 - Port
 - Created At

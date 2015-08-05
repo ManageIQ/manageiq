@@ -44,6 +44,6 @@
 - else
   .flobj
     - t = [h(item.name), h(item.hostname), h(item.last_refresh_status.titleize)]
-    %a{:href => url_for_record(item), :title => _("Name: %s | Host Name: %s | Refresh Status: %s") % t}
+    %a{:href => url_for_record(item), :title => _("Name: %s | Hostname: %s | Refresh Status: %s") % t}
       %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
 
