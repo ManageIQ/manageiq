@@ -40,7 +40,11 @@ log "Purging..."
 require 'progressbar'
 %w{realtime hourly daily}.each do |interval|
   pbar = ProgressBar.create(:title => interval.titleize, :total => counts[interval], :autofinish => false)
-  Metric::Purging.purge(dates[interval], interval, opts[:window]) { |count, total| pbar.progress +=  count } if counts[interval] > 0
+  if counts[interval] > 0
+    Metric::Purging.purge(dates[interval], interval, opts[:window]) do |count, _|
+      pbar.progress += count
+    end
+  end
   pbar.finish
 end
 log "Purging...Complete"
