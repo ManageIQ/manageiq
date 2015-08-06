@@ -85,8 +85,9 @@ class Condition < ActiveRecord::Base
   end
 
   def self.do_eval(expr)
+    # Remove this [DEPRECATION] in the next version
     if expr =~ /^__start_ruby__\s?__start_context__\s?(.*)\s?__type__\s?(.*)\s?__end_context__\s?__start_script__\s?(.*)\s?__end_script__\s?__end_ruby__$/im
-      raise "Ruby script in expression is no longer supported"
+      raise "Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead."
     else
       result = eval(expr) ? true : false
     end
