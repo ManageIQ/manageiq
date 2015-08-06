@@ -3,7 +3,7 @@ rvm:
 - "2.2"
 sudo: false
 cache: bundler
-bundler_args: --without development:metric_fu:qpid
+bundler_args: --without development:qpid
 env:
   global:
   - RUBY_GC_MALLOC_LIMIT=90000000

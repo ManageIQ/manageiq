@@ -32,6 +32,3 @@ test: &test
   <<: *base
   pool: 3
   database: vmdb_test
-
-metric_fu:
-  <<: *test

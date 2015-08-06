@@ -184,7 +184,7 @@ end
 RUBY
 
     def self.open_transactions_threshold
-      @open_transactions_threshold ||= Rails.env.test? || Rails.env.metric_fu? ? 1 : 0
+      @open_transactions_threshold ||= Rails.env.test? ? 1 : 0
     end
 
     def self.verbose_rc(rc)
