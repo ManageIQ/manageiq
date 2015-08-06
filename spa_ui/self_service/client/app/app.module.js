@@ -3,6 +3,7 @@
 
   angular.module('app', [
     'app.core',
-    'app.states'
+    'app.states',
+    'mock'
   ]);
 })();
