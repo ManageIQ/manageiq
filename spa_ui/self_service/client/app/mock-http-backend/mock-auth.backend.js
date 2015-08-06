@@ -1,8 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('mock')
-      .run(mock);
+  angular.module('mock').run(mock);
 
   /** @ngInject */
   function mock($httpBackend) {

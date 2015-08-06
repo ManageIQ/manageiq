@@ -1,9 +1,6 @@
 (function() {
   'use strict';
 
-  angular.module('mock')
-      .run(mock);
-
   /** @ngInject */
   function mock($httpBackend) {
     $httpBackend.whenGET(/\/api\/v1\/content_pages/).respond(getEmptyResponse);
