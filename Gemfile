@@ -104,13 +104,8 @@ unless ENV['APPLIANCE']
     gem "capybara",         "~>2.1.0",  :require => false
   end
 
-  group :development, :test, :metric_fu do
+  group :development, :test do
     gem "rspec-rails",      "~>2.14.0"
-  end
-
-  group :metric_fu do
-    gem "metric_fu",           :require => false, :git => "git://github.com/ManageIQ/metric_fu.git", :tag => "v3.0.0-3"
-    gem "simplecov-rcov-text", ">= 0.0.3", :require => false
   end
 end
 

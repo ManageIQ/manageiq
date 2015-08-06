@@ -1,6 +1,5 @@
 module EvmTestHelper
   VMDB_SPECS        = FileList["spec/**/*_spec.rb"].exclude(/^spec\/(replication|migrations|automation)/)
-  METRICS_SPECS     = VMDB_SPECS + ['spec/coverage_helper.rb']
   REPLICATION_SPECS = FileList['spec/replication/**/*_spec.rb']
   MIGRATION_SPECS   = FileList['spec/migrations/**/*_spec.rb'].sort
   AUTOMATION_SPECS  = FileList['spec/automation/**/*_spec.rb']
