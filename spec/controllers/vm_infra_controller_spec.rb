@@ -47,6 +47,19 @@ describe VmInfraController do
     expect(response.status).to eq(200)
   end
 
+  it 'can open the right size tab' do
+    vm = FactoryGirl.create(:vm_vmware, :name => 'a_name')
+
+    get :show, :id => vm.id
+    response.should redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_right_size', :id => vm.id
+    expect(response.status).to eq(200)
+  end
+
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
