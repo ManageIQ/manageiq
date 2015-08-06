@@ -2,7 +2,7 @@
   = render(:partial => "layouts/flash_msg")
   %h3
     = _("Info")
-  %form.form-horizontal.static
+  .form-horizontal.static
     .form-group
       %label.col-md-2.control-label
         = _("Name")
@@ -26,7 +26,7 @@
     - if @category
       %h3
         = _("Categories")
-      %form.form-horizontal.static
+      .form-horizontal.static
         - @category.sort.each do |c|
           .form-group
             .col-md-8
@@ -49,7 +49,7 @@
   - unless @selected_scan.mode == "Host"
     - if @registry
       %h3= _("Registry Items")
-      %form.form-horizontal.static
+      .form-horizontal.static
         - @registry.sort_by { |r| r["key"] }.each do |k|
           .form-group
             .col-md-8
@@ -58,7 +58,7 @@
   - if @nteventlog
     %h3
       = _("Event Log Items")
-    %form.form-horizontal.static
+    .form-horizontal.static
       - @nteventlog.sort_by { |l| l[:name] }.each do |k|
         .form-group
           .col-md-8

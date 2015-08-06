@@ -8,7 +8,7 @@
       %fieldset
         %h3
           = _("Role Information")
-        %form.form-horizontal
+        .form-horizontal
           .form-group
             %label.col-md-2.control-label
               = _("Name")
@@ -39,7 +39,7 @@
                              :class    => "selectpicker")
             :javascript
               miqInitSelectPicker();
-              miqSelectPickerEvent('chosen_group', "#{url}")
+              miqSelectPickerEvent('vm_restriction', "#{url}")
           - unless @edit
             .form-group
               %label.col-md-2.control-label

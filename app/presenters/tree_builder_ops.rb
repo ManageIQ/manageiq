@@ -30,4 +30,5 @@ class TreeBuilderOps < TreeBuilder
       return (object.ldap_domains.sort_by { |a| a.name.to_s })
     end
   end
+  
 end
