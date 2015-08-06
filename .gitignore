@@ -163,3 +163,6 @@ spa_ui/self_service/reports
 
 ### Build directory ###
 public/self_service
+
+### .gitignore overrides ###
+!spa_ui/self_service/**/region
