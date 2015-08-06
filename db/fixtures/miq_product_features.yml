@@ -3687,6 +3687,81 @@
       :feature_type: control
       :identifier: container_replicator_tag
 
+
+# ContainerImage
+- :name: Images
+  :description: Everything under Container Images
+  :feature_type: node
+  :identifier: container_image
+  :children:
+  - :name: View
+    :description: View Container Images
+    :feature_type: view
+    :identifier: container_image_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Images
+      :feature_type: view
+      :identifier: container_image_show_list
+    - :name: Show
+      :description: Display Individual Container images
+      :feature_type: view
+      :identifier: container_image_show
+  - :name: Modify
+    :description: Modify Container Images
+    :feature_type: admin
+    :identifier: container_image_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Images from the VMDB
+      :feature_type: admin
+      :identifier: container_image_delete
+    - :name: Edit
+      :description: Edit a Container Image
+      :feature_type: admin
+      :identifier: container_image_edit
+    - :name: Add
+      :description: Add a Container Image
+      :feature_type: admin
+      :identifier: container_image_new
+
+# ContainerImageRegistry
+- :name: Registries
+  :description: Everything under Container Image Registries
+  :feature_type: node
+  :identifier: container_image_registry
+  :children:
+  - :name: View
+    :description: View Container Image Registries
+    :feature_type: node
+    :identifier: container_image_registry_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Image Registries
+      :feature_type: view
+      :identifier: container_image_registry_show_list
+    - :name: Show
+      :description: Display Individual Container Image Registries
+      :feature_type: view
+      :identifier: container_image_registry_show
+  - :name: Modify
+    :description: Modify Container Image Registries
+    :feature_type: admin
+    :identifier: container_image_registry_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Image Registries from the VMDB
+      :feature_type: admin
+      :identifier: container_image_registry_delete
+    - :name: Edit
+      :description: Edit a Container Image Registry
+      :feature_type: admin
+      :identifier: container_image_registry_edit
+    - :name: Add
+      :description: Add a Container Image Registry
+      :feature_type: admin
+      :identifier: container_image_registry_new
+
 # ContainerService
 - :name: Services
   :description: Everything under Container Services

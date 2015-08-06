@@ -963,6 +963,10 @@ en:
       container_groups:            Pods
       container_replicator:        Replicator
       container_replicators:       Replicators
+      container_image:             Container Image
+      container_images:            Container Images
+      container_image_registry:    Image Registry
+      container_image_registries:  Image Registries
       container_node:              Node
       container_nodes:             Nodes
       container_service:           Service

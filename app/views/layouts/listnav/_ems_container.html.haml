@@ -95,3 +95,23 @@
               = link_to(_("Containers (%s)") % num_containers,
                   {:action  => 'show', :id => @record,
                   :display => 'containers'}, :title => _("Show Containers"))
+        - if role_allows(:feature => "container_image_registry_show_list")
+          - num_registries = @record.number_of(:container_image_registries)
+          - if num_registries == 0
+            %li.disabled
+              = link_to(_('Image Registries (0)'), "#")
+          - else
+            %li
+              = link_to(_("Image Registries (%s)") % num_registries,
+                  {:action  => 'show', :id => @record, :display => 'container_image_registries'},
+                  :title => _("Show Image Registries"))
+        - if role_allows(:feature => "container_image_show_list")
+          - num_images = @record.number_of(:container_images)
+          - if num_images == 0
+            %li.disabled
+              = link_to(_('Images (0)'), "#")
+          - else
+            %li
+              = link_to(_("Images (%s)") % num_images,
+                  {:action  => 'show', :id => @record, :display => 'container_images'},
+                  :title => _("Show Images"))
