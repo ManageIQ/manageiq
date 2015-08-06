@@ -76,6 +76,18 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
+  def vm_shelve(vm, options = {})
+    vm.shelve
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
+  def vm_shelve_offload(vm, options = {})
+    vm.shelve_offload
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
   def vm_destroy(vm, options = {})
     vm.vm_destroy
   rescue => err

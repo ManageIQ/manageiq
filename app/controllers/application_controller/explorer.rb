@@ -60,6 +60,7 @@ module ApplicationController::Explorer
     'guest_restart'    => :s1, 'retire_now'                => :s1, 'snapshot_revert'     => :s1,
     'start'            => :s1, 'stop'                      => :s1, 'suspend'             => :s1,
     'reset'            => :s1, 'terminate'                 => :s1, 'pause'               => :s1,
+    'shelve'           => :s1, 'shelve_offload'            => :s1,
 
     # group 2
     'clone'     => :s2, 'compare'          => :s2, 'drift'           => :s2,

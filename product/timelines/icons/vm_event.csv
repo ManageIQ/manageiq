@@ -14,6 +14,10 @@ compute.instance.power_on.end,vm_power_on
 compute.instance.soft_delete.end,vm_disconnected
 compute.instance.reboot.end,vm_rebooted
 compute.instance.suspend,vm_suspended
+compute.instance.pause,vm_paused
+compute.instance.shelve.end,vm_shelved
+compute.instance.unshelve.end,vm_unshelved
+compute.instance.shelve_offload.end,vm_shelved_offloaded
 compute.instance.resume,vm_resuming
 createsnapshot_task,vm_snapshot_create
 createvm_task,vm_being_created
