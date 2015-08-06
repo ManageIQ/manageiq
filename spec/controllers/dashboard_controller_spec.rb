@@ -10,7 +10,7 @@ describe DashboardController do
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
       UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
       post :authenticate, :user_name => user.userid, :user_password => 'dummy'
-      session[:userid].should == user.userid
+      expect(controller.send(:current_userid)).to eq(user.userid)
     end
   end
 
@@ -43,7 +43,7 @@ describe DashboardController do
       controller.stub(:start_url_for_user).and_return('some_url')
       UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
       validation = controller.send(:validate_user, user)
-      session[:group].should eq(group.id)
+      expect(controller.send(:current_groupid)).to eq(group.id)
       expect(validation.flash_msg).to be_nil
       expect(validation.url).to eq('some_url')
     end
@@ -129,6 +129,32 @@ describe DashboardController do
     it "defaults layout to login on Login screen" do
       layout = controller.send(:get_layout)
       layout.should eq("login")
+    end
+  end
+
+  describe "#eligible_groups" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+    let(:role1)  { FactoryGirl.create(:miq_user_role, :name => 'test_role1') }
+    let(:group1) { FactoryGirl.create(:miq_group, :description => 'test_group1', :miq_user_role => role1) }
+    let(:role2)  { FactoryGirl.create(:miq_user_role, :name => 'test_role2') }
+    let(:group2) { FactoryGirl.create(:miq_group, :description => 'test_group2', :miq_user_role => role2) }
+
+    it "has no eligible groups for single group users" do
+      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group1])
+      UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
+      post :authenticate, :user_name => user.userid, :user_password => 'dummy'
+      expect(controller.send(:current_user)).to eq(user)
+      expect(controller.send(:eligible_groups)).to eq([])
+    end
+
+    it "has eligible groups" do
+      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group1, group2])
+      UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
+      post :authenticate, :user_name => user.userid, :user_password => 'dummy'
+      expect(controller.send(:current_user)).to eq(user)
+      expect(controller.send(:eligible_groups)).to eq([group1, group2].map {|g| [g.description, g.id] })
     end
   end
 end

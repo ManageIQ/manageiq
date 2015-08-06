@@ -1,10 +1,10 @@
-- url = url_for(:action=>'reconfigure_field_changed', :id=>"new")
+- url = url_for(:action => 'reconfigure_field_changed', :id => "new")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %h3=_('Options')
+  %h3= _('Options')
   %table.style1
     %tr
-      %td.key=_('Memory')
+      %td.key= _('Memory')
       %td
         %table{:style => "line-height:1px;white-space: nowrap"}
           %tr
@@ -24,15 +24,14 @@
                   "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 
                 = select_tag("mem_typ",
-                  options_for_select(["MB","GB"],
-                  @edit[:new][:mem_typ]),
+                  options_for_select(%w(MB GB), @edit[:new][:mem_typ]),
                   "data-miq_sparkle_on" => true,
                   "data-miq_sparkle_off" => true,
                   "data-miq_observe" => {:url => url}.to_json)
                 (#{@edit[:memory_note]})
 
     %tr
-      %td.key=_('Processors')
+      %td.key= _('Processors')
       %td
         %table{:style => "line-height:1px;white-space: nowrap"}
           %tr
@@ -48,14 +47,14 @@
               #cpu_div{:style => display}
                 - if @edit[:cpu_options].length > 1
                   = select_tag("cpu_count",
-                     options_for_select((@edit[:new][:cpu_count].nil? ? [["<#{_('Choose')}>",nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
+                     options_for_select((@edit[:new][:cpu_count].nil? ? [["<#{_('Choose')}>", nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     "data-miq_observe" => {:url => url}.to_json)
                 - else
                   = @edit[:cpu_options][0]
 
-  - if !@edit[:explorer]
+  - unless @edit[:explorer]
     #buttons_div
       %table{:width => "100%"}
         %tr
@@ -78,7 +77,7 @@
                   :button => "cancel")}');")
 
   %hr
-  %h3=_('Affected VMs')
+  %h3= _('Affected VMs')
   %table.admintable{:height => "75"}
     %tbody
       %tr

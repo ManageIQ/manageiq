@@ -1000,7 +1000,7 @@ module OpsController::Settings::Common
           @edit = Hash.new
           @edit[:new] = Hash.new
           @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
-          add_flash(_("Locate and upload a file to start the import process"))
+          add_flash(_("Locate and upload a file to start the import process"), :info)
           @in_a_form = true
         when "settings_import"                                  # Import tab
           @edit = Hash.new

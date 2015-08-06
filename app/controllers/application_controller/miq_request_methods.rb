@@ -39,7 +39,7 @@ module ApplicationController::MiqRequestMethods
           end
         end
         if @edit.fetch_path(:new, :schedule_type, 0) == "schedule"
-          page << "miq_cal_dateFrom = new Date(#{@timezone_offset});"
+          page << "ManageIQ.calendar.calDateFrom = new Date(#{@timezone_offset});"
           page << "miqBuildCalendar();"
         end
         if changed != session[:changed]

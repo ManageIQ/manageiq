@@ -381,7 +381,7 @@ class ServiceController < ApplicationController
         presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
         r[:partial => "layouts/x_gtl"]
       end
-    if ["dialog_provision","ownership","retire","service_edit", "tag"].include?(action)
+    if %w(dialog_provision ownership service_edit tag).include?(action)
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = false
       presenter[:expand_collapse_cells][:a] = 'collapse'
@@ -391,13 +391,7 @@ class ServiceController < ApplicationController
                                                            :locals  => {:action_url => action_url,
                                                                         :record_id  => @edit[:rec_id]}]
       else
-        if action == "retire"
-          locals = {:action_url => action, :record_id => @record ? @record.id : nil}
-          locals[:no_reset] = true
-          locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
-          date_tz = Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")
-          presenter[:build_calendar] = {:date_from => date_tz}
-        elsif action == "tag"
+        if action == "tag"
           locals = {:action_url => action_url}
           locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
           locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
@@ -408,8 +402,8 @@ class ServiceController < ApplicationController
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
       end
-    elsif record_showing ||
-        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
+    elsif (action != "retire") && (record_showing ||
+        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0)))
       # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box
       # when trying to change a node on tree after saving a record
       presenter[:set_visible_elements][:buttons_on] = false
@@ -444,14 +438,19 @@ class ServiceController < ApplicationController
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
     presenter[:reload_toolbars][:custom]  = {:buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
-    
+
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    if @record && !@in_a_form
+      presenter[:record_id] = @record.id
+    else
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
+
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
     presenter[:osf_node] = x_node
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
-    presenter[:extra_js] << "miq_changes = undefined;"
+    presenter[:extra_js] << "ManageIQ.changes = null;"
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

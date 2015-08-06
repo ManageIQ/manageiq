@@ -35,6 +35,8 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def self.raw_connect(server, port, username, password, service = "Service")
     require 'ovirt'
+    Ovirt.logger = $rhevm_log
+
     params = {
       :server     => server,
       :port       => port.presence && port.to_i,

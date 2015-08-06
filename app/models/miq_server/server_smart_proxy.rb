@@ -82,7 +82,7 @@ module MiqServer::ServerSmartProxy
       timeout_adj = 1
       if ost.method_name == "ScanMetadata"
         v = VmOrTemplate.find(ost.vm_id)
-        timeout_adj = 4 if v.kind_of?(VmOpenstack) || v.kind_of?(TemplateOpenstack)
+        timeout_adj = 4 if v.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) || v.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
       end
       MiqQueue.put(:class_name => self.class.name, :instance_id => id, :method_name => "scan_sync_vm", :args => ost, :server_guid => guid, :role => "smartproxy", :queue_name => "smartproxy", :msg_timeout => worker_setting[:queue_timeout] * timeout_adj)
     else

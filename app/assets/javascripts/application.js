@@ -1,3 +1,4 @@
+//= require miq_global
 //= require jquery
 //= require jquery_overrides
 //= require angular
@@ -19,6 +20,7 @@
 //= require controllers/angular-bootstrap/DatepickerCtrl
 //= require controllers/provider_foreman/provider_foreman_form_controller
 //= require controllers/repository/repository_form_controller
+//= require controllers/retirement/retirement_form_controller
 //= require controllers/schedule/schedule_form_controller
 //= require controllers/ops/diagnostics_database_form_controller
 //= require controllers/ops/log_collection_form_controller
@@ -40,6 +42,7 @@
 //= require miq_jqplot
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap
+//= require bootstrap-datepicker
 //= require bootstrap-select
 //= require bootstrap-hover-dropdown
 //= require c3/c3

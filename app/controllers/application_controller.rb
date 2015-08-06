@@ -1378,132 +1378,6 @@ class ApplicationController < ActionController::Base
     session[:lastaction] = @lastaction if @lastaction
   end
 
-  # get the default column titles from a db table
-  def get_column_titles(db)
-    @col_titles = Array.new
-    @col_names = Array.new
-    db.content_columns.each do | col |
-
-      next if ["guid", "set_type"].include?(col.name)   # Never show GUIDs or Set Types
-
-      # Remove columns based on model
-      if db == Host
-        next if ["settings", "policy_settings", "vmm_buildnumber", "updated_on","guid"].include?(col.name)
-      elsif db == ExtManagementSystem
-        next if ["updated_on"].include?(col.name)
-      elsif db == Service
-        next if ["icon"].include?(col.name)
-      elsif db == Vm
-        next if ["vendor", "format", "version", "description", "config_xml", "busy", "registered", "autostart", "smart"].include?(col.name)
-      elsif db == GuestApplication
-        if Regexp.new(/linux/).match(@vm.os_image_name.downcase)
-          next if ["product_icon", "transform", "product_key"].include?(col.name)
-        end
-      elsif db == SystemService
-        if Regexp.new(/linux/).match(@vm.os_image_name.downcase)
-          next if ["svc_type", "start", "object_name", "depend_on_service", "depend_on_group","typename","display_name"].include?(col.name)
-        else
-          next if ["enable_run_levels", "disable_run_levels","typename"].include?(col.name)
-        end
-      elsif db == Job
-        next if ["guid", "code", "process", "target_class", "type"].include?(col.name)
-      elsif db == MiqPolicySet
-        next if ["created_on", "updated_on"].include?(col.name)
-      elsif db == PolicySet
-        next if ["created_on", "updated_on"].include?(col.name)
-      elsif db == MiqPolicy
-        next if ["file_mtime", "file_type", "created_on", "updated_on", "_policy", "expression", "towhat"].include?(col.name)
-      elsif db == Policy
-        next if ["file_mtime", "file_type", "created_on", "updated_on", "_policy", "expression", "towhat"].include?(col.name)
-      elsif db == MiqEvent
-        next if ["name", "created_on", "updated_on"].include?(col.name)
-      elsif db == ConditionSet
-        next if ["created_on", "updated_on"].include?(col.name)
-      elsif db == Condition
-        next if ["file_mtime", "file_type", "created_on", "updated_on", "expression", "towhat", "modifier"].include?(col.name)
-      elsif db == MiqAction
-        next if ["created_on", "updated_on"].include?(col.name)
-      elsif db == ActionSet
-        next if ["created_on", "updated_on"].include?(col.name)
-      end
-
-      @col_names.push(col.name)   # Move in the column name
-
-      if db == Host               # Replace certain Host columns
-        case col.name
-          when "hostname"
-            @col_titles.push("Host Name")
-          when "ipaddress"
-            @col_titles.push("IP Address")
-          when "vmm_vendor"
-            @col_titles.push("VMM Vendor")
-          when "vmm_version"
-            @col_titles.push("VMM Version")
-          when "vmm_product"
-            @col_titles.push("VMM Product")
-          when "created_on"
-            @col_titles.push("Registered On")
-          when "last_heartbeat"
-            @col_titles.push("Last SmartProxy Heartbeat")
-          when "version"
-            @col_titles.push("SmartProxy Version")
-          else
-            @col_titles.push(col.human_name.titleize)
-        end
-      elsif db == ExtManagementSystem   # Replace certain EMS columns
-        case col.name
-        when "hostname"
-          @col_titles.push("Host Name")
-        when "ipaddress"
-          @col_titles.push("IP Address")
-        when "emstype"
-          @col_titles.push("MS Type")
-        when "created_on"
-          @col_titles.push("Registered On")
-        else
-          @col_titles.push(col.human_name.titleize)
-        end
-      elsif db == Vm                  # Replace certain Vm columns
-        case col.name
-          when "last_extract_time"
-            @col_titles.push("Last Extract Time")
-          when "last_sync_on"
-            @col_titles.push("Last Sync")
-          when "created_on"
-            @col_titles.push("Registered On")
-          when "updated_on"
-            @col_titles.push("Updated On")
-          else
-            @col_titles.push(col.human_name.titleize)
-        end
-      elsif db == Job               # Replace certain Job columns
-        case col.name
-        when "name"
-          @col_titles.push("Task Name")
-        when "userid"
-          @col_titles.push("User")
-        when "created_on"
-          @col_titles.push("Since Started")
-        when "updated_on"
-          @col_titles.push("Since Updated")
-        when "agent_class"          # Will show the actual agent in this column
-          @col_titles.push("SmartProxy")
-        when "agent_state"          # Will show the actual agent in this column
-          @col_titles.push("SmartProxy State")
-        when "agent_message"          # Will show the actual agent in this column
-          @col_titles.push("SmartProxy Message")
-        else
-          @col_titles.push(col.human_name.titleize)
-        end
-      else
-        @col_titles.push(col.human_name.titleize)
-      end
-    end
-
-    return @col_titles, @col_names  # Return the column titles and names
-
-  end
-
   # get the sort column that was clicked on, else use the current one
   def get_sort_col
     unless params[:sortby] == nil
@@ -1730,7 +1604,6 @@ class ApplicationController < ActionController::Base
     else
       prefix = "check" if prefix == nil
       items = Array.new
-      session[:base_miq] = ""
       params.each do |var, val|
         vars = var.to_s.split("_")
         if vars[0]==prefix && val=="1"
@@ -2099,14 +1972,13 @@ class ApplicationController < ActionController::Base
   # RJS code to show tag box effects and replace the main list view area
   def replace_gtl_main_div(options={})
     action_url = options[:action_url] || @lastaction
-    session[:adv_search_on] = false
     return if params[:action] == "button" && @lastaction == "show"
     render :update do |page|                        # Use RJS to update the display
 #     page.visual_effect(:blind_up,"tag_box_div") if session[:applied_tags] != nil && @applied_tags == nil      # Hide div if removing all tags
 #     page.replace_html("tag_box_div", :partial=>"layouts/tag_box")                                             # Replace the tag box contents
 #     page.visual_effect(:blind_down, "tag_box_div")  if session[:applied_tags] == nil && @applied_tags != nil  # Show div if not shown already
       page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")           # Replace the flash message
-      page << "if (typeof miq_toolbars != 'undefined'){";                 # Need to make sure toolbars exist on the screen before resetting buttons
+      page << "if (ManageIQ.toolbars !== null){"; # Make sure toolbars exist on the screen before resetting buttons
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
       page << "}";
       if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
@@ -2118,11 +1990,11 @@ class ApplicationController < ActionController::Base
       end
       if @grid_xml                                  # Replacing a grid
         page << "xml = \"#{j_str(@grid_xml)}\";"            # Set the XML data
-        page << "gtl_list_grid.clearAll(true);"     # Clear grid data, including headers
-        page << "gtl_list_grid.parse(xml);"         # Reload grid from XML
+        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);" # Clear grid data, including headers
+        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);" # Reload grid from XML
         if @sortcol
           dir = @sortdir ? @sortdir[0..2] : "asc"
-          page << "gtl_list_grid.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
+          page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
         end
         page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
         page.replace("pc_div_1", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>action_url, :db=>@view.db, :headers=>@view.headers})
@@ -2289,7 +2161,6 @@ class ApplicationController < ActionController::Base
     # Get timelines hash, if it is in the session for the running controller
     @tl_options = session["#{controller_name}_tl".to_sym]
 
-    session[:adv_search_on] = false if action_name[0..3] != "adv_" # Turn off advanced search flag if not an adv search action
     session[:host_url] = request.env["HTTP_HOST"]   unless request.env["HTTP_HOST"] == nil
     session[:tab_url] ||= Hash.new
 
@@ -2336,7 +2207,7 @@ class ApplicationController < ActionController::Base
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "container", "container_group", "container_node", "container_service", "ems_container",
-           "container_route", "container_project", "container_replicator"
+           "container_route", "container_project", "container_replicator", "container_image_registry", "container_image"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"

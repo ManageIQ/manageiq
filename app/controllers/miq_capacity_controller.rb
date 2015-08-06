@@ -479,7 +479,7 @@ class MiqCapacityController < ApplicationController
     presenter = ExplorerPresenter.new(:active_tree => x_active_tree)
     r = proc { |opts| render_to_string(opts) }
 
-    presenter[:extra_js] << 'miq_chart_data = ' + @sb[:util][:chart_data].to_json + ';'
+    presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:util][:chart_data].to_json + ';'
 
     # clearing out any selection in tree if active node has been reset to "" upon returning to screen or when first time in
     presenter[:clear_selection] = x_node == ''
@@ -601,7 +601,7 @@ class MiqCapacityController < ApplicationController
     presenter = ExplorerPresenter.new(:active_tree => @sb[:active_tree])
     r = proc { |opts| render_to_string(opts) }
 
-    presenter[:extra_js] << 'miq_chart_data = ' + @sb[:planning][:chart_data].to_json + ';'
+    presenter[:extra_js] << 'ManageIQ.charts.chartData = ' + @sb[:planning][:chart_data].to_json + ';'
 
     if v_buttons && v_xml
       presenter[:set_visible_elements][:view_buttons_div] = true
@@ -625,7 +625,6 @@ class MiqCapacityController < ApplicationController
 
     presenter[:osf_node] = x_node
     presenter[:update_partials][:main_div] = r[:partial => 'bottlenecks_tabs']
-    presenter[:replace_partials][:tl_div]  = r[:partial => 'bottlenecks_tl_detail']
     presenter[:build_calendar] = true
     presenter[:right_cell_text] = @right_cell_text
 

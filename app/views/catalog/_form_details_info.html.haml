@@ -1,15 +1,14 @@
 - action = @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed"
-- url = url_for(:action => action, :id => "#{@edit[:rec_id] || "new"}")
 - url_one_trans = url_for(:action => action, :id => "#{@edit[:rec_id] || "new"}", :transOne => '1')
 
-%h3=_('Long Description')
+%h3= _('Long Description')
 = text_area_tag("long_description", @edit[:new][:long_description],
   :size => "350x600", :style => "display:none;")
 
 :javascript
-  miqOneTrans = 0;
+  ManageIQ.oneTransition.oneTrans = 0;
 
-- # Create a MyCodeMirror editor for the text area
+-# Create a MyCodeMirror editor for the text area
 = render :partial => "/layouts/my_code_mirror",
   :locals => {:text_area_id => "long_description",
     :mode => "htmlmixed",
@@ -17,4 +16,4 @@
     :url => url_one_trans}
 
 :javascript
-  miqEditor.refresh();
+  ManageIQ.editor.refresh();

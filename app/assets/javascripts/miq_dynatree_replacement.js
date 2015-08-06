@@ -1,4 +1,4 @@
-var miqDynatreeReplacement = {
+ManageIQ.dynatreeReplacement = {
   replace: function (options) {
     var onDblClickFunction;
     var onClickFunction;

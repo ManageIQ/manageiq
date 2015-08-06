@@ -1,2 +1,0 @@
-class FlavorOpenstack < Flavor
-end

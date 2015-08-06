@@ -1,7 +1,7 @@
 
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
+describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
@@ -84,7 +84,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   end
 
   def assert_specific_host
-    @host = HostOpenstackInfra.all.select { |x| x.name.include?('(Controller)') }.first
+    @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.select { |x| x.name.include?('(Controller)') }.first
 
     @host.ems_ref.should_not be nil
     @host.ems_ref_obj.should_not be nil
@@ -145,7 +145,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   end
 
   def assert_specific_template(name, is_public = false)
-    template = TemplateOpenstack.where(:name => name).first
+    template = ManageIQ::Providers::Openstack::CloudManager::Template.where(:name => name).first
     template.should have_attributes(
       :template              => true,
       :publicly_available    => is_public,

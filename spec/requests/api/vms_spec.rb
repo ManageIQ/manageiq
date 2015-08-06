@@ -290,6 +290,59 @@ describe ApiController do
     end
   end
 
+  context "Vm pause action" do
+    it "pauses an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :pause)
+
+      run_post(invalid_vm_url, gen_request(:pause))
+
+      expect_resource_not_found
+    end
+
+    it "pauses an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:pause))
+
+      expect_request_forbidden
+    end
+
+    it "pauses a powered off vm" do
+      api_basic_authorize action_identifier(:vms, :pause)
+      update_raw_power_state("off", vm)
+
+      run_post(vm_url, gen_request(:pause))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :vm_url)
+    end
+
+    it "pauses a pauseed vm" do
+      api_basic_authorize action_identifier(:vms, :pause)
+      update_raw_power_state("paused", vm)
+
+      run_post(vm_url, gen_request(:pause))
+
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :vm_url)
+    end
+
+    it "pauses a vm" do
+      api_basic_authorize action_identifier(:vms, :pause)
+
+      run_post(vm_url, gen_request(:pause))
+
+      expect_single_action_result(:success => true, :message => "pausing", :href => :vm_url, :task => true)
+    end
+
+    it "pauses multiple vms" do
+      api_basic_authorize action_identifier(:vms, :pause)
+
+      run_post(vms_url, gen_request(:pause, nil, vm1_url, vm2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+    end
+  end
+
   context "Vm delete action" do
     it "deletes an invalid vm" do
       api_basic_authorize action_identifier(:vms, :delete)

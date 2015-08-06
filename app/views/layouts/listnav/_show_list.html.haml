@@ -12,7 +12,7 @@
             - li_class = ""
             - search_name = search.description
             - if (!@default_search.blank? && @default_search.name == search.name) || (@default_search.blank? && search.id.to_i == 0)
-              - # highlight if default is selected, or first time in
+              -# highlight if default is selected, or first time in
               - if @edit && @edit[:expression] && ((@edit[:expression][:selected].nil? && @edit[:selected].nil?) || (!@edit[:expression][:selected].nil? && @edit[:expression][:selected][:id] == search.id.to_i && !@edit[:custom_search]))
                 - li_class = "active"
             - elsif @edit && @edit[:expression] && ((@edit[:expression][:selected] && @edit[:expression][:selected][:id] == 0 && search.id.to_i == 0) || (@edit[:expression][:selected] && @edit[:expression][:selected][:name] == search.name && !@edit[:custom_search]))

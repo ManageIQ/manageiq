@@ -41,19 +41,19 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.task_final_events
-    @task_final_events ||= VMDB::Config.new('event_handling').config[:task_final_events]
+    VMDB::Config.new('event_handling').config[:task_final_events]
   end
 
   def self.event_groups
-    @event_groups ||= VMDB::Config.new('event_handling').config[:event_groups]
+    VMDB::Config.new('event_handling').config[:event_groups]
   end
 
   def self.bottleneck_event_groups
-    @bottleneck_event_groups ||= VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
+    VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
   end
 
   def self.filtered_events
-    @filtered_events ||= VMDB::Config.new('event_handling').config[:filtered_events]
+    VMDB::Config.new('event_handling').config[:filtered_events]
   end
 
   def self.group_and_level(event_type)
@@ -93,11 +93,11 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.add_openstack(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::Openstack.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Openstack::CloudManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_openstack_infra(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::OpenstackInfra.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Openstack::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_amazon(ems_id, event)

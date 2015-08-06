@@ -1,5 +1,5 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
-- # JSON hash to hold text fields and types for miqValueStylePrefill
+-# JSON hash to hold text fields and types for miqValueStylePrefill
 = javascript_tag("miq_value_styles = {};")
 #styling_div
   %h3
@@ -64,7 +64,7 @@
                       "data-miq_sparkle_off" => true,
                       "data-miq_observe"     => {:url => url}.to_json)
                   - else
-                    - # Add the text field id and type into the JSON miq_value_styles hash for miqValueStylePrefill
+                    -# Add the text field id and type into the JSON miq_value_styles hash for miqValueStylePrefill
                     = javascript_tag("miq_value_styles['styleval_#{f_idx}_#{s_idx}'] = '##{field_type}';")
                     = text_field_tag("styleval_#{f_idx}_#{s_idx}", styles[s_idx][:value],
                       :maxlength         => 50,
@@ -93,5 +93,5 @@
   %br
   = _('* Style "If" conditions are evaluated top to bottom for each column')
 
-- # Initiate the prefill function to show text field background images when empty
+-# Initiate the prefill function to show text field background images when empty
 = javascript_tag("miqValueStylePrefill();")

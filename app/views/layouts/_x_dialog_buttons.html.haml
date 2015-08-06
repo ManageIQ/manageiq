@@ -1,6 +1,6 @@
-- # Set default action url, if none passed in
+-# Set default action url, if none passed in
 - action_url ||= nil
-- # Set default record id to nil, if none passed in
+-# Set default record id to nil, if none passed in
 - record_id ||= nil
 - align ||= "right"
 - buttons = @record.buttons.split(',')
@@ -39,7 +39,7 @@
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button =>"cancel")}');")
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
 
       #buttons_off{:style => session[:changed] ? "display: none;" : ""}
         - buttons.each do |b|

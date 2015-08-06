@@ -31,7 +31,7 @@ class MiqProvision < MiqProvisionTask
 
   CLONE_SYNCHRONOUS     = false
   CLONE_TIME_LIMIT      = 4.hours
-  SUPPORTED_EMS_CLASSES = %w(ManageIQ::Providers::Vmware::InfraManager ManageIQ::Providers::Redhat::InfraManager ManageIQ::Providers::Amazon::CloudManager EmsOpenstack EmsMicrosoft)
+  SUPPORTED_EMS_CLASSES = %w(ManageIQ::Providers::Vmware::InfraManager ManageIQ::Providers::Redhat::InfraManager ManageIQ::Providers::Amazon::CloudManager ManageIQ::Providers::Openstack::CloudManager EmsMicrosoft)
 
   def self.base_model
     MiqProvision

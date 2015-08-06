@@ -1,2 +1,0 @@
-class FloatingIpOpenstack < FloatingIp
-end

@@ -2,14 +2,14 @@
 #pre_prov_div
   - typ = request.parameters[:controller] == "vm_cloud" ? ui_lookup(:table => "template_cloud") : ui_lookup(:table => "template_infra")
   %h3
-    =_("Provision %s based on the selected %s") % [ui_lookup(:tables => request.parameters[:controller]), typ]
+    = _("Provision %s based on the selected %s") % [ui_lookup(:tables => request.parameters[:controller]), typ]
   %table.table.table-bordered.table-hover.table-striped.table-selectable
     %thead
       %tr
         - id = @edit[:req_id] || "new"
         - @edit[:vm_columns].each_with_index do |h, i|
           %th
-            - # Replaced to exclude non-view table fields from sorting
+            -# Replaced to exclude non-view table fields from sorting
             = link_to(h(@edit[:vm_headers][h]),
               {:action => "vm_pre_prov", :sort_choice => h, :id => id.to_s},
               "data-miq_sparkle_on"  => true,

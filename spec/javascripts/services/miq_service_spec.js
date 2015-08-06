@@ -1,7 +1,7 @@
 describe('miqService', function() {
   var testService;
 
-  beforeEach(module('miqAngularApplication'));
+  beforeEach(module('ManageIQ.angularApplication'));
 
   beforeEach(inject(function(miqService) {
     testService = miqService;
@@ -29,7 +29,7 @@ describe('miqService', function() {
   describe('#buildCalendar', function() {
     it('sets up the date from', function() {
       testService.buildCalendar(2014, 2, 3);
-      expect(window.miq_cal_dateFrom).toEqual(new Date(2014, 2, 3));
+      expect(window.ManageIQ.calendar.calDateFrom).toEqual(new Date(2014, 2, 3));
     });
 
     it('calls the global build calendar function', function() {

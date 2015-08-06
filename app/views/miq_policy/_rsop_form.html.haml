@@ -6,15 +6,15 @@
       %tr
         %td
           %fieldset
-            %h3=_("Event Selection")
-            %strong{:style => "color: #4b4b4b"}=_("Type:")
+            %h3= _("Event Selection")
+            %strong{:style => "color: #4b4b4b"}= _("Type:")
             %br
             = select_tag('event_typ',
               options_for_select(["<#{_('Choose')}>"] + @rsop_events, @sb[:rsop][:event]),
               "data-miq_observe" => observe)
             - unless @sb[:rsop][:event].nil?
               %br
-              %strong{:style => "color: #4b4b4b"}=_("Event:")
+              %strong{:style => "color: #4b4b4b"}= _("Event:")
               %br
               = select_tag('event_value',
                 options_for_select(["<#{_('Choose')}>"] + @rsop_event_sets, @sb[:rsop][:event_value]),
@@ -22,7 +22,7 @@
       %tr
         %td
           %fieldset
-            %h3=_("VM Selection")
+            %h3= _("VM Selection")
             = select_tag('filter_typ',
               options_for_select([["<#{_('Choose')}>"],
                 [_("By %s") % ui_lookup(:table => "ext_management_systems"), "ems"],

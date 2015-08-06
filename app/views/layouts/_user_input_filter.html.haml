@@ -19,7 +19,6 @@
                   - token = part.last
                   - if @edit[:qs_tokens][token].key?(:field)
                     - if @edit[:qs_tokens][token][:value_type] == :boolean
-                      - values = [["<Choose>", ""], %w(true true), %w(false false)]
                       = select_tag("value_#{token}",
                                    options_for_select(["<Choose>"] + MiqExpression.get_entry_details(@edit[:qs_tokens][token][:tag]).sort_by { |desc, _name| desc.downcase },
                                                        nil),
@@ -70,7 +69,7 @@
                   %b= h([part].flatten.first)
 
         .modal-footer
-          %div#buttons
+          #buttons
             %span#quick_search_buttons_off
               = button_tag(t = _("Apply"), :class => "btn btn-primary btn-disabled")
             %span#quick_search_buttons_on{:style => "display:none;"}

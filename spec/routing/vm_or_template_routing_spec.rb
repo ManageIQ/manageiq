@@ -38,7 +38,9 @@ describe VmOrTemplateController do
     drift_to_csv
     drift_to_pdf
     drift_to_txt
+    launch_html5_console
     launch_vmware_console
+    retirement_info
     vm_show
   ).each do |path|
     describe "##{path}" do
@@ -93,7 +95,6 @@ describe VmOrTemplateController do
     registry_items
     reload
     retire
-    retire_date_changed
     scan_histories
     sections_field_changed
     snap_pressed

@@ -6,8 +6,8 @@
 - else
   #drift_grid_div{:style => "width: #{w}; height: #{center_div_height + 150}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
     = render :partial => 'layouts/slickgrid',
-             :locals  => { :grid_id        => "drift_grid_div",
-                           :grid_name      => "drift_grid",
-                           :grid_rows_json => @grid_rows_json,
-                           :grid_cols_json => @grid_cols_json,
-                           :autoheight     => false}
+             :locals  => {:grid_id        => "drift_grid_div",
+                          :grid_name      => "drift_grid",
+                          :grid_rows_json => @grid_rows_json,
+                          :grid_cols_json => @grid_cols_json,
+                          :autoheight     => false}

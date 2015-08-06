@@ -11,23 +11,20 @@ class OpenstackNullEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
+    $log.warn("MIQ(#{self.class.name}##{__method__}) There was an problem establishing a connection to the AMQP service on #{options[:hostname]}.
+               Check the evm.log for more details.")
     @options = options
   end
 
   def start
-    raise NotImplementedError, error_message
   end
 
   def stop
-    raise NotImplementedError, error_message
   end
 
   def each_batch
-    raise NotImplementedError, error_message
-  end
-
-  private
-  def error_message
-    @error_message ||= "Openstack Event Monitoring is not available for #{@options[:hostname]}.  Check logs for more details."
+    # yield empty array to enter the each_batch block and trigger sleep
+    # to avoid smashing the CPU with a tight loop
+    yield []
   end
 end

@@ -124,10 +124,14 @@ module ApplicationController::Filter
         end
 
         if @edit[@expkey][:exp_key] && @edit[@expkey][:exp_field]
-          page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit[@expkey][:val1][:type]
-          page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit[@expkey][:val1][:type]
-          page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit[@expkey][:val2][:type]
-          page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit[@expkey][:val2][:type]
+          if @edit[@expkey][:val1][:type]
+            page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
+            page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
+          end
+          if @edit[@expkey][:val2][:type]
+            page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
+            page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
+          end
         end
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
@@ -246,10 +250,8 @@ module ApplicationController::Filter
         if params[:chosen_regval] && params[:chosen_regval] != @edit[@expkey][:exp_regval].to_s # Did the regkey change?
           @edit[@expkey][:exp_regval] = params[:chosen_regval]      # Save the regval
         end
-        if params[:chosen_key] && params[:chosen_key] != @edit[@expkey][:exp_key] # Did the key change?
-          @edit[@expkey][:exp_key] = params[:chosen_key]            # Save the key
-          @edit[@expkey][:exp_value] = nil if [params[:chosen_key],@edit[@expkey][:exp_key]].include?("RUBY") # Clear the value if going to/from RUBY
-        end
+        # Did the key change?, Save the key
+        @edit[@expkey][:exp_key] = params[:chosen_key] if params[:chosen_key] && params[:chosen_key] != @edit[@expkey][:exp_key]
         exp_get_prefill_types                         # Get the field type
 
       when "find"
@@ -427,12 +429,14 @@ module ApplicationController::Filter
               [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
             page << "miqBuildCalendar();"
           end
-
-          page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit.fetch_path(@expkey,:val1,:type)
-          page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit.fetch_path(@expkey,:val1,:type)
-          page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey,:val2,:type)
-          page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey,:val2,:type)
-
+          if @edit.fetch_path(@expkey, :val1, :type)
+            page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
+            page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
+          end
+          if @edit.fetch_path(@expkey, :val2, :type)
+            page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
+            page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
+          end
           page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
         end
       end
@@ -462,11 +466,14 @@ module ApplicationController::Filter
             [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
           page << "miqBuildCalendar();"
         end
-
-        page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit.fetch_path(@expkey,:val1,:type)
-        page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit.fetch_path(@expkey,:val1,:type)
-        page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey,:val2,:type)
-        page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey,:val2,:type)
+        if @edit.fetch_path(@expkey, :val1, :type)
+          page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
+          page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
+        end
+        if @edit.fetch_path(@expkey, :val2, :type)
+          page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
+          page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
+        end
       end
       page << set_spinner_off
       # Rememeber this settting in the model settings
@@ -1108,7 +1115,7 @@ module ApplicationController::Filter
     elsif @edit[@expkey][:exp_typ] == "count"
       @edit[@expkey][:val1][:type] = :integer
     elsif @edit[@expkey][:exp_typ] == "regkey"
-      @edit[@expkey][:val1][:type] = @edit[@expkey][:exp_key] == "RUBY" ? :ruby : :string
+      @edit[@expkey][:val1][:type] = :string
     end
     @edit[@expkey][:val1][:title] = FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:title] if @edit[@expkey][:val1][:type]
     @edit[@expkey][:val2][:title] = FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:title] if @edit[@expkey][:val2][:type]
@@ -1117,11 +1124,7 @@ module ApplicationController::Filter
   # Get the field type for miqExpressionPrefill using the operator key and field
   def exp_prefill_type(key, field)
     return nil unless key && field
-    if key.include?("RUBY")
-      return :ruby
-    elsif key.starts_with?("REG")
-      return :regex
-    end
+    return :regex if key.starts_with?("REG")
     typ = MiqExpression.get_col_info(field)[:format_sub_type] # :human_data_type?
     if FORMAT_SUB_TYPES.keys.include?(typ)
       return typ
@@ -1445,8 +1448,6 @@ module ApplicationController::Filter
         add_flash(_("A %s must be entered to commit this expression element") % "registry key name", :error)
       elsif @edit[@expkey][:exp_regval].blank? && @edit[@expkey][:exp_key] != "KEY EXISTS"
         add_flash(_("A %s must be entered to commit this expression element") % "registry value name", :error)
-      elsif @edit[@expkey][:exp_key] == "RUBY" && e = MiqExpression.atom_error(:ruby, @edit[@expkey][:exp_key], @edit[@expkey][:exp_value])
-        add_flash(_("%{field} Value Error: %{msg}") % {:field=>"Registry", :msg=>e}, :error)
       elsif @edit[@expkey][:exp_key].include?("REGULAR EXPRESSION") && e = MiqExpression.atom_error(:regexp, @edit[@expkey][:exp_key], @edit[@expkey][:exp_value])
         add_flash(_("%{field} Value Error: %{msg}") % {:field=>"Registry", :msg=>e}, :error)
       else
@@ -1745,12 +1746,6 @@ module ApplicationController::Filter
   end
 
   def process_changed_expression(params, chosen_key, exp_key, exp_value, exp_valx)
-
-    if [ params[chosen_key], @edit[@expkey][exp_key] ].include?("RUBY")      # Clear the value if going to/from RUBY
-      @edit[@expkey][exp_value] = nil
-      @edit[:suffix] = nil
-    end
-
     # Remove the second exp_value if the operator changed from EXP_FROM
     @edit[@expkey][exp_value].delete_at(1) if @edit[@expkey][exp_key] == EXP_FROM
 

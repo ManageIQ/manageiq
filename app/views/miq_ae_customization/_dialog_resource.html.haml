@@ -1,6 +1,7 @@
-- # Parameters:
-- #   tab     DialogTab object
-- #   curr_pos sending it upto server so it can be used to reorder widgets
+-#
+  Parameters:
+    tab     DialogTab object
+    curr_pos sending it upto server so it can be used to reorder widgets
 %div{:id => "t_#{curr_pos}|#{obj[:id]}", :title => _('Drag this Tab to a new location')}
   #test.modbox
     %h2.modtitle{:style => "cursor: move;"}

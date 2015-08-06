@@ -6,9 +6,9 @@ require 'log4r'
 require 'time'
 require 'util/vmdb-logger'
 
-MIQ_ROOT    = "#{File.dirname(__FILE__)}/../../"
-LOG_DIR     = MIQ_ROOT + "vmdb/log/"
-LOG_FILE    = LOG_DIR + "vim.log"
+MIQ_ROOT    = File.expand_path(File.join(__dir__, "../../.."))
+LOG_DIR     = File.join(MIQ_ROOT, "log")
+LOG_FILE    = File.join(LOG_DIR, "vim.log")
 
 $vim_log = VMDBLogger.new LOG_FILE
 

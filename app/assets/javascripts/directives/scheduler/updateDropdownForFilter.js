@@ -1,4 +1,4 @@
-miqAngularApplication.directive('updateDropdownForFilter', function($timeout) {
+ManageIQ.angularApplication.directive('updateDropdownForFilter', ['$timeout', function($timeout) {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {
@@ -38,7 +38,7 @@ miqAngularApplication.directive('updateDropdownForFilter', function($timeout) {
       });
     }
   }
-});
+}]);
 
 var selectListElement = function(scope, timeout, ctrl, refresh) {
   timeout(function(){

@@ -1,4 +1,4 @@
-miqAngularApplication.directive('selectpickerForSelectTag', function() {
+ManageIQ.angularApplication.directive('selectpickerForSelectTag', function() {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {

@@ -205,6 +205,13 @@ class MiqProcess
           pids << pid.to_i
         end
       end
+    when :macosx
+      require 'sys/proctable'
+      Sys::ProcTable.ps.select do |p|
+        if p.cmdline && cmd.match(p.cmdline.gsub("\000", " ").strip)
+          pids << p.pid
+        end
+      end
     else
       raise NotImplementedError, "Method MiqProcess.find_pids not implemented on this platform [#{Platform::IMPL}]"
     end

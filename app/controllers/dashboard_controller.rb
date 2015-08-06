@@ -580,55 +580,17 @@ class DashboardController < ApplicationController
         status = @report.table.data.length == 0 ? :disabled : :enabled
 
         center_tb_buttons.each do |button_id, typ|
-          page << "center_tb.showItem('#{button_id}');"
+          page << "ManageIQ.toolbars.center_tb.obj.showItem('#{button_id}');"
           page << tl_toggle_button_enablement(button_id, status, typ)
         end
       else
         center_tb_buttons.keys.each do |button_id|
-          page << "center_tb.hideItem('#{button_id}');"
+          page << "ManageIQ.toolbars.center_tb.obj.hideItem('#{button_id}');"
         end
       end
       page.replace("tl_div", :partial => "dashboard/tl_detail")
       page << "miqSparkle(false);"
       session[:last_rpt_id] = @report ? @report.id : nil  # Remember rpt record id to turn off later
-    end
-  end
-
-  def getTLdata
-    if session[:tl_xml_blob_id] != nil
-      blob = BinaryBlob.find(session[:tl_xml_blob_id])
-      render :xml=>blob.binary
-      blob.destroy
-      session[:tl_xml_blob_id] = session[:tl_position] = nil
-    else
-      tl_xml = MiqXml.load("<data/>")
-      #   tl_event = tl_xml.root.add_element("event", {
-      #                                                   "start"=>"May 16 2007 08:17:23 GMT",
-      #                                                   "title"=>"Dans-XP-VM",
-      #                                                   "image"=>"images/icons/20/20-VMware.png",
-      #                                                   "text"=>"VM &lt;a href=\"/vm/guest_applications/3\"&gt;Dan-XP-VM&lt;/a&gt; cloned to &lt;a href=\"/vm/guest_applications/1\"&gt;WinXP Testcase&lt;/a&gt;."
-      #                                                   })
-      Vm.all.each do | vm |
-        event = tl_xml.root.add_element("event", {
-#           START of TIMELINE TIMEZONE Code
-            "start"=>format_timezone(vm.created_on,Time.zone,"tl"),
-#           "start"=>vm.created_on,
-#           END of TIMELINE TIMEZONE Code
-            #                                       "end" => Time.now,
-            #                                       "isDuration" => "true",
-            "title"=>vm.name.length < 25 ? vm.name : vm.name[0..22] + "...",
-            #                                       "title"=>vm.name,
-            #"image"=>"/images/icons/20/20-#{vm.vendor.downcase}.png"
-            "icon"=>"/images/icons/timeline/vendor-#{vm.vendor.downcase}.png",
-            "color"=>"blue",
-            #"image"=>"/images/icons/64/64-vendor-#{vm.vendor.downcase}.png"
-            "image"=>"/images/icons/new/os-#{vm.os_image_name.downcase}.png"
-            #                                       "text"=>"VM &lt;a href='/vm/guest_applications/#{vm.id}'&gt;#{h(vm.name)}&lt;/a&gt; discovered at location #{h(vm.location)}&gt;."
-          })
-        #     event.text = "VM #{vm.name} discovered on #{vm.created_on}"
-        event.text = "VM &lt;a href='/vm/guest_applications/#{vm.id}'&gt;#{vm.name}&lt;/a&gt; discovered at location #{vm.location}"
-      end
-      render :xml=>tl_xml.to_s
     end
   end
 
@@ -662,10 +624,10 @@ class DashboardController < ApplicationController
   def tl_toggle_button_enablement(button_id, enablement, typ)
     if enablement == :enabled
       tooltip = "Download this Timeline data in #{typ} format"
-      "center_tb.enableItem('#{button_id}'); center_tb.setItemToolTip('#{button_id}', '#{tooltip}');"
+      "ManageIQ.toolbars.center_tb.obj.enableItem('#{button_id}'); ManageIQ.toolbars.center_tb.obj.setItemToolTip('#{button_id}', '#{tooltip}');"
     else
       tooltip = 'No records found for this timeline'
-      "center_tb.disableItem('#{button_id}'); center_tb.setItemToolTip('#{button_id}', '#{tooltip}');"
+      "ManageIQ.toolbars.center_tb.obj.disableItem('#{button_id}'); ManageIQ.toolbars.center_tb.obj.setItemToolTip('#{button_id}', '#{tooltip}');"
     end
   end
   helper_method(:tl_toggle_button_enablement)

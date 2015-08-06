@@ -147,7 +147,7 @@ class WorkerBase
   end
 
   def log_prefix
-    @log_prefix ||= ""
+    @log_prefix ||= "MIQ(#{self.class.name})"
   end
 
   #

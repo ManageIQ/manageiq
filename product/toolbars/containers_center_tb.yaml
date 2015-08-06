@@ -29,3 +29,19 @@
       :url_parms: 'main_div'
       :confirm: 'Warning: The selected #{ui_lookup(:tables=>"containers")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"containers")}?'
       :onwhen: '1+'
+- :name: container_policy
+  :items:
+  - :buttonSelect: container_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: container_tag
+      :image: tag
+      :text: 'Edit Tags'
+      :title: 'Edit Tags for this #{ui_lookup(:table=>"container")}'
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

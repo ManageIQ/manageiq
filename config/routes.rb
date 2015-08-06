@@ -99,11 +99,6 @@ Vmdb::Application.routes.draw do
     pre_prov_continue
   )
 
-  retire_post = %w(
-    retire
-    retire_date_changed
-  )
-
   save_post = %w(
     save_col_widths
     save_default_search
@@ -309,6 +304,8 @@ Vmdb::Application.routes.draw do
         download_data
         explorer
         show
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         accordion_select
@@ -321,6 +318,8 @@ Vmdb::Application.routes.draw do
         save_col_widths
         tree_autoload_dynatree
         tree_select
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         exp_post +
@@ -336,6 +335,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -352,6 +353,8 @@ Vmdb::Application.routes.draw do
         tl_chooser
         update
         wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         exp_post +
@@ -366,6 +369,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -382,6 +387,8 @@ Vmdb::Application.routes.draw do
         tl_chooser
         update
         wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         exp_post +
@@ -389,38 +396,15 @@ Vmdb::Application.routes.draw do
     },
 
     :container_replicator => {
-       :get => %w(
-         download_data
-         edit
-         index
-         new
-         show
-         show_list
-      ),
-       :post => %w(
-         button
-         create
-         dynamic_checkbox_refresh
-         form_field_changed
-         listnav_search_selected
-         panel_control
-         quick_search
-         save_col_widths
-         sections_field_changed
-         show
-         show_list
-         update
-       ) + adv_search_post + exp_post + save_post
-    },
-
-    :container_service => {
-      :get => %w(
+      :get  => %w(
         download_data
         edit
         index
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -435,6 +419,55 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + adv_search_post + exp_post + save_post
+    },
+
+    :container_image          => {
+      :get  => %w(download_data edit index new show show_list),
+      :post => %w(button create dynamic_checkbox_refresh form_field_changed listnav_search_selected panel_control
+                  quick_search save_col_widths sections_field_changed show show_list update) +
+               adv_search_post +
+               exp_post +
+               save_post
+    },
+
+    :container_image_registry => {
+      :get  => %w(download_data edit index new show show_list),
+      :post => %w(button create dynamic_checkbox_refresh form_field_changed listnav_search_selected panel_control
+                  quick_search save_col_widths sections_field_changed show show_list update) +
+               adv_search_post +
+               exp_post +
+               save_post
+    },
+
+    :container_service => {
+      :get => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ),
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        save_col_widths
+        sections_field_changed
+        show
+        show_list
+        update
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         exp_post +
@@ -449,6 +482,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -463,6 +498,8 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
+        tagging_edit
+        tag_edit_form_field_changed
       ) + adv_search_post + exp_post + save_post
     },
 
@@ -474,6 +511,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ),
       :post => %w(
         button
@@ -488,6 +527,8 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
+        tagging_edit
+        tag_edit_form_field_changed
       ) + adv_search_post + exp_post + save_post
     },
 
@@ -507,6 +548,7 @@ Vmdb::Application.routes.draw do
         report_only
         show
         timeline
+        timeline_data
         widget_to_pdf
       ),
       :post => %w(
@@ -514,7 +556,7 @@ Vmdb::Application.routes.draw do
         authenticate
         change_group
         csp_report
-        getTLdata
+        timeline_data
         login_retry
         panel_control
         reset_widgets
@@ -662,6 +704,8 @@ Vmdb::Application.routes.draw do
         new
         show
         show_list
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         compare_get,
       :post => %w(
@@ -679,6 +723,8 @@ Vmdb::Application.routes.draw do
         tl_chooser
         update
         wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
       ) +
         adv_search_post +
         compare_post +
@@ -723,6 +769,7 @@ Vmdb::Application.routes.draw do
         edit
         filesystems
         firewall_rules
+        timeline_data
         groups
         guest_applications
         host_services
@@ -904,6 +951,7 @@ Vmdb::Application.routes.draw do
     :miq_capacity => {
       :get => %w(
         bottlenecks
+        timeline_data
         index
         planning
         planning_report_download
@@ -1283,10 +1331,12 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         cloud_networks
         download_data
+        retirement_info
         index
         outputs
         parameters
         resources
+        retire
         show
         show_list
         tagging_edit
@@ -1300,6 +1350,7 @@ Vmdb::Application.routes.draw do
         parameters
         quick_search
         resources
+        retire
         save_col_widths
         sections_field_changed
         show
@@ -1544,6 +1595,8 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        retirement_info
+        retire
         show
       ),
       :post => %w(
@@ -1552,6 +1605,7 @@ Vmdb::Application.routes.draw do
         ownership_field_changed
         ownership_update
         reload
+        retire
         save_col_widths
         service_edit
         service_form_field_changed
@@ -1564,8 +1618,7 @@ Vmdb::Application.routes.draw do
         x_settings_changed
         x_show
       ) +
-        dialog_runner_post +
-        retire_post
+        dialog_runner_post
     },
 
     # TODO: revisit this controller/route, might be removed after other storage issues are sorted out
@@ -1648,6 +1701,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         edit
+        retirement_info
         ownership
         policy_sim
         reconfigure
@@ -1666,14 +1720,14 @@ Vmdb::Application.routes.draw do
         reconfigure
         reconfigure_field_changed
         reconfigure_update
+        retire
         right_size
         set_checked_items
         show_list
         vmtree_selected
       ) +
         ownership_post +
-        pre_prov_post +
-        retire_post
+        pre_prov_post
     },
 
     :vm_cloud               => {
@@ -1683,9 +1737,11 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        retirement_info
         launch_html5_console
         perf_chart_chooser
         protect
+        retire
         show
         tagging_edit
       ) +
@@ -1719,6 +1775,7 @@ Vmdb::Application.routes.draw do
         quick_search
         registry_items
         reload
+        retire
         save_col_widths
         scan_histories
         sections_field_changed
@@ -1743,7 +1800,6 @@ Vmdb::Application.routes.draw do
         exp_post +
         policy_post +
         pre_prov_post +
-        retire_post +
         x_post
     },
 
@@ -1754,11 +1810,13 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        retirement_info
         launch_vmware_console
         launch_html5_console
         perf_chart_chooser
         policies
         protect
+        retire
         show
         tagging_edit
       ) +
@@ -1796,6 +1854,7 @@ Vmdb::Application.routes.draw do
         reconfigure_update
         registry_items
         reload
+        retire
         save_col_widths
         scan_histories
         sections_field_changed
@@ -1829,7 +1888,6 @@ Vmdb::Application.routes.draw do
         exp_post +
         policy_post +
         pre_prov_post +
-        retire_post +
         snap_post +
         x_post
     },
@@ -1841,8 +1899,11 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        launch_html5_console
+        retirement_info
         launch_vmware_console
         protect
+        retire
         show
         tagging_edit
         util_report_download
@@ -1888,6 +1949,7 @@ Vmdb::Application.routes.draw do
         reconfigure_update
         registry_items
         reload
+        retire
         save_col_widths
         scan_histories
         sections_field_changed
@@ -1919,8 +1981,7 @@ Vmdb::Application.routes.draw do
         exp_post +
         policy_post +
         pre_prov_post +
-        snap_post +
-        retire_post
+        snap_post
     },
   }
 
@@ -1928,12 +1989,16 @@ Vmdb::Application.routes.draw do
 
   # Enablement for the REST API
   # OPTIONS requests for REST API pre-flight checks
-  match '/api/*path'   => 'api#handle_options_request', :via => [:options]
-  get '/api(/:version)'           => 'api#show',    :format => 'json', :version => /v\d.*/
 
-  get    '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#show',    :format => 'json', :version => /v\d.*/
-  match  '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#update',  :format => 'json', :via => [:post, :put, :patch], :version => /v\d.*/
-  delete '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#destroy', :format => 'json', :version => /v\d.*/
+  # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
+  apiver_regex = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
+
+  match '/api/*path'   => 'api#handle_options_request', :via => [:options]
+  get '/api(/:version)'           => 'api#show',    :format => 'json', :version => apiver_regex
+
+  get    '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#show',    :format => 'json', :version => apiver_regex
+  match  '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#update',  :format => 'json', :via => [:post, :put, :patch], :version => apiver_regex
+  delete '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#destroy', :format => 'json', :version => apiver_regex
 
   CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
 

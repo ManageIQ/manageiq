@@ -1,45 +1,52 @@
 - url = url_for(:action => 'form_instance_field_changed', :id => "#{@ae_inst.id || "new"}")
 - obs = {:interval => '.5', :url => url}.to_json
-%h3=_('Main Info')
-%table.style1
-  %tr
-    %td.key
-      = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
-    %td.wide
+%h3
+  = _('Main Info')
+%form.form-horizontal
+  .form-group
+    %label.col-md-2.control-label
+      = Dictionary.gettext('fqname', :type => :column, :notfound => :titleize)
+    .col-md-8
       = h(@sb[:namespace_path])
-  %tr
-    %td.key=_('Name')
-    %td.wide
+  .form-group
+    %label.col-md-2.control-label
+      = _('Name')
+    .col-md-8
       = text_field_tag("#{prefix}inst_name",
-        @edit[:new][:ae_inst]["name"],
-        :maxlength         => MAX_NAME_LEN,
-        "data-miq_observe" => obs)
+                        @edit[:new][:ae_inst]["name"],
+                        :maxlength         => MAX_NAME_LEN,
+                        :class => "form-control",
+                        "data-miq_observe" => obs)
       = javascript_tag(javascript_focus("#{prefix}inst_name"))
-  %tr
-    %td.key=_('Display Name')
-    %td.wide
+  .form-group
+    %label.col-md-2.control-label
+      = _('Display Name')
+    .col-md-8
       = text_field_tag("#{prefix}inst_display_name",
-        @edit[:new][:ae_inst]["display_name"],
-        :maxlength         => MAX_NAME_LEN,
-        "data-miq_observe" => obs)
-  %tr
-    %td.key=_('Description')
-    %td.wide
+                      @edit[:new][:ae_inst]["display_name"],
+                      :maxlength         => MAX_NAME_LEN,
+                      :class => "form-control",
+                      "data-miq_observe" => obs)
+  .form-group
+    %label.col-md-2.control-label
+      = _('Description')
+    .col-md-8
       = text_field_tag("#{prefix}inst_description",
-        @edit[:new][:ae_inst]["description"],
-        :maxlength         => MAX_NAME_LEN,
-        "data-miq_observe" => obs)
+                      @edit[:new][:ae_inst]["description"],
+                      :maxlength         => MAX_NAME_LEN,
+                      :class => "form-control",
+                      "data-miq_observe" => obs)
 %hr
-%h3=_('Fields')
+%h3= _('Fields')
 %table.table.table-striped.table-bordered
   %thead
     %tr
-      %th=_('Name')
-      %th=_('Value')
-      %th=_('On Entry')
-      %th=_('On Exit')
-      %th=_('On Error')
-      %th=_('Collect')
+      %th= _('Name')
+      %th= _('Value')
+      %th= _('On Entry')
+      %th= _('On Exit')
+      %th= _('On Error')
+      %th= _('Collect')
   %tbody
     - @edit[:new][:ae_values].each_with_index do |flds, i|
       %tr

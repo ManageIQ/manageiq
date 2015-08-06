@@ -1,16 +1,14 @@
-- grid_id              ||= "list_grid"
-- grid_name            ||= "gtl_list_grid"
-- listicon_image       ||= nil
-- button_div           ||= "center_tb"
+- listicon_image ||= nil
+- button_div ||= "center_tb"
 - rec_display          = ""
 - no_rec_display       = "display:none"
 - @ajax_paging_buttons = true
 
 - @first_item ||= 0
-- @last_item  ||= -1
+- @last_item ||= -1
 
 #gtl_div{:style => "height: inherit;background-color: #fff;"}
-  - view       ||= @view
+  - view ||= @view
   - table      = view.sub_table ? view.sub_table : view.table unless view.nil?
   - action_url ||= "explorer"
   - @gtl_type = "grid" if @gtl_type.nil?

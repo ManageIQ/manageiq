@@ -1,0 +1,16 @@
+<a class="sidebar__item-body sidebar__dropdown sidebar__link"
+   ng-class="[vm.item.style, (vm.isActive(vm.item.state) ? 'sidebar__item-body--active' : '')]"
+   ng-click="vm.item.collapsed = !vm.item.collapsed">
+  <i ng-if="::vm.item.icon" ng-class="::vm.item.icon" class="fa fa-fw"></i>
+  <span>{{ ::vm.item.label }}</span>
+  <i class="fa fa-fw sidebar__arrow" ng-class="vm.item.collapsed ? 'fa-angle-left' : 'fa-angle-down'"></i>
+</a>
+<ul class="sidebar__nav sidebar__nav--subnav" collapse="vm.item.collapsed" role="menu">
+  <li class="dropdown sidebar__item" ng-repeat="page in vm.pages">
+    <a class="sidebar__item-body sidebar__link"
+       ui-sref="pages({slug: page.slug})"
+       ui-sref-active="sidebar__item-body--active">
+      <span>{{ ::page.title }}</span>
+    </a>
+  </li>
+</ul>

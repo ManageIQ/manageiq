@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+  <title ng-bind="title">ManageIQ Self Service</title>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+  <link rel="shortcut icon" href="/favicon.ico"/>
+  <link rel="icon" href="/favicon.ico"/>
+  <base href="/">
+  <style>
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+  </style>
+  <!-- build:css styles/lib.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="/bower_components/toastr/toastr.css" />
+  <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="/bower_components/nganimate.css/animate.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:css styles/app.css-->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="/.tmp/styles.css">
+  <!-- endinject -->
+  <!-- endbuild -->
+</head>
+<body>
+  <div class="ng-cloak splash">
+    <div class="splash__overlay">
+      <div class="splash__message">
+        ManageIQ
+      </div>
+    </div>
+  </div>
+
+  <site-layout class="ng-cloak"></site-layout>
+
+  <!-- build:js js/lib.js -->
+  <!-- bower:js -->
+  <script src="/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/bower_components/lodash/lodash.js"></script>
+  <script src="/bower_components/moment/moment.js"></script>
+  <script src="/bower_components/toastr/toastr.js"></script>
+  <script src="/bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+  <script src="/bower_components/angular/angular.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.js"></script>
+  <script src="/bower_components/angular-animate/angular-animate.js"></script>
+  <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="/bower_components/angular-messages/angular-messages.js"></script>
+  <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="/bower_components/angular-smart-table/dist/smart-table.js"></script>
+  <script src="/bower_components/tv4/tv4.js"></script>
+  <script src="/bower_components/objectpath/lib/ObjectPath.js"></script>
+  <script src="/bower_components/angular-schema-form/dist/schema-form.js"></script>
+  <script src="/bower_components/angular-schema-form/dist/bootstrap-decorator.js"></script>
+  <script src="/bower_components/jquery-ui/ui/core.js"></script>
+  <script src="/bower_components/jquery-ui/ui/widget.js"></script>
+  <script src="/bower_components/jquery-ui/ui/mouse.js"></script>
+  <script src="/bower_components/jquery-ui/ui/sortable.js"></script>
+  <script src="/bower_components/angular-ui-sortable/sortable.js"></script>
+  <script src="/bower_components/ngDraggable/ngDraggable.js"></script>
+  <script src="/bower_components/angular-filter/dist/angular-filter.js"></script>
+  <script src="/bower_components/highcharts/highcharts.js"></script>
+  <script src="/bower_components/highcharts/highcharts-3d.js"></script>
+  <script src="/bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
+  <script src="/bower_components/marked/lib/marked.js"></script>
+  <script src="/bower_components/angular-marked/angular-marked.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:js js/app.js-->
+  <!-- inject:js -->
+  <script src="/client/app/app.module.js"></script>
+  <script src="/client/app/blocks/bind-attrs/bind-attrs.module.js"></script>
+  <script src="/client/app/blocks/directive-options/directive-options.module.js"></script>
+  <script src="/client/app/blocks/exception/exception.module.js"></script>
+  <script src="/client/app/blocks/logger/logger.module.js"></script>
+  <script src="/client/app/blocks/multi-transclude/multi-transclude.module.js"></script>
+  <script src="/client/app/blocks/pub-sub/pub-sub.module.js"></script>
+  <script src="/client/app/blocks/recursion/recursion.module.js"></script>
+  <script src="/client/app/blocks/router/router.module.js"></script>
+  <script src="/client/app/components/components.module.js"></script>
+  <script src="/client/app/core/core.module.js"></script>
+  <script src="/client/app/resources/resources.module.js"></script>
+  <script src="/client/app/states/states.module.js"></script>
+  <script src="/client/app/blocks/bind-attrs/bind-attrs.directive.js"></script>
+  <script src="/client/app/blocks/directive-options/directive-options.factory.js"></script>
+  <script src="/client/app/blocks/exception/exception-handler.provider.js"></script>
+  <script src="/client/app/blocks/exception/exception.js"></script>
+  <script src="/client/app/blocks/logger/logger.js"></script>
+  <script src="/client/app/blocks/multi-transclude/multi-transclude.factory.js"></script>
+  <script src="/client/app/blocks/pub-sub/pub-sub.factory.js"></script>
+  <script src="/client/app/blocks/recursion/recursion-helper.factory.js"></script>
+  <script src="/client/app/blocks/router/router-helper.provider.js"></script>
+  <script src="/client/app/components/active-alerts-table/active-alerts-table.directive.js"></script>
+  <script src="/client/app/components/alert-form/alert-form.directive.js"></script>
+  <script src="/client/app/components/authentication/authentication-service.factory.js"></script>
+  <script src="/client/app/components/authentication/session-service.factory.js"></script>
+  <script src="/client/app/components/authentication/startup-session.run.js"></script>
+  <script src="/client/app/components/authorization/authorization-service.factory.js"></script>
+  <script src="/client/app/components/authorization/authorization.state.js"></script>
+  <script src="/client/app/components/authorization/roles.constants.js"></script>
+  <script src="/client/app/components/cart/add-to-cart.directive.js"></script>
+  <script src="/client/app/components/cart/cart-service.factory.js"></script>
+  <script src="/client/app/components/cart/nav-cart.directive.js"></script>
+  <script src="/client/app/components/catalog/catalog-category.directive.js"></script>
+  <script src="/client/app/components/catalog/catalog-service.factory.js"></script>
+  <script src="/client/app/components/catalog/tags.filter.js"></script>
+  <script src="/client/app/components/compare/compare.service.js"></script>
+  <script src="/client/app/components/compare/constants.js"></script>
+  <script src="/client/app/components/compare/select-product.directive.js"></script>
+  <script src="/client/app/components/compare/selected-products.directive.js"></script>
+  <script src="/client/app/components/confirmation/confirmation.directive.js"></script>
+  <script src="/client/app/components/content-header/content-header.directive.js"></script>
+  <script src="/client/app/components/content-page-form/content-page-form.directive.js"></script>
+  <script src="/client/app/components/content-pages/nav-pages.directive.js"></script>
+  <script src="/client/app/components/details-table/details-table.directive.js"></script>
+  <script src="/client/app/components/footer/footer.directive.js"></script>
+  <script src="/client/app/components/group-form/group-form.directive.js"></script>
+  <script src="/client/app/components/groups-table/groups-table.directive.js"></script>
+  <script src="/client/app/components/latest-alerts-table/latest-alerts-table.directive.js"></script>
+  <script src="/client/app/components/login-form/login-form.directive.js"></script>
+  <script src="/client/app/components/monthly-price/monthly-price.directive.js"></script>
+  <script src="/client/app/components/multiple-choice/multiple-choice.directive.js"></script>
+  <script src="/client/app/components/navigation/nav-item.directive.js"></script>
+  <script src="/client/app/components/navigation/navigation-helper.provider.js"></script>
+  <script src="/client/app/components/navigation/navigation.directive.js"></script>
+  <script src="/client/app/components/navigation/sidebar-item.directive.js"></script>
+  <script src="/client/app/components/order-items-table/order-items-table.directive.js"></script>
+  <script src="/client/app/components/orders-table/orders-table.directive.js"></script>
+  <script src="/client/app/components/product-categories-table/product-categories-table.directive.js"></script>
+  <script src="/client/app/components/product-category-form/product-category-form.directive.js"></script>
+  <script src="/client/app/components/product-description/product-description.directive.js"></script>
+  <script src="/client/app/components/product-form/product-form-decorator.config.js"></script>
+  <script src="/client/app/components/product-form/product-form-field.directive.js"></script>
+  <script src="/client/app/components/product-form/product-form.directive.js"></script>
+  <script src="/client/app/components/product-type-modal/product-type-show-modal.directive.js"></script>
+  <script src="/client/app/components/products-table/products-table.directive.js"></script>
+  <script src="/client/app/components/profile/nav-profile.directive.js"></script>
+  <script src="/client/app/components/project-answers-table/project-answers-table.directive.js"></script>
+  <script src="/client/app/components/project-approval/project-approval.directive.js"></script>
+  <script src="/client/app/components/project-description/project-description.directive.js"></script>
+  <script src="/client/app/components/project-form/project-form-options.directive.js"></script>
+  <script src="/client/app/components/project-form/project-form.directive.js"></script>
+  <script src="/client/app/components/project-membership-modal/add-membership-modal-service.factory.js"></script>
+  <script src="/client/app/components/project-membership-table/project-membership-table.directive.js"></script>
+  <script src="/client/app/components/project-question-form/project-question-form.directive.js"></script>
+  <script src="/client/app/components/project-question-form/project-question-option.directive.js"></script>
+  <script src="/client/app/components/project-question-form/project-question-options.directive.js"></script>
+  <script src="/client/app/components/region/region.directive.js"></script>
+  <script src="/client/app/components/role-form/role-form.directive.js"></script>
+  <script src="/client/app/components/services-table/services-table.directive.js"></script>
+  <script src="/client/app/components/site-layout/site-layout.directive.js"></script>
+  <script src="/client/app/components/site-layout/site-layout.factory.js"></script>
+  <script src="/client/app/components/status/status.directive.js"></script>
+  <script src="/client/app/components/tags/keys.constant.js"></script>
+  <script src="/client/app/components/tags/tag-autocomplete.directive.js"></script>
+  <script src="/client/app/components/tags/tag-autosize.directive.js"></script>
+  <script src="/client/app/components/tags/tag-field.directive.js"></script>
+  <script src="/client/app/components/tags/tag-item.directive.js"></script>
+  <script src="/client/app/components/tags/tag-match.directive.js"></script>
+  <script src="/client/app/components/tags/tag-show-modal.directive.js"></script>
+  <script src="/client/app/components/tags/tags.constants.js"></script>
+  <script src="/client/app/components/toasts/toasts.factory.js"></script>
+  <script src="/client/app/components/user-catalog/user-catalog.directive.js"></script>
+  <script src="/client/app/components/user-form/user-form.directive.js"></script>
+  <script src="/client/app/components/view-mode-switch/view-mode-switch.directive.js"></script>
+  <script src="/client/app/components/view-mode-switch/view-modes.constant.js"></script>
+  <script src="/client/app/components/widget/widget.directive.js"></script>
+  <script src="/client/app/components/wizard-question-form/wizard-question-form.directive.js"></script>
+  <script src="/client/app/components/wizard-question-form/wizard-question-option.directive.js"></script>
+  <script src="/client/app/components/wizard-question-form/wizard-question-options.directive.js"></script>
+  <script src="/client/app/components/wizard-questions-table/wizard-questions-table.directive.js"></script>
+  <script src="/client/app/components/wizard/wizard-service.factory.js"></script>
+  <script src="/client/app/core/config.js"></script>
+  <script src="/client/app/core/constants.js"></script>
+  <script src="/client/app/resources/alert.factory.js"></script>
+  <script src="/client/app/resources/content-page.factory.js"></script>
+  <script src="/client/app/resources/dashboard.factory.js"></script>
+  <script src="/client/app/resources/group.factory.js"></script>
+  <script src="/client/app/resources/membership.factory.js"></script>
+  <script src="/client/app/resources/motd.factory.js"></script>
+  <script src="/client/app/resources/order-item.factory.js"></script>
+  <script src="/client/app/resources/order.factory.js"></script>
+  <script src="/client/app/resources/product-category.factory.js"></script>
+  <script src="/client/app/resources/product-type.factory.js"></script>
+  <script src="/client/app/resources/product.factory.js"></script>
+  <script src="/client/app/resources/project-question.factory.js"></script>
+  <script src="/client/app/resources/project.factory.js"></script>
+  <script src="/client/app/resources/roles.factory.js"></script>
+  <script src="/client/app/resources/service.factory.js"></script>
+  <script src="/client/app/resources/services-allcount.factory.js"></script>
+  <script src="/client/app/resources/services-orderprofiles.factory.js"></script>
+  <script src="/client/app/resources/services-projectcount.factory.js"></script>
+  <script src="/client/app/resources/staff.factory.js"></script>
+  <script src="/client/app/resources/tag.factory.js"></script>
+  <script src="/client/app/resources/wizard-question.factory.js"></script>
+  <script src="/client/app/states/404/404.state.js"></script>
+  <script src="/client/app/states/admin/admin.state.js"></script>
+  <script src="/client/app/states/admin/alerts/alerts.state.js"></script>
+  <script src="/client/app/states/admin/alerts/create/create.state.js"></script>
+  <script src="/client/app/states/admin/alerts/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/alerts/list/list.state.js"></script>
+  <script src="/client/app/states/admin/cms/cms.state.js"></script>
+  <script src="/client/app/states/admin/cms/create/create.state.js"></script>
+  <script src="/client/app/states/admin/cms/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/cms/list/list.state.js"></script>
+  <script src="/client/app/states/admin/groups/create/create.state.js"></script>
+  <script src="/client/app/states/admin/groups/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/groups/groups.state.js"></script>
+  <script src="/client/app/states/admin/groups/list/list.state.js"></script>
+  <script src="/client/app/states/admin/motd/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/motd/motd.state.js"></script>
+  <script src="/client/app/states/admin/product-categories/create/create.state.js"></script>
+  <script src="/client/app/states/admin/product-categories/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/product-categories/list/list.state.js"></script>
+  <script src="/client/app/states/admin/product-categories/product-categories.state.js"></script>
+  <script src="/client/app/states/admin/products/create/create.state.js"></script>
+  <script src="/client/app/states/admin/products/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/products/list/list.state.js"></script>
+  <script src="/client/app/states/admin/products/products.state.js"></script>
+  <script src="/client/app/states/admin/project-questions/create/create.state.js"></script>
+  <script src="/client/app/states/admin/project-questions/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/project-questions/list/list.state.js"></script>
+  <script src="/client/app/states/admin/project-questions/project-questions.state.js"></script>
+  <script src="/client/app/states/admin/roles/create/create.state.js"></script>
+  <script src="/client/app/states/admin/roles/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/roles/list/list.state.js"></script>
+  <script src="/client/app/states/admin/roles/roles.state.js"></script>
+  <script src="/client/app/states/admin/users/create/create.state.js"></script>
+  <script src="/client/app/states/admin/users/list/list.state.js"></script>
+  <script src="/client/app/states/admin/users/users.state.js"></script>
+  <script src="/client/app/states/admin/wizard-questions/create/create.state.js"></script>
+  <script src="/client/app/states/admin/wizard-questions/edit/edit.state.js"></script>
+  <script src="/client/app/states/admin/wizard-questions/list/list.state.js"></script>
+  <script src="/client/app/states/admin/wizard-questions/wizard-questions.state.js"></script>
+  <script src="/client/app/states/blank/blank.state.js"></script>
+  <script src="/client/app/states/dashboard/dashboard.state.js"></script>
+  <script src="/client/app/states/error/error.state.js"></script>
+  <script src="/client/app/states/login/login.state.js"></script>
+  <script src="/client/app/states/logout/logout.state.js"></script>
+  <script src="/client/app/states/marketplace/marketplace.state.js"></script>
+  <script src="/client/app/states/order-history/details/details.state.js"></script>
+  <script src="/client/app/states/order-history/list/list.state.js"></script>
+  <script src="/client/app/states/order-history/order-history.state.js"></script>
+  <script src="/client/app/states/pages/pages.state.js"></script>
+  <script src="/client/app/states/products/details/details.state.js"></script>
+  <script src="/client/app/states/products/products.state.js"></script>
+  <script src="/client/app/states/projects/create/create.state.js"></script>
+  <script src="/client/app/states/projects/details/alerts/alerts.state.js"></script>
+  <script src="/client/app/states/projects/details/alerts/create/create.state.js"></script>
+  <script src="/client/app/states/projects/details/alerts/edit/edit.state.js"></script>
+  <script src="/client/app/states/projects/details/details.state.js"></script>
+  <script src="/client/app/states/projects/details/services/services.state.js"></script>
+  <script src="/client/app/states/projects/edit/edit.state.js"></script>
+  <script src="/client/app/states/projects/list/list.state.js"></script>
+  <script src="/client/app/states/projects/projects.state.js"></script>
+  <script src="/client/app/states/services/details/details.state.js"></script>
+  <script src="/client/app/states/services/list/list.state.js"></script>
+  <script src="/client/app/states/services/services.state.js"></script>
+  <!-- endinject -->
+
+  <!-- inject:templates:js -->
+  <!-- endinject -->
+  <!-- endbuild -->
+</body>
+</html>

@@ -3,17 +3,17 @@
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
   - observe = {:url => url}.to_json
 #alert_snmp_div
-  %h3=_('SNMP Trap')
+  %h3= _('SNMP Trap')
   %table.style1
     - if @edit
       %tr
-        %td.key=_('Send an SNMP Trap')
+        %td.key= _('Send an SNMP Trap')
         %td
           = check_box_tag("send_snmp_cb", "1", @edit[:new][:send_snmp],
             "data-miq_observe_checkbox" => observe)
       - if @edit[:new][:send_snmp]
         %tr
-          %td.key=title_for_host
+          %td.key= title_for_host
           %td
             = text_field_tag("host_1", @edit[:new][:snmp][:host][0],
               :maxlength         => MAX_DESC_LEN,
@@ -27,7 +27,7 @@
               :maxlength => MAX_DESC_LEN,
               "data-miq_observe" => {:interval => '.5',  :url => url}.to_json)
         %tr
-          %td.key=_("Version")
+          %td.key= _("Version")
           %td
             = select_tag('snmp_version', options_for_select(%w(v1 v2), @edit[:new][:snmp][:snmp_version]),
               :style                 => "width:50px",
@@ -47,9 +47,9 @@
     %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
-          %th=_('Variable Object ID')
-          %th=_('Type')
-          %th=_('Value')
+          %th= _('Variable Object ID')
+          %th= _('Type')
+          %th= _('Value')
       %tbody
         - 10.times do |i|
           %tr

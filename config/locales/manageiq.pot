@@ -2567,10 +2567,10 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
-msgid "Container Groups (%s)"
+msgid "Pods (%s)"
 msgstr ""
 
-msgid "Container Groups (0)"
+msgid "Pods (0)"
 msgstr ""
 
 msgid "Container Nodes (%s)"
@@ -2588,7 +2588,7 @@ msgstr ""
 msgid "Container definition"
 msgstr ""
 
-msgid "Container group"
+msgid "Pod"
 msgstr ""
 
 msgid "Container node"
@@ -2621,25 +2621,25 @@ msgstr ""
 msgid "ContainerDefinition|Name"
 msgstr ""
 
-msgid "ContainerGroup|Creation timestamp"
+msgid "Pod|Creation timestamp"
 msgstr ""
 
-msgid "ContainerGroup|Dns policy"
+msgid "Pod|Dns policy"
 msgstr ""
 
-msgid "ContainerGroup|Ems ref"
+msgid "Pod|Ems ref"
 msgstr ""
 
-msgid "ContainerGroup|Name"
+msgid "Pod|Name"
 msgstr ""
 
-msgid "ContainerGroup|Namespace"
+msgid "Pod|Namespace"
 msgstr ""
 
-msgid "ContainerGroup|Resource version"
+msgid "Pod|Resource version"
 msgstr ""
 
-msgid "ContainerGroup|Restart policy"
+msgid "Pod|Restart policy"
 msgstr ""
 
 msgid "ContainerNode|Creation timestamp"
@@ -11737,7 +11737,7 @@ msgstr ""
 msgid "Show Capacity & Utilization"
 msgstr ""
 
-msgid "Show Container Groups"
+msgid "Show Pods"
 msgstr ""
 
 msgid "Show Container Nodes"
@@ -12028,7 +12028,7 @@ msgstr ""
 msgid "Show this Vm's parent %s"
 msgstr ""
 
-msgid "Show this container group's parent %s"
+msgid "Show this Pod's parent %s"
 msgstr ""
 
 msgid "Show this container node's parent %s"

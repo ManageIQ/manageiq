@@ -40,7 +40,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       configure_container
-      attach_floppy_payload
+      configure_cloud_init
 
       signal :poll_destination_powered_off_in_provider
     end

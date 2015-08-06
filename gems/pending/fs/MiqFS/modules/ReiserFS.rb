@@ -1,8 +1,8 @@
 # ReiserFS stuff.
-require 'fs/ReiserFS/ReiserFSSuperblock'
-require 'fs/ReiserFS/ReiserFSDirectory'
-require 'fs/ReiserFS/ReiserFSDirectoryEntry'
-require 'fs/ReiserFS/ReiserFSFileData'
+require 'fs/ReiserFS/superblock'
+require 'fs/ReiserFS/directory'
+require 'fs/ReiserFS/directory_entry'
+require 'fs/ReiserFS/file_data'
 
 require 'rufus/lru'
 

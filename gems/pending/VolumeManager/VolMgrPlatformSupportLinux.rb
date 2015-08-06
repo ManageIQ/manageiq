@@ -10,11 +10,8 @@ module VolMgrPlatformSupportLinux
         @vi = nil
         @vimVm = nil
         
-        if !$miqHostCfg
-            $log.warn "VolMgrPlatformSupportLinux: $miqHostCfg not set"
-            return
-        end
-        
+        return if $miqHostCfg.nil?
+
         $log.debug "VolMgrPlatformSupportLinux: $miqHostCfg.forceFleeceDefault = #{$miqHostCfg.forceFleeceDefault}" if $log.debug?
         @ost.force = $miqHostCfg.forceFleeceDefault if @ost.force.nil?
         

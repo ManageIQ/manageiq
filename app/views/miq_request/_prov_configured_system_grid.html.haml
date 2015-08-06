@@ -7,8 +7,8 @@
       %tr
       - options[:configured_system_headers].each do |header, name|
         %th
-          - #  Replaced to exclude non-view table fields from sorting
-          - # dont show sort on show screen, need @edit variables for sort to work
+          -# Replaced to exclude non-view table fields from sorting
+          -# dont show sort on show screen, need @edit variables for sort to work
           - if @edit
             = link_to(h(name),
               {:action => "sort_configured_system_grid", :sort_choice => header, :field_id => field_id, :id => id.to_s},

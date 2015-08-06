@@ -18,9 +18,21 @@ module EmsRefresh::Parsers
       get_pods(inventory)
       get_endpoints(inventory)
       get_services(inventory)
+      get_registries
+      get_images
 
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
+    end
+
+    def get_images
+      images = @data_index.fetch_path(:container_image, :by_ref_and_registry_host_port).try(:values) || []
+      process_collection(images, :container_images) { |n| n }
+    end
+
+    def get_registries
+      registries = @data_index.fetch_path(:container_image_registry, :by_host_and_port).try(:values) || []
+      process_collection(registries, :container_image_registries) { |n| n }
     end
 
     def get_nodes(inventory)
@@ -123,7 +135,7 @@ module EmsRefresh::Parsers
 
       # Searching for the underlying instance. At the moment this search strategy
       # is tested only with OpenStack.
-      vms = VmOpenstack.where(:uid_ems => new_result[:identity_system].downcase)
+      vms = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:uid_ems => new_result[:identity_system].downcase)
       if vms.to_a.size == 1
         new_result[:lives_on_id] = vms.first.id
         new_result[:lives_on_type] = vms.first.type
@@ -153,7 +165,8 @@ module EmsRefresh::Parsers
       end
 
       new_result.merge!(
-        :portal_ip        => service.spec.portalIP,
+        # TODO: We might want to change portal_ip to clusterIP
+        :portal_ip        => service.spec.clusterIP,
         :session_affinity => service.spec.sessionAffinity,
 
         :labels           => parse_labels(service),
@@ -180,14 +193,17 @@ module EmsRefresh::Parsers
         :restart_policy        => pod.spec.restartPolicy,
         :dns_policy            => pod.spec.dnsPolicy,
         :ipaddress             => pod.status.podIP,
+        :phase                 => pod.status.phase,
+        :message               => pod.status.message,
+        :reason                => pod.status.reason,
         :container_node        => nil,
         :container_definitions => [],
         :container_replicator  => nil
       )
 
-      unless pod.spec.host.nil?
+      unless pod.spec.nodeName.nil?
         new_result[:container_node] = @data_index.fetch_path(
-          :container_nodes, :by_name, pod.spec.host)
+          :container_nodes, :by_name, pod.spec.nodeName)
       end
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name, pod.metadata["table"][:namespace])
@@ -322,15 +338,45 @@ module EmsRefresh::Parsers
 
     def parse_container(container, pod_id)
       {
-        :type          => 'ContainerKubernetes',
-        :ems_ref       => "#{pod_id}_#{container.name}_#{container.image}",
-        :name          => container.name,
-        :image         => container.image,
-        :restart_count => container.restartCount,
-        :backing_ref   => container.containerID,
-        :image_ref     => container.imageID
+        :type            => 'ContainerKubernetes',
+        :ems_ref         => "#{pod_id}_#{container.name}_#{container.image}",
+        :name            => container.name,
+        :restart_count   => container.restartCount,
+        :backing_ref     => container.containerID,
+        :container_image => parse_container_image(container.image, container.imageID)
       }
+
       # TODO, state
+    end
+
+    def parse_container_image(image, imageID)
+      container_image, container_image_registry = parse_image_name(image, imageID)
+      host_port = nil
+
+      unless container_image_registry.nil?
+        host_port = "#{container_image_registry[:host]}:#{container_image_registry[:port]}"
+
+        stored_container_image_registry = @data_index.fetch_path(
+          :container_image_registry, :by_host_and_port,  host_port)
+        if stored_container_image_registry.nil?
+          @data_index.store_path(
+            :container_image_registry, :by_host_and_port, host_port, container_image_registry)
+          stored_container_image_registry = container_image_registry
+        end
+      end
+
+      stored_container_image = @data_index.fetch_path(
+        :container_image, :by_ref_and_registry_host_port,  "#{host_port}:#{container_image[:image_ref]}")
+
+      if stored_container_image.nil?
+        @data_index.store_path(
+          :container_image, :by_ref_and_registry_host_port,
+          "#{host_port}:#{container_image[:image_ref]}", container_image)
+        stored_container_image = container_image
+      end
+
+      stored_container_image[:container_image_registry] = stored_container_image_registry
+      stored_container_image
     end
 
     def parse_container_port_config(port_config, pod_id, container_name)
@@ -384,6 +430,33 @@ module EmsRefresh::Parsers
         :creation_timestamp => item.metadata.creationTimestamp,
         :resource_version   => item.metadata.resourceVersion
       }
+    end
+
+    def parse_image_name(image, image_ref)
+      parts = %r{
+        \A
+        (?:
+          (?<host>.*?)
+          (?::(?<port>.*?))?
+          /(?=.*/)
+        )?
+        (?<name>.*?)
+        (?::(?<tag>[^:]*?))?
+        \z
+      }x.match(image)
+
+      [
+        {
+          :name      => parts[:name],
+          :tag       => parts[:tag],
+          :image_ref => image_ref,
+        },
+        parts[:host] && {
+          :name => parts[:host],
+          :host => parts[:host],
+          :port => parts[:port],
+        },
+      ]
     end
   end
 end

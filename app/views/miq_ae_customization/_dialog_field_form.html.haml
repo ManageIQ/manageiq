@@ -271,7 +271,7 @@
                 'data-miq_observe_checkbox' => {:url => url}.to_json)
 
   - if @edit[:field_typ] =~ /Drop|Radio/ && !@edit[:field_dynamic]
-    = render :partial => 'field_values', :locals=>{:entry=>nil}
+    = render :partial => 'field_values', :locals => {:entry => nil}
   - elsif @edit[:field_typ] && @edit[:field_typ].include?("TagControl") && @edit[:field_category]
     = render :partial => 'tag_field_values', :locals => {:entry => nil}
 

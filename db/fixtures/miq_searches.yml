@@ -119,7 +119,7 @@
       exp:
         "=":
           field: Vm-type
-          value: VmOpenstack
+          value: ManageIQ::Providers::Openstack::CloudManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
@@ -507,7 +507,7 @@
       exp:
         "=":
           field: MiqTemplate-type
-          value: TemplateOpenstack
+          value: ManageIQ::Providers::Openstack::CloudManager::Template
     search_type: default
     search_key: _hidden_
     db: MiqTemplate
@@ -818,7 +818,7 @@
       exp:
         "=":
           field: TemplateCloud-type
-          value: TemplateOpenstack
+          value: ManageIQ::Providers::Openstack::CloudManager::Template
     search_type: default
     search_key: _hidden_
     db: TemplateCloud
@@ -960,7 +960,7 @@
       exp:
         "=":
           field: VmCloud-type
-          value: VmOpenstack
+          value: ManageIQ::Providers::Openstack::CloudManager::Vm
     search_type: default
     search_key: _hidden_
     db: VmCloud
@@ -1254,8 +1254,8 @@
     search_type: default
     db: Container
 - attributes:
-    name: default_Namespace / ContainerGroup
-    description: Namespace / Container Group
+    name: default_Namespace / Pod
+    description: Namespace / Pod
     filter: !ruby/object:MiqExpression
       exp:
         "=":

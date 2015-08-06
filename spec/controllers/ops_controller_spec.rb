@@ -241,9 +241,11 @@ describe OpsController do
 end
 
 describe OpsController do
-  let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
-
   before do
+    MiqRegion.seed
+    zone       = FactoryGirl.create(:zone)
+    MiqRegion.my_region.stub(:zones).and_return([zone])
+    server = FactoryGirl.create(:miq_server, :guid => 'guid', :zone => zone)
     EvmSpecHelper.seed_specific_product_features("ops_rbac")
     feature = MiqProductFeature.find_all_by_identifier("ops_rbac")
     @test_user_role  = FactoryGirl.create(:miq_user_role,
@@ -251,7 +253,7 @@ describe OpsController do
                                           :miq_product_features => feature)
     test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
     login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-    MiqServer.stub(:my_server).with(true).and_return(server)
+    MiqServer.stub(:my_server).and_return(server)
     controller.stub(:get_vmdb_config).and_return(:product => {})
   end
 
@@ -263,6 +265,18 @@ describe OpsController do
       controller.send(:explorer)
       expect(response.status).to eq(200)
       assigns(:sb)[:active_accord].should eq(:rbac)
+    end
+  end
+
+  context "#replace_explorer_trees" do
+    it "build trees that are passed in and met other conditions" do
+      controller.instance_variable_set(:@sb, {})
+      controller.stub(:x_build_dyna_tree)
+      r = proc { |opts| opts }
+      replace_trees = [:settings, :diagnostics, :analytics]
+      presenter = ExplorerPresenter.new
+      controller.send(:replace_explorer_trees, replace_trees, presenter, r)
+      expect(response.status).to eq(200)
     end
   end
 end

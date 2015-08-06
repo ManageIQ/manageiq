@@ -117,7 +117,7 @@ module EmsCommon
                       " on this " + ui_lookup(:tables => @table_name)
       end
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
-      title = "Container Groups"
+      title = "Pods"
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
                       :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
       @view, @pages = get_view(ContainerGroup, :parent => @ems)  # Get the records (into a view) and the paginator
@@ -145,6 +145,31 @@ module EmsCommon
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
                       :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
       @view, @pages = get_view(ContainerProject, :parent => @ems)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
+         @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
+                      " on this " + ui_lookup(:tables => @table_name)
+      end
+    elsif @display == "container_image_registries" ||
+          session[:display] == "container_image_registries" && params[:display].nil?
+      title = ui_lookup(:tables => "container_image_registries")
+      drop_breadcrumb(:name => @ems.name + " (All #{title})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerImageRegistry, :parent => @ems)  # Get the records into a view and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
+         @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
+                      " on this " + ui_lookup(:tables => @table_name)
+      end
+    elsif @display == "container_images" || session[:display] == "container_images" && params[:display].nil?
+      title = ui_lookup(:tables => "container_images")
+      drop_breadcrumb(:name => @ems.name + " (All #{title})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerImage, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
          @view.extras[:auth_count]
@@ -699,7 +724,7 @@ module EmsCommon
       @edit[:server_zones].push([zone.description, zone.name])
     end
     
-    @edit[:openstack_infra_providers] = ProviderOpenstack.order('lower(name)').each_with_object([["---", nil]]) do |openstack_infra_provider, x|
+    @edit[:openstack_infra_providers] = ManageIQ::Providers::Openstack::Provider.order('lower(name)').each_with_object([["---", nil]]) do |openstack_infra_provider, x|
       x.push([openstack_infra_provider.name, openstack_infra_provider.id])
     end
 

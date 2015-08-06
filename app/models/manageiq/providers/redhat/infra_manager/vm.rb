@@ -32,9 +32,10 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
 
   def self.calculate_power_state(raw_power_state)
     case raw_power_state
-    when 'up'   then 'on'
-    when 'down' then 'off'
-    else             super
+    when 'up'        then 'on'
+    when 'down'      then 'off'
+    when 'suspended' then 'suspended'
+    else                  super
     end
   end
 

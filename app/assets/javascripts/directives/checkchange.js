@@ -1,4 +1,4 @@
-miqAngularApplication.directive('checkchange', function() {
+ManageIQ.angularApplication.directive('checkchange', ['miqService', function(miqService) {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {
@@ -19,7 +19,7 @@ miqAngularApplication.directive('checkchange', function() {
       });
 
       ctrl.$parsers.push(function(value) {
-        scope.miqService.miqFlashClear();
+        miqService.miqFlashClear();
 
         if (value == scope.modelCopy[ctrl.$name]) {
           scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(true);
@@ -35,7 +35,7 @@ miqAngularApplication.directive('checkchange', function() {
         scope.angularForm.$setPristine(true);
     }
   }
-});
+}]);
 
 var viewModelComparison = function(scope, ctrl) {
   if (ctrl.$viewValue == scope.modelCopy[ctrl.$name]) {

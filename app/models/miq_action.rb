@@ -329,7 +329,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_email): Now executing Email [#{rec[:name]}]")
-      MiqAction.send("queue_email", email_options)
+      MiqAction.queue_email(email_options)
     else
       MiqPolicy.logger.info("MIQ(action_email): Queueing Email [#{rec[:name]}]")
       MiqQueue.put(
@@ -510,7 +510,7 @@ class MiqAction < ActiveRecord::Base
   def action_script(action, rec, inputs)
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_script): Now executing Action Script [#{rec[:name]}]")
-      action.send("run_script", rec)
+      action.run_script(rec)
     else
       MiqPolicy.logger.info("MIQ(action_script): Queueing Action Script [#{rec[:name]}]")
       MiqQueue.put(:class_name => "MiqAction",
@@ -598,7 +598,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_vm_migrate): Now executing [#{action.description}] of VM [#{rec.name}]")
-      rec.send("migrate", action.options[:host], action.options[:pool], action.options[:priority], action.options[:state])
+      rec.migrate(action.options[:host], action.options[:pool], action.options[:priority], action.options[:state])
     else
       MiqPolicy.logger.info("MIQ(action_vm_migrate): Queueing [#{action.description}] of VM [#{rec.name}]")
       MiqQueue.put(
@@ -621,7 +621,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_vm_clone): Now executing [#{action.description}] of VM [#{rec.name}]")
-      rec.send("clone", action.options[:name], action.options[:folder], action.options[:pool], action.options[:host], action.options[:datastore], action.options[:powerOn], action.options[:template], action.options[:transform], action.options[:config], action.options[:customization], action.options[:disk])
+      rec.clone(action.options[:name], action.options[:folder], action.options[:pool], action.options[:host], action.options[:datastore], action.options[:powerOn], action.options[:template], action.options[:transform], action.options[:config], action.options[:customization], action.options[:disk])
     else
       MiqPolicy.logger.info("MIQ(action_vm_clone): Queueing [#{action.description}] of VM [#{rec.name}]")
       MiqQueue.put(
@@ -671,7 +671,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_create_snapshot): Now executing Create Snapshot [#{action.options[:name]}] for VM [#{rec.name}]")
-      rec.send("create_snapshot", action.options[:name], action.options[:description])
+      rec.create_snapshot(action.options[:name], action.options[:description])
     else
       MiqPolicy.logger.info("MIQ(action_create_snapshot): Queueing Create Snapshot [#{action.options[:name]}] for VM [#{rec.name}]")
       MiqQueue.put(
@@ -841,7 +841,7 @@ class MiqAction < ActiveRecord::Base
 
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(#{action_method}): Now executing [#{action.description}] of Host [#{rec.name}]")
-      rec.send(:scan)
+      rec.scan
     else
       role = "smartstate"
       MiqPolicy.logger.info("MIQ(#{action_method}): Queueing [#{action.description}] of Host [#{rec.name}]")

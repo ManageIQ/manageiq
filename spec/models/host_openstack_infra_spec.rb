@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe HostOpenstackInfra do
+describe ManageIQ::Providers::Openstack::InfraManager::Host do
   describe "#refresh_openstack_services" do
     let(:openstack_status_text) do
       <<-EOT

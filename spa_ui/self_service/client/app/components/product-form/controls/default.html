@@ -1,0 +1,17 @@
+<div class="product-field" product-form-field>
+  <div class="product-field__aside">
+    <label class="product-field__label" for="{{ ::form.key.slice(-1)[0] }}">{{ ::form.title }}</label>
+  </div>
+
+  <div class="product-field__body" ng-class="{'has-error': hasErrors(form.key.slice(-1)[0])}">
+    <input id="{{ ::form.key.slice(-1)[0] }}" class="product-field__input"
+           name="{{ ::form.key.slice(-1)[0] }}"
+           type="{{ ::form.type }}"
+           ng-model="$$value$$"
+           ng-model-options="::form.ngModelOptions"
+           ng-disabled="form.readonly"
+           schema-validate="form"
+           placeholder="{{ ::form.placeholder }}"/>
+    <div class="product-field__feedback" sf-message="form.description"></div>
+  </div>
+</div>

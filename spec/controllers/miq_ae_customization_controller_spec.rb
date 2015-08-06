@@ -151,6 +151,8 @@ describe MiqAeCustomizationController do
     let(:sandbox_flash_messages) { nil }
 
     before do
+      session[:settings] =  {:display => {:locale => 'default'}}
+      controller.instance_variable_set(:@settings, :display => {:locale => 'default'})
       controller.instance_variable_set(:@sb, {:flash_msg => sandbox_flash_messages})
       bypass_rescue
     end

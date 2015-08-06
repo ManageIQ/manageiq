@@ -1,13 +1,13 @@
 #field_values_div
   %fieldset
-    %h3=_('Category Tag Entries')
+    %h3= _('Category Tag Entries')
     %table.table.table-striped.table-bordered
       %thead
         %tr
-          %th=_('Value')
-          %th=_('Description')
+          %th= _('Value')
+          %th= _('Description')
       %tbody
         - DialogFieldTagControl.category_tags(@edit[:field_category]).each do |cat|
           %tr
-            %td=cat[:name]
-            %td=cat[:description]
+            %td= cat[:name]
+            %td= cat[:description]

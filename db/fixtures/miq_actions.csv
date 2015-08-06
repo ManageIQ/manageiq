@@ -12,6 +12,7 @@ prevent,Prevent current event from proceeding
 vm_start,Start Virtual Machine
 vm_stop,Stop Virtual Machine
 vm_suspend,Suspend Virtual Machine
+vm_pause,Pause Virtual Machine
 vm_shutdown_guest,Shutdown Virtual Machine Guest OS
 vm_standby_guest,Put Virtual Machine Guest OS in Standby
 vm_unregister,Remove Virtual Machine from Inventory

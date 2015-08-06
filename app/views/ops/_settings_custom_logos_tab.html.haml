@@ -1,36 +1,35 @@
 - if @sb[:active_tab] == "settings_custom_logos"
   - url = url_for(:action => 'settings_form_field_changed', :id => "#{@sb[:active_tab].split('_')[1]}_#{@sb[:active_tab].split('_').last}")
   = render :partial => "layouts/flash_msg"
-  %h3=_("Custom Logo Image (Shown on top right of all screens)")
+  %h3= _("Custom Logo Image (Shown on top right of all screens)")
   - if File.exist?(@logo_file)
-    = image_tag("/upload/custom_logo.png?#{rand(99999999).to_s}")
+    = image_tag("/upload/custom_logo.png?#{rand(99_999_999)}")
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => "No custom logo image has been uploaded yet."}
-  = form_tag({:action=>"upload_logo"}, :multipart => true) do
+  = form_tag({:action => "upload_logo"}, :multipart => true) do
     = file_field("upload", "logo")
     = submit_tag("Upload",
       :id    => "upload",
       :class => "upload")
-    =_("* Requirements: File-type - PNG; Dimensions - 350x70.")
+    = _("* Requirements: File-type - PNG; Dimensions - 350x70.")
   - if File.exist?(@logo_file)
     %br/
     %table.style1
       %tr
-        %td.key=_("Use Custom Logo Image")
+        %td.key= _("Use Custom Logo Image")
         %td
-          = check_box_tag("server_uselogo", value="1",
-            checked=@edit[:new][:server][:custom_logo],
+          = check_box_tag("server_uselogo", "1", @edit[:new][:server][:custom_logo],
             "data-miq_observe_checkbox" => {:url => url}.to_json)
   %hr/
-  %h3=_("Custom Login Background Image")
+  %h3= _("Custom Login Background Image")
   - if File.exist?(@login_logo_file)
-    = image_tag("/upload/custom_login_logo.png?#{rand(99999999).to_s}",
+    = image_tag("/upload/custom_login_logo.png?#{rand(99_999_999)}",
       :height => 400,
       :width  => 675)
     %br/
     = succeed "*" do
       %br/
-    =_("Image shown at 25% of actual size")
+    = _("Image shown at 25% of actual size")
     %br/
     %br/
   - else
@@ -41,20 +40,18 @@
     = submit_tag("Upload",
       :id    => "login_logo",
       :class => "upload")
-    =_("* Requirements: File-type - PNG; Dimensions - 1280x1000.")
+    = _("* Requirements: File-type - PNG; Dimensions - 1280x1000.")
   - if File.exist?(@login_logo_file)
     %br/
     %table.style1
       %tr
-        %td.key=_("Use Custom Login Background Image")
+        %td.key= _("Use Custom Login Background Image")
         %td
-          = check_box_tag("server_useloginlogo",
-            value="1",
-            checked=@edit[:new][:server][:custom_login_logo],
+          = check_box_tag("server_useloginlogo", "1", @edit[:new][:server][:custom_login_logo],
             "data-miq_observe_checkbox" => {:url => url}.to_json)
   %hr/
   %h3
-    =_("Custom Login Panel Text (")
+    = _("Custom Login Panel Text (")
     %span#text_count= @edit[:new][:notes] ? @edit[:new][:notes].length : 0
     \/ 500)
   = text_area_tag("login_text",
@@ -67,9 +64,7 @@
   %br/
   %table.style1
     %tr
-      %td.key=_("Use Custom Login Text")
+      %td.key= _("Use Custom Login Text")
       %td
-        = check_box_tag("server_uselogintext",
-          value="1",
-          checked=@edit[:new][:server][:use_custom_login_text],
+        = check_box_tag("server_uselogintext", "1", @edit[:new][:server][:use_custom_login_text],
           "data-miq_observe_checkbox" => {:url => url}.to_json)

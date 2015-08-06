@@ -7,7 +7,6 @@ class ContainerGroupController < ApplicationController
   after_filter :set_session_data
 
   def show_list
-    @no_checkboxes = true
     process_show_list
   end
 
@@ -18,6 +17,6 @@ class ContainerGroupController < ApplicationController
   end
 
   def display_name
-    "Container Groups"
+    "Pods"
   end
 end

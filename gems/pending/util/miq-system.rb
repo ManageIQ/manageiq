@@ -1,6 +1,6 @@
 require 'util/extensions/miq-blank'
+require 'awesome_spawn'
 require 'platform'
-require 'util/runcmd'
 if Platform::OS == :win32
   require 'util/win32/miq-wmi'
 end
@@ -160,117 +160,6 @@ class MiqSystem
   end
 
   ##############################################################################################################################
-  # SWAPON(8)                                               Linux Programmer’s Manual                                              SWAPON(8)
-  #
-  # NAME
-  #        swapon, swapoff - enable/disable devices and files for paging and swapping
-  #
-  # SYNOPSIS
-  #        /sbin/swapon [-h -V]
-  #        /sbin/swapon -a [-v] [-e]
-  #        /sbin/swapon [-v] [-p priority]  specialfile ...
-  #        /sbin/swapon [-s]
-  #        /sbin/swapoff [-h -V]
-  #        /sbin/swapoff -a
-  #        /sbin/swapoff specialfile ...
-  #
-  # DESCRIPTION
-  #        Swapon is used to specify devices on which paging and swapping are to take place.
-  #
-  #        The  device or file used is given by the specialfile parameter. It may be of the form -L label or -U uuid to indicate a device by
-  #        label or uuid.
-  #
-  #        Calls to swapon normally occur in the system multi-user initialization file /etc/rc making all swap devices  available,  so  that
-  #        the paging and swapping activity is interleaved across several devices and files.
-  #
-  #        Normally, the first form is used:
-  #
-  #        -a     All devices marked as ‘‘swap’’ swap devices in /etc/fstab are made available, except for those with the ‘‘noauto’’ option.
-  #               Devices that are already running as swap are silently skipped.
-  #
-  #        -e     When -a is used with swapon, -e makes swapon silently skip devices that do not exist.
-  #
-  #        -h     Provide help
-  #
-  #        -L label
-  #               Use the partition that has the specified label.  (For this, access to /proc/partitions is needed.)
-  #
-  #        -p priority
-  #               Specify priority for swapon.  This option is only available if swapon was compiled under and is  used  under  a  1.3.2  or
-  #               later  kernel.  priority is a value between 0 and 32767. Higher numbers indicate higher priority. See swapon(2) for a full
-  #               description of swap priorities. Add pri=value to the option field of /etc/fstab for use with swapon -a.
-  #
-  #        -s     Display swap usage summary by device. Equivalent to "cat /proc/swaps".  Not available before Linux 2.1.25.
-  #
-  #        -U uuid
-  #               Use the partition that has the specified uuid.  (For this, access to /proc/partitions is needed.)
-  #
-  #        -v     Be verbose.
-  #
-  #        -V     Display version
-  #
-  #        Swapoff disables swapping on the specified devices and files.  When the -a flag is given, swapping is disabled on all known  swap
-  #        devices and files (as found in /proc/swaps or /etc/fstab).
-  #
-  # NOTE
-  #        You should not use swapon on a file with holes.  Swap over NFS may not work.
-  #
-  # SEE ALSO
-  #        swapon(2), swapoff(2), fstab(5), init(8), mkswap(8), rc(8), mount(8)
-  #
-  # FILES
-  #        /dev/hd??  standard paging devices
-  #        /dev/sd??  standard (SCSI) paging devices
-  #        /etc/fstab ascii filesystem description table
-  #
-  # HISTORY
-  #        The swapon command appeared in 4.0BSD.
-  #
-  # AVAILABILITY
-  #        The  swapon  command  is part of the util-linux-ng package and is available from ftp://ftp.kernel.org/pub/linux/utils/util-linux-
-  #        ng/.
-  #
-  #
-  # SAMPLE RUN on Ubuntu
-  #
-  # $ swapon -s
-  #
-  # Filename        Type        Size     Used  Priority
-  # /dev/sda5       partition   192740   0     -1
-  # /dev/sde1       partition   2096440  0     -2
-  #
-  ##############################################################################################################################
-  def self.swapinfo
-    result = Array.new
-
-    case Platform::IMPL
-    when :mswin, :mingw
-      #raise "MiqSystem.swapinfo: Windows Not Supported"
-
-    when :linux
-      rc = MiqUtil.runcmd("swapon -s")
-
-      rc.split("\n").each do |line|
-        lArray = line.strip.split(" ")
-        next unless lArray.length == 5
-        fname, type, size, used, priority = lArray
-        next unless size =~ /[0-9]+/
-        h = Hash.new
-        h[:filename] = fname
-        h[:type]     = type
-        h[:size]     = size
-        h[:used]     = used
-        h[:priority] = priority
-        result << h
-      end
-    when :macosx
-      #raise "MiqSystem.swapinfo: Mac OSX Not Supported"
-    end
-
-    return result
-  end
-
-  ##############################################################################################################################
   # DF(1)                                                         User Commands                                                        DF(1)
   #
   # NAME
@@ -398,7 +287,7 @@ class MiqSystem
     case Platform::IMPL
     when :linux
       # Collect bytes
-      result = MiqUtil.runcmd("df -T -P #{file}").lines.each_with_object([]) do |line, array|
+      result = AwesomeSpawn.run!("df", :params => ["-T", "-P", file]).output.lines.each_with_object([]) do |line, array|
         lArray = line.strip.split(" ")
         next if lArray.length != 7
         fsname, type, total, used, free, used_percentage, mount_point = lArray
@@ -417,7 +306,7 @@ class MiqSystem
       end
 
       # Collect inodes
-      MiqUtil.runcmd("df -T -P -i #{file}").lines.each do |line|
+      AwesomeSpawn.run!("df", :params => ["-T", "-P", "-i", file]).output.lines.each do |line|
         lArray = line.strip.split(" ")
         next if lArray.length != 7
         fsname, type, total, used, free, used_percentage, mount_point = lArray
@@ -433,7 +322,7 @@ class MiqSystem
       result
 
     when :macosx
-      MiqUtil.runcmd("df -ki #{file}").lines.each_with_object([]) do |line, array|
+      AwesomeSpawn.run!("df", :params => ["-ki", file]).output.lines.each_with_object([]) do |line, array|
         lArray = line.strip.split(" ")
         next if lArray.length != 9
         fsname, total, used, free, use_percentage, iused, ifree, iuse_percentage, mount_point = lArray
@@ -659,9 +548,6 @@ if __FILE__ == $0
 
   result = MiqSystem.memory
   puts "Memory: #{result.inspect}"
-
-  result = MiqSystem.swapinfo
-  puts "SwapInfo: #{result.inspect}"
 
   result = MiqSystem.disk_usage
   format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"

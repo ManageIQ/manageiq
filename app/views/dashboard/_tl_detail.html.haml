@@ -9,7 +9,7 @@
     = render(:partial => "layouts/timeline",
       :locals  => {:bands => @report.timeline[:bands],
         :tl_json => @tl_json.to_s.html_safe,
-        :data_action => "getTLdata",
+        :data_action => "timeline_data",
         :position_time => session[:tl_position]})
     - if @report.filter_summary
       = @report.filter_summary

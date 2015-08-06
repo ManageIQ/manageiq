@@ -170,7 +170,6 @@ class ContainerController < ApplicationController
     @sb[:action] = nil
     if x_node == "root" || TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
       typ = "Container"
-      @no_checkboxes = true
       process_show_list
       @right_cell_text = _("All %s") % ui_lookup(:models => typ)
     else
@@ -249,8 +248,8 @@ class ContainerController < ApplicationController
     elsif params[:display]
       partial_locals = {:controller => "container", :action_url => @lastaction}
       partial = "layouts/x_gtl"
-      presenter[:miq_parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
-      presenter[:miq_parent_class] = request[:controller] # Set parent class for URL also
+      presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+      presenter[:parent_class] = request[:controller] # Set parent class for URL also
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
     elsif record_showing
       presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
@@ -266,7 +265,7 @@ class ContainerController < ApplicationController
 
     presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox']
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Rebuild the toolbars
@@ -280,7 +279,7 @@ class ContainerController < ApplicationController
 
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record ? @record.id : nil
+    presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)

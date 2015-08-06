@@ -1,4 +1,4 @@
-miqAngularApplication.service('miqDBBackupService', function() {
+ManageIQ.angularApplication.service('miqDBBackupService', function() {
 
   this.logProtocolNotSelected = function(model) {
     if(model.log_protocol == '')

@@ -1,5 +1,5 @@
-- # Parameters:
-- # widget MiqWidget object
+-# Parameters:
+-# widget MiqWidget object
 %div{:id => "w_#{presenter.widget.id}"}
   #test.modbox
     %h2.modtitle{:style => "cursor:move"}
@@ -11,7 +11,7 @@
         - if %(report chart).include?(presenter.widget.content_type)
           = presenter.button_fullscreen
           = presenter.button_pdf
-        - if %(chart).include?(presenter.widget.content_type) &&
+        - if %(chart).include?(presenter.widget.content_type)
           = presenter.button_zoom
       %div
         %span.modtitle_text= h(presenter.widget.title)

@@ -5,6 +5,8 @@ class OvirtEventMonitor
 
   def inventory
     require 'ovirt'
+    Ovirt.logger = $rhevm_log if $rhevm_log
+
     @inventory ||= Ovirt::Inventory.new(@options)
   end
 

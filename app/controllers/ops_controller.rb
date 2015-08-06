@@ -614,7 +614,7 @@ class OpsController < ApplicationController
         # show all the tabs if on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
         if %w(save reset).include?(params[:button]) && is_browser_ie?
-          presenter[:extra_js] << "miqIEButtonPressed = true;"
+          presenter[:extra_js] << "ManageIQ.oneTransition.IEButtonPressed = true;"
         end
       elsif x_node.split("-").first.split("__")[1] == "svr" && @sb[:my_server_id] != active_id.to_i
         # show only 4 tabs if not on current server node
@@ -689,11 +689,11 @@ class OpsController < ApplicationController
     presenter[:expand_collapse_cells][:a] = 'collapse' if @sb[:center_tb_filename] == "blank_view_tb"
 
     if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
-      # Create miq_record_id JS var, if @record is present
-      presenter[:miq_record_id] =  @record ? @record.id : @edit[:rec_id]
+      # Create ManageIQ.record.recordId JS var, if @record is present
+      presenter[:record_id] =  @record ? @record.id : @edit[:rec_id]
     else
       # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
-      presenter[:miq_record_id] = nil
+      presenter[:record_id] = nil
     end
   end
 
@@ -733,7 +733,7 @@ class OpsController < ApplicationController
         :locals  => {:tree => tree,
                      :name => tree.name.to_s
         }
-      ]
+      ] if tree
     end
   end
 

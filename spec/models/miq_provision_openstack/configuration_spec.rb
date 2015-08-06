@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionOpenstack::Configuration do
+describe ManageIQ::Providers::Openstack::CloudManager::Provision::Configuration do
   context "#configure_network_adapters" do
     before do
       @ems      = FactoryGirl.create(:ems_openstack_with_authentication)

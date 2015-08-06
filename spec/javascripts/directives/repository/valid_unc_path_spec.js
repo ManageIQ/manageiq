@@ -1,15 +1,14 @@
 describe('checkpath initialization', function() {
   var $scope, form;
-  beforeEach(module('miqAngularApplication'));
-  beforeEach(inject(function($compile, $rootScope) {
+  beforeEach(module('ManageIQ.angularApplication'));
+  beforeEach(inject(function($compile, $rootScope, miqService) {
     $scope = $rootScope;
     var element = angular.element(
       '<form name="angularForm">' +
       '<input checkpath type="text" ng-model="repo.path" name="repo_path"/>' +
       '</form>'
     );
-    $scope.miqService = { miqFlash: function (type, msg){}};
-    spyOn($scope.miqService, 'miqFlash');
+    spyOn(miqService, 'miqFlash');
     $compile(element)($scope);
     $scope.$digest();
     form = $scope.angularForm;

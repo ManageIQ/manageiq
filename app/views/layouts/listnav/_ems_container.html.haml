@@ -49,13 +49,13 @@
           - num_groups = @record.number_of(:container_groups)
           - if num_groups == 0
             %li.disabled
-              = link_to(_('Container Groups (0)'), "#")
+              = link_to(_('Pods (0)'), "#")
           - else
             %li
-              = link_to(_("Container Groups (%s)") % num_groups,
+              = link_to(_("Pods (%s)") % num_groups,
                   {:action  => 'show', :id => @record, :display => 'container_groups'},
-                  :title => _("Show Container Groups"))
-        - if role_allows(:feature => "container_route_show_list") &&  @record.kind_of?(EmsOpenshift)
+                  :title => _("Show Pods"))
+        - if role_allows(:feature => "container_route_show_list") && @record.kind_of?(EmsOpenshift)
           - num_groups = @record.number_of(:container_routes)
           - if num_groups == 0
             %li.disabled
@@ -65,7 +65,7 @@
               = link_to(_("Container Routes (%s)") % num_groups,
                   {:action  => 'show', :id => @record, :display => 'container_routes'},
                   :title => _("Show Container Routes"))
-        - if role_allows(:feature => "container_project_show_list") &&  @record.kind_of?(EmsOpenshift)
+        - if role_allows(:feature => "container_project_show_list") && @record.kind_of?(EmsOpenshift)
           - num_groups = @record.number_of(:container_projects)
           - if num_groups == 0
             %li.disabled
@@ -95,3 +95,23 @@
               = link_to(_("Containers (%s)") % num_containers,
                   {:action  => 'show', :id => @record,
                   :display => 'containers'}, :title => _("Show Containers"))
+        - if role_allows(:feature => "container_image_registry_show_list")
+          - num_registries = @record.number_of(:container_image_registries)
+          - if num_registries == 0
+            %li.disabled
+              = link_to(_('Image Registries (0)'), "#")
+          - else
+            %li
+              = link_to(_("Image Registries (%s)") % num_registries,
+                  {:action  => 'show', :id => @record, :display => 'container_image_registries'},
+                  :title => _("Show Image Registries"))
+        - if role_allows(:feature => "container_image_show_list")
+          - num_images = @record.number_of(:container_images)
+          - if num_images == 0
+            %li.disabled
+              = link_to(_('Images (0)'), "#")
+          - else
+            %li
+              = link_to(_("Images (%s)") % num_images,
+                  {:action  => 'show', :id => @record, :display => 'container_images'},
+                  :title => _("Show Images"))

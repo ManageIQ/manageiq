@@ -8,6 +8,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   require_dependency 'manageiq/providers/amazon/cloud_manager/flavor'
   require_dependency 'manageiq/providers/amazon/cloud_manager/floating_ip'
   require_dependency 'manageiq/providers/amazon/cloud_manager/metrics_collector_worker'
+  require_dependency 'manageiq/providers/amazon/cloud_manager/orchestration_service_option_converter'
   require_dependency 'manageiq/providers/amazon/cloud_manager/orchestration_stack'
   require_dependency 'manageiq/providers/amazon/cloud_manager/provision'
   require_dependency 'manageiq/providers/amazon/cloud_manager/provision_workflow'
@@ -15,7 +16,6 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   require_dependency 'manageiq/providers/amazon/cloud_manager/refresh_worker'
   require_dependency 'manageiq/providers/amazon/cloud_manager/refresher'
   require_dependency 'manageiq/providers/amazon/cloud_manager/security_group'
-  require_dependency 'manageiq/providers/amazon/cloud_manager/service_option_converter'
   require_dependency 'manageiq/providers/amazon/cloud_manager/template'
   require_dependency 'manageiq/providers/amazon/cloud_manager/vm'
 

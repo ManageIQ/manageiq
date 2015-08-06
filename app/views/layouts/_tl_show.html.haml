@@ -1,8 +1,8 @@
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
-- # Create from/to date JS vars to limit calendar selection range
+-# Create from/to date JS vars to limit calendar selection range
 :javascript
-  var miq_cal_dateFrom = new Date(#{@tl_options[:sdate]});
-  var miq_cal_dateTo = new Date(#{@tl_options[:edate]});
+  ManageIQ.calendar.calDateFrom = new Date(#{@tl_options[:sdate]});
+  ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});
 
 = render :partial => "layouts/flash_msg"
 = render :partial => "layouts/tl_options"

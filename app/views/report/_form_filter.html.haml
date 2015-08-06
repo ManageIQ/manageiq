@@ -2,17 +2,17 @@
   - if @edit[:new][:perf_interval]
     = render :partial => "form_filter_performance"
   - if @edit[:new][:model] == TREND_MODEL
-    - # No additional filters for trend reports
+    -# No additional filters for trend reports
   - elsif @edit[:new][:model] == "Chargeback"
     = render :partial => "form_filter_chargeback"
   - else
-    - # Show expression editors for all other reports
+    -# Show expression editors for all other reports
     %h3
       = _("Primary (Record) Filter - Filters the %s table records") % @edit[:new][:model]
     - if @expkey == :record_filter
       = render :partial => 'layouts/exp_editor'
     - else
-      - # FIXME: alt/title incosistency
+      -# FIXME: alt/title incosistency
       = link_to(image_tag("/images/toolbars/edit.png", :class => "rollover small", :alt => _("Edit this Expression")),
         {:action => 'filter_change', :button => "record_filter", :id => "#{@edit[:rpt_id] || 'new'}"},
         "data-miq_sparkle_on"  => true,
@@ -31,7 +31,7 @@
               %b
                 = h([token].flatten.first)
     - unless @edit[:display_filter][:exp_available_fields].empty? && @edit[:display_filter][:exp_available_tags].empty?
-      - # Expression editor for the display filter
+      -# Expression editor for the display filter
       %fieldset
         %h3
           = _('Secondary (Display) Filter - Filters the rows based on child table fields')

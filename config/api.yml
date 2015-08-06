@@ -3,12 +3,12 @@
   :module: api
   :name: API
   :description: REST API
-  :version: '2.0.0'
+  :version: '2.1.0-pre'
 :version:
   :regex: !ruby/regexp /^v[0-9]+(?>\\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?/
   :definitions:
-  - :name: '2.0.0'
-    :ident: 'v2.0.0'
+  - :name: '2.1.0-pre'
+    :ident: 'v2.1.0-pre'
 :method:
   :names:
   - :get
@@ -62,6 +62,14 @@
     - :collection
     :methods: *70174834086080
     :klass: AvailabilityZone
+  :chargebacks:
+    :description: Chargebacks
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: ChargebackRate
+    :subcollections:
+    - :rates
   :clusters:
     :description: Clusters
     :options:
@@ -409,6 +417,21 @@
       :post:
       - :name: create
         :identifier: vm_miq_request_new
+  :rates:
+    :description: Chargeback Rates
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: ChargebackRateDetail
+  :reports:
+    :description: Reports
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqReport
+    :subcollections:
+    - :results
   :request_tasks:
     :description: Request Tasks
     :options:
@@ -459,6 +482,12 @@
         :identifier: resource_pool_protect
       - :name: unassign
         :identifier: resource_pool_protect
+  :results:
+    :description: Report Results
+    :options:
+    - :subcollection
+    :methods: *70174834086080
+    :klass: MiqReportResult
   :roles:
     :description: Roles
     :options:
@@ -777,6 +806,8 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
+      - :name: pause
+        :identifier: vm_pause
       - :name: reset
         :identifier: vm_reset
         :disabled: true
@@ -813,6 +844,8 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
+      - :name: pause
+        :identifier: vm_pause
       - :name: reset
         :identifier: vm_reset
         :disabled: true

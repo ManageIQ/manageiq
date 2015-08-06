@@ -1,0 +1,74 @@
++block(admin-project-questions-list)
+
+  +element(body)
+    padding-right: 395px
+
+  +element(aside)
+    text-align: right
+    height: 90px
+    position: absolute
+    right: 0
+    top: 0
+
++block(wizard-questions-table)
+  @extend .table-striped
+  width: 100%
+  background-color: $app-color-white
+
+  +element(row)
+    width: 100%
+    background-color: $app-color-white
+
+    &.ui-sortable-helper
+      display: table-row
+      box-shadow: 0 5px 5px $app-color-dark-gray
+      transform: scale(0.8)
+
+  +element(heading)
+    height: 44px
+    font-weight: bold
+    text-transform: uppercase
+    color: $app-color-gray
+
+    +modifier(order)
+      text-align: center
+
+  +element(cell)
+    height: 44px
+    font-size: 14px
+    border: none
+    padding: 10px 10px 10px 0
+    vertical-align: top
+    position: relative
+
+    +modifier(order)
+      color: $app-color-gray
+      font-weight: bold
+      width: 96px
+      text-align: center
+
+    +modifier(question)
+      color: $app-color-dark-gray
+      padding-right: 16px
+
+    +modifier(actions)
+      width: 196px
+
+  +element(action)
+    margin-right: 20px
+
+    &:last-child
+      margin-right: 0
+
+  +element(handle)
+    cursor: move
+
+  +element(placeholder)
+    background-color: $app-color-blue !important
+    height: 64px
+
+  +element(empty)
+    font-size: 22px
+    font-weight: bold
+    text-align: center
+    padding: 10px

@@ -1,0 +1,50 @@
+<content-header short="true">
+    <div class="admin-alerts-list__body">
+        <span class="content-header__title">Organization Alerts</span>
+    </div>
+    <div class="admin-alerts-list__aside">
+        <a ui-sref="admin.alerts.create" class="btn-rounded">Add New Organization Alert</a>
+    </div>
+</content-header>
+<div>
+    <table st-table="vm.alerts" class="alerts-table">
+        <thead>
+        <tr>
+            <th class="alerts-table__heading alerts-table__heading--padding"></th>
+            <th class="alerts-table__heading alerts-table__heading--sortable alerts-table__heading--category" st-sort="category">Category</th>
+            <th class="alerts-table__heading alerts-table__heading--sortable alerts-table__heading--status" st-sort="status">Status</th>
+            <th class="alerts-table__heading alerts-table__heading--sortable alerts-table__heading--message" st-sort="message">Message</th>
+            <th class="alerts-table__heading alerts-table__heading--sortable alerts-table__heading--start-date" st-sort="start_date">Start Date</th>
+            <th class="alerts-table__heading alerts-table__heading--sortable alerts-table__heading--end-date" st-sort="end_date">End Date</th>
+            <th class="alerts-table__heading alerts-table__heading--actions">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="alerts-table__row" ng-repeat="row in vm.alerts | filter:{status: '!ok'}">
+            <td class="alerts-table__cell alerts-table__cell--padding"></td>
+            <td class="alerts-table__cell alerts-table__cell--category">{{ ::row.category }}</td>
+             <td class="alerts-table__cell alerts-table__cell--status">
+              <status type="{{ ::row.status }}">{{ ::row.status }}</status>
+            </td>
+            <td class="alerts-table__cell alerts-table__cell--question">{{ ::row.message }}</td>
+            <td class="alerts-table__cell alerts-table__cell--question">{{ ::row.start_date | date:'short' }}</td>
+            <td class="alerts-table__cell alerts-table__cell--question">{{ ::row.end_date | date:'short' }}</td>
+            <td class="alerts-table__cell alerts-table__cell--actions">
+                <a ui-sref="admin.alerts.edit({id: row.id})" class="alerts-table__action alerts-table__action--edit">
+                    <img src="/images/ic_edit.png" alt="Edit"/>
+                </a>
+                <a href="#" class="alerts-table__action alerts-table__action--delete"
+                   confirmation
+                   confirmation-position="left-center"
+                   confirmation-message="Are you sure you want to remove this alert and it's content?"
+                   confirmation-ok-style="danger"
+                   confirmation-ok-text="Yes, Delete It"
+                   confirmation-on-ok="vm.deleteAlert(row)"
+                   confirmation-show-cancel="false">
+                    <img src="/images/ic_deletequestion.png" alt="Delete"/>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

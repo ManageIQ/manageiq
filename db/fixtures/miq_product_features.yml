@@ -4,7 +4,7 @@
 :feature_type: node
 :identifier: everything
 :children:
-  
+
 # Workloads Explorer
 - :name: Workloads
   :description: Workloads Views
@@ -485,6 +485,10 @@
         :description: Power Off Instance
         :feature_type: control
         :identifier: instance_stop
+      - :name: Pause
+        :description: Pause Instance
+        :feature_type: control
+        :identifier: instance_pause
       - :name: Suspend
         :description: Suspend Instance
         :feature_type: control
@@ -667,7 +671,7 @@
       :description: Edit a Request
       :feature_type: admin
       :identifier: miq_request_edit
-      
+
 # Catalog Items
 - :name: Catalogs Explorer
   :description: Everything under Catalogs
@@ -828,7 +832,7 @@
       :description: Create Service Dialog from Orchestration Template
       :identifier: service_dialog_from_ot
       :feature_type: admin
-      
+
 # My Services
 - :name: My Services
   :description: Everything under Services
@@ -2492,15 +2496,15 @@
       :description: Display Lists of All VM Analysis Tasks
       :feature_type: view
       :identifier: job_all_smartproxy
-    - :name: All Other Tasks 
+    - :name: All Other Tasks
       :description: Display Lists of All UI Tasks
       :feature_type: view
       :identifier: miq_task_all_ui
-    - :name: VM Analysis Tasks 
+    - :name: VM Analysis Tasks
       :description: Display Lists of VM Analysis Tasks
       :feature_type: view
       :identifier: job_my_smartproxy
-    - :name: Other UI Tasks 
+    - :name: Other UI Tasks
       :description: Display Lists of UI Tasks
       :feature_type: view
       :identifier: miq_task_my_ui
@@ -3474,6 +3478,14 @@
       :description: Edit Tags of Orchestration Stack
       :feature_type: control
       :identifier: orchestration_stack_tag
+    - :name: Retire Orchestration Stack
+      :description: Retire Orchestration Stack
+      :feature_type: control
+      :identifier: orchestration_stack_retire_now
+    - :name: Set Retirement Date
+      :description: Set Retirement Date
+      :feature_type: control
+      :identifier: orchestration_stack_retire
 
 # EmsContainer
 - :name: Providers
@@ -3507,6 +3519,10 @@
       :description: Refresh Containers Providers
       :feature_type: control
       :identifier: ems_container_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Containers Providers
+      :feature_type: control
+      :identifier: ems_container_tag
   - :name: Modify
     :description: Modify Containers Providers
     :feature_type: admin
@@ -3526,45 +3542,54 @@
       :identifier: ems_container_new
 
 # ContainerGroup
-- :name: Container Groups
-  :description: Everything under Container Groups
+- :name: Pods
+  :description: Everything under Pods
   :feature_type: node
   :identifier: container_group
   :children:
   - :name: View
-    :description: View Container Groups
+    :description: View Pods
     :feature_type: view
     :identifier: container_group_view
     :children:
     - :name: List
-      :description: Display Lists of Container Groups
+      :description: Display Lists of Pods
       :feature_type: view
       :identifier: container_group_show_list
     - :name: Show
-      :description: Display Individual Container Groups
+      :description: Display Individual Pods
       :feature_type: view
       :identifier: container_group_show
     - :name: Timeline
-      :description: Display Timelines for Container Groups
+      :description: Display Timelines for Pods
       :feature_type: view
       :identifier: container_group_timeline
   - :name: Modify
-    :description: Modify Container Groups
+    :description: Modify Pods
     :feature_type: admin
     :identifier: container_group_admin
     :children:
     - :name: Remove
-      :description: Remove Container Groups from the VMDB
+      :description: Remove Pods from the VMDB
       :feature_type: admin
       :identifier: container_group_delete
     - :name: Edit
-      :description: Edit a Container Groups
+      :description: Edit a Pod
       :feature_type: admin
       :identifier: container_group_edit
     - :name: Add
-      :description: Add a Container Groups
+      :description: Add a Pod
       :feature_type: admin
       :identifier: container_group_new
+  - :name: Operate
+    :description: Perform Operations on Pods
+    :feature_type: control
+    :identifier: container_group_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Pods
+      :feature_type: control
+      :identifier: container_group_tag
 
 # ContainerNode
 - :name: Nodes
@@ -3606,6 +3631,15 @@
       :description: Add a Container Nodes
       :feature_type: admin
       :identifier: container_node_new
+  - :name: Operate
+    :description: Perform Operations on Container Nodes
+    :feature_type: control
+    :identifier: container_node_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Nodes
+      :feature_type: control
+      :identifier: container_node_tag
 
 # ContainerReplicator
 - :name: Replicators
@@ -3643,6 +3677,90 @@
       :description: Add a Container Replicator
       :feature_type: admin
       :identifier: container_replicator_new
+  - :name: Operate
+    :description: Perform Operations on Container Replicators
+    :feature_type: control
+    :identifier: container_replicator_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Replicators
+      :feature_type: control
+      :identifier: container_replicator_tag
+
+
+# ContainerImage
+- :name: Images
+  :description: Everything under Container Images
+  :feature_type: node
+  :identifier: container_image
+  :children:
+  - :name: View
+    :description: View Container Images
+    :feature_type: view
+    :identifier: container_image_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Images
+      :feature_type: view
+      :identifier: container_image_show_list
+    - :name: Show
+      :description: Display Individual Container images
+      :feature_type: view
+      :identifier: container_image_show
+  - :name: Modify
+    :description: Modify Container Images
+    :feature_type: admin
+    :identifier: container_image_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Images from the VMDB
+      :feature_type: admin
+      :identifier: container_image_delete
+    - :name: Edit
+      :description: Edit a Container Image
+      :feature_type: admin
+      :identifier: container_image_edit
+    - :name: Add
+      :description: Add a Container Image
+      :feature_type: admin
+      :identifier: container_image_new
+
+# ContainerImageRegistry
+- :name: Registries
+  :description: Everything under Container Image Registries
+  :feature_type: node
+  :identifier: container_image_registry
+  :children:
+  - :name: View
+    :description: View Container Image Registries
+    :feature_type: node
+    :identifier: container_image_registry_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Image Registries
+      :feature_type: view
+      :identifier: container_image_registry_show_list
+    - :name: Show
+      :description: Display Individual Container Image Registries
+      :feature_type: view
+      :identifier: container_image_registry_show
+  - :name: Modify
+    :description: Modify Container Image Registries
+    :feature_type: admin
+    :identifier: container_image_registry_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Image Registries from the VMDB
+      :feature_type: admin
+      :identifier: container_image_registry_delete
+    - :name: Edit
+      :description: Edit a Container Image Registry
+      :feature_type: admin
+      :identifier: container_image_registry_edit
+    - :name: Add
+      :description: Add a Container Image Registry
+      :feature_type: admin
+      :identifier: container_image_registry_new
 
 # ContainerService
 - :name: Services
@@ -3680,6 +3798,15 @@
       :description: Add a Container Services
       :feature_type: admin
       :identifier: container_service_new
+  - :name: Operate
+    :description: Perform Operations on Container Services
+    :feature_type: control
+    :identifier: container_service_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Services
+      :feature_type: control
+      :identifier: container_service_tag
 
 # ContainerRoute
 - :name: Routes
@@ -3700,6 +3827,15 @@
       :description: Display Individual Container Routes
       :feature_type: view
       :identifier: container_route_show
+  - :name: Operate
+    :description: Perform Operations on Container Routes
+    :feature_type: control
+    :identifier: container_route_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Routes
+      :feature_type: control
+      :identifier: container_route_tag
 
 # ContainerProject
 - :name: Projects
@@ -3720,7 +3856,15 @@
       :description: Display Individual Container Routes
       :feature_type: view
       :identifier: container_project_show
-
+  - :name: Operate
+    :description: Perform Operations on Container Projects
+    :feature_type: control
+    :identifier: container_project_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Projects
+      :feature_type: control
+      :identifier: container_project_tag
 
 # Container
 - :name: Containers Explorer
@@ -3763,6 +3907,15 @@
         :description: Add a Container
         :feature_type: admin
         :identifier: container_new
+  - :name: Operate
+    :description: Perform Operations on Containers
+    :feature_type: control
+    :identifier: container_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Containers
+      :feature_type: control
+      :identifier: container_tag
 
 # Foreman
 - :name: Configuration Management

@@ -21,19 +21,22 @@ db: MiqDialog
 cols:
 - name
 - description
+- default
 
 # Included tables (joined, has_one, has_many) and columns
 include:
 
 # Order of columns (from all tables)
 col_order: 
-- name
 - description
+- name
+- default
 
 # Column titles, in order
 headers:
-- Name
 - Description
+- Name
+- Default
 
 # Condition(s) string for the SQL query
 conditions: 
@@ -43,7 +46,7 @@ order: Ascending
 
 # Columns to sort the report on, in order
 sortby:
-- name
+- description
 
 # Group rows (y=yes,n=no,c=count)
 group: n

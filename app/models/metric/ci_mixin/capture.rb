@@ -11,8 +11,8 @@ module Metric::CiMixin::Capture
     when ManageIQ::Providers::Vmware::InfraManager::Host, ManageIQ::Providers::Vmware::InfraManager::Vm then perf_collect_metrics_vim(*args)
     when ManageIQ::Providers::Redhat::InfraManager::Host, ManageIQ::Providers::Redhat::InfraManager::Vm then perf_collect_metrics_rhevm(*args)
     when ManageIQ::Providers::Amazon::CloudManager::Vm             then perf_collect_metrics_amazon(*args)
-    when VmOpenstack          then perf_collect_metrics_openstack('perf_capture_data_openstack', *args)
-    when HostOpenstackInfra   then perf_collect_metrics_openstack('perf_capture_data_openstack_infra', *args)
+    when ManageIQ::Providers::Openstack::CloudManager::Vm          then perf_collect_metrics_openstack('perf_capture_data_openstack', *args)
+    when ManageIQ::Providers::Openstack::InfraManager::Host   then perf_collect_metrics_openstack('perf_capture_data_openstack_infra', *args)
     else raise "Unsupported type #{self.class.name} (id: #{self.id})"
     end
   end

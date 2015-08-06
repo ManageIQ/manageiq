@@ -51,11 +51,19 @@ module ApplicationController::Performance
 
     render :update do |page|
       if @parent_chart_data
-        page << 'miq_chart_data = ' + {"candu" => @chart_data, "parent"    => @parent_chart_data}.to_json + ';'
+        page << 'ManageIQ.charts.chartData = ' + {
+          "candu"  => @chart_data,
+          "parent" => @parent_chart_data
+        }.to_json + ';'
       elsif @compare_vm_chart_data
-        page << 'miq_chart_data = ' + {"candu" => @chart_data, "comparevm" => @compare_vm_chart_data}.to_json + ';'
+        page << 'ManageIQ.charts.chartData = ' + {
+          "candu"     => @chart_data,
+          "comparevm" => @compare_vm_chart_data
+        }.to_json + ';'
       else
-        page << 'miq_chart_data = ' + {"candu" => @chart_data}.to_json + ';'
+        page << 'ManageIQ.charts.chartData = ' + {
+          "candu" => @chart_data
+        }.to_json + ';'
       end
 
 # Cannot replace button divs that contain dhtmlx toolbars, use code below to turn on/off individual buttons
@@ -64,13 +72,13 @@ module ApplicationController::Performance
       if ["host","vm","vm_or_template"].include?(params[:controller])
         pfx = params[:controller] == "vm_or_template" ? "vm_" : ""
         if @perf_options[:typ] == "realtime"
-          page << "if(center_tb) center_tb.showItem('#{pfx}perf_refresh');"
-          page << "if(center_tb) center_tb.showItem('#{pfx}perf_reload');"
-          page << "if(center_tb) center_tb.enableItem('#{pfx}perf_refresh');"
-          page << "if(center_tb) center_tb.enableItem('#{pfx}perf_reload');"
+          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.showItem('#{pfx}perf_refresh');"
+          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.showItem('#{pfx}perf_reload');"
+          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.enableItem('#{pfx}perf_refresh');"
+          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.enableItem('#{pfx}perf_reload');"
         else
-          page << "if(center_tb) center_tb.hideItem('#{pfx}perf_refresh');"
-          page << "if(center_tb) center_tb.hideItem('#{pfx}perf_reload');"
+          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.hideItem('#{pfx}perf_refresh');"
+          page << "if(ManageIQ.toolbars.center_tb.obj) ManageIQ.toolbars.center_tb.obj.hideItem('#{pfx}perf_reload');"
         end
       end
 
@@ -80,11 +88,11 @@ module ApplicationController::Performance
                   :locals => {:chart_data => @chart_data, :chart_set => "candu"})
       unless @no_util_data
         if @perf_options[:typ] == "Hourly"
-          page << "miq_cal_dateFrom = new Date(#{@perf_options[:sdate].year},#{@perf_options[:sdate].month-1},#{@perf_options[:sdate].day});"
-          page << "miq_cal_dateTo   = new Date(#{@perf_options[:edate].year},#{@perf_options[:edate].month-1},#{@perf_options[:edate].day});"
+          page << "ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate].year},#{@perf_options[:sdate].month - 1},#{@perf_options[:sdate].day});"
+          page << "ManageIQ.calendar.calDateTo   = new Date(#{@perf_options[:edate].year},#{@perf_options[:edate].month - 1},#{@perf_options[:edate].day});"
         else
-          page << "miq_cal_dateFrom = new Date(#{@perf_options[:sdate_daily].year},#{@perf_options[:sdate_daily].month-1},#{@perf_options[:sdate_daily].day});"
-          page << "miq_cal_dateTo   = new Date(#{@perf_options[:edate_daily].year},#{@perf_options[:edate_daily].month-1},#{@perf_options[:edate_daily].day});"
+          page << "ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate_daily].year},#{@perf_options[:sdate_daily].month - 1},#{@perf_options[:sdate_daily].day});"
+          page << "ManageIQ.calendar.calDateTo   = new Date(#{@perf_options[:edate_daily].year},#{@perf_options[:edate_daily].month - 1},#{@perf_options[:edate_daily].day});"
         end
         if @perf_options[:skip_days]
           page << "miq_cal_skipDays = '#{@perf_options[:skip_days]}';"
@@ -130,7 +138,7 @@ module ApplicationController::Performance
       perf_gen_top_data                   # Generate top data
       return unless @charts               # Return if no charts got created (first time thru async rpt gen)
       render :update do |page|
-        page << 'miq_chart_data = ' + {"candu" => @chart_data}.to_json + ';'
+        page << 'ManageIQ.charts.chartData = ' + {"candu" => @chart_data}.to_json + ';'
         page.replace("candu_charts_div",
                      :partial => "layouts/perf_charts",
                      :locals  => {:chart_data => @chart_data, :chart_set => "candu"})
@@ -391,16 +399,24 @@ module ApplicationController::Performance
 
       render :update do |page|
         if @parent_chart_data
-          page << 'miq_chart_data = ' + {"candu"=>@chart_data, "parent"=>@parent_chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu"  => @chart_data,
+            "parent" => @parent_chart_data
+          }.to_json + ';'
         elsif @parent_chart_data
-          page << 'miq_chart_data = ' + {"candu"=>@chart_data, "compare_vm"=>@compare_vm_chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu"      => @chart_data,
+            "compare_vm" => @compare_vm_chart_data
+          }.to_json + ';'
         else
-          page << 'miq_chart_data = ' + {"candu"=>@chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu" => @chart_data
+          }.to_json + ';'
         end
         page.replace("perf_options_div", :partial=>"layouts/perf_options")
         page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@chart_data, :chart_set=>"candu"})
-        page << "miq_cal_dateFrom = new Date(#{@perf_options[:sdate].year},#{@perf_options[:sdate].month-1},#{@perf_options[:sdate].day});"
-        page << "miq_cal_dateTo = new Date(#{@perf_options[:edate].year},#{@perf_options[:edate].month-1},#{@perf_options[:edate].day});"
+        page << "ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate].year},#{@perf_options[:sdate].month - 1},#{@perf_options[:sdate].day});"
+        page << "ManageIQ.calendar.calDateTo = new Date(#{@perf_options[:edate].year},#{@perf_options[:edate].month - 1},#{@perf_options[:edate].day});"
         if @perf_options[:skip_days]
           page << "miq_cal_skipDays = '#{@perf_options[:skip_days]}';"
         else
@@ -423,14 +439,19 @@ module ApplicationController::Performance
 
       render :update do |page|
         if @parent_chart_data
-          page << 'miq_chart_data = ' + {"candu"=>@chart_data, "parent"=>@parent_chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu"  => @chart_data,
+            "parent" => @parent_chart_data
+          }.to_json + ';'
         else
-          page << 'miq_chart_data = ' + {"candu"=>@chart_data}.to_json + ';'
+          page << 'ManageIQ.charts.chartData = ' + {
+            "candu" => @chart_data
+          }.to_json + ';'
         end
         page.replace("perf_options_div", :partial=>"layouts/perf_options")
         page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@chart_data, :chart_set=>"candu"})
-        page << "miq_cal_dateFrom = new Date(#{@perf_options[:sdate_daily].year},#{@perf_options[:sdate_daily].month-1},#{@perf_options[:sdate_daily].day});"
-        page << "miq_cal_dateTo = new Date(#{@perf_options[:edate_daily].year},#{@perf_options[:edate_daily].month-1},#{@perf_options[:edate_daily].day});"
+        page << "ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate_daily].year},#{@perf_options[:sdate_daily].month - 1},#{@perf_options[:sdate_daily].day});"
+        page << "ManageIQ.calendar.calDateTo = new Date(#{@perf_options[:edate_daily].year},#{@perf_options[:edate_daily].month - 1},#{@perf_options[:edate_daily].day});"
         if @perf_options[:skip_days]
           page << "miq_cal_skipDays = '#{@perf_options[:skip_days]}';"
         else

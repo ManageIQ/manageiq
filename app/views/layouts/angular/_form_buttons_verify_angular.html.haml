@@ -1,11 +1,9 @@
-- valtype ||= "default"
-
 - if !session[:host_items].nil?
   - verify_title_on = "Validate the credentials by logging into the selected %s" % title_for_host
 - else
   - verify_title_on = "Validate the credentials by logging into the Server"
 
-%tr(ng-show="#{ng_show}")
+%tr{'ng-show' => ng_show}
   %td
   %td
     = button_tag("Validate",

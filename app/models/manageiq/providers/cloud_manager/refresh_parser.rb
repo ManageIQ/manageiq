@@ -20,7 +20,7 @@ class ManageIQ::Providers::CloudManager::RefreshParser
       :type        => self.class.security_group_type,
       :ems_ref     => uid,
       :name        => sg.name,
-      :description => sg.description.truncate(255)
+      :description => sg.description.try(:truncate, 255)
     }
 
     return uid, new_result

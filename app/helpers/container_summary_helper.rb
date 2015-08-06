@@ -1,142 +1,154 @@
 module ContainerSummaryHelper
-  # TODO: most of these methods can be further simplified in the future
-  #       maybe using define_method and pluralize.
-
   def textual_ems
-    textual_single_relationship(
-      :ext_management_system,
-      :name,
-      "vendor-#{@record.ext_management_system.image_name}",
-      "ems_container_show",
-      "ems_container"
-    )
+    textual_link(@record.ext_management_system, :as => EmsContainer)
   end
 
   def textual_container_project
-    textual_single_relationship(
-      :container_project,
-      :name,
-      "container_project",
-      "container_project_show",
-    )
+    textual_link(@record.container_project)
   end
 
   def textual_container_group
-    textual_single_relationship(
-      :container_group,
-      :name,
-      "container_group",
-      "container_group_show",
-      "container_group"
-    )
+    textual_link(@record.container_group)
   end
 
   def textual_container_projects
-    textual_multiple_relationship(
-      :container_projects,
-      "container_project",
-      "container_project_show_list"
-    )
+    textual_link(@record.container_projects)
   end
 
   def textual_container_routes
-    textual_multiple_relationship(
-      :container_routes,
-      "container_route",
-      "container_route_show_list"
-    )
+    textual_link(@record.container_routes)
   end
 
   def textual_container_service
-    textual_single_relationship(
-      :container_service,
-      :name,
-      "container_service",
-      "container_service_show"
-    )
+    textual_link(@record.container_service)
   end
 
   def textual_container_services
-    textual_multiple_relationship(
-      :container_services,
-      "container_service",
-      "container_service_show_list"
-    )
+    textual_link(@record.container_services)
   end
 
   def textual_container_replicators
-    textual_multiple_relationship(
-      :container_replicators,
-      "container_replicator",
-      "container_replicator_show_list"
-    )
+    textual_link(@record.container_replicators)
   end
 
   def textual_container_groups
-    textual_multiple_relationship(
-      :container_groups,
-      "container_group",
-      "container_group_show_list"
-    )
+    textual_link(@record.container_groups)
   end
 
   def textual_containers
-    textual_multiple_relationship(
-      :containers,
-      "container",
-      "containers",  # should it be container_show_list?
-    )
+    textual_link(@record.containers, :feature => "containers") # should it be container_show_list?
   end
 
   def textual_container_nodes
-    textual_multiple_relationship(
-      :container_nodes,
-      "container_node",
-      "container_node_show_list",
-    )
+    textual_link(@record.container_nodes)
   end
 
   def textual_container_node
-    textual_single_relationship(
-      :container_node,
-      :name,
-      "container_node",
-      "container_node_show",
-    )
+    textual_link(@record.container_node)
+  end
+
+  def textual_container_labels
+    textual_key_value(@record.labels.to_a)
+  end
+
+  def textual_container_selectors
+    textual_key_value(@record.selector_parts.to_a)
+  end
+  
+  def textual_container_image
+    textual_link(@record.container_image)
+  end
+
+  def textual_container_images
+    textual_link(@record.container_images)
+  end
+
+  def textual_container_image_registry
+    textual_link(@record.container_image_registry)
+  end
+
+  def textual_container_image_registries
+    textual_link(@record.container_image_registries)
   end
 
   private
 
-  def textual_single_relationship(entity, attribute, image, feature, controller = nil)
-    controller ||= entity.to_s
+  def textual_key_value(items)
+    items.collect { |item| {:label => item.name.to_s, :value => item.value.to_s} }.flatten.compact
+  end
 
-    label = ui_lookup(:table => controller)
-    rel_entity = @record.send(entity)
+  def textual_link(target, **opts, &blk)
+    case target
+    when ActiveRecord::Relation
+      textual_collection_link(target, **opts, &blk)
+    else
+      textual_object_link(target, **opts, &blk)
+    end
+  end
 
-    return if rel_entity.nil?
-    rel_value = rel_entity.send(attribute)
+  def textual_object_link(object, as: nil, feature: nil)
+    return if object.nil?
 
-    h = {:label => label, :image => image, :value => rel_value}
+    klass = as || object.class.base_model
+
+    feature ||= "#{klass.name.underscore}_show"
+
+    label = ui_lookup(:model => klass.name)
+    image = textual_object_icon(object)
+    value = if block_given?
+              yield object
+            else
+              object.name
+            end
+
+    h = {:label => label, :image => image, :value => value}
 
     if role_allows(:feature => feature)
-      h[:link] = url_for(:controller => controller, :action => 'show', :id => rel_entity)
-      h[:title] = "Show #{label} '#{rel_value}'"
+      h[:link] = url_for(:controller => klass.name.underscore,
+                         :action     => 'show',
+                         :id         => object)
+      h[:title] = "Show #{label} '#{value}'"
     end
 
     h
   end
 
-  def textual_multiple_relationship(entity, image, feature)
-    label = ui_lookup(:tables => entity.to_s)
-    rel_num = @record.number_of(entity)
+  def textual_collection_link(collection, as: nil, feature: nil)
+    klass = as || collection.klass.base_model
 
-    h = {:label => label, :image => image, :value => rel_num.to_s}
+    feature ||= "#{klass.name.underscore}_show_list"
 
-    if rel_num > 0 && role_allows(:feature => feature)
-      h[:link] = url_for(:action => 'show', :id => @record, :display => entity)
+    label = ui_lookup(:models => klass.name)
+    image = textual_collection_icon(collection)
+    count = collection.count
+
+    h = {:label => label, :image => image, :value => count.to_s}
+
+    if count > 0 && role_allows(:feature => feature)
+      if collection.respond_to?(:proxy_association)
+        h[:link] = url_for(:action  => 'show',
+                           :id      => collection.proxy_association.owner,
+                           :display => collection.proxy_association.reflection.name)
+      else
+        h[:link] = url_for(:controller => klass.name.underscore,
+                           :action     => 'list')
+      end
       h[:title] = "Show all #{label}"
     end
 
     h
+  end
+
+  def textual_object_icon(object)
+    case object
+    when ExtManagementSystem
+      "vendor-#{object.image_name}"
+    else
+      object.class.base_model.name.underscore
+    end
+  end
+
+  def textual_collection_icon(collection)
+    collection.klass.base_model.name.underscore
   end
 end

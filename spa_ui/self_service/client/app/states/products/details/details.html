@@ -1,0 +1,71 @@
+<content-header short="true">
+  <div class="product-details-heading">
+    <img ng-if="vm.product.img" class="product-details-heading__icon" ng-src="/images/assets/{{ ::vm.product.img }}"/>
+    <span class="content-header__title">{{ ::vm.product.name }}</span>
+  </div>
+</content-header>
+
+<details-table heading="Details">
+  <div class="details-table__row">
+    <div class="details-table__label">Product</div>
+    <div class="details-table__detail">
+      <product-description product="vm.product" link-to="products.details({productId: {{vm.product.id}}})"></product-description>
+    </div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Product Status</div>
+    <div class="details-table__detail" ng-if="vm.product.active">Active</div>
+    <div class="details-table__detail" ng-if="!vm.product.active">Inactive</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Product Type</div>
+    <div class="details-table__detail">{{ ::vm.product.product_type }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Product Tags</div>
+    <div class="details-table__detail" ng-bind-html="vm.tagList(vm.product.tags)"></div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Creation Date</div>
+    <div class="details-table__detail">{{ ::vm.product.created_at | date:'medium' }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Last Updated</div>
+    <div class="details-table__detail">{{ ::vm.product.updated_at | date:'medium' }}</div>
+  </div>
+</details-table>
+
+<details-table heading="Provisioning Answers">
+  <div class="details-table__row" ng-repeat="(key, value) in vm.product.provisioning_answers">
+    <div class="details-table__label"> {{ ::key}}</div>
+    <div class="details-table__detail"> {{ ::value}}</div>
+  </div>
+</details-table>
+
+<region heading="Pricing">
+  <table class="product-pricing">
+    <thead>
+    <tr>
+      <th class="product-pricing__heading"></th>
+      <th class="product-pricing__heading">Setup</th>
+      <th class="product-pricing__heading">Hourly</th>
+      <th class="product-pricing__heading">Monthly</th>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="selectRow">
+      <td class="product-pricing__cell product-pricing__cell--padding"></td>
+      <td class="product-pricing__cell product-pricing__cell">{{ ::vm.product.setup_price | currency }}</td>
+      <td class="product-pricing__cell product-pricing__cell">{{ ::vm.product.monthly_price | currency }}</td>
+      <td class="product-pricing__cell product-pricing__cell">{{ ::vm.product.hourly_price | currency }}</td>
+    </tr>
+    </tbody>
+  </table>
+</region>
+

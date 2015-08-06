@@ -3,12 +3,12 @@
 
   - if @display == "config_info"
     %fieldset
-      %h3=_('Info')
+      %h3= _('Info')
       %table.table.table-bordered.table-striped
         - if @rp_config.nil? || @rp_config.empty?
           %tr
             %td{:width => "495"}
-              %strong=_('Not Available')
+              %strong= _('Not Available')
         - else
           - @rp_config.each_slice(2) do |items|
             %tr

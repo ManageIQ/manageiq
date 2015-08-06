@@ -2,13 +2,13 @@
   %table.table.table-bordered.table-hover.table-striped.table-selectable
     %thead
       %tr
-        - # need to set options from @edit/@option based upon calling screen: show/edit
+        -# need to set options from @edit/@option based upon calling screen: show/edit
         - options = @edit ? @edit : @options
         - id = @edit && @edit[:req_id] || "new"
         - options[:host_columns].each_with_index do |h, i|
           %th
-            - #  Replaced to exclude non-view table fields from sorting
-            - # dont show sort on show screen, need @edit variables for sort to work
+            -# Replaced to exclude non-view table fields from sorting
+            -# dont show sort on show screen, need @edit variables for sort to work
             - if @edit
               = link_to(h(options[:host_headers][h]),
                 {:action => "sort_host_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},

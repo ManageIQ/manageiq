@@ -45,15 +45,8 @@ module MigrationSpecHelper
   # Clears any cached column information on stubs, since the migrations
   # themselves will not expect anything to be cached.
   def clear_caches
-    ar_stubs.each do |s|
-      # inheritance_column changes done by migrations (e.g. to disable STI) are
-      # lost on reset_column_information, so we need to restore those changes.
-      i = s.inheritance_column
-
-      s.reset_column_information
-
-      s.inheritance_column = i
-    end
+    ar_stubs.each(&:reset_column_information)
+    ActiveRecord::Base.connection.schema_cache.clear!
   end
 
   def clearing_caches

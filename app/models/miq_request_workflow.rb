@@ -375,7 +375,7 @@ class MiqRequestWorkflow
     ws_tags = send(parser, tag_string)
 
     tags = {}
-    send(:allowed_tags).each do |v|
+    allowed_tags.each do |v|
       tc = tags[v[:name]] = {}
       v[:children].each { |k, v| tc[v[:name]] = k }
     end

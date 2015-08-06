@@ -6,7 +6,8 @@ class ContainerGroup < ActiveRecord::Base
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :restart_policy, :dns_policy
 
-  has_many :containers, :dependent => :destroy
+  has_many :containers,
+           :through => :container_definitions
   has_many :container_definitions, :dependent => :destroy
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource
@@ -19,6 +20,8 @@ class ContainerGroup < ActiveRecord::Base
   # validates :dns_policy, :inclusion => { :in => %w(ClusterFirst Default) }
 
   include EventMixin
+
+  acts_as_miq_taggable
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym

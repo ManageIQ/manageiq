@@ -1,6 +1,6 @@
 - @angularForm = true
 
-%form#form_div(name="angularForm" ng-controller="providerForemanFormController" ng-show="afterGet" novalidate)
+%form#form_div{:name => "angularForm", 'ng-controller' => "providerForemanFormController", 'ng-show' => "afterGet", :novalidate => true}
   = render :partial => "layouts/flash_msg"
 
   %h3
@@ -9,15 +9,15 @@
       %tr
         %td.key= _("Name")
         %td
-          %input(type="text" name="name" ng-model="providerForemanModel.name" maxlength="#{MAX_NAME_LEN}" miqrequired checkchange)
+          %input{:type => "text", :name => "name", 'ng-model' => "providerForemanModel.name", :maxlength => MAX_NAME_LEN, :miqrequired => true, :checkchange => true}
       %tr
         %td.key= _("Url")
         %td
-          %input(type="text" name="url" ng-model="providerForemanModel.url" maxlength="#{MAX_DESC_LEN}" miqrequired checkchange)
+          %input{:type => "text", :name => "url", 'ng-model' => "providerForemanModel.url", :maxlength => MAX_DESC_LEN, :miqrequired => true, :checkchange => true}
       %tr
         %td.key= _("Verify Peer Certificate")
         %td
-          %input(type="checkbox" name="verify_ssl" ng-model="providerForemanModel.verify_ssl" ng-true-value="1" ng-false-value="0" checkchange)
+          %input{:type => "checkbox", :name => "verify_ssl", 'ng-model' => "providerForemanModel.verify_ssl", 'ng-true-value' => "1", 'ng-false-value' => "0", :checkchange => true}
 
 
   %hr
@@ -39,5 +39,5 @@
   %span{:style => "color:black"}= _("Required. Should have privileged access, such as root or administrator.")
 
 :javascript
-  miqAngularApplication.value('providerForemanFormId', '#{@provider_foreman.id || "new"}');
-  angular.bootstrap(jQuery('#form_div'), ['miqAngularApplication']);
+  ManageIQ.angularApplication.value('providerForemanFormId', '#{@provider_foreman.id || "new"}');
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });

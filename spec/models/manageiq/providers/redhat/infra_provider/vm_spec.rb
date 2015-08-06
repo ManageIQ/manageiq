@@ -56,4 +56,18 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
       expect(vm_redhat.cloneable?).to eq(true)
     end
   end
+
+  context "#calculate_power_state" do
+    it "returns suspended when suspended" do
+      expect(described_class.calculate_power_state('suspended')).to eq('suspended')
+    end
+
+    it "returns on when up" do
+      expect(described_class.calculate_power_state('up')).to eq('on')
+    end
+
+    it "returns down when off" do
+      expect(described_class.calculate_power_state('down')).to eq('off')
+    end
+  end
 end

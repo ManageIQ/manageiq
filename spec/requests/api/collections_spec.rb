@@ -40,6 +40,11 @@ describe ApiController do
       test_collection_query(:availability_zones, availability_zones_url, AvailabilityZone)
     end
 
+    example "query Chargebacks" do
+      FactoryGirl.create(:chargeback_rate)
+      test_collection_query(:chargebacks, chargebacks_url, ChargebackRate)
+    end
+
     it "query Clusters" do
       FactoryGirl.create(:ems_cluster)
       test_collection_query(:clusters, clusters_url, EmsCluster)
@@ -98,6 +103,16 @@ describe ApiController do
     it "query Provision Requests" do
       FactoryGirl.create(:miq_provision_request, :source => template, :userid => api_config(:user))
       test_collection_query(:provision_requests, provision_requests_url, MiqProvisionRequest)
+    end
+
+    example "query Rates" do
+      FactoryGirl.create(:chargeback_rate_detail)
+      test_collection_query(:rates, rates_url, ChargebackRateDetail)
+    end
+
+    example "query Reports" do
+      FactoryGirl.create(:miq_report)
+      test_collection_query(:reports, reports_url, MiqReport)
     end
 
     it "query Request Tasks" do
