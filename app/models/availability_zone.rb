@@ -22,7 +22,7 @@ class AvailabilityZone < ActiveRecord::Base
   virtual_column :total_vms, :type => :integer, :uses => :vms
 
   def self.available
-    where(arel_table[:type].not_eq("AvailabilityZoneOpenstackNull"))
+    where(arel_table[:type].not_eq("ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull"))
   end
 
   PERF_ROLLUP_CHILDREN = :vms

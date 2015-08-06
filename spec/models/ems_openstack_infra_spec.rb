@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsOpenstackInfra do
+describe ManageIQ::Providers::Openstack::InfraManager do
   it ".ems_type" do
     described_class.ems_type.should == 'openstack_infra'
   end
@@ -52,13 +52,13 @@ describe EmsOpenstackInfra do
     it "creates related ProviderOpenstack after creating EmsOpenstackInfra" do
       @ems.provider.name.should eq @ems.name
       @ems.provider.zone.should == @ems.zone
-      ProviderOpenstack.count.should eq 1
+      ManageIQ::Providers::Openstack::Provider.count.should eq 1
     end
 
     it "destroys related ProviderOpenstack after destroying EmsOpenstackInfra" do
-      ProviderOpenstack.count.should eq 1
+      ManageIQ::Providers::Openstack::Provider.count.should eq 1
       @ems.destroy
-      ProviderOpenstack.count.should eq 0
+      ManageIQ::Providers::Openstack::Provider.count.should eq 0
     end
 
     it "related EmsOpenstack nullifies relation to ProviderOpenstack on EmsOpenstackInfra destroy" do
@@ -71,7 +71,7 @@ describe EmsOpenstackInfra do
 
       # destroy ems and see the relation of ems_cloud to provider nullified
       @ems.destroy
-      ProviderOpenstack.count.should eq 0
+      ManageIQ::Providers::Openstack::Provider.count.should eq 0
       @ems_cloud.reload.provider.should be_nil
     end
   end

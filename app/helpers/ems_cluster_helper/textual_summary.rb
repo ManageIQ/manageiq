@@ -37,7 +37,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_group_openstack_status
-    return nil unless @record.kind_of?(EmsClusterOpenstackInfra)
+    return nil unless @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
     ret = textual_generate_openstack_status
 
     ret.blank? ? nil : ret

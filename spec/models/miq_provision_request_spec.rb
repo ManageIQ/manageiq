@@ -13,7 +13,7 @@ describe MiqProvisionRequest do
 
     ems = FactoryGirl.create(:ems_openstack)
     vm = FactoryGirl.create(:vm_openstack, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq MiqProvisionOpenstack
+    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Openstack::CloudManager::Provision
 
     ems = FactoryGirl.create(:ems_amazon)
     vm = FactoryGirl.create(:vm_amazon, :ext_management_system => ems)

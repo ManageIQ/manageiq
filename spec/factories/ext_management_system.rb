@@ -52,7 +52,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_openstack_infra, :class => "EmsOpenstackInfra", :parent => :ems_infra do
+  factory :ems_openstack_infra, :aliases => ["manageiq/providers/openstack/infra_manager"], :class => "ManageIQ::Providers::Openstack::InfraManager", :parent => :ems_infra do
   end
 
   factory :ems_openstack_infra_with_stack, :parent => :ems_openstack_infra do
@@ -87,7 +87,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_openstack, :class => "EmsOpenstack", :parent => :ems_cloud do
+  factory :ems_openstack, :aliases => ["manageiq/providers/openstack/cloud_manager"], :class => "ManageIQ::Providers::Openstack::CloudManager", :parent => :ems_cloud do
   end
 
   factory :ems_openstack_with_authentication, :parent => :ems_openstack do

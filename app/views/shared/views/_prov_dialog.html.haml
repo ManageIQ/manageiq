@@ -166,7 +166,7 @@
           :label        => _("VM Reservations"),
           :prefix       => prefix,
           :keys         => keys})
-    - if wf.kind_of?(MiqProvisionOpenstackWorkflow)
+    - if wf.kind_of?(ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow)
       = render(:partial => "#{prefix}prov_dialog_cloud_quota",
         :locals         => {:workflow => wf,
           :dialog                     => dialog,

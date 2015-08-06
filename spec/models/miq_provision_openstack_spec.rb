@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionOpenstack do
+describe ManageIQ::Providers::Openstack::CloudManager::Provision do
   let(:options)      { {:src_vm_id => [template.id, template.name]} }
   let(:provider)     { FactoryGirl.create(:ems_openstack_with_authentication) }
   let(:template)     { FactoryGirl.create(:template_openstack, :ext_management_system => provider) }
@@ -93,8 +93,8 @@ describe MiqProvisionOpenstack do
   end
 
   it "#workflow" do
-    MiqProvisionWorkflow.any_instance.stub(:get_dialogs => {:dialogs => {}})
+    ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow.any_instance.stub(:get_dialogs => {:dialogs => {}})
 
-    expect(vm_prov.workflow).to be_kind_of(MiqProvisionOpenstackWorkflow)
+    expect(vm_prov.workflow).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow)
   end
 end

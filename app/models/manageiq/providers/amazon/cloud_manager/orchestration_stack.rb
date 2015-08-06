@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ManageIQ::Providers::CloudManager::OrchestrationStack
+class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ::OrchestrationStack
   def raw_update_stack(options)
     ext_management_system.with_provider_connection(:service => "CloudFormation") do |connection|
       connection.stacks[name].update(options)

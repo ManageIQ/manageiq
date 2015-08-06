@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionOpenstackWorkflow do
+describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
   before do
     MiqRegion.seed
   end
@@ -9,7 +9,7 @@ describe MiqProvisionOpenstackWorkflow do
     let(:admin) { FactoryGirl.create(:user, :name => 'admin', :userid => 'admin') }
 
     it "pass platform attributes to automate" do
-      MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+      ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
       MiqAeEngine::MiqAeWorkspaceRuntime.should_receive(:instantiate)
       MiqAeEngine.should_receive(:create_automation_object) do |name, attrs, _options|
         name.should eq("REQUEST")
@@ -23,16 +23,16 @@ describe MiqProvisionOpenstackWorkflow do
         )
       end
 
-      MiqProvisionOpenstackWorkflow.new({}, admin.userid)
+      ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow.new({}, admin.userid)
     end
 
     context "With a Valid Template" do
       let(:provider) { FactoryGirl.create(:ems_openstack) }
       let(:template) { FactoryGirl.create(:template_openstack, :name => "template", :ext_management_system => provider) }
       let(:workflow) do
-        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-        MiqProvisionCloudWorkflow.any_instance.stub(:update_field_visibility)
-        MiqProvisionOpenstackWorkflow.new({:src_vm_id => template.id}, admin.userid)
+        ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+        ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow.any_instance.stub(:update_field_visibility)
+        ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow.new({:src_vm_id => template.id}, admin.userid)
       end
 
       context "with empty relationships" do

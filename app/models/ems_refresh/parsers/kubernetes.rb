@@ -135,7 +135,7 @@ module EmsRefresh::Parsers
 
       # Searching for the underlying instance. At the moment this search strategy
       # is tested only with OpenStack.
-      vms = VmOpenstack.where(:uid_ems => new_result[:identity_system].downcase)
+      vms = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:uid_ems => new_result[:identity_system].downcase)
       if vms.to_a.size == 1
         new_result[:lives_on_id] = vms.first.id
         new_result[:lives_on_type] = vms.first.type

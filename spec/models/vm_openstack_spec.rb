@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe VmOpenstack do
+describe ManageIQ::Providers::Openstack::CloudManager::Vm do
   context "#is_available?" do
     let(:ems) { FactoryGirl.create(:ems_openstack) }
     let(:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }

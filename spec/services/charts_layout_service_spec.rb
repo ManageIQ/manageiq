@@ -5,7 +5,7 @@ describe ChartsLayoutService do
   let(:host_redhat) { FactoryGirl.create(:host_redhat) }
   let(:vm_openstack) { FactoryGirl.create(:vm_openstack) }
   let(:host_openstack_infra_chart) do
-    YAML::load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'HostOpenstackInfra') + '.yaml'))
+    YAML::load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'ManageIQ_Providers_Openstack_InfraManager_Host') + '.yaml'))
   end
   let(:host_chart) do
     YAML::load(File.open(File.join(UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'Host') + '.yaml'))
