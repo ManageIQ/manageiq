@@ -5,28 +5,7 @@ describe MiqIPMI do
   subject { described_class.new("host", "user", "pass") }
 
   it "#chassis_status" do
-    described_class.stub(:is_2_0_available?).and_return(true)
-    response = <<-EOF
-System Power         : off
-Power Overload       : false
-Power Interlock      : inactive
-Main Power Fault     : false
-Power Control Fault  : false
-Power Restore Policy : previous
-Last Power Event     : command
-Chassis Intrusion    : inactive
-Front-Panel Lockout  : inactive
-Drive Fault          : false
-Cooling/Fan Fault    : false
-Sleep Button Disable : not allowed
-Diag Button Disable  : allowed
-Reset Button Disable : not allowed
-Power Button Disable : allowed
-Sleep Button Disabled: false
-Diag Button Disabled : true
-Reset Button Disabled: false
-Power Button Disabled: false
-EOF
+    response = {:result => "System Power         : off\nPower Overload       : false\nPower Interlock      : inactive\nMain Power Fault     : false\nPower Control Fault  : false\nPower Restore Policy : previous\nLast Power Event     : command\nChassis Intrusion    : inactive\nFront-Panel Lockout  : inactive\nDrive Fault          : false\nCooling/Fan Fault    : false\nSleep Button Disable : not allowed\nDiag Button Disable  : allowed\nReset Button Disable : not allowed\nPower Button Disable : allowed\nSleep Button Disabled: false\nDiag Button Disabled : true\nReset Button Disabled: false\nPower Button Disabled: false\n", :value => true}
 
     result = {
       "System Power"          => "off",
@@ -50,7 +29,7 @@ EOF
       "Power Button Disabled" => "false"
     }
 
-    expect(MiqUtil).to receive(:runcmd).with("ipmitool -I lanplus -H  -U  -E chassis status").twice.and_return(response)
+    expect_any_instance_of(Rubyipmi::Ipmitool::Chassis).to receive(:status).twice.and_return(response)
     expect(subject.chassis_status).to eq(result)
   end
 
@@ -76,32 +55,23 @@ EOF
       it { expect(subject).to be_connected }
 
       it "#power_state" do
-        allow(MiqUtil).to receive(:runcmd).with("ipmitool -I lanplus -H  -U  -E chassis power status").and_return("Chassis Power is off")
+        expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:status).and_return("off")
         expect(subject.power_state).to eq("off")
       end
 
       it "#power_on" do
-        allow(MiqUtil).to receive(:runcmd).with("ipmitool -I lanplus -H  -U  -E chassis power on").and_return("Chassis Power Control: Up/On")
-        expect(subject.power_on).to eq("Chassis Power Control: Up/On")
+        expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:on).and_return(true)
+        expect(subject.power_on).to eq(true)
       end
 
       it "#power_off" do
-        allow(MiqUtil).to receive(:runcmd).with("ipmitool -I lanplus -H  -U  -E chassis power off").and_return("Chassis Power Control: Down/Off")
-        expect(subject.power_off).to eq("Chassis Power Control: Down/Off")
+        expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:off).and_return(true)
+        expect(subject.power_off).to eq(true)
       end
 
-      context "#power_reset" do
-        it "currently off" do
-          allow(subject).to receive(:power_state).and_return("off")
-          expect(subject).to receive(:run_command).with("chassis power on").and_return("Chassis Power Control: Up/On")
-          expect(subject.power_reset).to eq("Chassis Power Control: Up/On")
-        end
-
-        it "currently on" do
-          allow(subject).to receive(:power_state).and_return("on")
-          expect(subject).to receive(:run_command).with("chassis power reset").and_return("Chassis Power Control: Reset")
-          expect(subject.power_reset).to eq("Chassis Power Control: Reset")
-        end
+      it "#power_reset" do
+        expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:reset).and_return(true)
+        expect(subject.power_reset).to eq(true)
       end
     end
 

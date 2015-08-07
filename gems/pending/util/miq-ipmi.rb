@@ -16,42 +16,32 @@ class MiqIPMI
     @username = username
     @password = password
     @connection = Rubyipmi.connect(@username, @password, @server)
-    @status = self.chassis_status rescue nil
+    @status = chassis_status
     @vendor = nil
   end
 
   def connected?
-    !@status.nil?
+    !!@status
   end
 
   def power_state
-    result = run_command("chassis power status")
-    result.split(" ").last
+    @connection.chassis.power.status
   end
 
   def power_on
-    run_command("chassis power on")
+    @connection.chassis.power.on
   end
 
   def power_off
-    run_command("chassis power off")
+    @connection.chassis.power.off
   end
 
   def power_reset
-    if self.power_state == "off"
-      self.power_on
-    else
-      self.power_state_change('reset')
-    end
-  end
-
-  def power_state_change(new_state)
-    #status, on, off, cycle, reset, diag, soft
-    run_command("chassis power #{new_state}")
+    @connection.chassis.power.reset
   end
 
   def chassis_status
-    parse_key_value("chassis status")
+    parse_output(@connection.chassis.status[:result])
   end
 
   def lan_info
