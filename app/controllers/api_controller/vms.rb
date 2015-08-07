@@ -52,6 +52,32 @@ class ApiController
       end
     end
 
+    def shelve_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for shelving a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Shelving #{vm_ident(vm)}")
+
+        result = validate_vm_for_action(vm, "shelve")
+        result = shelve_vm(vm) if result[:success]
+        result
+      end
+    end
+
+    def shelve_offload_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for shelve-offloading a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Shelve-offloading #{vm_ident(vm)}")
+
+        result = validate_vm_for_action(vm, "shelve_offload")
+        result = shelve_offload_vm(vm) if result[:success]
+        result
+      end
+    end
+
     def delete_resource_vms(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
 
@@ -152,6 +178,22 @@ class ApiController
     def pause_vm(vm)
       desc = "#{vm_ident(vm)} pausing"
       task_id = queue_object_action(vm, desc, :method_name => "pause", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def shelve_vm(vm)
+      desc = "#{vm_ident(vm)} shelving"
+      task_id = queue_object_action(vm, desc, :method_name => "shelve", :role => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def shelve_offload_vm(vm)
+      desc = "#{vm_ident(vm)} shelve-offloading"
+      task_id = queue_object_action(vm, desc, :method_name => "shelve_offload", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)

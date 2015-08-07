@@ -11,14 +11,21 @@ describe ApiController do
   let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }
   let(:host)       { FactoryGirl.create(:host) }
 
-  let(:vm)         { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
-  let(:vm1)        { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
-  let(:vm2)        { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
-  let(:vm1_url)    { vms_url(vm1.id) }
-  let(:vm2_url)    { vms_url(vm2.id) }
-  let(:vms_list)   { [vm1_url, vm2_url] }
-  let(:vm_guid)    { vm.guid }
-  let(:vm_url)     { vms_url(vm.id) }
+  let(:vm)                 { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+  let(:vm_openstack)       { FactoryGirl.create(:vm_openstack, :host => host, :ems_id => ems.id, :raw_power_state => "ACTIVE") }
+  let(:vm_openstack1)      { FactoryGirl.create(:vm_openstack, :host => host, :ems_id => ems.id, :raw_power_state => "ACTIVE") }
+  let(:vm_openstack2)      { FactoryGirl.create(:vm_openstack, :host => host, :ems_id => ems.id, :raw_power_state => "ACTIVE") }
+  let(:vm_openstack_url)   { vms_url(vm_openstack.id) }
+  let(:vm_openstack1_url)  { vms_url(vm_openstack1.id) }
+  let(:vm_openstack2_url)  { vms_url(vm_openstack2.id) }
+  let(:vms_openstack_list) { [vm_openstack1_url, vm_openstack2_url] }
+  let(:vm1)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+  let(:vm2)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+  let(:vm1_url)            { vms_url(vm1.id) }
+  let(:vm2_url)            { vms_url(vm2.id) }
+  let(:vms_list)           { [vm1_url, vm2_url] }
+  let(:vm_guid)            { vm.guid }
+  let(:vm_url)             { vms_url(vm.id) }
 
   let(:invalid_vm_url) { vms_url(999_999) }
 
@@ -340,6 +347,196 @@ describe ApiController do
 
       expect_multiple_action_result(2, :task => true)
       expect_result_resources_to_include_hrefs("results", :vms_list)
+    end
+  end
+
+  context "Vm shelve action" do
+    it "shelves an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :shelve)
+
+      run_post(invalid_vm_url, gen_request(:shelve))
+
+      expect_resource_not_found
+    end
+
+    it "shelves an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:shelve))
+
+      expect_request_forbidden
+    end
+
+    it "shelves a powered off vm" do
+      api_basic_authorize action_identifier(:vms, :shelve)
+      update_raw_power_state("SHUTOFF", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => true, :message => 'shelving', :href => :vm_openstack_url)
+    end
+
+    it "shelves a suspended vm" do
+      api_basic_authorize action_identifier(:vms, :shelve)
+      update_raw_power_state("SUSPENDED", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => true, :message => 'shelving', :href => :vm_openstack_url)
+    end
+
+    it "shelves a paused off vm" do
+      api_basic_authorize action_identifier(:vms, :shelve)
+      update_raw_power_state("PAUSED", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => true, :message => 'shelving', :href => :vm_openstack_url)
+    end
+
+    it "shelves a shelveed vm" do
+      api_basic_authorize action_identifier(:vms, :shelve)
+      update_raw_power_state("SHELVED", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => false,
+                                  :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused",
+                                  :href => :vm_openstack_url)
+    end
+
+    it "shelves a vm" do
+      api_basic_authorize action_identifier(:vms, :shelve)
+
+      run_post(vm_openstack_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => true, :message => "shelving", :href => :vm_openstack_url, :task => true)
+    end
+
+    it "shelve for a VMWare vm is not supported" do
+      api_basic_authorize action_identifier(:vms, :shelve)
+
+      run_post(vm_url, gen_request(:shelve))
+
+      expect_single_action_result(:success => false,
+                                  :message => "Shelve Operation is not available for Vmware VM.",
+                                  :href => :vm_url,
+                                  :task => false)
+    end
+
+    it "shelves multiple vms" do
+      api_basic_authorize action_identifier(:vms, :shelve)
+
+      run_post(vms_url, gen_request(:shelve, nil, vm_openstack1_url, vm_openstack2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :vms_openstack_list)
+    end
+  end
+
+  context "Vm shelve offload action" do
+    it "shelve_offloads an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+
+      run_post(invalid_vm_url, gen_request(:shelve_offload))
+
+      expect_resource_not_found
+    end
+
+    it "shelve_offloads an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:shelve_offload))
+
+      expect_request_forbidden
+    end
+
+    it "shelve_offloads a active vm" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+
+      run_post(vm_openstack_url, gen_request(:shelve_offload))
+
+      expect_single_action_result(:success => false,
+                                  :message => "The VM can't be shelved offload, current state has to be shelved",
+                                  :href => :vm_openstack_url)
+    end
+
+    it "shelve_offloads a powered off vm" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      update_raw_power_state("SHUTOFF", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve_offload))
+
+      expect_single_action_result(:success => false,
+                                  :message => "The VM can't be shelved offload, current state has to be shelved",
+                                  :href => :vm_openstack_url)
+    end
+
+    it "shelve_offloads a suspended vm" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      update_raw_power_state("SUSPENDED", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve_offload))
+
+      expect_single_action_result(:success => false,
+                                  :message => "The VM can't be shelved offload, current state has to be shelved",
+                                  :href => :vm_openstack_url)
+    end
+
+    it "shelve_offloads a paused off vm" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      update_raw_power_state("PAUSED", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve_offload))
+
+      expect_single_action_result(:success => false,
+                                  :message => "The VM can't be shelved offload, current state has to be shelved",
+                                  :href => :vm_openstack_url)
+    end
+
+    it "shelve_offloads a shelve_offloaded vm" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      update_raw_power_state("SHELVED_OFFLOADED", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve_offload))
+
+      expect_single_action_result(:success => false,
+                                  :message => "The VM can't be shelved offload, current state has to be shelved",
+                                  :href => :vm_openstack_url)
+    end
+
+    it "shelve_offloads a shelved vm" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      update_raw_power_state("SHELVED", vm_openstack)
+
+      run_post(vm_openstack_url, gen_request(:shelve_offload))
+
+      expect_single_action_result(:success => true,
+                                  :message => "shelve-offloading",
+                                  :href => :vm_openstack_url)
+    end
+
+    it "shelve_offload for a VMWare vm is not supported" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+
+      run_post(vm_url, gen_request(:shelve_offload))
+
+      expect_single_action_result(:success => false,
+                                  :message => "Shelve Offload Operation is not available for Vmware VM.",
+                                  :href => :vm_url,
+                                  :task => false)
+    end
+
+    it "shelve_offloads multiple vms" do
+      api_basic_authorize action_identifier(:vms, :shelve_offload)
+
+      update_raw_power_state("SHELVED", vm_openstack1)
+      update_raw_power_state("SHELVED", vm_openstack2)
+
+      run_post(vms_url, gen_request(:shelve_offload, nil, vm_openstack1_url, vm_openstack2_url))
+
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :vms_openstack_list)
     end
   end
 

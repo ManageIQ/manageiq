@@ -806,6 +806,10 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
+      - :name: shelve
+        :identifier: vm_shelve
+      - :name: shelve_offload
+        :identifier: vm_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: reset
@@ -844,6 +848,10 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
+      - :name: shelve
+        :identifier: vm_shelve
+      - :name: shelve_offload
+        :identifier: vm_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: reset
