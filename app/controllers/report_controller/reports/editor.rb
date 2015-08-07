@@ -680,8 +680,8 @@ module ReportController::Reports::Editor
 
     if params[:chart_mode] && params[:chart_mode] != @edit[:new][:chart_mode]
       @edit[:new][:chart_mode] = params[:chart_mode]
-      @refresh_div              = "chart_sample_div"
-      @refresh_partial          = "form_chart_sample"
+      @refresh_div             = "chart_div"
+      @refresh_partial         = "form_chart"
     end
 
     if params[:chart_column] && params[:chart_column] != @edit[:new][:chart_column]
