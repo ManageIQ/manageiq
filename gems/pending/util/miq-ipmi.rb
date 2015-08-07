@@ -69,7 +69,7 @@ class MiqIPMI
     # comes back from the RFU (Field Replaceable Unit) this may not be accurate.
     fru = self.fru_info.first
     return fru["Board Product"] unless fru.blank?
-    return nil
+    nil
   end
 
   def fru_info
@@ -90,7 +90,7 @@ class MiqIPMI
     end
 
     @devices << fru_process_info(dev_id, dev_descript, dev_lines)
-    return @devices.compact
+    @devices.compact
   end
 
   def fru_process_info(id, description, lines)
@@ -100,7 +100,7 @@ class MiqIPMI
       dh.merge!("output" => lines) if dh.blank?
       dh.merge!({"ID" => id, "Description" => description})
     end
-    return dh
+    dh
   end
 
   def mac_address
@@ -108,13 +108,13 @@ class MiqIPMI
     return nil if macs.blank?
     result = macs.detect {|mac| mac[:enabled] == true}
     return result[:address] unless result.nil?
-    return nil
+    nil
   end
 
   def mac_addresses
     vendor = self.manufacturer.to_s.downcase
     return self.dell_mac_addresses if vendor.include?('dell')
-    return nil
+    nil
   end
 
   #Sample "delloem mac" output
@@ -140,7 +140,7 @@ class MiqIPMI
         end
       end
     end
-    return macs
+    macs
   end
 
   def parse_key_value(ipmi_cmd, continue_on_error=false)
