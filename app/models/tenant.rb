@@ -28,13 +28,13 @@ class Tenant < ActiveRecord::Base
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
-                    :url  => "/uploads/#{HARDCODED_LOGO}",
-                    :path => ":rails_root/public/uploads/#{HARDCODED_LOGO}"
+                    :url  => "/uploads/:basename.:extension",
+                    :path => ":rails_root/public/uploads/:basename.:extension"
 
   has_attached_file :login_logo,
-                    :url         => "/uploads/#{HARDCODED_LOGIN_LOGO}",
+                    :url         => "/uploads/:basename.:extension",
                     :default_url => ":default_login_logo",
-                    :path        => ":rails_root/public/uploads/#{HARDCODED_LOGIN_LOGO}"
+                    :path        => ":rails_root/public/uploads/:basename.:extension"
 
   validates :company_name, :presence => true
   validates :subdomain, :uniqueness => true, :allow_nil => true

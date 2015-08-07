@@ -32,7 +32,7 @@ describe Tenant do
   end
 
   describe "#logo" do
-    let(:tenant) { FactoryGirl.create(:tenant, :logo_file_name => "image.png") }
+    let(:tenant) { FactoryGirl.create(:tenant, :logo_file_name => "custom_logo.png") }
 
     # NOTE: this currently returns a bogus url.
     # it { expect(described_class.create.logo.url).to be_nil }
@@ -49,7 +49,7 @@ describe Tenant do
 
   describe "#logo?" do
     it "knows when there is a logo" do
-      expect(described_class.new(:logo_file_name => "image.png")).to be_logo
+      expect(described_class.new(:logo_file_name => "custom_logo.png")).to be_logo
     end
 
     it "knows when there is no logo" do
