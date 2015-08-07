@@ -1,4 +1,6 @@
 class ManageIQ::Providers::Redhat::InfraManager::Template < ManageIQ::Providers::InfraManager::Template
+  include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
+
   def self.supports_kickstart_provisioning?
     true
   end

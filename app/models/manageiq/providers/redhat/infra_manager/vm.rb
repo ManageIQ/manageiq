@@ -1,6 +1,7 @@
 class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
   include_concern 'Operations'
   include_concern 'RemoteConsole'
+  include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
 
   def provider_object(connection = nil)
     connection ||= self.ext_management_system.connect

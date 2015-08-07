@@ -15,13 +15,15 @@ require 'metadata/linux/LinuxSystemd'
 require 'metadata/linux/LinuxOSInfo'
 require 'metadata/ScanProfile/VmScanProfiles'
 require 'VMwareWebService/MiqVim'
+require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackImage'
+require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance'
 require 'util/miq-password'
 require 'VMwareWebService/MiqVimBroker'
 
 class MIQExtract
 	attr_reader :systemFsMsg, :systemFs, :vm
 
-	def initialize(filename, ost=nil)
+	def initialize(filename, ost=nil) # TODO: Always pass in MiqVm
 
     ost ||= OpenStruct.new
     @ost = ost
@@ -29,7 +31,9 @@ class MIQExtract
     ost.scanData = {} if ost.scanData.nil?
     @xml_class = ost.xml_class.nil? ? XmlHash::Document : ost.xml_class
 
-		if filename.kind_of?(MiqVm)
+    # TODO: Should all be subclasses of MiqVm.
+    #       Going forward, we should only pass in an MiqVm - so the "else" will be removed.
+		if filename.kind_of?(MiqVm) || filename.kind_of?(MiqOpenStackImage) || filename.kind_of?(MiqOpenStackInstance)
 			@externalMount = true
 			@vm = filename
 			@vmCfgFile = @vm.vmConfigFile
@@ -45,8 +49,6 @@ class MIQExtract
       ost.snapshotDescription = ost.scanData.fetch_path('snapshot', 'description') if ost.scanData.fetch_path('snapshot', 'description')
       ost.snapshot_create_free_space = ost.scanData.fetch_path('snapshot', 'create_free_percent') || 100
       ost.snapshot_remove_free_space = ost.scanData.fetch_path('snapshot', 'remove_free_percent') || 100
-      set_process_permissions(:set)
-      connect_to_ems(ost)
 			@vm = MiqVm.new(@vmCfgFile, ost)
 		end
 
@@ -297,163 +299,4 @@ class MIQExtract
       end
 		end
 	end  #close
-
-  def set_process_permissions(mode=:set)
-    log_header = "MIQExtract.set_process_permissions:"
-    grp_id = @ost.scanData.fetch_path('permissions', 'group')
-    unless grp_id.nil?
-      if mode == :set
-        $log.info "#{log_header} Process Group ID change requested from current:<#{Process.gid}> to <#{grp_id}>"
-        begin
-          @ost.scanData['permissions']['saved_group'] = Process.gid
-          Process::GID.change_privilege(grp_id)
-          $log.info "#{log_header} Group ID changed to <#{Process.gid}>"
-        rescue => err
-          $log.warn "#{log_header} Unable to change Group ID for current process.  Message: <#{err}>"
-        end
-      else
-        saved_grp_id = @ost.scanData.fetch_path('permissions', 'saved_group')
-        unless saved_grp_id.nil?
-          $log.info "#{log_header} Resetting Process Group ID from Current:<#{Process.gid}> to <#{saved_grp_id}>"
-          begin
-            Process::GID.change_privilege(saved_grp_id)
-            $log.info "#{log_header} Group ID reset to <#{Process.gid}>"
-          rescue => err
-            $log.warn "#{log_header} Unable to reset Group ID for current process.  Message: <#{err}>"
-          end
-        end
-      end
-    end
-  end
-
-  def mount_storage(mount_hash)
-    require 'miq_nfs_session'
-    log_header = "MIQ(MIQExtract.mount_storage)"
-
-    begin
-      FileUtils.mkdir_p(mount_hash[:link_path]) unless File.directory?(mount_hash[:link_path])
-      mount_hash[:mount_points].each do |mnt|
-        $log.info "#{log_header} Creating mount point <#{mnt.inspect}>"
-        MiqNfsSession.new(mnt).connect
-      end
-      mount_hash[:symlinks].each do |link|
-        $log.info "#{log_header} Creating symlink <#{link.inspect}>"
-        File.symlink(link[:source], link[:target])
-      end
-    rescue
-      $log.error "#{log_header} Unable to mount all items from <#{mount_hash[:base_dir]}>"
-      unmount_storage(mount_hash)
-      raise $!
-    end
-  end
-
-  def unmount_storage(mount_hash)
-    log_header = "MIQ(MIQExtract.unmount_storage)"
-    begin
-      $log.warn "#{log_header} Unmount all items from <#{mount_hash[:base_dir]}>"
-      mount_hash[:mount_points].each {|mnt| MiqNfsSession.disconnect(mnt[:mount_point])}
-      FileUtils.rm_rf(mount_hash[:base_dir])
-    rescue
-      $log.warn "#{log_header} Failed to unmount all items from <#{mount_hash[:base_dir]}>.  Reason: <#{$!}>"
-    end
-  end
-
-  def connect_to_ems(ost)
-    if ost
-      ems_connect_type = ost.scanData.fetch_path('ems', 'connect_to') || 'host'
-      klass_name = ost.scanData.fetch_path("ems", ems_connect_type, :class_name).to_s
-      if klass_name.include?('Redhat')
-        connect_to_ems_rhevm(ost, ems_connect_type)
-      else
-        connect_to_ems_vmware(ost, ems_connect_type)
-      end
-    end
-  end
-
-  def connect_to_ems_vmware(ost, ems_connect_type)
-    if ost.config && ost.config.capabilities[:vixDisk] == true
-      # Make sure we were given a ems/host to connect to
-      miqVimHost = ost.scanData.fetch_path("ems", ems_connect_type)
-      if miqVimHost
-        st = Time.now
-        use_broker = ost.scanData["ems"][:use_vim_broker] == true
-        miqVimHost[:address] = miqVimHost[:ipaddress] if miqVimHost[:address].nil?
-        ems_display_text = "#{ems_connect_type}(#{use_broker ? 'via broker' : 'directly'}):#{miqVimHost[:address]}"
-        $log.info "Connecting to [#{ems_display_text}] for VM:[#{@vmCfgFile}]"
-        miqVimHost[:password_decrypt] = MiqPassword.decrypt(miqVimHost[:password])
-        if !$miqHostCfg || !$miqHostCfg.emsLocal
-          ($miqHostCfg ||= OpenStruct.new).vimHost = ost.scanData["ems"]['host']
-          $miqHostCfg.vimHost[:use_vim_broker] = use_broker
-        end
-
-        begin
-          require 'miq_fault_tolerant_vim'
-          ost.miqVim = MiqFaultTolerantVim.new(:ip => miqVimHost[:address], :user => miqVimHost[:username], :pass => miqVimHost[:password_decrypt], :use_broker => use_broker, :vim_broker_drb_port => ost.scanData['ems'][:vim_broker_drb_port])
-          #ost.snapId = opts.snapId if opts.snapId
-          $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vmCfgFile}] in [#{Time.now-st}] seconds"
-        rescue Timeout::Error => err
-          msg = "Connection to [#{ems_display_text}] timed out for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
-          $log.error msg
-          raise err, msg, err.backtrace
-        rescue Exception => err
-          msg = "Connection to [#{ems_display_text}] failed for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
-          $log.error msg
-          raise err, msg, err.backtrace
-        end
-      end
-    end
-  end
-
-  def connect_to_ems_rhevm(ost, ems_connect_type)
-    log_header = "MIQ(MIQExtract.connect_to_ems_rhevm)"
-    @mount = ost.scanData[:mount]
-    unless @mount.blank?
-      $rhevm_mount_root = @mount[:base_dir]
-      $log.info "#{log_header} Mounting storage for VM at <#{$rhevm_mount_root}>"
-      self.mount_storage(@mount)
-      @vmCfgFile = File.join($rhevm_mount_root, @vmCfgFile)
-    end
-
-    # Check if we've been told explicitly not to connect to the ems
-    return if ost.scanData.fetch_path("ems", 'connect') == false
-
-    # Make sure we were given a ems/host to connect to
-    miqVimHost = ost.scanData.fetch_path("ems", ems_connect_type)
-    if miqVimHost
-      st = Time.now
-      #use_broker = ost.scanData["ems"][:use_vim_broker] == true
-      use_broker = false
-      miqVimHost[:address] = miqVimHost[:ipaddress] if miqVimHost[:address].nil?
-      ems_display_text = "#{ems_connect_type}(#{use_broker ? 'via broker' : 'directly'}):#{miqVimHost[:address]}"
-      $log.info "Connecting to [#{ems_display_text}] for VM:[#{@vmCfgFile}]"
-      miqVimHost[:password_decrypt] = MiqPassword.decrypt(miqVimHost[:password])
-
-      begin
-        require 'ovirt'
-        Ovirt.logger = $rhevm_log if $rhevm_log
-
-        ems_opt = {
-          :server     => miqVimHost[:address],
-          :username   => miqVimHost[:username],
-          :password   => miqVimHost[:password_decrypt],
-          :verify_ssl => false
-        }
-        ems_opt[:port] = miqVimHost[:port] unless miqVimHost[:port].blank?
-
-        rhevm = Ovirt::Inventory.new(ems_opt)
-        rhevm.api
-        ost.miqRhevm = rhevm
-        $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vmCfgFile}] in [#{Time.now-st}] seconds"
-      rescue Timeout::Error => err
-        msg = "Connection to [#{ems_display_text}] timed out for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
-        $log.error msg
-        raise err, msg, err.backtrace
-      rescue Exception => err
-        msg = "Connection to [#{ems_display_text}] failed for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
-        $log.error msg
-        raise err, msg, err.backtrace
-      end
-    end
-  end
-
 end  # MIQExtract class
