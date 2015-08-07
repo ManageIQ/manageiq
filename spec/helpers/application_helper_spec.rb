@@ -464,6 +464,22 @@ describe ApplicationHelper do
         end
       end
     end
+
+    context "when with ManageIQ::Providers::ContainerManager" do
+      before { @db = "ManageIQ::Providers::ContainerManager" }
+
+      it "and @explorer" do
+        @explorer = true
+        subject[0].should == "ems_container"
+        subject[1].should == "x_show"
+      end
+
+      it "and not @explorer" do
+        @explorer = nil
+        subject[0].should == "ems_container"
+        subject[1].should == "show"
+      end
+    end
   end
 
   describe "#field_to_col" do

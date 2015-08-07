@@ -993,12 +993,12 @@ class ApplicationHelper::ToolbarBuilder
       when "host_restart"
         return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
       end
-    when "ContainerNodeKubernetes"
+    when "ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode"
       case id
       when "container_node_timeline"
         return "No Timeline data has been collected for this Node" unless @record.has_events? || @record.has_events?(:policy_events)
       end
-    when "ContainerGroupKubernetes"
+    when "ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup"
       case id
       when "container_group_timeline"
         return "No Timeline data has been collected for this Pod" unless @record.has_events? || @record.has_events?(:policy_events)

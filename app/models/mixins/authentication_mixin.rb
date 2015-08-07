@@ -111,7 +111,7 @@ module AuthenticationMixin
       cred = self.authentication_type(type)
       current = {:new => nil, :old => nil}
 
-      if value[:auth_key] && !self.kind_of?(EmsContainer)
+      if value[:auth_key] && !self.kind_of?(ManageIQ::Providers::ContainerManager)
         # TODO(lsmola) figure out if there is a better way. Password field is replacing \n with \s, I need to replace
         # them back
         fixed_auth_key = value[:auth_key].gsub(/-----BEGIN\sRSA\sPRIVATE\sKEY-----/, '')
@@ -146,7 +146,7 @@ module AuthenticationMixin
           cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
           self.authentications << cred
-        elsif self.kind_of?(EmsContainer) && value[:auth_key]
+        elsif self.kind_of?(ManageIQ::Providers::ContainerManager) && value[:auth_key]
           cred = AuthToken.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
           self.authentications << cred

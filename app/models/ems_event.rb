@@ -87,7 +87,7 @@ class EmsEvent < EventStream
   end
 
   def self.add_kubernetes(ems_id, event)
-    add(ems_id, EmsEvent::Parsers::Kubernetes.event_to_hash(event, ems_id))
+    add(ems_id, ManageIQ::Providers::Kubernetes::ContainerManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add(ems_id, event_hash)

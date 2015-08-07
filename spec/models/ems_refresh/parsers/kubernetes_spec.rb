@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Parsers::Kubernetes do
+describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
   let(:parser)  { described_class.new }
 
   describe "parse_image_name" do

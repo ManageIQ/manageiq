@@ -256,6 +256,10 @@ module ApplicationHelper
       action = "diagnostics_worker_selected"
     when "CloudNetwork", "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
       controller = request.parameters[:controller]
+    when /^ManageIQ::Providers::(\w+)Manager$/
+      controller = "ems_#{$1.underscore}"
+    when /^ManageIQ::Providers::(\w+)Manager::(\w+)$/
+      controller = "#{$2.underscore}_#{$1.underscore}"
     else
       controller = db.underscore
     end
@@ -784,8 +788,8 @@ module ApplicationHelper
     raise "Record is not ExtManagementSystem class" unless record.kind_of?(ExtManagementSystem)
     if record.kind_of?(ManageIQ::Providers::CloudManager)
       ManageIQ::Providers::CloudManager
-    elsif record.kind_of?(EmsContainer)
-      EmsContainer
+    elsif record.kind_of?(ManageIQ::Providers::ContainerManager)
+      ManageIQ::Providers::ContainerManager
     else
       ManageIQ::Providers::InfraManager
     end

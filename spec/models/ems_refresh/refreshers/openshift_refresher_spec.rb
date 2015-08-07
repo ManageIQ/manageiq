@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::OpenshiftRefresher do
+describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   before(:each) do
     MiqServer.stub(:my_zone).and_return("default")
     @ems = FactoryGirl.create(:ems_openshift, :hostname => "10.35.0.174")
@@ -39,7 +39,7 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
   def assert_ems
     @ems.should have_attributes(
                     :port => "8443",
-                    :type => "EmsOpenshift"
+                    :type => "ManageIQ::Providers::Openshift::ContainerManager"
                 )
   end
 

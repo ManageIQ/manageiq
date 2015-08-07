@@ -140,7 +140,7 @@ describe EmsContainerController do
     context "#update" do
       it "updates provider with new token" do
         set_user_privileges
-        @ems = EmsKubernetes.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
+        @ems = ManageIQ::Providers::Kubernetes::ContainerManager.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
         controller.instance_variable_set(:@edit,
                                          :new    => {:name         => @ems.name,
                                                      :emstype      => @ems.type,
@@ -152,7 +152,7 @@ describe EmsContainerController do
         session[:edit] = assigns(:edit)
         post :update, :button => "save", :id => @ems.id, :type => @ems.type
         response.status.should == 200
-        EmsKubernetes.last.authentication_token("bearer").should == "valid-token"
+        ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer").should == "valid-token"
       end
     end
   end

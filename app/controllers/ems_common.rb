@@ -778,10 +778,10 @@ module EmsCommon
       @edit[:new][:emstype] = params[:server_emstype]
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
-      elsif params[:server_emstype] == EmsKubernetes.ems_type
-        @edit[:new][:port] = @ems.port ?  @ems.port : EmsKubernetes.new.port
-      elsif params[:server_emstype] == EmsOpenshift.ems_type
-        @edit[:new][:port] = @ems.port ?  @ems.port : EmsOpenshift.new.port
+      elsif params[:server_emstype] == ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
+        @edit[:new][:port] = @ems.port ?  @ems.port : ManageIQ::Providers::Kubernetes::ContainerManager.new.port
+      elsif params[:server_emstype] == ManageIQ::Providers::Openshift::ContainerManager.ems_type
+        @edit[:new][:port] = @ems.port ?  @ems.port : ManageIQ::Providers::Openshift::ContainerManager.new.port
       else
         @edit[:new][:port] = nil
       end

@@ -4,7 +4,7 @@ module EmsRefresh::SaveInventory
     case ems
     when EmsCloud;     save_ems_cloud_inventory(ems, hashes, target)
     when EmsInfra;     save_ems_infra_inventory(ems, hashes, target)
-    when EmsContainer; save_ems_container_inventory(ems, hashes, target)
+    when ManageIQ::Providers::ContainerManager; save_ems_container_inventory(ems, hashes, target)
     end
   end
 
