@@ -840,12 +840,7 @@ class MiqRequestWorkflow
     result.each_with_object({}) { |s, hash| hash[s[0]] = s[1] }
   end
 
-  def process_filter(filter_prop, ci_klass, targets = [])
-    return targets if targets.blank?
-    process_filter_all(filter_prop, ci_klass, targets)
-  end
-
-  def process_filter_all(filter_prop, ci_klass, targets = [])
+  def process_filter(filter_prop, ci_klass, targets)
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
     result = if filter_id.zero?
@@ -1055,7 +1050,7 @@ class MiqRequestWorkflow
   end
 
   # Return empty hash if we are selecting placement automatically so we do not
-  # send time determining all the available resources
+  # spend time determining all the available resources
   def resources_for_ui
     get_source_and_targets
   end
@@ -1119,15 +1114,15 @@ class MiqRequestWorkflow
   end
 
   def allowed_clusters(_options = {})
-    filtered_targets = process_filter_all(:cluster_filter, EmsCluster)
-    filtered_ids = filtered_targets.collect(&:id)
-    allowed_ci(:cluster, [:respool, :host, :folder], filtered_ids)
+    all_clusters     = EmsCluster.where(:ems_id => get_source_and_targets[:ems].id)
+    filtered_targets = process_filter(:cluster_filter, EmsCluster, all_clusters)
+    allowed_ci(:cluster, [:respool, :host, :folder], filtered_targets.collect(&:id))
   end
 
   def allowed_respools(_options = {})
-    filtered_targets = process_filter_all(:rp_filter, ResourcePool)
-    filtered_ids = filtered_targets.collect(&:id)
-    allowed_ci(:respool, [:cluster, :host, :folder], filtered_ids)
+    all_resource_pools = ResourcePool.where(:ems_id => get_source_and_targets[:ems].id)
+    filtered_targets   = process_filter(:rp_filter, ResourcePool, all_resource_pools)
+    allowed_ci(:respool, [:cluster, :host, :folder], filtered_targets.collect(&:id))
   end
   alias_method :allowed_resource_pools, :allowed_respools
 
