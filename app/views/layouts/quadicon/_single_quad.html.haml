@@ -44,12 +44,12 @@
     .flobj
       - if !@embedded || @showlinks
         - case @listicon
-          - when "scan_history"
-            - name = item.started_on
-          - when "orchestration_stack_output", "output"
-            - name = item.key
-          - else
-            - name = item.name
+        - when "scan_history"
+          - name = item.started_on
+        - when "orchestration_stack_output", "output"
+          - name = item.key
+        - else
+          - name = item.name
         - l = url_for(:controller => @parent.class.base_class.to_s.underscore, :action => @lastaction, :id => @parent.id, :show => item.id)
         %a{:href => l, :title => h(name)}
           %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
