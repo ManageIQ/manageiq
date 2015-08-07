@@ -458,7 +458,7 @@ module ApplicationController::Explorer
       end
       return options[:count_only] ? roles.count : roles.sort_by { |a| a.name.downcase }
     when :schedules
-      if session[:userrole] == "super_administrator"  # Super admins see all report schedules
+      if super_admin_user? # Super admins see all report schedules
         objects = MiqSchedule.all(:conditions=>["towhat=?", "MiqReport"])
       else
         objects = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])

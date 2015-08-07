@@ -357,7 +357,7 @@ class ConfigurationController < ApplicationController
   # Show the users list
   def show_timeprofiles
     build_tabs if params[:action] == "change_tab" || ["cancel","add","save"].include?(params[:button])
-    if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
+    if admin_user?
       @timeprofiles = TimeProfile.in_my_region.all(:order => "lower(description) ASC")
     else
       @timeprofiles = TimeProfile.in_my_region.all(:conditions=> ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
@@ -429,9 +429,9 @@ class ConfigurationController < ApplicationController
     assert_privileges("tp_edit")
     @timeprofile = TimeProfile.find(params[:id])
     set_form_vars
-    @tp_restricted = true if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
-    title = (@timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator") ? "Time Profile" : "Edit"
-    add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
+    @tp_restricted = true if @timeprofile.profile_type == "global" && !admin_user?
+    title = (@timeprofile.profile_type == "global" && !admin_user?) ? "Time Profile" : "Edit"
+    add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && !admin_user?
     session[:changed] = false
     @in_a_form = true
     drop_breadcrumb( {:name=>"#{title} '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
@@ -452,9 +452,7 @@ class ConfigurationController < ApplicationController
             timeprofiles.delete(tp.id.to_s)
             add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "TimeProfile"), :name  => tp.description},
                       :error)
-          elsif tp.profile_type == "global" &&
-              session[:userrole] != "super_administrator" &&
-              session[:userrole] != "administrator"
+          elsif tp.profile_type == "global" && !admin_user?
             timeprofiles.delete(tp.id.to_s)
             add_flash(_("\"%{name}\": Global %{model} cannot be deleted") % {:name  => tp.description, :model => ui_lookup(:models => "TimeProfile")},
                       :error)
@@ -515,7 +513,7 @@ class ConfigurationController < ApplicationController
       page.replace('timeprofile_days_hours_div',
                    :partial => "timeprofile_days_hours",
                    :locals  => {:disabled => false}) if @redraw
-      if params.key?(:profile_tz) && ["super_administrator", "administrator"].include?(session[:userrole])
+      if params.key?(:profile_tz) && admin_user?
         if params[:profile_tz].blank?
           page << javascript_hide("rollup_daily_tr")
         else

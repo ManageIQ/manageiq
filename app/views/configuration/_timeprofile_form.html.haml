@@ -16,7 +16,7 @@
                            "data-miq_focus"   => true,
                            "data-miq_observe" => {:interval => ".5",
                                                   :url      => url}.to_json)
-      - if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
+      - if admin_user?
         %tr
           %td.key= _('Scope')
           %td
@@ -40,7 +40,7 @@
                        "data-miq_sparkle_on"  => true,
                        "data-miq_sparkle_off" => true,
                        "data-miq_observe"     => {:url => url}.to_json)
-      - if %w(super_administrator administrator).include?(session[:userrole])
+      - if admin_user?
         %tr#rollup_daily_tr{:style => ("display:none;" unless @edit[:new][:profile][:tz])}
           %td.key= _('Roll Up Daily Performance')
           %td

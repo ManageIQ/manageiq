@@ -4,6 +4,7 @@ module ApplicationController::CurrentUser
   included do
     helper_method :current_user,  :current_userid, :current_username
     helper_method :current_group, :current_groupid, :eligible_groups
+    helper_method :current_role, :admin_user?, :super_admin_user?
   end
 
   def clear_current_user
@@ -27,11 +28,6 @@ module ApplicationController::CurrentUser
 
   def current_group=(db_group)
     session[:group] = db_group.try(:id)
-
-    role = db_group.try(:miq_user_role)
-
-    # Build pre-sprint 69 role name if this is an EvmRole read_only role
-    session[:userrole] = role.try(:read_only?) ? role.name.split("-").last : ""
   end
   private :current_group=
 
@@ -41,6 +37,24 @@ module ApplicationController::CurrentUser
     eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
   end
   private :eligible_groups
+
+  def current_role
+    @current_role ||= begin
+      role = current_group.try(:miq_user_role)
+      role.try(:read_only?) ? role.name.split("-").last : ""
+    end
+  end
+  protected :current_role
+
+  def admin_user?
+    %w(super_administrator administrator).include?(current_role)
+  end
+  protected :admin_user?
+
+  def super_admin_user?
+    current_role == "super_administrator"
+  end
+  protected :super_admin_user?
 
   def current_user
     @current_user ||= User.find_by_userid(session[:userid])

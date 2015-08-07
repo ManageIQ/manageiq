@@ -1283,7 +1283,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_invalid_session
-    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session)
+    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user)
     reset_session
 
     session[:start_url] = if RequestRefererService.access_whitelisted?(request, controller_name, action_name)
@@ -1354,7 +1354,7 @@ class ApplicationController < ActionController::Base
   # used as a before_filter for controller actions to check that
   # the currently logged in user has rights to perform the requested action
   def check_privileges
-    unless PrivilegeCheckerService.new.valid_session?(session)
+    unless PrivilegeCheckerService.new.valid_session?(session, current_user)
       handle_invalid_session
       return
     end
@@ -1946,10 +1946,10 @@ class ApplicationController < ActionController::Base
     # Build the view file name
     if suffix
       viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{session[:userrole]}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{current_role}.yaml"
     else
       viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{session[:userrole]}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{current_role}.yaml"
     end
 
     if viewfilerestricted && File.exist?(viewfilerestricted)

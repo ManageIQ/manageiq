@@ -7,27 +7,25 @@ describe PrivilegeCheckerService do
   describe "#valid_session?" do
     shared_examples_for "PrivilegeCheckerService#valid_session? that returns false" do
       it "returns false" do
-        privilege_checker.valid_session?(session).should be_false
+        privilege_checker.valid_session?(session, user).should be_false
       end
     end
 
     let(:session) do
       {
-        :userid          => userid,
-        :last_trans_time => last_trans_time,
-        :userrole        => "non super administrator"
+        :last_trans_time => last_trans_time
       }
     end
 
     context "when the user is signed out" do
-      let(:userid) { nil }
+      let(:user) { nil }
       let(:last_trans_time) { nil }
 
       it_behaves_like "PrivilegeCheckerService#valid_session? that returns false"
     end
 
     context "when the user is signed in" do
-      let(:userid) { 123 }
+      let(:user) { FactoryGirl.create(:user) }
 
       context "when the session is timed out" do
         let(:last_trans_time) { 2.hours.ago }
@@ -53,7 +51,7 @@ describe PrivilegeCheckerService do
           let(:logon_status) { :ready }
 
           it "returns true" do
-            privilege_checker.valid_session?(session).should be_true
+            privilege_checker.valid_session?(session, user).should be_true
           end
         end
       end
@@ -63,19 +61,18 @@ describe PrivilegeCheckerService do
   describe "#user_session_timed_out?" do
     let(:session) do
       {
-        :userid          => userid,
         :last_trans_time => last_trans_time
       }
     end
 
-    context "when a userid exists" do
-      let(:userid) { 123 }
+    context "when a user exists" do
+      let(:user) { FactoryGirl.create(:user) }
 
       context "when the session is timed out" do
         let(:last_trans_time) { 2.hours.ago }
 
         it "returns true" do
-          privilege_checker.user_session_timed_out?(session).should be_true
+          privilege_checker.user_session_timed_out?(session, user).should be_true
         end
       end
 
@@ -83,17 +80,17 @@ describe PrivilegeCheckerService do
         let(:last_trans_time) { Time.current }
 
         it "returns false" do
-          privilege_checker.user_session_timed_out?(session).should be_false
+          privilege_checker.user_session_timed_out?(session, user).should be_false
         end
       end
     end
 
-    context "when a userid does not exist" do
-      let(:userid) { nil }
+    context "when a user does not exist" do
+      let(:user) { nil }
       let(:last_trans_time) { nil }
 
       it "returns false" do
-        privilege_checker.user_session_timed_out?(session).should be_false
+        privilege_checker.user_session_timed_out?(session, user).should be_false
       end
     end
   end
