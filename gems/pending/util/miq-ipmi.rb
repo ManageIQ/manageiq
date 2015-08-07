@@ -189,14 +189,6 @@ class MiqIPMI
   end
 
   def self.is_available?(ip_address)
-    return self.is_any_available?(ip_address)
-    #return true if self.is_2_0_available?(ip_address)
-    #return true if self.is_1_5_available?(ip_address)
-    #false
-  end
-
-  def self.is_any_available?(ip_address)
-    # One ping reply if machine supports IPMI
     self.is_available_check(ip_address, nil)
   end
 
