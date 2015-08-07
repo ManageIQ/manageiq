@@ -157,24 +157,46 @@ describe MiqRequestWorkflow do
     let(:ems)           { FactoryGirl.create(:ext_management_system) }
     let(:resource_pool) { FactoryGirl.create(:resource_pool, :ems_id => ems.id) }
 
-    it "#allowed_clusters calls allowed_ci with the correct set of cluster ids" do
-      FactoryGirl.create(:ems_cluster)
-      allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
-      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+    before { allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC") }
 
-      expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [cluster.id])
+    context "#allowed_clusters calls allowed_ci with the correct set of cluster ids" do
+      it "missing sources" do
+        cluster
+        allow(workflow).to receive(:get_source_and_targets).and_return({})
 
-      workflow.allowed_clusters
+        expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [])
+
+        workflow.allowed_clusters
+      end
+
+      it "with valid sources" do
+        FactoryGirl.create(:ems_cluster)
+        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+
+        expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [cluster.id])
+
+        workflow.allowed_clusters
+      end
     end
 
-    it "#allowed_resource_pools calls allowed_ci with the correct set of resource_pool ids" do
-      FactoryGirl.create(:resource_pool)
-      allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
-      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+    context "#allowed_resource_pools calls allowed_ci with the correct set of resource_pool ids" do
+      it "missing sources" do
+        resource_pool
+        allow(workflow).to receive(:get_source_and_targets).and_return({})
 
-      expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [resource_pool.id])
+        expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [])
 
-      workflow.allowed_resource_pools
+        workflow.allowed_resource_pools
+      end
+
+      it "with valid sources" do
+        FactoryGirl.create(:resource_pool)
+        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+
+        expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [resource_pool.id])
+
+        workflow.allowed_resource_pools
+      end
     end
   end
 end
