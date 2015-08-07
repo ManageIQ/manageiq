@@ -44,10 +44,6 @@ class MiqIPMI
     parse_output(@connection.chassis.status[:result])
   end
 
-  def lan_info
-    parse_key_value("lan print")
-  end
-
   def mc_info
     parse_key_value("mc info")
   end
