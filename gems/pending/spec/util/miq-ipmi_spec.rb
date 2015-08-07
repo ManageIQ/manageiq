@@ -77,31 +77,7 @@ describe MiqIPMI do
 
     context "management card" do
       let(:mc_info_response) do
-        <<-EOR
-Device ID                 : 32
-Device Revision           : 1
-Firmware Revision         : 1.57
-IPMI Version              : 2.0
-Manufacturer ID           : 674
-Manufacturer Name         : DELL Inc
-Product ID                : 256 (0x0100)
-Product Name              : Unknown (0x100)
-Device Available          : yes
-Provides Device SDRs      : yes
-Additional Device Support :
-    Sensor Device
-    SDR Repository Device
-    SEL Device
-    FRU Inventory Device
-    IPMB Event Receiver
-    Bridge
-    Chassis Device
-Aux Firmware Rev Info     :
-    0x00
-    0x04
-    0x39
-    0x00
-EOR
+        {"Device ID"=>"32", "Device Revision"=>"1", "Firmware Revision"=>"1.57", "IPMI Version"=>"2.0", "Manufacturer ID"=>"674", "Manufacturer Name"=>"DELL Inc", "Product ID"=>"256 (0x0100)", "Product Name"=>"Unknown (0x100)", "Device Available"=>"yes", "Provides Device SDRs"=>"yes", "Additional Device Support"=>["Sensor Device", "SDR Repository Device", "SEL Device", "FRU Inventory Device", "IPMB Event Receiver", "Bridge", "Chassis Device"], "Aux Firmware Rev Info"=>["0x00", "0x04", "0x39", "0x00"]}
       end
 
       it "#mc_info" do
@@ -121,7 +97,7 @@ EOR
       end
 
       it "#manufacturer" do
-        allow(MiqUtil).to receive(:runcmd).with("ipmitool -I lanplus -H  -U  -E mc info").and_return(mc_info_response)
+        expect_any_instance_of(Rubyipmi::Ipmitool::Bmc).to receive(:info).and_return(mc_info_response)
         expect(subject.manufacturer).to eq("DELL Inc")
       end
     end

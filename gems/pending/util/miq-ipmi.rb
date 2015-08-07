@@ -15,7 +15,7 @@ class MiqIPMI
     @server = server
     @username = username
     @password = password
-    @connection = Rubyipmi.connect(@username, @password, @server)
+    @connection = Rubyipmi.connect(@username, @password, @server, "ipmitool")
     @status = chassis_status
     @vendor = nil
   end
@@ -45,11 +45,11 @@ class MiqIPMI
   end
 
   def mc_info
-    parse_key_value("mc info")
+    @connection.bmc.info
   end
 
   def manufacturer
-    self.mc_info['Manufacturer Name']
+    @connection.bmc.info['Manufacturer Name']
   end
 
   def model
