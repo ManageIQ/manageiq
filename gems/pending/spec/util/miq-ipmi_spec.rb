@@ -2,7 +2,7 @@ require "spec_helper"
 require "util/miq-ipmi"
 
 describe MiqIPMI do
-  subject { described_class.new }
+  subject { described_class.new("host", "user", "pass") }
 
   it "#chassis_status" do
     described_class.stub(:is_2_0_available?).and_return(true)

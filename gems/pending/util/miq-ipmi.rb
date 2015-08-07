@@ -8,12 +8,14 @@
 
 require 'util/runcmd'
 require 'util/miq-extensions'
+require 'rubyipmi'
 
 class MiqIPMI
   def initialize(server=nil, username=nil, password=nil)
     @server = server
     @username = username
     @password = password
+    @connection = Rubyipmi.connect(@username, @password, @server)
     @status = self.chassis_status rescue nil
     @vendor = nil
   end
