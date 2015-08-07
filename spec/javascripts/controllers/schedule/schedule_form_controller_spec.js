@@ -715,4 +715,10 @@ describe('scheduleFormController', function() {
       });
     });
   });
+
+  describe('miqService should exist in the scope', function() {
+    it('returns true', function() {
+      expect($scope.miqService).toBeDefined();
+    });
+  });
 });
