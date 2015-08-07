@@ -25,7 +25,7 @@ module OpenstackHandle
         )
       end
       body = Fog::JSON.decode(response.body)
-      vtenants = Fog::Identity::OpenStack::Tenants.new
+      vtenants = Fog::Identity::OpenStack::V2::Tenants.new
       vtenants.load(body['tenants'])
       vtenants
     end
