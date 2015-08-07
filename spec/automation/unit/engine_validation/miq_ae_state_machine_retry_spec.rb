@@ -18,6 +18,11 @@ describe "MiqAeStateMachineRetry" do
                         :instance_name    => @root_instance,
                         :automate_message => 'create'}
     MiqServer.stub(:my_zone).and_return('default')
+    clear_domain
+  end
+
+  def clear_domain
+    MiqAeDomain.find_by_name(@domain).try(:destroy)
   end
 
   def perpetual_retry_script
