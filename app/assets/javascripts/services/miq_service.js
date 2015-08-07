@@ -66,49 +66,6 @@ ManageIQ.angularApplication.service('miqService', function() {
     return form.$valid && form.$dirty;
   };
 
-  this.canValidate = function (form) {
-    if (this.validateFieldsValid(form) && this.validateFieldsDirty(form))
-      return true;
-    else
-      return false;
-  }
-
-  this.canValidateBasicInfo = function () {
-    if (ManageIQ.angularApplication.$scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
-  }
-
-  this.validateFieldsValid = function (form) {
-    if (form != undefined &&
-      form.depot_name.$valid &&
-      form.uri.$valid &&
-      form.log_userid.$valid &&
-      form.log_password.$valid &&
-      form.log_verify.$valid)
-      return true;
-    else
-      return false;
-  }
-
-  this.validateFieldsDirty = function (form) {
-    if (form != undefined &&
-      form.depot_name.$dirty ||
-      form.uri.$dirty ||
-      form.log_userid.$dirty ||
-      form.log_password.$dirty ||
-      form.log_verify.$dirty)
-      return true;
-    else
-      return false;
-  }
-
-   this.validateClicked = function (url) {
-     this.sparkleOn();
-     this.miqAjaxButton(url, true);
-  };
-
   this.serializeModel = function(model) {
     serializedObj = angular.copy( model );
     for(var k in serializedObj){
