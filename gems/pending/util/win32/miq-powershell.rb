@@ -83,10 +83,10 @@ module MiqPowerShell
   end
 
   def self.is_error_object?(xml)
-    if MiqXml.is_nokogiri_loaded?
-      object_type = xml.root.elements[0].attributes['Type'].value rescue ""
-    else
+    if MiqXml.rexml_parser?
       object_type = xml.root.elements[1].attributes['Type'] rescue ""
+    else
+      object_type = xml.root.elements[0].attributes['Type'].value rescue ""
     end
     return true if !object_type.nil? && object_type.split('.').last == 'ErrorRecord'
     return false
@@ -226,8 +226,8 @@ module MiqPowerShell
       hsh = {}
       node.each_element do |e|
         # REXML starts its elements indexing at 1, Nokogiri at 0.
-        index1 = MiqXml.is_nokogiri_loaded? ? 0 : 1
-        index2 = MiqXml.is_nokogiri_loaded? ? 1 : 2
+        index1 = MiqXml.rexml_parser? ? 1 : 0
+        index2 = MiqXml.rexml_parser? ? 2 : 1
 
         name = convert_type(e.elements[index1])
         name = name.to_sym if name.is_a?(String)
