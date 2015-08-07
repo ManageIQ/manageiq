@@ -201,11 +201,6 @@ class MiqIPMI
     self.is_available_check(ip_address, "2.0")
   end
 
-  def self.is_1_5_available?(ip_address)
-    # One ping reply if machine supports IPMI V1.5
-    self.is_available_check(ip_address, "1.5")
-  end
-
   def self.is_available_check(ip_address, version=nil)
     begin
       if version.nil?
