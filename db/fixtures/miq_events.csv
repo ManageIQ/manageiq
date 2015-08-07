@@ -120,6 +120,9 @@ vm_scan_start,VM Analysis Start,Default,vm_operational
 vm_compliance_check,VM Compliance Check,Default,compliance
 vm_compliance_passed,VM Compliance Passed,Default,compliance
 vm_compliance_failed,VM Compliance Failed,Default,compliance
+miqtemplate_compliance_check,MiqTemplate Compliance Check,Default,compliance
+miqtemplate_compliance_passed,MiqTemplate Compliance Passed,Default,compliance
+miqtemplate_compliance_failed,MiqTemplate Compliance Failed,Default,compliance
 vm_remote_console_connected,VM Remote Console Connected,Default,vm_operational
 
 #
