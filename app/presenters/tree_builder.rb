@@ -78,6 +78,7 @@ class TreeBuilder
       [title, title]
     when :pxe_image_types_tree          then [_("All System Image Types"),       _("All System Image Types")]
     when :pxe_servers_tree              then [_("All PXE Servers"),              _("All PXE Servers")]
+    when :reports_tree                  then [_("All Reports"),                  _("All Reports")]
     when :roles_tree                    then
       user = User.current_user
       if user.super_admin_user?
