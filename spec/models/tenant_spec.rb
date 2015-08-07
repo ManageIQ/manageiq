@@ -3,7 +3,7 @@ require "spec_helper"
 describe Tenant do
   describe "#default_tenant" do
     before do
-      Tenant.create
+      Tenant.seed
     end
 
     it "has a default tenant" do
@@ -13,7 +13,7 @@ describe Tenant do
 
   describe "#default?" do
     before do
-      Tenant.create
+      Tenant.seed
     end
 
     it "is default" do
@@ -22,12 +22,6 @@ describe Tenant do
 
     it "is not default" do
       expect(FactoryGirl.build(:tenant, :domain => 'x.com')).not_to be_default
-    end
-  end
-
-  describe "#settings?" do
-    it "is false" do
-      expect(described_class.new).not_to be_settings
     end
   end
 

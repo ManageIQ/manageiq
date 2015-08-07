@@ -36,7 +36,6 @@ class Tenant < ActiveRecord::Base
                     :default_url => ":default_login_logo",
                     :path        => ":rails_root/public/uploads/:basename.:extension"
 
-  validates :company_name, :presence => true
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
 
@@ -56,11 +55,6 @@ class Tenant < ActiveRecord::Base
     subdomain == DEFAULT_URL && domain == DEFAULT_URL
   end
 
-  # @return [Boolean] Is this a tenant reading out of settings?
-  def settings?
-    false
-  end
-
   def logo?
     !!logo_file_name
   end
@@ -74,10 +68,17 @@ class Tenant < ActiveRecord::Base
   end
 
 
+  def self.seed
+    Tenant.create_with(:company_name => nil).find_or_create_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
+  end
+
   private
 
   def nil_blanks
     self.subdomain = nil unless subdomain.present?
     self.domain = nil unless domain.present?
+
+    self.company_name = nil unless company_name.present?
+    self.appliance_name = nil unless appliance_name.present?
   end
 end
