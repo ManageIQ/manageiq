@@ -54,14 +54,14 @@ describe ApplicationHelper do
       end
 
       it "should return namespace toolbar on namespace node" do
-        n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => 1)
+        n1 = FactoryGirl.create(:miq_ae_namespace, :parent => FactoryGirl.create(:miq_ae_domain))
         x_node_set("aen-#{n1.id}", :ae_tree)
         toolbar_name = center_toolbar_filename_automate
         toolbar_name.should eq("miq_ae_namespace_center_tb")
       end
 
       it "should return tab specific toolbar on class node" do
-        n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => 1)
+        n1 = FactoryGirl.create(:miq_ae_namespace, :parent => FactoryGirl.create(:miq_ae_domain))
         c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
         x_node_set("aec-#{c1.id}", :ae_tree)
 
