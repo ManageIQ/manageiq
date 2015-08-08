@@ -15,20 +15,9 @@
     = patternfly_accordion_panel(_("Relationships"), false, "container_route_rel") do
       %ul.nav.nav-pills.nav-stacked
 
-        - if role_allows(:feature => "ems_container_show") && !@record.ext_management_system.nil?
-          %li
-            = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
-                {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                :title => _("Show this container service's parent %s") % ui_lookup(:table => "ems_container"))
-
-        - if role_allows(:feature => "container_project_show") && !@record.container_project.nil?
-          %li
-            = link_to("#{ui_lookup(:table => "container_project")}: #{@record.container_project.name}",
-                {:controller => "container_project", :action => 'show', :id => @record.container_project.id.to_s},
-                :title => _("Show this container service's parent %s") % ui_lookup(:table => "container_project"))
-
-        - if role_allows(:feature => "container_service_show") && !@record.container_service.nil?
-          %li
-            = link_to("#{ui_lookup(:table => "container_service")}: #{@record.container_service.name}",
-                {:controller => "container_service", :action => 'show', :id => @record.container_service.id.to_s},
-                :title => _("Show this container service's parent %s") % ui_lookup(:table => "container_service"))
+        = render(:partial => "layouts/listnav/container_link_to",
+                 :locals  => {:object => @record.ext_management_system})
+        = render(:partial => "layouts/listnav/container_link_to",
+                 :locals  => {:object => @record.container_project})
+        = render(:partial => "layouts/listnav/container_link_to",
+                 :locals  => {:object => @record.container_service})
