@@ -8,32 +8,32 @@ require 'util/xml/xml_patch'
 class MiqXml
   MIQ_XML_VERSION = 3.0 # Use Nokogiri by default
 
-  DefaultXmlType = :nokogiri
+  DEFAULT_XML_TYPE = :nokogiri
 
   @rexml_parser = false
 
-  def self.loadFile(filename, xmlClass = DefaultXmlType)
+  def self.loadFile(filename, xmlClass = DEFAULT_XML_TYPE)
     xml_document(xmlClass).loadFile(filename)
   end
 
-  def self.load(data, xmlClass = DefaultXmlType)
+  def self.load(data, xmlClass = DEFAULT_XML_TYPE)
     xml_document(xmlClass).load(data)
   end
 
-  def self.createDoc(rootName, rootAttrs = nil, version = MIQ_XML_VERSION, xmlClass = DefaultXmlType)
+  def self.createDoc(rootName, rootAttrs = nil, version = MIQ_XML_VERSION, xmlClass = DEFAULT_XML_TYPE)
     xml_document(xmlClass).createDoc(rootName, rootAttrs, version)
   end
 
-  def self.newDoc(xmlClass = DefaultXmlType)
-    xml_document(xmlClass).newDoc()
+  def self.newDoc(xmlClass = DEFAULT_XML_TYPE)
+    xml_document(xmlClass).newDoc
   end
 
-  def self.decode(encodedText, xmlClass = DefaultXmlType)
+  def self.decode(encodedText, xmlClass = DEFAULT_XML_TYPE)
     return xml_document(xmlClass).load(MIQEncode.decode(encodedText)) if encodedText
-    newDoc()
+    newDoc
   end
 
-  def self.newNode(data=nil, xmlClass = DefaultXmlType)
+  def self.newNode(data = nil, xmlClass = DEFAULT_XML_TYPE)
     xml_document(xmlClass).newNode(data)
   end
 
@@ -50,9 +50,11 @@ class MiqXml
         require 'util/xml/miq_nokogiri'
         Nokogiri::XML::Document
       else
+        @rexml_parser = true
         REXML::Document
       end
     rescue
+      @rexml_parser = true
       REXML::Document
     end
   end
