@@ -130,9 +130,9 @@ begin
 
         def self.loadFile(filename)
           begin
-            Nokogiri::XML::Document.file(filename)
+            Nokogiri::XML::Document.new(filename)
           rescue => err
-            $log.warn "Unabled to load XML document with Nokogiri, retrying with REXML" if $log
+            $log.warn "Unable to load XML document with Nokogiri, retrying with REXML" if $log
             self.from_xml(filename, true)
           end
         end
