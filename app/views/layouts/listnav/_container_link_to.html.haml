@@ -1,0 +1,36 @@
+- return if object.nil?
+- if object.kind_of?(ActiveRecord::Relation)
+  -# has_many relation
+  - klass = object.klass.base_model
+  - if klass == Container
+    - feature = 'containers'
+  - else
+    - feature ||= "#{klass.name.underscore}_show_list"
+  - label = ui_lookup(:models => klass.name)
+  - if role_allows(:feature => feature)
+    - count = object.count
+    - if count == 0
+      %li.disabled
+        = link_to(_("#{label} (#{count})"), "#")
+    - else
+      %li
+        = link_to(_("#{label} (#{count})"),
+                    {:action  => 'show', :id => @record, :display => "#{klass}"},
+                    :title => _("Show #{label}"))
+- else
+  -# has_one\belongs_to relation
+  - klass = object.class.base_model
+  - feature ||= "#{klass.name.underscore}_show"
+  - label = ui_lookup(:model => klass.name)
+
+  - if klass == ExtManagementSystem
+    - if role_allows(:feature => "ems_container_show") && !object.nil?
+      %li
+        = link_to("#{label}: #{object.name}",
+                  {:controller => "ems_container", :action => 'show', :id => object.id.to_s},
+                  :title => _("Show this #{@record.class.model_name.human.downcase}'s parent #{label}") )
+  - elsif role_allows(:feature => feature) && !object.nil?
+    %li
+      = link_to("#{label}: #{object.name}",
+                {:controller => "#{klass.name.underscore}", :action => 'show', :id => object},
+                :title => _("View #{label} #{object.name}"))
