@@ -13,28 +13,28 @@ class MiqXml
   @rexml_parser = false
 
   def self.loadFile(filename, xmlClass = DefaultXmlType)
-    self.xml_document(xmlClass).loadFile(filename)
+    xml_document(xmlClass).loadFile(filename)
   end
 
   def self.load(data, xmlClass = DefaultXmlType)
-    self.xml_document(xmlClass).load(data)
+    xml_document(xmlClass).load(data)
   end
 
   def self.createDoc(rootName, rootAttrs = nil, version = MIQ_XML_VERSION, xmlClass = DefaultXmlType)
-    self.xml_document(xmlClass).createDoc(rootName, rootAttrs, version)
+    xml_document(xmlClass).createDoc(rootName, rootAttrs, version)
   end
 
   def self.newDoc(xmlClass = DefaultXmlType)
-    self.xml_document(xmlClass).newDoc()
+    xml_document(xmlClass).newDoc()
   end
 
   def self.decode(encodedText, xmlClass = DefaultXmlType)
-    return self.xml_document(xmlClass).load(MIQEncode.decode(encodedText)) if encodedText
-    self.newDoc()
+    return xml_document(xmlClass).load(MIQEncode.decode(encodedText)) if encodedText
+    newDoc()
   end
 
   def self.newNode(data=nil, xmlClass = DefaultXmlType)
-    self.xml_document(xmlClass).newNode(data)
+    xml_document(xmlClass).newNode(data)
   end
 
   def self.xml_document(xmlClass)
@@ -59,19 +59,19 @@ class MiqXml
 
   def self.isXmlElement?(handle)
     return true if handle.kind_of?(Nokogiri::XML::Node)
-    return true if rexml_parser? && handle.is_a?(REXML::Element) || handle.is_a?(XmlHash::Element)
+    return true if rexml_parser? && handle.kind_of?(REXML::Element) || handle.kind_of?(XmlHash::Element)
     false
   end
 
   def self.isXmlDoc?(handle)
-    return true if handle.is_a?(Nokogiri::XML::Document)
-    return true if rexml_parser? && handle.is_a?(REXML::Document) || handle.is_a?(XmlHash::Document)
+    return true if handle.kind_of?(Nokogiri::XML::Document)
+    return true if rexml_parser? && handle.kind_of?(REXML::Document) || handle.kind_of?(XmlHash::Document)
     false
   end
 
   def self.isXml?(handle)
-    return true if (handle.is_a?(Nokogiri::XML::Element) || handle.is_a?(Nokogiri::XML::Document))
-    return true if rexml_parser? && handle.is_a?(REXML::Element) || handle.is_a?(REXML::Document) || handle.is_a?(XmlHash::Element) || handle.is_a?(XmlHash::Document)
+    return true if (handle.kind_of?(Nokogiri::XML::Element) || handle.kind_of?(Nokogiri::XML::Document))
+    return true if rexml_parser? && handle.kind_of?(REXML::Element) || handle.kind_of?(REXML::Document) || handle.kind_of?(XmlHash::Element) || handle.kind_of?(XmlHash::Document)
     false
   end
 
