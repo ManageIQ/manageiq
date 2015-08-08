@@ -164,9 +164,6 @@ module ApplicationHelper
     end
     if association == nil
       controller, action = db_to_controller(view.db)
-      if controller == "ems_cloud" && action == "show"
-        return ems_clouds_path
-      end
       if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent","SniaLocalFileSystem"].include?(view.db)
         return url_for(:controller=>controller, :action=>action, :id=>parent.id) + "?show="
       else
@@ -617,10 +614,10 @@ module ApplicationHelper
   end
 
   # Format a column in a report view for display on the screen
-  def format_col_for_display(view, row, col, tz = nil)
+  def format_col_for_display(view, text, col, tz = nil)
     tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC" : Time.zone
     celltext = view.format(col,
-                           row[col],
+                           text,
                            :tz=>tz
     ).gsub(/\\/, '\&')    # Call format, then escape any backslashes
     return celltext

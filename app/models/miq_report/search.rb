@@ -114,6 +114,7 @@ module MiqReport::Search
     end
 
     search_results ||= []
+    @search_results = search_results
 
     unless apply_sortby_in_search
       options[:limit]   = limit

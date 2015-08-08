@@ -149,4 +149,8 @@ class EmsCloudController < ApplicationController
     ems.update_authentication(creds)
     ems
   end
+
+  def manageiq_providers_amazon_cloud_manager_url(*args)
+    ems_cloud_path(*args)
+  end
 end
