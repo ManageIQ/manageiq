@@ -1122,9 +1122,13 @@ class ApplicationController < ActionController::Base
       row = ruport_data[idx]
       @id = row['id']
       ar_object = view.search_results[idx]
-      href = polymorphic_url(ar_object)
+      if ar_object.is_a?(ExtManagementSystem)
+        href = polymorphic_url(ar_object)
+        new_row = root.add_element('row', "id" => list_row_id(row), "href" => href)
+      else
+        new_row = root.add_element('row', "id" => list_row_id(row))
+      end
 
-      new_row = root.add_element('row', "id" => list_row_id(row), "href" => href)
       new_row.add_element('cell').text = '0'  # Checkbox column unchecked
 
       # Generate html for the list icon
