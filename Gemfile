@@ -9,8 +9,6 @@ gem "activerecord-deprecated_finders", "~>1.0.4",     :require => "active_record
 
 # Client-side dependencies
 gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
-gem 'angularjs-rails', '~>1.4.3'
-gem 'angular-ui-bootstrap-rails', '~> 0.13.0'
 gem 'momentjs-rails', '~> 2.10.3'
 gem 'jquery-rails', "~>4.0.4"
 gem 'jquery-hotkeys-rails'
@@ -113,6 +111,22 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-c3', '~> 0.4.10'
   gem 'rails-assets-bootstrap-select', '~> 1.5.4'
   gem 'rails-assets-bootstrap-hover-dropdown', '~> 2.0.11'
+
+  gem 'rails-assets-angular', '~>1.4.3'
+  gem 'rails-assets-angular-animate', '~> 1.4.3'
+  gem 'rails-assets-angular-aria', '~> 1.4.3'
+  gem 'rails-assets-angular-cookies', '~> 1.4.3'
+  gem 'rails-assets-angular-loader', '~> 1.4.3'
+  gem 'rails-assets-angular-message-format', '~> 1.4.3'
+  gem 'rails-assets-angular-messages', '~> 1.4.3'
+  gem 'rails-assets-angular-mocks', '~> 1.4.3'
+  gem 'rails-assets-angular-resource', '~> 1.4.3'
+  gem 'rails-assets-angular-route', '~> 1.4.3'
+  gem 'rails-assets-angular-sanitize', '~> 1.4.3'
+  gem 'rails-assets-angular-scenario', '~> 1.4.3'
+  gem 'rails-assets-angular-touch', '~> 1.4.3'
+
+  gem 'rails-assets-angular-bootstrap', '~> 0.13.0'
 end
 
 #
