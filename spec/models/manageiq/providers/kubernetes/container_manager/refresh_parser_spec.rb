@@ -282,4 +282,107 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       end
     end
   end
+
+  describe "quota parsing" do
+    it "handles simple data" do
+      parser.send(
+        :parse_quota,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-quota',
+            :namespace         => 'test-namespace',
+            :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+            :resourceVersion   => '165339',
+            :creationTimestamp => '2015-08-17T09:16:46Z',
+          },
+          :spec     => {
+            :hard => {
+              :cpu => '30'
+            }
+          },
+          :status   => {
+            :hard => {
+              :cpu => '30'
+            },
+            :used => {
+              :cpu => '100m'
+            }
+          }
+        )
+      ).should == {
+        :name                  => 'test-quota',
+        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :creation_timestamp    => '2015-08-17T09:16:46Z',
+        :resource_version      => '165339',
+        :project               => nil,
+        :container_quota_items => [
+          {
+            :resource       => "cpu",
+            :quota_desired  => "30",
+            :quota_enforced => "30",
+            :quota_observed => "100m"
+          }
+        ]
+      }
+    end
+
+    it "handles quotas with no specification" do
+      parser.send(
+        :parse_quota,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-quota',
+            :namespace         => 'test-namespace',
+            :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+            :resourceVersion   => '165339',
+            :creationTimestamp => '2015-08-17T09:16:46Z',
+          },
+          :spec     => {},
+          :status   => {}
+        )
+      ).should == {
+        :name                  => 'test-quota',
+        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :creation_timestamp    => '2015-08-17T09:16:46Z',
+        :resource_version      => '165339',
+        :project               => nil,
+        :container_quota_items => []
+      }
+    end
+
+    it "handles quotas with no status" do
+      parser.send(
+        :parse_quota,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-quota',
+            :namespace         => 'test-namespace',
+            :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+            :resourceVersion   => '165339',
+            :creationTimestamp => '2015-08-17T09:16:46Z',
+          },
+          :spec     => {
+            :hard => {
+              :cpu => '30'
+            }
+          },
+          :status   => {}
+        )
+      ).should == {
+        :name                  => 'test-quota',
+        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :creation_timestamp    => '2015-08-17T09:16:46Z',
+        :resource_version      => '165339',
+        :project               => nil,
+        :container_quota_items => [
+          {
+            :resource       => "cpu",
+            :quota_desired  => "30",
+            :quota_enforced => nil,
+            :quota_observed => nil
+          }
+        ]
+      }
+    end
+  end
 end

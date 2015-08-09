@@ -2,8 +2,8 @@ module EmsRefresh::SaveInventoryContainer
   def save_ems_container_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    child_keys = [:container_projects, :container_nodes, :container_image_registries, :container_images,
-                  :container_replicators, :container_groups, :container_services, :container_routes]
+    child_keys = [:container_projects, :container_quotas, :container_nodes, :container_image_registries,
+                  :container_images, :container_replicators, :container_groups, :container_services, :container_routes]
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -27,6 +27,37 @@ module EmsRefresh::SaveInventoryContainer
     save_inventory_multi(:container_projects, ems, hashes, deletes, [:ems_ref],
                          :labels)
     store_ids_for_new_records(ems.container_projects, hashes, :ems_ref)
+  end
+
+  def save_container_quotas_inventory(ems, hashes, target = nil)
+    return if hash.nil?
+    target = ems if target.nil?
+
+    ems.container_quotas(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                ems.container_quotas.dup
+              else
+                []
+              end
+
+    hashes.each do |h|
+      h[:container_project_id] = h.fetch_path(:project, :id)
+    end
+
+    save_inventory_multi(:container_quotas, ems, hashes, deletes, [:ems_ref], :container_quota_items, :project)
+    store_ids_for_new_records(ems.container_quotas, hashes, :ems_ref)
+  end
+
+  def save_container_quota_items_inventory(container_quota, hashes, target = nil)
+    return if hashes.nil?
+    container_quota.container_quota_items(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                container_quota.container_quota_items.dup
+              else
+                []
+              end
+    save_inventory_multi(:container_quota_items, container_quota, hashes, deletes, [:resource])
+    store_ids_for_new_records(container_quota.container_quota_items, hashes, :resource)
   end
 
   def save_container_routes_inventory(ems, hashes, target = nil)

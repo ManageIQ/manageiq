@@ -14,13 +14,13 @@ module ManageIQ::Providers::Kubernetes
     def ems_inv_to_hashes(inventory)
       get_nodes(inventory)
       get_namespaces(inventory)
+      get_resource_quotas(inventory)
       get_replication_controllers(inventory)
       get_pods(inventory)
       get_endpoints(inventory)
       get_services(inventory)
       get_registries
       get_images
-
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
     end
@@ -83,6 +83,10 @@ module ManageIQ::Providers::Kubernetes
       @data[:container_projects].each do |ns|
         @data_index.store_path(:container_projects, :by_name, ns[:name], ns)
       end
+    end
+
+    def get_resource_quotas(inventory)
+      process_collection(inventory["resource_quota"], :container_quotas) { |n| parse_quota(n) }
     end
 
     def process_collection(collection, key, &block)
@@ -275,6 +279,41 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_namespaces(container_projects)
       parse_base_item(container_projects).except(:namespace)
+    end
+
+    def parse_quota(resource_quota)
+      new_result = parse_base_item(resource_quota).except(:namespace)
+      new_result[:project] = @data_index.fetch_path(
+        :container_projects,
+        :by_name,
+        resource_quota.metadata["table"][:namespace])
+      new_result[:container_quota_items] = parse_quota_items resource_quota
+      new_result
+    end
+
+    def parse_quota_items(resource_quota)
+      new_result_h = Hash.new do |h, k|
+        h[k] = {
+          :resource       => k.to_s,
+          :quota_desired  => nil,
+          :quota_enforced => nil,
+          :quota_observed => nil
+        }
+      end
+
+      resource_quota.spec.hard.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_desired] = quota
+      end
+
+      resource_quota.status.hard.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_enforced] = quota
+      end
+
+      resource_quota.status.used.to_h.each do |resource_name, quota|
+        new_result_h[resource_name][:quota_observed] = quota
+      end
+
+      new_result_h.values
     end
 
     def parse_replication_controllers(container_replicator)

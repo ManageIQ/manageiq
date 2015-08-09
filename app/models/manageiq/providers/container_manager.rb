@@ -6,6 +6,7 @@ module ManageIQ::Providers
     has_many :container_replicators, :foreign_key => :ems_id, :dependent => :destroy
     has_many :containers, :through => :container_groups
     has_many :container_projects, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :container_quotas, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_image_registries, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_images, :foreign_key => :ems_id, :dependent => :destroy
 

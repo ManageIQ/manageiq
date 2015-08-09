@@ -8,6 +8,8 @@ class ContainerProject < ActiveRecord::Base
   has_many :container_services
   has_many :container_definitions, :through => :container_groups
   has_many :container_nodes, -> { distinct }, :through => :container_groups
+  has_many :container_quotas
+  has_many :container_quota_items, :through => :container_quotas
 
   has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
 
