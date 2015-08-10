@@ -21,7 +21,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_smart_management
-    %i(zone)
+    %i(zone tags)
   end
 
   #
