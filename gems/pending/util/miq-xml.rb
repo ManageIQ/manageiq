@@ -5,56 +5,52 @@ require 'util/miq-encode'
 require 'util/xml/xml_diff'
 require 'util/xml/xml_patch'
 
-class MiqXml  
-	#MIQ_XML_VERSION = 1.0
-	#MIQ_XML_VERSION = 1.1	# Added create_time to root in seconds for easier time conversions
-	MIQ_XML_VERSION = 2.0	# Changed sub-xmls, added namespaces
+class MiqXml
+  MIQ_XML_VERSION = 2.1 # Refactor Nokogiri handling
 
-	@@defaultXmlType = :rexml  # REXML is always available so default it here.
+  DEFAULT_XML_TYPE = :rexml # REXML is always available so default it here.
 
-  # Now test to see if nokogiri is available
-  @@nokogiri_loaded = false
-	begin
-    require 'util/xml/miq_nokogiri'
-  	Nokogiri::XML::Document.new
-    #@@defaultXmlType = :nokogiri
-		@@nokogiri_loaded = true
-  rescue
+  @nokogiri = false
+
+  def self.loadFile(filename, xmlClass = DEFAULT_XML_TYPE)
+    xml_document(xmlClass).loadFile(filename)
   end
 
-	def self.loadFile(filename, xmlClass = @@defaultXmlType)
-		self.xml_document(xmlClass).loadFile(filename)
-	end
-
-	def self.load(data, xmlClass = @@defaultXmlType)
-		self.xml_document(xmlClass).load(data)
-	end
-
-	def self.createDoc(rootName, rootAttrs = nil, version = MIQ_XML_VERSION, xmlClass = @@defaultXmlType)
-		self.xml_document(xmlClass).createDoc(rootName, rootAttrs, version)
-	end
-
-  def self.newDoc(xmlClass = @@defaultXmlType)
-    self.xml_document(xmlClass).newDoc()
+  def self.load(data, xmlClass = DEFAULT_XML_TYPE)
+    xml_document(xmlClass).load(data)
   end
 
-	def self.decode(encodedText, xmlClass = @@defaultXmlType)
-		return self.xml_document(xmlClass).load(MIQEncode.decode(encodedText)) if encodedText
-		self.newDoc()
-	end
+  def self.createDoc(rootName, rootAttrs = nil, version = MIQ_XML_VERSION, xmlClass = DEFAULT_XML_TYPE)
+    xml_document(xmlClass).createDoc(rootName, rootAttrs, version)
+  end
 
-  def self.newNode(data=nil, xmlClass = @@defaultXmlType)
-    self.xml_document(xmlClass).newNode(data)
+  def self.newDoc(xmlClass = DEFAULT_XML_TYPE)
+    xml_document(xmlClass).newDoc
+  end
+
+  def self.decode(encodedText, xmlClass = DEFAULT_XML_TYPE)
+    return xml_document(xmlClass).load(MIQEncode.decode(encodedText)) if encodedText
+    newDoc
+  end
+
+  def self.newNode(data=nil, xmlClass = DEFAULT_XML_TYPE)
+    xml_document(xmlClass).newNode(data)
   end
 
   def self.xml_document(xmlClass)
     return xmlClass::Document if xmlClass.kind_of?(Module)
     begin
       case xmlClass
-      when :rexml then REXML::Document
-      when :xmlhash then XmlHash::Document
-      when :nokogiri then Nokogiri::XML::Document
-      else REXML::Document
+      when :rexml
+        REXML::Document
+      when :xmlhash
+        XmlHash::Document
+      when :nokogiri
+        require 'util/xml/miq_nokogiri'
+        @nokogiri = true
+        Nokogiri::XML::Document
+      else
+        REXML::Document
       end
     rescue
       REXML::Document
@@ -62,24 +58,24 @@ class MiqXml
   end
 
   def self.isXmlElement?(handle)
-    return true if handle.is_a?(REXML::Element) || handle.is_a?(XmlHash::Element)
-    return true if @@nokogiri_loaded && handle.kind_of?(Nokogiri::XML::Node)
+    return true if handle.kind_of?(REXML::Element) || handle.kind_of?(XmlHash::Element)
+    return true if nokogiri? && handle.kind_of?(Nokogiri::XML::Node)
     false
   end
 
   def self.isXmlDoc?(handle)
-    return true if handle.is_a?(REXML::Document) || handle.is_a?(XmlHash::Document)
-    return true if @@nokogiri_loaded && handle.is_a?(Nokogiri::XML::Document)
+    return true if handle.kind_of?(REXML::Document) || handle.kind_of?(XmlHash::Document)
+    return true if nokogiri? && handle.kind_of?(Nokogiri::XML::Document)
     false
   end
 
   def self.isXml?(handle)
-    return true if handle.is_a?(REXML::Element) || handle.is_a?(REXML::Document) || handle.is_a?(XmlHash::Element) || handle.is_a?(XmlHash::Document)
-    return true if @@nokogiri_loaded && (handle.is_a?(Nokogiri::XML::Element) || handle.is_a?(Nokogiri::XML::Document))
+    return true if handle.kind_of?(REXML::Element) || handle.kind_of?(REXML::Document) || handle.kind_of?(XmlHash::Element) || handle.kind_of?(XmlHash::Document)
+    return true if nokogiri? && (handle.kind_of?(Nokogiri::XML::Element) || handle.kind_of?(Nokogiri::XML::Document))
     false
   end
 
-  def self.is_nokogiri_loaded?
-    @@nokogiri_loaded
+  def self.nokogiri?
+    @nokogiri
   end
 end
