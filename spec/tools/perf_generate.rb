@@ -25,8 +25,8 @@ require 'csv'
 NUM_VMS, NUM_HOSTS, NUM_CLUSTERS, NUM_EMS, NUM_STORAGES, IMPORT_WINDOW =
   opts.values_at(:vms, :hosts, :clusters, :ems, :storages, :window)
 
-REALTIME_START    = opts[:realtime].to_i_with_method.ago.utc.change(:min => 0, :sec => 0, :usec => 0) # beginning of hour
-HOURLY_START      = opts[:hourly].to_i_with_method.ago.utc.beginning_of_day
+REALTIME_START    = opts[:realtime].to_i_with_method.seconds.ago.utc.change(:min => 0, :sec => 0, :usec => 0) # beginning of hour
+HOURLY_START      = opts[:hourly].to_i_with_method.seconds.ago.utc.beginning_of_day
 
 VMS_PER_HOST      = NUM_VMS / NUM_HOSTS
 HOSTS_PER_CLUSTER = NUM_HOSTS / NUM_CLUSTERS
