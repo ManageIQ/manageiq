@@ -37,6 +37,8 @@ GlobalVars:
   - $vim_log
   # In Automate methods
   - $evm
+FormatString:
+  EnforcedStyle: percent
 HashSyntax:
   EnforcedStyle: hash_rockets
 LineLength:
