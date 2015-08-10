@@ -949,7 +949,7 @@ class ApplicationController < ActionController::Base
   #Gather information for the report accordians
   def build_report_listnav(tree_type="reports",tree="listnav",mode="menu")
     #checking to see if group (used to be role) was selected in menu editor tree, or came in from reports/timeline tree calls
-    group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]).id : session[:group]
+    group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]) : current_group
     @sb[:rpt_menu] = get_reports_menu(group,tree_type,mode)
     if tree == "listnav"
       if tree_type == "timeline"
@@ -962,17 +962,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def get_reports_menu(group=session[:group], tree_type="reports", mode="menu")
+  def get_reports_menu(group = current_group, tree_type = "reports", mode = "menu")
     rptmenu = Array.new
     reports = Array.new
     folders = Array.new
-    rec = MiqGroup.find_by_id(group)
     user = current_user
     @sb[:grp_title] = user.admin_user? ?
       "#{session[:customer_name]} (#{_("All %s") % ui_lookup(:models=>"MiqGroup")})" :
       "#{session[:customer_name]} (#{_("%s") % "#{ui_lookup(:model=>"MiqGroup")}: #{user.current_group.description}"})"
     @data = Array.new
-    if (!rec.settings || !rec.settings[:report_menus] || rec.settings[:report_menus].blank?) || mode == "default"
+    if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       #array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
@@ -1026,14 +1025,14 @@ class ApplicationController < ActionController::Base
 
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       rep = custom.select do |r|
-        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
+        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == current_group.try(:id))
       end.map(&:name).uniq
 
       subfolder.push(rep) unless subfolder.include?(rep)
       temp.push(@custom_folder) unless temp.include?(@custom_folder)
       if tree_type == "timeline"
         temp2 = []
-        rec.settings[:report_menus].each do |menu|
+        group.settings[:report_menus].each do |menu|
           folder_arr = Array.new
           menu_name = menu[0]
           menu[1].each_with_index do |reports,i|
@@ -1050,7 +1049,7 @@ class ApplicationController < ActionController::Base
           end
         end
       else
-        temp2 = rec.settings[:report_menus]
+        temp2 = group.settings[:report_menus]
       end
       rptmenu = temp.concat(temp2)
     end
