@@ -32,7 +32,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_ipaddress
-    {:label => "IP Address", :value => @ems.ipaddress}
+    {:label => "Discovered IP Address", :value => @ems.ipaddress}
   end
 
   def textual_type
