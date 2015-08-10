@@ -659,6 +659,13 @@ describe ReportController do
           edit_new[:sortby1].should == S1
           edit_new[:sortby2].should == "#{S2}__#{sfx}"
         end
+
+        it 'grouping value is a sorted array of symbols' do
+          edit_new = assigns(:edit)[:new]
+          edit_new[:field_order] = [['Vm-foobar']]
+          controller.send(:gfv_key_group_calculations, 'foobar_0', 'total,avg')
+          edit_new[:col_options]['foobar'][:grouping].should == [:avg, :total]
+        end
       end
 
       context "handle timeline field changes" do

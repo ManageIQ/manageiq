@@ -419,10 +419,9 @@ module ReportController::Reports::Editor
   # Handle params starting with "calc"
   def gfv_key_group_calculations(key, value)
     field = @edit[:new][:field_order][key.split("_").last.to_i].last  # Get the field name
-    col = field_to_col(field)                                         # Use column name as the key
-    @edit[:new][:col_options][col] = {}                               # Make sure the field hash exists
-    @edit[:new][:col_options][col][:grouping] = value.split(",")      # Add the type to the field's grouping array
-    @edit[:new][:col_options][col][:grouping].sort!                   # Sort the array
+    @edit[:new][:col_options][field_to_col(field)] = {
+      :grouping => value.split(",").sort.map(&:to_sym) # Add the type to the field's grouping array
+    }
   end
 
   # Handle params starting with "pivotcalc"
