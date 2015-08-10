@@ -8,6 +8,10 @@ describe MiqAeInstance do
       @f1 = @c1.ae_fields.create(:name => @fname1)
     end
 
+    after do
+      MiqAeDatastore.reset
+    end
+
     it "should create instance" do
       iname1 = "instance1"
       i1 = @c1.ae_instances.build(:name => iname1)
@@ -136,7 +140,7 @@ describe MiqAeInstance do
       f2.destroy
       i1.reload
 
-      MiqAeValue.where(:field_id => f2_id).should be_empty
+      MiqAeValue.find_all_by_field_id(f2_id).should be_empty
       expect { i1.set_field_value(fname2, value1) }.to raise_error(MiqAeException::FieldNotFound)
       expect { i1.get_field_value(fname2)         }.to raise_error(MiqAeException::FieldNotFound)
     end
