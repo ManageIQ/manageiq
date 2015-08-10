@@ -72,7 +72,7 @@ namespace :evm do
       puts "Replicating Region (#{MiqRegion.my_region_number}) to remote database..."
 
       unless (total = RrPendingChange.count) == 0
-        require 'progressbar'
+        require 'ruby-progressbar'
         require 'rubyrep'
         pbar = ProgressBar.create(:title => "Backlog", :total => total, :autofinish => false)
 

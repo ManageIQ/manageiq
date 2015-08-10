@@ -37,7 +37,7 @@ puts
 exit if opts[:mode] != "purge"
 
 log "Purging..."
-require 'progressbar'
+require 'ruby-progressbar'
 %w{realtime hourly daily}.each do |interval|
   pbar = ProgressBar.create(:title => interval.titleize, :total => counts[interval], :autofinish => false)
   if counts[interval] > 0

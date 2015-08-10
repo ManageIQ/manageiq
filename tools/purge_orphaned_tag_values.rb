@@ -16,7 +16,7 @@ end
 
 formatter = Class.new.extend(ActionView::Helpers::NumberHelper)
 
-require 'progressbar'
+require 'ruby-progressbar'
 log "Purging orphaned tag values..."
 
 # Determine all of the known metric ids in the tag values table

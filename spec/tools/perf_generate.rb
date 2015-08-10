@@ -19,7 +19,7 @@ Trollop::die :realtime, "must be a number with method (e.g. 4.hours)"  unless op
 Trollop::die :hourly,   "must be a number with method (e.g. 6.months)" unless opts[:hourly].number_with_method?
 opts[:no_generate] = opts[:no_import] = opts[:no_delete] = true if opts[:dry_run]
 
-require 'progressbar'
+require 'ruby-progressbar'
 require 'csv'
 
 NUM_VMS, NUM_HOSTS, NUM_CLUSTERS, NUM_EMS, NUM_STORAGES, IMPORT_WINDOW =

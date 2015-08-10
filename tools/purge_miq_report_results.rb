@@ -44,7 +44,7 @@ puts
 exit if opts[:mode] != "purge"
 
 log "Purging..."
-require 'progressbar'
+require 'ruby-progressbar'
 pbar = ProgressBar.create(:title => "Purging", :total => count, :autofinish => false)
 
 if count > 0
