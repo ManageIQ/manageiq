@@ -1,5 +1,4 @@
 require 'time'
-require 'util/xml/miq_rexml'
 require 'util/xml/xml_hash'
 require 'util/miq-encode'
 require 'util/xml/xml_diff'
@@ -38,10 +37,15 @@ class MiqXml
   end
 
   def self.xml_document(xmlClass)
-    return xmlClass::Document if xmlClass.kind_of?(Module)
+    if xmlClass.kind_of?(Module)
+      require 'util/xml/miq_nokogiri'
+      return xmlClass::Document
+    end
+
     begin
       case xmlClass
       when :rexml
+        require 'util/xml/miq_rexml'
         @rexml_parser = true
         REXML::Document
       when :xmlhash
@@ -50,10 +54,12 @@ class MiqXml
         require 'util/xml/miq_nokogiri'
         Nokogiri::XML::Document
       else
+        require 'util/xml/miq_rexml'
         @rexml_parser = true
         REXML::Document
       end
     rescue
+      require 'util/xml/miq_rexml'
       @rexml_parser = true
       REXML::Document
     end
