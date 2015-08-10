@@ -22,3 +22,14 @@
       :title: 'Remove this #{ui_lookup(:table=>"container_image")} from the VMDB'
       :url_parms: '&refresh=y'
       :confirm: 'Warning: This #{ui_lookup(:table=>"container_image")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"container_image")}?'
+- :name: container_image_policy
+  :items:
+  - :buttonSelect: container_image_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: container_image_tag
+      :image: tag
+      :text: 'Edit Tags'
+      :title: 'Edit Tags for this #{ui_lookup(:table=>"container_image")}'
