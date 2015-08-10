@@ -104,15 +104,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_infra")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_infra_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsInfra)
   end
 
   def textual_parent_datacenter
@@ -174,13 +166,7 @@ module EmsClusterHelper::TextualSummary
   def textual_rps_size
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
-    num = @record.number_of(:resource_pools)
-    h = {:label => "Resource Pools", :image => "resource_pool", :value => num}
-    if num > 0 && role_allows(:feature => "resource_pool_show_list")
-      h[:title] = "Show all Resource Pools"
-      h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'resource_pools')
-    end
-    h
+    textual_link(@record.resource_pools)
   end
 
   def textual_states_size
