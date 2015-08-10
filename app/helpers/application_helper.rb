@@ -217,7 +217,7 @@ module ApplicationHelper
     when "ScanItemSet"
       controller = "ops"
       action = "ap_show"
-    when "MiqEvent"
+    when "MiqEventDefinition"
       controller = "event"
       action = "_none_"
     when "User", "Group", "Patch", "GuestApplication"

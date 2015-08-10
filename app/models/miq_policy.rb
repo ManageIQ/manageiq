@@ -23,7 +23,7 @@ class MiqPolicy < ActiveRecord::Base
   has_many                :miq_policy_contents, :dependent => :destroy
   has_many                :policy_events
 
-  virtual_has_many :miq_events, :uses => {:miq_policy_contents => :miq_event}
+  virtual_has_many :miq_event_definitions, :uses => {:miq_policy_contents => :miq_event_definition}
 
   validates_presence_of     :name, :description, :guid
   validates_uniqueness_of   :name, :description, :guid
@@ -78,7 +78,7 @@ class MiqPolicy < ActiveRecord::Base
     @@built_in_policies.each {|bp|
       p = OpenStruct.new(bp)
       p.attributes = {"name" => "(Built-in) " + bp[:name], "description" => "(Built-in) " + bp[:description], :applies_to? => true}
-      p.events = [MiqEvent.find_by_name(p.event)]
+      p.events = [MiqEventDefinition.find_by_name(p.event)]
       p.conditions = []
       if p.condition
         p.conditions = [Condition.new(
@@ -112,10 +112,10 @@ class MiqPolicy < ActiveRecord::Base
     return npolicy
   end
 
-  def miq_events
-    self.miq_policy_contents.collect(&:miq_event).uniq
+  def miq_event_definitions
+    self.miq_policy_contents.collect(&:miq_event_definition).uniq
   end
-  alias events miq_events
+  alias events miq_event_definitions
 
   def miq_actions
     self.miq_policy_contents.collect(&:miq_action).compact.uniq
@@ -124,27 +124,27 @@ class MiqPolicy < ActiveRecord::Base
 
   def actions_for_event(event, on=:failure)
     order = on == :success ? "success_sequence" : "failure_sequence"
-    miq_policy_contents.where(:miq_event_id => event.id).order(order).collect do |pe|
+    miq_policy_contents.where(:miq_event_definition_id => event.id).order(order).collect do |pe|
       next unless pe.qualifier == on.to_s
       pe.get_action(on)
     end.compact
   end
 
   def action_result_for_event(action,event)
-    pe = miq_policy_contents.find_by_miq_action_id_and_miq_event_id(event.id, action.id)
+    pe = miq_policy_contents.find_by_miq_action_id_and_miq_event_definition_id(event.id, action.id)
     return pe.qualifier == "success"
   end
 
   def delete_event(event)
-    MiqPolicyContent.destroy_all(["miq_policy_id = ? and miq_event_id = ?", self.id, event.id])
+    MiqPolicyContent.destroy_all(["miq_policy_id = ? and miq_event_definition_id = ?", self.id, event.id])
   end
 
   def add_event(event)
-    MiqPolicyContent.create(:miq_policy_id => self.id, :miq_event_id => event.id)
+    MiqPolicyContent.create(:miq_policy_id => self.id, :miq_event_definition_id => event.id)
   end
 
   def sync_events(events)
-    cevents = self.miq_events
+    cevents = self.miq_event_definitions
     adds = events - cevents
     deletes = cevents - events
     deletes.each { |e| self.delete_event(e) }
@@ -172,7 +172,7 @@ class MiqPolicy < ActiveRecord::Base
 
     # find event record
     unless event == "rsop" # rsop event doesn't exist. It's used to run rsop without taking any actions
-      erec = MiqEvent.find_by_name(event)
+      erec = MiqEventDefinition.find_by_name(event)
       # raise "unable to find event named '#{event}'" if erec.nil?
       if erec.nil?
         self.logger.info("MIQ(policy-enforce_policy): Event: [#{event}], not defined, skipping policy enforcement")
@@ -337,7 +337,7 @@ class MiqPolicy < ActiveRecord::Base
 
   EVENT_GROUPS_EXCLUDED = ["evm_operations", "ems_operations"]
   def self.all_policy_events
-    MiqEvent.all_events.select {|e| !e.memberof.empty? && !EVENT_GROUPS_EXCLUDED.include?(e.memberof.first.name)}
+    MiqEventDefinition.all_events.select {|e| !e.memberof.empty? && !EVENT_GROUPS_EXCLUDED.include?(e.memberof.first.name)}
   end
 
   def self.logger
@@ -376,7 +376,7 @@ class MiqPolicy < ActiveRecord::Base
   private
 
   def self.get_policies_for_target(target, mode, event, inputs = {})
-    erec = MiqEvent.find_by_name(event)
+    erec = MiqEventDefinition.find_by_name(event)
     # collect policies expand profiles (sets)
     profiles = []
     plist = self.built_in_policies
@@ -456,7 +456,7 @@ class MiqPolicy < ActiveRecord::Base
     opt_hash.delete(:synchronous)
 
     pevent = self.miq_policy_contents.build(opt_hash)
-    pevent.miq_event  = event
+    pevent.miq_event_definition  = event
     pevent.miq_action = action
     pevent.save
 

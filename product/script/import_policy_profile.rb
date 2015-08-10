@@ -23,11 +23,11 @@ def import_file(fname)
 
   File.open(fname) { |fd|
     stats = PolicySet.import_from_yaml(fd)
-    puts "Import Completed for #{fname} (added #{stats["PolicySet"]} profiles, #{stats["Policy"]} policies, #{stats["MiqEvent"]} events, #{stats["Condition"]} conditions, #{stats["MiqAction"]} actions)"
+    puts "Import Completed for #{fname} (added #{stats["PolicySet"]} profiles, #{stats["Policy"]} policies, #{stats["MiqEventDefinition"]} events, #{stats["Condition"]} conditions, #{stats["MiqAction"]} actions)"
 
     $gstats["nprofiles"]   += stats["PolicySet"]
     $gstats["npolicies"]   += stats["Policy"]
-    $gstats["nevents"]     += stats["MiqEvent"]
+    $gstats["nevents"]     += stats["MiqEventDefinition"]
     $gstats["nactions"]    += stats["MiqAction"]
     $gstats["nconditions"] += stats["Condition"]
   }

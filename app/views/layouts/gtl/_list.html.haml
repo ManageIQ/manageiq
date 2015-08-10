@@ -81,7 +81,7 @@
         - classes = []
         - if view.db == "MiqWorker" && @sb[:selected_worker_id].to_i == row['id'].to_i
           - classes.append("selected")
-        - if %w(MiqEvent MiqTask VmdbDatabaseConnection VmdbDatabaseSetting).include?(view.db) || @embedded
+        - if %w(MiqEventDefinition MiqTask VmdbDatabaseConnection VmdbDatabaseSetting).include?(view.db) || @embedded
           - classes.append("no-hover")
         %tr{:class => classes.join(' ')}
           - unless @embedded || @no_checkboxes
@@ -95,7 +95,7 @@
             - unless (@embedded || @no_checkboxes) && ! @showlinks
               -# Don't put a td URL for the server_build list view
               - case view.db
-              - when "ServerBuild", "MiqTask", "MiqEvent", "VmdbDatabaseConnection", "VmdbDatabaseSetting"
+              - when "ServerBuild", "MiqTask", "MiqEventDefinition", "VmdbDatabaseConnection", "VmdbDatabaseSetting"
               - when "MiqProvision"
                 - rec = @targets_hash[row['id']] if @targets_hash
                 - unless rec.destination_id.blank?
@@ -169,7 +169,7 @@
             - title = ""
             - click = ""
             - unless (@embedded || @no_checkboxes) && ! @showlinks
-              - if %w(MiqTask MiqEvent).include?(view.db)
+              - if %w(MiqTask MiqEventDefinition).include?(view.db)
               - elsif view.db == "MiqProvision"
                 - rec = @targets_hash[row['id']] if @targets_hash
                 - unless rec.destination_id.blank?

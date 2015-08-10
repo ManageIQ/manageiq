@@ -23,20 +23,20 @@ module MiqPolicyController::Events
     # Reload @edit/vars for other buttons
     id = params[:id] ? params[:id] : "new"
     return unless load_edit("event_edit__#{id}","replace_cell__explorer")
-    @event = @edit[:event_id] ? MiqEvent.find_by_id(@edit[:event_id]) : MiqEvent.new
+    @event = @edit[:event_id] ? MiqEventDefinition.find_by_id(@edit[:event_id]) : MiqEventDefinition.new
     policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"]))
     @policy = policy
 
     case params[:button]
     when "save"
-      event = MiqEvent.find(@event.id)                        # Get event record
+      event = MiqEventDefinition.find(@event.id)                        # Get event record
       action_list = @edit[:new][:actions_true].collect{|a| [MiqAction.find(a.last), {:qualifier=>:success, :synchronous=>a[1]}]} +
                     @edit[:new][:actions_false].collect{|a| [MiqAction.find(a.last), {:qualifier=>:failure, :synchronous=>a[1]}]}
       policy.replace_actions_for_event(event, action_list)
       AuditEvent.success(build_saved_audit(event))
       add_flash(_("Actions for Policy Event \"%s\" were saved") % event.description)
       @nodetype = "ev"
-      event_get_info(MiqEvent.find(event.id))
+      event_get_info(MiqEventDefinition.find(event.id))
       @edit = nil
       replace_right_cell("ev", [:policy_profile, :policy])
     when "true_right", "true_left", "true_allleft", "true_up", "true_down", "true_sync", "true_async"
@@ -57,7 +57,7 @@ module MiqPolicyController::Events
     @edit[:new] = Hash.new
     @edit[:current] = Hash.new
 
-    @event = MiqEvent.find(params[:id])                                         # Get event record
+    @event = MiqEventDefinition.find(params[:id])                                         # Get event record
     policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"]))   # Get the policy above this event
     @policy = policy                                 # Save for use in the view
     @edit[:key] = "event_edit__#{@event.id || "new"}"
@@ -105,7 +105,7 @@ module MiqPolicyController::Events
     @events = MiqPolicy.all_policy_events.sort_by { |e| e.description.downcase }
     set_search_text
     @events = apply_search_filter(@search_text, @events) if !@search_text.blank?
-    @right_cell_text = _("All %s") % ui_lookup(:tables=>"miq_event")
+    @right_cell_text = _("All %s") % ui_lookup(:tables=>"miq_event_definition")
     @right_cell_div = "event_list"
   end
 
@@ -113,7 +113,7 @@ module MiqPolicyController::Events
   def event_get_info(event)
     @record = @event = event
     @policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"])) unless x_active_tree == :event_tree
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:tables=>"miq_event"), :name=>event.description}
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:tables=>"miq_event_definition"), :name=>event.description}
     @right_cell_div = "event_details"
 
     if x_active_tree == :event_tree
@@ -125,7 +125,7 @@ module MiqPolicyController::Events
   end
 
   def event_build_tree(type=:event, name=:event_tree)
-    x_tree_init(name, type, 'MiqEvent', :full_ids => true)
+    x_tree_init(name, type, 'MiqEventDefinition', :full_ids => true)
     tree_nodes = x_build_dynatree(x_tree(name))
 
     # Fill in root node details

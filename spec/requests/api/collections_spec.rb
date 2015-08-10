@@ -61,8 +61,8 @@ describe ApiController do
     end
 
     it "query Events" do
-      FactoryGirl.create(:miq_event)
-      test_collection_query(:events, events_url, MiqEvent)
+      FactoryGirl.create(:miq_event_definition)
+      test_collection_query(:events, events_url, MiqEventDefinition)
     end
 
     it "query Flavors" do
