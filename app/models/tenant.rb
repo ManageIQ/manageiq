@@ -1,9 +1,12 @@
+require 'ancestry'
+
 class Tenant < ActiveRecord::Base
   HARDCODED_LOGO = "custom_logo.png"
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil
 
   default_value_for :company_name, "My Company"
+  has_ancestry
 
   has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
   has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
@@ -73,6 +76,9 @@ class Tenant < ActiveRecord::Base
     Tenant.find_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
   end
 
+  def self.root_tenant
+    default_tenant
+  end
 
   private
 
