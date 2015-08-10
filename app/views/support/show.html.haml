@@ -8,7 +8,7 @@
           .form-horizontal.static
             - [[_("Server Name"),     h(session[:vmdb_name])],
                [_("Version"),         h(@vmdb[:version] + "." + @vmdb[:build])],
-               [_("User Name"),       h(session[:username])],
+               [_("User Name"),       h(current_user.name)],
                [_("User Role"),       h(@user_role)],
                [_("Browser"),         h(browser_info("name"))],
                [_("Browser Version"), h(browser_info("version"))],

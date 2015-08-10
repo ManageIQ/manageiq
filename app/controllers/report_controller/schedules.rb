@@ -110,7 +110,13 @@ module ReportController::Schedules
     end
     MiqSchedule.find_all_by_id(scheds, :order => "lower(name)").each do |sched|
       MiqSchedule.queue_scheduled_work(sched.id, nil, Time.now.utc.to_i, nil)
-      audit = {:event=>"queue_scheduled_work", :message=>"Schedule [#{sched.name}] queued to run from the UI by user #{session[:username]}", :target_id=>sched.id, :target_class=>"MiqSchedule", :userid => session[:userid]}
+      audit = {
+        :event        => "queue_scheduled_work",
+        :message      => "Schedule [#{sched.name}] queued to run from the UI by user #{current_user.name}",
+        :target_id    => sched.id,
+        :target_class => "MiqSchedule",
+        :userid       => session[:userid]
+      }
       AuditEvent.success(audit)
     end
     unless flash_errors?

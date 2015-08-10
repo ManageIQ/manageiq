@@ -260,7 +260,7 @@ class ConfigurationController < ApplicationController
           @css.merge!(@settings[:display])
           @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
           set_user_time_zone
-          add_flash(_("User Interface settings saved for User %s") %  session[:username])
+          add_flash(_("User Interface settings saved for User %s") % db_user.name)
         else
           add_flash(_("User Interface settings saved for this session"))
         end
@@ -286,7 +286,7 @@ class ConfigurationController < ApplicationController
           db_user.settings[:display].delete(:vm_summary_cool)     # :vm_summary_cool moved to :views hash
           db_user.settings[:views].delete(:vm_summary_cool)       # :views/:vm_summary_cool changed to :dashboards
           db_user.save
-          add_flash(_("User Interface settings saved for User %s") %  session[:username])
+          add_flash(_("User Interface settings saved for User %s") % db_user.name)
         else
           add_flash(_("User Interface settings saved for this session"))
         end

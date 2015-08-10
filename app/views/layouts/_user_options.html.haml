@@ -2,7 +2,7 @@
   %li.dropdown
     %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
       %span.pficon.pficon-user
-      = "#{session[:username]} | #{session[:vmdb_name]}"
+      = "#{current_user.name} | #{session[:vmdb_name]}"
       %b.caret
     %ul.dropdown-menu
       %li.disabled
