@@ -4,7 +4,7 @@ require "spec_helper"
 require 'rexml/document'
 require 'util/miq-xml'
 
-describe MIQRexml do
+describe MiqXml do
   it "attribute encoding" do
     xml = REXML::Document.new("<test/>")
     copyright_char = "\xC2\xAE"
