@@ -28,15 +28,14 @@ class Tenant < ActiveRecord::Base
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
-                    :url  => "/uploads/#{HARDCODED_LOGO}",
-                    :path => ":rails_root/public/uploads/#{HARDCODED_LOGO}"
+                    :url  => "/uploads/:basename.:extension",
+                    :path => ":rails_root/public/uploads/:basename.:extension"
 
   has_attached_file :login_logo,
-                    :url         => "/uploads/#{HARDCODED_LOGIN_LOGO}",
+                    :url         => "/uploads/:basename.:extension",
                     :default_url => ":default_login_logo",
-                    :path        => ":rails_root/public/uploads/#{HARDCODED_LOGIN_LOGO}"
+                    :path        => ":rails_root/public/uploads/:basename.:extension"
 
-  validates :company_name, :presence => true
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
 
@@ -51,14 +50,47 @@ class Tenant < ActiveRecord::Base
 
   before_save :nil_blanks
 
+  def company_name
+    tenant_attribute(:company_name, :company)
+  end
+
+  def appliance_name
+    tenant_attribute(:appliance_name, :name)
+  end
+
+  def login_text
+    tenant_attribute(:login_text, :custom_login_text)
+  end
+
+  def logo_file_name
+    tenant_attribute(:logo_file_name, :custom_logo) do |custom_logo|
+      custom_logo && HARDCODED_LOGO
+    end
+  end
+
+  def logo_content_type
+    tenant_attribute(:logo_content_type, :custom_logo) do |_custom_logo|
+      # fails validation when using custom_logo && "image/png"
+      "image/png"
+    end
+  end
+
+  def login_logo_file_name
+    tenant_attribute(:login_logo_file_name, :custom_login_logo) do |custom_logo|
+      custom_logo && HARDCODED_LOGIN_LOGO
+    end
+  end
+
+  def login_logo_content_type
+    tenant_attribute(:login_logo_content_type, :custom_login_logo) do |_custom_logo|
+      # fails validation when using custom_logo && "image/png"
+      "image/png"
+    end
+  end
+
   # @return [Boolean] Is this a default tenant?
   def default?
     subdomain == DEFAULT_URL && domain == DEFAULT_URL
-  end
-
-  # @return [Boolean] Is this a tenant reading out of settings?
-  def settings?
-    false
   end
 
   def logo?
@@ -74,10 +106,33 @@ class Tenant < ActiveRecord::Base
   end
 
 
+  def self.seed
+    Tenant.create_with(:company_name => nil).find_or_create_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
+  end
+
   private
+
+  def tenant_attribute(attr_name, setting_name)
+    ret = self[attr_name]
+    # if the attribute is nil and we are the default tenant
+    # then use settings values
+    if ret.nil? && default?
+      ret = settings.fetch_path(:server, setting_name)
+      block_given? ? yield(ret) : ret
+    else
+      ret
+    end
+  end
 
   def nil_blanks
     self.subdomain = nil unless subdomain.present?
     self.domain = nil unless domain.present?
+
+    self.company_name = nil unless company_name.present?
+    self.appliance_name = nil unless appliance_name.present?
+  end
+
+  def settings
+    @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 end

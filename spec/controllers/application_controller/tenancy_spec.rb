@@ -7,13 +7,17 @@ describe DashboardController do
 
   context "#with unknown subdomain or domain" do
     before do
+      # acts_as_tenant initializer
+      Tenant.seed
+      ActsAsTenant.default_tenant = Tenant.default_tenant
+      # end of acts_as_tenant_initializer
       @request.host = "www.example.com"
     end
 
     # assumes database is empty and has no tenant objects
     it "defaults to default_domain" do
       get :login
-      expect(controller.send(:current_tenant)).to be_a(TenantDefault)
+      expect(controller.send(:current_tenant)).to be_default
     end
   end
 
