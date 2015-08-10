@@ -27,6 +27,10 @@ module ContainerSummaryHelper
     textual_link(@record.container_services)
   end
 
+  def textual_container_replicator
+    textual_link(@record.container_replicator)
+  end
+
   def textual_container_replicators
     textual_link(@record.container_replicators)
   end
