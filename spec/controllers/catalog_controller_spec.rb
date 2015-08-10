@@ -1,9 +1,16 @@
 require "spec_helper"
+include AutomationSpecHelper
 
 describe CatalogController do
   let(:user) { FactoryGirl.create(:user) }
-  before(:each) do
+
+  before do
     set_user_privileges user
+    @ae_dir = create_temp_automate_dir
+  end
+
+  after do
+    remove_temp_automate_dir(@ae_dir)
   end
 
   # some methods should not be accessible through the legacy routes

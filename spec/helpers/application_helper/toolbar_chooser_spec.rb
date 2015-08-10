@@ -1,4 +1,5 @@
 require "spec_helper"
+include AutomationSpecHelper
 
 describe ApplicationHelper do
   before do
@@ -38,6 +39,11 @@ describe ApplicationHelper do
       before do
         @sb = {:active_tree => :ae_tree,
                :trees       => {:ae_tree => {:tree => :ae_tree}}}
+        @ae_dir = create_temp_automate_dir
+      end
+
+      after do
+        remove_temp_automate_dir(@ae_dir)
       end
 
       it "should return domains toolbar on root node" do

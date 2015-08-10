@@ -1,10 +1,18 @@
 require "spec_helper"
 include UiConstants
+include AutomationSpecHelper
 
 describe MiqAeCustomizationController do
-  before(:each) do
+
+  before do
     set_user_privileges
+    @ae_dir = create_temp_automate_dir
   end
+
+  after do
+    remove_temp_automate_dir(@ae_dir)
+  end
+
   context "::CustomButtons" do
     context "#ab_get_node_info" do
       it "correct target class gets set when assigned button node is clicked" do
