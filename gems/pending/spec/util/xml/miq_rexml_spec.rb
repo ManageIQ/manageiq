@@ -1,9 +1,10 @@
 # encoding: UTF-8
 
 require "spec_helper"
+require 'rexml/document'
 require 'util/miq-xml'
 
-describe MIQRexml do
+describe MiqXml do
   it "attribute encoding" do
     xml = REXML::Document.new("<test/>")
     copyright_char = "\xC2\xAE"
@@ -16,7 +17,7 @@ describe MIQRexml do
     copyright_char = "\xC2\xAE"
     attr_string = "string #{copyright_char}"
     doc_text = "<test><element_1 attr1='#{attr_string}'/></test>"
-    xml = MiqXml.load(doc_text)
+    xml = MiqXml.load(doc_text, :rexml)
     xml.root.elements[1].attributes['attr1'].should == attr_string
   end
 
@@ -25,7 +26,7 @@ describe MIQRexml do
     utf8_bom = "\xC3\xAF\xC2\xBB\xC2\xBF"
     doc_text = "#{utf8_bom}<test><element_1 attr1='#{attr_string}'/></test>"
 
-    xml = MiqXml.load(doc_text)
+    xml = MiqXml.load(doc_text, :rexml)
     xml.root.elements[1].attributes['attr1'].should == attr_string
   end
 end
