@@ -11,6 +11,8 @@ class MiqAeInstanceCopy
     raise "Source class not found #{@class_fqname}" unless @src_class
     @src_instance = MiqAeInstance.find_by_name_and_class_id(@instance_name, @src_class.id)
     raise "Source instance #{@instance_name} not found #{@class_fqname}" unless @src_instance
+    ui_fqname = @src_instance.fqname_from_objects # Case Sensitive Name
+    @src_domain, @partial_ns, @ae_class, @instance_name = MiqAeInstanceCopy.split(ui_fqname, true)
     @target_class_name = @ae_class
     @flags = MiqAeClassCompareFields::CONGRUENT_SCHEMA | MiqAeClassCompareFields::COMPATIBLE_SCHEMA
     @validate_schema = validate_schema

@@ -8,6 +8,8 @@ class MiqAeClassCopy
     @src_domain, @partial_ns, @ae_class = MiqAeClassCopy.split(@class_fqname, false)
     @src_class = MiqAeClass.find_by_fqname(@class_fqname)
     raise "Source class not found #{@class_fqname}" unless @src_class
+    ui_fqname = @src_class.fqname_from_objects # Case Sensitive Name
+    @src_domain, @partial_ns, @ae_class = MiqAeClassCopy.split(ui_fqname, false)
   end
 
   def to_domain(domain, ns = nil, overwrite = false)

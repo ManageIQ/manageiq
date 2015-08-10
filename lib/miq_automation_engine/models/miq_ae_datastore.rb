@@ -3,7 +3,7 @@ module MiqAeDatastore
   XML_VERSION_MIN_SUPPORTED = "1.0"
   MANAGEIQ_DOMAIN = "ManageIQ"
   MANAGEIQ_PRIORITY = 0
-  DATASTORE_DIRECTORY = Rails.root.join('db/fixtures/ae_datastore')
+  DATASTORE_DIRECTORY = Rails.root.join('db/fixtures/automate')
   DEFAULT_OBJECT_NAMESPACE = "$"
   TEMP_DOMAIN_PREFIX = "TEMP_DOMAIN"
   ALL_DOMAINS = "*"
@@ -127,7 +127,8 @@ module MiqAeDatastore
 
   def self.reset
     _log.info("Clearing datastore")
-    [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each(&:delete_all)
+    rc = FileUtils.remove_entry_secure(DATASTORE_DIRECTORY) if Dir.exist?(DATASTORE_DIRECTORY)
+    FileUtils.mkdir(DATASTORE_DIRECTORY) if rc == 0
   end
 
   def self.reset_default_namespace
@@ -148,7 +149,8 @@ module MiqAeDatastore
   end
 
   def self.reset_manageiq_domain
-    reset_domain(DATASTORE_DIRECTORY, MANAGEIQ_DOMAIN)
+    dirname = Rails.root.join('db/fixtures/ae_datastore').to_s
+    reset_domain(dirname, MANAGEIQ_DOMAIN)
   end
 
   def self.seed_default_namespace
@@ -170,7 +172,7 @@ module MiqAeDatastore
   def self.reset_to_defaults
     raise "Datastore directory [#{DATASTORE_DIRECTORY}] not found" unless Dir.exist?(DATASTORE_DIRECTORY)
     saved_attrs = preserved_attrs_for_domains
-    Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).each do |domain_file|
+    Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILE)).each do |domain_file|
       domain_name = File.basename(File.dirname(domain_file))
       reset_domain(DATASTORE_DIRECTORY, domain_name)
     end
@@ -197,31 +199,19 @@ module MiqAeDatastore
 
   def self.get_homonymic_across_domains(arclass, fqname, enabled = nil)
     return [] if fqname.blank?
+    domains = MiqAeDomain.all.reverse
     options = arclass == ::MiqAeClass ? {:has_instance_name => false} : {}
     _, ns, klass, name = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(fqname, options)
-    name = klass if arclass == ::MiqAeClass
-    MiqAeDatastore.get_sorted_matching_objects(arclass, ns, klass, name, enabled)
+    tail_name = name ? "#{ns}/#{klass}/#{name}" : "#{ns}/#{klass}"
+    collect_objects(arclass, domains, tail_name, enabled)
   end
 
-  def self.get_sorted_matching_objects(arclass, ns, klass, name, enabled)
-    options = arclass == ::MiqAeClass ? {:has_instance_name => false} : {}
-    matches = arclass.where("lower(name) = ?", name.downcase).collect do |obj|
-      get_domain_priority_object(obj, klass, ns, enabled, options)
+  def self.collect_objects(arclass, domains, tail_name, enabled)
+    domains.collect do |dom|
+      next if enabled && dom.enabled != enabled
+      temp_fqname = "#{dom.name}/#{tail_name}"
+      arclass.find_by_fqname(temp_fqname) if arclass.exists?(temp_fqname)
     end.compact
-    matches.sort { |a, b| b[:priority] <=> a[:priority] }.collect { |v| v[:obj] }
-  end
-
-  def self.get_domain_priority_object(obj, klass, ns, enabled, options)
-    domain, nsd, klass_name, _ = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(obj.fqname, options)
-    return if !klass_name.casecmp(klass).zero? || !nsd.casecmp(ns).zero?
-    domain_obj = get_domain_object(domain, enabled)
-    {:obj => obj, :priority => domain_obj.priority} if domain_obj
-  end
-
-  def self.get_domain_object(name, enabled)
-    arel = MiqAeDomain.where("lower(name) = ?", name.downcase)
-    arel = arel.where(:enabled => enabled) unless enabled.nil?
-    arel.first
   end
 
   def self.preserved_attrs_for_domains
