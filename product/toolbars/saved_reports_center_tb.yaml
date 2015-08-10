@@ -10,6 +10,7 @@
   - :button: reload
     :image: reload
     :title: 'Reload selected Reports'
+    :url: 'reload'
 - :name: saved_report_vmdb
   :items:
   - :buttonSelect: saved_report_vmdb_choice
