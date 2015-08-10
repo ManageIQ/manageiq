@@ -217,7 +217,7 @@ class PxeController < ApplicationController
           end
         # resetting ManageIQ.oneTransition.oneTrans when tab loads
         presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;'
-        if %(save reset).include?(params[:button]) && is_browser_ie?
+        if %w(save reset).include?(params[:button]) && is_browser_ie?
           presenter[:extra_js] << 'ManageIQ.oneTransition.IEButtonPressed = true'
         end
       end
