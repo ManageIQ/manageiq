@@ -6,7 +6,7 @@ describe ManageIQ::Providers::Openstack::InfraManager do
   end
 
   it ".description" do
-    described_class.description.should == 'OpenStack Infrastructure'
+    described_class.description.should == 'OpenStack Platform Director'
   end
 
   context "validation" do
