@@ -1,6 +1,7 @@
 # Explorer generic methods included in application.rb
 module ApplicationController::Explorer
   extend ActiveSupport::Concern
+  include MiqAeClassHelper
 
   # Historical tree item selected
   def x_history
@@ -979,6 +980,7 @@ module ApplicationController::Explorer
 
   # FIXME: move partly to Tree once Trees are made from TreeBuilder
   def valid_active_node(treenodeid)
+    return treenodeid if automate_node?(treenodeid)
     modelname, rec_id, nodetype = TreeBuilder.extract_node_model_and_id(treenodeid)
     return treenodeid if ["root",""].include?(nodetype) #incase node is root or doesn't have a prefix
     raise _("No Class found for explorer tree node id '%s'") % treenodeid if modelname.nil?
