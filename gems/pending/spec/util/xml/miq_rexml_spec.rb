@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 require "spec_helper"
+require 'rexml/document'
 require 'util/miq-xml'
 
 describe MIQRexml do
