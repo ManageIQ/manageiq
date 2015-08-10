@@ -242,7 +242,7 @@ class ApplicationHelper::ToolbarChooser
         return "scan_profile_center_tb"
       elsif x_node.split('-').last == "z"
         return "zones_center_tb"
-      elsif x_node.split('-').first == "z"
+      elsif x_node.split('-').first == "z" && @sb[:active_tab] != "settings_smartproxy_affinity"
         return "zone_center_tb"
       end
     elsif x_active_tree == :diagnostics_tree

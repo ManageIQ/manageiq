@@ -6,7 +6,11 @@
       %ul.nav.nav-tabs
         = miq_tab_header("settings_evm_servers", @sb[:active_tab]) do
           = _("Zone")
+        = miq_tab_header("settings_smartproxy_affinity", @sb[:active_tab]) do
+          = _("SmartProxy Affinity")
       .tab-content
+        = miq_tab_content("settings_smartproxy_affinity", @sb[:active_tab]) do
+          = render :partial => "settings_smartproxy_affinity_tab"
         = miq_tab_content("settings_evm_servers", @sb[:active_tab]) do
           = render :partial => "settings_evm_servers_tab"
     - elsif selected?(x_node, "svr")
