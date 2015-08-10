@@ -182,6 +182,18 @@ module OpsController::Settings::Common
     end
   end
 
+  def smartproxy_affinity_field_changed
+    settings_load_edit
+    return unless @edit
+
+    smartproxy_affinity_get_form_vars(params[:id], params[:check] == '1') if params[:id] && params[:check]
+
+    changed = (@edit[:new] != @edit[:current])
+    render :update do |page|
+      page << javascript_for_miq_button_visibility(changed)
+    end
+  end
+
   private
 
   def settings_update_ldap_verify
@@ -271,6 +283,8 @@ module OpsController::Settings::Common
         render_flash
       end
       return
+    when "settings_smartproxy_affinity"
+      smartproxy_affinity_update
     when "settings_server", "settings_authentication"
       # Server Settings
       settings_server_validate
@@ -523,6 +537,75 @@ module OpsController::Settings::Common
     end
   end
 
+  def smartproxy_affinity_get_form_vars(id, checked)
+    # Add/remove affinity based on the node that was checked
+    server_id, child = id.split('__')
+
+    all_children = @edit[:new][:children]
+    server = @edit[:new][:servers][server_id.to_i]
+
+    if child
+      # A host/storage node was selected
+      child_type, child_id = child.split('_')
+      child_key = child_type.pluralize.to_sym
+
+      children_update = child_id.blank? ? all_children[child_key] : [child_id.to_i]
+      if checked
+        server[child_key] += children_update
+      else
+        server[child_key] -= children_update
+      end
+    else
+      # A server was selected
+      if checked
+        all_children.each { |k, v| server[k] = Set.new(v) }
+      else
+        server.each_value(&:clear)
+      end
+    end
+  end
+
+  def smartproxy_affinity_set_form_vars
+    @edit = {}
+    @edit[:new] = {}
+    @edit[:current] = {}
+    @edit[:key] = "#{@sb[:active_tab]}_edit__#{@selected_zone.id}"
+    @sb[:selected_zone_id] = @selected_zone.id
+
+    children = @edit[:current][:children] = {}
+    children[:hosts] = @selected_zone.hosts.collect(&:id)
+    children[:storages] = @selected_zone.storages.collect(&:id)
+    servers = @edit[:current][:servers] = {}
+    @selected_zone.miq_servers.each do |server|
+      next unless server.is_a_proxy?
+      servers[server.id] = {
+        :hosts    => Set.new(server.vm_scan_host_affinity.collect(&:id)),
+        :storages => Set.new(server.vm_scan_storage_affinity.collect(&:id))
+      }
+    end
+
+    @smartproxy_affinity_tree = build_smartproxy_affinity_tree(@selected_zone)
+
+    @edit[:new] = copy_hash(@edit[:current])
+    session[:edit] = @edit
+    @in_a_form = true
+  end
+
+  def smartproxy_affinity_update
+    @changed = (@edit[:new] != @edit[:current])
+    MiqServer.transaction do
+      @edit[:new][:servers].each do |svr_id, children|
+        server = MiqServer.find(svr_id)
+        server.vm_scan_host_affinity = Host.where(:id =>  children[:hosts].to_a).to_a
+        server.vm_scan_storage_affinity = Storage.where(:id => children[:storages].to_a).to_a
+      end
+    end
+  rescue StandardError => bang
+    add_flash(_("Error during %s: ") %  "Analysis Affinity save" << bang.message, :error)
+  else
+    add_flash(_("Analysis Affinity was saved"))
+  end
+
   # load @edit from session and then update @edit from params based on active_tab
   def settings_get_form_vars
     settings_load_edit
@@ -722,6 +805,18 @@ module OpsController::Settings::Common
         new[:server][:custom_login_text] = params[:login_text]
         @login_text_changed = new[:server][:custom_login_text] != @edit[:current].config[:server][:custom_login_text].to_s
       end
+    when "settings_smartproxy"                                        # SmartProxy Defaults tab
+      @sb[:form_vars][:agent_heartbeat_frequency_mins] = params[:agent_heartbeat_frequency_mins] if params[:agent_heartbeat_frequency_mins]
+      @sb[:form_vars][:agent_heartbeat_frequency_secs] = params[:agent_heartbeat_frequency_secs] if params[:agent_heartbeat_frequency_secs]
+      @sb[:form_vars][:agent_log_wraptime_days] = params[:agent_log_wraptime_days] if params[:agent_log_wraptime_days]
+      @sb[:form_vars][:agent_log_wraptime_hours] = params[:agent_log_wraptime_hours] if params[:agent_log_wraptime_hours]
+      agent = new[:agent]
+      agent_log = agent[:log]
+      agent[:heartbeat_frequency] = @sb[:form_vars][:agent_heartbeat_frequency_mins].to_i * 60 + @sb[:form_vars][:agent_heartbeat_frequency_secs].to_i if params[:agent_heartbeat_frequency_mins] || params[:agent_heartbeat_frequency_secs]
+      agent[:readonly] = (params[:agent_readonly] == "1") if params[:agent_readonly]
+      agent_log[:level] = params[:agent_log_level] if params[:agent_log_level]
+      agent_log[:wrap_size] = params[:agent_log_wrapsize] if params[:agent_log_wrapsize]
+      agent_log[:wrap_time] = @sb[:form_vars][:agent_log_wraptime_days].to_i * 3600 * 24 + @sb[:form_vars][:agent_log_wraptime_hours].to_i * 3600 if params[:agent_log_wraptime_days] || params[:agent_log_wraptime_hours]
     when "settings_advanced"                                        # Advanced tab
       if params[:file_name] && params[:file_name] != session[:config_file_name] # If new file name was selected
         session[:config_file_name] = params[:file_name]
@@ -734,7 +829,7 @@ module OpsController::Settings::Common
     end
 
     # This section scoops up the config second level keys changed in the UI
-    unless %w(settings_advanced settings_database settings_rhn_edit).include?(@sb[:active_tab])
+    unless %w(settings_advanced settings_database settings_rhn_edit settings_smartproxy_affinity).include?(@sb[:active_tab])
       @edit[:current].config.each_key do |category|
         @edit[:current].config[category].symbolize_keys.each_key do |key|
           if category == :smtp && key == :enable_starttls_auto  # Checkbox is handled differently
@@ -820,6 +915,8 @@ module OpsController::Settings::Common
       @sb[:new_amazon_role] = @edit[:current].config[:authentication][:amazon_role]
       @sb[:new_httpd_role] = @edit[:current].config[:authentication][:httpd_role]
       @in_a_form = true
+    when "settings_smartproxy_affinity"                     # SmartProxy Affinity tab
+      smartproxy_affinity_set_form_vars
     when "settings_workers"                                 # Worker Settings tab
       # getting value in "1.megabytes" bytes from backend, converting it into "1 MB" to display in UI, and then later convert it into "1.megabytes" to before saving it back into config.
       # need to create two copies of config new/current set_worker_setting! is a instance method, need @edit[:new] to be config class to set count/memory_threshold, can't run method against hash
@@ -1071,6 +1168,7 @@ module OpsController::Settings::Common
             @servers.push(ms)
           end
         end
+        smartproxy_affinity_set_form_vars if @sb[:active_tab] == "settings_smartproxy_affinity"
     end
   end
 
@@ -1097,5 +1195,37 @@ module OpsController::Settings::Common
   def set_workers_verify_status
     w = @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination]
     @edit[:default_verify_status] = (w[:password] == w[:verify])
+  end
+
+  def build_smartproxy_affinity_node(zone, server, node_type)
+    affinities = server.send("vm_scan_#{node_type}_affinity").collect(&:id)
+    {
+      :key      => "#{server.id}__#{node_type}",
+      :icon     => "#{node_type}.png",
+      :title    => Dictionary.gettext(node_type.camelcase, :type => :model, :notfound => :titleize).pluralize,
+      :children => zone.send(node_type.pluralize).sort_by(&:name).collect do |node|
+        {
+          :key    => "#{server.id}__#{node_type}_#{node.id}",
+          :icon   => "#{node_type}.png",
+          :title  => node.name,
+          :select => affinities.include?(node.id)
+        }
+      end
+    }
+  end
+
+  def build_smartproxy_affinity_tree(zone)
+    zone.miq_servers.select(&:is_a_proxy?).sort_by { |s| [s.name, s.id] }.collect do |s|
+      title = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{s.name} [#{s.id}]"
+      title = "<b class='cfme-bold-node'>#{title} (current)</title>".html_safe if @sb[:my_server_id] == s.id
+      {
+        :key      => s.id.to_s,
+        :icon     => 'evm_server.png',
+        :title    => title,
+        :expand   => true,
+        :children => [build_smartproxy_affinity_node(zone, s, 'host'),
+                      build_smartproxy_affinity_node(zone, s, 'storage')]
+      }
+    end
   end
 end
