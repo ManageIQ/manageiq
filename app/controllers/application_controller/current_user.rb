@@ -2,7 +2,7 @@ module ApplicationController::CurrentUser
   extend ActiveSupport::Concern
 
   included do
-    helper_method :current_user,  :current_userid, :current_username
+    helper_method :current_user,  :current_userid
     helper_method :current_group, :current_groupid, :eligible_groups
     helper_method :current_role, :admin_user?, :super_admin_user?
   end
@@ -16,11 +16,9 @@ module ApplicationController::CurrentUser
     if db_user
       User.current_userid = db_user.userid
       session[:userid]    = db_user.userid
-      session[:username]  = db_user.name
     else
       User.current_userid = nil
       session[:userid]    = nil
-      session[:username]  = nil
     end
     self.current_group  = db_user.try(:current_group)
   end
@@ -66,12 +64,6 @@ module ApplicationController::CurrentUser
     session[:userid]
   end
   protected :current_userid
-
-  # current_user.username
-  def current_username
-    session[:username]
-  end
-  protected :current_username
 
   def current_group
     @current_group ||= MiqGroup.find_by_id(session[:group])
