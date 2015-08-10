@@ -12,6 +12,9 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @openstack_vm = FactoryGirl.create(
       :vm_openstack,
       :uid_ems => '8b6c7070-9abd-41ac-a950-e4cfac665673')
+    @ovirt_vm = FactoryGirl.create(
+      :vm_redhat,
+      :uid_ems => 'cad16607-fb88-4412-a993-5242030f6afa')
   end
 
   it "will perform a full refresh on k8s" do
@@ -38,7 +41,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
 
   def assert_table_counts
     ContainerGroup.count.should == 2
-    ContainerNode.count.should == 1
+    ContainerNode.count.should == 2
     Container.count.should == 3
     ContainerService.count.should == 5
     ContainerPortConfig.count.should == 2
@@ -129,7 +132,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
   end
 
   def assert_specific_container_node
-    @containernode = ContainerNode.first
+    @containernode = ContainerNode.where(:name => "10.35.0.169").first
     @containernode.should have_attributes(
       # :ems_ref       => "a3d2a008-e73f-11e4-b613-001a4a5f4a02",
       :lives_on_type              => @openstack_vm.type,
@@ -154,10 +157,18 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     )
 
     @containernode.ready_condition_status.should_not be_nil
-
     @containernode.lives_on.should == @openstack_vm
     @containernode.container_groups.count.should == 2
     @containernode.ext_management_system.should == @ems
+
+    # Leaving this test commented out until we find a way to test this more easily
+    # Check relationship with oVirt provider
+    @containernode = ContainerNode.where(:name => "localhost.localdomain").first
+    @containernode.should have_attributes(
+      :lives_on_type => @ovirt_vm.type,
+      :lives_on_id   => @ovirt_vm.id,
+    )
+    @containernode.lives_on.should == @ovirt_vm
   end
 
   def assert_specific_container_service
