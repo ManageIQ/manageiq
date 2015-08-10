@@ -4,6 +4,7 @@ module ApplicationHelper
   include_concern 'FormTags'
   include Sandbox
   include CompressedIds
+  include TextualHelper
 
   def css_background_color
     (@css || {}).fetch_path(:background_color) || 'black'
