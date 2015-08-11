@@ -111,7 +111,7 @@ module VmCommon
                   :vmid        => @record.ems_ref,
                   :ticket      => @sb[:vmrc],
                   :api_version => @record.ext_management_system.api_version.to_s,
-                  :os          => browser_info(:os).downcase,
+                  :os          => browser_info(:os),
                   :name        => @record.name
                 }
               end
