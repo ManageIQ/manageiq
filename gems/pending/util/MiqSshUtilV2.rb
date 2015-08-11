@@ -42,14 +42,6 @@ class MiqSshUtil
     end
   end # def initialize
 
-  def cp(from, to)
-    Net::SFTP.start(@host, @user, @options) do |sftp|
-      $log.debug "MiqSshUtil::cp - Copying file #{from} to #{@host}:#{to}." if $log
-      sftp.upload!(from, to)
-      $log.debug "MiqSshUtil::cp - Copying of #{from} to #{@host}:#{to}, complete." if $log
-    end
-  end # def cp
-
   def get_file(from, to)
     Net::SFTP.start(@host, @user, @options) do |sftp|
       $log.debug "MiqSshUtil::get_file - Copying file #{@host}:#{from} to #{to}." if $log
