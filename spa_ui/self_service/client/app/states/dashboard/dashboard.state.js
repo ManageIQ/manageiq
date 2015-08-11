@@ -14,7 +14,7 @@
   function getStates() {
     return {
       'dashboard': {
-        url: '/dashboard',
+        url: '/',
         templateUrl: 'app/states/dashboard/dashboard.html',
         controller: StateController,
         controllerAs: 'vm',
@@ -25,9 +25,22 @@
 
   function navItems() {
     return {
-      'profile': {
-        type: 'profile',
+      'user': {
+        type: 'dropdown',
+        icon: 'fa-user',
         order: 0
+      },
+      'user.profile': {
+        type: 'text',
+        label: 'Profile',
+        icon: 'fa.cog',
+        order: 0
+      },
+      'user.logout': {
+        type: 'text',
+        label: 'Logout',
+        icon: 'fa-logout',
+        order: 1
       }
     };
   }
@@ -45,23 +58,13 @@
   }
 
   /** @ngInject */
-  function StateController(Dashboard, logger) {
+  function StateController() {
     var vm = this;
 
     vm.title = 'Dashboard';
-    vm.onDropComplete = onDropComplete;
 
     activate();
     function activate() {
-      vm.chartCollection = Dashboard;
-      logger.info('Activated Dashboard View');
-    }
-
-    function onDropComplete(index, obj) {
-      vm.secondObj = vm.chartCollection[index];
-      vm.secondIndex = vm.chartCollection.indexOf(obj);
-      vm.chartCollection[index] = obj;
-      vm.chartCollection[vm.secondIndex] = vm.secondObj;
     }
   }
 })();
