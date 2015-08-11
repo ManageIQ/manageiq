@@ -86,6 +86,18 @@ describe AutomateImportService do
         "import stats"
       )
     end
+
+    context "when the domain name to import to is blank" do
+      it "creates a new MiqAeImport with the correct import options" do
+        expect(MiqAeImport).to receive(:new).with(
+          "carrot",
+          "import_as" => "carrot",
+          "overwrite" => true,
+          "zip_file"  => "automate_temporary_zip.zip"
+        ).and_return(miq_ae_import)
+        automate_import_service.import_datastore(import_file_upload, "carrot", "", ["starch"])
+      end
+    end
   end
 
   describe "#store_for_import" do
