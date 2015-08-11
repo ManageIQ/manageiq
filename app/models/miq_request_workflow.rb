@@ -1000,8 +1000,8 @@ class MiqRequestWorkflow
   end
 
   def ci_to_hash_struct(ci)
-    return ci.collect { |c| ci_to_hash_struct(c) } if ci.kind_of?(Array)
     return if ci.nil?
+    return ci.collect { |c| ci_to_hash_struct(c) } if ci.respond_to?(:collect)
     method_name = "#{ci.class.base_class.name.underscore}_to_hash_struct".to_sym
     return send(method_name, ci) if respond_to?(method_name, true)
     default_ci_to_hash_struct(ci)
