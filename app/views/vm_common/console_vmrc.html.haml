@@ -1,7 +1,7 @@
 !!! Strict
 %html
   %head
-    - if %w(5.1 5.5).include?(api_version) && is_browser_ie? && browser_info("version").to_i > 9
+    - if %w(5.1 5.5).include?(api_version) && is_browser_ie? && browser_info(:version).to_i > 9
       %meta{:content => "IE=8", "http-equiv" => "X-UA-Compatible"}
     %meta{:content => "text/html; charset=ISO-8859-1", "http-equiv" => "Content-Type"}
     = stylesheet_link_tag "vmrc"

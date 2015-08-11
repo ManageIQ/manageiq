@@ -767,7 +767,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    @report.extras[:browser_name] = browser_info("name").downcase
+    @report.extras[:browser_name] = browser_info(:name)
     if is_browser_ie?
       blob = BinaryBlob.new(:name => "timeline_results")
       blob.binary = @report.to_timeline

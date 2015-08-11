@@ -404,7 +404,7 @@ module ApplicationHelper
   end
 
   def is_browser_ie?
-    browser_info(:name).downcase == "explorer"
+    browser_info(:name) == "explorer"
   end
 
   def is_browser_ie7?
@@ -412,17 +412,18 @@ module ApplicationHelper
   end
 
   def is_browser?(name)
-    browser_name = browser_info(:name).downcase
+    browser_name = browser_info(:name)
     name.kind_of?(Array) ? name.include?(browser_name) : (browser_name == name)
   end
 
   def is_browser_os?(os)
-    browser_os = browser_info(:os).downcase
+    browser_os = browser_info(:os)
     os.kind_of?(Array) ? os.include?(browser_os) : (browser_os == os)
   end
 
-  def browser_info(typ = :name)
-    session.fetch_path(:browser, typ.to_sym).to_s
+  def browser_info(typ, downcase = true)
+    value = session.fetch_path(:browser, typ).to_s
+    downcase ? value.downcase : value
   end
 
   ############# Following methods generate JS lines for render page blocks
