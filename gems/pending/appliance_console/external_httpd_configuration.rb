@@ -196,7 +196,7 @@ module ApplianceConsole
     end
 
     def self.config_status
-      fetch_ipa_configuration("ipa_server") || "not configured"
+      fetch_ipa_configuration("ipa_server") || fetch_sssd_domain || "not configured"
     end
 
     def self.ipa_client_configured?
@@ -214,6 +214,10 @@ module ApplianceConsole
       end
       pattern = "[domain/.*].*(\n.*)+#{Regexp.escape(what)} = (.*)"
       config[/#{pattern}/, 2]
+    end
+
+    def self.fetch_sssd_domain
+      config_file_read(SSSD_CONFIG)[/\[domain\/(.*)\]/, 1] if File.exist?(SSSD_CONFIG)
     end
 
     delegate :ipa_client_configured?, :config_file_read, :fetch_ipa_configuration, :config_status, :to => self
