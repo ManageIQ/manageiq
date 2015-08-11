@@ -55,4 +55,8 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
   def validate_migrate
     validate_supported
   end
+
+  def validate_smartstate_analysis
+    validate_unsupported("Smartstate Analysis")
+  end
 end

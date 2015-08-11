@@ -1167,6 +1167,7 @@ class ApplicationHelper::ToolbarBuilder
               "vm_retire", "vm_retire_now"
         return "#{@record.kind_of?(ManageIQ::Providers::CloudManager::Vm) ? "Instance" : "VM"} is already retired" if @record.retired == true
       when "vm_scan", "instance_scan"
+        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
         return @record.active_proxy_error_message if !@record.has_active_proxy?
       when "vm_timeline"
         return "No Timeline data has been collected for this VM" unless @record.has_events? || @record.has_events?(:policy_events)

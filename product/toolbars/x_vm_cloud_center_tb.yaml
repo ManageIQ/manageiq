@@ -19,8 +19,8 @@
     - :button: instance_scan
       :image: scan
       :text: "Perform SmartState Analysis"
-      :title: "Perform SmartState Analysis on this Image"
-      :confirm: "Perform SmartState Analysis on this Image?"
+      :title: "Perform SmartState Analysis on this Instance"
+      :confirm: "Perform SmartState Analysis on this Instance?"
     - :separator:
     - :button: instance_edit
       :image: edit

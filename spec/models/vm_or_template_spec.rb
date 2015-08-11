@@ -455,6 +455,18 @@ describe VmOrTemplate do
     end
   end
 
+  context "#is_available? for Smartstate Analysis" do
+    it "returns true for VMware VM" do
+      vm =  FactoryGirl.create(:vm_vmware)
+      expect(vm.is_available?(:smartstate_analysis)).to eq(true)
+    end
+
+    it "returns false for Amazon VM" do
+      vm =  FactoryGirl.create(:vm_amazon)
+      expect(vm.is_available?(:smartstate_analysis)).to_not eq(true)
+    end
+  end
+
   context "#self.batch_operation_supported?" do
     it "when the vm_or_template supports migrate,  returns false" do
       vm1 =  FactoryGirl.create(:vm_microsoft)

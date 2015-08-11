@@ -32,4 +32,8 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   def raise_created_event
     MiqEvent.raise_evm_event(self, "vm_create", :vm => self)
   end
+
+  def validate_smartstate_analysis
+    validate_supported
+  end
 end
