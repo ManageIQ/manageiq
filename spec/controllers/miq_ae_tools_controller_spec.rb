@@ -20,6 +20,26 @@ describe MiqAeToolsController do
     end
   end
 
+  describe "#import_export" do
+    include_context "valid session"
+
+    let(:fake_domain) { active_record_instance_double("MiqAeDomain", :name => "test_domain") }
+
+    before do
+      bypass_rescue
+      MiqAeDomain.stub(:all_unlocked).and_return([fake_domain])
+    end
+
+    it "includes a list of importable domain options" do
+      get :import_export
+
+      expect(assigns(:importable_domain_options)).to eq([
+        ["<Same as import from>", nil],
+        %w(test_domain test_domain)
+      ])
+    end
+  end
+
   describe "#cancel_import" do
     include_context "valid session"
 
