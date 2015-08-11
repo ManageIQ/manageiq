@@ -324,21 +324,21 @@ class ApplicationController < ActionController::Base
   def save_col_widths
     @view = session[:view]
     cws = (params[:col_widths] || "").split(",")[2..-1]
-    if @view
-    cols_key = create_cols_key(@view)
-        if cws.length > 0
-          if (db_user = current_user)
-            db_user.settings[:col_widths] ||= {}
-            db_user.settings[:col_widths][cols_key] ||= {}
-            @settings[:col_widths] ||= {}
-            @settings[:col_widths][cols_key] ||= {}
-            cws.each_with_index do |cw, i|
-              @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
-            end
-            db_user.settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
-            db_user.save
-          end
+    if @view && cws.length > 0
+      cols_key = create_cols_key(@view)
+      @settings[:col_widths] ||= {}
+      @settings[:col_widths][cols_key] ||= {}
+      cws.each_with_index do |cw, i|
+        @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
+      end
+
+        if (db_user = current_user)
+          db_user.settings[:col_widths] ||= {}
+          db_user.settings[:col_widths][cols_key] ||= {}
+          db_user.settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
+          db_user.save
         end
+      end
     end
     render :nothing => true                                 # No response needed
   end
