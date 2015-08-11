@@ -4,7 +4,7 @@ module ApplicationHelper
       datepicker_options = {
         "data-provide"         => "datepicker",
         "data-date-autoclose"  => "true",
-        "data-date-format"     => "yyyy-mm-dd",
+        "data-date-format"     => "mm/dd/yyyy",
         "data-date-language"   => FastGettext.locale,
         "data-date-week-start" => 0
       }
