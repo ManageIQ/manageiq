@@ -52,7 +52,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     Ovirt.const_get(service).new(params)
   end
 
-  def connect(options = {})
+  def other_connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
     server   = options[:ip]      || self.address
@@ -64,12 +64,29 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     self.class.raw_connect(server, port, username, password, service)
   end
 
+  def metrics_connect(options = {})
+    equire 'ovirt_metrics'
+    OvirtMetrics.connect(rhevm_metrics_connect_options(options))
+  end
+
+  def connect(options = {})
+    if options[:service] == "Metrics"
+      metrics_connect(options)
+    else
+      other_connect(options)
+    end
+  end
+
   def rhevm_service
     @rhevm_service ||= connect(:service => "Service")
   end
 
   def rhevm_inventory
     @rhevm_inventory ||= connect(:service => "Inventory")
+  end
+
+  def rhevm_metrics
+    @rhevm_metrics ||= connect(:service => "Metrics")
   end
 
   def with_provider_connection(options = {})

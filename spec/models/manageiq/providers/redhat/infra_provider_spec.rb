@@ -18,4 +18,22 @@ describe ManageIQ::Providers::Redhat::InfraManager do
     h = FactoryGirl.create(:ems_redhat, :hostname => "h")
     h.rhevm_metrics_connect_options(:hostname => "i")[:host].should == "i"
   end
+
+  it "connect Metrics" do
+    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
+    expect(h).to receive(:metrics_connect)
+    h.connect(:service => "Metrics")
+  end
+
+  it "connect Inventory" do
+    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
+    expect(h).to receive(:other_connect)
+    h.connect(:service => "Inventory")
+  end
+
+  it "connect" do
+    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
+    expect(h).to receive(:other_connect)
+    h.connect()
+  end
 end
