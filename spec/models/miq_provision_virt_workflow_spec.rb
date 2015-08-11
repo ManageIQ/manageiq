@@ -85,7 +85,7 @@ describe MiqProvisionVirtWorkflow do
                                       :host_id => @host1.id)
         workflow.instance_variable_set(:@target_resource,
                                        :host    => workflow.host_to_hash_struct(@host1),
-                                       :ems     => workflow.default_ci_to_hash_struct(@ems),
+                                       :ems     => workflow.ci_to_hash_struct(@ems),
                                        :host_id => @host1.id)
         dvs = workflow.allowed_dvs({}, nil)
         dvs.should eql(@host1_dvs_hash)
@@ -117,7 +117,7 @@ describe MiqProvisionVirtWorkflow do
                                         :placement_auto => false)
           workflow.instance_variable_set(:@target_resource,
                                          :host    => workflow.host_to_hash_struct(@host1),
-                                         :ems     => workflow.default_ci_to_hash_struct(@ems),
+                                         :ems     => workflow.ci_to_hash_struct(@ems),
                                          :host_id => @host1.id)
           dvs = workflow.allowed_dvs({}, nil)
           dvs.should eql(@host1_dvs_hash)

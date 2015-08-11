@@ -1017,12 +1017,6 @@ class MiqRequestWorkflow
     v
   end
 
-  def default_ci_to_hash_struct(ci)
-    attributes = []
-    attributes << :name if ci.respond_to?(:name)
-    build_ci_hash_struct(ci, attributes)
-  end
-
   def ems_folder_to_hash_struct(ci)
     build_ci_hash_struct(ci, [:name, :is_datacenter?])
   end
@@ -1486,5 +1480,13 @@ class MiqRequestWorkflow
       _log.error "<#{err_text}>"
       raise err_text
     end
+  end
+
+  private
+
+  def default_ci_to_hash_struct(ci)
+    attributes = []
+    attributes << :name if ci.respond_to?(:name)
+    build_ci_hash_struct(ci, attributes)
   end
 end
