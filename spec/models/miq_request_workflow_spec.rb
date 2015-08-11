@@ -191,7 +191,7 @@ describe MiqRequestWorkflow do
 
       it "with valid sources" do
         FactoryGirl.create(:resource_pool)
-        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
 
         expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [resource_pool.id])
 
