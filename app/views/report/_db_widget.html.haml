@@ -9,9 +9,18 @@
 .pointer{params}
   #test.modbox
     %h2.modtitle{:style => @edit && @edit[:current] ? "cursor: move;" : ""}
-      %a{:class => "#{widget.content_type}box"}
+      - case widget.content_type
+      - when "chart"
+        - glyphicon = "product product-chart"
+      - when "report"
+        - glyphicon = "product product-report"
+      - when "rss"
+        - glyphicon = "fa fa-rss"
+
+      - if widget.status.downcase != "none"
+        %i{:class => "#{glyphicon}"}
+
       - if role_allows(:feature => "dashboard_add") && @edit && @edit[:current]
         = render :partial => 'db_widget_remove', :locals => {:widget => widget}
-      %div{:style => "overflow: hidden;"}
-        %span.modtitle_text{:style => "white-space: nowrap; overflow: hidden;"}
-          = widget.title
+
+      = widget.title
