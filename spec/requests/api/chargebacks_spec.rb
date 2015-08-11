@@ -71,4 +71,14 @@ RSpec.describe "chargebacks API" do
     )
     expect_request_success
   end
+
+  it "can create a new chargeback rate detail" do
+    api_basic_authorize
+    run_post rates_url, :rate => 0, :enabled => true
+
+    actual = @result["results"].first
+    expect(actual["rate"]).to eq("0")
+    expect(actual["enabled"]).to be true
+    expect_request_success
+  end
 end

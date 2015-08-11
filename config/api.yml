@@ -422,8 +422,11 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: ChargebackRateDetail
+    :collection_actions:
+      :post:
+      - :name: create
   :reports:
     :description: Reports
     :options:
