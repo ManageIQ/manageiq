@@ -318,14 +318,14 @@ class ApplicationController < ActionController::Base
   end
 
   # Save column widths
+  # skip processing when session[:view] is nil. Possible causes:
+  #   - user used back button
+  #   - user has multiple tabs to access the list view screen
   def save_col_widths
     @view = session[:view]
-    #don't do anything if @view is nil, incase user used back button or multiple tabs to access list view screen
+    cws = (params[:col_widths] || "").split(",")[2..-1]
     if @view
-#   cols_key = @view.scoped_association.nil? ? @view.db.to_sym : (@view.db + "-" + @view.scoped_association).to_sym
     cols_key = create_cols_key(@view)
-      if params[:col_widths]
-        cws = params[:col_widths].split(",")[2..-1]
         if cws.length > 0
           if (db_user = current_user)
             db_user.settings[:col_widths] ||= Hash.new                        # Create the col widths hash, if not there
@@ -339,7 +339,6 @@ class ApplicationController < ActionController::Base
             db_user.save
           end
         end
-      end
     end
     render :nothing => true                                 # No response needed
   end
