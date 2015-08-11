@@ -199,4 +199,44 @@ describe MiqRequestWorkflow do
       end
     end
   end
+
+  context "#ci_to_hash_struct" do
+    it("with a nil") { expect(workflow.ci_to_hash_struct(nil)).to be_nil }
+
+    context "with collections" do
+      let(:ems) { FactoryGirl.create(:ext_management_system) }
+
+      it "an array" do
+        arr = [FactoryGirl.create(:ems_cluster, :ems_id => ems.id), FactoryGirl.create(:ems_cluster, :ems_id => ems.id)]
+
+        expect(workflow.ci_to_hash_struct(arr).length).to eq(2)
+      end
+
+      it "an ActiveRecord CollectionProxy" do
+        FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
+        FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
+
+        expect(ems.clusters).to be_kind_of(ActiveRecord::Associations::CollectionProxy)
+        expect(workflow.ci_to_hash_struct(ems.clusters).length).to eq(2)
+      end
+    end
+
+    it "with an instance of a class that has a special format" do
+      hs = workflow.ci_to_hash_struct(FactoryGirl.create(:vm_or_template))
+
+      expect(hs.id).to               be_kind_of(Integer)
+      expect(hs.evm_object_class).to eq(:VmOrTemplate)
+      expect(hs.name).to             be_kind_of(String)
+      expect(hs.platform).to         eq("unknown")
+      expect(hs.snapshots).to        eq([])
+    end
+
+    it "with a regular class" do
+      hs = workflow.ci_to_hash_struct(FactoryGirl.create(:configured_system))
+
+      expect(hs.id).to               be_kind_of(Integer)
+      expect(hs.evm_object_class).to eq(:ConfiguredSystem)
+      expect(hs.name).to             be_kind_of(String)
+    end
+  end
 end
