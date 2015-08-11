@@ -18,10 +18,6 @@
     'blocks.recursion',
 
     // Third party modules
-    'ui.router',
-    'ui.bootstrap',
-    'ngDraggable',
-    'angular.filter',
-    'highcharts-ng'
+    'ui.router'
   ]);
 })();

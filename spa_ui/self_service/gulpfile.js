@@ -38,6 +38,8 @@ gulp.task('sass', task('sass'));
 gulp.task('wiredep', task('wiredep'));
 gulp.task('fonts', task('fonts'));
 gulp.task('images', task('images'));
+gulp.task('dev-fonts', task('fonts', {key: 'devFonts'}));
+gulp.task('dev-images', task('images', {key: 'devImages'}));
 
 /**
  * Build tasks
@@ -56,7 +58,7 @@ gulp.task('autotest', task('test', {singleRun: false}));
 /**
  * Serves up injected html for dev, builds for evything else.
  */
-gulp.task('serve-dev', ['inject'], task('serve', {
+gulp.task('serve-dev', ['dev-fonts', 'dev-images', 'inject'], task('serve', {
   isDev: true,
   specRunner: false
 }));
