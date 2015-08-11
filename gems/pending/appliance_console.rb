@@ -486,6 +486,29 @@ Date and Time Configuration
             Env['SHUTDOWN'] = true
           end
 
+        when I18n.t("advanced_settings.scap")
+          say("#{selection}\n\n")
+          yaml_filename = File.expand_path("appliance_console/config/scap_rules.yml", __dir__)
+          if !LinuxAdmin::Scap.openscap_available?
+            say("OpenSCAP has not been installed")
+          elsif !LinuxAdmin::Scap.ssg_available?
+            say("SCAP Security Guide has not been installed")
+          elsif !File.exist?(yaml_filename)
+            say("SCAP rules configuration file missing")
+          else
+            say("Locking down the appliance for SCAP...")
+            require 'yaml'
+            scap_config = YAML.load_file(yaml_filename)
+            begin
+              LinuxAdmin::Scap.new.lockdown(*scap_config['rules'], scap_config['values'])
+            rescue => e
+              say("Configuration failed: #{e.message}")
+            else
+              say("Complete")
+            end
+          end
+          press_any_key
+
         when I18n.t("advanced_settings.summary")
           # Do nothing
 
