@@ -27,14 +27,14 @@
 
   function sidebarItems() {
     return {
-      'admin': {
-        type: 'dropdown',
-        state: 'admin',
-        label: 'Admin',
-        style: 'admin',
-        order: 6,
-        isVisible: isVisible
-      }
+      //'admin': {
+      //  type: 'dropdown',
+      //  state: 'admin',
+      //  label: 'Admin',
+      //  style: 'admin',
+      //  order: 6,
+      //  isVisible: isVisible
+      //}
     };
   }
 

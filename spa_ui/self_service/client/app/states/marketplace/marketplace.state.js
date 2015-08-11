@@ -26,9 +26,6 @@
 
   function navItems() {
     return {
-      'cart': {
-        type: 'cart'
-      }
     };
   }
 
@@ -37,9 +34,9 @@
       'marketplace': {
         type: 'state',
         state: 'marketplace',
-        label: 'Marketplace',
+        label: 'Service Catalog',
         style: 'marketplace',
-        order: 4
+        order: 3
       }
     };
   }

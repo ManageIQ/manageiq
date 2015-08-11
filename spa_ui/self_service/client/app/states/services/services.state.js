@@ -30,9 +30,9 @@
       'services': {
         type: 'state',
         state: 'services',
-        label: 'Services',
+        label: 'My Services',
         style: 'services',
-        order: 3
+        order: 1
       }
     };
   }

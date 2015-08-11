@@ -30,7 +30,7 @@
       'order-history': {
         type: 'state',
         state: 'order-history',
-        label: 'Order History',
+        label: 'My Requests',
         style: 'order-history',
         order: 2
       }

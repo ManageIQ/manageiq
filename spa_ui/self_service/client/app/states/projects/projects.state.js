@@ -27,13 +27,13 @@
 
   function sidebarItems() {
     return {
-      'projects': {
-        type: 'state',
-        state: 'projects',
-        label: 'Projects',
-        style: 'projects',
-        order: 1
-      }
+      //'projects': {
+      //  type: 'state',
+      //  state: 'projects',
+      //  label: 'Projects',
+      //  style: 'projects',
+      //  order: 1
+      //}
     };
   }
 })();
