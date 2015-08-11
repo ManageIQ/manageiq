@@ -8,26 +8,18 @@ module ApplicationController::CurrentUser
   end
 
   def clear_current_user
-    self.current_user = nil
+    User.current_userid = nil
+    session[:userid]    = nil
+    session[:group]     = nil
   end
   protected :clear_current_user
 
   def current_user=(db_user)
-    if db_user
-      User.current_userid = db_user.userid
-      session[:userid]    = db_user.userid
-    else
-      User.current_userid = nil
-      session[:userid]    = nil
-    end
-    self.current_group  = db_user.try(:current_group)
+    User.current_userid = db_user.userid
+    session[:userid]    = db_user.userid
+    session[:group]     = db_user.current_group.try(:id)
   end
   protected :current_user=
-
-  def current_group=(db_group)
-    session[:group] = db_group.try(:id)
-  end
-  private :current_group=
 
   def eligible_groups
     eligible_groups = current_user.try(:miq_groups)
