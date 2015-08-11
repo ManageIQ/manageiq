@@ -1,16 +1,35 @@
 .maincontent{:xmlns => "http://www.w3.org/1999/html"}
   = render :partial => "layouts/flash_msg"
-  %table
-    %tr
-      %td{:align => "center", :valign => "top"}
+  %form.form-horizontal.static
+    .form-group
+      %label.col-md-1.control-labelimage{:rowspan => 9}
         - if @record.picture
-          = image_tag("#{@record.picture.url_path}?#{rand(99_999_999)}",
-                      :style => "width:100px; height:100px;")
+          %img{:src => "#{@record.picture.url_path}?#{rand(99_999_999)}"}/
         - else
-          = image_tag("/images/icons/new/service_template.png",
-                      :style => "width:100px; height:100px;")
+          %img{:src => "/images/icons/new/service_template.png"}/
         %br
         %br
+      .col-md-9
+        .form-group
+          %label.col-md-2.control-label
+            = _('Name')
+          .col-md-8
+            %p.form-control-static
+              = @record.name
+        .form-group
+          %label.col-md-2.control-label
+            = _('Description')
+          .col-md-8
+            %p.form-control-static
+              = @record.description
+        .form-group
+          %label.col-md-2.control-label
+            = _('Long Description')
+          .col-md-8
+            %p.form-control-static
+              = @record.long_description.to_s.html_safe
+    .form-group
+      .col-md-1{:align => "center"}
         #buttons
           = button_tag(_("Order"),
                        :class   => "btn btn-default",
@@ -18,21 +37,4 @@
                        :title   => t,
                        :onclick => "miqAjaxButton('#{url_for(:action => "svc_catalog_provision",
                                                              :id     => @record.id,
-                                                             :button => "order")}');")
-      %td{:valign => "top"}
-        %form.form-horizontal.static
-          .form-group
-            %label.col-md-2.control-label
-              = _('Name')
-            .col-md-8
-              = @record.name
-          .form-group
-            %label.col-md-2.control-label
-              = _('Description')
-            .col-md-8
-              = @record.description
-          .form-group
-            %label.col-md-2.control-label
-              = _('Long Description')
-            .col-md-8
-              = @record.long_description.to_s.html_safe
+                                                           :button => "order")}');")
