@@ -454,7 +454,7 @@ module ApplicationController::Explorer
       if user.super_admin_user?
         roles = MiqGroup.all
       else
-        roles = [MiqGroup.find_by_id(user.current_group_id)]
+        roles = [user.current_group]
       end
       return options[:count_only] ? roles.count : roles.sort_by { |a| a.name.downcase }
     when :schedules
