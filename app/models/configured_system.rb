@@ -13,6 +13,9 @@ class ConfiguredSystem < ActiveRecord::Base
   belongs_to :operating_system_flavor
   has_and_belongs_to_many :configuration_tags
 
+  alias_attribute :name,    :hostname
+  alias_method    :manager, :configuration_manager
+
   delegate :name, :to => :configuration_profile,         :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_architecture,    :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_compute_profile, :prefix => true, :allow_nil => true
@@ -62,14 +65,9 @@ class ConfiguredSystem < ActiveRecord::Base
     @tag_hash ||= configuration_tags.index_by(&:class)
   end
 
-  alias_method :manager, :configuration_manager
-
   def self.common_configuration_profiles_for_selected_configured_systems(ids)
     hosts = includes(:configuration_location, :configuration_organization).where(:id => ids)
     hosts.collect(&:available_configuration_profiles).inject(:&).presence
   end
 
-  def name
-    hostname
-  end
 end
