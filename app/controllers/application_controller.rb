@@ -328,12 +328,12 @@ class ApplicationController < ActionController::Base
     cols_key = create_cols_key(@view)
         if cws.length > 0
           if (db_user = current_user)
-            db_user.settings[:col_widths] ||= Hash.new                        # Create the col widths hash, if not there
-            db_user.settings[:col_widths][cols_key] ||= Hash.new        # Create hash for the view db
-            @settings[:col_widths] ||= Hash.new                               # Create the col widths hash, if not there
-            @settings[:col_widths][cols_key] ||= Hash.new             # Create hash for the view db
+            db_user.settings[:col_widths] ||= {}
+            db_user.settings[:col_widths][cols_key] ||= {}
+            @settings[:col_widths] ||= {}
+            @settings[:col_widths][cols_key] ||= {}
             cws.each_with_index do |cw, i|
-              @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i  # Save each cols width
+              @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
             end
             db_user.settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
             db_user.save
