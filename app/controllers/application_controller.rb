@@ -318,27 +318,25 @@ class ApplicationController < ActionController::Base
   end
 
   # Save column widths
+  # skip processing when session[:view] is nil. Possible causes:
+  #   - user used back button
+  #   - user has multiple tabs to access the list view screen
   def save_col_widths
     @view = session[:view]
-    #don't do anything if @view is nil, incase user used back button or multiple tabs to access list view screen
-    if @view
-#   cols_key = @view.scoped_association.nil? ? @view.db.to_sym : (@view.db + "-" + @view.scoped_association).to_sym
-    cols_key = create_cols_key(@view)
-      if params[:col_widths]
-        cws = params[:col_widths].split(",")[2..-1]
-        if cws.length > 0
-          if (db_user = current_user)
-            db_user.settings[:col_widths] ||= Hash.new                        # Create the col widths hash, if not there
-            db_user.settings[:col_widths][cols_key] ||= Hash.new        # Create hash for the view db
-            @settings[:col_widths] ||= Hash.new                               # Create the col widths hash, if not there
-            @settings[:col_widths][cols_key] ||= Hash.new             # Create hash for the view db
-            cws.each_with_index do |cw, i|
-              @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i  # Save each cols width
-            end
-            db_user.settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
-            db_user.save
-          end
-        end
+    cws = (params[:col_widths] || "").split(",")[2..-1]
+    if @view && cws.length > 0
+      cols_key = create_cols_key(@view)
+      @settings[:col_widths] ||= {}
+      @settings[:col_widths][cols_key] ||= {}
+      cws.each_with_index do |cw, i|
+        @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
+      end
+
+      if current_user
+        user_settings = current_user.settings || {}
+        user_settings[:col_widths] ||= {}
+        user_settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
+        current_user.update_attributes(:settings => user_settings)
       end
     end
     render :nothing => true                                 # No response needed
