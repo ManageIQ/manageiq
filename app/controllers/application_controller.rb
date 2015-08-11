@@ -332,12 +332,11 @@ class ApplicationController < ActionController::Base
         @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
       end
 
-        if (db_user = current_user)
-          db_user.settings[:col_widths] ||= {}
-          db_user.settings[:col_widths][cols_key] ||= {}
-          db_user.settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
-          db_user.save
-        end
+      if current_user
+        user_settings = current_user.settings || {}
+        user_settings[:col_widths] ||= {}
+        user_settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
+        current_user.update_attributes(:settings => user_settings)
       end
     end
     render :nothing => true                                 # No response needed
