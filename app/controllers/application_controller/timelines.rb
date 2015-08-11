@@ -225,7 +225,7 @@ module ApplicationController::Timelines
         add_flash(_("No records found for this timeline"), :warning)
       else
         @timeline = true
-        @report.extras[:browser_name] = browser_info("name").downcase
+        @report.extras[:browser_name] = browser_info(:name)
         if is_browser_ie?
           blob = BinaryBlob.new(:name => "timeline_results")
           blob.binary=(@report.to_timeline)
@@ -480,7 +480,7 @@ module ApplicationController::Timelines
         if @report.table.data.length == 0
           add_flash(_("No records found for this timeline"), :warning)
         else
-          @report.extras[:browser_name] = browser_info("name").downcase
+          @report.extras[:browser_name] = browser_info(:name)
           if is_browser_ie?
             blob = BinaryBlob.new(:name => "timeline_results")
             blob.binary=(@report.to_timeline)
