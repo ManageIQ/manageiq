@@ -68,7 +68,17 @@ module ContainerSummaryHelper
   end
 
   def textual_container_image_registry
-    textual_link(@record.container_image_registry)
+    object = @record.container_image_registry
+
+    if object.nil?
+      {
+        :label => ui_lookup(:model => ContainerImageRegistry.name),
+        :image => "container_image_registry_unknown",
+        :value => "Unknown image source"
+      }
+    else
+      textual_link(@record.container_image_registry)
+    end
   end
 
   def textual_container_image_registries
