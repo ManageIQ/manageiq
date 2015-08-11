@@ -400,42 +400,6 @@
       "note":""
     },
     {
-      "warning_type": "Cross Site Scripting",
-      "warning_code": 5,
-      "fingerprint": "47b291ced89eef8b3bc805bdeee98822e418418cfc2dc96df143e190ddfd03ef",
-      "message": "Unescaped parameter value",
-      "file": "app/views/layouts/_global_header.html.haml",
-      "line": 29,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "find_and_preserve(Haml::Filters::Javascript.render_with_options(\"ManageIQ.browser = \\\"#{browser_info(\"name\")}\";\nManageIQ.controller = \"#{request.parameters[:controller]}\";\n\", _hamlout.options))",
-      "render_path": ["AlertController#index","Template:layouts/application"],
-      "location": {
-        "type": "template",
-        "template": "layouts/_global_header (Template:layouts/application)"
-      },
-      "user_input":"request.parameters[:controller]",
-      "confidence":"Weak",
-      "note":""
-    },
-    {
-      "warning_type":"Cross Site Scripting",
-      "warning_code":5,
-      "fingerprint":"c77cb9703533e6d55f68f5b3881d29932d8872d15ace2d20919678cc0c7319e5",
-      "message":"Unescaped parameter value",
-      "file":"app/views/miq_policy/import.html.haml",
-      "line":43,
-      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code":"find_and_preserve(Haml::Filters::Javascript.render_with_options(\"var import_file_upload_id = \\\"#{params[:import_file_upload_id]}\";\n\", _hamlout.options))",
-      "render_path":["MiqPolicyController#import"],
-      "location":{
-        "type":"template",
-        "template":"miq_policy/import (MiqPolicyController#import)"
-      },
-      "user_input":"params[:import_file_upload_id]",
-      "confidence":"Weak",
-      "note":""
-    },
-    {
       "warning_type":"Dynamic Render Path",
       "warning_code":15,
       "fingerprint":"c49ab65cd0117e0a73e16fc89931d82331324f6d63d89bcb5ae4e4abac542475",
