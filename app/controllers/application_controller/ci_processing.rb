@@ -244,7 +244,7 @@ module ApplicationController::CiProcessing
     end
     obj = kls.find_by_id(params[:id])
     render :json => {
-      :retirement_date    => obj.retires_on,
+      :retirement_date    => obj.retires_on.strftime('%m/%d/%Y'),
       :retirement_warning => obj.retirement_warn
     }
   end
