@@ -30,19 +30,19 @@ module ApplicationController::CurrentUser
 
   def current_role
     @current_role ||= begin
-      role = current_group.try(:miq_user_role)
+      role = current_user.try(:miq_user_role)
       role.try(:read_only?) ? role.name.split("-").last : ""
     end
   end
   protected :current_role
 
   def admin_user?
-    %w(super_administrator administrator).include?(current_role)
+    current_user.admin_user?
   end
   protected :admin_user?
 
   def super_admin_user?
-    current_role == "super_administrator"
+    current_user.super_admin_user?
   end
   protected :super_admin_user?
 
