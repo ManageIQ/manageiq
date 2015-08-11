@@ -9,6 +9,7 @@
     var directive = {
       restrict: 'AE',
       require: '^navigation',
+      replace: true,
       scope: {
         item: '='
       },

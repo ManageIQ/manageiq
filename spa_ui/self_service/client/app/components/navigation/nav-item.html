@@ -1,4 +1,4 @@
-<div ng-switch="::vm.item.type">
+<div ng-switch="::vm.item.type" dropdown>
   <a ng-switch-when="state" class="navigation__item-body navigation__link" ng-class="::vm.item.style"
      ui-sref="{{ ::vm.item.state }}"
      ui-sref-active="navigation__link--active">
@@ -36,8 +36,6 @@
       <nav-item item="::item"></nav-item>
     </li>
   </ul>
-
-  <nav-cart ng-switch-when="cart" class="nav-cart"></nav-cart>
 
   <nav-profile ng-switch-when="profile" class="nav-profile"></nav-profile>
 

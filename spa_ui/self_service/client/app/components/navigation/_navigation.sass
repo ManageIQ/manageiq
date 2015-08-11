@@ -13,12 +13,16 @@
 
   +element(brand)
     @extend .navbar-brand
-    background-color: $app-color-blue
+    //background-color: $app-color-blue
     padding: 0
 
     .navigation &:hover, .navigation &:active, .navigation &:focus
       outline: none
-      background-color: $app-color-blue
+      //background-color: $app-color-blue
+
+    span
+      vertical-align: middle
+      color: $app-color-white
 
   +element(nav)
     list-style: outside none none
@@ -49,7 +53,6 @@
 
   +element(link)
     outline: none
-    //color: $color-
 
   +element(text)
     margin: 0
@@ -62,16 +65,8 @@
     min-height: $navbar-height
     padding: 27.5px 15px
 
-    +modifier(active)
-    //color: $color-
-    //background-color: $color-
-
     &:active, &:focus
       outline: none
-
-    &:hover
-      //color: $color-
-      //background-color: $color-
 
   +element(button-wrapper)
     padding: 0

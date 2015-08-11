@@ -17,14 +17,12 @@
   <!-- build:css styles/lib.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="/bower_components/toastr/toastr.css" />
-  <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css" />
-  <link rel="stylesheet" href="/bower_components/nganimate.css/animate.css" />
   <!-- endbower -->
   <!-- endbuild -->
 
   <!-- build:css styles/app.css-->
   <!-- inject:css -->
-  <link rel="stylesheet" href="/.tmp/styles.css">
+  <link rel="stylesheet" href="/.tmp/styles/styles.css">
   <!-- endinject -->
   <!-- endbuild -->
 </head>
@@ -52,25 +50,14 @@
   <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
   <script src="/bower_components/angular-messages/angular-messages.js"></script>
   <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="/bower_components/angular-smart-table/dist/smart-table.js"></script>
-  <script src="/bower_components/tv4/tv4.js"></script>
-  <script src="/bower_components/objectpath/lib/ObjectPath.js"></script>
-  <script src="/bower_components/angular-schema-form/dist/schema-form.js"></script>
-  <script src="/bower_components/angular-schema-form/dist/bootstrap-decorator.js"></script>
-  <script src="/bower_components/jquery-ui/ui/core.js"></script>
-  <script src="/bower_components/jquery-ui/ui/widget.js"></script>
-  <script src="/bower_components/jquery-ui/ui/mouse.js"></script>
-  <script src="/bower_components/jquery-ui/ui/sortable.js"></script>
-  <script src="/bower_components/angular-ui-sortable/sortable.js"></script>
   <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
   <script src="/bower_components/ngDraggable/ngDraggable.js"></script>
-  <script src="/bower_components/angular-filter/dist/angular-filter.js"></script>
   <script src="/bower_components/highcharts/highcharts.js"></script>
   <script src="/bower_components/highcharts/highcharts-3d.js"></script>
   <script src="/bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
-  <script src="/bower_components/marked/lib/marked.js"></script>
-  <script src="/bower_components/angular-marked/angular-marked.js"></script>
+  <script src="/bower_components/patternfly/dist/js/patternfly.js"></script>
+  <script src="/bower_components/patternfly-angular/dist/angular-patternfly.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -119,8 +106,6 @@
   <script src="/client/app/components/compare/selected-products.directive.js"></script>
   <script src="/client/app/components/confirmation/confirmation.directive.js"></script>
   <script src="/client/app/components/content-header/content-header.directive.js"></script>
-  <script src="/client/app/components/content-page-form/content-page-form.directive.js"></script>
-  <script src="/client/app/components/content-pages/nav-pages.directive.js"></script>
   <script src="/client/app/components/details-table/details-table.directive.js"></script>
   <script src="/client/app/components/footer/footer.directive.js"></script>
   <script src="/client/app/components/group-form/group-form.directive.js"></script>
@@ -138,7 +123,6 @@
   <script src="/client/app/components/product-categories-table/product-categories-table.directive.js"></script>
   <script src="/client/app/components/product-category-form/product-category-form.directive.js"></script>
   <script src="/client/app/components/product-description/product-description.directive.js"></script>
-  <script src="/client/app/components/product-form/product-form-decorator.config.js"></script>
   <script src="/client/app/components/product-form/product-form-field.directive.js"></script>
   <script src="/client/app/components/product-form/product-form.directive.js"></script>
   <script src="/client/app/components/product-type-modal/product-type-show-modal.directive.js"></script>
@@ -186,7 +170,6 @@
   <script src="/client/app/mock-http-backend/mock-auth.backend.js"></script>
   <script src="/client/app/resources/alert.factory.js"></script>
   <script src="/client/app/resources/content-page.factory.js"></script>
-  <script src="/client/app/resources/dashboard.factory.js"></script>
   <script src="/client/app/resources/group.factory.js"></script>
   <script src="/client/app/resources/membership.factory.js"></script>
   <script src="/client/app/resources/motd.factory.js"></script>
@@ -253,7 +236,6 @@
   <script src="/client/app/states/order-history/details/details.state.js"></script>
   <script src="/client/app/states/order-history/list/list.state.js"></script>
   <script src="/client/app/states/order-history/order-history.state.js"></script>
-  <script src="/client/app/states/pages/pages.state.js"></script>
   <script src="/client/app/states/products/details/details.state.js"></script>
   <script src="/client/app/states/products/products.state.js"></script>
   <script src="/client/app/states/projects/create/create.state.js"></script>
