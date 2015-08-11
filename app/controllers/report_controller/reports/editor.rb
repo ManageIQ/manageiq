@@ -428,9 +428,12 @@ module ReportController::Reports::Editor
   # Handle params starting with "pivotcalc"
   def gfv_key_pivot_calculations(key, value)
     field = @edit[:new][:fields][key.split("_").last.to_i].last       # Get the field name
-    @edit[:pivot_cols][field] = value.split(',').sort.map(&:to_sym)
-    # Create new header from original
-    @edit[:new][:headers][field + "__#{value}"] = @edit[:new][:headers][field] + " (#{value.to_s.titleize})"
+    @edit[:pivot_cols][field] = []
+    value.split(',').sort.map(&:to_sym).each do |agg|
+      @edit[:pivot_cols][field] << agg
+      # Create new header from original header + aggregate function
+      @edit[:new][:headers][field + "__#{agg}"] = @edit[:new][:headers][field] + " (#{agg.to_s.titleize})"
+    end
     build_field_order
   end
 
@@ -1661,7 +1664,8 @@ module ReportController::Reports::Editor
       end
       if field_key.include?("__")                           # Check for calculated pivot column
         field_key1, calc_typ = field_key.split("__")
-        pivot_cols[field_key1] ||= calc_typ.split(",")
+        pivot_cols[field_key1] ||= []
+        pivot_cols[field_key1] << calc_typ.to_sym
         pivot_cols[field_key1].sort!                          # Sort the array
         fields.push([field_value, field_key1])  unless fields.include?([field_value, field_key1]) # Add original col to fields array
       else
