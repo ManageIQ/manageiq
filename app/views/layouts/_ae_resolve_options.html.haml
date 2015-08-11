@@ -3,12 +3,12 @@
 - ae_custom_button  ||= false
 - rec_id = @edit && @edit[:action_id].present? ? @edit[:action_id] : "new"
 - url    = url_for(:action => field_changed_url, :id => rec_id)
-%hr
-%h3= _("Object Details")
-%table.style1
-  - if form_action == "ae_resolve"
+- if form_action == "ae_resolve"
+  %hr
+  %h3= _("Object Details")
+  %table.style1
     %tr
-      %td.key= _("System/Process/")
+      %td.key= _("System/Process")
       %td
         = select_tag('instance_name',
                      options_for_select(resolve[:instance_names].sort_by(&:downcase),
