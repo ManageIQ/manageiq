@@ -20,23 +20,26 @@ db: Container
 # Columns to fetch from the main table
 cols:
 - name
-- image
 
 # Included tables (joined, has_one, has_many) and columns
 include:
   container_group:
     columns:
     - name
+  container_image:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
   :container_group: {}
+  :container_image: {}
 
 # Order of columns (from all tables)
 col_order: 
 - name
 - container_group.name
-- image
+- container_image.name
 
 # Column titles, in order
 headers:
@@ -54,7 +57,7 @@ order: Ascending
 sortby:
 - name
 - container_group.name
-- image
+- container_image.name
 
 # Group rows (y=yes,n=no,c=count)
 group: n
