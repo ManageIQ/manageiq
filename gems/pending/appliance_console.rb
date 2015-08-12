@@ -486,6 +486,9 @@ Date and Time Configuration
             Env['SHUTDOWN'] = true
           end
 
+        when I18n.t("advanced_settings.scap")
+          LinuxAdmin::Security.scap_lockdown
+
         when I18n.t("advanced_settings.summary")
           # Do nothing
 
