@@ -718,11 +718,7 @@ module EmsCommon
     else
       @edit[:new][:zone] = @ems.my_zone
     end
-    @edit[:server_zones] = []
-    zones = Zone.order('lower(description)')
-    zones.each do |zone|
-      @edit[:server_zones].push([zone.description, zone.name])
-    end
+    @edit[:server_zones] = Zone.order('lower(description)').collect { |z| [z.description, z.name] }
     
     @edit[:openstack_infra_providers] = ManageIQ::Providers::Openstack::Provider.order('lower(name)').each_with_object([["---", nil]]) do |openstack_infra_provider, x|
       x.push([openstack_infra_provider.name, openstack_infra_provider.id])

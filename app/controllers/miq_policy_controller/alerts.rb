@@ -563,13 +563,8 @@ module MiqPolicyController::Alerts
     if alert.options[:notifications][:snmp]
       validate_snmp_options(alert.options[:notifications][:snmp])
       unless @flash_array
-        temp = Array.new
-        @edit[:new][:snmp][:variables].each_with_index do |var,i|
-          unless var[:oid].blank?
-            temp.push(var)
-          end
-        end
-        alert.options[:notifications][:snmp][:variables] = temp
+        alert.options[:notifications][:snmp][:variables] =
+          @edit[:new][:snmp][:variables].reject { |var| var[:oid].blank? }
       end
     end
     return @flash_array == nil
@@ -586,9 +581,9 @@ module MiqPolicyController::Alerts
       @event = e.nil? ? "<No Event configured>" : e.etype.description + ": " + e.description
     end
     if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:email] && @alert.options[:notifications][:email][:to]
-      @alert.options[:notifications][:email][:to].each_with_index do |e, e_idx|
-        u = User.find_by_email(e)
-        @email_to.push(u ? "#{u.name} (#{e})" : e)
+      @alert.options[:notifications][:email][:to].each do |to|
+        user = User.find_by_email(to)
+        @email_to.push(user ? "#{user.name} (#{to})" : to)
       end
     end
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlert"), :name=>alert.description}

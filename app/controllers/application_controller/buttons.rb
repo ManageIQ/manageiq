@@ -346,12 +346,8 @@ module ApplicationController::Buttons
     end
     group_set_record_vars(@custom_button_set)
 
-    mems = []
-    @edit[:new][:fields].each_with_index do |field,idx|
-      uri = CustomButton.find(field[1])
-      uri.save
-      mems.push(uri)
-    end
+    member_ids = @edit[:new][:fields].collect { |field| field[1] }
+    mems = CustomButton.where(:id => member_ids)
 
     if typ == "update"
       org_mems = @custom_button_set.members   #clean up existing members
@@ -480,10 +476,7 @@ module ApplicationController::Buttons
           #find custombutton set in ab_tree or when adding button under a group
             group_id = x_active_tree == :ab_tree ? nodes[2].split('-').last : nodes[3].split('-').last
             @aset = CustomButtonSet.find_by_id(from_cid(group_id))
-            mems = Array.new
-            @aset.members.each do |m|
-              mems.push(m)
-            end
+            mems = @aset.members
           end
         end
 
@@ -662,7 +655,6 @@ module ApplicationController::Buttons
     @edit[:new][:button_image] = @custom_button_set[:set_data] && @custom_button_set[:set_data][:button_image] ? @custom_button_set[:set_data][:button_image] : ""
     @edit[:new][:display] = @custom_button_set[:set_data] && @custom_button_set[:set_data].has_key?(:display) ? @custom_button_set[:set_data][:display] : true
     @edit[:new][:button_images] = build_button_image_options
-    @edit[:new][:available_fields] = Array.new
     @edit[:new][:fields] = Array.new
     button_order = @custom_button_set[:set_data] && @custom_button_set[:set_data][:button_order] ? @custom_button_set[:set_data][:button_order] : nil
     if button_order     # show assigned buttons in order they were saved
@@ -676,10 +668,11 @@ module ApplicationController::Buttons
         @edit[:new][:fields].push([mem.name,mem.id])
       end
     end
-    uri = CustomButton.buttons_for(@sb[:applies_to_class]).sort_by(&:name)
-    uri.each do |u|
-      @edit[:new][:available_fields].push([u.name,u.id]) if u.parent.nil?
-    end
+    @edit[:new][:available_fields] = 
+      CustomButton.buttons_for(@sb[:applies_to_class])
+        .select  { |u| u.parent.nil? }
+        .sort_by(&:name)
+        .collect { |u| [u.name, u.id] }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
   end
@@ -905,10 +898,7 @@ module ApplicationController::Buttons
     applies_to_id = @sb[:applies_to_id].to_i if x_active_tree == :sandt_tree
     group.name = "#{@edit[:new][:name]}|#{@edit[:new][:applies_to_class]}|#{to_cid(applies_to_id)}" if !@edit[:new][:name].blank?
     group.set_data ||= Hash.new
-    group.set_data[:button_order] = Array.new     # saves order of buttons/members
-    @edit[:new][:fields].each do |field|
-      group.set_data[:button_order].push(field[1])
-    end
+    group.set_data[:button_order] = @edit[:new][:fields].collect { |field| field[1] }
     if !@edit[:new][:button_image].blank? && @edit[:new][:button_image] != ""
       group.set_data[:button_image] ||= Hash.new
       group.set_data[:button_image] = @edit[:new][:button_image]

@@ -756,27 +756,21 @@ class MiqAeClassController < ApplicationController
       :key         => "aeinst_edit__#{@ae_inst.id || "new"}",
       :new         => {}
     }
-    @edit[:new][:ae_inst]   = {}
-    @edit[:new][:ae_values] = []
-    @edit[:new][:ae_fields] = []
+    @edit[:new][:ae_inst] = {}
     instance_column_names.each do |fld|
       @edit[:new][:ae_inst][fld] = @ae_inst.send(fld)
     end
 
-    @ae_values.each do |ae_value|
-      values = {}
-      value_column_names.each do |fld|
-        values[fld] = ae_value.send(fld)
+    @edit[:new][:ae_values] = @ae_values.collect do |ae_value|
+      value_column_names.each_with_object({}) do |fld, hash|
+        hash[fld] = ae_value.send(fld)
       end
-      @edit[:new][:ae_values].push(values)
     end
 
-    @ae_class.ae_fields.each do |ae_field|
-      field = {}
-      field_column_names.each do |fld|
-        field[fld] = ae_field.send(fld)
+    @edit[:new][:ae_fields] = @ae_class.ae_fields.collect do |ae_field|
+      field_column_names.each_with_object({}) do |fld, hash|
+        hash[fld] = ae_field.send(fld)
       end
-      @edit[:new][:ae_fields].push(field)
     end
 
     @edit[:current] = copy_hash(@edit[:new])
@@ -946,17 +940,15 @@ class MiqAeClassController < ApplicationController
 
     @edit[:new] = {
       :datatypes => build_dtype_options,    # setting dtype combo for adding a new field
-      :aetypes   => build_type_options,          # setting aetype combo for adding a new field
-      :fields    => []
+      :aetypes   => build_type_options      # setting aetype combo for adding a new field
     }
 
-    @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-      field = {}
-      field_attributes.each do |column|
-        field[column] = fld.send(column)
+    @edit[:new][:fields] = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
+      field_attributes.each_with_object({}) do |column, hash|
+        hash[column] = fld.send(column)
       end
-      @edit[:new][:fields].push(field)
     end
+
     # combo to show existing fields
     @combo_xml       = build_type_options
     # passing in fields because that's how many combo boxes we need
@@ -995,13 +987,10 @@ class MiqAeClassController < ApplicationController
       @edit[:new][:data] = MiqAeMethod.default_method_text
     end
     @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
-    @edit[:new][:fields] = []
-    @ae_method.inputs.each do |input|
-      field_input = {}
-      method_input_column_names.each do |column|
-        field_input[column] = input.send(column)
+    @edit[:new][:fields] = @ae_method.inputs.collect do |input|
+      method_input_column_names.each_with_object({}) do |column, hash|
+        hash[column] = input.send(column)
       end
-      @edit[:new][:fields].push(field_input)
     end
     @edit[:new][:available_datatypes] = MiqAeField.available_datatypes_for_ui
     @edit[:current] = copy_hash(@edit[:new])
@@ -1758,9 +1747,8 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     when "save"
       return unless load_edit("priority__edit", "replace_cell__explorer")
-      domains = []
-      @edit[:new][:domain_order].reverse!.each_with_index do |domain, i|
-        domains.push(MiqAeDomain.find_by_name(domain.split(' (Locked)').first).id)
+      domains = @edit[:new][:domain_order].reverse!.collect do |domain|
+        MiqAeDomain.find_by_name(domain.split(' (Locked)').first).id
       end
       MiqAeDomain.reset_priority_by_ordered_ids(domains)
       add_flash(_("Priority Order was saved"))
@@ -1853,12 +1841,9 @@ private
   def initial_setup_for_instances_form_vars(ae_inst_id)
     @ae_inst   =  ae_inst_id ? MiqAeInstance.find(ae_inst_id) : MiqAeInstance.new
     @ae_class  = ae_class_for_instance_or_method(@ae_inst)
-    @ae_values = []
 
-    @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
-      val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
-      @ae_values.push(val)
+    @ae_values = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
+      MiqAeValue.find_or_initialize_by(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
     end
   end
 
@@ -2394,14 +2379,10 @@ private
   # Get variables from edit form
   def get_instances_form_vars
     #resetting inst/class/values from id stored in @edit.
-    @ae_inst = @edit[:ae_inst_id] ? MiqAeInstance.find(@edit[:ae_inst_id]) : MiqAeInstance.new
-    @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
-    @ae_values = Array.new
-
-    @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
-      val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
-      @ae_values.push(val)
+    @ae_inst   = @edit[:ae_inst_id] ? MiqAeInstance.find(@edit[:ae_inst_id]) : MiqAeInstance.new
+    @ae_class  = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
+    @ae_values = @ae_class.ae_fields.sort_by { |a| a.priority.to_i }.collect do |fld|
+      MiqAeValue.find_or_initialize_by(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
     end
 
     if x_node.split('-').first == "aei"
@@ -2527,10 +2508,9 @@ private
     @edit[:rec_id] = @ae_class ? @ae_class.id : nil
     @edit[:ae_class_id] = @ae_class.id
     @edit[:new][:fields] = @ae_class.ae_fields.deep_clone
-    @edit[:new][:fields_list] = Array.new
-    @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each do |f|
-      @edit[:new][:fields_list].push("#{f.display_name} (#{f.name})")
-    end
+    @edit[:new][:fields_list] = @edit[:new][:fields]
+                                   .sort_by { |f| f.priority.to_i }
+                                   .collect { |f| "#{f.display_name} (#{f.name})" }
     @edit[:key] = "fields_edit__seq"
     @edit[:current] = copy_hash(@edit[:new])
     @right_cell_text = "Edit of Class Schema Sequence '#{@ae_class.name}'"
@@ -2660,17 +2640,18 @@ private
     name_for_msg % options
   end
 
+  def ordered_domains_for_priority_edit_screen
+    MiqAeDomain.order('priority DESC')
+               .reject  { |d| d.priority == 0 }
+               .collect { |d| d.editable? ? d.name : add_read_only_suffix(d, d.name) }
+  end
+
   def priority_edit_screen
     @in_a_form = true
     @edit = {
-      :key => "priority__edit"
+      :key => "priority__edit",
+      :new => {:domain_order => ordered_domains_for_priority_edit_screen}
     }
-    @edit[:new] = {
-      :domain_order => []
-    }
-    domains = MiqAeDomain.order('priority DESC')
-    order = @edit[:new][:domain_order]
-    domains.collect { |d| order.push("#{d.editable? ? d.name : add_read_only_suffix(d, d.name)}") unless d.priority == 0 }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit]  = @edit
   end

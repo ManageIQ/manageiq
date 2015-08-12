@@ -349,17 +349,10 @@ class ConfigurationController < ApplicationController
     @timeprofile_details = Hash.new
     @timeprofiles.each do |timeprofile|
       @timeprofile_details[timeprofile.description] = Hash.new
-      @timeprofile_details[timeprofile.description][:days] = Array.new
-      timeprofile.profile[:days].each do |day|
-        @timeprofile_details[timeprofile.description][:days].push(
-          DateTime::ABBR_DAYNAMES[day.to_i])
-      end
+      @timeprofile_details[timeprofile.description][:days] =
+        timeprofile.profile[:days].collect { |day| DateTime::ABBR_DAYNAMES[day.to_i] }
       @timeprofile_details[timeprofile.description][:hours] = Array.new
-      temp_arr = Array.new
-      timeprofile.profile[:hours].each do |h|
-        temp_arr.push(h.to_i)
-      end
-      temp_arr = temp_arr.sort
+      temp_arr = timeprofile.profile[:hours].collect(&:to_i).sort
       st = ""
       temp_arr.each_with_index do |hr,i|
         if hr.to_i+1 == temp_arr[i+1]
@@ -748,11 +741,9 @@ class ConfigurationController < ApplicationController
         :key     => 'config_edit__ui2',
       }
     when 'ui_3'
-      filters = []
-      MiqSearch.where(:search_type => "default").collect { |search| filters.push(search) if allowed_filter_db?(search.db) }
-      current = filters.sort_by do |a|
-        [NAV_TAB_PATH[a.db.downcase.to_sym], a.description.downcase]
-      end
+      current = MiqSearch.where(:search_type => "default")
+                         .select  { |s| allowed_filter_db?(s.db) }
+                         .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,

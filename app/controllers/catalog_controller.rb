@@ -1160,19 +1160,12 @@ class CatalogController < ApplicationController
     @edit[:rec_id] = @record.id
     @edit[:new][:name] = @record.name
     @edit[:new][:description]  = @record.description
-    selected_service_templates = @record.service_templates
-    @edit[:new][:fields] = Array.new
-    selected_service_templates.each do |st|
-      @edit[:new][:fields].push([st.name,st.id])
-    end
-    @edit[:new][:fields].sort!
+    @edit[:new][:fields] = @record.service_templates.collect { |st| [st.name, st.id] }.sort
 
-    available_service_templates = ServiceTemplate.find(:all)
-    @edit[:new][:available_fields] = Array.new
-    available_service_templates.each do |st|
-      @edit[:new][:available_fields].push([st.name,st.id]) if st.service_template_catalog.nil? && st.display
-    end
-    @edit[:new][:available_fields].sort!                  # Sort the available fields array
+    @edit[:new][:available_fields] = ServiceTemplate.all
+                                                    .select  { |st| st.service_template_catalog.nil? && st.display }
+                                                    .collect { |st| [st.name, st.id] }
+                                                    .sort
 
     @edit[:current] = copy_hash(@edit[:new])
     @in_a_form = true
@@ -1181,11 +1174,7 @@ class CatalogController < ApplicationController
   def st_catalog_set_record_vars(stc)
     stc.name = @edit[:new][:name]
     stc.description = @edit[:new][:description]
-    service_templates = Array.new
-    @edit[:new][:fields].each do |sf|
-      service_templates.push(ServiceTemplate.find_by_id(sf[1]))
-    end
-    stc.service_templates = service_templates
+    stc.service_templates = @edit[:new][:fields].collect { |sf| ServiceTemplate.find_by_id(sf[1]) }
   end
 
   def st_catalog_delete
@@ -1290,12 +1279,9 @@ class CatalogController < ApplicationController
     @edit[:new][:provision_cost] = @record.provision_cost
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
-    available_catalogs = ServiceTemplateCatalog.find(:all)
-    @edit[:new][:available_catalogs] = Array.new
-    available_catalogs.each do |stc|
-      @edit[:new][:available_catalogs].push([stc.name,stc.id])
-    end
-    @edit[:new][:available_catalogs].sort!
+    @edit[:new][:available_catalogs] = ServiceTemplateCatalog.all
+                                                             .collect { |stc| [stc.name, stc.id] }
+                                                             .sort
     available_templates if @record.kind_of?(ServiceTemplateOrchestration)
 
     # initialize fqnames
@@ -1447,17 +1433,16 @@ class CatalogController < ApplicationController
   end
 
   def available_managers(template_id)
-    available_managers = OrchestrationTemplate.find_by_id(template_id).eligible_managers
-    @edit[:new][:available_managers] = []
-    available_managers.each do |manager|
-      @edit[:new][:available_managers].push([manager.name, manager.id])
-    end
-    @edit[:new][:available_managers].sort!
+    @edit[:new][:available_managers] = OrchestrationTemplate.find_by_id(template_id)
+                                                            .eligible_managers
+                                                            .collect { |m| [m.name, m.id] }
+                                                            .sort
   end
 
   def available_templates
-    @edit[:new][:available_templates] =
-      OrchestrationTemplate.available.collect { |template| [template.name.to_s, template.id] }.sort!
+    @edit[:new][:available_templates] = OrchestrationTemplate.available
+                                                             .collect { |t| [t.name.to_s, t.id] }
+                                                             .sort
     @edit[:new][:template_id] = @record.orchestration_template.try(:id)
     @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
     available_managers(@record.orchestration_template.id) if @record.orchestration_template
