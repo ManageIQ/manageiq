@@ -908,17 +908,10 @@ class ApplicationController < ActionController::Base
     return datetime.in_time_zone(tz)
   end
 
+  # if authenticating or past login screen
   def set_user_time_zone
-    # if authenticating or past login screen
-    @tz = if session[:userid].present? || params[:user_name].present?
-            get_timezone_for_userid(session[:userid] || params[:user_name])
-          else
-            MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-          end
-
-    @tz ||= 'UTC'
-
-    session[:user_tz] = Time.zone = @tz
+    user = current_user || (params[:user_name].presence && User.find_by_userid(params[:user_name]))
+    session[:user_tz] = Time.zone = @tz = get_timezone_for_userid(user)
   end
 
   # Initialize the options for server selection
