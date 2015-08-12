@@ -711,9 +711,9 @@ module ApplicationController::Filter
         if @settings[:default_search] && @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym] # See if a default search exists
           def_search = @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym]
           if id.to_i == def_search.to_i
-            db_user = current_user
-            db_user.settings[:default_search].delete(@edit[@expkey][:exp_model].to_s.to_sym)
-            db_user.save
+            user_settings = current_user.settings || {}
+            user_settings[:default_search].delete(@edit[@expkey][:exp_model].to_s.to_sym)
+            current_user.update_attributes(:settings => user_settings)
             @edit[:adv_search_applied] = nil          # clearing up applied search results
           end
         end
@@ -916,16 +916,15 @@ module ApplicationController::Filter
         end
       end
       if @flash_array.blank?
-        db_user = current_user
-        if db_user != nil
-          db_user.settings[:default_search] ||= Hash.new                        # Create the col widths hash, if not there
-          db_user.settings[:default_search][cols_key] ||= Hash.new        # Create hash for the view db
-          @settings[:default_search] ||= Hash.new                               # Create the col widths hash, if not there
-          @settings[:default_search][cols_key] ||= Hash.new             # Create hash for the view db
-          @settings[:default_search][cols_key] = params[:id].to_i # Save each cols width
-          db_user.settings[:default_search][cols_key] = @settings[:default_search][cols_key]
-          db_user.save
-        end
+        @settings[:default_search] ||= {}
+        @settings[:default_search][cols_key] ||= {}
+        @settings[:default_search][cols_key] = params[:id].to_i
+
+        user_settings = current_user.settings || {}
+        user_settings[:default_search] ||= {}
+        user_settings[:default_search][cols_key] ||= {}
+        user_settings[:default_search][cols_key] = @settings[:default_search][cols_key]
+        user.update_attributes(:settings => user_settings)
       end
     end
     build_listnav_search_list(@view.db) if @flash_array.blank?

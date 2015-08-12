@@ -37,13 +37,13 @@ module ApplicationController::Explorer
 
     if params.key?(:width)
       # Store the new settings in the user record and in @settings (session)
-      db_user = current_user
-      unless db_user.nil?
-        db_user.settings[:explorer] ||= {}
-        db_user.settings[:explorer][params[:controller]] ||= {}
-        db_user.settings[:explorer][params[:controller]][:width] = params['width']
-        @settings[:explorer] = db_user.settings[:explorer]
-        db_user.save
+      if current_user
+        user_settings = current_user.settings || {}
+        user_settings[:explorer] ||= {}
+        user_settings[:explorer][params[:controller]] ||= {}
+        user_settings[:explorer][params[:controller]][:width] = params['width']
+        @settings[:explorer] = user_settings[:explorer]
+        current_user.update_attributes(:settings => user_settings)
       end
     end
 
