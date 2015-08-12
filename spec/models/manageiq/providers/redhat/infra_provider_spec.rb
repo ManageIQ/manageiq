@@ -12,31 +12,44 @@ describe ManageIQ::Providers::Redhat::InfraManager do
     described_class.description.should == 'Red Hat Enterprise Virtualization Manager'
   end
 
-  it "rhevm_metrics_connect_options" do
-    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    h.rhevm_metrics_connect_options[:host].should == "h"
+  context '#rhevm_metrics_connect_options' do
+    it "rhevm_metrics_connect_options" do
+      h = FactoryGirl.create(:ems_redhat, :hostname => "h")
+      h.rhevm_metrics_connect_options[:host].should == "h"
+    end
+
+    it "rhevm_metrics_connect_options overrides" do
+      h = FactoryGirl.create(:ems_redhat, :hostname => "h")
+      h.rhevm_metrics_connect_options(:hostname => "i")[:host].should == "i"
+    end
   end
 
-  it "rhevm_metrics_connect_options overrides" do
-    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    h.rhevm_metrics_connect_options(:hostname => "i")[:host].should == "i"
-  end
+  context '#connect' do
+    before do
+      class Foo
+        def initialize(param)
+        end
+      end
 
-  it "connect Metrics" do
-    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    expect(OvirtMetrics).to receive(:connect).and_return(:token)
-    expect(h.connect(:service => "Metrics")).to eq(:token)
-  end
+      described_class.any_instance.stub(:missing_credentials? => false)
+    end
 
-  it "connect Inventory" do
-    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    expect(h).to receive(:other_connect)
-    h.connect(:service => "Inventory")
-  end
+    it "connect Metrics" do
+      h = FactoryGirl.create(:ems_redhat)
+      expect(OvirtMetrics).to receive(:connect).and_return(:token)
+      expect(h.connect(:service => "Metrics")).to eq(:token)
+    end
 
-  it "connect" do
-    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    expect(h).to receive(:other_connect)
-    h.connect
+    it "connect Inventory" do
+      h = FactoryGirl.create(:ems_redhat)
+      expect(Ovirt).to receive(:const_get).and_return(Foo)
+      expect(h.connect(:service => "Inventory")).to be_a Foo
+    end
+
+    it "connect default" do
+      h = FactoryGirl.create(:ems_redhat)
+      expect(Ovirt).to receive(:const_get).and_return(Foo)
+      expect(h.connect).to be_a Foo
+    end
   end
 end
