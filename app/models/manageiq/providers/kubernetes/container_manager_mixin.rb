@@ -9,17 +9,29 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     end
 
     def verify_ssl_mode
+      # TODO: support real authentication using certificates
       OpenSSL::SSL::VERIFY_NONE
     end
 
     def kubernetes_connect(hostname, port, options)
       require 'kubeclient'
-      api_endpoint = raw_api_endpoint(hostname, port)
-      kubeclient = Kubeclient::Client.new(api_endpoint, kubernetes_version)
-      kubeclient.ssl_options(:verify_ssl => verify_ssl_mode)
-      kubeclient.basic_auth(options[:username], options[:password]) if options[:username] && options[:password]
-      kubeclient.bearer_token(options[:bearer]) if options[:bearer]
-      kubeclient
+
+      Kubeclient::Client.new(
+        raw_api_endpoint(hostname, port),
+        kubernetes_version,
+        :ssl_options  => {:verify_ssl => verify_ssl_mode},
+        :auth_options => kubernetes_auth_options(options),
+      )
+    end
+
+    def kubernetes_auth_options(options)
+      auth_options = {}
+      if options[:username] && options[:password]
+        auth_options[:username] = options[:username]
+        auth_options[:password] = options[:password]
+      end
+      auth_options[:bearer_token] = options[:bearer] if options[:bearer]
+      auth_options
     end
 
     def kubernetes_version
