@@ -36,9 +36,9 @@ module Vmdb
     end
 
     # Had to add timezone methods here, they are being called from models
-    def get_timezone_abbr(typ="server")
+    def get_timezone_abbr(user = nil)
       # return timezone abbreviation
-      if typ == "server"
+      if user.nil?
         tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
         tz = ActiveSupport::TimeZone::MAPPING[tz.blank? ? "UTC" : tz]
         time = Time.now

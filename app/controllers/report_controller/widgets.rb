@@ -309,7 +309,7 @@ module ReportController::Widgets
   end
 
   def widget_set_form_vars
-    @timezone_abbr = get_timezone_abbr("server")
+    @timezone_abbr = get_timezone_abbr
     @edit = Hash.new
     @edit[:widget_id] = @widget.id
     @edit[:read_only] = @widget.read_only ? true : false

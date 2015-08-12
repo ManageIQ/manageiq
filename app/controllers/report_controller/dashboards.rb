@@ -352,7 +352,7 @@ module ReportController::Dashboards
   end
 
   def db_set_form_vars
-    @timezone_abbr = get_timezone_abbr("server")
+    @timezone_abbr = get_timezone_abbr
     @edit = Hash.new
     @edit[:db_id] = @db.id
     @edit[:read_only] = @db.read_only ? true : false
