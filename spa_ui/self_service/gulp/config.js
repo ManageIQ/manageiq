@@ -29,6 +29,16 @@ module.exports = (function() {
   var serverIntegrationSpecs = [client + 'tests/server-integration/**/*.spec.js'];
   var specHelperFiles = client + 'test-helpers/*.js';
 
+  var imageFiles = [
+    client + 'assets/images/**/*.*'
+  ];
+
+  var fontFiles = [
+    src + 'client/assets/fonts/**/*.*',
+    bower + 'font-awesome/fonts/**/*.*',
+    bower + 'patternfly/dist/fonts/**/*.*'
+  ];
+
   var clientJsOrder = [
     '**/app.module.js',
     '**/*.module.js',
@@ -43,8 +53,6 @@ module.exports = (function() {
     exclude: [
       // Exclude the bootstrap CSS, the Sass version will be @imported instead
       /bootstrap\.css/,
-      // Exclude the giant heap of never used jquery-ui code (see bower.json for overrides)
-      /jquery-ui\.js/
     ]
   };
 
@@ -155,9 +163,7 @@ module.exports = (function() {
 
   // task images: Image build options
   config.images = {
-    src: [
-      client + 'assets/images/**/*.*'
-    ],
+    src: imageFiles,
     build: build + 'images',
     minify: true,
     options: {
@@ -167,33 +173,65 @@ module.exports = (function() {
     }
   };
 
+  config.devImages = {
+    src: imageFiles,
+    build: temp + 'images',
+    minify: false
+  };
+
+  config.imgs = {
+    src: [
+      bower + 'patternfly/dist/img/**/*'
+    ],
+    build: build + 'img',
+    minify: true,
+    options: {
+      optimizationLevel: 5,
+      progressive: true,
+      interlaced: true
+    }
+  };
+
+  config.devImgs = {
+    src: [
+      bower + 'patternfly/dist/img/**/*'
+    ],
+    build: temp + 'img',
+    minify: false
+  };
+
   // task fonts: Copies fonts into build directory
   config.fonts = {
-    src: [
-      src + 'client/assets/fonts/**/*.*',
-      bower + 'font-awesome/fonts/**/*.*',
-      bower + 'bootstrap-sass-official/assets/fonts/**/*.*'
-    ],
+    src: fontFiles,
     build: build + 'fonts'
+  };
+
+  config.devFonts = {
+    src: fontFiles,
+    build: temp + 'fonts'
   };
 
   // task sass: Sass build options
   config.sass = {
     src: client + 'assets/sass/styles.sass',
-    build: temp,
+    build: temp + 'styles/',
     output: cssFile,
     options: {
       // Only includes the styles if @imported
       // Remember to then update exclude in wiredepOptions if using @import
       loadPath: [
-        bower + 'bootstrap-sass-official/assets/stylesheets/'
+        bower + 'bootstrap-sass-official/assets/stylesheets/',
+        bower + 'font-awesome/scss/',
+        bower + 'patternfly-sass/assets/stylesheets/',
+        // Hack so that font-awesome/variables can be found
+        client + 'assets/sass/'
       ],
       style: 'compact',
       noCache: false,
       compass: false,
       bundleExec: true,
       sourcemap: false,
-      precision: 5
+      precision: 8
     },
     autoprefixer: {
       browsers: [
@@ -235,7 +273,7 @@ module.exports = (function() {
   config.inject = {
     index: client + indexFile,
     build: client,
-    css: temp + cssFile
+    css: temp + 'styles/' + cssFile
   };
 
   config.optimize = {

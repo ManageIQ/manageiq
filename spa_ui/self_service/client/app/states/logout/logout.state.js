@@ -5,10 +5,8 @@
     .run(appRun);
 
   /** @ngInject */
-  function appRun(routerHelper, navigationHelper) {
+  function appRun(routerHelper) {
     routerHelper.configureStates(getStates());
-    navigationHelper.navItems(navItems());
-    navigationHelper.sidebarItems(sidebarItems());
   }
 
   function getStates() {
@@ -20,29 +18,6 @@
         title: 'Logout'
       }
     };
-  }
-
-  function navItems() {
-    return {};
-  }
-
-  function sidebarItems() {
-    return {
-      'logout': {
-        type: 'state',
-        state: 'logout',
-        label: 'Logout',
-        style: 'logout',
-        isVisible: isVisible,
-        order: 99
-      }
-    };
-  }
-
-  /** @ngInject */
-  function isVisible() {
-    // Visibility can be conditional
-    return true;
   }
 
   /** @ngInject */

@@ -5,9 +5,8 @@
 
   /** @ngInject */
   function mock($httpBackend) {
-    $httpBackend.whenGET(/\/api\/v1\/staff\/sign_in/).respond(getAuth);
-    $httpBackend.whenGET(/\/api\/v1\/staff\/current_member/).respond('');
-    $httpBackend.whenPOST(/\/api\/v1\/staff\/sign_in/).respond('');
+    $httpBackend.whenGET(/\/api\/v1\/staff\/current_member/).respond(getAuth);
+    $httpBackend.whenPOST(/\/api\/v1\/staff\/sign_in/).respond(getAuth);
     $httpBackend.whenDELETE(/\/api\/v1\/staff\/sign_out/).respond(getAuthDelete);
 
     function getAuth(method, url, data) {

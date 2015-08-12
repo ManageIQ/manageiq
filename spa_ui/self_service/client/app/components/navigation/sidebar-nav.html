@@ -1,0 +1,29 @@
+<div class="navigation navigation-left-pf"
+     ng-class="{collapsed: vm.state.isCollapsed, hidden: vm.state.isMobileNav, showMobileNav: vm.state.showMobileNav}">
+  <div class="navigation-left-inner-pf">
+    <a class="action-collapse fa fa-angle-double-left" ng-class="{'fa-angle-double-right': vm.state.isCollapsed}"
+       ng-click="vm.state.isCollapsed = !vm.state.isCollapsed; vm.state.forceCollapse = false"></a>
+
+    <div class="pf-navigation-primary">
+      <aside class="list-group">
+        <a ng-repeat="item in vm.items.primary" ng-click="vm.navigate(item)"
+           ui-sref="{{ ::item.state }}" ui-sref-active="isActive"
+           class="list-group-item">
+          <i class="{{ ::item.icon }}" title="{{ ::item.title }}"></i>
+          <span class="list-group-item-value">{{ ::item.title }}</span>
+          <span ng-if="item.count" class="count">{{ item.count }}</span>
+        </a>
+
+        <div ng-if="vm.state.showMobileNav" class="list-group-item-secondary">
+          <a ng-repeat="item in vm.items.secondary" ng-click="vm.navigate(item)"
+             ui-sref="{{ ::item.state }}" ui-sref-active="isActive"
+             class="list-group-item">
+            <i class="{{ ::item.icon }}" title="{{ ::item.title }}"></i>
+            <span class="list-group-item-value">{{ ::item.title }}</span>
+            <span ng-if="item.count" class="count">{{ item.count }}</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>

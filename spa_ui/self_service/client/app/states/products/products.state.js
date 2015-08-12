@@ -5,10 +5,8 @@
     .run(appRun);
 
   /** @ngInject */
-  function appRun(routerHelper, navigationHelper) {
+  function appRun(routerHelper) {
     routerHelper.configureStates(getStates());
-    navigationHelper.navItems(navItems());
-    navigationHelper.sidebarItems(sidebarItems());
   }
 
   function getStates() {
@@ -19,13 +17,5 @@
         template: '<ui-view></ui-view>'
       }
     };
-  }
-
-  function navItems() {
-    return {};
-  }
-
-  function sidebarItems() {
-    return {};
   }
 })();
