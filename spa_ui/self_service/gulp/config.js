@@ -30,15 +30,13 @@ module.exports = (function() {
   var specHelperFiles = client + 'test-helpers/*.js';
 
   var imageFiles = [
-    bower + 'patternfly-sass/assets/images/**/*',
     client + 'assets/images/**/*.*'
   ];
 
   var fontFiles = [
     src + 'client/assets/fonts/**/*.*',
     bower + 'font-awesome/fonts/**/*.*',
-    bower + 'bootstrap-sass-official/assets/fonts/**/*.*',
-    bower + 'patternfly-sass/assets/fonts/**/*.*'
+    bower + 'patternfly/dist/fonts/**/*.*'
   ];
 
   var clientJsOrder = [
@@ -55,8 +53,6 @@ module.exports = (function() {
     exclude: [
       // Exclude the bootstrap CSS, the Sass version will be @imported instead
       /bootstrap\.css/,
-      // Exclude the font-awesome css file, the Sass version will be @imported instead
-      /font-awesome\.css/
     ]
   };
 
@@ -180,6 +176,27 @@ module.exports = (function() {
   config.devImages = {
     src: imageFiles,
     build: temp + 'images',
+    minify: false
+  };
+
+  config.imgs = {
+    src: [
+      bower + 'patternfly/dist/img/**/*'
+    ],
+    build: build + 'img',
+    minify: true,
+    options: {
+      optimizationLevel: 5,
+      progressive: true,
+      interlaced: true
+    }
+  };
+
+  config.devImgs = {
+    src: [
+      bower + 'patternfly/dist/img/**/*'
+    ],
+    build: temp + 'img',
     minify: false
   };
 
