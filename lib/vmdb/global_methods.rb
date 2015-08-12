@@ -36,19 +36,16 @@ module Vmdb
     end
 
     # Had to add timezone methods here, they are being called from models
+    # return timezone abbreviation
     def get_timezone_abbr(user = nil)
-      # return timezone abbreviation
       if user.nil?
-        tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-        tz = ActiveSupport::TimeZone::MAPPING[tz.blank? ? "UTC" : tz]
+        tz = get_timezone_for_userid(nil)
         time = Time.now
       else
         tz = Time.zone
         time = Time.zone.now
       end
-      new_time = time.in_time_zone(tz)
-      abbr = new_time.strftime("%Z")
-      return abbr
+      time.in_time_zone(tz).strftime("%Z")
     end
 
     # returns utc_offset of timezone
