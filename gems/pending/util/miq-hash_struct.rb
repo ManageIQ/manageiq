@@ -52,4 +52,10 @@ class MiqHashStruct
       @hash[m]
     end
   end
+
+  private
+
+  def respond_to_missing?(*)
+    true
+  end
 end
