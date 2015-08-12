@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('app.components')
+  angular.module('app.services')
     .run(startup);
 
   /** @ngInject */
