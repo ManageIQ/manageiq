@@ -1,19 +1,9 @@
 require "spec_helper"
-require 'vmdb_helper'
 
-describe Vmdb::GlobalMethods do
+describe ApplicationController, "#Timezone" do
   before do
     _, @server, _ = EvmSpecHelper.create_guid_miq_server_zone
-    class TestClass
-      include Vmdb::GlobalMethods
-    end
   end
-
-  after do
-    Object.send(:remove_const, :TestClass)
-  end
-
-  subject { TestClass.new }
 
   context "#get_timezone_offset" do
     context "for a server" do

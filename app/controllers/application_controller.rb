@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
   include_concern 'Tags'
   include_concern 'Tenancy'
   include_concern 'Timelines'
+  include_concern 'Timezone'
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
 
