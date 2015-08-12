@@ -40,14 +40,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::C
     @description ||= "Kubernetes".freeze
   end
 
-  def supported_auth_types
-    %w(default password bearer)
-  end
-
-  def supports_authentication?(authtype)
-    supported_auth_types.include?(authtype.to_s)
-  end
-
   def self.raw_connect(hostname, port, options)
     kubernetes_connect(hostname, port, options)
   end

@@ -60,6 +60,14 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     update_authentication(:default => {:userid => "_", :save => false})
   end
 
+  def supported_auth_types
+    %w(default password bearer)
+  end
+
+  def supports_authentication?(authtype)
+    supported_auth_types.include?(authtype.to_s)
+  end
+
   def default_authentication_type
     :bearer
   end
