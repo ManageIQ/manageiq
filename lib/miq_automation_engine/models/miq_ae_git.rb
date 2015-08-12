@@ -19,19 +19,8 @@ class MiqAeGit
     @cred          = Rugged::Credentials::UserPassword.new(:username => @name,
                                                            :password => @password)
     @base_name     = File.basename(@path)
-    return clone(options[:url]) if options[:url]
-    options[:new] ? create_repo : open_repo
-  end
 
-  def create_repo
-    @repo = @bare ? Rugged::Repository.init_at(@path, :bare) :
-                    Rugged::Repository.init_at(@path)
-    @repo.config['user.name']       = @name  if @name
-    @repo.config['user.email']      = @email if @email
-  end
-
-  def open_repo
-    @repo = Rugged::Repository.new(@path)
+    process_repo(options)
   end
 
   def delete_repo
@@ -41,12 +30,11 @@ class MiqAeGit
     true
   end
 
-  def add(hash, commit_sha = nil)
-    raise ArgumentError, "Must specify path" unless hash.key?(:path)
-    raise ArgumentError, "Must specify data" unless hash.key?(:data)
+  def add(path, data, commit_sha = nil, default_entry_keys = {})
     entry = {}
-    ENTRY_KEYS.each { |key| entry[key] = hash[key] if hash.key?(key) }
-    entry[:oid]  = @repo.write(hash[:data], :blob)
+    entry[:path] = path
+    ENTRY_KEYS.each { |key| entry[key] = default_entry_keys[key] if default_entry_keys.key?(key) }
+    entry[:oid]  = @repo.write(data, :blob)
     entry[:mode] ||= DEFAULT_FILE_MODE
     entry[:mtime] ||= Time.now
     current_index(commit_sha).add(entry)
@@ -66,13 +54,11 @@ class MiqAeGit
 
   def directory_exists?(path, commit_sha = nil)
     entry = find_entry(path, commit_sha)
-    entry ? entry[:type] == :tree : false
+    entry && entry[:type] == :tree
   end
 
   def read_file(path, commit_sha = nil)
-    entry = find_entry(path, commit_sha)
-    raise MiqException::MiqGitEntryMissing, path unless entry
-    @repo.lookup(entry[:oid]).content
+    read_entry(fetch_entry(path, commit_sha))
   end
 
   def read_entry(entry)
@@ -80,18 +66,17 @@ class MiqAeGit
   end
 
   def directory?(path, commit_sha = nil)
-    entry = find_entry(path, commit_sha)
-    raise MiqException::MiqGitEntryMissing, path unless entry
+    entry = fetch_entry(path, commit_sha)
     entry[:type] == :tree
   end
 
   def entries(path, commit_sha = nil)
-    tree = path.empty? ? lookup_commit_tree(commit_sha || @commit_sha) : get_tree(path)
+    tree = path.empty? ? lookup_commit_tree(commit_sha || @commit_sha) : get_tree(path, commit_sha)
     tree.find_all.collect { |e| e[:name] }
   end
 
   def nodes(path, commit_sha = nil)
-    tree = path.empty? ? lookup_commit_tree(commit_sha || @commit_sha) : get_tree(path)
+    tree = path.empty? ? lookup_commit_tree(commit_sha || @commit_sha) : get_tree(path, commit_sha)
     entries = tree.find_all
     entries.each do |entry|
       entry[:full_name] = File.join(@base_name, path, entry[:name])
@@ -115,7 +100,7 @@ class MiqAeGit
     walker = Rugged::Walker.new(@repo)
     walker.sorting(Rugged::SORT_DATE)
     walker.push(@repo.ref('refs/heads/master').target)
-    commit = walker.find  { |c| c.diff(:paths => [fname]).size > 0 }
+    commit = walker.find { |c| c.diff(:paths => [fname]).size > 0 }
     return {} unless commit
     {:updated_on => commit.time.gmtime, :updated_by => commit.author[:name]}
   end
@@ -169,13 +154,6 @@ class MiqAeGit
     merge(commit)
   end
 
-  def clone(url)
-    options = {:credentials => @cred, :bare => true, :remote => @remote_name}
-    ssl_no_verify_options(options)
-    @repo = Rugged::Repository.clone_at(url, @path, options)
-    ENV.delete('GIT_SSL_NO_VERIFY') if ENV.key?('GIT_SSL_NO_VERIFY')
-  end
-
   def file_list(commit_sha = nil)
     tree = lookup_commit_tree(commit_sha || @commit_sha)
     return [] unless tree
@@ -192,8 +170,8 @@ class MiqAeGit
     tree.walk(:preorder).collect { |r, e| File.join(r, e[:name]) }
   end
 
-  def mv_file_with_new_contents(old_file, new_hash, commit_sha = nil)
-    add(new_hash, commit_sha)
+  def mv_file_with_new_contents(old_file, new_path, new_data, commit_sha = nil, default_entry_keys = {})
+    add(new_path, new_data, commit_sha, default_entry_keys)
     remove(old_file, commit_sha)
   end
 
@@ -217,6 +195,40 @@ class MiqAeGit
   end
 
   private
+
+  def process_repo(options)
+    if options[:url]
+      clone(options[:url])
+    elsif options[:new]
+      create_repo
+    else
+      open_repo
+    end
+  end
+
+  def create_repo
+    @repo = @bare ? Rugged::Repository.init_at(@path, :bare) :
+                    Rugged::Repository.init_at(@path)
+    @repo.config['user.name']       = @name  if @name
+    @repo.config['user.email']      = @email if @email
+  end
+
+  def open_repo
+    @repo = Rugged::Repository.new(@path)
+  end
+
+  def clone(url)
+    options = {:credentials => @cred, :bare => true, :remote => @remote_name}
+    ssl_no_verify_options(options)
+    @repo = Rugged::Repository.clone_at(url, @path, options)
+    ENV.delete('GIT_SSL_NO_VERIFY') if ENV.key?('GIT_SSL_NO_VERIFY')
+  end
+
+  def fetch_entry(path, commit_sha = nil)
+    find_entry(path, commit_sha).tap do |entry|
+      raise MiqException::MiqGitEntryMissing, path unless entry
+    end
+  end
 
   def fix_path_mv(dir_name)
     dir_name = dir_name[1..-1] if dir_name[0] == '/'
@@ -277,11 +289,11 @@ class MiqAeGit
   def lock
     @repo.references.create(LOCK_REFERENCE, 'refs/heads/master')
     yield
-    rescue Rugged::ReferenceError
-      sleep 0.1
-      retry
-    ensure
-      @repo.references.delete(LOCK_REFERENCE)
+  rescue Rugged::ReferenceError
+    sleep 0.1
+    retry
+  ensure
+    @repo.references.delete(LOCK_REFERENCE)
   end
 
   def push_lock
