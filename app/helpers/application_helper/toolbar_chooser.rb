@@ -5,7 +5,7 @@ class ApplicationHelper::ToolbarChooser
 
   private
 
-  delegate :session, :from_cid, :x_node, :x_active_tree,
+  delegate :session, :from_cid, :x_node, :x_active_tree, :super_admin_user?,
            :to => :@view_context
 
   def initialize(view_context, instance_data)
