@@ -83,7 +83,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     begin
       connection = self.connect(options)
       yield connection
-    
+    ensure
       connection.try(:disconnect) rescue nil
     end
   end
