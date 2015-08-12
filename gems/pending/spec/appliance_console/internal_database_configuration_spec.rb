@@ -21,7 +21,7 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
 
   context "postgresql service" do
     it "#start_postgres (private)" do
-      LinuxAdmin::Service.any_instance.should_receive(:start)
+      allow(LinuxAdmin::Service).to receive(:new).and_return(double(:service).as_null_object)
       @config.should_receive(:block_until_postgres_accepts_connections)
       @config.send(:start_postgres)
     end
