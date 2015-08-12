@@ -5,9 +5,9 @@
 %tr
   - case option[:name]
   - when :event_types
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td.wider
+    .col-md-10
       - if @edit
         = select_tag('event_types',
           options_for_select([["<#{_('Choose')}>", nil]] + @sb[:alert][:events].invert.sort,
@@ -22,9 +22,9 @@
         - else
           = h(@sb[:alert][:events][@alert.expression[:options][:event_types].first])
   - when :time_threshold
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td
+    .col-md-10
       - if @edit
         - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:time_thresholds].invert.sort_by(&:last)
         = select_tag('time_threshold',
@@ -35,9 +35,9 @@
       - else
         = h(@sb[:alert][:time_thresholds][@alert.expression[:options][:time_threshold]])
   - when :hourly_time_threshold
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td
+    .col-md-10
       - if @edit
         - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:hourly_time_thresholds].invert.sort_by(&:last)
         = select_tag('hourly_time_threshold',
@@ -48,9 +48,9 @@
       - else
         = h(@sb[:alert][:hourly_time_thresholds][@alert.expression[:options][:hourly_time_threshold]])
   - when :rt_time_threshold
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td
+    .col-md-10
       - if @edit
         - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:rt_time_thresholds].invert.sort_by(&:last)
         = select_tag('rt_time_threshold',
@@ -63,9 +63,9 @@
   - when :operator, :value_threshold
     -# Skip these, they are handled by perf_column
   - when :perf_column
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td
+    .col-md-10
       - if @edit
         = select_tag('perf_column',
           options_for_select(option[:values][@edit[:new][:db]].invert.sort, @edit[:new][:expression][:options][:perf_column]),
@@ -89,9 +89,9 @@
   - when :trend_steepness
     -# Skip, handled by trend_direction
   - when :trend_direction
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td
+    .col-md-10
       - if @edit
         = select_tag('trend_direction',
           options_for_select(option[:values].invert.sort, @edit[:new][:expression][:options][:trend_direction]),
@@ -112,9 +112,9 @@
           = h(@perf_column_unit)
           = _('Per Minute')
   - when :debug_trace
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td
+    .col-md-10
       - if @edit
         = select_tag('debug_trace',
           options_for_select(option[:values], @edit[:new][:expression][:options][:debug_trace]),
@@ -130,8 +130,9 @@
   - when :event_log_message_filter_value
     -# Skip this, handled by event_log_message_filter_type
   - when :event_log_message_filter_type
-    %td.key= _('Message Filter')
-    %td
+    %label.control-label.col-md-2
+      = _('Message Filter')
+    .col-md-10
       - if @edit
         = select_tag('select_event_log_message_filter_type',
           options_for_select(@edit[:event_log_message_filter_types], @edit[:new][:expression][:options][:event_log_message_filter_type]),
@@ -146,8 +147,9 @@
         = h(@alert.expression[:options][:event_log_message_filter_type])
         = h(@alert.expression[:options][:event_log_message_filter_value])
   - when :hdw_attr
-    %td.key= _('Hardware Attribute')
-    %td
+    %label.control-label.col-md-2
+      = _('Hardware Attribute')
+    .col-md-10
       - if @edit
         = select_tag('select_hdw_attr',
           options_for_select(@edit[:hdw_attrs], @edit[:new][:expression][:options][:hdw_attr]),
@@ -163,9 +165,9 @@
         = h(Dictionary.gettext(@alert.expression[:options][:hdw_attr].to_s, :type => "column"))
         = h(@alert.expression[:options][:operator])
   - when :ems_id
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td
+    .col-md-10
       - if @edit
         - if @edit[:emss].length == 0
           = _("No %s found") % ui_lookup(:tables => "ext_management_system")
@@ -187,9 +189,9 @@
   - when :ems_alarm_mor
     - if @edit || @ems
       -# Show if editing or a valid EMS is configured
-      %td.key
+      %label.control-label.col-md-2
         = h(option[:description])
-      %td
+      .col-md-10
         - if @edit
           - if @edit[:new][:expression][:options][:ems_id]
             - if @edit[:ems_alarms].length == 0
@@ -207,9 +209,9 @@
           = h(@alert.expression[:options][:ems_alarm_name])
   - else
     -# Set up as a text input field
-    %td.key
+    %label.control-label.col-md-2
       = h(option[:description])
-    %td
+    .col-md-10
       - if @edit
         = text_field_tag(option[:name],
           @edit[:new][:expression][:options][option[:name]],

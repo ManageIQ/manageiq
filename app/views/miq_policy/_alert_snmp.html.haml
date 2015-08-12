@@ -4,17 +4,19 @@
   - observe = {:url => url}.to_json
 #alert_snmp_div
   %h3= _('SNMP Trap')
-  %table.style1
+  %form.form-horizontal
     - if @edit
-      %tr
-        %td.key= _('Send an SNMP Trap')
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _('Send an SNMP Trap')
+        .col-md-10
           = check_box_tag("send_snmp_cb", "1", @edit[:new][:send_snmp],
             "data-miq_observe_checkbox" => observe)
       - if @edit[:new][:send_snmp]
-        %tr
-          %td.key= title_for_host
-          %td
+        .form-group
+          %label.control-label.col-md-2
+            = title_for_host
+          .col-md-10
             = text_field_tag("host_1", @edit[:new][:snmp][:host][0],
               :maxlength         => MAX_DESC_LEN,
               "data-miq_observe" => observe_with_interval)
@@ -26,9 +28,10 @@
             = text_field_tag("host_3", @edit[:new][:snmp][:host][2],
               :maxlength => MAX_DESC_LEN,
               "data-miq_observe" => {:interval => '.5',  :url => url}.to_json)
-        %tr
-          %td.key= _("Version")
-          %td
+        .form-group
+          %label.control-label.col-md-2
+            = _("Version")
+          .col-md-10
             = select_tag('snmp_version', options_for_select(%w(v1 v2), @edit[:new][:snmp][:snmp_version]),
               :style                 => "width:50px",
               "data-miq_sparkle_on"  => true,

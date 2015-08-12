@@ -118,11 +118,11 @@
             = _('The Enterprise')
           - else
             -# Assigned to CIs
-            %table.style1
-              %tr
-                %td.key
+            %form.form-horizontal
+              .form-group
+                %label.control-label.col-md-2
                   = ui_lookup(:models => aa[:objects].first.class.to_s)
-                %td
+                .col-md-10
                   %table
                     %tbody
                       - objs = []
@@ -139,11 +139,11 @@
                             = h(obj)
         - elsif !aa[:tags].empty?
           -# Tags are assigned
-          %table.style1
-            %tr
-              %td.key
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
                 = _("%s with %s Tags") % [ui_lookup(:tables => aa[:tags].first.last), @alert_profile_tag.description]
-              %td
+              .col-md-10
                 - aa[:tags].sort_by { |a| a.first.description.downcase }.each do |tag|
                   = h(tag.first.description)
                   %br
