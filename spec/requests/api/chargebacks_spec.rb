@@ -92,4 +92,15 @@ RSpec.describe "chargebacks API" do
     expect_request_success
     expect(chargeback_rate_detail.reload.rate).to eq("0.02")
   end
+
+  it "can delete a chargeback rate detail" do
+    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
+
+    api_basic_authorize
+
+    expect {
+      run_delete rates_url(chargeback_rate_detail.id)
+    }.to change(ChargebackRateDetail, :count).by(-1)
+    expect(last_response.status).to eq(204)
+  end
 end
