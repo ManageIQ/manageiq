@@ -910,7 +910,7 @@ class ApplicationController < ActionController::Base
   # if authenticating or past login screen
   def set_user_time_zone
     user = current_user || (params[:user_name].presence && User.find_by_userid(params[:user_name]))
-    session[:user_tz] = Time.zone = get_timezone_for_userid(user)
+    session[:user_tz] = Time.zone = (user ? user.get_timezone : server_timezone)
   end
 
   # Initialize the options for server selection
