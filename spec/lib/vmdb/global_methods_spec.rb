@@ -33,38 +33,38 @@ describe Vmdb::GlobalMethods do
 
     context "for a user" do
       it "who doesn't exist" do
-        TestClass.any_instance.stub(:session => {:userid => "missing"})
-
-        subject.get_timezone_offset("user").should == 0.hours
+        subject.get_timezone_offset("missing").should == 0.hours
       end
 
       it "with a timezone" do
         user = FactoryGirl.create(:user, :settings => {:display => {:timezone => "Pacific Time (US & Canada)"}})
-        TestClass.any_instance.stub(:session => {:userid => user.userid})
-
         Timecop.freeze(Time.utc(2013, 1, 1)) do
-          subject.get_timezone_offset("user").should == -8.hours
+          subject.get_timezone_offset(user).should == -8.hours
         end
       end
 
       context "without a timezone" do
-        before do
-          user = FactoryGirl.create(:user)
-          TestClass.any_instance.stub(:session => {:userid => user.userid})
-        end
-
         it "with a system default" do
+          user = FactoryGirl.create(:user)
           stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
 
           Timecop.freeze(Time.utc(2013, 1, 1)) do
-            subject.get_timezone_offset("user").should == -5.hours
+            subject.get_timezone_offset(user).should == -5.hours
+          end
+        end
+
+        it "with a system default and nil user" do
+          stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
+          Timecop.freeze(Time.utc(2013, 1, 1)) do
+            subject.get_timezone_offset(nil).should == -5.hours
           end
         end
 
         it "without a system default" do
+          user = FactoryGirl.create(:user)
           stub_server_configuration({})
 
-          subject.get_timezone_offset("user").should == 0.hours
+          subject.get_timezone_offset(user).should == 0.hours
         end
       end
     end
@@ -74,6 +74,11 @@ describe Vmdb::GlobalMethods do
     context "for a user" do
       it "who doesn't exist" do
         subject.get_timezone_for_userid("missing").should == "UTC"
+      end
+
+      it "who is nil with system default" do
+        stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
+        subject.get_timezone_for_userid(nil).should == "Eastern Time (US & Canada)"
       end
 
       it "with a timezone" do
