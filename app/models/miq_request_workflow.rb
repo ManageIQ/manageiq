@@ -1000,8 +1000,8 @@ class MiqRequestWorkflow
   end
 
   def ci_to_hash_struct(ci)
-    return ci.collect { |c| ci_to_hash_struct(c) } if ci.kind_of?(Array)
     return if ci.nil?
+    return ci.collect { |c| ci_to_hash_struct(c) } if ci.respond_to?(:collect)
     method_name = "#{ci.class.base_class.name.underscore}_to_hash_struct".to_sym
     return send(method_name, ci) if respond_to?(method_name, true)
     default_ci_to_hash_struct(ci)
@@ -1015,12 +1015,6 @@ class MiqRequestWorkflow
     v = build_ci_hash_struct(ci, [:name, :platform])
     v.snapshots = ci.snapshots.collect { |si| ci_to_hash_struct(si) }
     v
-  end
-
-  def default_ci_to_hash_struct(ci)
-    attributes = []
-    attributes << :name if ci.respond_to?(:name)
-    build_ci_hash_struct(ci, attributes)
   end
 
   def ems_folder_to_hash_struct(ci)
@@ -1486,5 +1480,13 @@ class MiqRequestWorkflow
       _log.error "<#{err_text}>"
       raise err_text
     end
+  end
+
+  private
+
+  def default_ci_to_hash_struct(ci)
+    attributes = []
+    attributes << :name if ci.respond_to?(:name)
+    build_ci_hash_struct(ci, attributes)
   end
 end
