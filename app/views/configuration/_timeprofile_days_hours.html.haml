@@ -1,15 +1,16 @@
 - url = url_for(:action => "timeprofile_field_changed")
 - url_json = {:url => url}.to_json
 #timeprofile_days_hours_div
-  %table.style1
+  %form.form-horizontal
     %tbody
-      %tr
-        %td.key= _('Days')
-        %td
+      .form-group
+        %label.col-md-2.control-label
+          = _('Days')
+        .col-md-8
           %table{:style => "white-space: nowrap;"}
             %tr
               - [_("(All)"), _("Sunday"), _("Monday"), _("Tuesday"), _("Wednesday"), _("Thursday"), _("Friday"), _("Saturday")].each do |day|
-                %td{:style => "width:50px", :align => "center"}
+                %td{:style => "width:65px", :align => "center"}
                   = day
             %tr
               %td{:align => "center"}
@@ -27,10 +28,11 @@
                                   @edit[:new][:profile][:days].include?(i),
                                   :disabled => disabled,
                                   "data-miq_observe_checkbox" => url_json)
-      %tr
-        %td.key= _('Hours')
+      .form-group
+        %label.col-md-2.control-label
+          = _('Hours')
         - hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        %td
+        .col-md-8
           %table{:style => "white-space: nowrap;"}
             %tr
               %td{:style => "width:50px", :align => "center"}= _('(All)')
