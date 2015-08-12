@@ -1,5 +1,6 @@
 title: Nodes By Capacity
 rpt_group: Custom
+rpt_type: Custom
 priority:
 db: ContainerNode
 cols:
