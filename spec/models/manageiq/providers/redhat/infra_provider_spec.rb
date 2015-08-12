@@ -27,7 +27,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
   context '#connect' do
     before do
       class Foo
-        def initialize(param)
+        def initialize(_)
         end
       end
 
