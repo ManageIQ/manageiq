@@ -9,7 +9,7 @@
     var service = {
       setLayout: setLayout,
       getLayout: getLayout,
-      getClass: getClass,
+      getClass: getClass
     };
 
     var current = 'application';
