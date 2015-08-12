@@ -5,10 +5,8 @@
     .run(appRun);
 
   /** @ngInject */
-  function appRun(routerHelper, navigationHelper) {
+  function appRun(routerHelper) {
     routerHelper.configureStates(getStates());
-    navigationHelper.navItems(navItems());
-    navigationHelper.sidebarItems(sidebarItems());
   }
 
   function getStates() {
@@ -17,22 +15,6 @@
         url: '/order-history',
         redirectTo: 'order-history.list',
         template: '<ui-view></ui-view>'
-      }
-    };
-  }
-
-  function navItems() {
-    return {};
-  }
-
-  function sidebarItems() {
-    return {
-      'order-history': {
-        type: 'state',
-        state: 'order-history',
-        label: 'My Requests',
-        style: 'order-history',
-        order: 2
       }
     };
   }
