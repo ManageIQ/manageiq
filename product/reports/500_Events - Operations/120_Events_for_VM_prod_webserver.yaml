@@ -24,7 +24,7 @@ rpt_type: Custom
 filename: 
 include: {}
 
-db: EmsEvent
+db: EventStream
 cols: 
 - username
 - event_type

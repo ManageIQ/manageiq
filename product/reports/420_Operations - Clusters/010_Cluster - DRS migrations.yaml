@@ -33,7 +33,7 @@ db_options: {}
 col_formats: 
 include: {}
 
-db: EmsEvent
+db: EventStream
 cols: 
 - ems_cluster_name
 - vm_name

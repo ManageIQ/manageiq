@@ -40,7 +40,7 @@ include:
   vm: 
     columns: 
     - v_total_snapshots
-db: EmsEvent
+db: EventStream
 cols: 
 - username
 - vm_name

@@ -15,7 +15,7 @@ title: "Timeline All Events"
 name: "Timeline All Events"
 
 # Main DB table report is based on
-db: EmsEvent
+db: EventStream
 
 # Columns to fetch from the main table
 cols:

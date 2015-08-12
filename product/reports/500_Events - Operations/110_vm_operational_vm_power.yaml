@@ -16,7 +16,7 @@ title: "Operations VM Power On/Off Events for Last Week"
 menu_name: "Operations VMs Powered On/Off for Last Week"
 
 # Main DB table report is based on
-db: EmsEvent
+db: EventStream
 
 # Columns to fetch from the main table
 cols:
