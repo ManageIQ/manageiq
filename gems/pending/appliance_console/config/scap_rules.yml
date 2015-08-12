@@ -24,9 +24,6 @@ rules:
   - require_singleuser_auth
   - disable_interactive_boot
   - audit_rules_time_watch_localtime
-  - audit_rules_usergroup_modification
-  - audit_rules_mac_modification
-  - audit_rules_sysadmin_actions
   - audit_rules_kernel_module_loading
   - audit_rules_time_adjtimex
   - audit_rules_time_settimeofday
@@ -39,15 +36,15 @@ rules:
   - kernel_module_tipc_disabled
 
 values:
-  "sshd_idle_timeout_value": "15_minutes"
-  "sysctl_net_ipv4_conf_all_accept_redirects_value": "disabled"
-  "sysctl_net_ipv4_conf_all_secure_redirects_value": "disabled"
-  "sysctl_net_ipv4_conf_all_log_martians_value": "enabled"
-  "sysctl_net_ipv4_conf_default_secure_redirects_value": "disabled"
-  "sysctl_net_ipv4_conf_default_accept_redirects_value": "disabled"
-  "sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value": "enabled"
-  "sysctl_net_ipv4_icmp_ignore_bogus_error_responses_value": "enabled"
-  "sysctl_net_ipv4_conf_all_rp_filter_value": "enabled"
-  "sysctl_net_ipv6_conf_default_accept_redirects": "disabled"
-  "var_accounts_max_concurrent_login_sessions": "10"
-  "var_accounts_minimum_age_login_defs": "1"
+  sshd_idle_timeout_value: 15_minutes
+  sysctl_net_ipv4_conf_all_accept_redirects_value: disabled
+  sysctl_net_ipv4_conf_all_secure_redirects_value: disabled
+  sysctl_net_ipv4_conf_all_log_martians_value: enabled
+  sysctl_net_ipv4_conf_default_secure_redirects_value: disabled
+  sysctl_net_ipv4_conf_default_accept_redirects_value: disabled
+  sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value: enabled
+  sysctl_net_ipv4_icmp_ignore_bogus_error_responses_value: enabled
+  sysctl_net_ipv4_conf_all_rp_filter_value: enabled
+  sysctl_net_ipv6_conf_default_accept_redirects: disabled
+  var_accounts_max_concurrent_login_sessions: 10
+  var_accounts_minimum_age_login_defs: 1
