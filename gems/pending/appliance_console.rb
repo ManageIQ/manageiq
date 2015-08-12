@@ -111,6 +111,7 @@ require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/env'
 require 'appliance_console/key_configuration'
+require 'appliance_console/scap'
 
 require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
@@ -488,25 +489,7 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.scap")
           say("#{selection}\n\n")
-          yaml_filename = File.expand_path("appliance_console/config/scap_rules.yml", __dir__)
-          if !LinuxAdmin::Scap.openscap_available?
-            say("OpenSCAP has not been installed")
-          elsif !LinuxAdmin::Scap.ssg_available?
-            say("SCAP Security Guide has not been installed")
-          elsif !File.exist?(yaml_filename)
-            say("SCAP rules configuration file missing")
-          else
-            say("Locking down the appliance for SCAP...")
-            require 'yaml'
-            scap_config = YAML.load_file(yaml_filename)
-            begin
-              LinuxAdmin::Scap.new.lockdown(*scap_config['rules'], scap_config['values'])
-            rescue => e
-              say("Configuration failed: #{e.message}")
-            else
-              say("Complete")
-            end
-          end
+          ApplianceConsole::Scap.new.lockdown
           press_any_key
 
         when I18n.t("advanced_settings.summary")
