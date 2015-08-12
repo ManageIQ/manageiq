@@ -1,4 +1,7 @@
 require "spec_helper"
+require 'ovirt'
+require 'ovirt_metrics'
+
 
 describe ManageIQ::Providers::Redhat::InfraManager do
   it ".ems_type" do
@@ -21,8 +24,8 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
   it "connect Metrics" do
     h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    expect(h).to receive(:metrics_connect)
-    h.connect(:service => "Metrics")
+    expect(OvirtMetrics).to receive(:connect).and_return(:token)
+    expect(h.connect(:service => "Metrics")).to eq(:token)
   end
 
   it "connect Inventory" do
