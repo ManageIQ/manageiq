@@ -1,50 +1,50 @@
 rules:
-  - service_autofs_disabled
-  - service_atd_disabled
-  - sshd_do_not_permit_user_env
-  - sshd_disable_empty_passwords
-  - sshd_use_approved_ciphers
-  - sshd_set_idle_timeout
-  - sshd_set_keepalive
-  - sysctl_net_ipv4_conf_all_accept_redirects
-  - sysctl_net_ipv4_conf_all_secure_redirects
-  - sysctl_net_ipv4_conf_all_log_martians
-  - sysctl_net_ipv4_conf_default_secure_redirects
-  - sysctl_net_ipv4_conf_default_accept_redirects
-  - sysctl_net_ipv4_icmp_echo_ignore_broadcasts
-  - sysctl_net_ipv4_icmp_ignore_bogus_error_responses
-  - sysctl_net_ipv4_conf_all_rp_filter
-  - sysctl_net_ipv6_conf_default_accept_redirects
-  - sysctl_net_ipv4_conf_default_send_redirects
-  - sysctl_net_ipv4_conf_all_send_redirects
-  - disable_users_coredumps
   - accounts_max_concurrent_login_sessions
-  - securetty_root_login_console_only
   - accounts_minimum_age_login_defs
-  - require_singleuser_auth
-  - disable_interactive_boot
-  - audit_rules_time_watch_localtime
   - audit_rules_kernel_module_loading
   - audit_rules_time_adjtimex
-  - audit_rules_time_settimeofday
   - audit_rules_time_clock_settime
+  - audit_rules_time_settimeofday
+  - audit_rules_time_watch_localtime
   - audit_rules_unsuccessful_file_modification
   - bootloader_audit_argument
+  - disable_interactive_boot
+  - disable_users_coredumps
   - kernel_module_dccp_disabled
-  - kernel_module_sctp_disabled
   - kernel_module_rds_disabled
+  - kernel_module_sctp_disabled
   - kernel_module_tipc_disabled
+  - require_singleuser_auth
+  - securetty_root_login_console_only
+  - service_atd_disabled
+  - service_autofs_disabled
+  - sshd_disable_empty_passwords
+  - sshd_do_not_permit_user_env
+  - sshd_set_idle_timeout
+  - sshd_set_keepalive
+  - sshd_use_approved_ciphers
+  - sysctl_net_ipv4_conf_all_accept_redirects
+  - sysctl_net_ipv4_conf_all_log_martians
+  - sysctl_net_ipv4_conf_all_rp_filter
+  - sysctl_net_ipv4_conf_all_secure_redirects
+  - sysctl_net_ipv4_conf_all_send_redirects
+  - sysctl_net_ipv4_conf_default_accept_redirects
+  - sysctl_net_ipv4_conf_default_secure_redirects
+  - sysctl_net_ipv4_conf_default_send_redirects
+  - sysctl_net_ipv4_icmp_echo_ignore_broadcasts
+  - sysctl_net_ipv4_icmp_ignore_bogus_error_responses
+  - sysctl_net_ipv6_conf_default_accept_redirects
 
 values:
   sshd_idle_timeout_value: 15_minutes
   sysctl_net_ipv4_conf_all_accept_redirects_value: disabled
-  sysctl_net_ipv4_conf_all_secure_redirects_value: disabled
   sysctl_net_ipv4_conf_all_log_martians_value: enabled
-  sysctl_net_ipv4_conf_default_secure_redirects_value: disabled
+  sysctl_net_ipv4_conf_all_rp_filter_value: enabled
+  sysctl_net_ipv4_conf_all_secure_redirects_value: disabled
   sysctl_net_ipv4_conf_default_accept_redirects_value: disabled
+  sysctl_net_ipv4_conf_default_secure_redirects_value: disabled
   sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value: enabled
   sysctl_net_ipv4_icmp_ignore_bogus_error_responses_value: enabled
-  sysctl_net_ipv4_conf_all_rp_filter_value: enabled
   sysctl_net_ipv6_conf_default_accept_redirects: disabled
   var_accounts_max_concurrent_login_sessions: 10
   var_accounts_minimum_age_login_defs: 1
