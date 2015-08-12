@@ -37,6 +37,6 @@ describe ManageIQ::Providers::Redhat::InfraManager do
   it "connect" do
     h = FactoryGirl.create(:ems_redhat, :hostname => "h")
     expect(h).to receive(:other_connect)
-    h.connect()
+    h.connect
   end
 end
