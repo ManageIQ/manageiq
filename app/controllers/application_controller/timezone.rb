@@ -4,16 +4,16 @@ class ApplicationController
 
     included do
       helper_method :get_timezone_abbr, :get_timezone_offset
-      helper_method :get_timezone_for_userid
+      helper_method :get_timezone_for_userid, :server_timezone
 
       hide_action :get_timezone_abbr, :get_timezone_offset
-      hide_action :get_timezone_for_userid
+      hide_action :get_timezone_for_userid, :server_timezone
     end
 
     # return timezone abbreviation
     def get_timezone_abbr(user = nil)
       if user.nil?
-        tz = get_timezone_for_userid(nil)
+        tz = server_timezone
         time = Time.now
       else
         tz = Time.zone
@@ -40,7 +40,11 @@ class ApplicationController
     def get_timezone_for_userid(user = nil)
       user = User.find_by_userid(user) if user.kind_of?(String)
       tz = user && user.settings.fetch_path(:display, :timezone).presence
-      tz || MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+      tz || server_timezone
+    end
+
+    def server_timezone
+      MiqServer.my_server.server_timezone
     end
   end
 end

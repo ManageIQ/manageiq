@@ -550,7 +550,7 @@ class MiqWidget < ActiveRecord::Base
     sched = self.miq_schedule
     return sched unless sched.nil?
 
-    server_tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+    server_tz = MiqServer.my_server.server_timezone
     value     = schedule_info.fetch_path(:run_at, :interval, :value)
     unit      = schedule_info.fetch_path(:run_at, :interval, :unit)
     if unit == "daily"

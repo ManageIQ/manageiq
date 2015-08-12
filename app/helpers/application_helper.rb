@@ -616,7 +616,7 @@ module ApplicationHelper
 
   # Format a column in a report view for display on the screen
   def format_col_for_display(view, row, col, tz = nil)
-    tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC" : Time.zone
+    tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.server_timezone : Time.zone
     celltext = view.format(col,
                            row[col],
                            :tz=>tz

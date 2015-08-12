@@ -685,4 +685,8 @@ class MiqServer < ActiveRecord::Base
     groups = MiqGroup.where(:resource_id => nil, :resource_type => nil).order(:sequence).to_a if groups.empty?
     groups
   end
+
+  def server_timezone
+    get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+  end
 end #class MiqServer

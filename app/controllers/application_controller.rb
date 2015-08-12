@@ -904,9 +904,7 @@ class ApplicationController < ActionController::Base
 
   # convert time from utc to server timezone
   def convert_time_from_utc(datetime)
-    tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-    tz = "UTC" if tz.blank?
-    return datetime.in_time_zone(tz)
+    return datetime.in_time_zone(server_timezone)
   end
 
   # if authenticating or past login screen
@@ -1061,11 +1059,7 @@ class ApplicationController < ActionController::Base
   # Render the view data to xml for the grid view
   def view_to_xml(view, from_idx = 0, to_idx = -1, options = {})
     # Get the time zone in effect for this view
-    if view.db.downcase == 'miqschedule'
-      tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
-    else
-      tz = Time.zone
-    end
+    tz = (view.db.downcase == 'miqschedule') ? server_timezone : Time.zone
 
     xml = MiqXml.createDoc(nil, nil, 1.0, :nokogiri)
 
