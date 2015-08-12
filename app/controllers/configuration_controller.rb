@@ -239,17 +239,9 @@ class ConfigurationController < ApplicationController
       when "ui_1"                                                 # Visual tab
         @settings.merge!(@edit[:new])                                   # Apply the new saved settings
 
-        # Remove any old settings hashes *****************************
-        @settings[:display].delete(:pres_mode)                    # :pres_mode replaced by :theme
-
-        db_user = current_user
-        unless db_user.nil?                                       # Only if userid is in the DB
-          db_user.settings = db_user.settings == nil ? @settings : db_user.settings.merge(@settings)  # Create or merge the settings into the db
-          # Remove any old settings hashes *****************************
-          db_user.settings[:display].delete(:pres_mode)           # :pres_mode replaced by :theme
-          db_user.settings.delete(:css)                           # Moved this to @css
-          db_user.settings.delete(:adv_search)                    # These got in around sprint 40 by accident
-          db_user.save
+        if current_user
+          user_settings = merge_settings(current_user.settings, @settings)
+          current_user.update_attributes(:settings => user_settings)
 
           # Now copying ALL display settings into the :css hash so we can easily add new settings
           @settings[:css] ||= Hash.new
@@ -260,7 +252,7 @@ class ConfigurationController < ApplicationController
           @css.merge!(@settings[:display])
           @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
           set_user_time_zone
-          add_flash(_("User Interface settings saved for User %s") % db_user.name)
+          add_flash(_("User Interface settings saved for User %s") % current_user.name)
         else
           add_flash(_("User Interface settings saved for this session"))
         end
@@ -269,24 +261,11 @@ class ConfigurationController < ApplicationController
         return                                                    # No config file for Visuals yet, just return
       when "ui_2"                                                 # Visual tab
         @settings.merge!(@edit[:new])                                   # Apply the new saved settings
-
-        # Remove any old settings hashes *****************************
-        @settings[:display].delete(:pres_mode)                    # :pres_mode replaced by :theme
-        @settings[:display].delete(:vmcompare)                    # :vmcompare moved to :views hash
-        @settings[:display].delete(:vm_summary_cool)              # :vm_summary_cool moved to :views hash
-        @settings[:views].delete(:vm_summary_cool)                # :views/:vm_summary_cool changed to :dashboards
-        @settings[:views].delete(:dashboards)                    # :dashboards is obsolete now
-
-        db_user = current_user
-        unless db_user.nil?                                       # Only if userid is in the DB
-          db_user.settings = db_user.settings == nil ? @settings : db_user.settings.merge(@settings)  # Create or merge the settings into the db
-          # Remove any old settings hashes *****************************
-          db_user.settings[:display].delete(:pres_mode)           # :pres_mode replaced by :theme
-          db_user.settings[:display].delete(:vmcompare)           # :vmcompare moved to :views hash
-          db_user.settings[:display].delete(:vm_summary_cool)     # :vm_summary_cool moved to :views hash
-          db_user.settings[:views].delete(:vm_summary_cool)       # :views/:vm_summary_cool changed to :dashboards
-          db_user.save
-          add_flash(_("User Interface settings saved for User %s") % db_user.name)
+        prune_old_settings(@settings)
+        if current_user
+          settings = merge_settings(current_user.settings, @settings)
+          current_user.update_attributes(:settings => settings)
+          add_flash(_("User Interface settings saved for User %s") % current_user.name)
         else
           add_flash(_("User Interface settings saved for this session"))
         end
@@ -727,10 +706,9 @@ class ConfigurationController < ApplicationController
                   }
 
   def merge_in_user_settings(settings)
-    db_user = current_user
-    if db_user.try(:settings)
+    if user_settings = current_user.try(:settings)
       settings.each do |key, value|
-        value.merge!(db_user.settings[key]) unless db_user.settings[key].nil?
+        value.merge!(user_settings[key]) unless user_settings[key].nil?
       end
     end
     settings
@@ -936,5 +914,25 @@ class ConfigurationController < ApplicationController
     session[:vm_catinfo]        = @catinfo
     session[:vm_cats]           = @cats
     session[:zone_options]      = @zone_options
+  end
+
+  def merge_settings(user_settings, global_settings)
+    prune_old_settings(user_settings ? user_settings.merge(global_settings) : global_settings)
+  end
+
+  # typically passing in session, but sometimes passing in @session
+  def prune_old_settings(s)
+    # ui_1
+    s[:display].delete(:pres_mode)          # :pres_mode replaced by :theme
+    s.delete(:css)                          # Moved this to @css
+    s.delete(:adv_search)                   # These got in around sprint 40 by accident
+
+    # ui_2
+    s[:display].delete(:vmcompare)          # :vmcompare moved to :views hash
+    s[:display].delete(:vm_summary_cool)    # :vm_summary_cool moved to :views hash
+    s[:views].delete(:vm_summary_cool)      # :views/:vm_summary_cool changed to :dashboards
+    s[:views].delete(:dashboards)           # :dashboards is obsolete now
+
+    s
   end
 end
