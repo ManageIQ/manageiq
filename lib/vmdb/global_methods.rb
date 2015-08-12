@@ -51,16 +51,11 @@ module Vmdb
       return abbr
     end
 
+    # returns utc_offset of timezone
     def get_timezone_offset(user = nil, formatted = false)
-      # returns utc_offset of timezone
-      if user.nil?
-        tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-        tz = ActiveSupport::TimeZone::MAPPING[tz.blank? ? "UTC" : tz]
-      else
-        tz = get_timezone_for_userid(user)
-        @tz = tz unless tz.blank?
-        tz = ActiveSupport::TimeZone::MAPPING[@tz]
-      end
+      tz = get_timezone_for_userid(user)
+      @tz = tz if user && tz.present?
+      tz = ActiveSupport::TimeZone::MAPPING[tz]
       ActiveSupport::TimeZone.all.each do  |a|
         if ActiveSupport::TimeZone::MAPPING[a.name] == tz
           if formatted
