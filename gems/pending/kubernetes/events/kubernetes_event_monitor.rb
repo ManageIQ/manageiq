@@ -1,15 +1,11 @@
 class KubernetesEventMonitor
-  def initialize(api_endpoint, api_version)
-    @api_endpoint = api_endpoint
-    @api_version = api_version
+  def initialize(ems)
+    @ems = ems
   end
 
   def inventory
-    require 'kubeclient'
-    @inventory ||= Kubeclient::Client.new(@api_endpoint, @api_version)
-    # TODO: support real authentication using certificates
-    @inventory.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
-    @inventory
+    # :service is required to handle also the case where @ems is Openshift
+    @inventory ||= @ems.connect(:service => EmsKubernetes.ems_type)
   end
 
   def watcher(version = nil)
