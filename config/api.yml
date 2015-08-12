@@ -427,6 +427,9 @@
     :collection_actions:
       :post:
       - :name: create
+    :resource_actions:
+      :post:
+      - :name: edit
   :reports:
     :description: Reports
     :options:
