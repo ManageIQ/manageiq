@@ -20,6 +20,7 @@ db: ContainerNode
 # Columns to fetch from the main table
 cols:
 - name
+- ext_management_system
 - ready_condition_status
 - system_distribution
 - kernel_version
@@ -34,6 +35,7 @@ include_for_find:
 # Order of columns (from all tables)
 col_order:
 - name
+- ext_management_system
 - ready_condition_status
 - system_distribution
 - kernel_version
@@ -42,6 +44,7 @@ col_order:
 # Column titles, in order
 headers:
 - Name
+- Provider
 - Ready
 - Operating System
 - Kernel Version
