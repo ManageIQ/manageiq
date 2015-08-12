@@ -10,7 +10,7 @@
       restrict: 'AE',
       scope: {},
       replace: true,
-      template: '<div ng-include="vm.layout"></div>',
+      template: '<div ng-class="vm.layoutClass" ng-include="vm.layout"></div>',
       controller: SiteLayoutController,
       controllerAs: 'vm'
     };
@@ -26,6 +26,7 @@
 
       function setLayout() {
         vm.layout = SiteLayoutService.getLayout();
+        vm.layoutClass = SiteLayoutService.getClass();
       }
     }
   }

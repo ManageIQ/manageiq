@@ -1,9 +1,8 @@
-<navigation>
-  <span transclude-to="navbar-brand">
-    <span>ManageIQ Self Service</span>
-  </span>
-</navigation>
-<div class="main-content">
-  <ui-view></ui-view>
+<div class="container-fluid">
+  <header-nav></header-nav>
 </div>
-<footer></footer>
+<sidebar-nav></sidebar-nav>
+<main-content></main-content>
+<footer class="fixed-footer-pf">
+  <p class="text-muted">&copy; 2015 Red Hat, Inc.</p>
+</footer>
