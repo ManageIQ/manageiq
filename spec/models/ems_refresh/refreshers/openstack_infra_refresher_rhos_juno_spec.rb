@@ -90,6 +90,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     @host.ems_ref_obj.should_not be nil
     @host.mac_address.should_not be nil
     @host.ipaddress.should_not be nil
+    @host.ems_cluster.should_not be nil
 
     @host.should have_attributes(
       :ipmi_address     => nil,
