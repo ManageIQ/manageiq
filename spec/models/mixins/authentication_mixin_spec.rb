@@ -103,6 +103,30 @@ describe AuthenticationMixin do
     end
   end
 
+  context "authorization event and check for container providers" do
+    before(:each) do
+      MiqServer.stub(:my_zone).and_return("default")
+    end
+
+    it "should be triggered for kubernetes" do
+      auth = AuthToken.new(:name => "bearer", :auth_key => "valid-token")
+      FactoryGirl.create(:ems_kubernetes, :authentications => [auth])
+
+      MiqQueue.count.should be == 2
+      MiqQueue.find_by(:method_name => 'raise_evm_event').should_not be_nil
+      MiqQueue.find_by(:method_name => 'authentication_check_types').should_not be_nil
+    end
+
+    it "should be triggered for openshift" do
+      auth = AuthToken.new(:name => "bearer", :auth_key => "valid-token")
+      FactoryGirl.create(:ems_openshift, :authentications => [auth])
+
+      MiqQueue.count.should be == 2
+      MiqQueue.find_by(:method_name => 'raise_evm_event').should_not be_nil
+      MiqQueue.find_by(:method_name => 'authentication_check_types').should_not be_nil
+    end
+  end
+
   context "with server and zone" do
     before(:each) do
       @guid = MiqUUID.new_guid
