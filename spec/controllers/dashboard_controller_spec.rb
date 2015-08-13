@@ -6,16 +6,63 @@ describe DashboardController do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    let(:user_with_role) do
+      role = FactoryGirl.create(:miq_user_role)
+      group = FactoryGirl.create(:miq_group, :miq_user_role => role)
+      FactoryGirl.create(:user, :miq_groups => [group])
+    end
+
     it "validates user" do
-      role = FactoryGirl.create(:miq_user_role, :name => 'test_role')
-      group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
       skip_data_checks
-      post :authenticate, :user_name => user.userid, :user_password => 'dummy'
-      expect(controller.send(:current_userid)).to eq(user.userid)
+      post :authenticate, :user_name => user_with_role.userid, :user_password => 'dummy'
+      expect_successful_login(user_with_role)
+    end
+
+    it "fails validation" do
+      skip_data_checks
+      post :authenticate
+      expect_failed_login('Name is required')
+    end
+
+    it "requires user" do
+      skip_data_checks
+      post :authenticate, :user_name => 'bogus', :password => "bad"
+      expect_failed_login('username or password')
+    end
+
+    it "requires group" do
+      user = FactoryGirl.create(:user, :current_group => nil)
+      post :authenticate, :user_name => user.userid, :user_password => "dummy"
+      expect_failed_login('Group')
+    end
+
+    it "requires role" do
+      group = FactoryGirl.create(:miq_group)
+      user = FactoryGirl.create(:user, :miq_groups => [group])
+      post :authenticate, :user_name => user.userid, :user_password => "dummy"
+      expect_failed_login('Role')
+    end
+
+    it "requires VMs" do
+      post :authenticate, :user_name => user_with_role.userid, :user_password => "dummy"
+      expect_failed_login('no providers')
+    end
+
+    it "allows super admin with no vms" do
+      user = FactoryGirl.create(:user_admin)
+      post :authenticate, :user_name => user.userid, :user_password => "dummy"
+      expect_successful_login(user)
+    end
+
+    it "redirects to a proper start page" do
+      skip_data_checks('some_url')
+      post :authenticate, :user_name => user_with_role.userid, :user_password => "dummy"
+      expect_successful_login(user_with_role, 'some_url')
     end
   end
 
+  # would like to test these controller by calling authenticate
+  # need to ensure all cases are handled before deleting these
   context "#validate_user" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
@@ -163,5 +210,20 @@ describe DashboardController do
     UserValidationService.any_instance.stub(:data_ready?).and_return(true)
     UserValidationService.any_instance.stub(:server_ready?).and_return(true)
     controller.stub(:start_url_for_user).and_return(url)
+  end
+
+  # logs in and redirects to home url
+  def expect_successful_login(user, target_url = nil)
+    expect(controller.send(:current_user)).to eq(user)
+    expect(response.body).to match(/location.href.*#{target_url}/)
+  end
+
+  def expect_failed_login(flash = nil)
+    expect(controller.send(:current_user)).to be_nil
+    expect(response.body).not_to match(/location.href/)
+
+    # TODO: figure out why flash messages are not in result.body
+    expect(response.body).to match(/flash_msg_div/) if flash
+    # expect(result.body.to match(/flash_msg_div.*replaceWith.*#{msg}/) if flash
   end
 end
