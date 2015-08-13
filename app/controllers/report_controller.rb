@@ -127,7 +127,7 @@ class ReportController < ApplicationController
     @accords = []
     @lists = []
     @sb[:open_tree_nodes] ||= Array.new
-    @built_trees = []
+    @trees = []
     @accords = Array.new
     @lists = Array.new
 
@@ -139,7 +139,7 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_saved_reports")
-      @built_trees << build_savedreports_tree
+      @trees << build_savedreports_tree
       @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_tree_div")
       @lists.push("savedreports_list")
       self.x_active_tree ||= 'savedreports_tree'
@@ -147,7 +147,7 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_reports", :any => true)
-      @built_trees << build_report_listnav
+      @trees << build_report_listnav
       @accords.push(:name => "reports", :title => "Reports", :container => "reports_tree_div")
       @lists.push("report_list")
       self.x_active_tree ||= 'reports_tree'
@@ -155,7 +155,7 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_schedules", :any => true)
-      @built_trees << build_schedules_tree
+      @trees << build_schedules_tree
       @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_tree_div")
       @lists.push("schedule_list")
       self.x_active_tree ||= 'schedules_tree'
@@ -163,7 +163,7 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_dashboard_editor")
-      @built_trees << build_db_tree
+      @trees << build_db_tree
       @accords.push(:name => "db", :title => "Dashboards", :container => "db_tree_div")
       @lists.push("db_list")
       self.x_active_tree ||= 'db_tree'
@@ -171,7 +171,7 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_widget_editor")
-      @built_trees << build_widgets_tree
+      @trees << build_widgets_tree
       @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_tree_div")
       @lists.push("widget_list")
       self.x_active_tree ||= 'widgets_tree'
@@ -179,7 +179,7 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_menu_editor")
-      @built_trees << build_roles_tree
+      @trees << build_roles_tree
       @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_tree_div")
       @lists.push("role_list")
       self.x_active_tree ||= 'roles_tree'
@@ -188,7 +188,7 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_export")
-      @built_trees << build_export_tree
+      @trees << build_export_tree
       @accords.push(:name => "export", :title => "Import/Export", :container => "export_tree_div")
       @lists.push("export")
       self.x_active_tree ||= "export_tree"
@@ -672,8 +672,8 @@ class ReportController < ApplicationController
     trees[:reports]      = build_report_listnav    if replace_trees.include?(:reports)      || rebuild
     trees[:schedules]    = build_schedules_tree    if replace_trees.include?(:schedules)
     trees[:savedreports] = build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild
-    trees[:db]           = build_db_tree           if replace_trees.include?(:db)           || rebuild
-    trees[:widgets]      = build_widgets_tree      if replace_trees.include?(:widgets)      || rebuild
+    trees[:db]           = build_db_tree           if replace_trees.include?(:db) || rebuild
+    trees[:widgets]      = build_widgets_tree      if replace_trees.include?(:widgets) || rebuild
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,

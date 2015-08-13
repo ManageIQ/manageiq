@@ -389,11 +389,11 @@ module ReportController::Menus
                 @branch_node = []
                 if rec.class == String
                   @menu_node = TreeNodeBuilder.generic_tree_node(
-                      "s__#{menu}:#{rec}",
-                      rec,
-                      'folder.png',
-                      "Menu: #{rec}",
-                      :style   => 'cursor:default;' # No cursor pointer
+                    "s__#{menu}:#{rec}",
+                    rec,
+                    'folder.png',
+                    "Menu: #{rec}",
+                    :style => 'cursor:default;' # No cursor pointer
                   )
                 else
                   rec.each do |r|

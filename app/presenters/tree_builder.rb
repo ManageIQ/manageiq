@@ -83,7 +83,7 @@ class TreeBuilder
       user = User.current_user
       if user.super_admin_user?
         title = "All #{ui_lookup(:models => "MiqGroup")}"
-        else
+      else
         title = "My #{ui_lookup(:models => "MiqGroup")}"
       end
       [title, title, 'miq_group']

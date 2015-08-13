@@ -20,12 +20,13 @@ class TreeBuilderReportWidgets < TreeBuilder
   def x_get_tree_roots(options)
     objects = []
     WIDGET_TYPES.keys.each do |w|
-      objects.push({:id => w, :text => WIDGET_TYPES[w], :image => 'folder', :tip => WIDGET_TYPES[w]})
+      objects.push(:id => w, :text => WIDGET_TYPES[w], :image => 'folder', :tip => WIDGET_TYPES[w])
     end
     count_only_or_objects(options[:count_only], objects, nil)
   end
 
   def x_get_tree_custom_kids(object, options)
-    count_only_or_objects(options[:count_only], MiqWidget.find_all_by_content_type(WIDGET_CONTENT_TYPE[object[:id].split('-').last]), 'title')
+    count_only_or_objects(options[:count_only],
+                          MiqWidget.find_all_by_content_type(WIDGET_CONTENT_TYPE[object[:id].split('-').last]), 'title')
   end
 end

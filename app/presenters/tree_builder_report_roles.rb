@@ -24,6 +24,6 @@ class TreeBuilderReportRoles < TreeBuilder
     else
       roles = [MiqGroup.find_by_id(user.miq_group_id)]
     end
-    count_only_or_objects(options[:count_only], roles.sort_by{ |o| o.name.downcase }, 'name')
+    count_only_or_objects(options[:count_only], roles.sort_by { |o| o.name.downcase }, 'name')
   end
 end
