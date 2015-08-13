@@ -922,12 +922,12 @@ function miqBuildCalendar() {
 
   all.each(function () {
     var element = $(this);
+    var observeDateBackup = null;
 
     if (! element.data('datepicker')) {
-      var observeDateBackup = ManageIQ.observeDate;
+      observeDateBackup = ManageIQ.observeDate;
       ManageIQ.observeDate = function() {};
       element.datepicker();
-      ManageIQ.observeDate = observeDateBackup;
     }
 
     if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
@@ -940,6 +940,10 @@ function miqBuildCalendar() {
 
     if (typeof miq_cal_skipDays != "undefined") {
       element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
+    }
+
+    if (observeDateBackup != null) {
+      ManageIQ.observeDate = observeDateBackup;
     }
   });
 }
