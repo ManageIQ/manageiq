@@ -16,15 +16,20 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def ssh_users_and_passwords
-    # HostOpenstackInfra is using auth key set on ext_management_system level, not individual hosts
-    rl_user, auth_key = self.auth_user_keypair(:ssh_keypair)
-    rl_password = nil
+    user_auth_key, auth_key = self.auth_user_keypair
+    user_password, password = self.auth_user_pwd
     su_user, su_password = nil, nil
+
     # TODO(lsmola) make sudo user work with password. We will not probably support su, as root will not have password
     # allowed. Passwordless sudo is good enough for now
-    passwordless_sudo = rl_user != 'root'
 
-    return rl_user, rl_password, su_user, su_password, {:key_data => auth_key, :passwordless_sudo => passwordless_sudo}
+    if !user_auth_key.blank? && !auth_key.blank?
+      passwordless_sudo = user_auth_key != 'root'
+      return user_auth_key, nil, su_user, su_password, {:key_data => auth_key, :passwordless_sudo => passwordless_sudo}
+    else
+      passwordless_sudo = user_password != 'root'
+      return user_password, password, su_user, su_password, {:passwordless_sudo => passwordless_sudo}
+    end
   end
 
   def get_parent_keypair(type = nil)
@@ -32,49 +37,77 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     self.ext_management_system.try(:authentication_type, type)
   end
 
-  def authentication_best_fit(type = nil)
-    # First check for Host level credentials with filled private key, this way we can override auth credentials per
-    # host. Otherwise host level auth will hold only state of auth for the given host. We allow only auth with private
-    # key for OpenstackInfra hosts
-    auth = authentication_type(type)
-    return auth if auth && auth.auth_key
-    # Not defined auth on this specific host, get auth defined for all hosts from the provider.
+  def authentication_best_fit(requested_type = nil)
+    [requested_type, :ssh_keypair, :default].compact.uniq.each do |type|
+      auth = authentication_type(type)
+      return auth if auth && auth.available?
+    end
+    # If auth is not defined on this specific host, get auth defined for all hosts from the parent provider.
     get_parent_keypair(:ssh_keypair)
   end
 
   def authentication_status
-    # Auth status is always stored in Host's auth record
-    self.authentication_type(:ssh_keypair).try(:status) || "None"
+    if !authentication_type(:ssh_keypair).try(:auth_key).blank?
+      authentication_type(:ssh_keypair).status
+    elsif !authentication_type(:default).try(:password).blank?
+      authentication_type(:default).status
+    else
+      # If credentials are not on host's auth, we use host's ssh_keypair as a placeholder for status
+      authentication_type(:ssh_keypair).try(:status) || "None"
+    end
+  end
+
+  def verify_credentials(auth_type = nil, options = {})
+    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
+    raise MiqException::MiqHostError, "Logon to platform [#{os_image_name}] not supported" if auth_type.to_s != 'ipmi' && os_image_name !~ /linux_*/
+
+    case auth_type.to_s
+    when 'remote', 'default', 'ssh_keypair' then verify_credentials_with_ssh(auth_type, options)
+    when 'ws'                               then verify_credentials_with_ws(auth_type)
+    when 'ipmi'                             then verify_credentials_with_ipmi(auth_type)
+    else
+      verify_credentials_with_ws(auth_type)
+    end
+
+    true
   end
 
   def update_ssh_auth_status!
-    unless cred = self.authentication_type(:ssh_keypair)
+    unless (auth = authentication_type(:ssh_keypair))
       # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
       # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
-      cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{self.name}", :authtype => :ssh_keypair,
-                                           :resource_id => id, :resource_type => 'Host')
+      auth = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.create(
+        :name          => "#{self.class.name} #{self.name}",
+        :authtype      => :ssh_keypair,
+        :resource_id   => id,
+        :resource_type => 'Host')
     end
 
-    begin
-      verified = self.verify_credentials_with_ssh
-    rescue StandardError, NotImplementedError
-      verified = false
-      _log.warn("#{$!.inspect}")
-    end
+    # If authentication is defined per host, use that
+    best_fit_auth = authentication_best_fit
+    auth = best_fit_auth if best_fit_auth && !parent_credentials?
 
-    if verified
-      cred.status = 'Valid'
-      cred.save
-    else
-      if self.hostname && !self.missing_credentials?(:ssh_keypair)
-        # The credentials exists and hostname is set and we are not able to verify, go to error state
-        cred.status = 'Error'
+    status, details = authentication_check_no_validation(auth.authtype, {})
+    status == :valid ? auth.validation_successful : auth.validation_failed(status, details)
+  end
+
+  def missing_credentials?(type = nil)
+    if type.to_s == "ssh_keypair"
+      if !authentication_type(:ssh_keypair).try(:auth_key).blank?
+        # Credential are defined on host
+        !has_credentials?(type)
       else
-        # Hostname or credentials do not exists, set None.
-        cred.status = 'None'
+        # Credentials are defined on parent ems
+        get_parent_keypair(:ssh_keypair).try(:userid).blank?
       end
-      cred.save
+    else
+      !has_credentials?(type)
     end
+  end
+
+  def parent_credentials?
+    # Whether credentials are defined in parent or host. Missing credentials can be taken as parent.
+    authentication_best_fit.try(:resource_type) != 'Host'
   end
 
   def refresh_openstack_services(ssu)
