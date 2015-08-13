@@ -15,7 +15,9 @@
         - @parent_reports.each do |r|
           %tr{:title => _("View this Report"), :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', 'xx-#{r[1]}');"}
             %td.narrow
-              %img{:src => "/images/icons/new/report.png"}
+              %ul.icons.list-unstyled
+                %li
+                  %span.product.product-report
             %td
               = r[0]
 
@@ -38,7 +40,7 @@
               - t = _("Click to view saved report")
               %td{:title => t, :onclick => remote_function(:loading => "miqSparkle(true);",
                 :complete => "miqSparkle(false);", :url => {:action => 'tree_select', :id => row_id})}
-                %ul.icons
+                %ul.icons.list-unstyled
                   %li
                     %span.fa.fa-clock-o{:title => "Saved Report: #{row['name']}"}
               %td{:title => t, :onclick => remote_function(:loading => "miqSparkle(true);",
