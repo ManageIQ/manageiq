@@ -76,4 +76,15 @@ RSpec.describe "reports API" do
     expect_result_to_match_hash(@result, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
     expect_request_success
   end
+
+  it "can run a report" do
+    report = FactoryGirl.create(:miq_report)
+
+    expect {
+      api_basic_authorize
+      run_post "#{reports_url(report.id)}", :action => "run"
+    }.to change(MiqReportResult, :count).by(1)
+    expect(@result["miq_report_id"]).to eq(report.id)
+    expect_request_success
+  end
 end

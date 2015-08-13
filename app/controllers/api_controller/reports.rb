@@ -13,5 +13,11 @@ class ApiController
       end
       show_generic(:reports)
     end
+
+    def run_resource_reports(_type, id, _data)
+      report = MiqReport.find(id)
+      result_id = report.queue_generate_table
+      MiqReportResult.find(result_id)
+    end
   end
 end
