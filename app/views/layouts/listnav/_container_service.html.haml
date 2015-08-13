@@ -15,33 +15,11 @@
     = patternfly_accordion_panel(_("Relationships"), false, "container_service_rel") do
       %ul.nav.nav-pills.nav-stacked
 
-        - if role_allows(:feature => "ems_container_show") && !@record.ext_management_system.nil?
-          %li
-            = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
-                {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                :title => _("Show this container service's parent %s") % ui_lookup(:table => "ems_container"))
-        - if role_allows(:feature => "container_group_show_list")
-          - num_groups = @record.number_of(:container_groups)
-          - if num_groups == 0
-            %li.disabled
-              = link_to(_('Pods (0)'), "#")
-          - else
-            %li
-              = link_to(_("Pods (%s)") % num_groups,
-                  {:action  => 'show', :id => @record, :display => 'container_groups'},
-                  :title => _("Show Pods"))
-        - if role_allows(:feature => "container_project_show") && !@record.container_project.nil?
-          %li
-            = link_to("#{ui_lookup(:table => "container_project")}: #{@record.container_project.name}",
-                {:controller => "container_project", :action => 'show', :id => @record.container_project.id.to_s},
-                :title => _("Show this container service's parent %s") % ui_lookup(:table => "container_project"))
-        - if role_allows(:feature => "container_route_show_list")
-        - num_routes = @record.number_of(:container_routes)
-          - if num_routes == 0
-            %li.disabled
-              = link_to(_('Container Routes (0)'), "#")
-          - else
-            %li
-              = link_to(_("Container Routes (%s)") % num_routes,
-                 {:action  => 'show', :id => @record, :display => 'container_routes'},
-                 :title => _("Show Container Routes"))
+        = render(:partial => "layouts/listnav/container_link_to",
+                 :locals  => {:object => @record.ext_management_system})
+        = render(:partial => "layouts/listnav/container_link_to",
+                 :locals  => {:object => @record.container_groups})
+        = render(:partial => "layouts/listnav/container_link_to",
+                 :locals  => {:object => @record.container_project})
+        = render(:partial => "layouts/listnav/container_link_to",
+                 :locals  => {:object => @record.container_routes})
