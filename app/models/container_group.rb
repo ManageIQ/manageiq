@@ -28,7 +28,7 @@ class ContainerGroup < ActiveRecord::Base
     when :ems_events
       # TODO: improve relationship using the id
       ["container_namespace = ? AND container_group_name = ? AND ems_id = ?",
-       namespace, name, ems_id]
+       container_project.name, name, ems_id]
     when :policy_events
       # TODO: implement policy events and its relationship
       ["ems_id = ?", ems_id]
