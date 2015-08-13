@@ -14,6 +14,7 @@ class MiqAeGit
     @bare          = options[:bare]
     @commit_sha    = options[:commit_sha]
     @password      = options[:password]
+    @fast_forward_merge = options[:ff] || true
     @ssl_no_verify = options[:ssl_no_verify] || false
     @remote_name   = 'origin'
     @cred          = Rugged::Credentials::UserPassword.new(:username => @name,
@@ -211,6 +212,7 @@ class MiqAeGit
                     Rugged::Repository.init_at(@path)
     @repo.config['user.name']       = @name  if @name
     @repo.config['user.email']      = @email if @email
+    @repo.config['merge.ff']        = 'only' if @fast_forward_merge
   end
 
   def open_repo
