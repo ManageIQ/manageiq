@@ -2,18 +2,16 @@
   #basic_info_div
     = render :partial => "layouts/flash_msg"
     - url = url_for(:action => "ot_form_field_changed", :id => @edit[:rec_id])
-    %p.legend= _("Service Dialog Information")
-    %table
-      %td{:valign => "top"}
-        %table.style1
-          %tr
-            %td.key=_('Service Dialog Name')
-            %td
-              = text_field_tag("dialog_name",
-                               "",
-                               :autocomplete => 'off',
-                               :diabled => false,
-                               :size => 80,
-                               :maxlength => 255,
-                               "data-miq_observe" => {:interval => '.5',
-                                                      :url      => url}.to_json)
+    %form.form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Service Dialog Name')
+        .col-md-8
+          = text_field_tag("dialog_name",
+                           "",
+                           :autocomplete => 'off',
+                           :diabled => false,
+                           :class => "form-control",
+                           :maxlength => 255,
+                           "data-miq_observe" => {:interval => '.5',
+                                                  :url      => url}.to_json)

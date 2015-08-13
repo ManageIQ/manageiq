@@ -1,34 +1,34 @@
 - if @sb[:active_tab] == "settings_evm_servers"
   - if @servers
-    = render(:partial=>"layouts/flash_msg")
+    = render(:partial => "layouts/flash_msg")
     %h3= _("Relationships")
     .form-horizontal.static
       .form-group
-        %label.col-sm-2.control-label
+        %label.col-md-2.control-label
           = _("Servers")
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = @selected_zone.miq_servers.count
       .form-group
-        %label.col-sm-2.control-label
+        %label.col-md-2.control-label
           = ui_lookup(:tables => "ext_management_system")
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = @selected_zone.ext_management_systems.count
       .form-group
-        %label.col-sm-2.control-label
+        %label.col-md-2.control-label
           = _("Storage Managers")
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = @selected_zone.storage_managers.count
       .form-group
-        %label.col-sm-2.control-label
+        %label.col-md-2.control-label
           = _("Schedules")
-        .col-sm-10
+        .col-md-10
           %p.form-control-static
             = @selected_zone.miq_schedules.count
     %hr/
-    %h3=_("Servers")
+    %h3= _("Servers")
     - if @servers.empty?
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Servers Found.")}
     - else
@@ -41,8 +41,8 @@
               %td
                 - if my_server_id == s.id
                   %b
-                    = h(ui_lookup(:model=>s.class.to_s))
+                    = h(ui_lookup(:model => s.class.to_s))
                     \: #{h(s.name)} [#{h(s.id)}] (current)
                 - else
-                  = h(ui_lookup(:model=>s.class.to_s))
+                  = h(ui_lookup(:model => s.class.to_s))
                   \: #{h(s.name)} [#{h(s.id)}]

@@ -1,7 +1,7 @@
 module ActiveRecord
   class Migration
     def create_table(table_name, options = {})
-      options[:id] ||= :bigserial
+      options[:id] = :bigserial if options[:id].nil?
       super
       return if options[:id] == false
 

@@ -109,8 +109,8 @@ module ApplicationController::Timelines
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("tl_options_div", :partial=>"layouts/tl_options")
       page.replace("tl_div", :partial=>"layouts/tl_detail")
-      page << "miq_cal_dateFrom = new Date(#{@tl_options[:sdate]});" unless @tl_options[:sdate].nil?
-      page << "miq_cal_dateTo = new Date(#{@tl_options[:edate]});" unless @tl_options[:edate].nil?
+      page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options[:sdate]});" unless @tl_options[:sdate].nil?
+      page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});" unless @tl_options[:edate].nil?
       page << 'miqBuildCalendar();'
       if @tl_options[:tl_show] == "timeline"
         page << "$('#filter1').val('#{@tl_options[:fltr1]}');"
@@ -127,42 +127,10 @@ module ApplicationController::Timelines
     end
   end
 
-  def getTLdata
-    if session[:tl_xml_blob_id] != nil
-      blob = BinaryBlob.find(session[:tl_xml_blob_id])
-      render :xml=>blob.binary
-      blob.destroy
-      session[:tl_xml_blob_id] = session[:tl_position] = nil #if params[:controller] != "miq_capacity"
-    else
-      tl_xml = MiqXml.load("<data/>")
-      #   tl_event = tl_xml.root.add_element("event", {
-      #                                                   "start"=>"May 16 2007 08:17:23 GMT",
-      #                                                   "title"=>"Dans-XP-VM",
-      #                                                   "image"=>"images/icons/20/20-VMware.png",
-      #                                                   "text"=>"VM &lt;a href=\"/vm/guest_applications/3\"&gt;Dan-XP-VM&lt;/a&gt; cloned to &lt;a href=\"/vm/guest_applications/1\"&gt;WinXP Testcase&lt;/a&gt;."
-      #                                                   })
-      Vm.all.each do | vm |
-        event = tl_xml.root.add_element("event", {
-#           START of TIMELINE TIMEZONE Code
-#           "start"=>format_timezone(vm.created_on,Time.zone,"tl"),
-            "start"=>vm.created_on,
-#           END of TIMELINE TIMEZONE Code
-            #                                       "end" => Time.now,
-            #                                       "isDuration" => "true",
-            "title"=>vm.name.length < 25 ? vm.name : vm.name[0..22] + "...",
-            #                                       "title"=>vm.name,
-            #"image"=>"/images/icons/20/20-#{vm.vendor.downcase}.png"
-            "icon"=>"/images/icons/new/vendor-#{vm.vendor.downcase}.png",
-            "color"=>"blue",
-            #"image"=>"/images/icons/64/64-vendor-#{vm.vendor.downcase}.png"
-            "image"=>"/images/icons/new/os-#{vm.os_image_name.downcase}.png"
-            #                                       "text"=>"VM &lt;a href='/vm/guest_applications/#{vm.id}'&gt;#{h(vm.name)}&lt;/a&gt; discovered at location #{h(vm.location)}&gt;."
-          })
-        #     event.text = "VM #{vm.name} discovered on #{vm.created_on}"
-        event.text = "VM &lt;a href='/vm/guest_applications/#{vm.id}'&gt;#{vm.name}&lt;/a&gt; discovered at location #{vm.location}"
-      end
-      render :xml=>tl_xml.to_s
-    end
+  def timeline_data
+    blob = BinaryBlob.find(session[:tl_xml_blob_id])
+    render :xml => blob.binary
+    blob.destroy
   end
 
   private ############################
@@ -278,8 +246,9 @@ module ApplicationController::Timelines
   end
 
   def tl_build_filter(grp_name)             # hidden fields to highlight bands in timeline
-    arr = TL_ETYPE_GROUPS[grp_name][@tl_options[:fl_typ].downcase.to_sym]
-    arr.push(TL_ETYPE_GROUPS[grp_name][:critical]) if @tl_options[:fl_typ].downcase == "detail"
+    event_groups = EmsEvent.event_groups
+    arr = event_groups[grp_name][@tl_options[:fl_typ].downcase.to_sym]
+    arr.push(event_groups[grp_name][:critical]) if @tl_options[:fl_typ].downcase == "detail"
     filter = "(" << arr.join(")|(") << ")"
     return filter
   end
@@ -287,7 +256,7 @@ module ApplicationController::Timelines
   def tl_build_policy_filter(grp_name)      # hidden fields to highlight bands in timeline
     arr = Array.new
     @tl_options[:events][grp_name].each do |a|
-      e = PolicyEvent.find_by_miq_event_id(a.to_i)
+      e = PolicyEvent.find_by_miq_event_definition_id(a.to_i)
       if !e.nil?
         arr.push(e.event_type)
       end
@@ -335,7 +304,7 @@ module ApplicationController::Timelines
 
       @tl_options[:events] = Hash.new
       @tl_options[:etypes] = Array.new
-      MiqEventSet.all.each do |e|
+      MiqEventDefinitionSet.all.each do |e|
         @tl_options[:etypes].push(e.description)  unless @tl_options[:etypes].include?(e.description)
         @tl_options[:events][e.description] ||= Array.new
         e.members.each do |mem|
@@ -356,7 +325,7 @@ module ApplicationController::Timelines
     else
       @tl_options[:groups] = Array.new
       @tl_groups_hash = Hash.new
-      TL_ETYPE_GROUPS.each do |gname,list|
+      EmsEvent.event_groups.each do |gname,list|
         @tl_options[:groups].push(list[:name].to_s)
         @tl_groups_hash[list[:name].to_s] = gname
       end
@@ -435,36 +404,37 @@ module ApplicationController::Timelines
           end
         end
       else
+        event_groups = EmsEvent.event_groups
         if (!@tl_options[:filter1].nil? && @tl_options[:filter1] != "") ||
             (!@tl_options[:filter2].nil? && @tl_options[:filter2] != "") ||
             (!@tl_options[:filter3].nil? && @tl_options[:filter3] != "")
           if !@tl_options[:filter1].nil? && @tl_options[:filter1] != ""
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter1]]
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter1]]
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
           if !@tl_options[:filter2].nil? && @tl_options[:filter2] != ""
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter2]]
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter2]]
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
           if !@tl_options[:filter3].nil? && @tl_options[:filter3] != ""
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter3]]
-            event_set.push(TL_ETYPE_GROUPS[@tl_groups_hash[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter3]]
+            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
         else
-          event_set.push(TL_ETYPE_GROUPS[:power][@tl_options[:fl_typ].to_sym])
+          event_set.push(event_groups[:power][@tl_options[:fl_typ].to_sym])
         end
       end
 
       if !event_set.empty?
         if @tl_options[:tl_show] == "policy_timeline" && @tl_options[:tl_result] != "both"
-          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_id"
+          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?)) and (result = ?)",
                           from_dt,
                           to_dt,
                           event_set.flatten,
                           @tl_options[:tl_result]]
         else
-          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_id"
+          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?))",
                           from_dt,
                           to_dt,

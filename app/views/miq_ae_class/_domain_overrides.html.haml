@@ -1,5 +1,5 @@
 - if @domain_overrides && @domain_overrides.count > 1
-  %h3=_('Domain Overrides (by priority)')
+  %h3= _('Domain Overrides (by priority)')
   %table.table.table-striped.table-bordered.table-hover
     %tbody
       - @domain_overrides.each do |name, id|
@@ -9,8 +9,8 @@
                                           :url     => "/miq_ae_class/x_show?id=#{node_prefix}-#{to_cid(id)}"),
               :title => _("Click to view this %s in the \"%s\" Domain") % [model, name]}
             %td
-              =name
+              = name
         - else
           %tr
             %td
-              =name
+              = name

@@ -7,9 +7,7 @@ module AuthHelper
     User.stub(:current_user => user)
     User.stub(:current_userid => user.userid)
     session[:userid]   = user.userid
-    session[:username] = user.name
     session[:group]    = user.current_group.try(:id)
-    session[:eligible_groups] = []
   end
 end
 

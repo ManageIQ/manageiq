@@ -1,4 +1,4 @@
-miqAngularApplication.directive('updateDropdownForFilter', function($timeout) {
+ManageIQ.angularApplication.directive('updateDropdownForFilter', ['$timeout', function($timeout) {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {
@@ -11,14 +11,14 @@ miqAngularApplication.directive('updateDropdownForFilter', function($timeout) {
       if(scope['form_' + ctrl.$name + '_ngHide'] != "") {
         scope.$watch(scope['form_' + ctrl.$name + '_ngHide'], function () {
           if (scope[scope['form_' + ctrl.$name + '_ngHide']] === true) {
-            $(scope['form_' + ctrl.$name]).selectpicker('hide');
+            angular.element(scope['form_' + ctrl.$name]).selectpicker('hide');
           }
           else {
             if (scope[scope['form_' + ctrl.$name + '_ngHide']] == "NO-OP" ||
                 scope[scope['form_' + ctrl.$name + '_ngHide']] == false) {
 
               $timeout(function(){
-                $(scope['form_' + ctrl.$name]).selectpicker('render');
+                angular.element(scope['form_' + ctrl.$name]).selectpicker('render');
               }, 0);
             }
           }
@@ -31,60 +31,43 @@ miqAngularApplication.directive('updateDropdownForFilter', function($timeout) {
 
       ctrl.$parsers.push(function(value) {
         if(scope.invalidStyleSet) {
-          $(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-red-border', 'remove');
-          $(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default');
+          angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-red-border', 'remove');
+          angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default');
         }
         return value;
       });
     }
   }
-});
+}]);
 
 var selectListElement = function(scope, timeout, ctrl, refresh) {
   timeout(function(){
     if(refresh) {
       if (scope[scope['form_' + ctrl.$name + '_ngHide']] === true) {
-        $(scope['form_' + ctrl.$name]).selectpicker('hide');
+        angular.element(scope['form_' + ctrl.$name]).selectpicker('hide');
       }
       else {
-        $(scope['form_' + ctrl.$name]).selectpicker({
+        angular.element(scope['form_' + ctrl.$name]).selectpicker({
           dropupAuto: false
         });
-        $(scope['form_' + ctrl.$name]).selectpicker('show');
-        $(scope['form_' + ctrl.$name]).selectpicker('refresh');
-        $(scope['form_' + ctrl.$name]).addClass('span12').selectpicker('setStyle');
+        angular.element(scope['form_' + ctrl.$name]).selectpicker('show');
+        angular.element(scope['form_' + ctrl.$name]).selectpicker('refresh');
+        angular.element(scope['form_' + ctrl.$name]).addClass('span12').selectpicker('setStyle');
       }
     }
 
     if (scope[scope['form_' + ctrl.$name + '_dropdownModel']][ctrl.$name] != undefined &&
         scope[scope['form_' + ctrl.$name + '_dropdownModel']][ctrl.$name] != '') {
-      index = findIndexByKeyValue(scope[scope['form_' + ctrl.$name + '_dropdownList']], "value", scope[scope['form_' + ctrl.$name + '_dropdownModel']][ctrl.$name]);
-      $(scope['form_' + ctrl.$name]).selectpicker('val', index);
-
-      if(index == null) {
-        $(scope['form_' + ctrl.$name]).selectpicker('setStyle', ' btn-default btn-red-border');
-        scope.invalidStyleSet = true;
-      }
-      else {
-        $(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-red-border', 'remove');
-        $(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default');
-        scope.invalidStyleSet = false;
-      }
-
+      angular.element(scope['form_' + ctrl.$name]).selectpicker('val',
+        scope[scope['form_' + ctrl.$name + '_dropdownModel']][ctrl.$name]);
+      angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-red-border', 'remove');
+      angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default');
+      scope.invalidStyleSet = false;
     }
     else {
-      $(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default btn-red-border');
+      angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default btn-red-border');
       scope.invalidStyleSet = true;
     }
-
   }, 0);
 };
 
-var findIndexByKeyValue = function(arraytosearch, key, valuetosearch) {
-  for (var i = 0; i < arraytosearch.length; i++) {
-    if (arraytosearch[i][key] == valuetosearch) {
-      return i;
-    }
-  }
-  return null;
-};

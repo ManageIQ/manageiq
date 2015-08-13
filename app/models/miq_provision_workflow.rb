@@ -4,15 +4,22 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def self.class_for_platform(platform)
-    "MiqProvision#{platform.classify}Workflow".safe_constantize ||
-      "ManageIQ::Providers::#{platform.classify}::CloudManager::ProvisionWorkflow".safe_constantize ||
-      "ManageIQ::Providers::#{platform.classify}::InfraManager::ProvisionWorkflow".constantize
+    classy = platform.classify
+
+    if classy =~ /(.*)Infra/
+      "MiqProvision#{classy}Workflow".safe_constantize ||
+        "ManageIQ::Providers::#{$1}::InfraManager::ProvisionWorkflow".constantize
+    else
+      "MiqProvision#{classy}Workflow".safe_constantize ||
+        "ManageIQ::Providers::#{classy}::CloudManager::ProvisionWorkflow".safe_constantize ||
+        "ManageIQ::Providers::#{classy}::InfraManager::ProvisionWorkflow".constantize
+    end
   end
 
   def self.class_for_source(source_or_id)
     source = VmOrTemplate.find_by_id(source_or_id)
     return nil if source.nil?
-    source.ext_management_system.class.provision_workflow_class
+    source.class.manager_class.provision_workflow_class
   end
 
   def self.encrypted_options_fields

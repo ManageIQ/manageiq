@@ -1,7 +1,7 @@
-require 'directory'
-require 'directory2_data_header'
-require 'directory3_data_header'
-require 'superblock'
+require 'fs/xfs/directory'
+require 'fs/xfs/directory2_data_header'
+require 'fs/xfs/directory3_data_header'
+require 'fs/xfs/superblock'
 
 module XFS
   DIRECTORY_DATA_FREE = BinaryStruct.new([

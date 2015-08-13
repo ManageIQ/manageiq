@@ -185,8 +185,8 @@ class MiqAeClassController < ApplicationController
             records += details_cls.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
           end
           @grid_ns_xml = build_details_grid(records,false)
-          @combo_xml = get_combo_xml([MiqAeField.new])
-          @dtype_combo_xml = get_dtype_combo_xml([MiqAeField.new])   # passing fields because that's how many combo boxes we need
+          @combo_xml = build_type_options
+          @dtype_combo_xml = build_dtype_options
           @sb[:active_tab] = "details"
           set_right_cell_text(x_node, @record)
         end
@@ -366,7 +366,7 @@ class MiqAeClassController < ApplicationController
         @sb[:active_tab] == "methods" && @grid_methods_xml
     end
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Rebuild the toolbars
@@ -380,7 +380,12 @@ class MiqAeClassController < ApplicationController
       presenter[:set_visible_elements][:center_buttons_div] = false
     end
 
-    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    if @record && !@in_a_form
+      presenter[:record_id] = @record.id
+    else
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
+
     presenter[:osf_node] = x_node
 
     presenter[:extra_js] << "miqButtons('#{@changed ? 'show' : 'hide'}');"
@@ -389,50 +394,12 @@ class MiqAeClassController < ApplicationController
     render :js => presenter.to_html
   end
 
-  def get_combo_xml(fields)
-    aetypes = MiqAeField.available_aetypes
-    combo_xml = Array.new
-    fields.each do |fld|
-      xml = REXML::Document.load("")
-      xml << REXML::XMLDecl.new(1.0, "UTF-8")
-      # Create root element
-      root = xml.add_element("complete")
-      if fld['aetype'].blank? && (session[:field_data].blank? || session[:field_data][:aetype].blank?)
-        fld['aetype'] = "attribute"
-      elsif !session[:field_data].blank? && !session[:field_data][:aetype].blank?
-        fld['aetype'] = session[:field_data][:aetype]
-      end
-      aetypes.each do |aetype|
-        opt = root.add_element("option", {"value"=>aetype,"img_src"=>"/images/icons/new/16_ae_#{aetype}.png"})
-        opt.add_attribute("selected", "true") if fld['aetype'] == aetype
-        opt.text = aetype.titleize
-      end
-      combo_xml.push(xml.to_s)
-    end
-    return combo_xml
+  def build_type_options
+    MiqAeField.available_aetypes.collect { |t| [t.titleize, t, {"data-icon" => "product product-#{t}"}] }
   end
 
-  def get_dtype_combo_xml(fields)
-    dtypes = MiqAeField.available_datatypes_for_ui
-    combo_xml = Array.new
-    fields.each do |fld|
-      xml = REXML::Document.load("")
-      xml << REXML::XMLDecl.new(1.0, "UTF-8")
-      # Create root element
-      root = xml.add_element("complete")
-      if fld['datatype'].blank? && (session[:field_data].blank? || session[:field_data][:datatype].blank?)
-        fld['datatype'] = "string"
-      elsif !session[:field_data].blank? && !session[:field_data][:datatype].blank?
-        fld['datatype'] = session[:field_data][:datatype]
-      end
-      dtypes.each do |dtype|
-        opt = root.add_element("option", {"value"=>dtype,"img_src"=>"/images/icons/new/#{dtype}.png", "img_style"=>"height:16px;width:16px"})
-        opt.add_attribute("selected", "true") if fld['datatype'] == dtype
-        opt.text = dtype.titleize
-      end
-      combo_xml.push(xml.to_s)
-    end
-    return combo_xml
+  def build_dtype_options
+    MiqAeField.available_datatypes_for_ui.collect { |t| [t.titleize, t, {"data-icon" => "product product-#{t}"}] }
   end
 
   def set_cls(cls)
@@ -789,27 +756,21 @@ class MiqAeClassController < ApplicationController
       :key         => "aeinst_edit__#{@ae_inst.id || "new"}",
       :new         => {}
     }
-    @edit[:new][:ae_inst]   = {}
-    @edit[:new][:ae_values] = []
-    @edit[:new][:ae_fields] = []
+    @edit[:new][:ae_inst] = {}
     instance_column_names.each do |fld|
       @edit[:new][:ae_inst][fld] = @ae_inst.send(fld)
     end
 
-    @ae_values.each do |ae_value|
-      values = {}
-      value_column_names.each do |fld|
-        values[fld] = ae_value.send(fld)
+    @edit[:new][:ae_values] = @ae_values.collect do |ae_value|
+      value_column_names.each_with_object({}) do |fld, hash|
+        hash[fld] = ae_value.send(fld)
       end
-      @edit[:new][:ae_values].push(values)
     end
 
-    @ae_class.ae_fields.each do |ae_field|
-      field = {}
-      field_column_names.each do |fld|
-        field[fld] = ae_field.send(fld)
+    @edit[:new][:ae_fields] = @ae_class.ae_fields.collect do |ae_field|
+      field_column_names.each_with_object({}) do |fld, hash|
+        hash[fld] = ae_field.send(fld)
       end
-      @edit[:new][:ae_fields].push(field)
     end
 
     @edit[:current] = copy_hash(@edit[:new])
@@ -978,22 +939,20 @@ class MiqAeClassController < ApplicationController
     }
 
     @edit[:new] = {
-      :datatypes => get_dtype_combo_xml([MiqAeField.new]),    # setting dtype combo for adding a new field
-      :aetypes   => get_combo_xml([MiqAeField.new]),          # setting aetype combo for adding a new field
-      :fields    => []
+      :datatypes => build_dtype_options,    # setting dtype combo for adding a new field
+      :aetypes   => build_type_options      # setting aetype combo for adding a new field
     }
 
-    @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-      field = {}
-      field_attributes.each do |column|
-        field[column] = fld.send(column)
+    @edit[:new][:fields] = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
+      field_attributes.each_with_object({}) do |column, hash|
+        hash[column] = fld.send(column)
       end
-      @edit[:new][:fields].push(field)
     end
+
     # combo to show existing fields
-    @combo_xml       = get_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
+    @combo_xml       = build_type_options
     # passing in fields because that's how many combo boxes we need
-    @dtype_combo_xml = get_dtype_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
+    @dtype_combo_xml = build_dtype_options
     @edit[:current]         = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
                         _("Adding a new %s") %  ui_lookup(:model => "Class Schema") :
@@ -1028,13 +987,10 @@ class MiqAeClassController < ApplicationController
       @edit[:new][:data] = MiqAeMethod.default_method_text
     end
     @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
-    @edit[:new][:fields] = []
-    @ae_method.inputs.each do |input|
-      field_input = {}
-      method_input_column_names.each do |column|
-        field_input[column] = input.send(column)
+    @edit[:new][:fields] = @ae_method.inputs.collect do |input|
+      method_input_column_names.each_with_object({}) do |column, hash|
+        hash[column] = input.send(column)
       end
-      @edit[:new][:fields].push(field_input)
     end
     @edit[:new][:available_datatypes] = MiqAeField.available_datatypes_for_ui
     @edit[:current] = copy_hash(@edit[:new])
@@ -1570,8 +1526,8 @@ class MiqAeClassController < ApplicationController
   # AJAX driven routine to select a classification entry
   def field_select
     fields_get_form_vars
-    @combo_xml = get_combo_xml(@edit[:new][:fields])
-    @dtype_combo_xml = get_dtype_combo_xml(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
+    @combo_xml = build_type_options
+    @dtype_combo_xml = build_dtype_options
     session[:field_data] = Hash.new
     @edit[:new_field][:substitute] = session[:field_data][:substitute] = true
     @changed = (@edit[:new] != @edit[:current])
@@ -1586,8 +1542,8 @@ class MiqAeClassController < ApplicationController
   def field_accept
     fields_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
-    @combo_xml = get_combo_xml(@edit[:new][:fields])
-    @dtype_combo_xml = get_dtype_combo_xml(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
+    @combo_xml = build_type_options
+    @dtype_combo_xml = build_dtype_options
     render :update do |page|                    # Use JS to update the display
       page.replace_html("class_fields_div", :partial=>"class_fields")
       page << javascript_for_miq_button_visibility(@changed)
@@ -1598,8 +1554,8 @@ class MiqAeClassController < ApplicationController
   # AJAX driven routine to delete a classification entry
   def field_delete
     fields_get_form_vars
-    @combo_xml       = get_combo_xml(@edit[:new][:fields])
-    @dtype_combo_xml = get_dtype_combo_xml(@edit[:new][:fields])
+    @combo_xml       = build_type_options
+    @dtype_combo_xml = build_dtype_options
 
     if params.key?(:id) && @edit[:fields_to_delete].exclude?(params[:id])
       @edit[:fields_to_delete].push(params[:id])
@@ -1791,9 +1747,8 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     when "save"
       return unless load_edit("priority__edit", "replace_cell__explorer")
-      domains = []
-      @edit[:new][:domain_order].reverse!.each_with_index do |domain, i|
-        domains.push(MiqAeDomain.find_by_name(domain.split(' (Locked)').first).id)
+      domains = @edit[:new][:domain_order].reverse!.collect do |domain|
+        MiqAeDomain.find_by_name(domain.split(' (Locked)').first).id
       end
       MiqAeDomain.reset_priority_by_ordered_ids(domains)
       add_flash(_("Priority Order was saved"))
@@ -1886,12 +1841,9 @@ private
   def initial_setup_for_instances_form_vars(ae_inst_id)
     @ae_inst   =  ae_inst_id ? MiqAeInstance.find(ae_inst_id) : MiqAeInstance.new
     @ae_class  = ae_class_for_instance_or_method(@ae_inst)
-    @ae_values = []
 
-    @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
-      val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
-      @ae_values.push(val)
+    @ae_values = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
+      MiqAeValue.find_or_initialize_by(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
     end
   end
 
@@ -1979,7 +1931,7 @@ private
     model = @edit[:selected_items].count > 1 ? :models : :model
     @sb[:action] = session[:edit] = nil # clean out the saved info
     add_flash(_("Copy %s was cancelled by the user") %  ui_lookup(model => "#{@edit[:typ]}")
-              
+
     )
     @in_a_form = false
     replace_right_cell
@@ -2427,14 +2379,10 @@ private
   # Get variables from edit form
   def get_instances_form_vars
     #resetting inst/class/values from id stored in @edit.
-    @ae_inst = @edit[:ae_inst_id] ? MiqAeInstance.find(@edit[:ae_inst_id]) : MiqAeInstance.new
-    @ae_class = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
-    @ae_values = Array.new
-
-    @ae_class.ae_fields.sort_by{|a| [a.priority.to_i]}.each do |fld|
-      val = MiqAeValue.find_by_field_id_and_instance_id(fld.id.to_s, @ae_inst.id.to_s)
-      val ||= MiqAeValue.new(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
-      @ae_values.push(val)
+    @ae_inst   = @edit[:ae_inst_id] ? MiqAeInstance.find(@edit[:ae_inst_id]) : MiqAeInstance.new
+    @ae_class  = MiqAeClass.find_by_id(from_cid(@edit[:ae_class_id]))
+    @ae_values = @ae_class.ae_fields.sort_by { |a| a.priority.to_i }.collect do |fld|
+      MiqAeValue.find_or_initialize_by(:field_id => fld.id.to_s, :instance_id => @ae_inst.id.to_s)
     end
 
     if x_node.split('-').first == "aei"
@@ -2560,10 +2508,9 @@ private
     @edit[:rec_id] = @ae_class ? @ae_class.id : nil
     @edit[:ae_class_id] = @ae_class.id
     @edit[:new][:fields] = @ae_class.ae_fields.deep_clone
-    @edit[:new][:fields_list] = Array.new
-    @edit[:new][:fields].sort_by{|a| [a.priority.to_i]}.each do |f|
-      @edit[:new][:fields_list].push("#{f.display_name} (#{f.name})")
-    end
+    @edit[:new][:fields_list] = @edit[:new][:fields]
+                                   .sort_by { |f| f.priority.to_i }
+                                   .collect { |f| "#{f.display_name} (#{f.name})" }
     @edit[:key] = "fields_edit__seq"
     @edit[:current] = copy_hash(@edit[:new])
     @right_cell_text = "Edit of Class Schema Sequence '#{@ae_class.name}'"
@@ -2693,17 +2640,18 @@ private
     name_for_msg % options
   end
 
+  def ordered_domains_for_priority_edit_screen
+    MiqAeDomain.order('priority DESC')
+               .reject  { |d| d.priority == 0 }
+               .collect { |d| d.editable? ? d.name : add_read_only_suffix(d, d.name) }
+  end
+
   def priority_edit_screen
     @in_a_form = true
     @edit = {
-      :key => "priority__edit"
+      :key => "priority__edit",
+      :new => {:domain_order => ordered_domains_for_priority_edit_screen}
     }
-    @edit[:new] = {
-      :domain_order => []
-    }
-    domains = MiqAeDomain.order('priority DESC')
-    order = @edit[:new][:domain_order]
-    domains.collect { |d| order.push("#{d.editable? ? d.name : add_read_only_suffix(d, d.name)}") unless d.priority == 0 }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit]  = @edit
   end
@@ -2783,9 +2731,9 @@ private
       set_root_node
     else
       @grid_inst_list_xml = build_details_grid(@record.ae_instances)
-      @combo_xml = get_combo_xml(@record.ae_fields)
+      @combo_xml = build_type_options
       # passing fields because that's how many combo boxes we need
-      @dtype_combo_xml = get_dtype_combo_xml(@record.ae_fields)
+      @dtype_combo_xml = build_dtype_options
       @grid_methods_list_xml = build_details_grid(@record.ae_methods)
       domain_overrides
       set_right_cell_text(x_node, @record)

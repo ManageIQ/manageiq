@@ -233,9 +233,9 @@ shared_examples_for 'A controller that has vm_common routes' do
     end
   end
 
-  describe '#retire_date_changed' do
-    it 'routes with POST' do
-      expect(post("/#{controller_name}/retire_date_changed")).to route_to("#{controller_name}#retire_date_changed")
+  describe '#retirement_info' do
+    it 'routes with GET' do
+      expect(get("/#{controller_name}/retirement_info")).to route_to("#{controller_name}#retirement_info")
     end
   end
 

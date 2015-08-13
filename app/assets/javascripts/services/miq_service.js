@@ -1,4 +1,4 @@
-miqAngularApplication.service('miqService', function() {
+ManageIQ.angularApplication.service('miqService', function() {
   this.showButtons = function() {
     miqButtons('show');
   };
@@ -8,7 +8,7 @@ miqAngularApplication.service('miqService', function() {
   };
 
   this.buildCalendar = function(year, month, date) {
-    miq_cal_dateFrom = new Date(year, month, date);
+    ManageIQ.calendar.calDateFrom = new Date(year, month, date);
     miqBuildCalendar(true);
   };
 
@@ -64,49 +64,6 @@ miqAngularApplication.service('miqService', function() {
 
   this.saveable = function(form) {
     return form.$valid && form.$dirty;
-  };
-
-  this.canValidate = function (form) {
-    if (this.validateFieldsValid(form) && this.validateFieldsDirty(form))
-      return true;
-    else
-      return false;
-  }
-
-  this.canValidateBasicInfo = function () {
-    if (miqAngularApplication.$scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
-  }
-
-  this.validateFieldsValid = function (form) {
-    if (form != undefined &&
-      form.depot_name.$valid &&
-      form.uri.$valid &&
-      form.log_userid.$valid &&
-      form.log_password.$valid &&
-      form.log_verify.$valid)
-      return true;
-    else
-      return false;
-  }
-
-  this.validateFieldsDirty = function (form) {
-    if (form != undefined &&
-      form.depot_name.$dirty ||
-      form.uri.$dirty ||
-      form.log_userid.$dirty ||
-      form.log_password.$dirty ||
-      form.log_verify.$dirty)
-      return true;
-    else
-      return false;
-  }
-
-   this.validateClicked = function (url) {
-     this.sparkleOn();
-     this.miqAjaxButton(url, true);
   };
 
   this.serializeModel = function(model) {

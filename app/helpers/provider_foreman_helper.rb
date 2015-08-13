@@ -10,7 +10,7 @@ module ProviderForemanHelper
   end
 
   def textual_hostname
-    {:label => _("Host Name"),
+    {:label => _("Hostname"),
      :image => "configured_system",
      :value => @record.hostname,
     }

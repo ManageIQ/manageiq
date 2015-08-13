@@ -1,7 +1,7 @@
 describe('timerOptionService', function() {
   var testService;
 
-  beforeEach(module('miqAngularApplication'));
+  beforeEach(module('ManageIQ.angularApplication'));
 
   beforeEach(inject(function(timerOptionService) {
     testService = timerOptionService;

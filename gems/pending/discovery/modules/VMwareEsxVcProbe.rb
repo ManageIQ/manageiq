@@ -1,8 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
-
-require 'PortScan'
-require 'MiqVimClientBase'
+require 'discovery/PortScan'
+require 'VMwareWebService/MiqVimClientBase'
 
 class VMwareEsxVcProbe
     

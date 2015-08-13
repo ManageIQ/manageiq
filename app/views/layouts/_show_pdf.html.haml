@@ -4,5 +4,5 @@
   = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72}
 - if @record.kind_of?(ConfigurationProfile)
   = render :partial => "#{controller}/main_configuration_profile"
--else
+- else
   = render :partial => "#{controller}/main"

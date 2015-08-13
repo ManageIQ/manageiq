@@ -1,0 +1,31 @@
+<content-header short="true">
+  <div class="detail-heading">
+    <span class="content-header__title">Order Details</span>
+  </div>
+</content-header>
+
+<details-table>
+  <div class="details-table__row">
+    <div class="details-table__label">Order Id</div>
+    <div class="details-table__detail">{{ ::vm.order.id }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Ordered On</div>
+    <div class="details-table__detail">{{ ::vm.order.created_at | date:'medium' }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Ordered By</div>
+    <div class="details-table__detail">{{ ::vm.order.staff.full_name }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Projected Total</div>
+    <div class="details-table__detail">{{ ::vm.order.total | currency }} (monthly)</div>
+  </div>
+</details-table>
+
+<region heading="Items">
+  <order-items-table order-items="vm.orderItems"></order-items-table>
+</region>

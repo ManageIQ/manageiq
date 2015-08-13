@@ -10,7 +10,7 @@ describe "rendering fields in host new/edit form" do
 
   it "displays Host Name" do
     render :partial => "host/form"
-    expect(rendered).to match(/Host\ Name/)
+    expect(rendered).to match(/Hostname/)
   end
 
   it "doesn't display IP Address" do
@@ -18,3 +18,4 @@ describe "rendering fields in host new/edit form" do
     expect(rendered).not_to match(/\AIP\ Address/)
   end
 end
+

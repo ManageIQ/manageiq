@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../metadata/util/win32")
-require 'versioninfo'
+require 'metadata/util/win32/versioninfo'
 require 'minitest/unit'
 
 module Extract

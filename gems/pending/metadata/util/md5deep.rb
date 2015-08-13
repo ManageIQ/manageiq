@@ -1,13 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/win32")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'rubygems'
 require 'time'
-require 'peheader'
-require 'versioninfo'
-require 'miq-xml'
+require 'metadata/util/win32/peheader'
+require 'metadata/util/win32/versioninfo'
+require 'util/miq-xml'
 require 'ostruct'
-require 'miq-encode'
+require 'util/miq-encode'
 
 class MD5deep
   attr_reader   :fullDirCount, :fullFileCount
@@ -242,9 +238,8 @@ end
 # Only run if we are calling this script directly
 if __FILE__ == $0 then
 #if 1
-  $:.push("#{File.dirname(__FILE__)}/../../MiqVm")
-  require 'MiqVm'
-  require 'miq-logger'
+  require 'MiqVm/MiqVm'
+  require 'util/miq-logger'
 
   $log = MIQLogger.get_log(nil, __FILE__)
   $log.level = Log4r::INFO

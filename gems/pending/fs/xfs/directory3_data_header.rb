@@ -1,5 +1,5 @@
-require 'directory'
-require 'superblock'
+require 'fs/xfs/directory'
+require 'fs/xfs/superblock'
 
 module XFS
   DIRECTORY3_DATA_HEADER = BinaryStruct.new([

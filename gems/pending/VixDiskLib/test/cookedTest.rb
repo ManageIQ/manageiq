@@ -1,8 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require "VixDiskLib"
+require 'VixDiskLib/VixDiskLib'
 require 'enumerator'
-require 'rubygems'
 require 'log4r'
 
 #

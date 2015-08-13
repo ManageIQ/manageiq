@@ -3,7 +3,7 @@
   - if @display == "config_info"
     %dl.dl-horizontal
       - if @cluster_config.nil? || @cluster_config.empty?
-        %dt=_('Not Available')
+        %dt= _('Not Available')
         %dd
       - else
         - @cluster_config.each_slice(2) do |item1, item2|

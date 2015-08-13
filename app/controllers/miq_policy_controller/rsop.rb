@@ -22,7 +22,7 @@ module MiqPolicyController::Rsop
           @sb[:rsop][:passed] = true
           @sb[:rsop][:failed] = true
           @sb[:rsop][:open] = false
-          initiate_wait_for_task(:task_id => Vm.rsop_async(MiqEvent.find(@sb[:rsop][:event_value]), vms))
+          initiate_wait_for_task(:task_id => Vm.rsop_async(MiqEventDefinition.find(@sb[:rsop][:event_value]), vms))
           return
         else
           add_flash(_("No VMs match the selection criteria"), :error)
@@ -62,8 +62,8 @@ module MiqPolicyController::Rsop
       rsop_put_objects_in_sb(find_filtered(Host, :all), :hosts)
       rsop_put_objects_in_sb(find_filtered(Vm, :all), :vms)
       rsop_put_objects_in_sb(find_filtered(Storage, :all), :datastores)
-      @rsop_events = MiqEventSet.all.collect{|e|[e.description, e.id.to_s]}.sort
-      @rsop_event_sets = MiqEventSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
+      @rsop_events = MiqEventDefinitionSet.all.collect{|e|[e.description, e.id.to_s]}.sort
+      @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
       render :layout => "explorer"
     end
   end
@@ -83,8 +83,8 @@ module MiqPolicyController::Rsop
     if params[:filter_value]
       @sb[:rsop][:filter_value] = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
     end
-    @rsop_events = MiqEventSet.all.collect{|e|[e.description, e.id.to_s]}.sort
-    @rsop_event_sets = MiqEventSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
+    @rsop_events = MiqEventDefinitionSet.all.collect{|e|[e.description, e.id.to_s]}.sort
+    @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
     render :update do |page|                    # Use JS to update the display
       session[:changed] = @sb[:rsop][:filter_value] && @sb[:rsop][:event_value] ? true : false
       page.replace("rsop_form_div", :partial=>"rsop_form")
@@ -166,7 +166,7 @@ module MiqPolicyController::Rsop
   end
 
   def rsop_build_tree
-    event = MiqEvent.find(@sb[:rsop][:event_value])
+    event = MiqEventDefinition.find(@sb[:rsop][:event_value])
     root_node = TreeNodeBuilder.generic_tree_node(
       "rsoproot",
       "Policy Simulation Results for Event [#{event.description}]",

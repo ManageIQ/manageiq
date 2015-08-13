@@ -1,14 +1,9 @@
-$: << "#{File.dirname(__FILE__)}/.."
-$: << "#{File.dirname(__FILE__)}/../.."
-$: << "#{File.dirname(__FILE__)}/../../MiqFS"
-$: << "#{File.dirname(__FILE__)}/../../MiqFS/modules"
-
-require 'rubygems'
 require 'log4r'
-require 'MiqFsUtil'
-require 'MiqFS'
-require 'MetakitFS'
-require 'LocalFS'
+require 'fs/MiqFsUtil'
+require 'fs/MiqFS/MiqFS'
+require 'fs/MetakitFS/MetakitFS'
+require 'fs/MiqFS/modules/LocalFS'
+
 
 #
 # Formatter to output log messages to the console.

@@ -3,21 +3,18 @@ require "spec_helper"
 describe ServiceTemplateProvisionTask do
   context "with multiple tasks" do
     before(:each) do
-      User.any_instance.stub(:role).and_return("admin")
-      @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @approver    = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
-      UiTaskSet.stub(:find_by_name).and_return(@approver)
+      admin      = FactoryGirl.create(:user_admin)
 
-      @request   = FactoryGirl.create(:service_template_provision_request, :description => 'Service Request', :userid => @user.userid)
-      @task_0    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 0 (Top)'   , :userid => @user.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service")
-      @task_1    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1'         , :userid => @user.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 7, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
-      @task_1_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1 - 1'     , :userid => @user.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 1, :scaling_min => 1, :scaling_max => 3, :resource_type => 'ServiceTemplate').id})
-      @task_1_2  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1 - 2'     , :userid => @user.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 5, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
-      @task_2    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2'         , :userid => @user.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 9, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
-      @task_2_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2 - 1'     , :userid => @user.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 2, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
-      @task_3    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 3'         , :userid => @user.userid, :status => "Ok", :state => "finished", :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 3, :scaling_min => 1, :scaling_max => 5, :resource_type => 'ServiceTemplate').id})
+      @request   = FactoryGirl.create(:service_template_provision_request, :description => 'Service Request', :userid => admin.userid)
+      @task_0    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 0 (Top)'   , :userid => admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service")
+      @task_1    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1'         , :userid => admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 7, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
+      @task_1_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1 - 1'     , :userid => admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 1, :scaling_min => 1, :scaling_max => 3, :resource_type => 'ServiceTemplate').id})
+      @task_1_2  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 1 - 2'     , :userid => admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 5, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
+      @task_2    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2'         , :userid => admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 9, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
+      @task_2_1  = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 2 - 1'     , :userid => admin.userid, :status => "Ok", :state => "pending",  :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 2, :scaling_min => 1, :scaling_max => 1, :resource_type => 'ServiceTemplate').id})
+      @task_3    = FactoryGirl.create(:service_template_provision_task,    :description => 'Task 3'         , :userid => admin.userid, :status => "Ok", :state => "finished", :miq_request_id => @request.id, :request_type => "clone_to_service", :options => {:service_resource_id => FactoryGirl.create(:service_resource, :provision_index => 3, :scaling_min => 1, :scaling_max => 5, :resource_type => 'ServiceTemplate').id})
 
-      @request.miq_request_tasks = [@task_0, @task_1, @task_1_1, @task_1_2, @task_2, @task_2_1]
+      @request.miq_request_tasks = [@task_0, @task_1, @task_1_1, @task_1_2, @task_2, @task_2_1, @task_3]
       @task_0.miq_request_tasks  = [@task_1, @task_2, @task_3]
       @task_1.miq_request_task   =  @task_0
       @task_1.miq_request_tasks  = [@task_1_1, @task_1_2]
@@ -76,6 +73,36 @@ describe ServiceTemplateProvisionTask do
       @task_1_2.update_attribute(:options, :user_message => "New test message")
       @task_1_2.update_request_status
       expect(@task_1_2.message).to eq("New test message")
+    end
+
+    it "update_and_notify_parent all tasks finished sets bundle task finished" do
+      @request.miq_request_tasks.each { |t| t.update_attributes(:state => "finished") }
+      expect(@task_0.state).to eq("finished")
+    end
+
+    it "update_and_notify_parent all service children and parents finished sets bundle task provisioned" do
+      @request.miq_request_tasks.each { |t| t.update_attributes(:state => "finished") }
+      @task_0.update_attributes(:state => "active")
+      @task_1.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
+      @task_0.reload
+      expect(@task_0.state).to eq("provisioned")
+    end
+
+    it "update_and_notify_parent one service children finished, parent not finished sets parent task provisioned" do
+      @task_1_1.update_attributes(:state => "finished")
+      @task_1_2.update_attributes(:state => "finished")
+      @task_1_2.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
+      @task_1.reload
+      expect(@task_1.state).to eq("provisioned")
+      expect(@task_0.state).not_to eq("finished")
+    end
+
+    it "update_and_notify_parent one service children and parent finished, sets parent task finished" do
+      @task_2_1.update_attributes(:state => "finished")
+      @task_2.update_attributes(:state => "finished")
+      @task_2_1.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
+      expect(@task_2.state).to eq("finished")
+      expect(@task_0.state).not_to eq("finished")
     end
 
     context "with a service" do

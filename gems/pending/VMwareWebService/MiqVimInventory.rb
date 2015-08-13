@@ -1,11 +1,9 @@
-$:.push(File.dirname(__FILE__))
-
-require 'VimSyncDebug'
+require 'VMwareWebService/VimSyncDebug'
 require 'sync'
 require 'enumerator'
-require 'MiqVimClientBase'
-require 'MiqVimDump'
-require 'VimPropMaps'
+require 'VMwareWebService/MiqVimClientBase'
+require 'VMwareWebService/MiqVimDump'
+require 'VMwareWebService/VimPropMaps'
 
 class MiqVimInventory < MiqVimClientBase
 	attr_reader :cacheLock, :configLock

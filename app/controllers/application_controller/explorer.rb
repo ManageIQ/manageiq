@@ -37,13 +37,13 @@ module ApplicationController::Explorer
 
     if params.key?(:width)
       # Store the new settings in the user record and in @settings (session)
-      db_user = current_user
-      unless db_user.nil?
-        db_user.settings[:explorer] ||= {}
-        db_user.settings[:explorer][params[:controller]] ||= {}
-        db_user.settings[:explorer][params[:controller]][:width] = params['width']
-        @settings[:explorer] = db_user.settings[:explorer]
-        db_user.save
+      if current_user
+        user_settings = current_user.settings || {}
+        user_settings[:explorer] ||= {}
+        user_settings[:explorer][params[:controller]] ||= {}
+        user_settings[:explorer][params[:controller]][:width] = params['width']
+        @settings[:explorer] = user_settings[:explorer]
+        current_user.update_attributes(:settings => user_settings)
       end
     end
 
@@ -59,7 +59,7 @@ module ApplicationController::Explorer
     'refresh'          => :s1, 'scan'                      => :s1, 'guest_shutdown'      => :s1,
     'guest_restart'    => :s1, 'retire_now'                => :s1, 'snapshot_revert'     => :s1,
     'start'            => :s1, 'stop'                      => :s1, 'suspend'             => :s1,
-    'reset'            => :s1, 'terminate'                 => :s1,
+    'reset'            => :s1, 'terminate'                 => :s1, 'pause'               => :s1,
 
     # group 2
     'clone'     => :s2, 'compare'          => :s2, 'drift'           => :s2,
@@ -272,9 +272,9 @@ module ApplicationController::Explorer
     when Host		             then x_get_tree_host_kids(object, options)
     when LdapRegion		       then x_get_tree_lr_kids(object, options)
     when MiqAlertSet		     then x_get_tree_ap_kids(object, options)
-    when MiqEvent            then options[:tree] != :event_tree ? 
+    when MiqEventDefinition  then options[:tree] != :event_tree ?
                                   x_get_tree_ev_kids(object, options) : nil
-    when MiqGroup            then options[:tree] == :db_tree ? 
+    when MiqGroup            then options[:tree] == :db_tree ?
                                   x_get_tree_g_kids(object, options) : nil
     when MiqPolicySet		     then x_get_tree_pp_kids(object, options)
     when MiqPolicy		       then x_get_tree_p_kids(object, options)
@@ -300,7 +300,7 @@ module ApplicationController::Explorer
        (object.kind_of?(Zone)      && @sb[:my_zone]      == object.name))
 
     options.merge!(:active_tree => x_active_tree)
-    options.merge!({:parent_id => pid}) if object.kind_of?(MiqEvent) || object.kind_of?(MiqAction)
+    options.merge!({:parent_id => pid}) if object.kind_of?(MiqEventDefinition) || object.kind_of?(MiqAction)
 
     # open nodes to show selected automate entry point
     x_tree(options[:tree])[:open_nodes] = @open_nodes.dup if @open_nodes
@@ -358,17 +358,14 @@ module ApplicationController::Explorer
       object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
     end
 
-    kids = Array.new
     x_tree(tree)[:open_nodes].push(id) unless x_tree(tree)[:open_nodes].include?(id) # Save node as open
 
     options = x_tree(tree)         # Get options from sandbox
 
     # Process the node's children
-    x_get_tree_objects(options.merge({:parent=>object})).each do |o|
-      kids += x_build_node_dynatree(o, id, options)
+    x_get_tree_objects(options.merge(:parent => object)).flat_map do |o|
+      x_build_node_dynatree(o, id, options)
     end
-
-    kids
   end
 
   # Get root nodes count/array for explorer tree
@@ -454,11 +451,11 @@ module ApplicationController::Explorer
       if user.super_admin_user?
         roles = MiqGroup.all
       else
-        roles = [MiqGroup.find_by_id(user.current_group_id)]
+        roles = [user.current_group]
       end
       return options[:count_only] ? roles.count : roles.sort_by { |a| a.name.downcase }
     when :schedules
-      if session[:userrole] == "super_administrator"  # Super admins see all report schedules
+      if super_admin_user? # Super admins see all report schedules
         objects = MiqSchedule.all(:conditions=>["towhat=?", "MiqReport"])
       else
         objects = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])
@@ -708,10 +705,10 @@ module ApplicationController::Explorer
 
   def x_get_tree_p_kids(object, options)
     if options[:count_only]
-      return object.conditions.count + object.miq_events.count
+      return object.conditions.count + object.miq_event_definitions.count
     else
       return object.conditions.sort_by { |a| a.description.downcase } +
-              object.miq_events.sort_by { |a| a.description.downcase }
+              object.miq_event_definitions.sort_by { |a| a.description.downcase }
     end
   end
 

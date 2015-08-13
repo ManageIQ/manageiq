@@ -318,7 +318,7 @@ module OpenstackHandle
         not_found_error = Fog.const_get(service)::OpenStack::NotFound
 
         rv = begin
-          svc.send(accessor)
+          array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
         rescue not_found_error => e
           $fog_log.warn("MIQ(#{self.class.name}.#{__method__}) HTTP 404 Error during OpenStack request. " \
                         "Skipping inventory item #{service} #{accessor}\n#{e}")
@@ -326,11 +326,7 @@ module OpenstackHandle
         end
 
         if rv
-          if array_accessor
-            ra.concat(rv.to_a)
-          else
-            ra << rv
-          end
+          array_accessor ? ra.concat(rv) : ra << rv
         end
       end
       return ra unless uniq_id

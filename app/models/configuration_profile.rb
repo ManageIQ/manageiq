@@ -3,7 +3,7 @@ class ConfigurationProfile < ActiveRecord::Base
   include ReportableMixin
 
   acts_as_miq_taggable
-  belongs_to :configuration_manager
+  belongs_to :configuration_manager, :class_name => 'ManageIQ::Providers::ConfigurationManager'
   belongs_to :parent, :class_name => 'ConfigurationProfile'
   belongs_to :customization_script_ptable
   belongs_to :customization_script_medium

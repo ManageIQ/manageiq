@@ -3,19 +3,14 @@ require "spec_helper"
 
 module MiqAeServiceVmOpenstackSpec
   include MiqAeEngine
-  describe MiqAeMethodService::MiqAeServiceVmOpenstack do
+  describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_Vm do
 
     ["openstack", "amazon"].each  do |t|
 
       context "for #{t}" do
 
         define_method(:service_class_for) do |part|
-          case t
-          when "amazon"
-            "MiqAeMethodService::MiqAeServiceManageIQ_Providers_#{t.camelize}_CloudManager_#{part.to_s.camelize}".constantize
-          else
-            "MiqAeMethodService::MiqAeService#{part.to_s.camelize}#{t.camelize}".constantize
-          end
+          "MiqAeMethodService::MiqAeServiceManageIQ_Providers_#{t.camelize}_CloudManager_#{part.to_s.camelize}".constantize
         end
 
         before(:each) do

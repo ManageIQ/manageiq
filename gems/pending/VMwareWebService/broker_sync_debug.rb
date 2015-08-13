@@ -1,5 +1,5 @@
-require_relative "../util/SyncDebug"
-require "vim_base_sync_debug"
+require 'util/SyncDebug'
+require 'VMwareWebService/vim_base_sync_debug'
 
 module BrokerSyncDebug
   def connection_lock

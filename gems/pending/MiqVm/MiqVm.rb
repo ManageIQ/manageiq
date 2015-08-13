@@ -1,16 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/../metadata/VmConfig")
-$:.push("#{File.dirname(__FILE__)}/../metadata/MIQExtract")
-$:.push("#{File.dirname(__FILE__)}/../disk")
-$:.push("#{File.dirname(__FILE__)}/../fs")
-$:.push("#{File.dirname(__FILE__)}/../VolumeManager")
-
 require 'ostruct'
-require 'VmConfig'
-require 'MiqDisk'
-# require 'MiqFS'
-require 'MiqVolumeManager'
-require 'MiqMountManager'
-require 'MIQExtract'
+require 'metadata/VmConfig/VmConfig'
+require 'disk/MiqDisk'
+require 'VolumeManager/MiqVolumeManager'
+require 'fs/MiqMountManager'
+require 'metadata/MIQExtract/MIQExtract'
 
 class MiqVm
     
@@ -204,11 +197,8 @@ class MiqVm
 end # class MiqVm
 
 if __FILE__ == $0
-    $:.push("#{File.dirname(__FILE__)}/../metadata/util/win32")
-    
-    require 'rubygems'
     require 'log4r'
-    require 'boot_info_win'
+    require 'metadata/util/win32/boot_info_win'
     
     # vmDir = File.join(ENV.fetch("HOME", '.'), 'VMs')
 	vmDir = "/volumes/WDpassport/Virtual Machines"

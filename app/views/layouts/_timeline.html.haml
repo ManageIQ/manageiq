@@ -1,12 +1,12 @@
 - tl_json ||= nil
 %script{:type => "text/javascript"}
-  - # commented this to, for a workaround to close any open bubble from previous timeline when switching between timelines
-  - # var tl;
+  -# commented this to, for a workaround to close any open bubble from previous timeline when switching between timelines
+  -# var tl;
   - load_tl_now ||= false
-  var miq_timeline_filter = #{!! @timeline_filter};
+  ManageIQ.timelineFilter = #{!! @timeline_filter};
   function miqLoadTL() {
   var eventSource = new Timeline.DefaultEventSource();
-  - # Following works around a issue that causes timeline to not show any events in IE
+  -# Following works around a issue that causes timeline to not show any events in IE
   - if !is_browser_ie? && tl_json
     var miq_tl_data = #{tl_json.html_safe};
   - if bands[0][:decorate]
@@ -18,7 +18,7 @@
     var d = Timeline.DateTime.parseGregorianDateTime("#{bands[0][:center_position]}")
 
   var bandInfos = [
-  - # Create the bandInfos array elements from the bands array
+  -# Create the bandInfos array elements from the bands array
   - bands.each_with_index do |band, idx|
     Timeline.createBandInfo({
     showEventText: #{band[:text]},
@@ -28,9 +28,9 @@
       date:  d,
       theme: theme,
 
-    - # START of TIMELINE TIMEZONE Code
-    - # commented/uncomment line 241 elmt.appendChild(divTime); in bundle.js to remove/show timestamp at the bottom of timeline bubble
-    - # END of TIMELINE TIMEZONE Code
+    -# START of TIMELINE TIMEZONE Code
+    -# commented/uncomment line 241 elmt.appendChild(divTime); in bundle.js to remove/show timestamp at the bottom of timeline bubble
+    -# END of TIMELINE TIMEZONE Code
 
     - if band[:gap]
       trackGap: #{band[:gap]},
@@ -45,14 +45,14 @@
       }),
   ];
 
-  - # For each band, set up the sync with the band above
+  -# For each band, set up the sync with the band above
   - bands.each_index do |idx|
     - if idx > 0
       bandInfos[#{idx}].syncWith = #{idx - 1};
       bandInfos[#{idx}].highlight = true;
       bandInfos[#{idx}].eventPainter.setLayout(bandInfos[#{idx - 1}].eventPainter.getLayout());
   - if bands[0][:decorate]
-    - # highlighting filtered events text in specified color
+    -# highlighting filtered events text in specified color
     bandInfos[0].eventPainter = new Timeline.ThumbnailEventPainter({
     theme:              theme,
     trackHeight:        1,
@@ -62,7 +62,7 @@
     thumbnailHeight:    20
     });
 
-    - # highlighting band in diff color for specified timeframe
+    -# highlighting band in diff color for specified timeframe
     bandInfos[0].decorators = [
     new Timeline.SpanHighlightDecorator({
     startDate:  "#{bands[0][:st_time]}",
@@ -86,7 +86,7 @@
     })
     ];
 
-  - # workaround to close any open bubble from previous timeline when switching between timelines
+  -# workaround to close any open bubble from previous timeline when switching between timelines
   if (typeof tl != 'undefined'){
   for (var i = 0; i < tl.getBandCount(); i++) {
   tl.getBand(i).closeBubble();
@@ -94,11 +94,11 @@
   }
   tl = Timeline.create($('#miq_timeline')[0], bandInfos, Timeline.HORIZONTAL);
   - if bands[0][:center_position]
-    - # to align daily/hourly timeline in center
+    -# to align daily/hourly timeline in center
     tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime("#{bands[0][:center_position]}"));
   - else
     tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime("#{position_time}"));
-  - # Following works around a issue that causes timeline to not show any events in IE
+  -# Following works around a issue that causes timeline to not show any events in IE
   - if is_browser_ie? || !tl_json
     Timeline.loadXML('#{url_for(:action => data_action)}', function(xml, url) { eventSource.loadXML(xml, url); });
   - else
@@ -118,14 +118,14 @@
   - if load_tl_now
     miqLoadTL();
   - elsif request.xml_http_request?
-    - # Is this an Ajax request?
-    - # Executing this method from application.js to fix IE initial load issue
+    -# Is this an Ajax request?
+    -# Executing this method from application.js to fix IE initial load issue
     miqLoadTL();
     - if @timeline_filter
       performFiltering(tl, [0,1]);
 
 
 
-- #   START of TIMELINE TIMEZONE Code
-- # "* Times displayed are in #{get_timezone_offset("user",true)} #{get_timezone_abbr("user")} time"
-- #   END of TIMELINE TIMEZONE Code
+-# START of TIMELINE TIMEZONE Code
+-# "* Times displayed are in #{get_timezone_offset("user",true)} #{get_timezone_abbr("user")} time"
+-# END of TIMELINE TIMEZONE Code

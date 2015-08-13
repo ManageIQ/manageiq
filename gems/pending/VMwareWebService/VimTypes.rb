@@ -1,5 +1,5 @@
-require 'VimConstants'
-autoload :VimMappingRegistry, "VimMappingRegistry"
+require 'VMwareWebService/VimConstants'
+autoload :VimMappingRegistry, 'VMwareWebService/VimMappingRegistry'
 
 
 class VimHash < Hash

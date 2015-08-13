@@ -3,9 +3,9 @@
     %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
   .flobj{:class => "a#{size}"}
     %img{:src => "/images/icons/new/storagetype-#{item.store_type.nil? ? "unknown" : h(item.store_type.to_s.downcase)}.png"}
-  - # Get the Host count
+  -# Get the Host count
   - hcount = item.v_total_hosts
-  - # Get the VM count
+  -# Get the VM count
   - vcount = item.v_total_vms
   .flobj{:class => "b#{size}"}
     %p
@@ -24,7 +24,7 @@
     %img{:src => "/images/icons/new/datastore-#{h(space_percent)}.png"}
 
 - if typ == :listnav
-  - # Listnav, no clear image needed
+  -# Listnav, no clear image needed
   .flobj
     %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
 - else

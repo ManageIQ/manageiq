@@ -6,11 +6,18 @@ module Rbac
   # 3. Class contains acts_as_miq_taggable
   CLASSES_THAT_PARTICIPATE_IN_RBAC = %w{
     AvailabilityZone
+    CloudTenant
+    ConfiguredSystem
+    Container
+    ContainerGroup
+    ContainerNode
     EmsCluster
     EmsFolder
     ExtManagementSystem
+    Flavor
     Host
     MiqCimInstance
+    OrchestrationTemplate
     Repository
     ResourcePool
     SecurityGroup
@@ -447,7 +454,7 @@ module Rbac
   def self.method_with_scope(ar_scope, options)
     if ar_scope == VmdbDatabaseConnection
       ar_scope.all
-    elsif ar_scope < ActsAsArModel
+    elsif ar_scope < ActsAsArModel || (ar_scope.respond_to?(:instances_are_derived?) && ar_scope.instances_are_derived?)
       ar_scope.find(:all, options)
     else
       ar_scope.apply_legacy_finder_options(options)

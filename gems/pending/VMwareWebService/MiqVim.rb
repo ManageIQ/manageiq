@@ -1,20 +1,17 @@
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/../VixDiskLib")
-
 require 'sync'
 
-require 'MiqVimInventory'
-require 'MiqVimVm'
-require 'MiqVimVdlMod'
-require 'MiqVimFolder'
-require 'MiqVimCluster'
-require 'MiqVimDataStore'
-require 'MiqVimPerfHistory'
-require 'MiqVimHost'
-require 'MiqVimEventHistoryCollector'
-require 'MiqCustomFieldsManager'
-require 'MiqVimAlarmManager'
-require 'MiqVimCustomizationSpecManager'
+require 'VMwareWebService/MiqVimInventory'
+require 'VMwareWebService/MiqVimVm'
+require 'VMwareWebService/MiqVimVdlMod'
+require 'VMwareWebService/MiqVimFolder'
+require 'VMwareWebService/MiqVimCluster'
+require 'VMwareWebService/MiqVimDataStore'
+require 'VMwareWebService/MiqVimPerfHistory'
+require 'VMwareWebService/MiqVimHost'
+require 'VMwareWebService/MiqVimEventHistoryCollector'
+require 'VMwareWebService/MiqCustomFieldsManager'
+require 'VMwareWebService/MiqVimAlarmManager'
+require 'VMwareWebService/MiqVimCustomizationSpecManager'
 
 class MiqVim < MiqVimInventory
 	

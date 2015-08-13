@@ -7,32 +7,35 @@
   - elsif @alert
     #alert_info_div
       = render :partial => "layouts/flash_msg"
-      %h3=_('Info')
-      %table.style1
-        - # Description
+      %h3= _('Info')
+      %form.form-horizontal
+        -# Description
         - if @edit
-          %tr
-            %td.key=_("Description")
-            %td.wider
+          .form-group
+            %label.control-label.col-md-2
+              = _("Description")
+            .col-md-10
               = text_field_tag("description",
                 @edit[:new][:description],
                 :maxlength         => MAX_DESC_LEN,
                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
               = javascript_tag(javascript_focus('description'))
-        - # Enabled
-        %tr
-          %td.key=_("Active")
+        -# Enabled
+        .form-group
+          %label.control-label.col-md-2
+            = _("Active")
           - if @edit
-            %td
+            .col-md-10
               = check_box_tag("enabled_cb", "1", @edit[:new][:enabled], "data-miq_observe_checkbox" => observe)
           - else
-            %td
+            .col-md-10
               = @alert.enabled ? _("Yes") : _("No")
-        - # Based on (model)
-        %tr
-          %td.key=_("Based On")
+        -# Based on (model)
+        .form-group
+          %label.control-label.col-md-2
+            = _("Based On")
           - if @edit
-            %td
+            .col-md-10
               - if @alert.memberof.empty?
                 = select_tag('miq_alert_db',
                   options_for_select(@edit[:dbs].invert.sort, @edit[:new][:db]),
@@ -42,17 +45,18 @@
               - else
                 = ui_lookup(:model => @edit[:new][:db])
                 &nbsp;&nbsp;&nbsp;
-                =_('* Cannot be changed while this Alert belongs to an Alert Profile.')
+                = _('* Cannot be changed while this Alert belongs to an Alert Profile.')
           - else
-            %td
+            .col-md-10
               = h(ui_lookup(:model => @alert.db))
-        - # Eval Method
-        %tr
-          %td.key=_("What to Evaluate")
+        -# Eval Method
+        .form-group
+          %label.control-label.col-md-2
+            = _("What to Evaluate")
           - if @edit
-            %td
+            .col-md-10
               - if @edit[:expression_types].blank?
-                =_('Expression (Custom)')
+                = _('Expression (Custom)')
               - else
                 - opts = @edit[:expression_types].invert.sort + [[_("Expression (Custom)"), nil]]
                 = select_tag('exp_name',
@@ -61,20 +65,20 @@
                   "data-miq_sparkle_off" => true,
                   "data-miq_observe"     => observe)
           - else
-            %td
-              - if @alert.expression.is_a?(MiqExpression)
-                - # Expression is an MiqExpression
-                =_('Expression')
+            .col-md-10
+              - if @alert.expression.kind_of?(MiqExpression)
+                -# Expression is an MiqExpression
+                = _('Expression')
               - else
                 = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
 
-        - # Expression driving event
+        -# Expression driving event
         - if @edit
           - unless @edit[:new][:expression][:eval_method] && @edit[:new][:expression][:eval_method] != "nothing"
-            %tr
-              %td.key
+            .form-group
+              %label.control-label.col-md-2
                 = _("Driving Event")
-              %td
+              .col-md-10
                 - opts = [["<#{_('Choose')}>", nil], [_("Hourly Timer"), "_hourly_timer_"]] + @edit[:events].invert.sort
                 = select_tag('exp_event',
                   options_for_select(opts, @edit[:new][:exp_event]),
@@ -82,17 +86,18 @@
                   "data-miq_sparkle_off" => true,
                   "data-miq_observe"     => observe)
         - else
-          - if @alert.expression.is_a?(MiqExpression) || @alert.expression[:eval_method] == "nothing"
-            %tr
-              %td.key
+          - if @alert.expression.kind_of?(MiqExpression) || @alert.expression[:eval_method] == "nothing"
+            .form-group
+              %label.control-label.col-md-2
                 = _("Driving Event")
-              %td
+              .col-md-10
                 = h(@event)
-        - # Repeat Time
-        %tr
-          %td.key=_("Notification Frequency")
+        -# Repeat Time
+        .form-group
+          %label.control-label.col-md-2
+            = _("Notification Frequency")
           - if @edit
-            %td
+            .col-md-10
               - if @edit[:new][:expression][:eval_method] == "hourly_performance"
                 = select_tag('repeat_time',
                   options_for_select(@sb[:alert][:hourly_repeat_times].invert.sort_by(&:last), @edit[:new][:repeat_time]),
@@ -106,29 +111,31 @@
                   "data-miq_sparkle_off" => true,
                   "data-miq_observe"     => observe)
           - else
-            %td
+            .col-md-10
               - if @alert.options[:notifications][:delay_next_evaluation].blank?
-                =_('10 Minutes')
+                = _('10 Minutes')
               - else
                 = h(@sb[:alert][:repeat_times][@alert.options[:notifications][:delay_next_evaluation]])
       %hr
-      - # Expression
+      -# Expression
       - if @edit
         - if !@edit[:new][:expression][:eval_method]
-          %h3=_('Expression (Choose an element of the expression to edit)')
+          %h3
+            = _('Expression (Choose an element of the expression to edit)')
           = render(:partial => 'layouts/exp_editor')
         - else
           - if @edit[:new][:expression][:eval_method] != "nothing"
             %h3
               = h(MiqAlert.expression_types(@edit[:new][:db])[@edit[:new][:expression][:eval_method]])
-              =_('Parameters')
-            %table.style1
+              = _('Parameters')
+            %form.form-horizontal
               - @edit[:expression_options].each do |eo|
                 = render :partial => "alert_builtin_exp", :locals  => {:option => eo}
         %hr
       - else
-        - if @alert.expression.is_a?(MiqExpression)
-          %h3=_('Expression')
+        - if @alert.expression.kind_of?(MiqExpression)
+          %h3
+            = _('Expression')
           - if !@expression_table.nil?
             - @expression_table.each do |token|
               - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
@@ -138,71 +145,77 @@
                   %b
                     = h([token].flatten.first)
           - else
-            =_('An alert must contain a valid expression.')
+            = _('An alert must contain a valid expression.')
           %hr
         - else
           - if @alert.expression[:eval_method] != "nothing"
             %h3
               = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
-              =_('Parameters')
-            %table.style1
+              = _('Parameters')
+            %form.form-horizontal
               - MiqAlert.expression_options(@alert.expression[:eval_method]).each do |eo|
                 = render :partial => "alert_builtin_exp", :locals  => {:option => eo}
             %hr
 
       - if @edit
-        - # E-mail, SNMP, Timeline Event, Mgmt Event edit
+        -# E-mail, SNMP, Timeline Event, Mgmt Event edit
         = render :partial => "layouts/edit_email", :locals  => {:action_url => "alert_field_changed", :record => @alert}
         = render :partial => "alert_snmp"
         = render :partial => "alert_evm_event"
         = render :partial => "alert_mgmt_event"
       - else
-        - # E-mail, SNMP, Timeline Event, Mgmt Event show
+        -# E-mail, SNMP, Timeline Event, Mgmt Event show
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:email].blank?
-          %h3=_('Send E-mail')
-          %table.style1
-            %tr
-              %td.key=_("From")
-              %td
+          %h3
+            = _('Send E-mail')
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("From")
+              .col-md-10
                 - if @alert.options[:notifications][:email][:from].blank?
-                  =_("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
+                  = _("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
                 - else
                   = h(@alert.options[:notifications][:email][:from])
-            %tr
-              %td.key=_("To")
-              %td
+            .form-group
+              %label.control-label.col-md-2
+                = _("To")
+              .col-md-10
                 - unless @email_to.blank?
                   = h(@email_to.join(';'))
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:snmp].blank?
-          %h3=_('Send SNMP Trap')
-          %table.style1
-            %tr
-              %td.key=title_for_host
-              %td
+          %h3
+            = _('Send SNMP Trap')
+          %label.control-label.col-md-2
+            .form-group
+              %label.control-label.col-md-2
+                = title_for_host
+              .col-md-10
                 - @alert.options[:notifications][:snmp][:host].each do |host|
                   = h(host)
                   %br
-            %tr
-              %td.key=_("Version")
-              %td
+            .form-group
+              %label.control-label.col-md-2
+                = _("Version")
+              .col-md-10
                 = h(@alert.options[:notifications][:snmp][:snmp_version])
             - opts = @alert.options[:notifications][:snmp][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
             - trap_text = @alert.options[:notifications][:snmp][:snmp_version] == "v1" || opts
 
-            %tr
-              %td.key
+            .form-group
+              %label.control-label.col-md-2
                 = trap_text
-              %td
+              .col-md-10
                 = h(@alert.options[:notifications][:snmp][:trap_id])
           - if @alert.options[:notifications][:snmp].key?(:variables)
             %br
             %table.table.table-striped.table-bordered.table-hover
               %thead
                 %tr
-                  %th=_('Variable Object ID')
-                  %th=_('Type')
-                  %th=_('Value')
+                  %th= _('Variable Object ID')
+                  %th= _('Type')
+                  %th= _('Value')
               %tbody
                 - @alert.options[:notifications][:snmp][:variables].each do |var|
                   - unless var[:oid].blank?
@@ -215,26 +228,31 @@
                         = h(var[:value])
           %hr
         - if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:evm_event]
-          %h3=('Timeline Event')
-          %table.style1
-            %tr
-              %td.key=_("Show on Timeline")
-              %td=_('True')
+          %h3
+            = _('Timeline Event')
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Show on Timeline")
+              .col-md-10
+                = _('True')
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:automate].blank?
-          %h3=_('Send Management Event')
-          %table.style1
-            %tr
-              %td.key=_("Event Name")
-              %td
+          %h3
+            = _('Send Management Event')
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Event Name")
+              .col-md-10
                 = h(@alert.options[:notifications][:automate][:event_name])
           %hr
-      - # Alert Profiles alert is assigned to
+      -# Alert Profiles alert is assigned to
       - unless @edit
         - if x_active_tree == :alert_tree
           %tr
             %td
-              %h3=_('Belongs to Alert Profiles')
+              %h3= _('Belongs to Alert Profiles')
               - if @alert_profiles.empty?
                 = render :partial => 'layouts/info_msg', :locals => {:message => _("This Alert is not assigned to any Alert Profiles.")}
               - else
@@ -248,12 +266,12 @@
                           %img{:src => "/images/icons/new/miq_alert_profile.png"}
                         %td
                           = ap.description
-      - # Show any owning actions
+      -# Show any owning actions
       - unless @edit
         - if x_active_tree == :alert_tree && !@alert.owning_miq_actions.empty?
           %tr
             %td
-              %h3=_('Referenced by Actions')
+              %h3= _('Referenced by Actions')
               - if @alert.owning_miq_actions.empty?
                 = render :partial => 'layouts/info_msg', :locals => {:message => _("This Alert is not referenced by any Actions.")}
               - else

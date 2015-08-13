@@ -3,10 +3,7 @@ module EventCatcherKubernetesMixin
 
   def event_monitor_handle
     require 'kubernetes/events/kubernetes_event_monitor'
-    @event_monitor_handle ||= KubernetesEventMonitor.new(
-      @ems.api_endpoint,
-      @ems.api_version
-    )
+    @event_monitor_handle ||= KubernetesEventMonitor.new(@ems)
   end
 
   def reset_event_monitor_handle

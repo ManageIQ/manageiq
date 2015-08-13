@@ -58,7 +58,7 @@ class TreeNodeBuilder
         end
 
       generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
-    when ChargebackRate       then generic_node(object.description, "chargeback_rates.png")
+    when ChargebackRate       then generic_node(object.description, "chargeback_rate.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
     when ConfigurationProfile then configuration_profile_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
     when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")
@@ -93,7 +93,7 @@ class TreeNodeBuilder
     when MiqTemplate          then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
     when MiqAlert             then generic_node(object.description, "miq_alert.png")
     when MiqAction            then miq_action_node
-    when MiqEvent             then generic_node(object.description, "event-#{object.name}.png")
+    when MiqEventDefinition   then generic_node(object.description, "event-#{object.name}.png")
     when MiqGroup             then generic_node(object.name, "group.png")
     # Following line has dynatree workaround, add class to allow clicking on bold portion of title.
     when MiqPolicy            then miq_policy_node
@@ -264,7 +264,7 @@ class TreeNodeBuilder
         event_id  = parent_id.split('_').last.split('-').last
       end
       p  = MiqPolicy.find_by_id(ActiveRecord::Base.uncompress_id(policy_id))
-      ev = MiqEvent.find_by_id(ActiveRecord::Base.uncompress_id(event_id))
+      ev = MiqEventDefinition.find_by_id(ActiveRecord::Base.uncompress_id(event_id))
       image = p.action_result_for_event(ev, object) ? "check" : "x"
     else
       image = object.action_type == "default" ? "miq_action" : "miq_action_#{object.action_type}"

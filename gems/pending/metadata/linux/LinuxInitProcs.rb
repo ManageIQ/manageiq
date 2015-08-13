@@ -1,9 +1,6 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'miq-hash_struct'
-require 'miq-xml'
-
-require 'InitProcHash'
+require 'util/miq-hash_struct'
+require 'util/miq-xml'
+require 'metadata/linux/InitProcHash'
 
 module MiqLinux
     

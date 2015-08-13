@@ -1,12 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}/../../disk")
-$:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
-$:.push("#{File.dirname(__FILE__)}/../util/win32")
-
 require 'ostruct'
-require 'MiqDisk'
-require 'MiqFS'
-require 'VMPlatformMount'
-require 'system_path_win'   # Used to check for Windows system partition
+require 'disk/MiqDisk'
+require 'fs/MiqFS/MiqFS'
+require 'metadata/VMMount/VMPlatformMount'
+require 'metadata/util/win32/system_path_win'   # Used to check for Windows system partition
 
 class VMMount
   attr_reader :disk

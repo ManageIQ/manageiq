@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/modules")
-
-require_relative 'DiscoverProbe'
+require 'discovery/DiscoverProbe'
 
 #######################################################################
 #

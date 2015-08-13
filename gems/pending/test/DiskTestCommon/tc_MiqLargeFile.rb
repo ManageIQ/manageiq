@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../../disk/modules/")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/util/")
-require 'MiqLargeFile'
-require 'md5deep'
+require 'disk/modules/MiqLargeFile'
+require 'metadata/util/md5deep'
 require 'enumerator'
 require 'minitest/unit'
 require 'tmpdir'
@@ -22,8 +20,7 @@ module DiskTestCommon
 
     def setup
 #     unless $log
-#       $:.push("#{File.dirname(__FILE__)}/../../util")
-#       require 'miq-logger'
+#       require 'util/miq-logger'
 #
 #       # Setup console logging
 #       $log = MIQLogger.get_log(nil, nil)

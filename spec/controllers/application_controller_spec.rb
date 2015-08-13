@@ -146,4 +146,38 @@ describe ApplicationController do
       expect(assigns(:devices)).to_not be_empty
     end
   end
+
+  context "#prov_redirect" do
+    before do
+      EvmSpecHelper.seed_specific_product_features("vm_migrate")
+      feature = MiqProductFeature.find_all_by_identifier(["vm_migrate"])
+      test_user_role  = FactoryGirl.create(:miq_user_role,
+                                           :name                 => "test_user_role",
+                                           :miq_product_features => feature)
+      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      User.stub(:current_user => user)
+      controller.request.parameters[:pressed] = "vm_migrate"
+    end
+
+    it "returns flash message when Migrate button is pressed with list containing SCVMM VM" do
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryGirl.create(:vm_microsoft)
+      controller.instance_variable_set(:@_params, :pressed         => "vm_migrate",
+                                                  :miq_grid_checks => "#{vm1.id},#{vm2.id}")
+      controller.should_receive(:render)
+      controller.send(:prov_redirect, "migrate")
+      assigns(:flash_array).first[:message].should include("does not apply to selected")
+    end
+
+    it "sets variables when Migrate button is pressed with list of VMware VMs" do
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryGirl.create(:vm_vmware)
+      controller.instance_variable_set(:@_params, :pressed         => "vm_migrate",
+                                                  :miq_grid_checks => "#{vm1.id},#{vm2.id}")
+      controller.send(:prov_redirect, "migrate")
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:org_controller).should eq("vm")
+    end
+  end
 end

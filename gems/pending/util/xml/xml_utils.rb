@@ -1,5 +1,5 @@
-require 'miq-xml'
-require 'xml_hash'
+require 'util/miq-xml'
+require 'util/xml/xml_hash'
 require 'enumerator'
 
 class XmlFind

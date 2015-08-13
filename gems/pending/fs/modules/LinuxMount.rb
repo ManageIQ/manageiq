@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../MiqFS")
-
-require 'MiqFS'
+require 'fs/MiqFS/MiqFS'
 
 module LinuxMount
         

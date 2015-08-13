@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}")
-require 'MiqLargeFile'
+require 'disk/modules/MiqLargeFile'
 require 'memory_buffer'
 require 'binary_struct'
 

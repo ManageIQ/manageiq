@@ -7,4 +7,8 @@ class VmMicrosoft < ManageIQ::Providers::InfraManager::Vm
     else                        super
     end
   end
+
+  def validate_migrate
+    validate_unsupported("Migrate")
+  end
 end

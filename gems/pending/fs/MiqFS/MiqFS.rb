@@ -1,12 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/../../util/extensions")
-require 'miq-string'
+require 'util/extensions/miq-string'
 
 require 'stringio'
 require 'find'
 
-$:.push("#{File.dirname(__FILE__)}/modules")
-
-require 'FsProbe'
+require 'fs/MiqFS/FsProbe'
 
 class MiqFS
 	attr_accessor :fsType, :dobj, :fsId, :volName
@@ -21,7 +18,7 @@ class MiqFS
 		return(dobj.fs)	if dobj.fs
 
 		if probes.nil? && dobj.dInfo.localDev
-			require 'NativeFS'
+			require 'fs/modules/NativeFS'
 			return(self.new(NativeFS, dobj)) if NativeFS.supported?(dobj)
 			return(nil)
 		end

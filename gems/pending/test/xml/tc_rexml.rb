@@ -1,12 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/../../util/")
-require 'rubygems'
 require 'minitest/unit'
-require 'miq-xml'
-
+require 'util/miq-xml'
 
 class TestBaseXmlMethods < Minitest::Test
-  require 'xml_base_parser_tests'
+  require_relative 'xml_base_parser_tests'
   include XmlBaseParserTests
 
 	def setup

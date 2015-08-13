@@ -12,15 +12,15 @@
     %div{:class => "collapse navbar-collapse navbar-collapse-1"}
       %ul{:class => "nav navbar-nav navbar-utility"}
         %li{:class => "brand-white-label #{session[:custom_logo] ? "whitelabeled" : ""}"}
-        -Menu::Manager.menu(:top_right) do |menu_section|
-          -if menu_section.visible?(User.current_userid)
+        - Menu::Manager.menu(:top_right) do |menu_section|
+          - if menu_section.visible?(User.current_userid)
             %li.dropdown
               %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
                 = _(menu_section.name)
                 %b.caret
               %ul.dropdown-menu#custom_menu_div
                 - menu_section.items.each do |menu_item|
-                  -if menu_item.visible?(User.current_userid)
+                  - if menu_item.visible?(User.current_userid)
                     %li
                       %a{:href    => menu_item.url,
                          :onclick => 'return miqCheckForChanges()'}= _(menu_item.name)

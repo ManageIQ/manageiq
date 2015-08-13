@@ -1,8 +1,5 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../encryption")
-
-require 'rubygems'
 require 'ezcrypto'
-require 'CryptString'
+require 'encryption/CryptString'
 require 'base64'
 require 'yaml'
 

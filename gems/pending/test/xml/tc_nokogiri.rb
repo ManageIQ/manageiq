@@ -1,18 +1,15 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/../../util/")
-require 'rubygems'
 require 'minitest/unit'
-require 'miq-xml'
+require 'util/miq-xml'
 require 'nokogiri'
 
 class NokogiriXmlMethods < Minitest::Test
-#  require 'xml_base_parser_tests'
+#  require_relative 'xml_base_parser_tests'
 #  include XmlBaseParserTests
 
 	def setup
     @xml_klass = Nokogiri::XML
     @xml_string = self.default_test_xml() if @xml_string.nil?
-    @xml = MiqXml.load(@xml_string, @xml_klass)
+    @xml = MiqXml.load(@xml_string, :nokogiri)
 	end
 
 	def teardown

@@ -6,8 +6,8 @@
 #   OpenIPMI-tools.x86_64
 #   freeipmi.x86_64
 
-require 'runcmd'
-require 'miq-extensions'
+require 'util/runcmd'
+require 'util/miq-extensions'
 
 class MiqIPMI
   def initialize(server=nil, username=nil, password=nil)

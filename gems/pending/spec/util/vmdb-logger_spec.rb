@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'util')))
-require 'vmdb-logger'
+require 'util/vmdb-logger'
 
 describe VMDBLogger do
   it ".contents with no log returns empty string" do
@@ -10,7 +8,7 @@ describe VMDBLogger do
   end
 
   it ".contents with empty log returns empty string" do   
-    require 'miq-system'
+    require 'util/miq-system'
     MiqSystem.stub(:tail => "")
 
     File.stub(:file? => true)

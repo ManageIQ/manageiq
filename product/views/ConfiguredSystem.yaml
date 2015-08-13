@@ -42,7 +42,7 @@ col_order:
 
 # Column titles, in order
 headers:
-- Host Name
+- Hostname
 - Type
 - Last Checkin
 - Build State

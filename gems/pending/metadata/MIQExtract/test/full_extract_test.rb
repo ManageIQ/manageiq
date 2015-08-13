@@ -1,14 +1,12 @@
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-require 'miq-logger'
+require 'util/miq-logger'
 require 'tempfile'
 include Log4r
 
 $log = MIQLogger.get_log(nil, __FILE__)
 $log.level = INFO
 
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'MIQExtract'
-require 'miq-process'
+require 'metadata/MIQExtract/MIQExtract'
+require 'util/miq-process'
 
 PROFILE_INIT = false
 PROFILE_EXTRACT = false

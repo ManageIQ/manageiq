@@ -215,7 +215,7 @@ module OpsController::Settings::Ldap
         server = Hash.new
         server[:hostname] = params[:entry][:hostname]
         if params[:entry][:hostname] == ""
-          add_flash(_("%s is required") % "Host Name", :error)
+          add_flash(_("%s is required") % "Hostname", :error)
           render :update do |page|                    # Use JS to update the display
             page.replace("flash_msg_div_entries", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"entries"})
           end

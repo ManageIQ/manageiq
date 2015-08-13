@@ -1,3 +1,4 @@
+//= require miq_global
 //= require jquery
 //= require jquery_overrides
 //= require angular
@@ -19,6 +20,7 @@
 //= require controllers/angular-bootstrap/DatepickerCtrl
 //= require controllers/provider_foreman/provider_foreman_form_controller
 //= require controllers/repository/repository_form_controller
+//= require controllers/retirement/retirement_form_controller
 //= require controllers/schedule/schedule_form_controller
 //= require controllers/ops/diagnostics_database_form_controller
 //= require controllers/ops/log_collection_form_controller
@@ -40,8 +42,9 @@
 //= require miq_jqplot
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap
-//= require bootstrap-ui-components/bootstrap-select.min.js
-//= require bootstrap-hover-dropdown/bootstrap-hover-dropdown.min
+//= require bootstrap-datepicker
+//= require bootstrap-select
+//= require bootstrap-hover-dropdown
 //= require c3/c3
 //= require d3/d3
 //= require patternfly
@@ -52,7 +55,7 @@
 //= require jquery.cookie
 //= require dhtmlx_gpl_36/dhtmlxcommon
 //= require dhtmlx_gpl_36/dhtmlxcontainer
-//= require dynatree_1.2.4/jquery.dynatree
+//= require dynatree/jquery.dynatree
 //= require miq_dynatree
 //= require SlickGrid-2.1/jquery.event.drag-2.2
 //= require SlickGrid-2.1/slick.core

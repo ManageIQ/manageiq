@@ -124,7 +124,6 @@ module ApplicationController::Buttons
       @edit[:new][:display] = params[:display] == "1" if params[:display]
       @edit[:new][:description] = params[:description] if params[:description]
       @edit[:new][:button_image] = params[:button_image].to_i if params[:button_image]
-      @edit[:new][:button_images] = button_build_combo_xml(@resolve[:saved_buttons],@edit[:new][:button_image])
       @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
       visibility_box_edit
     end
@@ -347,12 +346,8 @@ module ApplicationController::Buttons
     end
     group_set_record_vars(@custom_button_set)
 
-    mems = []
-    @edit[:new][:fields].each_with_index do |field,idx|
-      uri = CustomButton.find(field[1])
-      uri.save
-      mems.push(uri)
-    end
+    member_ids = @edit[:new][:fields].collect { |field| field[1] }
+    mems = CustomButton.where(:id => member_ids)
 
     if typ == "update"
       org_mems = @custom_button_set.members   #clean up existing members
@@ -481,10 +476,7 @@ module ApplicationController::Buttons
           #find custombutton set in ab_tree or when adding button under a group
             group_id = x_active_tree == :ab_tree ? nodes[2].split('-').last : nodes[3].split('-').last
             @aset = CustomButtonSet.find_by_id(from_cid(group_id))
-            mems = Array.new
-            @aset.members.each do |m|
-              mems.push(m)
-            end
+            mems = @aset.members
           end
         end
 
@@ -662,8 +654,7 @@ module ApplicationController::Buttons
     @edit[:new][:description] = @custom_button_set.description
     @edit[:new][:button_image] = @custom_button_set[:set_data] && @custom_button_set[:set_data][:button_image] ? @custom_button_set[:set_data][:button_image] : ""
     @edit[:new][:display] = @custom_button_set[:set_data] && @custom_button_set[:set_data].has_key?(:display) ? @custom_button_set[:set_data][:display] : true
-    @edit[:new][:button_images] = button_build_combo_xml(@custom_button_set.members,@edit[:new][:button_image])
-    @edit[:new][:available_fields] = Array.new
+    @edit[:new][:button_images] = build_button_image_options
     @edit[:new][:fields] = Array.new
     button_order = @custom_button_set[:set_data] && @custom_button_set[:set_data][:button_order] ? @custom_button_set[:set_data][:button_order] : nil
     if button_order     # show assigned buttons in order they were saved
@@ -677,10 +668,11 @@ module ApplicationController::Buttons
         @edit[:new][:fields].push([mem.name,mem.id])
       end
     end
-    uri = CustomButton.buttons_for(@sb[:applies_to_class]).sort_by(&:name)
-    uri.each do |u|
-      @edit[:new][:available_fields].push([u.name,u.id]) if u.parent.nil?
-    end
+    @edit[:new][:available_fields] = 
+      CustomButton.buttons_for(@sb[:applies_to_class])
+        .select  { |u| u.parent.nil? }
+        .sort_by(&:name)
+        .collect { |u| [u.name, u.id] }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
   end
@@ -698,7 +690,7 @@ module ApplicationController::Buttons
       @edit[:new][:description] = params[:description] if params[:description]
       @edit[:new][:display] = params[:display] == "1" if params[:display]
       @edit[:new][:button_image] = params[:button_image].to_i if params[:button_image]
-      @edit[:new][:button_images] = button_build_combo_xml(@resolve[:saved_buttons],@edit[:new][:button_image])
+      @edit[:new][:button_images] = build_button_image_options
     end
   end
 
@@ -813,38 +805,8 @@ module ApplicationController::Buttons
     end
   end
 
-  def button_build_combo_xml(buttons,b_id)
-    xml = REXML::Document.load("")
-    xml << REXML::XMLDecl.new(1.0, "UTF-8")
-    # Create root element
-    root = xml.add_element("complete")
-    #creating pulldown with 5 buttons
-    opt = root.add_element("option", {"value"=>0})
-    if b_id.blank? || b_id.to_s == "0"
-      opt.add_attribute("selected","true")
-    end
-    #opt.text = "No Button Assigned"
-    opt.text = "<No Image>"
-    temp = Array.new
-    #   buttons.each do |b|
-    #     temp.push(b.button_id) unless temp.include?(b.button_id)
-    #     temp.delete(@edit[:current][:button_id]) if temp.include?(@edit[:current][:button_id]) #deleting the id that's being edited, so it is displayed in combo pull down
-    #   end
-
-    i = 1
-    15.times{
-      if !temp.include?(i)
-        #opt = root.add_element("option", {"value"=>i,"img_src"=>"/images/custom/custom-#{i}.png"})
-        opt = root.add_element("option", {"value"=>i,"img_src"=>"/images/icons/new/custom-#{i}.png"})
-        if i.to_s == b_id.to_s
-          opt.add_attribute("selected","true")
-        end
-        #opt.text = "Button #{i}"
-      end
-      i+=1
-    }
-
-    return xml.to_s
+  def build_button_image_options
+    (1..15).collect { |i| ["Button Image #{i}", i, {"data-icon" => "product product-custom-#{i}"}] }
   end
 
   # Set form variables for button add/edit
@@ -902,7 +864,7 @@ module ApplicationController::Buttons
     @edit[:new][:instance_name] ||= "Automation"
     @edit[:current] = copy_hash(@edit[:new])
 
-    @edit[:new][:button_images] = @edit[:current][:button_images] = button_build_combo_xml(@resolve[:saved_buttons],@edit[:new][:button_image])
+    @edit[:new][:button_images] = @edit[:current][:button_images] = build_button_image_options
 
     @edit[:visibility_types] = [["<To All>","all"],["<By Role>","role"]]
     #Visibility Box
@@ -936,10 +898,7 @@ module ApplicationController::Buttons
     applies_to_id = @sb[:applies_to_id].to_i if x_active_tree == :sandt_tree
     group.name = "#{@edit[:new][:name]}|#{@edit[:new][:applies_to_class]}|#{to_cid(applies_to_id)}" if !@edit[:new][:name].blank?
     group.set_data ||= Hash.new
-    group.set_data[:button_order] = Array.new     # saves order of buttons/members
-    @edit[:new][:fields].each do |field|
-      group.set_data[:button_order].push(field[1])
-    end
+    group.set_data[:button_order] = @edit[:new][:fields].collect { |field| field[1] }
     if !@edit[:new][:button_image].blank? && @edit[:new][:button_image] != ""
       group.set_data[:button_image] ||= Hash.new
       group.set_data[:button_image] = @edit[:new][:button_image]

@@ -1,6 +1,5 @@
 title: Number of Nodes per CPU Cores
 rpt_group: Custom
-rpt_type: Custom
 priority:
 db: ContainerNode
 cols:

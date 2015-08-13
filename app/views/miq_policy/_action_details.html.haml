@@ -2,14 +2,16 @@
   - if @action
     #action_info_div
       = render :partial => "layouts/flash_msg"
-      %h3=_('Basic Information')
-      %table.style1
+      %h3
+        = _('Basic Information')
+      %form.form-horizontal
         - if @edit
-          - # Don't show description unless in edit mode
+          -# Don't show description unless in edit mode
           - url = url_for(:action => 'action_field_changed', :id => "#{@action.id || 'new'}")
-          %tr
-            %td.key=_('Description')
-            %td
+          .form-group
+            %label.col-md-2.control-label
+              = _('Description')
+            .col-md-8
               - if @edit
                 = text_field_tag("description",
                   @edit[:new][:description],
@@ -18,9 +20,10 @@
                 = javascript_tag(javascript_focus('description'))
               - else
                 = h(@action.description)
-        %tr
-          %td.key=_('Action Type')
-          %td
+        .form-group
+          %label.col-md-2.control-label
+            = _('Action Type')
+          .col-md-8
             - if @edit
               = select_tag('miq_action_type',
                 options_for_select([["<#{_('Choose')}>", nil]] + MiqAction::TYPES.invert.sort, @edit[:new][:action_type]),
@@ -35,11 +38,12 @@
       - else
         - case @action.action_type
         - when "create_snapshot"
-          %h3= _('Snapshot Settings')
+          %h3
+            = _('Snapshot Settings')
           .form-horizontal.static
             .form-group
-              %label.control-label.col-sm-2= _('Name')
-              .col-sm-10
+              %label.control-label.col-md-2= _('Name')
+              .col-md-10
                 %p.form-control-static= h(@action.options[:name])
 
           %hr
@@ -47,116 +51,137 @@
           %h3= _('Snapshot Age Settings')
           .form-horizontal.static
             .form-group
-              %label.control-label.col-sm-2= _('Delete if older than')
-              .col-sm-10
+              %label.control-label.col-md-2= _('Delete if older than')
+              .col-md-10
                 %p.form-control-static= h(SNAPSHOT_AGES[@action.options[:age]])
 
           %hr
         - when "custom_automation"
-          %h3= _('Custom Automation')
-          %table.style1
-            %tr
-              %td{:width => '50%'}
+          %h3
+            = _('Custom Automation')
+          %form.form-horizontal
+            .form-group
+              .col-md-10
                 %fieldset
-                  %h3=_('Object Details')
-                  %table.style1
-                    %tr
-                      %td.key=_('Starting Message')
-                      %td
+                  %h3
+                    = _('Object Details')
+                  %form.form-horizontal
+                    .form-group
+                      %label.control-label.col-md-2
+                        = _('Starting Message')
+                      .col-md-10
                         = h(@action.options[:ae_message])
-                    %tr
-                      %td.key=_('Request')
-                      %td
+                    .form-group
+                      %label.control-label.col-md-2
+                        = _('Request')
+                      .col-md-10
                         = h(@action.options[:ae_request])
                 %fieldset
-                  %h3=_('Attribute/Value Pairs')
-                  %table.style1
+                  %h3
+                    = _('Attribute/Value Pairs')
+                  %form.form-horizontal
                     - if !@action.options[:ae_hash].blank?
                       - @action.options[:ae_hash].each do |k, v|
-                        %tr
-                          %td.key
+                        .form-group
+                          %label.control-label.col-md-2
                             = h(k)
-                          %td
+                          .col-md-10
                             = h(v)
                     - else
-                      =_('No Attribute/Value Pairs found')
+                      = _('No Attribute/Value Pairs found')
           %hr
         - when "email"
-          %h3=_('E-mail Settings')
-          %table.style1
-            %tr
-              %td.key=_('From E-mail Address')
-              %td
+          %h3
+            = _('E-mail Settings')
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _('From E-mail Address')
+              .col-md-10
                 = h(@action.options[:from])
-            %tr
-              %td.key=_('To E-mail Address')
-              %td
+            .form-group
+              %label.control-label.col-md-2
+                = _('To E-mail Address')
+              .col-md-10
                 = h(@action.options[:to])
           %hr
         - when "set_custom_attribute"
-          %h3=_('Set Custom Attribute Settings')
-          %table.style1
-            %tr
-              %td.key=_('Attribute Name')
-              %td
+          %h3
+            = _('Set Custom Attribute Settings')
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _('Attribute Name')
+              .col-md-10
                 = h(@action.options[:attribute])
-            %tr
-              %td.key=_("Value to Set")
-              %td
+            .form-group
+              %label.control-label.col-md-2
+                = _("Value to Set")
+              .col-md-10
                 = h(@action.options[:value])
           %hr
         - when "reconfigure_cpus"
-          %h3=_("Reconfigure CPU")
-          %table.style1
-            %tr
-              %td.key=_("Number of CPU's")
-              %td
+          %h3
+            = _("Reconfigure CPU")
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Number of CPU's")
+              .col-md-10
                 = h(@action.options[:value])
           %hr
         - when "reconfigure_memory"
-          %h3=_("Reconfigure Memory")
-          %table.style1
-            %tr
-              %td.key=_("Memory Size")
-              %td
+          %h3
+            = _("Reconfigure Memory")
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Memory Size")
+              .col-md-10
                 = "#{h(@action.options[:value])} MB"
           %hr
         - when "tag"
-          %h3=_("Applied Tag")
-          %table.style1
-            %tr
-              %td.key=_("Tag")
-              %td
+          %h3
+            = _("Applied Tag")
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Tag")
+              .col-md-10
                 = h(Classification.tag2human(@action.options[:tags].first))
           %hr
         - when "snmp_trap"
-          %h3=_("SNMP Trap")
-          %table.style1
-            %tr
-              %td.key=title_for_host
-              %td
+          %h3
+            = _("SNMP Trap")
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = title_for_host
+              .col-md-10
                 = h(@action.options[:host])
-            %tr
-              %td.key=_("Version")
-              %td
+            .form-group
+              %label.control-label.col-md-2
+                = _("Version")
+              .col-md-10
                 = h(@action.options[:snmp_version])
             - trap_text = @action.options[:snmp_version] == "v1" || @action.options[:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
-            %tr
-              %td.key
+            .form-group
+              %label.control-label.col-md-2
                 = trap_text
-              %td
+              .col-md-10
                 = h(@action.options[:trap_id])
           %hr
-          %h3=_("Variables")
+          %h3
+            = _("Variables")
           - if @action.options.fetch(:variables, []).empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _('No variables configured.')}
           - else
             %table.table.table-striped.table-bordered.table-hover
               %thead
                 %tr
-                  %th=_('Object ID')
-                  %th=_('Type')
-                  %th=_('Value')
+                  %th= _('Object ID')
+                  %th= _('Type')
+                  %th= _('Value')
               %tbody
                 - @action.options[:variables].each do |var|
                   - unless var[:oid].blank?
@@ -169,15 +194,18 @@
                         = h(var[:value])
           %hr
         - when "assign_scan_profile"
-          %h3=_("Analysis Profile")
-          %table.style1
-            %tr
-              %td.key=_("Assigned Analysis Profile")
-              %td
+          %h3
+            = _("Analysis Profile")
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Assigned Analysis Profile")
+              .col-md-10
                 = h(@action.options[:scan_item_set_name])
           %hr
         - when "evaluate_alerts"
-          %h3=_("Alerts to Evaluate")
+          %h3
+            = _("Alerts to Evaluate")
           - if @alert_guids.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts have been selected.")}
           - else
@@ -193,27 +221,33 @@
                       = alert.description
           %hr
         - when "inherit_parent_tags"
-          %h3=_("Inherit Tags")
-          %table.style1
-            %tr
-              %td.key=_("Parent Type")
-              %td
+          %h3
+            = _("Inherit Tags")
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Parent Type")
+              .col-md-10
                 = h(ui_lookup(:table => @action.options[:parent_type]))
-            %tr
-              %td.key=_("Categories")
-              %td= h(@cats)
+            .form-group
+              %label.control-label.col-md-2
+                = _("Categories")
+              .col-md-10
+                = h(@cats)
           %hr
         - when "remove_tags"
-          %h3=_("Remove Tags")
-          %table.style1
-            %tr
-              %td.key=_("Categories")
-              %td
+          %h3
+            = _("Remove Tags")
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Categories")
+              .col-md-10
                 = h(@cats)
           %hr
 
         - if x_active_tree == :action_tree
-          %h3=_("Assigned to Policies")
+          %h3= _("Assigned to Policies")
           - if @action_policies.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Action is not assigned to any Policies.")}
           - else

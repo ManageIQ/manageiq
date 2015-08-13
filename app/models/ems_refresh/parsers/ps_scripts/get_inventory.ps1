@@ -71,7 +71,6 @@ function get_clusters {
  return $results
 }
 
-$file = [System.IO.Path]::GetTempFileName()
 $r = @{}
 $v = Get-SCVirtualMachine -VMMServer "localhost"
 $r["vms"] = get_vms($v)
@@ -89,6 +88,7 @@ $r["clusters"] = get_clusters($c)
 $e = Get-VMMServer -ComputerName "localhost"
 $r["ems"] = $e
 
-$r | Export-CLIXML -path $file -encoding UTF8
-get-content $file
+$file = [System.IO.Path]::GetTempFileName()
+$r | Export-CLIXML -Path $file -Encoding UTF8
+Get-Content $file -ReadCount 0
 Remove-Item -Force $file

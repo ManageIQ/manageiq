@@ -38,7 +38,7 @@
           %td
             - ci = MiqReport.get_col_info(f.last.split("__").first)
             - unless ci[:available_formats].blank?
-              - # need to gsub the period out of the field name for pull down or observe doesn't work, replacing with "__"
+              -# need to gsub the period out of the field name for pull down or observe doesn't work, replacing with "__"
               - opts = [["<#{_('None')}>", "_none_"], ["<#{_('Reset to Default')}>", nil]] + Array(ci[:available_formats].invert).sort_by(&:first)
               = select_tag("fmt_#{f.last.gsub(".", "___")}",
                 options_for_select(opts, @edit[:new][:col_formats][f.last] || ci[:default_format]),

@@ -1,5 +1,5 @@
-require_relative "database_configuration"
-require_relative "service_group"
+require "appliance_console/database_configuration"
+require "appliance_console/service_group"
 
 module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration

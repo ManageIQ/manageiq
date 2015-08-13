@@ -102,6 +102,26 @@ describe HostController do
       expect(response.status).to eq(200)
       expect(response.body).to match(/window.location.href.*host\/show_list.*foobar.*added/)
     end
+
+    it "doesn't crash when trying to validate a new host" do
+      set_user_privileges
+      controller.instance_variable_set(:@breadcrumbs, [])
+      controller.new
+
+      edit = {:new => {:name             => 'foobar',
+                       :hostname         => '127.0.0.1',
+                       :default_userid   => "abc",
+                       :default_password => "def",
+                       :default_verify   => "def",
+                       :user_assigned_os => "linux_generic"},
+              :key => 'host_edit__new',
+              :host_id => nil}
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
+
+      post :create, :button => "validate", :type => "default", :id => "new"
+      expect(response.status).to eq(200)
+    end
   end
 
   context "#set_record_vars" do

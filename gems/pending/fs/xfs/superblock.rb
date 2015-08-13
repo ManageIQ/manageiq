@@ -1,13 +1,12 @@
 # encoding: US-ASCII
 
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
-require 'miq-uuid'
+require 'util/miq-uuid'
 require 'stringio'
 require 'memory_buffer'
-require 'allocation_group'
-require 'inode_map'
-require 'inode'
+require 'fs/xfs/allocation_group'
+require 'fs/xfs/inode_map'
+require 'fs/xfs/inode'
 
 require 'rufus/lru'
 

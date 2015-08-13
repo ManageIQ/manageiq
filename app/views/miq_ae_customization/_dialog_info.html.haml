@@ -1,21 +1,28 @@
-- # if dialogs is selected
+-# if dialogs is selected
 #info_div{:style => display}
-  %h3=_('Basic Information')
-  %table.style1
-    %tbody
-      %tr
-        %td.key=_('Label')
-        %td
-          = h(@record.label)
-      %tr
-        %td.key=_('Description')
-        %td
+  %h3
+    = _('Basic Information')
+  %form.form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Label')
+      .col-md-8
+        = h(@record.label)
+    .form-group
+      %label.col-md-2.control-label
+        = _('Description')
+      .col-md-8
+        %p.form-control-static
           = h(@record.description)
-      %tr
-        %td.key=_('Created On')
-        %td
+    .form-group
+      %label.col-md-2.control-label
+        = _('Created On')
+      .col-md-8
+        %p.form-control-static
           = h(format_timezone(@record.created_at, Time.zone, "gtl"))
-      %tr
-        %td.key=_('Updated On')
-        %td
+    .form-group
+      %label.col-md-2.control-label
+        = _('Updated On')
+      .col-md-8
+        %p.form-control-static
           = h(format_timezone(@record.updated_at, Time.zone, "gtl"))

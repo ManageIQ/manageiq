@@ -19,7 +19,7 @@ class ServiceOrchestration < Service
   def orchestration_stack_status
     return "check_status_failed", "stack has not been deployed" unless stack_ems_ref
 
-    orchestration_manager.stack_status(stack_name, stack_ems_ref)
+    orchestration_manager.stack_status(stack_name, stack_ems_ref, stack_options.slice(:tenant_name))
   rescue MiqException::MiqOrchestrationStatusError => err
     # naming convention requires status to end with "failed"
     return "check_status_failed", err.message
@@ -39,16 +39,20 @@ class ServiceOrchestration < Service
 
   def build_stack_options_from_dialog
     # manager from dialog_options overrides the one copied from service_template
-    manager_from_dialog = OptionConverter.get_manager(options[:dialog] || {})
+    dialog_options = options[:dialog] || {}
+    manager_from_dialog = OptionConverter.get_manager(dialog_options)
     self.orchestration_manager = manager_from_dialog if manager_from_dialog
     raise "orchestration manager was not set" if orchestration_manager.nil?
 
     # orchestration template from dialog_options overrides the one copied from service_template
-    template_from_dialog = OptionConverter.get_template(options[:dialog] || {})
+    template_from_dialog = OptionConverter.get_template(dialog_options)
     self.orchestration_template = template_from_dialog if template_from_dialog
 
-    converter = OptionConverter.get_converter(options[:dialog] || {}, orchestration_manager.class)
-    converter.stack_create_options
+    tenant_name = OptionConverter.get_tenant_name(dialog_options)
+    tenant_option = tenant_name ? {:tenant_name => tenant_name} : {}
+
+    converter = OptionConverter.get_converter(dialog_options, orchestration_manager.class)
+    converter.stack_create_options.merge(tenant_option)
   end
 
   def save_options

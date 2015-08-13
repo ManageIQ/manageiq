@@ -153,6 +153,7 @@ class MiqWorker < ActiveRecord::Base
       if desired > current && enough_resource_to_start_worker?
         (desired - current).times { result[:adds] << self.start_worker.pid }
       elsif desired < current
+        w = w.to_a
         (current - desired).times do
           ww = w.pop
           result[:deletes] << ww.pid
@@ -182,7 +183,7 @@ class MiqWorker < ActiveRecord::Base
 
   def self.corresponding_runner
     @corresponding_runner ||=
-      if const_defined?(:Runner)
+      if const_defined?(:Runner, false)
         self::Runner.name
       else
         settings_name.to_s.camelize

@@ -4,7 +4,7 @@
     %tr
       %td{:align => "center", :valign => "top"}
         - if @record.picture
-          = image_tag("#{@record.picture.url_path}?#{rand(99_999_999).to_s}",
+          = image_tag("#{@record.picture.url_path}?#{rand(99_999_999)}",
                       :style => "width:100px; height:100px;")
         - else
           = image_tag("/images/icons/new/service_template.png",
@@ -12,7 +12,6 @@
         %br
         %br
         #buttons
-          - res_acts = @record.resource_actions.find_all { |ra| ra.action.downcase.eql? "provision" }
           = button_tag(_("Order"),
                        :class   => "btn btn-default",
                        :alt     => t = _("Order this Service"),
@@ -21,13 +20,19 @@
                                                              :id     => @record.id,
                                                              :button => "order")}');")
       %td{:valign => "top"}
-        %table.style1
-          %tr
-            %td.key=_('Name')
-            %td.notwide= @record.name
-          %tr
-            %td.key=_('Description')
-            %td.notwide= @record.description
-          %tr
-            %td.key=_('Long Description')
-            %td.wide= @record.long_description.to_s.html_safe
+        %form.form-horizontal.static
+          .form-group
+            %label.col-md-2.control-label
+              = _('Name')
+            .col-md-8
+              = @record.name
+          .form-group
+            %label.col-md-2.control-label
+              = _('Description')
+            .col-md-8
+              = @record.description
+          .form-group
+            %label.col-md-2.control-label
+              = _('Long Description')
+            .col-md-8
+              = @record.long_description.to_s.html_safe

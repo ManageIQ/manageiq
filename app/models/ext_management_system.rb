@@ -51,6 +51,7 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many :miq_events,             :as => :target, :dependent => :destroy
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_owner_id]}
   validates :hostname,
@@ -125,7 +126,7 @@ class ExtManagementSystem < ActiveRecord::Base
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
         [EmsMicrosoft, 'SCVMM']
       elsif ost.hypervisor.include?(:rhevm)
-        [EmsRedhat, 'RHEV-M']
+        [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
       else
         [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
       end

@@ -1,4 +1,4 @@
-require_relative '../miqservices_client'
+require 'Verbs/miqservices_client'
 
 module SharedOps
 	def SyncMetadata(ost)

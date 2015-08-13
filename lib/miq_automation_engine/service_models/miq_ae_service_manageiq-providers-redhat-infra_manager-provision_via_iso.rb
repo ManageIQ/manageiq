@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Redhat_InfraManager_ProvisionViaIso < MiqAeServiceManageIQ_Providers_Redhat_InfraManager_Provision
+  end
+end

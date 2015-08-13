@@ -16,7 +16,7 @@
               - when 2
                 - objects = !@edit[:new][:tabs][ids.first.to_i][:groups][ids[1].to_i].blank? ? @edit[:new][:tabs][ids.first.to_i][:groups][ids[1].to_i][:fields] : nil
             - if objects.blank?
-              =_("No %s found.") % typ.pluralize.capitalize
+              = _("No %s found.") % typ.pluralize.capitalize
             - else
               - objects.each_with_index do |obj, i|
                 - if obj[:label]

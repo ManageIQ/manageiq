@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
   include_concern 'Automate'
   include_concern 'CiProcessing'
   include_concern 'Compare'
+  include_concern 'CurrentUser'
   include_concern 'Buttons'
   include_concern 'DialogRunner'
   include_concern 'Explorer'
@@ -37,11 +38,12 @@ class ApplicationController < ActionController::Base
   include_concern 'Performance'
   include_concern 'PolicySupport'
   include_concern 'Tags'
+  include_concern 'Tenancy'
   include_concern 'Timelines'
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
-  include_concern 'CurrentUser'
 
+  before_filter :set_session_tenant, :except => [:window_sizes]
   before_filter :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_filter :set_user_time_zone
   before_filter :set_gettext_locale
@@ -316,27 +318,25 @@ class ApplicationController < ActionController::Base
   end
 
   # Save column widths
+  # skip processing when session[:view] is nil. Possible causes:
+  #   - user used back button
+  #   - user has multiple tabs to access the list view screen
   def save_col_widths
     @view = session[:view]
-    #don't do anything if @view is nil, incase user used back button or multiple tabs to access list view screen
-    if @view
-#   cols_key = @view.scoped_association.nil? ? @view.db.to_sym : (@view.db + "-" + @view.scoped_association).to_sym
-    cols_key = create_cols_key(@view)
-      if params[:col_widths]
-        cws = params[:col_widths].split(",")[2..-1]
-        if cws.length > 0
-          if (db_user = current_user)
-            db_user.settings[:col_widths] ||= Hash.new                        # Create the col widths hash, if not there
-            db_user.settings[:col_widths][cols_key] ||= Hash.new        # Create hash for the view db
-            @settings[:col_widths] ||= Hash.new                               # Create the col widths hash, if not there
-            @settings[:col_widths][cols_key] ||= Hash.new             # Create hash for the view db
-            cws.each_with_index do |cw, i|
-              @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i  # Save each cols width
-            end
-            db_user.settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
-            db_user.save
-          end
-        end
+    cws = (params[:col_widths] || "").split(",")[2..-1]
+    if @view && cws.length > 0
+      cols_key = create_cols_key(@view)
+      @settings[:col_widths] ||= {}
+      @settings[:col_widths][cols_key] ||= {}
+      cws.each_with_index do |cw, i|
+        @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
+      end
+
+      if current_user
+        user_settings = current_user.settings || {}
+        user_settings[:col_widths] ||= {}
+        user_settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
+        current_user.update_attributes(:settings => user_settings)
       end
     end
     render :nothing => true                                 # No response needed
@@ -908,17 +908,10 @@ class ApplicationController < ActionController::Base
     return datetime.in_time_zone(tz)
   end
 
+  # if authenticating or past login screen
   def set_user_time_zone
-    # if authenticating or past login screen
-    @tz = if session[:userid].present? || params[:user_name].present?
-            get_timezone_for_userid(session[:userid] || params[:user_name])
-          else
-            MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-          end
-
-    @tz ||= 'UTC'
-
-    session[:user_tz] = Time.zone = @tz
+    user = current_user || (params[:user_name].presence && User.find_by_userid(params[:user_name]))
+    session[:user_tz] = Time.zone = @tz = get_timezone_for_userid(user)
   end
 
   # Initialize the options for server selection
@@ -947,7 +940,7 @@ class ApplicationController < ActionController::Base
   #Gather information for the report accordians
   def build_report_listnav(tree_type="reports",tree="listnav",mode="menu")
     #checking to see if group (used to be role) was selected in menu editor tree, or came in from reports/timeline tree calls
-    group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]).id : session[:group]
+    group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]) : current_group
     @sb[:rpt_menu] = get_reports_menu(group,tree_type,mode)
     if tree == "listnav"
       if tree_type == "timeline"
@@ -960,17 +953,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def get_reports_menu(group=session[:group], tree_type="reports", mode="menu")
+  def get_reports_menu(group = current_group, tree_type = "reports", mode = "menu")
     rptmenu = Array.new
     reports = Array.new
     folders = Array.new
-    rec = MiqGroup.find_by_id(group)
     user = current_user
     @sb[:grp_title] = user.admin_user? ?
       "#{session[:customer_name]} (#{_("All %s") % ui_lookup(:models=>"MiqGroup")})" :
       "#{session[:customer_name]} (#{_("%s") % "#{ui_lookup(:model=>"MiqGroup")}: #{user.current_group.description}"})"
     @data = Array.new
-    if (!rec.settings || !rec.settings[:report_menus] || rec.settings[:report_menus].blank?) || mode == "default"
+    if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       #array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
@@ -1024,14 +1016,14 @@ class ApplicationController < ActionController::Base
 
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       rep = custom.select do |r|
-        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
+        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == current_group.try(:id))
       end.map(&:name).uniq
 
       subfolder.push(rep) unless subfolder.include?(rep)
       temp.push(@custom_folder) unless temp.include?(@custom_folder)
       if tree_type == "timeline"
         temp2 = []
-        rec.settings[:report_menus].each do |menu|
+        group.settings[:report_menus].each do |menu|
           folder_arr = Array.new
           menu_name = menu[0]
           menu[1].each_with_index do |reports,i|
@@ -1048,7 +1040,7 @@ class ApplicationController < ActionController::Base
           end
         end
       else
-        temp2 = rec.settings[:report_menus]
+        temp2 = group.settings[:report_menus]
       end
       rptmenu = temp.concat(temp2)
     end
@@ -1281,7 +1273,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_invalid_session
-    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session)
+    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user)
     reset_session
 
     session[:start_url] = if RequestRefererService.access_whitelisted?(request, controller_name, action_name)
@@ -1352,7 +1344,7 @@ class ApplicationController < ActionController::Base
   # used as a before_filter for controller actions to check that
   # the currently logged in user has rights to perform the requested action
   def check_privileges
-    unless PrivilegeCheckerService.new.valid_session?(session)
+    unless PrivilegeCheckerService.new.valid_session?(session, current_user)
       handle_invalid_session
       return
     end
@@ -1374,132 +1366,6 @@ class ApplicationController < ActionController::Base
 
   def cleanup_action
     session[:lastaction] = @lastaction if @lastaction
-  end
-
-  # get the default column titles from a db table
-  def get_column_titles(db)
-    @col_titles = Array.new
-    @col_names = Array.new
-    db.content_columns.each do | col |
-
-      next if ["guid", "set_type"].include?(col.name)   # Never show GUIDs or Set Types
-
-      # Remove columns based on model
-      if db == Host
-        next if ["settings", "policy_settings", "vmm_buildnumber", "updated_on","guid"].include?(col.name)
-      elsif db == ExtManagementSystem
-        next if ["updated_on"].include?(col.name)
-      elsif db == Service
-        next if ["icon"].include?(col.name)
-      elsif db == Vm
-        next if ["vendor", "format", "version", "description", "config_xml", "busy", "registered", "autostart", "smart"].include?(col.name)
-      elsif db == GuestApplication
-        if Regexp.new(/linux/).match(@vm.os_image_name.downcase)
-          next if ["product_icon", "transform", "product_key"].include?(col.name)
-        end
-      elsif db == SystemService
-        if Regexp.new(/linux/).match(@vm.os_image_name.downcase)
-          next if ["svc_type", "start", "object_name", "depend_on_service", "depend_on_group","typename","display_name"].include?(col.name)
-        else
-          next if ["enable_run_levels", "disable_run_levels","typename"].include?(col.name)
-        end
-      elsif db == Job
-        next if ["guid", "code", "process", "target_class", "type"].include?(col.name)
-      elsif db == MiqPolicySet
-        next if ["created_on", "updated_on"].include?(col.name)
-      elsif db == PolicySet
-        next if ["created_on", "updated_on"].include?(col.name)
-      elsif db == MiqPolicy
-        next if ["file_mtime", "file_type", "created_on", "updated_on", "_policy", "expression", "towhat"].include?(col.name)
-      elsif db == Policy
-        next if ["file_mtime", "file_type", "created_on", "updated_on", "_policy", "expression", "towhat"].include?(col.name)
-      elsif db == MiqEvent
-        next if ["name", "created_on", "updated_on"].include?(col.name)
-      elsif db == ConditionSet
-        next if ["created_on", "updated_on"].include?(col.name)
-      elsif db == Condition
-        next if ["file_mtime", "file_type", "created_on", "updated_on", "expression", "towhat", "modifier"].include?(col.name)
-      elsif db == MiqAction
-        next if ["created_on", "updated_on"].include?(col.name)
-      elsif db == ActionSet
-        next if ["created_on", "updated_on"].include?(col.name)
-      end
-
-      @col_names.push(col.name)   # Move in the column name
-
-      if db == Host               # Replace certain Host columns
-        case col.name
-          when "hostname"
-            @col_titles.push("Host Name")
-          when "ipaddress"
-            @col_titles.push("IP Address")
-          when "vmm_vendor"
-            @col_titles.push("VMM Vendor")
-          when "vmm_version"
-            @col_titles.push("VMM Version")
-          when "vmm_product"
-            @col_titles.push("VMM Product")
-          when "created_on"
-            @col_titles.push("Registered On")
-          when "last_heartbeat"
-            @col_titles.push("Last SmartProxy Heartbeat")
-          when "version"
-            @col_titles.push("SmartProxy Version")
-          else
-            @col_titles.push(col.human_name.titleize)
-        end
-      elsif db == ExtManagementSystem   # Replace certain EMS columns
-        case col.name
-        when "hostname"
-          @col_titles.push("Host Name")
-        when "ipaddress"
-          @col_titles.push("IP Address")
-        when "emstype"
-          @col_titles.push("MS Type")
-        when "created_on"
-          @col_titles.push("Registered On")
-        else
-          @col_titles.push(col.human_name.titleize)
-        end
-      elsif db == Vm                  # Replace certain Vm columns
-        case col.name
-          when "last_extract_time"
-            @col_titles.push("Last Extract Time")
-          when "last_sync_on"
-            @col_titles.push("Last Sync")
-          when "created_on"
-            @col_titles.push("Registered On")
-          when "updated_on"
-            @col_titles.push("Updated On")
-          else
-            @col_titles.push(col.human_name.titleize)
-        end
-      elsif db == Job               # Replace certain Job columns
-        case col.name
-        when "name"
-          @col_titles.push("Task Name")
-        when "userid"
-          @col_titles.push("User")
-        when "created_on"
-          @col_titles.push("Since Started")
-        when "updated_on"
-          @col_titles.push("Since Updated")
-        when "agent_class"          # Will show the actual agent in this column
-          @col_titles.push("SmartProxy")
-        when "agent_state"          # Will show the actual agent in this column
-          @col_titles.push("SmartProxy State")
-        when "agent_message"          # Will show the actual agent in this column
-          @col_titles.push("SmartProxy Message")
-        else
-          @col_titles.push(col.human_name.titleize)
-        end
-      else
-        @col_titles.push(col.human_name.titleize)
-      end
-    end
-
-    return @col_titles, @col_names  # Return the column titles and names
-
   end
 
   # get the sort column that was clicked on, else use the current one
@@ -1728,7 +1594,6 @@ class ApplicationController < ActionController::Base
     else
       prefix = "check" if prefix == nil
       items = Array.new
-      session[:base_miq] = ""
       params.each do |var, val|
         vars = var.to_s.split("_")
         if vars[0]==prefix && val=="1"
@@ -2071,10 +1936,10 @@ class ApplicationController < ActionController::Base
     # Build the view file name
     if suffix
       viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{session[:userrole]}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{current_role}.yaml"
     else
       viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{session[:userrole]}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{current_role}.yaml"
     end
 
     if viewfilerestricted && File.exist?(viewfilerestricted)
@@ -2097,14 +1962,13 @@ class ApplicationController < ActionController::Base
   # RJS code to show tag box effects and replace the main list view area
   def replace_gtl_main_div(options={})
     action_url = options[:action_url] || @lastaction
-    session[:adv_search_on] = false
     return if params[:action] == "button" && @lastaction == "show"
     render :update do |page|                        # Use RJS to update the display
 #     page.visual_effect(:blind_up,"tag_box_div") if session[:applied_tags] != nil && @applied_tags == nil      # Hide div if removing all tags
 #     page.replace_html("tag_box_div", :partial=>"layouts/tag_box")                                             # Replace the tag box contents
 #     page.visual_effect(:blind_down, "tag_box_div")  if session[:applied_tags] == nil && @applied_tags != nil  # Show div if not shown already
       page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")           # Replace the flash message
-      page << "if (typeof miq_toolbars != 'undefined'){";                 # Need to make sure toolbars exist on the screen before resetting buttons
+      page << "if (ManageIQ.toolbars !== null){"; # Make sure toolbars exist on the screen before resetting buttons
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
       page << "}";
       if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
@@ -2116,11 +1980,11 @@ class ApplicationController < ActionController::Base
       end
       if @grid_xml                                  # Replacing a grid
         page << "xml = \"#{j_str(@grid_xml)}\";"            # Set the XML data
-        page << "gtl_list_grid.clearAll(true);"     # Clear grid data, including headers
-        page << "gtl_list_grid.parse(xml);"         # Reload grid from XML
+        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);" # Clear grid data, including headers
+        page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);" # Reload grid from XML
         if @sortcol
           dir = @sortdir ? @sortdir[0..2] : "asc"
-          page << "gtl_list_grid.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
+          page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
         end
         page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
         page.replace("pc_div_1", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>action_url, :db=>@view.db, :headers=>@view.headers})
@@ -2156,24 +2020,38 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  def prov_redirect(typ=nil)
-    assert_privileges(params[:pressed])
-    if typ  # we need to do this check before doing anything to prevent
-            # history being updated
-      vm_ids = find_checked_items.map(&:to_i).uniq
-      if !typ.eql?("clone") && VmOrTemplate.includes_template?(vm_ids)
+  def task_supported?(typ)
+    vm_ids = find_checked_items.map(&:to_i).uniq
+    if %w(migrate publish).include?(typ) && VmOrTemplate.includes_template?(vm_ids)
+      render_flash_not_applicable_to_model(typ)
+      return
+    end
+
+    case typ
+    when "clone"
+      if vm_ids.present? && !VmOrTemplate.cloneable?(vm_ids)
         render_flash_not_applicable_to_model(typ)
         return
       end
-      if typ.eql?("clone") && vm_ids.present? && !VmOrTemplate.cloneable?(vm_ids)
+    when "migrate"
+      if vm_ids.present? && !VmOrTemplate.batch_operation_supported?('migrate', vm_ids)
         render_flash_not_applicable_to_model(typ)
         return
       end
-      if typ.eql?("publish") && VmOrTemplate.where(:id => vm_ids, :type => %w(VmMicrosoft VmRedhat)).exists?
+    when "publish"
+      if VmOrTemplate.where(:id => vm_ids, :type => %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
         render_flash_not_applicable_to_model(typ)
         return
       end
     end
+  end
+
+  def prov_redirect(typ=nil)
+    assert_privileges(params[:pressed])
+    # we need to do this check before doing anything to prevent
+    # history being updated
+    task_supported?(typ) if typ
+    return if performed?
 
     @in_a_form = true
     @redirect_controller = "miq_request"
@@ -2273,7 +2151,6 @@ class ApplicationController < ActionController::Base
     # Get timelines hash, if it is in the session for the running controller
     @tl_options = session["#{controller_name}_tl".to_sym]
 
-    session[:adv_search_on] = false if action_name[0..3] != "adv_" # Turn off advanced search flag if not an adv search action
     session[:host_url] = request.env["HTTP_HOST"]   unless request.env["HTTP_HOST"] == nil
     session[:tab_url] ||= Hash.new
 
@@ -2320,7 +2197,7 @@ class ApplicationController < ActionController::Base
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "container", "container_group", "container_node", "container_service", "ems_container",
-           "container_route", "container_project", "container_replicator"
+           "container_route", "container_project", "container_replicator", "container_image_registry", "container_image"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
@@ -2352,11 +2229,6 @@ class ApplicationController < ActionController::Base
         add_flash(params[:flash_msg])
       end
     end
-
-    # Get customer name
-    session[:customer_name] = get_vmdb_config[:server][:company] if session[:customer_name] == nil
-    session[:vmdb_name] = get_vmdb_config[:server][:name] if session[:vmdb_name] == nil
-    session[:custom_logo] = get_vmdb_config[:server][:custom_logo] if session[:custom_logo] == nil
 
     # Get settings hash from the session
     @settings = session[:settings]

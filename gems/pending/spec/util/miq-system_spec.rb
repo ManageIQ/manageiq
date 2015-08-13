@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. util})))
-require 'miq-system'
+require 'util/miq-system'
 
 describe MiqSystem do
   context ".normalize_df_file_argument" do
@@ -23,6 +21,27 @@ describe MiqSystem do
       file = "/dev/null"
       File.stub(:exist?).with(file).and_return(false)
       expect { described_class.normalize_df_file_argument(file) }.to raise_error(RuntimeError, "file /dev/null does not exist")
+    end
+  end
+
+  context ".disk_usage(file)" do
+    require 'fileutils'
+
+    let(:file) { Pathname.new(__dir__).join("empty file") }
+
+    before do
+      FileUtils.touch(file)
+    end
+
+    after do
+      FileUtils.rm_f(file)
+    end
+
+    it "handles file with a space" do
+      usage_hash = described_class.disk_usage(file).first
+      expect(usage_hash[:filesystem]).to be_kind_of String
+      expect(usage_hash[:filesystem]).to be_present
+      expect(usage_hash[:total_bytes]).to be > 0
     end
   end
 
@@ -119,8 +138,8 @@ EOF
       ]
 
       stub_const("Platform::IMPL", :linux)
-      MiqUtil.should_receive(:runcmd).with("df -T -P -l").and_return(linux_df_output_bytes)
-      MiqUtil.should_receive(:runcmd).with("df -T -P -i -l").and_return(linux_df_output_inodes)
+      AwesomeSpawn.should_receive(:launch).with("df -T -P -l", {}).and_return([linux_df_output_bytes, "", 0])
+      AwesomeSpawn.should_receive(:launch).with("df -T -P -i -l", {}).and_return([linux_df_output_inodes, "", 0])
 
       expect(described_class.disk_usage).to eq(expected)
     end
@@ -186,7 +205,7 @@ EOF
       ]
 
       stub_const("Platform::IMPL", :macosx)
-      MiqUtil.should_receive(:runcmd).and_return(mac_df_output)
+      AwesomeSpawn.should_receive(:launch).and_return([mac_df_output, "", 0])
 
       expect(described_class.disk_usage).to eq(expected)
     end

@@ -19,9 +19,10 @@ class OrchestrationTemplateDialogService
       :label    => "Options",
       :position => position
     ).tap do |dialog_group|
-      add_stack_name_field(dialog_group, 0)
-      add_on_failure_field(dialog_group, 1)
-      add_timeout_field(dialog_group, 2)
+      add_tenant_name_field(dialog_group, 0)
+      add_stack_name_field(dialog_group, 1)
+      add_on_failure_field(dialog_group, 2)
+      add_timeout_field(dialog_group, 3)
     end
   end
 
@@ -32,6 +33,23 @@ class OrchestrationTemplateDialogService
       :position => position
     ).tap do |dialog_group|
       parameter_group.parameters.each_with_index { |param, index| add_parameter_field(param, dialog_group, index) }
+    end
+  end
+
+  def add_tenant_name_field(group, position)
+    group.dialog_fields.build(
+      :type         => "DialogFieldDropDownList",
+      :name         => "tenant_name",
+      :description  => "Tenant where the stack will be deployed",
+      :data_type    => "string",
+      :dynamic      => true,
+      :display      => "edit",
+      :required     => false,
+      :label        => "Tenant",
+      :position     => position,
+      :dialog_group => group
+    ).tap do |dialog_field|
+      dialog_field.resource_action.fqname = "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
     end
   end
 
@@ -108,7 +126,7 @@ class OrchestrationTemplateDialogService
       :display       => "edit",
       :required      => true,
       :values        => dropdown_list,
-      :default_value => parameter.default_value,
+      :default_value => parameter.default_value || dropdown_list.first,
       :label         => parameter.label,
       :description   => parameter.description,
       :position      => position,

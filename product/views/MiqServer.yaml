@@ -49,7 +49,7 @@ headers:
 - Zone
 - Version
 - Build
-- Host Name
+- Hostname
 - IP Address
 - Status
 

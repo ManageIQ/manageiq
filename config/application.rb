@@ -48,7 +48,7 @@ module Vmdb
     # Enable the asset pipeline
     config.assets.enabled = true
 
-    # TODO: Move to asset pipeline enabled by moving assets from vmdb/public to vmdb/app/assets
+    # TODO: Move to asset pipeline enabled by moving assets from public to app/assets
     config.asset_path = "%s"
 
     # Version of your assets, change this if you want to expire all your assets
@@ -67,6 +67,8 @@ module Vmdb
     config.autoload_paths += config.eager_load_paths
     config.autoload_paths << Rails.root.join("app", "models", "aliases")
     config.autoload_paths << Rails.root.join("app", "models", "mixins")
+    config.autoload_paths << Rails.root.join("lib", "miq_automation_engine", "models")
+    config.autoload_paths << Rails.root.join("lib", "miq_automation_engine", "models", "mixins")
     config.autoload_paths << Rails.root.join("app", "controllers", "mixins")
     config.autoload_paths << Rails.root.join("lib")
 
@@ -93,6 +95,7 @@ module Vmdb
 
     config.after_initialize do
       Vmdb::Initializer.init
+      ActiveRecord::Base.connection_pool.release_connection
     end
   end
 end

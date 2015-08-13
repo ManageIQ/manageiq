@@ -2,7 +2,7 @@
 # Toolbar config file
 #
 ---
-:model: ProviderForeman
+:model: ManageIQ::Providers::Foreman::Provider
 :button_groups:
 - :name: provider_vmdb
   :items:

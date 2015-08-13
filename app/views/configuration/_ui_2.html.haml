@@ -3,7 +3,7 @@
 #tab_div
   = form_tag(:action => "update", :id => "config_form") do
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %fieldset
           %h3= _('General')
           %table.style1
@@ -18,12 +18,7 @@
                 %td
                   %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
 
-        - if role_allows(:feature => "service")                        ||
-        -    role_allows(:feature => "catalog_items_accord")           ||
-        -    role_allows(:feature => "catalog_items_view")             ||
-        -    role_allows(:feature => "orchestration_templates_accord") ||
-        -    role_allows(:feature => "vms_instances_filter_accord")    ||
-        -    role_allows(:feature => "templates_images_filter_accord")
+        - if has_any_role?(%w(service catalog_items_accord catalog_items_view orchestration_templates_accord vms_instances_filter_accord templates_images_filter_accord))
           %fieldset
             %h3= _('Services')
             %table.style1
@@ -40,40 +35,27 @@
                     %td
                       %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
         - if get_vmdb_config[:product][:containers]
-          - if role_allows(:feature => "ems_container_show_list")        ||
-          -    role_allows(:feature => "container_group_show_list")      ||
-          -    role_allows(:feature => "container_node_show_list")       ||
-          -    role_allows(:feature => "container_route_show_list")      ||
-          -    role_allows(:feature => "container_project_show_list")    ||
-          -    role_allows(:feature => "container_replicator_show_list") ||
-          -    role_allows(:feature => "container_service_accord")       ||
-          -    role_allows(:feature => "containers_filter_accord")       ||
-          -    role_allows(:feature => "containers_accord")
+          - if has_any_role?(%w(ems_container_show_list container_group_show_list container_node_show_list container_route_show_list container_project_show_list container_replicator_show_list container_image_show_list container_image_registry_show_list container_service_accord containers_filter_accord containers_accord))
             %fieldset
               %h3= _('Containers')
               %table.style1
-                - keys = {:emscontainer        => "ems_container",
-                          :containernode       => "container_node",
-                          :containergroup      => "container_group",
-                          :containerservice    => "container_service",
-                          :containerroute      => "container_route",
-                          :containerproject    => "container_project",
-                          :containerreplicator => "container_replicator",
-                          :container           => "container"}
+                - keys = {:emscontainer           => "ems_container",
+                          :containernode          => "container_node",
+                          :containergroup         => "container_group",
+                          :containerservice       => "container_service",
+                          :containerroute         => "container_route",
+                          :containerproject       => "container_project",
+                          :containerreplicator    => "container_replicator",
+                          :containerimage         => "container_image",
+                          :containerimageregistry => "container_image_registry",
+                          :container              => "container"}
                 - keys.each do |resource, table_view_name|
                   %tr
                     %td.key= ui_lookup(:tables => table_view_name)
                     %td
                       %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
-      .col-sm-12.col-md-12.col-lg-6
-        - if role_allows(:feature => "ems_cloud_show_list")           ||
-        -    role_allows(:feature => "availability_zone_show_list")   ||
-        -    role_allows(:feature => "cloud_tenant_show_list")        ||
-        -    role_allows(:feature => "flavor_show_list")              ||
-        -    role_allows(:feature => "instances_accord")              ||
-        -    role_allows(:feature => "instances_filter_accord")       ||
-        -    role_allows(:feature => "images_filter_accord")          ||
-        -    role_allows(:feature => "orchestration_stack_show_list")
+      .col-md-12.col-lg-6
+        - if has_any_role?(%w(ems_cloud_show_list availability_zone_show_list cloud_tenant_show_list flavor_show_list instances_accord instances_filter_accord images_filter_accord orchestration_stack_show_list))
           %fieldset
             %h3= _('Clouds')
             %table.style1
@@ -97,14 +79,12 @@
                   %td.key= _('Flavors')
                   %td
                     %ul#toolbars= render_view_buttons(:flavor, @edit[:new][:views][:flavor])
-              - if role_allows(:feature => "instances_accord")        ||
-              -    role_allows(:feature => "instances_filter_accord")
+              - if has_any_role?(%w(instances_accord instances_filter_accord))
                 %tr
                   %td.key= _('Instances')
                   %td
                     %ul#toolbars= render_view_buttons(:vmcloud, @edit[:new][:views][:vmcloud])
-              - if role_allows(:feature => "images_accord")        ||
-              -    role_allows(:feature => "images_filter_accord")
+              - if has_any_role?(%w(images_accord images_filter_accord))
                 %tr
                   %td.key= _('Images')
                   %td
@@ -114,15 +94,7 @@
                   %td.key= _('Stacks')
                   %td
                     %ul#toolbars= render_view_buttons(:orchestrationstack, @edit[:new][:views][:orchestrationstack])
-        - if role_allows(:feature => "ems_infra_show_list")     ||
-        -    role_allows(:feature => "ems_cluster_show_list")   ||
-        -    role_allows(:feature => "host_show_list")          ||
-        -    role_allows(:feature => "resource_pool_show_list") ||
-        -    role_allows(:feature => "storage_show_list")       ||
-        -    role_allows(:feature => "repository_show_list")    ||
-        -    role_allows(:feature => "vandt_accord")            ||
-        -    role_allows(:feature => "vms_filter_accord")       ||
-        -    role_allows(:feature => "templates_filter_accord")
+        - if has_any_role?(%w(ems_infra_show_list ems_cluster_show_list host_show_list resource_pool_show_list storage_show_list repository_show_list vandt_accord vms_filter_accord templates_filter_accord))
           %fieldset
             %h3= _('Infrastructure')
             %table.style1
@@ -133,22 +105,20 @@
                     %ul#toolbars= render_view_buttons(:emsinfra, @edit[:new][:views][:emsinfra])
               - if role_allows(:feature => "ems_cluster_show_list")
                 %tr
-                  %td.key=title_for_clusters
+                  %td.key= title_for_clusters
                   %td
                     %ul#toolbars= render_view_buttons(:emscluster, @edit[:new][:views][:emscluster])
               - if role_allows(:feature => "host_show_list")
                 %tr
-                  %td.key=title_for_hosts
+                  %td.key= title_for_hosts
                   %td
                     %ul#toolbars= render_view_buttons(:host, @edit[:new][:views][:host])
-              - if role_allows(:feature => "vandt_accord")      ||
-              -    role_allows(:feature => "vms_filter_accord")
+              - if has_any_role?(%w(vandt_accord vms_filter_accord))
                 %tr
                   %td.key= _('VMs')
                   %td
                     %ul#toolbars= render_view_buttons(:vminfra, @edit[:new][:views][:vminfra])
-              - if role_allows(:feature => "vandt_accord")            ||
-              -    role_allows(:feature => "templates_filter_accord")
+              - if has_any_role?(%w(vandt_accord templates_filter_accord))
                 %tr
                   %td.key= _('Templates')
                   %td

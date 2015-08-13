@@ -1,11 +1,10 @@
 require_relative "../test_helper"
 
-$:.push("#{File.dirname(__FILE__)}/../../discovery/modules/")
-require 'MSVirtualServerProbe'
-require 'VMwareEsxVcProbe'
-require 'VMwareServerProbe'
-require 'MSScvmmProbe'
-require 'WindowsProbe'
+require 'discovery/modules/MSVirtualServerProbe'
+require 'discovery/modules/VMwareEsxVcProbe'
+require 'discovery/modules/VMwareServerProbe'
+require 'discovery/modules/MSScvmmProbe'
+require 'discovery/modules/WindowsProbe'
 
 require 'enumerator'
 require 'ostruct'
@@ -16,8 +15,7 @@ module MiqDiscovery
 	class TestDiscoveryModules < Minitest::Test
 		def setup
 #			unless $log
-#				$:.push("#{File.dirname(__FILE__)}/../../util")
-#				require 'miq-logger'
+#				require 'util/miq-logger'
 #
 #				# Setup console logging
 #				$log = MIQLogger.get_log(nil, nil)

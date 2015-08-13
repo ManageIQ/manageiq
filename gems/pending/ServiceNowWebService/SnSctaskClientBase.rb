@@ -1,9 +1,5 @@
-
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/../util")
-
-require 'SnSctaskService'
-require 'MiqDumpObj'
+require 'ServiceNowWebService/SnSctaskService'
+require 'util/MiqDumpObj'
 
 class SnSctaskClientBase < SnSctaskService
 		

@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'pathname2'
+require 'util/pathname2'
 
 module VMWareDescriptor
 	

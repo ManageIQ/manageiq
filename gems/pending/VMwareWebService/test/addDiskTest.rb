@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require_relative '../../bundler_setup'
-require 'MiqVim'
+require 'VMwareWebService/MiqVim'
 require 'log4r'
 
 if !(ARGV.length == 1 && ARGV[0] =~ /(add|remove)/)

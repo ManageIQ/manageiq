@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../linux")
-require 'LinuxUtils'
+require 'metadata/linux/LinuxUtils'
 
 module HostScanItemFile
   def parse_data(ssu, data, &blk)

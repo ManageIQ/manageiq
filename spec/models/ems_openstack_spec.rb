@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsOpenstack do
+describe ManageIQ::Providers::Openstack::CloudManager do
   context "Class Methods" do
     it("from mixin") { expect(described_class.methods).to include(:auth_url, :raw_connect) }
   end
@@ -49,7 +49,7 @@ describe EmsOpenstack do
   end
 
   it "event_monitor_options" do
-    MiqEventCatcherOpenstack.stub(:worker_settings => {:amqp_port => 1234})
+    ManageIQ::Providers::Openstack::CloudManager::EventCatcher.stub(:worker_settings => {:amqp_port => 1234})
     @ems = FactoryGirl.build(:ems_openstack, :hostname => "host", :ipaddress => "::1")
     require 'openstack/openstack_event_monitor'
 

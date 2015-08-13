@@ -1,12 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/MIQExtract")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'runcmd'
-require 'MIQExtract'
-require 'VmConfig'
+require 'util/runcmd'
+require 'metadata/MIQExtract/MIQExtract'
+require 'metadata/VmConfig/VmConfig'
 require 'platform'
-require 'SharedOps'
+require 'Verbs/implementations/SharedOps'
 
 class MicrosoftOps
     def initialize(ost)

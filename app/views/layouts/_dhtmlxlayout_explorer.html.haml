@@ -18,12 +18,11 @@
 - show_searchbar         ||= nil
 
 - if accords
-  = render :partial => "layouts/dhtmlx_tags", :locals => {:control=>"accordion"}
+  = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "accordion"}
 
 %script{:type => "text/javascript"}
 
   // Following function will be called by miqOnLoad if init_dhtmlx_layout is true
-  init_dhtmlx_layout = true;
   function miqInitDhtmlxLayout() {
   #{layout_name} = new dhtmlXLayoutObject("center_div", "#{layout_pattern}");
 
@@ -93,9 +92,7 @@
     - if (!@in_a_form && @record && ![:diagnostics_tree, :savedreports_tree,:svccat_tree].include?(x_active_tree)) || @collapse_c_cell
       #{layoutb_name}.cells("c").collapse();
 
-    - if (@layout == "chargeback" && (x_node == "root"                                               ||
-    -     x_active_tree == :cb_assignments_tree || (x_active_tree == :cb_reports_tree && !@report))) ||
-    -    ["miq_capacity_bottlenecks"].include?(@layout)
+    - if (@layout == "chargeback" && (x_node == "root" || x_active_tree == :cb_assignments_tree || (x_active_tree == :cb_reports_tree && !@report))) || ["miq_capacity_bottlenecks"].include?(@layout)
       #{layoutb_name}.cells("a").collapse();
 
     - if show_advanced_search?

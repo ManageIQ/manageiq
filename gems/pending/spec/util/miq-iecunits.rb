@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$LOAD_PATH.push(File.expand_path(File.join(File.dirname(__FILE__), %w(.. .. util))))
-require 'miq-iecunits'
+require 'util/miq-iecunits'
 
 describe MiqIECUnits do
   context "#string_to_value" do

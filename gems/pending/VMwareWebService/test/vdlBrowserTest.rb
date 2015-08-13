@@ -1,13 +1,9 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../../VixDiskLib")
-
 require_relative '../../bundler_setup'
 require 'log4r'
 require 'enumerator'
 
-require 'MiqVimBroker'
-# require 'MiqVim'
-require 'VixDiskLib'
+require 'VMwareWebService/MiqVimBroker'
+require 'VixDiskLib/VixDiskLib'
 
 #
 # Formatter to output log messages to the console.

@@ -4,13 +4,13 @@ describe MiqTemplate do
   it ".corresponding_model" do
     described_class.corresponding_model.should == Vm
     ManageIQ::Providers::Vmware::InfraManager::Template.corresponding_model.should == ManageIQ::Providers::Vmware::InfraManager::Vm
-    TemplateRedhat.corresponding_model.should == VmRedhat
+    ManageIQ::Providers::Redhat::InfraManager::Template.corresponding_model.should == ManageIQ::Providers::Redhat::InfraManager::Vm
   end
 
   it ".corresponding_vm_model" do
     described_class.corresponding_vm_model.should == Vm
     ManageIQ::Providers::Vmware::InfraManager::Template.corresponding_vm_model.should == ManageIQ::Providers::Vmware::InfraManager::Vm
-    TemplateRedhat.corresponding_vm_model.should == VmRedhat
+    ManageIQ::Providers::Redhat::InfraManager::Template.corresponding_vm_model.should == ManageIQ::Providers::Redhat::InfraManager::Vm
   end
 
   context "#template=" do
@@ -37,13 +37,13 @@ describe MiqTemplate do
 
   it ".supports_kickstart_provisioning?" do
     ManageIQ::Providers::Amazon::CloudManager::Template.supports_kickstart_provisioning?.should be_false
-    TemplateRedhat.supports_kickstart_provisioning?.should be_true
+    ManageIQ::Providers::Redhat::InfraManager::Template.supports_kickstart_provisioning?.should be_true
     ManageIQ::Providers::Vmware::InfraManager::Template.supports_kickstart_provisioning?.should be_false
   end
 
   it "#supports_kickstart_provisioning?" do
     ManageIQ::Providers::Amazon::CloudManager::Template.new.supports_kickstart_provisioning?.should be_false
-    TemplateRedhat.new.supports_kickstart_provisioning?.should be_true
+    ManageIQ::Providers::Redhat::InfraManager::Template.new.supports_kickstart_provisioning?.should be_true
     ManageIQ::Providers::Vmware::InfraManager::Template.new.supports_kickstart_provisioning?.should be_false
   end
 

@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-erb_for_yaml'
+require 'util/extensions/miq-erb_for_yaml'
 
 describe MiqERBForYAML do
   context "yaml load after ERB#result" do

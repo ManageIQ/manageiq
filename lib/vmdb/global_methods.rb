@@ -72,19 +72,10 @@ module Vmdb
       end
     end
 
-    def get_timezone_for_userid(userid)
-      db_user = User.find_by_userid(userid)
-      if !db_user.blank?
-        if db_user.settings && db_user.settings[:display] && !db_user.settings[:display][:timezone].blank?
-          tz = db_user.settings[:display][:timezone]
-        else
-          tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-        end
-      else    # if userid is not valid
-        tz = "UTC"
-      end
-
-      tz
+    def get_timezone_for_userid(user = nil)
+      user = User.find_by_userid(user) if user.kind_of?(String)
+      tz = user && user.settings.fetch_path(:display, :timezone).presence
+      tz || MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
     end
 
     #returns formatted time in specified timezone and format

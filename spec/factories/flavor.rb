@@ -5,6 +5,6 @@ FactoryGirl.define do
   factory :flavor_amazon, :parent => :flavor, :class => "ManageIQ::Providers::Amazon::CloudManager::Flavor" do
   end
 
-  factory :flavor_openstack, :parent => :flavor, :class => :FlavorOpenstack do
+  factory :flavor_openstack, :parent => :flavor, :class => "ManageIQ::Providers::Openstack::CloudManager::Flavor" do
   end
 end

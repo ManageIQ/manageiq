@@ -1,23 +1,5 @@
-class EmsEvent < ActiveRecord::Base
-  serialize :full_data
-
-  belongs_to :ext_management_system, :foreign_key => :ems_id
-
-  belongs_to :vm_or_template
-  alias src_vm_or_template vm_or_template
-  belongs_to :vm,           :foreign_key => :vm_or_template_id
-  belongs_to :miq_template, :foreign_key => :vm_or_template_id
-  belongs_to :host
-  belongs_to :availability_zone
-  alias src_host host
-
-  belongs_to :dest_vm_or_template, :class_name => "VmOrTemplate"
-  belongs_to :dest_vm,             :class_name => "Vm",          :foreign_key => :dest_vm_or_template_id
-  belongs_to :dest_miq_template,   :class_name => "MiqTemplate", :foreign_key => :dest_vm_or_template_id
-  belongs_to :dest_host,           :class_name => "Host"
-
+class EmsEvent < EventStream
   include_concern 'Automate'
-  include ReportableMixin
 
   virtual_column :group,       :type => :symbol
   virtual_column :group_level, :type => :symbol
@@ -41,19 +23,19 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.task_final_events
-    return VMDB::Config.new('event_handling').config[:task_final_events]
+    VMDB::Config.new('event_handling').config[:task_final_events]
   end
 
   def self.event_groups
-    return VMDB::Config.new('event_handling').config[:event_groups]
+    VMDB::Config.new('event_handling').config[:event_groups]
   end
 
   def self.bottleneck_event_groups
-    return VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
+    VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
   end
 
   def self.filtered_events
-    return VMDB::Config.new('event_handling').config[:filtered_events]
+    VMDB::Config.new('event_handling').config[:filtered_events]
   end
 
   def self.group_and_level(event_type)
@@ -89,15 +71,15 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.add_rhevm(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::Rhevm.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_openstack(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::Openstack.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Openstack::CloudManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_openstack_infra(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::OpenstackInfra.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Openstack::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_amazon(ems_id, event)
@@ -368,8 +350,14 @@ class EmsEvent < ActiveRecord::Base
   # Purging methods
   #
 
+  def self.keep_ems_events
+    VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :keep_ems_events)
+  end
+
   def self.purge_date
-    (VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :keep_ems_events) || 6.months).to_i_with_method.ago.utc
+    keep = keep_ems_events.to_i_with_method.seconds
+    keep = 6.months if keep == 0
+    keep.ago.utc
   end
 
   def self.purge_window_size

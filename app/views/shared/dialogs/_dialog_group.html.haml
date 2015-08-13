@@ -4,7 +4,7 @@
   - unless group.dialog_fields.empty?
     %table.style1
       %tbody
-      - group.dialog_fields.each_with_index do |field, i|
-        = render :partial => "shared/dialogs/dialog_field", 
+      - group.dialog_fields.each do |field|
+        = render :partial => "shared/dialogs/dialog_field",
                  :locals  => {:wf => wf, :field => field}
   %hr

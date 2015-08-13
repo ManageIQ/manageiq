@@ -1,12 +1,8 @@
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/../fs")
-
-require 'rubygems'
 require 'log4r'
 
-require 'MiqNativeMountManager'
-require 'MiqFsUtil'
-require 'MiqPayloadOutputter'
+require 'VolumeManager/MiqNativeMountManager'
+require 'fs/MiqFsUtil'
+require 'WriteVm/MiqPayloadOutputter'
 
 PAYLOAD_SPEC = "/miq_payload.yaml"
 

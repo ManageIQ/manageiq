@@ -514,7 +514,7 @@ class DashboardController < ApplicationController
         page.redirect_to(validation.url)
       end
     when :fail
-      self.current_user = nil
+      clear_current_user
       add_flash(validation.flash_msg || "Error: Authentication failed", :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -580,12 +580,12 @@ class DashboardController < ApplicationController
         status = @report.table.data.length == 0 ? :disabled : :enabled
 
         center_tb_buttons.each do |button_id, typ|
-          page << "center_tb.showItem('#{button_id}');"
+          page << "ManageIQ.toolbars.center_tb.obj.showItem('#{button_id}');"
           page << tl_toggle_button_enablement(button_id, status, typ)
         end
       else
         center_tb_buttons.keys.each do |button_id|
-          page << "center_tb.hideItem('#{button_id}');"
+          page << "ManageIQ.toolbars.center_tb.obj.hideItem('#{button_id}');"
         end
       end
       page.replace("tl_div", :partial => "dashboard/tl_detail")
@@ -594,47 +594,9 @@ class DashboardController < ApplicationController
     end
   end
 
-  def getTLdata
-    if session[:tl_xml_blob_id] != nil
-      blob = BinaryBlob.find(session[:tl_xml_blob_id])
-      render :xml=>blob.binary
-      blob.destroy
-      session[:tl_xml_blob_id] = session[:tl_position] = nil
-    else
-      tl_xml = MiqXml.load("<data/>")
-      #   tl_event = tl_xml.root.add_element("event", {
-      #                                                   "start"=>"May 16 2007 08:17:23 GMT",
-      #                                                   "title"=>"Dans-XP-VM",
-      #                                                   "image"=>"images/icons/20/20-VMware.png",
-      #                                                   "text"=>"VM &lt;a href=\"/vm/guest_applications/3\"&gt;Dan-XP-VM&lt;/a&gt; cloned to &lt;a href=\"/vm/guest_applications/1\"&gt;WinXP Testcase&lt;/a&gt;."
-      #                                                   })
-      Vm.all.each do | vm |
-        event = tl_xml.root.add_element("event", {
-#           START of TIMELINE TIMEZONE Code
-            "start"=>format_timezone(vm.created_on,Time.zone,"tl"),
-#           "start"=>vm.created_on,
-#           END of TIMELINE TIMEZONE Code
-            #                                       "end" => Time.now,
-            #                                       "isDuration" => "true",
-            "title"=>vm.name.length < 25 ? vm.name : vm.name[0..22] + "...",
-            #                                       "title"=>vm.name,
-            #"image"=>"/images/icons/20/20-#{vm.vendor.downcase}.png"
-            "icon"=>"/images/icons/timeline/vendor-#{vm.vendor.downcase}.png",
-            "color"=>"blue",
-            #"image"=>"/images/icons/64/64-vendor-#{vm.vendor.downcase}.png"
-            "image"=>"/images/icons/new/os-#{vm.os_image_name.downcase}.png"
-            #                                       "text"=>"VM &lt;a href='/vm/guest_applications/#{vm.id}'&gt;#{h(vm.name)}&lt;/a&gt; discovered at location #{h(vm.location)}&gt;."
-          })
-        #     event.text = "VM #{vm.name} discovered on #{vm.created_on}"
-        event.text = "VM &lt;a href='/vm/guest_applications/#{vm.id}'&gt;#{vm.name}&lt;/a&gt; discovered at location #{vm.location}"
-      end
-      render :xml=>tl_xml.to_s
-    end
-  end
-
   def logout
     current_user.try(:logoff)
-    self.current_user = nil
+    clear_current_user
 
     session.clear
     session[:auto_login] = false
@@ -648,7 +610,7 @@ class DashboardController < ApplicationController
     db_user.update_attributes(:current_group => MiqGroup.find_by_id(params[:to_group]))
 
     # Rebuild the session
-    session_reset(db_user)
+    session_reset
     session_init(db_user)
     session[:group_changed] = true
     url = start_url_for_user(nil) || url_for(:controller => params[:controller], :action => 'show')
@@ -662,10 +624,10 @@ class DashboardController < ApplicationController
   def tl_toggle_button_enablement(button_id, enablement, typ)
     if enablement == :enabled
       tooltip = "Download this Timeline data in #{typ} format"
-      "center_tb.enableItem('#{button_id}'); center_tb.setItemToolTip('#{button_id}', '#{tooltip}');"
+      "ManageIQ.toolbars.center_tb.obj.enableItem('#{button_id}'); ManageIQ.toolbars.center_tb.obj.setItemToolTip('#{button_id}', '#{tooltip}');"
     else
       tooltip = 'No records found for this timeline'
-      "center_tb.disableItem('#{button_id}'); center_tb.setItemToolTip('#{button_id}', '#{tooltip}');"
+      "ManageIQ.toolbars.center_tb.obj.disableItem('#{button_id}'); ManageIQ.toolbars.center_tb.obj.setItemToolTip('#{button_id}', '#{tooltip}');"
     end
   end
   helper_method(:tl_toggle_button_enablement)
@@ -693,8 +655,7 @@ class DashboardController < ApplicationController
     @settings[:display][:startpage]
   end
 
-  # Reset and set the user vars in the session object
-  def session_reset(db_user)  # User record
+  def session_reset
     # Clear session hash just to be sure nothing is left (but copy over some fields)
     winh    = session[:winH]
     winw    = session[:winW]
@@ -706,19 +667,16 @@ class DashboardController < ApplicationController
     session[:winW]     = winw
     session['referer'] = referer
 
-    self.current_user = db_user
-
     # Clear instance vars that end up in the session
     @sb = @edit = @view = @settings = @lastaction = @perf_options = @assign = nil
     @current_page = @search_text = @detail_sortcol = @detail_sortdir = @exp_key = nil
     @server_options = @tl_options = @pp_choices = @panels = @breadcrumbs = nil
-
-    db_user && db_user.userid &&
-      db_user.current_group && db_user.current_group.miq_user_role && true
   end
 
   # Initialize session hash variables for the logged in user
   def session_init(db_user)
+    self.current_user = db_user
+
     # Load settings for this user, if they exist
     @settings = copy_hash(DEFAULT_SETTINGS)             # Start with defaults
     unless db_user == nil || db_user.settings == nil    # If the user has saved settings

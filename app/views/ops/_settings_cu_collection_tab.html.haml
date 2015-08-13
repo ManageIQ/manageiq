@@ -1,33 +1,32 @@
 - if @sb[:active_tab] == "settings_cu_collection"
-  - url = url_for(:action=>'cu_collection_field_changed')
+  - url = url_for(:action => 'cu_collection_field_changed')
   - clusters_title = title_for_clusters
-  = form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do
+  = form_tag({:action => 'cu_collection_update'}, :id => "config_form") do
     = render :partial => "layouts/flash_msg"
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %fieldset
-          %h3=clusters_title
+          %h3= clusters_title
           %table.style1
             %tr
-              %td.key=_("Collect for All %s") % clusters_title
+              %td.key= _("Collect for All %s") % clusters_title
               %td
-                = check_box_tag("all_clusters", value="1",
-                  checked=@edit[:new][:all_clusters],
-                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                  "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                = check_box_tag("all_clusters", "1", @edit[:new][:all_clusters],
+                  "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
+                  "data-miq_observe_checkbox" => {:url => url}.to_json)
           .note
             Note:
-            %b=_("Collect for All %s must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % clusters_title
+            %b= _("Collect for All %s must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % clusters_title
           #clusters_div{:style => "display:#{@edit[:new][:all_clusters] ? "none" : ""}"}
             - cluster_title = title_for_cluster
             - if @edit[:new][:clusters].blank? && @edit[:new][:non_cl_hosts].blank?
-              =_("No %s found in the current region.") % clusters_title
+              = _("No %s found in the current region.") % clusters_title
             - else
               %br/
-              %b=_("Enable Collection by %s") % cluster_title
+              %b= _("Enable Collection by %s") % cluster_title
               %br/
               %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheck_CU_All(this,'#{session[:tree_name]}');", :type => "checkbox"}/
-              =(_("Check All"))
+              = _("Check All")
               #clhosts_treebox{:style => "color:#000"}
               = render(:partial => "layouts/dynatree",
                   :locals => {:tree_id => "clhosts_treebox",
@@ -39,27 +38,26 @@
                   :exp_tree => true,
                   :checkboxes => true})
               %br/
-              .note=_("VM data will be collected for VMs under selected %s only. Data is collected for a %s and all of its %s when at least one %s is selected.") % [title_for_hosts, cluster_title, title_for_hosts, title_for_host]
-      .col-sm-12.col-md-12.col-lg-6
+              .note= _("VM data will be collected for VMs under selected %s only. Data is collected for a %s and all of its %s when at least one %s is selected.") % [title_for_hosts, cluster_title, title_for_hosts, title_for_host]
+      .col-md-12.col-lg-6
         %fieldset
-          %h3= ui_lookup(:tables=>"storages")
+          %h3= ui_lookup(:tables => "storages")
           %table.style1
             %tr
-              %td.key=_("Collect for All Datastores")
+              %td.key= _("Collect for All Datastores")
               %td
-                = check_box_tag("all_storages", value="1",
-                  checked=@edit[:new][:all_storages],
-                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                  "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                = check_box_tag("all_storages", "1", @edit[:new][:all_storages],
+                  "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
+                  "data-miq_observe_checkbox" => {:url => url}.to_json)
           #storages_div{:style => "display:#{@edit[:new][:all_storages] ? "none" : ""}"}
             - if @edit[:new][:storages].blank?
-              =_("No Datastores found in the current region.")
+              = _("No Datastores found in the current region.")
             - else
               %br/
-              %b=_("Enable Collection by Datastore")
+              %b= _("Enable Collection by Datastore")
               %br/
               %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheck_CU_All(this,'#{session[:ds_tree_name]}');", :type => "checkbox"}/
-              =(_("Check All"))
+              = _("Check All")
               #cu_datastore_treebox{:style => "color:#000"}
               = render(:partial => "layouts/dynatree",
                   :locals => {:tree_id => "cu_datastore_treebox",

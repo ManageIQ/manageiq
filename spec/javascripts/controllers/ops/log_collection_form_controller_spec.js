@@ -1,7 +1,7 @@
 describe('logCollectionFormController', function() {
   var $scope, $controller, $httpBackend, miqService;
 
-  beforeEach(module('miqAngularApplication'));
+  beforeEach(module('ManageIQ.angularApplication'));
 
   beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, _miqService_) {
 

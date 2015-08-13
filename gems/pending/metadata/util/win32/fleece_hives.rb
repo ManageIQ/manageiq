@@ -1,10 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-
-require 'miq-xml'
+require 'util/miq-xml'
 require 'digest/md5'
-require 'remote-registry'
+require 'metadata/util/win32/remote-registry'
 require 'enumerator'
-require 'miq-encode'
+require 'util/miq-encode'
 
 class FleeceHives
   def self.collect_hive_data(xmlNode, hiveName, regHnd, xmlCol, fs)

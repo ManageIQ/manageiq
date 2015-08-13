@@ -39,7 +39,7 @@ module ApplicationController::MiqRequestMethods
           end
         end
         if @edit.fetch_path(:new, :schedule_type, 0) == "schedule"
-          page << "miq_cal_dateFrom = new Date(#{@timezone_offset});"
+          page << "ManageIQ.calendar.calDateFrom = new Date(#{@timezone_offset});"
           page << "miqBuildCalendar();"
         end
         if changed != session[:changed]
@@ -187,7 +187,7 @@ module ApplicationController::MiqRequestMethods
       @layout = layout_from_tab_name(params[:org_controller])
       if params[:commit] == "Upload" && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == "Sysprep Answer File"
         upload_sysprep_file
-        @tabactive = "customize_div"
+        @tabactive = "customize"
       else
         if params[:req_id]
           prov_set_form_vars(MiqRequest.find(params[:req_id]))    # Set vars from existing request
@@ -197,7 +197,7 @@ module ApplicationController::MiqRequestMethods
           session[:changed] = true                                # Turn on the submit button
         end
         @edit[:explorer] = true if @explorer
-        @tabactive = "#{@edit[:new][:current_tab_key]}_div"
+        @tabactive = @edit[:new][:current_tab_key]
       end
       drop_breadcrumb( {:name=>"#{params[:req_id] ? "Edit" : "Add"} #{@edit[:prov_type]} Request", :url=>"/vm/provision"} )
       @in_a_form = true
@@ -485,7 +485,7 @@ module ApplicationController::MiqRequestMethods
   def dialog_partial_for_workflow
     case (@edit || @options).try(:[], :wf)
     when MiqProvisionVirtWorkflow                    then "shared/views/prov_dialog"
-    when MiqProvisionConfiguredSystemForemanWorkflow then "prov_configured_system_foreman_dialog"
+    when ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow then "prov_configured_system_foreman_dialog"
     when MiqHostProvisionWorkflow                    then "prov_host_dialog"
     when VmMigrateWorkflow                           then "prov_vm_migrate_dialog"
     end
@@ -520,7 +520,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def tag_symbol_for_workflow
-    (@edit || @options)[:wf].tag_symbol
+    (@edit || @options)[:wf].try(:tag_symbol) || :vm_tags
   end
 
   def validate_fields
@@ -818,7 +818,7 @@ module ApplicationController::MiqRequestMethods
         @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
       end
 
-      if @edit[:wf].kind_of?(MiqProvisionConfiguredSystemForemanWorkflow)
+      if @edit[:wf].kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow)
         # BD TODO
       else
         @edit[:ds_sortdir] ||= "DESC"
@@ -919,7 +919,7 @@ module ApplicationController::MiqRequestMethods
     elsif @edit[:org_controller] == "configured_system"
       @edit[:prov_type] = "ConfiguredSystem"
       @edit[:new][:src_configured_system_ids] = params[:prov_id].kind_of?(Array) ? params[:prov_id] : [params[:prov_id]]
-      wf_type = MiqProvisionConfiguredSystemForemanWorkflow
+      wf_type = ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow
     else
       @edit[:prov_type] = "Host"
       if @edit[:new].empty?

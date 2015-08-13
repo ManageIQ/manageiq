@@ -39,17 +39,17 @@
     - if @edit[:new][:graph_type][0..2] == "Pie"
       %row
         %null
-        - for i in 1..@edit[:new][:graph_count].to_i
+        - @edit[:new][:graph_count].to_i.times do |i|
           %string
-            = _("OS %s") % i
+            = _("OS %s") % (i + 1)
         - if @edit[:new][:graph_other]
           %string
             = _("Other")
       %row
         %null
-        - for i in 1..@edit[:new][:graph_count].to_i
+        - @edit[:new][:graph_count].to_i.times do |i|
           %number
-            = @edit[:new][:graph_count].to_i + 2 - i
+            = @edit[:new][:graph_count].to_i + 1 - i
         - if @edit[:new][:graph_other]
           %number
             = (rand(@edit[:new][:graph_count].to_i) + 1).to_s
@@ -64,18 +64,18 @@
           = _("Vendor C")
         %string
           = _("Vendor D")
-      - for i in 1..@edit[:new][:graph_count].to_i
+      - @edit[:new][:graph_count].to_i.times do |i|
         %row
           %string
-            = _("OS %s") % i
+            = _("OS %s") % (i + 1)
           %number
-            = ((rand(5) + 1) * ((@edit[:new][:graph_count].to_i + 1) - i)).to_s
+            = ((rand(5) + 1) * (@edit[:new][:graph_count].to_i - i)).to_s
           %number
-            = ((rand(5) + 1) * ((@edit[:new][:graph_count].to_i + 1) - i)).to_s
+            = ((rand(5) + 1) * (@edit[:new][:graph_count].to_i - i)).to_s
           %number
-            = ((rand(5) + 1) * ((@edit[:new][:graph_count].to_i + 1) - i)).to_s
+            = ((rand(5) + 1) * (@edit[:new][:graph_count].to_i - i)).to_s
           %number
-            = ((rand(5) + 1) * ((@edit[:new][:graph_count].to_i + 1) - i)).to_s
+            = ((rand(5) + 1) * (@edit[:new][:graph_count].to_i - i)).to_s
     - if @edit[:new][:graph_other]
       %row
         %string

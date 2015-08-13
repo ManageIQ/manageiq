@@ -6,18 +6,18 @@
     %div{:style => "display:none;"}
       = render(:partial => "provider_foreman/#{tree}")
 
-  - # Custom left cell div for compare options to use
+  -# Custom left cell div for compare options to use
   = render :partial => "layouts/custom_left_cell"
 
 
 - content_for :accords do
-  - # Create the explorer dhtmlx layout/accordion JS objects
+  -# Create the explorer dhtmlx layout/accordion JS objects
   = render(:partial => "layouts/dhtmlxlayout_explorer",
     :locals => {:accords                => @accords,
                 :active_accord          => @sb[:active_accord],
                 :accord_select_function => "miqAccordProviderForemanSelect"})
 
-- # These are the initial divs that will go inside center_cell_div
+-# These are the initial divs that will go inside center_cell_div
 - if @configuration_profile_record
   #main_div.main_div
     - @pages = nil if @sb[:active_tab] == 'summary'

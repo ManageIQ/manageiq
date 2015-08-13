@@ -4,10 +4,7 @@ describe MiqProvision do
   context "A new provision request," do
     before(:each) do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
-      User.any_instance.stub(:role).and_return("admin")
-      @user     = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @approver = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
-      UiTaskSet.stub(:find_by_name).and_return(@approver)
+      @admin = FactoryGirl.create(:user_admin)
       @target_vm_name = 'clone test'
       @options = {
         :pass          => 1,
@@ -27,9 +24,9 @@ describe MiqProvision do
 
       context "with a valid userid and source vm," do
         before(:each) do
-          @pr = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id)
+          @pr = FactoryGirl.create(:miq_provision_request, :userid => @admin.userid, :src_vm_id => @vm_template.id)
           @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
-          @vm_prov = FactoryGirl.create(:miq_provision, :userid => @user.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
+          @vm_prov = FactoryGirl.create(:miq_provision, :userid => @admin.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
         end
 
         it "should get values out of an arrays in the options hash" do
@@ -43,7 +40,7 @@ describe MiqProvision do
         it "should return a user object" do
           user = @vm_prov.get_user
           user.should be_kind_of(User)
-          user.should == @user
+          user.should == @admin
         end
 
         it "should return a description" do

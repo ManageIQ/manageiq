@@ -12,7 +12,7 @@
         %td= @infra.hosts.count
       - @count_parameters.each do |parameter|
         %tr
-          %td.key=parameter.name
+          %td.key= parameter.name
           %td= text_field_tag(parameter.name, parameter.value, :maxlength => 5)
   %table{:width => "100%"}
     %tr

@@ -1,15 +1,15 @@
-- save_text            ||= _("Save Changes")
-- save_confirm_text    ||= nil
+- save_text ||= _("Save Changes")
+- save_confirm_text ||= nil
 - show_validate_button ||= nil
-- action_url           ||= "update"
-- record_id            ||= nil
-- noreset              ||= nil
-- align                ||= "right"
-- ajax_buttons         ||= false
-- serialize            ||= false
-- continue_button      ||= nil
+- action_url ||= "update"
+- record_id ||= nil
+- noreset ||= nil
+- align ||= "right"
+- ajax_buttons ||= false
+- serialize ||= false
+- continue_button ||= nil
 - show_cancel_button = %w(user_edit user_update menu_tree zone_edit zone_update ldap_seq_edit rbac_group_edit rbac_group_update rbac_group_field_changed category_edit category_update timeprofile_edit timeprofile_update timeprofile_copy)
-- force_cancel_button  ||= false
+- force_cancel_button ||= false
 &nbsp;
 %table{:width => "100%"}
   %tr
@@ -92,7 +92,7 @@
                          :onclick => "miqAjaxButton('#{url_for(:action => "menu_update",
                                                                :button => "default")}');")
           - else
-            - if @layout == "miq_ae_class" || (ajax_buttons  && params[:action] != "tagging_edit")
+            - if @layout == "miq_ae_class" || (ajax_buttons && params[:action] != "tagging_edit")
               = button_tag(_("Reset"),
                            :class   => 'btn btn-default',
                            :alt     => t = _("Reset Changes"),

@@ -33,7 +33,7 @@
       %table{:width => "100%"}
         %tr
           %td{:align => "right"}
-            -t = _("Generate Report preview")
+            - t = _("Generate Report preview")
             = link_to(_("Load"),
               {:action => "show_preview",  :id => "#{@edit[:rpt_id] || 'new'}"},
               :class                => "btn btn-primary",

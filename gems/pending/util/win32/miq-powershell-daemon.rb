@@ -1,8 +1,6 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'miq-powershell'
-require 'miq-process'
-require 'miq-password'
+require 'util/win32/miq-powershell'
+require 'util/miq-process'
+require 'util/miq-password'
 
 module MiqPowerShell
   class Daemon

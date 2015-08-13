@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require_relative '../../bundler_setup'
-require 'MiqVimBroker'
+require 'VMwareWebService/MiqVimBroker'
 
 Connections = [
 	{ :server => '', :user => '', :passwd => '' },

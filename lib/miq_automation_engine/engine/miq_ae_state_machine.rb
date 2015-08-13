@@ -21,20 +21,21 @@ module MiqAeEngine
     end
 
     def enforce_state_maxima(f)
-      now = Time.zone.now.utc
+      enforce_max_retries(f)
+      enforce_max_time(f)
+    end
 
-      unless f['max_retries'].blank?
-        if @workspace.root['ae_state_retries'].to_i > f['max_retries'].to_i
-          raise "number of retries <#{@workspace.root['ae_state_retries']}> exceeded maximum of <#{f['max_retries']}>"
-        end
-      end
+    def enforce_max_retries(f)
+      return if f['max_retries'].blank?
+      return if f['max_retries'].to_i >= @workspace.root['ae_state_retries'].to_i
+      raise "number of retries <#{@workspace.root['ae_state_retries']}> exceeded maximum of <#{f['max_retries']}>"
+    end
 
-      unless f['max_time'].blank?
-        ae_state_started = Time.zone.parse(@workspace.root['ae_state_started'])
-        if ae_state_started + f['max_time'].to_i_with_method <= now
-          raise "time in state <#{now - ae_state_started} seconds> exceeded maximum of <#{f['max_time']}>"
-        end
-      end
+    def enforce_max_time(f)
+      return if f['max_time'].blank?
+      lapsed = Time.zone.now.utc - Time.zone.parse(@workspace.root['ae_state_started'])
+      return if f['max_time'].to_i_with_method > lapsed
+      raise "time in state <#{lapsed} seconds> exceeded maximum of <#{f['max_time']}>"
     end
 
     def process_state_step_with_error_handling(f, step = nil)

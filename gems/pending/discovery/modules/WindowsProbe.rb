@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'PortScan'
+require 'discovery/PortScan'
 
 # Ports:
 #        135  - Microsoft Remote Procedure Call (RPC)

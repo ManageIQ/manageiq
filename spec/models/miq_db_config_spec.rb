@@ -250,4 +250,34 @@ EOF
       described_class.raw_config.fetch_path('production', 'host').should == "abc"
     end
   end
+
+  context "#verify_config" do
+    let(:current) { described_class.new(ActiveRecord::Base.connection_pool.spec.config.merge(:name => "internal")) }
+
+    it "not from_save, checks connectivity only by default" do
+      current.options[:database] = "non_existing_database"
+      expect(current.verify_config).to eq false
+    end
+
+    it "restores ActiveRecord::Base configuration after" do
+      before = ActiveRecord::Base.connection.current_database
+      current.options[:database] = "non_existing_database"
+      current.verify_config
+
+      expect(ActiveRecord::Base.connection.current_database).to eq before
+    end
+
+    it "from_save, is true at latest schema" do
+      expect(current.verify_config(true)).to eq true
+    end
+
+    it "from_save, is false and captures any error messages" do
+      current.options[:database] = "non_existing_database"
+      expect(current.verify_config(true)).to eq false
+
+      error = current.errors.first
+      expect(error[0]).to eq :configuration
+      expect(error[1]).to match(/non_existing_database.+does not exist/)
+    end
+  end
 end

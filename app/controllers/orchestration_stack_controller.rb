@@ -106,10 +106,16 @@ class OrchestrationStackController < ApplicationController
     else
       params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
       @refresh_div = "main_div" # Default div for button.rjs to refresh
-      orchestration_stack_delete if params[:pressed] == "orchestration_stack_delete"
-      retirevms              if params[:pressed] == "orchestration_stack_retire"
-      retirevms_now          if params[:pressed] == "orchestration_stack_retire_now"
-      tag(OrchestrationStack)    if params[:pressed] == "orchestration_stack_tag"
+      case params[:pressed]
+      when "orchestration_stack_delete"
+        orchestration_stack_delete
+      when "orchestration_stack_retire"
+        orchestration_stack_retire
+      when "orchestration_stack_retire_now"
+        orchestration_stack_retire_now
+      when "orchestration_stack_tag"
+        tag(OrchestrationStack)
+      end
       return if %w(orchestration_stack_retire orchestration_stack_tag).include?(params[:pressed]) &&
                 @flash_array.nil? # Tag screen showing, so return
     end
@@ -154,7 +160,7 @@ class OrchestrationStackController < ApplicationController
         replace_gtl_main_div
       else
         render :update do |page|                    # Use RJS to update the display
-          if @refresh_partial.nil?
+          unless @refresh_partial.nil?
             if @refresh_div == "flash_msg_div"
               page.replace(@refresh_div, :partial => @refresh_partial)
             else
@@ -168,7 +174,7 @@ class OrchestrationStackController < ApplicationController
               end
             end
           end
-          page.replace_html(@refresh_div, :action => @render_action) if @render_action.nil?
+          page.replace_html(@refresh_div, :action => @render_action) unless @render_action.nil?
         end
       end
     end

@@ -27,8 +27,9 @@ module MiqPolicy::ImportExport
           actionsHash[akey] = MiqAction.import_from_hash(e["MiqAction"], options) unless actionsHash.has_key?(akey)
         end
 
-        ekey = e["MiqEvent"]["name"]
-        eventsHash[ekey] = MiqEvent.import_from_hash(  e["MiqEvent"],  options) unless eventsHash.has_key?(ekey)
+        event = e["MiqEventDefinition"] || e["MiqEvent"]
+        ekey = event["name"]
+        eventsHash[ekey] = MiqEventDefinition.import_from_hash(event,  options) unless eventsHash.has_key?(ekey)
 
         e2a[ekey] = [] unless e2a.has_key?(ekey)
         e2a[ekey].push([akey, opts])
@@ -86,7 +87,7 @@ module MiqPolicy::ImportExport
         events.each { |event|
           e, a = event
           if a.empty?
-            p.add_event(e) unless p.miq_events.include?(e)
+            p.add_event(e) unless p.miq_event_definitions.include?(e)
           else
             p.replace_actions_for_event(e, a)
           end

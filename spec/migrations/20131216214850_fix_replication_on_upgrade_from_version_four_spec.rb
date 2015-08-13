@@ -44,8 +44,8 @@ describe FixReplicationOnUpgradeFromVersionFour do
         # them unless we have replication set up, which is not yet possible in a
         # migration spec.
         require 'awesome_spawn'
-        AwesomeSpawn.should_receive(:run!).with("bin/rake evm:dbsync:prepare_replication_without_sync")
-        AwesomeSpawn.should_receive(:run!).with("bin/rake evm:dbsync:uninstall drift_states miq_cim_derived_metrics miq_request_tasks miq_storage_metrics storages_vms_and_templates")
+        AwesomeSpawn.should_receive(:run!).with("bin/rake evm:db:environmentlegacykey evm:dbsync:prepare_replication_without_sync")
+        AwesomeSpawn.should_receive(:run!).with("bin/rake evm:db:environmentlegacykey evm:dbsync:uninstall drift_states miq_cim_derived_metrics miq_request_tasks miq_storage_metrics storages_vms_and_templates")
       end
 
       it "for renamed tables in rr_pending_changes" do

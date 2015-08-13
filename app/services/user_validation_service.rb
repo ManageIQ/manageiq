@@ -4,7 +4,7 @@ class UserValidationService
   end
 
   extend Forwardable
-  delegate [:session, :url_for, :initiate_wait_for_task, :session_init, :current_userid=,
+  delegate [:session, :url_for, :initiate_wait_for_task, :session_init, :clear_current_user,
             :session_reset, :get_vmdb_config, :start_url_for_user] => :@controller
 
   ValidateResult = Struct.new(:result, :flash_msg, :url)
@@ -21,7 +21,7 @@ class UserValidationService
     end
 
     unless user[:name]
-      self.current_userid = nil
+      clear_current_user
       return ValidateResult.new(:fail, @flash_msg ||= "Error: Authentication failed")
     end
 
@@ -33,27 +33,28 @@ class UserValidationService
       end
     end
 
+    start_url = session[:start_url] # Hang on to the initial start URL
     db_user = User.find_by_userid(user[:name])
+    session_reset
+    feature = missing_user_features(db_user)
     return ValidateResult.new(
       :fail,
       _("Login not allowed, User's %s is missing. Please contact the administrator") %
-      (session[:group] ? "Role" : "Group")
-    ) unless session_reset(db_user) # Reset/recreate the session hash
+      feature
+    ) if feature
 
-    start_url = session[:start_url] # Hang on to the initial start URL
+    session_init(db_user)
 
     # Don't allow logins until there's some content in the system
     return ValidateResult.new(
       :fail,
       "Logins not allowed, no providers are being managed yet. Please contact the administrator"
-    ) unless user_is_super_admin? || Vm.first || Host.first
+    ) unless db_user.super_admin_user? || data_ready?
 
-    session_init(db_user) # Initialize the session hash variables
-
-    return validate_user_handle_not_ready if MiqServer.my_server(true).logon_status != :ready
+    return validate_user_handle_not_ready(db_user) unless server_ready?
 
     # Start super admin at the main db if the main db has no records yet
-    return validate_user_handle_no_records if user_is_super_admin? &&
+    return validate_user_handle_no_records if db_user.super_admin_user? &&
                                                 get_vmdb_config[:product][:maindb] &&
                                                   !get_vmdb_config[:product][:maindb].constantize.first
 
@@ -75,12 +76,18 @@ class UserValidationService
     )
   end
 
-  def user_is_super_admin?
-    session[:userrole] == 'super_administrator'
+  def missing_user_features(db_user)
+    if !db_user || !db_user.userid
+      "User"
+    elsif !db_user.current_group
+      "Group"
+    elsif !db_user.current_group.miq_user_role
+      "Role"
+    end
   end
 
-  def validate_user_handle_not_ready
-    if user_is_super_admin?
+  def validate_user_handle_not_ready(db_user)
+    if db_user.super_admin_user?
       ValidateResult.new(:pass, nil, url_for(
         :controller    => "ops",
         :action        => 'explorer',
@@ -138,5 +145,13 @@ class UserValidationService
     return ValidateResult.new(:fail, "Error: New password is the same as existing password") if
       user[:new_password].present? && user[:password] == user[:new_password]
     nil
+  end
+
+  def data_ready?
+    Vm.first || Host.first
+  end
+
+  def server_ready?
+    MiqServer.my_server(true).logon_status == :ready
   end
 end

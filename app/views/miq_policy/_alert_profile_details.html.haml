@@ -8,12 +8,12 @@
     #alert_profile_info_div
       = render :partial => "layouts/flash_msg"
       - if @edit
-        - # Show basic info box with description only in edit mode
+        -# Show basic info box with description only in edit mode
         %h3= _('Basic Information')
         %div{:class => "form-horizontal#{@edit ? "" : ".static"} "}
           .form-group
-            %label.control-label.col-sm-2= _("Description")
-            .col-sm-10
+            %label.control-label.col-md-2= _("Description")
+            .col-md-10
               - if @edit
                 = text_field_tag("description", @edit[:new][:description],
                   :maxlength         => MAX_DESC_LEN,
@@ -25,7 +25,7 @@
         %hr
 
       - if !(@edit || @assign)
-        %h3=_('Alerts')
+        %h3= _('Alerts')
         - if @alert_profile_alerts.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts are defined.")}
         - else
@@ -40,12 +40,12 @@
                     = h(a.description)
         %hr
       - elsif @edit
-        %h3=_('Alert Selection')
+        %h3= _('Alert Selection')
         %table#formtest.form
           %tr
-            %td{:align => "left"}=_("Available %s Alerts:") % ui_lookup(:model => @edit[:new][:mode])
+            %td{:align => "left"}= _("Available %s Alerts:") % ui_lookup(:model => @edit[:new][:mode])
             %td
-            %td.widthed{:align => "left"}=_("Profile Alerts:")
+            %td.widthed{:align => "left"}= _("Profile Alerts:")
           %tr
             %td.widthed{:align => "left", :valign => "top"}
               %span#choices_chosen_div
@@ -83,10 +83,10 @@
                   :id       => "members_chosen")
         %hr
 
-      - # Notes field
+      -# Notes field
       - if @edit
         %h3
-          =_("Notes")
+          = _("Notes")
           (
           %span#notes_count
             = @edit[:new][:notes] ? @edit[:new][:notes].length : 0
@@ -108,28 +108,28 @@
         %hr
 
       - unless @edit
-        - # Show assignments
-        %h3=_('Assigned To')
+        -# Show assignments
+        %h3= _('Assigned To')
         - aa = @alert_profile.get_assigned_tos
         - if !aa[:objects].empty?
-          - # Objects are assigned
+          -# Objects are assigned
           - if aa[:objects].first.kind_of?(MiqEnterprise)
-            - # Assigned to Enterprise object
-            =_('The Enterprise')
+            -# Assigned to Enterprise object
+            = _('The Enterprise')
           - else
             -# Assigned to CIs
-            %table.style1
-              %tr
-                %td.key
+            %form.form-horizontal
+              .form-group
+                %label.control-label.col-md-2
                   = ui_lookup(:models => aa[:objects].first.class.to_s)
-                %td
+                .col-md-10
                   %table
                     %tbody
                       - objs = []
                       - aa[:objects].each do |o|
-                        - if o.is_a?(EmsFolder)
+                        - if o.kind_of?(EmsFolder)
                           - objs.push("#{o.ext_management_system.name}/#{o.folder_path(:exclude_root_folder => true, :exclude_non_display_folders => true)}")
-                        - elsif o.is_a?(ResourcePool)
+                        - elsif o.kind_of?(ResourcePool)
                           - objs.push(o.absolute_path(:exclude_hidden => true))
                         - else
                           - objs.push(o.name)
@@ -138,15 +138,15 @@
                           %td
                             = h(obj)
         - elsif !aa[:tags].empty?
-          - # Tags are assigned
-          %table.style1
-            %tr
-              %td.key
+          -# Tags are assigned
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
                 = _("%s with %s Tags") % [ui_lookup(:tables => aa[:tags].first.last), @alert_profile_tag.description]
-              %td
+              .col-md-10
                 - aa[:tags].sort_by { |a| a.first.description.downcase }.each do |tag|
                   = h(tag.first.description)
                   %br
         - else
-          =_('Nothing')
+          = _('Nothing')
         %hr

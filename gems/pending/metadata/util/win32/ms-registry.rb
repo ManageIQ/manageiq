@@ -1,12 +1,10 @@
 # encoding: US-ASCII
 
-$:.push("#{File.dirname(__FILE__)}/../../../util")
-
 require 'binary_struct'
-require 'miq-unicode'
+require 'util/miq-unicode'
 require 'enumerator'
-require 'miq-xml'
-require 'xml/xml_hash'
+require 'util/miq-xml'
+require 'util/xml/xml_hash'
 
 # Constants
 DEBUG_PRINT = false

@@ -1,7 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/../../VixDiskLib")
-
-require 'VixDiskLib'
+require 'VixDiskLib/VixDiskLib'
 
 module VixDiskMod
     def d_init

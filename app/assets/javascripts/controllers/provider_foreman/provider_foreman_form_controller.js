@@ -1,4 +1,4 @@
-miqAngularApplication.controller('providerForemanFormController', ['$http', '$scope', 'providerForemanFormId', 'miqService', function($http, $scope, providerForemanFormId, miqService) {
+ManageIQ.angularApplication.controller('providerForemanFormController', ['$http', '$scope', 'providerForemanFormId', 'miqService', function($http, $scope, providerForemanFormId, miqService) {
     var init = function() {
       $scope.providerForemanModel = {
         name: '',
@@ -13,7 +13,7 @@ miqAngularApplication.controller('providerForemanFormController', ['$http', '$sc
       $scope.modelCopy = angular.copy( $scope.providerForemanModel );
       $scope.model = 'providerForemanModel';
 
-      miqAngularApplication.$scope = $scope;
+      ManageIQ.angularApplication.$scope = $scope;
 
       if (providerForemanFormId == 'new') {
         $scope.newRecord                         = true;
@@ -54,7 +54,6 @@ miqAngularApplication.controller('providerForemanFormController', ['$http', '$sc
 
       $scope.$watch("providerForemanModel.name", function() {
         $scope.form = $scope.angularForm;
-        $scope.miqService = miqService;
       });
     };
 

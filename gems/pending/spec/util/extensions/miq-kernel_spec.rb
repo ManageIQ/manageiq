@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-kernel'
+require 'util/extensions/miq-kernel'
 
 describe Kernel do
   context '.add_to_load_path' do

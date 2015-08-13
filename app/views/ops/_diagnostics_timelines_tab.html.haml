@@ -3,8 +3,8 @@
   - if @tl_record
     :javascript
       // Create from/to date JS vars to limit calendar selection range
-      var miq_cal_dateFrom = new Date(#{@tl_options[:sdate]});
-      var miq_cal_dateTo = new Date(#{@tl_options[:edate]});
+      ManageIQ.calendar.calDateFrom = new Date(#{@tl_options[:sdate]});
+      var ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});
     = render :partial => 'layouts/tl_options'
     = render :partial => 'layouts/tl_detail'
   - else

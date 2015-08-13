@@ -67,7 +67,7 @@
   // method takes hash that can have 4 keys: tabs div id, active_tab label,
   // url to go to when tab is changed, and whether to check for abandon changes or not
   miq_tabs_init("#ae_tabs", "/miq_ae_class/change_tab");
-  if (typeof miqEditor != "undefined") miqEditor.refresh();
+  if (ManageIQ.editor !== null) ManageIQ.editor.refresh();
 
 -# disable any other tabs on screen when in edit
 - if @in_a_form

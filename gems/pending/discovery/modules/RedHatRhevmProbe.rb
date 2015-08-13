@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'PortScan'
+require 'discovery/PortScan'
 
 class RedHatRhevmProbe
   def self.probe(ost)
@@ -12,6 +11,8 @@ class RedHatRhevmProbe
     $log.debug "#{log_header}: probing ip = #{ost.ipaddr}" if $log
 
     require 'ovirt'
+    Ovirt.logger = $rhevm_log if $rhevm_log
+
     if PortScanner.portOpen(ost, Ovirt::Service::DEFAULT_PORT)
       if Ovirt::Service.ovirt?(:server => ost.ipaddr, :verify_ssl => false)
         ost.hypervisor << :rhevm

@@ -228,7 +228,7 @@ class MiqAlert < ActiveRecord::Base
     begin
       self.build_actions.each do |a|
         if a.kind_of?(MiqAction)
-          inputs = inputs.merge(:policy => self, :event => MiqEvent.new(:name => "AlertEvent", :description => "Alert condition met"))
+          inputs = inputs.merge(:policy => self, :event => MiqEventDefinition.new(:name => "AlertEvent", :description => "Alert condition met"))
           a.invoke(target, inputs.merge(:result => true, :sequence => a.sequence, :synchronous => false))
         else
           next if a == :delay_next_evaluation

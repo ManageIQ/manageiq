@@ -4,16 +4,12 @@ require 'logger'
 require 'platform'
 require 'uri'
 
-require_relative '../miq-exception'
-require_relative '../miq-uuid'
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__) ) ) )
-require 'rubygems'
+require 'util/miq-exception'
+require 'util/miq-uuid'
 
 class MiqGenericMountSession
-  #require 'miq_ftp_session'
-  require 'miq_nfs_session'
-  require 'miq_smb_session'
+  require 'util/mount/miq_nfs_session'
+  require 'util/mount/miq_smb_session'
 
   attr_accessor :settings, :mnt_point, :logger
 

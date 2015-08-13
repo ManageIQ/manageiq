@@ -5,7 +5,11 @@ describe MiqAeCustomizationController do
   context "::Dialogs" do
     context "#dialog_delete" do
       before do
+        FactoryGirl.create(:vmdb_database)
+        EvmSpecHelper.create_guid_miq_server_zone
         seed_specific_product_features("dialog_delete")
+        described_class.any_instance.stub(:set_user_time_zone)
+        controller.stub(:check_privileges).and_return(true)
       end
 
       it "flash message displays Dialog Label being deleted" do
@@ -20,7 +24,9 @@ describe MiqAeCustomizationController do
                                          },
                                           :active_tree => :dlg_tree
                                          })
+        session[:settings] = {:display   => {:locale => 'default'}}
 
+        controller.instance_variable_set(:@settings, :display => {:locale => 'default'})
         controller.stub(:replace_right_cell)
 
         # Now delete the Dialog

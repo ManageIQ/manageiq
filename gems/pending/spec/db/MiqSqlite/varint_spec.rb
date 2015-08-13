@@ -1,8 +1,6 @@
 # encoding: US-ASCII
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. db})))
-require 'MiqSqlite/MiqSqlite3'
+require 'db/MiqSqlite/MiqSqlite3'
 
 describe MiqSqlite3DB do
   #  Cell content makes use of variable length integers.  A variable

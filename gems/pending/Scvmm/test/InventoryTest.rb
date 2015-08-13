@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'MiqScvmmInventory'
+require 'Scvmm/MiqScvmmInventory'
 require 'yaml'
 
 out_file = "d:/temp/scvmm/scvmm_inv.dump"

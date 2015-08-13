@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}")
-require 'peheader'
+require 'metadata/util/win32/peheader'
 
 class File
   def File.getVersionInfo(fname)

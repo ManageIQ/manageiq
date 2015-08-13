@@ -5,56 +5,63 @@
 #action_options_div
   - case @edit[:new][:action_type]
   - when "email"
-    %h3=_('E-mail Settings')
-    %table.style1
-      %tr
-        %td.key
-          =_('From E-mail Address')
+    %h3
+      = _('E-mail Settings')
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _('From E-mail Address')
           %br
-          =_('(leave blank for default)')
-        %td
+          = _('(leave blank for default)')
+        .col-md-10
           = text_field_tag("from",
             @edit[:new][:options][:from],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
-          =_("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
+          = _("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
       %tr
-        %td.key=_('To E-mail Address')
+        %td.key= _('To E-mail Address')
         %td
           = text_field_tag("to",
             @edit[:new][:options][:to],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
   - when "set_custom_attribute"
-    %h3=_('Custom Attribute Settings')
-    %table.style1
-      %tr
-        %td.key=_('Attribute Name')
-        %td
+    %h3
+      = _('Custom Attribute Settings')
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _('Attribute Name')
+        .col-md-10
           = text_field_tag("attribute",
             @edit[:new][:options][:attribute],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
-      %tr
-        %td.key=_('Value to Set')
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _('Value to Set')
+        .col-md-10
           = text_field_tag("value",
             @edit[:new][:options][:value],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
   - when "tag"
-    %h3=_('Applied Tag')
-    %table.style1
-      %tr
-        %td.key=_('Tag to Apply:')
-        %td
+    %h3
+      = _('Applied Tag')
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _('Tag to Apply:')
+        .col-md-10
           %span#tag_selected
             = h(@tag_selected)
     %hr
-    %h3=_('Select a Tag to Apply')
-    %table.style1
-      %tr
-        %td
+    %h3
+      = _('Select a Tag to Apply')
+    %form.form-horizontal
+      .form-group
+        .col-md-10
           #action_tags_treebox
           = render(:partial => "layouts/dynatree",
             :locals         => {:tree_id   => "action_tags_treebox",
@@ -67,113 +74,124 @@
               :cfme_changes_check          => true,
               :open_close_all_on_dbl_click => true})
   - when "create_snapshot"
-    %h3=_("Snapshot Settings")
-    %table.style1
-      %tr
-        %td.key=_("Snapshot Name")
-        %td
+    %h3
+      = _("Snapshot Settings")
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _("Snapshot Name")
+        .col-md-10
           = text_field_tag("snapshot_name",
             @edit[:new][:options][:name],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
   - when "delete_snapshots_by_age"
-    %h3=_("Snapshot Age Settings")
-    %table.style1
-      %tr
-        %td.key=_("Delete if Older than")
-        %td
+    %h3
+      = _("Snapshot Age Settings")
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _("Delete if Older than")
+        .col-md-10
           = select_tag('snapshot_age',
             options_for_select([["<#{_('Choose')}>", nil]] + SNAPSHOT_AGES.invert.to_a.sort_by(&:last),
             @edit[:new][:options][:age]),
             "data-miq_observe" => observe)
   - when "reconfigure_memory"
-    %h3=_("Reconfigure Memory")
-    %table.style1
-      %tr
-        %td.key=_("Memory Size")
-        %td
+    %h3
+      = _("Reconfigure Memory")
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _("Memory Size")
+        .col-md-10
           = text_field_tag("memory_value",
             @edit[:new][:options][:value],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
-          =_('(Enter the value between 4 - 65636 MB)')
+          = _('(Enter the value between 4 - 65636 MB)')
   - when "reconfigure_cpus"
-    %h3=_("Reconfigure CPU")
-    %table.style1
-      %tr
-        %td.key=_("Number of CPU's")
-        %td
+    %h3
+      = _("Reconfigure CPU")
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _("Number of CPU's")
+        .col-md-10
           = select_tag('cpu_value',
             options_for_select(%w(1 2 4),
             @edit[:new][:options][:value]),
             :style             => "width:50px",
             "data-miq_observe" => observe)
   - when "custom_automation"
-    %h3=_("Custom Automation")
-    %table.style1
-      %tr
-        %td
+    %h3
+      = _("Custom Automation")
+    %form.form-horizontal
+      .form-group
+        .col-md-10
           = render(:partial => "layouts/ae_resolve_options",
             :locals         => {:resolve => @edit,
             :form_action                 => "miq_action",
             :field_changed_url           => "action_field_changed"})
   - when "evaluate_alerts"
-
-    %h3=_("Select Alerts to be Evaluated")
-    %table.style1
-      %tbody
-        %tr
-          %td
-            %table#formtest.form{:width => "100%"}
-              %tr
-                %td{:align => "left"}=_('Available Alerts:')
-                %td
-                %td.widthed{:align => "left"}=_(' Selected Alerts:')
-              %tr
-                %td.widthed{:align => "left", :valign => "top"}
-                  %span#choices_chosen_div
-                    = select_tag('choices_chosen[]', options_for_select(@edit[:choices].sort),
-                      :multiple => true,
-                      :class    => "widthed",
-                      :size     => 8,
-                      :id       => "choices_chosen")
-                  %p
-                %td{:width => "20", :valign => "middle"}
-                  = link_to(image_tag("/images/toolbars/right.png", :class => "rollover small", :alt => (t = _("Move selected Alerts into this Action"))),
-                    {:action => 'action_edit', :button => 'move_right', :id => "#{@action.id || 'new'}"},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    "data-submit"          => 'choices_chosen_div',
-                    :remote                => true,
-                    :title                 => t)
-                  = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => (t = _("Remove selected Alerts from this Action"))),
-                    {:action => 'action_edit', :button => 'move_left', :id => "#{@action.id || 'new'}"},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    "data-submit"          => 'members_chosen_div',
-                    :remote                => true,
-                    :title                 => t)
-                %td{:align => "right", :valign => "top"}
-                  %span#members_chosen_div
-                    = select_tag('members_chosen[]',
-                      options_for_select(@edit[:new][:alerts].sort),
-                      :multiple => true,
-                      :class    => "widthed",
-                      :size     => 8,
-                      :id       => "members_chosen")
+    %h3
+      = _("Select Alerts to be Evaluated")
+    %form.form-horizontal
+      .form-group
+        .col-md-10
+          %table#formtest.form{:width => "100%"}
+            %tr
+              %td{:align => "left"}= _('Available Alerts:')
+              %td
+              %td.widthed{:align => "left"}= _(' Selected Alerts:')
+            %tr
+              %td.widthed{:align => "left", :valign => "top"}
+                %span#choices_chosen_div
+                  = select_tag('choices_chosen[]', options_for_select(@edit[:choices].sort),
+                    :multiple => true,
+                    :class    => "widthed",
+                    :size     => 8,
+                    :id       => "choices_chosen")
+                %p
+              %td{:width => "20", :valign => "middle"}
+                = link_to(image_tag("/images/toolbars/right.png", :class => "rollover small", :alt => (t = _("Move selected Alerts into this Action"))),
+                  {:action => 'action_edit', :button => 'move_right', :id => "#{@action.id || 'new'}"},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'choices_chosen_div',
+                  :remote                => true,
+                  :title                 => t)
+                = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => (t = _("Remove selected Alerts from this Action"))),
+                  {:action => 'action_edit', :button => 'move_left', :id => "#{@action.id || 'new'}"},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'members_chosen_div',
+                  :remote                => true,
+                  :title                 => t)
+              %td{:align => "right", :valign => "top"}
+                %span#members_chosen_div
+                  = select_tag('members_chosen[]',
+                    options_for_select(@edit[:new][:alerts].sort),
+                    :multiple => true,
+                    :class    => "widthed",
+                    :size     => 8,
+                    :id       => "members_chosen")
   - when "snmp_trap"
-    %h3=_("SNMP Trap Settings")
-    %table.style1
-      %tr
-        %td.key=title_for_host
-        %td
+    %h3
+      = _("SNMP Trap Settings")
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = title_for_host
+        .col-md-10
           = text_field_tag("host",
             @edit[:new][:options][:host],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
-      %tr
-        %td.key=_("Version")
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _("Version")
+        .col-md-10
           = select_tag('snmp_version',
             options_for_select(%w(v1 v2),
             @edit[:new][:options][:snmp_version]),
@@ -182,32 +200,37 @@
             "data-miq_sparkle_off" => true,
             "data-miq_observe"     => observe)
       - trap_text = @edit[:new][:options][:snmp_version] == "v1" || @edit[:new][:options][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
-      %tr
-        %td.key
+      .form-group
+        %label.control-label.col-md-2
           = trap_text
-        %td
+        .col-md-10
           = text_field_tag("trap_id",
             @edit[:new][:options][:trap_id],
             :maxlength         => MAX_DESC_LEN,
             "data-miq_observe" => observe_with_interval)
-    %h3=_("Variables")
-    %table.style1
+    %h3
+      = _("Variables")
+    %table.table
       %thead
         %tr
-          %th=_('Object ID')
-          %th=_('Type')
-          %th=_('Value')
+          %th
+            = _('Object ID')
+          %th
+            = _('Type')
+          %th
+            = _('Value')
       - 10.times do |i|
         - f = "oid__#{i + 1}"
         - t = "var_type__#{i + 1}"
         - v = "value__#{i + 1}"
         %tr
-          %td.wide
+          %td
             = text_field_tag("#{f}",
               @edit[:new][:options][:variables][i][:oid],
               :maxlength         => MAX_NAME_LEN,
+              :class             => "form-control",
               "data-miq_observe" => observe_with_interval)
-          %td.wide
+          %td
             = select_tag("#{t}",
               options_for_select(["<#{_('None')}>"] + @edit[:snmp_var_types].sort,
               @edit[:new][:options][:variables][i][:var_type]),
@@ -217,36 +240,42 @@
             - val_disabled = true
           - else
             - val_disabled = false
-          %td.wide
+          %td
             = text_field_tag(v,
               @edit[:new][:options][:variables][i][:value],
               :maxlength         => MAX_NAME_LEN,
               :disabled          => val_disabled,
+              :class             => "form-control",
               "data-miq_observe" => observe_with_interval)
   - when "assign_scan_profile"
-    %h3=_("Analysis Profiles")
-    %table.style1
-      %tr
-        %td.key=_("Analysis Profiles")
-        %td
+    %h3
+      = _("Analysis Profiles")
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _("Analysis Profiles")
+        .col-md-10
           = select_tag('analysis_profile',
           options_for_select([["<#{_('Choose')}>", nil]] + @edit[:new][:scan_profiles],
           @edit[:new][:options][:scan_item_set_name]),
           :style             => "width:150px",
           "data-miq_observe" => observe)
   - when "inherit_parent_tags"
-    %h3=_("Inherit Tags Settings")
-    %table.style1
-      %tr
-        %td.key=_("Parent Type")
-        %td
+    %h3
+      = _("Inherit Tags Settings")
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _("Parent Type")
+        .col-md-10
           = select_tag('parent_type',
             options_for_select(@edit[:tag_parent_types],
             @edit[:new][:options][:parent_type]),
             "data-miq_observe" => observe)
-      %tr
-        %td.key=_("Categories")
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _("Categories")
+        .col-md-10
           %table
             - @edit[:cats].each_slice(3) do |cats|
               %tr
@@ -256,11 +285,13 @@
                     = check_box_tag("cat_#{cat.first}", "1", checked, "data-miq_observe_checkbox" => observe)
                     = h(cat.last)
   - when "remove_tags"
-    %h3=_("Remove Tags Settings")
-    %table.style1
-      %tr
-        %td.key=_("Categories")
-        %td
+    %h3
+      = _("Remove Tags Settings")
+    %form.form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _("Categories")
+        .col-md-10
           %table
             - @edit[:cats].each_slice(3) do |cats|
               %tr

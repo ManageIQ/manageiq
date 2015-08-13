@@ -1195,7 +1195,7 @@ describe Metric do
       context "executing capture_targets" do
         it "should find enabled targets" do
           targets = Metric::Targets.capture_targets
-          assert_cloud_targets_enabled targets, %w{VmOpenstack VmOpenstack VmOpenstack VmOpenstack VmOpenstack}
+          assert_cloud_targets_enabled targets, %w{ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm}
         end
 
         it "should find no enabled targets excluding vms" do
@@ -1245,7 +1245,7 @@ describe Metric do
         it "should have queued rollups for vm hourly" do
           q_all = MiqQueue.order(:id)
           q_all.length.should == 2
-          assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmOpenstack")
+          assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "ManageIQ::Providers::Openstack::CloudManager::Vm")
         end
 
         context "twice" do
@@ -1256,7 +1256,7 @@ describe Metric do
           it "should have one set of queued rollups" do
             q_all = MiqQueue.order(:id)
             q_all.length.should == 2
-            assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "VmOpenstack")
+            assert_queue_items_are_hourly_rollups(q_all, "2010-04-14T21:00:00Z", @vm.id, "ManageIQ::Providers::Openstack::CloudManager::Vm")
           end
         end
       end

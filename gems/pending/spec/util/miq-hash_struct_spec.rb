@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. util})))
-require 'miq-hash_struct'
+require 'util/miq-hash_struct'
 
 describe MiqHashStruct do
   it ".new" do
@@ -109,6 +107,19 @@ describe MiqHashStruct do
 
     it "with a different object class" do
       test_struct.should_not == "string"
+    end
+  end
+
+  context "#try" do
+    let(:hs) { MiqHashStruct.new(:id => 1) }
+
+    it("with existing key") { expect(hs.try(:id)).to        eq(1) }
+    it("with missing key")  { expect(hs.try(:abc)).to       be_nil }
+    it("with :object_id")   { expect(hs.try(:object_id)).to be_kind_of(Integer) }
+
+    it "storing data" do
+      hs.try(:abc=, 123)
+      expect(hs.to_hash[:abc]).to eq(123)
     end
   end
 end

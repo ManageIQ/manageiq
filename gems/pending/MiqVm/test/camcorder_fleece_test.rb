@@ -1,11 +1,8 @@
-$:.push(File.join(File.dirname(__FILE__), ".."))
-$:.push(File.join(File.dirname(__FILE__), "../.."))
-
-require 'bundler_setup'
+require_relative '../../bundler_setup'
 require 'openssl' # Required for 'Digest' in camcorder (< Ruby 2.1)
 require 'camcorder'
 require 'log4r'
-require 'MiqVm'
+require 'MiqVm/MiqVm'
 
 class ConsoleFormatter < Log4r::Formatter
   def format(event)

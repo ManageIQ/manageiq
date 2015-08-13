@@ -2,46 +2,49 @@ module ApplicationController::CurrentUser
   extend ActiveSupport::Concern
 
   included do
-    helper_method :current_user,  :current_userid, :current_username
-    helper_method :current_group, :current_groupid
+    helper_method :current_user,  :current_userid
+    helper_method :current_group, :current_groupid, :eligible_groups
+    helper_method :current_role, :admin_user?, :super_admin_user?
   end
 
   def clear_current_user
-    self.current_user = nil
+    User.current_userid = nil
+    session[:userid]    = nil
+    session[:group]     = nil
   end
   protected :clear_current_user
 
   def current_user=(db_user)
-    if db_user
-      User.current_userid = db_user.userid
-      session[:userid]    = db_user.userid
-      session[:username]  = db_user.name
-    else
-      User.current_userid = nil
-      session[:userid]    = nil
-      session[:username]  = nil
-    end
-    self.current_group  = db_user.try(:current_group)
-    self.current_eligible_groups = db_user.try(:miq_groups)
+    User.current_userid = db_user.userid
+    session[:userid]    = db_user.userid
+    session[:group]     = db_user.current_group.try(:id)
   end
   protected :current_user=
 
-  def current_group=(db_group)
-    session[:group] = db_group.try(:id)
-
-    role = db_group.try(:miq_user_role)
-
-    # Build pre-sprint 69 role name if this is an EvmRole read_only role
-    session[:userrole] = role.try(:read_only?) ? role.name.split("-").last : ""
-  end
-  private :current_group=
-
-  def current_eligible_groups=(eligible_groups)
-    # Save an array of groups this user is eligible for, if more than 1
+  def eligible_groups
+    eligible_groups = current_user.try(:miq_groups)
     eligible_groups = eligible_groups ? eligible_groups.sort_by { |g| g.description.downcase } : []
-    session[:eligible_groups] = eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
+    eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
   end
-  private :current_eligible_groups=
+  private :eligible_groups
+
+  def current_role
+    @current_role ||= begin
+      role = current_user.try(:miq_user_role)
+      role.try(:read_only?) ? role.name.split("-").last : ""
+    end
+  end
+  protected :current_role
+
+  def admin_user?
+    current_user.admin_user?
+  end
+  protected :admin_user?
+
+  def super_admin_user?
+    current_user.super_admin_user?
+  end
+  protected :super_admin_user?
 
   def current_user
     @current_user ||= User.find_by_userid(session[:userid])
@@ -54,19 +57,12 @@ module ApplicationController::CurrentUser
   end
   protected :current_userid
 
-  # current_user.username
-  def current_username
-    session[:username]
-  end
-  protected :current_username
-
   def current_group
-    @current_group ||= MiqGroup.find_by_id(session[:group])
+    current_user.current_group
   end
 
-  # current_group.id
   def current_groupid
-    session[:group]
+    current_user.current_group.id
   end
   protected :current_groupid
 

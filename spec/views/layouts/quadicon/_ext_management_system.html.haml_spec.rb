@@ -23,7 +23,7 @@ describe "rendering quadicons of ext_management_system" do
            :locals  => {:size => "72",
                         :typ  => "grid",
                         :item => @item}
-    expect(rendered).to match(/Host Name/)
+    expect(rendered).to match(/Hostname/)
   end
 
 end

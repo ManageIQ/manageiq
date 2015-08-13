@@ -1,1 +1,1 @@
-FactoryGirl.define { factory :configured_system_foreman, :class => "ConfiguredSystemForeman", :parent => :configured_system }
+FactoryGirl.define { factory :configured_system_foreman, :class => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem", :parent => :configured_system }

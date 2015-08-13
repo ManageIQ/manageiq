@@ -1,4 +1,5 @@
-require 'MiqVimEventMonitor'
+require_relative '../../bundler_setup'
+require 'VMwareWebService/MiqVimEventMonitor'
 require 'log4r'
 
 SERVER   = raise "please define SERVER"

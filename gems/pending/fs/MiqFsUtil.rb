@@ -4,8 +4,6 @@ require 'yaml'
 require 'ostruct'
 require 'zlib'
 
-$: << "#{File.dirname(__FILE__)}/.."
-
 class MiqFsUtil
     
     attr_accessor :verbose, :fromFs, :toFs

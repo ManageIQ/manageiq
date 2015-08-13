@@ -29,7 +29,6 @@
 # path1 + path2 # "C:\\foo\\bar\\zap"
 # path1.exists? # Does the path exist?
 #
-require 'rubygems'
 require 'facade'
 require 'fileutils'
 

@@ -23,11 +23,9 @@ module MiqAeServiceServiceReconfigureTaskSpec
       # hide deprecation warning
       expect(MiqAeDatastore).to receive(:xml_deprecated_warning)
       MiqAeDatastore::Import.load_xml(xml)
-      FactoryGirl.create(:ui_task_set_approver)
     end
 
     let(:ae_method) { ::MiqAeMethod.first }
-    let(:user)      { FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred') }
     let(:options)   { {} }
     let(:task)      do
       FactoryGirl.create(:service_reconfigure_task,

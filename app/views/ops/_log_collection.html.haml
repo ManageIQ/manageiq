@@ -1,12 +1,7 @@
 - @angularForm = true
 - div_num ||= ""
 
-%form#form_div(name                                  = "angularForm"
-               ng-controller                         = "logCollectionFormController"
-               ng-show                               = "afterGet"
-               data-log-collection-form-fields-url   = "/#{controller_name}/log_collection_form_fields/"
-               data-save-url                         = "/#{controller_name}/log_depot_edit/"
-               novalidate)
+%form#form_div{:name => "angularForm", 'ng-controller' => "logCollectionFormController", 'ng-show' => "afterGet", 'data-log-collection-form-fields-url' => "/#{controller_name}/log_collection_form_fields/", 'data-save-url' => "/#{controller_name}/log_depot_edit/", :novalidate => 1}
   = render :partial => "layouts/flash_msg", :locals => {:div_num => div_num}
 
   %fieldset
@@ -48,5 +43,5 @@
   = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 :javascript
-  miqAngularApplication.value('serverId', '#{@record.id || "new"}');
-  angular.bootstrap(jQuery('#form_div'), ['miqAngularApplication']);
+  ManageIQ.angularApplication.value('serverId', '#{@record.id || "new"}');
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });

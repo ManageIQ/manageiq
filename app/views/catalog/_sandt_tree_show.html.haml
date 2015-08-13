@@ -17,60 +17,60 @@
     = miq_tab_content('basic') do
       %h3
         = _('Basic Information')
-      %table.style1
-        %tr
-          %td.key
+      %form.form-horizontal.static
+        .form-group
+          %label.col-md-2.control-label
             = _('Name / Description')
-          %td
+          .col-md-8
             #{@record.name} / #{@record.description}
             = check_box_tag(display, true, @record.display, :disabled => true)
             &nbsp;
             = _('Display in Catalog')
         - if @record.display
-          %tr
-            %td.key
+          .form-group
+            %label.col-md-2.control-label
               = _('Catalog')
-            %td
+            .col-md-8
               = h(@record.service_template_catalog ? @record.service_template_catalog.name : "<#{_('Unassigned')}>")
-        %tr
-          %td.key
+        .form-group
+          %label.col-md-2.control-label
             = _('Dialog')
-          %td
+          .col-md-8
             = h(@sb[:dialog_label])
         - if @record.prov_type == "generic_orchestration"
-          %tr
-            %td.key
+          .form-group
+            %label.col-md-2.control-label
               = _('Orchestration Template')
-            %td
+            .col-md-8
               = h(@record.try(:orchestration_template).try(:name))
           - if @record.orchestration_manager
-            %tr
-              %td.key
+            .form-group
+              %label.col-md-2.control-label
                 = _('Provider')
-              %td
+              .col-md-8
                 = h(@record.orchestration_manager.name)
         - entry_points = [[_("Provisioning"), :fqname]]
         - unless @record.prov_type == "generic_orchestration"
           - entry_points.push([_("Reconfigure"),  :reconfigure_fqname],
              [_("Retirement"),   :retire_fqname])
         - entry_points.each do |entry_points_op|
-          %tr
-            %td.key{:title => _("%s Entry Point (NameSpace/Class/Instance)") % entry_points_op[0]}
+          .form-group
+            %label.col-md-2.control-label{:title => _("%s Entry Point (NameSpace/Class/Instance)") % entry_points_op[0]}
               #{entry_points_op[0]} #{_('Entry Point')}
               %br
               = _('State Machine (NS/Cls/Inst)')
-            %td
+            .col-md-8
               = h(@sb[entry_points_op[1]])
       %hr
       %h3
         = _('Custom Image')
       - if @record.picture
         %table
-          %tr
-            %td
+          .form-group
+            .col-md-8
               = image_tag("#{@record.picture.url_path}?#{rand(99_999_999)}",
                           :style => "width:100px; height:100px;")
-            %td{:valign => "bottom"}
+            .col-md-8{:valign => "bottom"}
               = link_to(image_tag("/images/toolbars/remove.png",
                                   :class => "rollover small",
                                   :alt   => t = _("Remove this Custom Image")),
@@ -106,11 +106,11 @@
       = miq_tab_content('details') do
         %h3
           = _('Basic Information')
-        %table.style1
-          %tr
-            %td.key
+        %form.form-horizontal.static
+          .form-group
+            %label.col-md-2.control-label
               = _('Long Description')
-            %td.wide
+            .col-md-8
               = @record.long_description.to_s.html_safe
 
     - if @record.composite?

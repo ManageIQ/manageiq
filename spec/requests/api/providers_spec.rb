@@ -31,7 +31,7 @@ describe ApiController do
   end
   let(:sample_rhevm) do
     {
-      "type"      => "EmsRedhat",
+      "type"      => "ManageIQ::Providers::Redhat::InfraManager",
       "name"      => "sample rhevm",
       "port"      => "5000",
       "hostname"  => "sample_rhevm.provider.com",

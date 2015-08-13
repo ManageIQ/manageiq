@@ -4,7 +4,7 @@
       - table.data[@first_item..@last_item].each do |row|
         - @id = row['id']
         - if @targets_hash
-          - # Get the record
+          -# Get the record
           - item = @targets_hash[@id]
         %div{:style => "width: 100px; height: 100px; float:left; padding: 0 10px 20px 0;"}
           %table{:border => "0", :cellpadding => "0", :cellspacing => "0"}

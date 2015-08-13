@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'miq-encode'
+require 'util/miq-encode'
 
 require 'active_support/inflector'
 require 'more_core_extensions/core_ext/string'

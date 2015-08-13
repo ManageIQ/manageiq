@@ -97,7 +97,7 @@ module MiqPolicyMixin
 
   module ClassMethods
     def rsop(event, targets)
-      eventobj = event.kind_of?(String) ? MiqEvent.find_by_name(event) : MiqEvent.extract_objects(event)
+      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by_name(event) : MiqEventDefinition.extract_objects(event)
       raise "No event found for [#{event}]" if eventobj.nil?
 
       targets = self.extract_objects(targets)
@@ -119,7 +119,7 @@ module MiqPolicyMixin
     end
 
     def rsop_async(event, targets, userid=nil)
-      eventobj = event.kind_of?(String) ? MiqEvent.find_by_name(event) : MiqEvent.extract_objects(event)
+      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by_name(event) : MiqEventDefinition.extract_objects(event)
       raise "No event found for [#{event}]" if eventobj.nil?
 
       targets =  targets.first.kind_of?(self) ? targets.collect(&:id) : targets

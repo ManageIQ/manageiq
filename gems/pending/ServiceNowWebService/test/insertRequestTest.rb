@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require_relative '../../bundler_setup'
-require 'SnEccqClientBase'
+require 'ServiceNowWebService/SnEccqClientBase'
 
 server = "manageiqdev.service-now.com"
 agent = "EVM Automate"

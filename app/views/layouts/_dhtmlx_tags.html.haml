@@ -1,8 +1,8 @@
 -# Parameters:
 -# control  Name of the control (i.e. tree, grid, layout)
 
--# Create miq_grids object to hold grid hash
-%script if (typeof miq_grids == "undefined") var miq_grids = {};
+-# Create ManageIQ.grids.grids object to hold grid hash
+%script if (ManageIQ.grids.grids === null) ManageIQ.grids.grids = {};
 
 -# Include the common JS once
 - unless @dhtmlx_common
@@ -16,21 +16,6 @@
     = javascript_include_tag 'miq_dhtmlxaccordion.js'
     = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxaccordion.js'
     = stylesheet_link_tag 'dhtmlx_gpl_36/skins/dhtmlxaccordion_dhx_miq.css'
-- when "calendar"
-  - unless @dhtmlx_calendar
-    - @dhtmlx_calendar = true
-    = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcalendar.js'
-    = stylesheet_link_tag 'dhtmlx_gpl_36/dhtmlxcalendar.css'
-    = stylesheet_link_tag 'dhtmlx_gpl_36/skins/dhtmlxcalendar_dhx_skyblue.css'
-    = stylesheet_link_tag 'dhtmlx_gpl_36/dhtmlx_custom.css'
-- when "combo"
-  - unless @dhtmlx_combo
-    - @dhtmlx_combo = true
-    = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcombo.js'
-    = javascript_include_tag 'dhtmlx_gpl_36/ext/dhtmlxcombo_extra.js'
-    = javascript_include_tag 'dhtmlx_gpl_36/ext/dhtmlxcombo_whp.js'
-    = stylesheet_link_tag 'dhtmlx_gpl_36/miq_dhtmlxcombo.css'
-    = javascript_include_tag 'miq_dhtmlxcombo.js'
 - when "grid"
   - unless @dhtmlx_grid
     - @dhtmlx_grid = true
@@ -48,12 +33,6 @@
     = javascript_include_tag 'miq_dhtmlxlayout.js'
     = stylesheet_link_tag 'dhtmlx_gpl_36/dhtmlxlayout.css'
     = stylesheet_link_tag 'dhtmlx_gpl_36/skins/dhtmlxlayout_dhx_miq.css'
-- when "menu"
-  - unless @dhtmlx_menu
-    - @dhtmlx_menu = true
-    = stylesheet_link_tag 'dhtmlx_gpl_36/skins/dhtmlxmenu_dhx_web.css'
-    = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxmenu.js'
-    = javascript_include_tag 'dhtmlx_gpl_36/ext/dhtmlxmenu_ext.js'
 - when "toolbar"
   - unless @dhtmlx_toolbar
     - @dhtmlx_toolbar = true

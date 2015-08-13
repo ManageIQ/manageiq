@@ -1,10 +1,9 @@
 require 'rufus/lru'
 
 # Ext4 stuff.
-$:.push("#{File.dirname(File.expand_path(__FILE__))}/../../ext4")
-require 'Ext4Superblock'
-require 'Ext4DirectoryEntry'
-require 'Ext4Directory'
+require 'fs/ext4/superblock'
+require 'fs/ext4/directory_entry'
+require 'fs/ext4/directory'
 
 # Ext4 file system interface to MiqFS.
 module Ext4

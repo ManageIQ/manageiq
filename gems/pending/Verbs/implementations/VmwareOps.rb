@@ -1,26 +1,21 @@
-$:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/MIQExtract")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
-
-require 'runcmd'
-require 'MIQExtract'
-require 'VmConfig'
+require 'util/runcmd'
+require 'metadata/MIQExtract/MIQExtract'
+require 'metadata/VmConfig/VmConfig'
 require 'platform'
-require 'SharedOps'
-require 'MiqVimInventory'
-require 'miq-password'
+require 'Verbs/implementations/SharedOps'
+require 'VMwareWebService/MiqVimInventory'
+require 'util/miq-password'
 
 class VMWareOps
     def initialize(ost)
 		extend SharedOps
         case Platform::OS
         when :win32
-            require 'VmwareOpsWin'
+            require 'Verbs/implementations/VmwareOpsWin'
             extend VMWareOpsWin
             initializeCOM
         when :unix
-            require 'VmwareOpsLinux'
+            require 'Verbs/implementations/VmwareOpsLinux'
             extend VMWareOpsLinux
         else
             raise "Unsupported platform: #{Platform::OS}-#{Platform::IMPL}"

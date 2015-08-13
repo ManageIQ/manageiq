@@ -1,14 +1,15 @@
 - if @sb[:active_tab] == "settings_import_tags"
   #tab_div
-    %h3 Messages
-    = render(:partial=>"layouts/flash_msg", :locals=>{:click_remove=>false})
+    %h3
+      = _("Messages")
+    = render(:partial => "layouts/flash_msg", :locals => {:click_remove => false})
     %hr/
     %h3
-      Upload #{h(session[:customer_name])} Tag Assignments for VMs
+      = _("Upload #{h(session[:customer_name])} Tag Assignments for VMs")
     %table.style1
       %tr
         %td
-          = form_tag({:action=>"upload_csv", :typ=>"tag"}, :multipart => true) do
+          = form_tag({:action => "upload_csv", :typ => "tag"}, :multipart => true) do
             = file_field("upload", "file")
-            = submit_tag("Upload", :id=>"upload_tags")
-            * Requirements: CSV formatted file.
+            = submit_tag("Upload", :id => "upload_tags")
+            = _("* Requirements: CSV formatted file.")

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ConfiguredSystemForeman do
+describe ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem do
   subject { described_class.new }
 
   describe "#configuration_tags" do

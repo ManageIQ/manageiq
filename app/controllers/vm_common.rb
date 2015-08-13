@@ -1516,8 +1516,8 @@ module VmCommon
           process_show_list(options)
           model_name = @nodetype == "d" ? "Datacenter" : ui_lookup(:model=>rec.class.base_class.to_s)
           @is_redhat = case model_name
-          when 'Datacenter' then ManageIQ::Providers::InfraManager.find(rec.ems_id).type == 'EmsRedhat'
-          when 'Provider'   then rec.type == 'EmsRedhat'
+          when 'Datacenter' then ManageIQ::Providers::InfraManager.find(rec.ems_id).type == 'ManageIQ::Providers::Redhat::InfraManager'
+          when 'Provider'   then rec.type == 'ManageIQ::Providers::Redhat::InfraManager'
           else false
           end
 #       @right_cell_text = "#{ui_lookup(:models=>"VmOrTemplate")} under #{model_name} \"#{rec.name}\""
@@ -1597,6 +1597,7 @@ module VmCommon
       :add_nodes   => add_nodes,         # Update the tree with any new nodes
       :delete_node => @delete_node,      # Remove a new node from the tree
     )
+
     r = proc { |opts| render_to_string(opts) }
 
     add_ajax = false
@@ -1610,7 +1611,7 @@ module VmCommon
       presenter[:update_partials][:main_div] = r[:partial=>partial, :locals=>partial_locals]
 
       locals = {:action_url => action, :record_id => @record ? @record.id : nil}
-      if ['clone', 'migrate', 'miq_request_new', 'pre_prov', 'publish', 'reconfigure', 'retire'].include?(@sb[:action])
+      if %w(clone migrate miq_request_new pre_prov publish reconfigure).include?(@sb[:action])
         locals[:no_reset]        = true                                                                               # don't need reset button on the screen
         locals[:submit_button]   = ['clone', 'migrate', 'publish', 'reconfigure', 'pre_prov'].include?(@sb[:action])  # need submit button on the screen
         locals[:continue_button] = ['miq_request_new'].include?(@sb[:action])                                         # need continue button on the screen
@@ -1658,8 +1659,8 @@ module VmCommon
       }
       if partial == 'layouts/x_gtl'
         partial_locals[:action_url]  = @lastaction
-        presenter[:miq_parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
-        presenter[:miq_parent_class] = request[:controller] # Set parent class for URL also
+        presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+        presenter[:parent_class] = request[:controller] # Set parent class for URL also
       end
       presenter[:update_partials][:main_div] = r[:partial=>partial, :locals=>partial_locals]
 
@@ -1681,7 +1682,7 @@ module VmCommon
       :locals  => {:nameonly => ([:images_tree, :instances_tree, :vandt_tree].include?(x_active_tree))}
     ]
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
     presenter[:clear_tree_cookies] = "edit_treeOpenStatex" if @sb[:action] == "policy_sim"
 
@@ -1712,7 +1713,7 @@ module VmCommon
               :record_id  => @edit[:rec_id],
             }
           ]
-        else
+        elsif action != "retire"
           presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons', :locals => locals]
         end
         presenter[:set_visible_elements][:pc_div_1] = false
@@ -1737,7 +1738,7 @@ module VmCommon
 
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record ? @record.id : nil
+    presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)

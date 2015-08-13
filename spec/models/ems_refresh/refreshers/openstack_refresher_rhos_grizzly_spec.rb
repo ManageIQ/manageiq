@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::OpenstackRefresher do
+describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_openstack, :zone => zone, :hostname => "1.2.3.4", :ipaddress => "1.2.3.4", :port => 5000)
@@ -124,7 +124,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   # end
 
   def assert_specific_flavor
-    @flavor = FlavorOpenstack.where(:name => "m1.ems_refresh_spec").first
+    @flavor = ManageIQ::Providers::Openstack::CloudManager::Flavor.where(:name => "m1.ems_refresh_spec").first
     @flavor.should have_attributes(
       :name        => "m1.ems_refresh_spec",
       :description => nil,
@@ -138,7 +138,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_az
-    @nova_az = AvailabilityZoneOpenstack.where(:type => AvailabilityZoneOpenstack, :ems_id => @ems.id).first
+    @nova_az = ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone.where(:type => ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone, :ems_id => @ems.id).first
     # standard openstack AZs have their ems_ref set to their name ("nova" in the test case)...
     # the "null" openstack AZ has a unique ems_ref and name
     @nova_az.should have_attributes(
@@ -147,14 +147,14 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_availability_zone_null
-    @az_null = AvailabilityZoneOpenstackNull.where(:ems_id => @ems.id).first
+    @az_null = ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull.where(:ems_id => @ems.id).first
     @az_null.should have_attributes(
       :ems_ref => "null_az"
     )
   end
 
   def assert_specific_floating_ip
-    @ip = FloatingIpOpenstack.where(:address => "10.3.4.1").first
+    @ip = ManageIQ::Providers::Openstack::CloudManager::FloatingIp.where(:address => "10.3.4.1").first
     @ip.should have_attributes(
       :address => "10.3.4.1",
       :ems_ref => "1"
@@ -162,7 +162,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_key_pair
-    @kp = AuthKeyPairOpenstack.where(:name => "EmsRefreshSpec-KeyPair").first
+    @kp = ManageIQ::Providers::Openstack::CloudManager::AuthKeyPair.where(:name => "EmsRefreshSpec-KeyPair").first
     @kp.should have_attributes(
       :name        => "EmsRefreshSpec-KeyPair",
       :fingerprint => "5e:51:73:2d:71:14:94:34:97:4c:e8:e5:92:49:9e:9e"
@@ -170,7 +170,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_security_group
-    @sg = SecurityGroupOpenstack.where(:name => "EmsRefreshSpec-SecurityGroup").first
+    @sg = ManageIQ::Providers::Openstack::CloudManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup").first
     @sg.should have_attributes(
       :name        => "EmsRefreshSpec-SecurityGroup",
       :description => "EmsRefreshSpec-SecurityGroup",
@@ -207,7 +207,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_template(name, uid, is_public = false)
-    template = TemplateOpenstack.where(:name => name).first
+    template = ManageIQ::Providers::Openstack::CloudManager::Template.where(:name => name).first
     template.should have_attributes(
       :template              => true,
       :publicly_available    => is_public,
@@ -245,7 +245,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_vm_powered_on
-    @vm = VmOpenstack.where(:name => "EmsRefreshSpec-PoweredOn").first
+    @vm = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:name => "EmsRefreshSpec-PoweredOn").first
     @vm.should have_attributes(
       :template              => false,
       :ems_ref               => "4bb8d624-a3a5-421c-9e14-8a6eaa16aed8",
@@ -276,7 +276,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @vm.floating_ip.should            == @ip
     @vm.flavor.should                 == @flavor
     @vm.key_pairs.should              == [@kp]
-    @vm.security_groups.should        match_array [@sg, SecurityGroupOpenstack.where(:name => "EmsRefreshSpec-SecurityGroup2").first]
+    @vm.security_groups.should        match_array [@sg, ManageIQ::Providers::Openstack::CloudManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup2").first]
 
     @vm.operating_system.should       be_nil # TODO: This should probably not be nil
     @vm.custom_attributes.size.should == 0
@@ -326,18 +326,18 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_template_created_from_vm
-    @snap = TemplateOpenstack.where(:name => "EmsRefreshSpec-Snapshot").first
+    @snap = ManageIQ::Providers::Openstack::CloudManager::Template.where(:name => "EmsRefreshSpec-Snapshot").first
     @snap.should_not be_nil
     #FIXME: @snap.parent.should == @vm
   end
 
   def assert_specific_vm_created_from_snapshot_template
-    t = VmOpenstack.where(:name => "EmsRefreshSpec-PoweredOn-FromSnapshot").first
+    t = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:name => "EmsRefreshSpec-PoweredOn-FromSnapshot").first
     t.parent.should == @snap
   end
 
   def assert_specific_vm_paused
-    v = VmOpenstack.where(:name => "EmsRefreshSpec-Paused").first
+    v = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:name => "EmsRefreshSpec-Paused").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "83de8005-7138-4005-b4a9-980d0df622ff",
@@ -413,7 +413,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def assert_specific_vm_suspended
-    v = VmOpenstack.where(:name => "EmsRefreshSpec-Suspended").first
+    v = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:name => "EmsRefreshSpec-Suspended").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "ed1056c3-53b1-4cec-af88-a6e6a6be1d44",

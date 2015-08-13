@@ -58,19 +58,19 @@ module ReportController::Usage
     render :update do |page|
 #     if new_toolbars
         if @usage_options[:report] && @usage_options[:report].table.data.length > 0
-          page << "center_tb.showItem('usage_txt');"
-          page << "center_tb.enableItem('usage_txt');"
-          page << "center_tb.showItem('usage_csv');"
-          page << "center_tb.enableItem('usage_csv');"
-          page << "center_tb.showItem('usage_pdf');"
-          page << "center_tb.enableItem('usage_pdf');"
-          page << "center_tb.showItem('usage_reportonly');"
-          page << "center_tb.enableItem('usage_reportonly');"
+          page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_txt');"
+          page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_txt');"
+          page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_csv');"
+          page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_csv');"
+          page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_pdf');"
+          page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_pdf');"
+          page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_reportonly');"
+          page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_reportonly');"
         else
-          page << "center_tb.hideItem('usage_txt');"
-          page << "center_tb.hideItem('usage_csv');"
-          page << "center_tb.hideItem('usage_pdf');"
-          page << "center_tb.hideItem('usage_reportonly');"
+          page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_txt');"
+          page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_csv');"
+          page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_pdf');"
+          page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_reportonly');"
         end
 #     else
 #       page.replace_html("center_buttons_div", :partial=>"layouts/center_buttons")

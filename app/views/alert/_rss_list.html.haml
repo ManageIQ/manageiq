@@ -23,9 +23,9 @@
           %th= _('Feed URL')
       %tbody
         - @rss_feeds.each do |feed|
-          %tr{:title =>_("Subscribe to this feed"),:onclick => "DoNav('#{feed.link}');"}
+          %tr{:title => _("Subscribe to this feed"), :onclick => "DoNav('#{feed.link}');"}
             %td.narrow
-              %ul.icons
+              %ul.icons.list-unstyled
                 %li
                   %span.pficon{:class => "fa fa-rss"}
             %td

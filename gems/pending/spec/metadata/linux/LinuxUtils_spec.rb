@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$LOAD_PATH.push(File.expand_path(File.join(File.dirname(__FILE__), %w(.. .. .. metadata linux))))
-require 'LinuxUtils'
+require 'metadata/linux/LinuxUtils'
 
 describe MiqLinux::Utils do
   describe '#parse_openstack_status' do

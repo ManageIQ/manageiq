@@ -1,7 +1,7 @@
 - if @settings[:quadicons][:host]
   .flobj
     %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
-  - # Get the VM count %>
+  -# Get the VM count %>
   - vcount = item.vms.size
   .flobj{:class => "a#{size}"}
     %p
@@ -36,21 +36,21 @@
     %img{:src => "/images/icons/new/vendor-#{h(item.vmm_vendor.downcase)}.png", :width => width * 1.8, :height => width * 1.8}
 
 - if typ == :listnav
-  - # Listnav, no href needed
+  -# Listnav, no href needed
   .flobj
     %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
 - else
   - if !@embedded || @showlinks
     - if @edit && @edit[:hostitems]
       .flobj
-        %a{:href => "/host/edit/?selected_host=#{item.id}", :title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+        %a{:href => "/host/edit/?selected_host=#{item.id}", :title => _("Name: %s | Hostname: %s") % [h(item.name), h(item.hostname)]}
           %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
     - else
       .flobj
-        %a{:href => url_for_record(item), :title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+        %a{:href => url_for_record(item), :title => _("Name: %s | Hostname: %s") % [h(item.name), h(item.hostname)]}
           %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
   - else
     .flobj
-      %a{:title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+      %a{:title => _("Name: %s | Hostname: %s") % [h(item.name), h(item.hostname)]}
         %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
 

@@ -2,40 +2,40 @@
   - @angularForm = false
   - return
 
-- # Set default action url, if none passed in
+-# Set default action url, if none passed in
 - action_url ||= nil
-- # Set default record id to nil, if none passed in
+-# Set default record id to nil, if none passed in
 - record_id ||= nil
 - align ||= "right"
-- # Default button for menus editor
+-# Default button for menus editor
 - default_button ||= nil
-- # don't need cancel button in OPS
+-# don't need cancel button in OPS
 - no_cancel ||= nil
-- # don't need reset button
+-# don't need reset button
 - no_reset ||= nil
-- # need to show save/cancel button, for screens editing multiple records or when @record is not set
+-# need to show save/cancel button, for screens editing multiple records or when @record is not set
 - multi_record ||= nil
-- # need to show submit button instead of save button
+-# need to show submit button instead of save button
 - submit_button ||= nil
-- # need to show apply button instead of save button
+-# need to show apply button instead of save button
 - apply_button ||= nil
-- # need to show continue button instead of save button
+-# need to show continue button instead of save button
 - continue_button ||= nil
-- # need to show copy button instead of save button
+-# need to show copy button instead of save button
 - copy_button ||= nil
-- # need to show create button instead of save button
+-# need to show create button instead of save button
 - create_button ||= nil
-- # need to show confirm message when save button is pressed on database config screen
+-# need to show confirm message when save button is pressed on database config screen
 - save_confirm_text ||= nil
-- # need to show title on save button on database config screen
+-# need to show title on save button on database config screen
 - save_text ||= nil
-- # need to show title on apply button on import config screens
+-# need to show title on apply button on import config screens
 - apply_text ||= nil
-- # should apply :get or :post the request
+-# should apply :get or :post the request
 - apply_method ||= :get
-- # need to show export button on Reports-import/export screen
+-# need to show export button on Reports-import/export screen
 - export_button ||= nil
-- # need to pass this as true if need to send up serialized form data when save is pressed
+-# need to pass this as true if need to send up serialized form data when save is pressed
 - serialize ||= false
 
 %table{:width => "100%"}
@@ -91,7 +91,7 @@
                 :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "copy")}',true);")
             - else
               - if save_confirm_text
-                - # Ask for confirmation before saving
+                -# Ask for confirmation before saving
                 = button_tag(_('Save'),
                   :class   => "btn btn-primary",
                   :alt     => save_text,
@@ -155,25 +155,25 @@
               :title   => t,
               :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
       - elsif record_id || export_button
-        - # show button to go back
+        -# show button to go back
         #buttons
           - if params[:action] == "policies" || %w(right_size).include?(@sb[:action])
             - action = (params[:action] == "policies" ? "policy_sim" : "x_history")
-            - # Button to go back to policy simulation screen from 1 VMs policies
+            -# Button to go back to policy simulation screen from 1 VMs policies
             = button_tag(t = _('Back'),
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
               :onclick => "miqAjaxButton('#{url_for(:action => action, :continue => true)}');")
           - elsif %w(drift policy_sim).include?(@sb[:action])
-            - # Button to cancel policy simulation/drift and return to latest tree node
+            -# Button to cancel policy simulation/drift and return to latest tree node
             = button_tag(t = _('Cancel'),
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
               :onclick => "miqAjaxButton('#{url_for(:action => "x_history", :item   => 0)}');")
           - else
-            - # export_button
+            -# export_button
             = button_tag(_("Export"),
               :class  => "btn btn-primary #{@export_reports.empty? ? "btn-disabled" : ""}",
               :type   => "application/txt",
@@ -181,7 +181,7 @@
               :alt    => _("Download Report to YAML"))
       - elsif ["compare"].include?(@sb[:action])
         #buttons
-          - # Button to cancel policy simulation and return to latest tree node
+          -# Button to cancel policy simulation and return to latest tree node
           = button_tag(t = _('Cancel'),
             :class   => "btn btn-default",
             :alt     => t,

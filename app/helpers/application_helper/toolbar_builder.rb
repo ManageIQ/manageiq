@@ -85,7 +85,17 @@ class ApplicationHelper::ToolbarBuilder
             props["enabled"] = "false"
             props["title"] = _("No records found for this report")
           end
-
+          if bgi[:buttonSelect] == "host_vmdb_choice" && x_active_tree == :old_dialogs_tree && @record && @record[:default]
+            bgi[:items].each do |bgsi|
+              if bgsi[:button] == "old_dialogs_edit"
+                bgsi[:enabled] = 'false'
+                bgsi[:title] = _('Default dialogs cannot be edited')
+              elsif bgsi[:button] == "old_dialogs_delete"
+                bgsi[:enabled] = 'false'
+                bgsi[:title] = _('Default dialogs cannot be removed from the VMDB')
+              end
+            end
+          end
           # Add a separator, if needed, before this buttonSelect
           if !sep_added && sep_needed
             if groups_added.include?(bg_idx) && groups_added.length > 1
@@ -471,6 +481,13 @@ class ApplicationHelper::ToolbarBuilder
     return true if %w(container_replicator_edit container_replicator_delete container_replicator_new).include?(id) &&
                    (@record.kind_of?(ContainerReplicator) || @record.nil?)
 
+    return true if %w(container_image_edit container_image_delete container_image_new).include?(id) &&
+                   (@record.kind_of?(ContainerImage) || @record.nil?)
+
+    return true if %w(container_image_registry_edit container_image_registry_delete
+                      container_image_registry_new).include?(id) &&
+                   (@record.kind_of?(ContainerImageRegistry) || @record.nil?)
+
     # hide timelines button for Amazon provider and instances
     # TODO: extend .is_available? support via refactoring task to cover this scenario
     return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(ManageIQ::Providers::Amazon::CloudManager) || @record.kind_of?(ManageIQ::Providers::Amazon::CloudManager::Vm))
@@ -606,9 +623,9 @@ class ApplicationHelper::ToolbarBuilder
 
     # Scale is only supported by OpenStack Infrastructure Provider
     return true if id == "ems_infra_scale" &&
-                   (@record.class.name != "EmsOpenstackInfra" ||
+                   (@record.class != ManageIQ::Providers::Openstack::InfraManager ||
                     !role_allows(:feature => "ems_infra_scale") ||
-                   (@record.class.name == "EmsOpenstackInfra" && @record.orchestration_stacks.count == 0))
+                   (@record.class == ManageIQ::Providers::Openstack::InfraManager && @record.orchestration_stacks.count == 0))
 
     # Now check model/record specific rules
     case get_record_cls(@record)
@@ -754,7 +771,7 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_clone"
         return true unless @record.cloneable?
       when "vm_publish"
-        return true if %w(VmMicrosoft VmRedhat).include?(@record.type)
+        return true if %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm).include?(@record.type)
       when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
       when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
@@ -765,7 +782,9 @@ class ApplicationHelper::ToolbarBuilder
         return true if !@record.is_available?(:shutdown_guest)
       when "vm_guest_restart", "instance_guest_restart"
         return true if !@record.is_available?(:reboot_guest)
-      when "vm_migrate", "vm_reconfigure"
+      when "vm_migrate"
+        return true unless @record.is_available?(:migrate)
+      when "vm_reconfigure"
         return true if @record.vendor.downcase == "redhat"
       when "vm_stop", "instance_stop"
         return true if !@record.is_available?(:stop)
@@ -859,7 +878,7 @@ class ApplicationHelper::ToolbarBuilder
 
     #need to add this here, since this button is on list view screen
     if @layout == "pxe" && id == "iso_datastore_new"
-      return "No #{ui_lookup(:tables => "ext_management_system")} are available to create an ISO Datastore on" if EmsRedhat.find(:all).delete_if{|e| e.iso_datastore != nil}.count <= 0
+      return "No #{ui_lookup(:tables => "ext_management_system")} are available to create an ISO Datastore on" if ManageIQ::Providers::Redhat::InfraManager.find(:all).delete_if{|e| e.iso_datastore != nil}.count <= 0
     end
 
     case get_record_cls(@record)
@@ -982,7 +1001,7 @@ class ApplicationHelper::ToolbarBuilder
     when "ContainerGroupKubernetes"
       case id
       when "container_group_timeline"
-        return "No Timeline data has been collected for this ContainerGroup" unless @record.has_events? || @record.has_events?(:policy_events)
+        return "No Timeline data has been collected for this Pod" unless @record.has_events? || @record.has_events?(:policy_events)
       end
     when "MiqAction"
       case id
@@ -1050,6 +1069,11 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "db_delete"
         return "Default Dashboard cannot be deleted" if @db.read_only
+      end
+    when "OrchestrationStack"
+      case id
+      when "orchestration_stack_retire_now"
+        return "Orchestration Stack is already retired" if @record.retired == true
       end
     when "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
       case id

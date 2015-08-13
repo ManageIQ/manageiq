@@ -1,17 +1,14 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../util")
-
 require 'drb/drb'
 require 'sync'
 require 'ffi-vix_disk_lib/api_wrapper'
-require 'VimTypes'
+require 'VMwareWebService/VimTypes'
 require 'log4r'
 require 'time'
-require 'vmdb-logger'
+require 'util/vmdb-logger'
 
-MIQ_ROOT    = "#{File.dirname(__FILE__)}/../../"
-LOG_DIR     = MIQ_ROOT + "vmdb/log/"
-LOG_FILE    = LOG_DIR + "vim.log"
+MIQ_ROOT    = File.expand_path(File.join(__dir__, "../../.."))
+LOG_DIR     = File.join(MIQ_ROOT, "log")
+LOG_FILE    = File.join(LOG_DIR, "vim.log")
 
 $vim_log = VMDBLogger.new LOG_FILE
 

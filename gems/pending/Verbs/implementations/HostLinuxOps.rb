@@ -1,11 +1,7 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
-$:.push("#{File.dirname(__FILE__)}/../../kvm")
-
 require 'ostruct'
-require 'miq-xml'
-require 'runcmd'
-require 'miq-password'
+require 'util/miq-xml'
+require 'util/runcmd'
+require 'util/miq-password'
 
 module MiqLinux
     
@@ -63,7 +59,7 @@ module MiqLinux
                 localPaths = MiqUtil.runcmd("vmware-cmd -l", ost.test).split("\n")
                 dsPaths = localPaths
             else
-                require 'VimInventory'
+                require 'VMwareWebService/VimInventory'
         		ems = $miqHostCfg.ems[$miqHostCfg.emsLocal]
         		$log.debug "GetVMs: emsHost = #{ems['host']}, emsUser = #{ems['user']}, emsPassword = #{ems['password']}" if $log
 			vi = VimInventory.new(ems['host'], ems['user'], MiqPassword.decrypt(ems['password']))

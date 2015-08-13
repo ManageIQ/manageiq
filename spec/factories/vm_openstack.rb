@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :vm_openstack, :class => "VmOpenstack", :parent => :vm_cloud do
+  factory :vm_openstack, :class => "ManageIQ::Providers::Openstack::CloudManager::Vm", :parent => :vm_cloud do
     vendor          "openstack"
     raw_power_state "ACTIVE"
   end

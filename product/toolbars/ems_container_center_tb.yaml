@@ -41,3 +41,14 @@
       :title: 'Show Timelines for this #{ui_lookup(:table=>"ems_container")}'
       :url: '/show'
       :url_parms: '?display=timeline'
+- :name: ems_container_policy
+  :items:
+  - :buttonSelect: ems_container_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: ems_container_tag
+      :image: tag
+      :text: 'Edit Tags'
+      :title: 'Edit Tags for this #{ui_lookup(:table=>"ems_container")}'

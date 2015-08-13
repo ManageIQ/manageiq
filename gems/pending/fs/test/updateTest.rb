@@ -1,16 +1,10 @@
-$: << "#{File.dirname(__FILE__)}/.."
-$: << "#{File.dirname(__FILE__)}/../MiqFS"
-$: << "#{File.dirname(__FILE__)}/../MetakitFS"
-$: << "#{File.dirname(__FILE__)}/../MiqFS/modules"
-
-require 'rubygems'
 require 'log4r'
 require 'ostruct'
 
-require 'MiqFS'
-require 'MiqFsUtil'
-require 'MetakitFS'
-require 'LocalFS'
+require 'fs/MiqFS/MiqFS'
+require 'fs/MiqFsUtil'
+require 'fs/MetakitFS/MetakitFS'
+require 'fs/MiqFS/modules/LocalFS'
 
 SRC_DIR		= "../../../.."
 DST_DIR		= "copy_dst"

@@ -1293,13 +1293,12 @@ describe ApplicationHelper do
           before { @id = id }
 
           it "and vendor is redhat" do
-            @record.stub(:vendor => "Redhat")
-            @record.stub(:type   => "VmRedhat")
+            @record = FactoryGirl.create(:vm_redhat)
             subject.should == true
           end
 
           it "and vendor is not redhat" do
-            @record.stub(:vendor => "Vmware")
+            @record = FactoryGirl.create(:vm_vmware)
             subject.should == false
           end
         end
@@ -1314,7 +1313,7 @@ describe ApplicationHelper do
         end
 
         it "record is cloneable" do
-          @record = Vm.create(:type => "VmRedhat", :name => "rh", :location => "l1", :vendor => "redhat")
+          @record = Vm.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Vm", :name => "rh", :location => "l1", :vendor => "redhat")
           subject.should == false
         end
       end
@@ -1563,7 +1562,7 @@ describe ApplicationHelper do
         end
 
         it "record is not cloneable" do
-          @record =  MiqTemplate.create(:type     => "TemplateRedhat",
+          @record =  MiqTemplate.create(:type     => "ManageIQ::Providers::Redhat::InfraManager::Template",
                                         :name     => "rh",
                                         :location => "loc1",
                                         :vendor   => "redhat")
@@ -2532,7 +2531,7 @@ describe ApplicationHelper do
     end
 
     context "when record is valid" do
-      [HostRedhat].each do |c|
+      [ManageIQ::Providers::Redhat::InfraManager::Host].each do |c|
         it "and with #{c}" do
           record = c.new
           get_record_cls(record).should eql(record.class.base_class.to_s)

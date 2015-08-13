@@ -1,5 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/modules")
-
 module MountManagerProbe
 	MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
 
@@ -18,11 +16,11 @@ module MountManagerProbe
 
 		probes.each do |pmod|
       $log.debug "MIQ(MountManagerProbe-getRootMod) Mount Manager probe attempting [#{pmod}]"
-			require pmod
+			require_relative "modules/#{pmod}"
       if Object.const_get(pmod).probe(dobj)
         mod = pmod.chomp("Probe")
         $log.info "MIQ(MountManagerProbe-getRootMod) Mount Manager probe detected [#{mod}]"
-        require mod
+        require_relative "modules/#{mod}"
         return Object.const_get(mod)
       end
 		end

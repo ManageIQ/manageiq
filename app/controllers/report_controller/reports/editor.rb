@@ -175,8 +175,6 @@ module ReportController::Reports::Editor
         @pivotby1 = @edit[:new][:pivotby1]
         @pivotby2 = @edit[:new][:pivotby2]
         @pivotby3 = @edit[:new][:pivotby3]
-        @edit[:pivotcalc_xml] = build_pivotcalc_combo_xml                           # Get the combobox XML for any numeric fields
-
       when "2"  # Formatting
                 #     @edit[:calc_xml] = build_calc_combo_xml                                     # Get the combobox XML for any numeric fields
 
@@ -214,8 +212,6 @@ module ReportController::Reports::Editor
         @sortby2 = @edit[:new][:sortby2]
         @sort1   = @edit[:new][:field_order].dup
         @sort2   = @sort1.dup.delete_if { |s| s[1] == @sortby1.split("__").first }
-        @edit[:calc_xml] = build_calc_combo_xml                                   # Get the combobox XML for any numeric fields
-
       when "6"  # Timeline
         @tl_fields = Array.new
         @edit[:new][:fields].each do |field|
@@ -261,48 +257,6 @@ module ReportController::Reports::Editor
       #drop_breadcrumb( {:name=>"Edit Report", :url=>"/report/edit"} )
       @gtl_url = "/report/edit/?"
     end
-  end
-
-  # Build the combo box xml array for the formatting screen field selectors
-  def build_calc_combo_xml
-    calc_xml = Hash.new
-    @edit[:new][:field_order].each_with_index do |f, f_idx|
-      next unless MiqReport.get_col_info(f.last.split("__").first)[:numeric]  # Calculations only for numeric fields
-      xml = REXML::Document.load("")
-      xml << REXML::XMLDecl.new(1.0, "UTF-8")
-      root = xml.add_element("complete")
-      MiqReport::GROUPINGS.each do |g|                      # Create a selection for each calc type
-        col = field_to_col(f.last)                          # col_options is keyed by column name
-        opt = root.add_element("option", {"value"=>g.first})
-        opt.text = g.last
-        opt.add_attribute("checked","1") if @edit[:new][:col_options][col] &&
-            !@edit[:new][:col_options][col][:grouping].blank? &&
-            @edit[:new][:col_options][col][:grouping].include?(g.first)
-      end
-      calc_xml[f_idx] = xml.to_s                            # Key the xml hash by the field index
-    end
-    return calc_xml
-  end
-
-  # Build the combo box xml array for the consolidate (pivot) screen field selectors
-  def build_pivotcalc_combo_xml
-    calc_xml = Hash.new
-    @edit[:new][:fields].each_with_index do |f, f_idx|
-      next unless MiqReport.get_col_info(f.last)[:numeric]  # Calculations only for numeric fields
-      xml = REXML::Document.load("")
-      xml << REXML::XMLDecl.new(1.0, "UTF-8")
-      root = xml.add_element("complete")
-      MiqReport::PIVOTS.each do |g|                         # Create a selection for each calc type
-        col = f.last                                        # col_options is keyed by column name
-        opt = root.add_element("option", {"value"=>g.first})
-        opt.text = g.last
-        opt.add_attribute("checked","1") if @edit[:pivot_cols][col] &&
-            !@edit[:pivot_cols][col].blank? &&
-            @edit[:pivot_cols][col].include?(g.first)
-      end
-      calc_xml[f_idx] = xml.to_s                            # Key the xml hash by the field index
-    end
-    return calc_xml
   end
 
   # Create the arrays for the start/end interval pulldowns
@@ -465,47 +419,19 @@ module ReportController::Reports::Editor
   # Handle params starting with "calc"
   def gfv_key_group_calculations(key, value)
     field = @edit[:new][:field_order][key.split("_").last.to_i].last  # Get the field name
-    col = field_to_col(field)                                         # Use column name as the key
-    typ, val = value.split("_")                                       # Get the type (avg, min, etc) and the value (true/false)
-    @edit[:new][:col_options][col] ||= Hash.new                       # Make sure the field hash exists
-    @edit[:new][:col_options][col][:grouping] ||= Array.new           # Make sure the grouping array exists
-    if val == "true"
-      @edit[:new][:col_options][col][:grouping].push(typ.to_sym)      # Add the type to the field's grouping array
-      @edit[:new][:col_options][col][:grouping].sort!                 # Sort the array
-    else
-      @edit[:new][:col_options][col][:grouping].delete(typ.to_sym)    # Remove the type from the field's grouping array
-      @edit[:new][:col_options][col].delete(:grouping) if @edit[:new][:col_options][col][:grouping].blank?  # Delete the array if empty
-      @edit[:new][:col_options].delete(col) if @edit[:new][:col_options][col].blank?  # Delete the hash if empty
-    end
-    @calc_div = key.split("_").last
-    if @edit[:new][:col_options][col] && @edit[:new][:col_options][col][:grouping]
-      @calc_val = @edit[:new][:col_options][col][:grouping].collect{|c|c.to_s.titleize}.join(", ")
-    else
-      @calc_val = ""
-    end
+    @edit[:new][:col_options][field_to_col(field)] = {
+      :grouping => value.split(",").sort.map(&:to_sym) # Add the type to the field's grouping array
+    }
   end
 
   # Handle params starting with "pivotcalc"
   def gfv_key_pivot_calculations(key, value)
     field = @edit[:new][:fields][key.split("_").last.to_i].last       # Get the field name
-    typ, val = value.split("_")                                       # Get the type (avg, min, etc) and the value (true/false)
-    if val == "true"
-      @edit[:pivot_cols][field] ||= Array.new
-      @edit[:pivot_cols][field].push(typ.to_sym)                      # Add the type to the field's array
-      @edit[:pivot_cols][field].sort!                                 # Sort the array
-      @edit[:new][:headers][field + "__#{typ}"] = @edit[:new][:headers][field] + " (#{typ.to_s.titleize})"  # Create new header from original
-    else
-      @edit[:pivot_cols][field].delete(typ.to_sym)                    # Remove the type from the field's array
-      @edit[:new][:headers].delete(field + "__#{typ}")                # Remove the calc field header
-      @edit[:new][:col_formats].delete(field + "__#{typ}")            # Remove any col_formats entry
-      @edit[:pivot_cols].delete(field) if @edit[:pivot_cols][field].blank?  # Delete the array if empty
-    end
-    @calc_div = key.split("_").last
-    if @edit[:pivot_cols][field]
-      @calc_val = @edit[:pivot_cols][field].collect{|c|c.to_s.titleize}.join(", ")
-    else
-      @calc_val = ""
-    end
+    @edit[:pivot_cols][field] = []
+    @edit[:pivot_cols][field].push(value.to_s)                        # Add the type to the field's array
+    @edit[:pivot_cols][field].sort!                                   # Sort the array
+    # Create new header from original
+    @edit[:new][:headers][field + "__#{value}"] = @edit[:new][:headers][field] + " (#{value.to_s.titleize})"
     build_field_order
   end
 
@@ -1521,7 +1447,7 @@ module ReportController::Reports::Editor
     end
 
     # Only show chargeback users choice if an admin
-    if ["administrator","super_administrator"].include?(session[:userrole])
+    if admin_user?
       @edit[:cb_users] = Hash.new
       User.all.each{|u| @edit[:cb_users][u.userid] = u.name}
     else
@@ -1702,8 +1628,7 @@ module ReportController::Reports::Editor
       end
       if field_key.include?("__")                           # Check for calculated pivot column
         field_key1, calc_typ = field_key.split("__")
-        pivot_cols[field_key1] ||= Array.new
-        pivot_cols[field_key1].push(calc_typ.to_sym)          # Add the type to the field's array
+        pivot_cols[field_key1] ||= calc_typ.split(",")
         pivot_cols[field_key1].sort!                          # Sort the array
         fields.push([field_value, field_key1])  unless fields.include?([field_value, field_key1]) # Add original col to fields array
       else

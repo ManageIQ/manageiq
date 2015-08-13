@@ -21,10 +21,9 @@ module Authenticator
       false
     end
 
-    def _authenticate(username, _password, request)
+    def _authenticate(_username, _password, request)
       request.present? &&
-        request.headers['X-REMOTE-USER'].present? &&
-        request.headers['X-REMOTE-USER'] == username
+        request.headers['X-REMOTE-USER'].present?
     end
 
     def failure_reason(_username, request)

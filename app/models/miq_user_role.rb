@@ -162,7 +162,6 @@ class MiqUserRole < ActiveRecord::Base
   end
 
   def self.seed_from_array(array, merge_features = false)
-    new_roles = []
     array.each do |hash|
       feature_ids = hash.delete(:miq_product_feature_identifiers)
 
@@ -175,32 +174,6 @@ class MiqUserRole < ActiveRecord::Base
         role.settings.merge!(new_settings)
       end
       role.update_attributes(hash.except(:id))
-
-      new_roles << role if new_role
-    end
-
-    self.migrate_roles(new_roles)
-  end
-
-  def self.migrate_roles(roles)
-    roles.each do |role|
-      # Migrate settings stored in UiTaskSet#set_data to settings
-      old_role_name = role.name.split("-").last
-      old_role = UiTaskSet.in_my_region.find_by_name(old_role_name)
-      unless old_role.nil? || old_role.set_data.blank?
-        role.settings = {:report_menus => old_role.set_data}
-        role.save
-      end
-
-      # Migrate widgets that may reference old role name
-      widgets ||= MiqWidget.in_my_region
-      widgets.each do |w|
-        if w.visibility.kind_of?(Hash) && w.visibility.has_key?(:roles) && w.visibility[:roles].include?(old_role_name)
-          idx = w.visibility[:roles].index(old_role_name)
-          w.visibility[:roles][idx] = role.name
-          w.update_attribute(:visibility, w.visibility)
-        end
-      end
     end
   end
 

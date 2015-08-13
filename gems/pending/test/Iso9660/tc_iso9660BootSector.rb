@@ -1,11 +1,7 @@
 require 'ostruct'
 require 'minitest/unit'
-
-$:.push("#{File.dirname(__FILE__)}/../../disk")
-require 'MiqDisk'
-
-$:.push("#{File.dirname(__FILE__)}/../../fs/iso9660")
-require 'Iso9660BootSector'
+require 'disk/MiqDisk'
+require 'fs/iso9660/boot_sector'
 include Iso9660
 
 class TestIso9660BootSector < Minitest::Test

@@ -1,7 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}")
-
-require 'miq-xml'
-require 'SharedOps'
+require 'util/miq-xml'
+require 'Verbs/implementations/SharedOps'
 
 class EmsEventMonitorOps
   def initialize(ost, klass)

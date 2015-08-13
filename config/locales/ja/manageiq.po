@@ -13073,63 +13073,6 @@ msgstr "URI"
 msgid "URL (i.e. www.mypage.com)"
 msgstr "URL (例: www.mypage.com)"
 
-msgid "Ui task"
-msgstr "UI タスク"
-
-msgid "Ui task set"
-msgstr "UI タスクセット"
-
-msgid "UiTaskSet|Created on"
-msgstr "作成日"
-
-msgid "UiTaskSet|Description"
-msgstr "説明"
-
-msgid "UiTaskSet|Guid"
-msgstr "GUID"
-
-msgid "UiTaskSet|Mode"
-msgstr "モード"
-
-msgid "UiTaskSet|Name"
-msgstr "名前"
-
-msgid "UiTaskSet|Owner type"
-msgstr "所有者タイプ"
-
-msgid "UiTaskSet|Read only"
-msgstr "読み取り専用"
-
-msgid "UiTaskSet|Set data"
-msgstr "セットデータ"
-
-msgid "UiTaskSet|Set type"
-msgstr "セットタイプ"
-
-msgid "UiTaskSet|Updated on"
-msgstr "更新日"
-
-msgid "UiTaskSet|Userid"
-msgstr "ユーザー ID"
-
-msgid "UiTask|Area"
-msgstr "エリア"
-
-msgid "UiTask|Created on"
-msgstr "作成日"
-
-msgid "UiTask|Name"
-msgstr "名前"
-
-msgid "UiTask|Task"
-msgstr "タスク"
-
-msgid "UiTask|Typ"
-msgstr "タイプ"
-
-msgid "UiTask|Updated on"
-msgstr "更新日"
-
 msgid ""
 "Unable to create a new template copy \"%s\": new template content cannot be "
 "empty."

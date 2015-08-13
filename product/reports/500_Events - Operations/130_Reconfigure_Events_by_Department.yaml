@@ -29,7 +29,7 @@ include:
       managed: 
         columns: 
         - department
-db: EmsEvent
+db: EventStream
 cols: 
 - vm_name
 - timestamp

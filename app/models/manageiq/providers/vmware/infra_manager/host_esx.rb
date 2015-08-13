@@ -83,6 +83,12 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     end
   end
 
+  def get_host_virtual_nic_manager_with_vmotion_device(vim_host, device = nil)
+    vnm = vim_host.hostVirtualNicManager
+    device ||= vnm.candidateVnicsByType("vmotion").first.device rescue nil
+    return vnm, device
+  end
+
   def vim_firewall_rules
     data = {'config' => {}}
     with_provider_object do |vim_host|
@@ -106,22 +112,22 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     ManageIQ::Providers::Vmware::InfraManager::RefreshParser.host_inv_to_advanced_settings_hashes(data)
   end
 
-  def verify_credentials_with_ws(auth_type=nil)
+  def verify_credentials_with_ws(auth_type = nil)
     raise "No credentials defined" if self.missing_credentials?(auth_type)
 
     begin
       with_provider_connection(:use_broker => false, :auth_type => auth_type) {}
-    rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
-      raise MiqException::MiqUnreachableError, $!.message
-    rescue Handsoap::Fault
-      _log.warn("#{$!.inspect}")
-      if $!.respond_to?(:reason)
-        raise MiqException::MiqInvalidCredentialsError, $!.reason if $!.reason =~ /Authorize Exception|incorrect user name or password/
-        raise $!.reason
+    rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH => err
+      raise MiqException::MiqUnreachableError, err.message
+    rescue Handsoap::Fault => err
+      _log.warn("#{err.inspect}")
+      if err.respond_to?(:reason)
+        raise MiqException::MiqInvalidCredentialsError, err.reason if err.reason =~ /Authorize Exception|incorrect user name or password/
+        raise err.reason
       end
-      raise $!.message
-    rescue Exception
-      _log.warn("#{$!.inspect}")
+      raise err.message
+    rescue Exception => err
+      _log.warn("#{err.inspect}")
       raise "Unexpected response returned from system, see log for details"
     else
       true
@@ -135,14 +141,14 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     end
 
     begin
-      vim = self.connect
+      vim = connect
       unless vim.nil?
         sp = HostScanProfiles.new(ScanItem.get_profile("host default"))
         hashes = sp.parse_data_hostd(vim)
         EventLog.add_elements(self, hashes)
       end
-    rescue
-      _log.log_backtrace($!)
+    rescue => err
+      _log.log_backtrace(err)
     rescue MiqException::MiqVimBrokerUnavailable => err
       MiqVimBrokerWorker.broker_unavailable(err.class.name,  err.to_s)
       _log.warn("Reported the broker unavailable")
@@ -154,21 +160,20 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
   end
 
   def refresh_firewall_rules
-    return if self.ext_management_system.nil? || self.operating_system.nil?
+    return if ext_management_system.nil? || operating_system.nil?
 
-    fwh = self.vim_firewall_rules
-    unless fwh.nil?
-      FirewallRule.add_elements(self, fwh)
-      self.operating_system.save unless self.operating_system.nil?
-    end
+    fwh = vim_firewall_rules
+    return if fwh.nil?
+
+    FirewallRule.add_elements(self, fwh)
+    operating_system.try(:save)
   end
 
   def refresh_advanced_settings
-    return if self.ext_management_system.nil?
+    return if ext_management_system.nil?
 
-    ash = self.vim_advanced_settings
+    ash = vim_advanced_settings
     AdvancedSetting.add_elements(self, ash) unless ash.nil?
   end
-
 end
 

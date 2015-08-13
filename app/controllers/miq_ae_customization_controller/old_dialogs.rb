@@ -103,7 +103,7 @@ module MiqAeCustomizationController::OldDialogs
 
   def old_dialogs_get_node_info(treenodeid)
     if treenodeid == "root"
-      @folders = MiqDialog::DIALOG_TYPES.sort
+      old_dialogs_list
       @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqDialog")
       @right_cell_div  = "old_dialogs_list"
     else
@@ -145,6 +145,7 @@ module MiqAeCustomizationController::OldDialogs
     @force_no_grid_xml   = true
     @gtl_type            = "list"
     @ajax_paging_buttons = true
+    @dialog = nil
     if params[:ppsetting]                                             # User selected new per page value
       @items_per_page = params[:ppsetting].to_i                       # Set the new per page value
       @settings[:perpage][@gtl_type.to_sym] = @items_per_page         # Set the per page setting for this gtl type
@@ -152,7 +153,11 @@ module MiqAeCustomizationController::OldDialogs
     @sortcol = session[:dialog_sortcol].nil? ? 0 : session[:dialog_sortcol].to_i
     @sortdir = session[:dialog_sortdir].nil? ? "ASC" : session[:dialog_sortdir]
 
-    @view, @pages = get_view(MiqDialog,:conditions=>["dialog_type=?",x_node.split('_').last]) # Get the records (into a view) and the paginator
+    if x_node == "root"
+      @view, @pages = get_view(MiqDialog) # Get the records (into a view) and the paginator
+    else
+      @view, @pages = get_view(MiqDialog, :conditions => ["dialog_type=?", x_node.split('_').last]) # Get the records (into a view) and the paginator
+    end
 
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
     session[:dialog_sortcol] = @sortcol
@@ -187,10 +192,8 @@ module MiqAeCustomizationController::OldDialogs
 
   def old_dialogs_edit
     assert_privileges("old_dialogs_edit")
-    unless params[:id]
-      obj = find_checked_items
-      @_params[:id] = obj[0] unless obj.empty?
-    end
+    obj = find_checked_items
+    @_params[:id] = obj[0] unless obj.empty?
 
     if params[:typ] == "copy"
       dialog = MiqDialog.find_by_id(from_cid(params[:id]))

@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}")
-
-require 'MiqLargeFile'
+require 'disk/modules/MiqLargeFile'
 
 module RawDisk
 	def d_init

@@ -10,7 +10,7 @@
 .flobj
   %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
 - unless typ == :listnav
-  - # Listnav, no clear image needed
+  -# Listnav, no clear image needed
   .flobj
     - if ! @embedded || @showlinks
       %a{:href => url_for_record(item), :title => _("Name: %s | Path: %s") % [h(item.name), h(item.path)]}

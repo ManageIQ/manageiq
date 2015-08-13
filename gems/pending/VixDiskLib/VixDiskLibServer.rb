@@ -1,19 +1,21 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}")
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../util")
+#
+# This script doesn't run in the context of the Rails environment,
+# so the following load path manipulation is required.
+#
+$LOAD_PATH << File.expand_path(File.join(__dir__, ".."))
 
 require 'drb/drb'
 require 'log4r'
 require 'time'
-require 'vmdb-logger'
-require 'vdl_wrapper'
+require 'util/vmdb-logger'
+require 'VixDiskLib/vdl_wrapper'
 
 class VixDiskLibError < RuntimeError
 end
 
-MIQ_ROOT    = "#{File.dirname(__FILE__)}/../../"
-LOG_DIR     = MIQ_ROOT + "vmdb/log/"
-LOG_FILE    = LOG_DIR + "vim.log"
+MIQ_ROOT    = File.expand_path(File.join(__dir__, "../../.."))
+LOG_DIR     = File.join(MIQ_ROOT, "log")
+LOG_FILE    = File.join(LOG_DIR, "vim.log")
 
 $vim_log = VMDBLogger.new LOG_FILE
 

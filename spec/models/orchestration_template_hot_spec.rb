@@ -4,7 +4,7 @@ describe OrchestrationTemplateHot do
   describe ".eligible_manager_types" do
     it "lists the classes of eligible managers" do
       OrchestrationTemplateHot.eligible_manager_types.each do |klass|
-        (klass <= EmsOpenstack).should be_true
+        (klass <= ManageIQ::Providers::Openstack::CloudManager).should be_true
       end
     end
   end

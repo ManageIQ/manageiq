@@ -441,5 +441,10 @@ module MiqAeMethodService
     def to_s
       self.name
     end
+
+    def inspect
+      hex_id = (object_id << 1).to_s(16).rjust(14, '0')
+      "#<#{self.class.name}:0x#{hex_id} name: #{name.inspect}>"
+    end
   end
 end

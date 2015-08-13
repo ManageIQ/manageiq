@@ -165,7 +165,7 @@
   - vm_snapshot
   - vm_tag
   - vm_timeline
-  
+
 - :name: EvmRole-auditor
   :read_only: true
   :miq_product_feature_identifiers:
@@ -243,7 +243,7 @@
   - resource_pool_tag
   - rss
   - service_show
-  - service_show_list  
+  - service_show_list
   - ontap_file_share_show
   - ontap_file_share_show_list
   - ontap_file_share_tag
@@ -315,6 +315,7 @@
   - vm_start
   - vm_stop
   - vm_suspend
+  - vm_pause
   - vm_timeline
 
 - :name: EvmRole-operator
@@ -452,9 +453,10 @@
   - vm_start
   - vm_stop
   - vm_suspend
+  - vm_pause
   - vm_sync
   - vm_tag
-  - vm_timeline  
+  - vm_timeline
 
 - :name: EvmRole-security
   :read_only: true
@@ -766,6 +768,7 @@
   - vm_start
   - vm_stop
   - vm_suspend
+  - vm_pause
   - vm_tag
 
 - :name: EvmRole-user_self_service
@@ -814,6 +817,7 @@
   - vm_start
   - vm_stop
   - vm_suspend
+  - vm_pause
   - vm_sync
   - vm_tag
   - vm_timeline
@@ -867,6 +871,7 @@
   - vm_start
   - vm_stop
   - vm_suspend
+  - vm_pause
   - vm_sync
   - vm_tag
   - vm_timeline

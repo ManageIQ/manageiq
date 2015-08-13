@@ -7,7 +7,7 @@ describe "rendering fields in ems_cloud new/edit form" do
 
   it "displays Host Name" do
     render :partial => "ems_cloud/form_fields", :locals => {:url => ""}
-    expect(rendered).to match(/Host\ Name/)
+    expect(rendered).to match(/Hostname/)
   end
 
   it "doesn't display IP Address" do

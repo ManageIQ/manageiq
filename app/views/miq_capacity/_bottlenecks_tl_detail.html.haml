@@ -1,11 +1,12 @@
 #tl_div
   - if @sb[:bottlenecks] && @sb[:bottlenecks][:report] && @sb[:bottlenecks][:report].table && @sb[:bottlenecks][:report].table.data.blank?
   - elsif @sb[:bottlenecks][:report]
+    - @tl_json ||= ''
     #miq_timeline{:style => "height: 380px; overflow:hidden; border: 1px solid #aaa"}
     = render(:partial => "layouts/timeline",
       :locals         => {:bands => @sb[:bottlenecks][:report].timeline[:bands],
         :tl_json                 => @tl_json.html_safe,
-        :data_action             => "getTLdata",
+        :data_action             => "timeline_data",
         :position_time           => session[:tl_position]})
     - if @sb[:bottlenecks][:report].filter_summary
       = @sb[:bottlenecks][:report].filter_summary

@@ -3,7 +3,7 @@ rvm:
 - "2.2"
 sudo: false
 cache: bundler
-bundler_args: --without development:metric_fu:qpid
+bundler_args: --without development:qpid
 env:
   global:
   - RUBY_GC_MALLOC_LIMIT=90000000
@@ -14,6 +14,7 @@ env:
   - "TEST_SUITE=replication  TEST_ROOT=."
   - "TEST_SUITE=automation   TEST_ROOT=."
   - "TEST_SUITE=javascript   TEST_ROOT=."
+  - "TEST_SUITE=brakeman     TEST_ROOT=."
 matrix:
   fast_finish: true
 addons:

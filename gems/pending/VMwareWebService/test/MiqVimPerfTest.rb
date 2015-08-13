@@ -1,10 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require_relative '../../bundler_setup'
 require 'log4r'
 require 'enumerator'
-require 'MiqVim'
-require 'MiqVimBroker'
+require 'VMwareWebService/MiqVim'
+require 'VMwareWebService/MiqVimBroker'
 
 #
 # Formatter to output log messages to the console.

@@ -1,0 +1,3 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Openstack_CloudManager_OrchestrationStack < MiqAeServiceOrchestrationStack; end
+end

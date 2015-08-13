@@ -1,10 +1,6 @@
-$:.push("#{File.dirname(__FILE__)}/../../../util/")
-$:.push("#{File.dirname(__FILE__)}/../../../util/xml/")
-
-require 'xml_utils'
-#require 'fleece_hives'
-require 'miq-xml'
-require 'miq-logger'
+require 'util/xml/xml_utils'
+require 'util/miq-xml'
+require 'util/miq-logger'
 
 module MiqWin32
   class System

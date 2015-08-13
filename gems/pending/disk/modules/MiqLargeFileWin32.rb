@@ -1,5 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
 require 'memory_buffer'
 require 'Win32API'
 

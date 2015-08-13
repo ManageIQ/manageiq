@@ -265,7 +265,7 @@ module EmsRefresh::SaveInventory
       when :refresh
         # Leaves out the source_security_group_id, as we will set that later
         #   after all security_groups have been saved and ids obtained.
-        if parent.kind_of?(SecurityGroupOpenstack)
+        if parent.kind_of?(ManageIQ::Providers::Openstack::CloudManager::SecurityGroup)
           [:ems_ref]
         else
           [:direction, :host_protocol, :port, :end_port, :source_ip_range]

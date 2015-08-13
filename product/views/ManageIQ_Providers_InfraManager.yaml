@@ -57,8 +57,8 @@ col_order:
 # Column titles, in order
 headers:
 - Name
-- Host Name
-- IP Address
+- Hostname
+- Discovered IP Address
 - Type
 - EVM Zone
 - Hosts

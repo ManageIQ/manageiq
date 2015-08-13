@@ -29,4 +29,6 @@ class ContainerProject < ActiveRecord::Base
   def services_count
     container_services.size
   end
+
+  acts_as_miq_taggable
 end

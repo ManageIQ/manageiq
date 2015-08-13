@@ -3,7 +3,7 @@
     = render :partial => "layouts/show_pdf"
   - else
     - if ["instances"].include?(@display) && @showtype != "compare"
-      = render :partial => "layouts/gtl", :locals=>{:action_url=>"show/#{@flavor.id}"}
+      = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@flavor.id}"}
     - elsif @showtype == "compare" || @showtype == "drift_history" || @showtype == "drift" || @showtype == "item"
       = render :partial => "layouts/#{@showtype}"
     - else

@@ -10,8 +10,6 @@ $req_log.sync = true
 
 $req_depth = 0
 
-require 'rubygems'
-
 module Kernel
   private
 

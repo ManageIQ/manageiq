@@ -1,0 +1,78 @@
+<content-header short="true">
+  <div class="service-details-heading">
+    <img ng-if="vm.product.img" class="service-details-heading__icon" ng-src="/images/assets/{{ ::vm.product.img }}"/>
+    <span class="content-header__title">{{ ::vm.service.product.name }}</span>
+  </div>
+  <div class="service-details-heading__aside">
+    <a ui-sref="services.edit({serviceId: vm.service.id})" class="btn-rounded">Edit Service</a>
+  </div>
+</content-header>
+
+<details-table heading="Details">
+  <alert ng-repeat="latest_alert in vm.service.latest_alerts track by latest_alert.id"
+         type="{{ ::vm.toAlertType(latest_alert.status) }}">
+    <strong>{{ ::latest_alert.status }}</strong> &mdash; {{ ::latest_alert.message }}
+  </alert>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Project</div>
+    <div class="details-table__detail">
+      <project-description
+        project="vm.service.project"
+        link-to="projects.details({projectId: {{vm.service.project.id}}})"></project-description>
+    </div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Product</div>
+    <div class="details-table__detail">
+      <product-description
+        product="vm.service.product"
+        link-to="products.details({productId: {{vm.service.product.id}}})"></product-description>
+    </div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Service Status</div>
+    <div class="details-table__detail">
+      <status type="{{ ::vm.service.provision_status }}">
+        <strong>{{ ::vm.service.provision_status.toUpperCase() }}</strong>
+        &mdash;
+        {{ ::vm.service.status_msg || 'No status message is available at this time.' }}
+      </status>
+    </div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Creation Date</div>
+    <div class="details-table__detail">{{ ::vm.service.created_at | date:'medium' }}</div>
+  </div>
+
+  <div class="details-table__row">
+    <div class="details-table__label">Last Updated</div>
+    <div class="details-table__detail">{{ ::vm.service.updated_at | date:'medium' }}</div>
+  </div>
+</details-table>
+
+<region heading="Pricing">
+  <table class="service-pricing">
+    <thead>
+    <tr>
+      <th class="service-pricing__heading"></th>
+      <th class="service-pricing__heading">Setup</th>
+      <th class="service-pricing__heading">Hourly</th>
+      <th class="service-pricing__heading">Monthly</th>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="selectRow">
+      <td class="service-pricing__cell service-pricing__cell--padding"></td>
+      <td class="service-pricing__cell service-pricing__cell">{{ ::vm.service.setup_price | currency }}</td>
+      <td class="service-pricing__cell service-pricing__cell">{{ ::vm.service.monthly_price | currency }}</td>
+      <td class="service-pricing__cell service-pricing__cell">{{ ::vm.service.hourly_price | currency }}</td>
+    </tr>
+    </tbody>
+  </table>
+</region>
+

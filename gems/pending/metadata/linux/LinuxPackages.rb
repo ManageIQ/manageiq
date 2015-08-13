@@ -1,10 +1,7 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../db/MiqBdb")
-
-require 'miq-hash_struct'
-require 'miq-xml'
-require 'MiqRpmPackages'
-require 'MiqConaryPackages'
+require 'util/miq-hash_struct'
+require 'util/miq-xml'
+require 'metadata/linux/MiqRpmPackages'
+require 'metadata/linux/MiqConaryPackages'
 
 module MiqLinux
     

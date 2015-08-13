@@ -1,13 +1,9 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../..")
-
 EMS_IP       = ""
 EMS_USERNAME = ""
 EMS_PASSWORD = ""
 
-require 'bundler_setup'
-require 'openstack_handle'
+require_relative '../../bundler_setup'
+require 'openstack/openstack_handle'
 
 def dump_attrs(obj, pref = "")
   unless obj.respond_to?(:attributes)

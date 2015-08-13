@@ -118,41 +118,39 @@ class MiqRequestWorkflow
     request
   end
 
-  def init_from_dialog(values, _userid)
-    options = values
-    values_new = options
+  def init_from_dialog(init_values, _userid)
+    @dialogs[:dialogs].keys.each do |dialog_name|
+      get_all_fields(dialog_name).each_pair do |field_name, field_values|
+        next unless init_values[field_name].nil?
+        next if field_values[:display] == :ignore
 
-    get_all_dialogs.keys.each do |d|                         # Go thru all dialogs
-      get_all_fields(d).keys.each do |f|                     # Go thru all field
-        if !options[f].nil?
-          values_new[f] = options[f]                              # Set the existing option value
-        else
-          field = get_field(f, d)
-          if field[:display] != :ignore
-            if !field[:default].nil?
-              val = field[:default]                               # Set to default value
-            elsif field[:values] && field[:values].length == 1    # if default is not set to anything and there is only one value in hash, use set element to be displayed default
-              field[:values].each do |v|
-                val = v[0]
+        if !field_values[:default].nil?
+          val = field_values[:default]
+
+        # if default is not set to anything and there is only one value in hash,
+        # use set element to be displayed default
+        elsif field_values[:values] && field_values[:values].length == 1
+          val = field_values[:values].first[0]
+        end
+
+        if field_values[:values]
+          if field_values[:values].kind_of?(Hash)
+            # Save [value, description], skip for timezones array
+            init_values[field_name] = [val, field_values[:values][val]]
+          else
+            field_values[:values].each do |tz|
+              if tz[1].to_i_with_method == val.to_i_with_method
+                # Save [value, description] for timezones array
+                init_values[field_name] = [val, tz[0]]
               end
-            end
-            if field[:values]                                     # If this field has values
-              if field[:values].kind_of?(Hash)
-                values_new[f] = [val, field[:values][val]]        # Save [value, description], skip for timezones array
-              else
-                field[:values].each do |tz|
-                  if tz[1].to_i_with_method == val.to_i_with_method
-                    values_new[f] = [val, tz[0]]                  # Save [value, description] for timezones array
-                  end
-                end
-              end
-            else
-              values_new[f] = val                                 # Set to default value
             end
           end
+        else
+          # Set to default value
+          init_values[field_name] = val
         end
-      end # get_all_fields
-    end # get_all_dialogs
+      end
+    end
   end
 
   def validate(values)
@@ -239,6 +237,28 @@ class MiqRequestWorkflow
 
   def get_buttons
     @dialogs[:buttons] || [:submit, :cancel]
+  end
+
+  def provisioning_tab_list
+    dialog_names = @dialogs[:dialog_order].collect(&:to_s)
+    dialog_descriptions = dialog_names.collect do |dialog_name|
+      @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :description)
+    end
+    dialog_display = dialog_names.collect do |dialog_name|
+      @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :display)
+    end
+
+    tab_list = []
+    dialog_names.each_with_index do |dialog_name, index|
+      next if dialog_display[index] == :hide || dialog_display[index] == :ignore
+
+      tab_list << {
+        :name        => dialog_name,
+        :description => dialog_descriptions[index]
+      }
+    end
+
+    tab_list
   end
 
   def get_all_dialogs
@@ -355,7 +375,7 @@ class MiqRequestWorkflow
     ws_tags = send(parser, tag_string)
 
     tags = {}
-    send(:allowed_tags).each do |v|
+    allowed_tags.each do |v|
       tc = tags[v[:name]] = {}
       v[:children].each { |k, v| tc[v[:name]] = k }
     end
@@ -704,8 +724,7 @@ class MiqRequestWorkflow
 
     input_fields.each { |k| attrs["dialog_input_#{k.to_s.downcase}"] = send(k).to_s }
 
-    uri  = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => @requester)
-    ws   = MiqAeEngine.resolve_automation_object(uri)
+    ws = MiqAeEngine.resolve_automation_object("REQUEST", attrs, :vmdb_object => @requester)
 
     if ws && ws.root
       dialog_option_prefix = 'dialog_option_'
@@ -821,12 +840,7 @@ class MiqRequestWorkflow
     result.each_with_object({}) { |s, hash| hash[s[0]] = s[1] }
   end
 
-  def process_filter(filter_prop, ci_klass, targets = [])
-    return targets if targets.blank?
-    process_filter_all(filter_prop, ci_klass, targets)
-  end
-
-  def process_filter_all(filter_prop, ci_klass, targets = [])
+  def process_filter(filter_prop, ci_klass, targets)
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
     result = if filter_id.zero?
@@ -986,8 +1000,8 @@ class MiqRequestWorkflow
   end
 
   def ci_to_hash_struct(ci)
-    return ci.collect { |c| ci_to_hash_struct(c) } if ci.kind_of?(Array)
     return if ci.nil?
+    return ci.collect { |c| ci_to_hash_struct(c) } if ci.respond_to?(:collect)
     method_name = "#{ci.class.base_class.name.underscore}_to_hash_struct".to_sym
     return send(method_name, ci) if respond_to?(method_name, true)
     default_ci_to_hash_struct(ci)
@@ -1001,12 +1015,6 @@ class MiqRequestWorkflow
     v = build_ci_hash_struct(ci, [:name, :platform])
     v.snapshots = ci.snapshots.collect { |si| ci_to_hash_struct(si) }
     v
-  end
-
-  def default_ci_to_hash_struct(ci)
-    attributes = []
-    attributes << :name if ci.respond_to?(:name)
-    build_ci_hash_struct(ci, attributes)
   end
 
   def ems_folder_to_hash_struct(ci)
@@ -1036,7 +1044,7 @@ class MiqRequestWorkflow
   end
 
   # Return empty hash if we are selecting placement automatically so we do not
-  # send time determining all the available resources
+  # spend time determining all the available resources
   def resources_for_ui
     get_source_and_targets
   end
@@ -1100,15 +1108,15 @@ class MiqRequestWorkflow
   end
 
   def allowed_clusters(_options = {})
-    filtered_targets = process_filter_all(:cluster_filter, EmsCluster)
-    filtered_ids = filtered_targets.collect(&:id)
-    allowed_ci(:cluster, [:respool, :host, :folder], filtered_ids)
+    all_clusters     = EmsCluster.where(:ems_id => get_source_and_targets[:ems].try(:id))
+    filtered_targets = process_filter(:cluster_filter, EmsCluster, all_clusters)
+    allowed_ci(:cluster, [:respool, :host, :folder], filtered_targets.collect(&:id))
   end
 
   def allowed_respools(_options = {})
-    filtered_targets = process_filter_all(:rp_filter, ResourcePool)
-    filtered_ids = filtered_targets.collect(&:id)
-    allowed_ci(:respool, [:cluster, :host, :folder], filtered_ids)
+    all_resource_pools = ResourcePool.where(:ems_id => get_source_and_targets[:ems].try(:id))
+    filtered_targets   = process_filter(:rp_filter, ResourcePool, all_resource_pools)
+    allowed_ci(:respool, [:cluster, :host, :folder], filtered_targets.collect(&:id))
   end
   alias_method :allowed_resource_pools, :allowed_respools
 
@@ -1472,5 +1480,13 @@ class MiqRequestWorkflow
       _log.error "<#{err_text}>"
       raise err_text
     end
+  end
+
+  private
+
+  def default_ci_to_hash_struct(ci)
+    attributes = []
+    attributes << :name if ci.respond_to?(:name)
+    build_ci_hash_struct(ci, attributes)
   end
 end

@@ -1,5 +1,5 @@
 - button_div ||= "center_tb"
-- db         ||= nil
+- db ||= nil
 - action_id    = action_url.split("/").last if action_url.include?("/")
 
 - @pc_occ ||= 0
@@ -29,30 +29,8 @@
         - if @bottom_msg
           = h(@bottom_msg)
       - unless db.blank?
-        - db = case db
-        - when "EmsInfra" 
-          - "ems_infra"
-        - when "EmsCloud"
-          - "ems_cloud"
-        - when "EmsCluster"
-          - "ems_cluster"
-        - when "ResourcePool"
-          - "resource_pool"
-        - when "OntapStorageSystem"
-          - "ontap_storage_system"
-        - when "OntapLogicalDisk"
-          - "ontap_logical_disk"
-        - when "CimBaseStorageExtent"
-          - "cim_base_storage_extent"
-        - when "OntapStorageVolume"
-          - "ontap_storage_volume"
-        - when "StorageManager"
-          - "storage_manager"
-        - when "OntapFileShare"
-          - "ontap_file_share"
-        - when "SniaLocalFileSystem"
-          - "snia_local_file_system"
-        - @db = db
+        - if %w(EmsInfra EmsCloud EmsCluster ResourcePool OntapStorageSystem OntapLogicalDisk CimBaseStorageExtent OntapStorageVolume StorageManager OntapFileShare SniaLocalFileSystem).include?(db)
+          - @db = db.underscore
       - if @pc_occ == 1
         %td{:nowrap => true, :style => "padding: 4px 2px 4px 2px;"}
           - unless @embedded

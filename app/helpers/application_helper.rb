@@ -1,6 +1,7 @@
 module ApplicationHelper
   include_concern 'Dialogs'
   include_concern 'PageLayouts'
+  include_concern 'FormTags'
   include Sandbox
   include CompressedIds
 
@@ -215,7 +216,7 @@ module ApplicationHelper
     when "ScanItemSet"
       controller = "ops"
       action = "ap_show"
-    when "MiqEvent"
+    when "MiqEventDefinition"
       controller = "event"
       action = "_none_"
     when "User", "Group", "Patch", "GuestApplication"
@@ -489,8 +490,8 @@ module ApplicationHelper
   # Reload toolbars using new buttons object and xml
   def javascript_for_toolbar_reload(tb, buttons, xml)
     %Q{
-      if (miq_toolbars.#{tb} && miq_toolbars.#{tb}.obj)
-        miq_toolbars.#{tb}.obj.unload();
+      if (ManageIQ.toolbars.#{tb} && ManageIQ.toolbars.#{tb}.obj)
+        ManageIQ.toolbars.#{tb}.obj.unload();
 
       if (document.getElementById('#{tb}') == null) {
         var tb_div = $('<div id="#{tb}" />');
@@ -499,13 +500,13 @@ module ApplicationHelper
       }
 
       window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
-      miq_toolbars['#{tb}'] = {
+      ManageIQ.toolbars['#{tb}'] = {
         obj: window.#{tb},
         buttons: #{buttons},
         xml: "#{xml}"
       };
 
-      miqInitToolbar(miq_toolbars['#{tb}']);
+      miqInitToolbar(ManageIQ.toolbars['#{tb}']);
     }
   end
 
@@ -724,7 +725,7 @@ module ApplicationHelper
 
   def display_adv_search?
     %w(availability_zone container_group container_node container_service
-       container_route container_project container_replicator
+       container_route container_project container_replicator container_image container_image_registry
        ems_container vm miq_template offline retired templates
        host service repository storage ems_cloud ems_cluster flavor
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
@@ -1000,7 +1001,7 @@ module ApplicationHelper
   end
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
-                        container_route container_project container_replicator
+                        container_route container_project container_replicator container_image container_image_registry
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
@@ -1036,7 +1037,7 @@ module ApplicationHelper
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
        %w(container_node container_service ems_container container_group ems_cloud ems_cluster
-          container_route container_project container_replicator
+          container_route container_project container_replicator container_image container_image_registry
           ems_infra host miq_template offline orchestration_stack repository
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
@@ -1045,7 +1046,7 @@ module ApplicationHelper
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
     elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
-             container_route container_project container_replicator
+             container_route container_project container_replicator container_image container_image_registry
              container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
@@ -1059,7 +1060,7 @@ module ApplicationHelper
 
   def show_adv_search?
     show_search = %w(availability_zone cim_base_storage_extent container_group container_node container_service
-                     container_route container_project container_replicator
+                     container_route container_project container_replicator container_image container_image_registry
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      orchestration_stack repository resource_pool retired security_group service
@@ -1251,6 +1252,120 @@ module ApplicationHelper
 
   def show_advanced_search?
     x_tree && ((vm_explorer_tree? && !@record) || @show_adv_search)
+  end
+
+  def listicon_image_tag(db, row)
+    img_path = "/images/icons/"
+    img_attr = {:valign => "middle", :width => "20", :height => "20", :alt => nil, :border => "0"}
+    if %w(Job MiqTask).include?(db)
+      img_attr = {:valign => "middle", :width => "16", :height => "16", :alt => nil}
+      if row["state"].downcase == "finished" && row["status"]
+        row_status = _("Status = %s") % row["status"].capitalize
+        strsearch = row["message"].gsub!("cancel", "cancel")
+        if row["status"].downcase == "ok" && strsearch.nil?
+          image = "checkmark"
+          img_attr.merge!(:title => row_status)
+        elsif row["status"].downcase == "error" || !strsearch.nil?
+          image = "x"
+          img_attr.merge!(:title => row_status)
+        elsif row["status"].downcase == "warn" || !strsearch.nil?
+          image = "warning"
+          img_attr.merge!(:title => row_status)
+        end
+      elsif %w(queued waiting_to_start).include?(row["state"].downcase)
+        image = "job-queued"
+        img_attr.merge!(:title => "Status = Queued")
+      elsif !%w(finished queued waiting_to_start).include?(["state"].downcase)
+        image = "job-running"
+        img_attr.merge!(:title => "Status = Running")
+      end
+    elsif %(Vm VmOrTemplate).include?(db)
+      vm = @targets_hash[from_cid(@id)]
+      vendor = vm ? vm.vendor.downcase : "unknown"
+      image = "vendor-#{vendor}"
+    elsif db == "Host"
+      host = @targets_hash[@id] if @targets_hash
+      vendor = host ? host.vmm_vendor.downcase : "unknown"
+      image = "vendor-#{vendor}"
+    elsif db == "MiqAction"
+      action = @targets_hash[@id.to_i]
+      image = action && action.action_type != "default" ? "miq_action_#{action.action_type}" : "miq_action"
+    elsif db == "MiqProvision"
+      image = "miq_request"
+    elsif db == "MiqWorker"
+      worker = @targets_hash[from_cid(@id)]
+      image = "processmanager-#{worker.normalized_type}"
+    elsif db == "ExtManagementSystem"
+      ems = @targets_hash[from_cid(@id)]
+      image = "vendor-#{ems.image_name}"
+    else
+      image = db.underscore
+    end
+
+    image_tag("#{img_path}new/#{image.downcase}.png", img_attr)
+  end
+
+  def listicon_glyphicon_tag(db, row)
+    glyphicon2 = nil
+    case db
+    when "MiqSchedule"
+      glyphicon = "fa fa-clock-o"
+    when "MiqReportResult"
+      case row['status'].downcase
+      when "error"
+        glyphicon = "fa fa-warning"
+      when "finished"
+        glyphicon = "pficon pficon-ok"
+      when "running"
+        glyphicon = "fa fa-play"
+      when "queued"
+        glyphicon = "fa fa-pause"
+      else
+        glyphicon = "product product-arrow-right"
+      end
+    when "MiqUserRole"
+      glyphicon = "product product-role"
+    when "MiqWidget"
+      case row['content_type'].downcase
+      when "chart"
+        glyphicon = "product product-chart"
+      when "menu"
+        glyphicon = "fa fa-share-square-o"
+      when "report"
+        glyphicon = "product product-report"
+      when "rss"
+        glyphicon = "fa fa-rss"
+      end
+      # for second icon to show status in widget list
+      if row.status != "none"
+        case row.status.downcase
+        when "complete"
+          glyphicon2 = "pficon pficon-ok"
+        when "queued"
+          glyphicon2 = "fa fa-pause"
+        when "running"
+          glyphicon2 = "fa fa-play"
+        when "error"
+          glyphicon2 = "fa fa-warning"
+        end
+      end
+    end
+
+    content_tag(:ul, :class => 'icons list-unstyled') do
+      content_tag(:li) do
+        content_tag(:span, nil, :class => glyphicon) do
+          content_tag(:span, nil, :class => glyphicon2) if glyphicon2
+        end
+      end
+    end
+  end
+
+  def listicon_tag(db, row)
+    if %w(MiqReportResult MiqSchedule MiqUserRole MiqWidget).include?(db)
+      listicon_glyphicon_tag(db, row)
+    else
+      listicon_image_tag(db, row)
+    end
   end
 
   attr_reader :big_iframe

@@ -1,6 +1,6 @@
 # encoding: US-ASCII
 
-require 'MSCommon'
+require 'disk/modules/MSCommon'
 
 module MSVSDiffDisk
 	

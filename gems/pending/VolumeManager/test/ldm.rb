@@ -1,19 +1,12 @@
-
-$:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
-$:.push("#{File.dirname(__FILE__)}/../../util/extensions")
-$:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
-$:.push("#{File.dirname(__FILE__)}/../../MiqVm")
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'rubygems'
+require_relative '../../bundler_setup'
 require 'log4r'
 require 'ostruct'
-require "miq-blank"
-require 'VmConfig'
-require "MiqVolumeManager"
-require "MiqFS"
-require "MiqVm"
-require 'MiqVimBroker'
+require "util/extensions/miq-blank"
+require 'metadata/VmConfig/VmConfig'
+require "VolumeManager/MiqVolumeManager"
+require "fs/MiqFS/MiqFS"
+require "MiqVm/MiqVm"
+require 'VMwareWebService/MiqVimBroker'
 
 SRC_VM = raise "please define"
 vmCfg = "/Volumes/WDpassport/Virtual Machines/MIQAppliance-win2008x86/Win2008x86.vmx"

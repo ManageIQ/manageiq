@@ -5,8 +5,7 @@ describe ResourceActionWorkflow do
   context "#create" do
     before(:each) do
       MiqRegion.seed
-      super_role   = FactoryGirl.create(:ui_task_set, :name => 'super_administrator', :description => 'Super Administrator')
-      @admin       = FactoryGirl.create(:user, :name => 'admin',            :userid => 'admin',    :ui_task_set_id => super_role.id)
+      @admin = FactoryGirl.create(:user_admin)
 
       @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
       @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')

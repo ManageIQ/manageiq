@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}")
-require 'MiqLargeFile'
+require 'disk/modules/MiqLargeFile'
 
 module MSVSFixedDisk
   def d_init

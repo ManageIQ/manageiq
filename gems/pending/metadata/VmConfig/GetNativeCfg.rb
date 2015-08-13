@@ -1,9 +1,6 @@
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'miq-xml'
-require 'runcmd'
-require 'VmConfig'
+require 'util/miq-xml'
+require 'util/runcmd'
+require 'metadata/VmConfig/VmConfig'
 
 class GetNativeCfg
 	

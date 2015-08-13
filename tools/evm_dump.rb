@@ -39,7 +39,6 @@ MODELS = [
   MiqTask,
   MiqWorker,
   ServerRole,
-  UiTask,
   Zone
 ]
 #

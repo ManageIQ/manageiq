@@ -1,8 +1,5 @@
-#$:.push("#{File.dirname(__FILE__)}/Vim20")
-#$:.push("#{File.dirname(__FILE__)}/Vim25")
-
-require 'MiqScvmm'
-require 'MiqScvmmInventory'
+require 'Scvmm/MiqScvmm'
+require 'Scvmm/MiqScvmmInventory'
 
 require 'drb'
 

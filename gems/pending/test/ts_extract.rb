@@ -1,13 +1,11 @@
 require_relative './test_helper'
 
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/../util")
-require 'miq-logger'
+require 'util/miq-logger'
 
 # Setup console logging
 $log = MIQLogger.get_log(nil, nil)
 $log.level = Log4r::WARN
 
-require 'extract/tc_versioninfo.rb'
-require 'extract/tc_md5deep.rb'
-require 'extract/tc_registry.rb'
+require_relative 'extract/tc_versioninfo.rb'
+require_relative 'extract/tc_md5deep.rb'
+require_relative 'extract/tc_registry.rb'

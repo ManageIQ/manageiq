@@ -76,7 +76,7 @@
                   "data-miq_sparkle_off" => true,
                   "data-miq_observe"     => {:url => url}.to_json)
           - if false
-            - # TODO: Commented out as this observe causes double transactions until we can undo the form observe
+            -# TODO: Commented out as this observe causes double transactions until we can undo the form observe
             %tr
               %td.key
                 = _('Label on Summary Row')
@@ -141,8 +141,6 @@
               = _('Header')
             %th
               = _('Calculations')
-            %th
-              = _('Selected')
         %tbody
           - @edit[:new][:field_order].each_with_index do |f, f_idx|
             %tr
@@ -150,19 +148,18 @@
                 = h(f.first)
               %td
                 = h(@edit[:new][:headers][f.last])
-              - combo_id = "calc_id_#{f_idx}"
-              - combo_name = "calc_#{f_idx}"
-              %td{:id => combo_id}
-              - ci = MiqReport.get_col_info(f.last.split("__").first)
               %td{:id => "calc_#{f_idx}_div"}
+                - ci = MiqReport.get_col_info(f.last.split("__").first)
                 - if ci[:numeric]
-                  = render(:partial => 'layouts/dhtmlxcombo',
-                    :locals         => {:combo_id => combo_id,
-                      :combo_name                 => combo_name,
-                      :combo_url                  => "/report/form_field_changed/#{@edit[:rpt_id] || 'new'}",
-                      :combo_onchange             => "miqChangeIgnore",
-                      :combo_type                 => "checkbox",
-                      :xml_combo                  => @edit[:calc_xml][f_idx]})
+                  #form-group
+                  - field_name = "calc_id_#{f_idx}"
                   - col = field_to_col(f.last)
-                  - if @edit[:new][:col_options][col] && @edit[:new][:col_options][col][:grouping]
-                    = @edit[:new][:col_options][col][:grouping].collect { |c| c.to_s.titleize }.join(", ")
+                  - selected = @edit[:new][:col_options][col] && @edit[:new][:col_options][col][:grouping] ? @edit[:new][:col_options][col][:grouping] : []
+                  = select_tag(field_name,
+                      options_for_select(MiqReport::GROUPINGS.map(&:reverse), selected),
+                      :class    => "selectpicker show-tick",
+                      :multiple => true,
+                      "title"   => "Check Option")
+                  :javascript
+                    miqInitSelectPicker();
+                    miqSelectPickerEvent("#{field_name}", "#{url}")

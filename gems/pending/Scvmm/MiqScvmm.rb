@@ -1,11 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../util/win32")
-require 'miq-xml'
-require 'miq-powershell'
-require 'miq-powershell-daemon'
-require 'MiqScvmmVm'
-require 'miq-hash_struct'
+require 'util/miq-xml'
+require 'util/win32/miq-powershell'
+require 'util/win32/miq-powershell-daemon'
+require 'Scvmm/MiqScvmmVm'
+require 'util/miq-hash_struct'
 
 class MiqScvmm
   attr_reader :connected

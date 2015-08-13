@@ -60,4 +60,55 @@ describe TreeBuilder do
       expect(nodes).to be_empty
     end
   end
+
+  # This is testing a private method, but it's relied upon by a lot of
+  # subclass methods, so it doesn't seem unreasonable to specify its
+  # behavior directly.
+  context '#count_only_or_objects' do
+    let(:builder) do
+      Class.new(TreeBuilder) do
+        public :count_only_or_objects
+      end.new(:test_tree, :test, {}, false)
+    end
+
+    it 'counts things in a Relation' do
+      a = FactoryGirl.create(:user_with_email)
+      FactoryGirl.create(:user_with_email)
+
+      expect(builder.count_only_or_objects(true, User.none, nil)).to eq(0)
+      expect(builder.count_only_or_objects(true, User.where(:id => a.id), nil)).to eq(1)
+      expect(builder.count_only_or_objects(true, User.all, nil)).to eq(2)
+      expect(builder.count_only_or_objects(true, User.select('id, name'), nil)).to eq(2)
+    end
+
+    it 'counts things in an Array' do
+      expect(builder.count_only_or_objects(true, [], nil)).to eq(0)
+      expect(builder.count_only_or_objects(true, [:x], nil)).to eq(1)
+      expect(builder.count_only_or_objects(true, [:x, :y, :z, :z, :y], nil)).to eq(5)
+    end
+
+    it 'returns a collection when not counting' do
+      a = FactoryGirl.create(:user_with_email)
+      b = FactoryGirl.create(:user_with_email)
+
+      expect(builder.count_only_or_objects(false, User.none, nil)).to eq([])
+      expect(builder.count_only_or_objects(false, User.where(:id => a.id), nil)).to eq([a])
+      expect(builder.count_only_or_objects(false, User.all, nil).sort).to eq([a, b].sort)
+      expect(builder.count_only_or_objects(false, User.select('id', 'name'), nil).sort).to eq([a, b].sort)
+
+      expect(builder.count_only_or_objects(false, [], nil)).to eq([])
+      expect(builder.count_only_or_objects(false, [:x], nil)).to eq([:x])
+      expect(builder.count_only_or_objects(false, [:x, :y, :z, :z, :y], nil)).to eq([:x, :y, :z, :z, :y])
+    end
+
+    it 'sorts the collection' do
+      expect(builder.count_only_or_objects(false, %w(), 'to_s')).to eq(%w())
+      expect(builder.count_only_or_objects(false, %w(x), 'to_s')).to eq(%w(x))
+      expect(builder.count_only_or_objects(false, %w(c a b), 'to_s')).to eq(%w(a b c))
+
+      expect(
+        builder.count_only_or_objects(false, [['c', 1], ['a', 0], ['b', 1], ['d', 0]], %w(second first))
+      ).to eq([['a', 0], ['d', 0], ['b', 1], ['c', 1]])
+    end
+  end
 end

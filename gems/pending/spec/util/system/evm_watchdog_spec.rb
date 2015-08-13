@@ -1,10 +1,7 @@
 # encoding: utf-8
 
-
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util system})))
-require 'evm_watchdog'
+require 'util/system/evm_watchdog'
 
 describe EvmWatchdog do
   before(:each) do

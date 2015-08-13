@@ -1,13 +1,13 @@
 - text_area_id ||= "miqNone"
-- url          ||= "form_field_changed"
-- mode         ||= "yaml"
-- theme        ||= "eclipse"
+- url ||= "form_field_changed"
+- mode ||= "yaml"
+- theme ||= "eclipse"
 - line_numbers ||= false
-- height       ||= "auto"
-- width        ||= "auto"
-- read_only    ||= false
-- multi_mode   ||= false
-- no_focus     ||= false
+- height ||= "auto"
+- width ||= "auto"
+- read_only ||= false
+- multi_mode ||= false
+- no_focus ||= false
 
 - if multi_mode
   - modes.each do |mode|
@@ -23,7 +23,7 @@
   = stylesheet_link_tag "codemirror/themes/#{theme}"
 %script{:type => "text/javascript"}
   if (miqDomElementExists('#{text_area_id}')) {
-  miqEditor = CodeMirror.fromTextArea($('##{text_area_id}')[0],
+  ManageIQ.editor = CodeMirror.fromTextArea($('##{text_area_id}')[0],
   {mode: '#{mode}',
   lineNumbers: #{line_numbers},
   matchBrackets: true,
@@ -31,10 +31,10 @@
   readOnly: #{read_only ? "'nocursor'".html_safe : false}
   }
   );
-  miqEditor.on("change", function(cm, change) {miqSendOneTrans('#{url}')}),
-  miqEditor.on("blur", function(cm) {miqEditor.save()}),
+  ManageIQ.editor.on("change", function(cm, change) {miqSendOneTrans('#{url}')}),
+  ManageIQ.editor.on("blur", function(cm) {ManageIQ.editor.save()}),
   $('.CodeMirror-scroll')[0].style.height = '#{height}px';
   $('.CodeMirror-scroll')[0].style.width = '#{width}px';
   - unless no_focus
-    miqEditor.focus();
+    ManageIQ.editor.focus();
   }

@@ -1,18 +1,15 @@
-$:.push("#{File.dirname(__FILE__)}")
-
-require "rubygems"
 require 'net/ssh'
 require 'net/ssh/version'  unless defined?(Net::SSH::Version)
 require 'net/sftp'
 require 'net/sftp/version' unless defined?(Net::SFTP::Version)
 require 'stringio'
-require 'MiqSockUtil'
+require 'util/MiqSockUtil'
 
 # puts "SSH Version: #{Net::SSH::Version::STRING}"
 # puts "SFTP Version: #{Net::SFTP::Version::STRING}"
 
 if Net::SSH::Version::MAJOR == 2
-  require 'MiqSshUtilV2'
+  require 'util/MiqSshUtilV2'
 else
   raise "MiqSshUtil does not support version #{Net::SSH::Version::STRING} of Net::SSH"
 end

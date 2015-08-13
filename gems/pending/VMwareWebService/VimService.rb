@@ -1,8 +1,5 @@
-
-$:.push(File.dirname(__FILE__))
-
 require "handsoap"
-require "VimTypes"
+require 'VMwareWebService/VimTypes'
 
 class VimService < Handsoap::Service
 	

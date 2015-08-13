@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$LOAD_PATH.push(File.expand_path(File.join(File.dirname(__FILE__), %w(.. .. .. db))))
-require 'MiqSqlite/MiqSqlite3'
+require 'db/MiqSqlite/MiqSqlite3'
 
 describe MiqSqlite3DB::MiqSqlite3 do
 

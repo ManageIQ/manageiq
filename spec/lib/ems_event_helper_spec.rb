@@ -3,7 +3,7 @@ require "spec_helper"
 describe EmsEventHelper do
   context "fb12322 - MiqAeEvent.build_evm_event blows up expecting inputs[:policy] to be an instance of MiqPolicy, but it is a hash of { :vmdb_class => 'MiqPolicy', :vmdb_id => 42}" do
     before(:each) do
-      [Zone, ExtManagementSystem, Host, Vm, Storage, EmsEvent, MiqEvent, MiqPolicy, MiqAction, MiqPolicyContent, MiqPolicySet].each(&:delete_all)
+      [Zone, ExtManagementSystem, Host, Vm, Storage, EmsEvent, MiqEventDefinition, MiqPolicy, MiqAction, MiqPolicyContent, MiqPolicySet].each(&:delete_all)
 
       @zone      = FactoryGirl.create(:zone)
       @ems       = FactoryGirl.create(:ems_vmware,
@@ -100,7 +100,7 @@ describe EmsEventHelper do
                                     :username               => @username
                                     )
 
-      @miq_event_vm_start = FactoryGirl.create(:miq_event, :name => 'vm_start', :description => 'VM Power On')
+      @miq_event_vm_start = FactoryGirl.create(:miq_event_definition, :name => 'vm_start', :description => 'VM Power On')
 
       @policy_set = FactoryGirl.create(:miq_policy_set)
       @policy     = FactoryGirl.create(:miq_policy, :towhat => 'Vm', :active => true, :mode => 'control')
@@ -111,7 +111,7 @@ describe EmsEventHelper do
       @policy_content  = FactoryGirl.create(:miq_policy_content,
                                         :miq_policy => @policy,
                                         :miq_action => @action,
-                                        :miq_event => @miq_event_vm_start,
+                                        :miq_event_definition => @miq_event_vm_start,
                                         :qualifier => 'success',
                                         :success_sequence => 1,
                                         :success_synchronous => true)

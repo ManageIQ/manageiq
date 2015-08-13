@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$LOAD_PATH.push(File.expand_path(File.join(File.dirname(__FILE__), %w(.. .. util))))
-require 'MiqSshUtilV2'
+require 'util/MiqSshUtilV2'
 
 describe MiqSshUtil do
   context "#temp_cmd_file" do

@@ -1,6 +1,4 @@
-$LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'inode'
+require 'fs/xfs/inode'
 
 module XFS
   # ////////////////////////////////////////////////////////////////////////////

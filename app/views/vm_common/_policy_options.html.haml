@@ -1,31 +1,25 @@
-- url = {:url => url_for(:action => 'policy_options', :id=>@record.id)}.to_json
-- url2 = {:url => url_for(:action => 'policy_show_options', :id=>@record.id)}.to_json
+- url = {:url => url_for(:action => 'policy_options', :id => @record.id)}.to_json
+- url2 = {:url => url_for(:action => 'policy_show_options', :id => @record.id)}.to_json
 #policy_options_div
   %fieldset
-    %h3=_('Options')
+    %h3= _('Options')
     %table.style1
       %tr
-        %td.key=_('Show out of scope items:')
+        %td.key= _('Show out of scope items:')
         %td
-          = check_box_tag("out_of_scope",
-            value   = "1",
-            checked = @policy_options[:out_of_scope],
+          = check_box_tag("out_of_scope", "1", @policy_options[:out_of_scope],
             "data-miq_sparkle_on" => true,
             "data-miq_sparkle_off" => true,
             "data-miq_observe_checkbox" => url)
       %tr
-        %td.key=_('Show policies:')
+        %td.key= _('Show policies:')
         %td
-          = check_box_tag("passed",
-            value   = "1",
-            checked = @policy_options[:passed],
+          = check_box_tag("passed", "1", @policy_options[:passed],
             "data-miq_sparkle_on" => true,
             "data-miq_sparkle_off" => true,
             "data-miq_observe_checkbox" => url2)
           = "&nbsp;Successful&nbsp;".html_safe
-          = check_box_tag("failed",
-            value   = "1",
-            checked = @policy_options[:failed],
+          = check_box_tag("failed", "1", @policy_options[:failed],
             "data-miq_sparkle_on" => true,
             "data-miq_sparkle_off" => true,
             "data-miq_observe_checkbox" => url2)

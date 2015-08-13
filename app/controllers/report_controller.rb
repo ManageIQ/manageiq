@@ -941,7 +941,11 @@ class ReportController < ApplicationController
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons, :xml => c_xml} if c_buttons && c_xml
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons, :xml => v_xml} if v_buttons && v_xml
 
-    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    if @record && !@in_a_form
+      presenter[:record_id] = @record.id
+    else
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
 
     # Lock current tree if in edit or assign, else unlock all trees
     if @edit && @edit[:current]

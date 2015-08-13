@@ -119,7 +119,7 @@
       exp:
         "=":
           field: Vm-type
-          value: VmOpenstack
+          value: ManageIQ::Providers::Openstack::CloudManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
@@ -130,7 +130,7 @@
       exp:
         "=":
           field: Vm-type
-          value: VmRedhat
+          value: ManageIQ::Providers::Redhat::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
@@ -507,7 +507,7 @@
       exp:
         "=":
           field: MiqTemplate-type
-          value: TemplateOpenstack
+          value: ManageIQ::Providers::Openstack::CloudManager::Template
     search_type: default
     search_key: _hidden_
     db: MiqTemplate
@@ -518,7 +518,7 @@
       exp:
         "=":
           field: MiqTemplate-type
-          value: TemplateRedhat
+          value: ManageIQ::Providers::Redhat::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: MiqTemplate
@@ -593,7 +593,7 @@
       exp:
         "=":
           field: TemplateInfra-type
-          value: TemplateRedhat
+          value: ManageIQ::Providers::Redhat::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: TemplateInfra
@@ -818,7 +818,7 @@
       exp:
         "=":
           field: TemplateCloud-type
-          value: TemplateOpenstack
+          value: ManageIQ::Providers::Openstack::CloudManager::Template
     search_type: default
     search_key: _hidden_
     db: TemplateCloud
@@ -960,7 +960,7 @@
       exp:
         "=":
           field: VmCloud-type
-          value: VmOpenstack
+          value: ManageIQ::Providers::Openstack::CloudManager::Vm
     search_type: default
     search_key: _hidden_
     db: VmCloud
@@ -1035,7 +1035,7 @@
       exp:
         "=":
           field: VmInfra-type
-          value: VmRedhat
+          value: ManageIQ::Providers::Redhat::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: VmInfra
@@ -1254,22 +1254,22 @@
     search_type: default
     db: Container
 - attributes:
-    name: default_Namespace / ContainerGroup
-    description: Namespace / Container Group
+    name: default_Project / Pod
+    description: Project / Pod
     filter: !ruby/object:MiqExpression
       exp:
         "=":
-          field: ContainerGroup-namespace
+          field: ContainerGroup-project
           value: default
     search_type: default
     db: ContainerGroup
 - attributes:
-    name: default_Namespace / ContainerService
-    description: Namespace / Container Services
+    name: default_Project / ContainerService
+    description: Project / Container Services
     filter: !ruby/object:MiqExpression
       exp:
         "=":
-          field: ContainerService-namespace
+          field: ContainerService-project
           value: default
     search_type: default
     db: ContainerService

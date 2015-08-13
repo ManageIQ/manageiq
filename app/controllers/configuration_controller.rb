@@ -239,17 +239,9 @@ class ConfigurationController < ApplicationController
       when "ui_1"                                                 # Visual tab
         @settings.merge!(@edit[:new])                                   # Apply the new saved settings
 
-        # Remove any old settings hashes *****************************
-        @settings[:display].delete(:pres_mode)                    # :pres_mode replaced by :theme
-
-        db_user = current_user
-        unless db_user.nil?                                       # Only if userid is in the DB
-          db_user.settings = db_user.settings == nil ? @settings : db_user.settings.merge(@settings)  # Create or merge the settings into the db
-          # Remove any old settings hashes *****************************
-          db_user.settings[:display].delete(:pres_mode)           # :pres_mode replaced by :theme
-          db_user.settings.delete(:css)                           # Moved this to @css
-          db_user.settings.delete(:adv_search)                    # These got in around sprint 40 by accident
-          db_user.save
+        if current_user
+          user_settings = merge_settings(current_user.settings, @settings)
+          current_user.update_attributes(:settings => user_settings)
 
           # Now copying ALL display settings into the :css hash so we can easily add new settings
           @settings[:css] ||= Hash.new
@@ -260,7 +252,7 @@ class ConfigurationController < ApplicationController
           @css.merge!(@settings[:display])
           @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
           set_user_time_zone
-          add_flash(_("User Interface settings saved for User %s") %  session[:username])
+          add_flash(_("User Interface settings saved for User %s") % current_user.name)
         else
           add_flash(_("User Interface settings saved for this session"))
         end
@@ -269,24 +261,11 @@ class ConfigurationController < ApplicationController
         return                                                    # No config file for Visuals yet, just return
       when "ui_2"                                                 # Visual tab
         @settings.merge!(@edit[:new])                                   # Apply the new saved settings
-
-        # Remove any old settings hashes *****************************
-        @settings[:display].delete(:pres_mode)                    # :pres_mode replaced by :theme
-        @settings[:display].delete(:vmcompare)                    # :vmcompare moved to :views hash
-        @settings[:display].delete(:vm_summary_cool)              # :vm_summary_cool moved to :views hash
-        @settings[:views].delete(:vm_summary_cool)                # :views/:vm_summary_cool changed to :dashboards
-        @settings[:views].delete(:dashboards)                    # :dashboards is obsolete now
-
-        db_user = current_user
-        unless db_user.nil?                                       # Only if userid is in the DB
-          db_user.settings = db_user.settings == nil ? @settings : db_user.settings.merge(@settings)  # Create or merge the settings into the db
-          # Remove any old settings hashes *****************************
-          db_user.settings[:display].delete(:pres_mode)           # :pres_mode replaced by :theme
-          db_user.settings[:display].delete(:vmcompare)           # :vmcompare moved to :views hash
-          db_user.settings[:display].delete(:vm_summary_cool)     # :vm_summary_cool moved to :views hash
-          db_user.settings[:views].delete(:vm_summary_cool)       # :views/:vm_summary_cool changed to :dashboards
-          db_user.save
-          add_flash(_("User Interface settings saved for User %s") %  session[:username])
+        prune_old_settings(@settings)
+        if current_user
+          settings = merge_settings(current_user.settings, @settings)
+          current_user.update_attributes(:settings => settings)
+          add_flash(_("User Interface settings saved for User %s") % current_user.name)
         else
           add_flash(_("User Interface settings saved for this session"))
         end
@@ -357,7 +336,7 @@ class ConfigurationController < ApplicationController
   # Show the users list
   def show_timeprofiles
     build_tabs if params[:action] == "change_tab" || ["cancel","add","save"].include?(params[:button])
-    if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
+    if admin_user?
       @timeprofiles = TimeProfile.in_my_region.all(:order => "lower(description) ASC")
     else
       @timeprofiles = TimeProfile.in_my_region.all(:conditions=> ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
@@ -370,17 +349,10 @@ class ConfigurationController < ApplicationController
     @timeprofile_details = Hash.new
     @timeprofiles.each do |timeprofile|
       @timeprofile_details[timeprofile.description] = Hash.new
-      @timeprofile_details[timeprofile.description][:days] = Array.new
-      timeprofile.profile[:days].each do |day|
-        @timeprofile_details[timeprofile.description][:days].push(
-          DateTime::ABBR_DAYNAMES[day.to_i])
-      end
+      @timeprofile_details[timeprofile.description][:days] =
+        timeprofile.profile[:days].collect { |day| DateTime::ABBR_DAYNAMES[day.to_i] }
       @timeprofile_details[timeprofile.description][:hours] = Array.new
-      temp_arr = Array.new
-      timeprofile.profile[:hours].each do |h|
-        temp_arr.push(h.to_i)
-      end
-      temp_arr = temp_arr.sort
+      temp_arr = timeprofile.profile[:hours].collect(&:to_i).sort
       st = ""
       temp_arr.each_with_index do |hr,i|
         if hr.to_i+1 == temp_arr[i+1]
@@ -429,9 +401,9 @@ class ConfigurationController < ApplicationController
     assert_privileges("tp_edit")
     @timeprofile = TimeProfile.find(params[:id])
     set_form_vars
-    @tp_restricted = true if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
-    title = (@timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator") ? "Time Profile" : "Edit"
-    add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && session[:userrole] != "super_administrator" &&  session[:userrole] != "administrator"
+    @tp_restricted = true if @timeprofile.profile_type == "global" && !admin_user?
+    title = (@timeprofile.profile_type == "global" && !admin_user?) ? "Time Profile" : "Edit"
+    add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && !admin_user?
     session[:changed] = false
     @in_a_form = true
     drop_breadcrumb( {:name=>"#{title} '#{@timeprofile.description}'", :url=>"/configuration/timeprofile_edit"} )
@@ -452,9 +424,7 @@ class ConfigurationController < ApplicationController
             timeprofiles.delete(tp.id.to_s)
             add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "TimeProfile"), :name  => tp.description},
                       :error)
-          elsif tp.profile_type == "global" &&
-              session[:userrole] != "super_administrator" &&
-              session[:userrole] != "administrator"
+          elsif tp.profile_type == "global" && !admin_user?
             timeprofiles.delete(tp.id.to_s)
             add_flash(_("\"%{name}\": Global %{model} cannot be deleted") % {:name  => tp.description, :model => ui_lookup(:models => "TimeProfile")},
                       :error)
@@ -515,7 +485,7 @@ class ConfigurationController < ApplicationController
       page.replace('timeprofile_days_hours_div',
                    :partial => "timeprofile_days_hours",
                    :locals  => {:disabled => false}) if @redraw
-      if params.key?(:profile_tz) && ["super_administrator", "administrator"].include?(session[:userrole])
+      if params.key?(:profile_tz) && admin_user?
         if params[:profile_tz].blank?
           page << javascript_hide("rollup_daily_tr")
         else
@@ -729,10 +699,9 @@ class ConfigurationController < ApplicationController
                   }
 
   def merge_in_user_settings(settings)
-    db_user = current_user
-    if db_user.try(:settings)
+    if user_settings = current_user.try(:settings)
       settings.each do |key, value|
-        value.merge!(db_user.settings[key]) unless db_user.settings[key].nil?
+        value.merge!(user_settings[key]) unless user_settings[key].nil?
       end
     end
     settings
@@ -772,11 +741,9 @@ class ConfigurationController < ApplicationController
         :key     => 'config_edit__ui2',
       }
     when 'ui_3'
-      filters = []
-      MiqSearch.where(:search_type => "default").collect { |search| filters.push(search) if allowed_filter_db?(search.db) }
-      current = filters.sort_by do |a|
-        [NAV_TAB_PATH[a.db.downcase.to_sym], a.description.downcase]
-      end
+      current = MiqSearch.where(:search_type => "default")
+                         .select  { |s| allowed_filter_db?(s.db) }
+                         .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,
@@ -938,5 +905,25 @@ class ConfigurationController < ApplicationController
     session[:vm_catinfo]        = @catinfo
     session[:vm_cats]           = @cats
     session[:zone_options]      = @zone_options
+  end
+
+  def merge_settings(user_settings, global_settings)
+    prune_old_settings(user_settings ? user_settings.merge(global_settings) : global_settings)
+  end
+
+  # typically passing in session, but sometimes passing in @session
+  def prune_old_settings(s)
+    # ui_1
+    s[:display].delete(:pres_mode)          # :pres_mode replaced by :theme
+    s.delete(:css)                          # Moved this to @css
+    s.delete(:adv_search)                   # These got in around sprint 40 by accident
+
+    # ui_2
+    s[:display].delete(:vmcompare)          # :vmcompare moved to :views hash
+    s[:display].delete(:vm_summary_cool)    # :vm_summary_cool moved to :views hash
+    s[:views].delete(:vm_summary_cool)      # :views/:vm_summary_cool changed to :dashboards
+    s[:views].delete(:dashboards)           # :dashboards is obsolete now
+
+    s
   end
 end

@@ -1,11 +1,7 @@
 require "spec_helper"
 
 describe ServiceReconfigureTask do
-  before(:each) do
-    FactoryGirl.create(:ui_task_set_approver)
-  end
-
-  let(:user)     { FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred') }
+  let(:user)     { FactoryGirl.create(:user) }
   let(:template) { FactoryGirl.create(:service_template, :name => 'Test Template') }
   let(:service)  { FactoryGirl.create(:service, :name => 'Test Service', :service_template => template) }
 

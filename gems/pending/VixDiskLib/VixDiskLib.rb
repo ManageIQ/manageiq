@@ -14,10 +14,10 @@ VixDiskLib_raw = FFI::VixDiskLib::API
 class VixDiskLibError < RuntimeError
 end
 
-MIQ_ROOT    = "#{File.dirname(__FILE__)}/../../"
-SERVER_PATH = "#{File.dirname(__FILE__)}/"
-LOG_DIR     = MIQ_ROOT + "vmdb/log/"
-LOG_FILE    = LOG_DIR + "vim.log"
+SERVER_PATH = File.expand_path(__dir__)
+MIQ_ROOT    = File.expand_path(File.join(SERVER_PATH, "../../.."))
+LOG_DIR     = File.join(MIQ_ROOT, "log")
+LOG_FILE    = File.join(LOG_DIR, "vim.log")
 
 class VixDiskLib
   VIXDISKLIB_FLAG_OPEN_READ_ONLY = FFI::VixDiskLib::API::VIXDISKLIB_FLAG_OPEN_READ_ONLY
@@ -116,7 +116,9 @@ class VixDiskLib
     # See: https://bugs.ruby-lang.org/issues/5041
     writer.close_on_exec = false
 
-    pid = Kernel.spawn(my_env, "ruby #{SERVER_PATH}VixDiskLibServer.rb",
+    server_cmd = "ruby #{SERVER_PATH}/VixDiskLibServer.rb"
+    $vim_log.info "VixDiskLib.start_service: running command = #{server_cmd}"
+    pid = Kernel.spawn(my_env, server_cmd,
                        [:out, :err]     => [LOG_FILE, "a"],
                        :unsetenv_others => true,
                        :close_others    => false,

@@ -1,7 +1,6 @@
 = stylesheet_link_tag "slick.grid"
 = stylesheet_link_tag "import_policy"
 
-- url = url_for(:action => 'export_field_changed')
 #profile_export_div
   = render :partial => "layouts/flash_msg"
   %fieldset
@@ -10,9 +9,9 @@
 
       #import_grid
 
-      %table{width: "100%"}
+      %table{:width => "100%"}
         %tr
-          %td{align: "right"}
+          %td{:align => "right"}
             #buttons
               - if @sb[:conflict]
                 = button_tag("Commit",

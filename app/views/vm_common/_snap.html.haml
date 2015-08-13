@@ -1,19 +1,19 @@
-= form_tag({:action => 'snap_vm', :id => @record}, {:id => "vm_snap_form"}) do
+= form_tag({:action => 'snap_vm', :id => @record}, :id => "vm_snap_form") do
   = render :partial => "layouts/flash_msg"
   #form_div
-    %h3=_('Snapshot Information')
+    %h3= _('Snapshot Information')
     %table.style1
       %tbody
         %tr
-          %td.key=_('Name')
+          %td.key= _('Name')
           %td
             = text_field_tag("name", @name, :maxlength => MAX_NAME_LEN, "data-miq_focus" => true)
         %tr
-          %td.key=_('Description')
+          %td.key= _('Description')
           %td
             = text_area_tag("description", @description, :size => "50x4")
         %tr
-          %td.key=_('Snapshot VM memory')
+          %td.key= _('Snapshot VM memory')
           %td
             = check_box_tag("snap_memory", :value => "1", :checked => false)
   - unless @edit

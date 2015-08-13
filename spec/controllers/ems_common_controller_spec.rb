@@ -96,12 +96,12 @@ describe EmsCloudController do
 
         it "when adding cloud EMS" do
           @type = 'openstack'
-          @ems  = EmsOpenstack.new
+          @ems  = ManageIQ::Providers::Openstack::CloudManager.new
         end
 
         it "when adding infra EMS" do
           @type = 'rhevm'
-          @ems  = EmsRedhat.new
+          @ems  = ManageIQ::Providers::Redhat::InfraManager.new
         end
       end
     end
@@ -130,6 +130,29 @@ describe EmsCloudController do
           controller.should_receive(:render_flash)
           controller.send(:update_button_validate)
         end
+      end
+    end
+  end
+end
+
+describe EmsContainerController do
+  context "::EmsCommon" do
+    context "#update" do
+      it "updates provider with new token" do
+        set_user_privileges
+        @ems = EmsKubernetes.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
+        controller.instance_variable_set(:@edit,
+                                         :new    => {:name         => @ems.name,
+                                                     :emstype      => @ems.type,
+                                                     :hostname     => @ems.hostname,
+                                                     :port         => @ems.port,
+                                                     :bearer_token => 'valid-token'},
+                                         :key    => "ems_edit__#{@ems.id}",
+                                         :ems_id => @ems.id)
+        session[:edit] = assigns(:edit)
+        post :update, :button => "save", :id => @ems.id, :type => @ems.type
+        response.status.should == 200
+        EmsKubernetes.last.authentication_token("bearer").should == "valid-token"
       end
     end
   end

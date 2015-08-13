@@ -56,9 +56,9 @@ module RefreshParser::Filter
       vr[:hosts_to_vms][h_id] << vm_id unless h_id.nil? || h_id == :invalid
 
       unless filtered_data[:storage].empty?
-        uid = Parser.normalize_vm_storage_uid(v, filtered_data[:storage])
+        uid = RefreshParser.normalize_vm_storage_uid(v, filtered_data[:storage])
         unless uid.blank?
-          s_mor, = filtered_data[:storage].find { |mor, s| Parser.normalize_storage_uid(s) == uid }
+          s_mor, = filtered_data[:storage].find { |mor, s| RefreshParser.normalize_storage_uid(s) == uid }
           s_id = storage_map[s_mor]
           vr[:vm_to_storage][vm_id] << s_id unless s_id.nil? || s_id == :invalid
         end
@@ -387,15 +387,15 @@ module RefreshParser::Filter
   end
 
   def get_mors(*args)
-    Parser.get_mors(*args)
+    RefreshParser.get_mors(*args)
   end
 
   def host_parent_resource(*args)
-    Parser.host_parent_resource(*args)
+    RefreshParser.host_parent_resource(*args)
   end
 
   def ems_metadata_target_by_mor(*args)
-    Parser.inv_target_by_mor(*args)
+    RefreshParser.inv_target_by_mor(*args)
   end
 end
 end

@@ -22,6 +22,7 @@ class MiqServer < ActiveRecord::Base
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_groups, :as => :resource
+  has_many                :miq_events, :as => :target, :dependent => :destroy
 
   cattr_accessor          :my_guid_cache
 
@@ -44,6 +45,8 @@ class MiqServer < ActiveRecord::Base
   STATUSES_STOPPED = [STATUS_STOPPED, STATUS_KILLED]
   STATUSES_ACTIVE  = [STATUS_STARTING, STATUS_STARTED]
   STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
+
+  RESTART_SCRIPT = Rails.root.join("vmdb_restart").freeze
 
   def self.active_miq_servers
     where(:status => STATUSES_ACTIVE)
@@ -479,16 +482,10 @@ class MiqServer < ActiveRecord::Base
     _log.info("Server restart initiating...")
     self.update_attribute(:status, "restarting")
 
-    _log.info("Server shutting down...")
-    self.class.stop
-
-    logfile = File.expand_path(File.join(Rails.root, "log/vmdb_restart.log"))
+    logfile = Rails.root.join("log/vmdb_restart.log")
     File.delete(logfile) if File.exist?(logfile)
 
-    restart_script = File.join(Rails.root, "vmdb_restart")
-    File.chmod(0755, restart_script)
-
-    pid = spawn("nohup", restart_script, [:out, :err] => [logfile, "a"])
+    pid = spawn("nohup #{RESTART_SCRIPT}", [:out, :err] => [logfile, "a"])
     Process.detach(pid)
   end
 

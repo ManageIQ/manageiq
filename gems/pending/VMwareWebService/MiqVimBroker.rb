@@ -2,8 +2,8 @@ require 'drb'
 require 'drb/acl'
 require 'sync'
 
-require 'MiqVimInventory'
-require 'VimTypes'
+require 'VMwareWebService/MiqVimInventory'
+require 'VMwareWebService/VimTypes'
 
 class MiqVimBroker
 	

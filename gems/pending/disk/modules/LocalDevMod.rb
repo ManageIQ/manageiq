@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}")
-
-require 'MiqLargeFile'
+require 'disk/modules/MiqLargeFile'
 
 module LocalDevMod
 	attr_reader :devFile

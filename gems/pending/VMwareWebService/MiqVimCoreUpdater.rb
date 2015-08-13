@@ -1,6 +1,6 @@
-require 'MiqVimClientBase'
-require 'MiqVimDump'
-require 'VimPropMaps'
+require 'VMwareWebService/MiqVimClientBase'
+require 'VMwareWebService/MiqVimDump'
+require 'VMwareWebService/VimPropMaps'
 
 class MiqVimCoreUpdater < MiqVimClientBase
 	

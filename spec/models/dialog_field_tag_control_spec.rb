@@ -155,7 +155,7 @@ describe DialogFieldTagControl do
       it "automate_output_value with multiple values" do
         tags = [Classification.first, Classification.last]
         @df.value = tags.collect(&:id).join(",")
-        @df.automate_output_value.should == tags.collect{|tag| "#{tag.class.name}::#{tag.id}"}.join(",")
+        @df.automate_output_value.split(",").should match_array tags.collect{|tag| "#{tag.class.name}::#{tag.id}"}
       end
     end
   end

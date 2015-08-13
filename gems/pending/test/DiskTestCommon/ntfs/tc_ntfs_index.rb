@@ -1,15 +1,10 @@
 require 'minitest/unit'
 require 'ostruct'
 
-$:.push("#{File.dirname(__FILE__)}/../..")
-require 'VmsFromYaml'
-
-$:.push("#{File.dirname(__FILE__)}/../../../disk")
-require 'MiqDisk'
-
-$:.push("#{File.dirname(__FILE__)}/../../../fs/ntfs")
-require 'NtfsBootSect'
-require 'NtfsMftEntry'
+require_relative '../../VmsFromYaml'
+require 'disk/MiqDisk'
+require 'fs/ntfs/boot_sect'
+require 'fs/ntfs/mft_entry'
 
 class NtfsTestIndex < Minitest::Test
 	

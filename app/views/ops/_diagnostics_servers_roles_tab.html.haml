@@ -2,9 +2,9 @@
   = render(:partial => "layouts/flash_msg")
   - if @server_tree
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         = render :partial => "zone_tree"
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         = render :partial => "selected"
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Servers found.")}

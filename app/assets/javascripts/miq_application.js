@@ -3,7 +3,7 @@
 // Things to be done on page loads
 function miqOnLoad() {
   // controller to be used in url in miqDropComplete method
-  miq_widget_dd_url = "dashboard/widget_dd_done";
+  ManageIQ.widget.dashboardUrl = "dashboard/widget_dd_done";
 
   // Initialize the dashboard column sortables
   if ($('#col1').length) {
@@ -14,18 +14,20 @@ function miqOnLoad() {
     miqInitWidgetPulldown();
   }
   // Need this since IE will not run JS correctly until after page is loaded
-  if (typeof init_dhtmlx_layout != "undefined") {
+  if (typeof miqInitDhtmlxLayout == "function") {
     miqInitDhtmlxLayout();
   }
 
+  // Track the mouse coordinates for popup menus
   $(document).mousemove(function (e) {
-    miqGetMouseXY(e.pageX, e.pageY);
+    ManageIQ.mouse.x = e.pageX;
+    ManageIQ.mouse.y = e.pageY;
   });
 
   // Need to do this here for IE, rather then right after the grid is initialized
   if ($('#compare_grid').length) {
-    compare_grid.enableAutoHeight(true);
-    compare_grid.enableAutoWidth(true);
+    $('#compare_grid')[0].enableAutoHeight(true);
+    $('#compare_grid')[0].enableAutoWidth(true);
   }
 
   miqBuildCalendar();
@@ -33,7 +35,7 @@ function miqOnLoad() {
 
   if (typeof miqLoadTL == "function") {
     miqLoadTL();
-    if (miq_timeline_filter) {
+    if (ManageIQ.timelineFilter) {
       performFiltering(tl, [ 0, 1 ]);
     }
   }
@@ -47,8 +49,8 @@ function miqOnLoad() {
     miqInitToolbars();
   }
   // Refresh the myCodeMirror editor
-  if (typeof miqEditor != "undefined") {
-    miqEditor.refresh();
+  if (ManageIQ.editor !== null) {
+    ManageIQ.editor.refresh();
   }
   // Position clear search link in right cell header
   if ($('#clear_search').length) {
@@ -81,7 +83,7 @@ function miqOnResize() {
   if (typeof dhxLayout != "undefined") {
     dhxLayout.setSizes();
   }
-  miqGetBrowserSize();
+  miqBrowserSizeTimeout();
 }
 
 // Initialize the widget pulldown on the dashboard
@@ -89,36 +91,13 @@ function miqInitWidgetPulldown() {
   var miqMenu = new dhtmlXToolbarObject("widget_select_div", "miq_blue");
   miqMenu.setIconsPath("/images/icons/24/");
   miqMenu.attachEvent("onClick", miqWidgetToolbarClick);
-  // miqMenuXML var is loaded in dashboard/_dropdownbar.rhtml
-  miqMenu.loadXMLString(miqMenuXML);
+  // ManageIQ.widget.menuXml var is loaded in dashboard/_dropdownbar.rhtml
+  miqMenu.loadXMLString(ManageIQ.widget.menuXml);
   miqSetToolbarButtonIds(miqMenu);
 }
 
 function miqCalendarDateConversion(server_offset) {
-  var date = new Date();
-  var x = new Date(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-    date.getUTCHours(),
-    date.getUTCMinutes(),
-    date.getUTCSeconds()
-  );
-  if (server_offset >= 0) {
-    x.setTime(x.getTime() + (Number(server_offset)) * 1000);
-  } else {
-    x.setTime(x.getTime() - (Number(server_offset.slice(1, server_offset.length))) * 1000);
-  }
-  return x;
-}
-
-// Track the mouse coordinates for popup menus
-var miqMouseX;
-var miqMouseY;
-
-function miqGetMouseXY(positionX, positionY) {
-  miqMouseX = positionX;
-  miqMouseY = positionY;
+  return moment().utcOffset(Number(server_offset) / 60);
 }
 
 // Prefill text entry field when blank
@@ -134,19 +113,18 @@ function miqLoginPrefill() {
 }
 
 // Prefill expression value text entry fields when blank
-function miqExpressionPrefill(count) {
+function miqExpressionPrefill(expEditor, noPrefillCount) {
   var title;
-  var miq_exp_prefill_count;
 
   if ($('#chosen_value[type=text]').length) {
-    miqPrefill($('#chosen_value'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('#chosen_value').prop('title', miq_val1_title);
-    $('#chosen_value').prop('alt', miq_val1_title);
+    miqPrefill($('#chosen_value'), '/images/layout/expression/' + expEditor.first.type + '.png');
+    $('#chosen_value').prop('title', expEditor.first.title);
+    $('#chosen_value').prop('alt', expEditor.first.title);
   }
   if ($('#chosen_cvalue[type=text]').length) {
-    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('#chosen_cvalue').prop('title', miq_val2_title);
-    $('#chosen_cvalue').prop('alt', miq_val2_title);
+    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + expEditor.second.type + '.png');
+    $('#chosen_cvalue').prop('title', expEditor.second.title);
+    $('#chosen_cvalue').prop('alt', expEditor.second.title);
   }
   if ($('#chosen_regkey[type=text]').length) {
     miqPrefill($('#chosen_regkey'), '/images/layout/expression/string.png');
@@ -161,64 +139,64 @@ function miqExpressionPrefill(count) {
     $('#chosen_regval').prop('alt', title);
   }
   if ($('#miq_date_1_0[type=text]').length) {
-    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('#miq_date_1_0').prop('title', miq_val1_title);
-    $('#miq_date_1_0').prop('alt', miq_val1_title);
+    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + expEditor.first.type + '.png');
+    $('#miq_date_1_0').prop('title', expEditor.first.title);
+    $('#miq_date_1_0').prop('alt', expEditor.first.title);
   }
   if ($('#miq_date_1_1[type=text]').length) {
-    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('#miq_date_1_1').prop('title', miq_val1_title);
-    $('#miq_date_1_1').prop('alt', miq_val1_title);
+    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + expEditor.first.type + '.png');
+    $('#miq_date_1_1').prop('title', expEditor.first.title);
+    $('#miq_date_1_1').prop('alt', expEditor.first.title);
   }
   if ($('#miq_date_2_0[type=text]').length) {
-    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('#miq_date_2_0').prop('title', miq_val2_title);
-    $('#miq_date_2_0').prop('alt', miq_val2_title);
+    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + expEditor.second.type + '.png');
+    $('#miq_date_2_0').prop('title', expEditor.second.title);
+    $('#miq_date_2_0').prop('alt', expEditor.second.title);
   }
   if ($('#miq_date_2_1[type=text]').length) {
-    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('#miq_date_2_1').prop('title', miq_val2_title);
-    $('#miq_date_2_1').prop('alt', miq_val2_title);
+    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + expEditor.second.type + '.png');
+    $('#miq_date_2_1').prop('title', expEditor.second.title);
+    $('#miq_date_2_1').prop('alt', expEditor.second.title);
   }
-  if (typeof count == 'undefined') {
-    miq_exp_prefill_count = 0;
+  if (noPrefillCount) {
+    expEditor.prefillCount = 0;
     setTimeout(function () {
-      miqExpressionPrefill(miq_exp_prefill_count);
+      miqExpressionPrefill(expEditor, false);
     }, 200);
-  } else if (count == miq_exp_prefill_count) {
-    if (++miq_exp_prefill_count > 100) {
-      miq_exp_prefill_count = 0;
+  } else {
+    if (++expEditor.prefillCount > 100) {
+      expEditor.prefillCount = 0;
     }
     setTimeout(function () {
-      miqExpressionPrefill(miq_exp_prefill_count);
+      miqExpressionPrefill(expEditor, false);
     }, 200);
   }
 }
 
 // Prefill report editor style value text entry fields when blank
-// (written more generic for reuse, just have to build the miq_value_styles hash)
+// (written more generic for reuse, just have to build
+// the ManageIQ.reportEditor.valueStyles hash)
 function miqValueStylePrefill(count) {
   var found = false;
-  var miq_vs_prefill_count;
 
-  for (var field in miq_value_styles) {
+  for (var field in ManageIQ.reportEditor.valueStyles) {
     if ($(field).length) {
-      miqPrefill($(field), '/images/layout/expression/' + miq_value_styles[field] + '.png');
+      miqPrefill($(field), '/images/layout/expression/' + ManageIQ.reportEditor.valueStyles[field] + '.png');
       found = true;
     }
   }
   if (found) {
     if (typeof count == 'undefined') {
-      miq_vs_prefill_count = 0;
+      ManageIQ.reportEditor.prefillCount = 0;
       setTimeout(function () {
-        miqValueStylePrefill(miq_vs_prefill_count);
+        miqValueStylePrefill(ManageIQ.reportEditor.prefillCount);
       }, 200);
-    } else if (count == miq_vs_prefill_count) {
-      if (++miq_vs_prefill_count > 100) {
-        miq_vs_prefill_count = 0;
+    } else if (count == ManageIQ.reportEditor.prefillCount) {
+      if (++ManageIQ.reportEditor.prefillCount > 100) {
+        ManageIQ.reportEditor.prefillCount = 0;
       }
       setTimeout(function () {
-        miqValueStylePrefill(miq_vs_prefill_count);
+        miqValueStylePrefill(ManageIQ.reportEditor.prefillCount);
       }, 200);
     }
   }
@@ -241,10 +219,8 @@ function miqPrefill(element, image, blank_image) {
 
 // Get user's time zone offset
 function miqGetTZO() {
-  var uDate = new Date();
-
   if ($('#user_TZO').length) {
-    $('#user_TZO').val(uDate.getTimezoneOffset() / 60);
+    $('#user_TZO').val(moment().utcOffset() / 60);
   }
 }
 
@@ -335,53 +311,24 @@ function miqDimDiv(divname, status) {
 
 // Check for changes and prompt
 function miqCheckForChanges() {
-  if (miqAngularApplication.$scope) {
-    if (miqAngularApplication.$scope.form.$dirty) {
+  if (ManageIQ.angularApplication.$scope) {
+    if (ManageIQ.angularApplication.$scope.form.$dirty) {
       var answer = confirm("Abandon changes?");
       if (answer) {
-        miqAngularApplication.$scope.form.$setPristine(true);
+        ManageIQ.angularApplication.$scope.form.$setPristine(true);
       }
       return answer;
     }
   } else {
     if ((($('#buttons_on').length &&
           $('#buttons_on').is(":visible")) ||
-         typeof miq_changes != "undefined") &&
+         ManageIQ.changes !== null) &&
         !$('#ignore_form_changes').length) {
       return confirm("Abandon changes?");
     }
   }
+  // use default browser reaction for onclick
   return true;
-}
-
-// go to the specified URL when a download all log files button is pressed
-function miqDownloadLogFiles(theUrl, count) {
-  for (var i = 0; i < count; i++) {
-    var new_url = theUrl + "?i=" + i;
-    var winName = "log" + i;
-    window.open(new_url, winName,
-      'top=0,' +
-      'left=0,' +
-      'directories=0,' +
-      'location=0,' +
-      'menubar=0,' +
-      'resizable=0,' +
-      'scrollbars=0,' +
-      'status=0,' +
-      'toolbar=0'
-    );
-  }
-}
-
-// Prompt for new tags
-function miqNewTagPrompt() {
-  var text = prompt('Enter new tags, separated by blanks', '');
-  if (text !== null) {
-    $('#new_tag').val(text);
-    return true;
-  } else {
-    return false;
-  }
 }
 
 // Hide/show form buttons
@@ -397,7 +344,7 @@ function miqButtons(h_or_s, prefix) {
   $('#' + prefix + 'buttons_' + off).hide();
 }
 
-// Hide/show form buttons
+// Hide/show form validate buttons
 function miqValidateButtons(h_or_s, prefix) {
   prefix = (prefix == null) ? "" : prefix;
   var on_id = '#' + prefix + 'validate_buttons_on';
@@ -451,23 +398,27 @@ function miqUpdateAllCheckboxes(button_div, override) {
     if (override != null) {
       state = override;
     }
-    if (typeof gtl_list_grid == "undefined" &&
+    if (typeof ManageIQ.grids.grids.gtl_list_grid == 'undefined' &&
         ($("input[id^='listcheckbox']").length)) {
       // No dhtmlx grid on the screen
-      $("input[id^='listcheckbox']").prop('checked', state);
+      var cbs = $("input[id^='listcheckbox']")
+      cbs.prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);
-    } else if (typeof gtl_list_grid == "undefined" &&
+    } else if (typeof ManageIQ.grids.grids.gtl_list_grid == 'undefined' &&
                $("input[id^='storage_cb']").length) {
       // to handle check/uncheck all for C&U collection
       $("input[id^='storage_cb']").prop('checked', state);
-      miqJqueryRequest("/configuration/form_field_changed?storage_cb_all=" + state);
+      miqJqueryRequest(miqPassFields(
+        "/configuration/form_field_changed",
+        {storage_cb_all: state}
+      ));
       return true;
     } else {
       // Set checkboxes in dhtmlx grid
-      gtl_list_grid.forEachRow(function (id) {
-        gtl_list_grid.cells(id, 0).setValue(state ? 1 : 0);
+      ManageIQ.grids.grids.gtl_list_grid.obj.forEachRow(function (id) {
+        ManageIQ.grids.grids.gtl_list_grid.obj.cells(id, 0).setValue(state ? 1 : 0);
       });
-      var crows = gtl_list_grid.getCheckedRows(0);
+      var crows = ManageIQ.grids.grids.gtl_list_grid.obj.getCheckedRows(0);
       $('#miq_grid_checks').val(crows);
       var count = !crows ? 0 : crows.split(",").length;
       miqSetButtons(count, button_div);
@@ -503,9 +454,9 @@ function miqSetButtons(count, button_div) {
   var buttons;
 
   if (button_div.match("_tb$")) {
-    if (typeof miq_toolbars[button_div] != "undefined") {
-      tb = miq_toolbars[button_div].obj;
-      buttons = miq_toolbars[button_div].buttons;
+    if (typeof ManageIQ.toolbars[button_div] != "undefined") {
+      tb = ManageIQ.toolbars[button_div].obj;
+      buttons = ManageIQ.toolbars[button_div].buttons;
       for (var button in buttons) {
         var onwhen = buttons[button].onwhen;
         if (typeof onwhen != "undefined") {
@@ -583,65 +534,43 @@ function miqSetButtons(count, button_div) {
   }
 }
 
-// ChangeColor and DoNav are for making a full table row clickable and
-// highlight-able.  Found here:
-//   http://imar.spaanjaars.com/312/how-do-i-make-a-full-table-row-clickable
-// TODO: Convert to jQuery UJS, possibly like so:
-//   http://www.electrictoolbox.com/jquey-make-entire-table-row-clickable/
-
-// Change table cell colors as mouse moves
-function ChangeColor(tablecell, highLight) {
-  if (highLight) {
-    tablecell.style.backgroundColor = '#fff';
-  } else {
-    tablecell.style.backgroundColor = '';
-  }
-}
-
 // go to the specified URL when a table cell is clicked
 function DoNav(theUrl) {
   document.location.href = theUrl;
 }
 
 // Routines to get the size of the window
-// original reference: http://www.communitymx.com/blog/index.cfm?newsid=622
-var size_timer = false;
+ManageIQ.sizeTimer = false;
 
-// Get the size and pass to the server
-function miqGetBrowserSize() {
-  if (size_timer) {
+function miqBrowserSizeTimeout() {
+  if (ManageIQ.sizeTimer) {
     return;
   }
-  size_timer = true;
+  ManageIQ.sizeTimer = true;
   setTimeout(miqResetSizeTimer, 1000);
 }
 
 function miqResetSizeTimer() {
-  size_timer = false;
-  var theArray = miqGetSize();
-  var url = "/dashboard/window_sizes";
-  var args = [];
+  ManageIQ.sizeTimer = false;
+  var sizes = miqGetSize();
   var offset = 427;
   var h;
+  var url = "/dashboard/window_sizes";
+  var args = {width: sizes[0], height: sizes[1]};
 
-  args.push("width");
-  args.push(theArray[0]);
-  args.push("height");
-  args.push(theArray[1]);
-
-  if (typeof xml != "undefined") {
+  if (ManageIQ.grids.xml !== null) {
     // If grid xml is available for reload
     if ($('#list_grid').length) {
       // Adjust certain elements, if present
-      h = theArray[1] - offset;
+      h = sizes[1] - offset;
       if (h < 200) {
         h = 200;
       }
       $('#list_grid').css({height: h + 'px'});
-      gtl_list_grid.clearAll();
-      gtl_list_grid.parse(xml);
+      ManageIQ.grids.grids.gtl_list_grid.obj.clearAll();
+      ManageIQ.grids.grids.gtl_list_grid.obj.parse(xml);
     } else if ($('#logview').length) {
-      h = theArray[1] - offset;
+        h = sizes[1] - offset;
       if (h < 200) {
         h = 200;
       }
@@ -650,9 +579,10 @@ function miqResetSizeTimer() {
   }
 
   // Send the new values to the server
-  miqPassFields(url, args);
+  miqJqueryRequest(miqPassFields(url, args));
 }
 
+// Get the size and pass to the server
 function miqGetSize() {
   var myWidth = 0;
   var myHeight = 0;
@@ -679,47 +609,14 @@ function miqGetSize() {
 
 // Pass fields to server given a URL and fields in name/value pairs
 function miqPassFields(url, args) {
-  url += '?';
-
-  for (var i = 0; i < args.length; i += 2) {
-    url += args[i] + '=' + args[i + 1] + '&';
-  }
-
-  miqJqueryRequest(url);
-}
-
-// Create a new div to put the notification area at the bottom of the screen whenever the page loads
-function wrapFish() {
-  var catfish = document.getElementById('notification');
-  var subelements = [];
-  var i;
-
-  for (i = 0; i < document.body.childNodes.length; i++) {
-    subelements[i] = document.body.childNodes[i];
-  }
-
-  // Create the outer-most div (zip)
-  var zip = document.createElement('div');
-  // call it zip
-  zip.id = 'zip';
-
-  for (i = 0; i < subelements.length; i++) {
-    zip.appendChild(subelements[i]);
-  }
-
-  // add the major div
-  document.body.appendChild(zip);
-  // add the catfish after the zip
-  document.body.appendChild(catfish);
+  return url + '?' + $.param(args);
 }
 
 // Load XML/SWF charts data (non-IE)
 // This method is called by the XML/SWF charts when a chart is loaded into the DOM
-var miq_chart_data;
-
 function Loaded_Chart(chart_id) {
-  if ((miq_browser != 'Explorer') &&
-      (typeof (miq_chart_data) !== 'undefined')) {
+  if ((ManageIQ.browser != 'Explorer') &&
+      (typeof (ManageIQ.charts.chartData) != 'undefined')) {
     doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
   }
 }
@@ -731,17 +628,17 @@ function doLoadChart(chart_id, chart_object) {
   var comp = id_splitted[3];
 
   if (typeof (comp) === 'undefined') {
-    chart_object.Update_XML(miq_chart_data[set][idx].xml, false);
+    chart_object.Update_XML(ManageIQ.charts.chartData[set][idx].xml, false);
   } else {
-    chart_object.Update_XML(miq_chart_data[set][idx].xml2, false);
+    chart_object.Update_XML(ManageIQ.charts.chartData[set][idx].xml2, false);
   }
 }
 
 // Load XML/SWF charts data (IE)
 function miqLoadCharts() {
-  if (typeof miq_chart_data != 'undefined' && miq_browser == 'Explorer') {
-    for (var set in miq_chart_data) {
-      var mcd = miq_chart_data[set];
+  if (typeof ManageIQ.charts.chartData != 'undefined' && ManageIQ.browser == 'Explorer') {
+    for (var set in ManageIQ.charts.chartData) {
+      var mcd = ManageIQ.charts.chartData[set];
       for (var i = 0; i < mcd.length; i++) {
         miqLoadChart("miq_" + set + "_" + i);
         if (typeof mcd[i].xml2 != "undefined") {
@@ -791,37 +688,38 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
 function miqBuildChartMenu(col, row, value, category, series, id, message) {
   var set = id.split('_')[1]; // Get the chart set
   var idx = id.split('_')[2]; // Get the chart index
-  var chart_data = miq_chart_data[set];
+  var chart_data = ManageIQ.charts.chartData[set];
+  var chart_el_id = id.replace(/^miq_/, 'miq_chart_');
+  var chartmenu_el_id = id.replace(/^miq_/, 'miq_chartmenu_');
 
   if (chart_data[idx].menu != null && chart_data[idx].menu.length) {
     var rowcolidx = "_" + row + "-" + col + "-" + idx;
-    var miqMenu = new dhtmlXMenuObject(null, "dhx_web");
-    miqMenu.setImagePath("/assets/dhtmlx_gpl_36/imgs/");
-    miqMenu.renderAsContextMenu();
-    miqMenu.setWebModeTimeout(1000);
-    miqMenu.attachEvent("onClick", miqChartMenuClick);
-    miqMenu.setAutoHideMode(true);
 
     for (var i = 0; i < chart_data[idx].menu.length; i++) {
       var menu_id = chart_data[idx].menu[i].split(":")[0] + rowcolidx;
       var pid = menu_id.split("-")[0];
 
-      if (miqMenu.getParentId(pid) == null) {
-        miqMenu.addNewChild(miqMenu.topId, 99, pid, pid, false);
+      if ($('#' + chartmenu_el_id).find('#' + pid).length == 0) {
+        $("#" + chartmenu_el_id).append("<li class='dropdown-submenu'>" +
+          "<a tabindex='-1' href='#'>" + pid + "</a>" +
+          "<ul id='" + pid + "' class='dropdown-menu'></ul></li>");
       }
 
       var menu_title = chart_data[idx].menu[i].split(":")[1];
       menu_title = menu_title.replace("<series>", series);
       menu_title = menu_title.replace("<category>", category);
-      miqMenu.addNewChild(pid, 99, menu_id, menu_title, false);
+      $("#" + pid).append("<li><a id='" + menu_id +
+        "' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
     }
 
-    miqMenu.showContextMenu(miqMouseX - 10, miqMouseY - 10);
+    $("#" + chartmenu_el_id).css({'left': ManageIQ.mouse.x, 'top': ManageIQ.mouse.y});
+    $('#' + chartmenu_el_id).dropdown('toggle');
+    $('#' + chart_el_id).find('.overlay').show();
   }
 }
 
 // Handle chart context menu clicks
-function miqChartMenuClick(itemId, itemValue) {
+function miqChartMenuClick(itemId) {
   if ($('#menu_div').length) {
     $('#menu_div').hide();
   }
@@ -829,8 +727,6 @@ function miqChartMenuClick(itemId, itemValue) {
     miqAsyncAjax("?menu_click=" + itemId);
   }
 }
-
-var miqAjaxTimers = 0;
 
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q,
 // then waiting for .7 seconds for observers to finish
@@ -842,7 +738,6 @@ function miqAjaxButton(url, serialize_fields) {
     $('#notification').show();
   }
 
-  miqAjaxTimers++;
   setTimeout(function () {
     miqAjaxButtonSend(url, serialize_fields);
   }, 700);
@@ -851,23 +746,25 @@ function miqAjaxButton(url, serialize_fields) {
 // Send ajax url after any outstanding ajax requests, wait longer if needed
 function miqAjaxButtonSend(url, serialize_fields) {
   if ($.active) {
-    miqAjaxTimers++;
     setTimeout(function () {
       miqAjaxButtonSend(url);
     }, 700);
   } else {
     miqAjax(url, serialize_fields);
   }
-  miqAjaxTimers--;
 }
 
 // Function to generate an Ajax request
 function miqAjax(url, serialize_fields) {
-  if (serialize_fields) {
-    miqJqueryRequest(url, {beforeSend: true, complete: true, data: miqSerializeForm('form_div')});
-  } else {
-    miqJqueryRequest(url, {beforeSend: true, complete: true});
+  var data = undefined;
+
+  if (serialize_fields === true) {
+    data = miqSerializeForm('form_div');
+  } else if (serialize_fields) {  // object or possibly FormData
+    data = serialize_fields;
   }
+
+  miqJqueryRequest(url, {beforeSend: true, complete: true, data: data});
 }
 
 // Function to generate an Ajax request for EVM async processing
@@ -875,42 +772,29 @@ function miqAsyncAjax(url) {
   miqJqueryRequest(url, {beforeSend: true});
 }
 
-var miqOneTrans = 0;
+ManageIQ.oneTransition.oneTrans = 0;
 
 // Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url) {
-  if (typeof miqIEButtonPressed != "undefined") {
+  if (typeof ManageIQ.oneTransition.IEButtonPressed != "undefined") {
     // page replace after clicking save/reset was making observe_field on
     // text_area in IE send up a trascation to form_field_changed method
-    miqIEButtonPressed = undefined;
+    ManageIQ.oneTransition.IEButtonPressed = undefined;
     return;
   }
-  if (miqOneTrans == 1) {
+  if (ManageIQ.oneTransition.oneTrans) {
     return;
   }
 
-  miqOneTrans = 1;
+  ManageIQ.oneTransition.oneTrans = 1;
   miqJqueryRequest(url);
 }
 
-function leadingZero(x) {
-  return (x > 9) ? x : '0' + x;
-}
-
+// Function to write date and time to page footer each second
 function dateTime(offset, abbr) {
   var date = miqCalendarDateConversion(offset);
 
-  document.getElementById('tP').innerHTML = (date.getMonth() + 1) +
-    '/' +
-    date.getDate() +
-    '/' +
-    date.getFullYear() +
-    ' ' +
-    leadingZero(date.getHours()) +
-    ':' +
-    leadingZero(date.getMinutes()) +
-    ' ' +
-    abbr;
+  $('#tP').html(date.format("MM/DD/YYYY HH:mm ") + abbr);
   setTimeout(function () {
     dateTime(offset, abbr);
   }, 1000);
@@ -944,19 +828,11 @@ function miqCheckMaxLength(obj) {
     obj.value = obj.value.substring(0, ml);
   }
   if (counter) {
-    if (miq_browser != 'Explorer') {
+    if (ManageIQ.browser != 'Explorer') {
       $('#' + counter)[0].textContent = obj.value.length;
     } else {
       $('#' + counter).innerText = obj.value.length;
     }
-  }
-}
-
-function miqSetInputClass(fld, cname, typ) {
-  if (typ == "remove") {
-    $(fld).removeClass(cname);
-  } else {
-    $(fld).addClass(cname);
   }
 }
 
@@ -991,9 +867,7 @@ function miqAjaxAuth(button) {
     miqEnableLoginFields(false);
     miqAsyncAjax(
       '/dashboard/authenticate?' +
-      miqSerializeForm('login_div') +
-      '&button=' +
-      button
+      miqSerializeForm('login_div') + '&button=' + button
     );
   }
 }
@@ -1007,36 +881,6 @@ function miqEnableLoginFields(enabled) {
   if ($('#user_verify_password').length) {
     $('#user_verify_password').prop('readonly', !enabled);
   }
-}
-
-// Attach text area with id = id + "_lines" to work with the text area id passed in
-function miqAttachTextAreaWithLines(id) {
-  var el = document.getElementById(id + "_lines");
-  var ta = document.getElementById(id);
-  var string = '';
-
-  for (var no = 1; no < 300; no++) {
-    if (string.length) {
-      string += '\n';
-    }
-    string += no;
-  }
-
-  el.style.height = (ta.offsetHeight - 3) + "px";
-  el.style.overflow = 'hidden';
-  el.style.textAlign = 'right';
-  el.innerHTML = string; // Firefox renders \n linebreak
-  el.innerText = string; // IE6 renders \n line break
-  el.scrollTop = ta.scrollTop;
-
-  ta.focus();
-  var scrollTop = function () {
-    el.scrollTop = ta.scrollTop;
-  }
-  ta.onkeydown = scrollTop;
-  ta.onmousedown = scrollTop;
-  ta.onmouseup = scrollTop;
-  ta.onmousemove = scrollTop;
 }
 
 // Initialize dashboard column jQuery sortables
@@ -1061,62 +905,41 @@ function miqInitDashboardCols() {
 // Send the updated sortable order after jQuery drag/drop
 function miqDropComplete(event, ui) {
   var el = $(this);
-  var url = "/" + miq_widget_dd_url + "?" + el.sortable(
+  var url = "/" + ManageIQ.widget.dashboardUrl + "?" + el.sortable(
               'serialize', {key: el.attr('id') + "[]"}
             ).toString();
   // Adding id of record being edited to be used by load_edit call
-  if (typeof miq_record_id != "undefined") {
-    url += "&id=" + miq_record_id;
+  if (ManageIQ.record.recordId !== null) {
+    url += "&id=" + ManageIQ.record.recordId;
   }
   miqJqueryRequest(url);
 }
 
 // Attach a calendar control to all text boxes that start with miq_date_
 function miqBuildCalendar() {
-  var all;
-
   // Get all of the input boxes with ids starting with "miq_date_"
-  all = $('input[id^=miq_date_]');
+  var all = $('input[id^=miq_date_]');
 
   all.each(function () {
-    // Attach dhtmlxcalendars to each one
-    var el = $(this);
-    var cal = new dhtmlxCalendarObject(el.attr('id'));
-    cal.setDateFormat("%m/%d/%Y");
+    var element = $(this);
 
-    if ((!el.val()) && typeof miq_cal_dateTo != "undefined") {
-      cal.setDate(miq_cal_dateTo);
-    } else {
-      cal.setDate(this.value);
+    if (! element.data('datepicker')) {
+      var observeDateBackup = ManageIQ.observeDate;
+      ManageIQ.observeDate = function() {};
+      element.datepicker();
+      ManageIQ.observeDate = observeDateBackup;
     }
 
-    cal.setSkin("dhx_skyblue");
-    cal.hideTime();
-    cal.setPosition('right');
-    // start week from sunday, default is (1) monday
-    cal.setWeekStartDay(7);
-
-    if ((typeof miq_cal_dateFrom != "undefined") &&
-        (typeof miq_cal_dateTo != "undefined")) {
-      cal.setSensitiveRange(miq_cal_dateFrom, miq_cal_dateTo);
-    } else if ((typeof miq_cal_dateFrom != "undefined") &&
-               (typeof miq_cal_dateTo == "undefined")) {
-      cal.setSensitiveRange(miq_cal_dateFrom);
-    }
-    if (typeof miq_cal_skipDays != "undefined" &&
-        miq_cal_skipDays != null &&
-        miq_cal_skipDays) {
-      cal.setInsensitiveRange(miq_cal_skipDays);
+    if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
+      element.datepicker('setStartDate', ManageIQ.calendar.calDateFrom);
     }
 
-    // Create an observer for the date field if the html5 attr is specified
-    if (this.getAttribute('data-miq_observe_date')) {
-      el.change(function () {
-      miqSendDateRequest(el);
-    });
-      cal.attachEvent("onClick", function () {
-      miqSendDateRequest(el);
-      });
+    if (typeof ManageIQ.calendar.calDateTo != "undefined") {
+      element.datepicker('setEndDate', ManageIQ.calendar.calDateTo);
+    }
+
+    if (typeof miq_cal_skipDays != "undefined") {
+      element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
     }
   });
 }
@@ -1138,157 +961,15 @@ function miqSendDateRequest(el) {
   }
 }
 
-// Build an explorer view using a YUI layout and a jQuery accordion
-function miqBuildExplorerView(options) {
-  // Set the default values in the object, then extend it to include the values that we passed to it.
-  var settings = $.extend({
-    accord_url: null,
-    width: 1000,
-    divider: 4,
-    left: 0,
-    resize: false,
-    layout_div: 'layout_div',
-    left_div: 'accordion_div',
-    active_accord: null,
-    center_div: null,
-    header: null
-  }, options || {}); // If no options, pass an empty object
-
-  $(function() {
-    // On doc ready, build the layout and accordion
-    // Build object for center layout unit settings
-    var centerHash = {
-      position: 'center'
-    };
-
-    // Only add header if option specified (because passing header:null still shows a thin header)
-    if (settings.header != null) {
-      centerHash.header = settings.header;
-    }
-
-    // Build the layout
-    if (!settings.left) {
-      // If no saved width, calculate
-      settings.left = settings.width / settings.divider;
-    }
-
-    var expLayout = new YAHOO.widget.Layout(settings.layout_div, {
-      units: [
-        {
-          position: 'left',
-          width: settings.left,
-          body: settings.left_div,
-          collapse: false,
-          gutter: '0 5 0 0',
-          resize: settings.resize,
-          minWidth: settings.width / 8,
-          maxWidth: settings.width / 2
-        },
-        centerHash
-      ]
-    });
-
-    expLayout.on('render', function () {
-      if ($('#main_div').length) {
-        miqBuildMainLayout(this, settings.header);
-      }
-    });
-
-    expLayout.render();
-
-    // Show the layout divs right after layout rendering
-    $("#" + settings.center_div).show();
-    $("#" + settings.left_div).show();
-
-    // Set up event to capture center layout resize
-    var clu = expLayout.getUnitByPosition('center');
-    clu.addListener('leftChange', miqExplorerResize);
-
-    // Build the accordion
-    $("#" + settings.left_div).accordion({
-      change: function (event, ui) {
-        miqAccordionChange(event, ui, settings.accord_url);
-      },
-      fillSpace: true,
-      active: "#" + settings.active_accord,
-      icons: false,
-      animated: false
-    });
-  });
-}
-
-// Build the nested GTL layout inside the explorer layout
-function miqBuildMainLayout(parentLayout, header) {
-  var el = parentLayout.getUnitByPosition('center').get('wrap');
-  var paging_height;
-
-  if ($('#paging_div').length) {
-    paging_height = 35;
-  } else {
-    paging_height = 0;
-  }
-
-  var mainLayout = new YAHOO.widget.Layout(el, {
-    parent: parentLayout,
-    id: 'main_layout',
-    units: [
-      {
-        position: 'top',
-        body: 'taskbar_div',
-        height: 40,
-        collapse: false
-      },
-      {
-        position: 'bottom',
-        body: 'paging_div',
-        height: paging_height,
-        gutter: "0px 0px 5px 0px",
-        collapse: false
-      },
-      {
-        position: 'center',
-        header: header,
-        body: 'main_div',
-        scroll: true,
-        gutter: "5px 0px 5px 0px",
-        collapse: false
-      }
-    ]
-  });
-
-  mainLayout.render();
-
-  $("#main_div").show();
-  $("#taskbar_div").show();
-  $("#paging_div").show();
-}
-
-function miqExplorerResize(e) {
-  var url = "/dashboard/window_sizes";
-  var args = [];
-  args.push("exp_controller");
-  args.push(miq_controller);
-  args.push("exp_left");
-  args.push(e.newValue);
-  // Send the new values to the server
-  miqPassFields(url, args);
-}
-
-function miqAccordionChange(event, ui, url) {
-  return miqAjaxRequest(ui.newHeader.context.id, url);
-}
-
-function miqSetLayoutHeader(unitId, text) {
-  return YAHOO.widget.LayoutUnit.getLayoutUnitById(unitId).set('header', text);
-}
-
 // common function to pass ajax request to server
 function miqAjaxRequest(itemId, path) {
-  if (!miqCheckForChanges()) {
-    return false;
-  } else {
-    miqJqueryRequest(path + '?id=' + itemId, {beforeSend: true, complete: true});
+  if (miqCheckForChanges()) {
+    miqJqueryRequest(
+      miqPassFields(path, {id: itemId}),
+      {beforeSend: true, complete: true});
     return true;
+  } else {
+    return false;
   }
 }
 
@@ -1299,41 +980,42 @@ function miqClickAndPop(el) {
   if (conmsg == null || confirm(conmsg)) {
     window.open(el.href);
   }
+  // no default browser reaction for onclick
   return false;
 }
 
 function miq_tabs_init(id, url) {
-  if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
-    $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-      if ($(e.target).parent().hasClass('disabled')) {
-        e.preventDefault();
-        return false;
-      } else {
-        // Load remote tab if an URL is specified
-        if (typeof(url) != 'undefined') {
-          var currTabTarget = $(e.target).attr('href').substring(1);
-          miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
-        }
+  $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+    if ($(e.target).parent().hasClass('disabled')) {
+      e.preventDefault();
+      return false;
+    } else {
+      // Load remote tab if an URL is specified
+      if (typeof(url) != 'undefined') {
+        var currTabTarget = $(e.target).attr('href').substring(1);
+        miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
       }
-    });
-    $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      // Refresh CodeMirror when its tab is toggled
-      if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(miqEditor) != 'undefined') {
-        miqEditor.refresh();
-      }
-      // Show buttons according to the show/hide-buttons class
-      if ($($(e.target).attr('href')).hasClass('show-buttons')) {
-        $("#center_buttons_div").show();
-      } else if ($($(e.target).attr('href')).hasClass('hide-buttons')) {
-        $("#center_buttons_div").hide();
-      }
-    });
-    // If no active tab is present, set the first tab as active
-    if ($(id + ' > ul.nav-tabs li.active').length != 1) {
-      $(id + ' > ul.nav-tabs li').first().addClass('active');
-      $(id + ' > .tab-content div.tab-pane').first().addClass('active');
     }
-  } else {
+  });
+  $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    // Refresh CodeMirror when its tab is toggled
+    if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(ManageIQ.editor) != 'undefined') {
+      ManageIQ.editor.refresh();
+    }
+    // Show buttons according to the show/hide-buttons class
+    if ($($(e.target).attr('href')).hasClass('show-buttons')) {
+      $("#center_buttons_div").show();
+    } else if ($($(e.target).attr('href')).hasClass('hide-buttons')) {
+      $("#center_buttons_div").hide();
+    }
+  });
+  // If no active tab is present, set the first tab as active
+  if ($(id + ' > ul.nav-tabs li.active:not(.hidden)').length != 1) {
+    var tab = $(id + ' > ul.nav-tabs li:not(.hidden)').first().addClass('active');
+    $(tab.find('a').attr('href')).addClass('active');
+  }
+  // Hide the tab header when there is only one visible tab available
+  if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length == 1) {
     $(id + ' > ul.nav-tabs').hide();
   }
 }
@@ -1353,16 +1035,10 @@ function miqSearchByName(button) {
   }
 }
 
-// Send search by filter via ajax
-function miqSearchByFilter(button) {
-  if (button == null) {
-    miqJqueryRequest('list_view_filter', {beforeSend: true, data: miqSerializeForm('filterbox')});
-  }
-}
-
-// Send transaction to server so automate tree selection box can be made active and rest of the screen can be blocked
+// Send transaction to server so automate tree selection box can be made active
+// and rest of the screen can be blocked
 function miqShowAE_Tree(typ) {
-  miqJqueryRequest('ae_tree_select_toggle?typ=' + typ);
+  miqJqueryRequest(miqPassFields("ae_tree_select_toggle", {typ: typ}));
   return true;
 }
 
@@ -1378,21 +1054,9 @@ function miqInitJqueryForm() {
   });
 }
 
-// Launch the VNC Console using the miqvncplugin
-function miqLaunchMiqVncConsole(pwd, hostAddress, hostPort, proxyAddress, proxyPort) {
-  if (typeof miqvncplugin != "undefined" &&
-      typeof miqvncplugin.launchVnc != "undefined") {
-    miqSparkleOn();
-    miqvncplugin.launchVnc(pwd, hostAddress, hostPort, proxyAddress, proxyPort);
-    miqSparkleOff();
-  } else {
-    alert("The MIQ VNC plugin is not installed");
-  }
-}
-
 // Toggle the user options div in the page header
 function miqToggleUserOptions(id) {
-  miqJqueryRequest("/dashboard/change_group?to_group=" + id);
+  miqJqueryRequest(miqPassFields("/dashboard/change_group", {to_group: id}));
 }
 
 // Check for enter/escape on quick search box
@@ -1421,7 +1085,7 @@ function miqQsEnterEscape(e) {
 // Start/stop the JS spinner
 function miqSpinner(status) {
   if (status) {
-    if (typeof spinner == "undefined") {
+    if (ManageIQ.spinner.spinner === null) {
       var opts = {
         lines: 15, // The number of lines to draw
         length: 18, // The length of each line
@@ -1439,13 +1103,13 @@ function miqSpinner(status) {
         top: 'auto', // Top position relative to parent in px
         left: 'auto' // Left position relative to parent in px
       };
-      spinner = new Spinner(opts).spin($('#spinner_div')[0]);
+      ManageIQ.spinner.spinner = new Spinner(opts).spin($('#spinner_div')[0]);
     } else {
-      spinner.spin($('#spinner_div')[0]);
+      ManageIQ.spinner.spinner.spin($('#spinner_div')[0]);
     }
   } else {
-    if (typeof spinner != "undefined") {
-      spinner.stop();
+    if (ManageIQ.spinner.spinner !== null) {
+      ManageIQ.spinner.spinner.stop();
     }
   }
 }
@@ -1456,7 +1120,7 @@ function miqSearchSpinner(status) {
     if ($('#search_notification').length) {
       $('#search_notification').show();
     }
-    if (typeof search_spinner == "undefined") {
+    if (ManageIQ.spinner.searchSpinner === null) {
       var opts = {
         lines: 13, // The number of lines to draw
         length: 20, // The length of each line
@@ -1475,16 +1139,16 @@ function miqSearchSpinner(status) {
         top: 'auto', // Top position relative to parent in px
         left: 'auto' // Left position relative to parent in px
       };
-      search_spinner = new Spinner(opts).spin($('#searching_spinner_center')[0]);
+      ManageIQ.spinner.searchSpinner = new Spinner(opts).spin($('#searching_spinner_center')[0]);
     } else {
-      search_spinner.spin($('#searching_spinner_center')[0]);
+      ManageIQ.spinner.searchSpinner.spin($('#searching_spinner_center')[0]);
     }
   } else {
     if ($('#search_notification').length) {
       $('#search_notification').hide();
     }
-    if (typeof search_spinner != "undefined") {
-      search_spinner.stop();
+    if (ManageIQ.spinner.searchSpinner !== null) {
+      ManageIQ.spinner.searchSpinner.stop();
     }
   }
 }
@@ -1525,7 +1189,7 @@ function miqJqueryRequest(url, options) {
       miqSparkle(false);
     };
   }
-  new $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
+  $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
 }
 
 function miqDomElementExists(element) {
@@ -1540,3 +1204,18 @@ function miqSerializeField(element, field_name) {
   return $("#" + element + " :input[id=" + field_name + "]").serialize();
 }
 
+function miqInitSelectPicker() {
+  $('.selectpicker').selectpicker();
+  $('.selectpicker').selectpicker({
+    style: 'btn-info',
+    size: 4
+  });
+}
+
+function miqSelectPickerEvent(element, url){
+  $('#' + element).on('change', function(){
+    var selected = $('#' + element).val();
+    miqJqueryRequest(url + '?' + element + '=' + selected);
+    return true;
+  });
+}

@@ -1,11 +1,10 @@
 require 'rufus/lru'
 
 # Iso9660 stuff.
-$:.push("#{File.dirname(__FILE__)}/../../iso9660")
-require 'Iso9660BootSector'
-require 'Iso9660DirectoryEntry'
-require 'Iso9660Directory'
-require 'Iso9660FileData'
+require 'fs/iso9660/boot_sector'
+require 'fs/iso9660/directory_entry'
+require 'fs/iso9660/directory'
+require 'fs/iso9660/file_data'
 
 module Iso9660
 	

@@ -9,7 +9,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(availability_zones cloud_tenants flavors security_groups instances images orchestration_stacks)
+    items = %w(ems_infra availability_zones cloud_tenants flavors security_groups instances images orchestration_stacks)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -38,7 +38,7 @@ module EmsCloudHelper::TextualSummary
 
   def textual_ipaddress
     return nil if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
-    {:label => "IP Address", :value => @ems.ipaddress}
+    {:label => "Discovered IP Address", :value => @ems.ipaddress}
   end
 
   def textual_type
@@ -71,6 +71,18 @@ module EmsCloudHelper::TextualSummary
     if num > 0 && role_allows(:feature => "miq_template_show_list")
       h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'images')
       h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_ems_infra
+    ems = @record.try(:provider).try(:infra_ems)
+    return nil if ems.nil?
+    label = ui_lookup(:table => "ems_infra")
+    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
+    if role_allows(:feature => "ems_infra_show")
+      h[:title] = "Show parent #{label} '#{ems.name}'"
+      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
     end
     h
   end

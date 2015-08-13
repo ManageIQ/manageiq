@@ -1,17 +1,17 @@
 #column_lists
   %table.form#formtest{:width => "100%"}
     %tr
-      %td.widthed{:align => "left"}=_('Unassigned:')
+      %td.widthed{:align => "left"}= _('Unassigned:')
       %td
-      %td{:align => "left"}=_('Selected:')
+      %td{:align => "left"}= _('Selected:')
     %tr
       %td{:align => "right", :valign => "top"}
         = select_tag("available_fields[]",
                      options_for_select(@edit[:new][:available_fields]),
-                     {:multiple => true,
-                      :style    => "width: 450px",
-                      :size     => 8,
-                      :id       => "available_fields"})
+                     :multiple => true,
+                     :style    => "width: 450px",
+                     :size     => 8,
+                     :id       => "available_fields")
       %td{:width => "30", :valign => "middle"}
         - if @edit[:new][:available_fields].length == 0
           = image_tag("/images/toolbars/right.png",
@@ -42,7 +42,7 @@
       %td{:align => "left", :valign => "top"}
         = select_tag("selected_fields[]",
                      options_for_select(@edit[:new][:fields], @selected),
-                     {:multiple => true,
-                      :style    => "width: 450px",
-                      :size     => 8,
-                      :id       => "selected_fields"})
+                     :multiple => true,
+                     :style    => "width: 450px",
+                     :size     => 8,
+                     :id       => "selected_fields")

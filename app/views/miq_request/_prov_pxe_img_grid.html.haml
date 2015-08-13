@@ -5,7 +5,7 @@
         - id = @edit[:req_id] || "new"
         - @edit[:pxe_img_columns].each_with_index do |h, i|
           %th
-            - # Replaced to exclude non-view table fields from sorting
+            -# Replaced to exclude non-view table fields from sorting
             = link_to(h(@edit[:pxe_img_headers][h]),
               {:action => "sort_pxe_img_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
               "data-miq_sparkle_on"  => true,

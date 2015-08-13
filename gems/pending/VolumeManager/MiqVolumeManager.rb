@@ -1,13 +1,10 @@
-$:.push("#{File.dirname(__FILE__)}/../disk")
-$:.push("#{File.dirname(__FILE__)}/../util")
-
 require 'ostruct'
 require 'platform'
 require 'binary_struct'
-require 'MiqLvm'
-require 'MiqLdm'
-require 'VolMgrPlatformSupport'
-require 'modules/RawDisk'
+require 'VolumeManager/MiqLvm'
+require 'VolumeManager/MiqLdm'
+require 'VolumeManager/VolMgrPlatformSupport'
+require 'disk/modules/RawDisk'
 
 class MiqVolumeManager
     

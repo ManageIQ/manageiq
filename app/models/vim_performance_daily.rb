@@ -42,6 +42,7 @@ class VimPerformanceDaily < MetricRollup
   end
 
   def self.find_entries(ext_options)
+    ext_options ||= {}
     ext_options[:time_profile] ||= default_time_profile(ext_options)
 
     find_by_time_profile(ext_options)

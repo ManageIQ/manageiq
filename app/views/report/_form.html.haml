@@ -25,7 +25,7 @@
               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %hr
 
-  - # Show the fields for tab #
+  -# Show the fields for tab #
   - case @sb[:miq_tab].split("_")[1]
   - when "1"
     = render :partial => "form_columns"
@@ -40,9 +40,9 @@
     = render :partial => "form_chart_sample"
   - when "6"
     = render :partial => "form_tl_settings"
-    - # if @tl_field != NOTHING_STRING
+    -# if @tl_field != NOTHING_STRING
     = render :partial => "form_tl_sample"
-    - # end
+    -# end
   - when "7"
     = render :partial => "form_preview"
   - when "8"

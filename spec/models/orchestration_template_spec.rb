@@ -75,7 +75,7 @@ describe OrchestrationTemplate do
 
   describe "#eligible_managers" do
     before do
-      OrchestrationTemplate.stub(:eligible_manager_types => [ManageIQ::Providers::Amazon::CloudManager, EmsOpenstack])
+      OrchestrationTemplate.stub(:eligible_manager_types => [ManageIQ::Providers::Amazon::CloudManager, ManageIQ::Providers::Openstack::CloudManager])
       @template = FactoryGirl.create(:orchestration_template)
       @aws = FactoryGirl.create(:ems_amazon)
       @openstack = FactoryGirl.create(:ems_openstack)

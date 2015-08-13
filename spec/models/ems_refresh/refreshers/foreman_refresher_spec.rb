@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::ForemanRefresher do
+describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   before do
     unless provider.api_cached?
       VCR.use_cassette("ems_refresh/refreshers/foreman_refresher_api_doc") do
@@ -43,7 +43,7 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     EmsRefresh.stub(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
 
     VCR.use_cassette("#{described_class.name.underscore}_api_v2") do
-      EmsRefresh.refresh(provider)
+      EmsRefresh.refresh(configuration_manager)
       expect(configuration_manager.reload.last_refresh_error).to be_nil
       expect(provisioning_manager.reload.last_refresh_error).to be_nil
     end
@@ -129,7 +129,7 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     child  = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-ChildHostGroup').first
     parent = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
     expect(child).to have_attributes(
-      :type                               => "ConfigurationProfileForeman",
+      :type                               => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile",
       :name                               => "ProviderRefreshSpec-ChildHostGroup",
       :description                        => "ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup",
       :manager_ref                        => "14",
@@ -154,7 +154,7 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
   def assert_configuration_profile_parent
     parent = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
     expect(parent).to have_attributes(
-      :type                               => "ConfigurationProfileForeman",
+      :type                               => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile",
       :name                               => "ProviderRefreshSpec-HostGroup",
       :description                        => "ProviderRefreshSpec-HostGroup",
       :manager_ref                        => "13",
@@ -183,7 +183,7 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     expect(system).to have_attributes(
       :ipaddress                          => "192.168.169.254",
       :mac_address                        => "00:00:00:00:00:00",
-      :type                               => "ConfiguredSystemForeman",
+      :type                               => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem",
       :hostname                           => "providerrefreshspec-hostbaremetal.example.com",
       :manager_ref                        => "38",
       :configuration_profile              => child,

@@ -17,6 +17,7 @@ class EmsCluster < ActiveRecord::Base
   has_many    :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
   has_many    :policy_events, -> { order "timestamp" }
+  has_many    :miq_events,             :as => :target,    :dependent => :destroy
 
   virtual_column :v_ram_vr_ratio,      :type => :float,   :uses => [:aggregate_memory, :aggregate_vm_memory]
   virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_logical_cpus, :aggregate_vm_cpus]
@@ -383,16 +384,16 @@ class EmsCluster < ActiveRecord::Base
   end
 
   def self.count_of_openstack_clusters
-    ems = EmsOpenstackInfra.pluck(:id)
+    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
     EmsCluster.where(:ems_id => ems).count
   end
 
   def self.count_of_non_openstack_clusters
-    ems = EmsOpenstackInfra.pluck(:id)
+    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
     EmsCluster.where(EmsCluster.arel_table[:ems_id].not_in(ems)).count
   end
 
   def openstack_cluster?
-    ext_management_system.class == EmsOpenstackInfra
+    ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
   end
 end

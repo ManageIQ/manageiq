@@ -5,6 +5,14 @@ class ProviderForemanController < ApplicationController
   after_filter :cleanup_action
   after_filter :set_session_data
 
+  def self.model
+    ManageIQ::Providers::Foreman::Provider
+  end
+
+  def self.table_name
+    @table_name ||= "foreman_provider"
+  end
+
   def index
     redirect_to :action => 'explorer'
   end
@@ -15,7 +23,7 @@ class ProviderForemanController < ApplicationController
 
   def new
     assert_privileges("provider_foreman_add_provider")
-    @provider_foreman = ProviderForeman.new
+    @provider_foreman = ManageIQ::Providers::Foreman::Provider.new
     render_form
   end
 
@@ -28,7 +36,7 @@ class ProviderForemanController < ApplicationController
       save_provider_foreman
     else
       assert_privileges("provider_foreman_edit_provider")
-      @provider_foreman = find_by_id_filtered(ConfigurationManagerForeman,
+      @provider_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager,
                                               from_cid(params[:miq_grid_checks] || params[:id]))
       render_form
     end
@@ -38,22 +46,22 @@ class ProviderForemanController < ApplicationController
     assert_privileges("provider_foreman_delete_provider")
     checked_items = find_checked_items
     checked_items.push(params[:id]) if params[:id]
-    foremen = ConfigurationManagerForeman.where(:id => checked_items).pluck(:provider_id)
+    foremen = ManageIQ::Providers::Foreman::ConfigurationManager.where(:id => checked_items).pluck(:provider_id)
     if foremen.empty?
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"),
                                                               :task  => "deletion"}, :error)
     else
-      ProviderForeman.find_all_by_id(foremen, :order => "lower(name)").each do |foreman|
+      ManageIQ::Providers::Foreman::Provider.find_all_by_id(foremen, :order => "lower(name)").each do |foreman|
         id = foreman.id
         provider_name = foreman.name
         audit = {:event        => "foreman_record_delete_initiated",
                  :message      => "[#{provider_name}] Record delete initiated",
                  :target_id    => id,
-                 :target_class => "ProviderForeman",
+                 :target_class => "ManageIQ::Providers::Foreman::Provider",
                  :userid       => session[:userid]}
         AuditEvent.success(audit)
       end
-      ProviderForeman.destroy_queue(foremen)
+      ManageIQ::Providers::Foreman::Provider.destroy_queue(foremen)
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
                     {:task        => "Delete",
                      :count_model => pluralize(foremen.length, "Provider")})
@@ -97,13 +105,13 @@ class ProviderForemanController < ApplicationController
 
   def add_provider_foreman
     if params[:id] == "new"
-      @provider_foreman = ProviderForeman.new(:name       => params[:name],
-                                              :url        => params[:url],
-                                              :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                              :verify_ssl => params[:verify_ssl].eql?("on"))
-    else
-      config_mgr = ConfigurationManagerForeman.find(params[:id])
-      @provider_foreman = ProviderForeman.find(config_mgr.provider_id)
+      @provider_foreman = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
+                                                                     :url        => params[:url],
+                                                                     :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                                     :verify_ssl => params[:verify_ssl].eql?("on"))
+        else
+      config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find(params[:id])
+      @provider_foreman = ManageIQ::Providers::Foreman::Provider.find(config_mgr.provider_id)
       @provider_foreman.update_attributes(:name       => params[:name],
                                           :url        => params[:url],
                                           :verify_ssl => params[:verify_ssl].eql?("on"))
@@ -155,8 +163,8 @@ class ProviderForemanController < ApplicationController
 
   def provider_foreman_form_fields
     assert_privileges("provider_foreman_edit_provider")
-    config_mgr_foreman = find_by_id_filtered(ConfigurationManagerForeman, params[:id])
-    provider_foreman = ProviderForeman.find(config_mgr_foreman.provider_id)
+    config_mgr_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
+    provider_foreman = ManageIQ::Providers::Foreman::Provider.find(config_mgr_foreman.provider_id)
     authentications_foreman = Authentication.where(:resource_id => provider_foreman[:id], :resource_type => "Provider")
 
     render :json => {
@@ -170,10 +178,10 @@ class ProviderForemanController < ApplicationController
   end
 
   def authentication_validate
-    @provider_foreman = ProviderForeman.new(:name       => params[:name],
-                                            :url        => params[:url],
-                                            :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                            :verify_ssl => params[:verify_ssl].eql?("on"))
+    @provider_foreman = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
+                                                                   :url        => params[:url],
+                                                                   :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+                                                                   :verify_ssl => params[:verify_ssl].eql?("on"))
     update_authentication_provider_foreman
 
     begin
@@ -315,9 +323,9 @@ class ProviderForemanController < ApplicationController
   def foreman_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then  rec = identify_record(params[:id], ConfigurationManagerForeman)
-    when "e"    then  rec = identify_record(params[:id], ConfigurationProfileForeman)
-    when "cp"   then  rec = identify_record(params[:id], ConfiguredSystemForeman)
+    when "root" then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager)
+    when "e"    then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile)
+    when "cp"   then  rec = identify_record(params[:id], ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem)
     end
     rec
   end
@@ -564,7 +572,7 @@ class ProviderForemanController < ApplicationController
   def default_node
     return unless x_node == "root"
     if self.x_active_tree == :foreman_providers_tree
-      options = {:model => "ConfigurationManagerForeman"}
+      options = {:model => "ManageIQ::Providers::Foreman::ConfigurationManager"}
       process_show_list(options)
       @right_cell_text = _("All %s Providers") % ui_lookup(:ui_title => "foreman")
     elsif self.x_active_tree == :cs_filter_tree
@@ -697,7 +705,7 @@ class ProviderForemanController < ApplicationController
         r[:partial => 'layouts/x_adv_searchbox',
           :locals  => {:nameonly => ([:foreman_providers_tree].include?(x_active_tree))}]
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
 
@@ -768,7 +776,7 @@ class ProviderForemanController < ApplicationController
 
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record ? @record.id : nil
+    presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = display_adv_searchbox

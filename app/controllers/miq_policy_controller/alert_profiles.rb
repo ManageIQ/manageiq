@@ -40,8 +40,7 @@ module MiqPolicyController::AlertProfiles
       alert_profile.mode = @edit[:new][:mode]
       if alert_profile.valid? && !@flash_array && alert_profile.save
         alerts = alert_profile.members                        # Get the sets members
-        current = Array.new
-        alerts.each {|a| current.push(a.id)}                  # Build an array of the current alert ids
+        current = alerts.collect(&:id)                        # Build an array of the current alert ids
         mems = @edit[:new][:alerts].invert                    # Get the ids from the member list box
         begin
           alerts.each {|a| alert_profile.remove_member(MiqAlert.find(a)) if !mems.include?(a.id) }  # Remove any alerts no longer in the members list box

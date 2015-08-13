@@ -3,11 +3,9 @@ require 'sync'
 require 'enumerator'
 require "ostruct"
 
-$:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../util/extensions")
-require 'miq-hash'
-require 'miq-exception'
-require 'MiqVimVdlMod'
+require 'util/extensions/miq-hash'
+require 'util/miq-exception'
+require 'VMwareWebService/MiqVimVdlMod'
 
 class MiqVimVm
 

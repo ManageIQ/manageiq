@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::OpenstackRefresher do
+describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   before(:each) do
     EmsRefresh.debug_failures = false
 
@@ -26,7 +26,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def refresh_ems(ems, error)
-    EmsRefresh::Parsers::Openstack.stub(:ems_inv_to_hashes).and_raise(Excon::Errors::BadRequest.new(error))
+    ManageIQ::Providers::Openstack::CloudManager::RefreshParser.stub(:ems_inv_to_hashes).and_raise(Excon::Errors::BadRequest.new(error))
     EmsRefresh.refresh(ems)
   end
 end

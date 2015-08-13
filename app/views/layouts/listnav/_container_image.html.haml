@@ -1,0 +1,39 @@
+- if @record.try(:name)
+  #accordion.panel-group
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
+      = render(:partial  => "layouts/quadicon",
+               :locals   => {:mode => :icon,
+               :item     => @record,
+               :size     => 72,
+               :typ      => :listnav})
+
+    = patternfly_accordion_panel(_("Properties"), false, "container_image_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
+
+    = patternfly_accordion_panel(_("Relationships"), false, "container_image_rel") do
+      %ul.nav.nav-pills.nav-stacked
+        - if role_allows(:feature => "containers")
+          - num_containers = @record.number_of(:containers)
+          - if num_containers == 0
+            %li.disabled
+              = link_to(_("%s (0)") % ui_lookup(:table => "containers"), "#")
+          - else
+            %li
+              = link_to(_("#{ui_lookup(:table => "containers")} (#{num_containers})"),
+                  {:action => 'show', :id => @record, :display => 'containers'},
+                   :title  => _("View %s") % ui_lookup(:table => "containers"))
+          - if role_allows(:feature => "container_image_registry_show") && !@record.container_image_registry.nil?
+            %li
+              = link_to("#{ui_lookup(:table => "container_image_registry")}: #{@record.container_image_registry.host}",
+                {:controller => "container_image_registry",
+                 :action => 'show',
+                 :id => @record.container_image_registry.id.to_s},
+                 :title => _("Show this images registry %s") % ui_lookup(:table => "container_image_registry"))
+          - if role_allows(:feature => "ems_container_show") && !@record.container_image_registry.nil?
+            %li
+              = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
+                {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
+                :title => _("Show this container group's parent %s") % ui_lookup(:table => "ems_container"))
+

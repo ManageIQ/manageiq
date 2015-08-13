@@ -1,9 +1,7 @@
 # encoding: UTF-8
 
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util})))
-require 'miq-xml'
+require 'util/miq-xml'
 
 describe MIQRexml do
   it "attribute encoding" do

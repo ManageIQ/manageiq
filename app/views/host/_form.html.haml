@@ -1,12 +1,12 @@
 - url = url_for(:action => 'form_field_changed', :id => (@host.id || 'new'))
-- observe = { :interval => '.5', :url => url }.to_json
+- observe = {:interval => '.5', :url => url}.to_json
 #form_div
   = render :partial => "layouts/flash_msg"
   - if session[:host_items].nil?
-    %h3=_('Basic Information')
+    %h3= _('Basic Information')
     %table.style1
       %tr
-        %td.key=_('Name')
+        %td.key= _('Name')
         %td.wide
           = text_field_tag("name",
             @edit[:new][:name],
@@ -14,14 +14,14 @@
             "data-miq_focus" => true,
             "data-miq_observe" => observe)
       %tr
-        %td.key=_('Host Name (or IPv4 or IPv6 address)')
+        %td.key= _('Hostname (or IPv4 or IPv6 address)')
         %td.wide
           = text_field_tag("hostname",
             @edit[:new][:hostname],
             :maxlength => MAX_HOSTNAME_LEN,
             "data-miq_observe" => observe)
       %tr
-        %td.key=_('Custom Identifier')
+        %td.key= _('Custom Identifier')
         %td.wide
           = text_field_tag("custom_1",
             @edit[:new][:custom_1],
@@ -29,21 +29,21 @@
             "data-miq_observe" => observe)
       - if @host.operating_system.nil? || @host.operating_system.product_name.nil?
         %tr
-          %td.key=_('Host platform')
+          %td.key= _('Host platform')
           %td.wide
             = select_tag("user_assigned_os",
               options_for_select([["<#{_('not specified')}>", nil]] + Host.host_create_os_types.to_a,
               @edit[:new][:user_assigned_os]),
-              "data-miq_observe" => { :url => url }.to_json)
+              "data-miq_observe" => {:url => url}.to_json)
       %tr
-        %td.key=_('IPMI IP Address')
+        %td.key= _('IPMI IP Address')
         %td.wide
           = text_field_tag("ipmi_address",
             @edit[:new][:ipmi_address],
             :maxlength => 15,
             "data-miq_observe" => observe)
       %tr
-        %td.key=_('MAC Address')
+        %td.key= _('MAC Address')
         %td.wide
           = text_field_tag("mac_address",
             @edit[:new][:mac_address],
@@ -52,7 +52,7 @@
     %hr
 
   = render(:partial => "/layouts/multi_auth_credentials", :locals => {:record => @host})
-  - if ["new", "create"].include?(controller.action_name)
+  - if %w(new create).include?(controller.action_name)
     %table{:width => '100%'}
       %tr
         %td{:align => 'right'}
@@ -76,9 +76,9 @@
 
   - unless session[:host_items].nil?
     %h3
-      = pluralize(session[:host_items].length,Dictionary::gettext(Host.to_s, :type => :model, :notfound => :titleize))
-      =_('Selected')
-    =_('Click on a Host to fetch its settings')
+      = pluralize(session[:host_items].length, Dictionary.gettext(Host.to_s, :type => :model, :notfound => :titleize))
+      = _('Selected')
+    = _('Click on a Host to fetch its settings')
     %table.admittable{:height => '75'}
       %tbody
         %tr

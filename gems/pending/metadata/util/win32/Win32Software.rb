@@ -1,11 +1,7 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/../../../util/")
-$:.push("#{File.dirname(__FILE__)}/../../../util/xml/")
-
-require 'xml_utils'
-require 'miq-xml'
-require 'miq-logger'
-require 'peheader'
+require 'util/xml/xml_utils'
+require 'util/miq-xml'
+require 'util/miq-logger'
+require 'metadata/util/win32/peheader'
 
 module MiqWin32
   class Software

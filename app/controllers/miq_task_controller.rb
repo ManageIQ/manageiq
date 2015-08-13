@@ -61,7 +61,7 @@ class MiqTaskController < ApplicationController
   # Show job list for the current user
   def jobs
     build_jobs_tab
-    @title = "Tasks for #{session[:username]}"
+    @title = "Tasks for #{current_user.name}"
     @breadcrumbs = []
     @lastaction = "jobs"
 

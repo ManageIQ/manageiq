@@ -48,11 +48,6 @@ body, html {
     height: 100%;
     overflow: auto;
   }
-  #main_content {
-    overflow: auto;
-    height: calc(100% - 30px);
-    padding-bottom: 25px
-  }
   #main_footer {
     position: absolute;
     bottom: 0;

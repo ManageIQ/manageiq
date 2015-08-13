@@ -118,7 +118,7 @@ class CatalogController < ApplicationController
       @edit[:rec_id] = @record.try(:id)
       @edit[:current] = copy_hash(@edit[:new])
 
-      @tabactive = "#{@edit[:new][:current_tab_key]}_div"
+      @tabactive = @edit[:new][:current_tab_key]
       @in_a_form = true
       session[:changed] = false
       replace_right_cell("at_st_new")
@@ -154,7 +154,7 @@ class CatalogController < ApplicationController
       @edit[:new][:service_type] = "atomic"
       default_entry_point(@edit[:new][:st_prov_type]) if %w(generic generic_orchestration).include?(params[:st_prov_type])
       @edit[:rec_id] = @record ? @record.id : nil
-      @tabactive = "#{@edit[:new][:current_tab_key]}_div"
+      @tabactive = @edit[:new][:current_tab_key]
     end
     render :update do |page|                    # Use JS to update the display
       page.replace_html("form_div", :partial=>"st_form") if params[:st_prov_type]
@@ -423,19 +423,12 @@ class CatalogController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       page.replace_html("basic_info_div", :partial=>"form_basic_info") if params[:resource_id] || params[:display]
       page.replace_html("resources_info_div", :partial=>"form_resources_info") if params[:resource_id] || @group_idx
-      #if @changed != session[:changed]
-        #e_buttons, e_xml = build_toolbar_buttons_and_xml("x_edit_view_tb")
-        #page << javascript_for_toolbar_reload('form_button_tb', e_buttons, e_xml)
-        #page << "miq_changes = true;"
-        #session[:changed] = @changed
-      #end
-
       if params[:display]
         page << "miq_tabs_show_hide('#details_tab', '#{(params[:display] == "1")}')"
       end
       if changed != session[:changed]
         session[:changed] = changed
-        page << "miq_changes = true;"
+        page << "ManageIQ.changes = true;"
         page << javascript_for_miq_button_visibility(changed)
       end
       page << "miqSparkle(false);"
@@ -497,15 +490,9 @@ class CatalogController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       page.replace_html("basic_info_div", :partial=>"form_basic_info")
       page.replace_html("resources_info_div", :partial=>"form_resources_info")
-#      if @changed != session[:changed]
-#        e_buttons, e_xml = build_toolbar_buttons_and_xml("x_edit_view_tb")
-#        page << javascript_for_toolbar_reload('form_button_tb', e_buttons, e_xml)
-#        page << "miq_changes = true;"
-#        session[:changed] = @changed
-#      end
       if changed != session[:changed]
         session[:changed] = changed
-        page << "miq_changes = true;"
+        page << "ManageIQ.changes = true;"
         page << javascript_for_miq_button_visibility(changed)
       end
       page << "miqSparkle(false);"
@@ -1173,19 +1160,12 @@ class CatalogController < ApplicationController
     @edit[:rec_id] = @record.id
     @edit[:new][:name] = @record.name
     @edit[:new][:description]  = @record.description
-    selected_service_templates = @record.service_templates
-    @edit[:new][:fields] = Array.new
-    selected_service_templates.each do |st|
-      @edit[:new][:fields].push([st.name,st.id])
-    end
-    @edit[:new][:fields].sort!
+    @edit[:new][:fields] = @record.service_templates.collect { |st| [st.name, st.id] }.sort
 
-    available_service_templates = ServiceTemplate.find(:all)
-    @edit[:new][:available_fields] = Array.new
-    available_service_templates.each do |st|
-      @edit[:new][:available_fields].push([st.name,st.id]) if st.service_template_catalog.nil? && st.display
-    end
-    @edit[:new][:available_fields].sort!                  # Sort the available fields array
+    @edit[:new][:available_fields] = ServiceTemplate.all
+                                                    .select  { |st| st.service_template_catalog.nil? && st.display }
+                                                    .collect { |st| [st.name, st.id] }
+                                                    .sort
 
     @edit[:current] = copy_hash(@edit[:new])
     @in_a_form = true
@@ -1194,11 +1174,7 @@ class CatalogController < ApplicationController
   def st_catalog_set_record_vars(stc)
     stc.name = @edit[:new][:name]
     stc.description = @edit[:new][:description]
-    service_templates = Array.new
-    @edit[:new][:fields].each do |sf|
-      service_templates.push(ServiceTemplate.find_by_id(sf[1]))
-    end
-    stc.service_templates = service_templates
+    stc.service_templates = @edit[:new][:fields].collect { |sf| ServiceTemplate.find_by_id(sf[1]) }
   end
 
   def st_catalog_delete
@@ -1303,12 +1279,9 @@ class CatalogController < ApplicationController
     @edit[:new][:provision_cost] = @record.provision_cost
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
-    available_catalogs = ServiceTemplateCatalog.find(:all)
-    @edit[:new][:available_catalogs] = Array.new
-    available_catalogs.each do |stc|
-      @edit[:new][:available_catalogs].push([stc.name,stc.id])
-    end
-    @edit[:new][:available_catalogs].sort!
+    @edit[:new][:available_catalogs] = ServiceTemplateCatalog.all
+                                                             .collect { |stc| [stc.name, stc.id] }
+                                                             .sort
     available_templates if @record.kind_of?(ServiceTemplateOrchestration)
 
     # initialize fqnames
@@ -1460,17 +1433,16 @@ class CatalogController < ApplicationController
   end
 
   def available_managers(template_id)
-    available_managers = OrchestrationTemplate.find_by_id(template_id).eligible_managers
-    @edit[:new][:available_managers] = []
-    available_managers.each do |manager|
-      @edit[:new][:available_managers].push([manager.name, manager.id])
-    end
-    @edit[:new][:available_managers].sort!
+    @edit[:new][:available_managers] = OrchestrationTemplate.find_by_id(template_id)
+                                                            .eligible_managers
+                                                            .collect { |m| [m.name, m.id] }
+                                                            .sort
   end
 
   def available_templates
-    @edit[:new][:available_templates] =
-      OrchestrationTemplate.available.collect { |template| [template.name.to_s, template.id] }.sort!
+    @edit[:new][:available_templates] = OrchestrationTemplate.available
+                                                             .collect { |t| [t.name.to_s, t.id] }
+                                                             .sort
     @edit[:new][:template_id] = @record.orchestration_template.try(:id)
     @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
     available_managers(@record.orchestration_template.id) if @record.orchestration_template
@@ -1870,7 +1842,7 @@ class CatalogController < ApplicationController
         r[:partial=>"layouts/x_gtl"]
       end
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     presenter[:open_accord] = 'sandt' if @sb[:active_tree] == :sandt_tree
@@ -1964,15 +1936,20 @@ class CatalogController < ApplicationController
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    if @record && !@in_a_form
+      presenter[:record_id] = @record.id
+    else
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
 
     presenter[:osf_node] = x_node
 
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
-    presenter[:extra_js] << "miq_changes = undefined;"
-    presenter[:extra_js] << "miqOneTrans = 0;"                  #resetting miqOneTrans when tab loads
+    presenter[:extra_js] << "ManageIQ.changes = null;"
+    # resetting ManageIQ.oneTransition.oneTrans when tab loads
+    presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;"
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

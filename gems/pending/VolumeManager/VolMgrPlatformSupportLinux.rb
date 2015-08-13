@@ -1,8 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../VMwareWebService")
-
-require 'miq-password'
-require 'MiqVim'
+require 'util/miq-password'
+require 'VMwareWebService/MiqVim'
 
 module VolMgrPlatformSupportLinux
         
@@ -13,11 +10,8 @@ module VolMgrPlatformSupportLinux
         @vi = nil
         @vimVm = nil
         
-        if !$miqHostCfg
-            $log.warn "VolMgrPlatformSupportLinux: $miqHostCfg not set"
-            return
-        end
-        
+        return if $miqHostCfg.nil?
+
         $log.debug "VolMgrPlatformSupportLinux: $miqHostCfg.forceFleeceDefault = #{$miqHostCfg.forceFleeceDefault}" if $log.debug?
         @ost.force = $miqHostCfg.forceFleeceDefault if @ost.force.nil?
         

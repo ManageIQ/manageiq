@@ -44,7 +44,7 @@ class TreeBuilderChargebackRates < TreeBuilder
   # Handle custom tree nodes (object is a Hash)
   def x_get_tree_custom_kids(object, options)
     count_only = options[:count_only]
-    objects = ChargebackRate.all(:conditions => ["rate_type = ?",object[:id]])
+    objects = ChargebackRate.where(:rate_type => object[:id]).to_a
     count_only_or_objects(options[:count_only], objects, "description")
   end
 end

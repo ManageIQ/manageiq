@@ -1,10 +1,7 @@
-$:.push("#{File.dirname(__FILE__)}/../disk")
-$:.push("#{File.dirname(__FILE__)}/../util")
-
 require "ostruct"
-require "MiqDisk"
+require "disk/MiqDisk"
 require 'binary_struct'
-require 'MiqLvm'
+require 'VolumeManager/MiqLvm'
 
 class MiqNativeVolumeManager
     

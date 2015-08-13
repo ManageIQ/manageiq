@@ -506,7 +506,7 @@ class Classification < ActiveRecord::Base
   end
 
   def delete_all_entries
-    self.entries.each {|e| e.send(:delete_tag_and_taggings)}
+    entries.each(&:delete_tag_and_taggings)
   end
 
   def delete_tag_and_taggings

@@ -10,7 +10,7 @@
       = truncate_for_quad(row['name'])
 - else
   - if !@listicon.nil? && (@vm || @host || @storage)
-    - # if sub-item is being shown
+    -# if sub-item is being shown
     - if @listicon == "scan_history"
       - href_link = url_for_item_quad_text(@vm, @id, @listicon.pluralize)
       %a{:href => href_link, :title => h(row['started_on'])}
@@ -25,7 +25,7 @@
       %a{:href => href_link, :title => h(row['name'])}
         = truncate_for_quad(row['name'] ? row['name'] : row['display_name'])
   - elsif @policy_sim && session[:policies].length > 0
-    - #  Policy sim (VMs only, for now)
+    -# Policy sim (VMs only, for now)
     %a{:href => url_for_db(db), :title => _("Show policy details for %s") % row['name']}
       = truncate_for_quad(row['name'])
   - elsif db == "EmsCluster"

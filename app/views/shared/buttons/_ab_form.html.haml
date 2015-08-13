@@ -4,7 +4,7 @@
     - if @resolve[:uri] && Hash[*@resolve[:target_classes].flatten].invert[@resolve[:new][:target_class]] == @edit[:new][:target_class]
 
       %li
-        -t = _("Paste object details for use in a Button.")
+        - t = _("Paste object details for use in a Button.")
         = link_to(image_tag("/images/toolbars/paste.png", :border => "0", :class  => "", :alt => t),
           {:action => "resolve", :button => "paste"},
           "data-miq_sparkle_on"  => true,
@@ -44,14 +44,10 @@
       %td.key
         = _('Button Image')
       %td
-        - #= select("button","id", Array.new(5) {|i| i+1}, {:selected=>@edit[:new][:button_id].to_i}, {:class=>"threedigit"})
-        #button_div
-          = render(:partial => 'layouts/dhtmlxcombo',
-            :locals         => {:combo_id => "button_div",
-              :combo_name                 => "button_image",
-              :combo_width                => 50,
-              :combo_url                  => "/miq_ae_customization/automate_button_field_changed",
-              :xml_combo                  => @edit[:new][:button_images]})
+        #form-group
+          = select_tag('button_image',
+              options_for_select([["No Image", nil]] + @edit[:new][:button_images], @edit[:new][:button_image].to_s),
+              :class => "selectpicker")
     %tr
       %td.key
         = _('Dialog')
@@ -66,5 +62,7 @@
       :ae_custom_button          => true,
       :field_changed_url         => "automate_button_field_changed"})
   = render(:partial => "layouts/role_visibility",
-    :locals         => {:rec_id => "#{@custom_button.id || 'new'}",
-      :action                   => "automate_button_field_changed"})
+           :locals  => {:rec_id => @custom_button ? @custom_button.id : 'new', :action => "automate_button_field_changed"})
+:javascript
+  miqInitSelectPicker();
+  miqSelectPickerEvent("button_image", "#{url}")

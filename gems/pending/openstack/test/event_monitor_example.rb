@@ -1,5 +1,5 @@
-require_relative "../../bundler_setup"
-require_relative "../openstack_event_monitor"
+require_relative '../../bundler_setup'
+require 'openstack/openstack_event_monitor'
 
 def event_to_hash event
   hash = {}

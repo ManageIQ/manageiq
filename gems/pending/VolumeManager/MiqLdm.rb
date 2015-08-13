@@ -3,11 +3,9 @@
 # Windows dynamic disks
 #
 
-$:.push("#{File.dirname(__FILE__)}/../util")
-
 require 'ostruct'
 require 'binary_struct'
-require 'miq-uuid'
+require 'util/miq-uuid'
 
 class BinaryStruct
 	

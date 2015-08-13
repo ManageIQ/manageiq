@@ -42,3 +42,27 @@
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
+- :name: orchestration_stack_lifecycle
+  :items:
+  - :buttonSelect: orchestration_stack_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: orchestration_stack_retire
+      :image: retire
+      :text: "Set Retirement Dates"
+      :title: 'Set Retirement Dates for the selected #{ui_lookup(:tables=>"orchestration_stack")}'
+      :enabled: 'false'
+      :onwhen: '1+'
+      :url_parms: 'main_div'
+    - :button: orchestration_stack_retire_now
+      :image: retire_now
+      :text: 'Retire selected #{ui_lookup(:tables => "orchestration_stack")}'
+      :title: 'Retire selected #{ui_lookup(:tables => "orchestration_stack")}'
+      :confirm: 'Retire the selected #{ui_lookup(:tables => "orchestration_stack")}?'
+      :enabled: 'false'
+      :onwhen: '1+'
+      :url_parms: 'main_div'

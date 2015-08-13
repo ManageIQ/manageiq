@@ -7,6 +7,22 @@ module AsConstMissingWithSti
     alias_method_chain :const_missing, :sti
   end
 
+  def self.cache_path
+    Rails.root.join('tmp/cache/sti_loader.yml')
+  end
+
+  def self.cache
+    @cache ||= cache_path.exist? ? YAML.load_file(cache_path) : {}
+  end
+
+  def self.save_cache!
+    return unless @cache_dirty
+    cache_path.parent.mkpath
+    cache_path.open('w') do |f|
+      YAML.dump(cache, f)
+    end
+  end
+
   def self.collect_classes(node, parents = [])
     type, *rest = node
     case type
@@ -21,7 +37,7 @@ module AsConstMissingWithSti
       rest.flat_map { |n| collect_classes(n, parents) }
     when :cdecl
       name, superklass = rest
-      if %i(const colon2 colon3).include?(superklass.first)
+      if [:const, :colon2, :colon3].include?(superklass.first)
         [[parents, [type, name, superklass]]]
       else
         []
@@ -32,6 +48,19 @@ module AsConstMissingWithSti
   end
 
   def self.classes_in(filename)
+    t = File.mtime(filename)
+
+    if (entry = cache[filename])
+      return entry[:parsed] if entry[:mtime] == t
+    end
+
+    _classes_in(filename).tap do |data|
+      @cache_dirty = true
+      cache[filename] = {:mtime => t, :parsed => data}
+    end
+  end
+
+  def self._classes_in(filename)
     content = File.read(filename)
     parsed = RubyParser.for_current_ruby.parse(content)
 
@@ -207,6 +236,10 @@ end
 
 ActiveSupport::Dependencies::ModuleConstMissing.send(:include, AsConstMissingWithSti)
 ActiveSupport::Dependencies.send(:include, AsDependenciesClearWithSti)
+
+at_exit do
+  AsConstMissingWithSti.save_cache!
+end
 
 #ActiveSupport::Dependencies.log_activity = true
 #ActiveSupport::Dependencies.logger = Logger.new($stdout)

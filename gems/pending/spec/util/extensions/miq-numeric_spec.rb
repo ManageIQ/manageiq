@@ -1,7 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-numeric'
+require 'util/extensions/miq-numeric'
 
 describe Numeric do
   it "#apply_min_max" do

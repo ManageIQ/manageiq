@@ -127,6 +127,7 @@ module MiqAeEngineSpec
             @ws = double('ws')
             @ws.stub(:root => root)
             @ws.stub(:persist_state_hash => {})
+            @ws.stub(:current_state_info => {})
             MiqAeEngine.stub(:resolve_automation_object).and_return(@ws)
           end
 

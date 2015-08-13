@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceMiqProvisionOpenstack < MiqAeServiceManageIQ_Providers_CloudManager_Provision
-  end
-end

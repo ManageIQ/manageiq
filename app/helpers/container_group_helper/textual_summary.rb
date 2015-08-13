@@ -4,13 +4,13 @@ module ContainerGroupHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name creation_timestamp resource_version restart_policy dns_policy ip)
+    items = %w(name phase message reason creation_timestamp resource_version restart_policy dns_policy ip)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_relationships
     # Order of items should be from parent to child
-    items = %w(ems container_project services containers container_node lives_on)
+    items = %w(ems container_project container_replicator container_services containers container_node lives_on)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -18,12 +18,20 @@ module ContainerGroupHelper::TextualSummary
   # Items
   #
 
-  def textual_namespace
-    {:label => "Namespace", :value => @record.namespace.to_s}
-  end
-
   def textual_name
     {:label => "Name", :value => @record.name}
+  end
+
+  def textual_phase
+    {:label => "Phase", :value => @record.phase}
+  end
+
+  def textual_message
+    {:label => "Message", :value => @record.message} if @record.message
+  end
+
+  def textual_reason
+    {:label => "Reason", :value => @record.reason} if @record.reason
   end
 
   def textual_creation_timestamp
@@ -46,41 +54,6 @@ module ContainerGroupHelper::TextualSummary
     {:label => "IP Address", :value => @record.ipaddress}
   end
 
-  def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_container")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_container_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
-    end
-    h
-  end
-
-  def textual_containers
-    num_of_containers = @record.number_of(:containers)
-    label = ui_lookup(:tables => "containers")
-    h     = {:label => label, :image => "container", :value => num_of_containers}
-    if num_of_containers > 0 && role_allows(:feature => "containers")
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'containers')
-      h[:title] = "View #{label}"
-    end
-    h
-  end
-
-  def textual_container_node
-    node = @record.container_node
-    return nil if node.nil?
-    label = ui_lookup(:table => "container_node")
-    h     = {:label => label, :image => "container_node", :value => node.name}
-    if role_allows(:feature => "container_node_show")
-      h[:link]  = url_for(:action => 'show', :id => node, :controller => 'container_node')
-      h[:title] = "View #{label} #{(@record.container_node.name)}"
-    end
-    h
-  end
-
   def textual_lives_on
     lives_on_ems = @record.container_node.try(:lives_on).try(:ext_management_system)
     return nil if lives_on_ems.nil?
@@ -96,27 +69,5 @@ module ContainerGroupHelper::TextualSummary
         :id         => @record.container_node.lives_on.id
       )
     }
-  end
-
-  def textual_services
-    num_of_services = @record.number_of(:container_services)
-    label = ui_lookup(:tables => "container_service")
-    h = {:label => label, :image => "container_service", :value => num_of_services}
-    if num_of_services > 0 && role_allows(:feature => "container_service_show")
-      h[:link] = url_for(:action => 'show', :controller => 'container_group', :display => 'container_services')
-    end
-    h
-  end
-
-  def textual_container_project
-    project = @record.container_project
-    return nil if project.nil?
-    label = ui_lookup(:table => "container_project")
-    h     = {:label => label, :image => "container_project", :value => project.name}
-    if role_allows(:feature => "container_project_show")
-      h[:link]  = url_for(:action => 'show', :id => project, :controller => 'container_project')
-      h[:title] = "View #{label} #{(@record.container_project.name)}"
-    end
-    h
   end
 end

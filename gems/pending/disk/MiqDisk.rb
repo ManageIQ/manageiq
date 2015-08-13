@@ -1,9 +1,5 @@
-$:.push(__dir__) unless $:.include?(__dir__)
-$:.push("#{File.dirname(__FILE__)}/modules")
-$:.push("#{File.dirname(__FILE__)}/../util")
-
 require 'binary_struct'
-require 'DiskProbe'
+require 'disk/DiskProbe'
 
 class MiqDisk
     attr_accessor :diskType, :dInfo, :blockSize, :pvObj, :fs

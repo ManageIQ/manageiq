@@ -31,6 +31,14 @@ module MiqAeServiceSpec
         @object.attributes.should == original_attributes
       end
     end
+
+    context "#inspect" do
+      it "returns the class, id and name" do
+        @object.stub(:object_name).and_return('fred')
+        regex = /#<MiqAeMethodService::MiqAeServiceObject:0x(\w+) name:.\"(?<name>\w+)\">/
+        match = regex.match(@service_object.inspect)
+        match[:name].should eq('fred')
+      end
+    end
   end
 end
-

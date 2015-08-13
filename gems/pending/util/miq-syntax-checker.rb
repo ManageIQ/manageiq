@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'platform'
 require "open3"
 

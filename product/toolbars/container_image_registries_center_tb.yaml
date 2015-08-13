@@ -1,0 +1,31 @@
+#
+# Toolbar config file
+#
+---
+:model: ContainerImageRegistry
+:button_groups:
+- :name: container_image_registry_vmdb
+  :items:
+  - :buttonSelect: container_image_registry_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: container_image_registry_new
+      :image: new
+      :url: '/new'
+      :text: 'Add a New #{ui_lookup(:table=>"container_image_registry")}'
+      :title: 'Add a New #{ui_lookup(:table=>"container_image_registry")}'
+    - :button: container_image_registry_edit
+      :image: edit
+      :text: 'Edit Selected #{ui_lookup(:table=>"container_image_registry")}'
+      :title: 'Select a single #{ui_lookup(:table=>"container_image_registry")} to edit'
+      :url_parms: 'main_div'
+      :onwhen: '1'
+    - :button: container_image_registry_delete
+      :image: remove
+      :text: 'Remove #{ui_lookup(:tables=>"container_image_registries")} from the VMDB'
+      :title: 'Remove selected #{ui_lookup(:tables=>"container_image_registries")} from the VMDB'
+      :url_parms: 'main_div'
+      :confirm: 'Warning: The selected #{ui_lookup(:tables=>"container_image_registries")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"container_image_registries")}?'
+      :onwhen: '1+'

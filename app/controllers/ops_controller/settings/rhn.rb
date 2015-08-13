@@ -99,7 +99,7 @@ module OpsController::Settings::RHN
       :registration_type => db.registration_type,
       :user_name         => username,
       :server            => db.registration_server,
-      :company_name      => db.registration_organization_display_name,
+      :company_name      => db.registration_organization_name,
       :subscription      => rhn_subscription_map[db.registration_type] || 'None',
       :update_repo_name  => db.update_repo_name,
       :version_available => db.cfme_version_available

@@ -6,13 +6,13 @@
         %td
           %table#formtest.form{:width => '50%'}
             %tr
-              %td.widthed{:align => "left"}=_("Domains:")
+              %td.widthed{:align => "left"}= _("Domains:")
               %td
             %tr
               %td{:align => "left", :valign => "top"}
                 = select_tag('seq_fields[]',
                   options_for_select(@edit[:new][:domain_order], @selected),
-                  {:multiple => true, :style => "width: 450px", :size => 20, :id => "seq_fields"})
+                  :multiple => true, :style => "width: 450px", :size => 20, :id => "seq_fields")
               %td{:width => "30", :align => "left", :valign => "middle"}
                 = link_image_if(:cond => (@edit[:new][:domain_order].length < 2),
                   :image                => "/images/toolbars/up.png",
@@ -26,4 +26,4 @@
                   :opts_false         => {:class => "rollover small", :alt => (t = _("Move selected fields down"))},
                   :link               => {:action => 'priority_form_field_changed', :button => 'down', :id => "priority__edit"},
                   :opts_link          => {"data-submit" => "domains_list", :remote => true, :title => t})
-          #div.note=_('* Select one or more consecutive groups to move up or down.')
+          #div.note= _('* Select one or more consecutive groups to move up or down.')

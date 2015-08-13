@@ -1,8 +1,5 @@
 require "spec_helper"
-
-$:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. util extensions})))
-require 'miq-module'
-
+require 'util/extensions/miq-module'
 require 'timecop'
 
 describe Module do
@@ -21,7 +18,7 @@ describe Module do
     end
 
     after(:each) do
-      $miq_cache_with_timeout.clear
+      Module.clear_all_cache_with_timeout
     end
 
     it 'will create the class method on that class/module only' do

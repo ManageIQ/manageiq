@@ -7,6 +7,7 @@ module MiqAeServiceVmVmwareSpec
 
     before do
       Vm.any_instance.stub(:my_zone).and_return('default')
+      MiqServer.stub(:my_zone).and_return('default')
       @base_queue_options = {
         :class_name  => vm.class.name,
         :instance_id => vm.id,
@@ -59,6 +60,28 @@ module MiqAeServiceVmVmwareSpec
         @base_queue_options.merge(
           :method_name => 'vm_destroy',
           :args        => [])
+      )
+    end
+
+    it "#create_snapshot without memory" do
+      service_vm.create_snapshot('snap', 'crackle & pop')
+
+      MiqQueue.first.args.first.should have_attributes(
+        :task        => 'create_snapshot',
+        :memory      => false,
+        :name        => 'snap',
+        :description => 'crackle & pop'
+      )
+    end
+
+    it "#create_snapshot with memory" do
+      service_vm.create_snapshot('snap', 'crackle & pop', true)
+
+      MiqQueue.first.args.first.should have_attributes(
+        :task        => 'create_snapshot',
+        :memory      => true,
+        :name        => 'snap',
+        :description => 'crackle & pop'
       )
     end
   end

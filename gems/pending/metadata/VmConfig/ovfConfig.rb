@@ -1,6 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'miq-xml'
+require 'util/miq-xml'
 
 module OvfConfig
   def convert(filename)

@@ -1,13 +1,9 @@
-$:.push(File.dirname(__FILE__))
-$:.push("#{File.dirname(__FILE__)}/..")
-
-require 'rubygems'
 require 'openssl' # Required for 'Digest' in camcorder (< Ruby 2.1)?
 require 'camcorder'
 require 'log4r'
 require 'ostruct'
-require 'MiqDisk'
-require 'modules/MiqLargeFile'
+require 'disk/MiqDisk'
+require 'disk/modules/MiqLargeFile'
 
 #
 # Formatter to output log messages to the console.

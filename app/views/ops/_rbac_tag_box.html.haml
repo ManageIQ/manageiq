@@ -2,21 +2,21 @@
   %h3= _("Smart Management")
   .form-horizontal.static
     .form-group
-      %label.col-sm-2.control-label
+      %label.col-md-2.control-label
         = session[:customer_name]
-        =_("Tags")
-      .col-sm-10
+        = _("Tags")
+      .col-md-10
         %table{:style => "padding: 0px; margin: 0px; border: 0px; width: 100%"}
           - if session[:assigned_filters].empty?
             %tr
               %td{:style => "padding: 0px; margin: 0px; border: 0px"}
                 %img{:align => "left", :height => "20", :src => "/images/icons/new/smarttag.png", :width => "20"}/
                 %div{:style => "padding-left: 2em;"}
-                  =_("No %s Tags have been assigned") % session[:customer_name]
+                  = _("No %s Tags have been assigned") % session[:customer_name]
           - else
             - session[:assigned_filters].keys.sort.each do |k|
               - v = session[:assigned_filters][k]
-              %tr{:class => cycle('row0','row1', :name => 'props')}
+              %tr{:class => cycle('row0', 'row1', :name => 'props')}
                 %td{:style => "padding: 0px; margin: 0px; border: 0px"}
                   %img{:align => "left", :height => "20", :src => "/images/icons/new/smarttag.png", :width => "20"}/
                   %div{:style => "padding-left: 2em;"}

@@ -4,7 +4,7 @@ module MiqEnvironment
   class Process
     def self.is_rails_server?
       return @is_rails_server unless @is_rails_server.nil?
-      return @is_rails_server = File.basename($PROGRAM_NAME) =~ /rackup|thin/ || (File.basename($PROGRAM_NAME) == "rails" && !!defined?(Rails::Server))
+      return @is_rails_server = File.basename($PROGRAM_NAME) =~ /rackup|puma|thin/ || (File.basename($PROGRAM_NAME) == "rails" && !!defined?(Rails::Server))
     end
 
     def self.is_rails_console?
@@ -52,7 +52,6 @@ module MiqEnvironment
     def self.is_non_web_server_worker?
       return @is_non_web_server_worker unless @is_non_web_server_worker.nil?
       # ARGV: ["priority_worker", "MiqPriorityWorker", "--queue_name", "generic", "--guid", "33d93972-56ff-11e0-98ac-001f5bee6a67"]
-      # rails runner eats /var/www/miq/vmdb/lib/workers/bin/worker.rb which was ARGV[0]
       klass = ARGV[1].constantize rescue NilClass
       return @is_non_web_server_worker = is_rails_runner? && klass.hierarchy.include?(MiqWorker)
     end

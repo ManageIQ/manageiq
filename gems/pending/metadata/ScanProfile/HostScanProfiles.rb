@@ -1,6 +1,6 @@
-require 'ScanProfilesBase'
-require 'HostScanProfile'
-require 'HostScanItem'
+require 'metadata/ScanProfile/ScanProfilesBase'
+require 'metadata/ScanProfile/HostScanProfile'
+require 'metadata/ScanProfile/HostScanItem'
 
 class HostScanProfiles < ScanProfilesBase
   SCAN_TYPE_HOSTD = 'nteventlog'

@@ -1,11 +1,7 @@
-$:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/MIQExtract")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-
-require 'runcmd'
-require 'MIQExtract'
-require 'VmConfig'
-require 'MicrosoftWinCom'
+require 'util/runcmd'
+require 'metadata/MIQExtract/MIQExtract'
+require 'metadata/VmConfig/VmConfig'
+require 'Verbs/implementations/MicrosoftWinCom'
 
 module MicrosoftOpsWin
   def initializeCOM

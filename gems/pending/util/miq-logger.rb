@@ -1,14 +1,13 @@
-require 'miq-extensions'
+require 'util/miq-extensions'
 
 # If a global log handle has already been defined do not load these classes
 # This allows for miqverbs to be loaded under vmdb.
 if $log.nil?
-  require 'rubygems'  
   require 'log4r'
   require 'log4r/configurator'
   require 'time'
   require 'platform'
-  require 'MiqSockUtil'
+  require 'util/MiqSockUtil'
 
   #Define custom logging level to insert the "Summary" level
   Log4r::Configurator.custom_levels(:DEBUG, :INFO, :WARN, :ERROR, :FATAL, :SUMM)

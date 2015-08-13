@@ -6,7 +6,7 @@
           - @edit[:buttons].each do |button|
             - next unless [:cancel, :continue, :submit].include?(button)
             - action       = button == :continue ? 'prov_continue' : 'prov_edit'
-            - button_class = button == :cancel   ? 'default'       : 'primary'
+            - button_class = button == :cancel ? 'default' : 'primary'
             - button_name  = button.to_s.capitalize
             - text         = _("#{button_name} this provisioning request")
             - url          = url_for(:action => action, :id => "#{@edit[:req_id] || 'new'}", :button => button)

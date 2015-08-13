@@ -104,6 +104,8 @@ class VmOrTemplate < ActiveRecord::Base
 
   has_many                  :policy_events, -> { where(["target_id = ? OR target_class = 'VmOrTemplate'", id]).order(:timestamp) }, :class_name => "PolicyEvent"
 
+  has_many                  :miq_events, :as => :target, :dependent => :destroy
+
   has_many                  :miq_alert_statuses, :dependent => :destroy, :as => :resource
 
   has_one                   :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
@@ -258,6 +260,14 @@ class VmOrTemplate < ActiveRecord::Base
 
   include FilterableMixin
   include StorageMixin
+
+  def self.manager_class
+    if parent == Object
+      "Ems#{model_suffix}".constantize
+    else
+      parent
+    end
+  end
 
   def to_s
     self.name
@@ -1865,6 +1875,10 @@ class VmOrTemplate < ActiveRecord::Base
     false
   end
 
+  def self.batch_operation_supported?(operation, ids)
+    VmOrTemplate.where(:id => ids).all? { |v| v.public_send("validate_#{operation}")[:available] }
+  end
+
   private
 
   def power_state=(new_power_state)
@@ -1873,5 +1887,9 @@ class VmOrTemplate < ActiveRecord::Base
 
   def calculate_power_state
     self.class.calculate_power_state(raw_power_state)
+  end
+
+  def validate_supported
+    {:available => true,   :message => nil}
   end
 end

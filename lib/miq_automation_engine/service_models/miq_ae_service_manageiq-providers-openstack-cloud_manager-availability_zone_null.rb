@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Openstack_CloudManager_AvailabilityZoneNull < MiqAeServiceManageIQ_Providers_Openstack_CloudManager_AvailabilityZone
+  end
+end

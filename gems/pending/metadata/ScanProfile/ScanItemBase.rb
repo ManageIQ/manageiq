@@ -1,5 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/modules")
-
 class ScanItemBase
   SCAN_TYPE_PROP = "item_type"
 
@@ -24,7 +22,7 @@ class ScanItemBase
     raise "Already set scan module" if @extend_scan_module
     begin
       m = "#{self.class.name}#{type.capitalize}"
-      require m
+      require_relative "modules/#{m}"
       extend Object.const_get(m)
     rescue LoadError
     end

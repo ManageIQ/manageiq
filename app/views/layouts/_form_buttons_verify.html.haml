@@ -1,22 +1,19 @@
-- valtype    ||= "default"
+- valtype ||= "default"
 - statuskey  = (valtype + "_verify_status").to_sym
-- record     ||= nil
-- record_id  ||= nil
-- ujs_button ||= nil
-- serialize  ||= false
+- record ||= nil
+- record_id ||= nil
+- serialize ||= false
 - if record
   - id = record.id.blank? ? "new" : record.id
 - else
   - id = record_id ? record_id : nil
 
 - if session[:host_items].present?
-  - verify_title_off = _("%s to validate against, Username and matching password fields are needed to perform verification of credentials") % title_for_host
   - verify_title_on  = _("Validate the credentials by logging into the selected %s") % title_for_host
 - else
-  - verify_title_off ||= _("Server information, Username and matching password fields are needed to perform verification of credentials")
-  - verify_title_on  ||= _("Validate the credentials by logging into the Server")
+  - verify_title_on ||= _("Validate the credentials by logging into the Server")
 
-%div{:id => "#{valtype}_validate_buttons_on", :style => ("display:none" if !@edit[statuskey])}
+%div{:id => "#{valtype}_validate_buttons_on", :style => ("display:none" unless @edit[statuskey])}
   - if serialize
     = button_tag(_("Validate"),
                  :class   => "btn btn-primary btn-xs",

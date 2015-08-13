@@ -6,10 +6,10 @@ FactoryGirl.define do
   factory :availability_zone_amazon, :parent => :availability_zone, :class => "ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone" do
   end
 
-  factory :availability_zone_openstack, :parent => :availability_zone, :class => "AvailabilityZoneOpenstack" do
+  factory :availability_zone_openstack, :parent => :availability_zone, :class => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone" do
   end
 
-  factory :availability_zone_openstack_null, :parent => :availability_zone_openstack, :class => "AvailabilityZoneOpenstackNull" do
+  factory :availability_zone_openstack_null, :parent => :availability_zone_openstack, :class => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull" do
   end
 
   factory :availability_zone_target, :parent => :availability_zone do

@@ -50,8 +50,6 @@
             = _('Column Name')
           %th
             = _('Calculations')
-          %th
-            = _('Selected')
       %tbody
         - @edit[:new][:fields].each_with_index do |f, f_idx|
           - next if [@pivotby1, @pivotby2, @pivotby3]. include?(f.last)
@@ -59,19 +57,18 @@
           %tr
             %td
               = h(f.first)
-            - combo_id = "pivotcalc_id_#{f_idx}"
-            - combo_name = "pivotcalc_#{f_idx}"
-            %td{:id => combo_id}
-            = render(:partial => 'layouts/dhtmlxcombo',
-              :locals         => {:combo_id => combo_id,
-                :combo_name                 => combo_name,
-                :combo_url                  => "/report/form_field_changed/#{@edit[:rpt_id] || 'new'}",
-                :combo_onchange             => "miqChangeIgnore",
-                :combo_type                 => "checkbox",
-                :xml_combo                  => @edit[:pivotcalc_xml][f_idx]})
-            %td{:id => "calc_#{f_idx}_div"}
-              - if @edit[:pivot_cols][f.last]
-                = @edit[:pivot_cols][f.last].collect { |c| c.to_s.titleize }.join(", ")
+            %td
+              #form-group
+              - field_name = "pivotcalc_#{f_idx}"
+              - selected = @edit[:pivot_cols][f.last] ? @edit[:pivot_cols][f.last] : []
+              = select_tag(field_name,
+                  options_for_select(MiqReport::PIVOTS.map(&:reverse), selected),
+                  :class    => "selectpicker show-tick",
+                  :multiple => true,
+                  "title"   => "Check Option")
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent("#{field_name}", "#{url}")
     %br
     %strong
       = _('Note:')

@@ -3,7 +3,7 @@
     - if !@in_a_form_fields
       / Show Schema
       = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
-      %h3=_('Schema')
+      %h3= _('Schema')
       %table.table.table-striped.table-bordered
         %thead
           %tr
@@ -13,16 +13,29 @@
               = title
         %tbody
         - @ae_class.ae_fields.each do |ae_field|
-          - image = ae_field.substitute ? "passed.png" : "failed.png"
+          - image = ae_field.substitute ? "pficon pficon-ok" : "pficon pficon-close"
           %tr
             - %w(name description default_value collect message on_entry on_exit on_error max_retries max_time).each do |fname|
               %td
                 / Name is special processed
                 - if fname == 'name'
-                  %img{:src => "/images/icons/new/ae_#{ae_field.aetype}.png", :alt => (t = "#{_('Type:')} #{ae_field.aetype}"), :title => t}
+                  %ul.icons.list-unstyled.pull-left
+                    %li
+                      %span.product{:class => "product-ae_#{ae_field.aetype}",
+                                    :alt   => (t = "#{_('Type:')} #{ae_field.aetype}"),
+                                    :title => t}
                   - if !ae_field.datatype.blank? && ae_field.datatype != "string"
-                    %img{:src => "/images/icons/new/#{ae_field.datatype}.png", :alt => (t = "#{_('Data Type:')} #{ae_field.datatype}"), :title => t}
-                  %img{:src => "/images/icons/16/#{image}", :alt => (t = "#{_('Substitution:')} #{ae_field.substitute}"), :title => t}
+                    %ul.icons.list-unstyled.pull-left
+                      %li
+                        %span.product{:class => "product-#{ae_field.datatype}",
+                                      :alt   => (t = "#{_('Data Type:')} #{ae_field.datatype}"), :title => t}
+
+                  %ul.icons.list-unstyled.pull-left
+                    %li
+                      %span{:class => "#{image}",
+                            :alt   => (t = "#{_('Substitution:')} #{ae_field.substitute}"),
+                            :title => t}
+
                   = h(ae_field.display_name)
                   (#{h(ae_field.name)})
                 - elsif fname == 'default_value'
@@ -36,7 +49,7 @@
       / Edit Schema
       #form_div
         = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
-        %h3=_('Schema')
+        %h3= _('Schema')
         %table.table.table-striped.table-bordered
           %thead
             %tr
@@ -60,18 +73,18 @@
                 - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
                   %td
                     - if %w(aetype datatype).include?(fname)
-                      - combo_id   = "fields_#{fname}_id#{i}"
                       - combo_name = "fields_#{fname}#{i}"
-                      - xml_combo  = (fname == 'aetype' ? @combo_xml : @dtype_combo_xml)[i]
+                      - combo_options  = (fname == 'aetype' ? @combo_xml : @dtype_combo_xml)
                       - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
-                      %div{:id => combo_id}
-                      = render(:partial => 'layouts/dhtmlxcombo',
-                        :locals     => {:combo_id => combo_id,
-                          :combo_name             => combo_name,
-                          :xml_combo              => xml_combo,
-                          :combo_url              => combo_url})
+                      #form-group
+                        = select_tag(combo_name,
+                          options_for_select(combo_options, field[fname]),
+                          "title" => "Choose",
+                          :class  => "selectpicker")
+                      :javascript
+                        miqSelectPickerEvent("#{combo_name}", "#{combo_url}")
                     - elsif fname == 'substitute'
-                      = check_box_tag("fields_#{fname}_#{i}", value = "1", checked = field['substitute'],
+                      = check_box_tag("fields_#{fname}_#{i}", "1", field['substitute'],
                         "data-miq_observe_checkbox" => {:url => url}.to_json)
                     - elsif fname == 'default_value'
                       - default_value = field['default_value']
@@ -109,19 +122,19 @@
               - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
                 %td
                   - if %w(aetype datatype).include?(fname)
-                    - combo_id   = "field_#{fname}_id"
                     - combo_name = "field_#{fname}"
-                    - xml_combo  = @edit[:new]["#{fname}s".to_sym][0]
+                    - combo_options  = @edit[:new]["#{fname}s".to_sym]
                     - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
-                    %div{:id => combo_id}
-                    = render(:partial => 'layouts/dhtmlxcombo',
-                      :locals => {:combo_id => combo_id,
-                        :combo_name          => combo_name,
-                        :xml_combo           => xml_combo,
-                        :combo_url           => combo_url})
+                    #form-group
+                      = select_tag(combo_name,
+                          options_for_select(combo_options, session[:field_data][fname]),
+                          "title" => "Choose",
+                          :class  => "selectpicker")
+                    :javascript
+                      miqSelectPickerEvent("#{combo_name}", "#{combo_url}")
                   - elsif fname == 'substitute'
                     - checked = !session[:field_data].blank? && session[:field_data][:substitute]
-                    = check_box_tag("field_#{fname}", value = "1", checked = checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
+                    = check_box_tag("field_#{fname}", "1", checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
                   - elsif fname == 'default_value'
                     = text_field_tag("field_default_value", session[:field_data][:default_value],
                       :style             => session[:field_data][:datatype] == "password" ? "display:none" : "",
@@ -133,4 +146,6 @@
                   - else
                     = text_field_tag("field_#{fname}", session[:field_data][fname.to_sym],
                       "data-miq_observe" => obs)
+:javascript
+  miqInitSelectPicker();
 

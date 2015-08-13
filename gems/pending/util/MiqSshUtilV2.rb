@@ -1,4 +1,4 @@
-require 'extensions/miq-string.rb'
+require 'util/extensions/miq-string.rb'
 
 module Net
   module SSH

@@ -18,10 +18,16 @@ class EvmDatabase
     VmdbDatabase
   }
 
-  def self.seedable_model_class_names
-    @seedable_model_class_names ||= begin
+  RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
+
+  def self.find_seedable_model_class_names
+    @found_model_class_names ||= begin
       Dir.glob(Rails.root.join("app/models/*.rb")).collect { |f| File.basename(f, ".*").camelize if File.read(f).include?("self.seed") }.compact.sort
     end
+  end
+
+  def self.seedable_model_class_names
+    find_seedable_model_class_names + RAILS_ENGINE_MODEL_CLASS_NAMES
   end
 
   def self.seed_primordial

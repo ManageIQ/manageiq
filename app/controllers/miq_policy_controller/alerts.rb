@@ -258,7 +258,7 @@ module MiqPolicyController::Alerts
 
     # Build hash of arrays of all events by event type
     @edit[:events] = Hash.new
-    MiqEvent.all_events.each do |e|
+    MiqEventDefinition.all_events.each do |e|
       next if e.name.ends_with?("compliance_check")
       @edit[:events][e.id] = (e.etype.description + ": " + e.description)
     end
@@ -291,14 +291,14 @@ module MiqPolicyController::Alerts
       if @alert.responds_to_events == "_hourly_timer_"                    # Check for hourly timer event
         @edit[:new][:exp_event] = @alert.responds_to_events
       else
-        exp_event = MiqEvent.find_by_name(@alert.responds_to_events)
+        exp_event = MiqEventDefinition.find_by_name(@alert.responds_to_events)
         @edit[:new][:exp_event] = exp_event.nil? ? nil : exp_event.id
       end
     elsif @alert.expression.is_a?(Hash) && @alert.expression[:eval_method] == "nothing"
       if @alert.responds_to_events == "_hourly_timer_"                    # Check for hourly timer event
         @edit[:new][:exp_event] = @alert.responds_to_events
       else
-        exp_event = MiqEvent.find_by_name(@alert.responds_to_events)
+        exp_event = MiqEventDefinition.find_by_name(@alert.responds_to_events)
         @edit[:new][:exp_event] = exp_event.nil? ? nil : exp_event.id
       end
     end
@@ -420,7 +420,7 @@ module MiqPolicyController::Alerts
     unless @sb[:alert][:events] # Only create this once
       vm_events = MiqAlert.expression_options("event_threshold").find{|eo|eo[:name]==:event_types}[:values] # Get the allowed events
       @sb[:alert][:events] ||= Hash.new
-      TL_ETYPE_GROUPS.each do |k,v|
+      EmsEvent.event_groups.each do |k,v|
         name = v[:name]
         v[:detail].each do |d|
           @sb[:alert][:events][d] = name + ": " + d if vm_events.include?(d)
@@ -495,7 +495,7 @@ module MiqPolicyController::Alerts
         alert.responds_to_events = @edit[:new][:exp_event]
       else
         alert.responds_to_events = @edit[:new][:exp_event] && @edit[:new][:exp_event] > 0 ?
-                                    MiqEvent.find(@edit[:new][:exp_event]).name : nil
+                                    MiqEventDefinition.find(@edit[:new][:exp_event]).name : nil
       end
     else
       alert.expression = copy_hash(@edit[:new][:expression])
@@ -505,7 +505,7 @@ module MiqPolicyController::Alerts
           alert.responds_to_events = @edit[:new][:exp_event]
         else
           alert.responds_to_events = @edit[:new][:exp_event] && @edit[:new][:exp_event] > 0 ?
-                                      MiqEvent.find(@edit[:new][:exp_event]).name : nil
+                                      MiqEventDefinition.find(@edit[:new][:exp_event]).name : nil
         end
       end
     end
@@ -563,13 +563,8 @@ module MiqPolicyController::Alerts
     if alert.options[:notifications][:snmp]
       validate_snmp_options(alert.options[:notifications][:snmp])
       unless @flash_array
-        temp = Array.new
-        @edit[:new][:snmp][:variables].each_with_index do |var,i|
-          unless var[:oid].blank?
-            temp.push(var)
-          end
-        end
-        alert.options[:notifications][:snmp][:variables] = temp
+        alert.options[:notifications][:snmp][:variables] =
+          @edit[:new][:snmp][:variables].reject { |var| var[:oid].blank? }
       end
     end
     return @flash_array == nil
@@ -582,13 +577,13 @@ module MiqPolicyController::Alerts
     if @alert.responds_to_events == "_hourly_timer_"
       @event = "Hourly Timer"
     else
-      e = MiqEvent.find_by_name(@alert.responds_to_events)
+      e = MiqEventDefinition.find_by_name(@alert.responds_to_events)
       @event = e.nil? ? "<No Event configured>" : e.etype.description + ": " + e.description
     end
     if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:email] && @alert.options[:notifications][:email][:to]
-      @alert.options[:notifications][:email][:to].each_with_index do |e, e_idx|
-        u = User.find_by_email(e)
-        @email_to.push(u ? "#{u.name} (#{e})" : e)
+      @alert.options[:notifications][:email][:to].each do |to|
+        user = User.find_by_email(to)
+        @email_to.push(user ? "#{user.name} (#{to})" : to)
       end
     end
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlert"), :name=>alert.description}

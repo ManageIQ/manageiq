@@ -1,10 +1,3 @@
-# If run through cruisecontrol, write the normal $log messages to the cruise
-# control build artifacts logger
-if ENV['CC_BUILD_ARTIFACTS']
-  $log.filename = File.expand_path(File.join(ENV['CC_BUILD_ARTIFACTS'], "evm.log"))
-  cc_level = VMDBLogger::INFO
-end
-
 # Set env var LOG_TO_CONSOLE if you want logging to dump to the console
 # e.g. LOG_TO_CONSOLE=true ruby spec/models/vm.rb
 $log.logdev = STDERR if ENV['LOG_TO_CONSOLE']
@@ -12,9 +5,9 @@ $log.logdev = STDERR if ENV['LOG_TO_CONSOLE']
 # Set env var LOGLEVEL if you want custom log level during a local test
 # e.g. LOG_LEVEL=debug ruby spec/models/vm.rb
 env_level = VMDBLogger.const_get(ENV['LOG_LEVEL'].to_s.upcase) rescue nil if ENV['LOG_LEVEL']
-
-$log.level = env_level || cc_level || VMDBLogger::INFO
-Rails.logger.level = $log.level
+env_level ||= VMDBLogger::INFO
+$log.level = env_level
+Rails.logger.level = env_level
 
 module EvmSpecHelper
 

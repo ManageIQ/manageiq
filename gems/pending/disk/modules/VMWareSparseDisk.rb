@@ -1,4 +1,4 @@
-require 'MiqLargeFile'
+require 'disk/modules/MiqLargeFile'
 require 'binary_struct'
 require 'memory_buffer'
 

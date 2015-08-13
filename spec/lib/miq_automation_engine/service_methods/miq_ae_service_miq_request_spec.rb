@@ -14,7 +14,6 @@ module MiqAeServiceMiqRequestSpec
       @ae_result_key = 'foo'
 
       @fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @approver_role = FactoryGirl.create(:ui_task_set_approver)
       @miq_request   = FactoryGirl.create(:automation_request, :requester => @fred)
     end
 

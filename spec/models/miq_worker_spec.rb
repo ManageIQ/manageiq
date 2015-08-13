@@ -1,6 +1,15 @@
 require "spec_helper"
 
 describe MiqWorker do
+  context ".sync_workers" do
+    it "stops extra workers, returning deleted pids" do
+      described_class.any_instance.should_receive(:stop)
+      worker = FactoryGirl.create(:miq_worker, :status => "started")
+      worker.class.workers = 0
+      worker.class.sync_workers.should == {:adds => [], :deletes => [worker.pid]}
+    end
+  end
+
   context ".has_required_role?" do
     def check_has_required_role(worker_role_names, expected_result)
       described_class.stub(:required_roles).and_return(worker_role_names)

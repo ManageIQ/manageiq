@@ -1,5 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../metadata/util/")
-require 'md5deep'
+require 'metadata/util/md5deep'
 require 'minitest/unit'
 
 module Extract

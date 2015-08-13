@@ -4,14 +4,14 @@
 = render :partial => "layouts/flash_msg"
 #main_div
   .row
-    .col-sm-12.col-md-12.col-lg-6
+    .col-md-12.col-lg-6
       %fieldset
-        %h3=_("Group Information")
+        %h3= _("Group Information")
         - if @edit
           = render :partial => "ldap_auth_users"
         %table.style1
           %tr
-            %td.key=_("Description")
+            %td.key= _("Description")
             %td{:nowrap => ""}
               - if !@edit
                 = h(@group.description)
@@ -26,10 +26,10 @@
                                 "1",
                                 false,
                                 "data-miq_observe_checkbox" => {:url => url}.to_json)
-                =_("(Look Up LDAP Groups)")
+                = _("(Look Up LDAP Groups)")
                 = javascript_tag(javascript_focus('description'))
           %tr
-            %td.key=_("Role")
+            %td.key= _("Role")
             %td{:style => @edit ? 'padding: 0px' : ''}
               - if !@edit
                 - if @group.miq_user_role
@@ -47,7 +47,7 @@
                              "data-miq_observe" => {:url => url}.to_json)
           - unless @edit
             %tr
-              %td.key=_("Users in this Group")
+              %td.key= _("Users in this Group")
               %td{:style => "padding: 0px"}
                 %table{:cellpadding => "0", :cellspacing => "0"}
                   - @group.users.sort_by { |a| a.name.downcase }.each do |u|
@@ -63,10 +63,10 @@
       - if @edit
         #group_lookup{:style => "display:none"}
           %fieldset
-            %h3=_("LDAP Group Look Up")
+            %h3= _("LDAP Group Look Up")
             %table.style1
               %tr
-                %td.key=_("User to Look Up")
+                %td.key= _("User to Look Up")
                 %td
                   = text_field_tag("user",
                                    @edit[:new][:user],
@@ -75,7 +75,7 @@
                                                           :url      => url}.to_json)
                 %td
               %tr
-                %td.key=_("Username")
+                %td.key= _("Username")
                 %td
                   = text_field_tag("user_id",
                                    @edit[:new][:user_id],
@@ -84,7 +84,7 @@
                                                           :url      => url}.to_json)
                 %td
               %tr
-                %td.key=_("Password")
+                %td.key= _("Password")
                 %td
                   = password_field_tag("password",
                                        @edit[:new][:password],
@@ -102,7 +102,7 @@
                              "data-miq_sparkle_off" => true,
                              :remote                => true,
                              :title                 => _("LDAP Group Lookup"))
-    .col-sm-12.col-md-12.col-lg-6
+    .col-md-12.col-lg-6
       %fieldset
         %h3= @edit ? _("Assign Filters") : _("Assigned Filters (read only)")
         #rbac_group_tabs

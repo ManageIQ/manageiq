@@ -1,5 +1,5 @@
-require_relative "external_httpd_configuration"
-require_relative "principal"
+require "appliance_console/external_httpd_configuration"
+require "appliance_console/principal"
 
 module ApplianceConsole
   class ExternalHttpdAuthentication

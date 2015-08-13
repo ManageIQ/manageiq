@@ -1,14 +1,11 @@
 # encoding: US-ASCII
 
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/win32")
-require 'rubygems'
 require 'platform'
-require 'runcmd'
-require 'miq-wmi'
-require 'miq-system'
+require 'util/runcmd'
+require 'util/win32/miq-wmi'
+require 'util/miq-system'
 if Platform::OS == :win32
-  require 'win32/miq-win32-process'
+  require 'util/win32/miq-win32-process'
 end
 
 class MiqProcess
@@ -206,6 +203,13 @@ class MiqProcess
         if cmd == cmdline.gsub("\000", " ").strip
           pid = filename.split('/')[2]
           pids << pid.to_i
+        end
+      end
+    when :macosx
+      require 'sys/proctable'
+      Sys::ProcTable.ps.select do |p|
+        if p.cmdline && cmd.match(p.cmdline.gsub("\000", " ").strip)
+          pids << p.pid
         end
       end
     else

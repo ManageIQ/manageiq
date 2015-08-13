@@ -424,7 +424,7 @@ class Vmware::InfraManager < InfraManager
     log_header = "EMS: [#{self.name}] #{obj.class.name}: id [#{obj.id}], name [#{obj.name}], ems_ref [#{obj.ems_ref}]"
     result = nil
 
-    if obj.kind_of?(self::Vm) || obj.kind_of?(self::Template) || obj.kind_of?(self::Host) || obj.kind_of?(EmsCluster) || obj.kind_of?(EmsFolder)
+    if obj.kind_of?(self.class::Vm) || obj.kind_of?(self.class::Template) || obj.kind_of?(self.class::Host) || obj.kind_of?(EmsCluster) || obj.kind_of?(EmsFolder)
       obj.with_provider_object do |vim_obj|
         vim_obj.logUserEvent(user_event) if user_event && obj.kind_of?(Vm)
 

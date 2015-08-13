@@ -14,7 +14,7 @@
           %td.key
             = _('Based On:')
           %td.notwide
-            = Dictionary::gettext(@report.db, :type => :model, :notfound => :titleize)
+            = Dictionary.gettext(@report.db, :type => :model, :notfound => :titleize)
         %tr
           %td.key
             = _('Updated On:')

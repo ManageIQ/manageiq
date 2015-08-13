@@ -1,9 +1,8 @@
-$:.push(File.dirname(__FILE__))
 require 'pathname'
 require Pathname.new(__dir__).join("../util/extensions/miq-uri")
 
 require 'sync'
-require 'VimService'
+require 'VMwareWebService/VimService'
 
 # require 'profile'
 

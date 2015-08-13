@@ -1,17 +1,11 @@
 #!/usr/bin/env ruby
 
-$: << "#{File.dirname(__FILE__)}/../../fs"
-$: << "#{File.dirname(__FILE__)}/../../fs/MetakitFS"
-$: << "#{File.dirname(__FILE__)}/../../fs/MiqFS"
-$: << "#{File.dirname(__FILE__)}/../../fs/MiqFS/modules"
-
-require 'rubygems'
 require 'log4r'
 require 'optparse'
-require 'MiqFsUtil'
-require 'MiqFS'
-require 'MetakitFS'
-require 'LocalFS'
+require 'fs/MiqFsUtil'
+require 'fs/MiqFS/MiqFS'
+require 'fs/MetakitFS/MetakitFS'
+require 'fs/MiqFS/modules/LocalFS'
 
 yaml	= nil
 outFile	= nil

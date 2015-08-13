@@ -243,7 +243,7 @@ class TreeBuilder
     children_or_count = case parent
                         when nil                 then x_get_tree_roots(options)
                         when AvailabilityZone    then x_get_tree_az_kids(parent, options)
-                        when ConfigurationManagerForeman then x_get_tree_cmf_kids(parent, options)
+                        when ManageIQ::Providers::Foreman::ConfigurationManager then x_get_tree_cmf_kids(parent, options)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, options)
                         when CustomButtonSet     then x_get_tree_aset_kids(parent, options)
                         when Dialog              then x_get_tree_dialog_kids(parent, options)
@@ -272,7 +272,7 @@ class TreeBuilder
                         when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
                         when Zone                then x_get_tree_zone_kids(parent, options)
                         when MiqSearch           then nil
-                        when VmOpenstack         then nil
+                        when ManageIQ::Providers::Openstack::CloudManager::Vm         then nil
                         else                          nil end
     children_or_count || (count_only ? 0 : [])
   end
@@ -326,7 +326,7 @@ class TreeBuilder
 
   def count_only_or_objects(count_only, objects, sort_by)
     if count_only
-      objects.count
+      objects.size
     elsif sort_by
       objects.sort_by { |o| Array(sort_by).collect { |sb| o.deep_send(sb).to_s.downcase } }
     else
@@ -405,7 +405,7 @@ class TreeBuilder
     "dg"  => "Dialog",
     "ds"  => "Storage",
     "e"   => "ExtManagementSystem",
-    "ev"  => "MiqEvent",
+    "ev"  => "MiqEventDefinition",
     "c"   => "EmsCluster",
     "f"   => "EmsFolder",
     "g"   => "MiqGroup",

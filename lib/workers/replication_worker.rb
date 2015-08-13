@@ -146,7 +146,10 @@ class ReplicationWorker < WorkerBase
       return false
     end
 
-    return true unless pid_state.nil? || pid_state == :zombie
+    return true unless pid_state.nil? || pid_state == :zombie || !child_process_recently_active?
+    $log.info(
+      "#{log_prefix} rubyrep Process with pid=#{@pid} child has not heartbeat since #{child_process_last_heartbeat}"
+    ) unless child_process_recently_active?
 
     if pid_state == :zombie
       pid, status = Process.waitpid2(@pid)
@@ -157,10 +160,36 @@ class ReplicationWorker < WorkerBase
     return false
   end
 
+  def child_process_heartbeat_file_init
+    FileUtils.touch(child_process_heartbeat_settings[:file]) if child_process_heartbeat_settings[:file]
+  end
+
+  def child_process_recently_active?
+    child_process_last_heartbeat && (child_process_last_heartbeat >= child_process_heartbeat_settings[:threshold].seconds.ago.utc)
+  end
+
+  def child_process_last_heartbeat
+    hb_file = child_process_heartbeat_settings[:file]
+    File.exist?(hb_file) ? File.mtime(hb_file).utc : nil
+  end
+
+  def child_process_heartbeat_settings
+    @default_settings ||= VMDB::Config.new("vmdb").retrieve_config(:tmpl)
+                          .fetch_path(:workers, :worker_base, :replication_worker, :replication)
+    worker_settings ||= @default_settings
+    {
+      :file      => MiqRubyrep.heartbeat_file,
+      :threshold => worker_settings.fetch_path(:options, :heartbeat_threshold).to_i ||
+        @default_settings.fetch_path(:options, :heartbeat_threshold).to_i
+    }
+  end
+
   def rubyrep_run(verb)
     verb = :local_uninstall if verb == :uninstall
 
     $log.info("#{self.log_prefix} rubyrep process for verb=#{verb} starting")
+
+    child_process_heartbeat_file_init
 
     require 'open4'
     pid, stdin, stdout, stderr = Open4.popen4(*(MiqEnvironment::Command.rake_command).split, "evm:dbsync:#{verb}")

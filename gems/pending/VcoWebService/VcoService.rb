@@ -1,8 +1,5 @@
-
-$:.push(File.dirname(__FILE__))
-
 require "handsoap"
-require "VcoTypes"
+require "VcoWebService/VcoTypes"
 
 class VcoService < Handsoap::Service
 			

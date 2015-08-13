@@ -1,0 +1,80 @@
+/*
+Block
+
+example:
++block(block-class)
+
+creates:
+.block-class
+
+Blocks can be used as parent to Elements or Modifiers
+*/
+@mixin block($block) {
+  .#{$block} {
+    @content;
+  }
+}
+
+/*
+Element
+
+example:
++block(block-class)
+  +element(element-class)
++block(block-class2)
+  +modifier(modifier-class)
+    +element(element-class)
+
+creates:
+.block-class
+.block-class__element-class
+.block-class2
+.block-class2--modifier
+.block-class2--modifier-class .block-class2__element-class
+
+Elements can be used as children of Blocks or Modifiers on a Block
+*/
+@mixin element($element) {
+  $selector: &;
+  @if containsModifier($selector) {
+    $block: getBlock($selector);
+    @at-root {
+      #{$selector} {
+        #{$block+$elementSeparator+$element} {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @at-root {
+      #{$selector+$elementSeparator+$element} {
+        @content;
+      }
+    }
+  }
+}
+
+/*
+Modifier
+
+example:
++block(block-class)
+  +modifier(modifier-class)
+  +element(element-class)
+    +modifier(modifier-class)
+
+creates:
+.block-class
+.block-class--element-class
+.block-class__element-class
+.block-class__element-class--element-class
+
+Modifiers can be used as children of Blocks or Elements
+*/
+@mixin modifier($modifier) {
+  @at-root {
+    #{&}#{$modifierSeparator+$modifier} {
+      @content;
+    }
+  }
+}

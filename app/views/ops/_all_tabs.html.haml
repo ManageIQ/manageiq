@@ -1,12 +1,16 @@
 #ops_tabs
-  - # Settings
+  -# Settings
   - case x_active_tree
   - when :settings_tree
     - if selected?(x_node, "z")
       %ul.nav.nav-tabs
         = miq_tab_header("settings_evm_servers", @sb[:active_tab]) do
           = _("Zone")
+        = miq_tab_header("settings_smartproxy_affinity", @sb[:active_tab]) do
+          = _("SmartProxy Affinity")
       .tab-content
+        = miq_tab_content("settings_smartproxy_affinity", @sb[:active_tab]) do
+          = render :partial => "settings_smartproxy_affinity_tab"
         = miq_tab_content("settings_evm_servers", @sb[:active_tab]) do
           = render :partial => "settings_evm_servers_tab"
     - elsif selected?(x_node, "svr")
@@ -148,17 +152,17 @@
       %ul.nav.nav-tabs
         = miq_tab_header("diagnostics_zones", @sb[:active_tab]) do
           = ui_lookup(:models => 'Zone')
-        - if session[:userrole] == "super_administrator"
+        - if super_admin_user?
           = miq_tab_header("diagnostics_roles_servers", @sb[:active_tab]) do
             = _("Roles by Servers")
           = miq_tab_header("diagnostics_servers_roles", @sb[:active_tab]) do
             = _("Servers by Roles")
         = miq_tab_header("diagnostics_server_list", @sb[:active_tab]) do
           = _("Servers")
-        - if !MiqEnterprise.is_enterprise? && session[:userrole] == "super_administrator"
+        - if !MiqEnterprise.is_enterprise? && super_admin_user?
           = miq_tab_header("diagnostics_replication", @sb[:active_tab]) do
             = _("Replication")
-        - if session[:userrole] == "super_administrator"
+        - if super_admin_user?
           = miq_tab_header("diagnostics_database", @sb[:active_tab]) do
             = _("Database")
           = miq_tab_header("diagnostics_orphaned_data", @sb[:active_tab]) do
@@ -166,17 +170,17 @@
       .tab-content
         = miq_tab_content("diagnostics_zones", @sb[:active_tab]) do
           = render :partial => "diagnostics_zones_tab"
-        - if session[:userrole] == "super_administrator"
+        - if super_admin_user?
           = miq_tab_content("diagnostics_roles_servers", @sb[:active_tab]) do
             = render :partial => "diagnostics_roles_servers_tab"
           = miq_tab_content("diagnostics_servers_roles", @sb[:active_tab]) do
             = render :partial => "diagnostics_servers_roles_tab"
         = miq_tab_content("diagnostics_server_list", @sb[:active_tab]) do
           = render :partial => "diagnostics_server_list_tab"
-        - if !MiqEnterprise.is_enterprise? && session[:userrole] == "super_administrator"
+        - if !MiqEnterprise.is_enterprise? && super_admin_user?
           = miq_tab_content("diagnostics_replication", @sb[:active_tab]) do
             = render :partial => "diagnostics_replication_tab"
-        - if session[:userrole] == "super_administrator"
+        - if super_admin_user?
           = miq_tab_content("diagnostics_database", @sb[:active_tab]) do
             - if @sb[:active_tab] == "diagnostics_database"
               = render :partial => "diagnostics_database_tab"

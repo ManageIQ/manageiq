@@ -215,8 +215,11 @@ class PxeController < ApplicationController
             @edit ? _("Editing %{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/,"\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")} :
                     _("%{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/,"\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")}
           end
-        presenter[:extra_js] << 'miqOneTrans = 0;' # resetting miqOneTrans when tab loads
-        presenter[:extra_js] << 'miqIEButtonPressed = true' if ['save', 'reset'].include?(params[:button]) && is_browser_ie?
+        # resetting ManageIQ.oneTransition.oneTrans when tab loads
+        presenter[:extra_js] << 'ManageIQ.oneTransition.oneTrans = 0;'
+        if %w(save reset).include?(params[:button]) && is_browser_ie?
+          presenter[:extra_js] << 'ManageIQ.oneTransition.IEButtonPressed = true'
+        end
       end
     when :iso_datastores_tree
       presenter[:update_partials][:main_div] = r[:partial=>"iso_datastore_list"]
@@ -283,9 +286,13 @@ class PxeController < ApplicationController
       presenter[:set_visible_elements][:pc_div_1] = true
     end
 
-    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    if @record && !@in_a_form
+      presenter[:record_id] = @record.id
+    else
+      presenter[:record_id] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Save open nodes, if any were added

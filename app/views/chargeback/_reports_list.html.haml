@@ -1,4 +1,3 @@
-- action ||= "view"
 #reports_list_div{:style => "width: 100%; height: 100%; overflow: auto;"}
   - if @report
     = render :partial => "layouts/flash_msg"
@@ -29,11 +28,11 @@
         %thead
           %tr
             %th.narrow
-            %th=_('Run On')
-            %th=_('Name')
-            %th=_('Source')
+            %th= _('Run On')
+            %th= _('Name')
+            %th= _('Source')
         %tbody
-          - @saved_reports.each_with_index do |row,i|
+          - @saved_reports.each do |row|
             - row_id = "#{x_node}_rr-#{to_cid(row['id'])}"
             %tr
               - t = _("Click to view saved report")

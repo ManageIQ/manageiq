@@ -1,5 +1,4 @@
-$LOAD_PATH.push("#{File.dirname(File.expand_path(__FILE__))}/../../xfs")
-require 'superblock'
+require 'fs/xfs/superblock'
 
 module XFSProbe
   def self.probe(dobj)

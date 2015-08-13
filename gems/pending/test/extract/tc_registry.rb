@@ -1,10 +1,6 @@
-
-$:.push("#{File.dirname(__FILE__)}/../../MiqVm")
-$:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../metadata/MIQExtract")
-require 'MiqVm'
-require 'MIQExtract'
-require 'miq-xml'
+require 'MiqVm/MiqVm'
+require 'metadata/MIQExtract/MIQExtract'
+require 'util/miq-xml'
 require 'digest/md5'
 require 'minitest/unit'
 
@@ -19,8 +15,7 @@ module Extract
 
     def setup
       unless $log
-        $:.push("#{File.dirname(__FILE__)}/../../util")
-        require 'miq-logger'
+        require 'util/miq-logger'
 
         # Setup console logging
         $log = MIQLogger.get_log(nil, nil)

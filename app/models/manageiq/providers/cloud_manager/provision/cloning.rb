@@ -4,12 +4,7 @@ module ManageIQ::Providers::CloudManager::Provision::Cloning
   end
 
   def vm_model_class
-    case self.class.name
-    when "MiqProvisionOpenstack"
-      VmOpenstack
-    else
-      self.class.parent::Vm
-    end
+    self.class.parent::Vm
   end
 
   def validate_dest_name

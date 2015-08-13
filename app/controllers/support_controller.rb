@@ -22,6 +22,7 @@ class SupportController < ApplicationController
 #   @tabs.push( ["1", "Help"] )
     @vmdb = {:version => Vmdb::Appliance.VERSION, :build => Vmdb::Appliance.BUILD}
     @user_role = User.current_user.miq_user_role_name
+    @pdf_documents = pdf_documents
     @layout = "about"
   end
 
@@ -38,6 +39,17 @@ class SupportController < ApplicationController
 
   def set_session_data
     session[:layout] = @layout
+  end
+
+  def pdf_document_files
+    Dir.glob(Rails.root.join("public/doc/*.pdf"))
+  end
+
+  def pdf_documents
+    pdf_document_files.sort.each_with_object({}) do |f, h|
+      f = File.basename(f, ".pdf")
+      h[f] = f.titleize
+    end
   end
 
 end

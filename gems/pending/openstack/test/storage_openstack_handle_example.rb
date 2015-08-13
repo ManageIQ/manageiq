@@ -1,14 +1,11 @@
-
-$:.push("#{File.dirname(__FILE__)}/..")
-$:.push("#{File.dirname(__FILE__)}/../..")
-
 EMS_IP       = ""
 EMS_USERNAME = ""
 EMS_PASSWORD = ""
 
-require 'bundler_setup'
+require_relative '../../bundler_setup'
 require 'excon'
-require 'openstack_handle'
+require 'openstack/openstack_handle'
+
 
 begin
   os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)

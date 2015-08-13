@@ -2,10 +2,10 @@
 #form_div
   = render :partial => "layouts/flash_msg"
 
-  %h3=_('Options')
+  %h3= _('Options')
   %table.style1
     %tr
-      %td.key=_('Name')
+      %td.key= _('Name')
       %td
         = text_field_tag("ds_name",
           @edit[:new][:ds_name],
@@ -13,7 +13,7 @@
           "data-miq_focus"   => true,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key=title_for_host
+      %td.key= title_for_host
       %td
         = select_tag("host_id",
           options_for_select([["<#{_('Choose')}>",nil]] + @edit[:hosts].invert.sort,

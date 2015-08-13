@@ -10,7 +10,7 @@
     && @display == "main" && @showtype == "main" && !@in_a_form |
     = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "summary_view_tb"}
   - else
-    - # fake table to keep center_tb aligned in case there is not view_tb to show
+    -# fake table to keep center_tb aligned in case there is not view_tb to show
     %table
       %tr
         %td{:width => '5'}

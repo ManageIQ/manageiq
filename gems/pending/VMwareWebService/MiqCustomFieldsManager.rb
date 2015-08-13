@@ -1,5 +1,3 @@
-$:.push(File.dirname(__FILE__))
-
 class MiqCustomFieldsManager
 	
 	attr_reader	:invObj

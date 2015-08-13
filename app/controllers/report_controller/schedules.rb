@@ -38,7 +38,7 @@ module ReportController::Schedules
     @sortcol = session[:schedule_sortcol].nil? ? 0 : session[:schedule_sortcol].to_i
     @sortdir = session[:schedule_sortdir].nil? ? "ASC" : session[:schedule_sortdir]
 
-    if session[:userrole] == "super_administrator"  # Super admins see all user's schedules
+    if super_admin_user? # Super admins see all user's schedules
       @view, @pages = get_view(MiqSchedule, :conditions=>["towhat=?", "MiqReport"]) # Get the records (into a view) and the paginator
     else
       @view, @pages = get_view(MiqSchedule, :conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])  # Get the records (into a view) and the paginator
@@ -110,7 +110,13 @@ module ReportController::Schedules
     end
     MiqSchedule.find_all_by_id(scheds, :order => "lower(name)").each do |sched|
       MiqSchedule.queue_scheduled_work(sched.id, nil, Time.now.utc.to_i, nil)
-      audit = {:event=>"queue_scheduled_work", :message=>"Schedule [#{sched.name}] queued to run from the UI by user #{session[:username]}", :target_id=>sched.id, :target_class=>"MiqSchedule", :userid => session[:userid]}
+      audit = {
+        :event        => "queue_scheduled_work",
+        :message      => "Schedule [#{sched.name}] queued to run from the UI by user #{current_user.name}",
+        :target_id    => sched.id,
+        :target_class => "MiqSchedule",
+        :userid       => session[:userid]
+      }
       AuditEvent.success(audit)
     end
     unless flash_errors?
@@ -178,7 +184,7 @@ module ReportController::Schedules
       javascript_for_timer_type(params[:timer_typ]).each { |js| page << js }
 
       if params[:time_zone]
-        page << "miq_cal_dateFrom = new Date(#{(Time.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
+        page << "ManageIQ.calendar.calDateFrom = new Date(#{(Time.zone.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
         page << "miqBuildCalendar();"
         page << "$('#miq_date_1').val('#{@edit[:new][:start_date]}');"
         page << "$('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"

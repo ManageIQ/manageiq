@@ -1,7 +1,7 @@
 
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
+describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
@@ -38,11 +38,11 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     EmsFolder.count.should                   == 0 # HACK: Folder structure for UI a la VMware
     EmsCluster.count.should                  == 2
     Host.count.should                        == 5
-    OrchestrationStack.count.should          == 1
-    OrchestrationStackParameter.count.should == 168
+    OrchestrationStack.count.should          == 46
+    OrchestrationStackParameter.count.should == 459
     OrchestrationStackResource.count.should  == 88
-    OrchestrationStackOutput.count.should    == 1
-    OrchestrationTemplate.count.should       == 1
+    OrchestrationStackOutput.count.should    == 20
+    OrchestrationTemplate.count.should       == 30
     ResourcePool.count.should                == 0
     Vm.count.should                          == 0
     VmOrTemplate.count.should                == 5
@@ -70,25 +70,27 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       :uid_ems     => nil
     )
 
-    @ems.ems_folders.size.should          == 0 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should         == 2
-    @ems.resource_pools.size.should       == 0
-    @ems.storages.size.should             == 0
-    @ems.hosts.size.should                == 5
-    @ems.orchestration_stacks.size.should == 1
-    @ems.vms_and_templates.size.should    == 5
-    @ems.vms.size.should                  == 0
-    @ems.miq_templates.size.should        == 5
-    @ems.customization_specs.size.should  == 0
+    @ems.ems_folders.size.should                 == 0 # HACK: Folder structure for UI a la VMware
+    @ems.ems_clusters.size.should                == 2
+    @ems.resource_pools.size.should              == 0
+    @ems.storages.size.should                    == 0
+    @ems.hosts.size.should                       == 5
+    @ems.orchestration_stacks.size.should        == 46
+    @ems.direct_orchestration_stacks.size.should == 1
+    @ems.vms_and_templates.size.should           == 5
+    @ems.vms.size.should                         == 0
+    @ems.miq_templates.size.should               == 5
+    @ems.customization_specs.size.should         == 0
   end
 
   def assert_specific_host
-    @host = HostOpenstackInfra.all.select { |x| x.name.include?('(Controller)') }.first
+    @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.select { |x| x.name.include?('(Controller)') }.first
 
     @host.ems_ref.should_not be nil
     @host.ems_ref_obj.should_not be nil
     @host.mac_address.should_not be nil
     @host.ipaddress.should_not be nil
+    @host.ems_cluster.should_not be nil
 
     @host.should have_attributes(
       :ipmi_address     => nil,
@@ -144,7 +146,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   end
 
   def assert_specific_template(name, is_public = false)
-    template = TemplateOpenstack.where(:name => name).first
+    template = ManageIQ::Providers::Openstack::CloudManager::Template.where(:name => name).first
     template.should have_attributes(
       :template              => true,
       :publicly_available    => is_public,

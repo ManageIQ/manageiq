@@ -4,11 +4,11 @@
       -# %h4 {{buildLegend()}}
       %div{"ng-switch" => "", "on" => "scheduleModel.action_typ"}
         .form-group
-          %label.col-sm-2.control-label{"for" => "textInput-markup", "ng-hide" => "dbBackup()"}
+          %label.col-md-2.control-label{"for" => "textInput-markup", "ng-hide" => "dbBackup()"}
             = _("Filter")
-          %label.col-sm-2.control-label{"for" => "textInput-markup", "ng-show" => "dbBackup()"}
+          %label.col-md-2.control-label{"for" => "textInput-markup", "ng-show" => "dbBackup()"}
             = _("Type")
-          .col-sm-10
+          .col-md-10
             = select_tag('filter_typ', options_for_select(@vm_options_for_select),
               "ng-switch-when" => "vm",
               "ng-model"       => "$parent.scheduleModel.filter_typ",
@@ -64,7 +64,7 @@
                                  "name"                       => "filter_value",
                                  "ng-change"                  => "filterValueChanged()",
                                  "ng-model"                   => "scheduleModel.filter_value",
-                                 "ng-options"                 => "filteredItem.value as filteredItem.text for filteredItem in filterList",
+                                 "ng-options"                 => "filteredItem.value as filteredItem.text for filteredItem in filterList track by filteredItem.text",
                                  "filter-hide"                => "filterValuesEmpty",
                                  "ng-required"                => "filterValueRequired(scheduleModel.filter_value)",
                                  "checkchange"                => ""}

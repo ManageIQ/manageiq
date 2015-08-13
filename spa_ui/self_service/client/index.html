@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html ng-app="app" class="height-100">
+<head lang="en">
+  <title ng-bind="title">ManageIQ Self Service</title>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+  <link rel="shortcut icon" href="/favicon.ico"/>
+  <link rel="icon" href="/favicon.ico"/>
+  <base href="/">
+  <style>
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+  </style>
+  <!-- build:css styles/lib.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="/bower_components/toastr/toastr.css" />
+  <link rel="stylesheet" href="/bower_components/patternfly/dist/css/patternfly.css" />
+  <link rel="stylesheet" href="/bower_components/patternfly/dist/css/patternfly-additions.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:css styles/app.css-->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="/.tmp/styles/styles.css">
+  <!-- endinject -->
+  <!-- endbuild -->
+</head>
+<body class="height-100">
+  <div class="ng-cloak splash">
+    <div class="splash__overlay">
+      <div class="splash__message">
+        ManageIQ Self Service
+      </div>
+    </div>
+  </div>
+
+  <site-layout class="ng-cloak"></site-layout>
+
+  <!-- build:js js/lib.js -->
+  <!-- bower:js -->
+  <script src="/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/bower_components/lodash/lodash.js"></script>
+  <script src="/bower_components/moment/moment.js"></script>
+  <script src="/bower_components/toastr/toastr.js"></script>
+  <script src="/bower_components/angular/angular.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.js"></script>
+  <script src="/bower_components/angular-animate/angular-animate.js"></script>
+  <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="/bower_components/angular-messages/angular-messages.js"></script>
+  <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
+  <script src="/bower_components/patternfly/dist/js/patternfly.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="/bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
+  <script src="/bower_components/angular-patternfly/dist/angular-patternfly.min.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:js js/app.js-->
+  <!-- inject:js -->
+  <script src="/client/app/app.module.js"></script>
+  <script src="/client/app/blocks/bind-attrs/bind-attrs.module.js"></script>
+  <script src="/client/app/blocks/directive-options/directive-options.module.js"></script>
+  <script src="/client/app/blocks/exception/exception.module.js"></script>
+  <script src="/client/app/blocks/logger/logger.module.js"></script>
+  <script src="/client/app/blocks/multi-transclude/multi-transclude.module.js"></script>
+  <script src="/client/app/blocks/pub-sub/pub-sub.module.js"></script>
+  <script src="/client/app/blocks/recursion/recursion.module.js"></script>
+  <script src="/client/app/blocks/router/router.module.js"></script>
+  <script src="/client/app/components/components.module.js"></script>
+  <script src="/client/app/config/config.module.js"></script>
+  <script src="/client/app/core/core.module.js"></script>
+  <script src="/client/app/mock-http-backend/mock.module.js"></script>
+  <script src="/client/app/resources/resources.module.js"></script>
+  <script src="/client/app/services/services.module.js"></script>
+  <script src="/client/app/states/states.module.js"></script>
+  <script src="/client/app/blocks/bind-attrs/bind-attrs.directive.js"></script>
+  <script src="/client/app/blocks/directive-options/directive-options.factory.js"></script>
+  <script src="/client/app/blocks/exception/exception-handler.provider.js"></script>
+  <script src="/client/app/blocks/exception/exception.js"></script>
+  <script src="/client/app/blocks/logger/logger.js"></script>
+  <script src="/client/app/blocks/multi-transclude/multi-transclude.factory.js"></script>
+  <script src="/client/app/blocks/pub-sub/pub-sub.factory.js"></script>
+  <script src="/client/app/blocks/recursion/recursion-helper.factory.js"></script>
+  <script src="/client/app/blocks/router/router-helper.provider.js"></script>
+  <script src="/client/app/components/main-content/main-content.directive.js"></script>
+  <script src="/client/app/components/navigation/header-nav.directive.js"></script>
+  <script src="/client/app/components/navigation/sidebar-nav.directive.js"></script>
+  <script src="/client/app/components/site-layout/site-layout.directive.js"></script>
+  <script src="/client/app/components/site-layout/site-layout.factory.js"></script>
+  <script src="/client/app/components/toasts/toasts.factory.js"></script>
+  <script src="/client/app/config/navigation.config.js"></script>
+  <script src="/client/app/core/config.js"></script>
+  <script src="/client/app/core/constants.js"></script>
+  <script src="/client/app/mock-http-backend/config.js"></script>
+  <script src="/client/app/mock-http-backend/mock-all.js"></script>
+  <script src="/client/app/mock-http-backend/mock-auth.backend.js"></script>
+  <script src="/client/app/resources/staff.factory.js"></script>
+  <script src="/client/app/services/authentication/authentication-service.factory.js"></script>
+  <script src="/client/app/services/authentication/session-service.factory.js"></script>
+  <script src="/client/app/services/authentication/startup-session.run.js"></script>
+  <script src="/client/app/services/authorization/authorization-service.factory.js"></script>
+  <script src="/client/app/services/authorization/authorization.config.js"></script>
+  <script src="/client/app/services/authorization/roles.constants.js"></script>
+  <script src="/client/app/services/navigation.provider.js"></script>
+  <script src="/client/app/services/notifications.service.js"></script>
+  <script src="/client/app/states/404/404.state.js"></script>
+  <script src="/client/app/states/about-me/about-me.state.js"></script>
+  <script src="/client/app/states/dashboard/dashboard.state.js"></script>
+  <script src="/client/app/states/error/error.state.js"></script>
+  <script src="/client/app/states/help/help.state.js"></script>
+  <script src="/client/app/states/login/login.state.js"></script>
+  <script src="/client/app/states/logout/logout.state.js"></script>
+  <script src="/client/app/states/marketplace/marketplace.state.js"></script>
+  <script src="/client/app/states/order-history/details/details.state.js"></script>
+  <script src="/client/app/states/order-history/list/list.state.js"></script>
+  <script src="/client/app/states/order-history/order-history.state.js"></script>
+  <script src="/client/app/states/products/details/details.state.js"></script>
+  <script src="/client/app/states/products/products.state.js"></script>
+  <script src="/client/app/states/services/details/details.state.js"></script>
+  <script src="/client/app/states/services/list/list.state.js"></script>
+  <script src="/client/app/states/services/services.state.js"></script>
+  <!-- endinject -->
+
+  <!-- inject:templates:js -->
+  <!-- endinject -->
+  <!-- endbuild -->
+</body>
+</html>

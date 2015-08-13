@@ -2,7 +2,7 @@
   #searchbox              {top: #{@explorer ? 138 : 63}px;}
   #searchbox.whitelabeled {top: 40px;}
 
--if big_iframe
+- if big_iframe
   - padding_top = session[:custom_logo] ? 83 : 70
   :css
     @media (min-width: 1080px) {
@@ -10,9 +10,9 @@
       .navbar-nav ul > li > ul { display:none }
       body { padding-top: #{padding_top}px !important }
     }
--else
+- else
   - padding_top = session[:custom_logo] ? 116 : 100
   :css
-    @media (min-width: 1042px) {
+    @media (min-width: 1080px) {
       body { padding-top: #{padding_top}px !important }
     }

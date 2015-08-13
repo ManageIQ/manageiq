@@ -52,6 +52,17 @@ class VmReconfigureTask < MiqRequestTask
 
   def build_config_spec
     VimHash.new("VirtualMachineConfigSpec") do |vmcs|
+      case vm.hardware.virtual_hw_version
+      when "07"
+        ec =  VimArray.new('ArrayOfOptionValue')
+        ec << VimHash.new('OptionValue') do |ov|
+          ov.key   = "cpuid.coresPerSocket"
+          ov.value = VimString.new(get_option(:cores_per_socket).to_s, nil, "xsd:string")
+        end
+        vmcs.extraConfig = ec
+      else
+        set_spec_option(vmcs, :numCoresPerSocket, :cores_per_socket, nil, :to_i)
+      end
       set_spec_option(vmcs, :memoryMB, :vm_memory,      nil, :to_i)
       set_spec_option(vmcs, :numCPUs,  :number_of_cpus, nil, :to_i)
     end

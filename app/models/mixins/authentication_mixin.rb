@@ -27,7 +27,7 @@ module AuthenticationMixin
   end
 
   def authentication_key_pairs
-    authentications.select { |a| a.kind_of?(AuthKeyPairOpenstackInfra) }
+    authentications.select { |a| a.kind_of?(ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair) }
   end
 
   def has_authentication_type?(type)
@@ -137,9 +137,9 @@ module AuthenticationMixin
 
       # Update or create
       if cred.nil?
-        if self.kind_of?(EmsOpenstackInfra) && value[:auth_key]
+        if self.kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
           # TODO(lsmola) investigate why build throws an exception, that it needs to be subclass of AuthUseridPassword
-          cred = AuthKeyPairOpenstackInfra.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
+          cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
           self.authentications << cred
         elsif self.kind_of?(EmsContainer) && value[:auth_key]

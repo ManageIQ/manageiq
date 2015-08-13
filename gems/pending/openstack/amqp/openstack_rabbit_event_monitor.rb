@@ -1,5 +1,5 @@
-require_relative '../openstack_event_monitor'
-require_relative './openstack_amqp_event'
+require 'openstack/openstack_event_monitor'
+require 'openstack/amqp/openstack_amqp_event'
 require 'bunny'
 require 'thread'
 

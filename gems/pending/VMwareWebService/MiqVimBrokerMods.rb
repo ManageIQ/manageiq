@@ -1,15 +1,13 @@
-$:.push("#{File.dirname(__FILE__)}/../VixDiskLib")
-
-require 'DMiqVim'
-require 'MiqVimVm'
-require 'MiqVimHost'
-require 'MiqVimDataStore'
-require 'MiqVimPerfHistory'
-require 'MiqVimFolder'
-require 'MiqVimEventHistoryCollector'
-require 'MiqCustomFieldsManager'
-require 'MiqVimAlarmManager'
-require 'MiqVimCustomizationSpecManager'
+require 'VMwareWebService/DMiqVim'
+require 'VMwareWebService/MiqVimVm'
+require 'VMwareWebService/MiqVimHost'
+require 'VMwareWebService/MiqVimDataStore'
+require 'VMwareWebService/MiqVimPerfHistory'
+require 'VMwareWebService/MiqVimFolder'
+require 'VMwareWebService/MiqVimEventHistoryCollector'
+require 'VMwareWebService/MiqCustomFieldsManager'
+require 'VMwareWebService/MiqVimAlarmManager'
+require 'VMwareWebService/MiqVimCustomizationSpecManager'
 
 # begin
   # require 'VixDiskLib'

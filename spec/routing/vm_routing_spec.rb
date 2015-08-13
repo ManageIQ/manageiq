@@ -11,6 +11,7 @@ describe VmOrTemplateController do
     policy_sim
     reconfigure
     retire
+    retirement_info
     right_size
     show
     show_list
@@ -38,7 +39,6 @@ describe VmOrTemplateController do
     reconfigure_field_changed
     reconfigure_update
     retire
-    retire_date_changed
     right_size
     set_checked_items
     show_list

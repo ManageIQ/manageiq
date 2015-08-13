@@ -1,4 +1,4 @@
-miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
+ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$scope', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
   var init = function() {
 
     $scope.scheduleModel = {
@@ -25,8 +25,9 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
     $scope.formId = scheduleFormId;
     $scope.afterGet = false;
     $scope.modelCopy = angular.copy( $scope.scheduleModel );
+    $scope.saveable = miqService.saveable;
 
-    miqAngularApplication.$scope = $scope;
+    ManageIQ.angularApplication.$scope = $scope;
 
     if (scheduleFormId == 'new') {
       $scope.newRecord                         = true;
@@ -97,7 +98,6 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
     $scope.$watch("scheduleModel.name", function() {
       $scope.form = $scope.angularForm;
       $scope.model = "scheduleModel";
-      $scope.miqService = miqService;
     });
   };
 
@@ -317,6 +317,31 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
     else if($scope[watchValue] == "NO-OP")
       $scope[watchValue] = initialValue;
   };
+
+  $scope.canValidate = function () {
+    if ($scope.isBasicInfoValid() && $scope.validateFieldsDirty())
+      return true;
+    else
+      return false;
+  }
+
+  $scope.canValidateBasicInfo = function () {
+    if ($scope.isBasicInfoValid())
+      return true;
+    else
+      return false;
+  }
+
+  $scope.validateFieldsDirty = function () {
+    if ($scope.angularForm.depot_name.$dirty ||
+        $scope.angularForm.uri.$dirty ||
+        $scope.angularForm.log_userid.$dirty ||
+        $scope.angularForm.log_password.$dirty ||
+        $scope.angularForm.log_verify.$dirty)
+      return true;
+    else
+      return false;
+  }
 
   init();
 }]);

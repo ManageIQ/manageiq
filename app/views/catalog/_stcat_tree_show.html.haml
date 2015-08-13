@@ -1,20 +1,25 @@
 .maincontent
   = render :partial => "layouts/flash_msg"
-  %table
-    %tr
-      %td{:valign => "center"}
-        %table.style1
-          %tr
-            %td.key=_('Name')
-            %td.notwide= @record.name
-          %tr
-            %td.key=_('Description')
-            %td.notwide= @record.description
-  - unless @record_service_templates.empty?
+  %form.form-horizontal.static
+    .form-group
+      %label.col-md-2.control-label
+        = _('Name')
+      .col-md-8
+        %p.form-control-static
+          = @record.name
+    .form-group
+      %label.col-md-2.control-label
+        = _('Description')
+      .col-md-8
+        %p.form-control-static= @record.description
+  - if @record_service_templates.empty?
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("No Catalog Items found.")}
+  - else
     %hr
     %table.table.table-bordered.table-striped.table-hover
       %thead
-        %th=_('Catalog Items')
+        %th
+          = _('Catalog Items')
       %tbody
         - @record_service_templates.sort_by { |a| a.name.downcase }.each do |obj|
           - if role_allows(:feature => "catalog_items_view")
@@ -22,9 +27,7 @@
                 :onclick     => remote_function(:loading  => "miqSparkle(true);",
                                                 :complete => "miqSparkle(false);",
                                                 :url      => "/catalog/x_show/#{to_cid(@record.id)}?rec_id=#{to_cid(obj.id)}")}
-              %td=obj.name
+              %td= obj.name
           - else
             %tr
-              %td=obj.name
-  - else
-    = render :partial => 'layouts/info_msg', :locals => {:message => _("No Catalog Items found.")}
+              %td= obj.name

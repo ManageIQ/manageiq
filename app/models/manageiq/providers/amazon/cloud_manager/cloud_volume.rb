@@ -1,2 +1,2 @@
-class ManageIQ::Providers::Amazon::CloudManager::CloudVolume < ManageIQ::Providers::CloudManager::CloudVolume
+class ManageIQ::Providers::Amazon::CloudManager::CloudVolume < ::CloudVolume
 end

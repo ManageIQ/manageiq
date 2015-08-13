@@ -5,32 +5,34 @@
   #profile_info_div
     = render :partial => "layouts/flash_msg"
     - if @edit
-      - # Don't show basic info box with description only unless in edit mode
-      %h3=_("Basic Information")
-      %table.style1
-        %tr
-          %td.key=_("Description")
+      -# Don't show basic info box with description only unless in edit mode
+      %h3
+        = _("Basic Information")
+      %form.form-horizontal
+        .form-group
+          %label.control-label.col-md-2
+            = _("Description")
           - if @edit
-            %td.wider
+            .col-md-10
               = text_field_tag("description", @edit[:new][:description],
                 :maxlength         => MAX_DESC_LEN,
                 "data-miq_observe" => observe_with_interval)
             = javascript_tag(javascript_focus('description'))
           - else
-            %td
+            .col-md-10
               = h(@profile.description)
       %hr
 
     - if @edit
-      %p{:class => "legend"}=_("Policy Selection")
+      %p{:class => "legend"}= _("Policy Selection")
       %table.admintable
         %tr
           %td
             %table#formtest.form{:width => "100%"}
               %tr
-                %td{:align => "left"}=_("Available Policies:")
+                %td{:align => "left"}= _("Available Policies:")
                 %td
-                %td.widthed{:align => "left"}=_("Profile Policies:")
+                %td.widthed{:align => "left"}= _("Profile Policies:")
               %tr
                 %td{:align => "left", :class => "widthed", :valign => "top"}
                   %span#choices_chosen_div
@@ -42,7 +44,7 @@
                       :id       => "choices_chosen")
                   %p
                 %td{:width => "20", :valign => "middle"}
-                  -t = _("Move selected Policies into this Profile")
+                  - t = _("Move selected Policies into this Profile")
                   = link_to(image_tag("/images/toolbars/right.png", :border => "0", :class  => "rollover small", :alt => t),
                     {:action => 'profile_edit', :button => 'move_right', :id => @profile},
                     "data-miq_sparkle_on"  => true,
@@ -50,14 +52,14 @@
                     "data-submit"          => 'choices_chosen_div',
                     :remote                => true,
                     :title                 => t)
-                  -t = _("Remove all Policies from this Profile")
+                  - t = _("Remove all Policies from this Profile")
                   = link_to(image_tag("/images/toolbars/allleft.png", :border => "0", :class  => "rollover small", :alt => t),
                     {:action => 'profile_edit', :button => 'move_allleft', :id => @profile},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
                     :title                 => t)
-                  -t = _("Remove selected Policies from this Profile")
+                  - t = _("Remove selected Policies from this Profile")
                   = link_to(image_tag("/images/toolbars/left.png", :border => "0", :class  => "rollover small", :alt => t),
                     {:action => 'profile_edit', :button => 'move_left', :id => @profile},
                     "data-miq_sparkle_on"  => true,
@@ -75,7 +77,7 @@
                       :id       => "members_chosen")
       %hr
     - else
-      %h3=_("Policies")
+      %h3= _("Policies")
       - if @profile_policies.empty?
         = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policies are defined.")}
       - else
@@ -93,12 +95,12 @@
                   = h(p.description)
       %hr
 
-    - # Notes field
+    -# Notes field
     - if @edit
       %h3
-        =_("Notes")
+        = _("Notes")
         (
-        %span#notes_count=@edit[:new][:notes] ? @edit[:new][:notes].length : 0
+        %span#notes_count= @edit[:new][:notes] ? @edit[:new][:notes].length : 0
         \/ 512)
       = text_area_tag("notes", @edit[:new][:notes],
         :rows                       => 4,
@@ -108,7 +110,7 @@
         "data-miq_observe"          => observe_with_interval)
       %hr
     - else
-      %h3=_("Notes")
+      %h3= _("Notes")
       - if @profile.notes.blank?
         = render :partial => 'layouts/info_msg', :locals => {:message => _("No notes have been entered.")}
       - else

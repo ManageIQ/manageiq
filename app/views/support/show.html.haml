@@ -2,39 +2,34 @@
   #tab_div
     = render :partial => "layouts/flash_msg"
     .row
-      .col-sm-12.col-md-12.col-lg-6
+      .col-md-12.col-lg-6
         %fieldset
-          %h3=_('Session Information')
+          %h3= _('Session Information')
           .form-horizontal.static
             - [[_("Server Name"),     h(session[:vmdb_name])],
                [_("Version"),         h(@vmdb[:version] + "." + @vmdb[:build])],
-               [_("User Name"),       h(session[:username])],
+               [_("User Name"),       h(current_user.name)],
                [_("User Role"),       h(@user_role)],
                [_("Browser"),         h(browser_info("name"))],
                [_("Browser Version"), h(browser_info("version"))],
                [_("Browser OS"),      h(browser_info("os"))]].each do |session_info|
               .form-group
-                %label.col-sm-3.control-label
+                %label.col-md-3.control-label
                   = session_info[0]
-                .col-sm-9
+                .col-md-9
                   %p.form-control-static
                     = session_info[1]
 
       - desc = get_vmdb_config[:server][:custom_support_url_description]
       - url  = get_vmdb_config[:server][:custom_support_url]
       - cond_url      = desc.present? && url.present?
-      - cond_userrole = ["super_administrator", "administrator"].include?(session[:userrole])
-      - if cond_userrole || cond_url
-        .col-sm-12.col-md-12.col-lg-6
+      - if admin_user? || cond_url
+        .col-md-12.col-lg-6
           %fieldset
-            %h3=_('Product Assistance')
-            - if cond_userrole
-              - [[_("Quick Start"),              "cfme_quickstart.pdf"],
-                 [_("Insight"),                  "cfme_insight.pdf"],
-                 [_("Control"),                  "cfme_control.pdf"],
-                 [_("Lifecycle and Automation"), "cfme_automate.pdf"],
-                 [_("Integration Services"),     "cfme_integrate.pdf"],
-                 [_("Settings and Operations"),  "cfme_settingandops.pdf"]].each do |title, filename|
+            %h3= _('Product Assistance')
+            - if admin_user?
+              - @pdf_documents.each do |filename, title|
+                - docfile_path = "/doc/#{filename}.pdf"
                 %br
                 = link_to(image_tag("/images/icons/new/acrobat.png",
                                     :border => "0",
@@ -42,7 +37,7 @@
                                     :height => "20",
                                     :align  => "left",
                                     :alt    => t = _("View the %s Guide") % title),
-                          docfile_path = "/doc/#{filename}",
+                          docfile_path,
                           :title   => t,
                           :onclick => "return miqClickAndPop(this);")
                 &nbsp;

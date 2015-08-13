@@ -1,35 +1,33 @@
 #class_props_div{:style => "width:100%;height:100%;"}
-  - if x_node.split('-')[0] == "aec" || params[:pressed] ||
-  -    ["field_select","field_accept","field_delete"].include?(params[:action]) ||
-  -    (x_node.split('-')[0] == "aen" && params[:button] == "reset")
+  - if x_node.split('-')[0] == "aec" || params[:pressed] || ["field_select","field_accept","field_delete"].include?(params[:action]) || (x_node.split('-')[0] == "aen" && params[:button] == "reset")
     - if !@in_a_form_props
       = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_props"}
-      %h3=_('Properties')
+      %h3= _('Properties')
       %table.table.table-striped.table-bordered
         %tbody
           %tr
             %td
-              = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+              = Dictionary.gettext('fqname', :type => :column, :notfound => :titleize)
             %td
               = h(@sb[:namespace_path])
           %tr
             %td
-              =_('Name')
+              = _('Name')
             %td
               = @ae_class.name
           %tr
             %td
-              =_('Display Name')
+              = _('Display Name')
             %td
               = @ae_class.display_name
           %tr
             %td
-              =_('Description')
+              = _('Description')
             %td
               = @ae_class.description
           %tr
             %td
-              =_('Instances')
+              = _('Instances')
             %td
               = h(@ae_class.ae_instances.length)
       = render :partial => "domain_overrides", :locals  => {:node_prefix => "aec", :model => "Class"}

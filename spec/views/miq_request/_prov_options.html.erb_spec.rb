@@ -9,7 +9,6 @@ describe 'miq_request/_prov_options.html.haml' do
       MiqRegion.seed
 
       # Create roles/groups
-      @approver_role = UiTaskSet.create(:name => 'approver', :description => 'Approver')
       role1   = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-super_administrator')
       role2   = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-vm_user')
       role3   = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-desktop')
@@ -72,8 +71,6 @@ describe 'miq_request/_prov_options.html.haml' do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       view.stub(:get_vmdb_config).and_return({:server => {}, :session => {}})
-      MiqRegion.seed
-      @approver_role = UiTaskSet.create(:name => 'approver', :description => 'Approver')
     end
 
     it 'for desktop' do

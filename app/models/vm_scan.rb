@@ -57,7 +57,7 @@ class VmScan < Job
 
       # TODO: should this logic be moved to a VM subclass implementation?
       #       or, make type-specific Job classes.
-      if vm.kind_of?(VmOpenstack)
+      if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
         if vm.ext_management_system
           sn_description = snapshotDescription
           _log.info("Creating snapshot, description: [#{sn_description}]")
@@ -240,7 +240,7 @@ class VmScan < Job
         begin
           # TODO: should this logic be moved to a VM subclass implementation?
           #       or, make type-specific Job classes.
-          if vm.kind_of?(VmOpenstack)
+          if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
             vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
           else
             delete_snapshot(mor)
@@ -492,7 +492,7 @@ class VmScan < Job
         mor = self.context[:snapshot_mor]
         self.context[:snapshot_mor] = nil
         set_status("Deleting snapshot before aborting job")
-        if vm.kind_of?(VmOpenstack)
+        if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
           vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
         else
           delete_snapshot(mor)

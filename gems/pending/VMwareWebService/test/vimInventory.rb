@@ -1,5 +1,5 @@
-$:<< ".."
-require 'MiqVimInventory'
+require_relative '../../bundler_setup'
+require 'VMwareWebService/MiqVimInventory'
 require 'log4r'
 
 SERVER   = raise "please define SERVER"

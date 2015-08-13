@@ -1,11 +1,8 @@
-$:.push("#{File.dirname(__FILE__)}/../metadata/VmConfig")
-
-require 'rubygems'
 require 'log4r'
 require 'log4r/outputter/iooutputter'
 require "log4r/staticlogger"
 
-require 'GetNativeCfg'
+require 'metadata/VmConfig/GetNativeCfg'
 
 module Log4r
 	
