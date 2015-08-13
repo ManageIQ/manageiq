@@ -40,10 +40,10 @@ class ContainerNode < ActiveRecord::Base
     case assoc.to_sym
     when :ems_events
       # TODO: improve relationship using the id
-      ["container_node_name = ? AND ems_id = ?", name, ems_id]
+      ["container_node_name = ? AND #{events_table_name(assoc)}.ems_id = ?", name, ems_id]
     when :policy_events
       # TODO: implement policy events and its relationship
-      ["ems_id = ?", ems_id]
+      ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
     end
   end
 end

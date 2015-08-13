@@ -38,11 +38,11 @@ class ContainerGroup < ActiveRecord::Base
     case assoc.to_sym
     when :ems_events
       # TODO: improve relationship using the id
-      ["container_namespace = ? AND container_group_name = ? AND ems_id = ?",
+      ["container_namespace = ? AND container_group_name = ? AND #{events_table_name(assoc)}.ems_id = ?",
        container_project.name, name, ems_id]
     when :policy_events
       # TODO: implement policy events and its relationship
-      ["ems_id = ?", ems_id]
+      ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
     end
   end
 end
