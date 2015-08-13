@@ -116,7 +116,10 @@ module ApplicationHelper
   end
 
   # Create a url for a record that links to the proper controller
-  def url_for_db(db, action="show") # Default action is show
+  def url_for_db(db, action="show", item = nil) # Default action is show
+    if item && EmsCloud === item
+      return ems_cloud_path(item.id)
+    end
     if @vm && ["Account", "User", "Group", "Patch", "GuestApplication"].include?(db)
       return url_for(:controller => "vm_or_template",
                      :action     => @lastaction,
@@ -611,10 +614,10 @@ module ApplicationHelper
   end
 
   # Format a column in a report view for display on the screen
-  def format_col_for_display(view, row, col, tz = nil)
+  def format_col_for_display(view, text, col, tz = nil)
     tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC" : Time.zone
     celltext = view.format(col,
-                           row[col],
+                           text,
                            :tz=>tz
     ).gsub(/\\/, '\&')    # Call format, then escape any backslashes
     return celltext

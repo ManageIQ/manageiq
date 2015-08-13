@@ -146,6 +146,11 @@ function miqToolbarOnClick(id) {
   }
 
   if (button.hasOwnProperty("url")) {
+    if (button.hasOwnProperty("full_path")) {
+      DoNav(encodeURI(button.full_path));
+      return;
+    }
+    
     // See if a url is defined
     if (button.url.indexOf("/") === 0) {
       // If url starts with / it is non-ajax

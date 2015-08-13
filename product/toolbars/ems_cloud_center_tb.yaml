@@ -21,7 +21,7 @@
       :image: edit
       :text: 'Edit this #{ui_lookup(:table=>"ems_cloud")}'
       :title: 'Edit this #{ui_lookup(:table=>"ems_cloud")}'
-      :url: '/edit'
+      :full_path: <%= edit_ems_cloud_path(@ems) %>
     - :button: ems_cloud_delete
       :image: delete
       :text: 'Remove this #{ui_lookup(:table=>"ems_cloud")} from the VMDB'

@@ -1106,10 +1106,19 @@ class ApplicationController < ActionController::Base
 
     # Add table elements
     table = view.sub_table ? view.sub_table : view.table
-    table.data[from_idx..to_idx].each do |row|
+    ruport_data = table.data
+    to_idx = (ruport_data.length - 1) if to_idx == -1
+    (from_idx..to_idx).each do |idx|
+      row = ruport_data[idx]
       @id = row['id']
+      ar_object = view.search_results[idx]
+      if ar_object.is_a?(ExtManagementSystem)
+        href = polymorphic_url(ar_object)
+        new_row = root.add_element('row', "id" => list_row_id(row), "href" => href)
+      else
+        new_row = root.add_element('row', "id" => list_row_id(row))
+      end
 
-      new_row = root.add_element('row', "id" => list_row_id(row))
       new_row.add_element('cell').text = '0'  # Checkbox column unchecked
 
       # Generate html for the list icon
@@ -1136,7 +1145,7 @@ class ApplicationController < ActionController::Base
           if ['miqschedule'].include?(view.db.downcase)
             celltz = row['run_at'][:tz] if row['run_at'] && row['run_at'][:tz]
           end
-          celltext = escape_once(format_col_for_display(view, row, col, celltz || tz))
+          celltext = escape_once(format_col_for_display(view, row[col], col, celltz || tz))
         end
         cell.text = celltext # Put value into the cell
       end

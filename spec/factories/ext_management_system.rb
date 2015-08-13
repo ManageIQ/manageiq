@@ -73,6 +73,7 @@ FactoryGirl.define do
 
   factory :ems_amazon, :aliases => ["manageiq/providers/amazon/cloud_manager"], :class => "ManageIQ::Providers::Amazon::CloudManager", :parent => :ems_cloud do
     provider_region "us-east-1"
+    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_amazon_with_authentication, :parent => :ems_amazon do
@@ -88,6 +89,7 @@ FactoryGirl.define do
   end
 
   factory :ems_openstack, :aliases => ["manageiq/providers/openstack/cloud_manager"], :class => "ManageIQ::Providers::Openstack::CloudManager", :parent => :ems_cloud do
+    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_openstack_with_authentication, :parent => :ems_openstack do

@@ -79,10 +79,10 @@
             - name = ui_lookup(:model => @ems.class.base_manager.name)
             - t = _("Add this %s") % name
             = button_tag(_('Add'),
-              :class   => "btn btn-primary",
+              :class   => "btn btn-primary save",
               :alt     => t,
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => "create", :id => "new", :button => "add")}');")
+              :onclick => "miqRESTAjaxButton('#{url_for(:action => "create", :id => "new", :button => "add")}', this);")
             - t = _("Cancel")
             = button_tag(t,
               :class   => "btn btn-default",
@@ -91,4 +91,4 @@
               :href    => url_for(:action => "show_list", :flash_msg => _("Add of new %s was cancelled by the user") % name),
               :onclick => 'window.location = this.getAttribute("href");')
   - else
-    = render :partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @ems.id, :ajax_buttons => true}
+    = render :partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @ems.id, :ajax_buttons => true, :restful => true}

@@ -46,6 +46,7 @@ class MiqReport < ActiveRecord::Base
                 :report_run_time, :chart
 
   attr_accessor_that_yamls :reserved # For legacy imports
+  attr_reader :search_results
 
   GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]

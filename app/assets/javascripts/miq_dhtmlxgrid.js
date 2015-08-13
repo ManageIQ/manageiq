@@ -8,6 +8,12 @@ function miqTreeState(rowId, state) {
 
 // Handle row click (ajax or normal html trans)
 function miqRowClick(row_id, cell_idx) {
+  var href = this.getRowAttribute(row_id, "href");
+
+  if (href) {
+    return DoNav(href);
+  }
+
   var cell = this.cells(row_id, cell_idx);
   if (cell_idx && !cell.getAttribute('is_button')) {
     if (typeof row_url_ajax != "undefined" && row_url_ajax) {

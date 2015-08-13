@@ -1,1 +1,3 @@
-= render :partial => "shared/views/ems_common/form"
+= form_for(@ems, :url => @ems.persisted? ? ems_clouds_path(@ems) : ems_clouds_path) do |f|
+  %input{:type => 'hidden', :name => "button", :value => "add"}
+  = render :partial => "shared/views/ems_common/form"
