@@ -3,7 +3,7 @@ require 'util/miq-exception'
 
 module OpenstackHandle
   class Handle
-    attr_accessor :username, :password, :address, :port, :connection_options
+    attr_accessor :username, :password, :address, :port, :api_version, :connection_options
     attr_writer   :default_tenant_name
 
     SERVICE_FALL_BACK = {
@@ -40,9 +40,9 @@ module OpenstackHandle
       yield "http", {}
     end
 
-    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil)
+    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil, api_version = nil)
       try_connection do |scheme, connection_options|
-        auth_url = auth_url(address, port, scheme)
+        auth_url = auth_url(address, port, scheme, api_version)
         opts[:connection_options] = (opts[:connection_options] || {}).merge(connection_options)
         raw_connect(username, password, auth_url, service, opts)
       end
@@ -75,11 +75,20 @@ module OpenstackHandle
       raise
     end
 
-    def self.auth_url(address, port = 5000, scheme = "http")
-      url(address, port, scheme)
+    def self.api_version_paths(api_version)
+      case api_version
+      when 'v2'
+        '/v2.0/tokens'
+      when 'v3'
+        '/v3/auth/tokens'
+      end
     end
 
-    def self.url(address, port = 5000, scheme = "http", path = "/v2.0/tokens")
+    def self.auth_url(address, port = 5000, scheme = "http", api_version = 'v2')
+      url(address, port, scheme, api_version_paths(api_version))
+    end
+
+    def self.url(address, port = 5000, scheme = "http", path = "")
       port = port.to_i
       uri = URI::Generic.build(:scheme => scheme, :port => port, :path => path)
       uri.hostname = address
@@ -94,11 +103,12 @@ module OpenstackHandle
       @connection_options
     end
 
-    def initialize(username, password, address, port = nil)
-      @username = username
-      @password = password
-      @address  = address
-      @port     = port || 5000
+    def initialize(username, password, address, port = nil, api_version = nil)
+      @username    = username
+      @password    = password
+      @address     = address
+      @port        = port        || 5000
+      @api_version = api_version || 'v2'
 
       @connection_cache   = {}
       @connection_options = self.class.connection_options
@@ -109,20 +119,28 @@ module OpenstackHandle
     end
 
     def connect(options = {})
-      opts    = options.dup
-      service = (opts.delete(:service) || "Compute").to_s.camelize
-      tenant  = opts.delete(:tenant_name)
+      opts     = options.dup
+      service  = (opts.delete(:service) || "Compute").to_s.camelize
+      tenant   = opts.delete(:tenant_name)
+      # TODO(lsmola) figure out from where to take the project name and domain name
+      domain   = opts.delete(:domain_name) || 'default'
+      project   = opts.delete(:domain_name) || 'admin'
+
       unless tenant
         tenant = "any_tenant" if service == "Identity"
         tenant ||= default_tenant_name
       end
       opts[:openstack_tenant] = tenant unless service == "Identity"
+      # TODO(lsmola) for now we will scope to keystone v3 project, investigate if we need
+      # to scope to domains also, which would be done by omitting project_name
+      opts[:openstack_project_name] = project
+      opts[:openstack_domain_name] = domain
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
         opts[:connection_options] = connection_options if connection_options
 
-        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts)
+        raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts, api_version)
         service_wrapper_name = "#{service}Delegate"
         # Allow openstack to define new services without explicitly requiring a
         # service wrapper.
