@@ -6,6 +6,7 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
       ipmi_address: '',
       custom_1: '',
       user_assigned_os: '',
+      operating_system: false,
       mac_address: '',
       default_userid: '',
       default_password: '',
@@ -18,13 +19,15 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
       ws_verify: '',
       ipmi_userid: '',
       ipmi_password: '',
-      ipmi_verify: ''
+      ipmi_verify: '',
+      validate_id: '',
     };
 
     $scope.modelCopy = angular.copy( $scope.hostModel );
     $scope.afterGet = false;
     $scope.formId = hostFormId;
     ManageIQ.angularApplication.$scope = $scope;
+    $scope.saveable = miqService.saveable;
 
     if (hostFormId == 'new') {
       $scope.hostModel.name = "";
@@ -32,6 +35,7 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
       $scope.hostModel.ipmi_address = "";
       $scope.hostModel.custom_1 = "";
       $scope.hostModel.user_assigned_os = "";
+      $scope.hostModel.operating_system = false;
       $scope.hostModel.mac_address = "";
       $scope.hostModel.default_userid = "";
       $scope.hostModel.default_password = "";
@@ -45,17 +49,18 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
       $scope.hostModel.ipmi_userid = "";
       $scope.hostModel.ipmi_password = "";
       $scope.hostModel.ipmi_verify = "";
+      $scope.hostModel.validate_id = "";
       $scope.afterGet = true;
 
     } else {
         miqService.sparkleOn();
-
         $http.get('/host/host_form_fields/' + hostFormId).success(function(data) {
           $scope.hostModel.name = data.name;
           $scope.hostModel.hostname = data.hostname;
           $scope.hostModel.ipmi_address = data.ipmi_address;
           $scope.hostModel.custom_1 = data.custom_1;
           $scope.hostModel.user_assigned_os = data.user_assigned_os;
+          $scope.hostModel.operating_system = data.operating_system;
           $scope.hostModel.mac_address = data.mac_address;
           $scope.hostModel.default_userid = data.default_userid;
           $scope.hostModel.default_password = data.default_password;
@@ -69,6 +74,7 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
           $scope.hostModel.ipmi_userid = data.ipmi_userid;
           $scope.hostModel.ipmi_password = data.ipmi_password;
           $scope.hostModel.ipmi_verify = data.ipmi_verify;
+          $scope.hostModel.validate_id = data.validate_id;
 
           $scope.afterGet = true;
 
@@ -115,8 +121,8 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
 
   $scope.resetClicked = function() {
     $scope.hostModel = angular.copy( $scope.modelCopy );
+    $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);
-    setFormToValid();
     miqService.miqFlash("warn", "All changes have been reset");
   };
 

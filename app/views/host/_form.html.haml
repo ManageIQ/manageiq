@@ -21,7 +21,7 @@
               = _("Required")
         .form-group{"ng-class" => "{'has-error': angularForm.hostname.$invalid}"}
           %label.col-md-2.control-label{"for" => "textInput-markup"}
-            = _("Host Name (or IPv4 or IPv6 address)")
+            = _("Hostname (or IPv4 or IPv6 address)")
           .col-md-8
             %input.form-control{"type"        => "text",
                                 "id"          => "textInput-markup",
@@ -41,7 +41,7 @@
                            "ng-model"    => "hostModel.custom_1",
                            "maxlength"   => 50,
                            "checkchange" => ""}
-        .form-group{"ng-class" => "{'has-error': angularForm.user_assigned_os.$invalid}"}
+        .form-group{"ng-class" => "{'has-error': angularForm.user_assigned_os.$invalid}", "ng-hide" => "hostModel.operating_system"}
           %label.col-md-2.control-label
             = _("Host platform")
           .col-md-10
@@ -49,7 +49,7 @@
                          options_for_select([["<#{_('not specified')}>", nil]] + Host.host_create_os_types.to_a),
                          "ng-model"                    => "hostModel.user_assigned_os",
                          "checkchange"                 => "",
-                         "miqrequired"                 => "",
+                         "ng-required"                 => "!hostModel.operating_system",
                          "selectpicker-for-select-tag" => "")
             %span.help-block{"ng-show" => "angularForm.name.$error.miqrequired"}
               = _("Required")
@@ -72,7 +72,7 @@
                            "maxlength"   => "#{MAX_NAME_LEN}",
                            "checkchange" => ""}
 
-  = render(:partial => "/layouts/multi_auth_credentials_form", :locals => {:record =>@host})
+  = render(:partial => "/layouts/angular/multi_auth_credentials_form", :locals => {:record => @host})
   %table{:width => '100%'}
     %tr
       %td{:align => 'right'}
@@ -100,4 +100,5 @@
 
 :javascript
   ManageIQ.angularApplication.value('hostFormId', '#{@host.id || "new"}');
+  //angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
   angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication']);
