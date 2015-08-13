@@ -51,7 +51,6 @@ module Vmdb
     # returns utc_offset of timezone
     def get_timezone_offset(user = nil, formatted = false)
       tz = get_timezone_for_userid(user)
-      @tz = tz if user && tz.present?
       tz = ActiveSupport::TimeZone::MAPPING[tz]
       ActiveSupport::TimeZone.all.each do  |a|
         if ActiveSupport::TimeZone::MAPPING[a.name] == tz
