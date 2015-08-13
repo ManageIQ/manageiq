@@ -9,35 +9,35 @@ class ContainerTopologyService
     topo_items = {}
     links = []
     nodes.each do |n|
-      topo_items[n.ems_ref] = build_entity(n.ems_ref, n.name, "Node")
+      topo_items[n.ems_ref] = build_entity_data(n, "Node")
       n.container_groups.each do |cg|
-        topo_items[cg.ems_ref] = build_entity(cg.ems_ref, cg.name, "Pod")
+        topo_items[cg.ems_ref] = build_entity_data(cg, "Pod")
         links << build_link(n.ems_ref, cg.ems_ref)
         cg.containers.each do |c|
-          topo_items[c.ems_ref] = build_entity(c.ems_ref, c.name, "Container")
+          topo_items[c.ems_ref] = build_entity_data(c, "Container")
           links << build_link(cg.ems_ref, c.ems_ref)
         end
         if cg.container_replicator
           cr = cg.container_replicator
-          topo_items[cr.ems_ref] = build_entity(cr.ems_ref, cr.name, "Replicator")
+          topo_items[cr.ems_ref] = build_entity_data(cr, "Replicator")
           links << build_link(cg.ems_ref, cr.ems_ref)
         end
       end
 
       if n.lives_on
         kind = n.lives_on.kind_of?(Vm) ? "VM" : "Host"
-        topo_items[n.lives_on.uid_ems] = build_entity(n.lives_on.uid_ems, n.lives_on.name, kind)
+        topo_items[n.lives_on.uid_ems] = build_entity_data(n.lives_on, kind)
         links << build_link(n.ems_ref, n.lives_on.uid_ems)
         if kind == 'VM' # add link to Host
           host = n.lives_on.host
-          topo_items[host.uid_ems] = build_entity(host.uid_ems, host.name, "Host")
+          topo_items[host.uid_ems] = build_entity_data(host, "Host")
           links << build_link(n.lives_on.uid_ems, host.uid_ems)
         end
       end
     end
 
     services.each do |s|
-      topo_items[s.ems_ref] = build_entity(s.ems_ref, s.name, "Service")
+      topo_items[s.ems_ref] = build_entity_data(s, "Service")
       s.container_groups.each { |cg| links << build_link(s.ems_ref, cg.ems_ref) } if s.container_groups.size > 0
     end
 
@@ -47,8 +47,30 @@ class ContainerTopologyService
     topology
   end
 
-  def build_entity(id, name, kind)
-    {:metadata => {:id => id, :name => name}, :kind => kind}
+  def build_entity_data(entity, kind)
+    status = entity_status(entity, kind)
+
+    id = case kind
+         when 'VM', 'Host' then entity.uid_ems
+         else entity.ems_ref
+         end
+
+    {:metadata => {:id => id}, :name => entity.name, :status => status, :kind => kind}
+  end
+
+  def entity_status(entity, kind)
+    case kind
+    when 'VM', 'Host' then entity.power_state
+    when 'Node'
+      condition = entity.container_conditions.first
+      if condition.name == 'Ready' && condition.status == 'True'
+        'Ready'
+      else
+        'NotReady'
+      end
+    when 'Pod' then entity.phase
+    else 'unknown'
+    end
   end
 
   def build_link(source, target)
@@ -74,14 +96,13 @@ class ContainerTopologyService
   end
 
   def build_kinds
-    {
-     :Replicator => '#vertex-Replicator',
-     :Pod        => '#vertex-Pod',
-     :Container  => '#vertex-Container',
-     :Node       => '#vertex-Node',
-     :Service    => '#vertex-Service',
-     :Host       => '#vertex-Host',
-     :VM         => '#vertex-VM'
+    {:Replicator => true,
+     :Pod        => true,
+     :Container  => true,
+     :Node       => true,
+     :Service    => true,
+     :Host       => true,
+     :VM         => true
     }
   end
 end
