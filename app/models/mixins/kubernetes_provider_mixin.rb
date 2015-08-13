@@ -59,4 +59,8 @@ module KubernetesProviderMixin
     return if authentications.present?
     update_authentication(:default => {:userid => "_", :save => false})
   end
+
+  def default_authentication_type
+    :token
+  end
 end
