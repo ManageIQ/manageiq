@@ -32,7 +32,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
       username = options[:user] || self.authentication_userid(options[:auth_type])
       password = options[:pass] || self.authentication_password(options[:auth_type])
 
-      osh = OpenstackHandle::Handle.new(username, password, address, port)
+      osh = OpenstackHandle::Handle.new(username, password, address, port, api_version)
       osh.connection_options = {:instrumentor => $fog_log}
       osh
     end
