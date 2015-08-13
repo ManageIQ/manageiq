@@ -309,7 +309,7 @@ module ReportController::Schedules
 
   # Set form variables for edit
   def schedule_set_form_vars
-    @timezone_abbr = get_timezone_abbr("server")
+    @timezone_abbr = get_timezone_abbr
     @edit = Hash.new
     @folders = Array.new
 

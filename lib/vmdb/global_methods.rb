@@ -36,31 +36,23 @@ module Vmdb
     end
 
     # Had to add timezone methods here, they are being called from models
-    def get_timezone_abbr(typ="server")
-      # return timezone abbreviation
-      if typ == "server"
-        tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-        tz = ActiveSupport::TimeZone::MAPPING[tz.blank? ? "UTC" : tz]
+    # return timezone abbreviation
+    def get_timezone_abbr(user = nil)
+      if user.nil?
+        tz = get_timezone_for_userid(nil)
         time = Time.now
       else
         tz = Time.zone
         time = Time.zone.now
       end
-      new_time = time.in_time_zone(tz)
-      abbr = new_time.strftime("%Z")
-      return abbr
+      time.in_time_zone(tz).strftime("%Z")
     end
 
-    def get_timezone_offset(typ="server",formatted=false)
-      # returns utc_offset of timezone
-      if typ == "server"
-        tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-        tz = ActiveSupport::TimeZone::MAPPING[tz.blank? ? "UTC" : tz]
-      else
-        tz = get_timezone_for_userid(session[:userid])
-        @tz = tz unless tz.blank?
-        tz = ActiveSupport::TimeZone::MAPPING[@tz]
-      end
+    # returns utc_offset of timezone
+    def get_timezone_offset(user = nil, formatted = false)
+      tz = get_timezone_for_userid(user)
+      @tz = tz if user && tz.present?
+      tz = ActiveSupport::TimeZone::MAPPING[tz]
       ActiveSupport::TimeZone.all.each do  |a|
         if ActiveSupport::TimeZone::MAPPING[a.name] == tz
           if formatted

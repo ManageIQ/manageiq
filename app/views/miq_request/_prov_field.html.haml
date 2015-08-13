@@ -465,7 +465,7 @@
             = options[:start_date]
         </tr><tr>
         %td.key
-          = _("Starting Time (%s)") % get_timezone_abbr("user")
+          = _("Starting Time (%s)") % get_timezone_abbr(current_user)
         %td
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
