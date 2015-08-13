@@ -24,6 +24,10 @@
         = javascript_include_tag '/javascripts/timeline/api/scripts/miq_layouts.js'
         = javascript_include_tag '/javascripts/timeline/api/scripts/miq_painters.js'
 
+    :javascript
+      ManageIQ.browser = "#{browser_info("name")}";
+      ManageIQ.controller = "#{request.parameters[:controller]}";
+
     %style html, body{width:100%; height:100%; margin:0px; padding:0px; overflow:hidden;}
 
   - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
