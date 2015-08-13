@@ -1894,7 +1894,7 @@ class CatalogController < ApplicationController
         @record.dialog_fields.each do |field|
           if ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field.type)
             presenter[:build_calendar]  = {
-              :date_from => field.show_past_dates ? nil : Time.now.in_time_zone(session[:user_tz]).to_i * 1000
+              :date_from => field.show_past_dates ? nil : Time.zone.now.to_i * 1000
             }
           end
         end

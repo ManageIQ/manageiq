@@ -40,7 +40,7 @@ module MiqAeCustomizationController::Dialogs
           if params[:field_past_dates] == "1"
             page << "ManageIQ.calendar.calDateFrom = undefined ;"
           else
-            date_tz = Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")
+            date_tz = Time.zone.now.strftime("%Y,%m,%d")
             page << "ManageIQ.calendar.calDateFrom = new Date('#{date_tz}');"
           end
         end

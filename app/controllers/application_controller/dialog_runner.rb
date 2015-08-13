@@ -240,7 +240,7 @@ module ApplicationController::DialogRunner
         # if user didnt choose the date and goes with default shown in the textbox,
         # need to set that value in wf before adding hour/min
         if @edit[:wf].value(field_name).nil?
-          t = Time.now.in_time_zone(session[:user_tz]) + 1.day
+          t = Time.zone.now + 1.day
           date_val = ["#{t.month}/#{t.day}/#{t.year}"]
           @edit[:wf].set_value(field_name, date_val)
         else
