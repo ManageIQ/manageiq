@@ -26,11 +26,6 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
   context '#connect' do
     before do
-      class Foo
-        def initialize(_)
-        end
-      end
-
       described_class.any_instance.stub(:missing_credentials? => false)
     end
 
@@ -42,14 +37,14 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
     it "connect Inventory" do
       h = FactoryGirl.create(:ems_redhat)
-      expect(Ovirt).to receive(:const_get).and_return(Foo)
-      expect(h.connect(:service => "Inventory")).to be_a Foo
+      expect(Ovirt::Inventory).to receive(:new).and_return(:token)
+      expect(h.connect(:service => "Inventory")).to eq(:token)
     end
 
     it "connect default" do
       h = FactoryGirl.create(:ems_redhat)
-      expect(Ovirt).to receive(:const_get).and_return(Foo)
-      expect(h.connect).to be_a Foo
+      expect(Ovirt::Service).to receive(:new).and_return(:token)
+      expect(h.connect).to eq(:token)
     end
   end
 end
