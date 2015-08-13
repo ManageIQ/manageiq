@@ -543,8 +543,14 @@ module EmsCommon
           end
         end
       else
-        render :update do |page|
-          page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
+        if params[:pressed] == "ems_cloud_edit"
+          render :update do |page|
+            page.redirect_to edit_ems_cloud_path(params[:id])
+          end
+        else
+          render :update do |page|
+            page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
+          end
         end
       end
     else
