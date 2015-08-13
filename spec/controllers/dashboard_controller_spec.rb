@@ -2,13 +2,15 @@ require "spec_helper"
 
 describe DashboardController do
   context "POST authenticate" do
-    it "validates user" do
+    before do
       EvmSpecHelper.create_guid_miq_server_zone
+    end
 
+    it "validates user" do
       role = FactoryGirl.create(:miq_user_role, :name => 'test_role')
       group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
-      User.any_instance.stub(:super_admin_user?).and_return(true)
+      skip_data_checks
       post :authenticate, :user_name => user.userid, :user_password => 'dummy'
       expect(controller.send(:current_userid)).to eq(user.userid)
     end
@@ -40,8 +42,7 @@ describe DashboardController do
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
       User.stub(:authenticate).and_return(user)
       controller.stub(:get_vmdb_config).and_return({:product => {}})
-      controller.stub(:start_url_for_user).and_return('some_url')
-      User.any_instance.stub(:super_admin_user?).and_return(true)
+      skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
       expect(controller.send(:current_groupid)).to eq(group.id)
       expect(validation.flash_msg).to be_nil
@@ -143,7 +144,7 @@ describe DashboardController do
 
     it "has no eligible groups for single group users" do
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group1])
-      User.any_instance.stub(:super_admin_user?).and_return(true)
+      skip_data_checks
       post :authenticate, :user_name => user.userid, :user_password => 'dummy'
       expect(controller.send(:current_user)).to eq(user)
       expect(controller.send(:eligible_groups)).to eq([])
@@ -151,10 +152,16 @@ describe DashboardController do
 
     it "has eligible groups" do
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group1, group2])
-      User.any_instance.stub(:super_admin_user?).and_return(true)
+      skip_data_checks
       post :authenticate, :user_name => user.userid, :user_password => 'dummy'
       expect(controller.send(:current_user)).to eq(user)
       expect(controller.send(:eligible_groups)).to eq([group1, group2].map {|g| [g.description, g.id] })
     end
+  end
+
+  def skip_data_checks(url = '/')
+    UserValidationService.any_instance.stub(:data_ready?).and_return(true)
+    UserValidationService.any_instance.stub(:server_ready?).and_return(true)
+    controller.stub(:start_url_for_user).and_return(url)
   end
 end
