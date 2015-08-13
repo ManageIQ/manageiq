@@ -8,7 +8,7 @@ describe DashboardController do
       role = FactoryGirl.create(:miq_user_role, :name => 'test_role')
       group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
-      UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
+      User.any_instance.stub(:super_admin_user?).and_return(true)
       post :authenticate, :user_name => user.userid, :user_password => 'dummy'
       expect(controller.send(:current_userid)).to eq(user.userid)
     end
@@ -41,7 +41,7 @@ describe DashboardController do
       User.stub(:authenticate).and_return(user)
       controller.stub(:get_vmdb_config).and_return({:product => {}})
       controller.stub(:start_url_for_user).and_return('some_url')
-      UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
+      User.any_instance.stub(:super_admin_user?).and_return(true)
       validation = controller.send(:validate_user, user)
       expect(controller.send(:current_groupid)).to eq(group.id)
       expect(validation.flash_msg).to be_nil
@@ -143,7 +143,7 @@ describe DashboardController do
 
     it "has no eligible groups for single group users" do
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group1])
-      UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
+      User.any_instance.stub(:super_admin_user?).and_return(true)
       post :authenticate, :user_name => user.userid, :user_password => 'dummy'
       expect(controller.send(:current_user)).to eq(user)
       expect(controller.send(:eligible_groups)).to eq([])
@@ -151,7 +151,7 @@ describe DashboardController do
 
     it "has eligible groups" do
       user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group1, group2])
-      UserValidationService.any_instance.stub(:user_is_super_admin?).and_return(true)
+      User.any_instance.stub(:super_admin_user?).and_return(true)
       post :authenticate, :user_name => user.userid, :user_password => 'dummy'
       expect(controller.send(:current_user)).to eq(user)
       expect(controller.send(:eligible_groups)).to eq([group1, group2].map {|g| [g.description, g.id] })
