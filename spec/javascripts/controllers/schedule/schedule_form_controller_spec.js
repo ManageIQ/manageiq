@@ -715,4 +715,43 @@ describe('scheduleFormController', function() {
       });
     });
   });
+
+  describe('saveable should exist in the scope', function() {
+    it('returns true', function() {
+      expect($scope.saveable).toBeDefined();
+    });
+  });
+
+  describe('Validates credential fields', function() {
+    beforeEach(inject(function($compile, miqService) {
+      var angularForm;
+      var element = angular.element(
+        '<form name="angularForm">' +
+        '<input ng-model="scheduleModel.depot_name" name="depot_name" required" text />' +
+        '<input ng-model="scheduleModel.uri" name="uri" required text />' +
+        '<input ng-model="scheduleModel.log_userid" name="log_userid" required text />' +
+        '<input ng-model="scheduleModel.log_password" name="log_password" required text />' +
+        '<input ng-model="scheduleModel.log_verify" name="log_verify" required text />' +
+        '</form>'
+      );
+
+      $compile(element)($scope);
+      $scope.$digest();
+      angularForm = $scope.angularForm;
+
+      $scope.angularForm.depot_name.$setViewValue('abc');
+      $scope.angularForm.uri.$setViewValue('abc');
+      $scope.angularForm.log_userid.$setViewValue('abcuser');
+      $scope.angularForm.log_password.$setViewValue('abcpassword');
+      $scope.angularForm.log_verify.$setViewValue('abcpassword');
+    }));
+
+    it('returns true if all the Validation fields are filled in', function() {
+      expect($scope.canValidateBasicInfo()).toBe(true);
+    });
+
+    it('returns true if all the Validation fields are filled in and dirty', function() {
+      expect($scope.canValidate()).toBe(true);
+    });
+  });
 });

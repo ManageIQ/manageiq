@@ -9,7 +9,7 @@ class NokogiriXmlMethods < Minitest::Test
 	def setup
     @xml_klass = Nokogiri::XML
     @xml_string = self.default_test_xml() if @xml_string.nil?
-    @xml = MiqXml.load(@xml_string, @xml_klass)
+    @xml = MiqXml.load(@xml_string, :nokogiri)
 	end
 
 	def teardown

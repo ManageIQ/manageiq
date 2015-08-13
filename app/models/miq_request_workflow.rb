@@ -840,12 +840,7 @@ class MiqRequestWorkflow
     result.each_with_object({}) { |s, hash| hash[s[0]] = s[1] }
   end
 
-  def process_filter(filter_prop, ci_klass, targets = [])
-    return targets if targets.blank?
-    process_filter_all(filter_prop, ci_klass, targets)
-  end
-
-  def process_filter_all(filter_prop, ci_klass, targets = [])
+  def process_filter(filter_prop, ci_klass, targets)
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
     result = if filter_id.zero?
@@ -1005,8 +1000,8 @@ class MiqRequestWorkflow
   end
 
   def ci_to_hash_struct(ci)
-    return ci.collect { |c| ci_to_hash_struct(c) } if ci.kind_of?(Array)
     return if ci.nil?
+    return ci.collect { |c| ci_to_hash_struct(c) } if ci.respond_to?(:collect)
     method_name = "#{ci.class.base_class.name.underscore}_to_hash_struct".to_sym
     return send(method_name, ci) if respond_to?(method_name, true)
     default_ci_to_hash_struct(ci)
@@ -1020,12 +1015,6 @@ class MiqRequestWorkflow
     v = build_ci_hash_struct(ci, [:name, :platform])
     v.snapshots = ci.snapshots.collect { |si| ci_to_hash_struct(si) }
     v
-  end
-
-  def default_ci_to_hash_struct(ci)
-    attributes = []
-    attributes << :name if ci.respond_to?(:name)
-    build_ci_hash_struct(ci, attributes)
   end
 
   def ems_folder_to_hash_struct(ci)
@@ -1055,7 +1044,7 @@ class MiqRequestWorkflow
   end
 
   # Return empty hash if we are selecting placement automatically so we do not
-  # send time determining all the available resources
+  # spend time determining all the available resources
   def resources_for_ui
     get_source_and_targets
   end
@@ -1119,15 +1108,15 @@ class MiqRequestWorkflow
   end
 
   def allowed_clusters(_options = {})
-    filtered_targets = process_filter_all(:cluster_filter, EmsCluster)
-    filtered_ids = filtered_targets.collect(&:id)
-    allowed_ci(:cluster, [:respool, :host, :folder], filtered_ids)
+    all_clusters     = EmsCluster.where(:ems_id => get_source_and_targets[:ems].try(:id))
+    filtered_targets = process_filter(:cluster_filter, EmsCluster, all_clusters)
+    allowed_ci(:cluster, [:respool, :host, :folder], filtered_targets.collect(&:id))
   end
 
   def allowed_respools(_options = {})
-    filtered_targets = process_filter_all(:rp_filter, ResourcePool)
-    filtered_ids = filtered_targets.collect(&:id)
-    allowed_ci(:respool, [:cluster, :host, :folder], filtered_ids)
+    all_resource_pools = ResourcePool.where(:ems_id => get_source_and_targets[:ems].try(:id))
+    filtered_targets   = process_filter(:rp_filter, ResourcePool, all_resource_pools)
+    allowed_ci(:respool, [:cluster, :host, :folder], filtered_targets.collect(&:id))
   end
   alias_method :allowed_resource_pools, :allowed_respools
 
@@ -1491,5 +1480,13 @@ class MiqRequestWorkflow
       _log.error "<#{err_text}>"
       raise err_text
     end
+  end
+
+  private
+
+  def default_ci_to_hash_struct(ci)
+    attributes = []
+    attributes << :name if ci.respond_to?(:name)
+    build_ci_hash_struct(ci, attributes)
   end
 end

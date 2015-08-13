@@ -133,9 +133,13 @@ module EmsRefresh::Parsers
         parse_node_condition(condition)
       end
 
-      # Searching for the underlying instance. At the moment this search strategy
-      # is tested only with OpenStack.
-      vms = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:uid_ems => new_result[:identity_system].downcase)
+      # Establish a relationship between this node and the vm it is on (if it is in the system)
+      # supported relationships: oVirt and Openstack
+      types = [ManageIQ::Providers::Redhat::InfraManager::Vm.name,
+               ManageIQ::Providers::Openstack::CloudManager::Vm.name]
+
+      # Searching for the underlying instance for Openstack or oVirt.
+      vms = Vm.where(:uid_ems => new_result[:identity_system].downcase, :type => types)
       if vms.to_a.size == 1
         new_result[:lives_on_id] = vms.first.id
         new_result[:lives_on_type] = vms.first.type

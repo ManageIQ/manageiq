@@ -22,6 +22,7 @@ class MiqServer < ActiveRecord::Base
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_groups, :as => :resource
+  has_many                :miq_events, :as => :target, :dependent => :destroy
 
   cattr_accessor          :my_guid_cache
 

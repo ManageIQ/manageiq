@@ -104,6 +104,8 @@ class VmOrTemplate < ActiveRecord::Base
 
   has_many                  :policy_events, -> { where(["target_id = ? OR target_class = 'VmOrTemplate'", id]).order(:timestamp) }, :class_name => "PolicyEvent"
 
+  has_many                  :miq_events, :as => :target, :dependent => :destroy
+
   has_many                  :miq_alert_statuses, :dependent => :destroy, :as => :resource
 
   has_one                   :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy

@@ -33,12 +33,6 @@
     = javascript_include_tag 'miq_dhtmlxlayout.js'
     = stylesheet_link_tag 'dhtmlx_gpl_36/dhtmlxlayout.css'
     = stylesheet_link_tag 'dhtmlx_gpl_36/skins/dhtmlxlayout_dhx_miq.css'
-- when "menu"
-  - unless @dhtmlx_menu
-    - @dhtmlx_menu = true
-    = stylesheet_link_tag 'dhtmlx_gpl_36/skins/dhtmlxmenu_dhx_web.css'
-    = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxmenu.js'
-    = javascript_include_tag 'dhtmlx_gpl_36/ext/dhtmlxmenu_ext.js'
 - when "toolbar"
   - unless @dhtmlx_toolbar
     - @dhtmlx_toolbar = true

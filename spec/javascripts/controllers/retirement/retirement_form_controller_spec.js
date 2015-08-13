@@ -21,7 +21,7 @@ describe('retirementFormController', function() {
 
   beforeEach(inject(function(_$controller_) {
     var retirementFormResponse = {
-      retirement_date: '2015-12-31',
+      retirement_date: '12/31/2015',
       retirement_warning: '0'
     };
     $httpBackend.whenGET('retirement_info/1000000000001').respond(retirementFormResponse);
@@ -35,7 +35,7 @@ describe('retirementFormController', function() {
 
   describe('initialization', function() {
     it('sets the retirementDate to the value returned with http request', function() {
-      expect($scope.retirementInfo.retirementDate).toEqual('2015-12-31');
+      expect($scope.retirementInfo.retirementDate).toEqual('12/31/2015');
     });
 
     it('sets the retirementWarning to the value returned with http request', function() {

@@ -235,18 +235,6 @@ module VmOrTemplate::Scanning
   end
 
   def scan_via_miq_vm(miqVm, ost)
-    _log.debug "Checking for file systems..."
-    if miqVm.vmRootTrees[0].nil?
-      raise MiqException::MiqVmMountError, "No root filesystem found." if miqVm.diskInitErrors.empty?
-
-      err_msg = ''
-      miqVm.diskInitErrors.each do |disk, err|
-        err = "#{err} - #{disk}" unless err.include?(disk)
-        err_msg += "#{err}\n"
-      end
-      raise err_msg.chomp
-    end
-
     # Initialize stat collection variables
     ost.scanTime = Time.now.utc unless ost.scanTime
     status = "OK"; statusCode = 0; scanMessage = "OK"
@@ -254,6 +242,7 @@ module VmOrTemplate::Scanning
     ost.xml_class = XmlHash::Document
     driver = MiqservicesClient.new
 
+    _log.debug "Scanning - Initializing scan"
     UpdateAgentState(driver, ost, "Scanning", "Initializing scan")
     vmName, bb, vmId, lastErr, vmCfg = nil
     xml_summary = ost.xml_class.createDoc(:summary)
@@ -262,6 +251,7 @@ module VmOrTemplate::Scanning
     xml_summary.root.add_attributes("taskid" => ost.taskid)
 
     data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
+    _log.debug "creating #{data_dir}"
     begin
       Dir.mkdir(data_dir)
     rescue Errno::EEXIST
@@ -274,17 +264,25 @@ module VmOrTemplate::Scanning
     )
 
     begin
-      bb = Manageiq::BlackBox.new(self.guid, ost)
+      _log.debug "instantiating MIQExtract"
+      extractor = MIQExtract.new(miqVm, ost)
+      _log.debug "instantiated MIQExtract"
 
-      # categories = miqVm.miq_extract.categories
-      categories = ost.category.split(',') # TODO: XXX Use scan profiles
+      _log.debug "instantiating BlackBox"
+      bb = Manageiq::BlackBox.new(guid, ost)
+      _log.debug "instantiated BlackBox"
+
+      _log.debug "Checking for file systems..."
+      raise extractor.systemFsMsg unless extractor.systemFs
+
+      categories = extractor.categories
       _log.debug "categories = [ #{categories.join(', ')} ]"
 
       categories.each do |c|
         UpdateAgentState(driver, ost, "Scanning", "Scanning #{c}")
         _log.info "Scanning [#{c}] information.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
         st = Time.now
-        xml = miqVm.extract(c)
+        xml = extractor.extract(c) { |scan_data| UpdateAgentState(ost, "Scanning", scan_data[:msg]) }
         categoriesProcessed += 1
         _log.info "Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
         if xml

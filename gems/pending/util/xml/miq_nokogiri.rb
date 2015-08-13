@@ -7,6 +7,15 @@ begin
   # Add class methods to nokogiri to have it behave more like REXML for easy replacement
   module Nokogiri
     module XML
+      class Attr
+        # REXML::Attributes are typically accessed so that it returns the value of an
+        # attribute, whereas Nokogiri returns an object with a "value" reader method.
+        # Our approach essentially forwards the call to the value.
+        def method_missing(*args, &block)
+          self.value.send(*args, &block)
+        end
+      end
+
       class Node
         def add_attribute(key, value)
           self[key.to_s] = value.to_s unless value.nil?
@@ -124,9 +133,9 @@ begin
 
         def self.loadFile(filename)
           begin
-            Nokogiri::XML::Document.file(filename)
+            Nokogiri::XML::Document.new(filename)
           rescue => err
-            $log.warn "Unabled to load XML document with Nokogiri, retrying with REXML" if $log
+            $log.warn "Unable to load XML document with Nokogiri, retrying with REXML" if $log
             self.from_xml(filename, true)
           end
         end

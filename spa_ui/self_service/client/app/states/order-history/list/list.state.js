@@ -5,10 +5,8 @@
     .run(appRun);
 
   /** @ngInject */
-  function appRun(routerHelper, navigationHelper) {
+  function appRun(routerHelper) {
     routerHelper.configureStates(getStates());
-    navigationHelper.navItems(navItems());
-    navigationHelper.sidebarItems(sidebarItems());
   }
 
   function getStates() {
@@ -18,32 +16,15 @@
         templateUrl: 'app/states/order-history/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Order History',
-        resolve: {
-          orders: resolveOrders
-        }
+        title: 'Order History'
       }
     };
   }
 
-  function navItems() {
-    return {};
-  }
-
-  function sidebarItems() {
-    return {};
-  }
-
   /** @ngInject */
-  function resolveOrders(Order) {
-    return Order.query({'includes[]': ['staff', 'order_items']}).$promise;
-  }
-
-  /** @ngInject */
-  function StateController($state, logger, orders) {
+  function StateController(logger) {
     var vm = this;
 
-    vm.orders = orders;
     vm.title = 'Order History';
     activate();
 

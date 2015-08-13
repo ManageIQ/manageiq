@@ -35,9 +35,9 @@ class TreeBuilderOpsSettings < TreeBuilderOps
       count_only_or_objects(options[:count_only], LdapRegion.all, "name.to_s")
     when "msc"
       objects = []
-      MiqSchedule.all(:conditions=>"prod_default != 'system' or prod_default is null").sort{
+      MiqSchedule.where("prod_default != 'system' or prod_default is null").to_a.sort{
           |a,b| a.name.downcase <=> b.name.downcase}.each do |z|
-        objects.push(z) if z.adhoc.nil? && (z.towhat != "DatabaseBackup" || (z.towhat == "DatabaseBackup" && DatabaseBackup.backup_supported?))
+        objects.push(z) if z.adhoc.nil? && (z.towhat != "DatabaseBackup" || DatabaseBackup.backup_supported?)
       end
       count_only_or_objects(options[:count_only], objects, nil)
     when "sis"

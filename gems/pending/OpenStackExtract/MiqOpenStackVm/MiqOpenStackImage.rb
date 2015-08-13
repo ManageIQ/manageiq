@@ -2,6 +2,7 @@ require 'util/miq_tempfile'
 require_relative '../../MiqVm/MiqVm'
 
 class MiqOpenStackImage
+  attr_reader :vmConfigFile
 
   SUPPORTED_METHODS = [ :vmRootTrees, :extract, :diskInitErrors ]
 
@@ -10,6 +11,7 @@ class MiqOpenStackImage
     @fog_compute  = args[:fog_compute]
     @fog_image    = args[:fog_image]
     @args         = args
+    @vmConfigFile = image_id
 
     raise ArgumentError, "#{self.class.name}: required arg fog_compute missing"  unless @fog_compute
     raise ArgumentError, "#{self.class.name}: required arg fog_image missing"    unless @fog_image

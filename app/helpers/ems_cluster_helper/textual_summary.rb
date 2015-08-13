@@ -150,7 +150,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_total_miq_templates
-    return nil if @record.kind_of?(EmsClusterOpenstackInfra)
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
     num = @record.total_miq_templates
     h = {:label => "All Templates", :image => "vm", :value => num}
@@ -172,7 +172,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_rps_size
-    return nil if @record.kind_of?(EmsClusterOpenstackInfra)
+    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
     num = @record.number_of(:resource_pools)
     h = {:label => "Resource Pools", :image => "resource_pool", :value => num}

@@ -88,5 +88,9 @@ module ConfigurationHelper
        inactive_icon("view_tile.png", _('Tile View'), resource, "tile"),
        active_icon("view_list.png", _('List View'))].compact.join('')
     end
+
+    def has_any_role?(arr)
+      arr.any? { |r| role_allows(:feature => r) }
+    end
   end
 end

@@ -81,7 +81,7 @@ module MigrationHelper
         SELECT pg_class.oid::regclass::text, quote_ident(attname)
         FROM pg_class JOIN pg_attribute ON pg_class.oid = attrelid
         WHERE relkind = 'r'
-          AND (attname = 'type' OR attname LIKE '%\_type')
+          AND (attname = 'type' OR attname LIKE '%\\_type')
           AND atttypid IN ('text'::regtype, 'varchar'::regtype)
         ORDER BY relname, attname
       SQL

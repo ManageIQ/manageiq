@@ -36,10 +36,7 @@ module ApplicationController::CiProcessing
       @refresh_partial = "layouts/flash_msg"
       return
     else
-      @edit[:ownership_items] = Array.new # Set the array of set ownership items
-      recs.each do |r|
-        @edit[:ownership_items].push(r.to_i)
-      end
+      @edit[:ownership_items] = recs.collect(&:to_i)
     end
 
     if @explorer
@@ -244,7 +241,7 @@ module ApplicationController::CiProcessing
     end
     obj = kls.find_by_id(params[:id])
     render :json => {
-      :retirement_date    => obj.retires_on,
+      :retirement_date    => obj.retires_on.strftime('%m/%d/%Y'),
       :retirement_warning => obj.retirement_warn
     }
   end
@@ -1020,10 +1017,7 @@ module ApplicationController::CiProcessing
         render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
         return
       end
-      @edit[:reconfigure_items] = Array.new # Set the array of set ownership items
-      recs.each do |r|
-        @edit[:reconfigure_items].push(r.to_i)
-      end
+      @edit[:reconfigure_items] = recs.collect(&:to_i)
     end
     if @explorer
       reconfigure
@@ -1400,7 +1394,6 @@ module ApplicationController::CiProcessing
   # Policy simulation for selected VMs
   def polsimvms
     assert_privileges(params[:pressed])
-    vms = Array.new
     vms = find_checked_items
     if vms.blank?
       vms = [params[:id]]

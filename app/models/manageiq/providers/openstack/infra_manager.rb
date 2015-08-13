@@ -50,7 +50,7 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   end
 
   def self.description
-    @description ||= "OpenStack Infrastructure".freeze
+    @description ||= "OpenStack Platform Director".freeze
   end
 
   def supports_port?

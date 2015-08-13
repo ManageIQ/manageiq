@@ -289,46 +289,26 @@ module ManageIQ
       def get_clusters
         # This counts with hosts being already collected
         hosts = @data.fetch_path(:hosts)
-        clusters = infer_clusters_from_hosts(hosts)
-
+        clusters, cluster_host_mapping = get_clusters_and_host_mapping
         process_collection(clusters, :clusters) { |cluster| parse_cluster(cluster) }
-        set_relationship_on_hosts(hosts)
+
+        set_relationship_on_hosts(hosts, cluster_host_mapping)
       end
 
-      def host_type(host)
-        host_type = host[:name].scan(/\((.*?)\)/).first
-        host_type.first if host_type
-      end
-
-      def cluster_name_for_host(host)
-        # TODO(lsmola) name and uid should also contain stack name, add this after the patch that saves resources
-        # is merged. Adding Overcloud by hard now.
-        host_type = host_type(host)
-        "overcloud #{host_type}"
-      end
-
-      def cluster_index_for_host(host)
-        # TODO(lsmola) name and uid should also contain stack name, add this after the patch that saves resources
-        # is merged. Adding Overcloud by hard now.
-        host_type = host_type(host)
-        "overcloud__#{host_type}"
-      end
-
-      def infer_clusters_from_hosts(hosts)
-        # We will create Cluster per Stack Host type. This way we can work with the same host types together
-        # as a group, e.g. all Compute hosts all Object Storage hosts, etc.
+      def get_clusters_and_host_mapping
         clusters = []
-        hosts.each do |host|
-          host_type = host_type(host)
-          # skip the non-provisoned hosts
-          next unless host_type
+        cluster_host_mapping = {}
+        @data_index.fetch_path(:orchestration_stacks).each_value do |stack|
+          uid = stack.fetch_path(:parent, :ems_ref)
+          next unless uid
 
-          name = cluster_name_for_host(host)
-          uid = cluster_index_for_host(host)
+          nova_server = stack[:resources].detect { |r| r[:resource_category] == 'OS::Nova::Server' }
+          next unless nova_server
 
-          clusters << {:name => name, :uid => uid}
+          cluster_host_mapping[nova_server[:physical_resource]] = uid
+          clusters << {:name => stack[:parent][:name], :uid => uid}
         end
-        clusters.uniq
+        return clusters.uniq, cluster_host_mapping
       end
 
       def parse_cluster(cluster)
@@ -344,9 +324,9 @@ module ManageIQ
         return uid, new_result
       end
 
-      def set_relationship_on_hosts(hosts)
+      def set_relationship_on_hosts(hosts, cluster_host_mapping)
         hosts.each do |host|
-          host[:ems_cluster] = @data_index.fetch_path(:clusters, cluster_index_for_host(host))
+          host[:ems_cluster] = @data_index.fetch_path(:clusters, cluster_host_mapping[host[:ems_ref_obj]])
         end
       end
 

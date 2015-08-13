@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :miq_ae_domain_enabled, :parent => :miq_ae_namespace do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
     enabled true
+    priority 1
   end
 
   factory :miq_ae_domain_disabled, :parent => :miq_ae_namespace do
@@ -9,6 +10,7 @@ FactoryGirl.define do
   end
 
   factory :miq_ae_domain, :parent => :miq_ae_namespace do
+    priority 1
     trait :with_methods do
       transient do
         ae_methods do {'method1' => {:scope => 'instance', :location => 'inline',

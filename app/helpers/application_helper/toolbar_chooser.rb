@@ -5,7 +5,7 @@ class ApplicationHelper::ToolbarChooser
 
   private
 
-  delegate :session, :from_cid, :x_node, :x_active_tree,
+  delegate :session, :from_cid, :x_node, :x_active_tree, :super_admin_user?,
            :to => :@view_context
 
   def initialize(view_context, instance_data)
@@ -70,7 +70,7 @@ class ApplicationHelper::ToolbarChooser
         elsif @layout == "chargeback"
           return center_toolbar_filename_chargeback
         elsif @layout == "miq_ae_tools"
-          return session[:userrole] == "super_administrator" ? "miq_ae_tools_simulate_center_tb" : "blank_view_tb"
+          return super_admin_user? ? "miq_ae_tools_simulate_center_tb" : "blank_view_tb"
         elsif @layout == "miq_policy"
           return center_toolbar_filename_miq_policy
         elsif @layout == "ops"
@@ -242,7 +242,7 @@ class ApplicationHelper::ToolbarChooser
         return "scan_profile_center_tb"
       elsif x_node.split('-').last == "z"
         return "zones_center_tb"
-      elsif x_node.split('-').first == "z"
+      elsif x_node.split('-').first == "z" && @sb[:active_tab] != "settings_smartproxy_affinity"
         return "zone_center_tb"
       end
     elsif x_active_tree == :diagnostics_tree

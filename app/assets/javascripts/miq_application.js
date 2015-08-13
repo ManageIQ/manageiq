@@ -689,36 +689,37 @@ function miqBuildChartMenu(col, row, value, category, series, id, message) {
   var set = id.split('_')[1]; // Get the chart set
   var idx = id.split('_')[2]; // Get the chart index
   var chart_data = ManageIQ.charts.chartData[set];
+  var chart_el_id = id.replace(/^miq_/, 'miq_chart_');
+  var chartmenu_el_id = id.replace(/^miq_/, 'miq_chartmenu_');
 
   if (chart_data[idx].menu != null && chart_data[idx].menu.length) {
     var rowcolidx = "_" + row + "-" + col + "-" + idx;
-    var miqMenu = new dhtmlXMenuObject(null, "dhx_web");
-    miqMenu.setImagePath("/assets/dhtmlx_gpl_36/imgs/");
-    miqMenu.renderAsContextMenu();
-    miqMenu.setWebModeTimeout(1000);
-    miqMenu.attachEvent("onClick", miqChartMenuClick);
-    miqMenu.setAutoHideMode(true);
 
     for (var i = 0; i < chart_data[idx].menu.length; i++) {
       var menu_id = chart_data[idx].menu[i].split(":")[0] + rowcolidx;
       var pid = menu_id.split("-")[0];
 
-      if (miqMenu.getParentId(pid) == null) {
-        miqMenu.addNewChild(miqMenu.topId, 99, pid, pid, false);
+      if ($('#' + chartmenu_el_id).find('#' + pid).length == 0) {
+        $("#" + chartmenu_el_id).append("<li class='dropdown-submenu'>" +
+          "<a tabindex='-1' href='#'>" + pid + "</a>" +
+          "<ul id='" + pid + "' class='dropdown-menu'></ul></li>");
       }
 
       var menu_title = chart_data[idx].menu[i].split(":")[1];
       menu_title = menu_title.replace("<series>", series);
       menu_title = menu_title.replace("<category>", category);
-      miqMenu.addNewChild(pid, 99, menu_id, menu_title, false);
+      $("#" + pid).append("<li><a id='" + menu_id +
+        "' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
     }
 
-    miqMenu.showContextMenu(ManageIQ.mouse.x - 10, ManageIQ.mouse.y - 10);
+    $("#" + chartmenu_el_id).css({'left': ManageIQ.mouse.x, 'top': ManageIQ.mouse.y});
+    $('#' + chartmenu_el_id).dropdown('toggle');
+    $('#' + chart_el_id).find('.overlay').show();
   }
 }
 
 // Handle chart context menu clicks
-function miqChartMenuClick(itemId, itemValue) {
+function miqChartMenuClick(itemId) {
   if ($('#menu_div').length) {
     $('#menu_div').hide();
   }

@@ -8,22 +8,25 @@
       -# Description and active fields
       - if @edit
         - if @edit && @edit[:typ] == "basic"
-          %h3= _("Basic Information")
-          %table.style1
-            %tr
-              %td.key= _("Description")
+          %h3
+            = _("Basic Information")
+          %form.form-horizontal
+            .form-group
+              %label.control-label.col-md-2
+                = _("Description")
               - if @edit
-                %td.wider
+                .col-md-10
                   = text_field_tag("description", @edit[:new][:description],
                     :maxlength         => MAX_DESC_LEN,
                     "data-miq_observe" => observe_with_interval)
                   = javascript_tag(javascript_focus('description'))
               - else
-                %td
+                .col-md-10
                   = h(@policy.description)
-            %tr
-              %td.key= _("Active")
-              %td
+            .form-group
+              %label.control-label.col-md-2
+                = _("Active")
+              .col-md-10
                 = check_box_tag("active", "1", @edit[:new][:active], "data-miq_observe_checkbox" => {:url => url}.to_json)
       - else
         %h3= _('Basic Information')
@@ -31,7 +34,7 @@
           .form-group
             %label.control-label.col-md-2= _('Active')
             .col-md-10
-              %p.form-control-static= h(@policy.active ? "Yes" : "No")
+              %p.form-control-static= h(@policy.active ? _("Yes") : _("No"))
           .form-group
             %label.control-label.col-md-2= _('Created')
             .col-md-10

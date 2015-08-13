@@ -318,27 +318,25 @@ class ApplicationController < ActionController::Base
   end
 
   # Save column widths
+  # skip processing when session[:view] is nil. Possible causes:
+  #   - user used back button
+  #   - user has multiple tabs to access the list view screen
   def save_col_widths
     @view = session[:view]
-    #don't do anything if @view is nil, incase user used back button or multiple tabs to access list view screen
-    if @view
-#   cols_key = @view.scoped_association.nil? ? @view.db.to_sym : (@view.db + "-" + @view.scoped_association).to_sym
-    cols_key = create_cols_key(@view)
-      if params[:col_widths]
-        cws = params[:col_widths].split(",")[2..-1]
-        if cws.length > 0
-          if (db_user = current_user)
-            db_user.settings[:col_widths] ||= Hash.new                        # Create the col widths hash, if not there
-            db_user.settings[:col_widths][cols_key] ||= Hash.new        # Create hash for the view db
-            @settings[:col_widths] ||= Hash.new                               # Create the col widths hash, if not there
-            @settings[:col_widths][cols_key] ||= Hash.new             # Create hash for the view db
-            cws.each_with_index do |cw, i|
-              @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i  # Save each cols width
-            end
-            db_user.settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
-            db_user.save
-          end
-        end
+    cws = (params[:col_widths] || "").split(",")[2..-1]
+    if @view && cws.length > 0
+      cols_key = create_cols_key(@view)
+      @settings[:col_widths] ||= {}
+      @settings[:col_widths][cols_key] ||= {}
+      cws.each_with_index do |cw, i|
+        @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i
+      end
+
+      if current_user
+        user_settings = current_user.settings || {}
+        user_settings[:col_widths] ||= {}
+        user_settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
+        current_user.update_attributes(:settings => user_settings)
       end
     end
     render :nothing => true                                 # No response needed
@@ -910,17 +908,10 @@ class ApplicationController < ActionController::Base
     return datetime.in_time_zone(tz)
   end
 
+  # if authenticating or past login screen
   def set_user_time_zone
-    # if authenticating or past login screen
-    @tz = if session[:userid].present? || params[:user_name].present?
-            get_timezone_for_userid(session[:userid] || params[:user_name])
-          else
-            MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-          end
-
-    @tz ||= 'UTC'
-
-    session[:user_tz] = Time.zone = @tz
+    user = current_user || (params[:user_name].presence && User.find_by_userid(params[:user_name]))
+    session[:user_tz] = Time.zone = @tz = get_timezone_for_userid(user)
   end
 
   # Initialize the options for server selection
@@ -949,7 +940,7 @@ class ApplicationController < ActionController::Base
   #Gather information for the report accordians
   def build_report_listnav(tree_type="reports",tree="listnav",mode="menu")
     #checking to see if group (used to be role) was selected in menu editor tree, or came in from reports/timeline tree calls
-    group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]).id : session[:group]
+    group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]) : current_group
     @sb[:rpt_menu] = get_reports_menu(group,tree_type,mode)
     if tree == "listnav"
       if tree_type == "timeline"
@@ -962,17 +953,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def get_reports_menu(group=session[:group], tree_type="reports", mode="menu")
+  def get_reports_menu(group = current_group, tree_type = "reports", mode = "menu")
     rptmenu = Array.new
     reports = Array.new
     folders = Array.new
-    rec = MiqGroup.find_by_id(group)
     user = current_user
     @sb[:grp_title] = user.admin_user? ?
       "#{session[:customer_name]} (#{_("All %s") % ui_lookup(:models=>"MiqGroup")})" :
       "#{session[:customer_name]} (#{_("%s") % "#{ui_lookup(:model=>"MiqGroup")}: #{user.current_group.description}"})"
     @data = Array.new
-    if (!rec.settings || !rec.settings[:report_menus] || rec.settings[:report_menus].blank?) || mode == "default"
+    if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       #array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
@@ -1026,14 +1016,14 @@ class ApplicationController < ActionController::Base
 
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       rep = custom.select do |r|
-        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
+        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == current_group.try(:id))
       end.map(&:name).uniq
 
       subfolder.push(rep) unless subfolder.include?(rep)
       temp.push(@custom_folder) unless temp.include?(@custom_folder)
       if tree_type == "timeline"
         temp2 = []
-        rec.settings[:report_menus].each do |menu|
+        group.settings[:report_menus].each do |menu|
           folder_arr = Array.new
           menu_name = menu[0]
           menu[1].each_with_index do |reports,i|
@@ -1050,7 +1040,7 @@ class ApplicationController < ActionController::Base
           end
         end
       else
-        temp2 = rec.settings[:report_menus]
+        temp2 = group.settings[:report_menus]
       end
       rptmenu = temp.concat(temp2)
     end
@@ -1283,7 +1273,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_invalid_session
-    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session)
+    timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user)
     reset_session
 
     session[:start_url] = if RequestRefererService.access_whitelisted?(request, controller_name, action_name)
@@ -1354,7 +1344,7 @@ class ApplicationController < ActionController::Base
   # used as a before_filter for controller actions to check that
   # the currently logged in user has rights to perform the requested action
   def check_privileges
-    unless PrivilegeCheckerService.new.valid_session?(session)
+    unless PrivilegeCheckerService.new.valid_session?(session, current_user)
       handle_invalid_session
       return
     end
@@ -1946,10 +1936,10 @@ class ApplicationController < ActionController::Base
     # Build the view file name
     if suffix
       viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{session[:userrole]}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{current_role}.yaml"
     else
       viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{session[:userrole]}.yaml"
+      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{current_role}.yaml"
     end
 
     if viewfilerestricted && File.exist?(viewfilerestricted)

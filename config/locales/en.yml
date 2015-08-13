@@ -130,7 +130,7 @@ en:
 
   model_name:
     miq_policy_set: Policy Profile
-    miq_event: Event
+    miq_event_definition: Event
     miq_action: Action
     miq_policy: Policy
     miq_alert: Alert
@@ -1016,7 +1016,7 @@ en:
       miq_approvals:               Approvals
       miq_custom_attribute:        EVM Custom Attribute
       miq_custom_attributes:       EVM Custom Attributes
-      miq_event:                   Event
+      miq_event_definition:        Event
       miq_provision:               Provision
       miq_provision_template:      Provisioned From Template
       miq_provision_vms:           Provisioned VMs

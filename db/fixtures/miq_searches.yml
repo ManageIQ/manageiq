@@ -1254,22 +1254,22 @@
     search_type: default
     db: Container
 - attributes:
-    name: default_Namespace / Pod
-    description: Namespace / Pod
+    name: default_Project / Pod
+    description: Project / Pod
     filter: !ruby/object:MiqExpression
       exp:
         "=":
-          field: ContainerGroup-namespace
+          field: ContainerGroup-project
           value: default
     search_type: default
     db: ContainerGroup
 - attributes:
-    name: default_Namespace / ContainerService
-    description: Namespace / Container Services
+    name: default_Project / ContainerService
+    description: Project / Container Services
     filter: !ruby/object:MiqExpression
       exp:
         "=":
-          field: ContainerService-namespace
+          field: ContainerService-project
           value: default
     search_type: default
     db: ContainerService

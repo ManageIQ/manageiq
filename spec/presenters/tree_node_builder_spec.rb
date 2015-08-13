@@ -189,8 +189,8 @@ describe TreeNodeBuilder do
       node.should_not be_nil
     end
 
-    it 'MiqEvent node' do
-      event = FactoryGirl.build(:miq_event)
+    it 'MiqEventDefinition node' do
+      event = FactoryGirl.build(:miq_event_definition)
       node = TreeNodeBuilder.build(event, nil, {})
       node.should_not be_nil
     end

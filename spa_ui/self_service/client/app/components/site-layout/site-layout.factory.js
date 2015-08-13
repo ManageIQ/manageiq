@@ -8,7 +8,8 @@
   function SiteLayoutFactory($rootScope, $state, logger) {
     var service = {
       setLayout: setLayout,
-      getLayout: getLayout
+      getLayout: getLayout,
+      getClass: getClass
     };
 
     var current = 'application';
@@ -32,6 +33,10 @@
       }
 
       return 'app/layouts/' + layout + '.html';
+    }
+
+    function getClass() {
+      return 'layout-' + current;
     }
   }
 })();

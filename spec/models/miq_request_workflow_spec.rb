@@ -1,9 +1,10 @@
 require "spec_helper"
 
 describe MiqRequestWorkflow do
+  let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
+
   context "#validate" do
     let(:dialog)   { workflow.instance_variable_get(:@dialogs) }
-    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
 
     context "validation_method" do
       it "skips validation if no validation_method is defined" do
@@ -50,7 +51,6 @@ describe MiqRequestWorkflow do
 
   describe "#init_from_dialog" do
     let(:dialogs) { workflow.instance_variable_get(:@dialogs) }
-    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
     let(:init_values) { {} }
 
     context "when the initial values already have a value for the field name" do
@@ -139,7 +139,6 @@ describe MiqRequestWorkflow do
 
   describe "#provisioning_tab_list" do
     let(:dialogs) { workflow.instance_variable_get(:@dialogs) }
-    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
 
     before do
       dialogs[:dialog_order] = [:test, :test2, :test3]
@@ -150,6 +149,94 @@ describe MiqRequestWorkflow do
 
     it "returns a list of tabs without the hidden or ignored ones" do
       expect(workflow.provisioning_tab_list).to eq([{:name => "test3", :description => "test description 3"}])
+    end
+  end
+
+  context "'allowed_*' methods" do
+    let(:cluster)       { FactoryGirl.create(:ems_cluster, :ems_id => ems.id) }
+    let(:ems)           { FactoryGirl.create(:ext_management_system) }
+    let(:resource_pool) { FactoryGirl.create(:resource_pool, :ems_id => ems.id) }
+
+    before { allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC") }
+
+    context "#allowed_clusters calls allowed_ci with the correct set of cluster ids" do
+      it "missing sources" do
+        cluster
+        allow(workflow).to receive(:get_source_and_targets).and_return({})
+
+        expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [])
+
+        workflow.allowed_clusters
+      end
+
+      it "with valid sources" do
+        FactoryGirl.create(:ems_cluster)
+        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+
+        expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [cluster.id])
+
+        workflow.allowed_clusters
+      end
+    end
+
+    context "#allowed_resource_pools calls allowed_ci with the correct set of resource_pool ids" do
+      it "missing sources" do
+        resource_pool
+        allow(workflow).to receive(:get_source_and_targets).and_return({})
+
+        expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [])
+
+        workflow.allowed_resource_pools
+      end
+
+      it "with valid sources" do
+        FactoryGirl.create(:resource_pool)
+        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+
+        expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [resource_pool.id])
+
+        workflow.allowed_resource_pools
+      end
+    end
+  end
+
+  context "#ci_to_hash_struct" do
+    it("with a nil") { expect(workflow.ci_to_hash_struct(nil)).to be_nil }
+
+    context "with collections" do
+      let(:ems) { FactoryGirl.create(:ext_management_system) }
+
+      it "an array" do
+        arr = [FactoryGirl.create(:ems_cluster, :ems_id => ems.id), FactoryGirl.create(:ems_cluster, :ems_id => ems.id)]
+
+        expect(workflow.ci_to_hash_struct(arr).length).to eq(2)
+      end
+
+      it "an ActiveRecord CollectionProxy" do
+        FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
+        FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
+
+        expect(ems.clusters).to be_kind_of(ActiveRecord::Associations::CollectionProxy)
+        expect(workflow.ci_to_hash_struct(ems.clusters).length).to eq(2)
+      end
+    end
+
+    it "with an instance of a class that has a special format" do
+      hs = workflow.ci_to_hash_struct(FactoryGirl.create(:vm_or_template))
+
+      expect(hs.id).to               be_kind_of(Integer)
+      expect(hs.evm_object_class).to eq(:VmOrTemplate)
+      expect(hs.name).to             be_kind_of(String)
+      expect(hs.platform).to         eq("unknown")
+      expect(hs.snapshots).to        eq([])
+    end
+
+    it "with a regular class" do
+      hs = workflow.ci_to_hash_struct(FactoryGirl.create(:configured_system))
+
+      expect(hs.id).to               be_kind_of(Integer)
+      expect(hs.evm_object_class).to eq(:ConfiguredSystem)
+      expect(hs.name).to             be_kind_of(String)
     end
   end
 end

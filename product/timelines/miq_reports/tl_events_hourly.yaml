@@ -15,7 +15,7 @@ title: "Timeline Events Hourly"
 name: "Timeline Events Hourly"
 
 # Main DB table report is based on
-db: EmsEvent
+db: EventStream
 
 # Columns to fetch from the main table
 cols:

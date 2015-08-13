@@ -127,8 +127,8 @@ describe Authenticator::Httpd do
       end
     end
 
-    context "with mismatched username" do
-      let(:headers) { super().merge('X-Remote-User' => 'eve') }
+    context "with invalid user" do
+      let(:headers) { super().except('X-Remote-User') }
 
       it "fails" do
         expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")

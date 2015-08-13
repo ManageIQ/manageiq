@@ -1,8 +1,0 @@
-<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="limit-modal" modal-animation-class="fade"
-     ng-class="{in: animate}"
-     ng-style="{'z-index': 1050 + index*10, display: 'block', overflow: 'hidden'}"
-     ng-click="close($event)">
-  <div class="limit-modal__dialog" ng-style="{top: $parent.vm.top, left: $parent.vm.left}">
-    <div class="limit-modal__content" modal-transclude></div>
-  </div>
-</div>

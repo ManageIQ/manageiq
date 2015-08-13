@@ -3,6 +3,7 @@ require 'vmdb_helper'
 
 describe Vmdb::GlobalMethods do
   before do
+    _, @server, _ = EvmSpecHelper.create_guid_miq_server_zone
     class TestClass
       include Vmdb::GlobalMethods
     end
@@ -15,10 +16,6 @@ describe Vmdb::GlobalMethods do
   subject { TestClass.new }
 
   context "#get_timezone_offset" do
-    before do
-      _, @server, _ = EvmSpecHelper.create_guid_miq_server_zone
-    end
-
     context "for a server" do
       it "with a system default" do
         stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
@@ -67,23 +64,25 @@ describe Vmdb::GlobalMethods do
         it "without a system default" do
           stub_server_configuration({})
 
-          subject.get_timezone_offset("user").should == ActiveSupport::TimeZone.all # TODO: This is most definitely wrong.  Should be 0.hours?
+          subject.get_timezone_offset("user").should == 0.hours
         end
       end
     end
   end
 
   context "#get_timezone_for_userid" do
-    before do
-      _, @server, _ = EvmSpecHelper.create_guid_miq_server_zone
-    end
-
     context "for a user" do
       it "who doesn't exist" do
         subject.get_timezone_for_userid("missing").should == "UTC"
       end
 
       it "with a timezone" do
+        user = FactoryGirl.create(:user, :settings => {:display => {:timezone => "Pacific Time (US & Canada)"}})
+        subject.get_timezone_for_userid(user).should == "Pacific Time (US & Canada)"
+      end
+
+      # currently only used in 1 place
+      it "with name lookup" do
         user = FactoryGirl.create(:user, :settings => {:display => {:timezone => "Pacific Time (US & Canada)"}})
         subject.get_timezone_for_userid(user.userid).should == "Pacific Time (US & Canada)"
       end
@@ -93,21 +92,20 @@ describe Vmdb::GlobalMethods do
           stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
 
           user = FactoryGirl.create(:user)
-          subject.get_timezone_for_userid(user.userid).should == "Eastern Time (US & Canada)"
+          subject.get_timezone_for_userid(user).should == "Eastern Time (US & Canada)"
         end
 
         it "without a system default" do
           stub_server_configuration({})
 
           user = FactoryGirl.create(:user)
-          subject.get_timezone_for_userid(user.userid).should be_nil # TODO: Is this correct? Should it be "UTC"?
+          subject.get_timezone_for_userid(user).should eq("UTC")
         end
       end
     end
   end
 
   def stub_server_configuration(config)
-    VMDB::Config.any_instance.stub(:config => config)
-    @server.stub(:get_config => VMDB::Config.new("vmdb"))
+    allow(VMDB::Config).to receive(:new).with("vmdb").and_return(double(:config => config))
   end
 end

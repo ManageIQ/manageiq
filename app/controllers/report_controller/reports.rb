@@ -189,7 +189,7 @@ module ReportController::Reports
     end
 
     if @sb[:active_tab] == "report_info"
-      if session[:userrole] == "super_administrator"  # Super admins see all report schedules
+      if super_admin_user? # Super admins see all report schedules
         schedules = MiqSchedule.all(:conditions=>["towhat=?", "MiqReport"])
       else
         schedules = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])

@@ -83,7 +83,13 @@ module MiqPowerShell
   end
 
   def self.is_error_object?(xml)
-    object_type = xml.root.elements[1].attributes['Type'] rescue ""
+    begin
+      object_type = xml.root.elements[1].attributes['Type']
+      object_type = object_type.value if object_type.respond_to?(:value)
+    rescue
+      object_type = ""
+    end
+
     return true if !object_type.nil? && object_type.split('.').last == 'ErrorRecord'
     return false
   end
@@ -192,7 +198,7 @@ module MiqPowerShell
     def initialize(xml)
       @refIds = []
       if xml.kind_of?(String)
-        @xml = MiqXml.load(xml)
+        @xml = MiqXml.load(xml, :nokogiri)
       else
         @xml = xml
       end
@@ -221,9 +227,13 @@ module MiqPowerShell
     def process_hash(node)
       hsh = {}
       node.each_element do |e|
-        name = convert_type(e.elements[1])
+        # Nokogiri starts its element indexing at 0, while others start at 1.
+        index1 = MiqXml.nokogiri? ? 0 : 1
+        index2 = MiqXml.nokogiri? ? 1 : 2
+
+        name = convert_type(e.elements[index1])
         name = name.to_sym if name.is_a?(String)
-        data = e.elements[2]
+        data = e.elements[index2]
 
         case data.name
         when 'Obj' then hsh[name] = process_obj(data)
@@ -238,6 +248,8 @@ module MiqPowerShell
       hsh = {}
       node.each_element do |e|
         name = e.attributes['N']
+        name = name.value if name.respond_to?(:value)
+
         name = e.name if name.nil?
         name = name.to_sym
 
@@ -255,8 +267,9 @@ module MiqPowerShell
     end
 
     def process_obj(node)
-      lst = node.elements['LST']
-      dct = node.elements['DCT']
+      lst = node.elements.find { |e| e.name == 'LST' }
+      dct = node.elements.find { |e| e.name == 'DCT' }
+
       refId = node.attributes['RefId'].to_i
 
       obj = nil
@@ -287,7 +300,12 @@ module MiqPowerShell
       when :U16, :U32, :I32, :U64, :I64, :D, :By then c.text.to_i
       when :Db then c.text.to_f
       when :B then c.text.downcase == 'true'
-      when :S, :Version, :G, :Ref then c.text.chomp unless c.text.nil?
+      when :S, :Version, :G, :Ref
+        if MiqXml.nokogiri?
+          c.node_text.chomp unless c.node_text.nil? || c.node_text.empty?
+        else
+          c.text.chomp unless c.text.nil?
+        end
       when :DT
         c_text = c.text
         if /\d+-\d+-\d+T\d+:\d+:\d+.\d+(.*)/ =~ c_text

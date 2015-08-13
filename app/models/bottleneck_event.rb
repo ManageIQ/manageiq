@@ -46,7 +46,7 @@ class BottleneckEvent < ActiveRecord::Base
 
   def self.event_definitions(event_type)
     @event_definitions             ||= {}
-    @event_definitions[event_type] ||= MiqEvent.where(:event_type => event_type).to_a
+    @event_definitions[event_type] ||= MiqEventDefinition.where(:event_type => event_type).to_a
   end
 
   def self.future_event_definitions_for_obj(obj)

@@ -3,9 +3,8 @@
 
   angular.module('app.components', [
     'app.core',
-    'smart-table',
-    'schemaForm',
-    'ui.sortable',
-    'hc.marked'
+
+    'ui.bootstrap',
+    'patternfly'
   ]);
 })();

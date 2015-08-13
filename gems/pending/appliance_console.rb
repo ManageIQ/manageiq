@@ -111,6 +111,7 @@ require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/env'
 require 'appliance_console/key_configuration'
+require 'appliance_console/scap'
 
 require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
@@ -485,6 +486,11 @@ Date and Time Configuration
             say("\nShutting down appliance...  This process may take a few minutes.\n\n")
             Env['SHUTDOWN'] = true
           end
+
+        when I18n.t("advanced_settings.scap")
+          say("#{selection}\n\n")
+          ApplianceConsole::Scap.new.lockdown
+          press_any_key
 
         when I18n.t("advanced_settings.summary")
           # Do nothing

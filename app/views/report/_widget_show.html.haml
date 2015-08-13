@@ -36,15 +36,15 @@
           %p.form-control-static
             - case @widget.status.downcase
             - when "complete"
-              - img = "complete"
+              - glyphicon = "pficon pficon-ok"
             - when "queued"
-              - img = "queued"
+              - glyphicon = "fa fa-pause"
             - when "running"
-              - img = "running"
+              - glyphicon = "fa fa-play"
             - when "error"
-              - img = "error"
+              - glyphicon = "fa fa-warning"
             - if @widget.status.downcase != "none"
-              %img{:src => "/images/icons/new/status_#{img}.png"}
+              %i{:class => "#{glyphicon}"}
             = h(@widget.status)
       .form-group
         %label.control-label.col-md-2= _('Last Run Time')

@@ -485,7 +485,7 @@ class MiqRequestController < ApplicationController
     end
 
     unless is_approver
-      username = session[:username]
+      username = current_user.name
       opts[:users] = opts[:users].value?(username) ? {opts[:users].key(username) => username} : {}
     end
     opts[:applied_states] = opts[:states].collect { |s| s[0] }

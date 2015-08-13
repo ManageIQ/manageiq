@@ -73,7 +73,7 @@
                                    :style             => "width: 250px",
                                    "data-miq_focus"   => true,
                                    "data-miq_observe" => {:interval => ".5", :url => url2}.to_json)
-            - if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
+            - if admin_user?
               %tr
                 %td.key
                   = _("Global search:")

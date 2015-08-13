@@ -8,7 +8,7 @@ describe MiqPolicyController do
   context "::Policies" do
     context "#policy_edit" do
       before :each do
-        event = FactoryGirl.create(:miq_event, :name => "host_compliance_check")
+        event = FactoryGirl.create(:miq_event_definition, :name => "host_compliance_check")
         action = FactoryGirl.create(:miq_action, :name => "compliance_failed")
         controller.stub(:policy_get_node_info)
         controller.stub(:get_node_info)

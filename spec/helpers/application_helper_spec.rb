@@ -365,8 +365,8 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with MiqEvent" do
-      before { @db = "MiqEvent" }
+    context "when with MiqEventDefinition" do
+      before { @db = "MiqEventDefinition" }
 
       it "and @explorer" do
         @explorer = true
