@@ -400,18 +400,18 @@
       "note":""
     },
     {
-      "warning_type":"Cross Site Scripting",
-      "warning_code":5,
-      "fingerprint":"6e27ded967d1c6674df2fedc722c7b47029777f64f73607b6bb5e32b8536d028",
-      "message":"Unescaped parameter value",
-      "file":"app/views/layouts/_global_footer.html.haml",
-      "line":4,
-      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code":"find_and_preserve(Haml::Filters::Javascript.render_with_options(\"ManageIQ.browser = \\\"#{browser_info(\"name\")}\";\nManageIQ.controller = \"#{request.parameters[:controller]}\";\n\n$('#exampleModal').on('show.bs.modal', function (event) {\nvar button = $(event.relatedTarget) // Button that triggered the modal\nvar recipient = button.data('whatever') // Extract info from data-* attributes\n// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).\n// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.\nvar modal = $(this)\nmodal.find('.modal-title').text('New message to ' + recipient)\nmodal.find('.modal-body input').val(recipient)\n})\n\", _hamlout.options))",
-      "render_path":["Template:layouts/application"],
-      "location":{
-        "type":"template",
-        "template":"layouts/_global_footer (Template:layouts/application)"
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 5,
+      "fingerprint": "47b291ced89eef8b3bc805bdeee98822e418418cfc2dc96df143e190ddfd03ef",
+      "message": "Unescaped parameter value",
+      "file": "app/views/layouts/_global_header.html.haml",
+      "line": 29,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "find_and_preserve(Haml::Filters::Javascript.render_with_options(\"ManageIQ.browser = \\\"#{browser_info(\"name\")}\";\nManageIQ.controller = \"#{request.parameters[:controller]}\";\n\", _hamlout.options))",
+      "render_path": ["AlertController#index","Template:layouts/application"],
+      "location": {
+        "type": "template",
+        "template": "layouts/_global_header (Template:layouts/application)"
       },
       "user_input":"request.parameters[:controller]",
       "confidence":"Weak",
@@ -706,6 +706,6 @@
       "note":""
     }
   ],
-  "updated":"2015-07-29 12:17:04 -0400",
-  "brakeman_version":"3.0.5"
+  "updated": "2015-08-13 18:47:21 +0200",
+  "brakeman_version": "3.0.5"
 }
