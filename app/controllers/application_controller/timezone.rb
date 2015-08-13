@@ -12,7 +12,7 @@ class ApplicationController
 
     # return timezone abbreviation
     def get_timezone_abbr(user = nil)
-      time = user ? Time.zone.now : Time.now.in_timezone(server_timezone)
+      time = user ? Time.zone.now : Time.now.in_time_zone(server_timezone)
       time.strftime("%Z")
     end
 
