@@ -430,6 +430,7 @@
     :resource_actions:
       :post:
       - :name: edit
+      - :name: delete
       :delete:
       - :name: delete
   :reports:

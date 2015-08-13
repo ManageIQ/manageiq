@@ -103,4 +103,15 @@ RSpec.describe "chargebacks API" do
     }.to change(ChargebackRateDetail, :count).by(-1)
     expect(last_response.status).to eq(204)
   end
+
+  it "can delete a chargeback rate detail through POST" do
+    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
+
+    api_basic_authorize
+
+    expect {
+      run_post rates_url(chargeback_rate_detail.id), :action => "delete"
+    }.to change(ChargebackRateDetail, :count).by(-1)
+    expect_request_success
+  end
 end
