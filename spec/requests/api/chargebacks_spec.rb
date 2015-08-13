@@ -73,7 +73,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can create a new chargeback rate detail" do
-    api_basic_authorize
+    api_basic_authorize action_identifier(:rates, :create, :collection_actions)
     run_post rates_url, :rate => 0, :enabled => true
 
     actual = @result["results"].first
@@ -85,7 +85,7 @@ RSpec.describe "chargebacks API" do
   it "can edit a chargeback rate detail through POST" do
     chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
 
-    api_basic_authorize
+    api_basic_authorize action_identifier(:rates, :edit)
     run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :rate => 0.02)
 
     expect(@result["rate"]).to eq("0.02")
@@ -107,7 +107,7 @@ RSpec.describe "chargebacks API" do
   it "can delete a chargeback rate detail" do
     chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
 
-    api_basic_authorize
+    api_basic_authorize action_identifier(:rates, :delete)
 
     expect {
       run_delete rates_url(chargeback_rate_detail.id)
@@ -118,7 +118,7 @@ RSpec.describe "chargebacks API" do
   it "can delete a chargeback rate detail through POST" do
     chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
 
-    api_basic_authorize
+    api_basic_authorize action_identifier(:rates, :delete)
 
     expect {
       run_post rates_url(chargeback_rate_detail.id), :action => "delete"
