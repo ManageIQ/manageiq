@@ -3,7 +3,7 @@ require "appliance_console/service_group"
 
 module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration
-    DATABASE_DISK_FILESYSTEM_TYPE = "ext4".freeze
+    DATABASE_DISK_FILESYSTEM_TYPE = "xfs".freeze
     POSTGRES_USER                 = "postgres".freeze
     POSTGRES_DIR                  = "opt/rh/postgresql92/root/var/lib/pgsql/data".freeze
     DATABASE_DISK_MOUNT_POINT     = Pathname.new("/").join(POSTGRES_DIR).freeze
