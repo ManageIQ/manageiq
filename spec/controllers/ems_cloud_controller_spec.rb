@@ -60,5 +60,25 @@ describe EmsCloudController do
         }
       }.to change { ManageIQ::Providers::Amazon::CloudManager.count }.by(1)
     end
+
+    it 'creates an authentication record on post' do
+      expect {
+        post :create,
+          "button"           => "add",
+          "hostname"         => "host_openstack",
+          "name"             => "foo_openstack",
+          "server_emstype"   => "openstack",
+          "provider_region"  => "",
+          "port"             => "5000",
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
+
+        expect(response.status).to eq(200)
+        openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
+        authentication = Authentication.where(:resource_id => openstack.to_a[0].id).first
+        expect(authentication).not_to be_nil
+      }.to change { Authentication.count }.by(1)
+    end
   end
 end

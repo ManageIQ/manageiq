@@ -125,9 +125,9 @@ class EmsCloudController < ApplicationController
 
     creds = {
       :default => {
-        :default_userid   => no_blank(params[:default_userid]),
-        :default_password => no_blank(params[:default_password]),
-        :default_verify   => no_blank(params[:default_verify]),
+        :userid   => no_blank(params[:default_userid]),
+        :password => no_blank(params[:default_password]),
+        :verify   => no_blank(params[:default_verify]),
       }
     }
 
