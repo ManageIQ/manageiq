@@ -8,71 +8,58 @@
     %div{'ng-if' => "kinds"}
       %kubernetes-topology-icon{:kind => "Replicator"}
         %svg.kube-topology
-          %use{'xlink:href' => "#vertex-Replicator", :x => "19", :y => "19"}
+          %g.Replicator{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/container_replicator.png", :y => "-9"}
 
       %label
         Replicators
       %kubernetes-topology-icon{:kind => "Pod"}
         %svg.kube-topology
-          %use{'xlink:href' => "#vertex-Pod", :x => "19", :y => "19"}
+          %g.Pod{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/container_group.png", :y => "-9"}
 
       %label
         Pods
       %kubernetes-topology-icon{:kind => "Container"}
         %svg.kube-topology
-          %use{'xlink:href' => "#vertex-Container", :x => "19", :y => "19"}
+          %g.Container{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/container.png", :y => "-9"}
+
 
       %label
         Containers
       %kubernetes-topology-icon{:kind => "Service"}
         %svg.kube-topology
-          %use{'xlink:href' => "#vertex-Service", :x => "19", :y => "19"}
+          %g.Service{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/container_service.png", :y => "-9"}
       %label
         Services
       %kubernetes-topology-icon{:kind => "Node"}
         %svg.kube-topology
-          %use{'xlink:href' => "#vertex-Node", :x => "19", :y => "19"}
+          %g.Node{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/container_node.png", :y => "-9"}
 
       %label
         Nodes
       %kubernetes-topology-icon{:kind => "VM"}
         %svg.kube-topology
-          %use{'xlink:href' => "#vertex-VM", :x => "19", :y => "19"}
+          %g.VM{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/vm.png", :y => "-9"}
 
       %label
         VMs
       %kubernetes-topology-icon{:kind => "Host"}
         %svg.kube-topology
-          %use{'xlink:href' => "#vertex-Host", :x => "19", :y => "19"}
+          %g.Host{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => "/images/icons/new/host.png", :y => "-9"}
 
       %label
         Hosts
 
-  %svg.kube-topology{:hidden => 'hidden'}
-    %defs
-      %g.Node#vertex-Node
-        %circle{:r => "18"}
-        %image{'xlink:href' => "/images/icons/new/container_node.png", :width => "18", :height => "18",
-        :x => "-9", :y => "-9"}
-      %g.Replicator#vertex-Replicator
-        %circle{:r => "18"}
-        %image{'xlink:href' => "/images/icons/new/container_replicator.png", :width => "18", :height => "18",
-        :x => "-9", :y => "-9"}
-      %g.Pod#vertex-Pod
-        %circle{:r => "18"}
-        %image{'xlink:href' => "/images/icons/new/container_group.png", :width => "18", :height => "18",
-        :x => "-9", :y => "-9"}
-      %g.Service#vertex-Service
-        %circle{:r => "18"}
-        %image{'xlink:href' => "/images/icons/new/container_service.png", :width => "18", :height => "18",
-        :x => "-9", :y => "-9"}
-      %g.Container#vertex-Container
-        %circle{:r => "18"}
-        %image{'xlink:href' => "/images/icons/new/container.png", :width => "18", :height => "18",
-        :x => "-9", :y => "-9"}
-      %g.VM#vertex-VM
-        %circle{:r => "18"}
-        %image{'xlink:href' => "/images/icons/new/vm.png", :width => "18", :height => "18", :x => "-9", :y => "-9"}
-      %g.Host#vertex-Host
-        %circle{:r => "18"}
-        %image{'xlink:href' => "/images/icons/new/host.png", :width => "18", :height => "18", :x => "-9", :y => "-9"}
