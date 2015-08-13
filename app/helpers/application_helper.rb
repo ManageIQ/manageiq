@@ -512,7 +512,7 @@ module ApplicationHelper
   end
 
   def javascript_for_ae_node_selection(id, prev_id, select)
-    "cfmeSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
+    "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
 
   # Generate lines of JS <text> for render page, replacing "~" with the <sub_array> elements

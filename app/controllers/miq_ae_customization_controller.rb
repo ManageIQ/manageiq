@@ -197,7 +197,7 @@ class MiqAeCustomizationController < ApplicationController
     else
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}', '#{x_node}');"
+        page << "miqDynatreeActivateNodeSilently('#{x_active_tree}', '#{x_node}');"
         page << "miqSparkle(false);"
       end
     end

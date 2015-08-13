@@ -38,7 +38,7 @@
               %td{:style => "padding: 0px"}
                 %table{:cellpadding => "0", :cellspacing => "0"}
                   - @role.miq_groups.sort_by { |a| a.description.downcase }.each do |g|
-                    %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'g-#{to_cid(g.id)}');", :title => _("View this Group")}
+                    %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');", :title => _("View this Group")}
                       %td.image
                         %img{:src => "/images/icons/new/miq_group.png"}/
                       %td
@@ -56,7 +56,7 @@
                               :three_checks   => true,
                               :check_url      => "/ops/rbac_role_field_changed/",
                               :disable_checks => @edit.nil?,
-                              :oncheck        => @edit.nil? ? nil : "miqOnCheck_handler",
+                              :oncheck        => @edit.nil? ? nil : "miqOnCheckHandler",
                               :open_close_all_on_dbl_click => true})
       &nbsp;&nbsp;*
       = _("Double click a feature to open/close all children.")

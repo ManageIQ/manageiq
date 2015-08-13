@@ -8,7 +8,7 @@
     %tbody
       -# CI node level
       - @sb[:obj_list].sort.each do |obj|
-        %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('ab_tree', 'xx-#{obj[1].split('_').first}_#{@sb[:target_classes][obj[0]]}')"}
+        %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('ab_tree', 'xx-#{obj[1].split('_').first}_#{@sb[:target_classes][obj[0]]}')"}
           %td
             = obj[0]
 
@@ -31,7 +31,7 @@
       %tbody
         - @sb[:button_groups].each do |obj|
           - if obj.kind_of?(String)
-            %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('ab_tree', '-ub-#{@nodetype[1]}')"}
+            %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('ab_tree', '-ub-#{@nodetype[1]}')"}
               %td.narrow
                 %img{:src => "/images/icons/new/folder.png"}
               %td
@@ -49,7 +49,7 @@
               - typ = "cbg"
               - img = obj[:button_image]
               - rec_type = "Group"
-            %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('#{tree_box}', '#{tree_id}_#{typ}-#{to_cid(obj[:id])}')"}
+            %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('#{tree_box}', '#{tree_id}_#{typ}-#{to_cid(obj[:id])}')"}
               %td.narrow
                 %img{:src => "/images/icons/new/custom-#{img}.png"}
               %td
@@ -102,7 +102,7 @@
         - @sb[:buttons].each do |obj|
           - tree_box = x_active_tree == :sandt_tree ? 'sandt_tree' : 'ab_tree'
           - id = @nodetype[0].split('-')[1] == "ub" ? "#{@nodetype[0]}_cb-#{to_cid(obj[:id])}" : "#{x_node}_cb-#{to_cid(obj[:id])}"
-          %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('#{tree_box}', '#{id}')"}
+          %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('#{tree_box}', '#{id}')"}
             %td.narrow
               %img{:src => "/images/icons/new/custom-#{obj[:button_image]}.png"}
             %td

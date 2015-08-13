@@ -1,6 +1,6 @@
 #vm_tree_div
   = render :partial => "layouts/flash_msg"
-  %input#masterToggle{:type => "checkbox", :name => "masterToggle", :onclick => "cfmeCheckAll(this, 'genealogy_tree');"}
+  %input#masterToggle{:type => "checkbox", :name => "masterToggle", :onclick => "miqCheckAll(this, 'genealogy_tree');"}
   = _("(Check All)")
   %p
 
@@ -11,11 +11,11 @@
     :json_tree => @vm_tree,
     :icon_size => @settings[:views][:treesize].to_i,
     :click_url => "/vm/vmtree_selected/",
-    :onmousein => "cfmeOnMouseIn_HostNet",
-    :onmouseout => "cfmeOnMouseOut_HostNet",
-    :onclick => "cfmeOnClick_GenealogyTree",
+    :onmousein => "miqOnMouseInHostNet",
+    :onmouseout => "miqOnMouseOutHostNet",
+    :onclick => "miqOnClickGenealogyTree",
     :exp_tree => true,
     :checkboxes => true,
-    :oncheck => "cfmeGetChecked",
+    :oncheck => "miqGetChecked",
     :check_url => "/vm/set_checked_items/",
     :open_close_all_on_dbl_click => true})

@@ -25,7 +25,7 @@
                  :locals => {:tree_id             => "automate_treebox",
                              :tree_name           => "automate_tree",
                              :json_tree           => @automate_tree,
-                             :onclick             => "cfmeOnClick_SelectAETreeNode",
+                             :onclick             => "miqOnClickSelectAETreeNode",
                              :tree_root           => "#{x_node(:automate_tree)}",
                              :base_id             => "root",
                              :no_base_exp         => true,
@@ -35,7 +35,7 @@
                              :cfme_changes_check  => true})
       .modal-footer
         %div{:id => "include_domain_prefix_div"}
-          %input#include_domain_prefix_chk{:onclick  => "miqOnClick_IncludeDomainPrefix()",
+          %input#include_domain_prefix_chk{:onclick  => "miqOnClickIncludeDomainPrefix()",
                                            :type     => "checkbox",
                                            :disabled => "disabled"}
           = _("Include Domain prefix in the path")

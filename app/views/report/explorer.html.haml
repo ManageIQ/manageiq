@@ -25,11 +25,11 @@
   function miqReportAfterOnload() {
   - if @right_cell_div == "role_list"
     - if role_allows(:feature => "miq_report_menu_editor")
-      cfmeDynatree_activateNode('roles_tree','#{x_node}');
+      miqDynatreeActivateNode('roles_tree','#{x_node}');
       - if x_node.split('-').length > 1
         = javascript_hide("menu_div1")
         = javascript_show("menu_div3")
   - else
-    cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}')
+    miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}')
   };
   var miq_after_onload = "miqReportAfterOnload();"

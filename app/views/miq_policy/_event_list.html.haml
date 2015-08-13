@@ -9,7 +9,7 @@
         %tbody
           - @events.each do |e|
             %tr{:title => ("View this Event"),
-              :onclick => "cfmeDynatree_activateNode('event_tree', 'ev-#{to_cid(e.id)}');"}
+              :onclick => "miqDynatreeActivateNode('event_tree', 'ev-#{to_cid(e.id)}');"}
               %td.narrow
                 %img{:src => "/images/icons/new/event-#{e.name}.png"}
               %td
