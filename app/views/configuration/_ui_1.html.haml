@@ -3,73 +3,93 @@
 = render :partial => "layouts/flash_msg"
 
 #tab_div
-  = form_tag({:action => "update"}, :id => "config_form") do
+  = form_tag({:action => "update"}, :id => "config_form", :class => "form-horizontal") do
     .row
       .col-md-12.col-lg-6
         %fieldset
-          %h3= _('Grid/Tile Icons')
-          %table.style1
-            -# render condition                                 title                                      check_box label & checked T/F
-            -# Host Item is commented (condition set as false) until we have host item quads
-            - [[role_allows(:feature => "ems_infra_show_list"), ui_lookup(:table => "ems_infra"),          "ems"],
-               [role_allows(:feature => "ems_cloud_show_list"), ui_lookup(:table => "ems_cloud"),          "ems_cloud"],
-               [role_allows(:feature => "host_show_list"),      _("Host"),                                 "host"],
-               [role_allows(:feature => "storage_show_list"),   ui_lookup(:table => "storages"),           "storage"],
-               [true,                                           _("VM"),                                   "vm"],
-               [true,                                           _("Template"),                             "miq_template"]].each do |icons_checkbox|
-              - if icons_checkbox[0]
-                %tr
-                  %td.key= _("Show %s Quadrants") % icons_checkbox[1]
-                  %td
-                    = check_box_tag("quadicons_#{icons_checkbox[2]}",
-                                    "1",
-                                    @edit[:new][:quadicons][icons_checkbox[2].to_sym],
-                                    "data-miq_observe_checkbox" => url_json)
-            %tr
-              %td.key= _('Truncate Long Text')
-              %td
-                = select_tag("quad_truncate",
-                             options_for_select([[_("Front (...1234)"), "f"],
-                                                 [_("Middle (AB...34)"), "m"],
-                                                 [_("Back (ABCD...)"), "b"]],
-                             @edit[:new][:display][:quad_truncate]),
-                             "data-miq_observe" => url_json)
+          %h3
+            = _('Grid/Tile Icons')
+          -# render condition                                 title                                      check_box label & checked T/F
+          -# Host Item is commented (condition set as false) until we have host item quads
+          - [[role_allows(:feature => "ems_infra_show_list"), ui_lookup(:table => "ems_infra"),          "ems"],
+             [role_allows(:feature => "ems_cloud_show_list"), ui_lookup(:table => "ems_cloud"),          "ems_cloud"],
+             [role_allows(:feature => "host_show_list"),      _("Host"),                                 "host"],
+             [role_allows(:feature => "storage_show_list"),   ui_lookup(:table => "storages"),           "storage"],
+             [true,                                           _("VM"),                                   "vm"],
+             [true,                                           _("Template"),                             "miq_template"]].each do |icons_checkbox|
+            - if icons_checkbox[0]
+              .form-group
+                %label.col-md-3.control-label
+                  = _("Show %s Quadrants") % icons_checkbox[1]
+                .col-md-8
+                  = check_box_tag("quadicons_#{icons_checkbox[2]}",
+                                  "1",
+                                  @edit[:new][:quadicons][icons_checkbox[2].to_sym],
+                                  "data-miq_observe_checkbox" => url_json)
+          .form-group
+            %label.col-md-3.control-label
+              = _('Truncate Long Text')
+            .col-md-8
+              = select_tag("quad_truncate",
+                           options_for_select([[_("Front (...1234)"), "f"],
+                                               [_("Middle (AB...34)"), "m"],
+                                               [_("Back (ABCD...)"), "b"]],
+                           @edit[:new][:display][:quad_truncate]),
+                           :class    => "selectpicker")
+
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("quad_truncate", "#{url}")
         %fieldset
-          %h3= _('Start Page')
-          %table.style1
-            %tr
-              %td.key= _('Show at Login')
-              %td
-                = select_tag("start_page",
-                             options_for_select(session[:start_pages], @edit[:new][:display][:startpage]),
-                             "data-miq_observe" => url_json)
+          %h3
+            = _('Start Page')
+          .form-group
+            %label.col-md-3.control-label
+              = _('Show at Login')
+            .col-md-8
+              = select_tag("start_page",
+                           options_for_select(session[:start_pages], @edit[:new][:display][:startpage]),
+                           :class    => "selectpicker")
+
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("start_page")
       .col-md-12.col-lg-6
         %fieldset
-          %h3= _('Default Items Per Page')
-          %table.style1
-            - [[_("Grid View"), "perpage_grid",    :grid],
-               [_("Tile View"), "perpage_tile",    :tile],
-               [_("List View"), "perpage_list",    :list],
-               [_("Reports"),   "perpage_reports", :reports]].each do |item_per_page|
-              %tr
-                %td.key= _(item_per_page[0])
-                %td
-                  = select_tag(_(item_per_page[1]),
-                               options_for_select(PPCHOICES, @edit[:new][:perpage][item_per_page[2]]),
-                               "data-miq_observe" => url_json)
+          %h3
+            = _('Default Items Per Page')
+          - [[_("Grid View"), "perpage_grid",    :grid],
+             [_("Tile View"), "perpage_tile",    :tile],
+             [_("List View"), "perpage_list",    :list],
+             [_("Reports"),   "perpage_reports", :reports]].each do |item_per_page|
+            .form-group
+              %label.col-md-3.control-label
+                = _(item_per_page[0])
+              .col-md-8
+                = select_tag(_(item_per_page[1]),
+                             options_for_select(PPCHOICES, @edit[:new][:perpage][item_per_page[2]]),
+                           :class    => "selectpicker")
+
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent(_(item_per_page[1]))
         %fieldset
-          %h3= _('Display Settings')
-          %table.style1                                                     |
-            - [[_("Chart Theme"), "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
-               [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,                    :timezone],
-               [_("Locale"), "display_locale",      [[_("Global Default"), "default"]] + FastGettext.human_available_locales,
-                :locale]].each do |display_settings|
-              %tr
-                %td.key
-                  = display_settings[0]
-                %td.wide
-                  = select_tag(display_settings[1],
-                               options_for_select(display_settings[2], @edit[:new][:display][display_settings[3]]),
-                               "data-miq_observe" => url_json)
+          %h3
+            = _('Display Settings')
+          - [[_("Chart Theme"), "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
+             [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,                    :timezone],
+             [_("Locale"), "display_locale",      [[_("Global Default"), "default"]] + FastGettext.human_available_locales,
+              :locale]].each do |display_settings|
+            .form-group
+              %label.col-md-3.control-label
+                = display_settings[0]
+              .col-md-8
+                = select_tag(display_settings[1],
+                             options_for_select(display_settings[2], @edit[:new][:display][display_settings[3]]),
+                             :class    => "selectpicker")
+
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent(display_settings[1])
 
     = render :partial => '/layouts/form_buttons'
