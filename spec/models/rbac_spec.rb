@@ -838,4 +838,28 @@ describe Rbac do
       attrs[:total_count].should == 2
     end
   end
+
+  context "database configuration" do
+
+    it "expect all database setting values returned" do
+      results, attrs = Rbac.search(:class               => "VmdbDatabaseSetting",
+                                   :userid              => "admin",
+                                   :parent              => nil,
+                                   :parent_method       => nil,
+                                   :targets_hash        => true,
+                                   :association         => nil,
+                                   :filter              => nil,
+                                   :sub_filter          => nil,
+                                   :where_clause        => nil,
+                                   :named_scope         => nil,
+                                   :display_filter_hash => nil,
+                                   :conditions          => nil,
+                                   :results_format      => :objects,
+                                   :include_for_find    => {:description=>{}, :minimum_value=>{}, :maximum_value=>{}}
+                                  )
+
+      expect(results.length).to eq(VmdbDatabaseSetting.all.length)
+    end
+  end
+
 end
