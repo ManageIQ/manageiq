@@ -26,6 +26,7 @@ src_files:
   - javascripts/controllers/retirement/retirement_form_controller.js
   - javascripts/directives/repository/valid_unc_path.js
   - javascripts/directives/checkchange.js
+  - javascripts/directives/miq_calendar.js
   - javascripts/directives/miqrequired.js
   - javascripts/directives/selectpickerForSelectTag.js
   - javascripts/directives/scheduler/updateDropdownForFilter.js
