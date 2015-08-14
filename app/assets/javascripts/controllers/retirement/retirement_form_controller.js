@@ -1,12 +1,18 @@
 ManageIQ.angularApplication.controller('retirementFormController', ['$http', '$scope', '$timeout', 'objectIds', 'miqService', function($http, $scope, $timeout, objectIds, miqService) {
   $scope.objectIds = objectIds;
-  $scope.retirementInfo = {retirementDate: '', retirementWarning: ''};
-  $scope.modelCopy = {retirementDate: '', retirementWarning: ''};
+  $scope.retirementInfo = {
+    retirementDate: null,
+    retirementWarning: ''
+  };
+  $scope.datepickerStartDate = new Date();
+  $scope.modelCopy = _.extend({}, $scope.retirementInfo);
   $scope.model = 'retirementInfo';
 
   if (objectIds.length == 1) {
     $http.get('retirement_info/' + objectIds[0]).success(function(response) {
-      $scope.retirementInfo.retirementDate = response.retirement_date || "";
+      if (response.retirement_date != null) {
+        $scope.retirementInfo.retirementDate = moment.utc(response.retirement_date, 'MM-DD-YYYY').toDate();
+      }
       $scope.retirementInfo.retirementWarning = response.retirement_warning || "";
       $scope.modelCopy = _.extend({}, $scope.retirementInfo);
     });

@@ -1637,7 +1637,7 @@ module VmCommon
       if %w(ownership protect reconfigure retire tag).include?(@sb[:action])
         locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
         locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids][0] if @sb[:action] == "tag"
-        unless @sb[:action] == 'ownership'
+        unless %w(ownership retire).include?(@sb[:action])
           presenter[:build_calendar] = {
             :date_from => Time.zone.now.to_i * 1000,
             :date_to   => nil,

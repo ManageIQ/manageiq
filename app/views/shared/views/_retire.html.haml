@@ -12,15 +12,16 @@
           %td.key
             = _('Retirement Date')
           %td#retirement_date
-            = datepicker_input_tag("retirementDate", session[:retire_date],
-              :id           => "miq_date_1",
-              :class        => "css1",
-              :readonly     => true,
-              "ng-model"    => "retirementInfo.retirementDate",
-              "checkchange" => true)
-            %a{'href'       => '#',
-               'ng-click'   => 'retirementInfo.retirementDate = ""; retirementInfo.retirementWarning = ""',
-               'ng-hide'    => '!retirementInfo.retirementDate'}
+            = datepicker_input_tag("retirementDate", nil,
+              :id                  => "retirement_date",
+              :class               => "css1",
+              "ng-model"           => "retirementInfo.retirementDate",
+              "miq-calendar"       => true,
+              "miq-cal-date-from"  => "datepickerStartDate",
+              "checkchange"        => true)
+            %a{'href'              => '#',
+               'ng-click'          => 'retirementInfo.retirementDate = null; retirementInfo.retirementWarning = ""',
+               'ng-hide'           => '!retirementInfo.retirementDate'}
               = image_tag('/images/icons/16/clear.png', :border => "0", :alt => _("Set to blank"))
         %tr
           %td.key
@@ -68,5 +69,3 @@
 :javascript
   ManageIQ.angularApplication.value('objectIds', #{ @retireitems.collect(&:id) });
   angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication']);
-  ManageIQ.calendar = {calDateFrom: new Date(), calDateTo: null};
-  miqBuildCalendar();
