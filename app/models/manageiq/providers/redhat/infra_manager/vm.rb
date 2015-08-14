@@ -43,4 +43,8 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   def validate_migrate
     validate_unsupported("Migrate")
   end
+
+  def validate_smartstate_analysis
+    validate_supported
+  end
 end

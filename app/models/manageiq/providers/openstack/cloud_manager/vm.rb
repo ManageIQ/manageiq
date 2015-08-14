@@ -74,4 +74,8 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   def validate_migrate
     validate_supported
   end
+
+  def validate_smartstate_analysis
+    validate_supported
+  end
 end

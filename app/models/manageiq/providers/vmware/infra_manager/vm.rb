@@ -31,6 +31,10 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     validate_supported
   end
 
+  def validate_smartstate_analysis
+    validate_supported
+  end
+
   #
   # Show Reconfigure VM task
   def reconfigurable?
