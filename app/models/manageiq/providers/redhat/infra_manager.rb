@@ -33,35 +33,37 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     supported_auth_types.include?(authtype.to_s)
   end
 
-  def self.raw_connect_metrics(connect_options)
+  def self.raw_connect_metrics(host, database, username, password)
     require 'ovirt_metrics'
-    OvirtMetrics.connect(connect_options)
+    OvirtMetrics.connect(:host => host, :database => database, :username => username, :password => password)
   end
 
-  def self.raw_connect(connect_options)
+  def self.raw_connect(server, port, username, password, service = "Service")
     require 'ovirt'
     Ovirt.logger = $rhevm_log
 
     params = {
-      :server     => connect_options[:server],
-      :port       => connect_options[:port].presence && connect_options[:port].to_i,
-      :username   => connect_options[:username],
-      :password   => connect_options[:password],
-      :verify_ssl => false,
+      :server     => server,
+      :port       => port.presence && port.to_i,
+      :username   => username,
+      :password   => password,
+      :verify_ssl => false
     }
 
-    read_timeout, open_timeout = ems_timeouts(:ems_redhat, connect_options[:service])
+    read_timeout, open_timeout = ems_timeouts(:ems_redhat, service)
     params[:timeout]      = read_timeout if read_timeout
     params[:open_timeout] = open_timeout if open_timeout
 
-    Ovirt.const_get(connect_options[:service]).new(params)
+    Ovirt.const_get(service).new(params)
   end
 
   def connect(options = {})
     if options[:service] == "Metrics"
-      self.class.raw_connect_metrics(rhevm_metrics_connect_options(options))
+      params = rhevm_metrics_connect_options(options)
+      self.class.raw_connect_metrics(params[:host], params[:database], params[:username], params[:password])
     else
-      self.class.raw_connect(rhevm_connect_options(options))
+      params = rhevm_connect_options(options)
+      self.class.raw_connect(params[:server], params[:port], params[:username], params[:password], params[:service])
     end
   end
 
