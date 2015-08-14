@@ -190,7 +190,7 @@ class TreeBuilder
       :tree_id        => "#{@name}box",
       :tree_name      => @name.to_s,
       :json_tree      => @tree_nodes,
-      :onclick        => "cfmeOnClick_SelectTreeNode",
+      :onclick        => "miqOnClickSelectTreeNode",
       :id_prefix      => "#{@name}_",
       :base_id        => "root",
       :no_base_exp    => true,

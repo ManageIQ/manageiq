@@ -1,5 +1,5 @@
 // Initialize a single grid (is called directly after an AJAX trans)
-function cfmeInitSlickGrid(grid_name, dataJson, columnsJson, options) {
+function miqInitSlickGrid(grid_name, dataJson, columnsJson, options) {
   for (var i in columnsJson) {
     columnsJson[i].asyncPostRender = applyCSS;
     columnsJson[i].formatter = HtmlFormatter;

@@ -144,12 +144,12 @@ module MiqPolicyController::Rsop
     render :update do |page|
       if params[:action] == "rsop_toggle"
         if @sb[:rsop][:open] == true
-          page << "cfme_dynatree_toggle_expand('rsop_tree', true);"
+          page << "miqDynatreeToggleExpand('rsop_tree', true);"
         else
-          page << "cfme_dynatree_toggle_expand('rsop_tree', false)"
-          page << "cfmeDynatree_activateNodeSilently('rsop_tree', 'rsoproot');"
+          page << "miqDynatreeToggleExpand('rsop_tree', false)"
+          page << "miqDynatreeActivateNodeSilently('rsop_tree', 'rsoproot');"
           @sb[:rsop][:results].each do |r|
-            page << "cfmeDynatree_expandNode('rsop_tree', 'rsoproot-v_#{r[:id]}');"
+            page << "miqDynatreeExpandNode('rsop_tree', 'rsoproot-v_#{r[:id]}');"
           end
         end
       else

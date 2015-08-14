@@ -18,7 +18,7 @@
                 %th= _('Name')
             %tbody
               - @isd.iso_images.sort_by { |a| a.name.downcase }.each do |i|
-                %tr{:title => _("View this ISO Image"), :onclick => "cfmeDynatree_activateNode('iso_datastores_tree', 'isi-#{to_cid(i.id)}');"}
+                %tr{:title => _("View this ISO Image"), :onclick => "miqDynatreeActivateNode('iso_datastores_tree', 'isi-#{to_cid(i.id)}');"}
                   %td
                     = h(i.name)
 

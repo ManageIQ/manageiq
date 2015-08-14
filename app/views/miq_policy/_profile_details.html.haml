@@ -85,7 +85,7 @@
           %tbody
             - @profile_policies.each do |p|
               %tr{:title => _("View this %s Policy") % ui_lookup(:model => p.towhat),
-                :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');"}
+                :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');"}
                 %td.narrow
                   %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase + (p.active ? '' : '_inactive')}.png"}
                 %td

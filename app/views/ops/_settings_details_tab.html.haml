@@ -33,27 +33,27 @@
               = h(region.description)
               [#{h(region.region)}]
         %tr
-          %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
+          %td.narrow{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
             %img{:src => "/images/icons/new/scan_item_set.png"}>/
-          %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
+          %td{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
             = _("Analysis Profiles")
             (#{h(@scan_items.size)})
         %tr
-          %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
+          %td.narrow{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
             %img{:src => "/images/icons/new/zone.png"}>/
-          %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
+          %td{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
             = _("Zones")
             (#{h(@zones.size)})
         %tr
-          %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
+          %td.narrow{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
             %img{:src => "/images/icons/new/miq_schedule.png"}>/
-          %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
+          %td{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
             = _("Schedules")
             (#{h(@miq_schedules.size)})
         - if get_vmdb_config[:product][:new_ldap]
           %tr
-            %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
+            %td.narrow{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
               %img{:src => "/images/icons/new/ldap_region.png"}>/
-            %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
+            %td{:onclick => "miqDynatreeActivateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
               = _("LDAP Regions")
               (#{h(@ldap_regions.size)})

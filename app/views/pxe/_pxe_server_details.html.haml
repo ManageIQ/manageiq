@@ -38,7 +38,7 @@
                 %th= _('Windows Boot Env')
             %tbody
               - @ps.pxe_images.sort_by { |a| a.name.downcase }.each do |i|
-                %tr{:title => _("View this PXE Image"), :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');"}
+                %tr{:title => _("View this PXE Image"), :onclick => "miqDynatreeActivateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');"}
                   %td
                     = h(i.name)
                   %td
@@ -59,7 +59,7 @@
                 %th= _('Index')
             %tbody
               - @ps.windows_images.sort_by { |a| a.name.downcase }.each do |i|
-                %tr{:title => _("View this Windows Image"), :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');"}
+                %tr{:title => _("View this Windows Image"), :onclick => "miqDynatreeActivateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');"}
                   %td
                     = h(i.name)
                   %td

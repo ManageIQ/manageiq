@@ -36,7 +36,7 @@
                   %th.narrow
                   %th
                     = _("Name")
-              %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('reports_tree','xx-#{i}');"}
+              %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('reports_tree','xx-#{i}');"}
                 %td.narrow
                   - if folder[0] == @sb[:grp_title]
                     - glyphicon = "pficon pficon-folder-close-blue"
@@ -57,7 +57,7 @@
                   %th.narrow
                   %th
                     = _('Name')
-              %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('reports_tree','xx-#{nodes[1].to_i}_xx-#{nodes[1].to_i}-#{i}');"}
+              %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('reports_tree','xx-#{nodes[1].to_i}_xx-#{nodes[1].to_i}-#{i}');"}
                 %td.narrow
                   %ul.icons.list-unstyled
                     %li
@@ -88,7 +88,7 @@
                   %th
                     = Dictionary.gettext("MiqGroup", :type => :model, :notfound => :titleize)
               - if @sb[:rep_details][rep]
-                %tr{:title => _('Click to view details'), :onclick => "cfmeDynatree_activateNode('reports_tree','xx-#{nodes[1].to_i}_xx-#{nodes[2].to_i}-#{nodes[3].to_i}_rep-#{to_cid(@sb[:rep_details][rep]["id"])}');"}
+                %tr{:title => _('Click to view details'), :onclick => "miqDynatreeActivateNode('reports_tree','xx-#{nodes[1].to_i}_xx-#{nodes[2].to_i}-#{nodes[3].to_i}_rep-#{to_cid(@sb[:rep_details][rep]["id"])}');"}
                   %td.narrow
                     %ul.icons.list-unstyled
                       %li

@@ -39,7 +39,7 @@ describe VmInfraController do
 
     post :explorer
     node_id = "v-#{vm.compressed_id}"
-    expect(response.body).to match(/cfmeDynatree_activateNodeSilently\('vandt_tree', '#{node_id}'\);/)
+    expect(response.body).to match(/miqDynatreeActivateNodeSilently\('vandt_tree', '#{node_id}'\);/)
 
     response.should render_template('shared/summary/_textual_tags')
     expect(response.body).to match(/VM and Instance &quot;#{vm.name}&quot;/)

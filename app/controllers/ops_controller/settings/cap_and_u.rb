@@ -83,12 +83,12 @@ module OpsController::Settings::CapAndU
             end
           end
           @changed_id_list.each do |item|
-            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}',
+            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
                                                   '#{j_str(item)}',
                                                   'cfme-blue-bold-node');"
           end
           @unchanged_id_list.each do |item|
-            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}',
+            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
                                                   '#{j_str(item)}',
                                                   'dynatree-title');"
           end
@@ -128,12 +128,12 @@ module OpsController::Settings::CapAndU
             end
           end
           @changed_id_list.each do |item|
-            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}',
+            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
                                                   '#{j_str(item)}',
                                                   'cfme-blue-bold-node');"
           end
           @unchanged_id_list.each do |item|
-            page << "cfme_dynatree_node_add_class('#{j_str(params[:tree_name])}',
+            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
                                                   '#{j_str(item)}',
                                                   'dynatree-title');"
           end

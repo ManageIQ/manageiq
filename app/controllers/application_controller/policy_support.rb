@@ -17,9 +17,9 @@ module ApplicationController::PolicySupport
       changed = (@edit[:new] != @edit[:current])
       render :update do |page|                      # Use JS to update the display
         if @edit[:new][profile_id] == @edit[:current][profile_id]
-          page << "cfme_dynatree_node_add_class('#{j_str(session[:tree_name])}', 'policy_profile_#{profile_id}','dynatree-title')"
+          page << "miqDynatreeNodeAddClass('#{j_str(session[:tree_name])}', 'policy_profile_#{profile_id}','dynatree-title')"
         else
-          page << "cfme_dynatree_node_add_class('#{j_str(session[:tree_name])}', 'policy_profile_#{profile_id}', 'cfme-blue-bold-node')"
+          page << "miqDynatreeNodeAddClass('#{j_str(session[:tree_name])}', 'policy_profile_#{profile_id}', 'cfme-blue-bold-node')"
         end
         if changed != session[:changed]
           session[:changed] = changed

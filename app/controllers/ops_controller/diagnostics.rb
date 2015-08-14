@@ -794,7 +794,7 @@ module OpsController::Diagnostics
         end
         nodes = x_node.split("-")
         nodes.pop
-        page << "cfmeDynatree_activateNodeSilently('<%= x_active_tree %>', '<%= x_node %>');"
+        page << "miqDynatreeActivateNodeSilently('<%= x_active_tree %>', '<%= x_node %>');"
       end
       if params[:action] == "x_button"
         kls = x_node.split("-").first == "z" ? Zone : MiqServer

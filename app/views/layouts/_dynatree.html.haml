@@ -28,7 +28,7 @@
     click_url = "#{click_url}";
   cfme_changes_check = #{cfme_changes_check}
   - if session[:group_changed]
-    cfme_delete_dynatree_cookies();
+    miqDeleteDynatreeCookies();
     - session[:group_changed] = false
 
   $("##{tree_id}").dynatree({
@@ -41,7 +41,7 @@
   cookie: {path: "/"},
 
   - if no_base_exp
-    onDblClick: cfmeOnDblClick_NoBaseExpand,
+    onDblClick: miqOnDblClickNoBaseExpand,
   - if min_expand_level
     minExpandLevel: #{min_expand_level},
   - if checkboxes
@@ -49,7 +49,7 @@
   - if three_checks
     selectMode: 3,
   - if open_close_all_on_dbl_click
-    onDblClick: cfmeOnDblClick_Expand,
+    onDblClick: miqOnDblClickExpand,
   - if tree_state
     persist: true,
 
@@ -108,31 +108,31 @@
 
     - if onmousein || onmouseout
       onExpand: function(node){
-      cfme_bind_hover_event("#{tree_name}");
+      miqBindHoverEvent("#{tree_name}");
       },
 
 
   - if autoload
     onLazyRead: function(node) {
-    cfmeOnLazyRead_GetNodeChildren(node, '#{tree_name}', '#{request.parameters[:controller]}');
+    miqOnLazyReadGetNodeChildren(node, '#{tree_name}', '#{request.parameters[:controller]}');
     },
 
   - if @explorer && tree_name == x_active_tree.to_s
     onPostInit: function(isReloading, isError) {
-    cfmeDynatree_activateNodeSilently('#{tree_name}', '#{select_node}');
+    miqDynatreeActivateNodeSilently('#{tree_name}', '#{select_node}');
     },
 
   debugLevel: 0
   });
 
   - if @reselect_node
-    cfmeDynatree_activateNodeSilently('#{tree_name}', '#{@reselect_node}');
+    miqDynatreeActivateNodeSilently('#{tree_name}', '#{@reselect_node}');
 
   - if @expand_parent_nodes
-    cfme_expand_parent_nodes("#{tree_name}", "#{@expand_parent_nodes}");
+    miqExpandParentNodes("#{tree_name}", "#{@expand_parent_nodes}");
 
   - if @add_nodes && @add_nodes[x_active_tree] && tree_name == x_active_tree.to_s
-    cfmeAddNodeChildren(
+    miqAddNodeChildren(
     '#{x_active_tree}',
     '#{@add_nodes[x_active_tree][:key]}',
     '#{select_node}',
@@ -140,4 +140,4 @@
     );
 
   - if onmousein || onmouseout
-    cfme_bind_hover_event("#{tree_name}");
+    miqBindHoverEvent("#{tree_name}");

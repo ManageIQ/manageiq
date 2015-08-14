@@ -13,7 +13,7 @@
       %table.table.table-striped.table-bordered.table-hover
         %tbody
         - @parent_reports.each do |r|
-          %tr{:title => _("View this Report"), :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', 'xx-#{r[1]}');"}
+          %tr{:title => _("View this Report"), :onclick => "miqDynatreeActivateNode('#{x_active_tree}', 'xx-#{r[1]}');"}
             %td.narrow
               %ul.icons.list-unstyled
                 %li

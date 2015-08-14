@@ -8,13 +8,13 @@ module ApplicationController::TreeSupport
       if session[:squash_open] == false
         page << "$('#squash_img').prop('src', '/images/toolbars/squashed-all-false.png')"
         page << "$('#squash_img').prop('title', 'Collapse All')"
-        page << "cfme_dynatree_toggle_expand('#{j_str(session[:tree_name])}', true)"
+        page << "miqDynatreeToggleExpand('#{j_str(session[:tree_name])}', true)"
         session[:squash_open] = true
       else
         page << "$('#squash_img').prop('src', '/images/toolbars/squashed-all-true.png')"
         page << "$('#squash_img').prop('title', 'Expand All')"
-        page << "cfme_dynatree_toggle_expand('#{j_str(session[:tree_name])}', false);"
-        page << "cfmeDynatree_activateNodeSilently('#{j_str(session[:tree_name])}', '#{item}');"
+        page << "miqDynatreeToggleExpand('#{j_str(session[:tree_name])}', false);"
+        page << "miqDynatreeActivateNodeSilently('#{j_str(session[:tree_name])}', '#{item}');"
         session[:squash_open] = false
       end
     end

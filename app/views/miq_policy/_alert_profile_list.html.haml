@@ -10,7 +10,7 @@
         %tbody
           - @alert_profiles.each do |ap|
             %tr{:title => _("View this Alert Profile"),
-              :onclick => "cfmeDynatree_activateNode('alert_profile_tree', 'xx-#{ap.mode}_ap-#{to_cid(ap.id)}');"}
+              :onclick => "miqDynatreeActivateNode('alert_profile_tree', 'xx-#{ap.mode}_ap-#{to_cid(ap.id)}');"}
               %td.narrow
                 %img{:src => "/images/icons/new/miq_alert_profile.png"}
               %td

@@ -5,7 +5,7 @@
       %tbody
         - @folders.each do |f|
           %tr{:title => _("View Condition"),
-            :onclick => "cfmeDynatree_activateNode('condition_tree', 'xx-#{f.downcase}');"}
+            :onclick => "miqDynatreeActivateNode('condition_tree', 'xx-#{f.downcase}');"}
             %td.narrow
               %img{:src => "/images/icons/new/#{f.downcase}.png"}
             %td
