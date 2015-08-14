@@ -171,7 +171,7 @@ module ReportFormatter
         unless mri.user_categories.blank?
           user_filters = mri.user_categories.flatten
           unless user_filters.blank?
-            customer_name = VMDB::Config.new("vmdb").config[:server][:company]
+            customer_name = Tenant.root_tenant.name
             user_filter = "User assigned " + customer_name + " Tag filters:"
             t = user_filter + " " * (@line_len - 2 - user_filter.length)
             output << fit_to_width("|#{t}|" + CRLF)
@@ -186,7 +186,7 @@ module ReportFormatter
         unless mri.categories.blank?
           categories = mri.categories.flatten
           unless categories.blank?
-            customer_name = VMDB::Config.new("vmdb").config[:server][:company]
+            customer_name = Tenant.root_tenant.name
             customer_name_title = "Report based " + customer_name + " Tag filters:"
             t = customer_name_title + " " * (@line_len - customer_name_title.length - 2)
             output << fit_to_width("|#{t}|" + CRLF)

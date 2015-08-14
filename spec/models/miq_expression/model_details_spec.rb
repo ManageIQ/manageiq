@@ -1,6 +1,9 @@
 describe MiqExpression do
   describe ".model_details" do
     before do
+      # tags contain the root tenant's name
+      Tenant.seed
+
       cat = FactoryGirl.create(:classification,
                                :description  => "Auto Approve - Max CPU",
                                :name         => "prov_max_cpu",
