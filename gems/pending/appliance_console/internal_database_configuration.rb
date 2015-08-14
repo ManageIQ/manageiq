@@ -5,18 +5,37 @@ module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration
     DATABASE_DISK_FILESYSTEM_TYPE = "xfs".freeze
     POSTGRES_USER                 = "postgres".freeze
-    POSTGRES_DIR                  = "opt/rh/rh-postgresql94/root/var/lib/pgsql/data".freeze
-    DATABASE_DISK_MOUNT_POINT     = Pathname.new("/").join(POSTGRES_DIR).freeze
     VOLUME_GROUP_NAME             = "vg_data".freeze
     LOGICAL_VOLUME_NAME           = "lv_pg".freeze
     LOGICAL_VOLUME_PATH           = Pathname.new("/dev").join(VOLUME_GROUP_NAME, LOGICAL_VOLUME_NAME).freeze
-    SCL_ENABLE_PREFIX             = "scl enable rh-postgresql94".freeze
     CERT_LOCATION                 = Pathname.new("/var/www/miq/vmdb/certs").freeze
-    POSTGRESQL_SAMPLE             = Pathname.new("/var/www/miq/system/COPY/").join(POSTGRES_DIR).freeze
-    POSTGRESQL_TEMPLATE           = Pathname.new("/var/www/miq/system/TEMPLATE/").join(POSTGRES_DIR).freeze
-    POSTGRESQL_SERVICE            = "rh-postgresql94-postgresql".freeze
+
     attr_accessor :disk
     attr_accessor :ssl
+
+    def self.postgresql_service
+      ENV.fetch("APPLIANCE_PG_SERVICE", "postgresql")
+    end
+
+    def self.scl_enable_prefix
+      "scl enable #{ENV.fetch('APPLIANCE_PG_SCL_NAME')}"
+    end
+
+    def self.database_disk_mount_point
+      Pathname.new(ENV.fetch("APPLIANCE_PG_DATA"))
+    end
+
+    def self.postgres_dir
+      database_disk_mount_point.relative_path_from(Pathname.new("/"))
+    end
+
+    def self.postgresql_sample
+      Pathname.new("/var/www/miq/system/COPY/").join(postgres_dir)
+    end
+
+    def self.postgresql_template
+      Pathname.new("/var/www/miq/system/TEMPLATE/").join(postgres_dir)
+    end
 
     def initialize(hash = {})
       set_defaults
@@ -75,8 +94,8 @@ module ApplianceConsole
     def configure_postgres
       self.ssl = File.exist?(CERT_LOCATION.join("postgres.key"))
 
-      copy_template "postgresql.conf.erb", POSTGRESQL_TEMPLATE
-      copy_template "pg_hba.conf.erb",     POSTGRESQL_TEMPLATE
+      copy_template "postgresql.conf.erb", self.class.postgresql_template
+      copy_template "pg_hba.conf.erb",     self.class.postgresql_template
       copy_template "pg_ident.conf"
     end
 
@@ -86,7 +105,7 @@ module ApplianceConsole
 
     private
 
-    def copy_template(src, src_dir = POSTGRESQL_SAMPLE, dest_dir = DATABASE_DISK_MOUNT_POINT)
+    def copy_template(src, src_dir = self.class.postgresql_sample, dest_dir = self.class.database_disk_mount_point)
       full_src = src_dir.join(src)
       if src.include?(".erb")
         full_dest = dest_dir.join(src.gsub(".erb", ""))
@@ -126,18 +145,18 @@ module ApplianceConsole
 
     def mount_database_disk
       #TODO: should this be moved into LinuxAdmin?
-      FileUtils.rm_rf(DATABASE_DISK_MOUNT_POINT)
-      FileUtils.mkdir_p(DATABASE_DISK_MOUNT_POINT)
-      LinuxAdmin.run!("mount", :params => {"-t" => DATABASE_DISK_FILESYSTEM_TYPE, nil => [@logical_volume.path, DATABASE_DISK_MOUNT_POINT]})
+      FileUtils.rm_rf(self.class.database_disk_mount_point)
+      FileUtils.mkdir_p(self.class.database_disk_mount_point)
+      LinuxAdmin.run!("mount", :params => {"-t" => DATABASE_DISK_FILESYSTEM_TYPE, nil => [@logical_volume.path, self.class.database_disk_mount_point]})
     end
 
     def update_fstab
       fstab = LinuxAdmin::FSTab.instance
-      return if fstab.entries.find {|e| e.mount_point == DATABASE_DISK_MOUNT_POINT}
+      return if fstab.entries.find {|e| e.mount_point == self.class.database_disk_mount_point}
 
       entry = LinuxAdmin::FSTabEntry.new(
         :device        => @logical_volume.path,
-        :mount_point   => DATABASE_DISK_MOUNT_POINT,
+        :mount_point   => self.class.database_disk_mount_point,
         :fs_type       => DATABASE_DISK_FILESYSTEM_TYPE,
         :mount_options => "rw,noatime",
         :dumpable      => 0,
@@ -150,17 +169,17 @@ module ApplianceConsole
 
     def prep_database_mount_point
       # initdb will fail if the database directory is not empty or not owned by the POSTGRES_USER
-      FileUtils.chown_R(POSTGRES_USER, POSTGRES_USER, DATABASE_DISK_MOUNT_POINT)
-      FileUtils.rm_rf(DATABASE_DISK_MOUNT_POINT.join("pg_log"))
-      FileUtils.rm_rf(DATABASE_DISK_MOUNT_POINT.join("lost+found"))
+      FileUtils.chown_R(POSTGRES_USER, POSTGRES_USER, self.class.database_disk_mount_point)
+      FileUtils.rm_rf(self.class.database_disk_mount_point.join("pg_log"))
+      FileUtils.rm_rf(self.class.database_disk_mount_point.join("lost+found"))
     end
 
     def run_initdb
-      LinuxAdmin.run!("service", :params => { nil => [POSTGRESQL_SERVICE, "initdb"]})
+      LinuxAdmin.run!("service", :params => { nil => [self.class.postgresql_service, "initdb"]})
     end
 
     def start_postgres
-      LinuxAdmin::Service.new(POSTGRESQL_SERVICE).start
+      LinuxAdmin::Service.new(self.class.postgresql_service).start
       block_until_postgres_accepts_connections
     end
 
@@ -180,11 +199,11 @@ module ApplianceConsole
 
     # some overlap with MiqPostgresAdmin
     def run_as_postgres(cmd)
-      AwesomeSpawn.run("su", :params => {"-" => nil, nil => "postgres", "-c" => "#{SCL_ENABLE_PREFIX} \"#{cmd}\""})
+      AwesomeSpawn.run("su", :params => {"-" => nil, nil => "postgres", "-c" => "#{self.class.scl_enable_prefix} \"#{cmd}\""})
     end
 
     def relabel_postgresql_dir
-      LinuxAdmin.run!("/sbin/restorecon -R -v #{DATABASE_DISK_MOUNT_POINT}")
+      LinuxAdmin.run!("/sbin/restorecon -R -v #{self.class.database_disk_mount_point}")
     end
   end
 end
