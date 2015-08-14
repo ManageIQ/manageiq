@@ -33,7 +33,7 @@ describe Vmdb::GlobalMethods do
 
     context "for a user" do
       it "who doesn't exist" do
-        subject.get_timezone_offset("missing").should == 0.hours
+        subject.get_timezone_offset(nil).should == 0.hours
       end
 
       it "with a timezone" do
