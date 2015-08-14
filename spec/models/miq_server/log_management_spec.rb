@@ -7,6 +7,31 @@ describe MiqServer do
       @miq_server2          = FactoryGirl.create(:miq_server, :zone => @zone)
     end
 
+    context "#pg_data_log_patterns" do
+      it "nil pg_data_dir" do
+        @miq_server.stub(:pg_data_dir => nil)
+        expect(@miq_server.pg_log_patterns).to eql []
+      end
+
+      it "pg_data_dir set" do
+        @miq_server.stub(:pg_data_dir => '/var/lib/pgsql/data')
+        expected = %w(/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/pg_log/*)
+        expect(@miq_server.pg_log_patterns.collect(&:to_s)).to match_array expected
+      end
+    end
+
+    it "#current_log_patterns" do
+      @miq_server.stub(:current_log_pattern_configuration => %w(/var/log/syslog*))
+      @miq_server.stub(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
+      expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
+    end
+
+    it "#current_log_patterns with pg_logs duplicated in current_log_pattern_configuration" do
+      @miq_server.stub(:current_log_pattern_configuration => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf))
+      @miq_server.stub(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
+      expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
+    end
+
     context "#synchronize_logs" do
       it "passes along server override" do
         @miq_server.synchronize_logs("system", @miq_server2)
