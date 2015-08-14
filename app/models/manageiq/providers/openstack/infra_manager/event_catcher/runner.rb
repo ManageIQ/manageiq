@@ -1,7 +1,4 @@
-require 'workers/event_catcher'
-require 'workers/mixins/event_catcher_openstack_mixin'
-
-class ManageIQ::Providers::Openstack::InfraManager::EventCatcher < ::EventCatcher
+class ManageIQ::Providers::Openstack::InfraManager::EventCatcher < ManageIQ::Providers::BaseManager::EventCatcher::Runner
   include ManageIQ::Providers::Openstack::EventCatcherMixin
 
   def add_openstack_queue(event_hash)

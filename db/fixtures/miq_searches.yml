@@ -58,7 +58,7 @@
       exp: 
         "=":
           field: Vm-type
-          value: VmMicrosoft
+          value: ManageIQ::Providers::Microsoft::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: Vm
@@ -456,7 +456,7 @@
       exp:
         "=":
           field: MiqTemplate-type
-          value: TemplateMicrosoft
+          value: ManageIQ::Providers::Microsoft::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: MiqTemplate
@@ -615,7 +615,7 @@
       exp:
         "=":
           field: TemplateInfra-type
-          value: TemplateMicrosoft
+          value: ManageIQ::Providers::Microsoft::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: TemplateInfra
@@ -1067,7 +1067,7 @@
       exp:
         "=":
           field: VmInfra-type
-          value: VmMicrosoft
+          value: ManageIQ::Providers::Microsoft::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: VmInfra

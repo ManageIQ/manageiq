@@ -1,4 +1,4 @@
-module MiqProvisionMicrosoft::Cloning
+module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
   MT_POINT_REGEX = %r{file://.*/([A-Z][:].*)}i
 
   def log_clone_options(clone_options)
@@ -15,7 +15,7 @@ module MiqProvisionMicrosoft::Cloning
   end
 
   def find_destination_in_vmdb(ems_ref)
-    VmMicrosoft.where(:name => dest_name, :ems_ref => ems_ref).first
+    ManageIQ::Providers::Microsoft::InfraManager::Vm.where(:name => dest_name, :ems_ref => ems_ref).first
   end
 
   def prepare_for_clone_task
@@ -135,7 +135,7 @@ module MiqProvisionMicrosoft::Cloning
 
   def start_clone(_clone_options)
     json_results = source.ext_management_system.run_powershell_script(build_ps_script)
-    vm_json      = EmsMicrosoft.parse_json_results(json_results)
+    vm_json      = ManageIQ::Providers::Microsoft::InfraManager.parse_json_results(json_results)
     phase_context[:new_vm_ems_ref] = vm_json["ID"]
   end
 end

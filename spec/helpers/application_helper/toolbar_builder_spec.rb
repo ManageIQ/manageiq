@@ -1308,7 +1308,7 @@ describe ApplicationHelper do
         before { @id = "vm_clone" }
 
         it "record is not cloneable" do
-          @record = Vm.create(:type => "VmMicrosoft", :name => "vm", :location => "l2", :vendor => "microsoft")
+          @record = Vm.create(:type => "ManageIQ::Providers::Microsoft::InfraManager::Vm", :name => "vm", :location => "l2", :vendor => "microsoft")
           subject.should == true
         end
 

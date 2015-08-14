@@ -1,6 +1,5 @@
-
-module EmsRefresh::Parsers
-  class Scvmm < Infra
+module ManageIQ::Providers::Microsoft
+  class InfraManager::RefreshParser < EmsRefresh::Parsers::Infra
     INVENTORY_SCRIPT = File.join(File.dirname(__FILE__), 'ps_scripts/get_inventory.ps1')
     DRIVE_LETTER     = /\A[a-z][:]/i
 
@@ -19,7 +18,7 @@ module EmsRefresh::Parsers
     def ems_inv_to_hashes
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
       $scvmm_log.info("#{log_header}...")
-      @inventory = EmsMicrosoft.execute_powershell(@connection, INVENTORY_SCRIPT).first
+      @inventory = ManageIQ::Providers::Microsoft::InfraManager.execute_powershell(@connection, INVENTORY_SCRIPT).first
       if @inventory.empty?
         $scvmm_log.warn("#{log_header}...Empty inventory set returned from SCVMM.")
         return
@@ -111,7 +110,7 @@ module EmsRefresh::Parsers
 
       new_result = {
         :name             => host_name,
-        :type             => 'HostMicrosoft',
+        :type             => 'ManageIQ::Providers::Microsoft::InfraManager::Host',
         :uid_ems          => uid,
         :ems_ref          => uid,
         :hostname         => host_name,
@@ -183,7 +182,7 @@ module EmsRefresh::Parsers
         :name             => p[:Name],
         :ems_ref          => uid,
         :uid_ems          => uid,
-        :type             => 'VmMicrosoft',
+        :type             => 'ManageIQ::Providers::Microsoft::InfraManager::Vm',
         :vendor           => "microsoft",
         :raw_power_state  => p[:VirtualMachineState][:ToString],
         :operating_system => process_vm_os(p[:OperatingSystem]),
@@ -205,7 +204,7 @@ module EmsRefresh::Parsers
       uid             = p[:ID]
 
       new_result = {
-        :type             => "TemplateMicrosoft",
+        :type             => "ManageIQ::Providers::Microsoft::InfraManager::Template",
         :uid_ems          => uid,
         :ems_ref          => uid,
         :vendor           => "microsoft",

@@ -1,4 +1,4 @@
-class MiqProvisionMicrosoftWorkflow < MiqProvisionInfraWorkflow
+class ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow < ::MiqProvisionInfraWorkflow
   def dialog_name_from_automate(message = 'get_dialog_name')
     super(message, {'platform' => 'microsoft'})
   end

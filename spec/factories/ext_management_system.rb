@@ -34,7 +34,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_microsoft, :class => "EmsMicrosoft", :parent => :ems_infra do
+  factory :ems_microsoft, :aliases => ["manageiq/providers/microsoft/infra_manager"], :class => "ManageIQ::Providers::Microsoft::InfraManager", :parent => :ems_infra do
   end
 
   factory :ems_microsoft_with_authentication, :parent => :ems_microsoft do

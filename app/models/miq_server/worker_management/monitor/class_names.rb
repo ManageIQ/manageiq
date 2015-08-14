@@ -14,7 +14,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker
     ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker
-    MiqEmsRefreshWorkerMicrosoft
+    ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker
     ManageIQ::Providers::Redhat::InfraManager::RefreshWorker
     ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
     ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
@@ -65,7 +65,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker
     ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker
-    MiqEmsRefreshWorkerMicrosoft
+    ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker
     ManageIQ::Providers::Redhat::InfraManager::RefreshWorker
     ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
     ManageIQ::Providers::Openstack::InfraManager::RefreshWorker

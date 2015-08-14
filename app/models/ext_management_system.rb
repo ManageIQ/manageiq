@@ -123,7 +123,7 @@ class ExtManagementSystem < ActiveRecord::Base
       hostname = Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
 
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
-        [EmsMicrosoft, 'SCVMM']
+        [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
       elsif ost.hypervisor.include?(:rhevm)
         [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
       else

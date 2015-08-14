@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionMicrosoft do
+describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
   context "::Placement" do
     before do
       ems      = FactoryGirl.create(:ems_microsoft_with_authentication)

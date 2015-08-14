@@ -575,7 +575,7 @@ describe ScheduleWorker do
     end
 
     it "#schedule_settings_for_ems_refresh (private)" do
-      _ = EmsMicrosoft # FIXME: Loader
+      _ = ManageIQ::Providers::Microsoft::InfraManager # FIXME: Loader
 
       VMDB::Config.any_instance.stub(:config).and_return(
         :ems_refresh => {
@@ -587,7 +587,7 @@ describe ScheduleWorker do
       settings = @schedule_worker.send(:schedule_settings_for_ems_refresh)
 
       expect(settings[ManageIQ::Providers::Vmware::InfraManager]).to    eq(86_400) # Uses default
-      expect(settings[EmsMicrosoft]).to eq(900)    # Uses override
+      expect(settings[ManageIQ::Providers::Microsoft::InfraManager]).to eq(900)    # Uses override
     end
   end
 end

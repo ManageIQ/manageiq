@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionMicrosoft do
+describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
   let(:vm_prov) do
     FactoryGirl.create(
       :miq_provision_microsoft,
@@ -43,8 +43,8 @@ describe MiqProvisionMicrosoft do
 
     context "SCVMM provisioning" do
       it "#workflow" do
-        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-        vm_prov.workflow.class.should eq MiqProvisionMicrosoftWorkflow
+        ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+        vm_prov.workflow.class.should eq ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow
       end
     end
 

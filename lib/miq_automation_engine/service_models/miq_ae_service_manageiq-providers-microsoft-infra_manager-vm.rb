@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Microsoft_InfraManager_Vm < MiqAeServiceManageIQ_Providers_InfraManager_Vm
+  end
+end
