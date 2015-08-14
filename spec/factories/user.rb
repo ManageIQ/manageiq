@@ -1,11 +1,5 @@
 FactoryGirl.define do
   factory :user do
-    # HACK: Due to password_digest callback needing infrastructure to write out
-    #       the new password to disk.
-    before(:create) do
-      MiqRegion.seed
-    end
-
     userid          "test"
     name            "Test User"
 
