@@ -10,6 +10,7 @@
 //= require services/miq_db_backup_service
 //= require directives/scheduler/updateDropdownForFilter
 //= require directives/scheduler/updateDropdownForTimer
+//= require directives/miq_calendar
 //= require directives/miqrequired
 //= require directives/checkchange
 //= require directives/verifypasswd
