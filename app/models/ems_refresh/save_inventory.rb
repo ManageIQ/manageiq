@@ -283,6 +283,12 @@ module EmsRefresh::SaveInventory
 
   def save_custom_attributes_inventory(parent, hashes)
     return if hashes.nil?
+    deletes = parent.custom_attributes(true).dup
+    save_inventory_multi(:custom_attributes, parent, hashes, deletes, [:section, :name])
+  end
+
+  def save_ems_custom_attributes_inventory(parent, hashes)
+    return if hashes.nil?
     deletes = parent.ems_custom_attributes(true).dup
     save_inventory_multi(:ems_custom_attributes, parent, hashes, deletes, [:section, :name])
   end
