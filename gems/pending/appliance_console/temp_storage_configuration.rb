@@ -34,7 +34,7 @@ module ApplianceConsole
     end
 
     def format_partition(partition)
-      LinuxAdmin.run!("mke2fs -t #{TEMP_DISK_FILESYSTEM_TYPE} #{partition.path}")
+      LinuxAdmin.run!("mkfs.#{TEMP_DISK_FILESYSTEM_TYPE} #{partition.path}")
     end
 
     def mount_temp_disk(partition)
