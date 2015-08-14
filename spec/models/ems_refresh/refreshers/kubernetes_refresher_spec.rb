@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::KubernetesRefresher do
+describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   before(:each) do
     MiqServer.stub(:my_zone).and_return("default")
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token")
@@ -56,7 +56,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
   def assert_ems
     @ems.should have_attributes(
       :port => "6443",
-      :type => "EmsKubernetes"
+      :type => "ManageIQ::Providers::Kubernetes::ContainerManager"
     )
   end
 

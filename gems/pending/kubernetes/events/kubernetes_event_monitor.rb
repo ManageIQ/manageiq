@@ -5,7 +5,7 @@ class KubernetesEventMonitor
 
   def inventory
     # :service is required to handle also the case where @ems is Openshift
-    @inventory ||= @ems.connect(:service => EmsKubernetes.ems_type)
+    @inventory ||= @ems.connect(:service => ManageIQ::Providers::Kubernetes::ContainerManager.ems_type)
   end
 
   def watcher(version = nil)

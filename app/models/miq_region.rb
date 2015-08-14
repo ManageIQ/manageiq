@@ -155,7 +155,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def ems_containers
-    ext_management_systems.select { |e| e.kind_of? EmsContainer }
+    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::ContainerManager }
   end
 
   def assigned_roles

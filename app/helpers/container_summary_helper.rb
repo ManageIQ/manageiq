@@ -1,6 +1,7 @@
 module ContainerSummaryHelper
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsContainer)
+    textual_link(@record.ext_management_system, :as         => ManageIQ::Providers::ContainerManager,
+                                                :controller => 'ems_container')
   end
 
   def textual_container_project
@@ -100,12 +101,13 @@ module ContainerSummaryHelper
     end
   end
 
-  def textual_object_link(object, as: nil, feature: nil)
+  def textual_object_link(object, as: nil, controller: nil, feature: nil)
     return if object.nil?
 
     klass = as || object.class.base_model
 
-    feature ||= "#{klass.name.underscore}_show"
+    controller ||= klass.name.underscore
+    feature ||= "#{controller}_show"
 
     label = ui_lookup(:model => klass.name)
     image = textual_object_icon(object)
@@ -118,7 +120,7 @@ module ContainerSummaryHelper
     h = {:label => label, :image => image, :value => value}
 
     if role_allows(:feature => feature)
-      h[:link] = url_for(:controller => klass.name.underscore,
+      h[:link] = url_for(:controller => controller,
                          :action     => 'show',
                          :id         => object)
       h[:title] = "Show #{label} '#{value}'"
@@ -127,10 +129,11 @@ module ContainerSummaryHelper
     h
   end
 
-  def textual_collection_link(collection, as: nil, feature: nil)
+  def textual_collection_link(collection, as: nil, controller: nil, feature: nil)
     klass = as || collection.klass.base_model
 
-    feature ||= "#{klass.name.underscore}_show_list"
+    controller ||= klass.name.underscore
+    feature ||= "#{controller}_show_list"
 
     label = ui_lookup(:models => klass.name)
     image = textual_collection_icon(collection)
@@ -144,7 +147,7 @@ module ContainerSummaryHelper
                            :id      => collection.proxy_association.owner,
                            :display => collection.proxy_association.reflection.name)
       else
-        h[:link] = url_for(:controller => klass.name.underscore,
+        h[:link] = url_for(:controller => controller,
                            :action     => 'list')
       end
       h[:title] = "Show all #{label}"

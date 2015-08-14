@@ -839,7 +839,6 @@ en:
       #EmsCloud:                 Cloud Provider
       EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
-      EmsContainer:             Containers Provider
       EmsEvent:                 Management Event
       EmsFolder:                Folder
       #EmsInfra:                 Infrastructure Provider
@@ -863,6 +862,7 @@ en:
       ManageIQ::Providers::CloudManager:              Cloud Provider
       ManageIQ::Providers::CloudManager::Vm:          Instance
       ManageIQ::Providers::CloudManager::Template:    Image
+      ManageIQ::Providers::ContainerManager:          Containers Provider
       ManageIQ::Providers::InfraManager:              Infrastructure Provider
       ManageIQ::Providers::InfraManager::Vm:          Virtual Machine
       ManageIQ::Providers::InfraManager::Template:    Template

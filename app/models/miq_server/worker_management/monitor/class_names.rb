@@ -12,16 +12,16 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
-    MiqEmsRefreshWorkerKubernetes
-    MiqEmsRefreshWorkerOpenshift
+    ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker
+    ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker
     MiqEmsRefreshWorkerMicrosoft
     ManageIQ::Providers::Redhat::InfraManager::RefreshWorker
     ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
     ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
-    MiqEventCatcherKubernetes
-    MiqEventCatcherOpenshift
+    ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
+    ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
     ManageIQ::Providers::Redhat::InfraManager::EventCatcher
     ManageIQ::Providers::Openstack::CloudManager::EventCatcher
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
@@ -63,8 +63,8 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
-    MiqEmsRefreshWorkerKubernetes
-    MiqEmsRefreshWorkerOpenshift
+    ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker
+    ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker
     MiqEmsRefreshWorkerMicrosoft
     ManageIQ::Providers::Redhat::InfraManager::RefreshWorker
     ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
@@ -80,8 +80,8 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::CloudManager::EventCatcher
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
-    MiqEventCatcherKubernetes
-    MiqEventCatcherOpenshift
+    ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
+    ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
     MiqUiWorker
   }.freeze
 
