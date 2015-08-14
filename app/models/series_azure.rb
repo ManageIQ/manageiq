@@ -1,0 +1,2 @@
+class SeriesAzure < Flavor
+end
