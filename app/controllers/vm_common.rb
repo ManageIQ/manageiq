@@ -1639,7 +1639,7 @@ module VmCommon
         locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids][0] if @sb[:action] == "tag"
         unless @sb[:action] == 'ownership'
           presenter[:build_calendar] = {
-            :date_from => Time.now.in_time_zone(@tz).to_i * 1000,
+            :date_from => Time.zone.now.to_i * 1000,
             :date_to   => nil,
           }
         end
