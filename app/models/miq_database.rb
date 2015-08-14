@@ -23,7 +23,7 @@ class MiqDatabase < ActiveRecord::Base
   end
 
   def self.postgres_package_name
-    "rh-postgresql94-postgresql-server"
+    ENV.fetch("APPLIANCE_PG_PACKAGE_NAME", "postgresql-server")
   end
 
   def self.registration_default_values
