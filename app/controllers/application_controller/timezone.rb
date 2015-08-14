@@ -4,10 +4,10 @@ class ApplicationController
 
     included do
       helper_method :get_timezone_abbr, :get_timezone_offset
-      helper_method :get_timezone_for_userid, :server_timezone
+      helper_method :server_timezone
 
       hide_action :get_timezone_abbr, :get_timezone_offset
-      hide_action :get_timezone_for_userid, :server_timezone
+      hide_action :server_timezone
     end
 
     # return timezone abbreviation
@@ -24,7 +24,7 @@ class ApplicationController
 
     # returns utc_offset of timezone
     def get_timezone_offset(user = nil, formatted = false)
-      tz = get_timezone_for_userid(user)
+      tz = user ? user.get_timezone : server_timezone
       tz = ActiveSupport::TimeZone::MAPPING[tz]
       ActiveSupport::TimeZone.all.each do  |a|
         if ActiveSupport::TimeZone::MAPPING[a.name] == tz
@@ -35,12 +35,6 @@ class ApplicationController
           end
         end
       end
-    end
-
-    def get_timezone_for_userid(user = nil)
-      user = User.find_by_userid(user) if user.kind_of?(String)
-      tz = user && user.settings.fetch_path(:display, :timezone).presence
-      tz || server_timezone
     end
 
     def server_timezone
