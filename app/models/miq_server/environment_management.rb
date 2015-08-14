@@ -127,10 +127,10 @@ module MiqServer::EnvironmentManagement
     disks.each do |disk|
       if disk[:used_bytes_percent].to_i > threshold
         disk_usage_event = case disk[:mount_point].chomp
-        when '/'                                            then 'evm_server_system_disk_high_usage'
-        when '/var/www/miq'                                 then 'evm_server_app_disk_high_usage'
-        when '/var/www/miq/vmdb/log'                        then 'evm_server_log_disk_high_usage'
-        when /pgsql\/data/                                  then 'evm_server_db_disk_high_usage'
+        when '/'                     then 'evm_server_system_disk_high_usage'
+        when '/var/www/miq'          then 'evm_server_app_disk_high_usage'
+        when '/var/www/miq/vmdb/log' then 'evm_server_log_disk_high_usage'
+        when /pgsql\/data/           then 'evm_server_db_disk_high_usage'
         end
 
         next unless disk_usage_event
