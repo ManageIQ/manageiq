@@ -309,6 +309,6 @@
                   - if row[col].kind_of?(Time) && row[col].nil? && row[col] != ""
                     = h(format_timezone(row[col], Time.zone, "gtl"))
                   - else
-                    - tz = view.db.downcase == "miqschedule" ? MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC" : Time.zone
+                    - tz = view.db.downcase == "miqschedule" ? server_timezone : Time.zone
                     - col_data = view.format(col, row[col], :tz => celltz || tz).gsub(/\\/, '\&')
                     = h(col_data)

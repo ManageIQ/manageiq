@@ -175,7 +175,7 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_get_time_range(time=nil)
-    tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+    tz = MiqServer.my_server.server_timezone
     ts = time.nil? ? Time.now.in_time_zone(tz) : time.in_time_zone(tz)
     return [ts.beginning_of_day.utc, ts.end_of_day.utc]
   end

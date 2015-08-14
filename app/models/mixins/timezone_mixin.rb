@@ -19,7 +19,7 @@ module TimezoneMixin
 
   module ClassMethods
     def server_timezone
-      MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+      MiqServer.my_server.server_timezone
     end
   end
 end

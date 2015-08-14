@@ -21,13 +21,8 @@ describe TimezoneMixin do
   end
 
   context ".server_timezone" do
-    it "default" do
-      Hash.any_instance.stub(:fetch_path).and_return(nil)
-      TestClass.server_timezone.should == "UTC"
-    end
-
     it "server default" do
-      Hash.any_instance.stub(:fetch_path).and_return("Eastern Time (US & Canada)")
+      expect(MiqServer).to receive(:my_server).and_return(double(:server_timezone => "Eastern Time (US & Canada)"))
       TestClass.server_timezone.should == "Eastern Time (US & Canada)"
     end
   end
