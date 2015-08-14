@@ -36,6 +36,7 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id"
   has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
+  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy
@@ -184,6 +185,10 @@ class ExtManagementSystem < ActiveRecord::Base
       suffix = short_name.sub(/^Ems/, '')
       "MiqProvision#{suffix}Workflow".constantize
     end
+  end
+
+  def self.default_blacklisted_event_names
+    []
   end
 
   # UI methods for determining availability of fields
@@ -476,5 +481,16 @@ class ExtManagementSystem < ActiveRecord::Base
       _log.info("EMS: [#{self.name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       self.stop_event_monitor_queue
     end
+  end
+
+  def blacklisted_event_names
+    (
+      self.class.blacklisted_events.where(:enabled => true).pluck(:event_name) +
+      blacklisted_events.where(:enabled => true).pluck(:event_name)
+    ).uniq.sort
+  end
+
+  def self.blacklisted_events
+    BlacklistedEvent.where(:provider_model => name, :ems_id => nil)
   end
 end

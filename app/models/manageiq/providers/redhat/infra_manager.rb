@@ -21,6 +21,17 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     @description ||= "Red Hat Enterprise Virtualization Manager".freeze
   end
 
+  def self.default_blacklisted_event_names
+    %w(
+      UNASSIGNED
+      USER_REMOVE_VG
+      USER_REMOVE_VG_FAILED
+      USER_VDC_LOGIN
+      USER_VDC_LOGOUT
+      USER_VDC_LOGIN_FAILED
+    )
+  end
+
   def supports_port?
     true
   end

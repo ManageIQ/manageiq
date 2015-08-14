@@ -34,10 +34,6 @@ class EmsEvent < EventStream
     VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
   end
 
-  def self.filtered_events
-    VMDB::Config.new('event_handling').config[:filtered_events]
-  end
-
   def self.group_and_level(event_type)
     group, v = self.event_groups.find { |k, v| v[:critical].include?(event_type) || v[:detail].include?(event_type) }
     if group.nil?
@@ -102,8 +98,6 @@ class EmsEvent < EventStream
     process_availability_zone_in_event!(event_hash)
     process_cluster_in_event!(event_hash)
 
-    return if events_filtered?(event_hash, self.filtered_events[event_type.to_sym])
-
     # Write the event
     new_event = create_event(event_hash)
 
@@ -111,34 +105,6 @@ class EmsEvent < EventStream
     create_completed_event(event_hash) if task_final_events.has_key?(event_type.to_sym)
 
     return new_event
-  end
-
-  FILTER_KEYS = [
-      # Filter Key | Event Key             | Object Description
-      #========================================================
-      ['ems',       :ems_id,                 "EMS"             ],
-      ['src_vm',    :vm_or_template_id,      "source VM"       ],
-      ['dest_vm',   :dest_vm_or_template_id, "dest VM"         ],
-      ['src_host',  :host_id,                "source Host"     ],
-      ['dest_host', :dest_host_id,           "dest Host"       ]
-  ]
-
-  def self.events_filtered?(event_hash, filter)
-    return false if filter.nil?
-
-    log_prefix = "Skipping caught event [#{event_hash[:event_type]}] chainId [#{event_hash[:chain_id]}]"
-    FILTER_KEYS.each do |filter_key, event_key, object_description|
-      if event_filtered?(event_hash, event_key, filter, filter_key)
-        _log.info "#{log_prefix} for #{object_description} [#{event_hash[event_key]}]"
-        return true
-      end
-    end
-
-    return false
-  end
-
-  def self.event_filtered?(event_hash, event_hash_key, filter, filter_key)
-    filter.has_key?(filter_key) && filter[filter_key].include?(event_hash[event_hash_key])
   end
 
   def self.process_object_in_event!(klass, event, options = {})
