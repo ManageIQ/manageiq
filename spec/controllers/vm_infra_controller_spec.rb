@@ -83,4 +83,40 @@ describe VmInfraController do
       expect(breadcrumbs).to include(:name => "Virtual Machines", :url => "/vm_infra/explorer")
     end
   end
+
+  context "clear or retain existing breadcrumb path" do
+    before do
+      session[:settings] = {:views => {}, :perpage => {:list => 10}}
+      FactoryGirl.create(:vmdb_database)
+      @vm = VmInfra.create(:name => "testvm", :location => "testvm_location", :vendor => "vmware")
+      controller.stub(:render)
+      controller.stub(:build_toolbar_buttons_and_xml)
+    end
+
+    it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do
+      breadcrumbs = []
+      breadcrumbs[0] = {:name => "Instances", :url => "/vm_cloud/explorer"}
+      session[:breadcrumbs] = breadcrumbs
+      controller.stub(:x_node).and_return("v-#{@vm.compressed_id}")
+      controller.stub(:controller_referrer?).and_return(false)
+      get :explorer
+      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+      expect(breadcrumbs.size).to eq(1)
+      expect(breadcrumbs).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+    end
+
+    it 'retains the breadcrumb path when cancel is pressed from a VM action' do
+      get :explorer
+      controller.stub(:controller_referrer?).and_return(true)
+      controller.stub(:x_node).and_return("v-#{@vm.compressed_id}")
+      post :x_button, :id => @vm.id, :pressed => 'vm_ownership'
+
+      controller.instance_variable_set(:@in_a_form, nil)
+      post :ownership_update, :button => 'cancel'
+
+      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+      expect(breadcrumbs.size).to eq(1)
+      expect(breadcrumbs).to include(:name => "VM or Templates", :url => "/vm_infra/explorer")
+    end
+  end
 end
