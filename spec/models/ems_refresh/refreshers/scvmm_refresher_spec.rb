@@ -182,7 +182,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
       :guest_os           => "64-bit edition of Windows Server 2008 R2 Standard",
       :guest_os_full_name => "64-bit edition of Windows Server 2008 R2 Standard",
       :bios               => "67b7b7ae-34aa-474e-9050-02ed3c633f6c",
-      :numvcpus           => 1,
+      :logical_cpus       => 1,
       :annotation         => nil,
       :memory_cpu         => 512   # MB
     )

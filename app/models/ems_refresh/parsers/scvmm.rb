@@ -215,7 +215,7 @@ module EmsRefresh::Parsers
         :template         => true,
         :storages         => process_vm_storages(p),
         :hardware         => {
-          :numvcpus           => p[:CPUCount],
+          :logical_cpus       => p[:CPUCount],
           :memory_cpu         => normalize_blank_property_num(p[:Memory]),
           :cpu_type           => p[:CPUType].blank? ? nil : p[:CPUType][:ToString],
           :disks              => process_disks(p),
@@ -308,7 +308,7 @@ module EmsRefresh::Parsers
       p = vm[:Properties][:Props]
 
       {
-        :numvcpus           => p[:CPUCount],
+        :logical_cpus       => p[:CPUCount],
         :guest_os           => p[:OperatingSystem][:Props][:Name],
         :guest_os_full_name => p[:OperatingSystem][:Props][:Name],
         :memory_cpu         => normalize_blank_property_num(p[:Memory]),
