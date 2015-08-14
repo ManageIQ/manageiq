@@ -57,10 +57,10 @@
           = miq_tab_header("settings_cu_collection", @sb[:active_tab]) do
             = _("C & U Collection")
           = miq_tab_header("settings_co_categories", @sb[:active_tab]) do
-            = escape_javascript(session[:customer_name])
+            = escape_javascript(current_tenant.name)
             = _("Categories")
           = miq_tab_header("settings_co_tags", @sb[:active_tab]) do
-            = escape_javascript(session[:customer_name])
+            = escape_javascript(current_tenant.name)
             = _("Tags")
           = miq_tab_header("settings_import_tags", @sb[:active_tab]) do
             = _("Import Tags")

@@ -364,6 +364,9 @@ describe CatalogController do
     end
 
     it "builds tagging screen" do
+      EvmSpecHelper.create_guid_miq_server_zone
+      controller.send(:find_tenant_by_subdomain_or_domain)
+
       controller.instance_variable_set(:@sb, :action => "ot_tags_edit")
       controller.instance_variable_set(:@_params, :miq_grid_checks => @ot.id.to_s)
       controller.send(:tags_edit, "OrchestrationTemplate")

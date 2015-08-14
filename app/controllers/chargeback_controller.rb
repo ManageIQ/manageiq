@@ -393,7 +393,7 @@ class ChargebackController < ApplicationController
           self.x_node = "reports-#{rep.id}"
         else
           @sb[:rpt_menu].each_with_index do |lvl1,i|
-            if lvl1[0]  == session[:customer_name]
+            if lvl1[0] == current_tenant.name
               lvl1[1].each_with_index do |lvl2,k|
                 if lvl2[0].downcase == "custom"
                   @sb[:active_node]["report"] = "reports-#{i}-#{k}-#{lvl2[1].length-1}_#{rep.id}"
