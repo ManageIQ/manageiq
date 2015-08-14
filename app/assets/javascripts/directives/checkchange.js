@@ -6,13 +6,11 @@ ManageIQ.angularApplication.directive('checkchange', ['miqService', function(miq
       scope['elemType_' + ctrl.$name] = attr.type;
 
       scope.$watch(attr.ngModel, function() {
-        if(ctrl.$viewValue != undefined) {
-          if(scope['elemType_' + ctrl.$name] != "date") {
-            viewModelComparison(scope, ctrl);
-          }
-          else {
-            viewModelDateComparison(scope, ctrl);
-          }
+        if(scope['elemType_' + ctrl.$name] == "date" || _.isDate(ctrl.$modelValue)) {
+          viewModelDateComparison(scope, ctrl);
+        }
+        else {
+          viewModelComparison(scope, ctrl);
         }
         if(scope.angularForm.$pristine )
           checkForOverallFormPristinity(scope, ctrl);
@@ -50,18 +48,14 @@ var viewModelComparison = function(scope, ctrl) {
 };
 
 var viewModelDateComparison = function(scope, ctrl) {
-  var viewValueDate = new Date(ctrl.$viewValue);
-  var viewValueDateCmp = viewValueDate.getUTCMonth() + 1 + "/" + viewValueDate.getUTCDate() + "/" + viewValueDate.getUTCFullYear();
+  var modelDate = moment(ctrl.$modelValue);
+  var copyDate = moment(scope.modelCopy[ctrl.$name]);
 
-  var modelCopyDate = new Date(scope.modelCopy[ctrl.$name]);
-  var modelCopyDateCmp = modelCopyDate.getUTCMonth() + 1 + "/" + modelCopyDate.getUTCDate() + "/" + modelCopyDate.getUTCFullYear();
-
-  if(viewValueDateCmp == modelCopyDateCmp) {
+  if (modelDate.diff(copyDate, 'days') == 0) {
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(true);
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched(true);
     scope.angularForm.$pristine = true;
-  }
-  else {
+  } else {
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine(false);
     scope.angularForm.$pristine = false;
   }
