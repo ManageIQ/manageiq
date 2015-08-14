@@ -255,15 +255,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_infra")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_infra_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsInfra)
   end
 
   def textual_cluster
@@ -278,26 +270,14 @@ module HostHelper::TextualSummary
 
   def textual_storages
     return nil if @record.openstack_host?
-    label = ui_lookup(:tables=>"storages")
-    num   = @record.number_of(:storages)
-    h     = {:label => label, :image => "storage", :value => num}
-    if num > 0 && role_allows(:feature => "storage_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'storages')
-    end
-    h
+    textual_link(@record.storages)
   end
 
   def textual_resource_pools
     return nil if @record.openstack_host?
-    label = "Resource Pools"
-    num   = @record.number_of(:resource_pools)
-    h     = {:label => label, :image => "resource_pool", :value => num}
-    if num > 0 && role_allows(:feature => "resource_pool_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'resource_pools')
-    end
-    h
+    textual_link(@record.resource_pools,
+                 :as   => ResourcePool,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'resource_pools'))
   end
 
   def textual_drift_history
@@ -326,37 +306,16 @@ module HostHelper::TextualSummary
 
   def textual_used_tenants
     return nil unless @record.openstack_host?
-    label = ui_lookup(:tables => "cloud_tenants")
-    num   = @record.cloud_tenants.count
-    h     = {:label => label, :image => "cloud_tenants", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
-      h[:title] = _("Show all used %s on this %s") % [host_title, label]
-      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
-    end
-    h
+    textual_link(@record.cloud_tenants)
   end
 
   def textual_vms
-    label = "VMs"
-    num   = @record.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'vms')
-    end
-    h
+    textual_link(@record.vms)
   end
 
   def textual_miq_templates
     return nil if @record.openstack_host?
-    label = ui_lookup(:tables=>"miq_template")
-    num   = @record.number_of(:miq_templates)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'miq_templates')
-    end
-    h
+    textual_link(@record.miq_templates)
   end
 
   def textual_tags

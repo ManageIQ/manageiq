@@ -21,26 +21,11 @@ module CloudTenantHelper::TextualSummary
   # Items
   #
   def textual_ems_cloud
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_cloud")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_cloud_show")
-      h[:title] = "Show this Cloud Tenant's #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_cloud', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsCloud)
   end
 
   def textual_security_groups
-    label = ui_lookup(:tables => "security_groups")
-    num   = @record.number_of(:security_groups)
-    h     = {:label => label, :image => "security_group", :value => num}
-    if num > 0
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'security_groups')
-    end
-    h
+    textual_link(@record.security_groups)
   end
 
   def textual_instances

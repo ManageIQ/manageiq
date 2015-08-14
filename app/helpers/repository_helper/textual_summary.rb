@@ -31,14 +31,7 @@ module RepositoryHelper::TextualSummary
   end
 
   def textual_miq_templates
-    label = ui_lookup(:tables=>"miq_template")
-    num   = @record.number_of(:miq_templates)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'miq_templates')
-    end
-    h
+    textual_link(@record.miq_templates)
   end
 
   def textual_tags

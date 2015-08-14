@@ -76,70 +76,27 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_ems_infra
-    ems = @record.try(:provider).try(:infra_ems)
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_infra")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_infra_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.try(:provider).try(:infra_ems), :as => EmsInfra)
   end
 
   def textual_availability_zones
-    label = ui_lookup(:tables=>"availability_zone")
-    num   = @record.number_of(:availability_zones)
-    h     = {:label => label, :image => "availability_zone", :value => num}
-    if num > 0 && role_allows(:feature => "availability_zone_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'availability_zones')
-    end
-    h
+    textual_link(@record.availability_zones)
   end
 
   def textual_cloud_tenants
-    label = ui_lookup(:tables => "cloud_tenants")
-    num   = @record.number_of(:cloud_tenants)
-    h     = {:label => label, :image => "cloud_tenants", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
-    end
-    h
+    textual_link(@record.cloud_tenants)
   end
 
   def textual_orchestration_stacks
-    label = ui_lookup(:tables => "orchestration_stack")
-    num   = @ems.number_of(:orchestration_stacks)
-    h     = {:label => label, :image => "orchestration_stack", :value => num}
-    if num > 0 && role_allows(:feature => "orchestration_stack_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'orchestration_stacks')
-      h[:title] = "Show all #{label}"
-    end
-    h
+    textual_link(@record.orchestration_stacks)
   end
 
   def textual_flavors
-    label = ui_lookup(:tables=>"flavors")
-    num   = @record.number_of(:flavors)
-    h     = {:label => label, :image => "flavor", :value => num}
-    if num > 0 && role_allows(:feature => "flavor_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'flavors')
-    end
-    h
+    textual_link(@record.flavors)
   end
 
   def textual_security_groups
-    label = ui_lookup(:tables=>"security_groups")
-    num   = @record.number_of(:security_groups)
-    h     = {:label => label, :image => "security_group", :value => num}
-    if num > 0
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'security_groups')
-    end
-    h
+    textual_link(@record.security_groups)
   end
 
   def textual_authentications

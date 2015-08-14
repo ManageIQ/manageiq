@@ -113,62 +113,31 @@ module EmsInfraHelper::TextualSummary
   def textual_used_tenants
     return nil if !@record.respond_to?(:cloud_tenants) || !@record.cloud_tenants
 
-    label = ui_lookup(:tables => "cloud_tenants")
-    num   = @record.cloud_tenants.count
-    h     = {:label => label, :image => "cloud_tenants", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
-      h[:title] = "Show all#{label} of this provider"
-      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
-    end
-    h
+    textual_link(@record.cloud_tenants)
   end
 
   def textual_used_availability_zones
     return nil if !@record.respond_to?(:availability_zones) || !@record.availability_zones
 
-    label = ui_lookup(:tables => "availability_zones")
-    num   = @record.availability_zones.count
-    h     = {:label => label, :image => "availability_zone", :value => num}
-    if num > 0 && role_allows(:feature => "availability_zone_show_list")
-      h[:title] = "Show all #{label} of this provider"
-      h[:link]  = url_for(:action => "show", :id => @record, :display => "availability_zones")
-    end
-    h
+    textual_link(@record.availability_zones)
   end
 
   def textual_datastores
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
-    label = ui_lookup(:tables=>"storages")
-    num   = @ems.number_of(:storages)
-    h     = {:label => label, :image => "storage", :value => num}
-    if num > 0 && role_allows(:feature => "storage_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'storages')
-      h[:title] = "Show all #{label}"
-    end
-    h
+
+    textual_link(@record.storages)
   end
 
   def textual_vms
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
-    label = "VMs"
-    num   = @ems.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'vms')
-      h[:title] = "Show all #{label}"
-    end
-    h
+
+    textual_link(@ems.vms)
   end
 
   def textual_templates
     label = "Templates"
-    num = @ems.number_of(:miq_templates)
-    h = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'miq_templates')
-      h[:title] = "Show all #{label}"
-    end
-    h
+
+    textual_link(@ems.miq_templates)
   end
 
   def textual_authentications
@@ -199,14 +168,7 @@ module EmsInfraHelper::TextualSummary
   def textual_orchestration_stacks
     return nil if !@ems.respond_to?(:orchestration_stacks) || !@ems.orchestration_stacks
 
-    label = ui_lookup(:tables => "orchestration_stack")
-    num   = @ems.number_of(:orchestration_stacks)
-    h     = {:label => label, :image => "orchestration_stack", :value => num}
-    if num > 0 && role_allows(:feature => "orchestration_stack_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'orchestration_stacks')
-      h[:title] = "Show all #{label}"
-    end
-    h
+    textual_link(@ems.orchestration_stacks)
   end
 
   def textual_refresh_status
