@@ -185,10 +185,6 @@ describe Tenant do
   end
 
   context "temporary names" do
-    it "supports legacy vmdb_name" do
-      expect(described_class.new(:company_name => 'company').customer_name).to eq('company')
-    end
-
     it "supports legacy appliance_name" do
       expect(described_class.new(:appliance_name => 'vmdb').vmdb_name).to eq('vmdb')
     end

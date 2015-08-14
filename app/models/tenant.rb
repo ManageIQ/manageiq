@@ -5,7 +5,7 @@ class Tenant < ActiveRecord::Base
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil
 
-  default_value_for :company_name, "My Company"
+  default_value_for :name, "My Company"
   has_ancestry
 
   has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
@@ -46,15 +46,13 @@ class Tenant < ActiveRecord::Base
   validates_attachment_content_type :logo, :content_type => ['image/png']
   validates_attachment_content_type :login_logo, :content_type => ['image/png']
 
-  # FUTURE: this is currently called session[:customer_name]. use this temporarily then remove
-  alias_attribute :customer_name, :company_name
   # FUTURE: this is currently called session[:vmdb_name]. use this temporarily then remove
   alias_attribute :vmdb_name, :appliance_name
 
   before_save :nil_blanks
 
-  def company_name
-    tenant_attribute(:company_name, :company)
+  def name
+    tenant_attribute(:name, :company)
   end
 
   def appliance_name
@@ -113,7 +111,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def self.seed
-    Tenant.create_with(:company_name => nil).find_or_create_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
+    Tenant.create_with(:name => nil).find_or_create_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
   end
 
   private
@@ -134,7 +132,7 @@ class Tenant < ActiveRecord::Base
     self.subdomain = nil unless subdomain.present?
     self.domain = nil unless domain.present?
 
-    self.company_name = nil unless company_name.present?
+    self.name = nil unless name.present?
     self.appliance_name = nil unless appliance_name.present?
   end
 
