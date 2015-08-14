@@ -12,14 +12,8 @@ class ApplicationController
 
     # return timezone abbreviation
     def get_timezone_abbr(user = nil)
-      if user.nil?
-        tz = server_timezone
-        time = Time.now
-      else
-        tz = Time.zone
-        time = Time.zone.now
-      end
-      time.in_time_zone(tz).strftime("%Z")
+      time = user ? Time.zone.now : Time.now.in_timezone(server_timezone)
+      time.strftime("%Z")
     end
 
     # returns utc_offset of timezone
