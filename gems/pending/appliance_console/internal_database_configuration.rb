@@ -3,7 +3,7 @@ require "appliance_console/service_group"
 
 module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration
-    DATABASE_DISK_FILESYSTEM_TYPE = "ext4".freeze
+    DATABASE_DISK_FILESYSTEM_TYPE = "xfs".freeze
     POSTGRES_USER                 = "postgres".freeze
     POSTGRES_DIR                  = "opt/rh/postgresql92/root/var/lib/pgsql/data".freeze
     DATABASE_DISK_MOUNT_POINT     = Pathname.new("/").join(POSTGRES_DIR).freeze
@@ -121,7 +121,7 @@ module ApplianceConsole
     def format_logical_volume
       # LogicalVolume#format_to(:ext4) should be a thing
       # LogicalVolume#fs_type => :ext4 should be a thing
-      LinuxAdmin.run!("mke2fs -t #{DATABASE_DISK_FILESYSTEM_TYPE} #{@logical_volume.path}")
+      LinuxAdmin.run!("mkfs.#{DATABASE_DISK_FILESYSTEM_TYPE} #{@logical_volume.path}")
     end
 
     def mount_database_disk
