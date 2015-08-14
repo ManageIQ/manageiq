@@ -1,5 +1,7 @@
+---
 title: Nodes By CPU Usage
 rpt_group: Custom
+rpt_type: Custom
 priority:
 db: ContainerNode
 cols:
