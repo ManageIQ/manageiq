@@ -1,7 +1,7 @@
 class ApiController
-  module ReportResults
+  module Reports
     #
-    # Report Results Supporting Methods
+    # Reports Supporting Methods
     #
     def results_query_resource(object)
       object.send("miq_report_results")
