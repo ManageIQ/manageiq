@@ -20,7 +20,7 @@ class ApplicationController
     def get_timezone_offset(user = nil, formatted = false)
       tz = user ? user.get_timezone : server_timezone
       tz = ActiveSupport::TimeZone::MAPPING[tz]
-      ActiveSupport::TimeZone.all.each do  |a|
+      ActiveSupport::TimeZone.all.each do |a|
         if ActiveSupport::TimeZone::MAPPING[a.name] == tz
           if formatted
             return a.formatted_offset
