@@ -189,19 +189,6 @@ module EmsInfraHelper::TextualSummary
     {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
   end
 
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
-    end
-    h
-  end
-
   def textual_host_default_vnc_port_range
     return nil unless @ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
     value = @ems.host_default_vnc_port_start.blank? ?

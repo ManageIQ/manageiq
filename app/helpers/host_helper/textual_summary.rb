@@ -318,19 +318,6 @@ module HostHelper::TextualSummary
     textual_link(@record.miq_templates)
   end
 
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h     = {:label => label}
-    tags  = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
-    end
-    h
-  end
-
   def textual_storage_systems
     num = @record.storage_systems_size
     label = ui_lookup(:tables => "ontap_storage_system")

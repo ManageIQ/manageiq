@@ -8,6 +8,24 @@ module TextualSummaryHelper
     end
   end
 
+def textual_tags
+    label = "#{session[:customer_name]} Tags"
+    h = {:label => label}
+    tags = session[:assigned_filters]
+    if tags.blank?
+      h[:image] = "smarttag"
+      h[:value] = "No #{label} have been assigned"
+    else
+      h[:value] = tags.sort_by { |category, _assigned| category.downcase }
+                  .collect do |category, assigned|
+                    {:image => "smarttag",
+                     :label => category,
+                     :value => assigned}
+                  end
+    end
+    h
+  end
+
   private
 
   def textual_object_link(object, as: nil, controller: nil, feature: nil)
