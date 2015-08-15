@@ -1,4 +1,4 @@
-class EmsMicrosoft
+class ManageIQ::Providers::Microsoft::InfraManager
   module Powershell
     extend ActiveSupport::Concern
 

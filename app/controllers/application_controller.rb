@@ -2034,7 +2034,7 @@ class ApplicationController < ActionController::Base
         return
       end
     when "publish"
-      if VmOrTemplate.where(:id => vm_ids, :type => %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
+      if VmOrTemplate.where(:id => vm_ids, :type => %w(ManageIQ::Providers::Microsoft::InfraManager::Vm ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
         render_flash_not_applicable_to_model(typ)
         return
       end

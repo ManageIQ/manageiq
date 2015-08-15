@@ -826,7 +826,7 @@ module EmsCommon
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
-    if ems.is_a?(EmsMicrosoft)
+    if ems.is_a?(ManageIQ::Providers::Microsoft::InfraManager)
       ems.security_protocol = @edit[:new][:security_protocol]
       ems.realm = @edit[:new][:realm]
     end

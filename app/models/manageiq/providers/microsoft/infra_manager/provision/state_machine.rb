@@ -1,4 +1,4 @@
-module MiqProvisionMicrosoft::StateMachine
+module ManageIQ::Providers::Microsoft::InfraManager::Provision::StateMachine
   def create_destination
     signal :determine_placement
   end

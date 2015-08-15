@@ -36,7 +36,7 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
       before do
         host_struct = MiqHashStruct.new(:id               => host.id,
                                         :evm_object_class => host.class.base_class.name.to_sym)
-        MiqProvisionMicrosoftWorkflow.any_instance.stub(:allowed_hosts).and_return([host_struct])
+        ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.any_instance.stub(:allowed_hosts).and_return([host_struct])
       end
 
       it "without storage will not set placement values" do
@@ -52,7 +52,7 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
           host.storages << storage
           storage_struct = MiqHashStruct.new(:id               => storage.id,
                                              :evm_object_class => storage.class.base_class.name.to_sym)
-          MiqProvisionMicrosoftWorkflow.any_instance.stub(:allowed_storages).and_return([storage_struct])
+          ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.any_instance.stub(:allowed_storages).and_return([storage_struct])
         end
 
         it "will set placement values" do

@@ -1,7 +1,7 @@
 
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::ScvmmRefresher do
+describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_microsoft_with_authentication, :zone => zone,
@@ -103,7 +103,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
   end
 
   def assert_specific_host
-    @host = HostMicrosoft.find_by_name("hyperv-h01.manageiq.com")
+    @host = ManageIQ::Providers::Microsoft::InfraManager::Host.find_by_name("hyperv-h01.manageiq.com")
     @host.should have_attributes(
       :ems_ref          => "60e92646-b9f8-432a-a71a-5bc169ceeca2",
       :name             => "hyperv-h01.manageiq.com",
@@ -155,7 +155,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
   end
 
   def assert_specific_vm
-    v = VmMicrosoft.find_by_name("Salesforce_A")
+    v = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by_name("Salesforce_A")
 
     v.should have_attributes(
       :template         => false,
@@ -246,37 +246,37 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
         [EmsFolder, "SCVMM", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
             [EmsCluster, "US_East"]                    => {},
-            [HostMicrosoft, "hyperv-h01.manageiq.com"] => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Host, "hyperv-h01.manageiq.com"] => {},
           },
           [EmsFolder, "vm", {:is_datacenter => false}]   => {
-            [TemplateMicrosoft, "testvm1"]                                                            => {},
-            [TemplateMicrosoft, "WS2008R2CloTem"]                                                     => {},
-            [TemplateMicrosoft, "WS2008R2CoreTem"]                                                    => {},
-            [TemplateMicrosoft, "WS2008R2Tem2"]                                                       => {},
-            [TemplateMicrosoft, "WS2008R2TemTem"]                                                     => {},
-            [VmMicrosoft, "bronze_storage_vm1"]                                                       => {},
-            [VmMicrosoft, "dynamic_vm"]                                                               => {},
-            [VmMicrosoft, "EastCost_sales"]                                                           => {},
-            [VmMicrosoft, "ERP_A"]                                                                    => {},
-            [VmMicrosoft, "ERP_A1"]                                                                   => {},
-            [VmMicrosoft, "ERP_B"]                                                                    => {},
-            [VmMicrosoft, "ERP_C"]                                                                    => {},
-            [VmMicrosoft, "ERP_D"]                                                                    => {},
-            [VmMicrosoft, "hostname_test"]                                                            => {},
-            [VmMicrosoft, "hostname_testing"]                                                         => {},
-            [VmMicrosoft, "Salesforce_A"]                                                             => {},
-            [VmMicrosoft, "Salesforce_B"]                                                             => {},
-            [VmMicrosoft, "SCVMM1111"]                                                                => {},
-            [VmMicrosoft, "ServerCore_tools"]                                                         => {},
-            [VmMicrosoft, "SQLServer1"]                                                               => {},
-            [VmMicrosoft, "SQLServer2"]                                                               => {},
-            [VmMicrosoft, "SQLServer3"]                                                               => {},
-            [VmMicrosoft, "SQLServer4"]                                                               => {},
-            [VmMicrosoft, "Storage_vm1"]                                                              => {},
-            [VmMicrosoft, "tenant_lib_vm"]                                                            => {},
-            [VmMicrosoft, "WestCoast_Sales"]                                                          => {},
-            [VmMicrosoft, "WS2008R2Corex64Ent", {:ems_ref => "1f3e7da4-9f67-4e4f-b968-b7d1e2a4aed8"}] => {},
-            [VmMicrosoft, "WS2008R2Corex64Ent", {:ems_ref => "5e55b0ea-75e2-488e-b834-b6c4e22c67f5"}] => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Template, "testvm1"]                                                            => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Template, "WS2008R2CloTem"]                                                     => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Template, "WS2008R2CoreTem"]                                                    => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Template, "WS2008R2Tem2"]                                                       => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Template, "WS2008R2TemTem"]                                                     => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "bronze_storage_vm1"]                                                       => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "dynamic_vm"]                                                               => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "EastCost_sales"]                                                           => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "ERP_A"]                                                                    => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "ERP_A1"]                                                                   => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "ERP_B"]                                                                    => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "ERP_C"]                                                                    => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "ERP_D"]                                                                    => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "hostname_test"]                                                            => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "hostname_testing"]                                                         => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "Salesforce_A"]                                                             => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "Salesforce_B"]                                                             => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "SCVMM1111"]                                                                => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "ServerCore_tools"]                                                         => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "SQLServer1"]                                                               => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "SQLServer2"]                                                               => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "SQLServer3"]                                                               => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "SQLServer4"]                                                               => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "Storage_vm1"]                                                              => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "tenant_lib_vm"]                                                            => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "WestCoast_Sales"]                                                          => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "WS2008R2Corex64Ent", {:ems_ref => "1f3e7da4-9f67-4e4f-b968-b7d1e2a4aed8"}] => {},
+            [ManageIQ::Providers::Microsoft::InfraManager::Vm, "WS2008R2Corex64Ent", {:ems_ref => "5e55b0ea-75e2-488e-b834-b6c4e22c67f5"}] => {},
           }
         }
       }

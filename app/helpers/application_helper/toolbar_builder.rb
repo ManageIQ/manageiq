@@ -771,7 +771,7 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_clone"
         return true unless @record.cloneable?
       when "vm_publish"
-        return true if %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm).include?(@record.type)
+        return true if %w(ManageIQ::Providers::Microsoft::InfraManager::Vm ManageIQ::Providers::Redhat::InfraManager::Vm).include?(@record.type)
       when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
       when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
