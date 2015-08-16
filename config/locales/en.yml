@@ -835,7 +835,15 @@ en:
       Condition:                Condition
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
+      Container:                Container
       ContainerGroup:           Pod
+      ContainerImageRegistry:   Image Registry
+      ContainerImage:           Image
+      ContainerNode:            Node
+      ContainerProject:         Project
+      ContainerRoute:           Route
+      ContainerReplicator:      Replicator
+      ContainerService:         Service
       #EmsCloud:                 Cloud Provider
       EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
@@ -963,8 +971,8 @@ en:
       container_groups:            Pods
       container_replicator:        Replicator
       container_replicators:       Replicators
-      container_image:             Container Image
-      container_images:            Container Images
+      container_image:             Image
+      container_images:            Images
       container_image_registry:    Image Registry
       container_image_registries:  Image Registries
       container_node:              Node
