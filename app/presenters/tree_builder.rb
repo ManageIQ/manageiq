@@ -1,5 +1,6 @@
 class TreeBuilder
   include CompressedIds
+  include MiqAeClassHelper
   attr_reader :name, :type, :tree_nodes
 
   def self.class_for_type(type)
@@ -99,6 +100,8 @@ class TreeBuilder
              elsif model.nil? && [:sandt, :svccat, :stcat].include?(@type)
                # Creating empty record to show items under unassigned catalog node
                ServiceTemplateCatalog.new
+             elsif AE_CLASSES_LIST.include?(model)
+               model.constantize.find(rec_id)   # Get the Automate object from the DB
              elsif model.nil? && [:foreman_providers_tree].include?(@name)
                # Creating empty record to show items under unassigned catalog node
                ConfigurationProfile.new
@@ -134,9 +137,18 @@ class TreeBuilder
     "#{prefix}-#{record.id}"
   end
 
+
+  def self.automate_node?(treenodeid)
+    (treenodeid =~ /^ae[ncim]-/) == 0
+  end
+
   # return this nodes model and record id
   def self.extract_node_model_and_id(node_id)
-    prefix, record_id = node_id.split("_").last.split('-')
+    prefix, record_id = if automate_node?(node_id) 
+                          [node_id[0..2], node_id[4..-1]]
+                        else
+                          node_id.split("_").last.split('-')
+                        end
     model = get_model_for_prefix(prefix)
     [model, record_id, prefix]
   end

@@ -10,6 +10,8 @@ class MiqAeMethodCopy
     raise "Source class not found #{@class_fqname}" unless @src_class
     @src_method = MiqAeMethod.find_by_name_and_class_id(@method_name, @src_class.id)
     raise "Source method #{@method_name} not found #{@class_fqname}" unless @src_method
+    ui_fqname = @src_method.fqname_from_objects # Case Sensitive Name
+    @src_domain, @partial_ns, @ae_class, @method_name = MiqAeMethodCopy.split(ui_fqname, true)
     @target_class_name = @ae_class
   end
 

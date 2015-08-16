@@ -1,46 +1,137 @@
-class MiqAeClass < ActiveRecord::Base
-  include MiqAeSetUserInfoMixin
-  include MiqAeYamlImportExportMixin
+class MiqAeClass < MiqAeBase
+  include MiqAeModelBase
+  include MiqAeFsStore
+  include MiqAeCount
+  include MiqAeFindByName
 
-  belongs_to :ae_namespace, :class_name => "MiqAeNamespace", :foreign_key => :namespace_id
-  has_many   :ae_fields,    -> { order(:priority) }, :class_name => "MiqAeField",     :foreign_key => :class_id,
-                            :dependent => :destroy, :autosave => true
-  has_many   :ae_instances, -> { preload(:ae_values) }, :class_name => "MiqAeInstance",  :foreign_key => :class_id,
-                            :dependent => :destroy
-  has_many   :ae_methods,   :class_name => "MiqAeMethod",    :foreign_key => :class_id,
-                            :dependent => :destroy
+  expose_columns :namespace_id, :namespace
+  expose_columns :description, :display_name, :name
+  expose_columns :id, :created_on, :created_by_user_id
+  expose_columns :updated_on, :updated_by, :updated_by_user_id
+  expose_columns :updated_by_user_id
+  expose_columns :inherits, :visibility, :type
 
-  validates_presence_of   :name, :namespace_id
-  validates_uniqueness_of :name, :case_sensitive => false, :scope => :namespace_id
-  validates_format_of     :name, :with => /\A[A-Za-z0-9_.-]+\z/i
+  validate              :uniqueness_of_name, :on => :create
+  validates_presence_of :namespace
+  validates_presence_of :namespace_id
 
-  include ReportableMixin
+  FIELD_HM_RELATIONS    = {:class_name => "MiqAeField", :foreign_key => :class_id,
+                           :belongs_to => 'ae_class', :save_parent => true}
+  INSTANCE_HM_RELATIONS = {:class_name => "MiqAeInstance", :foreign_key => :class_id, :belongs_to => 'ae_class'}
+  METHOD_HM_RELATIONS   = {:class_name => "MiqAeMethod",   :foreign_key => :class_id, :belongs_to => 'ae_class'}
 
-  def self.find_by_fqname(fqname, args = {})
-    ns, name = self.parse_fqname(fqname)
-    self.find_by_namespace_and_name(ns, name, args)
+  def self.base_class
+    MiqAeClass
   end
 
-  def self.find_by_namespace_and_name(ns, name, args = {})
-    ns = MiqAeNamespace.find_by_fqname(ns)
-    return nil if ns.nil?
-    ns.ae_classes.detect { |c| name.casecmp(c.name) == 0 }
+  def self.base_model
+    MiqAeClass
+  end
+
+  def self.column_names
+    %w(namespace_id namespace description display_name name id created_on
+       created_by_user_id updated_on updated_by updated_by_user_id
+       inherits visibility type)
+  end
+
+  def initialize(options = {})
+    @attributes = HashWithIndifferentAccess.new(options)
+    self.ae_fields    = @attributes.delete(:ae_fields)  if @attributes.key?(:ae_fields)
+    self.ae_instances = @attributes.delete(:ae_instances) if @attributes.key?(:ae_instances)
+    self.ae_methods   = @attributes.delete(:ae_methods) if @attributes.key?(:ae_methods)
+    self.ae_namespace = @attributes.delete(:ae_namespace) if @attributes.key?(:ae_namespace)
+  end
+
+  def save
+    context = persisted? ? :update : :create
+    namespace = @attributes[:namespace] if @attributes.key?(:namespace)
+    return false unless namespace_valid?
+    self.namespace_id ||= MiqAeNamespace.find_or_create_by_fqname(namespace, false).id
+    return false unless valid?(context)
+    generate_id   unless id
+    return false unless save_relationships
+    write(context).tap { |result| changes_applied if result }
+  end
+
+  def changed?
+    new_record? || fields_changed?
+  end
+
+  def namespace_valid?
+    if namespace_id.nil? && @attributes[:namespace].blank?
+      errors.add(:fields, "Namespace not specified")
+      return false
+    else
+      return true
+    end
+  end
+
+  def ae_fields
+    @fields_proxy ||= MiqAeHasManyProxy.new(self, FIELD_HM_RELATIONS)
+  end
+
+  def ae_fields=(*obj)
+    @fields_proxy = MiqAeHasManyProxy.new(self, FIELD_HM_RELATIONS)
+    @fields_proxy.assign(obj)
+  end
+
+  def ae_instances=(*obj)
+    @instances_proxy = MiqAeHasManyProxy.new(self, INSTANCE_HM_RELATIONS)
+    @instances_proxy.assign(obj)
+  end
+
+  def ae_methods=(*obj)
+    @methods_proxy = MiqAeHasManyProxy.new(self, METHOD_HM_RELATIONS)
+    @methods_proxy.assign(obj)
+  end
+
+  def ae_instances
+    @instances_proxy ||= MiqAeHasManyProxy.new(self, INSTANCE_HM_RELATIONS, load_class_children(::MiqAeInstance))
+  end
+
+  def ae_methods
+    @methods_proxy ||= MiqAeHasManyProxy.new(self, METHOD_HM_RELATIONS, load_class_methods)
+  end
+
+  def generate_id
+    self.id = self.class.fqname_to_id(fqname.downcase)
+  end
+
+  def self.find_by_fqname(fq_name, _args = {})
+    return nil if fq_name.blank?
+    fq_name = fq_name.downcase
+    git_repo, path = git_repo_fqname(fq_name)
+    return nil unless git_repo
+    entry = class_entry(git_repo, path)
+    load_ae_entry(git_repo, entry) if entry
+  end
+
+  def self.git_entry_exists?(fqname)
+    git_repo, path = git_repo_fqname(fqname)
+    entry = class_entry(git_repo, path) if git_repo
+    entry ? true : false
+  end
+
+  def self.class_entry(git_repo, path)
+    git_repo.find_entry(File.join("#{path}#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILE))
+  end
+
+  def self.find_by_namespace_and_name(ns, name, _args = {})
+    return nil if ns.blank? || name.blank?
+    find_by_fqname("#{ns}/#{name}")
   end
 
   def self.find_by_namespace_id_and_name(ns_id, name)
-    self.where(:namespace_id => ns_id).where(["lower(name) = ?", name.downcase]).first
+    return nil if ns_id.blank? || name.blank?
+    find_by_fqname("#{MiqAeNamespace.id_to_fqname(ns_id)}/#{name}")
   end
 
-  def self.find_by_name(name)
-    self.where(["lower(name) = ?", name.downcase]).includes([:ae_methods, :ae_fields] ).first
+  def self.find_by_name_and_namespace_id(name, ns_id)
+    find_by_namespace_id_and_name(ns_id, name)
   end
 
   def self.fqname(ns, name)
     "#{ns}/#{name}"
-  end
-
-  def export_schema
-    ae_fields.sort_by(&:priority).collect(&:to_export_yaml)
   end
 
   def self.parse_fqname(fqname)
@@ -50,42 +141,48 @@ class MiqAeClass < ActiveRecord::Base
     return ns, name
   end
 
-  def to_export_xml(options = {})
-    require 'builder'
-    xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
-    xml_attrs = { :name => self.name, :namespace => self.namespace }
+  def ae_namespace
+    @ae_namespace ||= ae_ns_obj
+  end
 
-    self.class.column_names.each { |cname|
-      # Remove any columns that we do not want to export
-      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+  def ae_namespace=(obj)
+    @ae_namespace = obj
+    @attributes[:namespace_id] = obj.id
+    @attributes[:namespace]    = obj.name
+  end
 
-      # Skip any columns that we process explicitly
-      next if %w(name namespace).include?(cname)
-
-      # Process the column
-      xml_attrs[cname.to_sym]  = self.send(cname)   unless self.send(cname).blank?
-    }
-
-    xml.MiqAeClass(xml_attrs) {
-      ae_methods.sort_by(&:fqname).each { |m| m.to_export_xml(:builder => xml) }
-      xml.MiqAeSchema {
-        ae_fields.sort_by(&:priority).each { |f| f.to_export_xml(:builder => xml) }
-      } unless ae_fields.empty?
-      ae_instances.sort_by(&:fqname).each { |i| i.to_export_xml(:builder => xml) }
-    }
+  def export_schema
+    ae_fields.sort_by(&:priority).collect(&:to_export_yaml)
   end
 
   def fqname
-    return self.class.fqname(self.namespace, self.name)
+    @fqname ||= attributes[:fqname]
+    @fqname ||= self.class.fqname(namespace, name)
+  end
+
+  def fqname_from_objects
+    @fqname_slow ||= self.class.fqname(namespace, name)
   end
 
   def domain
     ae_namespace.domain
   end
 
+  def ae_ns_obj
+    if self[:namespace_id].present?
+      MiqAeNamespace.find(self[:namespace_id])
+    elsif self[:namespace].present?
+      MiqAeNamespace.find_by_fqname(self[:namespace])
+    end
+  end
+
+  def destroy
+    self.class.delete_directory(dirname)
+    self
+  end
+
   def namespace
-    return nil if self.ae_namespace.nil?
-    return self.ae_namespace.fqname
+    ae_namespace.nil? ? nil : ae_namespace.fqname_from_objects
   end
 
   def namespace=(ns)
@@ -93,20 +190,53 @@ class MiqAeClass < ActiveRecord::Base
     self.ae_namespace = MiqAeNamespace.find_or_create_by_fqname(ns)
   end
 
+  def add_relations(yaml_hash)
+    @methods_proxy = MiqAeHasManyProxy.new(self, METHOD_HM_RELATIONS, load_class_children(::MiqAeMethod, '__methods__'))
+    @instances_proxy = MiqAeHasManyProxy.new(self, INSTANCE_HM_RELATIONS, load_class_children(::MiqAeInstance))
+    load_all_fields(yaml_hash, nil)
+  end
+
+  def load_all_fields(yaml_hash, _git_repo)
+    all_fields = []
+    yaml_hash['object']['schema'].each do |f|
+      field_id = "#{id}##{f['field']['name'].downcase}"
+      hash = {:class_id => id, :id => "#{field_id}"}
+      all_fields << ::MiqAeField.new(hash.merge(f['field']))
+    end
+    self.ae_fields = all_fields
+  end
+
+  def self.filename_to_fqname(filename)
+    class_dir = File.dirname(filename)
+    class_dir.gsub(CLASS_DIR_SUFFIX, "")
+  end
+
+  def self.fqname_to_filename(fqname)
+    options = {:has_instance_name => false}
+    domain, nsd, klass, _ = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(fqname, options)
+    return "#{domain}/#{klass}#{CLASS_DIR_SUFFIX}/#{CLASS_YAML_FILE}" if nsd.blank?
+    "#{domain}/#{nsd}/#{klass}#{CLASS_DIR_SUFFIX}/#{CLASS_YAML_FILE}"
+  end
+
+  def self.find(id)
+    return nil if id.blank?
+    find_by_fqname(id_to_fqname(id))
+  end
+
+  def self.find_by_id(id)
+    find(id)
+  end
+
   def instance_methods
-    @instance_methods ||= scoped_methods("instance")
+    @instance_methods ||= scoped_methods('instance')
   end
 
   def class_methods
-    @class_methods ||= scoped_methods("class")
+    @class_methods ||= scoped_methods('class')
   end
 
   def state_machine?
     ae_fields.any? { |f| f.aetype == 'state' }
-  end
-
-  def self.get_homonymic_across_domains(fqname, enabled = nil)
-    MiqAeDatastore.get_homonymic_across_domains(::MiqAeClass, fqname, enabled)
   end
 
   def self.find_homonymic_instances_across_domains(fqname)
@@ -134,7 +264,7 @@ class MiqAeClass < ActiveRecord::Base
 
   def field_hash(name)
     field = ae_fields.detect { |f| f.name.casecmp(name) == 0 }
-    raise "field #{name} not found in class #{@name}" if field.nil?
+    raise "field #{name} not found in class" if field.nil?
     field.attributes
   end
 
@@ -154,9 +284,41 @@ class MiqAeClass < ActiveRecord::Base
   end
 
   def self.waypoint_ids_for_state_machines
-    MiqAeClass.all.select(&:state_machine?).each_with_object([]) do |klass, ids|
+    klasses = MiqAeClass.find_all_by_name('*')
+    klasses.select(&:state_machine?).each_with_object([]) do |klass, ids|
       ids << "#{klass.class.name}::#{klass.id}"
       sub_namespaces(klass.ae_namespace, ids)
+    end
+  end
+
+  def load_children
+    ae_instances
+  end
+
+  alias_method :load_embedded_information, :load_all_fields
+
+  def to_export_xml(options = {})
+    require 'builder'
+    xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
+    xml_attrs = {:name => name, :namespace => namespace}
+
+    self.class.column_names.each do |cname|
+      # Remove any columns that we do not want to export
+      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+
+      # Skip any columns that we process explicitly
+      next if %w(name namespace).include?(cname)
+
+      # Process the column
+      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+    end
+
+    xml.MiqAeClass(xml_attrs) do
+      ae_methods.sort_by(&:fqname).each { |m| m.to_export_xml(:builder => xml) }
+      xml.MiqAeSchema do
+        ae_fields.sort_by(&:priority).each { |f| f.to_export_xml(:builder => xml) }
+      end unless ae_fields.length == 0
+      ae_instances.sort_by(&:fqname).each { |i| i.to_export_xml(:builder => xml) }
     end
   end
 
@@ -173,20 +335,21 @@ class MiqAeClass < ActiveRecord::Base
   private_class_method :sub_namespaces
 
   def scoped_methods(s)
-    self.ae_methods.select { |m| m.scope == s }
+    ae_methods.select { |m| m.scope == s }
   end
 
   def self.get_sorted_homonym_class_across_domains(ns = nil, klass)
     ns_obj = MiqAeNamespace.find_by_fqname(ns) unless ns.nil?
     partial_ns = ns_obj.nil? ? ns : remove_domain_from_fqns(ns)
-    class_array = MiqAeDomain.order("priority DESC").pluck(:name).collect do |domain|
+    domain_list = MiqAeDomain.all_domains.reverse.collect(&:name)
+    class_array = domain_list.collect do |domain|
       fq_ns = domain + "/" + partial_ns
       ae_ns = MiqAeNamespace.find_by_fqname(fq_ns)
       next if ae_ns.nil?
       ae_ns.ae_classes.select { |c| File.fnmatch(klass, c.name, File::FNM_CASEFOLD) }
     end.compact.flatten
     if class_array.empty? && ns_obj
-      class_array = ns_obj.ae_classes.select { |c| File.fnmatch(klass, c.name, File::FNM_CASEFOLD) }
+      class_array = ns_obj.ae_classes.select { |c| File.fnmatch(klass, c.name, File::FNM_CASEFOLD)   }
     end
     class_array
   end
@@ -216,5 +379,60 @@ class MiqAeClass < ActiveRecord::Base
       next if cls.nil?
       cls.ae_instances.select { |a| File.fnmatch(instance, a.name, File::FNM_CASEFOLD) }
     end.compact.flatten
+  end
+
+  def self.get_homonymic_across_domains(fqname, enabled = nil)
+    MiqAeDatastore.get_homonymic_across_domains(::MiqAeClass, fqname, enabled)
+  end
+
+  def refresh_associations(yaml_hash)
+    add_relations(yaml_hash)
+  end
+
+  def save_relationships
+    auto_save_fields && save_children(@instances_proxy) && save_children(@methods_proxy)
+  end
+
+  def save_children(objs)
+    return true unless objs
+    objs.each do |o|
+      next unless o.changed?
+      o.ae_class = self
+      errors.add(:children, o.errors.full_messages.join(' ')) unless o.save
+    end
+    errors.empty?
+  end
+
+  def auto_save_fields
+    ae_fields.each do |f|
+      f.ae_class = self
+      errors.add(:fields, f.errors.full_messages.join(' ')) unless f.auto_save
+    end
+    errors.empty?
+  end
+
+  def fields_changed?
+    ae_fields.any?(&:changed)
+  end
+
+  def write(context)
+    hash = setup_envelope(CLASS_OBJ_TYPE)
+    hash['object']['schema'] = export_schema
+    sub_dir = "#{fqname}#{CLASS_DIR_SUFFIX}"
+    entry = {:path => self.class.relative_filename(sub_dir, CLASS_YAML_FILE),
+             :data => hash.to_yaml}
+    if context == :update && changes.key?('name')
+      mv_class_dir(changes['name'][0], entry)
+    else
+      self.class.add_files_to_repo(domain_value, [entry])
+    end
+  end
+
+  def mv_class_dir(old_name, entry)
+    @fqname = File.join(ae_namespace.fqname, name).downcase
+    generate_id
+    old_dir = self.class.relative_filename(ae_namespace.fqname, "#{old_name}#{CLASS_DIR_SUFFIX}")
+    new_dir = self.class.relative_filename(ae_namespace.fqname, "#{name}#{CLASS_DIR_SUFFIX}")
+    self.class.rename_ae_dir(domain_value, old_dir, new_dir, entry)
   end
 end

@@ -71,4 +71,17 @@ module AutomationSpecHelper
     q.save
     q.deliver
   end
+
+  def create_temp_automate_dir
+    ae_dir = Dir.mktmpdir
+    require 'miq_ae_datastore'
+    stub_const("MiqAeDatastore::DATASTORE_DIRECTORY", ae_dir)
+    FileUtils.remove_entry_secure(ae_dir) if Dir.exist?(ae_dir)
+    FileUtils.mkdir(ae_dir)
+    ae_dir
+  end
+
+  def remove_temp_automate_dir(ae_dir)
+    FileUtils.remove_entry_secure(ae_dir) if Dir.exist?(ae_dir)
+  end
 end

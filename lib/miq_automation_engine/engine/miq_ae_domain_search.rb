@@ -1,7 +1,7 @@
 module MiqAeEngine
   class MiqAeDomainSearch
     def initialize
-      @sorted_domains      = MiqAeDomain.enabled.order("priority DESC").pluck(:name)
+      @sorted_domains      = MiqAeDomain.enabled.reverse.collect(&:name)
       @fqns_id_cache       = {}
       @fqns_id_class_cache = {}
       @partial_ns          = []
@@ -73,25 +73,20 @@ module MiqAeEngine
       return nil if class_name.nil? || ns_id.nil?
       key_name = "#{class_name}#{ns_id}"
       return @fqns_id_class_cache[key_name] if @fqns_id_class_cache.key?(key_name)
-
-      class_filter = MiqAeClass.arel_table[:name].lower.matches(class_name.downcase)
-      ae_class  = MiqAeClass.where(class_filter).where(:namespace_id => ns_id)
-      @fqns_id_class_cache[key_name] = ae_class.first.id if ae_class.any?
+      ae_class  = MiqAeClass.find_by_namespace_id_and_name(ns_id, class_name)
+      @fqns_id_class_cache[key_name] = ae_class.id if ae_class
     end
 
     def find_instance_id(instance_name, class_id)
       return nil if instance_name.nil? || class_id.nil?
-      instance_name = ::ActiveRecordQueryParts.glob_to_sql_like(instance_name).downcase
-      ae_instance_filter = MiqAeInstance.arel_table[:name].lower.matches(instance_name)
-      ae_instances = MiqAeInstance.where(ae_instance_filter).where(:class_id => class_id)
+      cls = MiqAeClass.find(class_id)
+      ae_instances = cls.load_class_children(MiqAeInstance, nil, instance_name)
       ae_instances.first.try(:id)
     end
 
     def find_method_id(method_name, class_id)
       return nil if method_name.nil? || class_id.nil?
-      ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(method_name)
-      ae_methods = ::MiqAeMethod.where(ae_method_filter).where(:class_id => class_id)
-      ae_methods.first.try(:id)
+      ::MiqAeMethod.find_by_name_and_class_id(method_name, class_id).try(:id)
     end
   end
 end

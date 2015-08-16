@@ -1,8 +1,14 @@
 require "spec_helper"
+include AutomationSpecHelper
 
 describe MiqAeCustomizationController do
   before(:each) do
     set_user_privileges
+    @ae_dir = create_temp_automate_dir
+  end
+
+  after do
+    remove_temp_automate_dir(@ae_dir)
   end
 
   context "#get_node_info" do
