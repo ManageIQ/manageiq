@@ -1,3 +1,3 @@
 class ManageIQ::Providers::Kubernetes::ContainerManager::Container < ::Container
-  delegate :pod_uid, :to => :container_group
+  has_one :pod_uid, through: :container_group
 end
