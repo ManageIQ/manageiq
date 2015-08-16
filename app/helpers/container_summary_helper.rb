@@ -139,17 +139,23 @@ module ContainerSummaryHelper
     h = {:label => label, :image => image, :value => count.to_s}
 
     if count > 0 && role_allows(:feature => feature)
-      if collection.respond_to?(:proxy_association)
-        h[:link] = url_for(:action  => 'show',
-                           :id      => collection.proxy_association.owner,
-                           :display => collection.proxy_association.reflection.name)
-      else
+      if collection.count == 1
         h[:link] = url_for(:controller => klass.name.underscore,
-                           :action     => 'list')
+                           :action     => 'show',
+                           :id         => collection.first)
+        h[:title]  = "Show #{collection.first.name}"
+      else
+        if collection.respond_to?(:proxy_association)
+          h[:link] = url_for(:action  => 'show',
+                             :id      => collection.proxy_association.owner,
+                             :display => collection.proxy_association.reflection.name)
+        else
+          h[:link] = url_for(:controller => klass.name.underscore,
+                             :action     => 'list')
+        end
+        h[:title] = "Show all #{label}"
       end
-      h[:title] = "Show all #{label}"
     end
-
     h
   end
 
