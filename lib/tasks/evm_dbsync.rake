@@ -206,7 +206,7 @@ namespace :evm do
         .sort
     end
 
-    # TODO: possible overlap with MiqPostgresAdmin
+    # TODO: possible overlap with PostgresAdmin
     def do_pg_copy(direction, tables, database, username, password, host, port)
       dir = File.join(Rails.root, "tmp", "sync")
       FileUtils.mkdir_p(dir)

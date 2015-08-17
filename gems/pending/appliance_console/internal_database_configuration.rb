@@ -197,7 +197,7 @@ module ApplianceConsole
       run_as_postgres("createdb -E utf8 -O #{username} #{database}")
     end
 
-    # some overlap with MiqPostgresAdmin
+    # some overlap with PostgresAdmin
     def run_as_postgres(cmd)
       AwesomeSpawn.run("su", :params => {"-" => nil, nil => "postgres", "-c" => "#{self.class.scl_enable_prefix} \"#{cmd}\""})
     end
