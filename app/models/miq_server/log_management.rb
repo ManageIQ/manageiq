@@ -1,3 +1,5 @@
+require 'util/postgres_admin'
+
 module MiqServer::LogManagement
   extend ActiveSupport::Concern
 
@@ -142,7 +144,7 @@ module MiqServer::LogManagement
   end
 
   def pg_data_dir
-    ENV["APPLIANCE_PG_DATA"]
+    PostgresAdmin.data_directory
   end
 
   def pg_log_patterns
