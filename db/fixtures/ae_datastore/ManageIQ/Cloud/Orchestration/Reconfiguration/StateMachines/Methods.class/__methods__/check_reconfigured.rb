@@ -7,14 +7,13 @@ def refresh_provider(service)
   provider = service.orchestration_manager
 
   $evm.log("info", "Refreshing provider #{provider.name}")
-  old_date = provider.last_refresh_date
-  $evm.set_state_var('provider_last_refresh', old_date)
+  $evm.set_state_var('provider_last_refresh', provider.last_refresh_date.to_i)
   provider.refresh
 end
 
 def refresh_may_have_completed?(service)
   provider = service.orchestration_manager
-  provider.last_refresh_date > $evm.get_state_var('provider_last_refresh')
+  provider.last_refresh_date.to_i > $evm.get_state_var('provider_last_refresh')
 end
 
 def check_updated(service)
