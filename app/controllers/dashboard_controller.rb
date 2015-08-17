@@ -341,7 +341,7 @@ class DashboardController < ApplicationController
 
     widget = MiqWidget.find_by_id(params[:widget].to_i)
     # Save the rr id for render_zgraph
-    @sb[:report_result_id] = widget.contents_for_user(session[:userid]).miq_report_result_id
+    @sb[:report_result_id] = widget.contents_for_user(current_user).miq_report_result_id
 
     render :update do |page|
       page.replace_html("lightbox_div", :partial => "zoomed_chart", :locals => {:widget => widget})
