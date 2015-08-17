@@ -1,7 +1,5 @@
 require 'awesome_spawn'
 class PostgresAdmin
-  include Vmdb::Logging
-
   # Who to run the postmaster as, usually "postgres".  (NOT "root")
   PGUSER='postgres'
 
@@ -152,11 +150,11 @@ class PostgresAdmin
     options = (options[:aggressive] ? GC_AGGRESSIVE_DEFAULTS : GC_DEFAULTS).merge(options)
 
     result = self.vacuum(options)
-    _log.info("Output... #{result}") if result.to_s.length > 0
+    $log.info("MIQ(#{self.name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
 
     if options[:reindex]
       result = self.reindex(options)
-      _log.info("Output... #{result}") if result.to_s.length > 0
+      $log.info("MIQ(#{self.name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
     end
   end
 
@@ -208,7 +206,7 @@ class PostgresAdmin
   end
 
   def self.runcmd_with_logging(cmd_str, opts, params = {})
-    _log.info("Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
+    $log.info("MIQ(#{self.name}.#{__method__}) Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
     with_pgpass_file(opts) do
       AwesomeSpawn.run!(cmd_str, :params => params).output
     end
