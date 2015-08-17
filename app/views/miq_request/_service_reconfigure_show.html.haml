@@ -11,4 +11,4 @@
       .row
         .col-md-12.col-lg-12
           = render :partial => "shared/dialogs/dialog_provision",
-                   :locals  => {:wf => ResourceActionWorkflow.new(values, session[:userid], ra, opts)}
+                   :locals  => {:wf => ResourceActionWorkflow.new(values, current_user, ra, opts)}

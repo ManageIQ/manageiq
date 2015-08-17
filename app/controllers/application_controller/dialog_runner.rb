@@ -200,7 +200,7 @@ module ApplicationController::DialogRunner
     opts = {
       :target => options[:target_kls].constantize.find_by_id(options[:target_id])
     }
-    @edit[:wf] = ResourceActionWorkflow.new(@edit[:new],session[:userid],ra,opts)
+    @edit[:wf] = ResourceActionWorkflow.new(@edit[:new], current_user, ra, opts)
     @record = Dialog.find_by_id(ra.dialog_id.to_i)
     @edit[:rec_id]   = @record.id
     @edit[:key]     = "dialog_edit__#{@edit[:rec_id] || "new"}"
