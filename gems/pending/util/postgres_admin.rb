@@ -1,5 +1,5 @@
 require 'awesome_spawn'
-class MiqPostgresAdmin
+class PostgresAdmin
   include Vmdb::Logging
 
   # Who to run the postmaster as, usually "postgres".  (NOT "root")
