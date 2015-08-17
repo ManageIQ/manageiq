@@ -35,6 +35,26 @@ describe Condition do
         expr.taint
         -> { Condition.subst(expr, @cluster, nil) }.should_not raise_error(SecurityError)
       end
+
+      it "tests all allowed operators in find/check expression clause" do
+        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> == 0</check></find>"
+        Condition.subst(expr, @cluster, nil).should == 'false'
+
+        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> > 0</check></find>"
+        Condition.subst(expr, @cluster, nil).should == 'true'
+
+        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> >= 0</check></find>"
+        Condition.subst(expr, @cluster, nil).should == 'true'
+
+        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> < 0</check></find>"
+        Condition.subst(expr, @cluster, nil).should == 'false'
+
+        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> <= 0</check></find>"
+        Condition.subst(expr, @cluster, nil).should == 'false'
+
+        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> != 0</check></find>"
+        Condition.subst(expr, @cluster, nil).should == 'true'
+      end
     end
 
     context "expression with <registry>" do
