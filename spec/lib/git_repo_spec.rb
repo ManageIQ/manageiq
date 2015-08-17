@@ -3,11 +3,11 @@ require 'spec_helper'
 describe GitRepo do
   context "repository" do
     before do
-      git_db    = "TestGit.git"
+      git_db = "TestGit.git"
       @ae_db_dir = Dir.mktmpdir
       @default_hash = {:a => "one", :b => "two", :c => "three"}
-      @dirnames  = %w(A B c)
-      @repo_path   = File.join(@ae_db_dir, git_db)
+      @dirnames = %w(A B c)
+      @repo_path = File.join(@ae_db_dir, git_db)
       @filenames = %w(A/File1.YamL B/File2.YamL c/File3.YAML)
       @deleted_names = %w(A A/File1.YamL)
       @conflict_file = 'A/File1.YamL'
@@ -26,7 +26,7 @@ describe GitRepo do
     end
 
     def add_files_to_bare_repo(flist)
-      flist.each  { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
+      flist.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
       @ae_db.commit("files_added").tap { |cid| @ae_db.merge(cid) }
     end
 
@@ -106,7 +106,7 @@ describe GitRepo do
     it "can delete directories" do
       @dirnames.each { |d| @ae_db.remove_dir(d) }
       @ae_db.save_changes("directories deleted")
-      @filenames.each  { |f| @ae_db.file_exists?(f).should be_false }
+      @filenames.each { |f| @ae_db.file_exists?(f).should be_false }
     end
 
     it "rename file with new contents" do
@@ -166,7 +166,7 @@ describe GitRepo do
 
     it "push changes to master with conflicts" do
       dirname, c_repo = clone(@master_url)
-      new_file   = "conflict_file.yaml"
+      new_file = "conflict_file.yaml"
       master_data = "on master"
       @ae_db.add(new_file, master_data)
       @ae_db.save_changes("updated on master")
