@@ -1,18 +1,54 @@
 require 'awesome_spawn'
-class PostgresAdmin
-  # Who to run the postmaster as, usually "postgres".  (NOT "root")
-  PGUSER='postgres'
+require 'pathname'
 
-  def self.appliance_pg_ctl
+class PostgresAdmin
+  def self.pg_ctl
     ENV.fetch("APPLIANCE_PG_CTL")
   end
 
-  def self.appliance_pg_data
+  def self.data_directory
     Pathname.new(ENV.fetch("APPLIANCE_PG_DATA"))
   end
 
-  def self.postgresql_service
-    ENV.fetch("APPLIANCE_PG_SERVICE", "postgresql")
+  def self.service_name
+    ENV.fetch("APPLIANCE_PG_SERVICE")
+  end
+
+  def self.scl_name
+    ENV.fetch('APPLIANCE_PG_SCL_NAME')
+  end
+
+  def self.scl_enable_prefix
+    "scl enable #{scl_name}"
+  end
+
+  def self.package_name
+    ENV.fetch('APPLIANCE_PG_PACKAGE_NAME')
+  end
+
+  # Unprivileged user to run postgresql
+  def self.user
+    "postgres".freeze
+  end
+
+  def self.certificate_location
+    Pathname.new("/var/www/miq/vmdb/certs")
+  end
+
+  def self.logical_volume_name
+    "lv_pg".freeze
+  end
+
+  def self.volume_group_name
+    "vg_data".freeze
+  end
+
+  def self.database_disk_filesystem
+    "xfs".freeze
+  end
+
+  def self.logical_volume_path
+    Pathname.new("/dev").join(VOLUME_GROUP_NAME, LOGICAL_VOLUME_NAME)
   end
 
   def self.database_size(opts)
@@ -191,7 +227,7 @@ class PostgresAdmin
     # -s do it silently
     # -m smart - quit after all connections have disconnected
     # -m fast  - quit directly with proper shutdown
-    cmd = "su - #{PGUSER} -c '#{appliance_pg_ctl} stop -W -D #{appliance_pg_data} -s -m #{mode}'"
+    cmd = "su - #{user} -c '#{pg_ctl} stop -W -D #{pg_data} -s -m #{mode}'"
     self.runcmd_with_logging(cmd, opts)
   end
 
