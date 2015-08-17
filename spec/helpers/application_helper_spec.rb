@@ -1,4 +1,5 @@
 require "spec_helper"
+include ActionView::Helpers::JqueryHelper
 include JsHelper
 
 describe ApplicationHelper do
@@ -1534,5 +1535,9 @@ describe ApplicationHelper do
       result = controller.show_advanced_search?
       result.should be_true
     end
+  end
+
+  it 'output of remote_function should not be html_safe' do
+    remote_function(:url => {:controller => 'vm_infra', :action => 'explorer'}).html_safe?.should be_false
   end
 end

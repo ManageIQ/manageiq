@@ -1374,5 +1374,11 @@ module ApplicationHelper
     end
   end
 
+  # Wrapper around jquery-rjs' remote_function which adds an extra .html_safe()
+  # Remove if merged: https://github.com/amatsuda/jquery-rjs/pull/3
+  def remote_function(options)
+    super(options).to_str
+  end
+
   attr_reader :big_iframe
 end
