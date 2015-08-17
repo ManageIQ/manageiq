@@ -418,8 +418,7 @@ module OpsController::Settings::Common
         end
         if @sb[:active_tab] == "settings_server" && @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
           current_tenant.update_attributes(
-            :customer_name => @update.config[:server][:company],
-            :vmdb_name     => @update.config[:server][:name]
+            :name => @update.config[:server][:company],
           )
         elsif @sb[:active_tab] == "settings_custom_logos"                           # Reset session variable for logo field
           current_tenant.update_attributes(
@@ -473,8 +472,7 @@ module OpsController::Settings::Common
 
         if @sb[:active_tab] == "settings_workers" && @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
           current_tenant.update_attributes(
-            :customer_name => @update.config[:server][:company],
-            :vmdb_name     => @update.config[:server][:name]
+            :name => @update.config[:server][:company],
           )
         end
         @changed = false
