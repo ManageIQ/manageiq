@@ -2,20 +2,20 @@ require 'awesome_spawn'
 class MiqPostgresAdmin
   include Vmdb::Logging
 
-  # From /etc/init.d/postgresql script
-  # Installation prefix
-  PREFIX='/opt/rh/rh-postgresql94/root/usr'
-
-  # Data directory
-  PGDATA="/opt/rh/rh-postgresql94/root/var/lib/pgsql/data"
-
   # Who to run the postmaster as, usually "postgres".  (NOT "root")
   PGUSER='postgres'
 
-  # What to use to shut down the postmaster
-  PGCTL="#{PREFIX}/bin/pg_ctl"
+  def self.appliance_pg_ctl
+    ENV.fetch("APPLIANCE_PG_CTL")
+  end
 
-  PGSERVICE = "rh-postgresql94-postgresql".freeze
+  def self.appliance_pg_data
+    Pathname.new(ENV.fetch("APPLIANCE_PG_DATA"))
+  end
+
+  def self.postgresql_service
+    ENV.fetch("APPLIANCE_PG_SERVICE", "postgresql")
+  end
 
   def self.database_size(opts)
     result = runcmd("psql", opts, :command => "SELECT pg_database_size('#{opts[:dbname]}');")
@@ -181,7 +181,7 @@ class MiqPostgresAdmin
   # TODO: overlaps with appliance_console/service_group.rb
 
   def self.start(opts)
-    runcmd_with_logging("service #{PGSERVICE} start", opts)
+    runcmd_with_logging("service #{postgresql_service} start", opts)
   end
 
   def self.stop(opts)
@@ -193,7 +193,7 @@ class MiqPostgresAdmin
     # -s do it silently
     # -m smart - quit after all connections have disconnected
     # -m fast  - quit directly with proper shutdown
-    cmd = "su - #{PGUSER} -c '#{PGCTL} stop -W -D #{PGDATA} -s -m #{mode}'"
+    cmd = "su - #{PGUSER} -c '#{appliance_pg_ctl} stop -W -D #{appliance_pg_data} -s -m #{mode}'"
     self.runcmd_with_logging(cmd, opts)
   end
 
