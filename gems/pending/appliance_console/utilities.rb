@@ -1,6 +1,7 @@
 #TODO: add appropriate requires instead of depending on appliance_console.rb.
 #TODO: Further refactor these unrelated methods.
 require "appliance_console/internal_database_configuration"
+require "util/postgres_admin"
 
 module ApplianceConsole
   module Utilities
@@ -44,7 +45,7 @@ module ApplianceConsole
     end
 
     def self.pg_status
-      system("service #{InternalDatabaseConfiguration.postgresql_service} status > /dev/null 2>&1")
+      system("service #{PostgresAdmin.service_name} status > /dev/null 2>&1")
       return $?.exitstatus == 0 ? "running" : "not running"
     end
 

@@ -1,4 +1,5 @@
 require "appliance_console/internal_database_configuration"
+require "util/postgres_admin"
 
 module ApplianceConsole
   class ServiceGroup
@@ -27,18 +28,14 @@ module ApplianceConsole
       start
     end
 
-    def postgresql_service
-      InternalDatabaseConfiguration.postgresql_service
-    end
-
     def enable
       enable_miqtop
       SERVICES.each { |s| run_service(s, "enable") }
-      run_service(postgresql_service, "enable") if postgresql?
+      run_service(PostgresAdmin.service_name, "enable") if postgresql?
     end
 
     def disable
-      run_service(postgresql_service, "disable") unless postgresql?
+      run_service(PostgresAdmin.service_name, "disable") unless postgresql?
     end
 
     def start
@@ -46,7 +43,7 @@ module ApplianceConsole
     end
 
     def stop
-      run_service(postgresql_service, "stop") unless postgresql?
+      run_service(PostgresAdmin.service_name, "stop") unless postgresql?
     end
 
     private
