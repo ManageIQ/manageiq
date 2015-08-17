@@ -5,7 +5,7 @@
     = render(:partial => "layouts/flash_msg", :locals => {:click_remove => false})
     %hr/
     %h3
-      = _("Upload #{h(session[:customer_name])} Tag Assignments for VMs")
+      = _("Upload #{h(current_tenant.name)} Tag Assignments for VMs")
     %table.style1
       %tr
         %td

@@ -51,6 +51,7 @@ module EvmSpecHelper
   end
 
   def self.remote_guid_miq_server_zone
+    Tenant.seed
     guid   = MiqUUID.new_guid
     zone   = FactoryGirl.create(:zone)
     server = FactoryGirl.create(:miq_server_master, :guid => guid, :zone => zone)
