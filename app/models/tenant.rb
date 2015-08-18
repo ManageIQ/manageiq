@@ -104,7 +104,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def self.root_tenant
-    default_tenant
+    roots.first
   end
 
   def self.seed
