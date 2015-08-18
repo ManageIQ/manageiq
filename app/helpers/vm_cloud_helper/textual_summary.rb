@@ -10,7 +10,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_vm_cloud_relationships
-    %i(ems ems_infra cluster host availability_zone cloud_tenant flavor drift scan_history security_groups
+    %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history security_groups
        service cloud_network cloud_subnet orchestration_stack)
   end
 
@@ -187,6 +187,17 @@ module VmCloudHelper::TextualSummary
     if flavor && role_allows(:feature => "flavor_show")
       h[:title] = "Show this VM's #{label}"
       h[:link]  = url_for(:controller => 'flavor', :action => 'show', :id => flavor)
+    end
+    h
+  end
+
+  def textual_vm_template
+    vm_template = @record.genealogy_parent
+    label = ui_lookup(:table => "miq_template")
+    h = {:label => label, :image => "template", :value => (vm_template.nil? ? "None" : vm_template.name)}
+    if vm_template && role_allows(:feature => "miq_template_show")
+      h[:title] = "Show this VM's #{label}"
+      h[:link]  = url_for(:controller => 'miq_template', :action => 'show', :id => vm_template)
     end
     h
   end
