@@ -13,7 +13,7 @@ describe ContainerImageController do
   end
 
   it "renders show screen" do
-    MiqServer.stub(:my_zone).and_return("default")
+    EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_image = ContainerImage.create(:ext_management_system => ems, :name => "Test Image")
     get :show, :id => container_image.id

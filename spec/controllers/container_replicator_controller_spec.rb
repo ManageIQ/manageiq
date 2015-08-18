@@ -13,7 +13,7 @@ describe ContainerReplicatorController do
   end
 
   it "renders show screen" do
-    MiqServer.stub(:my_zone).and_return("default")
+    EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     container_replicator = ContainerReplicator.create(:ext_management_system => ems, :name => "Test Replicator")
     get :show, :id => container_replicator.id
