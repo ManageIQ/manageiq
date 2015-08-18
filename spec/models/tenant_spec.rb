@@ -29,6 +29,37 @@ describe Tenant do
     end
   end
 
+  describe "#name" do
+    let(:settings) { {:server => {:company => "settings"}} }
+
+    it "has default name" do
+      expect(tenant.name).to eq("My Company")
+    end
+
+    it "has custom name" do
+      tenant.name = "custom"
+      expect(tenant.name).to eq("custom")
+    end
+
+    it "reads settings for default tenant" do
+      expect(default_tenant.name).to eq("settings")
+    end
+
+    it "doesnt read settings for regular tenant" do
+      tenant.name = nil
+      expect(tenant.name).to be_nil
+    end
+
+    it "has custom name for default tenant" do
+      default_tenant.name = "custom"
+      expect(default_tenant.name).to eq("custom")
+    end
+
+    it "has custom name for default tenant" do
+      expect(default_tenant.name).to eq("settings")
+    end
+  end
+
   describe "#logo" do
     # would prefer if url was nil, but this is how paperclip works
     # but basically checking tht it is not /uploads/custom_logo
