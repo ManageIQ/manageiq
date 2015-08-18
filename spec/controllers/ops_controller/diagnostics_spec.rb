@@ -109,7 +109,7 @@ describe OpsController do
 
       flash_message = assigns(:flash_array).first
       flash_message[:message].should include("Delete successful")
-      flash_message[:level].should be(:info)
+      flash_message[:level].should be(:success)
     end
 
     context "#logs_collect" do

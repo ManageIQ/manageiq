@@ -1229,7 +1229,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Add a msg to the @flash_array
-  def add_flash(msg, level = :info, reset = false)
+  def add_flash(msg, level = :success, reset = false)
     @flash_array = [] if reset
     @flash_array ||= []
     @flash_array.push({:message => msg, :level => level})
