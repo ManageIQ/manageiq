@@ -41,6 +41,7 @@ class Tenant < ActiveRecord::Base
 
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
+  validate  :validate_only_one_root
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']
@@ -135,5 +136,12 @@ class Tenant < ActiveRecord::Base
 
   def settings
     @vmdb_config ||= VMDB::Config.new("vmdb").config
+  end
+
+  # validates that there is only one tree
+  def validate_only_one_root
+    if !(parent_id || parent) && self.class.roots.exists?
+      errors.add(:parent, "required")
+    end
   end
 end

@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Tenant do
   let(:settings) { {} }
-  let(:tenant) { described_class.new(:domain => 'x.com') }
+  let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
 
   let(:default_tenant) do
     Tenant.seed
