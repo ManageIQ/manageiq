@@ -3,7 +3,7 @@ describe('hostFormController', function() {
 
   beforeEach(module('ManageIQ.angularApplication'));
 
-  beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_, _miqService_) {
+  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, _miqService_) {
     miqService = _miqService_;
     spyOn(miqService, 'showButtons');
     spyOn(miqService, 'hideButtons');
@@ -27,6 +27,9 @@ describe('hostFormController', function() {
     $httpBackend.whenGET('/host/host_form_fields/new').respond();
       $controller = _$controller_('hostFormController', {
         $scope: $scope,
+        $attrs: {'formFieldsUrl': '/host/host_form_fields/',
+                 'createUrl': '/host/create/',
+                 'updateUrl': '/host/update/'},
         hostFormId: 'new',
         miqService: miqService
       });
@@ -76,7 +79,11 @@ describe('hostFormController', function() {
 
             $httpBackend.whenGET('/host/host_form_fields/12345').respond(hostFormResponse);
 
-            $controller = _$controller_('hostFormController', {$scope: $scope, hostFormId: '12345'});
+            $controller = _$controller_('hostFormController', {$scope: $scope,
+                                                               $attrs: {'formFieldsUrl': '/host/host_form_fields/',
+                                                                        'createUrl': '/host/create/',
+                                                                        'updateUrl': '/host/update/'},
+                                                               hostFormId: '12345'});
             $httpBackend.flush();
           }));
 
@@ -166,6 +173,7 @@ describe('hostFormController', function() {
       var angularForm;
       var element = angular.element(
         '<form name="angularForm">' +
+        '<input ng-model="hostModel.hostname" name="hostname" required text />' +
         '<input ng-model="hostModel.default_userid" name="default_userid" required text />' +
         '<input ng-model="hostModel.default_password" name="default_password" required text />' +
         '<input ng-model="hostModel.default_verify" name="default_verify" required text />' +
@@ -176,17 +184,18 @@ describe('hostFormController', function() {
       $scope.$digest();
       angularForm = $scope.angularForm;
 
+      $scope.angularForm.hostname.$setViewValue('abchost');
       $scope.angularForm.default_userid.$setViewValue('abcuser');
       $scope.angularForm.default_password.$setViewValue('abcpassword');
       $scope.angularForm.default_verify.$setViewValue('abcpassword');
     }));
 
     it('returns true if all the Validation fields are filled in', function() {
-      expect(miqService.canValidateBasicInfo()).toBe(true);
+      expect($scope.canValidateBasicInfo()).toBe(true);
     });
 
     it('returns true if all the Validation fields are filled in and dirty', function() {
-      expect(miqService.canValidate()).toBe(false);
+      expect($scope.canValidate()).toBe(true);
     });
   });
 });

@@ -1,7 +1,11 @@
 - @angularForm = true
-%form.form-horizontal#form_div{"name"          => "angularForm",
-                               "ng-controller" => "hostFormController",
-                               "ng-show"       => "afterGet"}
+%form.form-horizontal#form_div{"name"            => "angularForm",
+                               "ng-controller"   => "hostFormController",
+                               "ng-show"         => "afterGet",
+                               "form-fields-url" => "/#{controller_name}/host_form_fields/",
+                               "create-url"      => "/#{controller_name}/create/",
+                               "update-url"      => "/#{controller_name}/update/",
+                               "novalidate"      => true}
   = render :partial => "layouts/flash_msg"
   - if session[:host_items].nil?
     %div
@@ -32,6 +36,18 @@
                                 "checkchange" => ""}
             %span.help-block{"ng-show" => "angularForm.hostname.$error.miqrequired"}
               = _("Required")
+        .form-group{"ng-class" => "{'has-error': angularForm.user_assigned_os.$invalid}", "ng-hide" => "hostModel.operating_system"}
+          %label.col-md-2.control-label
+            = _("Host platform")
+          .col-md-10
+            = select_tag('user_assigned_os',
+                         options_for_select([["<#{_('Choose')}>", nil]] + Host.host_create_os_types.to_a, disabled: ["<#{_('Choose')}>", nil]),
+                         "ng-model"                    => "hostModel.user_assigned_os",
+                         "checkchange"                 => "",
+                         "ng-required"                 => "!hostModel.operating_system",
+                         "selectpicker-for-select-tag" => "")
+            %span.help-block{"ng-show" => "angularForm.user_assigned_os.$error.required"}
+              = _("Required")
         .form-group
           %label.col-md-2.control-label
             = _("Custom Identifier")
@@ -41,18 +57,6 @@
                            "ng-model"    => "hostModel.custom_1",
                            "maxlength"   => 50,
                            "checkchange" => ""}
-        .form-group{"ng-class" => "{'has-error': angularForm.user_assigned_os.$invalid}", "ng-hide" => "hostModel.operating_system"}
-          %label.col-md-2.control-label
-            = _("Host platform")
-          .col-md-10
-            = select_tag('user_assigned_os',
-                         options_for_select([["<#{_('not specified')}>", nil]] + Host.host_create_os_types.to_a),
-                         "ng-model"                    => "hostModel.user_assigned_os",
-                         "checkchange"                 => "",
-                         "ng-required"                 => "!hostModel.operating_system",
-                         "selectpicker-for-select-tag" => "")
-            %span.help-block{"ng-show" => "angularForm.name.$error.miqrequired"}
-              = _("Required")
         .form-group
           %label.col-md-2.control-label
             = _("IPMI IP Address")
@@ -72,17 +76,9 @@
                            "maxlength"   => "#{MAX_NAME_LEN}",
                            "checkchange" => ""}
 
-  = render(:partial => "/layouts/angular/multi_auth_credentials_form", :locals => {:record => @host})
-  %table{:width => '100%'}
-    %tr
-      %td{:align => 'right'}
-        #buttons_on
-          - if @host.id || session[:host_items]
-            = button_tag("Save", :class => "btn btn-primary", "ng-click" => "saveClicked()", "ng-disabled" => "angularForm.$pristine || angularForm.$invalid", "ng-class" => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
-            = button_tag("Reset", :class => "btn btn-primary", "ng-click" => "resetClicked()", "ng-disabled" => "angularForm.$pristine", "ng-class" => "{'btn-disabled': angularForm.$pristine}")
-          - else
-            = button_tag("Add", :class => "btn btn-primary", "ng-class" => "{'btn-disabled': !angularForm.$valid}", "ng-click" => "addClicked()", "ng-disabled" => "!angularForm.$valid")
-          = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
+  = render(:partial => "/layouts/angular/multi_auth_credentials",
+           :locals  => {:record => @host, :ng_model => "hostModel"})
+  = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 - unless session[:host_items].nil?
   %h3
@@ -99,6 +95,5 @@
             = render :partial => 'layouts/gtl'
 
 :javascript
-  ManageIQ.angularApplication.value('hostFormId', '#{@host.id || "new"}');
-  //angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
-  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication']);
+  ManageIQ.angularApplication.value('hostFormId', '#{(@host.id || (session[:host_items] && session[:host_items].join(","))) || "new"}');
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });

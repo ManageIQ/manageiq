@@ -295,7 +295,6 @@ class HostController < ApplicationController
         add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
-        p "XXXXXX"
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
     end
@@ -334,7 +333,6 @@ class HostController < ApplicationController
     assert_privileges("host_edit")
     case params[:button]
     when "cancel"
-      @host = find_by_id_filtered(Host, params[:id])
       session[:edit] = nil  # clean out the saved info
       flash = "Edit for Host \""
       @breadcrumbs.pop if @breadcrumbs
@@ -345,6 +343,7 @@ class HostController < ApplicationController
           page.redirect_to :action=>@lastaction, :display=>session[:host_display], :flash_msg=>flash
         end
       else
+        @host = find_by_id_filtered(Host, params[:id])
         flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"Host"), :name=>@host.name}
         render :update do |page|
           page.redirect_to :action=>@lastaction, :id=>@host.id, :display=>session[:host_display], :flash_msg=>flash
@@ -593,11 +592,11 @@ class HostController < ApplicationController
     host_hash = {
       :name             => host.name,
       :hostname         => host.hostname,
-      :ipmi_address     => host.ipmi_address,
-      :custom_1         => host.custom_1,
+      :ipmi_address     => host.ipmi_address ? host.ipmi_address : "",
+      :custom_1         => host.custom_1 ? host.custom_1 : "",
       :user_assigned_os => host.user_assigned_os,
       :operating_system => !(host.operating_system.nil? || host.operating_system.product_name.nil?),
-      :mac_address      => host.mac_address,
+      :mac_address      => host.mac_address ? host.mac_address : "",
       :default_userid   => host.authentication_userid.to_s,
       :default_password => host.authentication_password.to_s,
       :default_verify   => host.authentication_password.to_s,
