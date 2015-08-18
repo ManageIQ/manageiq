@@ -1,0 +1,41 @@
+= render :partial => "layouts/flash_msg"
+#main_div
+  .row
+    .col-md-12.col-lg-6
+      %fieldset
+        %h3= _("Tenant Information")
+        %table.style1
+          %tr
+            %td.key= _("Name")
+            %td{:nowrap => ""}
+              = h(@tenant.name)
+          %tr
+            %td.key= _("Appliance Name")
+            %td
+              = h(@tenant.appliance_name)
+          %tr
+            %td.key= _("Groups in this Tenant")
+            %td{:style => "padding: 0px"}
+              %table{:cellpadding => "0", :cellspacing => "0"}
+                - @tenant.miq_groups.sort_by { |group| group.name.downcase }.each do |g|
+                  %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'g-#{to_cid(g.id)}');", :title => _("View this Group")}
+                    %td.image
+                      %ul.icons.list-unstyled
+                        %li
+                          %span.pficon.pficon-user
+                    %td
+                      = h(g.name)
+  - unless @tenant.children.blank?
+    %h3= _("Child Tenants")
+    %table.table.table-striped.table-bordered.table-hover
+      %thead
+        %th.narrow
+        %th= _("Name")
+        %tbody
+          - @tenant.children.each do |tenant|
+            %tr{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+              :title => _("Click to view child Tenant")}
+              %td.narrow
+                %img{:src => "/images/icons/new/tenant.png"}/
+              %td= tenant.name
+

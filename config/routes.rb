@@ -1289,6 +1289,7 @@ Vmdb::Application.routes.draw do
         rbac_role_field_changed
         rbac_roles_list
         rbac_tags_edit
+        rbac_tenants_list
         rbac_user_edit
         rbac_user_field_changed
         rbac_users_list

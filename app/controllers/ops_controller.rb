@@ -41,6 +41,9 @@ class OpsController < ApplicationController
     'rbac_user_copy'            => :rbac_user_copy,
     'rbac_user_delete'          => :rbac_user_delete,
     'rbac_user_tags_edit'       => :rbac_tags_edit,
+    'rbac_tenant_add'           => :rbac_tenant_add,
+    'rbac_tenant_delete'        => :rbac_tenant_delete,
+    'rbac_tenant_edit'          => :rbac_tenant_edit,
     'refresh_audit_log'         => :refresh_audit_log,
     'refresh_log'               => :refresh_log,
     'refresh_production_log'    => :refresh_production_log,
@@ -648,6 +651,8 @@ class OpsController < ApplicationController
         "Groups"
       when "ur"
         "Roles"
+      when "tn"
+        "Tenants"
       end
     when "u"
       @user.name || "Users"
@@ -661,6 +666,8 @@ class OpsController < ApplicationController
       end
     when "ur"
       @role.name || "Roles"
+    when "tn"
+      @tenant.name || "Tenants"
     else
       "Details"
     end

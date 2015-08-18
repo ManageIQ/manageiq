@@ -84,6 +84,21 @@ module OpsController::OpsRbac
     end
   end
 
+  def rbac_tenant_add
+    assert_privileges("rbac_tenant_add")
+    @_params[:typ] = "new"
+    rbac_edit_reset('tenant', Tenant)
+  end
+
+  def rbac_tenant_edit
+    assert_privileges("rbac_tenant_edit")
+    case params[:button]
+      when 'cancel'      then rbac_edit_cancel('tenant')
+      when 'save', 'add' then rbac_edit_save_or_add('tenant')
+      when 'reset', nil  then rbac_edit_reset('tenant', Tenant) # Reset or first time in
+    end
+  end
+
   # AJAX driven routines to check for changes in ANY field on the form
   def rbac_user_field_changed
     rbac_field_changed("user")
@@ -95,6 +110,10 @@ module OpsController::OpsRbac
 
   def rbac_role_field_changed
     rbac_field_changed("role")
+  end
+
+  def rbac_tenant_field_changed
+    rbac_field_changed("tenant")
   end
 
   def rbac_user_delete
@@ -175,6 +194,30 @@ module OpsController::OpsRbac
   end
   def rbac_roles_list
     rbac_list("role")
+  end
+
+  def rbac_tenants_list
+    rbac_list("tenant")
+  end
+
+  def rbac_tenant_delete
+    assert_privileges("rbac_tenant_delete")
+    tenants = []
+    if !params[:id] # showing a role list
+      ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
+      tenants = Tenant.find_all_by_id(ids)
+      process_tenants(tenants, "destroy") unless tenants.empty?
+    else # showing 1 role, delete it
+      if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
+        add_flash(_("%s no longer exists") %  "Tenant", :error)
+      else
+        tenants.push(params[:id])
+      end
+      process_tenants(tenants, "destroy") unless tenants.empty?
+      self.x_node  = "xx-tn" if Tenant.find_by_id(params[:id]).nil? # reset node to show list
+    end
+    get_node_info(x_node)
+    replace_right_cell(x_node, [:rbac])
   end
 
   def rbac_group_delete
@@ -438,6 +481,8 @@ module OpsController::OpsRbac
       record_id = @edit[:group_id]
     when :user
       record_id = @edit[:user_id]
+    when :tenant
+      record_id = id
     end
     add_flash(record_id ? _("Edit of %s was cancelled by the user") % what.titleize : _("Add of new %s was cancelled by the user") % what.titleize)
     self.x_node  = @sb[:pre_edit_node]
@@ -568,6 +613,8 @@ module OpsController::OpsRbac
                         get_view(MiqGroup)
                       when "role"
                         get_view(MiqUserRole)
+                      when "tenant"
+                        get_view(Tenant, {:conditions => ["domain IS NULL AND subdomain is NULL"]})
                     end
 
     @current_page = @pages[:current] if @pages != nil # save the current page number
@@ -627,6 +674,10 @@ module OpsController::OpsRbac
     process_elements(roles, MiqUserRole, task)
   end
 
+  def process_tenants(tenants, task)
+    process_elements(tenants, Tenant, task, "Tenant", "name")
+  end
+
   # Build the main Access Control tree
   def rbac_build_tree
     TreeBuilderOpsRbac.new("rbac_tree", "rbac", @sb)
@@ -647,6 +698,9 @@ module OpsController::OpsRbac
           when "ur"
             @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"MiqUserRole")}
             rbac_roles_list
+          when "tn"
+            @right_cell_text = _("%{typ} %{model}") % {:typ => "Access Control", :model => ui_lookup(:models => "Tenant")}
+            rbac_tenants_list
         end
       when "u"
         @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"User"), :name=>User.find_by_id(from_cid(id)).name}
@@ -657,11 +711,15 @@ module OpsController::OpsRbac
       when "ur"
         @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqUserRole"), :name=>MiqUserRole.find_by_id(from_cid(id)).name}
         rbac_role_get_details(id)
+      when "tn"
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "Tenant"), :name => Tenant.find_by_id(from_cid(id)).name}
+        rbac_tenant_get_details(id)
       else  # Root node
         @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Access Control", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
-        @users_count = User.in_my_region.count
-        @groups_count = MiqGroup.count
-        @roles_count = MiqUserRole.count
+        @users_count   = User.in_my_region.count
+        @groups_count  = MiqGroup.count
+        @roles_count   = MiqUserRole.count
+        @tenants_count = Tenant.roots.count
     end
   end
 
@@ -669,6 +727,10 @@ module OpsController::OpsRbac
     @edit = nil
     @record = @user = User.find_by_id(from_cid(id))
     get_tagdata(@user)
+  end
+
+  def rbac_tenant_get_details(id)
+    @record = @tenant = Tenant.find_by_id(from_cid(id))
   end
 
   def rbac_group_get_details(id)
@@ -853,6 +915,7 @@ module OpsController::OpsRbac
       @edit[:new][:description] = params[:ldap_groups_user] if params[:ldap_groups_user]
       @edit[:new][:description] = params[:description]      if params[:description]
       @edit[:new][:role]        = params[:group_role]       if params[:group_role]
+      @edit[:new][:tenant]      = params[:group_tenant]       if params[:group_tenant]
       @edit[:new][:lookup]      = (params[:lookup] == "1")  if params[:lookup]
       @edit[:new][:user]        = params[:user]             if params[:user]
       @edit[:new][:user_id]     = params[:user_id]          if params[:user_id]
@@ -924,6 +987,8 @@ module OpsController::OpsRbac
       @edit[:new][:role] = @group.miq_user_role.id
     end
 
+    @edit[:tenants] = Tenant.all.sort_by(&:name).collect {|tenant| [tenant.name, tenant.id]}
+
     @edit[:current] = copy_hash(@edit[:new])
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
     build_belongsto_tree(@edit[:new][:belongsto].keys)  # Build the Hosts & Clusters tree for this user
@@ -974,6 +1039,7 @@ module OpsController::OpsRbac
     group.sequence = groups.first.nil? ? 1 : groups.first.sequence + 1
     group.description = @edit[:new][:description]
     group.miq_user_role = role
+    group.tenant_owner = Tenant.find_by_id(@edit[:new][:tenant]) if @edit[:new][:tenant]
     rbac_group_set_filters(group)             # Go set the filters for the group
   end
 

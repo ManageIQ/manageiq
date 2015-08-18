@@ -2800,6 +2800,33 @@
           :feature_type: admin
           :hidden: true
           :identifier: rbac_role_delete
+    - :name: Tenants
+      :description: Tenants
+      :feature_type: node
+      :hidden: true
+      :identifier: rbac_tenant
+      :children:
+      - :name: Modify
+        :description: Modify Tenant
+        :feature_type: admin
+        :identifier: rbac_tenant_admin
+        :hidden: true
+        :children:
+        - :name: Add
+          :description: Add a Tenant
+          :feature_type: admin
+          :hidden: true
+          :identifier: rbac_tenant_add
+        - :name: Edit
+          :description: Edit a Tenant
+          :feature_type: admin
+          :hidden: true
+          :identifier: rbac_tenant_edit
+        - :name: Delete
+          :description: Delete a Tenant
+          :feature_type: admin
+          :hidden: true
+          :identifier: rbac_tenant_delete
   - :name: Diagnostics
     :description: Diagnostics Accordion
     :feature_type: node
