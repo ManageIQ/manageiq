@@ -18,7 +18,7 @@ module ContainerNodeHelper::TextualSummary
   def textual_group_conditions
     labels = [_("Name"), _("Status"), _("Last Transition Time"), _("Reason")]
     h = {:labels => labels}
-    h[:values] = @record.container_node_conditions.collect do |condition|
+    h[:values] = @record.container_conditions.collect do |condition|
       [
         condition.name,
         condition.status,
