@@ -114,8 +114,8 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
 
   def get_cpu_values_hash(vm)
     result = {
-      :number_of_cpus    => vm.hardware.numvcpus,
-      :number_of_sockets => vm.hardware.logical_cpus,
+      :number_of_cpus    => vm.hardware.logical_cpus,
+      :number_of_sockets => vm.hardware.numvcpus,
       :cores_per_socket  => vm.hardware.cores_per_socket
     }
 
