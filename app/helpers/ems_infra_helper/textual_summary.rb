@@ -113,13 +113,27 @@ module EmsInfraHelper::TextualSummary
   def textual_used_tenants
     return nil if !@record.respond_to?(:cloud_tenants) || !@record.cloud_tenants
 
-    textual_link(@record.cloud_tenants)
+    label = ui_lookup(:tables => "cloud_tenants")
+    num   = @record.cloud_tenants.count
+    h     = {:label => label, :image => "cloud_tenants", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
+      h[:title] = "Show all#{label} of this provider"
+      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
+    end
+    h
   end
 
   def textual_used_availability_zones
     return nil if !@record.respond_to?(:availability_zones) || !@record.availability_zones
 
-    textual_link(@record.availability_zones)
+    label = ui_lookup(:tables => "availability_zones")
+    num   = @record.availability_zones.count
+    h     = {:label => label, :image => "availability_zone", :value => num}
+    if num > 0 && role_allows(:feature => "availability_zone_show_list")
+      h[:title] = "Show all #{label} of this provider"
+      h[:link]  = url_for(:action => "show", :id => @record, :display => "availability_zones")
+    end
+    h
   end
 
   def textual_datastores
