@@ -16,6 +16,27 @@ module ContainerProjectHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_quota
+    {
+      :labels => [_("Name"), _("Resource"), _("Desired"), _("Enforced"), _("Observed")],
+      :values => collect_quota_items
+    }
+  end
+
+  def collect_quota_items
+    rows = []
+    @record.container_quota_items.each do |item|
+      rows << [
+        item.container_quota.name,
+        item.resource,
+        item.quota_desired,
+        item.quota_enforced,
+        item.quota_observed,
+      ]
+    end
+    rows
+  end
+
   #
   # Items
   #
