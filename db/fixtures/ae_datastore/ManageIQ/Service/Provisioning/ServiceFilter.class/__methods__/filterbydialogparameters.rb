@@ -22,16 +22,7 @@
 #	   included or excluded
 #
 
-def dump_root
-  $evm.log("info", "Root:<$evm.root> Attributes - Begin")
-  $evm.root.attributes.each { |k, v| $evm.log("info", "  Attribute - #{k}: #{v}") }
-  $evm.log("info", "Root:<$evm.root> Attributes - End")
-  $evm.log("info", "")
-end
-
 $evm.root['include_service'] = false
-
-# dump_root
 
 service_template = $evm.root['service_template']
 raise "service_template missing" unless service_template

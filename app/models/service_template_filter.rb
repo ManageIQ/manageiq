@@ -7,13 +7,13 @@ module ServiceTemplateFilter
       st = ServiceTemplate.find(service_template_id)
       set_automation_attrs([parent_svc_task.get_user, st, parent_svc, parent_svc_task], attrs)
       uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => parent_svc_task)
-      automate_result(uri, st.name)
+      automate_result_include_service_template?(uri, st.name)
     end
 
-    def automate_result(uri, name)
+    def automate_result_include_service_template?(uri, name)
       ws  = MiqAeEngine.resolve_automation_object(uri)
-      result = ws.root('include_service').nil? ? true : ws.root('include_service')
-      $log.info("Include Service Template <#{name}> : <#{result}>")
+      result = ws.root('include_service').presence || true
+      _log.info("Include Service Template <#{name}> : <#{result}>")
       result
     end
 

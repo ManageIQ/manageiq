@@ -2,7 +2,7 @@ require "spec_helper"
 include ServiceTemplateHelper
 
 describe "Service Filter" do
-  before(:each) do
+  before do
     @allowed_service_templates = []
     user_helper
     build_small_environment

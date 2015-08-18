@@ -2,7 +2,7 @@ require "spec_helper"
 include ServiceTemplateHelper
 
 describe "FilterByDialogParameters Automate Method" do
-  before(:each) do
+  before do
     @allowed_service_templates = %w(top)
     user_helper
     build_small_environment
@@ -49,7 +49,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("top"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      ws.root['include_service'].should be_true
+      expect(ws.root['include_service']).to be_true
     end
 
     it "with vm_serice" do
@@ -57,7 +57,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("vm_service"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      ws.root['include_service'].should be_true
+      expect(ws.root['include_service']).to be_true
     end
 
     it "with missing dialog_environment" do
@@ -73,7 +73,7 @@ describe "FilterByDialogParameters Automate Method" do
       ws = run_automate_method(ServiceTemplate.find_by_name("vm_service"),
                                root_service_template_task,
                                FactoryGirl.create(:service))
-      ws.root['include_service'].should be_false
+      expect(ws.root['include_service']).to be_false
     end
   end
 end
