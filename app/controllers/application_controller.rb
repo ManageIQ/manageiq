@@ -711,9 +711,19 @@ class ApplicationController < ActionController::Base
     }
   end
 
+  PASSWORD_FIELDS = [:password, :_pwd, :amazon_secret]
+
+  def filter_config(data)
+    @parameter_filter ||=
+      ActionDispatch::Http::ParameterFilter.new(
+        Rails.application.config.filter_parameters + PASSWORD_FIELDS
+      )
+    return data.map { |e| filter_config(e) } if data.kind_of?(Array)
+    data.kind_of?(Hash) ? @parameter_filter.filter(data) : data
+  end
+
   def password_field?(k)
-    (k.to_s.ends_with?("password") || k.to_s.ends_with?("_pwd") ||
-      k.to_s.ends_with?("amazon_secret"))
+    PASSWORD_FIELDS.any? { |p| k.to_s.ends_with?(p.to_s) }
   end
 
   def build_audit_msg(new, current, msg_in)
@@ -733,17 +743,15 @@ class ApplicationController < ActionController::Base
                 msg_arr << "#{hk}:[*]#{' to [*]' unless current.nil?}"
               else
                 msg_arr << "#{hk}:[" +
-                           (current.nil? ? "" :
-                            "#{current[k][hk]}] to [") +
-                            "#{new[k][hk]}]"
+                  (current.nil? ? "" : "#{filter_config(current[k][hk])}] to [") +
+                  "#{filter_config(new[k][hk])}]"
               end
             end
           end
         else
           msg_arr << "#{k}:[" +
-                     (current.nil? ? "" :
-                      "#{current[k]}] to [") +
-                      "#{new[k]}]"
+            (current.nil? ? "" : "#{filter_config(current[k])}] to [") +
+            "#{filter_config(new[k])}]"
         end
       end
     end
