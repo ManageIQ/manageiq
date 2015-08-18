@@ -30,8 +30,9 @@ class ApiController
         :message => message,
         :klass   => klass
       }
+      api_log_error("#{klass}: #{message}")
       # We don't want to return the stack trace, but only log it in case of an internal error
-      api_log_error("#{message}\n\n#{backtrace}") if kind == :internal_server_error && !backtrace.empty?
+      api_log_error("\n\n#{backtrace}") if kind == :internal_server_error && !backtrace.empty?
 
       render :json => {:error => err}, :status => status
     end
