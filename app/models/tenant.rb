@@ -55,6 +55,12 @@ class Tenant < ActiveRecord::Base
     self.class.descendants_of(self).where(:divisible => false)
   end
 
+  # this allows us to edit this record in the ui without
+  # settings getting into the default record
+  #
+  # @return [Boolean] Read out of configurations if this is a default records?
+  attr_writer :read_settings
+
   def name
     tenant_attribute(:name, :company)
   end
@@ -144,11 +150,12 @@ class Tenant < ActiveRecord::Base
 
   # when a root tenant has an attribute with a nil value,
   #   read the value from the settings table instead
+  # this can be turned off by setting read_settings to false
   #
   # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
     ret = self[attr_name]
-    if ret.nil? && root?
+    if ret.nil? && root? && (@read_settings != false)
       ret = settings.fetch_path(:server, setting_name)
       block_given? ? yield(ret) : ret
     else
