@@ -139,6 +139,7 @@ describe EmsContainerController do
   context "::EmsCommon" do
     context "#update" do
       it "updates provider with new token" do
+        MiqServer.stub(:my_zone).and_return("default")
         set_user_privileges
         @ems = ManageIQ::Providers::Kubernetes::ContainerManager.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
         controller.instance_variable_set(:@edit,
