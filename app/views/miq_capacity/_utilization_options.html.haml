@@ -1,30 +1,34 @@
 - cap_type ||= "details"
 - url = url_for(:action => 'util_chart_chooser', :id => @record.id)
 %div{:id => "capacity_#{cap_type}_options_div", :onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
-  %h3= _('Options')
-  %table.style1
-    %tr
-      %td.key{:style => "width: 120px;"}= _('Trends for past')
-      %td.wide{:style => "padding-right: 5px;"}
+  %h3
+    = _('Options')
+  %form.form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _('Trends for past')
+      .col-md-10
         = select_tag("#{cap_type}_days",
           options_for_select(WEEK_CHOICES.invert.sort_by(&:last), @sb[:util][:options][:days].to_i),
           "data-miq_sparkle_on" => true,
           "data-miq_observe"    => {:url => url}.to_json)
 
-  %table.style1
-    %tr
-      %td.key{:style => "width: 120px;"}= _('Classification')
-      %td.wide{:style => "padding-right: 5px;"}
+  %form.form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _('Classification')
+      .col-md-10
         - options = [["<#{_('None')}>", "<None>"]] + (@sb[:util][:tags] ? @sb[:util][:tags].invert.sort : [])
         = select_tag("#{cap_type}_tag",
           options_for_select(options, @sb[:util][:options][:tag]),
           "data-miq_sparkle_on" => true,
           "data-miq_observe"    => {:url => url}.to_json)
 
-  %table.style1
-    %tr
-      %td.key{:style => "width: 120px;"}= _('Time Profile')
-      %td.wide{:style => "padding-right: 5px;", :valign => "top"}
+  %form.form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _('Time Profile')
+      .col-md-10
         - if session[:time_profiles].blank?
           = _('No Time Profiles found')
         - elsif session[:time_profiles].length == 1
@@ -37,18 +41,20 @@
             "data-miq_sparkle_on" => true,
             "data-miq_observe"    => {:url => url}.to_json)
     - if ["summ"].include?(cap_type)
-      %tr
-        %td.key{:style => "width: 120px;"}= _('Selected Day')
-        %td.wide{:style => "padding-right: 5px;"}
+      .form-group
+        %label.control-label.col-md-2
+          = _('Selected Day')
+        .col-md-10
           = datepicker_input_tag("miq_date_1",
             @sb[:util][:options][:chart_date],
             :readonly               => "true",
             "data-miq_sparkle_on"   => true,
             "data-miq_observe_date" => {:url => url}.to_json)
     - elsif ["report"].include?(cap_type)
-      %tr
-        %td.key{:style => "width: 120px;"}= _('Selected Day')
-        %td.wide{:style => "padding-right: 5px;"}
+      .form-group
+        %label.control-label.col-md-2
+          = _('Selected Day')
+        .col-md-10
           = datepicker_input_tag("miq_date_2",
             @sb[:util][:options][:chart_date],
             :readonly               => "true",

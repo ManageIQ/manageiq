@@ -1,26 +1,30 @@
 - url = url_for :action => 'bottleneck_tl_chooser'
 #tl_options_div
-  %h3= _('Options')
-  %table.style1
-    %tr
-      %td.key{:style => "width: 150px;"}= _('Event Groups')
-      %td
+  %h3
+    = _('Options')
+  %form.form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _('Event Groups')
+      .col-md-10
         = select_tag("tl_#{typ}_fl_grp1",
           options_for_select([["<#{_('ALL')}> ", ""]] + @sb[:bottlenecks][:groups].sort, @sb[:bottlenecks][:tl_options][:filter1]),
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           "data-miq_observe"     => {:url => url}.to_json)
     - unless %w(s h).include?(x_node.split("-").last.split("_").first)
-      %tr
-        %td.key{:style => "width: 150px;"}= _('Show Host Events')
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _('Show Host Events')
+        .col-md-10
           = check_box_tag("tl_#{typ}_hosts", "1", @sb[:bottlenecks][:tl_options][:hosts],
             "data-miq_sparkle_on"       => true,
             "data-miq_sparkle_off"      => true,
             "data-miq_observe_checkbox" => {:url => url}.to_json)
-    %tr
-      %td.key{:style => "width: 150px;"}= _('Time Zone')
-      %td
+    .form-group
+      %label.control-label.col-md-2
+        = _('Time Zone')
+      .col-md-10
         = select_tag("tl_#{typ}_tz",
           options_for_select(ALL_TIMEZONES,
           @sb[:bottlenecks][:tl_options][:tz]),
@@ -29,4 +33,3 @@
           "data-miq_observe"     => {:url => url}.to_json)
   %form#hiddenForm
     %input.filter1{:type => "hidden", :name => "filter1", :value => @sb[:bottlenecks][:tl_options][:fltr1]}
-  -#= "* Dates/Times on this page are based on UTC Time."
