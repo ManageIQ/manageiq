@@ -85,9 +85,9 @@ class Jqplot
       when 'Pie'
         Jqplot.default_legend(
           :options => {
-            :seriesdefaults => {
-              :renderer        => 'jquery.jqplot.pierenderer',
-              :rendereroptions => {:showdatalabels => true}
+            :seriesDefaults => {
+              :renderer        => 'jQuery.jqplot.PieRenderer',
+              :rendererOptions => {:showDataLabels => true}
             },
             :series         => []
           },
