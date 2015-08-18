@@ -29,6 +29,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.plural(/queue$/, "queue")         # for table name(s)
   inflect.singular(/quota$/, "quota")
   inflect.singular(/Quota$/, "Quota")
+  inflect.plural(/quota$/, "quotas")
 
   inflect.acronym 'ManageIQ'
 end
