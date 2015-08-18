@@ -265,6 +265,7 @@ module ManageIQ::Providers
       uid = tenant.id
 
       new_result = {
+        :type        => "ManageIQ::Providers::Openstack::CloudManager::CloudTenant",
         :name        => tenant.name,
         :description => tenant.description,
         :enabled     => tenant.enabled,
