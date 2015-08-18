@@ -75,6 +75,9 @@ FactoryGirl.define do
     provider_region "us-east-1"
   end
 
+  factory :ems_azure, :aliases => ["manageiq/providers/azure/cloud_manager"], :class => "EmsAzure", :parent => :ems_cloud do
+  end
+
   factory :ems_amazon_with_authentication, :parent => :ems_amazon do
     after(:create) do |x|
       x.authentications << FactoryGirl.create(:authentication, :userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno")

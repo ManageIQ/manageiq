@@ -20,6 +20,7 @@ describe ExtManagementSystem do
       rhevm
       scvmm
       vmwarews
+      azure
     )
   end
 
