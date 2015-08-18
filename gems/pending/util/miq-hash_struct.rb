@@ -55,7 +55,8 @@ class MiqHashStruct
 
   private
 
-  def respond_to_missing?(*)
-    true
+  def respond_to_missing?(sym, *)
+    # Methods for Marshal and YAML dumping and loading shouldn't #respond_to_missing?
+    !sym.in?([:encode_with, :init_with, :yaml_initialize, :marshal_dump, :_dump])
   end
 end
