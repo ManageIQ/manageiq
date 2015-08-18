@@ -1,25 +1,16 @@
 eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 
+# Client-side dependencies
+eval_gemfile(File.expand_path("Gemfile.client.rb", __dir__))
+# Please do not add client-side dependencies here, use Gemfile.client.rb
+
 #
 # VMDB specific gems
 #
 
 gem "rails",                           RAILS_VERSION
 gem "activerecord-deprecated_finders", "~>1.0.4",     :require => "active_record/deprecated_finders"
-
-# Client-side dependencies
-gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
-gem 'momentjs-rails', '~> 2.10.3'
-gem 'jquery-rails', "~>4.0.4"
-gem 'jquery-hotkeys-rails'
-gem 'codemirror-rails', "=4.2"
-gem 'lodash-rails', '~> 3.10.0'
-
-# On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
-
 gem 'sass-rails'
-gem 'patternfly-sass', "~>1.3.1"
-gem 'bootstrap-datepicker-rails'
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                          :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
@@ -104,29 +95,6 @@ unless ENV['APPLIANCE']
   group :development, :test do
     gem "rspec-rails",      "~>2.14.0"
   end
-end
-
-# Assets from rails-assets.org
-source 'https://rails-assets.org' do
-  gem 'rails-assets-c3', '~> 0.4.10'
-  gem 'rails-assets-bootstrap-select', '~> 1.5.4'
-  gem 'rails-assets-bootstrap-hover-dropdown', '~> 2.0.11'
-
-  gem 'rails-assets-angular', '~>1.4.3'
-  gem 'rails-assets-angular-animate', '~> 1.4.3'
-  gem 'rails-assets-angular-aria', '~> 1.4.3'
-  gem 'rails-assets-angular-cookies', '~> 1.4.3'
-  gem 'rails-assets-angular-loader', '~> 1.4.3'
-  gem 'rails-assets-angular-message-format', '~> 1.4.3'
-  gem 'rails-assets-angular-messages', '~> 1.4.3'
-  gem 'rails-assets-angular-mocks', '~> 1.4.3'
-  gem 'rails-assets-angular-resource', '~> 1.4.3'
-  gem 'rails-assets-angular-route', '~> 1.4.3'
-  gem 'rails-assets-angular-sanitize', '~> 1.4.3'
-  gem 'rails-assets-angular-scenario', '~> 1.4.3'
-  gem 'rails-assets-angular-touch', '~> 1.4.3'
-
-  gem 'rails-assets-angular-bootstrap', '~> 0.13.0'
 end
 
 #
