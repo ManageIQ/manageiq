@@ -65,6 +65,11 @@ describe ApiController do
       test_collection_query(:events, events_url, MiqEventDefinition)
     end
 
+    it "query Features" do
+      FactoryGirl.create(:miq_product_feature, :identifier => "vm_auditing")
+      test_collection_query(:features, features_url, MiqProductFeature)
+    end
+
     it "query Flavors" do
       FactoryGirl.create(:flavor)
       test_collection_query(:flavors, flavors_url, Flavor)

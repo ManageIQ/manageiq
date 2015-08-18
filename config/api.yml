@@ -147,6 +147,7 @@
   :features:
     :description: Product Features
     :options:
+    - :collection
     - :subcollection
     - :show
     :methods: *70174834085860
