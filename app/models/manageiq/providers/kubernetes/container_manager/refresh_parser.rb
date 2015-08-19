@@ -342,7 +342,13 @@ module ManageIQ::Providers::Kubernetes
         :command           => container_def.command ? Shellwords.join(container_def.command) : nil,
         :memory            => container_def.memory,
          # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
-        :cpu_cores         => container_def.cpu.to_f / 1000
+        :cpu_cores         => container_def.cpu.to_f / 1000,
+        :capabilities_add  => container_def.securityContext.try(:capabilities).try(:add).to_a.join(','),
+        :capabilities_drop => container_def.securityContext.try(:capabilities).try(:drop).to_a.join(','),
+        :privileged        => container_def.securityContext.try(:privileged),
+        :run_as_user       => container_def.securityContext.try(:runAsUser),
+        :run_as_non_root   => container_def.securityContext.try(:runAsNonRoot),
+        :security_context  => parse_security_context(container_def.securityContext)
       }
       ports = container_def.ports
       new_result[:container_port_configs] = Array(ports).collect do |port_entry|
@@ -483,6 +489,16 @@ module ManageIQ::Providers::Kubernetes
           :port => parts[:port],
         },
       ]
+    end
+
+    def parse_security_context(security_context)
+      return if security_context.nil?
+      {
+        :se_linux_level => security_context.seLinuxOptions.try(:level),
+        :se_linux_user  => security_context.seLinuxOptions.try(:user),
+        :se_linux_role  => security_context.seLinuxOptions.try(:role),
+        :se_linux_type  => security_context.seLinuxOptions.try(:type)
+      }
     end
   end
 end

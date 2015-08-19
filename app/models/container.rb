@@ -11,6 +11,7 @@ class Container < ActiveRecord::Base
   belongs_to :container_definition
   belongs_to :container_image
   has_one    :container_image_registry, :through => :container_image
+  has_one    :security_context, :through => :container_definition
 
   acts_as_miq_taggable
 end
