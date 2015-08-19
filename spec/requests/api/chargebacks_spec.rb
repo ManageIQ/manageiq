@@ -96,10 +96,10 @@ RSpec.describe "chargebacks API" do
   it "can edit a chargeback rate detail through PATCH" do
     chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
 
-    api_basic_authorize
-    run_patch rates_url(chargeback_rate_detail.id), [gen_request(:edit, :rate => 0.02)]
+    api_basic_authorize action_identifier(:rates, :edit)
+    run_patch rates_url(chargeback_rate_detail.id), [{:action => "edit", :path => "rate", :value => 0.02}]
 
-    # expect(@result["rate"]).to eq("0.02")
+    expect(@result["rate"]).to eq("0.02")
     expect_request_success
     expect(chargeback_rate_detail.reload.rate).to eq("0.02")
   end
