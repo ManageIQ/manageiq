@@ -1,4 +1,6 @@
 class EmsAzure < EmsCloud
+  alias_attribute :tenant_id, :uid_ems
+
   def self.ems_type
     @ems_type ||= "azure".freeze
   end
@@ -17,7 +19,6 @@ class EmsAzure < EmsCloud
       :client_key => clientkey,
       :tenant_id  => tenantid
     )
-    Azure::Armrest::VirtualMachineManager.new
   end
 
   def connect(options = {})
@@ -32,14 +33,5 @@ class EmsAzure < EmsCloud
   def verify_credentials(_auth_type = nil, _options = {})
     # TODO
     true
-  end
-
-  def tenant_id=(tenant_id)
-    self.uid_ems = tenant_id
-    save
-  end
-
-  def tenant_id
-    uid_ems
   end
 end
