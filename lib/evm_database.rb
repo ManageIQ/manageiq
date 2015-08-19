@@ -8,6 +8,7 @@ class EvmDatabase
     Zone
     MiqServer
     ServerRole
+    Tenant
     MiqProductFeature
     MiqUserRole
     MiqGroup

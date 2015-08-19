@@ -15,4 +15,11 @@ describe EvmDatabase do
       expect(subject).not_to be_local
     end
   end
+
+  context "#seed_primordial" do
+    it "populates seeds" do
+      described_class.seed_primordial
+      expect(Tenant.count).to eq(1)
+    end
+  end
 end
