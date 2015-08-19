@@ -3,7 +3,7 @@ require 'pathname'
 
 class PostgresAdmin
   def self.pg_ctl
-    ENV.fetch("APPLIANCE_PG_CTL")
+    Pathname.new(ENV.fetch("APPLIANCE_PG_CTL"))
   end
 
   def self.data_directory
@@ -218,7 +218,7 @@ class PostgresAdmin
   end
 
   def self.start_command
-    "service #{postgresql_service} start".freeze
+    "service #{service_name} start".freeze
   end
 
   def self.stop(opts)
