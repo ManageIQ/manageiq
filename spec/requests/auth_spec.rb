@@ -5,6 +5,7 @@ describe "Login process" do
     Vmdb::Application.config.secret_token = 'x' * 40
     EvmSpecHelper.seed_admin_user_and_friends
 
+    EvmSpecHelper.local_guid_miq_server_zone
     ApplicationController.any_instance.stub(:set_user_time_zone)
     MiqEnvironment::Process.stub(:is_web_server_worker?).and_return(true)
   end
