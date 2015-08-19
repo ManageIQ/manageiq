@@ -8,17 +8,17 @@ gem "activerecord-deprecated_finders", "~>1.0.4",     :require => "active_record
 gem "rails",                           RAILS_VERSION
 
 # Client-side dependencies
-gem "angular-ui-bootstrap-rails", "~> 0.13.0"
-gem "codemirror-rails", "=4.2"
+gem "angular-ui-bootstrap-rails",     "~>0.13.0"
+gem "codemirror-rails",               "=4.2"
 gem "jquery-hotkeys-rails"
-gem "jquery-rails", "~>4.0.4"
-gem "jquery-rjs", "=0.1.1", :git => "https://github.com/amatsuda/jquery-rjs.git"
-gem "lodash-rails", "~> 3.10.0"
-gem "momentjs-rails", "~> 2.10.3"
+gem "jquery-rails",                   "~>4.0.4"
+gem "jquery-rjs",                     "=0.1.1", :git => "https://github.com/amatsuda/jquery-rjs.git"
+gem "lodash-rails",                   "~>3.10.0"
+gem "momentjs-rails",                 "~>2.10.3"
 
 # On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
 gem "bootstrap-datepicker-rails"
-gem "patternfly-sass", "~>1.3.1"
+gem "patternfly-sass",                "~>1.3.1"
 gem "sass-rails"
 
 # Vendored and required
@@ -46,7 +46,7 @@ gem "mime-types"
 gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "puma",                                                              :git => "git://github.com/puma/puma.git", :ref => "7e5b78861097be62912245f93d0187bb975f7753"
-gem "responders",                     "~> 2.0"
+gem "responders",                     "~>2.0"
 gem "secure_headers"
 gem "spice-html5-rails"
 gem "thin",                           "~>1.6.0"  # Used by rails server through rack
@@ -104,11 +104,11 @@ end
 
 # Assets from rails-assets.org
 source "https://rails-assets.org" do
-  gem "rails-assets-c3", "~> 0.4.10"
-  gem "rails-assets-angular", "~> 1.4.3"
-  gem "rails-assets-angular-mocks", "~> 1.4.3"
-  gem "rails-assets-bootstrap-hover-dropdown", "~> 2.0.11"
-  gem "rails-assets-bootstrap-select", "~> 1.5.4"
+  gem "rails-assets-c3",                       "~>0.4.10"
+  gem "rails-assets-angular",                  "~>1.4.3"
+  gem "rails-assets-angular-mocks",            "~>1.4.3"
+  gem "rails-assets-bootstrap-hover-dropdown", "~>2.0.11"
+  gem "rails-assets-bootstrap-select",         "~>1.5.4"
 end
 
 #
