@@ -1,58 +1,60 @@
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
 = render :partial => "layouts/flash_msg"
 
-%form#form_div{"name"          => "angularForm",
-               "ng-controller" => "retirementFormController"}
-  %fieldset
-    %h3
-      = _('Set/Remove Retirement Date')
-    %table.style1
-      %tbody
-        %tr
-          %td.key
-            = _('Retirement Date')
-          %td#retirement_date
-            = datepicker_input_tag("retirementDate", nil,
-              :id                  => "retirement_date",
-              :class               => "css1",
-              "ng-model"           => "retirementInfo.retirementDate",
-              "miq-calendar"       => true,
-              "miq-cal-date-from"  => "datepickerStartDate",
-              "checkchange"        => true)
-            %a{'href'              => '#',
-               'ng-click'          => 'retirementInfo.retirementDate = null; retirementInfo.retirementWarning = ""',
-               'ng-hide'           => '!retirementInfo.retirementDate'}
-              = image_tag('/images/icons/16/clear.png', :border => "0", :alt => _("Set to blank"))
-        %tr
-          %td.key
-            = _('Retirement Warning')
-          %td.wide
-            = select_tag("retirementWarning",
-              options_for_select([[_("None"), ""],
-                                  [_("1 Week before retirement"), 7],
-                                  [_("2 Weeks before retirement"), 14],
-                                  [_("30 Days before retirement"), 30]], ""),
-              "ng-model"    => "retirementInfo.retirementWarning",
-              "ng-disabled" => "!retirementInfo.retirementDate",
-              "checkchange" => true)
-    = _('* Saving a blank date will remove all retirement dates')
+%form#form_div.form-horizontal{"name"          => "angularForm",
+                               "ng-controller" => "retirementFormController"}
+  %h3
+    = _('Set/Remove Retirement Date')
+  %tbody
+    .form-group
+      %label.col-md-2.control-label
+        = _('Retirement Date')
+      .col-md-8#retirement_date
+        = datepicker_input_tag("retirementDate", nil,
+                                :id                  => "retirement_date",
+                                :class               => "css1",
+                                "ng-model"           => "retirementInfo.retirementDate",
+                                "miq-calendar"       => true,
+                                "miq-cal-date-from"  => "datepickerStartDate",
+                                "checkchange"        => true)
+        %a{'href'              => '#',
+           'ng-click'          => 'retirementInfo.retirementDate = null; retirementInfo.retirementWarning = ""',
+           'ng-hide'           => '!retirementInfo.retirementDate'}
+          = image_tag('/images/icons/16/clear.png', :border => "0", :alt => _("Set to blank"))
+    .form-group
+      %label.col-md-2.control-label
+        = _('Retirement Warning')
+      .col-md-8
+        = select_tag("retirementWarning",
+                      options_for_select([[_("None"), ""],
+                                          [_("1 Week before retirement"), 7],
+                                          [_("2 Weeks before retirement"), 14],
+                                          [_("30 Days before retirement"), 30]], ""),
+                      "ng-model"    => "retirementInfo.retirementWarning",
+                      "ng-disabled" => "!retirementInfo.retirementDate",
+                      "checkchange" => true,
+                      :class    => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("retirementWarning")
+  = _('* Saving a blank date will remove all retirement dates')
 
-  %fieldset
-    %h3
-      - if request.parameters[:controller] == "service"
-        = n_("New setting will affect Service", "New setting will affect Services", @retireitems.length)
-      - elsif request.parameters[:controller] == "orchestration_stack"
-        = n_("New setting will affect Orchestration Stack", "New setting will affect Orchestration Stacks",
-             @retireitems.length)
-      - elsif %(vm_cloud vm_infra).include?(request.parameters[:controller])
-        = n_("New setting will affect VM", "New setting will affect VMs", @retireitems.length)
-    %table.admintable{:height => "75"}
-      %tbody
-        %tr
-          %td
-            - if @retireitems
-              - @embedded = true
-              = render :partial => "layouts/gtl"
+  %hr
+  %h3
+    - if request.parameters[:controller] == "service"
+      = n_("New setting will affect Service", "New setting will affect Services", @retireitems.length)
+    - elsif request.parameters[:controller] == "orchestration_stack"
+      = n_("New setting will affect Orchestration Stack", "New setting will affect Orchestration Stacks",
+           @retireitems.length)
+    - elsif %(vm_cloud vm_infra).include?(request.parameters[:controller])
+      = n_("New setting will affect VM", "New setting will affect VMs", @retireitems.length)
+  %table.admintable{:height => "75"}
+    %tbody
+      %tr
+        %td
+          - if @retireitems
+            - @embedded = true
+            = render :partial => "layouts/gtl"
 
   %table{:width => "100%"}
     %tr
