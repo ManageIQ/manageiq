@@ -96,7 +96,8 @@ class VixDiskLib
     vars_to_clear.each do |key|
       my_env.delete(key)
     end
-    my_env["LD_LIBRARY_PATH"] = my_env["LD_LIBRARY_PATH"] + ":" + VIXDISKLIB_PATH
+
+    my_env["LD_LIBRARY_PATH"] = (my_env["LD_LIBRARY_PATH"].to_s.split(':') << VIXDISKLIB_PATH).compact.join(":")
     my_env
   end
 
