@@ -1,4 +1,4 @@
-module ServiceTemplateFilter
+module ServiceTemplate::Filter
   extend ActiveSupport::Concern
 
   module ClassMethods
