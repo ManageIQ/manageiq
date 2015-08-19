@@ -54,10 +54,6 @@ class Tenant < ActiveRecord::Base
     tenant_attribute(:name, :company)
   end
 
-  def appliance_name
-    tenant_attribute(:appliance_name, :name)
-  end
-
   def login_text
     tenant_attribute(:login_text, :custom_login_text)
   end
@@ -133,7 +129,6 @@ class Tenant < ActiveRecord::Base
     self.domain = nil unless domain.present?
 
     self.name = nil unless name.present?
-    self.appliance_name = nil unless appliance_name.present?
   end
 
   def settings
@@ -142,8 +137,9 @@ class Tenant < ActiveRecord::Base
 
   # validates that there is only one tree
   def validate_only_one_root
-    if !(parent_id || parent) && self.class.roots.exists?
-      errors.add(:parent, "required")
+    if !(parent_id || parent)
+      root = self.class.root_tenant
+      errors.add(:parent, "required") if root && root != self
     end
   end
 end

@@ -41,10 +41,6 @@ describe Tenant do
       expect(tenant.name).to eq("custom")
     end
 
-    it "reads settings for default tenant" do
-      expect(default_tenant.name).to eq("settings")
-    end
-
     it "doesnt read settings for regular tenant" do
       tenant.name = nil
       expect(tenant.name).to be_nil
@@ -55,7 +51,8 @@ describe Tenant do
       expect(default_tenant.name).to eq("custom")
     end
 
-    it "has custom name for default tenant" do
+    it "reads settings for default tenant" do
+      expect(default_tenant[:name]).to be_nil
       expect(default_tenant.name).to eq("settings")
     end
   end
@@ -218,8 +215,8 @@ describe Tenant do
   context "#root_tenant" do
     it "returns the root (not the default tenant)" do
       Tenant.destroy_all
-      r = described_class.create(:appliance_name => 'a', :subdomain => 'admin')
-      c = described_class.create(:appliance_name => 'b', :parent => r)
+      r = described_class.create(:subdomain => 'admin')
+      c = described_class.create(:parent => r)
 
       expect(described_class.root_tenant).to eq(r)
       expect(described_class.default_tenant).to eq(c)
