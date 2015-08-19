@@ -32,7 +32,7 @@ class PostgresAdmin
   end
 
   def self.certificate_location
-    Pathname.new("/var/www/miq/vmdb/certs")
+    Rails.root.join("certs")
   end
 
   def self.logical_volume_name
