@@ -4,7 +4,7 @@ describe VmInfraController do
   before(:each) do
     set_user_privileges
 
-    session[:settings] = {:quadicons => nil}
+    session[:settings] = {:quadicons => nil, :views => {:treesize => 20}   }
 
     FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone
@@ -58,6 +58,62 @@ describe VmInfraController do
 
     post :x_button, :pressed => 'vm_right_size', :id => vm.id
     expect(response.status).to eq(200)
+  end
+
+  it 'can open the reconfigure tab' do
+    FactoryGirl.create(:vmdb_database)
+    EvmSpecHelper.create_guid_miq_server_zone
+
+    host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1))
+    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => '04'))
+    controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
+
+    get :show, :id => vm.id
+    response.should redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_reconfigure', :id => vm.id
+    expect(response.status).to eq(200)
+  end
+
+  it 'the reconfigure tab for a vm with max_cores_per_socket <= 1 should not display the cores_per_socket dropdown' do
+    FactoryGirl.create(:vmdb_database)
+    EvmSpecHelper.create_guid_miq_server_zone
+
+    host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1))
+    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => "04"))
+    controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
+
+    get :show, :id => vm.id
+    response.should redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_reconfigure', :id => vm.id
+    expect(response.status).to eq(200)
+    expect(response.body).to_not include('Total Processors')
+  end
+
+  it 'the reconfigure tab for a vm with max_cores_per_socket > 1 should display the cores_per_socket dropdown' do
+    FactoryGirl.create(:vmdb_database)
+    EvmSpecHelper.create_guid_miq_server_zone
+
+    host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 4))
+    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => "07"))
+    controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
+
+    get :show, :id => vm.id
+    response.should redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_reconfigure', :id => vm.id
+    expect(response.status).to eq(200)
+    expect(response.body).to include('Total Processors')
   end
 
   context "skip or drop breadcrumb" do

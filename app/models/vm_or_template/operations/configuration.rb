@@ -17,15 +17,6 @@ module VmOrTemplate::Operations::Configuration
     raw_set_number_of_cpus(num)
   end
 
-  def raw_set_cores_per_socket(num)
-    raise "VM has no EMS, unable to reconfigure Cores Per Socket" unless self.ext_management_system
-    run_command_via_parent(:vm_set_cores_per_socket, :value => num)
-  end
-
-  def set_cores_per_socket(num)
-    raw_set_cores_per_socket(num)
-  end
-
   def raw_connect_all_devices
     raise "VM has no EMS, unable to connect all devices" unless self.ext_management_system
     run_command_via_parent(:vm_connect_all)
