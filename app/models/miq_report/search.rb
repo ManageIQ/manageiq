@@ -95,7 +95,7 @@ module MiqReport::Search
     includes = MiqExpression.merge_includes(self.get_include_for_find(self.include), self.include_for_find)
 
     self.extras ||= {}
-    return get_cached_page(limit, offset, includes, options) if self.extras[:target_ids_for_paging]
+    return get_cached_page(limit, offset, includes, options) if self.extras[:target_ids_for_paging] && self.db_class.column_names.include?('id')
 
     apply_sortby_in_search, order = get_order_info
 
