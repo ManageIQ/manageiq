@@ -9,13 +9,13 @@ gem "rails",                           RAILS_VERSION
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
+gem "bootstrap-datepicker-rails"
 gem "codemirror-rails",               "=4.2"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
 gem "momentjs-rails",                 "~>2.10.3"
-gem "bootstrap-datepicker-rails"
 gem "patternfly-sass",                "~>1.3.1"
 gem "sass-rails"
 
