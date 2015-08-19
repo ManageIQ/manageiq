@@ -13,20 +13,6 @@ class Tenant < ActiveRecord::Base
   has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
 
   has_many :tenant_quotas
-  has_many :tenant_resources
-  has_many :vm_or_templates,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "VmOrTemplate"
-  has_many :ext_management_systems,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "ExtManagementSystem"
-  has_many :providers,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "Provider"
-
   has_many :miq_groups, :foreign_key => :tenant_owner_id
   has_many :users, :through => :miq_groups
 
