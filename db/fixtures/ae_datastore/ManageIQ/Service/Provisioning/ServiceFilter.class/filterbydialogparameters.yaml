@@ -4,7 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: ".missing"
+    name: FilterByDialogParameters
     inherits: 
     description: 
-  fields: []
+  fields:
+  - filter_method:
+      value: FilterByDialogParameters

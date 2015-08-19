@@ -84,7 +84,7 @@ module ServiceTemplateHelper
   end
 
   def service_template_stubs
-    ServiceTemplate.stub(:automate_result) do |_uri, name|
+    ServiceTemplate.stub(:automate_result_include_service_template?) do |_uri, name|
       @allowed_service_templates.include?(name)
     end
   end
