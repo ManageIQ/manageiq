@@ -1227,6 +1227,7 @@ module ReportController::Reports::Editor
       rpt.col_options = Chargeback.report_col_options
       rpt.order = "Ascending"
       rpt.group = "y"
+      rpt.tz = @edit[:new][:tz]
     end
 
     # Remove when we support user sorting of trend reports
