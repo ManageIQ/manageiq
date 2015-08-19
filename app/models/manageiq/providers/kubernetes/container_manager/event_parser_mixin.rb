@@ -17,6 +17,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventParserMixin
         :container_node_name  => event[:container_node_name],
         :container_group_name => event[:container_group_name],
         :container_namespace  => event[:container_namespace],
+        :container_name       => event[:container_name],
         :full_data            => event,
         :ems_id               => ems_id
       }
