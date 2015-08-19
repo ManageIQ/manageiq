@@ -213,13 +213,20 @@ class PostgresAdmin
   end
 
   # TODO: overlaps with appliance_console/service_group.rb
-
   def self.start(opts)
-    runcmd_with_logging("service #{postgresql_service} start", opts)
+    runcmd_with_logging(start_command, opts)
+  end
+
+  def self.start_command
+    "service #{postgresql_service} start".freeze
   end
 
   def self.stop(opts)
-    mode = opts[:graceful] == true ? 'smart' : 'fast'
+    self.runcmd_with_logging(stop_command(opts[:graceful]), opts)
+  end
+
+  def self.stop_command(graceful)
+    mode = graceful == true ? 'smart' : 'fast'
     #su - postgres -c '/usr/local/pgsql/bin/pg_ctl stop -W -D /var/lib/pgsql/data -s -m smart'
     # stop postgres as postgres user
     # -W do not wait until operation completes, ie, don't block the process
@@ -227,8 +234,7 @@ class PostgresAdmin
     # -s do it silently
     # -m smart - quit after all connections have disconnected
     # -m fast  - quit directly with proper shutdown
-    cmd = "su - #{user} -c '#{pg_ctl} stop -W -D #{pg_data} -s -m #{mode}'"
-    self.runcmd_with_logging(cmd, opts)
+    "su - #{user} -c '#{pg_ctl} stop -W -D #{data_directory} -s -m #{mode}'"
   end
 
   def self.runcmd(cmd_str, opts, args)
