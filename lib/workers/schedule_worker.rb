@@ -23,8 +23,8 @@ class ScheduleWorker < WorkerBase
 
   def initialize_rufus
     require 'rufus/scheduler'
-    @system_scheduler = Rufus::Scheduler.start_new # Instantiate and start a new scheduler
-    @user_scheduler   = Rufus::Scheduler.start_new
+    @system_scheduler = Rufus::Scheduler.new
+    @user_scheduler   = Rufus::Scheduler.new
   end
 
   def dst?
@@ -75,11 +75,10 @@ class ScheduleWorker < WorkerBase
   end
 
   def system_schedule_every(*args, &block)
-    begin
-      @system_scheduler.schedule_every(*args, &block)
-    rescue ArgumentError => err
-      _log.error("#{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
-    end
+    raise ArgumentError if args.first.nil?
+    @system_scheduler.schedule_every(*args, &block)
+  rescue ArgumentError => err
+    _log.error("#{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
   end
 
   def schedules_for_all_roles
@@ -244,19 +243,19 @@ class ScheduleWorker < WorkerBase
 
     sched = cfg.config.fetch_path(*database_metrics_collection_schedule)
     _log.info("database_metrics_collection_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_collection_schedule]) do |rufus_job|
+    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_collection_schedule], :job => true) do |rufus_job|
       @queue.enq :vmdb_database_capture_metrics_timer
     end
 
     sched = cfg.config.fetch_path(*database_metrics_daily_rollup_schedule)
     _log.info("database_metrics_daily_rollup_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_daily_rollup_schedule]) do |rufus_job|
+    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_daily_rollup_schedule], :job => true) do |rufus_job|
       @queue.enq :vmdb_database_rollup_metrics_timer
     end
 
     sched = cfg.config.fetch_path(*database_metrics_purge_schedule)
     _log.info("database_metrics_purge_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_purge_schedule]) do |rufus_job|
+    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_purge_schedule], :job => true) do |rufus_job|
       @queue.enq :metric_purge_all_timer
     end
 
@@ -274,7 +273,7 @@ class ScheduleWorker < WorkerBase
     sched = VMDB::Config.new("vmdb").config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
     _log.info("ldap_synchronization_schedule: #{sched}")
 
-    @schedules[:ldap_synchronization] << @system_scheduler.cron(sched, :tags => [:ldap_synchronization, :ldap_synchronization_schedule]) do |rufus_job|
+    @schedules[:ldap_synchronization] << @system_scheduler.cron(sched, :tags => [:ldap_synchronization, :ldap_synchronization_schedule], :job => true) do |rufus_job|
       @queue.enq :ldap_server_sync_data_from_timer
     end
   end
@@ -345,14 +344,14 @@ class ScheduleWorker < WorkerBase
     # Schedule - Storage metrics collection
     sched = cfg.config.fetch_path(*storage_metrics_collection_schedule)
     _log.info("storage_metrics_collection_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
+    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
       @queue.enq :storage_refresh_metrics
     end
 
     # Schedule - Storage metrics hourly rollup
     sched = cfg.config.fetch_path(*storage_metrics_hourly_rollup_schedule)
     _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
+    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
       @queue.enq :storage_metrics_rollup_hourly
     end
 
@@ -362,7 +361,7 @@ class ScheduleWorker < WorkerBase
       tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
       sched = "#{base_sched} #{tz}"
       _log.info("storage_metrics_daily_rollup_schedule: #{sched}")
-      @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
+      @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
         @queue.enq [:storage_metrics_rollup_daily, tp.id]
       end
     end
@@ -370,14 +369,14 @@ class ScheduleWorker < WorkerBase
     # Schedule - Storage metrics purge
     sched = cfg.config.fetch_path(*storage_metrics_purge_schedule)
     _log.info("storage_metrics_purge_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
+    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
       @queue.enq :miq_storage_metric_purge_all_timer
     end
 
     # Schedule - Storage inventory collection
     sched = cfg.config.fetch_path(*storage_inventory_full_refresh_schedule)
     _log.info("storage_inventory_full_refresh_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched) do |rufus_job|
+    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
       @queue.enq :storage_refresh_inventory
     end
   end
@@ -426,6 +425,7 @@ class ScheduleWorker < WorkerBase
     method = options.delete(:method)
     interval = options.delete(:interval)
     schedule_id = options.delete(:schedule_id)
+    options[:job] = true
 
     @schedules[:scheduler] << @user_scheduler.send(method, interval, options) do |rufus_job|
       @queue.enq [:miq_schedule_queue_scheduled_work, schedule_id, rufus_job]
@@ -458,7 +458,7 @@ class ScheduleWorker < WorkerBase
 
   def rufus_remove_stale_schedules
     active_tags = MiqSchedule.in_zone(MiqServer.my_zone).collect(&:tag)
-    @user_scheduler.find_jobs(CLASS_TAG).each do |rufus_job|
+    @user_scheduler.jobs(:tag => CLASS_TAG).each do |rufus_job|
       if (active_tags & rufus_job.tags).empty?
         _log.info("Unscheduling Tag: #{rufus_job.tags.inspect}")
         rufus_job.unschedule
@@ -467,7 +467,7 @@ class ScheduleWorker < WorkerBase
   end
 
   def rufus_remove_schedules_by_tag(tag)
-    rufus_jobs = @user_scheduler.find_jobs(tag)
+    rufus_jobs = @user_scheduler.jobs(:tag => tag)
     _log.info("Unscheduling #{rufus_jobs.length} jobs with tag: #{tag}") unless rufus_jobs.empty?
     rufus_jobs.each(&:unschedule)
   end
@@ -505,6 +505,7 @@ class ScheduleWorker < WorkerBase
           @schedules[rs].each do |j|
             # In Rufus::Scheduler Version 1, schedule returns a JobID
             # In Rufus::Scheduler Version 2, schedule returns a Job
+            # In Rufus::Scheduler Version 3, schedule could return a Job/JobID, depending on whether :job => true is passed to opts
             if j.kind_of?(Fixnum)
               @system_scheduler.unschedule(j)
             else
