@@ -21,7 +21,7 @@ describe DashboardController do
   end
 
   # context "#with known subdomain" do
-  #   let(:tenant) { Tenant.create(:subdomain => "subdomain") }
+  #   let(:tenant) { Tenant.create(:subdomain => "subdomain", :parent => Tenant.default_tenant) }
   #   before do
   #     @request.host = "#{tenant.subdomain}.example.com"
   #   end
@@ -33,7 +33,7 @@ describe DashboardController do
   # end
 
   # context "#with known domain" do
-  #   let(:tenant) { Tenant.create(:domain => "domain.com") }
+  #   let(:tenant) { Tenant.create(:domain => "domain.com", :parent => Tenant.default_tenant) }
   #   before do
   #     @request.host = "www.#{tenant.domain}"
   #   end
