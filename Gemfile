@@ -12,7 +12,7 @@ gem "angular-ui-bootstrap-rails",     "~>0.13.0"
 gem "codemirror-rails",               "=4.2"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
-gem "jquery-rjs",                     "=0.1.1", :git => "https://github.com/amatsuda/jquery-rjs.git"
+gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
 gem "momentjs-rails",                 "~>2.10.3"
 
@@ -22,7 +22,7 @@ gem "patternfly-sass",                "~>1.3.1"
 gem "sass-rails"
 
 # Vendored and required
-gem "ruport",                         "=1.7.0",                          :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
+gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
 
 # Vendored but not required
 gem "net-ldap",                       "~>0.7.0",   :require => false
@@ -45,7 +45,7 @@ gem "hamlit-rails",                   "~>0.1.0"
 gem "mime-types"
 gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
-gem "puma",                                                              :git => "git://github.com/puma/puma.git", :ref => "7e5b78861097be62912245f93d0187bb975f7753"
+gem "puma",                                                           :git => "git://github.com/puma/puma.git", :ref => "7e5b78861097be62912245f93d0187bb975f7753"
 gem "responders",                     "~>2.0"
 gem "secure_headers"
 gem "spice-html5-rails"
@@ -55,7 +55,7 @@ gem "thin",                           "~>1.6.0"  # Used by rails server through 
 gem "gettext_i18n_rails"
 gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
-gem "rails-i18n", github: "svenfuchs/rails-i18n", branch: "master"
+gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
 
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",   :require => false
