@@ -42,11 +42,14 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 gem "american_date"
 gem "bcrypt",                         "3.1.10"
 gem "default_value_for",              "~>3.0.1"
+gem "hamlit-rails",                   "~>0.1.0"
 gem "mime-types"
+gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "puma",                                                              :git => "git://github.com/puma/puma.git", :ref => "7e5b78861097be62912245f93d0187bb975f7753"
 gem "responders",                     "~> 2.0"
 gem "secure_headers"
+gem "spice-html5-rails"
 gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
@@ -61,7 +64,6 @@ gem "aws-sdk",                        "~>1.56.0",     :require => false
 gem "dalli",                          "~>2.7.4",      :require => false
 gem "elif",                           "=0.1.0",       :require => false
 gem "hamlit",                         "~>1.7.2",      :require => false
-gem "hamlit-rails",                   "~>0.1.0"
 gem "inifile",                        "~>3.0",        :require => false
 gem "logging",                        "~>1.6.1",      :require => false  # Ziya depends on this
 gem "net_app_manageability",          ">=0.1.0",      :require => false
@@ -75,8 +77,6 @@ gem "ruby-progressbar",               "~>1.7.0",      :require => false
 gem "rufus-scheduler",                "~>3.1.3",      :require => false
 gem "savon",                          "~>2.2.0",      :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.2.0",      :require => false
-gem "novnc-rails",                    "~>0.2"
-gem "spice-html5-rails"
 gem "uglifier",                       "~>2.7.1",      :require => false
 
 
