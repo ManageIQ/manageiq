@@ -25,7 +25,7 @@ module MiqReport::Search
       offset ||= 0
       ids      = ids[offset..offset + limit - 1]
     end
-    data         = self.db_class.find_all_by_id(ids, :include => includes)
+    data         = db_class.where(:id => ids).includes(includes).to_a
     targets_hash = data.index_by(&:id) if options[:targets_hash]
     self.build_table(data, self.db, options)
     return self.table, self.extras[:attrs_for_paging].merge(:paged_read_from_cache => true, :targets_hash => targets_hash)
