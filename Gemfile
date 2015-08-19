@@ -17,7 +17,6 @@ gem "lodash-rails", "~> 3.10.0"
 gem "momentjs-rails", "~> 2.10.3"
 
 # On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
-
 gem "bootstrap-datepicker-rails"
 gem "patternfly-sass", "~>1.3.1"
 gem "sass-rails"
@@ -88,17 +87,14 @@ unless ENV['APPLIANCE']
   group :development do
     gem "gettext",          "3.1.4",    :require => false  # Used for finding translations
     gem "ruby-prof",                    :require => false
-
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
   end
 
   group :test do
     gem "brakeman",         "~>3.0",    :require => false
     gem "capybara",         "~>2.1.0",  :require => false
-
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "shoulda-matchers", "~>1.0.0",  :require => false
-
   end
 
   group :development, :test do
