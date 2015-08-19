@@ -147,7 +147,7 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(:container_definitions, container_group, hashes, deletes,
-                         [:ems_ref], [:container_port_configs, :container_env_vars, :container])
+                         [:ems_ref], [:container_port_configs, :container_env_vars, :security_context, :container])
     store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
   end
 
@@ -246,6 +246,10 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(:container_conditions, container_entity, hashes, deletes, [:name])
     store_ids_for_new_records(container_entity.container_conditions, hashes, :name)
+  end
+
+  def save_security_context_inventory(container_definition, hash, _target = nil)
+    save_inventory_single(:security_context, container_definition, hash)
   end
 
   def save_labels_inventory(entity, hashes, target = nil)
