@@ -3,36 +3,42 @@
   = render :partial => "layouts/flash_msg"
   %h3
     = _('Changes')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
         = _('Select an Owner:')
-      %td.wide
+      .col-md-8
         - if @edit[:ownership_items].length > 1
           - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Owner')}>", nil]]
         - else
           - opts =  [["<#{_('No Owner')}>", nil]]
         - opts += @users.sort
         = select_tag("user_name",
-          options_for_select(opts, @edit[:new][:user]),
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+                    options_for_select(opts, @edit[:new][:user]),
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    :class    => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("user_name")
       %td{:width => "100"}
-    %tr
-      %td.key
+    .form-group
+      %label.col-md-2.control-label
         = _('Select a Group:')
-      %td.wide
+      .col-md-8
         - if @edit[:ownership_items].length > 1
           - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Group')}>", nil]]
         - else
           - opts = [["<#{_("No Group")}>", nil]]
         - opts += @groups.sort
         = select_tag("group_name",
-          options_for_select(opts, @edit[:new][:group]),
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+                      options_for_select(opts, @edit[:new][:group]),
+                      "data-miq_sparkle_on"  => true,
+                      "data-miq_sparkle_off" => true,
+                    :class    => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("group_name")
   - unless @edit[:explorer]
     = render :partial => '/layouts/edit_form_buttons', :locals => {:action_url => 'ownership_update', :ajax_buttons => true}
 
