@@ -269,18 +269,20 @@ class HostController < ApplicationController
       if valid_record?(@host) && @host.save
         set_record_vars(@host)                                 # Save the authentication records for this host
         AuditEvent.success(build_saved_audit_hash_angular(old_host_attributes, @host, params[:button] == "add"))
+        message = _("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "Host"), :name => @host.name}
         render :update do |page|
-          page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"Host"), :name=>@host.name}
+          page.redirect_to :action    => 'show_list',
+                           :flash_msg => message
         end
       else
         @in_a_form = true
         @errors.each { |msg| add_flash(msg, :error) }
-        @host.errors.each do |field,msg|
+        @host.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        drop_breadcrumb( {:name=>"Add New Host", :url=>"/host/new"} )
+        drop_breadcrumb(:name => "Add New Host", :url => "/host/new")
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
     when "validate"
@@ -295,7 +297,7 @@ class HostController < ApplicationController
         add_flash(_("Credential validation was successful"))
       end
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
   end
@@ -318,7 +320,8 @@ class HostController < ApplicationController
       @changed = true
       @showlinks = true
       @in_a_form = true
-      hostitems = Host.find(session[:host_items]).sort{|a,b| a.name <=> b.name} # Get the db records that are being tagged
+      # Get the db records that are being tagged
+      hostitems = Host.find(session[:host_items]).sort { |a, b| a.name <=> b.name }
       @selected_hosts = {}
       hostitems.each do |h|
         @selected_hosts[h.id] = h.name
@@ -357,28 +360,31 @@ class HostController < ApplicationController
         valid_host = find_by_id_filtered(Host, params[:id])
         set_record_vars(valid_host, :validate)                      # Set the record variables, but don't save
         if valid_record?(valid_host) && set_record_vars(@host) && @host.save
-          add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"host"), :name=>@host.name})
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "host"), :name => @host.name})
           @breadcrumbs.pop if @breadcrumbs
           AuditEvent.success(build_saved_audit_hash_angular(old_host_attributes, @host, false))
           session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
           render :update do |page|
-            page.redirect_to :action=>"show", :id=>@host.id.to_s
+            page.redirect_to :action => "show", :id => @host.id.to_s
           end
           return
         else
           @errors.each { |msg| add_flash(msg, :error) }
-          @host.errors.each do |field,msg|
+          @host.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
-          drop_breadcrumb( {:name=>"Edit Host '#{@host.name}'", :url=>"/host/edit/#{@host.id}"} )
+          drop_breadcrumb(:name => "Edit Host '#{@host.name}'", :url => "/host/edit/#{@host.id}")
           @in_a_form = true
           render :update do |page|
-            page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
         end
       else
-        valid_host = find_by_id_filtered(Host, !params[:validate_id].blank?  ? params[:validate_id] : session[:host_items].first.to_i)
-        settings, creds, verify = set_credentials_record_vars(valid_host, :validate)      # Set the record variables, but don't save
+        valid_host = find_by_id_filtered(Host, !params[:validate_id].blank? ?
+                                               params[:validate_id] :
+                                               session[:host_items].first.to_i)
+        # Set the record variables, but don't save
+        settings, creds, verify = set_credentials_record_vars(valid_host, :validate)
         if valid_record?(valid_host) && verify
           @error = Host.multi_host_update(session[:host_items], settings, creds)
         end
@@ -587,7 +593,8 @@ class HostController < ApplicationController
   def host_form_fields
     assert_privileges("host_edit")
     host = find_by_id_filtered(Host, params[:id])
-    validate_against = session.fetch_path(:edit, :validate_against) && params[:button] != "reset" ? session.fetch_path(:edit, :validate_against) : nil
+    validate_against = session.fetch_path(:edit, :validate_against) &&
+                       params[:button] != "reset" ? session.fetch_path(:edit, :validate_against) : nil
 
     host_hash = {
       :name             => host.name,
@@ -612,7 +619,7 @@ class HostController < ApplicationController
       :validate_id      => validate_against,
     }
 
-    render  :json => host_hash
+    render :json => host_hash
   end
 
   private ############################
@@ -760,7 +767,7 @@ class HostController < ApplicationController
   # Validate the host record fields
   def valid_record?(host)
     valid = true
-    @errors = Array.new
+    @errors = []
     if !host.authentication_userid.blank? && params[:password] != params[:verify]
       @errors.push("Default Password and Verify Password fields do not match")
       valid = false
@@ -819,11 +826,15 @@ class HostController < ApplicationController
 
   def set_credentials(host, mode)
     creds = {}
-    creds[:default] = {:userid => params[:default_userid], :password => params[:default_password]} unless params[:default_userid].blank?
-    creds[:remote]  = {:userid => params[:remote_userid],  :password => params[:remote_password]}  unless params[:remote_userid].blank?
-    creds[:ws]      = {:userid => params[:ws_userid],      :password => params[:ws_password]}      unless params[:ws_userid].blank?
-    creds[:ipmi]    = {:userid => params[:ipmi_userid],    :password => params[:ipmi_password]}    unless params[:ipmi_userid].blank?
-    host.update_authentication(creds, {:save => (mode != :validate) })
+    creds[:default] = {:userid   => params[:default_userid],
+                       :password => params[:default_password]} unless params[:default_userid].blank?
+    creds[:remote]  = {:userid   => params[:remote_userid],
+                       :password => params[:remote_password]}  unless params[:remote_userid].blank?
+    creds[:ws]      = {:userid   => params[:ws_userid],
+                       :password => params[:ws_password]}      unless params[:ws_userid].blank?
+    creds[:ipmi]    = {:userid   => params[:ipmi_userid],
+                       :password => params[:ipmi_password]}    unless params[:ipmi_userid].blank?
+    host.update_authentication(creds, :save => (mode != :validate))
     creds
   end
 
