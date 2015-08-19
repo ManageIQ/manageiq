@@ -215,8 +215,8 @@ describe Tenant do
   context "#root_tenant" do
     it "returns the root (not the default tenant)" do
       Tenant.destroy_all
-      r = described_class.create(:appliance_name => 'a', :subdomain => 'admin')
-      c = described_class.create(:appliance_name => 'b', :parent => r)
+      r = described_class.create(:subdomain => 'admin')
+      c = described_class.create(:parent => r)
 
       expect(described_class.root_tenant).to eq(r)
       expect(described_class.default_tenant).to eq(c)

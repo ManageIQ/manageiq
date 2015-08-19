@@ -54,10 +54,6 @@ class Tenant < ActiveRecord::Base
     tenant_attribute(:name, :company)
   end
 
-  def appliance_name
-    tenant_attribute(:appliance_name, :name)
-  end
-
   def login_text
     tenant_attribute(:login_text, :custom_login_text)
   end
@@ -133,7 +129,6 @@ class Tenant < ActiveRecord::Base
     self.domain = nil unless domain.present?
 
     self.name = nil unless name.present?
-    self.appliance_name = nil unless appliance_name.present?
   end
 
   def settings

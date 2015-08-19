@@ -1381,4 +1381,8 @@ module ApplicationHelper
   end
 
   attr_reader :big_iframe
+
+  def appliance_name
+    MiqServer.my_server.name
+  end
 end
