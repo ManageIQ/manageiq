@@ -4,7 +4,9 @@ module ContainerHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name state reason started_at finished_at exit_code signal message last_state restart_count backing_ref command)
+    %i(name state reason started_at finished_at exit_code signal message last_state restart_count backing_ref command
+       capabilities_add capabilities_drop privileged run_as_user se_linux_user se_linux_role se_linux_type
+       se_linux_level run_as_non_root)
   end
 
   def textual_group_relationships
@@ -66,5 +68,41 @@ module ContainerHelper::TextualSummary
 
   def textual_command
     {:label => "Command", :value => @record.container_definition.command} if @record.container_definition.command
+  end
+
+  def textual_capabilities_add
+    {:label => "Add Capabilities", :value => @record.container_definition.capabilities_add} unless @record.container_definition.capabilities_add.empty?
+  end
+
+  def textual_capabilities_drop
+    {:label => "Drop Capabilities", :value => @record.container_definition.capabilities_drop} unless @record.container_definition.capabilities_drop.empty?
+  end
+
+  def textual_privileged
+    {:label => "Privileged", :value => @record.container_definition.privileged} unless @record.container_definition.privileged.nil?
+  end
+
+  def textual_run_as_user
+    {:label => "Run As User", :value => @record.container_definition.run_as_user} if @record.container_definition.run_as_user
+  end
+
+  def textual_se_linux_user
+    {:label => "Se Linux User", :value => @record.security_context.se_linux_user} if @record.security_context.se_linux_user
+  end
+
+  def textual_se_linux_role
+    {:label => "Se Linux Role", :value => @record.security_context.se_linux_role} if @record.security_context.se_linux_role
+  end
+
+  def textual_se_linux_type
+    {:label => "Se Linux Type", :value => @record.security_context.se_linux_type} if @record.security_context.se_linux_type
+  end
+
+  def textual_se_linux_level
+    {:label => "Se Linux Level", :value => @record.security_context.se_linux_level} if @record.security_context.se_linux_level
+  end
+
+  def textual_run_as_non_root
+    {:label => "Run As Non Root", :value => @record.container_definition.run_as_non_root} unless @record.container_definition.run_as_non_root.nil?
   end
 end
