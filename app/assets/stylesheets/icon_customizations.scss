@@ -15,16 +15,17 @@
   color: #c90813;
 }
 .fa-play:before {
-  content: "\f04b";
   color: #57a81c;
 }
 .fa-pause:before {
-  content: "\f04c";
   color: #eb7720;
 }
 .pficon-ok:before, .pficon-complete:before {
-  color: #57a81c;
+  color: $color-success;
   content: "\e602";
+}
+.pficon-close:before {
+  color: $color-critical;
 }
 .pficon-folder-close-blue:before {
   content: "\e607";
@@ -191,37 +192,46 @@
 .product-memory:before {
   content: "\e624";
 }
+.product-action:before {
+  content: "\e625";
+}
+.product-policy:before {
+  content: "\e626";
+}
+.product-policy_profile:before {
+  content: "\e627";
+}
 
 /* define  colors */
 .product-custom-1:before {
-  color: #009900;
+  color: #2d7623;
 }
 .product-custom-3:before {
-  color: #cccc33
+  color: #f5c12e
 }
 .product-custom-4:before {
-  color: #009900;
+  color: #2d7623;
 }
 .product-custom-8:before {
-  color: red;
+  color: #cc0000;
 }
 .product-custom-9:before {
-  color: #3333ff;
+  color: #00659c;
 }
 .product-custom-10:before {
-  color: #3333ff;
+  color: #00659c;
 }
 .product-custom-11:before {
-  color: #3333ff;
+  color: #00659c;
 }
 .product-custom-12:before {
-  color: #3333ff;
+  color: #00659c;
 }
 .product-custom-13:before {
-  color: #3333ff;
+  color: #00659c;
 }
 .product-custom-2:before {
-  color: #3333ff;
+  color: #00659c;
 }
 .product-custom-5:before {
   color: orange;
@@ -229,5 +239,4 @@
 .product-miq_condition:before {
   color: #0099cc;
 }
-
 /*end icon customizations*/

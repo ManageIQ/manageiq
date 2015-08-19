@@ -200,8 +200,7 @@
                     - ta = @policy.actions_for_event(e, :success)
                     - fa = @policy.actions_for_event(e, :failure)
                     - if ta.empty? && fa.empty?
-                      %strong
-                        = _("* No Actions are configured for this Event.")
+                      = _("* No Actions are configured for this Event.")
                     - else
                       - unless ta.empty?
                         %table
@@ -210,8 +209,7 @@
                               %tr{:title => _("View this Event Action"),
                                 :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
                                 %td
-                                  %img{:src => "/images/icons/new/check.png"}
-                                %td
+                                  %span.pficon.pficon-ok
                                   = h(a.description)
                       - unless fa.empty?
                         %table
@@ -220,8 +218,7 @@
                               %tr{:title => _("View this Event Action"),
                                   :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
                                 %td
-                                  %img{:src => "/images/icons/new/x.png"}
-                                %td
+                                  %span.pficon.pficon-close
                                   = h(a.description)
           %hr
 
