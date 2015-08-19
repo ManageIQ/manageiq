@@ -26,12 +26,9 @@ class VmAzure < VmCloud
 
   def self.calculate_power_state(raw_power_state)
     case raw_power_state
-    when "running"       then "on"
-    when "powering_up"   then "powering_up"
-    when "shutting_down" then "powering_down"
-    when "pending"       then "suspended"
-    when "terminated"    then "terminated"
-    else                      "off"
+    when "VM running" then "on"
+    when "VM deallocated", "VM deallocating" then "off"
+    else "unknown"
     end
   end
 end
