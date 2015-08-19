@@ -57,8 +57,10 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     when 'Node'
       event_data[:container_node_name] = event_data[:name]
     when 'Pod'
-      event_data[:container_namespace] = event_data[:namespace]
+      /^spec.containers{(?<container_name>.*)}$/ =~ event_data[:fieldpath]
+      event_data[:container_name] = container_name unless container_name.nil?
       event_data[:container_group_name] = event_data[:name]
+      event_data[:container_namespace] = event_data[:namespace]
     end
 
     _log.info "#{log_prefix} Queuing event [#{event_data}]"
