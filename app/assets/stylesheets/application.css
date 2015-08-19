@@ -10,14 +10,12 @@
  *= require dialog_import_export
  *= require dialog_fields
  *= require widget_import_export
- *= require angular
  *= require miq_timeline
- *= require angular
  *= require schedule_editor
  *= require miq_dynatree
  *= require codemirror
  *= require jqplot
  *= require product_slickgrid
  *= require consoles
- *= require bootstrap-datepicker3
+ *= require bootstrap-datepicker
 */

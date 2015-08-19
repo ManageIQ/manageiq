@@ -2,8 +2,7 @@
 //= require jquery
 //= require jquery_overrides
 //= require angular
-//= require angular-ui-bootstrap
-//= require angular-ui-bootstrap-tpls
+//= require angular-bootstrap
 //= require moment
 //= require miq_angular_application
 //= require services/miq_service
