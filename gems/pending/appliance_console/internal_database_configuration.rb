@@ -12,11 +12,11 @@ module ApplianceConsole
     end
 
     def self.postgresql_sample
-      Pathname.new("/var/www/miq/system/COPY/").join(postgres_dir)
+      Rails.root.join("../system/COPY").join(postgres_dir)
     end
 
     def self.postgresql_template
-      Pathname.new("/var/www/miq/system/TEMPLATE/").join(postgres_dir)
+      Rails.root.join("../system/TEMPLATE").join(postgres_dir)
     end
 
     def initialize(hash = {})

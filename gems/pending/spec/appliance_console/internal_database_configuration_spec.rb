@@ -51,6 +51,16 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
     @config.send(:create_partition_to_fill_disk).should == "fake partition"
   end
 
+  it ".postgresql_sample" do
+    PostgresAdmin.stub(:data_directory => Pathname.new("/var/lib/pgsql/data"))
+    expect(described_class.postgresql_sample.to_s).to end_with("system/COPY/var/lib/pgsql/data")
+  end
+
+  it ".postgresql_template" do
+    PostgresAdmin.stub(:data_directory => Pathname.new("/var/lib/pgsql/data"))
+    expect(described_class.postgresql_template.to_s).to end_with("system/TEMPLATE/var/lib/pgsql/data")
+  end
+
   context "#update_fstab (private)" do
     before do
       PostgresAdmin.stub(:data_directory => "/var/lib/pgsql")
