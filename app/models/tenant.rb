@@ -142,8 +142,9 @@ class Tenant < ActiveRecord::Base
 
   # validates that there is only one tree
   def validate_only_one_root
-    if !(parent_id || parent) && self.class.roots.exists?
-      errors.add(:parent, "required")
+    if !(parent_id || parent)
+      root = self.class.root_tenant
+      errors.add(:parent, "required") if root && root != self
     end
   end
 end

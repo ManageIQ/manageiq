@@ -41,10 +41,6 @@ describe Tenant do
       expect(tenant.name).to eq("custom")
     end
 
-    it "reads settings for default tenant" do
-      expect(default_tenant.name).to eq("settings")
-    end
-
     it "doesnt read settings for regular tenant" do
       tenant.name = nil
       expect(tenant.name).to be_nil
@@ -55,7 +51,8 @@ describe Tenant do
       expect(default_tenant.name).to eq("custom")
     end
 
-    it "has custom name for default tenant" do
+    it "reads settings for default tenant" do
+      expect(default_tenant[:name]).to be_nil
       expect(default_tenant.name).to eq("settings")
     end
   end
