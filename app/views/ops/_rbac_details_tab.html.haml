@@ -23,21 +23,29 @@
       %tbody
         %tr
           %td.narrow{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
-            = image_tag("/images/icons/new/user.png")
+            %ul.icons.list-unstyled
+              %li
+                %span.pficon.pficon-user
           %td{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
             = _("Users (%s)") % @users_count.to_s
         %tr
           %td.narrow{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
-            = image_tag("/images/icons/new/miq_group.png")
+            %ul.icons.list-unstyled
+              %li
+                %span.product.product-group
           %td{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
             = _("Groups (%s)") % @groups_count.to_s
         %tr
           %td.narrow{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
-            = image_tag("/images/icons/new/miq_user_role.png")
+            %ul.icons.list-unstyled
+              %li
+                %span.product.product-role
           %td{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
             = _("Roles (%s)") % @roles_count.to_s
         %tr
           %td.narrow{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-tn');", :title => _("View Tenants")}
-            = image_tag("/images/icons/new/miq_user_role.png")
+            %ul.icons.list-unstyled
+              %li
+                %span.product.product-tenant
           %td{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-tn');", :title => _("View Tenants")}
             = _("Tenants (%s)") % @tenants_count.to_s

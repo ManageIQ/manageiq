@@ -35,11 +35,8 @@
                 - if @group.miq_user_role
                   %table{:cellpadding => "0", :cellspacing => "0"}
                     %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');", :title => _("View this Role")}
-                      %td.image
-                        %ul.icons.list-unstyled
-                          %li
-                            %span.product.product-role
                       %td
+                        %span.product.product-role
                         = h(@group.miq_user_role.name)
               - else
                 = select_tag('group_role',
@@ -52,11 +49,8 @@
                 - if @group.tenant_owner
                   %table{:cellpadding => "0", :cellspacing => "0"}
                     %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'tn-#{to_cid(@group.tenant_owner.id)}');", :title => _("View this Tenant")}
-                      %td.image
-                        %ul.icons.list-unstyled
-                          %li
-                            %span.product.product-role
                       %td
+                        %span.product.product-tenant
                         = h(@group.tenant_owner.name)
               - else
                 = select_tag('group_tenant',
@@ -65,15 +59,12 @@
           - unless @edit
             %tr
               %td.key= _("Users in this Group")
-              %td{:style => "padding: 0px"}
+              %td
                 %table{:cellpadding => "0", :cellspacing => "0"}
                   - @group.users.sort_by { |a| a.name.downcase }.each do |u|
                     %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'u-#{to_cid(u.id)}');", :title => _("View this User")}
-                      %td.image
-                        %ul.icons.list-unstyled
-                          %li
-                            %span.pficon.pficon-user
                       %td
+                        %span.pficon.pficon-user
                         = h(u.name)
       - unless @edit
         = render :partial => "rbac_tag_box"
