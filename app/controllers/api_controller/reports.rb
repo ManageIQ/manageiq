@@ -31,11 +31,5 @@ class ApiController
       add_task_to_result(res, options[:task_id]) if options[:task_id].present?
       res
     end
-
-    def add_report_result_to_result(hash, result_id)
-      hash[:result_id] = result_id
-      hash[:result_href] = "#{@req[:base]}#{@req[:prefix]}/results/#{result_id}"
-      hash
-    end
   end
 end
