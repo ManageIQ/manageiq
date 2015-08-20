@@ -429,7 +429,7 @@ module ReportController::Reports::Editor
   def gfv_key_group_calculations(key, value)
     field = @edit[:new][:field_order][key.split("_").last.to_i].last  # Get the field name
     @edit[:new][:col_options][field_to_col(field)] = {
-      :grouping => value.split(",").sort.map(&:to_sym) # Add the type to the field's grouping array
+      :grouping => value.split(",").sort.map(&:to_sym).reject { |a| a == :null }
     }
   end
 
