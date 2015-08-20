@@ -28,8 +28,8 @@ module ReportHelper
 
   def chart_fields_options
     if @edit[:new][:group] != 'No'
-      @edit[:new][:col_options].find_all { |field, col_options| 
-        col_options[:grouping].present?
+      @edit[:new][:col_options].find_all { |field, col_options|
+        col_options[:grouping].present? && !col_options[:grouping].empty?
       }.each_with_object([]) { |(field, col_options), options|
         model = @edit[:new][:model]
         col_options[:grouping].each { |fun|
