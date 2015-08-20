@@ -37,6 +37,31 @@ module ContainerProjectHelper::TextualSummary
     rows
   end
 
+  def textual_limits
+    {
+      :labels => [_("Name"), _("Type"), _("Resource"), _("Max"), _("Min"), _("Default Limit"),
+                  _("Default Request"), _("Limit Request Ratio")],
+      :values => collect_limit_items
+    }
+  end
+
+  def collect_limit_items
+    rows = []
+    @record.container_limit_items.each do |item|
+      rows << [
+        item.container_limit.name,
+        item.item_type,
+        item.resource,
+        item.max,
+        item.min,
+        item.default,
+        item.default_request,
+        item.max_limit_request_ratio
+      ]
+    end
+    rows
+  end
+
   #
   # Items
   #
