@@ -62,6 +62,7 @@
       }
 
       function loginFailure(response) {
+        Session.destroy();
         console.log('TODO: Unhandled loginFailure', response.data);
       }
     }
