@@ -14,6 +14,7 @@ gem "activesupport", RAILS_VERSION
 gem "activerecord",  RAILS_VERSION
 
 # Not locally modified and not required
+gem "apipie-bindings",         "~>0.0.12",          :require => false
 gem "awesome_spawn",           "~> 1.3",            :require => false
 gem "binary_struct",           "~> 2.0",            :require => false
 gem "excon",                   "~>0.40",            :require => false
@@ -24,6 +25,7 @@ gem "ffi-vix_disk_lib",        "~>1.0.1",           :require => false  # used by
 gem "fog",                     "~>1.30.0",          :require => false
 gem "fog-core",                "!=1.31.1",          :require => false
 gem "httpclient",              "~>2.5.3",           :require => false
+gem "kubeclient",              "=0.1.17",           :require => false
 gem "linux_admin",             "~>0.11.0",          :require => false
 gem "log4r",                   "=1.1.8",            :require => false
 gem "memoist",                 "~>0.11.0",          :require => false
@@ -31,18 +33,16 @@ gem "memory_buffer",           ">=0.1.0",           :require => false
 gem "more_core_extensions",    "~>1.2.0",           :require => false
 gem "net-sftp",                "~>2.1.2",           :require => false
 gem "nokogiri",                "~>1.6.0",           :require => false
-gem "ovirt",                   "~>0.6.0",           :require => false
-gem "kubeclient",              "=0.1.17",           :require => false
 gem "openshift_client",        "=0.0.8",            :require => false
-gem "rest-client",                                  :require => false, :git => "git://github.com/rest-client/rest-client.git", :ref => "08480eb86aef1e"
+gem "ovirt",                   "~>0.6.0",           :require => false
 gem "parallel",                "~>0.5.21",          :require => false
-gem "sys-uname",               "~>1.0.1",           :require => false
+gem "psych",                   "~>2.0.12"
+gem "rest-client",                                  :require => false, :git => "git://github.com/rest-client/rest-client.git", :ref => "08480eb86aef1e"
 gem "rubyzip",                 "=0.9.5",            :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646
 gem "rufus-lru",               "~>1.0.3",           :require => false
-gem "uuidtools",               "~>2.1.3",           :require => false
+gem "sys-uname",               "~>1.0.1",           :require => false
 gem "trollop",                 "~>2.0",             :require => false
-gem "psych",                   "~>2.0.12"
-gem "apipie-bindings",         "~>0.0.12",          :require => false
+gem "uuidtools",               "~>2.1.3",           :require => false
 
 if RbConfig::CONFIG["host_os"].include?("darwin") # This is only used on Mac
   gem 'sys-proctable',  "~> 0.9",      :require => false

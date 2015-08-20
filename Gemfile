@@ -4,23 +4,23 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 # VMDB specific gems
 #
 
-gem "rails",                           RAILS_VERSION
 gem "activerecord-deprecated_finders", "~>1.0.4",     :require => "active_record/deprecated_finders"
+gem "rails",                           RAILS_VERSION
 
 # Client-side dependencies
-gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 gem 'angular-ui-bootstrap-rails', '~> 0.13.0'
-gem 'momentjs-rails', '~> 2.10.3'
-gem 'jquery-rails', "~>4.0.4"
-gem 'jquery-hotkeys-rails'
 gem 'codemirror-rails', "=4.2"
+gem 'jquery-hotkeys-rails'
+gem 'jquery-rails', "~>4.0.4"
+gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 gem 'lodash-rails', '~> 3.10.0'
+gem 'momentjs-rails', '~> 2.10.3'
 
 # On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
 
-gem 'sass-rails'
-gem 'patternfly-sass', "~>1.3.1"
 gem 'bootstrap-datepicker-rails'
+gem 'patternfly-sass', "~>1.3.1"
+gem 'sass-rails'
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                          :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
@@ -40,19 +40,20 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "default_value_for",              "~>3.0.1"
-gem "thin",                           "~>1.6.0"  # Used by rails server through rack
-gem "puma",                                                              :git => "git://github.com/puma/puma.git", :ref => "7e5b78861097be62912245f93d0187bb975f7753"
 gem "bcrypt",                         "3.1.10"
+gem "default_value_for",              "~>3.0.1"
+gem 'mime-types'
 gem 'outfielding-jqplot-rails',       "= 1.0.8"
+gem "puma",                                                              :git => "git://github.com/puma/puma.git", :ref => "7e5b78861097be62912245f93d0187bb975f7753"
 gem "responders",                     "~> 2.0"
 gem 'secure_headers'
-gem 'mime-types'
+gem "thin",                           "~>1.6.0"  # Used by rails server through rack
+
 # Needed by the REST API
-gem "jbuilder",                       "~>2.3.1"
 gem "gettext_i18n_rails"
-gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
+gem "jbuilder",                       "~>2.3.1"
 gem 'paperclip',                      "~>4.3.0"
+gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'master'
 
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",      :require => false
@@ -74,9 +75,9 @@ gem "ruby-progressbar",               "~>1.7.0",      :require => false
 gem "rufus-scheduler",                "~>3.1.3",      :require => false
 gem "savon",                          "~>2.2.0",      :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.2.0",      :require => false
-gem "uglifier",                       "~>2.7.1",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
+gem "uglifier",                       "~>2.7.1",      :require => false
 
 
 ### Start of gems excluded from the appliances.
@@ -85,20 +86,19 @@ gem 'spice-html5-rails'
 #
 unless ENV['APPLIANCE']
   group :development do
+    gem "gettext",          "3.1.4",    :require => false  # Used for finding translations
     gem "ruby-prof",                    :require => false
 
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
-    # used for finding translations
-    gem "gettext",          "3.1.4",    :require => false
   end
 
   group :test do
     gem "brakeman",         "~>3.0",    :require => false
-
-    gem "shoulda-matchers", "~>1.0.0",  :require => false
-    gem "factory_girl",     "~>4.5.0",  :require => false
-
     gem "capybara",         "~>2.1.0",  :require => false
+
+    gem "factory_girl",     "~>4.5.0",  :require => false
+    gem "shoulda-matchers", "~>1.0.0",  :require => false
+
   end
 
   group :development, :test do
@@ -109,10 +109,10 @@ end
 # Assets from rails-assets.org
 source 'https://rails-assets.org' do
   gem 'rails-assets-c3', '~> 0.4.10'
-  gem 'rails-assets-bootstrap-select', '~> 1.5.4'
-  gem 'rails-assets-bootstrap-hover-dropdown', '~> 2.0.11'
   gem 'rails-assets-angular', '~> 1.4.3'
   gem 'rails-assets-angular-mocks', '~> 1.4.3'
+  gem 'rails-assets-bootstrap-hover-dropdown', '~> 2.0.11'
+  gem 'rails-assets-bootstrap-select', '~> 1.5.4'
 end
 
 #
