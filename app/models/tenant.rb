@@ -119,7 +119,7 @@ class Tenant < ActiveRecord::Base
 
   def self.seed
     Tenant.find_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL) ||
-      Tenant.create(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL).update_attributes(:name => nil)
+      Tenant.create(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL).update_attributes!(:name => nil)
   end
 
   private

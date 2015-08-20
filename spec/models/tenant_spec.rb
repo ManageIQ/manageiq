@@ -9,12 +9,23 @@ describe Tenant do
     described_class.default_tenant
   end
 
+  let(:root_tenant) do
+    Tenant.seed
+    described_class.root_tenant
+  end
+
   before do
     allow(VMDB::Config).to receive(:new).with("vmdb").and_return(double(:config => settings))
   end
 
   describe "#default_tenant" do
     it "has a default tenant" do
+      expect(default_tenant).to be
+    end
+  end
+
+  describe "#root_tenant" do
+    it "has a root tenant" do
       expect(default_tenant).to be
     end
   end
@@ -91,14 +102,16 @@ describe Tenant do
       expect(tenant.name).to be_nil
     end
 
-    it "has custom name for default tenant" do
-      default_tenant.name = "custom"
-      expect(default_tenant.name).to eq("custom")
-    end
+    context "for default tenant" do
+      it "reads settings" do
+        expect(default_tenant[:name]).to be_nil
+        expect(default_tenant.name).to eq("settings")
+      end
 
-    it "reads settings for default tenant" do
-      expect(default_tenant[:name]).to be_nil
-      expect(default_tenant.name).to eq("settings")
+      it "has custom name" do
+        default_tenant.name = "custom"
+        expect(default_tenant.name).to eq("custom")
+      end
     end
   end
 
@@ -273,6 +286,20 @@ describe Tenant do
 
       expect(described_class.root_tenant).to eq(r)
       expect(described_class.default_tenant).to eq(c)
+    end
+
+    it "only allows one root" do
+      described_class.destroy_all
+      described_class.seed
+
+      expect {
+        described_class.create!
+      }.to raise_error
+    end
+
+    it "can update the root_tenant" do
+      root_tenant.update_attributes!(:name => 'newname')
+      expect(root_tenant.reload.name).to eq('newname')
     end
   end
 
