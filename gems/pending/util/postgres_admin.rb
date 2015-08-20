@@ -1,6 +1,8 @@
 require 'awesome_spawn'
 require 'pathname'
 
+RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
+
 class PostgresAdmin
   def self.pg_ctl
     Pathname.new(ENV.fetch("APPLIANCE_PG_CTL"))
@@ -32,7 +34,7 @@ class PostgresAdmin
   end
 
   def self.certificate_location
-    Rails.root.join("certs")
+    RAILS_ROOT.join("certs")
   end
 
   def self.logical_volume_name

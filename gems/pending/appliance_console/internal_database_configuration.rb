@@ -1,6 +1,9 @@
 require "appliance_console/database_configuration"
 require "appliance_console/service_group"
+require "pathname"
 require "util/postgres_admin"
+
+RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
 
 module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration
@@ -12,11 +15,11 @@ module ApplianceConsole
     end
 
     def self.postgresql_sample
-      Rails.root.join("../system/COPY").join(postgres_dir)
+      RAILS_ROOT.join("../system/COPY").join(postgres_dir)
     end
 
     def self.postgresql_template
-      Rails.root.join("../system/TEMPLATE").join(postgres_dir)
+      RAILS_ROOT.join("../system/TEMPLATE").join(postgres_dir)
     end
 
     def initialize(hash = {})
