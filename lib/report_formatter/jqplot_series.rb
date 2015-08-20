@@ -37,7 +37,9 @@ module ReportFormatter
     private
 
     def shorten_label(label)
-      label.to_s[0, 14]
+      parts = label.to_s.split(':')
+      parts[0] = parts[0].to_s[0, 14]
+      parts.join(':')
     end
   end
 end
