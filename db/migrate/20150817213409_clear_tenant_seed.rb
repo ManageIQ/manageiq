@@ -1,5 +1,8 @@
 class ClearTenantSeed < ActiveRecord::Migration
+  class Tenant < ActiveRecord::Base
+  end
+
   def up
-    execute "update tenants set name = null"
+    Tenant.update_all(:name => nil)
   end
 end
