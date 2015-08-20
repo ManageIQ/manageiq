@@ -1,89 +1,102 @@
-- url = url_for(:action => 'form_field_changed', :id => (@host.id || 'new'))
-- observe = {:interval => '.5', :url => url}.to_json
-#form_div
+- @angularForm = true
+%form.form-horizontal#form_div{"name"            => "angularForm",
+                               "ng-controller"   => "hostFormController",
+                               "ng-show"         => "afterGet",
+                               "form-fields-url" => "/#{controller_name}/host_form_fields/",
+                               "create-url"      => "/#{controller_name}/create/",
+                               "update-url"      => "/#{controller_name}/update/",
+                               "novalidate"      => true}
   = render :partial => "layouts/flash_msg"
   - if session[:host_items].nil?
-    %h3= _('Basic Information')
-    %table.style1
-      %tr
-        %td.key= _('Name')
-        %td.wide
-          = text_field_tag("name",
-            @edit[:new][:name],
-            :maxlength => MAX_NAME_LEN,
-            "data-miq_focus" => true,
-            "data-miq_observe" => observe)
-      %tr
-        %td.key= _('Hostname (or IPv4 or IPv6 address)')
-        %td.wide
-          = text_field_tag("hostname",
-            @edit[:new][:hostname],
-            :maxlength => MAX_HOSTNAME_LEN,
-            "data-miq_observe" => observe)
-      %tr
-        %td.key= _('Custom Identifier')
-        %td.wide
-          = text_field_tag("custom_1",
-            @edit[:new][:custom_1],
-            :maxlength => 50,
-            "data-miq_observe" => observe)
-      - if @host.operating_system.nil? || @host.operating_system.product_name.nil?
-        %tr
-          %td.key= _('Host platform')
-          %td.wide
-            = select_tag("user_assigned_os",
-              options_for_select([["<#{_('not specified')}>", nil]] + Host.host_create_os_types.to_a,
-              @edit[:new][:user_assigned_os]),
-              "data-miq_observe" => {:url => url}.to_json)
-      %tr
-        %td.key= _('IPMI IP Address')
-        %td.wide
-          = text_field_tag("ipmi_address",
-            @edit[:new][:ipmi_address],
-            :maxlength => 15,
-            "data-miq_observe" => observe)
-      %tr
-        %td.key= _('MAC Address')
-        %td.wide
-          = text_field_tag("mac_address",
-            @edit[:new][:mac_address],
-            :maxlength => MAX_NAME_LEN,
-            "data-miq_observe" => observe)
-    %hr
+    %div
+      %div
+        .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+          %label.col-md-2.control-label{"for" => "textInput-markup"}
+            = _("Name")
+          .col-md-8
+            %input.form-control{"type"        => "text",
+                                "id"          => "textInput-markup",
+                                "name"        => "name",
+                                "ng-model"    => "hostModel.name",
+                                "maxlength"   => "#{MAX_NAME_LEN}",
+                                "miqrequired" => "",
+                                "checkchange" => ""}
+            %span.help-block{"ng-show" => "angularForm.name.$error.miqrequired"}
+              = _("Required")
+        .form-group{"ng-class" => "{'has-error': angularForm.hostname.$invalid}"}
+          %label.col-md-2.control-label{"for" => "textInput-markup"}
+            = _("Hostname (or IPv4 or IPv6 address)")
+          .col-md-8
+            %input.form-control{"type"        => "text",
+                                "id"          => "textInput-markup",
+                                "name"        => "hostname",
+                                "ng-model"    => "hostModel.hostname",
+                                "maxlength"   => "#{MAX_HOSTNAME_LEN}",
+                                "miqrequired" => "",
+                                "checkchange" => ""}
+            %span.help-block{"ng-show" => "angularForm.hostname.$error.miqrequired"}
+              = _("Required")
+        .form-group{"ng-class" => "{'has-error': angularForm.user_assigned_os.$invalid}", "ng-hide" => "hostModel.operating_system"}
+          %label.col-md-2.control-label
+            = _("Host platform")
+          .col-md-8
+            = select_tag('user_assigned_os',
+                         options_for_select([["<#{_('Choose')}>", nil]] + Host.host_create_os_types.to_a, disabled: ["<#{_('Choose')}>", nil]),
+                         "ng-model"                    => "hostModel.user_assigned_os",
+                         "checkchange"                 => "",
+                         "ng-required"                 => "!hostModel.operating_system",
+                         "selectpicker-for-select-tag" => "")
+            %span.help-block{"ng-show" => "angularForm.user_assigned_os.$error.required"}
+              = _("Required")
+        .form-group
+          %label.col-md-2.control-label
+            = _("Custom Identifier")
+          .col-md-8
+            %input#custom_1{"type"        => "text",
+                           "name"        => "custom_1",
+                           "ng-model"    => "hostModel.custom_1",
+                           "maxlength"   => 50,
+                           "checkchange" => "",
+                           :class        => "form-control"}
+        .form-group
+          %label.col-md-2.control-label
+            = _("IPMI IP Address")
+          .col-md-8
+            %input#ipmi_address{"type"        => "text",
+                           "name"        => "ipmi_address",
+                           "ng-model"    => "hostModel.ipmi_address",
+                           "maxlength"   => 15,
+                           "checkchange" => "",
+                           :class        => "form-control"}
+        .form-group
+          %label.col-md-2.control-label
+            = _("MAC Address")
+          .col-md-8
+            %input#mac_address{"type"        => "text",
+                           "name"        => "mac_address",
+                           "ng-model"    => "hostModel.mac_address",
+                           "maxlength"   => "#{MAX_NAME_LEN}",
+                           "checkchange" => "",
+                           :class        => "form-control"}
+  %hr
+  = render(:partial => "/layouts/angular/multi_auth_credentials",
+           :locals  => {:record => @host, :ng_model => "hostModel"})
+  = render :partial => "layouts/angular/x_edit_buttons_angular"
 
-  = render(:partial => "/layouts/multi_auth_credentials", :locals => {:record => @host})
-  - if %w(new create).include?(controller.action_name)
-    %table{:width => '100%'}
+- unless session[:host_items].nil?
+  %h3
+    = pluralize(session[:host_items].length, Dictionary.gettext(Host.to_s, :type => :model, :notfound => :titleize))
+    =_('Selected')
+  =_('Click on a Host to fetch its settings')
+  %table.admittable{:height => '75'}
+    %tbody
       %tr
-        %td{:align => 'right'}
-          #buttons_on
-            = button_tag(_('Add'),
-              :class => 'btn btn-primary',
-              :alt => (t = _("Add this Host")),
-              :title => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => "create",
-                :id     => "new",
-                :button => "add")}');")
-            = button_tag((t = _('Cancel')),
-              :class => 'btn btn-default',
-              :alt => t,
-              :title => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => 'create',
-                :id => 'new',
-                :button => 'cancel')}');")
-  - else
-    = render(:partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @host.id, :ajax_buttons => true})
+        %td
+          - if session[:host_items]
+            - @embedded = true
+            - @gtl_type = @settings[:views][:host]
+            = render :partial => 'layouts/gtl'
 
-  - unless session[:host_items].nil?
-    %h3
-      = pluralize(session[:host_items].length, Dictionary.gettext(Host.to_s, :type => :model, :notfound => :titleize))
-      = _('Selected')
-    = _('Click on a Host to fetch its settings')
-    %table.admittable{:height => '75'}
-      %tbody
-        %tr
-          %td
-            - if session[:host_items]
-              - @embedded = true
-              - @gtl_type = @settings[:views][:host]
-              = render :partial => 'layouts/gtl'
+:javascript
+  ManageIQ.angularApplication.value('hostFormId', '#{(@host.id || (session[:host_items] && session[:host_items].join(","))) || "new"}');
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });

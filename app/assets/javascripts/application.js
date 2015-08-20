@@ -10,7 +10,6 @@
 //= require services/miq_db_backup_service
 //= require directives/scheduler/updateDropdownForFilter
 //= require directives/scheduler/updateDropdownForTimer
-//= require directives/miq_calendar
 //= require directives/miqrequired
 //= require directives/checkchange
 //= require directives/verifypasswd
@@ -18,6 +17,7 @@
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
 //= require services/timer_option_service
+//= require controllers/host/host_form_controller
 //= require controllers/provider_foreman/provider_foreman_form_controller
 //= require controllers/repository/repository_form_controller
 //= require controllers/retirement/retirement_form_controller

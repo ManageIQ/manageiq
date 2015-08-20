@@ -772,6 +772,7 @@ Vmdb::Application.routes.draw do
         timeline_data
         groups
         guest_applications
+        host_form_fields
         host_services
         index
         list
