@@ -2,7 +2,7 @@ module ReportFormatter
   module ChartCommon
     def slice_legend(string, limit = LEGEND_LENGTH)
       string = string.to_s
-      string.length > limit ? string.slice(0, limit) + "..." : string
+      string = string.length > limit ? string.slice(0, limit) + "..." : string
       string.gsub(/\n/, ' ')
     end
 
@@ -58,7 +58,8 @@ module ReportFormatter
             when :performance then :build_performance_chart # performance chart (time based)
             when :util_ts     then :build_util_ts_chart     # utilization timestamp chart (grouped columns)
             when :planning    then :build_planning_chart    # trend based planning chart
-            else                   :build_reporting_chart   # standard reporting chart
+            else                                            # reporting charts
+              mri.graph[:mode] == 'values' ? :build_reporting_chart_numeric : :build_reporting_chart
             end
       method(fun).call(maxcols, divider)
     end
@@ -347,13 +348,108 @@ module ReportFormatter
           series.push(:value   => ocount,
                       :tooltip => "#{key1} / Other: #{ocount}")
         end
-        add_series("Other", series)
+        add_series(_("Other"), series)
       end
       counts # FIXME
     end
 
+    def build_reporting_chart_dim2_numeric
+      (sort1, sort2) = mri.sortby
+      (keep, show_other) = keep_and_show_other
+
+      # Group values by sort1
+      # 3rd dimension in the chart is defined by sort2
+      groups = mri.table.data.group_by { |row| row[sort1] }
+
+      group_sums = groups.each_with_object({}) do |(key, rows), h|
+        h[key] = rows.inject(0) { |sum, row| sum + row[data_column_name] }
+      end
+      sorted_sums = group_sums.sort_by { |_key, sum| sum }
+
+      selected_groups = sorted_sums.reverse.take(keep)
+
+      cathegory_texts = selected_groups.collect { |key, _| slice_legend(key, LABEL_LENGTH) }
+      cathegory_texts << _('Other') if show_other
+
+      add_axis_category_text(cathegory_texts)
+
+      groups_hash = selected_groups.each_with_object(Hash.new { |h, k| h[k] = {} }) do |(key, _), h|
+        groups[key].each { |row| h[key][row[sort2]] = row }
+      end
+
+      if show_other
+        other_groups = Array(sorted_sums[0, sorted_sums.length - keep])
+        other = other_groups.each_with_object(Hash.new(0)) do |(key, _), o|
+          groups[key].each do |row|
+            o[row[sort2]] += row[data_column_name]
+          end
+        end
+      end
+
+      # For each value in sort2 column we create a series.
+      sort2_values = mri.table.data.each_with_object({}) { |row, h| h[row[sort2]] = true }
+      sort2_values.each_key do |val2|
+        series = selected_groups.each_with_object(series_class.new) do |(key1, _), a|
+          row = groups_hash.fetch_path(key1, val2)
+          value = row ? row[data_column_name] : 0
+          a.push(:value   => value,
+                 :tooltip => "#{key1} / #{val2}: #{value}")
+        end
+
+        series.push(:value   => other[val2],
+                    :tooltip => "Other / #{val2}: #{other[val2]}") if show_other
+
+        label = slice_legend(val2) if val2.kind_of?(String)
+        label = label.to_s.gsub(/\\/, ' \ ')
+        label = _('no value') if label.blank?
+        add_series(label, series)
+      end
+      groups
+    end
+
+    def data_column_name
+      @data_column_name ||= (
+        _model, col  = mri.graph[:column].split('-', 2)
+        col, aggreg = col.split(':', 2)
+        aggreg.blank? ? col : "#{col}__#{aggreg}"
+      )
+    end
+
+    def build_reporting_chart_other_numeric
+      categories = []
+      (sort1,) = mri.sortby
+      (keep, show_other) = keep_and_show_other
+      sorted_data = mri.table.data.sort_by { |row| row[data_column_name] || 0 }
+
+      series = sorted_data.reverse.take(keep)
+               .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
+        tooltip = row[sort1]
+        tooltip = _('no value') if tooltip.blank?
+        a.push(:value   => row[data_column_name],
+               :tooltip => tooltip)
+        categories.push([tooltip, row[data_column_name]])
+      end
+
+      if show_other
+        other_sum = Array(sorted_data[0, sorted_data.length - keep])
+                 .inject(0) { |sum, row| sum + row[data_column_name] }
+        series.push(:value => other_sum, :tooltip => _('Other'))
+        categories.push([_('Other'), other_sum])
+      end
+
+      # Pie charts put categories in legend, else in axis labels
+      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
+      categories.collect! { |c| slice_legend(c[0], limit) }
+      add_axis_category_text(categories)
+
+      add_series(mri.headers[0], series)
+    end
+
+    def pie_type?
+      @pie_type ||= mri.graph[:type] =~ /^(Pie|Donut)/
+    end
+
     def build_reporting_chart_other
-      @is_pie_type = mri.graph[:type] =~ /^(Pie|Donut)/
       save_key   = nil
       counter    = 0
       categories = []                      # Store categories and series counts in an array of arrays
@@ -379,12 +475,12 @@ module ReportFormatter
       end
 
       series = categories.each_with_object(
-        series_class.new(@is_pie_type ? :pie : :flat)) do |cat, a|
+        series_class.new(pie_type? ? :pie : :flat)) do |cat, a|
         a.push(:value => cat.last, :tooltip => "#{cat.first}: #{cat.last}")
       end
 
       # Pie charts put categories in legend, else in axis labels
-      limit = @is_pie_type ? LEGEND_LENGTH : LABEL_LENGTH
+      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
       categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
       add_series(mri.headers[0], series)
@@ -406,7 +502,11 @@ module ReportFormatter
       build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
     end
 
-    def build_reporting_chart(maxcols, divider)
+    def build_reporting_chart_numeric(_maxcols, _divider)
+      mri.dims == 2 ?  build_reporting_chart_dim2_numeric : build_reporting_chart_other_numeric
+    end
+
+    def build_reporting_chart(_maxcols, _divider)
       mri.dims == 2 ?  build_reporting_chart_dim2 : build_reporting_chart_other
     end
   end

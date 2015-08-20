@@ -25,4 +25,16 @@ module ReportHelper
       _("By %{typ}: %{values}") % {:typ => typ.to_s.titleize, :values => values.join(',')}
     end
   end
+
+  def chart_fields_options
+    if @edit[:pivot_cols].empty?
+      @edit[:new][:fields]
+    else
+      @edit[:pivot_cols].each_with_object([]) do |(field, agreg), options|
+        agreg.each do |fun|
+          options << ["#{field} (#{fun.to_s.titleize})", "#{field}:#{fun}"]
+        end
+      end
+    end
+  end
 end

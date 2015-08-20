@@ -78,6 +78,21 @@ module ReportFormatter
       mri.chart.store_path(:options, :axes, :xaxis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
     end
 
+    def vertical?
+      @vertical ||= mri.graph[:type] =~ /(Column)/
+    end
+
+    def axis_category_labels_ticks
+      return if Array(mri.chart[:axis_category_text]).empty?
+
+      axis = vertical? ? :xaxis : :yaxis
+      mri.chart.store_path(:options, :axes, axis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
+      mri.chart.store_path(:options, :axes, axis, :ticks, mri.chart[:axis_category_text][0].collect { |l| slice_legend(l) })
+      mri.chart.store_path(:options, :axes, axis, :tickRenderer, 'jQuery.jqplot.CanvasAxisTickRenderer')
+
+      mri.chart.store_path(:options, :axes, axis, :tickOptions, :angle, -45.0) if vertical?
+    end
+
     # Utilization timestamp charts
     def build_util_ts_chart_column
       return unless super
@@ -120,6 +135,38 @@ module ReportFormatter
       x_axis_category_labels
     end
 
+    def build_reporting_chart_other_numeric
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      mri.chart[:options][:seriesDefaults][:rendererOptions].update(
+        :varyBarColor => true
+      ) if mri.graph[:type] =~ /(Bar|Column)/
+      super
+
+      axis_category_labels_ticks if mri.graph[:type] =~ /(Bar|Column)/
+
+      mri.chart[:options].update(
+        :highlighter    => {
+          :show                 => true,
+          :useAxesFormatters    => false,
+          :tooltipAxes          => 'y',
+          :tooltipContentEditor => "foobar = function(str, seriesIndex, pointIndex, plot) {
+              return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
+                     plot.series[seriesIndex].data[pointIndex][1];
+          }",
+          :tooltipLocation      => 'n'
+        }
+      ) if pie_type?
+    end
+
+    def build_reporting_chart_dim2_numeric
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      super
+      horizontal_legend if mri.graph[:type] =~ /Bar/
+      default_legend    if mri.graph[:type] =~ /Column/
+
+      axis_category_labels_ticks if mri.graph[:type] =~ /(Bar|Column)/
+    end
+
     def build_reporting_chart_other
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
@@ -134,7 +181,7 @@ module ReportFormatter
           }",
           :tooltipLocation      => 'n'
         }
-      ) if @is_pie_type
+      ) if pie_type?
     end
 
     def finalize_document
