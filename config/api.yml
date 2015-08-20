@@ -433,6 +433,7 @@
     :resource_actions:
       :post:
       - :name: run
+        :identifier: miq_report_run
     :subcollections:
     - :results
   :request_tasks:

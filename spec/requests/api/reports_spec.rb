@@ -77,14 +77,28 @@ RSpec.describe "reports API" do
     expect_request_success
   end
 
-  it "can run a report" do
-    report = FactoryGirl.create(:miq_report)
+  context "with an appropriate role" do
+    it "can run a report" do
+      report = FactoryGirl.create(:miq_report)
 
-    expect {
-      api_basic_authorize
-      run_post "#{reports_url(report.id)}", :action => "run"
-    }.to change(MiqReportResult, :count).by(1)
-    expect(@result["miq_report_id"]).to eq(report.id)
-    expect_request_success
+      expect {
+        api_basic_authorize action_identifier(:reports, :run)
+        run_post "#{reports_url(report.id)}", :action => "run"
+      }.to change(MiqReportResult, :count).by(1)
+      expect(@result["miq_report_id"]).to eq(report.id)
+      expect_request_success
+    end
+  end
+
+  context "without an appropriate role" do
+    it "cannot run a report" do
+      report = FactoryGirl.create(:miq_report)
+
+      expect {
+        api_basic_authorize
+        run_post "#{reports_url(report.id)}", :action => "run"
+      }.not_to change(MiqReportResult, :count)
+      expect_request_forbidden
+    end
   end
 end
