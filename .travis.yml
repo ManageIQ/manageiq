@@ -18,7 +18,7 @@ env:
 matrix:
   fast_finish: true
 addons:
-  postgresql: '9.3'
+  postgresql: '9.4'
 before_install:
 - "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
 - gem uninstall -x -i $GEM_HOME@global bundler
