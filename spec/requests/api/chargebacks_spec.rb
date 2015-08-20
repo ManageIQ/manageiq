@@ -109,9 +109,9 @@ RSpec.describe "chargebacks API" do
 
     api_basic_authorize action_identifier(:rates, :delete)
 
-    expect {
+    expect do
       run_delete rates_url(chargeback_rate_detail.id)
-    }.to change(ChargebackRateDetail, :count).by(-1)
+    end.to change(ChargebackRateDetail, :count).by(-1)
     expect(last_response.status).to eq(204)
   end
 
@@ -120,9 +120,9 @@ RSpec.describe "chargebacks API" do
 
     api_basic_authorize action_identifier(:rates, :delete)
 
-    expect {
+    expect do
       run_post rates_url(chargeback_rate_detail.id), :action => "delete"
-    }.to change(ChargebackRateDetail, :count).by(-1)
+    end.to change(ChargebackRateDetail, :count).by(-1)
     expect_request_success
   end
 end
