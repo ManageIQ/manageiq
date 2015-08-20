@@ -109,3 +109,9 @@ VCR.configure do |c|
 
   #c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")
 end
+
+begin
+  require 'coveralls'
+  Coveralls.wear!
+rescue LoadError
+end
