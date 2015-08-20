@@ -2,16 +2,16 @@
   'use strict';
 
   angular.module('app.services')
-    .factory('NotificationsService', NotificationsServiceFactory);
+    .factory('Messages', MessagesFactory);
 
   /** @ngInject */
-  function NotificationsServiceFactory() {
+  function MessagesFactory() {
     var model = {
-      notifications: []
+      messages: []
     };
 
     var service = {
-      notifications: model.notifications,
+      items: model.messages,
       clear: clear
     };
 
@@ -20,7 +20,7 @@
     return service;
 
     function clear() {
-      model.notifications.length = 0;
+      model.messages.length = 0;
     }
 
     // Private

@@ -24,23 +24,23 @@
     }
 
     /** @ngInject */
-    function HeaderNavController(Navigation, NotificationsService) {
+    function HeaderNavController(Navigation, Messages) {
       var vm = this;
 
       vm.activate = activate;
       vm.toggleNavigation = toggleNavigation;
-      vm.clearNotifications = clearNotifications;
+      vm.clearMessages = clearMessages;
 
       function activate() {
-        vm.notifications = NotificationsService.notifications;
+        vm.messages = Messages.items;
       }
 
       function toggleNavigation() {
         Navigation.state.showMobileNav = !Navigation.state.showMobileNav;
       }
 
-      function clearNotifications() {
-        NotificationsService.clear();
+      function clearMessages() {
+        Messages.clear();
       }
     }
   }
