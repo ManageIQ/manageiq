@@ -7,7 +7,7 @@ gem "bundler",       ">= 1.8.4"
 gem "rake",          "~>10.1"
 gem "iniparse"
 
-RAILS_VERSION = "~>4.2.3"
+RAILS_VERSION = "~>4.2.4.rc1"
 gem "activesupport", RAILS_VERSION
 
 # ActiveRecord is used by appliance_console
