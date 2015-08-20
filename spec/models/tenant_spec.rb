@@ -223,6 +223,13 @@ describe Tenant do
     end
   end
 
+  describe "#description" do
+    it "has description" do
+      tenant.update_attributes(:description => 'very important vm')
+      expect(tenant.description).not_to be_nil
+    end
+  end
+
   context "#admins" do
     let(:self_service_role) { FactoryGirl.create(:miq_user_role, :settings => {:restrictions => {:vms => :user}}) }
 
