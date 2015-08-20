@@ -85,7 +85,11 @@ RSpec.describe "reports API" do
         api_basic_authorize action_identifier(:reports, :run)
         run_post "#{reports_url(report.id)}", :action => "run"
       }.to change(MiqReportResult, :count).by(1)
-      expect(@result["miq_report_id"]).to eq(report.id)
+      expect_single_action_result(
+        :href => reports_url(report.id),
+        :success => true,
+        :message => "running report #{report.id}"
+      )
       expect_request_success
     end
   end
