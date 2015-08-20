@@ -1,4 +1,4 @@
-require 'platform'
+require 'sys-uname'
 
 class VMPlatformMount
     
@@ -7,7 +7,7 @@ class VMPlatformMount
         @dInfo = dInfo
         @ost = ost
         
-        if Platform::OS == :win32
+        if Sys::Platform::OS == :windows
 			require "metadata/VMMount/VMPlatformMountWin"
 			extend VMPlatformMountWin
 		else

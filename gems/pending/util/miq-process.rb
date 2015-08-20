@@ -1,10 +1,10 @@
 # encoding: US-ASCII
 
-require 'platform'
+require 'sys-uname'
 require 'util/runcmd'
 require 'util/win32/miq-wmi'
 require 'util/miq-system'
-if Platform::OS == :win32
+if Sys::Platform::OS == :windows
   require 'util/win32/miq-win32-process'
 end
 
@@ -13,13 +13,13 @@ class MiqProcess
   def self.get_active_process_by_name(process_name)
     pids = []
 
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :mswin, :mingw
       WMIHelper.connectServer().run_query("select Handle,Name from Win32_Process where Name = '#{process_name}.exe'") {|p| pids << p.Handle.to_i}
     when :linux, :macosx
       pids = %x(ps -e | grep #{process_name} | grep -v grep ).split("\n").collect(&:to_i)
     else
-      raise "Method MiqProcess.get_active_process_by_name not implemented on this platform [#{Platform::IMPL}]"
+      raise "Method MiqProcess.get_active_process_by_name not implemented on this platform [#{Sys::Platform::IMPL}]"
     end
     return pids
   end
@@ -89,7 +89,7 @@ class MiqProcess
 
     result = { :pid => pid }
 
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :mswin, :mingw
       # WorkingSetSize: The amount of memory in bytes that a process needs to execute efficiently, for an operating system that uses
       #                 page-based memory management. If an insufficient amount of memory is available (< working set size), thrashing will occur.
@@ -116,7 +116,7 @@ class MiqProcess
       h = nil
       begin
         h = self.process_list_linux("ps -p #{pid} -o pid,rss,vsize,%mem,%cpu,time,pri,ucomm", true)
-      rescue 
+      rescue
         raise Errno::ESRCH.new(pid.to_s)
       end
       result = h[pid]
@@ -126,7 +126,7 @@ class MiqProcess
   end
 
   def self.command_line(pid)
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :mswin, :mingw
       WMIHelper.connectServer {|wmi| wmi.run_query("select CommandLine from Win32_Process where Handle = '#{pid}'") {|p| return p.CommandLine}}
     when :linux
@@ -147,7 +147,7 @@ class MiqProcess
   end
 
   def self.alive?(pid)
-    raise NotImplementedError, "Method MiqProcess.alive? not implemented on this platform [#{Platform::IMPL}]" unless Platform::OS == :unix
+    raise NotImplementedError, "Method MiqProcess.alive? not implemented on this platform [#{Sys::Platform::IMPL}]" unless Sys::Platform::OS == :unix
 
     begin
       Process.kill(0, pid)
@@ -175,7 +175,7 @@ class MiqProcess
   def self.state(pid)
     raw_state = nil
 
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :mswin, :mingw
       # TODO
     when :linux
@@ -195,7 +195,7 @@ class MiqProcess
   def self.find_pids(cmd)
     pids = []
 
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :linux
       Dir['/proc/[0-9]*/cmdline'].each do |filename|
         cmdline = MiqSystem.readfile_async(filename)
@@ -213,7 +213,7 @@ class MiqProcess
         end
       end
     else
-      raise NotImplementedError, "Method MiqProcess.find_pids not implemented on this platform [#{Platform::IMPL}]"
+      raise NotImplementedError, "Method MiqProcess.find_pids not implemented on this platform [#{Sys::Platform::IMPL}]"
     end
 
     return pids
@@ -224,7 +224,7 @@ class MiqProcess
 
     result = []
 
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :linux
       # ps -l --ppid 5320
       # Gets processes whose parent pid is pid
@@ -261,7 +261,7 @@ class MiqProcess
     pl = {}
     return self.process_list_wmi(wmi) unless wmi.nil?
 
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :mswin, :mingw
       pl = self.process_list_wmi(wmi)
     when :linux
@@ -345,18 +345,18 @@ class MiqProcess
   end
 
   def self.suspend_process(pid)
-    case Platform::OS
-    when :win32 then Process.process_thread_list[pid].each {|tid| Process.suspend_resume_thread(tid, false)}
+    case Sys::Platform::OS
+    when :windows then Process.process_thread_list[pid].each {|tid| Process.suspend_resume_thread(tid, false)}
     else
-      raise "Method MiqProcess.suspend_process not implemented on this platform [#{Platform::IMPL}]"
+      raise "Method MiqProcess.suspend_process not implemented on this platform [#{Sys::Platform::IMPL}]"
     end
   end
 
   def self.resume_process(pid)
-    case Platform::OS
-    when :win32 then Process.process_thread_list[pid].each {|tid| Process.suspend_resume_thread(tid, true)}
+    case Sys::Platform::OS
+    when :windows then Process.process_thread_list[pid].each {|tid| Process.suspend_resume_thread(tid, true)}
     else
-      raise "Method MiqProcess.resume_process not implemented on this platform [#{Platform::IMPL}]"
+      raise "Method MiqProcess.resume_process not implemented on this platform [#{Sys::Platform::IMPL}]"
     end
   end
 

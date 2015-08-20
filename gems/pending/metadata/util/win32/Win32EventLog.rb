@@ -4,7 +4,7 @@
 #      Provide collection of custom log names?
 
 # Specifically use the Platform mod used in MiqDisk.
-require 'platform'
+require 'sys-uname'
 
 # For message table resources.
 require 'metadata/util/win32/peheader'
@@ -13,7 +13,7 @@ require 'metadata/util/win32/peheader'
 require 'metadata/util/win32/remote-registry'
 
 # Dev needs this.
-require 'Win32API' if Platform::OS == :win32
+require 'Win32API' if Sys::Platform::OS == :windows
 require 'metadata/util/win32/system_path_win'
 
 require 'digest/md5'
@@ -150,7 +150,7 @@ class Win32EventLog
 
     # If an MiqFS instance was not passed, then the OS has to be (or emulate) Win32.
     # If an MiqFS instance *was* passed, then if the guest OS is not Windows then getSystemRoot will throw.
-    raise "#{self.class}::initialize: Platform is not Windows and file system is not MiqFS: cannot continue" if Platform::OS != :win32 and !vmMiqFs.class.to_s.include?('Miq')
+    raise "#{self.class}::initialize: Platform is not Windows and file system is not MiqFS: cannot continue" if Sys::Platform::OS != :windows and !vmMiqFs.class.to_s.include?('Miq')
 
     # Get a file system instance if we don't already have one.
     @fs = vmMiqFs
@@ -205,7 +205,7 @@ class Win32EventLog
       $log.info "#{self.class}: Opening file for [#{log}]" if $log
       @f = f
       @offset = BUFFER_READ_SIZE * -1
-      
+
       hdr = ELF_LOGFILE_HEADER.decode(read_buffer(0,ELF_LOGFILE_HEADER.size))
       hdr[:wrapped] = !(hdr[:flags] & ELF_WRAPPED).zero?
       @file_size = @fs == File ? File.size(filename) : @fs.fileSize(filename)
@@ -219,7 +219,7 @@ class Win32EventLog
 
       each_record(hdr, log) do |rec|
         recs_processed += 1
-        
+
         # Get log record components & filter on them
         rec[:generated] = Time.at(rec[:generated]).utc.iso8601
         break if EventLogFilter.filter_by_generated?(rec[:generated], filter)
@@ -300,7 +300,7 @@ class Win32EventLog
       f.close rescue nil
     end
   end
-  
+
   def mkXmlDoc(log, event_file)
     @xmlDoc ||= XmlHash.createDoc("<event_log/>")
     return @xmlDoc.root.add_element(:log, {:name => log, :path => event_file})
@@ -372,7 +372,7 @@ class Win32EventLog
     return if hdr[:oldest_record_number].zero?
 
     last_pos = pos = getNextRecordOffset(nil, hdr)
-    
+
     loop do
       # Get this record.
       rec = EVENTRECORD.decode(read_buffer(pos, EVENTRECORD.size, -1))
@@ -570,7 +570,7 @@ class Win32EventLog
     end
 
     msg = errMsg.nil? ? "#{self.class}::getMessage: Couldn't find message id in any listed source" : errMsg if msg.nil?
-    
+
     rec[:message] = msg.chomp!
   end
 
@@ -682,7 +682,7 @@ class Win32EventLog
     sources = {:message => {}, :param => {}, :category => {}}
     types = {'EventMessageFile'=>sources[:message], 'ParameterMessageFile'=>sources[:param], 'CategoryMessageFile'=> sources[:category]}
     src = "system\\currentcontrolset\\services\\eventlog\\#{log}"
-    
+
     Win32::Registry::HKEY_LOCAL_MACHINE.open(src) do |reg|
       reg.each_key do |subKey, wtime|
         subpath = "#{src}\\#{subKey}"

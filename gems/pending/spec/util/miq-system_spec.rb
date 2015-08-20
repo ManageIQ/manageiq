@@ -137,7 +137,7 @@ EOF
         }
       ]
 
-      stub_const("Platform::IMPL", :linux)
+      stub_const("Sys::Platform::IMPL", :linux)
       AwesomeSpawn.should_receive(:launch).with("df -T -P -l", {}).and_return([linux_df_output_bytes, "", 0])
       AwesomeSpawn.should_receive(:launch).with("df -T -P -i -l", {}).and_return([linux_df_output_inodes, "", 0])
 
@@ -204,7 +204,7 @@ EOF
         # }
       ]
 
-      stub_const("Platform::IMPL", :macosx)
+      stub_const("Sys::Platform::IMPL", :macosx)
       AwesomeSpawn.should_receive(:launch).and_return([mac_df_output, "", 0])
 
       expect(described_class.disk_usage).to eq(expected)

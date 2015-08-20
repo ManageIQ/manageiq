@@ -1,6 +1,6 @@
 require_relative './test_helper'
 
-require 'platform'
+require 'sys-uname'
 
 # This test runs all disk & file system tests on all VMs.
 # Each test case is responsible for pulling it's own VMs

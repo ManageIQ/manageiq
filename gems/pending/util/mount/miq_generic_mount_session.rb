@@ -1,7 +1,7 @@
 require 'active_support/core_ext/object/blank'
 require 'fileutils'
 require 'logger'
-require 'platform'
+require 'sys-uname'
 require 'uri'
 
 require 'util/miq-exception'
@@ -447,7 +447,7 @@ class MiqGenericMountSession
   end
 
   def self.raw_disconnect(mnt_point)
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :macosx
       self.runcmd("sudo umount #{mnt_point}")
     when :linux
@@ -458,7 +458,7 @@ class MiqGenericMountSession
   end
 
   def self.base_mount_point
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :macosx
       "/Volumes"
     when :linux
