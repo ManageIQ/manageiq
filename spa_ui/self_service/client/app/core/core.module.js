@@ -21,6 +21,7 @@
     'app.services',
 
     // Third party modules
-    'ui.router'
+    'ui.router',
+    'base64'
   ]);
 })();
