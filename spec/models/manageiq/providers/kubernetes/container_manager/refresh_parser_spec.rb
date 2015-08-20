@@ -385,4 +385,74 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       }
     end
   end
+
+  describe "limit range parsing" do
+    it "handles all limit types" do
+      from_k8s = {
+        :metadata => {
+          :name              => 'test-range',
+          :namespace         => 'test-namespace',
+          :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+          :resourceVersion   => '2',
+          :creationTimestamp => '2015-08-17T09:16:46Z',
+        },
+        :spec     => {
+          :limits => [
+            {
+              :type => 'Container',
+            }
+          ]
+        },
+      }
+      parsed = {
+        :name                  => 'test-range',
+        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :creation_timestamp    => '2015-08-17T09:16:46Z',
+        :resource_version      => '2',
+        :project               => nil,
+        :container_limit_items => [
+          {
+            :item_type               => "Container",
+            :resource                => "cpu",
+            :max                     => nil,
+            :min                     => nil,
+            :default                 => nil,
+            :default_request         => nil,
+            :max_limit_request_ratio => nil
+          }
+        ]
+      }
+      %w(min max default defaultRequest maxLimitRequestRatio).each do |k8s_name|
+        from_k8s[:spec][:limits][0][k8s_name.to_sym] = {:cpu => '512Mi'}
+        parsed[:container_limit_items][0][k8s_name.underscore.to_sym] = '512Mi'
+        # note each iteration ADDS ANOTHER limit type to data & result
+        parser.send(:parse_range, RecursiveOpenStruct.new(from_k8s)).should == parsed
+      end
+    end
+
+    it "handles limits without specification" do
+      parser.send(
+        :parse_range,
+        RecursiveOpenStruct.new(
+          :metadata => {
+            :name              => 'test-range',
+            :namespace         => 'test-namespace',
+            :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+            :resourceVersion   => '2',
+            :creationTimestamp => '2015-08-17T09:16:46Z',
+          },
+          :spec     => {
+            :limits => []
+          },
+        )
+      ).should == {
+        :name                  => 'test-range',
+        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+        :creation_timestamp    => '2015-08-17T09:16:46Z',
+        :resource_version      => '2',
+        :project               => nil,
+        :container_limit_items => []
+      }
+    end
+  end
 end

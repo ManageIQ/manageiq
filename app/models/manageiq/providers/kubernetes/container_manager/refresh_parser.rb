@@ -15,6 +15,7 @@ module ManageIQ::Providers::Kubernetes
       get_nodes(inventory)
       get_namespaces(inventory)
       get_resource_quotas(inventory)
+      get_limit_ranges(inventory)
       get_replication_controllers(inventory)
       get_pods(inventory)
       get_endpoints(inventory)
@@ -87,6 +88,10 @@ module ManageIQ::Providers::Kubernetes
 
     def get_resource_quotas(inventory)
       process_collection(inventory["resource_quota"], :container_quotas) { |n| parse_quota(n) }
+    end
+
+    def get_limit_ranges(inventory)
+      process_collection(inventory["limit_range"], :container_limits) { |n| parse_range(n) }
     end
 
     def process_collection(collection, key, &block)
@@ -314,6 +319,60 @@ module ManageIQ::Providers::Kubernetes
       end
 
       new_result_h.values
+    end
+
+    def parse_range(limit_range)
+      new_result = parse_base_item(limit_range).except(:namespace)
+      new_result[:project] = @data_index.fetch_path(
+        :container_projects,
+        :by_name,
+        limit_range.metadata["table"][:namespace])
+      new_result[:container_limit_items] = parse_range_items limit_range
+      new_result
+    end
+
+    def parse_range_items(limit_range)
+      new_result_h = create_limits_matrix
+
+      limit_range.spec.limits.each do |item|
+        item[:max].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:max] = limit
+        end
+
+        item[:min].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:min] = limit
+        end
+
+        item[:default].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:default] = limit
+        end
+
+        item[:defaultRequest].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:default_request] = limit
+        end
+
+        item[:maxLimitRequestRatio].to_h.each do |resource_name, limit|
+          new_result_h[item[:type].to_sym][resource_name.to_sym][:max_limit_request_ratio] = limit
+        end
+      end
+      new_result_h.values.collect(&:values).flatten
+    end
+
+    def create_limits_matrix
+      # example: h[:pod][:cpu][:max] = 8
+      Hash.new do |h, item_type|
+        h[item_type] = Hash.new do |j, resource|
+          j[resource] = {
+            :item_type               => item_type.to_s,
+            :resource                => resource.to_s,
+            :max                     => nil,
+            :min                     => nil,
+            :default                 => nil,
+            :default_request         => nil,
+            :max_limit_request_ratio => nil
+          }
+        end
+      end
     end
 
     def parse_replication_controllers(container_replicator)

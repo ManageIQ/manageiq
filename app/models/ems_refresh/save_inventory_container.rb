@@ -2,8 +2,9 @@ module EmsRefresh::SaveInventoryContainer
   def save_ems_container_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    child_keys = [:container_projects, :container_quotas, :container_nodes, :container_image_registries,
-                  :container_images, :container_replicators, :container_groups, :container_services, :container_routes]
+    child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
+                  :container_image_registries, :container_images, :container_replicators, :container_groups,
+                  :container_services, :container_routes]
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -58,6 +59,36 @@ module EmsRefresh::SaveInventoryContainer
               end
     save_inventory_multi(:container_quota_items, container_quota, hashes, deletes, [:resource])
     store_ids_for_new_records(container_quota.container_quota_items, hashes, :resource)
+  end
+
+  def save_container_limits_inventory(ems, hashes, target = nil)
+    return if hash.nil?
+    target = ems if target.nil?
+
+    ems.container_limits(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                ems.container_limits.dup
+              else
+                []
+              end
+    hashes.each do |h|
+      h[:container_project_id] = h.fetch_path(:project, :id)
+    end
+
+    save_inventory_multi(:container_limits, ems, hashes, deletes, [:ems_ref], :container_limit_items, :project)
+    store_ids_for_new_records(ems.container_limits, hashes, :ems_ref)
+  end
+
+  def save_container_limit_items_inventory(container_limit, hashes, target = nil)
+    return if hashes.nil?
+    container_limit.container_limit_items(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                container_limit.container_limit_items.dup
+              else
+                []
+              end
+    save_inventory_multi(:container_limit_items, container_limit, hashes, deletes, [:resource, :item_type])
+    store_ids_for_new_records(container_limit.container_limit_items, hashes, [:resource, :item_type])
   end
 
   def save_container_routes_inventory(ems, hashes, target = nil)
