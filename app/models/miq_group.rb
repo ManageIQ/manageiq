@@ -209,4 +209,8 @@ class MiqGroup < ActiveRecord::Base
       miq_widget_sets.sort_by { |a| a.name.downcase }
     end
   end
+
+  def self.sort_by_desc
+    all.sort_by { |g| g.description.downcase }
+  end
 end

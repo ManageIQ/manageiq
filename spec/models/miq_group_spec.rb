@@ -294,4 +294,16 @@ describe MiqGroup do
       expect(group.ordered_widget_sets).to eq([ws1, ws3, ws2])
     end
   end
+
+  context ".sort_by_desc" do
+    it "sorts by description" do
+      tenant = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
+      gc = FactoryGirl.create(:miq_group, :description => 'C', :tenant => tenant)
+      ga = FactoryGirl.create(:miq_group, :description => 'a', :tenant => tenant)
+      gb = FactoryGirl.create(:miq_group, :description => 'B', :tenant => tenant)
+      FactoryGirl.create(:miq_group, :description => 'X')
+
+      expect(tenant.miq_groups.sort_by_desc).to eq([ga, gb, gc])
+    end
+  end
 end
