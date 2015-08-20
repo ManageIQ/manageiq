@@ -72,57 +72,90 @@ RSpec.describe "chargebacks API" do
     expect_request_success
   end
 
-  it "can create a new chargeback rate detail" do
-    api_basic_authorize action_identifier(:rates, :create, :collection_actions)
-    run_post rates_url, :rate => 0, :enabled => true
+  context "with an appropriate role" do
+    it "can create a new chargeback rate detail" do
+      api_basic_authorize action_identifier(:rates, :create, :collection_actions)
 
-    actual = @result["results"].first
-    expect(actual["rate"]).to eq("0")
-    expect(actual["enabled"]).to be true
-    expect_request_success
+      expect { run_post rates_url, :rate => 0, :enabled => true }.to change(ChargebackRateDetail, :count).by(1)
+      actual = @result["results"].first
+      expect(actual["rate"]).to eq("0")
+      expect(actual["enabled"]).to be true
+      expect_request_success
+    end
+
+    it "can edit a chargeback rate detail through POST" do
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
+
+      api_basic_authorize action_identifier(:rates, :edit)
+      run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :rate => 0.02)
+
+      expect(@result["rate"]).to eq("0.02")
+      expect_request_success
+      expect(chargeback_rate_detail.reload.rate).to eq("0.02")
+    end
+
+    it "can edit a chargeback rate detail through PATCH" do
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
+
+      api_basic_authorize action_identifier(:rates, :edit)
+      run_patch rates_url(chargeback_rate_detail.id), [{:action => "edit", :path => "rate", :value => 0.02}]
+
+      expect(@result["rate"]).to eq("0.02")
+      expect_request_success
+      expect(chargeback_rate_detail.reload.rate).to eq("0.02")
+    end
+
+    it "can delete a chargeback rate detail" do
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
+
+      api_basic_authorize action_identifier(:rates, :delete)
+
+      expect do
+        run_delete rates_url(chargeback_rate_detail.id)
+      end.to change(ChargebackRateDetail, :count).by(-1)
+      expect(last_response.status).to eq(204)
+    end
+
+    it "can delete a chargeback rate detail through POST" do
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
+
+      api_basic_authorize action_identifier(:rates, :delete)
+
+      expect do
+        run_post rates_url(chargeback_rate_detail.id), :action => "delete"
+      end.to change(ChargebackRateDetail, :count).by(-1)
+      expect_request_success
+    end
   end
 
-  it "can edit a chargeback rate detail through POST" do
-    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
+  context "without an appropriate role" do
+    it "cannot create a chargeback rate detail" do
+      api_basic_authorize
 
-    api_basic_authorize action_identifier(:rates, :edit)
-    run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :rate => 0.02)
+      expect { run_post rates_url, :rate => 0, :enabled => true }.not_to change(ChargebackRateDetail, :count)
+      expect_request_forbidden
+    end
 
-    expect(@result["rate"]).to eq("0.02")
-    expect_request_success
-    expect(chargeback_rate_detail.reload.rate).to eq("0.02")
-  end
+    it "cannot edit a chargeback rate detail" do
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
 
-  it "can edit a chargeback rate detail through PATCH" do
-    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail, :rate => 0)
+      api_basic_authorize
 
-    api_basic_authorize action_identifier(:rates, :edit)
-    run_patch rates_url(chargeback_rate_detail.id), [{:action => "edit", :path => "rate", :value => 0.02}]
+      expect do
+        run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :rate => 0.02)
+      end.not_to change { chargeback_rate_detail.reload.rate }
+      expect_request_forbidden
+    end
 
-    expect(@result["rate"]).to eq("0.02")
-    expect_request_success
-    expect(chargeback_rate_detail.reload.rate).to eq("0.02")
-  end
+    it "cannot delete a chargeback rate detail" do
+      chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
 
-  it "can delete a chargeback rate detail" do
-    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
+      api_basic_authorize
 
-    api_basic_authorize action_identifier(:rates, :delete)
-
-    expect do
-      run_delete rates_url(chargeback_rate_detail.id)
-    end.to change(ChargebackRateDetail, :count).by(-1)
-    expect(last_response.status).to eq(204)
-  end
-
-  it "can delete a chargeback rate detail through POST" do
-    chargeback_rate_detail = FactoryGirl.create(:chargeback_rate_detail)
-
-    api_basic_authorize action_identifier(:rates, :delete)
-
-    expect do
-      run_post rates_url(chargeback_rate_detail.id), :action => "delete"
-    end.to change(ChargebackRateDetail, :count).by(-1)
-    expect_request_success
+      expect do
+        run_delete rates_url(chargeback_rate_detail.id)
+      end.not_to change(ChargebackRateDetail, :count)
+      expect_request_forbidden
+    end
   end
 end
