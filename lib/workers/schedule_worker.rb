@@ -89,48 +89,58 @@ class ScheduleWorker < WorkerBase
 
     # Schedule - Log current system configuration
     every = worker_setting_or_default(:log_active_configuration_interval, 1.days)
-    @schedules[:all] << self.system_schedule_every(every, :tags => [:vmdb_appliance_log_config, schedule_category]) do |rufus_job|
+    @schedules[:all] << self.system_schedule_every(every, :tags => [:vmdb_appliance_log_config, schedule_category]) do
       @queue.enq :vmdb_appliance_log_config
     end
 
     # Schedule - Log current database statistics and bloat
     every = worker_setting_or_default(:log_database_statistics_interval, 1.days)
-    @schedules[:all] << self.system_schedule_every(every, :tags => [:log_all_database_statistics, schedule_category]) do |rufus_job|
+    @schedules[:all] << self.system_schedule_every(every, :tags => [:log_all_database_statistics, schedule_category]) do
       @queue.enq :vmdb_database_log_all_database_statistics
     end
 
     # Schedule - Update Server Statistics
     every = worker_setting_or_default(:server_stats_interval)
-    @schedules[:all] << self.system_schedule_every(every, :first_in => every, :tags => [:status_update, schedule_category]) do |rufus_job|
-      @queue.enq :miq_server_status_update
-    end
+    @schedules[:all] << self.system_schedule_every(
+      every,
+      :first_in => every,
+      :tags     => [:status_update, schedule_category]
+    ) { @queue.enq :miq_server_status_update }
 
     # Schedule - Log Server and Worker Statistics
     every = worker_setting_or_default(:server_log_stats_interval)
-    @schedules[:all] << self.system_schedule_every(every, :first_in => every, :tags => [:log_status, schedule_category]) do |rufus_job|
-      @queue.enq :miq_server_worker_log_status
-    end
+    @schedules[:all] << self.system_schedule_every(
+      every,
+      :first_in => every,
+      :tags     => [:log_status, schedule_category]
+    ) { @queue.enq :miq_server_worker_log_status }
 
     # Schedule - Periodic logging of database statistics
     interval = worker_setting_or_default(:db_diagnostics_interval, 30.minutes)
-    @schedules[:all] << self.system_schedule_every(interval, :first_in => 1.minute, :tags => [:log_statistics, schedule_category]) do |rufus_job|
-      @queue.enq :miq_db_config_log_statistics
-    end
+    @schedules[:all] << self.system_schedule_every(
+      interval,
+      :first_in => 1.minute,
+      :tags     => [:log_statistics, schedule_category]
+    ) { @queue.enq :miq_db_config_log_statistics }
 
     # Schedule - Periodic check for updates on appliances only
     if MiqEnvironment::Command.is_appliance?
       interval = worker_setting_or_default(:yum_update_check, 12.hours)
-      @schedules[:all] << self.system_schedule_every(interval, :first_in => 1.minute, :tags => [:server_updates, schedule_category]) do |rufus_job|
-        @queue.enq :miq_server_queue_update_registration_status
-      end
+      @schedules[:all] << self.system_schedule_every(
+        interval,
+        :first_in => 1.minute,
+        :tags     => [:server_updates, schedule_category]
+      ) { @queue.enq :miq_server_queue_update_registration_status }
     end
 
     # Schedule - Periodic resync of RHN Mirror
     if MiqEnvironment::Command.is_appliance? && MiqServer.my_server.has_assigned_role?("rhn_mirror")
       interval = worker_setting_or_default(:resync_rhn_mirror, 12.hours)
-      @schedules[:all] << self.system_schedule_every(interval, :first_in => 1.minute, :tags => [:rhn_mirror, schedule_category]) do |rufus_job|
-        @queue.enq :miq_server_resync_rhn_mirror
-      end
+      @schedules[:all] << self.system_schedule_every(
+        interval,
+        :first_in => 1.minute,
+        :tags     => [:rhn_mirror, schedule_category]
+      ) { @queue.enq :miq_server_resync_rhn_mirror }
     end
   end
 
@@ -141,37 +151,37 @@ class ScheduleWorker < WorkerBase
 
     # Schedule - Check for VMs to scan
     every = worker_setting_or_default(:vm_scan_interval)
-    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do
       @queue.enq :host_check_for_vms_to_scan
     end
 
     # Schedule - Check for timed out jobs
     every = worker_setting_or_default(:job_timeout_interval)
-    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do
       @queue.enq :job_check_jobs_for_timeout
     end
 
     # Schedule - Check for Retired Services
     every = worker_setting_or_default(:service_retired_interval)
-    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do
       @queue.enq :service_retirement_check
     end
 
     # Schedule - Check for Retired VMs
     every = worker_setting_or_default(:vm_retired_interval)
-    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do
       @queue.enq :vm_retirement_check
     end
 
     # Schedule - Check for Retired Orchestration Stacks
     every = worker_setting_or_default(:orchestration_stack_retired_interval)
-    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |_rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do
       @queue.enq :orchestration_stack_retirement_check
     end
 
     # Schedule - Periodic validation of authentications
     every = worker_setting_or_default(:authentication_check_interval, 1.day)
-    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do
       # Queue authentication checks for CIs with credentials
       @queue.enq :host_authentication_check_schedule
       @queue.enq :ems_authentication_check_schedule
@@ -179,7 +189,7 @@ class ScheduleWorker < WorkerBase
     end
 
     # Schedule - Check for session timeouts
-    @schedules[:scheduler] << self.system_schedule_every(worker_setting_or_default(:session_timeout_interval)) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(worker_setting_or_default(:session_timeout_interval)) do
       # Session is global to the region, therefore, run it only once on the scheduler's server
       @queue.enq :session_check_session_timeout
     end
@@ -187,25 +197,25 @@ class ScheduleWorker < WorkerBase
     # Schedule - Check for rogue EVM snapshots
     every               = worker_setting_or_default(:evm_snapshot_interval, 1.hour)
     job_not_found_delay = worker_setting_or_default(:evm_snapshot_delete_delay_for_job_not_found, 1.hour)
-    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do
       @queue.enq [:job_check_for_evm_snapshots, job_not_found_delay]
     end
 
     # Queue a JobProxyDispatcher dispatch task at high priority unless there's already one on the queue
     # This dispatch method goes through all pending jobs to see if there's a free proxy available to work on one of them
     # It is very expensive to constantly do this, hence the need to ensure only one is on the queue at one time
-    @schedules[:scheduler] << self.system_schedule_every(worker_setting_or_default(:job_proxy_dispatcher_interval)) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(worker_setting_or_default(:job_proxy_dispatcher_interval)) do
       @queue.enq :job_proxy_dispatcher_dispatch
     end
 
     stale_interval = worker_setting_or_default(:job_proxy_dispatcher_stale_message_check_interval, 60.seconds)
     threshold_seconds = worker_setting_or_default(:job_proxy_dispatcher_stale_message_timeout, 2.minutes)
-    @schedules[:scheduler] << self.system_schedule_every(stale_interval) do |rufus_job|
+    @schedules[:scheduler] << self.system_schedule_every(stale_interval) do
       @queue.enq [:check_for_stuck_dispatch, threshold_seconds]
     end
 
     # Schedule - Hourly Alert Evaluation Timer
-    @schedules[:scheduler] << self.system_schedule_every(1.hour, :first_in => 5.minutes) do |job_id, at, params|
+    @schedules[:scheduler] << self.system_schedule_every(1.hour, :first_in => 5.minutes) do
       @queue.enq :miq_alert_evaluate_hourly_timer
     end
 
@@ -216,12 +226,13 @@ class ScheduleWorker < WorkerBase
     else
       time_at = Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc)
     end
-    @schedules[:scheduler] << self.system_schedule_every(worker_setting_or_default(:storage_file_collection_interval), :first_at => time_at) do |rufus_job|
-      @queue.enq :storage_scan_timer
-    end
+    @schedules[:scheduler] << self.system_schedule_every(
+      worker_setting_or_default(:storage_file_collection_interval),
+      :first_at => time_at
+    ) { @queue.enq :storage_scan_timer }
 
     schedule_settings_for_ems_refresh.each do |klass, every|
-      @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
+      @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do
         @queue.enq [:ems_refresh_timer, klass]
       end
     end
@@ -243,21 +254,27 @@ class ScheduleWorker < WorkerBase
 
     sched = cfg.config.fetch_path(*database_metrics_collection_schedule)
     _log.info("database_metrics_collection_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_collection_schedule], :job => true) do |rufus_job|
-      @queue.enq :vmdb_database_capture_metrics_timer
-    end
+    @schedules[:database_operations] << @system_scheduler.cron(
+      sched,
+      :tags => [:database_operations, :database_metrics_collection_schedule],
+      :job  => true
+    ) { @queue.enq :vmdb_database_capture_metrics_timer }
 
     sched = cfg.config.fetch_path(*database_metrics_daily_rollup_schedule)
     _log.info("database_metrics_daily_rollup_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_daily_rollup_schedule], :job => true) do |rufus_job|
-      @queue.enq :vmdb_database_rollup_metrics_timer
-    end
+    @schedules[:database_operations] << @system_scheduler.cron(
+      sched,
+      :tags => [:database_operations, :database_metrics_daily_rollup_schedule],
+      :job  => true
+    ) { @queue.enq :vmdb_database_rollup_metrics_timer }
 
     sched = cfg.config.fetch_path(*database_metrics_purge_schedule)
     _log.info("database_metrics_purge_schedule: #{sched}")
-    @schedules[:database_operations] << @system_scheduler.cron(sched, :tags => [:database_operations, :database_metrics_purge_schedule], :job => true) do |rufus_job|
-      @queue.enq :metric_purge_all_timer
-    end
+    @schedules[:database_operations] << @system_scheduler.cron(
+      sched,
+      :tags => [:database_operations, :database_metrics_purge_schedule],
+      :job  => true
+    ) { @queue.enq :metric_purge_all_timer }
 
     @schedules[:database_operations]
   end
@@ -273,9 +290,11 @@ class ScheduleWorker < WorkerBase
     sched = VMDB::Config.new("vmdb").config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
     _log.info("ldap_synchronization_schedule: #{sched}")
 
-    @schedules[:ldap_synchronization] << @system_scheduler.cron(sched, :tags => [:ldap_synchronization, :ldap_synchronization_schedule], :job => true) do |rufus_job|
-      @queue.enq :ldap_server_sync_data_from_timer
-    end
+    @schedules[:ldap_synchronization] << @system_scheduler.cron(
+      sched,
+      :tags => [:ldap_synchronization, :ldap_synchronization_schedule],
+      :job  => true
+    ) { @queue.enq :ldap_server_sync_data_from_timer }
   end
 
   def schedules_for_ems_metrics_coordinator_role
@@ -286,21 +305,27 @@ class ScheduleWorker < WorkerBase
     # Schedule - Performance Collection and Performance Purging
     every    = worker_setting_or_default(:performance_collection_interval, 3.minutes)
     first_in = worker_setting_or_default(:performance_collection_start_delay, 5.minutes)
-    @schedules[:ems_metrics_coordinator] << self.system_schedule_every(every, :first_in => first_in, :tags => [:ems_metrics_coordinator, :perf_capture_timer]) do |rufus_job|
-      @queue.enq :metric_capture_perf_capture_timer
-    end
+    @schedules[:ems_metrics_coordinator] << self.system_schedule_every(
+      every,
+      :first_in => first_in,
+      :tags     => [:ems_metrics_coordinator, :perf_capture_timer]
+    ) { @queue.enq :metric_capture_perf_capture_timer }
 
     every    = worker_setting_or_default(:performance_realtime_purging_interval, 15.minutes)
     first_in = worker_setting_or_default(:performance_realtime_purging_start_delay, 5.minutes)
-    @schedules[:ems_metrics_coordinator] << self.system_schedule_every(every, :first_in => first_in, :tags => [:ems_metrics_coordinator, :purge_realtime_timer]) do |rufus_job|
-      @queue.enq :metric_purging_purge_realtime_timer
-    end
+    @schedules[:ems_metrics_coordinator] << self.system_schedule_every(
+      every,
+      :first_in => first_in,
+      :tags     => [:ems_metrics_coordinator, :purge_realtime_timer]
+    ) { @queue.enq :metric_purging_purge_realtime_timer }
 
     every    = worker_setting_or_default(:performance_rollup_purging_interval, 4.hours)
     first_in = worker_setting_or_default(:performance_rollup_purging_start_delay, 5.minutes)
-    @schedules[:ems_metrics_coordinator] << self.system_schedule_every(every, :first_in => first_in, :tags => [:ems_metrics_coordinator, :purge_rollup_timer]) do |rufus_job|
-      @queue.enq :metric_purging_purge_rollup_timer
-    end
+    @schedules[:ems_metrics_coordinator] << self.system_schedule_every(
+      every,
+      :first_in => first_in,
+      :tags     => [:ems_metrics_coordinator, :purge_rollup_timer]
+    ) { @queue.enq :metric_purging_purge_rollup_timer }
   end
 
   def schedules_for_event_role
@@ -310,15 +335,19 @@ class ScheduleWorker < WorkerBase
 
     # Schedule - Event Purging
     interval = worker_setting_or_default(:ems_events_purge_interval, 1.day)
-    @schedules[:event] << self.system_schedule_every(interval, :first_in => "300s", :tags => [:ems_event, :purge_schedule]) do
-      @queue.enq :ems_event_purge_timer
-    end
+    @schedules[:event] << self.system_schedule_every(
+      interval,
+      :first_in => "300s",
+      :tags     => [:ems_event, :purge_schedule]
+    ) { @queue.enq :ems_event_purge_timer }
 
     # Schedule - Policy Event Purging
     interval = worker_setting_or_default(:policy_events_purge_interval, 1.day)
-    @schedules[:event] << self.system_schedule_every(interval, :first_in => "300s", :tags => [:policy_event, :purge_schedule]) do
-      @queue.enq :policy_event_purge_timer
-    end
+    @schedules[:event] << self.system_schedule_every(
+      interval,
+      :first_in => "300s",
+      :tags     => [:policy_event, :purge_schedule]
+    ) { @queue.enq :policy_event_purge_timer }
   end
 
   def schedules_for_storage_metrics_coordinator_role
@@ -344,14 +373,14 @@ class ScheduleWorker < WorkerBase
     # Schedule - Storage metrics collection
     sched = cfg.config.fetch_path(*storage_metrics_collection_schedule)
     _log.info("storage_metrics_collection_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
+    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
       @queue.enq :storage_refresh_metrics
     end
 
     # Schedule - Storage metrics hourly rollup
     sched = cfg.config.fetch_path(*storage_metrics_hourly_rollup_schedule)
     _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
+    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
       @queue.enq :storage_metrics_rollup_hourly
     end
 
@@ -361,7 +390,7 @@ class ScheduleWorker < WorkerBase
       tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
       sched = "#{base_sched} #{tz}"
       _log.info("storage_metrics_daily_rollup_schedule: #{sched}")
-      @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
+      @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
         @queue.enq [:storage_metrics_rollup_daily, tp.id]
       end
     end
@@ -369,14 +398,14 @@ class ScheduleWorker < WorkerBase
     # Schedule - Storage metrics purge
     sched = cfg.config.fetch_path(*storage_metrics_purge_schedule)
     _log.info("storage_metrics_purge_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
+    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
       @queue.enq :miq_storage_metric_purge_all_timer
     end
 
     # Schedule - Storage inventory collection
     sched = cfg.config.fetch_path(*storage_inventory_full_refresh_schedule)
     _log.info("storage_inventory_full_refresh_schedule: #{sched}")
-    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do |rufus_job|
+    @schedules[:storage_metrics_coordinator] << @system_scheduler.cron(sched, :job => true) do
       @queue.enq :storage_refresh_inventory
     end
   end
@@ -505,7 +534,8 @@ class ScheduleWorker < WorkerBase
           @schedules[rs].each do |j|
             # In Rufus::Scheduler Version 1, schedule returns a JobID
             # In Rufus::Scheduler Version 2, schedule returns a Job
-            # In Rufus::Scheduler Version 3, schedule could return a Job/JobID, depending on whether :job => true is passed to opts
+            # In Rufus::Scheduler Version 3, schedule could return a Job/JobID, depending on whether :job => true is
+            # passed to opts
             if j.kind_of?(Fixnum)
               @system_scheduler.unschedule(j)
             else
