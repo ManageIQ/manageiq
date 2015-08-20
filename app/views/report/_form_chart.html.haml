@@ -19,13 +19,17 @@
         %td.key
           = _('Chart mode')
         %td
-          = select_tag('chart_mode',
-            options_for_select([[_('Counts'), 'counts'], [_('Values'), 'values']], @edit[:new][:chart_mode]),
-            :multiple              => false,
-            :class                 => "widthed",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
+          - if chart_mode_values_allowed?
+            = select_tag('chart_mode',
+              options_for_select([[_('Counts'), 'counts'], [_('Values'), 'values']], @edit[:new][:chart_mode]),
+              :multiple              => false,
+              :class                 => "widthed",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+          - else
+            = _('Counts')
+            = hidden_field_tag('chart_mode', 'counts')
       %tr
         - if @edit[:new][:chart_mode] == 'values'
           %td.key

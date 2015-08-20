@@ -43,4 +43,10 @@ module ReportHelper
       end
     end
   end
+
+  # We allow value-based charts when we have aggregations or
+  # simple charts w/o summary.
+  def chart_mode_values_allowed?
+    @edit[:new][:group] != 'Counts'
+  end
 end
