@@ -13,6 +13,7 @@
   function getStates() {
     return {
       'error': {
+        parent: 'blank',
         url: '/error',
         templateUrl: 'app/states/error/error.html',
         controller: StateController,
