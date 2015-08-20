@@ -12,28 +12,11 @@
   function getStates() {
     return {
       'marketplace': {
-        url: '/marketplace?tags',
-        templateUrl: 'app/states/marketplace/marketplace.html',
-        controller: StateController,
-        controllerAs: 'vm',
-        title: 'Marketplace',
-        reloadOnSearch: false
+        parent: 'application',
+        url: '/marketplace',
+        redirectTo: 'marketplace.list',
+        template: '<ui-view></ui-view>'
       }
     };
-  }
-
-  /** @ngInject */
-  function StateController(logger) {
-    var vm = this;
-
-    vm.title = 'Marketplace';
-
-    vm.activate = activate;
-
-    activate();
-
-    function activate() {
-      logger.info('Activated Marketplace View');
-    }
   }
 })();

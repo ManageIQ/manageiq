@@ -12,7 +12,8 @@
   function getStates() {
     return {
       'about-me': {
-        url: '/',
+        parent: 'application',
+        url: '/about-me',
         templateUrl: 'app/states/about-me/about-me.html',
         controller: StateController,
         controllerAs: 'vm',

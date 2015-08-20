@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <site-layout class="ng-cloak"></site-layout>
+  <ui-view></ui-view>
 
   <!-- build:js js/lib.js -->
   <!-- bower:js -->
@@ -56,6 +56,7 @@
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="/bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
   <script src="/bower_components/angular-patternfly/dist/angular-patternfly.min.js"></script>
+  <script src="/bower_components/angular-base64/angular-base64.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -73,7 +74,6 @@
   <script src="/client/app/components/components.module.js"></script>
   <script src="/client/app/config/config.module.js"></script>
   <script src="/client/app/core/core.module.js"></script>
-  <script src="/client/app/mock-http-backend/mock.module.js"></script>
   <script src="/client/app/resources/resources.module.js"></script>
   <script src="/client/app/services/services.module.js"></script>
   <script src="/client/app/states/states.module.js"></script>
@@ -89,24 +89,19 @@
   <script src="/client/app/components/main-content/main-content.directive.js"></script>
   <script src="/client/app/components/navigation/header-nav.directive.js"></script>
   <script src="/client/app/components/navigation/sidebar-nav.directive.js"></script>
-  <script src="/client/app/components/site-layout/site-layout.directive.js"></script>
-  <script src="/client/app/components/site-layout/site-layout.factory.js"></script>
+  <script src="/client/app/components/ss-card/ss-card.directive.js"></script>
   <script src="/client/app/components/toasts/toasts.factory.js"></script>
+  <script src="/client/app/config/api.config.js"></script>
+  <script src="/client/app/config/authorization.config.js"></script>
+  <script src="/client/app/config/layouts.config.js"></script>
   <script src="/client/app/config/navigation.config.js"></script>
   <script src="/client/app/core/config.js"></script>
   <script src="/client/app/core/constants.js"></script>
-  <script src="/client/app/mock-http-backend/config.js"></script>
-  <script src="/client/app/mock-http-backend/mock-all.js"></script>
-  <script src="/client/app/mock-http-backend/mock-auth.backend.js"></script>
-  <script src="/client/app/resources/staff.factory.js"></script>
-  <script src="/client/app/services/authentication/authentication-service.factory.js"></script>
-  <script src="/client/app/services/authentication/session-service.factory.js"></script>
-  <script src="/client/app/services/authentication/startup-session.run.js"></script>
-  <script src="/client/app/services/authorization/authorization-service.factory.js"></script>
-  <script src="/client/app/services/authorization/authorization.config.js"></script>
-  <script src="/client/app/services/authorization/roles.constants.js"></script>
+  <script src="/client/app/resources/authentication-api.factory.js"></script>
+  <script src="/client/app/resources/collections-api.factory.js"></script>
+  <script src="/client/app/services/messages.service.js"></script>
   <script src="/client/app/services/navigation.provider.js"></script>
-  <script src="/client/app/services/notifications.service.js"></script>
+  <script src="/client/app/services/session.service.js"></script>
   <script src="/client/app/states/404/404.state.js"></script>
   <script src="/client/app/states/about-me/about-me.state.js"></script>
   <script src="/client/app/states/dashboard/dashboard.state.js"></script>
@@ -114,6 +109,8 @@
   <script src="/client/app/states/help/help.state.js"></script>
   <script src="/client/app/states/login/login.state.js"></script>
   <script src="/client/app/states/logout/logout.state.js"></script>
+  <script src="/client/app/states/marketplace/details/details.state.js"></script>
+  <script src="/client/app/states/marketplace/list/list.state.js"></script>
   <script src="/client/app/states/marketplace/marketplace.state.js"></script>
   <script src="/client/app/states/order-history/details/details.state.js"></script>
   <script src="/client/app/states/order-history/list/list.state.js"></script>
