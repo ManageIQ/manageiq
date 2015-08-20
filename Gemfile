@@ -9,7 +9,6 @@ gem "rails",                           RAILS_VERSION
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
-gem "bootstrap-datepicker-rails"
 gem "codemirror-rails",               "=4.2"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
@@ -106,6 +105,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-c3",                       "~>0.4.10"
   gem "rails-assets-angular",                  "~>1.4.3"
   gem "rails-assets-angular-mocks",            "~>1.4.3"
+  gem "rails-assets-bootstrap-datepicker",     "~>1.4.0"
   gem "rails-assets-bootstrap-hover-dropdown", "~>2.0.11"
   gem "rails-assets-bootstrap-select",         "~>1.5.4"
 end
