@@ -1,5 +1,5 @@
 require 'ostruct'
-require 'platform'
+require 'sys-uname'
 require 'binary_struct'
 require 'VolumeManager/MiqLvm'
 require 'VolumeManager/MiqLdm'
@@ -12,7 +12,7 @@ class MiqVolumeManager
     attr_reader :logicalVolumes, :physicalVolumes, :visibleVolumes, :hiddenVolumes, :allPhysicalVolumes, :vgHash, :lvHash, :diskFileNames
 
     def self.fromNativePvs
-    	return nil unless Platform::IMPL == :linux
+    	return nil unless Sys::Platform::IMPL == :linux
 
     	msg_pfx = "MiqVolumeManager.fromNativePvs"
 

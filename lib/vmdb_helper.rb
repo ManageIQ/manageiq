@@ -5,7 +5,7 @@ require 'ostruct'
 require 'fileutils'
 require 'erb'
 require 'sync'
-require 'platform'
+require 'sys-uname'
 
 # Need to push the workers path here, since __FILE__ doesn't work
 #   correctly in the workers when run as a separate process

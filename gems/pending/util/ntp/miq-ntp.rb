@@ -5,7 +5,7 @@ class MiqNtp
 
   class << self
     def sync_settings(ntp_settings)
-      return unless Platform::IMPL == :linux && File.exist?(SCRIPT)
+      return unless Sys::Platform::IMPL == :linux && File.exist?(SCRIPT)
       update_ntp_conf(ntp_settings[:server])
 
       sync_to_ntpd if use_ntpd?

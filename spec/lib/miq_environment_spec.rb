@@ -3,12 +3,12 @@ require "spec_helper"
 describe MiqEnvironment do
   context "with linux platform" do
     before(:each) do
-      @old_impl = Platform::IMPL
-      silence_warnings { Platform::IMPL = :linux }
+      @old_impl = Sys::Platform::IMPL
+      silence_warnings { Sys::Platform::IMPL = :linux }
     end
 
     after(:each) do
-      silence_warnings { Platform::IMPL = @old_impl } if @old_impl
+      silence_warnings { Sys::Platform::IMPL = @old_impl } if @old_impl
     end
 
     context "Command" do
