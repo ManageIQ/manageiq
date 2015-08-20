@@ -39,7 +39,7 @@
         .form-group{"ng-class" => "{'has-error': angularForm.user_assigned_os.$invalid}", "ng-hide" => "hostModel.operating_system"}
           %label.col-md-2.control-label
             = _("Host platform")
-          .col-md-10
+          .col-md-8
             = select_tag('user_assigned_os',
                          options_for_select([["<#{_('Choose')}>", nil]] + Host.host_create_os_types.to_a, disabled: ["<#{_('Choose')}>", nil]),
                          "ng-model"                    => "hostModel.user_assigned_os",
@@ -51,31 +51,34 @@
         .form-group
           %label.col-md-2.control-label
             = _("Custom Identifier")
-          .col-md-10
+          .col-md-8
             %input#custom_1{"type"        => "text",
                            "name"        => "custom_1",
                            "ng-model"    => "hostModel.custom_1",
                            "maxlength"   => 50,
-                           "checkchange" => ""}
+                           "checkchange" => "",
+                           :class        => "form-control"}
         .form-group
           %label.col-md-2.control-label
             = _("IPMI IP Address")
-          .col-md-10
+          .col-md-8
             %input#ipmi_address{"type"        => "text",
                            "name"        => "ipmi_address",
                            "ng-model"    => "hostModel.ipmi_address",
                            "maxlength"   => 15,
-                           "checkchange" => ""}
+                           "checkchange" => "",
+                           :class        => "form-control"}
         .form-group
           %label.col-md-2.control-label
             = _("MAC Address")
-          .col-md-10
+          .col-md-8
             %input#mac_address{"type"        => "text",
                            "name"        => "mac_address",
                            "ng-model"    => "hostModel.mac_address",
                            "maxlength"   => "#{MAX_NAME_LEN}",
-                           "checkchange" => ""}
-
+                           "checkchange" => "",
+                           :class        => "form-control"}
+  %hr
   = render(:partial => "/layouts/angular/multi_auth_credentials",
            :locals  => {:record => @host, :ng_model => "hostModel"})
   = render :partial => "layouts/angular/x_edit_buttons_angular"
