@@ -11,7 +11,7 @@
         primary: [
           {
             title: 'Dashboard',
-            'state': 'dashboard',
+            state: 'dashboard',
             icon: 'fa fa-dashboard'
           },
           {
