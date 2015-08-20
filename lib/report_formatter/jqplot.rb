@@ -105,6 +105,7 @@ module ReportFormatter
     def build_reporting_chart_other
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
+      pie_highligher if pie_type?
     end
 
     def build_reporting_chart_dim2
@@ -152,7 +153,7 @@ module ReportFormatter
       simple_numeric_styling
     end
 
-    def simple_numeric_styling
+    def pie_highligher
       mri.chart[:options].update(
         :highlighter    => {
           :show                 => true,
@@ -164,13 +165,15 @@ module ReportFormatter
           }",
           :tooltipLocation      => 'n'
         }
-      ) if pie_type?
+      )
+    end
 
+    def simple_numeric_styling
+      pie_highligher if pie_type?
 
       if mri.graph[:type] =~ /(Bar|Column)/
         mri.chart.store_path(:options, :seriesDefaults, :rendererOptions, :varyBarColor, true)
         axis_category_labels_ticks
-        #default_legend 
       end
     end
 
