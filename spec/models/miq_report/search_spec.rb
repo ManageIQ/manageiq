@@ -68,9 +68,8 @@ describe MiqReport do
 
       expect(report).to_not receive(:get_cached_page)
 
-      results = attrs = nil
-      Proc.new { results, attrs = report.paged_view_search(options) }.call.should_not raise_error
-      results.length.should == 20
+      results, attrs = report.paged_view_search(options)
+      expect(results.length).to eq(20)
     end
   end
 end
