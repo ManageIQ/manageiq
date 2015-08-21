@@ -169,12 +169,12 @@ module Metric::CiMixin
            return false
         end
       when :up_more_than
-        if slope <= (slope_steepness / Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE)
+        if slope <= (slope_steepness / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
           _log.info("Returning false result because slope #{slope} is not up more than #{slope_steepness} per minute")
           return false
         end
       when :down_more_than
-        if slope >= ((slope_steepness * -1.0) / Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE)
+        if slope >= ((slope_steepness * -1.0) / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
           _log.info("Returning false result because slope #{slope} is not down more than #{slope_steepness} per minute")
           return false
         end
@@ -184,7 +184,7 @@ module Metric::CiMixin
     end
 
     cap_int = total_records[0].capture_interval
-    cap_int = (interval_name == "realtime" ? (60 / Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE) : 3600) unless cap_int.kind_of?(Integer)
+    cap_int = (interval_name == "realtime" ? (60 / Metric::Capture::REALTIME_METRICS_PER_MINUTE) : 3600) unless cap_int.kind_of?(Integer)
 
     # If not using a percent recs_in_window will equal recs_to_match. Otherwise recs_to_match is the percentage of recs_in_window
     recs_in_window = duration / cap_int

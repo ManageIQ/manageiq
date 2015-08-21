@@ -148,7 +148,7 @@ module Metric::CiMixin::Capture
       # Shift the expected time for first item, since you may not get back an
       #   item for the first timestamp.
       case interval_name
-      when 'realtime' then expected_start_range = expected_start_range + (1.minute / Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE)
+      when 'realtime' then expected_start_range = expected_start_range + (1.minute / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
       when 'hourly'   then expected_start_range = expected_start_range + 1.hour
       end
       expected_start_range = expected_start_range.iso8601
