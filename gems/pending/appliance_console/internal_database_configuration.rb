@@ -14,10 +14,6 @@ module ApplianceConsole
       PostgresAdmin.data_directory.relative_path_from(Pathname.new("/"))
     end
 
-    def self.postgresql_sample
-      RAILS_ROOT.join("../system/COPY").join(postgres_dir)
-    end
-
     def self.postgresql_template
       RAILS_ROOT.join("../system/TEMPLATE").join(postgres_dir)
     end
@@ -79,9 +75,9 @@ module ApplianceConsole
     def configure_postgres
       self.ssl = File.exist?(PostgresAdmin.certificate_location.join("postgres.key"))
 
-      copy_template "postgresql.conf.erb", self.class.postgresql_template
-      copy_template "pg_hba.conf.erb",     self.class.postgresql_template
-      copy_template "pg_ident.conf",       self.class.postgresql_template
+      copy_template "postgresql.conf.erb"
+      copy_template "pg_hba.conf.erb"
+      copy_template "pg_ident.conf"
     end
 
     def post_activation
@@ -90,7 +86,7 @@ module ApplianceConsole
 
     private
 
-    def copy_template(src, src_dir = self.class.postgresql_sample, dest_dir = PostgresAdmin.data_directory)
+    def copy_template(src, src_dir = self.class.postgresql_template, dest_dir = PostgresAdmin.data_directory)
       full_src = src_dir.join(src)
       if src.include?(".erb")
         full_dest = dest_dir.join(src.gsub(".erb", ""))
