@@ -1,7 +1,6 @@
-module Metric::CiMixin::Capture::Amazon
+class Metric::CiMixin::Capture::Amazon < Metric::CiMixin::Capture::Base
   def perf_collect_metrics_amazon(interval_name, start_time = nil, end_time = nil)
-    target = "[#{self.class.name}], [#{self.id}], [#{self.name}]"
-    log_header = "[#{interval_name}] for: #{target}"
+    log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
     end_time   ||= Time.now
     end_time     = end_time.utc
@@ -28,12 +27,12 @@ module Metric::CiMixin::Capture::Amazon
   #
 
   def perf_init_amazon
-    raise "No EMS defined" if self.ext_management_system.nil?
+    raise "No EMS defined" if target.ext_management_system.nil?
 
     @perf_ems, _ = Benchmark.realtime_block(:connect) do
       # TODO: Fix connect timings.  Since Amazon is lazy connected, this is
       #       near instant, and is really reflected in the very first call
-      self.ext_management_system.connect(:service => "CloudWatch")
+      target.ext_management_system.connect(:service => "CloudWatch")
     end
     @perf_ems
   end
@@ -48,7 +47,7 @@ module Metric::CiMixin::Capture::Amazon
 
   def perf_capture_data_amazon(start_time, end_time)
     counters, _ = Benchmark.realtime_block(:capture_counters) do
-      filter = [{:name => "InstanceId", :value => self.ems_ref}]
+      filter = [{:name => "InstanceId", :value => target.ems_ref}]
       @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(Metric::Capture::Amazon::COUNTER_NAMES) }
     end
 
@@ -95,8 +94,8 @@ module Metric::CiMixin::Capture::Amazon
       end
     end
 
-    counters_by_id              = {self.ems_ref => Metric::Capture::Amazon::VIM_STYLE_COUNTERS}
-    counter_values_by_id_and_ts = {self.ems_ref => counter_values_by_ts}
+    counters_by_id              = {target.ems_ref => Metric::Capture::Amazon::VIM_STYLE_COUNTERS}
+    counter_values_by_id_and_ts = {target.ems_ref => counter_values_by_ts}
     return counters_by_id, counter_values_by_id_and_ts
   end
 end

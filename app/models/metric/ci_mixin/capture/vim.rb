@@ -1,22 +1,22 @@
-module Metric::CiMixin::Capture::Vim
+class Metric::CiMixin::Capture::Vim < Metric::CiMixin::Capture::Base
   #
   # Connect / Disconnect / Intialize methods
   #
 
   def perf_init_vim
-    @perf_resource = "Resource: [#{self.class.name}], id: [#{self.id}]"
-    ems = self.ext_management_system
+    @perf_resource = "Resource: [#{target.class.name}], id: [#{target.id}]"
+    ems = target.ext_management_system
     raise "#{@perf_resource} is not connected to an EMS" if ems.nil?
 
     @perf_intervals = {}
     @perf_ems       = "EMS: [#{ems.hostname}]"
 
     begin
-      @perf_vim = self.ext_management_system.connect
+      @perf_vim = target.ext_management_system.connect
       @perf_vim_hist = @perf_vim.getVimPerfHistory
     rescue => err
       _log.error("#{@perf_resource} Failed to initialize performance history from #{@perf_ems}: [#{err}]" )
-      self.perf_release_vim
+      perf_release_vim
       raise
     end
   end
@@ -32,20 +32,19 @@ module Metric::CiMixin::Capture::Vim
   #
 
   def perf_collect_metrics_vim(interval_name, start_time = nil, end_time = nil)
-    objects = self.to_miq_a
-    target = "[#{self.class.name}], [#{self.id}], [#{self.name}]"
-    log_header = "[#{interval_name}] for: #{target}"
+    objects = target.to_miq_a
+    log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
     require 'httpclient'
 
     begin
-      Benchmark.realtime_block(:vim_connect) { self.perf_init_vim }
+      Benchmark.realtime_block(:vim_connect) { perf_init_vim }
 
       objects_by_mor   = objects.each_with_object({}) { |o, h| h[o.ems_ref_obj] = o }
-      interval_by_mor, = Benchmark.realtime_block(:capture_intervals)  { self.perf_capture_intervals(objects_by_mor.keys, interval_name) }
-      counters_by_mor, = Benchmark.realtime_block(:capture_counters)   { self.perf_capture_counters(interval_by_mor) }
-      query_params,    = Benchmark.realtime_block(:build_query_params) { self.perf_build_query_params(interval_by_mor, counters_by_mor, start_time, end_time) }
-      counter_values_by_mor_and_ts = self.perf_query(query_params, interval_name)
+      interval_by_mor, = Benchmark.realtime_block(:capture_intervals)  { perf_capture_intervals(objects_by_mor.keys, interval_name) }
+      counters_by_mor, = Benchmark.realtime_block(:capture_counters)   { perf_capture_counters(interval_by_mor) }
+      query_params,    = Benchmark.realtime_block(:build_query_params) { perf_build_query_params(interval_by_mor, counters_by_mor, start_time, end_time) }
+      counter_values_by_mor_and_ts = perf_query(query_params, interval_name)
 
       return counters_by_mor, counter_values_by_mor_and_ts
     rescue HTTPClient::ReceiveTimeoutError => err
@@ -55,7 +54,7 @@ module Metric::CiMixin::Capture::Vim
         attempts += 1
         _log.warn("#{msg}...Retry attempt [#{attempts}]")
         _log.warn("#{log_header}   Timings before retry: #{Benchmark.current_realtime.inspect}")
-        self.perf_release_vim
+        perf_release_vim
         retry
       end
 
@@ -76,7 +75,7 @@ module Metric::CiMixin::Capture::Vim
       _log.log_backtrace(err)
       raise
     ensure
-      self.perf_release_vim
+      perf_release_vim
     end
   end
 
@@ -84,8 +83,8 @@ module Metric::CiMixin::Capture::Vim
     interval_by_mor = {}
     mors.each do |mor|
       interval = case interval_name
-      when 'realtime' then Metric::Capture::Vim.realtime_interval(self.ext_management_system, @perf_vim_hist, mor)
-      when 'hourly'   then Metric::Capture::Vim.hourly_interval(self.ext_management_system, @perf_vim_hist)
+      when 'realtime' then Metric::Capture::Vim.realtime_interval(target.ext_management_system, @perf_vim_hist, mor)
+      when 'hourly'   then Metric::Capture::Vim.hourly_interval(target.ext_management_system, @perf_vim_hist)
       end
 
       @perf_intervals[interval] = interval_name
@@ -103,7 +102,7 @@ module Metric::CiMixin::Capture::Vim
 
     # Query Vim for all of the available metrics and their associated counter info
     interval_by_mor.each do |mor, interval|
-      counters_by_mor[mor] = Metric::Capture::Vim.avail_metrics_for_entity(self.ext_management_system, @perf_vim_hist, mor, interval, @perf_intervals[interval.to_s])
+      counters_by_mor[mor] = Metric::Capture::Vim.avail_metrics_for_entity(target.ext_management_system, @perf_vim_hist, mor, interval, @perf_intervals[interval.to_s])
     end
 
     _log.info("Capturing counters...Complete")

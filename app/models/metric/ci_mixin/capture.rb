@@ -1,18 +1,16 @@
 module Metric::CiMixin::Capture
-  include_concern 'Vim'
-  include_concern 'Rhevm'
-  include_concern 'Amazon'
-  include_concern 'OpenstackBase'
-  include_concern 'Openstack'
-  include_concern 'OpenstackInfra'
-
   def perf_collect_metrics(*args)
     case self
-    when ManageIQ::Providers::Vmware::InfraManager::Host, ManageIQ::Providers::Vmware::InfraManager::Vm then perf_collect_metrics_vim(*args)
-    when ManageIQ::Providers::Redhat::InfraManager::Host, ManageIQ::Providers::Redhat::InfraManager::Vm then perf_collect_metrics_rhevm(*args)
-    when ManageIQ::Providers::Amazon::CloudManager::Vm             then perf_collect_metrics_amazon(*args)
-    when ManageIQ::Providers::Openstack::CloudManager::Vm          then perf_collect_metrics_openstack('perf_capture_data_openstack', *args)
-    when ManageIQ::Providers::Openstack::InfraManager::Host   then perf_collect_metrics_openstack('perf_capture_data_openstack_infra', *args)
+    when ManageIQ::Providers::Vmware::InfraManager::Host, ManageIQ::Providers::Vmware::InfraManager::Vm
+      Metric::CiMixin::Capture::Vim.new(self).perf_collect_metrics_vim(*args)
+    when ManageIQ::Providers::Redhat::InfraManager::Host, ManageIQ::Providers::Redhat::InfraManager::Vm
+      Metric::CiMixin::Capture::Rhevm.new(self).perf_collect_metrics_rhevm(*args)
+    when ManageIQ::Providers::Amazon::CloudManager::Vm
+      Metric::CiMixin::Capture::Amazon.new(self).perf_collect_metrics_amazon(*args)
+    when ManageIQ::Providers::Openstack::CloudManager::Vm
+      Metric::CiMixin::Capture::Openstack.new(self).perf_collect_metrics_openstack('perf_capture_data_openstack', *args)
+    when ManageIQ::Providers::Openstack::InfraManager::Host
+      Metric::CiMixin::Capture::OpenstackInfra.new(self).perf_collect_metrics_openstack('perf_capture_data_openstack_infra', *args)
     else raise "Unsupported type #{self.class.name} (id: #{self.id})"
     end
   end
