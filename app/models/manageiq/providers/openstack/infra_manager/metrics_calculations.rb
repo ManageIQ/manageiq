@@ -1,4 +1,4 @@
-module Metric::Capture::OpenstackInfra
+module ManageIQ::Providers::Openstack::InfraManager::MetricsCalculations
   CPU_METERS     = %w(hardware.system_stats.cpu.util)
   MEMORY_METERS  = %w(hardware.memory.used
                       hardware.memory.total)
@@ -47,22 +47,22 @@ module Metric::Capture::OpenstackInfra
     },
     {
       :openstack_counters    => MEMORY_METERS,
-      :calculation           => Metric::Capture::OpenstackInfra.method(:memory_util_calculation).to_proc,
+      :calculation           => method(:memory_util_calculation).to_proc,
       :vim_style_counter_key => "mem_usage_absolute_average"
     },
     {
       :openstack_counters    => SWAP_METERS,
-      :calculation           => Metric::Capture::OpenstackInfra.method(:memory_swapped_calculation).to_proc,
+      :calculation           => method(:memory_swapped_calculation).to_proc,
       :vim_style_counter_key => "mem_swapped_absolute_average"
     },
     {
       :openstack_counters    => DISK_METERS,
-      :calculation           => Metric::Capture::OpenstackInfra.method(:counter_sum_per_second_calculation).to_proc,
+      :calculation           => method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "disk_usage_rate_average"
     },
     {
       :openstack_counters    => NETWORK_METERS,
-      :calculation           => Metric::Capture::OpenstackInfra.method(:counter_sum_per_second_calculation).to_proc,
+      :calculation           => method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "net_usage_rate_average"
     },
   ]

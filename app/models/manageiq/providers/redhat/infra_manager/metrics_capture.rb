@@ -1,4 +1,4 @@
-class Metric::CiMixin::Capture::Rhevm < Metric::CiMixin::Capture::Base
+class ManageIQ::Providers::Redhat::InfraManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
   #
   # Connect / Disconnect / Intialize methods
   #

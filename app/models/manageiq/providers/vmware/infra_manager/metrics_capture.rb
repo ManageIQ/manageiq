@@ -1,4 +1,4 @@
-class Metric::CiMixin::Capture::Vim < Metric::CiMixin::Capture::Base
+class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
   #
   # Connect / Disconnect / Intialize methods
   #
@@ -83,8 +83,8 @@ class Metric::CiMixin::Capture::Vim < Metric::CiMixin::Capture::Base
     interval_by_mor = {}
     mors.each do |mor|
       interval = case interval_name
-      when 'realtime' then Metric::Capture::Vim.realtime_interval(target.ext_management_system, @perf_vim_hist, mor)
-      when 'hourly'   then Metric::Capture::Vim.hourly_interval(target.ext_management_system, @perf_vim_hist)
+      when 'realtime' then ManageIQ::Providers::Vmware::InfraManager::MetricsCalculations.realtime_interval(target.ext_management_system, @perf_vim_hist, mor)
+      when 'hourly'   then ManageIQ::Providers::Vmware::InfraManager::MetricsCalculations.hourly_interval(target.ext_management_system, @perf_vim_hist)
       end
 
       @perf_intervals[interval] = interval_name
@@ -102,7 +102,7 @@ class Metric::CiMixin::Capture::Vim < Metric::CiMixin::Capture::Base
 
     # Query Vim for all of the available metrics and their associated counter info
     interval_by_mor.each do |mor, interval|
-      counters_by_mor[mor] = Metric::Capture::Vim.avail_metrics_for_entity(target.ext_management_system, @perf_vim_hist, mor, interval, @perf_intervals[interval.to_s])
+      counters_by_mor[mor] = ManageIQ::Providers::Vmware::InfraManager::MetricsCalculations.avail_metrics_for_entity(target.ext_management_system, @perf_vim_hist, mor, interval, @perf_intervals[interval.to_s])
     end
 
     _log.info("Capturing counters...Complete")
@@ -151,7 +151,7 @@ class Metric::CiMixin::Capture::Vim < Metric::CiMixin::Capture::Base
       data, = Benchmark.realtime_block(:vim_execute_time) { @perf_vim_hist.queryPerfMulti(query) }
       _log.debug("Finished request for [#{query.length}] item(s)")
 
-      Benchmark.realtime_block(:perf_processing) { Metric::Capture::Vim.preprocess_data(data, counter_values_by_mor_and_ts) }
+      Benchmark.realtime_block(:perf_processing) { ManageIQ::Providers::Vmware::InfraManager::MetricsCalculations.preprocess_data(data, counter_values_by_mor_and_ts) }
     end
     Benchmark.current_realtime[:num_vim_trips] = vim_trips
 

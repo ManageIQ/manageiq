@@ -1,18 +1,6 @@
 module Metric::CiMixin::Capture
   def perf_capture_object
-    case self
-    when ManageIQ::Providers::Vmware::InfraManager::Host, ManageIQ::Providers::Vmware::InfraManager::Vm
-      Metric::CiMixin::Capture::Vim.new(self)
-    when ManageIQ::Providers::Redhat::InfraManager::Host, ManageIQ::Providers::Redhat::InfraManager::Vm
-      Metric::CiMixin::Capture::Rhevm.new(self)
-    when ManageIQ::Providers::Amazon::CloudManager::Vm
-      Metric::CiMixin::Capture::Amazon.new(self)
-    when ManageIQ::Providers::Openstack::CloudManager::Vm
-      Metric::CiMixin::Capture::Openstack.new(self)
-    when ManageIQ::Providers::Openstack::InfraManager::Host
-      Metric::CiMixin::Capture::OpenstackInfra.new(self)
-    else raise "Unsupported type #{self.class.name} (id: #{id})"
-    end
+    self.class.parent::MetricsCapture.new(self)
   end
 
   delegate :perf_collect_metrics, :to => :perf_capture_object

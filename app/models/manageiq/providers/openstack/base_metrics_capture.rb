@@ -1,4 +1,4 @@
-class Metric::CiMixin::Capture::OpenstackBase < Metric::CiMixin::Capture::Base
+class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 

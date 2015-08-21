@@ -1,4 +1,4 @@
-module Metric::Capture::Vim
+module ManageIQ::Providers::Vmware::InfraManager::MetricsCalculations
   VIM_INTERVAL_NAME_BY_MIQ_INTERVAL_NAME = {'hourly' => 'Past Month'}
   MIQ_INTERVAL_NAME_BY_VIM_INTERVAL_NAME = VIM_INTERVAL_NAME_BY_MIQ_INTERVAL_NAME.invert
 

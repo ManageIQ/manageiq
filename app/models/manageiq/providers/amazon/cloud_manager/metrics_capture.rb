@@ -1,4 +1,4 @@
-class Metric::CiMixin::Capture::Amazon < Metric::CiMixin::Capture::Base
+class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
@@ -48,7 +48,7 @@ class Metric::CiMixin::Capture::Amazon < Metric::CiMixin::Capture::Base
   def perf_capture_data_amazon(start_time, end_time)
     counters, _ = Benchmark.realtime_block(:capture_counters) do
       filter = [{:name => "InstanceId", :value => target.ems_ref}]
-      @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(Metric::Capture::Amazon::COUNTER_NAMES) }
+      @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations::COUNTER_NAMES) }
     end
 
     # Since we are unable to determine if the first datapoint we get is a
@@ -74,7 +74,7 @@ class Metric::CiMixin::Capture::Amazon < Metric::CiMixin::Capture::Base
     end
 
     counter_values_by_ts = {}
-    Metric::Capture::Amazon::COUNTER_INFO.each do |i|
+    ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations::COUNTER_INFO.each do |i|
       timestamps = i[:amazon_counters].collect { |c| metrics_by_counter_name[c].keys }.flatten.uniq.sort
 
       # If we are unable to determine if a datapoint is a 1-minute (detailed)
@@ -82,7 +82,7 @@ class Metric::CiMixin::Capture::Amazon < Metric::CiMixin::Capture::Base
       #   the very first interval.
       timestamps.each_cons(2) do |last_ts, ts|
         interval = ts - last_ts
-        next unless interval.in?(Metric::Capture::Amazon::INTERVALS)
+        next unless interval.in?(ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations::INTERVALS)
 
         metrics = i[:amazon_counters].collect { |c| metrics_by_counter_name.fetch_path(c, ts) }
         value   = i[:calculation].call(*metrics, interval)
@@ -94,7 +94,7 @@ class Metric::CiMixin::Capture::Amazon < Metric::CiMixin::Capture::Base
       end
     end
 
-    counters_by_id              = {target.ems_ref => Metric::Capture::Amazon::VIM_STYLE_COUNTERS}
+    counters_by_id              = {target.ems_ref => ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations::VIM_STYLE_COUNTERS}
     counter_values_by_id_and_ts = {target.ems_ref => counter_values_by_ts}
     return counters_by_id, counter_values_by_id_and_ts
   end

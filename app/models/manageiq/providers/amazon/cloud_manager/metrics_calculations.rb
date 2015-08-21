@@ -1,46 +1,27 @@
-module Metric::Capture::Openstack
-  CPU_METERS     = ["cpu_util"]
-  DISK_METERS    = ["disk.read.bytes", "disk.write.bytes"]
-  NETWORK_METERS = ["network.incoming.bytes", "network.outgoing.bytes"]
+module ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations
+  INTERVALS = [5.minutes, 1.minute]
 
-  # The list of meters that provide "cumulative" meters instead of "gauge"
-  # meters from openstack.  The values from these meters will have to be
-  # diffed against the previous value in order to grab a discrete value.
-  DIFF_METERS    = DISK_METERS + NETWORK_METERS
-  def self.diff_meter?(meters)
-    meters = [meters] unless meters.is_a? Array
-    meters.all? {|m| DIFF_METERS.include? m}
-  end
-
-  def self.counter_sum_per_second_calculation(stats, intervals)
-    total = 0.0
-    stats.keys.each do |c|
-      total += (intervals[c] > 0) ? stats[c] / intervals[c].to_f : 0
-    end
-    total / 1024.0
-  end
-
-  COUNTER_INFO   = [
+  COUNTER_INFO = [
     {
-      :openstack_counters    => CPU_METERS,
+      :amazon_counters       => ["CPUUtilization"],
       :calculation           => lambda { |stat, _| stat },
       :vim_style_counter_key => "cpu_usage_rate_average"
     },
 
     {
-      :openstack_counters    => DISK_METERS,
-      :calculation           => Metric::Capture::Openstack.method(:counter_sum_per_second_calculation).to_proc,
+      :amazon_counters       => ["DiskReadBytes", "DiskWriteBytes"],
+      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
       :vim_style_counter_key => "disk_usage_rate_average"
     },
 
     {
-      :openstack_counters    => NETWORK_METERS,
-      :calculation           => Metric::Capture::Openstack.method(:counter_sum_per_second_calculation).to_proc,
+      :amazon_counters       => ["NetworkIn", "NetworkOut"],
+      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
       :vim_style_counter_key => "net_usage_rate_average"
     },
   ]
 
-  COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:openstack_counters] }.flatten.uniq
+  COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:amazon_counters] }.flatten.uniq
 
   VIM_STYLE_COUNTERS = {
     "cpu_usage_rate_average" => {
