@@ -62,11 +62,11 @@ describe MiqWidgetSet do
     end
 
     it "brings back all group records" do
-      expect(MiqWidgetSet.where_unique_on('Home', nil, nil)).to eq([@ws_group])
+      expect(MiqWidgetSet.where_unique_on('Home')).to eq([@ws_group])
     end
 
     it "brings back records for a user with a group" do
-      expect(MiqWidgetSet.where_unique_on('Home', group.id, user.userid)).to eq([ws_1])
+      expect(MiqWidgetSet.where_unique_on('Home', user)).to eq([ws_1])
     end
   end
 end
