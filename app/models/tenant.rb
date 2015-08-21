@@ -35,10 +35,27 @@ class Tenant < ActiveRecord::Base
   validates_attachment_content_type :logo, :content_type => ['image/png']
   validates_attachment_content_type :login_logo, :content_type => ['image/png']
 
+  scope :all_tenants,  -> { where(:divisible => true) }
+  scope :all_projects, -> { where(:divisible => false) }
+
+  virtual_column :parent_name, :type => :string
+
   before_save :nil_blanks
+
+  def all_subtenants
+    self.class.descendants_of(self).where(:divisible => true)
+  end
+
+  def all_subprojects
+    self.class.descendants_of(self).where(:divisible => false)
+  end
 
   def name
     tenant_attribute(:name, :company)
+  end
+
+  def parent_name
+    parent.try(:name)
   end
 
   def login_text
@@ -74,6 +91,14 @@ class Tenant < ActiveRecord::Base
   # @return [Boolean] Is this a default tenant?
   def default?
     subdomain == DEFAULT_URL && domain == DEFAULT_URL
+  end
+
+  def tenant?
+    divisible?
+  end
+
+  def project?
+    !divisible?
   end
 
   def logo?

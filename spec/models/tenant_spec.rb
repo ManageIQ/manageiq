@@ -29,6 +29,51 @@ describe Tenant do
     end
   end
 
+  it "#tenant?" do
+    t = Tenant.new(:divisible => true)
+    expect(t.tenant?).to be_true
+  end
+
+  it "#project?" do
+    t = Tenant.new(:divisible => false)
+    expect(t.project?).to be_true
+  end
+
+  it ".all_tenants" do
+    FactoryGirl.create(:tenant, :parent => default_tenant)
+    FactoryGirl.create(:tenant, :parent => default_tenant, :divisible => false)
+
+    expect(Tenant.all_tenants.count).to eql 2 # The one we created + the default tenant
+  end
+
+  it ".all_projects" do
+    FactoryGirl.create(:tenant, :parent => default_tenant, :divisible => false)
+    FactoryGirl.create(:tenant, :parent => default_tenant, :divisible => false)
+
+    expect(Tenant.all_projects.count).to eql 2 # Should not return the default tenant
+  end
+
+  context "subtenants and subprojects" do
+    before do
+      @t1  = FactoryGirl.create(:tenant, :parent => default_tenant, :name => "T1")
+      @t2  = FactoryGirl.create(:tenant, :parent => @t1, :name => "T2")
+      @t2p = FactoryGirl.create(:tenant, :parent => @t1, :name => "T2 Project", :divisible => false)
+      @t3  = FactoryGirl.create(:tenant, :parent => @t2, :name => "T3")
+      @t3a = FactoryGirl.create(:tenant, :parent => @t2, :name => "T3a")
+      @t4p = FactoryGirl.create(:tenant, :parent => @t3, :name => "T4 Project", :divisible => false)
+    end
+
+    it "#all_subtenants" do
+      expect(@t1.all_subtenants.to_a).to match_array([@t2, @t3, @t3a])
+      expect(@t2.all_subtenants.to_a).to match_array([@t3, @t3a])
+    end
+
+    it "#all_subprojects" do
+      expect(@t1.all_subprojects.to_a).to match_array([@t2p, @t4p])
+      expect(@t2.all_subprojects.to_a).to match_array([@t4p])
+    end
+  end
+
   describe "#name" do
     let(:settings) { {:server => {:company => "settings"}} }
 
@@ -55,6 +100,14 @@ describe Tenant do
       expect(default_tenant[:name]).to be_nil
       expect(default_tenant.name).to eq("settings")
     end
+  end
+
+  it "#parent_name" do
+    t1 = FactoryGirl.create(:tenant, :name => "T1", :parent => default_tenant)
+    t2 = FactoryGirl.create(:tenant, :name => "T2", :parent => t1, :divisible => false)
+
+    expect(t2.parent_name).to eql "T1"
+    expect(default_tenant.parent_name).to eql nil
   end
 
   describe "#logo" do
