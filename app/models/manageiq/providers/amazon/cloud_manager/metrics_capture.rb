@@ -1,4 +1,60 @@
 class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
+  INTERVALS = [5.minutes, 1.minute]
+
+  COUNTER_INFO = [
+    {
+      :amazon_counters       => ["CPUUtilization"],
+      :calculation           => lambda { |stat, _| stat },
+      :vim_style_counter_key => "cpu_usage_rate_average"
+    },
+
+    {
+      :amazon_counters       => ["DiskReadBytes", "DiskWriteBytes"],
+      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
+      :vim_style_counter_key => "disk_usage_rate_average"
+    },
+
+    {
+      :amazon_counters       => ["NetworkIn", "NetworkOut"],
+      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
+      :vim_style_counter_key => "net_usage_rate_average"
+    },
+  ]
+
+  COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:amazon_counters] }.flatten.uniq
+
+  VIM_STYLE_COUNTERS = {
+    "cpu_usage_rate_average" => {
+      :counter_key           => "cpu_usage_rate_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 1,
+      :rollup                => "average",
+      :unit_key              => "percent",
+      :capture_interval_name => "realtime"
+    },
+
+    "disk_usage_rate_average" => {
+      :counter_key           => "disk_usage_rate_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 2,
+      :rollup                => "average",
+      :unit_key              => "kilobytespersecond",
+      :capture_interval_name => "realtime"
+    },
+
+    "net_usage_rate_average" => {
+      :counter_key           => "net_usage_rate_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 2,
+      :rollup                => "average",
+      :unit_key              => "kilobytespersecond",
+      :capture_interval_name => "realtime"
+    }
+  }
+
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
@@ -48,7 +104,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
   def perf_capture_data_amazon(start_time, end_time)
     counters, _ = Benchmark.realtime_block(:capture_counters) do
       filter = [{:name => "InstanceId", :value => target.ems_ref}]
-      @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations::COUNTER_NAMES) }
+      @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(COUNTER_NAMES) }
     end
 
     # Since we are unable to determine if the first datapoint we get is a
@@ -74,7 +130,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
     end
 
     counter_values_by_ts = {}
-    ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations::COUNTER_INFO.each do |i|
+    COUNTER_INFO.each do |i|
       timestamps = i[:amazon_counters].collect { |c| metrics_by_counter_name[c].keys }.flatten.uniq.sort
 
       # If we are unable to determine if a datapoint is a 1-minute (detailed)
@@ -82,7 +138,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
       #   the very first interval.
       timestamps.each_cons(2) do |last_ts, ts|
         interval = ts - last_ts
-        next unless interval.in?(ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations::INTERVALS)
+        next unless interval.in?(INTERVALS)
 
         metrics = i[:amazon_counters].collect { |c| metrics_by_counter_name.fetch_path(c, ts) }
         value   = i[:calculation].call(*metrics, interval)
@@ -94,7 +150,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
       end
     end
 
-    counters_by_id              = {target.ems_ref => ManageIQ::Providers::Amazon::CloudManager::MetricsCalculations::VIM_STYLE_COUNTERS}
+    counters_by_id              = {target.ems_ref => VIM_STYLE_COUNTERS}
     counter_values_by_id_and_ts = {target.ems_ref => counter_values_by_ts}
     return counters_by_id, counter_values_by_id_and_ts
   end

@@ -37,7 +37,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     end
 
     it "translates cumulative meters into discrete values" do
-      counter_info = ManageIQ::Providers::Openstack::InfraManager::MetricsCalculations::COUNTER_INFO.find do |c|
+      counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "disk_usage_rate_average"
       end
 
@@ -108,7 +108,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     end
 
     def preload_data
-      @counter_info = ManageIQ::Providers::Openstack::InfraManager::MetricsCalculations::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "disk_usage_rate_average"
       end
 
@@ -375,7 +375,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     end
 
     def preload_data
-      @counter_info = ManageIQ::Providers::Openstack::InfraManager::MetricsCalculations::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "net_usage_rate_average"
       end
 
@@ -537,7 +537,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     end
 
     def preload_data
-      @counter_info = ManageIQ::Providers::Openstack::InfraManager::MetricsCalculations::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "net_usage_rate_average"
       end
 
@@ -667,10 +667,10 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     end
 
     def preload_data
-      @counter_info = ManageIQ::Providers::Openstack::InfraManager::MetricsCalculations::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "mem_usage_absolute_average"
       end
-      @counter_info_swap = ManageIQ::Providers::Openstack::InfraManager::MetricsCalculations::COUNTER_INFO.find do |c|
+      @counter_info_swap = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "mem_swapped_absolute_average"
       end
 
@@ -846,7 +846,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     end
 
     def preload_data
-      @counter_info = ManageIQ::Providers::Openstack::InfraManager::MetricsCalculations::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "mem_usage_absolute_average"
       end
 

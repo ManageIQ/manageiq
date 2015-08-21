@@ -4,7 +4,6 @@ class Vmware::InfraManager < InfraManager
   require_dependency 'manageiq/providers/vmware/infra_manager/event_parser'
   require_dependency 'manageiq/providers/vmware/infra_manager/refresh_worker'
   require_dependency 'manageiq/providers/vmware/infra_manager/refresh_parser'
-  require_dependency 'manageiq/providers/vmware/infra_manager/metrics_calculations'
   require_dependency 'manageiq/providers/vmware/infra_manager/metrics_capture'
   require_dependency 'manageiq/providers/vmware/infra_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/vmware/infra_manager/refresher'
