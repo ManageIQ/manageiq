@@ -110,6 +110,17 @@ RSpec.describe "reports API" do
     expect_request_success
   end
 
+  it "returns an empty result set if none has been run" do
+    report = FactoryGirl.create(:miq_report_with_results)
+    result = report.miq_report_results.first
+
+    api_basic_authorize
+    run_get "#{reports_url(report.id)}/results/#{result.id}"
+
+    expect_result_to_match_hash(@result, "result_set" => [])
+    expect_request_success
+  end
+
   context "with an appropriate role" do
     it "can run a report" do
       report = FactoryGirl.create(:miq_report)
