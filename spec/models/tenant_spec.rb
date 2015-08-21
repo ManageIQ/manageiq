@@ -29,6 +29,30 @@ describe Tenant do
     end
   end
 
+  it "#tenant?" do
+    t = Tenant.new(:divisible => true)
+    expect(t.tenant?).to be_true
+  end
+
+  it "#project?" do
+    t = Tenant.new(:divisible => false)
+    expect(t.project?).to be_true
+  end
+
+  it ".all_tenants" do
+    FactoryGirl.create(:tenant, :parent => default_tenant)
+    FactoryGirl.create(:tenant, :parent => default_tenant, :divisible => false)
+
+    expect(Tenant.all_tenants.count).to eql 2 # The one we created + the default tenant
+  end
+
+  it ".all_projects" do
+    FactoryGirl.create(:tenant, :parent => default_tenant, :divisible => false)
+    FactoryGirl.create(:tenant, :parent => default_tenant, :divisible => false)
+
+    expect(Tenant.all_projects.count).to eql 2 # Should not return the default tenant
+  end
+
   describe "#name" do
     let(:settings) { {:server => {:company => "settings"}} }
 
