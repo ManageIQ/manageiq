@@ -69,4 +69,11 @@ describe MiqWidgetSet do
       expect(MiqWidgetSet.where_unique_on('Home', user)).to eq([ws_1])
     end
   end
+
+  describe "#with_users" do
+    it "brings back records with users" do
+      ws_1 = FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id)
+      expect(described_class.with_users).to eq([ws_1])
+    end
+  end
 end
