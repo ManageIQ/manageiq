@@ -10,8 +10,15 @@
   <link rel="icon" href="/favicon.ico"/>
   <base href="/">
   <style>
-    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-      display: none !important;
+    [ng-cloak] {
+      display: none;
+    }
+    [ng-cloak].splash {
+      display: block !important;
+    }
+    .splash {
+      display: none;
+      background-color: #428bca;
     }
   </style>
   <!-- build:css styles/lib.css -->
@@ -28,7 +35,7 @@
   <!-- endinject -->
   <!-- endbuild -->
 </head>
-<body class="height-100">
+<body class="height-100 container-pf-scroll-body">
   <div class="ng-cloak splash">
     <div class="splash__overlay">
       <div class="splash__message">
@@ -53,9 +60,8 @@
   <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
   <script src="/bower_components/patternfly/dist/js/patternfly.js"></script>
-  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="/bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
-  <script src="/bower_components/angular-patternfly/dist/angular-patternfly.min.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="/bower_components/angular-base64/angular-base64.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
