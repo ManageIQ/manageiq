@@ -2,7 +2,9 @@
 
 module ManageIQ::Providers
   class Openstack::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
+    include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
+    include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
     include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
     def self.ems_inv_to_hashes(ems, options = nil)
@@ -157,35 +159,9 @@ module ManageIQ::Providers
                          :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
     end
 
-    def get_object_store
-      return unless @storage_service_name == :swift
-      @os_handle.service_for_each_accessible_tenant('Storage') do |svc, t|
-        svc.directories.each do |fd|
-          result = process_collection_item(fd, :cloud_object_store_containers) { |c| parse_container(c, t) }
-          process_collection(fd.files, :cloud_object_store_objects) { |o| parse_object(o, result, t) }
-        end
-      end
-    end
-
     def get_servers
       openstack_infra_hosts = @ems.provider.try(:infra_ems).try(:hosts)
       process_collection(servers, :vms) { |server| parse_server(server, openstack_infra_hosts) }
-    end
-
-    def process_collection(collection, key, &block)
-      @data[key] ||= []
-      return if @options[:inventory_ignore] && @options[:inventory_ignore].include?(key)
-      collection.each { |item| process_collection_item(item, key, &block) }
-    end
-
-    def process_collection_item(item, key)
-      @data[key] ||= []
-
-      uid, new_result = yield(item)
-
-      @data[key] << new_result
-      @data_index.store_path(key, uid, new_result)
-      new_result
     end
 
     def get_floating_ips
@@ -443,33 +419,6 @@ module ManageIQ::Providers
         :size          => snap['size'].to_i.gigabytes,
         :tenant        => @data_index.fetch_path(:cloud_tenants, snap['os-extended-snapshot-attributes:project_id']),
         :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id'])
-      }
-      return uid, new_result
-    end
-
-    def parse_container(container, tenant)
-      uid = "#{tenant.id}/#{container.key}"
-      new_result = {
-        :ems_ref      => uid,
-        :key          => container.key,
-        :object_count => container.count,
-        :bytes        => container.bytes,
-        :tenant       => @data_index.fetch_path(:cloud_tenants, tenant.id)
-      }
-      return uid, new_result
-    end
-
-    def parse_object(obj, container, tenant)
-      uid = obj.etag
-      new_result = {
-        :ems_ref        => uid,
-        :etag           => obj.etag,
-        :last_modified  => obj.last_modified,
-        :content_length => obj.content_length,
-        :key            => obj.key,
-        :content_type   => obj.content_type,
-        :container      => container,
-        :tenant         => @data_index.fetch_path(:cloud_tenants, tenant.id)
       }
       return uid, new_result
     end
