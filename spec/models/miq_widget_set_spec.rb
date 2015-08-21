@@ -46,4 +46,27 @@ describe MiqWidgetSet do
       expect(MiqWidgetSet.count).to eq(1)
     end
   end
+
+  describe "#where_unique_on" do
+    let(:group2) { FactoryGirl.create(:miq_group, :description => 'dev group2') }
+    let(:ws_1)   { FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id) }
+
+     before do
+      user.miq_groups << group2
+      ws_1
+      FactoryGirl.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group2.id )
+    end
+
+    it "initial state" do
+      expect(MiqWidgetSet.count).to eq(3)
+    end
+
+    it "brings back all group records" do
+      expect(MiqWidgetSet.where_unique_on('Home', nil, nil)).to eq([@ws_group])
+    end
+
+    it "brings back records for a user with a group" do
+      expect(MiqWidgetSet.where_unique_on('Home', group.id, user.userid)).to eq([ws_1])
+    end
+  end
 end
