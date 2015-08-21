@@ -172,23 +172,6 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "#system_schedule_every" do
-          it "catches an error on nil first arg" do
-            $log.should_receive(:error).once
-            @schedule_worker.system_schedule_every(nil) {}
-          end
-
-          it "catches an error on 0 first arg" do
-            $log.should_receive(:error).once
-            @schedule_worker.system_schedule_every(0) {}
-          end
-
-          it "works on nil :first_in" do
-            $log.should_receive(:error).never
-            @schedule_worker.system_schedule_every(1, :first_in => nil) {}
-          end
-        end
-
         context "calling check_roles_changed" do
           before(:each) do
             # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
@@ -550,10 +533,10 @@ describe MiqScheduleWorker::Runner do
               @schedule_worker.do_work
 
               case job.tags
-              when %w(ems_event purge_schedule)
+              when %w(purge_schedule ems_event)
                 messages = MiqQueue.where(:class_name  => "EmsEvent", :method_name => "purge_timer")
                 messages.count.should == 1
-              when %w(policy_event purge_schedule)
+              when %w(purge_schedule policy_event)
                 messages = MiqQueue.where(:class_name  => "PolicyEvent", :method_name => "purge_timer")
                 messages.count.should == 1
               else
