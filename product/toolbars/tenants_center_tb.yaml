@@ -11,22 +11,18 @@
     :title: Configuration
     :text: Configuration
     :items:
-    - :button: rbac_tenant_add
-      :image: new
-      :text: "Add a new Tenant"
-      :title: "Add a new Tenant"
     - :button: rbac_tenant_edit
       :image: edit
-      :text: Edit the selected Tenant
-      :title: Select a single Tenant to edit
+      :text: Edit the selected item
+      :title: Select a single item to edit
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: rbac_tenant_delete
       :image: delete
-      :text: Delete selected Tenants
-      :title: Select one or more Tenants to delete
+      :text: Delete selected items
+      :title: Select one or more items to delete
       :url_parms: 'main_div'
-      :confirm: "Delete all selected Tenants?"
+      :confirm: "Delete all selected items?"
       :enabled: 'false'
       :onwhen: '1+'

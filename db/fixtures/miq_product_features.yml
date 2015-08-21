@@ -2807,23 +2807,23 @@
       :identifier: rbac_tenant
       :children:
       - :name: Modify
-        :description: Modify Tenant
+        :description: Modify Tenant/Project
         :feature_type: admin
         :identifier: rbac_tenant_admin
         :hidden: true
         :children:
         - :name: Add
-          :description: Add a Tenant
+          :description: Add a Tenant/Project
           :feature_type: admin
           :hidden: true
           :identifier: rbac_tenant_add
         - :name: Edit
-          :description: Edit a Tenant
+          :description: Edit a Tenant/Project
           :feature_type: admin
           :hidden: true
           :identifier: rbac_tenant_edit
         - :name: Delete
-          :description: Delete a Tenant
+          :description: Delete a Tenant/Project
           :feature_type: admin
           :hidden: true
           :identifier: rbac_tenant_delete

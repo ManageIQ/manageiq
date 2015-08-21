@@ -1307,6 +1307,8 @@ module ApplicationHelper
     elsif db == "ExtManagementSystem"
       ems = @targets_hash[from_cid(@id)]
       image = "vendor-#{ems.image_name}"
+    elsif db == "Tenant"
+      image = row['divisible'] ? "tenant" : "project"
     else
       image = db.underscore
     end

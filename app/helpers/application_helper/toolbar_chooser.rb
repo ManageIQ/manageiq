@@ -267,8 +267,9 @@ class ApplicationHelper::ToolbarChooser
         return "user_roles_center_tb"
       elsif node.first == "ur"
         return "user_role_center_tb"
+      elsif node.last == "tn"
+        return "tenants_center_tb"
       elsif node.first == "tn" && @record
-        #return @record.parent.nil? ? "tenants_center_tb" : "tenant_center_tb"
         return "tenant_center_tb"
       end
     elsif x_active_tree == :vmdb_tree

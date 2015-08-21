@@ -5,6 +5,8 @@ class Tenant < ActiveRecord::Base
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil
 
+  include ReportableMixin
+
   default_value_for :name,        "My Company"
   default_value_for :description, "Tenant for My Company"
   default_value_for :divisible,   true

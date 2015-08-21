@@ -384,6 +384,7 @@ class ApplicationHelper::ToolbarBuilder
             return true
         end
       when :rbac_tree
+        return true if %w(rbac_project_add rbac_tenant_add).include?(id) && @record.project?
         return false
       when :vmdb_tree
         return ["db_connections","db_details","db_indexes","db_settings"].include?(@sb[:active_tab]) ? false : true
@@ -1110,6 +1111,8 @@ class ApplicationHelper::ToolbarBuilder
       when "storage_delete"
         return "Only #{ui_lookup(:table=>"storages")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
       end
+    when "Tenant"
+      return "Default Tenant can not be deleted" if @record.default? && id == "rbac_tenant_delete"
     when "User"
       case id
       when "rbac_user_copy"

@@ -87,16 +87,88 @@ module OpsController::OpsRbac
   def rbac_tenant_add
     assert_privileges("rbac_tenant_add")
     @_params[:typ] = "new"
-    rbac_edit_reset('tenant', Tenant)
+    @tenant_type = params[:tenant_type] == "tenant" ? true : false
+    rbac_tenant_edit
   end
+  alias rbac_project_add rbac_tenant_add
 
   def rbac_tenant_edit
     assert_privileges("rbac_tenant_edit")
     case params[:button]
-      when 'cancel'      then rbac_edit_cancel('tenant')
-      when 'save', 'add' then rbac_edit_save_or_add('tenant')
-      when 'reset', nil  then rbac_edit_reset('tenant', Tenant) # Reset or first time in
+    when "cancel"
+      @tenant = Tenant.find_by_id(params[:id])
+      if @tenant.try(:id).nil?
+        add_flash(_("Add of new %s was cancelled by the user") % tenant_type_title_string(params[:divisible] == "true"))
+      else
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") %
+                    {:model => tenant_type_title_string(params[:divisible] == "true"), :name => @tenant.name})
+      end
+      get_node_info(x_node)
+      replace_right_cell(x_node)
+    when "save", "add"
+      tenant = params[:id] != "new" ? Tenant.find_by_id(params[:id]) : Tenant.new
+
+      # This should be changed to something like tenant.changed? and tenant.changes
+      # when we have a version of Rails that supports detecting changes on serialized
+      # fields
+      old_tenant_attributes = tenant.attributes.clone
+      tenant_set_record_vars(tenant)
+
+      begin
+        tenant.save!
+      rescue StandardError => bang
+        add_flash(_("Error when adding a new tenant: ") << bang.message, :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        AuditEvent.success(build_saved_audit_hash(old_tenant_attributes, tenant, params[:button] == "add"))
+        add_flash(_("%{model} \"%{name}\" was saved") %
+                    {:model => tenant_type_title_string(params[:divisible] == "true"), :name => tenant.name})
+        if params[:button] == "add"
+          rbac_tenants_list
+          rbac_get_info(x_node)
+        else
+          @selected_tenant = tenant
+          get_node_info(x_node)
+        end
+        replace_right_cell("root", [:rbac])
+      end
+    when "reset", nil # Reset or first time in
+      obj = find_checked_items
+      obj[0] = params[:id] if obj.blank? && params[:id]
+      @tenant = params[:typ] == "new" ? Tenant.new  : Tenant.find(obj[0])          # Get existing or new record
+
+      # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
+      @edit = {:tenant_id => @tenant.id}
+
+      # This is a hack to trick the controller into thinking we loaded an edit variable
+      session[:edit] = {:key => "tenant_edit__#{@tenant.id || 'new'}"}
+
+      session[:changed] = false
+      if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning)
+      end
+      replace_right_cell("tenant_edit")
     end
+  end
+
+  def tenant_form_fields
+    tenant = Tenant.find_by_id(params[:id])
+
+    render :json => {
+      :name        => tenant.name,
+      :description => tenant.description,
+      :default     => tenant.default?,
+      :divisible   => tenant.divisible
+    }
+  end
+
+  def tenant_set_record_vars(tenant)
+    tenant.name        = params[:name]
+    tenant.description = params[:description]
+    tenant.parent      = Tenant.find_by_id(from_cid(x_node.split('-').last)) unless tenant.parent
+    tenant.divisible   = params[:divisible] == "true"
   end
 
   # AJAX driven routines to check for changes in ANY field on the form
@@ -110,10 +182,6 @@ module OpsController::OpsRbac
 
   def rbac_role_field_changed
     rbac_field_changed("role")
-  end
-
-  def rbac_tenant_field_changed
-    rbac_field_changed("tenant")
   end
 
   def rbac_user_delete
@@ -203,19 +271,25 @@ module OpsController::OpsRbac
   def rbac_tenant_delete
     assert_privileges("rbac_tenant_delete")
     tenants = []
-    if !params[:id] # showing a role list
+    if !params[:id] # showing a tenants list
       ids = find_checked_items.collect { |r| from_cid(r.split("-").last) }
       tenants = Tenant.find_all_by_id(ids)
-      process_tenants(tenants, "destroy") unless tenants.empty?
-    else # showing 1 role, delete it
+      tenants.reject! { |t|
+        t.parent.nil?
+        add_flash(_("Default %{model} \"%{name}\" can not be deleted") % {:model => ui_lookup(:model => "Tenant"),
+                                                                          :name  => t.name}, :error) if t.parent.nil?
+      }
+    else # showing 1 tenant, delete it
       if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
         add_flash(_("%s no longer exists") %  "Tenant", :error)
       else
         tenants.push(params[:id])
       end
-      process_tenants(tenants, "destroy") unless tenants.empty?
-      self.x_node  = "xx-tn" if Tenant.find_by_id(params[:id]).nil? # reset node to show list
+      parent_id = Tenant.find_by_id(params[:id]).parent.id
+      self.x_node = "tn-#{to_cid(parent_id)}"
     end
+
+    process_tenants(tenants, "destroy") unless tenants.empty?
     get_node_info(x_node)
     replace_right_cell(x_node, [:rbac])
   end
@@ -407,6 +481,10 @@ module OpsController::OpsRbac
   end
 
   private ############################
+
+  def tenant_type_title_string(divisible)
+    divisible ? ui_lookup(:model => "Tenant") : "Project"
+  end
 
   def rbac_user_delete_restriction?(user)
     ["admin", session[:userid]].include?(user.userid)
@@ -607,14 +685,14 @@ module OpsController::OpsRbac
 
     # Get the records (into a view) and the paginator
     @view, @pages = case rec_type
-                      when "user"
-                        get_view(User, :named_scope=>:in_my_region)
-                      when "group"
-                        get_view(MiqGroup)
-                      when "role"
-                        get_view(MiqUserRole)
-                      when "tenant"
-                        get_view(Tenant, {:conditions => ["domain IS NULL AND subdomain is NULL"]})
+                    when "user"
+                      get_view(User, :named_scope=>:in_my_region)
+                    when "group"
+                      get_view(MiqGroup)
+                    when "role"
+                      get_view(MiqUserRole)
+                    when "tenant"
+                      get_view(Tenant)
                     end
 
     @current_page = @pages[:current] if @pages != nil # save the current page number
@@ -699,7 +777,8 @@ module OpsController::OpsRbac
             @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"MiqUserRole")}
             rbac_roles_list
           when "tn"
-            @right_cell_text = _("%{typ} %{model}") % {:typ => "Access Control", :model => ui_lookup(:models => "Tenant")}
+            @right_cell_text = _("%{typ} %{model}") % {:typ   => "Access Control",
+                                                       :model => ui_lookup(:models => "Tenant")}
             rbac_tenants_list
         end
       when "u"
@@ -712,8 +791,9 @@ module OpsController::OpsRbac
         @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqUserRole"), :name=>MiqUserRole.find_by_id(from_cid(id)).name}
         rbac_role_get_details(id)
       when "tn"
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "Tenant"), :name => Tenant.find_by_id(from_cid(id)).name}
         rbac_tenant_get_details(id)
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model => tenant_type_title_string(@tenant.divisible),
+                                                        :name  => @tenant.name}
       else  # Root node
         @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Access Control", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
         @users_count   = User.in_my_region.count
@@ -912,14 +992,14 @@ module OpsController::OpsRbac
       move_cols_up   if params[:button] == "up"
       move_cols_down if params[:button] == "down"
     else
-      @edit[:new][:description] = params[:ldap_groups_user] if params[:ldap_groups_user]
-      @edit[:new][:description] = params[:description]      if params[:description]
-      @edit[:new][:role]        = params[:group_role]       if params[:group_role]
-      @edit[:new][:tenant]      = params[:group_tenant]       if params[:group_tenant]
-      @edit[:new][:lookup]      = (params[:lookup] == "1")  if params[:lookup]
-      @edit[:new][:user]        = params[:user]             if params[:user]
-      @edit[:new][:user_id]     = params[:user_id]          if params[:user_id]
-      @edit[:new][:user_pwd]    = params[:password]         if params[:password]
+      @edit[:new][:description]  = params[:ldap_groups_user]  if params[:ldap_groups_user]
+      @edit[:new][:description]  = params[:description]       if params[:description]
+      @edit[:new][:role]         = params[:group_role]        if params[:group_role]
+      @edit[:new][:group_tenant] = params[:group_tenant].to_i if params[:group_tenant]
+      @edit[:new][:lookup]       = (params[:lookup] == "1")   if params[:lookup]
+      @edit[:new][:user]         = params[:user]              if params[:user]
+      @edit[:new][:user_id]      = params[:user_id]           if params[:user_id]
+      @edit[:new][:user_pwd]     = params[:password]          if params[:password]
     end
 
     if params[:check]                               # User checked/unchecked a tree node
@@ -987,7 +1067,12 @@ module OpsController::OpsRbac
       @edit[:new][:role] = @group.miq_user_role.id
     end
 
-    @edit[:tenants] = Tenant.all.sort_by(&:name).collect {|tenant| [tenant.name, tenant.id]}
+    @edit[:projects_tenants] = []
+    all_tenants = Tenant.all_tenants
+    all_projects = Tenant.all_projects
+    @edit[:projects_tenants].push(["Projects", all_projects.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_projects.blank?
+    @edit[:projects_tenants].push(["Tenants", all_tenants.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_tenants.blank?
+    @edit[:new][:group_tenant] = @group.tenant_owner.id
 
     @edit[:current] = copy_hash(@edit[:new])
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
@@ -1039,7 +1124,7 @@ module OpsController::OpsRbac
     group.sequence = groups.first.nil? ? 1 : groups.first.sequence + 1
     group.description = @edit[:new][:description]
     group.miq_user_role = role
-    group.tenant_owner = Tenant.find_by_id(@edit[:new][:tenant]) if @edit[:new][:tenant]
+    group.tenant_owner = Tenant.find_by_id(@edit[:new][:group_tenant]) if @edit[:new][:group_tenant]
     rbac_group_set_filters(group)             # Go set the filters for the group
   end
 
