@@ -15,22 +15,23 @@ describe ReportFormatter::JqplotFormatter do
           :dims        => 1,
           :group       => "y",
           :rpt_options => {:summary => {:hide_detail_rows => false}},
-          :col_options => {"num_cpu" => {:grouping => [:avg, :max, :min, :total]}, "name" => {:break_label=>"Cloud/Infrastructure Provider : Name: "}},
+          :col_options => {"num_cpu" => {:grouping => [:avg, :max, :min, :total]},
+                           "name"    => {:break_label => "Cloud/Infrastructure Provider : Name: "}},
           :graph       => {:type => "Column", :mode => "values", :column => "Vm-num_cpu:total", :count => 2, :other => other},
           :extras      => {},
         )
 
         report.table = Ruport::Data::Table.new(
           :column_names => %w(name num_cpu ext_management_system.name id),
-          :data => [
-            ["bar", 1, system_name_1 = 'blah', 10000000001352],
-            ["foo", 3, system_name_1,          10000000001353],
-            ["pat", 1, system_name_2 = 'bleh', 10000000001354],
-            ["mat", 1, system_name_2,          10000000001355],
-            ["cuk", 1, system_name_3 = 'blrg', 10000000001356],
-            ["gek", 2, system_name_3,          10000000001357],
-            ["tik", 1, system_name_4 = 'blud', 10000000001358],
-            ["tak", 1, system_name_4,          10000000001359],
+          :data         => [
+            ["bar", 1, system_name_1 = 'blah', 352],
+            ["foo", 3, system_name_1,          353],
+            ["pat", 1, system_name_2 = 'bleh', 354],
+            ["mat", 1, system_name_2,          355],
+            ["cuk", 1, system_name_3 = 'blrg', 356],
+            ["gek", 2, system_name_3,          357],
+            ["tik", 1, system_name_4 = 'blud', 358],
+            ["tak", 1, system_name_4,          359],
           ],
         )
 
@@ -71,13 +72,13 @@ describe ReportFormatter::JqplotFormatter do
 
         report.table = Ruport::Data::Table.new(
           :column_names => %w(name v_total_vms id),
-          :data => [
-            [host_name_1 = "bar", 15, 10000000001352],
-            ["foo", 14, 10000000001352],
-            ["foo", 3, 10000000001352],
-            ["foo", 2, 10000000001352],
-            ["foo", 1, 10000000001352],
-            ["foo", 0, 10000000001352],
+          :data         => [
+            [host_name_1 = "bar", 15, 1352],
+            ["foo", 14,               1353],
+            ["foo", 3,                1354],
+            ["foo", 2,                1355],
+            ["foo", 1,                1356],
+            ["foo", 0,                1357],
           ],
         )
 
