@@ -9,5 +9,5 @@
         %td.wide
           - img_types = [["<#{_('Unknown')}>", nil]] + @edit[:pxe_image_types]
           = select_tag("image_typ",
-            options_for_select(img_types, @edit[:new][:img_type]),
-            "data-miq_observe" => {:url => url}.to_json)
+                        options_for_select(img_types, @edit[:new][:img_type]),
+                        "data-miq_observe" => {:url => url}.to_json)

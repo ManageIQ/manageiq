@@ -1,61 +1,79 @@
 - url = url_for(:action => 'pxe_server_form_field_changed', :id => "#{@ps.id || "new"}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %h3= _('Basic Information')
-  %table.style1
-    %tbody
-      %tr
-        %td.key= _('Name')
-        %td
-          = text_field_tag("name", @edit[:new][:name], :maxlength => MAX_NAME_LEN,
-            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          = javascript_tag(javascript_focus('name'))
-      %tr
-        %td.key= _('Depot Type')
-        %td.wide
-          = select_tag("log_protocol",
-            options_for_select([["<#{_('Choose')}>", nil]] + @edit[:protocols_arr].sort, @edit[:new][:protocol]),
-            "data-miq_observe" => {:url => url}.to_json)
-      - unless @edit[:new][:uri_prefix].nil?
-        %tr
-          %td.key= _('URI')
-          %td.wide
-            = "#{@edit[:new][:uri_prefix]}://"
-            = text_field_tag("uri", @edit[:new][:uri], :maxlength => 100,
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-        - if @edit[:new][:uri_prefix] != "nfs"
-          = render(:partial => "/layouts/auth_credentials", :locals => {:pfx => "log",
-            :change_url => "pxe_server_form_field_changed",
-            :validate_url => "log_depot_validate",
-            :record => @ps})
-      %tr
-        %td.key= _('Access URL')
-        %td.wide
-          = text_field_tag("access_url", @edit[:new][:access_url], :maxlength => MAX_NAME_LEN,
-            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-      %tr
-        %td.key= _('PXE Directory')
-        %td.wide
-          = text_field_tag("pxe_directory", @edit[:new][:pxe_directory], :maxlength => MAX_NAME_LEN,
-            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-      %tr
-        %td.key= _('Windows Images Directory')
-        %td.wide
-          = text_field_tag("windows_images_directory", @edit[:new][:windows_images_directory],
-            :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-      %tr
-        %td.key= _('Customization Directory')
-        %td.wide
-          = text_field_tag("customization_directory", @edit[:new][:customization_directory],
-            :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  %h3
+    = _('Basic Information')
+  %form.form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Name')
+      .col-md-8
+        = text_field_tag("name", @edit[:new][:name], :maxlength => MAX_NAME_LEN,
+                        :class => "form-control",
+                        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        = javascript_tag(javascript_focus('name'))
+    .form-group
+      %label.col-md-2.control-label
+        = _('Depot Type')
+      .col-md-8
+        = select_tag("log_protocol",
+                      options_for_select([["<#{_('Choose')}>", nil]] + @edit[:protocols_arr].sort, @edit[:new][:protocol]),
+                      :class    => "selectpicker")
+      :javascript
+         miqInitSelectPicker();
+         miqSelectPickerEvent("log_protocol", "#{url}")
+    - unless @edit[:new][:uri_prefix].nil?
+      .form-group
+        %label.col-md-2.control-label
+          = _('URI')
+        .col-md-8
+          #{@edit[:new][:uri_prefix]}://
+          = text_field_tag("uri", @edit[:new][:uri], :maxlength => 100,
+                            :class => "form-control",
+                            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      - if @edit[:new][:uri_prefix] != "nfs"
+        = render(:partial => "/layouts/auth_credentials", :locals => {:pfx => "log",
+                  :change_url => "pxe_server_form_field_changed",
+                  :validate_url => "log_depot_validate",
+                  :record => @ps})
+    .form-group
+      %label.col-md-2.control-label
+        = _('Access URL')
+      .col-md-8
+        = text_field_tag("access_url", @edit[:new][:access_url], :maxlength => MAX_NAME_LEN,
+                          :class => "form-control",
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      %label.col-md-2.control-label
+        = _('PXE Directory')
+      .col-md-8
+        = text_field_tag("pxe_directory", @edit[:new][:pxe_directory], :maxlength => MAX_NAME_LEN,
+                          :class => "form-control",
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      %label.col-md-2.control-label
+        = _('Windows Images Directory')
+      .col-md-8
+        = text_field_tag("windows_images_directory", @edit[:new][:windows_images_directory],
+                          :class => "form-control",
+                          :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      %label.col-md-2.control-label
+        = _('Customization Directory')
+      .col-md-8
+        = text_field_tag("customization_directory", @edit[:new][:customization_directory],
+                          :class => "form-control",
+                          :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 
   %hr
-  %h3= _('PXE Image Menus')
-  %table.style1
-    %tbody
-      - @edit[:new][:pxe_menus].each_with_index do |menu, index|
-        %tr
-          %td.key= _('Filename')
-          %td.wide
-            = text_field_tag("pxemenu_#{index}", h(menu), :maxlength => MAX_NAME_LEN,
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  %h3
+    = _('PXE Image Menus')
+  %form.form-horizontal
+    - @edit[:new][:pxe_menus].each_with_index do |menu, index|
+      .form-group
+        %label.col-md-2.control-label
+          = _('Filename')
+        .col-md-8
+          = text_field_tag("pxemenu_#{index}", h(menu), :maxlength => MAX_NAME_LEN,
+                            :class => "form-control",
+                            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
