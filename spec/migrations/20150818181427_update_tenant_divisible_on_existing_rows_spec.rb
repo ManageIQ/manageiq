@@ -2,11 +2,13 @@ require "spec_helper"
 require Rails.root.join("db/migrate/20150818181427_update_tenant_divisible_on_existing_rows.rb")
 
 describe UpdateTenantDivisibleOnExistingRows do
-  let(:tenant)  { migration_stub(:Tenant) }
+  class UpdateTenantDivisibleOnExistingRows::Tenant < ActiveRecord::Base
+  end
+  let(:tenant_stub)  { migration_stub(:Tenant) }
 
   migration_context :up do
     it "updates nil values to true" do
-      t_nil = UpdateTenantDivisibleOnExistingRows::Tenant.create(:divisible => nil)
+      t_nil = tenant_stub.create!(:divisible => nil)
       t_nil.divisible.should be_nil
 
       migrate
@@ -16,8 +18,8 @@ describe UpdateTenantDivisibleOnExistingRows do
     end
 
     it "leaves true and false values alone" do
-      t_true  = UpdateTenantDivisibleOnExistingRows::Tenant.create(:divisible => true)
-      t_false = UpdateTenantDivisibleOnExistingRows::Tenant.create(:divisible => false)
+      t_true  = tenant_stub.create!(:divisible => true)
+      t_false = tenant_stub.create!(:divisible => false)
 
       t_true.divisible.should  be_true
       t_false.divisible.should be_false
