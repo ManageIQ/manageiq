@@ -42,6 +42,14 @@ class Tenant < ActiveRecord::Base
 
   before_save :nil_blanks
 
+  def all_subtenants
+    self.class.descendants_of(self).where(:divisible => true)
+  end
+
+  def all_subprojects
+    self.class.descendants_of(self).where(:divisible => false)
+  end
+
   def name
     tenant_attribute(:name, :company)
   end

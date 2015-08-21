@@ -53,6 +53,27 @@ describe Tenant do
     expect(Tenant.all_projects.count).to eql 2 # Should not return the default tenant
   end
 
+  context "subtenants and subprojects" do
+    before do
+      @t1  = FactoryGirl.create(:tenant, :parent => default_tenant, :name => "T1")
+      @t2  = FactoryGirl.create(:tenant, :parent => @t1, :name => "T2")
+      @t2p = FactoryGirl.create(:tenant, :parent => @t1, :name => "T2 Project", :divisible => false)
+      @t3  = FactoryGirl.create(:tenant, :parent => @t2, :name => "T3")
+      @t3a = FactoryGirl.create(:tenant, :parent => @t2, :name => "T3a")
+      @t4p = FactoryGirl.create(:tenant, :parent => @t3, :name => "T4 Project", :divisible => false)
+    end
+
+    it "#all_subtenants" do
+      expect(@t1.all_subtenants.to_a).to match_array([@t2, @t3, @t3a])
+      expect(@t2.all_subtenants.to_a).to match_array([@t3, @t3a])
+    end
+
+    it "#all_subprojects" do
+      expect(@t1.all_subprojects.to_a).to match_array([@t2p, @t4p])
+      expect(@t2.all_subprojects.to_a).to match_array([@t4p])
+    end
+  end
+
   describe "#name" do
     let(:settings) { {:server => {:company => "settings"}} }
 
