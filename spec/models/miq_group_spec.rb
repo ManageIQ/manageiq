@@ -99,10 +99,7 @@ describe MiqGroup do
 
     it "should return LDAP groups by user name" do
       auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
+      stub_server_configuration(:authentication =>  auth_config)
 
       miq_ldap = double('miq_ldap')
       miq_ldap.stub(:fqusername => 'fred')
@@ -118,10 +115,7 @@ describe MiqGroup do
 
     it "should issue an error message when user name could not be bound to LDAP" do
       auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
+      stub_server_configuration(:authentication =>  auth_config)
 
       miq_ldap = double('miq_ldap')
       miq_ldap.stub(:fqusername => 'fred')
@@ -142,10 +136,7 @@ describe MiqGroup do
 
     it "should issue an error message when user name does not exist in LDAP directory" do
       auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
+      stub_server_configuration(:authentication => auth_config)
 
       miq_ldap = double('miq_ldap')
       miq_ldap.stub(:fqusername => 'fred')

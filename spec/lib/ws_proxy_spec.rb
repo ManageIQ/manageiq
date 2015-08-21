@@ -3,17 +3,14 @@ require "spec_helper"
 describe WsProxy do
 
   before(:each) do
-    config = {
+    stub_server_configuration(
       :server => {
         :websocket => {
           :cert => 'non-existent-foo-bar',
           :key  => 'REGION' # file existing under Rails root
         }
       }
-    }
-    vmdb_config = double('vmdb_config')
-    vmdb_config.stub(:config => config)
-    VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
+    )
   end
 
   context '#try_run_proxy' do

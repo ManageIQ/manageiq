@@ -276,7 +276,7 @@ describe ScheduleWorker do
 
         context "LDAP synchronization role" do
           before(:each) do
-            VMDB::Config.any_instance.stub(:config).and_return(Hash.new(5.minutes))
+            stub_server_configuration(Hash.new(5.minutes))
             @schedule_worker.stub(:heartbeat)
 
             # Initialize active_roles
@@ -290,10 +290,7 @@ describe ScheduleWorker do
             @ldap_synchronization_collection = { :ldap_synchronization_schedule => "0 2 * * *" }
             config                           = { :ldap_synchronization => @ldap_synchronization_collection }
 
-            vmdb_config = double("vmdb_config")
-            vmdb_config.stub(:config => config)
-            vmdb_config.stub(:merge_from_template_if_missing)
-            VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
+            stub_server_configuration(config)
           end
 
           context "#schedules_for_ldap_synchronization_role" do
@@ -343,7 +340,7 @@ describe ScheduleWorker do
 
         context "Database operations role" do
           before(:each) do
-            VMDB::Config.any_instance.stub(:config).and_return(Hash.new(5.minutes))
+            stub_server_configuration(Hash.new(5.minutes))
             @schedule_worker.stub(:heartbeat)
 
             MiqRegion.seed
@@ -354,11 +351,7 @@ describe ScheduleWorker do
             @metrics_collection = { :collection_schedule => "1 * * * *", :daily_rollup_schedule => "23 0 * * *" }
             @metrics_history    = { :purge_schedule => "50 * * * *" }
             database_config     = { :metrics_collection => @metrics_collection, :metrics_history => @metrics_history }
-            config              = { :database => database_config }
-            vmdb_config = double("vmdb_config")
-            vmdb_config.stub(:config => config)
-            vmdb_config.stub(:merge_from_template_if_missing)
-            VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
+            stub_server_configuration(:database => database_config)
           end
 
           context "with database_owner in region" do
@@ -485,7 +478,7 @@ describe ScheduleWorker do
         context "end-to-end schedules modified to run every 5 minutes" do
           before(:each) do
             @schedule_worker.stub(:worker_settings).and_return(Hash.new(5.minutes))
-            VMDB::Config.any_instance.stub(:config).and_return(Hash.new(5.minutes))
+            stub_server_configuration(Hash.new(5.minutes))
             @schedule_worker.stub(:heartbeat)
 
             # Initialize active_roles
@@ -617,7 +610,7 @@ describe ScheduleWorker do
     it "#schedule_settings_for_ems_refresh (private)" do
       _ = ManageIQ::Providers::Microsoft::InfraManager # FIXME: Loader
 
-      VMDB::Config.any_instance.stub(:config).and_return(
+      stub_server_configuration(
         :ems_refresh => {
           :refresh_interval => 24.hours,
           :scvmm            => {:refresh_interval => 15.minutes}
