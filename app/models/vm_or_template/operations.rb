@@ -64,6 +64,20 @@ module VmOrTemplate::Operations
   # UI button validation methods
   #
 
+  def validate_vm_control_shelve_action
+    msg = validate_vm_control
+    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    return {:available => true,   :message => nil}  if %w(on off suspended paused).include?(self.current_state)
+    return {:available => false,  :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused"}
+  end
+
+  def validate_vm_control_shelve_offload_action
+    msg = validate_vm_control
+    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    return {:available => true,   :message => nil}  if %w(shelved).include?(self.current_state)
+    return {:available => false,  :message => "The VM can't be shelved offload, current state has to be shelved"}
+  end
+
   def validate_vm_control
     # Check the basic require to interact with a VM.
     return [false, 'The VM is retired'] if self.retired?

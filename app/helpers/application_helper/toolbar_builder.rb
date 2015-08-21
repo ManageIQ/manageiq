@@ -790,6 +790,10 @@ class ApplicationHelper::ToolbarBuilder
         return true if !@record.is_available?(:reset)
       when "vm_suspend", "instance_suspend"
         return true if !@record.is_available?(:suspend)
+      when "instance_shelve"
+        return true if !@record.is_available?(:shelve)
+      when "instance_shelve_offload"
+        return true if !@record.is_available?(:shelve_offload)
       when "instance_pause"
         return true if !@record.is_available?(:pause)
       when "vm_policy_sim", "vm_protect"
