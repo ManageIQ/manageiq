@@ -406,21 +406,21 @@ class MiqAeClassController < ApplicationController
     case cls.to_s.split("::").last
     when "MiqAeClass"
       cls = "aec"
-      img_name = "ae_class"
+      glyphicon = "product product-ae_class"
     when "MiqAeNamespace"
       cls = "aen"
-      img_name = "ae_namespace"
+      glyphicon = "product product-ae_namespace"
     when "MiqAeInstance"
       cls = "aei"
-      img_name = "ae_instance"
+      glyphicon = "product product-ae_instance"
     when "MiqAeField"
       cls = "Field"
-      img_name = "ae_field"
+      glyphicon = "product product-ae_field"
     when "MiqAeMethod"
       cls = "aem"
-      img_name = "ae_method"
+      glyphicon = "product product-ae_method"
     end
-    return cls, img_name
+    return cls, glyphicon
   end
 
   def build_details_grid(view,mode=true)
@@ -448,7 +448,7 @@ class MiqAeClassController < ApplicationController
         view
       end
     records.each do |kids|
-      cls,img_name = set_cls(kids.class)
+      cls,glyphicon = set_cls(kids.class)
       rec_name = get_rec_name(kids)
       if rec_name
         rec_name = rec_name.gsub(/\n/,"\\n")
@@ -459,7 +459,7 @@ class MiqAeClassController < ApplicationController
       end
       srow = root.add_element("row", {"id"=>"#{cls}-#{to_cid(kids.id)}", "style"=>"border-bottom: 1px solid #CCCCCC;color:black; text-align: center"})
       srow.add_element("cell").text = "0" # Checkbox column unchecked
-      srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{cls}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<img src='/images/icons/new/#{img_name}.png' border='0' height='20', width='20', align='middle' alt='#{cls}' title='#{cls}'>")
+      srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{cls}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<ul class='icons list-unstyled'><li><span class='#{glyphicon}' alt='#{cls}' title='#{cls}'></span></li></ul>")
       srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = rec_name
     end
     return xml.to_s
@@ -513,8 +513,7 @@ class MiqAeClassController < ApplicationController
                      "image" => "blank.png",
                      "title" => "#{cls}",
                      "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
-                     REXML::CData.new("<img src='/images/icons/new/ae_domain.png' border='0' height='20', \
-                       width='20', align='middle' alt='#{cls}' title='#{cls}'>")
+                     REXML::CData.new("<ul class='icons list-unstyled'><li><span class='fa fa-globe' alt='#{cls}' title='#{cls}'></span></li></ul>")
     srow.add_element("cell",
                      "image" => "blank.png",
                      "title" => "#{rec_name}",
@@ -552,13 +551,13 @@ class MiqAeClassController < ApplicationController
     grid_add_header(hrow)
 
     view.flatten.sort_by{|a| [a.priority.to_i]}.each do |kids|
-      cls,img_name = set_cls(kids.class)
-      img_name = "ae_#{kids.aetype}"
+      cls,glyphicon = set_cls(kids.class)
+      glyphicon = "ae_#{kids.aetype}"
 
       if kids.substitute
-        substitute_img = "passed"
+        substitute_glyphicon = "pficon pficon-ok"
       else
-        substitute_img = "failed"
+        substitute_glyphicon = "pficon pficon-ok-closed"
       end
 
       kids.datatype = kids.datatype == nil ? "string" : kids.datatype
@@ -590,9 +589,9 @@ class MiqAeClassController < ApplicationController
       if !def_val.blank? || !field_val.blank? || !kids.collect.blank? || !val.collect.blank?  || !kids.on_entry.blank? || !val.on_entry.blank? || !kids.on_exit.blank? || !val.on_exit.blank? || !kids.on_error.blank? || !val.on_error.blank? || !kids.max_retries.blank? || !val.max_retries.blank? || !kids.max_time.blank? || !val.max_time.blank?
         srow = root.add_element("row", {"id"=>"#{cls}-#{to_cid(kids.id)}", "style"=>"border-bottom: 1px solid #CCCCCC;color:black; text-align: center"})
         if kids.datatype != "string"
-          srow.add_element("cell", {"image"=>"blank.png", "title"=>"Type: #{kids.aetype}, Data Type: #{kids.datatype}, Substitution: #{kids.substitute}, #{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<img src='/images/icons/new/#{img_name}.png' height='20', width='20', border='0' align='middle' alt='Type: #{kids.aetype}' title='Type: #{kids.aetype}'>&nbsp;<img src='/images/icons/new/#{kids.datatype}.png' height='20', width='20', border='0' align='middle' alt='Data Type: #{kids.datatype}' title='Data Type: #{kids.datatype}'>&nbsp;<img src='/images/icons/16/#{substitute_img}.png' height='20', width='20', border='0' align='middle' alt='Substitution: #{kids.substitute}' title='Substitution: #{kids.substitute}'>&nbsp; #{rec_name}")
+          srow.add_element("cell", {"image"=>"blank.png", "title"=>"Type: #{kids.aetype}, Data Type: #{kids.datatype}, Substitution: #{kids.substitute}, #{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<ul class='icons list-unstyled pull-left'><li><span class='product product-#{glyphicon}' alt='Type: #{kids.aetype}' title='Type: #{kids.aetype}'></span></li></ul><ul class='icons list-unstyled pull-left'><li><span class='product product-#{kids.datatype}' alt='Data Type: #{kids.datatype}' title='Data Type: #{kids.datatype}'></span></li></ul><ul class='icons list-unstyled pull-left'><li><span class='#{substitute_glyphicon}' alt='Substitution: #{kids.substitute}' title='Substitution: #{kids.substitute}'></span></li></ul>#{rec_name}")
         else
-          srow.add_element("cell", {"image"=>"blank.png", "title"=>"Type: #{kids.aetype}, Substitution: #{kids.substitute}, #{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<img src='/images/icons/new/#{img_name}.png' height='20', width='20', border='0' align='middle' alt='Type: #{kids.aetype}' title='Type: #{kids.aetype}'>&nbsp;<img src='/images/icons/16/#{substitute_img}.png' height='20', width='20', border='0' align='middle' alt='Substitution: #{kids.substitute}' title='Substitution: #{kids.substitute}'>&nbsp; #{rec_name}")
+          srow.add_element("cell", {"image"=>"blank.png", "title"=>"Type: #{kids.aetype}, Substitution: #{kids.substitute}, #{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<ul class='icons list-unstyled pull-left'><li><span class='product product-#{glyphicon}' alt='Type: #{kids.aetype}' title='Type: #{kids.aetype}'></span></li></ul><ul class='icons list-unstyled pull-left'><li><span class='#{substitute_glyphicon}' alt='Substitution: #{kids.substitute}' title='Substitution: #{kids.substitute}'></span></li></ul>#{rec_name}")
         end
         clr = val.value.nil? || val.value == "" ? "#a8a8a8" : "#000000"
         value = val.value.nil? || val.value == "" ? (kids.datatype == "password" ? "********" : kids.default_value) : (kids.datatype == "password" ? "********" : val.value)
@@ -640,7 +639,7 @@ class MiqAeClassController < ApplicationController
     new_column.text = "Data Type"
 
     view.flatten.sort_by{|a| [a.priority.to_i]}.each do |kids|
-      cls,img_name = set_cls(kids.class)
+      cls,glyphicon = set_cls(kids.class)
       rec_name = get_rec_name(kids)
       def_val = kids.default_value
       data_type = kids.datatype ? kids.datatype : "string"
