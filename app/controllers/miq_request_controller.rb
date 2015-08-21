@@ -387,7 +387,7 @@ class MiqRequestController < ApplicationController
       end
       page << "ManageIQ.grids.xml = \"#{j_str(@grid_xml)}\";"  # Set the XML data
       page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);"               # Clear grid data, including headers
-      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);"                   # Reload grid from XML
+      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(ManageIQ.grids.xml);"    # Reload grid from XML
       if @sortcol
         dir = @sortdir ? @sortdir[0..2] : "asc"
         page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
