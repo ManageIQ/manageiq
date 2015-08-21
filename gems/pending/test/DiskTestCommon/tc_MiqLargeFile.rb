@@ -6,7 +6,7 @@ require 'tmpdir'
 
 module DiskTestCommon
   class TestMiqLargeFile < Minitest::Test
-    FILE_PATH = (Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
+    FILE_PATH = (Sys::Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
 
     FILE_1MB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1MB"
     FILE_1GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1GB"

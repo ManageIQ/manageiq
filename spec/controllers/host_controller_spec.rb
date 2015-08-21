@@ -88,19 +88,19 @@ describe HostController do
     it "can create a host with custom id and no host name" do
       set_user_privileges
       controller.instance_variable_set(:@breadcrumbs, [])
-      controller.new
 
-      edit = {:new => {:name     => 'foobar',
-                       :hostname => nil,
-                       :custom_1 => 'bar'},
-              :key => 'host_edit__new'}
-      controller.instance_variable_set(:@edit, edit)
-      session[:edit] = edit
+      controller.instance_variable_set(:@_params,
+        :button   => "add",
+        :id       => "new",
+        :name     => 'foobar',
+        :hostname => nil,
+        :custom_1 => 'bar'
+      )
 
       expect_any_instance_of(Host).to receive(:save).and_call_original
-      post :create, :button => "add", :id => 'new '
+      controller.should_receive(:render)
+      controller.send(:create)
       expect(response.status).to eq(200)
-      expect(response.body).to match(/window.location.href.*host\/show_list.*foobar.*added/)
     end
 
     it "doesn't crash when trying to validate a new host" do
@@ -108,18 +108,19 @@ describe HostController do
       controller.instance_variable_set(:@breadcrumbs, [])
       controller.new
 
-      edit = {:new => {:name             => 'foobar',
-                       :hostname         => '127.0.0.1',
-                       :default_userid   => "abc",
-                       :default_password => "def",
-                       :default_verify   => "def",
-                       :user_assigned_os => "linux_generic"},
-              :key => 'host_edit__new',
-              :host_id => nil}
-      controller.instance_variable_set(:@edit, edit)
-      session[:edit] = edit
-
-      post :create, :button => "validate", :type => "default", :id => "new"
+      controller.instance_variable_set(:@_params,
+        :button           => "validate",
+        :type             => "default",
+        :id               => "new",
+        :name             => 'foobar',
+        :hostname         => '127.0.0.1',
+        :default_userid   => "abc",
+        :default_password => "def",
+        :default_verify   => "def",
+        :user_assigned_os => "linux_generic"
+      )
+      controller.should_receive(:render)
+      controller.send(:create)
       expect(response.status).to eq(200)
     end
   end
@@ -127,11 +128,11 @@ describe HostController do
   context "#set_record_vars" do
     it "strips leading/trailing whitespace from hostname/ipaddress when adding infra host" do
       set_user_privileges
-      controller.instance_variable_set(:@edit, :new => {:name     => 'EMS 2',
-                                                        :emstype  => 'rhevm',
-                                                        :hostname => '  10.10.10.10  '},
-                                               :key => 'ems_edit__new')
-      session[:edit] = assigns(:edit)
+      controller.instance_variable_set(:@_params,
+        :name     => 'EMS 2',
+        :emstype  => 'rhevm',
+        :hostname => '  10.10.10.10  '
+      )
       host = Host.new
       controller.send(:set_record_vars, host, false)
       expect(host.hostname).to eq('10.10.10.10')

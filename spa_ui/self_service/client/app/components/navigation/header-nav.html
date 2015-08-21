@@ -24,20 +24,20 @@
       <li dropdown>
         <a dropdown-toggle class="action">
           <i title="Notifications" class="fa pficon-flag">
-            <span class="notification-icon-count">{{ vm.notifications.length }}</span>
+            <span class="notification-icon-count">{{ vm.messages.length }}</span>
           </i>
         </a>
 
         <div class="dropdown-menu infotip bottom-right">
           <div class="arrow"></div>
           <ul class="list-group">
-            <li ng-repeat="notification in vm.notifications" class="list-group-item">
-              <span class="i pficon pficon-info"></span> {{ notification.text }}
+            <li ng-repeat="message in vm.messages" class="list-group-item">
+              <span class="i pficon pficon-info"></span> {{ message.text }}
             </li>
           </ul>
           <div class="footer">
-            <a ng-if="vm.notifications.length > 0" ng-click="vm.clearNotifications()">Clear Messages</a>
-            <span ng-if="vm.notifications.length === 0">No Messages</span>
+            <a ng-if="vm.messages.length > 0" ng-click="vm.clearMessages()">Clear Messages</a>
+            <span ng-if="vm.messages.length === 0">No Messages</span>
           </div>
         </div>
       </li>

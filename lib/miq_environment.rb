@@ -1,4 +1,4 @@
-require 'platform'
+require 'sys-uname'
 
 module MiqEnvironment
   class Process
@@ -97,7 +97,7 @@ module MiqEnvironment
 
     def self.is_linux?
       return @is_linux unless @is_linux.nil?
-      return @is_linux = (Platform::IMPL == :linux)
+      return @is_linux = (Sys::Platform::IMPL == :linux)
     end
 
     def self.rake_command
@@ -129,11 +129,11 @@ module MiqEnvironment
     end
 
     def self.which
-      case Platform::IMPL
+      case Sys::Platform::IMPL
       when :linux
         "which"
       else
-        raise "Not yet supported platform: #{Platform::IMPL}"
+        raise "Not yet supported platform: #{Sys::Platform::IMPL}"
       end
     end
   end

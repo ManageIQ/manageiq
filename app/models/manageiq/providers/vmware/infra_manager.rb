@@ -60,7 +60,7 @@ class Vmware::InfraManager < InfraManager
     return false unless MiqVimBrokerWorker.has_required_role?
     cfg = VMDB::Config.new("vmdb").config[:webservices][:use_vim_broker]
     return true if cfg == "force"
-    return true if cfg && Platform::OS == :unix
+    return true if cfg && Sys::Platform::OS == :unix
     return false
   end
 

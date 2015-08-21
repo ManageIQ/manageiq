@@ -7,7 +7,9 @@ $dropdown-link-hover-bg:                    #d4edfa;  // sets dropdown link hove
 $link-color:                                #0099d3;  // sets link (also accordion hover, selected table cell) color globally
 $navbar-pf-border-color:                    #063451;  // sets 3px border color at top of screen
 $navbar-pf-bg-color:                        #063451;  // sets backgound color of navigation bar
-
+$color-success:                             #3f9c35;
+$color-warning:                             #ec7a08;
+$color-critical:                            #cc0000;
 
 // Product overrides of Patternfly Login variables
 $img-bg-login:                              "../bg-login.jpg";

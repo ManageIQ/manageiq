@@ -3,7 +3,7 @@ module RealFS
 	attr_reader :guestOS
 	
 	def fs_init
-		case Platform::IMPL
+		case Sys::Platform::IMPL
 			when :mswin, :mingw
 				self.fsType = "NTFS"
 				@guestOS = "Windows"

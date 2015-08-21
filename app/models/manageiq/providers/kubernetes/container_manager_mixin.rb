@@ -61,6 +61,6 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   end
 
   def default_authentication_type
-    :token
+    :bearer
   end
 end

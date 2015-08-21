@@ -1928,6 +1928,9 @@ class ApplicationController < ActionController::Base
 
     db = db.gsub(/::/, '_')
 
+    current_role = current_user.try(:miq_user_role)
+    current_role = current_role.name.split("-").last if current_role.try(:read_only?)
+
     # Build the view file name
     if suffix
       viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"

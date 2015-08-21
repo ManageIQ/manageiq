@@ -4,11 +4,10 @@ module ApplicationController::CurrentUser
   included do
     helper_method :current_user,  :current_userid
     helper_method :current_group, :current_groupid, :eligible_groups
-    helper_method :current_role, :admin_user?, :super_admin_user?
+    helper_method :admin_user?, :super_admin_user?
     hide_action :clear_current_user, :current_user=
     hide_action :admin_user?, :super_admin_user?
     hide_action :current_user, :current_userid, :current_groupid
-    hide_action :current_role, :current_userrole
   end
 
   def clear_current_user
@@ -29,13 +28,6 @@ module ApplicationController::CurrentUser
     eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
   end
   private :eligible_groups
-
-  def current_role
-    @current_role ||= begin
-      role = current_user.try(:miq_user_role)
-      role.try(:read_only?) ? role.name.split("-").last : ""
-    end
-  end
 
   def admin_user?
     current_user.admin_user?
@@ -60,9 +52,5 @@ module ApplicationController::CurrentUser
 
   def current_groupid
     current_user.current_group.id
-  end
-
-  def current_userrole
-    session[:userrole]
   end
 end

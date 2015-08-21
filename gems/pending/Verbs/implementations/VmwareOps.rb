@@ -1,7 +1,7 @@
 require 'util/runcmd'
 require 'metadata/MIQExtract/MIQExtract'
 require 'metadata/VmConfig/VmConfig'
-require 'platform'
+require 'sys-uname'
 require 'Verbs/implementations/SharedOps'
 require 'VMwareWebService/MiqVimInventory'
 require 'util/miq-password'
@@ -9,8 +9,8 @@ require 'util/miq-password'
 class VMWareOps
     def initialize(ost)
 		extend SharedOps
-        case Platform::OS
-        when :win32
+        case Sys::Platform::OS
+        when :windows
             require 'Verbs/implementations/VmwareOpsWin'
             extend VMWareOpsWin
             initializeCOM
@@ -18,7 +18,7 @@ class VMWareOps
             require 'Verbs/implementations/VmwareOpsLinux'
             extend VMWareOpsLinux
         else
-            raise "Unsupported platform: #{Platform::OS}-#{Platform::IMPL}"
+            raise "Unsupported platform: #{Sys::Platform::OS}-#{Sys::Platform::IMPL}"
         end
     end
 
@@ -27,22 +27,22 @@ class VMWareOps
 		# Normalize scan path
 		$log.debug "ScanRepository: path = #{rPath}"
 		rPath.gsub!("\\", "/")
-		
+
 		vi = nil
 		if MiqVimInventory.dsPath?(rPath)
 		    raise "ScanRepository: cannot scan datastore path #{rPath}, emsLocal is not set" if !$miqHostCfg || !$miqHostCfg.emsLocal
-		    
+
 		    ems = $miqHostCfg.ems[$miqHostCfg.emsLocal]
     		$log.debug "ScanRepository: emsHost = #{ems['host']}, emsUser = #{ems['user']}, emsPassword = #{ems['password']}" if $log
 		vi = MiqVimInventory.new(ems['host'], ems['user'], MiqPassword.decrypt(ems['password']))
-    		
+
 		    scanPath = vi.localVmPath(rPath)
 		    dsName = MiqVimInventory.path2dsName(rPath)
 		else
 		    scanPath = rPath
 		end
 		$log.debug "ScanRepository: converted path = #{scanPath}"
-		
+
 		# This will throw an error if the directory cannot be opened.
 		Dir.open(scanPath).close
 		ra = []
@@ -60,7 +60,7 @@ class VMWareOps
 		end
 
     $log.info "ScanRepository: Scan [#{scanPath}] return [#{ra.length}] VMs out of [#{total_found}] matching files."
-		
+
 		ra.each do |vh|
 		    #
 		    # Convert the local path of each VM found, to it's datastore path.
@@ -69,9 +69,9 @@ class VMWareOps
 		    vh[:location][vi.dsName2path(dsName)] = "[#{dsName}] "
 		    $log.debug "ScanRepository: datastore location = #{vh[:location]}"
 		end if vi
-		
+
 		vi.disconnect if vi
-		
+
 		ost.value = formatVmList(ra, ost)
 		$log.debug "ScanRepository returning: #{ost.value}"
 	end
@@ -79,14 +79,14 @@ class VMWareOps
 	def GetVersion(ost)
 		ost.value = MiqUtil.runcmd("vmware -v", ost.test)
 	end
-	
+
 	def self.isVmwareFile?(arg)
 	    if arg.kind_of? String
 	        file = arg
 	    else
 	        file = arg.args[0]
 	    end
-	    
+
 	    return true if File.extname(file) == ".vmx"
 	    return false
 	end
@@ -95,37 +95,37 @@ class VMWareOps
 		vmName = ost.args[0]
 
 		return File.uri_to_local_path(vmName) if !$miqHostCfg || !$miqHostCfg.emsLocal
-		
+
 		#
 		# TODO: We should try to cache the inventory information to make this faster.
 		#
 		$log.debug "getVmFile: vmName = #{vmName}" if $log
 		return File.uri_to_local_path(vmName) if !MiqVimInventory.dsPath?(vmName)
-		
+
 		ems = $miqHostCfg.ems[$miqHostCfg.emsLocal]
 		$log.debug "getVmFile: emsHost = #{ems['host']}, emsUser = #{ems['user']}, emsPassword = #{ems['password']}" if $log
 		vi = MiqVimInventory.new(ems['host'], ems['user'], MiqPassword.decrypt(ems['password']))
-    	
+
 		lp = vi.localVmPath(vmName)
 		$log.debug "getVmFile: localPath = #{lp}" if $log
 		vi.disconnect
 		return lp
 	end
-	
+
 	def getVmFile(ost)
 	    VMWareOps.getVmFile(ost)
 	end
-  
+
     def diskNames(vmName)
         vmDir = File.dirname(vmName)
 	    cfg = VmConfig.new(vmName).getHash
 	    dfn = cfg["scsi0:0.filename"]
 	    dfn = cfg["ide0:0.filename"] if !dfn
 	    raise "Can't determine disk file for virtual machine" if !dfn
-	
+
 	    ext = File.extname(dfn)
 	    dfBase = File.basename(dfn, ext)
-	
+
 	    diskFile = File.join(vmDir, dfBase + ext)
 	    diskFileSave = File.join(vmDir, dfBase + ".miq")
 	    bbFileSave = File.join(vmDir, dfBase + "BB.miq")

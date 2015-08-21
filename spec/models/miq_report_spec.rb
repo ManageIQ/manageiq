@@ -185,6 +185,21 @@ describe MiqReport do
           found_ids = results.data.collect { |rec| rec.data['id'] }
           found_ids.should match_array(@vms_in_silver_folder.collect(&:id))
         end
+
+        it "gets cached results" do
+          report = MiqReport.new(:db => "Vm", :sortby => "id")
+          options = {:page => 2, :per_page => 20 }
+
+          all_ids = Vm.all.order(:id).map(&:id)
+          report.extras = { :target_ids_for_paging => all_ids, :attrs_for_paging => {}}
+
+          results, attrs = report.paged_view_search(options)
+
+          results.length.should == 20
+          found_ids = results.data.collect { |rec| rec.data['id'] }
+          found_ids.should_not be_empty
+          found_ids.should == all_ids[20..39]
+        end
       end
 
       context "group has managed filters" do

@@ -13,6 +13,7 @@
   function getStates() {
     return {
       '404': {
+        parent: 'blank',
         url: '/404',
         templateUrl: 'app/states/404/404.html',
         title: '404',

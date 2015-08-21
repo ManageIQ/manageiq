@@ -3,7 +3,7 @@
     widget -- MiqWidget object
 .modboxfooter
   = _('Updated')
-  - last_run_on = widget.last_run_on_for_user(session[:userid])
+  - last_run_on = widget.last_run_on_for_user(current_user)
   - if last_run_on
     = format_timezone(last_run_on, session[:user_tz], "widget_footer")
   - else

@@ -12,6 +12,7 @@
   function getStates() {
     return {
       'services': {
+        parent: 'application',
         url: '/services',
         redirectTo: 'services.list',
         template: '<ui-view></ui-view>'

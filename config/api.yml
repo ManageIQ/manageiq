@@ -433,8 +433,21 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :methods: *70174834084700
     :klass: ChargebackRateDetail
+    :collection_actions:
+      :post:
+      - :name: create
+        :identifier: chargeback_rates_create
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: chargeback_rates_edit
+      - :name: delete
+        :identifier: chargeback_rates_delete
+      :delete:
+      - :name: delete
+        :identifier: chargeback_rates_delete
   :reports:
     :description: Reports
     :options:
@@ -823,6 +836,10 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
+      - :name: shelve
+        :identifier: vm_shelve
+      - :name: shelve_offload
+        :identifier: vm_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: reset
@@ -861,6 +878,10 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
+      - :name: shelve
+        :identifier: vm_shelve
+      - :name: shelve_offload
+        :identifier: vm_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: reset

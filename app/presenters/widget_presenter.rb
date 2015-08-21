@@ -11,7 +11,7 @@ class WidgetPresenter
   end
 
   extend Forwardable
-  delegate [:session, :url_for, :initiate_wait_for_task, :session_init,
+  delegate [:current_user, :url_for, :initiate_wait_for_task, :session_init,
             :session_reset, :get_vmdb_config, :start_url_for_user] => :@controller
 
   attr_reader :widget
@@ -26,7 +26,7 @@ class WidgetPresenter
       @view.link_to("",
                     {:action => "report_only",
                      :type   => "hybrid",
-                     :rr_id  => @widget.contents_for_user(session[:userid]).miq_report_result_id},
+                     :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id                => "w_#{@widget.id}_fullscreen",
                     :class             => "fullscreenbox",
                     :title             => _("Open the chart and full report in a new window"),
@@ -37,7 +37,7 @@ class WidgetPresenter
       @view.link_to("",
                     {:action => "report_only",
                      :type   => "tabular",
-                     :rr_id  => @widget.contents_for_user(session[:userid]).miq_report_result_id},
+                     :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id                => "w_#{@widget.id}_fullscreen",
                     :class             => "fullscreenbox",
                     :title             => _("Open the full report in a new window"),
@@ -79,7 +79,7 @@ class WidgetPresenter
     if PdfGenerator.available? && %w(report chart).include?(@widget.content_type)
       @view.link_to("",
                     {:action => "widget_to_pdf",
-                     :rr_id  => @widget.contents_for_user(session[:userid]).miq_report_result_id},
+                     :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id    => "w_#{@widget.id}_pdf",
                     :class => "pdfbox",
                     :title => _("Download the full report (all rows) as a PDF file"))

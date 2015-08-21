@@ -12,6 +12,7 @@
   function getStates() {
     return {
       'order-history': {
+        parent: 'application',
         url: '/order-history',
         redirectTo: 'order-history.list',
         template: '<ui-view></ui-view>'

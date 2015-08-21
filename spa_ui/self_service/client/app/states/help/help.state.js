@@ -12,6 +12,7 @@
   function getStates() {
     return {
       'help': {
+        parent: 'application',
         url: '/',
         templateUrl: 'app/states/help/help.html',
         controller: StateController,

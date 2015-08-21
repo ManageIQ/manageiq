@@ -3,7 +3,12 @@ require "spec_helper"
 describe ApplicationHelper do
   before do
     controller.send(:extend, ApplicationHelper)
+    controller.send(:extend, ApplicationController::CurrentUser)
     self.class.send(:include, ApplicationHelper)
+    self.class.send(:include, ApplicationController::CurrentUser)
+  end
+
+  def self.hide_action(*args)
   end
 
   def method_missing(sym, *args)

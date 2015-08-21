@@ -1219,7 +1219,10 @@ module ApplicationHelper
   end
 
   def miq_tab_header(id, active = nil, options = {}, &block)
-    content_tag(:li, :class => "#{options[:class]} #{active == id ? 'active' : ''}", :id => "#{id}_tab") do
+    content_tag(:li,
+                :class     => "#{options[:class]} #{active == id ? 'active' : ''}",
+                :id        => "#{id}_tab",
+                'ng-click' => "changeAuthTab('#{id}');") do
       content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
         yield
       end
@@ -1381,4 +1384,8 @@ module ApplicationHelper
   end
 
   attr_reader :big_iframe
+
+  def appliance_name
+    MiqServer.my_server.name
+  end
 end

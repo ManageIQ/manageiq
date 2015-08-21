@@ -246,7 +246,7 @@ class DashboardController < ApplicationController
     widget_list = ""
     prev_type   = nil
     @available_widgets = []
-    MiqWidget.available_for_user(session[:userid]).sort_by { |a| a.content_type + a.title.downcase }.each do |w|
+    MiqWidget.available_for_user(current_user).sort_by { |a| a.content_type + a.title.downcase }.each do |w|
       @available_widgets.push(w.id)  # Keep track of widgets available to this user
       if !col_widgets.include?(w.id) && w.enabled
         image, tip = case w.content_type
@@ -341,7 +341,7 @@ class DashboardController < ApplicationController
 
     widget = MiqWidget.find_by_id(params[:widget].to_i)
     # Save the rr id for render_zgraph
-    @sb[:report_result_id] = widget.contents_for_user(session[:userid]).miq_report_result_id
+    @sb[:report_result_id] = widget.contents_for_user(current_user).miq_report_result_id
 
     render :update do |page|
       page.replace_html("lightbox_div", :partial => "zoomed_chart", :locals => {:widget => widget})

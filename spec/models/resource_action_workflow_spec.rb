@@ -22,7 +22,7 @@ describe ResourceActionWorkflow do
     end
 
     it "new from resource_action" do
-      @wf = ResourceActionWorkflow.new({}, @admin.name, @resource_action)
+      @wf = ResourceActionWorkflow.new({}, @admin, @resource_action)
       values = @wf.create_values_hash
       values.fetch_path(:workflow_settings, :resource_action_id).should == @resource_action.id
       @wf.dialog.id.should == @dialog.id
@@ -30,7 +30,7 @@ describe ResourceActionWorkflow do
 
     it "new from hash" do
       nh = {:workflow_settings => {:resource_action_id => @resource_action.id}}
-      @wf = ResourceActionWorkflow.new(nh, @admin.name, nil)
+      @wf = ResourceActionWorkflow.new(nh, @admin, nil)
       values = @wf.create_values_hash
       values.fetch_path(:workflow_settings, :resource_action_id).should == @resource_action.id
       @wf.dialog.id.should == @dialog.id
@@ -38,7 +38,7 @@ describe ResourceActionWorkflow do
 
     it "load default_value" do
       @dialog_field.update_attribute(:default_value, "testing default")
-      @wf = ResourceActionWorkflow.new({}, @admin.name, @resource_action)
+      @wf = ResourceActionWorkflow.new({}, @admin, @resource_action)
       @wf.value(@dialog_field.name).should == "testing default"
       df = @wf.dialog_field(@dialog_field.name)
       df.value.should == "testing default"
@@ -53,7 +53,7 @@ describe ResourceActionWorkflow do
 
     context "with workflow" do
       before(:each) do
-        @wf = ResourceActionWorkflow.new({}, @admin.name, @resource_action)
+        @wf = ResourceActionWorkflow.new({}, @admin, @resource_action)
       end
 
       it "set_value" do
@@ -67,7 +67,7 @@ describe ResourceActionWorkflow do
     end
 
     context "#submit_request" do
-      subject { ResourceActionWorkflow.new({}, @admin.name, resource_action, :target => target) }
+      subject { ResourceActionWorkflow.new({}, @admin, resource_action, :target => target) }
       let(:resource_action) { @resource_action }
 
       context "with request class" do

@@ -1227,6 +1227,7 @@ module ReportController::Reports::Editor
       rpt.col_options = Chargeback.report_col_options
       rpt.order = "Ascending"
       rpt.group = "y"
+      rpt.tz = @edit[:new][:tz]
     end
 
     # Remove when we support user sorting of trend reports
@@ -1588,7 +1589,7 @@ module ReportController::Reports::Editor
     end
 
     # Only show chargeback users choice if an admin
-    if ["administrator","super_administrator"].include?(session[:userrole])
+    if admin_user?
       @edit[:cb_users] = Hash.new
       User.all.each{|u| @edit[:cb_users][u.userid] = u.name}
     else

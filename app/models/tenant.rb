@@ -13,20 +13,7 @@ class Tenant < ActiveRecord::Base
   has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
   has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
 
-  has_many :tenant_resources
-  has_many :vm_or_templates,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "VmOrTemplate"
-  has_many :ext_management_systems,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "ExtManagementSystem"
-  has_many :providers,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "Provider"
-
+  has_many :tenant_quotas
   has_many :miq_groups, :foreign_key => :tenant_owner_id
   has_many :users, :through => :miq_groups
 
@@ -42,22 +29,16 @@ class Tenant < ActiveRecord::Base
 
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
+  validate  :validate_only_one_root
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']
   validates_attachment_content_type :login_logo, :content_type => ['image/png']
 
-  # FUTURE: this is currently called session[:vmdb_name]. use this temporarily then remove
-  alias_attribute :vmdb_name, :appliance_name
-
   before_save :nil_blanks
 
   def name
     tenant_attribute(:name, :company)
-  end
-
-  def appliance_name
-    tenant_attribute(:appliance_name, :name)
   end
 
   def login_text
@@ -108,11 +89,12 @@ class Tenant < ActiveRecord::Base
   end
 
   def self.root_tenant
-    default_tenant
+    roots.first
   end
 
   def self.seed
-    Tenant.create_with(:name => nil).find_or_create_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
+    Tenant.find_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL) ||
+      Tenant.create(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL).update_attributes(:name => nil)
   end
 
   private
@@ -134,10 +116,17 @@ class Tenant < ActiveRecord::Base
     self.domain = nil unless domain.present?
 
     self.name = nil unless name.present?
-    self.appliance_name = nil unless appliance_name.present?
   end
 
   def settings
     @vmdb_config ||= VMDB::Config.new("vmdb").config
+  end
+
+  # validates that there is only one tree
+  def validate_only_one_root
+    if !(parent_id || parent)
+      root = self.class.root_tenant
+      errors.add(:parent, "required") if root && root != self
+    end
   end
 end

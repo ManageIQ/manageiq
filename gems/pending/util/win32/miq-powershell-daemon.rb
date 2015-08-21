@@ -198,7 +198,7 @@ module MiqPowerShell
     end
 
     def self.get_log_dir
-      return nil unless Platform::OS == :win32
+      return nil unless Sys::Platform::OS == :windows
       ps_log_dir = $miqHostCfg ? $miqHostCfg.miqLogs : nil
       unless ps_log_dir.blank?
         ps_log_dir = File.join(ps_log_dir, "ps_log")

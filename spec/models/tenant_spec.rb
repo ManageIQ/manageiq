@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Tenant do
   let(:settings) { {} }
-  let(:tenant) { described_class.new(:domain => 'x.com') }
+  let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
 
   let(:default_tenant) do
     Tenant.seed
@@ -26,6 +26,34 @@ describe Tenant do
 
     it "detects non default" do
       expect(tenant).not_to be_default
+    end
+  end
+
+  describe "#name" do
+    let(:settings) { {:server => {:company => "settings"}} }
+
+    it "has default name" do
+      expect(tenant.name).to eq("My Company")
+    end
+
+    it "has custom name" do
+      tenant.name = "custom"
+      expect(tenant.name).to eq("custom")
+    end
+
+    it "doesnt read settings for regular tenant" do
+      tenant.name = nil
+      expect(tenant.name).to be_nil
+    end
+
+    it "has custom name for default tenant" do
+      default_tenant.name = "custom"
+      expect(default_tenant.name).to eq("custom")
+    end
+
+    it "reads settings for default tenant" do
+      expect(default_tenant[:name]).to be_nil
+      expect(default_tenant.name).to eq("settings")
     end
   end
 
@@ -184,9 +212,21 @@ describe Tenant do
     end
   end
 
-  context "temporary names" do
-    it "supports legacy appliance_name" do
-      expect(described_class.new(:appliance_name => 'vmdb').vmdb_name).to eq('vmdb')
+  context "#root_tenant" do
+    it "returns the root (not the default tenant)" do
+      Tenant.destroy_all
+      r = described_class.create(:subdomain => 'admin')
+      c = described_class.create(:parent => r)
+
+      expect(described_class.root_tenant).to eq(r)
+      expect(described_class.default_tenant).to eq(c)
+    end
+  end
+
+  describe "#description" do
+    it "has description" do
+      tenant.update_attributes(:description => 'very important vm')
+      expect(tenant.description).not_to be_nil
     end
   end
 
