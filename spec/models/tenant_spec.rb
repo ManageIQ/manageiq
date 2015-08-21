@@ -81,6 +81,14 @@ describe Tenant do
     end
   end
 
+  it "#parent_name" do
+    t1 = FactoryGirl.create(:tenant, :name => "T1", :parent => default_tenant)
+    t2 = FactoryGirl.create(:tenant, :name => "T2", :parent => t1, :divisible => false)
+
+    expect(t2.parent_name).to eql "T1"
+    expect(default_tenant.parent_name).to eql nil
+  end
+
   describe "#logo" do
     # would prefer if url was nil, but this is how paperclip works
     # but basically checking tht it is not /uploads/custom_logo

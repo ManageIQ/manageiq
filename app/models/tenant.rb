@@ -38,10 +38,16 @@ class Tenant < ActiveRecord::Base
   scope :all_tenants,  -> { where(:divisible => true) }
   scope :all_projects, -> { where(:divisible => false) }
 
+  virtual_column :parent_name, :type => :string
+
   before_save :nil_blanks
 
   def name
     tenant_attribute(:name, :company)
+  end
+
+  def parent_name
+    parent.try(:name)
   end
 
   def login_text
