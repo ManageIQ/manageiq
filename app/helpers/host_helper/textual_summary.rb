@@ -306,7 +306,9 @@ module HostHelper::TextualSummary
 
   def textual_used_tenants
     return nil unless @record.openstack_host?
-    textual_link(@record.cloud_tenants)
+    textual_link(@record.cloud_tenants,
+                 :as   => CloudTenant,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'cloud_tenants'))
   end
 
   def textual_vms

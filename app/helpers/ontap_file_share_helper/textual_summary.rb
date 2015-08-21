@@ -116,10 +116,14 @@ module OntapFileShareHelper::TextualSummary
   end
 
   def textual_datastores
-    textual_link(@record.storages)
+    textual_link(@record.storages,
+                 :as   => Storage,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'storages'))
   end
 
   def textual_vms
-    textual_link(@record.vms)
+    textual_link(@record.vms,
+                 :as   => Vm,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'vms'))
   end
 end
