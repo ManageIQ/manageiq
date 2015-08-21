@@ -26,7 +26,7 @@ class Metric::CiMixin::Capture::Rhevm < Metric::CiMixin::Capture::Base
   # Capture methods
   #
 
-  def perf_collect_metrics_rhevm(interval_name, start_time = nil, end_time = nil)
+  def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
     start_time ||= 1.week.ago

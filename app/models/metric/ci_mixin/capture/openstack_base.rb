@@ -1,5 +1,5 @@
 class Metric::CiMixin::Capture::OpenstackBase < Metric::CiMixin::Capture::Base
-  def perf_collect_metrics_openstack(capture_data_method, interval_name, start_time = nil, end_time = nil)
+  def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
     end_time   ||= Time.now
@@ -11,7 +11,7 @@ class Metric::CiMixin::Capture::OpenstackBase < Metric::CiMixin::Capture::Base
 
     begin
       @perf_ems = perf_init_openstack
-      send(capture_data_method, start_time, end_time)
+      perf_capture_data(start_time, end_time)
     rescue Exception => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")

@@ -1,5 +1,5 @@
 class Metric::CiMixin::Capture::Openstack < Metric::CiMixin::Capture::OpenstackBase
-  def perf_capture_data_openstack(start_time, end_time)
+  def perf_capture_data(start_time, end_time)
     resource_filter = {"field" => "resource_id", "value" => target.ems_ref}
     metadata_filter = {"field" => "metadata.instance_id", "value" => target.ems_ref}
 

@@ -1,30 +1,32 @@
 module Metric::CiMixin::Capture
-  def perf_collect_metrics(*args)
+  def perf_capture_object
     case self
     when ManageIQ::Providers::Vmware::InfraManager::Host, ManageIQ::Providers::Vmware::InfraManager::Vm
-      Metric::CiMixin::Capture::Vim.new(self).perf_collect_metrics_vim(*args)
+      Metric::CiMixin::Capture::Vim.new(self)
     when ManageIQ::Providers::Redhat::InfraManager::Host, ManageIQ::Providers::Redhat::InfraManager::Vm
-      Metric::CiMixin::Capture::Rhevm.new(self).perf_collect_metrics_rhevm(*args)
+      Metric::CiMixin::Capture::Rhevm.new(self)
     when ManageIQ::Providers::Amazon::CloudManager::Vm
-      Metric::CiMixin::Capture::Amazon.new(self).perf_collect_metrics_amazon(*args)
+      Metric::CiMixin::Capture::Amazon.new(self)
     when ManageIQ::Providers::Openstack::CloudManager::Vm
-      Metric::CiMixin::Capture::Openstack.new(self).perf_collect_metrics_openstack('perf_capture_data_openstack', *args)
+      Metric::CiMixin::Capture::Openstack.new(self)
     when ManageIQ::Providers::Openstack::InfraManager::Host
-      Metric::CiMixin::Capture::OpenstackInfra.new(self).perf_collect_metrics_openstack('perf_capture_data_openstack_infra', *args)
-    else raise "Unsupported type #{self.class.name} (id: #{self.id})"
+      Metric::CiMixin::Capture::OpenstackInfra.new(self)
+    else raise "Unsupported type #{self.class.name} (id: #{id})"
     end
   end
 
+  delegate :perf_collect_metrics, :to => :perf_capture_object
+
   def queue_name_for_metrics_collection
     ems = if self.kind_of?(ExtManagementSystem)
-      self
-    elsif self.kind_of?(Storage)
-      self.ext_management_systems.first
-    elsif self.respond_to?(:ext_management_system)
-      self.ext_management_system
-    else
-      raise "Unsupported type #{self.class.name} (id: #{self.id})"
-    end
+            self
+          elsif self.kind_of?(Storage)
+            ext_management_systems.first
+          elsif self.respond_to?(:ext_management_system)
+            ext_management_system
+          else
+            raise "Unsupported type #{self.class.name} (id: #{id})"
+          end
 
     ems.class.name[3..-1].underscore
   end
@@ -155,7 +157,7 @@ module Metric::CiMixin::Capture
     _log.info "#{log_header} Capture for #{log_target}..."
 
     start_range = end_range = counters = counter_values = nil
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _, t = Benchmark.realtime_block(:total_time) do
       Benchmark.realtime_block(:capture_state) { self.perf_capture_state }
 
       counters_by_mor, counter_values_by_mor_and_ts = self.perf_collect_metrics(interval_name_for_capture, start_time, end_time)

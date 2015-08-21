@@ -1,5 +1,5 @@
 class Metric::CiMixin::Capture::Amazon < Metric::CiMixin::Capture::Base
-  def perf_collect_metrics_amazon(interval_name, start_time = nil, end_time = nil)
+  def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
     end_time   ||= Time.now

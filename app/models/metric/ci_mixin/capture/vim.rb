@@ -31,7 +31,7 @@ class Metric::CiMixin::Capture::Vim < Metric::CiMixin::Capture::Base
   # Capture methods
   #
 
-  def perf_collect_metrics_vim(interval_name, start_time = nil, end_time = nil)
+  def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     objects = target.to_miq_a
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
@@ -157,7 +157,4 @@ class Metric::CiMixin::Capture::Vim < Metric::CiMixin::Capture::Base
 
     return counter_values_by_mor_and_ts
   end
-
-
-
 end
