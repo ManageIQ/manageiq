@@ -16,9 +16,11 @@ class ApiController
 
     def run_resource_reports(_type, id, _data)
       report = MiqReport.find(id)
-      report.queue_generate_table do |task, report_result|
-        return run_report_result(true, "running report #{report.id}", :task_id => task.id, :report_result_id => report_result.id)
-      end
+      report_result = MiqReportResult.find(report.queue_generate_table)
+      run_report_result(true,
+                        "running report #{report.id}",
+                        :task_id          => report_result.miq_task_id,
+                        :report_result_id => report_result.id)
     rescue => err
       run_report_result(false, err.to_s)
     end

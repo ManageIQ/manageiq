@@ -124,7 +124,7 @@ module MiqReport::Generator
     @report ||= YAML.object_maker(MIQ_Report, self.attributes)
   end
 
-  def queue_generate_table(options = {}, &block)
+  def queue_generate_table(options = {})
     options[:userid]        ||= "system"
     options[:mode]          ||= "async"
     options[:report_source] ||= "Requested by user"
@@ -165,7 +165,6 @@ module MiqReport::Generator
       )
     end
 
-    block.call(task, report_result) if block_given?
     return report_result.id
   end
 
