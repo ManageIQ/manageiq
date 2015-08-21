@@ -19,7 +19,6 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
-gem "momentjs-rails",                 "~>2.10.3"
 gem "patternfly-sass",                "~>2.2.0"
 gem "sass-rails"
 
@@ -121,6 +120,11 @@ source "https://rails-assets.org" do
   gem "rails-assets-bootstrap-hover-dropdown", "~>2.0.11"
   gem "rails-assets-bootstrap-select",         "~>1.7.3"
   gem "rails-assets-kubernetes-topology-graph", "=0.0.17"
+  gem "rails-assets-moment",                   "~>2.10.3"
+  gem "rails-assets-moment-strftime",          "~>0.1.4"
+  gem "rails-assets-moment-timezone",          "~>0.4.0"
+  gem "rails-assets-sprintf",                  "~>1.0.3"
+  gem "rails-assets-numeral",                  "~>1.5.3"
 end
 
 #

@@ -5,6 +5,10 @@
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require moment
+//= require moment-strftime
+//= require moment-timezone
+//= require sprintf
+//= require numeral
 //= require miq_angular_application
 //= require services/miq_service
 //= require services/miq_db_backup_service
@@ -76,3 +80,4 @@
 //= require spin
 //= require jquery-hotkeys
 //= require lodash
+//= require miq_formatters
