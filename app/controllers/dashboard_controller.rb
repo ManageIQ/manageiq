@@ -191,7 +191,7 @@ class DashboardController < ApplicationController
 
       next if @sb[:dashboards]
       # get user dashboard version
-      ws = MiqWidgetSet.where_unique_on(db.name, session[:group], session[:userid]).first
+      ws = MiqWidgetSet.where_unique_on(db.name, current_user).first
       # update user's copy if group dashboard has been updated by admin
       if ws && ws.set_data && (!ws.set_data[:last_group_db_updated] ||
          (ws.set_data[:last_group_db_updated] && db.updated_on > ws.set_data[:last_group_db_updated]))
@@ -212,7 +212,7 @@ class DashboardController < ApplicationController
     end
 
     @sb[:dashboards] ||= {}
-    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
 
     # if all of user groups dashboards have been deleted and they are logged in, need to reset active_db_id
     if ws.nil?
@@ -230,7 +230,7 @@ class DashboardController < ApplicationController
       @tabs.push([ws.id.to_s, db.description])
     # User's group has dashboards, delete userid|default dashboard if it exists, dont need to keep that
     else
-      db = MiqWidgetSet.where_unique_on("default", session[:group], session[:userid]).first
+      db = MiqWidgetSet.where_unique_on("default", current_user).first
       db.destroy if db.present?
     end
 
@@ -297,7 +297,7 @@ class DashboardController < ApplicationController
   # Destroy and recreate a user's dashboard from the default
   def reset_widgets
     assert_privileges("dashboard_reset")
-    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
     ws.destroy unless ws.nil?
     ws = create_user_dashboard(@sb[:active_db_id])
     @sb[:dashboards] = nil  # Reset dashboards hash so it gets recreated
@@ -379,7 +379,7 @@ class DashboardController < ApplicationController
       @sb[:dashboards][@sb[:active_db]][:col2].delete(w)
       @sb[:dashboards][@sb[:active_db]][:col3].delete(w)
       @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
-      ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+      ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
       w = MiqWidget.find_by_id(w)
       ws.remove_member(w) if w
       save_user_dashboards
@@ -404,7 +404,7 @@ class DashboardController < ApplicationController
       else
         @sb[:dashboards][@sb[:active_db]][:col1].insert(0, w)
       end
-      ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+      ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
       w = MiqWidget.find_by_id(w)
       ws.add_member(w) if w
       save_user_dashboards
@@ -708,8 +708,8 @@ class DashboardController < ApplicationController
 
   # Create a user's dashboard, pass in dashboard id if that is used to copy else use default dashboard
   def create_user_dashboard(db_id = nil)
-    db = db_id ? MiqWidgetSet.find_by_id(db_id) : MiqWidgetSet.where_unique_on("default", nil, nil).first
-    ws = MiqWidgetSet.where_unique_on(db.name, session[:group], session[:userid]).first
+    db = db_id ? MiqWidgetSet.find_by_id(db_id) : MiqWidgetSet.where_unique_on("default").first
+    ws = MiqWidgetSet.where_unique_on(db.name, current_user).first
     if ws.nil?
       # Create new db if it doesn't exist
       ws = MiqWidgetSet.new(:name       => db.name,
@@ -731,7 +731,7 @@ class DashboardController < ApplicationController
 
   # Save dashboards for user
   def save_user_dashboards
-    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
     ws.set_data = @sb[:dashboards][@sb[:active_db]]
     ws.save
   end

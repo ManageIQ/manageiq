@@ -13,7 +13,7 @@ module ReportController::Dashboards
       err = false
       dashboard_order = Array.new
       @edit[:new][:dashboard_order].each do |n|
-        dashboard_order.push(MiqWidgetSet.where_unique_on(n, nil, nil).first.id)
+        dashboard_order.push(MiqWidgetSet.where_unique_on(n).first.id)
       end
         g = MiqGroup.find(from_cid(@sb[:nodes][2]))
         g.settings ||= Hash.new
@@ -81,7 +81,7 @@ module ReportController::Dashboards
           AuditEvent.success(build_saved_audit(@db, @edit))
           add_flash(_("%{model} \"%{name}\" was saved") % {:model=>"Dashboard", :name=>@db.name})
           if params[:button] == "add"
-            widgetset = MiqWidgetSet.where_unique_on(@edit[:new][:name], nil, nil).first
+            widgetset = MiqWidgetSet.where_unique_on(@edit[:new][:name]).first
             settings = g.settings ? g.settings : Hash.new
             settings[:dashboard_order] = settings[:dashboard_order] ? settings[:dashboard_order] : Array.new
             settings[:dashboard_order].push(widgetset.id) if !settings[:dashboard_order].include?(widgetset.id)
@@ -213,7 +213,7 @@ module ReportController::Dashboards
   def db_get_node_info
     @sb[:nodes] = x_node.split('-')
     if @sb[:nodes].length == 1
-      @default_ws = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
+      @default_ws = MiqWidgetSet.where_unique_on("default").where(:read_only => true).first
       @right_cell_text = _("All %s") % "Dashboards"
       @right_cell_div  = "db_list"
       @db_nodes = Hash.new

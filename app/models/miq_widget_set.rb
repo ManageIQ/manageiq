@@ -8,7 +8,7 @@ class MiqWidgetSet < ActiveRecord::Base
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
 
   def self.with_users
-    where(arel_table[:userid].not_eq(nil))
+    where.not(:userid => nil)
   end
 
   def destroy_user_versions
@@ -20,7 +20,9 @@ class MiqWidgetSet < ActiveRecord::Base
     MiqWidgetSet.with_users.where(:name => name, :group_id => owner_id).destroy_all
   end
 
-  def self.where_unique_on(name, group_id, userid)
+  def self.where_unique_on(name, user = nil)
+    userid = user.try(:userid)
+    group_id = user.try(:current_group_id)
     # a unique record is defined by name, group_id and userid
     where(:name => name, :group_id => group_id, :userid => userid)
   end

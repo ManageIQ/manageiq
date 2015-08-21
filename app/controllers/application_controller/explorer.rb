@@ -412,7 +412,7 @@ module ApplicationController::Explorer
       return count_only ? objects.length : objects
     when :db
       objects = Array.new
-      @default_ws = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
+      @default_ws = MiqWidgetSet.where_unique_on("default").where(:read_only => true).first
       text = "#{@default_ws.description} (#{@default_ws.name})"
       objects.push(:id=>to_cid(@default_ws.id),:text=>text, :image=>"dashboard", :tip=>text )
       objects.push({:id=>"g", :text=>"All Groups", :image=>"folder", :tip=>"All Groups"})
