@@ -8,7 +8,7 @@ class MiqWidgetSet < ActiveRecord::Base
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
 
   def self.with_users
-    where(arel_table[:userid].not_eq(nil))
+    where.not(:userid => nil)
   end
 
   def destroy_user_versions
