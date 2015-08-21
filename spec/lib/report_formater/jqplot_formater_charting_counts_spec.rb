@@ -4,15 +4,15 @@ describe ReportFormatter::JqplotFormatter do
   context '#build_reporting_chart_dim2' do
     it 'builds a stacked chart' do
       report = MiqReport.new(
-        :db        => "Vm",
-        :cols      => %w(os_image_name),
-        :include   => {"ext_management_system"=>{"columns"=>["name"]}},
-        :col_order => ["ext_management_system.name", "os_image_name"],
-        :headers   => ["Cloud/Infrastructure Provider Name", "OS Name"],
-        :order     => "Ascending",
-        :group     => nil,
-        :graph     => {:type=>"StackedBar", :mode=>"counts", :column=>nil, :count=>10, :other=>false},
-        :dims      => 2,
+        :db          => "Vm",
+        :cols        => %w(os_image_name),
+        :include     => {"ext_management_system" => {"columns" => ["name"]}},
+        :col_order   => ["ext_management_system.name", "os_image_name"],
+        :headers     => ["Cloud/Infrastructure Provider Name", "OS Name"],
+        :order       => "Ascending",
+        :group       => nil,
+        :graph       => {:type => "StackedBar", :mode => "counts", :column => nil, :count => 10, :other => false},
+        :dims        => 2,
         :col_options => {},
         :rpt_options => {},
         :sortby      => %w(ext_management_system.name os_image_name)
@@ -20,7 +20,7 @@ describe ReportFormatter::JqplotFormatter do
 
       report.table = Ruport::Data::Table.new(
         :column_names => %w(os_image_name ext_management_system.name id),
-        :data => [
+        :data         => [
           %w(linux_centos MTC-RHEVM-3.0 10000000000012),
           %w(linux_centos MTC-RHEVM-3.0 10000000000013),
           %w(linux_redhat MTC-RHEVM-3.1 10000000000014),
@@ -39,7 +39,7 @@ describe ReportFormatter::JqplotFormatter do
 
       expect(report.chart[:data]).to eq([[2, 1], [0, 1]])
       expect(report.chart[:options][:seriesDefaults][:renderer]).to eq("jQuery.jqplot.BarRenderer")
-      expect(report.chart[:options][:series]).to eq([{:label=>"linux_centos"}, {:label=>"linux_redhat"}])
+      expect(report.chart[:options][:series]).to eq([{:label => "linux_centos"}, {:label => "linux_redhat"}])
     end
   end
 
@@ -54,7 +54,7 @@ describe ReportFormatter::JqplotFormatter do
         :order       => "Ascending",
         :sortby      => ["os_image_name"],
         :group       => nil,
-        :graph       => {:type=>"Pie", :mode=>"counts", :column=>nil, :count=>10, :other=>true},
+        :graph       => {:type => "Pie", :mode => "counts", :column => nil, :count => 10, :other => true},
         :dims        => 1,
         :col_options => {},
         :rpt_options => {},
@@ -62,11 +62,11 @@ describe ReportFormatter::JqplotFormatter do
 
       report.table = Ruport::Data::Table.new(
         :column_names => %w(os_image_name id),
-        :data => [
-          ["linux_esx", 10000000000005],
-          ["linux_esx", 10000000000006],
-          ["linux_esx", 10000000000007],
-          ["widloze",   10000000000008],
+        :data         => [
+          ["linux_esx", 5],
+          ["linux_esx", 6],
+          ["linux_esx", 7],
+          ["widloze",   8],
         ]
       )
 
