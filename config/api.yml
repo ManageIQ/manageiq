@@ -489,6 +489,7 @@
   :results:
     :description: Report Results
     :options:
+    - :collection
     - :subcollection
     :methods: *70174834086080
     :klass: MiqReportResult
