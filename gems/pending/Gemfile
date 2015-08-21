@@ -7,11 +7,10 @@ gem "bundler",       ">= 1.8.4"
 gem "rake",          "~>10.1"
 gem "iniparse"
 
-RAILS_VERSION = "~>4.2.3"
-gem "activesupport", RAILS_VERSION
+gem "activesupport",           "~>4.2.3"
 
 # ActiveRecord is used by appliance_console
-gem "activerecord",  RAILS_VERSION
+gem "activerecord",            "~>4.2.3"
 
 # Not locally modified and not required
 gem "apipie-bindings",         "~>0.0.12",          :require => false
