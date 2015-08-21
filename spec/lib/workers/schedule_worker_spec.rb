@@ -161,11 +161,11 @@ describe ScheduleWorker do
         describe "#rufus_add_normal_schedule" do
           context "with the cron method" do
             it "adds jobs to the worker's schedules" do
-              @schedule_worker.instance_variable_set(:@schedules, {:scheduler => []})
+              @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
               interval = "0 2 * * *"
               options = {
-                :method => :cron,
-                :interval => interval,
+                :method      => :cron,
+                :interval    => interval,
                 :schedule_id => "12345"
               }
 
@@ -306,7 +306,7 @@ describe ScheduleWorker do
 
               scheduled_jobs.each do |job|
                 case job.tags
-                when ["ldap_synchronization", "ldap_synchronization_schedule"]
+                when %w(ldap_synchronization ldap_synchronization_schedule)
                   job.should be_kind_of(Rufus::Scheduler::CronJob)
                   job.original.should == @ldap_synchronization_collection[:ldap_synchronization_schedule]
                   job.call
@@ -317,7 +317,9 @@ describe ScheduleWorker do
 
                   MiqQueue.delete_all
                 else
-                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, handler=#{job.handler.inspect}"
+                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
+                        "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
+                        "handler=#{job.handler.inspect}"
                 end
 
                 job.unschedule
@@ -338,7 +340,6 @@ describe ScheduleWorker do
             end
           end
         end
-
 
         context "Database operations role" do
           before(:each) do
@@ -370,7 +371,7 @@ describe ScheduleWorker do
 
               scheduled_jobs.each do |job|
                 case job.tags
-                when ["database_operations", "database_metrics_collection_schedule"]
+                when %w(database_operations database_metrics_collection_schedule)
                   job.should be_kind_of(Rufus::Scheduler::CronJob)
                   job.original.should == @metrics_collection[:collection_schedule]
                   job.call
@@ -382,7 +383,7 @@ describe ScheduleWorker do
                   message.zone.should be_nil
 
                   MiqQueue.delete_all
-                when ["database_operations", "database_metrics_daily_rollup_schedule"]
+                when %w(database_operations database_metrics_daily_rollup_schedule)
                   job.should be_kind_of(Rufus::Scheduler::CronJob)
                   job.original.should == @metrics_collection[:daily_rollup_schedule]
                   job.call
@@ -394,7 +395,7 @@ describe ScheduleWorker do
                   message.zone.should be_nil
 
                   MiqQueue.delete_all
-                when ["database_operations", "database_metrics_purge_schedule"]
+                when %w(database_operations database_metrics_purge_schedule)
                   job.should be_kind_of(Rufus::Scheduler::CronJob)
                   job.original.should == @metrics_history[:purge_schedule]
                   job.call
@@ -410,7 +411,9 @@ describe ScheduleWorker do
 
                   MiqQueue.delete_all
                 else
-                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, handler=#{job.handler.inspect}"
+                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
+                        "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
+                        "handler=#{job.handler.inspect}"
                 end
 
                 job.unschedule
@@ -428,7 +431,7 @@ describe ScheduleWorker do
 
               scheduled_jobs.each do |job|
                 case job.tags
-                when ["database_operations", "database_metrics_collection_schedule"]
+                when %w(database_operations database_metrics_collection_schedule)
                   job.should be_kind_of(Rufus::Scheduler::CronJob)
                   job.original.should == @metrics_collection[:collection_schedule]
                   job.call
@@ -440,7 +443,7 @@ describe ScheduleWorker do
                   message.zone.should be_nil
 
                   MiqQueue.delete_all
-                when ["database_operations", "database_metrics_daily_rollup_schedule"]
+                when %w(database_operations database_metrics_daily_rollup_schedule)
                   job.should be_kind_of(Rufus::Scheduler::CronJob)
                   job.original.should == @metrics_collection[:daily_rollup_schedule]
                   job.call
@@ -452,7 +455,7 @@ describe ScheduleWorker do
                   message.zone.should be_nil
 
                   MiqQueue.delete_all
-                when ["database_operations", "database_metrics_purge_schedule"]
+                when %w(database_operations database_metrics_purge_schedule)
                   job.should be_kind_of(Rufus::Scheduler::CronJob)
                   job.original.should == @metrics_history[:purge_schedule]
                   job.call
@@ -468,7 +471,9 @@ describe ScheduleWorker do
 
                   MiqQueue.delete_all
                 else
-                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, handler=#{job.handler.inspect}"
+                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
+                        "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
+                        "handler=#{job.handler.inspect}"
                 end
 
                 job.unschedule
@@ -559,14 +564,16 @@ describe ScheduleWorker do
               @schedule_worker.do_work
 
               case job.tags
-              when ["ems_event", "purge_schedule"]
+              when %w(ems_event purge_schedule)
                 messages = MiqQueue.where(:class_name  => "EmsEvent", :method_name => "purge_timer")
                 messages.count.should == 1
-              when ["policy_event", "purge_schedule"]
+              when %w(policy_event purge_schedule)
                 messages = MiqQueue.where(:class_name  => "PolicyEvent", :method_name => "purge_timer")
                 messages.count.should == 1
               else
-                raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, handler=#{job.handler.inspect}"
+                raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
+                      "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
+                      "handler=#{job.handler.inspect}"
               end
 
               job.unschedule
