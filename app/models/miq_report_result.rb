@@ -26,10 +26,10 @@ class MiqReportResult < ActiveRecord::Base
 
   include ReportableMixin
 
-  delegate :table, :to => :report_results
+  delegate :table, :to => :report_results, :allow_nil => true
 
   def result_set
-    table.map(&:to_hash)
+    (table || []).map(&:to_hash)
   end
 
   def status

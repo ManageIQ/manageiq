@@ -452,8 +452,12 @@
     :description: Reports
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: MiqReport
+    :resource_actions:
+      :post:
+      - :name: run
+        :identifier: miq_report_run
     :subcollections:
     - :results
   :request_tasks:
@@ -509,6 +513,7 @@
   :results:
     :description: Report Results
     :options:
+    - :collection
     - :subcollection
     :methods: *70174834086080
     :klass: MiqReportResult
