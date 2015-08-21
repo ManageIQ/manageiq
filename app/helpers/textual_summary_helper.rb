@@ -57,6 +57,13 @@ def textual_tags
   end
 
   def textual_collection_link(collection, as: nil, controller: nil, explorer: false, feature: nil, link: nil)
+    if collection.kind_of?(Array)
+      unless as && link
+        raise ArgumentError, ":as and :link are both required when linking to an array",
+              caller.reject { |x| x =~ /^#{__FILE__}:/ }
+      end
+    end
+
     klass = as || collection.klass.base_model
 
     controller ||= klass.name.underscore
