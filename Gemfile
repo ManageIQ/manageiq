@@ -5,7 +5,7 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 #
 
 gem "activerecord-deprecated_finders", "~>1.0.4",  :require => "active_record/deprecated_finders"
-gem "rails",                           RAILS_VERSION
+gem "rails",                           "~>4.2.3"
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
