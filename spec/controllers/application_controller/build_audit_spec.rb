@@ -14,6 +14,15 @@ describe ApplicationController do
                    :message => "VMDB config updated (changing_value:[test] to [test2], password:[*] to [*])"}
     end
 
+    it "tests build_config_audit password filtering" do
+      edit = {:current => {:user_proxies => [{:ldapport => "389", :bind_pwd => "secret"}]},
+              :new     => {:user_proxies => [{:ldapport => "636", :bind_pwd => "super_secret"}]}}
+      controller.send(:build_config_audit, edit[:new], edit[:current])
+        .should == {:event   => "vmdb_config_update",
+                    :userid  => nil,
+                    :message => 'VMDB config updated (user_proxies:[[{:ldapport=>"389", :bind_pwd=>"[FILTERED]"}]] to [[{:ldapport=>"636", :bind_pwd=>"[FILTERED]"}]])'}
+    end
+
     it "tests build_created_audit" do
       category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
       edit = {:new     => {:name => "the-name", :changing_value=>"test2", :static_value=>"same",
