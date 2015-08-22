@@ -246,7 +246,7 @@ class ApplicationController < ActionController::Base
     send_data(rr.to_pdf, :filename => "#{filename}.pdf", :type => 'application/pdf')
   end
 
-  RENDER_TYPES = {'txt' => 'txt', 'csv' => 'csv', 'pdf' => 'pdf'}
+  RENDER_TYPES = {'txt' => :txt, 'csv' => :csv, 'pdf' => :pdf}
 
   # Render report in csv/txt/pdf format asynchronously
   def render_report_data
@@ -254,7 +254,7 @@ class ApplicationController < ActionController::Base
     assert_privileges("render_report_#{render_type}")
     unless params[:task_id] # First time thru, kick off the report generate task
       if render_type
-        @sb[:render_type] = render_type.to_sym
+        @sb[:render_type] = render_type
         rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
         task_id = rr.async_generate_result(@sb[:render_type], :userid     => session[:userid],
                                                               :session_id => request.session_options[:id])
