@@ -14,7 +14,7 @@ begin
     puts "\t#{t.name}\t(#{t.id})"
   end
 
-  unless os_handle.image_service_name == :glance
+  unless os_handle.image_service.name == :glance
     puts "Image service glance is not available, exiting."
     exit
   end

@@ -25,13 +25,9 @@ module ManageIQ
         @os_handle                  = ems.openstack_handle
         @compute_service            = @connection # for consistency
         @baremetal_service          = @os_handle.detect_baremetal_service
-        @baremetal_service_name     = @os_handle.baremetal_service_name
         @orchestration_service      = @os_handle.detect_orchestration_service
-        @orchestration_service_name = @os_handle.orchestration_service_name
         @image_service              = @os_handle.detect_image_service
-        @image_service_name         = @os_handle.image_service_name
         @storage_service            = @os_handle.detect_storage_service
-        @storage_service_name       = @os_handle.storage_service_name
       end
 
       def ems_inv_to_hashes

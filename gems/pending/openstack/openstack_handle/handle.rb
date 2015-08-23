@@ -100,7 +100,6 @@ module OpenstackHandle
       @address  = address
       @port     = port || 5000
 
-      @service_names      = {}
       @connection_cache   = {}
       @connection_options = self.class.connection_options
     end
@@ -110,9 +109,9 @@ module OpenstackHandle
     end
 
     def connect(options = {})
-      opts = options.dup
-      service  = (opts.delete(:service) || "Compute").to_s.camelize
-      tenant = opts.delete(:tenant_name)
+      opts    = options.dup
+      service = (opts.delete(:service) || "Compute").to_s.camelize
+      tenant  = opts.delete(:tenant_name)
       unless tenant
         tenant = "any_tenant" if service == "Identity"
         tenant ||= default_tenant_name
@@ -128,7 +127,7 @@ module OpenstackHandle
         # Allow openstack to define new services without explicitly requiring a
         # service wrapper.
         if OpenstackHandle.const_defined?(service_wrapper_name)
-          OpenstackHandle.const_get(service_wrapper_name).new(raw_service, self)
+          OpenstackHandle.const_get(service_wrapper_name).new(raw_service, self, SERVICE_NAME_MAP[service])
         else
           raw_service
         end
@@ -143,10 +142,6 @@ module OpenstackHandle
       detect_service("Baremetal", tenant_name)
     end
 
-    def baremetal_service_name
-      service_name("Baremetal")
-    end
-
     def orchestration_service(tenant_name = nil)
       connect(:service => "Orchestration", :tenant_name => tenant_name)
     end
@@ -155,20 +150,12 @@ module OpenstackHandle
       detect_service("Orchestration", tenant_name)
     end
 
-    def orchestration_service_name
-      service_name("Orchestration")
-    end
-
     def planning_service(tenant_name = nil)
       connect(:service => "Planning", :tenant_name => tenant_name)
     end
 
     def detect_planning_service(tenant_name = nil)
       detect_service("Planning", tenant_name)
-    end
-
-    def planning_service_name
-      service_name("Planning")
     end
 
     def compute_service(tenant_name = nil)
@@ -190,10 +177,6 @@ module OpenstackHandle
       detect_service("Network", tenant_name)
     end
 
-    def network_service_name
-      service_name("Network")
-    end
-
     def image_service(tenant_name = nil)
       connect(:service => "Image", :tenant_name => tenant_name)
     end
@@ -201,10 +184,6 @@ module OpenstackHandle
 
     def detect_image_service(tenant_name = nil)
       detect_service("Image", tenant_name)
-    end
-
-    def image_service_name
-      service_name("Image")
     end
 
     def volume_service(tenant_name = nil)
@@ -216,10 +195,6 @@ module OpenstackHandle
       detect_service("Volume", tenant_name)
     end
 
-    def volume_service_name
-      service_name("Volume")
-    end
-
     def storage_service(tenant_name = nil)
       connect(:service => "Storage", :tenant_name => tenant_name)
     end
@@ -229,13 +204,8 @@ module OpenstackHandle
       detect_service("Storage", tenant_name)
     end
 
-    def storage_service_name
-      service_name("Storage")
-    end
-
     def detect_service(service, tenant_name = nil)
       svc = connect(:service => service, :tenant_name => tenant_name)
-      @service_names[service] = SERVICE_NAME_MAP[service]
 
       #
       # For non-admin users, if the Swift ACLs aren't set to permit
@@ -249,25 +219,15 @@ module OpenstackHandle
         begin
           svc.directories.length
         rescue Excon::Errors::Forbidden
-          @service_names[service] = :none
           return nil
         end
       end
       svc
     rescue MiqException::ServiceNotAvailable
       unless (fbs = SERVICE_FALL_BACK[service])
-        @service_names[service] = :none
         return nil
       end
       svc = connect(:service => fbs, :tenant_name => tenant_name)
-      @service_names[service] = SERVICE_NAME_MAP[fbs]
-      svc
-    end
-
-    def service_name(service)
-      return @service_names[service] if @service_names[service]
-      detect_service(service)
-      @service_names[service]
     end
 
     def tenants
