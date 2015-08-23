@@ -12,11 +12,11 @@
     :text: Configuration
     :onwhen: '1+'
     :items:
-    - :button: ab_group_new
+    - :button: catalogitem_group_new
       :image: new
       :text: "Add a new Button Group"
       :title: "Add a new Button Group"
-    - :button: ab_button_new
+    - :button: catalogitem_button_new
       :image: new
       :text: "Add a new Button"
       :title: "Add a new Button"
