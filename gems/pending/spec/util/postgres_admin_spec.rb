@@ -35,6 +35,10 @@ describe PostgresAdmin do
       expect(described_class.start_command).to eql "service postgresql start"
     end
 
+    it ".logical_volume_path" do
+      expect(described_class.logical_volume_path.to_s).to eql "/dev/vg_data/lv_pg"
+    end
+
     context ".stop_command" do
       before do
         ENV["APPLIANCE_PG_CTL"]  = "/ctl/path"

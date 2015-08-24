@@ -50,7 +50,7 @@ class PostgresAdmin
   end
 
   def self.logical_volume_path
-    Pathname.new("/dev").join(VOLUME_GROUP_NAME, LOGICAL_VOLUME_NAME)
+    Pathname.new("/dev").join(volume_group_name, logical_volume_name)
   end
 
   def self.database_size(opts)
