@@ -1169,13 +1169,13 @@ module ApplicationController::CiProcessing
     begin
       case get_rec_cls.to_s
       when "OrchestrationStack"
-        objs = filter_ids_in_region(objs, "OrchestrationStack")
+        objs, _objs_out_reg = filter_ids_in_region(objs, "OrchestrationStack")
         klass = OrchestrationStack
       when "Service"
-        objs = filter_ids_in_region(objs, "Service")
+        objs, _objs_out_reg = filter_ids_in_region(objs, "Service")
         klass = Service
       when "VmOrTemplate"
-        objs = filter_ids_in_region(objs, "VM") unless VmOrTemplate::POWER_OPS.include?(task)
+        objs, _objs_out_reg = filter_ids_in_region(objs, "VM") unless VmOrTemplate::POWER_OPS.include?(task)
         klass = Vm
       end
 
