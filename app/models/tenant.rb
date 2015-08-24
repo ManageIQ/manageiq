@@ -90,7 +90,12 @@ class Tenant < ActiveRecord::Base
 
   # @return [Boolean] Is this a default tenant?
   def default?
-    subdomain == DEFAULT_URL && domain == DEFAULT_URL
+    root?
+  end
+
+  # @return [Boolean] Is this the root tenant?
+  def root?
+    !parent_id?
   end
 
   def tenant?
@@ -109,26 +114,36 @@ class Tenant < ActiveRecord::Base
     !!login_logo_file_name
   end
 
+  # The default tenant is the tenant to be used when
+  # the url does not map to a known domain or subdomain
+  #
+  # At this time, urls are not used, so the root tenant is returned
+  # @return [Tenant] default tenant
   def self.default_tenant
-    Tenant.find_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
+    root_tenant
   end
 
+  # the root tenant is also referred to as tenant0
+  # from this tenant, all tenants are positioned
+  #
+  # @return [Tenant] the root tenant
   def self.root_tenant
     roots.first
   end
 
   def self.seed
-    Tenant.find_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL) ||
-      Tenant.create(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL).update_attributes(:name => nil)
+    Tenant.root_tenant || Tenant.create.update_attributes!(:name => nil)
   end
 
   private
 
+  # when a root tenant has an attribute with a nil value,
+  #   read the value from the settings table instead
+  #
+  # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
     ret = self[attr_name]
-    # if the attribute is nil and we are the default tenant
-    # then use settings values
-    if ret.nil? && default?
+    if ret.nil? && root?
       ret = settings.fetch_path(:server, setting_name)
       block_given? ? yield(ret) : ret
     else
