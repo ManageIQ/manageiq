@@ -117,6 +117,7 @@ class TreeNodeBuilder
     when MiqRegion            then miq_region_node
     when MiqWidget            then generic_node(object.title, "#{object.content_type}_widget.png", object.title)
     when MiqWidgetSet         then generic_node(object.name, "dashboard.png", object.name)
+    when Tenant               then generic_node(object.name,  "#{object.tenant? ? "tenant" : "project"}.png")
     when VmdbTableEvm         then generic_node(object.name, "vmdbtableevm.png")
     when VmdbIndex            then generic_node(object.name, "vmdbindex.png")
     when Zone                 then zone_node

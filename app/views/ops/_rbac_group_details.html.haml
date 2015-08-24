@@ -1,6 +1,7 @@
 - if @edit
   - url = url_for(:action => 'rbac_group_field_changed',
                   :id     => "#{@edit[:group_id] || "new"}")
+  - combo_url = "/ops/rbac_group_field_changed/#{@edit[:group_id] || 'new'}"
 = render :partial => "layouts/flash_msg"
 #main_div
   .row
@@ -35,28 +36,47 @@
                 - if @group.miq_user_role
                   %table{:cellpadding => "0", :cellspacing => "0"}
                     %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');", :title => _("View this Role")}
-                      %td.image
-                        %ul.icons.list-unstyled
-                          %li
-                            %span.product.product-role
                       %td
+                        %span.product.product-role
                         = h(@group.miq_user_role.name)
               - else
-                = select_tag('group_role',
-                             options_for_select(@edit[:roles].sort, @edit[:new][:role]),
-                             "data-miq_observe" => {:url => url}.to_json)
+                #form-group
+                  = select_tag('group_role',
+                      options_for_select(@edit[:roles].sort, @edit[:new][:role]),
+                      "title" => "Choose",
+                      :class  => "selectpicker")
+                  :javascript
+                    miqSelectPickerEvent("group_role", "#{combo_url}")
+          %tr
+            %td.key= _("Project/Tenant")
+            %td{:style => @edit ? 'padding: 0px' : ''}
+              - if !@edit
+                - if @group.tenant_owner
+                  - tenant = @group.tenant_owner
+                  %table{:cellpadding => "0", :cellspacing => "0"}
+                    %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+                                :title   => _("View this #{tenant.divisible ? "Tenant" : "Project"}")}
+                      %td
+                        %span.product{:class => "product-#{tenant.divisible ? "tenant" : "project"}"}
+                        = h(tenant.name)
+              - else
+                #form-group
+                  = select_tag('group_tenant',
+                      grouped_options_for_select(@edit[:projects_tenants], @edit[:new][:group_tenant]),
+                      "title" => "Choose",
+                      :class  => "selectpicker")
+                  :javascript
+                    miqInitSelectPicker();
+                    miqSelectPickerEvent("group_tenant", "#{combo_url}")
           - unless @edit
             %tr
               %td.key= _("Users in this Group")
-              %td{:style => "padding: 0px"}
+              %td
                 %table{:cellpadding => "0", :cellspacing => "0"}
                   - @group.users.sort_by { |a| a.name.downcase }.each do |u|
                     %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'u-#{to_cid(u.id)}');", :title => _("View this User")}
-                      %td.image
-                        %ul.icons.list-unstyled
-                          %li
-                            %span.pficon.pficon-user
                       %td
+                        %span.pficon.pficon-user
                         = h(u.name)
       - unless @edit
         = render :partial => "rbac_tag_box"

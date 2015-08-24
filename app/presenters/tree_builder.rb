@@ -269,6 +269,7 @@ class TreeBuilder
                         when ServiceTemplateCatalog
                                                  then x_get_tree_stc_kids(parent, options)
                         when ServiceTemplate		 then x_get_tree_st_kids(parent, options)
+                        when Tenant              then x_get_tree_tenant_kids(parent, options)
                         when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
                         when Zone                then x_get_tree_zone_kids(parent, options)
                         when MiqSearch           then nil
@@ -439,6 +440,7 @@ class TreeBuilder
     "t"   => "MiqTemplate",
     "tb"  => "VmdbTable",
     "ti"  => "VmdbIndex",
+    "tn"  => "Tenant",
     "u"   => "User",
     "v"   => "Vm",
     "wi"  => "WindowsImage",

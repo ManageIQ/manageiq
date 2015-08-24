@@ -41,6 +41,10 @@ class OpsController < ApplicationController
     'rbac_user_copy'            => :rbac_user_copy,
     'rbac_user_delete'          => :rbac_user_delete,
     'rbac_user_tags_edit'       => :rbac_tags_edit,
+    'rbac_tenant_add'           => :rbac_tenant_add,
+    'rbac_project_add'          => :rbac_tenant_add,
+    'rbac_tenant_delete'        => :rbac_tenant_delete,
+    'rbac_tenant_edit'          => :rbac_tenant_edit,
     'refresh_audit_log'         => :refresh_audit_log,
     'refresh_log'               => :refresh_log,
     'refresh_production_log'    => :refresh_production_log,
@@ -632,6 +636,17 @@ class OpsController < ApplicationController
     elsif nodetype == "group_seq"
       presenter[:replace_partials][:flash_msg_div] = r[:partial => "layouts/flash_msg"]
       presenter[:update_partials][:rbac_details] = r[:partial => "ldap_seq_form"]
+    elsif nodetype == "tenant_edit"         # schedule edit
+      # when editing/adding schedule in settings tree
+      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_form"]
+      if !@tenant.id
+        @right_cell_text = _("Adding a new %s") % tenant_type_title_string(params[:tenant_type] == "tenant")
+      else
+        model = tenant_type_title_string(@tenant.divisible)
+        @right_cell_text = @edit ?
+          _("Editing %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
+          _("%{model} \"%{name}\"") % {:model => model, :name => @tenant.name}
+      end
     else
       presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
     end
@@ -648,6 +663,8 @@ class OpsController < ApplicationController
         "Groups"
       when "ur"
         "Roles"
+      when "tn"
+        "Tenants"
       end
     when "u"
       @user.name || "Users"
@@ -661,6 +678,8 @@ class OpsController < ApplicationController
       end
     when "ur"
       @role.name || "Roles"
+    when "tn"
+      @tenant.name || "Tenants"
     else
       "Details"
     end

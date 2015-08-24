@@ -1236,6 +1236,7 @@ Vmdb::Application.routes.draw do
         log_collection_form_fields
         schedule_form_fields
         show_product_update
+        tenant_form_fields
       ),
       :post => %w(
         accordion_select
@@ -1289,6 +1290,8 @@ Vmdb::Application.routes.draw do
         rbac_role_field_changed
         rbac_roles_list
         rbac_tags_edit
+        rbac_tenant_edit
+        rbac_tenants_list
         rbac_user_edit
         rbac_user_field_changed
         rbac_users_list

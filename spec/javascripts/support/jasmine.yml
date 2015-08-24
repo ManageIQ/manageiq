@@ -22,6 +22,7 @@ src_files:
   - javascripts/controllers/host/host_form_controller.js
   - javascripts/controllers/ops/diagnostics_database_form_controller.js
   - javascripts/controllers/ops/log_collection_form_controller.js
+  - javascripts/controllers/ops/tenant_form_controller.js
   - javascripts/controllers/schedule/schedule_form_controller.js
   - javascripts/controllers/repository/repository_form_controller.js
   - javascripts/controllers/retirement/retirement_form_controller.js
