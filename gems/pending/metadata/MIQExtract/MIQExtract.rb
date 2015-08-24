@@ -33,46 +33,46 @@ class MIQExtract
 
     # TODO: Should all be subclasses of MiqVm.
     #       Going forward, we should only pass in an MiqVm - so the "else" will be removed.
-		if filename.kind_of?(MiqVm) || filename.kind_of?(MiqOpenStackImage) || filename.kind_of?(MiqOpenStackInstance)
+		if filename.respond_to?(:vmRootTrees)
 			@externalMount = true
-			@vm = filename
-			@vmCfgFile = @vm.vmConfigFile
+			@target = filename
+			@configFile = filename.respond_to?(:vmConfigFile) ? @target.vmConfigFile : nil
 
-      $log.info "MIQExtract using config file: [#{@vmCfgFile}]  settings: [#{MiqPassword.sanitize_string(ost.scanData.inspect)}]"
+      $log.info "MIQExtract using config file: [#{@configFile}]  settings: [#{MiqPassword.sanitize_string(ost.scanData.inspect)}]"
 		else
 			@externalMount = false
-			@vmCfgFile = filename.gsub(/^"/, "").gsub(/"$/, "")
+			@configFile = filename.gsub(/^"/, "").gsub(/"$/, "")
 
-      $log.info "MIQExtract using config file: [#{@vmCfgFile}]  settings: [#{MiqPassword.sanitize_string(ost.scanData.inspect)}]"
+      $log.info "MIQExtract using config file: [#{@configFile}]  settings: [#{MiqPassword.sanitize_string(ost.scanData.inspect)}]"
       ost.openParent = true if ost.scanData.fetch_path('snapshot', 'use_existing')==true
       ost.force = false if ost.scanData.fetch_path('snapshot', 'forceFleeceDefault')==false
       ost.snapshotDescription = ost.scanData.fetch_path('snapshot', 'description') if ost.scanData.fetch_path('snapshot', 'description')
       ost.snapshot_create_free_space = ost.scanData.fetch_path('snapshot', 'create_free_percent') || 100
       ost.snapshot_remove_free_space = ost.scanData.fetch_path('snapshot', 'remove_free_percent') || 100
-			@vm = MiqVm.new(@vmCfgFile, ost)
+			@target = MiqVm.new(@configFile, ost)
 		end
 
 		# Set the system fs handle
 		begin
       st = Time.now
-      $log.info "Loading disk files for VM [#{@vmCfgFile}]"
-			@systemFs = @vm.vmRootTrees[0]
+      $log.info "Loading disk files for VM [#{@configFile}]"
+			@systemFs = @target.vmRootTrees[0]
 			if @systemFs.nil?
-				raise MiqException::MiqVmMountError, "No root filesystem found." if @vm.diskInitErrors.empty?
+				raise MiqException::MiqVmMountError, "No root filesystem found." if @target.diskInitErrors.empty?
 
 				err_msg = ''
-				@vm.diskInitErrors.each do |disk, err|
+				@target.diskInitErrors.each do |disk, err|
 					err = "#{err} - #{disk}" unless err.include?(disk)
 					err_msg += "#{err}\n"
         end
 				raise err_msg.chomp
       end
 
-			@systemFsMsg = "OS:[#{@systemFs.guestOS}] found on VM [#{@vmCfgFile}].  Loaded in [#{Time.now-st}] seconds"
+			@systemFsMsg = "OS:[#{@systemFs.guestOS}] found on VM [#{@configFile}].  Loaded in [#{Time.now-st}] seconds"
 			$log.info @systemFsMsg
 		rescue => err
 			@systemFsMsg = "Unable to mount filesystem.  Reason:[#{err}]"
-			$log.error "#{@systemFsMsg} for VM [#{@vmCfgFile}]"
+			$log.error "#{@systemFsMsg} for VM [#{@configFile}]"
       log_level = err.kind_of?(MiqException::Error) ? :debug : :error
       err.backtrace.each {|bt| $log.send(log_level, "MIQExtract.new #{bt}")}
 			close
@@ -103,7 +103,7 @@ class MIQExtract
 
         filters = []
         reg_filters[:HKCU].to_miq_a.each {|f| filters << {:key=>self.split_registry(f['key']).join('/'),:depth=>f['depth']}}
-        @scanProfiles.parse_data(@vm, RemoteRegistry.new(@systemFs, @xml_class).loadCurrentUser(filters)) unless filters.empty?
+        @scanProfiles.parse_data(@target, RemoteRegistry.new(@systemFs, @xml_class).loadCurrentUser(filters)) unless filters.empty?
 
         filters = {}
         reg_filters[:HKLM].each do |f|
@@ -115,14 +115,14 @@ class MIQExtract
         filters.each_pair do |k,v|
           regHnd = RemoteRegistry.new(@systemFs, @xml_class)
           xml = regHnd.loadHive(k, v)
-          @scanProfiles.parse_data(@vm, xml)
+          @scanProfiles.parse_data(@target, xml)
         end unless filters.empty?
         $log.info "Scanning [Profile-Registry] information ran for [#{Time.now-st}] seconds."
       end
     end
 
     # Pass in the MiqVm handle to do file parsing
-    @scanProfiles.parse_data(@vm, nil, &blk)
+    @scanProfiles.parse_data(@target, nil, &blk)
 
     return @scanProfiles.to_xml()
   end
@@ -162,7 +162,7 @@ class MIQExtract
 
 	def getVMConfig(c)
 		# Get VM config in XML format
-		config_xml = @vm.vmConfig.toXML(true, @vm)
+		config_xml = @target.vmConfig.toXML(true, @target)
 
 		begin
 			# Log snapshot data for diagnostic purposes
@@ -278,19 +278,19 @@ class MIQExtract
 	end
 
 	def getBaseConfigName
-		File.join(File.dirname(@vmCfgFile), File.basename(@vmCfgFile, ".*"))
+		File.join(File.dirname(@configFile), File.basename(@configFile, ".*"))
 	end
 
 	def close
 		return if @externalMount
 		# Call Unmount command if drive was succesfully mounted
-		unless @vm.nil? then
+		unless @target.nil? then
 			$log.debug "Unmounting..."
       begin
-  			@vm.unmount
+  			@target.unmount
     		$log.debug "Unmounting complete"
       rescue => err
-        $log.error "Error during disk unmounting for VM:[#{@vmCfgFile}]"
+        $log.error "Error during disk unmounting for VM:[#{@configFile}]"
         $log.debug err.backtrace.join("\n")
       ensure
         @ost.miqVim.disconnect if @ost.miqVim
