@@ -1,7 +1,6 @@
-module Metric::CiMixin::Capture::OpenstackBase
-  def perf_collect_metrics_openstack(capture_data_method, interval_name, start_time = nil, end_time = nil)
-    target = "[#{self.class.name}], [#{id}], [#{name}]"
-    log_header = "[#{interval_name}] for: #{target}"
+class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
+  def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
+    log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
     end_time   ||= Time.now
     end_time     = end_time.utc
@@ -12,7 +11,7 @@ module Metric::CiMixin::Capture::OpenstackBase
 
     begin
       @perf_ems = perf_init_openstack
-      send(capture_data_method, start_time, end_time)
+      perf_capture_data(start_time, end_time)
     rescue Exception => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
@@ -24,10 +23,10 @@ module Metric::CiMixin::Capture::OpenstackBase
   end
 
   def perf_init_openstack
-    raise "No EMS defined" if ext_management_system.nil?
+    raise "No EMS defined" if target.ext_management_system.nil?
 
     metering_service, _ = Benchmark.realtime_block(:connect) do
-      ext_management_system.connect(:service => "Metering")
+      target.ext_management_system.connect(:service => "Metering")
     end
     metering_service
   end
@@ -38,7 +37,7 @@ module Metric::CiMixin::Capture::OpenstackBase
 
   def perf_capture_data_openstack_base(metric_capture_module, start_time, end_time, resource_filter, metadata_filter)
     log_header = "#{_log.prefix} [#{start_time} - #{end_time}]"
-    $log.debug "#{log_header} id:[#{name}] start_time: #{start_time}, end_time: #{end_time}"
+    $log.debug "#{log_header} id:[#{target.name}] start_time: #{start_time}, end_time: #{end_time}"
 
     counters = find_meter_counters(metric_capture_module, resource_filter, metadata_filter, log_header)
 
@@ -63,8 +62,8 @@ module Metric::CiMixin::Capture::OpenstackBase
 
     counter_values_by_ts = process_statistics(metric_capture_module, metrics_by_counter_name, data_collecting_period,
                                               log_header)
-    counters_by_id              = {ems_ref => metric_capture_module::VIM_STYLE_COUNTERS}
-    counter_values_by_id_and_ts = {ems_ref => counter_values_by_ts}
+    counters_by_id              = {target.ems_ref => metric_capture_module::VIM_STYLE_COUNTERS}
+    counter_values_by_id_and_ts = {target.ems_ref => counter_values_by_ts}
     return counters_by_id, counter_values_by_id_and_ts
   end
 
@@ -93,10 +92,10 @@ module Metric::CiMixin::Capture::OpenstackBase
 
   def list_resource_meters(resource_filter, log_header)
     if resource_filter
-      $log.debug "#{log_header} id:[#{name}] getting resource counters using resource filter: #{resource_filter}"
+      $log.debug "#{log_header} id:[#{target.name}] getting resource counters using resource filter: #{resource_filter}"
       counters = list_meters(resource_filter)
     else
-      $log.debug "#{log_header} id:[#{name}] no resource filter provided"
+      $log.debug "#{log_header} id:[#{target.name}] no resource filter provided"
       counters = []
     end
     counters
@@ -104,10 +103,10 @@ module Metric::CiMixin::Capture::OpenstackBase
 
   def list_metadata_meters(metadata_filter, log_header)
     if metadata_filter
-      $log.debug "#{log_header} id:[#{name}] getting metadata counters using metadata filter: #{metadata_filter}"
+      $log.debug "#{log_header} id:[#{target.name}] getting metadata counters using metadata filter: #{metadata_filter}"
       counters = list_meters(metadata_filter)
     else
-      $log.debug "#{log_header} id:[#{name}] no metadata filter provided"
+      $log.debug "#{log_header} id:[#{target.name}] no metadata filter provided"
       counters = []
     end
     counters
@@ -147,12 +146,12 @@ module Metric::CiMixin::Capture::OpenstackBase
       timestamps = timestamps.flatten.compact.uniq.sort
 
       if i[:openstack_counters].count == 1
-        $log.debug "#{log_header} id:[#{name}] started collecting single counter stats for: "\
+        $log.debug "#{log_header} id:[#{target.name}] started collecting single counter stats for: "\
                    "#{i[:openstack_counters]}, with available data on timestamps: #{timestamps}"
         process_single_counter_stats!(counter_values_by_ts, metric_capture_module, i, timestamps,
                                       metrics_by_counter_name)
       else
-        $log.debug "#{log_header} id:[#{name}] started collecting multi counter stats for: "\
+        $log.debug "#{log_header} id:[#{target.name}] started collecting multi counter stats for: "\
                    "#{i[:openstack_counters]}, with available data on timestamps: #{timestamps}"
         process_multi_counter_stats!(counter_values_by_ts, metric_capture_module, i, timestamps,
                                      metrics_by_counter_name, data_collecting_period, log_header)
@@ -345,7 +344,7 @@ module Metric::CiMixin::Capture::OpenstackBase
   end
 
   def log_warn_data_corrupted(i, log_header, period_start, period_end)
-    $log.warn("#{log_header} name:[#{name}] Distance of the multiple streams of data is invalid. It "\
+    $log.warn("#{log_header} name:[#{target.name}] Distance of the multiple streams of data is invalid. It "\
               "exceeded half of the Ceilometer collection period in (#{period_start}, #{period_end}> for counters"\
               "#{i[:openstack_counters]}. It can be caused by a different pipeline configuration period for "\
               "each related sample, or Ceilometer needs to be scaled because the samples collection is overloaded. ")

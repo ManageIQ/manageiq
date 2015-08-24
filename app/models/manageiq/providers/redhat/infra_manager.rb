@@ -3,6 +3,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   require_dependency 'manageiq/providers/redhat/infra_manager/event_parser'
   require_dependency 'manageiq/providers/redhat/infra_manager/refresh_worker'
   require_dependency 'manageiq/providers/redhat/infra_manager/refresh_parser'
+  require_dependency 'manageiq/providers/redhat/infra_manager/metrics_capture'
   require_dependency 'manageiq/providers/redhat/infra_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/redhat/infra_manager/host'
   require_dependency 'manageiq/providers/redhat/infra_manager/provision'

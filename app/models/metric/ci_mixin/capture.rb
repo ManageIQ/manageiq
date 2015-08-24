@@ -1,32 +1,20 @@
 module Metric::CiMixin::Capture
-  include_concern 'Vim'
-  include_concern 'Rhevm'
-  include_concern 'Amazon'
-  include_concern 'OpenstackBase'
-  include_concern 'Openstack'
-  include_concern 'OpenstackInfra'
-
-  def perf_collect_metrics(*args)
-    case self
-    when ManageIQ::Providers::Vmware::InfraManager::Host, ManageIQ::Providers::Vmware::InfraManager::Vm then perf_collect_metrics_vim(*args)
-    when ManageIQ::Providers::Redhat::InfraManager::Host, ManageIQ::Providers::Redhat::InfraManager::Vm then perf_collect_metrics_rhevm(*args)
-    when ManageIQ::Providers::Amazon::CloudManager::Vm             then perf_collect_metrics_amazon(*args)
-    when ManageIQ::Providers::Openstack::CloudManager::Vm          then perf_collect_metrics_openstack('perf_capture_data_openstack', *args)
-    when ManageIQ::Providers::Openstack::InfraManager::Host   then perf_collect_metrics_openstack('perf_capture_data_openstack_infra', *args)
-    else raise "Unsupported type #{self.class.name} (id: #{self.id})"
-    end
+  def perf_capture_object
+    self.class.parent::MetricsCapture.new(self)
   end
+
+  delegate :perf_collect_metrics, :to => :perf_capture_object
 
   def queue_name_for_metrics_collection
     ems = if self.kind_of?(ExtManagementSystem)
-      self
-    elsif self.kind_of?(Storage)
-      self.ext_management_systems.first
-    elsif self.respond_to?(:ext_management_system)
-      self.ext_management_system
-    else
-      raise "Unsupported type #{self.class.name} (id: #{self.id})"
-    end
+            self
+          elsif self.kind_of?(Storage)
+            ext_management_systems.first
+          elsif self.respond_to?(:ext_management_system)
+            ext_management_system
+          else
+            raise "Unsupported type #{self.class.name} (id: #{id})"
+          end
 
     ems.class.name[3..-1].underscore
   end
@@ -148,7 +136,7 @@ module Metric::CiMixin::Capture
       # Shift the expected time for first item, since you may not get back an
       #   item for the first timestamp.
       case interval_name
-      when 'realtime' then expected_start_range = expected_start_range + (1.minute / Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE)
+      when 'realtime' then expected_start_range = expected_start_range + (1.minute / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
       when 'hourly'   then expected_start_range = expected_start_range + 1.hour
       end
       expected_start_range = expected_start_range.iso8601
@@ -157,7 +145,7 @@ module Metric::CiMixin::Capture
     _log.info "#{log_header} Capture for #{log_target}..."
 
     start_range = end_range = counters = counter_values = nil
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _, t = Benchmark.realtime_block(:total_time) do
       Benchmark.realtime_block(:capture_state) { self.perf_capture_state }
 
       counters_by_mor, counter_values_by_mor_and_ts = self.perf_collect_metrics(interval_name_for_capture, start_time, end_time)

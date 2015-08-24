@@ -10,6 +10,7 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   require_dependency 'manageiq/providers/openstack/cloud_manager/event_parser'
   require_dependency 'manageiq/providers/openstack/cloud_manager/flavor'
   require_dependency 'manageiq/providers/openstack/cloud_manager/floating_ip'
+  require_dependency 'manageiq/providers/openstack/cloud_manager/metrics_capture'
   require_dependency 'manageiq/providers/openstack/cloud_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/openstack/cloud_manager/orchestration_service_option_converter'
   require_dependency 'manageiq/providers/openstack/cloud_manager/orchestration_stack'

@@ -1,4 +1,4 @@
-module Metric::Capture::OpenstackInfra
+class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::Providers::Openstack::BaseMetricsCapture
   CPU_METERS     = %w(hardware.system_stats.cpu.util)
   MEMORY_METERS  = %w(hardware.memory.used
                       hardware.memory.total)
@@ -47,22 +47,22 @@ module Metric::Capture::OpenstackInfra
     },
     {
       :openstack_counters    => MEMORY_METERS,
-      :calculation           => Metric::Capture::OpenstackInfra.method(:memory_util_calculation).to_proc,
+      :calculation           => method(:memory_util_calculation).to_proc,
       :vim_style_counter_key => "mem_usage_absolute_average"
     },
     {
       :openstack_counters    => SWAP_METERS,
-      :calculation           => Metric::Capture::OpenstackInfra.method(:memory_swapped_calculation).to_proc,
+      :calculation           => method(:memory_swapped_calculation).to_proc,
       :vim_style_counter_key => "mem_swapped_absolute_average"
     },
     {
       :openstack_counters    => DISK_METERS,
-      :calculation           => Metric::Capture::OpenstackInfra.method(:counter_sum_per_second_calculation).to_proc,
+      :calculation           => method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "disk_usage_rate_average"
     },
     {
       :openstack_counters    => NETWORK_METERS,
-      :calculation           => Metric::Capture::OpenstackInfra.method(:counter_sum_per_second_calculation).to_proc,
+      :calculation           => method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "net_usage_rate_average"
     },
   ]
@@ -116,4 +116,13 @@ module Metric::Capture::OpenstackInfra
       :capture_interval_name => "realtime"
     }
   }
+
+  def perf_capture_data(start_time, end_time)
+    # Metadata filter covers all resources, resource filter can be nil
+    resource_filter = nil
+    metadata_filter = target.ems_ref_obj ? {"field" => "metadata.resource_id", "value" => target.ems_ref_obj} : nil
+
+    perf_capture_data_openstack_base(self.class, start_time, end_time, resource_filter,
+                                     metadata_filter)
+  end
 end

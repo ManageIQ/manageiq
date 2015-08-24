@@ -1,4 +1,4 @@
-module Metric::Capture::Openstack
+class ManageIQ::Providers::Openstack::CloudManager::MetricsCapture < ManageIQ::Providers::Openstack::BaseMetricsCapture
   CPU_METERS     = ["cpu_util"]
   DISK_METERS    = ["disk.read.bytes", "disk.write.bytes"]
   NETWORK_METERS = ["network.incoming.bytes", "network.outgoing.bytes"]
@@ -29,13 +29,13 @@ module Metric::Capture::Openstack
 
     {
       :openstack_counters    => DISK_METERS,
-      :calculation           => Metric::Capture::Openstack.method(:counter_sum_per_second_calculation).to_proc,
+      :calculation           => method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "disk_usage_rate_average"
     },
 
     {
       :openstack_counters    => NETWORK_METERS,
-      :calculation           => Metric::Capture::Openstack.method(:counter_sum_per_second_calculation).to_proc,
+      :calculation           => method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "net_usage_rate_average"
     },
   ]
@@ -73,4 +73,12 @@ module Metric::Capture::Openstack
       :capture_interval_name => "realtime"
     }
   }
+
+  def perf_capture_data(start_time, end_time)
+    resource_filter = {"field" => "resource_id", "value" => target.ems_ref}
+    metadata_filter = {"field" => "metadata.instance_id", "value" => target.ems_ref}
+
+    perf_capture_data_openstack_base(self.class, start_time, end_time, resource_filter,
+                                     metadata_filter)
+  end
 end

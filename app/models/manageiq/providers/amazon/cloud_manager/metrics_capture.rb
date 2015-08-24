@@ -1,7 +1,62 @@
-module Metric::CiMixin::Capture::Amazon
-  def perf_collect_metrics_amazon(interval_name, start_time = nil, end_time = nil)
-    target = "[#{self.class.name}], [#{self.id}], [#{self.name}]"
-    log_header = "[#{interval_name}] for: #{target}"
+class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
+  INTERVALS = [5.minutes, 1.minute]
+
+  COUNTER_INFO = [
+    {
+      :amazon_counters       => ["CPUUtilization"],
+      :calculation           => lambda { |stat, _| stat },
+      :vim_style_counter_key => "cpu_usage_rate_average"
+    },
+
+    {
+      :amazon_counters       => ["DiskReadBytes", "DiskWriteBytes"],
+      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
+      :vim_style_counter_key => "disk_usage_rate_average"
+    },
+
+    {
+      :amazon_counters       => ["NetworkIn", "NetworkOut"],
+      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
+      :vim_style_counter_key => "net_usage_rate_average"
+    },
+  ]
+
+  COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:amazon_counters] }.flatten.uniq
+
+  VIM_STYLE_COUNTERS = {
+    "cpu_usage_rate_average" => {
+      :counter_key           => "cpu_usage_rate_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 1,
+      :rollup                => "average",
+      :unit_key              => "percent",
+      :capture_interval_name => "realtime"
+    },
+
+    "disk_usage_rate_average" => {
+      :counter_key           => "disk_usage_rate_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 2,
+      :rollup                => "average",
+      :unit_key              => "kilobytespersecond",
+      :capture_interval_name => "realtime"
+    },
+
+    "net_usage_rate_average" => {
+      :counter_key           => "net_usage_rate_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 2,
+      :rollup                => "average",
+      :unit_key              => "kilobytespersecond",
+      :capture_interval_name => "realtime"
+    }
+  }
+
+  def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
+    log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
     end_time   ||= Time.now
     end_time     = end_time.utc
@@ -28,12 +83,12 @@ module Metric::CiMixin::Capture::Amazon
   #
 
   def perf_init_amazon
-    raise "No EMS defined" if self.ext_management_system.nil?
+    raise "No EMS defined" if target.ext_management_system.nil?
 
     @perf_ems, _ = Benchmark.realtime_block(:connect) do
       # TODO: Fix connect timings.  Since Amazon is lazy connected, this is
       #       near instant, and is really reflected in the very first call
-      self.ext_management_system.connect(:service => "CloudWatch")
+      target.ext_management_system.connect(:service => "CloudWatch")
     end
     @perf_ems
   end
@@ -48,8 +103,8 @@ module Metric::CiMixin::Capture::Amazon
 
   def perf_capture_data_amazon(start_time, end_time)
     counters, _ = Benchmark.realtime_block(:capture_counters) do
-      filter = [{:name => "InstanceId", :value => self.ems_ref}]
-      @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(Metric::Capture::Amazon::COUNTER_NAMES) }
+      filter = [{:name => "InstanceId", :value => target.ems_ref}]
+      @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(COUNTER_NAMES) }
     end
 
     # Since we are unable to determine if the first datapoint we get is a
@@ -75,7 +130,7 @@ module Metric::CiMixin::Capture::Amazon
     end
 
     counter_values_by_ts = {}
-    Metric::Capture::Amazon::COUNTER_INFO.each do |i|
+    COUNTER_INFO.each do |i|
       timestamps = i[:amazon_counters].collect { |c| metrics_by_counter_name[c].keys }.flatten.uniq.sort
 
       # If we are unable to determine if a datapoint is a 1-minute (detailed)
@@ -83,7 +138,7 @@ module Metric::CiMixin::Capture::Amazon
       #   the very first interval.
       timestamps.each_cons(2) do |last_ts, ts|
         interval = ts - last_ts
-        next unless interval.in?(Metric::Capture::Amazon::INTERVALS)
+        next unless interval.in?(INTERVALS)
 
         metrics = i[:amazon_counters].collect { |c| metrics_by_counter_name.fetch_path(c, ts) }
         value   = i[:calculation].call(*metrics, interval)
@@ -95,8 +150,8 @@ module Metric::CiMixin::Capture::Amazon
       end
     end
 
-    counters_by_id              = {self.ems_ref => Metric::Capture::Amazon::VIM_STYLE_COUNTERS}
-    counter_values_by_id_and_ts = {self.ems_ref => counter_values_by_ts}
+    counters_by_id              = {target.ems_ref => VIM_STYLE_COUNTERS}
+    counter_values_by_id_and_ts = {target.ems_ref => counter_values_by_ts}
     return counters_by_id, counter_values_by_id_and_ts
   end
 end
