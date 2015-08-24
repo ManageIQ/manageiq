@@ -6,9 +6,8 @@ require 'fs/MiqMountManager'
 require 'metadata/MIQExtract/MIQExtract'
 
 class MiqVm
-    
     attr_reader :vmConfig, :vmConfigFile, :vim, :vimVm, :rhevm, :rhevmVm, :diskInitErrors, :wholeDisks
-    
+
     def initialize(vmCfg, ost=nil)
         @ost = ost || OpenStruct.new
         $log.debug "MiqVm::initialize: @ost = nil" if $log && !@ost
@@ -25,7 +24,7 @@ class MiqVm
         end
 
         $log.debug "MiqVm::initialize: @ost.openParent = #{@ost.openParent}" if $log
-        
+
         #
         # If we're passed an MiqVim object, then use VIM to obtain the Vm's
         # configuration through the instantiated server.
@@ -49,7 +48,7 @@ class MiqVm
             @vmConfig = VmConfig.new(vmCfg)
         end
     end # def initialize
-    
+
     def vmDisks
         @vmDisks ||= begin
             @volMgrPS = VolMgrPlatformSupport.new(@vmConfig.configFile, @ost)
@@ -63,22 +62,29 @@ class MiqVm
         pVolumes = Array.new
         
         $log.debug "openDisks: no disk files supplied." if !diskFiles
-        
+
         #
         # Build a list of the VM's physical volumes.
         #
         diskFiles.each do |dtag, df|
             $log.debug "openDisks: processing disk file (#{dtag}): #{df}"
             dInfo = OpenStruct.new
-            
+
             if @ost.miqVim
                 dInfo.vixDiskInfo = Hash.new
                 dInfo.vixDiskInfo[:fileName]    = @ost.miqVim.datastorePath(df)
                 if @ost.miqVimVm && @ost.miqVim.isVirtualCenter?
-                    @vdlConnection = @ost.miqVimVm.vdlVcConnection if !@vdlConnection
+                    thumb_print    = VcenterThumbPrint.new(@ost.miqVimVm.invObj.server)
+                    @vdlConnection = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
                     $log.debug "openDisks (VC): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
+                elsif @ost.miqVimVm
+                    esx_host         = @ost.miqVimVm.invObj.server
+                    esx_username     = @ost.miqVimVm.invObj.username
+                    esx_password     = @ost.miqVimVm.invObj.password
+                    thumb_print      = ESXThumbPrint.new(esx_host, esx_username, esx_password)
+                    @vdlConnection   = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
                 else
-                    @vdlConnection = @ost.miqVim.vdlConnection if !@vdlConnection
+                    @vdlConnection = @ost.miqVim.vdlConnection unless @vdlConnection
                     $log.debug "openDisks (ESX): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
                 end
                 dInfo.vixDiskInfo[:connection]  = @vdlConnection
