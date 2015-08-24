@@ -5,8 +5,9 @@ class Tenant < ActiveRecord::Base
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil
 
-  default_value_for :name,      "My Company"
-  default_value_for :divisible, true
+  default_value_for :name,        "My Company"
+  default_value_for :description, "Tenant for My Company"
+  default_value_for :divisible,   true
   has_ancestry
 
   has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
@@ -30,6 +31,8 @@ class Tenant < ActiveRecord::Base
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
   validate  :validate_only_one_root
+  validates :name, :description, :presence => true, :unless => :root?
+  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent" }
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']

@@ -131,6 +131,23 @@ describe Tenant do
       expect(tenant.name).to be_nil
     end
 
+    it "is unique per parent tenant" do
+      FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant)
+      expect do
+        FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant)
+      end.to raise_error
+    end
+
+    it "can be the same for different parents" do
+      parent1 = FactoryGirl.create(:tenant, :name => "parent1", :parent => root_tenant)
+      parent2 = FactoryGirl.create(:tenant, :name => "parent2", :parent => root_tenant)
+
+      FactoryGirl.create(:tenant, :name => "common", :parent => parent1)
+      expect do
+        FactoryGirl.create(:tenant, :name => "common", :parent => parent2)
+      end.not_to raise_error
+    end
+
     context "for default tenant" do
       it "reads settings" do
         expect(root_tenant[:name]).to be_nil
