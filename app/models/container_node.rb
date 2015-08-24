@@ -9,7 +9,7 @@ class ContainerNode < ActiveRecord::Base
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
 
-  delegate   :hardware, :to => :computer_system
+  has_one   :hardware, :through => :computer_system
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
 
