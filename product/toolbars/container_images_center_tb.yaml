@@ -11,23 +11,13 @@
     :title: Configuration
     :text: Configuration
     :items:
-    - :button: container_image_new
-      :image: new
-      :url: '/new'
-      :text: 'Add a New #{ui_lookup(:table=>"container_image")}'
-      :title: 'Add a New #{ui_lookup(:table=>"container_image")}'
-    - :button: container_image_edit
-      :image: edit
-      :text: 'Edit Selected #{ui_lookup(:table=>"container_image")}'
-      :title: 'Select a single #{ui_lookup(:table=>"container_image")} to edit'
+    - :button: container_image_scan
+      :image: scan
+      :text: "Perform SmartState Analysis"
+      :title: "Perform SmartState Analysis on the selected items"
       :url_parms: 'main_div'
-      :onwhen: '1'
-    - :button: container_image_delete
-      :image: remove
-      :text: 'Remove #{ui_lookup(:tables=>"container_images")} from the VMDB'
-      :title: 'Remove selected #{ui_lookup(:tables=>"container_images")} from the VMDB'
-      :url_parms: 'main_div'
-      :confirm: 'Warning: The selected #{ui_lookup(:tables=>"container_images")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"container_images")}?'
+      :confirm: "Perform SmartState Analysis on the selected items?"
+      :enabled: 'false'
       :onwhen: '1+'
 - :name: container_image_policy
   :items:

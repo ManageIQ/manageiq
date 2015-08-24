@@ -482,9 +482,6 @@ class ApplicationHelper::ToolbarBuilder
     return true if %w(container_replicator_edit container_replicator_delete container_replicator_new).include?(id) &&
                    (@record.kind_of?(ContainerReplicator) || @record.nil?)
 
-    return true if %w(container_image_edit container_image_delete container_image_new).include?(id) &&
-                   (@record.kind_of?(ContainerImage) || @record.nil?)
-
     return true if %w(container_image_registry_edit container_image_registry_delete
                       container_image_registry_new).include?(id) &&
                    (@record.kind_of?(ContainerImageRegistry) || @record.nil?)
