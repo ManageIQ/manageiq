@@ -113,19 +113,25 @@ module EmsInfraHelper::TextualSummary
   def textual_used_tenants
     return nil if !@record.respond_to?(:cloud_tenants) || !@record.cloud_tenants
 
-    textual_link(@record.cloud_tenants)
+    textual_link(@record.cloud_tenants,
+                 :as   => CloudTenant,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'cloud_tenants'))
   end
 
   def textual_used_availability_zones
     return nil if !@record.respond_to?(:availability_zones) || !@record.availability_zones
 
-    textual_link(@record.availability_zones)
+    textual_link(@record.availability_zones,
+                 :as   => AvailabilityZone,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'availability_zones'))
   end
 
   def textual_datastores
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
 
-    textual_link(@record.storages, :as => Storage)
+    textual_link(@record.storages,
+                 :as   => Storage,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'storages'))
   end
 
   def textual_vms
