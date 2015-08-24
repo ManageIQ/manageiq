@@ -1,0 +1,2 @@
+class FlavorAzure < Flavor
+end
