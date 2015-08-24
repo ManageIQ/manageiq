@@ -8,9 +8,10 @@
                    "data-miq_observe" => {:url => url}.to_json)
 - elsif @edit[:new][:emstype].present?
   %tr
-    %td.key= _('Hostname (or IPv4 or IPv6 address)')
+    %td.key= _('Hostname or IP address')
     %td.wide
       = text_field_tag("hostname",
                        @edit[:new][:hostname],
                        :maxlength => MAX_HOSTNAME_LEN,
-                       "data-miq_observe" => {:interval => ".5", :url => url}.to_json)
+                       "data-miq_observe" => {:interval => ".5", :url => url}.to_json,
+                       :title => 'Hostname or IPv4/IPv6 address')
