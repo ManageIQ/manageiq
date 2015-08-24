@@ -1112,7 +1112,7 @@ class ApplicationHelper::ToolbarBuilder
         return "Only #{ui_lookup(:table=>"storages")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
       end
     when "Tenant"
-      return "Default Tenant can not be deleted" if @record.default? && id == "rbac_tenant_delete"
+      return "Default Tenant can not be deleted" if @record.parent.nil? && id == "rbac_tenant_delete"
     when "User"
       case id
       when "rbac_user_copy"

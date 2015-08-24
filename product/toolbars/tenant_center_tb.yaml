@@ -30,4 +30,4 @@
       :text: "Delete this item"
       :title: "Delete this item"
       :url_parms: '&refresh=y'
-      :confirm: "Are you sure you want to delete this item?"
+      :confirm: "Are you sure you want to delete this item and all of it's children?"

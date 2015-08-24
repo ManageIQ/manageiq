@@ -23,6 +23,6 @@
       :text: Delete selected items
       :title: Select one or more items to delete
       :url_parms: 'main_div'
-      :confirm: "Delete all selected items?"
+      :confirm: "Delete all selected items and all of their children?"
       :enabled: 'false'
       :onwhen: '1+'
