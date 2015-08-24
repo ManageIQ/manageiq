@@ -5,8 +5,9 @@ class Tenant < ActiveRecord::Base
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil
 
-  default_value_for :name,      "My Company"
-  default_value_for :divisible, true
+  default_value_for :name,        "My Company"
+  default_value_for :description, "Tenant for My Company"
+  default_value_for :divisible,   true
   has_ancestry
 
   has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
