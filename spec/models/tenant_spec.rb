@@ -45,14 +45,38 @@ describe Tenant do
     end
   end
 
-  it "#tenant?" do
-    t = Tenant.new(:divisible => true)
-    expect(t.tenant?).to be_true
+  describe "#root?" do
+    it "detects root" do
+      expect(root_tenant).to be_root
+    end
+
+    it "detects non root" do
+      expect(tenant).not_to be_root
+    end
   end
 
-  it "#project?" do
-    t = Tenant.new(:divisible => false)
-    expect(t.project?).to be_true
+  describe "#tenant?" do
+    it "detects tenant" do
+      t = Tenant.new(:divisible => true)
+      expect(t.tenant?).to be_true
+    end
+
+    it "detects non tenant" do
+      t = Tenant.new(:divisible => false)
+      expect(t.tenant?).not_to be_true
+    end
+  end
+
+  describe "#project?" do
+    it "detects project" do
+      t = Tenant.new(:divisible => false)
+      expect(t.project?).to be_true
+    end
+
+    it "detects non project" do
+      t = Tenant.new(:divisible => true)
+      expect(t.project?).not_to be_true
+    end
   end
 
   it ".all_tenants" do
