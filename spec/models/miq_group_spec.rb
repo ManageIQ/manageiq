@@ -79,6 +79,30 @@ describe MiqGroup do
     end
   end
 
+  describe "#get_ldap_groups_by_user_with_ext_auth" do
+    before do
+      require "dbus"
+      sysbus = double('sysbus')
+      ifp_service = double('ifp_service')
+      ifp_object  = double('ifp_object')
+      @ifp_interface = double('ifp_interface')
+
+      DBus.stub(:system_bus).and_return(sysbus)
+      sysbus.stub(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_service)
+      ifp_service.stub(:object).with("/org/freedesktop/sssd/infopipe").and_return(ifp_object)
+      ifp_object.stub(:introspect)
+      ifp_object.stub(:[]).with("org.freedesktop.sssd.infopipe").and_return(@ifp_interface)
+    end
+
+    it "should return groups by user name with external authentication" do
+      memberships = [%w(foo bar)]
+
+      @ifp_interface.stub(:GetUserGroups).with('user').and_return(memberships)
+
+      MiqGroup.get_httpd_groups_by_user('user').should == memberships.first
+    end
+  end
+
   describe "#get_ldap_groups_by_user" do
     before do
       stub_server_configuration(:authentication => {:group_memberships_max_depth => 1})

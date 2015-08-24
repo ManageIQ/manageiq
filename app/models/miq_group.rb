@@ -125,6 +125,24 @@ class MiqGroup < ActiveRecord::Base
     ldap.get_memberships(user_obj, auth[:group_memberships_max_depth])
   end
 
+  def self.get_httpd_groups_by_user(user)
+    require "dbus"
+
+    username = user.kind_of?(self) ? user.userid : user
+
+    sysbus = DBus.system_bus
+    ifp_service   = sysbus["org.freedesktop.sssd.infopipe"]
+    ifp_object    = ifp_service.object "/org/freedesktop/sssd/infopipe"
+    ifp_object.introspect
+    ifp_interface = ifp_object["org.freedesktop.sssd.infopipe"]
+    begin
+      user_groups = ifp_interface.GetUserGroups(user)
+    rescue => err
+      raise "Unable to get groups for user #{username} - #{err}"
+    end
+    user_groups.first
+  end
+
   def get_user_scope(options={})
     scope = self.filters.kind_of?(MiqUserScope) ? self.filters : MiqUserScope.hash_to_scope(self.filters)
 

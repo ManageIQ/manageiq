@@ -65,6 +65,9 @@ gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
 
+# Needed by External Auth
+gem "ruby-dbus"
+
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",   :require => false
 gem "aws-sdk",                        "~>1.56.0",  :require => false
