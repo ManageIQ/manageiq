@@ -1,19 +1,22 @@
 require "spec_helper"
+require 'azure-armrest'
 
 describe EmsAzure do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_azure, :zone => zone)
-    @ems.update_authentication(:default => {
-      :userid => "f895b5ef-3bb5-4366-8ce5-123456789012", :password => "0%2BdVmFpJLU0T9gqFWDkWnX9MY3FPb5l1yY123456789012"})
-    @ems.update_attributes(:tenant_id => "a50f9983-d1a2-4a8d-be7d-123456789012")
+    cred = {
+      :userid   => "f895b5ef-3bb5-4366-8ce5-123456789012",
+      :password => "0+dVmFpJLU0T9gqFWDkWnX9MY3FPb5l1123456789012"
+    }
+    @ems.authentications << FactoryGirl.create(:authentication, cred)
+    @ems.update_attributes(:azure_tenant_id => "a50f9983-d1a2-4a8d-be7d-123456789012")
   end
 
   it "will perform a full refresh" do
-    1.times do  # Run twice to verify that a second run with existing data does not change anything
+    2.times do # Run twice to verify that a second run with existing data does not change anything
       @ems.reload
-
-      VCR.use_cassette(described_class.name.underscore) do
+      VCR.use_cassette(described_class.name.underscore, :allow_unused_http_interactions => true) do
         EmsRefresh.refresh(@ems)
       end
       @ems.reload
@@ -28,18 +31,18 @@ describe EmsAzure do
   end
 
   def assert_table_counts
-    ExtManagementSystem.count.should == 1
-    Flavor.count.should              == 41
-    AvailabilityZone.count.should    == 2
-    VmOrTemplate.count.should        == 5
-    Vm.count.should                  == 5
-    Disk.count.should                == 7
-    GuestDevice.count.should         == 0
-    Hardware.count.should            == 5
-    Network.count.should             == 10
-    OperatingSystem.count.should     == 5
-    Relationship.count.should        == 0
-    MiqQueue.count.should            == 7
+    ExtManagementSystem.count.should eql(1)
+    Flavor.count.should eql(41)
+    AvailabilityZone.count.should eql(2)
+    VmOrTemplate.count.should eql(5)
+    Vm.count.should eql(5)
+    Disk.count.should eql(7)
+    GuestDevice.count.should eql(0)
+    Hardware.count.should eql(5)
+    Network.count.should eql(10)
+    OperatingSystem.count.should eql(5)
+    Relationship.count.should eql(0)
+    MiqQueue.count.should eql(5)
   end
 
   def assert_ems
@@ -47,10 +50,10 @@ describe EmsAzure do
       :api_version => nil,
       :uid_ems     => "a50f9983-d1a2-4a8d-be7d-123456789012"
     )
-    @ems.flavors.size.should              == 41
-    @ems.availability_zones.size.should   == 2
-    @ems.vms_and_templates.size.should    == 5
-    @ems.vms.size.should                  == 5
+    @ems.flavors.size.should eql(41)
+    @ems.availability_zones.size.should eql(2)
+    @ems.vms_and_templates.size.should eql(5)
+    @ems.vms.size.should eql(5)
   end
 
   def assert_specific_flavor
@@ -73,12 +76,11 @@ describe EmsAzure do
   end
 
   def assert_specific_az
-    @az = EmsAzure::AvailabilityZone.where(:name => "AvailabilitySet1").first
+    @az = AvailabilityZoneAzure.where(:name => "AvailabilitySet1").first
     @az.should have_attributes(
       :name => "AvailabilitySet1",
     )
   end
-
 
   def assert_specific_vm_powered_on
     v = EmsAzure::Vm.where(:name => "ERP", :raw_power_state => "VM running").first
@@ -107,13 +109,17 @@ describe EmsAzure do
       :cpu_shares_level      => nil
     )
 
-    v.ext_management_system.should  == @ems
-    v.availability_zone.should      == @az
-    v.flavor.should                 == @flavor
-    v.operating_system.product_name.should == "UbuntuServer 14.04.3 LTS"
-    v.custom_attributes.size.should == 0
-    v.snapshots.size.should         == 0
+    v.ext_management_system.should eql(@ems)
+    v.availability_zone.should eql(@az)
+    v.flavor.should eql(@flavor)
+    v.operating_system.product_name.should eql("UbuntuServer 14.04.3 LTS")
+    v.custom_attributes.size.should eql(0)
+    v.snapshots.size.should eql(0)
 
+    assert_specific_vm_powered_on_hardware(v)
+  end
+
+  def assert_specific_vm_powered_on_hardware(v)
     v.hardware.should have_attributes(
       :guest_os            => nil,
       :guest_os_full_name  => nil,
@@ -121,16 +127,20 @@ describe EmsAzure do
       :annotation          => nil,
       :numvcpus            => 1,
       :memory_cpu          => 1792, # MB
-      :disk_capacity       => 1072764928,
+      :disk_capacity       => 1_072_764_928,
       :bitness             => nil,
       :virtualization_type => nil
     )
 
-    v.hardware.disks.size.should         == 1 # TODO: Change to a flavor that has disks
-    v.hardware.guest_devices.size.should == 0
-    v.hardware.nics.size.should          == 0
+    v.hardware.disks.size.should eql(1) # TODO: Change to a flavor that has disks
+    v.hardware.guest_devices.size.should eql(0)
+    v.hardware.nics.size.should eql(0)
 
-    v.hardware.networks.size.should      == 2
+    assert_specific_vm_powered_on_hardware_networks(v)
+  end
+
+  def assert_specific_vm_powered_on_hardware_networks(v)
+    v.hardware.networks.size.should eql(2)
     network = v.hardware.networks.where(:description => "public").first
     network.should have_attributes(
       :description => "public",
@@ -147,6 +157,22 @@ describe EmsAzure do
 
   def assert_specific_vm_powered_off
     v = EmsAzure::Vm.where(:name => "MIQ2", :raw_power_state => "VM deallocated").first
+
+    assert_specific_vm_powered_off_attributes(v)
+
+    v.ext_management_system.should eql(@ems)
+    v.availability_zone.should eql(@az)
+    v.floating_ip.should be_nil
+    v.cloud_network.should be_nil
+    v.cloud_subnet.should be_nil
+    v.operating_system.product_name.should eql("UbuntuServer 14.04.3 LTS")
+    v.custom_attributes.size.should eql(0)
+    v.snapshots.size.should eql(0)
+
+    assert_specific_vm_powered_off_hardware(v)
+  end
+
+  def assert_specific_vm_powered_off_attributes(v)
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "ComputeVMs\\MIQ2",
@@ -171,15 +197,9 @@ describe EmsAzure do
       :cpu_shares            => nil,
       :cpu_shares_level      => nil
     )
+  end
 
-    v.ext_management_system.should         == @ems
-    v.availability_zone.should             == @az
-    v.floating_ip.should                   be_nil
-    v.cloud_network.should                 be_nil
-    v.cloud_subnet.should                  be_nil
-    v.operating_system.product_name.should == "UbuntuServer 14.04.3 LTS"
-    v.custom_attributes.size.should        == 0
-    v.snapshots.size.should                == 0
+  def assert_specific_vm_powered_off_hardware(v)
     v.hardware.should have_attributes(
       :guest_os           => nil,
       :guest_os_full_name => nil,
@@ -187,13 +207,13 @@ describe EmsAzure do
       :annotation         => nil,
       :numvcpus           => 1,
       :memory_cpu         => 768, # MB
-      :disk_capacity      => 1072713728,
+      :disk_capacity      => 1_072_713_728,
       :bitness            => nil
     )
 
-    v.hardware.disks.size.should         == 1
-    v.hardware.guest_devices.size.should == 0
-    v.hardware.nics.size.should          == 0
-    v.hardware.networks.size.should      == 2
+    v.hardware.disks.size.should eql(1)
+    v.hardware.guest_devices.size.should eql(0)
+    v.hardware.nics.size.should eql(0)
+    v.hardware.networks.size.should eql(2)
   end
 end
