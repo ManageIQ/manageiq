@@ -188,11 +188,11 @@ class PostgresAdmin
     options = (options[:aggressive] ? GC_AGGRESSIVE_DEFAULTS : GC_DEFAULTS).merge(options)
 
     result = self.vacuum(options)
-    $log.info("MIQ(#{self.name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
+    $log.info("MIQ(#{name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
 
     if options[:reindex]
       result = self.reindex(options)
-      $log.info("MIQ(#{self.name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
+      $log.info("MIQ(#{name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
     end
   end
 
