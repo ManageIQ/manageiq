@@ -79,7 +79,7 @@ class EmsEvent < EventStream
   end
 
   def self.add_amazon(ems_id, event)
-    self.add(ems_id, EmsEvent::Parsers::Amazon.event_to_hash(event, ems_id))
+    self.add(ems_id, ManageIQ::Providers::Amazon::CloudManager::EventParser.event_to_hash(event, ems_id))
   end
 
   def self.add_kubernetes(ems_id, event)
