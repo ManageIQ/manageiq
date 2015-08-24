@@ -105,10 +105,11 @@ describe OpsController do
 
       it "saves tenant record changes" do
         controller.instance_variable_set(:@_params,
-                                         :name      => "Foo_Bar",
-                                         :id        => @tenant.id,
-                                         :button    => "save",
-                                         :divisible => "true")
+                                         :name        => "Foo_Bar",
+                                         :description => "Foo Bar Description",
+                                         :id          => @tenant.id,
+                                         :button      => "save",
+                                         :divisible   => "true")
         controller.should_receive(:render)
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_edit)
