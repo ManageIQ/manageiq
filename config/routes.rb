@@ -578,6 +578,7 @@ Vmdb::Application.routes.draw do
         discover
         download_data
         edit
+        ems_cloud_form_fields
         index
         new
         protect
