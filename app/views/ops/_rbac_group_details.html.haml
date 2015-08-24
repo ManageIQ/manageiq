@@ -52,12 +52,13 @@
             %td{:style => @edit ? 'padding: 0px' : ''}
               - if !@edit
                 - if @group.tenant_owner
+                  - tenant = @group.tenant_owner
                   %table{:cellpadding => "0", :cellspacing => "0"}
-                    %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(@group.tenant_owner.id)}');",
-                                :title   => _("View this Tenant")}
+                    %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+                                :title   => _("View this #{tenant.divisible ? "Tenant" : "Project"}")}
                       %td
-                        %span.product.product-tenant
-                        = h(@group.tenant_owner.name)
+                        %span.product{:class => "product-#{tenant.divisible ? "tenant" : "project"}"}
+                        = h(tenant.name)
               - else
                 #form-group
                   = select_tag('group_tenant',
