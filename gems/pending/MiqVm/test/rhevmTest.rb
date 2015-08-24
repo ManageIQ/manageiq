@@ -47,7 +47,7 @@ begin
   vm = MiqVm.new(rvm.api_endpoint, ost)
 
   puts "\nChecking for file systems..."
-  vm.vmRootTrees.each do | fs |
+  vm.rootTrees.each do | fs |
       puts "*** Found root tree for #{fs.guestOS}"
       puts "Listing files in #{fs.pwd} directory:"
       fs.dirEntries.each { |de| puts "\t#{de}" }

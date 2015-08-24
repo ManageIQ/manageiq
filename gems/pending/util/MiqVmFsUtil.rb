@@ -107,9 +107,9 @@ if __FILE__ == $0
     # vmfsu = MiqVmFsUtil.new(fs)
     
     vm = MiqVm.new(vmCfg)
-    raise "No OSs detected" if vm.vmRootTrees.length == 0
+    raise "No OSs detected" if vm.rootTrees.length == 0
     
-    vmfsu = MiqVmFsUtil.new(vm.vmRootTrees[0])
+    vmfsu = MiqVmFsUtil.new(vm.rootTrees[0])
     # vmfsu.flatDirCopyOut("/var/lib/rpm", "rpm_test_dir")
     vmfsu.fs.chdir("/var/lib")
     vmfsu.findEach(".") { |f| puts f }

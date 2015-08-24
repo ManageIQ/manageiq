@@ -9,7 +9,7 @@ require_relative '../../MiqVm/MiqVm'
 class MiqOpenStackInstance
   attr_reader :vmConfigFile
   
-  SUPPORTED_METHODS = [:vmRootTrees, :extract, :diskInitErrors]
+  SUPPORTED_METHODS = [:rootTrees, :extract, :diskInitErrors]
 
   def initialize(instance_id, openstack_handle)
     @instance_id      = instance_id

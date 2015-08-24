@@ -33,7 +33,7 @@ class MIQExtract
 
     # TODO: Should all be subclasses of MiqVm.
     #       Going forward, we should only pass in an MiqVm - so the "else" will be removed.
-		if filename.respond_to?(:vmRootTrees)
+		if filename.respond_to?(:rootTrees)
 			@externalMount = true
 			@target = filename
 			@configFile = filename.respond_to?(:vmConfigFile) ? @target.vmConfigFile : nil
@@ -56,7 +56,7 @@ class MIQExtract
 		begin
       st = Time.now
       $log.info "Loading disk files for VM [#{@configFile}]"
-			@systemFs = @target.vmRootTrees[0]
+			@systemFs = @target.rootTrees[0]
 			if @systemFs.nil?
 				raise MiqException::MiqVmMountError, "No root filesystem found." if @target.diskInitErrors.empty?
 

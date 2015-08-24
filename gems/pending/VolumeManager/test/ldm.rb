@@ -44,7 +44,7 @@ begin
 	# xml.write($stdout, 4)
 	# puts
 	
-	rta = vm.vmRootTrees
+	rta = vm.rootTrees
 	raise "No root filesystems detected for: #{vmCfg}" if rta.empty?
 	rt = rta.first
 	puts "**** Filesystem information:"

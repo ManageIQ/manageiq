@@ -14,7 +14,7 @@ class MiqVm
         $log.debug "MiqVm::initialize: @ost = nil" if $log && !@ost
         @vmDisks = nil
         @wholeDisks = []
-        @vmRootTrees = nil
+        @rootTrees = nil
         @volumeManager = nil
         @applianceVolumeManager = nil
         @vmConfigFile = ""
@@ -144,11 +144,11 @@ class MiqVm
         return pVolumes
     end # def openDisks
     
-    def vmRootTrees
-        return @vmRootTrees if @vmRootTrees
-        @vmRootTrees = MiqMountManager.mountVolumes(volumeManager, @vmConfig, @ost)
-        volumeManager.rootTrees = @vmRootTrees
-        return @vmRootTrees
+    def rootTrees
+        return @rootTrees if @rootTrees
+        @rootTrees = MiqMountManager.mountVolumes(volumeManager, @vmConfig, @ost)
+        volumeManager.rootTrees = @rootTrees
+        return @rootTrees
     end
     
     def volumeManager
@@ -180,7 +180,7 @@ class MiqVm
             @volMgrPS = nil
         end
         @vimVm.release if @vimVm
-        @vmRootTrees = nil
+        @rootTrees = nil
         @vmDisks = nil
     end
 
@@ -283,8 +283,8 @@ if __FILE__ == $0
    # rfs.dirForeach("/") { |de| puts "\t\t#{de}" }
     
     puts "\n***** Detected Guest OSs:"
-    raise "No OSs detected" if vm.vmRootTrees.length == 0
-    vm.vmRootTrees.each do |rt|
+    raise "No OSs detected" if vm.rootTrees.length == 0
+    vm.rootTrees.each do |rt|
         puts "\t#{rt.guestOS}"
         if rt.guestOS == "Linux"
             puts "\n\t\t*** /etc/fstab contents:"
@@ -295,7 +295,7 @@ if __FILE__ == $0
         end
     end
     
-    vm.vmRootTrees.each do |rt|
+    vm.rootTrees.each do |rt|
         if rt.guestOS == "Linux"
             # tdirArr = [ "/", "/boot", "/var/www/miq", "/var/www/miq/vmdb/log", "/var/lib/mysql" ]
             tdirArr = [ "/", "/boot", "/etc/init.d", "/etc/rc.d/init.d", "/etc/rc.d/rc0.d" ]
