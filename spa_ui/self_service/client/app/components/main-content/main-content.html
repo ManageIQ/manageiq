@@ -1,6 +1,3 @@
-<div class="container-fluid fixed-container-pf fixed-left-nav-pf"
-     ng-class="{'fixed-collapsed-left-nav-pf': vm.state.isCollapsed, 'fixed-hide-left-nav-pf': vm.state.isMobileNav }">
-  <div class="fixed-container-inner-pf">
-    <div class="main-content" ui-view></div>
-  </div>
+<div class="container-fluid container-pf-scroll container-pf-nav-pf-vertical-alt" ng-class="{'collapsed-nav': vm.state.isCollapsed, 'hidden-nav': vm.state.isMobileNav }">
+  <div class="main-content" ui-view></div>
 </div>

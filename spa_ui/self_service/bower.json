@@ -30,14 +30,14 @@
     "angular-messages": "~1.3.0",
     "angular-ui-router": "~0.2.0",
     "angular-mocks": "~1.3.0",
-    "patternfly": "git://github.com/patternfly/patternfly.git#cfme-2.0",
+    "patternfly": "git://github.com/patternfly/patternfly.git#ssui",
+    "angular-patternfly": "~2.0.0",
     "angular-bootstrap": "~0.13.0",
-    "angular-patternfly": "~0.0.6",
     "angular-base64": "~2.0.5"
   },
   "resolutions": {
     "angular": "~1.3.0",
-    "patternfly": "cfme-2.0"
+    "patternfly": "ssui"
   },
   "overrides": {
     "patternfly": {
