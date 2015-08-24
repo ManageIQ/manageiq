@@ -26,7 +26,12 @@ describe Tenant do
 
   describe "#root_tenant" do
     it "has a root tenant" do
-      expect(default_tenant).to be
+      expect(root_tenant).to be
+    end
+
+    it "can update the root_tenant" do
+      root_tenant.update_attributes!(:name => 'newname')
+      expect(root_tenant.reload.name).to eq('newname')
     end
   end
 
@@ -278,14 +283,9 @@ describe Tenant do
     end
   end
 
-  context "#root_tenant" do
-    it "returns the root (not the default tenant)" do
-      Tenant.destroy_all
-      r = described_class.create(:subdomain => 'admin')
-      c = described_class.create(:parent => r)
-
-      expect(described_class.root_tenant).to eq(r)
-      expect(described_class.default_tenant).to eq(c)
+  context "#validate_only_one_root" do
+    it "allows child tenants" do
+      root_tenant.children.create!
     end
 
     it "only allows one root" do
@@ -295,11 +295,6 @@ describe Tenant do
       expect {
         described_class.create!
       }.to raise_error
-    end
-
-    it "can update the root_tenant" do
-      root_tenant.update_attributes!(:name => 'newname')
-      expect(root_tenant.reload.name).to eq('newname')
     end
   end
 
