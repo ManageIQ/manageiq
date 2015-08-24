@@ -100,7 +100,7 @@ module ApiSpecHelper
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
     collections  = %w(automation_requests availability_zones chargebacks clusters conditions
-                      data_stores events flavors groups hosts policies policy_actions
+                      data_stores events features flavors groups hosts policies policy_actions
                       policy_profiles providers provision_requests rates reports request_tasks
                       requests resource_pools results roles security_groups servers service_catalogs
                       service_requests service_templates services tags tasks templates users
