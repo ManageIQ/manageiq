@@ -5,7 +5,7 @@ module EmsContainerHelper::TextualSummary
 
   def textual_group_properties
     items = %w(name type hostname port cpu_cores memory_resources)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_relationships
@@ -14,17 +14,17 @@ module EmsContainerHelper::TextualSummary
     items.concat(%w(container_projects container_routes)) if @ems.kind_of?(ManageIQ::Providers::Openshift::ContainerManager)
     items.concat(%w(container_services container_replicators container_groups container_nodes containers
                     container_image_registries container_images))
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_status
     items = %w(refresh_status)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_smart_management
     items = %w{zone}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   #

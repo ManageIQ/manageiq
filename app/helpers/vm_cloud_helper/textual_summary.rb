@@ -7,65 +7,63 @@ module VmCloudHelper::TextualSummary
 
   def textual_group_properties
     items = %w(name region server description ipaddress custom_1 container tools_status osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_vm_cloud_relationships
     items = %w(ems ems_infra cluster host availability_zone cloud_tenant flavor drift scan_history security_groups
                service cloud_network cloud_subnet orchestration_stack)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_template_cloud_relationships
     items = %w{ems drift scan_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_security
     items = %w{users groups patches key_pairs}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_configuration
     items = %w{guest_applications init_processes win32_services kernel_drivers filesystem_drivers filesystems registry_items}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_diagnostics
     items = %w{processes event_logs}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_vmsafe
     items = %w{vmsafe_enable vmsafe_agent_address vmsafe_agent_port vmsafe_fail_open vmsafe_immutable_vm vmsafe_timeout}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_miq_custom_attributes
     items = %w{miq_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_ems_custom_attributes
     items = %w{ems_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_compliance
     items = %w{compliance_status compliance_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_power_management
     items = %w{power_state boot_time state_changed_on}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_tags
     items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   #

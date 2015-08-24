@@ -2,7 +2,7 @@ module PxeHelper::TextualSummary
   def textual_group_basicinfo
     items = %w(uri_prefix uri access_url pxe_directory windows_images_directory
                customization_directory last_refreshed_on)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_uri_prefix
@@ -35,7 +35,7 @@ module PxeHelper::TextualSummary
 
   def textual_group_pxe_image_menus
     items = %w(filename)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_filename
@@ -44,7 +44,7 @@ module PxeHelper::TextualSummary
 
   def textual_pxe_img_basicinfo
     items = %w(name description type kernel win_boot_env)
-    items.collect { |m| send("textual_pxe_img_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_pxe_img_#{m}") }
   end
 
   def textual_pxe_img_name
@@ -69,7 +69,7 @@ module PxeHelper::TextualSummary
 
   def textual_win_img_basicinfo
     items = %w(name description type path index)
-    items.collect { |m| send("textual_win_img_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_win_img_#{m}") }
   end
 
   def textual_win_img_name
@@ -94,7 +94,7 @@ module PxeHelper::TextualSummary
 
   def textual_template_basicinfo
     items = %w(name description img_type type)
-    items.collect { |m| send("textual_template_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_template_#{m}") }
   end
 
   def textual_template_name
@@ -115,7 +115,7 @@ module PxeHelper::TextualSummary
 
   def textual_sysimg_type_basicinfo
     items = %w(name provision_type)
-    items.collect { |m| send("textual_sysimg_type_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_sysimg_type_#{m}") }
   end
 
   def textual_sysimg_type_name
@@ -128,7 +128,7 @@ module PxeHelper::TextualSummary
 
   def textual_iso_datastore_basicinfo
     items = %w(name last_refresh_on)
-    items.collect { |m| send("textual_iso_datastore_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_iso_datastore_#{m}") }
   end
 
   def textual_iso_datastore_name
@@ -141,7 +141,7 @@ module PxeHelper::TextualSummary
 
   def textual_iso_img_info
     items = %w(name type)
-    items.collect { |m| send("textual_iso_img_info_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_iso_img_info_#{m}") }
   end
 
   def textual_iso_img_info_name

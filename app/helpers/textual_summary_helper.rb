@@ -8,7 +8,11 @@ module TextualSummaryHelper
     end
   end
 
-def textual_tags
+  def expand_textual_group(summaries)
+    Array.wrap(summaries).flatten.compact
+  end
+
+  def textual_tags
     label = "#{session[:customer_name]} Tags"
     h = {:label => label}
     tags = session[:assigned_filters]

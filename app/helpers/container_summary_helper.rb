@@ -89,6 +89,6 @@ module ContainerSummaryHelper
   private
 
   def textual_key_value(items)
-    items.collect { |item| {:label => item.name.to_s, :value => item.value.to_s} }.flatten.compact
+    items.collect { |item| {:label => item.name.to_s, :value => item.value.to_s} }
   end
 end

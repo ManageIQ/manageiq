@@ -5,17 +5,17 @@ module OrchestrationStackHelper::TextualSummary
 
   def textual_group_properties
     items = %w(name description type status status_reason)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_relationships
     items = %w(ems_cloud orchestration_template instances security_groups cloud_networks parameters outputs resources)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_tags
     items = %w(tags)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   #

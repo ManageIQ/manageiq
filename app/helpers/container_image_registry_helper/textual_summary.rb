@@ -6,12 +6,12 @@ module ContainerImageRegistryHelper
 
     def textual_group_properties
       items = %w(host port)
-      items.collect { |m| send("textual_#{m}") }.flatten.compact
+      items.collect { |m| send("textual_#{m}") }
     end
 
     def textual_group_relationships
       items = %w(container_images containers ems)
-      items.collect { |m| send("textual_#{m}") }.flatten.compact
+      items.collect { |m| send("textual_#{m}") }
     end
 
     #

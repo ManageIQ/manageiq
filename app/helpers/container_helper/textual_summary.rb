@@ -5,12 +5,12 @@ module ContainerHelper::TextualSummary
 
   def textual_group_properties
     items = %w(name state restart_count backing_ref)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_relationships
     items = %w(ems container_project container_replicator container_group container_node container_image)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   #

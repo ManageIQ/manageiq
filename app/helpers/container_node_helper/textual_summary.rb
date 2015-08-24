@@ -7,12 +7,12 @@ module ContainerNodeHelper::TextualSummary
     items = %w(name creation_timestamp resource_version num_cpu_cores memory
                identity_system identity_machine identity_infra runtime_version
                kubelet_version proxy_version os_distribution kernel_version)
-    items.collect {|m| send("textual_#{m}")}.flatten.compact
+    items.collect {|m| send("textual_#{m}")}
   end
 
   def textual_group_relationships
     items = %w(ems container_services container_replicators container_groups containers lives_on)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_conditions

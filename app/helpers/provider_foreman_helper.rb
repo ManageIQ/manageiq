@@ -6,7 +6,7 @@ module ProviderForemanHelper
      textual_mac_address,
      textual_configuration_profile_desc,
      textual_provider_name,
-     textual_zone].flatten.compact
+     textual_zone]
   end
 
   def textual_hostname
@@ -51,13 +51,13 @@ module ProviderForemanHelper
   end
 
   def textual_group_tags
-    [textual_tags].flatten.compact
+    [textual_tags]
   end
 
   def textual_group_environment
     [textual_configuration_environment_name,
      textual_configuration_domain_name,
-     textual_configuration_realm_name].flatten.compact
+     textual_configuration_realm_name]
   end
 
   def textual_configuration_environment_name
@@ -77,7 +77,7 @@ module ProviderForemanHelper
      textual_configuration_architecture_name,
      textual_operating_system_flavor_name,
      textual_customization_script_medium_name,
-     textual_customization_script_ptable_name].flatten.compact
+     textual_customization_script_ptable_name]
   end
 
   def textual_configuration_compute_profile_name
@@ -102,7 +102,7 @@ module ProviderForemanHelper
 
   def textual_group_tenancy
     [textual_configuration_locations_name,
-     textual_configuration_organizations_name].flatten.compact
+     textual_configuration_organizations_name]
   end
 
   def textual_configuration_locations_name
@@ -120,7 +120,7 @@ module ProviderForemanHelper
   def textual_configuration_profile_group_properties
     [textual_configuration_profile_name,
      textual_configuration_profile_region,
-     textual_configuration_profile_zone].flatten.compact
+     textual_configuration_profile_zone]
   end
 
   def textual_configuration_profile_name
@@ -138,7 +138,7 @@ module ProviderForemanHelper
   def textual_configuration_profile_group_environment
     [textual_configuration_profile_environment,
      textual_configuration_profile_domain,
-     textual_configuration_profile_puppet_realm].flatten.compact
+     textual_configuration_profile_puppet_realm]
   end
 
   def textual_configuration_profile_environment
@@ -158,7 +158,7 @@ module ProviderForemanHelper
      textual_configuration_profile_architecture,
      textual_configuration_profile_os,
      textual_configuration_profile_medium,
-     textual_configuration_profile_partition_table].flatten.compact
+     textual_configuration_profile_partition_table]
   end
 
   def textual_configuration_profile_compute_profile
@@ -183,7 +183,7 @@ module ProviderForemanHelper
 
   def textual_configuration_profile_group_tenancy
     [textual_configuration_profile_configuration_locations,
-     textual_configuration_profile_configuration_organizations].flatten.compact
+     textual_configuration_profile_configuration_organizations]
   end
 
   def textual_configuration_profile_configuration_locations

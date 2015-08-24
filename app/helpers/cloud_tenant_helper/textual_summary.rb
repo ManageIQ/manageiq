@@ -4,17 +4,17 @@ module CloudTenantHelper::TextualSummary
   #
   def textual_group_relationships
     items = %w{ems_cloud security_groups instances images}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_tags
     items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_quotas
     quotas = @record.cloud_resource_quotas.order(:service_name, :name)
-    quotas.collect { |quota| textual_quotas(quota) }.flatten.compact
+    quotas.collect { |quota| textual_quotas(quota) }
   end
 
   #

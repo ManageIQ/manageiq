@@ -7,12 +7,12 @@ module RepositoryHelper::TextualSummary
 
   def textual_group_properties
     items = %w{vms miq_templates}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_smart_management
     items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   #

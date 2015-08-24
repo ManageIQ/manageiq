@@ -5,12 +5,12 @@ module ContainerProjectHelper::TextualSummary
 
   def textual_group_properties
     items = %w(name display_name creation_timestamp resource_version)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_relationships
     items = %w(ems container_routes container_services container_replicators container_groups)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   #

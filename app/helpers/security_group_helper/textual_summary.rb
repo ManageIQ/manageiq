@@ -6,12 +6,12 @@ module SecurityGroupHelper::TextualSummary
 
   def textual_group_properties
     items = %w{description type}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_relationships
     items = %w(ems_cloud instances orchestration_stack)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_firewall
@@ -30,7 +30,7 @@ module SecurityGroupHelper::TextualSummary
 
   def textual_group_tags
     items = %w(tags)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   #

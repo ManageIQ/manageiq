@@ -5,7 +5,7 @@ module StorageManagerHelper::TextualSummary
 
   def textual_group_properties
     items = %w{hostname ipaddress agent_type port zone_name last_update_status_str}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   #

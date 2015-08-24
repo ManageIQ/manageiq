@@ -6,34 +6,34 @@ module EmsClusterHelper::TextualSummary
 
   def textual_group_host_totals
     items = %w{aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_vm_totals
     items = %w{aggregate_vm_memory aggregate_vm_cpus}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_relationships
     items = %w{ems parent_datacenter total_hosts total_direct_vms allvms_size total_miq_templates total_vms rps_size states_size}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_storage_relationships
     items = %w{ss_size sv_size fs_size se_size}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_configuration
     return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? &&  @record.drs_enabled.nil? &&
         @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
     items = %w{ha_enabled ha_admit_control drs_enabled drs_automation_level drs_migration_threshold}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_tags
     items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_openstack_status

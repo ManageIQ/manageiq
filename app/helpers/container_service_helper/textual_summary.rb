@@ -10,7 +10,7 @@ module ContainerServiceHelper::TextualSummary
       resource_version
       session_affinity
       portal_ip)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
 
   def textual_group_port_configs
@@ -29,7 +29,7 @@ module ContainerServiceHelper::TextualSummary
 
   def textual_group_relationships
     items = %w(ems container_project container_routes container_groups container_nodes)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }
   end
   #
   # Items

@@ -7,94 +7,92 @@ module VmHelper::TextualSummary
 
   def textual_group_properties
     items = %w{name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo cpu_affinity snapshots advanced_settings resources guid}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_lifecycle
     items = %w(discovered analyzed retirement_date retirement_state provisioned owner group)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_relationships
     items = %w{ems cluster host resource_pool storage service parent_vm genealogy drift scan_history cloud_network cloud_subnet}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_vm_cloud_relationships
     items = %w{ems availability_zone flavor drift scan_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_template_cloud_relationships
     items = %w{ems drift scan_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_security
     items = %w{users groups patches}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_configuration
     items = %w{guest_applications init_processes win32_services kernel_drivers filesystem_drivers filesystems registry_items}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_datastore_allocation
     items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_total}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_datastore_usage
     items = %w{usage_disks usage_snapshots usage_disk_storage usage_overcommitted}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_diagnostics
     items = %w{processes event_logs}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_storage_relationships
     items = %w{storage_systems storage_volumes logical_disks file_shares}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_vmsafe
     items = %w{vmsafe_enable vmsafe_agent_address vmsafe_agent_port vmsafe_fail_open vmsafe_immutable_vm vmsafe_timeout}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_miq_custom_attributes
     items = %w{miq_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_ems_custom_attributes
     items = %w{ems_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_compliance
     items = %w{compliance_status compliance_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_power_management
     items = %w{power_state boot_time state_changed_on}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_normal_operating_ranges
     items = %w{normal_operating_ranges_cpu normal_operating_ranges_cpu_usage normal_operating_ranges_memory normal_operating_ranges_memory_usage}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   def textual_group_tags
     items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| self.send("textual_#{m}") }
   end
 
   #
