@@ -2,9 +2,12 @@ module OpenstackHandle
   class ImageDelegate < DelegateClass(Fog::Image::OpenStack)
     SERVICE_NAME = "Image"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
+      @name      = name
     end
 
     def images_with_pagination_loop

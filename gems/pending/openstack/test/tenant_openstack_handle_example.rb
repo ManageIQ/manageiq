@@ -62,7 +62,7 @@ begin
       puts
       puts "\t#{service}##{method}:"
 
-      if req_name && os_handle.service_name(service) != req_name
+      if req_name && os_handle.detect_service(service).name != req_name
         puts "\t\tSkipping, required service: #{req_name}, not available."
         next
       end

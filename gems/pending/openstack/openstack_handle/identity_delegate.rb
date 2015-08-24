@@ -2,9 +2,12 @@ module OpenstackHandle
   class IdentityDelegate < DelegateClass(Fog::Identity::OpenStack)
     SERVICE_NAME = "Identity"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
+      @name      = name
     end
 
     #

@@ -2,9 +2,12 @@ module OpenstackHandle
   class OrchestrationDelegate < DelegateClass(Fog::Orchestration::OpenStack)
     SERVICE_NAME = "Orchestration"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
+      @name      = name
     end
 
     def stacks_for_accessible_tenants(opts = {})

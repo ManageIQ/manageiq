@@ -3,7 +3,7 @@ module ManageIQ::Providers
     module RefreshParserCommon
       module Objects
         def get_object_store
-          return unless @storage_service_name == :swift
+          return unless @storage_service.name == :swift
           @os_handle.service_for_each_accessible_tenant('Storage') do |svc, tenant|
             svc.directories.each do |dir|
               result = process_collection_item(dir, :cloud_object_store_containers) { |c| parse_container(c, tenant) }

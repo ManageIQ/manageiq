@@ -16,7 +16,7 @@ begin
     puts "\t#{t.name}\t(#{t.id})"
   end
 
-  unless os_handle.storage_service_name == :swift
+  unless os_handle.storage_service.name == :swift
     puts "Storeage service swift is not available, exiting."
     exit
   end

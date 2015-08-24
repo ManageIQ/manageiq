@@ -23,13 +23,9 @@ module ManageIQ::Providers
       @os_handle                  = ems.openstack_handle
       @compute_service            = @connection # for consistency
       @network_service            = @os_handle.detect_network_service
-      @network_service_name       = @os_handle.network_service_name
       @image_service              = @os_handle.detect_image_service
-      @image_service_name         = @os_handle.image_service_name
       @volume_service             = @os_handle.detect_volume_service
-      @volume_service_name        = @os_handle.volume_service_name
       @storage_service            = @os_handle.detect_storage_service
-      @storage_service_name       = @os_handle.storage_service_name
       @identity_service           = @os_handle.identity_service
       @orchestration_service      = @os_handle.detect_orchestration_service
     end
@@ -80,7 +76,7 @@ module ManageIQ::Providers
 
     def volumes
       # TODO: support volumes through :nova as well?
-      return [] unless @volume_service_name == :cinder
+      return [] unless @volume_service.name == :cinder
       @volumes ||= @volume_service.volumes_for_accessible_tenants
     end
 
@@ -109,8 +105,8 @@ module ManageIQ::Providers
 
     def get_quotas
       quotas = @compute_service.quotas_for_accessible_tenants
-      quotas.concat(@volume_service.quotas_for_accessible_tenants)  if @volume_service_name == :cinder
-      quotas.concat(@network_service.quotas_for_accessible_tenants) if @network_service_name == :neutron
+      quotas.concat(@volume_service.quotas_for_accessible_tenants)  if @volume_service.name == :cinder
+      quotas.concat(@network_service.quotas_for_accessible_tenants) if @network_service.name == :neutron
 
       process_collection(flatten_quotas(quotas), :cloud_resource_quotas) { |quota| parse_quota(quota) }
     end
@@ -133,14 +129,14 @@ module ManageIQ::Providers
     end
 
     def get_networks
-      return unless @network_service_name == :neutron
+      return unless @network_service.name == :neutron
 
       process_collection(networks, :cloud_networks) { |n| parse_network(n) }
       get_subnets
     end
 
     def get_subnets
-      return unless @network_service_name == :neutron
+      return unless @network_service.name == :neutron
 
       networks.each do |n|
         new_net = @data_index.fetch_path(:cloud_networks, n.id)
@@ -154,7 +150,7 @@ module ManageIQ::Providers
 
     def get_snapshots
       # TODO: support snapshots through :nova as well?
-      return unless @volume_service_name == :cinder
+      return unless @volume_service.name == :cinder
       process_collection(@volume_service.snapshots_for_accessible_tenants,
                          :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
     end
@@ -165,7 +161,7 @@ module ManageIQ::Providers
     end
 
     def get_floating_ips
-      ips = send("floating_ips_#{@network_service_name}")
+      ips = send("floating_ips_#{@network_service.name}")
       process_collection(ips, :floating_ips) { |ip| parse_floating_ip(ip) }
     end
 
@@ -307,7 +303,7 @@ module ManageIQ::Providers
     # TODO: Should ICMP protocol values have their own 2 columns, or
     #   should they override port and end_port like the Amazon API.
     def parse_firewall_rule(rule)
-      send("parse_firewall_rule_#{@network_service_name}", rule)
+      send("parse_firewall_rule_#{@network_service.name}", rule)
     end
 
     def parse_firewall_rule_neutron(rule)
@@ -502,7 +498,7 @@ module ManageIQ::Providers
     end
 
     def parse_floating_ip(ip)
-      send("parse_floating_ip_#{@network_service_name}", ip)
+      send("parse_floating_ip_#{@network_service.name}", ip)
     end
 
     def parse_floating_ip_neutron(ip)

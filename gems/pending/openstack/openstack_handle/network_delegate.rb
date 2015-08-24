@@ -2,9 +2,12 @@ module OpenstackHandle
   class NetworkDelegate < DelegateClass(Fog::Network::OpenStack)
     SERVICE_NAME = "Network"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
+      @name      = name
     end
 
     def security_groups_for_accessible_tenants
