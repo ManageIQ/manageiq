@@ -90,7 +90,7 @@ module OpsController::OpsRbac
     @tenant_type = params[:tenant_type] == "tenant" ? true : false
     rbac_tenant_edit
   end
-  alias rbac_project_add rbac_tenant_add
+  alias_method :rbac_project_add, :rbac_tenant_add
 
   def rbac_tenant_edit
     assert_privileges("rbac_tenant_edit")
@@ -137,7 +137,7 @@ module OpsController::OpsRbac
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
-      @tenant = params[:typ] == "new" ? Tenant.new  : Tenant.find(obj[0])          # Get existing or new record
+      @tenant = params[:typ] == "new" ? Tenant.new : Tenant.find(obj[0])          # Get existing or new record
 
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:tenant_id => @tenant.id}
@@ -281,7 +281,7 @@ module OpsController::OpsRbac
       }
     else # showing 1 tenant, delete it
       if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") %  "Tenant", :error)
+        add_flash(_("%s no longer exists") % "Tenant", :error)
       else
         tenants.push(params[:id])
       end
@@ -686,7 +686,7 @@ module OpsController::OpsRbac
     # Get the records (into a view) and the paginator
     @view, @pages = case rec_type
                     when "user"
-                      get_view(User, :named_scope=>:in_my_region)
+                      get_view(User, :named_scope => :in_my_region)
                     when "group"
                       get_view(MiqGroup)
                     when "role"
@@ -765,41 +765,41 @@ module OpsController::OpsRbac
   def rbac_get_info(nodetype)
     node, id = nodetype.split("-")
     case node
-      when "xx"
-        case id
-          when "u"
-            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"User")}
-            rbac_users_list
-          when "g"
-            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"MiqGroup")}
-            rbac_groups_list
-          when "ur"
-            @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"MiqUserRole")}
-            rbac_roles_list
-          when "tn"
-            @right_cell_text = _("%{typ} %{model}") % {:typ   => "Access Control",
-                                                       :model => ui_lookup(:models => "Tenant")}
-            rbac_tenants_list
-        end
+    when "xx"
+      case id
       when "u"
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"User"), :name=>User.find_by_id(from_cid(id)).name}
-        rbac_user_get_details(id)
+        @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"User")}
+        rbac_users_list
       when "g"
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqGroup"), :name=>MiqGroup.find_by_id(from_cid(id)).description}
-        rbac_group_get_details(id)
+        @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"MiqGroup")}
+        rbac_groups_list
       when "ur"
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqUserRole"), :name=>MiqUserRole.find_by_id(from_cid(id)).name}
-        rbac_role_get_details(id)
+        @right_cell_text = _("%{typ} %{model}") % {:typ=>"Access Control", :model=>ui_lookup(:models=>"MiqUserRole")}
+        rbac_roles_list
       when "tn"
-        rbac_tenant_get_details(id)
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model => tenant_type_title_string(@tenant.divisible),
-                                                        :name  => @tenant.name}
-      else  # Root node
-        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Access Control", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
-        @users_count   = User.in_my_region.count
-        @groups_count  = MiqGroup.count
-        @roles_count   = MiqUserRole.count
-        @tenants_count = Tenant.roots.count
+        @right_cell_text = _("%{typ} %{model}") % {:typ   => "Access Control",
+                                                   :model => ui_lookup(:models => "Tenant")}
+        rbac_tenants_list
+      end
+    when "u"
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"User"), :name=>User.find_by_id(from_cid(id)).name}
+      rbac_user_get_details(id)
+    when "g"
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqGroup"), :name=>MiqGroup.find_by_id(from_cid(id)).description}
+      rbac_group_get_details(id)
+    when "ur"
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqUserRole"), :name=>MiqUserRole.find_by_id(from_cid(id)).name}
+      rbac_role_get_details(id)
+    when "tn"
+      rbac_tenant_get_details(id)
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model => tenant_type_title_string(@tenant.divisible),
+                                                      :name  => @tenant.name}
+    else  # Root node
+      @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Access Control", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
+      @users_count   = User.in_my_region.count
+      @groups_count  = MiqGroup.count
+      @roles_count   = MiqUserRole.count
+      @tenants_count = Tenant.roots.count
     end
   end
 

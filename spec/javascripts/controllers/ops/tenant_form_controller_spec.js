@@ -33,11 +33,6 @@ describe('tenantFormController', function() {
         expect($scope.newRecord).toBe(true);
       });
 
-//      it('sets the filterValuesEmpty to true', function() {
-//        expect($scope.filterValuesEmpty).toBe(true);
-//      });
-
-
       it('sets afterGet', function() {
         expect($scope.afterGet).toBe(true);
       });
@@ -67,7 +62,7 @@ describe('tenantFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=cancel');
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=cancel&divisible=' + tenantType);
     });
   });
 
@@ -123,7 +118,7 @@ describe('tenantFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=save', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=save&divisible=' + tenantType, true);
     });
   });
 
@@ -140,7 +135,7 @@ describe('tenantFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=save', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=save&divisible='+ tenantType, true);
     });
   });
 });})

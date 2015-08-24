@@ -20,6 +20,7 @@ db: Tenant
 # Columns to fetch from the main table
 cols:
 - name
+- description
 - parent_name
 - divisible
 
@@ -29,11 +30,13 @@ include:
 # Order of columns (from all tables)
 col_order: 
 - name
+- description
 - parent_name
 
 # Column titles, in order
 headers:
 - Name
+- Description
 - Parent
 
 # Condition(s) string for the SQL query
