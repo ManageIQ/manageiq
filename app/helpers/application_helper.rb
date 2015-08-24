@@ -1284,7 +1284,7 @@ module ApplicationHelper
       elsif %w(queued waiting_to_start).include?(row["state"].downcase)
         image = "job-queued"
         img_attr.merge!(:title => "Status = Queued")
-      elsif !%w(finished queued waiting_to_start).include?(["state"].downcase)
+      elsif !%w(finished queued waiting_to_start).include?(row["state"].downcase)
         image = "job-running"
         img_attr.merge!(:title => "Status = Running")
       end

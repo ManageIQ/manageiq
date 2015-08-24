@@ -1537,6 +1537,14 @@ describe ApplicationHelper do
     end
   end
 
+  context "#listicon_image_tag" do
+    it "returns correct image for job record based upon it's status" do
+      job_attrs = {"state" => "running", "status" => "ok"}
+      image = listicon_image_tag("Job", job_attrs)
+      image.should eq("<img valign=\"middle\" width=\"16\" height=\"16\" title=\"Status = Running\" src=\"/images/icons/new/job-running.png\" />")
+    end
+  end
+
   it 'output of remote_function should not be html_safe' do
     remote_function(:url => {:controller => 'vm_infra', :action => 'explorer'}).html_safe?.should be_false
   end
