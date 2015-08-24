@@ -10,8 +10,11 @@
       .col-md-10
         = select_tag("#{cap_type}_days",
           options_for_select(WEEK_CHOICES.invert.sort_by(&:last), @sb[:util][:options][:days].to_i),
-          "data-miq_sparkle_on" => true,
-          "data-miq_observe"    => {:url => url}.to_json)
+          "class"               => "selectpicker",
+          "data-miq_sparkle_on" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("#{cap_type}_days", "#{url}");
 
   %form.form-horizontal
     .form-group
@@ -21,8 +24,11 @@
         - options = [["<#{_('None')}>", "<None>"]] + (@sb[:util][:tags] ? @sb[:util][:tags].invert.sort : [])
         = select_tag("#{cap_type}_tag",
           options_for_select(options, @sb[:util][:options][:tag]),
-          "data-miq_sparkle_on" => true,
-          "data-miq_observe"    => {:url => url}.to_json)
+          "class"               => "selectpicker",
+          "data-miq_sparkle_on" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("#{cap_type}_tag", "#{url}");
 
   %form.form-horizontal
     .form-group
@@ -38,24 +44,18 @@
           = select_tag("#{cap_type}_time_profile",
             options_for_select(Array(session[:time_profiles].invert).sort_by(&:first),
             @sb[:util][:options][:time_profile]),
-            "data-miq_sparkle_on" => true,
-            "data-miq_observe"    => {:url => url}.to_json)
-    - if ["summ"].include?(cap_type)
+            "class"               => "selectpicker",
+            "data-miq_sparkle_on" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("#{cap_type}_time_profile", "#{url}");
+    - if %w(summ report).include?(cap_type)
+      - date_id = cap_type == "summ" ? "1" : "2"
       .form-group
         %label.control-label.col-md-2
           = _('Selected Day')
         .col-md-10
-          = datepicker_input_tag("miq_date_1",
-            @sb[:util][:options][:chart_date],
-            :readonly               => "true",
-            "data-miq_sparkle_on"   => true,
-            "data-miq_observe_date" => {:url => url}.to_json)
-    - elsif ["report"].include?(cap_type)
-      .form-group
-        %label.control-label.col-md-2
-          = _('Selected Day')
-        .col-md-10
-          = datepicker_input_tag("miq_date_2",
+          = datepicker_input_tag("miq_date_#{date_id}",
             @sb[:util][:options][:chart_date],
             :readonly               => "true",
             "data-miq_sparkle_on"   => true,

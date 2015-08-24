@@ -9,9 +9,12 @@
       .col-md-10
         = select_tag("tl_#{typ}_fl_grp1",
           options_for_select([["<#{_('ALL')}> ", ""]] + @sb[:bottlenecks][:groups].sort, @sb[:bottlenecks][:tl_options][:filter1]),
+          "class" => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("tl_#{typ}_fl_grp1", "#{url}");
     - unless %w(s h).include?(x_node.split("-").last.split("_").first)
       .form-group
         %label.control-label.col-md-2
@@ -28,8 +31,11 @@
         = select_tag("tl_#{typ}_tz",
           options_for_select(ALL_TIMEZONES,
           @sb[:bottlenecks][:tl_options][:tz]),
+          "class" => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("tl_#{typ}_tz", "#{url}");
   %form#hiddenForm
     %input.filter1{:type => "hidden", :name => "filter1", :value => @sb[:bottlenecks][:tl_options][:fltr1]}
