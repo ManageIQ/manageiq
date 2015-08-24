@@ -6,6 +6,12 @@ describe ContainerImageController do
     set_user_privileges
   end
 
+  it "when Smart Analysis is pressed" do
+    controller.should_receive(:scan_images)
+    post :button, :pressed => 'container_image_scan', :format => :js
+    controller.send(:flash_errors?).should_not be_true
+  end
+
   it "renders index" do
     get :index
     expect(response.status).to eq(302)
