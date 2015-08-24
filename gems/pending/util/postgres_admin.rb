@@ -1,21 +1,57 @@
 require 'awesome_spawn'
-class MiqPostgresAdmin
-  include Vmdb::Logging
+require 'pathname'
 
-  # From /etc/init.d/postgresql script
-  # Installation prefix
-  PREFIX='/opt/rh/postgresql92/root/usr'
+RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
 
-  # Data directory
-  PGDATA="/opt/rh/postgresql92/root/var/lib/pgsql/data"
+class PostgresAdmin
+  def self.pg_ctl
+    Pathname.new(ENV.fetch("APPLIANCE_PG_CTL"))
+  end
 
-  # Who to run the postmaster as, usually "postgres".  (NOT "root")
-  PGUSER='postgres'
+  def self.data_directory
+    Pathname.new(ENV.fetch("APPLIANCE_PG_DATA"))
+  end
 
-  # What to use to shut down the postmaster
-  PGCTL="#{PREFIX}/bin/pg_ctl"
+  def self.service_name
+    ENV.fetch("APPLIANCE_PG_SERVICE")
+  end
 
-  PGSERVICE = "postgresql92-postgresql".freeze
+  def self.scl_name
+    ENV.fetch('APPLIANCE_PG_SCL_NAME')
+  end
+
+  def self.scl_enable_prefix
+    "scl enable #{scl_name}"
+  end
+
+  def self.package_name
+    ENV.fetch('APPLIANCE_PG_PACKAGE_NAME')
+  end
+
+  # Unprivileged user to run postgresql
+  def self.user
+    "postgres".freeze
+  end
+
+  def self.certificate_location
+    RAILS_ROOT.join("certs")
+  end
+
+  def self.logical_volume_name
+    "lv_pg".freeze
+  end
+
+  def self.volume_group_name
+    "vg_data".freeze
+  end
+
+  def self.database_disk_filesystem
+    "xfs".freeze
+  end
+
+  def self.logical_volume_path
+    Pathname.new("/dev").join(volume_group_name, logical_volume_name)
+  end
 
   def self.database_size(opts)
     result = runcmd("psql", opts, :command => "SELECT pg_database_size('#{opts[:dbname]}');")
@@ -152,11 +188,11 @@ class MiqPostgresAdmin
     options = (options[:aggressive] ? GC_AGGRESSIVE_DEFAULTS : GC_DEFAULTS).merge(options)
 
     result = self.vacuum(options)
-    _log.info("Output... #{result}") if result.to_s.length > 0
+    $log.info("MIQ(#{name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
 
     if options[:reindex]
       result = self.reindex(options)
-      _log.info("Output... #{result}") if result.to_s.length > 0
+      $log.info("MIQ(#{name}.#{__method__}) Output... #{result}") if result.to_s.length > 0
     end
   end
 
@@ -179,13 +215,20 @@ class MiqPostgresAdmin
   end
 
   # TODO: overlaps with appliance_console/service_group.rb
-
   def self.start(opts)
-    runcmd_with_logging("service #{PGSERVICE} start", opts)
+    runcmd_with_logging(start_command, opts)
+  end
+
+  def self.start_command
+    "service #{service_name} start".freeze
   end
 
   def self.stop(opts)
-    mode = opts[:graceful] == true ? 'smart' : 'fast'
+    self.runcmd_with_logging(stop_command(opts[:graceful]), opts)
+  end
+
+  def self.stop_command(graceful)
+    mode = graceful == true ? 'smart' : 'fast'
     #su - postgres -c '/usr/local/pgsql/bin/pg_ctl stop -W -D /var/lib/pgsql/data -s -m smart'
     # stop postgres as postgres user
     # -W do not wait until operation completes, ie, don't block the process
@@ -193,8 +236,7 @@ class MiqPostgresAdmin
     # -s do it silently
     # -m smart - quit after all connections have disconnected
     # -m fast  - quit directly with proper shutdown
-    cmd = "su - #{PGUSER} -c '#{PGCTL} stop -W -D #{PGDATA} -s -m #{mode}'"
-    self.runcmd_with_logging(cmd, opts)
+    "su - #{user} -c '#{pg_ctl} stop -W -D #{data_directory} -s -m #{mode}'"
   end
 
   def self.runcmd(cmd_str, opts, args)
@@ -208,7 +250,7 @@ class MiqPostgresAdmin
   end
 
   def self.runcmd_with_logging(cmd_str, opts, params = {})
-    _log.info("Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
+    $log.info("MIQ(#{self.name}.#{__method__}) Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
     with_pgpass_file(opts) do
       AwesomeSpawn.run!(cmd_str, :params => params).output
     end

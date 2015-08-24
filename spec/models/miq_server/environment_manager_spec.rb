@@ -92,4 +92,24 @@ describe "Server Environment Management" do
   end
 
 
+  context "#check_disk_usage" do
+    before do
+      _, @miq_server, _ = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server.stub(:disk_usage_threshold => 70)
+    end
+
+    it "normal usage" do
+      expect(@miq_server.check_disk_usage([:used_bytes_percent => 50]))
+      expect(MiqQueue.count).to eql 0
+    end
+
+    it "database disk exceeds usage" do
+      disks = [{:used_bytes_percent => 85, :mount_point => '/var/lib/pgsql/data'}]
+      expect(@miq_server.check_disk_usage(disks))
+      queue = MiqQueue.first
+
+      expect(queue.args[1]).to eql 'evm_server_db_disk_high_usage'
+      expect(queue.args[2][:event_details]).to include disks.first[:mount_point]
+    end
+  end
 end

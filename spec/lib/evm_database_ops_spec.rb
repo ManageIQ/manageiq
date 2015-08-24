@@ -8,7 +8,7 @@ describe EvmDatabaseOps do
       MiqSmbSession.stub(:runcmd)
       MiqSmbSession.stub(:base_mount_point).and_return(Rails.root.join("/tmp"))
       MiqUtil.stub(:runcmd)
-      MiqPostgresAdmin.stub(:runcmd_with_logging)
+      PostgresAdmin.stub(:runcmd_with_logging)
       EvmDatabaseOps.stub(:backup_destination_free_space).and_return(200.megabytes)
       EvmDatabaseOps.stub(:database_size).and_return(100.megabytes)
     end
@@ -55,7 +55,7 @@ describe EvmDatabaseOps do
       MiqSmbSession.stub(:runcmd)
       MiqSmbSession.stub(:raw_disconnect)
       MiqSmbSession.stub(:base_mount_point).and_return(Rails.root.join("/tmp"))
-      MiqPostgresAdmin.stub(:runcmd_with_logging)
+      PostgresAdmin.stub(:runcmd_with_logging)
     end
 
     it "from local backup" do

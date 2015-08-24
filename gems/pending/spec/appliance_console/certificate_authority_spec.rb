@@ -51,6 +51,7 @@ describe ApplianceConsole::CertificateAuthority do
 
       ApplianceConsole::InternalDatabaseConfiguration.should_receive(:new)
         .and_return(double("config", :activate => true, :configure_postgres => true))
+      PostgresAdmin.stub(:service_name => "postgresql")
       LinuxAdmin::Service.should_receive(:new).and_return(double("Service", :restart => true))
       FileUtils.should_receive(:chmod).with(0644, anything)
 

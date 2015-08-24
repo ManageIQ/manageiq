@@ -22,6 +22,7 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
   context "postgresql service" do
     it "#start_postgres (private)" do
       allow(LinuxAdmin::Service).to receive(:new).and_return(double(:service).as_null_object)
+      PostgresAdmin.stub(:service_name => 'postgresql')
       @config.should_receive(:block_until_postgres_accepts_connections)
       @config.send(:start_postgres)
     end
@@ -50,7 +51,21 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
     @config.send(:create_partition_to_fill_disk).should == "fake partition"
   end
 
+  it ".postgresql_sample" do
+    PostgresAdmin.stub(:data_directory => Pathname.new("/var/lib/pgsql/data"))
+    expect(described_class.postgresql_sample.to_s).to end_with("system/COPY/var/lib/pgsql/data")
+  end
+
+  it ".postgresql_template" do
+    PostgresAdmin.stub(:data_directory => Pathname.new("/var/lib/pgsql/data"))
+    expect(described_class.postgresql_template.to_s).to end_with("system/TEMPLATE/var/lib/pgsql/data")
+  end
+
   context "#update_fstab (private)" do
+    before do
+      PostgresAdmin.stub(:data_directory => "/var/lib/pgsql")
+    end
+
     it "adds database disk entry" do
       fstab = double
       fstab.stub(:entries => [])
@@ -66,7 +81,7 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
 
     it "skips update if mount point is in fstab" do
       fstab = double
-      fstab.stub(:entries => [double(:mount_point => described_class::DATABASE_DISK_MOUNT_POINT)])
+      fstab.stub(:entries => [double(:mount_point => PostgresAdmin.data_directory)])
       fstab.should_receive(:write!).never
       LinuxAdmin::FSTab.stub(:instance => fstab)
       fstab.entries.count.should == 1

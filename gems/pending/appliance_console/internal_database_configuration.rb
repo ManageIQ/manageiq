@@ -1,22 +1,26 @@
 require "appliance_console/database_configuration"
 require "appliance_console/service_group"
+require "pathname"
+require "util/postgres_admin"
+
+RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
 
 module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration
-    DATABASE_DISK_FILESYSTEM_TYPE = "xfs".freeze
-    POSTGRES_USER                 = "postgres".freeze
-    POSTGRES_DIR                  = "opt/rh/postgresql92/root/var/lib/pgsql/data".freeze
-    DATABASE_DISK_MOUNT_POINT     = Pathname.new("/").join(POSTGRES_DIR).freeze
-    VOLUME_GROUP_NAME             = "vg_data".freeze
-    LOGICAL_VOLUME_NAME           = "lv_pg".freeze
-    LOGICAL_VOLUME_PATH           = Pathname.new("/dev").join(VOLUME_GROUP_NAME, LOGICAL_VOLUME_NAME).freeze
-    SCL_ENABLE_PREFIX             = "scl enable postgresql92".freeze
-    CERT_LOCATION                 = Pathname.new("/var/www/miq/vmdb/certs").freeze
-    POSTGRESQL_SAMPLE             = Pathname.new("/var/www/miq/system/COPY/").join(POSTGRES_DIR).freeze
-    POSTGRESQL_TEMPLATE           = Pathname.new("/var/www/miq/system/TEMPLATE/").join(POSTGRES_DIR).freeze
-    POSTGRESQL_SERVICE            = "postgresql92-postgresql".freeze
     attr_accessor :disk
     attr_accessor :ssl
+
+    def self.postgres_dir
+      PostgresAdmin.data_directory.relative_path_from(Pathname.new("/"))
+    end
+
+    def self.postgresql_sample
+      RAILS_ROOT.join("../system/COPY").join(postgres_dir)
+    end
+
+    def self.postgresql_template
+      RAILS_ROOT.join("../system/TEMPLATE").join(postgres_dir)
+    end
 
     def initialize(hash = {})
       set_defaults
@@ -73,11 +77,11 @@ module ApplianceConsole
     end
 
     def configure_postgres
-      self.ssl = File.exist?(CERT_LOCATION.join("postgres.key"))
+      self.ssl = File.exist?(PostgresAdmin.certificate_location.join("postgres.key"))
 
-      copy_template "postgresql.conf.erb", POSTGRESQL_TEMPLATE
-      copy_template "pg_hba.conf.erb",     POSTGRESQL_TEMPLATE
-      copy_template "pg_ident.conf"
+      copy_template "postgresql.conf.erb", self.class.postgresql_template
+      copy_template "pg_hba.conf.erb",     self.class.postgresql_template
+      copy_template "pg_ident.conf",       self.class.postgresql_template
     end
 
     def post_activation
@@ -86,7 +90,7 @@ module ApplianceConsole
 
     private
 
-    def copy_template(src, src_dir = POSTGRESQL_SAMPLE, dest_dir = DATABASE_DISK_MOUNT_POINT)
+    def copy_template(src, src_dir = self.class.postgresql_sample, dest_dir = PostgresAdmin.data_directory)
       full_src = src_dir.join(src)
       if src.include?(".erb")
         full_dest = dest_dir.join(src.gsub(".erb", ""))
@@ -111,34 +115,34 @@ module ApplianceConsole
     end
 
     def create_volume_group
-      LinuxAdmin::VolumeGroup.create(VOLUME_GROUP_NAME, @physical_volume)
+      LinuxAdmin::VolumeGroup.create(PostgresAdmin.volume_group_name, @physical_volume)
     end
 
     def create_logical_volume_to_fill_volume_group
-      LinuxAdmin::LogicalVolume.create(LOGICAL_VOLUME_PATH, @volume_group, 100)
+      LinuxAdmin::LogicalVolume.create(PostgresAdmin.logical_volume_path, @volume_group, 100)
     end
 
     def format_logical_volume
       # LogicalVolume#format_to(:ext4) should be a thing
       # LogicalVolume#fs_type => :ext4 should be a thing
-      LinuxAdmin.run!("mkfs.#{DATABASE_DISK_FILESYSTEM_TYPE} #{@logical_volume.path}")
+      LinuxAdmin.run!("mkfs.#{PostgresAdmin.database_disk_filesystem} #{@logical_volume.path}")
     end
 
     def mount_database_disk
       #TODO: should this be moved into LinuxAdmin?
-      FileUtils.rm_rf(DATABASE_DISK_MOUNT_POINT)
-      FileUtils.mkdir_p(DATABASE_DISK_MOUNT_POINT)
-      LinuxAdmin.run!("mount", :params => {"-t" => DATABASE_DISK_FILESYSTEM_TYPE, nil => [@logical_volume.path, DATABASE_DISK_MOUNT_POINT]})
+      FileUtils.rm_rf(PostgresAdmin.data_directory)
+      FileUtils.mkdir_p(PostgresAdmin.data_directory)
+      LinuxAdmin.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, PostgresAdmin.data_directory]})
     end
 
     def update_fstab
       fstab = LinuxAdmin::FSTab.instance
-      return if fstab.entries.find {|e| e.mount_point == DATABASE_DISK_MOUNT_POINT}
+      return if fstab.entries.find {|e| e.mount_point == PostgresAdmin.data_directory}
 
       entry = LinuxAdmin::FSTabEntry.new(
         :device        => @logical_volume.path,
-        :mount_point   => DATABASE_DISK_MOUNT_POINT,
-        :fs_type       => DATABASE_DISK_FILESYSTEM_TYPE,
+        :mount_point   => PostgresAdmin.data_directory,
+        :fs_type       => PostgresAdmin.database_disk_filesystem,
         :mount_options => "rw,noatime",
         :dumpable      => 0,
         :fsck_order    => 0
@@ -149,18 +153,18 @@ module ApplianceConsole
     end
 
     def prep_database_mount_point
-      # initdb will fail if the database directory is not empty or not owned by the POSTGRES_USER
-      FileUtils.chown_R(POSTGRES_USER, POSTGRES_USER, DATABASE_DISK_MOUNT_POINT)
-      FileUtils.rm_rf(DATABASE_DISK_MOUNT_POINT.join("pg_log"))
-      FileUtils.rm_rf(DATABASE_DISK_MOUNT_POINT.join("lost+found"))
+      # initdb will fail if the database directory is not empty or not owned by the PostgresAdmin.user
+      FileUtils.chown_R(PostgresAdmin.user, PostgresAdmin.user, PostgresAdmin.data_directory)
+      FileUtils.rm_rf(PostgresAdmin.data_directory.join("pg_log"))
+      FileUtils.rm_rf(PostgresAdmin.data_directory.join("lost+found"))
     end
 
     def run_initdb
-      LinuxAdmin.run!("service", :params => { nil => [POSTGRESQL_SERVICE, "initdb"]})
+      LinuxAdmin.run!("service", :params => { nil => [PostgresAdmin.service_name, "initdb"]})
     end
 
     def start_postgres
-      LinuxAdmin::Service.new(POSTGRESQL_SERVICE).start
+      LinuxAdmin::Service.new(PostgresAdmin.service_name).start
       block_until_postgres_accepts_connections
     end
 
@@ -178,13 +182,13 @@ module ApplianceConsole
       run_as_postgres("createdb -E utf8 -O #{username} #{database}")
     end
 
-    # some overlap with MiqPostgresAdmin
+    # some overlap with PostgresAdmin
     def run_as_postgres(cmd)
-      AwesomeSpawn.run("su", :params => {"-" => nil, nil => "postgres", "-c" => "#{SCL_ENABLE_PREFIX} \"#{cmd}\""})
+      AwesomeSpawn.run("su", :params => {"-" => nil, nil => "postgres", "-c" => "#{PostgresAdmin.scl_enable_prefix} \"#{cmd}\""})
     end
 
     def relabel_postgresql_dir
-      LinuxAdmin.run!("/sbin/restorecon -R -v #{DATABASE_DISK_MOUNT_POINT}")
+      LinuxAdmin.run!("/sbin/restorecon -R -v #{PostgresAdmin.data_directory}")
     end
   end
 end
