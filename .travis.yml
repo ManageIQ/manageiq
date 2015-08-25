@@ -3,29 +3,32 @@ rvm:
 - "2.2.3"
 sudo: false
 cache: bundler
-bundler_args: --without development:qpid
 env:
   global:
   - RUBY_GC_MALLOC_LIMIT=90000000
   matrix:
-  - "TEST_SUITE=gems_pending TEST_ROOT=gems/pending"
-  - "TEST_SUITE=vmdb         TEST_ROOT=."
-  - "TEST_SUITE=migrations   TEST_ROOT=."
-  - "TEST_SUITE=replication  TEST_ROOT=."
-  - "TEST_SUITE=automation   TEST_ROOT=."
-  - "TEST_SUITE=javascript   TEST_ROOT=."
-  - "TEST_SUITE=brakeman     TEST_ROOT=."
+  - "GEM=manageiq_foreman"
+  - "GEM=pending"
+  - "TEST_SUITE=vmdb"
+  - "TEST_SUITE=migrations"
+  - "TEST_SUITE=replication"
+  - "TEST_SUITE=automation"
+  - "TEST_SUITE=javascript"
+  - "TEST_SUITE=brakeman"
 matrix:
   fast_finish: true
 addons:
   postgresql: '9.4'
 before_install:
 - "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
-- gem uninstall -x -i $GEM_HOME@global bundler
-- travis_retry gem install bundler -v ">= 1.8.4"
-- echo "1" > REGION
-- cp config/database.pg.yml config/database.yml
-- psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
-- cd $TEST_ROOT
-before_script: bundle exec rake test:$TEST_SUITE:setup
-script: bundle exec rake test:$TEST_SUITE
+- "[[ -n \"$GEM\" ]] || echo \"1\" > REGION"
+- "[[ -n \"$GEM\" ]] || cp config/database.pg.yml config/database.yml"
+- "[[ -n \"$GEM\" ]] || psql -c \"CREATE USER root SUPERUSER PASSWORD 'smartvm';\" -U postgres"
+- "[[ -z \"$GEM\" ]] || cd gems/$GEM"
+- "export BUNDLE_WITHOUT=qpid"
+- "[[ -n \"$GEM\" ]] || export BUNDLE_WITHOUT=development:$BUNDLE_WITHOUT"
+- "export BUNDLE_GEMFILE=$PWD/Gemfile"
+before_script:
+- "[[ -z \"$TEST_SUITE\" ]] || bundle exec rake test:$TEST_SUITE:setup"
+script:
+- "bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}"
