@@ -78,7 +78,7 @@ module ReportController::Usage
       page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       page.replace("usage_options_div", :partial=>"usage_options")
       page.replace("usage_report_div", :partial=>"usage_report")
-      page << 'miqBuildCalendar();'
+      page << js_build_calendar();
       page << 'miqSparkle(false);'
     end
   end

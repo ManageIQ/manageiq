@@ -26,7 +26,7 @@ if (typeof(ManageIQ) === 'undefined') {
         type: null, //
       },
     },
-    calendar: { // TODO about to be removed
+    calendar: { // TODO remove in this PR
       calDateFrom: null, // to limit calendar starting
       calDateTo: null, // to limit calendar ending
       calSkipDays: null,  // to disable specific days of week
