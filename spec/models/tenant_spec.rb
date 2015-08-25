@@ -174,6 +174,11 @@ describe Tenant do
         expect(root_tenant.name).to eq("custom")
       end
     end
+
+    it "ignores has custom name for default tenant" do
+      default_tenant.read_settings = false
+      expect(default_tenant.name).to be_nil
+    end
   end
 
   it "#parent_name" do
