@@ -80,5 +80,41 @@ describe EmsCloudController do
         expect(authentication).not_to be_nil
       }.to change { Authentication.count }.by(1)
     end
+
+    it 'updates an authentication record on post' do
+      post :create,
+           "button"           => "add",
+           "hostname"         => "host_openstack",
+           "name"             => "foo_openstack",
+           "server_emstype"   => "openstack",
+           "provider_region"  => "",
+           "port"             => "5000",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
+      authentication = Authentication.where(:resource_id => openstack.to_a[0].id).first
+      expect(authentication).not_to be_nil
+
+      post :update,
+           "id"               => openstack.to_a[0].id,
+           "button"           => "save",
+           "hostname"         => "host_openstack_updated",
+           "name"             => "foo_openstack",
+           "server_emstype"   => "openstack",
+           "provider_region"  => "",
+           "port"             => "5000",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
+      authentication = Authentication.where(:resource_id => openstack.to_a[0].id).first
+      expect(authentication.userid).to eq("foo")
+      expect(authentication.password).to eq("[FILTERED]")
+    end
   end
 end
