@@ -40,3 +40,33 @@
               = link_to(_("Pods (%s)") % num_groups,
                   {:action  => 'show', :id => @record, :display => 'container_groups'},
                   :title => _("Show Pods"))
+        - if role_allows(:feature => "container_service_show_list")
+          - num_services = @record.number_of(:container_services)
+          - if num_services == 0
+            %li.disabled
+              = link_to(_("%s (0)") % ui_lookup(:tables => "container_service"), "#")
+          - else
+            %li
+              = link_to(_("%s (%s)") % [ui_lookup(:tables => "container_service"), num_services],
+                  {:action  => 'show', :id => @record, :display => 'container_services'},
+                  :title => _("Show Container Services"))
+        - if role_allows(:feature => "container_replicator_show_list")
+          - num_replicators = @record.number_of(:container_replicators)
+          - if num_replicators == 0
+            %li.disabled
+              = link_to(_("%s (0)") % ui_lookup(:tables => "container_replicator"), "#")
+          - else
+            %li
+              = link_to(_("%s (%s)") % [ui_lookup(:tables => "container_replicator"), num_replicators],
+                  {:action  => 'show', :id => @record, :display => 'container_replicators'},
+                  :title => _("Show Container Replicators"))
+        - if role_allows(:feature => "containers")
+          - num_containers = @record.number_of(:containers)
+          - if num_containers == 0
+            %li.disabled
+              = link_to(_("%s (0)") % ui_lookup(:tables => "container"), "#")
+          - else
+            %li
+              = link_to(_("%s (%s)") % [ui_lookup(:tables => "container"), num_containers],
+                  {:action  => 'show', :id => @record, :display => 'containers'},
+                  :title => _("Show Containers"))

@@ -64,6 +64,8 @@ module ContainersCommonMixin
           session[:display] == "container_image_registries" &&
           params[:display].nil?
       show_container_display(record, "container_image_registries", ContainerImageRegistry)
+    elsif @display == "container_nodes" || session[:display] == "container_nodes" && params[:display].nil?
+      show_container_display(record, "container_nodes", ContainerNode)
     end
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
