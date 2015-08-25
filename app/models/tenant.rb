@@ -36,8 +36,9 @@ class Tenant < ActiveRecord::Base
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
   validate  :validate_only_one_root
-  validates :name, :description, :presence => true, :unless => :root?
-  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
+  validates :description, :presence => true
+  validates :name, :presence => true, :unless => :use_config_for_attributes?
+  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent" }
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']
@@ -145,7 +146,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def self.seed
-    Tenant.root_tenant || Tenant.create.update_attributes!(:name => nil)
+    Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
   end
 
   private
@@ -155,12 +156,11 @@ class Tenant < ActiveRecord::Base
   #
   # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
-    ret = self[attr_name]
-    if ret.nil? && root?
+    if use_config_for_attributes?
       ret = settings.fetch_path(:server, setting_name)
       block_given? ? yield(ret) : ret
     else
-      ret
+      self[attr_name]
     end
   end
 
