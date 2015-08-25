@@ -80,19 +80,17 @@ describe Tenant do
   end
 
   describe "#display_type" do
-    before do
-      @tenant  = FactoryGirl.create(:tenant, :parent => default_tenant)
-      @project = FactoryGirl.create(:tenant, :parent => default_tenant, :divisible => false)
-    end
+    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
+    let(:project) { FactoryGirl.build(:tenant, :parent => default_tenant, :divisible => false) }
 
     it "detects Tenant" do
-      expect(@tenant.display_type).to eql  'Tenant'
-      expect(@project.display_type).not_to eql  'Tenant'
+      expect(tenant.display_type).to eql  'Tenant'
+      expect(project.display_type).not_to eql  'Tenant'
     end
 
     it "detects Project" do
-      expect(@project.display_type).to eql 'Project'
-      expect(@tenant.display_type).not_to eql 'Project'
+      expect(project.display_type).to eql 'Project'
+      expect(tenant.display_type).not_to eql 'Project'
     end
   end
 
