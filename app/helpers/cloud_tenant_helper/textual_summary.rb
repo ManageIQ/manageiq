@@ -3,13 +3,11 @@ module CloudTenantHelper::TextualSummary
   # Groups
   #
   def textual_group_relationships
-    items = %w{ems_cloud security_groups instances images}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(ems_cloud security_groups instances images)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(tags)
   end
 
   def textual_group_quotas

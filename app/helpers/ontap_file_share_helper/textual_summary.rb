@@ -4,23 +4,19 @@ module OntapFileShareHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name element_name caption zone_name operational_status_str instance_id sharing_directory? last_update_status_str}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(name element_name caption zone_name operational_status_str instance_id sharing_directory? last_update_status_str)
   end
 
   def textual_group_relationships
-    items = %w{logical_disk storage_system local_file_system base_storage_extents}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(logical_disk storage_system local_file_system base_storage_extents)
   end
 
   def textual_group_infrastructure_relationships
-    items = %w{vms hosts datastores}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(vms hosts datastores)
   end
 
   def textual_group_smart_management
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(tags)
   end
 
   #

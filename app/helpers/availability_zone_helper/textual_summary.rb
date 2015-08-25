@@ -5,13 +5,11 @@ module AvailabilityZoneHelper::TextualSummary
   #
 
   def textual_group_relationships
-    items = %w{ems_cloud instances}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(ems_cloud instances)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(tags)
   end
 
   #

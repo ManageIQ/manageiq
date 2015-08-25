@@ -2,8 +2,8 @@
 .row
   .col-md-12.col-lg-6
     = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"), :items => textual_group_properties}
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Labels"), :items => textual_container_labels}
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Selector"), :items => textual_container_selectors}
+    = render :partial => "shared/summary/textual", :locals => {:title => _("Labels"), :items => textual_group_container_labels}
+    = render :partial => "shared/summary/textual", :locals => {:title => _("Selector"), :items => textual_group_container_selectors}
   .col-md-12.col-lg-6
     = render :partial => "shared/summary/textual", :locals => {:title => _("Relationships"), :items => textual_group_relationships}
 

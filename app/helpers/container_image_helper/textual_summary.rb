@@ -5,13 +5,11 @@ module ContainerImageHelper
     #
 
     def textual_group_properties
-      items = %w(name tag id)
-      items.collect { |m| send("textual_#{m}") }
+      %i(name tag id)
     end
 
     def textual_group_relationships
-      items = %w(containers container_image_registry ems)
-      items.collect { |m| send("textual_#{m}") }
+      %i(containers container_image_registry ems)
     end
 
     #

@@ -4,10 +4,9 @@ module CimBaseStorageExtentHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name vendor zone_name description operational_status_str health_state_str enabled_state
-                system_name number_of_blocks block_size consumable_blocks device_id extent_status
-                primordial? last_update_status_str}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(name vendor zone_name description operational_status_str health_state_str enabled_state
+       system_name number_of_blocks block_size consumable_blocks device_id extent_status
+       primordial? last_update_status_str)
   end
 
   #

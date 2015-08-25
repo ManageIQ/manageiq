@@ -4,13 +4,11 @@ module ContainerRouteHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name creation_timestamp resource_version)
-    items.collect { |m| send("textual_#{m}") }
+    %i(name creation_timestamp resource_version)
   end
 
   def textual_group_relationships
-    items = %w(ems container_project container_service)
-    items.collect { |m| send("textual_#{m}") }
+    %i(ems container_project container_service)
   end
 
   #

@@ -6,64 +6,51 @@ module HostHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
-               power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
-               guid}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
+       power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
+       guid)
   end
 
   def textual_group_relationships
-    items = %w{ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history)
   end
 
   def textual_group_storage_relationships
-    items = %w{storage_systems storage_volumes logical_disks file_shares}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(storage_systems storage_volumes logical_disks file_shares)
   end
 
   def textual_group_compliance
-    items = %w{compliance_status compliance_history}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(compliance_status compliance_history)
   end
 
   def textual_group_security
     return nil if @record.is_vmware_esxi?
-    items = %w{users groups patches firewall_rules ssh_root}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(users groups patches firewall_rules ssh_root)
   end
 
   def textual_group_configuration
-    items = %w{guest_applications host_services filesystems advanced_settings}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(guest_applications host_services filesystems advanced_settings)
   end
 
   def textual_group_diagnostics
     return nil unless get_vmdb_config[:product][:proto]
-    items = %w{esx_logs}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(esx_logs)
   end
 
   def textual_group_smart_management
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }
+    %i(tags)
   end
 
   def textual_group_miq_custom_attributes
-    items = %w{miq_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }
-    ret.blank? ? nil : ret
+    textual_miq_custom_attributes
   end
 
   def textual_group_ems_custom_attributes
-    items = %w{ems_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }
-    ret.blank? ? nil : ret
+    textual_ems_custom_attributes
   end
 
   def textual_group_authentications
-    items = %w{authentications}
-    items.collect { |m| self.send("textual_#{m}") }
+    textual_authentications
   end
 
   def textual_group_openstack_status

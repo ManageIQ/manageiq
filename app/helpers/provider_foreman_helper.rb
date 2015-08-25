@@ -1,12 +1,12 @@
 module ProviderForemanHelper
   def textual_group_properties
-    [textual_hostname,
-     textual_ipmi_present,
-     textual_ipaddress,
-     textual_mac_address,
-     textual_configuration_profile_desc,
-     textual_provider_name,
-     textual_zone]
+    %i(hostname
+       ipmi_present
+       ipaddress
+       mac_address
+       configuration_profile_desc
+       provider_name
+       zone)
   end
 
   def textual_hostname
@@ -51,13 +51,13 @@ module ProviderForemanHelper
   end
 
   def textual_group_tags
-    [textual_tags]
+    %i(tags)
   end
 
   def textual_group_environment
-    [textual_configuration_environment_name,
-     textual_configuration_domain_name,
-     textual_configuration_realm_name]
+    %i(configuration_environment_name
+       configuration_domain_name
+       configuration_realm_name)
   end
 
   def textual_configuration_environment_name
@@ -73,11 +73,11 @@ module ProviderForemanHelper
   end
 
   def textual_group_os
-    [textual_configuration_compute_profile_name,
-     textual_configuration_architecture_name,
-     textual_operating_system_flavor_name,
-     textual_customization_script_medium_name,
-     textual_customization_script_ptable_name]
+    %i(configuration_compute_profile_name
+       configuration_architecture_name
+       operating_system_flavor_name
+       customization_script_medium_name
+       customization_script_ptable_name)
   end
 
   def textual_configuration_compute_profile_name
@@ -101,8 +101,8 @@ module ProviderForemanHelper
   end
 
   def textual_group_tenancy
-    [textual_configuration_locations_name,
-     textual_configuration_organizations_name]
+    %i(configuration_locations_name
+       configuration_organizations_name)
   end
 
   def textual_configuration_locations_name
@@ -118,9 +118,9 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile_group_properties
-    [textual_configuration_profile_name,
-     textual_configuration_profile_region,
-     textual_configuration_profile_zone]
+    %i(configuration_profile_name
+       configuration_profile_region
+       configuration_profile_zone)
   end
 
   def textual_configuration_profile_name
@@ -136,9 +136,9 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile_group_environment
-    [textual_configuration_profile_environment,
-     textual_configuration_profile_domain,
-     textual_configuration_profile_puppet_realm]
+    %i(configuration_profile_environment
+       configuration_profile_domain
+       configuration_profile_puppet_realm)
   end
 
   def textual_configuration_profile_environment
@@ -154,11 +154,11 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile_group_os
-    [textual_configuration_profile_compute_profile,
-     textual_configuration_profile_architecture,
-     textual_configuration_profile_os,
-     textual_configuration_profile_medium,
-     textual_configuration_profile_partition_table]
+    %i(configuration_profile_compute_profile
+       configuration_profile_architecture
+       configuration_profile_os
+       configuration_profile_medium
+       configuration_profile_partition_table)
   end
 
   def textual_configuration_profile_compute_profile
@@ -182,8 +182,8 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile_group_tenancy
-    [textual_configuration_profile_configuration_locations,
-     textual_configuration_profile_configuration_organizations]
+    %i(configuration_profile_configuration_locations
+       configuration_profile_configuration_organizations)
   end
 
   def textual_configuration_profile_configuration_locations
