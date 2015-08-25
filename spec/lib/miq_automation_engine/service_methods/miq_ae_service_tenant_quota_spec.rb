@@ -16,7 +16,7 @@ module MiqAeServiceTenantQuotaSpec
     let(:st_storage_quota) { MiqAeMethodService::MiqAeServiceTenantQuota.find(storage_quota.id) }
 
     before do
-      allow(VMDB::Config).to receive(:new).with("vmdb").and_return(double(:config => settings))
+      stub_server_configuration(settings)
     end
 
     it "check max_cpu quota" do
@@ -29,6 +29,10 @@ module MiqAeServiceTenantQuotaSpec
       expect(st_storage_quota.name).to eq('stor')
       expect(st_storage_quota.unit).to eq('GB')
       expect(st_storage_quota.value.to_i).to eq(160)
+    end
+
+    it "check tenant from quota" do
+      expect(st_storage_quota.tenant.name).to eq('fred')
     end
   end
 end

@@ -13,7 +13,7 @@ module MiqAeServiceTenantSpec
     let(:service_tenant) { MiqAeMethodService::MiqAeServiceTenant.find(tenant.id) }
 
     before do
-      allow(VMDB::Config).to receive(:new).with("vmdb").and_return(double(:config => settings))
+      stub_server_configuration(settings)
     end
 
     it "#name" do
