@@ -12,7 +12,8 @@ $color-warning:                             #ec7a08;
 $color-critical:                            #cc0000;
 
 // Product overrides of Patternfly Login variables
-$img-bg-login:                              "../bg-login.jpg";
+$img-bg-login:                              "../bg-login.png";
+$img-bg-login-2:                            "../bg-login-2.png";
 $img-bg-login-whitelabel:                   "../../upload/custom_login_logo.png";
 $login-bg-color:                            #083c5a;
 $login-container-bg-color:                  #000000;
@@ -22,10 +23,11 @@ $login-container-details-border-color-rgba: rgba(0, 0, 0, 0.5);
 @import "patternfly-sprockets";
 @import "patternfly";
 @import "patternfly_overrides";
+@import "login";
 @import "icon_customizations";
 
 .login-pf #brand img { // sets size of brand.svg on login screen (upstream only)
-	height: 40px;
+	height: 38px;
 }
 
 body.whitelabel {
