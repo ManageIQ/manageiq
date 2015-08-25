@@ -341,7 +341,7 @@ class MiqAeClassController < ApplicationController
     presenter[:update_partials][update_partial_div] = r[:partial => update_partial] if update_partial
     if @in_a_form
       action_url =  create_action_url(nodes.first)
-      presenter[:expand_collapse_cells][:c] = 'expand' # incase it was collapsed for summary screen, and incase there were no records on show_list
+      presenter[:show_hide_layout][:paginator] = 'show' # incase it was hidden for summary screen, and incase there were no records on show_list
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:update_partials][:form_buttons_div] = r[
         :partial => "layouts/x_edit_buttons",
@@ -354,8 +354,8 @@ class MiqAeClassController < ApplicationController
         }
       ]
     else
-      # incase it was collapsed for summary screen, and incase there were no records on show_list
-      presenter[:expand_collapse_cells][:c] = 'collapse'
+      # incase it was hidden for summary screen, and incase there were no records on show_list
+      presenter[:show_hide_layout][:paginator] = 'hide'
       presenter[:set_visible_elements][:form_buttons_div] = false
     end
 
@@ -372,11 +372,11 @@ class MiqAeClassController < ApplicationController
     # Rebuild the toolbars
     presenter[:reload_toolbars][:history] = { :buttons => h_buttons, :xml => h_xml }
     if c_buttons && c_xml
-      presenter[:expand_collapse_cells][:a] = 'expand'
+      presenter[:show_hide_layout][:toolbar] = 'show'
       presenter[:reload_toolbars][:center] = { :buttons => c_buttons, :xml => c_xml }
       presenter[:set_visible_elements][:center_buttons_div] = true
     else
-      presenter[:expand_collapse_cells][:a] = 'collapse'
+      presenter[:show_hide_layout][:toolbar] = 'hide'
       presenter[:set_visible_elements][:center_buttons_div] = false
     end
 
