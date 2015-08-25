@@ -228,4 +228,17 @@ describe HostController do
       expect(controller.send(:breadcrumb_name, nil)).to eq("Hosts")
     end
   end
+
+  context "#process_objects" do
+    it "returns array of object ids " do
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryGirl.create(:vm_vmware)
+      vm3 = FactoryGirl.create(:vm_vmware)
+      vms=[vm1.id, vm2.id, vm3.id]
+      controller.send(:process_objects, vms, 'refresh_ems')
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages.first[:message]).to include "Refresh Ems initiated for #{vms.length} VMs"
+    end
+  end
 end
+
