@@ -6,7 +6,7 @@ class CreateBlacklistedEvents < ActiveRecord::Migration
       t.bigint  :ems_id
       t.boolean :system
       t.boolean :enabled
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 end
