@@ -73,7 +73,7 @@ function miqPrepRightCellForm(tree) {
   if ($('#adv_searchbox_div').length) {
     $('#adv_searchbox_div').hide();
   }
-  dhxLayoutB.cells("a").collapse();
+  ManageIQ.layout.toolbar.hide();
   $('#' + tree).dynatree('disable');
   miqDimDiv(tree + '_div', true);
 }
@@ -1229,3 +1229,4 @@ function miqSelectPickerEvent(element, url){
     return true;
   });
 }
+

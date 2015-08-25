@@ -467,14 +467,14 @@ module OpsController::Diagnostics
       #page.replace_html("main_div", :partial=>"layouts/gtl")
       page.replace_html(@sb[:active_tab], :partial=>"#{@sb[:active_tab]}_tab")
       if c_buttons && c_xml
-        page << "dhxLayoutB.cells('a').expand();"
+        page << "ManageIQ.layout.toolbar.show();"
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
         page << javascript_show_if_exists("center_buttons_div")
       else
-        page << "dhxLayoutB.cells('a').collapse();"
+        page << "ManageIQ.layout.toolbar.hide();"
         page << javascript_hide_if_exists("center_buttons_div")
       end
-      page << "dhxLayoutB.cells('a').collapse();" if @sb[:center_tb_filename] == "blank_view_tb"
+      page << "ManageIQ.layout.toolbar.hide();" if @sb[:center_tb_filename] == "blank_view_tb"
     end
   end
 
@@ -802,14 +802,14 @@ module OpsController::Diagnostics
         page.replace("zone_tree_div", :partial=>"zone_tree")
       end
       if c_buttons && c_xml
-        page << "dhxLayoutB.cells('a').expand();"
+        page << "ManageIQ.layout.toolbar.show();"
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
         page << javascript_show_if_exists("center_buttons_div")
       else
-        page << "dhxLayoutB.cells('a').collapse();"
+        page << "ManageIQ.layout.toolbar.hide();"
         page << javascript_hide_if_exists("center_buttons_div")
       end
-      page << "dhxLayoutB.cells('a').collapse();" if @sb[:center_tb_filename] == "blank_view_tb"
+      page << "ManageIQ.layout.toolbar.hide();" if @sb[:center_tb_filename] == "blank_view_tb"
     end
   end
 
