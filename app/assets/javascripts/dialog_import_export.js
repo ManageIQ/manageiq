@@ -31,37 +31,26 @@ var getAndRenderServiceDialogJson = function(importFileUploadId, message) {
       return status_img + dataContext.status;
     };
 
-    var inputCheckboxFormatter = function(row, cell, value, columnDef, dataContext) {
-      var checked = '';
-      var value = dataContext.name;
-      var attributes = "class='import-checkbox' type='checkbox' name='dialogs_to_import[]' value = '" + value + "'";
-      if (dataContext.status_icon == 'equal-green') {
-        checked = "checked='checked'";
-      }
-      return "<input " + attributes + checked + "></input>";
-    };
-
     var dataview = new Slick.Data.DataView({inlineFilters: true});
 
+    var checkboxSelector = new Slick.CheckboxSelectColumn({
+      cssClass: "import-checkbox",
+    });
+
     var columns = [
+      checkboxSelector.getColumnDefinition(),
       {
-      id: "import",
-      name: "Import",
-      field: "import_checkbox",
-      width: 65,
-      formatter: inputCheckboxFormatter
-    }, {
-      id: "name",
-      name: "Service Dialog Name",
-      field: "name",
-      width: 300
-    }, {
-      id: "status",
-      name: "Status",
-      field: "status",
-      width: 300,
-      formatter: statusFormatter
-    }
+        id: "name",
+        name: "Service Dialog Name",
+        field: "name",
+        width: 300
+      }, {
+        id: "status",
+        name: "Status",
+        field: "status",
+        width: 300,
+        formatter: statusFormatter
+      }
     ];
 
     dataview.beginUpdate();
@@ -70,9 +59,29 @@ var getAndRenderServiceDialogJson = function(importFileUploadId, message) {
 
     var grid = new Slick.Grid("#import-grid", dataview, columns, {enableColumnReorder: false});
 
+    grid.setSelectionModel(new Slick.RowSelectionModel({selectActiveRow: false}));
+    grid.registerPlugin(checkboxSelector);
+
     $('#import_file_upload_id').val(importFileUploadId);
     $('.import-data').show();
     $('.import-or-export').hide();
+
+    var rowsToSelect = [];
+    $.each(grid.getData().getItems(), function(index, item) {
+      if (item.status_icon === 'equal-green') {
+        rowsToSelect.push(item.id);
+      }
+    });
+
+    grid.setSelectedRows(rowsToSelect);
+    grid.invalidate();
+    grid.render();
+
+    setUpImportClickHandlers('import_service_dialogs', grid, function() {
+      $.get('dialog_accordion_json', function(data) {
+        ManageIQ.dynatreeReplacement.replace(data.locals_for_render);
+      });
+    });
   });
 
   showSuccessMessage(JSON.parse(message).message);

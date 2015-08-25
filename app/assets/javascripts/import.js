@@ -1,11 +1,18 @@
 //= require_directory ./SlickGrid-2.1/
 
-var setUpImportClickHandlers = function(url, importCallback) {
+var setUpImportClickHandlers = function(url, grid, importCallback) {
   $('.import-commit').click(function() {
     miqSparkleOn();
     clearMessages();
 
-    $.post(url, $('#import-form').serialize(), function(data) {
+    var serializedDialogs = '';
+    $.each(grid.getData().getItems(), function(index, item) {
+      if ($.inArray(item.id, grid.getSelectedRows()) !== -1) {
+        serializedDialogs += '&dialogs_to_import[]=' + item.name;
+      }
+    });
+
+    $.post(url, $('#import-form').serialize() + serializedDialogs, function(data) {
       var flashMessage = data[0];
       if (flashMessage.level == 'error') {
         showErrorMessage(flashMessage.message);
@@ -36,10 +43,6 @@ var setUpImportClickHandlers = function(url, importCallback) {
       $('.import-data').hide();
       miqSparkleOff();
     }, 'json');
-  });
-
-  $('#toggle-all').click(function() {
-    $('.import-checkbox').prop('checked', this.checked);
   });
 };
 
