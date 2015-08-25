@@ -125,3 +125,23 @@
     = javascript_show("control_searchbar")
     = javascript_focus("search_text")
   };
+
+:javascript
+  ManageIQ.layout.toolbar = {
+    hide: function() { #{layoutb_name}.cells('a').collapse(); },
+    show: function() { #{layoutb_name}.cells('a').expand(); },
+    height: function(v) { #{layoutb_name}.cells('a').setHeight(v); }
+  };
+
+  ManageIQ.layout.content = {
+    hide: function() { #{layoutb_name}.cells('b').collapse(); },
+    show: function() { #{layoutb_name}.cells('b').expand(); },
+    height: function(v) { #{layoutb_name}.cells('b').setHeight(v); },
+    title: function(v) { #{layoutb_name}.cells('b').setText(v); }
+  };
+
+  ManageIQ.layout.paginator = {
+    hide: function() { #{layoutb_name}.cells('c').collapse(); },
+    show: function() { #{layoutb_name}.cells('c').expand(); },
+    height: function(v) { #{layoutb_name}.cells('c').setHeight(v); }
+  }

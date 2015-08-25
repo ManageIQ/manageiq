@@ -71,8 +71,8 @@
     listenForWidgetPostMessages();
     setUpImportWidgetClickHandlers();
 
-    if (typeof(dhxLayoutB) !== 'undefined') {
-      dhxLayoutB.cells('c').collapse();
+    if (typeof(ManageIQ.layout.toolbar.hide) !== 'undefined') {
+      ManageIQ.layout.toolbar.hide();
       $('.widget-export-buttons').show();
     }
   });
