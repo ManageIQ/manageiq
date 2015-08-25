@@ -1,0 +1,66 @@
+= render :partial => "layouts/flash_msg"
+#main_div
+  .row
+    .col-md-12.col-lg-6
+      %fieldset
+        - type = @tenant.tenant? ? "Tenant" : "Project"
+        %h3= _("#{type} Information")
+        %table.style1
+          %tr
+            %td.key= _("Name")
+            %td{:nowrap => ""}
+              = h(@tenant.name)
+          %tr
+            %td.key= _("Description")
+            %td
+              = h(@tenant.description)
+          - parent = @tenant.parent
+          - if parent
+            %tr
+              %td.key= _("Parent")
+              %td.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(parent.id)}');",
+                  :title   => _("View Parent Tenant")}
+                = h(parent.name)
+          %tr
+            %td.key= _("Groups in this #{type}")
+            %td
+              %table{:cellpadding => "0", :cellspacing => "0"}
+                - @tenant.miq_groups.sort_by { |group| group.name.downcase }.each do |g|
+                  %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",
+                              :title   => _("View this Group")}
+                    %td
+                      %span.product.product-group
+                      = h(g.name)
+  - all_subtenants = @tenant.all_subtenants
+  - unless all_subtenants.blank?
+    %h3= _("Child Tenants")
+    %table.table.table-striped.table-bordered.table-hover
+      %thead
+        %th.narrow
+        %th= _("Name")
+        %tbody
+          - all_subtenants.each do |tenant|
+            %tr{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+              :title => _("Click to view child Tenant")}
+              %td.narrow
+                %ul.icons.list-unstyled
+                  %li
+                    %span.product.product-tenant
+              %td= tenant.name
+  - all_subprojects = @tenant.all_subprojects
+  - unless all_subprojects.blank?
+    %h3= _("Projects")
+    %table.table.table-striped.table-bordered.table-hover
+      %thead
+        %th.narrow
+        %th= _("Name")
+        %tbody
+          - all_subprojects.each do |tenant|
+            %tr{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+              :title => _("Click to view child TenantProject")}
+              %td.narrow
+                %ul.icons.list-unstyled
+                  %li
+                    %span.product.product-project
+              %td= tenant.name
+

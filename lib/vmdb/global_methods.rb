@@ -36,48 +36,6 @@ module Vmdb
     end
 
     # Had to add timezone methods here, they are being called from models
-    def get_timezone_abbr(typ="server")
-      # return timezone abbreviation
-      if typ == "server"
-        tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-        tz = ActiveSupport::TimeZone::MAPPING[tz.blank? ? "UTC" : tz]
-        time = Time.now
-      else
-        tz = Time.zone
-        time = Time.zone.now
-      end
-      new_time = time.in_time_zone(tz)
-      abbr = new_time.strftime("%Z")
-      return abbr
-    end
-
-    def get_timezone_offset(typ="server",formatted=false)
-      # returns utc_offset of timezone
-      if typ == "server"
-        tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-        tz = ActiveSupport::TimeZone::MAPPING[tz.blank? ? "UTC" : tz]
-      else
-        tz = get_timezone_for_userid(session[:userid])
-        @tz = tz unless tz.blank?
-        tz = ActiveSupport::TimeZone::MAPPING[@tz]
-      end
-      ActiveSupport::TimeZone.all.each do  |a|
-        if ActiveSupport::TimeZone::MAPPING[a.name] == tz
-          if formatted
-            return a.formatted_offset
-          else
-            return a.utc_offset
-          end
-        end
-      end
-    end
-
-    def get_timezone_for_userid(user = nil)
-      user = User.find_by_userid(user) if user.kind_of?(String)
-      tz = user && user.settings.fetch_path(:display, :timezone).presence
-      tz || MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
-    end
-
     #returns formatted time in specified timezone and format
     def format_timezone(time,timezone=Time.zone.name,ftype="view")
       timezone = timezone.name if timezone.is_a?(ActiveSupport::TimeZone)   # If a Timezone object comes in, just get the name

@@ -434,15 +434,6 @@ describe VmOrTemplate do
     end
   end
 
-  context "#tenants" do
-    let(:tenant) { FactoryGirl.create(:tenant) }
-    it "has a tenant owner" do
-      vm = FactoryGirl.create(:vm_vmware)
-      vm.tenants << tenant
-      expect(tenant.vm_or_templates).to include(vm)
-    end
-  end
-
   context "#is_available?" do
     it "returns true for SCVMM VM" do
       vm =  FactoryGirl.create(:vm_vmware)
@@ -452,6 +443,18 @@ describe VmOrTemplate do
     it "returns true for vmware VM" do
       vm =  FactoryGirl.create(:vm_microsoft)
       expect(vm.is_available?(:migrate)).to_not eq(true)
+    end
+  end
+
+  context "#is_available? for Smartstate Analysis" do
+    it "returns true for VMware VM" do
+      vm =  FactoryGirl.create(:vm_vmware)
+      expect(vm.is_available?(:smartstate_analysis)).to eq(true)
+    end
+
+    it "returns false for Amazon VM" do
+      vm =  FactoryGirl.create(:vm_amazon)
+      expect(vm.is_available?(:smartstate_analysis)).to_not eq(true)
     end
   end
 

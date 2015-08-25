@@ -7,7 +7,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   def initialize(values, requester, resource_action, options={})
     @settings        = {}
-    @requester       = User.lookup_by_identity(requester)
+    @requester       = requester
     @target          = options[:target]
     @dialog          = load_dialog(resource_action, values)
 

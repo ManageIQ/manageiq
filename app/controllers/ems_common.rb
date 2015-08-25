@@ -784,10 +784,10 @@ module EmsCommon
       @edit[:new][:emstype] = params[:server_emstype]
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
-      elsif params[:server_emstype] == EmsKubernetes.ems_type
-        @edit[:new][:port] = @ems.port ?  @ems.port : EmsKubernetes.new.port
-      elsif params[:server_emstype] == EmsOpenshift.ems_type
-        @edit[:new][:port] = @ems.port ?  @ems.port : EmsOpenshift.new.port
+      elsif params[:server_emstype] == ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
+        @edit[:new][:port] = @ems.port ?  @ems.port : ManageIQ::Providers::Kubernetes::ContainerManager.new.port
+      elsif params[:server_emstype] == ManageIQ::Providers::Openshift::ContainerManager.ems_type
+        @edit[:new][:port] = @ems.port ?  @ems.port : ManageIQ::Providers::Openshift::ContainerManager.new.port
       else
         @edit[:new][:port] = nil
       end
@@ -832,7 +832,7 @@ module EmsCommon
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
-    if ems.is_a?(EmsMicrosoft)
+    if ems.is_a?(ManageIQ::Providers::Microsoft::InfraManager)
       ems.security_protocol = @edit[:new][:security_protocol]
       ems.realm = @edit[:new][:realm]
     end

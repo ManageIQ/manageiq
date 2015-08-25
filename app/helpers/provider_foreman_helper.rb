@@ -54,20 +54,6 @@ module ProviderForemanHelper
     [textual_tags].flatten.compact
   end
 
-  def textual_tags
-    label = _("%s Tags") % session[:customer_name]
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] =
-        tags.sort_by { |category, _assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned} }
-    end
-    h
-  end
-
   def textual_group_environment
     [textual_configuration_environment_name,
      textual_configuration_domain_name,

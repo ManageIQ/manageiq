@@ -122,4 +122,11 @@ describe MiqHashStruct do
       expect(hs.to_hash[:abc]).to eq(123)
     end
   end
+
+  context "dump and load" do
+    let (:orig) { described_class.new("a" => 1, "b" => 2) }
+
+    it("Marshal") { expect(Marshal.load(Marshal.dump(orig))).to eq(orig) }
+    it("YAML")    { expect(YAML.load(YAML.dump(orig))).to       eq(orig) }
+  end
 end

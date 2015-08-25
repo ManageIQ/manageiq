@@ -30,7 +30,7 @@ describe('update-drop-down-for-filter initialization', function() {
     it('it attaches an error class to selectpicker', inject(function($timeout) {
       form.filter_value.$setViewValue('');
       $timeout.flush();
-      expect(elem[0][2].className).toMatch(/selectpicker/);
+      expect(elem[0][1].className).toMatch(/bs-select-hidden/);
       expect(elem[0][2].className).toMatch(/btn-red-border/);
       expect(elem[0][2].parentElement.attributes['style']['value']).not.toMatch(/display: none/);
       expect($scope.angularForm.filter_value.$viewValue).toBe("");
@@ -42,7 +42,7 @@ describe('update-drop-down-for-filter initialization', function() {
     it('it clears the error class previously attached to selectpicker', inject(function($timeout) {
       form.filter_value.$setViewValue('Ketchup');
       $timeout.flush();
-      expect(elem[0][2].className).toMatch(/selectpicker/);
+      expect(elem[0][1].className).toMatch(/bs-select-hidden/);
       expect(elem[0][2].className).toMatch(/btn-default/);
       expect(elem[0][2].className).not.toMatch(/btn-red-border/);
       expect(elem[0][2].parentElement.attributes['style']['value']).not.toMatch(/display: none/);

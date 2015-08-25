@@ -615,9 +615,15 @@ function miqPassFields(url, args) {
 // Load XML/SWF charts data (non-IE)
 // This method is called by the XML/SWF charts when a chart is loaded into the DOM
 function Loaded_Chart(chart_id) {
-  if ((ManageIQ.browser != 'Explorer') &&
-      (typeof (ManageIQ.charts.chartData) != 'undefined')) {
-    doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
+  if (ManageIQ.browser != 'Explorer') {
+    if ((ManageIQ.charts.chartData === null) && (document.readyState == "loading")) {
+      setTimeout(function() { Loaded_Chart(chart_id) }, 200);
+      return;
+    }
+
+    if (ManageIQ.charts.chartData !== null) {
+      doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
+    }
   }
 }
 
@@ -940,12 +946,12 @@ function miqBuildCalendar() {
 
   all.each(function () {
     var element = $(this);
+    var observeDateBackup = null;
 
     if (! element.data('datepicker')) {
-      var observeDateBackup = ManageIQ.observeDate;
+      observeDateBackup = ManageIQ.observeDate;
       ManageIQ.observeDate = function() {};
       element.datepicker();
-      ManageIQ.observeDate = observeDateBackup;
     }
 
     if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
@@ -958,6 +964,10 @@ function miqBuildCalendar() {
 
     if (typeof miq_cal_skipDays != "undefined") {
       element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
+    }
+
+    if (observeDateBackup != null) {
+      ManageIQ.observeDate = observeDateBackup;
     }
   });
 }

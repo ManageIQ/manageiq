@@ -241,7 +241,7 @@ module ApplicationController::CiProcessing
     end
     obj = kls.find_by_id(params[:id])
     render :json => {
-      :retirement_date    => obj.retires_on.strftime('%m/%d/%Y'),
+      :retirement_date    => obj.retires_on.try(:strftime, '%m/%d/%Y'),
       :retirement_warning => obj.retirement_warn
     }
   end
@@ -1340,6 +1340,22 @@ module ApplicationController::CiProcessing
   alias instance_stop stopvms
   alias vm_stop stopvms
 
+  # Shelve all selected or single displayed vm(s)
+  def shelvevms
+    assert_privileges(params[:pressed])
+    vm_button_operation('shelve', 'shelve')
+  end
+  alias instance_shelve shelvevms
+  alias vm_shelve shelvevms
+
+  # Shelve all selected or single displayed vm(s)
+  def shelveoffloadvms
+    assert_privileges(params[:pressed])
+    vm_button_operation('shelve_offload', 'shelve_offload')
+  end
+  alias instance_shelve_offload shelveoffloadvms
+  alias vm_shelve_offload shelveoffloadvms
+
   # Reset all selected or single displayed vm(s)
   def resetvms
     assert_privileges(params[:pressed])
@@ -1873,6 +1889,9 @@ module ApplicationController::CiProcessing
     when "#{pfx}_start"                     then startvms
     when "#{pfx}_stop"                      then stopvms
     when "#{pfx}_suspend"                   then suspendvms
+    when "#{pfx}_pause"                     then pausevms
+    when "#{pfx}_shelve"                    then shelvevms
+    when "#{pfx}_shelveoffloadvms"          then shelveoffloadvms
     when "#{pfx}_reset"                     then resetvms
     when "#{pfx}_check_compliance"          then check_compliance_vms
     when "#{pfx}_reconfigure"               then reconfigurevms

@@ -136,6 +136,10 @@ module MiqAeMethodService
       MiqAeServiceModelBase.wrap_results(MiqProvisionVirtWorkflow.from_ws(*args))
     end
 
+    def self.create_automation_request(options, userid, auto_approve = false)
+      MiqAeServiceModelBase.wrap_results(AutomationRequest.create_request(options, userid, auto_approve))
+    end
+
     private
 
     def self.service_now_drb_undumped

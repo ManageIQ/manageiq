@@ -32,31 +32,18 @@
           \&nbsp;&nbsp;
           = _("* Changing the Time Zone will reset the Starting Date and Time fields below")
 
-      .form-group{"ng-controller" => "DatepickerCtrl"}
+      .form-group
         %label.col-md-2.control-label{"for" => "textInput-markup"}
           = _("Starting Date")
         .col-md-2
-          #start_date
-            %div
-              %p.input-group
-                %input.form-control{"type"             => "date",
-                                    "class"            => "form-control",
-                                    "id"               => "start_date",
-                                    "name"             => "start_date",
-                                    "datepicker-popup" => "",
-                                    "ng-model"         => "scheduleModel.start_date",
-                                    "is-open"          => "opened",
-                                    "min-date"         => "minDate",
-                                    "ng-required"      => "true",
-                                    "show-button-bar"  => "false",
-                                    "readonly"         => "true",
-                                    "checkchange"      => ""}
-                  %span.input-group-btn
-                    %button{"type"     => "button",
-                            "class"    => "btn btn-default",
-                            "ng-click" => "open($event)"}
-                      %i{"class" => "glyphicon glyphicon-calendar"}
-
+          %p.input-group
+            = datepicker_input_tag("start_date", nil,
+                                   "class"             => "form-control",
+                                   "required"          => true,
+                                   "ng-model"          => "scheduleModel.start_date",
+                                   "miq-calendar"      => true,
+                                   "miq-cal-date-from" => "date_from",
+                                   "checkchange"       => "")
       .form-group
         %label.col-md-2.control-label{"for" => "textInput-markup"}
           = _("Starting Time")

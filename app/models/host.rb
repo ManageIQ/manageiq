@@ -973,7 +973,7 @@ class Host < ActiveRecord::Base
     find_method = :find_by_ipaddress
     if ost.hypervisor.include?(:hyperv)
       self.name        = "Microsoft Hyper-V (#{ipaddr})"
-      self.type        = "HostMicrosoft"
+      self.type        = "ManageIQ::Providers::Microsoft::InfraManager::Host"
       self.ipaddress   = ipaddr
       self.vmm_vendor  = "microsoft"
       self.vmm_product = "Hyper-V"

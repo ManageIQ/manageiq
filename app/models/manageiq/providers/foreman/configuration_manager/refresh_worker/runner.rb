@@ -1,4 +1,2 @@
-require 'workers/ems_refresh_worker'
-
-class ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker::Runner < EmsRefreshWorker
+class ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker::Runner < ManageIQ::Providers::BaseManager::RefreshWorker::Runner
 end

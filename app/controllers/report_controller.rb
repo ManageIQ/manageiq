@@ -120,8 +120,8 @@ class ReportController < ApplicationController
     @report          = nil
     @edit            = nil
     @timeline        = true
-    @timezone_abbr   = get_timezone_abbr("server")
-    @timezone_offset = get_timezone_offset("server")
+    @timezone_abbr   = get_timezone_abbr
+    @timezone_offset = get_timezone_offset
     @sb[:select_node] = false
     @sb[:open_tree_nodes] ||= Array.new
     @trees = Array.new

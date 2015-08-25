@@ -17,13 +17,14 @@
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
 //= require services/timer_option_service
-//= require controllers/angular-bootstrap/DatepickerCtrl
+//= require controllers/host/host_form_controller
 //= require controllers/provider_foreman/provider_foreman_form_controller
 //= require controllers/repository/repository_form_controller
 //= require controllers/retirement/retirement_form_controller
 //= require controllers/schedule/schedule_form_controller
 //= require controllers/ops/diagnostics_database_form_controller
 //= require controllers/ops/log_collection_form_controller
+//= require controllers/ops/tenant_form_controller
 //= require miq_application
 //= require miq_dynatree_replacement
 //= require dialog_import_export

@@ -14,7 +14,7 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
       name: '',
       timer_typ: '',
       timer_value: '',
-      start_date: '',
+      start_date: null,
       start_hour: '',
       start_min: '',
       time_zone: '',
@@ -22,6 +22,7 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
       uri_prefix: '',
       filter_value: ''
     };
+    $scope.date_from = null;
     $scope.formId = scheduleFormId;
     $scope.afterGet = false;
     $scope.modelCopy = angular.copy( $scope.scheduleModel );
@@ -30,43 +31,44 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
     ManageIQ.angularApplication.$scope = $scope;
 
     if (scheduleFormId == 'new') {
-      $scope.newRecord                         = true;
-      $scope.scheduleModel.action_typ          = 'vm';
-      $scope.scheduleModel.filter_typ          = 'all';
-      $scope.scheduleModel.enabled             = true;
-      $scope.filterValuesEmpty                 = true;
-      $scope.scheduleModel.start_date          = moment().add(1, 'days').toDate();
-      $scope.scheduleModel.timer_typ           = 'Once';
-      $scope.scheduleModel.time_zone           = 'UTC';
-      $scope.scheduleModel.start_hour          = '0';
-      $scope.scheduleModel.start_min           = '0';
-      $scope.afterGet                           = true;
-      $scope.modelCopy                          = angular.copy( $scope.scheduleModel );
+      $scope.newRecord                = true;
+      $scope.scheduleModel.action_typ = 'vm';
+      $scope.scheduleModel.filter_typ = 'all';
+      $scope.scheduleModel.enabled    = true;
+      $scope.filterValuesEmpty        = true;
+      $scope.scheduleModel.start_date = moment.utc().add(1, 'days').toDate();
+      $scope.scheduleModel.timer_typ  = 'Once';
+      $scope.scheduleModel.time_zone  = 'UTC';
+      $scope.scheduleModel.start_hour = '0';
+      $scope.scheduleModel.start_min  = '0';
+      $scope.afterGet                 = true;
+      $scope.modelCopy                = angular.copy( $scope.scheduleModel );
       $scope.setTimerType();
+      $scope.date_from = new Date();
     } else {
       $scope.newRecord = false;
 
       miqService.sparkleOn();
 
       $http.get('/ops/schedule_form_fields/' + scheduleFormId).success(function(data) {
-        $scope.scheduleModel.action_typ         = data.action_type;
-        $scope.scheduleModel.depot_name         = data.depot_name;
-        $scope.scheduleModel.filter_typ         = data.filter_type;
-        $scope.scheduleModel.log_userid         = data.log_userid;
-        $scope.scheduleModel.log_password       = data.log_password;
-        $scope.scheduleModel.log_verify         = data.log_verify;
-        $scope.scheduleModel.log_protocol       = data.protocol;
-        $scope.scheduleModel.description        = data.schedule_description;
-        $scope.scheduleModel.enabled            = data.schedule_enabled == "1" ? true : false;
-        $scope.scheduleModel.name               = data.schedule_name;
-        $scope.scheduleModel.timer_typ          = data.schedule_timer_type;
-        $scope.scheduleModel.timer_value        = data.schedule_timer_value;
-        $scope.scheduleModel.start_date         = new Date(data.schedule_start_date);
-        $scope.scheduleModel.start_hour         = data.schedule_start_hour.toString();
-        $scope.scheduleModel.start_min          = data.schedule_start_min.toString();
-        $scope.scheduleModel.time_zone          = data.schedule_time_zone;
-        $scope.scheduleModel.uri                = data.uri;
-        $scope.scheduleModel.uri_prefix         = data.uri_prefix;
+        $scope.scheduleModel.action_typ   = data.action_type;
+        $scope.scheduleModel.depot_name   = data.depot_name;
+        $scope.scheduleModel.filter_typ   = data.filter_type;
+        $scope.scheduleModel.log_userid   = data.log_userid;
+        $scope.scheduleModel.log_password = data.log_password;
+        $scope.scheduleModel.log_verify   = data.log_verify;
+        $scope.scheduleModel.log_protocol = data.protocol;
+        $scope.scheduleModel.description  = data.schedule_description;
+        $scope.scheduleModel.enabled      = data.schedule_enabled == "1" ? true : false;
+        $scope.scheduleModel.name         = data.schedule_name;
+        $scope.scheduleModel.timer_typ    = data.schedule_timer_type;
+        $scope.scheduleModel.timer_value  = data.schedule_timer_value;
+        $scope.scheduleModel.start_date   = moment.utc(data.schedule_start_date, 'MM-DD-YYYY').toDate();
+        $scope.scheduleModel.start_hour   = data.schedule_start_hour.toString();
+        $scope.scheduleModel.start_min    = data.schedule_start_min.toString();
+        $scope.scheduleModel.time_zone    = data.schedule_time_zone;
+        $scope.scheduleModel.uri          = data.uri;
+        $scope.scheduleModel.uri_prefix   = data.uri_prefix;
 
         $scope.setTimerType();
 

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionMicrosoftWorkflow do
+describe ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow do
   before do
     MiqRegion.seed
   end
@@ -11,8 +11,8 @@ describe MiqProvisionMicrosoftWorkflow do
     let(:template) { FactoryGirl.create(:template_microsoft, :name => "template", :ext_management_system => provider) }
 
     before do
-      MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-      MiqProvisionMicrosoftWorkflow.any_instance.stub(:update_field_visibility)
+      ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+      ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.any_instance.stub(:update_field_visibility)
     end
 
     it "pass platform attributes to automate" do
@@ -29,7 +29,7 @@ describe MiqProvisionMicrosoftWorkflow do
         )
       end
 
-      MiqProvisionMicrosoftWorkflow.new({}, admin.userid)
+      ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow.new({}, admin.userid)
     end
   end
 end

@@ -4,7 +4,7 @@
     %tbody
       - @folders.each do |f|
         %tr{:title => (_("View %s Folder") % f[0]),
-          :onclick => "cfmeDynatree_activateNode('old_dialogs_tree', 'xx-MiqDialog_#{f[1]}');"}
+          :onclick => "miqDynatreeActivateNode('old_dialogs_tree', 'xx-MiqDialog_#{f[1]}');"}
           %td.narrow
             %img{:src => "/images/icons/new/folder.png"}
           %td

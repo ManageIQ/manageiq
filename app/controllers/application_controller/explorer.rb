@@ -60,6 +60,7 @@ module ApplicationController::Explorer
     'guest_restart'    => :s1, 'retire_now'                => :s1, 'snapshot_revert'     => :s1,
     'start'            => :s1, 'stop'                      => :s1, 'suspend'             => :s1,
     'reset'            => :s1, 'terminate'                 => :s1, 'pause'               => :s1,
+    'shelve'           => :s1, 'shelve_offload'            => :s1,
 
     # group 2
     'clone'     => :s2, 'compare'          => :s2, 'drift'           => :s2,
@@ -177,7 +178,7 @@ module ApplicationController::Explorer
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
-    @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name=>ui_lookup(:models=>@tagging), :model=>"#{session[:customer_name]} Tags"}
+    @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name => ui_lookup(:models => @tagging), :model => "#{current_tenant.name} Tags"}
     replace_right_cell(@sb[:action])
   end
 
@@ -411,7 +412,7 @@ module ApplicationController::Explorer
       return count_only ? objects.length : objects
     when :db
       objects = Array.new
-      @default_ws = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
+      @default_ws = MiqWidgetSet.where_unique_on("default").where(:read_only => true).first
       text = "#{@default_ws.description} (#{@default_ws.name})"
       objects.push(:id=>to_cid(@default_ws.id),:text=>text, :image=>"dashboard", :tip=>text )
       objects.push({:id=>"g", :text=>"All Groups", :image=>"folder", :tip=>"All Groups"})

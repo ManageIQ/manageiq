@@ -38,8 +38,8 @@
                             ManageIQ.calendar.calDateFrom = undefined;
                         - else
                           :javascript
-                            ManageIQ.calendar.calDateFrom = new Date("#{Time.now.in_time_zone(session[:user_tz]).strftime("%Y, %m, %d")}");
-                        - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
+                            ManageIQ.calendar.calDateFrom = new Date("#{Time.zone.now.strftime("%Y, %m, %d")}");
+                        - t = Time.zone.now + 1.day
                         - date_val = field.value ? field.value.split(" ") : ["#{t.month}/#{t.day}/#{t.year}"]
                         = datepicker_input_tag("miq_date_1", h(date_val[0]),
                           :class    => "css1",

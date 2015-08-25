@@ -2,6 +2,7 @@ require 'fileutils'
 require 'tempfile'
 require 'appliance_console/principal'
 require 'appliance_console/certificate'
+require 'util/postgres_admin'
 
 module ApplianceConsole
   # configure ssl certificates for postgres communication
@@ -80,7 +81,7 @@ module ApplianceConsole
         # only telling postgres to rewrite server configuration files
         # no need for username/password since not writing database.yml
         InternalDatabaseConfiguration.new(:ssl => true).configure_postgres
-        LinuxAdmin::Service.new(ApplianceConsole::POSTGRESQL_SERVICE).restart
+        LinuxAdmin::Service.new(PostgresAdmin.service_name).restart
       end
       self.pgserver = cert.status
     end

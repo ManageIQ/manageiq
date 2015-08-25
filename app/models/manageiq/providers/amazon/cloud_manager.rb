@@ -7,6 +7,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   require_dependency 'manageiq/providers/amazon/cloud_manager/event_parser'
   require_dependency 'manageiq/providers/amazon/cloud_manager/flavor'
   require_dependency 'manageiq/providers/amazon/cloud_manager/floating_ip'
+  require_dependency 'manageiq/providers/amazon/cloud_manager/metrics_capture'
   require_dependency 'manageiq/providers/amazon/cloud_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/amazon/cloud_manager/orchestration_service_option_converter'
   require_dependency 'manageiq/providers/amazon/cloud_manager/orchestration_stack'
@@ -29,6 +30,14 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
   def self.hostname_required?
     false
+  end
+
+  def self.default_blacklisted_event_names
+    %w(
+      ConfigurationSnapshotDeliveryCompleted
+      ConfigurationSnapshotDeliveryStarted
+      ConfigurationSnapshotDeliveryFailed
+    )
   end
 
   validates :provider_region, :inclusion => {:in => ManageIQ::Providers::Amazon::Regions.names}

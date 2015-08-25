@@ -15,6 +15,8 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     when "SHUTOFF"               then "off"
     when "SUSPENDED"             then "suspended"
     when "PAUSED"                then "paused"
+    when "SHELVED"               then "shelved"
+    when "SHELVED_OFFLOADED"     then "shelved_offloaded"
     when "REBOOT", "HARD_REBOOT" then "reboot_in_progress"
     when "ERROR"                 then "non_operational"
     when "BUILD", "REBUILD"      then "wait_for_launch"
@@ -72,6 +74,10 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   end
 
   def validate_migrate
+    validate_supported
+  end
+
+  def validate_smartstate_analysis
     validate_supported
   end
 end

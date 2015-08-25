@@ -1,13 +1,13 @@
-- if session[:userid]
+- if current_user
   %li.dropdown
     %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
       %span.pficon.pficon-user
-      = "#{current_user.name} | #{session[:vmdb_name]}"
+      = "#{current_user.name} | #{appliance_name}"
       %b.caret
     %ul.dropdown-menu
       %li.disabled
         %a{:href => "#"}
-          = _('Server: %s') % session[:vmdb_name]
+          = _('Server: %s') % appliance_name
 
       - if eligible_groups.length > 1
         %li.dropdown-submenu
@@ -30,4 +30,4 @@
 
 - else
   = _('Logging into')
-  = "#{session[:vmdb_name]}"
+  = appliance_name

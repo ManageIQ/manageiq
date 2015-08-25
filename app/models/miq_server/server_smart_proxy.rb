@@ -151,7 +151,7 @@ module MiqServer::ServerSmartProxy
     caps = {:vixDisk => false}
     begin
       # This is only available on Linux
-      if Platform::IMPL == :linux
+      if Sys::Platform::IMPL == :linux
         # We now rely on the server role to determine if we want to enable server scanning.
         # Check if we want to expose this functionality
         #        unless get_config("vmdb").config[:server][:vix_disk_enabled] == false

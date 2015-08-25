@@ -1,3 +1,5 @@
+require 'util/postgres_admin'
+
 class MiqDatabase < ActiveRecord::Base
   REGISTRATION_DEFAULT_VALUES = {
     :registration_type   => "sm_hosted",
@@ -23,7 +25,7 @@ class MiqDatabase < ActiveRecord::Base
   end
 
   def self.postgres_package_name
-    "postgresql92-postgresql-server"
+    PostgresAdmin.package_name
   end
 
   def self.registration_default_values

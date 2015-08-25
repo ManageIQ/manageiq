@@ -52,10 +52,10 @@ ManageIQ.angularApplication.service('miqService', function() {
       var outerBox = $('<div class="alert alert-success">');
       var innerSpan = $('<span class="pficon pficon-ok">');
     }
-      $(outerBox).append(innerSpan);
-      $(outerBox).append(txt);
-      $(outerMost).append(outerBox);
-      $(outerMost).appendTo($("#flash_msg_div"));
+    $(outerBox).append(innerSpan);
+    $(outerBox).append(txt);
+    $(outerMost).append(outerBox);
+    $(outerMost).appendTo($("#flash_msg_div"));
   }
 
   this.miqFlashClear = function() {
@@ -64,6 +64,11 @@ ManageIQ.angularApplication.service('miqService', function() {
 
   this.saveable = function(form) {
     return form.$valid && form.$dirty;
+  };
+
+  this.validateClicked = function (url) {
+    miqSparkleOn();
+    miqAjaxButton(url, true);
   };
 
   this.serializeModel = function(model) {

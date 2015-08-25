@@ -67,6 +67,7 @@ RSpec.configure do |config|
   config.include AuthHelper,  :type => :helper
   config.include AuthRequestHelper, :type => :request
   config.include UiConstants, :type => :view
+  config.include ConfigurationHelper
 
   config.include AutomationSpecHelper, :type => :automation
   config.include PresenterSpecHelper, :type => :presenter, :example_group => {
@@ -107,4 +108,10 @@ VCR.configure do |c|
   }
 
   #c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")
+end
+
+begin
+  require 'coveralls'
+  Coveralls.wear!
+rescue LoadError
 end

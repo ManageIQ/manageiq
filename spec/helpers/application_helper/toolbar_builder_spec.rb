@@ -3,7 +3,12 @@ require "spec_helper"
 describe ApplicationHelper do
   before do
     controller.send(:extend, ApplicationHelper)
+    controller.send(:extend, ApplicationController::CurrentUser)
     self.class.send(:include, ApplicationHelper)
+    self.class.send(:include, ApplicationController::CurrentUser)
+  end
+
+  def self.hide_action(*args)
   end
 
   def method_missing(sym, *args)
@@ -1308,7 +1313,7 @@ describe ApplicationHelper do
         before { @id = "vm_clone" }
 
         it "record is not cloneable" do
-          @record = Vm.create(:type => "VmMicrosoft", :name => "vm", :location => "l2", :vendor => "microsoft")
+          @record = Vm.create(:type => "ManageIQ::Providers::Microsoft::InfraManager::Vm", :name => "vm", :location => "l2", :vendor => "microsoft")
           subject.should == true
         end
 
@@ -2325,6 +2330,7 @@ describe ApplicationHelper do
       context "and id = vm_scan" do
         before do
           @id = "vm_scan"
+          @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
           @record.stub(:has_active_proxy? => true)
         end
         it "when no active proxy" do
@@ -2332,6 +2338,16 @@ describe ApplicationHelper do
           subject.should == "No active SmartProxies found to analyze this VM"
         end
         it_behaves_like 'default case'
+      end
+
+      context "and id = instance_scan" do
+        before do
+          @id = "instance_scan"
+          @record = FactoryGirl.create(:vm_amazon, :vendor => "amazon")
+          @record.stub(:has_active_proxy? => true)
+        end
+        before { @record.stub(:is_available?).with(:smartstate_analysis).and_return(false) }
+        it_behaves_like 'record with error message', 'smartstate_analysis'
       end
 
       context "and id = vm_timeline" do

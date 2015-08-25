@@ -35,7 +35,7 @@ describe('retirementFormController', function() {
 
   describe('initialization', function() {
     it('sets the retirementDate to the value returned with http request', function() {
-      expect($scope.retirementInfo.retirementDate).toEqual('12/31/2015');
+      expect($scope.retirementInfo.retirementDate).toEqual(new Date('2015-12-31'));
     });
 
     it('sets the retirementWarning to the value returned with http request', function() {

@@ -15,7 +15,7 @@ begin
   vmCfgFile = nil
 
   startTime = Time.now
-  vms_path  = File.join((Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
+  vms_path  = File.join((Sys::Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
   vmCfgFile = File.join(vms_path, "vmware", "JanusVM", "JanusVM-17-sep-2007", "JanusVM", "JanusVM.vmx")
 
   # Load VM config file

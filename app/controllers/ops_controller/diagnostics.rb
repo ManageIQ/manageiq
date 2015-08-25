@@ -561,7 +561,7 @@ module OpsController::Diagnostics
   end
 
   def cu_repair_set_form_vars
-    @timezone_offset = get_timezone_offset("server")
+    @timezone_offset = get_timezone_offset
     @in_a_form = true
     @edit ||= Hash.new
     @edit[:new] ||= Hash.new
@@ -794,7 +794,7 @@ module OpsController::Diagnostics
         end
         nodes = x_node.split("-")
         nodes.pop
-        page << "cfmeDynatree_activateNodeSilently('<%= x_active_tree %>', '<%= x_node %>');"
+        page << "miqDynatreeActivateNodeSilently('<%= x_active_tree %>', '<%= x_node %>');"
       end
       if params[:action] == "x_button"
         kls = x_node.split("-").first == "z" ? Zone : MiqServer

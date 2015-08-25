@@ -21,7 +21,7 @@ class MiqNfsSession < MiqGenericMountSession
     # mount 192.168.252.139:/exported/miq /mnt/miq
 
     # Quote the host:exported directory since the directory can have spaces in it
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :macosx
       self.runcmd("sudo mount -t nfs -o resvport '#{@host}:#{@mount_path}' #{@mnt_point}")
     when :linux

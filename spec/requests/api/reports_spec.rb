@@ -68,12 +68,85 @@ RSpec.describe "reports API" do
       :data         => [%w(bar), %w(baz)]
     )
     allow(report).to receive(:table).and_return(table)
-    allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report) # ughhhh
+    allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
 
     api_basic_authorize
     run_get "#{reports_url(report.id)}/results/#{result.to_param}"
 
     expect_result_to_match_hash(@result, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
     expect_request_success
+  end
+
+  it "can fetch all the results" do
+    report = FactoryGirl.create(:miq_report_with_results)
+    result = report.miq_report_results.first
+
+    api_basic_authorize
+    run_get results_url
+
+    expect_result_resources_to_include_hrefs(
+      "resources",
+      [
+        "#{results_url(result.id)}"
+      ]
+    )
+    expect_request_success
+  end
+
+  it "can fetch a specific result as a primary collection" do
+    report = FactoryGirl.create(:miq_report_with_results)
+    result = report.miq_report_results.first
+    table = Ruport::Data::Table.new(
+      :column_names => %w(foo),
+      :data         => [%w(bar), %w(baz)]
+    )
+    allow(report).to receive(:table).and_return(table)
+    allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
+
+    api_basic_authorize
+    run_get results_url(result.id)
+
+    expect_result_to_match_hash(@result, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
+    expect_request_success
+  end
+
+  it "returns an empty result set if none has been run" do
+    report = FactoryGirl.create(:miq_report_with_results)
+    result = report.miq_report_results.first
+
+    api_basic_authorize
+    run_get "#{reports_url(report.id)}/results/#{result.id}"
+
+    expect_result_to_match_hash(@result, "result_set" => [])
+    expect_request_success
+  end
+
+  context "with an appropriate role" do
+    it "can run a report" do
+      report = FactoryGirl.create(:miq_report)
+
+      expect {
+        api_basic_authorize action_identifier(:reports, :run)
+        run_post "#{reports_url(report.id)}", :action => "run"
+      }.to change(MiqReportResult, :count).by(1)
+      expect_single_action_result(
+        :href => reports_url(report.id),
+        :success => true,
+        :message => "running report #{report.id}"
+      )
+      expect_request_success
+    end
+  end
+
+  context "without an appropriate role" do
+    it "cannot run a report" do
+      report = FactoryGirl.create(:miq_report)
+
+      expect {
+        api_basic_authorize
+        run_post "#{reports_url(report.id)}", :action => "run"
+      }.not_to change(MiqReportResult, :count)
+      expect_request_forbidden
+    end
   end
 end

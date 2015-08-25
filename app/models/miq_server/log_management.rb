@@ -1,3 +1,5 @@
+require 'util/postgres_admin'
+
 module MiqServer::LogManagement
   extend ActiveSupport::Concern
 
@@ -132,6 +134,27 @@ module MiqServer::LogManagement
     task.update_status("Finished", "Ok", "Log files were successfully collected")
   end
 
+  def current_log_pattern_configuration
+    get_config("vmdb").config.fetch_path(:log, :collection, :current, :pattern) || []
+  end
+
+  def current_log_patterns
+    # use an array union to add pg log path patterns if not already there
+    current_log_pattern_configuration | pg_log_patterns
+  end
+
+  def pg_data_dir
+    PostgresAdmin.data_directory
+  end
+
+  def pg_log_patterns
+    pg_data = pg_data_dir
+    return [] unless pg_data
+
+    pg_data = Pathname.new(pg_data)
+    return [pg_data.join("*.conf"), pg_data.join("pg_log/*")]
+  end
+
   def post_current_logs(taskid)
     resource = who_am_i
     task = MiqTask.find(taskid)
@@ -153,11 +176,7 @@ module MiqServer::LogManagement
       _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
-      patterns = []
-      cfg_pattern = get_config("vmdb").config.fetch_path(:log, :collection, :current, :pattern)
-      patterns += cfg_pattern if cfg_pattern.is_a?(Array)
-
-      local_file = VMDB::Util.zip_logs("evm.zip", patterns, "system")
+      local_file = VMDB::Util.zip_logs("evm.zip", current_log_patterns, "system")
 
       evm = VMDB::Util.get_evm_log_for_date("log/*.log")
       log_start, log_end = VMDB::Util.get_log_start_end_times(evm)

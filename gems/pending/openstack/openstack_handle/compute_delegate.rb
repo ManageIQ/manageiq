@@ -2,9 +2,12 @@ module OpenstackHandle
   class ComputeDelegate < DelegateClass(Fog::Compute::OpenStack)
     SERVICE_NAME = "Compute"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
+      @name      = name
     end
 
     def servers_with_pagination_loop

@@ -18,6 +18,10 @@ module AuthenticationMixin
     %w(userid password)
   end
 
+  def default_authentication_type
+    :default
+  end
+
   def authentication_userid_passwords
     authentications.select { |a| a.kind_of?(AuthUseridPassword) }
   end
@@ -107,7 +111,7 @@ module AuthenticationMixin
       cred = self.authentication_type(type)
       current = {:new => nil, :old => nil}
 
-      if value[:auth_key] && !self.kind_of?(EmsContainer)
+      if value[:auth_key] && !self.kind_of?(ManageIQ::Providers::ContainerManager)
         # TODO(lsmola) figure out if there is a better way. Password field is replacing \n with \s, I need to replace
         # them back
         fixed_auth_key = value[:auth_key].gsub(/-----BEGIN\sRSA\sPRIVATE\sKEY-----/, '')
@@ -142,7 +146,7 @@ module AuthenticationMixin
           cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
           self.authentications << cred
-        elsif self.kind_of?(EmsContainer) && value[:auth_key]
+        elsif self.kind_of?(ManageIQ::Providers::ContainerManager) && value[:auth_key]
           cred = AuthToken.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
           self.authentications << cred
@@ -271,7 +275,7 @@ module AuthenticationMixin
 
   def authentication_best_fit(type = nil)
     # Look for the supplied type and if that is not found return the default credentials
-    authentication_type(type) || authentication_type(:default)
+    authentication_type(type) || authentication_type(default_authentication_type)
   end
 
   def authentication_component(type, method)

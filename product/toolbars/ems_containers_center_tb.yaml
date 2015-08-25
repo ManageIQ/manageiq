@@ -2,7 +2,7 @@
 # Toolbar config file
 #
 ---
-:model: EmsContainer
+:model: ManageIQ::Providers::ContainerManager
 :button_groups:
 - :name: ems_container_vmdb
   :items:

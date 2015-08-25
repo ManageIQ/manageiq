@@ -46,15 +46,7 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_ems_cloud
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_cloud")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_cloud_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_cloud', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsCloud)
   end
 
   def textual_instances
@@ -69,32 +61,6 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_orchestration_stack
-    stack = @record.orchestration_stack
-    return nil if stack.nil?
-    label = ui_lookup(:table => "orchestration_stack")
-    h = {:label => label, :image => "orchestration_stack", :value => stack.name}
-    if role_allows(:feature => "orchestration_stack_show")
-      h[:title] = "Show this Security Group's #{label} '#{stack.name}'"
-      h[:link]  = url_for(:controller => 'orchestration_stack', :action => 'show', :id => stack)
-    end
-    h
-  end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.blank?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, _assigned| category.downcase }
-                  .collect do |category, assigned|
-                    {:image => "smarttag",
-                     :label => category,
-                     :value => assigned}
-                  end
-    end
-    h
+    textual_link(@record.orchestration_stack)
   end
 end

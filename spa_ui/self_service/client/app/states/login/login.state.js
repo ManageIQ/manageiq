@@ -12,6 +12,7 @@
   function getStates() {
     return {
       'login': {
+        parent: 'blank',
         url: '/login',
         templateUrl: 'app/states/login/login.html',
         controller: StateController,
@@ -25,13 +26,24 @@
   }
 
   /** @ngInject */
-  function StateController() {
+  function StateController($state, API_LOGIN, API_PASSWORD, AuthenticationApi) {
     var vm = this;
 
     vm.title = 'Login';
-    activate();
 
-    function activate() {
+    vm.credentials = {
+      login: API_LOGIN,
+      password: API_PASSWORD
+    };
+
+    vm.onSubmit = onSubmit;
+
+    function onSubmit() {
+      AuthenticationApi.login(vm.credentials.login, vm.credentials.password).then(handleSuccess);
+
+      function handleSuccess() {
+        $state.go('dashboard');
+      }
     }
   }
 })();

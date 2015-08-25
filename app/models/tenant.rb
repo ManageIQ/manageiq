@@ -5,27 +5,18 @@ class Tenant < ActiveRecord::Base
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil
 
-  default_value_for :company_name, "My Company"
+  include ReportableMixin
+
+  default_value_for :name,        "My Company"
+  default_value_for :description, "Tenant for My Company"
+  default_value_for :divisible,   true
   has_ancestry
 
   has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
   has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
   has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
 
-  has_many :tenant_resources
-  has_many :vm_or_templates,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "VmOrTemplate"
-  has_many :ext_management_systems,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "ExtManagementSystem"
-  has_many :providers,
-           :through     => :tenant_resources,
-           :source      => :resource,
-           :source_type => "Provider"
-
+  has_many :tenant_quotas
   has_many :miq_groups, :foreign_key => :tenant_owner_id
   has_many :users, :through => :miq_groups
 
@@ -41,24 +32,40 @@ class Tenant < ActiveRecord::Base
 
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
+  validate  :validate_only_one_root
+  validates :name, :description, :presence => true, :unless => :root?
+  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent" }
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']
   validates_attachment_content_type :login_logo, :content_type => ['image/png']
 
-  # FUTURE: this is currently called session[:customer_name]. use this temporarily then remove
-  alias_attribute :customer_name, :company_name
-  # FUTURE: this is currently called session[:vmdb_name]. use this temporarily then remove
-  alias_attribute :vmdb_name, :appliance_name
+  scope :all_tenants,  -> { where(:divisible => true) }
+  scope :all_projects, -> { where(:divisible => false) }
+
+  virtual_column :parent_name,  :type => :string
+  virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
 
-  def company_name
-    tenant_attribute(:company_name, :company)
+  def all_subtenants
+    self.class.descendants_of(self).where(:divisible => true)
   end
 
-  def appliance_name
-    tenant_attribute(:appliance_name, :name)
+  def all_subprojects
+    self.class.descendants_of(self).where(:divisible => false)
+  end
+
+  def name
+    tenant_attribute(:name, :company)
+  end
+
+  def parent_name
+    parent.try(:name)
+  end
+
+  def display_type
+    project? ?  "Project" : "Tenant"
   end
 
   def login_text
@@ -93,7 +100,20 @@ class Tenant < ActiveRecord::Base
 
   # @return [Boolean] Is this a default tenant?
   def default?
-    subdomain == DEFAULT_URL && domain == DEFAULT_URL
+    root?
+  end
+
+  # @return [Boolean] Is this the root tenant?
+  def root?
+    !parent_id?
+  end
+
+  def tenant?
+    divisible?
+  end
+
+  def project?
+    !divisible?
   end
 
   def logo?
@@ -104,25 +124,36 @@ class Tenant < ActiveRecord::Base
     !!login_logo_file_name
   end
 
+  # The default tenant is the tenant to be used when
+  # the url does not map to a known domain or subdomain
+  #
+  # At this time, urls are not used, so the root tenant is returned
+  # @return [Tenant] default tenant
   def self.default_tenant
-    Tenant.find_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
+    root_tenant
   end
 
+  # the root tenant is also referred to as tenant0
+  # from this tenant, all tenants are positioned
+  #
+  # @return [Tenant] the root tenant
   def self.root_tenant
-    default_tenant
+    roots.first
   end
 
   def self.seed
-    Tenant.create_with(:company_name => nil).find_or_create_by(:subdomain => DEFAULT_URL, :domain => DEFAULT_URL)
+    Tenant.root_tenant || Tenant.create.update_attributes!(:name => nil)
   end
 
   private
 
+  # when a root tenant has an attribute with a nil value,
+  #   read the value from the settings table instead
+  #
+  # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
     ret = self[attr_name]
-    # if the attribute is nil and we are the default tenant
-    # then use settings values
-    if ret.nil? && default?
+    if ret.nil? && root?
       ret = settings.fetch_path(:server, setting_name)
       block_given? ? yield(ret) : ret
     else
@@ -134,11 +165,18 @@ class Tenant < ActiveRecord::Base
     self.subdomain = nil unless subdomain.present?
     self.domain = nil unless domain.present?
 
-    self.company_name = nil unless company_name.present?
-    self.appliance_name = nil unless appliance_name.present?
+    self.name = nil unless name.present?
   end
 
   def settings
     @vmdb_config ||= VMDB::Config.new("vmdb").config
+  end
+
+  # validates that there is only one tree
+  def validate_only_one_root
+    if !(parent_id || parent)
+      root = self.class.root_tenant
+      errors.add(:parent, "required") if root && root != self
+    end
   end
 end

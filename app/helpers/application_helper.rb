@@ -4,6 +4,7 @@ module ApplicationHelper
   include_concern 'FormTags'
   include Sandbox
   include CompressedIds
+  include TextualSummaryHelper
 
   def css_background_color
     (@css || {}).fetch_path(:background_color) || 'black'
@@ -262,6 +263,10 @@ module ApplicationHelper
       action = "diagnostics_worker_selected"
     when "CloudNetwork", "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
       controller = request.parameters[:controller]
+    when /^ManageIQ::Providers::(\w+)Manager$/
+      controller = "ems_#{$1.underscore}"
+    when /^ManageIQ::Providers::(\w+)Manager::(\w+)$/
+      controller = "#{$2.underscore}_#{$1.underscore}"
     else
       controller = db.underscore
     end
@@ -518,7 +523,7 @@ module ApplicationHelper
   end
 
   def javascript_for_ae_node_selection(id, prev_id, select)
-    "cfmeSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
+    "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
 
   # Generate lines of JS <text> for render page, replacing "~" with the <sub_array> elements
@@ -618,7 +623,7 @@ module ApplicationHelper
 
   # Format a column in a report view for display on the screen
   def format_col_for_display(view, row, col, tz = nil)
-    tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC" : Time.zone
+    tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.server_timezone : Time.zone
     celltext = view.format(col,
                            row[col],
                            :tz=>tz
@@ -790,8 +795,8 @@ module ApplicationHelper
     raise "Record is not ExtManagementSystem class" unless record.kind_of?(ExtManagementSystem)
     if record.kind_of?(ManageIQ::Providers::CloudManager)
       ManageIQ::Providers::CloudManager
-    elsif record.kind_of?(EmsContainer)
-      EmsContainer
+    elsif record.kind_of?(ManageIQ::Providers::ContainerManager)
+      ManageIQ::Providers::ContainerManager
     else
       ManageIQ::Providers::InfraManager
     end
@@ -1220,7 +1225,10 @@ module ApplicationHelper
   end
 
   def miq_tab_header(id, active = nil, options = {}, &block)
-    content_tag(:li, :class => "#{options[:class]} #{active == id ? 'active' : ''}", :id => "#{id}_tab") do
+    content_tag(:li,
+                :class     => "#{options[:class]} #{active == id ? 'active' : ''}",
+                :id        => "#{id}_tab",
+                'ng-click' => "changeAuthTab('#{id}');") do
       content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
         yield
       end
@@ -1282,7 +1290,7 @@ module ApplicationHelper
       elsif %w(queued waiting_to_start).include?(row["state"].downcase)
         image = "job-queued"
         img_attr.merge!(:title => "Status = Queued")
-      elsif !%w(finished queued waiting_to_start).include?(["state"].downcase)
+      elsif !%w(finished queued waiting_to_start).include?(row["state"].downcase)
         image = "job-running"
         img_attr.merge!(:title => "Status = Running")
       end
@@ -1305,6 +1313,8 @@ module ApplicationHelper
     elsif db == "ExtManagementSystem"
       ems = @targets_hash[from_cid(@id)]
       image = "vendor-#{ems.image_name}"
+    elsif db == "Tenant"
+      image = row['divisible'] ? "tenant" : "project"
     else
       image = db.underscore
     end
@@ -1375,5 +1385,15 @@ module ApplicationHelper
     end
   end
 
+  # Wrapper around jquery-rjs' remote_function which adds an extra .html_safe()
+  # Remove if merged: https://github.com/amatsuda/jquery-rjs/pull/3
+  def remote_function(options)
+    super(options).to_str
+  end
+
   attr_reader :big_iframe
+
+  def appliance_name
+    MiqServer.my_server.name
+  end
 end

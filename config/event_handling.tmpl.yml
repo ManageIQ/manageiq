@@ -522,6 +522,11 @@ event_groups:
     - compute.instance.reboot.end
     - compute.instance.suspend
     - compute.instance.resume
+    - compute.instance.pause.end
+    - compute.instance.unpause.end
+    - compute.instance.shelve.end
+    - compute.instance.unshelve.end
+    - compute.instance.shelve_offload.end
     - NODE_REBOOT
     - POD_SCHEDULED
     :detail:
@@ -1310,6 +1315,27 @@ event_handling:
   - policy:
     - src_vm
     - vm_poweroff
+  compute.instance.suspend:
+  - refresh:
+    - ems
+  compute.instance.resume:
+  - refresh:
+    - ems
+  compute.instance.pause.end:
+  - refresh:
+    - ems
+  compute.instance.unpause.end:
+  - refresh:
+    - ems
+  compute.instance.shelve.end:
+  - refresh:
+    - ems
+  compute.instance.unshelve.end:
+  - refresh:
+    - ems
+  compute.instance.shelve_offload.end:
+  - refresh:
+    - ems
   image.update:
   - refresh:
     - ems
@@ -1332,6 +1358,9 @@ event_handling:
   - refresh:
     - ems
   orchestration.stack.suspend.end:
+  - refresh:
+    - ems
+  orchestration.stack.pause.end:
   - refresh:
     - ems
   orchestration.stack.resume.end:
@@ -1412,42 +1441,6 @@ event_handling:
   POD_SCHEDULED:
   - refresh:
     - ems
-
-#
-# The filtered_events section defines which events should not be added to the
-#   database.  Keys that have nil values will be filtered at the event catcher
-#   level.  Keys that do have values, in the format of a hash of object type to
-#   an array of ids, will be filtered such that they are not added to the event
-#   table.
-#
-filtered_events:
-  AlarmActionTriggeredEvent:                # Vmware filtered events
-  AlarmCreatedEvent:
-  AlarmEmailCompletedEvent:
-  AlarmEmailFailedEvent:
-  AlarmReconfiguredEvent:
-  AlarmRemovedEvent:
-  AlarmScriptCompleteEvent:
-  AlarmScriptFailedEvent:
-  AlarmSnmpCompletedEvent:
-  AlarmSnmpFailedEvent:
-  AlarmStatusChangedEvent:
-  AlreadyAuthenticatedSessionEvent:
-  EventEx:
-  UNASSIGNED:                               # RHEV filtered events
-  USER_REMOVE_VG:
-  USER_REMOVE_VG_FAILED:
-  USER_VDC_LOGIN:
-  USER_VDC_LOGOUT:
-  USER_VDC_LOGIN_FAILED:
-  UserLoginSessionEvent:
-  UserLogoutSessionEvent:
-  scheduler.run_instance.start:             # OpenStack filtered events
-  scheduler.run_instance.scheduled:
-  scheduler.run_instance.end:
-  ConfigurationSnapshotDeliveryCompleted:   # Amazon filtered events
-  ConfigurationSnapshotDeliveryStarted:
-  ConfigurationSnapshotDeliveryFailed:
 
 #
 # The task_final_events section defines which events could be the final event

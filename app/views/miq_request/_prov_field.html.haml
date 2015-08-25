@@ -172,7 +172,7 @@
             :locals         => {:tree_id => tree_id,
               :tree_name                 => session[:tree_name],
               :json_tree                 => @ldap_ous_tree,
-              :onclick                   => "miqOnClick_ProvLdapOus",
+              :onclick                   => "miqOnClickProvLdapOus",
               :click_url                 => "/miq_request/prov_field_changed/#{click}",
               :cfme_changes_check        => true,
               :cookie_id_prefix          => "prov_trees",
@@ -275,7 +275,7 @@
             :locals         => {:tree_id   => tree_id,
               :tree_name                   => "all_tags_tree",
               :json_tree                   => @all_tags_tree,
-              :oncheck                     => "miqOnCheck_ProvTags",
+              :oncheck                     => "miqOnCheckProvTags",
               :check_url                   => "/miq_request/prov_field_changed/#{check}",
               :exp_tree                    => @edit ? false : true,
               :no_tree_lines               => true,
@@ -465,7 +465,7 @@
             = options[:start_date]
         </tr><tr>
         %td.key
-          = _("Starting Time (%s)") % get_timezone_abbr("user")
+          = _("Starting Time (%s)") % get_timezone_abbr(current_user)
         %td
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field

@@ -393,7 +393,7 @@ class ChargebackController < ApplicationController
           self.x_node = "reports-#{rep.id}"
         else
           @sb[:rpt_menu].each_with_index do |lvl1,i|
-            if lvl1[0]  == session[:customer_name]
+            if lvl1[0] == current_tenant.name
               lvl1[1].each_with_index do |lvl2,k|
                 if lvl2[0].downcase == "custom"
                   @sb[:active_node]["report"] = "reports-#{i}-#{k}-#{lvl2[1].length-1}_#{rep.id}"
@@ -756,7 +756,7 @@ class ChargebackController < ApplicationController
 
     # FIXME
     #  if params[:action].ends_with?("_delete")
-    #    page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}', '<%= x_node %>');"
+    #    page << "miqDynatreeActivateNodeSilently('#{x_active_tree.to_s}', '<%= x_node %>');"
     #  end
     #presenter[:select_node] = x_node if params[:action].ends_with?("_delete")
     presenter[:osf_node] = x_node

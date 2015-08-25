@@ -7,7 +7,7 @@
           - click = f.downcase
         - else
           - click = "#{f.split.last.downcase}_xx-#{f.split[1].downcase}-#{f.split[0].downcase}"
-        %tr{:onclick => "cfmeDynatree_activateNode('policy_tree', 'xx-#{click}');", :title => _("Open Folder")}
+        %tr{:onclick => "miqDynatreeActivateNode('policy_tree', 'xx-#{click}');", :title => _("Open Folder")}
           %td.narrow
             %img{:src => "/images/icons/new/#{f.split.first.downcase}.png"}
           %td

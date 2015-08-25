@@ -42,14 +42,6 @@ class MiqSshUtil
     end
   end # def initialize
 
-  def cp(from, to)
-    Net::SFTP.start(@host, @user, @options) do |sftp|
-      $log.debug "MiqSshUtil::cp - Copying file #{from} to #{@host}:#{to}." if $log
-      sftp.upload!(from, to)
-      $log.debug "MiqSshUtil::cp - Copying of #{from} to #{@host}:#{to}, complete." if $log
-    end
-  end # def cp
-
   def get_file(from, to)
     Net::SFTP.start(@host, @user, @options) do |sftp|
       $log.debug "MiqSshUtil::get_file - Copying file #{@host}:#{from} to #{to}." if $log
@@ -58,7 +50,7 @@ class MiqSshUtil
       return data
     end
   end
-  
+
   def exec(cmd, doneStr=nil)
     errBuf = ""
     outBuf = ""
@@ -75,26 +67,26 @@ class MiqSshUtil
           outBuf << data
           data.each_line { |l| return outBuf if doneStr == l.chomp } unless doneStr.nil?
         end
-    
+
         channel.on_extended_data do |channel, data|
           $log.debug "MiqSshUtil::exec - STDERR: #{data}" if $log
           errBuf << data
         end
-    
-        channel.on_request('exit-status') do |channel, data| 
-          status = data.read_long   
+
+        channel.on_request('exit-status') do |channel, data|
+          status = data.read_long
           $log.debug "MiqSshUtil::exec - STATUS: #{status}" if $log
         end
-    
-        channel.on_request('exit-signal') do |channel, data| 
-          signal = data.read_string 
+
+        channel.on_request('exit-signal') do |channel, data|
+          signal = data.read_string
           $log.debug "MiqSshUtil::exec - SIGNAL: #{signal}" if $log
         end
-    
-        channel.on_eof do |channel| 
+
+        channel.on_eof do |channel|
           $log.debug "MiqSshUtil::exec - EOF RECEIVED" if $log
         end
-    
+
         channel.on_close do |channel|
           $log.debug "MiqSshUtil::exec - Command: #{cmd}, exit status: #{status}" if $log
           unless signal.nil? || status.zero?
@@ -104,13 +96,13 @@ class MiqSshUtil
           end
           return outBuf
         end
-    
+
         $log.debug "MiqSshUtil::exec - Command: #{cmd} started." if $log
         channel.exec(cmd) { |channel, success| raise "MiqSshUtil::exec - Could not execute command #{cmd}" unless success }
       end
     end
   end # def exec
-  
+
   def suexec(cmd_str, doneStr=nil)
     errBuf = ""
     outBuf = ""
@@ -258,7 +250,7 @@ class MiqSshUtil
     self.shell_exec("test -f #{filename}") rescue return false
     true
   end
-  
+
   # This method runs the ssh session and can handle reseting the ssh fingerprint
   # if it does not match and raises an error.
   def run_session

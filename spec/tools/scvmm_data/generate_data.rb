@@ -15,14 +15,14 @@ password = STDIN.noecho(&:gets).chomp
 puts
 
 puts "Connecting"
-win_rm = EmsMicrosoft.raw_connect(
+win_rm = ManageIQ::Providers::Microsoft::InfraManager.raw_connect(
   opts[:username],
   password,
-  EmsMicrosoft.auth_url(opts[:ipaddress], opts[:port])
+  ManageIQ::Providers::Microsoft::InfraManager.auth_url(opts[:ipaddress], opts[:port])
 )
 
 puts "Collecting"
-data = File.open(EmsRefresh::Parsers::Scvmm::INVENTORY_SCRIPT, "r") do |f|
+data = File.open(ManageIQ::Providers::Microsoft::InfraManager::RefreshParser::INVENTORY_SCRIPT, "r") do |f|
   win_rm.run_powershell_script(f)
 end
 
@@ -42,9 +42,9 @@ puts "Writing yml"
 File.write(output_yml, data.to_yaml)
 
 puts "Writing xml"
-File.write(output_xml, EmsMicrosoft.powershell_results_to_xml(data))
+File.write(output_xml, ManageIQ::Providers::Microsoft::InfraManager.powershell_results_to_xml(data))
 
 puts "Writing hash"
-File.write(output_hash, EmsMicrosoft.powershell_results_to_hash(data).to_yaml)
+File.write(output_hash, ManageIQ::Providers::Microsoft::InfraManager.powershell_results_to_hash(data).to_yaml)
 
 puts "Complete"

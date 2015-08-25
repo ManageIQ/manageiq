@@ -254,18 +254,23 @@ class ApplicationHelper::ToolbarChooser
         return "diagnostics_zone_center_tb"
       end
     elsif x_active_tree == :rbac_tree
-      if x_node.split('-').last == "g"
+      node = x_node.split('-')
+      if node.last == "g"
         return "miq_groups_center_tb"
-      elsif x_node.split('-').first == "g"
+      elsif node.first == "g"
         return "miq_group_center_tb"
-      elsif x_node.split('-').last == "u"
+      elsif node.last == "u"
         return "users_center_tb"
-      elsif x_node.split('-').first == "u"
+      elsif node.first == "u"
         return "user_center_tb"
-      elsif x_node.split('-').last == "ur"
+      elsif node.last == "ur"
         return "user_roles_center_tb"
-      elsif x_node.split('-').first == "ur"
+      elsif node.first == "ur"
         return "user_role_center_tb"
+      elsif node.last == "tn"
+        return "tenants_center_tb"
+      elsif node.first == "tn" && @record
+        return "tenant_center_tb"
       end
     elsif x_active_tree == :vmdb_tree
       if x_node

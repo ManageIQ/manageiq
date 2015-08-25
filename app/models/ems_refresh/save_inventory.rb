@@ -4,7 +4,7 @@ module EmsRefresh::SaveInventory
     case ems
     when EmsCloud;     save_ems_cloud_inventory(ems, hashes, target)
     when EmsInfra;     save_ems_infra_inventory(ems, hashes, target)
-    when EmsContainer; save_ems_container_inventory(ems, hashes, target)
+    when ManageIQ::Providers::ContainerManager; save_ems_container_inventory(ems, hashes, target)
     end
   end
 
@@ -282,6 +282,12 @@ module EmsRefresh::SaveInventory
   end
 
   def save_custom_attributes_inventory(parent, hashes)
+    return if hashes.nil?
+    deletes = parent.custom_attributes(true).dup
+    save_inventory_multi(:custom_attributes, parent, hashes, deletes, [:section, :name])
+  end
+
+  def save_ems_custom_attributes_inventory(parent, hashes)
     return if hashes.nil?
     deletes = parent.ems_custom_attributes(true).dup
     save_inventory_multi(:ems_custom_attributes, parent, hashes, deletes, [:section, :name])

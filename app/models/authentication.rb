@@ -40,6 +40,10 @@ class Authentication < ActiveRecord::Base
     self.authtype.nil? ? :default : self.authtype.to_sym
   end
 
+  def available?
+    password.present? || auth_key.present?
+  end
+
   # The various status types:
   #   valid, invalid
   #   incomplete  (???)

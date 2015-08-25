@@ -127,7 +127,7 @@ module Iso9660
 		end
 		
 		def getSuffix
-			if Platform::ARCH == :x86
+			if Sys::Platform::ARCH == :x86
 				@@suff = 'LE'
 			else
 				# Other architectures are bi-endian and must be determined at run time.

@@ -316,6 +316,8 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_timeline
 
 - :name: EvmRole-operator
@@ -454,6 +456,8 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_sync
   - vm_tag
   - vm_timeline
@@ -769,6 +773,8 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_tag
 
 - :name: EvmRole-user_self_service
@@ -818,6 +824,8 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_sync
   - vm_tag
   - vm_timeline
@@ -872,6 +880,8 @@
   - vm_stop
   - vm_suspend
   - vm_pause
+  - vm_shelve
+  - vm_shelve_offload
   - vm_sync
   - vm_tag
   - vm_timeline

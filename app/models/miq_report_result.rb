@@ -26,10 +26,10 @@ class MiqReportResult < ActiveRecord::Base
 
   include ReportableMixin
 
-  delegate :table, :to => :report_results
+  delegate :table, :to => :report_results, :allow_nil => true
 
   def result_set
-    table.map(&:to_hash)
+    (table || []).map(&:to_hash)
   end
 
   def status
@@ -179,7 +179,7 @@ class MiqReportResult < ActiveRecord::Base
 
     curr_tz = Time.zone # Save current time zone setting
     user = self.userid.include?("|") ? nil : User.find_by_userid(self.userid)
-    Time.zone = (user ? user.settings.fetch_path(:display, :timezone) : nil) || MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+    Time.zone = user ? user.get_timezone : MiqServer.my_server.server_timezone
 
     # Create the pdf header section
     html_string = generate_pdf_header(

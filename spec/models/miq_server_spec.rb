@@ -316,6 +316,18 @@ describe MiqServer do
           @miq_server.validate_active_messages([@worker.id])
         end
       end
+
+      context "#server_timezone" do
+        it "utc with no system default" do
+          stub_server_configuration(:server => {:timezone => nil})
+          expect(@miq_server.server_timezone).to eq("UTC")
+        end
+
+        it "uses system default" do
+          stub_server_configuration(:server => {:timezone => "Eastern Time (US & Canada)"})
+          expect(@miq_server.server_timezone).to eq("Eastern Time (US & Canada)")
+        end
+      end
     end
 
     context "with server roles" do

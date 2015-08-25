@@ -1,13 +1,17 @@
 = render :partial => "layouts/flash_msg"
 %table.table.table-striped.table-bordered.table-hover
   %tbody
-    %tr{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', 'xx-Compute');"}
+    %tr{:onclick => "miqDynatreeActivateNode('#{x_active_tree}', 'xx-Compute');"}
       %td.narrow{:title => _("View Compute Rates")}
-        %img{:src => "/images/icons/new/hardware-processor.png"}
+        %ul.icons.list-unstyled
+          %li
+            %span.product.product-memory
       %td{:title => _("View Compute Rates")}
         Compute
-    %tr{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', 'xx-Storage');"}
+    %tr{:onclick => "miqDynatreeActivateNode('#{x_active_tree}', 'xx-Storage');"}
       %td.narrow{:title => _("View Storage Rates")}
-        %img{:src => "/images/icons/new/hardware-disk.png"}
+        %ul.icons.list-unstyled
+          %li
+            %span.fa.fa-hdd-o
       %td{:title => _("View Storage Rates")}
         Storage

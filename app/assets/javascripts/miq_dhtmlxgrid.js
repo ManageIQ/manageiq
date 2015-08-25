@@ -42,7 +42,7 @@ function miqAeRowSelected(row_id, cell_idx) {
       if (selected_id.split("_")[0] == "Field") {
         this.clearSelection();
       } else {
-        cfmeDynatree_activateNode('ae_tree', row_id);
+        miqDynatreeActivateNode('ae_tree', row_id);
       }
     }
   }

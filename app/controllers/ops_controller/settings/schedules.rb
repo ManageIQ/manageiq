@@ -409,7 +409,7 @@ module OpsController::Settings::Schedules
 
     build_schedule_options_for_select
 
-    one_month_ago = (Time.now - 1.month).in_time_zone(session[:user_tz])
+    one_month_ago = Time.zone.now - 1.month
     @one_month_ago = {
       :year  => one_month_ago.year,
       :month => one_month_ago.month - 1, # Javascript counts months 0-11

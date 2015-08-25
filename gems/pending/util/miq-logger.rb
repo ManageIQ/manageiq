@@ -6,7 +6,7 @@ if $log.nil?
   require 'log4r'
   require 'log4r/configurator'
   require 'time'
-  require 'platform'
+  require 'sys-uname'
   require 'util/MiqSockUtil'
 
   #Define custom logging level to insert the "Summary" level
@@ -70,7 +70,7 @@ if $log.nil?
         log.level = eval('Log4r::' + logSettings[:level].upcase)
 
         # Logger header here which might product duplicates if running from the scripts
-        log.miqLogHeader #unless Platform::OS == :win32
+        log.miqLogHeader #unless Sys::Platform::OS == :windows
       end
       return log
     end
@@ -139,7 +139,7 @@ if $log.nil?
         # Log an opening message framed in "*" chars
         @miqFileName = fileName if fileName
         if logData == true && @miqFileName.nil? == false
-          init_msg = "* [#{File.basename(@miqFileName, ".*")}] [#{Platform::IMPL}] started on [#{Time.now}] *"
+          init_msg = "* [#{File.basename(@miqFileName, ".*")}] [#{Sys::Platform::IMPL}] started on [#{Time.now}] *"
           border = "*" * init_msg.length; 
           self.summary border
           self.summary init_msg 

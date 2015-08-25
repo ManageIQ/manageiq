@@ -8,7 +8,7 @@ module XmlConfig
 
     xml_data = nil
     unless File.file?(filename)
-      if Platform::IMPL == :linux
+      if Sys::Platform::IMPL == :linux
         begin
           # First check to see if the command is available
           MiqUtil.runcmd("virsh list")

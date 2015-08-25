@@ -2,9 +2,12 @@ module OpenstackHandle
   class IdentityDelegate < DelegateClass(Fog::Identity::OpenStack)
     SERVICE_NAME = "Identity"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
+      @name      = name
     end
 
     #
@@ -25,7 +28,7 @@ module OpenstackHandle
         )
       end
       body = Fog::JSON.decode(response.body)
-      vtenants = Fog::Identity::OpenStack::Tenants.new
+      vtenants = Fog::Identity::OpenStack::V2::Tenants.new
       vtenants.load(body['tenants'])
       vtenants
     end

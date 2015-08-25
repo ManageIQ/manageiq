@@ -15,7 +15,10 @@ describe ContainerGroupController do
   it "renders show screen" do
     EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
-    container_group = ContainerGroup.create(:ext_management_system => ems, :name => "Test Group")
+    container_project = ContainerProject.create(:ext_management_system => ems)
+    container_group = ContainerGroup.create(:ext_management_system => ems,
+                                            :container_project => container_project,
+                                            :name => "Test Group")
     get :show, :id => container_group.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty

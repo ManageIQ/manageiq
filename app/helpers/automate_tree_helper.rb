@@ -83,7 +83,7 @@ module AutomateTreeHelper
         end
         if x_node(:automate_tree)
           page << javascript_for_ae_node_selection(@edit[:new][:selected], @edit[:current][:selected], validnode)
-          page << "cfmeDynatree_activateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
+          page << "miqDynatreeActivateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
         end
       end
     end

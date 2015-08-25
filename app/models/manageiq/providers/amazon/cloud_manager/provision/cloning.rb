@@ -50,8 +50,8 @@ module ManageIQ::Providers::Amazon::CloudManager::Provision::Cloning
     _log.info("Cloud Subnet:                    [#{clone_options[:subnet].inspect}]")
     _log.info("Cloud Watch:                     [#{clone_options[:monitoring_enabled].inspect}]")
 
-    dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
-    dumpObj(options, "#{log_header} Prov Options:  ", $log, :info, :protected => {:path => workflow_class.encrypted_options_field_regs})
+    dumpObj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
+    dumpObj(options, "#{_log.prefix} Prov Options:  ", $log, :info, :protected => {:path => workflow_class.encrypted_options_field_regs})
   end
 
   def start_clone(clone_options)

@@ -4,7 +4,7 @@ require 'util/miq-xml'
 require 'digest/md5'
 require 'minitest/unit'
 
-$qaShare = File.join((Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
+$qaShare = File.join((Sys::Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
 
 module Extract
   class TestRegistry < Minitest::Test

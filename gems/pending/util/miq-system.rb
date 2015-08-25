@@ -1,7 +1,7 @@
 require 'util/extensions/miq-blank'
 require 'awesome_spawn'
-require 'platform'
-if Platform::OS == :win32
+require 'sys-uname'
+if Sys::Platform::OS == :windows
   require 'util/win32/miq-wmi'
 end
 
@@ -11,7 +11,7 @@ class MiqSystem
   @@cpu_usage_computed_value      = nil
 
   def self.cpu_usage
-    if Platform::IMPL == :linux
+    if Sys::Platform::IMPL == :linux
       filename = "/var/www/miq/vmdb/log/vmstat_output.log"
 
       begin
@@ -47,7 +47,7 @@ class MiqSystem
   end
 
   def self.num_cpus
-    if Platform::IMPL == :linux
+    if Sys::Platform::IMPL == :linux
       @num_cpus ||= begin
         filename = "/proc/cpuinfo"
         count = 0
@@ -109,7 +109,7 @@ class MiqSystem
 
   def self.memory
     result = Hash.new
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :mswin, :mingw
       # raise "MiqSystem.memory: Windows Not Supported"
     when :linux
@@ -142,7 +142,7 @@ class MiqSystem
   def self.status
     result = Hash.new
 
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :mswin, :mingw
       # raise "MiqSystem.status: Windows Not Supported"
     when :linux
@@ -284,7 +284,7 @@ class MiqSystem
   def self.disk_usage(file=nil)
     file = normalize_df_file_argument(file)
 
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :linux
       # Collect bytes
       result = AwesomeSpawn.run!("df", :params => ["-T", "-P", file]).output.lines.each_with_object([]) do |line, array|
@@ -478,8 +478,8 @@ class MiqSystem
   #   GNU coreutils 6.10                                             April 2008                                                          DU(1)
   ##############################################################################################################################
   def self.arch
-    arch = Platform::ARCH
-    case Platform::OS
+    arch = Sys::Platform::ARCH
+    case Sys::Platform::OS
     when :unix
       if arch == :unknown
         p = Gem::Platform.local
@@ -494,7 +494,7 @@ class MiqSystem
     return nil unless File.file?(filename)
 
     lines = nil
-    if Platform::OS == :unix
+    if Sys::Platform::OS == :unix
       tail  = `tail -n #{last} #{filename}` rescue nil
       tail.force_encoding("BINARY") if tail.respond_to?(:force_encoding)
       lines = tail.nil? ? [] : tail.split("\n")
@@ -525,7 +525,7 @@ class MiqSystem
 
   def self.open_browser(url)
     require 'shellwords'
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :macosx        then `open #{url.shellescape}`
     when :linux         then `xdg-open #{url.shellescape}`
     when :mingw, :mswin then `start "#{url.gsub('"', '""')}"`

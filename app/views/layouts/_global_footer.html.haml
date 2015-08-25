@@ -1,8 +1,5 @@
 = render :partial => "layouts/adv_search"
 :javascript
-  ManageIQ.browser = "#{browser_info("name")}";
-  ManageIQ.controller = "#{request.parameters[:controller]}";
-
   $('#exampleModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) // Button that triggered the modal
   var recipient = button.data('whatever') // Extract info from data-* attributes

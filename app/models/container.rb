@@ -3,12 +3,12 @@ class Container < ActiveRecord::Base
   include NewWithTypeStiMixin
 
   has_one    :container_group, :through => :container_definition
-  delegate   :ext_management_system, :to => :container_group
+  has_one    :ext_management_system, :through => :container_group
   has_one    :container_replicator, :through => :container_group
-  delegate   :container_project, :to => :container_group
+  has_one    :container_project, :through => :container_group
   belongs_to :container_definition
   belongs_to :container_image
-  delegate   :container_image_registry, :to => :container_image
+  has_one    :container_image_registry, :through => :container_image
 
   acts_as_miq_taggable
 end

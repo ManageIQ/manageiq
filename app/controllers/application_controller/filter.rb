@@ -974,7 +974,7 @@ module ApplicationController::Filter
     session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
 
     render :update do |page|
-      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}', '#{x_node}');" if @edit[:in_explorer]
+      page << "miqDynatreeActivateNodeSilently('#{x_active_tree.to_s}', '#{x_node}');" if @edit[:in_explorer]
       page << "$('#quicksearchbox').modal('hide');"
       page << "miqSparkle(false);"
     end

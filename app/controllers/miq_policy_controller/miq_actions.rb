@@ -299,10 +299,10 @@ module MiqPolicyController::MiqActions
   def action_build_cat_tree(cats)
     r_node = Hash.new                           # Root node
     r_node = TreeNodeBuilder.generic_tree_node(
-               "r_#{session[:customer_name]}",
-               "#{session[:customer_name]} Tags",
+               "r_#{current_tenant.name}",
+               "#{current_tenant.name} Tags",
                "",
-               "#{session[:customer_name]} Tags",
+               "#{current_tenant.name} Tags",
                :style_class => "cfme-no-cursor-node",
                :expand      => true
     )

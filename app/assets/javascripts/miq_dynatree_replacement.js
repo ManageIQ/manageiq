@@ -10,13 +10,13 @@ ManageIQ.dynatreeReplacement = {
     var selectMode;
 
     if (options.group_changed) {
-      cfme_delete_dynatree_cookies();
+      miqDeleteDynatreeCookies();
     }
 
     if (options.no_base_exp) {
-      onDblClickFunction = cfmeOnDblClick_NoBaseExpand;
+      onDblClickFunction = miqOnDblClickNoBaseExpand;
     } else if (options.open_close_all_on_dbl_click) {
-      onDblClickFunction = cfmeOnDblClick_Expand;
+      onDblClickFunction = miqOnDblClickExpand;
     }
 
     if (options.three_checks) {
@@ -96,7 +96,7 @@ ManageIQ.dynatreeReplacement = {
 
       if (options.onmousein || options.onmouseout) {
         onExpandFunction = function (node) {
-          cfme_bind_hover_event(options.tree_name);
+          miqBindHoverEvent(options.tree_name);
         };
       }
     }
@@ -114,14 +114,14 @@ ManageIQ.dynatreeReplacement = {
 
     if (options.autoload) {
       onLazyReadFunction = function (node) {
-        cfmeOnLazyRead_GetNodeChildren(node, options.tree_name, options.controller_name);
+        miqOnLazyReadGetNodeChildren(node, options.tree_name, options.controller_name);
       };
     }
 
     // Activate silently (no onActivate event) selected node AFTER the tree is initially loaded or replaced by AJAX
     if (options.explorer && options.tree_name === options.x_active_tree) {
       onPostInitFunction = function (isReloading, isError) {
-        cfmeDynatree_activateNodeSilently(options.tree_name, options.select_node);
+        miqDynatreeActivateNodeSilently(options.tree_name, options.select_node);
       };
     }
 
@@ -151,7 +151,7 @@ ManageIQ.dynatreeReplacement = {
     $('#' + options.tree_id).dynatree('getTree').reload();
 
     if (options.expand_parent_nodes) {
-      cfme_expand_parent_nodes(options.tree_name, options.expand_parent_nodes);
+      miqExpandParentNodes(options.tree_name, options.expand_parent_nodes);
     }
 
     if (options.add_nodes && options.add_nodes[options.x_active_tree] && options.tree_name === options.x_active_tree) {
@@ -164,7 +164,7 @@ ManageIQ.dynatreeReplacement = {
     }
 
     if (options.onmousein || options.onmouseout) {
-      cfme_bind_hover_event(options.tree_name);
+      miqBindHoverEvent(options.tree_name);
     }
   }
 };

@@ -1,7 +1,7 @@
 module ManageIQ::Providers::Openstack
 module RefreshParserCommon
   module Images
-    
+
     def get_images
       images = @image_service.images_for_accessible_tenants
       process_collection(images, :vms) { |image| parse_image(image) }
@@ -29,7 +29,7 @@ module RefreshParserCommon
     end
 
     def parse_image_parent_id(image)
-      image_parent = @image_service_name == :glance ? image.copy_from : image.server
+      image_parent = @image_service.name == :glance ? image.copy_from : image.server
       image_parent["id"] if image_parent
     end
 
