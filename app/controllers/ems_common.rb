@@ -263,11 +263,11 @@ module EmsCommon
 
   def create
     assert_privileges("#{permission_prefix}_new")
-    return unless load_edit("ems_edit__new")
     if controller_name == "ems_cloud"
       create_ems_record
       return
     end
+    return unless load_edit("ems_edit__new")
     get_form_vars
     case params[:button]
     when "add"
@@ -476,43 +476,40 @@ module EmsCommon
       host_default_vnc_port_end = @ems.host_default_vnc_port_end.to_s
     end
 
-
-
-    if @ems.is_a?(ManageIQ::Providers::CloudManager::EmsAzure)
+    if @ems.is_a?(EmsAzure)
       tenant_id = @ems.tenant_id
       client_id = @ems.authentication_userid ? @ems.authentication_userid : ""
       client_key = @ems.authentication_password ? @ems.authentication_password : ""
     end
 
-    render :json => {
-               :name         => @ems.name,
-               :emstype          => @ems.emstype,
-               :zone   => zone,
-               :provider_id => @ems.provider_id ? @ems.provider_id : "",
-               :hostname => @ems.hostname,
-               :api_port => @ems.port,
-               :provider_region => @ems.provider_region,
-               :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0 ? true : false,
-               :default_userid => @ems.authentication_userid ? @ems.authentication_userid : "",
-               :default_password => @ems.authentication_password ? @ems.authentication_password : "",
-               :default_verify => @ems.authentication_password ? @ems.authentication_password : "",
-               :metrics_userid => metrics_userid,
-               :metrics_password => metrics_password,
-               :metrics_verify => metrics_verify,
-               :amqp_userid => amqp_userid,
-               :amqp_password => amqp_password,
-               :amqp_verify => amqp_verify,
-               :ssh_keypair_userid => ssh_keypair_userid,
-               :ssh_keypair_password => ssh_keypair_password,
-               :bearer_token => bearer_token,
-               :bearer_verify => bearer_verify,
-               :tenant_id => tenant_id ? tenant_id : "",
-               :client_id => client_id ? client_id : "",
-               :client_key => client_key ? client_key : "",
-               :host_default_vnc_port_start => host_default_vnc_port_start,
-               :host_default_vnc_port_end => host_default_vnc_port_end,
-               :emstype_vm => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-           }
+    render :json => {:name                            => @ems.name,
+                     :emstype                         => @ems.emstype,
+                     :zone                            => zone,
+                     :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
+                     :hostname                        => @ems.hostname,
+                     :api_port                        => @ems.port,
+                     :provider_region                 => @ems.provider_region,
+                     :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0 ? true : false,
+                     :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
+                     :default_password                => @ems.authentication_password ? @ems.authentication_password : "",
+                     :default_verify                  => @ems.authentication_password ? @ems.authentication_password : "",
+                     :metrics_userid                  => metrics_userid,
+                     :metrics_password                => metrics_password,
+                     :metrics_verify                  => metrics_verify,
+                     :amqp_userid                     => amqp_userid,
+                     :amqp_password                   => amqp_password,
+                     :amqp_verify                     => amqp_verify,
+                     :ssh_keypair_userid              => ssh_keypair_userid,
+                     :ssh_keypair_password            => ssh_keypair_password,
+                     :bearer_token                    => bearer_token,
+                     :bearer_verify                   => bearer_verify,
+                     :tenant_id                       => tenant_id ? tenant_id : "",
+                     :client_id                       => client_id ? client_id : "",
+                     :client_key                      => client_key ? client_key : "",
+                     :host_default_vnc_port_start     => host_default_vnc_port_start,
+                     :host_default_vnc_port_end       => host_default_vnc_port_end,
+                     :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+                    }
   end
 
     # AJAX driven routine to check for changes in ANY field on the form
@@ -593,7 +590,7 @@ module EmsCommon
     changed = edit_changed?
     update_ems = find_by_id_filtered(model, params[:id])
     set_record_vars(update_ems)
-    if update_ems.save
+    if valid_record?(update_ems) && update_ems.save
       update_ems.reload
       flash = _("%{model} \"%{name}\" was saved") %
               {:model => ui_lookup(:model => model.to_s), :name => update_ems.name}
@@ -897,19 +894,7 @@ module EmsCommon
 
   # Set form variables for edit
   def set_form_vars
-    @server_zones = []
-    zones = Zone.order('lower(description)')
-    zones.each do |zone|
-      @server_zones.push([zone.description, zone.name])
-    end
-    @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
-    @amazon_regions = get_amazon_regions #if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
-    # @openstack_infra_providers = ManageIQ::Providers::Openstack::Provider.order('lower(name)').each_with_object([[_("<Choose>"), nil]]) do |openstack_infra_provider, x|
-    #   x.push([openstack_infra_provider.name, openstack_infra_provider.id])
-    # end
-    @openstack_infra_providers = retrieve_openstack_infra_providers
-    @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
-
+    form_instance_vars
 
     @edit = Hash.new
     @edit[:ems_id] = @ems.id
@@ -974,6 +959,18 @@ module EmsCommon
 
     @edit[:current] = @edit[:new].dup
     session[:edit] = @edit
+  end
+
+  def form_instance_vars
+    @server_zones = []
+    zones = Zone.order('lower(description)')
+    zones.each do |zone|
+      @server_zones.push([zone.description, zone.name])
+    end
+    @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
+    @amazon_regions = get_amazon_regions #if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
+    @openstack_infra_providers = retrieve_openstack_infra_providers
+    @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
   def get_amazon_regions
@@ -1117,11 +1114,7 @@ module EmsCommon
     if ems.supports_authentication?(:bearer) && !params[:bearer_token].blank?
       creds[:bearer] = {:auth_key => params[:bearer_token], :userid => "_"} # Must have userid
     end
-    # if !params[:tenant_id].blank?
-    #   creds[:azure_default] = {:tenant_id  => params[:tenant_id],
-    #                            :client_id  => params[:client_id],
-    #                            :client_key => params[:client_key]}
-    # end
+
     ems.update_authentication(creds, {:save =>(mode != :validate)})
   end
 

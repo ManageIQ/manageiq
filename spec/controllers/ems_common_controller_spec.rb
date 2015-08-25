@@ -54,32 +54,6 @@ describe EmsCloudController do
       end
     end
 
-    context "#create" do
-      it "displays correct attribute name in error message when adding cloud EMS" do
-        set_user_privileges
-        controller.instance_variable_set(:@edit, {:new => {:name => "EMS 1", :emstype => "ec2"},
-                                                  :key => "ems_edit__new"})
-        session[:edit] = assigns(:edit)
-        controller.stub(:drop_breadcrumb)
-        post :create, :button => "add"
-        flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Region is not included in the list")
-        flash_messages.first[:level].should == :error
-      end
-
-      it "displays correct attribute name in error message when adding infra EMS" do
-        set_user_privileges
-        controller.instance_variable_set(:@edit, {:new => {:name => "EMS 2", :emstype => "rhevm"},
-                                                  :key => "ems_edit__new"})
-        session[:edit] = assigns(:edit)
-        controller.stub(:drop_breadcrumb)
-        post :create, :button => "add"
-        flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Host Name can't be blank")
-        flash_messages.first[:level].should == :error
-      end
-    end
-
     context "#set_record_vars" do
       context "strip leading/trailing whitespace from hostname/ipaddress" do
         after :each do
