@@ -1,5 +1,9 @@
 module InteractionMethods
   def find_all(collection, lookup_pairs)
+    # TODO(lsmola) hm not comparing nested hashes, e.g. needed for
+    # firewall rules. so rule = {:nested => {}} is considered the same
+    # as rule = {:nested => {:ip_addr => something}}.
+    # First step, write unit tests, second step, fix this :-)
     puts "Finding #{lookup_pairs} in #{collection.class.name}"
     collection.select do |i|
       lookup_pairs.all? do |k, v|
@@ -17,18 +21,6 @@ module InteractionMethods
     end
   end
 
-  def ems
-    ManageIQ::Providers::Openstack::CloudManager.where(:id => settings[:connection][:ems_id]).first
-  end
-
-  def fog
-    @fog ||= ems.connect(:tenant_name => "EmsRefreshSpec-Project")
-  end
-
-  def fog_volume
-    @fog_volume ||= ems.connect(:tenant_name => "EmsRefreshSpec-Project", :service => "Volume")
-  end
-
   def find(collection, lookup_pairs)
     find_all(collection, lookup_pairs).first
   end
@@ -42,7 +34,9 @@ module InteractionMethods
   end
 
   def find_or_create(collection, attributes)
-    obj = find(collection, attributes.slice(:name))
+    lookup_pairs = attributes.slice(:name)
+    # By default look by name, if name is not available, look by whole Hash
+    obj = lookup_pairs.blank? ? find(collection, attributes) : find(collection, lookup_pairs)
     obj || begin
       new_obj = create(collection, attributes)
       yield new_obj if block_given?
@@ -50,38 +44,9 @@ module InteractionMethods
     end
   end
 
-  def find_or_create_project
-    find_or_create(ems.connect.tenants, :name => "EmsRefreshSpec-Project")
-  end
-
   def find_or_create_server(collection, attributes)
     find_or_create(collection, attributes) do |server|
       wait_for_server_to_start(server)
     end
-  end
-
-  def volume_types(volume_service)
-    # volume types are not available via the Fog API directly
-    volume_service.request(:expects => 200, :method => "GET", :path => "types").body["volume_types"]
-  end
-
-  private
-
-  def wait_for_server_to_start(server)
-    print "Waiting for server to start..."
-
-    loop do
-      case server.reload.state
-      when "ACTIVE"
-        break
-      when "ERROR"
-        puts "Error creating server"
-        exit 1
-      else
-        print "."
-        sleep 1
-      end
-    end
-    puts
   end
 end
