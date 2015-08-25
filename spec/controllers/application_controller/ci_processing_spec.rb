@@ -167,8 +167,8 @@ describe ApplicationController do
       controller.instance_variable_set(:@_params, :id => vm.id)
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
-      controller.instance_variable_set(:@_params, {:button => "submit"})
-      controller.instance_variable_set(:@breadcrumbs, ["test",{:url => "test/show"}])
+      controller.instance_variable_set(:@_params, :button => "submit")
+      controller.instance_variable_set(:@breadcrumbs, ["test", {:url => "test/show"}])
       controller.should_receive(:render)
       VmReconfigureRequest.stub(:create_request)
       controller.send(:reconfigure_update)
@@ -188,8 +188,8 @@ describe ApplicationController do
       controller.instance_variable_set(:@_params, :id => vm.id)
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
-      controller.instance_variable_set(:@_params, {:button => "submit"})
-      controller.instance_variable_set(:@breadcrumbs, ["test",{:url => "test/show"}])
+      controller.instance_variable_set(:@_params, :button => "submit")
+      controller.instance_variable_set(:@breadcrumbs, ["test", :url => "test/show"])
       controller.should_receive(:render)
       VmReconfigureRequest.stub(:create_request)
       controller.send(:reconfigure_update)
@@ -202,10 +202,8 @@ describe ApplicationController do
       edit[:new] = Hash.new
       controller.instance_variable_set(:@_params, :id => vm.id)
       controller.instance_variable_set(:@edit, edit)
-
     end
   end
-
 
   context "#discover" do
     it "checks that keys in @to remain set if there is an error after submit is pressed" do

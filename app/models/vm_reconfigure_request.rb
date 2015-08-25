@@ -33,7 +33,7 @@ class VmReconfigureRequest < MiqRequest
     all_memory, all_vcpus, all_cores_per_socket, all_total_vcpus = [], [], [], []
     options[:src_ids].to_miq_a.each do |idx|
       vm = Vm.find_by_id(idx)
-      all_vcpus   << (vm.host ? vm.host.hardware.logical_cpus : vm.max_vcpus)
+      all_vcpus << (vm.host ? vm.host.hardware.logical_cpus : vm.max_vcpus)
       all_memory << (vm.respond_to?(:max_memory_cpu) ? vm.max_memory_cpu : default_max_vm_memory)
       all_cores_per_socket << vm.max_cores_per_socket
       all_total_vcpus << vm.max_total_vcpus
@@ -46,7 +46,7 @@ class VmReconfigureRequest < MiqRequest
 
     result[:max__number_of_cpus] = 1 if result[:max__number_of_cpus].nil?
     result[:max__cores_per_socket] = 1 if result[:max__cores_per_socket].nil?
-    result[:max__vm_memory]      ||= default_max_vm_memory
+    result[:max__vm_memory] ||= default_max_vm_memory
     result[:max__total_vcpus] = 1 if result[:max__number_of_cpus].nil? && result[:max__cores_per_socket].nil?
     result
   end
@@ -64,7 +64,7 @@ class VmReconfigureRequest < MiqRequest
       errors << "Memory value must be divisible by 4.  Current value: #{mem}" if mem.modulo(4) != 0
     end
 
-    #Check if cpu value is within the allowed limits
+    # Check if cpu value is within the allowed limits
     cpus = options[:number_of_cpus]
     unless cpus.blank?
       cpus = cpus.to_i
@@ -72,7 +72,7 @@ class VmReconfigureRequest < MiqRequest
       errors << "Processor value must be greater than #{limits[:min__number_of_cpus]}.  Current value: #{cpus}" if cpus < limits[:min__number_of_cpus]
     end
 
-    #Check if cpu value is within the allowed limits
+    # Check if cpu value is within the allowed limits
     cores = options[:cores_per_socket]
     unless cores.blank?
       cores = cores.to_i
@@ -80,7 +80,7 @@ class VmReconfigureRequest < MiqRequest
       errors << "The Cores per Socket value must be greater than #{limits[:min__cores_per_socket]}.  Current value: #{cores}" if cores < limits[:min__cores_per_socket]
     end
 
-    #Check if the total number of cpu value is within the allowed limits
+    # Check if the total number of cpu value is within the allowed limits
     unless cpus.blank? || cores.blank?
       total_vcpus = (cores * cpus)
       errors << "The total number of cpus must be less than #{limits[:max__total_vcpus]}.  Current value: #{total_vcpus}"    if total_vcpus > limits[:max__total_vcpus]
