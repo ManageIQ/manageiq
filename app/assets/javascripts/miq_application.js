@@ -942,8 +942,8 @@ function miqBuildCalendar() {
       element.datepicker('setEndDate', ManageIQ.calendar.calDateTo);
     }
 
-    if (typeof miq_cal_skipDays != "undefined" && miq_cal_skipDays) {
-      element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
+    if (ManageIQ.calendar.calSkipDays) {
+      element.datepicker('setDaysOfWeekDisabled', ManageIQ.calendar.calSkipDays);
     }
 
     if (observeDateBackup != null) {

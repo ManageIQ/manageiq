@@ -128,7 +128,7 @@ describe JsHelper do
       expected = <<EOD
 ManageIQ.calendar.calDateFrom = undefined;
 ManageIQ.calendar.calDateTo = undefined;
-miq_cal_skipDays = undefined;
+ManageIQ.calendar.calSkipDays = undefined;
 miqBuildCalendar();
 EOD
 
@@ -143,7 +143,7 @@ EOD
       expected = <<EOD
 ManageIQ.calendar.calDateFrom = new Date('1970-01-01T00:00:00Z');
 ManageIQ.calendar.calDateTo = new Date('2000-01-01T00:00:00Z');
-miq_cal_skipDays = [1,2,3];
+ManageIQ.calendar.calSkipDays = [1,2,3];
 miqBuildCalendar();
 EOD
 

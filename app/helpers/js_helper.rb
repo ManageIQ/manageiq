@@ -121,7 +121,7 @@ module JsHelper
     <<EOD
 ManageIQ.calendar.calDateFrom = #{js_format_date(options[:date_from])};
 ManageIQ.calendar.calDateTo = #{js_format_date(options[:date_to])};
-miq_cal_skipDays = #{skip_days};
+ManageIQ.calendar.calSkipDays = #{skip_days};
 miqBuildCalendar();
 EOD
   end
