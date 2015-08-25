@@ -79,6 +79,21 @@ describe Tenant do
     end
   end
 
+  describe "#display_type" do
+    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
+    let(:project) { FactoryGirl.build(:tenant, :parent => default_tenant, :divisible => false) }
+
+    it "detects Tenant" do
+      expect(tenant.display_type).to eql  'Tenant'
+      expect(project.display_type).not_to eql  'Tenant'
+    end
+
+    it "detects Project" do
+      expect(project.display_type).to eql 'Project'
+      expect(tenant.display_type).not_to eql 'Project'
+    end
+  end
+
   it ".all_tenants" do
     FactoryGirl.create(:tenant, :parent => root_tenant)
     FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)

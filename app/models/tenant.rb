@@ -43,7 +43,8 @@ class Tenant < ActiveRecord::Base
   scope :all_tenants,  -> { where(:divisible => true) }
   scope :all_projects, -> { where(:divisible => false) }
 
-  virtual_column :parent_name, :type => :string
+  virtual_column :parent_name,  :type => :string
+  virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
 
@@ -61,6 +62,10 @@ class Tenant < ActiveRecord::Base
 
   def parent_name
     parent.try(:name)
+  end
+
+  def display_type
+    project? ?  "Project" : "Tenant"
   end
 
   def login_text
