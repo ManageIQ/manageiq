@@ -50,8 +50,8 @@ describe "Service Filter" do
   end
 
   context "#automate_result_include_service_template?" do
-    before do
-      TestClass = Class.new do
+    let(:test_class) do
+      Class.new do
         include ServiceTemplate::Filter
         def initialize(workspace)
           @workspace = workspace
@@ -59,18 +59,13 @@ describe "Service Filter" do
       end
     end
 
-    after do
-      Object.send(:remove_const, :TestClass)
-    end
-
     let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
-    let(:test_class) { TestClass.new(workspace) }
 
     context "allow" do
       let(:options) { {'include_service' => true} }
       it "check true value" do
         MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
-        expect(TestClass.automate_result_include_service_template?('a', 'b')).to be_true
+        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_true
       end
     end
 
@@ -78,7 +73,7 @@ describe "Service Filter" do
       let(:options) { {'include_service' => false} }
       it "check false value" do
         MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
-        expect(TestClass.automate_result_include_service_template?('a', 'b')).to be_false
+        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_false
       end
     end
 
@@ -86,7 +81,7 @@ describe "Service Filter" do
       let(:options) { {} }
       it "check nil value" do
         MiqAeEngine.stub(:resolve_automation_object).and_return(workspace)
-        expect(TestClass.automate_result_include_service_template?('a', 'b')).to be_true
+        expect(test_class.automate_result_include_service_template?('a', 'b')).to be_true
       end
     end
   end
