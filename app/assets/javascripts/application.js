@@ -77,6 +77,8 @@
 //= require SlickGrid-2.1/slick.grid
 //= require SlickGrid-2.1/slick.dataview
 //= require SlickGrid-2.1/plugins/slick.autotooltips
+//= require SlickGrid-2.1/plugins/slick.rowselectionmodel
+//= require SlickGrid-2.1/plugins/slick.checkboxselectcolumn
 //= require miq_slickgrid
 //= require codemirror
 //= require codemirror/modes/yaml
