@@ -25,6 +25,9 @@ cols:
 
 # Included tables (joined, has_one, has_many) and columns
 include:
+  container_image_registry:
+    columns:
+    - full_name
 
 # Included tables and columns for query performance
 include_for_find:
@@ -34,12 +37,14 @@ col_order:
 - name
 - tag
 - image_ref
+- container_image_registry.full_name
 
 # Column titles, in order
 headers:
 - Name
 - Tag
 - Id
+- Image Registry
 
 # Condition(s) string for the SQL query
 conditions: 
