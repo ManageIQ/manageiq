@@ -1,4 +1,6 @@
 class ManageIQ::Providers::Openstack::CloudManager::EventCatcher < ::MiqEventCatcher
+  require_dependency 'manageiq/providers/openstack/cloud_manager/event_catcher/runner'
+
   def self.ems_class
     ManageIQ::Providers::Openstack::CloudManager
   end
