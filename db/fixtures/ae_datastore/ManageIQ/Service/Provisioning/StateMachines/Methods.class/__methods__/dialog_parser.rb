@@ -25,6 +25,25 @@ def process_comma_separated_object_array(sequence_id, option_key, value, hash)
   hash[sequence_id][option_key] = options_value_array
 end
 
+def option_password_value(dialog_key, dialog_value, options_hash)
+  return false unless /^password::dialog_option_(?<sequence>\d*)_(?<option_key>.*)/i =~ dialog_key
+  add_password_value(sequence.to_i, option_key, dialog_value, options_hash)
+  true
+end
+
+def generic_password_value(dialog_key, dialog_value, options_hash)
+  return false unless /^password::dialog_(?<option_key>.*)/i =~ dialog_key
+  add_password_value(0, option_key, dialog_value, options_hash)
+  true
+end
+
+def add_password_value(sequence, option_key, value, options_hash)
+  stripped_option_key = 'password::' + option_key
+  prefixed_option_key = 'password::dialog_' + option_key
+  add_hash_value(sequence, stripped_option_key.to_sym, value, options_hash)
+  add_hash_value(sequence, prefixed_option_key.to_sym, value, options_hash)
+end
+
 def option_hash_value(dialog_key, dialog_value, options_hash)
   return false unless /^dialog_option_(?<sequence>\d*)_(?<option_key>.*)/i =~ dialog_key
   add_hash_value(sequence.to_i, option_key.to_sym, dialog_value, options_hash)
@@ -56,18 +75,23 @@ def generic_dialog_value(dialog_key, dialog_value, options_hash)
   true
 end
 
+def set_dialog_value(key, value, options_hash, tags_hash)
+  option_hash_value(key, value, options_hash) ||
+    option_array_value(key, value, options_hash) ||
+    option_password_value(key, value, options_hash) ||
+    tag_hash_value(key, value, tags_hash) ||
+    tag_array_value(key, value, tags_hash) ||
+    generic_dialog_value(key, value, options_hash) ||
+    generic_password_value(key, value, options_hash)
+end
+
 def parse_dialog_entries(dialog_options)
   options_hash        = Hash.new { |h, k| h[k] = {} }
   tags_hash           = Hash.new { |h, k| h[k] = {} }
 
   dialog_options.each do |key, value|
     next if value.blank?
-
-    option_hash_value(key, value, options_hash) ||
-      option_array_value(key, value, options_hash) ||
-      tag_hash_value(key, value, tags_hash) ||
-      tag_array_value(key, value, tags_hash) ||
-      generic_dialog_value(key, value, options_hash)
+    set_dialog_value(key, value, options_hash, tags_hash)
   end
   return options_hash, tags_hash
 end
