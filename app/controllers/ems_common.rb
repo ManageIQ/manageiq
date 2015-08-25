@@ -543,7 +543,7 @@ module EmsCommon
           end
         end
       else
-        if params[:pressed] == "ems_cloud_edit"
+        if params[:pressed] == "ems_cloud_edit" && params[:id]
           render :update do |page|
             page.redirect_to edit_ems_cloud_path(params[:id])
           end
