@@ -250,36 +250,16 @@ class MiqPolicyController < ApplicationController
     self.x_active_tree   ||= 'policy_profile_tree'
     self.x_active_accord ||= 'policy_profile'
 
-    @trees   = []
-    @accords = []
+    @trees = features.collect { |feature| feature.build_tree(@sb) }
+    @accords = features.map(&:accord_hash)
 
     profile_build_tree
-    @trees.push("profile_tree")
-    @accords.push(:name => "policy_profile", :title => "Policy Profiles", :container => "policy_profile_tree_div", :image => "policy_profile")
-
     policy_build_tree
-    @trees.push("policy_tree")
-    @accords.push(:name => "policy", :title => "Policies", :container => "policy_tree_div", :image => "miq_policy")
-
     event_build_tree
-    @trees.push("event_tree")
-    @accords.push(:name => "event", :title => "Events", :container => "event_tree_div", :image => "miq_event_definition")
-
     condition_build_tree
-    @trees.push("condition_tree")
-    @accords.push(:name => "condition", :title => "Conditions", :container => "condition_tree_div", :image => "miq_condition")
-
     action_build_tree
-    @trees.push("action_tree")
-    @accords.push(:name => "action", :title => "Actions", :container => "action_tree_div", :image => "miq_action")
-
     alert_profile_build_tree
-    @trees.push("alert_profile_tree")
-    @accords.push(:name => "alert_profile", :title => "Alert Profiles", :container => "alert_profile_tree_div", :image => "miq_alert_profile")
-
     alert_build_tree
-    @trees.push("alert_tree")
-    @accords.push(:name => "alert", :title => "Alerts", :container => "alert_tree_div", :image => "miq_alert")
 
     if params[:profile].present?  # If profile record id passed in, position on that node
       self.x_active_tree = 'policy_profile_tree'
@@ -1137,4 +1117,24 @@ class MiqPolicyController < ApplicationController
     session[:server_options]          = @server_options
   end
 
+  def features
+    [{:name => :policy_profile,
+      :title => "Policy Profiles",
+      :tree_name => :profile_tree},
+     {:name => :policy,
+      :title => "Policies"},
+     {:name => :event,
+      :title => "Events"},
+     {:name => :condition,
+      :title => "Conditions"},
+     {:name => :action,
+      :title => "Actions"},
+     {:name => :alert_profile,
+      :title => "Alert Profiles"},
+     {:name => :alert,
+      :title => "Alerts"},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
 end
