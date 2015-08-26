@@ -29,15 +29,15 @@ module EmsContainerHelper::TextualSummary
   #
 
   def textual_name
-    {:label => "Name", :value => @ems.name}
+    @ems.name
   end
 
   def textual_type
-    {:label => "Type", :value => @ems.emstype_description}
+    @ems.emstype_description
   end
 
   def textual_hostname
-    {:label => "Hostname", :value => @ems.hostname}
+    @ems.hostname
   end
 
   def textual_memory_resources
@@ -52,7 +52,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_port
-    @ems.supports_port? ? {:label => "Port", :value => @ems.port} : nil
+    @ems.supports_port? ? @ems.port : nil
   end
 
   def textual_zone

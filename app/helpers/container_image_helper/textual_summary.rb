@@ -22,11 +22,11 @@ module ContainerImageHelper
     #
 
     def textual_name
-      {:label => "Name", :value => @record.name}
+      @record.name
     end
 
     def textual_tag
-      {:label => "Tag", :value => @record.tag}
+      @record.tag
     end
 
     def textual_id
