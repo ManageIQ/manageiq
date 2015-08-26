@@ -2,7 +2,7 @@
   = render(:partial => "layouts/x_adv_searchbox", :locals => {:nameonly => true})
   - @trees.each do |tree|
     %div{:style => "display: none;"}
-      = render(:partial => tree, :locals => {:name => tree})
+      = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}
 
 - content_for :accords do
   -# Create the explorer dhtmlx layout/accordion JS objects

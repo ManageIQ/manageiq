@@ -16,6 +16,15 @@ class TreeBuilder
     when :images_filter    then TreeBuilderImagesFilter
     when :vms_instances_filter    then TreeBuilderVmsInstancesFilter
     when :templates_images_filter then TreeBuilderTemplatesImagesFilter
+
+    when :policy_profile   then TreeBuilderPolicyProfile
+    when :policy           then TreeBuilderPolicy
+    when :event            then TreeBuilderEvent
+    when :condition        then TreeBuilderCondition
+    when :action           then TreeBuilderAction
+    when :alert_profile    then TreeBuilderAlertProfile
+    when :alert            then TreeBuilderAlert
+
     end
   end
 
