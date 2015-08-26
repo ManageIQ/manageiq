@@ -165,13 +165,4 @@ module MiqPolicyController::PolicyProfiles
     instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
   end
-
-  def profile_get_all
-    @profiles = MiqPolicySet.all.sort_by { |ps| ps.description.downcase }
-    set_search_text
-    @profiles = apply_search_filter(@search_text, @profiles) if !@search_text.blank?
-    @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqPolicySet")
-    @right_cell_div = "profile_list"
-  end
-
 end
