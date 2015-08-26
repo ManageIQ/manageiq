@@ -285,6 +285,15 @@ class TreeBuilder
                         when Tenant              then x_get_tree_tenant_kids(parent, options)
                         when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
                         when Zone                then x_get_tree_zone_kids(parent, options)
+
+                        when MiqPolicySet        then x_get_tree_pp_kids(parent, options)
+                        when MiqAction           then x_get_tree_ac_kids(parent, options)
+                        when MiqAlert            then x_get_tree_al_kids(parent, options)
+                        when MiqAlertSet         then x_get_tree_ap_kids(parent, options)
+                        when Condition           then x_get_tree_co_kids(parent, options)
+                        when MiqEventDefinition  then x_get_tree_ev_kids(parent, options)
+                        when MiqPolicy           then x_get_tree_po_kids(parent, options)
+
                         when MiqSearch           then nil
                         when ManageIQ::Providers::Openstack::CloudManager::Vm         then nil
                         else                          nil end
