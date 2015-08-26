@@ -7,9 +7,9 @@ class ApplicationController
     end
 
     def autocomplete
-      accord_name = name.to_s unless name
-      tree_name   = "#{name}_tree".to_sym unless tree_name
-      container   = "#{accord_name}_tree_div" unless container
+      self.accord_name = name.to_s unless accord_name
+      self.tree_name   = "#{name}_tree".to_sym unless tree_name
+      self.container   = "#{accord_name}_tree_div" unless container
     end
 
     def accord_hash
