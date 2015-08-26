@@ -24,7 +24,8 @@ class TreeBuilderAlertProfile < TreeBuilder
 
     objects = []
     MiqAlert.base_tables.sort_by { |a| ui_lookup(:model => a) }.each do |db|
-      objects << {:id => db, :text => "#{ui_lookup(:model => db)} Alert Profiles", :image => db.underscore.downcase, :tip => "#{ui_lookup(:model => db)} Alert Profiles"}
+      text = PostponedTranslation.new(N_("%s Alert Profiles"), ui_lookup(:model => db)).to_proc
+      objects << {:id => db, :text => text, :image => db.underscore.downcase, :tip => text}
 
       # Set alert profile folder nodes to open so we pre-load all children
       n = "xx-#{db}"

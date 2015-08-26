@@ -139,6 +139,7 @@ class TreeNodeBuilder
 
   def tooltip(tip)
     unless tip.blank?
+      tip = tip.kind_of?(Proc) ? tip.call : _(tip)
       tip = ERB::Util.html_escape(tip) unless tip.html_safe?
       @node[:tooltip] = tip
     end
@@ -161,11 +162,14 @@ class TreeNodeBuilder
   end
 
   def hash_node
+    text = object[:text]
+    text = text.kind_of?(Proc) ? text.call : _(text)
+
     # FIXME: expansion
     @node = {
       :key   => build_hash_id,
-      :icon  => "#{object[:image] || object[:text]}.png",
-      :title => ERB::Util.html_escape(object[:text])
+      :icon  => "#{object[:image] || text}.png",
+      :title => ERB::Util.html_escape(text),
     }
     @node[:expand] = true if options[:open_all] # Start with all nodes open
     @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
