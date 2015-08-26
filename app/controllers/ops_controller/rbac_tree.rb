@@ -26,13 +26,14 @@ class OpsController
   
       top_nodes = []
       @all_vm_node = { # FIXME: handle the below special name!
-        :key      => "#{@role.id ? to_cid(@role.id) : "new"}___tab_all_vm",
+        :key      => "#{@role.id ? to_cid(@role.id) : "new"}___tab_all_vm_rules",
         :icon     => "feature_node.png",
-        :title    => t = _("All VM and Instance Access Rules"),
+        :title    => t = _("Access Rules for all Virtual Machines"),
         :tooltip  => t,
         :children => [],
+        :select   => root_node[:select]
       }
-      top_nodes << @all_vm_node
+      rbac_features_tree_add_node("all_vm_rules", root_node[:key], @all_vm_node[:select])
 
       Menu::Manager.each_feature_title_with_subitems do |feature_title, subitems|
         t_kids = []
@@ -61,7 +62,7 @@ class OpsController
             t_node[:select] = false           # Some kids are checked or partially checked
           end
         end
-  
+
         t_node[:children] = t_kids unless t_kids.empty?
         # only show storage node if product setting is set to show the nodes
         case feature_title.downcase
@@ -69,6 +70,7 @@ class OpsController
           else            top_nodes.push(t_node)
         end
       end
+      top_nodes << @all_vm_node
       root_node[:children] = top_nodes unless top_nodes.empty?
       root_node
     end

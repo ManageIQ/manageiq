@@ -1166,8 +1166,7 @@ module OpsController::OpsRbac
       node = params[:id].split("__").last # Get the feature of the checked node
       if params[:check] == "0"  # Unchecked
         if node.starts_with?("_tab_") # Remove all features under this tab
-          tab_features = Menu::Manager.tab_features_by_name(node.split("_tab_").last)
-          tab_features.each do |f|
+          tab_features_for_node(node).each do |f|
             @edit[:new][:features] -= ([f] + MiqProductFeature.feature_all_children(f)) # Remove the feature + children
             rbac_role_remove_parent(f)  # Remove all parents above the unchecked tab feature
           end
@@ -1177,8 +1176,7 @@ module OpsController::OpsRbac
         end
       else                      # Checked
         if node.starts_with?("_tab_") # Add all features under this tab
-          tab_features = Menu::Manager.tab_features_by_name(node.split("_tab_").last)
-          tab_features.each do |f|
+          tab_features_for_node(node).each do |f|
             @edit[:new][:features] += ([f] + MiqProductFeature.feature_all_children(f))
             rbac_role_add_parent(f) # Add any parents above the checked tab feature that have all children checked
           end
@@ -1190,6 +1188,12 @@ module OpsController::OpsRbac
     end
     @edit[:new][:features].uniq!
     @edit[:new][:features].sort!
+  end
+
+  def tab_features_for_node(node)
+    node.ends_with?("_tab_all_vm_rules") ?
+      MiqProductFeature.feature_children(node.split("_tab_").last) :
+      Menu::Manager.tab_features_by_name(node.split("_tab_").last)
   end
 
   # Walk the features tree, removing features up to the top
