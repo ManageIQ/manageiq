@@ -19,7 +19,11 @@ class TreeBuilder
     end
   end
 
-  # FIXME: need to move this to a subclass
+  def root_options
+    TreeBuilder.root_options(@name)
+  end
+
+  # FIXME: need to move this to a subclass (#root_options)
   def self.root_options(tree_name)
     #returns title, tooltip, root icon
     case tree_name
@@ -181,7 +185,7 @@ class TreeBuilder
 
   def add_root_node(nodes)
     root = nodes.first
-    root[:title], root[:tooltip], icon = TreeBuilder.root_options(@name)
+    root[:title], root[:tooltip], icon = root_options
     root[:icon] = "#{icon || 'folder'}.png"
   end
 
