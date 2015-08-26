@@ -9,6 +9,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - availability_zone
   - flavor
   - bottlenecks
@@ -66,6 +67,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -170,6 +172,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - bottlenecks
   - chargeback
   - chargeback_reports
@@ -275,6 +278,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - dashboard
   - miq_request_admin
   - miq_request_view
@@ -324,6 +328,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -466,6 +471,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -565,6 +571,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -658,6 +665,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - chargeback
   - chargeback_reports
   - cim_base_storage_extent_show
@@ -751,6 +759,7 @@
       :vms: :user
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - miq_request_admin
   - miq_request_view
   - my_settings_default_views
@@ -784,6 +793,7 @@
       :vms: :user_or_group
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - miq_template_clone
   - miq_template_drift
   - miq_template_edit
@@ -836,6 +846,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - all_vm_rules
   - miq_request_admin
   - miq_request_view
   - miq_template_analyze
