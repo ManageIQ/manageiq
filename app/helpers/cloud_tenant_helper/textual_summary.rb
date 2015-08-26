@@ -23,7 +23,7 @@ module CloudTenantHelper::TextualSummary
   end
 
   def textual_security_groups
-    textual_link(@record.security_groups)
+    @record.security_groups
   end
 
   def textual_instances

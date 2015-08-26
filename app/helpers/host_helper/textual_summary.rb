@@ -55,9 +55,7 @@ module HostHelper::TextualSummary
 
   def textual_group_openstack_status
     return nil unless @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::Host)
-    ret = textual_generate_openstack_status
-
-    ret.blank? ? nil : ret
+    textual_generate_openstack_status
   end
 
   #
@@ -107,11 +105,11 @@ module HostHelper::TextualSummary
 
 
   def textual_hostname
-    {:label => "Hostname", :value => "#{@record.hostname}"}
+    @record.hostname
   end
 
   def textual_ipaddress
-    {:label => "IP Address", :value => "#{@record.ipaddress}"}
+    @record.ipaddress
   end
 
   def textual_ipmi_ipaddress
@@ -150,13 +148,11 @@ module HostHelper::TextualSummary
   end
 
   def textual_asset_tag
-    return nil if @record.asset_tag.blank?
-    {:label => "Asset Tag", :value => @record.asset_tag}
+    @record.asset_tag
   end
 
   def textual_service_tag
-    return nil if @record.service_tag.blank?
-    {:label => "Service Tag", :value => @record.service_tag}
+    @record.service_tag
   end
 
   def textual_osinfo
@@ -299,12 +295,12 @@ module HostHelper::TextualSummary
   end
 
   def textual_vms
-    textual_link(@record.vms)
+    @record.vms
   end
 
   def textual_miq_templates
     return nil if @record.openstack_host?
-    textual_link(@record.miq_templates)
+    @record.miq_templates
   end
 
   def textual_storage_systems
