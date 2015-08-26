@@ -15,4 +15,8 @@ class TreeBuilderAlert < TreeBuilder
   def root_options
     [N_("All Alerts"), N_("All Alerts")]
   end
+
+  def x_get_tree_roots(options)
+    count_only_or_objects(options[:count_only], MiqAlert.all, :description)
+  end
 end

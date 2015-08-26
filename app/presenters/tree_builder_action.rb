@@ -15,4 +15,8 @@ class TreeBuilderAction < TreeBuilder
   def root_options
     [N_("All Actions"), N_("All Actions")]
   end
+
+  def x_get_tree_roots(options)
+    count_only_or_objects(options[:count_only], MiqAction.all, :description)
+  end
 end

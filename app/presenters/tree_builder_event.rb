@@ -15,4 +15,8 @@ class TreeBuilderEvent < TreeBuilder
   def root_options
     [N_("All Events"), N_("All Events")]
   end
+
+  def x_get_tree_roots(options)
+    count_only_or_objects(options[:count_only], MiqPolicy.all_policy_events, :description)
+  end
 end
