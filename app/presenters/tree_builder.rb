@@ -87,7 +87,7 @@ class TreeBuilder
     @locals_for_render  = {}
     @name               = name.to_sym                     # includes _tree
     @options            = tree_init_options(name.to_sym)
-    @tree_nodes         = {}
+    @tree_nodes         = {}.to_json
     # FIXME: remove @name or @tree, unify
     @type               = type.to_sym                     # *usually* same as @name but w/o _tree
 
