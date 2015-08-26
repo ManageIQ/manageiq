@@ -39,8 +39,8 @@ class TreeBuilderPolicyProfile < TreeBuilder
 
   # level 4 - actions under events
   def x_get_tree_ev_kids(parent, options)
-    # TODO - need the policy from l2, not this
-    pol_rec = parent.miq_policies.first
+    # the policy from level 2
+    pol_rec = node_by_tree_id(options[:parents].last)
 
     success = count_only_or_objects(options[:count_only], pol_rec ? pol_rec.actions_for_event(parent, :success) : [])
     failure = count_only_or_objects(options[:count_only], pol_rec ? pol_rec.actions_for_event(parent, :failure) : [])

@@ -104,25 +104,32 @@ class TreeBuilder
     build_tree if build
   end
 
+  def node_by_tree_id(id)
+    model, rec_id, prefix = self.class.extract_node_model_and_id(id)
+
+    if model == "Hash"
+      {:type => prefix, :id => rec_id, :full_id => id}
+    elsif model.nil? && [:sandt, :svccat, :stcat].include?(@type)
+      # Creating empty record to show items under unassigned catalog node
+      ServiceTemplateCatalog.new
+    elsif model.nil? && [:foreman_providers_tree].include?(@name)
+      # Creating empty record to show items under unassigned catalog node
+      ConfigurationProfile.new
+    else
+      model.constantize.find(from_cid(rec_id))
+    end
+  end
+
   # Get the children of a dynatree node that is being expanded (autoloaded)
   def x_get_child_nodes(id)
-    model, rec_id, prefix = self.class.extract_node_model_and_id(id)
-    object = if model == "Hash"
-               {:type => prefix, :id => rec_id, :full_id => id}
-             elsif model.nil? && [:sandt, :svccat, :stcat].include?(@type)
-               # Creating empty record to show items under unassigned catalog node
-               ServiceTemplateCatalog.new
-             elsif model.nil? && [:foreman_providers_tree].include?(@name)
-               # Creating empty record to show items under unassigned catalog node
-               ConfigurationProfile.new
-             else
-               model.constantize.find(from_cid(rec_id))
-             end
+    parents = [] # FIXME: parent ids should be provided on autoload as well
+
+    object = node_by_tree_id(id)
 
     # Save node as open
     @tree_state.x_tree(@name)[:open_nodes].push(id) unless @tree_state.x_tree(@name)[:open_nodes].include?(id)
 
-    x_get_tree_objects(object, @tree_state.x_tree(@name)).each_with_object([]) do |o, acc|
+    x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).each_with_object([]) do |o, acc|
       acc.concat(x_build_node_dynatree(o, id, @tree_state.x_tree(@name)))
     end
   end
@@ -222,7 +229,7 @@ class TreeBuilder
   # :add_root               # If true, put a root node at the top
   # :full_ids               # stack parent id on top of each node id
   def x_build_dynatree(options)
-    children = x_get_tree_objects(nil, options)
+    children = x_get_tree_objects(nil, options, nil, [])
 
     child_nodes = children.each_with_object([]) do |child, acc|
       # already a node? FIXME: make a class for node
@@ -245,13 +252,15 @@ class TreeBuilder
   #   :leaf                 # Model name of leaf nodes, i.e. "Vm"
   #   :open_all             # if true open all node (no autoload)
   #   :load_children
-  def x_get_tree_objects(parent, options, count_only = false)
+  # parents --- an Array of parent object ids, starting from tree root + 1, ending with parent's parent; only available when full_ids and not lazy
+  def x_get_tree_objects(parent, options, count_only = false, parents = [])
     # FIXME: To limit the use of options and make mandatory arguments explitic,
     # we need to fix all the callers and functions to pass count_only as an
-    # argument and not part of options.
+    # argument and not part of options.; same for parents
     count_only = options[:count_only] if options[:count_only]
     options = options.dup
     options[:count_only] = count_only
+    options[:parents] = parents
 
     children_or_count = case parent
                         when nil                 then x_get_tree_roots(options)
@@ -302,6 +311,8 @@ class TreeBuilder
 
   # Return a tree node for the passed in object
   def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
+    parents = pid.to_s.split('_')
+
     options[:is_current] =
         ((object.kind_of?(MiqServer) && MiqServer.my_server(true).id == object.id) ||
          (object.kind_of?(Zone)      && MiqServer.my_server(true).my_zone == object.name))
@@ -321,12 +332,12 @@ class TreeBuilder
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
-      kids = x_get_tree_objects(object, options).each_with_object([]) do |o, acc|
+      kids = x_get_tree_objects(object, options, nil, parents).each_with_object([]) do |o, acc|
         acc.concat(x_build_node(o, node[:key], options))
       end
       node[:children] = kids unless kids.empty?
     else
-      if x_get_tree_objects(object, options.merge(:count_only => true)) > 0
+      if x_get_tree_objects(object, options.merge(:count_only => true), nil, parents) > 0
         node[:isLazy] = true  # set child flag if children exist
       end
     end
