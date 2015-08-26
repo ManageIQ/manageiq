@@ -15,7 +15,7 @@ describe Tenant do
   end
 
   before do
-    allow(VMDB::Config).to receive(:new).with("vmdb").and_return(double(:config => settings))
+    stub_server_configuration(settings)
   end
 
   describe "#default_tenant" do

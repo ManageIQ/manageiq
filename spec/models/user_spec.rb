@@ -245,9 +245,7 @@ describe User do
               :ldaphost=>["192.168.254.15"]
             }
           }
-        vmdb_config = double("vmdb_config")
-        vmdb_config.stub(:config => @auth_config)
-        VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
+        stub_server_configuration(@auth_config)
         @miq_ldap = double('miq_ldap')
         @miq_ldap.stub(:bind => false)
       end

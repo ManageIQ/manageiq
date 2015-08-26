@@ -11,7 +11,7 @@ describe MiqReportResult do
           }
         }
       }
-      VMDB::Config.any_instance.stub(:config).and_return(@vmdb_config)
+      stub_server_configuration(@vmdb_config)
 
       @rr1 = [
         FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months + 1.days).to_i.seconds.ago.utc),

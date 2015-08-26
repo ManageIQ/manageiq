@@ -416,7 +416,7 @@ describe MiqWidget do
     end
 
     it "with report_sync" do
-      VMDB::Config.any_instance.stub(:config).and_return({:product => {:report_sync => true}})
+      stub_server_configuration(:product => {:report_sync => true})
 
       user_est =  FactoryGirl.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       user_est.get_timezone.should == "Eastern Time (US & Canada)"

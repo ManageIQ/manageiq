@@ -13,7 +13,7 @@ describe DriftState do
           }
         }
       }
-      VMDB::Config.any_instance.stub(:config).and_return(@vmdb_config)
+      stub_server_configuration(@vmdb_config)
 
       @rr1 = [
         FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months + 1.days).to_i.seconds.ago.utc),
