@@ -328,6 +328,8 @@ class TreeBuilder
   def count_only_or_objects(count_only, objects, sort_by)
     if count_only
       objects.size
+    elsif sort_by.kind_of?(Proc)
+      objects.sort_by(&sort_by)
     elsif sort_by
       objects.sort_by { |o| Array(sort_by).collect { |sb| o.deep_send(sb).to_s.downcase } }
     else
