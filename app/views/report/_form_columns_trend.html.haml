@@ -1,30 +1,34 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
-%tr
-  %td.key
+.form-group
+  %label.control-label.col-md-2
     = _('Trending for')
-  %td
+  .col-md-8
     - opts = ["<#{_('Choose')}>"] + MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).sort
     = select_tag('chosen_trend_col',
       options_for_select(opts, @edit[:new][:perf_trend_db] ? @edit[:new][:perf_trend_db] + "-" + @edit[:new][:perf_trend_col] : ""),
       :multiple              => false,
-      :class                 => "widthed",
+      :class                 => "selectpicker",
       "data-miq_sparkle_on"  => true,
-      "data-miq_sparkle_off" => true,
-      "data-miq_observe"     => {:url => url}.to_json)
+      "data-miq_sparkle_off" => true)
+    :javascript
+      miqInitSelectPicker();
+      miqSelectPickerEvent("chosen_trend_col", "#{url}")
 - if @edit[:new][:perf_trend_col]
-  %tr
-    %td.key
+  .form-group
+    %label.control-label.col-md-2
       = _('Trend Target Limit')
-    %td
+    .col-md-8
       - unless @edit[:limit_cols].empty?
         = _('Column:')
         = select_tag('chosen_limit_col',
           options_for_select(["<#{_('None')}>"] + @edit[:limit_cols].sort,  @edit[:new][:perf_limit_col]),
           :multiple              => false,
-          :class                 => "widthed",
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("chosen_limit_col", "#{url}")
       - unless @edit[:new][:perf_limit_col]
         = _('Value:')
         - if @edit[:percent_col]
@@ -32,30 +36,23 @@
         - else
           = text_field_tag("chosen_limit_val", @edit[:new][:perf_limit_val],
             :maxlength         => 20,
+            "class"            => "form-control",
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 - if @edit[:new][:perf_trend_col]
-  %tr
-    %td.key
+  .form-group
+    %label.control-label.col-md-2
       = _('Trend Target Percents')
-    %td
-      = select_tag('percent1',
-        options_for_select((0..100).step(5).to_a, @edit[:new][:perf_target_pct1]),
-        :multiple              => false,
-        :class                 => "widthed",
-        "data-miq_sparkle_on"  => true,
-        "data-miq_sparkle_off" => true,
-        "data-miq_observe"     => {:url => url}.to_json)
-      = select_tag('percent2',
-        options_for_select(["<#{_('None')}>"] + (0..100).step(5).to_a, @edit[:new][:perf_target_pct2]),
-        :multiple              => false,
-        :class                 => "widthed",
-        "data-miq_sparkle_on"  => true,
-        "data-miq_sparkle_off" => true,
-        "data-miq_observe"     => {:url => url}.to_json)
-      = select_tag('percent3',
-        options_for_select(["<#{_('None')}>"] + (0..100).step(5).to_a, @edit[:new][:perf_target_pct3]),
-        :multiple              => false,
-        :class                 => "widthed",
-        "data-miq_sparkle_on"  => true,
-        "data-miq_sparkle_off" => true,
-        "data-miq_observe"     => {:url => url}.to_json)
+    .col-md-8
+      - steps = (0..100).step(5).to_a
+      - [steps,
+         ["<#{_('None')}>"] + steps,
+         ["<#{_('None')}>"] + steps].each.with_index(1) do |opt, index|
+        = select_tag("percent#{index}",
+          options_for_select(opt, @edit[:new]["perf_target_pct#{index}".to_sym]),
+          :multiple              => false,
+          :class                 => "selectpicker",
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("percent#{index}", "#{url}")
