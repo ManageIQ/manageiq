@@ -16,4 +16,8 @@ class TreeBuilderPolicyProfile < TreeBuilder
   def root_options
     [N_("All Policy Profiles"), N_("All Policy Profiles")]
   end
+
+  def x_get_tree_roots(options)
+    count_only_or_objects(options[:count_only], MiqPolicySet.all, :description)
+  end
 end

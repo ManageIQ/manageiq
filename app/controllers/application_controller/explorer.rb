@@ -390,26 +390,6 @@ module ApplicationController::Explorer
     when :ae,:automate
       objects = MiqAeNamespace.all(:conditions => ["parent_id is null AND name<>?" ,"$"]).sort_by { |ns| [ns.display_name.to_s, ns.name.to_s] }
       return count_only ? objects.length : objects
-    when :action
-      objects = MiqAction.all.sort_by { |a| a.description.downcase }
-      return count_only ? objects.length : objects
-    when :alert
-      objects = MiqAlert.all.sort_by { |a| a.description.downcase }
-      return count_only ? objects.length : objects
-    when :alert_profile
-      objects = Array.new
-      MiqAlert.base_tables.sort_by { |a| ui_lookup(:model=>a) }.each do |db|
-        objects.push({:id=>db, :text=>"#{ui_lookup(:model=>db)} Alert Profiles", :image=>db.underscore.downcase, :tip=>"#{ui_lookup(:model=>db)} Alert Profiles"})
-        # Set alert profile folder nodes to open so we pre-load all children
-        n = "xx-#{db}"
-        x_tree(options[:tree])[:open_nodes].push(n) unless x_tree(options[:tree])[:open_nodes].include?(n)
-      end
-      return count_only ? objects.length : objects
-    when :condition
-      objects = Array.new
-      objects.push({:id=>"host", :text=>"Host Conditions", :image=>"host", :tip=>"Host Conditions"})
-      objects.push({:id=>"vm", :text=>"All VM and Instance Conditions", :image=>"vm", :tip=>"All VM and Instance Conditions"})
-      return count_only ? objects.length : objects
     when :db
       objects = Array.new
       @default_ws = MiqWidgetSet.where_unique_on("default").where(:read_only => true).first
@@ -423,22 +403,8 @@ module ApplicationController::Explorer
     when :dialogs
       objects = rbac_filtered_objects(Dialog.all).sort_by { |a| a.label.downcase }
       return count_only ? objects.length : objects
-    when :event
-      objects = MiqPolicy.all_policy_events.sort_by {|a| a.description.downcase }
-      return count_only ? objects.length : objects
     when :old_dialogs
       MiqDialog::DIALOG_TYPES.sort.collect{|typ| {:id=>"MiqDialog_#{typ[1]}", :text=>typ[0], :image=>"folder", :tip=>typ[0]}}
-    when :policy_profile
-      objects = MiqPolicySet.all.sort_by { |a| a.description.downcase }
-      return count_only ? objects.length : objects
-    when :policy
-      objects = Array.new
-      ["xx-compliance", "xx-control"].each do |n| # Push folder node ids onto open_nodes array
-        x_tree(options[:tree])[:open_nodes].push(n) unless x_tree(options[:tree])[:open_nodes].include?(n)
-      end
-      objects.push({:id=>"compliance", :text=>"Compliance Policies", :image=>"compliance", :tip=>"Compliance Policies"})
-      objects.push({:id=>"control", :text=>"Control Policies", :image=>"control", :tip=>"Control Policies"})
-      return count_only ? objects.length : objects
     when :reports
       objects = Array.new
       @sb[:rpt_menu].each_with_index do |r,i|
