@@ -167,8 +167,10 @@ module OpsController::OpsRbac
   def tenant_set_record_vars(tenant)
     tenant.name        = params[:name]
     tenant.description = params[:description]
-    tenant.parent      = Tenant.find_by_id(from_cid(x_node.split('-').last)) unless tenant.parent
-    tenant.divisible   = params[:divisible] == "true"
+    unless tenant.id # only set for new records
+      tenant.parent    = Tenant.find_by_id(from_cid(x_node.split('-').last))
+      tenant.divisible = params[:divisible] == "true"
+    end
   end
 
   # AJAX driven routines to check for changes in ANY field on the form
@@ -1072,7 +1074,7 @@ module OpsController::OpsRbac
     all_projects = Tenant.all_projects
     @edit[:projects_tenants].push(["Projects", all_projects.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_projects.blank?
     @edit[:projects_tenants].push(["Tenants", all_tenants.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_tenants.blank?
-    @edit[:new][:group_tenant] = @group.tenant_owner.id
+    @edit[:new][:group_tenant] = @group.tenant_owner_id
 
     @edit[:current] = copy_hash(@edit[:new])
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user

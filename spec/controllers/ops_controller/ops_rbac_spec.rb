@@ -118,5 +118,41 @@ describe OpsController do
         flash_message[:level].should be(:info)
       end
     end
+
+    context "#tenant_set_record_vars" do
+      before :each do
+        @tenant = FactoryGirl.create(:tenant,
+                                    :name        => "Foo",
+                                    :description => "Foo Description",
+                                    :divisible   => 1,
+                                    :parent      => Tenant.root_tenant)
+        controller.instance_variable_set(:@_params,
+                                         :name        => "Foo_Bar",
+                                         :divisible   => "False",
+                                         :parent      => "some_parent"
+        )
+      end
+
+      it "does not change value of parent & divisible fields for existing record" do
+        controller.send(:tenant_set_record_vars, @tenant)
+        @tenant.divisible.should be_true
+        @tenant.parent.id.should eq(Tenant.root_tenant.id)
+        @tenant.name.should eq("Foo_Bar")
+      end
+
+      it "sets value of parent & divisible fields for new record" do
+        tenant = FactoryGirl.build(:tenant, :parent => Tenant.root_tenant)
+        sb_hash = {
+          :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@tenant.id)}"}},
+          :active_tree => :rbac_tree,
+          :active_tab  => "rbac_details"
+        }
+        controller.instance_variable_set(:@sb, sb_hash)
+        controller.send(:tenant_set_record_vars, tenant)
+        tenant.divisible.should be_false
+        tenant.parent.id.should eq(@tenant.id)
+        tenant.name.should eq("Foo_Bar")
+      end
+    end
   end
 end
