@@ -171,16 +171,17 @@ class DashboardController < ApplicationController
     db_order = records.collect(&:id)
 
     @tabs = []
-    records.each_with_index do |db, i|
+    active_tab_id = (params[:tab] || @sb[:active_db_id]).try(:to_s)
+    active_tab = active_tab_id && records.detect { |r| r.id.to_s == active_tab_id } || records.first
       # load first one on intial load, or load tab from params[:tab] changed,
       # or when coming back from another screen load active tab from sandbox
-      if (!params[:tab] && !@sb[:active_db_id] && i == 0) || (params[:tab] && params[:tab] == db.id.to_s) ||
-         (!params[:tab] && @sb[:active_db_id] && @sb[:active_db_id].to_s == db.id.to_s) ||
-         (!db_order.include?(@sb[:active_db_id]) && !db_order.empty? && i == 0)
+      if db = active_tab
         @tabs.unshift([db.id.to_s, ""])
         @sb[:active_db]    = db.name
         @sb[:active_db_id] = db.id
       end
+
+    records.each do |db|
       @tabs.push([db.id.to_s, db.description])
       # check this only first time when user logs in comes to dashboard show
 
