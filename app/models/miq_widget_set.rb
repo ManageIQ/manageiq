@@ -73,4 +73,9 @@ class MiqWidgetSet < ActiveRecord::Base
       self.sync_from_dir
     end
   end
+
+  def self.find_with_same_order(ids)
+    recs = where(:id => ids).index_by(&:id)
+    ids.map { |id| recs[id.to_i] }
+  end
 end

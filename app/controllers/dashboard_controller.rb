@@ -168,15 +168,15 @@ class DashboardController < ApplicationController
     @dashboard = true
 
     g = current_group
-    db_order = if g.settings && g.settings[:dashboard_order]
-                 g.settings[:dashboard_order]
+    records =  if g.settings && g.settings[:dashboard_order]
+                 MiqWidgetSet.find_with_same_order(g.settings[:dashboard_order]).to_a
                else
-                 g.miq_widget_sets.sort_by { |a| a.name.downcase }.collect(&:id)
+                 g.miq_widget_sets.sort_by { |a| a.name.downcase }
                end
+    db_order = records.collect(&:id)
 
     @tabs = []
-    db_order.each_with_index do |d, i|
-      db = MiqWidgetSet.find_by_id(d)
+    records.each_with_index do |db, i|
       # load first one on intial load, or load tab from params[:tab] changed,
       # or when coming back from another screen load active tab from sandbox
       if (!params[:tab] && !@sb[:active_db_id] && i == 0) || (params[:tab] && params[:tab] == db.id.to_s) ||
