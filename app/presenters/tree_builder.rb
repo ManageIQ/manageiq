@@ -272,7 +272,7 @@ class TreeBuilder
                         when Service             then x_get_tree_service_kids(parent, options)
                         when ServiceTemplateCatalog
                                                  then x_get_tree_stc_kids(parent, options)
-                        when ServiceTemplate		 then x_get_tree_st_kids(parent, options)
+                        when ServiceTemplate     then x_get_tree_st_kids(parent, options)
                         when Tenant              then x_get_tree_tenant_kids(parent, options)
                         when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
                         when Zone                then x_get_tree_zone_kids(parent, options)
