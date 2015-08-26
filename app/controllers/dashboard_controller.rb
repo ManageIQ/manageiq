@@ -171,7 +171,7 @@ class DashboardController < ApplicationController
     db_order = if g.settings && g.settings[:dashboard_order]
                  g.settings[:dashboard_order]
                else
-                 MiqWidgetSet.find_all_by_owner_id(session[:group]).sort_by { |a| a.name.downcase }.collect(&:id)
+                 g.miq_widget_sets.sort_by { |a| a.name.downcase }.collect(&:id)
                end
 
     @tabs = []
