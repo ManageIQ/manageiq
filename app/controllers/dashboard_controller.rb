@@ -168,18 +168,17 @@ class DashboardController < ApplicationController
     @dashboard = true
 
     records = current_group.ordered_widget_sets
-    db_order = records.collect(&:id)
 
     @tabs = []
     active_tab_id = (params[:tab] || @sb[:active_db_id]).try(:to_s)
     active_tab = active_tab_id && records.detect { |r| r.id.to_s == active_tab_id } || records.first
-      # load first one on intial load, or load tab from params[:tab] changed,
-      # or when coming back from another screen load active tab from sandbox
-      if db = active_tab
-        @tabs.unshift([db.id.to_s, ""])
-        @sb[:active_db]    = db.name
-        @sb[:active_db_id] = db.id
-      end
+    # load first one on intial load, or load tab from params[:tab] changed,
+    # or when coming back from another screen load active tab from sandbox
+    if active_tab
+      @tabs.unshift([active_tab.id.to_s, ""])
+      @sb[:active_db]    = active_tab.name
+      @sb[:active_db_id] = active_tab.id
+    end
 
     records.each do |db|
       @tabs.push([db.id.to_s, db.description])
@@ -220,7 +219,7 @@ class DashboardController < ApplicationController
     ws = create_user_dashboard(@sb[:active_db_id]) if ws.nil?
 
     # Set tabs now if user's group didnt have any dashboards using default dashboard
-    if db_order.empty?
+    if records.empty?
       db = MiqWidgetSet.find_by_id(@sb[:active_db_id])
       @tabs.unshift([ws.id.to_s, ""])
       @tabs.push([ws.id.to_s, db.description])
