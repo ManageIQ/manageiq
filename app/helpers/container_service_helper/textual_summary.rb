@@ -4,13 +4,13 @@ module ContainerServiceHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(
+    %i(
       name
       creation_timestamp
       resource_version
       session_affinity
-      portal_ip)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+      portal_ip
+    )
   end
 
   def textual_group_port_configs
@@ -28,8 +28,7 @@ module ContainerServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems container_project container_routes container_groups container_nodes)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(ems container_project container_routes container_groups container_nodes)
   end
   #
   # Items

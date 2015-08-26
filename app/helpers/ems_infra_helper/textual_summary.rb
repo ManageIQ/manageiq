@@ -4,23 +4,19 @@ module EmsInfraHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{hostname ipaddress type port cpu_resources memory_resources cpus cpu_cores guid host_default_vnc_port_range}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(hostname ipaddress type port cpu_resources memory_resources cpus cpu_cores guid host_default_vnc_port_range)
   end
 
   def textual_group_relationships
-    items = %w(infrastructure_folders folders clusters hosts used_tenants used_availability_zones datastores vms templates orchestration_stacks)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(infrastructure_folders folders clusters hosts used_tenants used_availability_zones datastores vms templates orchestration_stacks)
   end
 
   def textual_group_status
-    items = %w(authentications refresh_status orchestration_stacks_status)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    textual_authentications + %i(refresh_status orchestration_stacks_status)
   end
 
   def textual_group_smart_management
-    items = %w{zone tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(zone tags)
   end
 
   #

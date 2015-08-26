@@ -4,23 +4,19 @@ module ResourcePoolHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{vapp aggregate_cpu_speed aggregate_cpu_memory aggregate_physical_cpus aggregate_logical_cpus aggregate_vm_memory aggregate_vm_cpus}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(vapp aggregate_cpu_speed aggregate_cpu_memory aggregate_physical_cpus aggregate_logical_cpus aggregate_vm_memory aggregate_vm_cpus)
   end
 
   def textual_group_relationships
-    items = %w{parent_datacenter parent_cluster parent_host direct_vms allvms_size total_vms}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(parent_datacenter parent_cluster parent_host direct_vms allvms_size total_vms)
   end
 
   def textual_group_configuration
-    items = %w{memory_reserve memory_reserve_expand memory_limit memory_shares memory_shares_level cpu_reserve cpu_reserve_expand cpu_limit cpu_shares cpu_shares_level}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(memory_reserve memory_reserve_expand memory_limit memory_shares memory_shares_level cpu_reserve cpu_reserve_expand cpu_limit cpu_shares cpu_shares_level)
   end
 
   def textual_group_smart_management
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   #

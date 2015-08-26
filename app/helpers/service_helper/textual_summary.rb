@@ -5,36 +5,29 @@ module ServiceHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name description guid)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(name description guid)
   end
 
   def textual_group_vm_totals
-    items = %w{aggregate_all_vm_cpus aggregate_all_vm_memory
-                aggregate_all_vm_disk_count aggregate_all_vm_disk_space_allocated
-                aggregate_all_vm_disk_space_used aggregate_all_vm_memory_on_disk}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(aggregate_all_vm_cpus aggregate_all_vm_memory
+       aggregate_all_vm_disk_count aggregate_all_vm_disk_space_allocated
+       aggregate_all_vm_disk_space_used aggregate_all_vm_memory_on_disk)
   end
 
   def textual_group_lifecycle
-    items = %w(retirement_date retirement_state owner group created)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(retirement_date retirement_state owner group created)
   end
 
   def textual_group_relationships
-    items = %w(catalog_item parent_service)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(catalog_item parent_service)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   def textual_group_miq_custom_attributes
-    items = %w(miq_custom_attributes)
-    ret = items.collect { |m| send("textual_#{m}") }.flatten.compact
-    ret.blank? ? nil : ret
+    textual_miq_custom_attributes
   end
 
   #

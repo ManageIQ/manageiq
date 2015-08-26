@@ -4,14 +4,12 @@ module ContainerReplicatorHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name creation_timestamp resource_version
-               replicas current_replicas)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(name creation_timestamp resource_version
+       replicas current_replicas)
   end
 
   def textual_group_relationships
-    items = %w(ems container_project container_groups container_nodes)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(ems container_project container_groups container_nodes)
   end
 
   #

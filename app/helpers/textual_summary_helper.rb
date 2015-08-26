@@ -8,7 +8,24 @@ module TextualSummaryHelper
     end
   end
 
-def textual_tags
+  def expand_textual_summary(summary)
+    case summary
+    when Hash
+      summary
+    when Symbol
+      send("textual_#{summary}")
+    when nil
+      nil
+    else
+      raise "Unexpected summary type: #{summary.class}"
+    end
+  end
+
+  def expand_textual_group(summaries)
+    Array.wrap(summaries).map { |summary| expand_textual_summary(summary) }.compact
+  end
+
+  def textual_tags
     label = "#{session[:customer_name]} Tags"
     h = {:label => label}
     tags = session[:assigned_filters]
