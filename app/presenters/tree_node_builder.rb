@@ -266,7 +266,7 @@ class TreeNodeBuilder
       end
       p  = MiqPolicy.find_by_id(ActiveRecord::Base.uncompress_id(policy_id))
       ev = MiqEventDefinition.find_by_id(ActiveRecord::Base.uncompress_id(event_id))
-      image = p.action_result_for_event(ev, object) ? "check" : "x"
+      image = p.action_result_for_event(object, ev) ? "check" : "x"
     else
       image = object.action_type == "default" ? "miq_action" : "miq_action_#{object.action_type}"
     end

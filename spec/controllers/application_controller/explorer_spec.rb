@@ -127,23 +127,6 @@ describe VmInfraController do
         objects.first[:id].should_not == ems_cloud.id
         objects.first[:id].should == ems_infra.id
       end
-
-      it "Return Zones only in My Region" do
-        my_region_zone = FactoryGirl.create(:zone)
-        controller.instance_variable_set(:@sb, {:trees =>
-                                                    {:settings_tree => {:active_node => "root"}},
-                                                :active_tree => :utilization_tree})
-        options = {
-            :tree => :settings_tree,
-            :type => :settings,
-            :parent => @region
-        }
-        object = {:id => "z"}
-        objects = controller.send(:x_get_tree_custom_kids, object , options)
-        objects.each do |o|
-          o.miq_region.id.should == @region.id
-        end
-      end
     end
 
     context "#x_settings_changed" do
