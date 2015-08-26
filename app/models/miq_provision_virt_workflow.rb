@@ -1272,7 +1272,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       :guid                   => vm_or_template.guid,
       :uid_ems                => vm_or_template.uid_ems,
       :platform               => vm_or_template.platform,
-      :num_cpu                => vm_or_template.num_cpu,
+      :logical_cpus           => vm_or_template.logical_cpus,
       :mem_cpu                => vm_or_template.mem_cpu,
       :allocated_disk_storage => vm_or_template.allocated_disk_storage,
       :v_total_snapshots      => vm_or_template.v_total_snapshots,

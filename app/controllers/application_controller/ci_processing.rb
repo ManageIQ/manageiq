@@ -1067,7 +1067,7 @@ module ApplicationController::CiProcessing
     #set memory to nil if multiple items were selected with different mem_cpu values
     @reconfigureitems.each_with_index do |vm, i|
       @temp_memory = i == 0 || @temp_memory == vm.mem_cpu ? vm.mem_cpu : nil
-      @temp_cpu_count = i == 0 || @temp_cpu_count == vm.num_cpu ? vm.num_cpu : nil
+      @temp_cpu_count = i == 0 || @temp_cpu_count == vm.logical_cpus ? vm.logical_cpus : nil
       @temp_cores_per_socket_count = (i == 0 || @temp_cores_per_socket_count == vm.cores_per_socket) ? vm.cores_per_socket : nil
     end
     @edit[:new][:old_memory], @edit[:new][:old_mem_typ] = reconfigure_calculations(@temp_memory)
