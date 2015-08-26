@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GitRepo do
+describe GitWorktree do
   context "repository" do
     before do
       git_db = "TestGit.git"
@@ -17,7 +17,7 @@ describe GitRepo do
                  :email => "user1@example.com",
                  :bare  => true,
                  :new   => true}
-      @ae_db = GitRepo.new(options)
+      @ae_db = GitWorktree.new(options)
       @original_commit = add_files_to_bare_repo(@filenames)
     end
 
@@ -38,14 +38,14 @@ describe GitRepo do
                  :email => "user1@example.com",
                  :bare  => true,
                  :clone => true}
-      return dir, GitRepo.new(options)
+      return dir, GitWorktree.new(options)
     end
 
     def open_existing_repo
       options = {:path  => @repo_path,
                  :name  => "user1",
                  :email => "user1@example.com"}
-      GitRepo.new(options)
+      GitWorktree.new(options)
     end
 
     it "#delete_repo" do
