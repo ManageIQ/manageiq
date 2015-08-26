@@ -6,4 +6,12 @@ class ContainerImage < ActiveRecord::Base
   has_many :containers
 
   acts_as_miq_taggable
+
+  def full_name
+    result = ""
+    result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
+    result << name
+    result << ":#{tag}" unless tag.nil?
+    result
+  end
 end
