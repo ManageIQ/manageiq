@@ -27,8 +27,8 @@ class TreeBuilderPolicy < TreeBuilder
     end
 
     objects = []
-    objects << {:id => "compliance", :text => "Compliance Policies", :image => "compliance", :tip => "Compliance Policies"}
-    objects << {:id => "control", :text => "Control Policies", :image => "control", :tip => "Control Policies"}
+    objects << {:id => "compliance", :text => N_("Compliance Policies"), :image => "compliance", :tip => N_("Compliance Policies")}
+    objects << {:id => "control", :text => N_("Control Policies"), :image => "control", :tip => N_("Control Policies")}
 
     count_only_or_objects(options[:count_only], objects)
   end
@@ -47,14 +47,19 @@ class TreeBuilderPolicy < TreeBuilder
         open_nodes << n unless open_nodes.include?(n)
       end
 
+      text_i18n = {:compliance => {:host => N_("Host Compliance Policies"),
+                                   :vm   => N_("Vm Compliance Policies")},
+                   :control    => {:host => N_("Host Control Policies"),
+                                   :vm   => N_("Vm Control Policies")}}
+
       objects = [{:id => "#{pid}-host",
-                  :text => "Host #{pid.capitalize} Policies",
+                  :text => text_i18n[pid.to_sym][:host],
                   :image => "host",
-                  :tip => "Host Policies"},
+                  :tip => N_("Host Policies")},
                  {:id => "#{pid}-vm",
-                  :text => "Vm #{pid.capitalize} Policies",
+                  :text => text_i18n[pid.to_sym][:vm],
                   :image => "vm",
-                  :tip => "Vm Policies"}]
+                  :tip => N_("Vm Policies")}]
 
       count_only_or_objects(options[:count_only], objects)
     # level 3 - actual policies

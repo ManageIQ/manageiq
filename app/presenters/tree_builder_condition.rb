@@ -21,8 +21,8 @@ class TreeBuilderCondition < TreeBuilder
   # level 1 - host / vm
   def x_get_tree_roots(options)
     objects = []
-    objects << {:id => "host", :text => "Host Conditions", :image => "host", :tip => "Host Conditions"}
-    objects << {:id => "vm", :text => "All VM and Instance Conditions", :image => "vm", :tip => "All VM and Instance Conditions"}
+    objects << {:id => "host", :text => N_("Host Conditions"), :image => "host", :tip => N_("Host Conditions")}
+    objects << {:id => "vm", :text => N_("All VM and Instance Conditions"), :image => "vm", :tip => N_("All VM and Instance Conditions")}
 
     count_only_or_objects(options[:count_only], objects)
   end
