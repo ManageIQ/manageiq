@@ -250,19 +250,4 @@ module MiqPolicyController::Policies
       @policy_profiles = @policy.memberof.sort_by { |pp| pp.description.downcase }
     end
   end
-
-  def policy_build_tree(type=:policy, name=:policy_tree)
-    x_tree_init(name, type, 'MiqPolicy', :full_ids => true)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    # Fill in root node details
-    root = tree_nodes.first
-    root[:title] = "All Policies"
-    root[:tooltip] = "All Policies"
-    root[:icon] = "folder.png"
-
-    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
-  end
-
 end
