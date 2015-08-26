@@ -21,8 +21,7 @@
         - if @edit[:ems_id].nil?
           = select_tag("server_emstype",
             options_for_select([["<#{_('Choose>')}", nil]] + Array(@edit[:ems_types].invert).sort_by(&:first), @edit[:new][:emstype]),
-            "class"            => "selectpicker",
-            "data-miq_observe" => {:url => url}.to_json)
+            "class"            => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent("server_emstype", "#{url}");
@@ -44,8 +43,7 @@
         .col-md-8
           = select_tag("provider_id",
             options_for_select(@edit[:openstack_infra_providers], @edit[:new][:provider_id]),
-            "class"            => "selectpicker",
-            "data-miq_observe" => {:url => url}.to_json)
+            "class"            => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent("provider_id", "#{url}");
@@ -62,8 +60,7 @@
         - else
           = select_tag("server_zone",
             options_for_select(@edit[:server_zones], @edit[:new][:zone]),
-            "class"            => "selectpicker",
-            "data-miq_observe" => {:url => url}.to_json)
+            "class"            => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent("server_zone", "#{url}");
