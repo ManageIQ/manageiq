@@ -165,12 +165,6 @@ class GitWorktree
     get_tree_entry(path, commit_sha)
   end
 
-  def list_files(commit_sha = nil)
-    tree = lookup_commit_tree(commit_sha || @commit_sha)
-    return [] unless tree
-    tree.walk(:preorder).collect { |r, e| File.join(r, e[:name]) }
-  end
-
   def mv_file_with_new_contents(old_file, new_path, new_data, commit_sha = nil, default_entry_keys = {})
     add(new_path, new_data, commit_sha, default_entry_keys)
     remove(old_file, commit_sha)
@@ -236,11 +230,6 @@ class GitWorktree
     dir_name = dir_name[1..-1] if dir_name[0] == '/'
     dir_name += '/'            if dir_name[-1] != '/'
     dir_name
-  end
-
-  def filename(path, commit_sha = nil)
-    entry = get_tree_entry(path, commit_sha)
-    entry ? entry[:full_name] : nil
   end
 
   def get_tree(path, commit_sha = nil)
@@ -313,10 +302,6 @@ class GitWorktree
     ensure
       @repo.references.delete(LOCK_REFERENCE)
     end
-  end
-
-  def branch
-    @branch ||= @repo.create_branch(SecureRandom.uuid)
   end
 
   def differences_with_master(commit)

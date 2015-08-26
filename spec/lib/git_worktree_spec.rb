@@ -3,11 +3,11 @@ require 'spec_helper'
 describe GitWorktree do
   context "repository" do
     before do
-      git_db = "TestGit.git"
+      @git_db = "TestGit.git"
       @ae_db_dir = Dir.mktmpdir
       @default_hash = {:a => "one", :b => "two", :c => "three"}
       @dirnames = %w(A B c)
-      @repo_path = File.join(@ae_db_dir, git_db)
+      @repo_path = File.join(@ae_db_dir, @git_db)
       @filenames = %w(A/File1.YamL B/File2.YamL c/File3.YAML)
       @deleted_names = %w(A A/File1.YamL)
       @conflict_file = 'A/File1.YamL'
@@ -36,6 +36,7 @@ describe GitWorktree do
                  :url   => url,
                  :name  => "user1",
                  :email => "user1@example.com",
+                 :ssl_no_verify => true,
                  :bare  => true,
                  :clone => true}
       return dir, GitWorktree.new(options)
@@ -72,6 +73,11 @@ describe GitWorktree do
       YAML.load(@ae_db.read_file(fname)).should have_attributes(@default_hash.merge(:fname => fname))
     end
 
+    it "#file_attributes" do
+      fname = 'A/File1.YamL'
+      @ae_db.file_attributes(fname).keys.should match_array([:updated_on, :updated_by])
+    end
+
     it "#read_file that doesn't exist" do
       expect { @ae_db.read_file('doesnotexist') }.to raise_error(MiqException::MiqGitEntryMissing)
     end
@@ -86,6 +92,16 @@ describe GitWorktree do
 
     it "get list of files" do
       @ae_db.file_list.should match_array(@filenames + @dirnames)
+    end
+
+    it "#directory_exists?" do
+      @ae_db.directory_exists?('A').should be_true
+    end
+
+    it "#nodes" do
+      node = @ae_db.nodes("A").first
+      node[:full_name].should eq("#{@git_db}/A/File1.YamL")
+      node[:rel_path].should  eq("A/File1.YamL")
     end
 
     it "rename directory" do
