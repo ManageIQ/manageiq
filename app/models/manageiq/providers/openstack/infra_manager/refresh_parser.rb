@@ -64,7 +64,7 @@ module ManageIQ
         # TODO(lsmola) loading this from already obtained nested stack hierarchy will be more effective. This is one
         # extra API call. But we will need to change order of loading, so we have all resources first.
         # Nested depth 50 just for sure, although nobody should nest templates that much
-        @orchestration_service.list_resources(stack, :nested_depth => 50).body['resources']
+        @orchestration_service.list_resources(:stack => stack, :nested_depth => 50).body['resources']
       end
 
       def servers
