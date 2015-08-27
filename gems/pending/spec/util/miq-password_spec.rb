@@ -2,6 +2,7 @@
 
 require "spec_helper"
 require 'util/miq-password'
+require 'tempfile'
 
 describe MiqPassword do
   before do
@@ -245,20 +246,22 @@ describe MiqPassword do
       MiqPassword.key_root = nil
 
       expect(Kernel).to receive(:warn).with(/v2_key doesn't exist/)
-      expect(MiqPassword.all_keys).to eq([nil])
+      expect(MiqPassword.all_keys).to be_empty
     end
   end
 
   describe ".clear_keys" do
-    it "clears legacy_keys" do
+    it "removes legacy keys from all_keys" do
       v0 = MiqPassword.add_legacy_key("v0_key", :v0)
       v1 = MiqPassword.add_legacy_key("v1_key")
+      v2 = MiqPassword.v2_key
 
-      expect(MiqPassword.legacy_keys).to match_array([v0, v1])
+      expect(MiqPassword.all_keys).to match_array([v2, v1, v0])
 
       MiqPassword.clear_keys
 
-      expect(MiqPassword.legacy_keys).to be_empty
+      v2 = MiqPassword.v2_key
+      expect(MiqPassword.all_keys).to match_array([v2])
     end
   end
 
@@ -271,6 +274,50 @@ describe MiqPassword do
 
     it "when present" do
       expect(MiqPassword.v2_key.to_s).to eq "5ysYUd3Qrjj7DDplmEJHmnrFBEPS887JwOQv0jFYq2g="
+    end
+  end
+
+  describe ".add_legacy_key" do
+    let(:v0_key)  { CryptString.new(nil, "AES-128-CBC", "9999999999999999", "5555555555555555") }
+    let(:v1_key)  { MiqPassword.generate_symmetric }
+
+    it "ignores bad key filename" do
+      expect(MiqPassword.all_keys.size).to eq(1)
+      MiqPassword.add_legacy_key("some_bogus_name")
+      expect(MiqPassword.all_keys.size).to eq(1)
+    end
+
+    it "supports raw key" do
+      expect(MiqPassword.all_keys.size).to eq(1)
+      MiqPassword.add_legacy_key(v1_key)
+      expect(MiqPassword.all_keys.size).to eq(2)
+    end
+
+    it "supports absolute path" do
+      with_key do |dir, filename|
+        MiqPassword.add_legacy_key("#{dir}/#{filename}")
+      end
+      expect(MiqPassword.all_keys.size).to eq(2)
+    end
+
+    it "supports root_key path (also warns if v2 key not found)" do
+      with_key do |dir, filename|
+        MiqPassword.key_root = dir
+        # NOTE: no v2_key in this key_root
+        expect(Kernel).to receive(:warn).with(/doesn't exist/)
+        expect(MiqPassword.all_keys.size).to eq(0)
+        MiqPassword.add_legacy_key(filename)
+        expect(MiqPassword.all_keys.size).to eq(1)
+      end
+    end
+  end
+
+  private
+
+  def with_key
+    Dir.mktmpdir('test-key-root') do |d|
+      MiqPassword.generate_symmetric.store("#{d}/my-key")
+      yield d, "my-key"
     end
   end
 

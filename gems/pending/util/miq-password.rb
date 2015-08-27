@@ -34,7 +34,7 @@ class MiqPassword
 
       self.class.all_keys.each do |key|
         begin
-          return key.decrypt64(enc) if key
+          return key.decrypt64(enc)
         rescue OpenSSL::Cipher::CipherError
           # this key doesnt work, try the next one
         end
@@ -132,11 +132,15 @@ class MiqPassword
   end
 
   def self.clear_keys
-    @@v2_key = @v1_key = @v0_key = nil
+    @@v2_key = @@all_keys = nil
   end
 
   def self.all_keys
-    [v2_key] + legacy_keys
+    @@all_keys ||= [v2_key].compact
+  end
+
+  def self.encryption_key
+    @@all_keys.first
   end
 
   def self.v2_key
@@ -155,24 +159,16 @@ EOS
     end
   end
 
-  def self.legacy_keys
-    [v1_key, v0_key].compact
-  end
-
   def self.add_legacy_key(filename, type = :v1)
-    case type
-    when :v0
-      @v0_key = ez_load(filename, false)
-    when :v1
-      @v1_key = ez_load(filename)
-    end
+    key = ez_load(filename, type != :v0)
+    all_keys << key if key && !all_keys.include?(key)
+    key
   end
 
   class << self
-    attr_accessor :v0_key
-    attr_accessor :v1_key
-
     def v2_key=(key)
+      @@all_keys.delete(@@v2_key)
+      @@all_key.unshift(key)
       @@v2_key = key
     end
   end
