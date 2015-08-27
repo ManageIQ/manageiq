@@ -3,6 +3,7 @@ require "spec_helper"
 describe "Server Environment Management" do
   context ".spartan_mode" do
     before(:each) { MiqServer.class_eval {instance_variable_set :@spartan_mode, nil } }
+    after(:each) { MiqServer.class_eval {instance_variable_set :@spartan_mode, nil } }
 
     it "when ENV['MIQ_SPARTAN'] is not set" do
       ENV.stub(:[]).with('MIQ_SPARTAN').and_return(nil)
@@ -47,6 +48,7 @@ describe "Server Environment Management" do
 
   context ".minimal_env_options" do
     before(:each) { MiqServer.class_eval {instance_variable_set :@minimal_env_options, nil } }
+    after(:each) { MiqServer.class_eval {instance_variable_set :@minimal_env_options, nil } }
 
     it "when spartan_mode is 'minimal'" do
       MiqServer.stub(:spartan_mode).and_return("minimal")
