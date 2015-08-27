@@ -1,7 +1,3 @@
-# May need this to clean up the db check and require active record
-# ENV['BUNDLE_GEMFILE'] = '/var/www/miq/vmdb/Gemfile'
-# require 'bundler/setup'
-
 require 'time'
 
 module EvmWatchdog

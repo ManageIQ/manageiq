@@ -204,7 +204,6 @@ class MiqReportResult < ActiveRecord::Base
     hdr  = "<head><style>"
     hdr << "@page{size: #{page_size} landscape}"
     hdr << "@page{margin: 40pt 30pt 40pt 30pt}"
-#   hdr << "@page{font-size: 50%}"
     hdr << "@page{@top{content: '#{title}';color:blue}}"
     hdr << "@page{@bottom-left{content: url('/images/layout/reportbanner_small1.png')}}"
     hdr << "@page{@bottom-center{font-size: 75%;content: 'Report date: #{run_date}'}}"

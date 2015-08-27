@@ -131,7 +131,6 @@ EOF
       expect(subject.options).to eq(
         :name     => "internal",
         :adapter  => "postgresql",
-#        :host=>"",
         :database => "vmdb_production",
         :username => "user",
         :password => "password"

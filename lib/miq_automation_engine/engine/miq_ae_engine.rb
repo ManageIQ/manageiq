@@ -11,8 +11,6 @@ require 'engine/miq_ae_uri'
 require 'engine/miq_ae_path'
 require 'engine/miq_ae_domain_search'
 
-#require "#{Rails.root}/../tools/ruby-prof/miq-ruby-prof.rb"
-
 module MiqAeEngine
   DEFAULT_ATTRIBUTES = %w{ User::user MiqServer::miq_server object_name }
   AE_ROOT_DIR            = File.expand_path(File.join(Rails.root,    'product/automate'))
