@@ -45,6 +45,7 @@ class OpsController < ApplicationController
     'rbac_project_add'          => :rbac_tenant_add,
     'rbac_tenant_delete'        => :rbac_tenant_delete,
     'rbac_tenant_edit'          => :rbac_tenant_edit,
+    'rbac_tenant_manage_quotas' => :rbac_tenant_manage_quotas,
     'refresh_audit_log'         => :refresh_audit_log,
     'refresh_log'               => :refresh_log,
     'refresh_production_log'    => :refresh_production_log,
@@ -650,6 +651,13 @@ class OpsController < ApplicationController
           _("Editing %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
           _("%{model} \"%{name}\"") % {:model => model, :name => @tenant.name}
       end
+    elsif nodetype == "tenant_manage_quotas"         # manage quotas
+      # when managing quotas for a tenant
+      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_quota_form"]
+      model = tenant_type_title_string(@tenant.divisible)
+      @right_cell_text = @edit ?
+          _("Manage quotas for %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
+          _("%{model} \"%{name}\"") % {:model => model, :name => @tenant.name}
     else
       presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
     end

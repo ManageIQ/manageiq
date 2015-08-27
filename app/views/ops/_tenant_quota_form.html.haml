@@ -1,0 +1,44 @@
+- @angularForm = true
+
+%form.form-horizontal#form_div{"name"          => "angularForm",
+                               "ng-controller" => "tenantQuotaFormController",
+                               "ng-show"       => "afterGet"}
+  = render :partial => "layouts/flash_msg"
+  %div
+    %div
+      %table.table.table-striped.table-bordered.table-hover
+        %tr
+          %td.key= _("Enforced")
+          %td.key= _("Description")
+          %td.key= _("Value")
+          %td.key= _("Units")
+        %tr{"ng-repeat" => "(quota_name, quota_obj) in tenantQuotaModel.quotas"}
+          .form-group{"ng-class" => "{'has-error': angularForm.value.$invalid}"}
+          %td
+            %input.form-control{"type"        => "checkbox",
+                                "name"        => "enforced",
+                                "ng-checked"  => "!!quota_obj.value",
+                                "ng-model"    => "quota_obj.enforced",
+                                "checkchange" => true,
+                                "ng-click"    => "enforced_changed(quota_name)"}
+          %td {{quota_obj.description}}
+          %td
+            %input.form-control{"type"        => "number",
+                                "id"          => "textInput-markup",
+                                "name"        => "value",
+                                "ng-model"    => "quota_obj.value",
+                                "maxlength"   => "#{MAX_NAME_LEN}",
+                                "ng-required" => "quota_obj.enforced",
+                                "placeholder" => "Not enforced",
+                                "miqrequired" => "",
+                                "checkchange" => ""}
+            %span.help-block{"ng-show" => "angularForm.value.$error.miqrequired"}
+              = _("Required")
+          %td {{quota_obj.unit}}
+
+  = render :partial => "layouts/angular/x_edit_buttons_angular"
+
+:javascript
+  ManageIQ.angularApplication.value('tenantQuotaFormId', '#{@tenant.id}');
+  ManageIQ.angularApplication.value('tenantType', '#{@tenant_type}');
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication'], { strictDi: true });
