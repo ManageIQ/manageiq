@@ -2039,7 +2039,7 @@ class ApplicationController < ActionController::Base
   def task_supported?(typ)
     vm_ids = find_checked_items.map(&:to_i).uniq
     if %w(migrate publish).include?(typ) && VmOrTemplate.includes_template?(vm_ids)
-      render_flash_not_applicable_to_model(typ)
+      render_flash_not_applicable_to_model(typ, ui_lookup(:table => "miq_template"))
       return
     end
 
@@ -2603,8 +2603,10 @@ class ApplicationController < ActionController::Base
     image || "#{image_path}#{model_image}.png"
   end
 
-  def render_flash_not_applicable_to_model(type)
-    add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task  => type.capitalize}, :error)
+  def render_flash_not_applicable_to_model(type, model_type = "items")
+    add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
+                {:model => model_type,
+                 :task  => type.capitalize}, :error)
     render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
   end
 
