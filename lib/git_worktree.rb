@@ -5,6 +5,7 @@ class GitWorktree
   ENTRY_KEYS = [:path, :dev, :ino, :mode, :gid, :uid, :ctime, :mtime]
   DEFAULT_FILE_MODE = 0100644
   LOCK_REFERENCE = 'refs/locks'
+  HEAD_REF = 'refs/heads/master'
 
   def initialize(options = {})
     raise ArgumentError, "Must specify path" unless options.key?(:path)
@@ -20,7 +21,6 @@ class GitWorktree
     @cred          = Rugged::Credentials::UserPassword.new(:username => @name,
                                                            :password => @password)
     @base_name     = File.basename(@path)
-
     process_repo(options)
   end
 
@@ -72,7 +72,7 @@ class GitWorktree
   end
 
   def entries(path, commit_sha = nil)
-    tree = path.empty? ? lookup_commit_tree(commit_sha || @commit_sha) : get_tree(path, commit_sha)
+    tree = get_tree(path, commit_sha)
     tree.find_all.collect { |e| e[:name] }
   end
 
@@ -87,33 +87,37 @@ class GitWorktree
 
   def save_changes(message, owner = :local)
     cid = commit(message)
-    owner == :local ? lock { merge(cid) } : merge_and_push(cid)
+    if owner == :local
+      lock { merge(cid) }
+    else
+      merge_and_push(cid)
+    end
     true
   end
 
   def commit(message)
     tree = @current_index.write_tree(@repo)
-    parents = @repo.empty? ? [] : [@repo.ref('refs/heads/master').target].compact
+    parents = @repo.empty? ? [] : [@repo.ref(HEAD_REF).target].compact
     create_commit(message, tree, parents)
   end
 
   def file_attributes(fname)
     walker = Rugged::Walker.new(@repo)
     walker.sorting(Rugged::SORT_DATE)
-    walker.push(@repo.ref('refs/heads/master').target)
+    walker.push(@repo.ref(HEAD_REF).target)
     commit = walker.find { |c| c.diff(:paths => [fname]).size > 0 }
     return {} unless commit
     {:updated_on => commit.time.gmtime, :updated_by => commit.author[:name]}
   end
 
   def merge(commit, rebase = false)
-    mb = @repo.ref('refs/heads/master')
-    merge_index = mb ? @repo.merge_commits(mb.target, commit) : nil
+    master_branch = @repo.ref(HEAD_REF)
+    merge_index = master_branch ? @repo.merge_commits(master_branch.target, commit) : nil
     if merge_index && merge_index.conflicts?
       result = differences_with_master(commit)
       raise MiqException::MiqGitConflicts, result
     end
-    commit = rebase(commit, merge_index, mb ? mb.target : nil) if rebase
+    commit = rebase(commit, merge_index, master_branch ? master_branch.target : nil) if rebase
     @repo.reset(commit, :soft)
   end
 
@@ -130,18 +134,17 @@ class GitWorktree
   def merge_and_push(commit)
     rebase = false
     push_lock do
-      @saved_cid = @repo.ref('refs/heads/master').target.oid
+      @saved_cid = @repo.ref(HEAD_REF).target.oid
       merge(commit, rebase)
       rebase = true
-      @repo.push(@remote_name, ['refs/heads/master'], :credentials => @cred)
+      @repo.push(@remote_name, [HEAD_REF], :credentials => @cred)
     end
   end
 
   def fetch
     options = {:credentials => @cred}
-    ssl_no_verify_options(options)
-    @repo.fetch(@remote_name, options).tap do |_|
-      ENV.delete('GIT_SSL_NO_VERIFY') if ENV.key?('GIT_SSL_NO_VERIFY')
+    ssl_no_verify_options(options) do
+      @repo.fetch(@remote_name, options)
     end
   end
 
@@ -215,9 +218,9 @@ class GitWorktree
 
   def clone(url)
     options = {:credentials => @cred, :bare => true, :remote => @remote_name}
-    ssl_no_verify_options(options)
-    @repo = Rugged::Repository.clone_at(url, @path, options)
-    ENV.delete('GIT_SSL_NO_VERIFY') if ENV.key?('GIT_SSL_NO_VERIFY')
+    ssl_no_verify_options(options) do
+      @repo = Rugged::Repository.clone_at(url, @path, options)
+    end
   end
 
   def fetch_entry(path, commit_sha = nil)
@@ -233,6 +236,7 @@ class GitWorktree
   end
 
   def get_tree(path, commit_sha = nil)
+    return lookup_commit_tree(commit_sha || @commit_sha) if path.empty?
     entry = get_tree_entry(path, commit_sha)
     raise MiqException::MiqGitEntryMissing, path unless entry
     raise MiqException::MiqGitEntryNotADirectory, path  unless entry[:type] == :tree
@@ -278,7 +282,7 @@ class GitWorktree
   end
 
   def lock
-    @repo.references.create(LOCK_REFERENCE, 'refs/heads/master')
+    @repo.references.create(LOCK_REFERENCE, HEAD_REF)
     yield
   rescue Rugged::ReferenceError
     sleep 0.1
@@ -288,7 +292,7 @@ class GitWorktree
   end
 
   def push_lock
-    @repo.references.create(LOCK_REFERENCE, 'refs/heads/master')
+    @repo.references.create(LOCK_REFERENCE, HEAD_REF)
     begin
       yield
     rescue Rugged::ReferenceError => err
@@ -306,7 +310,7 @@ class GitWorktree
 
   def differences_with_master(commit)
     differences = {}
-    diffs = @repo.diff(commit, @repo.ref('refs/heads/master').target)
+    diffs = @repo.diff(commit, @repo.ref(HEAD_REF).target)
     diffs.deltas.each do |delta|
       result = []
       delta.diff.each_line do |line|
@@ -320,8 +324,13 @@ class GitWorktree
   end
 
   def ssl_no_verify_options(options)
-    return unless @ssl_no_verify
-    options[:ignore_cert_errors] = true
-    ENV['GIT_SSL_NO_VERIFY'] = 'false'
+    return yield unless @ssl_no_verify
+    begin
+      options[:ignore_cert_errors] = true
+      ENV['GIT_SSL_NO_VERIFY'] = 'false'
+      yield
+    ensure
+      ENV.delete('GIT_SSL_NO_VERIFY')
+    end
   end
 end
