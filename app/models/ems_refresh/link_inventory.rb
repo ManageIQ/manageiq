@@ -117,7 +117,7 @@ module EmsRefresh::LinkInventory
     self.update_relats_by_ids(prev_ids, new_ids,
       do_disconnect ? Proc.new { |s| object.send(accessor).delete(model.find_by_id(s)) } : nil, # Disconnect proc
       Proc.new { |s| object.send(accessor) << model.find_by_id(s) },                            # Connect proc
-      Proc.new { |vs| object.send(accessor) << model.where(id: vs).to_a }                       # Bulk connect proc
+      Proc.new { |ss| object.send(accessor) << model.where(id: ss).to_a }                       # Bulk connect proc
     )
   end
 
