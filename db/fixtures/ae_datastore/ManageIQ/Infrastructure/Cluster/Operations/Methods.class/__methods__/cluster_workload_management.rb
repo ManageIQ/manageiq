@@ -138,7 +138,7 @@ unless host_exceeded.blank?
   $evm.log("info", "VM: <#{vm_culprit.name}> Memory: <#{vm_culprit.mem_cpu}>")
 
   # Log VM CPU Count I.e. CPU Count: <2>
-  $evm.log("info", "VM: <#{vm_culprit.name}> CPU Count: <#{vm_culprit.num_cpu}>")
+  $evm.log("info", "VM: <#{vm_culprit.name}> CPU Count: <#{vm_culprit.logical_cpus}>")
 
   # Log VM CPU average usage I.e. Average CPU Usage: <405.791768303411>
   $evm.log("info", "VM: <#{vm_culprit.name}> Average CPU Usage: <#{vm_culprit.cpu_usagemhz_rate_average_avg_over_time_period}>")

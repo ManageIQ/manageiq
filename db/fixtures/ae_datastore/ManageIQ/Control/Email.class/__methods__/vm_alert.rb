@@ -34,7 +34,7 @@ def buildDetails(vm)
   body += "<br>VM URL: <a href='https://#{appliance}/VM/show/#{vm.id}'>https://#{appliance}/VM/show/#{vm.id}</a>"
   body += "<br>Hostname: #{vm.hostnames.inspect}"
   body += "<br>IP Address(es): #{vm.ipaddresses.inspect}"
-  body += "<br>vCPU: #{vm.num_cpu}"
+  body += "<br>vCPU: #{vm.logical_cpus}"
   body += "<br>vRAM: #{vm.mem_cpu.to_i} MB"
   body += "<br>Tools Status: #{vm.tools_status}"
   body += "<br>Operating System: #{vm.operating_system['product_name']}"

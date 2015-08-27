@@ -41,7 +41,7 @@ col_order:
 - host.name
 - operating_system.product_name
 - mem_cpu
-- num_cpu
+- logical_cpus
 - used_disk_storage
 timeline: 
 file_mtime: 
@@ -125,7 +125,7 @@ cols:
 - retires_on
 - v_owning_datacenter
 - mem_cpu
-- num_cpu
+- logical_cpus
 - used_disk_storage
 template_type: report
 group: c
