@@ -165,7 +165,7 @@ module EmsRefresh::LinkInventory
           bulk_connect.call(new_ids)
         rescue => err
           _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting ids [#{new_ids.join(',')}]: #{err}"
-            _log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       elsif connect_proc
         new_ids.each do |n|
