@@ -434,6 +434,75 @@ module ReportFormatter
       add_series(mri.headers[0], series)
     end
 
+    def build_numeric_chart_grouped_2dim
+      (sort1, sort2) = mri.sortby
+      (keep, show_other) = keep_and_show_other
+      match = mri.graph[:column].match(/^([\w:]*)-([\w_]*):(\w*)$/)
+      (_model, column_name, aggreg) = match[1..3]
+      aggreg = aggreg.to_sym
+      show_other &&= (aggreg == :total) # FIXME we only support :total
+
+      subtotals = mri.build_subtotals(true).reject { |k,_| k == :_total_ }
+
+      # Group values by sort1
+      # 3rd dimension in the chart is defined by sort2
+      groups = mri.table.data.group_by { |row| row[sort1] }
+
+      def_range_key2 = subtotals.keys.map { |key| key.split('__')[1] }.sort.uniq
+
+      group_sums = groups.keys.each_with_object({}) do |key1, h|
+        h[key1] = def_range_key2.inject(0) do |sum, key2|
+          sub_key = "#{key1}__#{key2}"
+          subtotals.key?(sub_key) ? sum + subtotals[sub_key][aggreg][column_name] : sum
+        end
+      end
+
+      sorted_sums = group_sums.sort_by { |_key, sum| sum }
+
+      selected_groups = sorted_sums.reverse.take(keep)
+
+      cathegory_texts = selected_groups.collect do |key, _|
+        label = slice_legend(key, LABEL_LENGTH)
+        label = _('no value') if label.blank?
+        label
+      end
+      cathegory_texts << _('Other') if show_other
+
+      add_axis_category_text(cathegory_texts)
+
+      groups_hash = selected_groups.each_with_object(Hash.new { |h, k| h[k] = {} }) do |(key, _), h|
+        groups[key].each { |row| h[key][row[sort2]] = row }
+      end
+
+      if show_other
+        other_groups = Array(sorted_sums[0, sorted_sums.length - keep])
+        other = other_groups.each_with_object(Hash.new(0)) do |(key, _), o|
+          groups[key].each { |row| o[row[sort2]] += row[column_name] }
+        end
+      end
+
+      # For each value in sort2 column we create a series.
+      sort2_values = mri.table.data.each_with_object({}) { |row, h| h[row[sort2]] = true }
+      sort2_values.each_key do |val2|
+        series = selected_groups.each_with_object(series_class.new) do |(key1, _), a|
+          sub_key = "#{key1}__#{val2}"
+          value = subtotals.key?(sub_key) ? subtotals[sub_key][aggreg][column_name] : 0
+
+          a.push(:value   => value,
+                 :tooltip => "#{key1} / #{val2}: #{value}")
+        end
+
+        series.push(:value   => other[val2],
+                    :tooltip => "Other / #{val2}: #{other[val2]}") if show_other
+
+        label = slice_legend(val2) if val2.kind_of?(String)
+        label = label.to_s.gsub(/\\/, ' \ ')
+        label = _('no value') if label.blank?
+        add_series(label, series)
+      end
+      groups
+    end
+
     def pie_type?
       @pie_type ||= mri.graph[:type] =~ /^(Pie|Donut)/
     end
@@ -492,11 +561,12 @@ module ReportFormatter
     end
 
     def build_reporting_chart_numeric(_maxcols, _divider)
-      mri.group.nil? ?  build_numeric_chart_simple : build_numeric_chart_grouped
+      mri.group.nil? ? build_numeric_chart_simple :
+        (mri.dims == 2 ? build_numeric_chart_grouped_2dim : build_numeric_chart_grouped)
     end
 
     def build_reporting_chart(_maxcols, _divider)
-      mri.dims == 2 ?  build_reporting_chart_dim2 : build_reporting_chart_other
+      mri.dims == 2 ? build_reporting_chart_dim2 : build_reporting_chart_other
     end
   end
 end
