@@ -6,9 +6,9 @@
 %h3
   = _('Import')
 #import_div
-  %table.style1
-    %tr
-      %td
+  %form.form-horizontal
+    .form-group
+      .col-md-8
         = form_tag({:action => "upload", :typ => "import", :dbtype => @sb[:dbtype]}, :multipart => true) do
           - overwrite = @sb[:overwrite] ? true : false
           = check_box_tag("overwrite", "1", overwrite)
@@ -21,11 +21,11 @@
 %h3
   = _('Export')
 
-%table.style1
-  %tr
-    %td.key{:align => "left", :valign => "top"}
+%form.form-horizontal
+  .form-group
+    %label.control-label.col-md-2
       = _('Available Custom Reports:')
-    %td{:align => "left", :valign => "top"}
+    .col-md-8
       %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
         = select_tag('choices_chosen',
           options_for_select(@export_reports.sort),
@@ -34,5 +34,7 @@
           :style             => "width: 400px",
           :multiple          => true,
           :onchange          => "toggleConvertButtonToLink($('#export_button'),
-                                  'download_report', $('#choices_chosen').val() != null);",
-          "data-miq_observe" => {:url => url}.to_json)
+                                  'download_report', $('#choices_chosen').val() != null);")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("choices_chosen", "#{url}");
