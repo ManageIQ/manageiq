@@ -152,12 +152,12 @@ class Tenant < ActiveRecord::Base
   private
 
   # when a root tenant has an attribute with a nil value,
-  #   read the value from the settings table instead
+  #   read the value from the configurations table instead
   #
   # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
     if use_config_for_attributes?
-      ret = settings.fetch_path(:server, setting_name)
+      ret = get_vmdb_config.fetch_path(:server, setting_name)
       block_given? ? yield(ret) : ret
     else
       self[attr_name]
@@ -171,7 +171,7 @@ class Tenant < ActiveRecord::Base
     self.name = nil unless name.present?
   end
 
-  def settings
+  def get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 

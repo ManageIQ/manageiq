@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Tenant do
-  let(:settings) { {} }
+  let(:config) { {} }
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
 
   let(:default_tenant) do
@@ -15,7 +15,7 @@ describe Tenant do
   end
 
   before do
-    stub_server_configuration(settings)
+    stub_server_configuration(config)
   end
 
   describe "#default_tenant" do
@@ -130,7 +130,7 @@ describe Tenant do
   end
 
   describe "#name" do
-    let(:settings) { {:server => {:company => "settings"}} }
+    let(:config) { {:server => {:company => "settings"}} }
 
     it "has default name" do
       expect(tenant.name).to eq("My Company")
@@ -141,7 +141,7 @@ describe Tenant do
       expect(tenant.name).to eq("custom")
     end
 
-    it "doesnt read settings for regular tenant" do
+    it "doesnt read configurations for regular tenant" do
       tenant.name = "custom"
       expect(tenant.name).to eq("custom")
     end
@@ -205,10 +205,10 @@ describe Tenant do
       expect(root_tenant.logo.url).to match(/missing/)
     end
 
-    context "with server settings" do
-      let(:settings) { {:server => {:custom_logo => true}} }
+    context "with server configurations" do
+      let(:config) { {:server => {:custom_logo => true}} }
 
-      it "uses settings value for root_tenant" do
+      it "uses configurations value for root_tenant" do
         expect(root_tenant.logo.url).to eq("/uploads/custom_logo.png")
       end
 
@@ -218,7 +218,7 @@ describe Tenant do
       end
 
       # would prefer if url was nil, but this is how paperclip works
-      it "does not use settings for regular tenant" do
+      it "does not use configurations for regular tenant" do
         tenant.save!
         expect(tenant.logo.url).to match(/missing/)
       end
@@ -249,7 +249,7 @@ describe Tenant do
       end
 
       context "#with custom_logo configuration" do
-        let(:settings) { {:server => {:custom_logo => true}} }
+        let(:config) { {:server => {:custom_logo => true}} }
 
         it "knows there is a logo from configuration" do
           expect(root_tenant).to be_logo
@@ -314,7 +314,7 @@ describe Tenant do
     end
 
     context "with custom login logo configuration" do
-      let(:settings) { {:server => {:custom_login_logo => true}} }
+      let(:config) { {:server => {:custom_login_logo => true}} }
 
       it "has custom login logo" do
         expect(root_tenant.login_logo.url).to match(/custom_login_logo.png/)
