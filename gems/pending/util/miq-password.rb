@@ -122,6 +122,10 @@ class MiqPassword
     @@v2_key = @v1_key = @v0_key = nil
   end
 
+  def self.all_keys
+    [v2_key] + legacy_keys
+  end
+
   def self.v2_key
     @@v2_key ||= ez_load("v2_key") || begin
       key_file = File.expand_path("v2_key", key_root)
@@ -136,6 +140,10 @@ passwords in your database.
 EOS
       Kernel.warn msg
     end
+  end
+
+  def self.legacy_keys
+    [v1_key, v0_key].compact
   end
 
   def self.add_legacy_key(filename, type = :v1)
@@ -168,7 +176,7 @@ EOS
     return filename if filename.respond_to?(:decrypt64)
     filename = File.expand_path(filename, key_root)
     if !File.exist?(filename)
-      false
+      nil
     elsif recent
       EzCrypto::Key.load(filename)
     else
