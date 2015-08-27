@@ -77,7 +77,6 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       mor = host_inv[:id]
 
       hostname = host_inv[:address]
-#      domain_name = dns_config["domainName"] unless dns_config.nil?
 
       # Check connection state and log potential issues
       power_state = host_inv.attributes.fetch_path(:status, :state)
@@ -100,7 +99,6 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
       # Collect the hardware, networking, and scsi inventories
       switches, switch_uids[mor], lan_uids[mor] = self.host_inv_to_switch_hashes(host_inv, ems_inv)
-#      lans, lan_uids[mor] = self.host_inv_to_lan_hashes(host_inv, switch_uids[mor])
 
       hardware = self.host_inv_to_hardware_hash(host_inv)
       hardware[:guest_devices], guest_device_uids[mor] = self.host_inv_to_guest_device_hashes(host_inv, switch_uids[mor], ems_inv)
@@ -239,8 +237,6 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
       result << new_result
       result_uids[uid] = new_result
-
-#      pnics.each { |pnic| result_uids[:pnic_id][pnic] = new_result unless pnic.blank? }
     end
     return result, result_uids, lan_uids
   end
@@ -594,10 +590,6 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         :ems_children => {:vms => []}
       }
       result_res_pools << default_res_pool
-
-#      config = data["configuration"]
-#      das_config = config["dasConfig"]
-#      drs_config = config["drsConfig"]
 
       new_result = {
         :ems_ref => data[:href],

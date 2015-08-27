@@ -1,6 +1,5 @@
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
 require 'MiqScvmm'
-#require 'MiqScvmmBroker'
 
 class ManageIQ::Providers::Microsoft::InfraManager::Host < ::Host
   def verify_credentials(auth_type = nil, _options = {})

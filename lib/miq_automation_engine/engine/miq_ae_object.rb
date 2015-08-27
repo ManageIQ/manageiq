@@ -180,9 +180,7 @@ module MiqAeEngine
     def fetch_field_value(f)
       Benchmark.current_realtime[:fetch_field_value_count] += 1
       Benchmark.realtime_block(:fetch_field_value_time) do
-#        @workspace.datastore(@class_fqname.downcase.to_sym, "#{@instance.downcase}::#{f.name.downcase}") {
           @aei.get_field_value(f, false) unless @aei.nil?
-#        }
       end.first
     end
 

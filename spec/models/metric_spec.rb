@@ -1,7 +1,5 @@
 require "spec_helper"
 
-#$log.level = Rails.logger.level = 0
-
 describe Metric do
   before(:each) do
     MiqRegion.seed
@@ -897,8 +895,6 @@ describe Metric do
           @host.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
           q_all.length.should == 1
-          # assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'realtime')
-          # assert_queue_item_rollup_chain(q_all[1], @host, 'hourly')
           assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
         end
 
