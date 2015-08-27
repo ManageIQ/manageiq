@@ -167,12 +167,7 @@ class DashboardController < ApplicationController
     @layout    = "dashboard"
     @dashboard = true
 
-    g = current_group
-    records =  if g.settings && g.settings[:dashboard_order]
-                 MiqWidgetSet.find_with_same_order(g.settings[:dashboard_order]).to_a
-               else
-                 g.miq_widget_sets.sort_by { |a| a.name.downcase }
-               end
+    records = current_group.ordered_widget_sets
     db_order = records.collect(&:id)
 
     @tabs = []

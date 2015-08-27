@@ -201,4 +201,12 @@ class MiqGroup < ActiveRecord::Base
   def description=(val)
     super(val.to_s.strip)
   end
+
+  def ordered_widget_sets
+    if settings && settings[:dashboard_order]
+      MiqWidgetSet.find_with_same_order(settings[:dashboard_order]).to_a
+    else
+      miq_widget_sets.sort_by { |a| a.name.downcase }
+    end
+  end
 end

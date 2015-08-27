@@ -275,4 +275,23 @@ describe MiqGroup do
       expect(group_without_tenant.reload.tenant_owner).to eq(root_tenant)
     end
   end
+
+  context "#ordered_widget_sets" do
+    let(:group) { FactoryGirl.create(:miq_group) }
+    it "uses dashboard_order if present" do
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
+      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      group.update_attributes(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
+
+      expect(group.ordered_widget_sets).to eq([ws3, ws1])
+    end
+
+    it "uses all owned widgets" do
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
+      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      expect(group.ordered_widget_sets).to eq([ws1, ws3, ws2])
+    end
+  end
 end
