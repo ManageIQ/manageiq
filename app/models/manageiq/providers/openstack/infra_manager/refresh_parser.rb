@@ -72,7 +72,7 @@ module ManageIQ
       end
 
       def hosts
-        @hosts ||= @baremetal_service.nodes.details
+        @hosts ||= @baremetal_service.nodes.all
       end
 
       def clouds
