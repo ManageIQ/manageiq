@@ -5,7 +5,7 @@ module ContainerImageHelper
     #
 
     def textual_group_properties
-      %i(name tag id)
+      %i(name tag id full_name)
     end
 
     def textual_group_relationships
@@ -31,6 +31,10 @@ module ContainerImageHelper
 
     def textual_id
       {:label => "Image Id", :value => @record.image_ref}
+    end
+
+    def textual_full_name
+      {:label => "Full Name", :value => @record.full_name}
     end
   end
 end

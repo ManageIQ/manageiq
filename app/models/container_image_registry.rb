@@ -6,4 +6,9 @@ class ContainerImageRegistry < ActiveRecord::Base
   has_many :containers, :through => :container_images
 
   acts_as_miq_taggable
+  virtual_column :full_name, :type => :string
+
+  def full_name
+    port.present? ? "#{host}:#{port}" : host
+  end
 end
