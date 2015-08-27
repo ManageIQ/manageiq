@@ -262,13 +262,19 @@ module OpenstackHandle
       @default_tenant_name ||= accessible_tenant_names.detect { |tn| tn != "services" }
     end
 
-    def service_for_each_accessible_tenant(service, &block)
-      if block.arity == 1
-        accessible_tenant_names.each { |t| block.call(detect_service(service, t)) }
-      elsif block.arity == 2
-        accessible_tenants.each { |t| block.call(detect_service(service, t.name), t) }
-      else
-        raise "OpenstackHandle#service_for_each_accessible_tenant: unexpected number of block args: #{block.arity}"
+    def service_for_each_accessible_tenant(service_name, &block)
+      accessible_tenants.each do |tenant|
+        service = detect_service(service_name, tenant.name)
+        if service
+          case block.arity
+          when 1 then block.call(service)
+          when 2 then block.call(service, tenant)
+          else        raise "Unexpected number of block args: #{block.arity}"
+          end
+        else
+          $fog_log.warn("MIQ(#{self.class.name}##{__method__}) "\
+                        "Could not access service #{service_name} for tenant #{tenant.name} on OpenStack #{@address}")
+        end
       end
     end
 
