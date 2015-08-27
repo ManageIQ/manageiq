@@ -16,7 +16,7 @@ module ReportFormatter
       raise "Can't create a graph without a sortby column" if mri.sortby.nil? &&
           mri.db != "MiqReport" # MiqReport based charts are already sorted
       raise "Graph type not specified" if mri.graph.nil? ||
-          (mri.graph.is_a?(Hash) && mri.graph[:type].nil?)
+          (mri.graph.kind_of?(Hash) && mri.graph[:type].nil?)
     end
 
     def graph_options
@@ -110,7 +110,7 @@ module ReportFormatter
   #       end
   ####
 
-          val = val / divider.to_f unless val.nil? || divider == 1
+          val /= divider.to_f unless val.nil? || divider == 1
           if d_idx == mri.table.data.length - 1 && !tip.nil?
             series.push(:value => val, :tooltip => tip)
           else
@@ -138,19 +138,19 @@ module ReportFormatter
       value.round(graph_options[:decimals] || 0)
     end
 
-    def build_performance_chart_pie(maxcols, divider)
+    def build_performance_chart_pie(_maxcols, divider)
       col = mri.graph[:columns].first
       mri.table.sort_rows_by!(col, :order => :descending)
       categories = [] # Store categories and series counts in an array of arrays
       series = series_class.new
       cat_cnt = 0
       cat_total = mri.table.size
-      mri.table.data.each_with_index do |r, d_idx|
+      mri.table.data.each do |r|
         cat = cat_cnt > 6 ? '<Other(1)>' : slice_legend(r["resource_name"])
         val = rounded_value(r[col]) / divider
         next if val == 0
-        if cat.starts_with?("<Other(") && categories[-1].starts_with?("<Other(")  # Are we past the top 10?
-          categories[-1] = "<Other(#{cat_total - (cat_cnt - 1)})>"                  # Fix the <Other> category count
+        if cat.starts_with?("<Other(") && categories[-1].starts_with?("<Other(") # Are we past the top 10?
+          categories[-1] = "<Other(#{cat_total - (cat_cnt - 1)})>" # Fix the <Other> category count
           series.add_to_value(-1, val) # Accumulate the series value
           next
         end
@@ -165,7 +165,7 @@ module ReportFormatter
       add_series('', series)
     end
 
-    def build_planning_chart(maxcols, divider)
+    def build_planning_chart(_maxcols, _divider)
       case mri.graph[:type]
       when "Column", "ColumnThreed" # Build XML for column charts
         categories = [] # Store categories and series counts in an array of arrays
@@ -177,7 +177,7 @@ module ReportFormatter
               categories.push((r_idx + 1).ordinalize) # Use 1st, 2nd, etc as the categories on the x axis
             else
               series[col_idx - 1] ||= {}
-              series[col_idx - 1][:header] ||=  mri.headers[mri.col_order.index(col)] # Add the series header
+              series[col_idx - 1][:header] ||= mri.headers[mri.col_order.index(col)] # Add the series header
               series[col_idx - 1][:data] ||= series_class.new
               # If a max col size is set, limit the value to that size, else use the actual value
               val = r[col].to_i
@@ -227,12 +227,12 @@ module ReportFormatter
       categories = []                     # Store categories and series counts in an array of arrays
       series     = []
       mri.graph[:columns].each_with_index do |col, col_idx|
-        mri.table.data.each_with_index do |r, r_idx|
+        mri.table.data.each do |r|
           if col_idx == 0                 # First column is the category text
             categories.push(r[col])
           else
             series[col_idx - 1] ||= {}
-            series[col_idx - 1][:header] ||=  mri.headers[mri.col_order.index(col)] # Add the series header
+            series[col_idx - 1][:header] ||= mri.headers[mri.col_order.index(col)] # Add the series header
             series[col_idx - 1][:data] ||= series_class.new
             tip_key = col + '_tip'
             tip = case r[0] # Override the formatting for certain column groups on single day percent utilization chart
@@ -281,13 +281,13 @@ module ReportFormatter
 
     def keep_and_show_other
       # Show other sum value by default
-      mri.graph.is_a?(Hash) ? [mri.graph[:count].to_i, mri.graph[:other]] : [GRAPH_MAX_COUNT, true]
+      mri.graph.kind_of?(Hash) ? [mri.graph[:count].to_i, mri.graph[:other]] : [GRAPH_MAX_COUNT, true]
     end
 
     def build_reporting_chart_dim2
       (sort1, sort2) = mri.sortby
       save1 = save2 = counter = save1_nonblank = save2_nonblank = nil
-      counts = {}  # hash of hashes of counts
+      counts = {} # hash of hashes of counts
       mri.table.data.each_with_index do |r, d_idx|
         if d_idx == 0 || save1 != r[sort1].to_s
           counts[save1_nonblank][save2_nonblank] = counter unless d_idx == 0
@@ -353,7 +353,7 @@ module ReportFormatter
 
     def data_column_name
       @data_column_name ||= (
-        _model, col  = mri.graph[:column].split('-', 2)
+        _model, col = mri.graph[:column].split('-', 2)
         col, aggreg = col.split(':', 2)
         aggreg.blank? ? col : "#{col}__#{aggreg}"
       )
@@ -380,7 +380,7 @@ module ReportFormatter
 
       if show_other
         other_sum = Array(sorted_data[0, sorted_data.length - keep])
-                 .inject(0) { |sum, row| sum + row[data_column_name] }
+                    .inject(0) { |sum, row| sum + row[data_column_name] }
         series.push(:value => other_sum, :tooltip => _('Other'))
         categories.push([_('Other'), other_sum])
       end
@@ -394,18 +394,18 @@ module ReportFormatter
     end
 
     def build_numeric_chart_grouped
-      groups = mri.build_subtotals.reject { |k,_| k == :_total_ }
-
-      categories = []
-      (sort1,) = mri.sortby
-      (keep, show_other) = keep_and_show_other
+      groups = mri.build_subtotals.reject { |k, _| k == :_total_ }
 
       match = mri.graph[:column].match(/^(\w*)-(\w*):(\w*)$/)
       (_model, column_name, aggreg) = match[1..3]
       aggreg = aggreg.to_sym
 
-      sorted_data = groups.sort_by { |key, data| data[aggreg][column_name] || 0 }
+      (keep, show_other) = keep_and_show_other
+      show_other &&= (aggreg == :total) # FIXME: we only support :total
 
+      sorted_data = groups.sort_by { |_, data| data[aggreg][column_name] || 0 }
+
+      categories = []
       series = sorted_data.reverse.take(keep)
                .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |(key, data), a|
         tooltip = key
@@ -415,10 +415,9 @@ module ReportFormatter
         categories.push([tooltip, data[aggreg][column_name]])
       end
 
-      # FIXME: different aggregs need different calculation
-      if show_other && aggreg == :total
+      if show_other
         other_sum = Array(sorted_data[0, sorted_data.length - keep])
-                 .inject(0) { |sum, (key,row)| sum + row[aggreg][column_name] }
+                    .inject(0) { |sum, (_key, row)| sum + row[aggreg][column_name] }
 
         series.push(:value => other_sum, :tooltip => _('Other'))
         categories.push([_('Other'), other_sum])
@@ -438,9 +437,9 @@ module ReportFormatter
       match = mri.graph[:column].match(/^([\w:]*)-([\w_]*):(\w*)$/)
       (_model, column_name, aggreg) = match[1..3]
       aggreg = aggreg.to_sym
-      show_other &&= (aggreg == :total) # FIXME we only support :total
+      show_other &&= (aggreg == :total) # FIXME: we only support :total
 
-      subtotals = mri.build_subtotals(true).reject { |k,_| k == :_total_ }
+      subtotals = mri.build_subtotals(true).reject { |k, _| k == :_total_ }
 
       # Group values by sort1
       # 3rd dimension in the chart is defined by sort2
@@ -468,10 +467,6 @@ module ReportFormatter
 
       add_axis_category_text(cathegory_texts)
 
-      groups_hash = selected_groups.each_with_object(Hash.new { |h, k| h[k] = {} }) do |(key, _), h|
-        groups[key].each { |row| h[key][row[sort2]] = row }
-      end
-
       if show_other
         other_groups = Array(sorted_sums[0, sorted_sums.length - keep])
         other = other_groups.each_with_object(Hash.new(0)) do |(key, _), o|
@@ -480,8 +475,8 @@ module ReportFormatter
       end
 
       # For each value in sort2 column we create a series.
-      sort2_values = mri.table.data.each_with_object({}) { |row, h| h[row[sort2]] = true }
-      sort2_values.each_key do |val2|
+      sort2_values = mri.table.data.map { |row| row[sort2] }.uniq
+      sort2_values.each do |val2|
         series = selected_groups.each_with_object(series_class.new) do |(key1, _), a|
           sub_key = "#{key1}__#{val2}"
           value = subtotals.key?(sub_key) ? subtotals[sub_key][aggreg][column_name] : 0
@@ -554,13 +549,16 @@ module ReportFormatter
     end
 
     # Utilization timestamp charts
-    def build_util_ts_chart(maxcols, divider)
+    def build_util_ts_chart(_maxcols, _divider)
       build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
     end
 
     def build_reporting_chart_numeric(_maxcols, _divider)
-      mri.group.nil? ? build_numeric_chart_simple :
-        (mri.dims == 2 ? build_numeric_chart_grouped_2dim : build_numeric_chart_grouped)
+      if mri.group.nil?
+        build_numeric_chart_simple
+      else
+        mri.dims == 2 ? build_numeric_chart_grouped_2dim : build_numeric_chart_grouped
+      end
     end
 
     def build_reporting_chart(_maxcols, _divider)
