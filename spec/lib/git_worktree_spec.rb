@@ -32,13 +32,13 @@ describe GitWorktree do
 
     def clone(url)
       dir = Dir.mktmpdir
-      options = {:path  => dir,
-                 :url   => url,
-                 :name  => "user1",
-                 :email => "user1@example.com",
+      options = {:path          => dir,
+                 :url           => url,
+                 :name          => "user1",
+                 :email         => "user1@example.com",
                  :ssl_no_verify => true,
-                 :bare  => true,
-                 :clone => true}
+                 :bare          => true,
+                 :clone         => true}
       return dir, GitWorktree.new(options)
     end
 
