@@ -118,7 +118,7 @@ class OpsController < ApplicationController
       @sb[:active_tab]    ||= "settings_server"
       @built_trees << settings_build_tree
     end
-    if role_allows(:feature => "ops_rbac")
+    if role_allows(:feature => "ops_rbac", :any => true)
       @accords.push(:name => "rbac", :title => "Access Control", :container => "rbac_tree_div")
       self.x_active_accord ||= 'rbac'
       self.x_active_tree   ||= 'rbac_tree'
