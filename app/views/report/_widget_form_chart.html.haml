@@ -1,18 +1,20 @@
 - url = url_for(:action => 'widget_form_field_changed', :id => "#{@widget.id || "new"}")
-%fieldset
-  %h3
-    = _('Chart Report')
-  %table.style1
-    %tr
-      %td.key
-        - if @edit[:read_only]
-          *
-        = _('Filter')
-      %td
-        = select_tag("repfilter_typ", options_for_select(["<Choose>"] + @reps, @edit[:new][:repfilter]),
-          :multiple              => false,
-          :class                 => "widthed",
-          :disabled              => @edit[:read_only],
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+%h3
+  = _('Chart Report')
+.form-horizontal
+  .form-group
+    %label.col-md-2.control-label
+      - if @edit[:read_only]
+        *
+      = _('Filter')
+    .col-md-8
+      = select_tag("repfilter_typ", options_for_select(["<Choose>"] + @reps, @edit[:new][:repfilter]),
+        :multiple              => false,
+        :class                 => "selectpicker",
+        :disabled              => @edit[:read_only],
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true)
+      :javascript
+        miqInitSelectPicker();
+        miqSelectPickerEvent("repfilter_typ", "#{url}");
+%hr

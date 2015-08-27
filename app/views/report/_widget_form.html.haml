@@ -3,33 +3,35 @@
   = render :partial => "layouts/flash_msg"
   %h3
     = _('Basic Information')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
         - if @edit[:read_only]
           *
         = _('Title')
-      %td.wider
+      .col-md-8
         = text_field_tag("title", @edit[:new][:title],
           :disabled          => @edit[:read_only],
           :maxlength         => 40,
+          :class             => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         - unless @edit[:read_only]
           = javascript_tag(javascript_focus('title'))
-    %tr
-      %td.key
+    .form-group
+      %label.control-label.col-md-2
         - if @edit[:read_only]
           *
         = _('Description')
-      %td.wider
+      .col-md-8
         = text_field_tag("description", @edit[:new][:description],
           :disabled          => @edit[:read_only],
           :maxlength         => MAX_DESC_LEN,
+          :class             => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key
+    .form-group
+      %label.control-label.col-md-2
         = _('Active')
-      %td
+      .col-md-8
         = check_box_tag("enabled", "1", @edit[:new][:enabled],
           "data-miq_observe_checkbox" => {:url => url}.to_json)
   %hr
