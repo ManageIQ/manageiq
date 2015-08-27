@@ -157,15 +157,10 @@ EOS
     attr_writer :v2_key
   end
 
-  # generate a symmetric key
-  # preferred usage is without password/salt
-  def self.generate_symmetric(filename, password = nil, salt = nil)
-    key = if password
-            EzCrypto::Key.with_password(password, salt, :algorithm => "aes-256-cbc")
-          else
-            EzCrypto::Key.generate(:algorithm => "aes-256-cbc")
-          end
-    key.store(filename)
+  def self.generate_symmetric(filename = nil)
+    EzCrypto::Key.generate(:algorithm => "aes-256-cbc").tap do |key|
+      key.store(filename) if filename
+    end
   end
 
   protected
