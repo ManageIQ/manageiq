@@ -122,8 +122,12 @@ class MiqPassword
     @v2_key = @v1_key = @v0_key = nil
   end
 
-  def self.v2_key
-    @v2_key ||= ez_load("#{key_root}/v2_key")
+  def self.v2_key(filename = "v2_key")
+    @v2_key ||= begin
+      key   = ez_load(File.expand_path(filename, key_root))
+      key ||= ez_load(File.expand_path("#{filename}.dev", key_root)) if ENV["RAILS_ENV"] != "production"
+      key
+    end
   end
 
   def self.add_legacy_key(filename, type = :v1)

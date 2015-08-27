@@ -263,6 +263,20 @@ describe MiqPassword do
     end
   end
 
+  context ".v2_key" do
+    it "when missing" do
+      expect(MiqPassword.v2_key("v2_key_missing")).to be_false
+    end
+
+    it "when only .dev file present" do
+      expect(MiqPassword.v2_key("v2_key_missing_but_dev_present").to_s).to eq "K516gKEHBl9PrSW6+a8/h5RM1HASbeM3dg1QevV6Quw="
+    end
+
+    it "when present" do
+      expect(MiqPassword.v2_key.to_s).to eq "5ysYUd3Qrjj7DDplmEJHmnrFBEPS887JwOQv0jFYq2g="
+    end
+  end
+
   def erberize(password, passmethod = "MiqPassword")
     "<%= #{passmethod}.decrypt(\"#{password}\") %>"
   end
