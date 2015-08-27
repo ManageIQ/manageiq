@@ -383,8 +383,9 @@ module ReportController::Reports::Editor
         ["#{req}_7", _("Preview")]
       ]
     end
-    tab = @sb[:miq_tab].split("_")[1]           # Get the tab number of the active tab
-    @tabs.insert(0, ["#{req}_#{tab}", ""])    # Set as the active tab in first @tabs element
+
+    tab = @sb[:miq_tab].split("_")[1]  # Get the tab number of the active tab
+    @active_tab = "#{req}_#{tab}"
   end
 
   # Get variables from edit form

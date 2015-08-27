@@ -433,8 +433,11 @@ module OpsController::OpsRbac
     end
     @edit[:key] = "rbac_group_edit__seq"
     @edit[:current] = copy_hash(@edit[:new])
+
     @right_cell_text = _("Editing Sequence of User Groups")
-    @tabs = [["ldap_seq_edit", "Edit Sequence of User Groups"], ["ldap_seq_edit", "Edit Sequence of User Groups"]]
+    @active_tab = "ldap_seq_edit"
+    @tabs = [ ["ldap_seq_edit", "Edit Sequence of User Groups"] ]
+
     session[:edit] = @edit
     session[:changed] = false
   end

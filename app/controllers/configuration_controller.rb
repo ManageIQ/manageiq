@@ -552,20 +552,22 @@ class ConfigurationController < ApplicationController
     @breadcrumbs = []
     case @config_tab
     when "ui"
-      @tabs = []
       if @tabform != "ui_4"
         drop_breadcrumb({:name => _("User Interface Configuration"), :url => "/configuration/edit"}, true)
       end
+
       case @tabform
       when "ui_1"
-        @tabs[0] = ["1", ""]  # Start with first tab array entry set to tab 1 as active
+        @active_tab = "1"
       when "ui_2"
-        @tabs[0] = ["2", ""]  # Start with first tab array entry set to tab 1 as active
+        @active_tab = "2"
       when "ui_3"
-        @tabs[0] = ["3", ""]  # Start with first tab array entry set to tab 1 as active
+        @active_tab = "3"
       when "ui_4"
-        @tabs[0] = ["4", ""]  # Start with first tab array entry set to tab 1 as active
+        @active_tab = "4"
       end
+
+      @tabs = []
       @tabs.push(["1", _("Visual")])          if role_allows(:feature => "my_settings_visuals")
       @tabs.push(["2", _("Default Views")])   if role_allows(:feature => "my_settings_default_views")
       @tabs.push(["3", _("Default Filters")]) if role_allows(:feature => "my_settings_default_filters")

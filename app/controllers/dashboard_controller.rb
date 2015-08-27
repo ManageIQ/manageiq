@@ -106,7 +106,7 @@ class DashboardController < ApplicationController
     # load first one on intial load, or load tab from params[:tab] changed,
     # or when coming back from another screen load active tab from sandbox
     if active_tab
-      @tabs.unshift([active_tab.id.to_s, ""])
+      @active_tab = active_tab.id.to_s
       @sb[:active_db]    = active_tab.name
       @sb[:active_db_id] = active_tab.id
     end
@@ -152,7 +152,7 @@ class DashboardController < ApplicationController
     # Set tabs now if user's group didnt have any dashboards using default dashboard
     if records.empty?
       db = MiqWidgetSet.find_by_id(@sb[:active_db_id])
-      @tabs.unshift([ws.id.to_s, ""])
+      @active_tab = ws.id.to_s
       @tabs.push([ws.id.to_s, db.description])
     # User's group has dashboards, delete userid|default dashboard if it exists, dont need to keep that
     else

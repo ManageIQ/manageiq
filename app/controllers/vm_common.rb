@@ -688,7 +688,11 @@ module VmCommon
     evm_relationship_build_screen
     @edit[:current] = copy_hash(@edit[:new])
     session[:changed] = false
-    @tabs = [["evm_relationship", @record.id.to_s], ["evm_relationship", "Edit Management Engine Relationship"]]
+
+    @active_tab = "evm_relationship"
+    @tab_id = @record.id.to_s
+    @tabs = [ ["evm_relationship", "Edit Management Engine Relationship"] ]
+
     @in_a_form = true
     if @explorer
       @refresh_partial = "vm_common/evm_relationship"
@@ -844,9 +848,14 @@ module VmCommon
     set_form_vars
     build_edit_screen
     session[:changed] = false
-    @tabs = [["edit", @record.id.to_s], ["edit", "Information"]]
+
+    @active_tab = "edit"
+    @tab_id = @record.id.to_s
+    @tabs = [ ["edit", "Information"] ]
+
     @refresh_partial = "vm_common/form"
   end
+
   alias_method :image_edit, :edit
   alias_method :instance_edit, :edit
   alias_method :vm_edit, :edit
@@ -856,7 +865,9 @@ module VmCommon
     drop_breadcrumb(:name => _("Edit VM '%{name}''") % {:name => @record.name}, :url => "/vm/edit") unless @explorer
     session[:edit] = @edit
     @in_a_form = true
-    @tabs = [["edit", @record.id.to_s], ["edit", "Information"]]
+    @active_tab = "edit"
+    @tab_id = @record.id.to_s
+    @tabs = [ ["edit", "Information"] ]
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
