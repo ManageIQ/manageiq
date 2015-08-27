@@ -11,6 +11,11 @@ module ContainerProjectHelper::TextualSummary
     %i(ems container_routes container_services container_replicators container_groups)
   end
 
+  def textual_group_smart_management
+    items = %w(tags)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
+  end
+
   #
   # Items
   #

@@ -12,6 +12,11 @@ module ContainerImageHelper
       %i(containers container_image_registry ems)
     end
 
+    def textual_group_smart_management
+      items = %w(tags)
+      items.collect { |m| send("textual_#{m}") }.flatten.compact
+    end
+
     #
     # Items
     #

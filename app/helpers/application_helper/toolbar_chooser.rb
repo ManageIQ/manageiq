@@ -397,7 +397,8 @@ class ApplicationHelper::ToolbarChooser
       #show_list and show screens
       if !@in_a_form
         if %w(availability_zone cloud_tenant container_group container_node container_service ems_cloud ems_cluster
-              ems_container container_project container_route container_replicator ems_infra flavor host
+              ems_container container_project container_route container_replicator container_image
+              container_image_registry ems_infra flavor host
               ontap_file_share ontap_logical_disk
               ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
               timeline usage security_group).include?(@layout)
