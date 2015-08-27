@@ -2685,147 +2685,199 @@
     - :name: Users
       :description: Users
       :feature_type: node
-      :hidden: true
+      :hidden: false
       :identifier: rbac_user
       :children:
+      - :name: View
+        :description: View Users
+        :feature_type: view
+        :identifier: rbac_user_view
+        :children:
+        - :name: List
+          :description: Display Lists of Users
+          :feature_type: view
+          :identifier: rbac_user_show_list
+        - :name: Show
+          :description: Display Individual Users
+          :feature_type: view
+          :identifier: rbac_user_show
       - :name: Modify
         :description: Modify User
         :feature_type: admin
         :identifier: rbac_user_admin
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Add
           :description: Add a User
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_add
         - :name: Edit
           :description: Edit a User
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_edit
         - :name: Copy
           :description: Copy a User
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_copy
         - :name: Delete
           :description: Delete a User
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_delete
       - :name: Operate
         :description: Operate User
         :feature_type: control
         :identifier: rbac_user_operate
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Edit Tags
           :description: Edit Tags
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_tags_edit
     - :name: Groups
       :description: Groups
       :feature_type: node
-      :hidden: true
+      :hidden: false
       :identifier: rbac_group
       :children:
+      - :name: View
+        :description: View Groups
+        :feature_type: view
+        :identifier: rbac_group_view
+        :children:
+        - :name: List
+          :description: Display Lists of Groups
+          :feature_type: view
+          :identifier: rbac_group_show_list
+        - :name: Show
+          :description: Display Individual Groups
+          :feature_type: view
+          :identifier: rbac_group_show
       - :name: Modify
-        :description: Modify User
+        :description: Modify Group
         :feature_type: admin
         :identifier: rbac_group_admin
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Add
           :description: Add a Group
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_add
         - :name: Edit
           :description: Edit a Group
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_edit
         - :name: Edit Sequence
           :description: Edit Sequence of User Groups for LDAP Look Up
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_seq_edit
         - :name: Delete
           :description: Delete a Group
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_delete
       - :name: Operate
         :description: Operate Group
         :feature_type: control
         :identifier: rbac_group_operate
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Edit Tags
           :description: Edit Tags
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_tags_edit
     - :name: Roles
       :description: Roles
       :feature_type: node
-      :hidden: true
+      :hidden: false
       :identifier: rbac_role
       :children:
+      - :name: View
+        :description: View Roles
+        :feature_type: view
+        :identifier: rbac_role_view
+        :children:
+        - :name: List
+          :description: Display Lists of Roles
+          :feature_type: view
+          :identifier: rbac_role_show_list
+        - :name: Show
+          :description: Display Individual Roles
+          :feature_type: view
+          :identifier: rbac_role_show
       - :name: Modify
         :description: Modify Role
         :feature_type: admin
         :identifier: rbac_role_admin
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Add
           :description: Add a Role
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_role_add
         - :name: Edit
           :description: Edit a Role
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_role_edit
         - :name: Copy
           :description: Copy a Role
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_role_copy
         - :name: Delete
           :description: Delete a Role
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_role_delete
     - :name: Tenants
       :description: Tenants
       :feature_type: node
-      :hidden: true
+      :hidden: false
       :identifier: rbac_tenant
       :children:
+      - :name: View
+        :description: View Tenants
+        :feature_type: view
+        :identifier: rbac_tenant_view
+        :children:
+        - :name: List
+          :description: Display Lists of Tenants
+          :feature_type: view
+          :identifier: rbac_tenant_show_list
+        - :name: Show
+          :description: Display Individual Tenants
+          :feature_type: view
+          :identifier: rbac_tenant_show
       - :name: Modify
         :description: Modify Tenant/Project
         :feature_type: admin
         :identifier: rbac_tenant_admin
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Add
           :description: Add a Tenant/Project
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_tenant_add
         - :name: Edit
           :description: Edit a Tenant/Project
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_tenant_edit
         - :name: Delete
           :description: Delete a Tenant/Project
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_tenant_delete
   - :name: Diagnostics
     :description: Diagnostics Accordion

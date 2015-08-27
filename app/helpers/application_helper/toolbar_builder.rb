@@ -384,6 +384,7 @@ class ApplicationHelper::ToolbarBuilder
             return true
         end
       when :rbac_tree
+        return true unless role_allows(:feature => id)
         return true if %w(rbac_project_add rbac_tenant_add).include?(id) && @record.project?
         return false
       when :vmdb_tree
