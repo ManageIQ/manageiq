@@ -253,18 +253,18 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
     _log.debug "EMS: [#{@ems.name}], id: [#{@ems.id}] Updating #{type.to_s.titleize} relationships"
     if new_relats[type].kind_of?(Array) || prev_relats[type].kind_of?(Array)
       # Case where we have a single set of ids
-      disconnect_proc, connect_proc = yield
-      do_relat_compare_ids(prev_relats[type], new_relats[type], disconnect_proc, connect_proc)
+      disconnect_proc, connect_proc, bulk_connect_proc = yield
+      do_relat_compare_ids(prev_relats[type], new_relats[type], disconnect_proc, connect_proc, bulk_connect_proc)
     else
       # Case where we have multiple sets of ids
       (prev_relats[type].keys | new_relats[type].keys).each do |k|
-        disconnect_proc, connect_proc = yield(k)
-        do_relat_compare_ids(prev_relats[type][k], new_relats[type][k], disconnect_proc, connect_proc)
+        disconnect_proc, connect_proc, bulk_connect_proc = yield(k)
+        do_relat_compare_ids(prev_relats[type][k], new_relats[type][k], disconnect_proc, connect_proc, bulk_connect_proc)
       end
     end
   end
 
-  def do_relat_compare_ids(prev_ids, new_ids, disconnect_proc, connect_proc)
+  def do_relat_compare_ids(prev_ids, new_ids, disconnect_proc, connect_proc, bulk_connect_proc)
     common = prev_ids & new_ids unless prev_ids.nil? || new_ids.nil?
     unless common.nil?
       prev_ids -= common
@@ -282,13 +282,22 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       end
     end
 
-    unless new_ids.nil? || connect_proc.nil?
-      new_ids.each do |n|
+    unless new_ids.nil?
+      if bulk_connect_proc
         begin
-          connect_proc.call(n)
+          bulk_connect_proc.call(new_ids)
         rescue => err
-          _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}"
+          _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting ids [#{new_ids.join(',')}]: #{err}"
           _log.log_backtrace(err)
+        end
+      elsif connect_proc
+        new_ids.each do |n|
+          begin
+            connect_proc.call(n)
+          rescue => err
+            _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}"
+            _log.log_backtrace(err)
+          end
         end
       end
     end
@@ -349,14 +358,16 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       do_relat_compare(:folders_to_folders, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
         [ do_disconnect ? Proc.new { |f2| folder.remove_folder(EmsFolder.find(f2)) } : nil, # Disconnect proc
-          Proc.new { |f2| folder.add_folder(EmsFolder.find(f2)) } ]                         # Connect proc
+        Proc.new { |f2| folder.add_folder(EmsFolder.find_by_id(f2)) },                      # Connect proc
+        Proc.new { |f2s| folder.add_folder(EmsFolder.where(id: f2s).to_a) } ]               # Bulk connect proc
       end
 
       # Do the Folders to Clusters relationships
       do_relat_compare(:folders_to_clusters, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
         [ do_disconnect ? Proc.new { |c| folder.remove_cluster(EmsCluster.find(c)) } : nil, # Disconnect proc
-          Proc.new { |c| folder.add_cluster(EmsCluster.find(c)) } ]                         # Connect proc
+        Proc.new { |c| folder.add_cluster(EmsCluster.find_by_id(c)) },                      # Connect proc
+        Proc.new { |cs| folder.add_cluster(EmsCluster.where(id: cs).to_a) } ]               # Bulk connect proc
       end
 
       # Do the Folders to Hosts relationships
@@ -370,7 +381,8 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       do_relat_compare(:folders_to_vms, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
         [ do_disconnect ? Proc.new { |v| folder.remove_vm(VmOrTemplate.find(v)) } : nil, # Disconnect proc
-          Proc.new { |v| folder.add_vm(VmOrTemplate.find(v)) } ]                         # Connect proc
+          Proc.new { |v| folder.add_vm(VmOrTemplate.find(v)) },                          # Connect proc
+          Proc.new { |vs| folder.add_vm(VmOrTemplate.where(id: vs).to_a) } ]            # Bulk connect proc
       end
 
       # Do the Clusters to ResourcePools relationships
