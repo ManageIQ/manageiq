@@ -19,6 +19,7 @@ class Tenant < ActiveRecord::Base
   has_many :tenant_quotas
   has_many :miq_groups, :foreign_key => :tenant_owner_id
   has_many :users, :through => :miq_groups
+  has_many :ae_domains, :dependent => :destroy, :class_name => 'MiqAeDomain', :foreign_key => :tenant_id
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
@@ -122,6 +123,10 @@ class Tenant < ActiveRecord::Base
 
   def login_logo?
     !!login_logo_file_name
+  end
+
+  def ae_domains
+    MiqAeDomain.where(:tenant_id => [id, nil])
   end
 
   # The default tenant is the tenant to be used when
