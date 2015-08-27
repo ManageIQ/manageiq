@@ -1,16 +1,15 @@
 FactoryGirl.define do
-  factory :miq_ae_domain_enabled, :parent => :miq_ae_namespace do
+  factory :miq_ae_domain_enabled, :parent => :miq_ae_domain do
+  end
+
+  factory :miq_ae_domain_disabled, :parent => :miq_ae_domain do
+    enabled false
+  end
+
+  factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
+    priority 1
     enabled true
-    priority 1
-  end
-
-  factory :miq_ae_domain_disabled, :parent => :miq_ae_namespace do
-    sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
-  end
-
-  factory :miq_ae_domain, :parent => :miq_ae_namespace do
-    priority 1
     trait :with_methods do
       transient do
         ae_methods do {'method1' => {:scope => 'instance', :location => 'inline',
