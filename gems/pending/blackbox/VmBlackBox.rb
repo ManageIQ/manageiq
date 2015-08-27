@@ -88,7 +88,7 @@ module Manageiq
     end
 
     def writeData(filename, data)
-      Dir.mkdir(@localDataDir, 755) unless File.exist?(@localDataDir)
+      Dir.mkdir(@localDataDir, 0755) unless File.exist?(@localDataDir)
       filename2 = filename.gsub("/", "_")
       fullpath = File.join(@localDataDir, filename2)
       f = File.open(fullpath, "w")
