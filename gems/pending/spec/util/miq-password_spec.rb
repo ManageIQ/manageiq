@@ -233,42 +233,38 @@ describe MiqPassword do
       expect(MiqPassword.key_root).to eq("/abc")
     end
 
-    it "clears key caches" do
-      MiqPassword.add_legacy_key("v0_key", :v0)
-      MiqPassword.add_legacy_key("v1_key")
-      MiqPassword.v2_key
+    it "clears all_keys" do
+      v0 = MiqPassword.add_legacy_key("v0_key", :v0)
+      v1 = MiqPassword.add_legacy_key("v1_key")
+      v2 = MiqPassword.v2_key
 
-      expect(MiqPassword.v0_key).to_not be_nil
-      expect(MiqPassword.v1_key).to_not be_nil
-      expect(MiqPassword.v2_key).to_not be_false
+      expect(MiqPassword.all_keys).to match_array([v2, v1, v0])
 
       MiqPassword.key_root = nil
 
-      expect(MiqPassword.v0_key).to be_nil
-      expect(MiqPassword.v1_key).to be_nil
       expect(Kernel).to receive(:warn).with(/v2_key doesn't exist/)
-      expect(MiqPassword.v2_key).to be_false
+      expect(MiqPassword.all_keys).to eq([nil])
     end
   end
 
-  it ".clear_keys" do
-    MiqPassword.add_legacy_key("v0_key", :v0)
-    MiqPassword.add_legacy_key("v1_key")
+  describe ".clear_keys" do
+    it "clears legacy_keys" do
+      v0 = MiqPassword.add_legacy_key("v0_key", :v0)
+      v1 = MiqPassword.add_legacy_key("v1_key")
 
-    expect(MiqPassword.v0_key).to_not be_nil
-    expect(MiqPassword.v1_key).to_not be_nil
+      expect(MiqPassword.legacy_keys).to match_array([v0, v1])
 
-    MiqPassword.clear_keys
+      MiqPassword.clear_keys
 
-    expect(MiqPassword.v0_key).to be_nil
-    expect(MiqPassword.v1_key).to be_nil
+      expect(MiqPassword.legacy_keys).to be_empty
+    end
   end
 
   context ".v2_key" do
     it "when missing" do
       MiqPassword.key_root = "."
       expect(Kernel).to receive(:warn).with(/v2_key doesn't exist/)
-      expect(MiqPassword.v2_key).to be_false
+      expect(MiqPassword.v2_key).not_to be
     end
 
     it "when present" do
