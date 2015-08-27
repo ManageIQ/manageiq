@@ -1,7 +1,7 @@
 - if @tabs
   %ul{:class => "nav nav-tabs"}
-    - @tabs[1..-1].each do |tab|
-      - if tab[0] == @tabs[0][0]
+    - @tabs.each do |tab|
+      - if tab[0] == @active_tab
         %li.active
           %a
             = h(tab[1])
@@ -13,26 +13,26 @@
             - if %w(new edit).include?(tab[0].split("_")[0])
               - if %w(report ops).include?(@layout)
                 = link_to(tab[1],
-                  {:action => 'change_tab',  :tab => tab[0], :id => @tabs[0][1]},
+                  {:action => 'change_tab',  :tab => tab[0], :id => @tab_id},
                   "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
                   :remote => true)
               - else
-                = link_to(tab[1], :action => 'change_tab', :tab => tab[0], :id => @tabs[0][1])
+                = link_to(tab[1], :action => 'change_tab', :tab => tab[0], :id => @tab_id)
             - else
               - if %w(report ops).include?(@layout)
                 - if @layout == "ops"
                   = link_to(tab[1],
-                    {:action => 'change_tab',  :tab => tab[0], :id => @tabs[0][1]},
+                    {:action => 'change_tab',  :tab => tab[0], :id => @tab_id},
                     "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
                     :remote => true)
                 - else
                   = link_to(tab[1],
-                    {:action => 'change_tab',  :tab => tab[0], :id => @tabs[0][1]},
+                    {:action => 'change_tab',  :tab => tab[0], :id => @tab_id},
                     "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
                     "data-miq_check_for_changes" => true,
                     :remote => true)
               - else
-                = link_to(tab[1], {:action => 'change_tab', :tab => tab[0], :id => @tabs[0][1]}, :onclick => "return miqCheckForChanges()")
+                = link_to(tab[1], {:action => 'change_tab', :tab => tab[0], :id => @tab_id}, :onclick => "return miqCheckForChanges()")
   %br{:clear => "all"}/
 - if !@tabs && (@lastaction == "show_list" || !@edit && !session[:menu_click])
   %h1

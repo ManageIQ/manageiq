@@ -31,30 +31,27 @@ class MiqTaskController < ApplicationController
     tasks_set_default_options if @tasks_options[@tabform].blank?
 
     if role_allows(:feature => "job_my_smartproxy")
-      @tabs ||= [["1", ""]]
       @tabs.push(["1", "My VM Analysis Tasks"])
     end
     if role_allows(:feature => "miq_task_my_ui")
-      @tabs ||= [["2", ""]]
       @tabs.push(["2", "My Other UI Tasks"])
     end
     if role_allows(:feature => "job_all_smartproxy") && role_allows(:feature => "job_all_smartproxy")
-      @tabs ||= [["3", ""]]
       @tabs.push(["3", "All VM Analysis Tasks"])
     end
     if role_allows(:feature => "miq_task_all_ui") && role_allows(:feature => "miq_task_all_ui")
-      @tabs ||= [["4", ""]]
       @tabs.push(["4", "All Other Tasks"])
     end
+    @active_tab = @tabs.first.first
     case @tabform
     when "tasks_1"
-      @tabs[0][0] = "1"
+      @active_tab = "1"
     when "tasks_2"
-      @tabs[0][0] = "2"
+      @active_tab = "2"
     when "tasks_3"
-      @tabs[0][0] = "3"
+      @active_tab = "3"
     when "tasks_4"
-      @tabs[0][0] = "4"
+      @active_tab = "4"
     end
   end
 
