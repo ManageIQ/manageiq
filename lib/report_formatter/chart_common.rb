@@ -1,9 +1,7 @@
 module ReportFormatter
   module ChartCommon
     def slice_legend(string, limit = LEGEND_LENGTH)
-      string = string.to_s
-      string = string.length > limit ? string.slice(0, limit) + "..." : string
-      string.gsub(/\n/, ' ')
+      string.to_s.gsub(/\n/, ' ').truncate(limit)
     end
 
     def nonblank_or_default(value)
