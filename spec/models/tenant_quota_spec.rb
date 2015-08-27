@@ -38,8 +38,6 @@ describe TenantQuota do
     it "adds new quotas" do
       described_class.set(default_tenant, :cpu_allocated => {:value => 1024}, :vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
 
-      default_tenant.reload
-
       tq = default_tenant.tenant_quotas.order(:name)
       expect(tq.length).to eql 3
 
@@ -77,13 +75,11 @@ describe TenantQuota do
 
     it "deletes existing quotas" do
       described_class.set(default_tenant, :cpu_allocated => {:value => 1024}, :vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
-      default_tenant.reload
 
       tq = default_tenant.tenant_quotas
       expect(tq.length).to eql 3
 
       described_class.set(default_tenant, :vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
-      default_tenant.reload
 
       tq = default_tenant.tenant_quotas
       expect(tq.length).to eql 2
@@ -95,22 +91,33 @@ describe TenantQuota do
     it "gets existing quotas" do
       described_class.set(default_tenant, :vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
 
-      default_tenant.reload
-
       expected =       {
-          :vms_allocated => {
-              :unit => "fixnum",
-              :value => 20.0,
-              :format => "general_number_precision_0"
+          :vms_allocated     => {
+            :unit          => "fixnum",
+            :value         => 20.0,
+            :format        => "general_number_precision_0",
+            :text_modifier => "Count",
+            :description   => "Allocated Number of Virtual Machines"
           },
-          :mem_allocated => {
-              :unit => "bytes",
-              :value => 4096.0,
-              :format => "gigabytes_human"
+          :mem_allocated     => {
+            :unit          => "bytes",
+            :value         => 4096.0,
+            :format        => "gigabytes_human",
+            :text_modifier => "GB",
+            :description   => "Allocated Memory in GB"
+          },
+          :storage_allocated => {
+            :unit          => :bytes,
+            :value         => nil,
+            :format        => :gigabytes_human,
+            :text_modifier => "GB",
+            :description   => "Allocated Storage in GB"
           }
       }
 
-      expect(described_class.get(default_tenant)).to eql expected
+      expect(described_class.get(default_tenant)[:vms_allocated]).to     eql expected[:vms_allocated]
+      expect(described_class.get(default_tenant)[:mem_allocated]).to     eql expected[:mem_allocated]
+      expect(described_class.get(default_tenant)[:storage_allocated]).to eql expected[:storage_allocated]
     end
   end
 end

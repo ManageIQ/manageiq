@@ -1087,6 +1087,13 @@ en:
       retire_now:             retirement
       scan:                   analysis
 
+    tenants:
+      cpu_allocated: Allocated CPU in Mhz
+      mem_allocated: Allocated Memory in GB
+      storage_allocated: Allocated Storage in GB
+      vms_allocated: Allocated Number of Virtual Machines
+      templates_allocated: Allocated Number of Templates
+
     ui_action:
       advanced_settings:   Advanced Settings
       disks:               Number of Disks

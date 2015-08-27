@@ -98,6 +98,15 @@ class Tenant < ActiveRecord::Base
     end
   end
 
+  def get_quotas
+    TenantQuota.get(self)
+  end
+
+  def set_quotas(quotas)
+    TenantQuota.set(self, quotas)
+    get_quotas
+  end
+
   # @return [Boolean] Is this a default tenant?
   def default?
     root?
