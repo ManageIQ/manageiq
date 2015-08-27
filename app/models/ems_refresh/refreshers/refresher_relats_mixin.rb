@@ -358,7 +358,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       do_relat_compare(:folders_to_folders, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
         [ do_disconnect ? Proc.new { |f2| folder.remove_folder(EmsFolder.find(f2)) } : nil, # Disconnect proc
-          Proc.new { |f2| folder.add_folder(EmsFolder.find_by_id(f2)) },                    # Connect proc
+          Proc.new { |f2| folder.add_folder(EmsFolder.find(f2)) },                    # Connect proc
           Proc.new { |f2s| folder.add_folder(EmsFolder.where(id: f2s).to_a) } ]             # Bulk connect proc
       end
 
@@ -366,7 +366,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       do_relat_compare(:folders_to_clusters, prev_relats, new_relats) do |f|
         folder = EmsFolder.find(f)
         [ do_disconnect ? Proc.new { |c| folder.remove_cluster(EmsCluster.find(c)) } : nil, # Disconnect proc
-          Proc.new { |c| folder.add_cluster(EmsCluster.find_by_id(c)) },                    # Connect proc
+          Proc.new { |c| folder.add_cluster(EmsCluster.find(c)) },                    # Connect proc
           Proc.new { |cs| folder.add_cluster(EmsCluster.where(id: cs).to_a) } ]             # Bulk connect proc
       end
 
