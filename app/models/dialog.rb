@@ -9,6 +9,7 @@ class Dialog < ActiveRecord::Base
   include DialogMixin
   include ReportableMixin
   has_many   :resource_actions
+  virtual_has_one :content, :class_name => "Hash"
 
   before_destroy          :reject_if_has_resource_actions
   validates_uniqueness_of :label
@@ -74,6 +75,10 @@ class Dialog < ActiveRecord::Base
 
   def field(name)
     dialog_field_hash[name.to_s]
+  end
+
+  def content
+    DialogSerializer.new.serialize(Array[self])
   end
 
   private

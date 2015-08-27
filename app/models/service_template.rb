@@ -19,6 +19,8 @@ class ServiceTemplate < ActiveRecord::Base
   has_many   :custom_button_sets, :as => :owner, :dependent => :destroy
   belongs_to :service_template_catalog
 
+  has_many   :dialogs, -> { uniq }, :through => :resource_actions
+
   virtual_has_many :custom_buttons
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
