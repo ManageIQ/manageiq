@@ -107,7 +107,7 @@ module ManageIQ
       end
 
       def hosts_ports
-        @hosts_ports ||= @baremetal_service.ports.details
+        @hosts_ports ||= @baremetal_service.ports.all
       end
 
       def load_hosts
