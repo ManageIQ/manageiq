@@ -394,28 +394,20 @@ describe Tenant do
   context "#miq_ae_domains" do
     let(:t1) { FactoryGirl.create(:tenant, :name => "T1", :parent => root_tenant) }
     let(:t2) { FactoryGirl.create(:tenant, :name => "T2", :parent => root_tenant) }
-    let(:shared) { FactoryGirl.create(:miq_ae_domain) }
     let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1) }
     let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2) }
 
-    it "default domains" do
-      shared
-      expect(t1.ae_domains.collect(&:name)).to match_array([shared.name])
-    end
-
     it "tenant domains" do
-      shared
       dom1
       dom2
-      expect(t1.ae_domains.collect(&:name)).to match_array([dom1.name, shared.name])
+      expect(t1.ae_domains.collect(&:name)).to match_array([dom1.name])
     end
 
     it "delete tenant" do
-      shared
       dom1
       dom2
       t1.destroy
-      expect(MiqAeDomain.all.collect(&:name)).to match_array([dom2.name, shared.name])
+      expect(MiqAeDomain.all.collect(&:name)).to match_array([dom2.name])
     end
 
     it "domain belongs to tenant" do
