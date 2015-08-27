@@ -105,7 +105,7 @@ module ReportFormatter
     def build_reporting_chart_other
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
-      pie_highligher if pie_type?
+      pie_highligher(false) if pie_type?
     end
 
     def build_reporting_chart_dim2
@@ -123,11 +123,7 @@ module ReportFormatter
         :highlighter    => {
           :show                 => true,
           :tooltipAxes          => 'y',
-          :tooltipContentEditor => "foobar = function(str, seriesIndex, pointIndex, plot) {
-              return plot.options.axes.xaxis.ticks[pointIndex] + ' / ' +
-                     plot.options.series[seriesIndex].label + ': ' +
-                     str;
-          }",
+          :tooltipContentEditor => 'jqplot_xaxis_tick_highlight',
           :tooltipLocation      => 'n'
         }
       )
@@ -162,16 +158,13 @@ module ReportFormatter
       simple_numeric_styling
     end
 
-    def pie_highligher
+    def pie_highligher(values = false)
       mri.chart[:options].update(
         :highlighter    => {
           :show                 => true,
           :useAxesFormatters    => false,
           :tooltipAxes          => 'y',
-          :tooltipContentEditor => "foobar = function(str, seriesIndex, pointIndex, plot) {
-              return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
-                     plot.series[seriesIndex].data[pointIndex][1];
-          }",
+          :tooltipContentEditor => values ? 'jqplot_pie_highligh_values' : 'jqplot_pie_highligh',
           :tooltipLocation      => 'n'
         }
       )
