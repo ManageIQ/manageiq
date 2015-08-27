@@ -141,6 +141,15 @@ module ReportFormatter
       x_axis_category_labels
     end
 
+    def build_numeric_chart_grouped_2dim
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      super
+      horizontal_legend if mri.graph[:type] =~ /Bar/
+      default_legend    if mri.graph[:type] =~ /Column/
+
+      axis_category_labels_ticks if mri.graph[:type] =~ /(Bar|Column)/
+    end
+
     def build_numeric_chart_grouped
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super

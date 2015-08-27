@@ -97,4 +97,54 @@ describe ReportFormatter::JqplotFormatter do
       end
     end
   end
+
+  context '#build_numeric_chart_grouped_2dim' do
+    [true, false].each do |other|
+      it "builds 3d numeric charts #{other ? 'with' : 'without'} 'other'" do
+        report = MiqReport.new(
+          :db          => "Vm",
+          :cols        => %w(os_image_name mem_cpu),
+          :include     => {"ext_management_system" => {"columns" => ["name"]}},
+          :col_order   => %w(ext_management_system.name os_image_name mem_cpu),
+          :headers     => ["Cloud/Infrastructure Provider Name", "OS Name", "Memory"],
+          :order       => "Ascending",
+          :sortby      => %w(ext_management_system.name os_image_name),
+          :group       => "y",
+          :graph       => {:type => "StackedBar", :mode => "values", :column => "Vm-mem_cpu:total", :count => 2, :other => other},
+          :dims        => 2,
+          :col_options => {"name" => {:break_label => "Cloud/Infrastructure Provider : Name: "}, "mem_cpu" => {:grouping => [:total]}},
+          :rpt_options => {:summary => {:hide_detail_rows => false}},
+          :extras      => {},
+        )
+
+        report.table = Ruport::Data::Table.new(
+          :column_names => %w(os_image_name mem_cpu ext_management_system.name id),
+          :data         => [
+            ["linux_centos", 6_144, "MTC-RHEVM-3.0", 67],
+            ["linux_centos", 512,   "MTC-RHEVM-3.0", 167],
+            ["widloze",      1_024, "MTC-RHEVM-3.0", 68],
+            ["linux_centos", 4_096, "openslack",     70],
+            ["widloze",      2_048, "openslack",     69],
+            ["widloze",      1_024, "openslack",     71],
+            ["linux_centos", 1_024, "ec2",           72],
+          ],
+        )
+
+        expect_any_instance_of(described_class).to receive(:build_numeric_chart_grouped_2dim).once.and_call_original
+
+        ReportFormatter::ReportRenderer.render(Charting.format) do |e|
+          e.options.mri           = report
+          e.options.show_title    = true
+          e.options.graph_options = MiqReport.graph_options(600, 400)
+          e.options.theme         = 'miq'
+        end
+
+        expect(report.chart[:data][0][0]).to eq(6_656)
+        expect(report.chart[:data][0][1]).to eq(4_096)
+        expect(report.chart[:data][1][1]).to eq(3_072)
+        expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq('MTC-RHE...')
+        expect(report.chart[:data][0][-1]).to eq(1_024) if other
+      end
+    end
+  end
 end
