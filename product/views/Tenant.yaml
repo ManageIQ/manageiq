@@ -22,6 +22,7 @@ cols:
 - name
 - description
 - parent_name
+- display_type
 - divisible
 
 # Included tables (joined, has_one, has_many) and columns
@@ -32,12 +33,14 @@ col_order:
 - name
 - description
 - parent_name
+- display_type
 
 # Column titles, in order
 headers:
 - Name
 - Description
 - Parent
+- Type
 
 # Condition(s) string for the SQL query
 conditions: 
