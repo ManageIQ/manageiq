@@ -9,9 +9,7 @@ require "fix_auth/models"
 describe FixAuth::AuthConfigModel do
   let(:pass)    { "password" }
   let(:enc_v1)  { MiqPassword.new.send(:encrypt_version_1, pass) }
-  let(:enc_v2)  { MiqPassword.new.send(:encrypt_version_2, pass) }
   let(:bad_v2)  { "v2:{5555555555555555555555==}" }
-  let(:enc_leg) { MiqPassword.v0_key.encrypt64(pass) }
 
   before do
     MiqPassword.v0_key ||= CryptString.new(nil, "AES-128-CBC", "9999999999999999", "5555555555555555")
@@ -19,8 +17,7 @@ describe FixAuth::AuthConfigModel do
   end
 
   after do
-    MiqPassword.v0_key = nil
-    MiqPassword.v1_key = nil
+    MiqPassword.clear_keys
   end
 
   context "#configurations" do
