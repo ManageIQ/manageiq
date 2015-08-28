@@ -2,22 +2,22 @@ class TenantQuota < ActiveRecord::Base
   belongs_to :tenant
 
   QUOTAS = {
-    :cpu_allocated       => {
+    :cpu_allocated => {
       :unit          => :mhz,
       :format        => :mhz,
       :text_modifier => "Mhz"
     },
-    :mem_allocated       => {
+    :mem_allocated => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
       :text_modifier => "GB"
     },
-    :storage_allocated   => {
+    :storage_allocated => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
       :text_modifier => "GB"
     },
-    :vms_allocated       => {
+    :vms_allocated => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
       :text_modifier => "Count"
@@ -31,7 +31,7 @@ class TenantQuota < ActiveRecord::Base
 
   NAMES = QUOTAS.stringify_keys
 
-  validates :name, :inclusion => { :in => NAMES }
+  validates :name, :inclusion => {:in => NAMES}
   validates :unit, :value, :presence => true
 
   def self.available

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe TenantQuota do
-  let(:settings) { {} }
-  let(:tenant) { Tenant.new(:domain => 'x.com', :parent => default_tenant) }
+  let(:settings) {{}}
+  let(:tenant)   {Tenant.new(:domain => 'x.com', :parent => default_tenant)}
 
   let(:default_tenant) do
     Tenant.seed
@@ -16,21 +16,15 @@ describe TenantQuota do
 
   context "validations" do
     it "rejects invalid name" do
-      expect {
-        described_class.create!(:name => "XXX")
-      }.to raise_error
+      expect { described_class.create!(:name => "XXX") }.to raise_error
     end
 
     it "rejects missing value" do
-      expect {
-        described_class.create!(:name => :cpu_allocated, :unit => "mhz")
-      }.to raise_error
+      expect { described_class.create!(:name => :cpu_allocated, :unit => "mhz") }.to raise_error
     end
 
     it "rejects missing unit" do
-      expect {
-        described_class.create!(:name => :cpu_allocated, :value => 4096)
-      }.to raise_error
+      expect { described_class.create!(:name => :cpu_allocated, :value => 4096) }.to raise_error
     end
   end
 
@@ -52,7 +46,6 @@ describe TenantQuota do
       expect(tq_mem.unit).to eql "bytes"
       expect(tq_mem.format).to eql "gigabytes_human"
       expect(tq_mem.value).to eql 4096.0
-
 
       tq_vms = tq[2]
       expect(tq_vms.name).to eql "vms_allocated"
@@ -83,7 +76,7 @@ describe TenantQuota do
 
       tq = default_tenant.tenant_quotas
       expect(tq.length).to eql 2
-      expect(tq.map(&:name).sort).to eql ['mem_allocated', 'vms_allocated']
+      expect(tq.map(&:name).sort).to eql %w{mem_allocated vms_allocated}
     end
   end
 
@@ -91,28 +84,28 @@ describe TenantQuota do
     it "gets existing quotas" do
       described_class.set(default_tenant, :vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
 
-      expected =       {
-          :vms_allocated     => {
-            :unit          => "fixnum",
-            :value         => 20.0,
-            :format        => "general_number_precision_0",
-            :text_modifier => "Count",
-            :description   => "Allocated Number of Virtual Machines"
-          },
-          :mem_allocated     => {
-            :unit          => "bytes",
-            :value         => 4096.0,
-            :format        => "gigabytes_human",
-            :text_modifier => "GB",
-            :description   => "Allocated Memory in GB"
-          },
-          :storage_allocated => {
-            :unit          => :bytes,
-            :value         => nil,
-            :format        => :gigabytes_human,
-            :text_modifier => "GB",
-            :description   => "Allocated Storage in GB"
-          }
+      expected = {
+        :vms_allocated => {
+          :unit          => "fixnum",
+          :value         => 20.0,
+          :format        => "general_number_precision_0",
+          :text_modifier => "Count",
+          :description   => "Allocated Number of Virtual Machines"
+        },
+        :mem_allocated => {
+          :unit          => "bytes",
+          :value         => 4096.0,
+          :format        => "gigabytes_human",
+          :text_modifier => "GB",
+          :description   => "Allocated Memory in GB"
+        },
+        :storage_allocated => {
+          :unit          => :bytes,
+          :value         => nil,
+          :format        => :gigabytes_human,
+          :text_modifier => "GB",
+          :description   => "Allocated Storage in GB"
+        }
       }
 
       expect(described_class.get(default_tenant)[:vms_allocated]).to     eql expected[:vms_allocated]
