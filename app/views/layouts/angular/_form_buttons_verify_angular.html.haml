@@ -14,5 +14,4 @@
                  :alt       => verify_title_on,
                  :title     => verify_title_on,
                  "ng-show"  => basic_info_needed ? "canValidateBasicInfo()" : "canValidate()",
-                 "ng-click" => "validateClicked('#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}')",
-)
+                 "ng-click" => "validateBClicked($event, '#{valtype}', '#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}', true)")

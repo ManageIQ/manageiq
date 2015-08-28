@@ -16,6 +16,7 @@ describe EmsCloudController do
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
+      controller.stub(:render)
       FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       login_as user
@@ -43,9 +44,10 @@ describe EmsCloudController do
         post :create, {
           "button"               => "add",
           "name"                 => "foo",
-          "server_emstype"       => "ec2",
+          "emstype"              => "ec2",
           "provider_region"      => "ap-southeast-1",
           "port"                 => "",
+          "zone"                 => "default",
           "default_userid"       => "foo",
           "default_password"     => "[FILTERED]",
           "default_verify"       => "[FILTERED]",
@@ -67,9 +69,10 @@ describe EmsCloudController do
           "button"           => "add",
           "hostname"         => "host_openstack",
           "name"             => "foo_openstack",
-          "server_emstype"   => "openstack",
+          "emstype"          => "openstack",
           "provider_region"  => "",
           "port"             => "5000",
+          "zone"             => "default",
           "default_userid"   => "foo",
           "default_password" => "[FILTERED]",
           "default_verify"   => "[FILTERED]"
@@ -86,9 +89,10 @@ describe EmsCloudController do
            "button"           => "add",
            "hostname"         => "host_openstack",
            "name"             => "foo_openstack",
-           "server_emstype"   => "openstack",
+           "emstype"          => "openstack",
            "provider_region"  => "",
            "port"             => "5000",
+           "zone"             => "default",
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
@@ -103,7 +107,7 @@ describe EmsCloudController do
            "button"           => "save",
            "hostname"         => "host_openstack_updated",
            "name"             => "foo_openstack",
-           "server_emstype"   => "openstack",
+           "emstype"          => "openstack",
            "provider_region"  => "",
            "port"             => "5000",
            "default_userid"   => "foo",
@@ -115,6 +119,35 @@ describe EmsCloudController do
       authentication = Authentication.where(:resource_id => openstack.to_a[0].id).first
       expect(authentication.userid).to eq("foo")
       expect(authentication.password).to eq("[FILTERED]")
+    end
+  end
+
+  describe "#ems_cloud_form_fields" do
+    before do
+      Zone.first || FactoryGirl.create(:zone)
+      described_class.any_instance.stub(:set_user_time_zone)
+      controller.stub(:check_privileges).and_return(true)
+      controller.stub(:assert_privileges).and_return(true)
+    end
+    it 'gets the ems cloud form fields on a get' do
+      MiqServer.stub(:my_zone).and_return("default")
+      post :create,
+           "button"           => "add",
+           "hostname"         => "host_openstack",
+           "name"             => "foo_openstack",
+           "emstype"          => "openstack",
+           "provider_region"  => "",
+           "port"             => "5000",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
+      get :ems_cloud_form_fields, "id" => openstack.to_a[0].id
+      expect(response.status).to eq(200)
+      expect(response.body).to include('"name":"foo_openstack"')
     end
   end
 end

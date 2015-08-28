@@ -313,7 +313,7 @@ module EmsCommon
     drop_breadcrumb( {:name=>"Edit #{ui_lookup(:tables=>@table_name)} '#{@ems.name}'", :url=>"/#{@table_name}/edit/#{@ems.id}"} )
   end
 
-  # AJAX driven routine to check for changes in ANY field on the form
+    # AJAX driven routine to check for changes in ANY field on the form
   def form_field_changed
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
@@ -697,6 +697,7 @@ module EmsCommon
 
   # Set form variables for edit
   def set_form_vars
+    form_instance_vars
 
     @edit = Hash.new
     @edit[:ems_id] = @ems.id
@@ -763,12 +764,34 @@ module EmsCommon
     session[:edit] = @edit
   end
 
+  def form_instance_vars
+    @server_zones = []
+    zones = Zone.order('lower(description)')
+    zones.each do |zone|
+      @server_zones.push([zone.description, zone.name])
+    end
+    @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
+    @amazon_regions = get_amazon_regions #if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
+    @openstack_infra_providers = retrieve_openstack_infra_providers
+    @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
+  end
+
   def get_amazon_regions
     regions = Hash.new
     ManageIQ::Providers::Amazon::Regions.all.each do |region|
       regions[region[:name]] = region[:description]
     end
     return regions
+  end
+
+  def retrieve_openstack_infra_providers
+    openstack_infra_providers = []
+    ManageIQ::Providers::Openstack::Provider.all.each do |provider|
+      openstack_infra_providers = [
+          [provider[:name], provider[:id]]
+      ]
+    end
+    openstack_infra_providers
   end
 
   # Get variables from edit form
@@ -1037,9 +1060,5 @@ module EmsCommon
     url_for(options.merge(:controller => @table_name,
                           :action     => "show",
                           :id         => ems.id))
-  end
-
-  def permission_prefix
-    self.class.permission_prefix
   end
 end

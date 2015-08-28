@@ -16,6 +16,7 @@ describe EmsCloudController do
 
   %w(
     dialog_load
+    ems_cloud_form_fields
     new
     show_list
   ).each do |task|

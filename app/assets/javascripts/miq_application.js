@@ -734,6 +734,29 @@ function miqChartMenuClick(itemId) {
   }
 }
 
+function miqRESTAjaxButton(url, button, data) {
+  var form = $(button).parents('form:first')[0];
+  if (form) {
+    $(form).submit(function(e) {
+      e.preventDefault();
+      return false;
+    });
+    if(data != undefined) {
+      formData = data;
+    }
+    else {
+      formData = $(form).serialize();
+    }
+    miqJqueryRequest(form.action, {
+      beforeSend: true,
+      complete: true,
+      data: formData
+    });
+  } else {
+    miqAjaxButton(url, true);
+  }
+}
+
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q,
 // then waiting for .7 seconds for observers to finish
 function miqAjaxButton(url, serialize_fields) {
@@ -1027,6 +1050,9 @@ function miq_tabs_init(id, url) {
   // Hide the tab header when there is only one visible tab available
   if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length == 1) {
     $(id + ' > ul.nav-tabs').hide();
+  }
+  else if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
+    $(id + ' > ul.nav-tabs').show();
   }
 }
 
