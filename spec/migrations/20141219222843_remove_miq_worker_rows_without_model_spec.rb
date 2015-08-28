@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20141219222843_remove_miq_worker_rows_without_model.rb")
+require_migration
 
 describe RemoveMiqWorkerRowsWithoutModel do
   migration_context :up do

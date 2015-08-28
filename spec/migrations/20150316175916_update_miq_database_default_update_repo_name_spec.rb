@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150316175916_update_miq_database_default_update_repo_name")
+require_migration
 
 describe UpdateMiqDatabaseDefaultUpdateRepoName do
   let(:db_stub) { migration_stub(:MiqDatabase) }

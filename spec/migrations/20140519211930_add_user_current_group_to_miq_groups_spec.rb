@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140519211930_add_user_current_group_to_miq_groups.rb")
+require_migration
 
 describe AddUserCurrentGroupToMiqGroups do
   migration_context :up do

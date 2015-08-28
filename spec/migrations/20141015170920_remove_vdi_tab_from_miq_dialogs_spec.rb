@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20141015170920_remove_vdi_tab_from_miq_dialogs")
+require_migration
 
 describe RemoveVdiTabFromMiqDialogs do
   let(:miq_dialog_stub) { migration_stub(:MiqDialog) }

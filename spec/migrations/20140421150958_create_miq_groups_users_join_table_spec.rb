@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140421150958_create_miq_groups_users_join_table.rb")
+require_migration
 
 describe CreateMiqGroupsUsersJoinTable do
   migration_context :up do

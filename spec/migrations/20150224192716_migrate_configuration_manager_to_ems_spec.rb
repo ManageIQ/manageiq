@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150224192716_migrate_configuration_manager_to_ems")
+require_migration
 
 describe MigrateConfigurationManagerToEms do
   let(:config_manager_stub) { migration_stub(:ConfigurationManager) }

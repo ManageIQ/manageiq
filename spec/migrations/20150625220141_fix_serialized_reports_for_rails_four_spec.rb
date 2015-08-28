@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150625220141_fix_serialized_reports_for_rails_four.rb")
+require_migration
 
 describe FixSerializedReportsForRailsFour do
   let(:report_result_stub)  { migration_stub(:MiqReportResult) }
