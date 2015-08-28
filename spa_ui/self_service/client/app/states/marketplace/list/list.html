@@ -1,4 +1,11 @@
-<div ng-repeat="template in vm.serviceTemplates">
-  <ss-card heading="{{ ::template.name }}" more="{{ ::template.long_description || template.description }}"
-           ng-click="vm.showDetails(template)"></ss-card>
+
+<div ng-repeat="catalog in vm.serviceCatalogs">
+    <h2>{{ ::catalog.name }}</h2>
+    <div class="container">
+        <div ng-repeat="template in catalog.service_templates.resources">
+            <ss-card heading="{{ ::template.name }}" more="{{ ::template.long_description || template.description }}"
+                     ng-click="vm.showDetails(template.id)"></ss-card>
+        </div>
+    </div>
+  <hr>
 </div>
