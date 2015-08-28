@@ -73,7 +73,6 @@ module MiqServer::ServerSmartProxy
     case ost.method_name
     when "scan_metadata", "sync_metadata"
       worker_setting = MiqSmartProxyWorker.worker_settings
-      klass = ost.target_type.constantize
       #
       # TODO: until we get location/offset read capability for OpenStack
       # image data, OpenStack fleecing is prone to timeout (based on image size).
@@ -82,6 +81,7 @@ module MiqServer::ServerSmartProxy
       #
       timeout_adj = 1
       if ost.method_name == "scan_metadata"
+        klass = ost.target_type.constantize
         target = klass.find(ost.target_id)
         if target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
            target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
