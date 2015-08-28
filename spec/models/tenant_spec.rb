@@ -109,7 +109,7 @@ describe Tenant do
   end
 
   describe "#set_quotas" do
-    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
+    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
 
     it "can set quotas" do
       tenant.set_quotas(:vms_allocated => {:value => 20})
@@ -119,7 +119,7 @@ describe Tenant do
   end
 
   describe "#get_quotas" do
-    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
+    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
 
     it "can get quotas" do
       expect(tenant.get_quotas).not_to be_empty
