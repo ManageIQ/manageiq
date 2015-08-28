@@ -44,6 +44,7 @@ describe VmdbDatabaseConnection do
   end
 
   it 'is blocked' do
+    VmdbDatabaseConnection.connection_pool.disconnect!
     locked_latch = ActiveSupport::Concurrency::Latch.new
     continue_latch = ActiveSupport::Concurrency::Latch.new
 

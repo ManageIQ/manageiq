@@ -52,14 +52,14 @@ module ContainerSummaryHelper
     textual_link(@record.container_node)
   end
 
-  def textual_container_labels
-    textual_key_value(@record.labels.to_a)
+  def textual_group_container_labels
+    textual_key_value_group(@record.labels.to_a)
   end
 
-  def textual_container_selectors
-    textual_key_value(@record.selector_parts.to_a)
+  def textual_group_container_selectors
+    textual_key_value_group(@record.selector_parts.to_a)
   end
-  
+
   def textual_container_image
     textual_link(@record.container_image)
   end
@@ -86,9 +86,28 @@ module ContainerSummaryHelper
     textual_link(@record.container_image_registries)
   end
 
+  def textual_tags
+    label = "#{session[:customer_name]} Tags"
+    h = {:label => label}
+    tags = session[:assigned_filters]
+    if tags.empty?
+      h[:image] = "smarttag"
+      h[:value] = "No #{label} have been assigned"
+    else
+      h[:value] = tags.sort_by { |category, _assigned| category.downcase }.collect do |category, assigned|
+        {
+          :image => "smarttag",
+          :label => category,
+          :value => assigned
+        }
+      end
+    end
+    h
+  end
+
   private
 
-  def textual_key_value(items)
-    items.collect { |item| {:label => item.name.to_s, :value => item.value.to_s} }.flatten.compact
+  def textual_key_value_group(items)
+    items.collect { |item| {:label => item.name.to_s, :value => item.value.to_s} }
   end
 end

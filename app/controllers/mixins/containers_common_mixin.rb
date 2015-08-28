@@ -34,6 +34,7 @@ module ContainersCommonMixin
                      :url  => "/#{controller_name}/show_list?page=#{@current_page}&refresh=y"},
                     true)
     if %w(download_pdf main summary_only).include? @display
+      get_tagdata(@record)
       drop_breadcrumb(:name => "#{record.name} (Summary)",
                       :url  => "/#{controller_name}/show/#{record.id}")
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)

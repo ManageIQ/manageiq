@@ -7,16 +7,21 @@
           %td.key
             = _("Memory")
           %td
-            = h(@options[:memory])
+            = h(@options[:vm_memory])
             &nbsp;
             = @options[:mem_typ]
       - if @options[:number_of_cpus]
         %tr
           %td.key
-            = _("Processors")
+            = _("Processor Sockets")
           %td
             = h(@options[:number_of_cpus])
-
+      - if @options[:cores_per_socket]
+        %tr
+          %td.key
+            = _("Processor Cores_Per_Socket")
+          %td
+            = h(@options[:cores_per_socket])
   %fieldset
     %h3
       = _("Affected VMs")

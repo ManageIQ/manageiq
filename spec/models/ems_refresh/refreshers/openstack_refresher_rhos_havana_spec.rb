@@ -52,7 +52,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
 
   context "when configured with skips" do
     before(:each) do
-      VMDB::Config.any_instance.stub(:config).and_return(
+      stub_server_configuration(
         :ems_refresh => {:openstack => {:inventory_ignore => [:cloud_volumes, :cloud_volume_snapshots]}}
       )
     end

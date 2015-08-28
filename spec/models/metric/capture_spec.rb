@@ -10,7 +10,7 @@ describe Metric::Capture do
                      :capture_threshold_with_alerts => {:vm => @capture_rt, :host => @capture_rt}
                     }
                   }
-      VMDB::Config.any_instance.stub(:config).and_return(settings)
+      stub_server_configuration(settings)
       @time = Time.utc(2013, 4, 22, 8, 31)
     end
 

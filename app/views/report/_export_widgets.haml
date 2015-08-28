@@ -21,11 +21,11 @@
 
   %h3
     = _('Export')
-  %table.style1
-    %tr
-      %td.key
+  %form.form-horizontal
+    .form-group
+      %label.control-label.col-md-2
         = _('Available Widgets:')
-      %td
+      .col-md-8
         .export-choices
           = form_tag({:action => "export_widgets"}, :id => "export-widgets-form", :method => :get) do
             = select_tag("widgets[]",

@@ -10,35 +10,35 @@
           %tr
             %td.key
               = _("Request ID")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(number_with_delimiter(@miq_request.id))
           %tr
             %td.key
               = _("Status")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(@miq_request.status)
           %tr
             %td.key
               = _("Request State")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(@miq_request.state.titleize)
           %tr
             %td.key
               = _("Requester")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               - if @miq_request.requester
                 = h(@miq_request.requester_name)
           %tr
             %td.key
               = _("Request Type")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(@miq_request.request_type_display)
       .col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key
               = _("Description")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(@miq_request.description)
           %tr
             %td.key
@@ -48,17 +48,17 @@
           %tr
             %td.key
               = _("Created On")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(format_timezone(@miq_request.created_on))
           %tr
             %td.key
               = _("Last Update")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(format_timezone(@miq_request.updated_on))
           %tr
             %td.key
               = _("Completed")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               - if @miq_request.fulfilled_on
                 = h(format_timezone(@miq_request.fulfilled_on))
     .row
@@ -67,24 +67,24 @@
           %tr
             %td.key
               = _("Approval State")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(@miq_request.approval_state.titleize)
           %tr
             %td.key
               = _("Approved/Denied by")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               - if @miq_request.stamped_by
                 = h(@miq_request.stamped_by + (@user && " (#{@user.name})"))
           %tr
             %td.key
               = _("Approved/Denied on")
-            %td.wide:nowrap
+            %td.wide{:style => "white-space: nowrap"}
               = h(format_timezone(@miq_request.stamped_on))
           %tr
             %td.key
               = _("Reason")
             - if @edit && @edit[:stamp_typ]
-              %td.wide:nowrap
+              %td.wide{:style => "white-space: nowrap"}
                 = text_field_tag("reason", @edit[:reason],
                   :maxlength         => MAX_NAME_LEN,
                   "data-miq_focus"   => true,

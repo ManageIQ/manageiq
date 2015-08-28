@@ -21,6 +21,7 @@ db: Vm
 cols:
 - name
 - num_cpu
+- cores_per_socket
 - mem_cpu
 
 # Included tables (joined, has_one, has_many) and columns
@@ -39,6 +40,7 @@ include_for_find:
 col_order: 
 - name
 - num_cpu
+- cores_per_socket
 - mem_cpu
 - host.name
 
@@ -46,7 +48,8 @@ col_order:
 # Column titles, in order
 headers:
 - Name
-- Processors
+- Processor Sockets
+- Processor Cores Per Socket
 - Memory
 - Host
 

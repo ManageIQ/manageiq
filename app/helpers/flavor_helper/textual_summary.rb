@@ -5,7 +5,7 @@ module FlavorHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(
+    %i(
       cpus
       cpu_cores
       memory
@@ -14,18 +14,16 @@ module FlavorHelper::TextualSummary
       supports_hvm
       supports_paravirtual
       block_storage_based_only
-      cloud_subnet_required)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+      cloud_subnet_required
+    )
   end
 
   def textual_group_relationships
-    items = %w{ems_cloud instances}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems_cloud instances)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   #

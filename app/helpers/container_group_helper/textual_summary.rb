@@ -4,14 +4,12 @@ module ContainerGroupHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name phase message reason creation_timestamp resource_version restart_policy dns_policy ip)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(name phase message reason creation_timestamp resource_version restart_policy dns_policy ip)
   end
 
   def textual_group_relationships
     # Order of items should be from parent to child
-    items = %w(ems container_project container_replicator container_services containers container_node lives_on)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(ems container_project container_replicator container_services containers container_node lives_on)
   end
 
   def textual_group_conditions
@@ -24,6 +22,11 @@ module ContainerGroupHelper::TextualSummary
       ]
     end
     h
+  end
+
+  def textual_group_smart_management
+    items = %w(tags)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   #

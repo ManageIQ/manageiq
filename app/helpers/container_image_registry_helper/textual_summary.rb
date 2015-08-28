@@ -5,12 +5,15 @@ module ContainerImageRegistryHelper
     #
 
     def textual_group_properties
-      items = %w(host port)
-      items.collect { |m| send("textual_#{m}") }.flatten.compact
+      %i(host port)
     end
 
     def textual_group_relationships
-      items = %w(container_images containers ems)
+      %i(container_images containers ems)
+    end
+
+    def textual_group_smart_management
+      items = %w(tags)
       items.collect { |m| send("textual_#{m}") }.flatten.compact
     end
 

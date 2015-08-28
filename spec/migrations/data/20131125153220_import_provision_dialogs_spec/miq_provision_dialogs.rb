@@ -85,8 +85,6 @@ module MiqProvisionDialogs
           :display     => :show,
           :fields      => {
       :number_of_cpus     => {:data_type => :integer, :display => :edit, :required =>false, :description => "Number of CPUs",:default => 1,:values  => {1    => "1",2		=> "2",4		=> "4",8    => "8"}},
-#      :number_of_sockets  => {:data_type => :integer, :display => :edit, :required =>false, :description => "Number of Sockets",:default => 1,:values  => {1    => "1",2   => "2",4    => "4",8    => "8"}},
-#      :cores_per_socket   => {:data_type => :integer, :display => :edit, :required =>false, :description => "Cores per Socket",:default => 1,:values  => {1    => "1",2   => "2",4    => "4",8    => "8"}},
       :vm_memory          => {:data_type => :string, :display => :edit, :required => false, :description => "Memory (MB)",:default => "1024",:values  => {"1024"  => "1024","2048"  => "2048","4096"  => "4096",}},
       :network_adapters   => {:data_type => :integer, :display => :hide, :required => false, :description => "Network Adapters",:default => 1,:values  => {1    => "1",2		=> "2",3		=> "3",4		=> "4"}},
       :disk_format        => {:data_type => :string, :display => :edit, :required => false, :description => "Disk Format",:default => "unchanged",:values  => {"unchanged"    => "Default","thin"		=> "Thin","thick"		=> "Thick"}},
@@ -119,7 +117,6 @@ module MiqProvisionDialogs
       :sysprep_password                   => {:data_type => :string, :display => :edit, :required => false, :description => "New Administrator Password"},
       :sysprep_identification             => {:data_type => :string, :display => :edit, :required => false, :description => "Identification",:default => "domain",:values  => {"workgroup"    => "Workgroup","domain"				=> "Domain"}},
       :sysprep_workgroup_name             => {:data_type => :string, :display => :edit, :required => false, :description => "Workgroup Name", :default => "WORKGROUP"},
-      #:sysprep_domain_name               => {:data_type => :string, :display => :edit, :required => false, :description => "Domain Name"},
       :sysprep_domain_name                => {:data_type => :string, :display => :edit, :required => false, :description => "Domain Name",:values_from => {:method => :allowed_domains, :options => {:platform => nil, :active_proxy=> nil}}, :auto_select_single => false },
       :ldap_ous                           => {:data_type => :string, :display => :edit, :required => false, :description => "LDAP Group",:values_from => {:method => :allowed_ous_tree}, :auto_select_single => false },
       :sysprep_domain_admin               => {:data_type => :string, :display => :edit, :required => false, :description => "Domain Admin"},

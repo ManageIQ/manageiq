@@ -12,7 +12,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::C
 
   include ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
-  default_value_for :port, 6443
+  DEFAULT_PORT = 6443
+  default_value_for :port, DEFAULT_PORT
 
   # This is the API version that we use and support throughout the entire code
   # (parsers, events, etc.). It should be explicitly selected here and not

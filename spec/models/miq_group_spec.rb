@@ -99,10 +99,7 @@ describe MiqGroup do
 
     it "should return LDAP groups by user name" do
       auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
+      stub_server_configuration(:authentication =>  auth_config)
 
       miq_ldap = double('miq_ldap')
       miq_ldap.stub(:fqusername => 'fred')
@@ -118,10 +115,7 @@ describe MiqGroup do
 
     it "should issue an error message when user name could not be bound to LDAP" do
       auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
+      stub_server_configuration(:authentication =>  auth_config)
 
       miq_ldap = double('miq_ldap')
       miq_ldap.stub(:fqusername => 'fred')
@@ -142,10 +136,7 @@ describe MiqGroup do
 
     it "should issue an error message when user name does not exist in LDAP directory" do
       auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
+      stub_server_configuration(:authentication => auth_config)
 
       miq_ldap = double('miq_ldap')
       miq_ldap.stub(:fqusername => 'fred')
@@ -282,6 +273,25 @@ describe MiqGroup do
 
       expect(group_with_tenant.reload.tenant_owner).to    eq(new_tenant)
       expect(group_without_tenant.reload.tenant_owner).to eq(root_tenant)
+    end
+  end
+
+  context "#ordered_widget_sets" do
+    let(:group) { FactoryGirl.create(:miq_group) }
+    it "uses dashboard_order if present" do
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
+      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      group.update_attributes(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
+
+      expect(group.ordered_widget_sets).to eq([ws3, ws1])
+    end
+
+    it "uses all owned widgets" do
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
+      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      expect(group.ordered_widget_sets).to eq([ws1, ws3, ws2])
     end
   end
 end

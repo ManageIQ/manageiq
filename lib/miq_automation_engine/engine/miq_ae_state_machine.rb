@@ -74,7 +74,7 @@ module MiqAeEngine
 
         # Check the ae_result and set the next state appropriately
         if   @workspace.root['ae_result'] == 'ok'
-          $miq_ae_logger.warn "Processed State =[#{f['name']}]"
+          $miq_ae_logger.info "Processed State =[#{f['name']}]"
         elsif @workspace.root['ae_result'] == 'skip'
           $miq_ae_logger.warn "Skipping State =[#{f['name']}]"
           return set_next_state(f, message)

@@ -19,7 +19,11 @@ class TreeBuilder
     end
   end
 
-  # FIXME: need to move this to a subclass
+  def root_options
+    TreeBuilder.root_options(@name)
+  end
+
+  # FIXME: need to move this to a subclass (#root_options)
   def self.root_options(tree_name)
     #returns title, tooltip, root icon
     case tree_name
@@ -83,7 +87,7 @@ class TreeBuilder
     @locals_for_render  = {}
     @name               = name.to_sym                     # includes _tree
     @options            = tree_init_options(name.to_sym)
-    @tree_nodes         = {}
+    @tree_nodes         = {}.to_json
     # FIXME: remove @name or @tree, unify
     @type               = type.to_sym                     # *usually* same as @name but w/o _tree
 
@@ -181,7 +185,7 @@ class TreeBuilder
 
   def add_root_node(nodes)
     root = nodes.first
-    root[:title], root[:tooltip], icon = TreeBuilder.root_options(@name)
+    root[:title], root[:tooltip], icon = root_options
     root[:icon] = "#{icon || 'folder'}.png"
   end
 
@@ -268,7 +272,7 @@ class TreeBuilder
                         when Service             then x_get_tree_service_kids(parent, options)
                         when ServiceTemplateCatalog
                                                  then x_get_tree_stc_kids(parent, options)
-                        when ServiceTemplate		 then x_get_tree_st_kids(parent, options)
+                        when ServiceTemplate     then x_get_tree_st_kids(parent, options)
                         when Tenant              then x_get_tree_tenant_kids(parent, options)
                         when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
                         when Zone                then x_get_tree_zone_kids(parent, options)
@@ -328,6 +332,8 @@ class TreeBuilder
   def count_only_or_objects(count_only, objects, sort_by)
     if count_only
       objects.size
+    elsif sort_by.kind_of?(Proc)
+      objects.sort_by(&sort_by)
     elsif sort_by
       objects.sort_by { |o| Array(sort_by).collect { |sb| o.deep_send(sb).to_s.downcase } }
     else

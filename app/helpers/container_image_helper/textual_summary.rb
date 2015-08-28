@@ -5,12 +5,15 @@ module ContainerImageHelper
     #
 
     def textual_group_properties
-      items = %w(name tag id)
-      items.collect { |m| send("textual_#{m}") }.flatten.compact
+      %i(name tag id full_name)
     end
 
     def textual_group_relationships
-      items = %w(containers container_image_registry ems)
+      %i(containers container_image_registry ems)
+    end
+
+    def textual_group_smart_management
+      items = %w(tags)
       items.collect { |m| send("textual_#{m}") }.flatten.compact
     end
 
@@ -28,6 +31,10 @@ module ContainerImageHelper
 
     def textual_id
       {:label => "Image Id", :value => @record.image_ref}
+    end
+
+    def textual_full_name
+      {:label => "Full Name", :value => @record.full_name}
     end
   end
 end

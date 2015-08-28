@@ -4,12 +4,15 @@ module ContainerRouteHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name creation_timestamp resource_version)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(name creation_timestamp resource_version)
   end
 
   def textual_group_relationships
-    items = %w(ems container_project container_service)
+    %i(ems container_project container_service)
+  end
+
+  def textual_group_smart_management
+    items = %w(tags)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 

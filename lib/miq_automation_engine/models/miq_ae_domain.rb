@@ -5,6 +5,7 @@ class MiqAeDomain < MiqAeNamespace
   default_value_for(:priority) { MiqAeDomain.highest_priority + 1 }
   default_value_for :system,  false
   default_value_for :enabled, false
+  belongs_to :tenant
 
   def self.enabled
     where(:enabled => true)

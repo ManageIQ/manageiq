@@ -76,4 +76,18 @@ describe MiqWidgetSet do
       expect(described_class.with_users).to eq([ws_1])
     end
   end
+
+  context ".find_with_same_order" do
+    it "returns in index order" do
+      g1 = FactoryGirl.create(:miq_widget_set)
+      g2 = FactoryGirl.create(:miq_widget_set)
+      expect(MiqWidgetSet.find_with_same_order([g1.id.to_s, g2.id.to_s])).to eq([g1, g2])
+    end
+
+    it "returns in non index order" do
+      g1 = FactoryGirl.create(:miq_widget_set)
+      g2 = FactoryGirl.create(:miq_widget_set)
+      expect(MiqWidgetSet.find_with_same_order([g2.id.to_s, g1.id.to_s])).to eq([g2, g1])
+    end
+  end
 end

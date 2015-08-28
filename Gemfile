@@ -7,6 +7,11 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 gem "activerecord-deprecated_finders", "~>1.0.4",  :require => "active_record/deprecated_finders"
 gem "rails",                           "~>4.2.3"
 
+# Local gems
+path "gems/" do
+  gem "manageiq_foreman", :require => false
+end
+
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
 gem "codemirror-rails",               "=4.2"
@@ -42,7 +47,7 @@ gem "hamlit-rails",                   "~>0.1.0"
 gem "mime-types"
 gem "novnc-rails",                    "~>0.2"
 gem "outfielding-jqplot-rails",       "= 1.0.8"
-gem "puma",                                                           :git => "git://github.com/puma/puma.git", :ref => "7e5b78861097be62912245f93d0187bb975f7753"
+gem "puma",                           "~>2.13"
 gem "responders",                     "~>2.0"
 gem "secure_headers"
 gem "spice-html5-rails"
@@ -92,6 +97,8 @@ unless ENV['APPLIANCE']
     gem "capybara",         "~>2.1.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "shoulda-matchers", "~>1.0.0",  :require => false
+    gem "vcr",              "~>2.6",    :require => false
+    gem "webmock",                      :require => false
   end
 
   group :development, :test do

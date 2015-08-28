@@ -1,7 +1,5 @@
 require "spec_helper"
 
-#$log.level = Rails.logger.level = 0
-
 describe Metric do
   before(:each) do
     MiqRegion.seed
@@ -63,7 +61,7 @@ describe Metric do
 
       context "executing perf_capture_timer" do
         before(:each) do
-          VMDB::Config.any_instance.stub(:config).and_return({:performance => {:history => {:initial_capture_days => 7}}})
+          stub_server_configuration(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer
         end
 
@@ -478,7 +476,7 @@ describe Metric do
 
       context "executing perf_capture_now?" do
         before(:each) do
-          VMDB::Config.any_instance.stub(:config).and_return({:performance => {:capture_threshold => {:vm => 10}, :capture_threshold_with_alerts => {:vm => 2}}})
+          stub_server_configuration(:performance => {:capture_threshold => {:vm => 10}, :capture_threshold_with_alerts => {:vm => 2}})
         end
 
         it "without alerts assigned" do
@@ -897,8 +895,6 @@ describe Metric do
           @host.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id)
           q_all.length.should == 1
-          # assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'realtime')
-          # assert_queue_item_rollup_chain(q_all[1], @host, 'hourly')
           assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
         end
 
@@ -1206,7 +1202,7 @@ describe Metric do
 
       context "executing perf_capture_timer" do
         before(:each) do
-          VMDB::Config.any_instance.stub(:config).and_return({:performance => {:history => {:initial_capture_days => 7}}})
+          stub_server_configuration(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer
         end
 

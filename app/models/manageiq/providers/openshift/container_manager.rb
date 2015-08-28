@@ -10,7 +10,8 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   has_many :container_routes,                      :foreign_key => :ems_id, :dependent => :destroy
   has_many :container_projects,                    :foreign_key => :ems_id, :dependent => :destroy
 
-  default_value_for :port, 8443
+  DEFAULT_PORT = 8443
+  default_value_for :port, DEFAULT_PORT
 
   # This is the API version that we use and support throughout the entire code
   # (parsers, events, etc.). It should be explicitly selected here and not

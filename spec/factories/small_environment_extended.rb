@@ -1,7 +1,3 @@
-# %w{small_environment}.each do |m|
-#   require File.join(File.dirname(__FILE__), m) unless Factory.factories.has_key?(m.to_sym)
-# end
-
 FactoryGirl.define do
   factory :small_environment_with_storages, :parent => :small_environment do
     after(:create) do |x|

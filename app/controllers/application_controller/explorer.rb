@@ -259,35 +259,35 @@ module ApplicationController::Explorer
 
     object = options[:parent]
     children_or_count = case object
-    when nil                 then x_get_tree_roots(options)
-    when AvailabilityZone    then x_get_tree_az_kids(object, options)
-    when CustomButtonSet     then x_get_tree_aset_kids(object, options)
-    when Dialog              then x_get_tree_dialog_kids(object, options)
-    when DialogTab           then x_get_tree_dialog_tab_kids(object, options)
-    when DialogGroup         then x_get_tree_dialog_group_kids(object, options)
-    when ExtManagementSystem then x_get_tree_ems_kids(object, options)
-    when EmsFolder           then object.is_datacenter ?
-                                  x_get_tree_datacenter_kids(object, options) :
-                                  x_get_tree_folder_kids(object, options)
-    when EmsCluster          then x_get_tree_cluster_kids(object, options)
-    when Host		             then x_get_tree_host_kids(object, options)
-    when LdapRegion		       then x_get_tree_lr_kids(object, options)
-    when MiqAlertSet		     then x_get_tree_ap_kids(object, options)
-    when MiqEventDefinition  then options[:tree] != :event_tree ?
-                                  x_get_tree_ev_kids(object, options) : nil
-    when MiqGroup            then options[:tree] == :db_tree ?
-                                  x_get_tree_g_kids(object, options) : nil
-    when MiqPolicySet		     then x_get_tree_pp_kids(object, options)
-    when MiqPolicy		       then x_get_tree_p_kids(object, options)
-    when MiqRegion		       then x_get_tree_region_kids(object, options)
-    when MiqReport		       then x_get_tree_r_kids(object, options)
-    when ResourcePool		     then x_get_tree_rp_kids(object, options)
-    when ServiceTemplate		 then x_get_tree_st_kids(object, options)
-    when ServiceResource		 then x_get_tree_sr_kids(object, options)
-    when VmdbTableEvm		     then x_get_tree_vmdb_table_kids(object, options)
-    when Zone		             then x_get_tree_zone_kids(object, options)
-    when Hash                then x_get_tree_custom_kids(object, options)
-    end
+                        when nil                 then x_get_tree_roots(options)
+                        when AvailabilityZone    then x_get_tree_az_kids(object, options)
+                        when CustomButtonSet     then x_get_tree_aset_kids(object, options)
+                        when Dialog              then x_get_tree_dialog_kids(object, options)
+                        when DialogTab           then x_get_tree_dialog_tab_kids(object, options)
+                        when DialogGroup         then x_get_tree_dialog_group_kids(object, options)
+                        when ExtManagementSystem then x_get_tree_ems_kids(object, options)
+                        when EmsFolder           then object.is_datacenter ?
+                                                      x_get_tree_datacenter_kids(object, options) :
+                                                      x_get_tree_folder_kids(object, options)
+                        when EmsCluster          then x_get_tree_cluster_kids(object, options)
+                        when Host                then x_get_tree_host_kids(object, options)
+                        when LdapRegion          then x_get_tree_lr_kids(object, options)
+                        when MiqAlertSet         then x_get_tree_ap_kids(object, options)
+                        when MiqEventDefinition  then options[:tree] != :event_tree ?
+                                                      x_get_tree_ev_kids(object, options) : nil
+                        when MiqGroup            then options[:tree] == :db_tree ?
+                                                      x_get_tree_g_kids(object, options) : nil
+                        when MiqPolicySet        then x_get_tree_pp_kids(object, options)
+                        when MiqPolicy           then x_get_tree_p_kids(object, options)
+                        when MiqRegion           then x_get_tree_region_kids(object, options)
+                        when MiqReport           then x_get_tree_r_kids(object, options)
+                        when ResourcePool        then x_get_tree_rp_kids(object, options)
+                        when ServiceTemplate     then x_get_tree_st_kids(object, options)
+                        when ServiceResource     then x_get_tree_sr_kids(object, options)
+                        when VmdbTableEvm        then x_get_tree_vmdb_table_kids(object, options)
+                        when Zone                then x_get_tree_zone_kids(object, options)
+                        when Hash                then x_get_tree_custom_kids(object, options)
+                        end
     children_or_count || (options[:count_only] ? 0 : [])
   end
 

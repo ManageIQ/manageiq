@@ -4,23 +4,19 @@ module EmsCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{provider_region hostname ipaddress type port guid}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(provider_region hostname ipaddress type port guid)
   end
 
   def textual_group_relationships
-    items = %w(ems_infra availability_zones cloud_tenants flavors security_groups instances images orchestration_stacks)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems_infra availability_zones cloud_tenants flavors security_groups instances images orchestration_stacks)
   end
 
   def textual_group_status
-    items = %w(authentications refresh_status)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    textual_authentications + %i(refresh_status)
   end
 
   def textual_group_smart_management
-    items = %w{zone tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(zone tags)
   end
 
   #
