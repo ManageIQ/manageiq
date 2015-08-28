@@ -15,6 +15,8 @@ class Tenant < ActiveRecord::Base
   has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
   has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
   has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
+  has_many :owned_service_catalog_templates, :class_name => 'ServiceTemplateCatalog'
+  has_many :owned_service_templates, :class_name => 'ServiceTemplate'
 
   has_many :tenant_quotas
   has_many :miq_groups, :foreign_key => :tenant_owner_id
@@ -35,7 +37,7 @@ class Tenant < ActiveRecord::Base
   validates :domain,    :uniqueness => true, :allow_nil => true
   validate  :validate_only_one_root
   validates :name, :description, :presence => true, :unless => :root?
-  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent" }
+  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
 
   # FUTURE: allow more content_types
   validates_attachment_content_type :logo, :content_type => ['image/png']
@@ -66,7 +68,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def display_type
-    project? ?  "Project" : "Tenant"
+    project? ? "Project" : "Tenant"
   end
 
   def login_text
