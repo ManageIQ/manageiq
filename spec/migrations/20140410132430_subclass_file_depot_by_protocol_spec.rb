@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140410132430_subclass_file_depot_by_protocol")
+require_migration
 
 describe SubclassFileDepotByProtocol do
   let(:file_depot_stub) { migration_stub(:FileDepot) }

@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150501193927_default_provider_verify_ssl")
+require_migration
 
 describe DefaultProviderVerifySsl do
   migration_context :up do

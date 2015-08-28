@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150331104323_change_dialog_field_dynamic_lists_to_dialog_field_drop_down_list_with_dynamic_flag.rb")
+require_migration
 
 describe ChangeDialogFieldDynamicListsToDialogFieldDropDownListWithDynamicFlag do
   let(:dialog_field_stub) { migration_stub(:DialogField) }

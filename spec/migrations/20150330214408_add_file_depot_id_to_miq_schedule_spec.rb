@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150330214408_add_file_depot_id_to_miq_schedule")
+require_migration
 
 describe AddFileDepotIdToMiqSchedule do
   let(:depot_stub)    { migration_stub(:FileDepot) }

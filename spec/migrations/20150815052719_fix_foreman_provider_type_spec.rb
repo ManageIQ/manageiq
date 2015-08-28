@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150815052719_fix_foreman_provider_type")
+require_migration
 
 describe FixForemanProviderType do
   class FixForemanProviderType::Provider < ActiveRecord::Base

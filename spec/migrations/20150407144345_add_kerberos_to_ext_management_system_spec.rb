@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150407144345_add_kerberos_to_ext_management_system.rb")
+require_migration
 
 describe AddKerberosToExtManagementSystem do
   let(:reserve_stub) { MigrationSpecStubs.reserved_stub }

@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20131118232818_encrypt_miq_database_registration_http_proxy_password_field.rb")
+require_migration
 
 describe EncryptMiqDatabaseRegistrationHttpProxyPasswordField do
   let(:miq_database_stub) { migration_stub(:MiqDatabase) }

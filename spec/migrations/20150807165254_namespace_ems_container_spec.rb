@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150807165254_namespace_ems_container")
+require_migration
 
 describe NamespaceEmsContainer do
   class NamespaceEmsContainer::ExtManagementSystem < ActiveRecord::Base

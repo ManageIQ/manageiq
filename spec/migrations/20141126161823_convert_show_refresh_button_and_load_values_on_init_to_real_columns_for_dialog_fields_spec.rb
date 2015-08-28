@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20141126161823_convert_show_refresh_button_and_load_values_on_init_to_real_columns_for_dialog_fields.rb")
+require_migration
 
 describe ConvertShowRefreshButtonAndLoadValuesOnInitToRealColumnsForDialogFields do
   let(:dialog_field_stub) { migration_stub(:DialogField) }

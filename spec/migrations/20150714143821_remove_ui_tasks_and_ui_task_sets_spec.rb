@@ -1,5 +1,5 @@
-require_relative '../spec_helper'
-require Rails.root.join("db/migrate/20150714143821_remove_ui_tasks_and_ui_task_sets")
+require "spec_helper"
+require_migration
 
 describe RemoveUiTasksAndUiTaskSets do
   let(:miq_set_stub)      { migration_stub(:MiqSet) }
