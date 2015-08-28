@@ -246,6 +246,7 @@ describe MiqPassword do
 
       expect(MiqPassword.v0_key).to be_nil
       expect(MiqPassword.v1_key).to be_nil
+      expect(Kernel).to receive(:warn).with(/v2_key doesn't exist/)
       expect(MiqPassword.v2_key).to be_false
     end
 
@@ -260,6 +261,18 @@ describe MiqPassword do
 
       expect(MiqPassword.v0_key).to be_nil
       expect(MiqPassword.v1_key).to be_nil
+    end
+  end
+
+  context ".v2_key" do
+    it "when missing" do
+      MiqPassword.key_root = "."
+      expect(Kernel).to receive(:warn).with(/v2_key doesn't exist/)
+      expect(MiqPassword.v2_key).to be_false
+    end
+
+    it "when present" do
+      expect(MiqPassword.v2_key.to_s).to eq "5ysYUd3Qrjj7DDplmEJHmnrFBEPS887JwOQv0jFYq2g="
     end
   end
 
