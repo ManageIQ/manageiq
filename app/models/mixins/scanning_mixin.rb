@@ -105,14 +105,14 @@ module ScanningMixin
     # Update the last sync time if we did something
     # self.last_sync_on = Time.new.utc  if updated == true
     self.last_sync_on = Time.at(xml_node.root.attributes["created_on"].to_i).utc if updated == true && xml_node.root.attributes["created_on"]
-    self.save
-    self.hardware.save unless self.hardware.nil?
+    save
+    hardware.save unless hardware.nil?
   end
 
-  def scan_queue(userid = "system", options={})
+  def scan_queue(userid = "system", options = {})
     MiqQueue.put(
       :class_name  => self.class.base_class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => "scan",
       :args        => [userid, options]
     )
@@ -353,7 +353,7 @@ module ScanningMixin
       _log.debug { syncErr.backtrace.join("\n") }
     ensure
       if bb
-        bb.postSync()
+        bb.postSync
         bb.close
       end
 
