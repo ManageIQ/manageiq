@@ -54,8 +54,7 @@ class EmsEventMonitorOps
       $log.error "EventingOps: #{err}" if $log
       $log.error err.backtrace.join("\n") if $log
       sleep_wait(60)
-      break if MiqThreadCtl.exiting?
-      retry
+      MiqThreadCtl.exiting? ? nil : retry
     end
 	end # def doEvents
 
