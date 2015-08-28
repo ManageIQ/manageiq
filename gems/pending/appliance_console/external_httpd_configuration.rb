@@ -1,11 +1,11 @@
+require 'pathname'
+
 module ApplianceConsole
   class ExternalHttpdAuthentication
     module ExternalHttpdConfiguration
       #
       # External Authentication Definitions
       #
-      TEMPLATE_BASE_DIR   = "/var/www/miq/system/TEMPLATE/"
-
       IPA_COMMAND         = "/usr/bin/ipa"
       IPA_INSTALL_COMMAND = "/usr/sbin/ipa-client-install"
       IPA_GETKEYTAB       = "/usr/sbin/ipa-getkeytab"
@@ -31,6 +31,10 @@ module ApplianceConsole
         "sn"          => "REMOTE_USER_LASTNAME",
         "displayname" => "REMOTE_USER_FULLNAME"
       }
+
+      def template_directory
+        Pathname.new(ENV.fetch("APPLIANCE_TEMPLATE_DIRECTORY"))
+      end
 
       #
       # IPA Configuration Methods
@@ -68,8 +72,8 @@ module ApplianceConsole
       end
 
       def configure_httpd_application
-        cp_template(HTTP_EXTERNAL_AUTH_TEMPLATE, TEMPLATE_BASE_DIR)
-        cp_template(HTTP_REMOTE_USER, TEMPLATE_BASE_DIR)
+        cp_template(HTTP_EXTERNAL_AUTH_TEMPLATE, template_directory)
+        cp_template(HTTP_REMOTE_USER, template_directory)
       end
 
       def unconfigure_httpd_application

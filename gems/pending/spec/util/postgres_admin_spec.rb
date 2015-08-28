@@ -12,6 +12,7 @@ describe PostgresAdmin do
      %w(service_name   APPLIANCE_PG_SERVICE      postgresql          ),
      %w(scl_name       APPLIANCE_PG_SCL_NAME     postgresql_scl      ),
      %w(package_name   APPLIANCE_PG_PACKAGE_NAME postgresql-server   ),
+     %w(template_directory APPLIANCE_TEMPLATE_DIRECTORY /some/path true),
 
     ].each do |method, var, value, pathname_required|
       it "#{method}" do

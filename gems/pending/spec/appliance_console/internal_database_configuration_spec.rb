@@ -53,8 +53,9 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
   end
 
   it ".postgresql_template" do
-    PostgresAdmin.stub(:data_directory => Pathname.new("/var/lib/pgsql/data"))
-    expect(described_class.postgresql_template.to_s).to end_with("system/TEMPLATE/var/lib/pgsql/data")
+    PostgresAdmin.stub(:data_directory     => Pathname.new("/var/lib/pgsql/data"))
+    PostgresAdmin.stub(:template_directory => Pathname.new("/opt/manageiq/manageiq-appliance/TEMPLATE"))
+    expect(described_class.postgresql_template.to_s).to end_with("TEMPLATE/var/lib/pgsql/data")
   end
 
   context "#update_fstab (private)" do
