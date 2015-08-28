@@ -41,10 +41,7 @@
       options = options || {};
 
       if (options.expand) {
-        if (angular.isArray(options.expand)) {
-          options.expand = options.expand.join(',');
-        }
-        params.push('expand=' + options.expand);
+        params.push('expand=resources');
       }
 
       if (options.attributes) {

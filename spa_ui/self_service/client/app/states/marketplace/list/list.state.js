@@ -18,30 +18,30 @@
         controllerAs: 'vm',
         title: 'Service Catalog',
         resolve: {
-          serviceCatalogs: resolveServiceCatalogs
+          serviceTemplates: resolveServiceTemplates
         }
       }
     };
   }
 
   /** @ngInject */
-  function resolveServiceCatalogs(CollectionsApi) {
-    var options = {expand: ['resources', 'service_templates']};
+  function resolveServiceTemplates(CollectionsApi) {
+    var options = {expand: true, filter: ['display=true']};
 
-    return CollectionsApi.query('service_catalogs', options);
+    return CollectionsApi.query('service_templates', options);
   }
 
   /** @ngInject */
-  function StateController($state, serviceCatalogs) {
+  function StateController($state, serviceTemplates) {
     var vm = this;
 
     vm.title = 'Service Catalog';
-    vm.serviceCatalogs = serviceCatalogs.resources;
+    vm.serviceTemplates = serviceTemplates.resources;
 
     vm.showDetails = showDetails;
 
-    function showDetails(templateId) {
-      $state.go('marketplace.details', {serviceTemplateId: templateId});
+    function showDetails(template) {
+      $state.go('marketplace.details', {serviceTemplateId: template.id});
     }
   }
 })();
