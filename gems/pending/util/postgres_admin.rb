@@ -12,6 +12,10 @@ class PostgresAdmin
     Pathname.new(ENV.fetch("APPLIANCE_PG_DATA"))
   end
 
+  def self.template_directory
+    Pathname.new(ENV.fetch("APPLIANCE_TEMPLATE_DIRECTORY"))
+  end
+
   def self.service_name
     ENV.fetch("APPLIANCE_PG_SERVICE")
   end
