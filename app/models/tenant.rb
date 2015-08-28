@@ -19,6 +19,7 @@ class Tenant < ActiveRecord::Base
   has_many :tenant_quotas
   has_many :miq_groups, :foreign_key => :tenant_owner_id
   has_many :users, :through => :miq_groups
+  has_many :ae_domains, :dependent => :destroy, :class_name => 'MiqAeDomain'
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,

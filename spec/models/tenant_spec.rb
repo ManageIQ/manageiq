@@ -390,4 +390,29 @@ describe Tenant do
       expect(tenant1.users).not_to include(user2)
     end
   end
+
+  context "#miq_ae_domains" do
+    let(:t1) { FactoryGirl.create(:tenant, :name => "T1", :parent => root_tenant) }
+    let(:t2) { FactoryGirl.create(:tenant, :name => "T2", :parent => root_tenant) }
+    let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1) }
+    let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2) }
+
+    it "tenant domains" do
+      dom1
+      dom2
+      expect(t1.ae_domains.collect(&:name)).to match_array([dom1.name])
+    end
+
+    it "delete tenant" do
+      dom1
+      dom2
+      t1.destroy
+      expect(MiqAeDomain.all.collect(&:name)).to match_array([dom2.name])
+    end
+
+    it "domain belongs to tenant" do
+      dom1
+      expect(dom1.tenant.name).to eq(t1.name)
+    end
+  end
 end
