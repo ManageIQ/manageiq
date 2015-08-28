@@ -1,35 +1,25 @@
 require 'xmldata_helper'
 require 'yaml'
 
-# TODO: Determine if this file can be removed.
-module ScanningOperations
+module ScanningOperationsMixin
   include Vmdb::Logging
   WS_TIMEOUT = 60
 
-  def save_vmmetadata(vmId, xmlFile, type, jobid=nil)
+  def save_metadata_op(xmlFile, type, jobid=nil)
     begin
-      Timeout::timeout(WS_TIMEOUT) do
-        _log.info "vm [#{vmId}],  job [#{jobid}] enter"
-
-        # If we get a job id use that to lookup the vm
-        unless jobid.blank?
-          job = Job.where(:guid => jobid).select("target_id").first
-          vm = VmOrTemplate.find_by_id(job.target_id) if job
-        end
-
-        vm = VmOrTemplate.find_by_guid(vmId) if vm.nil?
-
-        if vm
-          _log.info "vm [#{vmId}] found vm object id [#{vm.id}], job [#{jobid}]"
-          MiqQueue.put(:target_id => vm.id, :class_name => "VmOrTemplate", :method_name => "save_metadata", :data => Marshal.dump([xmlFile, type]), :task_id => jobid, :zone => vm.my_zone, :role => "smartstate")
-          _log.info "vm [#{vmId}] data put on queue, job [#{jobid}]"
-        else
-          errMsg = "No VM found for id [#{vmId}], metadata will be discarded, job [#{jobid}]"
-          errStatus = "error"
-          _log.error "job [#{jobid}]" + errMsg
-          MiqQueue.put(:class_name => "Job", :method_name => "signal_by_taskid", :args => [jobid, :error, errMsg, errStatus], :task_id => jobid, :zone => MiqServer.my_zone, :role => "smartstate")
-          return false
-        end
+      Timeout.timeout(WS_TIMEOUT) do # TODO: do we need this timeout?
+        _log.info "target [#{guid}],  job [#{jobid}] enter"
+        _log.info "target [#{guid}] found target object id [#{id}], job [#{jobid}]"
+        MiqQueue.put(
+          :target_id   => id,
+          :class_name  => self.class.base_class.name,
+          :method_name => "save_metadata",
+          :data        => Marshal.dump([xmlFile, type]),
+          :task_id     => jobid,
+          :zone        => my_zone,
+          :role        => "smartstate"
+        )
+        _log.info "target [#{guid}] data put on queue, job [#{jobid}]"
       end
     rescue Exception => err
       _log.log_backtrace(err)
@@ -39,11 +29,18 @@ module ScanningOperations
     true
   end
 
-  def agent_job_state(jobid, state, message=nil)
+  def agent_job_state_op(jobid, state, message = nil)
     _log.info "jobid: [#{jobid}] starting"
     begin
-      Timeout::timeout(WS_TIMEOUT) do
-        MiqQueue.put(:class_name => "Job", :method_name => "agent_state_update_queue", :args => [jobid, state, message], :task_id => "agent_job_state_#{Time.now.to_i}", :zone => MiqServer.my_zone, :role => "smartstate")
+      Timeout.timeout(WS_TIMEOUT) do
+        MiqQueue.put(
+          :class_name  => "Job",
+          :method_name => "agent_state_update_queue",
+          :args        => [jobid, state, message],
+          :task_id     => "agent_job_state_#{Time.now.to_i}",
+          :zone        => MiqServer.my_zone,
+          :role        => "smartstate"
+        )
         return true
       end
     rescue Exception => err
@@ -53,12 +50,12 @@ module ScanningOperations
     end
   end
 
-  def task_update(task_id, state, status, message)
+  def task_update_op(task_id, state, status, message)
     _log.info "task_id: [#{task_id}] starting"
     begin
-      Timeout::timeout(WS_TIMEOUT) do
+      Timeout.timeout(WS_TIMEOUT) do
         task = MiqTask.find_by_id(task_id)
-        unless task.nil?
+        if !task.nil?
           task.update_status(state, status, message)
         else
           _log.warn "task_id: [#{task_id}] not found"
@@ -72,10 +69,10 @@ module ScanningOperations
     end
   end
 
-  def start_update(vmId)
+  def start_update_op(vmId)
     begin
       return false if vmId.blank?
-      Timeout::timeout(WS_TIMEOUT) do
+      Timeout.timeout(WS_TIMEOUT) do
         vm = VmOrTemplate.find_by_guid(vmId)
         return false if vm.busy
         vm.busy = true
@@ -89,10 +86,10 @@ module ScanningOperations
     true
   end
 
-  def end_update(vmId)
+  def end_update_op(vmId)
     begin
       return false if vmId.blank?
-      Timeout::timeout(WS_TIMEOUT) do
+      Timeout.timeout(WS_TIMEOUT) do
         vm = VmOrTemplate.find_by_guid(vmId)
         vm.busy = false
         vm.save!
@@ -105,17 +102,18 @@ module ScanningOperations
     true
   end
 
+  # TODO: still needed?
   def save_hostmetadata(hostId, xmlFile, type)
     begin
-      Timeout::timeout(WS_TIMEOUT) do
+      Timeout.timeout(WS_TIMEOUT) do
         _log.info "for host [#{hostId}]"
         host = Host.find_by_guid(hostId)
         MiqQueue.put(
-          :target_id => host.id,
-          :class_name => "Host",
+          :target_id   => host.id,
+          :class_name  => "Host",
           :method_name => "save_metadata",
-          :data => [xmlFile, type],
-          :priority => MiqQueue::HIGH_PRIORITY
+          :data        => [xmlFile, type],
+          :priority    => MiqQueue::HIGH_PRIORITY
         )
         _log.info "for host [#{hostId}] host queued"
       end
@@ -127,9 +125,9 @@ module ScanningOperations
     true
   end
 
-  def vm_status_update(vmId, vmStatus)
+  def status_update_op(vmId, vmStatus)
     begin
-      Timeout::timeout(WS_TIMEOUT) do
+      Timeout.timeout(WS_TIMEOUT) do
         vm = VmOrTemplate.find_by_guid(vmId)
         return unless vm
         vm.state = vmStatus
@@ -144,16 +142,14 @@ module ScanningOperations
   end
 
   def register_vm(nm, loc, vndr)
-    begin
-      Timeout::timeout(WS_TIMEOUT) do
-        vm = VmOrTemplate.new(:name => nm, :location => loc, :vendor => vndr)
-        vm.save!
-        return(@vm.id)
-      end
-    rescue Exception => err
-      _log.log_backtrace(err)
-      ScanningOperations.reconnect_to_db
+    Timeout.timeout(WS_TIMEOUT) do
+      vm = VmOrTemplate.new(:name => nm, :location => loc, :vendor => vndr)
+      vm.save!
+      return(@vm.id)
     end
+  rescue Exception => err
+    _log.log_backtrace(err)
+    ScanningOperations.reconnect_to_db
   end
 
   def test_statemachine(jobId, signal, data=nil)
@@ -161,7 +157,7 @@ module ScanningOperations
       _log.info "job [#{jobId}], signal [#{signal}]"
       job = Job.find_by_guid(jobId)
       _log.info "job [#{jobId}] found job object id [#{job.id}]"
-      unless data.nil?
+      if !data.nil?
         job.signal(signal.to_sym, data)
         # job.signal_process(signal.to_sym, data)
       else
@@ -179,7 +175,7 @@ module ScanningOperations
     _log.info "VmId:[#{vmId}]"
     ret, reason = false, "unknown"
     begin
-      Timeout::timeout(WS_TIMEOUT) do
+      Timeout.timeout(WS_TIMEOUT) do
         begin
           vm = VmOrTemplate.find_by_guid(vmId)
           # Policy check is so outdated it doesn't even exist in the Vm model anymore.
@@ -204,10 +200,10 @@ module ScanningOperations
 
   def start_service(service, userid, time)
     begin
-      Timeout::timeout(WS_TIMEOUT) do
+      Timeout.timeout(WS_TIMEOUT) do
         _log.info("Audit: req: <start_service>, user: <#{userid}>, service: <#{service}>, when: <#{time}>")
         svc = Service.find_by_name(service)
-        return false if svc == nil
+        return false if svc.nil?
 
         MiqQueue.put(:target_id => svc.id, :class_name => "Service", :method_name => "msg_handler", :data => "service")
 
@@ -222,7 +218,7 @@ module ScanningOperations
 
   def save_xmldata(hostId, xmlFile)
     begin
-      Timeout::timeout(WS_TIMEOUT) do
+      Timeout.timeout(WS_TIMEOUT) do
         _log.info "request received from host id: #{hostId}"
         doc = MiqXml.decode(xmlFile)
         _log.debug "doc:\n#{doc}"
@@ -258,12 +254,10 @@ module ScanningOperations
   end
 
   def self.reconnect_to_db
-    begin
-      _log.info("Reconnecting to database after error...")
-      ActiveRecord::Base.connection.reconnect!
-      _log.info("Reconnecting to database after error...Successful")
-    rescue Exception => err
-      _log.error("Error during reconnect: #{err.message}")
-    end
+    _log.info("Reconnecting to database after error...")
+    ActiveRecord::Base.connection.reconnect!
+    _log.info("Reconnecting to database after error...Successful")
+  rescue Exception => err
+    _log.error("Error during reconnect: #{err.message}")
   end
 end
