@@ -108,11 +108,11 @@ module ApplicationHelper
   def url_for_record(record, action="show") # Default action is show
     @id = to_cid(record.id)
     if record.kind_of?(VmOrTemplate)
-      return url_for_db(controller_for_vm(model_for_vm(record)), action)
+      return url_for_db(controller_for_vm(model_for_vm(record)), action, record)
     elsif record.class.respond_to?(:db_name)
-      return url_for_db(record.class.db_name, action)
+      return url_for_db(record.class.db_name, action, record)
     else
-      return url_for_db(record.class.base_class.to_s, action)
+      return url_for_db(record.class.base_class.to_s, action, record)
     end
   end
 

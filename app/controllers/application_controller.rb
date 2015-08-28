@@ -2641,4 +2641,8 @@ class ApplicationController < ActionController::Base
   def skip_breadcrumb?
     false
   end
+
+  def restful?
+    false
+  end
 end

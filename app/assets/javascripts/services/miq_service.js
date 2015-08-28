@@ -16,6 +16,14 @@ ManageIQ.angularApplication.service('miqService', function() {
     miqAjaxButton(url, serializeFields);
   };
 
+  this.restAjaxButton = function(url, button, data) {
+    miqRESTAjaxButton(url, button, data);
+  };
+
+  this.jqueryRequest = function(url, options) {
+    miqJqueryRequest(url, options);
+  };
+
   this.sparkleOn = function() {
     miqSparkleOn();
   };

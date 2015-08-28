@@ -9,11 +9,11 @@
       %label.control-label.col-md-2
         = _('Name')
       .col-md-8
-        = text_field_tag("name", @edit[:new][:name],
-                        :maxlength         => MAX_NAME_LEN,
-                        "class"            => "form-control",
-                        "data-miq_focus"   => true,
-                        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        = text_field_tag("name", @ems.name,
+        :maxlength         => MAX_NAME_LEN,
+        "class"            => "form-control",
+        "data-miq_focus"   => true,
+        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     .form-group
       %label.control-label.col-md-2
         = _('Type')
@@ -102,4 +102,4 @@
               :href    => url_for(:action => "show_list", :flash_msg => _("Add of new %s was cancelled by the user") % name),
               :onclick => 'window.location = this.getAttribute("href");')
   - else
-    = render :partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @ems.id, :ajax_buttons => true}
+    = render :partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @ems.id, :ajax_buttons => true, :restful => true}
