@@ -4,6 +4,7 @@ require 'uri'
 
 class VmOrTemplate < ActiveRecord::Base
   include NewWithTypeStiMixin
+  include ScanningMixin
 
   self.table_name = 'vms'
 
