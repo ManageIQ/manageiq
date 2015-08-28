@@ -223,7 +223,7 @@ describe MiqPassword do
     expect(x).to eq("some :password: ******** and another :password: ********")
   end
 
-  context ".key_root" do
+  context ".key_root / .key_root=" do
     it "defaults key_root" do
       expect(ENV).to receive(:[]).with("KEY_ROOT").and_return("/certs")
       MiqPassword.key_root = nil
@@ -234,6 +234,22 @@ describe MiqPassword do
       expect(ENV).not_to receive(:[])
       MiqPassword.key_root = "/abc"
       expect(MiqPassword.key_root).to eq("/abc")
+    end
+
+    it "clears key caches" do
+      MiqPassword.add_legacy_key("v0_key", :v0)
+      MiqPassword.add_legacy_key("v1_key")
+      MiqPassword.v2_key
+
+      expect(MiqPassword.v0_key).to_not be_nil
+      expect(MiqPassword.v1_key).to_not be_nil
+      expect(MiqPassword.v2_key).to_not be_false
+
+      MiqPassword.key_root = nil
+
+      expect(MiqPassword.v0_key).to be_nil
+      expect(MiqPassword.v1_key).to be_nil
+      expect(MiqPassword.v2_key).to be_false
     end
   end
 
