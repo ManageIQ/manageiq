@@ -19,8 +19,7 @@ describe FixAuth::AuthModel do
   end
 
   after do
-    MiqPassword.v0_key = nil
-    MiqPassword.v1_key = nil
+    MiqPassword.clear_keys
   end
 
   context "#authentications" do

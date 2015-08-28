@@ -8,12 +8,13 @@ require "appliance_console/logging"
 
 describe ApplianceConsole::DatabaseConfiguration do
   before do
+    @old_key_root = MiqPassword.key_root
     MiqPassword.key_root = File.join(GEMS_PENDING_ROOT, "spec/support")
     @config = described_class.new
   end
 
   after do
-    MiqPassword.key_root = nil
+    MiqPassword.key_root = @old_key_root
   end
 
   context ".initialize" do
