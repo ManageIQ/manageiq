@@ -140,4 +140,11 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     _log.log_backtrace(err)
     raise err
   end
+
+  def scan_refreshes_over_ssh(task, ssu)
+    super
+    scan_refresh("OpenStack Services", task) { refresh_openstack_services(ssu) }
+  end
+  protected :scan_refreshes_over_ssh
+
 end

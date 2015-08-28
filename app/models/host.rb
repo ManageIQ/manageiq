@@ -1475,21 +1475,7 @@ class Host < ActiveRecord::Base
 
     _dummy, t = Benchmark.realtime_block(:total_time) do
 
-      # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
-      _log.info("Refreshing Firewall Rules for #{log_target}")
-      task.update_status("Active", "Ok", "Refreshing Firewall Rules") if task
-      Benchmark.realtime_block(:refresh_firewall_rules) { refresh_firewall_rules }
-
-      _log.info("Refreshing Advanced Settings for #{log_target}")
-      task.update_status("Active", "Ok", "Refreshing Advanced Settings") if task
-      Benchmark.realtime_block(:refresh_advanced_settings) { refresh_advanced_settings }
-
-      if ext_management_system.nil?
-        _log.info("Refreshing IPMI information for #{log_target}")
-        task.update_status("Active", "Ok", "Refreshing IPMI Information") if task
-        Benchmark.realtime_block(:refresh_ipmi) { refresh_ipmi }
-      end
-
+      scan_refreshes(task)
       save
 
       # Skip SSH for ESXi hosts
@@ -1510,37 +1496,7 @@ class Host < ActiveRecord::Base
 
         begin
           connect_ssh do |ssu|
-            _log.info("Refreshing Patches for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing Patches") if task
-            Benchmark.realtime_block(:refresh_patches) { refresh_patches(ssu) }
-
-            _log.info("Refreshing Services for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing Services") if task
-            Benchmark.realtime_block(:refresh_services) { refresh_services(ssu) }
-
-            _log.info("Refreshing Linux Packages for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing Linux Packages") if task
-            Benchmark.realtime_block(:refresh_linux_packages) { refresh_linux_packages(ssu) }
-
-            _log.info("Refreshing User Groups for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing User Groups") if task
-            Benchmark.realtime_block(:refresh_user_groups) { refresh_user_groups(ssu) }
-
-            _log.info("Refreshing SSH Config for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing SSH Config") if task
-            Benchmark.realtime_block(:refresh_ssh_config) { refresh_ssh_config(ssu) }
-
-            _log.info("Refreshing FS Files for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing FS Files") if task
-            Benchmark.realtime_block(:refresh_fs_files) { refresh_fs_files(ssu) }
-
-            # refresh_openstack_services should run after refresh_services and refresh_fs_files
-            if respond_to?(:refresh_openstack_services)
-              _log.info("Refreshing OpenStack Services for #{log_target}")
-              task.update_status("Active", "Ok", "Refreshing OpenStack Services") if task
-              Benchmark.realtime_block(:refresh_openstack_services) { refresh_openstack_services(ssu) }
-            end
-
+            scan_refreshes_over_ssh(task, ssu)
             save
           end
         rescue Net::SSH::HostKeyMismatch
@@ -1569,6 +1525,36 @@ class Host < ActiveRecord::Base
     task.update_status("Finished", "Ok", "Scanning Complete") if task
     _log.info("Scanning #{log_target}...Complete - Timings: #{t.inspect}")
   end
+
+  def scan_refreshes(task)
+    # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
+    scan_refresh("Firewall Rules", task) { refresh_firewall_rules }
+    scan_refresh("Advanced Settings", task) { refresh_advanced_settings }
+    unless ext_management_system
+      scan_refresh("IPMI information", task) { refresh_ipmi }
+    end
+  end
+  protected :scan_refreshes
+
+  def scan_refreshes_over_ssh(task, ssu)
+    scan_refresh("Patches", task) { refresh_patches(ssu) }
+    scan_refresh("Services", task) { refresh_services(ssu) }
+    scan_refresh("Linux Packages", task) { refresh_services(ssu) }
+    scan_refresh("User Groups", task) { refresh_user_groups(ssu) }
+    scan_refresh("SSH Config", task) { refresh_ssh_config(ssu) }
+    scan_refresh("FS Files", task) { refresh_fs_files(ssu) }
+  end
+  protected :scan_refreshes_over_ssh
+
+  def scan_refresh(title, task)
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+    _log.info("Refreshing #{title} for #{log_target}")
+    task.update_status("Active", "Ok", "Refreshing #{title}") if task
+
+    benchmark_name = "refresh_#{title.parameterize.underscore}".to_sym
+    Benchmark.realtime_block(benchmark_name) { yield }
+  end
+  private :scan_refresh
 
   def ssh_run_script(script)
     connect_ssh {|ssu| return ssu.shell_exec(script)}
