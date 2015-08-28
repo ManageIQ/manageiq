@@ -23,6 +23,7 @@ module FixAuth
             :default => (env['RAILS_ROOT'] || File.expand_path(File.join(File.dirname(__FILE__), %w{.. ..})))
         opt :databaseyml, "Rewrite database.yml", :type => :boolean, :short => "y", :default => false
         opt :db,       "Upgrade database",  :type => :boolean, :short => 'x', :default => false
+        opt :legacy_key, "Legacy Key",      :type => :string, :short => "K", :multi => true
       end
 
       options[:databases] = args.presence || %w(vmdb_production)
