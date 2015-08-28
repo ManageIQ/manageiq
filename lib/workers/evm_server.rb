@@ -27,7 +27,7 @@ class EvmServer
 
   def process_soft_signal(s)
     begin
-      # SOFT_INTERRUPT_SIGNALS get processed via MiqServer.stop in at_exit
+      MiqServer.stop
     ensure
       do_exit("Interrupt signal (#{s}) received.", 0)
     end
@@ -57,12 +57,6 @@ class EvmServer
       $log.warn("EVM is already running (PID=#{pid})")
       exit
     end
-
-    at_exit {
-      # TODO: should this be called on SOFT ints and SystemExit, not SIGINT?
-      # register a shutdown method to run when server exits
-      MiqServer.stop
-    }
 
     PidFile.create(MiqServer.pidfile)
     MiqServer.start
