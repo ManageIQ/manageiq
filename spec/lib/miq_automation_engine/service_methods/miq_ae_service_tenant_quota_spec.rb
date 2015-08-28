@@ -4,8 +4,8 @@ module MiqAeServiceTenantQuotaSpec
   describe MiqAeMethodService::MiqAeServiceTenantQuota do
     let(:settings) { {} }
     let(:tenant) { Tenant.create(:name => 'fred', :domain => 'a.b', :parent => default_tenant) }
-    let(:cpu_quota) { TenantQuota.create(:name => "max_cpu", :unit => "int", :value => 2, :tenant_id => tenant.id) }
-    let(:storage_quota) { TenantQuota.create(:name => "stor", :unit => "GB", :value => 160, :tenant_id => tenant.id) }
+    let(:cpu_quota) { TenantQuota.create(:name => "cpu_allocated", :unit => "int", :value => 2, :tenant_id => tenant.id) }
+    let(:storage_quota) { TenantQuota.create(:name => "storage_allocated", :unit => "GB", :value => 160, :tenant_id => tenant.id) }
 
     let(:default_tenant) do
       Tenant.seed
@@ -20,13 +20,13 @@ module MiqAeServiceTenantQuotaSpec
     end
 
     it "check max_cpu quota" do
-      expect(st_cpu_quota.name).to eq('max_cpu')
+      expect(st_cpu_quota.name).to eq('cpu_allocated')
       expect(st_cpu_quota.unit).to eq('int')
       expect(st_cpu_quota.value.to_i).to eq(2)
     end
 
     it "check storage quota" do
-      expect(st_storage_quota.name).to eq('stor')
+      expect(st_storage_quota.name).to eq('storage_allocated')
       expect(st_storage_quota.unit).to eq('GB')
       expect(st_storage_quota.value.to_i).to eq(160)
     end
