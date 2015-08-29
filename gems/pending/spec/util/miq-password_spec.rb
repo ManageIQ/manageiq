@@ -169,7 +169,7 @@ describe MiqPassword do
     end
 
     it "should fail on recrypt bad password" do
-      expect { MiqPassword.new.recrypt("v2:{55555}") }.to raise_error
+      expect { MiqPassword.new.recrypt("v2:{55555}") }.to raise_error(MiqPassword::MiqPasswordError)
     end
 
     it "should decrypt passwords with newlines" do
@@ -181,7 +181,9 @@ describe MiqPassword do
 
   context "with missing v1_key" do
     it "should report decent error when decryption with missing an encryption key" do
-      expect { described_class.decrypt("v1:{KSOqhNiOWJbR0lz7v6PTJg==}") }.to raise_error("no encryption key v1_key")
+      expect {
+        described_class.decrypt("v1:{KSOqhNiOWJbR0lz7v6PTJg==}")
+      }.to raise_error(MiqPassword::MiqPasswordError, /can not decrypt.*v1_key/)
     end
   end
 

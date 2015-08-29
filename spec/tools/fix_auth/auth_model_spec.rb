@@ -100,7 +100,7 @@ describe FixAuth::AuthModel do
       end
 
       it "should raise exception for bad encryption" do
-        expect { subject.fix_passwords(badv2) }.to raise_error("not decryptable string")
+        expect { subject.fix_passwords(badv2) }.to raise_error(MiqPassword::MiqPasswordError)
       end
 
       it "should replace for bad encryption" do

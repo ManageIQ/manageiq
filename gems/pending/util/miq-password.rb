@@ -4,6 +4,8 @@ require 'base64'
 require 'yaml'
 
 class MiqPassword
+  class MiqPasswordError < StandardError; end
+
   CURRENT_VERSION = "2"
   REGEXP = /v([0-9]+):\{([^}]*)\}/
   REGEXP_START_LINE = /^#{REGEXP}/
@@ -29,11 +31,21 @@ class MiqPassword
 
       ver ||= "0" # if we don't know what it is, just assume legacy
 
-      decrypt_method = "decrypt_version_#{ver}"
-      raise "unknown encryption version, '#{ver}'" if ver.nil? || !self.respond_to?(decrypt_method, true)
-      raise "no encryption key v#{ver}_key" unless self.class.send("v#{ver}_key")
+      self.class.all_keys.each do |key|
+        begin
+          return key.decrypt64(enc) if key
+        rescue OpenSSL::Cipher::CipherError
+          # this key doesnt work, try the next one
+        end
+      end
 
-      send(decrypt_method, enc)
+      # will only come here if system is not configured with an encryption key
+      # so throw an exception with as much information as possible (including a cause)
+      begin
+        self.class.all_keys.first.decrypt64(enc)
+      rescue
+        raise MiqPasswordError, "can not decrypt v#{ver}_key encrypted string"
+      end
     end
   end
 
@@ -47,7 +59,7 @@ class MiqPassword
         if source_version == "0" # it probably wasn't encrypted
           return str
         else
-          raise "not decryptable string"
+          raise
         end
       end
     encrypt(decrypted_str)
@@ -193,18 +205,6 @@ EOS
   def encrypt_version_1(str)
     return "v1:{}" if str.nil? || str.empty?
     "v1:{#{self.class.v1_key.encrypt64(str).chomp}}"
-  end
-
-  def decrypt_version_2(str)
-    self.class.v2_key.decrypt64(str)
-  end
-
-  def decrypt_version_1(str)
-    self.class.v1_key.decrypt64(str)
-  end
-
-  def decrypt_version_0(str)
-    self.class.v0_key.decrypt64(str)
   end
 
   def self.extract_erb_encrypted_value(value)

@@ -60,7 +60,7 @@ describe FixAuth::AuthConfigModel do
     end
 
     it "should fail on bad passwords" do
-      expect { subject.fix_passwords(config_with_bad_password) }.to raise_error
+      expect { subject.fix_passwords(config_with_bad_password) }.to raise_error(MiqPassword::MiqPasswordError)
     end
 
     it "should replace bad passwords" do
