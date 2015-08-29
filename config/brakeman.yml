@@ -1,0 +1,4 @@
+---
+:safe_methods:
+- :j
+- :escape_javascript
