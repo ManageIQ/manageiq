@@ -123,12 +123,9 @@ class MiqPassword
   end
 
   def self.v2_key
-    @v2_key ||= begin
+    @v2_key ||= ez_load("v2_key") || begin
       key_file = File.expand_path("v2_key", key_root)
-      if File.exist?(key_file)
-        ez_load(key_file)
-      else
-        msg = <<-EOS
+      msg = <<-EOS
 #{key_file} doesn't exist!
 On an appliance, it should be generated on boot by evmserverd.
 
@@ -137,17 +134,16 @@ If you're a developer, you can copy the #{key_file}.dev to #{key_file}.
 Caution, using the developer key will allow anyone with the public developer key to decrypt the two-way
 passwords in your database.
 EOS
-        Kernel.warn msg
-      end
+      Kernel.warn msg
     end
   end
 
   def self.add_legacy_key(filename, type = :v1)
     case type
     when :v0
-      @v0_key = ez_load_v0(File.expand_path(filename, key_root))
+      @v0_key = ez_load(filename, false)
     when :v1
-      @v1_key = ez_load(File.expand_path(filename, key_root))
+      @v1_key = ez_load(filename)
     end
   end
 
@@ -165,12 +161,14 @@ EOS
 
   protected
 
-  def self.ez_load(filename)
-    File.exist?(filename) && EzCrypto::Key.load(filename)
-  end
-
-  def self.ez_load_v0(filename)
-    if File.exist?(filename)
+  def self.ez_load(filename, recent = true)
+    return filename if filename.respond_to?(:decrypt64)
+    filename = File.expand_path(filename, key_root)
+    if !File.exist?(filename)
+      false
+    elsif recent
+      EzCrypto::Key.load(filename)
+    else
       params = YAML.load_file(filename)
       CryptString.new(nil, params[:algorithm], params[:key], params[:iv])
     end
