@@ -10,8 +10,8 @@ describe FixAuth::AuthModel do
   let(:v0_key)  { CryptString.new(nil, "AES-128-CBC", "9999999999999999", "5555555555555555") }
   let(:v1_key)  { MiqPassword.generate_symmetric }
   let(:pass)    { "password" }
-  let(:enc_v1)  { MiqPassword.new.send(:encrypt_version_1, pass) }
-  let(:enc_v2)  { MiqPassword.new.send(:encrypt_version_2, pass) }
+  let(:enc_v1)  { MiqPassword.new.encrypt(pass, "v1", v1_key) }
+  let(:enc_v2)  { MiqPassword.new.encrypt(pass) }
   let(:bad_v2)  { "v2:{5555555555555555555555==}" }
   let(:enc_leg) { v0_key.encrypt64(pass) }
 

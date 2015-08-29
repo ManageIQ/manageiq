@@ -18,8 +18,9 @@ class MiqPassword
     @encStr = encrypt(str)
   end
 
-  def encrypt(str)
-    encrypt_version_2(str)
+  def encrypt(str, ver = "v2", key = self.class.v2_key)
+    value = key.encrypt64(str).delete("\n") unless str.nil? || str.empty?
+    "#{ver}:{#{value}}"
   end
 
   def decrypt(str)
@@ -195,16 +196,6 @@ EOS
       params = YAML.load_file(filename)
       CryptString.new(nil, params[:algorithm], params[:key], params[:iv])
     end
-  end
-
-  def encrypt_version_2(str)
-    return "v2:{}" if str.nil? || str.empty?
-    "v2:{#{self.class.v2_key.encrypt64(str).chomp.gsub("\n", "")}}"
-  end
-
-  def encrypt_version_1(str)
-    return "v1:{}" if str.nil? || str.empty?
-    "v1:{#{self.class.v1_key.encrypt64(str).chomp}}"
   end
 
   def self.extract_erb_encrypted_value(value)
