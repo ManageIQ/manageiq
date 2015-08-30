@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join('db/migrate/20150806190149_rename_miq_event_table_to_miq_event_definition')
+require_migration
 
 describe RenameMiqEventTableToMiqEventDefinition do
   migration_context :up do

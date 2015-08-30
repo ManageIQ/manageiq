@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join('db/migrate/20131121211455_change_options_in_miq_alert.rb')
+require_migration
 
 describe ChangeOptionsInMiqAlert do
 
