@@ -9,6 +9,7 @@ module ContainerServiceHelper::TextualSummary
       creation_timestamp
       resource_version
       session_affinity
+      service_type
       portal_ip
     )
   end
@@ -54,6 +55,10 @@ module ContainerServiceHelper::TextualSummary
 
   def textual_session_affinity
     @record.session_affinity
+  end
+
+  def textual_service_type
+    {:label => "Type", :value => @record.service_type}
   end
 
   def textual_portal_ip
