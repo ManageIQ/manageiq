@@ -4,7 +4,7 @@ require_relative '../../MiqVm/MiqVm'
 class MiqOpenStackImage
   attr_reader :vmConfigFile
 
-  SUPPORTED_METHODS = [ :vmRootTrees, :extract, :diskInitErrors ]
+  SUPPORTED_METHODS = [ :rootTrees, :extract, :diskInitErrors ]
 
 	def initialize(image_id, args)
     @image_id     = image_id

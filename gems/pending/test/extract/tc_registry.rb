@@ -43,7 +43,7 @@ module Extract
       # Load VM object
       @vm = MiqVm.new(fileName)
       # Set the system fs handle
-      @systemFs = @vm.vmRootTrees[0]
+      @systemFs = @vm.rootTrees[0]
       assert_instance_of(MiqMountManager, @systemFs)
       assert_instance_of(String, @systemFs.pwd)
 

@@ -280,8 +280,8 @@ if __FILE__ == $0
 	puts "VM config file: #{vmCfg}"
     
 	vm = MiqVm.new(vmCfg)
-	raise "No OSs detected" if vm.vmRootTrees.length == 0
-	rt = vm.vmRootTrees[0]
+	raise "No OSs detected" if vm.rootTrees.length == 0
+	rt = vm.rootTrees[0]
 	u = MiqLinux::Users.new(rt)
 	puts "**** USERS:"
 	u.usersToXml.write($stdout, 4)
