@@ -89,4 +89,14 @@ class TreeBuilderPolicy < TreeBuilder
     failure = count_only_or_objects(options[:count_only], pol_rec ? pol_rec.actions_for_event(parent, :failure) : [])
     success + failure
   end
+
+  # level 5 - nothing under conditions
+  def x_get_tree_co_kids(_parent, options)
+    count_only_or_objects(options[:count_only], [])
+  end
+
+  # level 6 - nothing under actions
+  def x_get_tree_ac_kids(_parent, options)
+    count_only_or_objects(options[:count_only], [])
+  end
 end

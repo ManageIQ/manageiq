@@ -51,4 +51,9 @@ class TreeBuilderAlertProfile < TreeBuilder
                           parent.miq_alerts,
                           :description)
   end
+
+  # level 4 - nothing
+  def x_get_tree_al_kids(_parent, options)
+    count_only_or_objects(options[:count_only], [])
+  end
 end
