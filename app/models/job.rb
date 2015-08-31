@@ -177,7 +177,7 @@ class Job < ActiveRecord::Base
         .where("state != 'finished' and (state != 'waiting_to_start' or dispatch_status = 'active')")
         .where("zone is null or zone = ?", MiqServer.my_zone)
         .each do |job|
-          next unless job.updated_on < current_job_timeout.seconds.ago
+          next unless job.updated_on < job.current_job_timeout.seconds.ago
 
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
           if job.agent_class == "MiqServer"
