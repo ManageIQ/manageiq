@@ -249,19 +249,19 @@ describe MiqPassword do
       expect(Kernel).to receive(:warn).with(/v2_key doesn't exist/)
       expect(MiqPassword.v2_key).to be_false
     end
+  end
 
-    it "clears key caches" do
-      MiqPassword.add_legacy_key("v0_key", :v0)
-      MiqPassword.add_legacy_key("v1_key")
+  it ".clear_keys" do
+    MiqPassword.add_legacy_key("v0_key", :v0)
+    MiqPassword.add_legacy_key("v1_key")
 
-      expect(MiqPassword.v0_key).to_not be_nil
-      expect(MiqPassword.v1_key).to_not be_nil
+    expect(MiqPassword.v0_key).to_not be_nil
+    expect(MiqPassword.v1_key).to_not be_nil
 
-      MiqPassword.clear_keys
+    MiqPassword.clear_keys
 
-      expect(MiqPassword.v0_key).to be_nil
-      expect(MiqPassword.v1_key).to be_nil
-    end
+    expect(MiqPassword.v0_key).to be_nil
+    expect(MiqPassword.v1_key).to be_nil
   end
 
   context ".v2_key" do
