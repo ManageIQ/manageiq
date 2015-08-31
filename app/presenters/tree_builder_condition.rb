@@ -13,15 +13,27 @@ class TreeBuilderCondition < TreeBuilder
     )
   end
 
+  # level 0 - root
   def root_options
     [N_("All Conditions"), N_("All Conditions")]
   end
 
+  # level 1 - host / vm
   def x_get_tree_roots(options)
     objects = []
     objects << {:id => "host", :text => "Host Conditions", :image => "host", :tip => "Host Conditions"}
     objects << {:id => "vm", :text => "All VM and Instance Conditions", :image => "vm", :tip => "All VM and Instance Conditions"}
 
     count_only_or_objects(options[:count_only], objects)
+  end
+
+  # level 2 - conditions
+  def x_get_tree_custom_kids(parent, options)
+    assert_type(options[:type], :condition)
+    return super unless %w(host vm).include?(parent[:id])
+
+    objects = Condition.where(:towhat => parent[:id].titleize)
+
+    count_only_or_objects(options[:count_only], objects, :description)
   end
 end

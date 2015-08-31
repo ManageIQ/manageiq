@@ -727,52 +727,12 @@ module ApplicationController::Explorer
       #add as first element of array
       objects.unshift(CustomButtonSet.new(:name=>"[Unassigned Buttons]|ub-#{nodes[1]}",:description=>"[Unassigned Buttons]"))
       return count_only ? objects.length : objects
-    when :alert_profile
-      # Add all alert profiles so links back from Alerts etc will work - TODO: figure out how to load on demand
-      objects = MiqAlertSet.where(:mode => object[:id].split('-')).order("lower(description) ASC")
-      if options[:count_only]
-        return objects.count
-      else
-        return objects
-      end
     when :db
       if object[:id].split('-').first == "g"
         objects = MiqGroup.all
         return options[:count_only] ? objects.count : objects.sort_by(&:name)
       else
         options[:count_only] ? 0 : []
-      end
-    when :condition
-      nodes = object[:id].split('-')
-      if ["host","vm"].include?(nodes.first) && nodes.length == 1
-        objects = Condition.where(:towhat => nodes.first.titleize).sort_by { |a| a.description.downcase }
-      end
-      if options[:count_only]
-        return objects.count
-      else
-        return objects
-      end
-    when :policy
-      nodes = object[:id].split('_')
-      if ["compliance","control"].include?(nodes.first) && nodes.length == 1
-        # Push folder node ids onto open_nodes array
-        ["xx-#{nodes.first}_xx-#{nodes.first}-host", "xx-#{nodes.first}_xx-#{nodes.first}-vm"].each do |n|
-          x_tree(options[:tree])[:open_nodes].push(n) unless x_tree(options[:tree])[:open_nodes].include?(n)
-        end
-        objects = Array.new
-        objects.push({:id=>"#{nodes[0]}-host", :text=>"Host #{nodes[0].capitalize} Policies", :image=>"host", :tip=>"Host Policies"})
-        objects.push({:id=>"#{nodes[0]}-vm", :text=>"Vm #{nodes[0].capitalize} Policies", :image=>"vm", :tip=>"Vm Policies"})
-      elsif %w(host vm).include?(nodes[0].split("-").last)
-        # Add all policies so links back from Conditions etc will work - TODO: figure out how to load on demand
-        objects = MiqPolicy.where(
-                    :mode   => nodes[0].split("-").first.downcase,
-                    :towhat => nodes[0].split("-").last.titleize,
-                  ).order("lower(description) ASC")
-      end
-      if options[:count_only]
-        return objects.count
-      else
-        return objects
       end
     when :old_dialogs # VMs & Templates tree has orphaned and archived nodes
       objects = MiqDialog.find_all_by_dialog_type(object[:id].split('_').last).sort_by { |a| a.description.downcase }
