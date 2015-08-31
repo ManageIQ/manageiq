@@ -15,27 +15,26 @@ module EventMixin
   end
 
   def has_events?(assoc=:ems_events)
+    # TODO: homemade caching is probably harfmul as it's not expected.
+    # It should be considered for removal.
     @has_events ||= {}
     return @has_events[assoc] if @has_events.has_key?(assoc)
+    @has_events[assoc] = events_assoc_class(assoc).where(event_where_clause(assoc)).exists?
+  end
 
-    klass = assoc.to_s.singularize.camelize.constantize
-    @has_events[assoc] = klass.where(event_where_clause(assoc)).exists?
+  def events_assoc_class(assoc)
+    assoc.to_s.classify.constantize
+  end
+
+  def events_table_name(assoc)
+    events_assoc_class(assoc).table_name
   end
 
   private
 
   def find_one_event(assoc, order)
-    ewc = self.event_where_clause(assoc)
-    return nil if ewc.blank?
-
-    klass = if assoc == :ems_events
-      EmsEvent
-    elsif assoc == :policy_events
-      PolicyEvent
-    end
-    return nil if klass.blank?
-
-    klass.where(ewc).order(order).first
+    ewc = event_where_clause(assoc)
+    events_assoc_class(assoc).where(ewc).order(order).first unless ewc.blank?
   end
 
 end
