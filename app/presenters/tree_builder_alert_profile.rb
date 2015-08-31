@@ -13,10 +13,12 @@ class TreeBuilderAlertProfile < TreeBuilder
     )
   end
 
+  # level 0 - root
   def root_options
     [N_("All Alert Profiles"), N_("All Alert Profiles")]
   end
 
+  # level 1 - * alert profiles
   def x_get_tree_roots(options)
     open_nodes = @tree_state.x_tree(options[:tree])[:open_nodes]
 
@@ -32,6 +34,16 @@ class TreeBuilderAlertProfile < TreeBuilder
     count_only_or_objects(options[:count_only], objects)
   end
 
+  # level 2 - alert profiles
+  def x_get_tree_custom_kids(parent, options)
+    assert_type(options[:type], :alert_profile)
+
+    objects = MiqAlertSet.where(:mode => parent[:id].split('-'))
+
+    count_only_or_objects(options[:count_only], objects, :description)
+  end
+
+  # level 3 - alerts
   def x_get_tree_ap_kids(parent, options)
     count_only_or_objects(options[:count_only],
                           parent.miq_alerts,
