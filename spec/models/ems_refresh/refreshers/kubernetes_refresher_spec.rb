@@ -221,7 +221,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :name        => nil,
       :protocol    => "TCP",
       :port        => 443,
-      :target_port => "443"
+      :target_port => "443",
+      :node_port   => 0
     )
 
     # Check group relation

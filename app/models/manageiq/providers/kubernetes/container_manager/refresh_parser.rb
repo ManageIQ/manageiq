@@ -442,7 +442,8 @@ module ManageIQ::Providers::Kubernetes
         :name        => port_config.name,
         :protocol    => port_config.protocol,
         :port        => port_config.port,
-        :target_port => port_config.targetPort
+        :target_port => port_config.targetPort,
+        :node_port   => port_config.nodePort,
       }
     end
 
