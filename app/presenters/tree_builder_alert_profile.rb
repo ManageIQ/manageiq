@@ -13,6 +13,10 @@ class TreeBuilderAlertProfile < TreeBuilder
     )
   end
 
+  def alert_profile_kinds
+    MiqAlert.base_tables.sort_by { |a| ui_lookup(:model => a) }
+  end
+
   # level 0 - root
   def root_options
     [N_("All Alert Profiles"), N_("All Alert Profiles")]
@@ -22,14 +26,14 @@ class TreeBuilderAlertProfile < TreeBuilder
   def x_get_tree_roots(options)
     open_nodes = @tree_state.x_tree(options[:tree])[:open_nodes]
 
-    objects = []
-    MiqAlert.base_tables.sort_by { |a| ui_lookup(:model => a) }.each do |db|
-      text = PostponedTranslation.new(N_("%s Alert Profiles"), ui_lookup(:model => db)).to_proc
-      objects << {:id => db, :text => text, :image => db.underscore.downcase, :tip => text}
-
+    objects = alert_profile_kinds.map do |db|
       # Set alert profile folder nodes to open so we pre-load all children
       n = "xx-#{db}"
       open_nodes << n unless open_nodes.include?(n)
+
+      # Actual translation should happen in TreeNodeBuilder
+      text = PostponedTranslation.new(N_("%s Alert Profiles"), ui_lookup(:model => db)).to_proc
+      {:id => db, :text => text, :image => db.underscore.downcase, :tip => text}
     end
 
     count_only_or_objects(options[:count_only], objects)
