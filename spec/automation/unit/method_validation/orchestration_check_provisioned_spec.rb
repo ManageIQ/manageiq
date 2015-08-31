@@ -22,6 +22,15 @@ describe "Orchestration check_provisioned Method Validation" do
     ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATE_FAILED', failure_msg] }
     ws.root['ae_result'].should == 'error'
     ws.root['ae_reason'].should == failure_msg
+    request.reload.message.should == failure_msg
+  end
+
+  it "truncates the error message that exceeds 255 characters" do
+    long_error = 't' * 300
+    ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATE_FAILED', long_error] }
+    ws.root['ae_result'].should == 'error'
+    ws.root['ae_reason'].should == long_error
+    request.reload.message.should == 't' * 252 + '...'
   end
 
   it "considers rollback as provision error" do
