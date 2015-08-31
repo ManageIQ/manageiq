@@ -373,7 +373,7 @@ describe MiqAeClassController do
       flash_messages.first[:message].should include("cannot be deleted")
       flash_messages.first[:level].should == :error
       flash_messages.last[:message].should include("Delete successful")
-      flash_messages.last[:level].should == :info
+      flash_messages.last[:level].should == :success
     end
   end
 
