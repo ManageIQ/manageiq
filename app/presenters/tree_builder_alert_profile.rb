@@ -24,12 +24,9 @@ class TreeBuilderAlertProfile < TreeBuilder
 
   # level 1 - * alert profiles
   def x_get_tree_roots(options)
-    open_nodes = @tree_state.x_tree(options[:tree])[:open_nodes]
-
     objects = alert_profile_kinds.map do |db|
       # Set alert profile folder nodes to open so we pre-load all children
-      n = "xx-#{db}"
-      open_nodes << n unless open_nodes.include?(n)
+      open_node("xx-#{db}")
 
       # Actual translation should happen in TreeNodeBuilder
       text = PostponedTranslation.new(N_("%s Alert Profiles"), ui_lookup(:model => db)).to_proc

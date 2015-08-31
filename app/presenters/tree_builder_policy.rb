@@ -37,10 +37,7 @@ class TreeBuilderPolicy < TreeBuilder
   # level 1 - compliance & control
   def x_get_tree_roots(options)
     # Push folder node ids onto open_nodes array
-    %w(xx-compliance xx-control).each do |n|
-      open_nodes = @tree_state.x_tree(options[:tree])[:open_nodes]
-      open_nodes << n unless open_nodes.include?(n)
-    end
+    %w(xx-compliance xx-control).each { |n| open_node(n) }
 
     objects = []
     objects << {:id => "compliance", :text => N_("Compliance Policies"), :image => "compliance", :tip => N_("Compliance Policies")}
@@ -58,10 +55,7 @@ class TreeBuilderPolicy < TreeBuilder
       pid = parent[:id]
 
       # Push folder node ids onto open_nodes array
-      ["xx-#{pid}_xx-#{pid}-host", "xx-#{pid}_xx-#{pid}-vm"].each do |n|
-        open_nodes = @tree_state.x_tree(options[:tree])[:open_nodes]
-        open_nodes << n unless open_nodes.include?(n)
-      end
+      %W(xx-#{pid}_xx-#{pid}-host xx-#{pid}_xx-#{pid}-vm).each { |n| open_node(n) }
 
       objects = compliance_control_kids(pid)
       count_only_or_objects(options[:count_only], objects)
