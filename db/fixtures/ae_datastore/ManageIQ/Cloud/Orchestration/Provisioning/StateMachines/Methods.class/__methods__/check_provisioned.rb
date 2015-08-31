@@ -79,4 +79,4 @@ if $evm.state_var_exist?('provider_last_refresh')
 else
   check_deployed(service)
 end
-task.miq_request.user_message = $evm.root['ae_reason'] unless $evm.root['ae_reason'].blank?
+task.miq_request.user_message = $evm.root['ae_reason'].truncate(255) unless $evm.root['ae_reason'].blank?
