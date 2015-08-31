@@ -127,7 +127,7 @@ class TreeBuilder
     object = node_by_tree_id(id)
 
     # Save node as open
-    @tree_state.x_tree(@name)[:open_nodes].push(id) unless @tree_state.x_tree(@name)[:open_nodes].include?(id)
+    open_node(id)
 
     x_get_tree_objects(object, @tree_state.x_tree(@name), nil, parents).each_with_object([]) do |o, acc|
       acc.concat(x_build_node_dynatree(o, id, @tree_state.x_tree(@name)))
@@ -328,7 +328,7 @@ class TreeBuilder
     node = x_build_single_node(object, pid, options)
 
     if [:policy_profile_tree, :policy_tree].include?(options[:tree])
-      @tree_state.x_tree(@name)[:open_nodes].push(node[:key])
+      open_node(node[:key])
     end
 
     # Process the node's children
@@ -376,6 +376,11 @@ class TreeBuilder
 
   def assert_type(actual, expected)
     raise "#{self.class}: expected #{expected.inspect}, got #{actual.inspect}" unless actual == expected
+  end
+
+  def open_node(id)
+    open_nodes = @tree_state.x_tree(@name)[:open_nodes]
+    open_nodes.push(id) unless open_nodes.include?(id)
   end
 
   def get_vmdb_config
