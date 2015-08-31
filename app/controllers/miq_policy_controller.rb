@@ -246,9 +246,10 @@ class MiqPolicyController < ApplicationController
     @breadcrumbs = []
     @explorer = true
     session[:export_data] = nil
+
     @sb[:open_tree_nodes] ||= [] # Create array to keep open tree nodes (only for autoload trees)
-    self.x_active_tree   ||= 'policy_profile_tree'
-    self.x_active_accord ||= 'policy_profile'
+    self.x_active_tree    ||= 'policy_profile_tree'
+    self.x_active_accord  ||= 'policy_profile'
 
     @trees = features.collect { |feature| feature.build_tree(@sb) }
     @accords = features.map(&:accord_hash)
@@ -259,7 +260,7 @@ class MiqPolicyController < ApplicationController
       if MiqPolicySet.exists?(:id => profile_id)
         self.x_node = "pp_#{profile_id}"
       else
-        add_flash(_("%s no longer exists") %  ui_lookup(:model => "MiqPolicySet"), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqPolicySet"), :error)
         self.x_node = "root"
       end
     end
@@ -285,8 +286,9 @@ class MiqPolicyController < ApplicationController
     #set these when a link on one of the summary screen was pressed
     self.x_active_accord = params[:accord]           if params[:accord]
     self.x_active_tree   = "#{params[:accord]}_tree" if params[:accord]
-    self.x_active_tree   = params[:tree] if params[:tree]
+    self.x_active_tree   = params[:tree]             if params[:tree]
     self.x_node          = params[:id]
+
     get_node_info(x_node)
     replace_right_cell(@nodetype)
   end
@@ -448,7 +450,7 @@ class MiqPolicyController < ApplicationController
     treenodeid.split("_").each do |p|
       node_ids[p.split("-").first] = p.split("-").last  # Create a hash of all record ids represented by the selected tree node
     end
-    @sb[:node_ids] ||= Hash.new
+    @sb[:node_ids] ||= {}
     @sb[:node_ids][x_active_tree] = node_ids
     get_root_node_info  if x_node == "root"                     # Get node info of tree roots
     folder_get_info(treenodeid) if treenodeid != "root"         # Get folder info for all node types
@@ -518,7 +520,7 @@ class MiqPolicyController < ApplicationController
   end
 
   def replace_right_cell(nodetype, replace_trees = [])  # replace_trees can be an array of tree symbols to be replaced
-    replace_trees = @replace_trees if @replace_trees  #get_node_info might set this
+    replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
 
     if replace_trees
@@ -541,8 +543,6 @@ class MiqPolicyController < ApplicationController
     r = proc { |opts| render_to_string(opts) }
 
     presenter[:open_accord] = params[:accord] if params[:accord] # Open new accordion
-
-    #js_options[:add_nodes] = add_nodes  # Update the tree with any new nodes
 
     # With dynatree, simply replace the tree partials to reload the trees
     replace_trees.each do |t|
