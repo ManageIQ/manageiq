@@ -741,6 +741,9 @@ module ReportController::Reports::Editor
       @edit[:new][:group] = params[:sort_group]
       @refresh_div = "sort_div"                               # Resend the sort tab
       @refresh_partial = "form_sort"
+      if @edit[:new][:chart_mode] = 'values' && !chart_mode_values_allowed?
+        @edit[:new][:chart_mode] = 'counts'
+      end
     end
     @edit[:new][:hide_details] = (params[:hide_details].to_s == "1") if params[:hide_details]
 
