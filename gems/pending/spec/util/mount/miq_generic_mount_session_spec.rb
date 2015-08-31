@@ -5,8 +5,8 @@ describe MiqGenericMountSession do
   context "#connect" do
     before do
       MiqGenericMountSession.stub(:raw_disconnect)
-      @s1 = MiqGenericMountSession.new({:uri => '/tmp/abc'})
-      @s2 = MiqGenericMountSession.new({:uri => '/tmp/abc'})
+      @s1 = MiqGenericMountSession.new(:uri => '/tmp/abc', :mount_point => 'tmp')
+      @s2 = MiqGenericMountSession.new(:uri => '/tmp/abc', :mount_point => 'tmp')
 
       @s1.logger = Logger.new("/dev/null")
       @s2.logger = Logger.new("/dev/null")
@@ -18,9 +18,10 @@ describe MiqGenericMountSession do
     end
 
     it "is unique" do
-      MiqGenericMountSession.should_receive(:base_mount_point).twice.and_return('/tmp')
       @s1.connect
       @s2.connect
+
+      expect(@s1.mnt_point).to_not eq(@s2.mnt_point)
     end
   end
 end
