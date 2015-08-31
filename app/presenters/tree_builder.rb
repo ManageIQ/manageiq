@@ -165,6 +165,10 @@ class TreeBuilder
     @locals_for_render.update(:select_node => "#{@tree_state.x_node(@name)}")
   end
 
+  def reload!
+    build_tree
+  end
+
   private
 
   def build_tree

@@ -251,7 +251,8 @@ class MiqPolicyController < ApplicationController
     self.x_active_tree    ||= 'policy_profile_tree'
     self.x_active_accord  ||= 'policy_profile'
 
-    @trees = features.collect { |feature| feature.build_tree(@sb) }
+    trees = features.collect { |feature| [feature.tree_name, feature.build_tree(@sb)] }
+    @trees = Hash[* trees.flatten] # trees.to_h in Ruby 2.2
     @accords = features.map(&:accord_hash)
 
     if params[:profile].present?  # If profile record id passed in, position on that node
@@ -445,8 +446,8 @@ class MiqPolicyController < ApplicationController
 
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
-    @nodetype, nodeid = valid_active_node(treenodeid).split("_").last.split("-")
-    node_ids = Hash.new
+    _modelname, nodeid, @nodetype = TreeBuilder.extract_node_model_and_id(valid_active_node(treenodeid))
+    node_ids = {}
     treenodeid.split("_").each do |p|
       node_ids[p.split("-").first] = p.split("-").last  # Create a hash of all record ids represented by the selected tree node
     end
@@ -523,14 +524,16 @@ class MiqPolicyController < ApplicationController
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
 
-    if replace_trees
-      profile_build_tree        if replace_trees.include?(:policy_profile)
-      policy_build_tree         if replace_trees.include?(:policy)
-      event_build_tree          if replace_trees.include?(:event)
-      condition_build_tree      if replace_trees.include?(:condition)
-      action_build_tree         if replace_trees.include?(:action)
-      alert_profile_build_tree  if replace_trees.include?(:alert_profile)
-      alert_build_tree          if replace_trees.include?(:alert)
+    # we need to be able to replace trees even if explorer has never been called on the current instance
+    @trees = {} unless @trees
+    replace_trees.each do |name|
+      tree = @trees["#{name}_tree".to_sym]
+      tree.reload! unless tree.nil?
+
+      if tree.nil?
+        feature = features.find { |f| f.name == name }
+        @trees[feature.tree_name] = feature.build_tree(@sb)
+      end
     end
 
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
@@ -545,32 +548,38 @@ class MiqPolicyController < ApplicationController
     presenter[:open_accord] = params[:accord] if params[:accord] # Open new accordion
 
     # With dynatree, simply replace the tree partials to reload the trees
-    replace_trees.each do |t|
-      case t
+    replace_trees.each do |name|
+      case name
       when :policy_profile
         self.x_node = @new_profile_node if @new_profile_node
-        presenter[:replace_partials][:policy_profile_tree_div] = r[:partial => "profile_tree"]
       when :policy
-        presenter[:replace_partials][:policy_tree_div] = r[:partial => "policy_tree"]
+        nil
       when :event
-        presenter[:replace_partials][:event_tree_div] = r[:partial => "event_tree"]
+        nil
       when :condition
         self.x_node = @new_condition_node if @new_condition_node
-        presenter[:replace_partials][:condition_tree_div] = r[:partial => "condition_tree"]
       when :action
         self.x_node = @new_action_node if @new_action_node
-        presenter[:replace_partials][:action_tree_div] = r[:partial => "action_tree"]
       when :alert_profile
         self.x_node = @new_alert_profile_node if @new_alert_profile_node
-        presenter[:replace_partials][:alert_profile_tree_div] = r[:partial => "alert_profile_tree"]
         # Send down extra alert_profile tree if present
         if @assign && @assign[:object_tree]
           presenter[:object_tree_json] = @assign[:object_tree]
         end
       when :alert
         self.x_node = @new_alert_node if @new_alert_node
-        presenter[:replace_partials][:alert_tree_div] = r[:partial => "alert_tree"]
+      else
+        raise "unknown tree in replace_trees: #{name}"
       end
+
+      tree = @trees["#{name}_tree".to_sym]
+      presenter[:replace_partials]["#{tree.name}_tree_div".to_sym] = r[
+        :partial => "shared/tree",
+        :locals  => {
+          :tree => tree,
+          :name => tree.name
+        }
+      ]
     end
 
     if params[:action].ends_with?('_delete') &&
