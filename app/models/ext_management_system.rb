@@ -24,7 +24,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   belongs_to :provider
-  belongs_to :tenant_owner, :class_name => 'Tenant'
+  belongs_to :tenant
 
   has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate"
@@ -50,10 +50,10 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
   has_many :miq_events,             :as => :target, :dependent => :destroy
 
-  validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_owner_id]}
+  validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname,
             :presence   => true,
-            :uniqueness => {:scope => [:tenant_owner_id], :case_sensitive => false},
+            :uniqueness => {:scope => [:tenant_id], :case_sensitive => false},
             :if         => :hostname_required?
 
   # TODO: Remove all callers of address

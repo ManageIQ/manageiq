@@ -384,12 +384,12 @@ describe Tenant do
     let(:tenant1_admins) do
       FactoryGirl.create(:miq_group,
                          :miq_user_role => admin_with_brand,
-                         :tenant_owner  => tenant1
+                         :tenant        => tenant1
                          )
     end
     let(:tenant1_users) do
       FactoryGirl.create(:miq_group,
-                         :tenant_owner  => tenant1,
+                         :tenant        => tenant1,
                          :miq_user_role => self_service_role)
     end
     let(:admin) { FactoryGirl.create(:user, :userid => 'admin', :miq_groups => [tenant1_users, tenant1_admins]) }

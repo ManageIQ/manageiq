@@ -12,14 +12,14 @@ class Tenant < ActiveRecord::Base
   default_value_for :divisible,   true
   has_ancestry
 
-  has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
-  has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
-  has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
-  has_many :owned_service_catalog_templates, :class_name => 'ServiceTemplateCatalog'
-  has_many :owned_service_templates, :class_name => 'ServiceTemplate'
+  has_many :providers
+  has_many :ext_management_systems
+  has_many :vm_or_templates
+  has_many :service_catalog_templates
+  has_many :service_templates
 
   has_many :tenant_quotas
-  has_many :miq_groups, :foreign_key => :tenant_owner_id
+  has_many :miq_groups
   has_many :users, :through => :miq_groups
   has_many :ae_domains, :dependent => :destroy, :class_name => 'MiqAeDomain'
 

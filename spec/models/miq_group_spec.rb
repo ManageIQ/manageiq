@@ -259,20 +259,20 @@ describe MiqGroup do
   context "#seed" do
     let(:root_tenant) { Tenant.root_tenant }
 
-    it "has tenant_owner for new records" do
+    it "has tenant for new records" do
       [MiqRegion, Tenant, MiqUserRole, MiqGroup].each(&:seed)
-      expect(MiqGroup.where(:tenant_owner_id => root_tenant.id).count).to eq(MiqGroup.count)
+      expect(MiqGroup.where(:tenant => root_tenant).count).to eq(MiqGroup.count)
     end
 
-    it "has tenant_owner for legacy records" do
+    it "has tenant for legacy records" do
       [MiqRegion, Tenant, MiqUserRole].each(&:seed)
       new_tenant           = root_tenant.children.create!
-      group_with_tenant    = FactoryGirl.create(:miq_group, :tenant_owner => new_tenant)
-      group_without_tenant = FactoryGirl.create(:miq_group, :tenant_owner => nil)
+      group_with_tenant    = FactoryGirl.create(:miq_group, :tenant => new_tenant)
+      group_without_tenant = FactoryGirl.create(:miq_group, :tenant => nil)
       MiqGroup.seed
 
-      expect(group_with_tenant.reload.tenant_owner).to    eq(new_tenant)
-      expect(group_without_tenant.reload.tenant_owner).to eq(root_tenant)
+      expect(group_with_tenant.reload.tenant).to    eq(new_tenant)
+      expect(group_without_tenant.reload.tenant).to eq(root_tenant)
     end
   end
 

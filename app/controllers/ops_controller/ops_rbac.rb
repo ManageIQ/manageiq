@@ -1074,7 +1074,7 @@ module OpsController::OpsRbac
     all_projects = Tenant.all_projects
     @edit[:projects_tenants].push(["Projects", all_projects.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_projects.blank?
     @edit[:projects_tenants].push(["Tenants", all_tenants.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_tenants.blank?
-    @edit[:new][:group_tenant] = @group.tenant_owner_id
+    @edit[:new][:group_tenant] = @group.tenant_id
 
     @edit[:current] = copy_hash(@edit[:new])
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
@@ -1126,7 +1126,7 @@ module OpsController::OpsRbac
     group.sequence = groups.first.nil? ? 1 : groups.first.sequence + 1
     group.description = @edit[:new][:description]
     group.miq_user_role = role
-    group.tenant_owner = Tenant.find_by_id(@edit[:new][:group_tenant]) if @edit[:new][:group_tenant]
+    group.tenant = Tenant.find_by_id(@edit[:new][:group_tenant]) if @edit[:new][:group_tenant]
     rbac_group_set_filters(group)             # Go set the filters for the group
   end
 
