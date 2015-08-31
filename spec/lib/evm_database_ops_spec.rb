@@ -6,7 +6,7 @@ describe EvmDatabaseOps do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
       MiqSmbSession.stub(:runcmd)
-      MiqSmbSession.stub(:base_mount_point).and_return(Rails.root.join("/tmp"))
+      allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
       MiqUtil.stub(:runcmd)
       PostgresAdmin.stub(:runcmd_with_logging)
       EvmDatabaseOps.stub(:backup_destination_free_space).and_return(200.megabytes)
@@ -54,7 +54,7 @@ describe EvmDatabaseOps do
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
       MiqSmbSession.stub(:runcmd)
       MiqSmbSession.stub(:raw_disconnect)
-      MiqSmbSession.stub(:base_mount_point).and_return(Rails.root.join("/tmp"))
+      allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
       PostgresAdmin.stub(:runcmd_with_logging)
     end
 
