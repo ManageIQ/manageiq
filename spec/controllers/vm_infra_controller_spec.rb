@@ -61,9 +61,6 @@ describe VmInfraController do
   end
 
   it 'can open the reconfigure tab' do
-    FactoryGirl.create(:vmdb_database)
-    EvmSpecHelper.create_guid_miq_server_zone
-
     host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1))
     vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => '04'))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
@@ -79,9 +76,6 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab for a vm with max_cores_per_socket <= 1 should not display the cores_per_socket dropdown' do
-    FactoryGirl.create(:vmdb_database)
-    EvmSpecHelper.create_guid_miq_server_zone
-
     host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1))
     vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => "04"))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
@@ -98,9 +92,6 @@ describe VmInfraController do
   end
 
   it 'the reconfigure tab for a vm with max_cores_per_socket > 1 should display the cores_per_socket dropdown' do
-    FactoryGirl.create(:vmdb_database)
-    EvmSpecHelper.create_guid_miq_server_zone
-
     host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 4))
     vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => "07"))
     controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
@@ -119,7 +110,6 @@ describe VmInfraController do
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      FactoryGirl.create(:vmdb_database)
       @vm = VmInfra.create(:name => "testvm", :location => "testvm_location", :vendor => "vmware")
       get :explorer
       request.env['HTTP_REFERER'] = request.fullpath
@@ -143,7 +133,6 @@ describe VmInfraController do
   context "clear or retain existing breadcrumb path" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
-      FactoryGirl.create(:vmdb_database)
       @vm = VmInfra.create(:name => "testvm", :location => "testvm_location", :vendor => "vmware")
       controller.stub(:render)
       controller.stub(:build_toolbar_buttons_and_xml)
