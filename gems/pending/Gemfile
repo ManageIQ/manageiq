@@ -88,6 +88,7 @@ end
 #
 unless ENV['APPLIANCE']
   group :test do
+    gem "coveralls",                    :require => false
     gem "test-unit",                    :require => false
     gem "camcorder",                    :require => false
     gem "jasmine",                      :require => false, :git => "git://github.com/jasmine/jasmine-gem.git", :ref => "c726fe1"
