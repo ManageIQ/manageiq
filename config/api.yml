@@ -416,6 +416,12 @@
         :identifier: ems_infra_protect
       - :name: unassign
         :identifier: ems_infra_protect
+  :provision_dialogs:
+    :description: Provisioning Dialogs
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqDialog
   :provision_requests:
     :description: Provision Requests
     :options:
@@ -584,6 +590,13 @@
       :delete:
       - :name: delete
         :identifier: st_catalog_delete
+  :service_dialogs:
+    :description: Service Dialogs
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: Dialog
   :service_requests:
     :description: Service Requests
     :options:
@@ -606,6 +619,7 @@
     :subcollections:
     - :tags
     - :service_requests
+    - :service_dialogs
     :collection_actions:
       :post:
       - :name: edit
@@ -658,6 +672,7 @@
     :klass: Service
     :subcollections:
     - :tags
+    - :service_dialogs
     :collection_actions:
       :post:
       - :name: edit

@@ -5,6 +5,8 @@ class Service < ActiveRecord::Base
   belongs_to :service                        # Parent Service
   has_many :services, :dependent => :destroy # Child services
 
+  has_many :dialogs, -> { uniq }, :through => :service_template
+
   virtual_belongs_to :parent_service
   virtual_has_many   :direct_service_children
   virtual_has_many   :all_service_children
