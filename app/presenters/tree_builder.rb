@@ -341,6 +341,10 @@ class TreeBuilder
     end
   end
 
+  def assert_type(actual, expected)
+    raise "#{self.class}: expected #{expected.inspect}, got #{actual.inspect}" unless actual == expected
+  end
+
   def get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
