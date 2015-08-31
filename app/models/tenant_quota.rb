@@ -1,7 +1,7 @@
 class TenantQuota < ActiveRecord::Base
   belongs_to :tenant
 
-  QUOTAS = {
+  QUOTA_BASE = {
     :cpu_allocated => {
       :unit          => :mhz,
       :format        => :mhz,
@@ -29,44 +29,26 @@ class TenantQuota < ActiveRecord::Base
     }
   }
 
-  NAMES = QUOTAS.stringify_keys
+  NAMES = QUOTA_BASE.stringify_keys
 
   validates :name, :inclusion => {:in => NAMES}
   validates :unit, :value, :presence => true
 
-  def self.available
-    return @available if @available
+  def self.quota_definitions
+    return @quota_definitions if @quota_definitions
 
-    @available = QUOTAS.each_with_object({}) do |q, h|
+    @quota_definitions = QUOTA_BASE.each_with_object({}) do |q, h|
       name, value = q
       h[name] = value.merge(:description => I18n.t("dictionary.tenants.#{name}"), :value => nil)
       h
     end
   end
 
-  def self.get(tenant)
-    tenant.tenant_quotas.each_with_object({}) do |q, h|
-      h[q.name.to_sym] = available[q.name.to_sym].merge(:unit => q.unit, :value => q.value, :format => q.format)
-      h
-    end.reverse_merge(available)
-  end
-
-  def self.set(tenant, quotas)
-    quotas.each do |name, values|
-      q = tenant.tenant_quotas.where(:name => name).last || new(values.merge(:tenant => tenant, :name => name))
-      q.unit ||= q.default_unit
-      q.update_attributes!(values)
-    end
-    # Delete any quotas that were not passed in
-    destroy_all(:tenant => tenant, :name => (available.keys.sort - quotas.symbolize_keys.keys.sort))
-    tenant.clear_association_cache
-  end
-
   def format
-    QUOTAS.fetch_path(name.to_sym, :format).to_s
+    self.class.quota_definitions.fetch_path(name.to_sym, :format).to_s
   end
 
   def default_unit
-    QUOTAS.fetch_path(name.to_sym, :unit).to_s
+    self.class.quota_definitions.fetch_path(name.to_sym, :unit).to_s
   end
 end
