@@ -219,9 +219,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @confs = @confs.first
     @confs.should have_attributes(
       :name        => nil,
+      :protocol    => "TCP",
       :port        => 443,
-      :target_port => "443",
-      :protocol    => "TCP"
+      :target_port => "443"
     )
 
     # Check group relation

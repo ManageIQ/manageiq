@@ -440,9 +440,9 @@ module ManageIQ::Providers::Kubernetes
       {
         :ems_ref     => "#{service_id}_#{port_config.port}_#{port_config.targetPort}",
         :name        => port_config.name,
+        :protocol    => port_config.protocol,
         :port        => port_config.port,
-        :target_port => port_config.targetPort,
-        :protocol    => port_config.protocol
+        :target_port => port_config.targetPort
       }
     end
 
