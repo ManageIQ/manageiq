@@ -30,4 +30,10 @@ class TreeBuilderPolicy < TreeBuilder
 
     count_only_or_objects(options[:count_only], objects)
   end
+
+  def x_get_tree_po_kids(parent, options)
+    conditions = count_only_or_objects(options[:count_only], parent.conditions, :description)
+    miq_events = count_only_or_objects(options[:count_only], parent.miq_event_definitions, :description)
+    conditions + miq_events
+  end
 end
