@@ -14,8 +14,8 @@ class MiqGenericMountSession
   attr_accessor :settings, :mnt_point, :logger
 
   def initialize(log_settings)
-    @settings = log_settings.dup
-    raise "URI missing" if @settings[:uri].nil?
+    raise "URI missing" unless log_settings.key?(:uri)
+    @settings  = log_settings.dup
     @mnt_point = nil
   end
 
