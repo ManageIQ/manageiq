@@ -106,7 +106,7 @@ module ScanningMixin
     # self.last_sync_on = Time.new.utc  if updated == true
     self.last_sync_on = Time.at(xml_node.root.attributes["created_on"].to_i).utc if updated == true && xml_node.root.attributes["created_on"]
     save
-    hardware.save unless hardware.nil?
+    hardware.save if self.respond_to?(:hardware) && !hardware.nil?
   end
 
   def scan_queue(userid = "system", options = {})
@@ -123,14 +123,14 @@ module ScanningMixin
     _log.debug "category=[#{category}] [#{category.class}]"
     options = {
       "category"    => category.join(","),
-      "from_time"   => last_drift_state_timestamp.try(:to_i),
+      "from_time"   => nil, # TODO: is this still needed?: last_drift_state_timestamp.try(:to_i),
       "taskid"      => nil,
       "target_id"   => id,
       "target_type" => self.class.base_class.name
     }.merge(options)
     host = options.delete("host")
     options = {
-      "args"        => [path],
+      "args"        => [path_arg],
       "method_name" => "sync_metadata",
       "vm_guid"     => guid # TODO: target_guid
     }.merge(options)
@@ -153,7 +153,7 @@ module ScanningMixin
     # If the options hash has an "args" element, remove it and add it to the "args" element with self.path
     miqhost_args = Array(options.delete("args"))
     options = {
-      "args"        => [path] + miqhost_args,
+      "args"        => [path_arg] + miqhost_args,
       "method_name" => "scan_metadata",
       "vm_guid"     => guid # TODO: target_guid
     }.merge(options)
@@ -162,6 +162,13 @@ module ScanningMixin
   rescue => err
     _log.log_backtrace(err)
   end
+
+  def path_arg
+    return path if self.respond_to?(:path)
+    return name if self.respond_to?(:name)
+    nil
+  end
+  private :path_arg
 
   def scan_profile_list
     ScanItem.get_default_profiles
