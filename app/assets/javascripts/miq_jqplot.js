@@ -86,6 +86,12 @@ function jqplot_xaxis_tick_highlight(str, seriesIndex, pointIndex, plot) {
            str;
 }
 
+function jqplot_yaxis_tick_highlight(str, seriesIndex, pointIndex, plot) {
+    return plot.options.axes.yaxis.ticks[pointIndex] + ' / ' +
+           plot.options.series[seriesIndex].label + ': ' +
+           str;
+}
+
 $(document).ready(function(){
   $(window).resize(function() {
     setTimeout(jqplot_redraw_charts, 500);
