@@ -22,7 +22,6 @@
           requireUser: true
         },
         resolve: {
-          requests: resolveRequests,
           services: resolveServices
         }
       }
@@ -30,22 +29,16 @@
   }
 
   /** @ngInject */
-  function resolveRequests(CollectionsApi) {
-    return CollectionsApi.query('provision_requests');
-  }
-
-  /** @ngInject */
   function resolveServices(CollectionsApi) {
-    var options = {expand: false};
+    var options = {expand: true, filter: ['display=true']};
 
     return CollectionsApi.query('services', options);
   }
 
   /** @ngInject */
-  function StateController(services, requests) {
+  function StateController(services) {
     var vm = this;
-    vm.servicesCount = services.count;
-    vm.requestsCount = requests.count;
+
     vm.title = 'Dashboard';
   }
 })();
