@@ -33,6 +33,7 @@ if (typeof(ManageIQ) === 'undefined') {
     charts: {
       chartData: null, // data for charts
       charts: {}, // object with registered charts used in jqplot_register_chart
+      c3: {}, // c3 charts by id
     },
     grids: {
       grids: null, // stored grids on the screen
