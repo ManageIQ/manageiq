@@ -8,7 +8,7 @@ class ContainerProject < ActiveRecord::Base
   has_many :container_services
   has_many :container_definitions, :through => :container_groups
 
-  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource
+  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
 
   virtual_column :groups_count,      :type => :integer
   virtual_column :services_count,    :type => :integer
