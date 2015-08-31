@@ -475,7 +475,6 @@ class OpsController < ApplicationController
     )
     # Update the tree with any new nodes
     presenter[:add_nodes] = add_nodes if add_nodes
-    presenter[:set_visible_elements][:buttons_on] = false
 
     r = proc { |opts| render_to_string(opts) }
 
