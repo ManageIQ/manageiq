@@ -1004,6 +1004,11 @@ class ApplicationHelper::ToolbarBuilder
       when "container_group_timeline"
         return "No Timeline data has been collected for this Pod" unless @record.has_events? || @record.has_events?(:policy_events)
       end
+    when "ManageIQ::Providers::Kubernetes::ContainerManager::ContainerProject"
+      case id
+      when "container_project_timeline"
+        return "No Timeline data has been collected for this Project" unless @record.has_events? || @record.has_events?(:policy_events)
+      end
     when "MiqAction"
       case id
       when "action_edit"
