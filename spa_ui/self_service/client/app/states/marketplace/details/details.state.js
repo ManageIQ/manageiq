@@ -37,4 +37,3 @@
     vm.serviceTemplate = serviceTemplate;
   }
 })();
-
