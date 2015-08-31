@@ -15,6 +15,8 @@ class Tenant < ActiveRecord::Base
   has_many :owned_providers,              :foreign_key => :tenant_owner_id, :class_name => 'Provider'
   has_many :owned_ext_management_systems, :foreign_key => :tenant_owner_id, :class_name => 'ExtManagementSystem'
   has_many :owned_vm_or_templates,        :foreign_key => :tenant_owner_id, :class_name => 'VmOrTemplate'
+  has_many :owned_service_catalog_templates, :class_name => 'ServiceTemplateCatalog'
+  has_many :owned_service_templates, :class_name => 'ServiceTemplate'
 
   has_many :tenant_quotas
   has_many :miq_groups, :foreign_key => :tenant_owner_id
@@ -34,7 +36,8 @@ class Tenant < ActiveRecord::Base
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
   validate  :validate_only_one_root
-  validates :name, :description, :presence => true, :unless => :root?
+  validates :description, :presence => true
+  validates :name, :presence => true, :unless => :use_config_for_attributes?
   validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent" }
 
   # FUTURE: allow more content_types
@@ -66,7 +69,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def display_type
-    project? ?  "Project" : "Tenant"
+    project? ? "Project" : "Tenant"
   end
 
   def login_text
@@ -143,22 +146,21 @@ class Tenant < ActiveRecord::Base
   end
 
   def self.seed
-    Tenant.root_tenant || Tenant.create.update_attributes!(:name => nil)
+    Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
   end
 
   private
 
   # when a root tenant has an attribute with a nil value,
-  #   read the value from the settings table instead
+  #   read the value from the configurations table instead
   #
   # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
-    ret = self[attr_name]
-    if ret.nil? && root?
-      ret = settings.fetch_path(:server, setting_name)
+    if use_config_for_attributes?
+      ret = get_vmdb_config.fetch_path(:server, setting_name)
       block_given? ? yield(ret) : ret
     else
-      ret
+      self[attr_name]
     end
   end
 
@@ -169,7 +171,7 @@ class Tenant < ActiveRecord::Base
     self.name = nil unless name.present?
   end
 
-  def settings
+  def get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 

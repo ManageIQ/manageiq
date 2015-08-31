@@ -4,7 +4,7 @@ include ApplicationHelper
 describe "miq_capacity/_utilization_options.html.haml" do
   before :each do
     set_controller_for_view("miq_capacity")
-    assign(:record, Struct.new("Record", :id).new(2))
+    assign(:record, Struct.new(:id).new(2))
     assign(:sb, {:util => {:options => {:days         => 2,
                                         :time_profile => "1",
                                         :chart_date   => "asdf"

@@ -3,11 +3,6 @@ require "spec_helper"
 describe MiqAePassword do
   let(:plaintext) { "Pl$1nTeXt" }
 
-  before do
-    # clear out cached key files
-    MiqPassword.key_root = Rails.root.join("certs")
-  end
-
   describe ".v0_key" do
     it "does not have v0_key" do
       expect(described_class.v0_key).to be_false

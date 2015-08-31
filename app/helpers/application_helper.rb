@@ -1213,11 +1213,6 @@ module ApplicationHelper
     role_allows(:feature => start_page, :any => true)
   end
 
-  def allowed_filter_db?(db)
-    return false if db.start_with?('Container') && !get_vmdb_config[:product][:containers]
-    true
-  end
-
   def miq_tab_header(id, active = nil, options = {}, &block)
     content_tag(:li,
                 :class     => "#{options[:class]} #{active == id ? 'active' : ''}",

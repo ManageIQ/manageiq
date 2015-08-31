@@ -742,7 +742,6 @@ class ConfigurationController < ApplicationController
       }
     when 'ui_3'
       current = MiqSearch.where(:search_type => "default")
-                         .select  { |s| allowed_filter_db?(s.db) }
                          .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
       @edit = {
         :key         => 'config_edit__ui3',

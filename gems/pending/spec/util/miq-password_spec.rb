@@ -5,11 +5,13 @@ require 'util/miq-password'
 
 describe MiqPassword do
   before do
+    @old_key_root = MiqPassword.key_root
     MiqPassword.key_root = File.join(GEMS_PENDING_ROOT, "spec/support")
   end
 
   after do
-    MiqPassword.key_root = nil
+    # clear legacy keys and reset key_root changes (from specs or before block)
+    MiqPassword.key_root = @old_key_root
   end
 
   MIQ_PASSWORD_CASES = [
@@ -75,10 +77,7 @@ describe MiqPassword do
         MiqPassword.add_legacy_key("v0_key", :v0)
         MiqPassword.add_legacy_key("v1_key")
       end
-      after do
-        MiqPassword.v0_key = nil
-        MiqPassword.v1_key = nil
-      end
+
       it(".encrypt")        { expect(MiqPassword.encrypt(pass)).to             be_encrypted(pass) }
       it(".decrypt v1")     { expect(MiqPassword.decrypt(enc_v1)).to           be_decrypted(pass) }
       it(".decrypt erb")    { expect(MiqPassword.decrypt(erberize(enc_v0))).to be_decrypted(pass) }
@@ -194,7 +193,6 @@ describe MiqPassword do
     it "with an encrypted string" do
       MiqPassword.add_legacy_key("v1_key")
       expect(MiqPassword.md5crypt("v1:{Wv/+DC0XBqnIbRCIAI+CSQ==}")).to eq("$1$miq$Ho9GNOzRsxMpJSsgwG/y01")
-      MiqPassword.v1_key = nil
     end
   end
 
@@ -208,7 +206,6 @@ describe MiqPassword do
       MiqPassword.add_legacy_key("v1_key")
       expect(MiqPassword.sysprep_crypt("v1:{Wv/+DC0XBqnIbRCIAI+CSQ==}")).to eq(
         "cABhAHMAcwB3AG8AcgBkAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==")
-      MiqPassword.v1_key = nil
     end
   end
 
@@ -223,7 +220,7 @@ describe MiqPassword do
     expect(x).to eq("some :password: ******** and another :password: ********")
   end
 
-  context ".key_root" do
+  context ".key_root / .key_root=" do
     it "defaults key_root" do
       expect(ENV).to receive(:[]).with("KEY_ROOT").and_return("/certs")
       MiqPassword.key_root = nil
@@ -234,6 +231,35 @@ describe MiqPassword do
       expect(ENV).not_to receive(:[])
       MiqPassword.key_root = "/abc"
       expect(MiqPassword.key_root).to eq("/abc")
+    end
+
+    it "clears key caches" do
+      MiqPassword.add_legacy_key("v0_key", :v0)
+      MiqPassword.add_legacy_key("v1_key")
+      MiqPassword.v2_key
+
+      expect(MiqPassword.v0_key).to_not be_nil
+      expect(MiqPassword.v1_key).to_not be_nil
+      expect(MiqPassword.v2_key).to_not be_false
+
+      MiqPassword.key_root = nil
+
+      expect(MiqPassword.v0_key).to be_nil
+      expect(MiqPassword.v1_key).to be_nil
+      expect(MiqPassword.v2_key).to be_false
+    end
+
+    it "clears key caches" do
+      MiqPassword.add_legacy_key("v0_key", :v0)
+      MiqPassword.add_legacy_key("v1_key")
+
+      expect(MiqPassword.v0_key).to_not be_nil
+      expect(MiqPassword.v1_key).to_not be_nil
+
+      MiqPassword.clear_keys
+
+      expect(MiqPassword.v0_key).to be_nil
+      expect(MiqPassword.v1_key).to be_nil
     end
   end
 

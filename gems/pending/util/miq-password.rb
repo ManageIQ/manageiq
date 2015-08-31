@@ -109,9 +109,17 @@ class MiqPassword
     end
   end
 
+  def self.key_root
+    @key_root ||= ENV["KEY_ROOT"]
+  end
+
   def self.key_root=(key_root)
-    @v2_key = @v1_key = @v0_key = nil
+    clear_keys
     @key_root = key_root
+  end
+
+  def self.clear_keys
+    @v2_key = @v1_key = @v0_key = nil
   end
 
   def self.v2_key
@@ -177,13 +185,6 @@ class MiqPassword
 
   def decrypt_version_0(str)
     self.class.v0_key.decrypt64(str)
-  end
-
-  class << self
-    attr_writer :key_root
-    def key_root
-      @key_root ||= ENV["KEY_ROOT"]
-    end
   end
 
   def self.extract_erb_encrypted_value(value)

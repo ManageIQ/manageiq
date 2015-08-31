@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Tenant do
-  let(:settings) { {} }
+  let(:config) { {} }
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
 
   let(:default_tenant) do
@@ -15,7 +15,7 @@ describe Tenant do
   end
 
   before do
-    stub_server_configuration(settings)
+    stub_server_configuration(config)
   end
 
   describe "#default_tenant" do
@@ -30,7 +30,7 @@ describe Tenant do
     end
 
     it "can update the root_tenant" do
-      root_tenant.update_attributes!(:name => 'newname')
+      root_tenant.update_attributes!(:name => 'newname', :use_config_for_attributes => false)
       expect(root_tenant.reload.name).to eq('newname')
     end
   end
@@ -130,7 +130,7 @@ describe Tenant do
   end
 
   describe "#name" do
-    let(:settings) { {:server => {:company => "settings"}} }
+    let(:config) { {:server => {:company => "settings"}} }
 
     it "has default name" do
       expect(tenant.name).to eq("My Company")
@@ -141,9 +141,9 @@ describe Tenant do
       expect(tenant.name).to eq("custom")
     end
 
-    it "doesnt read settings for regular tenant" do
-      tenant.name = nil
-      expect(tenant.name).to be_nil
+    it "doesnt read configurations for regular tenant" do
+      tenant.name = "custom"
+      expect(tenant.name).to eq("custom")
     end
 
     it "is unique per parent tenant" do
@@ -163,15 +163,14 @@ describe Tenant do
       end.not_to raise_error
     end
 
-    context "for default tenant" do
+    context "for root_tenants" do
       it "reads settings" do
-        expect(root_tenant[:name]).to be_nil
         expect(root_tenant.name).to eq("settings")
       end
 
-      it "has custom name" do
-        root_tenant.name = "custom"
-        expect(root_tenant.name).to eq("custom")
+      it "can disable reading from configurations" do
+        root_tenant.use_config_for_attributes = false
+        expect(root_tenant.name).not_to eq("settings")
       end
     end
   end
@@ -206,20 +205,20 @@ describe Tenant do
       expect(root_tenant.logo.url).to match(/missing/)
     end
 
-    context "with server settings" do
-      let(:settings) { {:server => {:custom_logo => true}} }
+    context "with server configurations" do
+      let(:config) { {:server => {:custom_logo => true}} }
 
-      it "uses settings value for root_tenant" do
+      it "uses configurations value for root_tenant" do
         expect(root_tenant.logo.url).to eq("/uploads/custom_logo.png")
       end
 
-      it "overrides settings for default tenant" do
-        root_tenant.update_attributes(:logo_file_name => "different.png")
+      it "overrides configurations for root_tenant" do
+        root_tenant.update_attributes(:logo_file_name => "different.png", :use_config_for_attributes => false)
         expect(root_tenant.logo.url).to eq("/uploads/different.png")
       end
 
       # would prefer if url was nil, but this is how paperclip works
-      it "does not use settings for regular tenant" do
+      it "does not use configurations for regular tenant" do
         tenant.save!
         expect(tenant.logo.url).to match(/missing/)
       end
@@ -238,27 +237,29 @@ describe Tenant do
       expect(tenant).not_to be_logo
     end
 
-    it "knows there is no logo from configuration for root_tenant" do
-      expect(root_tenant).not_to be_logo
-    end
-
-    it "knows there is a logo overriding configuration for root_tenant" do
-      root_tenant.logo_file_name = "custom_logo.png"
-      expect(root_tenant).to be_logo
-    end
-
-    context "#with custom_logo configuration" do
-      let(:settings) { {:server => {:custom_logo => true}} }
-
-      it "knows there is no logo ignoring settings for standard tenant" do
-        expect(tenant).not_to be_logo
+    context "for root_tenant" do
+      it "knows there is no logo from configuration" do
+        expect(root_tenant).not_to be_logo
       end
 
-      it "knows there is a logo from configuration for root_tenant" do
+      it "knows there is a logo overriding configuration" do
+        root_tenant.logo_file_name = "custom_logo.png"
+        root_tenant.use_config_for_attributes = false
         expect(root_tenant).to be_logo
       end
 
-      # don't know how to override custom_logo configuration for default tenant
+      context "#with custom_logo configuration" do
+        let(:config) { {:server => {:custom_logo => true}} }
+
+        it "knows there is a logo from configuration" do
+          expect(root_tenant).to be_logo
+        end
+
+        it "knows there is no logo when not using config" do
+          root_tenant.use_config_for_attributes = false
+          expect(root_tenant).not_to be_logo
+        end
+      end
     end
   end
 
@@ -280,15 +281,17 @@ describe Tenant do
       expect(tenant.logo_content_type).to be_nil
     end
 
-    it "has custom content_type for root_tenant" do
-      expect(root_tenant.logo_content_type).to eq("image/png")
-    end
-
-    context "#with custom logo configuration" do
-      let(:settings) { {:server => {:custom_logo => true}} }
-
-      it "has custom content_type for root_tenant" do
+    context "for root_tenant" do
+      it "has custom content_type" do
         expect(root_tenant.logo_content_type).to eq("image/png")
+      end
+
+      context "#with custom logo configuration" do
+        let(:settings) { {:server => {:custom_logo => true}} }
+
+        it "has custom content_type" do
+          expect(root_tenant.logo_content_type).to eq("image/png")
+        end
       end
     end
   end
@@ -311,7 +314,7 @@ describe Tenant do
     end
 
     context "with custom login logo configuration" do
-      let(:settings) { {:server => {:custom_login_logo => true}} }
+      let(:config) { {:server => {:custom_login_logo => true}} }
 
       it "has custom login logo" do
         expect(root_tenant.login_logo.url).to match(/custom_login_logo.png/)
@@ -358,6 +361,16 @@ describe Tenant do
     it "has description" do
       tenant.update_attributes(:description => 'very important vm')
       expect(tenant.description).not_to be_nil
+    end
+  end
+
+  describe "#reads_settings" do
+    it "defaults to false" do
+      expect(tenant).not_to be_use_config_for_attributes
+    end
+
+    it "defaults to true for root_tenant" do
+      expect(root_tenant).to be_use_config_for_attributes
     end
   end
 
