@@ -272,13 +272,8 @@ module ApplicationController::Explorer
                         when EmsCluster          then x_get_tree_cluster_kids(object, options)
                         when Host                then x_get_tree_host_kids(object, options)
                         when LdapRegion          then x_get_tree_lr_kids(object, options)
-                        when MiqAlertSet         then x_get_tree_ap_kids(object, options)
-                        when MiqEventDefinition  then options[:tree] != :event_tree ?
-                                                      x_get_tree_ev_kids(object, options) : nil
                         when MiqGroup            then options[:tree] == :db_tree ?
                                                       x_get_tree_g_kids(object, options) : nil
-                        when MiqPolicySet        then x_get_tree_pp_kids(object, options)
-                        when MiqPolicy           then x_get_tree_p_kids(object, options)
                         when MiqRegion           then x_get_tree_region_kids(object, options)
                         when MiqReport           then x_get_tree_r_kids(object, options)
                         when ResourcePool        then x_get_tree_rp_kids(object, options)
@@ -651,64 +646,6 @@ module ApplicationController::Explorer
         end
         return objects
       end
-    end
-  end
-
-  def x_get_tree_ap_kids(object, options)
-    if options[:count_only]
-      return object.miq_alerts.count
-    else
-      return object.miq_alerts.sort_by { |a| a.description.downcase }
-    end
-  end
-
-  def x_get_tree_pp_kids(object, options)
-    if options[:count_only]
-      return object.miq_policies.count
-    else
-      return object.miq_policies.sort_by { |a| a.towhat + a.mode + a.description.downcase }
-    end
-  end
-
-  def x_get_tree_p_kids(object, options)
-    if options[:count_only]
-      return object.conditions.count + object.miq_event_definitions.count
-    else
-      return object.conditions.sort_by { |a| a.description.downcase } +
-              object.miq_event_definitions.sort_by { |a| a.description.downcase }
-    end
-  end
-
-  def x_get_tree_ev_kids(object, options)
-    #if opening Event node in tree, need to use id of policy node from params[:id]
-    if (!params[:id] || params[:button]) && options[:tree] == :policy_profile_tree
-      id = options[:parent_id].split('-')[2].split('_').first
-    elsif (!params[:id] || params[:button]) && options[:tree] == :policy_tree
-      id = options[:parent_id].split('-')[4].split('_').first
-    else
-      nodes = params[:id] && !params[:button] && !params[:pressed] ? params[:id].split("_") : options[:parent_id].split("-")
-      if nodes.length == 5
-        #when condition delete is pressed in pol tree
-        id = nodes.last
-      elsif nodes.length == 4
-        id = nodes[2].split('-').last
-      elsif nodes.length == 3
-        id = options[:tree] == :policy_tree ? nodes.last.split('-').last : nodes[1].split('-').last
-        #id = options[:tree] == :policy_tree ? nodes.last.split('-').last : nodes[1].split('_').first
-      elsif nodes.length == 2
-        id = nodes[1].split('-').last
-      else
-        #if policy copy button was pressed
-        id = params[:id]
-      end
-    end
-    pol_rec = MiqPolicy.find_by_id(from_cid(id))  # Get the parent policy record
-    items1 = pol_rec ? pol_rec.actions_for_event(object, :success) : []
-    items2 = pol_rec ? pol_rec.actions_for_event(object, :failure) : []
-    if options[:count_only]
-      return items1.count + items2.count
-    else
-      return items1 + items2
     end
   end
 
