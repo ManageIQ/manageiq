@@ -14,4 +14,8 @@ class ContainerImage < ActiveRecord::Base
     result << ":#{tag}" unless tag.nil?
     result
   end
+
+  def scan
+    raise 'Feature not implemented'
+  end
 end
