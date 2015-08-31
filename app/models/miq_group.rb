@@ -1,7 +1,7 @@
 class MiqGroup < ActiveRecord::Base
   default_scope { where(self.conditions_for_my_region_default_scope) }
 
-  belongs_to :tenant_owner, :class_name => "Tenant"
+  belongs_to :tenant
   belongs_to :miq_user_role
   belongs_to :resource, :polymorphic => true
   has_and_belongs_to_many :users
@@ -96,7 +96,7 @@ class MiqGroup < ActiveRecord::Base
           group.sequence      = seq
           group.filters       = ldap_to_filters[g]
           group.group_type    = "system"
-          group.tenant_owner  = root_tenant
+          group.tenant        = root_tenant
 
           mode = group.new_record? ? "Created" : "Added"
           group.save!
@@ -105,7 +105,7 @@ class MiqGroup < ActiveRecord::Base
           seq += 1
         end
       else
-        MiqGroup.where(:tenant_owner_id => nil).update_all(:tenant_owner_id => root_tenant.id)
+        MiqGroup.where(:tenant_id => nil).update_all(:tenant_id => root_tenant.id)
 
         # Migrate legacy groups to have miq_user_roles if necessary
         self.all.each do |g|
