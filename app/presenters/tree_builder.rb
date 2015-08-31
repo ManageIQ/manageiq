@@ -329,7 +329,7 @@ class TreeBuilder
     options[:count_only] ? 0 : []
   end
 
-  def count_only_or_objects(count_only, objects, sort_by)
+  def count_only_or_objects(count_only, objects, sort_by = nil)
     if count_only
       objects.size
     elsif sort_by.kind_of?(Proc)
