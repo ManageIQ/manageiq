@@ -6,7 +6,15 @@
 - url      = url_for(:action => change_url, :id => "#{rec_id}")
 - url_json = {:interval => '.5', :url => url}.to_json
 - token_label ||= _("Token")
+- uid_label ||= _("Service Account Name")
 
+.form-group
+  %label.control-label.col-md-2
+    = uid_label
+  .col-md-8
+    = text_field_tag("#{pfx}_userid",
+                     @edit[:new]["#{pfx}_userid".to_sym],
+                     "data-miq_observe" => url_json)
 .form-group
   %label.control-label.col-md-2
     = token_label
