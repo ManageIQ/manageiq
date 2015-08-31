@@ -15,14 +15,15 @@ module ContainerServiceHelper::TextualSummary
   end
 
   def textual_group_port_configs
-    labels = [_("Name"), _("Protocol"), _("Port"), _("Target Port")]
+    labels = [_("Name"), _("Protocol"), _("Port"), _("Target Port"), _("Node Port")]
     h = {:labels => labels}
     h[:values] = @record.container_service_port_configs.collect do |config|
       [
         config.name || _("<Unnamed>"),
         config.protocol,
         config.port,
-        config.target_port
+        config.target_port,
+        config.node_port
       ]
     end
     h
