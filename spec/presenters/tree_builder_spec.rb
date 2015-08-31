@@ -20,7 +20,8 @@ describe TreeBuilder do
 
   context "title_and_tip" do
     it "sets title and tooltip for the passed in root node" do
-      title, tooltip, icon = TreeBuilder.root_options(:cb_rates_tree)
+      tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
+      title, tooltip, icon = tree.root_options
       title.should    == "Rates"
       tooltip.should  == "Rates"
       icon.should be_nil
@@ -53,11 +54,45 @@ describe TreeBuilder do
     end
   end
 
+  context "#reload!" do
+    it "replaces @tree_nodes" do
+      tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
+      tree.instance_eval { @tree_nodes = "{}" }
+      tree.reload!
+      expect(tree.tree_nodes).not_to eq("{}")
+    end
+  end
+
+  context "#root_options" do
+    let(:tree) do
+      Class.new(TreeBuilderChargebackRates) do
+        def root_options
+          [ "Foo", "Bar", nil ]
+        end
+      end.new("cb_rates_tree", "cb_rates", {})
+    end
+
+    it "descendants can set their own root_options" do
+      expect(tree.tree_nodes).to match(/"title":\s*"Foo"/)
+    end
+  end
+
   context '#x_get_child_nodes' do
     it 'returns for Hash models' do
       builder = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
       nodes = builder.x_get_child_nodes('tf_xx-10')
       expect(nodes).to be_empty
+    end
+  end
+
+  context '#node_by_tree_id' do
+    it 'returns a correct Hash for Hash models' do
+      builder = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
+      node = builder.node_by_tree_id('tf_xx-10')
+      expect(node).to be_a_kind_of(Hash)
+      expect(node[:id]).to eq("10")
+      expect(node[:type]).to eq("xx")
+      expect(node[:full_id]).to eq("tf_xx-10")
     end
   end
 
@@ -109,6 +144,31 @@ describe TreeBuilder do
       expect(
         builder.count_only_or_objects(false, [['c', 1], ['a', 0], ['b', 1], ['d', 0]], %w(second first))
       ).to eq([['a', 0], ['d', 0], ['b', 1], ['c', 1]])
+
+      expect(builder.count_only_or_objects(false, 1..5, lambda { |i| [ i % 2, i ] })).to eq([2, 4, 1, 3, 5])
+    end
+  end
+
+  context "#open_node" do
+    it "adds a node if not present" do
+      sb = {}
+      node = 'tf_xx-10'
+
+      tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", sb)
+      tree.send(:open_node, node)
+
+      expect(sb[:trees][:cb_rates_tree][:open_nodes]).to include(node)
+    end
+
+    it "doesn't add already present nodes" do
+      sb = {}
+      node = 'tf_xx-10'
+
+      tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", sb)
+      tree.send(:open_node, node)
+      tree.send(:open_node, node)
+
+      expect(sb[:trees][:cb_rates_tree][:open_nodes].length).to eq(1)
     end
   end
 end
