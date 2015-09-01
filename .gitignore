@@ -18,6 +18,7 @@
 /vmdb/
 BUILD
 ca/root
+certs/v2_key
 coverage/
 Gemfile.dev.rb
 Gemfile.lock*
