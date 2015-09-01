@@ -1,39 +1,57 @@
 - @angularForm = true
 
-%form#form_div{:name => "angularForm", 'ng-controller' => "providerForemanFormController", 'ng-show' => "afterGet", :novalidate => true}
+%form#form_div.form-horizontal{:name => "angularForm", 'ng-controller' => "providerForemanFormController", 'ng-show' => "afterGet", :novalidate => true}
   = render :partial => "layouts/flash_msg"
 
   %h3
     = _("Basic Information")
-    %table.style1
-      %tr
-        %td.key= _("Name")
-        %td
-          %input{:type => "text", :name => "name", 'ng-model' => "providerForemanModel.name", :maxlength => MAX_NAME_LEN, :miqrequired => true, :checkchange => true}
-      %tr
-        %td.key= _("Url")
-        %td
-          %input{:type => "text", :name => "url", 'ng-model' => "providerForemanModel.url", :maxlength => MAX_DESC_LEN, :miqrequired => true, :checkchange => true}
-      %tr
-        %td.key= _("Verify Peer Certificate")
-        %td
-          %input{:type => "checkbox", :name => "verify_ssl", 'ng-model' => "providerForemanModel.verify_ssl", 'ng-true-value' => "1", 'ng-false-value' => "0", :checkchange => true}
+  .form-group
+    %label.col-md-2.control-label
+      = _("Name")
+    .col-md-8
+      %input{:type => "text",
+             :name => "name",
+             'ng-model' => "providerForemanModel.name",
+             :maxlength => MAX_NAME_LEN,
+             :class => "form-control",
+             :miqrequired => true,
+             :checkchange => true}
+  .form-group
+    %label.col-md-2.control-label
+      = _("Url")
+    .col-md-8
+      %input{:type => "text",
+             :name => "url",
+             'ng-model' => "providerForemanModel.url",
+             :maxlength => MAX_DESC_LEN,
+             :class => "form-control",
+             :miqrequired => true,
+             :checkchange => true}
+  .form-group
+    %label.col-md-2.control-label
+      = _("Verify Peer Certificate")
+    .col-md-8
+      %input{:type => "checkbox",
+             :name => "verify_ssl",
+             'ng-model' => "providerForemanModel.verify_ssl",
+             'ng-true-value' => "1",
+             'ng-false-value' => "0",
+             :checkchange => true}
 
 
   %hr
   %h3
     = _("Credentials")
-    %table.style1
-      = render :partial => "layouts/angular/auth_credentials_angular",
-             :locals  => {:ng_show           => true,
-                          :ng_model          => "providerForemanModel",
-                          :ng_reqd_userid    => "providerForemanModel.log_userid == ''",
-                          :ng_reqd_password  => "providerForemanModel.log_password == ''",
-                          :ng_reqd_verify    => "providerForemanModel.log_verify == ''",
-                          :validate_url      => "authentication_validate",
-                          :id                => @provider_foreman.id || "new",
-                          :valtype           => nil,
-                          :basic_info_needed => true}
+  = render :partial => "layouts/angular/auth_credentials_angular",
+           :locals  => {:ng_show           => true,
+                        :ng_model          => "providerForemanModel",
+                        :ng_reqd_userid    => "providerForemanModel.log_userid == ''",
+                        :ng_reqd_password  => "providerForemanModel.log_password == ''",
+                        :ng_reqd_verify    => "providerForemanModel.log_verify == ''",
+                        :validate_url      => "authentication_validate",
+                        :id                => @provider_foreman.id || "new",
+                        :valtype           => nil,
+                        :basic_info_needed => true}
 
   = render :partial => "layouts/angular/x_edit_buttons_angular"
   %span{:style => "color:black"}= _("Required. Should have privileged access, such as root or administrator.")
