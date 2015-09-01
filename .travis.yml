@@ -21,7 +21,7 @@ addons:
   postgresql: '9.4'
 before_install:
 - "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
-- "[[ -f certs/v2_key.dev ]] || cp certs/v2_key.dev certs/v2_key"
+- "[[ -f certs/v2_key.dev ]] && cp certs/v2_key.dev certs/v2_key"
 - "[[ -n \"$GEM\" ]] || echo \"1\" > REGION"
 - "[[ -n \"$GEM\" ]] || cp config/database.pg.yml config/database.yml"
 - "[[ -n \"$GEM\" ]] || psql -c \"CREATE USER root SUPERUSER PASSWORD 'smartvm';\" -U postgres"
