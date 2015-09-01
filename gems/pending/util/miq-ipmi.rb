@@ -21,7 +21,7 @@ class MiqIPMI
   end
 
   def connected?
-    !!@status
+    !@status.empty?
   end
 
   def power_state
