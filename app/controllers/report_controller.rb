@@ -211,7 +211,7 @@ class ReportController < ApplicationController
     @x_edit_buttons_locals = set_form_locals if @in_a_form
     # show form buttons after upload is pressed
     @collapse_c_cell = !@in_a_form && !@pages && !saved_report_paging?
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def accordion_select
