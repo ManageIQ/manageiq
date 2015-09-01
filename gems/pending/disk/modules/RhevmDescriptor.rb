@@ -1,4 +1,4 @@
-require 'util/pathname2'
+require 'pathname'
 
 module RhevmDescriptor
 
@@ -159,9 +159,9 @@ module RhevmDescriptor
   end
 
   def buildFilename(parent_uuid)
-    parentFileName = Pathname2.new(parent_uuid)
+    parentFileName = Pathname.new(parent_uuid)
     if parentFileName.absolute?
-      parentFileName = parentFileName.relative_path_from(Pathname2.new(self.dInfo.fileName).dirname)
+      parentFileName = parentFileName.relative_path_from(Pathname.new(self.dInfo.fileName).dirname)
       $log.debug "#{self.class.name}: Parent disk file is absolute. Using relative path [#{parentFileName}]" if $log
     end
     File.join(File.dirname(self.dInfo.fileName), parentFileName.to_s.tr("\\", "/"))
