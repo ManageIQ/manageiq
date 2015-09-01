@@ -1290,7 +1290,7 @@ describe ApplicationHelper do
         @user.stub(:role_allows?).and_return(true)
       end
 
-      %w(vm_migrate vm_publish vm_reconfigure).each do |id|
+      %w(vm_migrate vm_publish).each do |id|
         context "and id = #{id}" do
           before { @id = id }
 
@@ -1303,6 +1303,22 @@ describe ApplicationHelper do
             @record = FactoryGirl.create(:vm_vmware)
             subject.should == false
           end
+        end
+      end
+
+      context "and id = vm_reconfigure" do
+        before do
+          @id = "vm_reconfigure"
+          @record.stub(:reconfigurable?).and_return(true)
+        end
+
+        it "and !@record.reconfigurable?" do
+          @record.stub(:reconfigurable?).and_return(false)
+          subject.should == true
+        end
+
+        it "and @record.reconfigurable?" do
+          subject.should == false
         end
       end
 
