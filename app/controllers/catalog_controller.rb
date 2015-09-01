@@ -262,7 +262,7 @@ class CatalogController < ApplicationController
       set_form_locals_for_sysprep
     end
 
-    render :layout => "explorer", :action => "explorer"
+    render :layout => "application", :action => "explorer"
   end
 
   def set_form_locals_for_sysprep

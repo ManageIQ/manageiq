@@ -110,7 +110,7 @@ class PxeController < ApplicationController
     get_node_info(x_node)
     @pxe_image_types_count = PxeImageType.count
 
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   private

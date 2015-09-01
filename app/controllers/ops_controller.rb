@@ -177,7 +177,7 @@ class OpsController < ApplicationController
     @collapse_c_cell = @in_a_form || @pages ? false : true
     @sb[:center_tb_filename] = center_toolbar_filename
     edit_changed? if @edit
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def accordion_select

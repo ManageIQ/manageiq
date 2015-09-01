@@ -1,657 +1,993 @@
 {
-  "ignored_warnings":[
+  "ignored_warnings": [
     {
-      "warning_type":"Command Injection",
-      "warning_code":14,
-      "fingerprint":"63c919e1588a501f6e81596e2a0dcc933f65bf634ac4a32a714c4b0f97fcf072",
-      "message":"Possible command injection",
-      "file":"lib/vmdb/appliance.rb",
-      "line":103,
-      "link":"http://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code":"`#{diag[:cmd]}`",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"Vmdb::Appliance",
-        "method":"s(:self).log_diagnostics"
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "bc7c2597ac891e83c66cb97cdbc860e550907de13b45dc33c64e121719df9486",
+      "message": "Possible command injection",
+      "file": "lib/vmdb/appliance.rb",
+      "line": 103,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`#{diag[:cmd]}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Vmdb::Appliance",
+        "method": "s(:self).log_diagnostics"
       },
-      "user_input":"diag[:cmd]",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "diag[:cmd]",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Command Injection",
-      "warning_code":14,
-      "fingerprint":"77418c09a382094942ab34d86d57a9e0e9b5bfc78052b77f4a1954ad78109b5f",
-      "message":"Possible command injection",
-      "file":"app/models/miq_action.rb",
-      "line":485,
-      "link":"http://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code":"Open3.capture3(MiqEnvironment::Command.rails_command, \"runner\", Tempfile.new(\"miq_action\", File.expand_path(File.join(Rails.root, \"product/conditions/scripts\"))).path, \"'#{rec.name}'\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MiqAction",
-        "method":"run_script"
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "9671d8f31067984959a7340e73928b3d7f3aafccdc16aa4c6cb08105e7093e98",
+      "message": "Possible command injection",
+      "file": "app/models/miq_action.rb",
+      "line": 485,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "Open3.capture3(MiqEnvironment::Command.rails_command, \"runner\", Tempfile.new(\"miq_action\", File.expand_path(File.join(Rails.root, \"product/conditions/scripts\"))).path, \"'#{rec.name}'\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MiqAction",
+        "method": "run_script"
       },
-      "user_input":"rec.name",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "rec.name",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Command Injection",
-      "warning_code":14,
-      "fingerprint":"0d3cd5be022f120f56390f4b85d602fa1f673495c784f8066129ffc8e7abf8c0",
-      "message":"Possible command injection",
-      "file":"app/models/miq_server.rb",
-      "line":487,
-      "link":"http://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code":"spawn(\"nohup #{Rails.root.join(\"vmdb_restart\").freeze}\", [:out, :err] => ([Rails.root.join(\"log/vmdb_restart.log\"), \"a\"]))",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MiqServer",
-        "method":"restart"
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "13e52e9f85af116b5c860df8a46e2a3dd0f80b4796f865a32001fa33ed1570b4",
+      "message": "User controlled method execution",
+      "file": "app/controllers/application_controller/explorer.rb",
+      "line": 95,
+      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "self.send(params[:pressed])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController::Explorer",
+        "method": "x_button"
       },
-      "user_input":"Rails.root.join(\"vmdb_restart\").freeze",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "params[:pressed]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Dangerous Send",
-      "warning_code":23,
-      "fingerprint":"13e52e9f85af116b5c860df8a46e2a3dd0f80b4796f865a32001fa33ed1570b4",
-      "message":"User controlled method execution",
-      "file":"app/controllers/application_controller/explorer.rb",
-      "line":94,
-      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code":"self.send(params[:pressed])",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"ApplicationController::Explorer",
-        "method":"x_button"
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "d6dfe1a980660196ab8703ce5edc7099563351b48cf08b2f875a9072b700db18",
+      "message": "User controlled method execution",
+      "file": "app/controllers/application_controller/explorer.rb",
+      "line": 103,
+      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "self.send(params[:pressed], VmOrTemplate)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController::Explorer",
+        "method": "x_button"
       },
-      "user_input":"params[:pressed]",
-      "confidence":"High",
-      "note":""
+      "user_input": "params[:pressed]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Dangerous Send",
-      "warning_code":23,
-      "fingerprint":"d6dfe1a980660196ab8703ce5edc7099563351b48cf08b2f875a9072b700db18",
-      "message":"User controlled method execution",
-      "file":"app/controllers/application_controller/explorer.rb",
-      "line":102,
-      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code":"self.send(params[:pressed], VmOrTemplate)",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"ApplicationController::Explorer",
-        "method":"x_button"
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "13e52e9f85af116b5c860df8a46e2a3dd0f80b4796f865a32001fa33ed1570b4",
+      "message": "User controlled method execution",
+      "file": "app/controllers/application_controller/explorer.rb",
+      "line": 105,
+      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "self.send(params[:pressed])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController::Explorer",
+        "method": "x_button"
       },
-      "user_input":"params[:pressed]",
-      "confidence":"High",
-      "note":""
+      "user_input": "params[:pressed]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Dangerous Send",
-      "warning_code":23,
-      "fingerprint":"13e52e9f85af116b5c860df8a46e2a3dd0f80b4796f865a32001fa33ed1570b4",
-      "message":"User controlled method execution",
-      "file":"app/controllers/application_controller/explorer.rb",
-      "line":104,
-      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code":"self.send(params[:pressed])",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"ApplicationController::Explorer",
-        "method":"x_button"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "fa060922082a464c758fbe517a07adf6daba5eae6f46bb08fa0f47f7a91a3215",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/application_controller/ci_processing.rb",
+      "line": 1237,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ExtManagementSystem.exists?(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController::CiProcessing",
+        "method": "foreman_button_operation"
       },
-      "user_input":"params[:pressed]",
-      "confidence":"High",
-      "note":""
+      "user_input": "params[:id]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"fa060922082a464c758fbe517a07adf6daba5eae6f46bb08fa0f47f7a91a3215",
-      "message":"Possible SQL injection",
-      "file":"app/controllers/application_controller/ci_processing.rb",
-      "line":1203,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"ExtManagementSystem.exists?(params[:id])",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"ApplicationController::CiProcessing",
-        "method":"foreman_button_operation"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "be1bdbfdf316ef91831326015e50e3d09e473c467bdcefd6386edb24d32c7769",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 27,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"      CREATE OR REPLACE FUNCTION #{name}()\\n      RETURNS TRIGGER AS $$\\n      BEGIN\\n        #{body}\\n      END;\\n      $$\\n      LANGUAGE plpgsql;\\n\", \"Create trigger function\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "add_trigger_function"
       },
-      "user_input":"params[:id]",
-      "confidence":"High",
-      "note":""
+      "user_input": "name",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"4c5ec67655da90895d56508852409346d51c7f2b01c56e484be18320638dc6aa",
-      "message":"Possible SQL injection",
-      "file":"lib/migration_helper.rb",
-      "line":27,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"connection.execute(\"      CREATE OR REPLACE FUNCTION #{name}()\n      RETURNS TRIGGER AS $$\n      BEGIN\n        #{body}\n      END;\n      $$\n      LANGUAGE plpgsql;\n\", \"Create trigger function\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MigrationHelper",
-        "method":"add_trigger_function"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "61b4f89fac6ce2e28a4fb78efc5927e2c1ab7b54ec17aba49ee14a84562d96e8",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 39,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"      CREATE TRIGGER #{name}\\n      #{direction.to_s.upcase} INSERT ON #{table}\\n      FOR EACH ROW EXECUTE PROCEDURE #{function}();\\n\", \"Create trigger\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "add_trigger_hook"
       },
-      "user_input":"name",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "name",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"040c4e61d0cf90640fc583cb268e22dd2391d18292d80017fc9f2e8c68655a79",
-      "message":"Possible SQL injection",
-      "file":"lib/migration_helper.rb",
-      "line":39,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"connection.execute(\"      CREATE TRIGGER #{name}\n      #{direction.to_s.upcase} INSERT ON #{table}\n      FOR EACH ROW EXECUTE PROCEDURE #{function}();\n\", \"Create trigger\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MigrationHelper",
-        "method":"add_trigger_hook"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "04d76e1f1f73388e374dc6fda6bc5f7104f6131330a129d1cf30bc4a0ee254d0",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 48,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"DROP TRIGGER IF EXISTS #{name} ON #{table};\", \"Drop trigger\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "drop_trigger"
       },
-      "user_input":"name",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "name",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"2aa99becc0fa810be8e032bfa3b707145bc5937ab9e8120156a6c03bcc2acf84",
-      "message":"Possible SQL injection",
-      "file":"lib/migration_helper.rb",
-      "line":48,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"connection.execute(\"DROP TRIGGER IF EXISTS #{name} ON #{table};\", \"Drop trigger\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MigrationHelper",
-        "method":"drop_trigger"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "0711113a0b3b613fd9738fd3b8d3f8b673bbc177881f780b109eb203b48999d7",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 49,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"DROP FUNCTION IF EXISTS #{name}();\", \"Drop trigger function\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "drop_trigger"
       },
-      "user_input":"name",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "name",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"73da601e27feee9ffb35444931704ca9a434b5450d7e8f7bf6636a13b6ba5db3",
-      "message":"Possible SQL injection",
-      "file":"lib/migration_helper.rb",
-      "line":49,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"connection.execute(\"DROP FUNCTION IF EXISTS #{name}();\", \"Drop trigger function\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MigrationHelper",
-        "method":"drop_trigger"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "766db77379b3990cea7c79706991e0032d960d4818194ecd036534d3eb01fbe8",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 60,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER TABLE #{table} ADD CONSTRAINT #{table}_inheritance_check CHECK (#{sanitize_sql_for_conditions(options[:conditions], table)})\", \"Add inheritance check constraint\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "add_table_inheritance"
       },
-      "user_input":"name",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"81f124a9537b1b09da07ea3262912f716cf54316f8e8ef952b7764923c64d3ec",
-      "message":"Possible SQL injection",
-      "file":"lib/migration_helper.rb",
-      "line":60,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"connection.execute(\"ALTER TABLE #{table} ADD CONSTRAINT #{table}_inheritance_check CHECK (#{sanitize_sql_for_conditions(options[:conditions], table)})\", \"Add inheritance check constraint\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MigrationHelper",
-        "method":"add_table_inheritance"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "635e2502b494430c1075dcaf83935abafc448326c5bf3d86697a8499f7e10201",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 61,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER TABLE #{table} INHERIT #{inherit_from}\", \"Add table inheritance\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "add_table_inheritance"
       },
-      "user_input":"table",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"15b29a46fd603377e166854fce2ef3240a678a23052a4e6d9a8e7080ce4d2f6c",
-      "message":"Possible SQL injection",
-      "file":"lib/migration_helper.rb",
-      "line":61,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"connection.execute(\"ALTER TABLE #{table} INHERIT #{inherit_from}\", \"Add table inheritance\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MigrationHelper",
-        "method":"add_table_inheritance"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "2598001fd78747a6b76bac8a6d34a102eac44ac0cb61ed8b64d51e2ad7313fd4",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 67,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER TABLE #{table} DROP CONSTRAINT #{table}_inheritance_check\", \"Drop inheritance check constraint\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "drop_table_inheritance"
       },
-      "user_input":"table",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"09cc3d5877b51e0ae1585fe0ae05f5ed8e745765f4443a19c805fb62107a2472",
-      "message":"Possible SQL injection",
-      "file":"lib/migration_helper.rb",
-      "line":67,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"connection.execute(\"ALTER TABLE #{table} DROP CONSTRAINT #{table}_inheritance_check\", \"Drop inheritance check constraint\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MigrationHelper",
-        "method":"drop_table_inheritance"
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "409793f250785018709aab39b430f88a247781bbe322ececc2784a81864c59e5",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 68,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER TABLE #{table} NO INHERIT #{inherit_from}\", \"Drop table inheritance\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "drop_table_inheritance"
       },
-      "user_input":"table",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"SQL Injection",
-      "warning_code":0,
-      "fingerprint":"36c98903b09a3da20c5a50198d316eeb84d545292b0a31c690e619a65e9bf891",
-      "message":"Possible SQL injection",
-      "file":"lib/migration_helper.rb",
-      "line":68,
-      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code":"connection.execute(\"ALTER TABLE #{table} NO INHERIT #{inherit_from}\", \"Drop table inheritance\")",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MigrationHelper",
-        "method":"drop_table_inheritance"
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "5f71c7d78b272c9c25e8892a2531396be07a770d904ed8e5c54b5e48096f2a3b",
+      "message": "Unsafe reflection method constantize called with parameter value",
+      "file": "app/controllers/cim_instance_controller.rb",
+      "line": 164,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "associations.keys.find do\n (key == (session[\"#{self.class.session_key_prefix}_display\".to_sym] or (params[:display] or \"main\")))\n end.singularize.classify.constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CimInstanceController",
+        "method": "process_show"
       },
-      "user_input":"table",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Remote Code Execution",
-      "warning_code":24,
-      "fingerprint":"3b2d49c0093dbc44e0b52c601675c11502c57181c1d0185bf544337c5cc6bcee",
-      "message":"Unsafe reflection method constantize called with parameter value",
-      "file":"app/controllers/cim_instance_controller.rb",
-      "line":164,
-      "link":"http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code":"associations.keys.find do\n (key == (session[\"#{self.class.session_key_prefix}_display\".to_sym] or (params[:display] or \"main\")))\n end.singularize.classify.constantize",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"CimInstanceController",
-        "method":"process_show"
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "ed8ad3c654ab94304d6536d62f89f18b40798ef0cec3527ac2d51351d901bfe6",
+      "message": "Unsafe reflection method constantize called with parameter value",
+      "file": "app/controllers/miq_ae_class_controller.rb",
+      "line": 1794,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "(params[:pressed] or session[:edit] = nil).split(\"_\").first(3).join(\"_\").camelcase.constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MiqAeClassController",
+        "method": "copy_objects"
       },
-      "user_input":"params[:display]",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "params[:pressed]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Remote Code Execution",
-      "warning_code":24,
-      "fingerprint":"ed8ad3c654ab94304d6536d62f89f18b40798ef0cec3527ac2d51351d901bfe6",
-      "message":"Unsafe reflection method constantize called with parameter value",
-      "file":"app/controllers/miq_ae_class_controller.rb",
-      "line":1806,
-      "link":"http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code":"(params[:pressed] or session[:edit] = nil).split(\"_\").first(3).join(\"_\").camelcase.constantize",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MiqAeClassController",
-        "method":"copy_objects"
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "f38d34cb747f14d41be8142a1ae18e5e4eae17513c807c401e5550d9dc47ec1e",
+      "message": "Unsafe reflection method constantize called with parameter value",
+      "file": "app/controllers/miq_ae_tools_controller.rb",
+      "line": 390,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "CustomButton.button_classes.detect do\n (klass == params[:target_class])\n end.constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MiqAeToolsController",
+        "method": "get_form_vars"
       },
-      "user_input":"params[:pressed]",
-      "confidence":"High",
-      "note":""
+      "user_input": "params[:target_class]",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Remote Code Execution",
-      "warning_code":24,
-      "fingerprint":"af2c877bc0c729c3151c903b76d9ebd00b110ecafcd98b63738c063165132cbe",
-      "message":"Unsafe reflection method constantize called with parameter value",
-      "file":"app/controllers/miq_ae_tools_controller.rb",
-      "line":387,
-      "link":"http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code":"CustomButton.button_classes.detect do\n (klass == params[:target_class])\n end.constantize",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"MiqAeToolsController",
-        "method":"get_form_vars"
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "58fcf47340099025db0b33d410f05aa6594508dab67fe0ee04c47580e838d24e",
+      "message": "Unsafe reflection method constantize called with parameter value",
+      "file": "app/controllers/application_controller/performance.rb",
+      "line": 359,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "(@sb[:chart_reports][params[:menu_click].split(\"_\").last.split(\"-\").last.to_i] or @sb[:chart_reports]).table.data[(params[:menu_click].split(\"_\").last.split(\"-\")[-2].to_i - 1)][\"resource_type\"].constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController::Performance",
+        "method": "perf_menu_click"
       },
-      "user_input":"params[:target_class]",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "(params[:menu_click].split(\"_\").last.split(\"-\")[-2].to_i - 1)",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Remote Code Execution",
-      "warning_code":24,
-      "fingerprint":"58fcf47340099025db0b33d410f05aa6594508dab67fe0ee04c47580e838d24e",
-      "message":"Unsafe reflection method constantize called with parameter value",
-      "file":"app/controllers/application_controller/performance.rb",
-      "line":359,
-      "link":"http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code":"(@sb[:chart_reports][params[:menu_click].split(\"_\").last.split(\"-\").last.to_i] or @sb[:chart_reports]).table.data[(params[:menu_click].split(\"_\").last.split(\"-\")[-2].to_i - 1)][\"resource_type\"].constantize",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"ApplicationController::Performance",
-        "method":"perf_menu_click"
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "8b4b19b9cc55af4ccf4ff69f6735f81f8882906436f6b2159082f4a79ca0ea54",
+      "message": "Unsafe reflection method const_get called with model attribute",
+      "file": "app/controllers/ops_controller/diagnostics.rb",
+      "line": 115,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OpsController::Diagnostics",
+        "method": "log_depot_edit"
       },
-      "user_input":"(params[:menu_click].split(\"_\").last.split(\"-\")[-2].to_i - 1)",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "FileDepot.supported_depots.key(params[:log_protocol])",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Remote Code Execution",
-      "warning_code":24,
-      "fingerprint":"8b4b19b9cc55af4ccf4ff69f6735f81f8882906436f6b2159082f4a79ca0ea54",
-      "message":"Unsafe reflection method const_get called with model attribute",
-      "file":"app/controllers/ops_controller/diagnostics.rb",
-      "line":115,
-      "link":"http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code":"Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"OpsController::Diagnostics",
-        "method":"log_depot_edit"
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "8b4b19b9cc55af4ccf4ff69f6735f81f8882906436f6b2159082f4a79ca0ea54",
+      "message": "Unsafe reflection method const_get called with model attribute",
+      "file": "app/controllers/ops_controller/diagnostics.rb",
+      "line": 145,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OpsController::Diagnostics",
+        "method": "log_depot_edit"
       },
-      "user_input":"FileDepot.supported_depots.key(params[:log_protocol])",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "FileDepot.supported_depots.key(params[:log_protocol])",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Remote Code Execution",
-      "warning_code":24,
-      "fingerprint":"8b4b19b9cc55af4ccf4ff69f6735f81f8882906436f6b2159082f4a79ca0ea54",
-      "message":"Unsafe reflection method const_get called with model attribute",
-      "file":"app/controllers/ops_controller/diagnostics.rb",
-      "line":145,
-      "link":"http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code":"Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))",
-      "render_path":null,
-      "location":{
-        "type":"method",
-        "class":"OpsController::Diagnostics",
-        "method":"log_depot_edit"
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "8ab5337141637347993441a43d64ac2c8ecad7e51e780e4baa5fc65c31f2df2b",
+      "message": "Unescaped parameter value",
+      "file": "app/views/layouts/_header.html.haml",
+      "line": 34,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "find_and_preserve(Haml::Filters::Javascript.render_with_options(\"var miq_after_onload = '#{\"miqAjax('/#{controller_name}/x_button?pressed=#{params[:button]}');\".html_safe}';\", _hamlout.options))",
+      "render_path": [{"type":"controller","class":"ProviderForemanController","method":"explorer","line":397,"file":"app/controllers/provider_foreman_controller.rb"},{"type":"template","name":"layouts/application","line":57,"file":"app/views/layouts/application.html.haml"}],
+      "location": {
+        "type": "template",
+        "template": "layouts/_header"
       },
-      "user_input":"FileDepot.supported_depots.key(params[:log_protocol])",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "params[:button]",
+      "confidence": "Weak",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"c49ab65cd0117e0a73e16fc89931d82331324f6d63d89bcb5ae4e4abac542475",
-      "message":"Render path contains parameter value",
-      "file":"app/views/cloud_tenant/show.html.haml",
-      "line":12,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => \"layouts/#{(session[:cloud_tenant_display] or (params[:display] or \"main\"))}\", {})",
-      "render_path":["CloudTenantController#show"],
-      "location":{
-        "type":"template",
-        "template":"cloud_tenant/show (CloudTenantController#show)"
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "f16f496f164004e758e1357b50b17298ab92d91a472b730b8141aab2da0e48fa",
+      "message": "Render path contains parameter value",
+      "file": "app/views/cloud_tenant/show.html.haml",
+      "line": 24,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:cloud_tenant_display] or (params[:display] or \"main\")), {})",
+      "render_path": [{"type":"controller","class":"CloudTenantController","method":"show","line":87,"file":"app/controllers/cloud_tenant_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "cloud_tenant/show"
       },
-      "user_input":"params[:display]",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"f16f496f164004e758e1357b50b17298ab92d91a472b730b8141aab2da0e48fa",
-      "message":"Render path contains parameter value",
-      "file":"app/views/cloud_tenant/show.html.haml",
-      "line":18,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => (session[:cloud_tenant_display] or (params[:display] or \"main\")), {})",
-      "render_path":["CloudTenantController#show"],
-      "location":{
-        "type":"template",
-        "template":"cloud_tenant/show (CloudTenantController#show)"
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "81643e92919b7fcf51345d899e362037a429d483e776eb1345d0bc3d1de3a0cc",
+      "message": "Render path contains parameter value",
+      "file": "app/views/configuration/show.html.haml",
+      "line": 1,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:config_tabform] or ((session[:config_tab] + \"_\") + params[:tab])), {})",
+      "render_path": [{"type":"controller","class":"ConfigurationController","method":"change_tab","line":92,"file":"app/controllers/configuration_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "configuration/show"
       },
-      "user_input":"params[:display]",
-      "confidence":"High",
-      "note":""
+      "user_input": "params[:tab]",
+      "confidence": "Weak",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"81643e92919b7fcf51345d899e362037a429d483e776eb1345d0bc3d1de3a0cc",
-      "message":"Render path contains parameter value",
-      "file":"app/views/configuration/show.html.haml",
-      "line":1,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => (session[:config_tabform] or ((session[:config_tab] + \"_\") + params[:tab])), {})",
-      "render_path":["ConfigurationController#change_tab"],
-      "location":{
-        "type":"template",
-        "template":"configuration/show (ConfigurationController#change_tab)"
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "01d3aa250efb62c0327b77aeb65375943ddda0c06e897aa657998ed7ed0494ee",
+      "message": "Render path contains parameter value",
+      "file": "app/views/ems_container/show.html.haml",
+      "line": 4,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => ((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\"), {})",
+      "render_path": [{"type":"controller","class":"EmsContainerController","method":"show","line":null,"file":"app/controllers/ems_common.rb"}],
+      "location": {
+        "type": "template",
+        "template": "ems_container/show"
       },
-      "user_input":"params[:tab]",
-      "confidence":"Weak",
-      "note":""
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"8a603f8d2a7e2755912724ff6e60205a56bae21453afdfe818b20a5ed563e20c",
-      "message":"Render path contains parameter value",
-      "file":"app/views/flavor/show.html.haml",
-      "line":8,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => \"layouts/#{(session[:flavor_display] or (params[:display] or \"main\"))}\", {})",
-      "render_path":["FlavorController#show"],
-      "location":{
-        "type":"template",
-        "template":"flavor/show (FlavorController#show)"
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "bf1571bc811c863308baca0a8c1b0ac00239058e1ae17fa00b7b8e8e583bb9de",
+      "message": "Render path contains parameter value",
+      "file": "app/views/flavor/show.html.haml",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:flavor_display] or (params[:display] or \"main\")), {})",
+      "render_path": [{"type":"controller","class":"FlavorController","method":"show","line":49,"file":"app/controllers/flavor_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "flavor/show"
       },
-      "user_input":"params[:display]",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"bf1571bc811c863308baca0a8c1b0ac00239058e1ae17fa00b7b8e8e583bb9de",
-      "message":"Render path contains parameter value",
-      "file":"app/views/flavor/show.html.haml",
-      "line":10,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => (session[:flavor_display] or (params[:display] or \"main\")), {})",
-      "render_path":["FlavorController#show"],
-      "location":{
-        "type":"template",
-        "template":"flavor/show (FlavorController#show)"
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "fa6119b7191a4416e8689572b83199f3750ae5c68aedd42506ef2d84ac50adc0",
+      "message": "Render path contains parameter value",
+      "file": "app/views/orchestration_stack/show.html.haml",
+      "line": 11,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:orchestration_stack_display] or (params[:display] or \"main\")), {})",
+      "render_path": [{"type":"controller","class":"OrchestrationStackController","method":"show","line":58,"file":"app/controllers/orchestration_stack_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "orchestration_stack/show"
       },
-      "user_input":"params[:display]",
-      "confidence":"High",
-      "note":""
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"c784cf6ee012b6182a3fe296d9d5b56f945d9165690f3bcaf79fdbf44bc9275c",
-      "message":"Render path contains parameter value",
-      "file":"app/views/orchestration_stack/show.html.haml",
-      "line":6,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => \"layouts/#{(session[:orchestration_stack_display] or (params[:display] or \"main\"))}\", {})",
-      "render_path":["OrchestrationStackController#show"],
-      "location":{
-        "type":"template",
-        "template":"orchestration_stack/show (OrchestrationStackController#show)"
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "cc17a33db3316149d769b1fbea5ffdb1a6633649f97599e9ce2274cdfb5a1698",
+      "message": "Render path contains parameter value",
+      "file": "app/views/security_group/show.html.haml",
+      "line": 5,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => (session[:security_group_display] or (params[:display] or \"main\")), {})",
+      "render_path": [{"type":"controller","class":"SecurityGroupController","method":"show","line":51,"file":"app/controllers/security_group_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "security_group/show"
       },
-      "user_input":"params[:display]",
-      "confidence":"Medium",
-      "note":""
+      "user_input": "params[:display]",
+      "confidence": "High",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"fa6119b7191a4416e8689572b83199f3750ae5c68aedd42506ef2d84ac50adc0",
-      "message":"Render path contains parameter value",
-      "file":"app/views/orchestration_stack/show.html.haml",
-      "line":11,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => (session[:orchestration_stack_display] or (params[:display] or \"main\")), {})",
-      "render_path":["OrchestrationStackController#show"],
-      "location":{
-        "type":"template",
-        "template":"orchestration_stack/show (OrchestrationStackController#show)"
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "4f1d28a4adcaf2ea6e17e36f97a0dd5f48e0910b0166157717462c2c56659a49",
+      "message": "Render path contains parameter value",
+      "file": "app/views/shared/views/ems_common/_show.html.haml",
+      "line": 8,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"layouts/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
+      "render_path": [{"type":"controller","class":"EmsCloudController","method":"show","line":null,"file":"app/controllers/ems_common.rb"},{"type":"template","name":"ems_cloud/show","line":1,"file":"app/views/ems_cloud/show.html.haml"}],
+      "location": {
+        "type": "template",
+        "template": "shared/views/ems_common/_show"
       },
-      "user_input":"params[:display]",
-      "confidence":"High",
-      "note":""
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"cc17a33db3316149d769b1fbea5ffdb1a6633649f97599e9ce2274cdfb5a1698",
-      "message":"Render path contains parameter value",
-      "file":"app/views/security_group/show.html.haml",
-      "line":5,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => (session[:security_group_display] or (params[:display] or \"main\")), {})",
-      "render_path":["SecurityGroupController#show"],
-      "location":{
-        "type":"template",
-        "template":"security_group/show (SecurityGroupController#show)"
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "ed5368976ca7df3c30050a5f359a3f6dde83bedf975433703dcebf78b6428228",
+      "message": "Render path contains parameter value",
+      "file": "app/views/shared/views/ems_common/_show.html.haml",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"shared/views/ems_common/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
+      "render_path": [{"type":"controller","class":"EmsCloudController","method":"show","line":null,"file":"app/controllers/ems_common.rb"},{"type":"template","name":"ems_cloud/show","line":1,"file":"app/views/ems_cloud/show.html.haml"}],
+      "location": {
+        "type": "template",
+        "template": "shared/views/ems_common/_show"
       },
-      "user_input":"params[:display]",
-      "confidence":"High",
-      "note":""
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"c5bf68d6f18199f2f42eb01a05bdcdd4950776273621e188cebe5d3e9218c008",
-      "message":"Render path contains parameter value",
-      "file":"app/views/shared/views/ems_common/_show.html.haml",
-      "line":6,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => \"layouts/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
-      "render_path":["EmsCloudController#show","Template:ems_cloud/show"],
-      "location":{
-        "type":"template",
-        "template":"shared/views/ems_common/_show (Template:ems_cloud/show)"
+      "warning_type": "Cross-Site Request Forgery",
+      "warning_code": 86,
+      "fingerprint": "0068de871aa26aa4f84eb376161fbaf45c66ea116f510db814a74fc4b997cb28",
+      "message": "protect_from_forgery should be configured with 'with: :exception'",
+      "file": "app/controllers/application_controller.rb",
+      "line": 14,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/",
+      "code": "protect_from_forgery(:secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report)",
+      "render_path": null,
+      "location": {
+        "type": "controller",
+        "controller": "ApplicationController"
       },
-      "user_input":"params[:display]",
-      "confidence":"Medium",
-      "note":""
+      "user_input": null,
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"335bc3c5f388ecc8a0322d73850c3857343b661e7a582054f80eb39a93735c2e",
-      "message":"Render path contains parameter value",
-      "file":"app/views/shared/views/ems_common/_show.html.haml",
-      "line":14,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => \"shared/views/ems_common/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
-      "render_path":["EmsCloudController#show","Template:ems_cloud/show"],
-      "location":{
-        "type":"template",
-        "template":"shared/views/ems_common/_show (Template:ems_cloud/show)"
+      "warning_type": "Mass Assignment",
+      "warning_code": 60,
+      "fingerprint": "4923f3c0a0536c2c40d61c8a7aabbf1c412f84f9cfdb85983a760b68a1b1f15a",
+      "message": "Potentially dangerous attribute available for mass assignment",
+      "file": "app/models/container_groups_container_services.rb",
+      "line": null,
+      "link": "http://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": ":container_group_id",
+      "render_path": null,
+      "location": {
+        "type": "model",
+        "model": "ContainerGroupsContainerServices"
       },
-      "user_input":"params[:display]",
-      "confidence":"Medium",
-      "note":""
+      "user_input": null,
+      "confidence": "Weak",
+      "note": ""
     },
     {
-      "warning_type":"Cross-Site Request Forgery",
-      "warning_code":86,
-      "fingerprint":"0068de871aa26aa4f84eb376161fbaf45c66ea116f510db814a74fc4b997cb28",
-      "message":"protect_from_forgery should be configured with 'with: :exception'",
-      "file":"app/controllers/application_controller.rb",
-      "line":14,
-      "link":"http://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/",
-      "code":"protect_from_forgery(:secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report)",
-      "render_path":null,
-      "location":{
-        "type":"controller",
-        "controller":"ApplicationController"
+      "warning_type": "Mass Assignment",
+      "warning_code": 60,
+      "fingerprint": "04b660e99bf174f893c7d497bb68a55ba4bcc9d5d4c518092a43dc4b12fa61d6",
+      "message": "Potentially dangerous attribute available for mass assignment",
+      "file": "app/models/container_groups_container_services.rb",
+      "line": null,
+      "link": "http://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": ":container_service_id",
+      "render_path": null,
+      "location": {
+        "type": "model",
+        "model": "ContainerGroupsContainerServices"
       },
-      "user_input":null,
-      "confidence":"Medium",
-      "note":""
+      "user_input": null,
+      "confidence": "Weak",
+      "note": ""
     },
     {
-      "warning_type":"Mass Assignment",
-      "warning_code":60,
-      "fingerprint":"4923f3c0a0536c2c40d61c8a7aabbf1c412f84f9cfdb85983a760b68a1b1f15a",
-      "message":"Potentially dangerous attribute available for mass assignment",
-      "file":"app/models/container_groups_container_services.rb",
-      "line":null,
-      "link":"http://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code":":container_group_id",
-      "render_path":null,
-      "location":{
-        "type":"model",
-        "model":"ContainerGroupsContainerServices"
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "63c919e1588a501f6e81596e2a0dcc933f65bf634ac4a32a714c4b0f97fcf072",
+      "message": "Possible command injection",
+      "file": "lib/vmdb/appliance.rb",
+      "line": 103,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`#{diag[:cmd]}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Vmdb::Appliance",
+        "method": "s(:self).log_diagnostics"
       },
-      "user_input":null,
-      "confidence":"Weak",
-      "note":""
+      "user_input": "diag[:cmd]",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Mass Assignment",
-      "warning_code":60,
-      "fingerprint":"04b660e99bf174f893c7d497bb68a55ba4bcc9d5d4c518092a43dc4b12fa61d6",
-      "message":"Potentially dangerous attribute available for mass assignment",
-      "file":"app/models/container_groups_container_services.rb",
-      "line":null,
-      "link":"http://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code":":container_service_id",
-      "render_path":null,
-      "location":{
-        "type":"model",
-        "model":"ContainerGroupsContainerServices"
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "77418c09a382094942ab34d86d57a9e0e9b5bfc78052b77f4a1954ad78109b5f",
+      "message": "Possible command injection",
+      "file": "app/models/miq_action.rb",
+      "line": 485,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "Open3.capture3(MiqEnvironment::Command.rails_command, \"runner\", Tempfile.new(\"miq_action\", File.expand_path(File.join(Rails.root, \"product/conditions/scripts\"))).path, \"'#{rec.name}'\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MiqAction",
+        "method": "run_script"
       },
-      "user_input":null,
-      "confidence":"Weak",
-      "note":""
+      "user_input": "rec.name",
+      "confidence": "Medium",
+      "note": ""
     },
     {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"01d3aa250efb62c0327b77aeb65375943ddda0c06e897aa657998ed7ed0494ee",
-      "message":"Render path contains parameter value",
-      "file":"app/views/ems_container/show.html.haml",
-      "line":4,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => ((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\"), {})",
-      "render_path":["EmsContainerController#show"],
-      "location":{
-        "type":"template",
-        "template":"ems_container/show (EmsContainerController#show)"
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "0d3cd5be022f120f56390f4b85d602fa1f673495c784f8066129ffc8e7abf8c0",
+      "message": "Possible command injection",
+      "file": "app/models/miq_server.rb",
+      "line": 487,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "spawn(\"nohup #{Rails.root.join(\"vmdb_restart\").freeze}\", [:out, :err] => ([Rails.root.join(\"log/vmdb_restart.log\"), \"a\"]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MiqServer",
+        "method": "restart"
+      },
+      "user_input": "Rails.root.join(\"vmdb_restart\").freeze",
+      "confidence": "Medium",
+      "note": ""
     },
-      "user_input":"params[:display]",
-      "confidence":"High",
-      "note":""
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "4c5ec67655da90895d56508852409346d51c7f2b01c56e484be18320638dc6aa",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 27,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"      CREATE OR REPLACE FUNCTION #{name}()\n      RETURNS TRIGGER AS $$\n      BEGIN\n        #{body}\n      END;\n      $$\n      LANGUAGE plpgsql;\n\", \"Create trigger function\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "add_trigger_function"
+      },
+      "user_input": "name",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "040c4e61d0cf90640fc583cb268e22dd2391d18292d80017fc9f2e8c68655a79",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 39,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"      CREATE TRIGGER #{name}\n      #{direction.to_s.upcase} INSERT ON #{table}\n      FOR EACH ROW EXECUTE PROCEDURE #{function}();\n\", \"Create trigger\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "add_trigger_hook"
+      },
+      "user_input": "name",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "2aa99becc0fa810be8e032bfa3b707145bc5937ab9e8120156a6c03bcc2acf84",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 48,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"DROP TRIGGER IF EXISTS #{name} ON #{table};\", \"Drop trigger\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "drop_trigger"
+      },
+      "user_input": "name",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "73da601e27feee9ffb35444931704ca9a434b5450d7e8f7bf6636a13b6ba5db3",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 49,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"DROP FUNCTION IF EXISTS #{name}();\", \"Drop trigger function\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "drop_trigger"
+      },
+      "user_input": "name",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "81f124a9537b1b09da07ea3262912f716cf54316f8e8ef952b7764923c64d3ec",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 60,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER TABLE #{table} ADD CONSTRAINT #{table}_inheritance_check CHECK (#{sanitize_sql_for_conditions(options[:conditions], table)})\", \"Add inheritance check constraint\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "add_table_inheritance"
+      },
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "15b29a46fd603377e166854fce2ef3240a678a23052a4e6d9a8e7080ce4d2f6c",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 61,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER TABLE #{table} INHERIT #{inherit_from}\", \"Add table inheritance\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "add_table_inheritance"
+      },
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "09cc3d5877b51e0ae1585fe0ae05f5ed8e745765f4443a19c805fb62107a2472",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 67,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER TABLE #{table} DROP CONSTRAINT #{table}_inheritance_check\", \"Drop inheritance check constraint\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "drop_table_inheritance"
+      },
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "36c98903b09a3da20c5a50198d316eeb84d545292b0a31c690e619a65e9bf891",
+      "message": "Possible SQL injection",
+      "file": "lib/migration_helper.rb",
+      "line": 68,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER TABLE #{table} NO INHERIT #{inherit_from}\", \"Drop table inheritance\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MigrationHelper",
+        "method": "drop_table_inheritance"
+      },
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "3b2d49c0093dbc44e0b52c601675c11502c57181c1d0185bf544337c5cc6bcee",
+      "message": "Unsafe reflection method constantize called with parameter value",
+      "file": "app/controllers/cim_instance_controller.rb",
+      "line": 164,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "associations.keys.find do\n (key == (session[\"#{self.class.session_key_prefix}_display\".to_sym] or (params[:display] or \"main\")))\n end.singularize.classify.constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CimInstanceController",
+        "method": "process_show"
+      },
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "af2c877bc0c729c3151c903b76d9ebd00b110ecafcd98b63738c063165132cbe",
+      "message": "Unsafe reflection method constantize called with parameter value",
+      "file": "app/controllers/miq_ae_tools_controller.rb",
+      "line": 387,
+      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "CustomButton.button_classes.detect do\n (klass == params[:target_class])\n end.constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MiqAeToolsController",
+        "method": "get_form_vars"
+      },
+      "user_input": "params[:target_class]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "c49ab65cd0117e0a73e16fc89931d82331324f6d63d89bcb5ae4e4abac542475",
+      "message": "Render path contains parameter value",
+      "file": "app/views/cloud_tenant/show.html.haml",
+      "line": 12,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"layouts/#{(session[:cloud_tenant_display] or (params[:display] or \"main\"))}\", {})",
+      "render_path": [
+        "CloudTenantController#show"
+      ],
+      "location": {
+        "type": "template",
+        "template": "cloud_tenant/show (CloudTenantController#show)"
+      },
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "8a603f8d2a7e2755912724ff6e60205a56bae21453afdfe818b20a5ed563e20c",
+      "message": "Render path contains parameter value",
+      "file": "app/views/flavor/show.html.haml",
+      "line": 8,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"layouts/#{(session[:flavor_display] or (params[:display] or \"main\"))}\", {})",
+      "render_path": [
+        "FlavorController#show"
+      ],
+      "location": {
+        "type": "template",
+        "template": "flavor/show (FlavorController#show)"
+      },
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "7406a3ed3118742bb83c8cc9e9cb187e25679a022f9ed07e215bfd4d6239e2cf",
+      "message": "Render path contains parameter value",
+      "file": "app/views/layouts/_show_pdf.html.haml",
+      "line": 6,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"#{(\"vm_common\" or params[:controller])}/main_configuration_profile\", {})",
+      "render_path": [
+        "AvailabilityZoneController#show",
+        "Template:availability_zone/show"
+      ],
+      "location": {
+        "type": "template",
+        "template": "layouts/_show_pdf (Template:availability_zone/show)"
+      },
+      "user_input": "params[:controller]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "b90b4cfb78fc8a752eb3fd3efafb4814bdc2ab857a35072434239caf980b9c2a",
+      "message": "Render path contains parameter value",
+      "file": "app/views/layouts/_show_pdf.html.haml",
+      "line": 8,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"#{(\"vm_common\" or params[:controller])}/main\", {})",
+      "render_path": [
+        "AvailabilityZoneController#show",
+        "Template:availability_zone/show"
+      ],
+      "location": {
+        "type": "template",
+        "template": "layouts/_show_pdf (Template:availability_zone/show)"
+      },
+      "user_input": "params[:controller]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "c784cf6ee012b6182a3fe296d9d5b56f945d9165690f3bcaf79fdbf44bc9275c",
+      "message": "Render path contains parameter value",
+      "file": "app/views/orchestration_stack/show.html.haml",
+      "line": 6,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"layouts/#{(session[:orchestration_stack_display] or (params[:display] or \"main\"))}\", {})",
+      "render_path": [
+        "OrchestrationStackController#show"
+      ],
+      "location": {
+        "type": "template",
+        "template": "orchestration_stack/show (OrchestrationStackController#show)"
+      },
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "c5bf68d6f18199f2f42eb01a05bdcdd4950776273621e188cebe5d3e9218c008",
+      "message": "Render path contains parameter value",
+      "file": "app/views/shared/views/ems_common/_show.html.haml",
+      "line": 6,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"layouts/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
+      "render_path": [
+        "EmsCloudController#show",
+        "Template:ems_cloud/show"
+      ],
+      "location": {
+        "type": "template",
+        "template": "shared/views/ems_common/_show (Template:ems_cloud/show)"
+      },
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "335bc3c5f388ecc8a0322d73850c3857343b661e7a582054f80eb39a93735c2e",
+      "message": "Render path contains parameter value",
+      "file": "app/views/shared/views/ems_common/_show.html.haml",
+      "line": 14,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"shared/views/ems_common/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
+      "render_path": [
+        "EmsCloudController#show",
+        "Template:ems_cloud/show"
+      ],
+      "location": {
+        "type": "template",
+        "template": "shared/views/ems_common/_show (Template:ems_cloud/show)"
+      },
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
     }
   ],
-  "updated": "2015-08-13 18:47:21 +0200",
-  "brakeman_version": "3.0.5"
+  "updated": "2015-09-04 16:28:34 +0200",
+  "brakeman_version": "3.1.0"
 }

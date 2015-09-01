@@ -45,7 +45,7 @@ module VmShowMixin
       set_active_elements(allowed_features.first) unless @upload_sysprep_file
     end
 
-    render :layout => "explorer" unless redirected
+    render :layout => "application" unless redirected
   end
 
   def set_form_locals_for_sysprep
