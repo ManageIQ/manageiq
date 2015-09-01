@@ -95,7 +95,7 @@ describe 'miq_request/_prov_options.html.haml' do
 
       login_as desktop
       render
-      rendered.should have_selector('td', :text => desktop.name)
+      rendered.should have_selector('.requester', :text => desktop.name)
       rendered.should_not have_selector('select#user_choice option')
     end
 
@@ -122,7 +122,7 @@ describe 'miq_request/_prov_options.html.haml' do
 
       login_as vm_user
       render
-      rendered.should have_selector('td', :text => vm_user.name)
+      rendered.should have_selector('.requester', :text => vm_user.name)
       rendered.should_not have_selector('select#user_choice option')
     end
   end
