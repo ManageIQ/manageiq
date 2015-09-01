@@ -677,16 +677,10 @@ describe ApplicationHelper do
   end
 
   context "#browser_info" do
-    it "downcases by default" do
+    it "preserves the case" do
       type = :a_type
       ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, type).and_return('checked_by_A_TYPE')
-      browser_info(type).should == 'checked_by_a_type'
-    end
-
-    it "can provide full case" do
-      type = :a_type
-      ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, type).and_return('checked_by_A_TYPE')
-      browser_info(type, false).should == 'checked_by_A_TYPE'
+      browser_info(type).should == 'checked_by_A_TYPE'
     end
   end
 
