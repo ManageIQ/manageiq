@@ -1,3 +1,9 @@
+%nav.navbar.navbar-default.navbar-fixed-bottom
+  .container-fluid
+    %span#tP
+    %script{:type => "text/javascript"}
+      dateTime('#{Time.zone.now.utc_offset}', '#{Time.zone.now.strftime("%Z")}');
+
 = render :partial => "layouts/adv_search"
 :javascript
   $('#exampleModal').on('show.bs.modal', function (event) {

@@ -38,7 +38,7 @@ class MiqCapacityController < ApplicationController
 
     @spin_msg = "Generating utilization data..."
     @ajax_action = "util_chart_chooser"
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def bottlenecks
@@ -61,7 +61,7 @@ class MiqCapacityController < ApplicationController
     else
       bottleneck_get_node_info(x_node)  if x_node != "" # Get the bottleneck info for the tree node
     end
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def waste
@@ -112,7 +112,7 @@ class MiqCapacityController < ApplicationController
       end
       format.html do                # HTML
         planning_build_options
-        render :layout => "explorer"
+        render :layout => "application"
       end
     end
   end

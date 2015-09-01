@@ -47,3 +47,17 @@
           .row{:style => "overflow: auto;height: calc(100% - 90px);"}
             .col-md-12
               = yield
+- if @explorer
+  #context_div
+  #layout_div
+    = yield :trees
+    #center_cell_div{:style => "display:none;"}
+      #taskbar_div
+        = render :partial => "layouts/x_taskbar"
+      = yield
+      #paging_div
+        - if saved_report_paging?
+          = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
+        - else
+          = render(:partial => '/layouts/x_pagingcontrols')
+  = yield :accords
