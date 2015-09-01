@@ -131,8 +131,8 @@ class MiqPolicy < ActiveRecord::Base
   end
 
   def action_result_for_event(action, event)
-    pe = miq_policy_contents.where(:miq_action_id => action.id, :miq_event_definition_id => event.id)
-    pe.first.present? && pe.first.qualifier == "success"
+    pe = miq_policy_contents.find_by(:miq_action_id => action.id, :miq_event_definition_id => event.id)
+    pe.qualifier == "success"
   end
 
   def delete_event(event)
