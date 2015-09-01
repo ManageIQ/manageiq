@@ -111,6 +111,7 @@ class ContainerController < ApplicationController
 
   # ST clicked on in the explorer right cell
   def x_show
+    get_tagdata(Container.find_by_id(from_cid(params[:id])))
     identify_container(from_cid(params[:id]))
     respond_to do |format|
       format.js do                  # AJAX, select the node
