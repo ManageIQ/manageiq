@@ -1,54 +1,65 @@
 = render :partial => "layouts/flash_msg"
 - url = url_for(:action => 'prov_change_options')
 #prov_options_div
-  %h3= _("Filter By")
-  %table.style1
+  %h3
+    = _("Filter By")
+  .form-horizontal
     - res_type = @sb[:prov_options][@sb[:prov_options][:resource_type]]
-    %tr
-      %td.key
+    .form-group
+      %label.col-md-2.control-label
         = _("Requester:")
-      %td
+      .col-md-8.requester
         - if res_type[:users].length > 1
           = select_tag("user_choice",
-            options_for_select([["#{_('All')}", "all"]] + res_type[:users].invert.sort, res_type[:user_choice].to_i),
-            "data-miq_observe" => {:url => url}.to_json)
+                      options_for_select([["#{_('All')}", "all"]] + res_type[:users].invert.sort, res_type[:user_choice].to_i),
+                      :class    => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("user_choice", "#{url}")
         - else
           = res_type[:users] && !res_type[:users].empty? ? res_type[:users].first[1] : _("None Available")
-    %tr
-      %td.key
+    .form-group
+      %label.col-md-2.control-label
         = _("Approval State:")
-      %td
+      .col-md-8
         - res_type[:states].sort.each do |(state, display_name)|
           %div{:style => "padding: 0px 5px 0px 0px; float:left;"}
             = check_box_tag("state_choice__#{state}", "1", @sb[:def_prov_options][@sb[:prov_options][:resource_type]][:applied_states].include?(state),
               "data-miq_observe_checkbox" => {:url => url}.to_json)
             = h(display_name)
-    %tr
-      %td.key
+    .form-group
+      %label.col-md-2.control-label
         = _("Type:")
-      %td
+      .col-md-8
         - if res_type[:types].length > 1
           = select_tag("type_choice",
-            options_for_select([["#{_('All')}", "all"]] + res_type[:types].invert.sort, res_type[:type_choice].to_sym),
-            "data-miq_observe" => {:url => url}.to_json)
+                        options_for_select([["#{_('All')}", "all"]] + res_type[:types].invert.sort, res_type[:type_choice].to_sym),
+                        :class    => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("type_choice", "#{url}")
         - else
           = h(Array(res_type[:types])[0].last)
-    %tr
-      %td.key
+    .form-group
+      %label.col-md-2.control-label
         = _("Request Date:")
-      %td
+      .col-md-8
         = select_tag("time_period",
-          options_for_select(Array(PROV_TIME_PERIODS.invert).sort_by(&:last), res_type[:time_period]),
-          "data-miq_observe" => {:url => url}.to_json)
-    %tr
-      %td.key
+                      options_for_select(Array(PROV_TIME_PERIODS.invert).sort_by(&:last), res_type[:time_period]),
+                      :class    => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("type_choice", "#{url}")
+    .form-group
+      %label.col-md-2.control-label
         = _("Reason:")
-      %td
+      .col-md-8
         = text_field_tag("reason_text", res_type[:reason_text],
-          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td
-      %td{:align => "left"}
+                         :class             => "form-control",
+                         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      .col-md-2
+      .col-md-8
         #buttons_off
           = button_tag(_("Apply"), :id => "apply", :class => "btn btn-primary btn-disabled")
           = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
