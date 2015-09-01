@@ -14,7 +14,7 @@ class TreeBuilderEvent < TreeBuilder
 
   # level 0 - root
   def root_options
-    [N_("All Events"), N_("All Events")]
+    [t = N_("All Events"), t]
   end
 
   # level 1 - events

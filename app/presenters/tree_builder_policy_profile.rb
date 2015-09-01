@@ -15,7 +15,7 @@ class TreeBuilderPolicyProfile < TreeBuilder
 
   # level 0 - root
   def root_options
-    [N_("All Policy Profiles"), N_("All Policy Profiles")]
+    [t = N_("All Policy Profiles"), t]
   end
 
   # level 1 - policy profiles
