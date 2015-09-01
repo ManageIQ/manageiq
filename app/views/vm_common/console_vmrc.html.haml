@@ -1,4 +1,4 @@
-!!! Strict
+= render :partial => 'layouts/doctype'
 %html
   %head
     - if %w(5.1 5.5).include?(api_version) && is_browser_ie? && browser_info(:version).to_i > 9
