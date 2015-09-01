@@ -193,6 +193,8 @@ class Condition < ActiveRecord::Base
     if checkmode == "count"
       e = check.gsub(/<count>/i, list.length.to_s)
       left, operator, right = e.split
+      raise "Illegal operator, '#{operator}'" unless %w(== != < > <= >=).include?(operator)
+
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
       result = !!left.to_f.send(operator, right.to_f)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression result: [#{result}]")
