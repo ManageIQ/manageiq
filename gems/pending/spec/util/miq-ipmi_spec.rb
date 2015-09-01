@@ -33,6 +33,50 @@ describe MiqIPMI do
     expect(subject.chassis_status).to eq(result)
   end
 
+  context "Power Ops" do
+    it { expect(subject).to be_connected }
+
+    it "#power_state" do
+      expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:status).and_return("off")
+      expect(subject.power_state).to eq("off")
+    end
+
+    it "#power_on" do
+      expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:on).and_return(true)
+      expect(subject.power_on).to eq(true)
+    end
+
+    it "#power_off" do
+      expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:off).and_return(true)
+      expect(subject.power_off).to eq(true)
+    end
+
+    it "#power_reset" do
+      expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:reset).and_return(true)
+      expect(subject.power_reset).to eq(true)
+    end
+  end
+
+  it "#manufacturer" do
+    response = {
+      "Device ID"                 => "32",
+      "Device Revision"           => "1",
+      "Firmware Revision"         => "1.57",
+      "IPMI Version"              => "2.0",
+      "Manufacturer ID"           => "674",
+      "Manufacturer Name"         => "DELL Inc",
+      "Product ID"                => "256 (0x0100)",
+      "Product Name"              => "Unknown (0x100)",
+      "Device Available"          => "yes",
+      "Provides Device SDRs"      => "yes",
+      "Additional Device Support" => ["Sensor Device", "SDR Repository Device", "SEL Device", "FRU Inventory Device", "IPMB Event Receiver", "Bridge", "Chassis Device"],
+      "Aux Firmware Rev Info"     => ["0x00", "0x04", "0x39", "0x00"]
+    }
+
+    expect_any_instance_of(Rubyipmi::Ipmitool::Bmc).to receive(:info).and_return(response)
+    expect(subject.manufacturer).to eq("DELL Inc")
+  end
+
   context "version 1.5" do
     before { described_class.stub(:is_2_0_available?).and_return(false) }
     before { allow_any_instance_of(MiqIPMI).to receive(:chassis_status).and_return({}) }
@@ -50,50 +94,6 @@ describe MiqIPMI do
   context "version 2.0" do
     before { described_class.stub(:is_2_0_available?).and_return(true) }
     before { allow_any_instance_of(MiqIPMI).to receive(:chassis_status).and_return({}) }
-
-    context "Power Ops" do
-      it { expect(subject).to be_connected }
-
-      it "#power_state" do
-        expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:status).and_return("off")
-        expect(subject.power_state).to eq("off")
-      end
-
-      it "#power_on" do
-        expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:on).and_return(true)
-        expect(subject.power_on).to eq(true)
-      end
-
-      it "#power_off" do
-        expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:off).and_return(true)
-        expect(subject.power_off).to eq(true)
-      end
-
-      it "#power_reset" do
-        expect_any_instance_of(Rubyipmi::Ipmitool::Power).to receive(:reset).and_return(true)
-        expect(subject.power_reset).to eq(true)
-      end
-    end
-
-    it "#manufacturer" do
-      response = {
-        "Device ID"                 => "32",
-        "Device Revision"           => "1",
-        "Firmware Revision"         => "1.57",
-        "IPMI Version"              => "2.0",
-        "Manufacturer ID"           => "674",
-        "Manufacturer Name"         => "DELL Inc",
-        "Product ID"                => "256 (0x0100)",
-        "Product Name"              => "Unknown (0x100)",
-        "Device Available"          => "yes",
-        "Provides Device SDRs"      => "yes",
-        "Additional Device Support" => ["Sensor Device", "SDR Repository Device", "SEL Device", "FRU Inventory Device", "IPMB Event Receiver", "Bridge", "Chassis Device"],
-        "Aux Firmware Rev Info"     => ["0x00", "0x04", "0x39", "0x00"]
-      }
-
-      expect_any_instance_of(Rubyipmi::Ipmitool::Bmc).to receive(:info).and_return(response)
-      expect(subject.manufacturer).to eq("DELL Inc")
-    end
 
     it "#interface_mode" do
       subject.interface_mode.should == "lanplus"
