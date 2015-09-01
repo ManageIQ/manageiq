@@ -5,7 +5,7 @@ module ContainerNodeHelper::TextualSummary
 
   def textual_group_properties
     %i(name creation_timestamp resource_version num_cpu_cores memory
-       identity_system identity_machine identity_infra runtime_version
+       max_container_groups identity_system identity_machine identity_infra runtime_version
        kubelet_version proxy_version os_distribution kernel_version)
   end
 
@@ -61,6 +61,11 @@ module ContainerNodeHelper::TextualSummary
       memory = "N/A"
     end
     {:label => "Memory", :value => memory}
+  end
+
+  def textual_max_container_groups
+    {:label => "Max Pods Capacity",
+     :value => @record.max_container_groups.nil? ? "N/A" : @record.max_container_groups}
   end
 
   def textual_identity_system
