@@ -108,24 +108,6 @@ describe Tenant do
     expect(Tenant.all_projects.count).to eql 2 # Should not return the default tenant
   end
 
-  describe "#set_quotas" do
-    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
-
-    it "can set quotas" do
-      tenant.set_quotas(:vms_allocated => {:value => 20})
-
-      expect(tenant.tenant_quotas.length).to eql 1
-    end
-  end
-
-  describe "#get_quotas" do
-    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
-
-    it "can get quotas" do
-      expect(tenant.get_quotas).not_to be_empty
-    end
-  end
-
   context "subtenants and subprojects" do
     before do
       @t1  = FactoryGirl.create(:tenant, :parent => root_tenant, :name => "T1")
@@ -435,6 +417,14 @@ describe Tenant do
   end
 
   describe ".set_quotas" do
+    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
+
+    it "can set quotas" do
+      tenant.set_quotas(:vms_allocated => {:value => 20})
+
+      expect(tenant.tenant_quotas.length).to eql 1
+    end
+
     it "adds new quotas" do
       default_tenant.set_quotas(:cpu_allocated => {:value => 1024}, :vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
 
@@ -499,6 +489,12 @@ describe Tenant do
   end
 
   describe ".get_quotas" do
+    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
+
+    it "can get quotas" do
+      expect(tenant.get_quotas).not_to be_empty
+    end
+
     it "gets existing quotas" do
       default_tenant.set_quotas(:vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
 
