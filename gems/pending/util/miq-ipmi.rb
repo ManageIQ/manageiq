@@ -12,12 +12,12 @@ require 'rubyipmi'
 
 class MiqIPMI
   def initialize(server=nil, username=nil, password=nil)
-    @server = server
-    @username = username
-    @password = password
+    @server     = server
+    @username   = username
+    @password   = password
     @connection = Rubyipmi.connect(@username, @password, @server, "ipmitool")
-    @status = chassis_status
-    @vendor = nil
+    @status     = chassis_status
+    @vendor     = nil
   end
 
   def connected?
