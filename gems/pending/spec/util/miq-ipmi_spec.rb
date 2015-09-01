@@ -78,27 +78,27 @@ describe MiqIPMI do
   end
 
   context "version 1.5" do
-    before { described_class.stub(:is_2_0_available?).and_return(false) }
+    before { allow(described_class).to receive(:is_2_0_available?).and_return(false) }
 
     it "#interface_mode" do
       subject.interface_mode.should == "lan"
     end
 
     it "#run_command" do
-      MiqUtil.should_receive(:runcmd).with { |cmd| cmd.should include("-I lan") }
+      expect(MiqUtil).to receive(:runcmd).with { |cmd| expect(cmd).to include("-I lan") }
       subject.run_command("chassis power status")
     end
   end
 
   context "version 2.0" do
-    before { described_class.stub(:is_2_0_available?).and_return(true) }
+    before { allow(described_class).to receive(:is_2_0_available?).and_return(true) }
 
     it "#interface_mode" do
       subject.interface_mode.should == "lanplus"
     end
 
     it "#run_command" do
-      MiqUtil.should_receive(:runcmd).with { |cmd| cmd.should include("-I lanplus") }
+      expect(MiqUtil).to receive(:runcmd).with { |cmd| expect(cmd).to include("-I lanplus") }
       subject.run_command("chassis power status")
     end
   end
