@@ -24,7 +24,7 @@ module EmsInfraHelper::TextualSummary
   #
 
   def textual_hostname
-    {:label => "Hostname", :value => @ems.hostname}
+    @ems.hostname
   end
 
   def textual_ipaddress
@@ -32,7 +32,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_type
-    {:label => "Type", :value => @ems.emstype_description}
+    @ems.emstype_description
   end
 
   def textual_port
@@ -137,9 +137,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_templates
-    label = "Templates"
-
-    textual_link(@ems.miq_templates)
+    @ems.miq_templates
   end
 
   def textual_authentications
@@ -168,9 +166,9 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_orchestration_stacks
-    return nil if !@ems.respond_to?(:orchestration_stacks) || !@ems.orchestration_stacks
+    return nil if !@ems.respond_to?(:orchestration_stacks)
 
-    textual_link(@ems.orchestration_stacks)
+    @ems.orchestration_stacks
   end
 
   def textual_refresh_status

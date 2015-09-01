@@ -35,11 +35,11 @@ module SecurityGroupHelper::TextualSummary
   #
 
   def textual_description
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_type
-    {:label => "Type", :value => @record.type}
+    @record.type
   end
 
   def textual_ems_cloud
@@ -58,6 +58,6 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_orchestration_stack
-    textual_link(@record.orchestration_stack)
+    @record.orchestration_stack
   end
 end

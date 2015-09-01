@@ -84,17 +84,15 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_server
-    return nil if @record.miq_server.nil?
-    {:label => "Server", :value => "#{@record.miq_server.name} [#{@record.miq_server.id}]"}
+    @record.miq_server && "#{@record.miq_server.name} [#{@record.miq_server.id}]"
   end
 
   def textual_description
-    return nil if @record.description.blank?
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_hostname
@@ -429,7 +427,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_disks_aligned
-    {:label => "Disks Aligned", :value => @record.disks_aligned}
+    @record.disks_aligned
   end
 
   def textual_thin_provisioned
