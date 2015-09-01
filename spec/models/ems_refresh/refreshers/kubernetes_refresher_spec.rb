@@ -150,7 +150,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :lives_on_id                => @openstack_vm.id,
       :container_runtime_version  => "docker://1.5.0",
       :kubernetes_kubelet_version => "v1.0.0-dirty",
-      :kubernetes_proxy_version   => "v1.0.0-dirty"
+      :kubernetes_proxy_version   => "v1.0.0-dirty",
+      :max_container_groups       => 40
     )
 
     @containernodeconditions = ContainerCondition.where(:container_entity_type => "ContainerNode")

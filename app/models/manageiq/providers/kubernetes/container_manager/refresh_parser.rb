@@ -129,6 +129,9 @@ module ManageIQ::Providers::Kubernetes
         }
       }
 
+      max_container_groups = node.status.capacity.pods
+      new_result[:max_container_groups] = max_container_groups && MiqIECUnits.string_to_value(max_container_groups)
+
       new_result[:container_conditions] = parse_conditions(node)
 
       # Establish a relationship between this node and the vm it is on (if it is in the system)
