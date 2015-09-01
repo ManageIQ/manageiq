@@ -17,6 +17,20 @@ module ContainerImageHelper
       items.collect { |m| send("textual_#{m}") }.flatten.compact
     end
 
+    def textual_group_packages
+      labels = [_("Name"), _("Version"), _("Release"), _("Arch")]
+      h = {:labels => labels}
+      h[:values] = @record.guest_applications.collect do |package|
+        [
+          package.name,
+          package.version,
+          package.release,
+          package.arch
+        ]
+      end
+      h
+    end
+
     #
     # Items
     #
