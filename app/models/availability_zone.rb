@@ -41,11 +41,6 @@ class AvailabilityZone < ActiveRecord::Base
   end
 
   def event_where_clause(assoc=:ems_events)
-    case assoc.to_sym
-    when :ems_events
-      ["availability_zone_id = ?", self.id]
-    when :policy_events
-      ["availability_zone_id = ?", self.id]
-    end
+    ["#{events_table_name(assoc)}.availability_zone_id = ?", id]
   end
 end

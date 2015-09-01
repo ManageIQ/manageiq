@@ -54,7 +54,7 @@ describe OpsController do
 
         flash_message = assigns(:flash_array).first
         flash_message[:message].should include("Delete successful")
-        flash_message[:level].should be(:info)
+        flash_message[:level].should be(:success)
       end
     end
 
@@ -100,7 +100,7 @@ describe OpsController do
         controller.send(:rbac_tenant_edit)
         flash_message = assigns(:flash_array).first
         flash_message[:message].should include("Edit of Tenant \"#{@tenant.name}\" was cancelled by the user")
-        flash_message[:level].should be(:info)
+        flash_message[:level].should be(:success)
       end
 
       it "saves tenant record changes" do
@@ -115,7 +115,7 @@ describe OpsController do
         controller.send(:rbac_tenant_edit)
         flash_message = assigns(:flash_array).first
         flash_message[:message].should include("Tenant \"Foo_Bar\" was saved")
-        flash_message[:level].should be(:info)
+        flash_message[:level].should be(:success)
       end
     end
 

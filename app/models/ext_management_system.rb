@@ -352,8 +352,8 @@ class ExtManagementSystem < ActiveRecord::Base
     end
   end
 
-  def event_where_clause(assoc)
-    ["ems_id = ?", self.id]
+  def event_where_clause(assoc = :ems_events)
+    ["#{events_table_name(assoc)}.ems_id = ?", id]
   end
 
   def total_vms_and_templates

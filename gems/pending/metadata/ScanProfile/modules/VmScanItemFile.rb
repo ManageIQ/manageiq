@@ -29,7 +29,7 @@ module VmScanItemFile
         begin
           # Skip if we already have data for this element
           options = {'contents'=>d['content']}
-          d["data"] = MD5deep.scan_glob(vm.vmRootTrees[0], d["target"], options) if d["data"].nil?
+          d["data"] = MD5deep.scan_glob(vm.rootTrees[0], d["target"], options) if d["data"].nil?
         rescue
         end
       end

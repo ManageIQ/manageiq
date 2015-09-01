@@ -13,6 +13,6 @@ begin
 rescue => err
   $evm.root['ae_result'] = 'error'
   $evm.root['ae_reason'] = err.message
-  task.miq_request.user_message = err.message
+  task.miq_request.user_message = err.message.truncate(255)
   $evm.log("error", "Stack #{service.stack_name} creation failed. Reason: #{err.message}")
 end

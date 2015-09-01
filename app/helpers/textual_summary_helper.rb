@@ -8,12 +8,26 @@ module TextualSummaryHelper
     end
   end
 
-  def expand_textual_summary(summary)
+  def expand_textual_summary(summary, context)
     case summary
     when Hash
       summary
     when Symbol
-      send("textual_#{summary}")
+      result = send("textual_#{summary}")
+      return result if result.kind_of?(Hash) && result[:label]
+
+      automatic_label = context.class.human_attribute_name(summary, :default => summary.to_s.titleize)
+
+      case result
+      when Hash
+        result.dup.tap do |h|
+          h[:label] = automatic_label
+        end
+      when ActiveRecord::Relation, ActiveRecord::Base
+        textual_link(result, :label => automatic_label)
+      when String, Fixnum, true, false, nil
+        {:label => automatic_label, :value => result.to_s} unless result.to_s.blank?
+      end
     when nil
       nil
     else
@@ -21,8 +35,8 @@ module TextualSummaryHelper
     end
   end
 
-  def expand_textual_group(summaries)
-    Array.wrap(summaries).map { |summary| expand_textual_summary(summary) }.compact
+  def expand_textual_group(summaries, context = @record)
+    Array.wrap(summaries).map { |summary| expand_textual_summary(summary, context) }.compact
   end
 
   def textual_tags
@@ -45,7 +59,7 @@ module TextualSummaryHelper
 
   private
 
-  def textual_object_link(object, as: nil, controller: nil, feature: nil)
+  def textual_object_link(object, as: nil, controller: nil, feature: nil, label: nil)
     return if object.nil?
 
     klass = as || object.class.base_model
@@ -53,7 +67,7 @@ module TextualSummaryHelper
     controller ||= klass.name.underscore
     feature ||= "#{controller}_show"
 
-    label = ui_lookup(:model => klass.name)
+    label ||= ui_lookup(:model => klass.name)
     image = textual_object_icon(object, klass)
     value = if block_given?
               yield object
@@ -73,7 +87,7 @@ module TextualSummaryHelper
     h
   end
 
-  def textual_collection_link(collection, as: nil, controller: nil, explorer: false, feature: nil, link: nil)
+  def textual_collection_link(collection, as: nil, controller: nil, explorer: false, feature: nil, label: nil, link: nil)
     if collection.kind_of?(Array)
       unless as && link
         raise ArgumentError, ":as and :link are both required when linking to an array",
@@ -86,7 +100,7 @@ module TextualSummaryHelper
     controller ||= klass.name.underscore
     feature ||= "#{controller}_show_list"
 
-    label = ui_lookup(:models => klass.name)
+    label ||= ui_lookup(:models => klass.name)
     image = textual_collection_icon(collection, klass)
     count = collection.count
 

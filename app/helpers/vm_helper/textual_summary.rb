@@ -96,17 +96,15 @@ module VmHelper::TextualSummary
   end
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_server
-    return nil if @record.miq_server.nil?
-    {:label => "Server", :value => "#{@record.miq_server.name} [#{@record.miq_server.id}]"}
+    @record.miq_server && "#{@record.miq_server.name} [#{@record.miq_server.id}]"
   end
 
   def textual_description
-    return nil if @record.description.blank?
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_hostname
@@ -217,7 +215,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_retirement_state
-    {:label => "Retirement State", :value => @record.retirement_state.to_s.capitalize}
+    @record.retirement_state.to_s.capitalize
   end
 
   def textual_provisioned
@@ -227,13 +225,11 @@ module VmHelper::TextualSummary
   end
 
   def textual_owner
-    return nil if @record.evm_owner.nil?
-    {:label => "Owner", :value => @record.evm_owner.name}
+    @record.evm_owner.try(:name)
   end
 
   def textual_group
-    return nil if @record.miq_group.nil?
-    {:label => "Group", :value => @record.miq_group.description}
+    @record.miq_group.try(:description)
   end
 
   def textual_ems

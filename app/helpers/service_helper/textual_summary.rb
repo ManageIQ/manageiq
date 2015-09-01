@@ -35,11 +35,11 @@ module ServiceHelper::TextualSummary
   #
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_description
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_guid
@@ -101,13 +101,11 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_owner
-    return nil if @record.evm_owner.nil?
-    {:label => "Owner", :value => @record.evm_owner.name}
+    @record.evm_owner.try(:name)
   end
 
   def textual_group
-    return nil if @record.miq_group.nil?
-    {:label => "Group", :value => @record.miq_group.description}
+    @record.miq_group.try(:description)
   end
 
   def textual_created

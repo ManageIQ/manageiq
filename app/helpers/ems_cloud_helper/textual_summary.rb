@@ -28,8 +28,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_hostname
-    return nil if @ems.hostname.blank?
-    {:label => "Hostname", :value => @ems.hostname }
+    @ems.hostname
   end
 
   def textual_ipaddress
@@ -38,7 +37,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_type
-    {:label => "Type", :value => @ems.emstype_description}
+    @ems.emstype_description
   end
 
   def textual_port
@@ -76,23 +75,23 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_availability_zones
-    textual_link(@record.availability_zones)
+    @record.availability_zones
   end
 
   def textual_cloud_tenants
-    textual_link(@record.cloud_tenants)
+    @record.cloud_tenants
   end
 
   def textual_orchestration_stacks
-    textual_link(@record.orchestration_stacks)
+    @record.orchestration_stacks
   end
 
   def textual_flavors
-    textual_link(@record.flavors)
+    @record.flavors
   end
 
   def textual_security_groups
-    textual_link(@record.security_groups)
+    @record.security_groups
   end
 
   def textual_authentications

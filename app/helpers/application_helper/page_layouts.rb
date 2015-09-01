@@ -5,6 +5,7 @@ module ApplicationHelper::PageLayouts
          @layout == "report" ||
          @layout == "exception" ||
          @layout == "chargeback" ||
+         @layout == "container_topology" ||
          @layout.starts_with?("miq_request") ||
          %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button miq_ae_export
             miq_ae_logs miq_ae_tools miq_policy miq_policy_export miq_policy_logs my_tasks my_ui_tasks

@@ -20,7 +20,7 @@ begin
     ost = OpenStruct.new
     vm = MiqVm.new(VMX, ost)
     
-    vm.vmRootTrees.each do | fs |
+    vm.rootTrees.each do | fs |
         puts "*** Found root tree for #{fs.guestOS}"
         puts "Listing files in #{fs.pwd} directory:"
         fs.dirEntries.each { |de| puts "\t#{de}" }

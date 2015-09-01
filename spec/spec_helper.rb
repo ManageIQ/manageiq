@@ -1,4 +1,10 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+
+require 'coveralls'
+Coveralls.wear!('rails') do
+  add_filter("/spec/")
+end
+
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/autorun'
@@ -11,13 +17,6 @@ require 'vcr'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 # include the gems/pending matchers
 Dir[File.join(GEMS_PENDING_ROOT, "spec/support/custom_matchers/*.rb")].each { |f| require f }
-
-begin
-  require 'simplecov'
-  SimpleCov.start "rails"
-rescue LoadError
-  # won't run coverage if gem not loaded
-end
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -108,10 +107,4 @@ VCR.configure do |c|
   }
 
   #c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")
-end
-
-begin
-  require 'coveralls'
-  Coveralls.wear!
-rescue LoadError
 end

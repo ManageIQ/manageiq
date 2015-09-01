@@ -24,7 +24,9 @@ cols:
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-
+  ext_management_system:
+    columns:
+    - name
 # Included tables and columns for query performance
 include_for_find:
 
@@ -32,11 +34,13 @@ include_for_find:
 col_order: 
 - host
 - port
+- ext_management_system.name
 
 # Column titles, in order
 headers:
 - Host
 - Port
+- Provider
 
 # Condition(s) string for the SQL query
 conditions: 

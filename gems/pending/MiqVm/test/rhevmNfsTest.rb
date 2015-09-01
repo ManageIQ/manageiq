@@ -39,10 +39,10 @@ begin
 
 	vm = MiqVm.new(hardware, ost)
 
-	raise "No filesystems detected." if vm.vmRootTrees.empty?
+	raise "No filesystems detected." if vm.rootTrees.empty?
 
 	puts "\nChecking for file systems..."
-	vm.vmRootTrees.each do | fs |
+	vm.rootTrees.each do | fs |
 	    puts "*** Found root tree for #{fs.guestOS}"
 	    puts "Listing files in #{fs.pwd} directory:"
 	    fs.dirEntries.each { |de| puts "\t#{de}" }

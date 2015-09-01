@@ -80,7 +80,7 @@ describe StorageController do
         controller.button
         flash_messages = assigns(:flash_array)
         flash_messages.first[:message].should include("successfully initiated")
-        flash_messages.first[:level].should == :info
+        flash_messages.first[:level].should == :success
       end
     end
   end

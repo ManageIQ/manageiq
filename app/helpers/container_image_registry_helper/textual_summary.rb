@@ -22,11 +22,11 @@ module ContainerImageRegistryHelper
     #
 
     def textual_host
-      {:label => "host", :value => @record.host}
+      @record.host
     end
 
     def textual_port
-      {:label => "port", :value => @record.port}
+      @record.port
     end
   end
 end
