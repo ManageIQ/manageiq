@@ -123,7 +123,23 @@ class MiqPassword
   end
 
   def self.v2_key
-    @v2_key ||= ez_load("#{key_root}/v2_key")
+    @v2_key ||= begin
+      key_file = File.expand_path("v2_key", key_root)
+      if File.exist?(key_file)
+        ez_load(key_file)
+      else
+        msg = <<-EOS
+#{key_file} doesn't exist!
+On an appliance, it should be generated on boot by evmserverd.
+
+If you're a developer, you can copy the #{key_file}.dev to #{key_file}.
+
+Caution, using the developer key will allow anyone with the public developer key to decrypt the two-way
+passwords in your database.
+EOS
+        Kernel.warn msg
+      end
+    end
   end
 
   def self.add_legacy_key(filename, type = :v1)
