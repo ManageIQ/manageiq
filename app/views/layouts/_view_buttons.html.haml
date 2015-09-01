@@ -6,7 +6,7 @@
   - elsif @lastaction == "drift"
     = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "drift_view_tb"}
   - elsif !%w(all_tasks all_ui_tasks timeline diagnostics my_tasks my_ui_tasks miq_server usage).include?(@layout) |
-    && !@layout.starts_with?("miq_request") && !@treesize_buttons |
+    && (!@layout.starts_with?("miq_request")) && !@treesize_buttons |
     && @display == "main" && @showtype == "main" && !@in_a_form |
     = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "summary_view_tb"}
   - else

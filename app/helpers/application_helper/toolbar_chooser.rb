@@ -399,7 +399,7 @@ class ApplicationHelper::ToolbarChooser
         if %w(availability_zone cloud_tenant container_group container_node container_service ems_cloud ems_cluster
               ems_container container_project container_route container_replicator container_image
               container_image_registry ems_infra flavor host
-              ontap_file_share ontap_logical_disk
+              ontap_file_share ontap_logical_disk container_topology
               ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
               timeline usage security_group).include?(@layout)
           if ["show_list"].include?(@lastaction)
