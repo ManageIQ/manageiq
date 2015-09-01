@@ -31,7 +31,6 @@ module ReportController::Reports
     @right_cell_div  = "report_list"
     @right_cell_text ||= _("%{model} \"%{name}\"") % {:name=>r.name, :model=>"Saved Report"}
     add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>r.name})
-    @sb[:rep_tree_build_time] = Time.now.utc
     replace_right_cell(:replace_trees => [:reports,:savedreports])
   end
 
@@ -108,7 +107,6 @@ module ReportController::Reports
         add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>rpt_name})
       end
       params[:id] = nil
-      @sb[:rep_tree_build_time] = Time.now.utc
       nodes = x_node.split('_')
       self.x_node = "#{nodes[0]}_#{nodes[1]}"
       replace_right_cell(:replace_trees => [:reports])

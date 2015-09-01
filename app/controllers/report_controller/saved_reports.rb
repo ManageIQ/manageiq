@@ -105,7 +105,6 @@ module ReportController::SavedReports
     end
     self.x_node = "xx-#{to_cid(@sb[:miq_report_id])}" if x_active_tree == :savedreports_tree &&
         x_node.split('-').first == "rr"
-    @sb[:rep_tree_build_time] = Time.now.utc
     replace_right_cell(:replace_trees => [:reports,:savedreports])
   end
 
