@@ -63,7 +63,7 @@ class MiqGenericMountSession
   end
 
   def mount_share
-    @mnt_point = settings_mount_point || Dir.mktmpdir
+    @mnt_point = Dir.mktmpdir("miq_", settings_mount_point)
   end
 
   def get_ping_depot_options
@@ -456,10 +456,6 @@ class MiqGenericMountSession
 
   def settings_mount_point
     return if @settings[:mount_point].blank? # Check if settings contains the mount_point to use
-    mount_point = File.join(@settings[:mount_point], "miq_#{MiqUUID.new_guid}")
-    raise MiqException::MountPointAlreadyExists, "#{@mnt_point} directory already exists!!!" if File.exist?(mount_point)
-    dir = FileUtils.mkdir_p(mount_point).first
-    raise MiqException::MiqLogFileMountPointMissing, "mount point: [#{@mnt_point}] failed to be created" unless File.directory?(dir)
-    dir
+    FileUtils.mkdir_p(@settings[:mount_point]).first
   end
 end
