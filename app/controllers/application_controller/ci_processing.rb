@@ -444,8 +444,8 @@ module ApplicationController::CiProcessing
       }
       # Convert memory to MB before passing on to model, don't multiply by 1024, if value is not numeric
       options[:vm_memory] = @edit[:new][:mem_typ] == "MB" ? @edit[:new][:memory] : (@edit[:new][:memory].to_i.zero? ? @edit[:new][:memory] : @edit[:new][:memory].to_i * 1024) if @edit[:new][:cb_memory]
-      options[:number_of_cpus] = @edit[:new][:cpu_count] if @edit[:new][:cb_cpu]
-      options[:cores_per_socket] = @edit[:new][:cores_per_socket_count] if @edit[:new][:cb_cores_per_socket]
+      options[:cores_per_socket]  = @edit[:new][:cores_per_socket_count].to_i if @edit[:new][:cb_cores_per_socket]
+      options[:number_of_cpus]    = @edit[:new][:cpu_count].to_i * @edit[:new][:cores_per_socket_count].to_i if @edit[:new][:cb_cpu] || @edit[:new][:cb_cores_per_socket]
       valid = VmReconfigureRequest.validate_request(options)
       if valid
         valid.each do |v|
@@ -1087,12 +1087,12 @@ module ApplicationController::CiProcessing
     else
       @req = MiqRequest.find_by_id(@edit[:req_id])
       @edit[:new][:memory], @edit[:new][:mem_typ] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
-      @edit[:new][:cpu_count] = @req.options[:number_of_cpus]
+      @edit[:new][:cpu_count] = @req.options[:number_of_sockets]
       @edit[:new][:cores_per_socket_count] = @req.options[:cores_per_socket]
     end
 
     @edit[:new][:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request
-    @edit[:new][:cb_cpu] = @req && @req.options[:number_of_cpus] ? true : false     # default for checkbox is false for new request
+    @edit[:new][:cb_cpu] = @req && @req.options[:number_of_sockets] ? true : false     # default for checkbox is false for new request
     @edit[:new][:cb_cores_per_socket] = @req && @req.options[:cores_per_socket] ? true : false     # default for checkbox is false for new request
 
     @edit[:options] = VmReconfigureRequest.request_limits(:src_ids => @edit[:reconfigure_items])
@@ -1100,10 +1100,10 @@ module ApplicationController::CiProcessing
     mem2, fmt2 = reconfigure_calculations(@edit[:options][:max__vm_memory])
     @edit[:memory_note] = "Between #{mem1}#{fmt1} and #{mem2}#{fmt2}"
 
-    @edit[:cpu_options] = []
-    @edit[:options][:max__number_of_cpus].times do |tidx|
-      idx = tidx + @edit[:options][:min__number_of_cpus]
-      @edit[:cpu_options].push(idx) if idx <= @edit[:options][:max__number_of_cpus]
+    @edit[:cpu_options] = Array.new
+    @edit[:options][:max__number_of_sockets].times do |tidx|
+      idx = tidx + @edit[:options][:min__number_of_sockets]
+      @edit[:cpu_options].push(idx) if idx <= @edit[:options][:max__number_of_sockets]
     end
 
     @edit[:cores_options] = []

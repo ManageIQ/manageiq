@@ -29,7 +29,7 @@ class VmReconfigureTask < MiqRequestTask
     unless req_obj.options[:vm_memory].blank?
       new_settings << "Memory: #{req_obj.options[:vm_memory].to_i} MB"
     end
-    new_settings << "Processor Sockets #{req_obj.options[:number_of_cpus].to_i}" unless req_obj.options[:number_of_cpus].blank?
+    new_settings << "Processor Sockets #{req_obj.options[:number_of_sockets].to_i}" unless req_obj.options[:number_of_cpus].blank?
     new_settings << "Processor Cores Per Socket: #{req_obj.options[:cores_per_socket].to_i}" unless req_obj.options[:cores_per_socket].blank?
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
   end

@@ -10,33 +10,34 @@ class VmReconfigureRequest < MiqRequest
     # Memory values are in megabytes
     default_max_vm_memory = 255.gigabyte / 1.megabyte
     result = {
-      :min__number_of_cpus   => 1,
-      :max__number_of_cpus   => nil,
-      :min__vm_memory        => 4,
-      :max__vm_memory        => nil,
-      :min__cores_per_socket => 1,
-      :max__cores_per_socket => nil,
-      :max__total_vcpus      => nil
+      :min__number_of_sockets => 1,
+      :max__number_of_sockets => nil,
+      :min__vm_memory         => 4,
+      :max__vm_memory         => nil,
+      :min__cores_per_socket  => 1,
+      :max__cores_per_socket  => nil,
+      :min__total_vcpus       => 1,
+      :max__total_vcpus       => nil
     }
 
     all_memory, all_vcpus, all_cores_per_socket, all_total_vcpus = [], [], [], []
     options[:src_ids].to_miq_a.each do |idx|
       vm = Vm.find_by_id(idx)
-      all_vcpus << (vm.host ? vm.host.hardware.logical_cpus : vm.max_vcpus)
+      all_vcpus            << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_vcpus].min : vm.max_vcpus)
+      all_cores_per_socket << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_cores_per_socket].min : vm.max_cores_per_socket)
+      all_total_vcpus      << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_total_vcpus].min : vm.max_total_vcpus)
       all_memory << (vm.respond_to?(:max_memory_cpu) ? vm.max_memory_cpu : default_max_vm_memory)
-      all_cores_per_socket << vm.max_cores_per_socket
-      all_total_vcpus << vm.max_total_vcpus
     end
 
-    result[:max__number_of_cpus] = all_vcpus.min
+    result[:max__number_of_sockets] = all_vcpus.min
     result[:max__vm_memory]      = all_memory.min
     result[:max__cores_per_socket] = all_cores_per_socket.min
     result[:max__total_vcpus] = all_total_vcpus.min
 
-    result[:max__number_of_cpus] = 1 if result[:max__number_of_cpus].nil?
+    result[:max__number_of_sockets] = 1 if result[:max__number_of_sockets].nil?
     result[:max__cores_per_socket] = 1 if result[:max__cores_per_socket].nil?
     result[:max__vm_memory] ||= default_max_vm_memory
-    result[:max__total_vcpus] = 1 if result[:max__number_of_cpus].nil? && result[:max__cores_per_socket].nil?
+    result[:max__total_vcpus] = 1 if result[:max__number_of_sockets].nil? && result[:max__cores_per_socket].nil?
     result
   end
 
@@ -54,11 +55,11 @@ class VmReconfigureRequest < MiqRequest
     end
 
     # Check if cpu value is within the allowed limits
-    cpus = options[:number_of_cpus]
+    cpus = options[:number_of_sockets]
     unless cpus.blank?
       cpus = cpus.to_i
-      errors << "Processor value must be less than #{limits[:max__number_of_cpus]}.  Current value: #{cpus}"    if cpus > limits[:max__number_of_cpus]
-      errors << "Processor value must be greater than #{limits[:min__number_of_cpus]}.  Current value: #{cpus}" if cpus < limits[:min__number_of_cpus]
+      errors << "Processor value must be less than #{limits[:max__number_of_sockets]}.  Current value: #{cpus}"    if cpus > limits[:max__number_of_sockets]
+      errors << "Processor value must be greater than #{limits[:min__number_of_sockets]}.  Current value: #{cpus}" if cpus < limits[:min__number_of_sockets]
     end
 
     # Check if cpu value is within the allowed limits
