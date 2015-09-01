@@ -119,11 +119,11 @@ class MiqPassword
   end
 
   def self.clear_keys
-    @v2_key = @v1_key = @v0_key = nil
+    @@v2_key = @v1_key = @v0_key = nil
   end
 
   def self.v2_key
-    @v2_key ||= ez_load("v2_key") || begin
+    @@v2_key ||= ez_load("v2_key") || begin
       key_file = File.expand_path("v2_key", key_root)
       msg = <<-EOS
 #{key_file} doesn't exist!
@@ -150,7 +150,10 @@ EOS
   class << self
     attr_accessor :v0_key
     attr_accessor :v1_key
-    attr_writer :v2_key
+
+    def v2_key=(key)
+      @@v2_key = key
+    end
   end
 
   def self.generate_symmetric(filename = nil)
