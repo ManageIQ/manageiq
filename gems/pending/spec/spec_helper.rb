@@ -1,4 +1,10 @@
 require_relative '../bundler_setup'
+
+require 'coveralls'
+Coveralls.wear_merged! do
+  add_filter("/spec/")
+end
+
 require 'rspec/autorun'
 
 # Push the gems/pending directory onto the load path
@@ -12,13 +18,6 @@ $log ||= Logger.new("/dev/null")
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir[File.expand_path(File.join(__dir__, 'support/**/*.rb'))].each { |f| require f }
-
-begin
-  require 'simplecov'
-  SimpleCov.start
-rescue LoadError
-  # won't run coverage if gem not loaded
-end
 
 RSpec.configure do |config|
   config.after(:each) do
