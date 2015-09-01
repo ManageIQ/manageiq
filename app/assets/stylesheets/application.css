@@ -19,4 +19,5 @@
  *= require jqplot
  *= require product_slickgrid
  *= require consoles
+ *= require kubernetes-topology-graph/topology-graph
 */

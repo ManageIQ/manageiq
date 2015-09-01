@@ -704,6 +704,24 @@
       "user_input":null,
       "confidence":"Weak",
       "note":""
+    },
+    {
+      "warning_type":"Dynamic Render Path",
+      "warning_code":15,
+      "fingerprint":"01d3aa250efb62c0327b77aeb65375943ddda0c06e897aa657998ed7ed0494ee",
+      "message":"Render path contains parameter value",
+      "file":"app/views/ems_container/show.html.haml",
+      "line":4,
+      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code":"render(partial => ((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\"), {})",
+      "render_path":["EmsContainerController#show"],
+      "location":{
+        "type":"template",
+        "template":"ems_container/show (EmsContainerController#show)"
+    },
+      "user_input":"params[:display]",
+      "confidence":"High",
+      "note":""
     }
   ],
   "updated": "2015-08-13 18:47:21 +0200",

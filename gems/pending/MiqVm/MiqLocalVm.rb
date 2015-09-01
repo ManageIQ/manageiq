@@ -7,15 +7,15 @@ class MiqLocalVm < MiqVm
         
     def initialize
         @ost = OpenStruct.new
-        @vmRootTrees = [ MiqFS.new(RealFS, OpenStruct.new) ]
+        @rootTrees = [ MiqFS.new(RealFS, OpenStruct.new) ]
         @volumeManager = OpenStruct.new
         @vmConfigFile = "Local VM"
         @vmDir = ""
 		@vmConfig = OpenStruct.new
     end # def initialize
     
-    def vmRootTrees
-        return @vmRootTrees
+    def rootTrees
+        return @rootTrees
     end
     
     def volumeManager

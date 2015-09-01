@@ -20,23 +20,23 @@ module OrchestrationStackHelper::TextualSummary
   #
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_description
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_type
-    {:label => "Type", :value => @record.type}
+    @record.type
   end
 
   def textual_status
-    {:label => "Status", :value => @record.status}
+    @record.status
   end
 
   def textual_status_reason
-    {:label => "Status Reason", :value => @record.status_reason}
+    @record.status_reason
   end
 
   def textual_ems_cloud
@@ -67,7 +67,7 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_security_groups
-    textual_link(@record.security_groups)
+    @record.security_groups
   end
 
   def textual_cloud_networks

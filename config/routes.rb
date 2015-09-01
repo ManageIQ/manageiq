@@ -534,6 +534,13 @@ Vmdb::Application.routes.draw do
       ) + adv_search_post + exp_post + save_post
     },
 
+    :container_topology => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
     :dashboard => {
       :get => %w(
         auth_error

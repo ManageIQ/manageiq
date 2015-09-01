@@ -93,7 +93,7 @@ unless ENV['APPLIANCE']
   end
 
   group :test do
-    gem "brakeman",         "~>3.0",    :require => false
+    gem "brakeman",         "~>3.0.5",  :require => false
     gem "capybara",         "~>2.1.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "shoulda-matchers", "~>1.0.0",  :require => false
@@ -103,7 +103,7 @@ unless ENV['APPLIANCE']
 
   group :development, :test do
     gem "rspec-rails",      "~>2.14.0"
-    gem "coveralls"
+    gem "coveralls",                    :require => false
   end
 end
 
@@ -115,6 +115,7 @@ source "https://rails-assets.org" do
   gem "rails-assets-bootstrap-datepicker",     "~>1.4.0"
   gem "rails-assets-bootstrap-hover-dropdown", "~>2.0.11"
   gem "rails-assets-bootstrap-select",         "~>1.7.3"
+  gem "rails-assets-kubernetes-topology-graph", "=0.0.16"
 end
 
 #

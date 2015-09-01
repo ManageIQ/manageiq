@@ -254,7 +254,7 @@ if __FILE__ == $0 then
   begin
     @vm = MiqVm.new(vmHDImage, nil)
 
-    @systemFs = @vm.vmRootTrees[0]
+    @systemFs = @vm.rootTrees[0]
     if @systemFs
       #Note: SHA22 is not valid.  It is here for testing of bad parms
       #md5 = MD5deep.new(@systemFs, {"digest"=>%w(SHA1)}) #, %w(MD5 RMD160 SHA1 SHA256 SHA384 SHA512 SHA22))

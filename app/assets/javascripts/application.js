@@ -25,6 +25,10 @@
 //= require controllers/ops/diagnostics_database_form_controller
 //= require controllers/ops/log_collection_form_controller
 //= require controllers/ops/tenant_form_controller
+//= require controllers/container_topology/container_topology_controller
+//= require d3/d3
+//= require c3/c3
+//= require kubernetes-topology-graph/topology-graph
 //= require miq_application
 //= require miq_dynatree_replacement
 //= require dialog_import_export
@@ -46,8 +50,6 @@
 //= require bootstrap-datepicker
 //= require bootstrap-select
 //= require bootstrap-hover-dropdown
-//= require c3/c3
-//= require d3/d3
 //= require patternfly
 //= require jquery.observe_field
 //= require miq_jquery_ujs_rails3

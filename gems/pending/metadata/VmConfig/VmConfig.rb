@@ -180,7 +180,7 @@ class VmConfig
     unless miqvm.nil?
       # Make sure we have the volume manager and loaded
       begin
-        miqvm.vmRootTrees[0]
+        miqvm.rootTrees[0]
         @vol_mgr_loaded = true
       rescue LoadError
         $log.warn "add_disk_stats [#{$!.class}]-[#{$!}]"
@@ -567,7 +567,7 @@ class VmConfig
       free_space = 0; disk_capacity = 0
       if miqvm && @vol_mgr_loaded
         # Make sure we have the volume manager loaded
-        vmRoot = miqvm.vmRootTrees[0]
+        vmRoot = miqvm.rootTrees[0]
         if vmRoot
           miqvm.wholeDisks.each {|d| disk_capacity += d.size}
           rootAdded = false

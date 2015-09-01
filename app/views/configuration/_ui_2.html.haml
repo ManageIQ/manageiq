@@ -37,7 +37,7 @@
                   .col-md-8
                     %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
         - if get_vmdb_config[:product][:containers]
-          - if has_any_role?(%w(ems_container_show_list container_group_show_list container_node_show_list container_route_show_list container_project_show_list container_replicator_show_list container_image_show_list container_image_registry_show_list container_service_accord containers_filter_accord containers_accord))
+          - if has_any_role?(%w(ems_container_show_list container_group_show_list container_node_show_list container_route_show_list container_project_show_list container_replicator_show_list container_image_show_list container_image_registry_show_list container_service_accord containers_filter_accord containers_accord container_topology))
             %fieldset
               %h3
                 = _('Containers')
@@ -50,7 +50,8 @@
                         :containerreplicator    => "container_replicator",
                         :containerimage         => "container_image",
                         :containerimageregistry => "container_image_registry",
-                        :container              => "container"}
+                        :container              => "container",
+                        :containertopology      => "container_topology"}
               - keys.each do |resource, table_view_name|
                 .form-group
                   %label.col-md-3.control-label

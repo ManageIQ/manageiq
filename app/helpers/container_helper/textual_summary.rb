@@ -21,15 +21,15 @@ module ContainerHelper::TextualSummary
   #
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_state
-    {:label => "State", :value => @record.state}
+    @record.state
   end
 
   def textual_restart_count
-    {:label => "Restart Count", :value => @record.restart_count}
+    @record.restart_count
   end
 
   def textual_backing_ref
