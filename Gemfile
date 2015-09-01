@@ -20,7 +20,7 @@ gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
 gem "momentjs-rails",                 "~>2.10.3"
-gem "patternfly-sass",                "~>2.0.0"
+gem "patternfly-sass",                "~>2.1.0"
 gem "sass-rails"
 
 # Vendored and required
