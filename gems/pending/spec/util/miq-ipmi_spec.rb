@@ -75,31 +75,24 @@ describe MiqIPMI do
       end
     end
 
-    context "management card" do
-      let(:mc_info_response) do
-        {"Device ID"=>"32", "Device Revision"=>"1", "Firmware Revision"=>"1.57", "IPMI Version"=>"2.0", "Manufacturer ID"=>"674", "Manufacturer Name"=>"DELL Inc", "Product ID"=>"256 (0x0100)", "Product Name"=>"Unknown (0x100)", "Device Available"=>"yes", "Provides Device SDRs"=>"yes", "Additional Device Support"=>["Sensor Device", "SDR Repository Device", "SEL Device", "FRU Inventory Device", "IPMB Event Receiver", "Bridge", "Chassis Device"], "Aux Firmware Rev Info"=>["0x00", "0x04", "0x39", "0x00"]}
-      end
+    it "#manufacturer" do
+      response = {
+        "Device ID"                 => "32",
+        "Device Revision"           => "1",
+        "Firmware Revision"         => "1.57",
+        "IPMI Version"              => "2.0",
+        "Manufacturer ID"           => "674",
+        "Manufacturer Name"         => "DELL Inc",
+        "Product ID"                => "256 (0x0100)",
+        "Product Name"              => "Unknown (0x100)",
+        "Device Available"          => "yes",
+        "Provides Device SDRs"      => "yes",
+        "Additional Device Support" => ["Sensor Device", "SDR Repository Device", "SEL Device", "FRU Inventory Device", "IPMB Event Receiver", "Bridge", "Chassis Device"],
+        "Aux Firmware Rev Info"     => ["0x00", "0x04", "0x39", "0x00"]
+      }
 
-      it "#mc_info" do
-        allow(MiqUtil).to receive(:runcmd).with("ipmitool -I lanplus -H  -U  -E mc info").and_return(mc_info_response)
-        expect(subject.mc_info).to eq(
-          "Device Available"     => "yes",
-          "Device ID"            => "32",
-          "Device Revision"      => "1",
-          "Firmware Revision"    => "1.57",
-          "IPMI Version"         => "2.0",
-          "Manufacturer ID"      => "674",
-          "Manufacturer Name"    => "DELL Inc",
-          "Product ID"           => "256 (0x0100)",
-          "Product Name"         => "Unknown (0x100)",
-          "Provides Device SDRs" => ["yes", "Additional Device Support :", "Sensor Device", "SDR Repository Device", "SEL Device", "FRU Inventory Device", "IPMB Event Receiver", "Bridge", "Chassis Device", "Aux Firmware Rev Info     :", "0x00", "0x04", "0x39", "0x00"]
-        )
-      end
-
-      it "#manufacturer" do
-        expect_any_instance_of(Rubyipmi::Ipmitool::Bmc).to receive(:info).and_return(mc_info_response)
-        expect(subject.manufacturer).to eq("DELL Inc")
-      end
+      expect_any_instance_of(Rubyipmi::Ipmitool::Bmc).to receive(:info).and_return(response)
+      expect(subject.manufacturer).to eq("DELL Inc")
     end
 
     it "#interface_mode" do

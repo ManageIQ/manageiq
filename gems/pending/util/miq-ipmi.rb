@@ -44,10 +44,6 @@ class MiqIPMI
     parse_output(@connection.chassis.status[:result])
   end
 
-  def mc_info
-    @connection.bmc.info
-  end
-
   def manufacturer
     @connection.bmc.info['Manufacturer Name']
   end
