@@ -527,19 +527,19 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "335bc3c5f388ecc8a0322d73850c3857343b661e7a582054f80eb39a93735c2e",
+      "fingerprint": "e95f7b494233d0543110961a8058f9fa42e06813db3579e54afa8adc9fbe62a7",
       "message": "Render path contains parameter value",
       "file": "app/views/shared/views/ems_common/_show.html.haml",
       "line": 16,
       "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(partial => \"shared/views/ems_common/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
+      "code": "render(partial => ((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\"), {})",
       "render_path": ["EmsCloudController#show","Template:ems_cloud/show"],
       "location": {
         "type": "template",
         "template": "shared/views/ems_common/_show (Template:ems_cloud/show)"
       },
       "user_input": "params[:display]",
-      "confidence": "Medium",
+      "confidence": "High",
       "note": ""
     },
     {
@@ -595,8 +595,29 @@
       "user_input": null,
       "confidence": "Weak",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "335bc3c5f388ecc8a0322d73850c3857343b661e7a582054f80eb39a93735c2e",
+      "message": "Render path contains parameter value",
+      "file": "app/views/shared/views/ems_common/_show.html.haml",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"shared/views/ems_common/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
+      "render_path": [
+        "EmsCloudController#show",
+        "Template:ems_cloud/show"
+      ],
+      "location": {
+        "type": "template",
+        "template": "shared/views/ems_common/_show (Template:ems_cloud/show)"
+      },
+      "user_input": "params[:display]",
+      "confidence": "Medium",
+      "note": ""
     }
   ],
-  "updated": "2015-09-08 09:54:37 +0200",
+  "updated": "2015-09-07 19:29:17 -0400",
   "brakeman_version": "3.0.5"
 }

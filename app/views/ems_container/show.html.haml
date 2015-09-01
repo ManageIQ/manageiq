@@ -1,5 +1,1 @@
-- if %w(containers container_groups container_services container_routes container_replicators container_nodes container_projects container_images container_image_registries).include?(@display)
-  = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
-- else
-  = render :partial => @showtype
-
+= render :partial => "shared/views/ems_common/show"
