@@ -421,9 +421,8 @@ module ApplicationHelper
     os.kind_of?(Array) ? os.include?(browser_os) : (browser_os == os)
   end
 
-  def browser_info(typ, downcase = true)
-    value = session.fetch_path(:browser, typ).to_s
-    downcase ? value.downcase : value
+  def browser_info(typ)
+    session.fetch_path(:browser, typ).to_s
   end
 
   ############# Following methods generate JS lines for render page blocks
