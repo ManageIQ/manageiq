@@ -55,6 +55,11 @@ describe Condition do
         expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> != 0</check></find>"
         Condition.subst(expr, @cluster, nil).should == 'true'
       end
+
+      it "rejects and expression with an illegal operator" do
+        expr = "<find><search>__start_ruby__ __start_context__<value ref=host, type=raw>/virtual/vms/hostnames</value>__type__string_set__end_context__ __start_script__return true__end_script__ __end_ruby__</search><check mode=count><count> !! 0</check></find>"
+        expect { Condition.subst(expr, @cluster, nil).should == 'false' }.to raise_error(RuntimeError, "Illegal operator, '!!'")
+      end
     end
 
     context "expression with <registry>" do
