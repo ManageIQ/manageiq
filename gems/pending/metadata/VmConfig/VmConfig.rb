@@ -1,4 +1,4 @@
-require 'util/pathname2'
+require 'pathname'
 require 'metadata/VMMount/VMMount'
 require 'util/miq-unicode'
 require 'util/miq-xml'
@@ -69,9 +69,9 @@ class VmConfig
 				next if @cfgHash[dk + ".filename"] && @cfgHash[dk + ".filename"].downcase == "auto detect"
 
         begin
-          dskPath = Pathname2.new(@cfgHash[dk + ".filename"])
+          dskPath = Pathname.new(@cfgHash[dk + ".filename"])
           begin
-            @cfgHash[dk + ".filename"] = dskPath.relative_path_from(Pathname2.new(@configPath)).to_s.tr("\\", "/") if dskPath.absolute?
+            @cfgHash[dk + ".filename"] = dskPath.relative_path_from(Pathname.new(@configPath)).to_s.tr("\\", "/") if dskPath.absolute?
           rescue
             @cfgHash[dk + ".filename"] = dskPath.to_s.tr("\\", "/")
           end
@@ -105,7 +105,7 @@ class VmConfig
       @diskFileHash[dk] = filename
 			if @direct_file_access
         ds, dir, name = split_filename(filename)
-        if ds.nil? && !Pathname2.new(filename).absolute?
+        if ds.nil? && !Pathname.new(filename).absolute?
           @diskFileHash[dk] = File.expand_path(File.join(@configPath, filename))
         end
       end
@@ -140,7 +140,7 @@ class VmConfig
 
       if @direct_file_access
         ds, dir, name = split_filename(filename)
-				if ds.nil? && !Pathname2.new(@cfgHash[dk + ".filename"]).absolute?
+				if ds.nil? && !Pathname.new(@cfgHash[dk + ".filename"]).absolute?
 					disk_path = File.join(@configPath, filename)
 				end
       end
@@ -328,7 +328,7 @@ class VmConfig
               whole_disk = nil
               whole_disk = miqvm.wholeDisks.detect {|wd| wd.hwId.include?(device_id)} if @vol_mgr_loaded
               size = whole_disk.nil? ? fstat[:provision_size] : whole_disk.size
-              
+
               # Report a disk's size_on_disk as the size of all the files that make up the disk.
               # This includes the base disk and snapshots.
               collective_disk_size = collective_size_on_disk(device_id, disk_files(miqvm))
@@ -487,13 +487,13 @@ class VmConfig
     disk_files(miqvm)
     return @files
   end
-  
+
   def rhevm_disk_file_entry(disk)
     storage_domain = disk[:storage_domains].first
     storage_id     = storage_domain && storage_domain[:id]
     disk_key       = disk[:image_id].blank? ? :id : :image_id
     fullPath       = storage_id && File.join('/dev', storage_id, disk[disk_key])
-    
+
     return {:path=>fullPath, :name=>disk[disk_key], :size=>disk[:actual_size].to_i}
   end
   private :rhevm_disk_file_entry
@@ -606,7 +606,7 @@ class VmConfig
         # If the VM does not have snapshots we can stop here
         return if miqvm.snapshots.nil?
         ds, dir, name = split_filename(miqvm.vmConfigFile)
-        
+
         # We need to connect to the host to get the snapshot file content
         hostVim = nil
         if miqvm.vim.isVirtualCenter?
