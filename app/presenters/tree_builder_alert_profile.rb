@@ -19,7 +19,7 @@ class TreeBuilderAlertProfile < TreeBuilder
 
   # level 0 - root
   def root_options
-    [N_("All Alert Profiles"), N_("All Alert Profiles")]
+    [t = N_("All Alert Profiles"), t]
   end
 
   # level 1 - * alert profiles
