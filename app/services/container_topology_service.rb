@@ -17,6 +17,11 @@ class ContainerTopologyService
           topo_items[c.ems_ref] = build_entity(c.ems_ref, c.name, "Container")
           links << build_link(cg.ems_ref, c.ems_ref)
         end
+        if cg.container_replicator
+          cr = cg.container_replicator
+          topo_items[cr.ems_ref] = build_entity(cr.ems_ref, cr.name, "Replicator")
+          links << build_link(cg.ems_ref, cr.ems_ref)
+        end
       end
 
       if n.lives_on
@@ -69,12 +74,14 @@ class ContainerTopologyService
   end
 
   def build_kinds
-    {:Pod            => '#vertex-Pod',
-     :Container      => '#vertex-Container',
-     :Node           => '#vertex-Node',
-     :Service        => '#vertex-Service',
-     :Host           => '#vertex-Host',
-     :VM             => '#vertex-VM'
+    {
+     :Replicator => '#vertex-Replicator',
+     :Pod        => '#vertex-Pod',
+     :Container  => '#vertex-Container',
+     :Node       => '#vertex-Node',
+     :Service    => '#vertex-Service',
+     :Host       => '#vertex-Host',
+     :VM         => '#vertex-VM'
     }
   end
 end
