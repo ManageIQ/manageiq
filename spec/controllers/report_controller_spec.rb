@@ -1144,4 +1144,104 @@ describe ReportController do
       assigns(:reps).should eq([["Report 1", 1], ["Report 2", 2]])
     end
   end
+
+  context "#replace_right_cell" do
+    before do
+      miq_group = FactoryGirl.create(:miq_group,
+                                     :description   => "EvmGroup-super_administrator",
+                                     :miq_user_role => FactoryGirl.create(:miq_user_role,
+                                                                          :name => 'EvmRole-super_administrator'))
+      controller.instance_variable_set(:@current_user, FactoryGirl.create(:user,
+                                                                          :name       => "foo",
+                                                                          :miq_groups => [miq_group]))
+      session[:group] = miq_group
+    end
+
+    it "should rebuild trees when last report result is newer than last tree build time" do
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:reports_tree => {:active_node => "root"}},
+                                       :active_tree => :reports_tree)
+      controller.stub(:x_node) { 'root' }
+      controller.stub(:get_node_info)
+      controller.stub(:x_build_dyna_tree)
+      last_build_time = Time.now.utc
+      controller.instance_variable_set(:@sb, :rep_tree_build_time => last_build_time)
+      FactoryGirl.create(:miq_report_with_results)
+      controller.should_receive(:build_report_listnav)
+      controller.should_receive(:build_savedreports_tree)
+      controller.should_receive(:build_db_tree)
+      controller.should_receive(:build_widgets_tree)
+      controller.should_receive(:render)
+      controller.send(:replace_right_cell)
+    end
+
+    it "should not rebuild trees when last report result is older than last tree build time" do
+      FactoryGirl.create(:miq_report_with_results)
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:reports_tree => {:active_node => "root"}},
+                                       :active_tree => :reports_tree)
+      controller.stub(:x_node) { 'root' }
+      controller.stub(:get_node_info)
+      controller.stub(:x_build_dyna_tree)
+      last_build_time = Time.now.utc
+      controller.instance_variable_set(:@sb, :rep_tree_build_time => last_build_time)
+      controller.should_not_receive(:build_report_listnav)
+      controller.should_not_receive(:build_savedreports_tree)
+      controller.should_not_receive(:build_db_tree)
+      controller.should_not_receive(:build_widgets_tree)
+      controller.should_receive(:render)
+      controller.send(:replace_right_cell)
+    end
+
+    it "should rebuild trees reports tree when replace_trees is passed in" do
+      # even tho rebuild_trees is false, it should still rebuild reports tree because
+      # {:replace_trees => [:reports]} is passed in
+      FactoryGirl.create(:miq_report_with_results)
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:reports_tree => {:active_node => "root"}},
+                                       :active_tree => :reports_tree)
+      controller.stub(:x_node) { 'root' }
+      controller.stub(:get_node_info)
+      controller.stub(:x_build_dyna_tree)
+      last_build_time = Time.now.utc
+      controller.instance_variable_set(:@sb, :rep_tree_build_time => last_build_time)
+      controller.should_receive(:build_report_listnav)
+      controller.should_not_receive(:build_savedreports_tree)
+      controller.should_not_receive(:build_db_tree)
+      controller.should_not_receive(:build_widgets_tree)
+      controller.should_receive(:render)
+      controller.send(:replace_right_cell, :replace_trees => [:reports])
+    end
+  end
+
+  context "#rebuild_trees" do
+    before do
+      miq_group = FactoryGirl.create(:miq_group,
+                                     :description   => "EvmGroup-super_administrator",
+                                     :miq_user_role => FactoryGirl.create(:miq_user_role,
+                                                                          :name => 'EvmRole-super_administrator'))
+      controller.instance_variable_set(:@current_user, FactoryGirl.create(:user,
+                                                                          :name       => "foo",
+                                                                          :miq_groups => [miq_group]))
+      session[:group] = miq_group
+    end
+
+    it "rebuild trees, latest report result was created after last time tree was built" do
+      last_build_time = Time.now.utc
+      controller.instance_variable_set(:@sb, :rep_tree_build_time => last_build_time)
+      FactoryGirl.create(:miq_report_with_results)
+      res = controller.send(:rebuild_trees)
+      res.should be(true)
+      assigns(:sb)[:rep_tree_build_time].should_not eq(last_build_time)
+    end
+
+    it "don't rebuild trees, latest report result was created before last time tree was built" do
+      FactoryGirl.create(:miq_report_with_results)
+      last_build_time = Time.now.utc
+      controller.instance_variable_set(:@sb, :rep_tree_build_time => last_build_time)
+      res = controller.send(:rebuild_trees)
+      res.should be(false)
+      assigns(:sb)[:rep_tree_build_time].should eq(last_build_time)
+    end
+  end
 end

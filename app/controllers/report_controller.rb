@@ -383,7 +383,6 @@ class ReportController < ApplicationController
     if ["graph", "hybrid"].include?(params[:type])
       @zgraph = true      # Show the zgraph in the report
     end
-    @sb[:rep_tree_build_time] = Time.now.utc
     @ght_type = params[:type]
     @title = @report.title
   end
@@ -391,7 +390,10 @@ class ReportController < ApplicationController
   def rebuild_trees
     rep = MiqReportResult.all(:conditions=>set_saved_reports_condition, :limit=>1, :order => 'created_on desc', :select => "created_on")
     return false if rep[0].nil?
-    return (rep[0].created_on > @sb[:rep_tree_build_time])
+    build_trees = rep[0].created_on > @sb[:rep_tree_build_time]
+    # save last tree build time to decide if tree needs to be refreshed automatically
+    @sb[:rep_tree_build_time] = Time.now.utc if build_trees
+    build_trees
   end
 
   #Build the main import/export tree
@@ -673,7 +675,7 @@ class ReportController < ApplicationController
     @sb[:active_tab] = params[:tab_id] ? params[:tab_id] : "report_info" if x_active_tree == :reports_tree &&
         params[:action] != "reload" && !["miq_report_run", "saved_report_delete"].include?(params[:pressed]) #do not reset if reload saved reports buttons is pressed
 
-    rebuild = rebuild_trees
+    rebuild = @in_a_form ? false : rebuild_trees
     build_report_listnav    if replace_trees.include?(:reports)      || rebuild
     build_schedules_tree    if replace_trees.include?(:schedules)
     build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild

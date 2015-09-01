@@ -215,7 +215,6 @@ module ReportController::Menus
       get_tree_data
       #set menu_default flag to true
       @sb[:menu_default] = true
-      @sb[:rep_tree_build_time] = Time.now.utc
       replace_right_cell(:menu_edit_action => "menu_default")
     elsif params[:button] == "save"
       @menu_lastaction = "save"
