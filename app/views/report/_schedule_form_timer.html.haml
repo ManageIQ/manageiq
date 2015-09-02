@@ -12,30 +12,26 @@
         = select_tag("timer_typ",
           options_for_select(timer_types, @edit[:new][:timer_typ]),
           "data-miq_observe" => {:url => url}.to_json)
-        = hidden_span_if(@edit[:new][:timer_typ].downcase != "daily", :id => "daily_span")
-        = _("every")
-        = select_tag("timer_days",
-          options_for_select(TIMER_DAYS, @edit[:new][:timer_days]),
-          "data-miq_observe" => {:url => url}.to_json)
-        </span>
-        = hidden_span_if(@edit[:new][:timer_typ].downcase != "hourly", :id => "hourly_span")
-        = _("every")
-        = select_tag("timer_hours",
-          options_for_select(TIMER_HOURS, @edit[:new][:timer_hours]),
-          "data-miq_observe" => {:url => url}.to_json)
-        </span>
-        = hidden_span_if(@edit[:new][:timer_typ].downcase != "weekly", :id => "weekly_span")
-        = _("every")
-        = select_tag("timer_weeks",
-          options_for_select(TIMER_WEEKS, @edit[:new][:timer_weeks]),
-          "data-miq_observe" => {:url => url}.to_json)
-        </span>
-        = hidden_span_if(@edit[:new][:timer_typ].downcase != "monthly", :id => "monthly_span")
-        = _("every")
-        = select_tag("timer_months",
-          options_for_select(TIMER_MONTHS, @edit[:new][:timer_months]),
-          "data-miq_observe" => {:url => url}.to_json)
-        </span>
+        = hidden_span_if(@edit[:new][:timer_typ].downcase != "daily", :id => "daily_span") do
+          = _("every")
+          = select_tag("timer_days",
+            options_for_select(TIMER_DAYS, @edit[:new][:timer_days]),
+            "data-miq_observe" => {:url => url}.to_json)
+        = hidden_span_if(@edit[:new][:timer_typ].downcase != "hourly", :id => "hourly_span") do
+          = _("every")
+          = select_tag("timer_hours",
+            options_for_select(TIMER_HOURS, @edit[:new][:timer_hours]),
+            "data-miq_observe" => {:url => url}.to_json)
+        = hidden_span_if(@edit[:new][:timer_typ].downcase != "weekly", :id => "weekly_span") do
+          = _("every")
+          = select_tag("timer_weeks",
+            options_for_select(TIMER_WEEKS, @edit[:new][:timer_weeks]),
+            "data-miq_observe" => {:url => url}.to_json)
+        = hidden_span_if(@edit[:new][:timer_typ].downcase != "monthly", :id => "monthly_span") do
+          = _("every")
+          = select_tag("timer_months",
+            options_for_select(TIMER_MONTHS, @edit[:new][:timer_months]),
+            "data-miq_observe" => {:url => url}.to_json)
     %tr
       %td.key
         = _('Time Zone')

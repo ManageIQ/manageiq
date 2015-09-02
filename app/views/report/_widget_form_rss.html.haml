@@ -35,13 +35,12 @@
             options_for_select([["<#{_('Enter URL Manually')}>", nil]] + RSS_FEEDS.sort, @edit[:new][:url]),
             :disabled          => @edit[:read_only],
             "data-miq_observe" => {:url => url}.to_json)
-          = hidden_span_if(!@edit[:new][:url].blank?, :id => "url_span")
-          = text_field_tag("txt_url",
-            @edit[:new][:txt_url],
-            :maxlength         => MAX_NAME_LEN,
-            :disabled          => @edit[:read_only],
-            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          </span>
+          = hidden_span_if(!@edit[:new][:url].blank?, :id => "url_span") do
+            = text_field_tag("txt_url",
+              @edit[:new][:txt_url],
+              :maxlength         => MAX_NAME_LEN,
+              :disabled          => @edit[:read_only],
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
       %td.key
         = _('Row Count')
