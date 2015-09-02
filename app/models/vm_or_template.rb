@@ -462,14 +462,8 @@ class VmOrTemplate < ActiveRecord::Base
       begin
         raise "SOAP services are no longer supported.  Remote server operations are dependent on a REST client library."
       rescue => err
-        $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
+        $log.error("An error occurred while invoking remote tasks...")
         $log.log_backtrace(err)
-        MiqQueue.put(
-          :class_name  => self.base_class.name,
-          :method_name => 'invoke_tasks_remote',
-          :args        => [remote_options],
-          :deliver_on  => Time.now.utc + 1.minute
-        )
         next
       end
 
