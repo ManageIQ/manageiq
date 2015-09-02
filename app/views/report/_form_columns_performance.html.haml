@@ -9,7 +9,7 @@
       = select_tag('chosen_interval',
         options_for_select([[_("Daily"), "daily"], [_("Hourly"), "hourly"]], @edit[:new][:perf_interval]),
         :multiple              => false,
-        :class                 => "widthed selectpicker",
+        :class                 => "selectpicker",
         "data-miq_sparkle_on"  => true,
         "data-miq_sparkle_off" => true)
       :javascript
@@ -22,7 +22,7 @@
     = select_tag('perf_avgs',
       options_for_select([[_("Performance Interval"), "time_interval"], [_("Available Active Data"), "active_data"]], @edit[:new][:perf_avgs]),
       :multiple                => false,
-      :class                   => "widthed selectpicker",
+      :class                   => "selectpicker",
       "data-miq_sparkle_on"    => true,
       "data-miq_sparkle_off"   => true)
     :javascript

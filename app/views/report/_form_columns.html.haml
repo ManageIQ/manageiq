@@ -10,7 +10,7 @@
         = select_tag('chosen_model',
           options_for_select(@edit[:models].sort, @edit[:new][:model]),
           :multiple              => false,
-          :class                 => "widthed selectpicker",
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true)
         :javascript
@@ -27,7 +27,7 @@
     %hr
       %h3
         = _('Report Creation Timeout')
-      %form.form-horizontal
+      .form-horizontal
         .form-group
           %label.control-label.col-md-2
             = _('Cancel after')
@@ -36,7 +36,7 @@
             = select_tag('chosen_queue_timeout',
               options_for_select(opts, @edit[:new][:queue_timeout]),
               :multiple              => false,
-              :class                 => "widthed selectpicker",
+              :class                 => "selectpicker",
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true)
             :javascript
