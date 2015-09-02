@@ -10,5 +10,3 @@ namespace :test do
   Rake::TestTask.new(:metadata) { |t| t.test_files = ['test/ts_metadata.rb'] }
   Rake::TestTask.new(:miq_disk) { |t| t.test_files = ['test/ts_mdfs.rb'] }
 end
-
-task :default => [:spec, :test]

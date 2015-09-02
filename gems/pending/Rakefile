@@ -1,3 +1,5 @@
 require_relative './bundler_setup'
 
 Dir[File.join(GEMS_PENDING_ROOT, "lib/tasks/**/*.rake")].sort.each { |ext| load ext }
+
+task :default => [:spec, :test]
