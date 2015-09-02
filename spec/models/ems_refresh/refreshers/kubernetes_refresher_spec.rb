@@ -78,9 +78,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     )
 
     @container.container_image.name.should == "kubernetes/heapster"
-    @container.container_definition.command.should.equal? '["/heapster",'\
-                                                          ' "--source=kubernetes:https://kubernetes",'\
-                                                          ' "--sink=influxdb:http://monitoring-influxdb:80"]'
 
     @container2 = Container.find_by_name("influxdb")
     @container2.should have_attributes(

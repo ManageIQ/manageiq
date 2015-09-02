@@ -334,7 +334,6 @@ module ManageIQ::Providers::Kubernetes
         :name              => container_def.name,
         :image             => container_def.image,
         :image_pull_policy => container_def.imagePullPolicy,
-        :command           => container_def.command ? container_def.command.to_json : nil,
         :memory            => container_def.memory,
          # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
         :cpu_cores         => container_def.cpu.to_f / 1000
