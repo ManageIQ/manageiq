@@ -40,7 +40,7 @@
         = text_field_tag("object_request",
                          resolve[:new][:object_request],
                          :maxlength         => MAX_NAME_LEN,
-                         :class            => "form-control",
+                         :class            => "form-control", 
                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 - if form_action != "miq_action"
   - if ae_custom_button
