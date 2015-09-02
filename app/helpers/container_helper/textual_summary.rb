@@ -4,7 +4,7 @@ module ContainerHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name state restart_count backing_ref command)
+    %i(name state restart_count backing_ref)
   end
 
   def textual_group_relationships
@@ -34,9 +34,5 @@ module ContainerHelper::TextualSummary
 
   def textual_backing_ref
     {:label => "Backing Ref (Container ID)", :value => @record.backing_ref}
-  end
-
-  def textual_command
-    {:label => "Command", :value => @record.container_definition.command} if @record.container_definition.command
   end
 end
