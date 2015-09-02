@@ -160,7 +160,9 @@ module EmsClusterHelper::TextualSummary
   def textual_rps_size
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
-    textual_link(@record.resource_pools)
+    textual_link(@record.resource_pools,
+                 :as => EmsCluster,
+                 :link => url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'resource_pools'))
   end
 
   def textual_states_size
