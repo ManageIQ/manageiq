@@ -48,7 +48,7 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
     api_endpoint = raw_api_endpoint(hostname, port)
     osclient = OpenshiftClient::Client.new(api_endpoint, api_version)
     # TODO: support real authentication using certificates
-    osclient.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+    osclient.ssl_options(:verify_ssl => verify_ssl_mode)
     osclient.bearer_token(options[:bearer]) if options[:bearer]
     osclient
   end
