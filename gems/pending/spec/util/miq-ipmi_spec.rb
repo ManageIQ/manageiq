@@ -5,6 +5,7 @@ describe MiqIPMI do
   let(:chassis_status_response) { {:result => "System Power         : off\nPower Overload       : false\nPower Interlock      : inactive\nMain Power Fault     : false\nPower Control Fault  : false\nPower Restore Policy : previous\nLast Power Event     : command\nChassis Intrusion    : inactive\nFront-Panel Lockout  : inactive\nDrive Fault          : false\nCooling/Fan Fault    : false\nSleep Button Disable : not allowed\nDiag Button Disable  : allowed\nReset Button Disable : not allowed\nPower Button Disable : allowed\nSleep Button Disabled: false\nDiag Button Disabled : true\nReset Button Disabled: false\nPower Button Disabled: false\n", :value => true} }
 
   subject { described_class.new("host", "user", "pass") }
+  before  { allow(Rubyipmi).to receive(:is_provider_installed?).with("ipmitool").and_return(true) }
   before  { allow_any_instance_of(Rubyipmi::Ipmitool::Chassis).to receive(:status).and_return(chassis_status_response) }
 
   it { expect(subject).to be_connected }
