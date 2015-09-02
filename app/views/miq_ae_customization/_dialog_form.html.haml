@@ -17,7 +17,6 @@
     = render :partial => 'dialog_resources', :locals => {:typ => "elements", :parent_id => parent_id}
   - elsif nodes.length == 4 || (nodes.length == 3 && @sb[:node_typ] == "element")
     -# dialog field form fields
-    = hidden_div_if(!@edit[:ae_tree_select], :id => 'ae_tree_select_div')
-    = render :partial => 'layouts/ae_tree_select'
-    </div>
+    = hidden_div_if(!@edit[:ae_tree_select], :id => 'ae_tree_select_div') do
+      = render :partial => 'layouts/ae_tree_select'
     = render(:partial => 'dialog_field_form')
