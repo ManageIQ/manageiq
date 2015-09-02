@@ -475,7 +475,7 @@ class VmOrTemplate < ActiveRecord::Base
 
       msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
       task_audit_event(:success, options, :message => msg)
-      end
+    end
   end
 
   def scan_data_current?
