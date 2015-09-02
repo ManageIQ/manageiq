@@ -534,7 +534,7 @@ module ApplicationController::Explorer
         objects += rbac_filtered_objects(object.default_resource_pool.vms).sort_by { |a| a.name.downcase }
       end
     end
-    return options[:count_only] ? objects.length : objects
+    options[:count_only] ? objects.length : objects
   end
 
   def x_get_tree_rp_kids(object, options)
