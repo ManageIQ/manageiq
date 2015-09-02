@@ -110,6 +110,7 @@ module ManageIQ::Providers::Kubernetes
         :container_runtime_version  => node.status.nodeInfo.containerRuntimeVersion,
         :kubernetes_proxy_version   => node.status.nodeInfo.kubeProxyVersion,
         :kubernetes_kubelet_version => node.status.nodeInfo.kubeletVersion,
+        :labels                     => parse_labels(node),
         :lives_on_id                => nil,
         :lives_on_type              => nil
       )
@@ -243,6 +244,7 @@ module ManageIQ::Providers::Kubernetes
       new_result[:container_conditions] = parse_conditions(pod)
 
       new_result[:labels] = parse_labels(pod)
+      new_result[:node_selector_parts] = parse_node_selector_parts(pod)
       new_result
     end
 
@@ -286,28 +288,23 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def parse_labels(entity)
-      result = []
-      labels = entity.metadata.labels
-      return result if labels.nil?
-      labels.to_h.each do |key, value|
-        custom_attr = {
-          :section => 'labels',
-          :name    => key,
-          :value   => value,
-          :source  => "kubernetes"
-        }
-        result << custom_attr
-      end
-      result
+      parse_identifying_attributes(entity.metadata.labels, 'labels')
     end
 
     def parse_selector_parts(entity)
+      parse_identifying_attributes(entity.spec.selector, 'selectors')
+    end
+
+    def parse_node_selector_parts(entity)
+      parse_identifying_attributes(entity.spec.nodeSelector, 'node_selectors')
+    end
+
+    def parse_identifying_attributes(attributes, section)
       result = []
-      selector_parts = entity.spec.selector
-      return result if selector_parts.nil?
-      selector_parts.to_h.each do |key, value|
+      return result if attributes.nil?
+      attributes.to_h.each do |key, value|
         custom_attr = {
-          :section => 'selectors',
+          :section => section,
           :name    => key,
           :value   => value,
           :source  => "kubernetes"

@@ -9,6 +9,7 @@ class ContainerNode < ActiveRecord::Base
   has_many   :containers, :through => :container_groups
   has_many   :container_services, -> { distinct }, :through => :container_groups
   has_many   :container_replicators, -> { distinct }, :through => :container_groups
+  has_many   :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
 
