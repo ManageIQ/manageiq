@@ -5,11 +5,12 @@ describe Tenant do
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
 
   let(:default_tenant) do
-    Tenant.seed
+    root_tenant
     described_class.default_tenant
   end
 
   let(:root_tenant) do
+    MiqRegion.seed
     Tenant.seed
     described_class.root_tenant
   end
@@ -334,11 +335,11 @@ describe Tenant do
 
   describe "#nil_blanks" do
     it "nulls out blank domain" do
-      expect(described_class.create(:domain => "  ").domain).to be_nil
+      expect(described_class.create!(:domain => "  ", :parent => root_tenant).domain).to be_nil
     end
 
     it "nulls out blank subdomain" do
-      expect(described_class.create(:subdomain => "  ").domain).to be_nil
+      expect(described_class.create!(:subdomain => "  ", :parent => root_tenant).domain).to be_nil
     end
   end
 
@@ -349,7 +350,7 @@ describe Tenant do
 
     it "only allows one root" do
       described_class.destroy_all
-      described_class.seed
+      root_tenant # create a root tenant
 
       expect {
         described_class.create!

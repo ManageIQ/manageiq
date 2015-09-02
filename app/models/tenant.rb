@@ -173,7 +173,9 @@ class Tenant < ActiveRecord::Base
   end
 
   def self.seed
-    Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
+    MiqRegion.my_region.lock do
+      Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
+    end
   end
 
   private

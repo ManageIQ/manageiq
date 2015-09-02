@@ -6,6 +6,7 @@ describe OpsController do
 
   context "::Tenants" do
     before do
+      MiqRegion.seed
       Tenant.seed
       set_user_privileges
     end
@@ -32,7 +33,7 @@ describe OpsController do
 
     context "#rbac_tenant_get_details" do
       it "sets @tenant record" do
-        t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant, :subdomain => "foo", :domain => "bar")
+        t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant, :subdomain => "foo")
         controller.send(:rbac_tenant_get_details, t.id)
         assigns(:tenant).should eq(t)
       end
@@ -74,7 +75,6 @@ describe OpsController do
         @tenant = FactoryGirl.create(:tenant,
                                      :name      => "Foo",
                                      :parent    => Tenant.root_tenant,
-                                     :domain    => "test",
                                      :subdomain => "test")
         sb_hash = {
           :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@tenant.id)}"}},
