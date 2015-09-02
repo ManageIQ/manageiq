@@ -67,41 +67,6 @@ class VimPerformanceDaily < MetricRollup
 
   def self.find_adhoc(*args)
     return []
-    cnt = args.first
-    options = args.last.is_a?(Hash) ? args.last : {}
-
-    ext_options = options.delete(:ext_options) || {}
-    order = options.delete(:order)
-
-    klass = ext_options[:class] || MetricRollup
-
-    start_time =   klass.hourly.where(options).order("timestamp ASC").first
-    end_time   =   klass.hourly.where(options).order("timestamp DESC").first
-    return cnt == :first ? nil : [] if start_time.nil? || end_time.nil?
-
-    tz = Metric::Helper.get_time_zone(ext_options)
-    start_time = start_time.timestamp.in_time_zone(tz).midnight.utc
-    end_time   = end_time.timestamp.utc
-
-    results = []
-
-    (start_time..end_time).step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      conditions = options[:conditions]
-      if conditions.nil?
-        conditions = ["(timestamp > ? AND timestamp <= ?)", query_start_time, query_end_time]
-      else
-        conditions =  sanitize_sql_for_conditions(conditions)
-        conditions =  "(#{conditions}) AND "
-        conditions << sanitize_sql_for_conditions(["(timestamp > ? and timestamp <= ?)", query_start_time, query_end_time])
-      end
-
-      recs = klass.hourly.find(:all, options.merge(:conditions => conditions))
-
-      results.concat(VimPerformanceDaily.generate_daily_for_one_day(recs, ext_options))
-    end
-
-    results = results.sort_by { |x| x.send(order) } if order
-    return cnt == :first ? results.first : results
   end
 
 
