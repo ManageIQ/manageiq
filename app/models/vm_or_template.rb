@@ -461,8 +461,6 @@ class VmOrTemplate < ActiveRecord::Base
 
       begin
         raise "SOAP services are no longer supported.  Remote server operations are dependent on a REST client library."
-        # client = VmdbwsClient.new(hostname)  FIXME: Replace with REST client library
-        client.vm_invoke_tasks(remote_options)
       rescue => err
         # Handle specific error case, until we can figure out how it occurs
         if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
