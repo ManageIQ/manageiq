@@ -438,25 +438,21 @@ module ManageIQ::Providers::Kubernetes
     def parse_image_name(image, image_ref)
       parts = %r{
         \A
-        (?:
-          (?<host>.*?)
-          (?::(?<port>.*?))?
-          /(?=.*/)
-        )?
-        (?<name>.*?)
-        (?::(?<tag>[^:]*?))?
+          (?:(?:(?<host>[^\.:\/]+\.[^\.:\/]+)|(?:(?<host2>[^:\/]+)(?::(?<port>\d+))))\/)?
+          (?<name>(?:[^:\/@]+\/)*[^\/:@]+)
+          (?:(?::(?<tag>.+))|(?:\@(?<shatag>sha256:.+)))?
         \z
       }x.match(image)
 
       [
         {
           :name      => parts[:name],
-          :tag       => parts[:tag],
+          :tag       => parts[:tag] || parts[:shatag],
           :image_ref => image_ref,
         },
-        parts[:host] && {
-          :name => parts[:host],
-          :host => parts[:host],
+        (parts[:host] || parts[:host2]) && {
+          :name => parts[:host] || parts[:host2],
+          :host => parts[:host] || parts[:host2],
           :port => parts[:port],
         },
       ]
