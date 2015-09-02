@@ -2,7 +2,7 @@
 #consolidate_div
   %h3
     = _('Group Records by up to 3 Columns')
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.control-label.col-md-2
         = _('Column 1')
@@ -10,7 +10,7 @@
         = select_tag('chosen_pivot1',
           options_for_select([NOTHING_STRING] + @pivots1, @pivotby1),
           :multiple             => false,
-          :class                => "widthed selectpicker",
+          :class                => "selectpicker",
           "data-miq_sparkle_on" => true)
         :javascript
           miqInitSelectPicker();
@@ -23,7 +23,7 @@
           = select_tag('chosen_pivot2',
             options_for_select([NOTHING_STRING] + @pivots2, @pivotby2),
             :multiple             => false,
-            :class                => "widthed selectpicker",
+            :class                => "selectpicker",
             "data-miq_sparkle_on" => true)
           :javascript
             miqInitSelectPicker();
@@ -36,7 +36,7 @@
             = select_tag('chosen_pivot3',
               options_for_select([NOTHING_STRING] + @pivots3, @pivotby3),
               :multiple             => false,
-              :class                => "widthed selectpicker",
+              :class                => "selectpicker",
               "data-miq_sparkle_on" => true)
             :javascript
               miqInitSelectPicker();

@@ -2,7 +2,7 @@
 #formatting_div
   %h3
     = _('PDF Output')
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.control-label.col-md-2
         = _('Page Size')
@@ -10,7 +10,7 @@
         = select_tag('pdf_page_size',
           options_for_select(PDF_PAGE_SIZES.invert.sort, @edit[:new][:pdf_page_size]),
           :multiple             => false,
-          :class                => "widthed selectpicker",
+          :class                => "selectpicker",
           "data-miq_sparkle_on" => true)
         :javascript
           miqInitSelectPicker();

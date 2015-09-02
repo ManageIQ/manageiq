@@ -17,27 +17,34 @@
   .form-group
     %label.control-label.col-md-2
       = _('Trend Target Limit')
-    .col-md-8
-      - unless @edit[:limit_cols].empty?
-        = _('Column:')
-        = select_tag('chosen_limit_col',
-          options_for_select(["<#{_('None')}>"] + @edit[:limit_cols].sort,  @edit[:new][:perf_limit_col]),
-          :multiple              => false,
-          :class                 => "selectpicker",
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true)
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent("chosen_limit_col", "#{url}")
-      - unless @edit[:new][:perf_limit_col]
-        = _('Value:')
-        - if @edit[:percent_col]
-          = "#{h(@edit[:new][:perf_limit_val])}%"
-        - else
-          = text_field_tag("chosen_limit_val", @edit[:new][:perf_limit_val],
-            :maxlength         => 20,
-            "class"            => "form-control",
-            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    - unless @edit[:limit_cols].empty?
+      .col-md-2
+        .input-group
+          %span.input-group-addon
+            = _('Column')
+          = select_tag('chosen_limit_col',
+            options_for_select(["<#{_('None')}>"] + @edit[:limit_cols].sort,  @edit[:new][:perf_limit_col]),
+            :multiple              => false,
+            :class                 => "selectpicker form-control",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("chosen_limit_col", "#{url}")
+    - unless @edit[:new][:perf_limit_col]
+      .col-md-4
+        .input-group
+          %span.input-group-addon
+            = _('Value')
+          - if @edit[:percent_col]
+            %input.form-control{:readonly => true,
+                                :type     => "text",
+                                :value    => "#{h(@edit[:new][:perf_limit_val])}%"}
+          - else
+            = text_field_tag("chosen_limit_val", @edit[:new][:perf_limit_val],
+              :maxlength         => 20,
+              "class"            => "form-control",
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 - if @edit[:new][:perf_trend_col]
   .form-group
     %label.control-label.col-md-2
