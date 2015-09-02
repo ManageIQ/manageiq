@@ -67,7 +67,6 @@ module ReportController::Reports::Editor
             setnode_for_customreport
           end
           @edit = session[:edit] = nil # clean out the saved info
-          @sb[:rep_tree_build_time] = Time.now.utc
           if role_allows(:feature=>"miq_report_widget_editor")
             # all widgets for this report
             get_all_widgets("report",from_cid(x_node.split('_').last))
