@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140121213913_split_widget_set_name_to_three_columns.rb")
+require_migration
 
 describe SplitWidgetSetNameToThreeColumns do
   migration_context :up do

@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140214191729_enhance_firewall_rules_for_neutron_networking.rb")
+require_migration
 
 describe EnhanceFirewallRulesForNeutronNetworking do
   let(:firewall_rule_stub) { migration_stub(:FirewallRule) }

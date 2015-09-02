@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150405141637_remove_port_config_from_container_service.rb")
+require_migration
 
 describe RemovePortConfigFromContainerService do
   let(:container_service_stub)             { migration_stub(:ContainerService) }

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join('db/migrate/20150806194147_migrate_filtered_events_to_blacklisted_events.rb')
+require_migration
 
 describe MigrateFilteredEventsToBlacklistedEvents do
   let(:configuration_stub)     { migration_stub(:Configuration) }

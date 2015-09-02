@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150206150955_migrate_miq_database_registration_organization_display_name_out_of_reserves.rb")
+require_migration
 
 describe MigrateMiqDatabaseRegistrationOrganizationDisplayNameOutOfReserves do
   let(:db_stub)      { migration_stub(:MiqDatabase) }

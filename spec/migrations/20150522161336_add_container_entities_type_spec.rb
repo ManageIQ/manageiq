@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150522161336_add_container_entities_type")
+require_migration
 
 describe AddContainerEntitiesType do
   let(:container_node_stub)  { migration_stub(:ContainerNode) }
