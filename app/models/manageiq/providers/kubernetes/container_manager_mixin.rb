@@ -8,12 +8,16 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
       URI::HTTPS.build(:host => hostname, :port => port.presence.try(:to_i))
     end
 
+    def verify_ssl_mode
+      OpenSSL::SSL::VERIFY_NONE
+    end
+
     def kubernetes_connect(hostname, port, options)
       require 'kubeclient'
       api_endpoint = raw_api_endpoint(hostname, port)
       kubeclient = Kubeclient::Client.new(api_endpoint, kubernetes_version)
       # TODO: support real authentication using certificates
-      kubeclient.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+      kubeclient.ssl_options(:verify_ssl => verify_ssl_mode)
       kubeclient.basic_auth(options[:username], options[:password]) if options[:username] && options[:password]
       kubeclient.bearer_token(options[:bearer]) if options[:bearer]
       kubeclient
@@ -31,6 +35,10 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def api_endpoint
     self.class.raw_api_endpoint(hostname, port)
+  end
+
+  def verify_ssl_mode
+    self.class.verify_ssl_mode
   end
 
   def connect(options = {})
