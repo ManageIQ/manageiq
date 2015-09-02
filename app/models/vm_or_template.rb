@@ -462,13 +462,6 @@ class VmOrTemplate < ActiveRecord::Base
       begin
         raise "SOAP services are no longer supported.  Remote server operations are dependent on a REST client library."
       rescue => err
-        # Handle specific error case, until we can figure out how it occurs
-        if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
-          $log.error("An error occurred while invoking remote tasks...")
-          $log.log_backtrace(err)
-          next
-        end
-
         $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
         $log.log_backtrace(err)
         MiqQueue.put(
