@@ -5,7 +5,7 @@ describe ContainerTopologyService do
 
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
-      container_topology_service.build_kinds.size.should eql 6
+      container_topology_service.build_kinds.size.should eql 7
     end
 
     it "kinds contains an expected key" do
@@ -42,16 +42,20 @@ describe ContainerTopologyService do
     it "topology contains the expected structure and content" do
       ems = FactoryGirl.create(:ems_kubernetes)
       container_node = ContainerNode.create(:ext_management_system => ems, :name => "127.0.0.1", :ems_ref => "905c90ba-3e00-11e5-a0d2-18037327aaeb")
-      container_group = ContainerGroup.create(:ext_management_system => ems, :container_node => container_node, :name => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb")
+      container_replicator = ContainerReplicator.create(:ext_management_system => ems, :ems_ref => "8f8ca74c-3a41-11e5-a79a-001a4a231290",
+                                                        :name => "replicator1")
+      container_group = ContainerGroup.create(:ext_management_system => ems, :container_node => container_node, :container_replicator => container_replicator, :name => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb")
       container_service = ContainerService.create(:ext_management_system => ems, :container_groups => [container_group], :ems_ref => "95e49048-3e00-11e5-a0d2-18037327aaeb",
-                                              :name => "service1")
-
+                                                  :name => "service1")
       container_topology_service.stub(:entities).and_return([[container_node], [container_service]])
-      container_topology_service.build_topology[:items].size.should eql 3
-      container_topology_service.build_topology[:relations].size.should eql 2
+      topology = container_topology_service.build_topology
+      topology[:items].size.should eql 4
+      topology[:relations].size.should eql 3
 
-      container_topology_service.build_topology[:items].key? "905c90ba-3e00-11e5-a0d2-18037327aaeb"
-      container_topology_service.build_topology[:items]["905c90ba-3e00-11e5-a0d2-18037327aaeb"].should eql({:metadata => {:id => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :name => "127.0.0.1"}, :kind => "Node"})
+      topology[:items].key? "905c90ba-3e00-11e5-a0d2-18037327aaeb"
+      topology[:items]["905c90ba-3e00-11e5-a0d2-18037327aaeb"].should eql(:metadata => {:id => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :name => "127.0.0.1"}, :kind => "Node")
+      topology[:items]["8f8ca74c-3a41-11e5-a79a-001a4a231290"].should eql(:metadata => {:id => "8f8ca74c-3a41-11e5-a79a-001a4a231290", :name => "replicator1"}, :kind => "Replicator")
+      topology[:relations].should include(:source => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :target => "8f8ca74c-3a41-11e5-a79a-001a4a231290")
     end
   end
 

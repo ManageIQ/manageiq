@@ -6,6 +6,12 @@
   .legend
     %label#selected
     %div{'ng-if' => "kinds"}
+      %kubernetes-topology-icon{:kind => "Replicator"}
+        %svg.kube-topology
+          %use{'xlink:href' => "#vertex-Replicator", :x => "19", :y => "19"}
+
+      %label
+        Replicators
       %kubernetes-topology-icon{:kind => "Pod"}
         %svg.kube-topology
           %use{'xlink:href' => "#vertex-Pod", :x => "19", :y => "19"}
@@ -47,6 +53,10 @@
       %g.Node#vertex-Node
         %circle{:r => "18"}
         %image{'xlink:href' => "/images/icons/new/container_node.png", :width => "18", :height => "18",
+        :x => "-9", :y => "-9"}
+      %g.Replicator#vertex-Replicator
+        %circle{:r => "18"}
+        %image{'xlink:href' => "/images/icons/new/container_replicator.png", :width => "18", :height => "18",
         :x => "-9", :y => "-9"}
       %g.Pod#vertex-Pod
         %circle{:r => "18"}
