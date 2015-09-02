@@ -41,6 +41,11 @@ kubernetes-topology-icon {
     stroke-dasharray: 5.5;
 }
 
+.kube-topology line.PodReplicator {
+    stroke-linecap: round;
+    stroke-dasharray: 5.5;
+}
+
 kubernetes-topology-icon svg {
     width: 39px !important;;
     height: 39px !important;;

@@ -180,6 +180,28 @@ describe MiqPolicyController do
     end
   end
 
+  describe '#tree_select' do
+    [
+      # [tree_sym, node, partial_name]
+      [:policy_profile_tree, 'root', 'miq_policy/_profile_list'],
+      [:policy_tree, 'root', 'miq_policy/_policy_folders'],
+      [:event_tree, 'root', 'miq_policy/_event_list'],
+      [:condition_tree, 'root', 'miq_policy/_condition_folders'],
+      [:action_tree, 'root', 'miq_policy/_action_list'],
+      [:alert_profile_tree, 'root', 'miq_policy/_alert_profile_folders'],
+      [:alert_tree, 'root', 'miq_policy/_alert_list'],
+    ].each do |tree_sym, node, partial_name|
+      it "renders #{partial_name} when #{tree_sym} tree #{node} node is selected" do
+        session[:sandboxes] = {"miq_policy" => {:active_tree => tree_sym}}
+        session[:settings] ||= {}
+
+        post :tree_select, :id => node, :format => :js
+        response.should render_template(partial_name)
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
   describe 'x_button' do
     describe 'corresponding methods are called for allowed actions' do
       MiqPolicyController::POLICY_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|

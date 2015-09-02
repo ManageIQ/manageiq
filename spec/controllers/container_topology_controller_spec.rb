@@ -9,7 +9,7 @@ describe ContainerTopologyController do
   it "renders index" do
     get :index
     expect(response.status).to eq(302)
-    response.should redirect_to(:action => 'show')
+    expect(response).to redirect_to(:action => 'show')
   end
 
   it "renders show screen per provider id" do
@@ -18,7 +18,7 @@ describe ContainerTopologyController do
     get :show, :id => ems.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(response).should render_template('container_topology/show')
+    expect(response).to render_template('container_topology/show')
   end
 
   it "renders show screen for all providers" do
@@ -26,6 +26,6 @@ describe ContainerTopologyController do
     get :show
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(response).should render_template('container_topology/show')
+    expect(response).to render_template('container_topology/show')
   end
 end

@@ -246,40 +246,14 @@ class MiqPolicyController < ApplicationController
     @breadcrumbs = []
     @explorer = true
     session[:export_data] = nil
+
     @sb[:open_tree_nodes] ||= [] # Create array to keep open tree nodes (only for autoload trees)
-    self.x_active_tree   ||= 'policy_profile_tree'
-    self.x_active_accord ||= 'policy_profile'
+    self.x_active_tree    ||= 'policy_profile_tree'
+    self.x_active_accord  ||= 'policy_profile'
 
-    @trees   = []
-    @accords = []
-
-    profile_build_tree
-    @trees.push("profile_tree")
-    @accords.push(:name => "policy_profile", :title => "Policy Profiles", :container => "policy_profile_tree_div", :image => "policy_profile")
-
-    policy_build_tree
-    @trees.push("policy_tree")
-    @accords.push(:name => "policy", :title => "Policies", :container => "policy_tree_div", :image => "miq_policy")
-
-    event_build_tree
-    @trees.push("event_tree")
-    @accords.push(:name => "event", :title => "Events", :container => "event_tree_div", :image => "miq_event_definition")
-
-    condition_build_tree
-    @trees.push("condition_tree")
-    @accords.push(:name => "condition", :title => "Conditions", :container => "condition_tree_div", :image => "miq_condition")
-
-    action_build_tree
-    @trees.push("action_tree")
-    @accords.push(:name => "action", :title => "Actions", :container => "action_tree_div", :image => "miq_action")
-
-    alert_profile_build_tree
-    @trees.push("alert_profile_tree")
-    @accords.push(:name => "alert_profile", :title => "Alert Profiles", :container => "alert_profile_tree_div", :image => "miq_alert_profile")
-
-    alert_build_tree
-    @trees.push("alert_tree")
-    @accords.push(:name => "alert", :title => "Alerts", :container => "alert_tree_div", :image => "miq_alert")
+    trees = features.collect { |feature| [feature.tree_name, feature.build_tree(@sb)] }
+    @trees = Hash[* trees.flatten] # trees.to_h in Ruby 2.2
+    @accords = features.map(&:accord_hash)
 
     if params[:profile].present?  # If profile record id passed in, position on that node
       self.x_active_tree = 'policy_profile_tree'
@@ -287,7 +261,7 @@ class MiqPolicyController < ApplicationController
       if MiqPolicySet.exists?(:id => profile_id)
         self.x_node = "pp_#{profile_id}"
       else
-        add_flash(_("%s no longer exists") %  ui_lookup(:model => "MiqPolicySet"), :error)
+        add_flash(_("%s no longer exists") % ui_lookup(:model => "MiqPolicySet"), :error)
         self.x_node = "root"
       end
     end
@@ -313,8 +287,9 @@ class MiqPolicyController < ApplicationController
     #set these when a link on one of the summary screen was pressed
     self.x_active_accord = params[:accord]           if params[:accord]
     self.x_active_tree   = "#{params[:accord]}_tree" if params[:accord]
-    self.x_active_tree   = params[:tree] if params[:tree]
+    self.x_active_tree   = params[:tree]             if params[:tree]
     self.x_node          = params[:id]
+
     get_node_info(x_node)
     replace_right_cell(@nodetype)
   end
@@ -471,12 +446,12 @@ class MiqPolicyController < ApplicationController
 
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
-    @nodetype, nodeid = valid_active_node(treenodeid).split("_").last.split("-")
-    node_ids = Hash.new
+    _modelname, nodeid, @nodetype = TreeBuilder.extract_node_model_and_id(valid_active_node(treenodeid))
+    node_ids = {}
     treenodeid.split("_").each do |p|
       node_ids[p.split("-").first] = p.split("-").last  # Create a hash of all record ids represented by the selected tree node
     end
-    @sb[:node_ids] ||= Hash.new
+    @sb[:node_ids] ||= {}
     @sb[:node_ids][x_active_tree] = node_ids
     get_root_node_info  if x_node == "root"                     # Get node info of tree roots
     folder_get_info(treenodeid) if treenodeid != "root"         # Get folder info for all node types
@@ -546,17 +521,19 @@ class MiqPolicyController < ApplicationController
   end
 
   def replace_right_cell(nodetype, replace_trees = [])  # replace_trees can be an array of tree symbols to be replaced
-    replace_trees = @replace_trees if @replace_trees  #get_node_info might set this
+    replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
 
-    if replace_trees
-      profile_build_tree        if replace_trees.include?(:policy_profile)
-      policy_build_tree         if replace_trees.include?(:policy)
-      event_build_tree          if replace_trees.include?(:event)
-      condition_build_tree      if replace_trees.include?(:condition)
-      action_build_tree         if replace_trees.include?(:action)
-      alert_profile_build_tree  if replace_trees.include?(:alert_profile)
-      alert_build_tree          if replace_trees.include?(:alert)
+    # we need to be able to replace trees even if explorer has never been called on the current instance
+    @trees = {} unless @trees
+    replace_trees.each do |name|
+      tree = @trees["#{name}_tree".to_sym]
+      tree.reload! unless tree.nil?
+
+      if tree.nil?
+        feature = features.find { |f| f.name == name }
+        @trees[feature.tree_name] = feature.build_tree(@sb)
+      end
     end
 
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
@@ -570,35 +547,39 @@ class MiqPolicyController < ApplicationController
 
     presenter[:open_accord] = params[:accord] if params[:accord] # Open new accordion
 
-    #js_options[:add_nodes] = add_nodes  # Update the tree with any new nodes
-
     # With dynatree, simply replace the tree partials to reload the trees
-    replace_trees.each do |t|
-      case t
+    replace_trees.each do |name|
+      case name
       when :policy_profile
         self.x_node = @new_profile_node if @new_profile_node
-        presenter[:replace_partials][:policy_profile_tree_div] = r[:partial => "profile_tree"]
       when :policy
-        presenter[:replace_partials][:policy_tree_div] = r[:partial => "policy_tree"]
+        nil
       when :event
-        presenter[:replace_partials][:event_tree_div] = r[:partial => "event_tree"]
+        nil
       when :condition
         self.x_node = @new_condition_node if @new_condition_node
-        presenter[:replace_partials][:condition_tree_div] = r[:partial => "condition_tree"]
       when :action
         self.x_node = @new_action_node if @new_action_node
-        presenter[:replace_partials][:action_tree_div] = r[:partial => "action_tree"]
       when :alert_profile
         self.x_node = @new_alert_profile_node if @new_alert_profile_node
-        presenter[:replace_partials][:alert_profile_tree_div] = r[:partial => "alert_profile_tree"]
         # Send down extra alert_profile tree if present
         if @assign && @assign[:object_tree]
           presenter[:object_tree_json] = @assign[:object_tree]
         end
       when :alert
         self.x_node = @new_alert_node if @new_alert_node
-        presenter[:replace_partials][:alert_tree_div] = r[:partial => "alert_tree"]
+      else
+        raise "unknown tree in replace_trees: #{name}"
       end
+
+      tree = @trees["#{name}_tree".to_sym]
+      presenter[:replace_partials]["#{tree.name}_tree_div".to_sym] = r[
+        :partial => "shared/tree",
+        :locals  => {
+          :tree => tree,
+          :name => tree.name
+        }
+      ]
     end
 
     if params[:action].ends_with?('_delete') &&
@@ -1137,4 +1118,23 @@ class MiqPolicyController < ApplicationController
     session[:server_options]          = @server_options
   end
 
+  def features
+    [{:name  => :policy_profile,
+      :title => N_("Policy Profiles")},
+     {:name  => :policy,
+      :title => N_("Policies")},
+     {:name  => :event,
+      :title => N_("Events")},
+     {:name  => :condition,
+      :title => N_("Conditions")},
+     {:name  => :action,
+      :title => N_("Actions")},
+     {:name  => :alert_profile,
+      :title => N_("Alert Profiles")},
+     {:name  => :alert,
+      :title => N_("Alerts")},
+    ].map do |hsh|
+      ApplicationController::Feature.new_with_hash(hsh)
+    end
+  end
 end
