@@ -3,11 +3,12 @@ require "spec_helper"
 module MiqAeServiceTenantSpec
   describe MiqAeMethodService::MiqAeServiceTenant do
     let(:settings) { {} }
-    let(:tenant) { Tenant.create(:name => 'fred', :domain => 'a.b', :parent => def_tenant, :description => "Krueger") }
+    let(:tenant) { Tenant.create(:name => 'fred', :domain => 'a.b', :parent => root_tenant, :description => "Krueger") }
 
-    let(:def_tenant) do
+    let(:root_tenant) do
+      MiqRegion.seed
       Tenant.seed
-      Tenant.default_tenant
+      Tenant.root_tenant
     end
 
     let(:service_tenant) { MiqAeMethodService::MiqAeServiceTenant.find(tenant.id) }
