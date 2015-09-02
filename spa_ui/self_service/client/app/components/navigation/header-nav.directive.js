@@ -37,11 +37,11 @@
 
       function toggleNavigation() {
         if (!Navigation.state.isMobileNav) {
-            Navigation.state.isCollapsed = !Navigation.state.isCollapsed; 
-            Navigation.state.forceCollapse = true;
-          } else {
-            Navigation.state.showMobileNav = !Navigation.state.showMobileNav;
-          }
+          Navigation.state.isCollapsed = !Navigation.state.isCollapsed;
+          Navigation.state.forceCollapse = true;
+        } else {
+          Navigation.state.showMobileNav = !Navigation.state.showMobileNav;
+        }
       }
 
       function clearMessages() {
