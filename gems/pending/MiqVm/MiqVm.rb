@@ -32,18 +32,23 @@ class MiqVm
         # If we're passed a snapshot ID, then obtain the configration of the
         # VM when the snapshot was taken.
         #
+        # TODO: move to MiqVmwareVm
         if (@vim = @ost.miqVim)
             $log.debug "MiqVm::initialize: accessing VM through server: #{@vim.server}" if $log.debug?
             @vimVm = @vim.getVimVm(vmCfg)
             $log.debug "MiqVm::initialize: setting @ost.miqVimVm = #{@vimVm.class}" if $log.debug?
             @ost.miqVimVm = @vimVm
             @vmConfig = VmConfig.new(@vimVm.getCfg(@ost.snapId))
+        # TODO: move this to MiqRhevmVm.
         elsif (@rhevm = @ost.miqRhevm)
             $log.debug "MiqVm::initialize: accessing VM through RHEVM server" if $log.debug?
+            $log.debug "MiqVm::initialize: vmCfg = #{vmCfg}"
             @rhevmVm = @rhevm.get_vm(vmCfg)
             $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}" if $log.debug?
             @ost.miqRhevmVm = @rhevmVm
-            @vmConfig = VmConfig.new(@rhevmVm.getCfg(@ost.snapId))
+            @vmConfig = VmConfig.new(getCfg(@ost.snapId))
+            $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
+            $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
         else
             @vimVm = nil
             @vmConfig = VmConfig.new(vmCfg)
@@ -93,12 +98,12 @@ class MiqVm
             dInfo.hardwareId = dtag
             dInfo.baseOnly = @ost.openParent unless mode && mode["independent"]
             dInfo.rawDisk = @ost.rawDisk # force raw disk for testing
-            $log.debug "MiqVolumeManager::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
+            $log.debug "MiqVm::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
             
             begin
-                d = applianceVolumeManager.lvHash[dInfo.fileName] if @rhevm
+                d = applianceVolumeManager && applianceVolumeManager.lvHash[dInfo.fileName] if @rhevm
                 if d
-                    $log.debug "MiqVolumeManager::openDisks: using applianceVolumeManager for #{dInfo.fileName}" if $log.debug?
+                    $log.debug "MiqVm::openDisks: using applianceVolumeManager for #{dInfo.fileName}" if $log.debug?
                     d.dInfo.fileName = dInfo.fileName
                     d.dInfo.hardwareId = dInfo.hardwareId
                     d.dInfo.baseOnly = dInfo.baseOnly
@@ -156,6 +161,7 @@ class MiqVm
     end
 
     def applianceVolumeManager
+        return nil if @ost.nfs_storage_mounted
         @applianceVolumeManager ||= MiqVolumeManager.fromNativePvs
     end
 
