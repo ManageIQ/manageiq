@@ -102,6 +102,33 @@ class Tenant < ActiveRecord::Base
     end
   end
 
+  def get_quotas
+    tenant_quotas.each_with_object({}) do |q, h|
+      h[q.name.to_sym] = TenantQuota.quota_definitions[q.name.to_sym].merge(:unit => q.unit, :value => q.value, :format => q.format)
+      h
+    end.reverse_merge(TenantQuota.quota_definitions)
+  end
+
+  def set_quotas(quotas)
+    updated_keys = []
+
+    self.class.transaction do
+      quotas.each do |name, values|
+        next if values[:value].nil?
+
+        q = tenant_quotas.where(:name => name).last || tenant_quotas.build(values.merge(:name => name))
+        q.unit ||= q.default_unit
+        q.update_attributes!(values)
+        updated_keys << name.to_sym
+      end
+      # Delete any quotas that were not passed in
+      TenantQuota.destroy_all(:tenant => self, :name => (TenantQuota.quota_definitions.keys.sort - updated_keys.sort))
+      clear_association_cache
+    end
+
+    get_quotas
+  end
+
   # @return [Boolean] Is this a default tenant?
   def default?
     root?
