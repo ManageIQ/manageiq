@@ -461,30 +461,15 @@ class VmOrTemplate < ActiveRecord::Base
 
       begin
         raise "SOAP services are no longer supported.  Remote server operations are dependent on a REST client library."
-        # client = VmdbwsClient.new(hostname)  FIXME: Replace with REST client library
-        client.vm_invoke_tasks(remote_options)
       rescue => err
-        # Handle specific error case, until we can figure out how it occurs
-        if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
-          $log.error("An error occurred while invoking remote tasks...")
-          $log.log_backtrace(err)
-          next
-        end
-
-        $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
+        $log.error("An error occurred while invoking remote tasks...")
         $log.log_backtrace(err)
-        MiqQueue.put(
-          :class_name  => self.base_class.name,
-          :method_name => 'invoke_tasks_remote',
-          :args        => [remote_options],
-          :deliver_on  => Time.now.utc + 1.minute
-        )
         next
       end
 
       msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
       task_audit_event(:success, options, :message => msg)
-      end
+    end
   end
 
   def scan_data_current?
