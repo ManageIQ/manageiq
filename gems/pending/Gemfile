@@ -34,7 +34,7 @@ gem "openshift_client",        "=0.0.8",            :require => false
 gem "ovirt",                   "~>0.6.0",           :require => false
 gem "parallel",                "~>0.5.21",          :require => false
 gem "psych",                   "~>2.0.12"
-gem "rest-client",             "=2.0.0.rc1"
+gem "rest-client",             "=2.0.0.rc1",        :require => false
 gem "rubyzip",                 "=0.9.5",            :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646
 gem "rufus-lru",               "~>1.0.3",           :require => false
 gem "sys-uname",               "~>1.0.1",           :require => false
