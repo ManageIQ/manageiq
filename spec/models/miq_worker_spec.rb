@@ -1,6 +1,36 @@
 require "spec_helper"
 
 describe MiqWorker do
+  context ".corresponding_runner" do
+
+    def all_workers
+      MiqWorker.descendants.select { |c| c.subclasses.empty? }
+    end
+
+    it "finds the correct corresponding runner for workers" do
+      namespaced, legacy = all_workers.partition { |c| c.name =~ /::/ }
+
+      namespaced.each do |worker|
+        # namespaced workers are spelled:
+        # ManageIQ::Providers::ProviderName::ManagerType::WorkerType
+        # namespaced runners are spelled:
+        # ManageIQ::Providers::ProviderName::ManagerType::WorkerType::Runner
+        worker.corresponding_runner.should end_with("Runner")
+      end
+
+      legacy.each do |worker|
+        # Legacy workers look like:
+        # MiqWorkerName
+        # Legacy runners look like:
+        # WorkerName
+        #
+        # Strip the "Miq" to get the runner name
+        runner_name = worker.name.slice(3..-1)
+        worker.corresponding_runner.should eq runner_name
+      end
+    end
+  end
+
   context ".sync_workers" do
     it "stops extra workers, returning deleted pids" do
       described_class.any_instance.should_receive(:stop)
