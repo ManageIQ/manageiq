@@ -69,9 +69,9 @@ module MiqServer::ServerSmartProxy
     with_relationship_type("vm_scan_storage_affinity") { children }
   end
 
-  def call_ws(ost)
+  def queue_call(ost)
     case ost.method_name
-    when "ScanMetadata", "SyncMetadata"
+    when "scan_metadata", "sync_metadata"
       worker_setting = MiqSmartProxyWorker.worker_settings
       #
       # TODO: until we get location/offset read capability for OpenStack
@@ -80,32 +80,47 @@ module MiqServer::ServerSmartProxy
       # on the size of the image, but that information isn't directly available.
       #
       timeout_adj = 1
-      if ost.method_name == "ScanMetadata"
-        v = VmOrTemplate.find(ost.vm_id)
-        timeout_adj = 4 if v.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) || v.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+      if ost.method_name == "scan_metadata"
+        klass = ost.target_type.constantize
+        target = klass.find(ost.target_id)
+        if target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
+           target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+          timeout_adj = 4
+        end
       end
-      $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name.underscore}"
+      $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}"
       # Queue call to scan_metadata or sync_metadata.
-      MiqQueue.put(:class_name => self.class.name, :instance_id => id, :method_name => ost.method_name.underscore, :args => ost, :server_guid => guid, :role => "smartproxy", :queue_name => "smartproxy", :msg_timeout => worker_setting[:queue_timeout] * timeout_adj)
+      MiqQueue.put(
+        :class_name  => self.class.name,
+        :instance_id => id,
+        :method_name => ost.method_name,
+        :args        => ost,
+        :server_guid => guid,
+        :role        => "smartproxy",
+        :queue_name  => "smartproxy",
+        :msg_timeout => worker_setting[:queue_timeout] * timeout_adj
+      )
     else
       _log.error "Unsupported method [#{ost.method_name}]"
     end
   end
 
+  # Called through Queue by Job
   def scan_metadata(ost)
-    v   = VmOrTemplate.find(ost.vm_id)
-    job = Job.find_by_guid(ost.taskid)
-    _log.debug "#{v.name} (#{v.class.name})"
+    klass  = ost.target_type.constantize
+    target = klass.find(ost.target_id)
+    job    = Job.find_by_guid(ost.taskid)
+    _log.debug "#{target.name} (#{target.class.name})"
     begin
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
       ost.scanData = ost.args[1].is_a?(Hash) ? ost.args[1] : {}
       ost.config = OpenStruct.new(
-        :vmdb => true,
+        :vmdb               => true,
         :forceFleeceDefault => true,
-        :capabilities => self.capabilities
+        :capabilities       => capabilities
       )
 
-      v.perform_metadata_scan(ost)
+      target.perform_metadata_scan(ost)
     rescue Exception => err
       _log.error err.to_s
       _log.debug err.backtrace.join("\n")
@@ -114,12 +129,14 @@ module MiqServer::ServerSmartProxy
     end
   end
 
+  # Called through Queue by Job
   def sync_metadata(ost)
-    v   = VmOrTemplate.find(ost.vm_id)
-    job = Job.find_by_guid(ost.taskid)
-    $log.debug "#{log_prefix}: #{v.name} (#{v.class.name})"
+    klass  = ost.target_type.constantize
+    target = klass.find(ost.target_id)
+    job    = Job.find_by_guid(ost.taskid)
+    _log.debug "#{log_prefix}: #{target.name} (#{target.class.name})"
     begin
-      v.perform_metadata_sync(ost)
+      target.perform_metadata_sync(ost)
     rescue Exception => err
       _log.error err.to_s
       _log.debug err.backtrace.join("\n")
