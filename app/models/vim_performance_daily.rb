@@ -66,7 +66,7 @@ class VimPerformanceDaily < MetricRollup
   end
 
   def self.find_adhoc(*args)
-    return []
+    []
   end
 
 
