@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe ServiceTemplateCatalog do
   let(:root_tenant) do
+    MiqRegion.seed
     Tenant.seed
     Tenant.root_tenant
   end
