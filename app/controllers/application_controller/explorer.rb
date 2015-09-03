@@ -528,14 +528,13 @@ module ApplicationController::Explorer
   def x_get_tree_host_kids(object, options)
     if [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
       raise "ERROR: should not get here"
-      objects = Array.new
     else
       objects = rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }.delete_if(&:is_default)
       if object.default_resource_pool           # Go thru default RP VMs
         objects += rbac_filtered_objects(object.default_resource_pool.vms).sort_by { |a| a.name.downcase }
       end
     end
-    return options[:count_only] ? objects.length : objects
+    options[:count_only] ? objects.length : objects
   end
 
   def x_get_tree_rp_kids(object, options)
