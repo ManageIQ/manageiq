@@ -5,6 +5,7 @@ $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
 require 'xml_utils'
 
 require 'blackbox/VmBlackBox'
+require 'metadata/MIQExtract/MIQExtract'
 require 'scanning_operations_mixin'
 
 module ScanningMixin
