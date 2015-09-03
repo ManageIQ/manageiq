@@ -6,6 +6,8 @@
   </div>
 </content-header>
 
+<button ui-sref="services.details" class="btn btn-primary" type="button">Go to Service Details</button>
+
 <region ng-repeat="data in vm.projects track by data.project.id" heading="{{ ::data.project.name }}">
   <services-table services="data.services"></services-table>
 </region>
