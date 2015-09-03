@@ -1,5 +1,6 @@
 require "spec_helper"
-require 'util/mount/miq_generic_mount_session'
+require "tmpdir"
+require "util/mount/miq_generic_mount_session"
 
 describe MiqGenericMountSession do
   let(:prefix) { File.join(Dir.tmpdir, "miq_") }

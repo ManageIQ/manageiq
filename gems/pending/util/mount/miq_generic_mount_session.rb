@@ -63,6 +63,7 @@ class MiqGenericMountSession
   end
 
   def mount_share
+    require 'tmpdir'
     @mnt_point = Dir.mktmpdir("miq_", settings_mount_point)
   end
 
