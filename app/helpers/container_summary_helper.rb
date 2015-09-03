@@ -94,10 +94,7 @@ module ContainerSummaryHelper
     label = "#{session[:customer_name]} Tags"
     h = {:label => label}
     tags = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
+    if tags.present?
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }.collect do |category, assigned|
         {
           :image => "smarttag",
@@ -105,7 +102,11 @@ module ContainerSummaryHelper
           :value => assigned
         }
       end
+    else
+      h[:image] = "smarttag"
+      h[:value] = "No #{label} have been assigned"
     end
+
     h
   end
 
