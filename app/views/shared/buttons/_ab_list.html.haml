@@ -70,27 +70,26 @@
     -# don't need basic info box for Unassigned button group
     %h3
       = _('Basic Information')
-    %table.style1
-      %tbody
-        %tr
-          %td.key
-            = _('Button Text')
-          %td
-            = @record.name.split('|').first
-            - display = @record.set_data.key?(:display) ? @record.set_data[:display] : true
-            = check_box_tag(display, true, display, :disabled => true)
-            &nbsp;
-            = _("Display on Button")
-        %tr
-          %td.key
-            = _('Button Hover Text')
-          %td.notwide
-            = @record.description
-        %tr
-          %td.key
-            = _('Image')
-          %td.notwide
-            %span{:class => "product product-custom-#{@record.set_data[:button_image]}"}
+    .form-horizontal.static
+      .form-group
+        %label.control-label.col-md-2
+          = _('Button Text')
+        .col-md-8
+          = @record.name.split('|').first
+          - display = @record.set_data.key?(:display) ? @record.set_data[:display] : true
+          = check_box_tag(display, true, display, :disabled => true)
+          &nbsp;
+          = _("Display on Button")
+      .form-group
+        %label.control-label.col-md-2
+          = _('Button Hover Text')
+        .col-md-8
+          = @record.description
+      .form-group
+        %label.control-label.col-md-2
+          = _('Image')
+        .col-md-8
+          %span{:class => "product product-custom-#{@record.set_data[:button_image]}"}
   - if @sb[:buttons].blank?
     %hr
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Buttons found.")}
