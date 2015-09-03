@@ -8,7 +8,7 @@
     #alert_info_div
       = render :partial => "layouts/flash_msg"
       %h3= _('Info')
-      %form.form-horizontal
+      .form-horizontal
         -# Description
         - if @edit
           .form-group
@@ -128,7 +128,7 @@
             %h3
               = h(MiqAlert.expression_types(@edit[:new][:db])[@edit[:new][:expression][:eval_method]])
               = _('Parameters')
-            %form.form-horizontal
+            .form-horizontal
               - @edit[:expression_options].each do |eo|
                 = render :partial => "alert_builtin_exp", :locals  => {:option => eo}
         %hr
@@ -152,7 +152,7 @@
             %h3
               = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
               = _('Parameters')
-            %form.form-horizontal
+            .form-horizontal
               - MiqAlert.expression_options(@alert.expression[:eval_method]).each do |eo|
                 = render :partial => "alert_builtin_exp", :locals  => {:option => eo}
             %hr
@@ -168,7 +168,7 @@
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:email].blank?
           %h3
             = _('Send E-mail')
-          %form.form-horizontal
+          .form-horizontal
             .form-group
               %label.control-label.col-md-2
                 = _("From")
@@ -230,7 +230,7 @@
         - if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:evm_event]
           %h3
             = _('Timeline Event')
-          %form.form-horizontal
+          .form-horizontal
             .form-group
               %label.control-label.col-md-2
                 = _("Show on Timeline")
@@ -240,7 +240,7 @@
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:automate].blank?
           %h3
             = _('Send Management Event')
-          %form.form-horizontal
+          .form-horizontal
             .form-group
               %label.control-label.col-md-2
                 = _("Event Name")

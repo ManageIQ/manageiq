@@ -3,7 +3,7 @@
 %div{:id => "capacity_#{cap_type}_options_div", :onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
   %h3
     = _('Options')
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.control-label.col-md-2
         = _('Trends for past')
@@ -16,7 +16,7 @@
           miqInitSelectPicker();
           miqSelectPickerEvent("#{cap_type}_days", "#{url}");
 
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.control-label.col-md-2
         = _('Classification')
@@ -30,7 +30,7 @@
           miqInitSelectPicker();
           miqSelectPickerEvent("#{cap_type}_tag", "#{url}");
 
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.control-label.col-md-2
         = _('Time Profile')
