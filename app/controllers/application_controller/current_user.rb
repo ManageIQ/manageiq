@@ -3,7 +3,7 @@ module ApplicationController::CurrentUser
 
   included do
     helper_method :current_user,  :current_userid
-    helper_method :current_group, :current_groupid, :eligible_groups
+    helper_method :current_group, :current_groupid
     helper_method :admin_user?, :super_admin_user?
     hide_action :clear_current_user, :current_user=
     hide_action :admin_user?, :super_admin_user?
@@ -21,13 +21,6 @@ module ApplicationController::CurrentUser
     session[:userid]    = db_user.userid
     session[:group]     = db_user.current_group.try(:id)
   end
-
-  def eligible_groups
-    eligible_groups = current_user.try(:miq_groups)
-    eligible_groups = eligible_groups ? eligible_groups.sort_by { |g| g.description.downcase } : []
-    eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
-  end
-  private :eligible_groups
 
   def admin_user?
     current_user.admin_user?

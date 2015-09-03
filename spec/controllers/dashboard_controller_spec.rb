@@ -180,32 +180,6 @@ describe DashboardController do
     end
   end
 
-  describe "#eligible_groups" do
-    before do
-      EvmSpecHelper.create_guid_miq_server_zone
-    end
-    let(:role1)  { FactoryGirl.create(:miq_user_role, :name => 'test_role1') }
-    let(:group1) { FactoryGirl.create(:miq_group, :description => 'test_group1', :miq_user_role => role1) }
-    let(:role2)  { FactoryGirl.create(:miq_user_role, :name => 'test_role2') }
-    let(:group2) { FactoryGirl.create(:miq_group, :description => 'test_group2', :miq_user_role => role2) }
-
-    it "has no eligible groups for single group users" do
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group1])
-      skip_data_checks
-      post :authenticate, :user_name => user.userid, :user_password => 'dummy'
-      expect(controller.send(:current_user)).to eq(user)
-      expect(controller.send(:eligible_groups)).to eq([])
-    end
-
-    it "has eligible groups" do
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group1, group2])
-      skip_data_checks
-      post :authenticate, :user_name => user.userid, :user_password => 'dummy'
-      expect(controller.send(:current_user)).to eq(user)
-      expect(controller.send(:eligible_groups)).to eq([group1, group2].map {|g| [g.description, g.id] })
-    end
-  end
-
   def skip_data_checks(url = '/')
     UserValidationService.any_instance.stub(:data_ready?).and_return(true)
     UserValidationService.any_instance.stub(:server_ready?).and_return(true)
