@@ -12,10 +12,6 @@ class ContainerServiceController < ApplicationController
 
   private ############################
 
-  def controller_name
-    "container_service"
-  end
-
   def display_name
     "Container Services"
   end

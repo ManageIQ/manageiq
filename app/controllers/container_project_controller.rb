@@ -12,10 +12,6 @@ class ContainerProjectController < ApplicationController
 
   private ############################
 
-  def controller_name
-    "container_project"
-  end
-
   def display_name
     "Container Projects"
   end
