@@ -528,42 +528,6 @@
     {
       "warning_type":"Dynamic Render Path",
       "warning_code":15,
-      "fingerprint":"7406a3ed3118742bb83c8cc9e9cb187e25679a022f9ed07e215bfd4d6239e2cf",
-      "message":"Render path contains parameter value",
-      "file":"app/views/layouts/_show_pdf.html.haml",
-      "line":6,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => \"#{(\"vm_common\" or params[:controller])}/main_configuration_profile\", {})",
-      "render_path":["AvailabilityZoneController#show","Template:availability_zone/show"],
-      "location":{
-        "type":"template",
-        "template":"layouts/_show_pdf (Template:availability_zone/show)"
-      },
-      "user_input":"params[:controller]",
-      "confidence":"Medium",
-      "note":""
-    },
-    {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
-      "fingerprint":"b90b4cfb78fc8a752eb3fd3efafb4814bdc2ab857a35072434239caf980b9c2a",
-      "message":"Render path contains parameter value",
-      "file":"app/views/layouts/_show_pdf.html.haml",
-      "line":8,
-      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code":"render(partial => \"#{(\"vm_common\" or params[:controller])}/main\", {})",
-      "render_path":["AvailabilityZoneController#show","Template:availability_zone/show"],
-      "location":{
-        "type":"template",
-        "template":"layouts/_show_pdf (Template:availability_zone/show)"
-      },
-      "user_input":"params[:controller]",
-      "confidence":"Medium",
-      "note":""
-    },
-    {
-      "warning_type":"Dynamic Render Path",
-      "warning_code":15,
       "fingerprint":"c784cf6ee012b6182a3fe296d9d5b56f945d9165690f3bcaf79fdbf44bc9275c",
       "message":"Render path contains parameter value",
       "file":"app/views/orchestration_stack/show.html.haml",
