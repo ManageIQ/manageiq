@@ -4,7 +4,7 @@
 #basic_info_div
   = hidden_div_if(@edit && @edit[:ae_tree_select] != true, :id => "ae_tree_select_div") do
     = render(:partial => 'layouts/ae_tree_select')
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.col-md-2.control-label
         = _('Name / Description')

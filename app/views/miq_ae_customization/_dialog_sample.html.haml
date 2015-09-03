@@ -16,7 +16,7 @@
               - group = tg.resource
               %h3{:title => group.description}
                 = group.label
-              %form.form-horizontal.static
+              .form-horizontal.static
                 - group.ordered_dialog_resources.each do |g|
                   - field = g.resource
                   .form-group
