@@ -1,8 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 
-require 'coveralls'
-Coveralls.wear!('rails') do
-  add_filter("/spec/")
+if ENV["TEST_SUITE"] == "vmdb"
+  require 'coveralls'
+  Coveralls.wear!('rails') { add_filter("/spec/") }
 end
 
 ENV["RAILS_ENV"] ||= 'test'
@@ -80,14 +80,17 @@ RSpec.configure do |config|
   config.after(:each) do
     EvmSpecHelper.clear_caches
   end
+  if ENV["CI"]
+    config.after(:suite) do
+      require Rails.root.join("spec/coverage_helper.rb")
+    end
+  end
 
   if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/}) ||
       config.backtrace_exclusion_patterns.delete(%r{/gems/})
     config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
     config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
   end
-
-  config.after(:suite) { require Rails.root.join("spec/coverage_helper.rb") if ENV["CI"] }
 end
 
 # PATCH: Temporary monkey patch until a new version of webmock is released
