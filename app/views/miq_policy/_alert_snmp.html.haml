@@ -3,8 +3,9 @@
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
   - observe = {:url => url}.to_json
 #alert_snmp_div
-  %h3= _('SNMP Trap')
-  %form.form-horizontal
+  %h3
+    = _('SNMP Trap')
+  .form-horizontal
     - if @edit
       .form-group
         %label.control-label.col-md-2

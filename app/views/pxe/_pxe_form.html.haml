@@ -3,7 +3,7 @@
   = render :partial => "layouts/flash_msg"
   %h3
     = _('Basic Information')
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.col-md-2.control-label
         = _('Name')
@@ -68,7 +68,7 @@
   %hr
   %h3
     = _('PXE Image Menus')
-  %form.form-horizontal
+  .form-horizontal
     - @edit[:new][:pxe_menus].each_with_index do |menu, index|
       .form-group
         %label.col-md-2.control-label

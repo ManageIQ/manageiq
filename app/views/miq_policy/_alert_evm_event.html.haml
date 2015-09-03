@@ -1,6 +1,7 @@
 #alert_evm_event_div
-  %h3= _('Timeline Event')
-  %form.form-horizontal
+  %h3
+    = _('Timeline Event')
+  .form-horizontal
     - if @edit
       - url = url_for(:action => 'alert_field_changed',  :id => "#{@alert.id || 'new'}")
       .form-group

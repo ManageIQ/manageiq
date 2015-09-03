@@ -6,7 +6,7 @@
 %h3
   = _('Import')
 #import_div
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       .col-md-8
         = form_tag({:action => "upload", :typ => "import", :dbtype => @sb[:dbtype]}, :multipart => true) do
@@ -21,7 +21,7 @@
 %h3
   = _('Export')
 
-%form.form-horizontal
+.form-horizontal
   .form-group
     %label.control-label.col-md-2
       = _('Available Custom Reports:')
