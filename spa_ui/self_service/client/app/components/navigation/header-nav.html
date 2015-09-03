@@ -1,4 +1,4 @@
-<header class="navbar navbar-pf-header" role="navigation">
+<header class="navbar navbar-pf-alt" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" ng-click="vm.toggleNavigation()">
       <span class="sr-only">Toggle navigation</span>
@@ -13,14 +13,14 @@
   <nav class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
       <li>
-        <a href="http://manageiq.org/" target="_blank" class="action">
-          <i title="Open" class="pf-icon pficon-export fa-rotate-270"></i>
+        <a href="http://manageiq.org/" target="_blank" class="nav-item-iconic nav-item-iconic-new-window">
+          <i title="Open" class="fa fa-external-link"></i>
         </a>
       </li>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
+    <ul class="nav navbar-nav navbar-right navbar-iconic">
       <li dropdown>
-        <a dropdown-toggle class="action">
+        <a dropdown-toggle class="nav-item-iconic">
           <i title="Notifications" class="fa pficon-flag"></i>
           <span class="notification-icon-count" ng-if="vm.messages.length > 0">{{ vm.messages.length }}</span>
         </a>
@@ -39,7 +39,7 @@
         </div>
       </li>
       <li dropdown>
-        <a dropdown-toggle class="action">
+        <a dropdown-toggle class="nav-item-iconic">
           <i title="Help" class="fa pficon-help"></i>
           <span class="caret"></span>
         </a>
@@ -49,7 +49,7 @@
         </ul>
       </li>
       <li dropdown>
-        <a dropdown-toggle class="action">
+        <a dropdown-toggle class="nav-item-iconic">
           <i title="Username" class="fa pficon-user"></i>
           <span class="caret"></span>
         </a>
@@ -57,9 +57,6 @@
           <li class="action"><a href="#">Preferences</a></li>
           <li class="action"><a href="#">Logout</a></li>
         </ul>
-      </li>
-      <li>
-        <a href="#" class="action"><i title="Search" class="fa fa-search"></i></a>
       </li>
     </ul>
   </nav>
