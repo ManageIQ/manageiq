@@ -86,6 +86,8 @@ RSpec.configure do |config|
     config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
     config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
   end
+
+  config.after(:suite) { require Rails.root.join("spec/coverage_helper.rb") if ENV["CI"] }
 end
 
 # PATCH: Temporary monkey patch until a new version of webmock is released
