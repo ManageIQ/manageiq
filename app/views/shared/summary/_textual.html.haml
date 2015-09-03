@@ -1,4 +1,5 @@
-- items = expand_textual_group(items)
+- restful_path ||= nil
+- items = expand_textual_group(items, @record, restful_path)
 - if items.present?
   %table.table.table-bordered.table-hover.table-striped
     %thead
