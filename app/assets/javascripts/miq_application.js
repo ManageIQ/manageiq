@@ -1207,7 +1207,7 @@ function miqDomElementExists(element) {
 }
 
 function miqSerializeForm(element) {
-  return $('#' + element).find('input,select,textarea').serialize();
+  return $('#' + element).find('input,select,textarea').serialize().replace(/%0D%0A/g, '%0A');
 }
 
 function miqSerializeField(element, field_name) {
