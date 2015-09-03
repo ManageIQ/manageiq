@@ -12,10 +12,6 @@ class ContainerReplicatorController < ApplicationController
 
   private ############################
 
-  def controller_name
-    "container_replicator"
-  end
-
   def display_name
     "Container Replicators"
   end
