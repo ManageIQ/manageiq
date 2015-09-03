@@ -2,13 +2,16 @@
 #TODO: Further refactor these unrelated methods.
 require "appliance_console/internal_database_configuration"
 require "util/postgres_admin"
+require "awesome_spawn"
 
 module ApplianceConsole
   module Utilities
     def self.db_connections
-      require 'open4'
-      status = Open4::popen4("cd #{RAILS_ROOT} && script/rails runner 'exit EvmDatabaseOps.database_connections'") { |pid,  stdin, stdout, stderr| }
-      Integer(status.exitstatus)
+      result = AwesomeSpawn.run("bin/rails runner",
+        :params => ["exit EvmDatabaseOps.database_connections"],
+        :chdir  => RAILS_ROOT
+      )
+      Integer(result.exit_status)
     end
 
     def self.bail_if_db_connections(message)
