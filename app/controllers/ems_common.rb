@@ -263,6 +263,10 @@ module EmsCommon
 
   def create
     assert_privileges("#{permission_prefix}_new")
+    if controller_name == "ems_cloud"
+      create_ems_record
+      return
+    end
     return unless load_edit("ems_edit__new")
     get_form_vars
     case params[:button]
@@ -304,6 +308,135 @@ module EmsCommon
     end
   end
 
+  def create_ems_record
+    case params[:button]
+      when "add"
+        if !@flash_array
+          add_ems = model.model_from_emstype(params[:emstype]).new
+          set_ems_record_vars(add_ems)
+        end
+        if !@flash_array && add_ems.save
+          construct_edit_for_audit(add_ems)
+          AuditEvent.success(build_created_audit(add_ems, @edit))
+          render :update do |page|
+            page.redirect_to :action=>'show_list', :flash_msg=>_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:tables=>@table_name), :name=>add_ems.name}
+          end
+        else
+          @in_a_form = true
+          if !@flash_array
+            add_ems.errors.each do |field,msg|
+              add_flash("#{add_ems.class.human_attribute_name(field)} #{msg}", :error)
+            end
+          end
+          drop_breadcrumb( {:name=>"Add New #{ui_lookup(:table=>@table_name)}", :url=>"/#{@table_name}/new"} )
+          render :update do |page|
+            page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          end
+        end
+      when "validate"
+        verify_ems = model.model_from_emstype(params[:emstype]).new
+        update_ems_button_validate(verify_ems)
+      when "cancel"
+        _model = model
+        render :update do |page|
+          page.redirect_to(:action => @lastaction,
+                           :display => session[:ems_display],
+                           :flash_msg => _("Add of %{model} was cancelled by the user") %
+                               {:model => ui_lookup(:model => _model.to_s)})
+        end
+    end
+  end
+
+  def update_ems_record
+    case params[:button]
+      when "cancel"   then update_ems_button_cancel
+      when "save"     then update_ems_button_save
+      when "validate" then update_ems_button_validate
+    end
+  end
+
+  def update_ems_button_cancel
+    update_ems = find_by_id_filtered(model, params[:id])
+    _model = model
+    render :update do |page|
+      page.redirect_to(:action => @lastaction, :id => update_ems.id, :display => session[:ems_display],
+                       :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
+                           {:model => ui_lookup(:model => _model.to_s), :name => update_ems.name})
+    end
+  end
+
+  def update_ems_button_save
+    update_ems = find_by_id_filtered(model, params[:id])
+    set_ems_record_vars(update_ems)
+    if update_ems.save
+      update_ems.reload
+      flash = _("%{model} \"%{name}\" was saved") %
+          {:model => ui_lookup(:model => model.to_s), :name => update_ems.name}
+      construct_edit_for_audit(update_ems)
+      AuditEvent.success(build_saved_audit(update_ems, @edit))
+      render :update do |page|
+        page.redirect_to :action => 'show', :id => update_ems.id.to_s, :flash_msg => flash
+      end
+      return
+    else
+      update_ems.errors.each do |field, msg|
+        add_flash("#{field.to_s.capitalize} #{msg}", :error)
+      end
+      drop_breadcrumb(:name => "Edit #{ui_lookup(:table => @table_name)} '#{update_ems.name}'",
+                      :url  => "/#{@table_name}/edit/#{update_ems.id}")
+      @in_a_form = true
+      render_flash
+    end
+  end
+
+  def update_ems_button_validate(verify_ems = nil)
+    verify_ems ||= find_by_id_filtered(model, params[:id])
+    set_ems_record_vars(verify_ems, :validate)
+    @in_a_form = true
+
+    save = params[:id] == "new" ? false : true
+    result, details = verify_ems.authentication_check(params[:type], :save => save)
+    if result
+      add_flash(_("Credential validation was successful"))
+    else
+      add_flash(_("Credential validation was not successful: %s") % details, :error)
+    end
+
+    render_flash
+  end
+
+  def construct_edit_for_audit(ems)
+    @edit ||= {}
+    @edit[:current] = {:name => ems.name,
+                       :provider_region => ems.provider_region,
+                       :hostname => ems.hostname,
+                       :port => ems.port,
+                       :provider_id => ems.provider_id,
+                       :zone => ems.zone
+                      }
+    @edit[:new] = {:name => params[:name],
+                   :provider_region => params[:provider_region],
+                   :hostname => params[:hostname],
+                   :port => params[:port],
+                   :provider_id => params[:provider_id],
+                   :zone => params[:zone]
+    }
+
+    if ems.is_a?(ManageIQ::Providers::Microsoft::InfraManager)
+      @edit[:current][:security_protocol] = ems.security_protocol
+      @edit[:current][:realm] = ems.realm
+      @edit[:new][:security_protocol] = params[:security_protocol]
+      @edit[:new][:realm] = params[:realm]
+    end
+
+    if ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
+      @edit[:current][:host_default_vnc_port_start] = ems.host_default_vnc_port_start
+      @edit[:current][:host_default_vnc_port_end] = ems.host_default_vnc_port_end
+      @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start]
+      @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end]
+    end
+  end
+
   def edit
     assert_privileges("#{permission_prefix}_edit")
     @ems = find_by_id_filtered(model, params[:id])
@@ -313,7 +446,73 @@ module EmsCommon
     drop_breadcrumb( {:name=>"Edit #{ui_lookup(:tables=>@table_name)} '#{@ems.name}'", :url=>"/#{@table_name}/edit/#{@ems.id}"} )
   end
 
-  # AJAX driven routine to check for changes in ANY field on the form
+  def ems_cloud_form_fields
+    assert_privileges("#{permission_prefix}_edit")
+    @ems = model.new if params[:id] == 'new'
+    @ems = find_by_id_filtered(model, params[:id]) if params[:id] != 'new'
+
+    if @ems.zone.nil? || @ems.my_zone == ""
+      zone = "default"
+    else
+      zone = @ems.my_zone
+    end
+
+    metrics_userid = @ems.has_authentication_type?(:metrics) ? @ems.authentication_userid(:metrics).to_s : ""
+    metrics_password = @ems.has_authentication_type?(:metrics) ? @ems.authentication_password(:metrics).to_s : ""
+    metrics_verify = @ems.has_authentication_type?(:metrics) ? @ems.authentication_password(:metrics).to_s : ""
+
+    amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
+    amqp_password = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
+    amqp_verify = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
+
+    ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
+    ssh_keypair_password = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_key(:ssh_keypair).to_s : ""
+
+    bearer_token = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
+    bearer_verify = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
+
+    if @ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
+      host_default_vnc_port_start = @ems.host_default_vnc_port_start.to_s
+      host_default_vnc_port_end = @ems.host_default_vnc_port_end.to_s
+    end
+
+    if @ems.is_a?(EmsAzure)
+      tenant_id = @ems.tenant_id
+      client_id = @ems.authentication_userid ? @ems.authentication_userid : ""
+      client_key = @ems.authentication_password ? @ems.authentication_password : ""
+    end
+
+    render :json => {:name                            => @ems.name,
+                     :emstype                         => @ems.emstype,
+                     :zone                            => zone,
+                     :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
+                     :hostname                        => @ems.hostname,
+                     :api_port                        => @ems.port,
+                     :provider_region                 => @ems.provider_region,
+                     :openstack_infra_providers_exist => retrieve_openstack_infra_providers.length > 0 ? true : false,
+                     :default_userid                  => @ems.authentication_userid ? @ems.authentication_userid : "",
+                     :default_password                => @ems.authentication_password ? @ems.authentication_password : "",
+                     :default_verify                  => @ems.authentication_password ? @ems.authentication_password : "",
+                     :metrics_userid                  => metrics_userid,
+                     :metrics_password                => metrics_password,
+                     :metrics_verify                  => metrics_verify,
+                     :amqp_userid                     => amqp_userid,
+                     :amqp_password                   => amqp_password,
+                     :amqp_verify                     => amqp_verify,
+                     :ssh_keypair_userid              => ssh_keypair_userid,
+                     :ssh_keypair_password            => ssh_keypair_password,
+                     :bearer_token                    => bearer_token,
+                     :bearer_verify                   => bearer_verify,
+                     :tenant_id                       => tenant_id ? tenant_id : "",
+                     :client_id                       => client_id ? client_id : "",
+                     :client_key                      => client_key ? client_key : "",
+                     :host_default_vnc_port_start     => host_default_vnc_port_start,
+                     :host_default_vnc_port_end       => host_default_vnc_port_end,
+                     :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+                    }
+  end
+
+    # AJAX driven routine to check for changes in ANY field on the form
   def form_field_changed
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
@@ -356,6 +555,10 @@ module EmsCommon
 
   def update
     assert_privileges("#{permission_prefix}_edit")
+    if controller_name == "ems_cloud"
+      update_ems_record
+      return
+    end
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
     case params[:button]
@@ -691,6 +894,7 @@ module EmsCommon
 
   # Set form variables for edit
   def set_form_vars
+    form_instance_vars
 
     @edit = Hash.new
     @edit[:ems_id] = @ems.id
@@ -757,12 +961,34 @@ module EmsCommon
     session[:edit] = @edit
   end
 
+  def form_instance_vars
+    @server_zones = []
+    zones = Zone.order('lower(description)')
+    zones.each do |zone|
+      @server_zones.push([zone.description, zone.name])
+    end
+    @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
+    @amazon_regions = get_amazon_regions #if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
+    @openstack_infra_providers = retrieve_openstack_infra_providers
+    @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
+  end
+
   def get_amazon_regions
     regions = Hash.new
     ManageIQ::Providers::Amazon::Regions.all.each do |region|
       regions[region[:name]] = region[:description]
     end
     return regions
+  end
+
+  def retrieve_openstack_infra_providers
+    openstack_infra_providers = []
+    ManageIQ::Providers::Openstack::Provider.all.each do |provider|
+      openstack_infra_providers = [
+          [provider[:name], provider[:id]]
+      ]
+    end
+    openstack_infra_providers
   end
 
   # Get variables from edit form
@@ -851,6 +1077,45 @@ module EmsCommon
       creds[:bearer] = {:auth_key => @edit[:new][:bearer_token], :userid => "_"} # Must have userid
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})
+  end
+
+  def set_ems_record_vars(ems, mode = nil)
+    ems.name = params[:name]
+    ems.provider_region = params[:provider_region]
+    ems.hostname = params[:hostname].strip unless params[:hostname].nil?
+    ems.port = params[:api_port] if ems.supports_port?
+    ems.provider_id = params[:provider_id] #if ems.supports_provider_id?
+    ems.zone = Zone.find_by_name(params[:zone])
+
+    if ems.is_a?(ManageIQ::Providers::Microsoft::InfraManager)
+      ems.security_protocol = params[:security_protocol]
+      ems.realm = params[:realm]
+    end
+
+    if ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
+      ems.host_default_vnc_port_start = params[:host_default_vnc_port_start].blank? ? nil : params[:host_default_vnc_port_start].to_i
+      ems.host_default_vnc_port_end = params[:host_default_vnc_port_end].blank? ? nil : params[:host_default_vnc_port_end].to_i
+    end
+
+    ems.tenant_id = params[:tenant_id] if ems.is_a?(EmsAzure)  #(ManageIQ::Providers::CloudManager::EmsAzure)
+
+    creds = {}
+    creds[:default] = {:userid => params[:default_userid],
+                       :password => params[:default_password]} unless params[:default_userid].blank?
+    if ems.supports_authentication?(:metrics) && !params[:metrics_userid].blank?
+      creds[:metrics] = {:userid => params[:metrics_userid], :password => params[:metrics_password]}
+    end
+    if ems.supports_authentication?(:amqp) && !params[:amqp_userid].blank?
+      creds[:amqp] = {:userid => params[:amqp_userid], :password => params[:amqp_password]}
+    end
+    if ems.supports_authentication?(:ssh_keypair) && !params[:ssh_keypair_userid].blank?
+      creds[:ssh_keypair] = {:userid => params[:ssh_keypair_userid], :auth_key => params[:ssh_keypair_password]}
+    end
+    if ems.supports_authentication?(:bearer) && !params[:bearer_token].blank?
+      creds[:bearer] = {:auth_key => params[:bearer_token], :userid => "_"} # Must have userid
+    end
+
+    ems.update_authentication(creds, {:save =>(mode != :validate)})
   end
 
   def process_emss(emss, task)

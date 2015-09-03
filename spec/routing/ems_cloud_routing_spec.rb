@@ -18,6 +18,7 @@ describe EmsCloudController do
   %w(
     dialog_load
     edit
+    ems_cloud_form_fields
     index
     new
     show

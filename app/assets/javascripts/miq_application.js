@@ -1028,6 +1028,9 @@ function miq_tabs_init(id, url) {
   if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length == 1) {
     $(id + ' > ul.nav-tabs').hide();
   }
+  else if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
+    $(id + ' > ul.nav-tabs').show();
+  }
 }
 
 function miq_tabs_disable_inactive(id) {
