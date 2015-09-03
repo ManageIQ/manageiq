@@ -26,7 +26,7 @@
 
   /** @ngInject */
   function resolveService($stateParams, CollectionsApi) {
-    return CollectionsApi.get('service_templates', $stateParams.serviceId);
+    return CollectionsApi.get('services', $stateParams.serviceId);
   }
 
   /** @ngInject */
@@ -44,6 +44,3 @@
     }
   }
 })();
-
-
-// add resolve and ngInject

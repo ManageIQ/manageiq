@@ -1,13 +1,5 @@
-<content-header short="true">
-  <div class="service-category__body">
-    <span class="content-header__title">Services</span>
-  </div>
-  <div class="service-category__aside">
-  </div>
-</content-header>
+<button ui-sref="services.details({serviceId: 10000000000021})" class="btn btn-primary" type="button">Go to Service Details</button>
 
-<button ui-sref="services.details" class="btn btn-primary" type="button">Go to Service Details</button>
-
-<region ng-repeat="data in vm.projects track by data.project.id" heading="{{ ::data.project.name }}">
-  <services-table services="data.services"></services-table>
-</region>
+<pre> <!-- include PF list styling-->
+    {{ vm.services | json }}
+</pre>
