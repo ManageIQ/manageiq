@@ -109,50 +109,9 @@ module ReportFormatter
     end
 
     def build_reporting_chart_dim2
-      counts = super # FIXME: counts are passed for now, should handle this in a better way
-      default_legend
-      # FIXME: we only support stacked bars or columns
-      if mri.graph[:type] =~ /Column/
-        mri.chart[:options].update(
-          :stackSeries    => true,
-          :seriesDefaults => {
-            :rendererOptions => {:barDirection => 'vertical', :barWidth => 5},
-            :renderer        => 'jQuery.jqplot.BarRenderer',
-          },
-          :axes           => {
-            :xaxis => {
-              :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
-              :ticks    => counts.keys,
-            },
-          },
-          :highlighter    => {
-            :show                 => true,
-            :tooltipAxes          => 'y',
-            :tooltipContentEditor => 'jqplot_xaxis_tick_highlight',
-            :tooltipLocation      => 'n'
-          }
-        )
-      else # Bar
-        mri.chart[:options].update(
-          :stackSeries    => true,
-          :seriesDefaults => {
-            :renderer        => 'jQuery.jqplot.BarRenderer',
-            :rendererOptions => {:barDirection => 'horizontal', :barWidth => 5},
-          },
-          :axes           => {
-            :yaxis => {
-              :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
-              :ticks    => counts.keys,
-            },
-          },
-          :highlighter    => {
-            :show                 => true,
-            :tooltipAxes          => 'x',
-            :tooltipContentEditor => 'jqplot_yaxis_tick_highlight',
-            :tooltipLocation      => 'n'
-          }
-        )
-      end
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      counts = super
+      dim2_formating(counts.keys)
     end
 
     def build_planning_chart(maxcols, divider)
@@ -165,11 +124,45 @@ module ReportFormatter
 
     def build_numeric_chart_grouped_2dim
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
-      super
+      series_names = super
+      dim2_formating(series_names)
+    end
+
+    def dim2_formating(ticks)
       horizontal_legend if mri.graph[:type] =~ /Bar/
       default_legend    if mri.graph[:type] =~ /Column/
 
-      axis_category_labels_ticks if mri.graph[:type] =~ /(Bar|Column)/
+      if mri.graph[:type] =~ /Column/
+        mri.chart[:options].update(
+          :axes           => {
+            :xaxis => {
+              :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
+              :ticks    => ticks,
+            },
+          },
+          :highlighter    => {
+            :show                 => true,
+            :tooltipAxes          => 'y',
+            :tooltipContentEditor => 'jqplot_xaxis_tick_highlight',
+            :tooltipLocation      => 'n'
+          }
+        )
+      elsif mri.graph[:type] =~ /Bar/
+        mri.chart[:options].update(
+          :axes           => {
+            :yaxis => {
+              :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
+              :ticks    => ticks,
+            },
+          },
+          :highlighter    => {
+            :show                 => true,
+            :tooltipAxes          => 'x',
+            :tooltipContentEditor => 'jqplot_yaxis_tick_highlight',
+            :tooltipLocation      => 'n'
+          }
+        )
+      end
     end
 
     def build_numeric_chart_grouped

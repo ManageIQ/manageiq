@@ -493,7 +493,7 @@ module ReportFormatter
         label = _('no value') if label.blank?
         add_series(label, series)
       end
-      groups
+      groups.keys.collect { |k| k.blank? ? _('no value') : k }
     end
 
     def pie_type?

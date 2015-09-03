@@ -142,7 +142,7 @@ describe ReportFormatter::JqplotFormatter do
         expect(report.chart[:data][0][0]).to eq(6_656)
         expect(report.chart[:data][0][1]).to eq(4_096)
         expect(report.chart[:data][1][1]).to eq(3_072)
-        expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq('MTC-...')
+        expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq('MTC-RHEVM-3.0')
         expect(report.chart[:data][0][-1]).to eq(1_024) if other
       end
     end
