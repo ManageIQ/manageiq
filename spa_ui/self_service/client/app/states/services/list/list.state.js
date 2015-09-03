@@ -16,19 +16,28 @@
         templateUrl: 'app/states/services/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Services'
+        title: 'Services',
+        resolve: {
+          services: resolveServices
+        }
       }
     };
   }
 
   /** @ngInject */
-  function StateController(logger) {
+  function resolveServices(CollectionsApi) {
+    return CollectionsApi.query('services');
+  }
+
+  /** @ngInject */
+  function StateController(logger, services) {
     /* jshint validthis: true */
     var vm = this;
 
     vm.title = 'Services';
 
     vm.activate = activate;
+    vm.services = services;
 
     activate();
 
