@@ -11,12 +11,16 @@ angular.module('topologyApp', ['kubernetesUI'])
         else {
             id = '/'+ (/container_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
         }
-
+        var currentSelectedKinds = $scope.kinds;
         var url = '/container_topology/data'+id;
         $http.get(url).success(function(data) {
             $scope.items = data.data.items;
             $scope.relations = data.data.relations;
             $scope.kinds = data.data.kinds;
+            if (currentSelectedKinds && (Object.keys(currentSelectedKinds).length !=  Object.keys($scope.kinds).length)) {
+                $scope.kinds = currentSelectedKinds;
+            }
+
         });
 
     };
