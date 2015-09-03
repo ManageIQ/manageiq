@@ -42,7 +42,6 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 gem "azure-armrest",                  :git => "git://github.com/ManageIQ/azure-armrest.git"
-gem "bcrypt",                         "3.1.10"
 gem "default_value_for",              "~>3.0.1"
 gem "hamlit-rails",                   "~>0.1.0"
 gem "mime-types"

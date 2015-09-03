@@ -14,6 +14,7 @@ gem "activerecord",            "~>4.2.3"
 
 # Not locally modified and not required
 gem "awesome_spawn",           "~> 1.3",            :require => false
+gem "bcrypt",                  "~> 3.1.10",         :require => false
 gem "binary_struct",           "~> 2.0",            :require => false
 gem "excon",                   "~>0.40",            :require => false
 gem "ezcrypto",                "=0.7",              :require => false
