@@ -7,10 +7,10 @@ require 'VMwareWebService/VimPropMaps'
 
 class MiqVimInventory < MiqVimClientBase
 	attr_reader :cacheLock, :configLock
-	
+
 	alias :__connect :connect
     alias :__disconnect :disconnect
-    
+
 	include	VimPropMaps
     include MiqVimDump
 
@@ -19,9 +19,9 @@ class MiqVimInventory < MiqVimClientBase
 
 	def initialize(server, username, password, cacheScope=nil)
 	    super(server, username, password)
-	
+
 		cacheScope ||= @@cacheScope
-		
+
 		case cacheScope
 		when :cache_scope_full
 			@propMap = FullPropMap
@@ -39,10 +39,10 @@ class MiqVimInventory < MiqVimClientBase
 			@propMap = FullPropMap
 			$vim_log.info "MiqVimInventory: unrecognized cache scope #{cacheScope}, using FullPropMap"
 		end
-	
+
 		if @v2
 			@propMap = dupProps(@propMap)
-			
+
 			deleteProperty(:HostSystem, "capability.storageVMotionSupported")
 			deleteProperty(:HostSystem, "capability.vmotionWithStorageVMotionSupported")
 
@@ -66,34 +66,34 @@ class MiqVimInventory < MiqVimClientBase
 			end
 			@propMap = @propMap.merge(PropMap4)
 		end
-		
+
 		@propCol    = @sic.propertyCollector
 		@rootFolder = @sic.rootFolder
 		@objectSet  = objectSet
 		@spec       = spec
 		@updateSpec = updateSpec
-		
+
 		@globalIndent			= ""
 		@selectorHash			= @@selectorHash
 		@selectorPropPathHash	= {}
-		
+
 		@cacheLock	= Sync.new
 		@configLock	= Sync.new
 
 		# Un-comment to enable Sync lock debugging.
 		# extend VimSyncDebug
-		
+
 		resetCache
 		__connect
 		@alive = true
 	end # def initialize
-	
+
 	def addProperty(key, property)
 		return if (pm = @propMap[key]).nil?
 		property.split('.').each { |p| return if pm.include?(p) }
 		@propMap[key][:props] << property
 	end
-	
+
 	def deleteProperty(key, property)
 		@propMap[key][:props].delete(property) unless @propMap[key].nil?
 	end
@@ -101,17 +101,17 @@ class MiqVimInventory < MiqVimClientBase
 	def self.cacheScope
 		@@cacheScope
 	end
-	
+
 	def self.cacheScope=(val)
 		@@cacheScope = val
 	end
-	
+
 	def logCacheCounts(pref)
 		@cacheLock.synchronize(:SH) do
             @propMap.each_value do |pm|
 				hn = pm[:baseName]
 				hnm = pm[:baseName] + "ByMor"
-				
+
 				unless eval("#{hnm}.nil?")
                 	hnmc = eval("#{hnm}.keys.length")
 					$vim_log.info "#{pref}#{hnm}: #{hnmc}"
@@ -123,7 +123,7 @@ class MiqVimInventory < MiqVimClientBase
             end
 	    end
 	end
-	
+
 	def cacheStats(pref)
 		totalCacheSz = 0
 		@cacheLock.synchronize(:SH) do
@@ -132,12 +132,12 @@ class MiqVimInventory < MiqVimClientBase
 				hnm = pm[:baseName] + "ByMor"
 				hashByMor = self.instance_variable_get(hnm)
 				hashByKey = pm[:keyPath] ? self.instance_variable_get(hn) : nil
-				
+
 				if hashByMor.nil?
 					$vim_log.info "#{pref}#{hnm}: is nil"
 					next
 				end
-				
+
 				keya = hashByMor.keys
 				obja = hashByMor.values
 				$vim_log.info "#{pref}#{hnm}: #keys = #{keya.length}"
@@ -145,7 +145,7 @@ class MiqVimInventory < MiqVimClientBase
 				obja.compact!
 				obja.uniq!
 				$vim_log.info "#{pref}#{hnm}: #unique non-nill objects = #{obja.length}"
-				
+
 				unless hashByKey.nil?
 					keyb = hashByKey.keys
 					objb = hashByKey.values
@@ -168,7 +168,7 @@ class MiqVimInventory < MiqVimClientBase
 	    end
 		return totalCacheSz
 	end
-	
+
 	#
 	# Construct an ObjectSpec to traverse the entire VI inventory tree.
 	#
@@ -182,7 +182,7 @@ class MiqVimInventory < MiqVimClientBase
 			ts.path			= "vm"
 			ts.skip			= "false"
 		end unless @v2
-		
+
 	    #
 	    # Traverse ResourcePool to ResourcePool and VirtualApp.
 	    #
@@ -218,10 +218,10 @@ class MiqVimInventory < MiqVimClientBase
 			ts.path			= "host"
 			ts.skip			= "false"
 		end
-		   
+
 		#
 	    # Traverse Datacenter to host folder.
-	    #                     
+	    #
 		datacenterHostTs = VimHash.new("TraversalSpec") do |ts|
 			ts.name			= "datacenterHostTraversalSpec"
 			ts.type			= "Datacenter"
@@ -244,7 +244,7 @@ class MiqVimInventory < MiqVimClientBase
 				ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
 			end
 		end
-		
+
 		#
 	    # Traverse Datacenter to Datastore.
 	    #
@@ -274,7 +274,7 @@ class MiqVimInventory < MiqVimClientBase
 				ssa		<< virtualAppTs unless @v2
 			end
 		end
-		
+
 		aOobjSpec = VimArray.new("ArrayOfObjectSpec") do |osa|
 			osa		<< VimHash.new("ObjectSpec") do |os|
 				os.obj			= @sic.rootFolder
@@ -282,10 +282,10 @@ class MiqVimInventory < MiqVimClientBase
 				os.selectSet	= VimArray.new("ArrayOfSelectionSpec") { |ssa| ssa << folderTs }
 			end
 		end
-		
+
 		return(aOobjSpec)
 	end # def objectSet
-	
+
 	#
     # Construct an array of PropertySpec objects to retrieve the MORs for all the
     # inventory objects we're interested in.
@@ -313,7 +313,7 @@ class MiqVimInventory < MiqVimClientBase
 		end
 		return(speca)
 	end
-	
+
 	def updateSpecByPropMap(propMap)
 		VimHash.new("PropertyFilterSpec") do |pfs|
 			pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
@@ -328,11 +328,11 @@ class MiqVimInventory < MiqVimClientBase
 			pfs.objectSet = @objectSet
 		end
 	end
-	
+
 	def updateSpec
 		updateSpecByPropMap(@propMap)
 	end
-	
+
 	def assert_no_locks
 	    return
 	    return if !@cacheLock.sync_locked?
@@ -342,7 +342,7 @@ class MiqVimInventory < MiqVimClientBase
 	    msg += Kernel.caller.join("\n")
 	    raise msg
     end
-    
+
     def loadCache
         @cacheLock.synchronize(:EX) do
             @propMap.each_value do |pm|
@@ -350,12 +350,12 @@ class MiqVimInventory < MiqVimClientBase
             end
         end
     end
-	
+
 	def resetCache
 		$vim_log.info "MiqVimInventory.resetCache: clearing cache for #{@connId}"
 	    @cacheLock.synchronize(:EX) do
             @inventoryHash                  = nil
-            
+
             @propMap.each_value do |pm|
                 eval("#{pm[:baseName]}ByMor = nil")
                 eval("#{pm[:baseName]} = nil")
@@ -363,11 +363,11 @@ class MiqVimInventory < MiqVimClientBase
 	    end
 	    $vim_log.info "MiqVimInventory.resetCache: cleared cache for #{@connId}"
 	end # def resetCache
-	
+
 	def currentSession
 		return getMoProp(@sic.sessionManager, "currentSession")
 	end
-	
+
 	def isAlive?
 		return false if !@alive
 	    begin
@@ -388,25 +388,25 @@ class MiqVimInventory < MiqVimClientBase
 	def isDead
 		@alive = false
 	end
-	
+
 	def isVirtualCenter?
 	    return @isVirtualCenter
     end
-    
+
     def isHostAgent?
         return !@isVirtualCenter
     end
-	
+
 	def hashObj(type, props)
 		objType = objType.to_sym if objType.kind_of? String
 	    raise "hashObj: exclusive cache lock not held" if !@cacheLock.sync_exclusive?
 	    raise "Unknown VIM object type: #{type}" if !(pmap = @propMap[type])
-	    
+
 	    return nil if !props
-	    
+
 	    baseName = pmap[:baseName]
 	    keyPath  = pmap[:keyPath]
-	    
+
 		mor = props['MOR']
 		if keyPath
 	    	key = eval("props#{keyPath}")
@@ -420,7 +420,7 @@ class MiqVimInventory < MiqVimClientBase
 		else
 			key = nil
 		end
-	    
+
 	    if key
     	    objHash = self.instance_variable_get(baseName)
     	    objHash[key] = props
@@ -432,20 +432,20 @@ class MiqVimInventory < MiqVimClientBase
 	    return(props)
     end
     private :hashObj
-    
+
     #
     # Add the property hash for the VIM object to the appropriate inventory hashes.
     #
     def addObjHash(objType, objHash)
         raise "addObjHash: exclusive cache lock not held" if !@cacheLock.sync_exclusive?
-        
+
         objHash = hashObj(objType, objHash)
 		objFixUp(objType, objHash)
 	end
-        
+
 	def objFixUp(objType, objHash)
 		objType = objType.to_sym if objType.kind_of? String
-		
+
         #
         # Type-specific processing
         #
@@ -472,13 +472,13 @@ class MiqVimInventory < MiqVimClientBase
 	    	    rsl.each { |rs| snapshotFixup(rs, ssMorHash) }
 	    	    ssObj['ssMorHash'] = ssMorHash
 			end
-    
+
             if (hostMor = objHash.fetch_path('summary', 'runtime', 'host'))
                 hostObj = hostSystemsByMor_locked[hostMor]
                 return if !hostObj
                 objHash['summary']["runtime"]["hostName"] = hostObj.fetch_path("summary", "config", "name")
             end
-            
+
         when :ResourcePool
             objHash['summary']['name'] = objHash['name']
         end
@@ -490,17 +490,17 @@ class MiqVimInventory < MiqVimClientBase
 	    # When this is the case, ssObj is an array instead of a hash.
 	    #
 	    ssObj.each { |sso| snapshotFixup(sso, ssMorHash) } if ssObj.kind_of? Array
-	
+
 		#
 	    # Hash snapshot info by MOR.
 	    #
 	    ssMorHash[String.new(ssObj['snapshot'].to_s)] = ssObj
-	    
+
 	    #
 	    # Hash snapshot info by create time.
 	    #
 	    ssMorHash[ssObj['createTime']] = ssObj
-	    
+
 	    #
 	    # Ensure childSnapshotList is always present and always an array,
 	    # evne if it's empty.
@@ -511,10 +511,10 @@ class MiqVimInventory < MiqVimClientBase
 	    elsif !childList.kind_of? Array
 	        ssObj['childSnapshotList'] = VimArray.new { |a| a << childList }
 	    end
-	    
+
 	    ssObj['childSnapshotList'].each { |sso| snapshotFixup(sso, ssMorHash) }
 	end
-    
+
     #
     # Extract the properties for the VIM object represented by objMor and hash them.
     # Add the resulting property hash to the appropriate inventory hashes.
@@ -523,26 +523,26 @@ class MiqVimInventory < MiqVimClientBase
         raise "addObjByMor: exclusive cache lock not held"			if !@cacheLock.sync_exclusive?
         objType = objMor.vimType.to_sym
         raise "addObjByMor: Unknown VIM object type: #{objType}"	if !(pmap = @propMap[objType])
-	    
+
 	    objHash = getMoProp_local(objMor, pmap[:props])
 	    return nil if !objHash
-        
+
         addObjHash(objType, objHash)
         return(objHash)
     end
-    
+
     def removeObjByMor(objMor)
         raise "removeObjByMor: exclusive cache lock not held"		if !@cacheLock.sync_exclusive?
         objType = objMor.vimType.to_sym
         raise "removeObjByMor: Unknown VIM object type: #{objType}"	if !(pmap = @propMap[objType])
-        
+
         baseName	= pmap[:baseName]
 	    keyPath		= pmap[:keyPath]
 		keyPath2	= pmap[:keyPath2]
-	    
+
 	    objHash = self.instance_variable_get("#{baseName}ByMor")
 	    return if !(props = objHash.delete(objMor))
-	    
+
 	    if keyPath
 	        key = eval("props#{keyPath}")
 			key2 = keyPath2 ? eval("props#{keyPath2}") : nil
@@ -609,7 +609,7 @@ class MiqVimInventory < MiqVimClientBase
 	###################
 	# Virtual Machines
 	###################
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -618,13 +618,13 @@ class MiqVimInventory < MiqVimClientBase
 	def virtualMachines_locked
 	    raise "virtualMachines_locked: cache lock not held" if !@cacheLock.sync_locked?
 	    return(@virtualMachines) if @virtualMachines
-	    
+
 	    $vim_log.info "MiqVimInventory.virtualMachines_locked: loading VirtualMachine cache for #{@connId}"
 	    begin
 	        @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	    
+
 			ra = getMoPropMulti(inventoryHash_locked['VirtualMachine'], @propMap[:VirtualMachine][:props])
-			
+
     	    @virtualMachines        = Hash.new
     	    @virtualMachinesByMor   = Hash.new
     	    ra.each do |vmObj|
@@ -634,11 +634,11 @@ class MiqVimInventory < MiqVimClientBase
 	        @cacheLock.sync_unlock if unlock
         end
         $vim_log.info "MiqVimInventory.virtualMachines_locked: loaded VirtualMachine cache for #{@connId}"
-	    
+
 	    return(@virtualMachines)
 	end # def virtualMachines_locked
 	protected :virtualMachines_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -651,7 +651,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@virtualMachinesByMor)
 	end # def virtualMachinesByMor_locked
 	protected :virtualMachinesByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -667,7 +667,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(vms)
     end
-    
+
     #
 	# Public accessor
 	#
@@ -693,10 +693,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(virtualMachinesByMor_locked[vmMor], selSpec))
         end
 	end
-    
+
     #
 	# Public accessor
-	# 
+	#
 	# Return an array of virtual machine objects that match the given property filter.
 	#
     def virtualMachinesByFilter(filter)
@@ -708,34 +708,34 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(vms)
     end
-	
+
 	def addVirtualMachine(vmMor)
 	    @cacheLock.synchronize(:EX) do
 	        return(addObjByMor(vmMor))
         end
 	end
-	
+
 	def refreshVirtualMachine(vmMor)
 	    @cacheLock.synchronize(:EX) do
 	        return(conditionalCopy(addObjByMor(vmMor)))
         end
 	end
-	
+
 	def addVirtualMachineObj(vmObj)
 	    addObjHash(:VirtualMachine, vmObj)
 	end
 	protected :addVirtualMachineObj
-	
+
 	def removeVirtualMachine(vmMor)
 	    @cacheLock.synchronize(:EX) do
             removeObjByMor(vmMor)
 	    end
 	end
-	
+
 	####################
 	# Compute Resources
 	####################
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -744,13 +744,13 @@ class MiqVimInventory < MiqVimClientBase
 	def computeResources_locked
 	    raise "computeResources_locked: cache lock not held" if !@cacheLock.sync_locked?
 	    return(@computeResources) if @computeResources
-	    
+
 	    $vim_log.info "MiqVimInventory.computeResources_locked: loading ComputeResource cache for #{@connId}"
 	    begin
     	    @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	    
+
 			ra = getMoPropMulti(inventoryHash_locked['ComputeResource'], @propMap[:ComputeResource][:props])
-			
+
     	    @computeResources       = Hash.new
     	    @computeResourcesByMor  = Hash.new
     	    ra.each do |crObj|
@@ -760,11 +760,11 @@ class MiqVimInventory < MiqVimClientBase
     	    @cacheLock.sync_unlock if unlock
 	    end
 	    $vim_log.info "MiqVimInventory.computeResources_locked: loaded ComputeResource cache for #{@connId}"
-	    
+
 	    return(@computeResources)
 	end # def computeResources_locked
 	protected :computeResources_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -777,7 +777,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@computeResourcesByMor)
 	end # def computeResourcesByMor_locked
 	protected :computeResourcesByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -793,7 +793,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(crs)
 	end # def computeResources
-	
+
 	#
 	# Public accessor
 	#
@@ -809,7 +809,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(crs)
 	end # def computeResourcesByMor
-	
+
 	#
 	# Return a single computeResource object, given its MOR
 	#
@@ -819,10 +819,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(computeResourcesByMor_locked[crMor], selSpec))
         end
 	end
-	
+
 	#
 	# Public accessor
-	# 
+	#
 	# Return an array of compute resource objects that match the given property filter.
 	#
     def computeResourcesByFilter(filter)
@@ -834,11 +834,11 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(crs)
     end
-	
+
 	############################
 	# Cluster Compute Resources
 	############################
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -847,13 +847,13 @@ class MiqVimInventory < MiqVimClientBase
 	def clusterComputeResources_locked
 	    raise "clusterComputeResources_locked: cache lock not held" if !@cacheLock.sync_locked?
 	    return(@clusterComputeResources) if @clusterComputeResources
-	    
+
 	    $vim_log.info "MiqVimInventory.clusterComputeResources_locked: loading ClusterComputeResource cache for #{@connId}"
 	    begin
 	        @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	    
+
 			ra = getMoPropMulti(inventoryHash_locked['ClusterComputeResource'], @propMap[:ClusterComputeResource][:props])
-			
+
     	    @clusterComputeResources       = Hash.new
     	    @clusterComputeResourcesByMor  = Hash.new
     	    ra.each do |crObj|
@@ -863,11 +863,11 @@ class MiqVimInventory < MiqVimClientBase
     	    @cacheLock.sync_unlock if unlock
 	    end
 	    $vim_log.info "MiqVimInventory.clusterComputeResources_locked: loaded ClusterComputeResource cache for #{@connId}"
-	    
+
 	    return(@clusterComputeResources)
 	end # def clusterComputeResources_locked
 	protected :clusterComputeResources_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -880,7 +880,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@clusterComputeResourcesByMor)
 	end # def clusterComputeResourcesByMor_locked
 	protected :clusterComputeResourcesByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -896,7 +896,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(ccrs)
 	end # def clusterComputeResources
-	
+
 	#
 	# Public accessor
 	#
@@ -912,7 +912,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(ccrs)
 	end # def clusterComputeResourcesByMor
-	
+
 	#
 	# Return a single clusterComputeResource object, given its MOR
 	#
@@ -922,10 +922,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(clusterComputeResourcesByMor_locked[ccrMor], selSpec))
         end
 	end
-	
+
 	#
 	# Public accessor
-	# 
+	#
 	# Return an array of cluster compute resource objects that match the given property filter.
 	#
     def clusterComputeResourcesByFilter(filter)
@@ -937,11 +937,11 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(crs)
     end
-	
+
 	#################
 	# Resource Pools
 	#################
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -950,13 +950,13 @@ class MiqVimInventory < MiqVimClientBase
 	def resourcePools_locked
 	    raise "resourcePools_locked: cache lock not held" if !@cacheLock.sync_locked?
 	    return(@resourcePools) if @resourcePools
-	    
+
 	    $vim_log.info "MiqVimInventory.resourcePools_locked: loading ResourcePool cache for #{@connId}"
 	    begin
 	        @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	
+
 			ra = getMoPropMulti(inventoryHash_locked['ResourcePool'], @propMap[:ResourcePool][:props])
-	    
+
     	    @resourcePools      = Hash.new
     	    @resourcePoolsByMor = Hash.new
     	    ra.each do |rpObj|
@@ -966,11 +966,11 @@ class MiqVimInventory < MiqVimClientBase
     	    @cacheLock.sync_unlock if unlock
 	    end
 	    $vim_log.info "MiqVimInventory.resourcePools_locked: loaded ResourcePool cache for #{@connId}"
-	    
+
         return(@resourcePools)
 	end # def resourcePools_locked
 	protected :resourcePools_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -983,7 +983,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@resourcePoolsByMor)
 	end # def resourcePoolsByMor_locked
 	protected :resourcePoolsByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -999,7 +999,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(rp)
 	end # def resourcePools
-	
+
 	#
 	# Public accessor
 	#
@@ -1015,7 +1015,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(rp)
 	end # def resourcePoolsByMor
-	
+
 	#
 	# Return a single resourcePool object, given its MOR
 	#
@@ -1025,10 +1025,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(resourcePoolsByMor_locked[rpMor], selSpec))
         end
 	end
-	
+
 	#
 	# Public accessor
-	# 
+	#
 	# Return an array of resource pool objects that match the given property filter.
 	#
     def resourcePoolsByFilter(filter)
@@ -1044,7 +1044,7 @@ class MiqVimInventory < MiqVimClientBase
 	##############
 	# VirtualApps
 	##############
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1052,7 +1052,7 @@ class MiqVimInventory < MiqVimClientBase
 	#
 	def virtualApps_locked
 	    raise "virtualApps_locked: cache lock not held" if !@cacheLock.sync_locked?
-	
+
 		#
 		# Not supported in v2.0 or v2.5
 		#
@@ -1060,15 +1060,15 @@ class MiqVimInventory < MiqVimClientBase
 			@virtualApps      = Hash.new
     	    @virtualAppsByMor = Hash.new
 		end
-		
+
 	    return(@virtualApps) if @virtualApps
-	    
+
 	    $vim_log.info "MiqVimInventory.virtualApps_locked: loading VirtualApp cache for #{@connId}"
 	    begin
 	        @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	
+
 			ra = getMoPropMulti(inventoryHash_locked['VirtualApp'], @propMap[:VirtualApp][:props])
-	    
+
     	    @virtualApps      = Hash.new
     	    @virtualAppsByMor = Hash.new
     	    ra.each do |rpObj|
@@ -1078,11 +1078,11 @@ class MiqVimInventory < MiqVimClientBase
     	    @cacheLock.sync_unlock if unlock
 	    end
 	    $vim_log.info "MiqVimInventory.virtualApps_locked: loaded VirtualApp cache for #{@connId}"
-	    
+
         return(@virtualApps)
 	end # def virtualApps_locked
 	protected :virtualApps_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1095,7 +1095,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@virtualAppsByMor)
 	end # def virtualAppsByMor_locked
 	protected :virtualAppsByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -1111,7 +1111,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(rp)
 	end # def virtualApps
-	
+
 	#
 	# Public accessor
 	#
@@ -1127,7 +1127,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(rp)
 	end # def virtualAppsByMor
-	
+
 	#
 	# Return a single virtualApp object, given its MOR
 	#
@@ -1137,10 +1137,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(virtualAppsByMor_locked[vaMor], selSpec))
         end
 	end
-	
+
 	#
 	# Public accessor
-	# 
+	#
 	# Return an array of virtualApp objects that match the given property filter.
 	#
     def virtualAppsByFilter(filter)
@@ -1152,11 +1152,11 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(rps)
     end
-	
+
 	##########
 	# Folders
 	##########
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1165,13 +1165,13 @@ class MiqVimInventory < MiqVimClientBase
 	def folders_locked
 	    raise "folders_locked: cache lock not held" if !@cacheLock.sync_locked?
 	    return(@folders) if @folders
-	    
+
 	    $vim_log.info "MiqVimInventory.folders_locked: loading Folder cache for #{@connId}"
 	    begin
 	        @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	
+
 			ra = getMoPropMulti(inventoryHash_locked['Folder'], @propMap[:Folder][:props])
-	    
+
     	    @folders      = Hash.new
     	    @foldersByMor = Hash.new
     	    ra.each do |fObj|
@@ -1181,11 +1181,11 @@ class MiqVimInventory < MiqVimClientBase
     	    @cacheLock.sync_unlock if unlock
 	    end
 	    $vim_log.info "MiqVimInventory.folders_locked: loaded Folder cache for #{@connId}"
-	    
+
         return(@folders)
 	end # def folders_locked
 	protected :folders_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1198,7 +1198,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@foldersByMor)
 	end # def foldersByMor_locked
 	protected :foldersByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -1214,7 +1214,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(f)
 	end # def folders
-	
+
 	#
 	# Public accessor
 	#
@@ -1230,7 +1230,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(f)
 	end # def foldersByMor
-	
+
 	#
 	# Return a single folder object, given its MOR
 	#
@@ -1240,10 +1240,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(foldersByMor_locked[fMor], selSpec))
         end
 	end
-	
+
 	#
 	# Public accessor
-	# 
+	#
 	# Return an array of folder objects that match the given property filter.
 	#
     def foldersByFilter(filter)
@@ -1255,11 +1255,11 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(f)
     end
-	
+
 	##############
 	# Datacenters
 	##############
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1268,13 +1268,13 @@ class MiqVimInventory < MiqVimClientBase
 	def datacenters_locked
 	    raise "datacenters_locked: cache lock not held" if !@cacheLock.sync_locked?
 	    return(@datacenters) if @datacenters
-	    
+
 	    $vim_log.info "MiqVimInventory.datacenters_locked: loading Datacenter cache for #{@connId}"
         begin
 	        @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	
+
 			ra = getMoPropMulti(inventoryHash_locked['Datacenter'], @propMap[:Datacenter][:props])
-	    
+
     	    @datacenters      = Hash.new
     	    @datacentersByMor = Hash.new
     	    ra.each do |dcObj|
@@ -1284,11 +1284,11 @@ class MiqVimInventory < MiqVimClientBase
     	    @cacheLock.sync_unlock if unlock
 	    end
 	    $vim_log.info "MiqVimInventory.datacenters_locked: loaded Datacenter cache for #{@connId}"
-	    
+
         return(@datacenters)
 	end # def datacenters_locked
 	protected :datacenters_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1301,7 +1301,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@datacentersByMor)
 	end # def datacentersByMor_locked
 	protected :datacentersByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -1317,7 +1317,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(dc)
     end # def datacenters
-    
+
     #
 	# Public accessor
 	#
@@ -1343,10 +1343,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(datacentersByMor_locked[dcMor], selSpec))
         end
 	end
-    
+
     #
 	# Public accessor
-	# 
+	#
 	# Return an array of datacenter objects that match the given property filter.
 	#
     def datacentersByFilter(filter)
@@ -1358,11 +1358,11 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(dc)
     end
-	
+
 	###############
 	# Host Systems
 	###############
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1371,13 +1371,13 @@ class MiqVimInventory < MiqVimClientBase
 	def hostSystems_locked
 	    raise "hostSystems_locked: cache lock not held" if !@cacheLock.sync_locked?
 	    return(@hostSystems) if @hostSystems
-	    
+
 	    $vim_log.info "MiqVimInventory.hostSystems_locked: loading HostSystem cache for #{@connId}"
 	    begin
 	        @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	
+
 			ra = getMoPropMulti(inventoryHash_locked['HostSystem'], @propMap[:HostSystem][:props])
-	    
+
     	    @hostSystems        = Hash.new
     	    @hostSystemsByMor   = Hash.new
     	    ra.each do |hsObj|
@@ -1387,11 +1387,11 @@ class MiqVimInventory < MiqVimClientBase
     	    @cacheLock.sync_unlock if unlock
 	    end
 	    $vim_log.info "MiqVimInventory.hostSystems_locked: loaded HostSystem cache for #{@connId}"
-	    
+
 	    return(@hostSystems)
 	end # def hostSystems_locked
 	protected :hostSystems_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1404,7 +1404,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@hostSystemsByMor)
 	end # def hostSystemsByMor_locked
 	protected :hostSystemsByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -1420,7 +1420,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(hs)
     end # def hostSystems
-    
+
     #
 	# Public accessor
 	#
@@ -1446,10 +1446,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(hostSystemsByMor_locked[hsMor], selSpec))
         end
 	end
-    
+
     #
 	# Public accessor
-	# 
+	#
 	# Return an array of host system objects that match the given property filter.
 	#
     def hostSystemsByFilter(filter)
@@ -1461,21 +1461,21 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(hs)
     end
-	
+
 	def addHostSystem(hsMor)
 	    @cacheLock.synchronize(:EX) do
 	        addObjByMor(hsMor)
         end
 	end
-	
+
 	def addHostSystemObj(hsObj)
 	    addObjHash(:HostSystem, hsObj)
 	end
-	
+
 	#############
 	# Datastores
 	#############
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1484,13 +1484,13 @@ class MiqVimInventory < MiqVimClientBase
 	def dataStores_locked
 	    raise "dataStores_locked: cache lock not held" if !@cacheLock.sync_locked?
 	    return(@dataStores) if @dataStores
-	    
+
 	    $vim_log.info "MiqVimInventory.dataStores_locked: loading Datastore cache for #{@connId}"
 	    begin
 	        @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-	
+
 			ra = getMoPropMulti(inventoryHash_locked['Datastore'], @propMap[:Datastore][:props])
-	    
+
     	    @dataStores         = Hash.new
     	    @dataStoresByMor    = Hash.new
     	    ra.each do |dsObj|
@@ -1500,11 +1500,11 @@ class MiqVimInventory < MiqVimClientBase
     	    @cacheLock.sync_unlock if unlock
 	    end
 	    $vim_log.info "MiqVimInventory.dataStores_locked: loaded Datastore cache for #{@connId}"
-	    
+
 	    return(@dataStores)
 	end # def dataStores_locked
 	protected :dataStores_locked
-	
+
 	#
 	# For internal use.
 	# Must be called with cache lock held
@@ -1517,7 +1517,7 @@ class MiqVimInventory < MiqVimClientBase
 	    return(@dataStoresByMor)
 	end # def dataStoresByMor_locked
 	protected :dataStoresByMor_locked
-	
+
 	#
 	# Public accessor
 	#
@@ -1533,7 +1533,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(ds)
     end # def dataStores
-    
+
     #
 	# Public accessor
 	#
@@ -1559,10 +1559,10 @@ class MiqVimInventory < MiqVimClientBase
 			return(applySelector(dataStoresByMor_locked[dsMor], selSpec))
         end
 	end
-    
+
     #
 	# Public accessor
-	# 
+	#
 	# Return an array of data store objects that match the given property filter.
 	#
     def dataStoresByFilter(filter)
@@ -1584,13 +1584,13 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(ds)
     end
-	
+
 	def addDataStore(dsMor)
 	    @cacheLock.synchronize(:EX) do
 	        addObjByMor(dsMor)
         end
 	end
-	
+
 	def addDataStoreObj(dsObj)
 	    addObjHash(:Datastore, dsObj)
 	end
@@ -1603,7 +1603,7 @@ class MiqVimInventory < MiqVimClientBase
 	def inventoryHash_locked
 		raise "inventoryHash_locked: cache lock not held" if !@cacheLock.sync_locked?
 		return(@inventoryHash) if @inventoryHash
-		
+
 		$vim_log.info "MiqVimInventory.inventoryHash_locked: loading inventoryHash for #{@connId}"
 		begin
 			@cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
@@ -1620,7 +1620,7 @@ class MiqVimInventory < MiqVimClientBase
 
 		return(@inventoryHash)
 	end
-	
+
 	def inventoryHash
 	    ih = nil
 	    @cacheLock.synchronize(:SH) do
@@ -1628,7 +1628,7 @@ class MiqVimInventory < MiqVimClientBase
         end
         return(ih)
 	end # def inventoryHash
-	
+
 	#
 	# Generate a user event associated with the given managed object.
 	#
@@ -1637,29 +1637,29 @@ class MiqVimInventory < MiqVimClientBase
 	    super(@sic.eventManager, entity, msg)
 		$vim_log.info "MiqVimInventory(#{@server}, #{@username}).logUserEvent: returned from logUserEvent" if $vim_log
 	end
-	
+
 	##################################
 	# Datastore/path utility methods.
 	##################################
-	
+
 	def self.dsPath?(p)
 	    return true if p =~ /^\[[^\]]*\].*/
 	    return false
 	end
-	
+
 	def dsPath?(p)
 	    return MiqVimInventory.dsPath?(p)
 	end
-	
+
 	def self.path2dsName(p)
 	    return nil if !MiqVimInventory.dsPath?(p)
 	    return p.gsub(/^\[([^\]]*)\].*/, '\1')
 	end
-	
+
 	def path2dsName(p)
 	    return MiqVimInventory.path2dsName(p)
 	end
-	
+
 	def dsName2path(dsn)
 	    ret = nil
 	    @cacheLock.synchronize(:SH) do
@@ -1667,7 +1667,7 @@ class MiqVimInventory < MiqVimClientBase
         end
         return(ret)
 	end
-	
+
 	def dsName2mo(dsn)
 	    ret = nil
 	    @cacheLock.synchronize(:SH) do
@@ -1676,7 +1676,7 @@ class MiqVimInventory < MiqVimClientBase
         assert_no_locks
         return(ret)
 	end
-	
+
 	def dsName2mo_local(dsn)
 	    ret = nil
 	    @cacheLock.synchronize(:SH) do
@@ -1690,11 +1690,11 @@ class MiqVimInventory < MiqVimClientBase
 	    raise "dsRelativePath: #{p} is not a datastore path" if !dsPath?(p)
 	    return p.gsub(/^.*\]\s*/, '')
     end
-	
+
 	def dsRelativePath(p)
 	    MiqVimInventory.dsRelativePath(p)
     end
-    
+
 	def localVmPath(p)
 		return p if !dsPath?(p)
 
@@ -1710,10 +1710,10 @@ class MiqVimInventory < MiqVimClientBase
         return dsPath if !path || path == "/"
 		return File.join(dsPath, path)
 	end # def localVmPath
-	
+
 	def datastorePath(p)
 	    return p if dsPath?(p)
-	    
+
 	    drp = nil
 	    @cacheLock.synchronize(:SH) do
             dataStores_locked.each do |n, o|
@@ -1748,11 +1748,11 @@ class MiqVimInventory < MiqVimClientBase
 	##############################
 	# Log and diagnostic methods.
 	##############################
-	
+
 	def queryLogDescriptions(host=nil)
 		queryDescriptions(@sic.diagnosticManager, host)
 	end
-	
+
 	def browseDiagnosticLog(key, start=nil, lines=nil, host=nil)
 		super(@sic.diagnosticManager, host, key, start, lines)
 	end
@@ -1800,13 +1800,13 @@ class MiqVimInventory < MiqVimClientBase
 		return getMoProp_local(@sic.taskManager, "recentTask")['recentTask']
 	end
 	# private :getTasks
-	
+
 	def getTasksByFilter(filter)
 		ta = applyFilter(getMoPropMulti(getTasks, 'info'), filter)
         ta = dupObj(ta)
 		return(ta)
 	end
-	
+
 	def getTaskMor(tmor)
 	    if tmor.respond_to?(:vimType)
 			$vim_log.debug "getTaskMor: returning #{tmor}, no search"
@@ -1826,10 +1826,10 @@ class MiqVimInventory < MiqVimClientBase
 	def cancelTask(tmor)
 		super(getTaskMor(tmor))
 	end
-	
+
 	def waitForTask(tmor, className=nil)
 	    className = className || self.class.to_s
-	    
+
 	    $vim_log.info "#{className}(#{@server}, #{@username})::waitForTask(#{tmor})" if $vim_log
 		args = VimArray.new("ArrayOfPropertyFilterSpec") do |pfsa|
 			pfsa << VimHash.new("PropertyFilterSpec") do |pfs|
@@ -1848,13 +1848,13 @@ class MiqVimInventory < MiqVimClientBase
 				end
 			end
 		end
-		
+
 		state = result = error = nil
-		
+
 		while !state do
 		    oca = retrieveProperties(@propCol, args)
 		    raise "waitForTask: task not found #{tmor}" if !oca || !oca[0] || !oca[0].propSet
-		    
+
 		    oca[0].propSet.each do |ps|
 		        if ps.name == "info.state"
                     state = ps.val if ps.val == TaskInfoState::Success || ps.val == TaskInfoState::Error
@@ -1864,15 +1864,15 @@ class MiqVimInventory < MiqVimClientBase
             end
             sleep 1 if !state
 		end
-		
+
 		raise VimFault.new(error) if state == TaskInfoState::Error
 		$vim_log.info "#{className}(#{@server}, #{@username})::waitForTask: result = #{result}" if $vim_log
 		return result
 	end # def waitForTask
-	
+
 	def pollTask(tmor, className=nil)
 	    className = className || self.class.to_s
-	    
+
 	    $vim_log.info "#{className}(#{@server}, #{@username})::pollTask(#{tmor})" if $vim_log
 		args = VimArray.new("ArrayOfPropertyFilterSpec") do |pfsa|
 			pfsa << VimHash.new("PropertyFilterSpec") do |pfs|
@@ -1891,12 +1891,12 @@ class MiqVimInventory < MiqVimClientBase
 				end
 			end
 		end
-		
+
 		state = result = error = progress = nil
-		
+
 		oca = retrieveProperties(@propCol, args)
 	    raise "pollTask: task not found #{tmor}" if !oca || !oca[0] || !oca[0].propSet
-	    
+
 	    oca[0].propSet.each do |ps|
 			case ps.name
 	        when "info.state"
@@ -1921,11 +1921,11 @@ class MiqVimInventory < MiqVimClientBase
 			return state, nil
 		end
 	end # def pollTask
-	
+
 	##############################
 	# Property retrieval methods.
 	##############################
-	
+
 	#
 	# Retrieve the properties for a single object, given its managed object reference.
 	#
@@ -1948,17 +1948,17 @@ class MiqVimInventory < MiqVimClientBase
 				end
 			end
 		end
-		
+
 		$vim_log.info "MiqVimInventory(#{@server}, #{@username}).getMoProp_local: calling retrieveProperties(#{mo.vimType})" if $vim_log
 		oca = retrieveProperties(@propCol, pfSpec)
 		$vim_log.info "MiqVimInventory(#{@server}, #{@username}).getMoProp_local: return from retrieveProperties(#{mo.vimType})" if $vim_log
-		
+
 		return nil if !oca || !oca[0] || !oca[0].propSet
-		
+
 		oc = oca[0]
 		oc.MOR = oc.obj
 		oc.delete('obj')
-		
+
 		oc.propSet = [oc.propSet] if !oc.propSet.kind_of?(Array)
 	    oc.propSet.each do |ps|
 	        #
@@ -1979,17 +1979,17 @@ class MiqVimInventory < MiqVimClientBase
 	        end
     	end # oc.propSet.each
 		oc.delete('propSet')
-		
+
 		return(oc)
 	end
-	
+
 	#
 	# Public accessor
 	#
 	def getMoProp(mo, path=nil)
 	    getMoProp_local(mo, path)
     end
-	
+
 	#
 	# Retrieve the properties for multiple objects of the same type,
 	# given an array of managed object references.
@@ -2012,7 +2012,7 @@ class MiqVimInventory < MiqVimClientBase
 						end
 					end
 				end
-				
+
 				pfs.objectSet = VimArray.new("ArrayOfObjectSpec") do |osa|
 					moa.each do |mor|
 					    VimHash.new("ObjectSpec") do |os|
@@ -2030,14 +2030,14 @@ class MiqVimInventory < MiqVimClientBase
 			$vim_log.info "MiqVimInventory(#{@server}, #{@username}).getMoPropMulti: retrieveProperties timed out, reverting to getMoPropMultiIter" if $vim_log
 			return getMoPropMultiIter(moa, path)
 		end
-		
+
 		return [] if !oca
-        
+
 		oca = VimArray.new { |va| va << oca } if !oca.kind_of?(Array)
         oca.each do |oc|
 	    	oc.MOR = oc.obj
 			oc.delete('obj')
-			
+
 			oc.propSet = [oc.propSet] if !oc.propSet.kind_of?(Array)
     	    oc.propSet.each do |ps|
     	        #
@@ -2059,10 +2059,10 @@ class MiqVimInventory < MiqVimClientBase
         	end # oc.propSet.each
 			oc.delete('propSet')
     	end
-	
+
 		return(oca)
 	end # def getMoPropMulti
-	
+
 	def getMoPropMultiIter(moa, path=nil)
 		oca = []
 		moa.each do |mo|
@@ -2071,7 +2071,7 @@ class MiqVimInventory < MiqVimClientBase
 		end
 		return oca
 	end
-	
+
 	def self.setSelector(selSpec)
 		raise "MiqVimBroker.setSelector: selSpec must be a hash, received #{selSpec.class}" unless selSpec.kind_of?(Hash)
 		selSpec.each_key do |k|
@@ -2093,8 +2093,8 @@ class MiqVimInventory < MiqVimClientBase
 		end
 		@@selectorHash.merge!(selSpec)
 	end
-	
-	def self.removeSelector(selName)		
+
+	def self.removeSelector(selName)
 		remKeys = nil
 		if selName.kind_of?(Symbol)
 			remKeys = [ selName ]
@@ -2108,12 +2108,12 @@ class MiqVimInventory < MiqVimClientBase
 		remKeys.each do |rk|
 			raise "MiqVimBroker.removeSelector: keys must be symbols, received #{rk.class}" unless rk.kind_of?(Symbol)
 		end
-		
+
 		remKeys.each do |rk|
 			@@selectorHash.delete(rk)
 		end
 	end
-	
+
 	def setSelector(selSpec)
 		raise "setSelector: selSpec must be a hash, received #{selSpec.class}" unless selSpec.kind_of?(Hash)
 		selSpec.each_key do |k|
@@ -2133,20 +2133,20 @@ class MiqVimInventory < MiqVimClientBase
 			end
 			raise "setSelector: selSpec values must be strings or arrays of strings, received #{ov.class}" unless ov.nil?
 		end
-		
+
 		@configLock.synchronize(:EX) do
 			@selectorHash.merge!(selSpec) { |k, o, n| @selectorPropPathHash.delete(k); n }
 		end
 	end
-	
+
 	def getSelector(selName)
 		raise "getSelector: selName must be a symbol, received #{selName.class}" unless selName.kind_of?(Symbol)
-		
+
 		@configLock.synchronize(:SH) do
 			return @selectorHash[selName]
 		end
 	end
-	
+
 	def removeSelector(selName)
 		remKeys = nil
 		if selName.kind_of?(Symbol)
@@ -2161,7 +2161,7 @@ class MiqVimInventory < MiqVimClientBase
 		remKeys.each do |rk|
 			raise "removeSelector: keys must be symbols, received #{rk.class}" unless rk.kind_of?(Symbol)
 		end
-		
+
 		@configLock.synchronize(:EX) do
 			remKeys.each do |rk|
 				@selectorHash.delete(rk)
@@ -2169,7 +2169,7 @@ class MiqVimInventory < MiqVimClientBase
 			end
 		end
 	end
-	
+
 	def getSelSpec(selSpec)
 		ss = selSpec
 		if ss.kind_of?(Symbol)
@@ -2180,32 +2180,32 @@ class MiqVimInventory < MiqVimClientBase
 		ss = [ ss ] unless ss.kind_of?(Array)
 		return ss
 	end
-	
+
 	def selSpecToPropPath(selSpec)
 		return ss2pp(selSpec) unless selSpec.kind_of?(Symbol)
-				
+
 		@configLock.synchronize(:EX) do
 			pp = @selectorPropPathHash[selSpec]
 			return pp unless pp.nil?
-			
+
 			ss = getSelSpec(selSpec)
 			raise "selSpecToPropPath: selector #{selSpec} not found" if ss.nil?
-			
+
 			return (@selectorPropPathHash[selSpec] = ss2pp(ss))
 		end
 	end
-	
+
 	def ss2pp(ss)
 		getSelSpec(ss).collect { |s| s.split("[")[0] }.uniq
 	end
 	private :ss2pp
-	
+
 	def applySelector(topObj, selSpec)
 		selSpec = getSelSpec(selSpec)
-		
+
 		if topObj.kind_of?(VimHash)
 			retObj = VimHash.new(topObj.xsiType, topObj.vimType)
-		
+
 			selSpec.each do |cs|
 				applySelSpec(topObj, retObj, splitPropPath(cs))
 			end
@@ -2225,28 +2225,28 @@ class MiqVimInventory < MiqVimClientBase
 				retObj << applySelector(v, selSpec)
 			end
 		end
-				
+
 		return retObj
 	end
-	
+
 	def applySelSpec(topObj, retObj, pa)
 		prop, arrayKey = tagAndKey(pa.first)
 		return unless topObj.kind_of?(Hash) && topObj.has_key?(prop)
 		nextTopObj = topObj[prop]
 		return if nextTopObj.nil?
-		
+
 		if pa.length == 1
 			retObj[prop] = nextTopObj
 			return
 		end
-		
+
 		nextpa = pa[1..-1]
-		
+
 		if arrayKey == "*"
 			raise "applySelSpec: #{pa.first} is not an array." unless nextTopObj.kind_of?(Array)
 			retObj[prop] = VimArray.new(nextTopObj.xsiType, nextTopObj.vimType) if retObj[prop].nil?
 			nextRetObj = retObj[prop]
-			
+
 			nextTopObj.each_with_index do |ntoe, i|
 				if (nroe = nextRetObj[i]).nil?
 					nroe = nextRetObj[i] = VimHash.new(ntoe.xsiType, ntoe.vimType)
@@ -2258,10 +2258,10 @@ class MiqVimInventory < MiqVimClientBase
 			applySelSpec(nextTopObj, retObj[prop], nextpa)
 		end
 	end
-    
+
     def applyFilter(objArr, propFilter)
         retArr = Array.new
-        
+
         objArr.each do |obj|
             match = true
             propFilter.each do |pn, pv|
@@ -2278,7 +2278,7 @@ class MiqVimInventory < MiqVimClientBase
                 else
                     next if pv === pVal
                 end
-                
+
                 match = false
                 break
             end
@@ -2286,10 +2286,10 @@ class MiqVimInventory < MiqVimClientBase
         end
         return(retArr)
     end
-    
+
     def propValue(baseHash, prop)
         return baseHash[prop] if !prop.index('.')
-        
+
         h = baseHash
 	    ka = splitPropPath(prop)
 	    ka[0...-1].each do |k|
@@ -2305,10 +2305,10 @@ class MiqVimInventory < MiqVimClientBase
         end
         return(h[ka[-1]])
     end
-    
+
     def hasProp?(baseHash, prop)
         return baseHash.has_key?(prop) if !prop.index('.')
-        
+
         h = baseHash
 	    ka = splitPropPath(prop)
 	    ka[0...-1].each do |k|
@@ -2324,7 +2324,7 @@ class MiqVimInventory < MiqVimClientBase
         end
         return(h.has_key?(ka[-1]))
     end
-	
+
 	#
     # Here, keyString can be a property path in the form: a.b.c
     # If that's the case, return baseHash['a']['b'] for the hash, and 'c' for the key
@@ -2332,7 +2332,7 @@ class MiqVimInventory < MiqVimClientBase
     #
 	def hashTarget(baseHash, keyString, create=false)
 	    return baseHash, keyString if !keyString.index('.')
-	    
+
 	    h = baseHash
 	    ka = splitPropPath(keyString)
 	    ka[0...-1].each do |k|
@@ -2349,7 +2349,7 @@ class MiqVimInventory < MiqVimClientBase
         return h, ka[-1]
     end
     private :hashTarget
-    
+
 	#
 	# Array keys (between "[" and "]") can contain ".", so we can't just use split.
 	#
@@ -2357,7 +2357,7 @@ class MiqVimInventory < MiqVimClientBase
         pathArray = Array.new
         inKey = false
         pc = String.new
-        
+
         propPath.split(//).each do |c|
             case c
             when '.'
@@ -2374,14 +2374,14 @@ class MiqVimInventory < MiqVimClientBase
             pc << c
         end
         pathArray << pc if !pc.empty?
-        
+
         return pathArray
     end
     private :splitPropPath
-    
+
     def tagAndKey(propStr)
         return propStr, nil if !propStr.include? ?[
-            
+
         if propStr =~ /([^\[]+)\[([^\]]+)\]/
             tag, key = $1, $2
         else
@@ -2391,14 +2391,14 @@ class MiqVimInventory < MiqVimClientBase
         return tag, key
     end
     private :tagAndKey
-    
+
     def getVimArrayType(arrayProp)
         return nil if !arrayProp.respond_to?(:xsiType) || !(typeStr = arrayProp.xsiType)
         return $1 if typeStr =~ /^ArrayOf(.*)$/
         return nil
     end
     private :getVimArrayType
-    
+
     def addToCollection(hash, tag, val)
         array = nil
         if !(array = hash[tag])
@@ -2413,13 +2413,13 @@ class MiqVimInventory < MiqVimClientBase
         end
         array << val
     end
-    
+
     #
     # Return array and index?
     #
     def getVimArrayEnt(arrayProp, key, create=false)
         return nil, nil     if !arrayProp.kind_of?(Array)
-        
+
         if getVimArrayType(arrayProp) == 'ManagedObjectReference'
             arrayProp.each_index { |n| return arrayProp, n if arrayProp[n] == key }
         else
@@ -2448,11 +2448,11 @@ class MiqVimInventory < MiqVimClientBase
         return nil, nil
     end
     private :getVimArrayEnt
-	
+
 	##########################
 	# Object utility methods.
 	##########################
-	
+
 	#
 	# When used in the broker - DRB - this method is redefined
 	# to carry the cacheLock into the DRB dump method.
@@ -2476,7 +2476,7 @@ class MiqVimInventory < MiqVimClientBase
 		nObj = obj.class.new
 		nObj.vimType = obj.vimType if obj.respond_to?(:vimType)
 		nObj.xsiType = obj.xsiType if obj.respond_to?(:xsiType)
-		
+
 		if obj.kind_of?(Hash)
 			obj.each { |k, v| nObj[k] = deepClone(v) }
 		elsif obj.kind_of?(Array)
@@ -2486,7 +2486,7 @@ class MiqVimInventory < MiqVimClientBase
 		else
 			raise "deepClone: unexpected object #{obj.class}"
 		end
-		
+
 		return(nObj)
 	end
 end
