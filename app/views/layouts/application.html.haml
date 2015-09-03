@@ -1,7 +1,5 @@
 = render :partial => 'layouts/doctype'
-- if @mks || @vmrc || @vnc || controller.action_name == "menutest"
-  = yield
-- elsif @report_only
+- if @report_only
   %html
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
