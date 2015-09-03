@@ -29,7 +29,7 @@
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
-        %div(ng-if="!newRecord")
+        %div{"ng-if" => "!newRecord"}
           %label.form-control{"type"        => "text",
                               "id"          => "textInput-markup",
                               "name"        => "emstype",
