@@ -12,10 +12,6 @@ class ContainerRouteController < ApplicationController
 
   private ############################
 
-  def controller_name
-    "container_route"
-  end
-
   def display_name
     "Container Routes"
   end

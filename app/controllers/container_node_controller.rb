@@ -12,10 +12,6 @@ class ContainerNodeController < ApplicationController
 
   private ############################
 
-  def controller_name
-    "container_node"
-  end
-
   def display_name
     "Container Nodes"
   end
