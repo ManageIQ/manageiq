@@ -682,14 +682,14 @@ module MiqSmisClient
     end
 
     def self.dotHealth(node)
-      return 'springgreen3' # XXX
-      st = node.metrics.miq_derived_metrics.last
-
-      return 'springgreen3' unless st
-      return 'springgreen3' unless (u = st.utilization)
-      return 'red'      if u > 75.0
-      return 'yellow'     if u > 45.0
-      return 'springgreen3'
+      u = node.metrics.miq_derived_metrics.last.try(:utilization).to_f
+      if u > 75.0
+        'red'
+      elsif u > 45.0
+        'yellow'
+      else
+        'springgreen3'
+      end
     end
 
     def self.dumpDotClusters(io, clusters, level=1)
