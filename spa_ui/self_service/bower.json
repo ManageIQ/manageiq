@@ -30,26 +30,22 @@
     "angular-messages": "~1.3.0",
     "angular-ui-router": "~0.2.0",
     "angular-mocks": "~1.3.0",
-    "patternfly": "git://github.com/patternfly/patternfly.git#ssui",
-    "angular-patternfly": "~2.0.0",
+    "patternfly": "~2.2.0",
+    "angular-patternfly": "~2.1.1",
     "angular-bootstrap": "~0.13.0",
     "angular-base64": "~2.0.5"
   },
   "resolutions": {
-    "angular": "~1.3.0",
-    "patternfly": "ssui"
+    "angular": "~1.3.0"
   },
   "overrides": {
     "patternfly": {
       "main": [
         "dist/js/patternfly.js",
+        "components/c3/c3.js",
+        "components/d3/d3.js",
         "dist/css/patternfly.css",
         "dist/css/patternfly-additions.css"
-      ]
-    },
-    "patternfly-angular": {
-      "main": [
-        "dist/angular-patternfly.js"
       ]
     }
   }
