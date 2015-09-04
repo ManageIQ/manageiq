@@ -3,8 +3,9 @@ class TreeBuilderOpsRbac < TreeBuilder
 
   def tree_init_options(tree_name)
     {
-      :open_all   => true,
-      :leaf       => "Access Control"
+      :open_all => true,
+      :leaf     => "Access Control",
+      :expand   => false
      }
   end
 
@@ -18,6 +19,7 @@ class TreeBuilderOpsRbac < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
+    options.merge!(:expand => false)
     [
       {:id => "u",  :text => "Users",   :image => "user",          :tip => "Users"},
       {:id => "g",  :text => "Groups",  :image => "group",         :tip => "Groups"},
@@ -38,6 +40,7 @@ class TreeBuilderOpsRbac < TreeBuilder
   end
 
   def x_get_tree_tenant_kids(object, options)
+    options.merge!(:expand => false)
     count_only_or_objects(options[:count_only], object.children, "name")
   end
 end
