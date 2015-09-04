@@ -1,4 +1,6 @@
 require 'drb'
+require 'engine/miq_ae_executor'
+require 'connection_pool'
 
 module MiqAeEngine
   class MiqAeMethod
@@ -79,30 +81,21 @@ module MiqAeEngine
         $miq_ae_logger.debug("Invoking External Method with MIQ_TOKEN=#{ws.guid} and command=#{cmd}")
       end
 
-      # Release connection to thread that will be used by method process. It will return it when it is done
-      ActiveRecord::Base.connection_pool.release_connection
-
-      # Spawn separate Ruby process to run method
-
-      ENV['MIQ_TOKEN'] = ws.guid unless ws.nil?
-
       rc = nil
       final_stderr = nil
       begin
-        require 'open4'
-        status = Open4.popen4(*cmd) do |pid, stdin, stdout, stderr|
-          stdin.close
-          final_stderr = stderr.each_line.map(&:strip)
-          stdout.each_line { |msg| $miq_ae_logger.info  "Method STDOUT: #{msg.strip}" }
-          final_stderr.each { |msg| $miq_ae_logger.error "Method STDERR: #{msg}" }
-        end
+        code = ""
+        code << "ENV['MIQ_TOKEN'] = #{ws.guid.to_s.inspect}\n" unless ws.nil?
+        code << "exec(*#{cmd.inspect})"
+
+        rc, _stdout, stderr = executor_pool.with { |exe| exe.run_ruby(code) }
+        final_stderr = stderr.each_line.map(&:strip)
 
         unless ws.nil?
           ws.reload unless ws.nil?
           ws.setters.each { |uri, value| workspace.varset(uri, value) } unless ws.setters.nil?
           ws.delete
         end
-        rc  = status.exitstatus
         msg = "Method exited with rc=#{verbose_rc(rc)}"
       rescue => err
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
@@ -118,71 +111,6 @@ module MiqAeEngine
     MIQ_STOP  = 8
     MIQ_ABORT = 16
 
-    RUBY_METHOD_PREAMBLE = <<-RUBY
-class AutomateMethodException < StandardError
-end
-
-begin
-  require 'date'
-  require 'rubygems'
-  $:.unshift("#{Gem.loaded_specs['activesupport'].full_gem_path}/lib")
-  require 'active_support/all'
-  require 'socket'
-  Socket.do_not_reverse_lookup = true  # turn off reverse DNS resolution
-
-  require 'drb'
-  require 'yaml'
-
-  Time.zone = 'UTC'
-
-  MIQ_OK    = 0
-  MIQ_WARN  = 4
-  MIQ_ERROR = 8
-  MIQ_STOP  = 8
-  MIQ_ABORT = 16
-
-  DRbObject.send(:undef_method, :inspect)
-  DRbObject.send(:undef_method, :id) if DRbObject.respond_to?(:id)
-
-  DRb.start_service("druby://127.0.0.1:0")
-  $evmdrb = DRbObject.new(nil, MIQ_URI)
-  raise AutomateMethodException,"Cannot create DRbObject for uri=\#{MIQ_URI}" if $evmdrb.nil?
-  $evm = $evmdrb.find(MIQ_ID)
-  raise AutomateMethodException,"Cannot find Service for id=\#{MIQ_ID} and uri=\#{MIQ_URI}" if $evm.nil?
-  MIQ_ARGS = $evm.inputs
-rescue Exception => err
-  STDERR.puts('The following error occurred during inline method preamble evaluation:')
-  STDERR.puts("  \#{err.class}: \#{err.message}")
-  STDERR.puts("  \#{err.backtrace.join('\n')}") unless err.kind_of?(AutomateMethodException)
-  raise
-end
-
-class Exception
-  def backtrace_with_evm
-    value = backtrace_without_evm
-    value ? $evm.backtrace(value) : value
-  end
-
-  alias backtrace_without_evm backtrace
-  alias backtrace backtrace_with_evm
-end
-
-begin
-RUBY
-
-    RUBY_METHOD_POSTSCRIPT = <<-RUBY
-rescue Exception => err
-  unless err.kind_of?(SystemExit)
-    $evm.log('error', 'The following error occurred during method evaluation:')
-    $evm.log('error', "  \#{err.class}: \#{err.message}")
-    $evm.log('error', "  \#{err.backtrace[0..-2].join('\n')}")
-  end
-  raise
-ensure
-  $evm.disconnect_sql
-end
-RUBY
-
     def self.open_transactions_threshold
       @open_transactions_threshold ||= Rails.env.test? ? 1 : 0
     end
@@ -197,27 +125,38 @@ RUBY
       end
     end
 
+    def self.executor_pool
+      @executor_pool ||= ConnectionPool.new(:size => 5, :timeout => 3) { MiqAeEngine::MiqAeExecutor.new }
+    end
+
     def self.run_ruby_method(body, preamble = nil)
+      rc, msg, final_stderr = nil
       begin
-        require 'open4'
-        ActiveRecord::Base.connection_pool.release_connection
+        # HACK: We return our DB connection to the pool, mid-
+        # transaction(!), so that the DRb thread will get it (!!!).
+        #
+        # When it's done, it'll do likewise, and we'll get it back
+        # again.
+        #
+        # Naturally, this is all incredibly un-threadsafe. But, we only
+        # do it for the test suite, so it's only moderately terrible.
 
-        rc = nil
-        final_stderr = nil
-        Bundler.with_clean_env do
-          status = Open4.popen4(Gem.ruby) do |pid, stdin, stdout, stderr|
-            stdin.puts(preamble.to_s)
-            stdin.puts(body)
-            stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
-            stdin.close
-
-            final_stderr = stderr.each_line.map(&:strip)
-            stdout.each_line { |msg| $miq_ae_logger.info  "Method STDOUT: #{msg.strip}" }
-            final_stderr.each { |msg| $miq_ae_logger.error "Method STDERR: #{msg}" }
-          end
-
-          rc = status.exitstatus
+        if open_transactions_threshold > 0
+          ActiveRecord::Base.connection_pool.release_connection
         end
+
+        args = [body]
+
+        if preamble && preamble =~ /^MIQ_URI = '(.*)'/
+          args << $1
+
+          if preamble =~ /^MIQ_ID = (.*)/
+            args << $1.to_i
+          end
+        end
+
+        rc, _stdout, stderr = executor_pool.with { |exe| exe.run_ruby(*args) }
+        final_stderr = stderr.each_line.map(&:strip)
 
         msg = "Method exited with rc=#{verbose_rc(rc)}"
       rescue => err
@@ -247,7 +186,6 @@ RUBY
     def self.method_preamble(miq_uri, miq_id)
       preamble  = "MIQ_URI = '#{miq_uri}'\n"
       preamble << "MIQ_ID = #{miq_id}\n"
-      preamble << RUBY_METHOD_PREAMBLE
       preamble
     end
 
