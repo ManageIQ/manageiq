@@ -61,6 +61,7 @@ describe MiqReport do
       rpt = MiqReport.find_by_name(name)
 
       rpt.generate_table(:userid => 'test')
+      rpt[:graph][:type] = 'StackedColumn'
       rpt.to_chart(@report_theme, @show_title, @options)
       chart = rpt.chart
 
