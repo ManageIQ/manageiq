@@ -145,6 +145,20 @@ describe MiqReport do
       expect(results.data.collect { |rec| rec.data['id'] }).to match_array [vm1.id, vm2.id]
     end
 
+    it "paging" do
+      FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:vm_vmware)
+      ids = Vm.order(:id).pluck(:id)
+
+      report        = MiqReport.new(:db => "Vm", :sortby => "id")
+      report.extras = { :target_ids_for_paging => ids, :attrs_for_paging => {}}
+      results, _    = report.paged_view_search(:page => 2, :per_page => 2 )
+      found_ids     = results.data.collect { |rec| rec.data['id'] }
+
+      expect(found_ids).to eq [ids.last]
+    end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -170,43 +184,6 @@ describe MiqReport do
           tags = []
           @tags.each { |n,t| tags << t if (i % n) == 0 }
           vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
-        end
-      end
-
-      context "in folders" do
-        before(:each) do
-          ems1 = FactoryGirl.create(:ems_vmware, :name => 'ems1')
-          @hosts.each { |host| host.update_attributes(:ext_management_system => ems1) }
-
-          @root          = FactoryGirl.create(:ems_folder, :name => "Datacenters")
-          @root.parent   = ems1
-          @root.save
-          @sl            = FactoryGirl.create(:ems_folder, :name => "ServiceLevel")
-          @sl.parent     = @root
-          @sl.save
-          @silver        = FactoryGirl.create(:ems_folder, :name => "Silver")
-          @silver.parent = @sl
-          @silver.save
-
-          @vms_in_silver_folder = Vm.find_tagged_with(:any => "/managed/service_level/silver", :ns => "*")
-          @vms_in_silver_folder.each do |vm|
-            vm.with_relationship_type("ems_metadata") { vm.parent = @silver }
-          end
-        end
-
-        it "gets cached results" do
-          report = MiqReport.new(:db => "Vm", :sortby => "id")
-          options = {:page => 2, :per_page => 20 }
-
-          all_ids = Vm.all.order(:id).map(&:id)
-          report.extras = { :target_ids_for_paging => all_ids, :attrs_for_paging => {}}
-
-          results, attrs = report.paged_view_search(options)
-
-          results.length.should == 20
-          found_ids = results.data.collect { |rec| rec.data['id'] }
-          found_ids.should_not be_empty
-          found_ids.should == all_ids[20..39]
         end
       end
 
