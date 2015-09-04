@@ -39,6 +39,6 @@
                         :remote => true,
                         :title  => "Cancel Import")
 :javascript
-  var import_file_upload_id = "#{@import_file_upload_id}";
+  var import_file_upload_id = "#{j @import_file_upload_id}";
 
 = javascript_include_tag "miq_policy/import"
