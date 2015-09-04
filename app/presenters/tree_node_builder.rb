@@ -152,7 +152,8 @@ class TreeNodeBuilder
       :title => text,
       :icon  => image
     }
-    @node[:expand] = true if options[:open_all]  # Start with all nodes open
+    # Start with all nodes open unless expand is explicitly set to false
+    @node[:expand] = true if options[:open_all] && options[:expand] != false
     tooltip(tip)
   end
 
@@ -171,7 +172,8 @@ class TreeNodeBuilder
       :icon  => "#{object[:image] || text}.png",
       :title => ERB::Util.html_escape(text),
     }
-    @node[:expand] = true if options[:open_all] # Start with all nodes open
+    # Start with all nodes open unless expand is explicitly set to false
+    @node[:expand] = true if options[:open_all] && options[:expand] != false
     @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
 
     # FIXME: check the following
