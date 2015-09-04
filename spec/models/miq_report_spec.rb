@@ -142,9 +142,6 @@ describe MiqReport do
           @tags.each { |n,t| tags << t if (i % n) == 0 }
           vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
         end
-
-        Vm.scope :group_3_scope, -> { where("name LIKE ?", "Test Group 3%") }
-        Vm.scope :group_scope,   ->(group_num) { where("name LIKE ?", "Test Group #{group_num}%") }
       end
 
       context "in folders" do
