@@ -1,7 +1,31 @@
 <div>
-  <a ui-sref="^">Back to Service Catalog</a>
+  <a ui-sref="^"> <span class="fa fa-angle-left"/> Back to Service Catalog</a>
 </div>
-<pre>
-  Service Template JSON Dump
-  {{ vm.serviceTemplate | json }}
-</pre>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <section>
+      <div class="title-img">
+        <img class="title-img__logo"/>
+      </div>
+      <h2>{{ ::vm.serviceTemplate.name }}</h2>
+    </section>
+    <section>
+      <dl>
+        <dt>Description</dt>
+        <dd>{{ ::vm.serviceTemplate.long_description || vm.serviceTemplate.description }}</dd>
+      </dl>
+    </section>
+    <hr>
+    <section>
+      <div class="well well-sm">
+        Area reserved for service template form.
+      </div>
+    </section>
+  </div>
+  <div class="panel-footer">
+    <div class="form-group text-right">
+      <button type="button" class="btn btn-default btn-xs">Cancel</button>
+      <button type="button" class="btn btn-primary">Request</button>
+    </div>
+  </div>
+</div>
