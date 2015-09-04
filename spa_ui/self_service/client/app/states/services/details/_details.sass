@@ -1,0 +1,21 @@
++block(title-img)
+  background: $app-color-white
+  border: 1px solid $app-color-light-gray-4
+  box-shadow: 0 1px 1px rgba($app-color-black, 0.175)
+  cursor: pointer
+  float: left
+  height: 30px
+  margin-left: 10px
+  padding-bottom: 10px
+  text-align: center
+  width: 30px
+
+  +element(logo)
+    ::before
+      content: "Sample Image"
+    display: block
+    margin: 22px auto
+
++block(pf-table)
+  +element(count)
+    float: left

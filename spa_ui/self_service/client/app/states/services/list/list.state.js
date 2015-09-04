@@ -16,7 +16,7 @@
         templateUrl: 'app/states/services/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Services',
+        title: 'Services List',
         resolve: {
           services: resolveServices
         }
@@ -26,23 +26,34 @@
 
   /** @ngInject */
   function resolveServices(CollectionsApi) {
-    return CollectionsApi.query('services');
+    var options = {expand: 'resources'};
+
+    return CollectionsApi.query('services', options);
   }
 
   /** @ngInject */
-  function StateController(logger, services) {
+  function StateController($state, services) {
     /* jshint validthis: true */
     var vm = this;
 
-    vm.title = 'Services';
+    vm.title = 'Services List';
+    vm.services = services.resources;
 
-    vm.activate = activate;
-    vm.services = services;
+    vm.handleClick = handleClick;
 
-    activate();
+    vm.config = {
+      selectItems: false,
+      multiSelect: false,
+      dblClick: false,
+      selectionMatchProp: 'name',
+      selectedItems: [],
+      showSelectBox: false,
+      rowHeight: 36,
+      onClick: vm.handleClick
+    };
 
-    function activate() {
-      logger.info('Activated Service View');
-    }
+    function handleClick(item, e) {
+      $state.go('services.details', {requestId: item.id});
+    };
   }
 })();
