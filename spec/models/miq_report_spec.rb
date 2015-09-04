@@ -143,10 +143,6 @@ describe MiqReport do
           vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
         end
 
-        10.times do |i|
-          FactoryGirl.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
-        end
-
         Vm.scope :group_3_scope, -> { where("name LIKE ?", "Test Group 3%") }
         Vm.scope :group_scope,   ->(group_num) { where("name LIKE ?", "Test Group #{group_num}%") }
       end
