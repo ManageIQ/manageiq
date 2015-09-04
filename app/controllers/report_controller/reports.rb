@@ -55,7 +55,7 @@ module ReportController::Reports
 
       if rpt.timeline                   # If timeline present
         @timeline                 = true
-        rpt.extras[:browser_name] = browser_info("name").downcase
+        rpt.extras[:browser_name] = browser_info(:name)
         #flag to force formatter to build timeline in xml for preview screen
         rpt.extras[:tl_preview] = true
         @edit[:tl_xml]            = rpt.to_timeline

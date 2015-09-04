@@ -10,9 +10,9 @@
                [_("Version"),         h(@vmdb[:version] + "." + @vmdb[:build])],
                [_("User Name"),       h(current_user.name)],
                [_("User Role"),       h(@user_role)],
-               [_("Browser"),         h(browser_info("name"))],
-               [_("Browser Version"), h(browser_info("version"))],
-               [_("Browser OS"),      h(browser_info("os"))]].each do |session_info|
+               [_("Browser"),         h(browser_info(:name_ui))],
+               [_("Browser Version"), h(browser_info(:version))],
+               [_("Browser OS"),      h(browser_info(:os_ui))]].each do |session_info|
               .form-group
                 %label.col-md-3.control-label
                   = session_info[0]

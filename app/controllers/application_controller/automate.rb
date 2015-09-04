@@ -26,7 +26,7 @@ module ApplicationController::Automate
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
     render :update do |page|
       # IE7 doesn't redraw the tree until the screen is clicked, so redirect back to this method for a refresh
-      if is_browser_ie? && browser_info("version") == "7"
+      if is_browser_ie? && browser_info(:version) == "7"
         page.redirect_to :action => 'resolve'
       else
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")

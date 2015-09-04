@@ -677,15 +677,10 @@ describe ApplicationHelper do
   end
 
   context "#browser_info" do
-    it "checks by name when called with NO argument" do
-      ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, :name).and_return('checked_by_name')
-      browser_info( ).should == 'checked_by_name'
-    end
-
-    it "checks by 'a_type' when called with 'a_type'" do
+    it "preserves the case" do
       type = :a_type
-      ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, type).and_return('checked_by_a_type')
-      browser_info(type).should == 'checked_by_a_type'
+      ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, type).and_return('checked_by_A_TYPE')
+      browser_info(type).should == 'checked_by_A_TYPE'
     end
   end
 

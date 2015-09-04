@@ -696,9 +696,15 @@ class DashboardController < ApplicationController
 
     session[:user_TZO] = params[:user_TZO] ? params[:user_TZO].to_i : nil     # Grab the timezone (future use)
     session[:browser] ||= Hash.new("Unknown")
-    session[:browser][:name] = params[:browser_name] if params[:browser_name]
+    if params[:browser_name]
+      session[:browser][:name] = params[:browser_name].to_s.downcase
+      session[:browser][:name_ui] = params[:browser_name]
+    end
     session[:browser][:version] = params[:browser_version] if params[:browser_version]
-    session[:browser][:os] = params[:browser_os] if params[:browser_os]
+    if params[:browser_os]
+      session[:browser][:os] = params[:browser_os].to_s.downcase
+      session[:browser][:os_ui] = params[:browser_os]
+    end
   end
 
   # Create a user's dashboard, pass in dashboard id if that is used to copy else use default dashboard
@@ -767,7 +773,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    @report.extras[:browser_name] = browser_info("name").downcase
+    @report.extras[:browser_name] = browser_info(:name)
     if is_browser_ie?
       blob = BinaryBlob.new(:name => "timeline_results")
       blob.binary = @report.to_timeline

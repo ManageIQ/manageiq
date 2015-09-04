@@ -730,7 +730,7 @@ class MiqCapacityController < ApplicationController
       add_flash(_("No records found for this timeline"), :warning)
     else
       tz = @sb[:bottlenecks][:report].tz ? @sb[:bottlenecks][:report].tz : Time.zone
-      @sb[:bottlenecks][:report].extras[:browser_name] = browser_info("name").downcase
+      @sb[:bottlenecks][:report].extras[:browser_name] = browser_info(:name)
       if is_browser_ie?
         blob = BinaryBlob.new(:name => "timeline_results")
         blob.binary=(@sb[:bottlenecks][:report].to_timeline)
