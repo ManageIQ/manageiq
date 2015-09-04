@@ -53,8 +53,7 @@ module Vmdb
     end
 
     def self.walk_nested_hashes(hash, &block)
-      hash.keys.each do |k|
-        v = hash[k]
+      hash.each do |k, v|
         yield k, v, hash
         walk_nested_hashes(v, &block) if v.kind_of?(Hash)
       end
