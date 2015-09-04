@@ -209,7 +209,6 @@ describe MiqReport do
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
           results.data.last["name"].should  == "Test Group 4 VM 80"
@@ -230,7 +229,6 @@ describe MiqReport do
             :userid   => @user.userid,
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 90"
           results.data.last["name"].should  == "Test Group 1 VM 0"
@@ -249,7 +247,6 @@ describe MiqReport do
             :per_page => 2
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 2
           results.data.first["name"].should == "Test Group 3 VM 50"
           results.data.last["name"].should  == "Test Group 2 VM 40"
@@ -268,7 +265,6 @@ describe MiqReport do
             :userid   => @user.userid,
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 90"
           results.data.last["name"].should  == "Test Group 1 VM 0"
@@ -282,16 +278,13 @@ describe MiqReport do
 
         it "works when sorting on a virtual column" do
           @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto"=>[]})
-          # Vm.any_instance.stub(:v_total_snapshots => 1)
           report = MiqReport.new(:db => "Vm", :sortby => ["v_total_snapshots", "name"], :order => "Descending")
-          # report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Descending")
           options = {
             :only     => ["name", "v_total_snapshots"],
             :page     => 2,
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
           results.data.last["name"].should  == "Test Group 4 VM 80"
@@ -313,7 +306,6 @@ describe MiqReport do
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["host.name"]} => #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 1 VM 21"
           results.data.last["name"].should  == "Test Group 1 VM 13"
@@ -330,7 +322,6 @@ describe MiqReport do
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["host.name"]} => #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
           results.data.last["name"].should  == "Test Group 4 VM 80"
@@ -365,7 +356,6 @@ describe MiqReport do
             :filter   => filter
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 1 VM 18"
           results.data.last["name"].should  == "Test Group 1 VM 4"
@@ -401,7 +391,6 @@ describe MiqReport do
             :filter   => filter
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 2
           results.data.first["name"].should == "Test Group 3 VM 50"
           results.data.last["name"].should  == "Test Group 2 VM 40"
@@ -433,7 +422,6 @@ describe MiqReport do
             :filter   => filter
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
           results.data.last["name"].should  == "Test Group 4 VM 80"
@@ -485,7 +473,6 @@ describe MiqReport do
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 1 VM 21"
           results.data.last["name"].should  == "Test Group 1 VM 13"
@@ -497,53 +484,5 @@ describe MiqReport do
         end
       end
     end
-
-    # it "should handle ActAsArModel through find" do
-    #   MiqDatabase.seed
-    #   options = {
-    #     :per_page    =>20,
-    #     :page        =>1,
-    #     :targets_hash=>true,
-    #     :userid      =>"admin"
-    #   }
-
-    #   yaml = YAML.load("---
-    #     title: VmdbTable
-    #     name: VmdbTable
-    #     db: VmdbTable
-    #     cols:
-    #     - name
-    #     - description
-    #     - record_count
-    #     col_order:
-    #     - name
-    #     - description
-    #     - record_count
-    #     headers:
-    #     - Name
-    #     - Description
-    #     - Record Count
-    #     order: Ascending
-    #     sortby:
-    #     - description
-    #   ")
-    #   begin
-    #     report = MiqReport.new(yaml)
-    #     results = attrs = nil
-    #     lambda { results, attrs = report.paged_view_search(options) }.should_not raise_error
-    #     results.length.should == 20
-    #     attrs[:total_count].should > 0
-    #     attrs[:apply_sortby_in_search].should be_false
-
-    #     # Retrieve page 2
-    #     results = attrs = nil
-    #     lambda { results, attrs = report.paged_view_search(options.merge({:page => 2 }))}.should_not raise_error
-    #     results.length.should == 20
-    #     attrs[:total_count].should > 0
-    #     attrs[:apply_sortby_in_search].should be_false
-    #   ensure
-    #     VmdbTable.registered.clear
-    #   end
-    # end
   end
 end
