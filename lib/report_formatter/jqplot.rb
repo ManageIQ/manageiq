@@ -105,7 +105,7 @@ module ReportFormatter
     def build_reporting_chart_other
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
-      pie_highligher(false) if pie_type?
+      simple_numeric_styling
     end
 
     def build_reporting_chart_dim2

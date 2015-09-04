@@ -348,7 +348,7 @@ module ReportFormatter
         end
         add_series(_("Other"), series)
       end
-      counts # FIXME
+      counts
     end
 
     def data_column_name
