@@ -445,7 +445,7 @@ module ReportFormatter
       # 3rd dimension in the chart is defined by sort2
       groups = mri.table.data.group_by { |row| row[sort1] }
 
-      def_range_key2 = subtotals.keys.map { |key| key.split('__')[1] }.sort.uniq
+      def_range_key2 = subtotals.keys.map { |key| key.split('__')[1] || '' }.sort.uniq
 
       group_sums = groups.keys.each_with_object({}) do |key1, h|
         h[key1] = def_range_key2.inject(0) do |sum, key2|

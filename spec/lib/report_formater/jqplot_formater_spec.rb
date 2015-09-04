@@ -127,6 +127,7 @@ describe ReportFormatter::JqplotFormatter do
             ["widloze",      2_048, "openslack",     69],
             ["widloze",      1_024, "openslack",     71],
             ["linux_centos", 1_024, "ec2",           72],
+            ["",             0,     "",              79],
           ],
         )
 
