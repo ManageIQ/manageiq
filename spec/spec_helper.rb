@@ -1,8 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 
-require 'coveralls'
-Coveralls.wear!('rails') do
-  add_filter("/spec/")
+if ENV["TEST_SUITE"] == "vmdb"
+  require 'coveralls'
+  Coveralls.wear!('rails') { add_filter("/spec/") }
 end
 
 ENV["RAILS_ENV"] ||= 'test'
@@ -79,6 +79,11 @@ RSpec.configure do |config|
   end
   config.after(:each) do
     EvmSpecHelper.clear_caches
+  end
+  if ENV["CI"]
+    config.after(:suite) do
+      require Rails.root.join("spec/coverage_helper.rb")
+    end
   end
 
   if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/}) ||
