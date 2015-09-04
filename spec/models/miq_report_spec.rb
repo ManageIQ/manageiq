@@ -116,6 +116,35 @@ describe MiqReport do
       @user  = FactoryGirl.create(:user, :miq_groups => [@group])
     end
 
+    it "filters vms in folders" do
+      host = FactoryGirl.create(:host)
+      vm1  = FactoryGirl.create(:vm_vmware, :host => host)
+      vm2  = FactoryGirl.create(:vm_vmware, :host => host)
+
+      root        = FactoryGirl.create(:ems_folder, :name => "datacenters")
+      root.parent = host
+
+      usa         = FactoryGirl.create(:ems_folder, :name => "usa")
+      usa.parent  = root
+
+      nyc         = FactoryGirl.create(:ems_folder, :name => "nyc")
+      nyc.parent  = usa
+
+      vm1.with_relationship_type("ems_metadata") { vm1.parent = usa }
+      vm2.with_relationship_type("ems_metadata") { vm2.parent = nyc }
+
+      report = MiqReport.new(:db => "Vm")
+
+      results, _ = report.paged_view_search(:parent => usa)
+      expect(results.data.collect { |rec| rec.data['id'] }).to eq [vm1.id]
+
+      results, _ = report.paged_view_search(:parent => root)
+      expect(results.data.collect { |rec| rec.data['id'] }).to eq []
+
+      results, _ = report.paged_view_search(:parent => root, :association => :all_vms)
+      expect(results.data.collect { |rec| rec.data['id'] }).to match_array [vm1.id, vm2.id]
+    end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -163,20 +192,6 @@ describe MiqReport do
           @vms_in_silver_folder.each do |vm|
             vm.with_relationship_type("ems_metadata") { vm.parent = @silver }
           end
-        end
-
-        it "filters properly" do
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {:page => nil, :per_page => nil, :parent => @sl } # Get all pages
-
-          results, attrs = report.paged_view_search(options)
-          found_ids = results.data.collect { |rec| rec.data['id'] }
-          found_ids.should be_empty
-
-          options[:association] = :all_vms
-          results, attrs = report.paged_view_search(options)
-          found_ids = results.data.collect { |rec| rec.data['id'] }
-          found_ids.should match_array(@vms_in_silver_folder.collect(&:id))
         end
 
         it "gets cached results" do
