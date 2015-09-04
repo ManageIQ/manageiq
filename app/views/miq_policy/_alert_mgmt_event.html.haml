@@ -1,7 +1,7 @@
 #alert_mgmt_event_div
   %h3
     = _('Management Event')
-  %form.form-horizontal
+  .form-horizontal
     - if @edit
       - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")
       .form-group
