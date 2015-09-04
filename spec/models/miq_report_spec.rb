@@ -116,6 +116,49 @@ describe MiqReport do
       @user  = FactoryGirl.create(:user, :miq_groups => [@group])
     end
 
+    it "filters vms in folders" do
+      host = FactoryGirl.create(:host)
+      vm1  = FactoryGirl.create(:vm_vmware, :host => host)
+      vm2  = FactoryGirl.create(:vm_vmware, :host => host)
+
+      root        = FactoryGirl.create(:ems_folder, :name => "datacenters")
+      root.parent = host
+
+      usa         = FactoryGirl.create(:ems_folder, :name => "usa")
+      usa.parent  = root
+
+      nyc         = FactoryGirl.create(:ems_folder, :name => "nyc")
+      nyc.parent  = usa
+
+      vm1.with_relationship_type("ems_metadata") { vm1.parent = usa }
+      vm2.with_relationship_type("ems_metadata") { vm2.parent = nyc }
+
+      report = MiqReport.new(:db => "Vm")
+
+      results, _ = report.paged_view_search(:parent => usa)
+      expect(results.data.collect { |rec| rec.data['id'] }).to eq [vm1.id]
+
+      results, _ = report.paged_view_search(:parent => root)
+      expect(results.data.collect { |rec| rec.data['id'] }).to eq []
+
+      results, _ = report.paged_view_search(:parent => root, :association => :all_vms)
+      expect(results.data.collect { |rec| rec.data['id'] }).to match_array [vm1.id, vm2.id]
+    end
+
+    it "paging" do
+      FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:vm_vmware)
+      ids = Vm.order(:id).pluck(:id)
+
+      report        = MiqReport.new(:db => "Vm", :sortby => "id")
+      report.extras = { :target_ids_for_paging => ids, :attrs_for_paging => {}}
+      results, _    = report.paged_view_search(:page => 2, :per_page => 2 )
+      found_ids     = results.data.collect { |rec| rec.data['id'] }
+
+      expect(found_ids).to eq [ids.last]
+    end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -142,64 +185,6 @@ describe MiqReport do
           @tags.each { |n,t| tags << t if (i % n) == 0 }
           vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
         end
-
-        10.times do |i|
-          FactoryGirl.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
-        end
-
-        Vm.scope :group_3_scope, -> { where("name LIKE ?", "Test Group 3%") }
-        Vm.scope :group_scope,   ->(group_num) { where("name LIKE ?", "Test Group #{group_num}%") }
-      end
-
-      context "in folders" do
-        before(:each) do
-          ems1 = FactoryGirl.create(:ems_vmware, :name => 'ems1')
-          @hosts.each { |host| host.update_attributes(:ext_management_system => ems1) }
-
-          @root          = FactoryGirl.create(:ems_folder, :name => "Datacenters")
-          @root.parent   = ems1
-          @root.save
-          @sl            = FactoryGirl.create(:ems_folder, :name => "ServiceLevel")
-          @sl.parent     = @root
-          @sl.save
-          @silver        = FactoryGirl.create(:ems_folder, :name => "Silver")
-          @silver.parent = @sl
-          @silver.save
-
-          @vms_in_silver_folder = Vm.find_tagged_with(:any => "/managed/service_level/silver", :ns => "*")
-          @vms_in_silver_folder.each do |vm|
-            vm.with_relationship_type("ems_metadata") { vm.parent = @silver }
-          end
-        end
-
-        it "filters properly" do
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {:page => nil, :per_page => nil, :parent => @sl } # Get all pages
-
-          results, attrs = report.paged_view_search(options)
-          found_ids = results.data.collect { |rec| rec.data['id'] }
-          found_ids.should be_empty
-
-          options[:association] = :all_vms
-          results, attrs = report.paged_view_search(options)
-          found_ids = results.data.collect { |rec| rec.data['id'] }
-          found_ids.should match_array(@vms_in_silver_folder.collect(&:id))
-        end
-
-        it "gets cached results" do
-          report = MiqReport.new(:db => "Vm", :sortby => "id")
-          options = {:page => 2, :per_page => 20 }
-
-          all_ids = Vm.all.order(:id).map(&:id)
-          report.extras = { :target_ids_for_paging => all_ids, :attrs_for_paging => {}}
-
-          results, attrs = report.paged_view_search(options)
-
-          results.length.should == 20
-          found_ids = results.data.collect { |rec| rec.data['id'] }
-          found_ids.should_not be_empty
-          found_ids.should == all_ids[20..39]
-        end
       end
 
       context "group has managed filters" do
@@ -216,7 +201,6 @@ describe MiqReport do
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
           results.data.last["name"].should  == "Test Group 4 VM 80"
@@ -237,7 +221,6 @@ describe MiqReport do
             :userid   => @user.userid,
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 90"
           results.data.last["name"].should  == "Test Group 1 VM 0"
@@ -256,7 +239,6 @@ describe MiqReport do
             :per_page => 2
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 2
           results.data.first["name"].should == "Test Group 3 VM 50"
           results.data.last["name"].should  == "Test Group 2 VM 40"
@@ -275,7 +257,6 @@ describe MiqReport do
             :userid   => @user.userid,
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 90"
           results.data.last["name"].should  == "Test Group 1 VM 0"
@@ -289,16 +270,13 @@ describe MiqReport do
 
         it "works when sorting on a virtual column" do
           @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto"=>[]})
-          # Vm.any_instance.stub(:v_total_snapshots => 1)
           report = MiqReport.new(:db => "Vm", :sortby => ["v_total_snapshots", "name"], :order => "Descending")
-          # report = MiqReport.new(:db => "Vm", :sortby => ["name"], :order => "Descending")
           options = {
             :only     => ["name", "v_total_snapshots"],
             :page     => 2,
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
           results.data.last["name"].should  == "Test Group 4 VM 80"
@@ -320,7 +298,6 @@ describe MiqReport do
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["host.name"]} => #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 1 VM 21"
           results.data.last["name"].should  == "Test Group 1 VM 13"
@@ -337,7 +314,6 @@ describe MiqReport do
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["host.name"]} => #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
           results.data.last["name"].should  == "Test Group 4 VM 80"
@@ -372,7 +348,6 @@ describe MiqReport do
             :filter   => filter
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 1 VM 18"
           results.data.last["name"].should  == "Test Group 1 VM 4"
@@ -408,7 +383,6 @@ describe MiqReport do
             :filter   => filter
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 2
           results.data.first["name"].should == "Test Group 3 VM 50"
           results.data.last["name"].should  == "Test Group 2 VM 40"
@@ -440,7 +414,6 @@ describe MiqReport do
             :filter   => filter
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
           results.data.last["name"].should  == "Test Group 4 VM 80"
@@ -492,7 +465,6 @@ describe MiqReport do
             :per_page => 10
           }
           results, attrs = report.paged_view_search(options)
-          # results.data.each {|r| $log.info("XXX: result: #{r["name"]}")}
           results.length.should == 10
           results.data.first["name"].should == "Test Group 1 VM 21"
           results.data.last["name"].should  == "Test Group 1 VM 13"
@@ -504,53 +476,5 @@ describe MiqReport do
         end
       end
     end
-
-    # it "should handle ActAsArModel through find" do
-    #   MiqDatabase.seed
-    #   options = {
-    #     :per_page    =>20,
-    #     :page        =>1,
-    #     :targets_hash=>true,
-    #     :userid      =>"admin"
-    #   }
-
-    #   yaml = YAML.load("---
-    #     title: VmdbTable
-    #     name: VmdbTable
-    #     db: VmdbTable
-    #     cols:
-    #     - name
-    #     - description
-    #     - record_count
-    #     col_order:
-    #     - name
-    #     - description
-    #     - record_count
-    #     headers:
-    #     - Name
-    #     - Description
-    #     - Record Count
-    #     order: Ascending
-    #     sortby:
-    #     - description
-    #   ")
-    #   begin
-    #     report = MiqReport.new(yaml)
-    #     results = attrs = nil
-    #     lambda { results, attrs = report.paged_view_search(options) }.should_not raise_error
-    #     results.length.should == 20
-    #     attrs[:total_count].should > 0
-    #     attrs[:apply_sortby_in_search].should be_false
-
-    #     # Retrieve page 2
-    #     results = attrs = nil
-    #     lambda { results, attrs = report.paged_view_search(options.merge({:page => 2 }))}.should_not raise_error
-    #     results.length.should == 20
-    #     attrs[:total_count].should > 0
-    #     attrs[:apply_sortby_in_search].should be_false
-    #   ensure
-    #     VmdbTable.registered.clear
-    #   end
-    # end
   end
 end
