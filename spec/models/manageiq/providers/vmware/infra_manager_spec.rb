@@ -9,6 +9,13 @@ describe ManageIQ::Providers::Vmware::InfraManager do
     described_class.description.should == 'VMware vCenter'
   end
 
+  describe ".metrics_collect_queue_name" do
+    it "returns the correct queue name" do
+      worker_queue = ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker.default_queue_name
+      expect(described_class.metrics_collect_queue_name).to eq(worker_queue)
+    end
+  end
+
   context "#validate_remote_console_vmrc_support" do
     before(:each) do
       @ems = FactoryGirl.create(:ems_vmware)
