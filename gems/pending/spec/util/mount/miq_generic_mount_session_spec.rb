@@ -1,26 +1,20 @@
 require "spec_helper"
-require 'util/mount/miq_generic_mount_session'
+require "util/mount/miq_generic_mount_session"
 
 describe MiqGenericMountSession do
-  context "#connect" do
-    before do
-      MiqGenericMountSession.stub(:raw_disconnect)
-      @s1 = MiqGenericMountSession.new({:uri => '/tmp/abc'})
-      @s2 = MiqGenericMountSession.new({:uri => '/tmp/abc'})
+  it "#connect returns a string pointing to the mount point" do
+    described_class.stub(:raw_disconnect)
+    s = described_class.new(:uri => '/tmp/abc')
+    s.logger = Logger.new("/dev/null")
 
-      @s1.logger = Logger.new("/dev/null")
-      @s2.logger = Logger.new("/dev/null")
-    end
+    result = s.connect
+    expect(result).to     be_kind_of(String)
+    expect(result).to_not be_blank
 
-    after do
-      @s1.disconnect
-      @s2.disconnect
-    end
+    s.disconnect
+  end
 
-    it "is unique" do
-      MiqGenericMountSession.should_receive(:base_mount_point).twice.and_return('/tmp')
-      @s1.connect
-      @s2.connect
-    end
+  it "#mount_share is unique" do
+    expect(described_class.new(:uri => '/tmp/abc').mount_share).to_not eq(described_class.new(:uri => '/tmp/abc').mount_share)
   end
 end

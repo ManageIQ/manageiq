@@ -14,8 +14,8 @@ class MiqGenericMountSession
   attr_accessor :settings, :mnt_point, :logger
 
   def initialize(log_settings)
-    @settings = log_settings.dup
-    raise "URI missing" if @settings[:uri].nil?
+    raise "URI missing" unless log_settings.key?(:uri)
+    @settings  = log_settings.dup
     @mnt_point = nil
   end
 
@@ -63,12 +63,8 @@ class MiqGenericMountSession
   end
 
   def mount_share
-    # Check if settings contains the mount_point to use
-    @mnt_point = @settings[:mount_point].blank? ? File.join(self.class.base_mount_point, "miq_#{MiqUUID.new_guid}") : @settings[:mount_point]
-    raise MiqException::MountPointAlreadyExists, "#{@mnt_point} directory already exists!!!" if File.exist?(@mnt_point)
-
-    FileUtils.mkdir_p @mnt_point
-    raise MiqException::MiqLogFileMountPointMissing, "mount point: [#{@mnt_point}] failed to be created" unless File.directory?(@mnt_point)
+    require 'tmpdir'
+    @mnt_point = Dir.mktmpdir("miq_", settings_mount_point)
   end
 
   def get_ping_depot_options
@@ -457,14 +453,10 @@ class MiqGenericMountSession
     end
   end
 
-  def self.base_mount_point
-    case Sys::Platform::IMPL
-    when :macosx
-      "/Volumes"
-    when :linux
-      "/mnt"
-    else
-      raise "platform not supported"
-    end
+  private
+
+  def settings_mount_point
+    return if @settings[:mount_point].blank? # Check if settings contains the mount_point to use
+    FileUtils.mkdir_p(@settings[:mount_point]).first
   end
 end
