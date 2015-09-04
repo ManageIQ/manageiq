@@ -62,7 +62,7 @@ module Vmdb
 
     def self.encrypt_password_fields!(hash)
       walk_nested_hashes(hash) do |k, v, h|
-        h[k] = MiqPassword.try_encrypt(v) if k.to_s.in?(PASSWORD_FIELDS) && v.present?
+        h[k] = MiqPassword.try_encrypt(v) if PASSWORD_FIELDS.include?(k.to_s) && v.present?
       end
     end
 
@@ -72,7 +72,7 @@ module Vmdb
 
     def self.decrypt_password_fields!(hash)
       walk_nested_hashes(hash) do |k, v, h|
-        h[k] = MiqPassword.try_decrypt(v) if k.to_s.in?(PASSWORD_FIELDS) && v.present?
+        h[k] = MiqPassword.try_decrypt(v) if PASSWORD_FIELDS.include?(k.to_s) && v.present?
       end
     end
 
