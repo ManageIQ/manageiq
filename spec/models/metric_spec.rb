@@ -27,7 +27,7 @@ describe Metric do
         end
 
         6.times do |n|
-          host = FactoryGirl.create(:host_target_vmware)
+          host = FactoryGirl.create(:host_target_vmware, :ext_management_system => @ems_vmware)
           @ems_vmware.hosts << host
 
           @vmware_clusters[n / 2].hosts << host if n < 4
