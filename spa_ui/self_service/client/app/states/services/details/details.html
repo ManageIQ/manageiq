@@ -1,50 +1,58 @@
-<pre>
-  <div>
-    <a ui-sref="^"> <span class="fa fa-angle-left"/> Back to My Services</a>
+<div>
+  <a ui-sref="^"> <span class="fa fa-angle-left"/> Back to My Requests</a>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <section>
+      <div class="title-img">
+        <img class="title-img__logo"/>
+      </div>
+      <h2>{{ ::vm.service.name }}</h2>
+    </section>
+    <section>
+      <div class="col-md-12">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <dl class="dl-horizontal text-capitalize">
+            <dt>Service Id</dt>
+            <dd>{{ ::vm.service.id }}</dd>
+            <dt>Service Owner</dt>
+            <dd> {{ ::vm.service.author }} </dd>
+            <dt>Service State</dt>
+            <dd class="text-capitalize">
+              Active
+            </dd>
+            <dt>Service Date</dt>
+            <dd>Service Created On {{ ::vm.service.created_at | date }}</dd>
+          </dl>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <dl class="dl-horizontal text-capitalize">
+            <dt>Service Approval State</dt>
+            <dd>{{ ::vm.service.approval_state }}</dd>
+            <dt>Service Adjudicator</dt>
+            <dd>N/A</dd>
+            <dt>Last Message</dt>
+            <dd>{{ ::vm.service.message}}</dd>
+            <dt>Last Updated</dt>
+            <dd>{{ ::vm.service.updated_at}}</dd>
+            <dt>Service Type</dt>
+            <dd>{{ ::vm.service.service_type }}</dd>
+          </dl>
+        </div>
+      </div>
+      <dl>
+        <dt>Description</dt>
+        <dd>{{ ::vm.service.long_description || vm.service.description }}</dd>
+      </dl>
+    </section>
   </div>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <section>
-        <div class="title-img">
-          <img class="title-img__logo"/>
-        </div>
-        <h2>{{ ::vm.service.name }}</h2>
-      </section>
-      <section>
-        <dl>
-          <dt>Description</dt>
-          <dd>{{ ::vm.service.long_description || vm.service.description }}</dd>
-        </dl>
-      </section>
-      <hr>
-      <section>
-        <div class="well well-sm">
-          Area reserved for service template form.
-        </div>
-      </section>
-    </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <section>
+      <h2>Service Details</h2>
+      <pre>{{ ::vm.service |json }}</pre>
+    </section>
   </div>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <section>
-        <div class="title-img">
-          <img class="title-img__logo"/>
-        </div>
-        <h2>{{ ::vm.service.name }}</h2>
-      </section>
-      <section>
-        <dl>
-          <dt>Description</dt>
-          <dd>{{ ::vm.service.long_description || vm.service.description }}</dd>
-        </dl>
-      </section>
-      <hr>
-      <section>
-        <div class="well well-sm">
-          Area reserved for service template form.
-        </div>
-      </section>
-    </div>
-  </div>
-</pre>
+</div>
 

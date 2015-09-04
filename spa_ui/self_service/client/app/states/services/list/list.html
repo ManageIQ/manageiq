@@ -1,5 +1,35 @@
 <button ui-sref="services.details({serviceId: 10000000000021})" class="btn btn-primary" type="button">Go to Service Details</button>
 
-<pre> <!-- include PF list styling-->
-    {{ vm.services | json }}
-</pre>
+
+<div class="col-md-12">
+    <div pf-data-list id="MyServicesList" config="vm.config" items="vm.services" class="pf-table">
+        <div class="col-md-12 cfme-row-column">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 list-column">
+                <span class="pf-table__count">{{$index + 1}}</span>
+
+        <span class="title-img">
+          <img class="title-img__logo"/>
+        </span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 list-column">
+                <span>Service started on {{ ::item.created_at | date }}</span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 list-column">
+        <span class="text-capitalize">
+        <span class="spinner spinner-xs spinner-inline"
+              ng-if="item.request_state == 'pending'">
+          </span>
+        <span class="pficon-error-circle-o"
+              ng-if="item.request_state == 'denied'">
+          </span>
+        <span class="pficon-ok"
+              ng-if="item.request_state == 'approved'">
+          </span>
+        {{ ::item.service_state }}
+          </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
