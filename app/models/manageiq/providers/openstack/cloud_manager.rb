@@ -41,6 +41,10 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
     )
   end
 
+  def self.metrics_collect_queue_name
+    MetricsCollectorWorker.default_queue_name
+  end
+
   def supports_port?
     true
   end

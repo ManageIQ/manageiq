@@ -22,6 +22,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     @description ||= "Red Hat Enterprise Virtualization Manager".freeze
   end
 
+  def self.metrics_collect_queue_name
+    MetricsCollectorWorker.default_queue_name
+  end
+
   def self.default_blacklisted_event_names
     %w(
       UNASSIGNED
