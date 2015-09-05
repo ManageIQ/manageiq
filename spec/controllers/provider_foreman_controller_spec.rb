@@ -3,7 +3,8 @@ require "spec_helper"
 describe ProviderForemanController do
   render_views
   before(:each) do
-    @zone = FactoryGirl.create(:zone, :name => 'zone1')
+    _, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+
     @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider.id)
     @config_profile = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name                     => "testprofile",
@@ -23,9 +24,7 @@ describe ProviderForemanController do
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "configured_system_unprovisioned2",
                                                                                   :configuration_profile_id => nil,
                                                                                   :configuration_manager_id => @config_mgr2.id)
-    sb = {}
-    sb[:active_tree] = :foreman_providers_tree
-    controller.instance_variable_set(:@sb, sb)
+    controller.instance_variable_set(:@sb, :active_tree => :foreman_providers_tree)
   end
 
   it "renders index" do
@@ -36,19 +35,9 @@ describe ProviderForemanController do
   end
 
   it "renders explorer" do
-    EvmSpecHelper.create_guid_miq_server_zone
+    set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord)
+    set_view_10_per_page
 
-    EvmSpecHelper.seed_specific_product_features("providers_accord", "configured_systems_filter_accord")
-    feature = MiqProductFeature.find_all_by_identifier(%w(providers_accord configured_systems_filter_accord))
-    test_user_role  = FactoryGirl.create(:miq_user_role,
-                                         :name                 => "test_user_role",
-                                         :miq_product_features => feature)
-    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-    user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-    set_user_privileges user
-    session[:settings] = {:default_search => '',
-                          :views          => {},
-                          :perpage        => {:list => 10}}
     get :explorer
     accords = controller.instance_variable_get(:@accords)
     expect(accords.size).to eq(2)
@@ -57,22 +46,10 @@ describe ProviderForemanController do
   end
 
   context "renders explorer based on RBAC" do
-    before do
-      EvmSpecHelper.create_guid_miq_server_zone
-    end
-
     it "renders explorer based on RBAC access to feature 'configured_system_tag'" do
-      EvmSpecHelper.seed_specific_product_features("configured_system_tag")
-      feature = MiqProductFeature.find_all_by_identifier("configured_system_tag")
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-      set_user_privileges user
-      session[:settings] = {:default_search => '',
-                            :views          => {},
-                            :perpage        => {:list => 10}}
+      set_user_privileges user_with_feature %w(configured_system_tag)
+      set_view_10_per_page
+
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
@@ -82,17 +59,9 @@ describe ProviderForemanController do
     end
 
     it "renders explorer based on RBAC access to feature 'provider_foreman_add_provider'" do
-      EvmSpecHelper.seed_specific_product_features("provider_foreman_add_provider")
-      feature = MiqProductFeature.find_all_by_identifier("provider_foreman_add_provider")
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-      set_user_privileges user
-      session[:settings] = {:default_search => '',
-                            :views          => {},
-                            :perpage        => {:list => 10}}
+      set_user_privileges user_with_feature %w(provider_foreman_add_provider)
+      set_view_10_per_page
+
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
@@ -104,13 +73,7 @@ describe ProviderForemanController do
 
   context "asserts correct privileges" do
     before do
-      EvmSpecHelper.seed_specific_product_features("configured_system_provision")
-      feature = MiqProductFeature.find_all_by_identifier("configured_system_provision")
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      login_as user_with_feature %w(configured_system_provision)
     end
 
     it "should not raise an error for feature that user has access to" do
@@ -134,7 +97,7 @@ describe ProviderForemanController do
   end
 
   it "renders a new page" do
-    session[:settings] = {:views => {}, :perpage => {:list => 10}}
+    set_view_10_per_page
     post :new, :format => :js
     expect(response.status).to eq(200)
   end
@@ -153,8 +116,6 @@ describe ProviderForemanController do
       controller.stub(:update_partials)
       controller.stub(:render)
 
-      settings = {}
-      settings[:perpage] = {}
       controller.instance_variable_set(:@settings, :per_page => {:list => 20})
       controller.stub(:items_per_page).and_return(20)
       controller.stub(:gtl_type).and_return("list")
@@ -195,10 +156,7 @@ describe ProviderForemanController do
       controller.stub(:update_partials)
       controller.stub(:render)
 
-      settings = {}
-      settings[:perpage] = {}
-      settings[:perpage][:list] = 20
-      controller.instance_variable_set(:@settings, settings)
+      controller.instance_variable_set(:@settings, :perpage => {:list => 20})
       controller.stub(:items_per_page).and_return(20)
       controller.stub(:gtl_type).and_return("list")
       controller.stub(:current_page).and_return(1)
@@ -264,7 +222,6 @@ describe ProviderForemanController do
     controller.stub(:replace_search_box)
     controller.stub(:update_partials)
 
-    EvmSpecHelper.create_guid_miq_server_zone
     set_user_privileges
 
     key = ems_key_for_provider(@provider)
@@ -283,8 +240,6 @@ describe ProviderForemanController do
       controller.stub(:update_partials)
       controller.stub(:render)
 
-      settings = {}
-      settings[:perpage] = {}
       controller.instance_variable_set(:@settings,
                                        :per_page => {:list => 20},
                                        :views    => {:cm_providers          => "grid",
@@ -307,6 +262,22 @@ describe ProviderForemanController do
       list_type = controller.instance_variable_get(:@gtl_type)
       expect(list_type).to eq("tile")
     end
+  end
+
+  def user_with_feature(features)
+    EvmSpecHelper.seed_specific_product_features(*features)
+    feature = MiqProductFeature.find_all_by_identifier(features)
+    test_user_role  = FactoryGirl.create(:miq_user_role,
+                                         :name                 => "test_user_role",
+                                         :miq_product_features => feature)
+    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+    FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
+  end
+
+  def set_view_10_per_page
+    session[:settings] = {:default_search => '',
+                          :views          => {},
+                          :perpage        => {:list => 10}}
   end
 
   def find_treenode_for_provider(provider)
