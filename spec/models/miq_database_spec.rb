@@ -83,33 +83,6 @@ describe MiqDatabase do
     end
   end
 
-  pending("New model-based-rewrite") do
-    context "#vmdb_tables" do
-      before(:each) do
-        MiqDatabase.seed
-        @db = MiqDatabase.first
-
-        @expected_tables = %w(schema_migrations vms miq_databases)
-        VmdbTable.stub(:vmdb_table_names).and_return(@expected_tables)
-      end
-
-      after(:each) do
-        VmdbTable.registered.clear
-      end
-
-      it "will fetch initial tables" do
-        tables = @db.vmdb_tables
-        tables.collect(&:name).should match_array @expected_tables
-      end
-
-      it "will create tables once" do
-        @db.vmdb_tables
-        VmdbTable.should_receive(:new).never
-        @db.vmdb_tables
-      end
-    end
-  end
-
   context "#registration_organization_name" do
     it "returns registration_organization when registration_organization_display_name is not available" do
       db = FactoryGirl.create(:miq_database, :registration_organization => "foo")
