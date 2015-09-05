@@ -278,7 +278,7 @@ describe TreeNodeBuilder do
       node.should_not be_nil
     end
 
-    pending 'MiqDialog node' do
+    it 'MiqDialog node' do
       dialog = FactoryGirl.build(:miq_dialog)
       node = TreeNodeBuilder.build(dialog, nil, {})
       node.should_not be_nil
