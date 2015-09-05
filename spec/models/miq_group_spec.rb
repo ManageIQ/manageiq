@@ -3,27 +3,8 @@ require "spec_helper"
 describe MiqGroup do
 
   context "set as Super Administrator" do
-
     before(:each) do
-      # create User Role record...
-      @miq_user_role = FactoryGirl.create(
-                      :miq_user_role,
-                      :name       => "EVMGroup-super_administrator",
-                      :read_only  => true,
-                      :settings   => nil
-                      )
-
-      # create Miq Group record...
-      @guid = MiqUUID.new_guid
-      MiqGroup.stub(:my_guid).and_return(@guid)
-      @miq_group = FactoryGirl.create(
-                  :miq_group,
-                  :guid             => @guid,
-                  :description      => "EVMGroup-super_administrator",
-                  :group_type       => "system",
-                  :miq_user_role    => @miq_user_role
-                  )
-
+      @miq_group = FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator")
     end
 
     context "#get_filters" do
@@ -80,7 +61,7 @@ describe MiqGroup do
     end
 
     it "should return user role name" do
-      @miq_group.miq_user_role_name.should == "EVMGroup-super_administrator"
+      @miq_group.miq_user_role_name.should == "EvmRole-super_administrator"
     end
 
     it "should set group type to 'system' " do
@@ -214,19 +195,19 @@ describe MiqGroup do
 
   context "should not be deleted while a user is still assigned" do
     before do
-      @group = FactoryGirl.create(:miq_group, :description => "remove me")
+      @group = FactoryGirl.create(:miq_group)
     end
 
     it "referenced by current_group" do
-      FactoryGirl.create(:user, :userid => "test", :miq_groups => [@group])
+      FactoryGirl.create(:user, :miq_groups => [@group])
 
       expect { @group.destroy }.to raise_error
       MiqGroup.count.should eq 1
     end
 
     it "referenced by miq_groups" do
-      group2 = FactoryGirl.create(:miq_group, :description => "group2")
-      FactoryGirl.create(:user, :userid => "test", :miq_groups => [@group, group2], :current_group => group2)
+      group2 = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:user, :miq_groups => [@group, group2], :current_group => group2)
 
       expect { @group.destroy }.to raise_error
       MiqGroup.count.should eq 2

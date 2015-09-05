@@ -41,6 +41,7 @@ module ControllerSpecHelper
     test_group = FactoryGirl.create(:miq_group,
                                     :miq_user_role => test_role)
     @test_user = FactoryGirl.create(:user,
+                                    :userid     => "test",
                                     :name       => 'test_user',
                                     :miq_groups => [test_group])
     login_as @test_user
