@@ -31,6 +31,7 @@ module Camcorder
   private_class_method :recorder_for
 
   def self.deintercept_all
+    @intercepted_constructors ||= []
     @intercepted_constructors.each { |cls| deintercept_constructor(cls) }
     @intercepted_constructors = []
   end
