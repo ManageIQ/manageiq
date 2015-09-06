@@ -3,21 +3,18 @@ require "spec_helper"
 describe MiqScheduleWorker::Runner do
   context ".new" do
     before(:each) do
-      @server_guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@server_guid)
-      @zone       = FactoryGirl.create(:zone)
-      @miq_server = FactoryGirl.create(:miq_server_master, :zone => @zone, :guid => @server_guid)
-      MiqServer.my_server(true)
+      @miq_server = FactoryGirl.create(:miq_server_master, :my_server)
+      @zone = @miq_server.zone
 
-      @worker_guid = MiqUUID.new_guid
-      @worker = FactoryGirl.create(:miq_schedule_worker, :guid => @worker_guid, :miq_server_id => @miq_server.id)
+      worker_guid = MiqUUID.new_guid
+      @worker = FactoryGirl.create(:miq_schedule_worker, :guid => worker_guid, :miq_server_id => @miq_server.id)
 
       MiqScheduleWorker::Runner.any_instance.stub(:initialize_rufus)
       MiqScheduleWorker::Runner.any_instance.stub(:sync_active_roles)
       MiqScheduleWorker::Runner.any_instance.stub(:sync_config)
       MiqScheduleWorker::Runner.any_instance.stub(:set_connection_pool_size)
 
-      @schedule_worker = MiqScheduleWorker::Runner.new(:guid => @worker_guid)
+      @schedule_worker = MiqScheduleWorker::Runner.new(:guid => worker_guid)
     end
 
     context "with a stuck dispatch in each zone" do

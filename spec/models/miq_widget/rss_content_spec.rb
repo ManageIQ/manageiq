@@ -63,10 +63,7 @@ describe "Widget RSS Content" do
     MiqRegion.seed
     RssFeed.sync_from_yml_dir
 
-    guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid => guid)
-    FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone), :guid => guid, :status => "started")
-    MiqServer.my_server(true)
+    FactoryGirl.create(:miq_server, :my_server)
 
     @admin       = FactoryGirl.create(:user_admin)
     @admin_group = @admin.current_group

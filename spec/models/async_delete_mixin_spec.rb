@@ -105,13 +105,7 @@ describe AsyncDeleteMixin do
 
   context "with zone and server" do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone       = FactoryGirl.create(:zone)
-      @server_name = "EVM"
-      @miq_server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :name => @server_name)
-      MiqServer.my_server(true)
+      FactoryGirl.create(:miq_server, :my_server)
     end
 
     context "with 3 ems clusters" do

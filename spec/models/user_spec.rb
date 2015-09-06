@@ -26,20 +26,7 @@ describe User do
                   :miq_user_role    => @miq_user_role
                   )
 
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone         = FactoryGirl.create(:zone)
-      @miq_server   = FactoryGirl.create(
-                    :miq_server,
-                    :guid         => @guid,
-                    :status       => "started",
-                    :name         => "EVM",
-                    :os_priority  => nil,
-                    :is_master    => false,
-                    :zone         => @zone
-                    )
-      MiqServer.my_server(true)
+      @miq_server = FactoryGirl.create(:miq_server, :my_server)
 
       # create User record...
       @user = FactoryGirl.create(

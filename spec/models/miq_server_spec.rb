@@ -267,8 +267,7 @@ describe MiqServer do
       context "with an active messsage and a second server" do
         before(:each) do
           @msg = FactoryGirl.create(:miq_queue, :state => 'dequeue')
-          @guid2 = MiqUUID.new_guid
-          @miq_server2 = FactoryGirl.create(:miq_server_master, :zone => @zone, :guid => @guid2)
+          @miq_server2 = FactoryGirl.create(:miq_server_master, :zone => @zone)
         end
 
         it "will validate the 'started' first server's active message when called on it" do

@@ -4,14 +4,7 @@ describe MiqAlert do
   context "With single server with a single generic worker with the notifier role," do
 
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone            = FactoryGirl.create(:zone)
-      @miq_server      = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      @miq_server.role = 'notifier'
-      MiqServer.stub(:my_server).and_return(@miq_server)
-
+      @miq_server = FactoryGirl.create(:miq_server, :my_server, :role => 'notifier')
       @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
       @vm     = FactoryGirl.create(:vm_vmware)
 
@@ -312,15 +305,9 @@ describe MiqAlert do
   context ".evaluate_hourly_timer" do
     before do
       MiqAlert.any_instance.stub(:validate => true)
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone            = FactoryGirl.create(:zone)
-      @miq_server      = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      MiqServer.stub(:my_server).and_return(@miq_server)
-
-      @ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
-      @ems_other = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
+      @miq_server = FactoryGirl.create(:miq_server, :my_server)
+      @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
+      @ems_other  = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :responds_to_events => "_hourly_timer_")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}")
       @alert_prof.add_member(@alert)

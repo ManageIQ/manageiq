@@ -4,12 +4,11 @@ describe Job do
   context "With a single scan job," do
 
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
+      @server1 = FactoryGirl.create(:miq_server_master, :my_server)
+      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
 
-      @zone       = FactoryGirl.create(:zone)
-      @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      MiqServer.stub(:my_server).and_return(@miq_server)
+      @miq_server = FactoryGirl.create(:miq_server_master, :my_server)
+      @zone = @miq_server.zone
       @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone, :name => "Test EMS")
       @host       = FactoryGirl.create(:host)
 

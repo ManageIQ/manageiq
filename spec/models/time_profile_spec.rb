@@ -2,14 +2,8 @@ require "spec_helper"
 
 describe TimeProfile do
   before(:each) do
-    @guid   = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-
-    @zone   = FactoryGirl.create(:zone)
-    @server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-    MiqServer.my_server_clear_cache
-
-    @ems    = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    @server = FactoryGirl.create(:miq_server, :my_server)
+    @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
     EvmSpecHelper.clear_caches
   end
 

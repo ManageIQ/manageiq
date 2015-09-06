@@ -34,10 +34,8 @@ describe MiqWorker do
     end
 
     before(:each) do
-      @server_active_role_names = ["foo", "bar"]
-      @server = FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone))
-      MiqServer.stub(:my_server).and_return(@server)
-      @server.stub(:active_role_names).and_return(@server_active_role_names)
+      active_roles = %w(foo bar).map { |rn| FactoryGirl.create(:server_role, :name => rn) }
+      @server = FactoryGirl.create(:miq_server, :my_server, :active_roles => active_roles)
     end
 
     context "clean_active_messages" do

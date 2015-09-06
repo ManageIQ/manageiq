@@ -2,15 +2,14 @@ require "spec_helper"
 
 describe VmReconfigureRequest do
   before do
-    @guid1 = MiqUUID.new_guid
-    @zone1 = FactoryGirl.create(:zone, :name => "zone_1")
-    FactoryGirl.create(:miq_server_master, :guid => @guid1, :zone => @zone1)
+    server = FactoryGirl.create(:miq_server_master)
     @request = FactoryGirl.create(:vm_reconfigure_request, :userid => FactoryGirl.create(:user, :userid => "tester").userid)
+    @guid1 = server.guid
+    @zone1 = server.zone
 
-    guid2   = MiqUUID.new_guid
-    @zone2  = FactoryGirl.create(:zone, :name => "zone_2")
-    FactoryGirl.create(:miq_server, :guid => guid2, :zone => @zone2)
-    @vm = FactoryGirl.create(:vm_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware, :zone => @zone2))
+    zone2  = FactoryGirl.create(:zone, :name => "zone_2")
+    FactoryGirl.create(:miq_server, :zone => zone2, :guid => MiqUUID.new_guid)
+    @vm = FactoryGirl.create(:vm_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware, :zone => zone2))
   end
 
   describe '#my_role' do

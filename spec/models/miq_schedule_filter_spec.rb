@@ -3,11 +3,7 @@ require "spec_helper"
 describe "MiqSchedule Filter" do
   context "Getting schedule targets" do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid => @guid)
-      @zone = FactoryGirl.create(:zone)
-      @server1 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :status => "started")
-      MiqServer.stub(:my_server => @server1)
+      @server1 = FactoryGirl.create(:miq_server, :my_server)
 
       # Vm Scan Schedules
       @vm1 = FactoryGirl.create(:vm_vmware, :name => "Test VM 1")

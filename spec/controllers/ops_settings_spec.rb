@@ -137,11 +137,9 @@ describe OpsController do
 
   context "replace_right_cell" do
     before do
+      miq_server = FactoryGirl.create(:miq_server, :my_server)
       MiqRegion.seed
-      zone       = FactoryGirl.create(:zone)
-      MiqRegion.my_region.stub(:zones).and_return([zone])
-      miq_server = FactoryGirl.create(:miq_server, :guid => 'guid', :zone => zone)
-      MiqServer.stub(:my_server).and_return(miq_server)
+      expect(MiqRegion.my_region.zones).to eq([miq_server.zone])
     end
 
     it "it renders replace_right_cell" do

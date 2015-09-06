@@ -6,16 +6,11 @@ describe MiqProvisionWorkflow do
   context "seeded" do
     context "After setup," do
       before(:each) do
-        @guid = MiqUUID.new_guid
-        MiqServer.stub(:my_guid => @guid)
-
-        @zone = FactoryGirl.create(:zone)
-        MiqServer.stub(:my_zone => @zone)
-
-        @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :status => "started")
-        MiqServer.stub(:my_server => @server)
-
+        @server = FactoryGirl.create(:miq_server, :my_server)
+        @zone = @server.zone
+        @guid = @server.guid
         @admin = FactoryGirl.create(:user_admin)
+        expect(MiqServer.my_server).to eq(@server)
 
         FactoryGirl.create(:miq_dialog_provision)
       end

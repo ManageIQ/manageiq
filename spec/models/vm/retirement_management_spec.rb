@@ -2,13 +2,8 @@ require "spec_helper"
 
 describe "VM Retirement Management" do
   before(:each) do
-    @guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-
-    @zone       = FactoryGirl.create(:zone)
-    @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-    MiqServer.stub(:my_server).and_return(@miq_server)
-    @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    miq_server = FactoryGirl.create(:miq_server, :my_server)
+    @ems       = FactoryGirl.create(:ems_vmware, :zone => miq_server.zone)
     @vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
   end
 

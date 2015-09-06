@@ -71,11 +71,7 @@ module ServiceTemplateHelper
   end
 
   def build_small_environment
-    @guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-    @zone       = FactoryGirl.create(:zone)
-    @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-    MiqServer.stub(:my_server).and_return(@miq_server)
+    @miq_server = FactoryGirl.create(:miq_server, :my_server)
     @ems = FactoryGirl.create(:ems_vmware_with_authentication)
     @host1 =  FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
     @src_vm = FactoryGirl.create(:vm_vmware, :host   => @host1,

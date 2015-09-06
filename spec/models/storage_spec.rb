@@ -77,11 +77,8 @@ describe Storage do
 
   context "with multiple storages" do
     before(:each) do
-      @guid   = MiqUUID.new_guid
-      @zone   = FactoryGirl.create(:zone)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid)
-      MiqServer.stub(:my_guid => @guid)
-      MiqServer.my_server(true)
+      @server = FactoryGirl.create(:miq_server, :my_server)
+      @zone   = @server.zone
 
       @zone2     = FactoryGirl.create(:zone, :name => 'Bedrock')
       @ems1      = FactoryGirl.create(:ems_vmware, :name => "test_vcenter1",     :zone => @zone)

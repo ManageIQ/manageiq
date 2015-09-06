@@ -57,10 +57,7 @@ describe DatabaseBackup do
 
   context "schedule" do
     before(:each) do
-      @zone  = FactoryGirl.create(:zone)
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid)
+      FactoryGirl.create(:miq_server, :my_server)
       MiqServer.my_server_clear_cache
 
       @name = "adhoc schedule"

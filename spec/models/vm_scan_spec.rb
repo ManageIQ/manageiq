@@ -3,18 +3,14 @@ require "spec_helper"
 describe VmScan do
   context "A single VM Scan Job," do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      @zone   = FactoryGirl.create(:zone)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid)
-      MiqServer.stub(:my_guid => @guid)
-      MiqServer.my_server(true)
+      @server = FactoryGirl.create(:miq_server, :my_server)
 
       #TODO: We should be able to set values so we don't need to stub behavior
       MiqServer.any_instance.stub(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)
       ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_status_ok? => true)
       Vm.stub(:scan_via_ems? => true)
 
-      @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @zone)
+      @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @server.zone)
       @storage   = FactoryGirl.create(:storage,          :name => "test_storage", :store_type => "VMFS")
       @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
       @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx", :raw_power_state => 'poweredOn', :host => @host, :ext_management_system => @ems, :storage => @storage)

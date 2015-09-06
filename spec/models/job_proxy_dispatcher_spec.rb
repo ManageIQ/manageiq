@@ -22,14 +22,10 @@ module JobProxyDispatcherSpec
 
       context "With a default zone, server, with hosts with a miq_proxy, vmware vms on storages" do
         before(:each) do
-          @guid = MiqUUID.new_guid
-          MiqServer.stub(:my_guid => @guid)
-          @zone = FactoryGirl.create(:zone)
-          @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :name => "test_server_main_server")
-          MiqServer.my_server(true)
+          @server = FactoryGirl.create(:miq_server, :my_server, :name => "test_server_main_server")
 
           (NUM_SERVERS - 1).times do |i|
-            FactoryGirl.create(:miq_server, :zone => @zone, :guid => MiqUUID.new_guid, :name => "test_server_#{i}")
+            FactoryGirl.create(:miq_server, :zone => @server.zone, :name => "test_server_#{i}")
           end
 
           #TODO: We should be able to set values so we don't need to stub behavior
@@ -44,13 +40,9 @@ module JobProxyDispatcherSpec
 
         # Don't run these tests if we only want to run dispatch for load testing
         unless DISPATCH_ONLY
-          it "should have a zone" do
-            @zone.should_not be_nil
-          end
-
           it "should have a server in default zone" do
+            @server.zone.should_not be_nil
             @server.should_not be_nil
-            @zone.should == @server.zone
           end
 
           it "should have #{NUM_HOSTS} hosts" do

@@ -46,11 +46,8 @@ describe MiqEvent do
     context ".raise_evm_event" do
       before(:each) do
         @cluster    = FactoryGirl.create(:ems_cluster)
-        @guid       = MiqUUID.new_guid
-        @zone       = FactoryGirl.create(:zone, :name => "test")
-        @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-        MiqServer.stub(:my_guid).and_return(@guid)
-        MiqServer.stub(:my_server).and_return(@miq_server)
+        @miq_server = FactoryGirl.create(:miq_server, :my_server)
+        @zone       = @miq_server.zone
       end
 
       it "will raise an error for missing target" do

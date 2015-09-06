@@ -1,27 +1,10 @@
 require "spec_helper"
 
 describe AssignedServerRole do
-
   context "and Server Role seeded for 1 Region/Zone" do
-
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
       MiqRegion.seed
-
-      @zone         = FactoryGirl.create(:zone)
-      @miq_server   = FactoryGirl.create(
-                    :miq_server,
-                    :guid         => @guid,
-                    :status       => "started",
-                    :name         => "EVM",
-                    :os_priority  => nil,
-                    :is_master    => false,
-                    :zone         => @zone
-                    )
-
-      MiqServer.my_server(true)
+      @miq_server = FactoryGirl.create(:miq_server, :my_server)
     end
 
     context "Server Role" do
@@ -106,56 +89,12 @@ describe AssignedServerRole do
       MiqRegion.stub(:my_region).and_return(@miq_region)
 
       @miq_zone1 = FactoryGirl.create(:zone, :name => "Zone 1", :description => "Test Zone One")
-
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @miq_server_11 = FactoryGirl.create(
-                    :miq_server,
-                    :guid         => @guid,
-                    :status       => "started",
-                    :name         => "Server 1",
-                    :os_priority  => nil,
-                    :is_master    => false,
-                    :zone_id      => @miq_zone1.id
-                    )
-
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @miq_server_12 = FactoryGirl.create(
-                    :miq_server,
-                    :guid         => @guid,
-                    :status       => "started",
-                    :name         => "Server 2",
-                    :os_priority  => nil,
-                    :is_master    => false,
-                    :zone_id      => @miq_zone1.id
-                    )
+      @miq_server_11 = FactoryGirl.create(:miq_server, :zone => @miq_zone1)
+      @miq_server_12 = FactoryGirl.create(:miq_server, :zone => @miq_zone1)
 
       @miq_zone2 = FactoryGirl.create(:zone, :name => "Zone 2", :description => "Test Zone Two")
-
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @miq_server_21 = FactoryGirl.create(
-                    :miq_server,
-                    :guid         => @guid,
-                    :status       => "started",
-                    :name         => "Server 3",
-                    :os_priority  => nil,
-                    :is_master    => false,
-                    :zone_id      => @miq_zone2.id
-                    )
-
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @miq_server_22 = FactoryGirl.create(
-                    :miq_server,
-                    :guid         => @guid,
-                    :status       => "started",
-                    :name         => "Server 4",
-                    :os_priority  => nil,
-                    :is_master    => false,
-                    :zone_id      => @miq_zone2.id
-                    )
+      @miq_server_21 = FactoryGirl.create(:miq_server, :zone => @miq_zone2)
+      @miq_server_22 = FactoryGirl.create(:miq_server, :zone => @miq_zone2)
 
       @server_role_zu = FactoryGirl.create(
                       :server_role,
@@ -326,7 +265,6 @@ describe AssignedServerRole do
     end
 
     it "should set priority for Server Role scope" do
-
       @assigned_server_role_11_zu.set_priority(AssignedServerRole::HIGH_PRIORITY)
       @assigned_server_role_11_zu.priority.should == AssignedServerRole::HIGH_PRIORITY
 
@@ -357,7 +295,5 @@ describe AssignedServerRole do
         @assigned_server_role_11_zl.deactivate_in_zone
         @assigned_server_role_11_zl.active.should be_false
       end
-
   end
-
 end

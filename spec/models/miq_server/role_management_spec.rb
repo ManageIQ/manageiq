@@ -4,9 +4,6 @@ describe "Server Role Management" do
 
   context "After Setup," do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,license_required,role_scope
         automate,Automation Engine,0,false,automate,region
@@ -32,9 +29,7 @@ describe "Server Role Management" do
       MiqRegion.seed
       ServerRole.seed
       @server_roles = ServerRole.all
-      @zone         = FactoryGirl.create(:zone)
-      @miq_server   = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone, :status => "started", :name => "Server 1")
-      MiqServer.my_server(true)
+      @miq_server   = FactoryGirl.create(:miq_server, :my_server)
       @miq_server.deactivate_all_roles
     end
 

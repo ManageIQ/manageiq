@@ -42,14 +42,9 @@ module JobProxyDispatcherEmbeddedScanSpec
 
     context "With a zone, server, ems, hosts, vmware vms" do
       before(:each) do
-        @guid = MiqUUID.new_guid
-        MiqServer.stub(:my_guid => @guid)
-        @zone = FactoryGirl.create(:zone)
-        @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :name => "test_server_main_server")
-        MiqServer.my_server(true)
-
+        server = FactoryGirl.create(:miq_server_master, :my_server, :name => "test_server_main_server")
         (NUM_SERVERS - 1).times do |i|
-          FactoryGirl.create(:miq_server, :zone => @zone, :guid => MiqUUID.new_guid, :name => "test_server_#{i}")
+          FactoryGirl.create(:miq_server, :zone => server.zone, :name => "test_server_#{i}")
         end
 
         #TODO: We should be able to set values so we don't need to stub behavior

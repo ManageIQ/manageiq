@@ -360,9 +360,7 @@ describe Host do
 
   context "host validation" do
     before do
-      @zone = FactoryGirl.create(:zone)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone)
-      MiqServer.stub(:my_server).and_return(@server)
+      FactoryGirl.create(:miq_server, :my_server)
 
       @password = "v2:{/OViaBJ0Ug+RSW9n7EFGqw==}"
       @host = FactoryGirl.create(:host_vmware_esx)

@@ -6,12 +6,8 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
   context "two vix disk enabled servers," do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid => @guid)
-      @zone = FactoryGirl.create(:zone)
-      @server1 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :status => "started")
-      MiqServer.my_server(true)
-      @server2 = FactoryGirl.create(:miq_server, :zone => @zone, :guid => MiqUUID.new_guid, :status => "started")
+      @server1 = FactoryGirl.create(:miq_server_master, :my_server)
+      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
       MiqServer.any_instance.stub(:is_vix_disk? => true)
     end
 
@@ -93,7 +89,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
           context "with server proxies active," do
             before(:each) do
               MiqServer.any_instance.stub(:is_proxy_active? => true)
-              @vm.stub(:my_zone).and_return(@zone.name)
+              @vm.stub(:my_zone).and_return(@server1.zone.name)
             end
 
             context "a vm template and invalid VC authentication" do

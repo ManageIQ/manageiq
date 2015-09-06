@@ -7,14 +7,7 @@ describe MiqHostProvisionWorkflow do
   context "seeded" do
     context "After setup," do
       before(:each) do
-        @guid = MiqUUID.new_guid
-        MiqServer.stub(:my_guid => @guid)
-
-        @zone = FactoryGirl.create(:zone)
-        MiqServer.stub(:my_zone => @zone)
-
-        @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid, :status => "started")
-        MiqServer.stub(:my_server => @server)
+        @server = FactoryGirl.create(:miq_server, :my_server)
 
         FactoryGirl.create(:user_admin)
 
@@ -38,7 +31,7 @@ describe MiqHostProvisionWorkflow do
 
       context "With a Valid IPMI Host," do
         before(:each) do
-          ems        = FactoryGirl.create(:ems_vmware,  :name => "Test EMS",  :zone => @zone)
+          ems        = FactoryGirl.create(:ems_vmware, :name => "Test EMS", :zone => @server.zone)
           host       = FactoryGirl.create(:host_with_ipmi, :ext_management_system => ems)
           pxe_server = FactoryGirl.create(:pxe_server, :name => 'PXE on 127.0.0.1', :uri_prefix => 'nfs', :uri => 'nfs://127.0.0.1/srv/tftpboot')
           pxe_image  = FactoryGirl.create(:pxe_image, :name => 'VMware ESXi 4.1-260247', :pxe_server => pxe_server)
