@@ -5,7 +5,7 @@ describe MiqQueue do
 
   context "#deliver" do
     before do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "works with deliver_on" do
@@ -54,9 +54,9 @@ describe MiqQueue do
 
   context "With messages left in dequeue at startup," do
     before do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-      @other_miq_server = FactoryGirl.create(:miq_server, :guid => MiqUUID.new_guid, :zone => @zone)
+      @other_miq_server = FactoryGirl.create(:miq_server, :zone => @miq_server.zone)
 
       @worker       = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
       @other_worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @other_miq_server.id)
@@ -219,7 +219,7 @@ describe MiqQueue do
 
   context "miq_queue with messages" do
     before do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @t1 = Time.parse("Wed Apr 20 00:15:00 UTC 2011")
       @t2 = Time.parse("Mon Apr 25 10:30:15 UTC 2011")
@@ -257,7 +257,7 @@ describe MiqQueue do
 
   context "deliver to queue" do
     before do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @t1 = Time.parse("Wed Apr 20 00:15:00 UTC 2011")
       @msg = FactoryGirl.create(:miq_queue, :zone => @zone.name, :role => "role1", :priority => 20, :created_on => @t1)
@@ -308,9 +308,9 @@ describe MiqQueue do
 
   context "worker" do
     before do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, @miq_server, _ = EvmSpecHelper.create_guid_miq_server_zone
 
-      @worker       = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
+      @worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
       @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :task_id => "task123", :handler => @worker)
     end
 
@@ -325,7 +325,7 @@ describe MiqQueue do
 
   context "#put" do
     before do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, @miq_server, _ = EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "should put one message on queue" do
