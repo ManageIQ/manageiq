@@ -129,17 +129,13 @@ describe AuthenticationMixin do
 
   context "with server and zone" do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @zone       = FactoryGirl.create(:zone)
-      @miq_server = FactoryGirl.create(:miq_server_not_master, :guid => @guid, :zone => @zone)
-      MiqServer.my_server(true)
+      @miq_server = FactoryGirl.create(:miq_server, :my_server)
       @data = {:default => {:userid => "test", :password => "blah"}}
     end
 
     context "with multiple zones, emses, and hosts" do
       before(:each) do
-        @zone1 = @zone
+        @zone1 = @miq_server.zone
         @zone2 = FactoryGirl.create(:zone, :name => 'test1')
         @ems1  = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone1)
         @ems2  = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone2)

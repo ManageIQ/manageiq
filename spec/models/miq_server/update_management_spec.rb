@@ -3,7 +3,7 @@ require "spec_helper"
 describe MiqServer do
   before do
     MiqDatabase.seed
-    guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    _, @server, _ = EvmSpecHelper.create_guid_miq_server_zone
   end
 
   let(:database)    { MiqDatabase.first }
@@ -12,7 +12,7 @@ describe MiqServer do
 
   context "Queue multiple servers" do
     before do
-      FactoryGirl.create(:miq_server_not_master, :zone => @zone, :guid => MiqUUID.new_guid)
+      FactoryGirl.create(:miq_server, :zone => @server.zone)
     end
 
     it ".queue_update_registration_status" do

@@ -2,12 +2,7 @@ require "spec_helper"
 
 describe PxeServer do
   before(:each) do
-    @guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-    @zone       = FactoryGirl.create(:zone)
-    @miq_server = FactoryGirl.create(:miq_server_not_master, :guid => @guid, :zone => @zone)
-    MiqServer.my_server(true)
-
+    FactoryGirl.create(:miq_server, :my_server)
     @pxe_server = FactoryGirl.create(:pxe_server, :uri_prefix => "nfs", :uri => "nfs:///#{@mnt_point}")
   end
 

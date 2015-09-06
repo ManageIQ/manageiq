@@ -20,8 +20,4 @@ FactoryGirl.define do
   factory :miq_server_master, :parent => :miq_server do
     is_master      true
   end
-
-  factory :miq_server_not_master, :parent => :miq_server do
-    is_master      false
-  end
 end

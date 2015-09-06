@@ -9,11 +9,7 @@ describe "MiqWorker Monitor" do
       MiqServer.any_instance.stub(:get_memory_threshold).and_return(100.megabytes)
       MiqServer.any_instance.stub(:get_restart_interval).and_return(0)
 
-      @guid               = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @zone               = FactoryGirl.create(:zone)
-      @miq_server         = FactoryGirl.create(:miq_server_not_master, :guid => @guid, :zone => @zone)
-      MiqServer.my_server(true)
+      @miq_server = FactoryGirl.create(:miq_server, :my_server)
     end
 
     context "A worker" do
@@ -161,7 +157,7 @@ describe "MiqWorker Monitor" do
 
       context "with expired active messages assigned to workers from multiple" do
         before(:each) do
-          @miq_server2 = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => @zone, :status => 'started')
+          @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server.zone)
           @worker1 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
           @worker2 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server2.id)
 
