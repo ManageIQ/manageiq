@@ -6,10 +6,7 @@ FactoryGirl.define do
 
     # Hackery: Due to ntp reload occurring on save, we need to add the servers after saving the zone.
     after(:create) do |z|
-      guid   = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(guid)
-      MiqServer.my_server_clear_cache
-      FactoryGirl.create(:miq_server_master, :guid => guid, :zone => z)
+      FactoryGirl.create(:miq_server_master, :my_server, :zone => z)
     end
   end
 

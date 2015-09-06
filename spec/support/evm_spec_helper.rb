@@ -46,26 +46,20 @@ module EvmSpecHelper
   end
 
   def self.local_guid_miq_server_zone
-    guid, server, zone = remote_guid_miq_server_zone
-    MiqServer.stub(:my_guid).and_return(guid)
-
-    return guid, server, zone
+    remote_guid_miq_server_zone(:my_server)
   end
 
   class << self
     alias_method :create_guid_miq_server_zone, :local_guid_miq_server_zone
   end
 
-  def self.remote_guid_miq_server_zone
+  def self.remote_guid_miq_server_zone(server_trait = nil)
     create_root_tenant
-    guid   = MiqUUID.new_guid
-    zone   = FactoryGirl.create(:zone)
-    server = FactoryGirl.create(:miq_server_master, :guid => guid, :zone => zone)
+    server = FactoryGirl.create(:miq_server_master, server_trait)
+    MiqServer.my_server_clear_cache unless server_trait # duplicate work
+    server.zone.clear_association_cache
 
-    MiqServer.my_server_clear_cache
-    zone.clear_association_cache
-
-    return guid, server, zone
+    [server.guid, server, server.zone]
   end
 
   def self.seed_specific_product_features(*features)
@@ -97,7 +91,6 @@ module EvmSpecHelper
       :description   => "EvmGroup-super_administrator",
       :miq_user_role => admin_role
     )
-
     admin_user = FactoryGirl.create(:user,
       :name           => "Administrator",
       :email          => "admin@example.com",
