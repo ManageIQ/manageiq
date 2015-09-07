@@ -52,6 +52,14 @@ class LdapDomain < ActiveRecord::Base
     @ldap ? true : false
   end
 
+  def domain_prefix
+    ""
+  end
+
+  def domain_prefix=(arg)
+    ""
+  end
+
   def verify_credentials(server = nil)
     begin
       result = self.connect(server)
