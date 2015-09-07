@@ -20,7 +20,9 @@ module ControllerSpecHelper
   def seed_specific_product_features(*features)
     features.flatten!
     EvmSpecHelper.seed_specific_product_features(features)
-    create_user_with_product_features(MiqProductFeature.find_all_by_identifier(features))
+    features_models = MiqProductFeature.find_all_by_identifier(features)
+    @test_user = create_user_with_product_features(feature_models)
+    feature_models
   end
 
   def seed_specific_product_features_with_user_settings(features, settings)
@@ -30,16 +32,10 @@ module ControllerSpecHelper
   end
 
   def create_user_with_product_features(product_features)
-    test_role  = FactoryGirl.create(:miq_user_role,
-                                    :name                 => "test_role",
-                                    :miq_product_features => product_features)
-    test_group = FactoryGirl.create(:miq_group,
-                                    :miq_user_role => test_role)
-    @test_user = FactoryGirl.create(:user,
-                                    :userid     => "test",
-                                    :name       => 'test_user',
-                                    :miq_groups => [test_group])
-    login_as @test_user
+    login_as FactoryGirl.create(:user,
+                                :userid   => "test",
+                                :name     => 'test_user',
+                                :features => product_features)
   end
 
   shared_context "valid session" do
