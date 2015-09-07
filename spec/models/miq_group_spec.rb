@@ -253,4 +253,18 @@ describe MiqGroup do
       expect(tenant.miq_groups.sort_by_desc).to eq([ga, gb, gc])
     end
   end
+
+  describe "#all_users" do
+    it "finds users" do
+      g  = FactoryGirl.create(:miq_group)
+      g2 = FactoryGirl.create(:miq_group)
+
+      FactoryGirl.create(:user)
+      u_one  = FactoryGirl.create(:user, :miq_groups => [g])
+      u_two  = FactoryGirl.create(:user, :miq_groups => [g, g2], :current_group => g)
+
+      expect(g.all_users).to match_array([u_one, u_two])
+      expect(g2.all_users).to match_array([u_two])
+    end
+  end
 end
