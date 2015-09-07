@@ -36,6 +36,6 @@ FactoryGirl.define do
   end
 
   factory :user_miq_request_approver, :parent => :user do
-    miq_groups { [FactoryGirl.create(:miq_group_miq_request_approver)] }
+    features "miq_request_approval"
   end
 end
