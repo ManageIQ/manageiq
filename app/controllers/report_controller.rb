@@ -388,9 +388,9 @@ class ReportController < ApplicationController
   end
 
   def rebuild_trees
-    rep = MiqReportResult.all(:conditions=>set_saved_reports_condition, :limit=>1, :order => 'created_on desc', :select => "created_on")
-    return false if rep[0].nil?
-    build_trees = rep[0].created_on > @sb[:rep_tree_build_time]
+    rep = MiqReportResult.where(set_saved_reports_condition).limit(1).order('created_on desc').pluck("created_on").first
+    return false unless rep
+    build_trees = rep > @sb[:rep_tree_build_time]
     # save last tree build time to decide if tree needs to be refreshed automatically
     @sb[:rep_tree_build_time] = Time.now.utc if build_trees
     build_trees
