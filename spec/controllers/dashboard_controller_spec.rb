@@ -153,7 +153,8 @@ describe DashboardController do
 
     it "retuns start page url that user has set as startpage in settings" do
       settings = {:display => {:startpage => "/dashboard/show"}}
-      seed_all_product_features(settings)
+      seed_specific_product_features_with_user_settings(%(everything), settings)
+      controller.stub(:role_allows).and_return(true)
       url = controller.send(:start_url_for_user, nil)
       url.should eq("/dashboard/show")
     end

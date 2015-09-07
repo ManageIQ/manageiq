@@ -29,11 +29,6 @@ module ControllerSpecHelper
     controller.instance_variable_set(:@settings, @test_user.settings)
   end
 
-  def seed_all_product_features(settings)
-    seed_specific_product_features_with_user_settings(%w(everything), settings)
-    controller.stub(:role_allows).and_return(true)
-  end
-
   def create_user_with_product_features(product_features)
     test_role  = FactoryGirl.create(:miq_user_role,
                                     :name                 => "test_role",
