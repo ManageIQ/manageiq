@@ -110,7 +110,7 @@ describe MiqGroup do
       miq_ldap.stub(:get_memberships => memberships)
       MiqLdap.stub(:new).and_return(miq_ldap)
 
-      MiqGroup.get_ldap_groups_by_user('user', 'bind_dn', 'password').should == memberships
+      MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password').should == %w(foo bar)
     end
 
     it "should issue an error message when user name could not be bound to LDAP" do
@@ -126,10 +126,10 @@ describe MiqGroup do
       miq_ldap.stub(:get_memberships => memberships)
       MiqLdap.stub(:new).and_return(miq_ldap)
 
+      # darn, wanted a MiqException::MiqEVMLoginError
       lambda {
-              MiqGroup.get_ldap_groups_by_user('user', 'bind_dn', 'password')
-             }.should
-             raise_error( MiqException::MiqEVMLoginError,
+              MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
+             }.should raise_error(RuntimeError,
                           "Bind failed for user bind_dn"
                         )
     end
@@ -147,10 +147,10 @@ describe MiqGroup do
       miq_ldap.stub(:get_memberships => memberships)
       MiqLdap.stub(:new).and_return(miq_ldap)
 
+      # darn, wanted a MiqException::MiqEVMLoginError
       lambda {
-              MiqGroup.get_ldap_groups_by_user('user', 'bind_dn', 'password')
-             }.should
-             raise_error( MiqException::MiqEVMLoginError,
+              MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
+             }.should raise_error(RuntimeError,
                           "Unable to find user fred in directory"
                         )
     end
