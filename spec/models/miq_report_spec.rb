@@ -159,6 +159,26 @@ describe MiqReport do
       expect(found_ids).to eq [ids.last]
     end
 
+    it "VMs under Host with order" do
+      host1 = FactoryGirl.create(:host)
+      vma   = FactoryGirl.create(:vm_vmware, :host => host1, :name => "a")
+
+      host2 = FactoryGirl.create(:host)
+      vmb   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "b")
+      vmc   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "c")
+
+      report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
+      results, _ = report.paged_view_search(
+        :parent      => host2,
+        :association => "vms",
+        :only        => ["name"],
+        :page        => 1,
+        :per_page    => 2
+      )
+      names = results.data.collect(&:name)
+      expect(names).to eq [vmc.name, vmb.name]
+    end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -447,32 +467,6 @@ describe MiqReport do
           lambda { results, attrs = report.paged_view_search(options) }.should_not raise_error
           results.length.should == 20
           attrs[:total_count].should == 100
-        end
-      end
-
-      context "with a parent and an association" do
-        before(:each) do
-          @host = @hosts.first
-        end
-
-        it "returns the correct number of VMs under Host in the correct order" do
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {
-            :parent   => @host,
-            :association => "vms",
-            :only     => ["name"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 1 VM 21"
-          results.data.last["name"].should  == "Test Group 1 VM 13"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 25
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 25
         end
       end
     end
