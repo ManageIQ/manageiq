@@ -11,7 +11,7 @@ require_relative 'openstack/services/compute/builder'
 require_relative 'openstack/services/volume/builder'
 require_relative 'openstack/services/image/builder'
 
-include InteractionMethods
+include Openstack::InteractionMethods
 
 def usage(s)
   $stderr.puts(s)
