@@ -445,14 +445,15 @@ module ManageIQ::Providers::Kubernetes
         \A
           (?:(?:(?<host>[^\.:\/]+\.[^\.:\/]+)|(?:(?<host2>[^:\/]+)(?::(?<port>\d+))))\/)?
           (?<name>(?:[^:\/@]+\/)*[^\/:@]+)
-          (?:(?::(?<tag>.+))|(?:\@(?<shatag>sha256:.+)))?
+          (?:(?::(?<tag>.+))|(?:\@(?<digest>.+)))?
         \z
       }x.match(image)
 
       [
         {
           :name      => parts[:name],
-          :tag       => parts[:tag] || parts[:shatag],
+          :tag       => parts[:tag],
+          :digest    => parts[:digest],
           :image_ref => image_ref,
         },
         (parts[:host] || parts[:host2]) && {

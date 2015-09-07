@@ -13,6 +13,7 @@ class ContainerImage < ActiveRecord::Base
     result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
     result << name
     result << ":#{tag}" unless tag.nil?
+    result << "@#{digest}" unless digest.nil?
     result
   end
 
