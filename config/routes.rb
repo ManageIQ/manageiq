@@ -611,6 +611,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tl_chooser
         update
+        upload_key_file
         wait_for_task
       ) +
         adv_search_post +
@@ -694,6 +695,7 @@ Vmdb::Application.routes.draw do
         tree_autoload_dynatree
         tree_autoload_quads
         update
+        upload_key_file
         wait_for_task
         scaling
       ) +

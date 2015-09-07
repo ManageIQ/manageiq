@@ -1,0 +1,9 @@
+:javascript
+  var postMessageData = {
+    ssh_keypair_password: '#{@ssh_keypair_password}',
+    message: '#{@message}'
+  };
+
+  $(function() {
+    parent.postMessage(postMessageData, '*');
+  });
