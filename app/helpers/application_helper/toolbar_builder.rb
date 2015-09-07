@@ -1163,6 +1163,8 @@ class ApplicationHelper::ToolbarBuilder
       when "instance_check_compliance", "vm_check_compliance"
         model = model_for_vm(@record).to_s
         return "No Compliance Policies assigned to this #{model == "ManageIQ::Providers::InfraManager::Vm" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
+      when "vm_clone"
+        return "Can't clone orphaned/archived VM" if @record.orphaned? || @record.archived?
       when "vm_collect_running_processes"
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"
@@ -1190,6 +1192,8 @@ class ApplicationHelper::ToolbarBuilder
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
       when "vm_guest_restart"
         return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
+      when "vm_publish"
+        return "Can't publish orphaned/archived VM to a template" if @record.orphaned? || @record.archived?
       when "vm_stop"
         return @record.is_available_now_error_message(:stop) if @record.is_available_now_error_message(:stop)
       when "vm_reset"
@@ -1250,6 +1254,16 @@ class ApplicationHelper::ToolbarBuilder
       end
     when nil, "NilClass"
       case id
+      when "vm_clone"
+        if @sb[:trees][:vandt_tree][:active_node] == "xx-arch" ||
+           @sb[:trees][:vandt_tree][:active_node] == "xx-orph"
+          return "Can't clone orphaned/archived VM"
+        end
+      when "vm_publish"
+        if @sb[:trees][:vandt_tree][:active_node] == "xx-arch" ||
+           @sb[:trees][:vandt_tree][:active_node] == "xx-orph"
+          return "Can't publish orphaned/archived VM to a template"
+        end
       when "ab_group_edit"
         return "Selected Custom Button Group cannot be edited" if x_node.split('-')[1] == "ub"
       when "ab_group_delete"
