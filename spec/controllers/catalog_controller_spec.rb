@@ -497,4 +497,38 @@ describe CatalogController do
       expect(@st.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement))
     end
   end
+
+  context "#replace_right_cell" do
+    it "correctly renders dialog_provision using dialogs with empty elements" do
+      st = FactoryGirl.create(:service_template)
+      dialog = FactoryGirl.create(:dialog,
+                                  :label       => "label",
+                                  :description => "description",
+                                  :buttons     => "submit,reset,cancel")
+      dialog_tab_1 = FactoryGirl.create(:dialog_tab, :label => "tab_1")
+      dialog_tab_2 = FactoryGirl.create(:dialog_tab, :label => "tab_2")
+      dialog_group = FactoryGirl.create(:dialog_group, :label => "dialog_group")
+      dialog_field = FactoryGirl.create(:dialog_field_date_control, :name => "dialog_field")
+      dialog_tab_1.add_resource(dialog_group, :order => 0)
+      dialog_group.add_resource(dialog_field, :order => 0)
+      dialog.add_resource(dialog_tab_1, :order => 0)
+      dialog.add_resource(dialog_tab_2, :order => 1)
+      ra = st.resource_actions.build(:action => 'Provision')
+      ra.update_attributes(:dialog => dialog, :fqname => 'namespace0/class0/instance0')
+      st.save
+      st.reload
+
+      controller.instance_variable_set(:@record, st)
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:sandt_tree => {:active_node => "stc-001_st-#{st.id}"}},
+                                       :active_tree => :sandt_tree)
+      controller.instance_variable_set(:@edit, :rec_id => st.id)
+      controller.instance_variable_set(:@record, dialog)
+      controller.stub(:get_node_info)
+      presenter_output = controller.send(:replace_right_cell, 'dialog_provision')
+      expect(presenter_output).not_to be_nil
+      expect(presenter_output[0]).to include('ManageIQ.calendar.calDateFrom')
+    end
+  end
 end
