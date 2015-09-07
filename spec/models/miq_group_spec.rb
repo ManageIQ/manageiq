@@ -96,63 +96,40 @@ describe MiqGroup do
       @miq_group.description = "      leading and trailing white spaces     "
       @miq_group.description.should == "leading and trailing white spaces"
     end
+  end
+
+  describe "#get_ldap_groups_by_user" do
+    before do
+      stub_server_configuration(:authentication => {:group_memberships_max_depth => 1})
+
+      miq_ldap = double('miq_ldap',
+                        :fqusername      => 'fred',
+                        :normalize       => 'fred flintstone',
+                        :bind            => true,
+                        :get_user_object => 'user object',
+                        :get_memberships => %w(foo bar))
+      MiqLdap.stub(:new).and_return(miq_ldap)
+    end
 
     it "should return LDAP groups by user name" do
-      auth_config = { :group_memberships_max_depth => 1 }
-      stub_server_configuration(:authentication =>  auth_config)
-
-      miq_ldap = double('miq_ldap')
-      miq_ldap.stub(:fqusername => 'fred')
-      miq_ldap.stub(:normalize => 'fred flintstone')
-      miq_ldap.stub(:bind => true)
-      miq_ldap.stub(:get_user_object => 'user object')
-      memberships = [ 'foo', 'bar' ]
-      miq_ldap.stub(:get_memberships => memberships)
-      MiqLdap.stub(:new).and_return(miq_ldap)
-
       MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password').should == %w(foo bar)
     end
 
     it "should issue an error message when user name could not be bound to LDAP" do
-      auth_config = { :group_memberships_max_depth => 1 }
-      stub_server_configuration(:authentication =>  auth_config)
-
-      miq_ldap = double('miq_ldap')
-      miq_ldap.stub(:fqusername => 'fred')
-      miq_ldap.stub(:normalize => 'fred flintstone')
-      miq_ldap.stub(:bind => false)
-      miq_ldap.stub(:get_user_object => 'user object')
-      memberships = [ 'foo', 'bar' ]
-      miq_ldap.stub(:get_memberships => memberships)
-      MiqLdap.stub(:new).and_return(miq_ldap)
-
+      MiqLdap.new.stub(:bind => false)
       # darn, wanted a MiqException::MiqEVMLoginError
-      lambda {
-              MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
-             }.should raise_error(RuntimeError,
-                          "Bind failed for user bind_dn"
-                        )
+      expect {
+        MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
+      }.to raise_error(RuntimeError, "Bind failed for user bind_dn")
     end
 
     it "should issue an error message when user name does not exist in LDAP directory" do
-      auth_config = { :group_memberships_max_depth => 1 }
-      stub_server_configuration(:authentication => auth_config)
-
-      miq_ldap = double('miq_ldap')
-      miq_ldap.stub(:fqusername => 'fred')
-      miq_ldap.stub(:normalize => 'fred flintstone')
-      miq_ldap.stub(:bind => true)
-      miq_ldap.stub(:get_user_object => nil)
-      memberships = [ 'foo', 'bar' ]
-      miq_ldap.stub(:get_memberships => memberships)
-      MiqLdap.stub(:new).and_return(miq_ldap)
+      MiqLdap.new.stub(:get_user_object => nil)
 
       # darn, wanted a MiqException::MiqEVMLoginError
-      lambda {
-              MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
-             }.should raise_error(RuntimeError,
-                          "Unable to find user fred in directory"
-                        )
+      expect {
+        MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
+      }.to raise_error(RuntimeError,"Unable to find user fred in directory")
     end
   end
 
