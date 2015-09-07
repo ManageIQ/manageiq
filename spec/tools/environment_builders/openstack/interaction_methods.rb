@@ -1,3 +1,4 @@
+module Openstack
 module InteractionMethods
   def find_all(collection, lookup_pairs)
     # TODO(lsmola) hm not comparing nested hashes, e.g. needed for
@@ -12,7 +13,7 @@ module InteractionMethods
         else
           if v.kind_of?(Hash)
             h = i.send(k)
-            v.each { |key, value| h[key] == value }
+            v.all? { |key, value| h[key] == value }
           else
             i.send(k) == v
           end
@@ -49,4 +50,5 @@ module InteractionMethods
       wait_for_server_to_start(server)
     end
   end
+end
 end
