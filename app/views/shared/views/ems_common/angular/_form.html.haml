@@ -64,18 +64,18 @@
         %span.help-block{"ng-show" => "angularForm.hostname.$error.required"}
           = _("Required")
 
-    .form-group{"ng-class" => "{'has-error': angularForm.tenant_id.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
+    .form-group{"ng-class" => "{'has-error': angularForm.azure_tenant_id.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _('Tenant ID')
       .col-md-8
         %input.form-control{"type"        => "text",
                             "id"          => "textInput-markup",
-                            "name"        => "tenant_id",
-                            "ng-model"    => "emsCommonModel.tenant_id",
+                            "name"        => "azure_tenant_id",
+                            "ng-model"    => "emsCommonModel.azure_tenant_id",
                             "maxlength"   => 32,
                             "required"    => "",
                             "checkchange" => ""}
-        %span.help-block{"ng-show" => "angularForm.tenant_id.$error.required"}
+        %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.required"}
           = _("Required")
 
     .form-group{"ng-class" => "{'has-error': angularForm.api_port.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'rhevm'"}

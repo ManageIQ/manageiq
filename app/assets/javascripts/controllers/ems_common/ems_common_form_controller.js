@@ -25,7 +25,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       host_default_vnc_port_end: '',
       emstype_vm: false,
       ems_common: true,
-      tenant_id: ''
+      azure_tenant_id: ''
     };
     $scope.formId = emsCommonFormId;
     $scope.afterGet = false;
@@ -78,7 +78,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
         $scope.emsCommonModel.amqp_password                   = data.amqp_password;
         $scope.emsCommonModel.amqp_verify                     = data.amqp_verify;
 
-        $scope.emsCommonModel.tenant_id                       = data.tenant_id;
+        $scope.emsCommonModel.azure_tenant_id                 = data.azure_tenant_id;
 
         $scope.afterGet  = true;
         $scope.modelCopy = angular.copy( $scope.emsCommonModel );
@@ -119,7 +119,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
        $scope.emsCommonModel.amqp_verify != '' && $scope.angularForm.amqp_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "default" && $scope.emsCommonModel.emstype == "azure") &&
-      ($scope.emsCommonModel.tenant_id != '' && $scope.angularForm.tenant_id.$valid) &&
+      ($scope.emsCommonModel.azure_tenant_id != '' && $scope.angularForm.azure_tenant_id.$valid) &&
       ($scope.emsCommonModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
        $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
