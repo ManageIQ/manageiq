@@ -33,7 +33,7 @@
     } else {
       minus = val[0] == '-';
       intpart = Math.abs(~~ val);
-      floatpart = val.replace(/^.*\./, '');
+      floatpart = (val.indexOf('.') < 0) ? '' : val.replace(/^.*\./, '');
     }
 
     var s = "";
@@ -69,8 +69,8 @@
     var numstr = val;
     if (_.isNumber(val)) {
       numstr = apply_format_precision(val, options.precision);
-      numstr = number_with_delimiter(numstr, options);
     }
+    numstr = number_with_delimiter(numstr, options);
 
     var fmt = (numstr[0] == '-') ? options.negative_format : options.format;
     return fmt.replace('%u', options.unit).replace('%n', numstr);
@@ -98,9 +98,9 @@
     val = Math.abs(val);
 
     val *= 1000000; // mhz to hz
-    if (size < 1000000000) {
+    if (val < 1000000000) {
       s += sprintf(precision + " MHz", val / 1000000);
-    } else if (size < 1000000000000) {
+    } else if (val < 1000000000000) {
       s += sprintf(precision + " GHz", val / 1000000000);
     } else {
       s += sprintf(precision + " THz", val / 1000000000000);
@@ -114,46 +114,6 @@
   };
 
   var format = {
-    /*
-      :description: Number (1,234)
-      :function:
-        :name: number_with_delimiter
-        :delimiter: ","
-
-      :description: Number (1,234.0)
-      :function:
-        :name: number_with_delimiter
-        :delimiter: ","
-
-      :description: Number, 2 Decimals (1,234.00)
-      :function:
-        :name: number_with_delimiter
-        :delimiter: ","
-
-      :description: Kilobytes per Second (10 KBps)
-      :function: 
-        :name: number_with_delimiter
-        :delimiter: ","
-        :suffix: " KBps"
-
-      :description: Percentage (99%)
-      :function: 
-        :name: number_with_delimiter
-        :delimiter: ","
-        :suffix: ! '%'
-
-      :description: Percent, 1 Decimal (99.0%)
-      :function:
-        :name: number_with_delimiter
-        :delimiter: ","
-        :suffix: ! '%'
-
-      :description: Percent, 2 Decimals (99.00%)
-      :function: 
-        :name: number_with_delimiter
-        :delimiter: ","
-        :suffix: ! '%'
-    */
     number_with_delimiter: function(val, options) {
       options = options || {};
       var av_options = _.pick(options, [ 'delimiter', 'separator' ]);
@@ -162,12 +122,6 @@
       return apply_prefix_and_suffix(val, options);
     },
 
-    /*
-      :description: Currency, 2 Decimals ($1,234.00)
-      :function:
-        :name: currency_with_delimiter
-        :delimiter: ","
-    */
     currency_with_delimiter: function(val, options) {
       options = options || {};
       var av_options = _.pick(options, [ 'delimiter', 'separator' ]);
@@ -176,11 +130,6 @@
       return apply_prefix_and_suffix(val, options)
     },
 
-    /*
-      :description: Suffixed Bytes (B, KB, MB, GB)
-      :function:
-        :name: bytes_to_human_size
-    */
     bytes_to_human_size: function(val, options) {
       options = options || {};
       var av_options = { precision: options.precision || 0 };  // Precision of 0 returns the significant digits
@@ -188,75 +137,24 @@
       return apply_prefix_and_suffix(val, options);
     },
 
-    /*
-      :description: Suffixed Kilobytes (KB, MB, GB)
-      :function:
-        :name: kbytes_to_human_size
-    */
     kbytes_to_human_size: function(val, options) {
       return format.bytes_to_human_size(val * 1024, options);
     },
 
-    /*
-      :description: Suffixed Megabytes (MB, GB)
-      :function:
-        :name: mbytes_to_human_size
-    */
     mbytes_to_human_size: function(val, options) {
       return format.kbytes_to_human_size(val * 1024, options);
     },
 
-    /*
-      :description: Suffixed Gigabytes (GB)
-      :function:
-        :name: gbytes_to_human_size
-    */
     gbytes_to_human_size: function(val, options) {
       return format.mbytes_to_human_size(val * 1024, options);
     },
 
-    /*
-      :description: Megahertz (12 Mhz)
-      :function: 
-        :name: mhz_to_human_size
-        :delimiter: ","
-
-      :description: Megahertz Avg (12.1 Mhz)
-      :function:
-        :name: mhz_to_human_size
-        :delimiter: ","
-    */
     mhz_to_human_size: function(val, options) {
       options = options || {};
       val = mhz_to_human_size(val, options.precision);
       return apply_prefix_and_suffix(val, options);
     },
 
-    /*
-      :description: Boolean (True/False)
-      :function:
-        :name: boolean
-
-      :description: Boolean (T/F)
-      :function:
-        :name: boolean
-        :format: t_f
-
-      :description: Boolean (Yes/No)
-      :function:
-        :name: boolean
-        :format: yes_no
-
-      :description: Boolean (Y/N)
-      :function:
-        :name: boolean
-        :format: y_n
-
-      :description: Boolean (Pass/Fail)
-      :function:
-        :name: boolean
-        :format: pass_fail
-    */
     boolean: function(val, options) {
       options = options || {};
 
@@ -281,112 +179,6 @@
       };
     },
 
-    /*
-      :description: Date (M/D/YYYY)
-      :function:
-        :name: datetime
-        :format: "%m/%d/%Y"
-
-      :description: Date (M/D/YY)
-      :function:
-        :name: datetime
-        :format: "%m/%d/%y"
-
-      :description: Date (M/D)
-      :function:
-        :name: datetime
-        :format: "%m/%d"
-
-      :description: Time (H:M:S Z) 
-      :function:
-        :name: datetime
-        :format: "%H:%M %Z"
-
-      :description: Date/Time (M/D/Y H:M:S Z)
-      :function:
-        :name: datetime
-        :format: "%m/%d/%y %H:%M:%S %Z"
-
-      :description: Date/Hour (M/D/Y H:00 Z)
-      :function:
-        :name: datetime
-        :format: "%m/%d/%y %H:00 %Z"
-
-      :description: Date/Hour (M/D/Y H AM|PM Z)
-      :function:
-        :name: datetime
-        :format: "%m/%d/%y %I %p %Z"
-
-      :description: Hour (H:00 Z)
-      :function:
-        :name: datetime
-        :format: "%H:00 %Z"
-
-      :description: Hour (H AM|PM Z)
-      :function:
-        :name: datetime
-        :format: "%l %p %Z"
-
-      :description: Hour of Day (24)
-      :function:
-        :name: datetime
-        :format: "%k"
-
-      :description: Day Full (Monday)
-      :function:
-        :name: datetime
-        :format: "%A"
-
-      :description: Day Short (Mon)
-      :function:
-        :name: datetime
-        :format: "%a"
-
-      :description: Day of Week (1)
-      :function:
-        :name: datetime
-        :format: "%u"
-
-      :description: Day of Month (27)
-      :function:
-        :name: datetime
-        :format: "%e"
-
-      :description: Month and Year (January 2011)
-      :function:
-        :name: datetime
-        :format: "%B %Y"
-
-      :description: Month and Year Short (Jan 11)
-      :function:
-        :name: datetime
-        :format: "%b %y"
-
-      :description: Month Full (January)
-      :function:
-        :name: datetime
-        :format: "%B"
-
-      :description: Month Short (Jan)
-      :function:
-        :name: datetime
-        :format: "%b"
-
-      :description: Month of Year (12)
-      :function:
-        :name: datetime
-        :format: "%m"
-
-      :description: Week of Year (52)
-      :function:
-        :name: datetime
-        :format: "%W"
-
-      :description: Year (YYYY)
-      :function:
-        :name: datetime
-        :format: "%Y"
-    */
     // note that we require moment-timezone so that %Z (which maps to moments z which uses zoneAbbr, which returns "UTC" or "" without moment-timezone) works
     datetime: function(val, options) {
       options = options || {};
@@ -403,22 +195,6 @@
       return val.strftime(options.format);
     },
 
-    /*
-      :description: Date Range (M/D/Y - M/D/Y)
-      :function:
-        :name: datetime_range
-        :format: "%m/%d/%y"
-
-      :description: Day Range (M/D - M/D)
-      :function:
-        :name: datetime_range
-        :format: "%m/%d"
-
-      :description: Day Range Start (M/D)
-      :function:
-        :name: datetime_range
-        :format: "%m/%d"
-    */
     datetime_range: function(val, options) {
       options = options || {};
       if (! options.format)
@@ -450,12 +226,6 @@
         return "(" + stime.strftime(options.format) + " - " + etime.strftime(options.format) + ")";
     },
 
-    /*
-      :description: Comma seperated list
-      :function:
-        :name: set
-        :delimiter: ", "
-    */
     set: function(val, options) {
       options = options || {};
       if (! _.isArray(val))
@@ -463,17 +233,6 @@
       return val.join(options.delimiter || ", ");
     },
 
-    /*
-      :description: Day of Month (27th)
-      :function:
-        :name: datetime_ordinal
-        :format: "%e"
-
-      :description: Week of Year (52nd)
-      :function:
-        :name: datetime_ordinal
-        :format: "%W"
-    */
     datetime_ordinal: function(val, options) {
       options = options || {};
       val = format.datetime(val, options);
@@ -486,16 +245,11 @@
       return ordinalize(~~ val);
     },
 
-    /*
-      :description: "Elapsed Time (10 Days, 0 Hours, 1 Minute, 44 Seconds)"
-      :function:
-        :name: elapsed_time_human
-    */
     elapsed_time_human: function(val, options) {
       options = options || {};
       val = ~~ val;
 
-      var names = ['day', 'hour', 'minute', 'second'];
+      var names = ['Day', 'Hour', 'Minute', 'Second'];
 
       var days    = ~~(val / 86400);
       var hours   = ~~((val / 3600) - (days * 24));
@@ -509,12 +263,12 @@
       var sidx = _.findIndex(arr, function(a) {
         return a > 0;
       });
-      var values = _.slice(arr, sidx, sidx + 1);
+      var values = _.slice(arr, sidx, sidx + 2);
       var result = '';
       var sep    = '';
-      for (var i in values) {
+      values.forEach(function(val, i) {
         var sfx = names[sidx + i];
-        if (values[i] > 1 || values[i] == 0)
+        if (val > 1 || val == 0)
           sfx += "s";
 
         result += sep;
@@ -523,34 +277,22 @@
         result += sfx;
 
         sep = ", ";
-      }
+      });
 
       return result;
     },
 
-    /*
-      :description: String Truncated to 50 Characters with Elipses (...)
-      :function:
-        :name: string_truncate
-        :length: 50
-    */
     string_truncate: function(val, options) {
       options = options || {};
       var result = String(val);
       return (result.length > options.length) ? result.substr(0, options.length) + "..." : val;
     },
 
-    /*
-      :description: Convert Numbers Larger than 1.0e+15 to Exponential Form
-      :function:
-        :name: large_number_to_exponential_form
-        :length: 50
-    */
     large_number_to_exponential_form: function(val, options) {
       options = options || {};
       if (Number(val) < 1.0e+15)
         return val;
-      return String( Number(val) );
+      return Number(val).toPrecision(2);
     },
   };
 
