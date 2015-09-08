@@ -18,24 +18,14 @@ module ControllerSpecHelper
   end
 
   def seed_specific_product_features(*features)
-    features.flatten!
-    EvmSpecHelper.seed_specific_product_features(features)
-    features_models = MiqProductFeature.find_all_by_identifier(features)
-    @test_user = create_user_with_product_features(feature_models)
-    feature_models
+    @test_user = login_as FactoryGirl.create(:user,
+                                             :userid   => "test",
+                                             :name     => 'test_user',
+                                             :features => specific_product_features(*features))
   end
 
-  def seed_specific_product_features_with_user_settings(features, settings)
-    seed_specific_product_features(features)
-    @test_user.settings = settings
-    controller.instance_variable_set(:@settings, @test_user.settings)
-  end
-
-  def create_user_with_product_features(product_features)
-    login_as FactoryGirl.create(:user,
-                                :userid   => "test",
-                                :name     => 'test_user',
-                                :features => product_features)
+  def specific_product_features(*features)
+    EvmSpecHelper.specific_product_features(features)
   end
 
   shared_context "valid session" do

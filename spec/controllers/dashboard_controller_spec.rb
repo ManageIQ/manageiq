@@ -152,16 +152,17 @@ describe DashboardController do
     end
 
     it "retuns start page url that user has set as startpage in settings" do
-      settings = {:display => {:startpage => "/dashboard/show"}}
-      seed_specific_product_features_with_user_settings(%(everything), settings)
+      seed_specific_product_features(%(everything))
+      controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
+
       controller.stub(:role_allows).and_return(true)
       url = controller.send(:start_url_for_user, nil)
       url.should eq("/dashboard/show")
     end
 
     it "returns first url that user has access to as start page when user doesn't have access to startpage set in settings" do
-      settings = {:display => {:startpage => "/dashboard/show"}}
-      seed_specific_product_features_with_user_settings("vm_cloud_explorer", settings)
+      seed_specific_product_features("vm_cloud_explorer")
+      controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
       url = controller.send(:start_url_for_user, nil)
       url.should eq("/vm_cloud/explorer?accordion=instances")
     end

@@ -73,6 +73,12 @@ module EvmSpecHelper
     [server.guid, server, server.zone]
   end
 
+  def self.specific_product_features(*features)
+    features.flatten!
+    seed_specific_product_features(*features)
+    MiqProductFeature.find_all_by_identifier(features)
+  end
+
   def self.seed_specific_product_features(*features)
     features.flatten!
     hashes   = YAML.load_file(MiqProductFeature::FIXTURE_YAML)
