@@ -40,10 +40,6 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     )
   end
 
-  def self.metrics_collect_queue_name
-    MetricsCollectorWorker.default_queue_name
-  end
-
   validates :provider_region, :inclusion => {:in => ManageIQ::Providers::Amazon::Regions.names}
 
   def description
