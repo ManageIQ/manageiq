@@ -1,5 +1,5 @@
 require "spec_helper"
-require __FILE__.sub("spec/migrations", "db/migrate").sub("_spec.rb", ".rb")
+require_migration
 
 describe UpdateTenantOverrideSettings do
   let(:tenant_stub) { migration_stub(:Tenant) }
