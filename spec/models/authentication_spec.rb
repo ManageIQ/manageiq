@@ -1,6 +1,10 @@
 require "spec_helper"
 
 describe Authentication do
+  it ".encrypted_columns" do
+    expect(described_class.encrypted_columns).to include('password', 'auth_key')
+  end
+
   context "with miq events seeded" do
     before(:each) do
       MiqRegion.seed

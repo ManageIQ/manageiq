@@ -10,6 +10,7 @@ class Authentication < ActiveRecord::Base
 
   include PasswordMixin
   encrypt_column :auth_key
+  encrypt_column :password
 
   belongs_to :resource, :polymorphic => true
 
