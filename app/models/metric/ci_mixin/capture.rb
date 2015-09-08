@@ -16,7 +16,7 @@ module Metric::CiMixin::Capture
             raise "Unsupported type #{self.class.name} (id: #{id})"
           end
 
-    ems.class.name[3..-1].underscore
+    ems.metrics_collector_queue_name
   end
 
   def perf_capture_queue(interval_name, options = {})
