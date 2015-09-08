@@ -2534,6 +2534,41 @@ describe ApplicationHelper do
     end
   end #end of disable button
 
+  describe "#build_toolbar_hide_button_ops" do
+    subject { build_toolbar_hide_button_ops(@id) }
+    before do
+      @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
+      @record = double("record")
+      login_as @user
+      EvmSpecHelper.seed_specific_product_features("ops_rbac", "rbac_group_add", "rbac_tenant_delete")
+      feature = MiqProductFeature.find_all_by_identifier(%w(ops_rbac rbac_group_add rbac_tenant_delete))
+      test_user_role = FactoryGirl.create(:miq_user_role,
+                                          :name                 => "test_user_role",
+                                          :miq_product_features => feature)
+      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      @sb = {:active_tree => :rbac_tree}
+    end
+
+    %w(rbac_group_add rbac_tenant_delete).each do |id|
+      context "when with #{id} button should be visible" do
+        before { @id = id }
+        it "and record_id" do
+          subject.should be_false
+        end
+      end
+    end
+
+    %w(rbac_group_edit rbac_role_edit).each do |id|
+      context "when with #{id} button should not be visible as user does not have access to these features" do
+        before { @id = id }
+        it "and record_id" do
+          subject.should be_true
+        end
+      end
+    end
+  end
+
   describe "#get_record_cls"  do
     subject { get_record_cls(record) }
     context "when record not exist" do
