@@ -179,16 +179,18 @@ module OpsController::OpsRbac
       when "cancel"
         @tenant = Tenant.find_by_id(params[:id])
         add_flash(_("Manage quotas for %{model}\ \"%{name}\" was cancelled by the user") %
-                      {:model => tenant_type_title_string(params[:divisible] == "true"), :name => @tenant.name})
+                      {:model => tenant_type_title_string(@tenant.divisible), :name => @tenant.name})
         get_node_info(x_node)
         replace_right_cell(x_node)
       when "save", "add"
-        tenant = Tenant.find_by_id(params[:id])
-
+        @tenant = Tenant.find_by_id(params[:id])
         begin
-          tenant_quotas = params[:quotas].deep_symbolize_keys
-
-          tenant.set_quotas(tenant_quotas.to_hash)
+          if !params[:quotas]
+            @tenant.set_quotas({})
+          else
+              tenant_quotas = params[:quotas].deep_symbolize_keys
+              @tenant.set_quotas(tenant_quotas.to_hash)
+          end
           rescue StandardError => bang
             add_flash(_("Error when saving tenant quota: ") << bang.message, :error)
             render :update do |page|
@@ -196,8 +198,8 @@ module OpsController::OpsRbac
             end
           else
             add_flash(_("Quotas for %{model} \"%{name}\" were saved") %
-                          {:model => tenant_type_title_string(params[:divisible] == "true"), :name => tenant.name})
-            @selected_tenant = tenant
+                          {:model => tenant_type_title_string(@tenant.divisible), :name => @tenant.name})
+            @selected_tenant = @tenant
             get_node_info(x_node)
             replace_right_cell("root", [:rbac])
         end
