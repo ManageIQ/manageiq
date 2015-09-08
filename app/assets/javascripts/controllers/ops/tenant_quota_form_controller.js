@@ -45,12 +45,16 @@ ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$s
     };
     $scope.saveClicked = function() {
         var data = {};
+        const GIGABYTE = 1024 * 1024 * 1024;
         for ( var key in $scope.tenantQuotaModel.quotas ){
             if($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
                 var quota =  $scope.tenantQuotaModel.quotas[key];
                  if( quota['value'] ){
                      q = {};
-                     q['value']= quota['value'];
+                     if ( quota['unit'] === "bytes")
+                         q['value'] = quota['value'] * GIGABYTE;
+                     else
+                        q['value'] = quota['value'];
                      data[key] = q;
                  }
             }

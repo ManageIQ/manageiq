@@ -129,7 +129,6 @@ module OpsController::OpsRbac
           rbac_tenants_list
           rbac_get_info(x_node)
         else
-          @selected_tenant = tenant
           get_node_info(x_node)
         end
         replace_right_cell("root", [:rbac])
@@ -183,36 +182,30 @@ module OpsController::OpsRbac
         get_node_info(x_node)
         replace_right_cell(x_node)
       when "save", "add"
-        @tenant = Tenant.find_by_id(params[:id])
+        tenant = Tenant.find_by_id(params[:id])
         begin
           if !params[:quotas]
-            @tenant.set_quotas({})
+            tenant.set_quotas({})
           else
               tenant_quotas = params[:quotas].deep_symbolize_keys
-              @tenant.set_quotas(tenant_quotas.to_hash)
+              tenant.set_quotas(tenant_quotas.to_hash)
           end
-          rescue StandardError => bang
-            add_flash(_("Error when saving tenant quota: ") << bang.message, :error)
-            render :update do |page|
-              page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-            end
-          else
-            add_flash(_("Quotas for %{model} \"%{name}\" were saved") %
-                          {:model => tenant_type_title_string(@tenant.divisible), :name => @tenant.name})
-            @selected_tenant = @tenant
-            get_node_info(x_node)
-            replace_right_cell("root", [:rbac])
+        rescue StandardError => bang
+          add_flash(_("Error when saving tenant quota: ") << bang.message, :error)
+          render :update do |page|
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          end
+        else
+          add_flash(_("Quotas for %{model} \"%{name}\" were saved") %
+                        {:model => tenant_type_title_string(tenant.divisible), :name => tenant.name})
+          @selected_tenant = tenant
+          get_node_info(x_node)
+          replace_right_cell("root", [:rbac])
         end
       when "reset", nil # Reset or first time in
         obj = find_checked_items
         obj[0] = params[:id] if obj.blank? && params[:id]
         @tenant = Tenant.find(obj[0])          # Get existing or new record
-        quotas = @tenant.get_quotas()
-        @tenant_quotas = quotas.each_with_object({}) do |q, h|
-          name, value = q
-          h[name] = value.merge(:enforced => h[value].nil?, :value => nil)
-          h
-        end
 
         # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
         @edit = {:tenant_id => @tenant.id}
@@ -226,21 +219,25 @@ module OpsController::OpsRbac
     end
   end
 
+  GIGABYTE = 1024 * 1024 *1024
 
   def tenant_quotas_form_fields
+
     tenant = Tenant.find_by_id(params[:id])
-
-    tenant_quotas = tenant.get_quotas()
-
+    quotas = tenant.get_quotas()
+    tenant_quotas = quotas.each_with_object({}) do |q, h|
+      name, val = q
+      val[:value] = val[:value]/GIGABYTE if !val[:value].nil? && val[:unit].to_s == "bytes"
+      h[name] = val.merge(:enforced => !(val[:value].nil?))
+      h[name] = val.merge(:valpattern => val[:format].to_s == "general_number_precision_0" ? "^[0-9]*$".to_sym : "".to_sym )
+      h
+    end
     render :json => {
                :name        => tenant.name,
                :quotas      => tenant_quotas
            }
   end
 
-  def tenant_quotas_set_record_vars(tenant)
-    tenant.set_quotas(params[:quotas])
-  end
   # AJAX driven routines to check for changes in ANY field on the form
   def rbac_user_field_changed
     rbac_field_changed("user")
