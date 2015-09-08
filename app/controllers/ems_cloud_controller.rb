@@ -167,9 +167,9 @@ class EmsCloudController < ApplicationController
     end
 
     if @ems.kind_of?(EmsAzure)
-      tenant_id = @ems.tenant_id
-      client_id = @ems.authentication_userid ? @ems.authentication_userid : ""
-      client_key = @ems.authentication_password ? @ems.authentication_password : ""
+      azure_tenant_id = @ems.azure_tenant_id
+      client_id       = @ems.authentication_userid ? @ems.authentication_userid : ""
+      client_key      = @ems.authentication_password ? @ems.authentication_password : ""
     end
 
     render :json => {:name                            => @ems.name,
@@ -193,7 +193,7 @@ class EmsCloudController < ApplicationController
                      :ssh_keypair_password            => ssh_keypair_password,
                      :bearer_token                    => bearer_token,
                      :bearer_verify                   => bearer_verify,
-                     :tenant_id                       => tenant_id ? tenant_id : "",
+                     :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
                      :client_id                       => client_id ? client_id : "",
                      :client_key                      => client_key ? client_key : "",
                      :host_default_vnc_port_start     => host_default_vnc_port_start,
@@ -251,7 +251,7 @@ class EmsCloudController < ApplicationController
       ems.host_default_vnc_port_end = params[:host_default_vnc_port_end].blank? ? nil : params[:host_default_vnc_port_end].to_i
     end
 
-    ems.tenant_id = params[:tenant_id] if ems.kind_of?(EmsAzure)
+    ems.azure_tenant_id = params[:azure_tenant_id] if ems.kind_of?(EmsAzure)
 
     creds = {}
     creds[:default] = {:userid   => params[:default_userid],
@@ -274,10 +274,11 @@ class EmsCloudController < ApplicationController
 
   def construct_edit_for_audit(ems)
     @edit ||= {}
+    ems.kind_of?(EmsAzure) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil;
     @edit[:current] = {:name            => ems.name,
                        :provider_region => ems.provider_region,
                        :hostname        => ems.hostname,
-                       :tenant_id       => ems.tenant_id,
+                       :azure_tenant_id => azure_tenant_id,
                        :port            => ems.port,
                        :provider_id     => ems.provider_id,
                        :zone            => ems.zone
@@ -285,7 +286,7 @@ class EmsCloudController < ApplicationController
     @edit[:new] = {:name            => params[:name],
                    :provider_region => params[:provider_region],
                    :hostname        => params[:hostname],
-                   :tenant_id       => params[:tenant_id],
+                   :azure_tenant_id => params[:tenant_id],
                    :port            => params[:port],
                    :provider_id     => params[:provider_id],
                    :zone            => params[:zone]

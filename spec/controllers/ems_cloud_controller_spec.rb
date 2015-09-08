@@ -120,6 +120,50 @@ describe EmsCloudController do
       expect(authentication.userid).to eq("foo")
       expect(authentication.password).to eq("[FILTERED]")
     end
+
+    it "validates credentials for a new record" do
+      post :create,
+           "button"           => "validate",
+           "cred_type"        => "default",
+           "name"             => "foo_ec2",
+           "emstype"          => "ec2",
+           "provider_region"  => "ap-southeast-1",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+    end
+
+    it "cancels a new record" do
+      post :create,
+           "button"           => "cancel",
+           "cred_type"        => "default",
+           "name"             => "foo_ec2",
+           "emstype"          => "ec2",
+           "provider_region"  => "ap-southeast-1",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+    end
+
+    it "adds a record of type azure" do
+      post :create,
+           "button"           => "add",
+           "tenant_id"        => "azure",
+           "name"             => "foo_azure",
+           "emstype"          => "azure",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#ems_cloud_form_fields" do
@@ -148,6 +192,34 @@ describe EmsCloudController do
       get :ems_cloud_form_fields, "id" => openstack.to_a[0].id
       expect(response.status).to eq(200)
       expect(response.body).to include('"name":"foo_openstack"')
+    end
+  end
+
+  describe "#show_link" do
+    before do
+      Zone.first || FactoryGirl.create(:zone)
+      described_class.any_instance.stub(:set_user_time_zone)
+      controller.stub(:check_privileges).and_return(true)
+      controller.stub(:assert_privileges).and_return(true)
+    end
+    it 'gets the restful show link path' do
+      MiqServer.stub(:my_zone).and_return("default")
+      post :create,
+           "button"           => "add",
+           "hostname"         => "host_openstack",
+           "name"             => "foo_openstack",
+           "emstype"          => "openstack",
+           "provider_region"  => "",
+           "port"             => "5000",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+      
+      expect(response.status).to eq(200)
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
+      show_link_actual_path = controller.send(:show_link, openstack.to_a[0])
+      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}")
     end
   end
 end
