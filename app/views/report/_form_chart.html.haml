@@ -8,13 +8,40 @@
         = _('Choose a chart type')
       %td
         = select_tag('chosen_graph',
-          options_for_select(["<No chart>"] + Charting.chart_names_for_select, @edit[:new][:graph_type]),
+          options_for_select([_("<No chart>")] + Charting.chart_names_for_select, @edit[:new][:graph_type]),
           :multiple              => false,
           :class                 => "widthed",
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           "data-miq_observe"     => {:url => url}.to_json)
     - unless @edit[:new][:graph_type].blank?
+      %tr
+        %td.key
+          = _('Chart mode')
+        %td
+          - if chart_mode_values_allowed?
+            = select_tag('chart_mode',
+              options_for_select([[_('Counts'), 'counts'], [_('Values'), 'values']], @edit[:new][:chart_mode]),
+              :multiple              => false,
+              :class                 => "widthed",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+          - else
+            = _('Counts')
+            = hidden_field_tag('chart_mode', 'counts')
+      %tr
+        - if @edit[:new][:chart_mode] == 'values'
+          %td.key
+            = _('Data column')
+          %td
+            = select_tag('chart_column',
+              options_for_select(chart_fields_options, @edit[:new][:chart_column]),
+              :multiple              => false,
+              :class                 => "widthed",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
       %tr
         %td.key
           = _('Top values to show')

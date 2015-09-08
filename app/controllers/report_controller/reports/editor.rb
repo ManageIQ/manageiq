@@ -151,101 +151,101 @@ module ReportController::Reports::Editor
     get_time_profiles # Get time profiles list (global and user specific)
 
     case @sb[:miq_tab].split("_")[1]
-
-      when "1"  # Select columns
-                # Add the blank choice if no table chosen yet
-                #     @edit[:models].insert(0,["<Choose>", "<Choose>"]) if @edit[:new][:model] == nil && @edit[:models][0][0] != "<Choose>"
-        if @edit[:new][:model].nil?
-          if @edit[:models][0][0] != "<Choose>"
-            @edit[:models].insert(0,["<Choose>", "<Choose>"])
-          end
-        else
-          if @edit[:models][0][0] == "<Choose>"
-            @edit[:models].delete_at(0)
-          end
+    when "1"  # Select columns
+              # Add the blank choice if no table chosen yet
+              #     @edit[:models].insert(0,["<Choose>", "<Choose>"]) if @edit[:new][:model] == nil && @edit[:models][0][0] != "<Choose>"
+      if @edit[:new][:model].nil?
+        if @edit[:models][0][0] != "<Choose>"
+          @edit[:models].insert(0,["<Choose>", "<Choose>"])
         end
-
-      when "8"  # Consolidate
-
-        # Build group chooser arrays
-        @pivots1  = @edit[:new][:fields].dup
-        @pivots2  = @pivots1.dup.delete_if { |g| g[1] == @edit[:new][:pivotby1] }
-        @pivots3  = @pivots2.dup.delete_if { |g| g[1] == @edit[:new][:pivotby2] }
-        @pivotby1 = @edit[:new][:pivotby1]
-        @pivotby2 = @edit[:new][:pivotby2]
-        @pivotby3 = @edit[:new][:pivotby3]
-      when "2"  # Formatting
-                #     @edit[:calc_xml] = build_calc_combo_xml                                     # Get the combobox XML for any numeric fields
-
-      when "3"  # Filter
-                # Build record filter expression
-        if @edit[:miq_exp] ||                                                       # Is this stored as an MiqExp object
-            ["new", "copy", "create"].include?(request.parameters["action"])        # or it's a new condition
-          @expkey = :record_filter
-          @edit[@expkey][:exp_idx] ||= 0                                            # Start at first exp
-          @edit[@expkey][:expression] = copy_hash(@edit[:new][:record_filter]) if !@edit[:new][:record_filter].blank?
-          exp_array(:init, @edit[@expkey][:expression]) if @edit[@expkey][:exp_array].nil?  # Initialize the exp array
-          @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
-          exp_get_prefill_types                                                   # Build prefill lists
-          @edit[@expkey][:exp_model] = @edit[:new][:model]                        # Set the model for the expression editor
+      else
+        if @edit[:models][0][0] == "<Choose>"
+          @edit[:models].delete_at(0)
         end
+      end
 
-        # Build display filter expression
-        @expkey = :display_filter
+    when "8"  # Consolidate
+      # Build group chooser arrays
+      @pivots1  = @edit[:new][:fields].dup
+      @pivots2  = @pivots1.dup.delete_if { |g| g[1] == @edit[:new][:pivotby1] }
+      @pivots3  = @pivots2.dup.delete_if { |g| g[1] == @edit[:new][:pivotby2] }
+      @pivotby1 = @edit[:new][:pivotby1]
+      @pivotby2 = @edit[:new][:pivotby2]
+      @pivotby3 = @edit[:new][:pivotby3]
+    when "2"  # Formatting
+              #     @edit[:calc_xml] = build_calc_combo_xml                                     # Get the combobox XML for any numeric fields
+
+    when "3"  # Filter
+              # Build record filter expression
+      if @edit[:miq_exp] ||                                                       # Is this stored as an MiqExp object
+          ["new", "copy", "create"].include?(request.parameters["action"])        # or it's a new condition
+        @expkey = :record_filter
         @edit[@expkey][:exp_idx] ||= 0                                            # Start at first exp
-        @edit[@expkey][:expression] = copy_hash(@edit[:new][:display_filter]) if !@edit[:new][:display_filter].blank?
+        @edit[@expkey][:expression] = copy_hash(@edit[:new][:record_filter]) if !@edit[:new][:record_filter].blank?
         exp_array(:init, @edit[@expkey][:expression]) if @edit[@expkey][:exp_array].nil?  # Initialize the exp array
-        @edit[@expkey][:exp_table]            = exp_build_table(@edit[@expkey][:expression])
-        @edit[@expkey][:exp_available_fields] = MiqReport::display_filter_details(@edit[:new][:field_order], :field)
-        @edit[@expkey][:exp_available_tags]   = MiqReport::display_filter_details(@edit[:new][:fields], :tag)
-        @edit[@expkey][:exp_model]            = "_display_filter_"                            # Set model for display filter
+        @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
+        exp_get_prefill_types                                                   # Build prefill lists
+        @edit[@expkey][:exp_model] = @edit[:new][:model]                        # Set the model for the expression editor
+      end
 
-        @expkey = :record_filter                                                  # Start with Record Filter showing
-        if @edit[:new][:perf_interval] && !@edit[:new][:time_profile]
-          set_time_profile_vars(selected_time_profile_for_pull_down, @edit[:new])
-        end
-      when "4"  # Summarize
+      # Build display filter expression
+      @expkey = :display_filter
+      @edit[@expkey][:exp_idx] ||= 0                                            # Start at first exp
+      @edit[@expkey][:expression] = copy_hash(@edit[:new][:display_filter]) if !@edit[:new][:display_filter].blank?
+      exp_array(:init, @edit[@expkey][:expression]) if @edit[@expkey][:exp_array].nil?  # Initialize the exp array
+      @edit[@expkey][:exp_table]            = exp_build_table(@edit[@expkey][:expression])
+      @edit[@expkey][:exp_available_fields] = MiqReport::display_filter_details(@edit[:new][:field_order], :field)
+      @edit[@expkey][:exp_available_tags]   = MiqReport::display_filter_details(@edit[:new][:fields], :tag)
+      @edit[@expkey][:exp_model]            = "_display_filter_"                            # Set model for display filter
 
-        # Build sort chooser arrays(@edit[:new][:fields], :field)
-        @sortby1 = @edit[:new][:sortby1]
-        @sortby2 = @edit[:new][:sortby2]
-        @sort1   = @edit[:new][:field_order].dup
-        @sort2   = @sort1.dup.delete_if { |s| s[1] == @sortby1.split("__").first }
-      when "6"  # Timeline
-        @tl_fields = Array.new
-        @edit[:new][:fields].each do |field|
-          if MiqReport.get_col_type(field[1]) == :datetime
-            @tl_fields.push(field)
-          end
-        end
-        @tl_field = @edit[:new][:tl_field]
-        if @edit[:new][:tl_position] == "Last"
-          @position_time = format_timezone(Time.now, "UTC", nil)
-        else
-          @position_time = format_timezone(Time.now - 1.year, "UTC", nil)
-        end
-        @timeline = true if @tl_field != NOTHING_STRING
-        build_timeline_units
-        case @edit[:new][:tl_last_unit]
-          when "Minutes"
-            @tl_last_time_choices = Array.new(12) { |t| (t*5 + 5).to_s }
-          when "Hours"
-            @tl_last_time_choices = Array.new(24) { |t| (t + 1).to_s }
-          when "Days"
-            @tl_last_time_choices = Array.new(31) { |t| (t + 1).to_s }
-          when "Weeks"
-            @tl_last_time_choices = Array.new(4)  { |t| (t + 1).to_s }
-          when "Months"
-            @tl_last_time_choices = Array.new(12) { |t| (t + 1).to_s }
-          when "Years"
-            @tl_last_time_choices = Array.new(10) { |t| (t + 1).to_s }
-        end
-        if @edit[:new][:tl_last_time].nil? && @edit[:new][:tl_last_unit] != SHOWALL_STRING
-          @edit[:new][:tl_last_time] = @tl_last_time_choices.first
-        end
+      @expkey = :record_filter                                                  # Start with Record Filter showing
+      if @edit[:new][:perf_interval] && !@edit[:new][:time_profile]
+        set_time_profile_vars(selected_time_profile_for_pull_down, @edit[:new])
+      end
+    when "4"  # Summarize
 
-      when "7"  # Preview
-                #generate preview report when
+      # Build sort chooser arrays(@edit[:new][:fields], :field)
+      @sortby1 = @edit[:new][:sortby1]
+      @sortby2 = @edit[:new][:sortby2]
+      @sort1   = @edit[:new][:field_order].dup
+      @sort2   = @sort1.dup.delete_if { |s| s[1] == @sortby1.split("__").first }
+    when "5"  # Charts
+      options = chart_fields_options
+      if options.empty?
+        @edit[:new][:chart_column] = nil
+      else
+        options[0][1] unless options.detect { |_, v| v == @edit[:new][:chart_column] }
+      end
+
+    when "6"  # Timeline
+      @tl_fields = Array.new
+      @edit[:new][:fields].each do |field|
+        if MiqReport.get_col_type(field[1]) == :datetime
+          @tl_fields.push(field)
+        end
+      end
+      @tl_field = @edit[:new][:tl_field]
+      if @edit[:new][:tl_position] == "Last"
+        @position_time = format_timezone(Time.now, "UTC", nil)
+      else
+        @position_time = format_timezone(Time.now - 1.year, "UTC", nil)
+      end
+      @timeline = true if @tl_field != NOTHING_STRING
+      build_timeline_units
+      @tl_last_time_choices = case @edit[:new][:tl_last_unit]
+                              when "Minutes" then Array.new(12) { |t| (t*5 + 5).to_s }
+                              when "Hours"   then Array.new(24) { |t| (t + 1).to_s }
+                              when "Days"    then Array.new(31) { |t| (t + 1).to_s }
+                              when "Weeks"   then Array.new(4)  { |t| (t + 1).to_s }
+                              when "Months"  then Array.new(12) { |t| (t + 1).to_s }
+                              when "Years"   then Array.new(10) { |t| (t + 1).to_s }
+                              end
+      if @edit[:new][:tl_last_time].nil? && @edit[:new][:tl_last_unit] != SHOWALL_STRING
+        @edit[:new][:tl_last_time] = @tl_last_time_choices.first
+      end
+
+    when "7"  # Preview
+              #generate preview report when
     end
 
     @in_a_form = true
@@ -320,6 +320,8 @@ module ReportController::Reports::Editor
     @edit[:new][:filter_string]   = nil
     @edit[:new][:categories]      = []
     @edit[:new][:graph_type]      = nil             # Clear graph field
+    @edit[:new][:chart_mode]      = nil
+    @edit[:new][:chart_column]    = nil
     @edit[:new][:perf_trend_col]  = nil
     @edit[:new][:perf_trend_db]   = nil
     @edit[:new][:perf_trend_pct1] = nil
@@ -419,16 +421,14 @@ module ReportController::Reports::Editor
   def gfv_key_group_calculations(key, value)
     field = @edit[:new][:field_order][key.split("_").last.to_i].last  # Get the field name
     @edit[:new][:col_options][field_to_col(field)] = {
-      :grouping => value.split(",").sort.map(&:to_sym) # Add the type to the field's grouping array
+      :grouping => value.split(",").sort.map(&:to_sym).reject { |a| a == :null }
     }
   end
 
   # Handle params starting with "pivotcalc"
   def gfv_key_pivot_calculations(key, value)
     field = @edit[:new][:fields][key.split("_").last.to_i].last       # Get the field name
-    @edit[:pivot_cols][field] = []
-    @edit[:pivot_cols][field].push(value.to_s)                        # Add the type to the field's array
-    @edit[:pivot_cols][field].sort!                                   # Sort the array
+    @edit[:pivot_cols][field] = value.split(',').sort.map(&:to_sym)
     # Create new header from original
     @edit[:new][:headers][field + "__#{value}"] = @edit[:new][:headers][field] + " (#{value.to_s.titleize})"
     build_field_order
@@ -450,20 +450,19 @@ module ReportController::Reports::Editor
           @edit[:new][:col_options][field_name].delete(:style) if @edit[:new][:col_options][field_name][:style].empty?
           @edit[:new][:col_options].delete(field_name) if @edit[:new][:col_options][field_name].empty?
         else
-          @edit[:new][:col_options][field_name] ||= Hash.new
-          @edit[:new][:col_options][field_name][:style] ||= Array.new
-          @edit[:new][:col_options][field_name][:style][s_idx] ||= Hash.new
+          @edit[:new][:col_options][field_name] ||= {}
+          @edit[:new][:col_options][field_name][:style] ||= []
+          @edit[:new][:col_options][field_name][:style][s_idx] ||= {}
           @edit[:new][:col_options][field_name][:style][s_idx][:class] = value.to_sym
 
-          ovs =
-              case field_data_type
+          ovs = case field_data_type
                 when :boolean
                   ["DEFAULT", "true"]
                 when :integer, :float
                   ["DEFAULT", "", FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units) ? FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units).first : nil]
                 else
                   ["DEFAULT", ""]
-              end
+                end
           op ||= ovs[0]
           val ||= ovs[1]
           suffix ||= ovs[2]
@@ -659,21 +658,39 @@ module ReportController::Reports::Editor
       if params[:chosen_graph] == "<No chart>"
         @edit[:new][:graph_type] = nil
         # Reset other setting to initial settings if choosing <No chart>
-        @edit[:new][:graph_count] = @edit[:current][:graph_count]
-        @edit[:new][:graph_other] = @edit[:current][:graph_other]
+        @edit[:new][:graph_count]  = @edit[:current][:graph_count]
+        @edit[:new][:graph_other]  = @edit[:current][:graph_other]
+        @edit[:new][:chart_mode]   = @edit[:current][:chart_mode]
+        @edit[:new][:chart_column] = @edit[:current][:chart_column]
       else
-        @edit[:new][:graph_other] = true if @edit[:new][:graph_type].nil? # Reset other setting if choosing first chart
-        @edit[:new][:graph_type]  = params[:chosen_graph] # Save graph type
-        @edit[:new][:graph_count] ||= GRAPH_MAX_COUNT     # Reset graph count, if not set
+        @edit[:new][:graph_other]  = true if @edit[:new][:graph_type].nil? # Reset other setting if choosing first chart
+        @edit[:new][:graph_type]   = params[:chosen_graph] # Save graph type
+        @edit[:new][:graph_count]  ||= GRAPH_MAX_COUNT     # Reset graph count, if not set
+        @edit[:new][:chart_mode]   ||= 'counts'
+        @edit[:new][:chart_column] ||= ''
       end
       @refresh_div     = "chart_div"
       @refresh_partial = "form_chart"
     end
+
+    if params[:chart_mode] && params[:chart_mode] != @edit[:new][:chart_mode]
+      @edit[:new][:chart_mode] = params[:chart_mode]
+      @refresh_div             = "chart_div"
+      @refresh_partial         = "form_chart"
+    end
+
+    if params[:chart_column] && params[:chart_column] != @edit[:new][:chart_column]
+      @edit[:new][:chart_column] = params[:chart_column]
+      @refresh_div              = "chart_sample_div"
+      @refresh_partial          = "form_chart_sample"
+    end
+
     if params[:chosen_count] && params[:chosen_count] != @edit[:new][:graph_count]
       @edit[:new][:graph_count] = params[:chosen_count]
       @refresh_div              = "chart_sample_div"
       @refresh_partial          = "form_chart_sample"
     end
+
     if params[:chosen_other] # If a chart is showing, set the other setting based on check box present
       chosen = (params[:chosen_other].to_s == "1")
       if @edit[:new][:graph_other] != chosen
@@ -724,6 +741,9 @@ module ReportController::Reports::Editor
       @edit[:new][:group] = params[:sort_group]
       @refresh_div = "sort_div"                               # Resend the sort tab
       @refresh_partial = "form_sort"
+      if @edit[:new][:chart_mode] = 'values' && !chart_mode_values_allowed?
+        @edit[:new][:chart_mode] = 'counts'
+      end
     end
     @edit[:new][:hide_details] = (params[:hide_details].to_s == "1") if params[:hide_details]
 
@@ -1106,10 +1126,17 @@ module ReportController::Reports::Editor
       else
         rpt.dims = @edit[:new][:sortby2] == NOTHING_STRING ? 1 : 2  # Set dims to 1 or 2 based on presence of sortby2
       end
-      rpt.graph         = Hash.new
-      rpt.graph[:type]  = @edit[:new][:graph_type]
-      rpt.graph[:count] = @edit[:new][:graph_count]
-      rpt.graph[:other] = @edit[:new][:graph_other]
+      if @edit[:new][:chart_mode] == 'values' && @edit[:new][:chart_column].blank?
+        options = chart_fields_options
+        @edit[:new][:chart_column] = options[0][1] if !options.empty?
+      end
+      rpt.graph = {
+        :type   => @edit[:new][:graph_type],
+        :mode   => @edit[:new][:chart_mode],
+        :column => @edit[:new][:chart_column],
+        :count  => @edit[:new][:graph_count],
+        :other  => @edit[:new][:graph_other],
+      }
     end
 
     # Set the conditions field (expression)
@@ -1377,13 +1404,17 @@ module ReportController::Reports::Editor
 #   @edit[:new][:graph] = @rpt.graph
 # Replaced above line to handle new graph settings Hash
     if @rpt.graph.is_a?(Hash)
-      @edit[:new][:graph_type] = @rpt.graph[:type]
-      @edit[:new][:graph_count] = @rpt.graph[:count]
-      @edit[:new][:graph_other] = @rpt.graph[:other] ? @rpt.graph[:other] : false
+      @edit[:new][:graph_type]   = @rpt.graph[:type]
+      @edit[:new][:graph_count]  = @rpt.graph[:count]
+      @edit[:new][:chart_mode]   = @rpt.graph[:mode]
+      @edit[:new][:chart_column] = @rpt.graph[:column]
+      @edit[:new][:graph_other]  = @rpt.graph[:other] ? @rpt.graph[:other] : false
     else
-      @edit[:new][:graph_type] = @rpt.graph
-      @edit[:new][:graph_count] = GRAPH_MAX_COUNT
-      @edit[:new][:graph_other] = true
+      @edit[:new][:graph_type]   = @rpt.graph
+      @edit[:new][:graph_count]  = GRAPH_MAX_COUNT
+      @edit[:new][:chart_mode]   = 'counts'
+      @edit[:new][:chart_column] = ''
+      @edit[:new][:graph_other]  = true
     end
 
     @edit[:new][:dims] = @rpt.dims
