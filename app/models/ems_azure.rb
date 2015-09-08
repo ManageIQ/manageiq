@@ -1,4 +1,7 @@
 class EmsAzure < EmsCloud
+  include Vmdb::Logging
+  alias_attribute :azure_tenant_id, :uid_ems
+
   def self.ems_type
     @ems_type ||= "azure".freeze
   end
@@ -11,35 +14,30 @@ class EmsAzure < EmsCloud
     false
   end
 
-  def self.raw_connect(clientid, clientkey, tenantid)
-    Azure::Armrest::ArmrestManager.configure(
+  def self.raw_connect(clientid, clientkey, azuretenantid)
+    Azure::Armrest::ArmrestService.configure(
       :client_id  => clientid,
       :client_key => clientkey,
-      :tenant_id  => tenantid
+      :tenant_id  => azuretenantid
     )
-    Azure::Armrest::VirtualMachineManager.new
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
     clientid  = options[:user] || authentication_userid(options[:auth_type])
     clientkey = options[:pass] || authentication_password(options[:auth_type])
-
-    self.class.raw_connect(clientid, clientkey, tenant_id)
+    self.class.raw_connect(clientid, clientkey, azure_tenant_id)
   end
 
-  def verify_credentials(_auth_type = nil, _options = {})
-    # TODO
+  def verify_credentials(_auth_type = nil, options = {})
+    connect(options)
+    rescue RestClient::Unauthorized
+      raise MiqException::MiqHostError, "Incorrect credentials - check your Azure Client ID and Client Key"
+    rescue StandardError => err
+      _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
+      raise MiqException::MiqHostError, "Unexpected response returned from system, see log for details"
+
     true
-  end
-
-  def tenant_id=(tenant_id)
-    self.uid_ems = tenant_id
-    save
-  end
-
-  def tenant_id
-    uid_ems
   end
 end
