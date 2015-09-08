@@ -101,7 +101,7 @@ class MiqAeClassController < ApplicationController
     self.x_node ||= "root"
     @right_cell_text ||= "Datastore"
     get_node_info(x_node)
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def set_right_cell_text(id,rec=nil)

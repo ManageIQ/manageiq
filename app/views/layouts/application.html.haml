@@ -1,7 +1,5 @@
-- if @mks || @vmrc || @vnc || controller.action_name == "menutest"
-  = yield
-- elsif @report_only
-  !!! Strict
+= render :partial => 'layouts/doctype'
+- if @report_only
   %html
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
@@ -13,8 +11,49 @@
     %body{:style => "overflow: scroll; padding: 0 20px 0 20px !important"}
       = yield
 - else
-  -# New v5 dhtmlx based outer layouts
-  = render :partial => "layouts/global_header"
-  = render :partial => "layouts/page"
-  = render :partial => "layouts/global_footer"
+  <!--[if IE 9]><html class="ie9"><![endif]-->
+  %html
+    %head
+      %title= h(title_from_layout(@layout))
 
+      %meta{"http-equiv" => "Pragma", :content => "no-cache"}
+      %meta{"http-equiv" => "Pragma", :content => "no-store"}
+      %meta{"http-equiv" => "Pragma", :content => "must-revalidate"}
+      %meta{"http-equiv" => "cache-control", :content => "no-cache, no-store"}
+
+      = tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico")
+      = stylesheet_link_tag 'application'
+      = stylesheet_link_tag 'template'
+      = stylesheet_link_tag 'jquery/miq/jquery-ui-1.9.2.custom'
+      = render :partial => "stylesheets/template50"
+      = javascript_include_tag 'application'
+      - if Rails.env.development?
+        = javascript_include_tag 'miq_debug'
+      = csrf_meta_tag
+      - if @timeline
+        = javascript_include_tag '/javascripts/timeline/api/timeline-api.js'
+        - if @timeline_filter
+          = javascript_include_tag '/javascripts/timeline/api/scripts/miq_filters.js'
+          = javascript_include_tag '/javascripts/timeline/api/scripts/miq_layouts.js'
+          = javascript_include_tag '/javascripts/timeline/api/scripts/miq_painters.js'
+
+      :javascript
+        ManageIQ.browser = "#{j browser_info(:name_ui)}";
+        ManageIQ.controller = "#{j request.parameters[:controller]}";
+
+      %style html, body{width:100%; height:100%; margin:0px; padding:0px; overflow:hidden;}
+
+      - if @explorer
+        = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "layout"}
+        = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "accordion"}
+        = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "grid"}
+        = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "combo"}
+        = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
+        = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "menu"}
+        = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "toolbar"}
+
+    - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
+    %body{:id => id, :onresize => "miqOnResize();", :onload => is_browser_ie? ? '' : 'miqOnLoad();'}
+      = render :partial => "layouts/header"
+      = render :partial => "layouts/content"
+      = render :partial => 'layouts/footer'

@@ -87,7 +87,7 @@ class ChargebackController < ApplicationController
     set_form_locals
     session[:changed] = false
 
-    render :layout => "explorer" unless request.xml_http_request?
+    render :layout => "application" unless request.xml_http_request?
   end
 
   def set_form_locals

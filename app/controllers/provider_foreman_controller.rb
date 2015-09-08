@@ -393,7 +393,7 @@ class ProviderForemanController < ApplicationController
       set_active_elements
     end
 
-    render :layout => "explorer" unless redirected
+    render :layout => "application" unless redirected
   end
 
   def tree_autoload_dynatree

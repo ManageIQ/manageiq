@@ -102,7 +102,7 @@ class ContainerController < ApplicationController
     get_node_info(x_node)
     @in_a_form = false
 
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def identify_container(id = nil)

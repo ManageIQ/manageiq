@@ -143,7 +143,7 @@ module ApplicationController::Automate
       add_flash(_("All changes have been reset"), :warning)
       resolve_reset
     else
-      render :layout => "explorer"
+      render :layout => "application"
     end
   end
   private :resolve_button_reset_or_none

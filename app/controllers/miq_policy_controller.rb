@@ -267,7 +267,7 @@ class MiqPolicyController < ApplicationController
     end
     get_node_info(x_node)
 
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   # Item clicked on in the explorer right cell
