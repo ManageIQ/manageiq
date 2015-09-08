@@ -3,7 +3,7 @@ require_relative "./evm_test_helper"
 if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
   namespace :vmdb do
-    task :setup => :setup_db
+    task :setup => [:verify_no_db_access_loading_rails_environment, :setup_db]
   end
 
   desc "Run all specs except migrations, replication, and automation"
