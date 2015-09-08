@@ -71,11 +71,8 @@
     listenForWidgetPostMessages();
     setUpImportWidgetClickHandlers();
 
-    setTimeout(function() {
-      if (typeof(dhxLayoutB) !== 'undefined') {
-        dhxLayoutB.cells('c').collapse();
-        $(dhxLayoutB.cells('c')).height(1);
-        $('.widget-export-buttons').show();
-      }
-    }, 100);
+    if (typeof(dhxLayoutB) !== 'undefined') {
+      dhxLayoutB.cells('c').collapse();
+      $('.widget-export-buttons').show();
+    }
   });
