@@ -1,5 +1,9 @@
 module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
   extend ActiveSupport::Concern
+  ENABLED_EVENTS = {
+    'Node' => %w(NodeReady NodeNotReady rebooted),
+    'Pod'  => %w(scheduled failedScheduling failedValidation HostPortConflict created failed started killing)
+  }
 
   def event_monitor_handle
     require 'kubernetes/events/kubernetes_event_monitor'
@@ -44,8 +48,11 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
       :message   => event.object.message
     }
 
-    @enabled_events ||= worker_settings[:enabled_events]
-    supported_reasons = @enabled_events[event_data[:kind]] || []
+    unless event.object.involvedObject.fieldPath.nil?
+      event_data[:fieldpath] = event.object.involvedObject.fieldPath
+    end
+
+    supported_reasons = ENABLED_EVENTS[event_data[:kind]] || []
 
     unless supported_reasons.include?(event_data[:reason])
       _log.debug "#{log_prefix} Discarding event [#{event_data}]"
@@ -57,8 +64,10 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     when 'Node'
       event_data[:container_node_name] = event_data[:name]
     when 'Pod'
-      event_data[:container_namespace] = event_data[:namespace]
+      /^spec.containers{(?<container_name>.*)}$/ =~ event_data[:fieldpath]
+      event_data[:container_name] = container_name unless container_name.nil?
       event_data[:container_group_name] = event_data[:name]
+      event_data[:container_namespace] = event_data[:namespace]
     end
 
     _log.info "#{log_prefix} Queuing event [#{event_data}]"
