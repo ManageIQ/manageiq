@@ -28,10 +28,6 @@ class Vmware::InfraManager < InfraManager
     @description ||= "VMware vCenter".freeze
   end
 
-  def self.metrics_collect_queue_name
-    MetricsCollectorWorker.default_queue_name
-  end
-
   def remote_console_vmrc_acquire_ticket
     vim = self.connect
     ticket = vim.acquireCloneTicket
