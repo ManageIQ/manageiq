@@ -104,6 +104,7 @@ describe MiqReport do
     before(:each) do
       MiqRegion.seed
 
+      #TODO: Move this setup to the examples that need it.
       @tags = {
         2  => "/managed/environment/prod",
         3  => "/managed/environment/dev",
@@ -188,6 +189,32 @@ describe MiqReport do
       expect(names).to eq [vmc.name, vmb.name]
     end
 
+    it "user managed filters" do
+      # TODO: Move user setup code here, remove @user/@group ivars
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm1.tag_with("/managed/environment/prod", :ns => "*")
+
+      vm2 = FactoryGirl.create(:vm_vmware)
+      vm2.tag_with("/managed/environment/dev", :ns => "*")
+
+      User.stub(:server_timezone => "UTC")
+      @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"]], "belongsto"=>[]})
+
+      report = MiqReport.new(:db => "Vm")
+      results, attrs = report.paged_view_search(
+        :only     => ["name"],
+        :userid   => @user.userid,
+      )
+      expect(results.length).to eq 1
+      expect(results.data.collect(&:name)).to eq [vm1.name]
+      expect(report.table.length).to eq 1
+      expect(attrs[:apply_sortby_in_search]).to be_true
+      expect(attrs[:apply_limit_in_sql]).to be_true
+      expect(attrs[:auth_count]).to eq 1
+      expect(attrs[:user_filters]["managed"]).to eq [["/managed/environment/prod"]]
+      expect(attrs[:total_count]).to eq 2
+   end
+
     context "with tagged VMs" do
       before(:each) do
         @hosts = [
@@ -220,42 +247,6 @@ describe MiqReport do
         before(:each) do
           User.stub(:server_timezone => "UTC")
           @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto"=>[]})
-        end
-
-        it "works when page parameters and user filters are passed" do
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {
-            :only     => ["name"],
-            :userid   => @user.userid,
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 90"
-          results.data.last["name"].should  == "Test Group 1 VM 0"
-          report.table.length.should == 10
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 10
-          attrs[:user_filters]["managed"].should == [["/managed/environment/prod"], ["/managed/service_level/silver"]]
-          attrs[:total_count].should == 100
-
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {
-            :only     => ["name"],
-            :userid   => @user.userid,
-            :page     => 3,
-            :per_page => 2
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 2
-          results.data.first["name"].should == "Test Group 3 VM 50"
-          results.data.last["name"].should  == "Test Group 2 VM 40"
-          report.table.length.should == 2
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 10
-          attrs[:user_filters]["managed"].should == [["/managed/environment/prod"], ["/managed/service_level/silver"]]
-          attrs[:total_count].should == 100
         end
 
         it "works when page parameters and user filters are passed and sort column is in a sub-table" do
