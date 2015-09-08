@@ -54,7 +54,7 @@ puts "Building Refresh Environment for networking: '#{@networking}' and keystone
 @ems = ManageIQ::Providers::Openstack::CloudManager.where(:id => @ems_id).first
 
 # TODO: Create a domain to contain refresh-related objects (Havana and above)
-identity = Openstack::Services::Identity::Builder.build_all(@ems)
+identity = Openstack::Services::Identity::Builder.build_all(@ems, @identity)
 # TODO(lsmola) cycle through many projects, so we test also multitenancy
 project = identity.projects.detect { |x| x.name == "EmsRefreshSpec-Project" }
 
