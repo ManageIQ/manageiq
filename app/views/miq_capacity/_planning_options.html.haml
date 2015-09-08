@@ -32,7 +32,7 @@
         "data-miq_observe"     => {:url => url}.to_json)
     - elsif @sb[:planning][:options][:filter_typ] == "cluster"
       %br
-      - options = [["<#{_('Choose a %s')}>" % title_for_clusters, "<Choose>"]] + Array(@sb[:planning][:clusters].invert).sort_by { |a| a.first.downcase }
+      - options = [["<#{_('Choose a %s')}>" % title_for_cluster, "<Choose>"]] + Array(@sb[:planning][:clusters].invert).sort_by { |a| a.first.downcase }
       = select_tag("filter_value",
         options_for_select(options, @sb[:planning][:options][:filter_value]),
         :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
