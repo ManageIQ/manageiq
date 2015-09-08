@@ -1,6 +1,5 @@
 # Storage Daily performance by tag chart layouts
 ---
-:Storage:
 - :title: Used Space
   :type: Line
   :columns:
