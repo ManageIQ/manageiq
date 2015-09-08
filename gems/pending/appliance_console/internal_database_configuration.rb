@@ -15,7 +15,7 @@ module ApplianceConsole
     end
 
     def self.postgresql_template
-      RAILS_ROOT.join("../system/TEMPLATE").join(postgres_dir)
+      PostgresAdmin.template_directory.join(postgres_dir)
     end
 
     def initialize(hash = {})
