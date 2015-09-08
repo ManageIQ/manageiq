@@ -3,7 +3,7 @@ module Openstack
     module Network
       class Builder
         class Base
-          attr_reader :projects, :networks, :service, :floating_ips
+          attr_reader :projects, :networks, :service, :floating_ips, :security_groups
 
           def build_all
             find_or_create_networks

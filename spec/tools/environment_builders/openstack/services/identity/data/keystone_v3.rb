@@ -4,7 +4,7 @@ module Openstack
   module Services
     module Identity
       class Data
-        class KeystoneV2 < ::Openstack::Services::BaseData
+        class KeystoneV3 < ::Openstack::Services::BaseData
           def projects
             # TODO(lsmola) test that not enabled tenat is not throwing refresh exception
             # TOD(lsmola) test that tenant without admin user assigned is not throwing refresh

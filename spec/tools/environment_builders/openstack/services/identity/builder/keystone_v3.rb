@@ -1,15 +1,15 @@
-require_relative '../data/keystone_v2'
+require_relative '../data/keystone_v3'
 
 module Openstack
   module Services
     module Identity
       class Builder
-        class KeystoneV2
+        class KeystoneV3
           attr_reader :projects, :service
 
           def initialize(ems)
             @service = ems.connect(:service => "Identity")
-            @data    = Data::KeystoneV2.new
+            @data    = Data::KeystoneV3.new
 
             # Collected data
             @projects = []
@@ -26,17 +26,17 @@ module Openstack
 
           def find_or_create_projects
             @data.projects.each do |project|
-              @projects << find_or_create(@service.tenants, project)
+              @projects << find_or_create(@service.projects, project)
             end
           end
 
           def find_or_create_roles
             @data.roles.each do |role|
-              admin_user = @service.users.find_by_name(role)
+              admin_user = @service.users.detect { |x| x.name == role }
               admin_role = @service.roles.detect { |x| x.name == role }
               @projects.each do |p|
                 begin
-                  p.grant_user_role(admin_user.id, admin_role.id)
+                  p.grant_role_to_user(admin_role.id, admin_user.id)
                 rescue Excon::Errors::Conflict
                   # Tenant already has the admin role
                   puts "Finding role {:name => 'admin', :tenant_id => '#{p.name}'} role in Fog::Identity::OpenStack:Roles"
