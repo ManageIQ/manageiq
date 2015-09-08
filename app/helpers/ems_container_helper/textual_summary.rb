@@ -80,6 +80,7 @@ module EmsContainerHelper::TextualSummary
 
   def textual_topology
     {:label => N_('Topology'),
+     :image => 'topology',
      :link  => url_for(:controller => 'container_topology', :action => 'show', :id => @ems.id),
      :title => N_("Show topology")}
   end
