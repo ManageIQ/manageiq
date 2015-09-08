@@ -3,14 +3,9 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventParserMixin
 
   included do
     def self.event_to_hash(event, ems_id = nil)
-      log_header = "ems_id: [#{ems_id}]"
-
-      _log.debug("#{log_header} event: [#{event.inspect}]")
-
-      event_type = "#{event[:kind].upcase}_#{event[:reason].upcase}"
-
+      _log.debug("ems_id: [#{ems_id}] event: [#{event.inspect}]")
       {
-        :event_type           => event_type,
+        :event_type           => event[:event_type],
         :source               => 'KUBERNETES',
         :timestamp            => event[:timestamp],
         :message              => event[:message],
