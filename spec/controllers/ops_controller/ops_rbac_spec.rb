@@ -206,6 +206,5 @@ describe OpsController do
         flash_message[:level].should be(:success)
       end
     end
-
   end
 end

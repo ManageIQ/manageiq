@@ -82,7 +82,7 @@ describe('tenantQuotaFormController', function() {
     it('delegates to miqService.miqAjaxButton', function() {
       expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_manage_quotas/1000000000001?button=save&divisible=', { quotas: {
         cpu_allocated: {value: 1024},
-        mem_allocated: {value: 4096}
+        mem_allocated: {value: 4096 * 1024 * 1024 * 1024}
       }});
     });
   });
