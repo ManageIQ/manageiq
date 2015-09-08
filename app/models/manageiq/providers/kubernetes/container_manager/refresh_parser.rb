@@ -136,9 +136,10 @@ module ManageIQ::Providers::Kubernetes
       new_result[:container_conditions] = parse_conditions(node)
 
       # Establish a relationship between this node and the vm it is on (if it is in the system)
-      # supported relationships: oVirt and Openstack
+      # supported relationships: oVirt, Openstack and VMware.
       types = [ManageIQ::Providers::Redhat::InfraManager::Vm.name,
-               ManageIQ::Providers::Openstack::CloudManager::Vm.name]
+               ManageIQ::Providers::Openstack::CloudManager::Vm.name,
+               ManageIQ::Providers::Vmware::InfraManager::Vm.name]
 
       # Searching for the underlying instance for Openstack or oVirt.
       vms = Vm.where(:uid_ems => new_result[:identity_system].downcase, :type => types)
