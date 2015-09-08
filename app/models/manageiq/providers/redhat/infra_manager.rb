@@ -45,6 +45,11 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     supported_auth_types.include?(authtype.to_s)
   end
 
+  def self.raw_connect_metrics(host, database, username, password)
+    require 'ovirt_metrics'
+    OvirtMetrics.connect(:host => host, :database => database, :username => username, :password => password)
+  end
+
   def self.raw_connect(server, port, username, password, service = "Service")
     require 'ovirt'
     Ovirt.logger = $rhevm_log
@@ -65,15 +70,13 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
-
-    server   = options[:ip]      || self.address
-    port     = options[:port]    || self.port
-    username = options[:user]    || self.authentication_userid(options[:auth_type])
-    password = options[:pass]    || self.authentication_password(options[:auth_type])
-    service  = options[:service] || "Service"
-
-    self.class.raw_connect(server, port, username, password, service)
+    if options[:service] == "Metrics"
+      params = rhevm_metrics_connect_options(options)
+      self.class.raw_connect_metrics(params[:host], params[:database], params[:username], params[:password])
+    else
+      params = rhevm_connect_options(options)
+      self.class.raw_connect(params[:server], params[:port], params[:username], params[:password], params[:service])
+    end
   end
 
   def rhevm_service
@@ -82,6 +85,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def rhevm_inventory
     @rhevm_inventory ||= connect(:service => "Inventory")
+  end
+
+  def rhevm_metrics
+    @rhevm_metrics ||= connect(:service => "Metrics")
   end
 
   def with_provider_connection(options = {})
@@ -93,6 +100,24 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     ensure
       connection.try(:disconnect) rescue nil
     end
+  end
+
+  def rhevm_connect_options(options = {})
+    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+
+    server   = options[:ip]      || self.address
+    port     = options[:port]    || self.port
+    username = options[:user]    || self.authentication_userid(options[:auth_type])
+    password = options[:pass]    || self.authentication_password(options[:auth_type])
+    service  = options[:service] || "Service"
+
+    {
+      :server   => server,
+      :port     => port,
+      :username => username,
+      :password => password,
+      :service  => service
+    }
   end
 
   def verify_credentials_for_rhevm(options={})
