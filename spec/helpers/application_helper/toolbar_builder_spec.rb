@@ -2017,6 +2017,45 @@ describe ApplicationHelper do
       end
     end
 
+    context "when record class = ContainerProject" do
+      before do
+        @record = ContainerProject.new
+        @record.stub(:has_perf_data? => true, :has_events? => true)
+      end
+
+      context "and id = container_project_timeline" do
+        before { @id = "container_project_timeline" }
+        it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this Project"
+        it_behaves_like 'default case'
+      end
+    end
+
+    context "when record class = ContainerGroup" do
+      before do
+        @record = ContainerGroup.new
+        @record.stub(:has_perf_data? => true, :has_events? => true)
+      end
+
+      context "and id = container_group_timeline" do
+        before { @id = "container_group_timeline" }
+        it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this Pod"
+        it_behaves_like 'default case'
+      end
+    end
+
+    context "when record class = ContainerNode" do
+      before do
+        @record = ContainerNode.new
+        @record.stub(:has_perf_data? => true, :has_events? => true)
+      end
+
+      context "and id = container_node_timeline" do
+        before { @id = "container_node_timeline" }
+        it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this Node"
+        it_behaves_like 'default case'
+      end
+    end
+
     context "when record class = Host" do
       before do
         @record = Host.new
