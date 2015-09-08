@@ -145,18 +145,27 @@ describe MiqReport do
       expect(results.data.collect { |rec| rec.data['id'] }).to match_array [vm1.id, vm2.id]
     end
 
-    it "paging" do
-      FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:vm_vmware)
-      ids = Vm.order(:id).pluck(:id)
+    it "paging with order" do
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryGirl.create(:vm_vmware)
+      ids = [vm1.id, vm2.id].sort
 
-      report        = MiqReport.new(:db => "Vm", :sortby => "id")
-      report.extras = { :target_ids_for_paging => ids, :attrs_for_paging => {}}
-      results, _    = report.paged_view_search(:page => 2, :per_page => 2 )
+      report     = MiqReport.new(:db => "Vm", :sortby => "id", :order => "Descending")
+      results, _ = report.paged_view_search(:page => 2, :per_page => 1)
+      found_ids  = results.data.collect { |rec| rec.data['id'] }
+
+      expect(found_ids).to eq [ids.first]
+    end
+
+    it "target_ids_for_paging caches results" do
+      vm  = FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:vm_vmware)
+
+      report        = MiqReport.new(:db => "Vm")
+      report.extras = { :target_ids_for_paging => [vm.id], :attrs_for_paging => {}}
+      results, _    = report.paged_view_search(:page => 1, :per_page => 10)
       found_ids     = results.data.collect { |rec| rec.data['id'] }
-
-      expect(found_ids).to eq [ids.last]
+      expect(found_ids).to eq [vm.id]
     end
 
     it "VMs under Host with order" do
@@ -211,27 +220,6 @@ describe MiqReport do
         before(:each) do
           User.stub(:server_timezone => "UTC")
           @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto"=>[]})
-        end
-
-        it "works when page parameters are passed" do
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {
-            :only     => ["name"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should  == "Test Group 4 VM 80"
-          report.table.length.should == 10
-          report.table.data.first["name"].should == "Test Group 4 VM 89"
-          report.table.data.last["name"].should  == "Test Group 4 VM 80"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
         end
 
         it "works when page parameters and user filters are passed" do
