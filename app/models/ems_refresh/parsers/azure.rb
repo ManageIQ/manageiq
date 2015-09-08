@@ -20,7 +20,7 @@ module EmsRefresh
       end
 
       def ems_inv_to_hashes
-        log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS : [#{@ems.name}] id: [#{@ems.id}]"
+        log_header = "Collecting data for EMS : [#{@ems.name}] id: [#{@ems.id}]"
 
         _log.info("#{log_header}...")
         get_series
