@@ -704,8 +704,8 @@ class OpsController < ApplicationController
     # Rebuild the toolbars
     presenter[:set_visible_elements][:center_buttons_div] = c_buttons && c_xml
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons, :xml => c_xml}  if c_buttons && c_xml
-    presenter[:expand_collapse_cells][:a] = c_buttons ? 'expand' : 'collapse'
-    presenter[:expand_collapse_cells][:a] = 'collapse' if @sb[:center_tb_filename] == "blank_view_tb"
+    presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
+    presenter[:show_hide_layout][:toolbar] = 'hide' if @sb[:center_tb_filename] == "blank_view_tb"
 
     if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
       # Create ManageIQ.record.recordId JS var, if @record is present
@@ -728,9 +728,9 @@ class OpsController < ApplicationController
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
       end
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:paginator] = 'show'
     else
-      presenter[:expand_collapse_cells][:c] = 'collapse'
+      presenter[:show_hide_layout][:paginator] = 'hide'
     end
   end
 

@@ -384,8 +384,8 @@ class ServiceController < ApplicationController
     if %w(dialog_provision ownership service_edit tag).include?(action)
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:expand_collapse_cells][:a] = 'collapse'
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:toolbar] = 'hide'
+      presenter[:show_hide_layout][:paginator] = 'show'
       if action == "dialog_provision"
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons",
                                                            :locals  => {:action_url => action_url,
@@ -407,13 +407,13 @@ class ServiceController < ApplicationController
       # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box
       # when trying to change a node on tree after saving a record
       presenter[:set_visible_elements][:buttons_on] = false
-      presenter[:expand_collapse_cells][:a]         = 'expand'
-      presenter[:expand_collapse_cells][:c]         = 'collapse'
+      presenter[:show_hide_layout][:toolbar]        = 'show'
+      presenter[:show_hide_layout][:paginator]      = 'hide'
     else
       presenter[:set_visible_elements][:form_buttons_div] = false
       presenter[:set_visible_elements][:pc_div_1]         = true
-      presenter[:expand_collapse_cells][:a]               = 'expand'
-      presenter[:expand_collapse_cells][:c]               = 'expand'
+      presenter[:show_hide_layout][:toolbar]              = 'show'
+      presenter[:show_hide_layout][:paginator]            = 'show'
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list
@@ -439,7 +439,7 @@ class ServiceController < ApplicationController
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
     presenter[:reload_toolbars][:custom]  = {:buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
 
-    presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
+    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
 
     if @record && !@in_a_form
       presenter[:record_id] = @record.id

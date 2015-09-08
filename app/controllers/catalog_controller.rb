@@ -1850,8 +1850,8 @@ class CatalogController < ApplicationController
 
     # Decide whether to show paging controls
     if @tagging
-      presenter[:expand_collapse_cells][:a] = 'collapse'
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:toolbar] = 'hide'
+      presenter[:show_hide_layout][:paginator] = 'show'
       action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
       locals = {
         :record_id           => @edit[:object_ids][0],
@@ -1866,8 +1866,8 @@ class CatalogController < ApplicationController
        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if ['button_edit', 'group_edit', 'group_reorder', 'at_st_new',
           'st_new', 'st_catalog_new', 'st_catalog_edit'].include?(action)
-        presenter[:expand_collapse_cells][:a] = 'collapse'
-        presenter[:expand_collapse_cells][:c] = 'expand' # incase it was collapsed for summary screen, and incase there were no records on show_list
+        presenter[:show_hide_layout][:toolbar] = 'hide'
+        presenter[:show_hide_layout][:paginator] = 'show' # incase it was hidden for summary screen, and incase there were no records on show_list
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         locals = {:record_id => @edit[:rec_id]}
@@ -1887,8 +1887,8 @@ class CatalogController < ApplicationController
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
       elsif action == "dialog_provision"
-        presenter[:expand_collapse_cells][:a] = 'collapse'
-        presenter[:expand_collapse_cells][:c] = 'expand'  # incase it was collapsed for summary screen, and incase there were no records on show_list
+        presenter[:show_hide_layout][:toolbar] = 'hide'
+        presenter[:show_hide_layout][:paginator] = 'show'  # incase it was hidden for summary screen, and incase there were no records on show_list
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         @record.dialog_fields.each do |field|
@@ -1900,8 +1900,8 @@ class CatalogController < ApplicationController
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url =>"dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
       elsif %w(ot_edit ot_copy ot_add service_dialog_from_ot).include?(action)
-        presenter[:expand_collapse_cells][:a] = 'collapse'
-        presenter[:expand_collapse_cells][:c] = 'expand'
+        presenter[:show_hide_layout][:toolbar] = 'hide'
+        presenter[:show_hide_layout][:paginator] = 'show'
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         locals = {:record_id  => @edit[:rec_id],
@@ -1917,14 +1917,14 @@ class CatalogController < ApplicationController
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
         presenter[:set_visible_elements][:buttons_on] = false
-        presenter[:expand_collapse_cells][:a] = 'expand'
-        presenter[:expand_collapse_cells][:c] = 'collapse'
+        presenter[:show_hide_layout][:toolbar] = 'show'
+        presenter[:show_hide_layout][:paginator] = 'hide'
       end
     else
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = true
-      presenter[:expand_collapse_cells][:a] = 'expand'
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:toolbar] = 'show'
+      presenter[:show_hide_layout][:paginator] = 'show'
     end
 
     # Rebuild the toolbars
@@ -1934,7 +1934,7 @@ class CatalogController < ApplicationController
     presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
-    presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
+    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
 
     if @record && !@in_a_form
       presenter[:record_id] = @record.id

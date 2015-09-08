@@ -130,7 +130,7 @@ class MiqCapacityController < ApplicationController
       if x_active_tree != :bottlenecks_tree
         page << javascript_show_if_exists("view_buttons_div") if v_buttons && v_xml
         page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml) if v_buttons && v_xml
-        page << "dhxLayoutB.cells('a').expand();"
+        page << "ManageIQ.layout.toolbar.show();"
       end
       if x_active_tree == :bottlenecks_tree && @sb[:active_tab] == "summary"
         #need to replace timeline div incase it wasn't there earlier
@@ -489,7 +489,7 @@ class MiqCapacityController < ApplicationController
       presenter[:reload_toolbars][:view] = {:buttons => v_buttons, :xml => v_xml}
     end
 
-    presenter[:expand_collapse_cells][:a] = 'expand'
+    presenter[:show_hide_layout][:toolbar] = 'show'
     presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
     presenter[:right_cell_text] = @right_cell_text
     presenter[:build_calendar]  = {
@@ -558,7 +558,7 @@ class MiqCapacityController < ApplicationController
       render :update do |page|  # Redraw the screen
         page << javascript_show_if_exists("view_buttons_div") if v_buttons && v_xml
         page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml) if v_buttons && v_xml
-        page << "dhxLayoutB.cells('a').expand();"
+        page << "ManageIQ.layout.toolbar.show();"
         page << javascript_for_miq_button_visibility(session[:changed])
         page.replace("planning_options_div", :partial=>"planning_options")
         page.replace_html("main_div", :partial=>"planning_tabs")
@@ -608,7 +608,7 @@ class MiqCapacityController < ApplicationController
       presenter[:reload_toolbars][:view] = {:buttons => v_buttons, :xml => v_xml}
     end
 
-    presenter[:expand_collapse_cells][:a] = 'expand'
+    presenter[:show_hide_layout][:toolbar] = 'show'
     presenter[:update_partials][:main_div] = r[:partial => 'planning_tabs']
     presenter[:replace_cell_text] = _("Best Fit %s") % @sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters'
 

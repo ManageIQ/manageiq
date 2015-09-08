@@ -717,16 +717,16 @@ class MiqPolicyController < ApplicationController
         :action_url => @sb[:action],
         :record_id  => @edit ? @edit[:rec_id] : @assign[:rec_id],
       }
-      presenter[:expand_collapse_cells][:a] = 'collapse'
-      # If was collapsed for summary screen and there were no records on show_list
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:toolbar] = 'hide'
+      # If was hidden for summary screen and there were no records on show_list
+      presenter[:show_hide_layout][:paginator] = 'show'
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
     else
       # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
       presenter[:set_visible_elements][:button_on] = false
-      presenter[:expand_collapse_cells][:a] = 'expand'
-      presenter[:expand_collapse_cells][:c] = 'collapse'
+      presenter[:show_hide_layout][:toolbar] = 'show'
+      presenter[:show_hide_layout][:paginator] = 'hide'
     end
 
     # Replace the searchbox

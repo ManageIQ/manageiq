@@ -41,7 +41,7 @@
   - if @sb[:active_tab] == "db_utilization"
     miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');
   - if @sb[:center_tb_filename].nil? || @sb[:center_tb_filename] == "blank_view_tb"
-    dhxLayoutB.cells('a').collapse();
+    ManageIQ.layout.toolbar.hide();
   };
   var miq_after_onload = "miqOpsAfterOnload();"
 
