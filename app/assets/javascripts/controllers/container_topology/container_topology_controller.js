@@ -47,6 +47,7 @@ angular.module('topologyApp', ['kubernetesUI'])
                             case "on":
                             case "Ready":
                             case "Running":
+                            case "running":
                             case "Succeeded":
                                 return "#3F9C35";
                             case "NotReady":
@@ -56,6 +57,7 @@ angular.module('topologyApp', ['kubernetesUI'])
                             case 'Pending':
                                 return "#EC7A08";
                             case 'unknown':
+                            case 'terminated':
                                 return "#bbb";
                         }});
             added.append("title");
