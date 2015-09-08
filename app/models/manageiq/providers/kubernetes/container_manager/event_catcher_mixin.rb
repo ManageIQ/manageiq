@@ -59,13 +59,19 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
       return
     end
 
+    event_data[:event_type] = "#{event_data[:kind].upcase}_" \
+                              "#{event_data[:reason].upcase}"
+
     # Handle event data for specific entities
     case event_data[:kind]
     when 'Node'
       event_data[:container_node_name] = event_data[:name]
     when 'Pod'
       /^spec.containers{(?<container_name>.*)}$/ =~ event_data[:fieldpath]
-      event_data[:container_name] = container_name unless container_name.nil?
+      unless container_name.nil?
+        event_data[:event_type] = "CONTAINER_#{event_data[:reason].upcase}"
+        event_data[:container_name] = container_name
+      end
       event_data[:container_group_name] = event_data[:name]
       event_data[:container_namespace] = event_data[:namespace]
     end
