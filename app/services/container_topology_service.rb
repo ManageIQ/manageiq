@@ -69,6 +69,7 @@ class ContainerTopologyService
         'NotReady'
       end
     when 'Pod' then entity.phase
+    when 'Container' then entity.state
     else 'unknown'
     end
   end
