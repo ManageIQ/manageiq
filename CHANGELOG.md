@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 
 # Unreleased
 
+## Sprint 27 end 2015-08-03
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+27+Ending+August+3%2C+2015%22+label%3Aenhancement)
+
+- Providers: Pluggable provider namespacing
+- Self Service UI: New UI imported from [Project Jellyfish](https://github.com/projectjellyfish/api)
+- Automate: Multiple state machine support
+- Provisioning: Multi-tenant support for Orchestration provisioning in Openstack
+- Rest API
+ - Chargebacks & rates queries
+ - Reports & results queries
+- Appliance
+ - Added support for systemctl 
+ - Initial work on support for PostgreSQL 9.4.1
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+27+Ending+August+3%2C+2015%22+label%3Aenhancement)
+
+- Providers: SCVMM Inventory Performance Improvement
+- UI
+ - Replaced DHTMLXCombo controls
+ - Replaced DHTMLXCalendar controls
+ - Updates for Container support
+- Rest API: Source refactoring
+ - app/helpers/api\_helper/ → app/controllers/api_controller
+- Replication
+ - Added heartbeating to child worker process for resiliency
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+27+Ending+August+3%2C+2015%22+label%3Abug)
+
+Notable fixes include:
+
+- Providers: Fixed caching for OpenStack Event Monitors
+
 ## Sprint 26 end 2015-07-13
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+26+Ending+July+13%2C+2015%22+label%3Aenhancement)
