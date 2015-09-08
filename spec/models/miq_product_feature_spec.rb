@@ -1,15 +1,16 @@
 require "spec_helper"
 
 describe MiqProductFeature do
-  before do
-    @expected_feature_count = 846
+  before(:all) do
+    MiqRegion.seed
+    MiqProductFeature.seed
+    @expected_feature_count = MiqProductFeature.count
+    MiqProductFeature.destroy_all
   end
 
   context ".seed" do
-    it "empty table" do
-      MiqRegion.seed
-      MiqProductFeature.seed
-      MiqProductFeature.count.should eq(@expected_feature_count)
+    it "sanity" do
+      @expected_feature_count.should_not eq(0)
     end
 
     it "run twice" do
