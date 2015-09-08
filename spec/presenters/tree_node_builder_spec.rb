@@ -319,5 +319,23 @@ describe TreeNodeBuilder do
       node = TreeNodeBuilder.build(zone, nil, {})
       node.should_not be_nil
     end
+
+    it "expand attribute of node should be set to true when open_all is true and expand is nil in options" do
+      tenant = FactoryGirl.build(:tenant)
+      node = TreeNodeBuilder.build(tenant, "root", :expand => nil, :open_all => true)
+      node[:expand].should eq(true)
+    end
+
+    it "expand attribute of node should be set to nil when open_all is true and expand is set to false in options" do
+      tenant = FactoryGirl.build(:tenant)
+      node = TreeNodeBuilder.build(tenant, "root", :expand => false, :open_all => true)
+      node[:expand].should eq(nil)
+    end
+
+    it "expand attribute of node should be set to true when open_all and expand are true in options" do
+      tenant = FactoryGirl.build(:tenant)
+      node = TreeNodeBuilder.build(tenant, "root", :expand => true, :open_all => true)
+      node[:expand].should eq(true)
+    end
   end
 end
