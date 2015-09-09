@@ -10,13 +10,14 @@ module ManageIQ::Providers
       end
 
       def initialize(ems, options = nil)
-        @ems        = ems
-        config      = ems.connect
-        @vmm        = ::Azure::Armrest::VirtualMachineService.new(config)
-        @asm        = ::Azure::Armrest::AvailabilitySetService.new(config)
-        @options    = options || {}
-        @data       = {}
-        @data_index = {}
+        @ems             = ems
+        config           = ems.connect
+        @subscription_id = config.subscription_id
+        @vmm             = ::Azure::Armrest::VirtualMachineService.new(config)
+        @asm             = ::Azure::Armrest::AvailabilitySetService.new(config)
+        @options         = options || {}
+        @data            = {}
+        @data_index      = {}
       end
 
       def ems_inv_to_hashes
@@ -100,10 +101,10 @@ module ManageIQ::Providers
       end
 
       def parse_instance(instance)
-        uid               = instance.fetch_path('resourceGroup') + "\\" + instance.fetch_path('name')
-        series_name       = instance.fetch_path('properties', 'hardwareProfile', 'vmSize')
-        az                = instance.fetch_path('properties', 'availabilitySet', 'id')
-        series            = @data_index.fetch_path(:flavors, series_name)
+        uid         = "#{@subscription_id}\\#{instance.fetch_path('resourceGroup')}\\#{instance.fetch_path('name')}"
+        series_name = instance.fetch_path('properties', 'hardwareProfile', 'vmSize')
+        az          = instance.fetch_path('properties', 'availabilitySet', 'id')
+        series      = @data_index.fetch_path(:flavors, series_name)
 
         new_result = {
           :type             => 'ManageIQ::Providers::Azure::CloudManager::Vm',
