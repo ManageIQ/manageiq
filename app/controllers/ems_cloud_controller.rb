@@ -166,7 +166,7 @@ class EmsCloudController < ApplicationController
       host_default_vnc_port_end = @ems.host_default_vnc_port_end.to_s
     end
 
-    if @ems.kind_of?(EmsAzure)
+    if @ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
       azure_tenant_id = @ems.azure_tenant_id
       client_id       = @ems.authentication_userid ? @ems.authentication_userid : ""
       client_key      = @ems.authentication_password ? @ems.authentication_password : ""
@@ -251,7 +251,7 @@ class EmsCloudController < ApplicationController
       ems.host_default_vnc_port_end = params[:host_default_vnc_port_end].blank? ? nil : params[:host_default_vnc_port_end].to_i
     end
 
-    ems.azure_tenant_id = params[:azure_tenant_id] if ems.kind_of?(EmsAzure)
+    ems.azure_tenant_id = params[:azure_tenant_id] if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
 
     creds = {}
     creds[:default] = {:userid   => params[:default_userid],
@@ -274,7 +274,7 @@ class EmsCloudController < ApplicationController
 
   def construct_edit_for_audit(ems)
     @edit ||= {}
-    ems.kind_of?(EmsAzure) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil;
+    ems.kind_of?(ManageIQ::Providers::Azure::CloudManager) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil;
     @edit[:current] = {:name            => ems.name,
                        :provider_region => ems.provider_region,
                        :hostname        => ems.hostname,
