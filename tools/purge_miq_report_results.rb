@@ -19,7 +19,7 @@ if opts[:remaining_given]
 elsif opts[:date_given]
   Trollop::die :date, "must be a number with method (e.g. 6.months)" unless opts[:date].number_with_method?
   purge_mode  = :date
-  purge_value = opts[:date].to_i_with_method.ago.utc
+  purge_value = opts[:date].to_i_with_method.seconds.ago.utc
 else
   purge_mode, purge_value = MiqReportResult.purge_mode_and_value
 end
