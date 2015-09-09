@@ -1,8 +1,6 @@
 module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   extend ActiveSupport::Concern
 
-  include ManageIQ::Providers::ContainerManagerMixin
-
   module ClassMethods
     def raw_api_endpoint(hostname, port)
       URI::HTTPS.build(:host => hostname, :port => port.presence.try(:to_i))
