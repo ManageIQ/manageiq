@@ -11,11 +11,17 @@ describe ManageIQ::Providers::Azure::CloudManager do
     }
     @ems.authentications << FactoryGirl.create(:authentication, cred)
     @ems.update_attributes(:azure_tenant_id => "a50f9983-d1a2-4a8d-be7d-123456789012")
+
+    # A true thread may fail the test with VCR
+    Thread.stub(:new) do |*args, &block|
+      block.call(*args)
+      Class.new do
+        def join; end
+      end.new
+    end
   end
 
   it "will perform a full refresh" do
-    pending("This test fails sporadically")
-
     2.times do # Run twice to verify that a second run with existing data does not change anything
       @ems.reload
       VCR.use_cassette(described_class.name.underscore, :allow_unused_http_interactions => true) do
