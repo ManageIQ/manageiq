@@ -88,12 +88,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
     v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "ERP", :raw_power_state => "VM running").first
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "ComputeVMs\\ERP",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\ERP",
       :ems_ref_obj           => nil,
-      :uid_ems               => "ComputeVMs\\ERP",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\ERP",
       :vendor                => "Microsoft",
       :power_state           => "on",
-      :location              => "ComputeVMs\\ERP",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\ERP",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -177,12 +177,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_specific_vm_powered_off_attributes(v)
     v.should have_attributes(
       :template              => false,
-      :ems_ref               => "ComputeVMs\\MIQ2",
+      :ems_ref               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\MIQ2",
       :ems_ref_obj           => nil,
-      :uid_ems               => "ComputeVMs\\MIQ2",
+      :uid_ems               => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\MIQ2",
       :vendor                => "Microsoft",
       :power_state           => "off",
-      :location              => "ComputeVMs\\MIQ2",
+      :location              => "462f2af8-e67e-40c6-9fbf-02824d1dd485\\ComputeVMs\\MIQ2",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
