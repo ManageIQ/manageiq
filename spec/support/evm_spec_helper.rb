@@ -123,14 +123,10 @@ module EvmSpecHelper
     end
   end
 
-  def self.stub_qpid_natives
-    require 'openstack/amqp/openstack_qpid_connection'
-    OpenstackQpidConnection.stub(:available?).and_return(true)
-    qsession = RSpec::Mocks::Mock.new("qpid session")
-    qconnection = RSpec::Mocks::Mock.new("qpid connection", :create_session => qsession)
-    OpenstackQpidConnection.any_instance.stub(:create_connection).and_return(qconnection)
-
-    return qsession, qconnection
+  def self.stub_amqp_support
+    require 'openstack/amqp/openstack_rabbit_event_monitor'
+    OpenstackRabbitEventMonitor.stub(:available?).and_return(true)
+    OpenstackRabbitEventMonitor.stub(:test_connection).and_return(true)
   end
 
   def self.import_yaml_model(dirname, domain, attrs = {})
