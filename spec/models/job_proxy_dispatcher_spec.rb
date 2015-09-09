@@ -22,7 +22,7 @@ module JobProxyDispatcherSpec
 
       context "With a default zone, server, with hosts with a miq_proxy, vmware vms on storages" do
         before(:each) do
-          @server = FactoryGirl.create(:miq_server, :my_server, :name => "test_server_main_server")
+          @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server")
 
           (NUM_SERVERS - 1).times do |i|
             FactoryGirl.create(:miq_server, :zone => @server.zone, :name => "test_server_#{i}")

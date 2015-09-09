@@ -3,7 +3,7 @@ require "spec_helper"
 describe GenericMailer do
 
   before(:each) do
-    @miq_server = FactoryGirl.create(:miq_server, :my_server)
+    @miq_server = EvmSpecHelper.local_miq_server
     @args = {
       :to          => "you@bedrock.gov",
       :from        => "me@bedrock.gov",

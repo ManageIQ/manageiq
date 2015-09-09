@@ -35,7 +35,7 @@ describe MiqWorker do
 
     before(:each) do
       active_roles = %w(foo bar).map { |rn| FactoryGirl.create(:server_role, :name => rn) }
-      @server = FactoryGirl.create(:miq_server, :my_server, :active_roles => active_roles)
+      @server = EvmSpecHelper.local_miq_server(:active_roles => active_roles)
     end
 
     context "clean_active_messages" do

@@ -26,7 +26,7 @@ describe TimezoneMixin do
     end
 
     it "#with_current_user_timezone" do
-      FactoryGirl.create(:miq_server, :my_server)
+      EvmSpecHelper.local_miq_server
       test_inst.with_current_user_timezone { Time.zone }.to_s.should == "(GMT+00:00) UTC"
     end
 

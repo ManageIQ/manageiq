@@ -3,7 +3,7 @@ require "spec_helper"
 describe "MiqSchedule Filter" do
   context "Getting schedule targets" do
     before(:each) do
-      @server1 = FactoryGirl.create(:miq_server, :my_server)
+      @server1 = EvmSpecHelper.local_miq_server
 
       # Vm Scan Schedules
       @vm1 = FactoryGirl.create(:vm_vmware, :name => "Test VM 1")

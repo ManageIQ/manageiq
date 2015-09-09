@@ -57,7 +57,7 @@ describe DatabaseBackup do
 
   context "schedule" do
     before(:each) do
-      FactoryGirl.create(:miq_server, :my_server)
+      EvmSpecHelper.local_miq_server
       MiqServer.my_server_clear_cache
 
       @name = "adhoc schedule"

@@ -3,7 +3,7 @@ require "spec_helper"
 describe VimPerformanceTag do
   before(:each) do
     MiqRegion.seed
-    @server = FactoryGirl.create(:miq_server, :my_server)
+    @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
 
     Classification.stub(:category_names_for_perf_by_tag).and_return(["environment"])

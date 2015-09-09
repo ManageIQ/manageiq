@@ -360,7 +360,7 @@ describe Host do
 
   context "host validation" do
     before do
-      FactoryGirl.create(:miq_server, :my_server)
+      EvmSpecHelper.local_miq_server
 
       @password = "v2:{/OViaBJ0Ug+RSW9n7EFGqw==}"
       @host = FactoryGirl.create(:host_vmware_esx)

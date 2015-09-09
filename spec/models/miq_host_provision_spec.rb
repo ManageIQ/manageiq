@@ -25,7 +25,7 @@ describe MiqHostProvision do
 
   context "with default server and zone" do
     before(:each) do
-      @miq_server = FactoryGirl.create(:miq_server, :my_server)
+      @miq_server = EvmSpecHelper.local_miq_server
     end
 
     context "with host and miq_host_provision" do

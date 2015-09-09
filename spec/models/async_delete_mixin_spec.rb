@@ -105,7 +105,7 @@ describe AsyncDeleteMixin do
 
   context "with zone and server" do
     before(:each) do
-      FactoryGirl.create(:miq_server, :my_server)
+      EvmSpecHelper.local_miq_server
     end
 
     context "with 3 ems clusters" do

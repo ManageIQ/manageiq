@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe TimeProfile do
   before(:each) do
-    @server = FactoryGirl.create(:miq_server, :my_server)
+    @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
     EvmSpecHelper.clear_caches
   end

@@ -3,7 +3,7 @@ require "spec_helper"
 describe MiqReport do
   before(:each) do
     MiqRegion.seed
-    FactoryGirl.create(:miq_server, :my_server)
+    EvmSpecHelper.local_miq_server
 
     @group = FactoryGirl.create(:miq_group)
     @user  = FactoryGirl.create(:user, :miq_groups => [@group])

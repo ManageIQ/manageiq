@@ -63,7 +63,7 @@ describe "Widget RSS Content" do
     MiqRegion.seed
     RssFeed.sync_from_yml_dir
 
-    FactoryGirl.create(:miq_server, :my_server)
+    EvmSpecHelper.local_miq_server
 
     @admin       = FactoryGirl.create(:user_admin)
     @admin_group = @admin.current_group

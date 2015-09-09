@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe PxeServer do
   before(:each) do
-    FactoryGirl.create(:miq_server, :my_server)
+    EvmSpecHelper.local_miq_server
     @pxe_server = FactoryGirl.create(:pxe_server, :uri_prefix => "nfs", :uri => "nfs:///#{@mnt_point}")
   end
 

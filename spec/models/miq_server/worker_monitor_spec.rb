@@ -9,7 +9,7 @@ describe "MiqWorker Monitor" do
       MiqServer.any_instance.stub(:get_memory_threshold).and_return(100.megabytes)
       MiqServer.any_instance.stub(:get_restart_interval).and_return(0)
 
-      @miq_server = FactoryGirl.create(:miq_server, :my_server)
+      @miq_server = EvmSpecHelper.local_miq_server
     end
 
     context "A worker" do

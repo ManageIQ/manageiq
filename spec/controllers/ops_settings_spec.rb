@@ -137,7 +137,7 @@ describe OpsController do
 
   context "replace_right_cell" do
     before do
-      miq_server = FactoryGirl.create(:miq_server, :my_server)
+      miq_server = EvmSpecHelper.local_miq_server
       MiqRegion.seed
       expect(MiqRegion.my_region.zones).to eq([miq_server.zone])
     end

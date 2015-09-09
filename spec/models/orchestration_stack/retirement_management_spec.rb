@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe "Service Retirement Management" do
   before(:each) do
-    @miq_server = FactoryGirl.create(:miq_server, :my_server)
+    @miq_server = EvmSpecHelper.local_miq_server
     @stack = FactoryGirl.create(:orchestration_stack)
   end
 

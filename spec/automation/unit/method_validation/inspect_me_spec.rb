@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe "InspectMe Automate Method" do
   before do
-    @miq_server = FactoryGirl.create(:miq_server, :my_server)
+    @miq_server = EvmSpecHelper.local_miq_server
   end
 
   def run_automate_method

@@ -77,7 +77,7 @@ describe Storage do
 
   context "with multiple storages" do
     before(:each) do
-      @server = FactoryGirl.create(:miq_server, :my_server)
+      @server = EvmSpecHelper.local_miq_server
       @zone   = @server.zone
 
       @zone2     = FactoryGirl.create(:zone, :name => 'Bedrock')

@@ -4,10 +4,10 @@ describe Job do
   context "With a single scan job," do
 
     before(:each) do
-      @server1 = FactoryGirl.create(:miq_server, :my_server, :is_master => true)
+      @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
 
-      @miq_server = FactoryGirl.create(:miq_server, :my_server, :is_master => true)
+      @miq_server = EvmSpecHelper.local_miq_server(:is_master => true)
       @zone = @miq_server.zone
       @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone, :name => "Test EMS")
       @host       = FactoryGirl.create(:host)

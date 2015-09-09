@@ -71,7 +71,7 @@ module ServiceTemplateHelper
   end
 
   def build_small_environment
-    @miq_server = FactoryGirl.create(:miq_server, :my_server)
+    @miq_server = EvmSpecHelper.local_miq_server
     @ems = FactoryGirl.create(:ems_vmware_with_authentication)
     @host1 =  FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
     @src_vm = FactoryGirl.create(:vm_vmware, :host   => @host1,

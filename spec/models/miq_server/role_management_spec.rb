@@ -29,7 +29,7 @@ describe "Server Role Management" do
       MiqRegion.seed
       ServerRole.seed
       @server_roles = ServerRole.all
-      @miq_server   = FactoryGirl.create(:miq_server, :my_server)
+      @miq_server   = EvmSpecHelper.local_miq_server
       @miq_server.deactivate_all_roles
     end
 

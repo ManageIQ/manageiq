@@ -8,12 +8,5 @@ FactoryGirl.define do
     started_on      { Time.now.utc }
     stopped_on      ""
     version         '9.9.9.9'
-
-    trait :my_server do
-      after(:create) do |ms|
-        MiqServer.stub(:my_guid).and_return(ms.guid)
-        MiqServer.my_server_clear_cache
-      end
-    end
   end
 end

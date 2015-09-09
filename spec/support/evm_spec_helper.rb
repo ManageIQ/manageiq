@@ -45,20 +45,33 @@ module EvmSpecHelper
     Tenant.root_tenant
   end
 
+  def self.local_miq_server(attrs = {})
+    remote_miq_server(attrs).tap do |server|
+      MiqServer.stub(:my_guid).and_return(server.guid)
+      MiqServer.my_server_clear_cache
+    end
+  end
+
   def self.local_guid_miq_server_zone
-    remote_guid_miq_server_zone(:my_server)
+    server = local_miq_server
+    [server.guid, server, server.zone]
   end
 
   class << self
     alias_method :create_guid_miq_server_zone, :local_guid_miq_server_zone
   end
 
-  def self.remote_guid_miq_server_zone(server_trait = nil)
+  def self.remote_miq_server(attrs = {})
     create_root_tenant
-    server = FactoryGirl.create(:miq_server, server_trait, :is_master => true)
-    MiqServer.my_server_clear_cache unless server_trait # duplicate work
-    server.zone.clear_association_cache
 
+    server = FactoryGirl.create(:miq_server, attrs)
+    MiqServer.my_server_clear_cache
+    server.zone.clear_association_cache
+    server
+  end
+
+  def self.remote_guid_miq_server_zone
+    server = remote_miq_server
     [server.guid, server, server.zone]
   end
 

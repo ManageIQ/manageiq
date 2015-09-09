@@ -26,7 +26,7 @@ describe User do
                   :miq_user_role    => @miq_user_role
                   )
 
-      @miq_server = FactoryGirl.create(:miq_server, :my_server)
+      @miq_server = EvmSpecHelper.local_miq_server
 
       # create User record...
       @user = FactoryGirl.create(

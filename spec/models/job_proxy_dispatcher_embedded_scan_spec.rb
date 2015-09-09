@@ -42,7 +42,7 @@ module JobProxyDispatcherEmbeddedScanSpec
 
     context "With a zone, server, ems, hosts, vmware vms" do
       before(:each) do
-        server = FactoryGirl.create(:miq_server, :my_server, :is_master => true, :name => "test_server_main_server")
+        server = EvmSpecHelper.local_miq_server(:is_master => true, :name => "test_server_main_server")
         (NUM_SERVERS - 1).times do |i|
           FactoryGirl.create(:miq_server, :zone => server.zone, :name => "test_server_#{i}")
         end

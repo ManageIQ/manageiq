@@ -129,7 +129,7 @@ describe AuthenticationMixin do
 
   context "with server and zone" do
     before(:each) do
-      @miq_server = FactoryGirl.create(:miq_server, :my_server)
+      @miq_server = EvmSpecHelper.local_miq_server
       @data = {:default => {:userid => "test", :password => "blah"}}
     end
 

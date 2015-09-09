@@ -3,7 +3,7 @@ require "spec_helper"
 describe VmScan do
   context "A single VM Scan Job," do
     before(:each) do
-      @server = FactoryGirl.create(:miq_server, :my_server)
+      @server = EvmSpecHelper.local_miq_server
 
       #TODO: We should be able to set values so we don't need to stub behavior
       MiqServer.any_instance.stub(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)

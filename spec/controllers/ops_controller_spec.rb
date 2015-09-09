@@ -242,7 +242,7 @@ end
 
 describe OpsController do
   before do
-    FactoryGirl.create(:miq_server, :my_server)
+    EvmSpecHelper.local_miq_server
     EvmSpecHelper.seed_specific_product_features("ops_rbac")
     feature = MiqProductFeature.find_all_by_identifier("ops_rbac")
     @test_user_role  = FactoryGirl.create(:miq_user_role,

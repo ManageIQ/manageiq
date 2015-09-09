@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe "VM Retirement Management" do
   before(:each) do
-    miq_server = FactoryGirl.create(:miq_server, :my_server)
+    miq_server = EvmSpecHelper.local_miq_server
     @ems       = FactoryGirl.create(:ems_vmware, :zone => miq_server.zone)
     @vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
   end

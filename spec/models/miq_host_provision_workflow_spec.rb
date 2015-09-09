@@ -7,7 +7,7 @@ describe MiqHostProvisionWorkflow do
   context "seeded" do
     context "After setup," do
       before(:each) do
-        @server = FactoryGirl.create(:miq_server, :my_server)
+        @server = EvmSpecHelper.local_miq_server
 
         FactoryGirl.create(:user_admin)
 

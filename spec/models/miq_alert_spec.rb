@@ -4,7 +4,7 @@ describe MiqAlert do
   context "With single server with a single generic worker with the notifier role," do
 
     before(:each) do
-      @miq_server = FactoryGirl.create(:miq_server, :my_server, :role => 'notifier')
+      @miq_server = EvmSpecHelper.local_miq_server(:role => 'notifier')
       @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
       @vm     = FactoryGirl.create(:vm_vmware)
 
@@ -305,7 +305,7 @@ describe MiqAlert do
   context ".evaluate_hourly_timer" do
     before do
       MiqAlert.any_instance.stub(:validate => true)
-      @miq_server = FactoryGirl.create(:miq_server, :my_server)
+      @miq_server = EvmSpecHelper.local_miq_server
       @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
       @ems_other  = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :responds_to_events => "_hourly_timer_")

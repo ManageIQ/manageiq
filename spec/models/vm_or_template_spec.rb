@@ -218,7 +218,7 @@ describe VmOrTemplate do
                                  :storages => [@storage1, @storage2])
         @zone = FactoryGirl.create(:zone, :name => 'zone')
 
-        @svr1 = FactoryGirl.create(:miq_server, :my_server, :name => 'svr1')
+        @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
         @svr2 = FactoryGirl.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
         @svr3 = FactoryGirl.create(:miq_server, :name => 'svr3', :zone => @svr1.zone)
 
@@ -273,7 +273,7 @@ describe VmOrTemplate do
                                  :storage  => @storage1,
                                  :storages => [@storage1])
 
-        @svr1 = FactoryGirl.create(:miq_server, :my_server, :name => 'svr1')
+        @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
         @svr2 = FactoryGirl.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
 
         @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host1, :name => 'svr1_vm', :miq_server => @svr1)

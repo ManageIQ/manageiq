@@ -46,7 +46,7 @@ describe MiqEvent do
     context ".raise_evm_event" do
       before(:each) do
         @cluster    = FactoryGirl.create(:ems_cluster)
-        @miq_server = FactoryGirl.create(:miq_server, :my_server)
+        @miq_server = EvmSpecHelper.local_miq_server
         @zone       = @miq_server.zone
       end
 
