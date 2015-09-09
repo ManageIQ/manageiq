@@ -27,29 +27,29 @@ class EmsInfraController < ApplicationController
     @infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
     # TODO: Currently assumes there is a single stack per infrastructure provider. This should
     # be improved to support multiple stacks.
-    @stack = @infra.orchestration_stacks.first
+    @stack = @infra.direct_orchestration_stacks.first
     if @stack.nil?
       log_and_flash_message(_("Orchestration stack could not be found."))
       return
     end
 
-    @count_parameters = @stack.parameters.select { |x| x.name.include?('::count') }
+    @count_parameters = @stack.parameters.select { |x| x.name.include?('::count') || x.name.include?('Count') }
 
     return unless params[:scale]
 
-    scale_parameters = params.select { |k, _v| k.include?('::count') }
+    scale_parameters = params.select { |k, _v| k.include?('::count') || k.include?('Count') }
     assigned_hosts = scale_parameters.values.sum(&:to_i)
     infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
     if assigned_hosts > infra.hosts.count
       # Validate number of selected hosts is not more than available
       log_and_flash_message(_("Assigning %{hosts} but only have %{hosts_count} hosts available.") % {:hosts => assigned_hosts, :hosts_count => infra.hosts.count.to_s})
     else
-      scale_parameters_formatted = []
+      scale_parameters_formatted = {}
       return_message = _("Scaling")
       @count_parameters.each do |p|
         if !scale_parameters[p.name].nil? && scale_parameters[p.name] != p.value
           return_message += _(" %{name} from %{value} to %{parameters} ") % {:name => p.name, :value => p.value, :parameters => scale_parameters[p.name]}
-          scale_parameters_formatted << {"name" => p.name, "value" => scale_parameters[p.name]}
+          scale_parameters_formatted[p.name] = scale_parameters[p.name]
         end
       end
 
@@ -66,7 +66,7 @@ class EmsInfraController < ApplicationController
       elsif scale_parameters_formatted.length > 0
         # A value was changed
         begin
-          @stack.raw_update_stack(:parameters => scale_parameters_formatted)
+          @stack.raw_update_stack(scale_parameters_formatted)
           redirect_to :action => 'show', :id => params[:id], :flash_msg => return_message
         rescue => ex
           log_and_flash_message(_("Unable to initiate scaling: %s") % ex)
