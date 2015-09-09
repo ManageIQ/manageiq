@@ -3,7 +3,7 @@ require "spec_helper"
 describe MiqScheduleWorker::Runner do
   context ".new" do
     before(:each) do
-      @miq_server = FactoryGirl.create(:miq_server_master, :my_server)
+      @miq_server = FactoryGirl.create(:miq_server, :my_server, :is_master => true)
       @zone = @miq_server.zone
 
       worker_guid = MiqUUID.new_guid

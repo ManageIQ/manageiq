@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe VmReconfigureRequest do
   before do
-    server = FactoryGirl.create(:miq_server_master)
+    server = FactoryGirl.create(:miq_server, :is_master => true)
     @request = FactoryGirl.create(:vm_reconfigure_request, :userid => FactoryGirl.create(:user, :userid => "tester").userid)
     @guid1 = server.guid
     @zone1 = server.zone

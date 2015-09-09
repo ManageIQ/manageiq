@@ -267,7 +267,7 @@ describe MiqServer do
       context "with an active messsage and a second server" do
         before(:each) do
           @msg = FactoryGirl.create(:miq_queue, :state => 'dequeue')
-          @miq_server2 = FactoryGirl.create(:miq_server_master, :zone => @zone)
+          @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @zone)
         end
 
         it "will validate the 'started' first server's active message when called on it" do

@@ -6,7 +6,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
 
   context "with two servers on same zone, vix disk enabled for all, " do
     before(:each) do
-      @server1 = FactoryGirl.create(:miq_server_master, :my_server)
+      @server1 = FactoryGirl.create(:miq_server, :my_server, :is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
       MiqServer.any_instance.stub(:is_vix_disk? => true)
     end

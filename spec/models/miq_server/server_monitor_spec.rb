@@ -234,7 +234,7 @@ describe "Server Monitor" do
 
     context "with 2 Servers in 2 Zones where I am the Master" do
       before(:each) do
-        @miq_server1 = FactoryGirl.create(:miq_server_master, :my_server)
+        @miq_server1 = FactoryGirl.create(:miq_server, :my_server, :is_master => true)
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, scheduler, reporting'
 
@@ -360,7 +360,7 @@ describe "Server Monitor" do
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
         @miq_server1.activate_roles("ems_operations", 'reporting')
 
-        @miq_server2 = FactoryGirl.create(:miq_server_master, :zone => @miq_server1.zone)
+        @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
         @miq_server2.role         = 'event, ems_operations, scheduler, reporting'
         @roles2 = [ ['ems_operations', 1], ['event', 1], ['scheduler', 1], ['reporting', 1] ]
@@ -444,7 +444,7 @@ describe "Server Monitor" do
 
     context "with 3 Servers where I am the Master" do
       before(:each) do
-        @miq_server1 = FactoryGirl.create(:miq_server_master, :my_server, :name => "Miq1")
+        @miq_server1 = FactoryGirl.create(:miq_server, :my_server, :is_master => true, :name => "Miq1")
         @miq_server1.deactivate_all_roles
         @roles1 = [ ['ems_operations', 2], ['event', 2], ['ems_inventory', 3], ['ems_metrics_coordinator', 2], ]
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
@@ -633,7 +633,7 @@ describe "Server Monitor" do
         @miq_server1.role         = 'event, ems_operations, ems_inventory'
         @miq_server1.activate_roles("ems_operations", "ems_inventory")
 
-        @miq_server2 = FactoryGirl.create(:miq_server_master, :zone => @miq_server1.zone, :name => "Server 2")
+        @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone, :name => "Server 2")
         @miq_server2.deactivate_all_roles
         @miq_server2.role         = 'event, ems_metrics_coordinator, ems_operations'
         @miq_server2.activate_roles("event", "ems_metrics_coordinator", 'ems_operations')
@@ -787,7 +787,7 @@ describe "Server Monitor" do
 
       context "with 2 Servers across Zones where I am the Master" do
         before(:each) do
-          @miq_server1 = FactoryGirl.create(:miq_server_master, :my_server, :zone => @zone1, :name => "Server 1")
+          @miq_server1 = FactoryGirl.create(:miq_server, :my_server, :is_master => true, :zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
           @roles1 = [ ['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 2], ['scheduler', 1], ['reporting', 1] ]
           @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }

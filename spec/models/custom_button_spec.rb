@@ -3,7 +3,7 @@ require "spec_helper"
 describe CustomButton do
   context "with no buttons" do
     before(:each) do
-      @miq_server = FactoryGirl.create(:miq_server_master, :my_server)
+      @miq_server = FactoryGirl.create(:miq_server, :my_server, :is_master => true)
 
       User.any_instance.stub(:role).and_return("admin")
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')

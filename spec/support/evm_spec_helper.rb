@@ -55,7 +55,7 @@ module EvmSpecHelper
 
   def self.remote_guid_miq_server_zone(server_trait = nil)
     create_root_tenant
-    server = FactoryGirl.create(:miq_server_master, server_trait)
+    server = FactoryGirl.create(:miq_server, server_trait, :is_master => true)
     MiqServer.my_server_clear_cache unless server_trait # duplicate work
     server.zone.clear_association_cache
 
