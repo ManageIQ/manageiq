@@ -47,7 +47,7 @@ describe ApiController do
               :filter => ["action='Provision'"]
 
       expect_query_result(:resource_actions, 1, 2)
-      expect_result_resources_to_include_data("resources", "action" => %w(Provision))
+      expect_result_resources_to_match_hash(["id" => ra1.id, "action" => ra1.action, "dialog_id" => dialog1.id])
     end
   end
 
