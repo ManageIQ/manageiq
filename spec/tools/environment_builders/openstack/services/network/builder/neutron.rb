@@ -80,12 +80,9 @@ module Openstack
                 i.tenant_id == @project.id && i.floating_network_id == network.id
               end
 
-              puts "Finding #{found.count} floating ips in #{collection.class.name} for network #{network.name}"
-
               missing = floating_ips_count - found.count
               next unless missing > 0
 
-              puts "Creating #{missing} floating ips in #{collection.class.name} for network #{network.name}"
               (1..missing).each do
                 @floating_ips << collection.create(:floating_network_id => network.id, :tenant_id => @project.id)
               end

@@ -50,12 +50,9 @@ module Openstack
             collection = @service.addresses
             @floating_ips += found = collection.all
 
-            puts "Finding #{found.count} floating ips in #{collection.class.name} for nova pool #{pool_name}"
-
             missing = floating_ips_count - found.count
             return unless missing > 0
 
-            puts "Creating #{missing} floating ips in #{collection.class.name} for nova pool #{pool_name}"
             (1..missing).each do
               @floating_ips << collection.create
             end
@@ -81,7 +78,6 @@ module Openstack
 
           def create_firewall_rule(security_group, attributes)
             collection = security_group.security_group_rules
-            puts "Creating nova security group rule #{attributes.inspect} in #{collection.class.name}"
             attributes[:parent_group_id]  = security_group.id
             attributes[:group]            = security_group.id if attributes[:group]
             collection.create(attributes)
