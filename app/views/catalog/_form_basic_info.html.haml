@@ -32,7 +32,7 @@
           - available_catalogs = @edit[:new][:available_catalogs]
           - catalog_id = @edit[:new][:catalog_id]
           = select_tag('catalog_id',
-                       options_for_select(([["<_#{('Unassigned')}>",nil]]) + available_catalogs, catalog_id),
+                       options_for_select([["<#{_('Unassigned')}>", nil]] + available_catalogs, catalog_id),
                        "class" => "form-control",
                        "data-miq_sparkle_on" => true,
                        "data-miq_observe" => {:url => url}.to_json)
