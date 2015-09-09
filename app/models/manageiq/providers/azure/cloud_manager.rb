@@ -1,5 +1,11 @@
-class EmsAzure < EmsCloud
-  include Vmdb::Logging
+class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManager
+  require_dependency 'manageiq/providers/azure/cloud_manager/availability_zone'
+  require_dependency 'manageiq/providers/azure/cloud_manager/flavor'
+  require_dependency 'manageiq/providers/azure/cloud_manager/refresh_parser'
+  require_dependency 'manageiq/providers/azure/cloud_manager/refresh_worker'
+  require_dependency 'manageiq/providers/azure/cloud_manager/refresher'
+  require_dependency 'manageiq/providers/azure/cloud_manager/vm'
+
   alias_attribute :azure_tenant_id, :uid_ems
 
   def self.ems_type
@@ -15,7 +21,7 @@ class EmsAzure < EmsCloud
   end
 
   def self.raw_connect(clientid, clientkey, azuretenantid)
-    Azure::Armrest::ArmrestService.configure(
+    ::Azure::Armrest::ArmrestService.configure(
       :client_id  => clientid,
       :client_key => clientkey,
       :tenant_id  => azuretenantid

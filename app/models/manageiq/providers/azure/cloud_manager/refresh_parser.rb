@@ -1,6 +1,6 @@
-module EmsRefresh
-  module Parsers
-    class Azure < ManageIQ::Providers::CloudManager::RefreshParser
+module ManageIQ::Providers
+  module Azure
+    class CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
       include Vmdb::Logging
 
       VALID_LOCATION = /\w+/
@@ -73,7 +73,7 @@ module EmsRefresh
       def parse_series(s)
         name = uid = s['name']
         new_result = {
-          :type           => "FlavorAzure",
+          :type           => "ManageIQ::Providers::Azure::CloudManager::Flavor",
           :ems_ref        => uid,
           :name           => name,
           :cpus           => s['numberOfCores'], # where are the virtual CPUs??
@@ -92,7 +92,7 @@ module EmsRefresh
         id = az["id"].downcase
 
         new_result = {
-          :type    => "AvailabilityZoneAzure",
+          :type    => "ManageIQ::Providers::Azure::CloudManager::AvailabilityZone",
           :ems_ref => id,
           :name    => az["name"],
         }
@@ -106,7 +106,7 @@ module EmsRefresh
         series            = @data_index.fetch_path(:flavors, series_name)
 
         new_result = {
-          :type             => 'VmAzure',
+          :type             => 'ManageIQ::Providers::Azure::CloudManager::Vm',
           :uid_ems          => uid,
           :ems_ref          => uid,
           :name             => instance.fetch_path('name'),

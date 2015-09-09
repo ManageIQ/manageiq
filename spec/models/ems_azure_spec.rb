@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsAzure do
+describe ManageIQ::Providers::Azure::CloudManager do
   it ".ems_type" do
     described_class.ems_type.should == 'azure'
   end
@@ -36,12 +36,12 @@ describe EmsAzure do
 
     context "#validation" do
       it "handles unknown error" do
-        EmsAzure.stub(:raw_connect).and_raise(StandardError)
+        ManageIQ::Providers::Azure::CloudManager.stub(:raw_connect).and_raise(StandardError)
         expect { @e.verify_credentials }.to raise_error(MiqException::MiqHostError, /Unexpected response returned*/)
       end
 
       it "handles incorrect password" do
-        EmsAzure.stub(:raw_connect).and_raise(RestClient::Unauthorized)
+        ManageIQ::Providers::Azure::CloudManager.stub(:raw_connect).and_raise(RestClient::Unauthorized)
         expect { @e.verify_credentials }.to raise_error(MiqException::MiqHostError, /Incorrect credentials*/)
       end
     end

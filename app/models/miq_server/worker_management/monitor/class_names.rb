@@ -9,7 +9,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker
     MiqEmsMetricsProcessorWorker
     MiqEmsRefreshCoreWorker
-    MiqEmsRefreshWorkerAzure
+    ManageIQ::Providers::Azure::CloudManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
@@ -61,7 +61,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqNetappRefreshWorker
     MiqVmdbStorageBridgeWorker
     MiqStorageMetricsCollectorWorker
-    MiqEmsRefreshWorkerAzure
+    ManageIQ::Providers::Azure::CloudManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
