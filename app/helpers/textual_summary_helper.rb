@@ -14,6 +14,12 @@ module TextualSummaryHelper
       summary
     when Symbol
       result = send("textual_#{summary}")
+      if result.kind_of?(Hash) && result[:link] && controller.send(:restful?)
+        restful_path = controller.send("#{controller_name}_path")
+        url = Addressable::URI.parse(restful_path)
+        url.query_values = (url.query_values || {}).merge(:display => summary)
+        result[:link] = url.to_s
+      end
       return result if result.kind_of?(Hash) && result[:label]
 
       automatic_label = context.class.human_attribute_name(summary, :default => summary.to_s.titleize)
@@ -87,7 +93,7 @@ module TextualSummaryHelper
     h
   end
 
-  def textual_collection_link(collection, as: nil, controller: nil, explorer: false, feature: nil, label: nil, link: nil)
+  def textual_collection_link(collection, as: nil, controller_collection: nil, explorer: false, feature: nil, label: nil, link: nil)
     if collection.kind_of?(Array)
       unless as && link
         raise ArgumentError, ":as and :link are both required when linking to an array",
@@ -97,8 +103,8 @@ module TextualSummaryHelper
 
     klass = as || collection.klass.base_model
 
-    controller ||= klass.name.underscore
-    feature ||= "#{controller}_show_list"
+    controller_collection ||= klass.name.underscore
+    feature ||= "#{controller_collection}_show_list"
 
     label ||= ui_lookup(:models => klass.name)
     image = textual_collection_icon(collection, klass)
@@ -110,11 +116,18 @@ module TextualSummaryHelper
       if link
         h[:link] = link
       elsif collection.respond_to?(:proxy_association)
-        h[:link] = url_for(:action  => 'show',
-                           :id      => collection.proxy_association.owner,
-                           :display => collection.proxy_association.reflection.name)
+        if controller.send(:restful?)
+          restful_path = controller.send("#{controller_name}_path")
+          url = Addressable::URI.parse(restful_path)
+          url.query_values = (url.query_values || {}).merge(:display => collection.proxy_association.reflection.name)
+          h[:link] = url.to_s
+        else
+          h[:link] = url_for(:action  => 'show',
+                             :id      => collection.proxy_association.owner,
+                             :display => collection.proxy_association.reflection.name)
+        end
       else
-        h[:link] = url_for(:controller => controller,
+        h[:link] = url_for(:controller => controller_collection,
                            :action     => 'list')
       end
       h[:title] = "Show all #{label}"
