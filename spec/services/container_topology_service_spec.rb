@@ -42,16 +42,20 @@ describe ContainerTopologyService do
     it "topology contains the expected structure and content" do
       ems = FactoryGirl.create(:ems_kubernetes)
       container_condition = ContainerCondition.create(:name => 'Ready', :status => 'True')
+      container = Container.create(:name => "ruby-example", :ems_ref => '3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift
+/mysql-55-centos7:latest', :state => 'running')
+      container_def = ContainerDefinition.create(:name => "ruby-example", :ems_ref => 'b6976f84-5184-11e5-950e-001a4a231290_ruby-helloworld_172.30.194.30:5000/test/origin-ruby-sample@sha256:0cd076c9beedb3b1f5cf3ba43da6b749038ae03f5886b10438556e36ec2a0dd9', :container => container)
+
       container_node = ContainerNode.create(:ext_management_system => ems, :name => "127.0.0.1", :ems_ref => "905c90ba-3e00-11e5-a0d2-18037327aaeb", :container_conditions => [container_condition])
       container_replicator = ContainerReplicator.create(:ext_management_system => ems, :ems_ref => "8f8ca74c-3a41-11e5-a79a-001a4a231290",
                                                         :name => "replicator1")
-      container_group = ContainerGroup.create(:ext_management_system => ems, :container_node => container_node, :container_replicator => container_replicator, :name => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :phase => "Running")
+      container_group = ContainerGroup.create(:ext_management_system => ems, :container_node => container_node, :container_replicator => container_replicator, :name => "myPod", :ems_ref => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :phase => "Running", :container_definitions => [container_def])
       container_service = ContainerService.create(:ext_management_system => ems, :container_groups => [container_group], :ems_ref => "95e49048-3e00-11e5-a0d2-18037327aaeb",
                                                   :name => "service1")
       container_topology_service.stub(:entities).and_return([[container_node], [container_service]])
       topology = container_topology_service.build_topology
-      topology[:items].size.should eql 4
-      topology[:relations].size.should eql 3
+      topology[:items].size.should eql 5
+      topology[:relations].size.should eql 4
 
       topology[:items].key? "905c90ba-3e00-11e5-a0d2-18037327aaeb"
       topology[:items]["905c90ba-3e00-11e5-a0d2-18037327aaeb"].should eql(:metadata => {:id => "905c90ba-3e00-11e5-a0d2-18037327aaeb"}, :name => "127.0.0.1",
@@ -62,6 +66,8 @@ describe ContainerTopologyService do
                                                                           :status => "unknown", :kind => "Service")
       topology[:items]["96c35ccd-3e00-11e5-a0d2-18037327aaeb"].should eql(:metadata => {:id => "96c35ccd-3e00-11e5-a0d2-18037327aaeb"}, :name => "myPod",
                                                                           :status => "Running", :kind => "Pod")
+      topology[:items]["3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"].should eql(:metadata => {:id => "3572afee-3a41-11e5-a79a-001a4a231290_ruby-helloworld-database_openshift\n/mysql-55-centos7:latest"}, :name => "ruby-example", :status => "running", :kind => "Container")
+
       topology[:relations].should include(:source => "96c35ccd-3e00-11e5-a0d2-18037327aaeb", :target => "8f8ca74c-3a41-11e5-a79a-001a4a231290")
     end
   end
