@@ -20,10 +20,7 @@ describe ManageIQ::Providers::Openstack::CloudManager do
     end
 
     it "verifies AMQP credentials" do
-      _, qconnection = EvmSpecHelper.stub_qpid_natives
-      qconnection.should_receive(:open).and_return(nil)
-      qconnection.should_receive(:open?).at_least(:twice).and_return(true)
-      qconnection.should_receive(:close).and_return(nil)
+      EvmSpecHelper.stub_amqp_support
 
       creds = {}
       creds[:amqp] = {:userid => "amqp_user", :password => "amqp_password"}
