@@ -34,7 +34,7 @@ module Metric::Capture
     value = if value.kind_of?(Fixnum) # Default unit is minutes
               value.minutes.ago.utc
             else
-              value.to_i_with_method.ago.utc unless value.nil?
+              value.to_i_with_method.seconds.ago.utc unless value.nil?
             end
     return value
   end
