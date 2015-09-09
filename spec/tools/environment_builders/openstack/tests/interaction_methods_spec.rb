@@ -64,6 +64,10 @@ describe Openstack::InteractionMethods do
   context "#Openstack::InteractionMethods" do
     let(:subject) { (Class.new { include Openstack::InteractionMethods }).new }
 
+    before :each do
+      allow($stdout).to receive(:puts)
+    end
+
     context "#find_all" do
       it "should find one host with unique attribute value" do
         expect(subject.find_all(data, {:name => "name1"})).to eq([host1])
