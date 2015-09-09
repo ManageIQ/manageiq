@@ -32,6 +32,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   VENDOR_TYPES = {
     # DB            Displayed
+    "azure"     => "Azure",
     "vmware"    => "VMware",
     "microsoft" => "Microsoft",
     "xen"       => "XenSource",
