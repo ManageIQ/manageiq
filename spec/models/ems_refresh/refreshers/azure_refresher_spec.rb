@@ -1,7 +1,7 @@
 require "spec_helper"
 require 'azure-armrest'
 
-describe EmsAzure do
+describe ManageIQ::Providers::Azure::CloudManager do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_azure, :zone => zone)
@@ -59,7 +59,7 @@ describe EmsAzure do
   end
 
   def assert_specific_flavor
-    @flavor = EmsAzure::Flavor.where(:name => "Standard_A1").first
+    @flavor = ManageIQ::Providers::Azure::CloudManager::Flavor.where(:name => "Standard_A1").first
     @flavor.should have_attributes(
       :name                     => "Standard_A1",
       :description              => nil,
@@ -78,14 +78,14 @@ describe EmsAzure do
   end
 
   def assert_specific_az
-    @az = AvailabilityZoneAzure.where(:name => "AvailabilitySet1").first
+    @az = ManageIQ::Providers::Azure::CloudManager::AvailabilityZone.where(:name => "AvailabilitySet1").first
     @az.should have_attributes(
       :name => "AvailabilitySet1",
     )
   end
 
   def assert_specific_vm_powered_on
-    v = EmsAzure::Vm.where(:name => "ERP", :raw_power_state => "VM running").first
+    v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "ERP", :raw_power_state => "VM running").first
     v.should have_attributes(
       :template              => false,
       :ems_ref               => "ComputeVMs\\ERP",
@@ -158,7 +158,7 @@ describe EmsAzure do
   end
 
   def assert_specific_vm_powered_off
-    v = EmsAzure::Vm.where(:name => "MIQ2", :raw_power_state => "VM deallocated").first
+    v = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => "MIQ2", :raw_power_state => "VM deallocated").first
 
     assert_specific_vm_powered_off_attributes(v)
 
