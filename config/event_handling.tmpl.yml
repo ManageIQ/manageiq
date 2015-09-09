@@ -445,6 +445,7 @@ event_groups:
     - network.floating_ip.deallocate
     - network.floating_ip.associate
     - network.floating_ip.disassociate
+    - POD_HOSTPORTCONFLICT
     :detail: []
     :name: Network
   power:
@@ -529,6 +530,10 @@ event_groups:
     - compute.instance.shelve_offload.end
     - NODE_REBOOT
     - POD_SCHEDULED
+    - POD_FAILEDSCHEDULING
+    - CONTAINER_CREATED
+    - CONTAINER_KILLING
+    - CONTAINER_STARTED
     :detail:
     - PowerOffVM_Task
     - PowerOffVM_Task_Complete
@@ -608,6 +613,7 @@ event_groups:
     - VmConfigMissingEvent
     - NODE_NODEREADY
     - NODE_NODENOTREADY
+    - POD_FAILEDVALIDATION
     :detail:
     - DatacenterRenamedEvent
     - GeneralUserEvent
@@ -1439,6 +1445,27 @@ event_handling:
   - refresh:
     - ems
   POD_SCHEDULED:
+  - refresh:
+    - ems
+  POD_FAILEDSCHEDULING:
+  - refresh:
+    - ems
+  POD_FAILEDVALIDATION:
+  - refresh:
+    - ems
+  POD_HOSTPORTCONFLICT:
+  - refresh:
+    - ems
+  CONTAINER_CREATED:
+  - refresh:
+    - ems
+  CONTAINER_FAILED:
+  - refresh:
+    - ems
+  CONTAINER_STARTED:
+  - refresh:
+    - ems
+  CONTAINER_KILLING:
   - refresh:
     - ems
 

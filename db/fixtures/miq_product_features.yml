@@ -3948,6 +3948,10 @@
       :description: Display Individual Container Routes
       :feature_type: view
       :identifier: container_project_show
+    - :name: Timeline
+      :description: Display Timelines for container Projects
+      :feature_type: view
+      :identifier: container_project_timeline
   - :name: Operate
     :description: Perform Operations on Container Projects
     :feature_type: control
