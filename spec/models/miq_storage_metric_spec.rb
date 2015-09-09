@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqStorageMetric do
-
   let(:time) { Time.utc(2013, 4, 22, 8, 31) }
 
   context ".purge_date" do
@@ -32,7 +31,5 @@ describe MiqStorageMetric do
         expect(described_class.purge_date(:token)).to eq nil
       end
     end
-
   end
-
 end
