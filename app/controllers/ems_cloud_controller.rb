@@ -286,7 +286,7 @@ class EmsCloudController < ApplicationController
     @edit[:new] = {:name            => params[:name],
                    :provider_region => params[:provider_region],
                    :hostname        => params[:hostname],
-                   :azure_tenant_id => params[:tenant_id],
+                   :azure_tenant_id => params[:azure_tenant_id],
                    :port            => params[:port],
                    :provider_id     => params[:provider_id],
                    :zone            => params[:zone]

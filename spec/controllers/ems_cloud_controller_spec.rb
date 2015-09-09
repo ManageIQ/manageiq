@@ -154,7 +154,7 @@ describe EmsCloudController do
     it "adds a record of type azure" do
       post :create,
            "button"           => "add",
-           "tenant_id"        => "azure",
+           "azure_tenant_id"  => "azure",
            "name"             => "foo_azure",
            "emstype"          => "azure",
            "zone"             => "default",
@@ -163,6 +163,8 @@ describe EmsCloudController do
            "default_verify"   => "[FILTERED]"
 
       expect(response.status).to eq(200)
+      edit = controller.instance_variable_get(:@edit)
+      expect(edit[:new][:azure_tenant_id]).to eq("azure")
     end
   end
 
