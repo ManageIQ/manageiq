@@ -12,6 +12,9 @@
           = select_tag('st_prov_type',
                        options_for_select(([["<#{_('Choose')}>",nil]]) + array, nil),
                        "data-miq_sparkle_on" => true,
-                       "data-miq_observe" => {:url => url}.to_json)
+                       :class    => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('st_prov_type', "#{url}")
   - else
     = render :partial => "form"
