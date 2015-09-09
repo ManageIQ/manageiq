@@ -5,7 +5,6 @@ module InteractionMethods
     # firewall rules. so rule = {:nested => {}} is considered the same
     # as rule = {:nested => {:ip_addr => something}}.
     # First step, write unit tests, second step, fix this :-)
-    puts "Finding #{lookup_pairs} in #{collection.class.name}"
     collection.select do |i|
       lookup_pairs.all? do |k, v|
         if i.kind_of?(Hash)
@@ -27,7 +26,6 @@ module InteractionMethods
   end
 
   def create(collection, attributes, method = :create)
-    puts "Creating #{attributes} against #{collection.class.name}"
     case attributes
     when Hash   then collection.send(method, attributes)
     when Array  then collection.send(method, *attributes)
