@@ -1,4 +1,4 @@
-class VmAzure < VmCloud
+class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.instances[ems_ref]

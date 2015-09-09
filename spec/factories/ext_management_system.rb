@@ -127,7 +127,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_azure, :aliases => ["manageiq/providers/azure/cloud_manager"], :class => "EmsAzure", :parent => :ems_cloud do
+  factory :ems_azure, :aliases => ["manageiq/providers/azure/cloud_manager"], :class => "ManageIQ::Providers::Azure::CloudManager", :parent => :ems_cloud do
   end
 
   factory :ems_azure_with_authentication, :parent => :ems_azure do
