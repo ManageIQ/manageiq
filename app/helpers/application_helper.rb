@@ -108,16 +108,19 @@ module ApplicationHelper
   def url_for_record(record, action="show") # Default action is show
     @id = to_cid(record.id)
     if record.kind_of?(VmOrTemplate)
-      return url_for_db(controller_for_vm(model_for_vm(record)), action)
+      return url_for_db(controller_for_vm(model_for_vm(record)), action, record)
     elsif record.class.respond_to?(:db_name)
-      return url_for_db(record.class.db_name, action)
+      return url_for_db(record.class.db_name, action, record)
     else
-      return url_for_db(record.class.base_class.to_s, action)
+      return url_for_db(record.class.base_class.to_s, action, record)
     end
   end
 
   # Create a url for a record that links to the proper controller
-  def url_for_db(db, action="show") # Default action is show
+  def url_for_db(db, action="show", item = nil) # Default action is show
+    if item && EmsCloud === item
+      return ems_cloud_path(item.id)
+    end
     if @vm && ["Account", "User", "Group", "Patch", "GuestApplication"].include?(db)
       return url_for(:controller => "vm_or_template",
                      :action     => @lastaction,
@@ -162,6 +165,9 @@ module ApplicationHelper
     end
     if association == nil
       controller, action = db_to_controller(view.db)
+      if controller == "ems_cloud" && action == "show"
+        return ems_clouds_path
+      end
       if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent","SniaLocalFileSystem"].include?(view.db)
         return url_for(:controller=>controller, :action=>action, :id=>parent.id) + "?show="
       else

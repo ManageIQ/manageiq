@@ -1327,6 +1327,9 @@ class ApplicationHelper::ToolbarBuilder
       ridx = url.rindex('/') if url
       url = url.slice(0..ridx-1)  if ridx
     end
+    if item[:full_path]
+      tb_buttons[button][:full_path] = ERB.new(item[:full_path]).result(@view_binding)
+    end
     tb_buttons[button][:url] = url if item[:url]
     tb_buttons[button][:explorer] = true if @explorer && !item[:url]  # Add explorer = true if ajax button
     if item[:popup]
