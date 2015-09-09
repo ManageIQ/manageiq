@@ -7,8 +7,7 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
 
   include ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
-  has_many :container_routes,                      :foreign_key => :ems_id, :dependent => :destroy
-  has_many :container_projects,                    :foreign_key => :ems_id, :dependent => :destroy
+  has_many :container_routes, :foreign_key => :ems_id, :dependent => :destroy
 
   DEFAULT_PORT = 8443
   default_value_for :port, DEFAULT_PORT
