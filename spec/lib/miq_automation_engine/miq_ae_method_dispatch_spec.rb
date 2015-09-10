@@ -15,7 +15,7 @@ describe "MiqAeMethodDispatch" do
                         :instance_name    => @root_instance,
                         :automate_message => 'create'}
     MiqServer.stub(:my_zone).and_return('default')
-    @pidfile        = File.join(Dir.mktmpdir(), "rip_van_winkle.pid")
+    @pidfile = File.join(Dir.mktmpdir, "rip_van_winkle.pid")
     clear_domain
   end
 
@@ -52,7 +52,7 @@ describe "MiqAeMethodDispatch" do
     dom = FactoryGirl.create(:miq_ae_domain, :enabled => true, :name => @domain)
     ns  = FactoryGirl.create(:miq_ae_namespace, :parent_id => dom.id, :name => @namespace)
     @ns_fqname = ns.fqname
-    create_method_class(:namespace => @ns_fqname, :name => @method_class, 
+    create_method_class(:namespace => @ns_fqname, :name => @method_class,
                         :method_script => method_script)
     create_root_class(:namespace => @ns_fqname, :name => @root_class)
   end
@@ -86,13 +86,13 @@ describe "MiqAeMethodDispatch" do
   end
 
   it "long running method" do
-    File.delete(@pidfile) if File.exists?(@pidfile)
+    File.delete(@pidfile) if File.exist?(@pidfile)
     setup_model(rip_van_winkle_script)
     send_ae_request_via_queue(@automate_args, 2)
-    status, _, _ = deliver_ae_request_from_queue
+    status, _msg, _ws = deliver_ae_request_from_queue
     expect(status).to eql 'timeout'
     pid = File.read(@pidfile).to_i
-    expect{Process.getpgid(pid)}.to raise_error(Errno::ESRCH)
+    expect { Process.getpgid(pid) }.to raise_error(Errno::ESRCH)
   end
 
   it "run method that writes to stderr and stdout" do
