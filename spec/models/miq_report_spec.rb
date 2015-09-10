@@ -12,8 +12,8 @@ describe MiqReport do
   end
 
   it '.get_expressions_by_model' do
-    rep_null = FactoryGirl.create(:miq_report, :conditions => nil)
-    rep_nil  = FactoryGirl.create(:miq_report)
+    FactoryGirl.create(:miq_report, :conditions => nil)
+    rep_nil = FactoryGirl.create(:miq_report)
 
     # FIXME: find a way to do this in a factory
     serialized_nil = "--- !!null \n...\n"
@@ -21,7 +21,7 @@ describe MiqReport do
 
     rep_ok  = FactoryGirl.create(:miq_report, :conditions => "SOMETHING")
     reports = MiqReport.get_expressions_by_model('Vm')
-    expect(reports).to eq({rep_ok.name => rep_ok.id})
+    expect(reports).to eq(rep_ok.name => rep_ok.id)
   end
 
   it "paged_view_search on vmdb_* tables" do
@@ -35,25 +35,27 @@ describe MiqReport do
     report_args = {
       "db"          => "VmdbIndex",
       "cols"        => ["name"],
-      "include"     => {"vmdb_table" => {"columns" => ["type"]}, "latest_hourly_metric" => {"columns"=>["rows", "size", "wasted_bytes", "percent_bloat"]}},
+      "include"     => {"vmdb_table" => {"columns" => ["type"]}, "latest_hourly_metric" => {"columns" => ["rows", "size", "wasted_bytes", "percent_bloat"]}},
       "col_order"   => ["name", "latest_hourly_metric.rows", "latest_hourly_metric.size", "latest_hourly_metric.wasted_bytes", "latest_hourly_metric.percent_bloat"],
       "col_formats" => [nil, nil, :bytes_human, :bytes_human, nil],
     }
 
     report = MiqReport.new(report_args)
 
-    search_expression  = MiqExpression.new({"and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}]})
+    search_expression = MiqExpression.new("and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}])
 
-    results, _ = report.paged_view_search(:filter => search_expression)
+    results, = report.paged_view_search(:filter => search_expression)
     expect(results.data.collect(&:data)).to eq(
-      [{"name" => "accounts_pkey",
-        "vmdb_table.type" => "VmdbTableEvm",
-        "latest_hourly_metric.rows" => 102,
-        "latest_hourly_metric.size" => 102,
-        "latest_hourly_metric.wasted_bytes" => 102.0,
+      [{
+        "name"                               => "accounts_pkey",
+        "vmdb_table.type"                    => "VmdbTableEvm",
+        "latest_hourly_metric.rows"          => 102,
+        "latest_hourly_metric.size"          => 102,
+        "latest_hourly_metric.wasted_bytes"  => 102.0,
         "latest_hourly_metric.percent_bloat" => 102.0,
-        "id" => index.id},
-      ])
+        "id"                                 => index.id
+      }]
+    )
   end
 
   context "#paged_view_search" do
@@ -62,7 +64,7 @@ describe MiqReport do
     before(:each) do
       MiqRegion.seed
 
-      #TODO: Move this setup to the examples that need it.
+      # TODO: Move this setup to the examples that need it.
       @tags = {
         2  => "/managed/environment/prod",
         3  => "/managed/environment/dev",
@@ -109,34 +111,34 @@ describe MiqReport do
       vm2 = FactoryGirl.create(:vm_vmware)
       ids = [vm1.id, vm2.id].sort
 
-      report     = MiqReport.new(:db => "Vm", :sortby => "id", :order => "Descending")
-      results, _ = report.paged_view_search(:page => 2, :per_page => 1)
-      found_ids  = results.data.collect { |rec| rec.data['id'] }
+      report    = MiqReport.new(:db => "Vm", :sortby => "id", :order => "Descending")
+      results,  = report.paged_view_search(:page => 2, :per_page => 1)
+      found_ids = results.data.collect { |rec| rec.data['id'] }
 
       expect(found_ids).to eq [ids.first]
     end
 
     it "target_ids_for_paging caches results" do
-      vm  = FactoryGirl.create(:vm_vmware)
+      vm = FactoryGirl.create(:vm_vmware)
       FactoryGirl.create(:vm_vmware)
 
       report        = MiqReport.new(:db => "Vm")
-      report.extras = { :target_ids_for_paging => [vm.id], :attrs_for_paging => {}}
-      results, _    = report.paged_view_search(:page => 1, :per_page => 10)
+      report.extras = {:target_ids_for_paging => [vm.id], :attrs_for_paging => {}}
+      results,      = report.paged_view_search(:page => 1, :per_page => 10)
       found_ids     = results.data.collect { |rec| rec.data['id'] }
       expect(found_ids).to eq [vm.id]
     end
 
     it "VMs under Host with order" do
       host1 = FactoryGirl.create(:host)
-      vma   = FactoryGirl.create(:vm_vmware, :host => host1, :name => "a")
+      FactoryGirl.create(:vm_vmware, :host => host1, :name => "a")
 
       host2 = FactoryGirl.create(:host)
       vmb   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "b")
       vmc   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "c")
 
       report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-      results, _ = report.paged_view_search(
+      results, = report.paged_view_search(
         :parent      => host2,
         :association => "vms",
         :only        => ["name"],
@@ -156,12 +158,12 @@ describe MiqReport do
       vm2.tag_with("/managed/environment/dev", :ns => "*")
 
       User.stub(:server_timezone => "UTC")
-      @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"]], "belongsto"=>[]})
+      @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
 
       report = MiqReport.new(:db => "Vm")
       results, attrs = report.paged_view_search(
-        :only     => ["name"],
-        :userid   => @user.userid,
+        :only   => ["name"],
+        :userid => @user.userid,
       )
       expect(results.length).to eq 1
       expect(results.data.collect(&:name)).to eq [vm1.name]
@@ -171,7 +173,7 @@ describe MiqReport do
       expect(attrs[:auth_count]).to eq 1
       expect(attrs[:user_filters]["managed"]).to eq [["/managed/environment/prod"]]
       expect(attrs[:total_count]).to eq 2
-   end
+    end
 
     context "with tagged VMs" do
       before(:each) do
