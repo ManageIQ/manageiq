@@ -41,6 +41,7 @@ describe OpsController do
 
     context "#rbac_tenant_delete" do
       it "deletes a tenant record successfully" do
+        ApplicationHelper.stub(:role_allows).and_return(true)
         t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
         sb_hash = {
           :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(t.id)}"}},
@@ -49,6 +50,7 @@ describe OpsController do
         }
         controller.instance_variable_set(:@sb, sb_hash)
         controller.instance_variable_set(:@_params, :id => t.id)
+        controller.should_receive(:x_active_tree_replace_cell)
         controller.should_receive(:render)
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_delete)
@@ -82,6 +84,7 @@ describe OpsController do
           :active_tab  => "rbac_details"
         }
         controller.instance_variable_set(:@sb, sb_hash)
+        ApplicationHelper.stub(:role_allows).and_return(true)
       end
       it "resets tenant edit" do
         controller.instance_variable_set(:@_params, :id => @tenant.id, :button => "reset")
@@ -95,6 +98,7 @@ describe OpsController do
 
       it "cancels tenant edit" do
         controller.instance_variable_set(:@_params, :id => @tenant.id, :button => "cancel", :divisible => "true")
+        controller.should_receive(:x_active_tree_replace_cell)
         controller.should_receive(:render)
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_edit)
@@ -110,6 +114,7 @@ describe OpsController do
                                          :id          => @tenant.id,
                                          :button      => "save",
                                          :divisible   => "true")
+        controller.should_receive(:x_active_tree_replace_cell)
         controller.should_receive(:render)
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_edit)

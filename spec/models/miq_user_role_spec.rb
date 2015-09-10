@@ -1,18 +1,21 @@
 require "spec_helper"
 
 describe MiqUserRole do
+  before do
+    @expected_user_role_count = 14
+  end
   context ".seed" do
     it "empty table" do
       MiqRegion.seed
       MiqUserRole.seed
-      MiqUserRole.count.should == 12
+      MiqUserRole.count.should == @expected_user_role_count
     end
 
     it "run twice" do
       MiqRegion.seed
       MiqUserRole.seed
       MiqUserRole.seed
-      MiqUserRole.count.should == 12
+      MiqUserRole.count.should == @expected_user_role_count
     end
 
     it "with existing records" do
@@ -23,7 +26,7 @@ describe MiqUserRole do
       MiqRegion.seed
       MiqUserRole.seed
 
-      MiqUserRole.count.should == 13
+      MiqUserRole.count.should == @expected_user_role_count + 1
       changed.reload.read_only.should    be_true
       unchanged.reload.updated_at.should be_same_time_as unchanged_orig_updated_at
     end
