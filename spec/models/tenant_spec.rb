@@ -95,18 +95,22 @@ describe Tenant do
     end
   end
 
-  it ".all_tenants" do
-    FactoryGirl.create(:tenant, :parent => root_tenant)
-    FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
+  describe ".all_tenants" do
+    it "returns divisible projects (root and created is divisible)" do
+      FactoryGirl.create(:tenant, :parent => root_tenant)
+      FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
 
-    expect(Tenant.all_tenants.count).to eql 2 # The one we created + the default tenant
+      expect(Tenant.all_tenants.count).to eql(2)
+    end
   end
 
-  it ".all_projects" do
-    FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
-    FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
+  describe ".app_projects" do
+    it "returns non-divisible projects (root is divisible))" do
+      FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
+      FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
 
-    expect(Tenant.all_projects.count).to eql 2 # Should not return the default tenant
+      expect(Tenant.all_projects.count).to eql 2
+    end
   end
 
   context "subtenants and subprojects" do
