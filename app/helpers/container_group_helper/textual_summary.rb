@@ -29,6 +29,43 @@ module ContainerGroupHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  @@key_dictionary = [
+    [:empty_dir_medium_type, _('Storage Medium Type')],
+    [:gce_pd_name, _('GCE PD Resource')],
+    [:git_repository, _('Git Repository')],
+    [:git_revision, _('Git Revision')],
+    [:nfs_server, _('NFS Server')],
+    [:iscsi_target_portal, _('ISCSI Target Portal')],
+    [:iscsi_iqn, _('ISCSI Target Qualified Name')],
+    [:iscsi_lun, _('ISCSI Target Lun Number')],
+    [:glusterfs_endpoint_name, _('Glusterfs Endpoint Name')],
+    [:claim_name, _('Persistent Volume Claim Name')],
+    [:rbd_ceph_monitors, _('Rados Ceph Monitors')],
+    [:rbd_image, _('Rados Image Name')],
+    [:rbd_pool, _('Rados Pool Name')],
+    [:rbd_rados_user, _('Rados User Name')],
+    [:rbd_keyring, _('Rados Keyring')],
+    [:common_path, _('Volume Path')],
+    [:common_fs_type, _('FS Type')],
+    [:common_read_only, _('Read-Only')],
+    [:common_volume_id, _('Volume ID')],
+    [:common_partition, _('Partition')],
+    [:common_secret, _('Secret Name')]
+  ]
+
+  def textual_group_volumes
+    h = {:labels => [_("Name"), _("Property"), _("Value")], :values => []}
+    @record.container_volumes.each do |volume|
+      volume_values = @@key_dictionary.collect do |key, name|
+        [nil, name, volume[key]] if volume[key].present?
+      end.compact
+      # Set the volume name only  for the first item in the list
+      volume_values[0][0] = volume.name if volume_values.length > 0
+      h[:values] += volume_values
+      end
+    h
+  end
+
   #
   # Items
   #
