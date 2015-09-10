@@ -34,6 +34,10 @@ class TenantQuota < ActiveRecord::Base
   validates :name, :inclusion => {:in => NAMES}
   validates :unit, :value, :presence => true
 
+  before_validation(:on => :create) do
+    self.unit = default_unit unless unit.present?
+  end
+
   def self.quota_definitions
     return @quota_definitions if @quota_definitions
 
