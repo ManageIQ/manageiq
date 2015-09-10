@@ -25,7 +25,7 @@ describe('tenantQuotaFormController', function() {
       name: 'Test tenant',
       quotas: {
         cpu_allocated:{unit:'mhz', format: 'mhz', text_modifier: 'Mhz', description:'Allocated CPU in Mhz',value: 1024.0},
-        mem_allocated:{unit: 'bytes', format: 'gigabytes_human', text_modifier: 'GB', description:'Allocated Memory in GB', value: 4096.0},
+        mem_allocated:{unit: 'bytes', format: 'gigabytes_human', text_modifier: 'GB', description:'Allocated Memory in GB', value: 4096.0 * 1024 *1024 *1024},
         storage_allocated: {unit: 'bytes', format: "gigabytes_human", text_modifier: 'GB', description: 'Allocated Storage in GB', value: null}
         }
       };
@@ -41,9 +41,9 @@ describe('tenantQuotaFormController', function() {
   describe('initialization', function() {
     it('sets the quotas to the values in the hash returned via the http request', function() {
       var quotas =  {
-        cpu_allocated:{unit:'mhz', format: 'mhz', text_modifier: 'Mhz', description:'Allocated CPU in Mhz',value: 1024.0},
-        mem_allocated:{unit: 'bytes', format: 'gigabytes_human', text_modifier: 'GB', description:'Allocated Memory in GB', value: 4096.0},
-        storage_allocated: {unit: 'bytes', format: "gigabytes_human", text_modifier: 'GB', description: 'Allocated Storage in GB', value: null}
+        cpu_allocated:{unit:'mhz', format: 'mhz', text_modifier: 'Mhz', description:'Allocated CPU in Mhz',value: 1024.0, enforced:true, valpattern:''},
+        mem_allocated:{unit: 'bytes', format: 'gigabytes_human', text_modifier: 'GB', description:'Allocated Memory in GB', value: 4096.0, enforced:true, valpattern:''},
+        storage_allocated: {unit: 'bytes', format: "gigabytes_human", text_modifier: 'GB', description: 'Allocated Storage in GB', value: null, enforced:false, valpattern:''}
       };
       expect($scope.tenantQuotaModel.quotas).toEqual(quotas);
     });
@@ -82,7 +82,7 @@ describe('tenantQuotaFormController', function() {
     it('delegates to miqService.miqAjaxButton', function() {
       expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_manage_quotas/1000000000001?button=save&divisible=', { quotas: {
         cpu_allocated: {value: 1024},
-        mem_allocated: {value: 4096 * 1024 * 1024 * 1024}
+        mem_allocated: {value: 4096*1024*1024*1024}
       }});
     });
   });

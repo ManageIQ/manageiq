@@ -30,7 +30,7 @@
                                 "ng-required" => "quota_obj.enforced",
                                 "ng-pattern"  => "quota_obj.valpattern",
                                 "placeholder" => "Not enforced"}
-          %td {{quota_obj.text_modifier}}
+          %td &nbsp; {{quota_obj.text_modifier}}
           %td{"style"=>"color:red" , "ng-show" => "rowForm.value.$invalid"}
             = _(" Valid quota value required ")
 

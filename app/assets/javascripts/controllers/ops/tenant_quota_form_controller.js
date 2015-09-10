@@ -15,6 +15,23 @@ ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$s
         $http.get('/ops/tenant_quotas_form_fields/' + tenantQuotaFormId).success(function(data) {
             $scope.tenantQuotaModel.name = data.name;
             $scope.tenantQuotaModel.quotas = angular.copy(data.quotas);
+            const GIGABYTE = 1024 * 1024 * 1024;
+            for ( var key in $scope.tenantQuotaModel.quotas ){
+                if($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
+                    var quota =  $scope.tenantQuotaModel.quotas[key];
+                    if( quota['value'] ){
+                        if ( quota['unit'] === "bytes")
+                            quota['value'] = quota['value'] / GIGABYTE;
+                        quota['enforced'] = true;
+                    }
+                    else
+                        quota['enforced'] = false;
+                    if(quota['format'] === "general_number_precision_0")
+                        quota['valpattern'] = "^[0-9]*$";
+                    else
+                        quota['valpattern'] = "";
+                }
+            }
             $scope.afterGet = true;
             $scope.modelCopy = angular.copy( $scope.tenantQuotaModel );
             miqService.sparkleOff();
