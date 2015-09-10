@@ -9,7 +9,7 @@ module Vmdb::Loggers
     # To be used as Excon's request logger, the logger must respond to
     #   #instrument as in ActiveSupport::Notifications.
     #   Implementation derived from Excon::StandardInstrumentor
-    def instrument(name, params = {}, &block)
+    def instrument(name, params = {})
       method, message =
         case name
         when "excon.request";  [:debug, message_for_excon_request(params)]
