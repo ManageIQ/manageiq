@@ -104,8 +104,7 @@ class Tenant < ActiveRecord::Base
 
   def get_quotas
     tenant_quotas.each_with_object({}) do |q, h|
-      h[q.name.to_sym] = TenantQuota.quota_definitions[q.name.to_sym].merge(:unit => q.unit, :value => q.value, :format => q.format)
-      h
+      h[q.name.to_sym] = q.quota_hash
     end.reverse_merge(TenantQuota.quota_definitions)
   end
 
@@ -116,13 +115,14 @@ class Tenant < ActiveRecord::Base
       quotas.each do |name, values|
         next if values[:value].nil?
 
-        q = tenant_quotas.where(:name => name).last || tenant_quotas.build(values.merge(:name => name))
-        q.unit ||= q.default_unit
+        name = name.to_s
+        q = tenant_quotas.detect { |tq| tq.name == name } || tenant_quotas.build(:name => name)
         q.update_attributes!(values)
-        updated_keys << name.to_sym
+        updated_keys << name
       end
       # Delete any quotas that were not passed in
-      TenantQuota.destroy_all(:tenant => self, :name => (TenantQuota.quota_definitions.keys.sort - updated_keys.sort))
+      tenant_quotas.destroy_missing(updated_keys)
+      # unfortunatly, an extra scope is created in destroy_missing, so we need to reload the records
       clear_association_cache
     end
 

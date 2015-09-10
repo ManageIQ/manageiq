@@ -5,43 +5,56 @@ class TenantQuota < ActiveRecord::Base
     :cpu_allocated => {
       :unit          => :mhz,
       :format        => :mhz,
-      :text_modifier => "Mhz"
+      :text_modifier => "Mhz".freeze
     },
     :mem_allocated => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
-      :text_modifier => "GB"
+      :text_modifier => "GB".freeze
     },
     :storage_allocated => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
-      :text_modifier => "GB"
+      :text_modifier => "GB".freeze
     },
     :vms_allocated => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count"
+      :text_modifier => "Count".freeze
     },
     :templates_allocated => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count"
+      :text_modifier => "Count".freeze
     }
   }
 
-  NAMES = QUOTA_BASE.stringify_keys
+  NAMES = QUOTA_BASE.keys.map(&:to_s)
 
   validates :name, :inclusion => {:in => NAMES}
   validates :unit, :value, :presence => true
 
-  def self.quota_definitions
-    return @quota_definitions if @quota_definitions
+  before_validation(:on => :create) do
+    self.unit = default_unit unless unit.present?
+  end
 
-    @quota_definitions = QUOTA_BASE.each_with_object({}) do |q, h|
-      name, value = q
+  def self.quota_definitions
+    @quota_definitions ||= QUOTA_BASE.each_with_object({}) do |(name, value), h|
       h[name] = value.merge(:description => I18n.t("dictionary.tenants.#{name}"), :value => nil)
-      h
     end
+  end
+
+  # remove all quotas that are not listed in the keys to keep
+  # e.g.: tenant.tenant_quotas.destroy_missing_quotas(include_keys)
+  # NOTE: these are already local, no need to hit db to find them
+  def self.destroy_missing(keep)
+    keep = keep.map(&:to_s)
+    deletes = all.select { |tq| !keep.include?(tq.name) }
+    delete(deletes)
+  end
+
+  def quota_hash
+    self.class.quota_definitions[name.to_sym].merge(:unit => unit, :value => value, :format => format) # attributes
   end
 
   def format
