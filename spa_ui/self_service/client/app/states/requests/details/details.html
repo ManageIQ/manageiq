@@ -1,0 +1,62 @@
+<div>
+  <a ui-sref="^"> <span class="fa fa-angle-left"/> Back to My Requests</a>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <section>
+      <div class="title-img">
+        <img class="title-img__logo"/>
+      </div>
+      <h2>{{ ::vm.request.description }}</h2>
+    </section>
+    <section>
+      <div class="col-md-12">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <dl class="dl-horizontal text-capitalize">
+            <dt>Request Id</dt>
+            <dd>{{ ::vm.request.id }}</dd>
+            <dt>Request State</dt>
+            <dd>
+              <span class="spinner spinner-xs spinner-inline" ng-if="vm.request.request_state == 'pending'"></span>
+              <span class="pficon-error-circle-o" ng-if="vm.request.request_state == 'denied'"></span>
+              <span class="pficon-ok" ng-if="vm.request.request_state == 'approved'"></span>
+              {{ ::item.request_state }}
+              {{ ::vm.request.request_state }}
+            </dd>
+            <dt>Request Date</dt>
+            <dd>Requested On {{ ::vm.request.created_on | date }}</dd>
+            <dt>Requested By</dt>
+            <dd>{{ ::vm.request.requester_name }}</dd>
+            <dt>Request Approval State</dt>
+            <dd>{{ ::vm.request.approval_state }}</dd>
+            <dt>Request Adjudicator</dt>
+            <dd>N/A</dd>
+          </dl>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <dl class="dl-horizontal text-capitalize">
+
+            <dt>Last Message</dt>
+            <dd>{{ ::vm.request.message}}</dd>
+            <dt>Last Updated</dt>
+            <dd>{{ ::vm.request.updated_on}}</dd>
+            <dt>Request Type</dt>
+            <dd>{{ ::vm.request.request_type }}</dd>
+          </dl>
+        </div>
+      </div>
+      <dl>
+        <dt>Description</dt>
+        <dd>{{ ::vm.request.options.long_description || vm.request.description }}</dd>
+      </dl>
+    </section>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <section>
+      <h2>Request Details</h2>
+      <pre>{{ ::vm.request.options |json }}</pre>
+    </section>
+  </div>
+</div>
