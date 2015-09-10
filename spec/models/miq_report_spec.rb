@@ -11,27 +11,17 @@ describe MiqReport do
     after.table.should == fake_ruport_data_table
   end
 
-  describe 'self.get_expressions_by_model' do
-    it 'it returns only reports with non-nil conditions' do
+  it '.get_expressions_by_model' do
+    rep_null = FactoryGirl.create(:miq_report, :conditions => nil)
+    rep_nil  = FactoryGirl.create(:miq_report)
 
-      test_group = FactoryGirl.create(:miq_group)
-      rep_null = FactoryGirl.create(:miq_report_with_null_condition)
+    # FIXME: find a way to do this in a factory
+    serialized_nil = "--- !!null \n...\n"
+    ActiveRecord::Base.connection.execute("update miq_reports set conditions='#{serialized_nil}' where id=#{rep_nil.id}")
 
-      rep_nil  = FactoryGirl.create(:miq_report_wo_null_but_nil_condition)
-      # FIXME: find a way to do this in a factory
-      crap = "--- !!null \n...\n"
-      ActiveRecord::Base.connection.execute("update miq_reports set conditions='#{crap}' where id=#{rep_nil.id}")
-
-      rep_ok   = FactoryGirl.create(:miq_report_with_non_nil_condition)
-
-      reports = MiqReport.get_expressions_by_model('Vm')
-
-      reports.should be_kind_of(Hash)
-      reports.count.should == 1
-      reports.find { |report| report[0] == rep_null.name }.should be_nil
-      reports.find { |report| report[0] == rep_nil.name }.should be_nil
-      reports.find { |report| report[0] == rep_ok.name }.should_not be_nil
-    end
+    rep_ok  = FactoryGirl.create(:miq_report, :conditions => "SOMETHING")
+    reports = MiqReport.get_expressions_by_model('Vm')
+    expect(reports).to eq({rep_ok.name => rep_ok.id})
   end
 
   context "#paged_view_search_gp" do

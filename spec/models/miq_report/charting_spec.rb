@@ -36,7 +36,7 @@ describe MiqReport do
 
   context 'to_chart' do
     it "raises an exception for missing sortby or type" do
-      rpt = FactoryGirl.create(:miq_report_with_non_nil_condition)
+      rpt = FactoryGirl.create(:miq_report)
 
       # Can't create a graph without a sortby column
       expect { rpt.to_chart(@report_theme, @show_title, @options) }.to raise_exception
