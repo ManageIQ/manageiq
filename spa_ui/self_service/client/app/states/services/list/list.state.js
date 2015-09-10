@@ -69,19 +69,6 @@
       }
     };
 
-    //vm.handleClick = handleClick;
-
-    //vm.config = {
-    //  selectItems: false,
-    //  multiSelect: false,
-    //  dblClick: false,
-    //  selectionMatchProp: 'name',
-    //  selectedItems: [],
-    //  showSelectBox: false,
-    //  rowHeight: 36,
-    //  onClick: vm.handleClick
-    //};
-
     function handleClick(item, e) {
       $state.go('services.details', {requestId: item.id});
     };
