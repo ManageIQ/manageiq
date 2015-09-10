@@ -13,7 +13,8 @@ class OpenstackConfigurationParser
   SECTION_REGEXP                       = /^\s*\[(.+?)\]\s*/
   # Its attribute e.g. rpc_thread_pool_size=64, or starting with a #, which is just comment marking a default
   # value. Limited to snake_case words for attribute names and = as delimiter.
-  ATTRIBUTE_REGEXP                     = /^\s*[#\;]*\s*([\w]+)\s*[=]\s*(.*?)\s*$/
+  ATTRIBUTE_REGEXP                     = /^\s*([\w]+)\s*[=]\s*(.*?)\s*$/
+  COMMENTED_ATTRIBUTE_REGEXP           = /^\s*[#\;]+([\w]+)\s*[=]\s*(.*?)\s*$/
   # Anything starting with #
   COMMENTED_LINE_REGEXP                = /^\s*[#\;]+\s*(.*?)$/
   # Description is the same as commented line, but it is expected, that immediately after block of description, there
@@ -66,7 +67,7 @@ class OpenstackConfigurationParser
       if (match = line.match(SECTION_REGEXP))
         # Section in a format e.g. [DEFAULT], we save it without braces, section applies until new one is defined
         section = match[1]
-      elsif (match = line.match(ATTRIBUTE_REGEXP))
+      elsif (match = (line.match(ATTRIBUTE_REGEXP) || line.match(COMMENTED_ATTRIBUTE_REGEXP)))
         # Its attribute e.g. rpc_thread_pool_size=64, or starting with a #, which is just comment marking a default
         # value.
         # Look if we already have the attribute, cause it can be redefined multiple times, last occurrence counts and
