@@ -152,26 +152,18 @@
         :description: Remove Catalog Items from the VMDB
         :feature_type: admin
         :identifier: catalogitem_delete
-      - :name: Edit Composite Catalog Item
-        :description: Edit a Composite Catalog Item
+      - :name: Edit Catalog Item
+        :description: Edit Catalog Item
         :feature_type: admin
         :identifier: catalogitem_edit
-      - :name: Add Composite Catalog Item
-        :description: Add a Composite Catalog Item
+      - :name: Add Catalog Item
+        :description: Add Catalog Item
         :feature_type: admin
         :identifier: catalogitem_new
-      - :name: Edit Atomic Catalog Item
-        :description: Edit an Atomic Catalog Item
-        :feature_type: admin
-        :identifier: atomic_catalogitem_edit
-      - :name: Add Atomic Catalog Item
-        :description: Add Atomic Catalog Item
-        :feature_type: admin
-        :identifier: atomic_catalogitem_new
-      - :name: Add a new Button Group
+      - :name: Add a new Button/Button Group
         :description: Add a new Button Group
         :feature_type: admin
-        :identifier: catalogitem_group_new
+        :identifier: catalogitem_button_or_group_new
       - :name: Edit Button Group
         :description: Edit Button Group
         :feature_type: admin
@@ -180,10 +172,6 @@
         :description: Remove Button Group
         :feature_type: admin
         :identifier: ab_group_delete
-      - :name: Add a new Button
-        :description: Add a new Button
-        :feature_type: admin
-        :identifier: catalogitem_button_new
       - :name: Edit Button
         :description: Edit Button
         :feature_type: admin

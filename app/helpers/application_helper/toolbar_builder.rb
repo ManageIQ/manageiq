@@ -537,6 +537,10 @@ class ApplicationHelper::ToolbarBuilder
         false : true
     end
 
+    if id =~ /atomic.*new/
+      return !role_allows(:feature => "catalogitem_new")
+    end
+
     if id.starts_with?("history_")
       if x_tree_history[id.split("_").last.to_i] || id.ends_with?("_1")
         return false
@@ -780,7 +784,12 @@ class ApplicationHelper::ToolbarBuilder
     when "Service", "ServiceOrchestration"
       return build_toolbar_hide_button_service(id)
     when "ServiceTemplate"
-      return !role_allows(:feature => id)
+      case id
+      when "catalogitem_button_new", "catalogitem_group_new"
+        return !role_allows(:feature => "catalogitem_button_or_group_new")
+      else
+        return !role_allows(:feature => id)
+      end
     when "Vm"
       case id
       when "vm_clone"

@@ -15,12 +15,12 @@ class CatalogController < ApplicationController
   end
 
   CATALOG_X_BUTTON_ALLOWED_ACTIONS = {
-    'ab_button_new'                 => :ab_button_new,
+    'catalogitem_button_new'        => :ab_button_new,
     'ab_button_edit'                => :ab_button_edit,
     'ab_button_delete'              => :ab_button_delete,
     'ab_group_delete'               => :ab_group_delete,
     'ab_group_edit'                 => :ab_group_edit,
-    'ab_group_new'                  => :ab_group_new,
+    'catalogitem_group_new'         => :ab_group_new,
     'ab_group_reorder'              => :ab_group_reorder,
     'svc_catalog_provision'         => :svc_catalog_provision,
     'st_catalog_delete'             => :st_catalog_delete,
@@ -62,7 +62,12 @@ class CatalogController < ApplicationController
   end
 
   def servicetemplate_edit
-    assert_privileges(params[:pressed]) if params[:pressed]
+    action = if params[:pressed] && params[:pressed].include?("new")
+               "catalogitem_new"
+             else
+               "catalogitem_edit"
+             end
+    assert_privileges(action)
     checked = find_checked_items
     @sb[:cached_waypoint_ids] = MiqAeClass.waypoint_ids_for_state_machines
     checked[0] = params[:id] if checked.blank? && params[:id]

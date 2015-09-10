@@ -1269,10 +1269,18 @@ class ApplicationController < ActionController::Base
   end
 
   def check_button_rbac
+    task = params[:pressed]
     # buttons ids that share a common feature id
-    common_buttons = %w(rbac_project_add rbac_tenant_add)
-    task = common_buttons.include?(params[:pressed]) ? rbac_common_feature_for_buttons(params[:pressed]) : params[:pressed]
-    # Intentional single = so we can check auth later
+    if params.key? :common_feature
+      case
+      when task.include?("rbac")
+        task = "rbac_tenant_add"
+      when task.match(/group|button/)
+        task = "catalogitem_button_or_group_new"
+      when task.include?("catalogitem")
+        task = "catalogitem_new"
+      end
+    end
     rbac_free_for_custom_button?(task, params[:button_id]) || role_allows(:feature => task)
   end
 

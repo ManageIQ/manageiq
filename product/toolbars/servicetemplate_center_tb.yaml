@@ -16,10 +16,12 @@
       :image: new
       :text: "Add a new Button Group"
       :title: "Add a new Button Group"
+      :url_parms: 'common_feature=true'
     - :button: catalogitem_button_new
       :image: new
       :text: "Add a new Button"
       :title: "Add a new Button"
+      :url_parms: 'common_feature=true'
     - :button: catalogitem_edit
       :image: edit
       :text: Edit this Item

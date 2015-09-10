@@ -15,10 +15,12 @@
       :image: new_vmprofile
       :text: "Add a New Catalog Item"
       :title: "Add a New Catalog Item"
+      :url_parms: 'common_feature=true'
     - :button: catalogitem_new
       :image: new
       :text: "Add a New Catalog Bundle"
       :title: "Add a New Catalog Bundle"
+      :url_parms: 'common_feature=true'
     - :button: catalogitem_edit
       :image: edit
       :text: Edit Selected Item
