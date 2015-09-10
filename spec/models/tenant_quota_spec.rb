@@ -9,17 +9,27 @@ describe TenantQuota do
     Tenant.root_tenant
   end
 
-  context "validations" do
+  describe "#valid?" do
     it "rejects invalid name" do
-      expect { described_class.create!(:name => "XXX") }.to raise_error
+      expect(described_class.new(:name => "XXX")).not_to be_valid
     end
 
     it "rejects missing value" do
-      expect { described_class.create!(:name => :cpu_allocated, :unit => "mhz") }.to raise_error
+      expect(described_class.new(:name => :cpu_allocated, :unit => "mhz")).not_to be_valid
     end
 
-    it "rejects missing unit" do
-      expect { described_class.create!(:name => :cpu_allocated, :value => 4096) }.to raise_error
+    it "defaults missing unit" do
+      expect(described_class.new(:name => :cpu_allocated, :value => 4096)).to be_valid
+    end
+
+    it "accepts valid quota" do
+      expect(described_class.new(:name => :cpu_allocated, :unit => "mhz", :value => 4096)).to be_valid
+    end
+
+    it "accepts string name" do
+      expect(described_class.new(:name => "cpu_allocated", :unit => "mhz", :value => 4096)).to be_valid
+    end
+  end
 
   describe "#format" do
     it "has cpu" do

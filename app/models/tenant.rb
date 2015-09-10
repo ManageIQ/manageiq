@@ -117,7 +117,6 @@ class Tenant < ActiveRecord::Base
         next if values[:value].nil?
 
         q = tenant_quotas.where(:name => name).last || tenant_quotas.build(values.merge(:name => name))
-        q.unit ||= q.default_unit
         q.update_attributes!(values)
         updated_keys << name.to_sym
       end
