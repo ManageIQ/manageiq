@@ -119,6 +119,29 @@ include:
     - value
     key:
     - name
+  filesystems:
+    group: Configuration
+    columns:
+    - name
+    - md5
+    - size
+    - permissions
+    - owner
+    - group
+    - mtime
+    key:
+    - name
+  filesystems_custom_attributes:
+    group: Configuration
+    columns:
+    - unique_name
+    - name
+    - section
+    - value
+    - value_interpolated
+    - source
+    key:
+    - unique_name
   categories:
     group: Categories
     columns:
@@ -178,6 +201,19 @@ col_order:
 - lans.tag
 - advanced_settings.name
 - advanced_settings.value
+- filesystems.name
+- filesystems.md5
+- filesystems.size
+- filesystems.permissions
+- filesystems.owner
+- filesystems.group
+- filesystems.mtime
+- filesystems_custom_attributes.unique_name
+- filesystems_custom_attributes.name
+- filesystems_custom_attributes.section
+- filesystems_custom_attributes.value
+- filesystems_custom_attributes.value_interpolated
+- filesystems_custom_attributes.source
 - categories.department
 - categories.customer
 - categories.environment
@@ -234,6 +270,19 @@ headers:
 - Tag
 - Key
 - Value
+- Name
+- md5
+- Size
+- Permissions
+- Owner
+- Group
+- Mtime
+- Unique Name
+- Name
+- Section
+- Value
+- Value Interpolated
+- Source
 - Department
 - Customer
 - Environment
@@ -243,13 +292,13 @@ headers:
 - Service Level
 
 # Condition(s) string for the SQL query
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order:
 
 # Columns to sort the report on, in order
-sortby: 
+sortby:
 
 # Group rows (y=yes,n=no,c=count)
 group:

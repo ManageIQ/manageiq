@@ -100,6 +100,7 @@ class Host < ActiveRecord::Base
 
   include CustomAttributeMixin
   has_many :ems_custom_attributes, -> { where("source = 'VC'") }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
+  has_many :filesystems_custom_attributes, :through => :filesystems, :source => 'custom_attributes'
 
   acts_as_miq_taggable
   include ReportableMixin

@@ -16,16 +16,18 @@ describe Host do
       :vmm_vendor         => "VMware",
       :v_total_vms        => 0,
 
-      :advanced_settings  => [],
-      :groups             => [],
-      :guest_applications => [],
-      :lans               => [],
-      :patches            => [],
-      :switches           => [],
-      :system_services    => [],
-      :tags               => [],
-      :users              => [],
-      :vms                => [],
+      :advanced_settings             => [],
+      :filesystems                   => [],
+      :filesystems_custom_attributes => [],
+      :groups                        => [],
+      :guest_applications            => [],
+      :lans                          => [],
+      :patches                       => [],
+      :switches                      => [],
+      :system_services               => [],
+      :tags                          => [],
+      :users                         => [],
+      :vms                           => [],
     }
   end
 
