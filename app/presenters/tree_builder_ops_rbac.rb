@@ -20,12 +20,12 @@ class TreeBuilderOpsRbac < TreeBuilder
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
     options.merge!(:expand => false)
-    [
-      {:id => "u",  :text => "Users",   :image => "user",          :tip => "Users"},
-      {:id => "g",  :text => "Groups",  :image => "group",         :tip => "Groups"},
-      {:id => "ur", :text => "Roles",   :image => "miq_user_role", :tip => "Roles"},
-      {:id => "tn", :text => "Tenants", :image => "tenant",        :tip => "Tenants"}
-    ]
+    objects = []
+    objects.push(:id => "u",  :text => "Users",   :image => "user",          :tip => "Users")   if ApplicationHelper.role_allows(:feature => "rbac_user_view", :any => true)
+    objects.push(:id => "g",  :text => "Groups",  :image => "group",         :tip => "Groups")  if ApplicationHelper.role_allows(:feature => "rbac_group_view", :any => true)
+    objects.push(:id => "ur", :text => "Roles",   :image => "miq_user_role", :tip => "Roles")   if ApplicationHelper.role_allows(:feature => "rbac_role_view", :any => true)
+    objects.push(:id => "tn", :text => "Tenants", :image => "tenant",        :tip => "Tenants") if ApplicationHelper.role_allows(:feature => "rbac_tenant_view", :any => true)
+    objects
   end
 
   def x_get_tree_custom_kids(object_hash, options)
