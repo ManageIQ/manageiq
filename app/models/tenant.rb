@@ -115,9 +115,10 @@ class Tenant < ActiveRecord::Base
       quotas.each do |name, values|
         next if values[:value].nil?
 
-        q = tenant_quotas.where(:name => name).last || tenant_quotas.build(:name => name)
+        name = name.to_s
+        q = tenant_quotas.detect { |tq| tq.name == name } || tenant_quotas.build(:name => name)
         q.update_attributes!(values)
-        updated_keys << name.to_sym
+        updated_keys << name
       end
       # Delete any quotas that were not passed in
       tenant_quotas.destroy_missing(updated_keys)
