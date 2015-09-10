@@ -29,7 +29,7 @@ ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$s
                     if(quota['format'] === "general_number_precision_0")
                         quota['valpattern'] = "^[0-9]*$";
                     else
-                        quota['valpattern'] = "";
+                        quota['valpattern'] = "^[-+]?([0-9]+(\.[0-9]*)?|\.[0-9]+)$";
                 }
             }
             $scope.afterGet = true;
