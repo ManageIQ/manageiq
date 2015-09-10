@@ -1,15 +1,10 @@
 require 'spec_helper'
 
 describe TenantQuota do
-  let(:settings) {{}}
-  let(:tenant)   {Tenant.new(:domain => 'x.com', :parent => default_tenant)}
-
-  let(:default_tenant) do
-    Tenant.seed
-    Tenant.default_tenant
-  end
+  let(:tenant) { FactoryGirl.create(:tenant, :parent => root_tenant) }
 
   let(:root_tenant) do
+    MiqRegion.seed
     Tenant.seed
     Tenant.root_tenant
   end
