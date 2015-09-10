@@ -5,27 +5,27 @@ class TenantQuota < ActiveRecord::Base
     :cpu_allocated => {
       :unit          => :mhz,
       :format        => :mhz,
-      :text_modifier => "Mhz"
+      :text_modifier => "Mhz".freeze
     },
     :mem_allocated => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
-      :text_modifier => "GB"
+      :text_modifier => "GB".freeze
     },
     :storage_allocated => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
-      :text_modifier => "GB"
+      :text_modifier => "GB".freeze
     },
     :vms_allocated => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count"
+      :text_modifier => "Count".freeze
     },
     :templates_allocated => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count"
+      :text_modifier => "Count".freeze
     }
   }
 
