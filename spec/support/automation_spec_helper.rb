@@ -57,11 +57,13 @@ module AutomationSpecHelper
       :instance_name => 'instance1')
   end
 
-  def send_ae_request_via_queue(args)
-    MiqQueue.put(:role        => 'automate',
+  def send_ae_request_via_queue(args, timeout = nil)
+    queue_args = {:role       => 'automate',
                  :class_name  => 'MiqAeEngine',
                  :method_name => 'deliver',
-                 :args        => [args])
+                 :args        => [args]}
+    queue_args.merge!(:msg_timeout => timeout) if timeout
+    MiqQueue.put(queue_args)
   end
 
   def deliver_ae_request_from_queue

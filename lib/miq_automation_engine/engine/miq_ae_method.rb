@@ -87,14 +87,25 @@ module MiqAeEngine
       ENV['MIQ_TOKEN'] = ws.guid unless ws.nil?
 
       rc = nil
-      final_stderr = nil
+      final_stderr = []
+      threads = []
+      method_pid = nil
       begin
         require 'open4'
         status = Open4.popen4(*cmd) do |pid, stdin, stdout, stderr|
+          method_pid = pid
           stdin.close
-          final_stderr = stderr.each_line.map(&:strip)
-          stdout.each_line { |msg| $miq_ae_logger.info  "Method STDOUT: #{msg.strip}" }
-          final_stderr.each { |msg| $miq_ae_logger.error "Method STDERR: #{msg}" }
+          threads << Thread.new do
+            stdout.each_line { |msg| $miq_ae_logger.info "Method STDOUT: #{msg.strip}" }
+          end
+          threads << Thread.new do
+            stderr.each_line do |msg|
+              msg = msg.strip
+              final_stderr << msg
+              $miq_ae_logger.error "Method STDERR: #{msg}"
+            end
+          end
+          threads.each(&:join)
         end
 
         unless ws.nil?
@@ -104,13 +115,21 @@ module MiqAeEngine
         end
         rc  = status.exitstatus
         msg = "Method exited with rc=#{verbose_rc(rc)}"
+        method_pid = nil
+        threads = []
       rescue => err
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
         rc = MIQ_ABORT
         msg = "Method execution failed"
+      ensure
+        if method_pid
+          $miq_ae_logger.error("Terminating non responsive method with pid #{method_pid.inspect}")
+          Process.kill("TERM", method_pid) rescue nil
+          Process.wait(method_pid) rescue nil
+        end
+        threads.each(&:exit)
       end
-
-      process_ruby_method_results(rc, msg, final_stderr)
+      process_ruby_method_results(rc, msg, final_stderr.presence)
     end
 
     MIQ_OK    = 0
@@ -203,20 +222,32 @@ RUBY
         ActiveRecord::Base.connection_pool.release_connection
 
         rc = nil
-        final_stderr = nil
+        final_stderr = []
+        method_pid = nil
+        threads = []
         Bundler.with_clean_env do
           status = Open4.popen4(Gem.ruby) do |pid, stdin, stdout, stderr|
+            method_pid = pid
             stdin.puts(preamble.to_s)
             stdin.puts(body)
             stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
             stdin.close
-
-            final_stderr = stderr.each_line.map(&:strip)
-            stdout.each_line { |msg| $miq_ae_logger.info  "Method STDOUT: #{msg.strip}" }
-            final_stderr.each { |msg| $miq_ae_logger.error "Method STDERR: #{msg}" }
+            threads << Thread.new do
+              stdout.each_line { |msg| $miq_ae_logger.info "Method STDOUT: #{msg.strip}" }
+            end
+            threads << Thread.new do
+              stderr.each_line do |msg|
+                msg = msg.strip
+                final_stderr << msg
+                $miq_ae_logger.error "Method STDERR: #{msg}"
+              end
+            end
+            threads.each(&:join)
           end
 
           rc = status.exitstatus
+          method_pid = nil
+          threads = []
         end
 
         msg = "Method exited with rc=#{verbose_rc(rc)}"
@@ -224,8 +255,15 @@ RUBY
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
         rc = MIQ_ABORT
         msg = "Method execution failed"
+      ensure
+        if method_pid
+          $miq_ae_logger.error("Terminating non responsive method with pid #{method_pid.inspect}")
+          Process.kill("TERM", method_pid) rescue nil
+          Process.wait(method_pid) rescue nil
+        end
+        threads.each(&:exit)
       end
-      return rc, msg, final_stderr
+      return rc, msg, final_stderr.presence
     end
 
     def self.process_ruby_method_results(rc, msg, stderr)
