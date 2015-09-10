@@ -55,15 +55,6 @@ module MiqEnvironment
       klass = ARGV[1].constantize rescue NilClass
       return @is_non_web_server_worker = is_rails_runner? && klass.hierarchy.include?(MiqWorker)
     end
-
-    def self.is_evmserver?
-      return @is_evmserver unless @is_evmserver.nil?
-      @is_evmserver = is_rails_runner? && !ENV['EVMSERVER'].blank?
-
-      # Unset the variable so subprocesses don't inherit it
-      ENV['EVMSERVER'] = nil
-      return @is_evmserver
-    end
   end
 
   class Command
