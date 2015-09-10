@@ -120,7 +120,8 @@ class Tenant < ActiveRecord::Base
         updated_keys << name.to_sym
       end
       # Delete any quotas that were not passed in
-      TenantQuota.destroy_all(:tenant => self, :name => (TenantQuota.quota_definitions.keys.sort - updated_keys.sort))
+      tenant_quotas.destroy_missing(updated_keys)
+      # unfortunatly, an extra scope is created in destroy_missing, so we need to reload the records
       clear_association_cache
     end
 
