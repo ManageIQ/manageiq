@@ -2882,7 +2882,7 @@
       - :name: Manage_Quotas
         :description: Manage Tenant Quotas
         :feature_type: admin
-        :hidden: true
+        :hidden: false
         :identifier: rbac_tenant_manage_quotas
   - :name: Diagnostics
     :description: Diagnostics Accordion

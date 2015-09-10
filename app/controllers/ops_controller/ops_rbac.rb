@@ -219,19 +219,10 @@ module OpsController::OpsRbac
     end
   end
 
-  GIGABYTE = 1024 * 1024 *1024
-
   def tenant_quotas_form_fields
 
     tenant = Tenant.find_by_id(params[:id])
-    quotas = tenant.get_quotas()
-    tenant_quotas = quotas.each_with_object({}) do |q, h|
-      name, val = q
-      val[:value] = val[:value]/GIGABYTE if !val[:value].nil? && val[:unit].to_s == "bytes"
-      h[name] = val.merge(:enforced => !(val[:value].nil?))
-      h[name] = val.merge(:valpattern => val[:format].to_s == "general_number_precision_0" ? "^[0-9]*$".to_sym : "".to_sym )
-      h
-    end
+    tenant_quotas = tenant.get_quotas()
     render :json => {
                :name        => tenant.name,
                :quotas      => tenant_quotas
