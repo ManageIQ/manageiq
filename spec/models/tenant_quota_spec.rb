@@ -42,4 +42,46 @@ describe TenantQuota do
       expect(FactoryGirl.build(:tenant_quota_cpu).default_unit).to eq("mhz")
     end
   end
+
+  describe "#quota_hash" do
+    it "has cpu_allocated attributes" do
+      expect(described_class.new(:name => "cpu_allocated", :value => 4096).tap(&:valid?).quota_hash).to eq(
+        :unit          => "mhz",
+        :value         => 4096.0,
+        :format        => "mhz",
+        :text_modifier => "Mhz",
+        :description   => "Allocated CPU in Mhz"
+      )
+    end
+
+    it "has vms_allocated attributes" do
+      expect(described_class.new(:name => "vms_allocated", :value => 20).tap(&:valid?).quota_hash).to eq(
+        :unit          => "fixnum",
+        :value         => 20.0,
+        :format        => "general_number_precision_0",
+        :text_modifier => "Count",
+        :description   => "Allocated Number of Virtual Machines"
+      )
+    end
+
+    it "has mem_allocated attributes" do
+      expect(described_class.new(:name => "mem_allocated", :value => 4096).tap(&:valid?).quota_hash).to eq(
+        :unit          => "bytes",
+        :value         => 4096.0,
+        :format        => "gigabytes_human",
+        :text_modifier => "GB",
+        :description   => "Allocated Memory in GB"
+      )
+    end
+
+    it "has nil attributes" do
+      expect(described_class.new(:name => "storage_allocated").tap(&:valid?).quota_hash).to eq(
+        :unit          => "bytes",
+        :value         => nil,
+        :format        => "gigabytes_human",
+        :text_modifier => "GB",
+        :description   => "Allocated Storage in GB"
+      )
+    end
+  end
 end

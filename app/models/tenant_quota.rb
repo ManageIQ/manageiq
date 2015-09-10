@@ -44,6 +44,10 @@ class TenantQuota < ActiveRecord::Base
     end
   end
 
+  def quota_hash
+    self.class.quota_definitions[name.to_sym].merge(:unit => unit, :value => value, :format => format) # attributes
+  end
+
   def format
     self.class.quota_definitions.fetch_path(name.to_sym, :format).to_s
   end
