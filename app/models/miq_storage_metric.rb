@@ -135,17 +135,17 @@ class MiqStorageMetric < ActiveRecord::Base
     return nil if value.nil?
 
     value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
-    value = value.to_i_with_method.ago.utc unless value.nil?
+    value = value.to_i_with_method.seconds.ago.utc unless value.nil?
     return value
   end
 
   def self.derived_metrics_count_by_date(older_than)
     return metrics_count_by_date(older_than, self.derived_metrics_classes)
-    end
+  end
 
   def self.metrics_rollups_count_by_date(older_than)
     return metrics_count_by_date(older_than, self.metrics_rollup_classes)
-    end
+  end
 
   def self.metrics_count_by_date(older_than, metrics_classes)
     count = 0
