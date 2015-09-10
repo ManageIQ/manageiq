@@ -248,7 +248,33 @@ module Rbac
     end
   end
 
+  def self.group(user_or_group)
+    case user_or_group
+    when User
+      user_or_group.current_group
+    when MiqGroup
+      user_or_group
+    when NilClass
+    else
+      raise
+    end
+  end
+
+  def self.find_options_for_tenant(klass, user_or_group, find_options = {})
+    tenant_id = group(user_or_group).try(:tenant_id)
+    return find_options unless tenant_id
+
+    tenant_id_clause = ["#{klass.table_name}.tenant_id = ? OR #{klass.table_name}.tenant_id IS NULL", tenant_id]
+    find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause)
+    find_options
+  end
+
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
+    if klass.scope_by_tenant?
+      # TODO: check if these find_options should be duplicated/modified in place
+      find_options = find_options_for_tenant(klass, user_or_group, find_options)
+    end
+
     return find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
     return find_targets_with_indirect_rbac(klass, scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
     return find_targets_with_user_group_rbac(klass, scope, rbac_filters, find_options, user_or_group) if apply_user_group_rbac_to_class?(klass)

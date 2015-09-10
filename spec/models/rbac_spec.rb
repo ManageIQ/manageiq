@@ -17,6 +17,56 @@ describe Rbac do
     @user  = FactoryGirl.create(:user, :miq_groups => [@group])
   end
 
+  context "tenant scoping" do
+    before do
+      default_tenant = Tenant.seed
+
+      @owner_tenant  = FactoryGirl.create(:tenant, :divisible => false, :parent => default_tenant)
+      @owner_group   = FactoryGirl.create(:miq_group, :tenant => @owner_tenant)
+      @owner_user    = FactoryGirl.create(:user, :userid => 'foo', :miq_groups => [@owner_group])
+
+      @other_tenant  = FactoryGirl.create(:tenant, :divisible => false, :parent => default_tenant)
+      @other_group   = FactoryGirl.create(:miq_group, :tenant => @other_tenant)
+      @other_user    = FactoryGirl.create(:user, :userid => 'bar', :miq_groups => [@other_group])
+
+      @owner_vm      = FactoryGirl.create(:vm_vmware, :tenant => @owner_tenant)
+    end
+
+    it ".search with :userid, finds user's tenant vms" do
+      results, = Rbac.search(:class => "Vm", :results_format => :objects, :userid => @owner_user.userid)
+      expect(results).to eq [@owner_vm]
+    end
+
+    it ".search with :userid filters out other tenants" do
+      results, = Rbac.search(:class => "Vm", :results_format => :objects, :userid => @other_user.userid)
+      expect(results).to eq []
+    end
+
+    it ".search with User.with_userid finds user's tenant vms" do
+      User.with_userid(@owner_user.userid) do
+        results, = Rbac.search(:class => "Vm", :results_format => :objects)
+        expect(results).to eq [@owner_vm]
+      end
+    end
+
+    it ".search with User.with_userid filters out other tenants" do
+      User.with_userid(@other_user.userid) do
+        results, = Rbac.search(:class => "Vm", :results_format => :objects)
+        expect(results).to eq []
+      end
+    end
+
+    it ".search with :miq_group_id, finds user's tenant vms" do
+      results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+      expect(results).to eq [@owner_vm]
+    end
+
+    it ".search with :miq_group_id filters out other tenants" do
+      results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @other_group.id)
+      expect(results).to eq []
+    end
+  end
+
   context "with Hosts" do
     before(:each) do
       @host1 = FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local")
