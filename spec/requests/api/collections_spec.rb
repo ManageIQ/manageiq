@@ -85,6 +85,11 @@ describe ApiController do
       test_collection_query(:hosts, hosts_url, Host, :guid)
     end
 
+    it "query Pictures" do
+      FactoryGirl.create(:picture)
+      test_collection_query(:pictures, pictures_url, Picture)
+    end
+
     it "query Policies" do
       FactoryGirl.create(:miq_policy)
       test_collection_query(:policies, policies_url, MiqPolicy)
