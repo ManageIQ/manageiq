@@ -4,34 +4,36 @@
   - read_only = @edit && @edit[:db_id] && @edit[:db_id] ? true : false
   %h3
     = _('Basic Information')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
         - if read_only
           *
         = _('Name')
-      %td.wider
+      .col-md-8
         = text_field_tag("name",
-          @edit[:new][:name],
-          :maxlength         => 50,
-          :disabled          => read_only,
-          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                          @edit[:new][:name],
+                          :maxlength         => 50,
+                          :class             => "form-control",
+                          :disabled          => read_only,
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         - unless read_only
           = javascript_tag(javascript_focus('name'))
-    %tr
-      %td.key
+    .form-group
+      %label.control-label.col-md-2
         = _('Tab Title')
-      %td.wider
+      .col-md-8
         = text_field_tag("description",
-          @edit[:new][:description],
-          :maxlength         => 20,
-          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key
+                          @edit[:new][:description],
+                          :maxlength         => 20,
+                          :class             => "form-control",
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      %label.control-label.col-md-2
         = _('Locked')
-      %td
+      .col-md-8
         = check_box_tag("locked", "1", @edit[:new][:locked],
-          "data-miq_observe_checkbox" => {:url => url}.to_json)
+                        "data-miq_observe_checkbox" => {:url => url}.to_json)
   %hr
   = render :partial => "db_widgets"
   - if read_only
