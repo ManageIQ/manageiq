@@ -11,6 +11,29 @@ describe MiqReport do
     after.table.should == fake_ruport_data_table
   end
 
+  describe 'self.get_expressions_by_model' do
+    it 'it returns only reports with non-nil conditions' do
+
+      test_group = FactoryGirl.create(:miq_group)
+      rep_null = FactoryGirl.create(:miq_report_with_null_condition)
+
+      rep_nil  = FactoryGirl.create(:miq_report_wo_null_but_nil_condition)
+      # FIXME: find a way to do this in a factory
+      crap = "--- !!null \n...\n"
+      ActiveRecord::Base.connection.execute("update miq_reports set conditions='#{crap}' where id=#{rep_nil.id}")
+
+      rep_ok   = FactoryGirl.create(:miq_report_with_non_nil_condition)
+
+      reports = MiqReport.get_expressions_by_model('Vm')
+
+      reports.should be_kind_of(Hash)
+      reports.count.should == 1
+      reports.find { |report| report[0] == rep_null.name }.should be_nil
+      reports.find { |report| report[0] == rep_nil.name }.should be_nil
+      reports.find { |report| report[0] == rep_ok.name }.should_not be_nil
+    end
+  end
+
   context "#paged_view_search_gp" do
     before(:each) do
       MiqRegion.seed
@@ -56,30 +79,6 @@ describe MiqReport do
       @search_expression  = MiqExpression.new({"and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}]})
 
     end
-
-    describe 'self.get_expressions_by_model' do
-      it 'it returns only reports with non-nil conditions' do
-
-        test_group = FactoryGirl.create(:miq_group)
-        rep_null = FactoryGirl.create(:miq_report_with_null_condition)
-
-        rep_nil  = FactoryGirl.create(:miq_report_wo_null_but_nil_condition)
-        # FIXME: find a way to do this in a factory
-        crap = "--- !!null \n...\n"
-        ActiveRecord::Base.connection.execute("update miq_reports set conditions='#{crap}' where id=#{rep_nil.id}")
-
-        rep_ok   = FactoryGirl.create(:miq_report_with_non_nil_condition)
-
-        reports = MiqReport.get_expressions_by_model('Vm')
-
-        reports.should be_kind_of(Hash)
-        reports.count.should == 1
-        reports.find { |report| report[0] == rep_null.name }.should be_nil
-        reports.find { |report| report[0] == rep_nil.name }.should be_nil
-        reports.find { |report| report[0] == rep_ok.name }.should_not be_nil
-      end
-    end
-
 
     it "reports on EVM table indexes and metrics properly" do
 
