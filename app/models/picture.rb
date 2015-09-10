@@ -2,6 +2,8 @@ class Picture < ActiveRecord::Base
   has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
   include ReportableMixin
 
+  virtual_has_one :image_href, :class_name => "String"
+
   URL_ROOT          = Rails.root.join("public").to_s
   DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures")
   Dir.mkdir(DEFAULT_DIRECTORY) unless File.directory?(DEFAULT_DIRECTORY)
@@ -92,5 +94,9 @@ class Picture < ActiveRecord::Base
 
   def url_path(basepath = URL_ROOT)
     self.class.url_path(self.filename, basepath)
+  end
+
+  def image_href
+    url_path
   end
 end

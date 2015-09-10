@@ -280,6 +280,12 @@
         :identifier: host_protect
       - :name: unassign
         :identifier: host_protect
+  :pictures:
+    :description: Pictures
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Picture
   :policies:
     :description: Policies
     :options:

@@ -108,10 +108,12 @@ class ApiController
       def gen_attr_type_hash
         @attr_time = {}
         @attr_url  = {}
+        @attr_resource  = {}
         @attr_encrypted = {}
 
         ATTR_TYPES[:time].each { |attr| @attr_time[attr] = true }
         ATTR_TYPES[:url].each  { |attr| @attr_url[attr]  = true }
+        ATTR_TYPES[:resource].each  { |attr| @attr_resource[attr]  = true }
         ATTR_TYPES[:encrypted].each { |attr| @attr_encrypted[attr] = true }
 
         gen_time_attr_type_hash
