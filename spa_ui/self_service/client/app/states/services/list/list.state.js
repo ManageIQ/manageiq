@@ -16,7 +16,7 @@
         templateUrl: 'app/states/services/list/list.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Services List',
+        title: 'Service List',
         resolve: {
           services: resolveServices
         }
@@ -36,24 +36,107 @@
     /* jshint validthis: true */
     var vm = this;
 
-    vm.title = 'Services List';
+    vm.title = 'Service List';
     vm.services = services.resources;
+    vm.servicesList = angular.copy(vm.services);
 
-    vm.handleClick = handleClick;
-
-    vm.config = {
+    vm.listConfig = {
       selectItems: false,
-      multiSelect: false,
-      dblClick: false,
-      selectionMatchProp: 'name',
-      selectedItems: [],
       showSelectBox: false,
-      rowHeight: 36,
-      onClick: vm.handleClick
+      selectionMatchProp: 'service_status',
+      onClick: handleClick
     };
+
+    vm.toolbarConfig = {
+      filterConfig: {
+        fields: [
+          {
+            id: 'name',
+            title: 'Service Name',
+            placeholder: 'Filter by Service Name',
+            filterType: 'text'
+          },
+          {
+            id: 'id',
+            title: 'Service Id',
+            placeholder: 'Filter by Service ID',
+            filterType: 'text'
+          }
+        ],
+        resultsCount: vm.servicesList.length,
+        appliedFilters: [],
+        onFilterChange: filterChange
+      }
+    };
+
+    //vm.handleClick = handleClick;
+
+    //vm.config = {
+    //  selectItems: false,
+    //  multiSelect: false,
+    //  dblClick: false,
+    //  selectionMatchProp: 'name',
+    //  selectedItems: [],
+    //  showSelectBox: false,
+    //  rowHeight: 36,
+    //  onClick: vm.handleClick
+    //};
 
     function handleClick(item, e) {
       $state.go('services.details', {requestId: item.id});
     };
+
+    function filterChange(filters) {
+      vm.filtersText = '';
+      angular.forEach(filters, filterTextFactory);
+
+      function filterTextFactory(filter) {
+        vm.filtersText += filter.title + ' : ' + filter.value + '\n';
+      }
+
+      applyFilters(filters);
+      vm.toolbarConfig.filterConfig.resultsCount = vm.servicesList.length;
+    }
+
+    function applyFilters(filters) {
+      vm.servicesList = [];
+      if (filters && filters.length > 0) {
+        angular.forEach(vm.services, filterChecker);
+      } else {
+        vm.servicesList = vm.services;
+      }
+
+      function filterChecker(item) {
+        if (matchesFilters(item, filters)) {
+          vm.servicesList.push(item);
+        }
+      }
+    }
+
+    function matchesFilters(item, filters) {
+      var matches = true;
+      angular.forEach(filters, filterMatcher);
+
+      function filterMatcher(filter) {
+        if (!matchesFilter(item, filter)) {
+          matches = false;
+
+          return false;
+        }
+      }
+
+      return matches;
+    }
+
+    function matchesFilter(item, filter) {
+      var match = true;
+      if (filter.id === 'name') {
+        match = item.name === filter.value;
+      } else if (filter.id === 'id') {
+        match = Number(item.id) === Number(filter.value);
+      }
+
+      return match;
+    }
   }
 })();
