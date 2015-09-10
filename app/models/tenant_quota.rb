@@ -39,12 +39,8 @@ class TenantQuota < ActiveRecord::Base
   end
 
   def self.quota_definitions
-    return @quota_definitions if @quota_definitions
-
-    @quota_definitions = QUOTA_BASE.each_with_object({}) do |q, h|
-      name, value = q
+    @quota_definitions ||= QUOTA_BASE.each_with_object({}) do |(name, value), h|
       h[name] = value.merge(:description => I18n.t("dictionary.tenants.#{name}"), :value => nil)
-      h
     end
   end
 

@@ -105,7 +105,6 @@ class Tenant < ActiveRecord::Base
   def get_quotas
     tenant_quotas.each_with_object({}) do |q, h|
       h[q.name.to_sym] = TenantQuota.quota_definitions[q.name.to_sym].merge(:unit => q.unit, :value => q.value, :format => q.format)
-      h
     end.reverse_merge(TenantQuota.quota_definitions)
   end
 
@@ -116,7 +115,7 @@ class Tenant < ActiveRecord::Base
       quotas.each do |name, values|
         next if values[:value].nil?
 
-        q = tenant_quotas.where(:name => name).last || tenant_quotas.build(values.merge(:name => name))
+        q = tenant_quotas.where(:name => name).last || tenant_quotas.build(:name => name)
         q.update_attributes!(values)
         updated_keys << name.to_sym
       end
