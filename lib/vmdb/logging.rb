@@ -11,6 +11,9 @@ module Vmdb
       def log_hashes(*); end
       def success(*); end
       def failure(*); end
+      def instrument(*)
+        yield if block_given?
+      end
     end
 
     def self.null_logger
