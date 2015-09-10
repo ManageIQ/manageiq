@@ -44,6 +44,15 @@ class TenantQuota < ActiveRecord::Base
     end
   end
 
+  # remove all quotas that are not listed in the keys to keep
+  # e.g.: tenant.tenant_quotas.destroy_missing_quotas(include_keys)
+  # NOTE: these are already local, no need to hit db to find them
+  def self.destroy_missing(keep)
+    keep = keep.map(&:to_s)
+    deletes = all.select { |tq| !keep.include?(tq.name) }
+    delete(deletes)
+  end
+
   def quota_hash
     self.class.quota_definitions[name.to_sym].merge(:unit => unit, :value => value, :format => format) # attributes
   end

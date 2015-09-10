@@ -84,4 +84,18 @@ describe TenantQuota do
       )
     end
   end
+
+  describe ".destroy_missing" do
+    let(:tenant2) { FactoryGirl.create(:tenant, :parent => root_tenant) }
+
+    it "removes extra quotas only from object in question" do
+      tenant.tenant_quotas.create(:name => :vms_allocated, :value => 20)
+      tenant.tenant_quotas.create(:name => :mem_allocated, :value => 4096)
+      tenant2.tenant_quotas.create(:name => :cpu_allocated, :value => 1024)
+
+      tenant.tenant_quotas.destroy_missing([:vms_allocated])
+      expect(tenant.tenant_quotas.count).to eq(1)
+      expect(tenant2.tenant_quotas.count).to eq(1)
+    end
+  end
 end
