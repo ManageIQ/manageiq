@@ -31,9 +31,8 @@ module MiqAeServiceTenantSpec
     end
 
     it "#tenant_quotas" do
-      cpu_quota = TenantQuota.create(:name => "cpu_allocated", :unit => "int", :value => 2, :tenant_id => tenant.id)
-      storage_quota = TenantQuota.create(:name => "storage_allocated", :unit => "GB", :value => 160, :tenant_id => tenant.id)
-      ids = [cpu_quota.id, storage_quota.id]
+      cpu_quota = FactoryGirl.create(:tenant_quota_cpu, :tenant_id => tenant.id)
+      ids = [cpu_quota.id]
       expect(service_tenant.tenant_quotas.collect(&:id)).to match_array(ids)
     end
   end
