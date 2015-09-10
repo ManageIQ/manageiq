@@ -22,4 +22,12 @@ class TreeBuilderOps < TreeBuilder
     objects = region.zones.sort_by{|z| z.name.downcase}
     count_only_or_objects(options[:count_only], objects, nil)
   end
+
+  def x_get_tree_lr_kids(object, options)
+    if options[:count_only]
+      return (object.ldap_domains.count)
+    else
+      return (object.ldap_domains.sort_by { |a| a.name.to_s })
+    end
+  end
 end
