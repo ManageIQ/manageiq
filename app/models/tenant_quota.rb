@@ -29,7 +29,7 @@ class TenantQuota < ActiveRecord::Base
     }
   }
 
-  NAMES = QUOTA_BASE.stringify_keys
+  NAMES = QUOTA_BASE.keys.map(&:to_s)
 
   validates :name, :inclusion => {:in => NAMES}
   validates :unit, :value, :presence => true
