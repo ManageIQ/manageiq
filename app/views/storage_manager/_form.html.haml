@@ -3,87 +3,112 @@
 
 #form_div
   = render :partial => "layouts/flash_msg"
-  %h3= _('Basic Information')
-  %table.style1
-    %tr
-      %td.key= _('Name')
-      %td.wide
+  %h3
+    = _('Basic Information')
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _('Name')
+      .col-md-8
         = text_field_tag("name",
           @edit[:new][:name],
           :maxlength => MAX_NAME_LEN,
+          :class     => "form-control",
           "data-miq_focus" => true,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key= _('Type')
-      %td.wide
+    .form-group
+      %label.control-label.col-md-2
+        = _('Type')
+      .col-md-8
         - if @sm.id
           = h(@edit[:new][:sm_type])
         - else
           = select_tag("sm_type",
             options_for_select([["<#{_('Choose')}>", nil]] + @edit[:sm_types].invert.sort, @edit[:new][:sm_type]),
-            "data-miq_observe" => {:url => url}.to_json)
-    %tr
-      %td.key= _('Hostname')
-      %td.wide
+            :class => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("sm_type", "#{url}");
+    .form-group
+      %label.control-label.col-md-2
+        = _('Hostname')
+      .col-md-8
         = text_field_tag("hostname",
           @edit[:new][:hostname],
           :maxlength => MAX_NAME_LEN,
+          :class     => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key= _('IP Address')
-      %td.wide
+    .form-group
+      %label.control-label.col-md-2
+        = _('IP Address')
+      .col-md-8
         = text_field_tag("ipaddress",
           @edit[:new][:ipaddress],
           :maxlength => 15,
+          :class     => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key= _('Port')
-      %td.wide
+    .form-group
+      %label.control-label.col-md-2
+        = _('Port')
+      .col-md-8
         = text_field_tag("port",
           @edit[:new][:port],
           :maxlength => 15,
+          :class     => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key= _('Zone')
-      %td.wide
+    .form-group
+      %label.control-label.col-md-2
+        = _('Zone')
+      .col-md-8
         - if @edit[:server_zones].length <= 1
           = text_field_tag("server_zone",
             @edit[:new][:zone],
             :disabled => true,
             :maxlength => 15,
+            :class     => "form-control",
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         - else
           = select_tag("server_zone",
             options_for_select(@edit[:server_zones].sort, @edit[:new][:zone]),
+            :class             => "selectpicker",
             "data-miq_observe" => {:url => url}.to_json)
-
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("server_zone", "#{url}");
   %hr
-  %h3= _('Credentials')
-  %table.style1
-    %tr
-      %td.key= _('Username')
-      %td.wide
+  %h3
+    = _('Credentials')
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _('Username')
+      .col-md-8
         = text_field_tag("userid",
           @edit[:new][:userid],
           :maxlength => 50,
+          :class     => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key= _('Password')
-      %td.wide
+    .form-group
+      %label.control-label.col-md-2
+        = _('Password')
+      .col-md-8
         = password_field_tag("password",
           @edit[:new][:password],
           :maxlength => 50,
+          :class     => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key= _('Verify Password')
-      %td.wide
+    .form-group
+      %label.control-label.col-md-2
+        = _('Verify Password')
+      .col-md-8
         = password_field_tag("verify",
           @edit[:new][:verify],
           :maxlength => 50,
+          :class     => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td
-      %td{:align => 'left'}
+    .form-group
+      %label.control-label.col-md-2
+      .col-md-8
         = render(:partial => "/layouts/form_buttons_verify",
           :locals => {:validate_url => validate_url, :record => @sm})
 
