@@ -24,67 +24,36 @@ describe MiqReport do
     expect(reports).to eq({rep_ok.name => rep_ok.id})
   end
 
-  context "#paged_view_search_gp" do
-    before(:each) do
-      MiqRegion.seed
+  it "paged_view_search on vmdb_* tables" do
+    MiqRegion.seed
 
-      # Create EVM tables/indexes and hourly metric data...
-      @table_1    = FactoryGirl.create(:vmdb_table_evm,  :name => "accounts")
-      @index_1    = FactoryGirl.create(:vmdb_index,      :name => "accounts_pkey", :vmdb_table => @table_1)
-      @metric_1A  = FactoryGirl.create(:vmdb_metric, :resource => @index_1, :timestamp => 2.hours.ago.utc, :capture_interval_name => 'hourly', :size => 100, :rows => 100, :pages => 100, :wasted_bytes => 100, :percent_bloat => 100)
-      @metric_1B  = FactoryGirl.create(:vmdb_metric, :resource => @index_1, :timestamp => 1.hour.ago.utc,  :capture_interval_name => 'hourly', :size => 101, :rows => 101, :pages => 101, :wasted_bytes => 101, :percent_bloat => 101)
-      @metric_1C  = FactoryGirl.create(:vmdb_metric, :resource => @index_1, :timestamp => Time.now.utc,    :capture_interval_name => 'hourly', :size => 102, :rows => 102, :pages => 102, :wasted_bytes => 102, :percent_bloat => 102)
+    # Create EVM tables/indexes and hourly metric data...
+    table = FactoryGirl.create(:vmdb_table_evm, :name => "accounts")
+    index = FactoryGirl.create(:vmdb_index, :name => "accounts_pkey", :vmdb_table => table)
+    FactoryGirl.create(:vmdb_metric, :resource => index, :timestamp => Time.now.utc, :capture_interval_name => 'hourly', :size => 102, :rows => 102, :pages => 102, :wasted_bytes => 102, :percent_bloat => 102)
 
-      @table_2    = FactoryGirl.create(:vmdb_table_evm,  :name => "advanced_settings")
-      @index_2    = FactoryGirl.create(:vmdb_index,      :name => "advanced_settings_pkey", :vmdb_table => @table_2)
-      @metric_2A  = FactoryGirl.create(:vmdb_metric, :resource => @index_2, :timestamp => 2.hours.ago.utc, :capture_interval_name => 'hourly', :size => 200, :rows => 200, :pages => 200, :wasted_bytes => 200, :percent_bloat => 200)
-      @metric_2B  = FactoryGirl.create(:vmdb_metric, :resource => @index_2, :timestamp => 1.hour.ago.utc,  :capture_interval_name => 'hourly', :size => 201, :rows => 201, :pages => 201, :wasted_bytes => 201, :percent_bloat => 201)
-      @metric_2C  = FactoryGirl.create(:vmdb_metric, :resource => @index_2, :timestamp => Time.now.utc,    :capture_interval_name => 'hourly', :size => 202, :rows => 202, :pages => 202, :wasted_bytes => 202, :percent_bloat => 202)
+    report_args = {
+      "db"          => "VmdbIndex",
+      "cols"        => ["name"],
+      "include"     => {"vmdb_table" => {"columns" => ["type"]}, "latest_hourly_metric" => {"columns"=>["rows", "size", "wasted_bytes", "percent_bloat"]}},
+      "col_order"   => ["name", "latest_hourly_metric.rows", "latest_hourly_metric.size", "latest_hourly_metric.wasted_bytes", "latest_hourly_metric.percent_bloat"],
+      "col_formats" => [nil, nil, :bytes_human, :bytes_human, nil],
+    }
 
-      @table_3    = FactoryGirl.create(:vmdb_table_evm,  :name => "assigned_server_roles")
-      @index_3    = FactoryGirl.create(:vmdb_index,      :name => "assigned_server_roles_pkey", :vmdb_table => @table_3)
-      @metric_3A  = FactoryGirl.create(:vmdb_metric, :resource => @index_3, :timestamp => 2.hours.ago.utc, :capture_interval_name => 'hourly', :size => 300, :rows => 300, :pages => 300, :wasted_bytes => 300, :percent_bloat => 300)
-      @metric_3B  = FactoryGirl.create(:vmdb_metric, :resource => @index_3, :timestamp => 1.hour.ago.utc,  :capture_interval_name => 'hourly', :size => 301, :rows => 301, :pages => 301, :wasted_bytes => 301, :percent_bloat => 301)
-      @metric_3C  = FactoryGirl.create(:vmdb_metric, :resource => @index_3, :timestamp => Time.now.utc,    :capture_interval_name => 'hourly', :size => 302, :rows => 302, :pages => 302, :wasted_bytes => 302, :percent_bloat => 302)
+    report = MiqReport.new(report_args)
 
-      @index_3A   = FactoryGirl.create(:vmdb_index,      :name => "assigned_server_roles_idx", :vmdb_table => @table_3)
-      @metric_3AA = FactoryGirl.create(:vmdb_metric, :resource => @index_3A, :timestamp => 2.hour.ago.utc, :capture_interval_name => 'hourly', :size => 310, :rows => 310, :pages => 310, :wasted_bytes => 310, :percent_bloat => 310)
-      @metric_3AB = FactoryGirl.create(:vmdb_metric, :resource => @index_3A, :timestamp => 1.hour.ago.utc, :capture_interval_name => 'hourly', :size => 311, :rows => 311, :pages => 311, :wasted_bytes => 311, :percent_bloat => 311)
-      @metric_3AC = FactoryGirl.create(:vmdb_metric, :resource => @index_3A, :timestamp => Time.now.utc,   :capture_interval_name => 'hourly', :size => 312, :rows => 312, :pages => 312, :wasted_bytes => 312, :percent_bloat => 312)
+    search_expression  = MiqExpression.new({"and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}]})
 
-      @report_args = {
-        "title"       => "VmdbIndex",
-        "name"        => "VmdbIndex",
-        "db"          => "VmdbIndex",
-        "cols"        => ["name"],
-        "include"     => {"vmdb_table" => {"columns" => ["type"]}, "latest_hourly_metric" => {"columns"=>["rows", "size", "wasted_bytes", "percent_bloat"]}},
-        "col_order"   => ["name", "latest_hourly_metric.rows", "latest_hourly_metric.size", "latest_hourly_metric.wasted_bytes", "latest_hourly_metric.percent_bloat"],
-        "col_formats" => [nil, nil, :bytes_human, :bytes_human, nil],
-        "headers"     => ["Name", "Rows", "Size", "Wasted", "Percent Bloat"],
-        "order"       => "Ascending",
-        "sortby"      => ["name"],
-        "group"       => "n",
-      }
-
-      @search_expression  = MiqExpression.new({"and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}]})
-
-    end
-
-    it "reports on EVM table indexes and metrics properly" do
-
-      report = MiqReport.new(@report_args)
-
-      search_expression  = MiqExpression.new({"and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}]})
-
-      options = { :targets_hash   => true,
-                  :filter         => search_expression,
-                  :page           => 1,
-                  :per_page       => 20
-      }
-
-      results, attrs = report.paged_view_search(options)
-      results.count.should be 4
-    end
+    results, _ = report.paged_view_search(:filter => search_expression)
+    expect(results.data.collect(&:data)).to eq(
+      [{"name" => "accounts_pkey",
+        "vmdb_table.type" => "VmdbTableEvm",
+        "latest_hourly_metric.rows" => 102,
+        "latest_hourly_metric.size" => 102,
+        "latest_hourly_metric.wasted_bytes" => 102.0,
+        "latest_hourly_metric.percent_bloat" => 102.0,
+        "id" => index.id},
+      ])
   end
 
   context "#paged_view_search" do
