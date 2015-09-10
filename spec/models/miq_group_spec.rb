@@ -263,17 +263,6 @@ describe MiqGroup do
       [MiqRegion, Tenant, MiqUserRole, MiqGroup].each(&:seed)
       expect(MiqGroup.where(:tenant => root_tenant).count).to eq(MiqGroup.count)
     end
-
-    it "has tenant for legacy records" do
-      [MiqRegion, Tenant, MiqUserRole].each(&:seed)
-      new_tenant           = root_tenant.children.create!
-      group_with_tenant    = FactoryGirl.create(:miq_group, :tenant => new_tenant)
-      group_without_tenant = FactoryGirl.create(:miq_group, :tenant => nil)
-      MiqGroup.seed
-
-      expect(group_with_tenant.reload.tenant).to    eq(new_tenant)
-      expect(group_without_tenant.reload.tenant).to eq(root_tenant)
-    end
   end
 
   context "#ordered_widget_sets" do

@@ -104,23 +104,6 @@ class MiqGroup < ActiveRecord::Base
 
           seq += 1
         end
-      else
-        MiqGroup.where(:tenant_id => nil).update_all(:tenant_id => root_tenant.id)
-
-        # Migrate legacy groups to have miq_user_roles if necessary
-        self.all.each do |g|
-          next unless g.group_type == "ldap"
-          role_name = "EvmRole-#{g.description.split("-").last}"
-          role = MiqUserRole.find_by_name(role_name)
-          if role.nil? && g.role
-            role_name = "EvmRole-#{g.role.name}"
-            role = MiqUserRole.find_by_name(role_name)
-          end
-          g.update_attributes(
-            :group_type    => "system",
-            :miq_user_role => role
-          )
-        end
       end
     end
   end
