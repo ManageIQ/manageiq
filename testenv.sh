@@ -1,5 +1,5 @@
 
-cd manageiq
+cd rhus-chargeback
 git pull gitlab
 bundle install --without qpid
 cp config/database.pg.yml config/database.yml

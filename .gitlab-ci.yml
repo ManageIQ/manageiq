@@ -1,4 +1,6 @@
 test:
   script:
-  - ssh miqbuilder@test.rhus.cloud "sh manageiq/testenv.sh"
+  - ssh miqbuilder@test.rhus.cloud "cd rhus-chargeback && git pull origin master"
+  - ssh miqbuilder@test.rhus.cloud "sh rhus-chargeback/testenv.sh"
+
 
