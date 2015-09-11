@@ -467,6 +467,10 @@
         :identifier: miq_report_run
     :subcollections:
     - :results
+    :collection_actions:
+      :post:
+      - :name: import
+        :identifier: miq_report_export
   :request_tasks:
     :description: Request Tasks
     :options:
