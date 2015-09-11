@@ -14,12 +14,6 @@ module TextualSummaryHelper
       summary
     when Symbol
       result = send("textual_#{summary}")
-      if result.kind_of?(Hash) && result[:link] && controller.send(:restful?)
-        restful_path = controller.send("#{controller_name}_path")
-        url = Addressable::URI.parse(restful_path)
-        url.query_values = (url.query_values || {}).merge(:display => summary)
-        result[:link] = url.to_s
-      end
       return result if result.kind_of?(Hash) && result[:label]
 
       automatic_label = context.class.human_attribute_name(summary, :default => summary.to_s.titleize)
@@ -117,14 +111,14 @@ module TextualSummaryHelper
         h[:link] = link
       elsif collection.respond_to?(:proxy_association)
         if controller.send(:restful?)
-          restful_path = controller.send("#{controller_name}_path")
-          url = Addressable::URI.parse(restful_path)
-          url.query_values = (url.query_values || {}).merge(:display => collection.proxy_association.reflection.name)
-          h[:link] = url.to_s
+          h[:link] = send("#{controller_name}_path",
+                          collection.proxy_association.owner,
+                          :display => collection.proxy_association.reflection.name)
         else
-          h[:link] = url_for(:action  => 'show',
-                             :id      => collection.proxy_association.owner,
-                             :display => collection.proxy_association.reflection.name)
+          h[:link] = url_for(:controller => controller_name,
+                             :action     => 'show',
+                             :id         => collection.proxy_association.owner,
+                             :display    => collection.proxy_association.reflection.name)
         end
       else
         h[:link] = url_for(:controller => controller_collection,

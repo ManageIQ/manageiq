@@ -53,7 +53,7 @@ module EmsCloudHelper::TextualSummary
     num   = @ems.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'instances')
+      h[:link]  = ems_cloud_path(@ems.id, :display => 'instances')
       h[:title] = "Show all #{label}"
     end
     h
@@ -64,7 +64,7 @@ module EmsCloudHelper::TextualSummary
     num = @ems.number_of(:miq_templates)
     h = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'images')
+      h[:link] = ems_cloud_path(@ems.id, :display => 'images')
       h[:title] = "Show all #{label}"
     end
     h
