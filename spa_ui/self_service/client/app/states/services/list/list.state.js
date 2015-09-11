@@ -114,7 +114,7 @@
 
       return matches;
     }
-    
+
     function matchesFilter(item, filter) {
       if ('name' === filter.id) {
         return item.name.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
