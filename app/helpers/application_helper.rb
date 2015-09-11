@@ -1392,4 +1392,12 @@ module ApplicationHelper
   def appliance_name
     MiqServer.my_server.name
   end
+
+  def rbac_common_feature_for_buttons(pressed)
+    # return feature that should be checked for the button that came in
+    case pressed
+    when "rbac_project_add", "rbac_tenant_add"
+      "rbac_tenant_add"
+    end
+  end
 end
