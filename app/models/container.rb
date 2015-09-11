@@ -5,7 +5,6 @@ class Container < ActiveRecord::Base
   has_one    :container_group, :through => :container_definition
   has_one    :ext_management_system, :through => :container_group
   has_one    :container_node, :through => :container_group
-  delegate   :ext_management_system, :to => :container_group
   has_one    :container_replicator, :through => :container_group
   has_one    :container_project, :through => :container_group
   belongs_to :container_definition

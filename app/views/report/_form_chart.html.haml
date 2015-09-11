@@ -2,61 +2,69 @@
 #chart_div
   %h3
     = _('Chart Settings')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
         = _('Choose a chart type')
-      %td
+      .col-md-8
         = select_tag('chosen_graph',
           options_for_select([_("<No chart>")] + Charting.chart_names_for_select, @edit[:new][:graph_type]),
           :multiple              => false,
-          :class                 => "widthed",
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("chosen_graph", "#{url}");
     - unless @edit[:new][:graph_type].blank?
-      %tr
-        %td.key
+      .form-group
+        %label.col-md-2.control-label
           = _('Chart mode')
-        %td
+        .col-md-8
           - if chart_mode_values_allowed?
             = select_tag('chart_mode',
               options_for_select([[_('Counts'), 'counts'], [_('Values'), 'values']], @edit[:new][:chart_mode]),
               :multiple              => false,
-              :class                 => "widthed",
+              :class                 => "selectpicker",
               "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+              "data-miq_sparkle_off" => true)
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("chart_mode", "#{url}");
           - else
             = _('Counts')
             = hidden_field_tag('chart_mode', 'counts')
-      %tr
+      .form-group
         - if @edit[:new][:chart_mode] == 'values'
-          %td.key
+          %label.col-md-2.control-label
             = _('Data column')
-          %td
+          .col-md-8
             = select_tag('chart_column',
               options_for_select(chart_fields_options, @edit[:new][:chart_column]),
               :multiple              => false,
-              :class                 => "widthed",
+              :class                 => "selectpicker",
               "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
-      %tr
-        %td.key
+              "data-miq_sparkle_off" => true)
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("chart_column", "#{url}");
+      .form-group
+        %label.col-md-2.control-label
           = _('Top values to show')
-        %td
+        .col-md-8
           = select_tag('chosen_count',
             options_for_select(3..GRAPH_MAX_COUNT, @edit[:new][:graph_count].to_i),
             :multiple              => false,
-            :class                 => "widthed",
+            :class                 => "selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
-      %tr
-        %td.key
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("chosen_count", "#{url}");
+      .form-group
+        %label.col-md-2.control-label
           = _("Sum 'Other' values")
-        %td
+        .col-md-8
           = check_box_tag("chosen_other", "1", @edit[:new][:graph_other],
           "data-miq_sparkle_on"       => true,
           "data-miq_sparkle_off"      => true,

@@ -543,14 +543,6 @@ module ApplicationController::Explorer
     return options[:count_only] ? objects.length : objects
   end
 
-  def x_get_tree_lr_kids(object, options)
-    if options[:count_only]
-      return (object.ldap_domains.count)
-    else
-      return (object.ldap_domains.sort_by { |a| a.name.to_s })
-    end
-  end
-
   def x_get_tree_zone_kids(object, options)
     if options[:count_only]
       return (object.miq_servers.count)

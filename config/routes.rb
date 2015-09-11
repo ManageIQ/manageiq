@@ -1249,6 +1249,7 @@ Vmdb::Application.routes.draw do
         schedule_form_fields
         show_product_update
         tenant_form_fields
+        ldap_regions_list
       ),
       :post => %w(
         accordion_select
@@ -1340,6 +1341,14 @@ Vmdb::Application.routes.draw do
         x_settings_changed
         zone_edit
         zone_field_changed
+        ldap_region_add
+        ldap_region_edit
+        ldap_region_form_field_changed
+        ldap_domain_edit
+        ldap_domain_form_field_changed
+        ls_select
+        ldap_entry_changed
+        ls_delete
       )
     },
 

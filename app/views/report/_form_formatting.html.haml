@@ -2,17 +2,19 @@
 #formatting_div
   %h3
     = _('PDF Output')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
         = _('Page Size')
-      %td
+      .col-md-8
         = select_tag('pdf_page_size',
           options_for_select(PDF_PAGE_SIZES.invert.sort, @edit[:new][:pdf_page_size]),
           :multiple             => false,
-          :class                => "widthed",
-          "data-miq_sparkle_on" => true,
-          "data-miq_observe"    => {:url => url}.to_json)
+          :class                => "selectpicker",
+          "data-miq_sparkle_on" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("pdf_page_size", "#{url}");
   %hr
   %h3
     = _('Specify Column Headers and Formats')

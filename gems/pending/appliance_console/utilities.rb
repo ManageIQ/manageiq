@@ -2,13 +2,16 @@
 #TODO: Further refactor these unrelated methods.
 require "appliance_console/internal_database_configuration"
 require "util/postgres_admin"
+require "awesome_spawn"
 
 module ApplianceConsole
   module Utilities
     def self.db_connections
-      require 'open4'
-      status = Open4::popen4("cd #{RAILS_ROOT} && script/rails runner 'exit EvmDatabaseOps.database_connections'") { |pid,  stdin, stdout, stderr| }
-      Integer(status.exitstatus)
+      result = AwesomeSpawn.run("bin/rails runner",
+        :params => ["exit EvmDatabaseOps.database_connections"],
+        :chdir  => RAILS_ROOT
+      )
+      Integer(result.exit_status)
     end
 
     def self.bail_if_db_connections(message)
@@ -21,26 +24,21 @@ module ApplianceConsole
     end
 
     def self.db_host_type_database
-      require 'open4'
-      out = nil
-      err = nil
-      Open4::popen4("cd #{RAILS_ROOT} && script/rails runner 'puts MiqDbConfig.current.options[:host]|| \"localhost\"; puts MiqDbConfig.current.options[:name]; puts MiqDbConfig.current.options[:database]'") do |pid, stdin, stdout, stderr|
-        out = stdout.read
-        err = stderr.read
+      result = AwesomeSpawn.run("bin/rails runner",
+        :params => ["puts MiqDbConfig.current.options.values_at(:host, :adapter, :database)"],
+        :chdir  => RAILS_ROOT
+      )
+
+      host, type, database = result.output.split("\n").last(3)
+      host = "localhost" if host.blank?
+
+      if [type, database].any?(&:blank?)
+        logger = ApplianceConsole::Logging.logger
+        logger.error "db_host_type_database: Failed to detect some/all DB configuration"
+        logger.error "Output: #{result.output.inspect}" unless result.output.blank?
+        logger.error "Error:  #{result.error.inspect}"  unless result.error.blank?
       end
-      out = out.chomp.split("\n")
-      host, type, database = out[-3..-1]
-      unless [host, type, database].all? { |res| res.kind_of?(String) }
-        File.open(LOGFILE, 'a') do |f|
-          f.puts "db_host_type_database: Failed to detect some/all DB configuration"
-          f.puts "Output: #{out.inspect}" if out.to_s.length > 0
-          f.puts "Error:  #{err.inspect}" if err.to_s.length > 0
-        end
-      end
-      host = host.to_s
-      type = type.to_s
-      database = database.to_s
-      type = "postgresql" if type.strip =~ /^(in|ex)ternal/
+
       return host, type, database
     end
 

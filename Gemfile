@@ -26,6 +26,12 @@ gem "sass-rails"
 # Vendored and required
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
 
+# HACK: Force color to be required before azure-armrest. color is lazy required
+#   by ruport.  However, due to a bug in color, it detects the top level
+#   constant "Azure" and fails.
+#   See https://github.com/halostatue/color/pull/24
+gem "color"
+
 # Vendored but not required
 gem "net-ldap",                       "~>0.7.0",   :require => false
 gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-7"
@@ -42,7 +48,6 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 gem "azure-armrest",                  :git => "git://github.com/ManageIQ/azure-armrest.git"
-gem "bcrypt",                         "3.1.10"
 gem "default_value_for",              "~>3.0.1"
 gem "hamlit-rails",                   "~>0.1.0"
 gem "mime-types"

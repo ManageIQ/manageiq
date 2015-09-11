@@ -233,9 +233,10 @@ module RefreshParser
       require 'ipaddr'
       default_gw = IPAddr.new(default_gw)
 
-      vnics   = inv.fetch_path("config", "network", "consoleVnic")
-      vnics ||= inv.fetch_path("config", "network", "vnic")
-      vnics.to_miq_a.each do |vnic|
+      network = inv.fetch_path("config", "network")
+      vnics   = network['consoleVnic'].to_miq_a + network['vnic'].to_miq_a
+
+      vnics.each do |vnic|
         ip = vnic.fetch_path("spec", "ip", "ipAddress")
         subnet_mask = vnic.fetch_path("spec", "ip", "subnetMask")
         next if ip.blank? || subnet_mask.blank?

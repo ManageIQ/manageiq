@@ -2,6 +2,7 @@
   - arr = %w(container_images container_image_registries containers container_replicators container_routes)
   - arr.concat(%w(container_projects container_nodes container_services container_groups availability_zones))
   - arr.concat(%w(cloud_tenants ems_clusters flavors security_groups hosts instances images miq_templates))
+  - arr.concat(%w(orchestration_stacks vms storages miq_proxies))
   - if arr.include?(@display) && @showtype != "compare"
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@ems.id}"}
   - elsif @showtype == "compare"
