@@ -14,15 +14,11 @@
         - case fl[:level]
         - when :error
           .alert.alert-danger
-            %span.pficon-layered
-              %span.pficon.pficon-error-octagon
-              %span.pficon.pficon-error-exclamation
+            %span.pficon.pficon-error-circle-o
             %strong= h(fl[:message])
         - when :warning
           .alert.alert-warning
-            %span.pficon-layered
-              %span.pficon.pficon-warning-triangle
-              %span.pficon.pficon-warning-exclamation
+            %span.pficon-warning-triangle-o
             %strong= h(fl[:message])
         - when :info
           = render :partial => "layouts/info_msg",
