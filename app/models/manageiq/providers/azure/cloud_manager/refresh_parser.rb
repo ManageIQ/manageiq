@@ -4,20 +4,23 @@ module ManageIQ::Providers
       include Vmdb::Logging
 
       VALID_LOCATION = /\w+/
+      TYPE_DEPLOYMENT = "microsoft.resources/deployments"
 
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
 
       def initialize(ems, options = nil)
-        @ems             = ems
-        config           = ems.connect
-        @subscription_id = config.subscription_id
-        @vmm             = ::Azure::Armrest::VirtualMachineService.new(config)
-        @asm             = ::Azure::Armrest::AvailabilitySetService.new(config)
-        @options         = options || {}
-        @data            = {}
-        @data_index      = {}
+        @ems               = ems
+        config             = ems.connect
+        @subscription_id   = config.subscription_id
+        @vmm               = ::Azure::Armrest::VirtualMachineService.new(config)
+        @asm               = ::Azure::Armrest::AvailabilitySetService.new(config)
+        @tds               = ::Azure::Armrest::TemplateDeploymentService.new(config)
+        @options           = options || {}
+        @data              = {}
+        @data_index        = {}
+        @resource_to_stack = {}
       end
 
       def ems_inv_to_hashes
@@ -26,6 +29,7 @@ module ManageIQ::Providers
         _log.info("#{log_header}...")
         get_series
         get_availability_sets
+        get_stacks
         get_instances
         clean_up_extra_flavor_keys
         _log.info("#{log_header}...Complete")
@@ -52,6 +56,34 @@ module ManageIQ::Providers
       def get_availability_sets
         a_zones = @asm.list
         process_collection(a_zones, :availability_zones) { |az| parse_az(az) }
+      end
+
+      def get_stacks
+        deployments = @tds.list
+        process_collection(deployments, :orchestration_stacks) { |dp| parse_stack(dp) }
+        update_nested_stack_relations
+      end
+
+      def get_stack_parameters(stack_id, parameters)
+        process_collection(parameters, :orchestration_stack_parameters) do |param_key, param_val|
+          parse_stack_parameter(param_key, param_val, stack_id)
+        end
+      end
+
+      def get_stack_outputs(stack_id, outputs)
+        process_collection(outputs, :orchestration_stack_outputs) do |output_key, output_val|
+          parse_stack_output(output_key, output_val, stack_id)
+        end
+      end
+
+      def get_stack_resources(resources, group)
+        process_collection(resources, :orchestration_stack_resources) do |resource|
+          parse_stack_resource(resource, group)
+        end
+      end
+
+      def get_stack_template(stack, content)
+        process_collection([stack], :orchestration_templates) { |the_stack| parse_stack_template(the_stack, content) }
       end
 
       def get_instances
@@ -101,22 +133,26 @@ module ManageIQ::Providers
       end
 
       def parse_instance(instance)
-        uid         = "#{@subscription_id}\\#{instance.fetch_path('resourceGroup')}\\#{instance.fetch_path('name')}"
+        uid = resource_uid(@subscription_id,
+                           instance.fetch_path('resourceGroup'),
+                           instance.fetch_path('type').downcase,
+                           instance.fetch_path('name'))
         series_name = instance.fetch_path('properties', 'hardwareProfile', 'vmSize')
         az          = instance.fetch_path('properties', 'availabilitySet', 'id')
         series      = @data_index.fetch_path(:flavors, series_name)
 
         new_result = {
-          :type             => 'ManageIQ::Providers::Azure::CloudManager::Vm',
-          :uid_ems          => uid,
-          :ems_ref          => uid,
-          :name             => instance.fetch_path('name'),
-          :vendor           => "Microsoft",
-          :raw_power_state  => instance["powerStatus"],
-          :operating_system => process_os(instance),
-          :flavor           => series,
-          :location         => uid,
-          :hardware         => {
+          :type                => 'ManageIQ::Providers::Azure::CloudManager::Vm',
+          :uid_ems             => uid,
+          :ems_ref             => uid,
+          :name                => instance.fetch_path('name'),
+          :vendor              => "Microsoft",
+          :raw_power_state     => instance["powerStatus"],
+          :operating_system    => process_os(instance),
+          :flavor              => series,
+          :location            => uid,
+          :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid]),
+          :hardware            => {
             :disks    => [], # Filled in later conditionally on flavor
             :networks => [], # Filled in later conditionally on what's available
           },
@@ -209,6 +245,161 @@ module ManageIQ::Providers
         @vmm.locations.collect do |location|
           location = location.delete(' ')
           location.match(VALID_LOCATION).to_s
+        end
+      end
+
+      def parse_stack(deployment)
+        name = deployment.fetch_path('name')
+        uid = resource_uid(@subscription_id,
+                           deployment.fetch_path('resourceGroup'),
+                           TYPE_DEPLOYMENT,
+                           name)
+        child_stacks, resources = find_stack_resources(deployment)
+        new_result = {
+          :type        => ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.name,
+          :ems_ref     => deployment.fetch_path('id'),
+          :name        => name,
+          :description => name,
+          :status      => deployment.fetch_path('properties', 'provisioningState'),
+          :children    => child_stacks,
+          :resources   => resources,
+          :outputs     => find_stack_outputs(deployment),
+          :parameters  => find_stack_parameters(deployment),
+
+          :orchestration_template => find_stack_template(deployment)
+        }
+        return uid, new_result
+      end
+
+      def find_stack_template(deployment)
+        uri = deployment.fetch_path('properties', 'templateLink', 'uri')
+        return unless uri
+
+        content = download_template(uri)
+        return unless content
+
+        get_stack_template(deployment, content)
+        @data_index.fetch_path(:orchestration_templates, deployment.fetch_path('id'))
+      end
+
+      def download_template(uri)
+        require 'open-uri'
+        open(uri) {|f| f.read }
+      rescue => e
+        _log.error("Failed to download Azure template #{uri}. Reason: #{e.inspect}")
+        nil
+      end
+
+      def find_stack_parameters(deployment)
+        raw_parameters = deployment.fetch_path('properties', 'parameters')
+        return [] if raw_parameters.blank?
+
+        stack_id = deployment.fetch_path('id')
+        get_stack_parameters(stack_id, raw_parameters)
+        raw_parameters.collect do |param_key, _val|
+          @data_index.fetch_path(:orchestration_stack_parameters, resource_uid(stack_id, param_key))
+        end
+      end
+
+      def find_stack_outputs(deployment)
+        raw_outputs = deployment.fetch_path('properties', 'outputs')
+        return [] if raw_outputs.blank?
+
+        stack_id = deployment.fetch_path('id')
+        get_stack_outputs(stack_id, raw_outputs)
+        raw_outputs.collect do |output_key, _val|
+          @data_index.fetch_path(:orchestration_stack_outputs, resource_uid(stack_id, output_key))
+        end
+      end
+
+      def find_stack_resources(deployment)
+        group = deployment.fetch_path('resourceGroup')
+        name = deployment.fetch_path('name')
+        stack_uid = resource_uid(@subscription_id, group, TYPE_DEPLOYMENT, name)
+        raw_resources = @tds.list_deployment_operations(name, group)
+
+        raw_resources.reject! { |r| r.fetch_path('properties', 'targetResource', 'id').nil? }
+
+        get_stack_resources(raw_resources, group)
+
+        child_stacks = []
+        resources = raw_resources.collect do |resource|
+          resource_type = resource.fetch_path('properties', 'targetResource', 'resourceType')
+          resource_name = resource.fetch_path('properties', 'targetResource', 'resourceName')
+          uid = resource_uid(@subscription_id, group, resource_type.downcase, resource_name)
+
+          @resource_to_stack[uid] =  stack_uid
+          child_stacks << uid if resource_type.downcase == TYPE_DEPLOYMENT
+          @data_index.fetch_path(:orchestration_stack_resources, uid)
+        end
+
+        return child_stacks, resources
+      end
+
+      def parse_stack_template(deployment, content)
+        # Only need a temporary unique identifier for the template. Using the stack id is the cheapest way.
+        uid = deployment.fetch_path('id')
+        ver = deployment.fetch_path('properties', 'templateLink', 'contentVersion')
+
+        new_result = {
+          :type        => "OrchestrationTemplateAzure",
+          :name        => deployment.fetch_path('name'),
+          :description => "contentVersion: #{ver}",
+          :content     => content
+        }
+        return uid, new_result
+      end
+
+      def parse_stack_parameter(param_key, param_obj, stack_id)
+        uid = resource_uid(stack_id, param_key)
+        new_result = {
+          :ems_ref => uid,
+          :name    => param_key,
+          :value   => param_obj['value']
+        }
+        return uid, new_result
+      end
+
+      def parse_stack_output(output_key, output_obj, stack_id)
+        uid = resource_uid(stack_id, output_key)
+        new_result = {
+          :ems_ref     => uid,
+          :key         => output_key,
+          :value       => output_obj['value'],
+          :description => output_key
+        }
+        return uid, new_result
+      end
+
+      def parse_stack_resource(resource, group)
+        status_message = resource.fetch_path('properties', 'statusMessage')
+        new_result = {
+          :ems_ref                => resource.fetch_path('properties', 'targetResource', 'id'),
+          :name                   => resource.fetch_path('properties', 'targetResource', 'resourceName'),
+          :logical_resource       => resource.fetch_path('properties', 'targetResource', 'resourceName'),
+          :physical_resource      => resource.fetch_path('properties', 'trackingId'),
+          :resource_category      => resource.fetch_path('properties', 'targetResource', 'resourceType'),
+          :resource_status        => resource.fetch_path('properties', 'provisioningState'),
+          :resource_status_reason => status_message || resource.fetch_path('properties', 'statusCode'),
+          :last_updated           => resource.fetch_path('properties', 'timestamp')
+        }
+        uid = resource_uid(@subscription_id, group, new_result[:resource_category].downcase, new_result[:name])
+        return uid, new_result
+      end
+
+      # Compose an id string combining some existing keys
+      def resource_uid(*keys)
+        keys.join('\\')
+      end
+
+      # Remap from children to parent
+      def update_nested_stack_relations
+        @data[:orchestration_stacks].each do |stack|
+          stack[:children].each do |child_stack_id|
+            child_stack = @data_index.fetch_path(:orchestration_stacks, child_stack_id)
+            child_stack[:parent] = stack if child_stack
+          end
+          stack.delete(:children)
         end
       end
     end
