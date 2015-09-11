@@ -10,9 +10,9 @@ module Openstack
             # TOD(lsmola) test that tenant without admin user assigned is not throwing refresh
             # exception
             [{:name => "admin", :enabled => true},
-             {:name => "EmsRefreshSpec-Project", :enabled => true},
-             {:name => "EmsRefreshSpec-Project2", :enabled => true},
-             {:name => "EmsRefreshSpec-Project-No-Admin-Role", :enabled => true}]
+             {:name => "EmsRefreshSpec-Project", :enabled => true, :__domain_name => "admin_domain"},
+             {:name => "EmsRefreshSpec-Project2", :enabled => true, :__domain_name => "admin_domain"},
+             {:name => "EmsRefreshSpec-Project-No-Admin-Role", :enabled => true, :__domain_name => "admin_domain"}]
           end
 
           def roles

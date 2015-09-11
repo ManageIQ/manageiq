@@ -13,9 +13,11 @@ module Openstack
 
             # Collected data
             @projects = []
+            @domains  = []
           end
 
           def build_all
+            find_or_create_domains
             find_or_create_projects
             find_or_create_roles
 
@@ -26,13 +28,21 @@ module Openstack
 
           def find_or_create_projects
             @data.projects.each do |project|
+              if (domain_name = project.delete(:__domain_name))
+                project[:domain_id] = @domains.detect { |x| x.name == domain_name}.id
+              end
               @projects << find_or_create(@service.projects, project)
             end
           end
 
+          def find_or_create_domains
+            # TODO(lsmola) implement mutidomain support, just load domains for now
+            @domains = @service.domains
+          end
+
           def find_or_create_roles
             @data.roles.each do |role|
-              admin_user = @service.users.detect { |x| x.name == role }
+              admin_user = @service.users.detect { |x| x.name == 'cloud_admin' }
               admin_role = @service.roles.detect { |x| x.name == role }
               @projects.each do |p|
                 begin
