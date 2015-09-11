@@ -403,6 +403,16 @@ class MiqRequest < ActiveRecord::Base
   end
 
   # Helper method when not using workflow
+  # all sub classes override create_request and update_request with only 3 parameters
+  def self.make_request(request, values, requester_id, auto_approve = false)
+    if request
+      update_request(request, values, requester_id)
+    else
+      create_request(values, requester_id, auto_approve)
+    end
+  end
+
+  # Helper method when not using workflow
   def self.create_request(values, requester_id, auto_approve, request_type, target_class, event_message)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
     request          = create(:options => values, :userid => requester_id, :request_type => request_type)

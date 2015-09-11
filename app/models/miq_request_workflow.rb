@@ -57,6 +57,16 @@ class MiqRequestWorkflow
     @values.merge!(options) unless options.blank?
   end
 
+  # Helper method when not using workflow
+  # all sub classes override create_request and update_request with 3 parameters
+  def self.make_request(request, values, requester_id, auto_approve = false)
+    if request
+      update_request(request, values, requester_id)
+    else
+      create_request(values, requester_id, auto_approve)
+    end
+  end
+
   def create_request(values, requester_id, target_class, event_name, event_message, auto_approve = false)
     return false unless validate(values)
 
