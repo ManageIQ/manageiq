@@ -90,17 +90,6 @@ module MiqException
 
   class RbacPrivilegeException < Error; end
 
-  class MiqGitConflicts < Error
-    attr_reader :conflicts
-    def initialize(conflicts)
-      @conflicts = conflicts
-      super
-    end
-  end
-
-  class MiqGitEntryMissing < Error; end
-  class MiqGitRepositoryMissing < Error; end
-
   class MiqParsingError < Error; end
 
   class MiqOrchestrationProvisionError < Error; end

@@ -12,11 +12,11 @@ describe GitWorktree do
       @deleted_names = %w(A A/File1.YamL)
       @conflict_file = 'A/File1.YamL'
       @master_url = "file://#{@repo_path}"
-      options = {:path  => @repo_path,
-                 :name  => "user1",
-                 :email => "user1@example.com",
-                 :bare  => true,
-                 :new   => true}
+      options = {:path     => @repo_path,
+                 :username => "user1",
+                 :email    => "user1@example.com",
+                 :bare     => true,
+                 :new      => true}
       @ae_db = GitWorktree.new(options)
       @original_commit = add_files_to_bare_repo(@filenames)
     end
@@ -27,14 +27,14 @@ describe GitWorktree do
 
     def add_files_to_bare_repo(flist)
       flist.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
-      @ae_db.commit("files_added").tap { |cid| @ae_db.merge(cid) }
+      @ae_db.send(:commit, "files_added").tap { |cid| @ae_db.send(:merge, cid) }
     end
 
     def clone(url)
       dir = Dir.mktmpdir
       options = {:path          => dir,
                  :url           => url,
-                 :name          => "user1",
+                 :username      => "user1",
                  :email         => "user1@example.com",
                  :ssl_no_verify => true,
                  :bare          => true,
@@ -43,9 +43,9 @@ describe GitWorktree do
     end
 
     def open_existing_repo
-      options = {:path  => @repo_path,
-                 :name  => "user1",
-                 :email => "user1@example.com"}
+      options = {:path     => @repo_path,
+                 :username => "user1",
+                 :email    => "user1@example.com"}
       GitWorktree.new(options)
     end
 
@@ -63,9 +63,12 @@ describe GitWorktree do
     end
 
     it "#remove_dir existing directory" do
-      @ae_db.directory?('A').should be_true
       expect { @ae_db.remove_dir('A') }.to_not raise_error
       @ae_db.file_exists?('A/File1.YamL').should be_true
+    end
+
+    it "#file_exists? missing" do
+      @ae_db.file_exists?('A/nothing.YamL').should be_false
     end
 
     it "#read_file that exists" do
@@ -79,7 +82,7 @@ describe GitWorktree do
     end
 
     it "#read_file that doesn't exist" do
-      expect { @ae_db.read_file('doesnotexist') }.to raise_error(MiqException::MiqGitEntryMissing)
+      expect { @ae_db.read_file('doesnotexist') }.to raise_error(GitWorktreeException::GitEntryMissing)
     end
 
     it "#entries" do
@@ -112,6 +115,32 @@ describe GitWorktree do
       @ae_db.file_list.should match_array(filenames + dirnames)
     end
 
+    it "rename directory when target exists" do
+      expect { @ae_db.mv_dir('A', 'A') }.to raise_error(GitWorktreeException::DirectoryAlreadyExists)
+    end
+
+    it "move directories with similar names" do
+      filenames = %w(A/A/A/File1.YamL A/A/Aile2.YamL)
+      filenames.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
+      @ae_db.send(:commit, "extra files_added").tap { |cid| @ae_db.send(:merge, cid) }
+      @ae_db.mv_dir('A', "AAA")
+      @ae_db.save_changes("directories moved")
+      filenames = %w(AAA/File1.YamL B/File2.YamL c/File3.YAML AAA/A/A/File1.YamL AAA/A/Aile2.YamL)
+      dirnames  = %w(AAA B c AAA/A AAA/A/A)
+      @ae_db.file_list.should match_array(filenames + dirnames)
+    end
+
+    it "move intermediate directories with similar names" do
+      filenames = %w(A/A/A/File1.YamL A/A/Aile2.YamL)
+      filenames.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
+      @ae_db.send(:commit, "extra files_added").tap { |cid| @ae_db.send(:merge, cid) }
+      @ae_db.mv_dir('A/A', "AAA")
+      @ae_db.save_changes("directories moved")
+      filenames = %w(A/File1.YamL B/File2.YamL c/File3.YAML AAA/A/File1.YamL AAA/Aile2.YamL)
+      dirnames  = %w(AAA B c AAA/A A)
+      @ae_db.file_list.should match_array(filenames + dirnames)
+    end
+
     it "get list of files from a specific commit" do
       @ae_db.remove_dir("A")
       @ae_db.save_changes("directories deleted")
@@ -141,13 +170,13 @@ describe GitWorktree do
 
     it "manage conflicts" do
       @ae_db.add(@conflict_file, YAML.dump(@default_hash.merge(:fname => "first_one")))
-      commit = @ae_db.commit("suspended commit")
+      commit = @ae_db.send(:commit, "suspended commit")
 
       new_db = open_existing_repo
       new_db.add(@conflict_file, YAML.dump(@default_hash.merge(:fname => "second_one")))
       new_db.save_changes("overlapping commit")
-      expect { @ae_db.merge(commit) }.to raise_error { |error|
-        expect(error).to be_a(MiqException::MiqGitConflicts)
+      expect { @ae_db.send(:merge, commit) }.to raise_error { |error|
+        expect(error).to be_a(GitWorktreeException::GitConflicts)
       }
     end
 
@@ -187,7 +216,7 @@ describe GitWorktree do
       @ae_db.add(new_file, master_data)
       @ae_db.save_changes("updated on master")
       c_repo.add(new_file, "on slave")
-      expect { c_repo.save_changes("updated on slave", :remote) }.to raise_error(MiqException::MiqGitConflicts)
+      expect { c_repo.save_changes("updated on slave", :remote) }.to raise_error(GitWorktreeException::GitConflicts)
       @ae_db.file_list.should match_array(@filenames + @dirnames + [new_file])
       c_repo.file_list.should match_array(@ae_db.file_list)
       c_repo.read_entry(c_repo.find_entry(new_file)).should eql(master_data)
@@ -199,7 +228,7 @@ describe GitWorktree do
       c_repo.file_list.should match_array(@ae_db.file_list)
       @ae_db.mv_file_with_new_contents('A/File1.YamL', 'A/File11.YamL', "Hello")
       @ae_db.save_changes("file renamed in master")
-      c_repo.pull
+      c_repo.send(:pull)
       c_repo.file_list.should match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
