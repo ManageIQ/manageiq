@@ -7,13 +7,13 @@ require "fix_auth/auth_config_model"
 require "fix_auth/models"
 
 describe FixAuth::AuthConfigModel do
+  let(:v1_key)  { MiqPassword.generate_symmetric }
   let(:pass)    { "password" }
   let(:enc_v1)  { MiqPassword.new.send(:encrypt_version_1, pass) }
   let(:bad_v2)  { "v2:{5555555555555555555555==}" }
 
   before do
-    MiqPassword.v0_key ||= CryptString.new(nil, "AES-128-CBC", "9999999999999999", "5555555555555555")
-    MiqPassword.v1_key ||= EzCrypto::Key.generate(:algorithm => "aes-256-cbc")
+    MiqPassword.add_legacy_key(v1_key)
   end
 
   after do
