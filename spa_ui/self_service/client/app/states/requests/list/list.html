@@ -10,7 +10,7 @@
     <div class="row list-row ">
       <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
         <span class="text-center">
-         {{ ::$index + 1}}
+         {{ $index + 1}}
         </span>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
@@ -18,24 +18,24 @@
           <span class="title-img">
             <img class="title-img__logo"/>
           </span>
-          {{ ::item.id }}
+          {{ item.id }}
         </span>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-center">
         <span>
-          {{ ::item.description }}
+          {{ item.description }}
         </span>
       </div>
 
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
-        <span>Requested On {{ ::item.created_on | date }}</span>
+        <span>Requested On {{ item.created_on | date }}</span>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
         <span class="text-capitalize">
           <span class="spinner spinner-xs spinner-inline" ng-if="item.request_state == 'pending'"></span>
           <span class="pficon-error-circle-o" ng-if="item.request_state == 'denied'"></span>
           <span class="pficon-ok" ng-if="item.request_state == 'approved'"></span>
-          {{ ::item.request_state }}
+          {{ item.request_state }}
         </span>
       </div>
     </div>

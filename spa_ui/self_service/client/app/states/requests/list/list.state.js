@@ -117,7 +117,7 @@
     function matchesFilter(item, filter) {
       var match = true;
       if (filter.id === 'request_state') {
-        match = item.request_state === filter.value;
+        match = String(item.request_state).toLowerCase() === String(filter.value).toLowerCase();
       } else if (filter.id === 'id') {
         match = Number(item.id) === Number(filter.value);
       }
