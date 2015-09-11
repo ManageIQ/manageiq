@@ -22,7 +22,7 @@
           },
           {
             title: 'My Requests',
-            state: 'order-history',
+            state: 'requests',
             icon: 'fa fa-file-text-o',
             count: 2
           },

@@ -11,10 +11,10 @@
 
   function getStates() {
     return {
-      'order-history': {
+      'requests': {
         parent: 'application',
-        url: '/order-history',
-        redirectTo: 'order-history.list',
+        url: '/requests',
+        redirectTo: 'requests.list',
         template: '<ui-view></ui-view>'
       }
     };
