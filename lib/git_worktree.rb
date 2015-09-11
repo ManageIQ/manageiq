@@ -1,24 +1,25 @@
 require 'rugged'
+require_relative 'git_worktree_exception'
 
 class GitWorktree
   attr_accessor :name, :email, :base_name
   ENTRY_KEYS = [:path, :dev, :ino, :mode, :gid, :uid, :ctime, :mtime]
   DEFAULT_FILE_MODE = 0100644
   LOCK_REFERENCE = 'refs/locks'
-  HEAD_REF = 'refs/heads/master'
+  MASTER_REF = 'refs/heads/master'
 
   def initialize(options = {})
     raise ArgumentError, "Must specify path" unless options.key?(:path)
     @path          = options[:path]
     @email         = options[:email]
-    @name          = options[:name]
+    @username      = options[:username]
     @bare          = options[:bare]
     @commit_sha    = options[:commit_sha]
     @password      = options[:password]
     @fast_forward_merge = options[:ff] || true
     @ssl_no_verify = options[:ssl_no_verify] || false
     @remote_name   = 'origin'
-    @cred          = Rugged::Credentials::UserPassword.new(:username => @name,
+    @cred          = Rugged::Credentials::UserPassword.new(:username => @username,
                                                            :password => @password)
     @base_name     = File.basename(@path)
     process_repo(options)
@@ -50,7 +51,7 @@ class GitWorktree
   end
 
   def file_exists?(path, commit_sha = nil)
-    find_entry(path, commit_sha) ? true : false
+    !!find_entry(path, commit_sha)
   end
 
   def directory_exists?(path, commit_sha = nil)
@@ -64,11 +65,6 @@ class GitWorktree
 
   def read_entry(entry)
     @repo.lookup(entry[:oid]).content
-  end
-
-  def directory?(path, commit_sha = nil)
-    entry = fetch_entry(path, commit_sha)
-    entry[:type] == :tree
   end
 
   def entries(path, commit_sha = nil)
@@ -95,67 +91,13 @@ class GitWorktree
     true
   end
 
-  def commit(message)
-    tree = @current_index.write_tree(@repo)
-    parents = @repo.empty? ? [] : [@repo.ref(HEAD_REF).target].compact
-    create_commit(message, tree, parents)
-  end
-
   def file_attributes(fname)
     walker = Rugged::Walker.new(@repo)
     walker.sorting(Rugged::SORT_DATE)
-    walker.push(@repo.ref(HEAD_REF).target)
+    walker.push(@repo.ref(MASTER_REF).target)
     commit = walker.find { |c| c.diff(:paths => [fname]).size > 0 }
     return {} unless commit
     {:updated_on => commit.time.gmtime, :updated_by => commit.author[:name]}
-  end
-
-  def merge(commit, rebase = false)
-    master_branch = @repo.ref(HEAD_REF)
-    merge_index = master_branch ? @repo.merge_commits(master_branch.target, commit) : nil
-    if merge_index && merge_index.conflicts?
-      result = differences_with_master(commit)
-      raise MiqException::MiqGitConflicts, result
-    end
-    commit = rebase(commit, merge_index, master_branch ? master_branch.target : nil) if rebase
-    @repo.reset(commit, :soft)
-  end
-
-  def rebase(commit, merge_index, parent)
-    commit_obj = commit if commit.class == Rugged::Commit
-    commit_obj ||= @repo.lookup(commit)
-    Rugged::Commit.create(@repo, :author    => commit_obj.author,
-                                 :committer => commit_obj.author,
-                                 :message   => commit_obj.message,
-                                 :parents   => parent ? [parent] : [],
-                                 :tree      => merge_index.write_tree(@repo))
-  end
-
-  def merge_and_push(commit)
-    rebase = false
-    push_lock do
-      @saved_cid = @repo.ref(HEAD_REF).target.oid
-      merge(commit, rebase)
-      rebase = true
-      @repo.push(@remote_name, [HEAD_REF], :credentials => @cred)
-    end
-  end
-
-  def fetch
-    options = {:credentials => @cred}
-    ssl_no_verify_options(options) do
-      @repo.fetch(@remote_name, options)
-    end
-  end
-
-  def pull
-    lock { fetch_and_merge }
-  end
-
-  def fetch_and_merge
-    fetch
-    commit = @repo.ref("refs/remotes/#{@remote_name}/master").target
-    merge(commit)
   end
 
   def file_list(commit_sha = nil)
@@ -182,17 +124,72 @@ class GitWorktree
   end
 
   def mv_dir(old_dir, new_dir, commit_sha = nil)
+    raise GitWorktreeException::DirectoryAlreadyExists, new_dir if find_entry(new_dir)
     old_dir = fix_path_mv(old_dir)
     new_dir = fix_path_mv(new_dir)
     updates = current_index(commit_sha).entries.select { |entry| entry[:path].start_with?(old_dir) }
     updates.each do |entry|
-      entry[:path] = entry[:path].gsub(old_dir, new_dir)
+      entry[:path] = entry[:path].sub(old_dir, new_dir)
       current_index(commit_sha).add(entry)
     end
     current_index(commit_sha).remove_dir(old_dir)
   end
 
   private
+
+  def fetch_and_merge
+    fetch
+    commit = @repo.ref("refs/remotes/#{@remote_name}/master").target
+    merge(commit)
+  end
+
+  def fetch
+    options = {:credentials => @cred}
+    ssl_no_verify_options(options) do
+      @repo.fetch(@remote_name, options)
+    end
+  end
+
+  def pull
+    lock { fetch_and_merge }
+  end
+
+  def merge_and_push(commit)
+    rebase = false
+    push_lock do
+      @saved_cid = @repo.ref(MASTER_REF).target.oid
+      merge(commit, rebase)
+      rebase = true
+      @repo.push(@remote_name, [MASTER_REF], :credentials => @cred)
+    end
+  end
+
+  def merge(commit, rebase = false)
+    master_branch = @repo.ref(MASTER_REF)
+    merge_index = master_branch ? @repo.merge_commits(master_branch.target, commit) : nil
+    if merge_index && merge_index.conflicts?
+      result = differences_with_master(commit)
+      raise GitWorktreeException::GitConflicts, result
+    end
+    commit = rebase(commit, merge_index, master_branch ? master_branch.target : nil) if rebase
+    @repo.reset(commit, :soft)
+  end
+
+  def rebase(commit, merge_index, parent)
+    commit_obj = commit if commit.class == Rugged::Commit
+    commit_obj ||= @repo.lookup(commit)
+    Rugged::Commit.create(@repo, :author    => commit_obj.author,
+                                 :committer => commit_obj.author,
+                                 :message   => commit_obj.message,
+                                 :parents   => parent ? [parent] : [],
+                                 :tree      => merge_index.write_tree(@repo))
+  end
+
+  def commit(message)
+    tree = @current_index.write_tree(@repo)
+    parents = @repo.empty? ? [] : [@repo.ref(MASTER_REF).target].compact
+    create_commit(message, tree, parents)
+  end
 
   def process_repo(options)
     if options[:url]
@@ -205,9 +202,8 @@ class GitWorktree
   end
 
   def create_repo
-    @repo = @bare ? Rugged::Repository.init_at(@path, :bare) :
-                    Rugged::Repository.init_at(@path)
-    @repo.config['user.name']       = @name  if @name
+    @repo = @bare ? Rugged::Repository.init_at(@path, :bare) : Rugged::Repository.init_at(@path)
+    @repo.config['user.name']       = @username  if @username
     @repo.config['user.email']      = @email if @email
     @repo.config['merge.ff']        = 'only' if @fast_forward_merge
   end
@@ -225,7 +221,7 @@ class GitWorktree
 
   def fetch_entry(path, commit_sha = nil)
     find_entry(path, commit_sha).tap do |entry|
-      raise MiqException::MiqGitEntryMissing, path unless entry
+      raise GitWorktreeException::GitEntryMissing, path unless entry
     end
   end
 
@@ -238,8 +234,8 @@ class GitWorktree
   def get_tree(path, commit_sha = nil)
     return lookup_commit_tree(commit_sha || @commit_sha) if path.empty?
     entry = get_tree_entry(path, commit_sha)
-    raise MiqException::MiqGitEntryMissing, path unless entry
-    raise MiqException::MiqGitEntryNotADirectory, path  unless entry[:type] == :tree
+    raise GitWorktreeException::GitEntryMissing, path unless entry
+    raise GitWorktreeException::GitEntryNotADirectory, path  unless entry[:type] == :tree
     @repo.lookup(entry[:oid])
   end
 
@@ -274,7 +270,7 @@ class GitWorktree
   end
 
   def create_commit(message, tree, parents)
-    author = {:email => @email, :name => @name, :time => Time.now}
+    author = {:email => @email, :name => @username, :time => Time.now}
     # Create the actual commit but dont update the reference
     Rugged::Commit.create(@repo, :author  => author,  :committer  => author,
                                  :message => message, :parents    => parents,
@@ -282,7 +278,7 @@ class GitWorktree
   end
 
   def lock
-    @repo.references.create(LOCK_REFERENCE, HEAD_REF)
+    @repo.references.create(LOCK_REFERENCE, MASTER_REF)
     yield
   rescue Rugged::ReferenceError
     sleep 0.1
@@ -292,7 +288,7 @@ class GitWorktree
   end
 
   def push_lock
-    @repo.references.create(LOCK_REFERENCE, HEAD_REF)
+    @repo.references.create(LOCK_REFERENCE, MASTER_REF)
     begin
       yield
     rescue Rugged::ReferenceError => err
@@ -300,9 +296,9 @@ class GitWorktree
       @repo.reset(@saved_cid, :soft)
       fetch_and_merge
       retry
-    rescue MiqException::MiqGitConflicts => err
+    rescue GitWorktreeException::GitConflicts => err
       @repo.reset(@saved_cid, :soft)
-      raise MiqException::MiqGitConflicts, err.conflicts
+      raise GitWorktreeException::GitConflicts, err.conflicts
     ensure
       @repo.references.delete(LOCK_REFERENCE)
     end
@@ -310,7 +306,7 @@ class GitWorktree
 
   def differences_with_master(commit)
     differences = {}
-    diffs = @repo.diff(commit, @repo.ref(HEAD_REF).target)
+    diffs = @repo.diff(commit, @repo.ref(MASTER_REF).target)
     diffs.deltas.each do |delta|
       result = []
       delta.diff.each_line do |line|
