@@ -1022,11 +1022,9 @@ msgid "Any"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Appliance"
 msgstr "Toestel:"
 
-#, fuzzy
 #, fuzzy
 msgid "Appliance Name"
 msgstr "Toestel:"
@@ -1034,7 +1032,6 @@ msgstr "Toestel:"
 msgid "Appliance Time Zone"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "Appliance Updates"
 msgstr "Toestel:"
@@ -1447,7 +1444,6 @@ msgid "Bind DN"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Bind Password"
 msgstr "Nieuw wachtwoord"
 
@@ -1538,7 +1534,6 @@ msgstr ""
 msgid "By Host"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "By Role"
 msgstr "Gebruikersnaam"
@@ -2315,11 +2310,9 @@ msgid "Completed"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Compliance"
 msgstr "Toestel:"
 
-#, fuzzy
 #, fuzzy
 msgid "Compliance Check"
 msgstr "Toestel:"
@@ -2614,12 +2607,6 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
-msgid "Pods (%s)"
-msgstr ""
-
-msgid "Pods (0)"
-msgstr ""
-
 msgid "Container Nodes (%s)"
 msgstr ""
 
@@ -2633,9 +2620,6 @@ msgid "Container Services (0)"
 msgstr ""
 
 msgid "Container definition"
-msgstr ""
-
-msgid "Pod"
 msgstr ""
 
 msgid "Container node"
@@ -2666,27 +2650,6 @@ msgid "ContainerDefinition|Memory"
 msgstr ""
 
 msgid "ContainerDefinition|Name"
-msgstr ""
-
-msgid "Pod|Creation timestamp"
-msgstr ""
-
-msgid "Pod|Dns policy"
-msgstr ""
-
-msgid "Pod|Ems ref"
-msgstr ""
-
-msgid "Pod|Name"
-msgstr ""
-
-msgid "Pod|Namespace"
-msgstr ""
-
-msgid "Pod|Resource version"
-msgstr ""
-
-msgid "Pod|Restart policy"
 msgstr ""
 
 msgid "ContainerNode|Creation timestamp"
@@ -3115,7 +3078,6 @@ msgstr ""
 msgid "Daily"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "Dashboard"
 msgstr "Wachtwoord"
@@ -4253,7 +4215,6 @@ msgid "FileDepot|Uri"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Filename"
 msgstr "Nederlands"
 
@@ -4494,7 +4455,6 @@ msgstr ""
 msgid "Front (...1234)"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "Full Name"
 msgstr "Nederlands"
@@ -5531,7 +5491,6 @@ msgid "Locked"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Log"
 msgstr "Aanmelden"
 
@@ -5590,11 +5549,9 @@ msgid "LogFile|Updated on"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Logging"
 msgstr "Aanmelden"
 
-#, fuzzy
 #, fuzzy
 msgid "Login"
 msgstr "Aanmelden"
@@ -5692,7 +5649,6 @@ msgstr ""
 msgid "Memory threshold"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "Menu Name"
 msgstr "Gebruikersnaam"
@@ -10190,6 +10146,36 @@ msgstr ""
 msgid "Please select an Instance Type from above"
 msgstr ""
 
+msgid "Pod"
+msgstr ""
+
+msgid "Pods (%s)"
+msgstr ""
+
+msgid "Pods (0)"
+msgstr ""
+
+msgid "Pod|Creation timestamp"
+msgstr ""
+
+msgid "Pod|Dns policy"
+msgstr ""
+
+msgid "Pod|Ems ref"
+msgstr ""
+
+msgid "Pod|Name"
+msgstr ""
+
+msgid "Pod|Namespace"
+msgstr ""
+
+msgid "Pod|Resource version"
+msgstr ""
+
+msgid "Pod|Restart policy"
+msgstr ""
+
 msgid "Policies"
 msgstr ""
 
@@ -11558,7 +11544,6 @@ msgid "Server Name"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Server Roles"
 msgstr "Gebruikersnaam"
 
@@ -11831,9 +11816,6 @@ msgstr ""
 msgid "Show Capacity & Utilization"
 msgstr ""
 
-msgid "Show Pods"
-msgstr ""
-
 msgid "Show Container Nodes"
 msgstr ""
 
@@ -11859,6 +11841,9 @@ msgid "Show Parent %s"
 msgstr ""
 
 msgid "Show Past Dates"
+msgstr ""
+
+msgid "Show Pods"
 msgstr ""
 
 msgid "Show Refresh Button"
@@ -12107,6 +12092,9 @@ msgstr ""
 msgid "Show this Flavor's parent %s"
 msgstr ""
 
+msgid "Show this Pod's parent %s"
+msgstr ""
+
 msgid "Show this Security Group's parent %s"
 msgstr ""
 
@@ -12120,9 +12108,6 @@ msgid "Show this VM's parent Service"
 msgstr ""
 
 msgid "Show this Vm's parent %s"
-msgstr ""
-
-msgid "Show this pod's parent %s"
 msgstr ""
 
 msgid "Show this container node's parent %s"
@@ -12308,7 +12293,6 @@ msgstr ""
 msgid "Start the %s Discovery"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "Started On"
 msgstr "Aangepast op"
@@ -13105,11 +13089,9 @@ msgid "Update"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Update Password"
 msgstr "Wachtwoord veranderen"
 
-#, fuzzy
 #, fuzzy
 msgid "Update Repository"
 msgstr "Wachtwoord veranderen"
@@ -13121,11 +13103,9 @@ msgid "Update password"
 msgstr "Wachtwoord veranderen"
 
 #, fuzzy
-#, fuzzy
 msgid "Update this LDAP Server"
 msgstr "Update dit object"
 
-#, fuzzy
 #, fuzzy
 msgid "Update this entry"
 msgstr "Update dit object"
@@ -13136,7 +13116,6 @@ msgstr "Aangepast"
 msgid "Updated On"
 msgstr "Aangepast op"
 
-#, fuzzy
 #, fuzzy
 msgid "Updated On:"
 msgstr "Aangepast op"
@@ -13208,7 +13187,6 @@ msgid "User"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "User Data"
 msgstr "Gebruikersnaam"
 
@@ -13228,7 +13206,6 @@ msgid "User Interface settings saved for this session"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "User Name"
 msgstr "Gebruikersnaam"
 
@@ -13236,11 +13213,9 @@ msgid "User Principal Name"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "User Role"
 msgstr "Gebruikersnaam"
 
-#, fuzzy
 #, fuzzy
 msgid "User Roles"
 msgstr "Gebruikersnaam"
@@ -13251,7 +13226,6 @@ msgstr ""
 msgid "User Suffix:"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "User Type"
 msgstr "Gebruikersnaam"
@@ -13487,7 +13461,6 @@ msgid "Verify"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "Verify %s"
 msgstr "Wachtwoord bevestigen"
 
@@ -13530,7 +13503,6 @@ msgstr ""
 msgid "View LDAP Regions"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "View Roles"
 msgstr "Gebruikersnaam"
@@ -14175,7 +14147,6 @@ msgstr ""
 msgid "available"
 msgstr ""
 
-#, fuzzy
 #, fuzzy
 msgid "back"
 msgstr "Terug"
