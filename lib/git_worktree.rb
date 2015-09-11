@@ -21,7 +21,7 @@ class GitWorktree
     @remote_name   = 'origin'
     @cred          = Rugged::Credentials::UserPassword.new(:username => @username,
                                                            :password => @password)
-    @base_name     = File.basename(@path)
+    @base_name = File.basename(@path)
     process_repo(options)
   end
 
@@ -203,9 +203,9 @@ class GitWorktree
 
   def create_repo
     @repo = @bare ? Rugged::Repository.init_at(@path, :bare) : Rugged::Repository.init_at(@path)
-    @repo.config['user.name']       = @username  if @username
-    @repo.config['user.email']      = @email if @email
-    @repo.config['merge.ff']        = 'only' if @fast_forward_merge
+    @repo.config['user.name']  = @username  if @username
+    @repo.config['user.email'] = @email if @email
+    @repo.config['merge.ff']   = 'only' if @fast_forward_merge
   end
 
   def open_repo
