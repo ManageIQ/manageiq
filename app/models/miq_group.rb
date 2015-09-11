@@ -108,8 +108,6 @@ class MiqGroup < ActiveRecord::Base
           seq += 1
         end
       end
-
-      MiqGroup.where(:tenant_id => nil).update_all(:tenant_id => root_tenant.id)
     end
   end
 
