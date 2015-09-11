@@ -47,7 +47,6 @@ describe MiqServer do
   context "instance" do
     before do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      MiqServer.my_server(true)
     end
 
     it "should have proper guid" do

@@ -628,7 +628,6 @@ describe "Server Monitor" do
     context "with 3 Servers where I am the non-Master" do
       before(:each) do
         @miq_server1 = EvmSpecHelper.local_miq_server(:name => "Server 1")
-        MiqServer.my_server(true)
         @miq_server1.deactivate_all_roles
         @miq_server1.role         = 'event, ems_operations, ems_inventory'
         @miq_server1.activate_roles("ems_operations", "ems_inventory")

@@ -62,7 +62,6 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
               server_roles = [FactoryGirl.create(:server_role, :name => "smartproxy", :max_concurrent => 0)]
 
-              MiqServer.my_server(true)
               @server1.deactivate_all_roles
               @server1.role    = 'smartproxy'
               Host.any_instance.stub(:missing_credentials? => false)

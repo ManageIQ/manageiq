@@ -65,8 +65,6 @@ module EvmSpecHelper
     create_root_tenant
 
     server = FactoryGirl.create(:miq_server, attrs)
-    MiqServer.my_server_clear_cache
-    server.zone.clear_association_cache
     server
   end
 

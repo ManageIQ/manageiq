@@ -58,7 +58,6 @@ describe DatabaseBackup do
   context "schedule" do
     before(:each) do
       EvmSpecHelper.local_miq_server
-      MiqServer.my_server_clear_cache
 
       @name = "adhoc schedule"
       @sanitized_name = "adhoc_schedule"
