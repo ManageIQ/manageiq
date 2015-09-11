@@ -30,12 +30,6 @@ class VDDKFactory
     @running = nil
   end
 
-  def writer_to_caller
-    writer_fd = ENV['WRITER_FD']
-    writer = IO.new(writer_fd.to_i)
-    writer
-  end
-
   def init
     VdlWrapper.init
     @started = true
@@ -113,9 +107,9 @@ begin
   #
   # Now write the URI used back to the parent (client) process to let it know which port was selected.
   #
-  writer = vddk.writer_to_caller
-  writer.puts "URI:#{uri_used}"
-  writer.flush
+  IO.open(3, 'w') do |io|
+    io.write uri_used
+  end
   #
   # Trap Handlers useful for testing and debugging.
   #
