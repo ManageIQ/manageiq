@@ -71,12 +71,12 @@ function jqplot_redraw_charts() {
     }
 }
 
-function jqplot_pie_highligh_values(str, seriesIndex, pointIndex, plot) {
+function jqplot_pie_highlight_values(str, seriesIndex, pointIndex, plot) {
     return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
            plot.series[seriesIndex].data[pointIndex][1];
 }
 
-function jqplot_pie_highligh(str, seriesIndex, pointIndex, plot) {
+function jqplot_pie_highlight(str, seriesIndex, pointIndex, plot) {
     return plot.series[seriesIndex].data[pointIndex][0];
 }
 

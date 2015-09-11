@@ -183,7 +183,7 @@ module ReportFormatter
           :show                 => true,
           :useAxesFormatters    => false,
           :tooltipAxes          => 'y',
-          :tooltipContentEditor => values ? 'jqplot_pie_highligh_values' : 'jqplot_pie_highligh',
+          :tooltipContentEditor => values ? 'jqplot_pie_highlight_values' : 'jqplot_pie_highlight',
           :tooltipLocation      => 'n'
         }
       )
