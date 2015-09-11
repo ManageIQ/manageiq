@@ -41,9 +41,9 @@ describe('tenantQuotaFormController', function() {
   describe('initialization', function() {
     it('sets the quotas to the values in the hash returned via the http request', function() {
       var quotas =  {
-        cpu_allocated:{unit:'mhz', format: 'mhz', text_modifier: 'Mhz', description:'Allocated CPU in Mhz',value: 1024.0, enforced:true, valpattern:'^[-+]?([0-9]+(\.[0-9]*)?|\.[0-9]+)$'},
-        mem_allocated:{unit: 'bytes', format: 'gigabytes_human', text_modifier: 'GB', description:'Allocated Memory in GB', value: 4096.0, enforced:true, valpattern:'^[-+]?([0-9]+(\.[0-9]*)?|\.[0-9]+)$'},
-        storage_allocated: {unit: 'bytes', format: "gigabytes_human", text_modifier: 'GB', description: 'Allocated Storage in GB', value: null, enforced:false, valpattern:'^[-+]?([0-9]+(\.[0-9]*)?|\.[0-9]+)$'}
+        cpu_allocated:{unit:'mhz', format: 'mhz', text_modifier: 'Mhz', description:'Allocated CPU in Mhz',value: 1024.0, enforced:true, valpattern:'^[+]?([0-9]+(\.[0-9]*)?|\.[0-9]+)$'},
+        mem_allocated:{unit: 'bytes', format: 'gigabytes_human', text_modifier: 'GB', description:'Allocated Memory in GB', value: 4096.0, enforced:true, valpattern:'^[+]?([0-9]+(\.[0-9]*)?|\.[0-9]+)$'},
+        storage_allocated: {unit: 'bytes', format: "gigabytes_human", text_modifier: 'GB', description: 'Allocated Storage in GB', value: null, enforced:false, valpattern:'^[+]?([0-9]+(\.[0-9]*)?|\.[0-9]+)$'}
       };
       expect($scope.tenantQuotaModel.quotas).toEqual(quotas);
     });
