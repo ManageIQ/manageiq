@@ -163,9 +163,9 @@ describe OpsController do
                                      :domain    => "test",
                                      :subdomain => "test")
         sb_hash = {
-            :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@tenant.id)}"}},
-            :active_tree => :rbac_tree,
-            :active_tab  => "rbac_details"
+          :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@tenant.id)}"}},
+          :active_tree => :rbac_tree,
+          :active_tab  => "rbac_details"
         }
         controller.instance_variable_set(:@sb, sb_hash)
       end
@@ -191,13 +191,14 @@ describe OpsController do
 
       it "saves tenant quotas record changes" do
         controller.instance_variable_set(:@_params,
-                                         :name        => "OneTenant",
-                                         :quotas      => { :cpu_allocated => {:value => 1024.0},
-                                                           :mem_allocated => {:value => 4096.0}
-                                                          },
-                                         :id          => @tenant.id,
-                                         :button      => "save",
-                                         :divisible   => "true")
+          :name        => "OneTenant",
+          :quotas      => {
+            :cpu_allocated => {:value => 1024.0},
+            :mem_allocated => {:value => 4096.0}
+          },
+          :id          => @tenant.id,
+          :button      => "save",
+          :divisible   => "true")
         controller.should_receive(:render)
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_manage_quotas)

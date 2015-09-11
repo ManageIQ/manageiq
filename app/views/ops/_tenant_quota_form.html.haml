@@ -3,30 +3,28 @@
 %form.form-horizontal#form_div{"name"          => "angularForm",
                                "ng-controller" => "tenantQuotaFormController",
                                "ng-show"       => "afterGet",
-                               "novalidate"      => true}
+                               "novalidate"    => true}
   = render :partial => "layouts/flash_msg"
   %div
     %div
-      %table{:width => "100%"}
-        %col{:style => "width:10%"}
-        %col{:style => "width:25%"}
-        %col{:style => "width:25%"}
-        %col{:style => "width:5%"}
-        %col{:style => "width:35%"}
+      %table.table.datatable.table-striped.table-bordered
         %thead
           %tr
-            %th.key= _("Enforced")
-            %th.key= _("Description")
-            %th.key= _("Value")
-            %th.key= _("Units")
             %th
+              = _("Enforced")
+            %th
+              = _("Description")
+            %th
+              = _("Value")
+            %th
+              = _("Units")
         %tbody
           %tr{"ng-repeat" => "(quota_name, quota_obj) in tenantQuotaModel.quotas", "ng-form" => "rowForm", "ng-class" => "{'has-error': rowForm.value.$invalid}"}
-            %td
-              %input.form-control{"type"        => "checkbox",
-                                  "name"        => "enforced",
-                                  "ng-click"    => "enforced_changed(quota_name)",
-                                  "ng-model"    => "quota_obj.enforced"}
+            %td.narrow
+              %input{"type"        => "checkbox",
+                    "name"        => "enforced",
+                    "ng-click"    => "enforcedChanged(quota_name)",
+                    "ng-model"    => "quota_obj.enforced"}
             %td {{quota_obj.description}}
             %td
               %input.form-control{"type"        => "text",
@@ -36,10 +34,12 @@
                                   "ng-required" => "quota_obj.enforced",
                                   "ng-disabled" => "!quota_obj.enforced",
                                   "ng-pattern"  => "quota_obj.valpattern",
-                                  "placeholder" => "Not enforced"}
+                                  "placeholder" => "Not enforced",
+                                  "ng-change"   => "valueChanged()"}
+              %span{"style"=>"color:red", "ng-show" => "rowForm.value.$invalid"}
+                = _(" Valid numeric quota value required ")
+
             %td &nbsp; {{quota_obj.text_modifier}}
-            %td{"style"=>"color:red" , "ng-show" => "rowForm.value.$invalid"}
-              = _(" Valid quota value required ")
 
   = render :partial => "layouts/angular/x_edit_buttons_angular"
 
