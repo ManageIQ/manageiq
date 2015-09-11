@@ -40,7 +40,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     $aws_log.info("#{log_header}...Complete")
 
     filter_unused_disabled_flavors
-    clean_up_extra_flavor_keys
 
     @data
   end
@@ -180,8 +179,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :supports_paravirtual     => flavor[:virtualization_type].include?(:paravirtual),
       :block_storage_based_only => flavor[:ebs_only],
       :cloud_subnet_required    => flavor[:vpc_only],
-
-      # Extra keys
       :disk_size                => flavor[:instance_store_size],
       :disk_count               => flavor[:instance_store_volumes]
     }
@@ -546,13 +543,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
         child_stack[:parent] = stack if child_stack
       end
       stack.delete(:children)
-    end
-  end
-
-  def clean_up_extra_flavor_keys
-    @data[:flavors].each do |f|
-      f.delete(:disk_size)
-      f.delete(:disk_count)
     end
   end
 

@@ -204,9 +204,9 @@ module ManageIQ::Providers
         :enabled => !flavor.disabled,
         :cpus    => flavor.vcpus,
         :memory  => flavor.ram.megabytes,
-
+        :disk_size      => flavor.disk.to_i.gigabytes,
+        :disk_count     => flavor.disk.to_i.gigabytes > 0 ? 1 : 0,
         # Extra keys
-        :root_disk      => flavor.disk.to_i.gigabytes,
         :ephemeral_disk => flavor.ephemeral.to_i.gigabytes,
         :swap_disk      => flavor.swap.to_i.megabytes
       }
@@ -463,7 +463,7 @@ module ManageIQ::Providers
           :cores_per_socket => 1,
           :logical_cpus     => flavor[:cpus],
           :memory_cpu       => flavor[:memory] / (1024 * 1024), # memory_cpu is in megabytes
-          :disk_capacity    => flavor[:root_disk] + flavor[:ephemeral_disk] + flavor[:swap_disk],
+          :disk_capacity    => flavor[:disk_size] + flavor[:ephemeral_disk] + flavor[:swap_disk],
           :disks            => [], # Filled in later conditionally on flavor
           :networks         => [], # Filled in later conditionally on what's available
         },
@@ -484,8 +484,8 @@ module ManageIQ::Providers
       disks = new_result[:hardware][:disks]
       dev = "vda"
 
-      # TODO: flavor[:root_disk] == 0 should take root disk size from image size.
-      if (sz = flavor[:root_disk]) == 0
+      # TODO: flavor[:disk_size] == 0 should take disk size from image size.
+      if (sz = flavor[:disk_size]) == 0
         sz = 1.gigabytes
       end
       add_instance_disk(disks, sz, dev.dup,       "Root disk")
@@ -551,7 +551,6 @@ module ManageIQ::Providers
 
     def clean_up_extra_flavor_keys
       @data[:flavors].each do |f|
-        f.delete(:root_disk)
         f.delete(:ephemeral_disk)
         f.delete(:swap_disk)
       end

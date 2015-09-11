@@ -155,6 +155,24 @@ module Openstack
       expect(@ems.miq_templates.size).to      eq images_count
     end
 
+    def name_to_disk_info(name)
+      case name
+      when "m1.tiny"
+        # grizzly has a 0 size disk for m1.tiny others have 1G
+        @environment == :grizzly ? [0, 0] : [1.gigabytes, 1]
+      when "m1.small"
+        [20.gigabytes, 1]
+      when "m1.medium"
+        [40.gigabytes, 1]
+      when "m1.large"
+        [80.gigabytes, 1]
+      when "m1.xlarge"
+        [160.gigabytes, 1]
+      when "m1.ems_refresh_spec"
+        [1.gigabytes, 1]
+      end
+    end
+
     def assert_specific_flavor
       assert_objects_with_hashes(ManageIQ::Providers::Openstack::CloudManager::Flavor.all,
                                  compute_data.flavors,
@@ -163,11 +181,15 @@ module Openstack
                                  [:is_public, :disk, :ephemeral, :swap]) # TODO(lsmola) model blacklisted attrs
 
       ManageIQ::Providers::Openstack::CloudManager::Flavor.all.each do |flavor|
+        disk_size, disk_count = name_to_disk_info(flavor.name)
+
         expect(flavor.ext_management_system).to eq @ems
         # TODO(lsmola) expose below to Builder's data
         expect(flavor.enabled).to               eq true
         expect(flavor.cpu_cores).to             eq nil
         expect(flavor.description).to           eq nil
+        expect(flavor.disk_size).to             eq disk_size
+        expect(flavor.disk_count).to            eq disk_count
       end
     end
 

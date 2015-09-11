@@ -104,6 +104,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :supports_hvm             => false,
       :supports_paravirtual     => true,
       :block_storage_based_only => true,
+      :disk_size                => 0,
+      :disk_count               => 0
     )
 
     @flavor.ext_management_system.should == @ems
