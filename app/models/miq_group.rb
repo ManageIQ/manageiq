@@ -80,7 +80,7 @@ class MiqGroup < ActiveRecord::Base
     MiqRegion.my_region.lock do
       role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
       root_tenant = Tenant.root_tenant
-      if self.count == 0 && File.exist?(role_map_file)
+      if File.exist?(role_map_file)
         filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
         ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
 
@@ -108,6 +108,8 @@ class MiqGroup < ActiveRecord::Base
           seq += 1
         end
       end
+
+      MiqGroup.where(:tenant_id => nil).update_all(:tenant_id => root_tenant.id)
     end
   end
 

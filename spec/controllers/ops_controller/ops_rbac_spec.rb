@@ -172,6 +172,7 @@ describe OpsController do
           :active_tab  => "rbac_details"
         }
         controller.instance_variable_set(:@sb, sb_hash)
+        ApplicationHelper.stub(:role_allows).and_return(true)
       end
       it "resets tenant manage quotas" do
         controller.instance_variable_set(:@_params, :id => @tenant.id, :button => "reset")
