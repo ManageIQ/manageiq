@@ -274,6 +274,26 @@ describe MiqGroup do
       expect(group_with_tenant.reload.tenant).to    eq(new_tenant)
       expect(group_without_tenant.reload.tenant).to eq(root_tenant)
     end
+
+    it "adds new groups after initial seed" do
+      [MiqRegion, Tenant, MiqUserRole, MiqGroup].each(&:seed)
+
+      current_count = MiqGroup.count
+      role_map_path = File.expand_path(File.join(Rails.root, "db/fixtures/role_map.yaml"))
+      role_map = YAML.load_file(role_map_path)
+      role_map.unshift('EvmRole-test_role' => 'tenant_quota_administrator')
+      filter_map_path = File.expand_path(File.join(Rails.root, "db/fixtures/filter_map.yaml"))
+      filter_map = YAML.load_file(filter_map_path)
+
+      allow(YAML).to receive(:load_file).with(role_map_path).and_return(role_map)
+      allow(YAML).to receive(:load_file).with(filter_map_path).and_return(filter_map)
+
+      MiqGroup.seed
+
+      expect(MiqGroup.count).to eql(current_count + 1)
+      expect(MiqGroup.last.name).to eql('EvmRole-test_role')
+      expect(MiqGroup.last.sequence).to eql(1)
+    end
   end
 
   context "#ordered_widget_sets" do
