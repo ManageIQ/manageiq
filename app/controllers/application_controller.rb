@@ -1306,14 +1306,6 @@ class ApplicationController < ActionController::Base
     task == "custom_button" && CustomButton.find_by_id(from_cid(button_id))
   end
 
-  def rbac_common_feature_for_buttons(pressed)
-    # return feature that should be checked for the button that came in
-    case pressed
-    when "rbac_project_add", "rbac_tenant_add"
-      "rbac_tenant_add"
-    end
-  end
-
   def check_button_rbac
     # buttons ids that share a common feature id
     common_buttons = %w(rbac_project_add rbac_tenant_add)

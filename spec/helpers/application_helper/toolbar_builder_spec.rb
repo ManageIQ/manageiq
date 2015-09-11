@@ -2577,10 +2577,13 @@ describe ApplicationHelper do
     subject { build_toolbar_hide_button_ops(@id) }
     before do
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
-      @record = double("record")
+      @record = FactoryGirl.create(:tenant)
       login_as @user
-      EvmSpecHelper.seed_specific_product_features("ops_rbac", "rbac_group_add", "rbac_tenant_delete")
-      feature = MiqProductFeature.find_all_by_identifier(%w(ops_rbac rbac_group_add rbac_tenant_delete))
+      EvmSpecHelper.seed_specific_product_features("ops_rbac",
+                                                   "rbac_group_add",
+                                                   "rbac_tenant_add",
+                                                   "rbac_tenant_delete")
+      feature = MiqProductFeature.find_all_by_identifier(%w(ops_rbac rbac_group_add rbac_tenant_add rbac_tenant_delete))
       test_user_role = FactoryGirl.create(:miq_user_role,
                                           :name                 => "test_user_role",
                                           :miq_product_features => feature)
@@ -2589,7 +2592,7 @@ describe ApplicationHelper do
       @sb = {:active_tree => :rbac_tree}
     end
 
-    %w(rbac_group_add rbac_tenant_delete).each do |id|
+    %w(rbac_group_add rbac_project_add rbac_tenant_add rbac_tenant_delete).each do |id|
       context "when with #{id} button should be visible" do
         before { @id = id }
         it "and record_id" do
