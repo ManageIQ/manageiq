@@ -54,7 +54,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     supports_pxe? || supports_iso? || supports_cloud_init?
   end
 
-  def continue_request(values, _requester_id)
+  def continue_request(values)
     return false unless validate(values)
 
     exit_pre_dialog if @running_pre_dialog

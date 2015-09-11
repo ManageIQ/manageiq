@@ -204,7 +204,7 @@ module MiqProvisionMixin
       options = self.options.dup
       prov_wf = workflow
       options[:sysprep_enabled]       = ['fields', 'Specification']
-      prov_wf.init_from_dialog(options, self.userid)
+      prov_wf.init_from_dialog(options)
       prov_wf.get_all_dialogs
       prov_wf.allowed_customization_specs
       prov_wf.get_timezones
