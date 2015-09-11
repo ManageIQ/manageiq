@@ -480,6 +480,12 @@
     - :collection
     :methods: *70174834086080
     :klass: MiqRequest
+  :resource_actions:
+    :description: Resource Actions
+    :options:
+    - :subcollection
+    :methods: *70174834086080
+    :klass: ResourceAction
   :resource_pools:
     :description: Resource Pools
     :options:
@@ -617,6 +623,7 @@
     :methods: *70174834084700
     :klass: ServiceTemplate
     :subcollections:
+    - :resource_actions
     - :tags
     - :service_requests
     - :service_dialogs
