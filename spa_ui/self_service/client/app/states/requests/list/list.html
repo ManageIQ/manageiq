@@ -13,7 +13,7 @@
          {{ ::$index + 1}}
         </span>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
         <span>
           <span class="title-img">
             <img class="title-img__logo"/>
@@ -21,6 +21,12 @@
           {{ ::item.id }}
         </span>
       </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-center">
+        <span>
+          {{ ::item.description }}
+        </span>
+      </div>
+
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
         <span>Requested On {{ ::item.created_on | date }}</span>
       </div>
