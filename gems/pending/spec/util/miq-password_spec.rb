@@ -300,6 +300,16 @@ describe MiqPassword do
       expect(MiqPassword.all_keys.size).to eq(2)
     end
 
+    it "supports relative path" do
+      with_key do |dir, filename|
+        Dir.chdir dir do
+          expect(MiqPassword.all_keys.size).to eq(1)
+          MiqPassword.add_legacy_key(filename)
+          expect(MiqPassword.all_keys.size).to eq(2)
+        end
+      end
+    end
+
     it "supports root_key path (also warns if v2 key not found)" do
       with_key do |dir, filename|
         MiqPassword.key_root = dir

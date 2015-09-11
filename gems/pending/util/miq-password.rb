@@ -183,7 +183,10 @@ EOS
 
   def self.ez_load(filename, recent = true)
     return filename if filename.respond_to?(:decrypt64)
-    filename = File.expand_path(filename, key_root)
+
+    # if it is an absolute path, or relative to pwd, leave as is
+    # otherwise, look in key root for it
+    filename = File.expand_path(filename, key_root) unless File.exist?(filename)
     if !File.exist?(filename)
       nil
     elsif recent
