@@ -3,6 +3,7 @@
 # subclass
 require 'more_core_extensions/core_ext/hash'
 require 'util/extensions/miq-module'
+require 'active_support/core_ext/class/subclasses'
 
 class OpenstackEventMonitor
   DEFAULT_AMQP_PORT = 5672

@@ -6,10 +6,6 @@ class ManageIQ::Providers::Openstack::InfraManager::EventCatcher < ::MiqEventCat
   end
 
   def self.all_valid_ems_in_zone
-    # Overridden to gate the execution of OpenstackEventMonitor in cases where
-    # the qpid-cpp-client-devel package is not available.  See
-    # PerEmsWorkerMixin#sync_workers and PerEmsWorkerMixin#start_workers to
-    # understand the overall flow when starting Event Catchers.
     require 'openstack/openstack_event_monitor'
     super.select do |ems|
       ems.event_monitor_available?.tap do |available|

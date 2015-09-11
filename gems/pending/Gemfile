@@ -55,18 +55,7 @@ if RbConfig::CONFIG["host_os"].include?("linux")
   end
 end
 
-# qpid group is needed to gate the inclusion of qpid_messaging gem on platforms
-# where the qpid-cpp-client-devel package is not available.  This includes
-# OSX, Windows, and CruiseControl machines.
-group :qpid do
-  gem "qpid_messaging", "~>0.20.0", :require => false
-end
-
-# Grouping this mainly to stay consistent with qpid--the other amqp library.  In
-# a production build, the qpid and rabbit groups should be included
-group :rabbit do
-  gem "bunny", "~>1.0.4", :require => false
-end
+gem "bunny", "~>1.0.4", :require => false
 
 group :appliance do
   gem "highline", "~> 1.6.21", :require => false  # Needed for the appliance_console
