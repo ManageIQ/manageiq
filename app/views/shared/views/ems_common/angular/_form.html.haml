@@ -166,7 +166,8 @@
                               :userid_label      => _("Client ID"),
                               :password_label    => _("Client Key"),
                               :verify_label      => _("Verify Client Key"),
-                              :passwd_mismatch   => _("Client Keys do not match")}
+                              :passwd_mismatch   => _("Client Keys do not match"),
+                              :verify_title_off  => _("Tenant ID, Client ID and matching Client Key fields are needed to perform verification of credentials")}
       %div{"ng-show" => "emsCommonModel.emstype != 'azure'"}
         = render :partial => "/layouts/angular/multi_auth_credentials", :locals  => {:record => @ems, :ng_model => "emsCommonModel"}
 
