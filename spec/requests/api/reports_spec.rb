@@ -136,6 +136,76 @@ RSpec.describe "reports API" do
       )
       expect_request_success
     end
+
+    it "can import a report" do
+      serialized_report = {
+        :menu_name => "Test Report",
+        :col_order => %w(foo bar baz),
+        :cols      => %w(foo bar baz),
+        :rpt_type  => "Custom",
+        :title     => "Test Report",
+        :db        => "My::Db",
+        :rpt_group => "Custom"
+      }
+      options = {:save => true}
+
+      api_basic_authorize collection_action_identifier(:reports, :import)
+
+      expect do
+        run_post reports_url, gen_request(:import, :report => serialized_report, :options => options)
+      end.to change(MiqReport, :count).by(1)
+      expect_result_to_match_hash(
+        @result["results"].first["result"],
+        "name"      => "Test Report",
+        "title"     => "Test Report",
+        "rpt_group" => "Custom",
+        "rpt_type"  => "Custom",
+        "db"        => "My::Db",
+        "cols"      => %w(foo bar baz),
+        "col_order" => %w(foo bar baz),
+      )
+      expect_result_to_match_hash(
+        @result["results"].first,
+        "message" => "Imported Report: [Test Report]",
+        "success" => true
+      )
+      expect_request_success
+    end
+
+    it "can import multiple reports in a single call" do
+      serialized_report = {
+        :menu_name => "Test Report",
+        :col_order => %w(foo bar baz),
+        :cols      => %w(foo bar baz),
+        :rpt_type  => "Custom",
+        :title     => "Test Report",
+        :db        => "My::Db",
+        :rpt_group => "Custom"
+      }
+      serialized_report2 = {
+        :menu_name => "Test Report 2",
+        :col_order => %w(qux quux corge),
+        :cols      => %w(qux quux corge),
+        :rpt_type  => "Custom",
+        :title     => "Test Report 2",
+        :db        => "My::Db",
+        :rpt_group => "Custom"
+      }
+      options = {:save => true}
+
+      api_basic_authorize collection_action_identifier(:reports, :import)
+
+      expect do
+        run_post(
+          reports_url,
+          gen_request(
+            :import,
+            [{:report => serialized_report, :options => options},
+             {:report => serialized_report2, :options => options}]
+          )
+        )
+      end.to change(MiqReport, :count).by(2)
+    end
   end
 
   context "without an appropriate role" do
@@ -146,6 +216,26 @@ RSpec.describe "reports API" do
         api_basic_authorize
         run_post "#{reports_url(report.id)}", :action => "run"
       }.not_to change(MiqReportResult, :count)
+      expect_request_forbidden
+    end
+
+    it "cannot import a report" do
+      serialized_report = {
+        :menu_name => "Test Report",
+        :col_order => %w(foo bar baz),
+        :cols      => %w(foo bar baz),
+        :rpt_type  => "Custom",
+        :title     => "Test Report",
+        :db        => "My::Db",
+        :rpt_group => "Custom"
+      }
+      options = {:save => true}
+
+      api_basic_authorize
+
+      expect do
+        run_post reports_url, gen_request(:import, :report => serialized_report, :options => options)
+      end.not_to change(MiqReport, :count)
       expect_request_forbidden
     end
   end
