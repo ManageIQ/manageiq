@@ -114,18 +114,7 @@
 
       return matches;
     }
-
-    //function matchesFilter(item, filter) {
-    //  var match = true;
-    //  if (filter.id === 'name') {
-    //    match = item.name === filter.value;
-    //  } else if (filter.id === 'id') {
-    //    match = Number(item.id) === Number(filter.value);
-    //  }
-    //  console.log(item.name, filter.value, item.name.toLowerCase().indexOf(filter.value.toLowerCase()))
-    //  return match;
-    //}
-
+    
     function matchesFilter(item, filter) {
       if ('name' === filter.id) {
         return item.name.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1;
