@@ -151,4 +151,25 @@ describe EmsInfraController do
         _("Provider is not ready to be scaled, another operation is in progress."))
     end
   end
+
+  describe "#show" do
+    before(:each) do
+      session[:settings] = {:views => {}}
+      set_user_privileges
+      get :show, {:id => ems.id}.merge(url_params)
+    end
+    let(:url_params) { {} }
+    let(:ems) do
+      FactoryGirl.create(:ems_infra)
+    end
+    subject do
+      response.status
+    end
+    it { should eq 200 }
+
+    context "display=timeline" do
+      let(:url_params) { {:display => 'timeline'} }
+      it { should eq 200 }
+    end
+  end
 end
