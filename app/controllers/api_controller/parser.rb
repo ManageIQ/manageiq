@@ -133,6 +133,11 @@ class ApiController
       resource["id"].kind_of?(Integer) ? resource["id"] : nil
     end
 
+    def resource_can_have_custom_actions(type, cspec = nil)
+      cspec ||= collection_config[type.to_sym] if collection_config.key?(type.to_sym)
+      cspec && cspec[:options].include?(:custom_actions)
+    end
+
     private
 
     #
@@ -189,9 +194,16 @@ class ApiController
 
       aspec = cspec[aspecnames.to_sym]
       action_hash = fetch_action_hash(aspec, mname, aname)
-      raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified" if action_hash.blank?
-      raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
-      raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
+      if action_hash.blank?
+        unless type == :resource && resource_can_have_custom_actions(cname, cspec)
+          raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified"
+        end
+      end
+
+      if action_hash.present?
+        raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
+        raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
+      end
 
       validate_post_api_action_as_subcollection(cname, mname, aname)
     end

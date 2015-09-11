@@ -16,6 +16,11 @@ class Service < ActiveRecord::Base
   virtual_column     :v_total_vms,            :type => :integer,  :uses => :vms
   virtual_has_one    :picture
 
+  virtual_has_one    :custom_actions
+  virtual_has_one    :custom_action_buttons
+
+  delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
+
   include ServiceMixin
   include OwnershipMixin
   include CustomAttributeMixin

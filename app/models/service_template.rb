@@ -30,6 +30,20 @@ class ServiceTemplate < ActiveRecord::Base
 
   default_value_for :service_type,  'unknown'
 
+  virtual_has_one :custom_actions, :class_name => "Hash"
+  virtual_has_one :custom_action_buttons, :class_name => "Array"
+
+  def custom_actions
+    {
+      :buttons       => custom_buttons,
+      :button_groups => custom_button_sets.collect { |s| s.serializable_hash.merge(:buttons => s.children) }
+    }
+  end
+
+  def custom_action_buttons
+    custom_buttons + custom_button_sets.collect(&:children).flatten
+  end
+
   def custom_buttons
     CustomButton.buttons_for(self).select { |b| b.parent.nil? }
   end

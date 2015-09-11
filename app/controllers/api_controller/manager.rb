@@ -87,7 +87,9 @@ class ApiController
       else
         target = "#{action}_resource"
         typed_target = "#{target}_#{type}"
-        respond_to?(typed_target) ? typed_target : target
+        return typed_target if respond_to?(typed_target)
+        return target if respond_to?(target)
+        return "custom_action_resource" if resource_can_have_custom_actions(type)
       end
     end
 
