@@ -123,8 +123,8 @@ module OpenstackHandle
       service  = (opts.delete(:service) || "Compute").to_s.camelize
       tenant   = opts.delete(:tenant_name)
       # TODO(lsmola) figure out from where to take the project name and domain name
-      domain   = opts.delete(:domain_name) || 'default'
-      project   = opts.delete(:domain_name) || 'admin'
+      domain   = opts.delete(:domain_name) || 'admin_domain'
+      project  = tenant
 
       unless tenant
         tenant = "any_tenant" if service == "Identity"
