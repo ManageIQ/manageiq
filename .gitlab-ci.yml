@@ -1,0 +1,4 @@
+test:
+  script:
+  - ssh miqbuilder@test.rhus.cloud "sh manageiq/testenv.sh"
+
