@@ -124,6 +124,7 @@ module ApplianceConsole
     end
 
     def run
+      Trollop.educate unless set_host? || key? || database? || tmp_disk? || uninstall_ipa? || install_ipa? || certs?
       Env[:host] = options[:host] if set_host?
       create_key if key?
       set_db if database?
