@@ -1,0 +1,26 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: service_quota
+    inherits: 
+    description: 
+  fields:
+  - quota_type:
+      value: service
+  - max_group_cpu:
+      value: '2'
+  - warn_group_storage:
+      value: '1024'
+  - warn_group_memory:
+      value: '1024'
+  - max_group_memory:
+      value: '2048'
+  - max_group_storage:
+      value: '2048'
+  - warn_group_cpu:
+      value: '2'
+  - meth:
+      value: validate_quota
