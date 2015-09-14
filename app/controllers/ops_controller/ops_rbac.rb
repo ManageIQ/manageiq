@@ -129,7 +129,6 @@ module OpsController::OpsRbac
           rbac_tenants_list
           rbac_get_info(x_node)
         else
-          @selected_tenant = tenant
           get_node_info(x_node)
         end
         replace_right_cell("root", [:rbac])
@@ -171,6 +170,59 @@ module OpsController::OpsRbac
       tenant.parent    = Tenant.find_by_id(from_cid(x_node.split('-').last))
       tenant.divisible = params[:divisible] == "true"
     end
+  end
+
+  def rbac_tenant_manage_quotas
+    assert_privileges("rbac_tenant_manage_quotas")
+    case params[:button]
+    when "cancel"
+      @tenant = Tenant.find_by_id(params[:id])
+      add_flash(_("Manage quotas for %{model}\ \"%{name}\" was cancelled by the user") %
+                    {:model => tenant_type_title_string(@tenant.divisible), :name => @tenant.name})
+      get_node_info(x_node)
+      replace_right_cell(x_node)
+    when "save", "add"
+      tenant = Tenant.find_by_id(params[:id])
+      begin
+        if !params[:quotas]
+          tenant.set_quotas({})
+        else
+          tenant_quotas = params[:quotas].deep_symbolize_keys
+          tenant.set_quotas(tenant_quotas.to_hash)
+        end
+      rescue StandardError => bang
+        add_flash(_("Error when saving tenant quota: ") << bang.message, :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        add_flash(_("Quotas for %{model} \"%{name}\" were saved") %
+                      {:model => tenant_type_title_string(tenant.divisible), :name => tenant.name})
+        get_node_info(x_node)
+        replace_right_cell("root", [:rbac])
+      end
+    when "reset", nil # Reset or first time in
+      obj = find_checked_items
+      obj[0] = params[:id] if obj.blank? && params[:id]
+      @tenant = Tenant.find(obj[0])          # Get existing or new record
+      # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
+      @edit = {:tenant_id => @tenant.id}
+      session[:edit] = {:key => "tenant_manage_quotas__#{@tenant.id}"}
+      session[:changed] = false
+      if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning)
+      end
+      replace_right_cell("tenant_manage_quotas")
+    end
+  end
+
+  def tenant_quotas_form_fields
+    tenant = Tenant.find_by_id(params[:id])
+    tenant_quotas = tenant.get_quotas
+    render :json => {
+      :name        => tenant.name,
+      :quotas      => tenant_quotas
+    }
   end
 
   # AJAX driven routines to check for changes in ANY field on the form

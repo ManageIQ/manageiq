@@ -154,5 +154,58 @@ describe OpsController do
         tenant.name.should eq("Foo_Bar")
       end
     end
+
+    context "#rbac_tenant_manage_quotas" do
+      before do
+        @tenant = FactoryGirl.create(:tenant,
+                                     :name      => "OneTenant",
+                                     :parent    => Tenant.root_tenant,
+                                     :domain    => "test",
+                                     :subdomain => "test")
+        sb_hash = {
+          :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@tenant.id)}"}},
+          :active_tree => :rbac_tree,
+          :active_tab  => "rbac_details"
+        }
+        controller.instance_variable_set(:@sb, sb_hash)
+      end
+      it "resets tenant manage quotas" do
+        controller.instance_variable_set(:@_params, :id => @tenant.id, :button => "reset")
+        controller.should_receive(:render)
+        expect(response.status).to eq(200)
+        controller.send(:rbac_tenant_manage_quotas)
+        flash_message = assigns(:flash_array).first
+        flash_message[:message].should include("All changes have been reset")
+        flash_message[:level].should be(:warning)
+      end
+
+      it "cancels tenant manage quotas" do
+        controller.instance_variable_set(:@_params, :id => @tenant.id, :button => "cancel", :divisible => "true")
+        controller.should_receive(:render)
+        expect(response.status).to eq(200)
+        controller.send(:rbac_tenant_manage_quotas)
+        flash_message = assigns(:flash_array).first
+        flash_message[:message].should include("Manage quotas for Tenant \"#{@tenant.name}\" was cancelled by the user")
+        flash_message[:level].should be(:success)
+      end
+
+      it "saves tenant quotas record changes" do
+        controller.instance_variable_set(:@_params,
+          :name        => "OneTenant",
+          :quotas      => {
+            :cpu_allocated => {:value => 1024.0},
+            :mem_allocated => {:value => 4096.0}
+          },
+          :id          => @tenant.id,
+          :button      => "save",
+          :divisible   => "true")
+        controller.should_receive(:render)
+        expect(response.status).to eq(200)
+        controller.send(:rbac_tenant_manage_quotas)
+        flash_message = assigns(:flash_array).first
+        flash_message[:message].should include("Quotas for Tenant \"OneTenant\" were saved")
+        flash_message[:level].should be(:success)
+      end
+    end
   end
 end
