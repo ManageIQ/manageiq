@@ -7,7 +7,7 @@ class ApplicationHelper::ToolbarBuilder
 
   delegate :request, :current_user, :to => :@view_context
 
-  delegate :get_vmdb_config, :role_allows, :model_for_vm, :to => :@view_context
+  delegate :get_vmdb_config, :role_allows, :model_for_vm, :rbac_common_feature_for_buttons, :to => :@view_context
   delegate :x_tree_history, :x_node, :x_active_tree, :to => :@view_context
   delegate :is_browser?, :is_browser_os?, :to => :@view_context
 
@@ -384,8 +384,10 @@ class ApplicationHelper::ToolbarBuilder
             return true
         end
       when :rbac_tree
-        return true unless role_allows(:feature => id)
-        return true if %w(rbac_project_add rbac_tenant_add).include?(id) && @record.project?
+        common_buttons = %w(rbac_project_add rbac_tenant_add)
+        feature = common_buttons.include?(id) ? rbac_common_feature_for_buttons(id) : id
+        return true unless role_allows(:feature => feature)
+        return true if common_buttons.include?(id) && @record.project?
         return false
       when :vmdb_tree
         return ["db_connections","db_details","db_indexes","db_settings"].include?(@sb[:active_tab]) ? false : true
