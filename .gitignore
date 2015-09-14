@@ -23,6 +23,7 @@ coverage/
 Gemfile.dev.rb
 Gemfile.lock*
 GUID
+openstack_environments.yml
 nbproject/
 private_test
 REGION
