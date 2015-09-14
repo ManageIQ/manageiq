@@ -26,4 +26,10 @@ FactoryGirl.define do
           :class  => "OrchestrationTemplateHot" do
     content File.read('spec/fixtures/orchestration_templates/hot_parameters.yml')
   end
+
+  factory :orchestration_template_azure_with_content,
+          :parent => :orchestration_template,
+          :class  => "OrchestrationTemplateAzure" do
+    content File.read('spec/fixtures/orchestration_templates/azure_parameters.json')
+  end
 end
