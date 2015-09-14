@@ -30,17 +30,30 @@
   }
 
   /** @ngInject */
-  function StateController(service) {
+  function StateController($state, service, CollectionsApi) {
     var vm = this;
 
     vm.title = 'Service Details';
     vm.service = service;
 
     vm.activate = activate;
+    vm.removeService = removeService;
 
     activate();
 
     function activate() {
+    }
+
+    function removeService() {
+      var removeAction = {'action': 'retire'};
+      CollectionsApi.post('services', vm.service.id, {}, removeAction).then(removeSuccess, removeFailure);
+
+      function removeSuccess() {
+        $state.go('services.list');
+      }
+
+      function removeFailure(data) {
+      }
     }
   }
 })();

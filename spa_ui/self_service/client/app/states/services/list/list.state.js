@@ -70,8 +70,8 @@
     };
 
     function handleClick(item, e) {
-      $state.go('services.details', {requestId: item.id});
-    };
+      $state.go('services.details', {serviceId: item.id});
+    }
 
     function filterChange(filters) {
       vm.filtersText = '';
