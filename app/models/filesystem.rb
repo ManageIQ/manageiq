@@ -7,6 +7,7 @@ class Filesystem < ActiveRecord::Base
   belongs_to :scan_item
   belongs_to :host_service_group
 
+  has_many :custom_attributes, :as => :resource, :dependent => :destroy
   has_one :binary_blob, :as => :resource, :dependent => :destroy
 
   include FilterableMixin
