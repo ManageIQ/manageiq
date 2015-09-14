@@ -1248,6 +1248,7 @@ Vmdb::Application.routes.draw do
         log_collection_form_fields
         schedule_form_fields
         show_product_update
+        tenant_quotas_form_fields
         tenant_form_fields
         ldap_regions_list
       ),
@@ -1305,6 +1306,7 @@ Vmdb::Application.routes.draw do
         rbac_tags_edit
         rbac_tenant_edit
         rbac_tenants_list
+        rbac_tenant_manage_quotas
         rbac_user_edit
         rbac_user_field_changed
         rbac_users_list

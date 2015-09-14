@@ -71,7 +71,7 @@
 
     function handleClick(item, e) {
       $state.go('services.details', {serviceId: item.id});
-    }
+    };
 
     function filterChange(filters) {
       vm.filtersText = '';
