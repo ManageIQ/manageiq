@@ -25,7 +25,7 @@ module ManageIQ::Providers
       @network_service            = @os_handle.detect_network_service
       @image_service              = @os_handle.detect_image_service
       @volume_service             = @os_handle.detect_volume_service
-      @storage_service            = @os_handle.detect_storage_service
+      @storage_service            = @os_handle.detect_storage_service("admin")
       @identity_service           = @os_handle.identity_service
       @orchestration_service      = @os_handle.detect_orchestration_service
     end
