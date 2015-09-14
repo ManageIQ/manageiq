@@ -451,8 +451,8 @@ describe Tenant do
 
       tq_cpu = tq[0]
       expect(tq_cpu.name).to eql "cpu_allocated"
-      expect(tq_cpu.unit).to eql "mhz"
-      expect(tq_cpu.format).to eql "mhz"
+      expect(tq_cpu.unit).to eql "fixnum"
+      expect(tq_cpu.format).to eql "general_number_precision_0"
       expect(tq_cpu.value).to eql 1024.0
 
       tq_mem = tq[1]
@@ -520,6 +520,7 @@ describe Tenant do
           :vms_allocated => {
               :unit          => "fixnum",
               :value         => 20.0,
+              :warn_value    => nil,
               :format        => "general_number_precision_0",
               :text_modifier => "Count",
               :description   => "Allocated Number of Virtual Machines"
@@ -527,6 +528,7 @@ describe Tenant do
           :mem_allocated => {
               :unit          => "bytes",
               :value         => 4096.0,
+              :warn_value    => nil,
               :format        => "gigabytes_human",
               :text_modifier => "GB",
               :description   => "Allocated Memory in GB"
@@ -534,6 +536,7 @@ describe Tenant do
           :storage_allocated => {
               :unit          => :bytes,
               :value         => nil,
+              :warn_value    => nil,
               :format        => :gigabytes_human,
               :text_modifier => "GB",
               :description   => "Allocated Storage in GB"

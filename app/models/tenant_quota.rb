@@ -3,9 +3,9 @@ class TenantQuota < ActiveRecord::Base
 
   QUOTA_BASE = {
     :cpu_allocated => {
-      :unit          => :mhz,
-      :format        => :mhz,
-      :text_modifier => "Mhz".freeze
+      :unit          => :fixnum,
+      :format        => :general_number_precision_0,
+      :text_modifier => "Count".freeze
     },
     :mem_allocated => {
       :unit          => :bytes,
@@ -40,7 +40,7 @@ class TenantQuota < ActiveRecord::Base
 
   def self.quota_definitions
     @quota_definitions ||= QUOTA_BASE.each_with_object({}) do |(name, value), h|
-      h[name] = value.merge(:description => I18n.t("dictionary.tenants.#{name}"), :value => nil)
+      h[name] = value.merge(:description => I18n.t("dictionary.tenants.#{name}"), :value => nil, :warn_value => nil)
     end
   end
 
@@ -54,7 +54,7 @@ class TenantQuota < ActiveRecord::Base
   end
 
   def quota_hash
-    self.class.quota_definitions[name.to_sym].merge(:unit => unit, :value => value, :format => format) # attributes
+    self.class.quota_definitions[name.to_sym].merge(:unit => unit, :value => value, :warn_value => warn_value, :format => format) # attributes
   end
 
   def format
