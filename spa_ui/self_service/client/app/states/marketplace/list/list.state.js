@@ -26,7 +26,7 @@
 
   /** @ngInject */
   function resolveServiceTemplates(CollectionsApi) {
-    var options = {expand: true, filter: ['display=true']};
+    var options = {expand: 'resources', filter: ['display=true']};
 
     return CollectionsApi.query('service_templates', options);
   }
