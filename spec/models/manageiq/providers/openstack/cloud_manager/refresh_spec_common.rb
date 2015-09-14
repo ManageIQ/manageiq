@@ -1,5 +1,6 @@
 require 'tools/environment_builders/openstack/services/compute/data'
-require 'tools/environment_builders/openstack/services/identity/data'
+require 'tools/environment_builders/openstack/services/identity/data/keystone_v2'
+require 'tools/environment_builders/openstack/services/identity/data/keystone_v3'
 require 'tools/environment_builders/openstack/services/image/data'
 require 'tools/environment_builders/openstack/services/network/data/neutron'
 require 'tools/environment_builders/openstack/services/network/data/nova'
@@ -81,8 +82,9 @@ module Openstack
     def default_security_groups_count
       # There is default security group per each tenant
       count = identity_data.projects.count
-      # Neutron puts there one extra security group, that is noit assosiated to any tenant
-      count += 1 if neutron_networking?
+      # Neutron puts there one extra security group, that is noit assosiated to any tenant, but it's
+      # not there in kilo_keystone_v3, weird
+      count += 1 if neutron_networking? && !keystone_v3_identity?
       count
     end
 
@@ -141,7 +143,7 @@ module Openstack
 
     def assert_ems
       @ems.should have_attributes(
-        :api_version => nil, # TODO: test for v2 v3 when keystone v3 patch lands
+        :api_version => identity_service.to_s,
         :uid_ems     => nil
       )
 
