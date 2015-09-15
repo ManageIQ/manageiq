@@ -17,9 +17,11 @@ function _jqplot_eval_option(data, option) {
 function jqplot_process_options(data) {
   $.each([ 'seriesDefaults.renderer',
            'axes.xaxis.renderer',
-           'axes.yaxis.tickRenderer',
            'axes.yaxis.renderer',
+           'axes.yaxis.tickRenderer',
            'axes.xaxis.tickRenderer',
+           'axes.xaxis.tickOptions.formatter',
+           'axes.yaxis.tickOptions.formatter',
            'legend.renderer',
            'highlighter.tooltipContentEditor' ], function (index, key) {
     _jqplot_eval_option(data, key);

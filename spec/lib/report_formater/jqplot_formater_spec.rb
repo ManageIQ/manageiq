@@ -1,4 +1,5 @@
 require 'spec_helper'
+include ReportsSpecHelper
 
 describe ReportFormatter::JqplotFormatter do
   context '#build_numeric_chart_grouped' do
@@ -36,14 +37,7 @@ describe ReportFormatter::JqplotFormatter do
         )
 
         expect_any_instance_of(described_class).to receive(:build_numeric_chart_grouped).once.and_call_original
-
-        ReportFormatter::ReportRenderer.render(Charting.format) do |e|
-          e.options.mri           = report
-          e.options.show_title    = true
-          e.options.graph_options = MiqReport.graph_options(600, 400)
-          e.options.theme         = 'miq'
-        end
-
+        render_report(report)
         expect(report.chart[:data][0][0]).to eq(4.0)
         expect(report.chart[:options][:axes][:xaxis][:ticks][0]).to eq(system_name_1)
         expect(report.chart[:data][0][-1]).to eq(4) if other
@@ -83,14 +77,7 @@ describe ReportFormatter::JqplotFormatter do
         )
 
         expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original
-
-        ReportFormatter::ReportRenderer.render(Charting.format) do |e|
-          e.options.mri           = report
-          e.options.show_title    = true
-          e.options.graph_options = MiqReport.graph_options(600, 400)
-          e.options.theme         = 'miq'
-        end
-
+        render_report(report)
         expect(report.chart[:data][0][0]).to eq(15)
         expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq(host_name_1)
         expect(report.chart[:data][0][-1]).to eq(1) if other
@@ -132,20 +119,53 @@ describe ReportFormatter::JqplotFormatter do
         )
 
         expect_any_instance_of(described_class).to receive(:build_numeric_chart_grouped_2dim).once.and_call_original
-
-        ReportFormatter::ReportRenderer.render(Charting.format) do |e|
-          e.options.mri           = report
-          e.options.show_title    = true
-          e.options.graph_options = MiqReport.graph_options(600, 400)
-          e.options.theme         = 'miq'
-        end
-
+        render_report(report)
         expect(report.chart[:data][0][0]).to eq(6_656)
         expect(report.chart[:data][0][1]).to eq(4_096)
         expect(report.chart[:data][1][1]).to eq(3_072)
         expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq('MTC-RHEVM-3.0')
         expect(report.chart[:data][0][-1]).to eq(1_024) if other
       end
+    end
+  end
+
+  context '#build_numeric_chart_simple' do
+    let(:report) do
+      report = MiqReport.new(
+        :db          => "Host",
+        :cols        => %w(name ram_size),
+        :col_order   => %w(name ram_size),
+        :headers     => ["Name", "RAM Size (MB)"],
+        :order       => "Ascending",
+        :sortby      => %w(name),
+        :group       => nil,
+        :graph       => {:type => "Bar", :mode => "values", :column => "Host-ram_size", :count => 10, :other => false},
+        :dims        => 1,
+        :col_options => {},
+        :extras      => {},
+      )
+
+      report.table = Ruport::Data::Table.new(
+        :column_names => %w(name ram_size id),
+        :data         => [
+          ['jenda',  512, 1],
+          ['ladas', 1024, 2],
+          ['joker', 2024, 3],
+        ]
+      )
+
+      report
+    end
+
+    it "uses correct formating function for axis with given column format" do
+      report.col_formats = [nil, :general_number_precision_0]
+      render_report(report)
+      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.number_with_delimiter.jqplot({})")
+    end
+
+    it "uses correct formating function for axis with implicit column format" do
+      render_report(report)
+      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.mbytes_to_human_size.jqplot({})")
     end
   end
 end
