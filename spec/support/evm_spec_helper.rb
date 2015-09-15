@@ -39,6 +39,12 @@ module EvmSpecHelper
     instance.instance_variable_set(ivar, nil)
   end
 
+  def self.create_root_tenant
+    MiqRegion.seed
+    Tenant.seed
+    Tenant.root_tenant
+  end
+
   def self.local_guid_miq_server_zone
     guid, server, zone = remote_guid_miq_server_zone
     MiqServer.stub(:my_guid).and_return(guid)
@@ -51,8 +57,7 @@ module EvmSpecHelper
   end
 
   def self.remote_guid_miq_server_zone
-    MiqRegion.seed
-    Tenant.seed
+    create_root_tenant
     guid   = MiqUUID.new_guid
     zone   = FactoryGirl.create(:zone)
     server = FactoryGirl.create(:miq_server_master, :guid => guid, :zone => zone)

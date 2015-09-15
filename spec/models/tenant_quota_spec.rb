@@ -4,9 +4,7 @@ describe TenantQuota do
   let(:tenant) { FactoryGirl.create(:tenant, :parent => root_tenant) }
 
   let(:root_tenant) do
-    MiqRegion.seed
-    Tenant.seed
-    Tenant.root_tenant
+    EvmSpecHelper.create_root_tenant
   end
 
   describe "#valid?" do
