@@ -10,9 +10,7 @@ describe Tenant do
   end
 
   let(:root_tenant) do
-    MiqRegion.seed
-    Tenant.seed
-    described_class.root_tenant
+    EvmSpecHelper.create_root_tenant
   end
 
   before do
