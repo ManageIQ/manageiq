@@ -110,12 +110,12 @@ class MiqPassword
   end
 
   def self.key_root
-    @key_root ||= ENV["KEY_ROOT"]
+    @@key_root ||= ENV["KEY_ROOT"]
   end
 
   def self.key_root=(key_root)
     clear_keys
-    @key_root = key_root
+    @@key_root = key_root
   end
 
   def self.clear_keys
