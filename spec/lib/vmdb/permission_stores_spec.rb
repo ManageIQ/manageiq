@@ -3,6 +3,14 @@ require 'vmdb/permission_stores'
 require 'tempfile'
 
 describe Vmdb::PermissionStores do
+  before(:each) do
+    @original_store = Vmdb::PermissionStores.instance
+  end
+
+  after(:each) do
+    Vmdb::PermissionStores.instance = @original_store
+  end
+
   it 'should be configurable' do
     Vmdb::PermissionStores.configure do |config|
       config.backend = 'yaml'
