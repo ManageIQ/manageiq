@@ -30,8 +30,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
     $scope.formId = emsCommonFormId;
     $scope.afterGet = false;
     $scope.saveable = miqService.saveable;
-    $scope.restAjaxButton = miqService.restAjaxButton;
-    $scope.validateClicked = miqService.validateClicked;
+    $scope.validateClicked = miqService.validateWithREST;
     $scope.modelCopy = angular.copy( $scope.emsCommonModel );
     $scope.formFieldsUrl = $attrs.formFieldsUrl;
     $scope.createUrl = $attrs.createUrl;
@@ -162,18 +161,6 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
       angular.element('#button_name').val('save');
       emsCommonEditButtonClicked('save', true, $event);
       $scope.angularForm.$setPristine(true);
-    }
-    else {
-      $event.preventDefault();
-    }
-  };
-
-  $scope.validateBClicked = function($event, credType, url, formSubmit) {
-    angular.element('#button_name').val('validate');
-    angular.element('#cred_type').val(credType);
-    if(formSubmit) {
-      miqService.sparkleOn();
-      miqService.restAjaxButton(url, $event.target);
     }
     else {
       $event.preventDefault();
