@@ -4,6 +4,7 @@ class MiqRequest < ActiveRecord::Base
   belongs_to :source,            :polymorphic => true
   belongs_to :destination,       :polymorphic => true
   belongs_to :requester,         :class_name  => "User"
+  belongs_to :tenant
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
 

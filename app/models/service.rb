@@ -1,6 +1,7 @@
 class Service < ActiveRecord::Base
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
+  belongs_to :tenant
   belongs_to :service_template               # Template this service was cloned from
   belongs_to :service                        # Parent Service
   has_many :services, :dependent => :destroy # Child services

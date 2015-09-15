@@ -8,6 +8,7 @@ class MiqRequestTask < ActiveRecord::Base
   belongs_to :destination,       :polymorphic => true
   has_many   :miq_request_tasks, :dependent   => :destroy
   belongs_to :miq_request_task
+  belongs_to :tenant
 
   serialize   :phase_context, Hash
   serialize   :options,       Hash
