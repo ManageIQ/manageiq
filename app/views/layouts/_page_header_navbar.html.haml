@@ -16,7 +16,7 @@
 
         %ul{:class => primary_nav_class2(menu_section.id)}
           - menu_section.items.each do |menu_item|
-            - if menu_item.visible?
+            - if menu_item.visible?(User.current_userid)
               %li{:class => secondary_nav_class(menu_item.id)}
                 %a{:href    => menu_item.url,
                    :onclick => 'return miqCheckForChanges()'}= _(menu_item.name)
