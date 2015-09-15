@@ -248,20 +248,8 @@ module Rbac
     end
   end
 
-  def self.group(user_or_group)
-    case user_or_group
-    when User
-      user_or_group.current_group
-    when MiqGroup
-      user_or_group
-    when NilClass
-    else
-      raise
-    end
-  end
-
   def self.find_options_for_tenant(klass, user_or_group, find_options = {})
-    tenant_id = group(user_or_group).try(:tenant_id)
+    tenant_id = user_or_group.try(:current_tenant, :id)
     return find_options unless tenant_id
 
     tenant_id_clause = {klass.table_name => {:tenant_id => [tenant_id, nil]}}
