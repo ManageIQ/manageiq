@@ -264,16 +264,14 @@ module Rbac
     tenant_id = group(user_or_group).try(:tenant_id)
     return find_options unless tenant_id
 
-    tenant_id_clause = ["#{klass.table_name}.tenant_id = ? OR #{klass.table_name}.tenant_id IS NULL", tenant_id]
+    tenant_id_clause = {klass.table_name => {:tenant_id => [tenant_id, nil]}}
     find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause)
     find_options
   end
 
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
-    if klass.scope_by_tenant?
-      # TODO: check if these find_options should be duplicated/modified in place
-      find_options = find_options_for_tenant(klass, user_or_group, find_options)
-    end
+    # TODO: check if these find_options should be duplicated/modified in place
+    find_options = find_options_for_tenant(klass, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
 
     return find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
     return find_targets_with_indirect_rbac(klass, scope, rbac_filters, find_options, user_or_group)   if apply_rbac_to_associated_class?(klass)
