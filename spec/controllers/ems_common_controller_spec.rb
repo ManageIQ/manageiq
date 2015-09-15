@@ -132,3 +132,38 @@ describe EmsContainerController do
     end
   end
 end
+
+describe EmsInfraController do
+  context "button pressed='miq_template_clone'" do
+    describe "#button" do
+      before do
+        EvmSpecHelper.seed_specific_product_features("ems_infra_new")
+        feature = MiqProductFeature.find_all_by_identifier(["ems_infra_new"])
+        test_user_role = FactoryGirl.create(:miq_user_role,
+                                            :name                 => "test_user_role",
+                                            :miq_product_features => feature)
+        test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+        user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+
+        allow(user).to receive(:server_timezone).and_return("UTC")
+        described_class.any_instance.stub(:set_user_time_zone)
+        controller.stub(:check_privileges).and_return(true)
+        controller.stub(:assert_privileges).and_return(true)
+        login_as user
+      end
+
+      it "correctly sets flash message when template cannot be cloned" do
+        ems_infra = FactoryGirl.create(:ext_management_system)
+        template = FactoryGirl.create(:template_vmware)
+        VmOrTemplate.stub(:cloneable?).and_return(false)
+        post :button,
+             :id              => ems_infra.id,
+             :pressed         => "miq_template_clone",
+             :miq_grid_checks => ActiveRecord::Base.compress_id(template.id)
+        flash_array = controller.instance_variable_get(:@flash_array)
+        expect(flash_array.first[:message]).to include("Clone does not apply to at least one of the selected items")
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+end

@@ -494,6 +494,7 @@ module EmsCommon
         powerbutton_hosts(params[:pressed].split("_")[1..-1].join("_")) # Handle specific power button
       else
         process_vm_buttons(pfx)
+        return if @flash_array
         # Control transferred to another screen, so return
         return if ["host_tag", "#{pfx}_policy_sim", "host_scan", "host_refresh","host_protect",
                     "host_compare","#{pfx}_compare", "#{pfx}_tag","#{pfx}_retire",
