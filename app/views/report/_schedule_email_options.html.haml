@@ -2,30 +2,30 @@
 - url_json = {:url => url}.to_json
 #schedule_email_options_div
   - if @edit[:new][:send_email]
-    %fieldset
-      %h3
-        = _("E-mail Options")
-      %table.style1
-        %tr
-          %td.key
-            = _("Send if Report is Empty")
-          %td
-            = check_box_tag("send_if_empty", "1", @edit[:new][:email][:send_if_empty],
-                            "data-miq_observe_checkbox" => url_json)
-        %tr
-          %td.key
-            = _("Attachments")
-          %td
+    %h3
+      = _("E-mail Options")
+    .form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _("Send if Report is Empty")
+        .col-md-8
+          = check_box_tag("send_if_empty", "1", @edit[:new][:email][:send_if_empty],
+                          "data-miq_observe_checkbox" => url_json)
+      .form-group
+        %label.control-label.col-md-2
+          = _("Attachments")
+        .col-md-8
+          %label.checkbox-inline
             = check_box_tag("send_txt", 1,
                             Array(@edit[:new][:email][:attach]).include?(:txt),
                             "data-miq_observe_checkbox" => url_json)
             = _("Text")
-            &nbsp;&nbsp;
+          %label.checkbox-inline
             = check_box_tag("send_csv", 1,
                             Array(@edit[:new][:email][:attach]).include?(:csv),
                             "data-miq_observe_checkbox" => url_json)
             = _("CSV")
-            &nbsp;&nbsp;
+          %label.checkbox-inline
             - if PdfGenerator.available?
               = check_box_tag("send_pdf", 1,
                               Array(@edit[:new][:email][:attach]).include?(:pdf),
