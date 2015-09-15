@@ -83,8 +83,8 @@ def openstack_environments
 end
 
 case @method
-  when "--load"
-    load_environments
-  when "--obfuscate"
-    obfuscate_environments
+when "--load"
+  load_environments
+when "--obfuscate"
+  obfuscate_environments
 end
