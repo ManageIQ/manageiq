@@ -1,5 +1,8 @@
 module OpenstackHandle
   class ImageDelegate < DelegateClass(Fog::Image::OpenStack)
+    include OpenstackHandle::HandledList
+    include Vmdb::Logging
+
     SERVICE_NAME = "Image"
 
     attr_reader :name
