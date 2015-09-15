@@ -809,7 +809,7 @@
     :description: Users
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: User
     :subcollections:
     - :tags
