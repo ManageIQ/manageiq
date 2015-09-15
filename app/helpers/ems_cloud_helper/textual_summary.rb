@@ -71,7 +71,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_ems_infra
-    textual_link(@record.try(:provider).try(:infra_ems), :as => EmsInfra)
+    textual_link(@record.try(:provider).try(:infra_ems))
   end
 
   def textual_availability_zones
