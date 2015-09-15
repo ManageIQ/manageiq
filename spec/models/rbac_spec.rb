@@ -65,6 +65,24 @@ describe Rbac do
       results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @other_group.id)
       expect(results).to eq []
     end
+
+    it ".search with User.with_userid leaving tenant" do
+      User.with_userid(@owner_user.userid) do
+        @owner_user.miq_groups = [@other_group]
+        @owner_user.save
+        results, = Rbac.search(:class => "Vm", :results_format => :objects)
+        expect(results).to eq []
+      end
+    end
+
+    it ".search with User.with_userid joining tenant" do
+      User.with_userid(@other_user.userid) do
+        @other_user.miq_groups = [@owner_group]
+        @other_user.save
+        results, = Rbac.search(:class => "Vm", :results_format => :objects)
+        expect(results).to eq [@owner_vm]
+      end
+    end
   end
 
   context "with Hosts" do
