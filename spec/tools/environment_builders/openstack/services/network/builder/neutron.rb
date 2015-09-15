@@ -44,7 +44,7 @@ module Openstack
 
             @data.subnets(network.name).each do |subnet|
               @subnets << find_or_create(@service.subnets, subnet.merge(:network_id => network.id,
-                                                                        :tenant_id  => @project.id ))
+                                                                        :tenant_id  => @project.id))
             end
           end
 

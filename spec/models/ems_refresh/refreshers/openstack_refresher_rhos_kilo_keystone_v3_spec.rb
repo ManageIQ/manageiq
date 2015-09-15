@@ -10,7 +10,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   end
 
   it "will perform a full refresh against RHOS #{@environment}" do
-    2.times do  # Run twice to verify that a second run with existing data does not change anything
+    2.times do # Run twice to verify that a second run with existing data does not change anything
       with_cassette(@environment, @ems) do
         EmsRefresh.refresh(@ems)
       end

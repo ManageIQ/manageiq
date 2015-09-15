@@ -35,7 +35,8 @@ module Openstack
         def build_servers(volume, network, image)
           find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images)
           image.build_snapshots_from_servers(servers)
-          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, :servers_from_snapshot)
+          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images,
+                                 :servers_from_snapshot)
           associate_ips(servers, network)
         end
 

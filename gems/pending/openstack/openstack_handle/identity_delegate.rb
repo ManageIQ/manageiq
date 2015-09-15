@@ -10,7 +10,6 @@ module OpenstackHandle
       @name      = name
     end
 
-
     def visible_tenants
       if respond_to?(:projects)
         # Check if keystone v3 method projects is available, if not fall back to v2
