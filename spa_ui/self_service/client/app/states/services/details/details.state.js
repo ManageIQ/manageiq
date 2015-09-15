@@ -30,18 +30,31 @@
   }
 
   /** @ngInject */
-  function StateController(service, EditServiceModal) {
+  function StateController($state, service, CollectionsApi, EditServiceModal) {
     var vm = this;
 
     vm.title = 'Service Details';
     vm.service = service;
 
     vm.activate = activate;
+    vm.removeService = removeService;
     vm.editServiceModal = editServieModal;
 
     activate();
 
     function activate() {
+    }
+
+    function removeService() {
+      var removeAction = {'action': 'retire'};
+      CollectionsApi.post('services', vm.service.id, {}, removeAction).then(removeSuccess, removeFailure);
+
+      function removeSuccess() {
+        $state.go('services.list');
+      }
+
+      function removeFailure(data) {
+      }
     }
 
     function editServieModal() {

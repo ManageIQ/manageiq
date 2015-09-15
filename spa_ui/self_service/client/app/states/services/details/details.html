@@ -41,10 +41,9 @@
             </dl>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <button class="btn btn-danger" type="button" ng-click="vm.removeService()">Remove Service</button>
             <button class="btn btn-primary" type="button" ng-click="vm.editServiceModal()">Edit Service Details</button>
           </div>
-        </div>
-      </div>
       <dl>
         <dt>Description</dt>
         <dd>{{ ::vm.service.long_description || vm.service.description }}</dd>
