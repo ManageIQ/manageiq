@@ -1,101 +1,119 @@
 - @angularForm = true
 
-%form#form_div{:name => "angularForm", 'ng-controller' => "diagnosticsDatabaseFormController", 'ng-show' => "afterGet", 'data-db-backup-form-field-changed-url' => "/#{controller_name}/db_backup_form_field_changed/", 'data-submit-url' => "/#{controller_name}/db_backup/"}
+%form#form_div.form-horizontal{:name => "angularForm", 'ng-controller' => "diagnosticsDatabaseFormController", 'ng-show' => "afterGet", 'data-db-backup-form-field-changed-url' => "/#{controller_name}/db_backup_form_field_changed/", 'data-submit-url' => "/#{controller_name}/db_backup/"}
   - if @sb[:active_tab] == "diagnostics_database"
     -# created div with different name so database validation flash message can be shown in it's own box
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "database"}
 
-    %h3= _("Basic Info")
-    %table.style1
-      %tr
-        %td.key= _("Type")
-        %td.wide= h(@database[:display_name])
-      %tr
-        %td.key= _("Hostname")
-        %td.wide= h(@database[:host])
-      %tr
-        %td.key= _("Database Name")
-        %td.wide= h(@database[:database])
-      %tr
-        %td.key= _("Username")
-        %td.wide= h(@database[:username])
+    %h3
+      = _("Basic Info")
+  .form-group
+    %label.col-md-2.control-label
+      = _("Type")
+    .col-md-8
+      %p.form-control-static
+        = h(@database[:display_name])
+  .form-group
+    %label.col-md-2.control-label
+      = _("Hostname")
+    .col-md-8
+      %p.form-control-static
+        = h(@database[:host])
+  .form-group
+    %label.col-md-2.control-label
+      = _("Database Name")
+    .col-md-8
+      %p.form-control-static
+        = h(@database[:database])
+  .form-group
+    %label.col-md-2.control-label
+      = _("Username")
+    .col-md-8
+      %p.form-control-static
+        = h(@database[:username])
 
-    - if DatabaseBackup.backup_supported?
-      %hr/
-      %h3= _("Run a Database Backup Now")
-      %fieldset
-        %h3= _("Backup Schedules")
-        %table.style1
-          %tr
-            %td.key= _("Fetch settings from a schedule")
-            %td.wide
-              - if @backup_schedules.length < 1
-                = _("No Backup Schedules are defined")
-              - else
-                - default_option = [_("<Choose>"), nil]
-                - schedules_ary = Array(@backup_schedules.invert)
-                - schedules_ary.sort_by! { |name, _id| name }
-                - options = options_for_select([default_option] + schedules_ary)
+  - if DatabaseBackup.backup_supported?
+    %hr/
+    %h3
+      = _("Run a Database Backup Now")
+    %fieldset
+      %h3
+        = _("Backup Schedules")
+      .form-group
+        %label.col-md-2.control-label
+          = _("Fetch settings from a schedule")
+        .col-md-8
+          - if @backup_schedules.length < 1
+            %p.form-control-static
+              = _("No Backup Schedules are defined")
+          - else
+            - default_option = [_("<Choose>"), nil]
+            - schedules_ary = Array(@backup_schedules.invert)
+            - schedules_ary.sort_by! { |name, _id| name }
+            - options = options_for_select([default_option] + schedules_ary)
 
-                = select_tag('backup_schedule_type',
-                             options,
-                             "ng-model"    => "diagnosticsDatabaseModel.backup_schedule_type",
-                             "ng-change"   => "backupScheduleTypeChanged()",
-                             "checkchange" => "log_protocol,depot_name,uri,log_userid,log_password,log_verify")
+            = select_tag('backup_schedule_type',
+                         options,
+                         "ng-model"    => "diagnosticsDatabaseModel.backup_schedule_type",
+                         "ng-change"   => "backupScheduleTypeChanged()",
+                         "checkchange" => "log_protocol,depot_name,uri,log_userid,log_password,log_verify")
 
 
-      %fieldset
-        %h3
-          = _("Database Backup Settings")
-        %table.style1
-          %tr
-            %td.key
-              = _("Type")
-            %td.wide
-              - default_option = [_("<No Depot>"), nil]
-              = select_tag('log_protocol', options_for_select([default_option] + @database_backup_options_for_select),
-                          "ng-model"       => "diagnosticsDatabaseModel.log_protocol",
-                          "ng-change"      => "miqDBBackupService.logProtocolChanged(diagnosticsDatabaseModel)",
-                          "ng-required"    => "miqDBBackupService.logProtocolNotSelected(diagnosticsDatabaseModel)",
-                          "checkchange"    => "")
-          = render :partial => "layouts/angular/edit_log_depot_settings_angular",
-                         :locals  => {:ng_show             => "miqDBBackupService.logProtocolSelected(diagnosticsDatabaseModel)",
-                                      :ng_reqd_depot_name  => "miqDBBackupService.dbRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.depot_name)",
-                                      :ng_model_depot_name => "diagnosticsDatabaseModel.depot_name",
-                                      :ng_reqd_uri         => "miqDBBackupService.dbRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.uri)",
-                                      :ng_model_uri        => "diagnosticsDatabaseModel.uri",
-                                      :ng_model_uri_prefix => "diagnosticsDatabaseModel.uri_prefix",
-                                      :uri_prefix_display  =>  "{{diagnosticsDatabaseModel.uri_prefix}}://"}
-          = render :partial => "layouts/angular/auth_credentials_angular",
-                         :locals  => {:ng_show           => "miqDBBackupService.sambaBackup(diagnosticsDatabaseModel)",
-                                      :ng_model          => "diagnosticsDatabaseModel",
-                                      :ng_reqd_userid    => "miqDBBackupService.sambaRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.log_userid)",
-                                      :ng_reqd_password  => "miqDBBackupService.sambaRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.log_password)",
-                                      :ng_reqd_verify    => "miqDBBackupService.sambaRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.log_verify)",
-                                      :validate_url      => "log_depot_validate",
-                                      :id                => nil,
-                                      :valtype           => "log",
-                                      :basic_info_needed => true}
-          %input{:type => "hidden", :value => "db_backup", :name => "action_typ"}
-      %table{:width => "100%"}
-        %tr
-          %td{:align => "right"}
-            - caption = _("Run a Database Backup Now")
-            - confirm = _("Are you sure you want to Run a Database Backup Now?")
-            = button_tag(_("Submit"),
-                         :class        => "btn btn-primary",
-                         :title        => caption,
-                         "ng-class"    => "{'btn-disabled': !angularForm.$valid}",
-                         "ng-disabled" => "!miqService.saveable(angularForm)",
-                         "ng-show"     => true,
-                         "ng-click"    => "submitButtonClicked('#{confirm}')")
+      %h3
+        = _("Database Backup Settings")
+      .form-group
+        %label.col-md-2.control-label
+          = _("Type")
+        .col-md-8
+          - default_option = [_("<No Depot>"), nil]
+          = select_tag('log_protocol', options_for_select([default_option] + @database_backup_options_for_select),
+                      "ng-model"       => "diagnosticsDatabaseModel.log_protocol",
+                      "ng-change"      => "miqDBBackupService.logProtocolChanged(diagnosticsDatabaseModel)",
+                      "ng-required"    => "miqDBBackupService.logProtocolNotSelected(diagnosticsDatabaseModel)",
+                      "checkchange"    => "",
+                      :class           => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('log_protocol');
+      = render :partial => "layouts/angular/edit_log_depot_settings_angular",
+                     :locals  => {:ng_show             => "miqDBBackupService.logProtocolSelected(diagnosticsDatabaseModel)",
+                                  :ng_reqd_depot_name  => "miqDBBackupService.dbRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.depot_name)",
+                                  :ng_model_depot_name => "diagnosticsDatabaseModel.depot_name",
+                                  :ng_reqd_uri         => "miqDBBackupService.dbRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.uri)",
+                                  :ng_model_uri        => "diagnosticsDatabaseModel.uri",
+                                  :ng_model_uri_prefix => "diagnosticsDatabaseModel.uri_prefix",
+                                  :uri_prefix_display  =>  "{{diagnosticsDatabaseModel.uri_prefix}}://"}
+      = render :partial => "layouts/angular/auth_credentials_angular",
+                     :locals  => {:ng_show           => "miqDBBackupService.sambaBackup(diagnosticsDatabaseModel)",
+                                  :ng_model          => "diagnosticsDatabaseModel",
+                                  :ng_reqd_userid    => "miqDBBackupService.sambaRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.log_userid)",
+                                  :ng_reqd_password  => "miqDBBackupService.sambaRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.log_password)",
+                                  :ng_reqd_verify    => "miqDBBackupService.sambaRequired(diagnosticsDatabaseModel, diagnosticsDatabaseModel.log_verify)",
+                                  :validate_url      => "log_depot_validate",
+                                  :id                => nil,
+                                  :valtype           => "log",
+                                  :basic_info_needed => true}
+      %input{:type => "hidden", :value => "db_backup", :name => "action_typ"}
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "right"}
+          - caption = _("Run a Database Backup Now")
+          - confirm = _("Are you sure you want to Run a Database Backup Now?")
+          = button_tag(_("Submit"),
+                       :class        => "btn btn-primary",
+                       :title        => caption,
+                       "ng-class"    => "{'btn-disabled': !angularForm.$valid}",
+                       "ng-disabled" => "!miqService.saveable(angularForm)",
+                       "ng-show"     => true,
+                       "ng-click"    => "submitButtonClicked('#{confirm}')")
 
     - if DatabaseBackup.gc_supported?
       %hr/
-      %h3= _("Run Database Garbage Collection Now")
-      %table.style1
-        %tr
-          %td= _("Press submit to start the Database Vacuum process")
+      %h3
+        = _("Run Database Garbage Collection Now")
+      .form-group
+        .col-md-8
+          = _("Press submit to start the Database Vacuum process")
       %table{:width => "100%"}
         %tr
           %td{:align => "right"}

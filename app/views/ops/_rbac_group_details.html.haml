@@ -7,19 +7,22 @@
   .row
     .col-md-12.col-lg-6
       %fieldset
-        %h3= _("Group Information")
+        %h3
+          = _("Group Information")
         - if @edit
           = render :partial => "ldap_auth_users"
-        %table.style1
-          %tr
-            %td.key= _("Description")
-            %td{:nowrap => ""}
+        .form-horizontal
+          .form-group
+            %label.col-md-2.control-label
+              = _("Description")
+            .col-md-8{:nowrap => ""}
               - if !@edit
                 = h(@group.description)
               - else
                 = text_field_tag("description",
                                  @edit[:new][:description],
                                  :maxlength         => 50,
+                                 :class => "form-control",
                                  "data-miq_observe" => {:interval => '.5',
                                                         :url      => url}.to_json)
                 &nbsp;
@@ -29,9 +32,10 @@
                                 "data-miq_observe_checkbox" => {:url => url}.to_json)
                 = _("(Look Up LDAP Groups)")
                 = javascript_tag(javascript_focus('description'))
-          %tr
-            %td.key= _("Role")
-            %td{:style => @edit ? 'padding: 0px' : ''}
+          .form-group
+            %label.col-md-2.control-label
+              = _("Role")
+            .col-md-8
               - if !@edit
                 - if @group.miq_user_role
                   %table{:cellpadding => "0", :cellspacing => "0"}
@@ -46,16 +50,18 @@
                         %span.product.product-role
                         = h(@group.miq_user_role.name)
               - else
-                #form-group
+                .form-group
                   = select_tag('group_role',
                       options_for_select(@edit[:roles].sort, @edit[:new][:role]),
                       "title" => "Choose",
                       :class  => "selectpicker")
                   :javascript
+                    miqInitSelectPicker();
                     miqSelectPickerEvent("group_role", "#{combo_url}")
-          %tr
-            %td.key= _("Project/Tenant")
-            %td{:style => @edit ? 'padding: 0px' : ''}
+          .form-group
+            %label.col-md-2.control-label
+              = _("Project/Tenant")
+            .col-md-8
               - if !@edit
                 - if @group.tenant
                   - tenant = @group.tenant
@@ -71,18 +77,18 @@
                         %span.product{:class => "product-#{tenant.divisible ? "tenant" : "project"}"}
                         = h(tenant.name)
               - else
-                #form-group
+                .form-group
                   = select_tag('group_tenant',
                       grouped_options_for_select(@edit[:projects_tenants], @edit[:new][:group_tenant]),
                       "title" => "Choose",
                       :class  => "selectpicker")
                   :javascript
-                    miqInitSelectPicker();
                     miqSelectPickerEvent("group_tenant", "#{combo_url}")
           - unless @edit
-            %tr
-              %td.key= _("Users in this Group")
-              %td
+            .form-group
+              %label.col-md-2.control-label
+                = _("Users in this Group")
+              .col-md-8
                 %table{:cellpadding => "0", :cellspacing => "0"}
                   - @group.users.sort_by { |a| a.name.downcase }.each do |u|
                     - if role_allows(:feature => "rbac_user_show")
@@ -100,35 +106,42 @@
       - if @edit
         #group_lookup{:style => "display:none"}
           %fieldset
-            %h3= _("LDAP Group Look Up")
-            %table.style1
-              %tr
-                %td.key= _("User to Look Up")
-                %td
+            %h3
+              = _("LDAP Group Look Up")
+            .form-horizontal
+              .form-group
+                %label.col-md-2.control-label
+                  = _("User to Look Up")
+                .col-md-8
                   = text_field_tag("user",
                                    @edit[:new][:user],
                                    :maxlength         => 255,
+                                   :class => "form-control",
                                    "data-miq_observe" => {:interval => '.5',
                                                           :url      => url}.to_json)
-                %td
-              %tr
-                %td.key= _("Username")
-                %td
+
+              .form-group
+                %label.col-md-2.control-label
+                  = _("Username")
+                .col-md-8
                   = text_field_tag("user_id",
                                    @edit[:new][:user_id],
                                    :maxlength         => 255,
+                                   :class => "form-control",
                                    "data-miq_observe" => {:interval => '.5',
                                                           :url      => url}.to_json)
-                %td
-              %tr
-                %td.key= _("Password")
-                %td
+
+              .form-group
+                %label.col-md-2.control-label
+                  = _("Password")
+                .col-md-8
                   = password_field_tag("password",
                                        @edit[:new][:password],
                                        :maxlength         => 50,
+                                       :class => "form-control",
                                        "data-miq_observe" => {:interval => '.5',
                                                               :url      => url}.to_json)
-                %td{:align => "right", :valign => "bottom"}
+                .col-md-12{:align => "right", :valign => "bottom"}
                   = link_to("Retrieve",
                             {:action => "rbac_group_user_lookup",
                              :button => "submit",
@@ -141,7 +154,8 @@
                              :title                 => _("LDAP Group Lookup"))
     .col-md-12.col-lg-6
       %fieldset
-        %h3= @edit ? _("Assign Filters") : _("Assigned Filters (read only)")
+        %h3
+          = @edit ? _("Assign Filters") : _("Assigned Filters (read only)")
         #rbac_group_tabs
           %ul.nav.nav-tabs
             = miq_tab_header('customer_tags') do

@@ -20,8 +20,6 @@ CollectionMethods:
     reduce: inject
 CyclomaticComplexity:
   Severity: refactor
-DoubleNegation:
-  Severity: refactor
 GlobalVars:
   AllowedVariables:
   # Loggers
