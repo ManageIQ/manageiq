@@ -334,7 +334,7 @@ class MiqVimInventory < MiqVimClientBase
 	end
 
 	def assert_no_locks
-	    return
+	    return unless @lock_debug
 	    return if !@cacheLock.sync_locked?
 	    msg = ""
 	    msg += "Exclusive cache lock held\n" if @cacheLock.sync_exclusive?
