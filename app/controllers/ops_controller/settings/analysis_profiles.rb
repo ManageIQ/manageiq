@@ -476,8 +476,8 @@ module OpsController::Settings::AnalysisProfiles
 
   # Set record variables to new values
   def ap_set_record_vars_set(scanitemset)
-    scanitemset.name = @edit[:new][:name].strip
-    scanitemset.description = @edit[:new][:description].strip
+    scanitemset.name = @edit[:new].fetch(:name, '').strip
+    scanitemset.description = @edit[:new].fetch(:description, '').strip
     scanitemset.mode = @edit[:new][:scan_mode]
   end
 
