@@ -6,87 +6,88 @@
     .form-group
       %label.col-md-2.control-label
         = _('Memory')
-      .col-md-10
-        .col-md-1
-          = check_box_tag("cb_memory",
-            1,
-            @edit[:new][:cb_memory],
-            "data-miq_sparkle_on" => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe_checkbox" => {:url => url}.to_json)
-        .col-md-10
-          - display = @edit[:new][:cb_memory] ? "" : "display:none"
-          #memory_div{:style => display}
-            .col-md-4
-              = text_field_tag("memory",
-                                @edit[:new][:memory],
-                                :maxlength => MAX_NAME_LEN,
-                                :class     => "form-control",
-                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-            .col-md-4
-              = select_tag("mem_typ",
-                            options_for_select(%w(MB GB),
-                            @edit[:new][:mem_typ]),
-                            "data-miq_sparkle_on" => true,
-                            "data-miq_sparkle_off" => true,
-                            :class    => "selectpicker")
-              :javascript
-                miqInitSelectPicker();
-                miqSelectPickerEvent("mem_typ", "#{url}")
-              (#{@edit[:memory_note]})
+      .col-md-1
+        = check_box_tag("cb_memory",
+          1,
+          @edit[:new][:cb_memory],
+          "data-miq_sparkle_on" => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe_checkbox" => {:url => url}.to_json)
+
+        - display = @edit[:new][:cb_memory] ? "" : "display:none"
+      #memory_div{:style => display}
+        .col-md-4
+          = text_field_tag("memory",
+                            @edit[:new][:memory],
+                            :maxlength => MAX_NAME_LEN,
+                            :class     => "form-control",
+                            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        .col-md-4
+          = select_tag("mem_typ",
+                        options_for_select(%w(MB GB),
+                        @edit[:new][:mem_typ]),
+                        "data-miq_sparkle_on" => true,
+                        "data-miq_sparkle_off" => true,
+                        "data-width"           => "auto",
+                        :class    => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("mem_typ", "#{url}")
+          (#{@edit[:memory_note]})
     .form-group
       %label.col-md-2.control-label
         = _('Processor Sockets')
-      .col-md-10
-        .col-md-1
-          = check_box_tag("cb_cpu",
-                            1,
-                            @edit[:new][:cb_cpu],
-                            "data-miq_sparkle_on" => true,
-                            "data-miq_sparkle_off" => true,
-                            "data-miq_observe_checkbox" => {:url => url}.to_json)
-        .col-md-10
-          .col-md-4
-            - display = @edit[:new][:cb_cpu] ? "" : "display:none"
-            #cpu_div{:style => display}
-              - if @edit[:cpu_options].length > 1
-                = select_tag("cpu_count",
-                              options_for_select((@edit[:new][:cpu_count].nil? ? [["<#{_('Choose')}>", nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
-                              "data-miq_sparkle_on"  => true,
-                              "data-miq_sparkle_off" => true,
-                              :class    => "selectpicker")
-          :javascript
-            miqInitSelectPicker();
-            miqSelectPickerEvent("cpu_count", "#{url}")
-            - else
-              = @edit[:cpu_options][0]
+      .col-md-1
+        = check_box_tag("cb_cpu",
+                          1,
+                          @edit[:new][:cb_cpu],
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+      .col-md-4
+        - display = @edit[:new][:cb_cpu] ? "" : "display:none"
+        #cpu_div{:style => display}
+          - if @edit[:cpu_options].length > 1
+            = select_tag("cpu_count",
+                          options_for_select((@edit[:new][:cpu_count].nil? ? [["<#{_('Choose')}>", nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          "data-width"           => "auto",
+                          :class    => "selectpicker")
+      :javascript
+        miqInitSelectPicker();
+        miqSelectPickerEvent("cpu_count", "#{url}")
+        - else
+          = @edit[:cpu_options][0]
 
     - if @edit[:cores_options].length > 1
       .form-group
         %label.col-md-2.control-label
           = _('Processor Cores Per socket')
-        .col-md-10
-          .col-md-1
-            = check_box_tag("cb_cores_per_socket",
-                            1,
-                            @edit[:new][:cb_cores_per_socket],
-                            "data-miq_sparkle_on" => true,
-                            "data-miq_sparkle_off" => true,
-                            "data-miq_observe_checkbox" => {:url => url}.to_json)
-          .col-md-10
-            .col-md-4
-              - if @edit[:cores_options].length > 1
-                = select_tag("cores_per_socket_count",
-                             options_for_select((@edit[:new][:cores_per_socket_count].nil? ? [["<#{_('Choose')}>",nil]] : []) + @edit[:cores_options],
-                             @edit[:new][:cores_per_socket_count].to_i),
-                             "data-miq_sparkle_on"  => true,
-                             "data-miq_sparkle_off" => true,
-                             :class    => "selectpicker")
-                :javascript
-                  miqInitSelectPicker();
-                  miqSelectPickerEvent("cores_per_socket_count", "#{url}")
-              - else
-                = @edit[:cores_options][0]
+        .col-md-1
+          = check_box_tag("cb_cores_per_socket",
+                          1,
+                          @edit[:new][:cb_cores_per_socket],
+                          "data-miq_sparkle_on" => true,
+                          "data-miq_sparkle_off" => true,
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+
+        .col-md-4
+          - display = @edit[:new][:cb_cores_per_socket] ? "" : "display:none"
+          #cores_div{:style => display}
+            - if @edit[:cores_options].length > 1
+              = select_tag("cores_per_socket_count",
+                           options_for_select((@edit[:new][:cores_per_socket_count].nil? ? [["<#{_('Choose')}>",nil]] : []) + @edit[:cores_options],
+                           @edit[:new][:cores_per_socket_count].to_i),
+                           "data-miq_sparkle_on"  => true,
+                           "data-miq_sparkle_off" => true,
+                           "data-width"           => "auto",
+                           :class                 => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("cores_per_socket_count", "#{url}")
+          - else
+            = @edit[:cores_options][0]
 
       .form-group
         %label.col-md-2.control-label
