@@ -484,7 +484,6 @@ module ManageIQ::Providers
       disks = new_result[:hardware][:disks]
       dev = "vda"
 
-      # TODO: flavor[:disk_size] == 0 should take disk size from image size.
       if (sz = flavor[:disk_size]) == 0
         sz = 1.gigabytes
       end
