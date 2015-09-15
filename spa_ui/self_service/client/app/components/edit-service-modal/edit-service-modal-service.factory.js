@@ -57,7 +57,7 @@
 
       function saveSuccess() {
         $modalInstance.close();
-        $state.go('services.details', {serviceId: vm.service.id});
+        $state.go($state.current, {}, {reload: true});
       }
 
       function saveFailure() {
