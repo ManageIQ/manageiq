@@ -1839,16 +1839,6 @@ class Host < ActiveRecord::Base
     miq_cim_instance.try(:logical_disks_size) || 0
   end
 
-  def create_pxe_install_request(values, requester_id, auto_approve = false)
-    values[:host_ids] = [id]
-    MiqHostProvisionRequest.create_request(values, requester_id, auto_approve)
-  end
-
-  def update_pxe_install_request(request, values, requester_id)
-    values[:host_ids] = [id]
-    MiqHostProvisionRequest.update_request(request, values, requester_id)
-  end
-
   #
   # Metric methods
   #
