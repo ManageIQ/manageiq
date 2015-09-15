@@ -30,17 +30,22 @@
   }
 
   /** @ngInject */
-  function StateController(service) {
+  function StateController(service, EditServiceModal) {
     var vm = this;
 
     vm.title = 'Service Details';
     vm.service = service;
 
     vm.activate = activate;
+    vm.editServiceModal = editServieModal;
 
     activate();
 
     function activate() {
+    }
+
+    function editServieModal() {
+      EditServiceModal.showModal(vm.service);
     }
   }
 })();
