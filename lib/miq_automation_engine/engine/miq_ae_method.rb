@@ -92,7 +92,7 @@ module MiqAeEngine
         ws.setters.each { |uri, value| workspace.varset(uri, value) } unless ws.setters.nil?
         ws.delete
       end
-      process_ruby_method_results(rc, msg, final_stderr.presence)
+      process_ruby_method_results(rc, msg, final_stderr)
     end
 
     MIQ_OK    = 0
@@ -191,7 +191,7 @@ RUBY
           stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
         end
       end
-      return rc, msg, final_stderr.presence
+      return rc, msg, final_stderr
     end
 
     def self.process_ruby_method_results(rc, msg, stderr)
@@ -263,7 +263,6 @@ RUBY
       threads = []
       method_pid = nil
       begin
-        require 'open4'
         status = Open4.popen4(*cmd) do |pid, stdin, stdout, stderr|
           method_pid = pid
           yield stdin if block_given?
@@ -273,7 +272,7 @@ RUBY
           end
           threads << Thread.new do
             stderr.each_line do |msg|
-              msg = msg.strip
+              msg = msg.chomp
               final_stderr << msg
               $miq_ae_logger.error "Method STDERR: #{msg}"
             end
@@ -291,7 +290,7 @@ RUBY
       ensure
         cleanup(method_pid, threads)
       end
-      return rc, msg, final_stderr
+      return rc, msg, final_stderr.presence
     end
 
     def self.cleanup(method_pid, threads)
