@@ -333,15 +333,15 @@ class MiqVimInventory < MiqVimClientBase
 		updateSpecByPropMap(@propMap)
 	end
 
-	def assert_no_locks
-	    return unless @lock_debug
-	    return if !@cacheLock.sync_locked?
-	    msg = ""
-	    msg += "Exclusive cache lock held\n" if @cacheLock.sync_exclusive?
-	    msg += "Shared cache lock held\n" if @cacheLock.sync_shared?
-	    msg += Kernel.caller.join("\n")
-	    raise msg
-    end
+  def assert_no_locks
+    return unless @lock_debug
+    return if !@cacheLock.sync_locked?
+    msg = ""
+    msg += "Exclusive cache lock held\n" if @cacheLock.sync_exclusive?
+    msg += "Shared cache lock held\n" if @cacheLock.sync_shared?
+    msg += Kernel.caller.join("\n")
+    raise msg
+  end
 
     def loadCache
         @cacheLock.synchronize(:EX) do
