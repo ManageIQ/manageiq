@@ -234,6 +234,7 @@ module OpenstackHandle
       # service isn't available when encountered.
       #
       if service == "Storage"
+        # TODO(lsmola) move swift list to handled_list, than we can remove this
         begin
           svc.directories.length
         rescue Excon::Errors::Forbidden
@@ -302,7 +303,12 @@ module OpenstackHandle
         not_found_error = Fog.const_get(service)::OpenStack::NotFound
 
         rv = begin
-          array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
+          if accessor.kind_of?(Proc)
+            accessor.call(svc)
+          else
+            array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
+          end
+
         rescue not_found_error => e
           $fog_log.warn("MIQ(#{self.class.name}.#{__method__}) HTTP 404 Error during OpenStack request. " \
                         "Skipping inventory item #{service} #{accessor}\n#{e}")
@@ -313,6 +319,14 @@ module OpenstackHandle
           array_accessor ? ra.concat(rv) : ra << rv
         end
       end
+
+      if uniq_id.blank? && array_accessor && !ra.blank?
+        # Take uniq ID from Fog::Model definition
+        last_object = ra.last
+        # TODO(lsmola) change to last_object.identity_name once the new fog-core is released
+        uniq_id = last_object.class.instance_variable_get("@identity") if last_object.kind_of?(Fog::Model)
+      end
+
       return ra unless uniq_id
       ra.uniq { |i| i.kind_of?(Hash) ? i[uniq_id] : i.send(uniq_id) }
     end

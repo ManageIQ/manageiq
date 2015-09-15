@@ -41,7 +41,7 @@ module Openstack
       #   query param to avoid HTTP caching - ignore_awful_caching##########
       #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
       VCR.use_cassette("#{described_class.name.underscore}_rhos_#{version}",
-                       :match_requests_on => [:method, :host, :path]) do
+                       :match_requests_on => [:method, :host, :path, :query]) do
         yield
       end
       ems.reload

@@ -1,5 +1,8 @@
 module OpenstackHandle
   class VolumeDelegate < DelegateClass(Fog::Volume::OpenStack)
+    include OpenstackHandle::HandledList
+    include Vmdb::Logging
+
     SERVICE_NAME = "Volume"
 
     attr_reader :name
@@ -8,10 +11,6 @@ module OpenstackHandle
       super(dobj)
       @os_handle = os_handle
       @name      = name
-    end
-
-    def volumes_for_accessible_tenants
-      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :volumes, :id)
     end
 
     def snapshots_for_accessible_tenants

@@ -3,7 +3,7 @@ module RefreshParserCommon
   module Images
 
     def get_images
-      images = @image_service.images_for_accessible_tenants
+      images = @image_service.handled_list(:images)
       process_collection(images, :vms) { |image| parse_image(image) }
     end
 

@@ -25,7 +25,7 @@ end
 @method = ARGV.shift
 raise ArgumentError, usage("expecting method name as first argument") unless %w(--load --obfuscate).include?(@method)
 
-OBFUSCATED_PASSWORD = "password"
+OBFUSCATED_PASSWORD = "password_2WpEraURh"
 OBFUSCATED_IP = "1.2.3.4"
 
 def load_environments

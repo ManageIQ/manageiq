@@ -5,7 +5,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   include Openstack::RefreshSpecCommon
 
   before(:each) do
-    setup_ems('1.2.3.4', 'password')
+    setup_ems('1.2.3.4', 'password_2WpEraURh')
     @environment = :grizzly
   end
 

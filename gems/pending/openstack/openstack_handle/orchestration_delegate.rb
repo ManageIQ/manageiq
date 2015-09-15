@@ -1,5 +1,8 @@
 module OpenstackHandle
   class OrchestrationDelegate < DelegateClass(Fog::Orchestration::OpenStack)
+    include OpenstackHandle::HandledList
+    include Vmdb::Logging
+
     SERVICE_NAME = "Orchestration"
 
     attr_reader :name

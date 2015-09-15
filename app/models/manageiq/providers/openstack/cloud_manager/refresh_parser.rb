@@ -63,25 +63,25 @@ module ManageIQ::Providers
     private
 
     def servers
-      @servers ||= @connection.servers_for_accessible_tenants
+      @servers ||= @connection.handled_list(:servers)
     end
 
     def security_groups
-      @security_groups ||= @network_service.security_groups_for_accessible_tenants
+      @security_groups ||= @network_service.handled_list(:security_groups)
     end
 
     def networks
-      @networks ||= @network_service.networks_for_accessible_tenants
+      @networks ||= @network_service.handled_list(:networks)
     end
 
     def volumes
       # TODO: support volumes through :nova as well?
       return [] unless @volume_service.name == :cinder
-      @volumes ||= @volume_service.volumes_for_accessible_tenants
+      @volumes ||= @volume_service.handled_list(:volumes)
     end
 
     def get_flavors
-      flavors = @connection.flavors_for_accessible_tenants
+      flavors = @connection.handled_list(:flavors)
       process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
     end
 
@@ -112,7 +112,7 @@ module ManageIQ::Providers
     end
 
     def get_key_pairs
-      kps = @connection.key_pairs
+      kps = @connection.handled_list(:key_pairs)
       process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
     end
 
@@ -149,9 +149,9 @@ module ManageIQ::Providers
     end
 
     def get_snapshots
-      # TODO: support snapshots through :nova as well?
       return unless @volume_service.name == :cinder
-      process_collection(@volume_service.snapshots_for_accessible_tenants,
+      process_collection(@volume_service.handled_list(:list_snapshots_detailed,
+                                                      :__request_body_index => "snapshots"),
                          :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
     end
 
@@ -166,12 +166,12 @@ module ManageIQ::Providers
     end
 
     def floating_ips_neutron
-      @network_service.floating_ips
+      @network_service.handled_list(:floating_ips)
     end
 
     # maintained for legacy nova network support
     def floating_ips_nova
-      @network_service.addresses_for_accessible_tenants
+      @connection.handled_list(:addresses)
     end
 
     def link_vm_genealogy

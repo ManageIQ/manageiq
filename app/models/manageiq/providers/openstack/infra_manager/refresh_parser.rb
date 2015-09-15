@@ -68,11 +68,11 @@ module ManageIQ
       end
 
       def servers
-        @servers ||= @connection.servers_for_accessible_tenants
+        @servers ||= @connection.handled_list(:servers)
       end
 
       def hosts
-        @hosts ||= @baremetal_service.nodes.all
+        @hosts ||= @baremetal_service.handled_list(:nodes)
       end
 
       def clouds
@@ -107,7 +107,7 @@ module ManageIQ
       end
 
       def hosts_ports
-        @hosts_ports ||= @baremetal_service.ports.all
+        @hosts_ports ||= @baremetal_service.handled_list(:ports)
       end
 
       def load_hosts
