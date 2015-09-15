@@ -39,6 +39,12 @@ if (typeof(ManageIQ) === 'undefined') {
       gridColumnWidths: null, // store grid column widths
       xml: null,
     },
+    layout: { // abstraction over dhxLayout(B)
+      sidebar:   null,
+      toolbar:   null,
+      content:   null,
+      paginator: null
+    },
     mouse: {
       x: null, // mouse X coordinate for popup menu
       y: null, // mouse Y coordinate for popup menu

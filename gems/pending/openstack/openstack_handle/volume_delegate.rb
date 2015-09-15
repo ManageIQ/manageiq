@@ -2,9 +2,12 @@ module OpenstackHandle
   class VolumeDelegate < DelegateClass(Fog::Volume::OpenStack)
     SERVICE_NAME = "Volume"
 
-    def initialize(dobj, os_handle)
+    attr_reader :name
+
+    def initialize(dobj, os_handle, name)
       super(dobj)
       @os_handle = os_handle
+      @name      = name
     end
 
     def volumes_for_accessible_tenants

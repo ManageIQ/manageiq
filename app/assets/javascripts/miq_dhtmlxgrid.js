@@ -1,3 +1,16 @@
+// ES6 endsWith polyfill
+if (!String.prototype.endsWith) {
+  String.prototype.endsWith = function(searchString, position) {
+      var subjectString = this.toString();
+      if (position === undefined || position > subjectString.length) {
+        position = subjectString.length;
+      }
+      position -= searchString.length;
+      var lastIndex = subjectString.indexOf(searchString, position);
+      return lastIndex !== -1 && lastIndex === position;
+  };
+}
+
 // Functions used by MIQ for the dhtmlxtree control
 
 // Function to pass ajax request to server, to remember tree states
@@ -13,6 +26,9 @@ function miqRowClick(row_id, cell_idx) {
     if (typeof row_url_ajax != "undefined" && row_url_ajax) {
       miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
     } else {
+      if (!row_url.endsWith("/")) {
+        row_url = row_url + "/";
+      }
       DoNav(row_url + row_id);
     }
   }
@@ -26,7 +42,7 @@ function miqAeRowSelected(row_id, cell_idx) {
       if (selected_id.split("_")[0] == "Field") {
         this.clearSelection();
       } else {
-        cfmeDynatree_activateNode('ae_tree', row_id);
+        miqDynatreeActivateNode('ae_tree', row_id);
       }
     }
   }

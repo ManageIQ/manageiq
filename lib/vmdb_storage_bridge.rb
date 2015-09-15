@@ -291,10 +291,4 @@ class VmdbStorageBridge
     row.class.column_names.each { |cn| rv[cn] = row[cn] if WBEM.valid_cimtype?(row[cn]) }
     return rv
   end
-
 end
-
-# mvs = MiqVimSmis.new
-# mvs.collectData
-# mvs.bridgeAssociations
-

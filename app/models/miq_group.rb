@@ -1,7 +1,7 @@
 class MiqGroup < ActiveRecord::Base
   default_scope { where(self.conditions_for_my_region_default_scope) }
 
-  belongs_to :tenant_owner, :class_name => "Tenant"
+  belongs_to :tenant
   belongs_to :miq_user_role
   belongs_to :resource, :polymorphic => true
   has_and_belongs_to_many :users
@@ -76,6 +76,7 @@ class MiqGroup < ActiveRecord::Base
   def self.seed
     MiqRegion.my_region.lock do
       role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
+      root_tenant = Tenant.root_tenant
       if self.count == 0 && File.exist?(role_map_file)
         filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
         ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
@@ -95,27 +96,13 @@ class MiqGroup < ActiveRecord::Base
           group.sequence      = seq
           group.filters       = ldap_to_filters[g]
           group.group_type    = "system"
+          group.tenant        = root_tenant
 
           mode = group.new_record? ? "Created" : "Added"
           group.save!
           _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
 
           seq += 1
-        end
-      else
-        # Migrate legacy groups to have miq_user_roles if necessary
-        self.all.each do |g|
-          next unless g.group_type == "ldap"
-          role_name = "EvmRole-#{g.description.split("-").last}"
-          role = MiqUserRole.find_by_name(role_name)
-          if role.nil? && g.role
-            role_name = "EvmRole-#{g.role.name}"
-            role = MiqUserRole.find_by_name(role_name)
-          end
-          g.update_attributes(
-            :group_type    => "system",
-            :miq_user_role => role
-          )
         end
       end
     end
@@ -196,5 +183,17 @@ class MiqGroup < ActiveRecord::Base
 
   def description=(val)
     super(val.to_s.strip)
+  end
+
+  def ordered_widget_sets
+    if settings && settings[:dashboard_order]
+      MiqWidgetSet.find_with_same_order(settings[:dashboard_order]).to_a
+    else
+      miq_widget_sets.sort_by { |a| a.name.downcase }
+    end
+  end
+
+  def self.sort_by_desc
+    all.sort_by { |g| g.description.downcase }
   end
 end

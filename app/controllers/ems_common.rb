@@ -9,24 +9,24 @@ module EmsCommon
     @ems = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@ems)
 
-    @gtl_url = "/#{@table_name}/show/" << @ems.id.to_s << "?"
+    @gtl_url = show_link(@ems) << "?"
     @showtype = "config"
     drop_breadcrumb({:name=>ui_lookup(:tables=>@table_name), :url=>"/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
 
     if ["download_pdf","main","summary_only"].include?(@display)
       get_tagdata(@ems)
-      drop_breadcrumb( {:name=>@ems.name + " (Summary)", :url=>"/#{@table_name}/show/#{@ems.id}"} )
+      drop_breadcrumb(:name => @ems.name + " (Summary)", :url => show_link(@ems))
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf","summary_only"].include?(@display)
     elsif @display == "props"
-      drop_breadcrumb( {:name=>@ems.name+" (Properties)", :url=>"/#{@table_name}/show/#{@ems.id}?display=props"} )
+      drop_breadcrumb(:name => @ems.name + " (Properties)", :url => show_link(@ems, :display  =>  "props"))
     elsif @display == "ems_folders"
       if params[:vat]
-        drop_breadcrumb({:name=>@ems.name+" (VMs & Templates)",
-                        :url=>"/#{@table_name}/show/#{@ems.id}?display=ems_folders&vat=true"})
+        drop_breadcrumb(:name => @ems.name + " (VMs & Templates)",
+                        :url  => show_link(@ems, :display => "ems_folder", :vat => "true"))
       else
-        drop_breadcrumb({:name=>@ems.name+" (Hosts & Clusters)",
-                        :url=>"/#{@table_name}/show/#{@ems.id}?display=ems_folders"} )
+        drop_breadcrumb(:name => @ems.name + " (Hosts & Clusters)",
+                        :url  => show_link(@ems, :display => "ems_folders"))
       end
       @showtype = "config"
       build_dc_tree
@@ -37,7 +37,7 @@ module EmsCommon
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report
-      drop_breadcrumb( {:name=>"Timelines", :url=>"/#{@table_name}/show/#{@record.id}?refresh=n&display=timeline"} )
+      drop_breadcrumb(:name => "Timelines", :url => show_link(@record.id, :refresh => "n", :display => "timeline"))
     elsif ["instances","images","miq_templates","vms"].include?(@display) || session[:display] == "vms" && params[:display].nil?
       if @display == "instances"
         title = "Instances"
@@ -52,7 +52,7 @@ module EmsCommon
         title = "VMs"
         kls = Vm
       end
-      drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name => @ems.name + " (All #{title})", :url => show_link(@ems, :display  =>  @display))
       @view, @pages = get_view(kls, :parent=>@ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -61,7 +61,7 @@ module EmsCommon
       end
     elsif @display == "availability_zones" || session[:display] == "availability_zones" && params[:display].nil?
       title = "Availability Zones"
-      drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name => @ems.name + " (All #{title})", :url => show_link(@ems, :display => @display))
       @view, @pages = get_view(AvailabilityZone, :parent=>@ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -71,7 +71,7 @@ module EmsCommon
     elsif @display == "container_replicators" || session[:display] == "container_replicators" && params[:display].nil?
       title = ui_lookup(:tables => "container_replicators")
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(ContainerReplicator, :parent => @ems)
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -83,7 +83,7 @@ module EmsCommon
     elsif @display == "containers" || session[:display] == "containers" && params[:display].nil?
       title = ui_lookup(:tables => "containers")
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(Container, :parent => @ems)
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -95,7 +95,7 @@ module EmsCommon
     elsif @display == "container_nodes" || session[:display] == "container_nodes" && params[:display].nil?
       title = "Container Nodes"
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(ContainerNode, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -107,7 +107,7 @@ module EmsCommon
     elsif @display == "container_services" || session[:display] == "container_services" && params[:display].nil?
       title = "Container Services"
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(ContainerService, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -119,7 +119,7 @@ module EmsCommon
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
       title = "Pods"
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(ContainerGroup, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -131,7 +131,7 @@ module EmsCommon
     elsif @display == "container_routes" || session[:display] == "container_routes" && params[:display].nil?
       title = ui_lookup(:tables => "container_routes")
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(ContainerRoute, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -143,7 +143,7 @@ module EmsCommon
     elsif @display == "container_projects" || session[:display] == "container_projects" && params[:display].nil?
       title = ui_lookup(:tables => "container_projects")
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(ContainerProject, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -156,7 +156,7 @@ module EmsCommon
           session[:display] == "container_image_registries" && params[:display].nil?
       title = ui_lookup(:tables => "container_image_registries")
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(ContainerImageRegistry, :parent => @ems)  # Get the records into a view and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -168,7 +168,7 @@ module EmsCommon
     elsif @display == "container_images" || session[:display] == "container_images" && params[:display].nil?
       title = ui_lookup(:tables => "container_images")
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(ContainerImage, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
@@ -179,7 +179,7 @@ module EmsCommon
       end
     elsif @display == "cloud_tenants" || (session[:display] == "cloud_tenants" && params[:display].nil?)
       title = "Cloud Tenants"
-      drop_breadcrumb( {:name => "#{@ems.name} (All #{title})", :url => "/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name => "#{@ems.name} (All #{title})", :url => show_link(@ems, :display => @display))
       @view, @pages = get_view(CloudTenant, :parent => @ems) # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] && @view.extras[:total_count] > @view.extras[:auth_count]
@@ -187,7 +187,7 @@ module EmsCommon
       end
     elsif @display == "flavors" || session[:display] == "flavors" && params[:display].nil?
       title = "Flavors"
-      drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name => @ems.name + " (All #{title})", :url => show_link(@ems, :display => @display))
       @view, @pages = get_view(Flavor, :parent=>@ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -196,7 +196,7 @@ module EmsCommon
       end
     elsif @display == "security_groups" || session[:display] == "security_groups" && params[:display].nil?
       title = "Security Groups"
-      drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name => @ems.name + " (All #{title})", :url => show_link(@ems, :display => @display))
       @view, @pages = get_view(SecurityGroup, :parent=>@ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -204,7 +204,8 @@ module EmsCommon
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables=>@table_name)
       end
     elsif @display == "storages" || session[:display] == "storages" && params[:display].nil?
-      drop_breadcrumb( {:name=>@ems.name+" (All Managed #{ui_lookup(:tables=>"storages")})", :url=>"/#{@table_name}/show/#{@ems.id}?display=storages"} )
+      drop_breadcrumb(:name => @ems.name + " (All Managed #{ui_lookup(:tables => "storages")})",
+                      :url  => show_link(@ems, :display => "storages"))
       @view, @pages = get_view(Storage, :parent=>@ems)  # Get the records (into a view) and the paginator
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]
@@ -212,7 +213,7 @@ module EmsCommon
       end
     elsif @display == "ems_clusters"
       drop_breadcrumb(:name => "#{@ems.name} (All #{title_for_clusters})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=ems_clusters")
+                      :url  => show_link(@ems, :display => "ems_clusters"))
       @view, @pages = get_view(EmsCluster, :parent=>@ems) # Get the records (into a view) and the paginator
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]
@@ -221,7 +222,7 @@ module EmsCommon
     elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
       title = "Stacks"
       drop_breadcrumb(:name => "#{@ems.name} (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(OrchestrationStack, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] &&
@@ -231,7 +232,7 @@ module EmsCommon
         @bottom_msg = "* You are not authorized to view #{count_text} on this #{ui_lookup(:tables => @table_name)}"
       end
     else  # Must be Hosts # FIXME !!!
-      drop_breadcrumb( {:name=>@ems.name+" (All Managed Hosts)", :url=>"/#{@table_name}/show/#{@ems.id}?display=hosts"} )
+      drop_breadcrumb(:name => @ems.name + " (All Managed Hosts)", :url => show_link(@ems, :display => :hosts))
       @view, @pages = get_view(Host, :parent=>@ems) # Get the records (into a view) and the paginator
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]
@@ -543,8 +544,14 @@ module EmsCommon
           end
         end
       else
-        render :update do |page|
-          page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
+        if params[:pressed] == "ems_cloud_edit" && params[:id]
+          render :update do |page|
+            page.redirect_to edit_ems_cloud_path(params[:id])
+          end
+        else
+          render :update do |page|
+            page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
+          end
         end
       end
     else
@@ -691,6 +698,7 @@ module EmsCommon
 
   # Set form variables for edit
   def set_form_vars
+    form_instance_vars
 
     @edit = Hash.new
     @edit[:ems_id] = @ems.id
@@ -757,12 +765,34 @@ module EmsCommon
     session[:edit] = @edit
   end
 
+  def form_instance_vars
+    @server_zones = []
+    zones = Zone.order('lower(description)')
+    zones.each do |zone|
+      @server_zones.push([zone.description, zone.name])
+    end
+    @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
+    @amazon_regions = get_amazon_regions
+    @openstack_infra_providers = retrieve_openstack_infra_providers
+    @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
+  end
+
   def get_amazon_regions
     regions = Hash.new
     ManageIQ::Providers::Amazon::Regions.all.each do |region|
       regions[region[:name]] = region[:description]
     end
     return regions
+  end
+
+  def retrieve_openstack_infra_providers
+    openstack_infra_providers = []
+    ManageIQ::Providers::Openstack::Provider.all.each do |provider|
+      openstack_infra_providers = [
+        [provider[:name], provider[:id]]
+      ]
+    end
+    openstack_infra_providers
   end
 
   # Get variables from edit form
@@ -778,10 +808,10 @@ module EmsCommon
       @edit[:new][:emstype] = params[:server_emstype]
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
-      elsif params[:server_emstype] == EmsKubernetes.ems_type
-        @edit[:new][:port] = @ems.port ?  @ems.port : EmsKubernetes.new.port
-      elsif params[:server_emstype] == EmsOpenshift.ems_type
-        @edit[:new][:port] = @ems.port ?  @ems.port : EmsOpenshift.new.port
+      elsif params[:server_emstype] == ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
+        @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Kubernetes::ContainerManager::DEFAULT_PORT
+      elsif params[:server_emstype] == ManageIQ::Providers::Openshift::ContainerManager.ems_type
+        @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Openshift::ContainerManager::DEFAULT_PORT
       else
         @edit[:new][:port] = nil
       end
@@ -826,7 +856,7 @@ module EmsCommon
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
-    if ems.is_a?(EmsMicrosoft)
+    if ems.is_a?(ManageIQ::Providers::Microsoft::InfraManager)
       ems.security_protocol = @edit[:new][:security_protocol]
       ems.realm = @edit[:new][:realm]
     end
@@ -1025,5 +1055,11 @@ module EmsCommon
 
   def permission_prefix
     self.class.permission_prefix
+  end
+
+  def show_link(ems, options = {})
+    url_for(options.merge(:controller => @table_name,
+                          :action     => "show",
+                          :id         => ems.id))
   end
 end

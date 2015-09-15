@@ -26,9 +26,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   belongs_to :provider
-  belongs_to :tenant_owner, :class_name => 'Tenant'
-  has_many :tenant_resources, :as => :resource
-  has_many :tenants, :through => :tenant_resources
+  belongs_to :tenant
 
   has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate"
@@ -38,6 +36,7 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id"
   has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
+  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy
@@ -53,10 +52,10 @@ class ExtManagementSystem < ActiveRecord::Base
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
   has_many :miq_events,             :as => :target, :dependent => :destroy
 
-  validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_owner_id]}
+  validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname,
             :presence   => true,
-            :uniqueness => {:scope => [:tenant_owner_id], :case_sensitive => false},
+            :uniqueness => {:scope => [:tenant_id], :case_sensitive => false},
             :if         => :hostname_required?
 
   # TODO: Remove all callers of address
@@ -124,7 +123,7 @@ class ExtManagementSystem < ActiveRecord::Base
       hostname = Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
 
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
-        [EmsMicrosoft, 'SCVMM']
+        [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
       elsif ost.hypervisor.include?(:rhevm)
         [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
       else
@@ -186,6 +185,10 @@ class ExtManagementSystem < ActiveRecord::Base
       suffix = short_name.sub(/^Ems/, '')
       "MiqProvision#{suffix}Workflow".constantize
     end
+  end
+
+  def self.default_blacklisted_event_names
+    []
   end
 
   # UI methods for determining availability of fields
@@ -351,8 +354,8 @@ class ExtManagementSystem < ActiveRecord::Base
     end
   end
 
-  def event_where_clause(assoc)
-    ["ems_id = ?", self.id]
+  def event_where_clause(assoc = :ems_events)
+    ["#{events_table_name(assoc)}.ems_id = ?", id]
   end
 
   def total_vms_and_templates
@@ -478,5 +481,16 @@ class ExtManagementSystem < ActiveRecord::Base
       _log.info("EMS: [#{self.name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       self.stop_event_monitor_queue
     end
+  end
+
+  def blacklisted_event_names
+    (
+      self.class.blacklisted_events.where(:enabled => true).pluck(:event_name) +
+      blacklisted_events.where(:enabled => true).pluck(:event_name)
+    ).uniq.sort
+  end
+
+  def self.blacklisted_events
+    BlacklistedEvent.where(:provider_model => name, :ems_id => nil)
   end
 end

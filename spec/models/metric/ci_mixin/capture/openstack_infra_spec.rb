@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Metric::CiMixin::Capture::OpenstackInfra do
+describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
   require File.expand_path(File.join(File.dirname(__FILE__),
                                      %w(.. .. .. .. tools openstack_data openstack_data_test_helper)))
 
@@ -11,32 +11,33 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     @mock_meter_list = OpenstackMeterListData.new
     @mock_stats_data = OpenstackMetricStatsData.new
 
-    @ems_openstack = FactoryGirl.create(:ems_openstack_infra, :zone => @zone)
-    @ems_openstack.stub(:list_meters).and_return(
+    @metering = double(:metering)
+    @metering.stub(:list_meters).and_return(
       OpenstackApiResult.new(@mock_meter_list.list_meters("metadata_counters")))
 
+    @ems_openstack = FactoryGirl.create(:ems_openstack_infra, :zone => @zone)
+    @ems_openstack.stub(:connect).with(:service => "Metering").and_return(@metering)
+
     @host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems_openstack)
-    @host.stub(:perf_init_openstack).and_return(@ems_openstack)
   end
 
   context "with standard interval data" do
     before :each do
-      @ems_openstack.stub(:get_statistics) do |name, _options|
+      @metering.stub(:get_statistics) do |name, _options|
         OpenstackApiResult.new(@mock_stats_data.get_statistics(name))
       end
     end
 
     it "treats openstack timestamp as UTC" do
       ts_as_utc = api_time_as_utc(@mock_stats_data.get_statistics("hardware.system_stats.cpu.util").last)
-      _counters, values_by_id_and_ts = @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra",
-                                                                            "realtime")
+      _counters, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
       ts = Time.parse(values_by_id_and_ts[@host.ems_ref].keys.sort.last)
 
       ts_as_utc.should eq ts
     end
 
     it "translates cumulative meters into discrete values" do
-      counter_info = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
+      counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "disk_usage_rate_average"
       end
 
@@ -83,7 +84,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
         )
 
       # get the actual values from the method
-      _, values_by_id_and_ts = @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
+      _, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
       values_by_ts = values_by_id_and_ts[@host.ems_ref]
 
       # make sure that the last calculated value is the same as the discrete values
@@ -99,7 +100,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
 
   context "with irregular interval data" do
     before do
-      @ems_openstack.stub(:get_statistics) do |name, _options|
+      @metering.stub(:get_statistics) do |name, _options|
         OpenstackApiResult.new(@mock_stats_data.get_statistics(name, "irregular_interval"))
       end
 
@@ -107,7 +108,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     end
 
     def preload_data
-      @counter_info = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "disk_usage_rate_average"
       end
 
@@ -116,7 +117,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
       @read_bytes = @mock_stats_data.get_statistics("hardware.system_stats.io.incoming.blocks", "irregular_interval")
       @write_bytes = @mock_stats_data.get_statistics("hardware.system_stats.io.outgoing.blocks", "irregular_interval")
 
-      _, values_by_id_and_ts = @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
+      _, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
       @values_by_ts = values_by_id_and_ts[@host.ems_ref]
       @ts_keys = @values_by_ts.keys.sort
     end
@@ -361,7 +362,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
   context "1. collection period from 2 collection periods total of net_usage_rate_average, end of this period has "\
           "incomplete stat" do
     before do
-      @ems_openstack.stub(:get_statistics) do |name, _options|
+      @metering.stub(:get_statistics) do |name, _options|
         first_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
                                                                                     "multiple_collection_periods"),
                                                     '<=',
@@ -374,7 +375,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     end
 
     def preload_data
-      @counter_info = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "net_usage_rate_average"
       end
 
@@ -390,7 +391,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
                                        '<=',
                                        NET_SECOND_COLLECTION_PERIOD_START)
 
-      _, values_by_id_and_ts = @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
+      _, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
       @values_by_ts = values_by_id_and_ts[@host.ems_ref]
       @ts_keys = @values_by_ts.keys.sort
     end
@@ -515,7 +516,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
   context "2. collection period from 2 collection periods total of net_usage_rate_average, start and middle of "\
           "this period has one incomplete stat" do
     before do
-      @ems_openstack.stub(:get_statistics) do |name, _options|
+      @metering.stub(:get_statistics) do |name, _options|
         second_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
                                                                                      "multiple_collection_periods"),
                                                      '>',
@@ -536,7 +537,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     end
 
     def preload_data
-      @counter_info = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "net_usage_rate_average"
       end
 
@@ -558,7 +559,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
       # Drop pre last element of write bytes cause it doesn't have pair sample, therefore it is an incomplete stat
       @write_bytes.delete_at(-2)
 
-      _, values_by_id_and_ts = @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
+      _, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
       @values_by_ts = values_by_id_and_ts[@host.ems_ref]
       @ts_keys = @values_by_ts.keys.sort
     end
@@ -612,7 +613,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     it "there is missing stat in the middle of the period, make sure we log warning of corrupted data exactly once" do
       # should fail twice for mem_usage and net_usage
       $log.should_receive(:warn).with(/Distance of the multiple streams of data is invalid/).exactly(:twice)
-      @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
+      @host.perf_collect_metrics("realtime")
     end
 
     it "make sure disk_usage_rate_average stats continuos block of 20s is correct" do
@@ -653,7 +654,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
   context "1. collection period from 2 collection periods total of the mem_usage_absolute_average, end of this "\
           "period has incomplete stat" do
     before do
-      @ems_openstack.stub(:get_statistics) do |name, _options|
+      @metering.stub(:get_statistics) do |name, _options|
         first_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
                                                                                     "multiple_collection_periods"),
                                                     '<=',
@@ -666,10 +667,10 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     end
 
     def preload_data
-      @counter_info = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "mem_usage_absolute_average"
       end
-      @counter_info_swap = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
+      @counter_info_swap = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "mem_swapped_absolute_average"
       end
 
@@ -695,7 +696,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
                                       '<=',
                                       NET_SECOND_COLLECTION_PERIOD_START)
 
-      _, values_by_id_and_ts = @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
+      _, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
       @values_by_ts = values_by_id_and_ts[@host.ems_ref]
       @ts_keys = @values_by_ts.keys.sort
     end
@@ -824,7 +825,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
   context "2. collection period from 2 collection periods total of the mem_usage_absolute_average, start and "\
           "middle of this period has one incomplete stat" do
     before do
-      @ems_openstack.stub(:get_statistics) do |name, _options|
+      @metering.stub(:get_statistics) do |name, _options|
         second_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
                                                                                      "multiple_collection_periods"),
                                                      '>',
@@ -845,7 +846,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     end
 
     def preload_data
-      @counter_info = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
+      @counter_info = described_class::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "mem_usage_absolute_average"
       end
 
@@ -867,7 +868,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
       # Drop pre last element of write bytes cause it doesn't have pair sample, therefore it is an incomplete stat
       @memory_total.delete_at(-2)
 
-      _, values_by_id_and_ts = @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
+      _, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
       @values_by_ts = values_by_id_and_ts[@host.ems_ref]
       @ts_keys = @values_by_ts.keys.sort
     end
@@ -916,7 +917,7 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     it "there is missing stat in the middle of the period, make sure we log warning of corrupted data exactly once" do
       # should fail twice for mem_usage and net_usage
       $log.should_receive(:warn).with(/Distance of the multiple streams of data is invalid/).exactly(:twice)
-      @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
+      @host.perf_collect_metrics("realtime")
     end
 
     it "make sure disk_usage_rate_average stats continuos block of 20s is correct" do

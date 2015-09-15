@@ -3,6 +3,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   require_dependency 'manageiq/providers/redhat/infra_manager/event_parser'
   require_dependency 'manageiq/providers/redhat/infra_manager/refresh_worker'
   require_dependency 'manageiq/providers/redhat/infra_manager/refresh_parser'
+  require_dependency 'manageiq/providers/redhat/infra_manager/metrics_capture'
   require_dependency 'manageiq/providers/redhat/infra_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/redhat/infra_manager/host'
   require_dependency 'manageiq/providers/redhat/infra_manager/provision'
@@ -19,6 +20,17 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def self.description
     @description ||= "Red Hat Enterprise Virtualization Manager".freeze
+  end
+
+  def self.default_blacklisted_event_names
+    %w(
+      UNASSIGNED
+      USER_REMOVE_VG
+      USER_REMOVE_VG_FAILED
+      USER_VDC_LOGIN
+      USER_VDC_LOGOUT
+      USER_VDC_LOGIN_FAILED
+    )
   end
 
   def supports_port?

@@ -20,11 +20,13 @@ db: ContainerRoute
 # Columns to fetch from the main table
 cols:
 - name
-- ext_management_system
 
 # Included tables (joined, has_one, has_many) and columns
 include:
   container_project:
+    columns:
+    - name
+  ext_management_system:
     columns:
     - name
 
@@ -34,7 +36,7 @@ include_for_find:
 # Order of columns (from all tables)
 col_order: 
 - name
-- ext_management_system
+- ext_management_system.name
 - container_project.name
 
 # Column titles, in order

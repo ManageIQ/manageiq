@@ -96,72 +96,40 @@ describe MiqGroup do
       @miq_group.description = "      leading and trailing white spaces     "
       @miq_group.description.should == "leading and trailing white spaces"
     end
+  end
+
+  describe "#get_ldap_groups_by_user" do
+    before do
+      stub_server_configuration(:authentication => {:group_memberships_max_depth => 1})
+
+      miq_ldap = double('miq_ldap',
+                        :fqusername      => 'fred',
+                        :normalize       => 'fred flintstone',
+                        :bind            => true,
+                        :get_user_object => 'user object',
+                        :get_memberships => %w(foo bar))
+      MiqLdap.stub(:new).and_return(miq_ldap)
+    end
 
     it "should return LDAP groups by user name" do
-      auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
-
-      miq_ldap = double('miq_ldap')
-      miq_ldap.stub(:fqusername => 'fred')
-      miq_ldap.stub(:normalize => 'fred flintstone')
-      miq_ldap.stub(:bind => true)
-      miq_ldap.stub(:get_user_object => 'user object')
-      memberships = [ 'foo', 'bar' ]
-      miq_ldap.stub(:get_memberships => memberships)
-      MiqLdap.stub(:new).and_return(miq_ldap)
-
-      MiqGroup.get_ldap_groups_by_user('user', 'bind_dn', 'password').should == memberships
+      MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password').should == %w(foo bar)
     end
 
     it "should issue an error message when user name could not be bound to LDAP" do
-      auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
-
-      miq_ldap = double('miq_ldap')
-      miq_ldap.stub(:fqusername => 'fred')
-      miq_ldap.stub(:normalize => 'fred flintstone')
-      miq_ldap.stub(:bind => false)
-      miq_ldap.stub(:get_user_object => 'user object')
-      memberships = [ 'foo', 'bar' ]
-      miq_ldap.stub(:get_memberships => memberships)
-      MiqLdap.stub(:new).and_return(miq_ldap)
-
-      lambda {
-              MiqGroup.get_ldap_groups_by_user('user', 'bind_dn', 'password')
-             }.should
-             raise_error( MiqException::MiqEVMLoginError,
-                          "Bind failed for user bind_dn"
-                        )
+      MiqLdap.new.stub(:bind => false)
+      # darn, wanted a MiqException::MiqEVMLoginError
+      expect {
+        MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
+      }.to raise_error(RuntimeError, "Bind failed for user bind_dn")
     end
 
     it "should issue an error message when user name does not exist in LDAP directory" do
-      auth_config = { :group_memberships_max_depth => 1 }
-      config = { :authentication =>  auth_config }
-      vmdb_config = double('vmdb_config')
-      vmdb_config.stub(:config => config)
-      VMDB::Config.stub(:new).with('vmdb').and_return(vmdb_config)
+      MiqLdap.new.stub(:get_user_object => nil)
 
-      miq_ldap = double('miq_ldap')
-      miq_ldap.stub(:fqusername => 'fred')
-      miq_ldap.stub(:normalize => 'fred flintstone')
-      miq_ldap.stub(:bind => true)
-      miq_ldap.stub(:get_user_object => nil)
-      memberships = [ 'foo', 'bar' ]
-      miq_ldap.stub(:get_memberships => memberships)
-      MiqLdap.stub(:new).and_return(miq_ldap)
-
-      lambda {
-              MiqGroup.get_ldap_groups_by_user('user', 'bind_dn', 'password')
-             }.should
-             raise_error( MiqException::MiqEVMLoginError,
-                          "Unable to find user fred in directory"
-                        )
+      # darn, wanted a MiqException::MiqEVMLoginError
+      expect {
+        MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
+      }.to raise_error(RuntimeError,"Unable to find user fred in directory")
     end
   end
 
@@ -262,6 +230,46 @@ describe MiqGroup do
 
       expect { @group.destroy }.to raise_error
       MiqGroup.count.should eq 2
+    end
+  end
+
+  context "#seed" do
+    let(:root_tenant) { Tenant.root_tenant }
+
+    it "has tenant for new records" do
+      [MiqRegion, Tenant, MiqUserRole, MiqGroup].each(&:seed)
+      expect(MiqGroup.where(:tenant => root_tenant).count).to eq(MiqGroup.count)
+    end
+  end
+
+  context "#ordered_widget_sets" do
+    let(:group) { FactoryGirl.create(:miq_group) }
+    it "uses dashboard_order if present" do
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
+      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      group.update_attributes(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
+
+      expect(group.ordered_widget_sets).to eq([ws3, ws1])
+    end
+
+    it "uses all owned widgets" do
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
+      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      expect(group.ordered_widget_sets).to eq([ws1, ws3, ws2])
+    end
+  end
+
+  context ".sort_by_desc" do
+    it "sorts by description" do
+      tenant = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
+      gc = FactoryGirl.create(:miq_group, :description => 'C', :tenant => tenant)
+      ga = FactoryGirl.create(:miq_group, :description => 'a', :tenant => tenant)
+      gb = FactoryGirl.create(:miq_group, :description => 'B', :tenant => tenant)
+      FactoryGirl.create(:miq_group, :description => 'X')
+
+      expect(tenant.miq_groups.sort_by_desc).to eq([ga, gb, gc])
     end
   end
 end

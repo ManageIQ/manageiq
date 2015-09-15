@@ -1,6 +1,7 @@
 - if @edit
   - url = url_for(:action => 'rbac_group_field_changed',
                   :id     => "#{@edit[:group_id] || "new"}")
+  - combo_url = "/ops/rbac_group_field_changed/#{@edit[:group_id] || 'new'}"
 = render :partial => "layouts/flash_msg"
 #main_div
   .row
@@ -34,29 +35,65 @@
               - if !@edit
                 - if @group.miq_user_role
                   %table{:cellpadding => "0", :cellspacing => "0"}
-                    %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');", :title => _("View this Role")}
-                      %td.image
-                        %ul.icons.list-unstyled
-                          %li
-                            %span.product.product-role
+                    - if role_allows(:feature => "rbac_role_show")
+                      - params = {:class   => "pointer",
+                                  :onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');",
+                                  :title   => _("View this Role")}
+                    - else
+                      - params = {}
+                    %tr{params}
                       %td
+                        %span.product.product-role
                         = h(@group.miq_user_role.name)
               - else
-                = select_tag('group_role',
-                             options_for_select(@edit[:roles].sort, @edit[:new][:role]),
-                             "data-miq_observe" => {:url => url}.to_json)
+                #form-group
+                  = select_tag('group_role',
+                      options_for_select(@edit[:roles].sort, @edit[:new][:role]),
+                      "title" => "Choose",
+                      :class  => "selectpicker")
+                  :javascript
+                    miqSelectPickerEvent("group_role", "#{combo_url}")
+          %tr
+            %td.key= _("Project/Tenant")
+            %td{:style => @edit ? 'padding: 0px' : ''}
+              - if !@edit
+                - if @group.tenant
+                  - tenant = @group.tenant
+                  %table{:cellpadding => "0", :cellspacing => "0"}
+                    - if role_allows(:feature => "rbac_tenant_show")
+                      - params = {:class   => "pointer",
+                                  :onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+                                  :title   => _("View this #{tenant.divisible ? "Tenant" : "Project"}")}
+                    - else
+                      - params = {}
+                    %tr{params}
+                      %td
+                        %span.product{:class => "product-#{tenant.divisible ? "tenant" : "project"}"}
+                        = h(tenant.name)
+              - else
+                #form-group
+                  = select_tag('group_tenant',
+                      grouped_options_for_select(@edit[:projects_tenants], @edit[:new][:group_tenant]),
+                      "title" => "Choose",
+                      :class  => "selectpicker")
+                  :javascript
+                    miqInitSelectPicker();
+                    miqSelectPickerEvent("group_tenant", "#{combo_url}")
           - unless @edit
             %tr
               %td.key= _("Users in this Group")
-              %td{:style => "padding: 0px"}
+              %td
                 %table{:cellpadding => "0", :cellspacing => "0"}
                   - @group.users.sort_by { |a| a.name.downcase }.each do |u|
-                    %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'u-#{to_cid(u.id)}');", :title => _("View this User")}
-                      %td.image
-                        %ul.icons.list-unstyled
-                          %li
-                            %span.pficon.pficon-user
+                    - if role_allows(:feature => "rbac_user_show")
+                      - params = {:class   => "pointer",
+                                  :onclick => "miqDynatreeActivateNode('rbac_tree', 'u-#{to_cid(u.id)}');",
+                                  :title   => _("View this User")}
+                    - else
+                      - params = {}
+                    %tr{params}
                       %td
+                        %span.pficon.pficon-user
                         = h(u.name)
       - unless @edit
         = render :partial => "rbac_tag_box"
@@ -108,7 +145,7 @@
         #rbac_group_tabs
           %ul.nav.nav-tabs
             = miq_tab_header('customer_tags') do
-              = escape_javascript(session[:customer_name])
+              = escape_javascript(current_tenant.name)
               = _("Tags")
             = miq_tab_header('hosts_clusters') do
               = _("#{title_for_hosts} & #{title_for_clusters}")
@@ -125,9 +162,9 @@
                        :locals  => {:tree_id        => "myco_treebox",
                                     :tree_name      => "myco_tree",
                                     :json_tree      => session[:myco_tree],
-                                    :onmousein      => "miqOnMouseIn_HostNet",
-                                    :onmouseout     => "miqOnMouseOut_HostNet",
-                                    :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                    :onmousein      => "miqOnMouseInHostNet",
+                                    :onmouseout     => "miqOnMouseOutHostNet",
+                                    :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
                                     :disable_checks => @edit.nil?,
                                     :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
                                     :checkboxes     => true})
@@ -141,9 +178,9 @@
                        :locals  => {:tree_id        => "hac_treebox",
                                     :tree_name      => "hac_tree",
                                     :json_tree      => session[:hac_tree],
-                                    :onmousein      => "miqOnMouseIn_HostNet",
-                                    :onmouseout     => "miqOnMouseOut_HostNet",
-                                    :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                    :onmousein      => "miqOnMouseInHostNet",
+                                    :onmouseout     => "miqOnMouseOutHostNet",
+                                    :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
                                     :disable_checks => @edit.nil?,
                                     :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
                                     :checkboxes     => true})
@@ -157,9 +194,9 @@
                        :locals  => {:tree_id        => "vat_treebox",
                                     :tree_name      => "vat_tree",
                                     :json_tree      => session[:vat_tree],
-                                    :onmousein      => "miqOnMouseIn_HostNet",
-                                    :onmouseout     => "miqOnMouseOut_HostNet",
-                                    :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                    :onmousein      => "miqOnMouseInHostNet",
+                                    :onmouseout     => "miqOnMouseOutHostNet",
+                                    :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
                                     :disable_checks => @edit.nil?,
                                     :check_url      => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
                                     :checkboxes     => true})

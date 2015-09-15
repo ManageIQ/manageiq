@@ -60,6 +60,7 @@ module ApplicationController::Explorer
     'guest_restart'    => :s1, 'retire_now'                => :s1, 'snapshot_revert'     => :s1,
     'start'            => :s1, 'stop'                      => :s1, 'suspend'             => :s1,
     'reset'            => :s1, 'terminate'                 => :s1, 'pause'               => :s1,
+    'shelve'           => :s1, 'shelve_offload'            => :s1,
 
     # group 2
     'clone'     => :s2, 'compare'          => :s2, 'drift'           => :s2,
@@ -177,7 +178,7 @@ module ApplicationController::Explorer
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
-    @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name=>ui_lookup(:models=>@tagging), :model=>"#{session[:customer_name]} Tags"}
+    @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name => ui_lookup(:models => @tagging), :model => "#{current_tenant.name} Tags"}
     replace_right_cell(@sb[:action])
   end
 
@@ -258,35 +259,30 @@ module ApplicationController::Explorer
 
     object = options[:parent]
     children_or_count = case object
-    when nil                 then x_get_tree_roots(options)
-    when AvailabilityZone    then x_get_tree_az_kids(object, options)
-    when CustomButtonSet     then x_get_tree_aset_kids(object, options)
-    when Dialog              then x_get_tree_dialog_kids(object, options)
-    when DialogTab           then x_get_tree_dialog_tab_kids(object, options)
-    when DialogGroup         then x_get_tree_dialog_group_kids(object, options)
-    when ExtManagementSystem then x_get_tree_ems_kids(object, options)
-    when EmsFolder           then object.is_datacenter ?
-                                  x_get_tree_datacenter_kids(object, options) :
-                                  x_get_tree_folder_kids(object, options)
-    when EmsCluster          then x_get_tree_cluster_kids(object, options)
-    when Host		             then x_get_tree_host_kids(object, options)
-    when LdapRegion		       then x_get_tree_lr_kids(object, options)
-    when MiqAlertSet		     then x_get_tree_ap_kids(object, options)
-    when MiqEventDefinition  then options[:tree] != :event_tree ?
-                                  x_get_tree_ev_kids(object, options) : nil
-    when MiqGroup            then options[:tree] == :db_tree ?
-                                  x_get_tree_g_kids(object, options) : nil
-    when MiqPolicySet		     then x_get_tree_pp_kids(object, options)
-    when MiqPolicy		       then x_get_tree_p_kids(object, options)
-    when MiqRegion		       then x_get_tree_region_kids(object, options)
-    when MiqReport		       then x_get_tree_r_kids(object, options)
-    when ResourcePool		     then x_get_tree_rp_kids(object, options)
-    when ServiceTemplate		 then x_get_tree_st_kids(object, options)
-    when ServiceResource		 then x_get_tree_sr_kids(object, options)
-    when VmdbTableEvm		     then x_get_tree_vmdb_table_kids(object, options)
-    when Zone		             then x_get_tree_zone_kids(object, options)
-    when Hash                then x_get_tree_custom_kids(object, options)
-    end
+                        when nil                 then x_get_tree_roots(options)
+                        when AvailabilityZone    then x_get_tree_az_kids(object, options)
+                        when CustomButtonSet     then x_get_tree_aset_kids(object, options)
+                        when Dialog              then x_get_tree_dialog_kids(object, options)
+                        when DialogTab           then x_get_tree_dialog_tab_kids(object, options)
+                        when DialogGroup         then x_get_tree_dialog_group_kids(object, options)
+                        when ExtManagementSystem then x_get_tree_ems_kids(object, options)
+                        when EmsFolder           then object.is_datacenter ?
+                                                      x_get_tree_datacenter_kids(object, options) :
+                                                      x_get_tree_folder_kids(object, options)
+                        when EmsCluster          then x_get_tree_cluster_kids(object, options)
+                        when Host                then x_get_tree_host_kids(object, options)
+                        when LdapRegion          then x_get_tree_lr_kids(object, options)
+                        when MiqGroup            then options[:tree] == :db_tree ?
+                                                      x_get_tree_g_kids(object, options) : nil
+                        when MiqRegion           then x_get_tree_region_kids(object, options)
+                        when MiqReport           then x_get_tree_r_kids(object, options)
+                        when ResourcePool        then x_get_tree_rp_kids(object, options)
+                        when ServiceTemplate     then x_get_tree_st_kids(object, options)
+                        when ServiceResource     then x_get_tree_sr_kids(object, options)
+                        when VmdbTableEvm        then x_get_tree_vmdb_table_kids(object, options)
+                        when Zone                then x_get_tree_zone_kids(object, options)
+                        when Hash                then x_get_tree_custom_kids(object, options)
+                        end
     children_or_count || (options[:count_only] ? 0 : [])
   end
 
@@ -389,29 +385,9 @@ module ApplicationController::Explorer
     when :ae,:automate
       objects = MiqAeNamespace.all(:conditions => ["parent_id is null AND name<>?" ,"$"]).sort_by { |ns| [ns.display_name.to_s, ns.name.to_s] }
       return count_only ? objects.length : objects
-    when :action
-      objects = MiqAction.all.sort_by { |a| a.description.downcase }
-      return count_only ? objects.length : objects
-    when :alert
-      objects = MiqAlert.all.sort_by { |a| a.description.downcase }
-      return count_only ? objects.length : objects
-    when :alert_profile
-      objects = Array.new
-      MiqAlert.base_tables.sort_by { |a| ui_lookup(:model=>a) }.each do |db|
-        objects.push({:id=>db, :text=>"#{ui_lookup(:model=>db)} Alert Profiles", :image=>db.underscore.downcase, :tip=>"#{ui_lookup(:model=>db)} Alert Profiles"})
-        # Set alert profile folder nodes to open so we pre-load all children
-        n = "xx-#{db}"
-        x_tree(options[:tree])[:open_nodes].push(n) unless x_tree(options[:tree])[:open_nodes].include?(n)
-      end
-      return count_only ? objects.length : objects
-    when :condition
-      objects = Array.new
-      objects.push({:id=>"host", :text=>"Host Conditions", :image=>"host", :tip=>"Host Conditions"})
-      objects.push({:id=>"vm", :text=>"All VM and Instance Conditions", :image=>"vm", :tip=>"All VM and Instance Conditions"})
-      return count_only ? objects.length : objects
     when :db
       objects = Array.new
-      @default_ws = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
+      @default_ws = MiqWidgetSet.where_unique_on("default").where(:read_only => true).first
       text = "#{@default_ws.description} (#{@default_ws.name})"
       objects.push(:id=>to_cid(@default_ws.id),:text=>text, :image=>"dashboard", :tip=>text )
       objects.push({:id=>"g", :text=>"All Groups", :image=>"folder", :tip=>"All Groups"})
@@ -422,22 +398,8 @@ module ApplicationController::Explorer
     when :dialogs
       objects = rbac_filtered_objects(Dialog.all).sort_by { |a| a.label.downcase }
       return count_only ? objects.length : objects
-    when :event
-      objects = MiqPolicy.all_policy_events.sort_by {|a| a.description.downcase }
-      return count_only ? objects.length : objects
     when :old_dialogs
       MiqDialog::DIALOG_TYPES.sort.collect{|typ| {:id=>"MiqDialog_#{typ[1]}", :text=>typ[0], :image=>"folder", :tip=>typ[0]}}
-    when :policy_profile
-      objects = MiqPolicySet.all.sort_by { |a| a.description.downcase }
-      return count_only ? objects.length : objects
-    when :policy
-      objects = Array.new
-      ["xx-compliance", "xx-control"].each do |n| # Push folder node ids onto open_nodes array
-        x_tree(options[:tree])[:open_nodes].push(n) unless x_tree(options[:tree])[:open_nodes].include?(n)
-      end
-      objects.push({:id=>"compliance", :text=>"Compliance Policies", :image=>"compliance", :tip=>"Compliance Policies"})
-      objects.push({:id=>"control", :text=>"Control Policies", :image=>"control", :tip=>"Control Policies"})
-      return count_only ? objects.length : objects
     when :reports
       objects = Array.new
       @sb[:rpt_menu].each_with_index do |r,i|
@@ -566,28 +528,19 @@ module ApplicationController::Explorer
   def x_get_tree_host_kids(object, options)
     if [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
       raise "ERROR: should not get here"
-      objects = Array.new
     else
       objects = rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }.delete_if(&:is_default)
       if object.default_resource_pool           # Go thru default RP VMs
         objects += rbac_filtered_objects(object.default_resource_pool.vms).sort_by { |a| a.name.downcase }
       end
     end
-    return options[:count_only] ? objects.length : objects
+    options[:count_only] ? objects.length : objects
   end
 
   def x_get_tree_rp_kids(object, options)
     objects =  rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }
     objects += rbac_filtered_objects(object.vmss).sort_by { |a| a.name.downcase }
     return options[:count_only] ? objects.length : objects
-  end
-
-  def x_get_tree_lr_kids(object, options)
-    if options[:count_only]
-      return (object.ldap_domains.count)
-    else
-      return (object.ldap_domains.sort_by { |a| a.name.to_s })
-    end
   end
 
   def x_get_tree_zone_kids(object, options)
@@ -687,64 +640,6 @@ module ApplicationController::Explorer
     end
   end
 
-  def x_get_tree_ap_kids(object, options)
-    if options[:count_only]
-      return object.miq_alerts.count
-    else
-      return object.miq_alerts.sort_by { |a| a.description.downcase }
-    end
-  end
-
-  def x_get_tree_pp_kids(object, options)
-    if options[:count_only]
-      return object.miq_policies.count
-    else
-      return object.miq_policies.sort_by { |a| a.towhat + a.mode + a.description.downcase }
-    end
-  end
-
-  def x_get_tree_p_kids(object, options)
-    if options[:count_only]
-      return object.conditions.count + object.miq_event_definitions.count
-    else
-      return object.conditions.sort_by { |a| a.description.downcase } +
-              object.miq_event_definitions.sort_by { |a| a.description.downcase }
-    end
-  end
-
-  def x_get_tree_ev_kids(object, options)
-    #if opening Event node in tree, need to use id of policy node from params[:id]
-    if (!params[:id] || params[:button]) && options[:tree] == :policy_profile_tree
-      id = options[:parent_id].split('-')[2].split('_').first
-    elsif (!params[:id] || params[:button]) && options[:tree] == :policy_tree
-      id = options[:parent_id].split('-')[4].split('_').first
-    else
-      nodes = params[:id] && !params[:button] && !params[:pressed] ? params[:id].split("_") : options[:parent_id].split("-")
-      if nodes.length == 5
-        #when condition delete is pressed in pol tree
-        id = nodes.last
-      elsif nodes.length == 4
-        id = nodes[2].split('-').last
-      elsif nodes.length == 3
-        id = options[:tree] == :policy_tree ? nodes.last.split('-').last : nodes[1].split('-').last
-        #id = options[:tree] == :policy_tree ? nodes.last.split('-').last : nodes[1].split('_').first
-      elsif nodes.length == 2
-        id = nodes[1].split('-').last
-      else
-        #if policy copy button was pressed
-        id = params[:id]
-      end
-    end
-    pol_rec = MiqPolicy.find_by_id(from_cid(id))  # Get the parent policy record
-    items1 = pol_rec ? pol_rec.actions_for_event(object, :success) : []
-    items2 = pol_rec ? pol_rec.actions_for_event(object, :failure) : []
-    if options[:count_only]
-      return items1.count + items2.count
-    else
-      return items1 + items2
-    end
-  end
-
   def x_get_tree_dialog_kids(object, options)
     if options[:count_only]
       return options[:type] == :dialogs ? 0 : object.dialog_resources.count
@@ -823,52 +718,12 @@ module ApplicationController::Explorer
       #add as first element of array
       objects.unshift(CustomButtonSet.new(:name=>"[Unassigned Buttons]|ub-#{nodes[1]}",:description=>"[Unassigned Buttons]"))
       return count_only ? objects.length : objects
-    when :alert_profile
-      # Add all alert profiles so links back from Alerts etc will work - TODO: figure out how to load on demand
-      objects = MiqAlertSet.where(:mode => object[:id].split('-')).order("lower(description) ASC")
-      if options[:count_only]
-        return objects.count
-      else
-        return objects
-      end
     when :db
       if object[:id].split('-').first == "g"
         objects = MiqGroup.all
         return options[:count_only] ? objects.count : objects.sort_by(&:name)
       else
         options[:count_only] ? 0 : []
-      end
-    when :condition
-      nodes = object[:id].split('-')
-      if ["host","vm"].include?(nodes.first) && nodes.length == 1
-        objects = Condition.where(:towhat => nodes.first.titleize).sort_by { |a| a.description.downcase }
-      end
-      if options[:count_only]
-        return objects.count
-      else
-        return objects
-      end
-    when :policy
-      nodes = object[:id].split('_')
-      if ["compliance","control"].include?(nodes.first) && nodes.length == 1
-        # Push folder node ids onto open_nodes array
-        ["xx-#{nodes.first}_xx-#{nodes.first}-host", "xx-#{nodes.first}_xx-#{nodes.first}-vm"].each do |n|
-          x_tree(options[:tree])[:open_nodes].push(n) unless x_tree(options[:tree])[:open_nodes].include?(n)
-        end
-        objects = Array.new
-        objects.push({:id=>"#{nodes[0]}-host", :text=>"Host #{nodes[0].capitalize} Policies", :image=>"host", :tip=>"Host Policies"})
-        objects.push({:id=>"#{nodes[0]}-vm", :text=>"Vm #{nodes[0].capitalize} Policies", :image=>"vm", :tip=>"Vm Policies"})
-      elsif %w(host vm).include?(nodes[0].split("-").last)
-        # Add all policies so links back from Conditions etc will work - TODO: figure out how to load on demand
-        objects = MiqPolicy.where(
-                    :mode   => nodes[0].split("-").first.downcase,
-                    :towhat => nodes[0].split("-").last.titleize,
-                  ).order("lower(description) ASC")
-      end
-      if options[:count_only]
-        return objects.count
-      else
-        return objects
       end
     when :old_dialogs # VMs & Templates tree has orphaned and archived nodes
       objects = MiqDialog.find_all_by_dialog_type(object[:id].split('_').last).sort_by { |a| a.description.downcase }

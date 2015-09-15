@@ -1,7 +1,7 @@
 require 'vmdb-logger'
 
 $LOAD_PATH << File.expand_path(__dir__)
-require 'db_administration/miq_postgres_admin'
+require 'util/postgres_admin'
 
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/mount")
 require 'miq_generic_mount_session'
@@ -30,7 +30,7 @@ class EvmDatabaseOps
   end
 
   def self.database_size(opts)
-    MiqPostgresAdmin.database_size(opts)
+    PostgresAdmin.database_size(opts)
   end
 
   def self.backup(db_opts, connect_opts = {})
@@ -67,7 +67,7 @@ class EvmDatabaseOps
         MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
         raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
       end
-      backup = MiqPostgresAdmin.backup(db_opts)
+      backup = PostgresAdmin.backup(db_opts)
     ensure
       session.disconnect if session
     end
@@ -98,7 +98,7 @@ class EvmDatabaseOps
         db_opts[:local_file] = session.uri_to_local_path(uri)
       end
 
-      backup = MiqPostgresAdmin.restore(db_opts)
+      backup = PostgresAdmin.restore(db_opts)
     ensure
       session.disconnect if session
     end
@@ -109,7 +109,7 @@ class EvmDatabaseOps
   end
 
   def self.gc(options = {})
-    MiqPostgresAdmin.gc(options)
+    PostgresAdmin.gc(options)
   end
 
   def self.database_connections(database = nil, type = :all)
@@ -120,12 +120,12 @@ class EvmDatabaseOps
 
   def self.stop
     _log.info("Stopping internal database")
-    MiqPostgresAdmin.stop(DEFAULT_OPTS.merge(:graceful => true))
+    PostgresAdmin.stop(DEFAULT_OPTS.merge(:graceful => true))
   end
 
   def self.start
     _log.info("Starting internal database")
-    MiqPostgresAdmin.start(DEFAULT_OPTS)
+    PostgresAdmin.start(DEFAULT_OPTS)
   end
 
   private

@@ -84,9 +84,7 @@ describe GenericMailer do
   end
 
   it "call deliver for generic_notification without a 'from' address" do
-    config = VMDB::Config.new("vmdb")
-    config.config[:smtp][:from] = "test@123.com"
-    VMDB::Config.stub(:new).with("vmdb").and_return(config)
+    stub_server_configuration(:smtp => {:from => "test@123.com"} )
     new_args = @args.dup
     new_args.delete(:from)
     msg = GenericMailer.deliver(:generic_notification, new_args)

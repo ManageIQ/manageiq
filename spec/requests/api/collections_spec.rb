@@ -65,6 +65,11 @@ describe ApiController do
       test_collection_query(:events, events_url, MiqEventDefinition)
     end
 
+    it "query Features" do
+      FactoryGirl.create(:miq_product_feature, :identifier => "vm_auditing")
+      test_collection_query(:features, features_url, MiqProductFeature)
+    end
+
     it "query Flavors" do
       FactoryGirl.create(:flavor)
       test_collection_query(:flavors, flavors_url, Flavor)
@@ -78,6 +83,11 @@ describe ApiController do
     it "query Hosts" do
       FactoryGirl.create(:host)
       test_collection_query(:hosts, hosts_url, Host, :guid)
+    end
+
+    it "query Pictures" do
+      FactoryGirl.create(:picture)
+      test_collection_query(:pictures, pictures_url, Picture)
     end
 
     it "query Policies" do
@@ -100,6 +110,11 @@ describe ApiController do
       test_collection_query(:providers, providers_url, ExtManagementSystem, :guid)
     end
 
+    it "query Provision Dialogs" do
+      FactoryGirl.create(:miq_dialog)
+      test_collection_query(:provision_dialogs, provision_dialogs_url, MiqDialog)
+    end
+
     it "query Provision Requests" do
       FactoryGirl.create(:miq_provision_request, :source => template, :userid => api_config(:user))
       test_collection_query(:provision_requests, provision_requests_url, MiqProvisionRequest)
@@ -113,6 +128,11 @@ describe ApiController do
     example "query Reports" do
       FactoryGirl.create(:miq_report)
       test_collection_query(:reports, reports_url, MiqReport)
+    end
+
+    it "query Report Results" do
+      FactoryGirl.create(:miq_report_result)
+      test_collection_query(:results, results_url, MiqReportResult)
     end
 
     it "query Request Tasks" do
@@ -141,13 +161,18 @@ describe ApiController do
     end
 
     it "query Servers" do
-      miq_server  # create resource
+      miq_server # create resource
       test_collection_query(:servers, servers_url, MiqServer, :guid)
     end
 
     it "query Service Catalogs" do
       FactoryGirl.create(:service_template_catalog)
       test_collection_query(:service_catalogs, service_catalogs_url, ServiceTemplateCatalog)
+    end
+
+    it "query Service Dialogs" do
+      FactoryGirl.create(:dialog, :label => "ServiceDialog1")
+      test_collection_query(:service_dialogs, service_dialogs_url, Dialog)
     end
 
     it "query Service Requests" do
@@ -176,7 +201,7 @@ describe ApiController do
     end
 
     it "query Templates" do
-      template  # create resource
+      template # create resource
       test_collection_query(:templates, templates_url, MiqTemplate, :guid)
     end
 

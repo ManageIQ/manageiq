@@ -141,7 +141,7 @@ class ConfigurationController < ApplicationController
         else
           style_class = 'dynatree-title'
         end
-        page << "cfme_dynatree_node_add_class('#{session[:tree_name]}', '#{id}', '#{style_class}')"
+        page << "miqDynatreeNodeAddClass('#{session[:tree_name]}', '#{id}', '#{style_class}')"
       end
       page << javascript_for_miq_button_visibility(@changed) if @changed
     end
@@ -742,7 +742,6 @@ class ConfigurationController < ApplicationController
       }
     when 'ui_3'
       current = MiqSearch.where(:search_type => "default")
-                         .select  { |s| allowed_filter_db?(s.db) }
                          .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
       @edit = {
         :key         => 'config_edit__ui3',

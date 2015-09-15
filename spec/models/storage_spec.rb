@@ -44,9 +44,7 @@ describe Storage do
 
   it "#vmdb_storage_config" do
     config = { :foo => 1, :bar => 2 }
-    vmdb_storage_config = double('vmdb_storage_config')
-    vmdb_storage_config.stub(:config => config)
-    VMDB::Config.stub(:new).with('storage').and_return(vmdb_storage_config)
+    stub_server_configuration(config, "storage")
     Storage.vmdb_storage_config.should == config
   end
 

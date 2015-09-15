@@ -167,31 +167,26 @@ class DashboardController < ApplicationController
     @layout    = "dashboard"
     @dashboard = true
 
-    g = current_group
-    db_order = if g.settings && g.settings[:dashboard_order]
-                 g.settings[:dashboard_order]
-               else
-                 MiqWidgetSet.find_all_by_owner_id(session[:group]).sort_by { |a| a.name.downcase }.collect(&:id)
-               end
+    records = current_group.ordered_widget_sets
 
     @tabs = []
-    db_order.each_with_index do |d, i|
-      db = MiqWidgetSet.find_by_id(d)
-      # load first one on intial load, or load tab from params[:tab] changed,
-      # or when coming back from another screen load active tab from sandbox
-      if (!params[:tab] && !@sb[:active_db_id] && i == 0) || (params[:tab] && params[:tab] == db.id.to_s) ||
-         (!params[:tab] && @sb[:active_db_id] && @sb[:active_db_id].to_s == db.id.to_s) ||
-         (!db_order.include?(@sb[:active_db_id]) && !db_order.empty? && i == 0)
-        @tabs.unshift([db.id.to_s, ""])
-        @sb[:active_db]    = db.name
-        @sb[:active_db_id] = db.id
-      end
+    active_tab_id = (params[:tab] || @sb[:active_db_id]).try(:to_s)
+    active_tab = active_tab_id && records.detect { |r| r.id.to_s == active_tab_id } || records.first
+    # load first one on intial load, or load tab from params[:tab] changed,
+    # or when coming back from another screen load active tab from sandbox
+    if active_tab
+      @tabs.unshift([active_tab.id.to_s, ""])
+      @sb[:active_db]    = active_tab.name
+      @sb[:active_db_id] = active_tab.id
+    end
+
+    records.each do |db|
       @tabs.push([db.id.to_s, db.description])
       # check this only first time when user logs in comes to dashboard show
 
       next if @sb[:dashboards]
       # get user dashboard version
-      ws = MiqWidgetSet.where_unique_on(db.name, session[:group], session[:userid]).first
+      ws = MiqWidgetSet.where_unique_on(db.name, current_user).first
       # update user's copy if group dashboard has been updated by admin
       if ws && ws.set_data && (!ws.set_data[:last_group_db_updated] ||
          (ws.set_data[:last_group_db_updated] && db.updated_on > ws.set_data[:last_group_db_updated]))
@@ -212,7 +207,7 @@ class DashboardController < ApplicationController
     end
 
     @sb[:dashboards] ||= {}
-    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
 
     # if all of user groups dashboards have been deleted and they are logged in, need to reset active_db_id
     if ws.nil?
@@ -224,13 +219,13 @@ class DashboardController < ApplicationController
     ws = create_user_dashboard(@sb[:active_db_id]) if ws.nil?
 
     # Set tabs now if user's group didnt have any dashboards using default dashboard
-    if db_order.empty?
+    if records.empty?
       db = MiqWidgetSet.find_by_id(@sb[:active_db_id])
       @tabs.unshift([ws.id.to_s, ""])
       @tabs.push([ws.id.to_s, db.description])
     # User's group has dashboards, delete userid|default dashboard if it exists, dont need to keep that
     else
-      db = MiqWidgetSet.where_unique_on("default", session[:group], session[:userid]).first
+      db = MiqWidgetSet.where_unique_on("default", current_user).first
       db.destroy if db.present?
     end
 
@@ -246,7 +241,7 @@ class DashboardController < ApplicationController
     widget_list = ""
     prev_type   = nil
     @available_widgets = []
-    MiqWidget.available_for_user(session[:userid]).sort_by { |a| a.content_type + a.title.downcase }.each do |w|
+    MiqWidget.available_for_user(current_user).sort_by { |a| a.content_type + a.title.downcase }.each do |w|
       @available_widgets.push(w.id)  # Keep track of widgets available to this user
       if !col_widgets.include?(w.id) && w.enabled
         image, tip = case w.content_type
@@ -297,7 +292,7 @@ class DashboardController < ApplicationController
   # Destroy and recreate a user's dashboard from the default
   def reset_widgets
     assert_privileges("dashboard_reset")
-    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
     ws.destroy unless ws.nil?
     ws = create_user_dashboard(@sb[:active_db_id])
     @sb[:dashboards] = nil  # Reset dashboards hash so it gets recreated
@@ -341,7 +336,7 @@ class DashboardController < ApplicationController
 
     widget = MiqWidget.find_by_id(params[:widget].to_i)
     # Save the rr id for render_zgraph
-    @sb[:report_result_id] = widget.contents_for_user(session[:userid]).miq_report_result_id
+    @sb[:report_result_id] = widget.contents_for_user(current_user).miq_report_result_id
 
     render :update do |page|
       page.replace_html("lightbox_div", :partial => "zoomed_chart", :locals => {:widget => widget})
@@ -379,7 +374,7 @@ class DashboardController < ApplicationController
       @sb[:dashboards][@sb[:active_db]][:col2].delete(w)
       @sb[:dashboards][@sb[:active_db]][:col3].delete(w)
       @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
-      ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+      ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
       w = MiqWidget.find_by_id(w)
       ws.remove_member(w) if w
       save_user_dashboards
@@ -404,7 +399,7 @@ class DashboardController < ApplicationController
       else
         @sb[:dashboards][@sb[:active_db]][:col1].insert(0, w)
       end
-      ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+      ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
       w = MiqWidget.find_by_id(w)
       ws.add_member(w) if w
       save_user_dashboards
@@ -701,15 +696,21 @@ class DashboardController < ApplicationController
 
     session[:user_TZO] = params[:user_TZO] ? params[:user_TZO].to_i : nil     # Grab the timezone (future use)
     session[:browser] ||= Hash.new("Unknown")
-    session[:browser][:name] = params[:browser_name] if params[:browser_name]
+    if params[:browser_name]
+      session[:browser][:name] = params[:browser_name].to_s.downcase
+      session[:browser][:name_ui] = params[:browser_name]
+    end
     session[:browser][:version] = params[:browser_version] if params[:browser_version]
-    session[:browser][:os] = params[:browser_os] if params[:browser_os]
+    if params[:browser_os]
+      session[:browser][:os] = params[:browser_os].to_s.downcase
+      session[:browser][:os_ui] = params[:browser_os]
+    end
   end
 
   # Create a user's dashboard, pass in dashboard id if that is used to copy else use default dashboard
   def create_user_dashboard(db_id = nil)
-    db = db_id ? MiqWidgetSet.find_by_id(db_id) : MiqWidgetSet.where_unique_on("default", nil, nil).first
-    ws = MiqWidgetSet.where_unique_on(db.name, session[:group], session[:userid]).first
+    db = db_id ? MiqWidgetSet.find_by_id(db_id) : MiqWidgetSet.where_unique_on("default").first
+    ws = MiqWidgetSet.where_unique_on(db.name, current_user).first
     if ws.nil?
       # Create new db if it doesn't exist
       ws = MiqWidgetSet.new(:name       => db.name,
@@ -731,7 +732,7 @@ class DashboardController < ApplicationController
 
   # Save dashboards for user
   def save_user_dashboards
-    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], session[:group], session[:userid]).first
+    ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
     ws.set_data = @sb[:dashboards][@sb[:active_db]]
     ws.save
   end
@@ -772,7 +773,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    @report.extras[:browser_name] = browser_info("name").downcase
+    @report.extras[:browser_name] = browser_info(:name)
     if is_browser_ie?
       blob = BinaryBlob.new(:name => "timeline_results")
       blob.binary = @report.to_timeline

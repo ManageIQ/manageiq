@@ -1,7 +1,7 @@
 require 'optparse'
 require 'ostruct'
 require 'rubygems'
-require 'platform'
+require 'sys-uname'
 
 require 'Verbs/miqservices_client'
 
@@ -17,8 +17,8 @@ require 'util/diag/miqping'
 require 'util/miq-password'
 require 'util/miq-option-parser'
 
-case Platform::OS
-when :win32
+case Sys::Platform::OS
+when :windows
     require_relative 'implementations/HostWinOps'
 when :unix
     require_relative 'implementations/HostLinuxOps'
@@ -31,7 +31,7 @@ class MiqParser < MiqOptionParser::MiqCommandParser
 		super()
 		self.handle_exceptions = true
 		@miqRet = OpenStruct.new
-		
+
 		#
 		# If we're being instantiated by miqhost, cfg will contain
 		# the current miqhost configuration.
@@ -50,19 +50,19 @@ class MiqParser < MiqOptionParser::MiqCommandParser
 		    @miqRet.config.vmdbHost = "localhost"
 		    @miqRet.config.vmdbPort = "3000"
 		end
-		
+
 		@miqRet.config.ems = Hash.new if !@miqRet.config.ems
-		
+
 		#
 		# Global defaults used by miq-cmd in remote mode.
 		# Not used by miqhost.
-		# 
+		#
 		@miqRet.host = 'localhost'
 		@miqRet.port = '1139'
 
 		self.program_name = $0
 		self.program_version = [0, 1, 0]
-		
+
 		currentEmsName = nil
 
 		self.option_parser = OptionParser.new do |opt|
@@ -119,9 +119,9 @@ class MiqParser < MiqOptionParser::MiqCommandParser
 			    @miqRet.config.ems[currentEmsName]['password'] = MiqPassword.encrypt(p)
 			end
 		end
-		
+
 		$log.debug "MiqParser: forceFleeceDefault = #{@miqRet.config.forceFleeceDefault}"
-		
+
 		self.add_command(GetVMProductInfo.new)
 		self.add_command(StartVM.new)
 		self.add_command(StopVM.new(@miqRet))
@@ -181,7 +181,7 @@ end
 
 class VerbBase < MiqOptionParser::MiqCommand
 	def initialize(name, has_sub, switch_type, req_access=:write)
-		super(name)		
+		super(name)
 		@switch = self.method(switch_type)
 		@reqAccess = req_access
 	end
@@ -191,7 +191,7 @@ class VerbBase < MiqOptionParser::MiqCommand
 		ret = @parser.miqRet
 		ret.args = args
 		ret.cmdObj = self
-		
+
 		begin
 		    if ret.config
 		        raise "Host is read only." if ret.config.readonly && @reqAccess != :read
@@ -203,7 +203,7 @@ class VerbBase < MiqOptionParser::MiqCommand
 				# Call the policy_check method if it is defined - It will raise an error if policy fails
 				self.policy_check(ret) if self.respond_to?(:policy_check)
 			end
-			
+
 		    if @parser.forceImpl
 		        op = @parser.forceImpl
 		    else
@@ -228,13 +228,13 @@ class VerbBase < MiqOptionParser::MiqCommand
 
     # Only load the MicrosoftOps with we are running on a MS platform
     # This allows repository fleece of MS VMs. FB 1736
-		return MicrosoftOps if Platform::OS == :win32 && ['.vmc', '.xml'].include?(ext)
+		return MicrosoftOps if Sys::Platform::OS == :windows && ['.vmc', '.xml'].include?(ext)
 		VMWareOps
 	end
 
 	def hostSwitch(ost)
-    case Platform::OS
-    when :win32
+    case Sys::Platform::OS
+    when :windows
       MiqWin::HostConfigData
     when :unix
       MiqLinux::HostLinuxOps
@@ -242,14 +242,14 @@ class VerbBase < MiqOptionParser::MiqCommand
       VMWareOps
     end
 	end
-	
+
 	def vmdbSwitch(ost)
 	    VmdbOps
 	end
-	
+
 	def emsSwitch(ost)
     ems = self.hostSwitch(ost).new(ost).ems rescue nil
-    return ems unless ems.nil?    
+    return ems unless ems.nil?
 
     require 'VMWareWebSvcOps'
     VMWareWebSvcOps
@@ -268,7 +268,7 @@ class StartVM < VerbBase
 		super('startvm', false, :vmSwitch, :write)
 		self.short_desc = "Start virtual machine by name"
 	end
- 
+
   def policy_check(ost)
 	  VmdbOps.new(ost).policyCheckVmInternal(ost)
   end
@@ -304,7 +304,7 @@ class SyncMetadata < VerbBase
 				ostruct.from_time = v
 				ostruct.from_time = ostruct.from_time.gsub!("\"","") if ostruct.from_time.include?("\"")
 			end
-			opt.on('-t=val', '--taskid=val') do |v|				
+			opt.on('-t=val', '--taskid=val') do |v|
 				ostruct.taskid = v
 				ostruct.taskid = ostruct.taskid.gsub!("\"","") if ostruct.taskid.include?("\"")
 			end
@@ -312,7 +312,7 @@ class SyncMetadata < VerbBase
 				show_help
 				exit
 			end
-		end    
+		end
 	end
 end
 
@@ -453,15 +453,15 @@ class ScanMetadata < VerbBase
 			opt.on('-c=val', '--category=val') do |v|
 				ostruct.category = v
 			end
-			opt.on('-f', '--force', "Force scan, even if locked") do		
+			opt.on('-f', '--force', "Force scan, even if locked") do
 				ostruct.force = true
 				$log.debug "ScanMetadata: force changed to: #{ostruct.force}"
 			end
-			opt.on('-n', '--noforce', "Do not force scan") do			
+			opt.on('-n', '--noforce', "Do not force scan") do
 				ostruct.force = false
 				$log.debug "ScanMetadata: force changed to: #{ostruct.force}"
 			end
-			opt.on('-t=val', '--taskid=val') do |v|				
+			opt.on('-t=val', '--taskid=val') do |v|
 				ostruct.taskid = v
 				ostruct.taskid = ostruct.taskid.gsub!("\"","") if ostruct.taskid.include?("\"")
 			end
@@ -469,7 +469,7 @@ class ScanMetadata < VerbBase
 				show_help
 				exit
 			end
-		end    		
+		end
 	end
 end
 
@@ -548,7 +548,7 @@ class StartLogicalService < VerbBase
 				show_help
 				exit
 			end
-		end    
+		end
 	end
 end
 

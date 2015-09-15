@@ -307,7 +307,10 @@ class MiqRequestController < ApplicationController
     #only build host grid if that field is visible/exists in dialog
     build_host_grid(@options[:wf].allowed_hosts, @options[:host_sortdir], @options[:host_sortcol]) if !@options[:wf].get_field(:src_host_ids,:service).blank? || !@options[:wf].get_field(:placement_host_name,:environment).blank?
     render :update do |page|                    # Use JS to update the display
-      page.replace_html("#{@options[:current_tab_key]}_div", :partial => dialog_partial_for_workflow, :locals => {:wf => @options[:wf], :dialog => @options[:current_tab_key]})
+      page.replace_html(@options[:current_tab_key],
+                        :partial => dialog_partial_for_workflow,
+                        :locals  => {:wf => @options[:wf], :dialog => @options[:current_tab_key]}
+                       )
       # page << javascript_show("hider_#{@options[:current_tab_key].to_s}_div")
       page << "miqSparkle(false);"
     end
@@ -387,7 +390,7 @@ class MiqRequestController < ApplicationController
       end
       page << "ManageIQ.grids.xml = \"#{j_str(@grid_xml)}\";"  # Set the XML data
       page << "ManageIQ.grids.grids['gtl_list_grid'].obj.clearAll(true);"               # Clear grid data, including headers
-      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(xml);"                   # Reload grid from XML
+      page << "ManageIQ.grids.grids['gtl_list_grid'].obj.parse(ManageIQ.grids.xml);"    # Reload grid from XML
       if @sortcol
         dir = @sortdir ? @sortdir[0..2] : "asc"
         page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"

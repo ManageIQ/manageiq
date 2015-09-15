@@ -493,6 +493,14 @@
         :description: Suspend Instance
         :feature_type: control
         :identifier: instance_suspend
+      - :name: Shelve
+        :description: Shelve Instance
+        :feature_type: control
+        :identifier: instance_shelve
+      - :name: Shelve Offload
+        :description: Shelve Offload Instance
+        :feature_type: control
+        :identifier: instance_shelve_offload
       - :name: Reset
         :description: Reset Instance
         :feature_type: control
@@ -2677,121 +2685,205 @@
     - :name: Users
       :description: Users
       :feature_type: node
-      :hidden: true
+      :hidden: false
       :identifier: rbac_user
       :children:
+      - :name: View
+        :description: View Users
+        :feature_type: view
+        :identifier: rbac_user_view
+        :children:
+        - :name: List
+          :description: Display Lists of Users
+          :feature_type: view
+          :identifier: rbac_user_show_list
+        - :name: Show
+          :description: Display Individual Users
+          :feature_type: view
+          :identifier: rbac_user_show
       - :name: Modify
         :description: Modify User
         :feature_type: admin
         :identifier: rbac_user_admin
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Add
           :description: Add a User
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_add
         - :name: Edit
           :description: Edit a User
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_edit
         - :name: Copy
           :description: Copy a User
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_copy
         - :name: Delete
           :description: Delete a User
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_delete
       - :name: Operate
         :description: Operate User
         :feature_type: control
         :identifier: rbac_user_operate
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Edit Tags
           :description: Edit Tags
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_user_tags_edit
     - :name: Groups
       :description: Groups
       :feature_type: node
-      :hidden: true
+      :hidden: false
       :identifier: rbac_group
       :children:
+      - :name: View
+        :description: View Groups
+        :feature_type: view
+        :identifier: rbac_group_view
+        :children:
+        - :name: List
+          :description: Display Lists of Groups
+          :feature_type: view
+          :identifier: rbac_group_show_list
+        - :name: Show
+          :description: Display Individual Groups
+          :feature_type: view
+          :identifier: rbac_group_show
       - :name: Modify
-        :description: Modify User
+        :description: Modify Group
         :feature_type: admin
         :identifier: rbac_group_admin
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Add
           :description: Add a Group
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_add
         - :name: Edit
           :description: Edit a Group
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_edit
         - :name: Edit Sequence
           :description: Edit Sequence of User Groups for LDAP Look Up
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_seq_edit
         - :name: Delete
           :description: Delete a Group
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_delete
       - :name: Operate
         :description: Operate Group
         :feature_type: control
         :identifier: rbac_group_operate
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Edit Tags
           :description: Edit Tags
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_group_tags_edit
     - :name: Roles
       :description: Roles
       :feature_type: node
-      :hidden: true
+      :hidden: false
       :identifier: rbac_role
       :children:
+      - :name: View
+        :description: View Roles
+        :feature_type: view
+        :identifier: rbac_role_view
+        :children:
+        - :name: List
+          :description: Display Lists of Roles
+          :feature_type: view
+          :identifier: rbac_role_show_list
+        - :name: Show
+          :description: Display Individual Roles
+          :feature_type: view
+          :identifier: rbac_role_show
       - :name: Modify
         :description: Modify Role
         :feature_type: admin
         :identifier: rbac_role_admin
-        :hidden: true
+        :hidden: false
         :children:
         - :name: Add
           :description: Add a Role
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_role_add
         - :name: Edit
           :description: Edit a Role
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_role_edit
         - :name: Copy
           :description: Copy a Role
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_role_copy
         - :name: Delete
           :description: Delete a Role
           :feature_type: admin
-          :hidden: true
+          :hidden: false
           :identifier: rbac_role_delete
+    - :name: Tenants
+      :description: Tenants
+      :feature_type: node
+      :hidden: false
+      :identifier: rbac_tenant
+      :children:
+      - :name: View
+        :description: View Tenants
+        :feature_type: view
+        :identifier: rbac_tenant_view
+        :children:
+        - :name: List
+          :description: Display Lists of Tenants
+          :feature_type: view
+          :identifier: rbac_tenant_show_list
+        - :name: Show
+          :description: Display Individual Tenants
+          :feature_type: view
+          :identifier: rbac_tenant_show
+      - :name: Modify
+        :description: Modify Tenant/Project
+        :feature_type: admin
+        :identifier: rbac_tenant_admin
+        :hidden: false
+        :children:
+        - :name: Add
+          :description: Add a Tenant/Project
+          :feature_type: admin
+          :hidden: false
+          :identifier: rbac_tenant_add
+        - :name: Edit
+          :description: Edit a Tenant/Project
+          :feature_type: admin
+          :hidden: false
+          :identifier: rbac_tenant_edit
+        - :name: Delete
+          :description: Delete a Tenant/Project
+          :feature_type: admin
+          :hidden: false
+          :identifier: rbac_tenant_delete
+      - :name: Manage_Quotas
+        :description: Manage Tenant Quotas
+        :feature_type: admin
+        :hidden: false
+        :identifier: rbac_tenant_manage_quotas
   - :name: Diagnostics
     :description: Diagnostics Accordion
     :feature_type: node
@@ -3707,23 +3799,19 @@
       :description: Display Individual Container images
       :feature_type: view
       :identifier: container_image_show
-  - :name: Modify
-    :description: Modify Container Images
-    :feature_type: admin
-    :identifier: container_image_admin
+  - :name: Operate
+    :description: Perform Operations on Container Images
+    :feature_type: control
+    :identifier: container_image_control
     :children:
-    - :name: Remove
-      :description: Remove Container Images from the VMDB
-      :feature_type: admin
-      :identifier: container_image_delete
-    - :name: Edit
-      :description: Edit a Container Image
-      :feature_type: admin
-      :identifier: container_image_edit
-    - :name: Add
-      :description: Add a Container Image
-      :feature_type: admin
-      :identifier: container_image_new
+    - :name: Edit Tags
+      :description: Edit Tags of Container Images
+      :feature_type: control
+      :identifier: container_image_tag
+    - :name: Analysis
+      :description: Perform SmartState Analysis on VMs
+      :feature_type: control
+      :identifier: container_image_scan
 
 # ContainerImageRegistry
 - :name: Registries
@@ -3761,6 +3849,15 @@
       :description: Add a Container Image Registry
       :feature_type: admin
       :identifier: container_image_registry_new
+  - :name: Operate
+    :description: Perform Operations on Container Image Registries
+    :feature_type: control
+    :identifier: container_image_registry_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Image Registries
+      :feature_type: control
+      :identifier: container_image_registry_tag
 
 # ContainerService
 - :name: Services
@@ -3856,6 +3953,10 @@
       :description: Display Individual Container Routes
       :feature_type: view
       :identifier: container_project_show
+    - :name: Timeline
+      :description: Display Timelines for container Projects
+      :feature_type: view
+      :identifier: container_project_timeline
   - :name: Operate
     :description: Perform Operations on Container Projects
     :feature_type: control
@@ -3916,6 +4017,17 @@
       :description: Edit Tags of Containers
       :feature_type: control
       :identifier: container_tag
+
+  # Container Topology
+  - :name: Containers Topology
+    :description: Containers Topology
+    :feature_type: node
+    :identifier: container_topology
+    :children:
+      - :name: View
+        :description: View Containers Topology
+        :feature_type: view
+        :identifier: container_topology_view
 
 # Foreman
 - :name: Configuration Management

@@ -24,14 +24,15 @@
                   "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 
                 = select_tag("mem_typ",
-                  options_for_select(%w(MB GB), @edit[:new][:mem_typ]),
+                  options_for_select(["MB", "GB"],
+                  @edit[:new][:mem_typ]),
                   "data-miq_sparkle_on" => true,
                   "data-miq_sparkle_off" => true,
                   "data-miq_observe" => {:url => url}.to_json)
                 (#{@edit[:memory_note]})
 
     %tr
-      %td.key= _('Processors')
+      %td.key= _('Processor Sockets')
       %td
         %table{:style => "line-height:1px;white-space: nowrap"}
           %tr
@@ -54,7 +55,45 @@
                 - else
                   = @edit[:cpu_options][0]
 
-  - unless @edit[:explorer]
+    - if @edit[:cores_options].length > 1
+      %tr
+        %td.key= _('Processor Cores Per socket')
+        %td
+          %table{:style => "line-height:1px;white-space: nowrap"}
+            %tr
+              %td
+                = check_box_tag("cb_cores_per_socket",
+                  1,
+                  @edit[:new][:cb_cores_per_socket],
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe_checkbox" => {:url => url}.to_json)
+              %td
+                - display = @edit[:new][:cb_cores_per_socket] ? "" : "display:none"
+                #cores_div{:style => display}
+                  - if @edit[:cores_options].length > 1
+                    = select_tag("cores_per_socket_count",
+                       options_for_select((@edit[:new][:cores_per_socket_count].nil? ? [["<#{_('Choose')}>",nil]] : []) + @edit[:cores_options],
+                       @edit[:new][:cores_per_socket_count].to_i),
+                      "data-miq_sparkle_on"  => true,
+                      "data-miq_sparkle_off" => true,
+                      "data-miq_observe" => {:url => url}.to_json)
+                  - else
+                    = @edit[:cores_options][0]
+
+      %tr
+        %td.key= _('Total Processors')
+        %td
+          %table{:style => "line-height:1px;white-space: nowrap"}
+            %tr
+              %td
+                = text_field_tag("total_cpus",
+                  @edit[:new][:cpu_count].to_i * (@edit[:new][:cores_per_socket_count].to_i > 0 ? @edit[:new][:cores_per_socket_count].to_i : 1),
+                  :maxlength => MAX_NAME_LEN,
+                  :readonly => '',
+                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+
+  - if !@edit[:explorer]
     #buttons_div
       %table{:width => "100%"}
         %tr

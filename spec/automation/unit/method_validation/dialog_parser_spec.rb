@@ -18,12 +18,27 @@ describe "DialogParser Automate Method" do
 
   def create_tags
     FactoryGirl.create(:classification_department_with_tags)
-    @array_name  = "Array::dialog_tag_0_department"
+    @array_name = "Array::dialog_tag_0_department"
     @dept_ids = Classification.find_by_description('Department').children.collect do |x|
       "Classification::#{x.id}"
     end.join(',')
 
     @dept_array = Classification.find_by_description('Department').children.collect(&:name)
+  end
+
+  def setup_and_run_method(dialog_hash)
+    @root_stp.options = @root_stp.options.merge(:dialog => dialog_hash)
+    @root_stp.save
+    run_automate_method
+    @root_stp.reload
+  end
+
+  def load_options
+    YAML.load(@root_stp.get_option(:parsed_dialog_options))
+  end
+
+  def load_tags
+    YAML.load(@root_stp.get_option(:parsed_dialog_tags))
   end
 
   context "parser" do
@@ -42,17 +57,34 @@ describe "DialogParser Automate Method" do
                                  1 => {:location => "BOM"},
                                  2 => {:location => "EWR"}}
 
-      @root_stp.options = @root_stp.options.merge(:dialog => dialog_hash)
-      @root_stp.save
-      run_automate_method
-      @root_stp.reload
+      setup_and_run_method(dialog_hash)
+      pdo = load_options
+      pdt = load_tags
 
-      pdo = YAML.load(@root_stp.get_option(:parsed_dialog_options))
-      pdt = YAML.load(@root_stp.get_option(:parsed_dialog_tags))
       depts = pdt[0].delete(:department)
       expect(pdo).to eql(parsed_dialog_options_hash)
       expect(pdt).to eql(parsed_dialog_tags_hash)
       expect(depts).to match_array(@dept_array)
+    end
+
+    it "with password option" do
+      dialog_hash = {'password::dialog_option_1_passwordtest' => "v2:{i7uvqmb1Dr6WAxCpakNE9w==}"}
+      parsed_dialog_options_hash = {1 => {:"password::dialog_passwordtest" => "v2:{i7uvqmb1Dr6WAxCpakNE9w==}",
+                                          :"password::passwordtest"        => "v2:{i7uvqmb1Dr6WAxCpakNE9w==}"}}
+      setup_and_run_method(dialog_hash)
+      pdo = load_options
+
+      expect(pdo).to eql(parsed_dialog_options_hash)
+    end
+
+    it "with generic password" do
+      dialog_hash = {'password::dialog_passwordtest' => "v2:{i7uvqmb1Dr6WAxCpakNE9w==}"}
+      parsed_dialog_options_hash = {0 => {:"password::dialog_passwordtest" => "v2:{i7uvqmb1Dr6WAxCpakNE9w==}",
+                                          :"password::passwordtest"        => "v2:{i7uvqmb1Dr6WAxCpakNE9w==}"}}
+      setup_and_run_method(dialog_hash)
+      pdo = load_options
+
+      expect(pdo).to eql(parsed_dialog_options_hash)
     end
 
     it "with no dialogs set" do

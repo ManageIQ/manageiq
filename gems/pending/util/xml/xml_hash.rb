@@ -39,11 +39,11 @@ module XmlHash
       while root.parent
         root = root.parent
       end
-      return root      
+      return root
     end
 
     alias :doc :document
-    
+
     def name
       self[:name]
     end
@@ -133,7 +133,7 @@ module XmlHash
         break if max>0 && eCount >= max
       end
     end
-    
+
     def to_xml(xml=nil)
       if xml.nil?
         return REXML::Document.new(nil) if self[:name].nil?
@@ -160,7 +160,7 @@ module XmlHash
     def to_h(options={}, type=:simple)
       return self.send("to_h_#{type}", options, nil)
     end
-    
+
     def to_h_simple(options, hash=nil)
       hash = {} if hash.nil?
 
@@ -172,7 +172,7 @@ module XmlHash
 
       return hash
     end
-    
+
     def elements
       return @elements if @elements
       @elements = Elements.new(self)
@@ -181,7 +181,7 @@ module XmlHash
     def has_elements?
       !self.children.empty?
     end
-    
+
     def get_path
       p = self.parent
       head = nil
@@ -198,13 +198,7 @@ module XmlHash
 
         p = p.parent
       end
-      return nil if head.nil?
-
-      # Create a document to contain this node list otherwise XPath expressions will fail
-#      doc = XmlHash::Document.new("temp")
-#      doc.root = head
-#      return doc.root
-      return head
+      head
     end
 
     def shallow_copy(include_text = false)
@@ -213,7 +207,7 @@ module XmlHash
       newEle.text = self.text if include_text
       return newEle
     end
-    
+
     def << (rhs)
       if rhs.parent.nil? || rhs.class == XmlHash::Document
         self.child = rhs
@@ -230,7 +224,6 @@ module XmlHash
         x = self[:child] << object
         object.parent = self
       elsif object.respond_to?(:to_xml)
-        #
       else
         raise "Invalid child object type [#{object.class}] for XmlHash"
       end
@@ -242,12 +235,12 @@ module XmlHash
         self.parent = nil
       end
     end
-    
+
     def delete(element)
       element.remove!
     end
     alias delete_element delete
-    
+
     def add_elements_from_xml(xml)
       xml.each_element do |e|
         xmh = self.add_element(e.name)
@@ -260,7 +253,7 @@ module XmlHash
         xmh.add_elements_from_xml(e)
       end
     end
-    
+
     def from_hash(ref, options)
       ref.each_pair do |k, v|
         case v
@@ -290,7 +283,7 @@ module XmlHash
     def add_cdata(data)
       self.cdata=data
     end
-    
+
     def key_type
       Symbol
     end
@@ -329,11 +322,11 @@ module XmlHash
           :version => 1.0
         })
     end
-    
+
     def elements
       return @elements if @elements
       @elements = Elements.new(self)
-    end    
+    end
 
     def parent
       nil
@@ -359,7 +352,7 @@ module XmlHash
     end
 
     alias :doc :document
-    
+
     def name
       self[:name]
     end
@@ -391,7 +384,7 @@ module XmlHash
       return REXML::Document.new(nil) if self.root.nil?
       self.root.to_xml(*args)
     end
-    
+
     def extendXmlDiff; end
 
     def miqEncode
@@ -465,7 +458,7 @@ module XmlHash
       xmh.root.from_hash(ref, options)
       return xmh
     end
-    
+
     def self.newDoc(*args)
       self.new(*args)
     end
@@ -480,7 +473,7 @@ module XmlHash
     def initialize parent
       @element = parent
     end
-    
+
     def []( index, name=nil)
       if index.kind_of? Integer
         raise "index (#{index}) must be >= 1" if index < 1
@@ -546,7 +539,7 @@ module XmlHash
         return ele
       end
     end
-    
+
     def self.findElementInt(paths, ele)
       if paths.length > 0 then
         found = false
@@ -579,7 +572,7 @@ module XmlHash
   def self.loadFile(*args)
     self::Document.loadFile(*args)
   end
-  
+
   def self.from_hash(*args)
     self::Document.from_hash(*args)
   end
@@ -587,7 +580,7 @@ module XmlHash
   def self.newDoc(*args)
     self::Document.new(*args)
   end
-  
+
   def self.newNode(data=nil)
     self::Document.newNode(data)
   end

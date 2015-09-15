@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
   include_concern 'Tags'
   include_concern 'Tenancy'
   include_concern 'Timelines'
+  include_concern 'Timezone'
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
 
@@ -245,7 +246,7 @@ class ApplicationController < ActionController::Base
     send_data(rr.to_pdf, :filename => "#{filename}.pdf", :type => 'application/pdf')
   end
 
-  RENDER_TYPES = {'txt' => 'txt', 'csv' => 'csv', 'pdf' => 'pdf'}
+  RENDER_TYPES = {'txt' => :txt, 'csv' => :csv, 'pdf' => :pdf}
 
   # Render report in csv/txt/pdf format asynchronously
   def render_report_data
@@ -253,7 +254,7 @@ class ApplicationController < ActionController::Base
     assert_privileges("render_report_#{render_type}")
     unless params[:task_id] # First time thru, kick off the report generate task
       if render_type
-        @sb[:render_type] = render_type.to_sym
+        @sb[:render_type] = render_type
         rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
         task_id = rr.async_generate_result(@sb[:render_type], :userid     => session[:userid],
                                                               :session_id => request.session_options[:id])
@@ -710,9 +711,19 @@ class ApplicationController < ActionController::Base
     }
   end
 
+  PASSWORD_FIELDS = [:password, :_pwd, :amazon_secret]
+
+  def filter_config(data)
+    @parameter_filter ||=
+      ActionDispatch::Http::ParameterFilter.new(
+        Rails.application.config.filter_parameters + PASSWORD_FIELDS
+      )
+    return data.map { |e| filter_config(e) } if data.kind_of?(Array)
+    data.kind_of?(Hash) ? @parameter_filter.filter(data) : data
+  end
+
   def password_field?(k)
-    (k.to_s.ends_with?("password") || k.to_s.ends_with?("_pwd") ||
-      k.to_s.ends_with?("amazon_secret"))
+    PASSWORD_FIELDS.any? { |p| k.to_s.ends_with?(p.to_s) }
   end
 
   def build_audit_msg(new, current, msg_in)
@@ -732,17 +743,15 @@ class ApplicationController < ActionController::Base
                 msg_arr << "#{hk}:[*]#{' to [*]' unless current.nil?}"
               else
                 msg_arr << "#{hk}:[" +
-                           (current.nil? ? "" :
-                            "#{current[k][hk]}] to [") +
-                            "#{new[k][hk]}]"
+                  (current.nil? ? "" : "#{filter_config(current[k][hk])}] to [") +
+                  "#{filter_config(new[k][hk])}]"
               end
             end
           end
         else
           msg_arr << "#{k}:[" +
-                     (current.nil? ? "" :
-                      "#{current[k]}] to [") +
-                      "#{new[k]}]"
+            (current.nil? ? "" : "#{filter_config(current[k])}] to [") +
+            "#{filter_config(new[k])}]"
         end
       end
     end
@@ -903,15 +912,13 @@ class ApplicationController < ActionController::Base
 
   # convert time from utc to server timezone
   def convert_time_from_utc(datetime)
-    tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone)
-    tz = "UTC" if tz.blank?
-    return datetime.in_time_zone(tz)
+    return datetime.in_time_zone(server_timezone)
   end
 
   # if authenticating or past login screen
   def set_user_time_zone
     user = current_user || (params[:user_name].presence && User.find_by_userid(params[:user_name]))
-    session[:user_tz] = Time.zone = @tz = get_timezone_for_userid(user)
+    session[:user_tz] = Time.zone = (user ? user.get_timezone : server_timezone)
   end
 
   # Initialize the options for server selection
@@ -959,8 +966,8 @@ class ApplicationController < ActionController::Base
     folders = Array.new
     user = current_user
     @sb[:grp_title] = user.admin_user? ?
-      "#{session[:customer_name]} (#{_("All %s") % ui_lookup(:models=>"MiqGroup")})" :
-      "#{session[:customer_name]} (#{_("%s") % "#{ui_lookup(:model=>"MiqGroup")}: #{user.current_group.description}"})"
+      "#{current_tenant.name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})" :
+      "#{current_tenant.name} (#{_("%s") % "#{ui_lookup(:model => "MiqGroup")}: #{user.current_group.description}"})"
     @data = Array.new
     if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       #array of all reports if menu not configured
@@ -1060,11 +1067,7 @@ class ApplicationController < ActionController::Base
   # Render the view data to xml for the grid view
   def view_to_xml(view, from_idx = 0, to_idx = -1, options = {})
     # Get the time zone in effect for this view
-    if view.db.downcase == 'miqschedule'
-      tz = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
-    else
-      tz = Time.zone
-    end
+    tz = (view.db.downcase == 'miqschedule') ? server_timezone : Time.zone
 
     xml = MiqXml.createDoc(nil, nil, 1.0, :nokogiri)
 
@@ -1226,7 +1229,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Add a msg to the @flash_array
-  def add_flash(msg, level = :info, reset = false)
+  def add_flash(msg, level = :success, reset = false)
     @flash_array = [] if reset
     @flash_array ||= []
     @flash_array.push({:message => msg, :level => level})
@@ -1304,7 +1307,9 @@ class ApplicationController < ActionController::Base
   end
 
   def check_button_rbac
-    task = params[:pressed]
+    # buttons ids that share a common feature id
+    common_buttons = %w(rbac_project_add rbac_tenant_add)
+    task = common_buttons.include?(params[:pressed]) ? rbac_common_feature_for_buttons(params[:pressed]) : params[:pressed]
     # Intentional single = so we can check auth later
     rbac_free_for_custom_button?(task, params[:button_id]) || role_allows(:feature => task)
   end
@@ -1933,6 +1938,9 @@ class ApplicationController < ActionController::Base
 
     db = db.gsub(/::/, '_')
 
+    current_role = current_user.try(:miq_user_role)
+    current_role = current_role.name.split("-").last if current_role.try(:read_only?)
+
     # Build the view file name
     if suffix
       viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
@@ -2023,7 +2031,7 @@ class ApplicationController < ActionController::Base
   def task_supported?(typ)
     vm_ids = find_checked_items.map(&:to_i).uniq
     if %w(migrate publish).include?(typ) && VmOrTemplate.includes_template?(vm_ids)
-      render_flash_not_applicable_to_model(typ)
+      render_flash_not_applicable_to_model(typ, ui_lookup(:table => "miq_template"))
       return
     end
 
@@ -2039,7 +2047,7 @@ class ApplicationController < ActionController::Base
         return
       end
     when "publish"
-      if VmOrTemplate.where(:id => vm_ids, :type => %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
+      if VmOrTemplate.where(:id => vm_ids, :type => %w(ManageIQ::Providers::Microsoft::InfraManager::Vm ManageIQ::Providers::Redhat::InfraManager::Vm)).exists?
         render_flash_not_applicable_to_model(typ)
         return
       end
@@ -2197,7 +2205,8 @@ class ApplicationController < ActionController::Base
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "container", "container_group", "container_node", "container_service", "ems_container",
-           "container_route", "container_project", "container_replicator", "container_image_registry", "container_image"
+           "container_route", "container_project", "container_replicator", "container_image_registry", "container_image",
+           "container_topology"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
@@ -2587,8 +2596,10 @@ class ApplicationController < ActionController::Base
     image || "#{image_path}#{model_image}.png"
   end
 
-  def render_flash_not_applicable_to_model(type)
-    add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task  => type.capitalize}, :error)
+  def render_flash_not_applicable_to_model(type, model_type = "items")
+    add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
+                {:model => model_type,
+                 :task  => type.capitalize}, :error)
     render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
   end
 
@@ -2620,6 +2631,10 @@ class ApplicationController < ActionController::Base
   end
 
   def skip_breadcrumb?
+    false
+  end
+
+  def restful?
     false
   end
 end

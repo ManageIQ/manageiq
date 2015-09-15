@@ -54,32 +54,6 @@ describe EmsCloudController do
       end
     end
 
-    context "#create" do
-      it "displays correct attribute name in error message when adding cloud EMS" do
-        set_user_privileges
-        controller.instance_variable_set(:@edit, {:new => {:name => "EMS 1", :emstype => "ec2"},
-                                                  :key => "ems_edit__new"})
-        session[:edit] = assigns(:edit)
-        controller.stub(:drop_breadcrumb)
-        post :create, :button => "add"
-        flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Region is not included in the list")
-        flash_messages.first[:level].should == :error
-      end
-
-      it "displays correct attribute name in error message when adding infra EMS" do
-        set_user_privileges
-        controller.instance_variable_set(:@edit, {:new => {:name => "EMS 2", :emstype => "rhevm"},
-                                                  :key => "ems_edit__new"})
-        session[:edit] = assigns(:edit)
-        controller.stub(:drop_breadcrumb)
-        post :create, :button => "add"
-        flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Host Name can't be blank")
-        flash_messages.first[:level].should == :error
-      end
-    end
-
     context "#set_record_vars" do
       context "strip leading/trailing whitespace from hostname/ipaddress" do
         after :each do
@@ -139,8 +113,9 @@ describe EmsContainerController do
   context "::EmsCommon" do
     context "#update" do
       it "updates provider with new token" do
+        MiqServer.stub(:my_zone).and_return("default")
         set_user_privileges
-        @ems = EmsKubernetes.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
+        @ems = ManageIQ::Providers::Kubernetes::ContainerManager.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
         controller.instance_variable_set(:@edit,
                                          :new    => {:name         => @ems.name,
                                                      :emstype      => @ems.type,
@@ -152,7 +127,7 @@ describe EmsContainerController do
         session[:edit] = assigns(:edit)
         post :update, :button => "save", :id => @ems.id, :type => @ems.type
         response.status.should == 200
-        EmsKubernetes.last.authentication_token("bearer").should == "valid-token"
+        ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer").should == "valid-token"
       end
     end
   end

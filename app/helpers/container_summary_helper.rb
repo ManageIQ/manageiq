@@ -1,6 +1,7 @@
 module ContainerSummaryHelper
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsContainer)
+    textual_link(@record.ext_management_system, :as         => ManageIQ::Providers::ContainerManager,
+                                                :controller => 'ems_container')
   end
 
   def textual_container_project
@@ -51,14 +52,18 @@ module ContainerSummaryHelper
     textual_link(@record.container_node)
   end
 
-  def textual_container_labels
-    textual_key_value(@record.labels.to_a)
+  def textual_group_container_labels
+    textual_key_value_group(@record.labels.to_a)
   end
 
-  def textual_container_selectors
-    textual_key_value(@record.selector_parts.to_a)
+  def textual_group_container_selectors
+    textual_key_value_group(@record.selector_parts.to_a)
   end
-  
+
+  def textual_container_node_selectors
+    textual_key_value_group(@record.node_selector_parts.to_a)
+  end
+
   def textual_container_image
     textual_link(@record.container_image)
   end
@@ -85,84 +90,29 @@ module ContainerSummaryHelper
     textual_link(@record.container_image_registries)
   end
 
+  def textual_tags
+    label = "#{session[:customer_name]} Tags"
+    h = {:label => label}
+    tags = session[:assigned_filters]
+    if tags.present?
+      h[:value] = tags.sort_by { |category, _assigned| category.downcase }.collect do |category, assigned|
+        {
+          :image => "smarttag",
+          :label => category,
+          :value => assigned
+        }
+      end
+    else
+      h[:image] = "smarttag"
+      h[:value] = "No #{label} have been assigned"
+    end
+
+    h
+  end
+
   private
 
-  def textual_key_value(items)
-    items.collect { |item| {:label => item.name.to_s, :value => item.value.to_s} }.flatten.compact
-  end
-
-  def textual_link(target, **opts, &blk)
-    case target
-    when ActiveRecord::Relation
-      textual_collection_link(target, **opts, &blk)
-    else
-      textual_object_link(target, **opts, &blk)
-    end
-  end
-
-  def textual_object_link(object, as: nil, feature: nil)
-    return if object.nil?
-
-    klass = as || object.class.base_model
-
-    feature ||= "#{klass.name.underscore}_show"
-
-    label = ui_lookup(:model => klass.name)
-    image = textual_object_icon(object)
-    value = if block_given?
-              yield object
-            else
-              object.name
-            end
-
-    h = {:label => label, :image => image, :value => value}
-
-    if role_allows(:feature => feature)
-      h[:link] = url_for(:controller => klass.name.underscore,
-                         :action     => 'show',
-                         :id         => object)
-      h[:title] = "Show #{label} '#{value}'"
-    end
-
-    h
-  end
-
-  def textual_collection_link(collection, as: nil, feature: nil)
-    klass = as || collection.klass.base_model
-
-    feature ||= "#{klass.name.underscore}_show_list"
-
-    label = ui_lookup(:models => klass.name)
-    image = textual_collection_icon(collection)
-    count = collection.count
-
-    h = {:label => label, :image => image, :value => count.to_s}
-
-    if count > 0 && role_allows(:feature => feature)
-      if collection.respond_to?(:proxy_association)
-        h[:link] = url_for(:action  => 'show',
-                           :id      => collection.proxy_association.owner,
-                           :display => collection.proxy_association.reflection.name)
-      else
-        h[:link] = url_for(:controller => klass.name.underscore,
-                           :action     => 'list')
-      end
-      h[:title] = "Show all #{label}"
-    end
-
-    h
-  end
-
-  def textual_object_icon(object)
-    case object
-    when ExtManagementSystem
-      "vendor-#{object.image_name}"
-    else
-      object.class.base_model.name.underscore
-    end
-  end
-
-  def textual_collection_icon(collection)
-    collection.klass.base_model.name.underscore
+  def textual_key_value_group(items)
+    items.collect { |item| {:label => item.name.to_s, :value => item.value.to_s} }
   end
 end

@@ -1,6 +1,7 @@
 class GuestApplication < ActiveRecord::Base
   belongs_to :vm_or_template
   belongs_to :host
+  belongs_to :container_image
 
   include ReportableMixin
 

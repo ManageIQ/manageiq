@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150224192816_migrate_provisioning_manager_to_ems")
+require_migration
 
 describe MigrateProvisioningManagerToEms do
   let(:prov_manager_stub) { migration_stub(:ProvisioningManager) }

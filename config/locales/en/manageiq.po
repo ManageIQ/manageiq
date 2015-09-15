@@ -2555,11 +2555,9 @@ msgid "ConfiguredSystem|Build state"
 msgstr ""
 
 #, fuzzy
-#, fuzzy
 msgid "ConfiguredSystem|Hostname"
 msgstr "Host Name"
 
-#, fuzzy
 #, fuzzy
 msgid "ConfiguredSystem|Ipaddress"
 msgstr "IP Address"
@@ -2603,12 +2601,6 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
-msgid "Pods (%s)"
-msgstr ""
-
-msgid "Pods (0)"
-msgstr ""
-
 msgid "Container Nodes (%s)"
 msgstr ""
 
@@ -2622,9 +2614,6 @@ msgid "Container Services (0)"
 msgstr ""
 
 msgid "Container definition"
-msgstr ""
-
-msgid "Pod"
 msgstr ""
 
 msgid "Container node"
@@ -2655,27 +2644,6 @@ msgid "ContainerDefinition|Memory"
 msgstr ""
 
 msgid "ContainerDefinition|Name"
-msgstr ""
-
-msgid "Pod|Creation timestamp"
-msgstr ""
-
-msgid "Pod|Dns policy"
-msgstr ""
-
-msgid "Pod|Ems ref"
-msgstr ""
-
-msgid "Pod|Name"
-msgstr ""
-
-msgid "Pod|Namespace"
-msgstr ""
-
-msgid "Pod|Resource version"
-msgstr ""
-
-msgid "Pod|Restart policy"
 msgstr ""
 
 msgid "ContainerNode|Creation timestamp"
@@ -4145,11 +4113,9 @@ msgid "ExtManagementSystem|Ipaddress"
 msgstr "IP Address"
 
 #, fuzzy
-#, fuzzy
 msgid "ExtManagementSystem|Last refresh date"
 msgstr "Host Name"
 
-#, fuzzy
 #, fuzzy
 msgid "ExtManagementSystem|Last refresh error"
 msgstr "Region"
@@ -4164,11 +4130,9 @@ msgid "ExtManagementSystem|Provider region"
 msgstr "Region"
 
 #, fuzzy
-#, fuzzy
 msgid "ExtManagementSystem|Realm"
 msgstr "Host Name"
 
-#, fuzzy
 #, fuzzy
 msgid "ExtManagementSystem|Security protocol"
 msgstr "Region"
@@ -10173,6 +10137,36 @@ msgstr ""
 msgid "Please select an Instance Type from above"
 msgstr ""
 
+msgid "Pod"
+msgstr ""
+
+msgid "Pods (%s)"
+msgstr ""
+
+msgid "Pods (0)"
+msgstr ""
+
+msgid "Pod|Creation timestamp"
+msgstr ""
+
+msgid "Pod|Dns policy"
+msgstr ""
+
+msgid "Pod|Ems ref"
+msgstr ""
+
+msgid "Pod|Name"
+msgstr ""
+
+msgid "Pod|Namespace"
+msgstr ""
+
+msgid "Pod|Resource version"
+msgstr ""
+
+msgid "Pod|Restart policy"
+msgstr ""
+
 msgid "Policies"
 msgstr ""
 
@@ -11812,9 +11806,6 @@ msgstr ""
 msgid "Show Capacity & Utilization"
 msgstr ""
 
-msgid "Show Pods"
-msgstr ""
-
 msgid "Show Container Nodes"
 msgstr ""
 
@@ -11840,6 +11831,9 @@ msgid "Show Parent %s"
 msgstr ""
 
 msgid "Show Past Dates"
+msgstr ""
+
+msgid "Show Pods"
 msgstr ""
 
 msgid "Show Refresh Button"
@@ -12088,6 +12082,9 @@ msgstr ""
 msgid "Show this Flavor's parent %s"
 msgstr ""
 
+msgid "Show this Pod's parent %s"
+msgstr ""
+
 msgid "Show this Security Group's parent %s"
 msgstr ""
 
@@ -12101,9 +12098,6 @@ msgid "Show this VM's parent Service"
 msgstr ""
 
 msgid "Show this Vm's parent %s"
-msgstr ""
-
-msgid "Show this pod's parent %s"
 msgstr ""
 
 msgid "Show this container node's parent %s"

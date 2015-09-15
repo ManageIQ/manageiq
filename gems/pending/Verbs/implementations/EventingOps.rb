@@ -28,8 +28,6 @@ class EmsEventMonitorOps
       @inv_class = @klass.new
       @previous_state_file = File.join(@ost.config.dataDir, 'host_ems_state.yaml')
       @previous_state = nil
-      #@previous_state = YAML.load_file(@previous_state_file) rescue nil
-      #@previous_state = nil unless Hash === @previous_state
 
       # Load any previously unsent events
       @previous_events_file = File.join(@ost.config.dataDir, 'host_events.yaml')
@@ -56,8 +54,7 @@ class EmsEventMonitorOps
       $log.error "EventingOps: #{err}" if $log
       $log.error err.backtrace.join("\n") if $log
       sleep_wait(60)
-      break if MiqThreadCtl.exiting?
-      retry
+      MiqThreadCtl.exiting? ? nil : retry
     end
 	end # def doEvents
 
@@ -69,7 +66,6 @@ class EmsEventMonitorOps
 
     # Setup for next polling event
     @previous_state = current_state
-    #File.open(@previous_state_file,'w') {|f| YAML.dump(current_state, f)}
   end
 
   def save_events
@@ -136,8 +132,6 @@ class EmsEventMonitorOps
 
   def process_vm_events(previous_state, current_state)
     diff = diff_object(previous_state, current_state, :vms, :location)
-    #diff_stat = diff_stats(diff)
-    #$log.warn "Eventing diff: [#{diff_stat.inspect}]" if $log
 
     diff[:deletes].each do |v|
       add_vm_event(:VmConnectedEvent, v)
@@ -224,7 +218,6 @@ class EmsEventMonitorOps
     vm_location = event.fetch_path(:vm, :path)
     result[:vm_location] = vm_location unless vm_location.nil?
 
-#    result[:username] = event['userName'] unless event['userName'].blank?
     $log.warn "Events: Adding [#{result[:event_type]}] for [#{result[:vm_name]}]"
     @events << result
   end
@@ -237,7 +230,7 @@ class EmsEventMonitorOps
 
   def send_events
     return if @events.empty?
-    
+
     @ost.args[0] = self.host_id
     @ost.args[1] = {:type=> :ems_events, :timestamp => Time.now.utc, :host_id => @hostId, :events => @events}
     @ost.args[2] = 'yaml'

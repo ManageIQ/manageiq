@@ -12,7 +12,7 @@ module AsConstMissingWithSti
   end
 
   def self.cache
-    @cache ||= cache_path.exist? ? YAML.load_file(cache_path) : {}
+    @cache ||= (cache_path.exist? && YAML.load_file(cache_path)) || {}
   end
 
   def self.save_cache!

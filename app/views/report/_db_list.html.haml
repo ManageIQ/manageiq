@@ -10,7 +10,7 @@
       %tbody
         - @db_nodes_order.each do |node|
           %tr{:title => _("Click to view '%s'") % @db_nodes[node][:title],
-            :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', '#{@db_nodes[node][:id]}');"}
+            :onclick => "miqDynatreeActivateNode('#{@sb[:active_tree]}', '#{@db_nodes[node][:id]}');"}
             %td.narrow{:nowrap => 1}
               %ul.icons.list-unstyled
                 %li

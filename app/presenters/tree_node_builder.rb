@@ -117,6 +117,7 @@ class TreeNodeBuilder
     when MiqRegion            then miq_region_node
     when MiqWidget            then generic_node(object.title, "#{object.content_type}_widget.png", object.title)
     when MiqWidgetSet         then generic_node(object.name, "dashboard.png", object.name)
+    when Tenant               then generic_node(object.name,  "#{object.tenant? ? "tenant" : "project"}.png")
     when VmdbTableEvm         then generic_node(object.name, "vmdbtableevm.png")
     when VmdbIndex            then generic_node(object.name, "vmdbindex.png")
     when Zone                 then zone_node
@@ -138,6 +139,7 @@ class TreeNodeBuilder
 
   def tooltip(tip)
     unless tip.blank?
+      tip = tip.kind_of?(Proc) ? tip.call : _(tip)
       tip = ERB::Util.html_escape(tip) unless tip.html_safe?
       @node[:tooltip] = tip
     end
@@ -150,7 +152,8 @@ class TreeNodeBuilder
       :title => text,
       :icon  => image
     }
-    @node[:expand] = true if options[:open_all]  # Start with all nodes open
+    # Start with all nodes open unless expand is explicitly set to false
+    @node[:expand] = true if options[:open_all] && options[:expand] != false
     tooltip(tip)
   end
 
@@ -160,13 +163,17 @@ class TreeNodeBuilder
   end
 
   def hash_node
+    text = object[:text]
+    text = text.kind_of?(Proc) ? text.call : _(text)
+
     # FIXME: expansion
     @node = {
       :key   => build_hash_id,
-      :icon  => "#{object[:image] || object[:text]}.png",
-      :title => ERB::Util.html_escape(object[:text])
+      :icon  => "#{object[:image] || text}.png",
+      :title => ERB::Util.html_escape(text),
     }
-    @node[:expand] = true if options[:open_all] # Start with all nodes open
+    # Start with all nodes open unless expand is explicitly set to false
+    @node[:expand] = true if options[:open_all] && options[:expand] != false
     @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
 
     # FIXME: check the following
@@ -265,7 +272,7 @@ class TreeNodeBuilder
       end
       p  = MiqPolicy.find_by_id(ActiveRecord::Base.uncompress_id(policy_id))
       ev = MiqEventDefinition.find_by_id(ActiveRecord::Base.uncompress_id(event_id))
-      image = p.action_result_for_event(ev, object) ? "check" : "x"
+      image = p.action_result_for_event(object, ev) ? "check" : "x"
     else
       image = object.action_type == "default" ? "miq_action" : "miq_action_#{object.action_type}"
     end

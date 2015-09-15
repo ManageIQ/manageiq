@@ -342,19 +342,4 @@ module MiqPolicyController::AlertProfiles
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :name=>alert_profile.description}
     @right_cell_div = "alert_profile_details"
   end
-
-  def alert_profile_build_tree(type=:alert_profile, name=:alert_profile_tree)
-    x_tree_init(name, type, 'MiqAlertSet', :full_ids => true)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    # Fill in root node details
-    root = tree_nodes.first
-    root[:title] = "All Alert Profiles"
-    root[:tooltip] = "All Alert Profiles"
-    root[:icon] = "folder.png"
-
-    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
-  end
-
 end

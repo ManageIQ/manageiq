@@ -299,10 +299,10 @@ module MiqPolicyController::MiqActions
   def action_build_cat_tree(cats)
     r_node = Hash.new                           # Root node
     r_node = TreeNodeBuilder.generic_tree_node(
-               "r_#{session[:customer_name]}",
-               "#{session[:customer_name]} Tags",
+               "r_#{current_tenant.name}",
+               "#{current_tenant.name} Tags",
                "",
-               "#{session[:customer_name]} Tags",
+               "#{current_tenant.name} Tags",
                :style_class => "cfme-no-cursor-node",
                :expand      => true
     )
@@ -436,19 +436,4 @@ module MiqPolicyController::MiqActions
       @cats = cats.sort_by(&:downcase).join(" | ")
     end
   end
-
-  def action_build_tree(type=:action, name=:action_tree)
-    x_tree_init(name, type, 'MiqAction', :full_ids => true)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    # Fill in root node details
-    root = tree_nodes.first
-    root[:title] = "All Actions"
-    root[:tooltip] = "All Actions"
-    root[:icon] = "folder.png"
-
-    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
-  end
-
 end

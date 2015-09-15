@@ -1050,7 +1050,7 @@ module ApplicationController::Compare
         @group = section[:group]
         @ci_node = TreeNodeBuilder.generic_tree_node(
           "group_#{section[:group]}",
-          section[:group] == "Categories" ? "#{session[:customer_name]} Tags" : section[:group],
+          section[:group] == "Categories" ? "#{current_tenant.name} Tags" : section[:group],
           false,
           section[:group],
           :cfmeNoClick => true,

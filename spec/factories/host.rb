@@ -29,7 +29,7 @@ FactoryGirl.define do
   factory :host_target_vmware, :parent => :host do
     after(:create) do |x|
       x.perf_capture_enabled = toggle_on_name_seq(x)
-      2.times { x.vms << FactoryGirl.create(:vm_target_vmware) }
+      2.times { x.vms << FactoryGirl.create(:vm_target_vmware, :ext_management_system => x.ext_management_system) }
     end
   end
 
@@ -68,7 +68,7 @@ FactoryGirl.define do
     ems_ref_obj "openstack-perf-host-nova-instance"
   end
 
-  factory :host_microsoft, :parent => :host, :class => "HostMicrosoft" do
+  factory :host_microsoft, :parent => :host, :class => "ManageIQ::Providers::Microsoft::InfraManager::Host" do
     vmm_vendor  "microsoft"
     vmm_product "Hyper-V"
   end

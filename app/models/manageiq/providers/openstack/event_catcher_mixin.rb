@@ -1,4 +1,4 @@
-module ManageIQ::Providers::Openstack::CloudManager::EventCatcherMixin
+module ManageIQ::Providers::Openstack::EventCatcherMixin
   # seems like most of this class could be boilerplate when compared against EventCatcherRhevm
   def event_monitor_handle
     require 'openstack/openstack_event_monitor'

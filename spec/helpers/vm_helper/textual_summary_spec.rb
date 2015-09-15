@@ -8,7 +8,7 @@ describe VmHelper do
     end
 
     it "#textual_server" do
-      helper.textual_server.should == {:label => "Server", :value => "#{@server.name} [#{@server.id}]"}
+      expect(helper.textual_server).to eq("#{@server.name} [#{@server.id}]")
     end
   end
 end

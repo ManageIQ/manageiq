@@ -200,7 +200,7 @@ module ApplicationController::DialogRunner
     opts = {
       :target => options[:target_kls].constantize.find_by_id(options[:target_id])
     }
-    @edit[:wf] = ResourceActionWorkflow.new(@edit[:new],session[:userid],ra,opts)
+    @edit[:wf] = ResourceActionWorkflow.new(@edit[:new], current_user, ra, opts)
     @record = Dialog.find_by_id(ra.dialog_id.to_i)
     @edit[:rec_id]   = @record.id
     @edit[:key]     = "dialog_edit__#{@edit[:rec_id] || "new"}"
@@ -240,7 +240,7 @@ module ApplicationController::DialogRunner
         # if user didnt choose the date and goes with default shown in the textbox,
         # need to set that value in wf before adding hour/min
         if @edit[:wf].value(field_name).nil?
-          t = Time.now.in_time_zone(session[:user_tz]) + 1.day
+          t = Time.zone.now + 1.day
           date_val = ["#{t.month}/#{t.day}/#{t.year}"]
           @edit[:wf].set_value(field_name, date_val)
         else

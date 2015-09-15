@@ -4,18 +4,15 @@ module OrchestrationStackHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name description type status status_reason)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(name description type status status_reason)
   end
 
   def textual_group_relationships
-    items = %w(ems_cloud orchestration_template instances security_groups cloud_networks parameters outputs resources)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(ems_cloud orchestration_template instances security_groups cloud_networks parameters outputs resources)
   end
 
   def textual_group_tags
-    items = %w(tags)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   #
@@ -23,35 +20,27 @@ module OrchestrationStackHelper::TextualSummary
   #
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_description
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_type
-    {:label => "Type", :value => @record.type}
+    @record.type
   end
 
   def textual_status
-    {:label => "Status", :value => @record.status}
+    @record.status
   end
 
   def textual_status_reason
-    {:label => "Status Reason", :value => @record.status_reason}
+    @record.status_reason
   end
 
   def textual_ems_cloud
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_cloud")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_cloud_show")
-      h[:title] = "Show this Orchestration Stack's #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_cloud', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsCloud)
   end
 
   def textual_orchestration_template
@@ -78,14 +67,7 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_security_groups
-    label = ui_lookup(:tables => "security_group")
-    num   = @record.number_of(:security_groups)
-    h     = {:label => label, :image => "security_group", :value => num}
-    if num > 0 && role_allows(:feature => "security_group_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @orchestration_stack, :display => 'security_groups')
-      h[:title] = "Show all #{label}"
-    end
-    h
+    @record.security_groups
   end
 
   def textual_cloud_networks
@@ -128,19 +110,6 @@ module OrchestrationStackHelper::TextualSummary
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'resources', :id => @record)
       h[:title] = "Show all #{label}"
-    end
-    h
-  end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.blank?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, _| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned} }
     end
     h
   end

@@ -3,55 +3,68 @@
   = render :partial => "layouts/flash_msg"
   - disabled = @tp_restricted
 
-  %h3= _('Time Profile Information')
-  %table.style1
-    %tbody
-      %tr
-        %td.key= _('Description')
-        %td.wider
-          = text_field_tag("description",
-                           @edit[:new][:description],
-                           :disabled          => disabled,
-                           :maxlength         => 50,
-                           "data-miq_focus"   => true,
-                           "data-miq_observe" => {:interval => ".5",
-                                                  :url      => url}.to_json)
-      - if admin_user?
-        %tr
-          %td.key= _('Scope')
-          %td
-            = select_tag("profile_type",
-                         options_for_select([["#{_('All Users')}", "global"],
-                                             ["#{_('Current User')}", "user"]],
-                                            @edit[:new][:profile_type]),
+  %h3
+    = _('Time Profile Information')
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Description')
+      .col-md-8
+        = text_field_tag("description",
+                         @edit[:new][:description],
                          :disabled          => disabled,
-                         "data-miq_observe" => {:url => url}.to_json)
+                         :maxlength         => 50,
+                         "data-miq_focus"   => true,
+                         :class => "form-control",
+                         "data-miq_observe" => {:interval => ".5",
+                                                :url      => url}.to_json)
+    - if admin_user?
+      .form-group
+        %label.col-md-2.control-label
+          = _('Scope')
+        .col-md-8
+          = select_tag("profile_type",
+                       options_for_select([["#{_('All Users')}", "global"],
+                                           ["#{_('Current User')}", "user"]],
+                                          @edit[:new][:profile_type]),
+                       :disabled          => disabled,
+                       :class    => "selectpicker")
+
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("profile_type", "#{url}")
   = render(:partial => "timeprofile_days_hours",
            :locals  => {:disabled => disabled})
-  %table.style1
-    %tbody
-      %tr
-        %td.key= _('Timezone')
-        %td
-          = select_tag("profile_tz",
-                       options_for_select([["<#{_('Determine at Run Time')}>", nil]] + ALL_TIMEZONES,
-                                          @edit[:new][:profile][:tz]),
-                       :disabled              => disabled,
-                       "data-miq_sparkle_on"  => true,
-                       "data-miq_sparkle_off" => true,
-                       "data-miq_observe"     => {:url => url}.to_json)
-      - if admin_user?
-        %tr#rollup_daily_tr{:style => ("display:none;" unless @edit[:new][:profile][:tz])}
-          %td.key= _('Roll Up Daily Performance')
-          %td
-            - rollup_disabled = !@timeprofile.miq_reports.empty? || disabled
-            = check_box_tag("rollup_daily",
-                            "1",
-                            @edit[:new][:rollup_daily],
-                            :disabled                   => rollup_disabled,
-                            "data-miq_observe_checkbox" => {:url => url}.to_json)
-            - unless @timeprofile.miq_reports.empty?
-              .note= _("In use by %s reports, cannot be disabled") % @timeprofile.miq_reports.count
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Timezone')
+      .col-md-8
+        = select_tag("profile_tz",
+                     options_for_select([["<#{_('Determine at Run Time')}>", nil]] + ALL_TIMEZONES,
+                                        @edit[:new][:profile][:tz]),
+                     :disabled              => disabled,
+                     "data-miq_sparkle_on"  => true,
+                     "data-miq_sparkle_off" => true,
+                     :class    => "selectpicker")
+
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("profile_tz", "#{url}")
+
+    - if admin_user?
+      .form-group#rollup_daily_tr{:style => ("display:none;" unless @edit[:new][:profile][:tz])}
+        %label.col-md-2.control-label
+          = _('Roll Up Daily Performance')
+        .col-md-8
+          - rollup_disabled = !@timeprofile.miq_reports.empty? || disabled
+          = check_box_tag("rollup_daily",
+                          "1",
+                          @edit[:new][:rollup_daily],
+                          :disabled                   => rollup_disabled,
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+          - unless @timeprofile.miq_reports.empty?
+            .note= _("In use by %s reports, cannot be disabled") % @timeprofile.miq_reports.count
 
 
   - if %w(timeprofile_new timeprofile_copy timeprofile_create).include?(controller.action_name)

@@ -73,7 +73,7 @@ function miqPrepRightCellForm(tree) {
   if ($('#adv_searchbox_div').length) {
     $('#adv_searchbox_div').hide();
   }
-  dhxLayoutB.cells("a").collapse();
+  ManageIQ.layout.toolbar.hide();
   $('#' + tree).dynatree('disable');
   miqDimDiv(tree + '_div', true);
 }
@@ -615,9 +615,15 @@ function miqPassFields(url, args) {
 // Load XML/SWF charts data (non-IE)
 // This method is called by the XML/SWF charts when a chart is loaded into the DOM
 function Loaded_Chart(chart_id) {
-  if ((ManageIQ.browser != 'Explorer') &&
-      (typeof (ManageIQ.charts.chartData) != 'undefined')) {
-    doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
+  if (ManageIQ.browser != 'Explorer') {
+    if ((ManageIQ.charts.chartData === null) && (document.readyState == "loading")) {
+      setTimeout(function() { Loaded_Chart(chart_id) }, 200);
+      return;
+    }
+
+    if (ManageIQ.charts.chartData !== null) {
+      doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
+    }
   }
 }
 
@@ -725,6 +731,29 @@ function miqChartMenuClick(itemId) {
   }
   if (itemId != "cancel") {
     miqAsyncAjax("?menu_click=" + itemId);
+  }
+}
+
+function miqRESTAjaxButton(url, button, data) {
+  var form = $(button).parents('form:first')[0];
+  if (form) {
+    $(form).submit(function(e) {
+      e.preventDefault();
+      return false;
+    });
+    if(data != undefined) {
+      formData = data;
+    }
+    else {
+      formData = $(form).serialize();
+    }
+    miqJqueryRequest(form.action, {
+      beforeSend: true,
+      complete: true,
+      data: formData
+    });
+  } else {
+    miqAjaxButton(url, true);
   }
 }
 
@@ -922,12 +951,12 @@ function miqBuildCalendar() {
 
   all.each(function () {
     var element = $(this);
+    var observeDateBackup = null;
 
     if (! element.data('datepicker')) {
-      var observeDateBackup = ManageIQ.observeDate;
+      observeDateBackup = ManageIQ.observeDate;
       ManageIQ.observeDate = function() {};
       element.datepicker();
-      ManageIQ.observeDate = observeDateBackup;
     }
 
     if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
@@ -940,6 +969,10 @@ function miqBuildCalendar() {
 
     if (typeof miq_cal_skipDays != "undefined") {
       element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
+    }
+
+    if (observeDateBackup != null) {
+      ManageIQ.observeDate = observeDateBackup;
     }
   });
 }
@@ -1017,6 +1050,9 @@ function miq_tabs_init(id, url) {
   // Hide the tab header when there is only one visible tab available
   if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length == 1) {
     $(id + ' > ul.nav-tabs').hide();
+  }
+  else if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
+    $(id + ' > ul.nav-tabs').show();
   }
 }
 
@@ -1197,7 +1233,7 @@ function miqDomElementExists(element) {
 }
 
 function miqSerializeForm(element) {
-  return $('#' + element).find('input,select,textarea').serialize();
+  return $('#' + element).find('input,select,textarea').serialize().replace(/%0D%0A/g, '%0A');
 }
 
 function miqSerializeField(element, field_name) {
@@ -1219,3 +1255,4 @@ function miqSelectPickerEvent(element, url){
     return true;
   });
 }
+

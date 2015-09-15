@@ -4,43 +4,45 @@ module EmsContainerHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name type hostname port cpu_cores memory_resources)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(name type hostname port cpu_cores memory_resources)
   end
 
   def textual_group_relationships
     # Order of items should be from parent to child
     items = []
-    items.concat(%w(container_projects container_routes)) if @ems.kind_of?(EmsOpenshift)
-    items.concat(%w(container_services container_replicators container_groups container_nodes containers
+    items.concat(%i(container_projects))
+    items.concat(%i(container_routes)) if @ems.kind_of?(ManageIQ::Providers::Openshift::ContainerManager)
+    items.concat(%i(container_services container_replicators container_groups container_nodes containers
                     container_image_registries container_images))
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    items
   end
 
   def textual_group_status
-    items = %w(refresh_status)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(refresh_status)
   end
 
   def textual_group_smart_management
-    items = %w{zone}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(zone tags)
   end
 
+  def textual_group_topology
+    items = %w(topology)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
+  end
   #
   # Items
   #
 
   def textual_name
-    {:label => "Name", :value => @ems.name}
+    @ems.name
   end
 
   def textual_type
-    {:label => "Type", :value => @ems.emstype_description}
+    @ems.emstype_description
   end
 
   def textual_hostname
-    {:label => "Hostname", :value => @ems.hostname}
+    @ems.hostname
   end
 
   def textual_memory_resources
@@ -55,7 +57,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_port
-    @ems.supports_port? ? {:label => "Port", :value => @ems.port} : nil
+    @ems.supports_port? ? @ems.port : nil
   end
 
   def textual_zone
@@ -74,5 +76,12 @@ module EmsContainerHelper::TextualSummary
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
     }
+  end
+
+  def textual_topology
+    {:label => N_('Topology'),
+     :image => 'topology',
+     :link  => url_for(:controller => 'container_topology', :action => 'show', :id => @ems.id),
+     :title => N_("Show topology")}
   end
 end

@@ -1,4 +1,4 @@
-require 'util/pathname2'
+require 'pathname'
 
 module VMWareDescriptor
 	
@@ -31,9 +31,9 @@ module VMWareDescriptor
 			@parentOstruct = OpenStruct.new
 			
 			# Get the parentFileNameHint and be sure it is relative to the descriptor file's directory
-			parentFileName = Pathname2.new(desc['parentFileNameHint'])
+			parentFileName = Pathname.new(desc['parentFileNameHint'])
 			if parentFileName.absolute?
-				parentFileName = parentFileName.relative_path_from(Pathname2.new(self.dInfo.fileName).dirname) 
+				parentFileName = parentFileName.relative_path_from(Pathname.new(self.dInfo.fileName).dirname) 
 				$log.debug "VMWareDescriptor: Parent disk file is absolute. Using relative path [#{parentFileName}]" if $log
 			end
 			parentFileName = File.dirname(self.dInfo.fileName) + "/" + parentFileName.to_s.tr("\\", "/")

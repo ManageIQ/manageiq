@@ -33,7 +33,7 @@
             %tbody
               - @alert_profile_alerts.each do |a|
                 %tr{:title => _("View this Alert"),
-                  :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');"}
+                  :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');"}
                   %td.narrow
                     %img{:src => "/images/icons/new/miq_alert.png"}
                   %td
@@ -118,7 +118,7 @@
             = _('The Enterprise')
           - else
             -# Assigned to CIs
-            %form.form-horizontal
+            .form-horizontal
               .form-group
                 %label.control-label.col-md-2
                   = ui_lookup(:models => aa[:objects].first.class.to_s)
@@ -139,7 +139,7 @@
                             = h(obj)
         - elsif !aa[:tags].empty?
           -# Tags are assigned
-          %form.form-horizontal
+          .form-horizontal
             .form-group
               %label.control-label.col-md-2
                 = _("%s with %s Tags") % [ui_lookup(:tables => aa[:tags].first.last), @alert_profile_tag.description]

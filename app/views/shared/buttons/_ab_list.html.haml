@@ -8,7 +8,7 @@
     %tbody
       -# CI node level
       - @sb[:obj_list].sort.each do |obj|
-        %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('ab_tree', 'xx-#{obj[1].split('_').first}_#{@sb[:target_classes][obj[0]]}')"}
+        %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('ab_tree', 'xx-#{obj[1].split('_').first}_#{@sb[:target_classes][obj[0]]}')"}
           %td
             = obj[0]
 
@@ -31,9 +31,11 @@
       %tbody
         - @sb[:button_groups].each do |obj|
           - if obj.kind_of?(String)
-            %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('ab_tree', '-ub-#{@nodetype[1]}')"}
+            %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('ab_tree', '-ub-#{@nodetype[1]}')"}
               %td.narrow
-                %img{:src => "/images/icons/new/folder.png"}
+                %ul.icons.list-unstyled
+                  %li
+                    %span{:class => "pficon pficon-folder-close"}
               %td
                 = obj
               %td
@@ -49,9 +51,11 @@
               - typ = "cbg"
               - img = obj[:button_image]
               - rec_type = "Group"
-            %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('#{tree_box}', '#{tree_id}_#{typ}-#{to_cid(obj[:id])}')"}
+            %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('#{tree_box}', '#{tree_id}_#{typ}-#{to_cid(obj[:id])}')"}
               %td.narrow
-                %img{:src => "/images/icons/new/custom-#{img}.png"}
+                %ul.icons.list-unstyled
+                  %li
+                    %span{:class => "product product-custom-#{img}"}
               %td
                 = obj[:name].split("|").first
               - if x_active_tree == :sandt_tree
@@ -66,28 +70,28 @@
     -# don't need basic info box for Unassigned button group
     %h3
       = _('Basic Information')
-    %table.style1
-      %tbody
-        %tr
-          %td.key
-            = _('Button Text')
-          %td
-            = @record.name.split('|').first
-            - display = @record.set_data.key?(:display) ? @record.set_data[:display] : true
-            = check_box_tag(display, true, display, :disabled => true)
-            &nbsp;
-            = _("Display on Button")
-        %tr
-          %td.key
-            = _('Button Hover Text')
-          %td.notwide
-            = @record.description
-        %tr
-          %td.key
-            = _('Image')
-          %td.notwide
-            %img{:src => "/images/icons/new/custom-#{@record.set_data[:button_image]}.png", :align => "left", :width => "20", :height => "20"}
+    .form-horizontal.static
+      .form-group
+        %label.control-label.col-md-2
+          = _('Button Text')
+        .col-md-8
+          = @record.name.split('|').first
+          - display = @record.set_data.key?(:display) ? @record.set_data[:display] : true
+          = check_box_tag(display, true, display, :disabled => true)
+          &nbsp;
+          = _("Display on Button")
+      .form-group
+        %label.control-label.col-md-2
+          = _('Button Hover Text')
+        .col-md-8
+          = @record.description
+      .form-group
+        %label.control-label.col-md-2
+          = _('Image')
+        .col-md-8
+          %span{:class => "product product-custom-#{@record.set_data[:button_image]}"}
   - if @sb[:buttons].blank?
+    %hr
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Buttons found.")}
   - else
     %hr
@@ -102,9 +106,11 @@
         - @sb[:buttons].each do |obj|
           - tree_box = x_active_tree == :sandt_tree ? 'sandt_tree' : 'ab_tree'
           - id = @nodetype[0].split('-')[1] == "ub" ? "#{@nodetype[0]}_cb-#{to_cid(obj[:id])}" : "#{x_node}_cb-#{to_cid(obj[:id])}"
-          %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('#{tree_box}', '#{id}')"}
+          %tr{:title => _("Click to view details"), :onclick => "miqDynatreeActivateNode('#{tree_box}', '#{id}')"}
             %td.narrow
-              %img{:src => "/images/icons/new/custom-#{obj[:button_image]}.png"}
+              %ul.icons.list-unstyled
+                %li
+                  %span{:class => "product product-custom-#{obj[:button_image]}"}
             %td
               = obj[:name]
             %td

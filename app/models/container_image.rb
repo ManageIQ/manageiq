@@ -4,4 +4,20 @@ class ContainerImage < ActiveRecord::Base
   belongs_to :container_image_registry
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :containers
+  has_many :guest_applications, :dependent => :destroy
+
+  acts_as_miq_taggable
+
+  def full_name
+    result = ""
+    result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
+    result << name
+    result << ":#{tag}" unless tag.nil?
+    result << "@#{digest}" unless digest.nil?
+    result
+  end
+
+  def scan
+    raise 'Feature not implemented'
+  end
 end

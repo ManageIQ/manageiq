@@ -1,6 +1,10 @@
 module Metric::Capture
   VALID_CAPTURE_INTERVALS = ['realtime', 'hourly', 'historical'].freeze
 
+  # This is nominally a VMware-specific value, but we currently expect
+  # all providers to conform to it.
+  REALTIME_METRICS_PER_MINUTE = 3
+
   REALTIME_PRIORITY = HOURLY_PRIORITY = DAILY_PRIORITY = MiqQueue::NORMAL_PRIORITY
   HISTORICAL_PRIORITY = MiqQueue::LOW_PRIORITY
 
@@ -30,7 +34,7 @@ module Metric::Capture
     value = if value.kind_of?(Fixnum) # Default unit is minutes
               value.minutes.ago.utc
             else
-              value.to_i_with_method.ago.utc unless value.nil?
+              value.to_i_with_method.seconds.ago.utc unless value.nil?
             end
     return value
   end

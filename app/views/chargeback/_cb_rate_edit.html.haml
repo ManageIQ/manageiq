@@ -1,7 +1,8 @@
 - url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@sb[:rate].id || "new"}")
 #form_div
-  %h3= _('Basic Info')
-  %form.form-horizontal.static
+  %h3
+    = _('Basic Info')
+  .form-horizontal.static
     .form-group
       %label.col-md-2.control-label
         = _('Description')

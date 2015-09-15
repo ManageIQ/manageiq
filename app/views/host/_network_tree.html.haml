@@ -5,9 +5,9 @@
                         :tree_name                   => session[:tree_name],
                         :json_tree                   => instance_variable_get(:"@#{session[:tree_name]}"),
                         :click_url                   => "/vm/show/",
-                        :onmousein                   => "miqOnMouseIn_HostNet",
-                        :onmouseout                  => "miqOnMouseOut_HostNet",
-                        :onclick                     => "miqOnClick_HostNet",
+                        :onmousein                   => "miqOnMouseInHostNet",
+                        :onmouseout                  => "miqOnMouseOutHostNet",
+                        :onclick                     => "miqOnClickHostNet",
                         :exp_tree                    => true,
                         :open_close_all_on_dbl_click => true})
 

@@ -72,9 +72,9 @@ namespace :evm do
       puts "Replicating Region (#{MiqRegion.my_region_number}) to remote database..."
 
       unless (total = RrPendingChange.count) == 0
-        require 'progressbar'
+        require 'ruby-progressbar'
         require 'rubyrep'
-        pbar = ProgressBar.new("Backlog", total)
+        pbar = ProgressBar.create(:title => "Backlog", :total => total, :autofinish => false)
 
         begin
           pid     = Process.spawn("bin/rake evm:dbsync:replicate", :chdir => Rails.root)
@@ -82,7 +82,7 @@ namespace :evm do
 
           # Wait for the Backlog to empty before continuing
           until (count = RrPendingChange.count) == 0
-            pbar.set(total - count)
+            pbar.progress = (total - count)
             break unless waiting.status
             sleep 1
           end
@@ -206,7 +206,7 @@ namespace :evm do
         .sort
     end
 
-    # TODO: possible overlap with MiqPostgresAdmin
+    # TODO: possible overlap with PostgresAdmin
     def do_pg_copy(direction, tables, database, username, password, host, port)
       dir = File.join(Rails.root, "tmp", "sync")
       FileUtils.mkdir_p(dir)

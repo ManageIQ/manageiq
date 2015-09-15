@@ -19,13 +19,19 @@ src_files:
   - javascripts/services/miq_service.js
   - javascripts/services/miq_db_backup_service.js
   - javascripts/services/timer_option_service.js
+  - javascripts/controllers/ems_common/ems_common_form_controller.js
+  - javascripts/controllers/host/host_form_controller.js
   - javascripts/controllers/ops/diagnostics_database_form_controller.js
   - javascripts/controllers/ops/log_collection_form_controller.js
+  - javascripts/controllers/ops/tenant_form_controller.js
+  - javascripts/controllers/ops/tenant_quota_form_controller.js
   - javascripts/controllers/schedule/schedule_form_controller.js
   - javascripts/controllers/repository/repository_form_controller.js
   - javascripts/controllers/retirement/retirement_form_controller.js
+  - javascripts/directives/autofocus.js
   - javascripts/directives/repository/valid_unc_path.js
   - javascripts/directives/checkchange.js
+  - javascripts/directives/miq_calendar.js
   - javascripts/directives/miqrequired.js
   - javascripts/directives/selectpickerForSelectTag.js
   - javascripts/directives/scheduler/updateDropdownForFilter.js

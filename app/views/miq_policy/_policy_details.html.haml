@@ -10,7 +10,7 @@
         - if @edit && @edit[:typ] == "basic"
           %h3
             = _("Basic Information")
-          %form.form-horizontal
+          .form-horizontal
             .form-group
               %label.control-label.col-md-2
                 = _("Description")
@@ -140,7 +140,7 @@
             %tbody
               - @policy_conditions.each do |c|
                 %tr{:title => _("View this Condition"),
-                  :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_co-#{to_cid(c.id)}');"}
+                  :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_co-#{to_cid(c.id)}');"}
                   %td.narrow
                     %ul.icons.list-unstyled
                       %li
@@ -191,37 +191,34 @@
               - @policy_events.each do |e|
                 %tr
                   %td.narrow{:title => _("View this Policy Event"),
-                    :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
+                    :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
                     %img{:src => "/images/icons/new/event-#{e.name}.png"}
                   %td{:title => _("View this Policy Event"),
-                    :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
+                    :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
                     = h(e.description)
                   %td
                     - ta = @policy.actions_for_event(e, :success)
                     - fa = @policy.actions_for_event(e, :failure)
                     - if ta.empty? && fa.empty?
-                      %strong
-                        = _("* No Actions are configured for this Event.")
+                      = _("* No Actions are configured for this Event.")
                     - else
                       - unless ta.empty?
                         %table
                           %tbody
                             - ta.each do |a|
                               %tr{:title => _("View this Event Action"),
-                                :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
+                                :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
                                 %td
-                                  %img{:src => "/images/icons/new/check.png"}
-                                %td
+                                  %span.pficon.pficon-ok
                                   = h(a.description)
                       - unless fa.empty?
                         %table
                           %tbody
                             - fa.each do |a|
                               %tr{:title => _("View this Event Action"),
-                                  :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
+                                  :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
                                 %td
-                                  %img{:src => "/images/icons/new/x.png"}
-                                %td
+                                  %span.pficon.pficon-close
                                   = h(a.description)
           %hr
 

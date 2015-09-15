@@ -5,7 +5,7 @@ require 'io/wait'
 require 'open-uri'
 require 'util/miq-encode'
 require 'util/miq-unicode'
-require 'win32/registry' if Platform::OS == :win32
+require 'win32/registry' if Sys::Platform::OS == :windows
 
 module MiqPowerShell
   @@default_port = 9121

@@ -280,6 +280,7 @@ class WorkerBase
     @my_zone ||= MiqServer.my_zone
     sync_log_level
     sync_worker_settings
+    sync_blacklisted_events
     _log.info("ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
     $log.log_hashes(@worker_settings)
     $log.info("---")
@@ -388,6 +389,9 @@ class WorkerBase
   end
 
   def before_exit(message, exit_code)
+  end
+
+  def sync_blacklisted_events
   end
 
   #

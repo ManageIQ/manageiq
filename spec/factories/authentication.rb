@@ -10,18 +10,19 @@ FactoryGirl.define do
     authtype    "ipmi"
   end
 
-  factory :authentication_ssh_keypair, :parent => :authentication do
+  factory :authentication_ws, :parent => :authentication do
+    authtype    "ws"
+  end
+
+  factory :authentication_ssh_keypair, :parent => :authentication, :class => 'ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair' do
     authtype    "ssh_keypair"
     userid      "testuser"
     password    nil
     auth_key    'private_key_content'
   end
 
-  factory :authentication_ssh_keypair_root, :parent => :authentication do
-    authtype    "ssh_keypair"
+  factory :authentication_ssh_keypair_root, :parent => :authentication_ssh_keypair do
     userid      "root"
-    password    nil
-    auth_key    'private_key_content'
   end
 
   factory :authentication_ssh_keypair_without_key, :parent => :authentication_ssh_keypair do

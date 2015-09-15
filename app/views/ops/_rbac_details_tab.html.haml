@@ -8,27 +8,44 @@
     = render :partial => "rbac_groups_list"
   - elsif node.first == "xx" && node.last == "ur" && (!@edit || (@edit && !@edit[:current]))
     = render :partial => "rbac_roles_list"
+  - elsif node.first == "xx" && node.last == "tn" && (!@edit || (@edit && !@edit[:current]))
+    = render :partial => "rbac_tenants_list"
   - elsif node.first == "u" || (node.last == "u" && @edit)
     = render :partial => "rbac_user_details"
   - elsif node.first == "g" || (node.last == "g" && @edit)
     = render :partial => "rbac_group_details"
   - elsif node.first == "ur" || (node.last == "ur" && @edit)
     = render :partial => "rbac_role_details"
+  - elsif node.first == "tn" || (node.last == "tn" && @edit)
+    = render :partial => "rbac_tenant_details"
   - else
     %table.table.table-striped.table-bordered.table-hover
       %tbody
         %tr
-          %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
-            = image_tag("/images/icons/new/user.png")
-          %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
+          %td.narrow{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
+            %ul.icons.list-unstyled
+              %li
+                %span.pficon.pficon-user
+          %td{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
             = _("Users (%s)") % @users_count.to_s
         %tr
-          %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
-            = image_tag("/images/icons/new/miq_group.png")
-          %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
+          %td.narrow{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
+            %ul.icons.list-unstyled
+              %li
+                %span.product.product-group
+          %td{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
             = _("Groups (%s)") % @groups_count.to_s
         %tr
-          %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
-            = image_tag("/images/icons/new/miq_user_role.png")
-          %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
+          %td.narrow{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
+            %ul.icons.list-unstyled
+              %li
+                %span.product.product-role
+          %td{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
             = _("Roles (%s)") % @roles_count.to_s
+        %tr
+          %td.narrow{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-tn');", :title => _("View Tenants")}
+            %ul.icons.list-unstyled
+              %li
+                %span.product.product-tenant
+          %td{:onclick => "miqDynatreeActivateNode('rbac_tree', 'xx-tn');", :title => _("View Tenants")}
+            = _("Tenants (%s)") % @tenants_count.to_s

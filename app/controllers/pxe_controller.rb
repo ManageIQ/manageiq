@@ -110,7 +110,7 @@ class PxeController < ApplicationController
     get_node_info(x_node)
     @pxe_image_types_count = PxeImageType.count
 
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   private
@@ -165,7 +165,7 @@ class PxeController < ApplicationController
       presenter[:reload_toolbars][:center] = { :buttons => c_buttons, :xml => c_xml }
     end
 
-    presenter[:expand_collapse_cells][:a] = c_buttons ? 'expand' : 'collapse'
+    presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
 
     # Rebuild the toolbars
     presenter[:reload_toolbars][:history] = { :buttons => h_buttons, :xml => h_xml }
@@ -237,8 +237,8 @@ class PxeController < ApplicationController
     if !@view || @in_a_form ||
         (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if @in_a_form
-        presenter[:expand_collapse_cells][:a] = 'collapse'
-        presenter[:expand_collapse_cells][:c] = 'expand'   # in case it was collapsed for summary screen, and incase there were no records on show_list
+        presenter[:show_hide_layout][:toolbar] = 'hide'
+        presenter[:show_hide_layout][:paginator] = 'show'   # in case it was hidden for summary screen, and incase there were no records on show_list
         presenter[:set_visible_elements][:form_buttons_div] = true
 
         action_url, multi_record = case x_active_tree

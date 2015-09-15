@@ -35,7 +35,7 @@ describe Metric::Purging do
             }
           }
         }
-        VMDB::Config.any_instance.stub(:config).and_return(@vmdb_config)
+        stub_server_configuration(@vmdb_config)
 
         @metrics1 = [
           FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => 1, :timestamp => (6.months + 1.days).ago.utc),

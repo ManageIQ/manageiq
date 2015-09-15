@@ -116,17 +116,21 @@ module MiqServer::EnvironmentManagement
     MiqApache::Control.stop(false)
   end
 
-  def check_disk_usage(disks)
+  def disk_usage_threshold
     @vmdb_config = VMDB::Config.new("vmdb")
-    threshold = @vmdb_config.config.fetch_path(:server, :events, :disk_usage_gt_percent) || 80
+    @vmdb_config.config.fetch_path(:server, :events, :disk_usage_gt_percent) || 80
+  end
+
+  def check_disk_usage(disks)
+    threshold = disk_usage_threshold
 
     disks.each do |disk|
       if disk[:used_bytes_percent].to_i > threshold
         disk_usage_event = case disk[:mount_point].chomp
-        when '/'                                            then 'evm_server_system_disk_high_usage'
-        when '/var/www/miq'                                 then 'evm_server_app_disk_high_usage'
-        when '/var/www/miq/vmdb/log'                        then 'evm_server_log_disk_high_usage'
-        when '/opt/rh/postgresql92/root/var/lib/pgsql/data' then 'evm_server_db_disk_high_usage'
+        when '/'                     then 'evm_server_system_disk_high_usage'
+        when '/var/www/miq'          then 'evm_server_app_disk_high_usage'
+        when '/var/www/miq/vmdb/log' then 'evm_server_log_disk_high_usage'
+        when /pgsql\/data/           then 'evm_server_db_disk_high_usage'
         end
 
         next unless disk_usage_event

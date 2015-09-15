@@ -41,6 +41,12 @@ class ApiController
       hash
     end
 
+    def add_report_result_to_result(hash, result_id)
+      hash[:result_id] = result_id
+      hash[:result_href] = "#{@req[:base]}#{@req[:prefix]}/results/#{result_id}"
+      hash
+    end
+
     def log_result(hash)
       hash.each { |k, v| api_log_info("Result: #{k}=#{v}") }
     end

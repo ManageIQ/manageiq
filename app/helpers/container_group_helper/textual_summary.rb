@@ -4,13 +4,28 @@ module ContainerGroupHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name phase message reason creation_timestamp resource_version restart_policy dns_policy ip)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(name phase message reason creation_timestamp resource_version restart_policy dns_policy ip)
   end
 
   def textual_group_relationships
     # Order of items should be from parent to child
-    items = %w(ems container_project container_replicator container_services containers container_node lives_on)
+    %i(ems container_project container_replicator container_services containers container_node lives_on)
+  end
+
+  def textual_group_conditions
+    labels = [_("Name"), _("Status")]
+    h = {:labels => labels}
+    h[:values] = @record.container_conditions.collect do |condition|
+      [
+        condition.name,
+        condition.status,
+      ]
+    end
+    h
+  end
+
+  def textual_group_smart_management
+    items = %w(tags)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -19,35 +34,35 @@ module ContainerGroupHelper::TextualSummary
   #
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_phase
-    {:label => "Phase", :value => @record.phase}
+    @record.phase
   end
 
   def textual_message
-    {:label => "Message", :value => @record.message} if @record.message
+    @record.message
   end
 
   def textual_reason
-    {:label => "Reason", :value => @record.reason} if @record.reason
+    @record.reason
   end
 
   def textual_creation_timestamp
-    {:label => "Creation Timestamp", :value => format_timezone(@record.creation_timestamp)}
+    format_timezone(@record.creation_timestamp)
   end
 
   def textual_resource_version
-    {:label => "Resource Version", :value => @record.resource_version}
+    @record.resource_version
   end
 
   def textual_restart_policy
-    {:label => "Restart Policy", :value => @record.restart_policy}
+    @record.restart_policy
   end
 
   def textual_dns_policy
-    {:label => "DNS Policy", :value => @record.dns_policy}
+    @record.dns_policy
   end
 
   def textual_ip

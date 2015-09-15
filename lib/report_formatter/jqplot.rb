@@ -78,6 +78,21 @@ module ReportFormatter
       mri.chart.store_path(:options, :axes, :xaxis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
     end
 
+    def vertical?
+      @vertical ||= mri.graph[:type] =~ /(Column)/
+    end
+
+    def axis_category_labels_ticks
+      return if Array(mri.chart[:axis_category_text]).empty?
+
+      axis = vertical? ? :xaxis : :yaxis
+      mri.chart.store_path(:options, :axes, axis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
+      mri.chart.store_path(:options, :axes, axis, :ticks, mri.chart[:axis_category_text][0].collect { |l| slice_legend(l) })
+      mri.chart.store_path(:options, :axes, axis, :tickRenderer, 'jQuery.jqplot.CanvasAxisTickRenderer')
+
+      mri.chart.store_path(:options, :axes, axis, :tickOptions, :angle, -45.0) if vertical?
+    end
+
     # Utilization timestamp charts
     def build_util_ts_chart_column
       return unless super
@@ -87,29 +102,16 @@ module ReportFormatter
       x_axis_category_labels
     end
 
+    def build_reporting_chart_other
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      super
+      simple_numeric_styling
+    end
+
     def build_reporting_chart_dim2
-      counts = super # FIXME: counts are passed for now, should handle this in a better way
-      default_legend
-      mri.chart[:options].update(
-        :stackSeries    => true,
-        :seriesDefaults => {:renderer => 'jQuery.jqplot.BarRenderer'},
-        :axes           => {
-          :xaxis => {
-            :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
-            :ticks    => counts.keys,
-          },
-        },
-        :highlighter    => {
-          :show                 => true,
-          :tooltipAxes          => 'y',
-          :tooltipContentEditor => "foobar = function(str, seriesIndex, pointIndex, plot) {
-              return plot.options.axes.xaxis.ticks[pointIndex] + ' / ' +
-                     plot.options.series[seriesIndex].label + ': ' +
-                     str;
-          }",
-          :tooltipLocation      => 'n'
-        }
-      )
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      counts = super
+      dim2_formating(counts.keys)
     end
 
     def build_planning_chart(maxcols, divider)
@@ -120,21 +122,80 @@ module ReportFormatter
       x_axis_category_labels
     end
 
-    def build_reporting_chart_other
+    def build_numeric_chart_grouped_2dim
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      series_names = super
+      dim2_formating(series_names)
+    end
+
+    def dim2_formating(ticks)
+      horizontal_legend if mri.graph[:type] =~ /Bar/
+      default_legend    if mri.graph[:type] =~ /Column/
+
+      if mri.graph[:type] =~ /Column/
+        mri.chart[:options].update(
+          :axes           => {
+            :xaxis => {
+              :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
+              :ticks    => ticks,
+            },
+          },
+          :highlighter    => {
+            :show                 => true,
+            :tooltipAxes          => 'y',
+            :tooltipContentEditor => 'jqplot_xaxis_tick_highlight',
+            :tooltipLocation      => 'n'
+          }
+        )
+      elsif mri.graph[:type] =~ /Bar/
+        mri.chart[:options].update(
+          :axes           => {
+            :yaxis => {
+              :renderer => 'jQuery.jqplot.CategoryAxisRenderer',
+              :ticks    => ticks,
+            },
+          },
+          :highlighter    => {
+            :show                 => true,
+            :tooltipAxes          => 'x',
+            :tooltipContentEditor => 'jqplot_yaxis_tick_highlight',
+            :tooltipLocation      => 'n'
+          }
+        )
+      end
+    end
+
+    def build_numeric_chart_grouped
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
+      simple_numeric_styling
+    end
+
+    def build_numeric_chart_simple
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      super
+      simple_numeric_styling
+    end
+
+    def pie_highligher(values = false)
       mri.chart[:options].update(
         :highlighter    => {
           :show                 => true,
           :useAxesFormatters    => false,
           :tooltipAxes          => 'y',
-          :tooltipContentEditor => "foobar = function(str, seriesIndex, pointIndex, plot) {
-              return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
-                     plot.series[seriesIndex].data[pointIndex][1];
-          }",
+          :tooltipContentEditor => values ? 'jqplot_pie_highlight_values' : 'jqplot_pie_highlight',
           :tooltipLocation      => 'n'
         }
-      ) if @is_pie_type
+      )
+    end
+
+    def simple_numeric_styling
+      pie_highligher if pie_type?
+
+      if mri.graph[:type] =~ /(Bar|Column)/
+        mri.chart.store_path(:options, :seriesDefaults, :rendererOptions, :varyBarColor, true)
+        axis_category_labels_ticks
+      end
     end
 
     def finalize_document

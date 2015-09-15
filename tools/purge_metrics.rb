@@ -28,7 +28,7 @@ log "Purge Counts"
 dates = {}
 counts = {}
 %w{realtime hourly daily}.each do |interval|
-  dates[interval]  = opts[interval.to_sym].to_i_with_method.ago.utc
+  dates[interval]  = opts[interval.to_sym].to_i_with_method.seconds.ago.utc
   counts[interval] = Metric::Purging.purge_count(dates[interval], interval)
   log "  #{"#{interval.titleize}:".ljust(9)} #{formatter.number_with_delimiter(counts[interval])}"
 end
@@ -37,10 +37,14 @@ puts
 exit if opts[:mode] != "purge"
 
 log "Purging..."
-require 'progressbar'
+require 'ruby-progressbar'
 %w{realtime hourly daily}.each do |interval|
-  pbar = ProgressBar.new(interval.titleize, counts[interval])
-  Metric::Purging.purge(dates[interval], interval, opts[:window]) { |count, total| pbar.inc count } if counts[interval] > 0
+  pbar = ProgressBar.create(:title => interval.titleize, :total => counts[interval], :autofinish => false)
+  if counts[interval] > 0
+    Metric::Purging.purge(dates[interval], interval, opts[:window]) do |count, _|
+      pbar.progress += count
+    end
+  end
   pbar.finish
 end
 log "Purging...Complete"

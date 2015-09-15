@@ -14,7 +14,7 @@ FactoryGirl.define do
   factory :ems_cloud, :aliases => ["manageiq/providers/cloud_manager"], :class => "ManageIQ::Providers::CloudManager", :parent => :ext_management_system do
   end
 
-  factory :ems_container, :class => "EmsContainer", :parent => :ext_management_system do
+  factory :ems_container, :aliases => ["manageiq/providers/container_manager"], :class => "ManageIQ::Providers::ContainerManager", :parent => :ext_management_system do
   end
 
   factory :configuration_manager, :aliases => ["manageiq/providers/configuration_manager"], :class => "ManageIQ::Providers::ConfigurationManager", :parent => :ext_management_system do
@@ -34,7 +34,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_microsoft, :class => "EmsMicrosoft", :parent => :ems_infra do
+  factory :ems_microsoft, :aliases => ["manageiq/providers/microsoft/infra_manager"], :class => "ManageIQ::Providers::Microsoft::InfraManager", :parent => :ems_infra do
   end
 
   factory :ems_microsoft_with_authentication, :parent => :ems_microsoft do
@@ -72,6 +72,7 @@ FactoryGirl.define do
   # Leaf classes for ems_cloud
 
   factory :ems_amazon, :aliases => ["manageiq/providers/amazon/cloud_manager"], :class => "ManageIQ::Providers::Amazon::CloudManager", :parent => :ems_cloud do
+    zone {  Zone.first || FactoryGirl.create(:zone) }
     provider_region "us-east-1"
   end
 
@@ -88,6 +89,7 @@ FactoryGirl.define do
   end
 
   factory :ems_openstack, :aliases => ["manageiq/providers/openstack/cloud_manager"], :class => "ManageIQ::Providers::Openstack::CloudManager", :parent => :ems_cloud do
+    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_openstack_with_authentication, :parent => :ems_openstack do
@@ -99,10 +101,10 @@ FactoryGirl.define do
 
   # Leaf classes for ems_container
 
-  factory :ems_kubernetes, :class => "EmsKubernetes", :parent => :ems_container do
+  factory :ems_kubernetes, :aliases => ["manageiq/providers/kubernetes/container_manager"], :class => "ManageIQ::Providers::Kubernetes::ContainerManager", :parent => :ems_container do
   end
 
-  factory :ems_openshift,  :class => "EmsOpenshift", :parent => :ems_container do
+  factory :ems_openshift, :aliases => ["manageiq/providers/openshift/container_manager"], :class => "ManageIQ::Providers::Openshift::ContainerManager", :parent => :ems_container do
   end
 
   # Leaf classes for configuration_manager
@@ -122,6 +124,16 @@ FactoryGirl.define do
   end
 
   factory :provisioning_manager_foreman_with_authentication, :parent => :provisioning_manager_foreman do
+    after :create do |x|
+      x.authentications << FactoryGirl.create(:authentication)
+    end
+  end
+
+  factory :ems_azure, :aliases => ["manageiq/providers/azure/cloud_manager"], :class => "ManageIQ::Providers::Azure::CloudManager", :parent => :ems_cloud do
+    zone {  Zone.first || FactoryGirl.create(:zone) }
+  end
+
+  factory :ems_azure_with_authentication, :parent => :ems_azure do
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication)
     end

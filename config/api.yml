@@ -144,6 +144,18 @@
     - :subcollection
     :methods: *70174834086080
     :klass: MiqEventDefinition
+  :features:
+    :description: Product Features
+    :options:
+    - :collection
+    - :subcollection
+    - :show
+    :methods: *70174834085860
+    :klass: MiqProductFeature
+    :subcollection_actions:
+      :post:
+      - :name: assign
+      - :name: unassign
   :flavors:
     :description: Flavors
     :options:
@@ -268,6 +280,12 @@
         :identifier: host_protect
       - :name: unassign
         :identifier: host_protect
+  :pictures:
+    :description: Pictures
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Picture
   :policies:
     :description: Policies
     :options:
@@ -404,6 +422,12 @@
         :identifier: ems_infra_protect
       - :name: unassign
         :identifier: ems_infra_protect
+  :provision_dialogs:
+    :description: Provisioning Dialogs
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: MiqDialog
   :provision_requests:
     :description: Provision Requests
     :options:
@@ -422,16 +446,37 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :methods: *70174834084700
     :klass: ChargebackRateDetail
+    :collection_actions:
+      :post:
+      - :name: create
+        :identifier: chargeback_rates_create
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: chargeback_rates_edit
+      - :name: delete
+        :identifier: chargeback_rates_delete
+      :delete:
+      - :name: delete
+        :identifier: chargeback_rates_delete
   :reports:
     :description: Reports
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: MiqReport
+    :resource_actions:
+      :post:
+      - :name: run
+        :identifier: miq_report_run
     :subcollections:
     - :results
+    :collection_actions:
+      :post:
+      - :name: import
+        :identifier: miq_report_export
   :request_tasks:
     :description: Request Tasks
     :options:
@@ -445,6 +490,12 @@
     - :collection
     :methods: *70174834086080
     :klass: MiqRequest
+  :resource_actions:
+    :description: Resource Actions
+    :options:
+    - :subcollection
+    :methods: *70174834086080
+    :klass: ResourceAction
   :resource_pools:
     :description: Resource Pools
     :options:
@@ -485,6 +536,7 @@
   :results:
     :description: Report Results
     :options:
+    - :collection
     - :subcollection
     :methods: *70174834086080
     :klass: MiqReportResult
@@ -492,10 +544,14 @@
     :description: Roles
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085620
     :klass: MiqUserRole
+    :subcollections:
+    - :features
     :collection_actions:
       :post:
+      - :name: create
+        :identifier: rbac_role_add
       - :name: add
         :identifier: rbac_role_add
       - :name: edit
@@ -506,6 +562,8 @@
       :post:
       - :name: edit
         :identifier: rbac_role_edit
+      - :name: delete
+        :identifier: rbac_role_delete
       :delete:
       - :name: delete
         :identifier: rbac_role_delete
@@ -548,6 +606,13 @@
       :delete:
       - :name: delete
         :identifier: st_catalog_delete
+  :service_dialogs:
+    :description: Service Dialogs
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: Dialog
   :service_requests:
     :description: Service Requests
     :options:
@@ -568,8 +633,10 @@
     :methods: *70174834084700
     :klass: ServiceTemplate
     :subcollections:
+    - :resource_actions
     - :tags
     - :service_requests
+    - :service_dialogs
     :collection_actions:
       :post:
       - :name: edit
@@ -622,6 +689,7 @@
     :klass: Service
     :subcollections:
     - :tags
+    - :service_dialogs
     :collection_actions:
       :post:
       - :name: edit
@@ -806,6 +874,10 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
+      - :name: shelve
+        :identifier: vm_shelve
+      - :name: shelve_offload
+        :identifier: vm_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: reset
@@ -844,6 +916,10 @@
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
+      - :name: shelve
+        :identifier: vm_shelve
+      - :name: shelve_offload
+        :identifier: vm_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: reset

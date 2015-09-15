@@ -2,11 +2,11 @@
 #sort_div
   %h3
     = _('Sort Criteria')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
         = _('Sort the Report By')
-      %td
+      .col-md-8
         - if @sortby1.include?("__") && MiqReport.is_break_suffix?(@sortby1.split("__")[1])
           - sortby1 = @sortby1.split("__").first
         - else
@@ -14,85 +14,96 @@
         = select_tag('chosen_sort1',
           options_for_select([NOTHING_STRING] + @sort1, sortby1),
           :multiple              => false,
-          :class                 => "widthed",
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("chosen_sort1", "#{url}");
         - unless MiqReport.get_col_break_suffixes(@sortby1.split("__").first).empty?
           - opts = [["<#{_('Original Value')}>", nil]] + MiqReport.get_col_break_suffixes(@sortby1.split("__").first)
           = select_tag('sort1_suffix',
             options_for_select(opts, @sortby1.split("__")[1]),
             :multiple              => false,
-            :class                 => "widthed",
+            :class                 => "selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("sort1_suffix", "#{url}");
     - if @sortby1 != NOTHING_STRING
-      %tr
-        %td.key
+      .form-group
+        %label.control-label.col-md-2
           = _('Sort Order')
-        %td
+        .col-md-8
           - opts = [[_("Ascending"), "Ascending"], [_("Descending"), "Descending"]]
           = select_tag('sort_order',
             options_for_select(opts, @edit[:new][:order]),
             :multiple              => false,
-            :class                 => "widthed",
+            :class                 => "selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
-      %tr
-        %td.key
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("sort_order", "#{url}");
+      .form-group
+        %label.control-label.col-md-2
           = _('Show Sort Breaks')
-        %td
+        .col-md-8
           - opts = [[_("No"), "No"], [_("Yes"), "Yes"], [_("Counts"), "Counts"]]
           = select_tag('sort_group',
             options_for_select(opts, @edit[:new][:group]),
             :multiple              => false,
-            :class                 => "widthed",
+            :class                 => "selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("sort_group", "#{url}");
       - unless @edit[:new][:group] == "No"
-        %tr
-          %td{:class => "key"}
+        .form-group
+          %label.control-label.col-md-2
             = _('Hide Detail Rows')
-          %td
+          .col-md-8
             = check_box_tag("hide_details", "1", @edit[:new][:hide_details],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
               "data-miq_observe_checkbox" => {:url => url}.to_json)
         - ci = MiqReport.get_col_info(@sortby1)
         - unless ci[:available_formats].empty?
-          %tr
-            %td.key
+          .form-group
+            %label.control-label.col-md-2
               = _('Format on Summary Row')
-            %td
+            .col-md-8
               - opts = [["<#{_('None')}>", "_none_"], ["<#{_('Reset to Default')}>", nil]] + Array(ci[:available_formats].invert).sort_by(&:first)
               = select_tag('break_format',
                 options_for_select(opts, @edit[:new].fetch_path(:col_options, @sortby1.split("-").last, :break_format) || ci[:default_format]),
                   :multiple              => false,
-                  :class                 => "widthed",
+                  :class                 => "selectpicker",
                   "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  "data-miq_observe"     => {:url => url}.to_json)
+                  "data-miq_sparkle_off" => true)
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent("break_format", "#{url}");
           - if false
             -# TODO: Commented out as this observe causes double transactions until we can undo the form observe
-            %tr
-              %td.key
+            .form-group
+              %label.control-label.col-md-2
                 = _('Label on Summary Row')
-              %td.wide
+              .col-md-8
                 #break_label_div
                   = text_field_tag("break_label",
                     @edit[:new].fetch_path(:col_options, @sortby1.split("-").last, :break_label).to_s,
                     :maxlength         => 100,
+                    "class"            => "form-control",
                     "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   - if @sortby1 != NOTHING_STRING
     %br
-    %table.style1
-      %tr
-        %td.key
+    .form-horizontal
+      .form-group
+        %label.control-label.col-md-2
           = _('Within Above Field, Sort By')
-        %td
+        .col-md-8
           - if @sortby2.include?("__") && MiqReport.is_break_suffix?(@sortby2.split("__")[1])
             - sortby2 = @sortby2.split("__").first
           - else
@@ -100,32 +111,38 @@
           = select_tag('chosen_sort2',
             options_for_select([NOTHING_STRING] + @sort2, sortby2),
             :multiple              => false,
-            :class                 => "widthed",
+            :class                 => "selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("chosen_sort2", "#{url}");
           - unless MiqReport.get_col_break_suffixes(@sortby2.split("__").first).empty?
             - opts = [["<#{_('Original Value')}>", nil]] + MiqReport.get_col_break_suffixes(@sortby2.split("__").first)
             = select_tag('sort2_suffix',
               options_for_select(opts, @sortby2.split("__")[1]),
               :multiple              => false,
-              :class                 => "widthed",
+              :class                 => "selectpicker",
               "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
-      %tr
-        %td.key
+              "data-miq_sparkle_off" => true)
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("sort2_suffix", "#{url}");
+      .form-group
+        %label.control-label.col-md-2
           = _('Number of Rows to Show')
-        %td
+        .col-md-8
           - if @edit[:new][:group] == "No"
             - opts = [[_("All"), ""]] + [5, 10, 20, 50, 100].map! { |x| [_("First %s") % x, x] }
             = select_tag('row_limit',
               options_for_select(opts, @edit[:new][:row_limit]),
               :multiple              => false,
-              :class                 => "widthed",
+              :class                 => "selectpicker",
               "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+              "data-miq_sparkle_off" => true)
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("row_limit", "#{url}");
           - else
             = _('All')
   - unless @sortby1 == NOTHING_STRING || @edit[:new][:group] == "No"

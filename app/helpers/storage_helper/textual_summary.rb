@@ -4,34 +4,28 @@ module StorageHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{store_type free_space used_space total_space}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(store_type free_space used_space total_space)
   end
 
   def textual_group_registered_vms
-    items = %w{uncommitted_space used_uncommitted_space}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(uncommitted_space used_uncommitted_space)
   end
 
   def textual_group_relationships
-    items = %w{hosts managed_vms managed_miq_templates registered_vms unregistered_vms unmanaged_vms}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(hosts managed_vms managed_miq_templates registered_vms unregistered_vms unmanaged_vms)
   end
 
   def textual_group_storage_relationships
-    items = %w{storage_systems storage_volumes logical_disk file_share}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(storage_systems storage_volumes logical_disk file_share)
   end
 
   def textual_group_smart_management
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   def textual_group_content
     return nil if @record["total_space"].nil?
-    items = %w{files disk_files snapshot_files vm_ram_files vm_misc_files debris_files}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(files disk_files snapshot_files vm_ram_files vm_misc_files debris_files)
   end
 
   #
@@ -234,18 +228,4 @@ module StorageHelper::TextualSummary
     end
     h
   end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h     = {:label => label}
-    tags  = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
-    end
-    h
-  end
-
 end

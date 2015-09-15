@@ -25,7 +25,7 @@ describe('update-drop-down-for-timer initialization', function() {
       $scope.timerTypeOnce = false;
       model.timer_value = 0;
       $timeout.flush();
-      expect(elem[0][2].className).toMatch(/selectpicker/);
+      expect(elem[0][1].className).toMatch(/bs-select-hidden/);
       expect(elem[0][2].className).toMatch(/btn-default/);
       expect(elem[0][2].parentElement.attributes['style']['value']).not.toMatch(/display: none/);
       expect(form.timer_value.$viewValue).toBe(0);

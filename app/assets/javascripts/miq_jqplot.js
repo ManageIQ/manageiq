@@ -17,6 +17,9 @@ function _jqplot_eval_option(data, option) {
 function jqplot_process_options(data) {
   $.each([ 'seriesDefaults.renderer',
            'axes.xaxis.renderer',
+           'axes.yaxis.tickRenderer',
+           'axes.yaxis.renderer',
+           'axes.xaxis.tickRenderer',
            'legend.renderer',
            'highlighter.tooltipContentEditor' ], function (index, key) {
     _jqplot_eval_option(data, key);
@@ -66,6 +69,27 @@ function jqplot_redraw_charts() {
         ManageIQ.charts.charts[chart].replot({resetAxes: true, foobar: true});
       } catch (e) {};
     }
+}
+
+function jqplot_pie_highlight_values(str, seriesIndex, pointIndex, plot) {
+    return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
+           plot.series[seriesIndex].data[pointIndex][1];
+}
+
+function jqplot_pie_highlight(str, seriesIndex, pointIndex, plot) {
+    return plot.series[seriesIndex].data[pointIndex][0];
+}
+
+function jqplot_xaxis_tick_highlight(str, seriesIndex, pointIndex, plot) {
+    return plot.options.axes.xaxis.ticks[pointIndex] + ' / ' +
+           plot.options.series[seriesIndex].label + ': ' +
+           str;
+}
+
+function jqplot_yaxis_tick_highlight(str, seriesIndex, pointIndex, plot) {
+    return plot.options.axes.yaxis.ticks[pointIndex] + ' / ' +
+           plot.options.series[seriesIndex].label + ': ' +
+           str;
 }
 
 $(document).ready(function(){

@@ -4,7 +4,7 @@
   = render :partial => "layouts/flash_msg"
   %h3
     = _('Assignments')
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.col-md-2.control-label
         = _('Based On')
@@ -39,7 +39,7 @@
         :locals         => {:tree_id    => "obj_treebox",
           :tree_name                    => "obj_tree",
           :json_tree                    => @assign[:obj_tree],
-          :oncheck                      => "miqOnCheck_handler",
+          :oncheck                      => "miqOnCheckHandler",
           :check_url                    => "alert_profile_assign_changed/",
           :exp_tree                     => false,
           :checkboxes                   => true})

@@ -5,35 +5,29 @@ module EmsClusterHelper::TextualSummary
   #
 
   def textual_group_host_totals
-    items = %w{aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(aggregate_cpu_speed aggregate_memory aggregate_physical_cpus aggregate_logical_cpus)
   end
 
   def textual_group_vm_totals
-    items = %w{aggregate_vm_memory aggregate_vm_cpus}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(aggregate_vm_memory aggregate_vm_cpus)
   end
 
   def textual_group_relationships
-    items = %w{ems parent_datacenter total_hosts total_direct_vms allvms_size total_miq_templates total_vms rps_size states_size}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems parent_datacenter total_hosts total_direct_vms allvms_size total_miq_templates total_vms rps_size states_size)
   end
 
   def textual_group_storage_relationships
-    items = %w{ss_size sv_size fs_size se_size}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ss_size sv_size fs_size se_size)
   end
 
   def textual_group_configuration
     return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? &&  @record.drs_enabled.nil? &&
         @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
-    items = %w{ha_enabled ha_admit_control drs_enabled drs_automation_level drs_migration_threshold}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ha_enabled ha_admit_control drs_enabled drs_automation_level drs_migration_threshold)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   def textual_group_openstack_status
@@ -104,15 +98,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_infra")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_infra_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsInfra)
   end
 
   def textual_parent_datacenter
@@ -174,13 +160,9 @@ module EmsClusterHelper::TextualSummary
   def textual_rps_size
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
-    num = @record.number_of(:resource_pools)
-    h = {:label => "Resource Pools", :image => "resource_pool", :value => num}
-    if num > 0 && role_allows(:feature => "resource_pool_show_list")
-      h[:title] = "Show all Resource Pools"
-      h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'resource_pools')
-    end
-    h
+    textual_link(@record.resource_pools,
+                 :as => EmsCluster,
+                 :link => url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'resource_pools'))
   end
 
   def textual_states_size
@@ -234,19 +216,6 @@ module EmsClusterHelper::TextualSummary
     if num > 0 && role_allows(:feature => "cim_base_storage_extent_show_list")
       h[:title] = label
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'storage_extents')
-    end
-    h
-  end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
     end
     h
   end

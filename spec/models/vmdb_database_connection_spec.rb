@@ -44,6 +44,7 @@ describe VmdbDatabaseConnection do
   end
 
   it 'is blocked' do
+    VmdbDatabaseConnection.connection_pool.disconnect!
     locked_latch = ActiveSupport::Concurrency::Latch.new
     continue_latch = ActiveSupport::Concurrency::Latch.new
 
@@ -70,7 +71,12 @@ describe VmdbDatabaseConnection do
 
     give_up = 10.seconds.from_now
     until (blocked_conn = connections.detect(&:blocked_by))
-      raise "Lock is not blocking" if Time.current > give_up
+      if Time.current > give_up
+        continue_latch.release
+        get_lock.join
+        wait_for_lock.join
+        raise "Lock is not blocking"
+      end
       sleep 1
     end
 

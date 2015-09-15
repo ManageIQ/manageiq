@@ -1,6 +1,7 @@
 require 'xmldata_helper'
 require 'yaml'
 
+# TODO: Determine if this file can be removed.
 module ScanningOperations
   include Vmdb::Logging
   WS_TIMEOUT = 60

@@ -75,7 +75,6 @@ class VmMigrateTask < MiqRequestTask
       update_and_notify_parent(:state => 'migrated', :message => "Finished #{self.request_class::TASK_DESCRIPTION}")
     else
       update_and_notify_parent(:state => 'finished', :message => "#{self.request_class::TASK_DESCRIPTION} complete")
-#        call_automate_event('vm_provision_postprocessing')
     end
   end
 

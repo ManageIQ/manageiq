@@ -1,9 +1,9 @@
-require 'platform'
+require 'sys-uname'
 
 class WMIHelper
   WMI_ROOT_NAMESPACE = "root\\cimv2" unless defined?(WMI_ROOT_NAMESPACE)
 
-  platform = Platform::IMPL
+  platform = Sys::Platform::IMPL
   unless platform == :macosx
     platform = :mswin if platform == :mingw
     require "util/win32/miq-wmi-#{platform}"

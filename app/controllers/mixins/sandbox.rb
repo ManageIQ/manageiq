@@ -11,7 +11,6 @@ module Sandbox
   end
 
   def x_tree_init(name, type, leaf, values = {})
-    Rails.logger.error("x_tree_init called for type #{type}")
     return if @sb.has_key_path?(:trees, name)
 
     values = values.reverse_merge(

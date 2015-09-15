@@ -4,13 +4,13 @@
     %table.table.table-bordered.table-striped.table-hover
       %tbody
         %tr{:title => _("View Examples (read only)' Folder"),
-          :onclick => "cfmeDynatree_activateNode('customization_templates_tree', 'xx-xx-system');"}
+          :onclick => "miqDynatreeActivateNode('customization_templates_tree', 'xx-xx-system');"}
           %td.narrow
             %img{:src => '/images/icons/new/folder.png'}
           %td Examples (read only)
         - @folders.each do |f|
           %tr{:title => _("View '%s' Folder") % f.name,
-            :onclick => "cfmeDynatree_activateNode('customization_templates_tree', 'xx-xx-#{to_cid(f.id)}');"}
+            :onclick => "miqDynatreeActivateNode('customization_templates_tree', 'xx-xx-#{to_cid(f.id)}');"}
             %td.icon
               %img{:src => '/images/icons/new/folder.png'}
             %td

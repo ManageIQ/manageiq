@@ -9,8 +9,9 @@ class ContainerService < ActiveRecord::Base
   has_many :container_routes
   has_many :container_service_port_configs, :dependent => :destroy
   belongs_to :container_project
-  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource
-  has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => "CustomAttribute", :as => :resource
+  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many :container_nodes, -> { distinct }, :through => :container_groups
 
   acts_as_miq_taggable
 end

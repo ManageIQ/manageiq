@@ -11,7 +11,6 @@ namespace :test do
     #   http://www.rubydoc.info/gems/brakeman/Brakeman#run-class_method
     tracker = Brakeman.run(
       :app_path     => ".",
-      :ignore_file  => ".brakeman.ignore",
       :quiet        => false,
       :print_report => true
     )

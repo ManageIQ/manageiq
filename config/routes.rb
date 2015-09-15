@@ -425,18 +425,20 @@ Vmdb::Application.routes.draw do
     },
 
     :container_image          => {
-      :get  => %w(download_data edit index new show show_list),
+      :get  => %w(download_data edit index new show show_list tagging_edit tag_edit_form_field_changed),
       :post => %w(button create dynamic_checkbox_refresh form_field_changed listnav_search_selected panel_control
-                  quick_search save_col_widths sections_field_changed show show_list update) +
+                  quick_search save_col_widths sections_field_changed show show_list update
+                  tagging_edit tag_edit_form_field_changed) +
                adv_search_post +
                exp_post +
                save_post
     },
 
     :container_image_registry => {
-      :get  => %w(download_data edit index new show show_list),
+      :get  => %w(download_data edit index new show show_list tagging_edit tag_edit_form_field_changed),
       :post => %w(button create dynamic_checkbox_refresh form_field_changed listnav_search_selected panel_control
-                  quick_search save_col_widths sections_field_changed show show_list update) +
+                  quick_search save_col_widths sections_field_changed show show_list update
+                  tagging_edit tag_edit_form_field_changed) +
                adv_search_post +
                exp_post +
                save_post
@@ -497,7 +499,9 @@ Vmdb::Application.routes.draw do
         sections_field_changed
         show
         show_list
+        tl_chooser
         update
+        wait_for_task
         tagging_edit
         tag_edit_form_field_changed
       ) + adv_search_post + exp_post + save_post
@@ -530,6 +534,13 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) + adv_search_post + exp_post + save_post
+    },
+
+    :container_topology => {
+      :get => %w(
+        show
+        data
+      )
     },
 
     :dashboard => {
@@ -577,11 +588,8 @@ Vmdb::Application.routes.draw do
         dialog_load
         discover
         download_data
-        edit
-        index
-        new
+        ems_cloud_form_fields
         protect
-        show
         show_list
         tagging_edit
       ) +
@@ -589,6 +597,10 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         create
+        dynamic_checkbox_refresh
+        dynamic_list_refresh
+        dynamic_radio_button_refresh
+        dynamic_text_box_refresh
         form_field_changed
         listnav_search_selected
         panel_control
@@ -772,6 +784,7 @@ Vmdb::Application.routes.draw do
         timeline_data
         groups
         guest_applications
+        host_form_fields
         host_services
         index
         list
@@ -1235,6 +1248,9 @@ Vmdb::Application.routes.draw do
         log_collection_form_fields
         schedule_form_fields
         show_product_update
+        tenant_quotas_form_fields
+        tenant_form_fields
+        ldap_regions_list
       ),
       :post => %w(
         accordion_select
@@ -1288,6 +1304,9 @@ Vmdb::Application.routes.draw do
         rbac_role_field_changed
         rbac_roles_list
         rbac_tags_edit
+        rbac_tenant_edit
+        rbac_tenants_list
+        rbac_tenant_manage_quotas
         rbac_user_edit
         rbac_user_field_changed
         rbac_users_list
@@ -1324,6 +1343,14 @@ Vmdb::Application.routes.draw do
         x_settings_changed
         zone_edit
         zone_field_changed
+        ldap_region_add
+        ldap_region_edit
+        ldap_region_form_field_changed
+        ldap_domain_edit
+        ldap_domain_form_field_changed
+        ls_select
+        ldap_entry_changed
+        ls_delete
       )
     },
 
@@ -2003,7 +2030,9 @@ Vmdb::Application.routes.draw do
   CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
 
     # Default route with no action to controller's index action
-    match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
+    unless controller_name == :ems_cloud
+      match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
+    end
 
     # One-by-one get/post routes for defined controllers
     if controller_actions.is_a?(Hash)
@@ -2024,4 +2053,7 @@ Vmdb::Application.routes.draw do
       end
     end
   end
+
+  resources :ems_cloud, :as => :ems_clouds
+
 end

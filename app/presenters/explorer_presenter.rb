@@ -41,7 +41,7 @@ class ExplorerPresenter
   #   replace_partials          -- partials to replace (also wrapping tag)
   #   element_updates           -- do we need all 3 of the above?
   #   set_visible_elements      -- elements to cal 'set_visible' on
-  #   expand_collapse_cells     -- cells to expand/collapse
+  #   show_hide_layout          -- layout elements to show/hide
   #   reload_toolbars
   #
 
@@ -49,7 +49,7 @@ class ExplorerPresenter
     @options = HashWithIndifferentAccess.new(
       :lock_unlock_trees     => {},
       :set_visible_elements  => {},
-      :expand_collapse_cells => {},
+      :show_hide_layout      => {},
       :update_partials       => {},
       :element_updates       => {},
       :replace_partials      => {},
@@ -87,21 +87,21 @@ class ExplorerPresenter
     # Turn off form buttons when replacing explorer right cell
     @out << javascript_for_miq_button_visibility(false).html_safe
 
-    @out << "cfme_delete_dynatree_cookies('#{@options[:clear_tree_cookies]}')" if @options[:clear_tree_cookies]
+    @out << "miqDeleteDynatreeCookies('#{@options[:clear_tree_cookies]}')" if @options[:clear_tree_cookies]
 
     @out << "dhxAccord.openItem('#{@options[:open_accord]}');" unless @options[:open_accord].to_s.empty?
 
     if @options[:remove_nodes]
-      @out << "cfmeRemoveNodeChildren('#{@options[:active_tree]}',
-                                      '#{@options[:add_nodes][:key]}'
+      @out << "miqRemoveNodeChildren('#{@options[:active_tree]}',
+                                     '#{@options[:add_nodes][:key]}'
       );\n"
     end
 
     if @options[:add_nodes]
       @out << "
-        cfmeAddNodeChildren('#{@options[:active_tree]}',
-                            '#{@options[:add_nodes][:key]}',
-                            '#{@options[:osf_node]}',
+        miqAddNodeChildren('#{@options[:active_tree]}',
+                           '#{@options[:add_nodes][:key]}',
+                           '#{@options[:osf_node]}',
                             #{@options[:add_nodes][:children].to_json.html_safe}
         );
       \n"
@@ -146,14 +146,14 @@ class ExplorerPresenter
       @out << set_element_visible(el, visible)
     end
 
-    @options[:expand_collapse_cells].each do |cell, e_c|
-      @out << "dhxLayoutB.cells('#{cell}').#{e_c}();"
+    @options[:show_hide_layout].each do |element, action|
+      @out << "ManageIQ.layout.#{element}.#{action}();"
     end
 
     # Scroll to top of main div
     @out << "$('#main_div').scrollTop(0);"
 
-    @out << "dhxLayoutB.cells('b').setText('#{escape_javascript(ERB::Util::h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
+    @out << "ManageIQ.layout.content.title('#{escape_javascript(ERB::Util::h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
 
     # Reload toolbars
     @options[:reload_toolbars].each do |tb, opts|
@@ -165,7 +165,7 @@ class ExplorerPresenter
 
     # Open, select, and focus node in current tree
     #   using dynatree if dhtmlxtree object is undefined
-    @out << "cfmeDynatree_activateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].empty?
+    @out << "miqDynatreeActivateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].empty?
 
     @options[:lock_unlock_trees].each { |tree, lock| @out << tree_lock(tree, lock) }
 

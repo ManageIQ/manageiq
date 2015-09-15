@@ -1,6 +1,5 @@
 require "spec_helper"
-
-require Rails.root.join("db/migrate/20131125153220_import_provision_dialogs.rb")
+require_migration
 
 describe ImportProvisionDialogs do
   let(:miq_dialog_stub) { migration_stub(:MiqDialog) }

@@ -4,6 +4,7 @@ class Vmware::InfraManager < InfraManager
   require_dependency 'manageiq/providers/vmware/infra_manager/event_parser'
   require_dependency 'manageiq/providers/vmware/infra_manager/refresh_worker'
   require_dependency 'manageiq/providers/vmware/infra_manager/refresh_parser'
+  require_dependency 'manageiq/providers/vmware/infra_manager/metrics_capture'
   require_dependency 'manageiq/providers/vmware/infra_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/vmware/infra_manager/refresher'
   require_dependency 'manageiq/providers/vmware/infra_manager/host'
@@ -60,7 +61,7 @@ class Vmware::InfraManager < InfraManager
     return false unless MiqVimBrokerWorker.has_required_role?
     cfg = VMDB::Config.new("vmdb").config[:webservices][:use_vim_broker]
     return true if cfg == "force"
-    return true if cfg && Platform::OS == :unix
+    return true if cfg && Sys::Platform::OS == :unix
     return false
   end
 
@@ -77,6 +78,26 @@ class Vmware::InfraManager < InfraManager
     when "pxe" then self::ProvisionViaPxe
     else            self::Provision
     end
+  end
+
+  def self.default_blacklisted_event_names
+    %w(
+      AlarmActionTriggeredEvent
+      AlarmCreatedEvent
+      AlarmEmailCompletedEvent
+      AlarmEmailFailedEvent
+      AlarmReconfiguredEvent
+      AlarmRemovedEvent
+      AlarmScriptCompleteEvent
+      AlarmScriptFailedEvent
+      AlarmSnmpCompletedEvent
+      AlarmSnmpFailedEvent
+      AlarmStatusChangedEvent
+      AlreadyAuthenticatedSessionEvent
+      EventEx
+      UserLoginSessionEvent
+      UserLogoutSessionEvent
+    )
   end
 
   def control_monitor

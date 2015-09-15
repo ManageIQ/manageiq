@@ -63,6 +63,8 @@ class ApiController
         normalize_attr(type, :url,  value)
       elsif self.class.attr_type_hash(:encrypted).key?(attr.to_s) || attr.to_s.include?("password")
         normalize_attr(type, :encrypted,  value)
+      elsif self.class.attr_type_hash(:resource).key?(attr.to_s)
+        normalize_attr(type, :resource, value)
       else
         value
       end
@@ -96,6 +98,13 @@ class ApiController
     #
     def normalize_href(type, value)
       normalize_url(type, "#{type}/#{value}")
+    end
+
+    #
+    # Let's normalize href accessible resources
+    #
+    def normalize_resource(_type, value)
+      value.to_s.starts_with?("/") ? "#{@req[:base]}#{value}" : value
     end
 
     #

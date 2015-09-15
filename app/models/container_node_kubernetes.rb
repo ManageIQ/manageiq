@@ -1,2 +1,0 @@
-class ContainerNodeKubernetes < ContainerNode
-end

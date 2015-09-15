@@ -254,18 +254,23 @@ class ApplicationHelper::ToolbarChooser
         return "diagnostics_zone_center_tb"
       end
     elsif x_active_tree == :rbac_tree
-      if x_node.split('-').last == "g"
+      node = x_node.split('-')
+      if node.last == "g"
         return "miq_groups_center_tb"
-      elsif x_node.split('-').first == "g"
+      elsif node.first == "g"
         return "miq_group_center_tb"
-      elsif x_node.split('-').last == "u"
+      elsif node.last == "u"
         return "users_center_tb"
-      elsif x_node.split('-').first == "u"
+      elsif node.first == "u"
         return "user_center_tb"
-      elsif x_node.split('-').last == "ur"
+      elsif node.last == "ur"
         return "user_roles_center_tb"
-      elsif x_node.split('-').first == "ur"
+      elsif node.first == "ur"
         return "user_role_center_tb"
+      elsif node.last == "tn"
+        return "tenants_center_tb"
+      elsif node.first == "tn" && @record
+        return "tenant_center_tb"
       end
     elsif x_active_tree == :vmdb_tree
       if x_node
@@ -392,8 +397,9 @@ class ApplicationHelper::ToolbarChooser
       #show_list and show screens
       if !@in_a_form
         if %w(availability_zone cloud_tenant container_group container_node container_service ems_cloud ems_cluster
-              ems_container container_project container_route container_replicator ems_infra flavor host
-              ontap_file_share ontap_logical_disk
+              ems_container container_project container_route container_replicator container_image
+              container_image_registry ems_infra flavor host
+              ontap_file_share ontap_logical_disk container_topology
               ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
               timeline usage security_group).include?(@layout)
           if ["show_list"].include?(@lastaction)

@@ -4,13 +4,13 @@ module ContainerServiceHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(
+    %i(
       name
       creation_timestamp
       resource_version
       session_affinity
-      portal_ip)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+      portal_ip
+    )
   end
 
   def textual_group_port_configs
@@ -28,31 +28,36 @@ module ContainerServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems container_project container_routes container_groups)
+    %i(ems container_project container_routes container_groups container_nodes)
+  end
+
+  def textual_group_smart_management
+    items = %w(tags)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
+
   #
   # Items
   #
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_creation_timestamp
-    {:label => "Creation Timestamp", :value => format_timezone(@record.creation_timestamp)}
+    format_timezone(@record.creation_timestamp)
   end
 
   def textual_resource_version
-    {:label => "Resource Version", :value => @record.resource_version}
+    @record.resource_version
   end
 
   def textual_session_affinity
-    {:label => "Session Affinity", :value => @record.session_affinity}
+    @record.session_affinity
   end
 
   def textual_portal_ip
-    {:label => "Portal IP", :value => @record.portal_ip}
+    @record.portal_ip
   end
 
   def textual_port_config(port_conf)

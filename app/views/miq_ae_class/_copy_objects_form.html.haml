@@ -4,7 +4,7 @@
   = hidden_div_if(!@edit[:new][:namespace], :id => "ae_tree_select_div") do
     = render(:partial => 'layouts/ae_tree_select', :locals => {:entry_point => "Namespace"})
   %p
-  %form.form-horizontal
+  .form-horizontal
     .form-group
       %label.col-md-2.control-label
         = _('From Domain')

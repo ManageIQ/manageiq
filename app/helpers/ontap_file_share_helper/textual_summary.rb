@@ -4,23 +4,19 @@ module OntapFileShareHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name element_name caption zone_name operational_status_str instance_id sharing_directory? last_update_status_str}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(name element_name caption zone_name operational_status_str instance_id sharing_directory? last_update_status_str)
   end
 
   def textual_group_relationships
-    items = %w{logical_disk storage_system local_file_system base_storage_extents}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(logical_disk storage_system local_file_system base_storage_extents)
   end
 
   def textual_group_infrastructure_relationships
-    items = %w{vms hosts datastores}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(vms hosts datastores)
   end
 
   def textual_group_smart_management
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   #
@@ -116,37 +112,14 @@ module OntapFileShareHelper::TextualSummary
   end
 
   def textual_datastores
-    label = ui_lookup(:tables=>"storages")
-    num   = @record.storages_size
-    h     = {:label => label, :image => "storage", :value => num}
-    if num > 0 && role_allows(:feature => "storage_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'storages')
-    end
-    h
+    textual_link(@record.storages,
+                 :as   => Storage,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'storages'))
   end
 
   def textual_vms
-    label = "VMs"
-    num   = @record.vms_size
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'vms')
-    end
-    h
-  end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h     = {:label => label}
-    tags  = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
-    end
-    h
+    textual_link(@record.vms,
+                 :as   => Vm,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'vms'))
   end
 end

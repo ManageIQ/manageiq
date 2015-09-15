@@ -81,7 +81,7 @@ module Metric::Common
 
   CHILD_ROLLUP_INTERVAL = {
     "realtime" => [20, 1],
-    "hourly"   => [20, 60 * Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE],
+    "hourly"   => [20, 60 * Metric::Capture::REALTIME_METRICS_PER_MINUTE],
     "daily"    => [1.hour, 24]
   }
   def v_calc_pct_of_cpu_time(vcol)

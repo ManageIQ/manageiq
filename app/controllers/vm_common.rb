@@ -111,7 +111,7 @@ module VmCommon
                   :vmid        => @record.ems_ref,
                   :ticket      => @sb[:vmrc],
                   :api_version => @record.ext_management_system.api_version.to_s,
-                  :os          => browser_info(:os).downcase,
+                  :os          => browser_info(:os),
                   :name        => @record.name
                 }
               end
@@ -485,7 +485,7 @@ module VmCommon
     c_buttons, c_xml = build_toolbar_buttons_and_xml("x_vm_center_tb")
     render :update do |page|                    # Use RJS to update the display
       if c_buttons && c_xml
-        page << "dhxLayoutB.cells('a').expand();"
+        page << "ManageIQ.layout.toolbar.show();"
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
         page << javascript_show_if_exists("center_buttons_div")
       else
@@ -1478,7 +1478,7 @@ module VmCommon
         get_node_info("root")
         return
       else
-        if params[:id].nil?
+        unless controller_referrer?
           @breadcrumbs.clear
           drop_breadcrumb({:name => breadcrumb_name(model), :url => "/#{controller_name}/explorer"}, false)
         end
@@ -1628,7 +1628,7 @@ module VmCommon
         @record.dialog_fields.each do |field|
           if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field.type)
             presenter[:build_calendar]  = {
-              :date_from => field.show_past_dates ? nil : Time.now.in_time_zone(session[:user_tz]).to_i * 1000
+              :date_from => field.show_past_dates ? nil : Time.zone.now.to_i * 1000
             }
           end
         end
@@ -1637,9 +1637,9 @@ module VmCommon
       if %w(ownership protect reconfigure retire tag).include?(@sb[:action])
         locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
         locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids][0] if @sb[:action] == "tag"
-        unless @sb[:action] == 'ownership'
+        unless %w(ownership retire).include?(@sb[:action])
           presenter[:build_calendar] = {
-            :date_from => Time.now.in_time_zone(@tz).to_i * 1000,
+            :date_from => Time.zone.now.to_i * 1000,
             :date_to   => nil,
           }
         end
@@ -1719,9 +1719,9 @@ module VmCommon
         presenter[:set_visible_elements][:pc_div_1] = false
         presenter[:set_visible_elements][:form_buttons_div] = true
       end
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:paginator] = 'show'
     else
-      presenter[:expand_collapse_cells][:c] = 'collapse'
+      presenter[:show_hide_layout][:paginator] = 'hide'
     end
 
     presenter[:right_cell_text] = @right_cell_text
@@ -1736,7 +1736,7 @@ module VmCommon
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
     presenter[:reload_toolbars][:custom]  = {:buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
 
-    presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
+    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
 
     presenter[:record_id] = @record ? @record.id : nil
 

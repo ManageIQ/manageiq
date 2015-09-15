@@ -1,174 +1,79 @@
 require 'fog'
+# TODO(lsmola) how do I load this?
+# require 'models/ems_refresh/refreshers/openstack/refresh_spec_environments'
+
 $LOAD_PATH.push(Rails.root.to_s)
-require_relative 'openstack/image_methods'
 require_relative 'openstack/interaction_methods'
-require_relative 'openstack/network_methods'
-require_relative 'openstack/setup_methods'
 
-include ImageMethods
-include InteractionMethods
-include NetworkMethods
-include SetupMethods
+require_relative 'openstack/services/identity/builder'
+require_relative 'openstack/services/network/builder'
+require_relative 'openstack/services/compute/builder'
+require_relative 'openstack/services/volume/builder'
+require_relative 'openstack/services/image/builder'
 
-ARGV.shift if ARGV.first == "--"
-@environment = ARGV.first.to_s.downcase
-raise ArgumentError, "expecting an environment argument" if @environment.blank?
+include Openstack::InteractionMethods
+
+def usage(s)
+  $stderr.puts(s)
+  $stderr.puts("Run on a VM with at least 8GB of RAM!!!")
+  $stderr.puts("Usage: bundle exec rails r spec/tools/environment_builders/openstack.rb <ems_id>")
+  $stderr.puts("Options:")
+  $stderr.puts("         [--networking <netwoking>]  - allowed values [nova, neutron], default => neutron")
+  $stderr.puts("         [--identity   <identity>]   - allowed values [v2, v3],        default => v2")
+  exit(2)
+end
+
+@ems_id = ARGV.shift
+raise ArgumentError, usage("expecting ExtManagementSystem id as a first argument") if @ems_id.blank?
+@networking = :neutron
+@identity   = :v2
+
+loop do
+  option = ARGV.shift
+  case option
+  when '--networking'
+    argv      = ARGV.shift
+    supported = %w(neutron nova)
+    raise ArgumentError, usage("supported --networking options are #{supported}") unless supported.include?(argv)
+    @networking = argv.to_sym
+  when '--identity'
+    argv      = ARGV.shift
+    supported = %w(v2 v3)
+    raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv)
+    @identity = argv.to_sym
+  when /^-/
+    usage("Unknown option: #{option}")
+  else
+    break
+  end
+end
 
 $fog_log.level = 0
-puts "Building Refresh Environment for #{@environment}..."
+puts "Building Refresh Environment for networking: '#{@networking}' and keystone: '#{@identity}'..."
 
-# Setup outer structure
+@ems = ManageIQ::Providers::Openstack::CloudManager.where(:id => @ems_id).first
+
 # TODO: Create a domain to contain refresh-related objects (Havana and above)
-@project = find_or_create_project
+identity = Openstack::Services::Identity::Builder.build_all(@ems)
+# TODO(lsmola) cycle through many projects, so we test also multitenancy
+project = identity.projects.detect { |x| x.name == "EmsRefreshSpec-Project" }
+
+network = Openstack::Services::Network::Builder.build_all(@ems, project, @networking)
+compute = Openstack::Services::Compute::Builder.build_all(@ems, project)
+volume = Openstack::Services::Volume::Builder.build_all(@ems, project)
+image = Openstack::Services::Image::Builder.build_all(@ems, project)
 
 #
-# Setup Network
+# Create all servers
 #
-find_or_create_networks
-find_or_create_subnet
-find_or_create_router
-find_or_create_floating_ip
-
-sg = find_or_create(fog_network.security_groups,
-  :name        => "EmsRefreshSpec-SecurityGroup",
-  :description => "EmsRefreshSpec-SecurityGroup description",
-  :tenant_id   => @project.id,
-)
-
-sg2 = find_or_create(fog_network.security_groups,
-  :name        => "EmsRefreshSpec-SecurityGroup2",
-  :description => "EmsRefreshSpec-SecurityGroup2 description",
-  :tenant_id   => @project.id,
-)
-
-find_or_create_firewall_rules(sg)
+compute.build_servers(volume, network, image)
 
 #
-# Setup Flavor
+# Set states of the servers
 #
-flavor = find_or_create(fog.flavors,
-  :name      => "m1.ems_refresh_spec",
-  :is_public => true,
-  :vcpus     => 1,
-  :ram       => 1024, # MB
-  :disk      => 1, # GB
-  :ephemeral => 1, # GB
-  :swap      => 512, # MB
-)
+compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Paused" }, :pause)
+compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Suspended" }, :suspend)
+# TODO(lsmola) do shelve action once we use new fog
+# compute.do_action(compute.servers.detect{|x| x.name == "EmsRefreshSpec-Shelved"}, :shelve)
 
-#
-# Setup Keypair
-#
-kp = find_or_create(fog.key_pairs,
-  :name => "EmsRefreshSpec-KeyPair"
-)
-if kp.private_key
-  File.write("EmsRefreshSpec-KeyPair.pem", kp.private_key)
-  puts "Your new key_pair private key has been written to 'EmsRefreshSpec-KeyPair.pem'"
-end
-
-#
-# Setup Volumes
-#
-vol_type = find(volume_types(fog_volume), :name => "EmsRefreshSpec-VolumeType")
-if vol_type.nil?
-  # volume types are not createable through the Openstack API
-  puts "ERROR: You must manually create a volume type named 'EmsRefreshSpec-VolumeType' before continuing."
-  exit 1
-end
-
-vol = find_or_create(fog_volume.volumes,
-  :display_name        => "EmsRefreshSpec-Volume",
-  :display_description => "EmsRefreshSpec-Volume description",
-  :size                => 1,
-  :volume_type         => "EmsRefreshSpec-VolumeType"
-)
-
-vol_snap = find_or_create(fog.snapshots,
-  :name        => "EmsRefreshSpec-VolumeSnapshot",
-  :description => "EmsRefreshSpec-VolumeSnapshot description",
-  :volume_id   => vol.id
-)
-
-find_or_create(fog_volume.volumes,
-  :display_name        => "EmsRefreshSpec-Volume-FromSnapshot",
-  :display_description => "EmsRefreshSpec-Volume-FromSnapshot description",
-  :size                => vol_snap.size,
-  :snapshot_id         => vol_snap.id
-)
-
-#
-# Setup Images and servers
-#
-image = find_or_create_image(fog.images,
-  :name => "EmsRefreshSpec-Image"
-)
-
-server_on_settings = {
-  :name                 => "EmsRefreshSpec-PoweredOn",
-  :flavor_ref           => flavor.id,
-  :image_ref            => image.id,
-  :block_device_mapping => {
-    :volume_id   => vol.id,
-    :device_name => "vda"
-  },
-  :key_name             => kp.name,
-  :security_groups      => [sg.name, sg2.name],
-}
-
-server_on_settings[:nics] = [{"net_id" => @network_private.id}] if @network_private
-
-server_on = find_or_create_server(fog.servers, server_on_settings)
-puts "Finding {:ip => #{@floating_ip.inspect}} on #{server_on.class.name}"
-if server_on.addresses.blank?
-  puts "Associating {:ip => #{@floating_ip.inspect}} to #{server_on.class.name}"
-  server_on.associate_address(@floating_ip)
-end
-
-server_snap = find_or_create_image_from_server(fog.images, server_on,
-  :name => "EmsRefreshSpec-Snapshot"
-)
-
-server_from_snap_settings = {
-  :name            => "EmsRefreshSpec-PoweredOn-FromSnapshot",
-  :flavor_ref      => flavor.id,
-  :image_ref       => server_snap.id,
-  :key_name        => kp.name,
-  :security_groups => sg.name,
-}
-
-server_from_snap_settings[:nics] = [{"net_id" => @network_private.id}] if @network_private
-
-find_or_create_server(fog.servers, server_from_snap_settings)
-
-server_paused_settings = {
-  :name            => "EmsRefreshSpec-Paused",
-  :flavor_ref      => flavor.id,
-  :image_ref       => image.id,
-  :key_name        => kp.name,
-  :security_groups => sg.name,
-}
-
-server_paused_settings[:nics] = [{"net_id" => @network_private.id}] if @network_private
-
-server_paused = find_or_create_server(fog.servers, server_paused_settings)
-if server_paused.state != "PAUSED"
-  puts "Pausing server."
-  fog.pause_server(server_paused.id)
-end
-
-server_suspended_settings = {
-  :name            => "EmsRefreshSpec-Suspended",
-  :flavor_ref      => flavor.id,
-  :image_ref       => image.id,
-  :key_name        => kp.name,
-  :security_groups => sg.name,
-}
-
-server_suspended_settings[:nics] = [{"net_id" => @network_private.id}] if @network_private
-
-server_suspend = find_or_create_server(fog.servers, server_suspended_settings)
-if server_suspend.state != "SUSPENDED"
-  puts "Suspending server."
-  fog.suspend_server(server_suspend.id)
-end
+puts "Finished"

@@ -167,7 +167,7 @@ describe ApplicationController do
                                                   :miq_grid_checks => "#{vm1.id},#{vm2.id}")
       controller.should_receive(:render)
       controller.send(:prov_redirect, "migrate")
-      assigns(:flash_array).first[:message].should include("does not apply to selected")
+      assigns(:flash_array).first[:message].should include("does not apply to at least one of the selected")
     end
 
     it "sets variables when Migrate button is pressed with list of VMware VMs" do

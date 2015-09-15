@@ -5,6 +5,7 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   require_dependency 'manageiq/providers/openstack/infra_manager/event_parser'
   require_dependency 'manageiq/providers/openstack/infra_manager/host'
   require_dependency 'manageiq/providers/openstack/infra_manager/host_service_group'
+  require_dependency 'manageiq/providers/openstack/infra_manager/metrics_capture'
   require_dependency 'manageiq/providers/openstack/infra_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/openstack/infra_manager/orchestration_stack'
   require_dependency 'manageiq/providers/openstack/infra_manager/refresher'

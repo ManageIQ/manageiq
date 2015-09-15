@@ -22,6 +22,19 @@ module ContainersCommonMixin
     @refresh_div = "main_div" # Default div for button.rjs to refresh
     tag(self.class.model) if params[:pressed] == "#{params[:controller]}_tag"
     return if ["#{params[:controller]}_tag"].include?(params[:pressed]) && @flash_array.nil? # Tag screen showing
+
+    # Handle scan
+    if params[:pressed] == "container_image_scan"
+      scan_images
+
+      render :update do |page|
+        if @lastaction == "show"
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        else
+          page.replace_html("main_div", :partial => "layouts/gtl")
+        end
+      end
+    end
   end
 
   private
@@ -34,6 +47,7 @@ module ContainersCommonMixin
                      :url  => "/#{controller_name}/show_list?page=#{@current_page}&refresh=y"},
                     true)
     if %w(download_pdf main summary_only).include? @display
+      get_tagdata(@record)
       drop_breadcrumb(:name => "#{record.name} (Summary)",
                       :url  => "/#{controller_name}/show/#{record.id}")
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
@@ -64,6 +78,8 @@ module ContainersCommonMixin
           session[:display] == "container_image_registries" &&
           params[:display].nil?
       show_container_display(record, "container_image_registries", ContainerImageRegistry)
+    elsif @display == "container_nodes" || session[:display] == "container_nodes" && params[:display].nil?
+      show_container_display(record, "container_nodes", ContainerNode)
     end
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
@@ -100,6 +116,49 @@ module ContainersCommonMixin
       @bottom_msg = "* You are not authorized to view " +
                     pluralize(total_count - auth_count, "other #{title.singularize}") +
                     " on this #{ui_lookup(:tables => @table_name)}"
+    end
+  end
+
+  # Scan all selected or single displayed image(s)
+  def scan_images
+    assert_privileges("image_scan")
+    showlist = @lastaction == "show_list"
+    images = showlist ? find_checked_items : find_scan_item
+
+    if images.empty?
+      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "container_image"),
+                                                              :task  => "Analysis"}, :error)
+    else
+      process_scan_images(images)
+    end
+
+    showlist ? show_list : show
+    images.count
+  end
+
+  def find_scan_item
+    images = []
+    if params[:id].nil? || ContainerImage.find_by_id(params[:id]).nil?
+      add_flash(_("%s no longer exists") % ui_lookup(:table => "container_image"), :error)
+    else
+      images.push(params[:id])
+    end
+    images
+  end
+
+  def process_scan_images(images)
+    ContainerImage.where(:id => images).order("lower(name)").each do |image|
+      image_name = image.name
+      begin
+        image.scan
+      rescue StandardError => bang
+        add_flash(_("%{model} \"%{name}\": Error during 'Analysis': ") %
+                      {:model => ui_lookup(:model => "ContainerImage"),
+                       :name  => image_name} << bang.message,
+                  :error) # Push msg and error flag
+      else
+        add_flash(_("\"%{record}\": Analysis successfully initiated") % {:record => image_name})
+      end
     end
   end
 end

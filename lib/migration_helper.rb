@@ -69,7 +69,6 @@ module MigrationHelper
     end
   end
 
-
   def rename_class_references(mapping)
     reversible do |dir|
       dir.down { mapping = mapping.invert }
@@ -94,6 +93,14 @@ module MigrationHelper
         SQL
       end
     end
+  end
+
+  # Fixes issues where migrations were named incorrectly due to issues with the
+  #   naming of 20150823120001_namespace_ems_openstack_availability_zones_null.rb
+  def previously_migrated_as?(bad_date)
+    connection.exec_delete(
+      "DELETE FROM schema_migrations WHERE version = #{connection.quote(bad_date)}"
+    ) > 0
   end
 end
 

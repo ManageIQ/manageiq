@@ -21,17 +21,4 @@ class MiqAePassword < MiqPassword
   def inspect
     "\"#{self}\""
   end
-
-  # Use the same keys for MiqPassword and MiqAePassword
-  def self.v0_key
-    MiqPassword.v0_key
-  end
-
-  def self.v1_key
-    MiqPassword.v1_key
-  end
-
-  def self.v2_key
-    MiqPassword.v2_key
-  end
 end

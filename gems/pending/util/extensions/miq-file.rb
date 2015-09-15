@@ -1,5 +1,5 @@
-require 'platform'
-require "Win32API" if Platform::OS == :win32
+require 'sys-uname'
+require 'Win32API' if Sys::Platform::OS == :windows
 require 'disk/modules/MiqLargeFile'
 require 'util/runcmd'
 require 'uri'
@@ -7,7 +7,7 @@ require 'util/MiqSockUtil'
 
 class File
   def self.paths_equal?(f1, f2)
-    if Platform::OS == :win32
+    if Sys::Platform::OS == :windows
       # Note: The file needs to exist and be accessable for getShortFileName to work.
       f1 = File.getShortFileName(f1).downcase
       f2 = File.getShortFileName(f2).downcase
@@ -17,22 +17,22 @@ class File
   end
 
   def self.getShortFileName(longName)
-    if Platform::OS == :win32
+    if Sys::Platform::OS == :windows
       size = 255
       buffer = " " * 255
       returnSize = Win32API.new("kernel32" , "GetShortPathNameA" , 'ppl'  , 'L').Call(longName ,  buffer , size )
       a = ""
-      a = a + buffer[0...returnSize]        
+      a = a + buffer[0...returnSize]
       return a
     else
       return longName
     end
   end
-  
+
   def self.normalize(path)
     File.expand_path(path.gsub(/\\/,"/"))
   end
-  
+
   def self.splitpath(path)
     ext = File.extname(path)
     return File.dirname(path), File.basename(path, ext), ext
@@ -40,7 +40,7 @@ class File
 
   # Extended File.size method to handle files over 2GB
   def self.sizeEx(path)
-    case Platform::IMPL
+    case Sys::Platform::IMPL
     when :linux
       MiqUtil.runcmd("ls -lQ \"#{path}\"").split(" ")[4].to_i
     when :mswin, :mingw

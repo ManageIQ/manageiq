@@ -16,8 +16,8 @@ module EvmSpecHelper
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
 
     clear_instance_variables(MiqEnvironment::Command)
-    clear_instance_variable(MiqProductFeature, :@feature_cache)
-    clear_instance_variable(BottleneckEvent, :@event_definitions)
+    clear_instance_variable(MiqProductFeature, :@feature_cache) if defined?(MiqProductFeature)
+    clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
 
     # Clear the thread local variable to prevent test contamination
     User.current_userid = nil if defined?(User) && User.respond_to?(:current_userid=)
@@ -51,6 +51,8 @@ module EvmSpecHelper
   end
 
   def self.remote_guid_miq_server_zone
+    MiqRegion.seed
+    Tenant.seed
     guid   = MiqUUID.new_guid
     zone   = FactoryGirl.create(:zone)
     server = FactoryGirl.create(:miq_server_master, :guid => guid, :zone => zone)
@@ -121,14 +123,10 @@ module EvmSpecHelper
     end
   end
 
-  def self.stub_qpid_natives
-    require 'openstack/amqp/openstack_qpid_connection'
-    OpenstackQpidConnection.stub(:available?).and_return(true)
-    qsession = RSpec::Mocks::Mock.new("qpid session")
-    qconnection = RSpec::Mocks::Mock.new("qpid connection", :create_session => qsession)
-    OpenstackQpidConnection.any_instance.stub(:create_connection).and_return(qconnection)
-
-    return qsession, qconnection
+  def self.stub_amqp_support
+    require 'openstack/amqp/openstack_rabbit_event_monitor'
+    OpenstackRabbitEventMonitor.stub(:available?).and_return(true)
+    OpenstackRabbitEventMonitor.stub(:test_connection).and_return(true)
   end
 
   def self.import_yaml_model(dirname, domain, attrs = {})

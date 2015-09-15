@@ -171,7 +171,7 @@ class MiqAeCustomizationController < ApplicationController
     @lastaction = "automate_button"
     @layout = "miq_ae_customization"
 
-    render :layout => "explorer" unless request.xml_http_request?
+    render :layout => "application" unless request.xml_http_request?
   end
 
   def tree_select
@@ -197,7 +197,7 @@ class MiqAeCustomizationController < ApplicationController
     else
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}', '#{x_node}');"
+        page << "miqDynatreeActivateNodeSilently('#{x_active_tree}', '#{x_node}');"
         page << "miqSparkle(false);"
       end
     end
@@ -322,9 +322,9 @@ class MiqAeCustomizationController < ApplicationController
         presenter[:set_visible_elements][:pc_div_1] = false
         presenter[:set_visible_elements][:form_buttons_div] = true
       end
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:paginator] = 'show'
     else
-      presenter[:expand_collapse_cells][:c] = 'collapse'
+      presenter[:show_hide_layout][:paginator] = 'hide'
     end
   end
 
@@ -356,7 +356,7 @@ class MiqAeCustomizationController < ApplicationController
       end
     end
 
-    presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons ? 'expand' : 'collapse'
+    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons ? 'show' : 'hide'
 
     presenter[:set_visible_elements][:history_buttons_div] = !!(h_buttons && h_xml)
     presenter[:set_visible_elements][:center_buttons_div]  = !!(c_buttons && c_xml)
@@ -399,7 +399,7 @@ class MiqAeCustomizationController < ApplicationController
       presenter[:update_partials][:form_buttons_div] = render_proc[:partial => "dialog_sample_buttons"]
       presenter[:set_visible_elements][:pc_div_1]         = false
       presenter[:set_visible_elements][:form_buttons_div] = false
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:paginator] = 'show'
     end
   end
 

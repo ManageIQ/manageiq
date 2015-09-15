@@ -3,7 +3,12 @@ require "spec_helper"
 describe ApplicationHelper do
   before do
     controller.send(:extend, ApplicationHelper)
+    controller.send(:extend, ApplicationController::CurrentUser)
     self.class.send(:include, ApplicationHelper)
+    self.class.send(:include, ApplicationController::CurrentUser)
+  end
+
+  def self.hide_action(*args)
   end
 
   def method_missing(sym, *args)
@@ -1308,7 +1313,7 @@ describe ApplicationHelper do
         before { @id = "vm_clone" }
 
         it "record is not cloneable" do
-          @record = Vm.create(:type => "VmMicrosoft", :name => "vm", :location => "l2", :vendor => "microsoft")
+          @record = Vm.create(:type => "ManageIQ::Providers::Microsoft::InfraManager::Vm", :name => "vm", :location => "l2", :vendor => "microsoft")
           subject.should == true
         end
 
@@ -2012,6 +2017,45 @@ describe ApplicationHelper do
       end
     end
 
+    context "when record class = ContainerProject" do
+      before do
+        @record = ContainerProject.new
+        @record.stub(:has_perf_data? => true, :has_events? => true)
+      end
+
+      context "and id = container_project_timeline" do
+        before { @id = "container_project_timeline" }
+        it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this Project"
+        it_behaves_like 'default case'
+      end
+    end
+
+    context "when record class = ContainerGroup" do
+      before do
+        @record = ContainerGroup.new
+        @record.stub(:has_perf_data? => true, :has_events? => true)
+      end
+
+      context "and id = container_group_timeline" do
+        before { @id = "container_group_timeline" }
+        it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this Pod"
+        it_behaves_like 'default case'
+      end
+    end
+
+    context "when record class = ContainerNode" do
+      before do
+        @record = ContainerNode.new
+        @record.stub(:has_perf_data? => true, :has_events? => true)
+      end
+
+      context "and id = container_node_timeline" do
+        before { @id = "container_node_timeline" }
+        it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this Node"
+        it_behaves_like 'default case'
+      end
+    end
+
     context "when record class = Host" do
       before do
         @record = Host.new
@@ -2325,6 +2369,7 @@ describe ApplicationHelper do
       context "and id = vm_scan" do
         before do
           @id = "vm_scan"
+          @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
           @record.stub(:has_active_proxy? => true)
         end
         it "when no active proxy" do
@@ -2332,6 +2377,16 @@ describe ApplicationHelper do
           subject.should == "No active SmartProxies found to analyze this VM"
         end
         it_behaves_like 'default case'
+      end
+
+      context "and id = instance_scan" do
+        before do
+          @id = "instance_scan"
+          @record = FactoryGirl.create(:vm_amazon, :vendor => "amazon")
+          @record.stub(:has_active_proxy? => true)
+        end
+        before { @record.stub(:is_available?).with(:smartstate_analysis).and_return(false) }
+        it_behaves_like 'record with error message', 'smartstate_analysis'
       end
 
       context "and id = vm_timeline" do
@@ -2517,6 +2572,44 @@ describe ApplicationHelper do
       end
     end
   end #end of disable button
+
+  describe "#build_toolbar_hide_button_ops" do
+    subject { build_toolbar_hide_button_ops(@id) }
+    before do
+      @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
+      @record = FactoryGirl.create(:tenant)
+      login_as @user
+      EvmSpecHelper.seed_specific_product_features("ops_rbac",
+                                                   "rbac_group_add",
+                                                   "rbac_tenant_add",
+                                                   "rbac_tenant_delete")
+      feature = MiqProductFeature.find_all_by_identifier(%w(ops_rbac rbac_group_add rbac_tenant_add rbac_tenant_delete))
+      test_user_role = FactoryGirl.create(:miq_user_role,
+                                          :name                 => "test_user_role",
+                                          :miq_product_features => feature)
+      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      @sb = {:active_tree => :rbac_tree}
+    end
+
+    %w(rbac_group_add rbac_project_add rbac_tenant_add rbac_tenant_delete).each do |id|
+      context "when with #{id} button should be visible" do
+        before { @id = id }
+        it "and record_id" do
+          subject.should be_false
+        end
+      end
+    end
+
+    %w(rbac_group_edit rbac_role_edit).each do |id|
+      context "when with #{id} button should not be visible as user does not have access to these features" do
+        before { @id = id }
+        it "and record_id" do
+          subject.should be_true
+        end
+      end
+    end
+  end
 
   describe "#get_record_cls"  do
     subject { get_record_cls(record) }

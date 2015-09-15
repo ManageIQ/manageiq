@@ -103,14 +103,14 @@ class BottleneckEvent < ActiveRecord::Base
 
   def self.event_where_clause(obj)
     ids_hash = self.child_types_and_ids(obj)
-    result = ["(resource_type = '#{obj.class.name}' AND resource_id = #{obj.id})"]
+    result = ["(resource_type = '#{obj.class.base_class.name}' AND resource_id = #{obj.id})"]
     ids_hash.each { |k,v| result.push("(resource_type = '#{k}' AND resource_id in (#{v.join(",")}))") }
     return result.join(" OR ")
   end
 
   def self.child_types_and_ids(obj)
     result = {}
-    relats = case obj.class.name
+    relats = case obj.class.base_class.name
     when "MiqEnterprise"
       [:ext_management_systems, :storages]
     when "MiqRegion"
@@ -127,7 +127,7 @@ class BottleneckEvent < ActiveRecord::Base
       recs = obj.send(r)
       next if recs.blank?
 
-      result[recs.first.class.name] = recs.collect(&:id)
+      result[recs.first.class.base_class.name] = recs.collect(&:id)
       recs.each do |child|
         self.child_types_and_ids(child).each do |k,v|
           result[k] ||= []

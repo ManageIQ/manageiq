@@ -1,4 +1,4 @@
-require 'platform'
+require 'sys-uname'
 
 module MiqEnvironment
   class Process
@@ -55,15 +55,6 @@ module MiqEnvironment
       klass = ARGV[1].constantize rescue NilClass
       return @is_non_web_server_worker = is_rails_runner? && klass.hierarchy.include?(MiqWorker)
     end
-
-    def self.is_evmserver?
-      return @is_evmserver unless @is_evmserver.nil?
-      @is_evmserver = is_rails_runner? && !ENV['EVMSERVER'].blank?
-
-      # Unset the variable so subprocesses don't inherit it
-      ENV['EVMSERVER'] = nil
-      return @is_evmserver
-    end
   end
 
   class Command
@@ -97,7 +88,7 @@ module MiqEnvironment
 
     def self.is_linux?
       return @is_linux unless @is_linux.nil?
-      return @is_linux = (Platform::IMPL == :linux)
+      return @is_linux = (Sys::Platform::IMPL == :linux)
     end
 
     def self.rake_command
@@ -129,11 +120,11 @@ module MiqEnvironment
     end
 
     def self.which
-      case Platform::IMPL
+      case Sys::Platform::IMPL
       when :linux
         "which"
       else
-        raise "Not yet supported platform: #{Platform::IMPL}"
+        raise "Not yet supported platform: #{Sys::Platform::IMPL}"
       end
     end
   end

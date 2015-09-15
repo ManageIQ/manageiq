@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140918140859_add_cloud_tenant_sti_column")
+require_migration
 
 describe AddCloudTenantStiColumn do
   let(:cloud_tenant_stub) { migration_stub(:CloudTenant) }

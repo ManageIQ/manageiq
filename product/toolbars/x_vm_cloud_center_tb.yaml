@@ -19,8 +19,8 @@
     - :button: instance_scan
       :image: scan
       :text: "Perform SmartState Analysis"
-      :title: "Perform SmartState Analysis on this Image"
-      :confirm: "Perform SmartState Analysis on this Image?"
+      :title: "Perform SmartState Analysis on this Instance"
+      :confirm: "Perform SmartState Analysis on this Instance?"
     - :separator:
     - :button: instance_edit
       :image: edit
@@ -125,6 +125,16 @@
       :text: "Suspend"
       :title: "Suspend this Instance"
       :confirm: "Suspend this Instance?"
+    - :button: instance_shelve
+      :image: shelve
+      :text: "Shelve"
+      :title: "Shelve this Instance"
+      :confirm: "Shelve this Instance?"
+    - :button: instance_shelve_offload
+      :image: shelve_offload
+      :text: "Shelve Offload"
+      :title: "Shelve Offload this Instance"
+      :confirm: "Shelve Offload this Instance?"
     - :button: instance_resume
       :image: power_resume
       :text: "Resume"

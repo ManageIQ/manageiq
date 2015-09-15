@@ -6,15 +6,14 @@ require 'fs/MiqMountManager'
 require 'metadata/MIQExtract/MIQExtract'
 
 class MiqVm
-    
     attr_reader :vmConfig, :vmConfigFile, :vim, :vimVm, :rhevm, :rhevmVm, :diskInitErrors, :wholeDisks
-    
+
     def initialize(vmCfg, ost=nil)
         @ost = ost || OpenStruct.new
         $log.debug "MiqVm::initialize: @ost = nil" if $log && !@ost
         @vmDisks = nil
         @wholeDisks = []
-        @vmRootTrees = nil
+        @rootTrees = nil
         @volumeManager = nil
         @applianceVolumeManager = nil
         @vmConfigFile = ""
@@ -25,31 +24,36 @@ class MiqVm
         end
 
         $log.debug "MiqVm::initialize: @ost.openParent = #{@ost.openParent}" if $log
-        
+
         #
         # If we're passed an MiqVim object, then use VIM to obtain the Vm's
         # configuration through the instantiated server.
         # If we're passed a snapshot ID, then obtain the configration of the
         # VM when the snapshot was taken.
         #
+        # TODO: move to MiqVmwareVm
         if (@vim = @ost.miqVim)
             $log.debug "MiqVm::initialize: accessing VM through server: #{@vim.server}" if $log.debug?
             @vimVm = @vim.getVimVm(vmCfg)
             $log.debug "MiqVm::initialize: setting @ost.miqVimVm = #{@vimVm.class}" if $log.debug?
             @ost.miqVimVm = @vimVm
             @vmConfig = VmConfig.new(@vimVm.getCfg(@ost.snapId))
+        # TODO: move this to MiqRhevmVm.
         elsif (@rhevm = @ost.miqRhevm)
             $log.debug "MiqVm::initialize: accessing VM through RHEVM server" if $log.debug?
+            $log.debug "MiqVm::initialize: vmCfg = #{vmCfg}"
             @rhevmVm = @rhevm.get_vm(vmCfg)
             $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}" if $log.debug?
             @ost.miqRhevmVm = @rhevmVm
-            @vmConfig = VmConfig.new(@rhevmVm.getCfg(@ost.snapId))
+            @vmConfig = VmConfig.new(getCfg(@ost.snapId))
+            $log.debug "MiqVm::initialize: @vmConfig.getHash = #{@vmConfig.getHash.inspect}"
+            $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
         else
             @vimVm = nil
             @vmConfig = VmConfig.new(vmCfg)
         end
     end # def initialize
-    
+
     def vmDisks
         @vmDisks ||= begin
             @volMgrPS = VolMgrPlatformSupport.new(@vmConfig.configFile, @ost)
@@ -63,22 +67,29 @@ class MiqVm
         pVolumes = Array.new
         
         $log.debug "openDisks: no disk files supplied." if !diskFiles
-        
+
         #
         # Build a list of the VM's physical volumes.
         #
         diskFiles.each do |dtag, df|
             $log.debug "openDisks: processing disk file (#{dtag}): #{df}"
             dInfo = OpenStruct.new
-            
+
             if @ost.miqVim
                 dInfo.vixDiskInfo = Hash.new
                 dInfo.vixDiskInfo[:fileName]    = @ost.miqVim.datastorePath(df)
                 if @ost.miqVimVm && @ost.miqVim.isVirtualCenter?
-                    @vdlConnection = @ost.miqVimVm.vdlVcConnection if !@vdlConnection
+                    thumb_print    = VcenterThumbPrint.new(@ost.miqVimVm.invObj.server)
+                    @vdlConnection = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
                     $log.debug "openDisks (VC): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
+                elsif @ost.miqVimVm
+                    esx_host         = @ost.miqVimVm.invObj.server
+                    esx_username     = @ost.miqVimVm.invObj.username
+                    esx_password     = @ost.miqVimVm.invObj.password
+                    thumb_print      = ESXThumbPrint.new(esx_host, esx_username, esx_password)
+                    @vdlConnection   = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
                 else
-                    @vdlConnection = @ost.miqVim.vdlConnection if !@vdlConnection
+                    @vdlConnection = @ost.miqVim.vdlConnection unless @vdlConnection
                     $log.debug "openDisks (ESX): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
                 end
                 dInfo.vixDiskInfo[:connection]  = @vdlConnection
@@ -93,12 +104,12 @@ class MiqVm
             dInfo.hardwareId = dtag
             dInfo.baseOnly = @ost.openParent unless mode && mode["independent"]
             dInfo.rawDisk = @ost.rawDisk # force raw disk for testing
-            $log.debug "MiqVolumeManager::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
+            $log.debug "MiqVm::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
             
             begin
-                d = applianceVolumeManager.lvHash[dInfo.fileName] if @rhevm
+                d = applianceVolumeManager && applianceVolumeManager.lvHash[dInfo.fileName] if @rhevm
                 if d
-                    $log.debug "MiqVolumeManager::openDisks: using applianceVolumeManager for #{dInfo.fileName}" if $log.debug?
+                    $log.debug "MiqVm::openDisks: using applianceVolumeManager for #{dInfo.fileName}" if $log.debug?
                     d.dInfo.fileName = dInfo.fileName
                     d.dInfo.hardwareId = dInfo.hardwareId
                     d.dInfo.baseOnly = dInfo.baseOnly
@@ -144,11 +155,11 @@ class MiqVm
         return pVolumes
     end # def openDisks
     
-    def vmRootTrees
-        return @vmRootTrees if @vmRootTrees
-        @vmRootTrees = MiqMountManager.mountVolumes(volumeManager, @vmConfig, @ost)
-        volumeManager.rootTrees = @vmRootTrees
-        return @vmRootTrees
+    def rootTrees
+        return @rootTrees if @rootTrees
+        @rootTrees = MiqMountManager.mountVolumes(volumeManager, @vmConfig, @ost)
+        volumeManager.rootTrees = @rootTrees
+        return @rootTrees
     end
     
     def volumeManager
@@ -156,6 +167,7 @@ class MiqVm
     end
 
     def applianceVolumeManager
+        return nil if @ost.nfs_storage_mounted
         @applianceVolumeManager ||= MiqVolumeManager.fromNativePvs
     end
 
@@ -180,7 +192,7 @@ class MiqVm
             @volMgrPS = nil
         end
         @vimVm.release if @vimVm
-        @vmRootTrees = nil
+        @rootTrees = nil
         @vmDisks = nil
     end
 
@@ -283,8 +295,8 @@ if __FILE__ == $0
    # rfs.dirForeach("/") { |de| puts "\t\t#{de}" }
     
     puts "\n***** Detected Guest OSs:"
-    raise "No OSs detected" if vm.vmRootTrees.length == 0
-    vm.vmRootTrees.each do |rt|
+    raise "No OSs detected" if vm.rootTrees.length == 0
+    vm.rootTrees.each do |rt|
         puts "\t#{rt.guestOS}"
         if rt.guestOS == "Linux"
             puts "\n\t\t*** /etc/fstab contents:"
@@ -295,7 +307,7 @@ if __FILE__ == $0
         end
     end
     
-    vm.vmRootTrees.each do |rt|
+    vm.rootTrees.each do |rt|
         if rt.guestOS == "Linux"
             # tdirArr = [ "/", "/boot", "/var/www/miq", "/var/www/miq/vmdb/log", "/var/lib/mysql" ]
             tdirArr = [ "/", "/boot", "/etc/init.d", "/etc/rc.d/init.d", "/etc/rc.d/rc0.d" ]

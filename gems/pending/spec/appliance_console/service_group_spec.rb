@@ -5,7 +5,10 @@ require "linux_admin"
 describe ApplianceConsole::ServiceGroup do
   let(:group)             { described_class.new }
   let(:common_services)   { %w(evminit memcached miqtop evmserverd) }
-  let(:postgres_service)  { "postgresql92-postgresql" }
+
+  before do
+    PostgresAdmin.stub(:service_name => "postgresql")
+  end
 
   describe "#postgresql?" do
     it { expect(group).not_to be_postgresql }
@@ -41,7 +44,7 @@ describe ApplianceConsole::ServiceGroup do
         common_services.each do |service|
           expect_run_service(service, "enable")
         end
-        expect_run_service(postgres_service, "enable")
+        expect_run_service(PostgresAdmin.service_name, "enable")
 
         group.enable
       end
@@ -76,7 +79,7 @@ describe ApplianceConsole::ServiceGroup do
     let(:group) { described_class.new(:internal_postgresql => false) }
 
     it "disables postgres" do
-      expect_run_service(postgres_service, "disable")
+      expect_run_service(PostgresAdmin.service_name, "disable")
 
       group.disable
     end
@@ -96,7 +99,7 @@ describe ApplianceConsole::ServiceGroup do
     let(:group) { described_class.new(:internal_postgresql => false) }
 
     it "stops postgres" do
-      expect_run_service(postgres_service, "stop")
+      expect_run_service(PostgresAdmin.service_name, "stop")
 
       group.stop
     end

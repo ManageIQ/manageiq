@@ -123,5 +123,18 @@ describe MiqAeCustomizationController do
         @dialog.dialog_fields.count.should eq(1)
       end
     end
+
+    it "Empty dropdown element has to be invalid" do
+      controller.stub(:x_node) { 'root_-0_-0_-0' }
+      controller.instance_variable_set(:@sb, :node_typ => 'element')
+      session[:edit] = {
+        :field_typ    => "DialogFieldDropDownList",
+        :field_values => [],
+        :field_label  => 'Dropdown 1',
+        :field_name   => 'Dropdown1'
+      }
+      controller.send(:dialog_validate)
+      assigns(:flash_array).first[:message].should include("Dropdown elements require some entries")
+    end
   end
 end

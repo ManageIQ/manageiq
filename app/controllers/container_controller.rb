@@ -102,7 +102,7 @@ class ContainerController < ApplicationController
     get_node_info(x_node)
     @in_a_form = false
 
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def identify_container(id = nil)
@@ -111,6 +111,7 @@ class ContainerController < ApplicationController
 
   # ST clicked on in the explorer right cell
   def x_show
+    get_tagdata(Container.find_by_id(from_cid(params[:id])))
     identify_container(from_cid(params[:id]))
     respond_to do |format|
       format.js do                  # AJAX, select the node
@@ -254,13 +255,13 @@ class ContainerController < ApplicationController
     elsif record_showing
       presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
       presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:expand_collapse_cells][:c] = 'collapse'
+      presenter[:show_hide_layout][:paginator] = 'hide'
     else
       presenter[:update_partials][:main_div] = r[:partial => "layouts/x_gtl"]
       presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
       presenter[:set_visible_elements][:form_buttons_div] = false
       presenter[:set_visible_elements][:pc_div_1] = true
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:paginator] = 'show'
     end
 
     presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox']
@@ -277,7 +278,7 @@ class ContainerController < ApplicationController
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
 
-    presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
+    presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
 
     presenter[:record_id] = @record ? @record.id : nil
 

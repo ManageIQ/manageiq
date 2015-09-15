@@ -41,6 +41,11 @@ class OpsController < ApplicationController
     'rbac_user_copy'            => :rbac_user_copy,
     'rbac_user_delete'          => :rbac_user_delete,
     'rbac_user_tags_edit'       => :rbac_tags_edit,
+    'rbac_tenant_add'           => :rbac_tenant_add,
+    'rbac_project_add'          => :rbac_tenant_add,
+    'rbac_tenant_delete'        => :rbac_tenant_delete,
+    'rbac_tenant_edit'          => :rbac_tenant_edit,
+    'rbac_tenant_manage_quotas' => :rbac_tenant_manage_quotas,
     'refresh_audit_log'         => :refresh_audit_log,
     'refresh_log'               => :refresh_log,
     'refresh_production_log'    => :refresh_production_log,
@@ -73,6 +78,10 @@ class OpsController < ApplicationController
     'schedule_delete'           => :schedule_delete,
     'schedule_enable'           => :schedule_enable,
     'schedule_disable'          => :schedule_disable,
+    'ldap_region_add'           => :ldap_region_add,
+    'ldap_region_edit'          => :ldap_region_edit,
+    'ldap_domain_add'           => :ldap_domain_add,
+    'ldap_domain_edit'          => :ldap_domain_edit,
   }.freeze
 
   def collect_current_logs
@@ -114,7 +123,7 @@ class OpsController < ApplicationController
       @sb[:active_tab]    ||= "settings_server"
       @built_trees << settings_build_tree
     end
-    if role_allows(:feature => "ops_rbac")
+    if role_allows(:feature => "ops_rbac", :any => true)
       @accords.push(:name => "rbac", :title => "Access Control", :container => "rbac_tree_div")
       self.x_active_accord ||= 'rbac'
       self.x_active_tree   ||= 'rbac_tree'
@@ -173,7 +182,7 @@ class OpsController < ApplicationController
     @collapse_c_cell = @in_a_form || @pages ? false : true
     @sb[:center_tb_filename] = center_toolbar_filename
     edit_changed? if @edit
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def accordion_select
@@ -471,7 +480,6 @@ class OpsController < ApplicationController
     )
     # Update the tree with any new nodes
     presenter[:add_nodes] = add_nodes if add_nodes
-    presenter[:set_visible_elements][:buttons_on] = false
 
     r = proc { |opts| render_to_string(opts) }
 
@@ -632,6 +640,24 @@ class OpsController < ApplicationController
     elsif nodetype == "group_seq"
       presenter[:replace_partials][:flash_msg_div] = r[:partial => "layouts/flash_msg"]
       presenter[:update_partials][:rbac_details] = r[:partial => "ldap_seq_form"]
+    elsif nodetype == "tenant_edit"         # schedule edit
+      # when editing/adding schedule in settings tree
+      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_form"]
+      if !@tenant.id
+        @right_cell_text = _("Adding a new %s") % tenant_type_title_string(params[:tenant_type] == "tenant")
+      else
+        model = tenant_type_title_string(@tenant.divisible)
+        @right_cell_text = @edit ?
+          _("Editing %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
+          _("%{model} \"%{name}\"") % {:model => model, :name => @tenant.name}
+      end
+    elsif nodetype == "tenant_manage_quotas"         # manage quotas
+      # when managing quotas for a tenant
+      presenter[:update_partials][:rbac_details] = r[:partial => "tenant_quota_form"]
+      model = tenant_type_title_string(@tenant.divisible)
+      @right_cell_text = @edit ?
+          _("Manage quotas for %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
+          _("%{model} \"%{name}\"") % {:model => model, :name => @tenant.name}
     else
       presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
     end
@@ -648,6 +674,8 @@ class OpsController < ApplicationController
         "Groups"
       when "ur"
         "Roles"
+      when "tn"
+        "Tenants"
       end
     when "u"
       @user.name || "Users"
@@ -661,6 +689,8 @@ class OpsController < ApplicationController
       end
     when "ur"
       @role.name || "Roles"
+    when "tn"
+      @tenant.name || "Tenants"
     else
       "Details"
     end
@@ -685,8 +715,8 @@ class OpsController < ApplicationController
     # Rebuild the toolbars
     presenter[:set_visible_elements][:center_buttons_div] = c_buttons && c_xml
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons, :xml => c_xml}  if c_buttons && c_xml
-    presenter[:expand_collapse_cells][:a] = c_buttons ? 'expand' : 'collapse'
-    presenter[:expand_collapse_cells][:a] = 'collapse' if @sb[:center_tb_filename] == "blank_view_tb"
+    presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
+    presenter[:show_hide_layout][:toolbar] = 'hide' if @sb[:center_tb_filename] == "blank_view_tb"
 
     if (@record && !@in_a_form) || (@edit && @edit[:rec_id] && @in_a_form)
       # Create ManageIQ.record.recordId JS var, if @record is present
@@ -709,9 +739,9 @@ class OpsController < ApplicationController
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
       end
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:paginator] = 'show'
     else
-      presenter[:expand_collapse_cells][:c] = 'collapse'
+      presenter[:show_hide_layout][:paginator] = 'hide'
     end
   end
 

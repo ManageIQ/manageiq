@@ -4,6 +4,7 @@ require 'uri'
 
 class VmOrTemplate < ActiveRecord::Base
   include NewWithTypeStiMixin
+  include ScanningMixin
 
   self.table_name = 'vms'
 
@@ -111,11 +112,8 @@ class VmOrTemplate < ActiveRecord::Base
   has_one                   :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
 
   has_many                  :service_resources, :as => :resource
-#  has_many                  :service_templates, :through => :service_resources, :source => :service_template
   has_many                  :direct_services, :through => :service_resources, :source => :service
-  belongs_to                :tenant_owner, :class_name => 'Tenant'
-  has_many                  :tenant_resources, :as => :resource
-  has_many                  :tenants, :through => :tenant_resources
+  belongs_to                :tenant
 
   acts_as_miq_taggable
   include ReportableMixin
@@ -1877,6 +1875,17 @@ class VmOrTemplate < ActiveRecord::Base
 
   def self.batch_operation_supported?(operation, ids)
     VmOrTemplate.where(:id => ids).all? { |v| v.public_send("validate_#{operation}")[:available] }
+  end
+
+  # Stop showing Reconfigure VM task unless the subclass allows
+  def reconfigurable?
+    false
+  end
+
+  def self.reconfigurable?(ids)
+    vms = VmOrTemplate.where(:id => ids)
+    return false if vms.blank?
+    vms.all?(&:reconfigurable?)
   end
 
   private

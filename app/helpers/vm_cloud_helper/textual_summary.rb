@@ -6,66 +6,52 @@ module VmCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name region server description ipaddress custom_1 container tools_status osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(name region server description ipaddress custom_1 container tools_status osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
   end
 
   def textual_group_vm_cloud_relationships
-    items = %w(ems ems_infra cluster host availability_zone cloud_tenant flavor drift scan_history security_groups
-               service cloud_network cloud_subnet orchestration_stack)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history security_groups
+       service cloud_network cloud_subnet orchestration_stack)
   end
 
   def textual_group_template_cloud_relationships
-    items = %w{ems drift scan_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems drift scan_history)
   end
 
   def textual_group_security
-    items = %w{users groups patches key_pairs}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(users groups patches key_pairs)
   end
 
   def textual_group_configuration
-    items = %w{guest_applications init_processes win32_services kernel_drivers filesystem_drivers filesystems registry_items}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(guest_applications init_processes win32_services kernel_drivers filesystem_drivers filesystems registry_items)
   end
 
   def textual_group_diagnostics
-    items = %w{processes event_logs}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(processes event_logs)
   end
 
   def textual_group_vmsafe
-    items = %w{vmsafe_enable vmsafe_agent_address vmsafe_agent_port vmsafe_fail_open vmsafe_immutable_vm vmsafe_timeout}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(vmsafe_enable vmsafe_agent_address vmsafe_agent_port vmsafe_fail_open vmsafe_immutable_vm vmsafe_timeout)
   end
 
   def textual_group_miq_custom_attributes
-    items = %w{miq_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    textual_miq_custom_attributes
   end
 
   def textual_group_ems_custom_attributes
-    items = %w{ems_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    textual_ems_custom_attributes
   end
 
   def textual_group_compliance
-    items = %w{compliance_status compliance_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(compliance_status compliance_history)
   end
 
   def textual_group_power_management
-    items = %w{power_state boot_time state_changed_on}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(power_state boot_time state_changed_on)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   #
@@ -87,17 +73,15 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_server
-    return nil if @record.miq_server.nil?
-    {:label => "Server", :value => "#{@record.miq_server.name} [#{@record.miq_server.id}]"}
+    @record.miq_server && "#{@record.miq_server.name} [#{@record.miq_server.id}]"
   end
 
   def textual_description
-    return nil if @record.description.blank?
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_ipaddress
@@ -156,27 +140,11 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_cloud")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_cloud_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_cloud', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsCloud)
   end
 
   def textual_ems_infra
-    ems = @record.ext_management_system.try(:provider).try(:infra_ems)
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_infra")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_infra_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system.try(:provider).try(:infra_ems), :as => EmsInfra)
   end
 
   def textual_cluster
@@ -219,6 +187,17 @@ module VmCloudHelper::TextualSummary
     if flavor && role_allows(:feature => "flavor_show")
       h[:title] = "Show this VM's #{label}"
       h[:link]  = url_for(:controller => 'flavor', :action => 'show', :id => flavor)
+    end
+    h
+  end
+
+  def textual_vm_template
+    vm_template = @record.genealogy_parent
+    label = ui_lookup(:table => "miq_template")
+    h = {:label => label, :image => "template", :value => (vm_template.nil? ? "None" : vm_template.name)}
+    if vm_template && role_allows(:feature => "miq_template_show")
+      h[:title] = "Show this VM's #{label}"
+      h[:link]  = url_for(:controller => 'miq_template', :action => 'show', :id => vm_template)
     end
     h
   end
@@ -527,19 +506,6 @@ module VmCloudHelper::TextualSummary
   def textual_state_changed_on
     date = @record.state_changed_on
     {:label => "State Changed On", :value => (date.nil? ? "N/A" : format_timezone(date))}
-  end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
-    end
-    h
   end
 
   def textual_security_groups

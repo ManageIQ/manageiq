@@ -6,71 +6,56 @@ module HostHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
-               power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
-               guid}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
+       power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
+       guid)
   end
 
   def textual_group_relationships
-    items = %w{ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history)
   end
 
   def textual_group_storage_relationships
-    items = %w{storage_systems storage_volumes logical_disks file_shares}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(storage_systems storage_volumes logical_disks file_shares)
   end
 
   def textual_group_compliance
-    items = %w{compliance_status compliance_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(compliance_status compliance_history)
   end
 
   def textual_group_security
     return nil if @record.is_vmware_esxi?
-    items = %w{users groups patches firewall_rules ssh_root}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(users groups patches firewall_rules ssh_root)
   end
 
   def textual_group_configuration
-    items = %w{guest_applications host_services filesystems advanced_settings}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(guest_applications host_services filesystems advanced_settings)
   end
 
   def textual_group_diagnostics
     return nil unless get_vmdb_config[:product][:proto]
-    items = %w{esx_logs}
-    items.collect { |m| self.send("graphical_#{m}") }.flatten.compact
+    %i(esx_logs)
   end
 
   def textual_group_smart_management
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   def textual_group_miq_custom_attributes
-    items = %w{miq_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    ret.blank? ? nil : ret
+    textual_miq_custom_attributes
   end
 
   def textual_group_ems_custom_attributes
-    items = %w{ems_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    ret.blank? ? nil : ret
+    textual_ems_custom_attributes
   end
 
   def textual_group_authentications
-    items = %w{authentications}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    textual_authentications
   end
 
   def textual_group_openstack_status
     return nil unless @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::Host)
-    ret = textual_generate_openstack_status
-
-    ret.blank? ? nil : ret
+    textual_generate_openstack_status
   end
 
   #
@@ -120,11 +105,11 @@ module HostHelper::TextualSummary
 
 
   def textual_hostname
-    {:label => "Hostname", :value => "#{@record.hostname}"}
+    @record.hostname
   end
 
   def textual_ipaddress
-    {:label => "IP Address", :value => "#{@record.ipaddress}"}
+    @record.ipaddress
   end
 
   def textual_ipmi_ipaddress
@@ -163,13 +148,11 @@ module HostHelper::TextualSummary
   end
 
   def textual_asset_tag
-    return nil if @record.asset_tag.blank?
-    {:label => "Asset Tag", :value => @record.asset_tag}
+    @record.asset_tag
   end
 
   def textual_service_tag
-    return nil if @record.service_tag.blank?
-    {:label => "Service Tag", :value => @record.service_tag}
+    @record.service_tag
   end
 
   def textual_osinfo
@@ -255,15 +238,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_infra")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_infra_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsInfra)
   end
 
   def textual_cluster
@@ -278,26 +253,14 @@ module HostHelper::TextualSummary
 
   def textual_storages
     return nil if @record.openstack_host?
-    label = ui_lookup(:tables=>"storages")
-    num   = @record.number_of(:storages)
-    h     = {:label => label, :image => "storage", :value => num}
-    if num > 0 && role_allows(:feature => "storage_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'storages')
-    end
-    h
+    textual_link(@record.storages)
   end
 
   def textual_resource_pools
     return nil if @record.openstack_host?
-    label = "Resource Pools"
-    num   = @record.number_of(:resource_pools)
-    h     = {:label => label, :image => "resource_pool", :value => num}
-    if num > 0 && role_allows(:feature => "resource_pool_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'resource_pools')
-    end
-    h
+    textual_link(@record.resource_pools,
+                 :as   => ResourcePool,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'resource_pools'))
   end
 
   def textual_drift_history
@@ -326,50 +289,18 @@ module HostHelper::TextualSummary
 
   def textual_used_tenants
     return nil unless @record.openstack_host?
-    label = ui_lookup(:tables => "cloud_tenants")
-    num   = @record.cloud_tenants.count
-    h     = {:label => label, :image => "cloud_tenants", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
-      h[:title] = _("Show all used %s on this %s") % [host_title, label]
-      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
-    end
-    h
+    textual_link(@record.cloud_tenants,
+                 :as   => CloudTenant,
+                 :link => url_for(:action => 'show', :id => @record, :display => 'cloud_tenants'))
   end
 
   def textual_vms
-    label = "VMs"
-    num   = @record.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'vms')
-    end
-    h
+    @record.vms
   end
 
   def textual_miq_templates
     return nil if @record.openstack_host?
-    label = ui_lookup(:tables=>"miq_template")
-    num   = @record.number_of(:miq_templates)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:title] = "Show all #{label}"
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'miq_templates')
-    end
-    h
-  end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h     = {:label => label}
-    tags  = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
-    end
-    h
+    @record.miq_templates
   end
 
   def textual_storage_systems

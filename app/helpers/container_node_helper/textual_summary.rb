@@ -4,21 +4,19 @@ module ContainerNodeHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name creation_timestamp resource_version num_cpu_cores memory
-               identity_system identity_machine identity_infra runtime_version
-               kubelet_version proxy_version os_distribution kernel_version)
-    items.collect {|m| send("textual_#{m}")}.flatten.compact
+    %i(name creation_timestamp resource_version num_cpu_cores memory
+       max_container_groups identity_system identity_machine identity_infra runtime_version
+       kubelet_version proxy_version os_distribution kernel_version)
   end
 
   def textual_group_relationships
-    items = %w(ems container_groups lives_on)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
+    %i(ems container_services container_replicators container_groups containers lives_on)
   end
 
   def textual_group_conditions
     labels = [_("Name"), _("Status"), _("Last Transition Time"), _("Reason")]
     h = {:labels => labels}
-    h[:values] = @record.container_node_conditions.collect do |condition|
+    h[:values] = @record.container_conditions.collect do |condition|
       [
         condition.name,
         condition.status,
@@ -29,20 +27,25 @@ module ContainerNodeHelper::TextualSummary
     h
   end
 
+  def textual_group_smart_management
+    items = %w(tags)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
+  end
+
   #
   # Items
   #
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_creation_timestamp
-    {:label => "Creation Timestamp", :value => format_timezone(@record.creation_timestamp)}
+    format_timezone(@record.creation_timestamp)
   end
 
   def textual_resource_version
-    {:label => "Resource Version", :value => @record.resource_version}
+    @record.resource_version
   end
 
   def textual_num_cpu_cores
@@ -58,6 +61,11 @@ module ContainerNodeHelper::TextualSummary
       memory = "N/A"
     end
     {:label => "Memory", :value => memory}
+  end
+
+  def textual_max_container_groups
+    {:label => "Max Pods Capacity",
+     :value => @record.max_container_groups.nil? ? "N/A" : @record.max_container_groups}
   end
 
   def textual_identity_system
@@ -93,18 +101,15 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_runtime_version
-    {:label => "Runtime Version", :value =>
-        @record.container_runtime_version.nil?  ? "N/A" : @record.container_runtime_version}
+    @record.container_runtime_version || "N/A"
   end
 
   def textual_kubelet_version
-    {:label => "Kubelet Version", :value =>
-        @record.kubernetes_kubelet_version.nil?  ? "N/A" : @record.kubernetes_kubelet_version}
+    @record.kubernetes_kubelet_version || "N/A"
   end
 
   def textual_proxy_version
-    {:label => "Proxy Version", :value =>
-        @record.kubernetes_proxy_version.nil?  ? "N/A" : @record.kubernetes_proxy_version}
+    @record.kubernetes_proxy_version || "N/A"
   end
 
   def textual_os_distribution
@@ -117,11 +122,6 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_kernel_version
-    if @record.computer_system.nil? || @record.computer_system.operating_system.nil?
-      version = "N/A"
-    else
-      version = @record.computer_system.operating_system.kernel_version
-    end
-    {:label => "Kernel Version", :value => version}
+    @record.computer_system.try(:operating_system).try(:kernel_version) || "N/A"
   end
 end

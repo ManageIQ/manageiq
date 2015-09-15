@@ -16,23 +16,31 @@
         templateUrl: 'app/states/services/details/details.html',
         controller: StateController,
         controllerAs: 'vm',
-        title: 'Service Details'
+        title: 'Service Details',
+        resolve: {
+          service: resolveService
+        }
       }
     };
   }
 
   /** @ngInject */
-  function StateController(logger) {
+  function resolveService($stateParams, CollectionsApi) {
+    return CollectionsApi.get('services', $stateParams.serviceId);
+  }
+
+  /** @ngInject */
+  function StateController(service) {
     var vm = this;
 
     vm.title = 'Service Details';
+    vm.service = service;
 
     vm.activate = activate;
 
     activate();
 
     function activate() {
-      logger.info('Activated Service Details View');
     }
   }
 })();

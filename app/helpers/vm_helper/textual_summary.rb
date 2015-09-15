@@ -6,95 +6,75 @@ module VmHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo cpu_affinity snapshots advanced_settings resources guid}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo cpu_affinity snapshots advanced_settings resources guid)
   end
 
   def textual_group_lifecycle
-    items = %w(discovered analyzed retirement_date retirement_state provisioned owner group)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(discovered analyzed retirement_date retirement_state provisioned owner group)
   end
 
   def textual_group_relationships
-    items = %w{ems cluster host resource_pool storage service parent_vm genealogy drift scan_history cloud_network cloud_subnet}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems cluster host resource_pool storage service parent_vm genealogy drift scan_history cloud_network cloud_subnet)
   end
 
   def textual_group_vm_cloud_relationships
-    items = %w{ems availability_zone flavor drift scan_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems availability_zone flavor drift scan_history)
   end
 
   def textual_group_template_cloud_relationships
-    items = %w{ems drift scan_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(ems drift scan_history)
   end
 
   def textual_group_security
-    items = %w{users groups patches}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(users groups patches)
   end
 
   def textual_group_configuration
-    items = %w{guest_applications init_processes win32_services kernel_drivers filesystem_drivers filesystems registry_items}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(guest_applications init_processes win32_services kernel_drivers filesystem_drivers filesystems registry_items)
   end
 
   def textual_group_datastore_allocation
-    items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_total}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(disks disks_aligned thin_provisioned allocated_disks allocated_total)
   end
 
   def textual_group_datastore_usage
-    items = %w{usage_disks usage_snapshots usage_disk_storage usage_overcommitted}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(usage_disks usage_snapshots usage_disk_storage usage_overcommitted)
   end
 
   def textual_group_diagnostics
-    items = %w{processes event_logs}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(processes event_logs)
   end
 
   def textual_group_storage_relationships
-    items = %w{storage_systems storage_volumes logical_disks file_shares}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(storage_systems storage_volumes logical_disks file_shares)
   end
 
   def textual_group_vmsafe
-    items = %w{vmsafe_enable vmsafe_agent_address vmsafe_agent_port vmsafe_fail_open vmsafe_immutable_vm vmsafe_timeout}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(vmsafe_enable vmsafe_agent_address vmsafe_agent_port vmsafe_fail_open vmsafe_immutable_vm vmsafe_timeout)
   end
 
   def textual_group_miq_custom_attributes
-    items = %w{miq_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    textual_miq_custom_attributes
   end
 
   def textual_group_ems_custom_attributes
-    items = %w{ems_custom_attributes}
-    ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return ret.blank? ? nil : ret
+    textual_ems_custom_attributes
   end
 
   def textual_group_compliance
-    items = %w{compliance_status compliance_history}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(compliance_status compliance_history)
   end
 
   def textual_group_power_management
-    items = %w{power_state boot_time state_changed_on}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(power_state boot_time state_changed_on)
   end
 
   def textual_group_normal_operating_ranges
-    items = %w{normal_operating_ranges_cpu normal_operating_ranges_cpu_usage normal_operating_ranges_memory normal_operating_ranges_memory_usage}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(normal_operating_ranges_cpu normal_operating_ranges_cpu_usage normal_operating_ranges_memory normal_operating_ranges_memory_usage)
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    %i(tags)
   end
 
   #
@@ -116,17 +96,15 @@ module VmHelper::TextualSummary
   end
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_server
-    return nil if @record.miq_server.nil?
-    {:label => "Server", :value => "#{@record.miq_server.name} [#{@record.miq_server.id}]"}
+    @record.miq_server && "#{@record.miq_server.name} [#{@record.miq_server.id}]"
   end
 
   def textual_description
-    return nil if @record.description.blank?
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_hostname
@@ -237,7 +215,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_retirement_state
-    {:label => "Retirement State", :value => @record.retirement_state.to_s.capitalize}
+    @record.retirement_state.to_s.capitalize
   end
 
   def textual_provisioned
@@ -247,25 +225,15 @@ module VmHelper::TextualSummary
   end
 
   def textual_owner
-    return nil if @record.evm_owner.nil?
-    {:label => "Owner", :value => @record.evm_owner.name}
+    @record.evm_owner.try(:name)
   end
 
   def textual_group
-    return nil if @record.miq_group.nil?
-    {:label => "Group", :value => @record.miq_group.description}
+    @record.miq_group.try(:description)
   end
 
   def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_infra")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_infra_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)
-    end
-    h
+    textual_link(@record.ext_management_system, :as => EmsInfra)
   end
 
   def textual_cluster
@@ -820,19 +788,6 @@ module VmHelper::TextualSummary
     [:high, "High", :avg, "Average", :low, "Low"].each_slice(2) do |key, label|
       value = @record.send("max_mem_usage_absolute_average_#{key}_over_time_period")
       h[:value] << {:label => label, :value => (value.nil? ? "Not Available" : number_to_percentage(value, :precision => 2))}
-    end
-    h
-  end
-
-  def textual_tags
-    label = "#{session[:customer_name]} Tags"
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
     end
     h
   end

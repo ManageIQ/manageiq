@@ -1,8 +1,7 @@
 require "spec_helper"
-require Rails.root.join('db/migrate/20140611194007_change_options_in_miq_alert_for_email_to.rb')
+require_migration
 
 describe ChangeOptionsInMiqAlertForEmailTo do
-
   migration_context :up do
     let(:miq_alert_stub) { migration_stub(:MiqAlert) }
 

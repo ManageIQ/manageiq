@@ -1,4 +1,4 @@
-require 'util/pathname2'
+require 'pathname'
 require 'metadata/VMMount/VMMount'
 require 'util/miq-unicode'
 require 'util/miq-xml'
@@ -69,9 +69,9 @@ class VmConfig
 				next if @cfgHash[dk + ".filename"] && @cfgHash[dk + ".filename"].downcase == "auto detect"
 
         begin
-          dskPath = Pathname2.new(@cfgHash[dk + ".filename"])
+          dskPath = Pathname.new(@cfgHash[dk + ".filename"])
           begin
-            @cfgHash[dk + ".filename"] = dskPath.relative_path_from(Pathname2.new(@configPath)).to_s.tr("\\", "/") if dskPath.absolute?
+            @cfgHash[dk + ".filename"] = dskPath.relative_path_from(Pathname.new(@configPath)).to_s.tr("\\", "/") if dskPath.absolute?
           rescue
             @cfgHash[dk + ".filename"] = dskPath.to_s.tr("\\", "/")
           end
@@ -105,7 +105,7 @@ class VmConfig
       @diskFileHash[dk] = filename
 			if @direct_file_access
         ds, dir, name = split_filename(filename)
-        if ds.nil? && !Pathname2.new(filename).absolute?
+        if ds.nil? && !Pathname.new(filename).absolute?
           @diskFileHash[dk] = File.expand_path(File.join(@configPath, filename))
         end
       end
@@ -140,7 +140,7 @@ class VmConfig
 
       if @direct_file_access
         ds, dir, name = split_filename(filename)
-				if ds.nil? && !Pathname2.new(@cfgHash[dk + ".filename"]).absolute?
+				if ds.nil? && !Pathname.new(@cfgHash[dk + ".filename"]).absolute?
 					disk_path = File.join(@configPath, filename)
 				end
       end
@@ -180,7 +180,7 @@ class VmConfig
     unless miqvm.nil?
       # Make sure we have the volume manager and loaded
       begin
-        miqvm.vmRootTrees[0]
+        miqvm.rootTrees[0]
         @vol_mgr_loaded = true
       rescue LoadError
         $log.warn "add_disk_stats [#{$!.class}]-[#{$!}]"
@@ -567,7 +567,7 @@ class VmConfig
       free_space = 0; disk_capacity = 0
       if miqvm && @vol_mgr_loaded
         # Make sure we have the volume manager loaded
-        vmRoot = miqvm.vmRootTrees[0]
+        vmRoot = miqvm.rootTrees[0]
         if vmRoot
           miqvm.wholeDisks.each {|d| disk_capacity += d.size}
           rootAdded = false

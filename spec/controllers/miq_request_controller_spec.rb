@@ -124,4 +124,23 @@ describe MiqRequestController do
       expect(response.body).to_not be_empty
     end
   end
+
+  render_views
+  context "#edit_button" do
+    before do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @miq_request = MiqProvisionConfiguredSystemRequest.create(:description    => "Foreman provision",
+                                                                :approval_state => "pending_approval",
+                                                                :userid         => User.current_user.userid)
+    end
+    it "when the edit button is pressed the request is displayed" do
+      session[:settings] = {:display   => {:quad_truncate => 'f'},
+                            :quadicons => {:host => 'foo'}}
+      get :show, :id => @miq_request.id
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+  end
 end

@@ -1,4 +1,4 @@
-require 'platform'
+require 'sys-uname'
 
 class VolMgrPlatformSupport
     
@@ -7,7 +7,7 @@ class VolMgrPlatformSupport
         @cfgFile = cfgFile
         @ost = ost
         
-        if Platform::OS == :win32
+        if Sys::Platform::OS == :windows
 			require "VolumeManager/VolMgrPlatformSupportWin"
 			extend VolMgrPlatformSupportWin
 		else

@@ -1,6 +1,7 @@
-module ApplianceConsole
-  POSTGRESQL_SERVICE = "postgresql92-postgresql".freeze
+require "appliance_console/internal_database_configuration"
+require "util/postgres_admin"
 
+module ApplianceConsole
   class ServiceGroup
     SERVICES  = %w{evminit memcached miqtop evmserverd}.freeze
 
@@ -30,11 +31,11 @@ module ApplianceConsole
     def enable
       enable_miqtop
       SERVICES.each { |s| run_service(s, "enable") }
-      run_service(POSTGRESQL_SERVICE, "enable") if postgresql?
+      run_service(PostgresAdmin.service_name, "enable") if postgresql?
     end
 
     def disable
-      run_service(POSTGRESQL_SERVICE, "disable") unless postgresql?
+      run_service(PostgresAdmin.service_name, "disable") unless postgresql?
     end
 
     def start
@@ -42,7 +43,7 @@ module ApplianceConsole
     end
 
     def stop
-      run_service(POSTGRESQL_SERVICE, "stop") unless postgresql?
+      run_service(PostgresAdmin.service_name, "stop") unless postgresql?
     end
 
     private

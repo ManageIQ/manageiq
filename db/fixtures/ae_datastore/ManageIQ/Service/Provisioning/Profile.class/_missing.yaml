@@ -7,4 +7,6 @@ object:
     name: ".missing"
     inherits: 
     description: 
-  fields: []
+  fields:
+  - service_filter:
+      value: "#/Service/Provisioning/ServiceFilter/FilterByDialogParameters"

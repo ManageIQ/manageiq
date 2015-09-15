@@ -2,27 +2,28 @@
 #form_div
   = render :partial => '/layouts/tabs'
   = render :partial => "layouts/flash_msg"
-  = form_tag(:action => 'create', :id => "report_basic_form") do
+  = form_tag({:action => 'create', :id => "report_basic_form"}, {:class => "form-horizontal"}) do
     %h3
       = _('Basic Report Info')
-    %table.style1
-      %tr
-        %td.key
-          = _('Menu Name')
-        %td.wider
-          #name_div
-            = text_field_tag("name", @edit[:new][:name].to_s,
-              :maxlength         => 40,
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-      = javascript_tag(javascript_focus('name'))
-      %tr
-        %td.key
-          = _('Title')
-        %td.wider
-          #title_div
-            = text_field_tag("title", @edit[:new][:title],
-              :maxlength         => 60,
-              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      %label.control-label.col-md-2
+        = _('Menu Name')
+      .col-md-8
+        #name_div
+          = text_field_tag("name", @edit[:new][:name].to_s,
+            :maxlength         => 40,
+            "class"            => "form-control",
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    = javascript_tag(javascript_focus('name'))
+    .form-group
+      %label.control-label.col-md-2
+        = _('Title')
+      .col-md-8
+        #title_div
+          = text_field_tag("title", @edit[:new][:title],
+            :maxlength         => 60,
+            "class"            => "form-control",
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %hr
 
   -# Show the fields for tab #
@@ -40,9 +41,7 @@
     = render :partial => "form_chart_sample"
   - when "6"
     = render :partial => "form_tl_settings"
-    -# if @tl_field != NOTHING_STRING
     = render :partial => "form_tl_sample"
-    -# end
   - when "7"
     = render :partial => "form_preview"
   - when "8"

@@ -8,7 +8,7 @@
         %td.key
           = _('Show Costs by')
         %td
-          - opts = [["<#{_('Choose')}>", nil], ["#{_('Owner')}", "owner"], ["%s Tag" % session[:customer_name], "tag"]]
+          - opts = [["<#{_('Choose')}>", nil], [_('Owner'), "owner"], ["%s Tag" % current_tenant.name, "tag"]]
           = select_tag("cb_show_typ",
             options_for_select(opts, @edit[:new][:cb_show_typ]),
             "data-miq_sparkle_on"  => true,
@@ -102,7 +102,7 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             "data-miq_observe"     => {:url => url}.to_json)
-          = _("going back")
+        = _("going back")
         - case @edit[:new][:cb_interval]
         - when "daily"
           - opts = (1..6).map { |i| [n_('%s Day', '%s Days', i) % i, i] } + (1..4).map { |i| [n_('%s Week', '%s Weeks', i) % i, i] }

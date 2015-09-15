@@ -233,9 +233,10 @@ module RefreshParser
       require 'ipaddr'
       default_gw = IPAddr.new(default_gw)
 
-      vnics   = inv.fetch_path("config", "network", "consoleVnic")
-      vnics ||= inv.fetch_path("config", "network", "vnic")
-      vnics.to_miq_a.each do |vnic|
+      network = inv.fetch_path("config", "network")
+      vnics   = network['consoleVnic'].to_miq_a + network['vnic'].to_miq_a
+
+      vnics.each do |vnic|
         ip = vnic.fetch_path("spec", "ip", "ipAddress")
         subnet_mask = vnic.fetch_path("spec", "ip", "subnetMask")
         next if ip.blank? || subnet_mask.blank?
@@ -811,8 +812,9 @@ module RefreshParser
     result[:bios] = bios unless bios.blank?
 
     if inv["numCpu"].present?
-      result[:numvcpus] = inv["numCpu"].to_i
-      result[:cores_per_socket], result[:logical_cpus] = calculate_cores_and_sockets(inv["numCpu"], config.try(:fetch_path, "hardware", "numCoresPerSocket"))
+      result[:logical_cpus] = inv["numCpu"].to_i
+      result[:cores_per_socket] = (config.try(:fetch_path, "hardware", "numCoresPerSocket") || 1).to_i
+      result[:numvcpus] = result[:logical_cpus] / result[:cores_per_socket]
     end
 
     result[:annotation] = inv["annotation"] unless inv["annotation"].blank?
@@ -821,12 +823,6 @@ module RefreshParser
 
     return result
   end
-
-  def self.calculate_cores_and_sockets(total, cores)
-    cores = (cores || 1).to_i
-    [cores, (total.to_i / cores)]
-  end
-  private_class_method :calculate_cores_and_sockets
 
   def self.vm_inv_to_guest_device_hashes(inv, lan_uids)
     inv = inv.fetch_path('config', 'hardware', 'device')

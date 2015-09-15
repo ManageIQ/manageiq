@@ -3,7 +3,7 @@
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_method_inputs"}
     %h3
       = _('Main Info')
-    %form.form-horizontal.static
+    .form-horizontal.static
       .form-group
         %label.col-md-2.control-label
           = Dictionary.gettext('fqname', :type => :column, :notfound => :titleize)

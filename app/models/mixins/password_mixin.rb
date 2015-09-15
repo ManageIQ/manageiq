@@ -1,10 +1,6 @@
 module PasswordMixin
   extend ActiveSupport::Concern
 
-  included do
-    encrypt_column(:password) if self.columns_hash.include?("password")
-  end
-
   module ClassMethods
     def encrypted_columns
       @@encrypted_columns ||= []    # rubocop:disable Style/ClassVars

@@ -1,24 +1,34 @@
 - unless @edit[:new][:emstype].blank?
-  %tr
-    %td.key= _('Hostname (or IPv4 or IPv6 address)')
-    %td.wide
+  .form-group
+    %label.control-label.col-md-2
+      = _('Hostname or IP address')
+    .col-md-8
       = text_field_tag("hostname",
         @edit[:new][:hostname],
         :maxlength => MAX_HOSTNAME_LEN,
-        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+        :class => "form-control",
+        :title => _("Hostname or IPv4/IPv6 address"))
   - if @edit[:new][:emstype] == "scvmm"
-    %tr
-      %td.key= _('Security Protocol')
-      %td.wide
+    .form-group
+      %label.control-label.col-md-2
+        = _('Security Protocol')
+      .col-md-8
         = select_tag("security_protocol",
                      options_for_select(@edit[:protocols],
                      @edit[:new][:security_protocol]),
-                     "data-miq_observe" => {:url => url}.to_json)
+                     :class => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("security_protocol", "#{url}");
     - if @edit[:new][:security_protocol] == "kerberos"
-      %tr
-        %td.key= _('Realm')
-        %td.wide
+      .form-group
+        %label.control-label.col-md-2
+          = _('Realm')
+        .col-md-8
           = text_field_tag("realm",
                            @edit[:new][:realm],
                            :maxlength => MAX_NAME_LEN,
-                           "data-miq_observe" => {:interval => ".5", :url => url}.to_json)
+                           :class             => "form-control",
+                           "data-miq_observe" => {:interval => ".5",
+                                                  :url => url}.to_json)

@@ -5,16 +5,20 @@ class ContainerNode < ActiveRecord::Base
   # :name, :uid, :creation_timestamp, :resource_version
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many   :container_groups
-  has_many   :container_node_conditions, :dependent => :destroy
+  has_many   :container_conditions, :class_name => ContainerCondition, :as => :container_entity, :dependent => :destroy
+  has_many   :containers, :through => :container_groups
+  has_many   :container_services, -> { distinct }, :through => :container_groups
+  has_many   :container_replicators, -> { distinct }, :through => :container_groups
+  has_many   :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
 
-  delegate   :hardware, :to => :computer_system
+  has_one   :hardware, :through => :computer_system
 
-  virtual_column :ready_condition_status, :type => :string, :uses => :container_node_conditions
+  virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
 
   def ready_condition
-    container_node_conditions.find_by_name('Ready')
+    container_conditions.find_by(:name => "Ready")
   end
 
   def ready_condition_status
@@ -37,10 +41,10 @@ class ContainerNode < ActiveRecord::Base
     case assoc.to_sym
     when :ems_events
       # TODO: improve relationship using the id
-      ["container_node_name = ? AND ems_id = ?", name, ems_id]
+      ["container_node_name = ? AND #{events_table_name(assoc)}.ems_id = ?", name, ems_id]
     when :policy_events
       # TODO: implement policy events and its relationship
-      ["ems_id = ?", ems_id]
+      ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
     end
   end
 end

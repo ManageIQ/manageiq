@@ -46,7 +46,7 @@ class MiqServer < ActiveRecord::Base
   STATUSES_ACTIVE  = [STATUS_STARTING, STATUS_STARTED]
   STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
 
-  RESTART_SCRIPT = Rails.root.join("vmdb_restart").freeze
+  RESTART_EXIT_STATUS = 123
 
   def self.active_miq_servers
     where(:status => STATUSES_ACTIVE)
@@ -449,9 +449,9 @@ class MiqServer < ActiveRecord::Base
     self.quiesce
   end
 
-  def shutdown_and_exit
+  def shutdown_and_exit(exit_status = 0)
     self.shutdown
-    exit
+    exit exit_status
   end
 
   def quiesce
@@ -482,11 +482,7 @@ class MiqServer < ActiveRecord::Base
     _log.info("Server restart initiating...")
     self.update_attribute(:status, "restarting")
 
-    logfile = Rails.root.join("log/vmdb_restart.log")
-    File.delete(logfile) if File.exist?(logfile)
-
-    pid = spawn("nohup #{RESTART_SCRIPT}", [:out, :err] => [logfile, "a"])
-    Process.detach(pid)
+    shutdown_and_exit(RESTART_EXIT_STATUS)
   end
 
   def format_full_log_msg
@@ -684,5 +680,9 @@ class MiqServer < ActiveRecord::Base
     groups = zone.miq_groups.order(:sequence).to_a if groups.empty?
     groups = MiqGroup.where(:resource_id => nil, :resource_type => nil).order(:sequence).to_a if groups.empty?
     groups
+  end
+
+  def server_timezone
+    get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
   end
 end #class MiqServer

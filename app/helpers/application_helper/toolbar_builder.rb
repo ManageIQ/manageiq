@@ -5,9 +5,9 @@ class ApplicationHelper::ToolbarBuilder
 
   private
 
-  delegate :request, :session, :to => :@view_context
+  delegate :request, :current_user, :to => :@view_context
 
-  delegate :get_vmdb_config, :role_allows, :model_for_vm, :to => :@view_context
+  delegate :get_vmdb_config, :role_allows, :model_for_vm, :rbac_common_feature_for_buttons, :to => :@view_context
   delegate :x_tree_history, :x_node, :x_active_tree, :to => :@view_context
   delegate :is_browser?, :is_browser_os?, :to => :@view_context
 
@@ -300,7 +300,7 @@ class ApplicationHelper::ToolbarBuilder
       group[:image]        = cbs.set_data[:button_image]
       group[:text_display] = cbs.set_data.has_key?(:display) ? cbs.set_data[:display] : true
 
-      available = CustomButton.available_for_user(session[:userid], cbs.name) # get all uri records for this user for specified uri set
+      available = CustomButton.available_for_user(current_user, cbs.name) # get all uri records for this user for specified uri set
       available = available.select { |b| cbs.members.include?(b) }            # making sure available_for_user uri is one of the members
       group[:buttons] = available.collect { |cb| create_raw_custom_button_hash(cb, record) }.uniq
       if cbs[:set_data][:button_order] # Show custom buttons in the order they were saved
@@ -384,6 +384,10 @@ class ApplicationHelper::ToolbarBuilder
             return true
         end
       when :rbac_tree
+        common_buttons = %w(rbac_project_add rbac_tenant_add)
+        feature = common_buttons.include?(id) ? rbac_common_feature_for_buttons(id) : id
+        return true unless role_allows(:feature => feature)
+        return true if common_buttons.include?(id) && @record.project?
         return false
       when :vmdb_tree
         return ["db_connections","db_details","db_indexes","db_settings"].include?(@sb[:active_tab]) ? false : true
@@ -480,9 +484,6 @@ class ApplicationHelper::ToolbarBuilder
 
     return true if %w(container_replicator_edit container_replicator_delete container_replicator_new).include?(id) &&
                    (@record.kind_of?(ContainerReplicator) || @record.nil?)
-
-    return true if %w(container_image_edit container_image_delete container_image_new).include?(id) &&
-                   (@record.kind_of?(ContainerImage) || @record.nil?)
 
     return true if %w(container_image_registry_edit container_image_registry_delete
                       container_image_registry_new).include?(id) &&
@@ -733,15 +734,13 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_request_approve", "miq_request_deny"
         return true if ["approved", "denied"].include?(@record.approval_state) || @showtype == "miq_provisions"
       when "miq_request_edit"
-        requester = User.find_by_userid(session[:userid])
-        return true if requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
+        return true if current_user.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
       when "miq_request_copy"
-        requester = User.find_by_userid(session[:userid])
         resource_types_for_miq_request_copy = %w(MiqProvisionRequest
                                                  MiqHostProvisionRequest
                                                  MiqProvisionConfiguredSystemRequest)
         return true if !resource_types_for_miq_request_copy.include?(@record.resource_type) ||
-                       ((requester.name != @record.requester_name ||
+                       ((current_user.name != @record.requester_name ||
                          !@record.request_pending_approval?) &&
                         @showtype == "miq_provisions")
       end
@@ -771,7 +770,7 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_clone"
         return true unless @record.cloneable?
       when "vm_publish"
-        return true if %w(VmMicrosoft ManageIQ::Providers::Redhat::InfraManager::Vm).include?(@record.type)
+        return true if %w(ManageIQ::Providers::Microsoft::InfraManager::Vm ManageIQ::Providers::Redhat::InfraManager::Vm).include?(@record.type)
       when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
       when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
@@ -785,13 +784,17 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_migrate"
         return true unless @record.is_available?(:migrate)
       when "vm_reconfigure"
-        return true if @record.vendor.downcase == "redhat"
+        return true if !@record.reconfigurable?
       when "vm_stop", "instance_stop"
         return true if !@record.is_available?(:stop)
       when "vm_reset", "instance_reset"
         return true if !@record.is_available?(:reset)
       when "vm_suspend", "instance_suspend"
         return true if !@record.is_available?(:suspend)
+      when "instance_shelve"
+        return true if !@record.is_available?(:shelve)
+      when "instance_shelve_offload"
+        return true if !@record.is_available?(:shelve_offload)
       when "instance_pause"
         return true if !@record.is_available?(:pause)
       when "vm_policy_sim", "vm_protect"
@@ -993,15 +996,20 @@ class ApplicationHelper::ToolbarBuilder
       when "host_restart"
         return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
       end
-    when "ContainerNodeKubernetes"
+    when "ContainerNode"
       case id
       when "container_node_timeline"
         return "No Timeline data has been collected for this Node" unless @record.has_events? || @record.has_events?(:policy_events)
       end
-    when "ContainerGroupKubernetes"
+    when "ContainerGroup"
       case id
       when "container_group_timeline"
         return "No Timeline data has been collected for this Pod" unless @record.has_events? || @record.has_events?(:policy_events)
+      end
+    when "ContainerProject"
+      case id
+      when "container_project_timeline"
+        return "No Timeline data has been collected for this Project" unless @record.has_events? || @record.has_events?(:policy_events)
       end
     when "MiqAction"
       case id
@@ -1036,7 +1044,7 @@ class ApplicationHelper::ToolbarBuilder
     when "MiqRequest"
       case id
       when "miq_request_delete"
-        requester = User.find_by_userid(session[:userid])
+        requester = current_user
         return false if requester.admin_user?
         return _("Users are only allowed to delete their own requests") if requester.name != @record.requester_name
         return _("%s requests cannot be deleted" % @record.approval_state.titleize) if %w(approved denied).include?(@record.approval_state)
@@ -1108,6 +1116,8 @@ class ApplicationHelper::ToolbarBuilder
       when "storage_delete"
         return "Only #{ui_lookup(:table=>"storages")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
       end
+    when "Tenant"
+      return "Default Tenant can not be deleted" if @record.parent.nil? && id == "rbac_tenant_delete"
     when "User"
       case id
       when "rbac_user_copy"
@@ -1167,6 +1177,7 @@ class ApplicationHelper::ToolbarBuilder
               "vm_retire", "vm_retire_now"
         return "#{@record.kind_of?(ManageIQ::Providers::CloudManager::Vm) ? "Instance" : "VM"} is already retired" if @record.retired == true
       when "vm_scan", "instance_scan"
+        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
         return @record.active_proxy_error_message if !@record.has_active_proxy?
       when "vm_timeline"
         return "No Timeline data has been collected for this VM" unless @record.has_events? || @record.has_events?(:policy_events)
@@ -1317,6 +1328,9 @@ class ApplicationHelper::ToolbarBuilder
       url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/,"")
       ridx = url.rindex('/') if url
       url = url.slice(0..ridx-1)  if ridx
+    end
+    if item[:full_path]
+      tb_buttons[button][:full_path] = ERB.new(item[:full_path]).result(@view_binding)
     end
     tb_buttons[button][:url] = url if item[:url]
     tb_buttons[button][:explorer] = true if @explorer && !item[:url]  # Add explorer = true if ajax button

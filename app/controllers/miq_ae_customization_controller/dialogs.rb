@@ -40,7 +40,7 @@ module MiqAeCustomizationController::Dialogs
           if params[:field_past_dates] == "1"
             page << "ManageIQ.calendar.calDateFrom = undefined ;"
           else
-            date_tz = Time.now.in_time_zone(session[:user_tz]).strftime("%Y,%m,%d")
+            date_tz = Time.zone.now.strftime("%Y,%m,%d")
             page << "ManageIQ.calendar.calDateFrom = new Date('#{date_tz}');"
           end
         end
@@ -698,6 +698,10 @@ module MiqAeCustomizationController::Dialogs
       end
       if @edit[:field_typ].nil? || @edit[:field_typ].strip == ""
         add_flash(_("%s is required") % "Element Type", :error)
+        res = false
+      end
+      if @edit[:field_typ] == "DialogFieldDropDownList" && @edit[:field_values].empty?
+        add_flash(_("Dropdown elements require some entries"), :error)
         res = false
       end
     end

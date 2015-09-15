@@ -5,7 +5,7 @@
       %tbody
         - @ap_folders.each do |f|
           %tr{:title => _("Open Folder"),
-            :onclick => "cfmeDynatree_activateNode('alert_profile_tree', 'xx-#{f.last}');"}
+            :onclick => "miqDynatreeActivateNode('alert_profile_tree', 'xx-#{f.last}');"}
             %td.narrow
               %img{:src => "/images/icons/new/#{f.last.underscore.downcase}.png"}
             %td

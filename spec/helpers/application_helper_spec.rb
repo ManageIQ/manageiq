@@ -1,4 +1,5 @@
 require "spec_helper"
+include ActionView::Helpers::JqueryHelper
 include JsHelper
 
 describe ApplicationHelper do
@@ -492,6 +493,22 @@ describe ApplicationHelper do
         end
       end
     end
+
+    context "when with ManageIQ::Providers::ContainerManager" do
+      before { @db = "ManageIQ::Providers::ContainerManager" }
+
+      it "and @explorer" do
+        @explorer = true
+        subject[0].should == "ems_container"
+        subject[1].should == "x_show"
+      end
+
+      it "and not @explorer" do
+        @explorer = nil
+        subject[0].should == "ems_container"
+        subject[1].should == "show"
+      end
+    end
   end
 
   describe "#field_to_col" do
@@ -688,15 +705,10 @@ describe ApplicationHelper do
   end
 
   context "#browser_info" do
-    it "checks by name when called with NO argument" do
-      ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, :name).and_return('checked_by_name')
-      browser_info( ).should == 'checked_by_name'
-    end
-
-    it "checks by 'a_type' when called with 'a_type'" do
+    it "preserves the case" do
       type = :a_type
-      ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, type).and_return('checked_by_a_type')
-      browser_info(type).should == 'checked_by_a_type'
+      ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, type).and_return('checked_by_A_TYPE')
+      browser_info(type).should == 'checked_by_A_TYPE'
     end
   end
 
@@ -1546,5 +1558,17 @@ describe ApplicationHelper do
       result = controller.show_advanced_search?
       result.should be_true
     end
+  end
+
+  context "#listicon_image_tag" do
+    it "returns correct image for job record based upon it's status" do
+      job_attrs = {"state" => "running", "status" => "ok"}
+      image = listicon_image_tag("Job", job_attrs)
+      image.should eq("<img valign=\"middle\" width=\"16\" height=\"16\" title=\"Status = Running\" src=\"/images/icons/new/job-running.png\" />")
+    end
+  end
+
+  it 'output of remote_function should not be html_safe' do
+    remote_function(:url => {:controller => 'vm_infra', :action => 'explorer'}).html_safe?.should be_false
   end
 end

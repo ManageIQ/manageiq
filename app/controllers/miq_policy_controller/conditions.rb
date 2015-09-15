@@ -249,19 +249,4 @@ module MiqPolicyController::Conditions
     end
     add_flash(_("Ruby scripts are no longer supported in expressions, please change or remove them."), :warning) if @condition.expression.exp.has_key?('RUBY')
   end
-
-  def condition_build_tree(type=:condition, name=:condition_tree)
-    x_tree_init(name, type, 'Condition', :full_ids => true)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    # Fill in root node details
-    root = tree_nodes.first
-    root[:title] = "All Conditions"
-    root[:tooltip] = "All Conditions"
-    root[:icon] = "folder.png"
-
-    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
-  end
-
 end

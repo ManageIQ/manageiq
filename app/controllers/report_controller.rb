@@ -9,6 +9,8 @@ class ReportController < ApplicationController
   include_concern 'Usage'
   include_concern 'Widgets'
 
+  include ReportHelper
+
   before_filter :check_privileges
   before_filter :get_session_data
   after_filter  :cleanup_action
@@ -120,8 +122,8 @@ class ReportController < ApplicationController
     @report          = nil
     @edit            = nil
     @timeline        = true
-    @timezone_abbr   = get_timezone_abbr("server")
-    @timezone_offset = get_timezone_offset("server")
+    @timezone_abbr   = get_timezone_abbr
+    @timezone_offset = get_timezone_offset
     @sb[:select_node] = false
     @sb[:open_tree_nodes] ||= Array.new
     @trees = Array.new
@@ -211,7 +213,7 @@ class ReportController < ApplicationController
     @x_edit_buttons_locals = set_form_locals if @in_a_form
     # show form buttons after upload is pressed
     @collapse_c_cell = !@in_a_form && !@pages && !saved_report_paging?
-    render :layout => "explorer"
+    render :layout => "application"
   end
 
   def accordion_select
@@ -383,15 +385,17 @@ class ReportController < ApplicationController
     if ["graph", "hybrid"].include?(params[:type])
       @zgraph = true      # Show the zgraph in the report
     end
-    @sb[:rep_tree_build_time] = Time.now.utc
     @ght_type = params[:type]
     @title = @report.title
   end
 
   def rebuild_trees
-    rep = MiqReportResult.all(:conditions=>set_saved_reports_condition, :limit=>1, :order => 'created_on desc', :select => "created_on")
-    return false if rep[0].nil?
-    return (rep[0].created_on > @sb[:rep_tree_build_time])
+    rep = MiqReportResult.where(set_saved_reports_condition).limit(1).order('created_on desc').pluck("created_on").first
+    return false unless rep
+    build_trees = rep > @sb[:rep_tree_build_time]
+    # save last tree build time to decide if tree needs to be refreshed automatically
+    @sb[:rep_tree_build_time] = Time.now.utc if build_trees
+    build_trees
   end
 
   #Build the main import/export tree
@@ -673,7 +677,7 @@ class ReportController < ApplicationController
     @sb[:active_tab] = params[:tab_id] ? params[:tab_id] : "report_info" if x_active_tree == :reports_tree &&
         params[:action] != "reload" && !["miq_report_run", "saved_report_delete"].include?(params[:pressed]) #do not reset if reload saved reports buttons is pressed
 
-    rebuild = rebuild_trees
+    rebuild = @in_a_form ? false : rebuild_trees
     build_report_listnav    if replace_trees.include?(:reports)      || rebuild
     build_schedules_tree    if replace_trees.include?(:schedules)
     build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild
@@ -925,12 +929,12 @@ class ReportController < ApplicationController
         presenter[:set_visible_elements][:rpb_div_1]        = true
         presenter[:set_visible_elements][:pc_div_1]         = false
       end
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:paginator] = 'show'
     else
-      presenter[:expand_collapse_cells][:c] = 'collapse'
+      presenter[:show_hide_layout][:paginator] = 'hide'
     end
-    presenter[:expand_collapse_cells][:c] = 'collapse' if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
-    presenter[:expand_collapse_cells][:a] = @in_a_form ? 'collapse' : 'expand'
+    presenter[:show_hide_layout][:paginator] = 'hide' if @sb[:active_tab] == 'report_info' && x_node.split('-').length == 5 && !@in_a_form
+    presenter[:show_hide_layout][:toolbar] = @in_a_form ? 'hide' : 'show'
 
     # Rebuild the toolbars
     presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml

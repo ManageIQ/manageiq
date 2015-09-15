@@ -64,7 +64,7 @@ module MiqPolicyController::Rsop
       rsop_put_objects_in_sb(find_filtered(Storage, :all), :datastores)
       @rsop_events = MiqEventDefinitionSet.all.collect{|e|[e.description, e.id.to_s]}.sort
       @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
-      render :layout => "explorer"
+      render :layout => "application"
     end
   end
 
@@ -144,12 +144,12 @@ module MiqPolicyController::Rsop
     render :update do |page|
       if params[:action] == "rsop_toggle"
         if @sb[:rsop][:open] == true
-          page << "cfme_dynatree_toggle_expand('rsop_tree', true);"
+          page << "miqDynatreeToggleExpand('rsop_tree', true);"
         else
-          page << "cfme_dynatree_toggle_expand('rsop_tree', false)"
-          page << "cfmeDynatree_activateNodeSilently('rsop_tree', 'rsoproot');"
+          page << "miqDynatreeToggleExpand('rsop_tree', false)"
+          page << "miqDynatreeActivateNodeSilently('rsop_tree', 'rsoproot');"
           @sb[:rsop][:results].each do |r|
-            page << "cfmeDynatree_expandNode('rsop_tree', 'rsoproot-v_#{r[:id]}');"
+            page << "miqDynatreeExpandNode('rsop_tree', 'rsoproot-v_#{r[:id]}');"
           end
         end
       else

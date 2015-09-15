@@ -107,7 +107,7 @@ class VdlConnection
     $vim_log.info "VdlConnection.disconnect: #{@serverName}" if $vim_log
     @disk_lock.synchronize(:EX) do
       if !@vdl_connection
-        vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
+        $vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
       else
         __close_disks__
         VdlWrapper.__disconnect__(self)
@@ -153,7 +153,7 @@ class VdlConnection
     @vddk.running = true
     VixDiskLibApi.close(diskObj.handle)
     if !@vdl_connection
-      vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
+      $vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
     else
       @disks.delete(diskObj)
       nd = VdlWrapper.dec_server_disk_count
@@ -167,7 +167,7 @@ class VdlConnection
     raise VixDiskLibError,
           "VdlConnection::__close_disks__: exclusive disk lock not held" unless @disk_lock.sync_exclusive?
     if !@vdl_connection
-      vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
+      $vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
     else
       @disks.each(&:close)
     end

@@ -24,6 +24,24 @@ module VmOrTemplate::Operations::Power
     raw_suspend unless policy_prevented?(:request_vm_suspend)
   end
 
+  # All associated data and resources are kept but anything still in memory is not retained.
+  def raw_shelve
+    run_command_via_parent(:vm_shelve)
+  end
+
+  def shelve
+    raw_shelve unless policy_prevented?(:request_vm_shelve)
+  end
+
+  # Has to be in shelved state first. Data and resource associations are deleted.
+  def raw_shelve_offload
+    run_command_via_parent(:vm_shelve_offload)
+  end
+
+  def shelve_offload
+    raw_shelve_offload unless policy_prevented?(:request_vm_shelve_offload)
+  end
+
   # Pause keeps the VM in memory but does not give it CPU cycles.
   # Not supported in VMware, so it is the same as suspend
   def raw_pause

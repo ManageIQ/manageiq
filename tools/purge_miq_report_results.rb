@@ -19,7 +19,7 @@ if opts[:remaining_given]
 elsif opts[:date_given]
   Trollop::die :date, "must be a number with method (e.g. 6.months)" unless opts[:date].number_with_method?
   purge_mode  = :date
-  purge_value = opts[:date].to_i_with_method.ago.utc
+  purge_value = opts[:date].to_i_with_method.seconds.ago.utc
 else
   purge_mode, purge_value = MiqReportResult.purge_mode_and_value
 end
@@ -44,8 +44,14 @@ puts
 exit if opts[:mode] != "purge"
 
 log "Purging..."
-require 'progressbar'
-pbar = ProgressBar.new("Purging", count)
-MiqReportResult.purge(purge_mode, purge_value, opts[:window]) { |count, total| pbar.inc count } if count > 0
+require 'ruby-progressbar'
+pbar = ProgressBar.create(:title => "Purging", :total => count, :autofinish => false)
+
+if count > 0
+  MiqReportResult.purge(purge_mode, purge_value, opts[:window]) do |increment, _|
+    pbar.progress += increment
+  end
+end
+
 pbar.finish
 log "Purging...Complete"

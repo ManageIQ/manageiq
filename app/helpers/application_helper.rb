@@ -4,6 +4,7 @@ module ApplicationHelper
   include_concern 'FormTags'
   include Sandbox
   include CompressedIds
+  include TextualSummaryHelper
 
   def css_background_color
     (@css || {}).fetch_path(:background_color) || 'black'
@@ -106,16 +107,19 @@ module ApplicationHelper
   def url_for_record(record, action="show") # Default action is show
     @id = to_cid(record.id)
     if record.kind_of?(VmOrTemplate)
-      return url_for_db(controller_for_vm(model_for_vm(record)), action)
+      return url_for_db(controller_for_vm(model_for_vm(record)), action, record)
     elsif record.class.respond_to?(:db_name)
-      return url_for_db(record.class.db_name, action)
+      return url_for_db(record.class.db_name, action, record)
     else
-      return url_for_db(record.class.base_class.to_s, action)
+      return url_for_db(record.class.base_class.to_s, action, record)
     end
   end
 
   # Create a url for a record that links to the proper controller
-  def url_for_db(db, action="show") # Default action is show
+  def url_for_db(db, action="show", item = nil) # Default action is show
+    if item && EmsCloud === item
+      return ems_cloud_path(item.id)
+    end
     if @vm && ["Account", "User", "Group", "Patch", "GuestApplication"].include?(db)
       return url_for(:controller => "vm_or_template",
                      :action     => @lastaction,
@@ -160,6 +164,9 @@ module ApplicationHelper
     end
     if association == nil
       controller, action = db_to_controller(view.db)
+      if controller == "ems_cloud" && action == "show"
+        return ems_clouds_path
+      end
       if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent","SniaLocalFileSystem"].include?(view.db)
         return url_for(:controller=>controller, :action=>action, :id=>parent.id) + "?show="
       else
@@ -255,6 +262,10 @@ module ApplicationHelper
       action = "diagnostics_worker_selected"
     when "CloudNetwork", "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
       controller = request.parameters[:controller]
+    when /^ManageIQ::Providers::(\w+)Manager$/
+      controller = "ems_#{$1.underscore}"
+    when /^ManageIQ::Providers::(\w+)Manager::(\w+)$/
+      controller = "#{$2.underscore}_#{$1.underscore}"
     else
       controller = db.underscore
     end
@@ -398,7 +409,7 @@ module ApplicationHelper
   end
 
   def is_browser_ie?
-    browser_info(:name).downcase == "explorer"
+    browser_info(:name) == "explorer"
   end
 
   def is_browser_ie7?
@@ -406,17 +417,17 @@ module ApplicationHelper
   end
 
   def is_browser?(name)
-    browser_name = browser_info(:name).downcase
+    browser_name = browser_info(:name)
     name.kind_of?(Array) ? name.include?(browser_name) : (browser_name == name)
   end
 
   def is_browser_os?(os)
-    browser_os = browser_info(:os).downcase
+    browser_os = browser_info(:os)
     os.kind_of?(Array) ? os.include?(browser_os) : (browser_os == os)
   end
 
-  def browser_info(typ = :name)
-    session.fetch_path(:browser, typ.to_sym).to_s
+  def browser_info(typ)
+    session.fetch_path(:browser, typ).to_s
   end
 
   ############# Following methods generate JS lines for render page blocks
@@ -511,7 +522,7 @@ module ApplicationHelper
   end
 
   def javascript_for_ae_node_selection(id, prev_id, select)
-    "cfmeSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
+    "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
 
   # Generate lines of JS <text> for render page, replacing "~" with the <sub_array> elements
@@ -585,7 +596,7 @@ module ApplicationHelper
         %w(about chargeback exception miq_ae_automate_button miq_ae_class miq_ae_export
            miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
            miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
-           server_build).include?(@layout) ||
+           server_build container_topology).include?(@layout) ||
         (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
@@ -611,7 +622,7 @@ module ApplicationHelper
 
   # Format a column in a report view for display on the screen
   def format_col_for_display(view, row, col, tz = nil)
-    tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC" : Time.zone
+    tz ||= ["miqschedule"].include?(view.db.downcase) ? MiqServer.my_server.server_timezone : Time.zone
     celltext = view.format(col,
                            row[col],
                            :tz=>tz
@@ -783,8 +794,8 @@ module ApplicationHelper
     raise "Record is not ExtManagementSystem class" unless record.kind_of?(ExtManagementSystem)
     if record.kind_of?(ManageIQ::Providers::CloudManager)
       ManageIQ::Providers::CloudManager
-    elsif record.kind_of?(EmsContainer)
-      EmsContainer
+    elsif record.kind_of?(ManageIQ::Providers::ContainerManager)
+      ManageIQ::Providers::ContainerManager
     else
       ManageIQ::Providers::InfraManager
     end
@@ -1002,6 +1013,7 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
                         container_route container_project container_replicator container_image container_image_registry
+                        container_topology
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
@@ -1207,13 +1219,11 @@ module ApplicationHelper
     role_allows(:feature => start_page, :any => true)
   end
 
-  def allowed_filter_db?(db)
-    return false if db.start_with?('Container') && !get_vmdb_config[:product][:containers]
-    true
-  end
-
   def miq_tab_header(id, active = nil, options = {}, &block)
-    content_tag(:li, :class => "#{options[:class]} #{active == id ? 'active' : ''}", :id => "#{id}_tab") do
+    content_tag(:li,
+                :class     => "#{options[:class]} #{active == id ? 'active' : ''}",
+                :id        => "#{id}_tab",
+                'ng-click' => "changeAuthTab('#{id}');") do
       content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
         yield
       end
@@ -1275,7 +1285,7 @@ module ApplicationHelper
       elsif %w(queued waiting_to_start).include?(row["state"].downcase)
         image = "job-queued"
         img_attr.merge!(:title => "Status = Queued")
-      elsif !%w(finished queued waiting_to_start).include?(["state"].downcase)
+      elsif !%w(finished queued waiting_to_start).include?(row["state"].downcase)
         image = "job-running"
         img_attr.merge!(:title => "Status = Running")
       end
@@ -1298,6 +1308,8 @@ module ApplicationHelper
     elsif db == "ExtManagementSystem"
       ems = @targets_hash[from_cid(@id)]
       image = "vendor-#{ems.image_name}"
+    elsif db == "Tenant"
+      image = row['divisible'] ? "tenant" : "project"
     else
       image = db.underscore
     end
@@ -1368,5 +1380,23 @@ module ApplicationHelper
     end
   end
 
+  # Wrapper around jquery-rjs' remote_function which adds an extra .html_safe()
+  # Remove if merged: https://github.com/amatsuda/jquery-rjs/pull/3
+  def remote_function(options)
+    super(options).to_str
+  end
+
   attr_reader :big_iframe
+
+  def appliance_name
+    MiqServer.my_server.name
+  end
+
+  def rbac_common_feature_for_buttons(pressed)
+    # return feature that should be checked for the button that came in
+    case pressed
+    when "rbac_project_add", "rbac_tenant_add"
+      "rbac_tenant_add"
+    end
+  end
 end

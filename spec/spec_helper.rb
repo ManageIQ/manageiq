@@ -1,4 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+
+require 'coveralls'
+Coveralls.wear!('rails') { add_filter("/spec/") }
+
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/autorun'
@@ -11,13 +15,6 @@ require 'vcr'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 # include the gems/pending matchers
 Dir[File.join(GEMS_PENDING_ROOT, "spec/support/custom_matchers/*.rb")].each { |f| require f }
-
-begin
-  require 'simplecov'
-  SimpleCov.start "rails"
-rescue LoadError
-  # won't run coverage if gem not loaded
-end
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -67,6 +64,7 @@ RSpec.configure do |config|
   config.include AuthHelper,  :type => :helper
   config.include AuthRequestHelper, :type => :request
   config.include UiConstants, :type => :view
+  config.include ConfigurationHelper
 
   config.include AutomationSpecHelper, :type => :automation
   config.include PresenterSpecHelper, :type => :presenter, :example_group => {
@@ -79,6 +77,11 @@ RSpec.configure do |config|
   end
   config.after(:each) do
     EvmSpecHelper.clear_caches
+  end
+  if ENV["CI"] && ENV["TEST_SUITE"] == "vmdb"
+    config.after(:suite) do
+      require Rails.root.join("spec/coverage_helper.rb")
+    end
   end
 
   if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/}) ||

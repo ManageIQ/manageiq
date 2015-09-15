@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20141021103820_remove_miq_search_vdi_instances.rb")
+require_migration
 
 describe RemoveMiqSearchVdiInstances do
   let(:miq_search_stub) { migration_stub(:MiqSearch) }

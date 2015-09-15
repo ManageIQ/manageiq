@@ -44,7 +44,7 @@ module Ext4
     'L',  'version_hi',   # Upper 32-bits of version (for 64-bit version)
   ])
   SIZEOF_INODE = INODE.size
-  
+
   SYM_LNK_SIZE          = 60
   MAX_READ              = 4294967296
   DEFAULT_BLOCK_SIZE    = 1024
@@ -112,7 +112,7 @@ module Ext4
     IF_EA_INODE   = 0x00200000  # Inode used for large EA
     IF_EOFBLOCKS  = 0x00400000  # Blocks allocated beyond EOF
     IF_FLAGS = (IF_SECURE_DEL | IF_KEEP_COPY | IF_COMPRESS | IF_SYNCHRO | IF_IMMUTABLE | IF_APPEND | IF_NO_DUMP | IF_NO_ATIME | IF_DIRTY | IF_COMPR_CL | IF_NOCOMPR | IF_ECOMPR | IF_HASH_INDEX | IF_AFS_DIR | IF_JOURNAL | IF_NOTAIL | IF_DIRSYNC | IF_TOPDIR | IF_HUGE_FILE | IF_EXTENTS | IF_EA_INODE | IF_EOFBLOCKS)
-    
+
     FLAG_STR = {
       IF_SECURE_DEL => 'IF_SECURE_DEL',
       IF_KEEP_COPY  => 'IF_KEEP_COPY',
@@ -210,7 +210,6 @@ module Ext4
 
     def write(buf, len = buf.length)
       raise "Ext4::Inode.write: Write functionality is not yet supported on Ext4."
-      @dirty = true
     end
 
 
@@ -420,7 +419,7 @@ module Ext4
     def block_pointers_via_double_indirect(double_indirect_block_num, bplen = 0)
       block_pointers = []
       if (bplen + block_pointers.length) < expected_blocks
-        read_block_pointers(double_indirect_block_num).each do |single_indirect_block_num| 
+        read_block_pointers(double_indirect_block_num).each do |single_indirect_block_num|
           if (bplen + block_pointers.length) < expected_blocks
             block_pointers.concat block_pointers_via_single_indirect(single_indirect_block_num, bplen + block_pointers.length)
           end

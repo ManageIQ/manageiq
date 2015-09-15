@@ -55,7 +55,7 @@
               = link_to(_("Pods (%s)") % num_groups,
                   {:action  => 'show', :id => @record, :display => 'container_groups'},
                   :title => _("Show Pods"))
-        - if role_allows(:feature => "container_route_show_list") && @record.kind_of?(EmsOpenshift)
+        - if role_allows(:feature => "container_route_show_list") && @record.kind_of?(ManageIQ::Providers::Openshift::ContainerManager)
           - num_groups = @record.number_of(:container_routes)
           - if num_groups == 0
             %li.disabled
@@ -65,7 +65,7 @@
               = link_to(_("Container Routes (%s)") % num_groups,
                   {:action  => 'show', :id => @record, :display => 'container_routes'},
                   :title => _("Show Container Routes"))
-        - if role_allows(:feature => "container_project_show_list") && @record.kind_of?(EmsOpenshift)
+        - if role_allows(:feature => "container_project_show_list")
           - num_groups = @record.number_of(:container_projects)
           - if num_groups == 0
             %li.disabled

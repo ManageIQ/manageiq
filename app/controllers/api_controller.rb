@@ -58,11 +58,15 @@ class ApiController < ApplicationController
   include_concern 'PolicyActions'
   include_concern 'Providers'
   include_concern 'Events'
+  include_concern 'Features'
   include_concern 'ProvisionRequests'
   include_concern "Rates"
-  include_concern "ReportResults"
+  include_concern "Reports"
   include_concern 'RequestTasks'
+  include_concern 'ResourceActions'
+  include_concern 'Roles'
   include_concern 'ServiceCatalogs'
+  include_concern 'ServiceDialogs'
   include_concern 'ServiceRequests'
   include_concern 'Software'
   include_concern 'ServiceTemplates'
@@ -86,6 +90,7 @@ class ApiController < ApplicationController
   ATTR_TYPES = {
     :time      => %w(expires_on),
     :url       => %w(href),
+    :resource  => %w(image_href),
     :encrypted => %w(password) |
                   ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
                   ::Vmdb::ConfigurationEncoder::PASSWORD_FIELDS

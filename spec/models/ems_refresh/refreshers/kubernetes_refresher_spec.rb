@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::KubernetesRefresher do
+describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   before(:each) do
     MiqServer.stub(:my_zone).and_return("default")
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token")
@@ -56,7 +56,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
   def assert_ems
     @ems.should have_attributes(
       :port => "6443",
-      :type => "EmsKubernetes"
+      :type => "ManageIQ::Providers::Kubernetes::ContainerManager"
     )
   end
 
@@ -71,13 +71,26 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
   def assert_specific_container
     @container = Container.find_by_name("heapster")
     @container.should have_attributes(
-      # :ems_ref       => "a7566742-e73f-11e4-b613-001a4a5f4a02_heapster_kubernetes/heapster:v0.9",
+      # :ems_ref     => "a7566742-e73f-11e4-b613-001a4a5f4a02_heapster_kubernetes/heapster:v0.9",
       :name          => "heapster",
       :restart_count => 2,
-      # :backing_ref   => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
+      :state         => "running",
+      :last_state    => "terminated",
+    # :backing_ref => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
     )
 
+    [
+      @container.started_at,
+      @container.finished_at,
+      @container.last_started_at,
+      @container.last_finished_at,
+    ].each do |date_|
+      (date_.kind_of?(ActiveSupport::TimeWithZone) || date_.kind_of?(NilClass)).should be_true
+    end
+
     @container.container_image.name.should == "kubernetes/heapster"
+    @container.container_definition.command.should == "/heapster --source\\=kubernetes:https://kubernetes "\
+                                                      "--sink\\=influxdb:http://monitoring-influxdb:80"
 
     @container2 = Container.find_by_name("influxdb")
     @container2.should have_attributes(
@@ -97,6 +110,10 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @container2.container_image.name.should == "kubernetes/heapster_influxdb"
     @container2.container_definition.should_not be_nil
     @container2.ext_management_system.should == @ems
+
+    @container.container_node.should have_attributes(
+      :name => "10.35.0.169"
+    )
   end
 
   def assert_specific_container_group
@@ -129,6 +146,13 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @containergroup.container_replicator.should ==
       ContainerReplicator.find_by(:name => "monitoring-heapster-controller")
     @containergroup.ext_management_system.should == @ems
+
+    # Check pod condition name is "Ready" with status "True"
+    @containergroupconditions = ContainerCondition.where(:container_entity_type => "ContainerGroup")
+    @containergroupconditions.first.should have_attributes(
+      :name   => "Ready",
+      :status => "True"
+    )
   end
 
   def assert_specific_container_node
@@ -139,13 +163,19 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :lives_on_id                => @openstack_vm.id,
       :container_runtime_version  => "docker://1.5.0",
       :kubernetes_kubelet_version => "v1.0.0-dirty",
-      :kubernetes_proxy_version   => "v1.0.0-dirty"
+      :kubernetes_proxy_version   => "v1.0.0-dirty",
+      :max_container_groups       => 40
     )
-    @containernode.container_node_conditions.count.should == 1
-    @containernode.container_node_conditions.first.should have_attributes(
+
+    @containernodeconditions = ContainerCondition.where(:container_entity_type => "ContainerNode")
+    @containernodeconditions.count.should be == 2
+    @containernodeconditions.first.should have_attributes(
       :name   => "Ready",
       :status => "True"
     )
+
+    @containernode.labels.count.should == 1
+
     @containernode.computer_system.operating_system.should have_attributes(
       :distribution   => "Fedora 20 (Heisenbug)",
       :kernel_version => "3.18.9-100.fc20.x86_64"
@@ -169,6 +199,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :lives_on_id   => @ovirt_vm.id,
     )
     @containernode.lives_on.should == @ovirt_vm
+    @containernode.containers.count.should == 0
   end
 
   def assert_specific_container_service
@@ -204,6 +235,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     )
 
     @containersrv.ext_management_system.should == @ems
+    @containersrv.container_nodes.count.should == 0
   end
 
   def assert_specific_container_replicator
@@ -220,6 +252,11 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @group.container_replicator.should_not be_nil
     @group.container_replicator.name.should == "monitoring-influx-grafana-controller"
     @replicator.ext_management_system.should == @ems
+
+    @replicator.container_nodes.count.should == 1
+    @replicator.container_nodes.first.should have_attributes(
+      :name => "10.35.0.169"
+    )
   end
 
   def assert_specific_container_project

@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140428162159_rename_miq_group_id_column_in_users.rb")
+require_migration
 
 describe RenameMiqGroupIdColumnInUsers do
   migration_context :up do

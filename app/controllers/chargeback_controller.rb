@@ -87,7 +87,7 @@ class ChargebackController < ApplicationController
     set_form_locals
     session[:changed] = false
 
-    render :layout => "explorer" unless request.xml_http_request?
+    render :layout => "application" unless request.xml_http_request?
   end
 
   def set_form_locals
@@ -393,7 +393,7 @@ class ChargebackController < ApplicationController
           self.x_node = "reports-#{rep.id}"
         else
           @sb[:rpt_menu].each_with_index do |lvl1,i|
-            if lvl1[0]  == session[:customer_name]
+            if lvl1[0] == current_tenant.name
               lvl1[1].each_with_index do |lvl2,k|
                 if lvl2[0].downcase == "custom"
                   @sb[:active_node]["report"] = "reports-#{i}-#{k}-#{lvl2[1].length-1}_#{rep.id}"
@@ -756,7 +756,7 @@ class ChargebackController < ApplicationController
 
     # FIXME
     #  if params[:action].ends_with?("_delete")
-    #    page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}', '<%= x_node %>');"
+    #    page << "miqDynatreeActivateNodeSilently('#{x_active_tree.to_s}', '<%= x_node %>');"
     #  end
     #presenter[:select_node] = x_node if params[:action].ends_with?("_delete")
     presenter[:osf_node] = x_node
@@ -768,7 +768,7 @@ class ChargebackController < ApplicationController
         presenter[:set_visible_elements][:center_buttons_div] = true
         presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
       end
-      presenter[:expand_collapse_cells][:a] = c_buttons ? 'expand' : 'collapse'
+      presenter[:show_hide_layout][:toolbar] = c_buttons ? 'show' : 'hide'
       presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
       presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
     when :cb_assignments_tree
@@ -778,10 +778,10 @@ class ChargebackController < ApplicationController
       if c_buttons && c_xml
         presenter[:set_visible_elements][:center_buttons_div] = true
         presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
-        presenter[:expand_collapse_cells][:a] = 'expand'
+        presenter[:show_hide_layout][:toolbar] = 'show'
       else
         presenter[:set_visible_elements][:center_buttons_div] = false
-        presenter[:expand_collapse_cells][:a] = 'collapse'
+        presenter[:show_hide_layout][:toolbar] = 'hide'
       end
       presenter[:update_partials][:main_div] = r[:partial => 'reports_list']
       if @html
@@ -797,8 +797,8 @@ class ChargebackController < ApplicationController
         (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if ["chargeback_rates_copy", "chargeback_rates_edit", "chargeback_rates_new"].include?(@sb[:action]) ||
           (x_active_tree == :cb_assignments_tree && ["Compute", "Storage"].include?(x_node.split('-').last))
-        presenter[:expand_collapse_cells][:a] = 'collapse'
-        presenter[:expand_collapse_cells][:c] = 'expand' # incase it was collapsed for summary screen, and incase there were no records on show_list
+        presenter[:show_hide_layout][:toolbar] = 'hide'
+        presenter[:show_hide_layout][:paginator] = 'show' # incase it was hidden for summary screen, and incase there were no records on show_list
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         locals = {:record_id => @edit[:rec_id]}
@@ -815,8 +815,8 @@ class ChargebackController < ApplicationController
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
         presenter[:set_visible_elements][:buttons_on] = false
-        presenter[:expand_collapse_cells][:a] = 'expand'
-        presenter[:expand_collapse_cells][:c] = 'collapse'
+        presenter[:show_hide_layout][:toolbar] = 'show'
+        presenter[:show_hide_layout][:paginator] = 'hide'
       end
     else
       presenter[:set_visible_elements][:form_buttons_div] = false
@@ -824,10 +824,10 @@ class ChargebackController < ApplicationController
       if (x_active_tree == :cb_assignments_tree && x_node == "root") ||
          (x_active_tree == :cb_reports_tree     && !@report) ||
          (x_active_tree == :cb_rates_tree       && x_node == "root")
-        presenter[:expand_collapse_cells][:a] = 'collapse'
+        presenter[:show_hide_layout][:toolbar] = 'hide'
         presenter[:set_visible_elements][:pc_div_1] = false
       end
-      presenter[:expand_collapse_cells][:c] = 'expand'
+      presenter[:show_hide_layout][:paginator] = 'show'
     end
 
     if @record && !@in_a_form

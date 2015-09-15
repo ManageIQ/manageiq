@@ -7,7 +7,7 @@
   - when "email"
     %h3
       = _('E-mail Settings')
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _('From E-mail Address')
@@ -29,7 +29,7 @@
   - when "set_custom_attribute"
     %h3
       = _('Custom Attribute Settings')
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _('Attribute Name')
@@ -49,7 +49,7 @@
   - when "tag"
     %h3
       = _('Applied Tag')
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _('Tag to Apply:')
@@ -59,7 +59,7 @@
     %hr
     %h3
       = _('Select a Tag to Apply')
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         .col-md-10
           #action_tags_treebox
@@ -68,7 +68,7 @@
               :tree_name                   => "action_tags_tree",
               :json_tree                   => @cat_tree,
               :click_url                   => "/miq_policy/action_tag_pressed/",
-              :onclick                     => "cfmeOnClick_TagCat",
+              :onclick                     => "miqOnClickTagCat",
               :enable_tree_images          => false,
               :exp_tree                    => false,
               :cfme_changes_check          => true,
@@ -76,7 +76,7 @@
   - when "create_snapshot"
     %h3
       = _("Snapshot Settings")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _("Snapshot Name")
@@ -88,7 +88,7 @@
   - when "delete_snapshots_by_age"
     %h3
       = _("Snapshot Age Settings")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _("Delete if Older than")
@@ -100,7 +100,7 @@
   - when "reconfigure_memory"
     %h3
       = _("Reconfigure Memory")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _("Memory Size")
@@ -113,7 +113,7 @@
   - when "reconfigure_cpus"
     %h3
       = _("Reconfigure CPU")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _("Number of CPU's")
@@ -126,7 +126,7 @@
   - when "custom_automation"
     %h3
       = _("Custom Automation")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         .col-md-10
           = render(:partial => "layouts/ae_resolve_options",
@@ -136,7 +136,7 @@
   - when "evaluate_alerts"
     %h3
       = _("Select Alerts to be Evaluated")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         .col-md-10
           %table#formtest.form{:width => "100%"}
@@ -179,7 +179,7 @@
   - when "snmp_trap"
     %h3
       = _("SNMP Trap Settings")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = title_for_host
@@ -250,7 +250,7 @@
   - when "assign_scan_profile"
     %h3
       = _("Analysis Profiles")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _("Analysis Profiles")
@@ -263,7 +263,7 @@
   - when "inherit_parent_tags"
     %h3
       = _("Inherit Tags Settings")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _("Parent Type")
@@ -287,7 +287,7 @@
   - when "remove_tags"
     %h3
       = _("Remove Tags Settings")
-    %form.form-horizontal
+    .form-horizontal
       .form-group
         %label.control-label.col-md-2
           = _("Categories")
