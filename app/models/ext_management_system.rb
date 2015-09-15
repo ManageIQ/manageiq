@@ -412,8 +412,8 @@ class ExtManagementSystem < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = :hosts
 
-  def perf_rollup_parent(interval_name=nil)
-    MiqRegion.my_region unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [MiqRegion.my_region].compact unless interval_name == 'realtime'
   end
 
   def perf_capture_enabled
