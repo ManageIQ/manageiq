@@ -130,6 +130,36 @@ describe EmsContainerController do
         ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer").should == "valid-token"
       end
     end
+
+    context "#button" do
+      before(:each) do
+        set_user_privileges
+        FactoryGirl.create(:vmdb_database)
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it "when VM Migrate is pressed for unsupported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_microsoft)
+        post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should be_true
+        assigns(:flash_array).first[:message].should include('does not apply')
+      end
+
+      it "when VM Migrate is pressed for supported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_vmware)
+        post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should_not be_true
+      end
+
+      it "when VM Migrate is pressed for supported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_vmware)
+        post :button, :pressed => "vm_edit", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should_not be_true
+      end
+    end
   end
 end
 

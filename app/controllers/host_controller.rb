@@ -552,7 +552,17 @@ class HostController < ApplicationController
         if @redirect_controller
           if ["host_miq_request_new","#{pfx}_clone","#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
             render :update do |page|
-              page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :prov_type=>@prov_type, :prov_id=>@prov_id, :org_controller=>@org_controller, :escape=>false
+              if flash_errors?
+                page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+              else
+                page.redirect_to :controller     => @redirect_controller,
+                                 :action         => @refresh_partial,
+                                 :id             => @redirect_id,
+                                 :prov_type      => @prov_type,
+                                 :prov_id        => @prov_id,
+                                 :org_controller => @org_controller,
+                                 :escape         => false
+              end
             end
           else
             render :update do |page|

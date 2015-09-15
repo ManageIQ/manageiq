@@ -150,21 +150,7 @@ class StorageController < ApplicationController
       end
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new","#{pfx}_clone",
                                                    "#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
-      if @redirect_controller
-        if ["#{pfx}_clone","#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
-          render :update do |page|
-            page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :prov_type=>@prov_type, :prov_id=>@prov_id
-          end
-        else
-          render :update do |page|
-            page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id
-          end
-        end
-      else
-        render :update do |page|
-          page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
-        end
-      end
+      render_or_redirect_partial(pfx)
     else
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div

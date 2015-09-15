@@ -157,14 +157,14 @@ class ResourcePoolController < ApplicationController
     return if ["resource_pool_tag","resource_pool_protect"].include?(params[:pressed]) && @flash_array == nil   # Tag screen showing, so return
 
     if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-        add_flash(_("Button not yet implemented"), :error)
-        @refresh_partial = "layouts/flash_msg"
-        @refresh_div     = "flash_msg_div"
-      elsif @flash_array && @lastaction == "show"
-        @record = identify_record(params[:id])
-        @refresh_partial = "layouts/flash_msg"
-        @refresh_div     = "flash_msg_div"
-      end
+      add_flash(_("Button not yet implemented"), :error)
+      @refresh_partial = "layouts/flash_msg"
+      @refresh_div     = "flash_msg_div"
+    elsif @flash_array && @lastaction == "show"
+      @record = identify_record(params[:id])
+      @refresh_partial = "layouts/flash_msg"
+      @refresh_div     = "flash_msg_div"
+    end
 
     if !@flash_array.nil? && params[:pressed] == "resource_pool_delete" && @single_delete
       render :update do |page|
@@ -172,21 +172,7 @@ class ResourcePoolController < ApplicationController
       end
     elsif ["#{pfx}_miq_request_new","#{pfx}_migrate","#{pfx}_clone",
            "#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
-      if @redirect_controller
-        if ["#{pfx}_clone","#{pfx}_migrate","#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
-          render :update do |page|
-            page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :prov_type=>@prov_type, :prov_id=>@prov_id
-          end
-        else
-          render :update do |page|
-            page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id
-          end
-        end
-      else
-        render :update do |page|
-          page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
-        end
-      end
+      render_or_redirect_partial(pfx)
     else
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
