@@ -32,48 +32,48 @@ class GitWorktree
     true
   end
 
-  def add(path, data, commit_sha = nil, default_entry_keys = {})
+  def add(path, data, default_entry_keys = {})
     entry = {}
     entry[:path] = path
     ENTRY_KEYS.each { |key| entry[key] = default_entry_keys[key] if default_entry_keys.key?(key) }
     entry[:oid]  = @repo.write(data, :blob)
     entry[:mode] ||= DEFAULT_FILE_MODE
     entry[:mtime] ||= Time.now
-    current_index(commit_sha).add(entry)
+    current_index.add(entry)
   end
 
-  def remove(path, commit_sha = nil)
-    current_index(commit_sha).remove(path)
+  def remove(path )
+    current_index.remove(path)
   end
 
-  def remove_dir(path, commit_sha = nil)
-    current_index(commit_sha).remove_dir(path)
+  def remove_dir(path)
+    current_index.remove_dir(path)
   end
 
-  def file_exists?(path, commit_sha = nil)
-    !!find_entry(path, commit_sha)
+  def file_exists?(path)
+    !!find_entry(path)
   end
 
-  def directory_exists?(path, commit_sha = nil)
-    entry = find_entry(path, commit_sha)
+  def directory_exists?(path)
+    entry = find_entry(path)
     entry && entry[:type] == :tree
   end
 
-  def read_file(path, commit_sha = nil)
-    read_entry(fetch_entry(path, commit_sha))
+  def read_file(path)
+    read_entry(fetch_entry(path))
   end
 
   def read_entry(entry)
     @repo.lookup(entry[:oid]).content
   end
 
-  def entries(path, commit_sha = nil)
-    tree = get_tree(path, commit_sha)
+  def entries(path)
+    tree = get_tree(path)
     tree.find_all.collect { |e| e[:name] }
   end
 
-  def nodes(path, commit_sha = nil)
-    tree = path.empty? ? lookup_commit_tree(commit_sha || @commit_sha) : get_tree(path, commit_sha)
+  def nodes(path)
+    tree = path.empty? ? lookup_commit_tree : get_tree(path)
     entries = tree.find_all
     entries.each do |entry|
       entry[:full_name] = File.join(@base_name, path, entry[:name])
@@ -100,39 +100,39 @@ class GitWorktree
     {:updated_on => commit.time.gmtime, :updated_by => commit.author[:name]}
   end
 
-  def file_list(commit_sha = nil)
-    tree = lookup_commit_tree(commit_sha || @commit_sha)
+  def file_list
+    tree = lookup_commit_tree
     return [] unless tree
     tree.walk(:preorder).collect { |root, entry| "#{root}#{entry[:name]}" }
   end
 
-  def find_entry(path, commit_sha = nil)
-    get_tree_entry(path, commit_sha)
+  def find_entry(path)
+    get_tree_entry(path)
   end
 
-  def mv_file_with_new_contents(old_file, new_path, new_data, commit_sha = nil, default_entry_keys = {})
-    add(new_path, new_data, commit_sha, default_entry_keys)
-    remove(old_file, commit_sha)
+  def mv_file_with_new_contents(old_file, new_path, new_data, default_entry_keys = {})
+    add(new_path, new_data, default_entry_keys)
+    remove(old_file)
   end
 
-  def mv_file(old_file, new_file, commit_sha = nil)
+  def mv_file(old_file, new_file)
     entry = current_index[old_file]
     return unless entry
     entry[:path] = new_file
-    current_index(commit_sha).add(entry)
-    remove(old_file, commit_sha)
+    current_index.add(entry)
+    remove(old_file)
   end
 
-  def mv_dir(old_dir, new_dir, commit_sha = nil)
+  def mv_dir(old_dir, new_dir)
     raise GitWorktreeException::DirectoryAlreadyExists, new_dir if find_entry(new_dir)
     old_dir = fix_path_mv(old_dir)
     new_dir = fix_path_mv(new_dir)
-    updates = current_index(commit_sha).entries.select { |entry| entry[:path].start_with?(old_dir) }
+    updates = current_index.entries.select { |entry| entry[:path].start_with?(old_dir) }
     updates.each do |entry|
       entry[:path] = entry[:path].sub(old_dir, new_dir)
-      current_index(commit_sha).add(entry)
+      current_index.add(entry)
     end
-    current_index(commit_sha).remove_dir(old_dir)
+    current_index.remove_dir(old_dir)
   end
 
   private
@@ -219,8 +219,8 @@ class GitWorktree
     end
   end
 
-  def fetch_entry(path, commit_sha = nil)
-    find_entry(path, commit_sha).tap do |entry|
+  def fetch_entry(path)
+    find_entry(path).tap do |entry|
       raise GitWorktreeException::GitEntryMissing, path unless entry
     end
   end
@@ -231,23 +231,23 @@ class GitWorktree
     dir_name
   end
 
-  def get_tree(path, commit_sha = nil)
-    return lookup_commit_tree(commit_sha || @commit_sha) if path.empty?
-    entry = get_tree_entry(path, commit_sha)
+  def get_tree(path)
+    return lookup_commit_tree if path.empty?
+    entry = get_tree_entry(path)
     raise GitWorktreeException::GitEntryMissing, path unless entry
     raise GitWorktreeException::GitEntryNotADirectory, path  unless entry[:type] == :tree
     @repo.lookup(entry[:oid])
   end
 
-  def lookup_commit_tree(commit_sha = nil)
+  def lookup_commit_tree
     return nil unless @repo.branches['master']
-    ct = commit_sha ? @repo.lookup(commit_sha) : @repo.branches['master'].target
+    ct = @commit_sha ? @repo.lookup(@commit_sha) : @repo.branches['master'].target
     ct.tree if ct
   end
 
-  def get_tree_entry(path, commit_sha = nil)
+  def get_tree_entry(path)
     path = path[1..-1] if path[0] == '/'
-    tree = lookup_commit_tree(commit_sha || @commit_sha)
+    tree = lookup_commit_tree
     begin
       entry             = tree.path(path)
       entry[:full_name] = File.join(@base_name, path)
@@ -258,10 +258,10 @@ class GitWorktree
     entry
   end
 
-  def current_index(commit_sha = nil)
+  def current_index
     @current_index ||= Rugged::Index.new.tap do |index|
       unless @repo.empty?
-        tree = lookup_commit_tree(commit_sha || @commit_sha)
+        tree = lookup_commit_tree
         raise ArgumentError, "Cannot locate commit tree" unless tree
         @current_tree_oid = tree.oid
         index.read_tree(tree)
