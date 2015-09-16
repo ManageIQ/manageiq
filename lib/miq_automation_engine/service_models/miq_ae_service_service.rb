@@ -18,6 +18,7 @@ module MiqAeMethodService
     expose :direct_service_children,   :association => true
     expose :indirect_service_children, :association => true
     expose :parent_service,            :association => true
+    expose :tenant,                    :association => true
     expose :custom_keys,               :method => :miq_custom_keys
     expose :custom_get,                :method => :miq_custom_get
     expose :custom_set,                :method => :miq_custom_set, :override_return => true

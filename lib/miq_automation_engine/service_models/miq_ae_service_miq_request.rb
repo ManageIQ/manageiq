@@ -8,6 +8,7 @@ module MiqAeMethodService
     expose :resource,          :association => true
     expose :source,            :association => true
     expose :destination,       :association => true
+    expose :tenant,            :association => true
     expose :authorized?
     expose :approve,   :override_return => true
     expose :deny,      :override_return => true
