@@ -36,11 +36,7 @@ class MiqWorker::Runner
   end
 
   def self.corresponding_model
-    if parent == Object
-      @corresponding_model ||= Object.const_get("Miq#{self.name}")
-    else
-      parent
-    end
+    parent
   end
 
   def self.interrupt_signals
