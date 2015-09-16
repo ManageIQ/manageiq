@@ -79,11 +79,11 @@ describe ApplicationHelper do
             end
             Vmdb::PermissionStores.initialize!
 
-            Menu::DefaultMenu.services_menu_section.visible?(nil).should be_true
-            Menu::DefaultMenu.cloud_inteligence_menu_section.visible?(nil).should be_false
+            Menu::DefaultMenu.services_menu_section.visible?.should be_true
+            Menu::DefaultMenu.cloud_inteligence_menu_section.visible?.should be_false
 
             User.stub_chain(:current_user, :role_allows?).and_return(true)
-            Menu::DefaultMenu.cloud_inteligence_menu_section.visible?(nil).should be_false
+            Menu::DefaultMenu.cloud_inteligence_menu_section.visible?.should be_false
           end
         ensure
           Vmdb::PermissionStores.instance = current_store
@@ -118,12 +118,12 @@ describe ApplicationHelper do
     context "when with :main_tab_id" do
       include UiConstants
       it "and entitled" do
-        Menu::DefaultMenu.services_menu_section.visible?(User.current_userid).should be_true
+        Menu::DefaultMenu.services_menu_section.visible?.should be_true
       end
 
       it "and not entitled" do
         @user.stub(:role_allows_any? => false)
-        Menu::DefaultMenu.services_menu_section.visible?(User.current_userid).should be_false
+        Menu::DefaultMenu.services_menu_section.visible?.should be_false
       end
     end
 

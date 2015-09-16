@@ -9,8 +9,8 @@ module Menu
       @name.call
     end
 
-    def visible?(userid)
-      ApplicationHelper.role_allows_intern userid, rbac_feature
+    def visible?
+      ApplicationHelper.role_allows_intern(rbac_feature)
     end
 
     def url

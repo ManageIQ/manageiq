@@ -8,7 +8,8 @@ module Menu
       Array(items).collect(&:feature).compact
     end
 
-    def visible?(userid)
+    def visible?
+      userid = User.current_userid
       store = Vmdb::PermissionStores.instance
       auth  = store.can?(id) && User.current_user.role_allows_any?(:identifiers => features)
       $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], main tab [#{id}]")
