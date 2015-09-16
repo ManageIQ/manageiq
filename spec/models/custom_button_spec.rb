@@ -70,7 +70,7 @@ describe CustomButton do
           h[:user_id].should       == @user2.id
           h[:object_type].should   == @vm.class.base_class.name
           h[:object_id].should     == @vm.id
-          h[:attrs].should         == @ae_attributes
+          expect(h[:attrs]).to include(@ae_attributes)
           h[:instance_name].should == @ae_name
         end
       end
