@@ -93,7 +93,7 @@
             - else
               = options[field]
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
-            -#  Display notes if available
+            -# Display notes if available
             = field_hash[:notes]
         .col-md-2
           - if field == :owner_email
@@ -470,8 +470,9 @@
               - checked = options[field] && options[field][0] == f[0]
               - current_div = "#{@edit[:new][:current_tab_key]}_div"
               - onclick = remote_function(:with => "miqSerializeField('#{current_div}', '#{field_id}')", :url => url, :loading => "miqSparkle(true);", :complete => "miqSparkle(false);")
-              %input{:type => "radio", :id => field_id, :value => f[0], :name => field_id, :checked => checked, :onclick => disabled ? "" : onclick}
-              = f[1]
+              .radio-inline
+                %input{:type => "radio", :id => field_id, :value => f[0], :name => field_id, :checked => checked, :onclick => disabled ? "" : onclick}
+                = f[1]
           - else
             = options[field][1]
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
@@ -506,9 +507,9 @@
               miqInitSelectPicker();
               miqSelectPickerEvent("start_min", "#{url}")
           - else
-            = "#{options[:start_hour]}h"
+            #{options[:start_hour]}h
             &nbsp;
-            = "#{options[:start_min]}m"
+            #{options[:start_min]}m
       - elsif [:sysprep_upload_file].include?(field)
         .col-md-8
           - path = Rails.application.routes.recognize_path request.referrer
