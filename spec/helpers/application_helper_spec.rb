@@ -63,6 +63,34 @@ describe ApplicationHelper do
       login_as  @user
     end
 
+    context "permission store" do
+      it 'consults the permission store' do
+        begin
+          current_store = Vmdb::PermissionStores.instance
+          Tempfile.open('foo') do |tf|
+            menu = Menu::DefaultMenu.services_menu_section
+
+            tf.write Psych.dump [menu.id]
+            tf.close
+
+            Vmdb::PermissionStores.configure do |config|
+              config.backend = 'yaml'
+              config.options[:filename] = tf.path
+            end
+            Vmdb::PermissionStores.initialize!
+
+            Menu::DefaultMenu.services_menu_section.visible?.should be_true
+            Menu::DefaultMenu.cloud_inteligence_menu_section.visible?.should be_false
+
+            User.stub_chain(:current_user, :role_allows?).and_return(true)
+            Menu::DefaultMenu.cloud_inteligence_menu_section.visible?.should be_false
+          end
+        ensure
+          Vmdb::PermissionStores.instance = current_store
+        end
+      end
+    end
+
     context "when with :feature" do
       context "and :any" do
         it "and entitled" do
