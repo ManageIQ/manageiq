@@ -37,15 +37,18 @@
       .form-group
         %label.col-md-2.control-label{"for" => "textInput-markup"}
           = _("Starting Date")
-        .col-md-2
-          %p.input-group
+        .col-md-3
+          .input-group.date
             = datepicker_input_tag("start_date", nil,
                                    "class"             => "form-control",
                                    "required"          => true,
+                                   "b-datepicker"      => true,
                                    "ng-model"          => "scheduleModel.start_date",
                                    "miq-calendar"      => true,
                                    "miq-cal-date-from" => "date_from",
                                    "checkchange"       => "")
+            %span.input-group-addon{"data-toggle" => "datepicker"}
+              %span.fa.fa-calendar
       .form-group
         %label.col-md-2.control-label{"for" => "textInput-markup"}
           = _("Starting Time")
@@ -57,13 +60,13 @@
                        options_for_select(Array.new(24) { |i| i }),
                        "ng-model"    => "scheduleModel.start_hour",
                        "checkchange" => "",
-                       "data-width"  => "auto",
+                       :class        => "selectWidth",
                        "selectpicker-for-select-tag" => "")
           %span h
           = select_tag("start_min",
                        options_for_select(Array.new(12) { |i| i * 5 }),
                        "ng-model"    => "scheduleModel.start_min",
                        "checkchange" => "",
-                       "data-width"  => "auto",
+                       :class        => "selectWidth",
                        "selectpicker-for-select-tag" => "")
           %span m
