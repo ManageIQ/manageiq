@@ -159,6 +159,18 @@ class Tenant < ActiveRecord::Base
     !!login_logo_file_name
   end
 
+  def visible_domains
+    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id)).order('priority DESC')
+  end
+
+  def enabled_domains
+    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id), :enabled => true).order('priority DESC')
+  end
+
+  def editable_domains
+    MiqAeDomain.where(:tenant_id => id, :system => false).order('priority DESC')
+  end
+
   # The default tenant is the tenant to be used when
   # the url does not map to a known domain or subdomain
   #

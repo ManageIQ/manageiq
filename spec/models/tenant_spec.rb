@@ -410,8 +410,43 @@ describe Tenant do
   context "#miq_ae_domains" do
     let(:t1) { FactoryGirl.create(:tenant, :name => "T1", :parent => root_tenant) }
     let(:t2) { FactoryGirl.create(:tenant, :name => "T2", :parent => root_tenant) }
-    let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1) }
-    let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2) }
+    let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1, :name => 'DOM1', :priority => 20) }
+    let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2, :name => 'DOM2', :priority => 40) }
+    let(:t1_1) { FactoryGirl.create(:tenant, :name => 'T1_1', :domain => 'a.a.com', :parent => t1) }
+    let(:t2_2) { FactoryGirl.create(:tenant, :name => 'T2_1', :domain => 'b.b.com', :parent => t2) }
+
+    context "visibility" do
+      before do
+        dom1
+        dom2
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM0', :priority => 10,
+                         :tenant_id => root_tenant.id, :enabled => false)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM3', :priority => 3,
+                           :tenant_id => t1_1.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM4', :priority => 5,
+                           :tenant_id => t2_2.id)
+      end
+
+      it "#visibile_domains sub_tenant" do
+        t1_1
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM1 DOM0 DOM3))
+      end
+
+      it "#enabled_domains sub_tenant" do
+        t1_1
+        expect(t1_1.enabled_domains.collect(&:name)).to eq(%w(DOM1 DOM3))
+      end
+
+      it "#editable domains sub_tenant" do
+        t1_1
+        expect(t1_1.editable_domains.collect(&:name)).to eq(%w(DOM3))
+      end
+
+      it "#visible_domains tenant" do
+        t2
+        expect(t2.visible_domains.collect(&:name)).to eq(%w(DOM2 DOM0))
+      end
+    end
 
     it "tenant domains" do
       dom1
