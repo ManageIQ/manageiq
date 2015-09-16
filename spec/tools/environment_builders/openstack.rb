@@ -10,6 +10,7 @@ require_relative 'openstack/services/network/builder'
 require_relative 'openstack/services/compute/builder'
 require_relative 'openstack/services/volume/builder'
 require_relative 'openstack/services/image/builder'
+require_relative 'openstack/services/orchestration/builder'
 
 include Openstack::InteractionMethods
 
@@ -63,6 +64,12 @@ compute = Openstack::Services::Compute::Builder.build_all(@ems, project)
 volume = Openstack::Services::Volume::Builder.build_all(@ems, project)
 image = Openstack::Services::Image::Builder.build_all(@ems, project)
 
+# Neutron specific, also means > Havana
+if @networking == :neutron
+  # Heat started in grizzly, but it was first version, so it would be pain to test, also we would require different
+  # template without network link in it. So testing it only > Havana
+  orchestration = Openstack::Services::Orchestration::Builder.build_all(@ems, project, network)
+end
 #
 # Create all servers
 #

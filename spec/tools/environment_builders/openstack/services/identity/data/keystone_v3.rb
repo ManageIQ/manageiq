@@ -17,7 +17,7 @@ module Openstack
           end
 
           def roles
-            %w(admin)
+            %w(admin heat_stack_owner)
           end
         end
       end
