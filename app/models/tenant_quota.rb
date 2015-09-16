@@ -33,6 +33,8 @@ class TenantQuota < ActiveRecord::Base
 
   validates :name, :inclusion => {:in => NAMES}
   validates :unit, :value, :presence => true
+  validates :value, :numericality => { :greater_than => 0 }
+  validates :warn_value, :numericality => { :greater_than => 0 }, :if => "warn_value.present?"
 
   before_validation(:on => :create) do
     self.unit = default_unit unless unit.present?
