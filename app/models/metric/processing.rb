@@ -17,7 +17,18 @@ module Metric::Processing
     :cpu_usagemhz_rate_average
   ]
 
-  VALID_PROCESS_TARGETS = [VmOrTemplate, Host, AvailabilityZone, EmsCluster, ExtManagementSystem, MiqRegion, MiqEnterprise]
+  VALID_PROCESS_TARGETS = [
+    VmOrTemplate,
+    Container,
+    ContainerGroup,
+    Host,
+    ContainerNode,
+    AvailabilityZone,
+    EmsCluster,
+    ExtManagementSystem,
+    MiqRegion,
+    MiqEnterprise
+  ]
 
   def self.process_derived_columns(obj, attrs, ts = nil)
     raise "object #{obj} is not one of #{VALID_PROCESS_TARGETS.collect(&:name).join(", ")}" unless VALID_PROCESS_TARGETS.any? { |t| obj.kind_of?(t) }

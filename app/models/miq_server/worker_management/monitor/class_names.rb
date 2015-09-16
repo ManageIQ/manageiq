@@ -4,6 +4,8 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
   MONITOR_CLASS_NAMES = %w{
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
+    ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
+    ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Openstack::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker
@@ -49,6 +51,8 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsMetricsProcessorWorker
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
+    ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
+    ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Openstack::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker
