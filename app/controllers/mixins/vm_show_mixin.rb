@@ -1,7 +1,131 @@
 module VmShowMixin
   extend ActiveSupport::Concern
 
+  def tabledata
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    set_active_elements(allowed_features.first)
+    @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
+    model = case x_active_tree.to_s
+            when "images_filter_tree"
+              "ManageIQ::Providers::CloudManager::Template"
+            when "images_tree"
+              "ManageIQ::Providers::CloudManager::Template"
+            when "instances_filter_tree"
+              "ManageIQ::Providers::CloudManager::Vm"
+            when "instances_tree"
+              "ManageIQ::Providers::CloudManager::Vm"
+            when "vandt_tree"
+              "VmOrTemplate"
+            when "vms_instances_filter_tree"
+              "Vm"
+            when "templates_images_filter_tree"
+              "MiqTemplate"
+            when "templates_filter_tree"
+              "ManageIQ::Providers::InfraManager::Template"
+            when "vms_filter_tree"
+              "ManageIQ::Providers::InfraManager::Vm"
+            end
+    perpage = params[:length] != "NaN" ? params[:length].to_i : 20
+
+    options = {:model => model, :page => params[:start].to_i / perpage + 1}
+    if x_node == "root"
+      options[:where_clause] = ["vms.type IN (?)", ManageIQ::Providers::InfraManager::Vm.subclasses.collect(&:name) + ManageIQ::Providers::InfraManager::Template.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
+    else
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "Hash"
+        options[:where_clause] = ["vms.type IN (?)", ManageIQ::Providers::InfraManager::Vm.subclasses.collect(&:name) + ManageIQ::Providers::InfraManager::Template.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
+        if id == "orph"
+          options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ORPHANED_CONDITIONS)
+        elsif id == "arch"
+          options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ARCHIVED_CONDITIONS)
+        end
+      elsif TreeBuilder.get_model_for_prefix(@nodetype) != "MiqSearch"
+        rec = TreeBuilder.get_model_for_prefix(@nodetype).constantize.find(from_cid(id))
+        options.merge!(:association => "#{@nodetype == "az" ? "vms" : "all_vms_and_templates"}", :parent => rec)
+      end
+    end
+    db     = model.to_s
+    dbname = db.gsub('::', '_').downcase # Get db name as text
+    db_sym = dbname.to_sym # Get db name as symbol
+
+    parent      = options[:parent] || nil             # Get passed in parent object
+    association = options[:association] || nil        # Get passed in association (i.e. "users")
+
+    # Build sorting keys - Use association name, if available, else dbname
+    # need to add check for miqreportresult, need to use different sort in savedreports/report tree for saved reports list
+    sort_prefix = association || (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname)
+    sortcol_sym = "#{sort_prefix}_sortcol".to_sym
+    sortdir_sym = "#{sort_prefix}_sortdir".to_sym
+
+    # Get the view for this db or use the existing one in the session
+    @view = get_db_view(db.gsub('::', '_'), :association => association)
+
+    # Check for changed settings in params
+    @settings[:perpage][perpage_key(dbname)] = perpage
+
+    # Get the current sort info, else get defaults from the view
+    @sortcol = params[:order]['0']['column'].to_i
+    @sortdir = params[:order]['0']['dir'].upcase
+
+    session[sortcol_sym] = @sortcol
+    session[sortdir_sym] = @sortdir
+
+    @items_per_page = controller_name.downcase == "miq_policy" ? ONE_MILLION : get_view_pages_perpage(dbname)
+    @items_per_page = ONE_MILLION if 'vm' == db_sym.to_s && controller_name == 'service'
+
+    @current_page = options[:page]
+
+    stxt = params[:search][:value].gsub("_", "`_") # Escape underscores
+    stxt.gsub!("%", "`%") # and percents
+
+    stxt = if stxt.starts_with?("*") && stxt.ends_with?("*") # Replace beginning/ending * chars with % for SQL
+             "%#{stxt[1..-2]}%"
+           elsif stxt.starts_with?("*")
+             "%#{stxt[1..-1]}"
+           elsif stxt.ends_with?("*")
+             "#{stxt[0..-2]}%"
+           else
+             "%#{stxt}%"
+           end
+
+    if MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :case_sensitive_name_search)
+      sub_filter = ["#{@view.db_class.table_name}.#{@view.col_order.first} like ? escape '`'", stxt]
+    else
+      sub_filter = ["lower(#{@view.db_class.table_name}.#{@view.col_order.first}) like ? escape '`'", stxt.downcase] unless @display
+    end
+
+    # Save the paged_view_search_options for download buttons to use later
+    session[:paged_view_search_options] = {
+      :parent              => parent ? minify_ar_object(parent) : nil,
+      :parent_method       => options[:parent_method],
+      :targets_hash        => true,
+      :association         => association,
+      :filter              => get_view_filter(options),
+      :sub_filter          => sub_filter,
+      :page                => options[:all_pages] ? 1 : @current_page,
+      :per_page            => options[:all_pages] ? ONE_MILLION : @items_per_page,
+      :where_clause        => get_view_where_clause(options),
+      :named_scope         => options[:named_scope],
+      :display_filter_hash => options[:display_filter_hash],
+      :userid              => session[:userid]
+    }
+
+    # Call paged_view_search to fetch records and build the view.table and additional attrs
+    @view.table, attrs = @view.paged_view_search(session[:paged_view_search_options])
+
+    # adding filters/conditions for download reports
+    if attrs && attrs[:user_filters] && attrs[:user_filters]["managed"]
+      @view.user_categories = attrs[:user_filters]["managed"]
+    end
+
+    @view.extras[:total_count] = attrs[:total_count] if attrs[:total_count]
+    @view.extras[:auth_count]  = attrs[:auth_count]  if attrs[:auth_count]
+
+    @pages = get_view_pages(dbname, @view)
+    @parent = parent
+  end
+
   def explorer
+    @tabledata = true
     @explorer = true
     @lastaction = "explorer"
     @timeline = @timeline_filter = true    #need to set these to load timelines on vm show screen

@@ -205,6 +205,10 @@ function miqToolbarOnClick(id) {
     if (button.url_parms.match("_div$")) {
       if (miqDomElementExists('miq_grid_checks')) {
         params = "miq_grid_checks=" + $('#miq_grid_checks').val();
+      } else if ($('#' + button.url_parms + ' .datatable').length == 1) {
+        params = $.map($('#' + button.url_parms + ' .datatable').find('.selected'), function (k, v) {
+          return 'check_' + ManageIQ.dataTable.row(v).data().id + '=1';
+        }).join('&');
       } else {
         params = miqSerializeForm(button.url_parms);
       }
