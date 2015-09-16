@@ -136,7 +136,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @services.count.should == 1
     @services.first.should have_attributes(
       # :ems_ref => "49981230-e1b7-11e4-b7dc-001a4a5f4a02",
-      :name    => "monitoring-heapster"
+      :name         => "monitoring-heapster",
+      :service_type => "ClusterIP"
     )
 
     # Check the relation to containers
@@ -218,9 +219,10 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @confs = @confs.first
     @confs.should have_attributes(
       :name        => nil,
+      :protocol    => "TCP",
       :port        => 443,
       :target_port => "443",
-      :protocol    => "TCP"
+      :node_port   => 0
     )
 
     # Check group relation

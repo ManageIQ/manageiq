@@ -175,6 +175,7 @@ module ManageIQ::Providers::Kubernetes
         # TODO: We might want to change portal_ip to clusterIP
         :portal_ip        => service.spec.clusterIP,
         :session_affinity => service.spec.sessionAffinity,
+        :service_type     => service.spec.type,
 
         :labels           => parse_labels(service),
         :selector_parts   => parse_selector_parts(service),
@@ -439,9 +440,10 @@ module ManageIQ::Providers::Kubernetes
       {
         :ems_ref     => "#{service_id}_#{port_config.port}_#{port_config.targetPort}",
         :name        => port_config.name,
+        :protocol    => port_config.protocol,
         :port        => port_config.port,
         :target_port => port_config.targetPort,
-        :protocol    => port_config.protocol
+        :node_port   => port_config.nodePort,
       }
     end
 
