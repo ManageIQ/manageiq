@@ -233,7 +233,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsInfra)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_cluster

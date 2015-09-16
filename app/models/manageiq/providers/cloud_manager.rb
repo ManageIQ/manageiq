@@ -7,6 +7,11 @@ class CloudManager < BaseManager
   require_dependency 'manageiq/providers/cloud_manager/provision_workflow'
   require_dependency 'manageiq/providers/cloud_manager/vm'
 
+  class << model_name
+    define_method(:route_key) { "ems_clouds" }
+    define_method(:singular_route_key) { "ems_cloud" }
+  end
+
   has_many :availability_zones,            :foreign_key => :ems_id, :dependent => :destroy
   has_many :flavors,                       :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_tenants,                 :foreign_key => :ems_id, :dependent => :destroy

@@ -1,7 +1,6 @@
 module ContainerSummaryHelper
   def textual_ems
-    textual_link(@record.ext_management_system, :as         => ManageIQ::Providers::ContainerManager,
-                                                :controller => 'ems_container')
+    textual_link(@record.ext_management_system)
   end
 
   def textual_container_project

@@ -140,11 +140,11 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsCloud)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_ems_infra
-    textual_link(@record.ext_management_system.try(:provider).try(:infra_ems), :as => EmsInfra)
+    textual_link(@record.ext_management_system.try(:provider).try(:infra_ems))
   end
 
   def textual_cluster

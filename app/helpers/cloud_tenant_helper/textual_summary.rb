@@ -19,7 +19,7 @@ module CloudTenantHelper::TextualSummary
   # Items
   #
   def textual_ems_cloud
-    textual_link(@record.ext_management_system, :as => EmsCloud)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_security_groups
