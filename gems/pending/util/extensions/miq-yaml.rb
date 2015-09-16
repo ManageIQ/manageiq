@@ -26,7 +26,7 @@ module Psych
 
           # We need to migrate all old YAML before we can remove this
           #### Reapply the instance variables, see https://github.com/tenderlove/psych/issues/43
-          elsif key.to_s[0..5] == IVAR_MARKER
+          elsif key.to_s.start_with?(IVAR_MARKER)
             hash.instance_variable_set(key.to_s[6..-1], accept(v))
 
           else
