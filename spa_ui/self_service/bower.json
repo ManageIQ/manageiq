@@ -31,7 +31,7 @@
     "angular-ui-router": "~0.2.0",
     "angular-mocks": "~1.3.0",
     "patternfly": "~2.2.0",
-    "angular-patternfly": "~2.2.0",
+    "angular-patternfly": "~2.2.1",
     "angular-bootstrap": "~0.13.0",
     "angular-base64": "~2.0.5"
   },
@@ -41,6 +41,8 @@
   "overrides": {
     "patternfly": {
       "main": [
+        "components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
+        "components/bootstrap-select/dist/js/bootstrap-select.js",
         "dist/js/patternfly.js",
         "components/c3/c3.js",
         "components/d3/d3.js",
