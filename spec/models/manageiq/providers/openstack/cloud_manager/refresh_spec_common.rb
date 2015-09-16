@@ -82,7 +82,7 @@ module Openstack
     def default_security_groups_count
       # There is default security group per each tenant
       count = identity_data.projects.count
-      # Neutron puts there one extra security group, that is noit assosiated to any tenant, but it's
+      # Neutron puts there one extra security group, that is not associated to any tenant, but it's
       # not there in kilo_keystone_v3, weird
       count += 1 if neutron_networking? && !keystone_v3_identity?
       count

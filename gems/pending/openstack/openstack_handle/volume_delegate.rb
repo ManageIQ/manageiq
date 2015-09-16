@@ -27,7 +27,7 @@ module OpenstackHandle
         @tenant_id ||= current_tenant['id']
       else
         # Seems like keystone v3 has string in current_tenant
-        @tenant_id = @os_handle.accessible_tenants.detect { |x| x.name == current_tenant }.id
+        @tenant_id ||= @os_handle.accessible_tenants.detect { |x| x.name == current_tenant }.id
       end
       q = get_quota(@tenant_id).body['quota_set']
       # looks like the quota id and the tenant id are the same,

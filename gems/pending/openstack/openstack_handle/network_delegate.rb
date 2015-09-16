@@ -19,7 +19,7 @@ module OpenstackHandle
         @tenant_id ||= current_tenant['id']
       else
         # Seems like keystone v3 has string in current_tenant
-        @tenant_id = @os_handle.accessible_tenants.detect { |x| x.name == current_tenant }.try(:id)
+        @tenant_id ||= @os_handle.accessible_tenants.detect { |x| x.name == current_tenant }.try(:id)
       end
 
       return nil unless @tenant_id
