@@ -1,12 +1,10 @@
 require "spec_helper"
 
-require 'workers/worker_base'
-
-describe WorkerBase do
+describe MiqWorker::Runner do
   context "#start" do
     before do
-      WorkerBase.any_instance.stub(:worker_initialization)
-      @worker_base = WorkerBase.new
+      MiqWorker::Runner.any_instance.stub(:worker_initialization)
+      @worker_base = MiqWorker::Runner.new
       @worker_base.stub(:prepare)
     end
 

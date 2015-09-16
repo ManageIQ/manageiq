@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner do
 
     before do
       ManageIQ::Providers::Redhat::InfraManager.any_instance.stub(:authentication_check => [true, ""])
-      WorkerBase.any_instance.stub(:worker_initialization)
+      MiqWorker::Runner.any_instance.stub(:worker_initialization)
     end
 
     it "numeric port" do

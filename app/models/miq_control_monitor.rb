@@ -1,4 +1,6 @@
 class MiqControlMonitor < MiqWorker
+  require_dependency 'miq_control_monitor/runner'
+
   include PerEmsWorkerMixin
 
   self.required_roles = ["control"]

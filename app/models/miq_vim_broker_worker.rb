@@ -1,4 +1,6 @@
 class MiqVimBrokerWorker < MiqWorker
+  require_dependency 'miq_vim_broker_worker/runner'
+
   self.required_roles         = %w{
                                     ems_inventory
                                     ems_metrics_collector

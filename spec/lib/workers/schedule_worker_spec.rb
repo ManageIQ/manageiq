@@ -1,8 +1,6 @@
 require "spec_helper"
 
-require 'workers/schedule_worker'
-
-describe ScheduleWorker do
+describe MiqScheduleWorker::Runner do
   context ".new" do
     before(:each) do
       @server_guid = MiqUUID.new_guid
@@ -14,12 +12,12 @@ describe ScheduleWorker do
       @worker_guid = MiqUUID.new_guid
       @worker = FactoryGirl.create(:miq_schedule_worker, :guid => @worker_guid, :miq_server_id => @miq_server.id)
 
-      ScheduleWorker.any_instance.stub(:initialize_rufus)
-      ScheduleWorker.any_instance.stub(:sync_active_roles)
-      ScheduleWorker.any_instance.stub(:sync_config)
-      ScheduleWorker.any_instance.stub(:set_connection_pool_size)
+      MiqScheduleWorker::Runner.any_instance.stub(:initialize_rufus)
+      MiqScheduleWorker::Runner.any_instance.stub(:sync_active_roles)
+      MiqScheduleWorker::Runner.any_instance.stub(:sync_config)
+      MiqScheduleWorker::Runner.any_instance.stub(:set_connection_pool_size)
 
-      @schedule_worker = ScheduleWorker.new(:guid => @worker_guid)
+      @schedule_worker = MiqScheduleWorker::Runner.new(:guid => @worker_guid)
     end
 
     context "with a stuck dispatch in each zone" do
@@ -50,7 +48,7 @@ describe ScheduleWorker do
         @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
 
         MiqQueue.where(@cond).count.should == 2
-        ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout.to_i)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout.to_i)
         MiqQueue.where(@cond).count.should == 0
       end
 
@@ -60,7 +58,7 @@ describe ScheduleWorker do
         @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
 
         MiqQueue.where(@cond).count.should == 2
-        ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
         MiqQueue.where(@cond).count.should == 0
       end
 
@@ -69,14 +67,14 @@ describe ScheduleWorker do
         MiqQueue.any_instance.should_receive(:check_for_timeout).once do |prefix, grace, timeout|
           timeout.should == @stale_timeout * 3
         end
-        ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
       end
 
       it "check_for_dispatch calls check_for_timeout with threshold for inactive worker" do
         MiqQueue.any_instance.should_receive(:check_for_timeout).once do |prefix, grace, timeout|
             timeout.should == @stale_timeout
         end
-        ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
       end
 
       it "check_for_dispatch calls check_for_timeout which deletes for in-active worker" do
@@ -86,7 +84,7 @@ describe ScheduleWorker do
         cond_active = @cond.dup
         cond_active[:handler_id] = @worker1.id
         MiqQueue.where(@cond).count.should == 2
-        ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
         MiqQueue.where(@cond).count.should == 1
         MiqQueue.where(cond_active).count.should == 1
       end
@@ -196,7 +194,7 @@ describe ScheduleWorker do
 
         context "calling check_roles_changed" do
           before(:each) do
-            # ScheduleWorker.any_instance.stub(:schedules_for_scheduler_role)
+            # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
             @schedule_worker.stub(:worker_settings).and_return(Hash.new(5.minutes))
             @schedule_worker.instance_variable_set(:@schedules, {:scheduler => []})
 

@@ -1,4 +1,6 @@
 class MiqSmisRefreshWorker < MiqWorker
+  require_dependency 'miq_smis_refresh_worker/runner'
+
   include PerStorageManagerTypeWorkerMixin
 
   self.required_roles = ["storage_inventory"]
