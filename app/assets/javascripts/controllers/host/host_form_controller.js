@@ -27,7 +27,7 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
     $scope.afterGet = false;
     $scope.formId = hostFormId;
     $scope.saveable = miqService.saveable;
-    $scope.validateClicked = miqService.validateClicked;
+    $scope.validateClicked = miqService.validateWithAjax;
     $scope.formFieldsUrl = $attrs.formFieldsUrl;
     $scope.createUrl = $attrs.createUrl;
     $scope.updateUrl = $attrs.updateUrl;

@@ -25,6 +25,7 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
     $scope.date_from = null;
     $scope.formId = scheduleFormId;
     $scope.afterGet = false;
+    $scope.validateClicked = miqService.validateWithAjax;
     $scope.modelCopy = angular.copy( $scope.scheduleModel );
     $scope.saveable = miqService.saveable;
 
