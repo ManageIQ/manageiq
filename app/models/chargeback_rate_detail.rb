@@ -2,11 +2,17 @@ class ChargebackRateDetail < ActiveRecord::Base
   belongs_to :chargeback_rate
   validates_numericality_of :rate
 
+
   def cost(value)
     return 0.0 unless self.enabled?
-    value = 1 if group == 'fixed'
-
-    value * hourly_rate
+    value = 1 if self.group == 'fixed'
+    unless self.chargeback_tier_id.nil?
+      tier = ChargebackTier.where(guid: self.chargeback_tier_id).take
+      unless tier.nil?
+      self.rate = tier.rate(value)
+      end
+    end
+    value * self.hourly_rate()
   end
 
   def hourly_rate

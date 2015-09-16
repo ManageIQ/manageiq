@@ -22,13 +22,13 @@ describe ChargebackRateDetail do
     per_time = 'daily'
     per_unit = 'megabytes'
 
-    tier_detail1 = FactoryGirl.create(:chargeback_tier_detail, :start => 1.0, :end => 2.0, :rate => 0.1  )
-    tier_detail2 = FactoryGirl.create(:chargeback_tier_detail, :start => 2.0, :end => 4.0, :rate => 0.15)
-    tier_detail3 = FactoryGirl.create(:chargeback_tier_detail, :start => 4.0, :end => 8.0, :rate => 0.2)
-    default_rate = 0.5
-    tier_details = [tier_detail1,tier_detail2,tier_detail3]
-    tier = FactoryGirl.create(:chargeback_tier, :tier_details => tier_details, :default_rate => default_rate)
-    cbd = FactoryGirl.create(:chargeback_rate_detail,:tier => tier, :per_time => per_time, :per_unit => per_unit, :enabled => true)
+    tier = FactoryGirl.create(:chargeback_tier, :rate_below => 0.0, :rate_above => 0.5)
+    tier_id=tier.id
+    tier_detail1 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 1.0, :end => 2.0, :tier_rate => 0.1  )
+    tier_detail2 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 2.0, :end => 4.0, :tier_rate => 0.15)
+    tier_detail3 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 4.0, :end => 8.0, :tier_rate => 0.2)
+
+    cbd = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tier_id => tier_id, :per_time => per_time, :per_unit => per_unit, :enabled => true)
     cbd.cost(cvalue).should == cvalue * cbd.hourly_rate
 
     cbd.group = 'fixed'
