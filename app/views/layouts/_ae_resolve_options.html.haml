@@ -21,27 +21,27 @@
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent('instance_name', "#{url}")
-    .form-group
-      %label.col-md-2.control-label
-        = _("Message")
-      .col-md-8
-        = text_field_tag("object_message",
-                         resolve[:new][:object_message],
-                         :maxlength         => MAX_NAME_LEN,
-                         :class             => "form-control",
-                         "data-miq_observe" => {:interval => '.5',
-                                                :url      => url}.to_json)
-        - unless is_browser_ie?
-          = javascript_tag("if (!$('#description').length) #{javascript_focus('object_message')}")
-    .form-group
-      %label.col-md-2.control-label
-        = _("Request")
-      .col-md-8
-        = text_field_tag("object_request",
-                         resolve[:new][:object_request],
-                         :maxlength         => MAX_NAME_LEN,
-                         :class            => "form-control",
-                         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+.form-group
+  %label.col-md-2.control-label
+    = _("Message")
+  .col-md-8
+    = text_field_tag("object_message",
+                     resolve[:new][:object_message],
+                     :maxlength         => MAX_NAME_LEN,
+                     :class             => "form-control",
+                     "data-miq_observe" => {:interval => '.5',
+                                            :url      => url}.to_json)
+    - unless is_browser_ie?
+      = javascript_tag("if (!$('#description').length) #{javascript_focus('object_message')}")
+.form-group
+  %label.col-md-2.control-label
+    = _("Request")
+  .col-md-8
+    = text_field_tag("object_request",
+                     resolve[:new][:object_request],
+                     :maxlength         => MAX_NAME_LEN,
+                     :class            => "form-control",
+                     "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 - if form_action != "miq_action"
   - if ae_custom_button
     %hr
