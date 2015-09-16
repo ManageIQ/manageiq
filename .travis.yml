@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-- "2.2.3"
+- "2.2"
 sudo: false
 cache: bundler
 env:
@@ -21,6 +21,7 @@ addons:
   postgresql: '9.4'
 before_install:
 - "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
+- travis_retry gem install bundler -v ">= 1.8.4"
 - "[[ -f certs/v2_key.dev ]] && cp certs/v2_key.dev certs/v2_key"
 - "[[ -n \"$GEM\" ]] || echo \"1\" > REGION"
 - "[[ -n \"$GEM\" ]] || cp config/database.pg.yml config/database.yml"
