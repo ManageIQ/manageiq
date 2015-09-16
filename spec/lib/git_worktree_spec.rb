@@ -12,12 +12,12 @@ describe GitWorktree do
       @deleted_names = %w(A A/File1.YamL)
       @conflict_file = 'A/File1.YamL'
       @master_url = "file://#{@repo_path}"
-      options = {:path     => @repo_path,
-                 :username => "user1",
-                 :email    => "user1@example.com",
-                 :bare     => true,
-                 :new      => true}
-      @ae_db = GitWorktree.new(options)
+      @repo_options = {:path     => @repo_path,
+                       :username => "user1",
+                       :email    => "user1@example.com",
+                       :bare     => true,
+                       :new      => true}
+      @ae_db = GitWorktree.new(@repo_options)
       @original_commit = add_files_to_bare_repo(@filenames)
     end
 
@@ -145,7 +145,10 @@ describe GitWorktree do
       @ae_db.remove_dir("A")
       @ae_db.save_changes("directories deleted")
       @ae_db.file_list.should match_array(@filenames + @dirnames - @deleted_names)
-      @ae_db.file_list(@original_commit).should match_array(@filenames + @dirnames)
+      @repo_options[:commit_sha] = @original_commit
+      @repo_options[:new] = false
+      @orig_db = GitWorktree.new(@repo_options)
+      @orig_db.file_list.should match_array(@filenames + @dirnames)
     end
 
     it "can delete directories" do
