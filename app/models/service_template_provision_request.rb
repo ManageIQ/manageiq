@@ -1,5 +1,4 @@
 class ServiceTemplateProvisionRequest < MiqRequest
-
   TASK_DESCRIPTION  = 'Service_Template_Provisioning'
   SOURCE_CLASS_NAME = 'ServiceTemplate'
   ACTIVE_STATES     = %w{ migrated } + self.base_class::ACTIVE_STATES
@@ -39,13 +38,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
     req_task_attrs['options'][:pass] = idx
   end
 
-  def self.create_request(values, requester_id, auto_approve=false)
-    event_message = "#{TASK_DESCRIPTION} requested by <#{requester_id}> for ServiceTemplate:#{values[:src_id]}"
-    super(values, requester_id, auto_approve, request_types.first, SOURCE_CLASS_NAME, event_message)
-  end
-
-  def self.update_request(request, values, requester_id)
-    event_message = "#{TASK_DESCRIPTION} request updated by <#{requester_id}> for ServiceTemplate:#{values[:src_id]}"
-    super(request, values, requester_id, SOURCE_CLASS_NAME, event_message)
+  def my_records
+    "#{self.class::SOURCE_CLASS_NAME}:#{get_option(:src_id)}"
   end
 end

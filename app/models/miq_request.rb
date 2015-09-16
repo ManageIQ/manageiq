@@ -414,8 +414,7 @@ class MiqRequest < ActiveRecord::Base
     end
   end
 
-  # Helper method when not using workflow
-  def self.create_request(values, requester_id, auto_approve, request_type, target_class, event_message)
+  def self.create_request(values, requester_id, auto_approve = false, request_type = request_types.first)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
     request          = create(:options => values, :userid => requester_id, :request_type => request_type)
     request.save!  # Force validation errors to raise now
@@ -423,29 +422,41 @@ class MiqRequest < ActiveRecord::Base
     request.set_description
     request.create_request
 
-    event_name = "#{name.underscore}_created"
-    AuditEvent.success(:event => event_name, :target_class => target_class, :userid => requester_id, :message => event_message)
+    request.log_request_success(requester_id, :created)
 
     request.call_automate_event_queue("request_created")
-    request.approve(requester_id, "Auto-Approved") if auto_approve == true
+    request.approve(requester_id, "Auto-Approved") if auto_approve
+    request.reload if auto_approve
     request
   end
 
   # Helper method when not using workflow
-  def self.update_request(request, values, requester_id, target_class, event_message)
+  def self.update_request(request, values, requester_id)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
     request.update_attribute(:options, request.options.merge(values))
+    request.set_description(true)
 
-    event_name = "#{name.underscore}_updated"
-    AuditEvent.success(
-      :event        => event_name,
-      :target_class => target_class,
-      :userid       => requester_id,
-      :message      => event_message,
-    )
+    request.log_request_success(requester_id, :updated)
 
     request.call_automate_event_queue("request_updated")
     request
+  end
+
+  def log_request_success(requester_id, mode)
+    requester_id = requester_id.userid if requester_id.respond_to?(:userid)
+    status_message = mode == :created ? "requested" : "request updated"
+    event_message = "#{self.class::TASK_DESCRIPTION} #{status_message} by <#{requester_id}> for #{my_records}"
+
+    AuditEvent.success(
+      :event        => event_name(mode),
+      :target_class => self.class::SOURCE_CLASS_NAME,
+      :userid       => requester_id,
+      :message      => event_message,
+    )
+  end
+
+  def event_name(mode)
+    "#{self.class.name.underscore}_#{mode}"
   end
 
   def request_pending_approval?
@@ -458,6 +469,10 @@ class MiqRequest < ActiveRecord::Base
 
   def request_denied?
     approval_state == "denied"
+  end
+
+  def my_records
+    "#{self.class::SOURCE_CLASS_NAME}:#{requested_task_idx.inspect}"
   end
 
   private
