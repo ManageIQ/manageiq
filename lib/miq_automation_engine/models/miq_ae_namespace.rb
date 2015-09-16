@@ -2,6 +2,7 @@ class MiqAeNamespace < ActiveRecord::Base
   acts_as_tree
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include TenancyMixin
 
   belongs_to :parent,        :class_name => "MiqAeNamespace",  :foreign_key => :parent_id
   has_many   :ae_namespaces, :class_name => "MiqAeNamespace",  :foreign_key => :parent_id,    :dependent => :destroy

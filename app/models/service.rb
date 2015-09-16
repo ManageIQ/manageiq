@@ -20,6 +20,7 @@ class Service < ActiveRecord::Base
   include CustomAttributeMixin
   include NewWithTypeStiMixin
   include ProcessTasksMixin
+  include TenancyMixin
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'

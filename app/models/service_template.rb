@@ -3,6 +3,7 @@ class ServiceTemplate < ActiveRecord::Base
   include ServiceMixin
   include OwnershipMixin
   include NewWithTypeStiMixin
+  include TenancyMixin
   include_concern 'Filter'
 
   belongs_to :tenant
