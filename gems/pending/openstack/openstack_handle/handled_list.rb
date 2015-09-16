@@ -19,7 +19,8 @@ module OpenstackHandle
                               :all).list
     rescue Excon::Errors::Forbidden => err
       # It can happen user doesn't have rights to read some tenant, in that case log warning but continue refresh
-      _log.warn "Forbidden to read the tenant, Message=#{err.message}"
+      _log.warn "Forbidden to read the project: #{@os_handle.project_name}, for collection type: #{collection_type}, "\
+                "in provider: #{@os_handle.address}. Message=#{err.message}"
       _log.warn err.backtrace.join("\n")
       []
     end
