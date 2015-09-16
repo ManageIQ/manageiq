@@ -27,6 +27,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   include EventMixin
   include ProcessTasksMixin
+  include TenancyMixin
 
   has_many :ems_custom_attributes, -> { where "source = 'VC'" }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
 
