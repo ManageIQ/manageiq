@@ -24,7 +24,7 @@ module ManageIQ::Providers
           # TODO(lsmola) We need a support of GET /{tenant_id}/stacks/detail in FOG, it was implemented here
           # https://review.openstack.org/#/c/35034/, but never documented in API reference, so right now we
           # can't get list of detailed stacks in one API call.
-          @orchestration_service.stacks_for_accessible_tenants(:show_nested => true).collect(&:details)
+          @orchestration_service.handled_list(:stacks, :show_nested => true).collect(&:details)
         rescue Excon::Errors::Forbidden
           # Orchestration service is detected but not open to the user
           $log.warn("Skip refreshing stacks because the user cannot access the orchestration service")
