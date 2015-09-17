@@ -573,7 +573,7 @@ class MiqPolicyController < ApplicationController
       end
 
       tree = @trees["#{name}_tree".to_sym]
-      presenter[:replace_partials]["#{tree.name}_tree_div".to_sym] = r[
+      presenter[:replace_partials]["#{tree.name}_div".to_sym] = r[
         :partial => "shared/tree",
         :locals  => {
           :tree => tree,
