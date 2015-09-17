@@ -1499,8 +1499,12 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "add"
-      parent_id = @edit[:typ] == "MiqAeDomain" ? nil : from_cid(x_node.split('-')[1])
-      add_ae_ns = @edit[:typ].constantize.new(:parent_id => parent_id)
+      parent_id, tenant = if @edit[:typ] == "MiqAeDomain"
+                            [nil, current_tenant]
+                          else
+                            [from_cid(x_node.split('-')[1]), nil]
+                          end
+      add_ae_ns = @edit[:typ].constantize.new(:parent_id => parent_id, :tenant => tenant)
       ns_set_record_vars(add_ae_ns)      # Set the record variables, but don't save
       if add_ae_ns.valid? && !flash_errors? && add_ae_ns.save
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => add_ae_ns.class.name), :name  => add_ae_ns.name})
@@ -1749,7 +1753,7 @@ class MiqAeClassController < ApplicationController
       domains = @edit[:new][:domain_order].reverse!.collect do |domain|
         MiqAeDomain.find_by_name(domain.split(' (Locked)').first).id
       end
-      MiqAeDomain.reset_priority_by_ordered_ids(domains)
+      MiqAeDomain.reset_priority_by_ordered_ids(domains, current_tenant)
       add_flash(_("Priority Order was saved"))
       @sb[:action] = @in_a_form = @edit = session[:edit] = nil  # clean out the saved info
       replace_right_cell([:ae])
