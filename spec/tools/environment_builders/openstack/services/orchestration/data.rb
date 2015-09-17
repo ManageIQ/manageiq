@@ -15,7 +15,7 @@ module Openstack
 
         def stack_translate_table
           {
-            :stack_name  => :name,
+            :stack_name => :name,
           }
         end
 
@@ -29,8 +29,7 @@ module Openstack
               "image_id"      => "EmsRefreshSpec-Image",
               :__network_name => "EmsRefreshSpec-NetworkPrivate",
             }
-          },
-          {
+          }, {
             :stack_name => "stack2",
             :template   => template,
             :parameters => {
@@ -39,8 +38,7 @@ module Openstack
               "image_id"      => "EmsRefreshSpec-Image",
               :__network_name => "EmsRefreshSpec-NetworkPrivate",
             }
-          },
-          {
+          }, {
             :stack_name => "stack3",
             :template   => template,
             :parameters => {

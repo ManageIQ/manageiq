@@ -68,7 +68,7 @@ image = Openstack::Services::Image::Builder.build_all(@ems, project)
 if @networking == :neutron
   # Heat started in grizzly, but it was first version, so it would be pain to test, also we would require different
   # template without network link in it. So testing it only > Havana
-  orchestration = Openstack::Services::Orchestration::Builder.build_all(@ems, project, network)
+  Openstack::Services::Orchestration::Builder.build_all(@ems, project, network)
 end
 #
 # Create all servers
