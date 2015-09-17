@@ -39,21 +39,21 @@
     vm.service = serviceDetails;
     vm.saveServiceDetails = saveServiceDetails;
 
+    vm.modalData = {
+      'action': 'edit',
+      'resource': {
+        'name': vm.service.name || '',
+        'description': vm.service.description || ''
+      }
+    };
+
     activate();
 
     function activate() {
     }
 
     function saveServiceDetails() {
-      var data = {
-        'action': 'edit',
-        'resource': {
-          'name': vm.service.name,
-          'description': vm.service.description
-        }
-      };
-
-      CollectionsApi.post('services', vm.service.id, {}, data).then(saveSuccess, saveFailure);
+      CollectionsApi.post('services', vm.service.id, {}, vm.modalData).then(saveSuccess, saveFailure);
 
       function saveSuccess() {
         $modalInstance.close();
