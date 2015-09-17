@@ -314,7 +314,7 @@ module.exports = (function() {
   };
 
   config.test = {
-    confFile: __dirname + '/karma.conf.js',
+    confFile: __dirname + '/../karma.conf.js',
     serverEnv: 'dev',
     serverPort: 8888,
     serverApp: serverApp,
