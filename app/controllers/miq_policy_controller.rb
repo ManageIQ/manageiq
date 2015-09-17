@@ -520,7 +520,8 @@ class MiqPolicyController < ApplicationController
     return add_nodes
   end
 
-  def replace_right_cell(nodetype, replace_trees = [])  # replace_trees can be an array of tree symbols to be replaced
+  # replace_trees can be an array of tree symbols to be replaced
+  def replace_right_cell(nodetype, replace_trees = [], presenter = nil)
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
 
@@ -540,9 +541,8 @@ class MiqPolicyController < ApplicationController
     h_buttons, h_xml = build_toolbar_buttons_and_xml('x_history_tb')
 
     # Build a presenter to render the JS
-    presenter = ExplorerPresenter.new(
-      :active_tree => x_active_tree,
-    )
+    presenter ||= ExplorerPresenter.new(:active_tree => x_active_tree)
+
     r = proc { |opts| render_to_string(opts) }
 
     presenter[:open_accord] = params[:accord] if params[:accord] # Open new accordion
@@ -573,7 +573,7 @@ class MiqPolicyController < ApplicationController
       end
 
       tree = @trees["#{name}_tree".to_sym]
-      presenter[:replace_partials]["#{tree.name}_tree_div".to_sym] = r[
+      presenter[:replace_partials]["#{tree.name}_div".to_sym] = r[
         :partial => "shared/tree",
         :locals  => {
           :tree => tree,

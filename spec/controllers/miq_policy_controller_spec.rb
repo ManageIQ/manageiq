@@ -202,6 +202,18 @@ describe MiqPolicyController do
     end
   end
 
+  describe '#replace_right_cell' do
+    it 'should replace policy_tree_div when replace_trees contains :policy' do
+      controller.stub(:params).and_return({:action => 'whatever'})
+      controller.instance_eval { @sb = {:active_tree => :policy_tree} }
+      controller.stub(:render).and_return(nil)
+      presenter = ExplorerPresenter.new(:active_tree => :policy_tree)
+
+      controller.send(:replace_right_cell, 'root', [:policy], presenter)
+      expect(presenter[:replace_partials]).to have_key(:policy_tree_div)
+    end
+  end
+
   describe 'x_button' do
     describe 'corresponding methods are called for allowed actions' do
       MiqPolicyController::POLICY_X_BUTTON_ALLOWED_ACTIONS.each_pair do |action_name, method|
