@@ -115,7 +115,7 @@ module Openstack
 
     def expected_stack_parameters_count
       # We ignore AWS params added there by Heat
-      OrchestrationStackParameter.all.to_a.delete_if { |x| x.name.include?("AWS::") || x.name.include?("OS::")}.count
+      OrchestrationStackParameter.all.to_a.delete_if { |x| x.name.include?("AWS::") || x.name.include?("OS::") }.count
     end
 
     def stack_parameters_count
@@ -168,7 +168,7 @@ module Openstack
       expect(MiqTemplate.count).to         eq images_count
       expect(Disk.count).to                eq disks_count
       # One hardware per each VM
-      expect(Hardware.count).to                   eq vms_count
+      expect(Hardware.count).to            eq vms_count
       # TODO(lsmola) 2 networks per each floatingip assigned, it's kinda weird now, will replace with
       # neutron models, then the number of networks will fit the number of neutron networks
       # expect(Network.count).to           eq vms_count * 2
@@ -403,10 +403,10 @@ module Openstack
       if orchestration_supported?
         # When there are orchestration stacks, we will delete them from vm comparing, vm name contains unique
         # id, so it's hard to build it from stack
-        stack_vms     = OrchestrationStackResource.select { |x| x.resource_category == "OS::Nova::Server"}
+        stack_vms     = OrchestrationStackResource.select { |x| x.resource_category == "OS::Nova::Server" }
         stack_vms_ids = stack_vms.collect(&:physical_resource)
 
-        all_vms = all_vms.to_a.delete_if { |x| stack_vms_ids.include?(x.ems_ref)}
+        all_vms = all_vms.to_a.delete_if { |x| stack_vms_ids.include?(x.ems_ref) }
       end
 
       assert_objects_with_hashes(all_vms,
