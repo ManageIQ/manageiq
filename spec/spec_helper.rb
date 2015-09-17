@@ -80,7 +80,7 @@ RSpec.configure do |config|
   config.after(:each) do
     EvmSpecHelper.clear_caches
   end
-  if ENV["CI"] && ENV["TEST_SUITE"] == "vmdb"
+  if ENV["CI"]
     config.after(:suite) do
       require Rails.root.join("spec/coverage_helper.rb")
     end
