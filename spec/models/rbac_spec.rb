@@ -30,25 +30,46 @@ describe Rbac do
       @other_user    = FactoryGirl.create(:user, :userid => 'bar', :miq_groups => [@other_group])
     end
 
-    context "vm" do
+    klass_factory_names = [
+      "ExtManagementSystem", :ems_vmware,
+      "MiqAeNamespace", :miq_ae_namespace,
+      "MiqAeDomain", :miq_ae_domain,
+      #"MiqRequest", :miq_request,  # MiqRequest is an abstract class that can't be instantiated currently
+      "MiqRequestTask", :miq_request_task,
+      "Provider", :provider,
+      "Service", :service,
+      "ServiceTemplate", :service_template,
+      "ServiceTemplateCatalog", :service_template_catalog,
+      "Vm", :vm_vmware
+    ]
+
+    klass_factory_names.each_slice(2) do |klass, factory_name|
+      context "#{klass} basic filtering" do
+        before do
+          @owned_object = FactoryGirl.create(factory_name, :tenant => @owner_tenant)
+        end
+
+        it ".search with :userid, finds user's tenant #{klass}" do
+          results, = Rbac.search(:class => klass, :results_format => :objects, :userid => @owner_user.userid)
+          expect(results).to eq [@owned_object]
+        end
+
+        it ".search with :userid filters out other tenants" do
+          results, = Rbac.search(:class => klass, :results_format => :objects, :userid => @other_user.userid)
+          expect(results).to eq []
+        end
+      end
+    end
+
+    context "Advanced filtering" do
       before do
-        @owner_vm      = FactoryGirl.create(:vm_vmware, :tenant => @owner_tenant)
+        @owned_object = FactoryGirl.create(:vm_vmware, :tenant => @owner_tenant)
       end
 
-      it ".search with :userid, finds user's tenant vms" do
-        results, = Rbac.search(:class => "Vm", :results_format => :objects, :userid => @owner_user.userid)
-        expect(results).to eq [@owner_vm]
-      end
-
-      it ".search with :userid filters out other tenants" do
-        results, = Rbac.search(:class => "Vm", :results_format => :objects, :userid => @other_user.userid)
-        expect(results).to eq []
-      end
-
-      it ".search with User.with_userid finds user's tenant vms" do
+      it ".search with User.with_userid finds user's tenant object" do
         User.with_userid(@owner_user.userid) do
           results, = Rbac.search(:class => "Vm", :results_format => :objects)
-          expect(results).to eq [@owner_vm]
+          expect(results).to eq [@owned_object]
         end
       end
 
@@ -59,9 +80,9 @@ describe Rbac do
         end
       end
 
-      it ".search with :miq_group_id, finds user's tenant vms" do
+      it ".search with :miq_group_id, finds user's tenant object" do
         results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
-        expect(results).to eq [@owner_vm]
+        expect(results).to eq [@owned_object]
       end
 
       it ".search with :miq_group_id filters out other tenants" do
@@ -83,43 +104,10 @@ describe Rbac do
           @other_user.miq_groups = [@owner_group]
           @other_user.save
           results, = Rbac.search(:class => "Vm", :results_format => :objects)
-          expect(results).to eq [@owner_vm]
+          expect(results).to eq [@owned_object]
         end
       end
     end
-
-    context "service_template" do
-      before do 
-        @owner_template = FactoryGirl.create(:service_template, :tenant => @owner_tenant)
-      end
-
-      it ".search with :userid, finds user's tenant service_templates" do
-        results, = Rbac.search(:class => "ServiceTemplate", :results_format => :objects, :userid => @owner_user.userid)
-        expect(results).to eq [@owner_template]
-      end
-
-      it ".search with :userid filters out other tenants" do
-        results, = Rbac.search(:class => "ServiceTemplate", :results_format => :objects, :userid => @other_user.userid)
-        expect(results).to eq []
-      end
-    end
-
-    context "service_template_catalog" do
-      before do 
-        @owner_template_catalog = FactoryGirl.create(:service_template_catalog, :tenant => @owner_tenant)
-      end
-
-      it ".search with :userid, finds user's tenant service_template_catalogs" do
-        results, = Rbac.search(:class => "ServiceTemplateCatalog", :results_format => :objects, :userid => @owner_user.userid)
-        expect(results).to eq [@owner_template_catalog]
-      end
-
-      it ".search with :userid filters out other tenants" do
-        results, = Rbac.search(:class => "ServiceTemplateCatalog", :results_format => :objects, :userid => @other_user.userid)
-        expect(results).to eq []
-      end
-    end
-
   end
 
   context "with Hosts" do
