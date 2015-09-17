@@ -105,33 +105,29 @@ class VixDiskLib
     #
     # TODO: Get the path to the server programatically - this server should probably live elsewhere.
     #
-    my_env = setup_env
-    reader, writer = IO.pipe
-    writerfd = writer.fileno
-    my_env["WRITER_FD"] = writerfd.to_s
-
-    # Ruby 2.0+ automatically closes all descriptors except 0, 1, 2 (input/output/error)
-    # in child processes.  We need the child process (the server) to write it's DRb URI to
-    # the writer descriptor so the client can read it.  Set close_on_exec to false
-    # in the writer descriptor so it doesn't get closed on us.
-    # See: https://bugs.ruby-lang.org/issues/5041
-    writer.close_on_exec = false
+    my_env                   = setup_env
+    uri_reader, uri_writer   = IO.pipe
+    proc_reader, @proc_writer = IO.pipe
 
     server_cmd = "ruby #{SERVER_PATH}/VixDiskLibServer.rb"
     $vim_log.info "VixDiskLib.start_service: running command = #{server_cmd}"
     pid = Kernel.spawn(my_env, server_cmd,
                        [:out, :err]     => [LOG_FILE, "a"],
                        :unsetenv_others => true,
-                       :close_others    => false,
-                       reader           => :close)
-    writer.close
+                       3                => uri_writer,
+                       4                => proc_reader,
+                       uri_reader       => :close,
+                       @proc_writer     => :close)
+    uri_writer.close
+    proc_reader.close
     Process.detach(pid)
     $vim_log.info "VixDiskLibServer Process #{pid} started" if $vim_log
     DRb.start_service
     retry_num = 5
+    uri = get_uri(uri_reader)
     begin
       sleep 1
-      vix_disk_lib_service = DRbObject.new(nil, get_uri(reader))
+      vix_disk_lib_service = DRbObject.new(nil, uri)
     rescue DRb::DRbConnError => e
       raise VixDiskLibError, "ERROR: VixDiskLib.connect() got #{e} on DRbObject.new_with_uri()" if retry_num == 0
       retry_num -= 1 && retry
@@ -142,14 +138,10 @@ class VixDiskLib
   def self.get_uri(reader)
     if reader.eof
       #
-      # Error - unable to read the port number written into the pipe by the child (Server).
+      # Error - unable to read the URI with port number written into the pipe by the child (Server).
       #
       raise VixDiskLibError, "ERROR: VixDiskLib.connect() Unable to determine port used by VixDiskLib Server."
     end
-    uri_selected = reader.gets.split("URI:")
-    if uri_selected.length != 2
-      raise VixDiskLibError, "ERROR: VixDiskLib.connect() Unable to determine port used by VixDiskLib Server."
-    end
-    uri_selected[1].chomp
+    reader.gets
   end
 end

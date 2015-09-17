@@ -30,12 +30,6 @@ class VDDKFactory
     @running = nil
   end
 
-  def writer_to_caller
-    writer_fd = ENV['WRITER_FD']
-    writer = IO.new(writer_fd.to_i)
-    writer
-  end
-
   def init
     VdlWrapper.init
     @started = true
@@ -113,15 +107,19 @@ begin
   #
   # Now write the URI used back to the parent (client) process to let it know which port was selected.
   #
-  writer = vddk.writer_to_caller
-  writer.puts "URI:#{uri_used}"
-  writer.flush
+  uri_writer = IO.open(3, 'w')
+  uri_writer.write "#{uri_used}"
+  uri_writer.flush
+  uri_writer.close
+
+  proc_reader = IO.open(4, File::RDONLY | File::SYNC)
   #
   # Trap Handlers useful for testing and debugging.
   #
-  trap('INT') { vddk.shut_down_service("Interrupt Signal received") && exit }
-  trap('TERM') { vddk.shut_down_service("Termination Signal received") && exit }
+  trap('INT') { vddk.shut_down_service("Interrupt Signal received"); exit }
+  trap('TERM') { vddk.shut_down_service("Termination Signal received"); exit }
 
+  Thread.new { $vim_log.info "Monitoring Thread"; proc_reader.read; $vim_log.info "Shutting down VixDiskLibServer - Worker has exited"; exit }
   #
   # If we haven't been marked as started yet, wait for it.
   # We may return immediately because startup (and more) has already happened.
