@@ -1,26 +1,27 @@
 #main_div
   %fieldset
-    %h3= _("Options")
-    %table.style1
+    %h3
+      = _("Options")
+    .form-horizontal
       - if @options[:vm_memory]
-        %tr
-          %td.key
+        .form-group
+          %label.control-label.col-md-2
             = _("Memory")
-          %td
+          .col-md-8
             = h(@options[:vm_memory])
             &nbsp;
             = @options[:mem_typ]
       - if @options[:number_of_sockets]
-        %tr
-          %td.key
+        .form-group
+          %label.control-label.col-md-2
             = _("Processor Sockets")
-          %td
+          .col-md-8
             = h(@options[:number_of_sockets])
       - if @options[:cores_per_socket]
-        %tr
-          %td.key
+        .form-group
+          %label.control-label.col-md-2
             = _("Processor Cores_Per_Socket")
-          %td
+          .col-md-8
             = h(@options[:cores_per_socket])
       - if @options[:number_of_cpus]
         %tr
@@ -32,9 +33,10 @@
   %fieldset
     %h3
       = _("Affected VMs")
-    %table.style1{:height => "75"}
-      %tr
-        %td
+    .form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+        .col-md-8
           - if @view
             - @embedded = true
             - @gtl_type = "list"
