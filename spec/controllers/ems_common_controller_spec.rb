@@ -132,3 +132,14 @@ describe EmsContainerController do
     end
   end
 end
+
+describe EmsInfraController do
+  context "#show_link" do
+    let(:ems) { mock_model(EmsInfra) }
+    it "sets relative url" do
+      controller.instance_variable_set(:@table_name, "ems_infra")
+      link = controller.send(:show_link, ems, :display => "vms")
+      link.should eq("/ems_infra/show/#{ems.id}?display=vms")
+    end
+  end
+end
