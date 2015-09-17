@@ -46,4 +46,12 @@ module ApplicationController::CurrentUser
   def current_groupid
     current_user.current_group.id
   end
+
+  def current_tenant
+    current_user.current_tenant || Tenant.default_tenant
+  end
+
+  def current_tenantid
+    current_tenant.try(:id)
+  end
 end
