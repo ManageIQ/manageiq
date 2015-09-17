@@ -29,5 +29,10 @@ module Openstack
     def neutron_networking?
       networking_service == :neutron
     end
+
+    def orchestration_supported?
+      # We support orchestration from Havana, so it's same as neutron condition
+      neutron_networking?
+    end
   end
 end
