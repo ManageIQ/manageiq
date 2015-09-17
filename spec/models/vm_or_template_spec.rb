@@ -471,4 +471,34 @@ describe VmOrTemplate do
       expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
     end
   end
+
+  context ".set_tenant_from_group" do
+    before { EvmSpecHelper.create_root_tenant }
+    let(:tenant1) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
+    let(:tenant2) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
+    let(:group1) { FactoryGirl.create(:miq_group, :tenant => tenant1) }
+    let(:group2) { FactoryGirl.create(:miq_group, :tenant => tenant2) }
+
+    it "assigns the tenant from the group" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group => group1).tenant).to eq(tenant1)
+    end
+
+    it "assigns the tenant from the group_id" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group_id => group1.id).tenant).to eq(tenant1)
+    end
+
+    it "assigns the tenant from the group over the tenant" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group => group1, :tenant => tenant2).tenant).to eq(tenant1)
+    end
+
+    it "assigns no tenant by default" do
+      expect(FactoryGirl.create(:vm_vmware).tenant).to be_nil
+    end
+
+    it "changes the tenant after changing the group" do
+      vm = FactoryGirl.create(:vm_vmware, :miq_group => group1)
+      vm.update_attributes(:miq_group_id => group2.id)
+      expect(vm.tenant).to eq(tenant2)
+    end
+  end
 end
