@@ -37,16 +37,16 @@
       .form-group
         %label.col-md-2.control-label{"for" => "textInput-markup"}
           = _("Starting Date")
-        .col-md-3
+        .col-md-2
           .input-group.date
-            = datepicker_input_tag("start_date", nil,
-                                   "class"             => "form-control",
-                                   "required"          => true,
-                                   "b-datepicker"      => true,
-                                   "ng-model"          => "scheduleModel.start_date",
-                                   "miq-calendar"      => true,
-                                   "miq-cal-date-from" => "date_from",
-                                   "checkchange"       => "")
+            %input{:type             => "text",
+                   :name             => "start_date",
+                   "ng-model"        => "scheduleModel.start_date",
+                   "datepicker-init" => "",
+                   :language         => FastGettext.locale,
+                   :required         => true,
+                   :checkchange      => "",
+                   :readonly         => true}
             %span.input-group-addon{"data-toggle" => "datepicker"}
               %span.fa.fa-calendar
       .form-group

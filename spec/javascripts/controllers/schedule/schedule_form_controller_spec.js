@@ -86,7 +86,7 @@ describe('scheduleFormController', function() {
     });
 
     it('sets the scheduleDate', function() {
-      expect($scope.scheduleModel.start_date).toEqual(new Date(Date.UTC(2015, 0, 1)));
+      expect($scope.scheduleModel.start_date).toEqual(moment('01/01/2015').format('MM/DD/YYYY'));
     });
 
     it('sets the scheduleStartHour', function() {
@@ -145,7 +145,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets the scheduleDate to today', function() {
-        expect($scope.scheduleModel.start_date).toEqual(new Date("01/03/2014"));
+        expect($scope.scheduleModel.start_date).toEqual(moment("01/03/2014").format('MM/DD/YYYY'));
       });
 
       it('sets the scheduleTimerType to once', function() {
