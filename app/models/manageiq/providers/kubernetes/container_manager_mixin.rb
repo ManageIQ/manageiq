@@ -1,3 +1,5 @@
+require 'MiqContainerGroup/MiqContainerGroup'
+
 module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   extend ActiveSupport::Concern
 
@@ -88,5 +90,31 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def default_authentication_type
     :bearer
+  end
+
+  def scan_job_create(entity_class, entity_id)
+    Job.create_job(
+      "ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job",
+      :name            => "Container image analysis",
+      :target_class    => entity_class,
+      :target_id       => entity_id,
+      :zone            => my_zone,
+      :miq_server_host => MiqServer.my_server.hostname,
+      :miq_server_guid => MiqServer.my_server.guid
+    )
+  end
+
+  SCAN_CONTENT_PATH = '/api/v1/content'
+
+  def scan_entity_create(scan_data)
+    client = ext_management_system.connect(:service => 'kubernetes')
+    pod_proxy = client.proxy_url(:pod,
+                                 scan_data[:pod_name],
+                                 scan_data[:pod_port],
+                                 scan_data[:pod_namespace])
+    MiqContainerGroup.new(pod_proxy + SCAN_CONTENT_PATH,
+                          verify_ssl_mode,
+                          client.headers.stringify_keys,
+                          scan_data[:guest_os])
   end
 end
