@@ -75,7 +75,7 @@ module OpenstackHandle
       raise
     end
 
-    def self.api_version_paths(api_version)
+    def self.path_for_api_version(api_version)
       case api_version
       when 'v2'
         '/v2.0/tokens'
@@ -85,7 +85,7 @@ module OpenstackHandle
     end
 
     def self.auth_url(address, port = 5000, scheme = "http", api_version = 'v2')
-      url(address, port, scheme, api_version_paths(api_version))
+      url(address, port, scheme, path_for_api_version(api_version))
     end
 
     def self.url(address, port = 5000, scheme = "http", path = "")
