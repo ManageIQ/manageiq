@@ -71,7 +71,7 @@ class ApiController
     def delete_resource(type, id = nil, _data = nil)
       klass = collection_class(type)
       id  ||= @req[:c_id]
-      raise BadRequestError, "Must specify and id for deleting a #{type} resource" unless id
+      raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
       api_log_info("Deleting #{type} id #{id}")
       resource_search(id, type, klass)
       delete_resource_action(klass, type, id)
@@ -96,7 +96,7 @@ class ApiController
         end
         resource
       else
-        raise BadRequestError, "Must specify and id for retiring a #{type} resource"
+        raise BadRequestError, "Must specify an id for retiring a #{type} resource"
       end
     end
 
@@ -104,7 +104,7 @@ class ApiController
       action = @req[:action].downcase
       id ||= @req[:c_id]
       if id.blank?
-        raise BadRequestError, "Must specify and id for invoking the custom action #{action} on a #{type} resource"
+        raise BadRequestError, "Must specify an id for invoking the custom action #{action} on a #{type} resource"
       end
 
       api_log_info("Invoking #{action} on #{type} id #{id}")
@@ -146,9 +146,11 @@ class ApiController
       result
     end
 
-    def invoke_custom_action(type, resource, action, _data)
+    def invoke_custom_action(type, resource, action, data)
       custom_button = resource_custom_action_button(resource, action)
-      raise BadRequestError, "Custom Actions with Dialogs are not supported" if custom_button.resource_action.dialog_id
+      if custom_button.resource_action.dialog_id
+        return invoke_custom_action_with_dialog(type, resource, action, data, custom_button)
+      end
 
       result = begin
         custom_button.invoke(resource)
@@ -159,6 +161,28 @@ class ApiController
       add_href_to_result(result, type, resource.id)
       log_result(result)
       result
+    end
+
+    def invoke_custom_action_with_dialog(type, resource, action, data, custom_button)
+      result = begin
+        wf_result = submit_custom_action_dialog(resource, custom_button, data)
+        action_result(true,
+                      "Invoked custom dialog action #{action} for #{type} id: #{resource.id}",
+                      :result => wf_result[:request])
+      rescue => err
+        action_result(false, err.to_s)
+      end
+      add_href_to_result(result, type, resource.id)
+      log_result(result)
+      result
+    end
+
+    def submit_custom_action_dialog(resource, custom_button, data)
+      wf = ResourceActionWorkflow.new({}, @auth_user, custom_button.resource_action, :target => resource)
+      data.each { |key, value| wf.set_value(key, value) } if data.present?
+      wf_result = wf.submit_request(@auth_user)
+      raise StandardError, Array(wf_result[:errors]).join(", ") if wf_result[:errors].present?
+      wf_result
     end
 
     def resource_custom_action_button(resource, action)

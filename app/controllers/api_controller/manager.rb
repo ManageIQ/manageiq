@@ -67,7 +67,7 @@ class ApiController
 
     def delete_subcollection_resource(type, id = nil)
       raise BadRequestError,
-            "Must specify and id for destroying a #{type} subcollection resource" if id.nil?
+            "Must specify an id for destroying a #{type} subcollection resource" if id.nil?
 
       parent_resource = parent_resource_obj
       typed_target    = "delete_resource_#{type}"
@@ -89,7 +89,7 @@ class ApiController
         typed_target = "#{target}_#{type}"
         return typed_target if respond_to?(typed_target)
         return target if respond_to?(target)
-        return "custom_action_resource" if resource_can_have_custom_actions(type)
+        resource_can_have_custom_actions(type) ? "custom_action_resource" : "undefined_api_method"
       end
     end
 
