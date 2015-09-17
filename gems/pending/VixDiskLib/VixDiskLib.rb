@@ -105,8 +105,8 @@ class VixDiskLib
     #
     # TODO: Get the path to the server programatically - this server should probably live elsewhere.
     #
-    my_env                   = setup_env
-    uri_reader, uri_writer   = IO.pipe
+    my_env                    = setup_env
+    uri_reader, uri_writer    = IO.pipe
     proc_reader, @proc_writer = IO.pipe
 
     server_cmd = "ruby #{SERVER_PATH}/VixDiskLibServer.rb"
@@ -115,21 +115,19 @@ class VixDiskLib
                        [:out, :err]     => [LOG_FILE, "a"],
                        :unsetenv_others => true,
                        3                => uri_writer,
-                       4                => proc_reader,
-                       uri_reader       => :close,
-                       @proc_writer     => :close)
+                       4                => proc_reader)
     uri_writer.close
     proc_reader.close
     Process.detach(pid)
     $vim_log.info "VixDiskLibServer Process #{pid} started" if $vim_log
     DRb.start_service
     retry_num = 5
-    uri = get_uri(uri_reader)
+    uri       = get_uri(uri_reader)
     begin
-      sleep 1
       vix_disk_lib_service = DRbObject.new(nil, uri)
     rescue DRb::DRbConnError => e
       raise VixDiskLibError, "ERROR: VixDiskLib.connect() got #{e} on DRbObject.new_with_uri()" if retry_num == 0
+      sleep 1
       retry_num -= 1 && retry
     end
     vix_disk_lib_service
