@@ -166,4 +166,12 @@ describe('miqService', function() {
       expect(window.miqAjaxButton).toHaveBeenCalledWith('/host/create/new?button=validate&type=default', true);
     });
   });
+
+  describe('#disabledClick', function() {
+    it('prevents a submit action', function() {
+      var event = $.Event('click');
+      testService.disabledClick(event);
+      expect(event.isDefaultPrevented()).toBeTruthy();
+    });
+  });
 });
