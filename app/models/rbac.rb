@@ -249,7 +249,7 @@ module Rbac
   end
 
   def self.find_options_for_tenant(klass, user_or_group, find_options = {})
-    tenant_id = user_or_group.try(:current_tenant, :id)
+    tenant_id = klass.accessible_tenant_ids(user_or_group)
     return find_options unless tenant_id
 
     tenant_id_clause = {klass.table_name => {:tenant_id => [tenant_id, nil]}}

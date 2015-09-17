@@ -92,6 +92,21 @@ describe Rbac do
           expect(results).to eq [@owned_object]
         end
       end
+
+      it "by default, sees parent tenant's Vm" do
+        child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+        child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
+        results,            = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => child_group.id)
+        expect(results).to eq [@owned_object]
+      end
+
+      it "by default, can't see descendant tenant's Vm" do
+        child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+        @owned_object.tenant = child_tenant
+        @owned_object.save
+        results,             = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+        expect(results).to eq []
+      end
     end
   end
 

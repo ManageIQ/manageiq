@@ -64,6 +64,11 @@ class Tenant < ActiveRecord::Base
     self.class.descendants_of(self).where(:divisible => false)
   end
 
+  # See TenancyMixin for the strategy
+  def accessible_tenant_ids(klass = nil)
+    send(klass.accessible_tenant_ids_strategy).append(id)
+  end
+
   def name
     tenant_attribute(:name, :company)
   end
