@@ -19,14 +19,12 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     false
   end
 
-  def create_request(values, requester_id, auto_approve=false)
-    event_message = "Host Provisioning requested by <#{requester_id}> for Host:#{values[:src_host_ids].inspect}"
-    super(values, requester_id, 'Host', 'host_provision_request_created', event_message, auto_approve) { update_selected_storage_names(values) }
+  def create_request(values, requester_id, auto_approve = false)
+    super(values, requester_id, auto_approve) { update_selected_storage_names(values) }
   end
 
   def update_request(request, values, requester_id)
-    event_message = "Host Provisioning request updated by <#{requester_id}> for Host:#{values[:src_host_ids].inspect}"
-    super(request, values, requester_id, 'Host', 'host_provision_request_updated', event_message) { update_selected_storage_names(values) }
+    super(request, values, requester_id) { update_selected_storage_names(values) }
   end
 
   def get_source_and_targets(refresh=false)

@@ -68,7 +68,7 @@ class MiqRequestWorkflow
     end
   end
 
-  def create_request(values, _requester_id, target_class, event_name, event_message, auto_approve = false)
+  def create_request(values, _requester_id, auto_approve = false)
     return false unless validate(values)
 
     set_request_values(values)
@@ -88,19 +88,15 @@ class MiqRequestWorkflow
     request.set_description
     request.create_request
 
-    AuditEvent.success(
-      :event        => event_name,
-      :target_class => target_class,
-      :userid       => @requester.userid,
-      :message      => event_message
-    )
+    request.log_request_success(@requester.userid, :created)
 
     request.call_automate_event_queue("request_created")
     request.approve(@requester.userid, "Auto-Approved") if auto_approve == true
+    request.reload if auto_approve
     request
   end
 
-  def update_request(request, values, _requester_id, target_class, event_name, event_message)
+  def update_request(request, values, _requester_id)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
 
     return false unless validate(values)
@@ -115,15 +111,9 @@ class MiqRequestWorkflow
     request.update_attribute(:options, request.options.merge(values))
     request.set_description(true)
 
-    AuditEvent.success(
-      :event        => event_name,
-      :target_class => target_class,
-      :userid       => @requester.userid,
-      :message      => event_message
-    )
+    request.log_request_success(@requester.userid, :updated)
 
     request.call_automate_event_queue("request_updated")
-
     request
   end
 

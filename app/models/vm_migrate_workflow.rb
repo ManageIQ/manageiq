@@ -11,16 +11,6 @@ class VmMigrateWorkflow < MiqRequestWorkflow
     'vm_migrate_dialogs'
   end
 
-  def create_request(values, requester_id, auto_approve=false)
-    event_message = "VM Migrate requested by <#{requester_id}> for Vm:#{values[:src_ids].inspect}"
-    super(values, requester_id, 'Vm', 'vm_migrate_request_created', event_message, auto_approve)
-  end
-
-  def update_request(request, values, requester_id)
-    event_message = "VM Migrate request updated by <#{requester_id}> for Vm:#{values[:src_ids].inspect}"
-    super(request, values, requester_id, 'Vm', 'vm_migrate_request_updated', event_message)
-  end
-
   def get_source_and_targets(refresh=false)
     return @target_resource if @target_resource && refresh == false
 

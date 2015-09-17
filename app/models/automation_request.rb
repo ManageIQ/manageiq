@@ -58,7 +58,7 @@ class AutomationRequest < MiqRequest
     'automate'
   end
 
-  def log_request_success(requester_id, mode)
+  def log_request_success(_requester_id, _mode)
     # currently we do not log successful automation requests
   end
 end
