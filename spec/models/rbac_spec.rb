@@ -19,7 +19,7 @@ describe Rbac do
       "ExtManagementSystem", :ems_vmware,
       "MiqAeNamespace", :miq_ae_namespace,
       "MiqAeDomain", :miq_ae_domain,
-      #"MiqRequest", :miq_request,  # MiqRequest is an abstract class that can't be instantiated currently
+      # "MiqRequest", :miq_request,  # MiqRequest is an abstract class that can't be instantiated currently
       "MiqRequestTask", :miq_request_task,
       "Provider", :provider,
       "Service", :service,
@@ -101,10 +101,10 @@ describe Rbac do
 
       MiqRegion.seed
       @tags = {
-        2  => "/managed/environment/prod",
-        3  => "/managed/environment/dev",
-        4  => "/managed/service_level/gold",
-        5  => "/managed/service_level/silver"
+        2 => "/managed/environment/prod",
+        3 => "/managed/environment/dev",
+        4 => "/managed/service_level/gold",
+        5 => "/managed/service_level/silver"
       }
 
       @group = FactoryGirl.create(:miq_group)
@@ -199,7 +199,7 @@ describe Rbac do
 
             root = FactoryGirl.create(:ems_folder, :name => "Datacenters")
             root.parent = ems1
-            dc   = FactoryGirl.create(:ems_folder, :name => "Datacenter1")
+            dc = FactoryGirl.create(:ems_folder, :name => "Datacenter1")
             dc.parent = root
             hfolder   = FactoryGirl.create(:ems_folder, :name => "Hosts")
             hfolder.parent = dc
@@ -260,7 +260,7 @@ describe Rbac do
 
         context "search on EMSes" do
           before(:each) do
-           @ems2 = FactoryGirl.create(:ems_vmware, :name => 'ems2')
+            @ems2 = FactoryGirl.create(:ems_vmware, :name => 'ems2')
           end
 
           it "preserves order of targets" do
@@ -374,9 +374,9 @@ describe Rbac do
         before(:each) do
           @ems = FactoryGirl.create(:ems_vmware, :name => 'ems')
           @ems_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}"
-          @root   = FactoryGirl.create(:ems_folder, :name => "Datacenters")
+          @root = FactoryGirl.create(:ems_folder, :name => "Datacenters")
           @root.parent = @ems
-          @mtc   = FactoryGirl.create(:ems_folder, :name => "MTC", :is_datacenter => true)
+          @mtc = FactoryGirl.create(:ems_folder, :name => "MTC", :is_datacenter => true)
           @mtc.parent = @root
           @mtc_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}/EmsFolder|#{@root.name}/EmsFolder|#{@mtc.name}"
 
@@ -553,11 +553,10 @@ describe Rbac do
           vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
         end
 
-        Vm.scope :group_scope,   lambda { |group_num| Vm.where("name LIKE ?", "Test Group #{group_num}%") }
+        Vm.scope :group_scope, lambda { |group_num| Vm.where("name LIKE ?", "Test Group #{group_num}%") }
       end
 
       context ".search" do
-
         it "self-service group" do
           MiqGroup.any_instance.stub(:self_service? => true)
 
@@ -931,7 +930,6 @@ describe Rbac do
     end
 
     context "database configuration" do
-
       it "expect all database setting values returned" do
         results, attrs = Rbac.search(:class               => "VmdbDatabaseSetting",
                                      :userid              => "admin",
