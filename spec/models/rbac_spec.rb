@@ -670,7 +670,6 @@ describe Rbac do
             ")
             results = nil
             lambda { results, attrs = Rbac.search(:class => "Vm", :filter => exp, :userid => @user.userid, :results_format => :objects, :order => "vms.name desc") }.should_not raise_error
-            # results.each {|r| $log.info("XXX: result: #{r.name}")}
           end
 
           it "works when limit, offset and user filters are passed and search expression contains columns in a sub-table" do
@@ -704,8 +703,6 @@ describe Rbac do
 
             results, attrs = Rbac.search(:class => "EmsEvent", :filter => exp, :userid => @user.userid, :results_format => :objects)
 
-            EmsEvent.all.each {|r| $log.info("XXX: event: [#{r.id}], #{r.timestamp}")}
-            results.each {|r| $log.info("XXX: result: #{r.message}")}
             results.length.should == 2
             attrs[:auth_count].should == 2
             attrs[:user_filters]["managed"].should == @group.filters['managed']
