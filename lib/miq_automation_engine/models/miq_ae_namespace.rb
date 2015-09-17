@@ -5,6 +5,7 @@ class MiqAeNamespace < ActiveRecord::Base
   include TenancyMixin
 
   belongs_to :parent,        :class_name => "MiqAeNamespace",  :foreign_key => :parent_id
+  belongs_to :tenant
   has_many   :ae_namespaces, :class_name => "MiqAeNamespace",  :foreign_key => :parent_id,    :dependent => :destroy
   has_many   :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) },    :class_name => "MiqAeClass",      :foreign_key => :namespace_id, :dependent => :destroy
 
