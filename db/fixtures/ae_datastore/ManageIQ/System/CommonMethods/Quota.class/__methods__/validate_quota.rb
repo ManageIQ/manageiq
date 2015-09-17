@@ -1,11 +1,12 @@
 
 def request_info
-  type = $evm.root['quota_type']
+  type = $evm.object['quota_type']
   if type == 'service'
     @service = true
-    @miq_request = $evm.root['service_template_provision_task']
+    @miq_request = $evm.root['service_template_provision_request']
   else
     @miq_request = $evm.root['miq_request']
+    @service = false
   end
   $evm.log(:info, "Request: #{@miq_request.description} id: #{@miq_request.id} ")
 end
@@ -20,16 +21,16 @@ def vmdb_object(object, id)
   $evm.vmdb(object).find_by_id(id)
 end
 
-def model_value(attr)
-  model_value = $evm.object[attr].to_i
-  $evm.log(:info, "Quota Model #{attr}: #{model_value}") unless model_value.zero?
-  model_value
+def model_value(attr, unit)
+  value = $evm.object[attr].to_i
+  $evm.log(:info, "Quota Model #{attr}: #{value} #{unit}") unless value.zero?
+  value
 end
 
-def tag_value(tag, tag_value)
-  tag_value = tag_value.to_i
-  $evm.log(:info, "Quota Tag #{tag}: #{tag_value}") unless tag_value.zero?
-  tag_value
+def tag_value(tag, tag_value, unit)
+  value = tag_value.to_i
+  $evm.log(:info, "Quota Tag #{tag}: #{value} #{unit}") unless value.zero?
+  value
 end
 
 def get_option_value(request, option)
@@ -44,15 +45,15 @@ def manage_quotas_by_group?
 end
 
 def get_total_requested(options_hash, prov_option)
-  total_requested = collect_template_totals
+  total_requested = collect_template_totals(prov_option)
   total_requested = request_totals(total_requested.to_i,
                                    collect_dialog_totals(prov_option, options_hash).to_i) if options_hash
   total_requested
 end
 
-def collect_template_totals
-  total = collect_totals(get_service_prov_option_value(prov_option)) if @service
-  total = collect_totals(get_vm_prov_option_value(prov_option)) unless @service
+def collect_template_totals(prov_option)
+  total = collect_totals(service_prov_option_value(prov_option)) if @service
+  total = collect_totals(vm_prov_option_value(prov_option)) unless @service
   total
 end
 
@@ -84,7 +85,8 @@ end
 
 def quota_exceeded(args_hash, quota_hash_key, reason)
   args_hash[:warn] ? (@quota_results[:quota_warn_exceeded] = true) : (@quota_results[:quota_exceeded] = true)
-  $evm.log(:info,  "Quota exceeded for key: #{args_hash[quota_hash_key]} reason: #{reason}")
+  $evm.log(:info,  "Quota Limit exceeded for key: #{args_hash[quota_hash_key]} reason: #{reason}") if @quota_results[:quota_exceeded]
+  $evm.log(:info,  "Quota Warning exceeded for key: #{args_hash[quota_hash_key]} reason: #{reason}") if @quota_results[:quota_warn_exceeded]
   @quota_results[args_hash[quota_hash_key].to_sym] = reason
   true
 end
@@ -94,10 +96,10 @@ def reason(args_hash)
   "#{args_hash[:requested]} #{args_hash[:unit]} &gt; quota #{args_hash[:limit]} #{args_hash[:unit]}"
 end
 
-def get_service_prov_option_value(prov_option, options_array = [])
+def service_prov_option_value(prov_option, options_array = [])
   @service_template.service_resources.each do |child_service_resource|
     if @service_template.service_type == 'composite'
-      composite_service(child_service_resource, prov_option, options_array)
+      composite_service_options_value(child_service_resource, prov_option, options_array)
     else
       next if @service_template.prov_type.starts_with?("generic")
       options_value(prov_option, child_service_resource.resource, options_array)
@@ -106,27 +108,33 @@ def get_service_prov_option_value(prov_option, options_array = [])
   options_array
 end
 
-def composite_service(child_service_resource, prov_option, options_array)
+def composite_service_options_value(child_service_resource, prov_option, options_array)
   return if child_service_resource.resource.prov_type == 'generic'
   child_service_resource.resource.service_resources.each do |grandchild_service_template_service_resource|
     options_value(prov_option, grandchild_service_template_service_resource.resource, options_array)
   end
 end
 
-def get_vm_prov_option_value(prov_option, options_array = [])
-  # Extract Request Information
+def vm_prov_option_value(prov_option, options_array = [])
+  number_of_vms = get_option_value(@miq_request, :number_of_vms)
   case prov_option
-  when "vm_memory"
-    memory_in_request = get_option_value(@miq_request, :number_of_vms) * get_option_value(@miq_request, :vm_memory)
-    options_value(prov_option, @miq_request, memory_in_request)
-  when "number_of_cpus"
+  when :vm_memory
+    memory_in_request = number_of_vms * get_option_value(@miq_request, :vm_memory)
+    set_requested_value(prov_option, memory_in_request,
+                       @miq_request.get_option(:instance_type), options_array)
+  when :number_of_cpus
     cpu_in_request = get_option_value(@miq_request, :number_of_cpus)
     if cpu_in_request.zero?
       cpu_in_request = get_option_value(@miq_request, :number_of_sockets) *
                        get_option_value(@miq_request, :cores_per_socket)
-      options_value(prov_option, @miq_request, cpu_in_request)
     end
-    options_value(prov_option, @miq_request, get_option_value(@miq_request, :number_of_vms) * cpu_in_request)
+    set_requested_value(prov_option, cpu_in_request,
+                        @miq_request.get_option(:instance_type), options_array)
+  when :allocated_storage
+    vm_size = @miq_request.vm_template.provisioned_storage
+    total_storage = number_of_vms * vm_size
+    set_requested_value(prov_option, total_storage,
+                        @miq_request.get_option(:instance_type), options_array)
   else
     options_value(prov_option, @miq_request, options_array)
   end
@@ -135,19 +143,19 @@ end
 
 def dialog_values(prov_option, options_hash, dialog_array)
   options_hash.each do |_sequence_id, options|
-    set_requested_values(prov_option, options[prov_option], options[:instance_type], dialog_array)
+    set_requested_value(prov_option, options[prov_option], options[:instance_type], dialog_array)
   end
 end
 
 def options_value(prov_option, resource, options_array)
   return unless resource.respond_to?('get_option')
-  set_requested_values(prov_option, resource.get_option(prov_option),
+  set_requested_value(prov_option, resource.get_option(prov_option),
                        resource.get_option(:instance_type), options_array)
 end
 
 def default_option(option_value, options_array)
   return if option_value.blank?
-  options_array << option_value
+  options_array << option_value.to_i
 end
 
 def calculate_requested(options_hash = {})
@@ -155,6 +163,26 @@ def calculate_requested(options_hash = {})
                      :cpu               => get_total_requested(options_hash, :cores_per_socket),
                      :allocated_storage => get_total_requested(options_hash, :allocated_storage),
                      :vms               => get_total_requested(options_hash, :number_of_vms)}
+end
+
+def set_requested_value(prov_option, option_value, find_id, dialog_array)
+  $evm.log(:info,  "set requested value: prov_option: #{prov_option} value:  #{option_value}")
+  case prov_option
+  when :cores_per_socket
+  $evm.log(:info,  "set requested value cores_per_socket: prov_option: #{prov_option} value:  #{option_value}")
+    option_set = requested_cores_per_socket(find_id, dialog_array)
+  when :vm_memory
+  $evm.log(:info,  "set requested value vm_memory: prov_option: #{prov_option} value:  #{option_value}")
+    option_set = requested_vm_memory(find_id, dialog_array)
+  when :allocated_storage
+  $evm.log(:info,  "10 set requested value allocated_storage: prov_option: #{prov_option} value:  #{option_value}")
+    src_id = @miq_request.get_option(:src_vm_id)
+    $evm.log(:info,  "20 XXXXXXX set requested value allocated_storage: prov_option: #{prov_option} src_id:  #{src_id}")
+    option_set = requested_allocated_storage(@miq_request.get_option(:src_vm_id), dialog_array)
+  end
+  return if option_set
+  $evm.log(:info,  "set requested value default_option: prov_option: #{prov_option} value:  #{option_value}")
+  default_option(option_value, dialog_array)
 end
 
 def requested_cores_per_socket(vmdb_object_find_by, options_array)
@@ -166,10 +194,12 @@ def requested_cores_per_socket(vmdb_object_find_by, options_array)
 end
 
 def requested_allocated_storage(vmdb_object_find_by, options_array)
+  $evm.log(:info,  "1 requested allocated storage: id: #{vmdb_object_find_by} options_array:  #{options_array}")
   template = vmdb_object(:miq_template, vmdb_object_find_by)
   return false unless template
 
-  options_array << template.allocated_disk_storage
+  $evm.log(:info,  "2 requested allocated storage: id: #{vmdb_object_find_by} options_array:  #{options_array}")
+  options_array << template.provisioned_disk_storage
   true
 end
 
@@ -180,17 +210,6 @@ def requested_vm_memory(vmdb_object_find_by, options_array)
   flavor_memory = flavor.memory / 1024**2
   options_array << flavor_memory
   true
-end
-
-def set_requested_values(prov_option, option_value, find_id, dialog_array)
-  case prov_option
-  when :cores_per_socket
-    option_set = requested_cores_per_socket(find_id, dialog_array)
-  when :vm_memory
-    option_set = requested_vm_memory(find_id, dialog_array)
-  end
-  return if option_set
-  default_option(option_value, dialog_array)
 end
 
 def check_quotas
@@ -321,27 +340,27 @@ end
 
 def quota_item_check(item_hash, used, requested)
   $evm.log(:info, "Used #{item_hash[:type]}: #{used} #{item_hash[:unit]}")
-
+  limit = quota_values(item_hash, item_hash[:unit])
   args_hash = {:used      => used,
                :requested => requested,
-               :limit     => quota_values(item_hash),
+               :limit     => limit,
                :unit      => item_hash[:unit],
                :warn      => item_hash[:warn],
                :item      => item_hash[:reason_key]}
-  quota_check(args_hash) unless quota_value.zero?
+  quota_check(args_hash) unless limit.zero?
 end
 
-def quota_values(item_hash)
-  object_value = quota_model_value(item_hash[:model_attribute])
-  tag_value = tag_value(item_hash[:tag_name], @entity.tags(item_hash[:tag_name]).first)
-  quota_value(tag_value, object_value)
+def quota_values(item_hash, unit)
+  object_value = quota_model_value(item_hash[:model_attribute], unit)
+  tag_value = tag_value(item_hash[:tag_name], @entity.tags(item_hash[:tag_name]).first, unit)
+  final_quota_value(tag_value, object_value)
 end
 
-def quota_model_value(model_attr)
-  model_value(model_attr)
+def quota_model_value(model_attr, unit)
+  model_value(model_attr, unit)
 end
 
-def quota_value(tag_quota_value, object_quota_value)
+def final_quota_value(tag_quota_value, object_quota_value)
   tag_quota_value.zero? ? object_quota_value : tag_quota_value
 end
 
@@ -364,7 +383,7 @@ def service_options
 end
 
 # get_dialog_options_hash - Look for dialog variables in the dialog options hash that start with "dialog_option_[0-9]"
-def get_dialogs_options_hash(dialog_options)
+def get_dialog_options_hash(dialog_options)
   options_hash = Hash.new { |h, k| h[k] = {} }
   # Loop through all of the options and build an options_hash from them
   dialog_options.each do |k, v|
@@ -400,9 +419,9 @@ def quota_exceeded_message(type)
   err_message = nil
   case type
   when 'limit'
-    err_message = message_text(nil, "Service request denied due to the following quota limits: ")
+    err_message = message_text(nil, "Request denied due to the following quota limits: ")
   end
-  warn_message = message_text('warn_', "Service request warning due to the following quota thresholds: ")
+  warn_message = message_text('warn_', "Request warning due to the following quota thresholds: ")
 
   $evm.log(:info, "Quota Error Message: #{err_message}") if err_message
   $evm.log(:info, "Quota Warning Message: #{warn_message}") if warn_message
@@ -427,8 +446,10 @@ def setup
 end
 
 def error(type)
-  $evm.log(:warn, "Unable to calculate quota due to an error getting the #{type}")
+  msg = "Unable to calculate quota due to an error getting the #{type}"
+  $evm.log(:warn," #{msg}")
   $evm.root['ae_result'] = 'error'
+  raise msg
 end
 
 $evm.log(:warn, "Quota Processing starting.")
@@ -438,6 +459,11 @@ unless manage_quotas_by_group?
   return
 end
 
+$evm.log("info", "Listing Root Object Attributes:")
+$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
+$evm.log("info", "===========================================")
+
+
 setup
 
 request_info
@@ -445,8 +471,6 @@ error("request") if @miq_request.nil?
 
 entity_info
 error("entity") if @entity.nil?
-
-check_if_service
 
 options_hash = service_options if @service
 
