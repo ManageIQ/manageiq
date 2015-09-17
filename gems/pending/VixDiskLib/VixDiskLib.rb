@@ -136,6 +136,7 @@ class VixDiskLib
       raise VixDiskLibError, "ERROR: VixDiskLib.connect() got #{e} on DRbObject.new_with_uri()" if retry_num == 0
       retry_num -= 1 && retry
     end
+    trap("TERM") { kill("TERM", pid); $vim_log.warn "TERM Signal Received - exiting"; exit }
     vix_disk_lib_service
   end
 
