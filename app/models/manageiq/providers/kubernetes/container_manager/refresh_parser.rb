@@ -251,6 +251,7 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:labels] = parse_labels(pod)
       new_result[:node_selector_parts] = parse_node_selector_parts(pod)
+      new_result[:container_volumes] = parse_volumes(pod.spec.volumes)
       new_result
     end
 
@@ -501,6 +502,52 @@ module ManageIQ::Providers::Kubernetes
         :se_linux_role  => security_context.seLinuxOptions.try(:role),
         :se_linux_type  => security_context.seLinuxOptions.try(:type)
       }
+    end
+
+    def parse_volumes(volumes)
+      volumes.collect do |volume|
+        {
+          :type                    => 'ContainerVolumeKubernetes',
+          :name                    => volume.name,
+          :empty_dir_medium_type   => volume.emptyDir.try(:medium),
+          :gce_pd_name             => volume.gcePersistentDisk.try(:pdName),
+          :git_repository          => volume.gitRepo.try(:repository),
+          :git_revision            => volume.gitRepo.try(:revision),
+          :nfs_server              => volume.nfs.try(:server),
+          :iscsi_target_portal     => volume.iscsi.try(:targetPortal),
+          :iscsi_iqn               => volume.iscsi.try(:iqn),
+          :iscsi_lun               => volume.iscsi.try(:lun),
+          :glusterfs_endpoint_name => volume.glusterfs.try(:endpointsName),
+          :claim_name              => volume.persistentVolumeClaim.try(:claimName),
+          :rbd_ceph_monitors       => volume.rbd.try(:cephMonitors).to_a.join(','),
+          :rbd_image               => volume.rbd.try(:rbdImage),
+          :rbd_pool                => volume.rbd.try(:rbdPool),
+          :rbd_rados_user          => volume.rbd.try(:radosUser),
+          :rbd_keyring             => volume.rbd.try(:keyring),
+          :common_path             => [volume.hostPath.try(:path),
+                                       volume.nfs.try(:path),
+                                       volume.glusterfs.try(:path)].compact.first,
+          :common_fs_type          => [volume.gcePersistentDisk.try(:fsType),
+                                       volume.awsElasticBlockStore.try(:fsType),
+                                       volume.iscsi.try(:fsType),
+                                       volume.rbd.try(:fsType),
+                                       volume.cinder.try(:fsType)].compact.first,
+          :common_read_only        => [volume.gcePersistentDisk.try(:readOnly),
+                                       volume.awsElasticBlockStore.try(:readOnly),
+                                       volume.nfs.try(:readOnly),
+                                       volume.iscsi.try(:readOnly),
+                                       volume.glusterfs.try(:readOnly),
+                                       volume.persistentVolumeClaim.try(:readOnly),
+                                       volume.rbd.try(:readOnly),
+                                       volume.cinder.try(:readOnly)].compact.first,
+          :common_secret           => [volume.secret.try(:secretName),
+                                       volume.rbd.try(:secretRef).try(:name)].compact.first,
+          :common_volume_id        => [volume.awsElasticBlockStore.try(:volumeId),
+                                       volume.cinder.try(:volumeId)].compact.first,
+          :common_partition        => [volume.gcePersistentDisk.try(:partition),
+                                       volume.awsElasticBlockStore.try(:partition)].compact.first
+        }
+      end
     end
   end
 end
