@@ -1,4 +1,6 @@
 class MiqEmsMetricsProcessorWorker < MiqQueueWorkerBase
+  require_dependency 'miq_ems_metrics_processor_worker/runner'
+
   self.required_roles       = ["ems_metrics_processor"]
   self.default_queue_name   = "ems_metrics_processor"
 

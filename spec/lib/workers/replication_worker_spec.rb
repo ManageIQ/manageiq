@@ -1,11 +1,9 @@
 require "spec_helper"
 
-require "workers/replication_worker"
-
-describe ReplicationWorker do
+describe MiqReplicationWorker::Runner do
   before do
-    ReplicationWorker.any_instance.stub(:worker_initialization)
-    @worker = ReplicationWorker.new
+    MiqReplicationWorker::Runner.any_instance.stub(:worker_initialization)
+    @worker = MiqReplicationWorker::Runner.new
     @hb_file = Rails.root.join('tmp/rubyrep_hb')
   end
 

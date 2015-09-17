@@ -1,4 +1,6 @@
 class MiqEmsRefreshCoreWorker < MiqWorker
+  require_dependency 'miq_ems_refresh_core_worker/runner'
+
   include PerEmsWorkerMixin
 
   self.required_roles = ["ems_inventory"]

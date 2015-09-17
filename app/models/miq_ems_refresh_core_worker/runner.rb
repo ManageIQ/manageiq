@@ -1,12 +1,11 @@
-require 'workers/worker_base'
 require 'thread'
 
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VMwareWebService")
 
-class EmsRefreshCoreWorker < WorkerBase
+class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
   self.wait_for_worker_monitor = false
 
-  OPTIONS_PARSER_SETTINGS = WorkerBase::OPTIONS_PARSER_SETTINGS + [
+  OPTIONS_PARSER_SETTINGS = MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
     [:ems_id, 'EMS Instance ID', String],
   ]
 

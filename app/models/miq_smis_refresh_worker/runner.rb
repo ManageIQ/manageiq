@@ -1,8 +1,7 @@
-require 'workers/worker_base'
 require 'thread'
 require 'sync'
 
-class SmisRefreshWorker < WorkerBase
+class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
   self.wait_for_worker_monitor = true  # SmisRefreshWorker uses the VimBrokerWorker
 
   def after_initialize

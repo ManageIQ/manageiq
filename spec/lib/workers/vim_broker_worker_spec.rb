@@ -1,10 +1,9 @@
 require "spec_helper"
 
-require 'workers/vim_broker_worker'
 require 'MiqVim'
 require 'MiqVimBroker'
 
-describe VimBrokerWorker do
+describe MiqVimBrokerWorker::Runner do
   before(:each) do
     guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)

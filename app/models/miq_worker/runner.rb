@@ -1,7 +1,7 @@
 require 'miq-process'
 require 'thread'
 
-class WorkerBase
+class MiqWorker::Runner
   include Vmdb::Logging
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :vmdb_config, :active_roles, :server
@@ -36,11 +36,7 @@ class WorkerBase
   end
 
   def self.corresponding_model
-    if parent == Object
-      @corresponding_model ||= Object.const_get(self == WorkerBase ? "MiqWorker" : "Miq#{self.name}")
-    else
-      parent
-    end
+    parent
   end
 
   def self.interrupt_signals

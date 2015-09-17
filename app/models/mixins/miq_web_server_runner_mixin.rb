@@ -1,4 +1,4 @@
-module WebServerWorkerMixin
+module MiqWebServerRunnerMixin
   extend ActiveSupport::Concern
 
   included do

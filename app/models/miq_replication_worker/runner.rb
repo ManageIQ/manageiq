@@ -1,7 +1,6 @@
-require 'workers/worker_base'
 require 'io/wait' # To support IO#ready? calls
 
-class ReplicationWorker < WorkerBase
+class MiqReplicationWorker::Runner < MiqWorker::Runner
   def do_before_work_loop
     stop_active_replication_processes
     start_replicate

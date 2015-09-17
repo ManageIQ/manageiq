@@ -1,13 +1,12 @@
-require 'workers/worker_base'
 require 'thread'
 
-class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
+class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runner
   class EventCatcherHandledException < StandardError
   end
 
   self.wait_for_worker_monitor = false
 
-  OPTIONS_PARSER_SETTINGS = WorkerBase::OPTIONS_PARSER_SETTINGS + [
+  OPTIONS_PARSER_SETTINGS = ::MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
     [:ems_id, 'EMS Instance ID', String],
   ]
 

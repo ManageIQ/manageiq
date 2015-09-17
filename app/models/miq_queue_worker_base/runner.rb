@@ -1,7 +1,6 @@
-require 'workers/worker_base'
 require 'miq-system'
 
-class QueueWorkerBase < WorkerBase
+class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   def after_sync_config
     self.sync_cpu_usage_threshold
     self.sync_dequeue_method

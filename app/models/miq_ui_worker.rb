@@ -1,4 +1,6 @@
 class MiqUiWorker < MiqWorker
+  require_dependency 'miq_ui_worker/runner'
+
   REQUIRED_ROLE = 'user_interface'
   self.required_roles = [REQUIRED_ROLE]
   self.check_for_minimal_role = false

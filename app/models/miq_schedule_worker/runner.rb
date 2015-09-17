@@ -1,13 +1,11 @@
-require 'workers/worker_base'
 require 'thread'
-require_relative 'schedule_worker/jobs'
 
-class ScheduleWorker < WorkerBase
+class MiqScheduleWorker::Runner < MiqWorker::Runner
   include ActiveSupport::Callbacks
   define_callbacks :dst_change
   set_callback :dst_change, :after, :load_user_schedules
 
-  OPTIONS_PARSER_SETTINGS = WorkerBase::OPTIONS_PARSER_SETTINGS + [
+  OPTIONS_PARSER_SETTINGS = MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
     [:emsid, 'EMS Instance ID', String],
   ]
 
@@ -571,7 +569,7 @@ class ScheduleWorker < WorkerBase
   def do_work
     _log.info("Number of scheduled items to be processed: #{queue_length}.")
 
-    schedule_worker_jobs = ScheduleWorker::Jobs.new
+    schedule_worker_jobs = MiqScheduleWorker::Jobs.new
     while @queue.length > 0
       heartbeat
       method_to_send, *args = @queue.deq
