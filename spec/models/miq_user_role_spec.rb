@@ -139,11 +139,17 @@ describe MiqUserRole do
     end
   end
 
-  it "should not be deleted while a group is still assigned" do
+  it "deletes with no group assigned" do
+    role = FactoryGirl.create(:miq_user_role, :name => "test role")
+    role.destroy
+    expect(MiqUserRole.count).to eq(0)
+  end
+
+  it "does not delete with group assigned" do
     role = FactoryGirl.create(:miq_user_role, :name => "test role")
     FactoryGirl.create(:miq_group, :description => "test group", :miq_user_role => role)
 
     expect { role.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError)
-    MiqUserRole.count.should eq 1
+    expect(MiqUserRole.count).to eq(1)
   end
 end

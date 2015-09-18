@@ -8,7 +8,7 @@ describe User do
       MiqRegion.seed
 
       # create User Role record...
-      @miq_user_role = FactoryGirl.create(
+      miq_user_role = FactoryGirl.create(
                       :miq_user_role,
                       :name       => "EvmRole-super_administrator",
                       :read_only  => true,
@@ -16,14 +16,11 @@ describe User do
                       )
 
       # create Miq Group record...
-      @guid = MiqUUID.new_guid
-      MiqGroup.stub(:my_guid).and_return(@guid)
       @miq_group = FactoryGirl.create(
                   :miq_group,
-                  :guid             => @guid,
-                  :description      => "EvmGroup-super_administrator",
-                  :group_type       => "system",
-                  :miq_user_role    => @miq_user_role
+                  :description   => "EvmGroup-super_administrator",
+                  :group_type    => "system",
+                  :miq_user_role => miq_user_role
                   )
 
       @miq_server = EvmSpecHelper.local_miq_server
@@ -79,40 +76,26 @@ describe User do
     end
 
     it "should ensure presence of name" do
-      @user.save.should be_true
-      @user.name = nil
-      @user.save.should be_false
+      expect(FactoryGirl.build(:user, :name => nil)).not_to be_valid
     end
 
     it "should ensure presence of user id" do
-      @user.save.should be_true
-      @user.userid = nil
-      @user.save.should be_false
+      expect(FactoryGirl.build(:user, :userid => nil)).not_to be_valid
     end
 
-    # it "should ensure presence of region" do
-    #   @user.region = nil
-    #   @user.save.should be_false
-    # end
-
     it "should invalidate incorrect email address" do
-      @user.valid?.should be_true
-      @user.email = "thisguy@@manageiq.com"
-      @user.valid?.should be_false
+      expect(FactoryGirl.build(:user, :email => "thisguy@@manageiq.com")).not_to be_valid
     end
 
     it "should validate email address with a value of nil" do
-      @user.email = nil
-      @user.valid?.should be_true
+      expect(FactoryGirl.build(:user, :email => nil)).to be_valid
     end
 
     it "should save proper email address" do
-      @user.email = "that.guy@manageiq.com"
-      @user.valid?.should be_true
+      expect(FactoryGirl.build(:user, :email => "that.guy@manageiq.com")).to be_valid
     end
     it "should reject invalid characters in email address" do
-      @user.email = "{{that.guy}}@manageiq.com"
-      @user.valid?.should be_false
+      expect(FactoryGirl.build(:user, :email => "{{that.guy}}@manageiq.com")).not_to be_valid
     end
 
     it "should change user password" do
@@ -541,6 +524,20 @@ describe User do
       @vm[3].update_attributes(:miq_group => @limited_self_service_group)
 
       expect(accessible_vms.size).to eq(1)
+    end
+  end
+
+  describe ".all_users_of_group" do
+    it "finds users" do
+      g  = FactoryGirl.create(:miq_group)
+      g2 = FactoryGirl.create(:miq_group)
+
+      FactoryGirl.create(:user)
+      u_one  = FactoryGirl.create(:user, :miq_groups => [g])
+      u_two  = FactoryGirl.create(:user, :miq_groups => [g, g2], :current_group => g)
+
+      expect(described_class.all_users_of_group(g)).to match_array([u_one, u_two])
+      expect(described_class.all_users_of_group(g2)).to match_array([u_two])
     end
   end
 end
