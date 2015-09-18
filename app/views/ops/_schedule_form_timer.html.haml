@@ -37,7 +37,7 @@
       .form-group
         %label.col-md-2.control-label{"for" => "textInput-markup"}
           = _("Starting Date")
-        .col-md-2
+        .col-md-3
           .input-group.date
             %input{:type             => "text",
                    :name             => "start_date",
@@ -46,6 +46,7 @@
                    :language         => FastGettext.locale,
                    :required         => true,
                    :checkchange      => "",
+                   :class            => "form-control bootstrap-datepicker",
                    :readonly         => true}
             %span.input-group-addon{"data-toggle" => "datepicker"}
               %span.fa.fa-calendar
@@ -60,13 +61,13 @@
                        options_for_select(Array.new(24) { |i| i }),
                        "ng-model"    => "scheduleModel.start_hour",
                        "checkchange" => "",
-                       :class        => "selectWidth",
+                       "data-width"  => "auto",
                        "selectpicker-for-select-tag" => "")
           %span h
           = select_tag("start_min",
                        options_for_select(Array.new(12) { |i| i * 5 }),
                        "ng-model"    => "scheduleModel.start_min",
                        "checkchange" => "",
-                       :class        => "selectWidth",
+                       "data-width"  => "auto",
                        "selectpicker-for-select-tag" => "")
           %span m
