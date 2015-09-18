@@ -30,7 +30,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, service, CollectionsApi) {
+  function StateController($state, service, CollectionsApi, EditServiceModal) {
     var vm = this;
 
     vm.title = 'Service Details';
@@ -38,6 +38,7 @@
 
     vm.activate = activate;
     vm.removeService = removeService;
+    vm.editServiceModal = editServieModal;
 
     activate();
 
@@ -54,6 +55,10 @@
 
       function removeFailure(data) {
       }
+    }
+
+    function editServieModal() {
+      EditServiceModal.showModal(vm.service);
     }
   }
 })();
