@@ -31,4 +31,4 @@
 -# if set by controller, set up to run as JS after onload is done
 - if @miq_after_onload
   :javascript
-    var miq_after_onload = '#{@miq_after_onload.html_safe}';
+    var miq_after_onload = '#{j @miq_after_onload}';

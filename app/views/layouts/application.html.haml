@@ -39,7 +39,7 @@
 
       :javascript
         ManageIQ.browser = "#{j browser_info(:name_ui)}";
-        ManageIQ.controller = "#{j request.parameters[:controller]}";
+        ManageIQ.controller = "#{j controller_name}";
 
       %style html, body{width:100%; height:100%; margin:0px; padding:0px; overflow:hidden;}
 
