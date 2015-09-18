@@ -33,6 +33,7 @@ class MiqGroup < ActiveRecord::Base
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
   include TimezoneMixin
+  include TenancyMixin
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 

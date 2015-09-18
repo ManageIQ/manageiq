@@ -21,6 +21,7 @@ class MiqRequestTask < ActiveRecord::Base
   validates_inclusion_of :status, :in => %w{ Ok Warn Error Timeout }
 
   include MiqRequestMixin
+  include TenancyMixin
 
   def approved?
     if miq_request.class.name.include?('Template') && miq_request_task
