@@ -8,7 +8,7 @@ FactoryGirl.define do
 
   factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
-    tenant EvmSpecHelper.create_root_tenant
+    tenant { EvmSpecHelper.create_root_tenant }
     enabled true
     trait :with_methods do
       transient do
