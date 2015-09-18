@@ -40,7 +40,7 @@ module.exports = function(gulp, options) {
       .pipe(cssFilter.restore())
       // Get the custom javascript
       .pipe(jsAppFilter)
-      .pipe(replace("'" + config.devHost + "'", 'null'))
+      .pipe(replace("'" + config.devHost + "'", "location.protocol + '//' + location.host"))
 
       // FIXME Disabling minifiction and injection until the following issue with ng-annotate has been resolved
       // Issue : https://github.com/olov/ng-annotate/issues/168
