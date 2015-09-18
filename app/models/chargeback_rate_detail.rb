@@ -6,8 +6,8 @@ class ChargebackRateDetail < ActiveRecord::Base
   def cost(value)
     return 0.0 unless self.enabled?
     value = 1 if self.group == 'fixed'
-    unless self.chargeback_tier_id.nil?
-      tier = ChargebackTier.where(guid: self.chargeback_tier_id).take
+    unless self.chargeback_tier.nil?
+      tier = ChargebackTier.where(id: self.chargeback_tier).take
       unless tier.nil?
       self.rate = tier.rate(value)
       end

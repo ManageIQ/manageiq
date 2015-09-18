@@ -24,11 +24,11 @@ describe ChargebackRateDetail do
 
     tier = FactoryGirl.create(:chargeback_tier, :rate_below => 0.0, :rate_above => 0.5)
     tier_id=tier.id
-    tier_detail1 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 1.0, :end => 2.0, :tier_rate => 0.1  )
-    tier_detail2 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 2.0, :end => 4.0, :tier_rate => 0.15)
-    tier_detail3 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier_id => tier_id, :start => 4.0, :end => 8.0, :tier_rate => 0.2)
+    tier_detail1 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier => tier_id, :start => 1.0, :end => 2.0, :tier_rate => 0.1  )
+    tier_detail2 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier => tier_id, :start => 2.0, :end => 4.0, :tier_rate => 0.15)
+    tier_detail3 = FactoryGirl.create(:chargeback_tier_detail, :chargeback_tier => tier_id, :start => 4.0, :end => 8.0, :tier_rate => 0.2)
 
-    cbd = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tier_id => tier_id, :per_time => per_time, :per_unit => per_unit, :enabled => true)
+    cbd = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tier => tier_id, :per_time => per_time, :per_unit => per_unit, :enabled => true)
     cbd.cost(cvalue).should == cvalue * cbd.hourly_rate
 
     cbd.group = 'fixed'

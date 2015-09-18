@@ -5,11 +5,11 @@ class CreateChargebackTierDetails < ActiveRecord::Migration
       t.float :start
       t.float :end
       t.string :tier_rate
-      t.bigint :chargeback_tier_id
+      t.bigint :chargeback_tier
       t.datetime :created_on
       t.string :updated_on
       t.string :datetime
     end
-    add_index :chargeback_tier_details, ["chargeback_tier_id"], :name => "index_chargeback_tier_details_on_chargeback_tier_id"
+    add_index :chargeback_tier_details, ["chargeback_tier"], :name => "index_chargeback_tier_details_on_chargeback_tier"
   end
 end

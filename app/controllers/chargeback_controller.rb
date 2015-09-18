@@ -220,6 +220,7 @@ class ChargebackController < ApplicationController
           detail.source = r[:source]
           detail.rate = r[:rate]
           detail.per_time = r[:per_time]
+          detail.chargeback_tier = r[:chargeback_tier]
           detail.group = r[:group]
           detail.per_unit = r[:per_unit]
           detail.metric = r[:metric]
@@ -243,6 +244,8 @@ class ChargebackController < ApplicationController
                   # detail.rate = r[:rate]
                   # detail.per_time = r[:per_time]
                   detail.rate = ""
+                  detail.chargeback_tier = r[:chargeback_tier]
+                  #detail.chargeback_tier = "Not tiered"
                   detail.per_time = "hourly"
                   detail.group = r[:group]
                   detail.per_unit = r[:per_unit]
@@ -545,6 +548,7 @@ class ChargebackController < ApplicationController
       temp = {}
       temp[:rate] = (!r.rate.nil? && r.rate != "") ? r.rate : 0
       temp[:per_time] = r.per_time ? r.per_time : "hourly"
+      temp[:chargeback_tier]= r.chargeback_tier ? r.chargeback_tier : "Not tiered"
       @edit[:new][:details].push(temp)
     end
 
@@ -565,6 +569,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |_detail, i|
       @edit[:new][:details][i][:rate] = params["rate_#{i}".to_sym] if params["rate_#{i}".to_sym]
       @edit[:new][:details][i][:per_time] = params["per_time_#{i}".to_sym] if params["per_time_#{i}".to_sym]
+      @edit[:new][:details][i][:chargeback_tier] = params["chargeback_tier_#{i}".to_sym] if params["chargeback_tier_#{i}".to_sym]
     end
   end
 
@@ -573,6 +578,7 @@ class ChargebackController < ApplicationController
       @sb[:rate_details][i].rate               = @edit[:new][:details][i][:rate]
       @sb[:rate_details][i].per_time           = @edit[:new][:details][i][:per_time]
       @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
+      @sb[:rate_details][i].chargeback_tier = ChargebackTier.find_by_id(@edit[:new][:details][i][:chargeback_tier]).id
     end
   end
 
