@@ -24,6 +24,12 @@ RSpec.configure do |config|
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
   end
 
+  if ENV["CI"]
+    config.after(:suite) do
+      require "spec/coverage_helper.rb"
+    end
+  end
+
   config.backtrace_exclusion_patterns -= [%r{/lib\d*/ruby/}, %r{/gems/}]
   config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
   config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
