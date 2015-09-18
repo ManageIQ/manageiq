@@ -1,56 +1,57 @@
 - url = url_for(:action => action_url, :id => "#{record.id || "new"}")
-#edit_to_email_div{:style => "width:100%;height:100%;overflow:auto;"}
-  %br
-    %table.style1
-      %tr
-        %td.key
-          = _("To")
-          %br
-          = _("(Click to remove)")
-        %td
-          - if @edit[:new][:email][:to].blank?
-            = _("None")
+%br
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _("To")
+        %br
+        = _("(Click to remove)")
+      .col-md-8
+        - if @edit[:new][:email][:to].blank?
+          = _("None")
+        - else
+          - if @email_to.present?
+            - emails = @email_to.sort_by { |_email, display_email| display_email }.collect { |email, _display_email| email }
+          - elsif @edit[:new][:email][:to].present?
+            - emails = @edit[:new][:email][:to].sort
           - else
-            - if @email_to.present?
-              - emails = @email_to.sort_by { |_email, display_email| display_email }.collect { |email, _display_email| email }
-            - elsif @edit[:new][:email][:to].present?
-              - emails = @edit[:new][:email][:to].sort
-            - else
-              - emails = []
-            - emails.each_with_index do |e, e_idx|
-              = e_idx > 0 ? "; " : ""
-              = link_to(e,
-                        {:action       => action_url,
-                         :remove_email => e,
-                         :id           => "#{record.id || "new"}"},
-                        "data-miq_sparkle_on"  => true,
-                        "data-miq_sparkle_off" => true,
-                        :remote                => true,
-                        :title                 => _("Remove %s") % e)
-      %tr
-        %td.key
-          = _("Add a User")
-          %td
-            - if @edit[:user_emails].empty?
-              = _("None Available or All Selected")
-            - else
-              = select_tag("user_email",
-                           options_for_select([[_("<Choose>"), ""]] + @edit[:user_emails].invert.sort),
-                           "data-miq_sparkle_on"  => true,
-                           "data-miq_sparkle_off" => true,
-                           "data-miq_observe"     => {:url => url}.to_json)
-      %tr
-        %td.key
-          = _("Add (enter manually)")
-        %td.wider
+            - emails = []
+          - emails.each_with_index do |e, e_idx|
+            = e_idx > 0 ? "; " : ""
+            = link_to(e,
+                      {:action                => action_url,
+                       :remove_email          => e,
+                       :id                    => "#{record.id || "new"}"},
+                       "data-miq_sparkle_on"  => true,
+                       "data-miq_sparkle_off" => true,
+                       :remote                => true,
+                       :title                 => _("Remove %s") % e)
+    .form-group
+      %label.control-label.col-md-2
+        = _("Add a User")
+      .col-md-8
+        - if @edit[:user_emails].empty?
+          = _("None Available or All Selected")
+        - else
+          = select_tag("user_email",
+                       options_for_select([[_("<Choose>"), ""]] + @edit[:user_emails].invert.sort),
+                       "data-miq_sparkle_on"  => true,
+                       "data-miq_sparkle_off" => true,
+                       :class                 => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("user_email", "#{url}")
+    .form-group
+      %label.control-label.col-md-2
+        = _("Add (enter manually)")
+      .col-md-8
+        .input-group
           = text_field_tag("email",
                            @edit[:email],
                            :maxlength         => MAX_DESC_LEN,
                            :style             => "float: left; margin-right: 2px",
+                           :class             => "form-control",
                            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          = image_tag('/images/toolbars/new.png',
-                      :class   => "rollover",
-                      :style   => "width: 20px; height: 20px",
-                      :alt     => t = _("Add"),
-                      :title   => t,
-                      :onclick => "miqAjaxButton('#{url_for(:action => action_url, :button => "add_email", :id => "#{record.id || "new"}")}');")
+          %span.input-group-addon
+            %i.fa.fa-plus{:alt => t = _("Add"), :title => t, :onclick => "miqAjaxButton('#{url_for(:action => action_url, :button => "add_email", :id => "#{record.id || "new"}")}');"}
+  %hr

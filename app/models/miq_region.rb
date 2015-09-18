@@ -86,8 +86,8 @@ class MiqRegion < ActiveRecord::Base
     Vm.in_region(region_number)
   end
 
-  def perf_rollup_parent(interval_name=nil)
-    MiqEnterprise.my_enterprise unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [MiqEnterprise.my_enterprise].compact unless interval_name == 'realtime'
   end
 
   def my_zone

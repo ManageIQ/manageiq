@@ -163,6 +163,7 @@ module ManageIQ::Providers
 
           raw_resources.collect do |resource|
             physical_id = resource.physical_resource_id
+            @resource_to_stack[physical_id] = stack.id
             @data_index.fetch_path(:orchestration_stack_resources, physical_id)
           end
         end

@@ -2,6 +2,10 @@
   - verify_title_on = "Validate the credentials by logging into the selected %s" % title_for_host
 - else
   - verify_title_on = "Validate the credentials by logging into the Server"
+- if controller.send(:restful?)
+  - validate = "validateClicked($event, '#{valtype}', '#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}', true)"
+- else
+  - validate = "validateClicked('#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}')"
 
 %div{'ng-show' => ng_show}
   = button_tag("Validate",
@@ -14,4 +18,4 @@
                  :alt       => verify_title_on,
                  :title     => verify_title_on,
                  "ng-show"  => basic_info_needed ? "canValidateBasicInfo()" : "canValidate()",
-                 "ng-click" => "validateBClicked($event, '#{valtype}', '#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}', true)")
+                 "ng-click" => validate)

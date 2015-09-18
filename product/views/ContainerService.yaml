@@ -20,6 +20,7 @@ db: ContainerService
 # Columns to fetch from the main table
 cols:
 - name
+- service_type
 - portal_ip
 - session_affinity
 
@@ -40,6 +41,7 @@ col_order:
 - name
 - ext_management_system.name
 - container_project.name
+- service_type
 - portal_ip
 - session_affinity
 
@@ -48,6 +50,7 @@ headers:
 - Name
 - Provider
 - Project Name
+- Type
 - Portal IP
 - Session Affinity
 

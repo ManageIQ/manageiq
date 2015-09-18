@@ -1,7 +1,5 @@
-require 'workers/queue_worker_base'
-
-class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::QueueWorkerBase
-  OPTIONS_PARSER_SETTINGS = WorkerBase::OPTIONS_PARSER_SETTINGS + [
+class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::MiqQueueWorkerBase::Runner
+  OPTIONS_PARSER_SETTINGS = ::MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
     [:ems_id, 'EMS Instance ID', String],
   ]
 

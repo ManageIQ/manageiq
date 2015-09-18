@@ -7,8 +7,7 @@ describe DashboardController do
 
   context "#with unknown subdomain or domain" do
     before do
-      MiqRegion.seed
-      Tenant.seed
+      EvmSpecHelper.create_root_tenant
       @request.host = "www.example.com"
     end
 

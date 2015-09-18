@@ -168,6 +168,8 @@ module Openstack
         expect(flavor.enabled).to               eq true
         expect(flavor.cpu_cores).to             eq nil
         expect(flavor.description).to           eq nil
+        expect(flavor.disk_size).to_not         be_nil
+        expect(flavor.disk_count).to            eq flavor.disk_size == 0 ? 0 : 1
       end
     end
 

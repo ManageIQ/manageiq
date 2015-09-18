@@ -4,6 +4,7 @@ module ApplicationHelper
   include_concern 'FormTags'
   include Sandbox
   include CompressedIds
+  include StiRoutingHelper
   include TextualSummaryHelper
 
   def css_background_color
@@ -92,6 +93,8 @@ module ApplicationHelper
     return auth
   end
 
+  # NB: This differs from controller_for_model; until they're unified,
+  # make sure you have the right one.
   def model_to_controller(record)
     record.class.base_model.name.underscore
   end
@@ -103,6 +106,16 @@ module ApplicationHelper
     else
       self.class.model
     end
+  end
+
+  def restful_routed?(record_or_model)
+    model = if record_or_model.kind_of?(Class)
+              record_or_model
+            else
+              record_or_model.class
+            end
+    model = ui_base_model(model)
+    respond_to?("#{model.model_name.route_key}_path")
   end
 
   def url_for_record(record, action="show") # Default action is show
@@ -118,8 +131,8 @@ module ApplicationHelper
 
   # Create a url for a record that links to the proper controller
   def url_for_db(db, action="show", item = nil) # Default action is show
-    if item && EmsCloud === item
-      return ems_cloud_path(item.id)
+    if item && restful_routed?(item)
+      return polymorphic_path(item)
     end
     if @vm && ["Account", "User", "Group", "Patch", "GuestApplication"].include?(db)
       return url_for(:controller => "vm_or_template",
@@ -660,7 +673,7 @@ module ApplicationHelper
   end
 
   def url_for_item_quad_text(record, id, action)
-    url_for(:controller => model_to_controller(record),
+    url_for(:controller => controller_for_model(record.class),
             :action     => action,
             :id         => record.id.to_s,
             :show       => id.to_s)

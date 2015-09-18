@@ -75,6 +75,7 @@ module MiqAeEngine
 
     options[:instance_name] ||= 'AUTOMATION'
     options[:attrs]         ||= {}
+    options[:tenant_id]     ||= Tenant.root_tenant.try(:id)
 
     object_type      = options[:object_type]
     object_id        = options[:object_id]
@@ -87,6 +88,7 @@ module MiqAeEngine
     ae_state_previous = options[:ae_state_previous]
     vmdb_object      = nil
     ae_result        = 'error'
+    tenant_id        = options[:tenant_id]
 
     begin
       object_name = "#{object_type}.#{object_id}"
@@ -105,6 +107,7 @@ module MiqAeEngine
       automate_attrs[:ae_state_retries] = ae_state_retries   unless ae_state_retries.nil?
       automate_attrs['ae_state_data']   = ae_state_data      unless ae_state_data.nil?
       automate_attrs['ae_state_previous'] = ae_state_previous  unless ae_state_previous.nil?
+      automate_attrs['Tenant::tenant']    = tenant_id          unless tenant_id.nil?
 
       create_automation_object_options = {}
       create_automation_object_options[:vmdb_object] = vmdb_object                unless vmdb_object.nil?
@@ -281,6 +284,7 @@ module MiqAeEngine
   def self.create_ae_attrs(attrs, name, vmdb_object, objects = [MiqServer.my_server, User.current_user])
     ae_attrs  = attrs.dup
     ae_attrs['object_name'] = name
+    ae_attrs['tenant_id'] ||= Tenant.root_tenant.try(:id)
 
     # Prepare for conversion to Automate MiqAeService objects (process vmdb_object first in case it is a User or MiqServer)
     ([vmdb_object] + objects).each do |object|
@@ -298,7 +302,8 @@ module MiqAeEngine
     array_objects.each do |o|
       ae_attrs[o] = ae_attrs[o].first   if ae_attrs[o].kind_of?(Array)
     end
-
+    tenant_id = ae_attrs.delete('tenant_id')
+    ae_attrs['Tenant::tenant'] = tenant_id if tenant_id
     ae_attrs
   end
 

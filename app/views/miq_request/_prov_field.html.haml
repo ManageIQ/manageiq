@@ -18,12 +18,12 @@
   - if [:cluster_filter, :ds_filter, :host_filter, :rp_filter, :vm_filter].include?(field)
     -# ### Filter Pull Down fields, show them only if there are any values
     - unless field_hash[:values].blank?
-      %tr
-        %td.key
+      .form-group
+        %label.col-md-2.control-label
           = field_hash[:description]
           - if @edit && field_hash[:required] && field_hash[:display] == :edit
             *
-        %td.wide
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of this pulldown field
             - opts = [["<#{_('ALL')}>", 0]]
@@ -32,11 +32,14 @@
             - else
               - opts += Array(field_hash[:values].invert).sort_by(&:first)
             = select_tag(field_id,
-              options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
-              :style                 => "width: auto;",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+                        options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
+                        :style                 => "width: auto;",
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :class    => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("#{field_id}", "#{url}")
           - else
             -# Just show the field value
             -# Description is in the second, last, array element
@@ -45,8 +48,8 @@
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             = field_hash[:notes]
   - else
-    %tr
-      %td.key{:valign => "top"}
+    .form-group
+      %label.col-md-2.control-label{:valign => "top"}
         = field_hash[:description]
         - if @edit && @edit[:new] && [:vm_description].include?(field)
           (
@@ -57,27 +60,30 @@
           *
       -# ### Text fields
       - if [:cpu_limit, :cpu_reserve, :dns_servers, :dns_suffixes, :gateway, :hostname, :ip_addr, :linux_host_name, :linux_domain_name, :mac_address, :owner_address, :owner_city, :owner_company, :owner_country, :owner_department, :owner_email, :owner_first_name, :owner_last_name, :owner_load_ldap, :owner_office, :owner_manager, :owner_manager_mail, :owner_manager_phone, :owner_phone, :owner_phone_mobile, :owner_state, :owner_title, :owner_zip, :request_notes, :subnet_mask, :memory_limit, :memory_reserve, :root_password, :sysprep_password, :sysprep_domain_admin, :sysprep_domain_password, :sysprep_workgroup_name, :sysprep_full_name, :sysprep_organization, :sysprep_product_id, :sysprep_computer_name, :sysprep_per_server_max_connections, :vm_description, :vm_name, :wins_servers].include?(field)
-        %td.wide
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
             - if [:root_password, :sysprep_password, :sysprep_domain_password].include?(field)
               = password_field_tag(field_id, options[field],
-                :maxlength         => MAX_NAME_LEN,
-                :disabled          => disabled,
-                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                                    :maxlength         => MAX_NAME_LEN,
+                                    :class             => "form-control",
+                                    :disabled          => disabled,
+                                    "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             - elsif [:request_notes, :vm_description].include?(field)
               = text_area_tag(field_id, options[field],
-                :maxlength                     => field_hash[:max_length],
-                :size                          => "25x4",
-                :counter                       => "description_count",
-                "data-miq_check_max_length"    => true,
-                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                                :maxlength                     => field_hash[:max_length],
+                                :class             => "form-control",
+                                :size                          => "25x4",
+                                :counter                       => "description_count",
+                                "data-miq_check_max_length"    => true,
+                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             - else
               - len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN
               = text_field_tag(field_id, options[field],
-                :maxlength         => len,
-                :disabled          => disabled,
-                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                                :maxlength         => len,
+                                :class             => "form-control",
+                                :disabled          => disabled,
+                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           - else
             -# Just show the field value
             - if [:root_password, :sysprep_password, :sysprep_domain_password].include?(field)
@@ -87,9 +93,9 @@
             - else
               = options[field]
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
-            -#  Display notes if available
+            -# Display notes if available
             = field_hash[:notes]
-        %td
+        .col-md-2
           - if field == :owner_email
             - fh = wf.get_field(:owner_load_ldap, dialog)
             - if @edit && field_hash[:display] == :edit && fh[:display] == :show && !@edit[:stamp_typ]
@@ -103,7 +109,7 @@
                   :button                                         => 'submit')}');")
       - elsif [:vm_prefix].include?(field)
         -# text field for vm prefix/suffix
-        %td.wide
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
             = text_field_tag(field_id, options[field],
@@ -122,7 +128,7 @@
             = field_hash[:notes]
       - elsif [:vm_memory].include?(field)
         -# text field or a Pull down for vm memory, depending upon existence of :values hash
-        %td.wide
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !field_hash[:values] && !@edit[:stamp_typ]
             -# Allow editing of the text field
             = text_field_tag(field_id, options[field].kind_of?(Array) ? options[field].last : options[field],
@@ -139,11 +145,14 @@
                 - opts = [["<#{_('Choose')}>", nil]]
               - opts += (Array(field_hash[:values].invert).sort_by { |a| a.first.to_i })
             = select_tag(field_id,
-              options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
-              :disabled              => disabled,
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+                          options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
+                          :disabled              => disabled,
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :class    => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("#{field_id}", "#{url}")
           - else
             -# Just show the field value
             = options[field].kind_of?(Array) ? options[field].last : options[field]
@@ -152,13 +161,13 @@
             = field_hash[:notes]
       - elsif [:customization_template_script, :sysprep_upload_text].include?(field)
         -# text Area field to display uploaded file contents
-        %td.wide
+        .col-md-8
           = text_area_tag(field_id, options[field],
             :readonly => "readonly",
             :style    => "width: 600px; height: 250px;")
       - elsif [:ldap_ous].include?(field)
         -# ### dhtmlxree control for tags fields
-        %td.wide
+        .col-md-8
           - tree_id = "ldap_ous_treebox"
           %div{:id => tree_id, :style => "color:#000; overflow: hidden;"}
           - if @edit && @edit[:req_id]
@@ -182,7 +191,7 @@
             = field_hash[:notes]
       - elsif [:placement_folder_name].include?(field)
         -# ### wider Pull Down field that fits into 1280 wide screens
-        %td.wide
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of this pulldown field
             - if field_hash[:values].blank?
@@ -200,12 +209,15 @@
               - else
                 - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
             = select_tag(field_id,
-              options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
-              :disabled              => disabled,
-              :style                 => "width:auto;",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+                        options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
+                        :disabled              => disabled,
+                        :style                 => "width:auto;",
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :class    => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("#{field_id}", "#{url}")
           - else
             -# Just show the field value
             = options[field].last
@@ -223,7 +235,7 @@
         -# ### Multiple select Pull Down fields
         - multiple = field == :security_groups
         - td_class = field == :security_groups ? "wider" : "wide"
-        %td{:class => td_class}
+        .col-md-8{:class => td_class}
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of this pulldown field
             - if field_hash[:values].blank?
@@ -241,12 +253,15 @@
               - else
                 - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
             = select_tag(field_id,
-              options_for_select(opts, (options[field].kind_of?(Array) && !multiple) ? options[field].first : options[field]),
-              :multiple              => multiple,
-              :disabled              => disabled,
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+                        options_for_select(opts, (options[field].kind_of?(Array) && !multiple) ? options[field].first : options[field]),
+                        :multiple              => multiple,
+                        :disabled              => disabled,
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :class    => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("#{field_id}", "#{url}")
           - else
             -# Just show the field value
             - if multiple
@@ -262,7 +277,7 @@
             = field_hash[:notes]
       - elsif [:tag_ids, :vm_tags].include?(field)
         -# ### dhtmlxree control for tags fields
-        %td.wide
+        .col-md-8
           - tree_id = "all_tags_treebox"
           %div{:id => tree_id, :style => "color:#000; overflow: hidden;"}
           - if @edit && @edit[:req_id]
@@ -291,7 +306,7 @@
             = _("* Only a single value can be assigned from these Tag Categories")
       - elsif [:attached_ds, :iso_image_id, :placement_availability_zone, :placement_cluster_name, :placement_dc_name, :placement_ds_name, :placement_ems_name, :placement_host_name, :placement_rp_name, :pxe_image_id, :windows_image_id, :src_configured_system_ids, :src_host_ids, :src_vm_id, :sysprep_custom_spec, :customization_template_id].include?(field)
         -# ### Pull Down fields that need to be sorted on description
-        %td.wide
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of this pulldown field
             - if field == :src_vm_id
@@ -333,11 +348,14 @@
                   - opts = [["<#{_('None')}>", nil]]
                 - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
               = select_tag(field_id,
-                options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
-                :style                 => "width: auto;",
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                "data-miq_observe"     => {:url => url}.to_json)
+                          options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
+                          :style                 => "width: auto;",
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :class    => "selectpicker")
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent("#{field_id}", "#{url}")
           - else
             -# Just show the field value
             - if field == :src_host_ids
@@ -357,7 +375,7 @@
             = field_hash[:notes]
       - elsif [:pxe_server_id, :number_of_vms, :number_of_cpus, :number_of_sockets, :cores_per_socket, :snapshot, :sysprep_enabled].include?(field)
         -# ### Pull Down for fields that dont need <None> in the list
-        %td.wide
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of this pulldown field
             - if field_hash[:values].blank?
@@ -372,11 +390,14 @@
               - else
                 - opts += Array(field_hash[:values].invert).sort_by(&:first)
             = select_tag(field_id,
-              options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
-              :disabled              => disabled,
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+                        options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
+                        :disabled              => disabled,
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :class    => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("#{field_id}", "#{url}")
           - else
             -# Just show the field value
             -# Description is in the second, last, array element
@@ -386,7 +407,7 @@
             = field_hash[:notes]
       - elsif [:sysprep_timezone].include?(field)
         -# Pull down with Array of Arrays
-        %td.wide
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of this pulldown field
             - if field_hash[:values].length == 1
@@ -406,11 +427,14 @@
                   - opts = [["<#{_('None')}>", nil]]
                 - opts += field_hash[:values]
               = select_tag(field_id,
-                options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
-                :disabled              => disabled,
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                "data-miq_observe"     => {:url => url}.to_json)
+                          options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
+                          :disabled              => disabled,
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :class    => "selectpicker")
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent("#{field_id}", "#{url}")
           - else
             -# Just show the field value %>
             -# Description is in the second, last, array element
@@ -418,7 +442,7 @@
       - elsif [:linked_clone, :placement_auto, :stateless, :sysprep_auto_logon, :sysprep_change_sid,
                :sysprep_delete_accounts, :sysprep_spec_override, :vm_auto_start, :vm_dynamic_memory].include?(field)
         -# ### Checkbox fields
-        %td{:style => "vertical-align: top;"}
+        .col-md-8{:style => "vertical-align: top;"}
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
             - checked = options[field] && options[field][0].to_s == "true"
@@ -438,7 +462,7 @@
             = field_hash[:notes]
       - elsif [:addr_mode, :disk_format, :sysprep_identification, :schedule_type].include?(field)
         -# ### Radio Button fields
-        %td
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
             -# need to specify Checked/Disabled to check or disable a checkbox, so need separate lines for each depending upon radio button state
@@ -446,15 +470,16 @@
               - checked = options[field] && options[field][0] == f[0]
               - current_div = "#{@edit[:new][:current_tab_key]}_div"
               - onclick = remote_function(:with => "miqSerializeField('#{current_div}', '#{field_id}')", :url => url, :loading => "miqSparkle(true);", :complete => "miqSparkle(false);")
-              %input{:type => "radio", :id => field_id, :value => f[0], :name => field_id, :checked => checked, :onclick => disabled ? "" : onclick}
-              = f[1]
+              .radio-inline
+                %input{:type => "radio", :id => field_id, :value => f[0], :name => field_id, :checked => checked, :onclick => disabled ? "" : onclick}
+                = f[1]
           - else
             = options[field][1]
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]
       - elsif [:schedule_time].include?(field)
-        %td
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
             = datepicker_input_tag("miq_date_1", options[:start_date],
@@ -464,23 +489,29 @@
           - else
             = options[:start_date]
         </tr><tr>
-        %td.key
+        %label.col-md-2.control-label
           = _("Starting Time (%s)") % get_timezone_abbr(current_user)
-        %td
+        .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
             = select_tag("start_hour",
-              options_for_select((0..23).to_a, options[:start_hour].to_i),
-              "data-miq_observe" => {:url => url}.to_json)
+                          options_for_select((0..23).to_a, options[:start_hour].to_i),
+                          :class    => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("start_hour", "#{url}")
             = select_tag("start_min",
-              options_for_select((0..55).step(5).to_a, options[:start_min].to_i),
-              "data-miq_observe" => {:url => url}.to_json)
+                          options_for_select((0..55).step(5).to_a, options[:start_min].to_i),
+                          :class    => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("start_min", "#{url}")
           - else
-            = "#{options[:start_hour]}h"
+            #{options[:start_hour]}h
             &nbsp;
-            = "#{options[:start_min]}m"
+            #{options[:start_min]}m
       - elsif [:sysprep_upload_file].include?(field)
-        %td
+        .col-md-8
           - path = Rails.application.routes.recognize_path request.referrer
           - if path[:controller] == "miq_request"
             = form_tag({:action => "prov_edit", :req_id => "#{@edit[:req_id]}"}, :multipart => true) do

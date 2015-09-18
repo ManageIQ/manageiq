@@ -74,9 +74,21 @@ ManageIQ.angularApplication.service('miqService', function() {
     return form.$valid && form.$dirty;
   };
 
-  this.validateClicked = function (url) {
+  this.validateWithAjax = function (url) {
     miqSparkleOn();
     miqAjaxButton(url, true);
+  };
+
+  this.validateWithREST = function($event, credType, url, formSubmit) {
+    angular.element('#button_name').val('validate');
+    angular.element('#cred_type').val(credType);
+    if(formSubmit) {
+      miqSparkleOn();
+      miqRESTAjaxButton(url, $event.target);
+    }
+    else {
+      $event.preventDefault();
+    }
   };
 
   this.serializeModel = function(model) {

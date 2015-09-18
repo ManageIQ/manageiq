@@ -42,6 +42,7 @@ module Metric::Common
     virtual_column :v_derived_host_count,          :type => :integer
     virtual_column :v_derived_cpu_reserved_pct,    :type => :float
     virtual_column :v_derived_memory_reserved_pct, :type => :float
+    virtual_column :v_derived_logical_cpus_used,   :type => :float
   end
 
   def v_find_min_max(vcol)
@@ -133,6 +134,11 @@ module Metric::Common
   def v_derived_memory_reserved_pct
     return nil if self.derived_memory_reserved.nil? || self.derived_memory_available.nil? || derived_memory_available == 0
     (self.derived_memory_reserved / self.derived_memory_available * 100)
+  end
+
+  def v_derived_logical_cpus_used
+    return nil if cpu_usage_rate_average.nil? || derived_vm_numvcpus.nil? || derived_vm_numvcpus == 0
+    (cpu_usage_rate_average * derived_vm_numvcpus) / 100.0
   end
 
   def apply_time_profile(profile)

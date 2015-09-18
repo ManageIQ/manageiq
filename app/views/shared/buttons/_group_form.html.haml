@@ -3,36 +3,40 @@
   = render :partial => "layouts/flash_msg"
   %h3
     = _('Basic Info')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
         = _('Button Group Text')
-      %td
+      .col-md-6
         = text_field_tag("name", @edit[:new][:name],
-          :maxlength         => 15,
-          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-        &nbsp;
+                        :maxlength         => 15,
+                        :class             => "form-control",
+                        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %label.checkbox-inline
         = check_box_tag("display", "1", @edit[:new][:display],
-          "data-miq_observe_checkbox" => {:url => url}.to_json)
-        &nbsp;
+                        "data-miq_observe_checkbox" => {:url => url}.to_json)
         = _('Display on Button')
       - unless is_browser_ie?
         = javascript_tag(javascript_focus('name'))
-    %tr
-      %td.key
+    .form-group
+      %label.control-label.col-md-2
         = _('Button Group Hover Text')
-      %td.wide
+      .col-md-8
         = text_field_tag("description", @edit[:new][:description],
-          :maxlength         => 30,
-          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key
+                        :maxlength         => 30,
+                        :class             => "form-control",
+                        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      %label.control-label.col-md-2
         = _('Button Group Image')
-      %td
+      .col-md-8
         #form-group
         = select_tag('button_image',
-            options_for_select([["No Image", nil]] + @edit[:new][:button_images], @edit[:new][:button_image].to_s),
-            :class  => "selectpicker")
+                      options_for_select([["No Image", nil]] + @edit[:new][:button_images], @edit[:new][:button_image].to_s),
+                      :class  => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('button_image', '#{url}')
 
   - if x_active_tree == :ab_tree || (x_active_tree == :sandt_tree && @edit[:rec_id])
     %hr

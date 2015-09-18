@@ -22,7 +22,8 @@ class User < ActiveRecord::Base
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
 
-  delegate   :miq_user_role, :to => :current_group, :allow_nil => true
+  delegate   :miq_user_role,  :to => :current_group, :allow_nil => true
+  delegate   :current_tenant, :to => :current_group, :allow_nil => true
 
   validates_presence_of   :name, :userid, :region
   validates_uniqueness_of :userid, :scope => :region

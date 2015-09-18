@@ -27,6 +27,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   include EventMixin
   include ProcessTasksMixin
+  include TenancyMixin
 
   has_many :ems_custom_attributes, -> { where "source = 'VC'" }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
 
@@ -1758,8 +1759,8 @@ class VmOrTemplate < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = nil
 
-  def perf_rollup_parent(interval_name=nil)
-    self.host unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [host].compact unless interval_name == 'realtime'
   end
 
   # Called from integrate ws to kick off scan for vdi VMs

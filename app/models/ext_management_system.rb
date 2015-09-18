@@ -19,7 +19,9 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def self.supported_types_and_descriptions_hash
     supported_subclasses.each_with_object({}) do |klass, hash|
-      hash[klass.ems_type] = klass.description
+      if Vmdb::PermissionStores.instance.supported_ems_type?(klass.ems_type)
+        hash[klass.ems_type] = klass.description
+      end
     end
   end
 
@@ -412,8 +414,8 @@ class ExtManagementSystem < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = :hosts
 
-  def perf_rollup_parent(interval_name=nil)
-    MiqRegion.my_region unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [MiqRegion.my_region].compact unless interval_name == 'realtime'
   end
 
   def perf_capture_enabled

@@ -6,7 +6,7 @@
       .col-md-9
         %p.form-control-static
           = h("#{rec.name}(#{rec.id})")
-          = "PID=#{h(rec[:pid])}"
+          PID=#{h(rec[:pid])}
     .form-group
       %label.col-md-3.control-label= _("Hostname")
       .col-md-9
@@ -61,34 +61,37 @@
           = h(rec["version"])
 - else
   -# record class is AssignedServerRole
-  %table.style1
-    %tr
-      %label.col-md-3.control-labelimage{:rowspan => 9}
+  .form-horizontal.static
+    .form-group
+      %label.col-md-3.control-labelimage
         %img{:src => "/images/icons/new/role-#{rec.server_role.name}.png"}/
-      %label.col-md-3.control-label= _("Role")
-      %td.wide
-        = _("%{role} on %{model}: %{name} [%{id}]") % {:role => rec.server_role.description,   |
-          :model => Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize),  |
-          :name => rec.miq_server.name,                                                        |
-          :id => rec.miq_server.id}                                                            |
-    %tr
-      %label.col-md-3.control-label= _("Status")
-      %td.wide
-        - if rec.miq_server.started?
-          = rec.active ? _("active") : _("available")
-        - else
-          = _("unavailable")
-    - if rec.master_supported?
-      %tr
-        %label.col-md-3.control-label= _("Priority")
-        %td.wide
-          - if rec.priority == 1
-            = _("primary")
-          - elsif rec.priority == 2
-            = _("secondary")
-          - else
-            = _("normal")
-    %tr
-      - max = rec.server_role.max_concurrent
-      %label.col-md-3.control-label= _("Max Concurrent")
-      %td.wide= h(max == 0 ? _("unlimited") : max)
+      .col-md-9
+        .form-group
+          %label.col-md-3.control-label= _("Role")
+          .col-md-9
+            = _("%{role} on %{model}: %{name} [%{id}]") % {:role => rec.server_role.description,   |
+              :model => Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize),  |
+              :name => rec.miq_server.name,                                                        |
+              :id => rec.miq_server.id}                                                            |
+        .form-group
+          %label.col-md-3.control-label= _("Status")
+          .col-md-9
+            - if rec.miq_server.started?
+              = rec.active ? _("active") : _("available")
+            - else
+              = _("unavailable")
+        - if rec.master_supported?
+          .form-group
+            %label.col-md-3.control-label= _("Priority")
+            .col-md-9
+              - if rec.priority == 1
+                = _("primary")
+              - elsif rec.priority == 2
+                = _("secondary")
+              - else
+                = _("normal")
+        .form-group
+          - max = rec.server_role.max_concurrent
+          %label.col-md-3.control-label= _("Max Concurrent")
+          .col-md-9
+            = h(max == 0 ? _("unlimited") : max)

@@ -14,7 +14,8 @@ describe ApplianceConsole::Cli do
   it "should not set hostname if none specified" do
     ApplianceConsole::Env.should_not_receive(:[]=).with(:host, anything)
 
-    subject.parse([]).run
+    subject.stub(:create_key) # just give it something to do
+    subject.parse(%w(--key)).run
   end
 
   it "should set database host to localhost if running locally" do

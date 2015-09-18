@@ -12,10 +12,17 @@ class ContainerNode < ActiveRecord::Base
   has_many   :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
-
   has_one   :hardware, :through => :computer_system
 
+  # Metrics destroy is handled by purger
+  has_many :metrics, :as => :resource
+  has_many :metric_rollups, :as => :resource
+  has_many :vim_performance_states, :as => :resource
+
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
+
+  # Needed for metrics
+  delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")
@@ -34,6 +41,7 @@ class ContainerNode < ActiveRecord::Base
   end
 
   include EventMixin
+  include Metric::CiMixin
 
   acts_as_miq_taggable
 
@@ -46,5 +54,12 @@ class ContainerNode < ActiveRecord::Base
       # TODO: implement policy events and its relationship
       ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
     end
+  end
+
+  # TODO: children will be container groups
+  PERF_ROLLUP_CHILDREN = nil
+
+  def perf_rollup_parents(interval_name = nil)
+    [ext_management_system] unless interval_name == 'realtime'
   end
 end

@@ -2,9 +2,7 @@ require "spec_helper"
 
 describe ServiceTemplateCatalog do
   let(:root_tenant) do
-    MiqRegion.seed
-    Tenant.seed
-    Tenant.root_tenant
+    EvmSpecHelper.create_root_tenant
   end
 
   describe "#name" do
