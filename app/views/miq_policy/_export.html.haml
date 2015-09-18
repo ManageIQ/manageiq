@@ -2,7 +2,8 @@
 - observe = {:url => url}.to_json
 #profile_export_div
   = render :partial => "layouts/flash_msg"
-  %h3= _("Import")
+  %h3
+    = _("Import")
   - if @sb[:hide]
     %table{:width => "100%"}
       %tr
@@ -56,7 +57,10 @@
         .col-md-8
           = select_tag('dbtype',
             options_for_select([[_("Policy Profiles"), "pp"], [_("Policies"), "p"], [_("Alerts"), "al"]], @sb[:dbtype]),
-            "data-miq_observe" => observe)
+            :class             => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('dbtype', '#{url}')
       .form-group
         %label.col-md-2.control-label
           = _("Available %{title}:") % {:title => title}

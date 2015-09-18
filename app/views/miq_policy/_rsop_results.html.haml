@@ -9,7 +9,7 @@
         .form-group
           %label.control-label.col-md-2
             = _("Show out of scope items:")
-          .col-md-10
+          .col-md-8
             = check_box_tag("out_of_scope", "1", @sb[:rsop][:out_of_scope],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
@@ -17,7 +17,7 @@
         .form-group
           %label.control-label.col-md-2
             = _("Show policies:")
-          .col-md-10
+          .col-md-8
             = check_box_tag("passed", "1", @sb[:rsop][:passed],
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,

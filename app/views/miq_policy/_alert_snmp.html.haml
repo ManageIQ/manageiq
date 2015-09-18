@@ -10,14 +10,14 @@
       .form-group
         %label.control-label.col-md-2
           = _('Send an SNMP Trap')
-        .col-md-10
+        .col-md-8
           = check_box_tag("send_snmp_cb", "1", @edit[:new][:send_snmp],
             "data-miq_observe_checkbox" => observe)
       - if @edit[:new][:send_snmp]
         .form-group
           %label.control-label.col-md-2
             = title_for_host
-          .col-md-10
+          .col-md-8
             = text_field_tag("host_1", @edit[:new][:snmp][:host][0],
               :maxlength         => MAX_DESC_LEN,
               "data-miq_observe" => observe_with_interval)
@@ -32,19 +32,20 @@
         .form-group
           %label.control-label.col-md-2
             = _("Version")
-          .col-md-10
+          .col-md-8
             = select_tag('snmp_version', options_for_select(%w(v1 v2), @edit[:new][:snmp][:snmp_version]),
               :style                 => "width:50px",
+              :class                 => "selectpicker",
               "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => observe)
+              "data-miq_sparkle_off" => true)
         - trap_text = @edit[:new][:snmp][:snmp_version] == "v1" || @edit[:new][:snmp][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
-        %tr
-          %td.key
+        .form-group
+          %label.control-label.col-md-2
             = trap_text
-          %td
+          .col-md-8
             = text_field_tag("trap_id", @edit[:new][:snmp][:trap_id],
               :maxlength         => MAX_DESC_LEN,
+              :class             => "form-control",
               "data-miq_observe" => observe_with_interval)
   - if @edit[:new][:send_snmp]
     %br

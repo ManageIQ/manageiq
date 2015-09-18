@@ -1,5 +1,4 @@
 - url = url_for(:action => 'alert_profile_assign_changed')
-- observe = {:url => url}.to_json
 #alert_profile_assign_div
   = render :partial => "layouts/flash_msg"
   %h3
@@ -8,27 +7,33 @@
     .form-group
       %label.col-md-2.control-label
         = _('Based On')
-      .col-md-10
+      .col-md-8
         = h(ui_lookup(:model => @alert_profile.mode))
     .form-group
       %label.col-md-2.control-label
         = _('Assign To')
-      .col-md-10
+      .col-md-8
         = select_tag('chosen_assign_to',
           options_for_select([["<#{_('Nothing')}>", nil]] + ASSIGN_TOS[@alert_profile.mode].invert.sort, @assign[:new][:assign_to]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('chosen_assign_to', '#{url}'
     - if @assign[:new][:assign_to].to_s.ends_with?("-tags")
       .form-group
         %label.col-md-2.control-label
           = _('Tag Category')
-        .col-md-10
+        .col-md-8
           = select_tag('chosen_cat',
             options_for_select([["<Choose>", nil]] + @assign[:cats].invert.sort, @assign[:new][:cat]),
+            :class                 => "selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe" => observe)
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('chosen_cat', '#{url}'
   - if @assign[:obj_tree]
     %hr
     %h3

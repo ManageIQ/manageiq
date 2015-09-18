@@ -7,7 +7,7 @@
       .form-group
         %label.control-label.col-md-2
           = _('Send a Management Event')
-        .col-md-10
+        .col-md-8
           = check_box_tag("send_event_cb", "1",  @edit[:new][:send_event],
             "data-miq_sparkle_on"       => true,
             "data-miq_sparkle_off"      => true,
@@ -16,8 +16,9 @@
         .form-group
           %label.control-label.col-md-2 
             = _('Event Name')
-          .col-md-10
+          .col-md-8
             = text_field_tag("event_name", @edit[:new][:event_name],
               :maxlength => MAX_DESC_LEN,
+              :class     => "form-control",
               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %hr

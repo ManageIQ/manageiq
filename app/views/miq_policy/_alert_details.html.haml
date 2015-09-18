@@ -14,10 +14,11 @@
           .form-group
             %label.control-label.col-md-2
               = _("Description")
-            .col-md-10
+            .col-md-8
               = text_field_tag("description",
                 @edit[:new][:description],
                 :maxlength         => MAX_DESC_LEN,
+                :class             => "form-control",
                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
               = javascript_tag(javascript_focus('description'))
         -# Enabled
@@ -25,47 +26,50 @@
           %label.control-label.col-md-2
             = _("Active")
           - if @edit
-            .col-md-10
+            .col-md-8
               = check_box_tag("enabled_cb", "1", @edit[:new][:enabled], "data-miq_observe_checkbox" => observe)
           - else
-            .col-md-10
+            .col-md-8
               = @alert.enabled ? _("Yes") : _("No")
         -# Based on (model)
         .form-group
           %label.control-label.col-md-2
             = _("Based On")
           - if @edit
-            .col-md-10
+            .col-md-8
               - if @alert.memberof.empty?
                 = select_tag('miq_alert_db',
                   options_for_select(@edit[:dbs].invert.sort, @edit[:new][:db]),
+                  :class                 => "selectpicker",
                   "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  "data-miq_observe"     => observe)
+                  "data-miq_sparkle_off" => true)
               - else
                 = ui_lookup(:model => @edit[:new][:db])
                 &nbsp;&nbsp;&nbsp;
                 = _('* Cannot be changed while this Alert belongs to an Alert Profile.')
           - else
-            .col-md-10
+            .col-md-8
               = h(ui_lookup(:model => @alert.db))
         -# Eval Method
         .form-group
           %label.control-label.col-md-2
             = _("What to Evaluate")
           - if @edit
-            .col-md-10
+            .col-md-8
               - if @edit[:expression_types].blank?
                 = _('Expression (Custom)')
               - else
                 - opts = @edit[:expression_types].invert.sort + [[_("Expression (Custom)"), nil]]
                 = select_tag('exp_name',
                   options_for_select(opts, @edit[:new][:expression][:eval_method].to_s),
+                  :class                 => "selectpicker",
                   "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  "data-miq_observe"     => observe)
+                  "data-miq_sparkle_off" => true)
+                :javascript
+                  miqInitSelectPicker();
+                  miqSelectPickerEvent('exp_name', '#{url}')
           - else
-            .col-md-10
+            .col-md-8
               - if @alert.expression.kind_of?(MiqExpression)
                 -# Expression is an MiqExpression
                 = _('Expression')
@@ -78,40 +82,43 @@
             .form-group
               %label.control-label.col-md-2
                 = _("Driving Event")
-              .col-md-10
+              .col-md-8
                 - opts = [["<#{_('Choose')}>", nil], [_("Hourly Timer"), "_hourly_timer_"]] + @edit[:events].invert.sort
                 = select_tag('exp_event',
                   options_for_select(opts, @edit[:new][:exp_event]),
+                  :class                 => "selectpicker",
                   "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  "data-miq_observe"     => observe)
+                  "data-miq_sparkle_off" => true)
+                :javascript
+                  miqInitSelectPicker();
+                  miqSelectPickerEvent('exp_event', '#{url}')
         - else
           - if @alert.expression.kind_of?(MiqExpression) || @alert.expression[:eval_method] == "nothing"
             .form-group
               %label.control-label.col-md-2
                 = _("Driving Event")
-              .col-md-10
+              .col-md-8
                 = h(@event)
         -# Repeat Time
         .form-group
           %label.control-label.col-md-2
             = _("Notification Frequency")
           - if @edit
-            .col-md-10
+            .col-md-8
               - if @edit[:new][:expression][:eval_method] == "hourly_performance"
-                = select_tag('repeat_time',
-                  options_for_select(@sb[:alert][:hourly_repeat_times].invert.sort_by(&:last), @edit[:new][:repeat_time]),
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  "data-miq_observe"     => observe)
+                - repeat = @sb[:alert][:hourly_repeat_times]
               - else
-                = select_tag('repeat_time',
-                  options_for_select(@sb[:alert][:repeat_times].invert.sort_by(&:last), @edit[:new][:repeat_time]),
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  "data-miq_observe"     => observe)
+                - repeat = @sb[:alert][:repeat_times]
+              = select_tag('repeat_time',
+                options_for_select(repeat.invert.sort_by(&:last), @edit[:new][:repeat_time]),
+                :class                 => "selectpicker",
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true)
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent('repeat_time', '#{url}')
           - else
-            .col-md-10
+            .col-md-8
               - if @alert.options[:notifications][:delay_next_evaluation].blank?
                 = _('10 Minutes')
               - else
@@ -172,7 +179,7 @@
             .form-group
               %label.control-label.col-md-2
                 = _("From")
-              .col-md-10
+              .col-md-8
                 - if @alert.options[:notifications][:email][:from].blank?
                   = _("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
                 - else
@@ -180,7 +187,7 @@
             .form-group
               %label.control-label.col-md-2
                 = _("To")
-              .col-md-10
+              .col-md-8
                 - unless @email_to.blank?
                   = h(@email_to.join(';'))
           %hr
@@ -191,14 +198,14 @@
             .form-group
               %label.control-label.col-md-2
                 = title_for_host
-              .col-md-10
+              .col-md-8
                 - @alert.options[:notifications][:snmp][:host].each do |host|
                   = h(host)
                   %br
             .form-group
               %label.control-label.col-md-2
                 = _("Version")
-              .col-md-10
+              .col-md-8
                 = h(@alert.options[:notifications][:snmp][:snmp_version])
             - opts = @alert.options[:notifications][:snmp][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
             - trap_text = @alert.options[:notifications][:snmp][:snmp_version] == "v1" || opts
@@ -206,7 +213,7 @@
             .form-group
               %label.control-label.col-md-2
                 = trap_text
-              .col-md-10
+              .col-md-8
                 = h(@alert.options[:notifications][:snmp][:trap_id])
           - if @alert.options[:notifications][:snmp].key?(:variables)
             %br
@@ -234,7 +241,7 @@
             .form-group
               %label.control-label.col-md-2
                 = _("Show on Timeline")
-              .col-md-10
+              .col-md-8
                 = _('True')
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:automate].blank?
@@ -244,7 +251,7 @@
             .form-group
               %label.control-label.col-md-2
                 = _("Event Name")
-              .col-md-10
+              .col-md-8
                 = h(@alert.options[:notifications][:automate][:event_name])
           %hr
       -# Alert Profiles alert is assigned to

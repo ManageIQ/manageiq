@@ -1,20 +1,22 @@
 - if @edit
   - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")
-  - observe = {:url => url}.to_json
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
 %tr
   - case option[:name]
   - when :event_types
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         = select_tag('event_types',
           options_for_select([["<#{_('Choose')}>", nil]] + @sb[:alert][:events].invert.sort,
           @edit[:new][:expression][:options][:event_types]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('event_types', '#{url}')
       - else
         - if @alert.expression[:options][:event_types].nil?
           %span.bg-warning
@@ -24,40 +26,49 @@
   - when :time_threshold
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:time_thresholds].invert.sort_by(&:last)
         = select_tag('time_threshold',
           options_for_select(opts, @edit[:new][:expression][:options][:time_threshold]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('time_threshold', '#{url}')
       - else
         = h(@sb[:alert][:time_thresholds][@alert.expression[:options][:time_threshold]])
   - when :hourly_time_threshold
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:hourly_time_thresholds].invert.sort_by(&:last)
         = select_tag('hourly_time_threshold',
           options_for_select(opts, @edit[:new][:expression][:options][:hourly_time_threshold]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('hourly_time_threshold', '#{url}')
       - else
         = h(@sb[:alert][:hourly_time_thresholds][@alert.expression[:options][:hourly_time_threshold]])
   - when :rt_time_threshold
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         - opts = [["<#{_('Choose')}>", nil]] + @sb[:alert][:rt_time_thresholds].invert.sort_by(&:last)
         = select_tag('rt_time_threshold',
           options_for_select(opts, @edit[:new][:expression][:options][:rt_time_threshold]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('rt_time_threshold', '#{url}')
       - else
         = h(@sb[:alert][:rt_time_thresholds][@alert.expression[:options][:rt_time_threshold]])
   - when :operator, :value_threshold
@@ -65,22 +76,29 @@
   - when :perf_column
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         = select_tag('perf_column',
           options_for_select(option[:values][@edit[:new][:db]].invert.sort, @edit[:new][:expression][:options][:perf_column]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('perf_column', '#{url}')
         = select_tag('select_operator',
           options_for_select(@edit[:operators], @edit[:new][:expression][:options][:operator]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('select_operator', '#{url}')
         - if @edit[:new][:expression][:options].key?(:value_threshold)
           = text_field_tag("value_threshold",
             @edit[:new][:expression][:options][:value_threshold],
             :maxlength         => MAX_NAME_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
       - else
         = h(option[:values][@alert.db][@alert.expression[:options][:perf_column]])
@@ -91,17 +109,21 @@
   - when :trend_direction
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         = select_tag('trend_direction',
           options_for_select(option[:values].invert.sort, @edit[:new][:expression][:options][:trend_direction]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('trend_direction', '#{url}')
         - if @edit[:new][:expression][:options][:trend_direction].to_s.ends_with?("more_than")
           = text_field_tag("trend_steepness",
             @edit[:new][:expression][:options][:trend_steepness],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
           = h(@edit[:perf_column_unit])
           = _('Per Minute')
@@ -114,13 +136,16 @@
   - when :debug_trace
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         = select_tag('debug_trace',
           options_for_select(option[:values], @edit[:new][:expression][:options][:debug_trace]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('debug_trace', '#{url}')
         &nbsp;&nbsp;
         %b
           = _('Caution:')
@@ -132,13 +157,16 @@
   - when :event_log_message_filter_type
     %label.control-label.col-md-2
       = _('Message Filter')
-    .col-md-10
+    .col-md-8
       - if @edit
         = select_tag('select_event_log_message_filter_type',
           options_for_select(@edit[:event_log_message_filter_types], @edit[:new][:expression][:options][:event_log_message_filter_type]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('select_event_log_message_filter_type', '#{url}')
         = text_field_tag("event_log_message_filter_value",
           @edit[:new][:expression][:options][:event_log_message_filter_value],
           :maxlength         => MAX_DESC_LEN,
@@ -149,25 +177,31 @@
   - when :hdw_attr
     %label.control-label.col-md-2
       = _('Hardware Attribute')
-    .col-md-10
+    .col-md-8
       - if @edit
         = select_tag('select_hdw_attr',
           options_for_select(@edit[:hdw_attrs], @edit[:new][:expression][:options][:hdw_attr]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('select_event_log_message_filter_type', '#{url}')
         = select_tag('select_operator',
           options_for_select(@edit[:operators], @edit[:new][:expression][:options][:operator]),
+          :class                 => "selectpicker",
           "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => observe)
+          "data-miq_sparkle_off" => true)
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('select_operator', '#{url}')
       - else
         = h(Dictionary.gettext(@alert.expression[:options][:hdw_attr].to_s, :type => "column"))
         = h(@alert.expression[:options][:operator])
   - when :ems_id
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         - if @edit[:emss].length == 0
           = _("No %s found") % ui_lookup(:tables => "ext_management_system")
@@ -177,9 +211,12 @@
           - opts = [["<#{_('Choose')}>", nil]] + @edit[:emss].invert.sort_by { |a| a.first.downcase }
           = select_tag('select_ems_id',
             options_for_select(opts, @edit[:new][:expression][:options][:ems_id]),
+            :class                 => "selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => observe)
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('select_ems_id', '#{url}')
       - else
         - if @ems.blank?
           %span{:style => "color: red;"}
@@ -191,7 +228,7 @@
       -# Show if editing or a valid EMS is configured
       %label.control-label.col-md-2
         = h(option[:description])
-      .col-md-10
+      .col-md-8
         - if @edit
           - if @edit[:new][:expression][:options][:ems_id]
             - if @edit[:ems_alarms].length == 0
@@ -200,9 +237,12 @@
               - opts = [["<#{_('Choose')}>", nil]] + @edit[:ems_alarms].invert.sort_by { |a| a.first.downcase }
               = select_tag('select_ems_alarm_mor',
                 options_for_select(opts, @edit[:new][:expression][:options][:ems_alarm_mor]),
+                :class                 => "selectpicker",
                 "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                "data-miq_observe"     => observe)
+                "data-miq_sparkle_off" => true)
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent('select_ems_alarm_mor', '#{url}')
           - else
             = _("Choose a %s first") % ui_lookup(:table => "ext_management_system")
         - else
@@ -211,11 +251,12 @@
     -# Set up as a text input field
     %label.control-label.col-md-2
       = h(option[:description])
-    .col-md-10
+    .col-md-8
       - if @edit
         = text_field_tag(option[:name],
           @edit[:new][:expression][:options][option[:name]],
           :maxlength         => MAX_DESC_LEN,
+          :class             => "form-control",
           "data-miq_observe" => observe_with_interval)
       - else
         = h(@alert.expression[:options][option[:name]])

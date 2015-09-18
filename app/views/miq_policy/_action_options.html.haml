@@ -13,18 +13,21 @@
           = _('From E-mail Address')
           %br
           = _('(leave blank for default)')
-        .col-md-10
+        .col-md-8
           = text_field_tag("from",
             @edit[:new][:options][:from],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
           = _("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
-      %tr
-        %td.key= _('To E-mail Address')
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _('To E-mail Address')
+        .col-md-8
           = text_field_tag("to",
             @edit[:new][:options][:to],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
   - when "set_custom_attribute"
     %h3
@@ -33,18 +36,20 @@
       .form-group
         %label.control-label.col-md-2
           = _('Attribute Name')
-        .col-md-10
+        .col-md-8
           = text_field_tag("attribute",
             @edit[:new][:options][:attribute],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
       .form-group
         %label.control-label.col-md-2
           = _('Value to Set')
-        .col-md-10
+        .col-md-8
           = text_field_tag("value",
             @edit[:new][:options][:value],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
   - when "tag"
     %h3
@@ -52,8 +57,8 @@
     .form-horizontal
       .form-group
         %label.control-label.col-md-2
-          = _('Tag to Apply:')
-        .col-md-10
+          = _('Tag to Apply')
+        .col-md-8
           %span#tag_selected
             = h(@tag_selected)
     %hr
@@ -61,7 +66,7 @@
       = _('Select a Tag to Apply')
     .form-horizontal
       .form-group
-        .col-md-10
+        .col-md-8
           #action_tags_treebox
           = render(:partial => "layouts/dynatree",
             :locals         => {:tree_id   => "action_tags_treebox",
@@ -80,10 +85,11 @@
       .form-group
         %label.control-label.col-md-2
           = _("Snapshot Name")
-        .col-md-10
+        .col-md-8
           = text_field_tag("snapshot_name",
             @edit[:new][:options][:name],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
   - when "delete_snapshots_by_age"
     %h3
@@ -92,11 +98,14 @@
       .form-group
         %label.control-label.col-md-2
           = _("Delete if Older than")
-        .col-md-10
+        .col-md-8
           = select_tag('snapshot_age',
             options_for_select([["<#{_('Choose')}>", nil]] + SNAPSHOT_AGES.invert.to_a.sort_by(&:last),
             @edit[:new][:options][:age]),
-            "data-miq_observe" => observe)
+            :class             => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('snapshot_age', '#{url}')
   - when "reconfigure_memory"
     %h3
       = _("Reconfigure Memory")
@@ -104,10 +113,11 @@
       .form-group
         %label.control-label.col-md-2
           = _("Memory Size")
-        .col-md-10
+        .col-md-8
           = text_field_tag("memory_value",
             @edit[:new][:options][:value],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
           = _('(Enter the value between 4 - 65636 MB)')
   - when "reconfigure_cpus"
@@ -117,18 +127,21 @@
       .form-group
         %label.control-label.col-md-2
           = _("Number of CPU's")
-        .col-md-10
+        .col-md-8
           = select_tag('cpu_value',
             options_for_select(%w(1 2 4),
             @edit[:new][:options][:value]),
             :style             => "width:50px",
-            "data-miq_observe" => observe)
+            :class             => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('cpu_value', '#{url}')
   - when "custom_automation"
     %h3
       = _("Custom Automation")
     .form-horizontal
       .form-group
-        .col-md-10
+        .col-md-8
           = render(:partial => "layouts/ae_resolve_options",
             :locals         => {:resolve => @edit,
             :form_action                 => "miq_action",
@@ -138,7 +151,7 @@
       = _("Select Alerts to be Evaluated")
     .form-horizontal
       .form-group
-        .col-md-10
+        .col-md-8
           %table#formtest.form{:width => "100%"}
             %tr
               %td{:align => "left"}= _('Available Alerts:')
@@ -183,30 +196,35 @@
       .form-group
         %label.control-label.col-md-2
           = title_for_host
-        .col-md-10
+        .col-md-8
           = text_field_tag("host",
             @edit[:new][:options][:host],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
       .form-group
         %label.control-label.col-md-2
           = _("Version")
-        .col-md-10
+        .col-md-8
           = select_tag('snmp_version',
             options_for_select(%w(v1 v2),
             @edit[:new][:options][:snmp_version]),
             :style                 => "width:50px",
+            :class                 => "selectpicker",
             "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => observe)
+            "data-miq_sparkle_off" => true)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('snmp_version', '#{url}')
       - trap_text = @edit[:new][:options][:snmp_version] == "v1" || @edit[:new][:options][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
       .form-group
         %label.control-label.col-md-2
           = trap_text
-        .col-md-10
+        .col-md-8
           = text_field_tag("trap_id",
             @edit[:new][:options][:trap_id],
             :maxlength         => MAX_DESC_LEN,
+            :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
     %h3
       = _("Variables")
@@ -235,7 +253,10 @@
               options_for_select(["<#{_('None')}>"] + @edit[:snmp_var_types].sort,
               @edit[:new][:options][:variables][i][:var_type]),
               :style             => "width:100px",
-              "data-miq_observe" => observe)
+              :class             => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent('#{t}', '#{url}')
           - if @edit[:new][:options][:variables][i][:var_type] == "Null" || @edit[:new][:options][:variables][i][:var_type] == "<#{_('None')}>"
             - val_disabled = true
           - else
@@ -254,12 +275,15 @@
       .form-group
         %label.control-label.col-md-2
           = _("Analysis Profiles")
-        .col-md-10
+        .col-md-8
           = select_tag('analysis_profile',
           options_for_select([["<#{_('Choose')}>", nil]] + @edit[:new][:scan_profiles],
           @edit[:new][:options][:scan_item_set_name]),
           :style             => "width:150px",
-          "data-miq_observe" => observe)
+          :class             => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('analysis_profile', '#{url}')
   - when "inherit_parent_tags"
     %h3
       = _("Inherit Tags Settings")
@@ -267,15 +291,18 @@
       .form-group
         %label.control-label.col-md-2
           = _("Parent Type")
-        .col-md-10
+        .col-md-8
           = select_tag('parent_type',
             options_for_select(@edit[:tag_parent_types],
             @edit[:new][:options][:parent_type]),
-            "data-miq_observe" => observe)
+            :class => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('parent_type', '#{url}')
       .form-group
         %label.control-label.col-md-2
           = _("Categories")
-        .col-md-10
+        .col-md-8
           %table
             - @edit[:cats].each_slice(3) do |cats|
               %tr
@@ -291,7 +318,7 @@
       .form-group
         %label.control-label.col-md-2
           = _("Categories")
-        .col-md-10
+        .col-md-8
           %table
             - @edit[:cats].each_slice(3) do |cats|
               %tr
