@@ -6,6 +6,7 @@ var plumber = require('gulp-plumber');
 var csso = require('gulp-csso');
 var ngAnnotate = require('gulp-ng-annotate');
 var uglify = require('gulp-uglify');
+var replace = require('gulp-replace');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
 var getHeader = require('../utils/getHeader');
@@ -39,6 +40,7 @@ module.exports = function(gulp, options) {
       .pipe(cssFilter.restore())
       // Get the custom javascript
       .pipe(jsAppFilter)
+      .pipe(replace("'" + config.devHost + "'", 'null'))
 
       // FIXME Disabling minifiction and injection until the following issue with ng-annotate has been resolved
       // Issue : https://github.com/olov/ng-annotate/issues/168
