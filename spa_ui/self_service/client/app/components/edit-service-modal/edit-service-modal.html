@@ -12,12 +12,17 @@
     </div>
     <div pf-form-group pf-input-class="col-sm-9" pf-label="Description">
         <textarea id="description" name="description" ng-model="vm.modalData.resource.description">
-          {{ vm.service.description }}
+          {{ vm.modalData.resource.description }}
         </textarea>
     </div>
   </form>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-  <button type="button" class="btn btn-primary" ng-click="vm.saveServiceDetails()">Save</button>
+  <button type="button"
+          class="btn btn-primary"
+          ng-click="vm.saveServiceDetails()"
+          ng-disabled="vm.modalData.resource.name == vm.service.name &&
+          vm.modalData.resource.description == vm.service.description">Save
+  </button>
 </div>

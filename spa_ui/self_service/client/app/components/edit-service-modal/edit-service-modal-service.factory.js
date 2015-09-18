@@ -65,8 +65,3 @@
     }
   }
 })();
-
-/** @ngInject */
-function resolveService($stateParams, CollectionsApi) {
-  return CollectionsApi.get('services', $stateParams.serviceId);
-}
