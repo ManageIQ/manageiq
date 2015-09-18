@@ -18,10 +18,6 @@ describe TenantQuota do
       expect(described_class.new(:name => :cpu_allocated, :unit => "fixnum")).not_to be_valid
     end
 
-    it "rejects 0 value" do
-      expect(described_class.new(:name => :cpu_allocated, :value => 0)).not_to be_valid
-    end
-
     it "rejects 0 warn_value" do
       expect(described_class.new(:name => :cpu_allocated, :value => 1, :warn_value => 0)).not_to be_valid
     end
