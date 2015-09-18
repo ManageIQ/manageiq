@@ -1060,6 +1060,7 @@ module EmsCommon
   def show_link(ems, options = {})
     url_for(options.merge(:controller => @table_name,
                           :action     => "show",
-                          :id         => ems.id))
+                          :id         => ems.id,
+                          :only_path  => true))
   end
 end
