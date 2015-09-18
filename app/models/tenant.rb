@@ -6,6 +6,7 @@ class Tenant < ActiveRecord::Base
   DEFAULT_URL = nil
 
   include ReportableMixin
+  acts_as_miq_taggable
 
   default_value_for :name,        "My Company"
   default_value_for :description, "Tenant for My Company"
