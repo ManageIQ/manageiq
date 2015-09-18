@@ -181,17 +181,13 @@ RUBY
 
     def self.run_ruby_method(body, preamble = nil)
       ActiveRecord::Base.connection_pool.release_connection
-      rc = nil
-      final_stderr = []
-      msg = nil
       Bundler.with_clean_env do
-        rc, msg, final_stderr = run_method(Gem.ruby) do |stdin|
+        run_method(Gem.ruby) do |stdin|
           stdin.puts(preamble.to_s)
           stdin.puts(body)
           stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
         end
       end
-      return rc, msg, final_stderr
     end
 
     def self.process_ruby_method_results(rc, msg, stderr)
