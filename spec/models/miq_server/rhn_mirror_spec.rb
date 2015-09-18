@@ -6,9 +6,9 @@ describe "MiqServer" do
       MiqDatabase.seed
       MiqRegion.seed
       ServerRole.seed
-      _, @server1, zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, @server1, _ = EvmSpecHelper.create_guid_miq_server_zone
       @server1.update_attribute(:ipaddress, "1.2.3.4")
-      @server2  = FactoryGirl.create(:miq_server_not_master, :guid => MiqUUID.new_guid, :zone => zone, :ipaddress => "9.8.7.6")
+      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone, :ipaddress => "9.8.7.6")
     end
 
     context "#configure_rhn_mirror_client" do

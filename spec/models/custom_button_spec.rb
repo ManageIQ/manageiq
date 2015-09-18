@@ -3,11 +3,7 @@ require "spec_helper"
 describe CustomButton do
   context "with no buttons" do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @zone       = FactoryGirl.create(:zone)
-      @miq_server = FactoryGirl.create(:miq_server_master, :zone => @zone, :guid => @guid)
-      MiqServer.my_server(true)
+      @miq_server = EvmSpecHelper.local_miq_server(:is_master => true)
 
       User.any_instance.stub(:role).and_return("admin")
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
@@ -74,7 +70,7 @@ describe CustomButton do
           h[:user_id].should       == @user2.id
           h[:object_type].should   == @vm.class.base_class.name
           h[:object_id].should     == @vm.id
-          h[:attrs].should         == @ae_attributes
+          expect(h[:attrs]).to include(@ae_attributes)
           h[:instance_name].should == @ae_name
         end
       end

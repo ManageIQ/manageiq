@@ -4,7 +4,6 @@ module MiqAeEngineSpec
   include MiqAeEngine
   describe MiqAeEngine do
     before(:each) do
-      MiqServer.my_server_clear_cache
       MiqAeDatastore.reset
       EvmSpecHelper.local_guid_miq_server_zone
       @domain = 'SPEC_DOMAIN'

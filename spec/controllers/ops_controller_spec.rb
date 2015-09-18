@@ -242,10 +242,7 @@ end
 
 describe OpsController do
   before do
-    MiqRegion.seed
-    zone       = FactoryGirl.create(:zone)
-    MiqRegion.my_region.stub(:zones).and_return([zone])
-    server = FactoryGirl.create(:miq_server, :guid => 'guid', :zone => zone)
+    EvmSpecHelper.local_miq_server
     EvmSpecHelper.seed_specific_product_features("ops_rbac")
     feature = MiqProductFeature.find_all_by_identifier("ops_rbac")
     @test_user_role  = FactoryGirl.create(:miq_user_role,
@@ -253,7 +250,6 @@ describe OpsController do
                                           :miq_product_features => feature)
     test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
     login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-    MiqServer.stub(:my_server).and_return(server)
     controller.stub(:get_vmdb_config).and_return(:product => {})
   end
 
