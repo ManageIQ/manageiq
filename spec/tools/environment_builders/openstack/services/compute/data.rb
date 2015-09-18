@@ -15,7 +15,7 @@ module Openstack
           [{:name      => "m1.ems_refresh_spec",
             :is_public => true,
             :vcpus     => 1,
-            :ram       => 1024, # MB
+            :ram       => 512, # MB
             :disk      => 1, # GB
             :ephemeral => 1, # GB
             :swap      => 512, # MB
