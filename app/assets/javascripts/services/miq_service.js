@@ -91,6 +91,10 @@ ManageIQ.angularApplication.service('miqService', function() {
     }
   };
 
+  this.disabledClick = function($event) {
+    $event.preventDefault();
+  };
+
   this.serializeModel = function(model) {
     serializedObj = angular.copy( model );
     for(var k in serializedObj){

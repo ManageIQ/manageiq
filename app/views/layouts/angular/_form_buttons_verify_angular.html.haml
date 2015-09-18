@@ -9,10 +9,11 @@
 
 %div{'ng-show' => ng_show}
   = button_tag("Validate",
-                 :class    => "btn btn-primary btn-xs btn-disabled",
-                 :alt      => "Validate",
-                 :title    => "Validate",
-                 "ng-show" => basic_info_needed ? "!canValidateBasicInfo()" : "!canValidate()")
+                 :class     => "btn btn-primary btn-xs btn-disabled",
+                 :alt       => "Validate",
+                 :title     => "Validate",
+                 "ng-show"  => basic_info_needed ? "!canValidateBasicInfo()" : "!canValidate()",
+                 "ng-click" => "disabledClick($event)")
   = button_tag("Validate",
                  :class     => "btn btn-primary btn-xs",
                  :alt       => verify_title_on,

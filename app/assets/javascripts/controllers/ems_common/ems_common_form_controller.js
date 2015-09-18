@@ -31,6 +31,7 @@ ManageIQ.angularApplication.controller('emsCommonFormController', ['$http', '$sc
     $scope.afterGet = false;
     $scope.saveable = miqService.saveable;
     $scope.validateClicked = miqService.validateWithREST;
+    $scope.disabledClick = miqService.disabledClick;
     $scope.modelCopy = angular.copy( $scope.emsCommonModel );
     $scope.formFieldsUrl = $attrs.formFieldsUrl;
     $scope.createUrl = $attrs.createUrl;
