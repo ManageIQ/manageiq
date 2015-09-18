@@ -114,7 +114,30 @@ describe CatalogController do
       controller.send(:st_edit)
       assigns(:record).should.nil?
     end
-  end
+
+    context "#st_invalid_template" do
+      it "does displays a warning if the record is associated with an invalid template" do
+        controller.instance_variable_set(:@sb, {})
+        controller.instance_variable_set(:@_params, {:button => "add"})
+
+        @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
+        user         = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
+        @vm_template = FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
+        st = FactoryGirl.create(:miq_provision_request_template, :userid => user.userid, :src_vm_id => @vm_template.id)
+        controller.instance_variable_set(:@record, st)
+        edit = {
+            :new => {:name => "New Name", :description => "New Description", :selected_resources => [st.id], :rsc_groups => [[{:name => "Some name"}]]},
+            :key => "st_edit__new",
+            :rec_id => st.id,
+        }
+        controller.instance_variable_set(:@edit, edit)
+        session[:edit] = edit
+        controller.stub(:replace_right_cell)
+        controller.send(:st_edit)
+        assigns(:record).should == nil
+      end
+
+    end
 
   context "#ot_edit" do
     before(:each) do
