@@ -97,6 +97,7 @@ class Picture < ActiveRecord::Base
   end
 
   def image_href
+    sync_to_disk
     url_path
   end
 end
