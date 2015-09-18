@@ -529,7 +529,12 @@ class ReportController < ApplicationController
   def get_node_info
     treenodeid = valid_active_node(x_node)
     if [:db_tree, :reports_tree, :saved_tree, :savedreports_tree, :widgets_tree].include?(x_active_tree)
-      @nodetype         = treenodeid.split("-")[0]
+      @nodetype = case x_active_tree
+                  when :savedreports_tree
+                    treenodeid.split('_').last.split('-')[0]
+                  else
+                    treenodeid.split('-')[0]
+                  end
       self.x_active_tree = :savedreports_tree if @nodetype == "saved"
       nodeid            = treenodeid.split("-")[1] if treenodeid.split("-")[1]
     else
