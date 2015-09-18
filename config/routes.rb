@@ -159,6 +159,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        tabledata
         ot_edit
         ot_show
         show
@@ -225,6 +226,7 @@ Vmdb::Application.routes.draw do
     :chargeback              => {
       :get  => %w(
         explorer
+        tabledata
         index
         render_csv
         render_pdf
@@ -303,6 +305,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        tabledata
         show
         tagging_edit
         tag_edit_form_field_changed
@@ -848,6 +851,7 @@ Vmdb::Application.routes.draw do
     :miq_ae_class => {
       :get => %w(
         explorer
+        tabledata
       ),
       :post => %w(
         ae_tree_select
@@ -895,6 +899,7 @@ Vmdb::Application.routes.draw do
       :get => %w(
         dialog_accordion_json
         explorer
+        tabledata
         export_service_dialogs
         review_import
         service_dialog_json
@@ -986,6 +991,7 @@ Vmdb::Application.routes.draw do
     :miq_policy             => {
       :get  => %w(
         explorer
+        tabledata
         export
         fetch_log
         fetch_yaml
@@ -1241,6 +1247,7 @@ Vmdb::Application.routes.draw do
     :ops => {
       :get => %w(
         explorer
+        tabledata
         fetch_audit_log
         fetch_build
         fetch_log
@@ -1394,6 +1401,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        tabledata
         provider_foreman_form_fields
         show
         show_list
@@ -1435,6 +1443,7 @@ Vmdb::Application.routes.draw do
     :pxe => {
       :get => %w(
         explorer
+        tabledata
       ),
       :post => %w(
         accordion_select
@@ -1472,6 +1481,7 @@ Vmdb::Application.routes.draw do
         db_widget_dd_done
         download_report
         explorer
+        tabledata
         export_widgets
         miq_report_edit
         miq_report_new
@@ -1622,6 +1632,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        tabledata
         retirement_info
         retire
         show
@@ -1764,6 +1775,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        tabledata
         retirement_info
         launch_html5_console
         perf_chart_chooser
@@ -1837,6 +1849,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        tabledata
         retirement_info
         launch_vmware_console
         launch_html5_console
@@ -1926,6 +1939,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        tabledata
         launch_html5_console
         retirement_info
         launch_vmware_console

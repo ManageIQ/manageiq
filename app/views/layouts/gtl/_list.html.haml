@@ -1,7 +1,59 @@
 -# New code to use DHTMLXGRID below
 - if @grid_xml
   - url = @showlinks == false ? nil : view_to_url(view, @parent)
-  - if @explorer
+  - if @tabledata
+    %table.table.datatable.table-striped.table-bordered.table-hover.table-selectable
+      %thead
+        %tr
+          - view.headers.each do |hdr|
+            %th= h(hdr)
+
+    :javascript
+      $(function () {
+        var loadData = _.debounce(function(data, callback, settings) {
+          $.getJSON('tabledata.json', data, function (result) {
+            console.log('called back');
+            callback(result);
+          });
+        }, 500);
+
+        ManageIQ.dataTable = $('.datatable').DataTable({
+           'sDom':
+             "<'dataTables_header' f i l r >" +
+             "<'table-responsive'  t >" +
+             "<'dataTables_footer' p >",
+          'serverSide':    true,
+          'ajax':          loadData,
+          'lengthMenu':    [[5, 10, 20, 100, 200, 500, 1000], [5, 10, 20, 100, 200, 500, 1000]],
+          'displayLength': #{@pages[:perpage]},
+          'columns':       #{@view.col_order.map { |c| {:data => c.gsub('.', '\\.')} }.to_json.html_safe},
+          'order':         [[ #{@sortcol}, '#{@sortdir.downcase}' ]]
+        });
+
+        ManageIQ.dataTable.on('processing.dt', function (e, settings, processing) {
+          processing ? setTimeout(miqSparkleOn, 500) : miqSparkleOff();
+        });
+
+        $('.dataTables_length select').selectpicker({
+          width: 'auto',
+          size: 'auto'
+        });
+        $('.datatable').on('click', 'tr', function (e) {
+          if (e.shiftKey || e.ctrlKey || e.metaKey) {
+            $(this).toggleClass('selected');
+            var count = $('.datatable tr.selected').length
+            if (miqDomElementExists('center_tb')) {
+              miqSetButtons(count, "center_tb");
+            } else {
+              miqSetButtons(count, "center_buttons_div");
+            }
+          } else {
+            var data = ManageIQ.dataTable.row(this).data();
+            $.post('#{url}' + data.id);
+          }
+        });
+      });
+  - elsif @explorer
     #list_grid{:style => "cursor: hand;"}
     - ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
     -# don't need a row url to be AJAX when displaying a list of other CI's inside explorer
