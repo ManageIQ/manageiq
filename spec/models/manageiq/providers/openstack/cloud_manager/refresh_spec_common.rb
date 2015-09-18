@@ -98,7 +98,7 @@ module Openstack
     def default_security_groups_count
       # There is default security group per each tenant
       count = identity_data.projects.count
-      # Neutron puts there one extra security group, that is not assosiated to any tenant
+      # Neutron puts there one extra security group, that is not associated to any tenant
       count += 1 if neutron_networking?
       count
     end

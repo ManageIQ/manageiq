@@ -32,10 +32,10 @@ module Openstack
         # Create servers
         # Servers are separated from build_all, since it requires sources from several services
         #
-        def build_servers(volume, network, image)
-          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images)
+        def build_servers(volume, network, image, networking)
+          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, networking)
           image.build_snapshots_from_servers(servers)
-          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images,
+          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, networking,
                                  :servers_from_snapshot)
           associate_ips(servers, network)
         end
@@ -53,7 +53,7 @@ module Openstack
 
         private
 
-        def find_or_create_servers(volumes, networks, security_groups, images, data_method = :servers)
+        def find_or_create_servers(volumes, networks, security_groups, images, networking, data_method = :servers)
           servers = []
           @data.send(data_method).each do |server|
             if (volume_name = server.delete(:__block_device_name))
@@ -79,7 +79,8 @@ module Openstack
               server.merge!(:flavor_ref => flavor.id) if flavor
             end
 
-            if (security_group_names = server.delete(:security_groups))
+            # Do not replaces security group names with ids for nova
+            if networking != :nova && (security_group_names = server.delete(:security_groups))
               security_group_names = [security_group_names] unless security_group_names.kind_of?(Array)
 
               security_group_ids = security_group_names.map do |security_group_name|
