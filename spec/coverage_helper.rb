@@ -7,6 +7,7 @@ module CoverageHelper
       Dir.glob(Rails.root.join(path, "**", "*.rb")) do |file|
         next if file.include?("/bin/") || file.include?("/spec/")
         begin
+          puts "requiring: #{file}"
           silence_warnings { require file }
         rescue StandardError, LoadError, MissingSourceFile
         end
