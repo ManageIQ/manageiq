@@ -286,7 +286,8 @@ module.exports = (function() {
     ngAnnotateOptions: {
       add: true,
       single_quotes: true
-    }
+    },
+    devHost: 'http://localhost:4000'
   };
 
   config.build = {
