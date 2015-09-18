@@ -1,7 +1,9 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 
-require 'coveralls'
-Coveralls.wear!('rails') { add_filter("/spec/") }
+if ENV["CI"]
+  require 'coveralls'
+  Coveralls.wear!('rails') { add_filter("/spec/") }
+end
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
