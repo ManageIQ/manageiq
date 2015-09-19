@@ -190,15 +190,13 @@ class MiqServer < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      unless self.exists?(:guid => self.my_guid)
-        _log.info("Creating Default MiqServer with guid=[#{self.my_guid}], zone=[#{Zone.default_zone.name}]")
-        self.create!(:guid => self.my_guid, :zone => Zone.default_zone)
-        self.my_server_clear_cache
-        _log.info("Creating Default MiqServer... Complete")
-      end
-      self.my_server
+    unless self.exists?(:guid => self.my_guid)
+      _log.info("Creating Default MiqServer with guid=[#{self.my_guid}], zone=[#{Zone.default_zone.name}]")
+      self.create!(:guid => self.my_guid, :zone => Zone.default_zone)
+      self.my_server_clear_cache
+      _log.info("Creating Default MiqServer... Complete")
     end
+    self.my_server
   end
 
   def self.start

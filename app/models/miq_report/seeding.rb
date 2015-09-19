@@ -7,12 +7,10 @@ module MiqReport::Seeding
     COMPARE_DIR = File.expand_path(File.join(Rails.root, "product/compare"))
 
     def seed
-      MiqRegion.my_region.lock do
-        # Force creation of model instances for all report yaml files that exist in the product/reports directories
-        # that don't already have an instance in the model
-        MiqReport.sync_from_dir("report")
-        MiqReport.sync_from_dir("compare")
-      end
+      # Force creation of model instances for all report yaml files that exist in the product/reports directories
+      # that don't already have an instance in the model
+      MiqReport.sync_from_dir("report")
+      MiqReport.sync_from_dir("compare")
     end
 
     def seed_report(pattern, type = "report")

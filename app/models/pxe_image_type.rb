@@ -18,11 +18,9 @@ class PxeImageType < ActiveRecord::Base
   def self.seed
     return if PxeImageType.any?
 
-    MiqRegion.my_region.lock do
-      seed_data.each do |s|
-        _log.info("Creating #{s.inspect}")
-        self.create(s)
-      end
+    seed_data.each do |s|
+      _log.info("Creating #{s.inspect}")
+      self.create(s)
     end
   end
 

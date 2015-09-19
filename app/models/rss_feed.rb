@@ -155,8 +155,6 @@ class RssFeed < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      RssFeed.sync_from_yml_dir
-    end
+    RssFeed.sync_from_yml_dir
   end
 end

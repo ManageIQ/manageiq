@@ -69,9 +69,7 @@ class MiqWidgetSet < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.sync_from_dir
-    end
+    self.sync_from_dir
   end
 
   def self.find_with_same_order(ids)

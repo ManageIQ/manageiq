@@ -16,9 +16,7 @@ class MiqDialog < ActiveRecord::Base
   include ReportableMixin
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.sync_from_dir
-    end
+    self.sync_from_dir
   end
 
   def self.sync_from_dir

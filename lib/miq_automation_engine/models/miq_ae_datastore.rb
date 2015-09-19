@@ -180,17 +180,15 @@ module MiqAeDatastore
   end
 
   def self.seed
-    MiqRegion.my_region.lock(:shared, 1800) do
-      ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
-      unless ns
-        _log.info "Seeding ManageIQ domain..."
-        begin
-          reset_to_defaults
-        rescue => err
-          _log.error "Seeding... Reset failed, #{err.message}"
-        else
-          _log.info "Seeding... Complete"
-        end
+    ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
+    unless ns
+      _log.info "Seeding ManageIQ domain..."
+      begin
+        reset_to_defaults
+      rescue => err
+        _log.error "Seeding... Reset failed, #{err.message}"
+      else
+        _log.info "Seeding... Complete"
       end
     end
   end

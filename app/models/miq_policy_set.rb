@@ -116,12 +116,10 @@ class MiqPolicySet < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.all.each do |ps|
-        if ps.mode.nil?
-          _log.info("Updating [#{ps.name}]")
-          ps.update_attribute(:mode, "control")
-        end
+    self.all.each do |ps|
+      if ps.mode.nil?
+        _log.info("Updating [#{ps.name}]")
+        ps.update_attribute(:mode, "control")
       end
     end
   end

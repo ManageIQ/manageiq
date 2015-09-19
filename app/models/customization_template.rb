@@ -19,30 +19,28 @@ class CustomizationTemplate < ActiveRecord::Base
   def self.seed
     return unless self == base_class # Prevent subclasses from seeding
 
-    MiqRegion.my_region.lock do
-      current = self.where(:system => true).index_by(&:name)
+    current = self.where(:system => true).index_by(&:name)
 
-      seed_data.each do |s|
-        log_attrs = s.slice(:name, :type, :description)
+    seed_data.each do |s|
+      log_attrs = s.slice(:name, :type, :description)
 
-        rec = current.delete(s[:name])
-        if rec.nil?
-          _log.info("Creating #{log_attrs.inspect}")
-          self.create!(s)
-        else
-          rec.attributes = s.except(:type)
-          if rec.changed?
-            _log.info("Updating #{log_attrs.inspect}")
-            rec.save!
-          end
+      rec = current.delete(s[:name])
+      if rec.nil?
+        _log.info("Creating #{log_attrs.inspect}")
+        self.create!(s)
+      else
+        rec.attributes = s.except(:type)
+        if rec.changed?
+          _log.info("Updating #{log_attrs.inspect}")
+          rec.save!
         end
       end
+    end
 
-      current.values.each do |rec|
-        log_attrs = rec.attributes.slice("id", "name", "type", "description").symbolize_keys
-        _log.info("Deleting #{log_attrs.inspect}")
-        rec.destroy
-      end
+    current.values.each do |rec|
+      log_attrs = rec.attributes.slice("id", "name", "type", "description").symbolize_keys
+      _log.info("Deleting #{log_attrs.inspect}")
+      rec.destroy
     end
   end
 

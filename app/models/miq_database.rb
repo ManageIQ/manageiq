@@ -45,12 +45,11 @@ class MiqDatabase < ActiveRecord::Base
 
   def self.seed
     if self.exists?
-      self.first.lock do |db|
-        db.session_secret_token ||= SecureRandom.hex(64)
-        db.csrf_secret_token    ||= SecureRandom.hex(64)
-        db.update_repo_name     ||= registration_default_value_for_update_repo_name
-        db.save! if db.changed?
-      end
+      db = first
+      db.session_secret_token ||= SecureRandom.hex(64)
+      db.csrf_secret_token    ||= SecureRandom.hex(64)
+      db.update_repo_name     ||= registration_default_value_for_update_repo_name
+      db.save! if db.changed?
     else
       self.create!(
         :session_secret_token => SecureRandom.hex(64),

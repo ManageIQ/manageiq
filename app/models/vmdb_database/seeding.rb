@@ -3,11 +3,9 @@ module VmdbDatabase::Seeding
 
   module ClassMethods
     def seed
-      MiqDatabase.first.lock do
-        db = seed_self
-        db.seed
-        db
-      end
+      db = seed_self
+      db.seed
+      db
     end
 
     def seed_self

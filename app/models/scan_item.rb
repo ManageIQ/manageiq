@@ -50,10 +50,8 @@ class ScanItem < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.sync_from_dir
-      self.preload_default_profile
-    end
+    self.sync_from_dir
+    self.preload_default_profile
   end
 
   def self.preload_default_profile

@@ -307,19 +307,16 @@ class User < ActiveRecord::Base
   private
 
   def self.seed
-    MiqRegion.my_region.lock do
-      user = self.in_my_region.find_by_userid("admin")
-      if user.nil?
-        _log.info("Creating default admin user...")
-        user = self.create(:userid => "admin", :name => "Administrator", :password => "smartvm")
-        _log.info("Creating default admin user... Complete")
-      end
-
-      admin_group     = MiqGroup.in_my_region.find_by_description("EvmGroup-super_administrator")
-      user.miq_groups = [admin_group] if admin_group
-      user.save
-
+    user = self.in_my_region.find_by_userid("admin")
+    if user.nil?
+      _log.info("Creating default admin user...")
+      user = self.create(:userid => "admin", :name => "Administrator", :password => "smartvm")
+      _log.info("Creating default admin user... Complete")
     end
+
+    admin_group     = MiqGroup.in_my_region.find_by_description("EvmGroup-super_administrator")
+    user.miq_groups = [admin_group] if admin_group
+    user.save
   end
 
   # Save the current user from the session object as a thread variable to allow lookup from other areas of the code

@@ -427,14 +427,12 @@ class Classification < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      YAML.load_file(FIXTURE_FILE).each do |c|
-        cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
-        next if cat
+    YAML.load_file(FIXTURE_FILE).each do |c|
+      cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
+      next if cat
 
-        _log.info("Creating #{c[:name]}")
-        add_entries_from_hash(create(c.except(:entries)), c[:entries])
-      end
+      _log.info("Creating #{c[:name]}")
+      add_entries_from_hash(create(c.except(:entries)), c[:entries])
     end
 
     # Fix categories that have a nill parent_id

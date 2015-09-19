@@ -38,26 +38,24 @@ class MiqSearch < ActiveRecord::Base
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
   def self.seed
-    MiqRegion.my_region.lock do
-      fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")
-      slist        = YAML.load_file(fixture_file) if File.exist?(fixture_file)
-      slist      ||= []
+    fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")
+    slist        = YAML.load_file(fixture_file) if File.exist?(fixture_file)
+    slist      ||= []
 
-      slist.each do |search|
-        attrs = search['attributes']
-        name  = attrs['name']
-        db    = attrs['db']
+    slist.each do |search|
+      attrs = search['attributes']
+      name  = attrs['name']
+      db    = attrs['db']
 
-        rec = self.find_by_name_and_db(name, db)
-        if rec.nil?
-          _log.info("Creating [#{name}]")
-          self.create(attrs)
-        else
-          # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column
-          attrs.delete('search_key')
-          rec.attributes = attrs
-          rec.save
-        end
+      rec = self.find_by_name_and_db(name, db)
+      if rec.nil?
+        _log.info("Creating [#{name}]")
+        self.create(attrs)
+      else
+        # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column
+        attrs.delete('search_key')
+        rec.attributes = attrs
+        rec.save
       end
     end
   end

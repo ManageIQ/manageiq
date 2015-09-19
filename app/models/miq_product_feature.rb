@@ -73,9 +73,7 @@ class MiqProductFeature < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.seed_features
-    end
+    self.seed_features
   end
 
   def self.seed_features

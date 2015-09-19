@@ -188,10 +188,9 @@ class Tenant < ActiveRecord::Base
     roots.first
   end
 
+  # NOTE: returns the root tenant
   def self.seed
-    MiqRegion.my_region.lock do
-      Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
-    end
+    Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
   end
 
   private
