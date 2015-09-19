@@ -73,7 +73,7 @@ class MiqProductFeature < ActiveRecord::Base
   end
 
   def self.seed
-    self.seed_features
+    seed_features
   end
 
   def self.seed_features

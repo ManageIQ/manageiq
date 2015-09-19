@@ -359,7 +359,7 @@ class MiqPolicy < ActiveRecord::Base
   end
 
   def self.seed
-    self.all.each do |p|
+    all.each do |p|
       attrs = {}
       attrs[:towhat] = "Vm"      if p.towhat.nil?
       attrs[:active] = true      if p.active.nil?

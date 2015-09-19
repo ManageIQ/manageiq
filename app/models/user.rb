@@ -307,10 +307,10 @@ class User < ActiveRecord::Base
   private
 
   def self.seed
-    user = self.in_my_region.find_by_userid("admin")
+    user = in_my_region.find_by_userid("admin")
     if user.nil?
       _log.info("Creating default admin user...")
-      user = self.create(:userid => "admin", :name => "Administrator", :password => "smartvm")
+      user = create(:userid => "admin", :name => "Administrator", :password => "smartvm")
       _log.info("Creating default admin user... Complete")
     end
 

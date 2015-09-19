@@ -109,16 +109,16 @@ class MiqRegion < ActiveRecord::Base
   def self.seed
     # Get the region by looking at an existing MiqDatabase instance's id
     # (ie, 2000000000001 is region 2) and sync this to the file
-    my_region = self.my_region_number
+    my_region = my_region_number
     db = MiqDatabase.first
     if db
       region = db.region_id
       raise Exception, "Region [#{my_region}] does not match the database's region [#{region}]" if region != my_region
     end
 
-    unless self.exists?(:region => my_region)
+    unless exists?(:region => my_region)
       _log.info("Creating Region [#{my_region}]")
-      self.create!(:region => my_region, :description => "Region #{my_region}")
+      create!(:region => my_region, :description => "Region #{my_region}")
       _log.info("Creating Region... Complete")
     end
   end

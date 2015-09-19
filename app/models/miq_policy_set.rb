@@ -116,7 +116,7 @@ class MiqPolicySet < ActiveRecord::Base
   end
 
   def self.seed
-    self.all.each do |ps|
+    all.each do |ps|
       if ps.mode.nil?
         _log.info("Updating [#{ps.name}]")
         ps.update_attribute(:mode, "control")

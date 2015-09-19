@@ -50,8 +50,8 @@ class ScanItem < ActiveRecord::Base
   end
 
   def self.seed
-    self.sync_from_dir
-    self.preload_default_profile
+    sync_from_dir
+    preload_default_profile
   end
 
   def self.preload_default_profile

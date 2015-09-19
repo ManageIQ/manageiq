@@ -152,10 +152,10 @@ class MiqUserRole < ActiveRecord::Base
   end
 
   def self.seed
-    self.seed_from_array(YAML.load_file(FIXTURE_YAML))
+    seed_from_array(YAML.load_file(FIXTURE_YAML))
 
     Dir.glob(File.join(FIXTURE_PATH, "*.yml")).each do |fixture|
-      self.seed_from_array(YAML.load_file(fixture), true)
+      seed_from_array(YAML.load_file(fixture), true)
     end
   end
 

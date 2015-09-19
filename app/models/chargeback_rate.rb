@@ -50,11 +50,11 @@ class ChargebackRate < ActiveRecord::Base
       fixture = YAML.load_file(fixture_file)
 
       fixture.each do |cbr|
-        rec = self.find_by_guid(cbr[:guid])
+        rec = find_by_guid(cbr[:guid])
         rates = cbr.delete(:rates)
         if rec.nil?
           _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-          rec = self.create(cbr)
+          rec = create(cbr)
           rec.chargeback_rate_details.create(rates)
         else
           fixture_mtime = File.mtime(fixture_file).utc

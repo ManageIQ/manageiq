@@ -732,9 +732,9 @@ class MiqAlert < ActiveRecord::Base
 
       alist.each do |alert_hash|
         guid = alert_hash["guid"] || alert_hash[:guid]
-        rec = self.find_by_guid(guid)
+        rec = find_by_guid(guid)
         if rec.nil?
-          alert = self.create(alert_hash)
+          alert = create(alert_hash)
           _log.info("Added sample Alert: #{alert.description}")
           if action
             alert.options = {:notifications => {action.action_type.to_sym => action.options}}

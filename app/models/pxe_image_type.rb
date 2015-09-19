@@ -16,11 +16,11 @@ class PxeImageType < ActiveRecord::Base
   end
 
   def self.seed
-    return if PxeImageType.any?
+    return if any?
 
     seed_data.each do |s|
       _log.info("Creating #{s.inspect}")
-      self.create(s)
+      create(s)
     end
   end
 

@@ -1077,8 +1077,8 @@ class MiqAction < ActiveRecord::Base
   end
 
   def self.seed
-    self.create_default_actions
-    self.create_script_actions_from_directory
+    create_default_actions
+    create_script_actions_from_directory
   end
 
   def self.create_default_actions

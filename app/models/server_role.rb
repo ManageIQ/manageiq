@@ -12,7 +12,7 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.seed
-    data = self.seed_data.split("\n")
+    data = seed_data.split("\n")
     cols = data.shift.split(",")
 
     data.each do |a|
@@ -23,10 +23,10 @@ class ServerRole < ActiveRecord::Base
       action = {}
       cols.each_index {|i| action[cols[i].to_sym] = arr[i]}
 
-      rec = self.where(:name => action[:name]).first
+      rec = where(:name => action[:name]).first
       if rec.nil?
         _log.info("Creating Server Role [#{action[:name]}]")
-        rec = self.create(action)
+        rec = create(action)
       else
         rec.attributes = action
         if rec.changed?

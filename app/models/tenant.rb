@@ -190,7 +190,7 @@ class Tenant < ActiveRecord::Base
 
   # NOTE: returns the root tenant
   def self.seed
-    Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
+    root_tenant || create!(:use_config_for_attributes => true)
   end
 
   private

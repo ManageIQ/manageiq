@@ -29,7 +29,7 @@ class TimeProfile < ActiveRecord::Base
     utc_tp = default_time_profile
 
     if utc_tp.nil?
-      TimeProfile.create!(
+      create!(
         :description          => DEFAULT_TZ,
         :tz                   => DEFAULT_TZ,
         :profile_type         => "global",

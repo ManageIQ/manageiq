@@ -155,6 +155,6 @@ class RssFeed < ActiveRecord::Base
   end
 
   def self.seed
-    RssFeed.sync_from_yml_dir
+    sync_from_yml_dir
   end
 end

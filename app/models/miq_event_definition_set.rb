@@ -6,7 +6,7 @@ class MiqEventDefinitionSet < ActiveRecord::Base
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 
   def self.seed
-    fname = File.join(FIXTURE_DIR, "#{self.to_s.pluralize.underscore}.csv")
+    fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
     data  = File.read(fname).split("\n")
     cols  = data.shift.split(",")
 
@@ -18,10 +18,10 @@ class MiqEventDefinitionSet < ActiveRecord::Base
       set = {}
       cols.each_index {|i| set[cols[i].to_sym] = arr[i]}
 
-      rec = self.find_by_name(set[:name])
+      rec = find_by_name(set[:name])
       if rec.nil?
         _log.info("Creating [#{set[:name]}]")
-        rec = self.create(set)
+        rec = create(set)
       else
         rec.attributes = set
         if rec.changed?
@@ -31,5 +31,4 @@ class MiqEventDefinitionSet < ActiveRecord::Base
       end
     end
   end
-
 end

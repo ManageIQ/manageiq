@@ -88,7 +88,7 @@ class MiqGroup < ActiveRecord::Base
       groups_to_roles = role_map.inject({}) {|h, g| h[g.keys.first] = g[g.keys.first]; h}
       seq = 1
       order.each do |g|
-        group = self.find_by_description(g) || self.new(:description => g)
+        group = find_by_description(g) || new(:description => g)
         user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
         if user_role.nil?
           _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")

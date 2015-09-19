@@ -69,7 +69,7 @@ class MiqWidgetSet < ActiveRecord::Base
   end
 
   def self.seed
-    self.sync_from_dir
+    sync_from_dir
   end
 
   def self.find_with_same_order(ids)

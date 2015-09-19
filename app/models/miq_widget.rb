@@ -585,7 +585,7 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def self.seed
-    self.sync_from_dir
+    sync_from_dir
     MiqWidgetSet.seed
   end
 

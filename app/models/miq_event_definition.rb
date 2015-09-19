@@ -113,8 +113,8 @@ class MiqEventDefinition < ActiveRecord::Base
 
   def self.seed
     MiqEventDefinitionSet.seed
-    self.seed_default_events
-    self.seed_default_definitions
+    seed_default_events
+    seed_default_definitions
   end
 
   def self.seed_default_events
