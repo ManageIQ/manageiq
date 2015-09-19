@@ -10,12 +10,12 @@ class MiqShortcut < ActiveRecord::Base
       rec = find_by_name(s[:name])
       if rec.nil?
         _log.info("Creating #{s.inspect}")
-        rec = create(s)
+        rec = create!(s)
       else
         rec.attributes = s
         if rec.changed?
           _log.info("Updating #{s.inspect}")
-          rec.save
+          rec.save!
         end
       end
     end

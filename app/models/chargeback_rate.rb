@@ -54,7 +54,7 @@ class ChargebackRate < ActiveRecord::Base
         rates = cbr.delete(:rates)
         if rec.nil?
           _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-          rec = create(cbr)
+          rec = create!(cbr)
           rec.chargeback_rate_details.create(rates)
         else
           fixture_mtime = File.mtime(fixture_file).utc
@@ -64,7 +64,7 @@ class ChargebackRate < ActiveRecord::Base
             rec.chargeback_rate_details.clear
             rec.chargeback_rate_details.create(rates)
             rec.created_on = fixture_mtime
-            rec.save
+            rec.save!
           end
         end
       end

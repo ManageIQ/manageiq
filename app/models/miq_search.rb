@@ -50,12 +50,12 @@ class MiqSearch < ActiveRecord::Base
       rec = find_by_name_and_db(name, db)
       if rec.nil?
         _log.info("Creating [#{name}]")
-        create(attrs)
+        create!(attrs)
       else
         # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column
         attrs.delete('search_key')
         rec.attributes = attrs
-        rec.save
+        rec.save!
       end
     end
   end

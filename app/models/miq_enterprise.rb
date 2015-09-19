@@ -27,10 +27,8 @@ class MiqEnterprise < ActiveRecord::Base
   include Metric::CiMixin
 
   def self.seed
-    if in_my_region.first.nil?
+    in_my_region.first || create!(:name => "Enterprise", :description => "Enterprise Root Object") do |_|
       _log.info("Creating Enterprise Root Object")
-      create(:name => "Enterprise", :description => "Enterprise Root Object")
-      _log.info("Creating Enterprise Root Object... Complete")
     end
   end
 
