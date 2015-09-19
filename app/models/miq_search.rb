@@ -40,7 +40,7 @@ class MiqSearch < ActiveRecord::Base
   def self.seed
     fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")
     slist        = YAML.load_file(fixture_file) if File.exist?(fixture_file)
-    slist      ||= []
+    slist ||= []
 
     slist.each do |search|
       attrs = search['attributes']

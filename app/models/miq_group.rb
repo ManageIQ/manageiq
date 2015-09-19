@@ -85,7 +85,7 @@ class MiqGroup < ActiveRecord::Base
 
       role_map = YAML.load_file(role_map_file)
       order = role_map.collect(&:keys).flatten
-      groups_to_roles = role_map.inject({}) {|h, g| h[g.keys.first] = g[g.keys.first]; h}
+      groups_to_roles = role_map.each_with_object({}) { |g, h| h[g.keys.first] = g[g.keys.first] }
       seq = 1
       order.each do |g|
         group = find_by_description(g) || new(:description => g)

@@ -21,7 +21,7 @@ class ServerRole < ActiveRecord::Base
       arr = a.split(",")
 
       action = {}
-      cols.each_index {|i| action[cols[i].to_sym] = arr[i]}
+      cols.each_index { |i| action[cols[i].to_sym] = arr[i] }
 
       rec = where(:name => action[:name]).first
       if rec.nil?

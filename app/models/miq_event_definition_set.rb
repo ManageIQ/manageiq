@@ -16,7 +16,7 @@ class MiqEventDefinitionSet < ActiveRecord::Base
       arr = s.split(",")
 
       set = {}
-      cols.each_index {|i| set[cols[i].to_sym] = arr[i]}
+      cols.each_index { |i| set[cols[i].to_sym] = arr[i] }
 
       rec = find_by_name(set[:name])
       if rec.nil?
