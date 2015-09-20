@@ -270,6 +270,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     @container_pr.container_groups.count.should == 2
     @container_pr.container_replicators.count.should == 2
+    @container_pr.container_nodes.count.should == 1
     @container_pr.container_services.count.should == 5
     @container_pr.ext_management_system.should == @ems
   end
