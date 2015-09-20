@@ -289,5 +289,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :host => "example.com",
       :port => "1234",
     )
+    @image.container_nodes.count.should == 1
   end
 end
