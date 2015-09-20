@@ -201,6 +201,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     )
     @containernode.lives_on.should == @ovirt_vm
     @containernode.containers.count.should == 0
+    @containernode.container_routes.count.should == 0
   end
 
   def assert_specific_container_service
