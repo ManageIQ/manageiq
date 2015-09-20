@@ -443,8 +443,8 @@ module ManageIQ::Providers::Kubernetes
         :name        => port_config.name,
         :protocol    => port_config.protocol,
         :port        => port_config.port,
-        :target_port => port_config.targetPort,
-        :node_port   => port_config.nodePort,
+        :target_port => (port_config.targetPort unless port_config.targetPort == 0),
+        :node_port   => (port_config.nodePort unless port_config.nodePort == 0)
       }
     end
 
