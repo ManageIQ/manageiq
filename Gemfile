@@ -22,6 +22,7 @@ gem "lodash-rails",                   "~>3.10.0"
 gem "momentjs-rails",                 "~>2.10.3"
 gem "patternfly-sass",                "~>2.2.0"
 gem "sass-rails"
+gem "high_voltage",                   "~>2.4.0"
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"

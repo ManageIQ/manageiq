@@ -2054,6 +2054,9 @@ Vmdb::Application.routes.draw do
     end
   end
 
+  # pure-angular templates
+  get '/angular_template/*id' => 'high_voltage/pages#show', :as => :page, :format => false
+
   resources :ems_cloud, :as => :ems_clouds
 
 end
