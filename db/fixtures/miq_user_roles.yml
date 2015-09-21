@@ -931,7 +931,10 @@
   - policy_import_export
   - provider_foreman_explorer
   - pxe
+  - rbac_group
+  - rbac_role_view
   - rbac_tenant
+  - rbac_user
   - repository
   - resource_pool
   - rss

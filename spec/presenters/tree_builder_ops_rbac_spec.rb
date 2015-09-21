@@ -13,8 +13,15 @@ describe TreeBuilderOpsRbac do
       tree_nodes.should match_array %w(Groups Users Roles Tenants)
     end
 
-    it "Tenant Admin role should only see Tenants nodes in Access Control tree" do
+    it "Tenant Admin role should only all nodes in Access Control tree" do
       create_user_with_role('EvmRole-tenant_administrator')
+      tree = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
+      tree_nodes = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
+      tree_nodes.should match_array %w(Groups Users Roles Tenants)
+    end
+
+    it "Tenant Quota Admin role should only see Tenants nodes in Access Control tree" do
+      create_user_with_role('EvmRole-tenant_quota_administrator')
       tree = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
       tree_nodes = JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
       tree_nodes.should match_array %w(Tenants)
