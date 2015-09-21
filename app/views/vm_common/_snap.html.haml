@@ -2,20 +2,22 @@
   = render :partial => "layouts/flash_msg"
   #form_div
     %h3= _('Snapshot Information')
-    %table.style1
-      %tbody
-        %tr
-          %td.key= _('Name')
-          %td
-            = text_field_tag("name", @name, :maxlength => MAX_NAME_LEN, "data-miq_focus" => true)
-        %tr
-          %td.key= _('Description')
-          %td
-            = text_area_tag("description", @description, :size => "50x4")
-        %tr
-          %td.key= _('Snapshot VM memory')
-          %td
-            = check_box_tag("snap_memory", :value => "1", :checked => false)
+    .form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _('Name')
+        .col-md-8
+          = text_field_tag("name", @name, :maxlength => MAX_NAME_LEN, :class => "form-control", "data-miq_focus" => true)
+      .form-group
+        %label.control-label.col-md-2
+          = _('Description')
+        .col-md-8
+          = text_area_tag("description", @description, :size => "50x4")
+      .form-group
+        %label.control-label.col-md-2
+          = _('Snapshot VM memory')
+        .col-md-8
+          = check_box_tag("snap_memory", :value => "1", :checked => false)
   - unless @edit
     %hr
     %table{:width => "100%"}
