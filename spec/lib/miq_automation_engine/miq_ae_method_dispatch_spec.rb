@@ -31,7 +31,10 @@ describe "MiqAeMethodDispatch" do
           STDERR.puts "Hello from stderr channel"
           STDOUT.puts "Hello from stdout channel"
       end
-      sleep(600)
+      # Intentional Sleep, this process gets terminated by the
+      # Automate Engine, since it thinks its unresponsive
+      # look at long running method spec in this file
+      sleep(60)
     RUBY
   end
 
@@ -88,6 +91,8 @@ describe "MiqAeMethodDispatch" do
   it "long running method" do
     File.delete(@pidfile) if File.exist?(@pidfile)
     setup_model(rip_van_winkle_script)
+    # Set the timeout to 2 seconds so we can terminate
+    # unresponsive method
     send_ae_request_via_queue(@automate_args, 2)
     status, _msg, _ws = deliver_ae_request_from_queue
     expect(status).to eql 'timeout'
