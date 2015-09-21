@@ -10,9 +10,18 @@ describe ProviderForemanController do
     @config_profile = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name                     => "testprofile",
                                                                                                       :description              => "testprofile",
                                                                                                       :configuration_manager_id => @config_mgr.id)
+    @config_profile2 = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name                     => "testprofile2",
+                                                                                                       :description              => "testprofile2",
+                                                                                                       :configuration_manager_id => @config_mgr.id)
     @configured_system = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test_configured_system",
                                                                                                      :configuration_profile_id => @config_profile.id,
                                                                                                      :configuration_manager_id => @config_mgr.id)
+    @configured_system2a = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test2a_configured_system",
+                                                                                                       :configuration_profile_id => @config_profile2.id,
+                                                                                                       :configuration_manager_id => @config_mgr.id)
+    @configured_system2b = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test2b_configured_system",
+                                                                                                       :configuration_profile_id => @config_profile2.id,
+                                                                                                       :configuration_manager_id => @config_mgr.id)
     @configured_system_unprovisioned =
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "configured_system_unprovisioned",
                                                                                   :configuration_profile_id => nil,
@@ -162,13 +171,57 @@ describe ProviderForemanController do
       controller.stub(:current_page).and_return(1)
       controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
     end
+    it "renders the list view based on the nodetype(root,provider,config_profile) and the search associated with it" do
+      controller.instance_variable_set(:@_params, :id => "root")
+      controller.instance_variable_set(:@search_text, "manager")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data.size).to eq(2)
+
+      ems_id = ems_key_for_provider(@provider)
+      controller.instance_variable_set(:@_params, :id => ems_id)
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].description).to eq("testprofile")
+
+      controller.instance_variable_set(:@search_text, "2")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].description).to eq("testprofile2")
+      config_profile_id2 = config_profile_key(@config_profile2)
+      controller.instance_variable_set(:@_params, :id => config_profile_id2)
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].hostname).to eq("test2a_configured_system")
+
+      controller.instance_variable_set(:@search_text, "2b")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].hostname).to eq("test2b_configured_system")
+
+      controller.stub(:x_node).and_return("root")
+      controller.stub(:x_tree).and_return(:type => :filter)
+      controller.instance_variable_set(:@_params, :id => "cs_filter")
+      controller.send(:accordion_select)
+      controller.instance_variable_set(:@search_text, "brew")
+      controller.stub(:x_tree).and_return(:type => :providers)
+      controller.instance_variable_set(:@_params, :id => "foreman_providers")
+      controller.send(:accordion_select)
+
+      controller.instance_variable_set(:@_params, :id => "root")
+      controller.send(:tree_select)
+      search_text = controller.instance_variable_get(:@search_text)
+      expect(search_text).to eq("manager")
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data.size).to eq(2)
+    end
     it "renders tree_select for a ConfigurationManagerForeman node that contains an unassigned profile" do
       ems_id = ems_key_for_provider(@provider)
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
       expect(view.table.data[0].data).to include('description' => "testprofile")
-      expect(view.table.data[1]).to include('description' => _("Unassigned Profiles Group"),
+      expect(view.table.data[2]).to include('description' => _("Unassigned Profiles Group"),
                                             'name'        => _("Unassigned Profiles Group"))
     end
 
@@ -289,6 +342,11 @@ describe ProviderForemanController do
   def ems_key_for_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
     "e-" + ActiveRecord::Base.compress_id(ems.id)
+  end
+
+  def config_profile_key(config_profile)
+    cp = ConfigurationProfile.where(:id => config_profile.id).first
+    "cp-" + ActiveRecord::Base.compress_id(cp.id)
   end
 
   def ems_id_for_provider(provider)
