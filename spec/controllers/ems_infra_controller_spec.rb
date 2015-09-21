@@ -20,6 +20,15 @@ describe EmsInfraController do
       controller.send(:flash_errors?).should_not be_true
     end
 
+    it "when VM Migrate is pressed" do
+      vm = FactoryGirl.create(:vm_vmware)
+      ems = FactoryGirl.create("ems_vmware")
+      post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => 1, :id => ems.id
+      controller.send(:flash_errors?).should_not be_true
+      response.body.should include("/miq_request/prov_edit?")
+      expect(response.status).to eq(200)
+    end
+
     it "when VM Retire is pressed" do
       controller.should_receive(:retirevms).once
       post :button, :pressed => "vm_retire", :format => :js
