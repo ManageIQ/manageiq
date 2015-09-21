@@ -419,9 +419,13 @@ describe Tenant do
       before do
         dom1
         dom2
-        FactoryGirl.create(:miq_ae_domain, :name => 'DOM0', :priority => 10,
-                         :tenant_id => root_tenant.id, :enabled => false)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM15', :priority => 15,
+                           :tenant_id => root_tenant.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM10', :priority => 10,
+                           :tenant_id => root_tenant.id, :enabled => false)
         FactoryGirl.create(:miq_ae_domain, :name => 'DOM3', :priority => 3,
+                           :tenant_id => t1_1.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM5', :priority => 7,
                            :tenant_id => t1_1.id)
         FactoryGirl.create(:miq_ae_domain, :name => 'DOM4', :priority => 5,
                            :tenant_id => t2_2.id)
@@ -429,22 +433,22 @@ describe Tenant do
 
       it "#visibile_domains sub_tenant" do
         t1_1
-        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM1 DOM0 DOM3))
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15 DOM10))
       end
 
       it "#enabled_domains sub_tenant" do
         t1_1
-        expect(t1_1.enabled_domains.collect(&:name)).to eq(%w(DOM1 DOM3))
+        expect(t1_1.enabled_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15))
       end
 
       it "#editable domains sub_tenant" do
         t1_1
-        expect(t1_1.editable_domains.collect(&:name)).to eq(%w(DOM3))
+        expect(t1_1.editable_domains.collect(&:name)).to eq(%w(DOM5 DOM3))
       end
 
       it "#visible_domains tenant" do
         t2
-        expect(t2.visible_domains.collect(&:name)).to eq(%w(DOM2 DOM0))
+        expect(t2.visible_domains.collect(&:name)).to eq(%w(DOM2 DOM15 DOM10))
       end
     end
 

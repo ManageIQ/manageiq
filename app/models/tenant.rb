@@ -160,15 +160,15 @@ class Tenant < ActiveRecord::Base
   end
 
   def visible_domains
-    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id)).order('priority DESC')
+    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id)).joins(:tenant).order('tenants.ancestry DESC NULLS LAST, priority DESC')
   end
 
   def enabled_domains
-    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id), :enabled => true).order('priority DESC')
+    visible_domains.where(:enabled => true)
   end
 
   def editable_domains
-    MiqAeDomain.where(:tenant_id => id, :system => false).order('priority DESC')
+    ae_domains.where(:system => false).order('priority DESC')
   end
 
   # The default tenant is the tenant to be used when
