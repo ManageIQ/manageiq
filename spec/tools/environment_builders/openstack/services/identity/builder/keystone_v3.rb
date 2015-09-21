@@ -45,6 +45,7 @@ class Builder
         admin_user = @service.users.detect { |x| x.name == 'cloud_admin' }
         admin_role = @service.roles.detect { |x| x.name == role }
         @projects.each do |p|
+          puts "Creating role {:name => '#{role}', :tenant_id => '#{p.name}'} role in Fog::Identity::OpenStack:Roles"
           begin
             p.grant_role_to_user(admin_role.id, admin_user.id)
           rescue Excon::Errors::Conflict
