@@ -2061,4 +2061,5 @@ Vmdb::Application.routes.draw do
   get '/static/*id' => 'static#show', :format => false
 
   resources :ems_cloud, :as => :ems_clouds
+  match "/auth/:provider/callback" => "sessions#create", :via => :get
 end

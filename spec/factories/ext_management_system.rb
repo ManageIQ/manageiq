@@ -99,6 +99,11 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_google, :aliases => ["manageiq/providers/google/cloud_manager"],
+    :class => "ManageIQ::Providers::Google::CloudManager", :parent => :ems_cloud do
+    provider_region "us-central1"
+  end
+
   # Leaf classes for ems_container
 
   factory :ems_kubernetes, :aliases => ["manageiq/providers/kubernetes/container_manager"], :class => "ManageIQ::Providers::Kubernetes::ContainerManager", :parent => :ems_container do

@@ -74,12 +74,15 @@ gem "ancestry",                       "~>2.1.0",   :require => false
 gem "aws-sdk",                        "~>1.56.0",  :require => false
 gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false
+gem "google-api-client",              ">=0.8.0",   :require => false
 gem "hamlit",                         "~>1.7.2",   :require => false
 gem "inifile",                        "~>3.0",     :require => false
 gem "logging",                        "~>1.6.1",   :require => false  # Ziya depends on this
 gem "net_app_manageability",          ">=0.1.0",   :require => false
 gem "net-ping",                       "~>1.7.4",   :require => false
 gem "net-ssh",                        "~>2.9.2",   :require => false
+gem "omniauth",                       ">=1.1.0",   :require => false
+gem "omniauth-google-oauth2",         :git => "git://github.com/zquestz/omniauth-google-oauth2.git"
 gem "open4",                          "~>1.3.0",   :require => false
 gem "ovirt_metrics",                  "~>1.1.0",   :require => false
 gem "ruby_parser",                    "~>3.7",     :require => false
