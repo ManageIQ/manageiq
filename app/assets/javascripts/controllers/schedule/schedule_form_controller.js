@@ -345,10 +345,6 @@ ManageIQ.angularApplication.controller('scheduleFormController', ['$http', '$sco
       return false;
   }
 
-  $scope.valueChanged = function() {
-    alert("hi " + $scope.scheduleModel.start_date )
-  }
-
   init();
 }]);
 
