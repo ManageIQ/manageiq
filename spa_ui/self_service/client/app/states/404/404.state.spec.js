@@ -1,7 +1,7 @@
 /* jshint -W117, -W030 */
 describe('404', function() {
   beforeEach(function() {
-    module('app.states');
+    module('app.states', 'app.config');
   });
 
   describe('route', function() {
