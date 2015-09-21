@@ -28,13 +28,8 @@ class BaseManager
     private
 
     def self.ems_type
-      @ems_type ||= if name =~ /^EmsRefresh::Refreshers::(.*)Refresher$/
-                      # e.g. EmsRefresh::Refreshers::VcRefresher => :vc
-                      $1.underscore.to_sym
-                    else
-                      # e.g. ManageIQ::Providers::Vmware::InfraManager::Refresher => :vmware
-                      parent.parent.name.demodulize.underscore.to_sym
-                    end
+      # e.g. ManageIQ::Providers::Vmware::InfraManager::Refresher => :vmware
+      @ems_type ||= parent.short_token.underscore.to_sym
     end
 
     def group_targets_by_ems(targets)
@@ -61,13 +56,7 @@ class BaseManager
     end
 
     def refresher_type
-      if self.class.name =~ /^EmsRefresh::Refreshers::(.*)Refresher$/
-        # "EmsRefresh::Refreshers::Ec2Refresher" => "Ec2"
-        $1
-      else
-        # "Ems::AmazonProvider::CloudManager::Refresher" => "AmazonProvider" => "Amazon"
-        self.class.parent.parent.name.demodulize.sub(/Provider$/, '')
-      end
+      self.class.parent.short_token
     end
   end
 end

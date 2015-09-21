@@ -265,10 +265,14 @@ class VmOrTemplate < ActiveRecord::Base
 
   def self.manager_class
     if parent == Object
-      "Ems#{model_suffix}".constantize
+      ExtManagementSystem
     else
       parent
     end
+  end
+
+  def self.model_suffix
+    manager_class.short_token
   end
 
   def to_s
