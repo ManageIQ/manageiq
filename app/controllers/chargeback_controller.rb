@@ -64,12 +64,19 @@ class ChargebackController < ApplicationController
       @trees << cb_rates_build_tree
       @accords << {:name => "cb_rates", :title => "Rates", :container => "cb_rates_accord"}
     end
+    if true#role_allows(:feature => "chargeback_tiers")
+      self.x_active_tree ||= 'cb_tiers_tree'
+      self.x_active_accord ||= 'cb_tiers'
+      @built_trees << cb_tiers_build_tree
+      @accords << {:name => "cb_tiers", :title => "Tiers", :container => "cb_tiers_tree_div"}
+    end
     if role_allows(:feature => "chargeback_assignments")
       self.x_active_tree ||= 'cb_assignments_tree'
       self.x_active_accord ||= 'cb_assignments'
       @trees << cb_assignments_build_tree
       @accords << {:name => "cb_assignments", :title => "Assignments", :container => "cb_assignments_accord"}
     end
+
 
     if params[:accordion]
       self.x_active_tree   = "#{params[:accordion]}_tree"
@@ -79,10 +86,11 @@ class ChargebackController < ApplicationController
     @sb[:open_tree_nodes] ||= []
 
     @right_cell_text = case x_active_tree
-                       when :cb_rates_tree       then _("All %s") % ui_lookup(:models => "ChargebackRate")
-                       when :cb_assignments_tree then _("All %s") % "Assignments"
-                       when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
-                       end
+    when :cb_rates_tree       then _("All %s") % ui_lookup(:models=>"ChargebackRate")
+    when :cb_assignments_tree then _("All %s") % "Assignments"
+    when :cb_reports_tree     then _("All %s") % "Saved Chargeback Reports"
+    when :cb_tiers_tree       then _("All %s") % "Tiers"
+    end
     get_node_info(x_node)
     set_form_locals
     session[:changed] = false
@@ -323,6 +331,33 @@ class ChargebackController < ApplicationController
     end
   end
 
+  def cb_tiers_list
+    @listicon = "chargeback_tiers"
+    @gtl_type = "list"
+    @ajax_paging_buttons = true
+    @explorer = true
+    if params[:ppsetting]                                              # User selected new per page value
+      @items_per_page = params[:ppsetting].to_i                        # Set the new per page value
+      @settings[:perpage][@gtl_type.to_sym] = @items_per_page          # Set the per page setting for this gtl type
+    end
+    @sortcol = session[:rates_sortcol] == nil ? 0 : session[:rates_sortcol].to_i
+    @sortdir = session[:rates_sortdir] == nil ? "ASC" : session[:rates_sortdir]
+
+    @view, @pages = get_view(ChargebackTier)  # Get the records (into a view) and the paginator
+
+    @current_page = @pages[:current] if @pages != nil  # save the current page number
+    session[:rates_sortcol] = @sortcol
+    session[:rates_sortdir] = @sortdir
+
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
+      render :update do |page|                    # Use RJS to update the display
+        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "cb_tiers_list"})
+        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
+        page << "miqSparkle(false)"
+      end
+    end
+  end
+
   # AJAX driven routine to check for changes in ANY field on the form
   def cb_assign_field_changed
     return unless load_edit("cbassign_edit__#{x_node}", "replace_cell__chargeback")
@@ -447,6 +482,16 @@ class ChargebackController < ApplicationController
       else
         @right_cell_text = _("All %s") % "Assignments"
       end
+    elsif x_active_tree == :cb_tiers_tree
+      if node == "root"
+        @sb[:tier] = @record = @sb[:selected_tier_details] = nil
+        @right_cell_text = _("All %s") % ui_lookup(:models=>"ChargebackTier")
+      else
+        @record = ChargebackRate.find(from_cid(node.split('_').last.split('-').last))
+        @sb[:action] = nil
+        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>@record.rate_type, :model=>ui_lookup(:model=>"ChargebackTier"), :name=>@record.description}
+        cb_tier_show
+      end
     elsif x_active_tree == :cb_reports_tree
       @nodetype = node.split("-")[0]
       nodes = x_node.split('_')
@@ -487,6 +532,7 @@ class ChargebackController < ApplicationController
         end
       end
     end
+
   end
 
   def cb_rpt_build_folder_nodes
@@ -522,6 +568,10 @@ class ChargebackController < ApplicationController
   # Build a Catalog Items explorer tree
   def cb_assignments_build_tree
     TreeBuilderChargebackAssignments.new("cb_assignments_tree", "cb_assignments", @sb)
+  end
+
+  def cb_tiers_build_tree
+    TreeBuilderChargebackAssignments.new("cb_tiers_tree", "cb_tiers", @sb)
   end
 
   # Common Schedule button handler routines
@@ -777,6 +827,23 @@ class ChargebackController < ApplicationController
       presenter[:set_visible_elements][:toolbar] = c_buttons
       presenter[:update_partials][:main_div]   = r[:partial => 'rates_tabs']
       presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
+    when :cb_tiers_tree
+      if c_buttons && c_xml
+        presenter[:set_visible_elements][:center_buttons_div] = true
+        presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
+        presenter[:expand_collapse_cells][:a] = 'expand'
+      else
+        presenter[:set_visible_elements][:center_buttons_div] = false
+        presenter[:expand_collapse_cells][:a] = 'collapse'
+      end
+      presenter[:update_partials][:main_div] = r[:partial => 'tiers_list']
+      if @html
+        presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_tiers_paging_bar',
+                                                   :locals  => @sb[:pages]]
+        presenter[:set_visible_elements][:paging_div] = true
+      else
+        presenter[:set_visible_elements][:paging_div] = false
+      end
     when :cb_assignments_tree
       # Assignments accordion
       presenter[:update_partials][:main_div] = r[:partial => "assignments_tabs"]

@@ -1,0 +1,6 @@
+= render :partial => "layouts/flash_msg"
+%table.table.table-striped.table-bordered.table-hover
+  %tbody
+    %tr{:onclick => "miqDynatreeActivateNode('#{x_active_tree}', 'cb_tiers_tree');"}
+      %td{:title => _("View Tiers")}
+        Tiers
