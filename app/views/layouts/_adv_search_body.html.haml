@@ -53,35 +53,35 @@
     .modal-body
       = render(:partial => "layouts/flash_msg",
                :locals  => {:div_num => "2"})
-      %fieldset
-        %h3
-          = _("Search Expression")
-        - @edit[@expkey][:exp_table].each do |token|
-          - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
-            = h([token].flatten.first)
-          - else
-            %font{:color => "black"}
-              %b= h([token].flatten.first)
-      %fieldset
-        .form-horizontal
+      .form-horizontal.static
+        .form-group
+          %label.control-label.col-md-5
+            = _("Search Expression")
+          .col-md-6
+            - @edit[@expkey][:exp_table].each do |token|
+              - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+                = h([token].flatten.first)
+              - else
+                %font{:color => "black"}
+                  %b= h([token].flatten.first)
+      .form-horizontal
+        .form-group
+          %label.control-label.col-md-5
+            = _("Save this %s search as:") % @edit[@expkey][:exp_model]
+          .col-md-6
+            %span#search_name_span
+              = text_field_tag("search_name",
+                               h(@edit[:adv_search_name]),
+                               :maxlength         => 30,
+                               :class             => "form-control",
+                               "data-miq_focus"   => true,
+                               "data-miq_observe" => {:interval => ".5", :url => url2}.to_json)
+        - if admin_user?
           .form-group
-            %label.control-label.col-md-2
-              = _("Save this %s search as:") % @edit[@expkey][:exp_model]
-            .col-md-8
-              %span#search_name_span
-                = text_field_tag("search_name",
-                                 h(@edit[:adv_search_name]),
-                                 :maxlength         => 30,
-                                 :style             => "width: 250px",
-                                 :class             => "form-control",
-                                 "data-miq_focus"   => true,
-                                 "data-miq_observe" => {:interval => ".5", :url => url2}.to_json)
-          - if admin_user?
-            .form-group
-              %label.control-label.col-md-2
-                = _("Global search:")
-              .col-md-8
-                - checked = @edit && @edit[:expression] && @edit[:expression][:selected] && @edit[:expression][:selected][:typ] == "global"
-                = check_box_tag("search_type", "1", checked,
-                  :style                      => "width: 20px",
-                  "data-miq_observe_checkbox" => {:url => url2}.to_json)
+            %label.control-label.col-md-5
+              = _("Global search:")
+            .col-md-6
+              - checked = @edit && @edit[:expression] && @edit[:expression][:selected] && @edit[:expression][:selected][:typ] == "global"
+              = check_box_tag("search_type", "1", checked,
+                :style                      => "width: 20px",
+                "data-miq_observe_checkbox" => {:url => url2}.to_json)
