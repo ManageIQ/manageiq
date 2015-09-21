@@ -107,6 +107,16 @@ describe Rbac do
         results,             = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
         expect(results).to eq []
       end
+
+      it "with child_ids strategy can see child tenant's Vm" do
+        VmOrTemplate.stub(:accessible_tenant_ids_strategy => :child_ids)
+
+        child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+        @owned_object.tenant = child_tenant
+        @owned_object.save
+        results,             = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+        expect(results).to eq [@owned_object]
+      end
     end
   end
 
