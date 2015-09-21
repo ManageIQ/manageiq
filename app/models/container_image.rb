@@ -15,6 +15,7 @@ class ContainerImage < ActiveRecord::Base
   delegate :my_zone, :to => :ext_management_system
 
   acts_as_miq_taggable
+  virtual_column :display_registry, :type => :string
 
   def full_name
     result = ""
@@ -38,6 +39,10 @@ class ContainerImage < ActiveRecord::Base
 
   # The guid is required by the smart analysis infrastructure
   alias_method :guid, :docker_id
+
+  def display_registry
+    container_image_registry.present? ? container_image_registry.full_name : "Unknown image source"
+  end
 
   def scan
     ext_management_system.scan_job_create(self.class.name, id)

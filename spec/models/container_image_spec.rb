@@ -13,6 +13,15 @@ describe ContainerImage do
     expect(image.full_name).to eq("docker.io:1234/fedora:v1")
   end
 
+  it "#display_registry" do
+    image = ContainerImage.new(:name => "fedora")
+    expect(image.display_registry).to eq("Unknown image source")
+
+    reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io", :port => "1234")
+    image.container_image_registry = reg
+    expect(image.display_registry).to eq("docker.io:1234")
+  end
+
   it "#docker_id" do
     image = FactoryGirl.create(:container_image, :image_ref => "docker://id")
     expect(image.docker_id).to eq("id")
