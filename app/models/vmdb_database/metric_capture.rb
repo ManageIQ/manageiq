@@ -19,7 +19,6 @@ module VmdbDatabase::MetricCapture
   end
 
   def capture_database_metrics(timestamp = Time.now)
-    return unless self.class.connection.adapter_name.downcase == "postgresql"
     attrs = {
       :timestamp             => ::Metric::Helper.nearest_hourly_timestamp(timestamp),
       :capture_interval_name => 'hourly'
