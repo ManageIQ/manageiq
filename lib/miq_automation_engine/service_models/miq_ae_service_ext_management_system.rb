@@ -13,5 +13,6 @@ module MiqAeMethodService
     expose :authentication_password
     expose :authentication_password_encrypted
     expose :refresh, :method => :refresh_ems
+    expose :provider, :association => true
   end
 end
