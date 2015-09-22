@@ -25,33 +25,28 @@ class MiqHostProvisionRequest < MiqRequest
   end
 
   def placement_ems
-    ems_id, ems_name = options[:placement_ems_name]
-    return nil unless ems_id.kind_of?(Numeric)
-    ExtManagementSystem.find_by_id(ems_id)
+    ems_id, _ems_name = options[:placement_ems_name]
+    ExtManagementSystem.find_by_id(ems_id) if ems_id.kind_of?(Numeric)
   end
 
   def placement_cluster
-    ems_cluster_id, ems_cluster_name = options[:placement_cluster_name]
-    return nil unless ems_cluster_id.kind_of?(Numeric)
-    EmsCluster.find_by_id(ems_cluster_id)
+    ems_cluster_id, _ems_cluster_name = options[:placement_cluster_name]
+    EmsCluster.find_by_id(ems_cluster_id) if ems_cluster_id.kind_of?(Numeric)
   end
 
   def placement_folder
-    ems_folder_id, ems_folder_name = options[:placement_folder_name]
-    return nil unless ems_folder_id.kind_of?(Numeric)
-    EmsFolder.find_by_id(ems_folder_id)
+    ems_folder_id, _ems_folder_name = options[:placement_folder_name]
+    EmsFolder.find_by_id(ems_folder_id) if ems_folder_id.kind_of?(Numeric)
   end
 
   def pxe_server
-    pxe_server_id, pxe_server_name = options[:pxe_server_id]
-    return nil unless pxe_server_id.kind_of?(Numeric)
-    PxeServer.find_by_id(pxe_server_id)
+    pxe_server_id, _pxe_server_name = options[:pxe_server_id]
+    PxeServer.find_by_id(pxe_server_id) if pxe_server_id.kind_of?(Numeric)
   end
 
   def pxe_image
-    pxe_image_id, pxe_image_name = options[:pxe_image_id]
-    return nil unless pxe_image_id.kind_of?(Numeric)
-    PxeImage.find_by_id(pxe_image_id)
+    pxe_image_id, _pxe_image_name = options[:pxe_image_id]
+    PxeImage.find_by_id(pxe_image_id) if pxe_image_id.kind_of?(Numeric)
   end
 
   def src_hosts
