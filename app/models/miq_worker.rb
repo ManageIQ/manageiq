@@ -182,12 +182,7 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.corresponding_runner
-    @corresponding_runner ||=
-      if const_defined?(:Runner, false)
-        self::Runner.name
-      else
-        settings_name.to_s.camelize
-      end
+    @corresponding_runner ||= self::Runner.name
   end
 
   # Grab all the classes in the hierarchy but ActiveRecord::Base and Object (and BasicObject on 1.9)

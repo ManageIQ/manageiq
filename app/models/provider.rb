@@ -4,6 +4,7 @@ class Provider < ActiveRecord::Base
   include ReportableMixin
   include AsyncDeleteMixin
   include EmsRefresh::Manager
+  include TenancyMixin
 
   belongs_to :tenant
   belongs_to :zone

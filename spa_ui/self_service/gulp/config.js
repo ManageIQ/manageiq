@@ -286,7 +286,8 @@ module.exports = (function() {
     ngAnnotateOptions: {
       add: true,
       single_quotes: true
-    }
+    },
+    devHost: 'http://localhost:4000'
   };
 
   config.build = {
@@ -339,6 +340,7 @@ module.exports = (function() {
     browserSyncOptions: {
       proxy: 'localhost:' + (process.env.PORT || '8001'),
       port: 3001,
+      startPath: '/self_service/',
       files: [],
       ghostMode: {
         clicks: true,

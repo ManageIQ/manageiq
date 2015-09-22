@@ -24,29 +24,36 @@ module MigrationHelper
   end
 
   def add_trigger_function(name, body)
+    quoted_name = connection.quote_table_name(name)
+    quoted_body = connection.quote("BEGIN\n#{body}\nEND;\n")
+
     connection.execute <<-EOSQL, 'Create trigger function'
-      CREATE OR REPLACE FUNCTION #{name}()
-      RETURNS TRIGGER AS $$
-      BEGIN
-        #{body}
-      END;
-      $$
+      CREATE OR REPLACE FUNCTION #{quoted_name}()
+      RETURNS TRIGGER AS #{quoted_body}
       LANGUAGE plpgsql;
     EOSQL
   end
 
   def add_trigger_hook(direction, name, table, function)
+    quoted_name = connection.quote_column_name(name)
+    quoted_table = connection.quote_table_name(table)
+    quoted_function = connection.quote_table_name(function)
+    safe_direction = direction.downcase == 'before' ? 'BEFORE' : 'AFTER'
+
     connection.execute <<-EOSQL, 'Create trigger'
-      CREATE TRIGGER #{name}
-      #{direction.to_s.upcase} INSERT ON #{table}
-      FOR EACH ROW EXECUTE PROCEDURE #{function}();
+      CREATE TRIGGER #{quoted_name}
+      #{safe_direction} INSERT ON #{quoted_table}
+      FOR EACH ROW EXECUTE PROCEDURE #{quoted_function}();
     EOSQL
   end
 
   def drop_trigger(table, name)
+    quoted_name = connection.quote_column_name(name)
+    quoted_table = connection.quote_table_name(table)
+
     say_with_time("drop_trigger(:#{table}, :#{name})") do
-      connection.execute("DROP TRIGGER IF EXISTS #{name} ON #{table};", 'Drop trigger')
-      connection.execute("DROP FUNCTION IF EXISTS #{name}();", 'Drop trigger function')
+      connection.execute("DROP TRIGGER IF EXISTS #{quoted_name} ON #{quoted_table};", 'Drop trigger')
+      connection.execute("DROP FUNCTION IF EXISTS #{quoted_name}();", 'Drop trigger function')
     end
   end
 
@@ -55,17 +62,25 @@ module MigrationHelper
   #
 
   def add_table_inheritance(table, inherit_from, options = {})
+    quoted_table = connection.quote_table_name(table)
+    quoted_inherit = connection.quote_table_name(inherit_from)
+    quoted_constraint = connection.quote_column_name("#{table}_inheritance_check")
+
     say_with_time("add_table_inheritance(:#{table}, :#{inherit_from})") do
       conditions = sanitize_sql_for_conditions(options[:conditions], table)
-      connection.execute("ALTER TABLE #{table} ADD CONSTRAINT #{table}_inheritance_check CHECK (#{conditions})", 'Add inheritance check constraint')
-      connection.execute("ALTER TABLE #{table} INHERIT #{inherit_from}", 'Add table inheritance')
+      connection.execute("ALTER TABLE #{quoted_table} ADD CONSTRAINT #{quoted_constraint} CHECK (#{conditions})", 'Add inheritance check constraint')
+      connection.execute("ALTER TABLE #{quoted_table} INHERIT #{quoted_inherit}", 'Add table inheritance')
     end
   end
 
   def drop_table_inheritance(table, inherit_from)
+    quoted_table = connection.quote_table_name(table)
+    quoted_inherit = connection.quote_table_name(inherit_from)
+    quoted_constraint = connection.quote_column_name("#{table}_inheritance_check")
+
     say_with_time("drop_table_inheritance(:#{table}, :#{inherit_from})") do
-      connection.execute("ALTER TABLE #{table} DROP CONSTRAINT #{table}_inheritance_check", 'Drop inheritance check constraint')
-      connection.execute("ALTER TABLE #{table} NO INHERIT #{inherit_from}", 'Drop table inheritance')
+      connection.execute("ALTER TABLE #{quoted_table} DROP CONSTRAINT #{quoted_constraint}", 'Drop inheritance check constraint')
+      connection.execute("ALTER TABLE #{quoted_table} NO INHERIT #{quoted_inherit}", 'Drop table inheritance')
     end
   end
 

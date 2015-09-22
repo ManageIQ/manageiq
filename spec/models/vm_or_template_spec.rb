@@ -218,19 +218,13 @@ describe VmOrTemplate do
                                  :storages => [@storage1, @storage2])
         @zone = FactoryGirl.create(:zone, :name => 'zone')
 
-        @svr1 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr1', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
-        @svr2 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr2', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
-        @svr3 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr3', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
+        @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
+        @svr2 = FactoryGirl.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
+        @svr3 = FactoryGirl.create(:miq_server, :name => 'svr3', :zone => @svr1.zone)
 
         @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host1, :name => 'svr1_vm', :miq_server => @svr1)
         @svr2_vm = FactoryGirl.create(:vm_redhat, :host => @host2, :name => 'svr2_vm', :miq_server => @svr2)
         @svr3_vm = FactoryGirl.create(:vm_redhat, :host => @host3, :name => 'svr3_vm', :miq_server => @svr3)
-
-        MiqServer.stub(:my_zone => @zone.name)
-        Vm.stub(:miq_servers_for_scan => [@svr1, @svr2, @svr3])
       end
 
       it "should select SmartProxies with matching VM host affinity" do
@@ -279,17 +273,11 @@ describe VmOrTemplate do
                                  :storage  => @storage1,
                                  :storages => [@storage1])
 
-        @zone = FactoryGirl.create(:zone, :name => 'zone1')
-
-        @svr1 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr1', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
-        @svr2 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr2', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
+        @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
+        @svr2 = FactoryGirl.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
 
         @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host1, :name => 'svr1_vm', :miq_server => @svr1)
         @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host2, :name => 'svr2_vm', :miq_server => @svr2)
-
-        MiqServer.stub(:my_zone => @zone.name)
       end
 
       it "should select SmartProxies with access to the same NFS storage" do
@@ -469,6 +457,36 @@ describe VmOrTemplate do
       vm1 =  FactoryGirl.create(:vm_vmware)
       vm2 =  FactoryGirl.create(:vm_vmware)
       expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
+    end
+  end
+
+  context ".set_tenant_from_group" do
+    before { EvmSpecHelper.create_root_tenant }
+    let(:tenant1) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
+    let(:tenant2) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
+    let(:group1) { FactoryGirl.create(:miq_group, :tenant => tenant1) }
+    let(:group2) { FactoryGirl.create(:miq_group, :tenant => tenant2) }
+
+    it "assigns the tenant from the group" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group => group1).tenant).to eq(tenant1)
+    end
+
+    it "assigns the tenant from the group_id" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group_id => group1.id).tenant).to eq(tenant1)
+    end
+
+    it "assigns the tenant from the group over the tenant" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group => group1, :tenant => tenant2).tenant).to eq(tenant1)
+    end
+
+    it "assigns no tenant by default" do
+      expect(FactoryGirl.create(:vm_vmware).tenant).to be_nil
+    end
+
+    it "changes the tenant after changing the group" do
+      vm = FactoryGirl.create(:vm_vmware, :miq_group => group1)
+      vm.update_attributes(:miq_group_id => group2.id)
+      expect(vm.tenant).to eq(tenant2)
     end
   end
 end

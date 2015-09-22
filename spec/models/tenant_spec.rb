@@ -10,9 +10,7 @@ describe Tenant do
   end
 
   let(:root_tenant) do
-    MiqRegion.seed
-    Tenant.seed
-    described_class.root_tenant
+    EvmSpecHelper.create_root_tenant
   end
 
   before do
@@ -412,8 +410,47 @@ describe Tenant do
   context "#miq_ae_domains" do
     let(:t1) { FactoryGirl.create(:tenant, :name => "T1", :parent => root_tenant) }
     let(:t2) { FactoryGirl.create(:tenant, :name => "T2", :parent => root_tenant) }
-    let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1) }
-    let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2) }
+    let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1, :name => 'DOM1', :priority => 20) }
+    let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2, :name => 'DOM2', :priority => 40) }
+    let(:t1_1) { FactoryGirl.create(:tenant, :name => 'T1_1', :domain => 'a.a.com', :parent => t1) }
+    let(:t2_2) { FactoryGirl.create(:tenant, :name => 'T2_1', :domain => 'b.b.com', :parent => t2) }
+
+    context "visibility" do
+      before do
+        dom1
+        dom2
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM15', :priority => 15,
+                           :tenant_id => root_tenant.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM10', :priority => 10,
+                           :tenant_id => root_tenant.id, :enabled => false)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM3', :priority => 3,
+                           :tenant_id => t1_1.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM5', :priority => 7,
+                           :tenant_id => t1_1.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM4', :priority => 5,
+                           :tenant_id => t2_2.id)
+      end
+
+      it "#visibile_domains sub_tenant" do
+        t1_1
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15 DOM10))
+      end
+
+      it "#enabled_domains sub_tenant" do
+        t1_1
+        expect(t1_1.enabled_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15))
+      end
+
+      it "#editable domains sub_tenant" do
+        t1_1
+        expect(t1_1.editable_domains.collect(&:name)).to eq(%w(DOM5 DOM3))
+      end
+
+      it "#visible_domains tenant" do
+        t2
+        expect(t2.visible_domains.collect(&:name)).to eq(%w(DOM2 DOM15 DOM10))
+      end
+    end
 
     it "tenant domains" do
       dom1
@@ -451,8 +488,8 @@ describe Tenant do
 
       tq_cpu = tq[0]
       expect(tq_cpu.name).to eql "cpu_allocated"
-      expect(tq_cpu.unit).to eql "mhz"
-      expect(tq_cpu.format).to eql "mhz"
+      expect(tq_cpu.unit).to eql "fixnum"
+      expect(tq_cpu.format).to eql "general_number_precision_0"
       expect(tq_cpu.value).to eql 1024.0
 
       tq_mem = tq[1]
@@ -520,6 +557,7 @@ describe Tenant do
           :vms_allocated => {
               :unit          => "fixnum",
               :value         => 20.0,
+              :warn_value    => nil,
               :format        => "general_number_precision_0",
               :text_modifier => "Count",
               :description   => "Allocated Number of Virtual Machines"
@@ -527,6 +565,7 @@ describe Tenant do
           :mem_allocated => {
               :unit          => "bytes",
               :value         => 4096.0,
+              :warn_value    => nil,
               :format        => "gigabytes_human",
               :text_modifier => "GB",
               :description   => "Allocated Memory in GB"
@@ -534,6 +573,7 @@ describe Tenant do
           :storage_allocated => {
               :unit          => :bytes,
               :value         => nil,
+              :warn_value    => nil,
               :format        => :gigabytes_human,
               :text_modifier => "GB",
               :description   => "Allocated Storage in GB"

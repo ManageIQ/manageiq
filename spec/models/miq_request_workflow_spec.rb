@@ -57,7 +57,7 @@ describe MiqRequestWorkflow do
       let(:init_values) { {:root_password => "root"} }
 
       it "does not modify the initial values" do
-        workflow.init_from_dialog(init_values, 123)
+        workflow.init_from_dialog(init_values)
         expect(init_values).to eq(:root_password => "root")
       end
     end
@@ -72,7 +72,7 @@ describe MiqRequestWorkflow do
       end
 
       it "does not modify the initial values" do
-        workflow.init_from_dialog(init_values, 123)
+        workflow.init_from_dialog(init_values)
 
         expect(init_values).to eq({})
       end
@@ -88,7 +88,7 @@ describe MiqRequestWorkflow do
       end
 
       it "modifies the initial values with the default value" do
-        workflow.init_from_dialog(init_values, 123)
+        workflow.init_from_dialog(init_values)
 
         expect(init_values).to eq(:root_password => "not nil")
       end
@@ -113,7 +113,7 @@ describe MiqRequestWorkflow do
         end
 
         it "uses the first field value" do
-          workflow.init_from_dialog(init_values, 123)
+          workflow.init_from_dialog(init_values)
 
           expect(init_values).to eq(:root_password => [:something, "test"])
         end
@@ -129,7 +129,7 @@ describe MiqRequestWorkflow do
         end
 
         it "uses values as [value, description] for timezones aray" do
-          workflow.init_from_dialog(init_values, 123)
+          workflow.init_from_dialog(init_values)
 
           expect(init_values).to eq(:root_password => [nil, "test2"])
         end

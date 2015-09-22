@@ -1,4 +1,6 @@
 class MiqNetappRefreshWorker < MiqQueueWorkerBase
+  require_dependency 'miq_netapp_refresh_worker/runner'
+
   include PerStorageManagerTypeWorkerMixin
 
   self.required_roles     = ["storage_inventory"]

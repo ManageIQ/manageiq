@@ -28,10 +28,7 @@ class BeSameTimeAs
   end
 
   def precision
-    @precision ||= case ActiveRecord::Base.connection.adapter_name
-    when "PostgreSQL"; 5
-    else               0
-    end
+    @precision ||= 5
   end
 
   private

@@ -2,25 +2,32 @@
 #form_div
   = render :partial => "layouts/flash_msg"
 
-  %h3= _('Options')
-  %table.style1
-    %tr
-      %td.key= _('Name')
-      %td
+  %h3
+    = _('Options')
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _('Name')
+      .col-md-8
         = text_field_tag("ds_name",
           @edit[:new][:ds_name],
           :maxlength         => MAX_NAME_LEN,
           "data-miq_focus"   => true,
+          :class             => "form-control",
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key= title_for_host
-      %td
+    .form-group
+      %label.control-label.col-md-2
+        = title_for_host
+      .col-md-8
         = select_tag("host_id",
           options_for_select([["<#{_('Choose')}>",nil]] + @edit[:hosts].invert.sort,
           @edit[:new][:host_id]),
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
-          "data-miq_observe"     => {:url => url}.to_json)
+          :class                 => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("host_id", "#{url}");
 
   #buttons_div
     %table{:width => '100%'}

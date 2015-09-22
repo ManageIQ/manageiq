@@ -27,6 +27,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   include EventMixin
   include ProcessTasksMixin
+  include TenancyMixin
 
   has_many :ems_custom_attributes, -> { where "source = 'VC'" }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
 
@@ -175,6 +176,8 @@ class VmOrTemplate < ActiveRecord::Base
 
   virtual_has_one   :direct_service,       :class_name => 'Service'
   virtual_has_one   :service,              :class_name => 'Service'
+
+  before_validation :set_tenant_from_group
 
   alias datastores storages    # Used by web-services to return datastores as the property name
 
@@ -1758,8 +1761,8 @@ class VmOrTemplate < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = nil
 
-  def perf_rollup_parent(interval_name=nil)
-    self.host unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [host].compact unless interval_name == 'realtime'
   end
 
   # Called from integrate ws to kick off scan for vdi VMs
@@ -1889,6 +1892,10 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   private
+
+  def set_tenant_from_group
+    self.tenant_id = miq_group.tenant_id if miq_group
+  end
 
   def power_state=(new_power_state)
     super

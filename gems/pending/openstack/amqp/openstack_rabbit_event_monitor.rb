@@ -98,7 +98,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       @options[:topics].each do |exchange, topic|
         amqp_exchange = channel.topic(exchange)
         queue_name = "miq-#{@client_ip}-#{exchange}"
-        @queues[exchange] = channel.queue(queue_name).bind(amqp_exchange, :routing_key => topic)
+        @queues[exchange] = channel.queue(queue_name, :auto_delete => true, :exclusive => true).bind(amqp_exchange, :routing_key => topic)
       end
     end
   end

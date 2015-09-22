@@ -4,6 +4,7 @@ class MiqRequest < ActiveRecord::Base
   belongs_to :source,            :polymorphic => true
   belongs_to :destination,       :polymorphic => true
   belongs_to :requester,         :class_name  => "User"
+  belongs_to :tenant
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
 
@@ -24,6 +25,7 @@ class MiqRequest < ActiveRecord::Base
   validate :validate_class, :validate_request_type
 
   include ReportableMixin
+  include TenancyMixin
 
   virtual_column  :reason,               :type => :string,   :uses => :miq_approvals
   virtual_column  :v_approved_by,        :type => :string,   :uses => :miq_approvals
@@ -400,6 +402,16 @@ class MiqRequest < ActiveRecord::Base
     req_task.after_request_task_create
 
     req_task
+  end
+
+  # Helper method when not using workflow
+  # all sub classes override create_request and update_request with only 3 parameters
+  def self.make_request(request, values, requester_id, auto_approve = false)
+    if request
+      update_request(request, values, requester_id)
+    else
+      create_request(values, requester_id, auto_approve)
+    end
   end
 
   # Helper method when not using workflow

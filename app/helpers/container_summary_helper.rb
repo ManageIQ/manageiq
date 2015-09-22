@@ -1,7 +1,6 @@
 module ContainerSummaryHelper
   def textual_ems
-    textual_link(@record.ext_management_system, :as         => ManageIQ::Providers::ContainerManager,
-                                                :controller => 'ems_container')
+    textual_link(@record.ext_management_system)
   end
 
   def textual_container_project
@@ -79,7 +78,7 @@ module ContainerSummaryHelper
       {
         :label => ui_lookup(:model => ContainerImageRegistry.name),
         :image => "container_image_registry_unknown",
-        :value => "Unknown image source"
+        :value => @record.display_registry
       }
     else
       textual_link(@record.container_image_registry)

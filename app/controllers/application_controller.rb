@@ -2081,7 +2081,7 @@ class ApplicationController < ActionController::Base
       end
     else
       @org_controller = "vm"                                      #request originated from controller
-      @refresh_partial = "pre_prov"
+      @refresh_partial = typ ? "prov_edit" : "pre_prov"
     end
     if typ
       vms = find_checked_items

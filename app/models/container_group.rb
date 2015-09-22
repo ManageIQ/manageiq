@@ -17,8 +17,17 @@ class ContainerGroup < ActiveRecord::Base
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services
   belongs_to :container_replicator
   belongs_to :container_project
+  has_many :container_volumes, :dependent => :destroy
+
+  # Metrics destroy is handled by purger
+  has_many :metrics, :as => :resource
+  has_many :metric_rollups, :as => :resource
+  has_many :vim_performance_states, :as => :resource
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
+
+  # Needed for metrics
+  delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")
@@ -32,6 +41,7 @@ class ContainerGroup < ActiveRecord::Base
   # validates :dns_policy, :inclusion => { :in => %w(ClusterFirst Default) }
 
   include EventMixin
+  include Metric::CiMixin
 
   acts_as_miq_taggable
 
@@ -45,5 +55,11 @@ class ContainerGroup < ActiveRecord::Base
       # TODO: implement policy events and its relationship
       ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
     end
+  end
+
+  PERF_ROLLUP_CHILDREN = nil
+
+  def perf_rollup_parents(_interval_name = nil)
+    # No rollups: group performance are collected separately
   end
 end

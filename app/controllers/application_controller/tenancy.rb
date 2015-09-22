@@ -9,11 +9,10 @@ module ApplicationController::Tenancy
   end
 
   def current_tenant
-    # current_user.try(:current_group).try(:tenant) || Tenant.default_tenant
     @current_tenant ||=
      #  Tenant.where(:subdomain => request.subdomains.last).first ||
      #  Tenant.where(:domain => request.domain).first ||
-      Tenant.default_tenant
+      current_user.try(:current_tenant) || Tenant.default_tenant
   end
 
   # NOTE: remove when these session vars are removed

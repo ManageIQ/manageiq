@@ -7,10 +7,12 @@ module MiqAeMethodService
     expose :ems_clusters,   :association => true
     expose :ems_folders,    :association => true
     expose :resource_pools, :association => true
+    expose :tenant,         :association => true
     expose :to_s
     expose :authentication_userid
     expose :authentication_password
     expose :authentication_password_encrypted
     expose :refresh, :method => :refresh_ems
+    expose :provider, :association => true
   end
 end

@@ -1839,24 +1839,18 @@ class Host < ActiveRecord::Base
     miq_cim_instance.try(:logical_disks_size) || 0
   end
 
-  def create_pxe_install_request(values, requester_id, auto_approve = false)
-    values[:host_ids] = [id]
-    MiqHostProvisionRequest.create_request(values, requester_id, auto_approve)
-  end
-
-  def update_pxe_install_request(request, values, requester_id)
-    values[:host_ids] = [id]
-    MiqHostProvisionRequest.update_request(request, values, requester_id)
-  end
-
   #
   # Metric methods
   #
 
   PERF_ROLLUP_CHILDREN = :vms
 
-  def perf_rollup_parent(interval_name = nil)
-    ems_cluster || (ext_management_system if interval_name == 'realtime')
+  def perf_rollup_parents(interval_name = nil)
+    if interval_name == 'realtime'
+      [ems_cluster].compact if ems_cluster
+    else
+      [ems_cluster || ext_management_system].compact
+    end
   end
 
   def get_performance_metric(capture_interval, metric, range, function = nil)

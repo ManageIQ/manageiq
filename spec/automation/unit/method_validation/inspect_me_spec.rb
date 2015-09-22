@@ -2,10 +2,7 @@ require "spec_helper"
 
 describe "InspectMe Automate Method" do
   before do
-    @guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid).and_return(@guid)
-    @zone       = FactoryGirl.create(:zone)
-    @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
+    @miq_server = EvmSpecHelper.local_miq_server
   end
 
   def run_automate_method

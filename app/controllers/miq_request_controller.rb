@@ -265,8 +265,8 @@ class MiqRequestController < ApplicationController
     if params[:button] == "continue"                            # Continue the request from the workflow with the new options
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("prov_edit__#{id}","show_list")
-      @edit[:wf].continue_request(@edit[:new], session[:userid])          # Continue the workflow with new field values based on options, need to pass userid there
-      @edit[:wf].init_from_dialog(@edit[:new],session[:userid])                                 # Create a new provision workflow for this edit session
+      @edit[:wf].continue_request(@edit[:new])    # Continue the workflow with new field values based on options, need to pass userid there
+      @edit[:wf].init_from_dialog(@edit[:new])    # Create a new provision workflow for this edit session
       @edit[:buttons] = @edit[:wf].get_buttons
       @edit[:wf].get_dialog_order.each do |d|                           # Go thru all dialogs, in order that they are displayed
         @edit[:wf].get_all_fields(d).keys.each do |f|                 # Go thru all field

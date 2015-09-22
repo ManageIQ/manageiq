@@ -1,5 +1,5 @@
 = render :partial => "layouts/flash_msg"
-%table.style1
+.form-horizontal
   - if @item.kind_of?(CimStorageExtent) || @item.kind_of?(SniaLocalFileSystem)
     - if @item.kind_of?(CimStorageExtent)
       - cols = [%w(Name               evm_display_name),
@@ -38,10 +38,10 @@
                 %w(Last Update Status         last_update_status_str)]
 
     - cols.each do |title, val|
-      %tr{:class => "#{cycle('row0', 'row1')}"}
-        %td.key
+      .form-group
+        %label.control-label.col-md-2
           = title
-        %td
+        .col-md-8
           - if %w(consumable_blocks number_of_blocks).include?(val)
             = h(number_with_delimiter(@item.send(val), :delimiter => ','))
           - elsif %w(file_system_size available_size).include?(val)
@@ -51,10 +51,10 @@
   - else
     - j = (%w(scan_histories registry_items filesystems).include?(@lastaction) ? 0 : 1)
     - @view.col_order[j..-1].each_with_index do |item, i|
-      %tr{:class => "#{cycle('row0', 'row1')}"}
-        %td.key
+      .form-group
+        %label.control-label.col-md-2
           = @view.headers[i]
-        %td
+        .col-md-8
           - item_data = @item.send(item)
           - if %w(data name).include?(@view.headers[i].downcase)
             - if item_data.present?
@@ -68,21 +68,24 @@
             - else
               = h(item_data)
     - if @lastaction == "users"
-      %tr{:class => "#{cycle('row0', 'row1')}"}
-        %td.key= _("Groups")
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _("Groups")
+        .col-md-8
           - groups = @group_names.sort_by { |m| m[:name] }.collect(&:name)
           = h(groups.join(", "))
     - elsif @lastaction == "groups"
-      %tr{:class => "#{cycle('row0', 'row1')}"}
-        %td.key= _("Users")
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _("Users")
+        .col-md-8
           - users = @user_names.sort_by { |m| m[:name] }.collect(&:name)
           = h(users.join(", "))
     - elsif @lastaction == "filesystems"
-      %tr{:class => "#{cycle('row0', 'row1')}"}
-        %td.key= _("Contents")
-        %td
+      .form-group
+        %label.control-label.col-md-2
+          = _("Contents")
+        .col-md-8
           - if @item.has_contents?
             - if @item.contents_displayable?
               = text_area_tag("item_contents", @item.contents, :readonly => "readonly", :style => "overflow:auto;width:600px;height:400px;")

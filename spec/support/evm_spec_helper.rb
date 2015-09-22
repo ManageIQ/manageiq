@@ -39,28 +39,44 @@ module EvmSpecHelper
     instance.instance_variable_set(ivar, nil)
   end
 
-  def self.local_guid_miq_server_zone
-    guid, server, zone = remote_guid_miq_server_zone
-    MiqServer.stub(:my_guid).and_return(guid)
+  def self.create_root_tenant
+    MiqRegion.seed
+    Tenant.seed
+    Tenant.root_tenant
+  end
 
-    return guid, server, zone
+  def self.local_miq_server(attrs = {})
+    remote_miq_server(attrs).tap do |server|
+      MiqServer.stub(:my_guid).and_return(server.guid)
+      MiqServer.my_server_clear_cache
+    end
+  end
+
+  def self.local_guid_miq_server_zone
+    server = local_miq_server
+    [server.guid, server, server.zone]
   end
 
   class << self
     alias_method :create_guid_miq_server_zone, :local_guid_miq_server_zone
   end
 
+  def self.remote_miq_server(attrs = {})
+    create_root_tenant
+
+    server = FactoryGirl.create(:miq_server, attrs)
+    server
+  end
+
   def self.remote_guid_miq_server_zone
-    MiqRegion.seed
-    Tenant.seed
-    guid   = MiqUUID.new_guid
-    zone   = FactoryGirl.create(:zone)
-    server = FactoryGirl.create(:miq_server_master, :guid => guid, :zone => zone)
+    server = remote_miq_server
+    [server.guid, server, server.zone]
+  end
 
-    MiqServer.my_server_clear_cache
-    zone.clear_association_cache
-
-    return guid, server, zone
+  def self.specific_product_features(*features)
+    features.flatten!
+    seed_specific_product_features(*features)
+    MiqProductFeature.find_all_by_identifier(features)
   end
 
   def self.seed_specific_product_features(*features)
@@ -79,33 +95,19 @@ module EvmSpecHelper
   private_class_method :filter_specific_features
 
   def self.seed_admin_user_and_friends
-    guid, server, zone = create_guid_miq_server_zone
+    create_guid_miq_server_zone
 
-    admin_role = FactoryGirl.create(:miq_user_role,
-      #:name       => "EvmRole-administrator",
-      :name       => "EvmRole-super_administrator",
-      :read_only  => true,
-      :settings   => nil
+    FactoryGirl.create(:user,
+      :name       => "Administrator",
+      :email      => "admin@example.com",
+      :password   => "smartvm",
+      :userid     => "admin",
+      :settings   => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
+      :filters    => {"Filter1" => 1, "Filter2" => 2, "Filter3" => 3},
+      :first_name => "Bob",
+      :last_name  => "Smith",
+      :role       => "super_administrator",
     )
-
-    admin_group = FactoryGirl.create(:miq_group,
-      :description   => "EvmGroup-super_administrator",
-      :miq_user_role => admin_role
-    )
-
-    admin_user = FactoryGirl.create(:user,
-      :name           => "Administrator",
-      :email          => "admin@example.com",
-      :password       => "smartvm",
-      :userid         => "admin",
-      :settings       => {"Setting1"  => 1, "Setting2"  => 2, "Setting3"  => 3 },
-      :filters        => {"Filter1"   => 1, "Filter2"   => 2, "Filter3"   => 3 },
-      :miq_groups     => [admin_group],
-      :first_name     => "Bob",
-      :last_name      => "Smith"
-    )
-
-    return guid, server, zone, admin_user, admin_group, admin_role
   end
 
   def self.ruby_object_usage

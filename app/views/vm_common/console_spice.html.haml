@@ -33,7 +33,8 @@
           var host     = window.location.hostname;
           var port     = $('#spice-area').data('port');
           var password = $('#spice-area').data('password');
-          encrypt      = $('#spice-area').data('encrypt') !== undefined;
+          var encrypt_attr = vnc_el.attr('data-encrypt');
+          encrypt = (encrypt_attr !== undefined) && (encrypt_attr !== 'false');
           var scheme   = (encrypt ? "wss://" : "ws://"), uri;
 
           if (!host || !port || !password) {

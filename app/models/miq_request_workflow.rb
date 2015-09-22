@@ -57,6 +57,16 @@ class MiqRequestWorkflow
     @values.merge!(options) unless options.blank?
   end
 
+  # Helper method when not using workflow
+  # all sub classes override create_request and update_request with 3 parameters
+  def self.make_request(request, values, requester_id, auto_approve = false)
+    if request
+      update_request(request, values, requester_id)
+    else
+      create_request(values, requester_id, auto_approve)
+    end
+  end
+
   def create_request(values, requester_id, target_class, event_name, event_message, auto_approve = false)
     return false unless validate(values)
 
@@ -118,7 +128,7 @@ class MiqRequestWorkflow
     request
   end
 
-  def init_from_dialog(init_values, _userid)
+  def init_from_dialog(init_values)
     @dialogs[:dialogs].keys.each do |dialog_name|
       get_all_fields(dialog_name).each_pair do |field_name, field_values|
         next unless init_values[field_name].nil?

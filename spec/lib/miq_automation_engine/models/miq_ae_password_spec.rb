@@ -40,4 +40,10 @@ describe MiqAePassword do
       end
     end
   end
+
+  describe ".key_root" do
+    it "has key_root set" do
+      expect(MiqAePassword.key_root).to be
+    end
+  end
 end

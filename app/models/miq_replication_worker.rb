@@ -1,4 +1,6 @@
 class MiqReplicationWorker < MiqWorker
+  require_dependency 'miq_replication_worker/runner'
+
   self.required_roles = ["database_synchronization"]
   self.include_stopping_workers_on_synchronize = true
 

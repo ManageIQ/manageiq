@@ -237,7 +237,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
       src = p.ws_template_fields(values, template_fields)
 
       # Populate required fields
-      p.init_from_dialog(values, userid)
+      p.init_from_dialog(values)
       values[:src_host_ids] = [src.id]
       p.refresh_field_values(values, userid)
       values[:placement_auto] = [true, 1]

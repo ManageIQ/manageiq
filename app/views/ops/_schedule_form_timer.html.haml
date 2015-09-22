@@ -10,6 +10,7 @@
                        "ng-model"                    => "scheduleModel.timer_typ",
                        "ng-change"                   => "scheduleTimerTypeChanged()",
                        "checkchange"                 => "",
+                       "data-width"                  => "auto",
                        "selectpicker-for-select-tag" => "")
 
           %span{"ng-show" => "!timerTypeOnce"}= _("every")
@@ -18,6 +19,7 @@
                               "name"                      => "timer_value",
                               "ng-options"                => "timerItem.value as timerItem.text for timerItem in timer_items",
                               "timer-hide"                => "timerTypeOnce",
+                              "data-width"                => "auto",
                               "checkchange"               => ""}
           %input{"type" => "hidden", "ng-value" => "scheduleModel.timer_value", "name" => "timer_value"}
       .form-group
@@ -35,15 +37,19 @@
       .form-group
         %label.col-md-2.control-label{"for" => "textInput-markup"}
           = _("Starting Date")
-        .col-md-2
-          %p.input-group
-            = datepicker_input_tag("start_date", nil,
-                                   "class"             => "form-control",
-                                   "required"          => true,
-                                   "ng-model"          => "scheduleModel.start_date",
-                                   "miq-calendar"      => true,
-                                   "miq-cal-date-from" => "date_from",
-                                   "checkchange"       => "")
+        .col-md-3
+          .input-group.date
+            %input{:type             => "text",
+                   :name             => "start_date",
+                   "ng-model"        => "scheduleModel.start_date",
+                   "datepicker-init" => "",
+                   :language         => FastGettext.locale,
+                   :required         => true,
+                   :checkchange      => "",
+                   :class            => "form-control bootstrap-datepicker",
+                   :readonly         => true}
+            %span.input-group-addon{"data-toggle" => "datepicker"}
+              %span.fa.fa-calendar
       .form-group
         %label.col-md-2.control-label{"for" => "textInput-markup"}
           = _("Starting Time")
@@ -55,11 +61,13 @@
                        options_for_select(Array.new(24) { |i| i }),
                        "ng-model"    => "scheduleModel.start_hour",
                        "checkchange" => "",
+                       "data-width"  => "auto",
                        "selectpicker-for-select-tag" => "")
           %span h
           = select_tag("start_min",
                        options_for_select(Array.new(12) { |i| i * 5 }),
                        "ng-model"    => "scheduleModel.start_min",
                        "checkchange" => "",
+                       "data-width"  => "auto",
                        "selectpicker-for-select-tag" => "")
           %span m

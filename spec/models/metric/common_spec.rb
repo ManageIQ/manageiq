@@ -56,4 +56,23 @@ describe Metric::Common do
       res.should be_false
     end
   end
+
+  it ".v_derived_logical_cpus_used" do
+    m = Metric.new
+
+    # cpu_rate, num_vcpus, logical_cpus_used
+    metrics_exercises = [
+      [0, 8, 0], [10, 8, 0.8], [50, 8, 4], [75, 8, 6], [100, 8, 8],
+      [nil, 8, nil], [nil, 4, nil],
+      [0, 0, nil], [10, 0, nil], [50, 0, nil],
+      [0, nil, nil], [10, nil, nil], [50, nil, nil],
+      [nil, nil, nil],
+    ]
+
+    metrics_exercises.each do |cpu_rate, num_vcpus, expected|
+      m.cpu_usage_rate_average = cpu_rate
+      m.derived_vm_numvcpus = num_vcpus
+      expect(m.v_derived_logical_cpus_used).to eq(expected)
+    end
+  end
 end

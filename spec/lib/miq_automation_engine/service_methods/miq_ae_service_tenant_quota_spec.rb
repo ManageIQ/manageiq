@@ -8,9 +8,7 @@ module MiqAeServiceTenantQuotaSpec
     let(:storage_quota) { TenantQuota.create(:name => "storage_allocated", :unit => "GB", :value => 160, :tenant_id => tenant.id) }
 
     let(:root_tenant) do
-      MiqRegion.seed
-      Tenant.seed
-      Tenant.root_tenant
+      EvmSpecHelper.create_root_tenant
     end
 
     let(:st_cpu_quota) { MiqAeMethodService::MiqAeServiceTenantQuota.find(cpu_quota.id) }

@@ -8,7 +8,8 @@
   function CollectionsApiFactory($http, API_BASE) {
     var service = {
       query: query,
-      get: get
+      get: get,
+      post: post
     };
 
     return service;
@@ -33,6 +34,16 @@
       }
     }
 
+    function post(collection, id, options, data) {
+      var url = API_BASE + '/api/' + collection + '/' + id + buildQuery(options);
+
+      return $http.post(url, data).then(handleSuccess);
+
+      function handleSuccess(response) {
+        return response.data;
+      }
+    }
+
     // Private
 
     function buildQuery(options) {
@@ -41,7 +52,7 @@
       options = options || {};
 
       if (options.expand) {
-        params.push('expand=resources');
+        params.push('expand=' + options.expand);
       }
 
       if (options.attributes) {

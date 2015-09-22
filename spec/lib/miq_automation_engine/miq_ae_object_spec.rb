@@ -4,7 +4,6 @@ module MiqAeObjectSpec
   include MiqAeEngine
   describe MiqAeObject do
     before(:each) do
-      MiqServer.my_server_clear_cache
       MiqAeDatastore.reset
       @domain = 'SPEC_DOMAIN'
       @model_data_dir = File.join(File.dirname(__FILE__), "data")

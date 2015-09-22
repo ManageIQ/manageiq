@@ -458,7 +458,7 @@ module ApplicationController::CiProcessing
         return
       end
 
-      if @edit[:req_id] ? VmReconfigureRequest.update_request(@edit[:req_id],options, session[:userid]) : VmReconfigureRequest.create_request(options, session[:userid])
+      if VmReconfigureRequest.make_request(@edit[:req_id], options, session[:userid])
         flash = _("VM Reconfigure Request was saved")
         if role_allows(:feature => "miq_request_show_list", :any => true)
           render :update do |page|

@@ -5,64 +5,82 @@
 = render :partial => "layouts/flash_msg"
 - disabled = @edit && @edit[:new][:userid] == "admin"
 #main_div
-  %h3= _("User Information")
-  %table.style1
-    %tr
-      %td.key= _("Full Name")
-      %td
+  %h3
+    = _("User Information")
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _("Full Name")
+      .col-md-8
         - if !@edit
-          = h(@user.name)
+          %p.form-control-static
+            = h(@user.name)
         - else
           = text_field_tag("name",
                            @edit[:new][:name],
                            :autocomplete => 'off',
                            :maxlength    => 50,
                            :disabled     => disabled,
+                           :class => "form-control",
                            "data-miq_observe" => observe_url_json)
           - unless @edit[:new][:userid] == "admin"
             = javascript_tag(javascript_focus('name'))
-    %tr
-      %td.key= _("Username")
-      %td
+    .form-group
+      %label.col-md-2.control-label
+        = _("Username")
+      .col-md-8
         - if !@edit
-          = h(@user.userid)
+          %p.form-control-static
+            = h(@user.userid)
         - else
           = text_field_tag("userid",
                            @edit[:new][:userid],
                            :autocomplete => 'off',
                            :maxlength    => 50,
                            :disabled     => disabled,
+                           :class => "form-control",
                            "data-miq_observe" => observe_url_json)
     - if @edit
       - db_mode = get_vmdb_config[:authentication][:mode]
       - if db_mode == "database" || (db_mode != "database" && disabled)
-        %tr
-          %td.key= _("Change Password / Confirm Password")
-          %td
+        .form-group
+          %label.col-md-2.control-label
+            = _("Change Password")
+          .col-md-8
             = password_field_tag("password", '',
                                  :maxlength         => 50,
                                  :placeholder       => placeholder_if_present(@edit[:new][:password]),
+                                 :class => "form-control",
                                  "data-miq_observe" => observe_url_json)
             - if @edit[:new][:userid] == "admin"
               = javascript_tag(javascript_focus('password'))
+        .form-group
+          %label.col-md-2.control-label
+            = _("Confirm Password")
+          .col-md-8
             = password_field_tag("password2", '',
                                  :maxlength         => 50,
                                  :placeholder       => placeholder_if_present(@edit[:new][:password2]),
+                                 :class => "form-control",
                                  "data-miq_observe" => observe_url_json)
-    %tr
-      %td.key= _("E-mail Address")
-      %td
+    .form-group
+      %label.col-md-2.control-label
+        = _("E-mail Address")
+      .col-md-8
         - if !@edit
-          = h(@user.email)
+          %p.form-control-static
+            = h(@user.email)
         - else
           = text_field_tag("email",
                            @edit[:new][:email],
                            :autocomplete      => 'off',
                            :maxlength         => 50,
+                           :class => "form-control",
                            "data-miq_observe" => observe_url_json)
-    %tr
-      %td.key= _("Group")
-      %td{:style => "padding: 0px"}
+    .form-group
+      %label.col-md-2.control-label
+        = _("Group")
+      .col-md-8
         - if !@edit
           - if @user.current_group
             %table{:cellpadding => "0", :cellspacing => "0"}
@@ -81,16 +99,21 @@
             = h(@user.miq_group_description)
         - else
           - if disabled
-            = h(@user.miq_group_description)
+            %p.form-control-static
+              = h(@user.miq_group_description)
           - else
             - options = (@edit[:new][:group] ? [] : [[_("<Choose a Group>"), nil]]) + @edit[:groups]
             = select_tag('chosen_group',
                          options_for_select(options, @edit[:new][:group]),
-                         "data-miq_observe" => {:url => url}.to_json)
+                         :class    => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('chosen_group', "#{url}")
     - unless @edit
-      %tr
-        %td.key= _("Role")
-        %td{:style => "padding: 0px"}
+      .form-group
+        %label.col-md-2.control-label
+          = _("Role")
+        .col-md-8{:style => "padding: 0px"}
           - if @user.current_group && @user.current_group.miq_user_role
             %table{:cellpadding => "0", :cellspacing => "0"}
               - if role_allows(:feature => "rbac_user_show")
@@ -105,7 +128,8 @@
                 %td
                   = h(@user.miq_user_role_name)
           - else
-            = h(@user.miq_user_role_name)
+            %p.form-control-static
+              = h(@user.miq_user_role_name)
   %hr/
   - unless @edit
     = render :partial => "rbac_tag_box"

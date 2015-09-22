@@ -4,26 +4,31 @@
     .col-md-12.col-lg-6
       %fieldset
         - type = @tenant.tenant? ? "Tenant" : "Project"
-        %h3= _("#{type} Information")
-        %table.style1
-          %tr
-            %td.key= _("Name")
-            %td{:nowrap => ""}
+        %h3
+          = _("#{type} Information")
+        .form-horizontal
+          .form-group
+            %label.control-label.col-md-2
+              = _("Name")
+            .col-md-8
               = h(@tenant.name)
-          %tr
-            %td.key= _("Description")
-            %td
+          .form-group
+            %label.control-label.col-md-2
+              = _("Description")
+            .col-md-8
               = h(@tenant.description)
           - parent = @tenant.parent
           - if parent
-            %tr
-              %td.key= _("Parent")
-              %td.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(parent.id)}');",
-                  :title   => _("View Parent Tenant")}
+            .form-group
+              %label.control-label.col-md-2
+                = _("Parent")
+              .col-md-8.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(parent.id)}');",
+                :title   => _("View Parent Tenant")}
                 = h(parent.name)
-          %tr
-            %td.key= _("Groups in this #{type}")
-            %td
+          .form-group
+            %label.control-label.col-md-2
+              = _("Groups in this #{type}")
+            .col-md-8
               %table{:cellpadding => "0", :cellspacing => "0"}
                 - @tenant.miq_groups.sort_by { |group| group.name.downcase }.each do |g|
                   %tr.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",

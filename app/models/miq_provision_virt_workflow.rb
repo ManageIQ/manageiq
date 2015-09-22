@@ -51,7 +51,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def create_request(values, requester_id, auto_approve = false)
     if @running_pre_dialog == true
-      continue_request(values, requester_id)
+      continue_request(values)
       password_helper(values, true)
       return nil
     else
@@ -1029,7 +1029,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     p = class_for_source(src.id).new(values, userid, :use_pre_dialog => false)
 
     # Populate required fields
-    p.init_from_dialog(values, userid)
+    p.init_from_dialog(values)
     values[:src_vm_id] = [src.id, src.name]
     p.refresh_field_values(values, userid)
     values[:vm_name]          = target_name
@@ -1241,7 +1241,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     p = class_for_source(src.id).new(values, userid, init_options)
 
     # Populate required fields
-    p.init_from_dialog(values, userid)
+    p.init_from_dialog(values)
     values[:src_vm_id] = [src.id, src.name]
     p.refresh_field_values(values, userid)
     values[:placement_auto] = [true, 1]

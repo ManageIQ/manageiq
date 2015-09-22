@@ -1,29 +1,12 @@
 class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::OrchestrationStack
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::InfraManager"
 
-  def raw_update_stack(options)
-    planning_data = {}
-    ext_management_system.with_provider_connection(:service => "Planning") do |connection|
-      # Send new parameters to Tuskar and get updated plan
-      connection.plans.find_by_name(name).patch(options)
-      plan = connection.plans.find_by_name(name)
-
-      # Get all parameters needed for heat stack-update from Tuskar
-      planning_data = {
-        :stack_name       => name,
-        :template         => plan.master_template,
-        :environment      => plan.environment,
-        :files            => plan.provider_resource_templates,
-        :timeout_mins     => 60,
-        :disable_rollback => true
-      }
-    end
-
+  def raw_update_stack(parameters)
     ext_management_system.with_provider_connection(:service => "Orchestration") do |connection|
-      # Update stack with updated planning data
-      stack = connection.stacks.get(name, ems_ref)
-      # Update stack with updated planning data
-      connection.update_stack(stack, planning_data)
+      stack    = connection.stacks.get(name, ems_ref)
+      template = connection.get_stack_template(stack).body
+
+      connection.patch_stack(stack, 'template' => template, 'parameters' => parameters)
     end
   end
 

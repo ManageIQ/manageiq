@@ -47,7 +47,6 @@ describe MiqServer do
   context "instance" do
     before do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      MiqServer.my_server(true)
     end
 
     it "should have proper guid" do
@@ -267,8 +266,7 @@ describe MiqServer do
       context "with an active messsage and a second server" do
         before(:each) do
           @msg = FactoryGirl.create(:miq_queue, :state => 'dequeue')
-          @guid2 = MiqUUID.new_guid
-          @miq_server2 = FactoryGirl.create(:miq_server_master, :zone => @zone, :guid => @guid2)
+          @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @zone)
         end
 
         it "will validate the 'started' first server's active message when called on it" do

@@ -1,6 +1,7 @@
 class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::ContainerManager
   require_dependency 'manageiq/providers/openshift/container_manager/event_catcher'
   require_dependency 'manageiq/providers/openshift/container_manager/event_parser'
+  require_dependency 'manageiq/providers/openshift/container_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/openshift/container_manager/refresh_parser'
   require_dependency 'manageiq/providers/openshift/container_manager/refresh_worker'
   require_dependency 'manageiq/providers/openshift/container_manager/refresher'

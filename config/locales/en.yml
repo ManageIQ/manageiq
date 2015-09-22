@@ -1088,7 +1088,7 @@ en:
       scan:                   analysis
 
     tenants:
-      cpu_allocated: Allocated CPU in Mhz
+      cpu_allocated: Allocated Virtual CPUs
       mem_allocated: Allocated Memory in GB
       storage_allocated: Allocated Storage in GB
       vms_allocated: Allocated Number of Virtual Machines

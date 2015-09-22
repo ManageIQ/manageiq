@@ -36,7 +36,8 @@ $(function () {
   var vnc_el = $('#vnc');
   var port = vnc_el.attr('data-port');
   var password = vnc_el.attr('data-password');
-  var encrypt = vnc_el.attr('data-encrypt') !== undefined;
+  var encrypt_attr = vnc_el.attr('data-encrypt');
+  var encrypt = (encrypt_attr !== undefined) && (encrypt_attr !== 'false');
   var path = "";
   rfb = new RFB({
     target: $D('noVNC_canvas'),

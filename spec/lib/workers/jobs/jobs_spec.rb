@@ -1,8 +1,6 @@
 require 'spec_helper'
 
-require 'schedule_worker'
-
-describe ScheduleWorker::Jobs do
+describe MiqScheduleWorker::Jobs do
   context "#ems_refresh_timer" do
     it "with no EMSes" do
       described_class.new.ems_refresh_timer(ManageIQ::Providers::Vmware::InfraManager)

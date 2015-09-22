@@ -1,8 +1,6 @@
 require "spec_helper"
 
-require 'workers/ems_refresh_core_worker'
-
-describe EmsRefreshCoreWorker do
+describe MiqEmsRefreshCoreWorker::Runner do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone)
@@ -15,7 +13,7 @@ describe EmsRefreshCoreWorker do
     described_class.any_instance.stub(:heartbeat_using_drb?).and_return(false)
     ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_check).and_return([true, ""])
 
-    @worker = EmsRefreshCoreWorker.new({:guid => @worker_record.guid, :ems_id => @ems.id})
+    @worker = MiqEmsRefreshCoreWorker::Runner.new({:guid => @worker_record.guid, :ems_id => @ems.id})
   end
 
   context "#process_update" do
