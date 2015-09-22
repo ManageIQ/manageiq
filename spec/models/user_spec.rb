@@ -540,4 +540,37 @@ describe User do
       expect(described_class.all_users_of_group(g2)).to match_array([u_two])
     end
   end
+
+  describe "#miq_group_description=" do
+    let(:g1) { FactoryGirl.create(:miq_group) }
+    let(:g2) { FactoryGirl.create(:miq_group) }
+    let(:u)  { FactoryGirl.create(:user, :miq_groups => [g1, g2], :current_group => g1) }
+
+    it "ignores blank" do
+      u.miq_group_description = ""
+      expect(u.current_group).to eq(g1)
+    end
+
+    it "ignores not found" do
+      u.miq_group_description = "not_found"
+      expect(u.current_group).to eq(g1)
+    end
+
+    it "sets by description" do
+      u.miq_group_description = g2.description
+      expect(u.current_group).to eq(g2)
+    end
+  end
+
+  describe ".find_by_lower_email" do
+    it "uses cache" do
+      u = FactoryGirl.build(:user_with_email)
+      expect(User.find_by_lower_email(u.email.upcase, u)).to eq(u)
+    end
+
+    it "finds in the table" do
+      u = FactoryGirl.create(:user_with_email)
+      expect(User.find_by_lower_email(u.email.upcase)).to eq(u)
+    end
+  end
 end

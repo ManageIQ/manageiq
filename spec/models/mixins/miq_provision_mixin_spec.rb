@@ -29,7 +29,7 @@ describe MiqProvisionMixin do
     end
 
     it do
-      expect(User).to receive(:where).once.and_call_original
+      expect(User).to receive(:find_by).once.and_call_original
       expect(subject.get_owner).to eq(owner)
     end
 

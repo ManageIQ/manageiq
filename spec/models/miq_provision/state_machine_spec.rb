@@ -95,6 +95,23 @@ describe MiqProvision do
         expect(vm.reload.evm_owner).to        eq(user)
       end
 
+      it "sets miq group" do
+        group_owner = FactoryGirl.create(:miq_group, :description => "desired")
+        group_current = FactoryGirl.create(:miq_group, :description => "current")
+        user.update_attributes!(:miq_groups => [group_owner, group_current], :current_group => group_current)
+        options[:owner_email] = user.email
+        options[:owner_group] = group_owner.description
+        task.update_attributes(:options => options)
+
+        task.stub(:miq_request => double("MiqRequest").as_null_object)
+
+        task.should_receive(:mark_as_completed)
+
+        task.signal(:post_create_destination)
+
+        expect(vm.reload.miq_group).to eq(group_owner)
+      end
+
       context "sets retirement" do
         it "with :retirement option" do
           options[:retirement] = retirement = 2.days.to_i

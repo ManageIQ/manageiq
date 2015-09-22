@@ -63,18 +63,12 @@ module MiqProvisionMixin
     @owner ||= begin
       email = get_option(:owner_email).try(:downcase)
       return if email.blank?
-      requester = miq_request.requester
-      owner = requester.email.to_s.downcase == email ? requester : User.where("lower(email) = ?", email).first
-      owner.tap { |o| set_owner_group(o) }
+      User.find_by_lower_email(email, miq_request.requester).tap { |o| set_owner_group(o) }
     end
   end
 
   def set_owner_group(user)
-    group_id = get_option(:owner_group)
-    if user && group_id.present?
-      group = user.miq_groups.detect { |g| g.description == group_id }
-      user.current_group = group if group
-    end
+    user.miq_group_description = get_option(:owner_group) if user
   end
 
   def workflow_class
