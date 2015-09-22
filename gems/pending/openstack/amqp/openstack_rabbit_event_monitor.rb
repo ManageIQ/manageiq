@@ -93,6 +93,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def initialize_queues(channel)
+    remove_legacy_queues
     @queues = {}
     if @options[:topics]
       @options[:topics].each do |exchange, topic|
@@ -101,6 +102,24 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
         @queues[exchange] = channel.queue(queue_name, :auto_delete => true, :exclusive => true).bind(amqp_exchange, :routing_key => topic)
       end
     end
+  end
+
+  def remove_legacy_queues
+    # Rabbit queues used to be created with incorrect initializing arguments (no
+    # auto_delete and no exclusive).  The significant problem with leaving these
+    # queues around is that they are not deleted when the event monitor
+    # disconnects from Rabbit.  And the queues continue to collect messages with
+    # no client to drain them.
+    channel = connection.create_channel
+    @options[:topics].each do |exchange, topic|
+      queue_name = "miq-#{@client_ip}-#{exchange}"
+      channel.queue_delete(queue_name) if connection.queue_exists?(queue_name)
+    end
+
+    # notifications.* is a poorly named extra-old legacy queue
+    channel.queue_delete("notifications.*") if connection.queue_exists?(queue_name)
+
+    channel.close
   end
 
   def subscribe_queues
