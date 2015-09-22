@@ -107,6 +107,23 @@ describe VmInfraController do
     expect(response.body).to include('Total Processors')
   end
 
+  it 'the reconfigure tab displays the submit and cancel buttons' do
+    host = FactoryGirl.create(:host, :vmm_vendor => 'vmware', :vmm_product => "ESX", :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 4))
+    vm = FactoryGirl.create(:vm_vmware, :name => 'b_name', :host => host, :hardware => FactoryGirl.create(:hardware, :memory_cpu => 1024, :logical_cpus => 1, :virtual_hw_version => "07"))
+    controller.stub(:x_node).and_return("v-#{vm.compressed_id}")
+
+    get :show, :id => vm.id
+    response.should redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :pressed => 'vm_reconfigure', :id => vm.id
+    expect(response.status).to eq(200)
+    expect(response.body).to include('button=submit')
+    expect(response.body).to include('button=cancel')
+  end
+
   context "skip or drop breadcrumb" do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
