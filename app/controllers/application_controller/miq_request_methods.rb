@@ -571,7 +571,7 @@ module ApplicationController::MiqRequestMethods
     id = session[:edit][:req_id] || "new"
     return unless load_edit("prov_edit__#{id}","show_list")
     @edit[:new][:schedule_time] = @edit[:new][:schedule_time].in_time_zone("Etc/UTC") if @edit[:new][:schedule_time]
-    request = @edit[:req_id] ? @edit[:wf].update_request(@edit[:req_id], @edit[:new], session[:userid]) : @edit[:wf].create_request(@edit[:new], session[:userid])
+    request = @edit[:wf].make_request(@edit[:req_id], @edit[:new], session[:userid])
     validate_fields
     if !@flash_array
       @breadcrumbs.pop if @breadcrumbs
@@ -749,7 +749,7 @@ module ApplicationController::MiqRequestMethods
         @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
       end
       if options[:wf]
-        options[:wf].init_from_dialog(@options,session[:userid])                                 # Create a new provision workflow for this edit session
+        options[:wf].init_from_dialog(@options)  # Create a new provision workflow for this edit session
         #setting active tab to first visible tab
         options[:wf].get_dialog_order.each do |d|
           if options[:wf].get_dialog(d)[:display] == :show
@@ -795,7 +795,7 @@ module ApplicationController::MiqRequestMethods
         end
       end
       @edit[:buttons] = @edit[:wf].get_buttons
-      @edit[:wf].init_from_dialog(@edit[:new], session[:userid]) # Create a new provision workflow for this edit session
+      @edit[:wf].init_from_dialog(@edit[:new]) # Create a new provision workflow for this edit session
       @timezone_offset = get_timezone_offset
       if @edit[:new][:schedule_time]
         @edit[:new][:schedule_time] = format_timezone(@edit[:new][:schedule_time], Time.zone, "raw")

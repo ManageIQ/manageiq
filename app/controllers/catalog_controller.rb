@@ -861,8 +861,7 @@ class CatalogController < ApplicationController
 
     #set request for non generic ST
     if @edit[:wf] && need_prov_dialogs?(@edit[:new][:st_prov_type])
-      request = @edit[:req_id] ? @edit[:wf].update_request(@edit[:req_id], @edit[:new], session[:userid]) :
-                                  @edit[:wf].create_request(@edit[:new], session[:userid])
+      request = @edit[:wf].make_request(@edit[:req_id], @edit[:new], session[:userid])
       if request && request.errors.present?
         request.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
