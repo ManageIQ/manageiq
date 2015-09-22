@@ -5,10 +5,7 @@ class ContainerTopologyController < ApplicationController
   after_action :set_session_data
 
   def show
-    topology = generate_topology(params[:id])
-    @topologyitems = topology[:items].to_json
-    @topologyrelations = topology[:relations].to_json
-    @topologykinds = topology[:kinds].to_json
+
   end
 
   def index

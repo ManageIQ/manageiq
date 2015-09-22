@@ -55,7 +55,7 @@ class ContainerTopologyService
          else entity.ems_ref
          end
 
-    {:metadata => {:id => id}, :name => entity.name, :status => status, :kind => kind}
+    {:id => id, :name => entity.name, :status => status, :kind => kind}
   end
 
   def entity_status(entity, kind)
