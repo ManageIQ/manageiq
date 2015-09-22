@@ -103,7 +103,7 @@ describe Rbac do
           expect(results).to eq []
         end
 
-        it "by default, can see descendant tenant's Vm" do
+        it "can see descendant tenant's Vm" do
           child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           @owned_vm.tenant     = child_tenant
           @owned_vm.save
@@ -113,14 +113,14 @@ describe Rbac do
       end
 
       context "tenant access strategy of ancestor_ids (parents)" do
-        it "by default, can see parent tenant's EMS" do
+        it "can see parent tenant's EMS" do
           child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
           results,            = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => child_group.id)
           expect(results).to eq [@owned_ems]
         end
 
-        it "by default, can't see descendant tenant's EMS" do
+        it "can't see descendant tenant's EMS" do
           child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           @owned_ems.tenant    = child_tenant
           @owned_ems.save
@@ -130,20 +130,19 @@ describe Rbac do
       end
 
       context "tenant access strategy of nil (tenant only)" do
-        it "by default, can see tenant's request task" do
-          child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+        it "can see tenant's request task" do
           results,            = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
           expect(results).to eq [@owned_request_task]
         end
 
-        it "by default, can't see parent tenant's request task" do
+        it "can't see parent tenant's request task" do
           child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
           results,            = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => child_group.id)
           expect(results).to eq []
         end
 
-        it "by default, can't see descendant tenant's request task" do
+        it "can't see descendant tenant's request task" do
           child_tenant               = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           @owned_request_task.tenant = child_tenant
           @owned_request_task.save
