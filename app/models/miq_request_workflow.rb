@@ -853,13 +853,16 @@ class MiqRequestWorkflow
   def process_filter(filter_prop, ci_klass, targets)
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
-    result = if filter_id.zero?
-               Rbac.filtered(targets, :class => ci_klass, :userid => @requester.userid)
-             else
-               MiqSearch.find(filter_id).filtered(targets, :userid => @requester.userid)
-             end
-    rails_logger("process_filter - [#{ci_klass}]", 1)
-    result
+    if filter_id.zero?
+      Rbac.filtered(targets,
+                    :class        => ci_klass,
+                    :userid       => @requester.userid,
+                    :miq_group_id => @requester.current_group_id)
+    else
+      MiqSearch.find(filter_id).filtered(targets,
+                                         :userid       => @requester.userid,
+                                         :miq_group_id => @requester.current_group_id)
+    end.tap { rails_logger("process_filter - [#{ci_klass}]", 1) }
   end
 
   def find_all_ems_of_type(klass, src = nil)
