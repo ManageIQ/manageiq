@@ -4,7 +4,7 @@ module OpenstackHandle
   module MultiTenancy
     class None < OpenstackHandle::MultiTenancy::Base
       def list
-        @service.pagination_handle(@collection_type, @options, @method)
+        @service.pagination_handle(@collection_type, @options, @method).list
       end
     end
   end

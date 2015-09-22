@@ -11,8 +11,12 @@ module OpenstackHandle
 
       private
 
+      def default_options
+        {:limit => @service.default_pagination_limit}
+      end
+
       def call_list_method(collection_type, options, method, paginate_options = {})
-        options = {:limit => @service.default_pagination_limit}.merge(options).merge(paginate_options)
+        options = default_options.merge(options).merge(paginate_options)
         if @service.public_send(collection_type).respond_to?(method)
           # In the case when we call a model method
           @service.public_send(collection_type).public_send(method, options)

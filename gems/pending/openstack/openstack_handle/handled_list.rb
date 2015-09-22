@@ -3,6 +3,8 @@ require 'openstack/openstack_handle/pagination/page_number'
 require 'openstack/openstack_handle/pagination/none'
 
 require 'openstack/openstack_handle/multi_tenancy/loop'
+require 'openstack/openstack_handle/multi_tenancy/option'
+require 'openstack/openstack_handle/multi_tenancy/none'
 
 module OpenstackHandle
   module HandledList

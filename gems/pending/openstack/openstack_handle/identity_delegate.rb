@@ -23,7 +23,7 @@ module OpenstackHandle
     end
 
     def visible_tenants_v3
-      projects
+      handled_list(:projects)
     end
 
     #
@@ -47,6 +47,16 @@ module OpenstackHandle
       vtenants = Fog::Identity::OpenStack::V2::Tenants.new
       vtenants.load(body['tenants'])
       vtenants
+    end
+
+    def multi_tenancy_class
+      # For keystone, we are not scoping to project, Seems like keystone v2 tenants is ignoring pagination
+      OpenstackHandle::MultiTenancy::None
+    end
+
+    def pagination_class
+      # Keystone v3 is using page number pagination
+      OpenstackHandle::Pagination::PageNumber
     end
   end
 end
