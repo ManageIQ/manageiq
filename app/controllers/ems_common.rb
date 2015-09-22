@@ -601,7 +601,10 @@ module EmsCommon
       @edit[:metrics_verify_status] = (edit_new[:metrics_password] == edit_new[:metrics_verify])
     end
 
-    if edit_new[:bearer_token].blank? || edit_new[:hostname].blank? || edit_new[:emstype].blank?
+    if edit_new[:bearer_token].blank? ||
+       edit_new[:hostname].blank? ||
+       edit_new[:emstype].blank? ||
+       edit_new[:bearer_userid].blank?
       @edit[:bearer_verify_status] = false
     else
       @edit[:bearer_verify_status] = true
@@ -747,6 +750,7 @@ module EmsCommon
     @edit[:new][:ssh_keypair_userid] = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
     @edit[:new][:ssh_keypair_password] = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_key(:ssh_keypair).to_s : ""
 
+    @edit[:new][:bearer_userid] = @ems.has_authentication_type?(:bearer) ? @ems.authentication_userid(:bearer).to_s : ""
     @edit[:new][:bearer_token] = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
     @edit[:new][:bearer_verify] = @ems.has_authentication_type?(:bearer) ? @ems.authentication_token(:bearer).to_s : ""
 
@@ -835,6 +839,7 @@ module EmsCommon
     @edit[:new][:ssh_keypair_userid] = params[:ssh_keypair_userid] if params[:ssh_keypair_userid]
     @edit[:new][:ssh_keypair_password] = params[:ssh_keypair_password] if params[:ssh_keypair_password]
 
+    @edit[:new][:bearer_userid] = params[:bearer_userid] if params[:bearer_userid]
     @edit[:new][:bearer_token] = params[:bearer_token] if params[:bearer_token]
     @edit[:new][:bearer_verify] = params[:bearer_verify] if params[:bearer_verify]
 
@@ -877,8 +882,10 @@ module EmsCommon
     if ems.supports_authentication?(:ssh_keypair) && !@edit[:new][:ssh_keypair_userid].blank?
       creds[:ssh_keypair] = {:userid => @edit[:new][:ssh_keypair_userid], :auth_key => @edit[:new][:ssh_keypair_password]}
     end
-    if ems.supports_authentication?(:bearer) && !@edit[:new][:bearer_token].blank?
-      creds[:bearer] = {:auth_key => @edit[:new][:bearer_token], :userid => "_"} # Must have userid
+    if ems.supports_authentication?(:bearer) &&
+       !@edit[:new][:bearer_token].blank? &&
+       !@edit[:new][:bearer_userid].blank?
+      creds[:bearer] = {:auth_key => @edit[:new][:bearer_token], :userid => @edit[:new][:bearer_userid]}
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})
   end

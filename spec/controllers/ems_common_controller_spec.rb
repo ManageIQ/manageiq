@@ -117,17 +117,19 @@ describe EmsContainerController do
         set_user_privileges
         @ems = ManageIQ::Providers::Kubernetes::ContainerManager.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
         controller.instance_variable_set(:@edit,
-                                         :new    => {:name         => @ems.name,
-                                                     :emstype      => @ems.type,
-                                                     :hostname     => @ems.hostname,
-                                                     :port         => @ems.port,
-                                                     :bearer_token => 'valid-token'},
+                                         :new    => {:name          => @ems.name,
+                                                     :emstype       => @ems.type,
+                                                     :hostname      => @ems.hostname,
+                                                     :port          => @ems.port,
+                                                     :bearer_token  => 'valid-token',
+                                                     :bearer_userid => 'myuser'},
                                          :key    => "ems_edit__#{@ems.id}",
                                          :ems_id => @ems.id)
         session[:edit] = assigns(:edit)
         post :update, :button => "save", :id => @ems.id, :type => @ems.type
         response.status.should == 200
-        ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer").should == "valid-token"
+        ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token.should == "valid-token"
+        ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_userid.should == "myuser"
       end
     end
   end

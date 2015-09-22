@@ -3,7 +3,7 @@ require "spec_helper"
 describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   before(:each) do
     MiqServer.stub(:my_zone).and_return("default")
-    auth = AuthToken.new(:name => "test", :auth_key => "valid-token")
+    auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "myuser")
     @ems = FactoryGirl.create(:ems_kubernetes, :hostname => "10.35.0.169",
                               :ipaddress => "10.35.0.169", :port => 6443,
                               :authentications => [auth])
@@ -65,6 +65,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @token = @ems.authentication_tokens.last
     @token.should have_attributes(
       :auth_key => 'valid-token'
+    )
+    @token.should have_attributes(
+      :userid => 'myuser'
     )
   end
 
