@@ -16,7 +16,7 @@ class Tenant < ActiveRecord::Base
   has_many :providers
   has_many :ext_management_systems
   has_many :vm_or_templates
-  has_many :service_catalog_templates
+  has_many :service_template_catalogs
   has_many :service_templates
 
   has_many :tenant_quotas
