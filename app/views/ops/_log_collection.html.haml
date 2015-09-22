@@ -18,8 +18,10 @@
                         "ng-model"       => "logCollectionModel.log_protocol",
                         "ng-change"      => "miqDBBackupService.logProtocolChanged(logCollectionModel)",
                         "checkchange"    => "",
-                        :class           => "form-control",
+                        :class           => "selectpicker",
                         )
+      :javascript
+        miqInitSelectPicker();
 
   = render :partial => "layouts/angular/edit_log_depot_settings_angular",
                        :locals  => {:ng_show             => "miqDBBackupService.logProtocolSelected(logCollectionModel)",
