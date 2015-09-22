@@ -219,6 +219,7 @@ class ProviderForemanController < ApplicationController
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
     load_or_clear_adv_search
+    apply_node_search_text if x_active_tree == :foreman_providers_tree
 
     unless action_name == "reload"
       if active_tab_configured_systems?
@@ -669,9 +670,37 @@ class ProviderForemanController < ApplicationController
     type && ["ConfiguredSystem"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
-  def configuration_profile_record?
-    type, _id = x_node.split("_").last.split("-")
+  def configuration_profile_record?(node = x_node)
+    type, _id = node.split("_").last.split("-")
     type && ["ConfigurationProfile"].include?(TreeBuilder.get_model_for_prefix(type))
+  end
+
+  def provider_record?(node = x_node)
+    type, _id = node.split("_").last.split("-")
+    type && ["ExtManagementSystem"].include?(TreeBuilder.get_model_for_prefix(type))
+  end
+
+  def search_text_type(node)
+    return "provider" if provider_record?(node)
+    return "configuration_profile" if configuration_profile_record?(node)
+    node
+  end
+
+  def apply_node_search_text
+    setup_search_text_for_node
+    previous_nodetype = search_text_type(@sb[:foreman_search_text][:previous_node])
+    current_nodetype = search_text_type(@sb[:foreman_search_text][:current_node])
+
+    @sb[:foreman_search_text]["#{previous_nodetype}_search_text"] = @search_text
+    @search_text = @sb[:foreman_search_text]["#{current_nodetype}_search_text"]
+    @sb[:foreman_search_text]["#{x_active_accord}_search_text"] = @search_text
+  end
+
+  def setup_search_text_for_node
+    @sb[:foreman_search_text] ||= {}
+    @sb[:foreman_search_text][:current_node] ||= x_node
+    @sb[:foreman_search_text][:previous_node] = @sb[:foreman_search_text][:current_node]
+    @sb[:foreman_search_text][:current_node] = x_node
   end
 
   def update_partials(record_showing, presenter, r)

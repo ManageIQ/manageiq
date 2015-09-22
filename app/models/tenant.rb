@@ -16,7 +16,7 @@ class Tenant < ActiveRecord::Base
   has_many :providers
   has_many :ext_management_systems
   has_many :vm_or_templates
-  has_many :service_catalog_templates
+  has_many :service_template_catalogs
   has_many :service_templates
 
   has_many :tenant_quotas
@@ -157,6 +157,18 @@ class Tenant < ActiveRecord::Base
 
   def login_logo?
     !!login_logo_file_name
+  end
+
+  def visible_domains
+    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id)).joins(:tenant).order('tenants.ancestry DESC NULLS LAST, priority DESC')
+  end
+
+  def enabled_domains
+    visible_domains.where(:enabled => true)
+  end
+
+  def editable_domains
+    ae_domains.where(:system => false).order('priority DESC')
   end
 
   # The default tenant is the tenant to be used when

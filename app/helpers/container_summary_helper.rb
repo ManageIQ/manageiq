@@ -78,7 +78,7 @@ module ContainerSummaryHelper
       {
         :label => ui_lookup(:model => ContainerImageRegistry.name),
         :image => "container_image_registry_unknown",
-        :value => "Unknown image source"
+        :value => @record.display_registry
       }
     else
       textual_link(@record.container_image_registry)
