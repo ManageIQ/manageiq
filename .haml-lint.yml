@@ -57,6 +57,7 @@ linters:
       - Metrics/LineLength
       - Style/AlignParameters
       - Style/BlockNesting
+      - Style/ExtraSpacing
       - Style/FileName
       - Style/FinalNewline
       - Style/IfUnlessModifier
