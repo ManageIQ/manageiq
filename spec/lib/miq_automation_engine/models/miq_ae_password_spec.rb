@@ -21,7 +21,7 @@ describe MiqAePassword do
     end
 
     it "throws understandable error" do
-      expect { described_class.decrypt("v1:{something}") }.to raise_error("no encryption key v1_key")
+      expect { described_class.decrypt("v1:{something}") }.to raise_error(MiqAePassword::MiqPasswordError)
     end
   end
 

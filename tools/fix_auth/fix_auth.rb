@@ -79,6 +79,11 @@ module FixAuth
       MiqPassword.key_root = cert_dir if cert_dir
       MiqPassword.add_legacy_key("v0_key", :v0)
       MiqPassword.add_legacy_key("v1_key", :v1)
+      (options[:legacy_key] || []).each do |k|
+        unless MiqPassword.add_legacy_key(k)
+          puts "WARNING: key #{k} not found"
+        end
+      end
     end
 
     def run
