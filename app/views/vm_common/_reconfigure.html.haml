@@ -54,11 +54,11 @@
                           "data-miq_sparkle_off" => true,
                           "data-width"           => "auto",
                           :class    => "selectpicker")
-      :javascript
-        miqInitSelectPicker();
-        miqSelectPickerEvent("cpu_count", "#{url}")
-        - else
-          = @edit[:cpu_options][0]
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent("cpu_count", "#{url}")
+          - else
+            = @edit[:cpu_options][0]
 
     - if @edit[:cores_options].length > 1
       .form-group
@@ -83,11 +83,11 @@
                            "data-miq_sparkle_off" => true,
                            "data-width"           => "auto",
                            :class                 => "selectpicker")
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent("cores_per_socket_count", "#{url}")
-          - else
-            = @edit[:cores_options][0]
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent("cores_per_socket_count", "#{url}")
+            - else
+              = @edit[:cores_options][0]
 
       .form-group
         %label.col-md-2.control-label
