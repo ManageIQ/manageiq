@@ -67,7 +67,7 @@ class MiqRequestWorkflow
     end
   end
 
-  def create_request(values, requester_id, target_class, event_name, event_message, auto_approve = false)
+  def create_request(values, _requester_id, target_class, event_name, event_message, auto_approve = false)
     return false unless validate(values)
 
     # Ensure that tags selected in the pre-dialog get applied to the request
@@ -77,7 +77,7 @@ class MiqRequestWorkflow
 
     yield if block_given?
 
-    request = request_class.create(:options => values, :userid => requester_id, :request_type => request_type.to_s)
+    request = request_class.create(:options => values, :userid => @requester.userid, :request_type => request_type.to_s)
     begin
       request.save!  # Force validation errors to raise now
     rescue => err
@@ -92,16 +92,16 @@ class MiqRequestWorkflow
     AuditEvent.success(
       :event        => event_name,
       :target_class => target_class,
-      :userid       => requester_id,
+      :userid       => @requester.userid,
       :message      => event_message
     )
 
     request.call_automate_event_queue("request_created")
-    request.approve(requester_id, "Auto-Approved") if auto_approve == true
+    request.approve(@requester.userid, "Auto-Approved") if auto_approve == true
     request
   end
 
-  def update_request(request, values, requester_id, target_class, event_name, event_message)
+  def update_request(request, values, _requester_id, target_class, event_name, event_message)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
 
     return false unless validate(values)
@@ -119,7 +119,7 @@ class MiqRequestWorkflow
     AuditEvent.success(
       :event        => event_name,
       :target_class => target_class,
-      :userid       => requester_id,
+      :userid       => @requester.userid,
       :message      => event_message
     )
 
