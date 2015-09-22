@@ -284,7 +284,7 @@ module ManageIQ::Providers
 
       def download_template(uri)
         require 'open-uri'
-        open(uri) {|f| f.read }
+        open(uri) { |f| f.read }
       rescue => e
         _log.error("Failed to download Azure template #{uri}. Reason: #{e.inspect}")
         nil
@@ -328,7 +328,7 @@ module ManageIQ::Providers
           resource_name = resource.fetch_path('properties', 'targetResource', 'resourceName')
           uid = resource_uid(@subscription_id, group, resource_type.downcase, resource_name)
 
-          @resource_to_stack[uid] =  stack_uid
+          @resource_to_stack[uid] = stack_uid
           child_stacks << uid if resource_type.downcase == TYPE_DEPLOYMENT
           @data_index.fetch_path(:orchestration_stack_resources, uid)
         end
