@@ -50,6 +50,8 @@ describe ProviderForemanController do
     get :explorer
     accords = controller.instance_variable_get(:@accords)
     expect(accords.size).to eq(2)
+    breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+    expect(breadcrumbs[0]).to include(:url => '/provider_foreman/show_list')
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
   end
