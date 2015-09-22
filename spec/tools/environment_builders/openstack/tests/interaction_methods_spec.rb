@@ -35,8 +35,8 @@ describe Openstack::InteractionMethods do
       :name             => "name7",
       :connection_state => 'connection_state7',
       :settings         => {
-        :ip_addr => "1.2.3.5",
-        :gateway => "192.0.2.2",
+        "ip_addr" => "1.2.3.5",
+        "gateway" => "192.0.2.2",
       }
     }
   end

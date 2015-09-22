@@ -197,6 +197,10 @@ class ExtManagementSystem < ActiveRecord::Base
     false
   end
 
+  def supports_api_version?
+    false
+  end
+
   def supports_provider_id?
     false
   end

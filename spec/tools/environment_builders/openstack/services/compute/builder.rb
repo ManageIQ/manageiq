@@ -32,10 +32,11 @@ module Openstack
         # Create servers
         # Servers are separated from build_all, since it requires sources from several services
         #
-        def build_servers(volume, network, image)
-          find_or_create_servers(volume.volumes, network.networks, image.images)
+        def build_servers(volume, network, image, networking)
+          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, networking)
           image.build_snapshots_from_servers(servers)
-          find_or_create_servers(volume.volumes, network.networks, image.images, :servers_from_snapshot)
+          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, networking,
+                                 :servers_from_snapshot)
           associate_ips(servers, network)
         end
 
@@ -52,7 +53,7 @@ module Openstack
 
         private
 
-        def find_or_create_servers(volumes, networks, images, data_method = :servers)
+        def find_or_create_servers(volumes, networks, security_groups, images, networking, data_method = :servers)
           servers = []
           @data.send(data_method).each do |server|
             if (volume_name = server.delete(:__block_device_name))
@@ -76,6 +77,16 @@ module Openstack
             if (flavor_name = server.delete(:__flavor_name))
               flavor = flavors.detect { |x| x.name == flavor_name }
               server.merge!(:flavor_ref => flavor.id) if flavor
+            end
+
+            # Do not replaces security group names with ids for nova
+            if networking != :nova && (security_group_names = server.delete(:security_groups))
+              security_group_names = [security_group_names] unless security_group_names.kind_of?(Array)
+
+              security_group_ids = security_group_names.map do |security_group_name|
+                security_groups.detect { |x| x.name == security_group_name }.id
+              end
+              server.merge!(:security_groups => security_group_ids) if security_group_ids
             end
 
             servers << find_or_create(@service.servers, server)

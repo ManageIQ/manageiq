@@ -1,5 +1,8 @@
 module OpenstackHandle
   class BaremetalDelegate < DelegateClass(Fog::Baremetal::OpenStack)
+    include OpenstackHandle::HandledList
+    include Vmdb::Logging
+
     SERVICE_NAME = "Baremetal"
 
     attr_reader :name

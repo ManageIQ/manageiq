@@ -1,8 +1,10 @@
 require 'tools/environment_builders/openstack/services/compute/data'
-require 'tools/environment_builders/openstack/services/identity/data'
+require 'tools/environment_builders/openstack/services/identity/data/keystone_v2'
+require 'tools/environment_builders/openstack/services/identity/data/keystone_v3'
 require 'tools/environment_builders/openstack/services/image/data'
 require 'tools/environment_builders/openstack/services/network/data/neutron'
 require 'tools/environment_builders/openstack/services/network/data/nova'
+require 'tools/environment_builders/openstack/services/orchestration/data'
 require 'tools/environment_builders/openstack/services/volume/data'
 
 require_relative 'refresh_spec_environments'
@@ -24,11 +26,13 @@ module Openstack
       expect(CloudVolume.count).to eq 0
 
       # .. but other things are still present:
-      expect(Disk.count).to       eq vms_count * 3
+      expect(Disk.count).to       eq disks_count
       expect(FloatingIp.count).to eq network_data.floating_ips.sum
     end
 
     def assert_common
+      assert_table_counts
+
       assert_ems
       assert_specific_flavor
       assert_specific_az
@@ -37,15 +41,19 @@ module Openstack
       assert_key_pairs
       assert_specific_security_groups
       assert_specific_network
+      assert_specific_volumes
+      assert_specific_volume_snapshots
       assert_specific_templates
+      assert_specific_stacks
       assert_specific_vms
       assert_relationship_tree
 
       # Assert table counts as last, just for sure. First we compare Hashes of data, so we see the diffs
       assert_table_counts
+      assert_table_counts_orchestration
     end
 
-    def volumes_count
+    def snapshots_with_volumes
       # We create snapshots from all servers in the enviroment builder, take the ones that had volume associated and
       # compute how many servers was created using that snapshots. Volumes attached there, will be also snapshoted and
       # then created and attached to each server, created by such snapshot.
@@ -57,7 +65,11 @@ module Openstack
       snapshots_with_volumes_names = servers_with_volumes_names.map do |x|
         image_data.servers_snapshots(x)
       end
-      snapshots_with_volumes_names = snapshots_with_volumes_names.compact.flatten.map { |x| x[:name] }
+      snapshots_with_volumes_names.compact.flatten
+    end
+
+    def volumes_count
+      snapshots_with_volumes_names = snapshots_with_volumes.map { |x| x[:name] }
 
       servers_created_by_snapshots_with_volumes = compute_data.servers_from_snapshot.select do |x|
         snapshots_with_volumes_names.include?(x[:__image_name])
@@ -67,6 +79,11 @@ module Openstack
       # volume attached
       (volume_data.volumes.count + volume_data.volumes_from_snapshots.count +
        servers_created_by_snapshots_with_volumes.count)
+    end
+
+    def volume_snapshots_count
+      # Snapshosts created manuall + snapshosts of servers that has attached volume
+      volume_data.volume_snapshots.count + snapshots_with_volumes.count
     end
 
     def firewall_rules_count
@@ -81,7 +98,7 @@ module Openstack
     def default_security_groups_count
       # There is default security group per each tenant
       count = identity_data.projects.count
-      # Neutron puts there one extra security group, that is noit assosiated to any tenant
+      # Neutron puts there one extra security group, that is not associated to any tenant
       count += 1 if neutron_networking?
       count
     end
@@ -96,9 +113,38 @@ module Openstack
       image_data.images.count + image_data.servers_snapshots.count + 2
     end
 
+    def expected_stack_parameters_count
+      # We ignore AWS params added there by Heat
+      OrchestrationStackParameter.all.to_a.delete_if { |x| x.name.include?("AWS::") || x.name.include?("OS::") }.count
+    end
+
+    def stack_parameters_count
+      orchestration_data.stacks.count * orchestration_data.template_parameters.count
+    end
+
+    def stack_resources_count
+      orchestration_data.stacks.count * orchestration_data.template_resources.count
+    end
+
+    def stack_outputs_count
+      orchestration_data.stacks.count * orchestration_data.template_outputs.count
+    end
+
+    def stack_templates_count
+      # we have one template for now
+      1
+    end
+
     def vms_count
       # VMs + Vms created from snapshots
-      compute_data.servers.count + compute_data.servers_from_snapshot.count
+      vms_count = compute_data.servers.count + compute_data.servers_from_snapshot.count
+      vms_count += orchestration_data.stacks.count if orchestration_supported?
+      vms_count
+    end
+
+    def disks_count
+      # There are 3 disks per each vm: Root disk, Ephemeral disk and Swap disk
+      vms_count * 3
     end
 
     def availability_zones_count
@@ -106,7 +152,7 @@ module Openstack
     end
 
     def assert_table_counts
-      expect(ExtManagementSystem.count).to eq 1 # Can this be not hardcoded
+      expect(ExtManagementSystem.count).to eq 1 # Can this be not hardcoded?
       expect(Flavor.count).to              eq compute_data.flavors.count
       expect(AvailabilityZone.count).to    eq availability_zones_count
       expect(FloatingIp.count).to          eq network_data.floating_ips.sum
@@ -116,17 +162,16 @@ module Openstack
       expect(CloudNetwork.count).to        eq network_data.networks.count
       expect(CloudSubnet.count).to         eq network_data.subnets.count
       expect(CloudVolume.count).to         eq volumes_count
+      expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count
       expect(VmOrTemplate.count).to        eq vms_count + images_count
       expect(Vm.count).to                  eq vms_count
       expect(MiqTemplate.count).to         eq images_count
-      # There are 3 disks per each vm: Root disk, Ephemeral disk and Swap disk
-      expect(Disk.count).to                eq vms_count * 3
+      expect(Disk.count).to                eq disks_count
       # One hardware per each VM
       expect(Hardware.count).to            eq vms_count
       # TODO(lsmola) 2 networks per each floatingip assigned, it's kinda weird now, will replace with
       # neutron models, then the number of networks will fit the number of neutron networks
       # expect(Network.count).to           eq vms_count * 2
-
       expect(OperatingSystem.count).to     eq 0
       expect(Snapshot.count).to            eq 0
       expect(SystemService.count).to       eq 0
@@ -139,9 +184,19 @@ module Openstack
       expect(MiqQueue.count).to            be > 0
     end
 
+    def assert_table_counts_orchestration
+      if orchestration_supported?
+        expect(OrchestrationStack.count).to         eq orchestration_data.stacks.count
+        expect(expected_stack_parameters_count).to  eq stack_parameters_count
+        expect(OrchestrationStackResource.count).to eq stack_resources_count
+        expect(OrchestrationStackOutput.count).to   eq stack_outputs_count
+        expect(OrchestrationTemplate.count).to      eq stack_templates_count
+      end
+    end
+
     def assert_ems
       @ems.should have_attributes(
-        :api_version => nil, # TODO: test for v2 v3 when keystone v3 patch lands
+        :api_version => identity_service.to_s,
         :uid_ems     => nil
       )
 
@@ -267,6 +322,24 @@ module Openstack
       end
     end
 
+    def assert_specific_volumes
+      # TODO(lsmola) assert volumes
+      # assert_objects_with_hashes(volumes, volume_data.volumes)
+    end
+
+    def assert_specific_volume_snapshots
+      volume_snapshots = CloudVolumeSnapshot.all
+      defined_volume_snapshots = volume_data.volume_snapshots
+      if snapshots_with_volumes
+        # Volume snapshots created by snapshoting VM with volume have changed name and description
+        # of original volume, let's just compare changed name in all snapshots, otherwise we would
+        # have to obtain link to the original volume, for the description
+        defined_volume_snapshots += snapshots_with_volumes.map { |x| {:name => "snapshot for #{x[:name]}"} }
+      end
+
+      assert_objects_with_hashes(volume_snapshots, defined_volume_snapshots, {}, {}, [:description])
+    end
+
     def assert_specific_templates
       # TODO(lsmola) make aki and ari part of the Builder's data
       without_aki_and_ari = ManageIQ::Providers::Openstack::CloudManager::Template.all.select do |x|
@@ -313,8 +386,30 @@ module Openstack
       end
     end
 
+    def assert_specific_stacks
+      return unless orchestration_supported?
+
+      stacks = OrchestrationStack.all
+
+      assert_objects_with_hashes(stacks,
+                                 orchestration_data.stacks,
+                                 orchestration_data.stack_translate_table,
+                                 {},
+                                 [:template, :parameters])
+    end
+
     def assert_specific_vms
-      assert_objects_with_hashes(ManageIQ::Providers::Openstack::CloudManager::Vm.all,
+      all_vms = ManageIQ::Providers::Openstack::CloudManager::Vm.all
+      if orchestration_supported?
+        # When there are orchestration stacks, we will delete them from vm comparing, vm name contains unique
+        # id, so it's hard to build it from stack
+        stack_vms     = OrchestrationStackResource.select { |x| x.resource_category == "OS::Nova::Server" }
+        stack_vms_ids = stack_vms.collect(&:physical_resource)
+
+        all_vms = all_vms.to_a.delete_if { |x| stack_vms_ids.include?(x.ems_ref) }
+      end
+
+      assert_objects_with_hashes(all_vms,
                                  compute_data.servers + compute_data.servers_from_snapshot,
                                  {},
                                  {},
