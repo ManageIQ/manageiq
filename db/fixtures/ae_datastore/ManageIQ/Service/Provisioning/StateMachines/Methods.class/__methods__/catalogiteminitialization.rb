@@ -164,7 +164,9 @@ def set_option_on_destination(dialog_options_hash, destination)
 end
 
 def destination_key_name(key)
-  key.to_s.starts_with?("dialog_") ? key.to_s : "dialog_#{key}"
+  key = key.to_s
+  return key if key.include?("::") || key.starts_with?("dialog_")
+  "dialog_#{key}"
 end
 
 def pass_dialog_values_to_provision_task(provision_task, dialog_options_hash, dialog_tags_hash)
