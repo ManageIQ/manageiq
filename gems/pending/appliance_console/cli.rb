@@ -140,7 +140,7 @@ module ApplianceConsole
     end
 
     def set_db
-      raise "No v2_key present" unless key_configuration.key_exist?
+      raise "No encryption key (v2_key) present" unless key_configuration.key_exist?
       if local?
         set_internal_db
       else

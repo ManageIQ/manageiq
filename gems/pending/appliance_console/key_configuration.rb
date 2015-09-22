@@ -22,7 +22,7 @@ module ApplianceConsole
 
     def ask_questions
       if key_exist?
-        @force = agree("Overwrite existing v2_key? (Y/N): ")
+        @force = agree("Overwrite existing encryption key (v2_key)? (Y/N): ")
         return false unless @force
       end
 
@@ -30,10 +30,10 @@ module ApplianceConsole
 
       if fetch_key?
         say("")
-        @host      = ask_for_ip_or_hostname("hostname for appliance with v2_key", @host)
+        @host      = ask_for_ip_or_hostname("hostname for appliance with encryption key (v2_key)", @host)
         @login     = ask_for_string("appliance SSH login", @login)
         @password  = ask_for_password("appliance SSH password", @password)
-        @key_path  = ask_for_string("path of remote v2_key", @key_path)
+        @key_path  = ask_for_string("path of remote encryption key (v2_key)", @key_path)
       end
       @action
     end
@@ -56,7 +56,7 @@ module ApplianceConsole
       else
         # probably only got here via the cli
         $stderr.puts
-        $stderr.puts "Only generate one v2_key per installation."
+        $stderr.puts "Only generate one encryption key (v2_key) per installation."
         $stderr.puts "Chances are you did not want to overwrite this file."
         $stderr.puts "If you do this all encrypted secrets in the database will not be readable."
         $stderr.puts "Please backup your key and run this command again with --force-key."
