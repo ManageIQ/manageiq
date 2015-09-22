@@ -21,7 +21,7 @@ describe MiqAeDomain do
     it "should change priority based on ordered list of ids" do
       after = {'TEST4' => 1, 'TEST3' => 2, 'TEST2' => 3, 'TEST1' => 4}
       ids   = after.collect { |dom, _| MiqAeDomain.find_by_fqname(dom).id }
-      MiqAeDomain.reset_priority_by_ordered_ids(ids, Tenant.root_tenant)
+      MiqAeDomain.reset_priority_by_ordered_ids(ids)
       after.each { |dom, pri| MiqAeDomain.find_by_fqname(dom).priority.should eql(pri) }
     end
 

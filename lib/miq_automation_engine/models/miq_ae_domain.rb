@@ -13,9 +13,9 @@ class MiqAeDomain < MiqAeNamespace
     where(:enabled => true)
   end
 
-  def self.reset_priority_by_ordered_ids(ids, tenant)
+  def self.reset_priority_by_ordered_ids(ids)
     ids.each_with_index do |id, priority|
-      MiqAeDomain.where(:id => id, :tenant => tenant).first.try(:update_attributes, :priority => priority + 1)
+      MiqAeDomain.find(id).try(:update_attributes, :priority => priority + 1)
     end
   end
 
@@ -31,7 +31,7 @@ class MiqAeDomain < MiqAeNamespace
 
   def squeeze_priorities
     ids = MiqAeDomain.where('priority > 0', :tenant => tenant).order('priority ASC').collect(&:id)
-    MiqAeDomain.reset_priority_by_ordered_ids(ids, tenant)
+    MiqAeDomain.reset_priority_by_ordered_ids(ids)
   end
 
   def self.any_unlocked?
