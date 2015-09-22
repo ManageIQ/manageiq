@@ -99,7 +99,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
   end
 
   def data_dir
-    File.expand_path(File.join(File.dirname(__FILE__), "data", "openstack_infra"))
+    File.expand_path(File.join(File.dirname(__FILE__), "event_parser_data"))
   end
 
   def common_attributes(event)
