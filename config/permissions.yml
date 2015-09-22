@@ -13,6 +13,7 @@
 - ems-type:openstack_infra
 - ems-type:rhevm
 - ems-type:vmwarews
+- ems-type:azure
 - ems-type:ec2
 - ems-type:openstack
 - ems-type:kubernetes
