@@ -41,6 +41,7 @@
   "overrides": {
     "patternfly": {
       "main": [
+        "components/bootstrap/dist/js/bootstrap.js",
         "components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
         "components/bootstrap-select/dist/js/bootstrap-select.js",
         "dist/js/patternfly.js",

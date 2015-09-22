@@ -30,7 +30,7 @@
   }
 
   /** @ngInject */
-  function StateController($state, service, CollectionsApi, EditServiceModal) {
+  function StateController($state, service, CollectionsApi, EditServiceModal, RetireServiceModal) {
     var vm = this;
 
     vm.title = 'Service Details';
@@ -39,6 +39,8 @@
     vm.activate = activate;
     vm.removeService = removeService;
     vm.editServiceModal = editServieModal;
+    vm.retireServiceNow = retireServiceNow;
+    vm.retireServiceLater = retireServiceLater;
 
     activate();
 
@@ -59,6 +61,23 @@
 
     function editServieModal() {
       EditServiceModal.showModal(vm.service);
+    }
+
+    function retireServiceNow(){
+      var data = {"action" : "retire"};
+      CollectionsApi.post('services', vm.service.id, {}, data).then(retireSuccess, retireFailure);
+
+      function retireSuccess(){
+        $state.go('services.list');
+      }
+
+      function retireFailure(){
+
+      }
+    }
+
+    function retireServiceLater(){
+      RetireServiceModal.showModal(vm.service);
     }
   }
 })();
