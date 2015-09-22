@@ -4,6 +4,7 @@
 - :clo
 - :inf
 - :con
+- :cnt
 - :aut
 - :opt
 - :set
@@ -15,4 +16,5 @@
 - ems-type:ec2
 - ems-type:openstack
 - ems-type:kubernetes
+- ems-type:openshift
 - ems-type:foreman_provisioning

@@ -1,4 +1,6 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
+  require_dependency 'manageiq/providers/base_manager/refresh_worker/runner'
+
   include PerEmsWorkerMixin
 
   self.required_roles = "ems_inventory"

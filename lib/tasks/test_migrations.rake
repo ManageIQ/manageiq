@@ -12,6 +12,7 @@ namespace :test do
   )
 
   namespace :migrations do
+    desc "Setup environment for migration specs"
     task :setup => :setup_db
 
     desc "Run the up migration specs only"

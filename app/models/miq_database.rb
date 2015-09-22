@@ -72,10 +72,6 @@ class MiqDatabase < ActiveRecord::Base
     @adapter ||= ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter]
   end
 
-  def self.postgres?
-    adapter == "postgresql"
-  end
-
   # virtual has_many
   def vmdb_tables
     VmdbTable.all

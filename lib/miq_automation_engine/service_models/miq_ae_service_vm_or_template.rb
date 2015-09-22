@@ -30,6 +30,7 @@ module MiqAeMethodService
     expose :files,                 :association => true
     expose :directories,           :association => true
     expose :refresh, :method => :refresh_ems
+    expose :tenant,                :association => true
 
     METHODS_WITH_NO_ARGS = %w{start stop suspend unregister collect_running_processes shutdown_guest standby_guest reboot_guest}
     METHODS_WITH_NO_ARGS.each do |m|
