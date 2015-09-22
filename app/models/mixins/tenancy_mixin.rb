@@ -12,6 +12,5 @@ module TenancyMixin
 
       tenant.accessible_tenant_ids(strategy)
     end
-
   end
 end

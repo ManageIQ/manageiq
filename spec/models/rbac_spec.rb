@@ -107,7 +107,7 @@ describe Rbac do
           child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           @owned_vm.tenant     = child_tenant
           @owned_vm.save
-          results,             = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
           expect(results).to eq [@owned_vm]
         end
       end
@@ -124,14 +124,14 @@ describe Rbac do
           child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           @owned_ems.tenant    = child_tenant
           @owned_ems.save
-          results,             = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results, = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => @owner_group.id)
           expect(results).to eq []
         end
       end
 
       context "tenant access strategy of nil (tenant only)" do
         it "can see tenant's request task" do
-          results,            = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
           expect(results).to eq [@owned_request_task]
         end
 
@@ -146,7 +146,7 @@ describe Rbac do
           child_tenant               = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           @owned_request_task.tenant = child_tenant
           @owned_request_task.save
-          results,                   = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
+          results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
           expect(results).to eq []
         end
       end

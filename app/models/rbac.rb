@@ -54,7 +54,7 @@ module Rbac
   #   :sibling_ids
   #   :descendant_ids
   #   ...
-  TENANT_ACCESS_STRATEGY ={
+  TENANT_ACCESS_STRATEGY = {
     'ExtManagementSystem'    => :ancestor_ids,
     'MiqAeNamespace'         => :ancestor_ids,
     'MiqRequest'             => nil, # tenant only
@@ -280,7 +280,6 @@ module Rbac
   def self.accessible_tenant_ids_strategy(klass)
     TENANT_ACCESS_STRATEGY[klass.to_s]
   end
-
 
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
     find_options = find_options_for_tenant(klass, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
