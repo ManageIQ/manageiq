@@ -10,7 +10,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "foreman_provider"
+    @table_name ||= "provider_foreman"
   end
 
   def index
@@ -18,7 +18,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def show_list
-    redirect_to :action => 'explorer'
+    redirect_to :action => 'explorer', :flash_msg => @flash_array ? @flash_array[0][:message] : nil
   end
 
   def new
