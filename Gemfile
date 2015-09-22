@@ -68,6 +68,7 @@ gem "rails-i18n",                                                     :git => "g
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",   :require => false
 gem "aws-sdk",                        "~>1.56.0",  :require => false
+gem "connection_pool",                "~>2.2.0",   :require => false
 gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false
 gem "hamlit",                         "~>1.7.2",   :require => false
