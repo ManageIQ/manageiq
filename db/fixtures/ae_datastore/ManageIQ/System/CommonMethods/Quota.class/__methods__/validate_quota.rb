@@ -7,6 +7,7 @@ def request_info
   else
     @miq_request = $evm.root['miq_request']
     @service = false
+    @cloud =  @miq_request.source.respond_to?(:cloud) ? @miq_request.source.cloud : false
   end
   $evm.log(:info, "Request: #{@miq_request.description} id: #{@miq_request.id} ")
 end
@@ -37,10 +38,10 @@ def get_option_value(request, option)
   request.get_option(option).to_i
 end
 
-def manage_quotas_by_group?
+def manage_quotas?
   # specify whether quotas should be managed (valid options are [true | false])
-  manage_quotas_by_group = $evm.object['manage_quotas_by_group'] || true
-  manage_quotas_by_group =~ (/(true|t|yes|y|1)$/i)
+  manage_quotas = $evm.object['manage_quotas'] || true
+  manage_quotas =~ (/(true|t|yes|y|1)$/i)
   true
 end
 
@@ -121,7 +122,7 @@ def vm_prov_option_value(prov_option, options_array = [])
   when :vm_memory
     memory_in_request = number_of_vms * get_option_value(@miq_request, :vm_memory)
     set_requested_value(prov_option, memory_in_request,
-                       @miq_request.get_option(:instance_type), options_array)
+                        @miq_request.get_option(:instance_type), options_array)
   when :number_of_cpus
     cpu_in_request = get_option_value(@miq_request, :number_of_cpus)
     if cpu_in_request.zero?
@@ -150,7 +151,7 @@ end
 def options_value(prov_option, resource, options_array)
   return unless resource.respond_to?('get_option')
   set_requested_value(prov_option, resource.get_option(prov_option),
-                       resource.get_option(:instance_type), options_array)
+                      resource.get_option(:instance_type), options_array)
 end
 
 def default_option(option_value, options_array)
@@ -167,22 +168,27 @@ end
 
 def set_requested_value(prov_option, option_value, find_id, dialog_array)
   $evm.log(:info,  "set requested value: prov_option: #{prov_option} value:  #{option_value}")
-  case prov_option
-  when :cores_per_socket
-  $evm.log(:info,  "set requested value cores_per_socket: prov_option: #{prov_option} value:  #{option_value}")
-    option_set = requested_cores_per_socket(find_id, dialog_array)
-  when :vm_memory
-  $evm.log(:info,  "set requested value vm_memory: prov_option: #{prov_option} value:  #{option_value}")
-    option_set = requested_vm_memory(find_id, dialog_array)
-  when :allocated_storage
-  $evm.log(:info,  "10 set requested value allocated_storage: prov_option: #{prov_option} value:  #{option_value}")
-    src_id = @miq_request.get_option(:src_vm_id)
-    $evm.log(:info,  "20 XXXXXXX set requested value allocated_storage: prov_option: #{prov_option} src_id:  #{src_id}")
-    option_set = requested_allocated_storage(@miq_request.get_option(:src_vm_id), dialog_array)
-  end
-  return if option_set
+  return if cloud_value(prov_option, option_value, find_id, dialog_array)
+
   $evm.log(:info,  "set requested value default_option: prov_option: #{prov_option} value:  #{option_value}")
   default_option(option_value, dialog_array)
+end
+
+def cloud_value(prov_option, option_value, find_id, dialog_array)
+  return nil unless @cloud
+
+  case prov_option
+  when :cores_per_socket
+    $evm.log(:info,  "set requested value cores_per_socket: prov_option: #{prov_option} value:  #{option_value}")
+    option_set = requested_cores_per_socket(find_id, dialog_array)
+  when :vm_memory
+    $evm.log(:info,  "set requested value vm_memory: prov_option: #{prov_option} value:  #{option_value}")
+    option_set = requested_vm_memory(find_id, dialog_array)
+  when :allocated_storage
+    $evm.log(:info,  "set requested value allocated_storage: prov_option: #{prov_option} value:  #{option_value}")
+    option_set = requested_allocated_storage(@miq_request.get_option(:src_vm_id), dialog_array)
+  end
+  option_set
 end
 
 def requested_cores_per_socket(vmdb_object_find_by, options_array)
@@ -194,12 +200,11 @@ def requested_cores_per_socket(vmdb_object_find_by, options_array)
 end
 
 def requested_allocated_storage(vmdb_object_find_by, options_array)
-  $evm.log(:info,  "1 requested allocated storage: id: #{vmdb_object_find_by} options_array:  #{options_array}")
   template = vmdb_object(:miq_template, vmdb_object_find_by)
   return false unless template
 
-  $evm.log(:info,  "2 requested allocated storage: id: #{vmdb_object_find_by} options_array:  #{options_array}")
-  options_array << template.provisioned_disk_storage
+  allocated_storage = template.respond_to?(:provisioned_disk_storage) ? template.provisioned_disk_storage : 99
+  options_array << allocated_storage
   true
 end
 
@@ -230,11 +235,11 @@ def memory_quota_check(used, requested)
   $evm.log(:info, "Requested memory: #{requested} MB")
   item_hash = {:type            => :memory,
                :title           => "vRAM",
-               :model_attribute => "max_group_memory",
+               :model_attribute => "max_memory",
                :tag_name        => :quota_max_memory,
                :requested       => requested,
                :warn            => false,
-               :reason_key      => "group_memory_quota_exceeded",
+               :reason_key      => "memory_quota_exceeded",
                :unit            => "MB"}
 
   if quota_item_check(item_hash, used, requested)
@@ -243,10 +248,10 @@ def memory_quota_check(used, requested)
   end
   $evm.log(:info, "Memory Quota Check passed, checking quota warning.")
 
-  item_hash[:model_attribute] = "warn_group_memory"
+  item_hash[:model_attribute] = "warn_memory"
   item_hash[:tag_name] = :quota_warn_memory
   item_hash[:warn] = true
-  item_hash[:reason_key] = "group_warn_memory_quota_exceeded"
+  item_hash[:reason_key] = "warn_memory_quota_exceeded"
 
   warn_exceeded = quota_item_check(item_hash, used, requested)
   $evm.log(:info, "Memory Quota Warning Check Failed") if warn_exceeded
@@ -258,11 +263,11 @@ def cpu_quota_check(used, requested)
   $evm.log(:info, "Requested cpu: #{requested}")
   item_hash = {:type            => :cpu,
                :title           => "vCPU",
-               :model_attribute => "max_group_cpu",
+               :model_attribute => "max_cpu",
                :tag_name        => :quota_max_cpu,
                :requested       => requested,
                :warn            => false,
-               :reason_key      => "group_cpu_quota_exceeded",
+               :reason_key      => "cpu_quota_exceeded",
                :unit            => nil}
 
   if quota_item_check(item_hash, used, requested)
@@ -271,10 +276,10 @@ def cpu_quota_check(used, requested)
   end
   $evm.log(:info, "CPU Quota Check passed, checking quota warning.")
 
-  item_hash[:model_attribute] = "warn_group_cpu"
+  item_hash[:model_attribute] = "warn_cpu"
   item_hash[:tag_name] = :quota_warn_cpu
   item_hash[:warn] = true
-  item_hash[:reason_key] = "group_warn_cpu_quota_exceeded"
+  item_hash[:reason_key] = "warn_cpu_quota_exceeded"
 
   warn_exceeded = quota_item_check(item_hash, used, requested)
   $evm.log(:info, "CPU Quota Warning Check Failed") if warn_exceeded
@@ -286,11 +291,11 @@ def vm_quota_check(used, requested)
   $evm.log(:info, "Requested vms: #{requested}")
   item_hash = {:type            => :vms,
                :title           => "VMs",
-               :model_attribute => "max_group_vms",
+               :model_attribute => "max_vms",
                :tag_name        => :quota_max_vms,
                :requested       => requested,
                :warn            => false,
-               :reason_key      => "group_vms_quota_exceeded",
+               :reason_key      => "vms_quota_exceeded",
                :unit            => nil}
 
   if quota_item_check(item_hash, used, requested)
@@ -299,10 +304,10 @@ def vm_quota_check(used, requested)
   end
   $evm.log(:info, "VM Quota Check passed, checking quota warning.")
 
-  item_hash[:model_attribute] = "warn_group_vms"
+  item_hash[:model_attribute] = "warn_vms"
   item_hash[:tag_name] = :quota_warn_vms
   item_hash[:warn] = true
-  item_hash[:reason_key] = "group_warn_vms_quota_exceeded"
+  item_hash[:reason_key] = "warn_vms_quota_exceeded"
 
   warn_exceeded = quota_item_check(item_hash, used, requested)
   $evm.log(:info, "VM Quota Warning Check Failed") if warn_exceeded
@@ -315,11 +320,11 @@ def storage_quota_check(used, requested)
 
   item_hash = {:type            => :allocated_storage,
                :title           => "storage",
-               :model_attribute => "max_group_storage",
+               :model_attribute => "max_storage",
                :tag_name        => :quota_max_storage,
                :requested       => requested,
                :warn            => false,
-               :reason_key      => "group_storage_quota_exceeded",
+               :reason_key      => "storage_quota_exceeded",
                :unit            => "bytes"}
 
   if quota_item_check(item_hash, used, requested)
@@ -328,10 +333,10 @@ def storage_quota_check(used, requested)
   end
   $evm.log(:info, "Storage Quota Check passed, checking quota warning.")
 
-  item_hash[:model_attribute] = "warn_group_storage"
+  item_hash[:model_attribute] = "warn_storage"
   item_hash[:tag_name] = :quota_warn_storage
   item_hash[:warn] = true
-  item_hash[:reason_key] = "group_warn_storage_quota_exceeded"
+  item_hash[:reason_key] = "warn_storage_quota_exceeded"
 
   warn_exceeded = quota_item_check(item_hash, used, requested)
   $evm.log(:info, "Storage Quota Warning Check Failed") if warn_exceeded
@@ -427,15 +432,15 @@ def quota_exceeded_message(type)
   $evm.log(:info, "Quota Warning Message: #{warn_message}") if warn_message
   message = err_message + warn_message
   @miq_request.set_message(message[0..250])
-  @miq_request.set_option("service_quota_#{warn}exceeded".to_sym, message)
+  @miq_request.set_option("quota_#{warn}exceeded".to_sym, message)
 end
 
 def message_text(type, msg)
   message = msg
-  ["group_#{type}cpu_quota_exceeded".to_sym,
-   "group_#{type}memory_quota_exceeded".to_sym,
-   "group_#{type}storage_quota_exceeded".to_sym,
-   "group_#{type}vms_quota_exceeded".to_sym].each do |q|
+  ["#{type}cpu_quota_exceeded".to_sym,
+   "#{type}memory_quota_exceeded".to_sym,
+   "#{type}storage_quota_exceeded".to_sym,
+   "#{type}vms_quota_exceeded".to_sym].each do |q|
     message += "(#{@quota_results[q]}) " if @quota_results[q]
   end
   message
@@ -447,14 +452,14 @@ end
 
 def error(type)
   msg = "Unable to calculate quota due to an error getting the #{type}"
-  $evm.log(:warn," #{msg}")
+  $evm.log(:warn, " #{msg}")
   $evm.root['ae_result'] = 'error'
   raise msg
 end
 
 $evm.log(:warn, "Quota Processing starting.")
 
-unless manage_quotas_by_group?
+unless manage_quotas?
   $evm.log(:warn, "Quota is turned off. ")
   return
 end
@@ -462,7 +467,6 @@ end
 $evm.log("info", "Listing Root Object Attributes:")
 $evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
 $evm.log("info", "===========================================")
-
 
 setup
 
