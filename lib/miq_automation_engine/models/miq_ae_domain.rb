@@ -20,11 +20,11 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def self.highest_priority(tenant)
-    MiqAeDomain.where(:tenant => tenant).order('priority DESC').first.try(:priority).to_i
+    MiqAeDomain.where(:tenant => tenant).maximum('priority').to_i
   end
 
   def default_priority
-    self.priority = (MiqAeDomain.highest_priority(tenant)) + 1 unless priority
+    self.priority = MiqAeDomain.highest_priority(tenant) + 1 unless priority
   end
 
   private
