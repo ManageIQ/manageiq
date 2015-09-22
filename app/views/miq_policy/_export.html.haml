@@ -57,7 +57,7 @@
         .col-md-8
           = select_tag('dbtype',
             options_for_select([[_("Policy Profiles"), "pp"], [_("Policies"), "p"], [_("Alerts"), "al"]], @sb[:dbtype]),
-            :class             => "selectpicker")
+            :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent('dbtype', '#{url}')

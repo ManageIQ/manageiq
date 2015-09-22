@@ -40,9 +40,10 @@
               - if @alert.memberof.empty?
                 = select_tag('miq_alert_db',
                   options_for_select(@edit[:dbs].invert.sort, @edit[:new][:db]),
-                  :class                 => "selectpicker",
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true)
+                  :class => "selectpicker")
+                :javascript
+                  miqInitSelectPicker();
+                  miqSelectPickerEvent('miq_alert_db', '#{url}', {beforeSend: true, complete: true})
               - else
                 = ui_lookup(:model => @edit[:new][:db])
                 &nbsp;&nbsp;&nbsp;
@@ -62,12 +63,10 @@
                 - opts = @edit[:expression_types].invert.sort + [[_("Expression (Custom)"), nil]]
                 = select_tag('exp_name',
                   options_for_select(opts, @edit[:new][:expression][:eval_method].to_s),
-                  :class                 => "selectpicker",
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true)
+                  :class => "selectpicker")
                 :javascript
                   miqInitSelectPicker();
-                  miqSelectPickerEvent('exp_name', '#{url}')
+                  miqSelectPickerEvent('exp_name', '#{url}', {beforeSend: true, complete: true})
           - else
             .col-md-8
               - if @alert.expression.kind_of?(MiqExpression)
@@ -86,12 +85,10 @@
                 - opts = [["<#{_('Choose')}>", nil], [_("Hourly Timer"), "_hourly_timer_"]] + @edit[:events].invert.sort
                 = select_tag('exp_event',
                   options_for_select(opts, @edit[:new][:exp_event]),
-                  :class                 => "selectpicker",
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true)
+                  :class => "selectpicker")
                 :javascript
                   miqInitSelectPicker();
-                  miqSelectPickerEvent('exp_event', '#{url}')
+                  miqSelectPickerEvent('exp_event', '#{url}', {beforeSend: true, complete: true})
         - else
           - if @alert.expression.kind_of?(MiqExpression) || @alert.expression[:eval_method] == "nothing"
             .form-group
@@ -111,12 +108,10 @@
                 - repeat = @sb[:alert][:repeat_times]
               = select_tag('repeat_time',
                 options_for_select(repeat.invert.sort_by(&:last), @edit[:new][:repeat_time]),
-                :class                 => "selectpicker",
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true)
+                :class => "selectpicker")
               :javascript
                 miqInitSelectPicker();
-                miqSelectPickerEvent('repeat_time', '#{url}')
+                miqSelectPickerEvent('repeat_time', '#{url}', {beforeSend: true, complete: true})
           - else
             .col-md-8
               - if @alert.options[:notifications][:delay_next_evaluation].blank?

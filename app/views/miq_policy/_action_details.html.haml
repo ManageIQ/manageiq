@@ -28,12 +28,10 @@
             - if @edit
               = select_tag('miq_action_type',
                 options_for_select([["<#{_('Choose')}>", nil]] + MiqAction::TYPES.invert.sort, @edit[:new][:action_type]),
-                :class                 => "selectpicker",
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true)
+                :class => "selectpicker")
               :javascript
                 miqInitSelectPicker();
-                miqSelectPickerEvent('miq_action_type', '#{url}')
+                miqSelectPickerEvent('miq_action_type', '#{url}', {beforeSend: true, complete: true})
             - else
               = h(@action.action_type == "default" ? "Default" : MiqAction::TYPES[@action.action_type])
       %hr

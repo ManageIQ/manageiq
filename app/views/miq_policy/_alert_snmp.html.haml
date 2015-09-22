@@ -34,10 +34,11 @@
             = _("Version")
           .col-md-8
             = select_tag('snmp_version', options_for_select(%w(v1 v2), @edit[:new][:snmp][:snmp_version]),
-              :style                 => "width:50px",
-              :class                 => "selectpicker",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true)
+              :style => "width:50px",
+              :class => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent('snmp_version', '#{url}', {beforeSend: true, complete: true})
         - trap_text = @edit[:new][:snmp][:snmp_version] == "v1" || @edit[:new][:snmp][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
         .form-group
           %label.control-label.col-md-2
