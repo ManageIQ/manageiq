@@ -15,7 +15,7 @@ class MiqAeDomain < MiqAeNamespace
 
   def self.reset_priority_by_ordered_ids(ids)
     ids.each_with_index do |id, priority|
-      MiqAeDomain.find(id).try(:update_attributes, :priority => priority + 1)
+      MiqAeDomain.find_by!(:id => id).update_attributes(:priority => priority + 1)
     end
   end
 
