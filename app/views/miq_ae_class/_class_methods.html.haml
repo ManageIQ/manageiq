@@ -2,21 +2,29 @@
   - if !@in_a_form
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"}
     %h3= _('Methods')
-    .checkall
-      %input{:id => "Toggle4", :type => "checkbox", :name => "Toggle4", :onclick => "miqCheck_AE_All('center_tb','class_methods_grid');"}
-      (#{_('Check All')})
-    = render :partial => 'layouts/dhtmlxgrid',
-      :locals => {:options => {:grid_id => "cls_methods_grid_div",
-        :grid_name                      => "class_methods_grid",
-        :grid_url                       => "/miq_ae_class/tree_select/",
-        :grid_xml                       => @grid_methods_list_xml,
-        :no_resize                      => true,
-        :autosize                       => true,
-        :grid_num                       => 2,
-        :set_sizes                      => true,
-        :skin                           => "style3",
-        :alt_row                        => true,
-        :div_in_js                      => true}}
+    %table#class_methods_grid.table.table-striped.table-bordered.table-hover.table-clickable.table-checkable
+      %thead
+        %th.narrow
+          %input.checkall{:type => 'checkbox', :title => _('Check All')}
+        %th
+        %th
+      %tbody{'data-click-url' => '/miq_ae_class/tree_select/'}
+        - @record.ae_methods.each do |record|
+          - next if record.name == '$'
+          - cls_cid = "#{class_prefix(record.class)}-#{ActiveRecord::Base.compress_id(record.id)}"
+          %tr{'data-click-id' => cls_cid}
+            %td.narrow.noclick
+              %input{:type => 'checkbox', :value => cls_cid}
+            %td.narrow
+              %ul.icons.list-unstyled
+                %li
+                  %span{:class => icon_class(record.class)}
+            %td
+              = record_name(record)
+    :javascript
+      $(function () {
+        $('#class_methods_grid').miqGrid();
+      });
   - elsif @edit[:new][:fields]
     #form_div
       = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_methods"}
