@@ -897,92 +897,7 @@ module OpsController::OpsRbac
 
   def rbac_build_features_tree
     @role = @sb[:typ] == "copy" ? @record.dup : @record if @role.nil?     #if on edit screen use @record
-    root_feature = MiqProductFeature.feature_root
-    root = MiqProductFeature.feature_details(root_feature)
-    root_node = {
-      :key      => "#{@role.id ? to_cid(@role.id) : "new"}__#{root_feature}",
-      :icon     => "feature_node.png",
-      :title    => root[:name],
-      :tooltip  => root[:description] || root[:name],
-      :addClass => "cfme-cursor-default",
-      :expand   => true,
-      :select   => @role_features.include?(root_feature)
-    }
-
-    top_nodes = []
-    Menu::Manager.each_feature_title_with_subitems do |feature_title, subitems|
-      t_kids = []
-      t_node = {
-        :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{feature_title}",
-        :icon    => "feature_node.png",
-        :title   => feature_title,
-        :tooltip => feature_title + " Main Tab"
-      }
-
-      subitems.each do |f| # Go thru the features of this tab
-        f_tab = f.ends_with?("_accords") ? f.split("_accords").first : f  # Remove _accords suffix if present, to get tab feature name
-        next unless MiqProductFeature.feature_exists?(f_tab)
-        feature = rbac_features_tree_add_node(f_tab, t_node[:key], root_node[:select])
-        t_kids.push(feature) unless feature.nil?
-      end
-
-      if root_node[:select]                 # Root node is checked
-        t_node[:select] = true
-      elsif !t_kids.empty?                  # If kids are present
-        full_chk = (t_kids.collect{|k| k if k[:select]}.compact).length
-        part_chk = (t_kids.collect{|k| k unless k[:select]}.compact).length
-        if full_chk == t_kids.length
-          t_node[:select] = true            # All kids are checked
-        elsif full_chk > 0 || part_chk > 0
-          t_node[:select] = false           # Some kids are checked or partially checked
-        end
-      end
-
-      t_node[:children] = t_kids unless t_kids.empty?
-      #only show storage node if product setting is set to show the nodes
-      case feature_title.downcase
-        when "storage"; top_nodes.push(t_node) if get_vmdb_config[:product][:storage]
-        else            top_nodes.push(t_node)
-      end
-    end
-    root_node[:children] = top_nodes unless top_nodes.empty?
-    return [root_node].to_json
-  end
-
-  def rbac_features_tree_add_node(feature, pid, parent_checked = false)
-    details = MiqProductFeature.feature_details(feature)
-    unless details[:hidden]
-      f_node = {}
-      f_kids = []                             # Array to hold node children
-      f_node[:key] = "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}"
-      f_node[:icon] = "feature_#{details[:feature_type]}.png"
-      f_node[:title] = details[:name]
-      f_node[:tooltip] = details[:description] || details[:name]
-      f_node[:hideCheckbox] = true if details[:protected]
-
-      # Go thru the features children
-      MiqProductFeature.feature_children(feature).each do |f|
-        feat = rbac_features_tree_add_node(f,
-                                           f_node[:key],
-                                           parent_checked || @role_features.include?(feature)) if f
-        f_kids.push(feat) if feat
-      end
-      f_node[:children] = f_kids unless f_kids.empty?             # Add in the node's children, if any
-
-      if parent_checked ||                  # Parent is checked
-          @role_features.include?(feature)  # This feature is checked
-        f_node[:select] = true
-      elsif !f_kids.empty?                  # If kids are present
-        full_chk = (f_kids.collect { |k| k if k[:select] }.compact).length
-        part_chk = (f_kids.collect { |k| k unless k[:select] }.compact).length
-        if full_chk == f_kids.length
-          f_node[:select] = true            # All kids are checked
-        elsif full_chk > 0 || part_chk > 0
-          f_node[:select] = false         # Some kids are checked
-        end
-      end
-      f_node
-    end
+    OpsController::RbacTree.build(@role, @role_features).to_json
   end
 
   # Set form variables for role edit
@@ -1251,8 +1166,7 @@ module OpsController::OpsRbac
       node = params[:id].split("__").last # Get the feature of the checked node
       if params[:check] == "0"  # Unchecked
         if node.starts_with?("_tab_") # Remove all features under this tab
-          tab_features = Menu::Manager.tab_features_by_name(node.split("_tab_").last)
-          tab_features.each do |f|
+          tab_features_for_node(node).each do |f|
             @edit[:new][:features] -= ([f] + MiqProductFeature.feature_all_children(f)) # Remove the feature + children
             rbac_role_remove_parent(f)  # Remove all parents above the unchecked tab feature
           end
@@ -1262,8 +1176,7 @@ module OpsController::OpsRbac
         end
       else                      # Checked
         if node.starts_with?("_tab_") # Add all features under this tab
-          tab_features = Menu::Manager.tab_features_by_name(node.split("_tab_").last)
-          tab_features.each do |f|
+          tab_features_for_node(node).each do |f|
             @edit[:new][:features] += ([f] + MiqProductFeature.feature_all_children(f))
             rbac_role_add_parent(f) # Add any parents above the checked tab feature that have all children checked
           end
@@ -1275,6 +1188,12 @@ module OpsController::OpsRbac
     end
     @edit[:new][:features].uniq!
     @edit[:new][:features].sort!
+  end
+
+  def tab_features_for_node(node)
+    node.ends_with?("_tab_all_vm_rules") ?
+      MiqProductFeature.feature_children(node.split("_tab_").last) :
+      Menu::Manager.tab_features_by_name(node.split("_tab_").last)
   end
 
   # Walk the features tree, removing features up to the top

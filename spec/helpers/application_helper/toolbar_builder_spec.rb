@@ -1813,6 +1813,34 @@ describe ApplicationHelper do
         end
       end
     end
+
+    context "when id == vm_scan" do
+      before do
+        @id = "vm_scan"
+      end
+
+      it "vm_scan button should be hidden when user does not have access to vm_rules feature" do
+        EvmSpecHelper.seed_specific_product_features("vm_infra_explorer")
+        feature = MiqProductFeature.find_all_by_identifier("vm_infra_explorer")
+        test_user_role = FactoryGirl.create(:miq_user_role,
+                                             :name                 => "test_user_role",
+                                             :miq_product_features => feature)
+        test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+        login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+        subject.should == true
+      end
+
+      it "vm_scan button should be displayed when user does has access to vm_scan feature" do
+        EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "vm_scan")
+        feature = MiqProductFeature.find_all_by_identifier(%w(vm_infra_explorer vm_scan))
+        test_user_role = FactoryGirl.create(:miq_user_role,
+                                             :name                 => "test_user_role",
+                                             :miq_product_features => feature)
+        test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+        login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+        subject.should == false
+      end
+    end
   end # end of build_toolbar_hide_button
 
   describe "#build_toolbar_disable_button" do

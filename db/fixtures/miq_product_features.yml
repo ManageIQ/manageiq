@@ -27,7 +27,7 @@
 
 # VM Explorer
 - :name: Virtual Machines
-  :description: Virtual Machine Views and Access Rules
+  :description: Virtual Machine Views
   :feature_type: node
   :identifier: vm_infra_explorer
   :children:
@@ -49,337 +49,9 @@
       :feature_type: node
       :identifier: templates_filter_accord
 
-  # Virtual Machines access rules
-  - :name: VM Access Rules
-    :description: Access Rules for Virtual Machines
-    :feature_type: node
-    :identifier: vm
-    :children:
-    - :name: View
-      :description: View VMs
-      :feature_type: view
-      :identifier: vm_view
-      :children:
-      - :name: List
-        :description: Display Lists of VMs related to a CI
-        :feature_type: view
-        :identifier: vm_show_list
-      - :name: Show
-        :description: Display Individual VMs related to a CI
-        :feature_type: view
-        :identifier: vm_show
-      - :name: Compare
-        :description: Compare multiple VMs
-        :feature_type: view
-        :identifier: vm_compare
-      - :name: Drift
-        :description: Display VMs Drift
-        :feature_type: view
-        :identifier: vm_drift
-      - :name: Utilization
-        :description: Show Capacity & Utilization data of VMs
-        :feature_type: view
-        :identifier: vm_perf
-      - :name: Refresh
-        :description: Initiate refresh of recent C&U data
-        :feature_type: view
-        :hidden: true
-        :identifier: vm_perf_refresh
-      - :name: Reload
-        :description: Reload charts
-        :feature_type: view
-        :hidden: true
-        :identifier: vm_perf_reload
-      - :name: Timelines
-        :description: Display Timelines for VMs
-        :feature_type: view
-        :identifier: vm_timeline
-    - :name: Operate
-      :description: Perform Operations on VMs
-      :feature_type: control
-      :identifier: vm_control
-      :children:
-      - :name: Analysis
-        :description: Perform SmartState Analysis on VMs
-        :feature_type: control
-        :identifier: vm_scan
-      - :name: Check Compliance
-        :description: Check Compliance of Last Known Configuration
-        :feature_type: control
-        :identifier: vm_check_compliance
-      - :name: Extract Running Processes
-        :description: Extract Running Processes of VMs
-        :feature_type: control
-        :identifier: vm_collect_running_processes
-      - :name: Manage Policies
-        :description: Manage Policies on VMs
-        :feature_type: control
-        :identifier: vm_protect
-      - :name: Policy Simulation
-        :description: View Policy Simulation of VMs
-        :feature_type: control
-        :identifier: vm_policy_sim
-      - :name: Set Retirement Date
-        :description: Set Retirement Date for VMs
-        :feature_type: control
-        :identifier: vm_retire
-      - :name: Retire VMs
-        :description: Retire VMs
-        :feature_type: control
-        :identifier: vm_retire_now
-      - :name: Set Ownership
-        :description: Set Ownership of VMs
-        :feature_type: control
-        :identifier: vm_ownership
-      - :name: Refresh
-        :description: Refresh relationships and power states for all items related of VMs
-        :feature_type: control
-        :identifier: vm_refresh
-      - :name: Power On
-        :description: Power On VM
-        :feature_type: control
-        :identifier: vm_start
-      - :name: Power Off
-        :description: Power Off VM
-        :feature_type: control
-        :identifier: vm_stop
-      - :name: Suspend
-        :description: Suspend VM
-        :feature_type: control
-        :identifier: vm_suspend
-      - :name: Reset
-        :description: Reset VM
-        :feature_type: control
-        :identifier: vm_reset
-      - :name: Shutdown Guest
-        :description: Shutdown the Guest OS on VMs
-        :feature_type: control
-        :identifier: vm_guest_shutdown
-      - :name: Restart Guest
-        :description: Restart the Guest OS on VMs
-        :feature_type: control
-        :identifier: vm_guest_restart
-      - :name: Console using MKS
-        :description: Open a web-based console for VMs
-        :feature_type: control
-        :identifier: vm_console
-      - :name: Console using VNC
-        :description: Open a web-based VNC console for VMs
-        :feature_type: control
-        :identifier: vm_vnc_console
-      - :name: Console using VMRC
-        :description: Open a web-based VMRC console for VMs
-        :feature_type: control
-        :identifier: vm_vmrc_console
-      - :name: Edit Tags
-        :description: Edit VM Tags
-        :feature_type: control
-        :identifier: vm_tag
-    - :name: Modify
-      :description: Modify VMs
-      :feature_type: admin
-      :identifier: vm_admin
-      :children:
-      - :name: Provision VMs
-        :description: Request to Provision VMs
-        :feature_type: admin
-        :identifier: vm_miq_request_new
-      - :name: Clone VMs
-        :description: Clone VMs
-        :feature_type: admin
-        :identifier: vm_clone
-      - :name: Publish VMs to a Template
-        :description: Request to Publish VMs to a Template
-        :feature_type: admin
-        :identifier: vm_publish
-      - :name: Migrate VMs
-        :description: Migrate VMs to another Host/Datastore
-        :feature_type: admin
-        :identifier: vm_migrate
-      - :name: Remove
-        :description: Remove VMs from the VMDB
-        :feature_type: admin
-        :identifier: vm_delete
-      - :name: Edit
-        :description: Edit a VM
-        :feature_type: admin
-        :identifier: vm_edit
-      - :name: Edit EVM Server Relationship
-        :description: Edit EVM Server Relationship
-        :feature_type: admin
-        :identifier: vm_evm_relationship
-      - :name: Right-Size VMs
-        :description: CPU/Memory Recommendations
-        :feature_type: admin
-        :identifier: vm_right_size
-      - :name: Reconfigure VMs
-        :description: Reconfigure VM Memory/CPUs
-        :feature_type: admin
-        :identifier: vm_reconfigure
-    - :name: Snapshots
-      :description: Everything for VM Snapshots
-      :feature_type: node
-      :identifier: vm_snapshot
-      :children:
-      - :name: View
-        :description: View VM Snapshots
-        :feature_type: view
-        :identifier: vm_snapshot_view
-        :children:
-        - :name: List
-          :description: Display Lists of VM Snapshots
-          :feature_type: view
-          :identifier: vm_snapshot_show_list
-      - :name: Operate
-        :description: Perform Operations on VM Snapshots
-        :feature_type: control
-        :identifier: vm_snapshot_control
-        :children:
-        - :name: Create new Snapshots
-          :description: Create a new snapshot for VMs
-          :feature_type: control
-          :identifier: vm_snapshot_add
-        - :name: Delete Snapshots
-          :description: Delete Snapshots on VMs
-          :feature_type: control
-          :identifier: vm_snapshot_delete
-        - :name: Delete All Existing Snapshots
-          :description: Delete All Existing Snapshots on VMs
-          :feature_type: control
-          :identifier: vm_snapshot_delete_all
-        - :name: Revert to selected snapshot
-          :description: Revert to selected snapshot on VMs
-          :feature_type: control
-          :identifier: vm_snapshot_revert
-
-  # Templates access rules
-  - :name: Template Access Rules
-    :description: Access Rules for Templates
-    :feature_type: node
-    :identifier: miq_template
-    :children:
-    - :name: View
-      :description: View Templates
-      :feature_type: view
-      :identifier: miq_template_view
-      :children:
-      - :name: List
-        :description: Display Lists of Templates related to a CI
-        :feature_type: view
-        :identifier: miq_template_show_list
-      - :name: Show
-        :description: Display Individual Templates related to a CI
-        :feature_type: view
-        :identifier: miq_template_show
-      - :name: Compare
-        :description: Compare multiple Templates
-        :feature_type: view
-        :identifier: miq_template_compare
-      - :name: Drift
-        :description: Display Templates Drift
-        :feature_type: view
-        :identifier: miq_template_drift
-      - :name: Utilization
-        :description: Show Capacity & Utilization data of Templates
-        :feature_type: view
-        :identifier: miq_template_perf
-      - :name: Timelines
-        :description: Display Timelines for Templates
-        :feature_type: view
-        :identifier: miq_template_timeline
-    - :name: Operate
-      :description: Perform Operations on Templates
-      :feature_type: control
-      :identifier: miq_template_control
-      :children:
-      - :name: Analysis
-        :description: Perform SmartState Analysis on Templates
-        :feature_type: control
-        :identifier: miq_template_scan
-      - :name: Check Compliance
-        :description: Check Compliance of Last Known Configuration
-        :feature_type: control
-        :identifier: miq_template_check_compliance
-      - :name: Manage Policies
-        :description: Manage Policies on Templates
-        :feature_type: control
-        :identifier: miq_template_protect
-      - :name: Policy Simulation
-        :description: View Policy Simulation of Templates
-        :feature_type: control
-        :identifier: miq_template_policy_sim
-      - :name: Set Ownership
-        :description: Set Ownership of Templates
-        :feature_type: control
-        :identifier: miq_template_ownership
-      - :name: Refresh
-        :description: Refresh relationships and power states for all items related of Templates
-        :feature_type: control
-        :identifier: miq_template_refresh
-      - :name: Edit Tags
-        :description: Edit Template Tags
-        :feature_type: control
-        :identifier: miq_template_tag
-    - :name: Modify
-      :description: Modify Templates
-      :feature_type: admin
-      :identifier: miq_template_admin
-      :children:
-      - :name: Clone Templates
-        :description: Clone Templates
-        :feature_type: admin
-        :identifier: miq_template_clone
-      - :name: Remove
-        :description: Remove Templates from the TemplateDB
-        :feature_type: admin
-        :identifier: miq_template_delete
-      - :name: Edit
-        :description: Edit a Template
-        :feature_type: admin
-        :identifier: miq_template_edit
-      - :name: Edit EVM Server Relationship
-        :description: Edit EVM Server Relationship
-        :feature_type: admin
-        :identifier: miq_template_evm_relationship
-    - :name: Snapshots
-      :description: Everything for Template Snapshots
-      :feature_type: node
-      :identifier: miq_template_snapshot
-      :children:
-      - :name: View
-        :description: View Template Snapshots
-        :feature_type: view
-        :identifier: miq_template_snapshot_view
-        :children:
-        - :name: List
-          :description: Display Lists of Template Snapshots
-          :feature_type: view
-          :identifier: miq_template_snapshot_show_list
-      - :name: Operate
-        :description: Perform Operations on Template Snapshots
-        :feature_type: control
-        :identifier: miq_template_snapshot_control
-        :children:
-        - :name: Create new Snapshots
-          :description: Create a new snapshot for Templates
-          :feature_type: control
-          :identifier: miq_template_snapshot_add
-        - :name: Delete Snapshots
-          :description: Delete Snapshots on Templates
-          :feature_type: control
-          :identifier: miq_template_snapshot_delete
-        - :name: Delete All Existing Snapshots
-          :description: Delete All Existing Snapshots on Templates
-          :feature_type: control
-          :identifier: miq_template_snapshot_delete_all
-        - :name: Revert to selected snapshot
-          :description: Revert to selected snapshot on Templates
-          :feature_type: control
-          :identifier: miq_template_snapshot_revert
-
 # Instance & Image Explorer
 - :name: Instances
-  :description: Instance Views and Access Rules
+  :description: Instance Views
   :feature_type: node
   :identifier: vm_cloud_explorer
   :children:
@@ -404,230 +76,6 @@
       :description: Images Accordion
       :feature_type: node
       :identifier: images_filter_accord
-
-  # Virtual Machines access rules
-  - :name: Instance Access Rules
-    :description: Access Rules for Instances
-    :feature_type: node
-    :identifier: instance
-    :children:
-    - :name: View
-      :description: View Instances
-      :feature_type: view
-      :identifier: instance_view
-      :children:
-      - :name: List
-        :description: Display Lists of Instances related to a CI
-        :feature_type: view
-        :identifier: instance_show_list
-      - :name: Show
-        :description: Display Individual Instances related to a CI
-        :feature_type: view
-        :identifier: instance_show
-      - :name: Compare
-        :description: Compare multiple Instances
-        :feature_type: view
-        :identifier: instance_compare
-      - :name: Drift
-        :description: Display Instances Drift
-        :feature_type: view
-        :identifier: instance_drift
-      - :name: Utilization
-        :description: Show Capacity & Utilization data of Instances
-        :feature_type: view
-        :identifier: instance_perf
-      - :name: Timelines
-        :description: Display Timelines for Instances
-        :feature_type: view
-        :identifier: instance_timeline
-    - :name: Operate
-      :description: Perform Operations on Instances
-      :feature_type: control
-      :identifier: instance_control
-      :children:
-      - :name: Analysis
-        :description: Perform SmartState Analysis on Instances
-        :feature_type: control
-        :identifier: instance_scan
-      - :name: Check Compliance
-        :description: Check Compliance of Last Known Configuration
-        :feature_type: control
-        :identifier: instance_check_compliance
-      - :name: Manage Policies
-        :description: Manage Policies on Instances
-        :feature_type: control
-        :identifier: instance_protect
-      - :name: Policy Simulation
-        :description: View Policy Simulation of Instances
-        :feature_type: control
-        :identifier: instance_policy_sim
-      - :name: Set Retirement Date
-        :description: Set Retirement Date for Instances
-        :feature_type: control
-        :identifier: instance_retire
-      - :name: Retire Instances
-        :description: Retire Instances
-        :feature_type: control
-        :identifier: instance_retire_now
-      - :name: Set Ownership
-        :description: Set Ownership of Instances
-        :feature_type: control
-        :identifier: instance_ownership
-      - :name: Refresh
-        :description: Refresh relationships and power states for all items related of Instances
-        :feature_type: control
-        :identifier: instance_refresh
-      - :name: Power On
-        :description: Power On Instance
-        :feature_type: control
-        :identifier: instance_start
-      - :name: Power Off
-        :description: Power Off Instance
-        :feature_type: control
-        :identifier: instance_stop
-      - :name: Pause
-        :description: Pause Instance
-        :feature_type: control
-        :identifier: instance_pause
-      - :name: Suspend
-        :description: Suspend Instance
-        :feature_type: control
-        :identifier: instance_suspend
-      - :name: Shelve
-        :description: Shelve Instance
-        :feature_type: control
-        :identifier: instance_shelve
-      - :name: Shelve Offload
-        :description: Shelve Offload Instance
-        :feature_type: control
-        :identifier: instance_shelve_offload
-      - :name: Reset
-        :description: Reset Instance
-        :feature_type: control
-        :identifier: instance_reset
-      - :name: Shutdown Guest
-        :description: Shutdown the Guest OS on Instances
-        :feature_type: control
-        :identifier: instance_guest_shutdown
-      - :name: Restart Guest
-        :description: Restart the Guest OS on Instances
-        :feature_type: control
-        :identifier: instance_guest_restart
-      - :name: Terminate
-        :description: Terminate the Guest OS on Instances
-        :feature_type: control
-        :identifier: instance_terminate
-      - :name: Edit Tags
-        :description: Edit Instance Tags
-        :feature_type: control
-        :identifier: instance_tag
-    - :name: Modify
-      :description: Modify Instances
-      :feature_type: admin
-      :identifier: instance_admin
-      :children:
-      - :name: Provision Instances
-        :description: Request to Provision Instances
-        :feature_type: admin
-        :identifier: instance_miq_request_new
-      - :name: Remove
-        :description: Remove Instances from the VMDB
-        :feature_type: admin
-        :identifier: instance_delete
-      - :name: Edit
-        :description: Edit a Instance
-        :feature_type: admin
-        :identifier: instance_edit
-      - :name: Edit EVM Server Relationship
-        :description: Edit EVM Server Relationship
-        :feature_type: admin
-        :identifier: instance_evm_relationship
-
-  # Templates access rules
-  - :name: Image Access Rules
-    :description: Access Rules for Images
-    :feature_type: node
-    :identifier: image
-    :children:
-    - :name: View
-      :description: View Images
-      :feature_type: view
-      :identifier: image_view
-      :children:
-      - :name: List
-        :description: Display Lists of Images related to a CI
-        :feature_type: view
-        :identifier: image_show_list
-      - :name: Show
-        :description: Display Individual Images related to a CI
-        :feature_type: view
-        :identifier: image_show
-      - :name: Compare
-        :description: Compare multiple Images
-        :feature_type: view
-        :identifier: image_compare
-      - :name: Drift
-        :description: Display Images Drift
-        :feature_type: view
-        :identifier: image_drift
-      - :name: Utilization
-        :description: Show Capacity & Utilization data of Images
-        :feature_type: view
-        :identifier: image_perf
-      - :name: Timelines
-        :description: Display Timelines for Images
-        :feature_type: view
-        :identifier: image_timeline
-    - :name: Operate
-      :description: Perform Operations on Images
-      :feature_type: control
-      :identifier: image_control
-      :children:
-      - :name: Analysis
-        :description: Perform SmartState Analysis on Images
-        :feature_type: control
-        :identifier: image_scan
-      - :name: Check Compliance
-        :description: Check Compliance of Last Known Configuration
-        :feature_type: control
-        :identifier: image_check_compliance
-      - :name: Manage Policies
-        :description: Manage Policies on Images
-        :feature_type: control
-        :identifier: image_protect
-      - :name: Policy Simulation
-        :description: View Policy Simulation of Images
-        :feature_type: control
-        :identifier: image_policy_sim
-      - :name: Set Ownership
-        :description: Set Ownership of Images
-        :feature_type: control
-        :identifier: image_ownership
-      - :name: Refresh
-        :description: Refresh relationships and power states for all items related of Images
-        :feature_type: control
-        :identifier: image_refresh
-      - :name: Edit Tags
-        :description: Edit Image Tags
-        :feature_type: control
-        :identifier: image_tag
-    - :name: Modify
-      :description: Modify Images
-      :feature_type: admin
-      :identifier: image_admin
-      :children:
-      - :name: Remove
-        :description: Remove Images from the VMDB
-        :feature_type: admin
-        :identifier: image_delete
-      - :name: Edit
-        :description: Edit a Image
-        :feature_type: admin
-        :identifier: image_edit
-      - :name: Edit EVM Server Relationship
-        :description: Edit EVM Server Relationship
-        :feature_type: admin
-        :identifier: image_evm_relationship
 
 # MiqRequest
 - :name: Requests
@@ -4100,3 +3548,546 @@
             :description: Provision Configured Systems
             :feature_type: control
             :identifier: configured_system_provision
+
+- :name: All VM and Instance Access Rules
+  :description: All VM and Instance Access Rules
+  :feature_type: node
+  :identifier: all_vm_rules
+  :children:
+  # Instances access rules
+  - :name: Instance Access Rules
+    :description: Access Rules for Instances
+    :feature_type: node
+    :identifier: instance
+    :children:
+    - :name: View
+      :description: View Instances
+      :feature_type: view
+      :identifier: instance_view
+      :children:
+      - :name: List
+        :description: Display Lists of Instances related to a CI
+        :feature_type: view
+        :identifier: instance_show_list
+      - :name: Show
+        :description: Display Individual Instances related to a CI
+        :feature_type: view
+        :identifier: instance_show
+      - :name: Compare
+        :description: Compare multiple Instances
+        :feature_type: view
+        :identifier: instance_compare
+      - :name: Drift
+        :description: Display Instances Drift
+        :feature_type: view
+        :identifier: instance_drift
+      - :name: Utilization
+        :description: Show Capacity & Utilization data of Instances
+        :feature_type: view
+        :identifier: instance_perf
+      - :name: Timelines
+        :description: Display Timelines for Instances
+        :feature_type: view
+        :identifier: instance_timeline
+    - :name: Operate
+      :description: Perform Operations on Instances
+      :feature_type: control
+      :identifier: instance_control
+      :children:
+      - :name: Analysis
+        :description: Perform SmartState Analysis on Instances
+        :feature_type: control
+        :identifier: instance_scan
+      - :name: Check Compliance
+        :description: Check Compliance of Last Known Configuration
+        :feature_type: control
+        :identifier: instance_check_compliance
+      - :name: Manage Policies
+        :description: Manage Policies on Instances
+        :feature_type: control
+        :identifier: instance_protect
+      - :name: Policy Simulation
+        :description: View Policy Simulation of Instances
+        :feature_type: control
+        :identifier: instance_policy_sim
+      - :name: Set Retirement Date
+        :description: Set Retirement Date for Instances
+        :feature_type: control
+        :identifier: instance_retire
+      - :name: Retire Instances
+        :description: Retire Instances
+        :feature_type: control
+        :identifier: instance_retire_now
+      - :name: Set Ownership
+        :description: Set Ownership of Instances
+        :feature_type: control
+        :identifier: instance_ownership
+      - :name: Refresh
+        :description: Refresh relationships and power states for all items related of Instances
+        :feature_type: control
+        :identifier: instance_refresh
+      - :name: Power On
+        :description: Power On Instance
+        :feature_type: control
+        :identifier: instance_start
+      - :name: Power Off
+        :description: Power Off Instance
+        :feature_type: control
+        :identifier: instance_stop
+      - :name: Suspend
+        :description: Suspend Instance
+        :feature_type: control
+        :identifier: instance_suspend
+      - :name: Reset
+        :description: Reset Instance
+        :feature_type: control
+        :identifier: instance_reset
+      - :name: Shutdown Guest
+        :description: Shutdown the Guest OS on Instances
+        :feature_type: control
+        :identifier: instance_guest_shutdown
+      - :name: Restart Guest
+        :description: Restart the Guest OS on Instances
+        :feature_type: control
+        :identifier: instance_guest_restart
+      - :name: Terminate
+        :description: Terminate the Guest OS on Instances
+        :feature_type: control
+        :identifier: instance_terminate
+      - :name: Edit Tags
+        :description: Edit Instance Tags
+        :feature_type: control
+        :identifier: instance_tag
+    - :name: Modify
+      :description: Modify Instances
+      :feature_type: admin
+      :identifier: instance_admin
+      :children:
+      - :name: Provision Instances
+        :description: Request to Provision Instances
+        :feature_type: admin
+        :identifier: instance_miq_request_new
+      - :name: Remove
+        :description: Remove Instances from the VMDB
+        :feature_type: admin
+        :identifier: instance_delete
+      - :name: Edit
+        :description: Edit a Instance
+        :feature_type: admin
+        :identifier: instance_edit
+      - :name: Edit EVM Server Relationship
+        :description: Edit EVM Server Relationship
+        :feature_type: admin
+        :identifier: instance_evm_relationship
+  # Images access rules
+  - :name: Image Access Rules
+    :description: Access Rules for Images
+    :feature_type: node
+    :identifier: image
+    :children:
+    - :name: View
+      :description: View Images
+      :feature_type: view
+      :identifier: image_view
+      :children:
+      - :name: List
+        :description: Display Lists of Images related to a CI
+        :feature_type: view
+        :identifier: image_show_list
+      - :name: Show
+        :description: Display Individual Images related to a CI
+        :feature_type: view
+        :identifier: image_show
+      - :name: Compare
+        :description: Compare multiple Images
+        :feature_type: view
+        :identifier: image_compare
+      - :name: Drift
+        :description: Display Images Drift
+        :feature_type: view
+        :identifier: image_drift
+      - :name: Utilization
+        :description: Show Capacity & Utilization data of Images
+        :feature_type: view
+        :identifier: image_perf
+      - :name: Timelines
+        :description: Display Timelines for Images
+        :feature_type: view
+        :identifier: image_timeline
+    - :name: Operate
+      :description: Perform Operations on Images
+      :feature_type: control
+      :identifier: image_control
+      :children:
+      - :name: Analysis
+        :description: Perform SmartState Analysis on Images
+        :feature_type: control
+        :identifier: image_scan
+      - :name: Check Compliance
+        :description: Check Compliance of Last Known Configuration
+        :feature_type: control
+        :identifier: image_check_compliance
+      - :name: Manage Policies
+        :description: Manage Policies on Images
+        :feature_type: control
+        :identifier: image_protect
+      - :name: Policy Simulation
+        :description: View Policy Simulation of Images
+        :feature_type: control
+        :identifier: image_policy_sim
+      - :name: Set Ownership
+        :description: Set Ownership of Images
+        :feature_type: control
+        :identifier: image_ownership
+      - :name: Refresh
+        :description: Refresh relationships and power states for all items related of Images
+        :feature_type: control
+        :identifier: image_refresh
+      - :name: Edit Tags
+        :description: Edit Image Tags
+        :feature_type: control
+        :identifier: image_tag
+    - :name: Modify
+      :description: Modify Images
+      :feature_type: admin
+      :identifier: image_admin
+      :children:
+      - :name: Remove
+        :description: Remove Images from the VMDB
+        :feature_type: admin
+        :identifier: image_delete
+      - :name: Edit
+        :description: Edit a Image
+        :feature_type: admin
+        :identifier: image_edit
+      - :name: Edit EVM Server Relationship
+        :description: Edit EVM Server Relationship
+        :feature_type: admin
+        :identifier: image_evm_relationship
+  # Virtual Machines access rules
+  - :name: VM Access Rules
+    :description: Access Rules for Virtual Machines
+    :feature_type: node
+    :identifier: vm
+    :children:
+    - :name: View
+      :description: View VMs
+      :feature_type: view
+      :identifier: vm_view
+      :children:
+      - :name: List
+        :description: Display Lists of VMs related to a CI
+        :feature_type: view
+        :identifier: vm_show_list
+      - :name: Show
+        :description: Display Individual VMs related to a CI
+        :feature_type: view
+        :identifier: vm_show
+      - :name: Compare
+        :description: Compare multiple VMs
+        :feature_type: view
+        :identifier: vm_compare
+      - :name: Drift
+        :description: Display VMs Drift
+        :feature_type: view
+        :identifier: vm_drift
+      - :name: Utilization
+        :description: Show Capacity & Utilization data of VMs
+        :feature_type: view
+        :identifier: vm_perf
+      - :name: Refresh
+        :description: Initiate refresh of recent C&U data
+        :feature_type: view
+        :hidden: true
+        :identifier: vm_perf_refresh
+      - :name: Reload
+        :description: Reload charts
+        :feature_type: view
+        :hidden: true
+        :identifier: vm_perf_reload
+      - :name: Timelines
+        :description: Display Timelines for VMs
+        :feature_type: view
+        :identifier: vm_timeline
+    - :name: Operate
+      :description: Perform Operations on VMs
+      :feature_type: control
+      :identifier: vm_control
+      :children:
+      - :name: Analysis
+        :description: Perform SmartState Analysis on VMs
+        :feature_type: control
+        :identifier: vm_scan
+      - :name: Check Compliance
+        :description: Check Compliance of Last Known Configuration
+        :feature_type: control
+        :identifier: vm_check_compliance
+      - :name: Extract Running Processes
+        :description: Extract Running Processes of VMs
+        :feature_type: control
+        :identifier: vm_collect_running_processes
+      - :name: Manage Policies
+        :description: Manage Policies on VMs
+        :feature_type: control
+        :identifier: vm_protect
+      - :name: Policy Simulation
+        :description: View Policy Simulation of VMs
+        :feature_type: control
+        :identifier: vm_policy_sim
+      - :name: Set Retirement Date
+        :description: Set Retirement Date for VMs
+        :feature_type: control
+        :identifier: vm_retire
+      - :name: Retire VMs
+        :description: Retire VMs
+        :feature_type: control
+        :identifier: vm_retire_now
+      - :name: Set Ownership
+        :description: Set Ownership of VMs
+        :feature_type: control
+        :identifier: vm_ownership
+      - :name: Refresh
+        :description: Refresh relationships and power states for all items related of VMs
+        :feature_type: control
+        :identifier: vm_refresh
+      - :name: Power On
+        :description: Power On VM
+        :feature_type: control
+        :identifier: vm_start
+      - :name: Power Off
+        :description: Power Off VM
+        :feature_type: control
+        :identifier: vm_stop
+      - :name: Suspend
+        :description: Suspend VM
+        :feature_type: control
+        :identifier: vm_suspend
+      - :name: Reset
+        :description: Reset VM
+        :feature_type: control
+        :identifier: vm_reset
+      - :name: Shutdown Guest
+        :description: Shutdown the Guest OS on VMs
+        :feature_type: control
+        :identifier: vm_guest_shutdown
+      - :name: Restart Guest
+        :description: Restart the Guest OS on VMs
+        :feature_type: control
+        :identifier: vm_guest_restart
+      - :name: Console using MKS
+        :description: Open a web-based console for VMs
+        :feature_type: control
+        :identifier: vm_console
+      - :name: Console using VNC
+        :description: Open a web-based VNC console for VMs
+        :feature_type: control
+        :identifier: vm_vnc_console
+      - :name: Console using VMRC
+        :description: Open a web-based VMRC console for VMs
+        :feature_type: control
+        :identifier: vm_vmrc_console
+      - :name: Edit Tags
+        :description: Edit VM Tags
+        :feature_type: control
+        :identifier: vm_tag
+    - :name: Modify
+      :description: Modify VMs
+      :feature_type: admin
+      :identifier: vm_admin
+      :children:
+      - :name: Provision VMs
+        :description: Request to Provision VMs
+        :feature_type: admin
+        :identifier: vm_miq_request_new
+      - :name: Clone VMs
+        :description: Clone VMs
+        :feature_type: admin
+        :identifier: vm_clone
+      - :name: Publish VMs to a Template
+        :description: Request to Publish VMs to a Template
+        :feature_type: admin
+        :identifier: vm_publish
+      - :name: Migrate VMs
+        :description: Migrate VMs to another Host/Datastore
+        :feature_type: admin
+        :identifier: vm_migrate
+      - :name: Remove
+        :description: Remove VMs from the VMDB
+        :feature_type: admin
+        :identifier: vm_delete
+      - :name: Edit
+        :description: Edit a VM
+        :feature_type: admin
+        :identifier: vm_edit
+      - :name: Edit EVM Server Relationship
+        :description: Edit EVM Server Relationship
+        :feature_type: admin
+        :identifier: vm_evm_relationship
+      - :name: Right-Size VMs
+        :description: CPU/Memory Recommendations
+        :feature_type: admin
+        :identifier: vm_right_size
+      - :name: Reconfigure VMs
+        :description: Reconfigure VM Memory/CPUs
+        :feature_type: admin
+        :identifier: vm_reconfigure
+    - :name: Snapshots
+      :description: Everything for VM Snapshots
+      :feature_type: node
+      :identifier: vm_snapshot
+      :children:
+      - :name: View
+        :description: View VM Snapshots
+        :feature_type: view
+        :identifier: vm_snapshot_view
+        :children:
+        - :name: List
+          :description: Display Lists of VM Snapshots
+          :feature_type: view
+          :identifier: vm_snapshot_show_list
+      - :name: Operate
+        :description: Perform Operations on VM Snapshots
+        :feature_type: control
+        :identifier: vm_snapshot_control
+        :children:
+        - :name: Create new Snapshots
+          :description: Create a new snapshot for VMs
+          :feature_type: control
+          :identifier: vm_snapshot_add
+        - :name: Delete Snapshots
+          :description: Delete Snapshots on VMs
+          :feature_type: control
+          :identifier: vm_snapshot_delete
+        - :name: Delete All Existing Snapshots
+          :description: Delete All Existing Snapshots on VMs
+          :feature_type: control
+          :identifier: vm_snapshot_delete_all
+        - :name: Revert to selected snapshot
+          :description: Revert to selected snapshot on VMs
+          :feature_type: control
+          :identifier: vm_snapshot_revert
+
+  # Templates access rules
+  - :name: Template Access Rules
+    :description: Access Rules for Templates
+    :feature_type: node
+    :identifier: miq_template
+    :children:
+    - :name: View
+      :description: View Templates
+      :feature_type: view
+      :identifier: miq_template_view
+      :children:
+      - :name: List
+        :description: Display Lists of Templates related to a CI
+        :feature_type: view
+        :identifier: miq_template_show_list
+      - :name: Show
+        :description: Display Individual Templates related to a CI
+        :feature_type: view
+        :identifier: miq_template_show
+      - :name: Compare
+        :description: Compare multiple Templates
+        :feature_type: view
+        :identifier: miq_template_compare
+      - :name: Drift
+        :description: Display Templates Drift
+        :feature_type: view
+        :identifier: miq_template_drift
+      - :name: Utilization
+        :description: Show Capacity & Utilization data of Templates
+        :feature_type: view
+        :identifier: miq_template_perf
+      - :name: Timelines
+        :description: Display Timelines for Templates
+        :feature_type: view
+        :identifier: miq_template_timeline
+    - :name: Operate
+      :description: Perform Operations on Templates
+      :feature_type: control
+      :identifier: miq_template_control
+      :children:
+      - :name: Analysis
+        :description: Perform SmartState Analysis on Templates
+        :feature_type: control
+        :identifier: miq_template_scan
+      - :name: Check Compliance
+        :description: Check Compliance of Last Known Configuration
+        :feature_type: control
+        :identifier: miq_template_check_compliance
+      - :name: Manage Policies
+        :description: Manage Policies on Templates
+        :feature_type: control
+        :identifier: miq_template_protect
+      - :name: Policy Simulation
+        :description: View Policy Simulation of Templates
+        :feature_type: control
+        :identifier: miq_template_policy_sim
+      - :name: Set Ownership
+        :description: Set Ownership of Templates
+        :feature_type: control
+        :identifier: miq_template_ownership
+      - :name: Refresh
+        :description: Refresh relationships and power states for all items related of Templates
+        :feature_type: control
+        :identifier: miq_template_refresh
+      - :name: Edit Tags
+        :description: Edit Template Tags
+        :feature_type: control
+        :identifier: miq_template_tag
+    - :name: Modify
+      :description: Modify Templates
+      :feature_type: admin
+      :identifier: miq_template_admin
+      :children:
+      - :name: Clone Templates
+        :description: Clone Templates
+        :feature_type: admin
+        :identifier: miq_template_clone
+      - :name: Remove
+        :description: Remove Templates from the TemplateDB
+        :feature_type: admin
+        :identifier: miq_template_delete
+      - :name: Edit
+        :description: Edit a Template
+        :feature_type: admin
+        :identifier: miq_template_edit
+      - :name: Edit EVM Server Relationship
+        :description: Edit EVM Server Relationship
+        :feature_type: admin
+        :identifier: miq_template_evm_relationship
+    - :name: Snapshots
+      :description: Everything for Template Snapshots
+      :feature_type: node
+      :identifier: miq_template_snapshot
+      :children:
+      - :name: View
+        :description: View Template Snapshots
+        :feature_type: view
+        :identifier: miq_template_snapshot_view
+        :children:
+        - :name: List
+          :description: Display Lists of Template Snapshots
+          :feature_type: view
+          :identifier: miq_template_snapshot_show_list
+      - :name: Operate
+        :description: Perform Operations on Template Snapshots
+        :feature_type: control
+        :identifier: miq_template_snapshot_control
+        :children:
+        - :name: Create new Snapshots
+          :description: Create a new snapshot for Templates
+          :feature_type: control
+          :identifier: miq_template_snapshot_add
+        - :name: Delete Snapshots
+          :description: Delete Snapshots on Templates
+          :feature_type: control
+          :identifier: miq_template_snapshot_delete
+        - :name: Delete All Existing Snapshots
+          :description: Delete All Existing Snapshots on Templates
+          :feature_type: control
+          :identifier: miq_template_snapshot_delete_all
+        - :name: Revert to selected snapshot
+          :description: Revert to selected snapshot on Templates
+          :feature_type: control
+          :identifier: miq_template_snapshot_revert
