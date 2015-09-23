@@ -28,7 +28,6 @@
                         @edit[:new][:mem_typ]),
                         "data-miq_sparkle_on" => true,
                         "data-miq_sparkle_off" => true,
-                        "data-width"           => "auto",
                         :class    => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -52,7 +51,6 @@
                           options_for_select((@edit[:new][:cpu_count].nil? ? [["<#{_('Choose')}>", nil]] : []) + @edit[:cpu_options], @edit[:new][:cpu_count].to_i),
                           "data-miq_sparkle_on"  => true,
                           "data-miq_sparkle_off" => true,
-                          "data-width"           => "auto",
                           :class    => "selectpicker")
             :javascript
               miqInitSelectPicker();
@@ -81,7 +79,6 @@
                            @edit[:new][:cores_per_socket_count].to_i),
                            "data-miq_sparkle_on"  => true,
                            "data-miq_sparkle_off" => true,
-                           "data-width"           => "auto",
                            :class                 => "selectpicker")
               :javascript
                 miqInitSelectPicker();

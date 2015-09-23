@@ -10,7 +10,6 @@
                        "ng-model"                    => "scheduleModel.timer_typ",
                        "ng-change"                   => "scheduleTimerTypeChanged()",
                        "checkchange"                 => "",
-                       "data-width"                  => "auto",
                        "selectpicker-for-select-tag" => "")
 
           %span{"ng-show" => "!timerTypeOnce"}= _("every")
@@ -19,7 +18,6 @@
                               "name"                      => "timer_value",
                               "ng-options"                => "timerItem.value as timerItem.text for timerItem in timer_items",
                               "timer-hide"                => "timerTypeOnce",
-                              "data-width"                => "auto",
                               "checkchange"               => ""}
           %input{"type" => "hidden", "ng-value" => "scheduleModel.timer_value", "name" => "timer_value"}
       .form-group
@@ -61,13 +59,11 @@
                        options_for_select(Array.new(24) { |i| i }),
                        "ng-model"    => "scheduleModel.start_hour",
                        "checkchange" => "",
-                       "data-width"  => "auto",
                        "selectpicker-for-select-tag" => "")
           %span h
           = select_tag("start_min",
                        options_for_select(Array.new(12) { |i| i * 5 }),
                        "ng-model"    => "scheduleModel.start_min",
                        "checkchange" => "",
-                       "data-width"  => "auto",
                        "selectpicker-for-select-tag" => "")
           %span m
