@@ -15,8 +15,8 @@
       </div>
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
         <span>
-          <span class="title-img">
-            <img class="title-img__logo"/>
+          <span class="service-title-img" ng-if=" ::item.service_template.picture.image_href">
+            <img class="service-title-img__logo" src="{{ ::item.service_template.picture.image_href }}"/>
           </span>
           {{ item.name }}
         </span>

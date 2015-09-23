@@ -4,8 +4,8 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <section>
-      <div class="title-img">
-        <img class="title-img__logo"/>
+      <div class="service-details-title-img" ng-if=" ::vm.service.service_template.picture.image_href ">
+        <img class="service-details-title-img__logo" src="{{ ::vm.service.service_template.picture.image_href }}"/>
       </div>
       <h2>{{ ::vm.service.name }}</h2>
     </section>
