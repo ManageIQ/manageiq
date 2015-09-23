@@ -2,6 +2,10 @@ require "spec_helper"
 
 describe "/angular_template/*" do
   context "foo" do
+    before :each do
+      ApplicationController.any_instance.stub(:set_user_time_zone)
+    end
+
     it "returns test template" do
       get "/angular_template/test"
       expect(response.status).to eq(200)
@@ -11,8 +15,8 @@ describe "/angular_template/*" do
     it "renders haml template" do
       get "/angular_template/test_haml"
       expect(response.status).to eq(200)
-      expect(response.body).to include('<div class="testclass">')
-      expect(response.body).to not_include(".testclass")
+      expect(response.body).to match(/<div class=['"]testclass['"]>/)
+      expect(response.body).not_to include(".testclass")
     end
   end
 end
