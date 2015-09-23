@@ -59,6 +59,8 @@ module ManageIQ::Providers
       end
 
       def get_stacks
+        # deployments are realizations of a template in the Azure provider
+        # they are parsed and converted to stacks in vmdb
         deployments = @tds.list
         process_collection(deployments, :orchestration_stacks) { |dp| parse_stack(dp) }
         update_nested_stack_relations
@@ -76,7 +78,10 @@ module ManageIQ::Providers
         end
       end
 
-      def get_stack_resources(resources, group)
+      def get_stack_resources(name, group)
+        resources = @tds.list_deployment_operations(name, group)
+        resources.reject! { |r| r.fetch_path('properties', 'targetResource', 'id').nil? }
+
         process_collection(resources, :orchestration_stack_resources) do |resource|
           parse_stack_resource(resource, group)
         end
@@ -254,7 +259,7 @@ module ManageIQ::Providers
                            deployment.fetch_path('resourceGroup'),
                            TYPE_DEPLOYMENT,
                            name)
-        child_stacks, resources = find_stack_resources(deployment)
+        child_stacks, resources = stack_resources(deployment)
         new_result = {
           :type        => ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.name,
           :ems_ref     => deployment.fetch_path('id'),
@@ -263,15 +268,15 @@ module ManageIQ::Providers
           :status      => deployment.fetch_path('properties', 'provisioningState'),
           :children    => child_stacks,
           :resources   => resources,
-          :outputs     => find_stack_outputs(deployment),
-          :parameters  => find_stack_parameters(deployment),
+          :outputs     => stack_outputs(deployment),
+          :parameters  => stack_parameters(deployment),
 
-          :orchestration_template => find_stack_template(deployment)
+          :orchestration_template => stack_template(deployment)
         }
         return uid, new_result
       end
 
-      def find_stack_template(deployment)
+      def stack_template(deployment)
         uri = deployment.fetch_path('properties', 'templateLink', 'uri')
         return unless uri
 
@@ -290,7 +295,7 @@ module ManageIQ::Providers
         nil
       end
 
-      def find_stack_parameters(deployment)
+      def stack_parameters(deployment)
         raw_parameters = deployment.fetch_path('properties', 'parameters')
         return [] if raw_parameters.blank?
 
@@ -301,7 +306,7 @@ module ManageIQ::Providers
         end
       end
 
-      def find_stack_outputs(deployment)
+      def stack_outputs(deployment)
         raw_outputs = deployment.fetch_path('properties', 'outputs')
         return [] if raw_outputs.blank?
 
@@ -312,15 +317,12 @@ module ManageIQ::Providers
         end
       end
 
-      def find_stack_resources(deployment)
+      def stack_resources(deployment)
         group = deployment.fetch_path('resourceGroup')
         name = deployment.fetch_path('name')
         stack_uid = resource_uid(@subscription_id, group, TYPE_DEPLOYMENT, name)
-        raw_resources = @tds.list_deployment_operations(name, group)
 
-        raw_resources.reject! { |r| r.fetch_path('properties', 'targetResource', 'id').nil? }
-
-        get_stack_resources(raw_resources, group)
+        raw_resources = get_stack_resources(name, group)
 
         child_stacks = []
         resources = raw_resources.collect do |resource|
