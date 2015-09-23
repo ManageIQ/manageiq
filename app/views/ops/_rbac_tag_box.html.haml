@@ -1,27 +1,26 @@
-%fieldset
-  %h3= _("Smart Management")
-  .form-horizontal.static
-    .form-group
-      %label.col-md-2.control-label
-        = current_tenant.name
-        = _("Tags")
-      .col-md-10
-        %table{:style => "padding: 0px; margin: 0px; border: 0px; width: 100%"}
-          - if session[:assigned_filters].empty?
-            %tr
+%h3= _("Smart Management")
+.form-horizontal.static
+  .form-group
+    %label.col-md-2.control-label
+      = current_tenant.name
+      = _("Tags")
+    .col-md-10
+      %table{:style => "padding: 0px; margin: 0px; border: 0px; width: 100%"}
+        - if session[:assigned_filters].empty?
+          %tr
+            %td{:style => "padding: 0px; margin: 0px; border: 0px"}
+              %img{:align => "left", :height => "20", :src => "/images/icons/new/smarttag.png", :width => "20"}/
+              %div{:style => "padding-left: 2em;"}
+                = _("No %s Tags have been assigned") % current_tenant.name
+        - else
+          - session[:assigned_filters].keys.sort.each do |k|
+            - v = session[:assigned_filters][k]
+            %tr{:class => cycle('row0', 'row1', :name => 'props')}
               %td{:style => "padding: 0px; margin: 0px; border: 0px"}
                 %img{:align => "left", :height => "20", :src => "/images/icons/new/smarttag.png", :width => "20"}/
                 %div{:style => "padding-left: 2em;"}
-                  = _("No %s Tags have been assigned") % current_tenant.name
-          - else
-            - session[:assigned_filters].keys.sort.each do |k|
-              - v = session[:assigned_filters][k]
-              %tr{:class => cycle('row0', 'row1', :name => 'props')}
-                %td{:style => "padding: 0px; margin: 0px; border: 0px"}
-                  %img{:align => "left", :height => "20", :src => "/images/icons/new/smarttag.png", :width => "20"}/
-                  %div{:style => "padding-left: 2em;"}
-                    %b
-                      = h(k) + ':'
-                    - v.sort.each_with_index do |t, idx|
-                      = idx > 0 ? "<b>|</b>".html_safe : ""
-                      = h(t)
+                  %b
+                    = h(k) + ':'
+                  - v.sort.each_with_index do |t, idx|
+                    = idx > 0 ? "<b>|</b>".html_safe : ""
+                    = h(t)
