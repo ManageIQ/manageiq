@@ -475,16 +475,32 @@ Date and Time Configuration
           when CANCEL
             # don't do anything
           when RE_RESTART
-            Env['RESTARTOS'] = are_you_sure?("restart the appliance now")
+            if are_you_sure?("restart the appliance now")
+              Logging.logger.info("APPLIANCE RESTART initiated by MIQ Console.")
+              LinuxAdmin::Service.new("evmserverd").stop
+              LinuxAdmin::System.reboot!
+            end
           when RE_DELLOGS
-            Env['RESTARTOSRMLOGS'] = are_you_sure?("restart the appliance now")
+            if are_you_sure?("restart the appliance now")
+              Logging.logger.info("APPLIANCE RESTART WITH CLEAN LOGS initiated by MIQ Console.")
+              LinuxAdmin::Service.new("evmserverd").stop
+              LinuxAdmin::Service.new("miqtop").stop
+              LinuxAdmin::Service.new("miqvmstat").stop
+              LinuxAdmin::Service.new("httpd").stop
+              FileUtils.rm_rf(Dir.glob("/var/www/miq/vmdb/log/*.log*"))
+              FileUtils.rm_rf(Dir.glob("/var/www/miq/vmdb/log/apache/*.log*"))
+              Logging.logger.info("LOGS CLEANED AND APPLIANCE REBOOTED by MIQ Console.")
+              LinuxAdmin::System.reboot!
+            end
           end
 
         when I18n.t("advanced_settings.shutdown")
           say("#{selection}\n\n")
           if are_you_sure?("shut down the appliance now")
             say("\nShutting down appliance...  This process may take a few minutes.\n\n")
-            Env['SHUTDOWN'] = true
+            Logging.logger.info("APPLIANCE SHUTDOWN initiated by MIQ Console")
+            LinuxAdmin::Service.new("evmserverd").stop
+            LinuxAdmin::System.shutdown!
           end
 
         when I18n.t("advanced_settings.scap")
