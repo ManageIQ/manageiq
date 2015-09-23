@@ -51,6 +51,16 @@ host_auth_invalid,Host Auth Invalid,Default,auth_validation
 host_auth_unreachable,Host Auth Unreachable,Default,auth_validation
 host_auth_incomplete,Host Auth Incomplete Credentials,Default,auth_validation
 host_auth_error,Host Auth Error,Default,auth_validation
+request_host_reset,Host Reset Request,Default,host_operations
+request_host_start,Host Start Request,Default,host_operations
+request_host_stop,Host Stop Request,Default,host_operations
+request_host_standby,Host Standby Request,Default,host_operations
+request_host_enter_maintenance_mode,Host Maintenance Enter Request,Default,host_operations
+request_host_exit_maintenance_mode,Host Maintenance Exit Request,Default,host_operations
+request_host_shutdown,Host Shutdown Request,Default,host_operations
+request_host_reboot,Host Reboot Request,Default,host_operations
+request_host_enable_vmotion,Host Vmotion Enable Request,Default,host_operations
+request_host_disable_vmotion,Host Vmotion Disable Request,Default,host_operations
 #
 # Company tags
 #
