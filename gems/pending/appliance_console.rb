@@ -141,7 +141,6 @@ module ApplianceConsole
         dns1     = Env["DNS1"]
         dns2     = Env["DNS2"]
         order    = Env["SEARCHORDER"]
-        # time   = Env["TIMESERVER"]
         timezone = Env["TIMEZONE"]
         region   = File.read(REGION_FILE).chomp  if File.exist?(REGION_FILE)
         version  = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
