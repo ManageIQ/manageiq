@@ -1500,7 +1500,7 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     when "add"
       add_ae_ns = if @edit[:typ] == "MiqAeDomain"
-                    current_tenant.ae_domains.new()
+                    current_tenant.ae_domains.new
                   else
                     MiqAeNamespace.new(:parent_id => from_cid(x_node.split('-')[1]))
                   end
