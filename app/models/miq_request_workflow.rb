@@ -54,6 +54,7 @@ class MiqRequestWorkflow
     @values       = values
     @filters      = {}
     @requester    = User.lookup_by_identity(requester)
+    @requester.miq_group_description = values[:requester_group]
     @values.merge!(options) unless options.blank?
   end
 
@@ -70,9 +71,7 @@ class MiqRequestWorkflow
   def create_request(values, _requester_id, target_class, event_name, event_message, auto_approve = false)
     return false unless validate(values)
 
-    # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
-
+    set_request_values(values)
     password_helper(values, true)
 
     yield if block_given?
@@ -534,18 +533,6 @@ class MiqRequestWorkflow
     end
   end
 
-  def set_default_user_info
-    if get_value(@values[:owner_email]).blank?
-      unless @requester.email.blank?
-        @values[:owner_email] = @requester.email
-        retrieve_ldap if MiqLdap.using_ldap?
-      end
-    end
-
-    show_flag = MiqLdap.using_ldap? ? :show : :hide
-    show_fields(show_flag, [:owner_load_ldap])
-  end
-
   def retrieve_ldap(_options = {})
     email = get_value(@values[:owner_email])
     unless email.blank?
@@ -781,15 +768,24 @@ class MiqRequestWorkflow
   def set_default_user_info
     return if get_dialog(:requester).blank?
 
-    if get_value(@values[:owner_email]).blank?
-      unless @requester.email.blank?
-        @values[:owner_email] = @requester.email
-        retrieve_ldap if MiqLdap.using_ldap?
-      end
+    if get_value(@values[:owner_email]).blank? && @requester.email.present?
+      @values[:owner_email] = @requester.email
+      retrieve_ldap if MiqLdap.using_ldap?
     end
 
     show_flag = MiqLdap.using_ldap? ? :show : :hide
     show_fields(show_flag, [:owner_load_ldap])
+  end
+
+  def set_request_values(values)
+    # Ensure that tags selected in the pre-dialog get applied to the request
+    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
+
+    values[:requester_group] ||= @requester.current_group.description
+    email = values[:owner_email]
+    if email.present? && values[:owner_group].blank?
+      values[:owner_group] = User.find_by_lower_email(email, @requester).try(:miq_group_description)
+    end
   end
 
   def password_helper(values, encrypt = true)

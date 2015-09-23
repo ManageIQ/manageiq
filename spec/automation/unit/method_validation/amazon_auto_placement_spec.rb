@@ -20,6 +20,7 @@ describe "AMAZON best fit" do
   let(:miq_provision) do
     FactoryGirl.create(:miq_provision_amazon,
                        :options => {:src_vm_id => vm_template.id},
+                       :userid  => FactoryGirl.create(:user).userid,
                        :state   => 'active',
                        :status  => 'Ok')
   end

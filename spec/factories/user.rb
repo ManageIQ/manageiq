@@ -30,6 +30,10 @@ FactoryGirl.define do
     sequence(:email) { |s| "user#{s}@example.com" }
   end
 
+  factory :user_with_group, :parent => :user do
+    miq_groups { FactoryGirl.create_list(:miq_group, 1) }
+  end
+
   factory :user_admin, :parent => :user do
     userid          "admin"
     role            "super_administrator"
