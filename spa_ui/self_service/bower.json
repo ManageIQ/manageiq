@@ -45,8 +45,6 @@
         "components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
         "components/bootstrap-select/dist/js/bootstrap-select.js",
         "dist/js/patternfly.js",
-        "components/c3/c3.js",
-        "components/d3/d3.js",
         "dist/css/patternfly.css",
         "dist/css/patternfly-additions.css"
       ]
