@@ -14,6 +14,7 @@ class Service < ActiveRecord::Base
   virtual_has_many   :vms
   virtual_has_many   :all_vms
   virtual_column     :v_total_vms,            :type => :integer,  :uses => :vms
+  virtual_has_one    :picture
 
   include ServiceMixin
   include OwnershipMixin
