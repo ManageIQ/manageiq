@@ -193,7 +193,7 @@ class MiqAeClassController < ApplicationController
       else
         rec = MiqAeNamespace.where(:parent_id => nil)
         @record = nil
-        @grid_xml = build_toplevel_grid(rec)
+        @grid_data = rec.flatten.sort_by { |a| a.priority.to_s }.reverse
         @right_cell_text = "Datastore"
         @sb[:active_tab] = "namespaces"
         set_right_cell_text(x_node)
@@ -463,68 +463,6 @@ class MiqAeClassController < ApplicationController
       srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = rec_name
     end
     return xml.to_s
-  end
-
-  def build_toplevel_grid(view)
-    xml = REXML::Document.load("")
-    xml << REXML::XMLDecl.new(1.0, "UTF-8")
-
-    # Create root element
-    root = xml.add_element("rows")
-    # Build the header row
-    head = root.add_element("head")
-    toplevel_grid_add_header(head)
-    toplevel_grid_add_rows(root, view)
-    xml.to_s
-  end
-
-  def toplevel_grid_add_header(hrow)
-    new_column = hrow.add_element("column", "type" => "ch", "width" => 25, "align" => "center")
-    ["", "Name", "Description", "Enabled"].each do |col|
-      width = col == "" ? "30" : "*"
-      new_column = hrow.add_element("column", "width" => width, "align" => "left", "sort" => "na")
-      new_column.add_attribute("type", 'ro')
-      new_column.text = col
-    end
-  end
-
-  def toplevel_grid_add_rows(root, view)
-    view.flatten.sort_by { |a| a.priority.to_s }.reverse.each do |kids|
-      next if kids[:name] == "$"  # Skip the build-in namespace
-      cls, _ = set_cls(kids.class)
-      rec_name = get_rec_name(kids)
-      if rec_name
-        rec_name = rec_name.gsub(/\n/, "\\n")
-        rec_name = rec_name.gsub(/\t/, "\\t")
-        rec_name = rec_name.gsub(/"/, "'")
-        rec_name = CGI.escapeHTML(rec_name)
-        rec_name = rec_name.gsub(/\\/, "&#92;")
-      end
-      srow = root.add_element("row",
-                              "id"    => "#{cls}-#{to_cid(kids.id)}",
-                              "style" => "border-bottom: 1px solid #CCCCCC;color:black; text-align: center")
-      toplevel_grid_add_row_data(srow, kids, cls, rec_name)
-    end
-  end
-
-  def toplevel_grid_add_row_data(srow, kids, cls, rec_name)
-    srow.add_element("cell").text = "0" # Checkbox column unchecked
-    srow.add_element("cell",
-                     "image" => "blank.png",
-                     "title" => "#{cls}",
-                     "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
-                     REXML::CData.new("<ul class='icons list-unstyled'><li><span class='fa fa-globe' alt='#{cls}' title='#{cls}'></span></li></ul>")
-    srow.add_element("cell",
-                     "image" => "blank.png",
-                     "title" => "#{rec_name}",
-                     "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = rec_name
-    %w(description enabled).each do |field|
-      srow.add_element("cell",
-                       "image" => "blank.png",
-                       "title" => "#{kids.send(field)}",
-                       "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
-                       kids.send(field)
-    end
   end
 
   def grid_add_header(head)

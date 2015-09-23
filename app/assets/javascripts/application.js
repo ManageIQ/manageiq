@@ -82,3 +82,4 @@
 //= require jquery-hotkeys
 //= require lodash
 //= require miq_formatters
+//= require miq_grid
