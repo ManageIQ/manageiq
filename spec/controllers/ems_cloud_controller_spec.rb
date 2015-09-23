@@ -16,7 +16,6 @@ describe EmsCloudController do
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
-      controller.stub(:render)
       FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       login_as user
