@@ -2,17 +2,19 @@ class ChargebackTier < ActiveRecord::Base
   has_many :chargeback_tier_detail, :dependent => :destroy
 
   def rate(value)
-    ChargebackTierDetail.where(chargeback_tier: self.id).find_each do |tier_detail|
+    ratet = 0
+    ChargebackTierDetail.where(chargeback_tier_id: self.id).each do |tier_detail|
       if value>=tier_detail.start
-        rate = self.rate_above
+        ratet = self.rate_above
         if value<tier_detail.end
-          rate = tier_detail.rate
-          break
+          ratet = tier_detail.tier_rate.to_f
+          return ratet
         end
       else
-        rate = self.rate_below
+        ratet = self.rate_below
       end
     end
+    return ratet
   end
 
   def self.allNames
