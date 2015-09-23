@@ -30,7 +30,7 @@ module ApplicationHelper::Dialogs
   def textbox_tag_options(field, url)
     tag_options = {
       :maxlength => 50,
-      :class     => "dynamic-text-box-#{field.id}"
+      :class     => "dynamic-text-box-#{field.id} form-control"
     }
 
     extra_options = {"data-miq_observe" => {
@@ -43,7 +43,7 @@ module ApplicationHelper::Dialogs
 
   def textarea_tag_options(field, url)
     tag_options = {
-      :class     => "dynamic-text-area-#{field.id}",
+      :class     => "dynamic-text-area-#{field.id} form-control",
       :maxlength => 8192,
       :size      => "50x6"
     }
@@ -82,7 +82,7 @@ module ApplicationHelper::Dialogs
   end
 
   def drop_down_options(field, url)
-    tag_options = {:class => "dynamic-drop-down-#{field.id}"}
+    tag_options = {:class => "dynamic-drop-down-#{field.id} selectpicker"}
     extra_options = {
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,

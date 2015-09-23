@@ -45,7 +45,7 @@ describe ApplicationHelper do
         it "returns the tag options with a disabled true" do
           expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
             :maxlength => 50,
-            :class     => "dynamic-text-box-100",
+            :class     => "dynamic-text-box-100 form-control",
             :disabled  => true,
             :title     => "This element is disabled because it is read only"
           )
@@ -61,7 +61,7 @@ describe ApplicationHelper do
           it "returns the tag options with a data-miq-observe" do
             expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
               :maxlength         => 50,
-              :class             => "dynamic-text-box-100",
+              :class             => "dynamic-text-box-100 form-control",
               "data-miq_observe" => '{"interval":".5","url":"url"}'
             )
           end
@@ -73,7 +73,7 @@ describe ApplicationHelper do
           it "returns the tag options with a data-miq-observe" do
             expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
               :maxlength         => 50,
-              :class             => "dynamic-text-box-100",
+              :class             => "dynamic-text-box-100 form-control",
               "data-miq_observe" => {
                 :interval     => ".5",
                 :url          => "url",
@@ -93,7 +93,7 @@ describe ApplicationHelper do
 
         it "returns the tag options with a disabled true" do
           expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
-            :class     => "dynamic-text-area-100",
+            :class     => "dynamic-text-area-100 form-control",
             :maxlength => 8192,
             :size      => "50x6",
             :disabled  => true,
@@ -110,7 +110,7 @@ describe ApplicationHelper do
 
           it "returns the tag options with a data-miq-observe" do
             expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
-              :class             => "dynamic-text-area-100",
+              :class             => "dynamic-text-area-100 form-control",
               :maxlength         => 8192,
               :size              => "50x6",
               "data-miq_observe" => {
@@ -129,7 +129,7 @@ describe ApplicationHelper do
 
           it "returns the tag options with a data-miq-observe" do
             expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
-              :class             => "dynamic-text-area-100",
+              :class             => "dynamic-text-area-100 form-control",
               :maxlength         => 8192,
               :size              => "50x6",
               "data-miq_observe" => '{"interval":".5","url":"url"}'
@@ -272,7 +272,7 @@ describe ApplicationHelper do
 
         it "returns the tag options with a disabled true" do
           expect(helper.drop_down_options(dialog_field, "url")).to eq(
-            :class    => "dynamic-drop-down-100",
+            :class    => "dynamic-drop-down-100 selectpicker",
             :disabled => true,
             :title    => "This element is disabled because it is read only"
           )
@@ -287,7 +287,7 @@ describe ApplicationHelper do
 
           it "returns the tag options with a few data-miq attributes" do
             expect(helper.drop_down_options(dialog_field, "url")).to eq(
-              :class                 => "dynamic-drop-down-100",
+              :class                 => "dynamic-drop-down-100 selectpicker",
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
               "data-miq_observe"     => '{"url":"url","auto_refresh":true,"field_id":"100","trigger":"true"}'
@@ -300,7 +300,7 @@ describe ApplicationHelper do
 
           it "returns the tag options with a few data-miq attributes" do
             expect(helper.drop_down_options(dialog_field, "url")).to eq(
-              :class                 => "dynamic-drop-down-100",
+              :class                 => "dynamic-drop-down-100 selectpicker",
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
               "data-miq_observe"     => '{"url":"url"}'
