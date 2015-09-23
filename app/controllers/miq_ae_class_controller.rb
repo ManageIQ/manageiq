@@ -175,16 +175,15 @@ class MiqAeClassController < ApplicationController
         if @record.nil?
           set_root_node
         else
-          records = Array.new
+          @records = []
           # Add Namespaces under a namespace
           details = @record.ae_namespaces
-          records += details.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
+          @records += details.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
           # Add classes under a namespace
           details_cls = @record.ae_classes
           if !details_cls.nil?
-            records += details_cls.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
+            @records += details_cls.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
           end
-          @grid_ns_xml = build_details_grid(records,false)
           @combo_xml = build_type_options
           @dtype_combo_xml = build_dtype_options
           @sb[:active_tab] = "details"
