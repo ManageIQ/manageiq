@@ -54,6 +54,7 @@ class MiqRequestWorkflow
     @values       = values
     @filters      = {}
     @requester    = User.lookup_by_identity(requester)
+    @requester.miq_group_description = values[:requester_group]
     @values.merge!(options) unless options.blank?
   end
 
@@ -67,17 +68,15 @@ class MiqRequestWorkflow
     end
   end
 
-  def create_request(values, requester_id, target_class, event_name, event_message, auto_approve = false)
+  def create_request(values, _requester_id, target_class, event_name, event_message, auto_approve = false)
     return false unless validate(values)
 
-    # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
-
+    set_request_values(values)
     password_helper(values, true)
 
     yield if block_given?
 
-    request = request_class.create(:options => values, :userid => requester_id, :request_type => request_type.to_s)
+    request = request_class.create(:options => values, :userid => @requester.userid, :request_type => request_type.to_s)
     begin
       request.save!  # Force validation errors to raise now
     rescue => err
@@ -92,16 +91,16 @@ class MiqRequestWorkflow
     AuditEvent.success(
       :event        => event_name,
       :target_class => target_class,
-      :userid       => requester_id,
+      :userid       => @requester.userid,
       :message      => event_message
     )
 
     request.call_automate_event_queue("request_created")
-    request.approve(requester_id, "Auto-Approved") if auto_approve == true
+    request.approve(@requester.userid, "Auto-Approved") if auto_approve == true
     request
   end
 
-  def update_request(request, values, requester_id, target_class, event_name, event_message)
+  def update_request(request, values, _requester_id, target_class, event_name, event_message)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
 
     return false unless validate(values)
@@ -119,7 +118,7 @@ class MiqRequestWorkflow
     AuditEvent.success(
       :event        => event_name,
       :target_class => target_class,
-      :userid       => requester_id,
+      :userid       => @requester.userid,
       :message      => event_message
     )
 
@@ -534,18 +533,6 @@ class MiqRequestWorkflow
     end
   end
 
-  def set_default_user_info
-    if get_value(@values[:owner_email]).blank?
-      unless @requester.email.blank?
-        @values[:owner_email] = @requester.email
-        retrieve_ldap if MiqLdap.using_ldap?
-      end
-    end
-
-    show_flag = MiqLdap.using_ldap? ? :show : :hide
-    show_fields(show_flag, [:owner_load_ldap])
-  end
-
   def retrieve_ldap(_options = {})
     email = get_value(@values[:owner_email])
     unless email.blank?
@@ -781,15 +768,24 @@ class MiqRequestWorkflow
   def set_default_user_info
     return if get_dialog(:requester).blank?
 
-    if get_value(@values[:owner_email]).blank?
-      unless @requester.email.blank?
-        @values[:owner_email] = @requester.email
-        retrieve_ldap if MiqLdap.using_ldap?
-      end
+    if get_value(@values[:owner_email]).blank? && @requester.email.present?
+      @values[:owner_email] = @requester.email
+      retrieve_ldap if MiqLdap.using_ldap?
     end
 
     show_flag = MiqLdap.using_ldap? ? :show : :hide
     show_fields(show_flag, [:owner_load_ldap])
+  end
+
+  def set_request_values(values)
+    # Ensure that tags selected in the pre-dialog get applied to the request
+    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
+
+    values[:requester_group] ||= @requester.current_group.description
+    email = values[:owner_email]
+    if email.present? && values[:owner_group].blank?
+      values[:owner_group] = User.find_by_lower_email(email, @requester).try(:miq_group_description)
+    end
   end
 
   def password_helper(values, encrypt = true)
@@ -853,13 +849,16 @@ class MiqRequestWorkflow
   def process_filter(filter_prop, ci_klass, targets)
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
-    result = if filter_id.zero?
-               Rbac.filtered(targets, :class => ci_klass, :userid => @requester.userid)
-             else
-               MiqSearch.find(filter_id).filtered(targets, :userid => @requester.userid)
-             end
-    rails_logger("process_filter - [#{ci_klass}]", 1)
-    result
+    if filter_id.zero?
+      Rbac.filtered(targets,
+                    :class        => ci_klass,
+                    :userid       => @requester.userid,
+                    :miq_group_id => @requester.current_group_id)
+    else
+      MiqSearch.find(filter_id).filtered(targets,
+                                         :userid       => @requester.userid,
+                                         :miq_group_id => @requester.current_group_id)
+    end.tap { rails_logger("process_filter - [#{ci_klass}]", 1) }
   end
 
   def find_all_ems_of_type(klass, src = nil)

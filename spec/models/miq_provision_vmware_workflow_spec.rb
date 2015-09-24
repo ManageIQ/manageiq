@@ -3,7 +3,7 @@ require "spec_helper"
 silence_warnings { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
-  let(:admin)    { FactoryGirl.create(:user, :name => 'admin', :userid => 'admin') }
+  let(:admin)    { FactoryGirl.create(:user_with_group) }
   let(:vm_template) { FactoryGirl.create(:template_vmware) }
 
   before do

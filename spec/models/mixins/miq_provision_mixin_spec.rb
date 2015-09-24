@@ -28,15 +28,21 @@ describe MiqProvisionMixin do
       it { expect(subject.get_owner).to be_nil }
     end
 
-    it do
-      expect(User).to receive(:where).once.and_call_original
+    it "find owner (no group)" do
       expect(subject.get_owner).to eq(owner)
     end
 
     context "with owner = requester" do
       let(:owner) { requester }
+
       it "leverages requester record (and doesn't look up the owner again)" do
-        expect(User).not_to receive(:where)
+        expect(subject.get_owner.object_id).to eq(requester.object_id)
+      end
+    end
+
+    context "#with different email case" do
+      let(:options) { {:owner_email => owner.email.upcase} }
+      it "still finds owner" do
         expect(subject.get_owner).to eq(owner)
       end
     end
