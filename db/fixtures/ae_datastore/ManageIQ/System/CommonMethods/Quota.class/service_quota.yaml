@@ -10,17 +10,17 @@ object:
   fields:
   - quota_type:
       value: service
-  - max_group_cpu:
+  - warn_vms:
+      value: '1'
+  - max_vms:
       value: '2'
-  - warn_group_storage:
-      value: '1024'
-  - warn_group_memory:
-      value: '1024'
-  - max_group_memory:
-      value: '2048'
-  - max_group_storage:
-      value: '2048'
-  - warn_group_cpu:
-      value: '2'
+  - warn_cpu:
+      value: '40'
+  - max_cpu:
+      value: '50'
+  - warn_memory:
+      value: '10240'
+  - max_memory:
+      value: '20480'
   - meth:
       value: validate_quota
