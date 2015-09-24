@@ -40,8 +40,8 @@
     vm.retireService = retireService;
 
     vm.modalData = {
-      action : 'retire',
-      resource : { date : vm.service.retires_on || new Date(), warn : vm.service.retirement_warn || 0 }
+      action: 'retire',
+      resource: {date: vm.service.retires_on || new Date(), warn: vm.service.retirement_warn || 0}
     };
 
     vm.dateOptions = {
