@@ -48,7 +48,7 @@ class EvmDatabase
     # Only 1 machine can go through this at a time
     # Populating the DB takes 20 seconds
     # Not populating the db takes 3 seconds
-    MiqDatabase.with_lock(:share_row_exclusive, 10.minutes) do
+    MiqDatabase.with_lock(10.minutes) do
       classes.each do |klass|
         begin
           klass = klass.constantize if klass.kind_of?(String)
