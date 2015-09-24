@@ -52,10 +52,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   context '.save_security_groups_inventory' do
-    it 'should not raise an exception with empty firewall rules' do
-      expect do
-        EmsRefresh.save_security_groups_inventory(@ems, hashes)
-      end.to_not raise_error
+    it 'should handle empty firewall rules' do
+      expect(EmsRefresh.save_security_groups_inventory(@ems, hashes).uniq(&:id).count).to eq(4)
     end
   end
 end
