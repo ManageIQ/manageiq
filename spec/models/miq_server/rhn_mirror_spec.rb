@@ -3,8 +3,6 @@ require "spec_helper"
 describe "MiqServer" do
   context "RhnMirror" do
     before do
-      MiqDatabase.seed
-      MiqRegion.seed
       ServerRole.seed
       _, @server1, _ = EvmSpecHelper.create_guid_miq_server_zone
       @server1.update_attribute(:ipaddress, "1.2.3.4")

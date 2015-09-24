@@ -157,7 +157,6 @@ describe Rbac do
     before(:each) do
       User.stub(:server_timezone => "UTC")
 
-      MiqRegion.seed
       @tags = {
         2 => "/managed/environment/prod",
         3 => "/managed/environment/dev",

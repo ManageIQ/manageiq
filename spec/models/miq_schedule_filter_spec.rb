@@ -43,7 +43,6 @@ describe "MiqSchedule Filter" do
 
     context "for a scheduled report" do
       before(:each) do
-        MiqRegion.seed
         MiqReport.seed_report("Vendor and Guest OS")
         @report = MiqReport.first
         @report_schedule = FactoryGirl.create(:miq_schedule,

@@ -16,7 +16,6 @@ describe TimeProfile do
 
   context "will seed the database" do
     before(:each) do
-      MiqRegion.seed
       TimeProfile.seed
     end
 
@@ -104,7 +103,6 @@ describe TimeProfile do
 
   context "profiles_for_user" do
     before(:each) do
-      MiqRegion.seed
       TimeProfile.seed
     end
 
@@ -130,7 +128,6 @@ describe TimeProfile do
 
   context "profile_for_user_tz" do
     before(:each) do
-      MiqRegion.seed
       TimeProfile.seed
     end
 

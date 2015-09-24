@@ -40,9 +40,7 @@ module EvmSpecHelper
   end
 
   def self.create_root_tenant
-    MiqRegion.seed
     Tenant.seed
-    Tenant.root_tenant
   end
 
   def self.local_miq_server(attrs = {})

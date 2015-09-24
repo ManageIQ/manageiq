@@ -2,10 +2,6 @@ require "spec_helper"
 
 describe MiqEvent do
   context "seeded" do
-    before(:each) do
-      MiqRegion.seed
-    end
-
     context ".raise_evm_job_event" do
       it "vm" do
         obj = FactoryGirl.create(:vm_redhat)

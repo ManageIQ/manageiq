@@ -12,7 +12,6 @@ describe RssFeed do
     end
 
     it "#generate 2 hosts in newest_hosts rss" do
-      MiqRegion.seed
       RssFeed.sync_from_yml_file("newest_hosts")
       feed_container = RssFeed.where(:name => "newest_hosts").first.generate
       feed_container[:text].should == <<-EOXML
@@ -47,7 +46,6 @@ EOXML
 
   context ".sync_from_yml_dir" do
     before(:each) do
-      MiqRegion.seed
       RssFeed.seed
     end
 
@@ -81,7 +79,6 @@ EOXML
     end
 
     it "when the yaml file is updated" do
-      MiqRegion.seed
       RssFeed.seed
       old_count = RssFeed.count
 

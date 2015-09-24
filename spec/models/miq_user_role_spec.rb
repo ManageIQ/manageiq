@@ -6,13 +6,11 @@ describe MiqUserRole do
   end
   context ".seed" do
     it "empty table" do
-      MiqRegion.seed
       MiqUserRole.seed
       MiqUserRole.count.should == @expected_user_role_count
     end
 
     it "run twice" do
-      MiqRegion.seed
       MiqUserRole.seed
       MiqUserRole.seed
       MiqUserRole.count.should == @expected_user_role_count
@@ -23,7 +21,6 @@ describe MiqUserRole do
       unchanged = FactoryGirl.create(:miq_user_role, :name => "xxx", :read_only => false)
       unchanged_orig_updated_at = unchanged.updated_at
 
-      MiqRegion.seed
       MiqUserRole.seed
 
       MiqUserRole.count.should == @expected_user_role_count + 1
@@ -34,8 +31,6 @@ describe MiqUserRole do
 
   context "testing allows methods" do
     before(:each) do
-      MiqRegion.seed
-
       EvmSpecHelper.seed_specific_product_features(%w(
         dashboard_add
         dashboard_view

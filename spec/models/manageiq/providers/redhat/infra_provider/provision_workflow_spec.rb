@@ -1,10 +1,6 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
-  before do
-    MiqRegion.seed
-  end
-
   context "With a Valid Template," do
     let(:admin)    { FactoryGirl.create(:user, :name => 'admin', :userid => 'admin') }
     let(:provider) { FactoryGirl.create(:ems_redhat) }

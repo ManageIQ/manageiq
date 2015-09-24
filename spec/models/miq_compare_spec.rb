@@ -6,7 +6,6 @@ describe MiqCompare do
       vm1 = FactoryGirl.create(:vm_vmware)
       vm2 = FactoryGirl.create(:vm_vmware)
 
-      MiqRegion.seed
       MiqReport.seed_report("vms", "compare")
 
       report = MiqReport.find_by_name("VMs: Compare Template")

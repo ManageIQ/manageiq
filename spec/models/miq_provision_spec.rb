@@ -55,6 +55,7 @@ describe MiqProvision do
         end
 
         it "should create a valid target_name and hostname" do
+          MiqRegion.seed
           @vm_prov.after_request_task_create
           @vm_prov.get_option(:vm_target_name).should == @target_vm_name
 
@@ -75,7 +76,7 @@ describe MiqProvision do
 
         context "when auto naming sequence exceeds the range" do
           before do
-            region = MiqRegion.my_region
+            region = MiqRegion.seed
             region.naming_sequences.create(:name => "#{@target_vm_name}$n{3}", :source => "provisioning", :value => 998)
             region.naming_sequences.create(:name => "#{@target_vm_name}$n{4}", :source => "provisioning", :value => 10)
           end

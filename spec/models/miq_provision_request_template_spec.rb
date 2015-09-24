@@ -29,6 +29,7 @@ describe MiqProvisionRequestTemplate do
 
   describe '#create_tasks_for_service' do
     before do
+      MiqRegion.seed
       ManageIQ::Providers::Vmware::InfraManager::Provision.any_instance.stub(:get_hostname).and_return('hostname')
       MiqAeEngine.stub(:resolve_automation_object).and_return(double(:root => 'miq'))
     end

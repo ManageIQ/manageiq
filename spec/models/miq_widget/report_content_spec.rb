@@ -20,7 +20,6 @@ describe "Widget Report Content" do
   '))}
 
   before(:each) do
-    MiqRegion.seed
     RssFeed.sync_from_yml_dir
     MiqReport.seed_report("Vendor and Guest OS")
 

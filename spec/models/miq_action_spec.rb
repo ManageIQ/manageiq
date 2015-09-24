@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe MiqAction do
-  before(:each) { MiqRegion.seed }
-
   context "#action_custom_automation" do
     before(:each) do
       @vm   = FactoryGirl.create(:vm_vmware)

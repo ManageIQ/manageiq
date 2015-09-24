@@ -54,7 +54,6 @@ describe ApplicationHelper do
   describe "#role_allows" do
     let(:features) { MiqProductFeature.find_all_by_identifier("everything") }
     before(:each) do
-      MiqRegion.seed
       EvmSpecHelper.seed_specific_product_features("miq_report", "service")
 
       @admin_role  = FactoryGirl.create(:miq_user_role, :name => "admin", :miq_product_features => features)

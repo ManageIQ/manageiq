@@ -8,7 +8,6 @@ describe MiqAlert do
       @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
       @vm     = FactoryGirl.create(:vm_vmware)
 
-      MiqRegion.seed
       MiqAlert.seed
       @events_to_alerts = MiqAlert.all.inject([]) do |arr,a|
         next(arr) if a.responds_to_events.nil?

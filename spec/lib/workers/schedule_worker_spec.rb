@@ -277,8 +277,7 @@ describe MiqScheduleWorker::Runner do
             # Initialize active_roles
             @schedule_worker.instance_variable_set(:@active_roles, [])
 
-            MiqRegion.seed
-            @region = MiqRegion.my_region
+            @region = MiqRegion.seed
             MiqRegion.stub(:my_region).and_return(@region)
             @schedule_worker.instance_variable_set(:@active_roles, ["ldap_synchronization"])
 
@@ -338,8 +337,7 @@ describe MiqScheduleWorker::Runner do
             stub_server_configuration(Hash.new(5.minutes))
             @schedule_worker.stub(:heartbeat)
 
-            MiqRegion.seed
-            @region = MiqRegion.my_region
+            @region = MiqRegion.seed
             MiqRegion.stub(:my_region).and_return(@region)
             @schedule_worker.instance_variable_set(:@active_roles, ["database_operations"])
 

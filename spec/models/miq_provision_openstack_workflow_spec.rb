@@ -1,10 +1,6 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
-  before do
-    MiqRegion.seed
-  end
-
   context "With a user" do
     let(:admin) { FactoryGirl.create(:user, :name => 'admin', :userid => 'admin') }
 

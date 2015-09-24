@@ -1,11 +1,6 @@
 require "spec_helper"
 
 describe VmMigrateWorkflow do
-
-  before do
-    MiqRegion.seed
-  end
-
   context "With a Valid Template," do
     let(:admin)    { FactoryGirl.create(:user, :name => 'admin', :userid => 'admin') }
     let(:provider) { FactoryGirl.create(:ems_vmware) }
@@ -31,9 +26,7 @@ describe VmMigrateWorkflow do
 
           workflow.allowed_hosts.should == [workflow.ci_to_hash_struct(host)]
         end
-
       end
     end
   end
-
 end

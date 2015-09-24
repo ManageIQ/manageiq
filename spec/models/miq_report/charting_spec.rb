@@ -2,7 +2,6 @@ require "spec_helper"
 
 describe MiqReport do
   before(:each) do
-    MiqRegion.seed
     EvmSpecHelper.local_miq_server
 
     @group = FactoryGirl.create(:miq_group)
