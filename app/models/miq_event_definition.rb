@@ -113,10 +113,8 @@ class MiqEventDefinition < ActiveRecord::Base
 
   def self.seed
     MiqEventDefinitionSet.seed
-    MiqRegion.my_region.lock do
-      self.seed_default_events
-      self.seed_default_definitions
-    end
+    seed_default_events
+    seed_default_definitions
   end
 
   def self.seed_default_events

@@ -44,12 +44,10 @@ class Zone < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      unless self.exists?(:name => 'default')
-        _log.info("Creating default zone...")
-        self.create(:name => "default", :description => "Default Zone")
-        _log.info("Creating default zone... Complete")
-      end
+    unless exists?(:name => 'default')
+      _log.info("Creating default zone...")
+      create(:name => "default", :description => "Default Zone")
+      _log.info("Creating default zone... Complete")
     end
   end
 

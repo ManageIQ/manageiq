@@ -585,9 +585,7 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.sync_from_dir
-    end
+    sync_from_dir
     MiqWidgetSet.seed
   end
 

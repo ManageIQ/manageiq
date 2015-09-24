@@ -77,36 +77,34 @@ class MiqGroup < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
-      root_tenant = Tenant.root_tenant
-      if File.exist?(role_map_file)
-        filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
-        ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
+    role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
+    root_tenant = Tenant.root_tenant
+    if File.exist?(role_map_file)
+      filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
+      ldap_to_filters = File.exist?(filter_map_file) ? YAML.load_file(filter_map_file) : {}
 
-        role_map = YAML.load_file(role_map_file)
-        order = role_map.collect(&:keys).flatten
-        groups_to_roles = role_map.inject({}) {|h, g| h[g.keys.first] = g[g.keys.first]; h}
-        seq = 1
-        order.each do |g|
-          group = self.find_by_description(g) || self.new(:description => g)
-          user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
-          if user_role.nil?
-            _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
-            next
-          end
-          group.miq_user_role = user_role
-          group.sequence      = seq
-          group.filters       = ldap_to_filters[g]
-          group.group_type    = "system"
-          group.tenant        = root_tenant
-
-          mode = group.new_record? ? "Created" : "Added"
-          group.save!
-          _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
-
-          seq += 1
+      role_map = YAML.load_file(role_map_file)
+      order = role_map.collect(&:keys).flatten
+      groups_to_roles = role_map.each_with_object({}) { |g, h| h[g.keys.first] = g[g.keys.first] }
+      seq = 1
+      order.each do |g|
+        group = find_by_description(g) || new(:description => g)
+        user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
+        if user_role.nil?
+          _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
+          next
         end
+        group.miq_user_role = user_role
+        group.sequence      = seq
+        group.filters       = ldap_to_filters[g]
+        group.group_type    = "system"
+        group.tenant        = root_tenant
+
+        mode = group.new_record? ? "Created" : "Added"
+        group.save!
+        _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
+
+        seq += 1
       end
     end
   end
