@@ -1,5 +1,4 @@
 require 'pathname'
-require Pathname.new(__dir__).join("../util/extensions/miq-uri")
 
 require 'sync'
 require 'VMwareWebService/VimService'
