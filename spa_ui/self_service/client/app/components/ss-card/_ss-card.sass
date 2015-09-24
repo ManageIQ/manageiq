@@ -11,10 +11,17 @@
   text-align: center
   width: 260px
 
+  &:hover .ss-card__more
+    opacity: 1
+
   +element(logo)
     display: block
     margin: 22px auto
-    max-height: 133px
+    margin-bottom: 0
+    max-height: 120px
+
+  +element(logo_wrapper)
+    height: 155px
 
   +element(more)
     background: $app-color-white
@@ -26,5 +33,4 @@
       font-size: 16px
       margin-right: 5px
 
-  &:hover .ss-card__more
-    opacity: 1
+  

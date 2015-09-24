@@ -1,8 +1,51 @@
-+block(pf-card)
++block(ss-dashboard)
+  +element(card-primary)
+    .card-pf-body
+      padding-bottom: 0
+      
+    .fa
+      font-size: 24px
+      border: 2px solid $app-color-medium-blue
+      border-radius: 50px
+      height: 50px
+      width: 50px
+      float: left
+      text-align: center
+      line-height: 45px
+      margin: 25px 10px 5px 10px
 
-  +element(primary)
-    background-color: $app-color-purple
-    color: $app-color-white
-    cursor: pointer
-    &:hover
-      background-color: $app-color-dark-gray
+    +element(count)
+      margin: -20px 0 -20px 90px
+      padding: 20px 0px
+      text-align: center
+      border-left: 1px solid #bbb
+
+      h2
+        margin-top: 0
+        font-size: 30px
+
+      h3
+        margin: 0
+        font-size: 14px
+        font-weight: 700
+
+  .card-pf
+    .card-pf-title
+      font-size: 16px
+      margin: 25px 0 10px 0
+
+    .card-pf-aggregate-status-notification
+      border-left: none
+      margin: 0
+
+      .pficon
+        font-size: 24px
+        position: relative
+        top: 2px
+
+    .card-pf
+      box-shadow: none
+      border-bottom: none
+
+    .card-divider
+      border-bottom: 1px solid #bbb

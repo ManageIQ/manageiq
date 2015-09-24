@@ -1,72 +1,102 @@
 <div>
-  <a ui-sref="^"> <span class="fa fa-angle-left"/> Back to My Services</a>
+  <a ui-sref="^" class="breadcrumb"> <span class="fa fa-angle-left"/> Back to My Services</a>
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
     <section>
-      <div class="service-details-title-img" ng-if=" ::vm.service.picture.image_href ">
-        <img class="service-details-title-img__logo" src="{{ ::vm.service.picture.image_href }}"/>
-      </div>
-      <h2>{{ ::vm.service.name }}</h2>
-    </section>
-    <section>
-      <div class="col-md-12">
+      <div class="col-md-12 ss-details-header">
         <div class="row">
-          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-            <dl class="dl-horizontal text-capitalize">
-              <dt>Service Id</dt>
-              <dd>{{ ::vm.service.id }}</dd>
-              <dt>Service Owner</dt>
-              <dd> {{ ::vm.service.author }}</dd>
-              <dt>Service State</dt>
-              <dd class="text-capitalize">
-                Active
-              </dd>
-              <dt>Service Date</dt>
-              <dd>Service Created On {{ ::vm.service.created_at | date }}</dd>
-            </dl>
+          <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <div class="ss-details-header__title-img" ng-if=" ::vm.service.picture.image_href ">
+              <img class="ss-details-header__title-img__logo" src="{{ ::vm.service.picture.image_href }}"/>
+            </div>
+            <div class="ss-details-header__title">
+              <h2>{{ ::vm.service.name }}</h2>
+              <h4>{{ ::vm.service.long_description || vm.service.description }}</h4>
+            </div>
           </div>
-          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-            <dl class="dl-horizontal text-capitalize">
-              <dt>Service Approval State</dt>
-              <dd>{{ ::vm.service.approval_state }}</dd>
-              <dt>Service Adjudicator</dt>
-              <dd>N/A</dd>
-              <dt>Last Message</dt>
-              <dd>{{ ::vm.service.message}}</dd>
-              <dt>Last Updated</dt>
-              <dd>Service Updated On {{ ::vm.service.updated_at | date}}</dd>
-              <dt>Service Type</dt>
-              <dd>{{ ::vm.service.service_type }}</dd>
-            </dl>
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <p>
-              <button class="btn btn-danger" type="button" ng-click="vm.removeService()">Remove Service</button>
-            </p>
-            <p>
-            <div class="btn-group">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ss-details-header__actions">
+            <button class="btn btn-danger" type="button" ng-click="vm.removeService()">Remove Service</button>
             <button class="btn btn-primary" type="button" ng-click="vm.retireServiceNow()">Retire </button>
             <button class="btn btn-primary" type="button" ng-click="vm.retireServiceLater()">Schedule</button>
+            <button class="btn btn-primary" type="button" ng-click="vm.editServiceModal()">Edit Service</button>
+          </div>
+         </div>
+      </div>
+    </section>
+    <section class="ss-form-readonly">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-sm-4">Service Id</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.id }}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Service Owner</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.author }}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Service State</label>
+                <div class="col-sm-8">
+                  <input class="text-capitalize form-control" disabled value="Active"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Service Date</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="Service Created On {{ ::vm.service.created_at | date }}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Service Type</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.service_type }}" />
+                </div>
+              </div>
             </div>
-            </p>
-            <p>
-              <button class="btn btn-primary" type="button" ng-click="vm.editServiceModal()">Edit Service</button>
-            </p>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="control-label col-sm-4">Service Approval State</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.approval_state }}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Service Adjudicator</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="N/A" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Last Message</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.message}}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Last Updated</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="Service Updated On {{ ::vm.service.updated_at | date}}" />
+                </div>
+              </div>
+            </div>
           </div>
           </div>
         </div>
-            <dl>
-              <dt>Description</dt>
-              <dd>{{ ::vm.service.long_description || vm.service.description }}</dd>
-            </dl>
-
     </section>
   </div>
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
-    <section>
+    <section class="ss-details-section">
       <h2>Service Details</h2>
       <pre>{{ ::vm.service |json }}</pre>
     </section>
