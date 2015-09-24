@@ -385,6 +385,20 @@ module MiqAeEngineSpec
         MiqAeEngine.create_automation_attributes("").should == ""
       end
 
+     it "with an array of nil objects" do
+       hash = {}
+       MiqAeEngine.create_automation_attributes_from_obj_array([nil, nil], hash)
+       expect(hash).to be_empty
+     end
+
+     it "with an array of nil and valid objects" do
+       hash = {:a => 'A', 'b' => 'b'}
+       expected_hash = hash.merge("VmOrTemplate::vm" => Vm.first.id, "Host::host" => Host.first.id)
+       MiqAeEngine.create_automation_attributes_from_obj_array([Vm.first, nil, Host.first], hash)
+       expect(hash).to eq(expected_hash)
+     end
+
+
     end
 
     context ".automation_attribute_is_array?" do

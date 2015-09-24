@@ -261,6 +261,15 @@ module MiqAeEngine
     end.join(",")
   end
 
+  def self.create_automation_attributes_from_obj_array(objects, attrs_hash)
+    Array.wrap(objects).each do |object|
+      next unless object
+      key   = create_automation_attribute_key(object)
+      value = create_automation_attribute_value(object)
+      attrs_hash[key] = value
+    end
+  end
+
   def self.create_automation_object(name, attrs, options = {})
     # args
     if options[:fqclass]
