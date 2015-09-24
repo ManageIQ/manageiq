@@ -14,4 +14,4 @@
   - elsif @showtype == "dialog_provision"
     = render :partial => "shared/dialogs/dialog_provision"
   - else
-    = render :partial => @showtype
+    = render :partial => "shared/views/ems_common/#{@showtype}"
