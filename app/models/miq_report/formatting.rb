@@ -40,6 +40,19 @@ module MiqReport::Formatting
     end
   end
 
+  def javascript_format(col, format_name)
+    format_name ||= self.class.get_default_format(col, nil)
+    return nil unless format_name && format_name != :_none_
+
+    format = FORMATS[format_name]
+    function_name = format[:function][:name]
+
+    options = format.merge(format[:function]).slice(
+      %i(delimiter separator precision length tz column format prefix suffix description unit))
+
+    [function_name, options]
+  end
+
   def format(col, value, options = {})
     if self.db.to_s == "VimPerformanceTrend"
       if col == "limit_col_value"
