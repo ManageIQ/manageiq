@@ -15,6 +15,7 @@ require_relative 'openstack/services/compute/builder'
 require_relative 'openstack/services/volume/builder'
 require_relative 'openstack/services/image/builder'
 require_relative 'openstack/services/orchestration/builder'
+require_relative 'openstack/services/storage/builder'
 
 def usage(s)
   $stderr.puts(s)
@@ -75,6 +76,10 @@ openstack_environments.each do |env|
   compute = Openstack::Services::Compute::Builder.build_all(@ems, project)
   volume = Openstack::Services::Volume::Builder.build_all(@ems, project)
   image = Openstack::Services::Image::Builder.build_all(@ems, project)
+
+  if storage_supported?
+    Openstack::Services::Storage::Builder.build_all(@ems, project)
+  end
 
   if orchestration_supported?
     Openstack::Services::Orchestration::Builder.build_all(@ems, project, network)
