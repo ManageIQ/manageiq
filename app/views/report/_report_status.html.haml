@@ -1,46 +1,45 @@
 #report_status_div
-  %fieldset
-    %h3
-      = @report_result.name
-    %table.style1
-      %tr{:class => cycle('row0', 'row1')}
-        %td.key
-          = _("Queued At")
-        %td
-          = h(format_timezone(@report_result.created_on, Time.zone, "view"))
-      %tr{:class => cycle('row0', 'row1')}
-        %td.key
-          = _("Run At")
-        - run_on = @report_result.last_run_on
-        %td
-          = h(run_on ? format_timezone(run_on, Time.zone, "view") : "")
-      %tr{:class => cycle('row0', 'row1')}
-        %td.key
-          = _('Name')
-        %td
-          = h(@report_result.name)
-      %tr{:class => cycle('row0', 'row1')}
-        %td.key
-          = _('Source')
-        %td
-          = h(@report_result.report_source)
-      %tr{:class => cycle('row0', 'row1')}
-        %td.key
-          = _("Username")
-        %td
-          = h(@report_result.userid)
-      %tr{:class => cycle('row0', 'row1')}
-        %td.key
-          = _('Group')
-        %td
-          = h(@report_result.miq_group_description)
-      %tr{:class => cycle('row0', 'row1')}
-        %td.key
-          = _("Status")
-        %td
-          = h(@report_result.status)
-      %tr{:class => cycle('row0', 'row1')}
-        %td.key
-          = _("Message")
-        %td
-          = h(@report_result.status_message)
+  %h3
+    = @report_result.name
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
+        = _("Queued At")
+      .col-md-8
+        = h(format_timezone(@report_result.created_on, Time.zone, "view"))
+    .form-group
+      %label.control-label.col-md-2
+        = _("Run At")
+      - run_on = @report_result.last_run_on
+      .col-md-8
+        = h(run_on ? format_timezone(run_on, Time.zone, "view") : "")
+    .form-group
+      %label.control-label.col-md-2
+        = _('Name')
+      .col-md-8
+        = h(@report_result.name)
+    .form-group
+      %label.control-label.col-md-2
+        = _('Source')
+      .col-md-8
+        = h(@report_result.report_source)
+    .form-group
+      %label.control-label.col-md-2
+        = _("Username")
+      .col-md-8
+        = h(@report_result.userid)
+    .form-group
+      %label.control-label.col-md-2
+        = _('Group')
+      .col-md-8
+        = h(@report_result.miq_group_description)
+    .form-group
+      %label.control-label.col-md-2
+        = _("Status")
+      .col-md-8
+        = h(@report_result.status)
+    .form-group
+      %label.control-label.col-md-2
+        = _("Message")
+      .col-md-8
+        = h(@report_result.status_message)
