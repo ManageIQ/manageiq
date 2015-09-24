@@ -9,7 +9,9 @@ class SecurityGroup < ActiveRecord::Base
   belongs_to :cloud_tenant
   belongs_to :orchestration_stack
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
+
   has_and_belongs_to_many :vms
+  has_and_belongs_to_many :network_ports
 
   def total_vms
     vms.count
