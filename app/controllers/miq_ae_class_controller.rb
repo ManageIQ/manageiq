@@ -2669,7 +2669,6 @@ private
     if @record.nil?
       set_root_node
     else
-      @grid_inst_list_xml = build_details_grid(@record.ae_instances)
       @combo_xml = build_type_options
       # passing fields because that's how many combo boxes we need
       @dtype_combo_xml = build_dtype_options
