@@ -12,6 +12,4 @@
 #main_div
   - unless @report_only
     = render :partial => "layouts/flash_msg"
-    - unless @usage_options[:sdate].nil?
-      = render :partial => "usage_options"
   = render :partial => "usage_report"

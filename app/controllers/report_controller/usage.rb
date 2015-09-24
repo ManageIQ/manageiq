@@ -56,7 +56,6 @@ module ReportController::Usage
     session[:usage_options] = @usage_options
 
     render :update do |page|
-      #     if new_toolbars
       if @usage_options[:report] && @usage_options[:report].table.data.length > 0
         page << "ManageIQ.toolbars.center_tb.obj.showItem('usage_txt');"
         page << "ManageIQ.toolbars.center_tb.obj.enableItem('usage_txt');"
@@ -72,12 +71,8 @@ module ReportController::Usage
         page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_pdf');"
         page << "ManageIQ.toolbars.center_tb.obj.hideItem('usage_reportonly');"
       end
-      #     else
-      #       page.replace_html("center_buttons_div", :partial=>"layouts/center_buttons")
-      #     end
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("usage_options_div", :partial => "usage_options")
-      page.replace("usage_report_div", :partial => "usage_report")
+      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("usage_report_div", :partial=>"usage_report")
       page << 'miqBuildCalendar();'
       page << 'miqSparkle(false);'
     end

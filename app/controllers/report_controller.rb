@@ -101,8 +101,6 @@ class ReportController < ApplicationController
       redirect_to(:action => "miq_report_new", :tab => params[:tab])
     when "edit"
       redirect_to(:action => "miq_report_edit", :tab => params[:tab])
-    when "editreport"
-      redirect_to(:action => params[:tab], :id => params[:id])
     when "schedules"
       redirect_to(:action => params[:tab])
     when "saved_reports"

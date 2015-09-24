@@ -89,11 +89,6 @@ module ReportController::Reports
       end
     else
       begin
-        if rpt.rpt_type == "Default"
-          add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "MiqReport"), :name => rpt.name}, :error)
-          redirect_to :action => "editreport", :id => rpt.id, :flash_msg => flash, :flash_error => true
-          return
-        end
         rpt_name = rpt.name
         audit = {:event => "report_record_delete", :message => "[#{rpt_name}] Record deleted", :target_id => rpt.id, :target_class => "MiqReport", :userid => session[:userid]}
         rpt.destroy
