@@ -117,7 +117,8 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
     end
 
     # notifications.* is a poorly named extra-old legacy queue
-    channel.queue_delete("notifications.*") if connection.queue_exists?(queue_name)
+    queue_name = "notifications.*"
+    channel.queue_delete(queue_name) if connection.queue_exists?(queue_name)
 
     channel.close
   end
