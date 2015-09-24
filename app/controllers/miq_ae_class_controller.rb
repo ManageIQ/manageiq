@@ -175,16 +175,15 @@ class MiqAeClassController < ApplicationController
         if @record.nil?
           set_root_node
         else
-          records = Array.new
+          @records = []
           # Add Namespaces under a namespace
           details = @record.ae_namespaces
-          records += details.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
+          @records += details.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
           # Add classes under a namespace
           details_cls = @record.ae_classes
           if !details_cls.nil?
-            records += details_cls.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
+            @records += details_cls.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
           end
-          @grid_ns_xml = build_details_grid(records,false)
           @combo_xml = build_type_options
           @dtype_combo_xml = build_dtype_options
           @sb[:active_tab] = "details"
@@ -193,7 +192,7 @@ class MiqAeClassController < ApplicationController
       else
         rec = MiqAeNamespace.where(:parent_id => nil)
         @record = nil
-        @grid_xml = build_toplevel_grid(rec)
+        @grid_data = rec.flatten.sort_by { |a| a.priority.to_s }.reverse
         @right_cell_text = "Datastore"
         @sb[:active_tab] = "namespaces"
         set_right_cell_text(x_node)
@@ -463,68 +462,6 @@ class MiqAeClassController < ApplicationController
       srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = rec_name
     end
     return xml.to_s
-  end
-
-  def build_toplevel_grid(view)
-    xml = REXML::Document.load("")
-    xml << REXML::XMLDecl.new(1.0, "UTF-8")
-
-    # Create root element
-    root = xml.add_element("rows")
-    # Build the header row
-    head = root.add_element("head")
-    toplevel_grid_add_header(head)
-    toplevel_grid_add_rows(root, view)
-    xml.to_s
-  end
-
-  def toplevel_grid_add_header(hrow)
-    new_column = hrow.add_element("column", "type" => "ch", "width" => 25, "align" => "center")
-    ["", "Name", "Description", "Enabled"].each do |col|
-      width = col == "" ? "30" : "*"
-      new_column = hrow.add_element("column", "width" => width, "align" => "left", "sort" => "na")
-      new_column.add_attribute("type", 'ro')
-      new_column.text = col
-    end
-  end
-
-  def toplevel_grid_add_rows(root, view)
-    view.flatten.sort_by { |a| a.priority.to_s }.reverse.each do |kids|
-      next if kids[:name] == "$"  # Skip the build-in namespace
-      cls, _ = set_cls(kids.class)
-      rec_name = get_rec_name(kids)
-      if rec_name
-        rec_name = rec_name.gsub(/\n/, "\\n")
-        rec_name = rec_name.gsub(/\t/, "\\t")
-        rec_name = rec_name.gsub(/"/, "'")
-        rec_name = CGI.escapeHTML(rec_name)
-        rec_name = rec_name.gsub(/\\/, "&#92;")
-      end
-      srow = root.add_element("row",
-                              "id"    => "#{cls}-#{to_cid(kids.id)}",
-                              "style" => "border-bottom: 1px solid #CCCCCC;color:black; text-align: center")
-      toplevel_grid_add_row_data(srow, kids, cls, rec_name)
-    end
-  end
-
-  def toplevel_grid_add_row_data(srow, kids, cls, rec_name)
-    srow.add_element("cell").text = "0" # Checkbox column unchecked
-    srow.add_element("cell",
-                     "image" => "blank.png",
-                     "title" => "#{cls}",
-                     "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
-                     REXML::CData.new("<ul class='icons list-unstyled'><li><span class='fa fa-globe' alt='#{cls}' title='#{cls}'></span></li></ul>")
-    srow.add_element("cell",
-                     "image" => "blank.png",
-                     "title" => "#{rec_name}",
-                     "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = rec_name
-    %w(description enabled).each do |field|
-      srow.add_element("cell",
-                       "image" => "blank.png",
-                       "title" => "#{kids.send(field)}",
-                       "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = \
-                       kids.send(field)
-    end
   end
 
   def grid_add_header(head)
@@ -1499,8 +1436,11 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "add"
-      parent_id = @edit[:typ] == "MiqAeDomain" ? nil : from_cid(x_node.split('-')[1])
-      add_ae_ns = @edit[:typ].constantize.new(:parent_id => parent_id)
+      add_ae_ns = if @edit[:typ] == "MiqAeDomain"
+                    current_tenant.ae_domains.new
+                  else
+                    MiqAeNamespace.new(:parent_id => from_cid(x_node.split('-')[1]))
+                  end
       ns_set_record_vars(add_ae_ns)      # Set the record variables, but don't save
       if add_ae_ns.valid? && !flash_errors? && add_ae_ns.save
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => add_ae_ns.class.name), :name  => add_ae_ns.name})

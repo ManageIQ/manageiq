@@ -59,7 +59,7 @@ class MiqRequestWorkflow
 
   # Helper method when not using workflow
   # all sub classes override create_request and update_request with 3 parameters
-  def self.make_request(request, values, requester_id, auto_approve = false)
+  def make_request(request, values, requester_id, auto_approve = false)
     if request
       update_request(request, values, requester_id)
     else

@@ -63,10 +63,10 @@ describe MiqAeClassController do
   context "#domains_priority_edit" do
     it "sets priority of domains" do
       set_user_privileges
-      FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => nil, :priority => 1)
-      FactoryGirl.create(:miq_ae_namespace, :name => "test2", :parent => nil, :priority => 2)
-      FactoryGirl.create(:miq_ae_namespace, :name => "test3", :parent => nil, :priority => 3)
-      FactoryGirl.create(:miq_ae_namespace, :name => "test4", :parent => nil, :priority => 4)
+      FactoryGirl.create(:miq_ae_domain, :name => "test1", :parent => nil, :priority => 1)
+      FactoryGirl.create(:miq_ae_domain, :name => "test2", :parent => nil, :priority => 2)
+      FactoryGirl.create(:miq_ae_domain, :name => "test3", :parent => nil, :priority => 3)
+      FactoryGirl.create(:miq_ae_domain, :name => "test4", :parent => nil, :priority => 4)
       order = %w(test3 test2 test4 test1)
       edit = {
         :new     => {:domain_order => order},

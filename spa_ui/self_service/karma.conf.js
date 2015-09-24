@@ -2,13 +2,13 @@
 module.exports = function(config) {
   'use strict';
 
-  var gulpConfig = require('./config');
+  var gulpConfig = require(__dirname + '/gulp/config');
 
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: './',
 
-    urlRoot: '/__karma__/',
+    // urlRoot: '/__karma__/',
 
     // frameworks to use
     // some available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -22,7 +22,7 @@ module.exports = function(config) {
 
     proxies: {
       '/': 'http://127.0.0.1:3000'
-//      '/': 'http://localhost:8888/'
+      // '/': 'http://localhost:8888/'
     },
 
     // preprocess matching files before serving them to the browser

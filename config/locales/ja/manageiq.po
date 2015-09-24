@@ -1,18 +1,19 @@
 # Japanese translations for manageiq package.
 # Template file for strings which can be localized in the ManageIQ Application.
 # This file is distributed under the same license as the Manageiq package.
+# aeng <aeng@redhat.com>, 2015. #zanata
 # asasaki <asasaki@redhat.com>, 2015. #zanata
-# irooskov <irooskov@redhat.com>, 2015. #zanata
-# jito <jito@redhat.com>, 2015. #zanata
+# myamamot <myamamot@redhat.com>, 2015. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-11 22:51+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-06-10 11:43+0000\n"
-"Last-Translator: asasaki <asasaki@redhat.com>\n"
+"PO-Revision-Date: 2015-09-22 05:49+0000\n"
+"Last-Translator: myamamot <myamamot@redhat.com>\n"
 "Language-Team: English\n"
 "Language: ja\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
@@ -22,10 +23,10 @@ msgid " # of Days"
 msgstr "日数"
 
 msgid " %s Assignments"
-msgstr " %s の割り当て"
+msgstr "%s の割り当て"
 
 msgid " %{name} from %{value} to %{parameters} "
-msgstr "%{value} から %{parameters} の  %{name}"
+msgstr "%{value} から %{parameters} の %{name}"
 
 msgid " (Names with \"%s\")"
 msgstr " (次を含む名前 \"%s\")"
@@ -33,7 +34,8 @@ msgstr " (次を含む名前 \"%s\")"
 msgid " (current)"
 msgstr " (現在)"
 
-msgid " * Multiple UI workers can not be configured with session store as memory"
+msgid ""
+" * Multiple UI workers can not be configured with session store as memory"
 msgstr " * 複数の UI ワーカーをメモリーとしてセッションストアで設定することはできません"
 
 msgid " Selected Actions:"
@@ -204,7 +206,7 @@ msgid "%s is currently being used in the Display Filter"
 msgstr "%s は現在表示フィルターに使用されています"
 
 msgid "%s is not allowed for the selected item"
-msgstr "%s は選択した項目用に許可されていません"
+msgstr "%s は選択した項目では許可されていません"
 
 msgid "%s is not in the current region and will be skipped"
 msgstr "%s は現行のリージョンに含まれていないため省略されます"
@@ -216,7 +218,7 @@ msgid "%s must be alphanumeric characters and underscores without spaces"
 msgstr "%s は英数文字およびアンダースコアから構成されている必要があり、スペースは使用できません"
 
 msgid "%s must be an integer"
-msgstr "%s は整数であることが必要です"
+msgstr "%s には整数を指定する必要があります"
 
 msgid "%s must be configured"
 msgstr "%s の設定が必要です"
@@ -225,7 +227,7 @@ msgid "%s must be entered to perform LDAP Group Look Up"
 msgstr "LDAP グループ検索を実行するためには %s の入力が必要です"
 
 msgid "%s must be numeric"
-msgstr "%s は数字であることが必要です"
+msgstr "%s には数字を指定する必要があります"
 
 msgid "%s must be selected"
 msgstr "%s の選択が必要です"
@@ -270,8 +272,8 @@ msgid "%s tab is not available until at least 1 field has been selected"
 msgstr "フィールドが最低 1 つ選択されていない場合 %s タブは利用できません "
 
 msgid ""
-"%s to validate against, Username and matching password fields are needed to pe"
-"rform verification of credentials"
+"%s to validate against, Username and matching password fields are needed to "
+"perform verification of credentials"
 msgstr "検証対象の %s、ユーザー名および一致するパスワードフィールドは、認証情報を確認するために必要です"
 
 msgid "%s was cancelled by the user"
@@ -392,21 +394,21 @@ msgid "%{typ} %{model} \"%{name}\" (current)"
 msgstr "%{typ} %{model} \"%{name}\" (current)"
 
 msgid ""
-"%{typ} Request was Submitted, you will be notified when your %{title} are read"
-"y"
-msgstr "%{typ} リクエストが送信されました。あなたの %{title} の準備ができた時点で通知が送信されます"
+"%{typ} Request was Submitted, you will be notified when your %{title} are "
+"ready"
+msgstr "%{typ} リクエストが送信されました。%{title} の準備ができた時点で通知が送信されます"
 
 msgid ""
-"%{typ} Request was re-submitted, you will be notified when your %{title} are r"
-"eady"
-msgstr "%{typ} リクエストが再送信されました。あなたの %{title} の準備ができた時点で通知が送信されます"
+"%{typ} Request was re-submitted, you will be notified when your %{title} are "
+"ready"
+msgstr "%{typ} リクエストが再送信されました。%{title} の準備ができた時点で通知が送信されます"
 
 msgid "%{typ} in %{model} \"%{name}\""
 msgstr "%{model} \"%{name}\" 内の %{typ} "
 
 msgid ""
-"%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone"
-"}\""
+"%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone "
+"\"%{zone}\""
 msgstr "%{typ} 設定が CFME サーバー \"%{name} [%{server_id}]\" のゾーン \"%{zone}\" に保存されました"
 
 msgid "%{val} missing for %{field}"
@@ -469,7 +471,8 @@ msgstr "(オプション) 代替サービスのアドレス"
 msgid "(optional) your HTTP proxy information"
 msgstr "(オプション)  HTTP プロキシー情報"
 
-msgid "* 'Name' and 'Single Value' fields cannot be edited after adding a category."
+msgid ""
+"* 'Name' and 'Single Value' fields cannot be edited after adding a category."
 msgstr "* '名前' および '単一値' フィールドは、カテゴリーの追加後に編集することができません。"
 
 msgid "* Base the report on"
@@ -478,26 +481,29 @@ msgstr "* レポートのベース"
 msgid "* Cannot be changed while this Alert belongs to an Alert Profile."
 msgstr "* このアラートがアラートプロファイルに属している間は変更できません。"
 
-msgid "* Caution: Changing these fields will clear all selected values below them!"
+msgid ""
+"* Caution: Changing these fields will clear all selected values below them!"
 msgstr "* 注意: これらのフィールドを変更すると、それらのフィールドの下で選択したすべての値がクリアされます!"
 
-msgid "* Changing the Time Zone will reset the Starting Date and Time fields below"
+msgid ""
+"* Changing the Time Zone will reset the Starting Date and Time fields below"
 msgstr "* タイムゾーンを変更すると、以下の開始日と時間フィールドがリセットされます。"
 
-msgid "* Changing the Zone will reset all of this Server's priorities to secondary."
+msgid ""
+"* Changing the Zone will reset all of this Server's priorities to secondary."
 msgstr "* ゾーンを変更すると、このサーバーの優先順位がすべて「セカンダリー」にリセットされます。"
 
 msgid ""
-"* Checking this box will remove this setting from all other PXE Images on this"
-" PXE Server"
+"* Checking this box will remove this setting from all other PXE Images on "
+"this PXE Server"
 msgstr "* このボックスをチェックすると、この PXE サーバーにある他のすべての PXE イメージからこの設定が削除されます"
 
 msgid "* Click on any MyTag to permanently delete and unassign it."
 msgstr "* MyTag を永久削除し、割り当て解除するには、それをクリックしてください。"
 
 msgid ""
-"* Daily charts only include days for which all 24 hours of data has been colle"
-"cted."
+"* Daily charts only include days for which all 24 hours of data has been "
+"collected."
 msgstr "* 日次チャートには、24 時間分のデータすべてが収集される日のみが含まれます。"
 
 msgid "* Dashboard name cannot be changed"
@@ -522,13 +528,13 @@ msgid "* Fields are read only for default Widgets"
 msgstr "* デフォルトウィジェットの場合、フィールドは読み取り専用になります。"
 
 msgid ""
-"* If all Conditions are removed from a Policy, it will be unconditional and al"
-"ways evaluate to true."
+"* If all Conditions are removed from a Policy, it will be unconditional and "
+"always evaluate to true."
 msgstr "* ポリシーからすべての条件が削除された場合は、無条件となり常に true と評価されます。"
 
 msgid ""
-"* Information shown is based on available trend data from %s to %s in the %s t"
-"ime zone."
+"* Information shown is based on available trend data from %s to %s in the %s "
+"time zone."
 msgstr "* 表示されている情報は %s から %s (タイムゾーン %s) の入手可能なトレンドデータに基づいています。"
 
 msgid "* Information shown is based on available trend data going back %s."
@@ -538,8 +544,8 @@ msgid "* Items in"
 msgstr "* 次の項目"
 
 msgid ""
-"* Items in <font color=\"red\"><i>red italics</i></font> do not change the outco"
-"me of the scope or expression."
+"* Items in <font color=\"red\"><i>red italics</i></font> do not change the "
+"outcome of the scope or expression."
 msgstr "* <font color=\"red\"><i>赤字イタリック</i></font> の項目はスコープまたは数式の結果を変更しません。"
 
 msgid "* No Actions are configured for this Event."
@@ -612,8 +618,8 @@ msgid "10 Minutes"
 msgstr "10 分"
 
 msgid ""
-"2 - Specify the VM Options to define the source of the values used for the pla"
-"n calculations."
+"2 - Specify the VM Options to define the source of the values used for the "
+"plan calculations."
 msgstr "2 - 計画の計算に使用する値のソースを定義するために VM オプションを指定してください。"
 
 msgid "2 Weeks before retirement"
@@ -628,7 +634,8 @@ msgstr "3 - ターゲット %s または %s を限定するにはターゲット
 msgid "30 Days before retirement"
 msgstr "リタイアの30日前"
 
-msgid "4 - Change the Trend Options used to calculate the daily trends, if desired."
+msgid ""
+"4 - Change the Trend Options used to calculate the daily trends, if desired."
 msgstr "4 - 毎日のトレンドを計算するためのトレンドオプションを変更することができます。"
 
 msgid "5 - Press the Submit button."
@@ -719,8 +726,8 @@ msgid "Access URL"
 msgstr "アクセス URL"
 
 msgid ""
-"Accessing Management Engine from multiple tabs or windows of the same browser "
-"on a single machine."
+"Accessing Management Engine from multiple tabs or windows of the same "
+"browser on a single machine."
 msgstr "単一マシンの同じブラウザーの複数タブまたはウィンドウから管理エンジンにアクセスしています。"
 
 msgid "Account"
@@ -937,8 +944,8 @@ msgid "All (%s)"
 msgstr "すべて (%s)"
 
 msgid ""
-"All Datastore customizations will be lost. Are you sure you want to reset all "
-"classes and instances to default?"
+"All Datastore customizations will be lost. Are you sure you want to reset "
+"all classes and instances to default?"
 msgstr "カスタマイズされたデータストアがすべて削除されます。すべてのクラスとインスタンスをデフォルトにリセットしますか?"
 
 msgid "All Files"
@@ -1110,8 +1117,8 @@ msgid "Are you sure you want to remove '%s'from the Dashboard?"
 msgstr "'%s' をダッシュボードから削除してもよろしいですか?"
 
 msgid ""
-"Are you sure you want to remove the '%{a_parent}[%{a}]' assignment from all of"
-" the items below?"
+"Are you sure you want to remove the '%{a_parent}[%{a}]' assignment from all "
+"of the items below?"
 msgstr "'%{a_parent}[%{a}]' の割り当てを以下のすべての項目から削除してもよろしいですか?"
 
 msgid "Are you sure you want to remove this Custom Image?"
@@ -1256,7 +1263,7 @@ msgid "Authentication|Credentials changed on"
 msgstr "認証情報の変更日"
 
 msgid "Authentication|Fingerprint"
-msgstr "指紋"
+msgstr "フィンガープリント"
 
 msgid "Authentication|Last invalid on"
 msgstr "最終無効日"
@@ -1397,10 +1404,10 @@ msgid "Basic Report Info"
 msgstr "基本レポート情報"
 
 msgid "Belongs to Alert Profiles"
-msgstr "アラートプロファイルへの所属"
+msgstr "アラートプロファイルに所属"
 
 msgid "Belongs to Profiles"
-msgstr "プロファイルへの所属"
+msgstr "プロファイルに所属"
 
 msgid "Best Fit %s"
 msgstr "Best Fit %s"
@@ -1561,7 +1568,8 @@ msgstr "CFME データベース設定が正常に検証されました"
 msgid "CFME Log"
 msgstr "CFME ログ"
 
-msgid "CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
+msgid ""
+"CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
 msgstr "CFME サーバー \"%{name}\" をロール \"%{role_description}\" の %{priority} に設定する"
 
 msgid "CFME Version"
@@ -1604,8 +1612,8 @@ msgid "Calculations"
 msgstr "計算"
 
 msgid ""
-"Can not delete folder, one or more reports in the selected folder are not owne"
-"d by your group"
+"Can not delete folder, one or more reports in the selected folder are not "
+"owned by your group"
 msgstr "フォルダーを削除できません。選択したフォルダー中の 1 つ以上のレポートがあなたのグループによって所有されていません"
 
 msgid "Cancel"
@@ -1639,8 +1647,8 @@ msgid "Cannot display binary content"
 msgstr "バイナリーコンテンツを表示できません"
 
 msgid ""
-"Cannot start log collection, a log collection is already in progress within th"
-"is scope"
+"Cannot start log collection, a log collection is already in progress within "
+"this scope"
 msgstr "ログ収集を開始できません。このスコープのログ収集がすでに進行中です"
 
 msgid "Cannot start log collection, requires a started server"
@@ -1700,7 +1708,8 @@ msgstr "カテゴリータグエントリー"
 msgid "Caution:"
 msgstr "注意:"
 
-msgid "Caution: Changing the Database settings could make the Server unstartable!"
+msgid ""
+"Caution: Changing the Database settings could make the Server unstartable!"
 msgstr "注意: データベースの設定を変更すると、サーバーを起動できなくなる可能性があります!"
 
 msgid "Caution: Manual changes to configuration files can disable the Server!"
@@ -2238,11 +2247,11 @@ msgid "Collect for All %s"
 msgstr "すべての %s を収集"
 
 msgid ""
-"Collect for All %s must be checked to be able to collect C & U data from Cloud"
-" Providers such as Red Hat OpenStack or Amazon EC2"
+"Collect for All %s must be checked to be able to collect C & U data from "
+"Cloud Providers such as Red Hat OpenStack or Amazon EC2"
 msgstr ""
-"Red Hat OpenStack または Amazon EC2 などのクラウドプロバイダーから C & U データを収集できるように、すべての %s の収"
-"集をチェックする必要があります。"
+"Red Hat OpenStack または Amazon EC2 などのクラウドプロバイダーから C & U データを収集できるように、すべての %s "
+"の収集をチェックする必要があります。"
 
 msgid "Collect for All Datastores"
 msgstr "すべてのデータストアの収集"
@@ -2455,8 +2464,8 @@ msgid "Configuration (%s)"
 msgstr "設定 (%s)"
 
 msgid ""
-"Configuration File selection can not be changed until changes are saved or res"
-"et."
+"Configuration File selection can not be changed until changes are saved or "
+"reset."
 msgstr "設定ファイルの選択は、変更が保存またはリセットされるまで変更することができません。"
 
 msgid "Configuration File to Edit"
@@ -2603,6 +2612,12 @@ msgstr "記録を統合すると、レポート内に詳細の記録が表示さ
 msgid "Container"
 msgstr "コンテナー"
 
+msgid "Pods (%s)"
+msgstr "ポッド (%s)"
+
+msgid "Pods (0)"
+msgstr "ポッド (0)"
+
 msgid "Container Nodes (%s)"
 msgstr "コンテナーノード (%s)"
 
@@ -2617,6 +2632,9 @@ msgstr "コンテナーサービス (0)"
 
 msgid "Container definition"
 msgstr "コンテナー定義"
+
+msgid "Pod"
+msgstr "ポッド"
 
 msgid "Container node"
 msgstr "コンテナーノード"
@@ -2648,6 +2666,27 @@ msgstr "メモリー"
 msgid "ContainerDefinition|Name"
 msgstr "名前"
 
+msgid "Pod|Creation timestamp"
+msgstr "作成タイムスタンプ"
+
+msgid "Pod|Dns policy"
+msgstr "DNS ポリシー"
+
+msgid "Pod|Ems ref"
+msgstr "EMS 参照"
+
+msgid "Pod|Name"
+msgstr "名前"
+
+msgid "Pod|Namespace"
+msgstr "名前空間"
+
+msgid "Pod|Resource version"
+msgstr "リソースバージョン"
+
+msgid "Pod|Restart policy"
+msgstr "再起動ポリシー"
+
 msgid "ContainerNode|Creation timestamp"
 msgstr "作成タイムスタンプ"
 
@@ -2655,13 +2694,13 @@ msgid "ContainerNode|Ems ref"
 msgstr "EMS 参照"
 
 msgid "ContainerNode|Identity infra"
-msgstr "ID インフラ"
+msgstr "Identity インフラ"
 
 msgid "ContainerNode|Identity machine"
-msgstr "CPU コア"
+msgstr "Identity マシン"
 
 msgid "ContainerNode|Identity system"
-msgstr "ID システム"
+msgstr "Identity システム"
 
 msgid "ContainerNode|Lives on type"
 msgstr "ライブのタイプ"
@@ -3114,8 +3153,8 @@ msgid "Database backup"
 msgstr "データベースのバックアップ"
 
 msgid ""
-"Database settings successfully saved, they will take effect upon CFME Server r"
-"estart"
+"Database settings successfully saved, they will take effect upon CFME Server "
+"restart"
 msgstr "データベースの設定が正常に保存されました。この設定は CFME サーバーが再起動した時点で有効になります"
 
 msgid "DatabaseBackup|Name"
@@ -3224,10 +3263,12 @@ msgstr "%s という名前のフィルターを削除"
 msgid "Deleting the '%s' LDAP Server, are you sure?"
 msgstr "'%s'　LDAP サーバーを削除します。実行してもよろしいですか?"
 
-msgid "Deleting the '%s' entry will also unassign it from all items, are you sure?"
+msgid ""
+"Deleting the '%s' entry will also unassign it from all items, are you sure?"
 msgstr "'%s' エントリーを削除すると、すべての項目から割り当てが解除されます。実行してもよろしいですか?"
 
-msgid "Deleting the MyTag '%s' will also unassign it from all items, are you sure?"
+msgid ""
+"Deleting the MyTag '%s' will also unassign it from all items, are you sure?"
 msgstr "マイタグ '%s' を削除するとすべての項目から割当が解除されます。実行してもよろしいですか? "
 
 msgid "Deployment Roles"
@@ -3639,12 +3680,12 @@ msgid "Edit Tags for Configured Systems"
 msgstr "設定済みシステムのタグの編集"
 
 msgid ""
-"Edit aborted!  CFME does not support the browser's back button or access from "
-"multiple tabs or windows of the same browser.  Please close any duplicate sess"
-"ions before proceeding."
+"Edit aborted!  CFME does not support the browser's back button or access "
+"from multiple tabs or windows of the same browser.  Please close any "
+"duplicate sessions before proceeding."
 msgstr ""
-"編集が中止されました!  CFME はブラウザーの「戻る」ボタン、または同一ブラウザーの複数タブ/ウィンドウからのアクセスをサポートしていません。重複したセ"
-"ッションを終了してから続行してください。"
+"編集が中止されました!  CFME はブラウザーの「戻る」ボタン、または同一ブラウザーの複数タブ/"
+"ウィンドウからのアクセスをサポートしていません。重複したセッションを終了してから続行してください。"
 
 msgid "Edit of %s was cancelled by the user"
 msgstr "%s の編集がユーザーによりキャンセルされました"
@@ -3917,8 +3958,8 @@ msgid "Error during '%s': "
 msgstr "'%s' 時のエラー: "
 
 msgid ""
-"Error during Orchestration Template creation: new template content cannot be e"
-"mpty"
+"Error during Orchestration Template creation: new template content cannot be "
+"empty"
 msgstr "オーケストレーションテンプレートの作成時のエラー: 新しいテンプレートコンテンツを空にすることはできません"
 
 msgid "Error during Orphaned Records delete for user %s: "
@@ -3931,8 +3972,8 @@ msgid "Error during sending test email: "
 msgstr "メール送信テスト時のエラー: "
 
 msgid ""
-"Error during upload: incorrect Dialog format, only service dialogs can be impo"
-"rted"
+"Error during upload: incorrect Dialog format, only service dialogs can be "
+"imported"
 msgstr "アップロード時のエラー: ダイアログ形式が間違っています、サービスダイアログのみがインポート可能です"
 
 msgid "Error during upload: one of the DialogField types is not supported"
@@ -4185,8 +4226,8 @@ msgid "Fields"
 msgstr "フィールド"
 
 msgid ""
-"Fields not added: Adding the selected %{count} fields will exceed the maximum "
-"of %{max} fields"
+"Fields not added: Adding the selected %{count} fields will exceed the "
+"maximum of %{max} fields"
 msgstr "フィールドが追加されませんでした: 選択した %{count} フィールドの追加は %{max} フィールド最大数を超えます"
 
 msgid "File"
@@ -4265,7 +4306,7 @@ msgid "Filesystem|Owner"
 msgstr "所有者"
 
 msgid "Filesystem|Permissions"
-msgstr "許可"
+msgstr "権限"
 
 msgid "Filesystem|Product version"
 msgstr "製品バージョン"
@@ -4409,7 +4450,7 @@ msgid "Flavor|Supports paravirtual"
 msgstr "準仮想化のサポート"
 
 msgid "Floating ip"
-msgstr "フローティング IP"
+msgstr "Floating IP"
 
 msgid "FloatingIp|Address"
 msgstr "アドレス"
@@ -4910,8 +4951,8 @@ msgid "If"
 msgstr "If"
 
 msgid ""
-"If this widget is new or has just been added to your dashboard, the data is be"
-"ing generated and should be available soon."
+"If this widget is new or has just been added to your dashboard, the data is "
+"being generated and should be available soon."
 msgstr "データ収集中のため、新規ウィジェットまたはダッシュボードに追加されたばかりのウィジェットはしばらくしてから利用可能になります。"
 
 msgid "Image"
@@ -5154,8 +5195,8 @@ msgid "LDAP Host Name"
 msgstr "LDAP ホスト名"
 
 msgid ""
-"LDAP Host Name and Port fields are needed to perform verification of LDAP Sett"
-"ings"
+"LDAP Host Name and Port fields are needed to perform verification of LDAP "
+"Settings"
 msgstr "LDAP ホスト名とポートフィールドが LDAP 設定の検証の実行に必要です。"
 
 msgid "LDAP Host Names"
@@ -5414,8 +5455,8 @@ msgid "LdapUser|Zip"
 msgstr "ZIP"
 
 msgid ""
-"Leave all options unchecked to show the original column value from the first r"
-"ecord in the group."
+"Leave all options unchecked to show the original column value from the first "
+"record in the group."
 msgstr "グループ内の最初の記録にある元の列値を表示するには、すべてのオプションのチェックを外したままにします。"
 
 msgid "Level"
@@ -5553,7 +5594,8 @@ msgstr "ログ"
 msgid "Login"
 msgstr "ログイン"
 
-msgid "Login not allowed, User's %s is missing. Please contact the administrator"
+msgid ""
+"Login not allowed, User's %s is missing. Please contact the administrator"
 msgstr "ログインが許可されませんでした、ユーザーの %s が見つかりません。管理者にお問い合わせください"
 
 msgid "Logs for this CFME Server are not available for viewing"
@@ -7993,15 +8035,16 @@ msgstr "使用できる選択肢がありません"
 msgid "No Class found for explorer tree node type '%s'"
 msgstr "エクスプローラーツリーノードタイプ '%s' のクラスが見つかりませんでした"
 
-msgid "No Dashboards are defined for this group. Default dashboard will be shown."
+msgid ""
+"No Dashboards are defined for this group. Default dashboard will be shown."
 msgstr "このグループに定義されたダッシュボードはありません。デフォルトダッシュボードが表示されます。"
 
 msgid "No Datastores found in the current region."
 msgstr "現在のリージョンにデータストアが見つかりません"
 
 msgid ""
-"No Default Repository SmartProxy is configured, contact your CFME Administrato"
-"r"
+"No Default Repository SmartProxy is configured, contact your CFME "
+"Administrator"
 msgstr "デフォルトのリポジトリー SmartProxy が設定されていません。CFME 管理者にお問い合わせください。"
 
 msgid "No Dialog"
@@ -8034,7 +8077,8 @@ msgstr "ポリシーが定義されていません。"
 msgid "No Policy Profiles available."
 msgstr "利用可能なポリシープロファイルがありません。"
 
-msgid "No Policy scope defined, the scope of this policy includes all elements."
+msgid ""
+"No Policy scope defined, the scope of this policy includes all elements."
 msgstr "ポリシースコープが定義されていません。このポリシーのスコープはすべての要素を含んでいます。"
 
 msgid "No RSS Feed data found"
@@ -8118,12 +8162,13 @@ msgstr "チャートデータが見つかりませんでした"
 msgid "No child VMs to move right, no action taken"
 msgstr "右側に移動する子 VM はありません。アクションは実行されません"
 
-msgid "No common configuration profiles available for the selected configured %s"
+msgid ""
+"No common configuration profiles available for the selected configured %s"
 msgstr "選択された設定済みの %s に利用可能な共通設定プロファイルがありません。"
 
 msgid ""
-"No conditions defined. This policy is unconditional and will ALWAYS return tru"
-"e."
+"No conditions defined. This policy is unconditional and will ALWAYS return "
+"true."
 msgstr "条件が定義されていません。このポリシーは無条件で常に「true」を返します。"
 
 msgid "No custom image has been uploaded"
@@ -8133,8 +8178,8 @@ msgid "No data found."
 msgstr "データが見つかりませんでした。"
 
 msgid ""
-"No drift history found, an Analysis or Virtual Black Box Synchronization for t"
-"his VM may need to be run."
+"No drift history found, an Analysis or Virtual Black Box Synchronization for "
+"this VM may need to be run."
 msgstr "ドリフト履歴が見つかりません。この VM 用に分析または仮想ブラックボックス同期の実行が必要になる可能性があります。"
 
 msgid "No events available for this timeline"
@@ -8207,8 +8252,8 @@ msgid "Non-VM Files"
 msgstr "VM 以外のファイル"
 
 msgid ""
-"Non-admin users can not access the system until at least 1 VM/Instance has bee"
-"n discovered"
+"Non-admin users can not access the system until at least 1 VM/Instance has "
+"been discovered"
 msgstr "管理者以外のユーザーは 1 つ以上の  VM/インスタンスが検出されるまでシステムにアクセスできません"
 
 msgid "None"
@@ -8241,7 +8286,8 @@ msgstr "注:"
 msgid "Note: Fields marked with * are required."
 msgstr "注* 印のついたフィールドは必須です。"
 
-msgid "Note: Gap Collection is only available for VMware vSphere Infrastructures"
+msgid ""
+"Note: Gap Collection is only available for VMware vSphere Infrastructures"
 msgstr "注: ギャップ収集は VMware vSphere インフラストラクチャーの場合のみ有効です。"
 
 msgid "Note: Only Time Profiles with 'Roll Up Performance' set are shown."
@@ -8322,7 +8368,9 @@ msgstr "1 回"
 msgid "One or more %{model} must be selected to %{task}"
 msgstr "%{task} には 1 つ以上の %{model} が選択されている必要があります"
 
-msgid "One or more selected reports are not owned by your group, they cannot be moved"
+msgid ""
+"One or more selected reports are not owned by your group, they cannot be "
+"moved"
 msgstr "選択した 1 つ以上のレポートはあなたのグループによって所有されていないため、移動することができません"
 
 msgid "Only 1 Date or Date/Time element can be present in a Dialog"
@@ -10033,8 +10081,8 @@ msgid "Password/Verify Password do not match"
 msgstr "パスワード/検証パスワードが一致しません"
 
 msgid ""
-"Paste is not available, no object information has been copied from the Simulat"
-"ion screen"
+"Paste is not available, no object information has been copied from the "
+"Simulation screen"
 msgstr "貼り付けはできません。シミュレーション画面からコピーされたオブジェクト情報はありません"
 
 msgid "Paste object details for use in a Button."
@@ -10142,43 +10190,6 @@ msgstr "左側のノードを選択して編集します。"
 msgid "Please select an Instance Type from above"
 msgstr "上記からインスタンスタイプを選択してください"
 
-msgid "Pod"
-msgstr ""
-
-#, fuzzy
-msgid "Pods (%s)"
-msgstr "ロール (%s)"
-
-#, fuzzy
-msgid "Pods (0)"
-msgstr "VM (0)"
-
-#, fuzzy
-msgid "Pod|Creation timestamp"
-msgstr "作成タイムスタンプ"
-
-msgid "Pod|Dns policy"
-msgstr ""
-
-#, fuzzy
-msgid "Pod|Ems ref"
-msgstr "EMS 参照"
-
-#, fuzzy
-msgid "Pod|Name"
-msgstr "名前"
-
-#, fuzzy
-msgid "Pod|Namespace"
-msgstr "名前空間"
-
-#, fuzzy
-msgid "Pod|Resource version"
-msgstr "リソースバージョン"
-
-msgid "Pod|Restart policy"
-msgstr ""
-
 msgid "Policies"
 msgstr "ポリシー"
 
@@ -10272,7 +10283,8 @@ msgstr "インポートするには「コミット」を押してください"
 msgid "Press submit to start the Database Vacuum process"
 msgstr "「送信」を押してデータベースバキュームプロセスを開始します。"
 
-msgid "Press the Apply button to import the good records into the CFME database"
+msgid ""
+"Press the Apply button to import the good records into the CFME database"
 msgstr "適正な記録を CFME データベースにインポートするには「適用」ボタンを押してください "
 
 msgid "Press your browser's Back button or click a tab to continue"
@@ -10417,7 +10429,7 @@ msgid "PxeMenu|File name"
 msgstr "ファイル名"
 
 msgid "PxeServer|Access url"
-msgstr "アクセスURI"
+msgstr "アクセス URI"
 
 msgid "PxeServer|Customization directory"
 msgstr "カスタマイズディレクトリー"
@@ -10755,7 +10767,8 @@ msgstr "ユーザー別のレポート結果"
 msgid "Report Selection"
 msgstr "レポート選択"
 
-msgid "Report can not be saved unless sort field has been configured for Charts"
+msgid ""
+"Report can not be saved unless sort field has been configured for Charts"
 msgstr "並べ替えフィールドがチャート用に設定されていない限りレポートを保存することはできません"
 
 msgid "Report cannot be deleted if it's being used by one or more Widgets"
@@ -10782,7 +10795,8 @@ msgstr "レポートは存在しません"
 msgid "Report not found."
 msgstr "レポートが見つかりませんでした"
 
-msgid "Report preview generation returned: Status [%{status}] Message [%{message}]"
+msgid ""
+"Report preview generation returned: Status [%{status}] Message [%{message}]"
 msgstr "レポートプレビュー生成が返されました: ステータス [%{status}] メッセージ [%{message}]"
 
 msgid "Reporting Workers"
@@ -10860,7 +10874,8 @@ msgstr "必須"
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "SSH ログインがデフォルトアカウントに対して無効にされている場合に必須です。"
 
-msgid "Required. Should have privileged access, such as root or administrator."
+msgid ""
+"Required. Should have privileged access, such as root or administrator."
 msgstr "必須情報です。root または管理者などの特権アクセスが必要です。"
 
 msgid "Reserve"
@@ -11137,8 +11152,8 @@ msgid "Running system services of %s"
 msgstr "%s の実行中のシステムサービス"
 
 msgid ""
-"SMTP E-mail Server settings and Test E-mail Address are needed to send test em"
-"ail"
+"SMTP E-mail Server settings and Test E-mail Address are needed to send test "
+"email"
 msgstr "テストメールを送信するには、SMTP メールサーバー設定およびテストメールアドレスが必要です。"
 
 msgid "SNMP Trap"
@@ -11348,7 +11363,8 @@ msgstr "2 番目のバンドユニット:"
 msgid "Secondary (Display) Filter"
 msgstr "セカンダリー (表示) フィルター"
 
-msgid "Secondary (Display) Filter - Filters the rows based on child table fields"
+msgid ""
+"Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr "セカンダリー (表示) フィルター - 子テーブルフィールドに基づく行のフィルタリング"
 
 msgid "Secret Access Key"
@@ -11432,7 +11448,8 @@ msgstr "左側のノードを選択して使用量情報を表示します。"
 msgid "Select a node on the left to view Utilization report."
 msgstr "左側のノードを選択して使用量レポートを表示します。"
 
-msgid "Select a reference VM or Manual Input source to Submit the Planning Options"
+msgid ""
+"Select a reference VM or Manual Input source to Submit the Planning Options"
 msgstr "参照 VM または手動入力情報源を選択して計画オプションを送信"
 
 msgid "Select an Owner:"
@@ -11550,8 +11567,8 @@ msgid "Server Roles"
 msgstr "サーバーロール"
 
 msgid ""
-"Server information, Username and matching password fields are needed to perfor"
-"m verification of credentials"
+"Server information, Username and matching password fields are needed to "
+"perform verification of credentials"
 msgstr "サーバー情報、ユーザー名および一致するパスワードフィールドは認証情報の検証を実行する際に必要です。"
 
 msgid "Server role"
@@ -11818,6 +11835,9 @@ msgstr "%s ストレージアダプターの表示"
 msgid "Show Capacity & Utilization"
 msgstr "容量 & 使用率の表示"
 
+msgid "Show Pods"
+msgstr "ポッドの表示"
+
 msgid "Show Container Nodes"
 msgstr "コンテナーノードの表示"
 
@@ -11844,10 +11864,6 @@ msgstr "親 %s の表示"
 
 msgid "Show Past Dates"
 msgstr "過去の日付を表示"
-
-#, fuzzy
-msgid "Show Pods"
-msgstr "%s の表示"
 
 msgid "Show Refresh Button"
 msgstr "リフレッシュボタンを表示"
@@ -12095,10 +12111,6 @@ msgstr "このクラウドテナントの親 %s を表示"
 msgid "Show this Flavor's parent %s"
 msgstr "このフレーバーの親 %s を表示"
 
-#, fuzzy
-msgid "Show this Pod's parent %s"
-msgstr "この VM の親 %s を表示"
-
 msgid "Show this Security Group's parent %s"
 msgstr "このセキュリティーグループの親 %s を表示"
 
@@ -12113,6 +12125,9 @@ msgstr "この VM の親サービスを表示"
 
 msgid "Show this Vm's parent %s"
 msgstr "この VM の親 %s を表示"
+
+msgid "Show this Pod's parent %s"
+msgstr "このポッドの親 %s を表示"
 
 msgid "Show this container node's parent %s"
 msgstr "このコンテナーノードの親  %s を表示"
@@ -12241,12 +12256,12 @@ msgid "Snapshot|Updated on"
 msgstr "更新日"
 
 msgid ""
-"Software updates have not yet been configured. Select Edit Registration to reg"
-"ister appliances in this region with Red Hat to receive software updates and o"
-"ther benefits."
+"Software updates have not yet been configured. Select Edit Registration to "
+"register appliances in this region with Red Hat to receive software updates "
+"and other benefits."
 msgstr ""
-"ソフトウェア更新はまだ設定されていません。このリージョンのアプリケーションを Red Hat に登録するために「登録の編集」を選択すると、ソフトウエア更新と"
-"他の特典を取得できます。"
+"ソフトウェア更新はまだ設定されていません。このリージョンのアプリケーションを Red Hat "
+"に登録するために「登録の編集」を選択すると、ソフトウエア更新と他の特典を取得できます。"
 
 msgid "Sorry, the username or password you entered is incorrect."
 msgstr "入力したユーザー名またはパスワードが間違っています。"
@@ -12711,50 +12726,48 @@ msgid "Text"
 msgstr "テキスト"
 
 msgid ""
-"The CFME Server is still starting, you have been redirected to the diagnostics"
-" page for problem determination"
+"The CFME Server is still starting, you have been redirected to the "
+"diagnostics page for problem determination"
 msgstr "CFME サーバーが起動中です。問題判別のため診断ページにリダイレクトされました。"
 
 msgid ""
-"The CFME Server is still starting. If this message persists, please contact yo"
-"ur CFME administrator."
+"The CFME Server is still starting. If this message persists, please contact "
+"your CFME administrator."
 msgstr "CFME サーバーがまだ起動中です。このメッセージが消えない場合、CFME 管理者にお問い合わせください。"
 
 msgid ""
-"The Default Repository SmartProxy is not valid, contact your CFME Administrato"
-"r"
+"The Default Repository SmartProxy is not valid, contact your CFME "
+"Administrator"
 msgstr "デフォルトのリポジトリー SmartProxy が無効です。CFME 管理者にお問い合わせください。"
 
 msgid ""
-"The Default Repository SmartProxy no longer exists, contact your CFME Administ"
-"rator"
+"The Default Repository SmartProxy no longer exists, contact your CFME "
+"Administrator"
 msgstr "デフォルトのリポジトリー SmartProxy が存在しません。CFME 管理者にお問い合わせください。"
 
 msgid ""
-"The Default Repository SmartProxy, \"%s\", is not running, contact your CFME Adm"
-"inistrator"
+"The Default Repository SmartProxy, \"%s\", is not running, contact your CFME "
+"Administrator"
 msgstr "デフォルトのリポジトリー SmartProxy \"%s\" が実行されていません。CFME 管理者にお問い合わせください。"
 
 msgid "The Enterprise"
 msgstr "エンタープライズ"
 
 msgid ""
-"The Host Default VNC Port Range ending port must be equal to or higher than th"
-"e starting point"
+"The Host Default VNC Port Range ending port must be equal to or higher than "
+"the starting point"
 msgstr "ホストデフォルト VNC ポート範囲の終了ポートは開始ポイントと等しいかそれより大きい番号である必要があります "
 
 msgid "The Remote Console is connecting"
 msgstr "リモートコンソールに接続しています"
 
 msgid ""
-"The VM has been suspended, powered off or the connection to the server has bee"
-"n lost. \n"
-"This console window will now close."
-msgstr ""
-"VM は中断したか、電源がオフになったか、またはサーバーとの接続が失われました。\n"
-"このコンソールウィンドウは閉じられます。"
+"The VM has been suspended, powered off or the connection to the server has "
+"been lost. \\nThis console window will now close."
+msgstr "VM は中断したか、電源がオフになったか、またはサーバーとの接続が失われました。\\nこのコンソールウィンドウは閉じられます。"
 
-msgid "The check count value must be an integer to commit this expression element"
+msgid ""
+"The check count value must be an integer to commit this expression element"
 msgstr "この式要素をコミットするために、このチェックカウント値は整数でなければなりません"
 
 msgid "The current search details have been reset"
@@ -12778,7 +12791,8 @@ msgstr "選択された %s は有効にされました"
 msgid "The selected %{model} were marked as %{action}"
 msgstr "選択した %{model} は %{action}としてマークが付けられました"
 
-msgid "The selected Filter can not be set as Default because it requires user input"
+msgid ""
+"The selected Filter can not be set as Default because it requires user input"
 msgstr "ユーザー入力が必要であるため、選択したフィルターはデフォルトに設定することができません"
 
 msgid "The selected Filter record was not found"
@@ -12793,21 +12807,24 @@ msgstr "選択したスケジュールが実行のキューに追加されまし
 msgid "The selected Task was cancelled"
 msgstr "選択したタスクがキャンセルされました"
 
-msgid "The selected job no longer exists, Delete all older Tasks was not completed"
+msgid ""
+"The selected job no longer exists, Delete all older Tasks was not completed"
 msgstr "選択したジョブは存在しなくなりました。古いタスクすべての削除は完了していません"
 
-msgid "The server is initializing; access is being retried every 10 seconds %s"
+msgid ""
+"The server is initializing; access is being retried every 10 seconds %s"
 msgstr "サーバーが初期化しています。10 秒ごとにアクセスが再試行されています: %s"
 
-msgid "The test email is being delivered, check \"%s\" to verify it was successful"
+msgid ""
+"The test email is being delivered, check \"%s\" to verify it was successful"
 msgstr "テストメールが送信されています。正常に送信されたかを確認するために \"%s\" をチェックしてください"
 
 msgid "The user is not authorized for this task or item."
 msgstr "ユーザーにはこのタスクまたは項目についての権限がありません。"
 
 msgid ""
-"There is an error in the selected expression element, perhaps it was imported "
-"or edited manually."
+"There is an error in the selected expression element, perhaps it was "
+"imported or edited manually."
 msgstr "選択した式要素にエラーがあります。手動によりインポートまたは編集された可能性があります。"
 
 msgid "Third band unit:"
@@ -12847,11 +12864,12 @@ msgid "This Week (partial)"
 msgstr "今週 (一部)"
 
 msgid ""
-"This element should be removed and recreated or you can report the error to yo"
-"ur CFME administrator."
+"This element should be removed and recreated or you can report the error to "
+"your CFME administrator."
 msgstr "この要素は削除されるか、または再作成される必要があります。または、CFME 管理者にエラーを報告することができます。"
 
-msgid "This page requires the VMware MKS plugin. Install the plugin and try again."
+msgid ""
+"This page requires the VMware MKS plugin. Install the plugin and try again."
 msgstr "このページには VMware MKS プラグインが必要です。プラグインをインストールしてから再試行してください。"
 
 msgid "This policy does not currently respond to any Events."
@@ -12867,13 +12885,13 @@ msgid "This user is limited to the selected items and their children."
 msgstr "このユーザーは選択した項目とその子に制限されます。"
 
 msgid ""
-"This will show the chart and the entire report (all rows) in your browser. Do "
-"you want to proceed?"
+"This will show the chart and the entire report (all rows) in your browser. "
+"Do you want to proceed?"
 msgstr "ブラウザーにチャートとレポート全体 (すべての行) が表示されます。続行しますか?"
 
 msgid ""
-"This will show the entire report (all rows) in your browser. Do you want to pr"
-"oceed?"
+"This will show the entire report (all rows) in your browser. Do you want to "
+"proceed?"
 msgstr "ブラウザーにレポート全体 (すべての行) が表示されます。続行しますか?"
 
 msgid "Thursday"
@@ -12970,8 +12988,8 @@ msgid "To Generate a Chargeback Report"
 msgstr "チャージバックレポートを生成"
 
 msgid ""
-"To configure the Host Default VNC Port Range, both start and end ports are req"
-"uired"
+"To configure the Host Default VNC Port Range, both start and end ports are "
+"required"
 msgstr "ホストのデフォルト VNC ポート範囲を設定するには、開始ポートと終了ポートの両方が必要です"
 
 msgid "Today (partial)"
@@ -13056,13 +13074,13 @@ msgid "URL (i.e. www.mypage.com)"
 msgstr "URL (例: www.mypage.com)"
 
 msgid ""
-"Unable to create a new template copy \"%s\": new template content cannot be empt"
-"y."
+"Unable to create a new template copy \"%s\": new template content cannot be "
+"empty."
 msgstr "新しいテンプレートコピー \"%s\" を作成することはできません: 新しいテンプレートコンテンツを空にすることはできません。"
 
 msgid ""
-"Unable to create a new template copy \"%s\": old and new template content have t"
-"o differ."
+"Unable to create a new template copy \"%s\": old and new template content "
+"have to differ."
 msgstr "新しいテンプレートコピー \"%s\" を作成することはできません: 新旧のテンプレートコンテンツは異なっている必要があります。"
 
 msgid "Unable to initiate scaling: %s"
@@ -13179,7 +13197,8 @@ msgstr "IPMI へのアクセスに使用されます。"
 msgid "Used for access to Web Services."
 msgstr "Web サービスへのアクセスに使用されます。"
 
-msgid "Used to authenticate with OpenStack AMQP Messaging Bus for event handling."
+msgid ""
+"Used to authenticate with OpenStack AMQP Messaging Bus for event handling."
 msgstr "イベント処理のために OpenStack AMQP Messaging Bus による認証に使用されます。"
 
 msgid "Used to gather Capacity & Utilization metrics."
@@ -13351,11 +13370,11 @@ msgid "VM Snapshot Files"
 msgstr "VM スナップショットファイル"
 
 msgid ""
-"VM data will be collected for VMs under selected %s only. Data is collected fo"
-"r a %s and all of its %s when at least one %s is selected."
+"VM data will be collected for VMs under selected %s only. Data is collected "
+"for a %s and all of its %s when at least one %s is selected."
 msgstr ""
-"選択された %s の下にある VM の VM データのみが収集されます。1 つ以上の %s が選択されると、%s とその %s のすべてについてデータが収集"
-"されます。"
+"選択された %s の下にある VM の VM データのみが収集されます。1 つ以上の %s が選択されると、%s とその %s "
+"のすべてについてデータが収集されます。"
 
 msgid "VM successfully removed from service \"%s\""
 msgstr "VM がサービス \"%s\" から正常に削除されました"
@@ -13988,8 +14007,8 @@ msgid "Warn"
 msgstr "警告"
 
 msgid ""
-"Warning: This 'Run Once' timer is in the past and will never run as currently "
-"configured"
+"Warning: This 'Run Once' timer is in the past and will never run as "
+"currently configured"
 msgstr "警告：この '一度実行' タイマーは過去の時間に設定されているため、現在の設定では実行されることはありません "
 
 msgid "Wasted"
@@ -14086,8 +14105,8 @@ msgid "Yesterday"
 msgstr "昨日"
 
 msgid ""
-"You are about to enter fullscreen mode. Press Ctl+Alt to return to windowed mo"
-"de."
+"You are about to enter fullscreen mode. Press Ctl+Alt to return to windowed "
+"mode."
 msgstr "フルスクリーンモードに入ります。ウィンドウモードに戻るには Ctl+Alt を押してください。"
 
 msgid "You are not authorized to view %s"
