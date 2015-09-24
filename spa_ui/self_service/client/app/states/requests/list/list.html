@@ -15,8 +15,8 @@
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
         <span>
-          <span class="title-img">
-            <img class="title-img__logo"/>
+            <span class="request-title-img" ng-if=" ::item.picture.image_href">
+            <img class="request-title-img__logo" src="{{ ::item.picture.image_href }}"/>
           </span>
           {{ item.id }}
         </span>

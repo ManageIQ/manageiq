@@ -26,7 +26,7 @@
 
   /** @ngInject */
   function resolveServiceTemplates(CollectionsApi) {
-    var options = {expand: 'resources', filter: ['display=true']};
+    var options = {expand: 'resources', filter: ['display=true'], attributes: ['picture', 'picture.image_href']};
 
     return CollectionsApi.query('service_templates', options);
   }
@@ -41,7 +41,7 @@
     vm.showDetails = showDetails;
 
     function showDetails(template) {
-      $state.go('marketplace.details', {serviceTemplateId: template.id});
+      $state.go('marketplace.details', {serviceTemplateId: template});
     }
   }
 })();
