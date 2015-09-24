@@ -84,7 +84,7 @@ class OntapFileShareController < CimInstanceController
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
-        page.redirect_to(@breadcrumbs[-2][:url])              # Go to previous breadcrumb
+        page.redirect_to(previous_breadcrumb_url)
       end
     else
       sfs.errors.each do |field, msg|
@@ -102,7 +102,7 @@ class OntapFileShareController < CimInstanceController
     @edit = nil # clean out the saved info
     session[:flash_msgs] = @flash_array.dup                   # Put msgs in session for next transaction
     render :update do |page|
-      page.redirect_to(@breadcrumbs[-2][:url])                # Go to previous breadcrumb
+      page.redirect_to(previous_breadcrumb_url)
     end
   end
 
