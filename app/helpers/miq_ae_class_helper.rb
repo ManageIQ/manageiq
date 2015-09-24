@@ -51,4 +51,8 @@ module MiqAeClassHelper
       "aem"
     end
   end
+
+  def icon_class(cls)
+    cls.to_s.split("::").last.underscore.sub('miq_', 'product product-')
+  end
 end
