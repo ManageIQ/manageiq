@@ -38,7 +38,6 @@ describe ApplicationController do
     end
 
     it "should not raise an error for feature that user has access to" do
-      msg = "The user is not authorized for this task or item."
       lambda do
         controller.send(:assert_privileges, "host_new")
       end.should_not raise_error
@@ -79,6 +78,21 @@ describe ApplicationController do
       @test_user_role[:settings] = {}
       view_yaml = controller.send(:view_yaml_filename, VmCloud.name, {})
       view_yaml.should include("ManageIQ_Providers_CloudManager_Vm.yaml")
+    end
+  end
+
+  context "#previous_breadcrumb_url" do
+    it "should return url when 2 entries" do
+      controller.instance_variable_set(:@breadcrumbs, [{:url => "test_url"}, 'placeholder'])
+      expect(controller.send(:previous_breadcrumb_url)).to eq("test_url")
+    end
+
+    it "should raise for less than 2 entries" do
+      controller.instance_variable_set(:@breadcrumbs, [{}])
+      expect { controller.send(:previous_breadcrumb_url) }.to raise_error
+
+      controller.instance_variable_set(:@breadcrumbs, [])
+      expect { controller.send(:previous_breadcrumb_url) }.to raise_error
     end
   end
 
