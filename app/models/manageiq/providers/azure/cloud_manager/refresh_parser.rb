@@ -27,7 +27,6 @@ module ManageIQ::Providers
         get_series
         get_availability_sets
         get_instances
-        clean_up_extra_flavor_keys
         _log.info("#{log_header}...Complete")
 
         @data
@@ -80,11 +79,8 @@ module ManageIQ::Providers
           :cpus           => s['numberOfCores'], # where are the virtual CPUs??
           :cpu_cores      => s['numberOfCores'],
           :memory         => s['memoryInMB'].to_f,
-
-          # Extra keys
-          :os_disk_size   => s['osDiskSizeInMB'] * 1024,
+          :root_disk_size => s['osDiskSizeInMB'] * 1024,
           :swap_disk_size => s['resourceDiskSizeInMB']
-
         }
         return uid, new_result
       end
@@ -188,21 +184,14 @@ module ManageIQ::Providers
         return if series.nil?
         hardware_hash[:logical_cpus]  = series[:cpus]
         hardware_hash[:memory_cpu]    = series[:memory] # MB
-        hardware_hash[:disk_capacity] = series[:os_disk_size] + series[:swap_disk_size]
+        hardware_hash[:disk_capacity] = series[:root_disk_size] + series[:swap_disk_size]
 
         os_disk = instance.fetch_path('properties', 'storageProfile', 'osDisk')
-        sz      = series[:os_disk_size]
+        sz      = series[:root_disk_size]
 
         add_instance_disk(hardware_hash[:disks], sz, os_disk['name'], os_disk['vhd']) unless sz.zero?
 
         # No data availbale on swap disk? Called temp or resource disk.
-      end
-
-      def clean_up_extra_flavor_keys
-        @data[:flavors].each do |f|
-          f.delete(:os_disk_size)
-          f.delete(:swap_disk_size)
-        end
       end
 
       def get_locations

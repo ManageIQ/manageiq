@@ -179,8 +179,8 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :supports_paravirtual     => flavor[:virtualization_type].include?(:paravirtual),
       :block_storage_based_only => flavor[:ebs_only],
       :cloud_subnet_required    => flavor[:vpc_only],
-      :disk_size                => flavor[:instance_store_size],
-      :disk_count               => flavor[:instance_store_volumes]
+      :ephemeral_disk_size      => flavor[:instance_store_size],
+      :ephemeral_disk_count     => flavor[:instance_store_volumes]
     }
 
     return uid, new_result
@@ -364,7 +364,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
         :cores_per_socket    => 1,
         :logical_cpus        => flavor[:cpus],
         :memory_cpu          => flavor[:memory] / (1024 * 1024), # memory_cpu is in megabytes
-        :disk_capacity       => flavor[:disk_size],
+        :disk_capacity       => flavor[:ephemeral_disk_size],
         :disks               => [], # Filled in later conditionally on flavor
         :networks            => [], # Filled in later conditionally on what's available
       },
@@ -386,10 +386,10 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       new_result.store_path(:hardware, :guest_os, parent_image.fetch_path(:hardware, :guest_os))
     end
 
-    if flavor[:disk_count] > 0
+    if flavor[:ephemeral_disk_count] > 0
       disks = new_result[:hardware][:disks]
-      single_disk_size = flavor[:disk_size] / flavor[:disk_count]
-      flavor[:disk_count].times do |i|
+      single_disk_size = flavor[:ephemeral_disk_size] / flavor[:ephemeral_disk_count]
+      flavor[:ephemeral_disk_count].times do |i|
         add_instance_disk(disks, single_disk_size, i, "Disk #{i}")
       end
     end

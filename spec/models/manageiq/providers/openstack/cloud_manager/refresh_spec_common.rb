@@ -220,11 +220,13 @@ module Openstack
       ManageIQ::Providers::Openstack::CloudManager::Flavor.all.each do |flavor|
         expect(flavor.ext_management_system).to eq @ems
         # TODO(lsmola) expose below to Builder's data
-        expect(flavor.enabled).to               eq true
-        expect(flavor.cpu_cores).to             eq nil
-        expect(flavor.description).to           eq nil
-        expect(flavor.disk_size).to_not         be_nil
-        expect(flavor.disk_count).to            eq flavor.disk_size == 0 ? 0 : 1
+        expect(flavor.enabled).to                 eq true
+        expect(flavor.cpu_cores).to               eq nil
+        expect(flavor.description).to             eq nil
+        expect(flavor.root_disk_size).to_not      be_nil
+        expect(flavor.swap_disk_size).to_not      be_nil
+        expect(flavor.ephemeral_disk_size).to_not be_nil
+        expect(flavor.ephemeral_disk_count).to    eq flavor.ephemeral_disk_size == 0 ? 0 : 1
       end
     end
 

@@ -78,6 +78,8 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :supports_hvm             => nil,
       :supports_paravirtual     => nil,
       :block_storage_based_only => nil,
+      :root_disk_size           => 1_072_693_248,
+      :swap_disk_size           => 71_680
     )
 
     @flavor.ext_management_system.should == @ems
