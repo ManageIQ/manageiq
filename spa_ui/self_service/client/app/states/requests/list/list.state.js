@@ -26,7 +26,7 @@
 
   /** @ngInject */
   function resolveRequests(CollectionsApi) {
-    var options = {expand: 'resources',  attributes: ['picture','picture.image_href']};
+    var options = {expand: 'resources', attributes: ['picture', 'picture.image_href']};
 
     return CollectionsApi.query('service_requests', options);
   }

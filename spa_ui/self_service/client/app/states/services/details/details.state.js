@@ -50,7 +50,7 @@
     }
 
     function removeService() {
-      var removeAction = {'action': 'retire'};
+      var removeAction = {action: 'retire'};
       CollectionsApi.post('services', vm.service.id, {}, removeAction).then(removeSuccess, removeFailure);
 
       function removeSuccess() {
@@ -65,20 +65,19 @@
       EditServiceModal.showModal(vm.service);
     }
 
-    function retireServiceNow(){
-      var data = {"action" : "retire"};
+    function retireServiceNow() {
+      var data = {action: 'retire'};
       CollectionsApi.post('services', vm.service.id, {}, data).then(retireSuccess, retireFailure);
 
-      function retireSuccess(){
+      function retireSuccess() {
         $state.go('services.list');
       }
 
-      function retireFailure(){
-
+      function retireFailure() {
       }
     }
 
-    function retireServiceLater(){
+    function retireServiceLater() {
       RetireServiceModal.showModal(vm.service);
     }
   }
