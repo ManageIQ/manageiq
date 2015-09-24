@@ -59,6 +59,12 @@ describe ServiceTemplate do
       service_with_dialog_options.stack_options.should == new_options
     end
 
+    it "encrypts password when saves to DB" do
+      new_options = {:parameters => {"my_password" => "secret"}}
+      service_with_dialog_options.stack_options = new_options
+      service_with_dialog_options.options[:create_options][:parameters]["my_password"].should == MiqPassword.encrypt("secret")
+    end
+
     it "prefers the orchestration template set by dialog" do
       service_mix_dialog_setter.orchestration_template.should == template_by_setter
       service_mix_dialog_setter.stack_options
@@ -87,8 +93,37 @@ describe ServiceTemplate do
       ProvisionError = MiqException::MiqOrchestrationProvisionError
       ManageIQ::Providers::Amazon::CloudManager.any_instance.stub(:stack_create).and_raise(ProvisionError, 'test failure')
 
-      service_mix_dialog_setter.should_receive(:save_options)
+      service_mix_dialog_setter.should_receive(:save_create_options)
       expect { service_mix_dialog_setter.deploy_orchestration_stack }.to raise_error(ProvisionError)
+    end
+  end
+
+  context '#update_orchestration_stack' do
+    let(:reconfigurable_service) do
+      stack = FactoryGirl.create(:orchestration_stack)
+      service_template = FactoryGirl.create(:service_template_orchestration)
+      service_template.orchestration_template = template_by_setter
+
+      service.service_template = service_template
+      service.orchestration_manager = manager_by_setter
+      service.add_resource(stack)
+      service.update_options = service.build_stack_options_from_dialog(dialog_options)
+      service
+    end
+
+    it 'updates a stack through cloud manager' do
+      OrchestrationStack.any_instance.stub(:raw_update_stack) do |opts|
+        opts[:parameters].should include(
+          'InstanceType'   => 'cg1.4xlarge',
+          'DBRootPassword' => 'admin'
+        )
+        opts[:template].should == template_by_setter.content
+      end
+      reconfigurable_service.update_orchestration_stack
+    end
+
+    it 'saves update options and encrypts password' do
+      reconfigurable_service.options[:update_options][:parameters]['DBRootPassword'].should == MiqPassword.encrypt("admin")
     end
   end
 
@@ -118,5 +153,4 @@ describe ServiceTemplate do
       message.should == 'test failure'
     end
   end
-
 end
