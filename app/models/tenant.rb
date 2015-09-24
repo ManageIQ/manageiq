@@ -64,6 +64,10 @@ class Tenant < ActiveRecord::Base
     self.class.descendants_of(self).where(:divisible => false)
   end
 
+  def accessible_tenant_ids(strategy = nil)
+    (strategy ? send(strategy) : []).append(id)
+  end
+
   def name
     tenant_attribute(:name, :company)
   end

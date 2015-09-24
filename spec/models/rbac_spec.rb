@@ -31,12 +31,12 @@ describe Rbac do
     klass_factory_names.each_slice(2) do |klass, factory_name|
       context "#{klass} basic filtering" do
         before do
-          @owned_object = FactoryGirl.create(factory_name, :tenant => @owner_tenant)
+          @owned_vm = FactoryGirl.create(factory_name, :tenant => @owner_tenant)
         end
 
         it ".search with :userid, finds user's tenant #{klass}" do
           results, = Rbac.search(:class => klass, :results_format => :objects, :userid => @owner_user.userid)
-          expect(results).to eq [@owned_object]
+          expect(results).to eq [@owned_vm]
         end
 
         it ".search with :userid filters out other tenants" do
@@ -48,13 +48,15 @@ describe Rbac do
 
     context "Advanced filtering" do
       before do
-        @owned_object = FactoryGirl.create(:vm_vmware, :tenant => @owner_tenant)
+        @owned_vm           = FactoryGirl.create(:vm_vmware, :tenant => @owner_tenant)
+        @owned_ems          = FactoryGirl.create(:ems_vmware, :tenant => @owner_tenant)
+        @owned_request_task = FactoryGirl.create(:miq_request_task, :tenant => @owner_tenant)
       end
 
       it ".search with User.with_userid finds user's tenant object" do
         User.with_userid(@owner_user.userid) do
           results, = Rbac.search(:class => "Vm", :results_format => :objects)
-          expect(results).to eq [@owned_object]
+          expect(results).to eq [@owned_vm]
         end
       end
 
@@ -67,7 +69,7 @@ describe Rbac do
 
       it ".search with :miq_group_id, finds user's tenant object" do
         results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
-        expect(results).to eq [@owned_object]
+        expect(results).to eq [@owned_vm]
       end
 
       it ".search with :miq_group_id filters out other tenants" do
@@ -89,7 +91,63 @@ describe Rbac do
           @other_user.miq_groups = [@owner_group]
           @other_user.save
           results, = Rbac.search(:class => "Vm", :results_format => :objects)
-          expect(results).to eq [@owned_object]
+          expect(results).to eq [@owned_vm]
+        end
+      end
+
+      context "tenant access strategy of descendant_ids (children)" do
+        it "can't see parent tenant's Vm" do
+          child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+          child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
+          results,            = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => child_group.id)
+          expect(results).to eq []
+        end
+
+        it "can see descendant tenant's Vm" do
+          child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+          @owned_vm.tenant     = child_tenant
+          @owned_vm.save
+          results, = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @owner_group.id)
+          expect(results).to eq [@owned_vm]
+        end
+      end
+
+      context "tenant access strategy of ancestor_ids (parents)" do
+        it "can see parent tenant's EMS" do
+          child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+          child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
+          results,            = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => child_group.id)
+          expect(results).to eq [@owned_ems]
+        end
+
+        it "can't see descendant tenant's EMS" do
+          child_tenant         = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+          @owned_ems.tenant    = child_tenant
+          @owned_ems.save
+          results, = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :miq_group_id => @owner_group.id)
+          expect(results).to eq []
+        end
+      end
+
+      context "tenant access strategy of nil (tenant only)" do
+        it "can see tenant's request task" do
+          results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
+          expect(results).to eq [@owned_request_task]
+        end
+
+        it "can't see parent tenant's request task" do
+          child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+          child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
+          results,            = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => child_group.id)
+          expect(results).to eq []
+        end
+
+        it "can't see descendant tenant's request task" do
+          child_tenant               = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
+          @owned_request_task.tenant = child_tenant
+          @owned_request_task.save
+          results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
+          expect(results).to eq []
         end
       end
     end

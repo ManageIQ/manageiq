@@ -47,6 +47,25 @@ module Rbac
     "VmOrTemplate::ResourcePool"        => :resource_pool,
   }
 
+  # These classes should accept any of the relationship_mixin methods including:
+  #   :parent_ids
+  #   :ancestor_ids
+  #   :child_ids
+  #   :sibling_ids
+  #   :descendant_ids
+  #   ...
+  TENANT_ACCESS_STRATEGY = {
+    'ExtManagementSystem'    => :ancestor_ids,
+    'MiqAeNamespace'         => :ancestor_ids,
+    'MiqRequest'             => nil, # tenant only
+    'MiqRequestTask'         => nil, # tenant only
+    'Provider'               => :ancestor_ids,
+    'ServiceTemplateCatalog' => :ancestor_ids,
+    'ServiceTemplate'        => :ancestor_ids,
+    'Service'                => :descendant_ids,
+    'Vm'                     => :descendant_ids
+  }
+
   NO_SCOPE = :_no_scope_
 
   ########################################################################################
@@ -249,16 +268,20 @@ module Rbac
   end
 
   def self.find_options_for_tenant(klass, user_or_group, find_options = {})
-    tenant_id = user_or_group.try(:current_tenant, :id)
-    return find_options unless tenant_id
+    tenant_ids = klass.accessible_tenant_ids(user_or_group, accessible_tenant_ids_strategy(klass))
+    return find_options if tenant_ids.empty?
 
-    tenant_id_clause = {klass.table_name => {:tenant_id => [tenant_id, nil]}}
+    tenant_ids << nil # Return objects not assigned to a tenant until tenant assignment code is done
+    tenant_id_clause = {klass.table_name => {:tenant_id => tenant_ids}}
     find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause)
     find_options
   end
 
+  def self.accessible_tenant_ids_strategy(klass)
+    TENANT_ACCESS_STRATEGY[klass.to_s]
+  end
+
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options = {}, user_or_group = nil)
-    # TODO: check if these find_options should be duplicated/modified in place
     find_options = find_options_for_tenant(klass, user_or_group, find_options) if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
 
     return find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)     if apply_rbac_to_class?(klass)
