@@ -102,6 +102,11 @@ class ApiController < ApplicationController
   ID_ATTRS = %w(href id)
 
   #
+  # Requester types for authentication
+  #
+  REQUESTER_TYPES = {"ui" => :ui_token_ttl}
+
+  #
   # To skip CSRF token verification as API clients would
   # not have these. They would instead dealing with the /api/auth
   # mechanism.
