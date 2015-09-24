@@ -54,5 +54,4 @@
       :image: timeline
       :text: 'Timelines'
       :title: 'Show Timelines for this #{ui_lookup(:table=>"ems_cloud")}'
-      :url: '/show'
       :url_parms: '?display=timeline'
