@@ -96,25 +96,6 @@
       "note": ""
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "fa060922082a464c758fbe517a07adf6daba5eae6f46bb08fa0f47f7a91a3215",
-      "message": "Possible SQL injection",
-      "file": "app/controllers/application_controller/ci_processing.rb",
-      "line": 1237,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "ExtManagementSystem.exists?(params[:id])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ApplicationController::CiProcessing",
-        "method": "foreman_button_operation"
-      },
-      "user_input": "params[:id]",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Remote Code Execution",
       "warning_code": 24,
       "fingerprint": "5f71c7d78b272c9c25e8892a2531396be07a770d904ed8e5c54b5e48096f2a3b",

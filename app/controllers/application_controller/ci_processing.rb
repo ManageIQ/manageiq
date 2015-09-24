@@ -1234,7 +1234,7 @@ module ApplicationController::CiProcessing
   def foreman_button_operation(method, display_name)
     items = []
     if params[:id]
-      if params[:id].nil? || ExtManagementSystem.exists?(params[:id]).nil?
+      if params[:id].nil? || !ExtManagementSystem.where(:id => params[:id]).exists?
         add_flash(_("%s no longer exists") % ui_lookup(:table => controller_name), :error)
       else
         items.push(params[:id])
