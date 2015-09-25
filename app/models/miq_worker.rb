@@ -185,10 +185,10 @@ class MiqWorker < ActiveRecord::Base
     @corresponding_runner ||= self::Runner.name
   end
 
-  # Grab all the classes in the hierarchy but ActiveRecord::Base and Object (and BasicObject on 1.9)
+  # Grab all the classes in the hierarchy below ActiveRecord::Base
   def self.path_to_my_worker_settings
-    excluded = %w(ActiveRecord::Base Object BasicObject)
-    @path_to_my_worker_settings ||= self.hierarchy.reject {|c| excluded.include?(c.name)}.reverse.collect(&:settings_name)
+    @path_to_my_worker_settings ||=
+      ancestors.grep(Class).select { |c| c < ActiveRecord::Base }.reverse.collect(&:settings_name)
   end
 
   def self.fetch_worker_settings_from_server(miq_server, options = {})

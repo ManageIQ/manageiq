@@ -89,9 +89,9 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def self.request_class
-    if self.is_or_subclass_of?(MiqProvision)
+    if self <= MiqProvision
       MiqProvisionRequest
-    elsif self.is_or_subclass_of?(MiqHostProvision)
+    elsif self <= MiqHostProvision
       MiqHostProvisionRequest
     else
       name.underscore.gsub(/_task$/, "_request").camelize.constantize

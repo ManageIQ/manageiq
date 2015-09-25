@@ -79,31 +79,30 @@ module EmsRefresh
     end
   end
 
-  def self.get_ar_objects(target, id = nil)
+  def self.get_ar_objects(target, single_id = nil)
     # Handle targets passed as a single class/id pair, an array of class/id pairs, an array of references
-    target = [[target, id]] unless id.nil?
-    target = [target] unless target.kind_of?(Array)
-
+    target = [[target, single_id]] unless single_id.nil?
+    return [target] unless target.kind_of?(Array)
     return target unless target[0].kind_of?(Array)
 
     # Group by type for a more optimized search
-    targets_by_type = target.each_with_object(Hash.new {|h, c| h[c] = Array.new}) do |t, h|
+    targets_by_type = target.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(c, id), h|
       # Take care of both String or Class type being passed in
-      c = t[0].kind_of?(Class) ? t[0] : t[0].to_s.constantize
-      if [VmOrTemplate, Host, ExtManagementSystem].none? { |k| c.is_or_subclass_of?(k) }
+      c = c.to_s.constantize unless c.kind_of?(Class)
+      if [VmOrTemplate, Host, ExtManagementSystem].none? { |k| c <= k }
         _log.warn "Unknown target type: [#{c}]."
         next
       end
 
-      h[c] << t[1]
+      h[c] << id
     end
 
     # Do lookups to get ActiveRecord objects
-    return targets_by_type.each_with_object([]) do |(c, ids), a|
+    targets_by_type.each_with_object([]) do |(c, ids), a|
       ids.uniq!
 
       recs = c.where(:id => ids)
-      recs = recs.includes(:ext_management_system) unless c.ancestors.include?(ExtManagementSystem)
+      recs = recs.includes(:ext_management_system) unless c <= ExtManagementSystem
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)
