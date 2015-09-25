@@ -31,7 +31,7 @@ module TenancyMixin
                        elsif respond_to?(:ext_management_system) && ext_management_system
                          ext_management_system.tenant_id
                        else
-                         Tenant.root_tenant.id
+                         Tenant.root_tenant.try(:id)
                        end
   end
 end

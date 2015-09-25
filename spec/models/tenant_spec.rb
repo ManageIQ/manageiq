@@ -585,4 +585,46 @@ describe Tenant do
       expect(default_tenant.get_quotas[:storage_allocated]).to eql expected[:storage_allocated]
     end
   end
+
+  describe "assigning tenants" do
+    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
+
+    it "assigns owning group tenant" do
+      tenant_users = FactoryGirl.create(:miq_user_role, :name => "tenant-users")
+      tenant_group = FactoryGirl.create(:miq_group,
+                                        :miq_user_role => tenant_users,
+                                        :tenant => tenant
+      )
+      vm = FactoryGirl.create(:vm_vmware, :miq_group => tenant_group)
+
+      expect(vm.tenant).to eql tenant
+    end
+
+    it "assigns current user tenant" do
+      tenant_users = FactoryGirl.create(:miq_user_role, :name => "tenant-users")
+      tenant_group = FactoryGirl.create(:miq_group,
+                                        :miq_user_role => tenant_users,
+                                        :tenant => tenant
+      )
+      user = FactoryGirl.create(:user, :userid => 'user', :miq_groups => [tenant_group])
+      User.stub(:current_user => user)
+      vm = FactoryGirl.create(:vm_vmware)
+
+      expect(vm.tenant).to eql tenant
+    end
+
+    it "assigns parent EMS tenant" do
+      ems = FactoryGirl.create(:ems_vmware, :name => 'ems', :tenant => tenant)
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+
+      expect(vm.tenant).to eql tenant
+    end
+
+    it "assigns root tenant" do
+      root_tenant
+      vm = FactoryGirl.create(:vm_vmware)
+
+      expect(vm.tenant).to eql root_tenant
+    end
+  end
 end
