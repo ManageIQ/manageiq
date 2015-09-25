@@ -18,7 +18,6 @@ module MiqAeEngineSpec
 
     context ".deliver" do
       before(:each) do
-        MiqServer.stub(:my_zone).and_return("default")
         @ems              = FactoryGirl.create(:ems_vmware)
         @cluster          = FactoryGirl.create(:ems_cluster)
         @vm               = FactoryGirl.create(:vm_vmware)
