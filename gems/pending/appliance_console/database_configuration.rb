@@ -11,8 +11,6 @@ require 'appliance_console/logging'
 RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
 
 module ApplianceConsole
-  MiqPassword.key_root = "#{RAILS_ROOT}/certs"
-
   class DatabaseConfiguration
     attr_accessor :adapter, :host, :username, :database, :password, :port, :region
 

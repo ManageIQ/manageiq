@@ -100,6 +100,9 @@ TZ_AREAS_MAP     = Hash.new { |_h, k| k }.merge!(
 )
 TZ_AREAS_MAP_REV = Hash.new { |_h, k| k }.merge!(TZ_AREAS_MAP.invert)
 
+require 'util/miq-password'
+MiqPassword.key_root = "#{RAILS_ROOT}/certs"
+
 # Load appliance_console libraries
 require 'appliance_console/utilities'
 require 'appliance_console/logging'
