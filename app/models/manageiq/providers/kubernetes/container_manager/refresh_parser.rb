@@ -1,4 +1,3 @@
-require 'miq-iecunits'
 require 'shellwords'
 
 module ManageIQ::Providers::Kubernetes
@@ -117,7 +116,7 @@ module ManageIQ::Providers::Kubernetes
       )
 
       node_memory = node.status.capacity.memory
-      node_memory &&= MiqIECUnits.string_to_value(node_memory) / 1.megabyte
+      node_memory &&= parse_iec_number(node_memory) / 1.megabyte
 
       new_result[:computer_system] = {
         :hardware => {
@@ -131,7 +130,7 @@ module ManageIQ::Providers::Kubernetes
       }
 
       max_container_groups = node.status.capacity.pods
-      new_result[:max_container_groups] = max_container_groups && MiqIECUnits.string_to_value(max_container_groups)
+      new_result[:max_container_groups] = max_container_groups && parse_iec_number(max_container_groups)
 
       new_result[:container_conditions] = parse_conditions(node)
 
@@ -547,6 +546,16 @@ module ManageIQ::Providers::Kubernetes
           :common_partition        => [volume.gcePersistentDisk.try(:partition),
                                        volume.awsElasticBlockStore.try(:partition)].compact.first
         }
+      end
+    end
+
+    IEC_SIZE_SUFFIXES = %w(Ki Mi Gi Ti)
+    def parse_iec_number(value)
+      exp_index = IEC_SIZE_SUFFIXES.index(value[-2..-1])
+      if exp_index.nil?
+        return Integer(value)
+      else
+        return Integer(value[0..-3]) * 1024**(exp_index + 1)
       end
     end
   end

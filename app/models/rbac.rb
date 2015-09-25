@@ -92,7 +92,7 @@ module Rbac
     return false if klass == Metric
     return false if klass == MetricRollup
     return false if klass == VimPerformanceDaily
-    klass.hierarchy.include?(MetricRollup) || klass.hierarchy.include?(Metric)
+    klass < MetricRollup || klass < Metric
   end
 
   def self.rbac_class(klass)

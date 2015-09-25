@@ -217,7 +217,7 @@ module MiqReport::Generator
         self.build_correlate_tag_cols
       end
 
-    elsif !self.db_options.blank? && self.db_options[:interval] == 'daily' && klass.is_or_subclass_of?(MetricRollup)
+    elsif !db_options.blank? && db_options[:interval] == 'daily' && klass <= MetricRollup
       # Ad-hoc daily performance reports
       #   Daily for: Performance - Clusters...
       associations = includes.is_a?(Hash) ? includes.keys : Array(includes)
