@@ -293,3 +293,24 @@ table.table.table-selectable tbody tr.selected td {
 iframe, .iframe {
   width: 100%; height: 100%;
 }
+
+/* resizer styling */
+
+.resizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  z-index: 600
+}
+.resizer-box {
+  position: absolute;
+  bottom: 40px;
+  left: -18px;
+  width: 38px
+}
+
+.resizer .btn {
+  border-color: #d0d0d0
+}
