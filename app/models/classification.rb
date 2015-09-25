@@ -216,7 +216,7 @@ class Classification < ActiveRecord::Base
   def self.tag_name_split(tag_name)
     parts = tag_name.split("/")
     parts.shift
-    return *parts
+    return parts
   end
 
   # Splits a fully qualified tag into the namespace, category object, and entry object

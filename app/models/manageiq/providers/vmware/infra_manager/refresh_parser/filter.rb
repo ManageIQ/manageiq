@@ -289,7 +289,7 @@ module RefreshParser::Filter
   def vm_parent_rp(vm_mor, data_source)
     parent = data_source[:rp].find { |mor, data| get_mors(data, 'vm').include?(vm_mor) }
     return nil, nil if parent.nil?
-    return *parent
+    return parent
   end
 
   def ems_metadata_inv_by_host_mor(host_mor, data_source)
