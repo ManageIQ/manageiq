@@ -23,8 +23,12 @@ class Provider < ActiveRecord::Base
     end
   end
 
+  def self.short_token
+    parent.name.demodulize
+  end
+
   def image_name
-    self.class.name[/^Provider(.+)/, 1].to_s.underscore
+    self.class.short_token.underscore
   end
 
   def verify_ssl=(val)

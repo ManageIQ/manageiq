@@ -1,12 +1,12 @@
 require "spec_helper"
-require "models/ems_refresh/refreshers/openstack/refresh_spec_common"
+require_relative "refresh_spec_common"
 
 describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   include Openstack::RefreshSpecCommon
 
   before(:each) do
     setup_ems('1.2.3.4', 'password')
-    @environment = :grizzly
+    @environment = :havana
   end
 
   it "will perform a full refresh against RHOS #{@environment}" do
@@ -21,7 +21,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
 
   context "when configured with skips" do
     before(:each) do
-      VMDB::Config.any_instance.stub(:config).and_return(
+      stub_server_configuration(
         :ems_refresh => {:openstack => {:inventory_ignore => [:cloud_volumes, :cloud_volume_snapshots]}}
       )
     end

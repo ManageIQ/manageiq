@@ -152,11 +152,21 @@ class ExtManagementSystem < ActiveRecord::Base
     ExtManagementSystem.leaf_subclasses.detect { |k| k.ems_type == emstype }
   end
 
-  def self.short_name
-    if parent == ManageIQ::Providers
-      "Ems#{name.demodulize.sub(/Manager$/, '')}"
+  def self.short_token
+    if self == ManageIQ::Providers::BaseManager
+      nil
+    elsif parent == ManageIQ::Providers
+      # "Infra"
+      name.demodulize.sub(/Manager$/, '')
     elsif parent != Object
-      "Ems#{parent.name.demodulize}"
+      # "Vmware"
+      parent.name.demodulize
+    end
+  end
+
+  def self.short_name
+    if (t = short_token)
+      "Ems#{t}"
     else
       name
     end
@@ -171,21 +181,11 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def self.provision_class(_via)
-    if const_defined?(:Provision, false)
-      self::Provision
-    else
-      suffix = short_name.sub(/^Ems/, '')
-      "MiqProvision#{suffix}".constantize
-    end
+    self::Provision
   end
 
   def self.provision_workflow_class
-    if const_defined?(:ProvisionWorkflow, false)
-      self::ProvisionWorkflow
-    else
-      suffix = short_name.sub(/^Ems/, '')
-      "MiqProvision#{suffix}Workflow".constantize
-    end
+    self::ProvisionWorkflow
   end
 
   def self.default_blacklisted_event_names

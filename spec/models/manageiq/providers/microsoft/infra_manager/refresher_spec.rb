@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     FactoryGirl.create(:miq_region)
     @ems = FactoryGirl.create(:ems_microsoft_with_authentication, :zone => zone,
         :hostname => "scvmm1111.manageiq.com", :ipaddress => "192.168.252.90", :security_protocol => "ssl")
-    data_file = File.join(File.dirname(__FILE__), %w{.. .. .. tools scvmm_data get_inventory_output.yml})
+    data_file = File.join(File.dirname(__FILE__), %w{.. .. .. .. .. tools scvmm_data get_inventory_output.yml})
 
     # See HACK comment in EmsMicrosoft.raw_connect for details around suppressing
     # the benign GSSAPI warnings printed when the winrm gem is required.

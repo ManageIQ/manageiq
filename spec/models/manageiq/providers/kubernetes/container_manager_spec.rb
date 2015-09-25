@@ -6,6 +6,10 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
     expect(described_class.ems_type).to eq('kubernetes')
   end
 
+  it ".raw_api_endpoint (ipv6)" do
+    expect(described_class.raw_api_endpoint("::1", 123).to_s).to eq "https://[::1]:123"
+  end
+
   context "SmartState Analysis Methods" do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
