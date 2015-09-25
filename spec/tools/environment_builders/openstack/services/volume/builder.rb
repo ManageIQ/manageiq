@@ -33,23 +33,14 @@ module Openstack
 
         def find_or_create_volume_types
           @data.volume_types.each do |volume_type|
-            # TODO(lsmola) Fog is commiiing
-            # @volume_types << volume_type = find_or_create(@service.volume_types, volume_type)
-            @volume_types << volume_type = find(service_volume_types(@service), volume_type)
+            @volume_types << volume_type = find_or_create(@service.volume_types, volume_type)
 
             find_or_create_volumes(volume_type)
           end
         end
 
-        # TODO(lsmola) Delete when in fog
-        def service_volume_types(volume_service)
-          # volume types are not available via the Fog API directly
-          volume_service.request(:expects => 200, :method => "GET", :path => "types").body["volume_types"]
-        end
-
         def find_or_create_volumes(volume_type)
-          # volume_type_name = volume_type.name
-          volume_type_name = volume_type['name']
+          volume_type_name = volume_type.name
           volume_type_data = @data.volumes(volume_type_name)
 
           return if volume_type_data.blank?
