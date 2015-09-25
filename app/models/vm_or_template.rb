@@ -178,6 +178,8 @@ class VmOrTemplate < ActiveRecord::Base
   virtual_has_one   :direct_service,       :class_name => 'Service'
   virtual_has_one   :service,              :class_name => 'Service'
 
+  before_validation :set_tenant_from_group
+
   alias datastores storages    # Used by web-services to return datastores as the property name
 
   alias parent_cluster ems_cluster
@@ -1891,6 +1893,10 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   private
+
+  def set_tenant_from_group
+    self.tenant_id = miq_group.tenant_id if miq_group
+  end
 
   def power_state=(new_power_state)
     super

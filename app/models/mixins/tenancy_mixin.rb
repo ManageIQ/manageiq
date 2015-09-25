@@ -20,18 +20,18 @@ module TenancyMixin
 
   def set_tenant
     # Priority
-    #   Current user
     #   Owning group
+    #   Current user
     #   Parent EMS
     #   Root tenant
-    self.tenant_id = if User.current_user
-                  User.current_user.miq_group.tenant_id
-                elsif respond_to?(:miq_group) && miq_group
-                  miq_group.tenant_id
-                elsif respond_to?(:ext_management_system) && ext_management_system
-                  ext_management_system.tenant_id
-                else
-                  Tenant.root_tenant.id
-                end
+    self.tenant_id ||= if respond_to?(:miq_group) && miq_group
+                         miq_group.tenant_id
+                       elsif User.current_tenant
+                         User.current_tenant.id
+                       elsif respond_to?(:ext_management_system) && ext_management_system
+                         ext_management_system.tenant_id
+                       else
+                         Tenant.root_tenant.id
+                       end
   end
 end

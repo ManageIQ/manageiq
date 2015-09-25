@@ -333,6 +333,10 @@ class User < ActiveRecord::Base
     user.save
   end
 
+  def self.current_tenant
+    current_user.try(:current_tenant)
+  end
+
   # Save the current user from the session object as a thread variable to allow lookup from other areas of the code
   def self.with_userid(userid)
     saved_user   = Thread.current[:user]

@@ -271,7 +271,6 @@ module Rbac
     tenant_ids = klass.accessible_tenant_ids(user_or_group, accessible_tenant_ids_strategy(klass))
     return find_options if tenant_ids.empty?
 
-    tenant_ids << nil # Return objects not assigned to a tenant until tenant assignment code is done
     tenant_id_clause = {klass.table_name => {:tenant_id => tenant_ids}}
     find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause)
     find_options
