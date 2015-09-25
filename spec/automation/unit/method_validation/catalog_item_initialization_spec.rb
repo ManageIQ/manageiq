@@ -78,6 +78,7 @@ describe "CatalogItemInitialization Automate Method" do
       stp.save
       run_automate_method(stp)
       stp.reload
+      check_destination_options(stp.destination, required_options)
       request_task = stp.miq_request_tasks[0].miq_request_tasks[0]
       check_vm_task(request_task, required_options, required_tags)
     end
@@ -95,6 +96,10 @@ describe "CatalogItemInitialization Automate Method" do
     def check_tags(request_task, required_tags)
       tags = request_task.get_tags
       required_tags.each { |k, v| tags[k].should eql(v) }
+    end
+
+    def check_destination_options(service, required_options)
+      required_options.each { |k, v| service.options[:dialog]["dialog_#{k}"].should eql(v) }
     end
   end
 end
