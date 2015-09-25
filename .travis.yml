@@ -40,3 +40,10 @@ before_script:
 - '[[ -z "$TEST_SUITE" ]] || bundle exec rake test:$TEST_SUITE:setup'
 script:
 - bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}
+notifications:
+  webhooks:
+    urls:
+    - https://webhooks.gitter.im/e/7af45001fe6b7a4039f2
+    on_success: change
+    on_failure: always
+    on_start: never
