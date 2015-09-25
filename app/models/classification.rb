@@ -177,7 +177,7 @@ class Classification < ActiveRecord::Base
   def self.categories(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
     cats = self.where(:classifications => {:parent_id => 0}).includes(:tag, :children)
     cats = cats.in_region(region_id) if region_id
-    cats.select { |c| c.tag2ns(c.tag.name) == ns }
+    cats.select { |c| c.ns == ns }
   end
 
   def self.category_names_for_perf_by_tag(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
