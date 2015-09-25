@@ -172,44 +172,6 @@
       "note": ""
     },
     {
-      "warning_type": "Remote Code Execution",
-      "warning_code": 24,
-      "fingerprint": "8b4b19b9cc55af4ccf4ff69f6735f81f8882906436f6b2159082f4a79ca0ea54",
-      "message": "Unsafe reflection method const_get called with model attribute",
-      "file": "app/controllers/ops_controller/diagnostics.rb",
-      "line": 115,
-      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code": "Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OpsController::Diagnostics",
-        "method": "log_depot_edit"
-      },
-      "user_input": "FileDepot.supported_depots.key(params[:log_protocol])",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Remote Code Execution",
-      "warning_code": 24,
-      "fingerprint": "8b4b19b9cc55af4ccf4ff69f6735f81f8882906436f6b2159082f4a79ca0ea54",
-      "message": "Unsafe reflection method const_get called with model attribute",
-      "file": "app/controllers/ops_controller/diagnostics.rb",
-      "line": 145,
-      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code": "Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OpsController::Diagnostics",
-        "method": "log_depot_edit"
-      },
-      "user_input": "FileDepot.supported_depots.key(params[:log_protocol])",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "f16f496f164004e758e1357b50b17298ab92d91a472b730b8141aab2da0e48fa",
