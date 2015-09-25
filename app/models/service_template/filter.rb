@@ -6,7 +6,7 @@ module ServiceTemplate::Filter
       attrs = {'request' => 'SERVICE_PROVISION_INFO', 'message' => 'include_service'}
       st = ServiceTemplate.find(service_template_id)
       obj_array = [parent_svc_task.get_user, st, parent_svc, parent_svc_task]
-      MiqAeEngine.create_automation_attributes_from_obj_array(obj_array, attrs)
+      MiqAeEngine.set_automation_attributes_from_objects(obj_array, attrs)
       uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => parent_svc_task)
       automate_result_include_service_template?(uri, st.name)
     end

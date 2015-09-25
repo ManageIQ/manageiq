@@ -261,10 +261,10 @@ module MiqAeEngine
     end.join(",")
   end
 
-  def self.create_automation_attributes_from_obj_array(objects, attrs_hash)
-    Array.wrap(objects).each do |object|
-      next unless object
+  def self.set_automation_attributes_from_objects(objects, attrs_hash)
+    Array.wrap(objects).compact.each do |object|
       key   = create_automation_attribute_key(object)
+      raise "Key: #{key} already exists in hash" if attrs_hash.key?(key)
       value = create_automation_attribute_value(object)
       attrs_hash[key] = value
     end
