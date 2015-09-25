@@ -8,6 +8,10 @@ class MiqAeYamlImport
     @domain_name = domain
     @options     = options
     @restore     = @options.fetch('restore', false)
+    tenant_id    = @options.fetch('tenant_id', Tenant.root_tenant.try(:id))
+    tenant_obj   = Tenant.find_by!(:id => tenant_id) if tenant_id
+    @tenant      = @options.fetch('tenant', tenant_obj)
+    raise "Tenant object is needed to import automate models" unless @tenant
   end
 
   def import
@@ -71,7 +75,7 @@ class MiqAeYamlImport
     domain_name = domain_yaml.fetch_path('object', 'attributes', 'name')
     domain_obj = MiqAeDomain.find_by_fqname(domain_name, false)
     track_stats('domain', domain_obj)
-    domain_obj ||= add_domain(domain_yaml) unless @preview
+    domain_obj ||= add_domain(domain_yaml, @tenant) unless @preview
     if @options['namespace']
       import_namespace(File.join(domain_folder, @options['namespace']), domain_obj, domain_name)
     else

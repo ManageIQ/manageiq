@@ -5,6 +5,7 @@ module MiqAeDatastoreConverter
   describe "XML2YAML Converter" do
     before(:each) do
       MiqAeDatastore.reset
+      EvmSpecHelper.local_guid_miq_server_zone
     end
 
     after(:each) do

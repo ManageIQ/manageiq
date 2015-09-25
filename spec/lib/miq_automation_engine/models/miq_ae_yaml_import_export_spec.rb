@@ -12,6 +12,8 @@ describe MiqAeDatastore do
     @clear_default_password = 'little_secret'
     @clear_password = 'secret'
     @relations_value = "bedrock relations"
+    EvmSpecHelper.local_guid_miq_server_zone
+    @tenant = Tenant.root_tenant
     create_factory_data("manageiq", 0)
     setup_export_dir
     set_manageiq_values
@@ -564,6 +566,7 @@ describe MiqAeDatastore do
       [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each { |k| k.count.should == 0 }
     end
     import_options = {'preview' => true,
+                      'tenant'  => @tenant,
                       'mode'    => 'add'}.merge(options)
     MiqAeImport.new(domain, import_options).import
 

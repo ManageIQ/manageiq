@@ -3,12 +3,14 @@ include AutomationSpecHelper
 
 describe MiqAeDomain do
   before do
+    EvmSpecHelper.local_guid_miq_server_zone
+    @root_tenant = Tenant.root_tenant
     setup_model
   end
 
   def setup_model
     yaml_file = File.join(File.dirname(__FILE__), 'data', 'domain_test.yaml')
-    import_options = {'yaml_file' => yaml_file, 'preview' => false, 'domain' => '*'}
+    import_options = {'yaml_file' => yaml_file, 'preview' => false, 'domain' => '*', 'tenant_id' => @root_tenant.id}
     MiqAeImport.new('*', import_options).import
     update_domain_attributes('root', :priority => 10, :system => true, :enabled => true)
     update_domain_attributes('user', :priority => 20, :enabled => true)
@@ -26,13 +28,13 @@ describe MiqAeDomain do
 
   context 'Domain Checks' do
     it 'cannot set parent_id in a domain object' do
-      domain = MiqAeDomain.create!(:name => 'Fred')
+      domain = MiqAeDomain.create!(:name => 'Fred', :tenant => @root_tenant)
       ns = MiqAeNamespace.create!(:name => 'NS1')
       expect { domain.update_attributes!(:parent_id => ns.id) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'can set other attributes in a domain object' do
-      domain = MiqAeDomain.create!(:name => 'Fred')
+      domain = MiqAeDomain.create!(:name => 'Fred', :tenant => @root_tenant)
       domain.update_attributes!(:priority => 10, :system => false).should be_true
     end
   end

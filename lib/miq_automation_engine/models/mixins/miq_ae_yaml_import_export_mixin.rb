@@ -22,8 +22,8 @@ module MiqAeYamlImportExportMixin
     attributes.dup.delete_if { |k, v| EXPORT_EXCLUDE_KEYS.any? { |rexp| k =~ rexp || v.blank? } }
   end
 
-  def add_domain(domain_yaml)
-    MiqAeDomain.create!(domain_yaml['object']['attributes'])
+  def add_domain(domain_yaml, tenant)
+    MiqAeDomain.create!(domain_yaml['object']['attributes'].merge(:tenant => tenant))
   end
 
   def add_namespace(fqname)
