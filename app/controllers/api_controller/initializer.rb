@@ -76,7 +76,7 @@ class ApiController
 
         $api_log.info("")
         $api_log.info("Dynamic Configuration")
-        api_config = cfg.config[mod.to_sym].merge(REQUESTER_TYPES["ui"] => fetch_ui_token_ttl(cfg))
+        api_config = cfg.config[mod.to_sym].merge(REQUESTER_TTL_CONFIG["ui"] => fetch_ui_token_ttl(cfg))
         api_config.each { |key, val| log_kv(key, val) }
 
         new_token_mgr(mod, name, api_config)
@@ -90,7 +90,7 @@ class ApiController
 
         options                          = {}
         options[:token_ttl]              = token_ttl.to_i_with_method if token_ttl
-        options[REQUESTER_TYPES["ui"]]   = fetch_ui_token_ttl
+        options[REQUESTER_TTL_CONFIG["ui"]] = fetch_ui_token_ttl
 
         $api_log.info("")
         $api_log.info("Creating new Token Manager for the #{name}")

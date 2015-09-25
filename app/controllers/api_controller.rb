@@ -102,9 +102,9 @@ class ApiController < ApplicationController
   ID_ATTRS = %w(href id)
 
   #
-  # Requester types for authentication
+  # Requester type token ttl's for authentication
   #
-  REQUESTER_TYPES = {"ui" => :ui_token_ttl}
+  REQUESTER_TTL_CONFIG = {"ui" => :ui_token_ttl}
 
   #
   # To skip CSRF token verification as API clients would

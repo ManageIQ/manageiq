@@ -8,7 +8,7 @@ class ApiController
       requester_type = fetch_and_validate_requester_type
       auth_token = @api_token_mgr.gen_token(@module,
                                             :userid           => @auth_user,
-                                            :token_ttl_config => REQUESTER_TYPES[requester_type])
+                                            :token_ttl_config => REQUESTER_TTL_CONFIG[requester_type])
       res = {
         :auth_token => auth_token,
         :token_ttl  => @api_token_mgr.token_get_info(@module, auth_token, :token_ttl),
@@ -52,8 +52,9 @@ class ApiController
 
     def fetch_and_validate_requester_type
       requester_type = params['requester_type']
-      if requester_type && !REQUESTER_TYPES.keys.include?(requester_type)
-        requester_types = REQUESTER_TYPES.keys.join(', ')
+      return unless requester_type
+      REQUESTER_TTL_CONFIG.fetch(requester_type) do
+        requester_types = REQUESTER_TTL_CONFIG.keys.join(', ')
         raise BadRequestError, "Invalid requester_type #{requester_type} specified, valid types are: #{requester_types}"
       end
       requester_type
