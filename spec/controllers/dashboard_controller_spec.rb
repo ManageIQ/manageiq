@@ -122,8 +122,6 @@ describe DashboardController do
 
   context "#main_tab redirects to correct url when maintab is pressed by limited access user" do
     before do
-      MiqRegion.seed
-
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
     end
@@ -146,7 +144,6 @@ describe DashboardController do
 
   context "#start_url_for_user" do
     before do
-      MiqRegion.seed
       MiqShortcut.seed
       controller.stub(:check_privileges).and_return(true)
     end

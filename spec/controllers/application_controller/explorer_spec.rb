@@ -89,8 +89,7 @@ describe VmInfraController do
 
     context "#x_get_tree_region_kids" do
       it "does not return Cloud Providers nodes for Utilization tree" do
-        MiqRegion.seed
-        region = MiqRegion.my_region
+        region = MiqRegion.seed
         ems_cloud = FactoryGirl.create(:ems_amazon)
         ems_infra = FactoryGirl.create(:ems_redhat)
         controller.instance_variable_set(:@sb, {:trees => {:utilization_tree => {:active_node => "root"}}, :active_tree => :utilization_tree})
@@ -106,12 +105,9 @@ describe VmInfraController do
     end
 
     context "#x_get_tree_custom_kids" do
-      before(:each) do
-        MiqRegion.seed
-        @region = MiqRegion.my_region
-      end
-
       it "Return only Infra Providers nodes for Utilization tree" do
+        @region = MiqRegion.seed
+
         ems_cloud = FactoryGirl.create(:ems_amazon)
         ems_infra = FactoryGirl.create(:ems_redhat)
         folder_node_id = {:id => "folder_e_xx-#{MiqRegion.compress_id(@region.id)}"}

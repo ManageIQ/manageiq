@@ -7,7 +7,6 @@ describe Authentication do
 
   context "with miq events seeded" do
     before(:each) do
-      MiqRegion.seed
       MiqEventDefinition.seed
     end
 

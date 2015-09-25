@@ -4,7 +4,6 @@ require 'bcrypt'
 describe "User Password" do
   context "With admin user" do
     before(:each) do
-      MiqRegion.seed
       guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @old = 'smartvm'

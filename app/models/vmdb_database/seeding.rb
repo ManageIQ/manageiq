@@ -19,7 +19,7 @@ module VmdbDatabase::Seeding
       db.last_start_time = connection.last_start_time           if connection.respond_to?(:last_start_time)
       db.data_disk       = self.db_disk_size(db.data_directory) if EvmDatabase.local? && db.data_directory
 
-      db.save
+      db.save!
       db
     end
 

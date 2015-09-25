@@ -1,10 +1,6 @@
 require "spec_helper"
 
 describe RrPendingChange do
-  before(:each) do
-    MiqRegion.seed
-  end
-
   it ".table_name" do
     described_class.table_name.should == "rr#{MiqRegion.my_region_number}_pending_changes"
   end

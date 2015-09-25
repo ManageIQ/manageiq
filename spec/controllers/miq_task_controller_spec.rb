@@ -5,7 +5,6 @@ describe MiqTaskController do
   context "#tasks_condition" do
     subject { controller.send(:tasks_condition, @opts) }
     before do
-      MiqRegion.seed
       @user = FactoryGirl.create(:user, :userid => 'admin')
       controller.stub(:session => @user)
     end

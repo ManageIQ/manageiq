@@ -2,7 +2,6 @@ require "spec_helper"
 
 describe VimPerformanceTag do
   before(:each) do
-    MiqRegion.seed
     @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
 

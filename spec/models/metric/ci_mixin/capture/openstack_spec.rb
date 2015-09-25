@@ -5,7 +5,6 @@ describe ManageIQ::Providers::Openstack::CloudManager::MetricsCapture do
                                      %w(.. .. .. .. tools openstack_data openstack_data_test_helper)))
 
   before :each do
-    MiqRegion.seed
     _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
     @mock_meter_list = OpenstackMeterListData.new

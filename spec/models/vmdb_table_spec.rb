@@ -262,7 +262,6 @@ EOF
 
     context ".export_queue" do
       before(:each) do
-        MiqRegion.seed
         EvmSpecHelper.create_guid_miq_server_zone
         @ids = VmdbTable.find_all_by_name(@populated_tables).collect(&:id)
         @dest_zip = File.join(VmdbTable.export_output_dir, "evm_export.zip")

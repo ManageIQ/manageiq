@@ -103,7 +103,6 @@ describe DialogFieldTagControl do
 
   context "dialog field tag control and Classification seeded" do
     before(:each) do
-      MiqRegion.seed
       cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
       add_entry(cat, :name=>"dev",  :description=>"Development")
       add_entry(cat, :name=>"test", :description=>"Test")

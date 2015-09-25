@@ -194,7 +194,9 @@ class Tenant < ActiveRecord::Base
 
   # NOTE: returns the root tenant
   def self.seed
-    root_tenant || create!(:use_config_for_attributes => true)
+    root_tenant || create!(:use_config_for_attributes => true) do |_|
+      _log.info("Creating root tenant")
+    end
   end
 
   private

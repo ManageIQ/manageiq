@@ -1,12 +1,8 @@
 require "spec_helper"
 
 describe User do
-
   context "id set as Administrator" do
-
     before(:each) do
-      MiqRegion.seed
-
       # create User Role record...
       miq_user_role = FactoryGirl.create(
                       :miq_user_role,
@@ -458,8 +454,6 @@ describe User do
   end
 
   context ".seed" do
-    before { MiqRegion.seed }
-
     it "empty database" do
       User.seed
       expect(User.where(:userid => "admin").first.current_group).to be_nil

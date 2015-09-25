@@ -25,8 +25,6 @@ describe MiqReport do
   end
 
   it "paged_view_search on vmdb_* tables" do
-    MiqRegion.seed
-
     # Create EVM tables/indexes and hourly metric data...
     table = FactoryGirl.create(:vmdb_table_evm, :name => "accounts")
     index = FactoryGirl.create(:vmdb_index, :name => "accounts_pkey", :vmdb_table => table)
@@ -62,8 +60,6 @@ describe MiqReport do
     OS_LIST = %w{_none_ windows ubuntu windows ubuntu}
 
     before(:each) do
-      MiqRegion.seed
-
       # TODO: Move this setup to the examples that need it.
       @tags = {
         2  => "/managed/environment/prod",

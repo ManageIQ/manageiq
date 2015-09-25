@@ -20,7 +20,7 @@ class PxeImageType < ActiveRecord::Base
 
     seed_data.each do |s|
       _log.info("Creating #{s.inspect}")
-      create(s)
+      create!(s)
     end
   end
 

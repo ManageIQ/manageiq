@@ -7,7 +7,6 @@ describe Dialog do
     let(:all_yaml_files) { test_file_path.join("{,*/**/}*.{yaml,yml}") }
 
     before do
-      MiqRegion.seed
       DialogImportService.stub(:new).and_return(dialog_import_service)
       dialog_import_service.stub(:import_all_service_dialogs_from_yaml_file)
     end

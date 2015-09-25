@@ -1,10 +1,6 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
-  before(:each) do
-    MiqRegion.seed
-  end
-
   context "With a user" do
     let(:admin) { FactoryGirl.create(:user, :name => 'admin', :userid => 'admin') }
 

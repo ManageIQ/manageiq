@@ -60,7 +60,6 @@ describe "Widget RSS Content" do
   EOF
 
   before(:each) do
-    MiqRegion.seed
     RssFeed.sync_from_yml_dir
 
     EvmSpecHelper.local_miq_server

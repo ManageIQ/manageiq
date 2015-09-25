@@ -2,8 +2,6 @@ require "spec_helper"
 
 describe MiqReport::ImportExport do
   before do
-    MiqRegion.seed
-
     @user       = FactoryGirl.create(:user_admin)
     @old_report = FactoryGirl.create(:miq_report, 
                                      :name      => "Test Report",

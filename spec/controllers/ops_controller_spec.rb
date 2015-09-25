@@ -3,6 +3,7 @@ require "spec_helper"
 describe OpsController do
   before(:each) do
     EvmSpecHelper.create_guid_miq_server_zone
+    MiqRegion.seed
     set_user_privileges
   end
 
@@ -242,6 +243,7 @@ end
 
 describe OpsController do
   before do
+    MiqRegion.seed
     EvmSpecHelper.local_miq_server
     EvmSpecHelper.seed_specific_product_features("ops_rbac")
     feature = MiqProductFeature.find_all_by_identifier("ops_rbac")
