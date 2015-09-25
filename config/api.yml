@@ -697,6 +697,8 @@
         :identifier: service_edit
       - :name: retire
         :identifier: service_retire
+      - :name: set_ownership
+        :identifier: service_ownership
       - :name: delete
         :identifier: service_delete
     :resource_actions:
@@ -705,6 +707,8 @@
         :identifier: service_edit
       - :name: retire
         :identifier: service_retire
+      - :name: set_ownership
+        :identifier: service_ownership
       :delete:
       - :name: delete
         :identifier: service_delete
