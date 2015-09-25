@@ -284,13 +284,14 @@
       %label.col-md-2.control-label
         = _("Test E-mail Address")
       .col-md-8
-        = text_field_tag("smtp_test_to",
-                          @sb[:new_to],
-                          :maxlength => MAX_DESC_LEN,
-                          :class => "form-control",
-                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-      %td{:align => "right"}
-        = render :partial => 'email_verify_button', :locals => {:id => "#{@sb[:active_tab].split('_').last}"}
+        .input-group
+          = text_field_tag("smtp_test_to",
+                            @sb[:new_to],
+                            :maxlength => MAX_DESC_LEN,
+                            :class => "form-control",
+                            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %span.input-group-btn
+            = render :partial => 'email_verify_button', :locals => {:id => "#{@sb[:active_tab].split('_').last}"}
   %hr
   %h3
     = _("Web Services")
