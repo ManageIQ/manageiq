@@ -2535,17 +2535,17 @@ private
 
   def new_ns
     assert_privileges("miq_ae_namespace_new")
-    new_domain_or_namespace("MiqAeNamespace")
+    new_domain_or_namespace(MiqAeNamespace)
   end
 
   def new_domain
     assert_privileges("miq_ae_domain_new")
-    new_domain_or_namespace("MiqAeDomain")
+    new_domain_or_namespace(MiqAeDomain)
   end
 
-  def new_domain_or_namespace(typ)
+  def new_domain_or_namespace(klass)
     parent_id = x_node == "root" ? nil : from_cid(x_node.split("-").last)
-    @ae_ns = typ.constantize.new(:parent_id => parent_id)
+    @ae_ns = klass.new(:parent_id => parent_id)
     ns_set_form_vars
     @in_a_form = true
     replace_right_cell
