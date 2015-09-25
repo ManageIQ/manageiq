@@ -80,7 +80,7 @@ module ManageIQ::Providers
           :cpu_cores      => s['numberOfCores'],
           :memory         => s['memoryInMB'].to_f,
           :root_disk_size => s['osDiskSizeInMB'] * 1024,
-          :swap_disk_size => s['resourceDiskSizeInMB']
+          :swap_disk_size => s['resourceDiskSizeInMB'] * 1024
         }
         return uid, new_result
       end

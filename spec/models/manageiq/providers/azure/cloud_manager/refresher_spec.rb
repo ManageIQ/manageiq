@@ -78,8 +78,8 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :supports_hvm             => nil,
       :supports_paravirtual     => nil,
       :block_storage_based_only => nil,
-      :root_disk_size           => 1_072_693_248,
-      :swap_disk_size           => 71_680
+      :root_disk_size           => 1023.megabytes,
+      :swap_disk_size           => 70.megabytes
     )
 
     @flavor.ext_management_system.should == @ems
@@ -137,7 +137,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :annotation          => nil,
       :numvcpus            => 1,
       :memory_cpu          => 1792, # MB
-      :disk_capacity       => 1_072_764_928,
+      :disk_capacity       => 1093.megabytes,
       :bitness             => nil,
       :virtualization_type => nil
     )
@@ -217,7 +217,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       :annotation         => nil,
       :numvcpus           => 1,
       :memory_cpu         => 768, # MB
-      :disk_capacity      => 1_072_713_728,
+      :disk_capacity      => 1043.megabytes,
       :bitness            => nil
     )
 

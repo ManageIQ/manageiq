@@ -205,8 +205,14 @@ module ManageIQ::Providers
         :memory               => flavor.ram.megabytes,
         :root_disk_size       => flavor.disk.to_i.gigabytes,
         :swap_disk_size       => flavor.swap.to_i.megabytes,
-        :ephemeral_disk_size  => flavor.ephemeral.to_i.gigabytes,
-        :ephemeral_disk_count => flavor.ephemeral.to_i.gigabytes > 0 ? 1 : 0
+        :ephemeral_disk_size  => flavor.ephemeral.nil? ? nil : flavor.ephemeral.to_i.gigabytes,
+        :ephemeral_disk_count => if flavor.ephemeral.nil?
+                                   nil
+                                 elsif flavor.ephemeral.to_i > 0
+                                   1
+                                 else
+                                   0
+                                 end
       }
 
       return uid, new_result
