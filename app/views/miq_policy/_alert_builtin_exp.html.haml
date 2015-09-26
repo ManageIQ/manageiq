@@ -1,7 +1,7 @@
 - if @edit
   - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
-%tr
+.form-group
   - case option[:name]
   - when :event_types
     %label.control-label.col-md-2
