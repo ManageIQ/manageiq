@@ -133,7 +133,7 @@ describe DashboardController do
     }
     main_tabs.each do |tab, feature|
       it "for tab ':#{tab}'" do
-        seed_specific_product_features(feature)
+        login_as FactoryGirl.create(:user, :features => feature)
         session[:tab_url] = {}
         post :maintab, :tab => tab
         url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
@@ -149,7 +149,7 @@ describe DashboardController do
     end
 
     it "retuns start page url that user has set as startpage in settings" do
-      seed_specific_product_features(%(everything))
+      login_as FactoryGirl.create(:user, :features => "everything")
       controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
 
       controller.stub(:role_allows).and_return(true)
@@ -158,7 +158,7 @@ describe DashboardController do
     end
 
     it "returns first url that user has access to as start page when user doesn't have access to startpage set in settings" do
-      seed_specific_product_features("vm_cloud_explorer")
+      login_as FactoryGirl.create(:user, :features => "vm_cloud_explorer")
       controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
       url = controller.send(:start_url_for_user, nil)
       url.should eq("/vm_cloud/explorer?accordion=instances")

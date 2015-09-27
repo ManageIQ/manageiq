@@ -754,7 +754,7 @@ describe ReportController do
 
   context "ReportController::Schedules" do
     before do
-      seed_specific_product_features("miq_report_schedule_enable", "miq_report_schedule_disable")
+      login_as FactoryGirl.create(:user, :features => %w(miq_report_schedule_enable miq_report_schedule_disable))
     end
 
     context "no schedules selected" do
