@@ -22,9 +22,7 @@ describe ApplicationHelper do
 
   describe "custom_buttons" do
     before(:each) do
-      @miq_user_role = FactoryGirl.create(:miq_user_role, :name => "EvmRole-super_administrator")
-      @miq_group     = FactoryGirl.create(:miq_group, :miq_user_role => @miq_user_role)
-      @user          = FactoryGirl.create(:user, :name => 'wilma', :miq_groups => [@miq_group])
+      @user = FactoryGirl.create(:user, :role => "super_administrator")
     end
 
     context "when record is VM" do
@@ -335,7 +333,7 @@ describe ApplicationHelper do
   describe "#build_toolbar_hide_button" do
     subject { build_toolbar_hide_button(@id) }
     before do
-      @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
+      @user = FactoryGirl.create(:user)
       @record = double("record")
       login_as @user
       @settings = {
@@ -1820,24 +1818,14 @@ describe ApplicationHelper do
       end
 
       it "vm_scan button should be hidden when user does not have access to vm_rules feature" do
-        EvmSpecHelper.seed_specific_product_features("vm_infra_explorer")
-        feature = MiqProductFeature.find_all_by_identifier("vm_infra_explorer")
-        test_user_role = FactoryGirl.create(:miq_user_role,
-                                             :name                 => "test_user_role",
-                                             :miq_product_features => feature)
-        test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-        login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+        feature = EvmSpecHelper.specific_product_features("vm_infra_explorer")
+        login_as FactoryGirl.create(:user, :features => feature)
         subject.should == true
       end
 
       it "vm_scan button should be displayed when user does has access to vm_scan feature" do
-        EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "vm_scan")
-        feature = MiqProductFeature.find_all_by_identifier(%w(vm_infra_explorer vm_scan))
-        test_user_role = FactoryGirl.create(:miq_user_role,
-                                             :name                 => "test_user_role",
-                                             :miq_product_features => feature)
-        test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-        login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+        feature = EvmSpecHelper.specific_product_features("vm_infra_explorer", "vm_scan")
+        login_as FactoryGirl.create(:user, :features => feature)
         subject.should == false
       end
     end
@@ -2540,32 +2528,10 @@ describe ApplicationHelper do
     context "and id = miq_request_delete" do
       let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
       before(:each) do
-        # create User Role record...
-        @miq_user_role = FactoryGirl.create(
-          :miq_user_role,
-          :name      => "EvmRole-super_administrator",
-          :read_only => true
-        )
-
-        @miq_group = FactoryGirl.create(
-          :miq_group,
-          :guid          => "guid",
-          :description   => "EvmGroup-super_administrator",
-          :miq_user_role => @miq_user_role
-        )
-
         MiqServer.stub(:my_server).with(true).and_return(server)
 
         # create User record...
-        @user = FactoryGirl.create(
-          :user_admin,
-          :miq_groups => [@miq_group],
-        )
-
-        @test_role = FactoryGirl.create(
-          :miq_user_role,
-          :name => "test_role"
-        )
+        @user = FactoryGirl.create(:user_admin)
 
         @id = "miq_request_delete"
         login_as @user
@@ -2589,12 +2555,7 @@ describe ApplicationHelper do
       end
 
       it "and requester.name != @record.requester_name" do
-        @miq_group.update_attributes(:miq_user_role => @test_role)
-        user = FactoryGirl.create(
-          :user,
-          :miq_groups     => [@miq_group],
-        )
-        login_as user
+        login_as FactoryGirl.create(:user, :role => "test")
         res = build_toolbar_disable_button("miq_request_delete")
         res.should include("Users are only allowed to delete their own requests")
       end
@@ -2604,19 +2565,9 @@ describe ApplicationHelper do
   describe "#build_toolbar_hide_button_ops" do
     subject { build_toolbar_hide_button_ops(@id) }
     before do
-      @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
       @record = FactoryGirl.create(:tenant)
-      login_as @user
-      EvmSpecHelper.seed_specific_product_features("ops_rbac",
-                                                   "rbac_group_add",
-                                                   "rbac_tenant_add",
-                                                   "rbac_tenant_delete")
-      feature = MiqProductFeature.find_all_by_identifier(%w(ops_rbac rbac_group_add rbac_tenant_add rbac_tenant_delete))
-      test_user_role = FactoryGirl.create(:miq_user_role,
-                                          :name                 => "test_user_role",
-                                          :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      feature = EvmSpecHelper.specific_product_features(%w(ops_rbac rbac_group_add rbac_tenant_add rbac_tenant_delete))
+      login_as FactoryGirl.create(:user, :features => feature)
       @sb = {:active_tree => :rbac_tree}
     end
 

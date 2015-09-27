@@ -56,9 +56,7 @@ describe ApplicationHelper do
     before(:each) do
       EvmSpecHelper.seed_specific_product_features("miq_report", "service")
 
-      @admin_role  = FactoryGirl.create(:miq_user_role, :name => "admin", :miq_product_features => features)
-      @admin_group = FactoryGirl.create(:miq_group, :miq_user_role => @admin_role)
-      @user        = FactoryGirl.create(:user, :name => 'wilma', :miq_groups => [@admin_group])
+      @user        = FactoryGirl.create(:user, :features => features)
       login_as  @user
     end
 
