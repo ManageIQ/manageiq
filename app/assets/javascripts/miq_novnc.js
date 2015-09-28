@@ -1,6 +1,8 @@
 "use strict";
 var rfb;
 
+window.WEB_SOCKET_SWF_LOCATION = '/assets/noVNC/web-socket-js/WebSocketMain.swf';
+
 function sendCtrlAltDel() {
   rfb.sendCtrlAltDel();
   return false;
