@@ -7,7 +7,6 @@ ManageIQ.angularApplication.controller('tenantQuotaFormController',['$http', '$s
     $scope.formId = tenantQuotaFormId;
     $scope.afterGet = false;
     $scope.modelCopy = angular.copy( $scope.tenantQuotaModel );
-    $scope.saveable = miqService.saveable;
 
     ManageIQ.angularApplication.$scope = $scope;
     $scope.newRecord = false;

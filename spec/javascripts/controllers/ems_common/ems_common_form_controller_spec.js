@@ -338,15 +338,6 @@ describe('emsCommonFormController', function() {
     });
   });
 
-  describe('saveable should exist in the scope', function() {
-    beforeEach(function() {
-      $httpBackend.flush();
-    });
-    it('returns true', function() {
-      expect($scope.saveable).toBeDefined();
-    });
-  });
-
   describe('Validates credential fields', function() {
     beforeEach(function() {
       $httpBackend.flush();
