@@ -314,7 +314,7 @@ Date and Time Configuration
           if service.running?
             if ask_yn? "\nNote: It may take up to a few minutes for all #{I18n.t("product.name")} server processes to exit gracefully. Stop #{I18n.t("product.name")}"
               say("\nStopping #{I18n.t("product.name")} Server...")
-              Logging.logger.info("EVM SERVER STOP initiated by MIQ Console.")
+              Logging.logger.info("EVM server stop initiated by appliance console.")
               service.stop
             end
           else
@@ -325,7 +325,7 @@ Date and Time Configuration
           say("#{selection}\n\n")
           if ask_yn?("\nStart #{I18n.t("product.name")}")
             say("\nStarting #{I18n.t("product.name")} Server...")
-            Logging.logger.info("EVM SERVER START initiated by MIQ Console.")
+            Logging.logger.info("EVM server start initiated by appliance console.")
             LinuxAdmin::Service.new("evmserverd").start
           end
 
