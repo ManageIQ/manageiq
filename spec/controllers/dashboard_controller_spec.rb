@@ -40,15 +40,10 @@ describe DashboardController do
       expect_failed_login('Role')
     end
 
-    it "requires VMs" do
+    it "allow users in with no vms" do
+      skip_data_checks
       post :authenticate, :user_name => user_with_role.userid, :user_password => "dummy"
-      expect_failed_login('no providers')
-    end
-
-    it "allows super admin with no vms" do
-      user = FactoryGirl.create(:user_admin)
-      post :authenticate, :user_name => user.userid, :user_password => "dummy"
-      expect_successful_login(user)
+      expect_successful_login(user_with_role)
     end
 
     it "redirects to a proper start page" do
@@ -174,7 +169,6 @@ describe DashboardController do
   end
 
   def skip_data_checks(url = '/')
-    UserValidationService.any_instance.stub(:data_ready?).and_return(true)
     UserValidationService.any_instance.stub(:server_ready?).and_return(true)
     controller.stub(:start_url_for_user).and_return(url)
   end

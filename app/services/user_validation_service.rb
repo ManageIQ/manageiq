@@ -45,12 +45,6 @@ class UserValidationService
 
     session_init(db_user)
 
-    # Don't allow logins until there's some content in the system
-    return ValidateResult.new(
-      :fail,
-      "Logins not allowed, no providers are being managed yet. Please contact the administrator"
-    ) unless db_user.super_admin_user? || data_ready?
-
     return validate_user_handle_not_ready(db_user) unless server_ready?
 
     # Start super admin at the main db if the main db has no records yet
@@ -145,10 +139,6 @@ class UserValidationService
     return ValidateResult.new(:fail, "Error: New password is the same as existing password") if
       user[:new_password].present? && user[:password] == user[:new_password]
     nil
-  end
-
-  def data_ready?
-    Vm.first || Host.first
   end
 
   def server_ready?
