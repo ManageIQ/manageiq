@@ -309,20 +309,23 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.evmstop")
           say("#{selection}\n\n")
-          if File.exist?(EVM_PID_FILE)
+          service = LinuxAdmin::Service.new("evmserverd")
+          if service.running?
             if ask_yn? "\nNote: It may take up to a few minutes for all #{I18n.t("product.name")} server processes to exit gracefully. Stop #{I18n.t("product.name")}"
               say("\nStopping #{I18n.t("product.name")} Server...")
-              Env['STOP'] = true
+              Logging.logger.info("EVM server stop initiated by appliance console.")
+              service.stop
             end
           else
-            say("\nNo #{I18n.t("product.name")} PID file. #{I18n.t("product.name")} Server is not running...")
+            say("\n#{I18n.t("product.name")} Server is not running...")
           end
 
         when I18n.t("advanced_settings.evmstart")
           say("#{selection}\n\n")
           if ask_yn?("\nStart #{I18n.t("product.name")}")
             say("\nStarting #{I18n.t("product.name")} Server...")
-            Env['START'] = true
+            Logging.logger.info("EVM server start initiated by appliance console.")
+            LinuxAdmin::Service.new("evmserverd").start
           end
 
         when I18n.t("advanced_settings.dbrestore")
