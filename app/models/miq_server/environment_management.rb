@@ -1,4 +1,6 @@
 require 'miq_apache'
+require 'linux_admin'
+
 module MiqServer::EnvironmentManagement
   extend ActiveSupport::Concern
 
@@ -49,7 +51,7 @@ module MiqServer::EnvironmentManagement
       begin
         if MiqEnvironment::Command.is_linux? && File.exist?('/bin/miqnet.sh')
           ipaddr      = `/bin/miqnet.sh -GET IP`.chomp
-          hostname    = `/bin/miqnet.sh -GET HOST`.chomp
+          hostname    = LinuxAdmin::Hosts.new.hostname
           mac_address = `/bin/miqnet.sh -GET MAC`.chomp
         else
           require 'MiqSockUtil'
