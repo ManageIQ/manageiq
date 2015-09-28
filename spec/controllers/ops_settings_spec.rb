@@ -2,8 +2,9 @@ require "spec_helper"
 
 describe OpsController do
   context "OpsSettings::Schedules" do
+    let(:user) { FactoryGirl.create(:user, :features => %w(schedule_enable schedule_disable)) }
     before do
-      seed_specific_product_features("schedule_enable", "schedule_disable")
+      login_as user
     end
 
     context "no schedules selected" do
@@ -93,7 +94,7 @@ describe OpsController do
       before(:each) do
         EvmSpecHelper.create_guid_miq_server_zone
         controller.should_receive(:render)
-        @schedule = FactoryGirl.create(:miq_schedule, :userid => "test", :towhat => "Vm")
+        @schedule = FactoryGirl.create(:miq_schedule, :userid => user.userid, :towhat => "Vm")
         @params = {
           :action      => "schedule_edit",
           :button      => "add",
@@ -127,7 +128,7 @@ describe OpsController do
         @params[:id] = @schedule.id
         @params[:name] = "schedule01"
         controller.instance_variable_set(:@_params, @params)
-        FactoryGirl.create(:miq_schedule, :name => @params[:name], :userid => "test", :towhat => "Vm")
+        FactoryGirl.create(:miq_schedule, :name => @params[:name], :userid => user.userid, :towhat => "Vm")
         controller.send(:schedule_edit)
         controller.send(:flash_errors?).should be_true
         assigns(:flash_array).first[:message].should include("Name has already been taken")
