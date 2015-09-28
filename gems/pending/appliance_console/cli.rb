@@ -27,7 +27,7 @@ module ApplianceConsole
 
     # machine host
     def host
-      options[:host] || Env["host"]
+      options[:host] || LinuxAdmin::Hosts.new.hostname
     end
 
     # database hostname
@@ -125,7 +125,7 @@ module ApplianceConsole
 
     def run
       Trollop.educate unless set_host? || key? || database? || tmp_disk? || uninstall_ipa? || install_ipa? || certs?
-      Env[:host] = options[:host] if set_host?
+      LinuxAdmin::Hosts.new.hostname = options[:host] if set_host?
       create_key if key?
       set_db if database?
       config_tmp_disk if tmp_disk?
