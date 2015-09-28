@@ -6,12 +6,21 @@
     = image_tag("/upload/custom_logo.png?#{rand(99_999_999)}")
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => "No custom logo image has been uploaded yet."}
-  = form_tag({:action => "upload_logo"}, :multipart => true) do
-    = file_field("upload", "logo")
-    = submit_tag("Upload",
-                :id    => "upload",
-                :class => "upload")
-    = _("* Requirements: File-type - PNG; Dimensions - 350x70.")
+  = form_tag({:action => "upload_logo"}, :class => "form-horizontal", :multipart => true) do
+    .form-group
+      .col-md-4
+        = file_field("upload", "logo",
+                     :class             => "filestyle",
+                     "data-buttonName"  => "btn-default",
+                     )
+        :javascript
+          $(":file").filestyle({icon: false,placeholder: "No file chosen"});
+
+      .col-md-6
+        = submit_tag("Upload",
+                    :id    => "upload",
+                    :class => "btn btn-default")
+        = _("* Requirements: File-type - PNG; Dimensions - 350x70.")
   - if File.exist?(@logo_file)
     %br/
     %form.form-horizontal
@@ -35,13 +44,22 @@
     %br/
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => "No custom login image has been uploaded yet."}
-  = form_tag({:action    => "upload_login_logo"},
+  = form_tag({:action    => "upload_login_logo"}, :class => "form-horizontal",
     :multipart => true) do
-    = file_field("login", "logo")
-    = submit_tag("Upload",
-                  :id    => "login_logo",
-                  :class => "upload")
-    = _("* Requirements: File-type - PNG; Dimensions - 1280x1000.")
+    .form-group
+      .col-md-4
+        = file_field("login", "logo",
+                     :class             => "filestyle",
+                     "data-buttonName"  => "btn-default",
+                     )
+        :javascript
+          $(":file").filestyle({icon: false,placeholder: "No file chosen"});
+      .col-md-6
+        = submit_tag("Upload",
+                    :id    => "login_logo",
+                    :class => "btn btn-default")
+        = _("* Requirements: File-type - PNG; Dimensions - 1280x1000.")
+
   - if File.exist?(@login_logo_file)
     %br/
     %form.form-horizontal

@@ -113,18 +113,19 @@ end
 
 # Assets from rails-assets.org
 source "https://rails-assets.org" do
-  gem "rails-assets-c3",                       "~>0.4.10"
-  gem "rails-assets-angular",                  "~>1.4.3"
-  gem "rails-assets-angular-mocks",            "~>1.4.3"
-  gem "rails-assets-bootstrap-datepicker",     "~>1.4.0"
-  gem "rails-assets-bootstrap-hover-dropdown", "~>2.0.11"
-  gem "rails-assets-bootstrap-select",         "~>1.7.3"
-  gem "rails-assets-kubernetes-topology-graph", "=0.0.17"
-  gem "rails-assets-moment",                   "~>2.10.3"
-  gem "rails-assets-moment-strftime",          "~>0.1.5"
-  gem "rails-assets-moment-timezone",          "~>0.4.0"
-  gem "rails-assets-sprintf",                  "~>1.0.3"
-  gem "rails-assets-numeral",                  "~>1.5.3"
+  gem "rails-assets-c3",                              "~>0.4.10"
+  gem "rails-assets-angular",                         "~>1.4.3"
+  gem "rails-assets-angular-mocks",                   "~>1.4.3"
+  gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
+  gem "rails-assets-markusslima--bootstrap-filestyle","~>1.2.1"
+  gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
+  gem "rails-assets-bootstrap-select",                "~>1.7.3"
+  gem "rails-assets-kubernetes-topology-graph",       "=0.0.17"
+  gem "rails-assets-moment",                          "~>2.10.3"
+  gem "rails-assets-moment-strftime",                 "~>0.1.5"
+  gem "rails-assets-moment-timezone",                 "~>0.4.0"
+  gem "rails-assets-sprintf",                         "~>1.0.3"
+  gem "rails-assets-numeral",                         "~>1.5.3"
 end
 
 #
