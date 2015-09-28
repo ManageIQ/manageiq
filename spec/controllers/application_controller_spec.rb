@@ -165,7 +165,6 @@ describe ApplicationController do
       vm2 = FactoryGirl.create(:vm_microsoft)
       controller.instance_variable_set(:@_params, :pressed         => "vm_migrate",
                                                   :miq_grid_checks => "#{vm1.id},#{vm2.id}")
-      controller.should_receive(:render)
       controller.send(:prov_redirect, "migrate")
       assigns(:flash_array).first[:message].should include("does not apply to at least one of the selected")
     end

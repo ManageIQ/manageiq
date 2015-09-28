@@ -1255,6 +1255,7 @@ class ApplicationController < ActionController::Base
   def flash_errors?
     Array(@flash_array).any? { |f| f[:level] == :error }
   end
+  helper_method(:flash_errors?)
 
   # Handle the breadcrumb array by either adding, or resetting to, the passed in breadcrumb
   def drop_breadcrumb(new_bc, onlyreplace=false) # if replace = true, only add this bc if it was already there
@@ -1977,6 +1978,38 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def render_or_redirect_partial(pfx)
+    if @redirect_controller
+      if ["#{pfx}_clone","#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
+        render :update do |page|
+          if flash_errors?
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          else
+            page.redirect_to :controller => @redirect_controller,
+                             :action     => @refresh_partial,
+                             :id         => @redirect_id,
+                             :prov_type  => @prov_type,
+                             :prov_id    => @prov_id
+          end
+        end
+      else
+        render :update do |page|
+          page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id
+        end
+      end
+    else
+      if params[:pressed] == "ems_cloud_edit" && params[:id]
+        render :update do |page|
+          page.redirect_to edit_ems_cloud_path(params[:id])
+        end
+      else
+        render :update do |page|
+          page.redirect_to :action => @refresh_partial, :id => @redirect_id
+        end
+      end
+    end
+  end
+
   # RJS code to show tag box effects and replace the main list view area
   def replace_gtl_main_div(options={})
     action_url = options[:action_url] || @lastaction
@@ -2071,8 +2104,10 @@ class ApplicationController < ActionController::Base
     task_supported?(typ) if typ
     return if performed?
 
-    @in_a_form = true
     @redirect_controller = "miq_request"
+    # non-explorer screens will perform render in their respective button method
+    return if flash_errors?
+    @in_a_form = true
     if request.parameters[:pressed].starts_with?("host_")       # need host id for host prov
       @org_controller = "host"                                  # request originated from controller
       @refresh_partial = "prov_edit"
@@ -2610,7 +2645,7 @@ class ApplicationController < ActionController::Base
     add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
                 {:model => model_type,
                  :task  => type.capitalize}, :error)
-    render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
+    render_flash { |page| page << '$(\'#main_div\').scrollTop();' } if @explorer
   end
 
   def set_gettext_locale
