@@ -383,6 +383,29 @@ module MiqAeEngineSpec
         MiqAeEngine.create_automation_attributes("").should == ""
         MiqAeEngine.create_automation_attributes("").should == ""
       end
+    end
+
+    context ".set_automation_attributes_from_objects" do
+      before(:each) do
+        FactoryGirl.create(:small_environment)
+      end
+      it "with an array of nil objects" do
+        hash = {}
+        MiqAeEngine.set_automation_attributes_from_objects([nil, nil], hash)
+        expect(hash).to be_empty
+      end
+
+      it "with an array of nil and valid objects" do
+        hash = {:a => 'A', 'b' => 'b'}
+        expected_hash = hash.merge("VmOrTemplate::vm" => Vm.first.id, "Host::host" => Host.first.id)
+        MiqAeEngine.set_automation_attributes_from_objects([Vm.first, nil, Host.first], hash)
+        expect(hash).to eq(expected_hash)
+      end
+
+      it "raise error if the object is already in the hash" do
+        hash = {:a => 'A', "VmOrTemplate::vm" => Vm.first.id}
+        expect { MiqAeEngine.set_automation_attributes_from_objects([Vm.first], hash) }.to raise_error
+      end
 
     end
 
