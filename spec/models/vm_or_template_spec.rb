@@ -479,8 +479,8 @@ describe VmOrTemplate do
       expect(FactoryGirl.create(:vm_vmware, :miq_group => group1, :tenant => tenant2).tenant).to eq(tenant1)
     end
 
-    it "assigns no tenant by default" do
-      expect(FactoryGirl.create(:vm_vmware).tenant).to be_nil
+    it "uses default tenant via tenancy_mixin" do
+      expect(FactoryGirl.create(:vm_vmware).tenant).to eq(Tenant.root_tenant)
     end
 
     it "changes the tenant after changing the group" do
