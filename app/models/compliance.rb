@@ -61,6 +61,7 @@ class Compliance < ActiveRecord::Base
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
     target_class = target.class.base_model.name.downcase
+    target_class = "vm" if target_class.match("template")
 
     raise "Compliance check not supported for #{target.class.name} objects" unless target.respond_to?(:compliances)
     check_event = "#{target_class}_compliance_check"
