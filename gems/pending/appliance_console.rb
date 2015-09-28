@@ -476,20 +476,20 @@ Date and Time Configuration
             # don't do anything
           when RE_RESTART
             if are_you_sure?("restart the appliance now")
-              Logging.logger.info("APPLIANCE RESTART initiated by appliance console.")
+              Logging.logger.info("Appliance restart initiated by appliance console.")
               LinuxAdmin::Service.new("evmserverd").stop
               LinuxAdmin::System.reboot!
             end
           when RE_DELLOGS
             if are_you_sure?("restart the appliance now")
-              Logging.logger.info("APPLIANCE RESTART WITH CLEAN LOGS initiated by appliance console.")
+              Logging.logger.info("Appliance restart with clean logs initiated by appliance console.")
               LinuxAdmin::Service.new("evmserverd").stop
               LinuxAdmin::Service.new("miqtop").stop
               LinuxAdmin::Service.new("miqvmstat").stop
               LinuxAdmin::Service.new("httpd").stop
               FileUtils.rm_rf(Dir.glob("/var/www/miq/vmdb/log/*.log*"))
               FileUtils.rm_rf(Dir.glob("/var/www/miq/vmdb/log/apache/*.log*"))
-              Logging.logger.info("LOGS CLEANED AND APPLIANCE REBOOTED by appliance console.")
+              Logging.logger.info("Logs cleaned and appliance rebooted by appliance console.")
               LinuxAdmin::System.reboot!
             end
           end
@@ -498,7 +498,7 @@ Date and Time Configuration
           say("#{selection}\n\n")
           if are_you_sure?("shut down the appliance now")
             say("\nShutting down appliance...  This process may take a few minutes.\n\n")
-            Logging.logger.info("APPLIANCE SHUTDOWN initiated by appliance console")
+            Logging.logger.info("Appliance shutdown initiated by appliance console")
             LinuxAdmin::Service.new("evmserverd").stop
             LinuxAdmin::System.shutdown!
           end
