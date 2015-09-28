@@ -136,25 +136,6 @@
     {
       "warning_type": "Remote Code Execution",
       "warning_code": 24,
-      "fingerprint": "f38d34cb747f14d41be8142a1ae18e5e4eae17513c807c401e5550d9dc47ec1e",
-      "message": "Unsafe reflection method constantize called with parameter value",
-      "file": "app/controllers/miq_ae_tools_controller.rb",
-      "line": 390,
-      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code": "CustomButton.button_classes.detect do\n (klass == params[:target_class])\n end.constantize",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MiqAeToolsController",
-        "method": "get_form_vars"
-      },
-      "user_input": "params[:target_class]",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Remote Code Execution",
-      "warning_code": 24,
       "fingerprint": "58fcf47340099025db0b33d410f05aa6594508dab67fe0ee04c47580e838d24e",
       "message": "Unsafe reflection method constantize called with parameter value",
       "file": "app/controllers/application_controller/performance.rb",

@@ -13,7 +13,15 @@ class CustomButton < ActiveRecord::Base
   include UuidMixin
   acts_as_miq_set_member
 
-  BUTTON_CLASSES = %w(Vm Host ExtManagementSystem Storage EmsCluster MiqTemplate Service)
+  BUTTON_CLASSES = [
+    Vm,
+    Host,
+    ExtManagementSystem,
+    Storage,
+    EmsCluster,
+    MiqTemplate,
+    Service
+  ]
 
   def self.buttons_for(other, applies_to_id=nil)
     if other.kind_of?(Class)
@@ -133,7 +141,11 @@ class CustomButton < ActiveRecord::Base
   end
 
   def self.button_classes
-    return BUTTON_CLASSES
+    BUTTON_CLASSES.collect(&:name)
+  end
+
+  def self.name_to_button_class(name)
+    BUTTON_CLASSES.find { |klass| klass.name == name }
   end
 
   def self.available_for_user(user,group)
