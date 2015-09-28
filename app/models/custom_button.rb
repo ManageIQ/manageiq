@@ -138,7 +138,7 @@ class CustomButton < ActiveRecord::Base
 
   def self.available_for_user(user,group)
     user = self.get_user(user)
-    role = user.miq_user_role_name || user.role.name
+    role = user.miq_user_role_name
     # Return all automation uri's that has his role or is allowed for all roles.
     self.all.to_a.select do |uri|
       uri.parent && uri.parent.name == group && uri.visibility.has_key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?("_ALL_"))
