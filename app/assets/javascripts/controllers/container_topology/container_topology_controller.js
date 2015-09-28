@@ -31,6 +31,7 @@ angular.module('topologyApp', ['kubernetesUI'])
     $scope.$on('$destroy', function() {
         $interval.cancel(promise);
     });
+
 }])
 
 .run(function($rootScope) {
@@ -61,25 +62,10 @@ angular.module('topologyApp', ['kubernetesUI'])
                                 return "#bbb";
                         }});
             added.append("title");
+            added.on("dblclick", function(d) {return dblclick(d)});
             added.append("image")
                 .attr("xlink:href",function(d) {
-                    var image_url = "/images/icons/new/";
-                    switch (d.item.kind) {
-                        case "Service":
-                        case "Node":
-                        case "Replicator":
-                            image_url += "container_" + d.item.kind.toLowerCase() + ".png";
-                            break;
-                        case "VM":
-                        case "Host":
-                        case "Container":
-                            image_url += d.item.kind.toLowerCase() + ".png";
-                            break;
-                        case "Pod":
-                            image_url += "container_group.png";
-                            break;
-                    }
-                    return image_url;
+                    return "/images/icons/new/" + class_name(d) + ".png";
                 })
                 .attr("y", function(d) { return getDimensions(d).y})
                 .attr("x", function(d) { return getDimensions(d).x})
@@ -88,11 +74,37 @@ angular.module('topologyApp', ['kubernetesUI'])
 
 
             vertices.selectAll("title").text(function(d) { return "Name: " + d.item.name + "\nType: " + d.item.kind + "\nStatus: " + d.item.status });
-            //vertices.selectAll("use").classed("running", function(d) { return true; });
+
 
             /* Don't do default rendering */
             ev.preventDefault();
         });
+
+        function class_name(d) {
+            var class_name = "";
+            switch (d.item.kind) {
+                case "Service":
+                case "Node":
+                case "Replicator":
+                    class_name = "container_" + d.item.kind.toLowerCase();
+                    break;
+                case "VM":
+                case "Host":
+                case "Container":
+                    class_name = d.item.kind.toLowerCase();
+                    break;
+                case "Pod":
+                    class_name = "container_group";
+                    break;
+            }
+            return class_name;
+        }
+
+        function dblclick(d) {
+            var url = '/' + class_name(d) + '/show/' + d.item.miq_id;
+            window.location.assign(url);
+
+        }
 
         function getDimensions(d) {
             switch (d.item.kind) {
