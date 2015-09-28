@@ -233,7 +233,11 @@ Static Network Configuration
 
           if new_host != host
             say("Applying new hostname...")
-            LinuxAdmin::Hosts.new.hostname = new_host
+            system_hosts = LinuxAdmin::Hosts.new
+            system_hosts.hostname = new_host
+            system_hosts.update_entry(ip, new_host)
+            system_hosts.save
+            LinuxAdmin::Service.new("network").restart
           end
 
         when I18n.t("advanced_settings.datetime")
