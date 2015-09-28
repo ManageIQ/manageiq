@@ -162,6 +162,11 @@ module VirtualFields
     uses = options.delete :uses
     reflection = ActiveRecord::Associations::Builder::HasMany.build(self, name, nil, options)
     add_virtual_reflection(reflection, name, uses, options)
+    define_method("#{name.to_s.singularize}_ids") do
+      _log.info("DJM: Entering #{name.to_s.singularize}_ids")
+      records = send(name)
+      records.respond_to?(:ids) ? records.ids : records.collect(&:id)
+    end
   end
 
   def virtual_belongs_to(name, options = {})
