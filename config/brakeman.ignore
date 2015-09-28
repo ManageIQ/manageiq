@@ -98,25 +98,6 @@
     {
       "warning_type": "Remote Code Execution",
       "warning_code": 24,
-      "fingerprint": "5f71c7d78b272c9c25e8892a2531396be07a770d904ed8e5c54b5e48096f2a3b",
-      "message": "Unsafe reflection method constantize called with parameter value",
-      "file": "app/controllers/cim_instance_controller.rb",
-      "line": 164,
-      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code": "associations.keys.find do\n (key == (session[\"#{self.class.session_key_prefix}_display\".to_sym] or (params[:display] or \"main\")))\n end.singularize.classify.constantize",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "CimInstanceController",
-        "method": "process_show"
-      },
-      "user_input": "params[:display]",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Remote Code Execution",
-      "warning_code": 24,
       "fingerprint": "ed8ad3c654ab94304d6536d62f89f18b40798ef0cec3527ac2d51351d901bfe6",
       "message": "Unsafe reflection method constantize called with parameter value",
       "file": "app/controllers/miq_ae_class_controller.rb",
