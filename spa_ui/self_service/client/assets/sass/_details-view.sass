@@ -1,0 +1,53 @@
++block(ss-details-header)
+  border-bottom: 1px solid #f2f2f2
+  margin-bottom: 20px
+
+  +element(title-img)
+    background: $app-color-white
+    border: 1px solid $app-color-light-gray-4
+    box-shadow: 0 1px 1px darken($app-color-light-gray-4, 15%)
+    cursor: pointer
+    float: left
+    height: 130px
+    margin: 10px 20px 20px 0
+    padding: 10px
+    text-align: center
+    width: 130px
+
+    +element(logo)
+      display: block
+      margin: 22px auto
+      max-height: 80px
+      max-width: 110px
+    
+  +element(title)
+    margin-left: 40px
+    padding-bottom: 20px
+
+    h2
+      margin-top: 10px
+
+    h4
+      color: #666
+
+  +element(actions)
+    text-align: right
+    margin-top: 10px
+    margin-right: -10px
+    float: right
+
+.ss-form-readonly
+  .form-control
+    border: none
+    background: transparent
+    color: #333
+  .form-group
+    margin-bottom: 10px  
+
+.ss-details-section
+  padding: 10px
+
+  h2
+    margin-top: 0
+
+

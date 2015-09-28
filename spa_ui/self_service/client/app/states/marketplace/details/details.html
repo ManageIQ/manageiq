@@ -1,5 +1,5 @@
 <div>
-  <a ui-sref="^"> <span class="fa fa-angle-left"/> Back to Service Catalog</a>
+  <a ui-sref="^" class="breadcrumb"> <span class="fa fa-angle-left"/> Back to Service Catalog</a>
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
@@ -14,16 +14,9 @@
              alt="{{ ::vm.serviceTemplate.name }}"
              src="{{ ::vm.serviceTemplate.picture.image_href }}"/>
       </div>
-      <h2>{{ ::vm.serviceTemplate.name }}</h2>
-    </section>
-    <section>
-      <div class="col-md-12">
-        <div class="row">
-          <dl>
-            <dt>Description</dt>
-            <dd ng-bind-html="::vm.serviceTemplate.long_description || vm.serviceTemplate.description"></dd>
-          </dl>
-        </div>
+      <div class="marketplace-title-description">
+        <h2>{{ ::vm.serviceTemplate.name }}</h2>
+        <p ng-bind-html="::vm.serviceTemplate.long_description || vm.serviceTemplate.description"></p>
       </div>
     </section>
 
@@ -106,7 +99,7 @@
 
   <div class="panel-footer">
     <div class="form-group text-right">
-      <button ui-sref="^" type="button" class="btn btn-default btn-xs">Cancel</button>
+      <button ui-sref="^" type="button" class="btn btn-default">Cancel</button>
       <button type="button" class="btn btn-primary">Request</button>
     </div>
   </div>
