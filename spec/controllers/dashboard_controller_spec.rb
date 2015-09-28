@@ -7,9 +7,7 @@ describe DashboardController do
     end
 
     let(:user_with_role) do
-      role = FactoryGirl.create(:miq_user_role)
-      group = FactoryGirl.create(:miq_group, :miq_user_role => role)
-      FactoryGirl.create(:user, :miq_groups => [group])
+      FactoryGirl.create(:user, :role => "random")
     end
 
     it "validates user" do
@@ -37,8 +35,7 @@ describe DashboardController do
     end
 
     it "requires role" do
-      group = FactoryGirl.create(:miq_group)
-      user = FactoryGirl.create(:user, :miq_groups => [group])
+      user = FactoryGirl.create(:user_with_group)
       post :authenticate, :user_name => user.userid, :user_password => "dummy"
       expect_failed_login('Role')
     end
@@ -69,29 +66,26 @@ describe DashboardController do
     end
 
     it "returns flash message when user's group is missing" do
-      user = FactoryGirl.create(:user, :userid => 'wilma')
+      user = FactoryGirl.create(:user)
       User.stub(:authenticate).and_return(user)
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to include('User\'s Group is missing')
     end
 
     it "returns flash message when user's role is missing" do
-      group = FactoryGirl.create(:miq_group, :description => 'test_group')
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      user = FactoryGirl.create(:user_with_group)
       User.stub(:authenticate).and_return(user)
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to include('User\'s Role is missing')
     end
 
     it "returns url for the user and sets user's group/role id in session" do
-      role = FactoryGirl.create(:miq_user_role, :name => 'test_role')
-      group = FactoryGirl.create(:miq_group, :description => 'test_group', :miq_user_role => role)
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      user = FactoryGirl.create(:user, :role => "test")
       User.stub(:authenticate).and_return(user)
       controller.stub(:get_vmdb_config).and_return({:product => {}})
       skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
-      expect(controller.current_groupid).to eq(group.id)
+      expect(controller.current_groupid).to eq(user.current_group_id)
       expect(validation.flash_msg).to be_nil
       expect(validation.url).to eq('some_url')
     end
@@ -106,7 +100,7 @@ describe DashboardController do
 
       ur = FactoryGirl.create(:miq_user_role)
       group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => {:dashboard_order => [ws.id]})
-      user = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      user = FactoryGirl.create(:user, :miq_groups => [group])
 
       controller.instance_variable_set(:@sb, {:active_db => ws.name})
       controller.instance_variable_set(:@tabs, [])

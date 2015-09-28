@@ -3,22 +3,12 @@ require "spec_helper"
 describe EmsCloudController do
   describe "#create" do
     before do
-      EvmSpecHelper.seed_specific_product_features("ems_cloud_new")
-      feature = MiqProductFeature.find_all_by_identifier(["ems_cloud_new"])
       Zone.first || FactoryGirl.create(:zone)
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-
-      allow(user).to receive(:server_timezone).and_return("UTC")
-      described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
       FactoryGirl.create(:vmdb_database)
-      EvmSpecHelper.create_guid_miq_server_zone
-      login_as user
+      EvmSpecHelper.local_miq_server
+      login_as FactoryGirl.create(:user, :features => "ems_cloud_new")
     end
 
     it "adds a new provider" do

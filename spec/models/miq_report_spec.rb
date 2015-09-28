@@ -68,7 +68,6 @@ describe MiqReport do
         5  => "/managed/service_level/silver"
       }
 
-      User.any_instance.stub(:validate => true)
       @group = FactoryGirl.create(:miq_group)
       @user  = FactoryGirl.create(:user, :miq_groups => [@group])
     end

@@ -8,7 +8,7 @@ describe ApplicationController do
       ur = FactoryGirl.create(:miq_user_role)
       rptmenu = {:report_menus => [["Configuration Management", ["Hosts", ["Hosts Summary", "Hosts Summary"]]]]}
       group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => rptmenu)
-      login_as FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
+      login_as FactoryGirl.create(:user, :miq_groups => [group])
     end
 
     it "Verify Invalid input flash error message when invalid id is passed in" do
@@ -30,11 +30,7 @@ describe ApplicationController do
     before do
       EvmSpecHelper.seed_specific_product_features("host_new", "host_edit", "perf_reload")
       feature = MiqProductFeature.find_all_by_identifier(["host_new"])
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      login_as FactoryGirl.create(:user, :features => feature)
     end
 
     it "should not raise an error for feature that user has access to" do
@@ -61,11 +57,8 @@ describe ApplicationController do
     before do
       EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
       feature = MiqProductFeature.find_all_by_identifier("vm_infra_explorer")
-      @test_user_role  = FactoryGirl.create(:miq_user_role,
-                                            :name                 => "test_user_role",
-                                            :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
-      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      user = login_as FactoryGirl.create(:user, :features => feature)
+      @test_user_role = user.current_group.miq_user_role
     end
 
     it "should return restricted view yaml for restricted user" do
@@ -163,14 +156,7 @@ describe ApplicationController do
 
   context "#prov_redirect" do
     before do
-      EvmSpecHelper.seed_specific_product_features("vm_migrate")
-      feature = MiqProductFeature.find_all_by_identifier(["vm_migrate"])
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      login_as FactoryGirl.create(:user, :features => "vm_migrate")
       controller.request.parameters[:pressed] = "vm_migrate"
     end
 

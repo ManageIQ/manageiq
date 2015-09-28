@@ -3,7 +3,7 @@ require "spec_helper"
 describe ProviderForemanController do
   render_views
   before(:each) do
-    _, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    @zone = EvmSpecHelper.local_miq_server.zone
 
     @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider.id)
@@ -320,13 +320,8 @@ describe ProviderForemanController do
   end
 
   def user_with_feature(features)
-    EvmSpecHelper.seed_specific_product_features(*features)
-    feature = MiqProductFeature.find_all_by_identifier(features)
-    test_user_role  = FactoryGirl.create(:miq_user_role,
-                                         :name                 => "test_user_role",
-                                         :miq_product_features => feature)
-    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-    FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
+    features = EvmSpecHelper.specific_product_features(*features)
+    FactoryGirl.create(:user, :features => features)
   end
 
   def set_view_10_per_page

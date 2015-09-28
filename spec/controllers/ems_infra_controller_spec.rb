@@ -75,13 +75,7 @@ describe EmsInfraController do
 
   describe "#create" do
     before do
-      EvmSpecHelper.seed_specific_product_features("ems_infra_new")
-      feature = MiqProductFeature.find_all_by_identifier(["ems_infra_new"])
-      test_user_role  = FactoryGirl.create(:miq_user_role,
-                                           :name                 => "test_user_role",
-                                           :miq_product_features => feature)
-      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      user = FactoryGirl.create(:user, :features => "ems_infra_new")
 
       allow(user).to receive(:server_timezone).and_return("UTC")
       described_class.any_instance.stub(:set_user_time_zone)
