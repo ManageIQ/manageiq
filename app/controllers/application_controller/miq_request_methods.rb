@@ -494,7 +494,6 @@ module ApplicationController::MiqRequestMethods
   def layout_from_tab_name(tab_name)
     case tab_name
     when "ae"                then "miq_request_ae"
-    when "configured_system" then "miq_request_configured_system"
     when "host"              then "miq_request_host"
     else                          "miq_request_vm"  # Includes "vm"
     end
