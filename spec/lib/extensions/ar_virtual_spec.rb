@@ -450,6 +450,13 @@ describe VirtualFields do
       end
     end
 
+    describe ".virtual_has_many" do
+      it "defines _ids method" do
+        c = TestClass.send(:virtual_has_many, :vref1)
+        expect(c.public_methods).to include(:vref1_ids)
+      end
+    end
+
     context "virtual_reflection assignment" do
       it "" do
         {
