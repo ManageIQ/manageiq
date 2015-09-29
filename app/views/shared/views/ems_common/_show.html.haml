@@ -6,7 +6,7 @@
   - if arr.include?(@display) && @showtype != "compare"
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@ems.id}"}
   - elsif @showtype == "compare"
-    = render :partial => "layouts/#{@showtype}"
+    = render :partial => "layouts/compare"
   - elsif @showtype == "timeline"
     = render :partial => "layouts/tl_show"
     :javascript
