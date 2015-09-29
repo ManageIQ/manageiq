@@ -268,7 +268,6 @@ describe MiqGroup do
       gc = FactoryGirl.create(:miq_group, :description => 'C', :tenant => tenant)
       ga = FactoryGirl.create(:miq_group, :description => 'a', :tenant => tenant)
       gb = FactoryGirl.create(:miq_group, :description => 'B', :tenant => tenant)
-      FactoryGirl.create(:miq_group, :description => 'X')
 
       expect(tenant.miq_groups.sort_by_desc).to eq([ga, gb, gc])
     end
