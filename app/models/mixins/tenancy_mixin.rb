@@ -24,14 +24,9 @@ module TenancyMixin
     #   Current user
     #   Parent EMS
     #   Root tenant
-    self.tenant_id ||= if respond_to?(:miq_group) && miq_group.try(:tenant_id)
-                         miq_group.tenant_id
-                       elsif User.current_tenant.try(:id)
-                         User.current_tenant.id
-                       elsif respond_to?(:ext_management_system) && ext_management_system.try(:tenant_id)
-                         ext_management_system.tenant_id
-                       else
-                         Tenant.root_tenant.try(:id)
-                       end
+    self.tenant_id ||= try(:miq_group).try(:tenant_id)             ||
+                       User.current_tenant.try(:id)                ||
+                       try(:ext_management_system).try(:tenant_id) ||
+                       Tenant.root_tenant.try(:id)
   end
 end
