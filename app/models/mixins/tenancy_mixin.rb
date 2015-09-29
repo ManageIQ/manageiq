@@ -19,14 +19,28 @@ module TenancyMixin
   end
 
   def set_tenant
-    # Priority
-    #   Owning group
-    #   Current user
-    #   Parent EMS
-    #   Root tenant
-    self.tenant_id ||= try(:miq_group).try(:tenant_id)             ||
-                       User.current_tenant.try(:id)                ||
-                       try(:ext_management_system).try(:tenant_id) ||
-                       Tenant.root_tenant.try(:id)
+    # In priority order
+    self.tenant_id ||= owning_group_tenant ||
+                       current_user_tenant ||
+                       ems_tenant          ||
+                       root_tenant
+  end
+
+  private
+
+  def owning_group_tenant
+    miq_group.try(:tenant_id) if respond_to?(:miq_group)
+  end
+
+  def current_user_tenant
+    User.current_tenant.try(:id)
+  end
+
+  def ems_tenant
+    ext_management_system.try(:tenant_id) if respond_to?(:ext_management_system)
+  end
+
+  def root_tenant
+    Tenant.root_tenant.try(:id)
   end
 end
