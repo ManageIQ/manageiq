@@ -17,7 +17,18 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ss-details-header__actions">
             <button class="btn btn-danger" type="button" ng-click="vm.removeService()">Remove Service</button>
-            <button class="btn btn-primary" type="button" ng-click="vm.retireServiceNow()">Retire </button>
+            <button class="btn btn-primary"
+                    type="button"
+                    confirmation
+                    confirmation-if="true"
+                    confirmation-title="Retire Service Now"
+                    confirmation-message="Confirm, would you like to retire this service?"
+                    confirmation-ok-text="Yes, Retire Service Now"
+                    confirmation-on-ok="vm.retireServiceNow()"
+                    confirmation-ok-style="primary"
+                    confirmation-show-cancel="true">
+              Retire
+            </button>
             <button class="btn btn-primary" type="button" ng-click="vm.retireServiceLater()">Schedule</button>
             <button class="btn btn-primary" type="button" ng-click="vm.editServiceModal()">Edit Service</button>
           </div>
