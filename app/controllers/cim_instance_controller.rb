@@ -147,7 +147,7 @@ class CimInstanceController < ApplicationController
     else
       whitelisted_key = associations.keys.find { |key| key == @display }
       if whitelisted_key.present?
-        model_name = whitelisted_key.singularize.classify.constantize
+        model_name = whitelisted_key.singularize.classify
         drop_breadcrumb( {:name=>@record.evm_display_name+" (All #{ui_lookup(:tables => @display.singularize)})", :url=>"/#{self.class.table_name}/show/#{@record.id}?display=#{@display}"} )
         @view, @pages = get_view(model_name, :parent=>@record, :parent_method => associations[@display])  # Get the records (into a view) and the paginator
         @showtype = @display
