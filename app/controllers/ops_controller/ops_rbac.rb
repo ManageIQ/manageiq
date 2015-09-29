@@ -778,6 +778,11 @@ module OpsController::OpsRbac
     end
 
     changed = (@edit[:new] != @edit[:current])
+    bad = false
+    if rec_type == "group"
+      bad ||= @edit[:new][:role].blank?
+      bad ||= @edit[:new][:group_tenant].blank?
+    end
 
     render :update do |page|              # Use JS to update the display
       if %w(up down).include?(params[:button])
@@ -798,7 +803,7 @@ module OpsController::OpsRbac
           page << set_element_visible('group_lookup', @edit[:new][:lookup]) unless params[:check]
         end
       end
-      page << javascript_for_miq_button_visibility(changed)
+      page << javascript_for_miq_button_visibility(changed && !bad)
     end
   end
 
@@ -1037,10 +1042,11 @@ module OpsController::OpsRbac
 
     all_roles = MiqUserRole.all
     @edit[:roles] = {}
-    @edit[:roles]["<Choose a role>"] = nil
+    @edit[:roles]["<Choose a Role>"] = nil if @record.id.nil?
     all_roles.each do |r|
       @edit[:roles][r.name] = r.id
     end
+
     if @group.miq_user_role.nil?              # If adding, set to first role
       @edit[:new][:role] = @edit[:roles][@edit[:roles].keys.sort[0]]
     else
@@ -1050,6 +1056,7 @@ module OpsController::OpsRbac
     @edit[:projects_tenants] = []
     all_tenants = Tenant.all_tenants
     all_projects = Tenant.all_projects
+    @edit[:projects_tenants].push(["", [["<Choose a Project/Tentant>", :selected => "<Choose a Project/Tentant>", :disabled => "<Choose a Project/Tentant>", :style => 'display:none']]])
     @edit[:projects_tenants].push(["Projects", all_projects.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_projects.blank?
     @edit[:projects_tenants].push(["Tenants", all_tenants.sort_by(&:name).collect { |tenant| [tenant.name, tenant.id] }]) unless all_tenants.blank?
     @edit[:new][:group_tenant] = @group.tenant_id

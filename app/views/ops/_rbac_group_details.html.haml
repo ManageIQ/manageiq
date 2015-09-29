@@ -48,7 +48,6 @@
         - else
           = select_tag('group_role',
               options_for_select(@edit[:roles].sort, @edit[:new][:role]),
-              "title" => "Choose",
               :class  => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -74,10 +73,10 @@
         - else
           = select_tag('group_tenant',
               grouped_options_for_select(@edit[:projects_tenants], @edit[:new][:group_tenant]),
-              "title" => "Choose",
-              :class  => "selectpicker")
+               :class  => "selectpicker")
           :javascript
             miqSelectPickerEvent("group_tenant", "#{combo_url}")
+
     - unless @edit
       .form-group
         %label.col-md-2.control-label
