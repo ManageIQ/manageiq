@@ -46,8 +46,10 @@ var dialogFieldRefresh = {
       var option = '<option ';
       option += 'value="' + value[0] + '" ';
       if (data.values.checked_value !== null) {
-        if (data.values.checked_value.toString() === value[0].toString()) {
-          option += 'selected="selected" ';
+        if (value[0] !== null) {
+          if (data.values.checked_value.toString() === value[0].toString()) {
+            option += 'selected="selected" ';
+          }
         }
       } else {
         if (index === 0) {
