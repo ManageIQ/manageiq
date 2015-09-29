@@ -17,7 +17,6 @@ describe Rbac do
 
     klass_factory_names = [
       "ExtManagementSystem", :ems_vmware,
-      "MiqAeNamespace", :miq_ae_namespace,
       "MiqAeDomain", :miq_ae_domain,
       # "MiqRequest", :miq_request,  # MiqRequest is an abstract class that can't be instantiated currently
       "MiqRequestTask", :miq_request_task,

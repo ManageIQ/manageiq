@@ -9,6 +9,8 @@ class MiqAeDomain < MiqAeNamespace
   before_save :default_priority
   belongs_to :tenant
 
+  include TenancyMixin
+
   def self.enabled
     where(:enabled => true)
   end
