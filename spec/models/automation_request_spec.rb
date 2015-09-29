@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe AutomationRequest do
   before(:each) do
-    MiqServer.stub(:my_zone).and_return("default")
+    MiqServer.stub(:my_zone).and_return(Zone.seed.name)
     @zone        = FactoryGirl.create(:zone, :name => "fred")
     User.any_instance.stub(:role).and_return("admin")
     @user        = FactoryGirl.create(:user)

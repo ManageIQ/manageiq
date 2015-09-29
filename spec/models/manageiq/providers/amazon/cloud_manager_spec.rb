@@ -18,7 +18,7 @@ describe ManageIQ::Providers::Amazon::CloudManager do
 
   context ".discover" do
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server(:zone => Zone.seed)
       @ec2_user = "0123456789ABCDEFGHIJ"
       @ec2_pass = "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"
       @ec2_user2 = "testuser"

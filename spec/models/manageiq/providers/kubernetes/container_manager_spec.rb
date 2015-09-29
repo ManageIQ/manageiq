@@ -12,7 +12,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
 
   context "SmartState Analysis Methods" do
     before(:each) do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server(:zone => Zone.seed)
       @ems = FactoryGirl.create(
         :ems_kubernetes,
         :hostname        => 'hostname',

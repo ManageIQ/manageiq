@@ -3,7 +3,7 @@ require "spec_helper"
 describe CustomButton do
   context "with no buttons" do
     before(:each) do
-      @miq_server = EvmSpecHelper.local_miq_server(:is_master => true)
+      @miq_server = EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
 
       User.any_instance.stub(:role).and_return("admin")
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')

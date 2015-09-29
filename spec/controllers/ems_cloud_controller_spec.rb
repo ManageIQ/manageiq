@@ -3,11 +3,10 @@ require "spec_helper"
 describe EmsCloudController do
   describe "#create" do
     before do
-      Zone.first || FactoryGirl.create(:zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
       FactoryGirl.create(:vmdb_database)
-      EvmSpecHelper.local_miq_server
+      EvmSpecHelper.local_miq_server(:zone => Zone.seed)
       login_as FactoryGirl.create(:user, :features => "ems_cloud_new")
     end
 
@@ -22,7 +21,7 @@ describe EmsCloudController do
 
     it 'shows the edit page' do
       expect(MiqServer.my_server).to be
-      FactoryGirl.create(:ems_amazon, :zone => Zone.first)
+      FactoryGirl.create(:ems_amazon, :zone => Zone.seed)
       ems = ManageIQ::Providers::Amazon::CloudManager.first
       get :edit, :id => ems.id
       expect(response.status).to eq(200)
@@ -159,7 +158,7 @@ describe EmsCloudController do
 
   describe "#ems_cloud_form_fields" do
     before do
-      Zone.first || FactoryGirl.create(:zone)
+      Zone.seed
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
@@ -188,7 +187,7 @@ describe EmsCloudController do
 
   describe "#show_link" do
     before do
-      Zone.first || FactoryGirl.create(:zone)
+      Zone.seed
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
