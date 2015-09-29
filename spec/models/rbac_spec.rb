@@ -47,9 +47,7 @@ describe Rbac do
 
     context "Advanced filtering" do
       before do
-        @owned_vm           = FactoryGirl.create(:vm_vmware, :tenant => @owner_tenant)
-        @owned_ems          = FactoryGirl.create(:ems_vmware, :tenant => @owner_tenant)
-        @owned_request_task = FactoryGirl.create(:miq_request_task, :tenant => @owner_tenant)
+        @owned_vm = FactoryGirl.create(:vm_vmware, :tenant => @owner_tenant)
       end
 
       it ".search with User.with_userid finds user's tenant object" do
@@ -112,6 +110,10 @@ describe Rbac do
       end
 
       context "tenant access strategy of ancestor_ids (parents)" do
+        before do
+          @owned_ems = FactoryGirl.create(:ems_vmware, :tenant => @owner_tenant)
+        end
+
         it "can see parent tenant's EMS" do
           child_tenant        = FactoryGirl.create(:tenant, :divisible => false, :parent => @owner_tenant)
           child_group         = FactoryGirl.create(:miq_group, :tenant => child_tenant)
@@ -129,6 +131,10 @@ describe Rbac do
       end
 
       context "tenant access strategy of nil (tenant only)" do
+        before do
+          @owned_request_task = FactoryGirl.create(:miq_request_task, :tenant => @owner_tenant)
+        end
+
         it "can see tenant's request task" do
           results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
           expect(results).to eq [@owned_request_task]
