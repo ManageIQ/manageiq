@@ -87,6 +87,7 @@ class MiqProductFeature < ActiveRecord::Base
 
     deletes = where.not(:identifier => idents_from_hash).destroy_all
     _log.info("Deleting product features: #{deletes.collect(&:identifier).inspect}") unless deletes.empty?
+    idents_from_hash
   end
 
   def self.seed_from_hash(hash, seen = [], parent = nil)

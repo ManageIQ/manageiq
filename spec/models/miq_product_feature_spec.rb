@@ -6,9 +6,10 @@ describe MiqProductFeature do
   end
 
   context ".seed" do
-    it "empty table" do
-      MiqProductFeature.seed
-      MiqProductFeature.count.should eq(@expected_feature_count)
+    it "expected feature count with no duplicate identifiers" do
+      seeded_identifiers = MiqProductFeature.seed
+      expect(MiqProductFeature.count).to eq(@expected_feature_count)
+      expect(seeded_identifiers).to match_array seeded_identifiers.uniq
     end
 
     it "run twice" do
