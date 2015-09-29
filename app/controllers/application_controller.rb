@@ -609,14 +609,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Add a picture record id or array of ids to be synced to disk
-  def add_pictures_to_sync(pic_ids)
-    @pictures_to_sync ||= Array.new
-    @pictures_to_sync.push(pic_ids)
-    @pictures_to_sync.flatten!
-    @pictures_to_sync.uniq!
-  end
-
   # Build a Catalog Items explorer tree
   def build_ae_tree(type = :ae, name = :ae_tree)
     # build the ae tree to show the tree select box for entry point
@@ -1202,7 +1194,6 @@ class ApplicationController < ActionController::Base
             when OsProcess, EventLog   then "#{pn}#{@listicon.downcase}.png"
             when Service, ServiceTemplate
               if item.try(:picture)
-                add_pictures_to_sync(item.picture.id)
                 "../../../pictures/#{item.picture.basename}"
               end
             end
@@ -2340,7 +2331,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_global_session_data
-    Picture.sync_to_disk(@pictures_to_sync) if @pictures_to_sync
     @sb ||= Hash.new
     # Set all of the global variables used by most of the controllers
     session[:layout] = @layout

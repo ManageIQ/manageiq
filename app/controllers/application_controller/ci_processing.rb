@@ -1893,13 +1893,6 @@ module ApplicationController::CiProcessing
     delete_elements(ResourcePool, :process_resourcepools)
   end
 
-  # Go thru the view rows, collect picture object ids, and call sync_to_disk
-  def sync_view_pictures_to_disk(view)
-    pics = view.table.data.collect{|r| r["picture.id"].to_i if r["picture.id"]}.compact.uniq
-#    Picture.sync_to_disk(pics) unless pics.blank?
-    add_pictures_to_sync(pics) unless pics.blank?
-  end
-
   def pfx_for_vm_button_pressed(button_pressed)
     if params[:pressed].starts_with?("image_")
       return "image"

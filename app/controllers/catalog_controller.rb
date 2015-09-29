@@ -454,7 +454,6 @@ class CatalogController < ApplicationController
         @record.picture.content = params[:upload][:image].read
         @record.picture.extension = ext
         @record.save
-        add_pictures_to_sync(@record.picture.id)
         msg = _("Custom Image file \"%s\" successfully uploaded") % params[:upload][:image].original_filename
       end
     else
@@ -1617,12 +1616,10 @@ class CatalogController < ApplicationController
             process_show_list(:model => typ.constantize)
           end
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
-          sync_view_pictures_to_disk(@view) if ["grid", "tile"].include?(@gtl_type)
         elsif ["xx-otcfn", "xx-othot"].include?(x_node)
           typ = x_node == "xx-otcfn" ? "OrchestrationTemplateCfn" : "OrchestrationTemplateHot"
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
           process_show_list(:model => typ.constantize, :gtl_dbname => :orchestrationtemplate)
-          sync_view_pictures_to_disk(@view) if ["grid", "tile"].include?(@gtl_type)
         else
           if x_active_tree == :stcat_tree
             @record = ServiceTemplateCatalog.find_by_id(from_cid(id))
@@ -1648,7 +1645,6 @@ class CatalogController < ApplicationController
               end
             else
               show_record(from_cid(id))
-              add_pictures_to_sync(@record.picture.id) if @record.picture
               if @record.atomic? && need_prov_dialogs?(@record.prov_type)
                 @miq_request = MiqRequest.find_by_id(@record.service_resources[0].resource_id)
                 prov_set_show_vars

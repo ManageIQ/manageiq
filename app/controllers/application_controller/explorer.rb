@@ -304,8 +304,6 @@ module ApplicationController::Explorer
     node = TreeNodeBuilder.build(object, pid, options)
 
     case object
-    when Service, ServiceTemplate
-      add_pictures_to_sync(object.picture.id) if object.picture
     when MiqGroup
       # loading nodes under event node incase these were cliked on policy details screen and not yet loaded in the tree
       x_tree(options[:tree])[:open_nodes].push("#{pid}_ev-#{to_cid(object.id)}") if [:policy_profile_tree, :policy_tree].include?(options[:tree])
