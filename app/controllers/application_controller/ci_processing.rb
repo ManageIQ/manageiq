@@ -425,7 +425,7 @@ module ApplicationController::CiProcessing
       end
 
       if @edit[:new][:cb_cpu] && @edit[:new][:old_cpu_count].to_s == @edit[:new][:cpu_count].to_s
-        add_flash(_("Change %s value to submit reconfigure request") % "Processors", :error)
+        add_flash(_("Change %s value to submit reconfigure request") % "Processor Sockets", :error)
       end
 
       if @edit[:new][:cb_cores_per_socket] && @edit[:new][:old_cores_per_socket_count].to_s == @edit[:new][:cores_per_socket_count].to_s
