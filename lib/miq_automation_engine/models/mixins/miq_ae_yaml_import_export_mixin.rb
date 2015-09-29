@@ -12,7 +12,7 @@ module MiqAeYamlImportExportMixin
   ALL_DOMAINS             = '*'
   VERSION                 = 1.0
 
-  EXPORT_EXCLUDE_KEYS     = [/^id$/, /_id$/, /^created_on/, /^updated_on/, /^updated_by/, /^reserved$/]
+  EXPORT_EXCLUDE_KEYS     = [/^id$/, /^(?!tenant).*_id$/, /^created_on/, /^updated_on/, /^updated_by/, /^reserved$/]
 
   def export_attributes
     attributes.dup.delete_if { |k, _| EXPORT_EXCLUDE_KEYS.any? { |rexp| k =~ rexp } }

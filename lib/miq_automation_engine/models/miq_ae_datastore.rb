@@ -73,7 +73,7 @@ module MiqAeDatastore
     _log.info("Upload complete (size=#{File.size(filename)})")
 
     begin
-      import_yaml_zip(filename, domain_name)
+      import_yaml_zip(filename, domain_name, Tenant.current_tenant)
     ensure
       File.delete(filename)
     end
@@ -91,17 +91,20 @@ module MiqAeDatastore
     _log.info("Restore from #{fname}...Complete")
   end
 
-  def self.import_yaml_zip(fname, domain)
+  def self.import_yaml_zip(fname, domain, tenant)
     t = Benchmark.realtime_block(:total_time) do
-      import_options = {'zip_file' => fname, 'preview' => false, 'mode' => 'add'}
+      import_options = {'zip_file' => fname, 'preview' => false,
+                        'mode'     => 'add', 'tenant'  => tenant}
       MiqAeImport.new(domain, import_options).import
     end
     _log.info("Import #{fname}...Complete - Benchmark: #{t.inspect}")
   end
 
-  def self.import_yaml_dir(dirname, domain)
+  def self.import_yaml_dir(dirname, domain, tenant)
     t = Benchmark.realtime_block(:total_time) do
-      import_options = {'import_dir' => dirname, 'preview' => false, 'mode' => 'add', 'restore' => true}
+      import_options = {'import_dir' => dirname, 'preview' => false,
+                        'mode'       => 'add',   'restore' => true,
+                        'tenant'     => tenant}
       MiqAeImport.new(domain, import_options).import
     end
     _log.info("Import from #{dirname}...Complete - Benchmark: #{t.inspect}")
@@ -136,11 +139,11 @@ module MiqAeDatastore
     seed_default_namespace
   end
 
-  def self.reset_domain(datastore_dir, domain_name)
+  def self.reset_domain(datastore_dir, domain_name, tenant)
     _log.info("Resetting domain #{domain_name} from #{datastore_dir}")
     ns = MiqAeDomain.find_by_fqname(domain_name)
     ns.destroy if ns
-    import_yaml_dir(datastore_dir, domain_name)
+    import_yaml_dir(datastore_dir, domain_name, tenant)
     if domain_name.downcase == MANAGEIQ_DOMAIN.downcase
       ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
       ns.update_attributes!(:system => true, :enabled => true, :priority => MANAGEIQ_PRIORITY) if ns
@@ -148,7 +151,7 @@ module MiqAeDatastore
   end
 
   def self.reset_manageiq_domain
-    reset_domain(DATASTORE_DIRECTORY, MANAGEIQ_DOMAIN)
+    reset_domain(DATASTORE_DIRECTORY, MANAGEIQ_DOMAIN, Tenant.root_tenant)
   end
 
   def self.seed_default_namespace
@@ -172,7 +175,7 @@ module MiqAeDatastore
     saved_attrs = preserved_attrs_for_domains
     Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).each do |domain_file|
       domain_name = File.basename(File.dirname(domain_file))
-      reset_domain(DATASTORE_DIRECTORY, domain_name)
+      reset_domain(DATASTORE_DIRECTORY, domain_name, Tenant.root_tenant)
     end
 
     restore_attrs_for_domains(saved_attrs)

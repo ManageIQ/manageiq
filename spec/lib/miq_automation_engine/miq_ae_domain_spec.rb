@@ -3,8 +3,8 @@ include AutomationSpecHelper
 
 describe MiqAeDomain do
   before do
-    EvmSpecHelper.local_guid_miq_server_zone
-    @root_tenant = Tenant.root_tenant
+    EvmSpecHelper.local_miq_server
+    @root_tenant = Tenant.seed
     setup_model
   end
 

@@ -104,6 +104,7 @@ class MiqAeYamlImport
 
   def reset_domain_attributes(domain_yaml)
     domain_yaml.delete_path('object', 'attributes', 'enabled') unless @restore
+    domain_yaml.delete_path('object', 'attributes', 'tenant_id') unless @restore
     domain_yaml.delete_path('object', 'attributes', 'priority')
   end
 

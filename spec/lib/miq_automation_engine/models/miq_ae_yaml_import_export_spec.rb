@@ -12,8 +12,8 @@ describe MiqAeDatastore do
     @clear_default_password = 'little_secret'
     @clear_password = 'secret'
     @relations_value = "bedrock relations"
-    EvmSpecHelper.local_guid_miq_server_zone
-    @tenant = Tenant.root_tenant
+    EvmSpecHelper.local_miq_server
+    @tenant = Tenant.seed
     create_factory_data("manageiq", 0)
     setup_export_dir
     set_manageiq_values
@@ -156,6 +156,15 @@ describe MiqAeDatastore do
     def assert_import_failure_with_missing_file(import_options)
       expect { MiqAeImport.new("fred", import_options).import }
         .to raise_error(MiqAeException::FileNotFound)
+    end
+  end
+
+  context "tenant id" do
+    it "validate export data" do
+      export_model(@manageiq_domain.name)
+      domain_file = File.join(@export_dir, @manageiq_domain.name, '__domain__.yaml')
+      data = YAML.load_file(domain_file)
+      expect(data.fetch_path('object', 'attributes', 'tenant_id')).to eq(@tenant.id)
     end
   end
 
