@@ -106,4 +106,7 @@ module MiqException
   class MiqOrchestrationProvisionError < Error; end
   class MiqOrchestrationStatusError < Error; end
   class MiqOrchestrationValidationError < Error; end
+  class MiqOrchestrationUpdateError < Error; end
+  class MiqOrchestrationDeleteError < Error; end
+  class MiqOrchestrationStackNotExistError < Error; end
 end

@@ -125,4 +125,26 @@ class OrchestrationTemplate < ActiveRecord::Base
   def with_universal_newline(text)
     self.class.with_universal_newline(text)
   end
+
+  def openstack_validate_content(ems_openstack)
+    ems_openstack.with_provider_connection(:service => "Orchestration") do |service|
+      service.templates.validate(:template => content)
+    end
+    nil
+  rescue Excon::Errors::BadRequest => bad
+    JSON.parse(bad.response.body)['error']['message']
+  rescue => err
+    $log.error "MIQ(#{self.class.name}##{__method__}) template=[#{name}], error: #{err}"
+    raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
+  end
+
+  def aws_validate_content(ems_aws)
+    ems_aws.with_provider_connection(:service => "CloudFormation") do |service|
+      service.validate_template(content)[:message]
+    end
+    nil
+  rescue => err
+    $log.error "MIQ(#{self.class.name}##{__method__}) template=[#{name}], error: #{err}"
+    raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
+  end
 end
