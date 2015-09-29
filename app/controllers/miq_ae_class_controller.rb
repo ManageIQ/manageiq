@@ -1732,8 +1732,15 @@ class MiqAeClassController < ApplicationController
       copy_save
     when "reset", nil # Reset or first time in
       action = params[:pressed] || @sb[:action]
-      typ = action.split("_").first(3).join("_").camelcase.constantize
-      copy_reset(typ, ids, action)
+      klass = case action
+              when "miq_ae_class_copy"
+                MiqAeClass
+              when "miq_ae_instance_copy"
+                MiqAeInstance
+              when "miq_ae_method_copy"
+                MiqAeMethod
+              end
+      copy_reset(klass, ids, action)
     end
   end
 
