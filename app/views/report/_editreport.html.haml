@@ -1,22 +1,21 @@
 #main_div
   - if @report.nil?
     = render :partial => 'layouts/info_msg', :locals => {:message => _("Choose a Report to edit from the menus on the left.")}
-    %fieldset
-      %h3
-        = @report.name
-      %table.style1
-        %tr
-          %td.key
-            = _('Title:')
-          %td.notwide
-            = @report.title
-        %tr
-          %td.key
-            = _('Based On:')
-          %td.notwide
-            = Dictionary.gettext(@report.db, :type => :model, :notfound => :titleize)
-        %tr
-          %td.key
-            = _('Updated On:')
-          %td.notwide
-            = @report.updated_on
+    %h3
+      = @report.name
+    .form-horizontal
+      .form-group
+        %label.control-label.col-md-2
+          = _('Title:')
+        .col-md-8
+          = @report.title
+      .form-group
+        %label.control-label.col-md-2
+          = _('Based On:')
+        .col-md-8
+          = Dictionary.gettext(@report.db, :type => :model, :notfound => :titleize)
+      .form-group
+        %label.control-label.col-md-2
+          = _('Updated On:')
+        .col-md-8
+          = @report.updated_on
