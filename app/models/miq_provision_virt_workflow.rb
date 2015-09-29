@@ -62,6 +62,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def update_request(request, values, requester_id)
     event_message = "VM Provision request was successfully updated by [#{requester_id}] for VM:#{values[:src_vm_id].inspect}"
+    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+    request.src_vm_id = request.get_option(:src_vm_id)
     super(request, values, requester_id, 'Vm', 'vm_migrate_request_updated', event_message)
   end
 

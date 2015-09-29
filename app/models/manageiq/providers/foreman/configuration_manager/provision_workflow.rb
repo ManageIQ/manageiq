@@ -9,7 +9,7 @@ class ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow < Mi
   end
 
   def update_request(request, values, requester_id)
-    event_message = "Provision request successfully updated by [#{requester_id}] for Configured Systems:#{values[:src_configured_system_ids].inspect}"
+    event_message = "Provision request was successfully updated by [#{requester_id}] for Configured Systems:#{values[:src_configured_system_ids].inspect}"
     super(request, values, requester_id, 'ConfiguredSystem', 'configured_system_provision_request_updated', event_message)
   end
 
