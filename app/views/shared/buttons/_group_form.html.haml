@@ -7,17 +7,19 @@
     .form-group
       %label.control-label.col-md-2
         = _('Button Group Text')
-      .col-md-6
-        = text_field_tag("name", @edit[:new][:name],
-                        :maxlength         => 15,
-                        :class             => "form-control",
-                        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-      %label.checkbox-inline
-        = check_box_tag("display", "1", @edit[:new][:display],
-                        "data-miq_observe_checkbox" => {:url => url}.to_json)
-        = _('Display on Button')
-      - unless is_browser_ie?
-        = javascript_tag(javascript_focus('name'))
+      .col-md-8
+        .input-group
+          = text_field_tag("name", @edit[:new][:name],
+                          :maxlength         => 15,
+                          :class             => "form-control",
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          .input-group-addon
+            %label.checkbox-inline
+              = check_box_tag("display", "1", @edit[:new][:display],
+                              "data-miq_observe_checkbox" => {:url => url}.to_json)
+              = _('Display on Button')
+            - unless is_browser_ie?
+              = javascript_tag(javascript_focus('name'))
     .form-group
       %label.control-label.col-md-2
         = _('Button Group Hover Text')
