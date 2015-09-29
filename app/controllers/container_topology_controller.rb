@@ -5,7 +5,13 @@ class ContainerTopologyController < ApplicationController
   after_action :set_session_data
 
   def show
-
+    # When navigated here without id, it means this is a general view for all providers (not for a specific provider)
+    # all previous navigation should not be displayed in breadcrumbs as the user could arrive from
+    # any other page in the application.
+    if params[:id].nil?
+      @breadcrumbs.clear
+    end
+    drop_breadcrumb(:name => 'Topology', :url => '')
   end
 
   def index
