@@ -205,10 +205,10 @@ class ApiController
       if ownership.blank?
         action_result(false, "Must specify a valid owner or group for setting ownership")
       else
-        errors = klass.set_ownership([id], ownership)
+        result = klass.set_ownership([id], ownership)
         details = ownership.each.collect { |key, obj| "#{key}: #{obj.name}" }.join(", ")
         desc = "setting ownership of #{type} id #{id} to #{details}"
-        errors == true ? action_result(true, desc) : action_result(false, errors.values.join(", "))
+        result == true ? action_result(true, desc) : action_result(false, result.values.join(", "))
       end
     rescue => err
       action_result(false, err.to_s)

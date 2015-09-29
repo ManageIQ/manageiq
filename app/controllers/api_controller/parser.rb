@@ -140,15 +140,15 @@ class ApiController
 
     def parse_by_attr(resource, type, attr_list)
       klass = collection_class(type)
-      attr_list.each do |attr|
-        obj = klass.send("find_by_#{attr}", resource[attr])
-        return obj.id if obj
-      end
-      nil
+      objs = attr_list.map { |attr| klass.send("find_by_#{attr}", resource[attr]) if resource[attr] }.compact
+      objs.collect(&:id).first
     end
 
     def parse_ownership(data)
-      {:owner => User.find_by_id(parse_owner(data)), :group => MiqGroup.find_by_id(parse_group(data))}.compact if data.present?
+      {
+        :owner => collection_class(:users).find_by_id(parse_owner(data)),
+        :group => collection_class(:groups).find_by_id(parse_group(data))
+      }.compact if data.present?
     end
 
     private
