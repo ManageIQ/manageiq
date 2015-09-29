@@ -7,15 +7,15 @@ env:
   global:
   - RUBY_GC_MALLOC_LIMIT=90000000
   matrix:
-  - GEM=manageiq_foreman
-  - GEM=pending
   - TEST_SUITE=vmdb
-  - TEST_SUITE=migrations
-  - TEST_SUITE=replication
   - TEST_SUITE=automation
-  - TEST_SUITE=javascript
-  - TEST_SUITE=brakeman
+  - TEST_SUITE=migrations
   - TEST_SUITE=self_service SPA_UI=self_service
+  - TEST_SUITE=brakeman
+  - TEST_SUITE=replication
+  - GEM=pending
+  - TEST_SUITE=javascript
+  - GEM=manageiq_foreman
 matrix:
   fast_finish: true
 addons:
