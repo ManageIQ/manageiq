@@ -1080,19 +1080,19 @@ module ApplicationController::CiProcessing
   # Build the ownership assignment screen
   def reconfigure_build_screen
     @reconfigureitems = Vm.find(@edit[:reconfigure_items]).sort_by(&:name)  # Get the db records that are being tagged
+    set_memory_cpu
     if !@edit[:req_id]
-      set_memory_cpu
       @edit[:new][:memory] = @edit[:new][:old_memory]
       @edit[:new][:mem_typ] = @edit[:new][:old_mem_typ]
     else
       @req = MiqRequest.find_by_id(@edit[:req_id])
       @edit[:new][:memory], @edit[:new][:mem_typ] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
-      @edit[:new][:cpu_count] = @req.options[:number_of_sockets]
-      @edit[:new][:cores_per_socket_count] = @req.options[:cores_per_socket]
+      @edit[:new][:cores_per_socket_count] = @req.options[:cores_per_socket] if @req.options[:cores_per_socket]
+      @edit[:new][:cpu_count] = @req.options[:number_of_cpus] / @edit[:new][:cores_per_socket_count] if @req.options[:number_of_cpus]
     end
 
     @edit[:new][:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request
-    @edit[:new][:cb_cpu] = @req && @req.options[:number_of_sockets] ? true : false     # default for checkbox is false for new request
+    @edit[:new][:cb_cpu] = @req && @req.options[:number_of_cpus] ? true : false     # default for checkbox is false for new request
     @edit[:new][:cb_cores_per_socket] = @req && @req.options[:cores_per_socket] ? true : false     # default for checkbox is false for new request
 
     @edit[:options] = VmReconfigureRequest.request_limits(:src_ids => @edit[:reconfigure_items])
