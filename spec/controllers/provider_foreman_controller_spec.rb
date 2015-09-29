@@ -113,6 +113,29 @@ describe ProviderForemanController do
     expect(response.status).to eq(200)
   end
 
+  context "#edit" do
+    before do
+      set_user_privileges
+    end
+
+    it "renders the edit page when the configuration manager id is supplied" do
+      post :edit, :id => @config_mgr.id
+      expect(response.status).to eq(200)
+      right_cell_text = controller.instance_variable_get(:@right_cell_text)
+      expect(right_cell_text).to eq(_("Edit Foreman Provider"))
+    end
+
+    it "renders the edit page when the configuration manager id is selected from a list view" do
+      post :edit, :miq_grid_checks => @config_mgr.id
+      expect(response.status).to eq(200)
+    end
+
+    it "renders the edit page when the configuration manager id is selected from a grid/tile" do
+      post :edit, "check_#{ActiveRecord::Base.compress_id(@config_mgr.id)}" => "1"
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "renders right cell text" do
     before do
       right_cell_text = nil
