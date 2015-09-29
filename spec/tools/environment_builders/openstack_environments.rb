@@ -33,7 +33,7 @@ def load_environments
     env_name = env.keys.first
     env      = env[env_name]
 
-    file_name = File.join(test_base_dir, "openstack_refresher_rhos_#{env_name}_spec.rb")
+    file_name = File.join(test_base_dir, "refresher_rhos_#{env_name}_spec.rb")
     change_file(file_name, OBFUSCATED_PASSWORD, env["password"], OBFUSCATED_IP, env["ip"])
 
     file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}.yml")
@@ -46,7 +46,7 @@ def obfuscate_environments
     env_name = env.keys.first
     env      = env[env_name]
 
-    file_name = File.join(test_base_dir, "openstack_refresher_rhos_#{env_name}_spec.rb")
+    file_name = File.join(test_base_dir, "refresher_rhos_#{env_name}_spec.rb")
     change_file(file_name, env["password"], OBFUSCATED_PASSWORD, env["ip"], OBFUSCATED_IP)
 
     file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}.yml")
@@ -75,7 +75,7 @@ def vcr_base_dir
 end
 
 def test_base_dir
-  File.join(base_dir, 'spec/models/ems_refresh/refreshers')
+  File.join(base_dir, 'spec/models/manageiq/providers/openstack/cloud_manager')
 end
 
 def openstack_environments

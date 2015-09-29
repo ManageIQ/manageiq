@@ -1,5 +1,5 @@
 require "spec_helper"
-require "models/ems_refresh/refreshers/openstack/refresh_spec_common"
+require_relative "refresh_spec_common"
 
 describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   include Openstack::RefreshSpecCommon
