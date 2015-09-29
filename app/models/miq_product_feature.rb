@@ -77,26 +77,27 @@ class MiqProductFeature < ActiveRecord::Base
   end
 
   def self.seed_features
-    idents_from_hash = []
-    seed_from_hash(YAML.load_file(FIXTURE_YAML), idents_from_hash)
+    seen = Hash.new([])
+    seed_from_hash(YAML.load_file(FIXTURE_YAML), seen)
 
     root_feature = MiqProductFeature.find_by(:identifier => 'everything')
     Dir.glob(File.join(FIXTURE_PATH, "*.yml")).each do |fixture|
-      seed_from_hash(YAML.load_file(fixture), idents_from_hash, root_feature)
+      seed_from_hash(YAML.load_file(fixture), seen, root_feature)
     end
 
-    deletes = where.not(:identifier => idents_from_hash).destroy_all
+    deletes = where.not(:identifier => seen.values.flatten).destroy_all
     _log.info("Deleting product features: #{deletes.collect(&:identifier).inspect}") unless deletes.empty?
-    idents_from_hash
+    seen
   end
 
-  def self.seed_from_hash(hash, seen = [], parent = nil)
+  def self.seed_from_hash(hash, seen = {}, parent = nil)
     children = hash.delete(:children) || []
     hash.delete(:parent_identifier)
 
     hash[:parent] = parent
-    feature = seed_feature(hash)
-    seen << hash[:identifier]
+    feature, status = seed_feature(hash)
+    seen[status] = [] unless seen.key?(status)
+    seen[status] << hash[:identifier]
 
     children.each do |child|
       self.seed_from_hash(child, seen, feature)
@@ -104,19 +105,22 @@ class MiqProductFeature < ActiveRecord::Base
   end
 
   def self.seed_feature(hash)
+    status = :unchanged
     feature = find_by_identifier(hash[:identifier])
     if feature
       feature.attributes = hash
       if feature.changed?
         _log.info("Updating product feature: Identifier: [#{hash[:identifier]}], Name: [#{hash[:name]}]")
         feature.save
+        status = :updated
       end
     else
       _log.info("Creating product feature: Identifier: [#{hash[:identifier]}], Name: [#{hash[:name]}]")
       feature = create(hash.except(:id))
+      status = :created
       feature.seed_vm_explorer_for_custom_roles
     end
-    feature
+    return feature, status
   end
 
   def seed_vm_explorer_for_custom_roles

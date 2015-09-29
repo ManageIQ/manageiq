@@ -6,16 +6,18 @@ describe MiqProductFeature do
   end
 
   context ".seed" do
-    it "expected feature count with no duplicate identifiers" do
-      seeded_identifiers = MiqProductFeature.seed
+    it "creates feature identifiers once on first seed, changes nothing on second seed" do
+      status_seed1 = MiqProductFeature.seed
       expect(MiqProductFeature.count).to eq(@expected_feature_count)
-      expect(seeded_identifiers).to match_array seeded_identifiers.uniq
-    end
+      expect(status_seed1[:created]).to match_array status_seed1[:created].uniq
+      expect(status_seed1[:updated]).to match_array []
+      expect(status_seed1[:unchanged]).to match_array []
 
-    it "run twice" do
-      MiqProductFeature.seed
-      MiqProductFeature.seed
+      status_seed2 = MiqProductFeature.seed
       MiqProductFeature.count.should eq(@expected_feature_count)
+      expect(status_seed2[:created]).to match_array []
+      expect(status_seed2[:updated]).to match_array []
+      expect(status_seed2[:unchanged]).to match_array status_seed1[:created]
     end
 
     it "with existing records" do
