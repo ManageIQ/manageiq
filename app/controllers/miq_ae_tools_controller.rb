@@ -382,9 +382,9 @@ Methods updated/added: %{method_stats}") % stat_options)
 #   @resolve[:new][:target_attr_name] = params[:target_attr_name] if params.has_key?(:target_attr_name)
     if params.has_key?(:target_class)
       @resolve[:new][:target_class] = params[:target_class]
-      whitelisted_class_name = CustomButton.button_classes.detect { |klass| klass == params[:target_class] }
-      unless whitelisted_class_name.nil?
-        targets = whitelisted_class_name.constantize.all
+      klass = CustomButton.name_to_button_class(params[:target_class])
+      unless klass.nil?
+        targets = klass.all
         @resolve[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
         @resolve[:new][:target_id] = nil
       end

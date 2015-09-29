@@ -15,6 +15,9 @@ describe OpenstackRabbitEventMonitor do
     @topics = {"nova" => "nova_topic", "glance" => "glance_topic"}
     @receiver_options = {:capacity => 1, :duration => 1}
     @options = @receiver_options.merge({:topics => @topics, :client_ip => "10.11.12.13"})
+
+    @rabbit_connection = double
+    OpenstackRabbitEventMonitor.stub(:connect).and_return(@rabbit_connection)
   end
 
   after do
@@ -22,11 +25,6 @@ describe OpenstackRabbitEventMonitor do
   end
 
   context "testing a connection" do
-    before :each do
-      @rabbit_connection = double
-      OpenstackRabbitEventMonitor.stub(:connect).and_return(@rabbit_connection)
-    end
-
     it "returns true on a successful test" do
       @rabbit_connection.should_receive(:start)
       @rabbit_connection.should_receive(:close)
@@ -48,4 +46,19 @@ describe OpenstackRabbitEventMonitor do
     # get back to this piece
   end
 
+  it "#remove_legacy_queues (private)" do
+    @rabbit_channel = double
+    @rabbit_connection.stub(:create_channel).and_return(@rabbit_channel)
+    @rabbit_channel.stub(:close).and_return(nil)
+
+    @rabbit_connection.should_receive(:queue_exists?).at_least(2).times.with(/^miq-/).and_return(true)
+    @rabbit_channel.should_receive(:queue_delete).at_least(2).times.with(/^miq-/).and_return(nil)
+
+    @rabbit_connection.should_receive(:queue_exists?).once.with("notifications.*").and_return(true)
+    @rabbit_channel.should_receive(:queue_delete).once.with("notifications.*").and_return(nil)
+
+    @event_monitor = OpenstackRabbitEventMonitor.new(@options)
+
+    @event_monitor.send(:remove_legacy_queues)
+  end
 end

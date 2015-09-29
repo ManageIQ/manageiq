@@ -13,11 +13,7 @@ class BaseManager < ExtManagementSystem
   end
 
   def refresher
-    if self.class::Refresher != BaseManager::Refresher
-      self.class::Refresher
-    else
-      ::EmsRefresh::Refreshers.const_get("#{emstype.to_s.camelize}Refresher")
-    end
+    self.class::Refresher
   end
 end
 end

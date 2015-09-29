@@ -67,6 +67,13 @@ class User < ActiveRecord::Base
     self.in_region.where(:email => email).first
   end
 
+  # find a user by lowercase email
+  # often we have the most probably user object onhand. so use that if possible
+  def self.find_by_lower_email(email, cache = [])
+    email = email.downcase
+    Array.wrap(cache).detect { |u| u.email.try(:downcase) == email } || find_by(['lower(email) = ?', email])
+  end
+
   virtual_column :ldap_group, :type => :string, :uses => :current_group
   # FIXME: amazon_group too?
   virtual_column :miq_group_description, :type => :string, :uses => :current_group
@@ -98,6 +105,13 @@ class User < ActiveRecord::Base
     end
 
     self.current_group = group
+  end
+
+  def miq_group_description=(group_description)
+    if group_description
+      desired_group = miq_groups.detect { |g| g.description == group_description }
+      self.current_group = desired_group if desired_group
+    end
   end
 
   def nil_email_field_if_blank
@@ -307,19 +321,16 @@ class User < ActiveRecord::Base
   private
 
   def self.seed
-    MiqRegion.my_region.lock do
-      user = self.in_my_region.find_by_userid("admin")
-      if user.nil?
-        _log.info("Creating default admin user...")
-        user = self.create(:userid => "admin", :name => "Administrator", :password => "smartvm")
-        _log.info("Creating default admin user... Complete")
-      end
-
-      admin_group     = MiqGroup.in_my_region.find_by_description("EvmGroup-super_administrator")
-      user.miq_groups = [admin_group] if admin_group
-      user.save
-
+    user = in_my_region.find_by_userid("admin")
+    if user.nil?
+      _log.info("Creating default admin user...")
+      user = create(:userid => "admin", :name => "Administrator", :password => "smartvm")
+      _log.info("Creating default admin user... Complete")
     end
+
+    admin_group     = MiqGroup.in_my_region.find_by_description("EvmGroup-super_administrator")
+    user.miq_groups = [admin_group] if admin_group
+    user.save
   end
 
   # Save the current user from the session object as a thread variable to allow lookup from other areas of the code

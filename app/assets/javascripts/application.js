@@ -5,6 +5,10 @@
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require moment
+//= require moment-strftime
+//= require moment-timezone
+//= require sprintf
+//= require numeral
 //= require miq_angular_application
 //= require services/miq_service
 //= require services/miq_db_backup_service
@@ -19,6 +23,7 @@
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
 //= require services/timer_option_service
+//= require controllers/buttons/button_group_controller
 //= require controllers/ems_common/ems_common_form_controller
 //= require controllers/host/host_form_controller
 //= require controllers/provider_foreman/provider_foreman_form_controller
@@ -54,6 +59,7 @@
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap
 //= require bootstrap-datepicker
+//= require bootstrap-filestyle
 //= require bootstrap-select
 //= require bootstrap-hover-dropdown
 //= require patternfly
@@ -77,3 +83,6 @@
 //= require spin
 //= require jquery-hotkeys
 //= require lodash
+//= require miq_formatters
+//= require miq_grid
+//= require resizable_sidebar

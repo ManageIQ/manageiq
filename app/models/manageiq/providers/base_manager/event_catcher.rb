@@ -16,10 +16,6 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
     parent
   end
 
-  def self.normalized_type
-    @normalized_type ||= "event_catcher"
-  end
-
   def self.validate_config_settings(configuration = VMDB::Config.new("vmdb"))
     super
 

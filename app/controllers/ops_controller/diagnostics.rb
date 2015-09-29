@@ -112,7 +112,7 @@ module OpsController::Diagnostics
         else
           new_uri = "#{params[:uri_prefix]}://#{params[:uri]}"
           build_supported_depots_for_select
-          type    = Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))
+          type    = FileDepot.depot_description_to_class(params[:log_protocol])
           depot   = @record.log_file_depot.instance_of?(type) ? @record.log_file_depot : @record.build_log_file_depot(:type => type.to_s)
           depot.update_attributes(:uri => new_uri, :name => params[:depot_name])
           depot.update_authentication(:default => {:userid   => params[:log_userid],
@@ -142,7 +142,7 @@ module OpsController::Diagnostics
       }
 
       begin
-        type = Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))
+        type = FileDepot.depot_description_to_class(params[:log_protocol])
         type.validate_settings(settings)
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)

@@ -6,6 +6,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
   <title>Spec Runner</title>
+  <base href="/">
   <style>
     body {
       font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -16,7 +17,7 @@
   <!--BEWARE of using any app styles as @media can screw up tests -->
   <link rel="stylesheet" href="node_modules/mocha/mocha.css">
 </head>
-<body>
+<body id="mocha">
   <h1><a href="specs.html">Spec Runner</a></h1>
 
   <p><strong>Make sure the REMOTE server is running</strong><br/>
@@ -26,8 +27,6 @@
     Click on a <em>spec title</em> to see the test implementation.<br/>
     Click on <em>page title</em> to start over.
   </p>
-
-  <div id="mocha"></div>
 
   <!-- inject:testlibraries:js -->
   <script src="/node_modules/mocha/mocha.js"></script>

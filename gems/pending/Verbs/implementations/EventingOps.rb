@@ -44,7 +44,6 @@ class EmsEventMonitorOps
 
     begin
       while true
-        break if MiqThreadCtl.exiting?
         pollEvents
         send_events
         save_events
@@ -54,7 +53,7 @@ class EmsEventMonitorOps
       $log.error "EventingOps: #{err}" if $log
       $log.error err.backtrace.join("\n") if $log
       sleep_wait(60)
-      MiqThreadCtl.exiting? ? nil : retry
+      retry
     end
 	end # def doEvents
 
@@ -78,7 +77,7 @@ class EmsEventMonitorOps
 
   def sleep_wait(total_time=nil)
     total_time = @sleep_interval if total_time.to_i < @sleep_interval
-    1.upto(total_time/5) {break if MiqThreadCtl.exiting?; sleep(5)}
+    1.upto(total_time/5) {sleep(5)}
   end
 
   def getEmsh(ost, emsName)

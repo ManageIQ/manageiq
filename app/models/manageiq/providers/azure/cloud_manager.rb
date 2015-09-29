@@ -46,4 +46,27 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
     true
   end
+
+  # Operations
+
+  def vm_start(vm, _options = {})
+    vm.provider_service.start(vm.name, vm.resource_group)
+    vm.update_attributes!(:raw_power_state => "VM starting")
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
+  def vm_stop(vm, _options = {})
+    vm.provider_service.stop(vm.name, vm.resource_group)
+    vm.update_attributes!(:raw_power_state => "VM stopping")
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
+  def vm_restart(vm, _options = {})
+    vm.provider_service.restart(vm.name, vm.resource_group)
+    vm.update_attributes!(:raw_power_state => "VM starting")
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
 end

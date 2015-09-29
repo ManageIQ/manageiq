@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe MiqWorker do
-  context ".corresponding_runner" do
+  context "::Runner" do
 
     def all_workers
       MiqWorker.descendants.select { |c| c.subclasses.empty? }
@@ -9,11 +9,9 @@ describe MiqWorker do
 
     it "finds the correct corresponding runner for workers" do
       all_workers.each do |worker|
-        # namespaced workers are spelled:
-        # ManageIQ::Providers::ProviderName::ManagerType::WorkerType
-        # namespaced runners are spelled:
-        # ManageIQ::Providers::ProviderName::ManagerType::WorkerType::Runner
-        worker.corresponding_runner.should end_with("Runner")
+        # If this isn't true, we're probably accidentally inheriting the
+        # runner from a superclass
+        worker::Runner.name.should eq("#{worker.name}::Runner")
       end
     end
   end

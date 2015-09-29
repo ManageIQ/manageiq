@@ -6,9 +6,8 @@ describe MiqAeCustomizationController do
     context "#dialog_delete" do
       before do
         FactoryGirl.create(:vmdb_database)
-        EvmSpecHelper.create_guid_miq_server_zone
-        seed_specific_product_features("dialog_delete")
-        described_class.any_instance.stub(:set_user_time_zone)
+        EvmSpecHelper.local_miq_server
+        login_as FactoryGirl.create(:user, :features => "dialog_delete")
         controller.stub(:check_privileges).and_return(true)
       end
 
@@ -52,7 +51,7 @@ describe MiqAeCustomizationController do
 
     context "#dialog_edit" do
       before do
-        seed_specific_product_features("dialog_edit")
+        login_as FactoryGirl.create(:user, :features => "dialog_edit")
         @dialog = FactoryGirl.create(:dialog,
                                      :label       => "Test Label",
                                      :description => "Test Description"

@@ -117,7 +117,7 @@
                               "style"       => "color: black;"}
         - else
           = select_tag('zone',
-                       options_for_select([["<#{_('Choose')}>", nil]] + Array(@server_zones.invert).sort_by { |name, _name| name }),
+                       options_for_select(@server_zones.sort_by { |name, _name| name }),
                        "ng-model"                    => "emsCommonModel.zone",
                        "checkchange"                 => "",
                        "required"                    => "",

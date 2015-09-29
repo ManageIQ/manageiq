@@ -156,6 +156,19 @@ def set_option_on_provision_task(dialog_options_hash, prov)
   end
 end
 
+def set_option_on_destination(dialog_options_hash, destination)
+  dialog_options_hash.each do |key, value|
+    log_and_update_message(:info, "Adding Option: {#{key} => #{value}} to Destination id: #{destination.id}")
+    destination.set_dialog_option(destination_key_name(key), value)
+  end
+end
+
+def destination_key_name(key)
+  key = key.to_s
+  return key if key.include?("::") || key.starts_with?("dialog_")
+  "dialog_#{key}"
+end
+
 def pass_dialog_values_to_provision_task(provision_task, dialog_options_hash, dialog_tags_hash)
   provision_task.miq_request_tasks.each do |prov|
     log_and_update_message(:info, "Grandchild Task: #{prov.id} Desc: #{prov.description} type: #{prov.source_type}")
@@ -166,6 +179,8 @@ def pass_dialog_values_to_provision_task(provision_task, dialog_options_hash, di
 end
 
 def pass_dialog_values_to_children(dialog_options_hash, dialog_tags_hash)
+  set_option_on_destination(dialog_options_hash, @task.destination)
+
   @task.miq_request_tasks.each do |t|
     child_service = t.destination
     log_and_update_message(:info, "Child Service: #{child_service.name}")

@@ -162,12 +162,6 @@ describe('hostFormController', function() {
     });
   });
 
-  describe('saveable should exist in the scope', function() {
-    it('returns true', function() {
-      expect($scope.saveable).toBeDefined();
-    });
-  });
-
   describe('Validates credential fields', function() {
     beforeEach(inject(function($compile, miqService) {
       var angularForm;

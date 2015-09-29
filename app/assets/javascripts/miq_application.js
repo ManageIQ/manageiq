@@ -1248,10 +1248,11 @@ function miqInitSelectPicker() {
   });
 }
 
-function miqSelectPickerEvent(element, url){
+function miqSelectPickerEvent(element, url, options){
   $('#' + element).on('change', function(){
     var selected = $('#' + element).val();
-    miqJqueryRequest(url + '?' + element + '=' + selected);
+    options =  typeof options !== 'undefined' ? options : {}
+    miqJqueryRequest(url + '?' + element + '=' + selected, options);
     return true;
   });
 }

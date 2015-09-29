@@ -243,11 +243,11 @@ class MiqRequestController < ApplicationController
     req = MiqRequest.new(
       :approval_state => 'pending_approval',
       :description    => org_req.description,
-      :requester      => org_req.requester,
+      :requester      => current_user,
       :type           => org_req.type,
       :created_on     => org_req.created_on,
       :updated_on     => org_req.updated_on,
-      :options        => org_req.options,
+      :options        => org_req.options.except(:requester_group),
     )
 
     prov_set_form_vars(req)       # Set vars from existing request

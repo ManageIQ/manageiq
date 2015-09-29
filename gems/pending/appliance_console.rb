@@ -141,7 +141,6 @@ module ApplianceConsole
         dns1     = Env["DNS1"]
         dns2     = Env["DNS2"]
         order    = Env["SEARCHORDER"]
-        # time   = Env["TIMESERVER"]
         timezone = Env["TIMEZONE"]
         region   = File.read(REGION_FILE).chomp  if File.exist?(REGION_FILE)
         version  = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
@@ -310,20 +309,23 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.evmstop")
           say("#{selection}\n\n")
-          if File.exist?(EVM_PID_FILE)
+          service = LinuxAdmin::Service.new("evmserverd")
+          if service.running?
             if ask_yn? "\nNote: It may take up to a few minutes for all #{I18n.t("product.name")} server processes to exit gracefully. Stop #{I18n.t("product.name")}"
               say("\nStopping #{I18n.t("product.name")} Server...")
-              Env['STOP'] = true
+              Logging.logger.info("EVM server stop initiated by appliance console.")
+              service.stop
             end
           else
-            say("\nNo #{I18n.t("product.name")} PID file. #{I18n.t("product.name")} Server is not running...")
+            say("\n#{I18n.t("product.name")} Server is not running...")
           end
 
         when I18n.t("advanced_settings.evmstart")
           say("#{selection}\n\n")
           if ask_yn?("\nStart #{I18n.t("product.name")}")
             say("\nStarting #{I18n.t("product.name")} Server...")
-            Env['START'] = true
+            Logging.logger.info("EVM server start initiated by appliance console.")
+            LinuxAdmin::Service.new("evmserverd").start
           end
 
         when I18n.t("advanced_settings.dbrestore")
@@ -475,16 +477,32 @@ Date and Time Configuration
           when CANCEL
             # don't do anything
           when RE_RESTART
-            Env['RESTARTOS'] = are_you_sure?("restart the appliance now")
+            if are_you_sure?("restart the appliance now")
+              Logging.logger.info("Appliance restart initiated by appliance console.")
+              LinuxAdmin::Service.new("evmserverd").stop
+              LinuxAdmin::System.reboot!
+            end
           when RE_DELLOGS
-            Env['RESTARTOSRMLOGS'] = are_you_sure?("restart the appliance now")
+            if are_you_sure?("restart the appliance now")
+              Logging.logger.info("Appliance restart with clean logs initiated by appliance console.")
+              LinuxAdmin::Service.new("evmserverd").stop
+              LinuxAdmin::Service.new("miqtop").stop
+              LinuxAdmin::Service.new("miqvmstat").stop
+              LinuxAdmin::Service.new("httpd").stop
+              FileUtils.rm_rf(Dir.glob("/var/www/miq/vmdb/log/*.log*"))
+              FileUtils.rm_rf(Dir.glob("/var/www/miq/vmdb/log/apache/*.log*"))
+              Logging.logger.info("Logs cleaned and appliance rebooted by appliance console.")
+              LinuxAdmin::System.reboot!
+            end
           end
 
         when I18n.t("advanced_settings.shutdown")
           say("#{selection}\n\n")
           if are_you_sure?("shut down the appliance now")
             say("\nShutting down appliance...  This process may take a few minutes.\n\n")
-            Env['SHUTDOWN'] = true
+            Logging.logger.info("Appliance shutdown initiated by appliance console")
+            LinuxAdmin::Service.new("evmserverd").stop
+            LinuxAdmin::System.shutdown!
           end
 
         when I18n.t("advanced_settings.scap")

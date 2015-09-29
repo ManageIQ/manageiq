@@ -121,7 +121,7 @@ module ApplicationController::CiProcessing
         else
           session[:flash_msgs] = @flash_array
           render :update do |page|
-            page.redirect_to(@breadcrumbs[-2][:url])               # Go to previous page using breadcrumbs
+            page.redirect_to(previous_breadcrumb_url)
           end
         end
       when "save"
@@ -160,7 +160,7 @@ module ApplicationController::CiProcessing
           else
             session[:flash_msgs] = @flash_array
             render :update do |page|
-              page.redirect_to(@breadcrumbs[-2][:url])               # Go to previous page using breadcrumbs
+              page.redirect_to(previous_breadcrumb_url)
             end
           end
         end
@@ -288,7 +288,7 @@ module ApplicationController::CiProcessing
       else
         session[:flash_msgs] = @flash_array.dup
         render :update do |page|
-          page.redirect_to @breadcrumbs[-2][:url]
+          page.redirect_to previous_breadcrumb_url
         end
       end
       return
@@ -403,7 +403,7 @@ module ApplicationController::CiProcessing
       else
         session[:flash_msgs] = @flash_array
         render :update do |page|
-          page.redirect_to(@breadcrumbs[-2][:url])
+          page.redirect_to(previous_breadcrumb_url)
         end
       end
     when "submit"
@@ -1234,7 +1234,7 @@ module ApplicationController::CiProcessing
   def foreman_button_operation(method, display_name)
     items = []
     if params[:id]
-      if params[:id].nil? || ExtManagementSystem.exists?(params[:id]).nil?
+      if params[:id].nil? || !ExtManagementSystem.where(:id => params[:id]).exists?
         add_flash(_("%s no longer exists") % ui_lookup(:table => controller_name), :error)
       else
         items.push(params[:id])

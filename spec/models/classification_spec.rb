@@ -302,8 +302,6 @@ describe Classification do
 
   describe ".seed" do
     before do
-      MiqRegion.seed
-
       YAML.stub(:load_file).and_return([
         {:name         => "cc",
          :description  => "Cost Center",

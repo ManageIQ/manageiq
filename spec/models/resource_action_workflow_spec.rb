@@ -4,7 +4,6 @@ describe ResourceActionWorkflow do
 
   context "#create" do
     before(:each) do
-      MiqRegion.seed
       @admin = FactoryGirl.create(:user_admin)
 
       @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')

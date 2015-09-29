@@ -3,6 +3,7 @@ require "spec_helper"
 describe OpsController do
   before(:each) do
     EvmSpecHelper.create_guid_miq_server_zone
+    MiqRegion.seed
     set_user_privileges
   end
 
@@ -242,14 +243,9 @@ end
 
 describe OpsController do
   before do
+    MiqRegion.seed
     EvmSpecHelper.local_miq_server
-    EvmSpecHelper.seed_specific_product_features("ops_rbac")
-    feature = MiqProductFeature.find_all_by_identifier("ops_rbac")
-    @test_user_role  = FactoryGirl.create(:miq_user_role,
-                                          :name                 => "test_user_role",
-                                          :miq_product_features => feature)
-    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
-    login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+    login_as FactoryGirl.create(:user, :features => "ops_rbac")
     controller.stub(:get_vmdb_config).and_return(:product => {})
   end
 

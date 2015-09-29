@@ -12,28 +12,26 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      data = self.seed_data.split("\n")
-      cols = data.shift.split(",")
+    data = seed_data.split("\n")
+    cols = data.shift.split(",")
 
-      data.each do |a|
-        next if a =~ /^#.*$/ # skip commented lines
+    data.each do |a|
+      next if a =~ /^#.*$/ # skip commented lines
 
-        arr = a.split(",")
+      arr = a.split(",")
 
-        action = {}
-        cols.each_index {|i| action[cols[i].to_sym] = arr[i]}
+      action = {}
+      cols.each_index { |i| action[cols[i].to_sym] = arr[i] }
 
-        rec = self.where(:name => action[:name]).first
-        if rec.nil?
-          _log.info("Creating Server Role [#{action[:name]}]")
-          rec = self.create(action)
-        else
-          rec.attributes = action
-          if rec.changed?
-            _log.info("Updating Server Role [#{action[:name]}]")
-            rec.save
-          end
+      rec = where(:name => action[:name]).first
+      if rec.nil?
+        _log.info("Creating Server Role [#{action[:name]}]")
+        rec = create(action)
+      else
+        rec.attributes = action
+        if rec.changed?
+          _log.info("Updating Server Role [#{action[:name]}]")
+          rec.save
         end
       end
     end

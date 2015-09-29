@@ -11,99 +11,56 @@ describe MiqReport do
     after.table.should == fake_ruport_data_table
   end
 
-  context "#paged_view_search_gp" do
-    before(:each) do
-      MiqRegion.seed
+  it '.get_expressions_by_model' do
+    FactoryGirl.create(:miq_report, :conditions => nil)
+    rep_nil = FactoryGirl.create(:miq_report)
 
-      # Create EVM tables/indexes and hourly metric data...
-      @table_1    = FactoryGirl.create(:vmdb_table_evm,  :name => "accounts")
-      @index_1    = FactoryGirl.create(:vmdb_index,      :name => "accounts_pkey", :vmdb_table => @table_1)
-      @metric_1A  = FactoryGirl.create(:vmdb_metric, :resource => @index_1, :timestamp => 2.hours.ago.utc, :capture_interval_name => 'hourly', :size => 100, :rows => 100, :pages => 100, :wasted_bytes => 100, :percent_bloat => 100)
-      @metric_1B  = FactoryGirl.create(:vmdb_metric, :resource => @index_1, :timestamp => 1.hour.ago.utc,  :capture_interval_name => 'hourly', :size => 101, :rows => 101, :pages => 101, :wasted_bytes => 101, :percent_bloat => 101)
-      @metric_1C  = FactoryGirl.create(:vmdb_metric, :resource => @index_1, :timestamp => Time.now.utc,    :capture_interval_name => 'hourly', :size => 102, :rows => 102, :pages => 102, :wasted_bytes => 102, :percent_bloat => 102)
+    # FIXME: find a way to do this in a factory
+    serialized_nil = "--- !!null \n...\n"
+    ActiveRecord::Base.connection.execute("update miq_reports set conditions='#{serialized_nil}' where id=#{rep_nil.id}")
 
-      @table_2    = FactoryGirl.create(:vmdb_table_evm,  :name => "advanced_settings")
-      @index_2    = FactoryGirl.create(:vmdb_index,      :name => "advanced_settings_pkey", :vmdb_table => @table_2)
-      @metric_2A  = FactoryGirl.create(:vmdb_metric, :resource => @index_2, :timestamp => 2.hours.ago.utc, :capture_interval_name => 'hourly', :size => 200, :rows => 200, :pages => 200, :wasted_bytes => 200, :percent_bloat => 200)
-      @metric_2B  = FactoryGirl.create(:vmdb_metric, :resource => @index_2, :timestamp => 1.hour.ago.utc,  :capture_interval_name => 'hourly', :size => 201, :rows => 201, :pages => 201, :wasted_bytes => 201, :percent_bloat => 201)
-      @metric_2C  = FactoryGirl.create(:vmdb_metric, :resource => @index_2, :timestamp => Time.now.utc,    :capture_interval_name => 'hourly', :size => 202, :rows => 202, :pages => 202, :wasted_bytes => 202, :percent_bloat => 202)
+    rep_ok  = FactoryGirl.create(:miq_report, :conditions => "SOMETHING")
+    reports = MiqReport.get_expressions_by_model('Vm')
+    expect(reports).to eq(rep_ok.name => rep_ok.id)
+  end
 
-      @table_3    = FactoryGirl.create(:vmdb_table_evm,  :name => "assigned_server_roles")
-      @index_3    = FactoryGirl.create(:vmdb_index,      :name => "assigned_server_roles_pkey", :vmdb_table => @table_3)
-      @metric_3A  = FactoryGirl.create(:vmdb_metric, :resource => @index_3, :timestamp => 2.hours.ago.utc, :capture_interval_name => 'hourly', :size => 300, :rows => 300, :pages => 300, :wasted_bytes => 300, :percent_bloat => 300)
-      @metric_3B  = FactoryGirl.create(:vmdb_metric, :resource => @index_3, :timestamp => 1.hour.ago.utc,  :capture_interval_name => 'hourly', :size => 301, :rows => 301, :pages => 301, :wasted_bytes => 301, :percent_bloat => 301)
-      @metric_3C  = FactoryGirl.create(:vmdb_metric, :resource => @index_3, :timestamp => Time.now.utc,    :capture_interval_name => 'hourly', :size => 302, :rows => 302, :pages => 302, :wasted_bytes => 302, :percent_bloat => 302)
+  it "paged_view_search on vmdb_* tables" do
+    # Create EVM tables/indexes and hourly metric data...
+    table = FactoryGirl.create(:vmdb_table_evm, :name => "accounts")
+    index = FactoryGirl.create(:vmdb_index, :name => "accounts_pkey", :vmdb_table => table)
+    FactoryGirl.create(:vmdb_metric, :resource => index, :timestamp => Time.now.utc, :capture_interval_name => 'hourly', :size => 102, :rows => 102, :pages => 102, :wasted_bytes => 102, :percent_bloat => 102)
 
-      @index_3A   = FactoryGirl.create(:vmdb_index,      :name => "assigned_server_roles_idx", :vmdb_table => @table_3)
-      @metric_3AA = FactoryGirl.create(:vmdb_metric, :resource => @index_3A, :timestamp => 2.hour.ago.utc, :capture_interval_name => 'hourly', :size => 310, :rows => 310, :pages => 310, :wasted_bytes => 310, :percent_bloat => 310)
-      @metric_3AB = FactoryGirl.create(:vmdb_metric, :resource => @index_3A, :timestamp => 1.hour.ago.utc, :capture_interval_name => 'hourly', :size => 311, :rows => 311, :pages => 311, :wasted_bytes => 311, :percent_bloat => 311)
-      @metric_3AC = FactoryGirl.create(:vmdb_metric, :resource => @index_3A, :timestamp => Time.now.utc,   :capture_interval_name => 'hourly', :size => 312, :rows => 312, :pages => 312, :wasted_bytes => 312, :percent_bloat => 312)
+    report_args = {
+      "db"          => "VmdbIndex",
+      "cols"        => ["name"],
+      "include"     => {"vmdb_table" => {"columns" => ["type"]}, "latest_hourly_metric" => {"columns" => ["rows", "size", "wasted_bytes", "percent_bloat"]}},
+      "col_order"   => ["name", "latest_hourly_metric.rows", "latest_hourly_metric.size", "latest_hourly_metric.wasted_bytes", "latest_hourly_metric.percent_bloat"],
+      "col_formats" => [nil, nil, :bytes_human, :bytes_human, nil],
+    }
 
-      @report_args = {
-        "title"       => "VmdbIndex",
-        "name"        => "VmdbIndex",
-        "db"          => "VmdbIndex",
-        "cols"        => ["name"],
-        "include"     => {"vmdb_table" => {"columns" => ["type"]}, "latest_hourly_metric" => {"columns"=>["rows", "size", "wasted_bytes", "percent_bloat"]}},
-        "col_order"   => ["name", "latest_hourly_metric.rows", "latest_hourly_metric.size", "latest_hourly_metric.wasted_bytes", "latest_hourly_metric.percent_bloat"],
-        "col_formats" => [nil, nil, :bytes_human, :bytes_human, nil],
-        "headers"     => ["Name", "Rows", "Size", "Wasted", "Percent Bloat"],
-        "order"       => "Ascending",
-        "sortby"      => ["name"],
-        "group"       => "n",
-      }
+    report = MiqReport.new(report_args)
 
-      @search_expression  = MiqExpression.new({"and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}]})
+    search_expression = MiqExpression.new("and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}])
 
-    end
-
-    describe 'self.get_expressions_by_model' do
-      it 'it returns only reports with non-nil conditions' do
-
-        test_group = FactoryGirl.create(:miq_group)
-        rep_null = FactoryGirl.create(:miq_report_with_null_condition)
-
-        rep_nil  = FactoryGirl.create(:miq_report_wo_null_but_nil_condition)
-        # FIXME: find a way to do this in a factory
-        crap = "--- !!null \n...\n"
-        ActiveRecord::Base.connection.execute("update miq_reports set conditions='#{crap}' where id=#{rep_nil.id}")
-
-        rep_ok   = FactoryGirl.create(:miq_report_with_non_nil_condition)
-
-        reports = MiqReport.get_expressions_by_model('Vm')
-
-        reports.should be_kind_of(Hash)
-        reports.count.should == 1
-        reports.find { |report| report[0] == rep_null.name }.should be_nil
-        reports.find { |report| report[0] == rep_nil.name }.should be_nil
-        reports.find { |report| report[0] == rep_ok.name }.should_not be_nil
-      end
-    end
-
-
-    it "reports on EVM table indexes and metrics properly" do
-
-      report = MiqReport.new(@report_args)
-
-      search_expression  = MiqExpression.new({"and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}]})
-
-      options = { :targets_hash   => true,
-                  :filter         => search_expression,
-                  :page           => 1,
-                  :per_page       => 20
-      }
-
-      results, attrs = report.paged_view_search(options)
-      results.count.should be 4
-    end
+    results, = report.paged_view_search(:filter => search_expression)
+    expect(results.data.collect(&:data)).to eq(
+      [{
+        "name"                               => "accounts_pkey",
+        "vmdb_table.type"                    => "VmdbTableEvm",
+        "latest_hourly_metric.rows"          => 102,
+        "latest_hourly_metric.size"          => 102,
+        "latest_hourly_metric.wasted_bytes"  => 102.0,
+        "latest_hourly_metric.percent_bloat" => 102.0,
+        "id"                                 => index.id
+      }]
+    )
   end
 
   context "#paged_view_search" do
     OS_LIST = %w{_none_ windows ubuntu windows ubuntu}
 
     before(:each) do
-      MiqRegion.seed
-
+      # TODO: Move this setup to the examples that need it.
       @tags = {
         2  => "/managed/environment/prod",
         3  => "/managed/environment/dev",
@@ -111,7 +68,6 @@ describe MiqReport do
         5  => "/managed/service_level/silver"
       }
 
-      User.any_instance.stub(:validate => true)
       @group = FactoryGirl.create(:miq_group)
       @user  = FactoryGirl.create(:user, :miq_groups => [@group])
     end
@@ -145,18 +101,73 @@ describe MiqReport do
       expect(results.data.collect { |rec| rec.data['id'] }).to match_array [vm1.id, vm2.id]
     end
 
-    it "paging" do
-      FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:vm_vmware)
-      ids = Vm.order(:id).pluck(:id)
+    it "paging with order" do
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryGirl.create(:vm_vmware)
+      ids = [vm1.id, vm2.id].sort
 
-      report        = MiqReport.new(:db => "Vm", :sortby => "id")
-      report.extras = { :target_ids_for_paging => ids, :attrs_for_paging => {}}
-      results, _    = report.paged_view_search(:page => 2, :per_page => 2 )
+      report    = MiqReport.new(:db => "Vm", :sortby => "id", :order => "Descending")
+      results,  = report.paged_view_search(:page => 2, :per_page => 1)
+      found_ids = results.data.collect { |rec| rec.data['id'] }
+
+      expect(found_ids).to eq [ids.first]
+    end
+
+    it "target_ids_for_paging caches results" do
+      vm = FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:vm_vmware)
+
+      report        = MiqReport.new(:db => "Vm")
+      report.extras = {:target_ids_for_paging => [vm.id], :attrs_for_paging => {}}
+      results,      = report.paged_view_search(:page => 1, :per_page => 10)
       found_ids     = results.data.collect { |rec| rec.data['id'] }
+      expect(found_ids).to eq [vm.id]
+    end
 
-      expect(found_ids).to eq [ids.last]
+    it "VMs under Host with order" do
+      host1 = FactoryGirl.create(:host)
+      FactoryGirl.create(:vm_vmware, :host => host1, :name => "a")
+
+      host2 = FactoryGirl.create(:host)
+      vmb   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "b")
+      vmc   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "c")
+
+      report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
+      results, = report.paged_view_search(
+        :parent      => host2,
+        :association => "vms",
+        :only        => ["name"],
+        :page        => 1,
+        :per_page    => 2
+      )
+      names = results.data.collect(&:name)
+      expect(names).to eq [vmc.name, vmb.name]
+    end
+
+    it "user managed filters" do
+      # TODO: Move user setup code here, remove @user/@group ivars
+      vm1 = FactoryGirl.create(:vm_vmware)
+      vm1.tag_with("/managed/environment/prod", :ns => "*")
+
+      vm2 = FactoryGirl.create(:vm_vmware)
+      vm2.tag_with("/managed/environment/dev", :ns => "*")
+
+      User.stub(:server_timezone => "UTC")
+      @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
+
+      report = MiqReport.new(:db => "Vm")
+      results, attrs = report.paged_view_search(
+        :only   => ["name"],
+        :userid => @user.userid,
+      )
+      expect(results.length).to eq 1
+      expect(results.data.collect(&:name)).to eq [vm1.name]
+      expect(report.table.length).to eq 1
+      expect(attrs[:apply_sortby_in_search]).to be_true
+      expect(attrs[:apply_limit_in_sql]).to be_true
+      expect(attrs[:auth_count]).to eq 1
+      expect(attrs[:user_filters]["managed"]).to eq [["/managed/environment/prod"]]
+      expect(attrs[:total_count]).to eq 2
     end
 
     context "with tagged VMs" do
@@ -191,63 +202,6 @@ describe MiqReport do
         before(:each) do
           User.stub(:server_timezone => "UTC")
           @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto"=>[]})
-        end
-
-        it "works when page parameters are passed" do
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {
-            :only     => ["name"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should  == "Test Group 4 VM 80"
-          report.table.length.should == 10
-          report.table.data.first["name"].should == "Test Group 4 VM 89"
-          report.table.data.last["name"].should  == "Test Group 4 VM 80"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 100
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 100
-        end
-
-        it "works when page parameters and user filters are passed" do
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {
-            :only     => ["name"],
-            :userid   => @user.userid,
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 4 VM 90"
-          results.data.last["name"].should  == "Test Group 1 VM 0"
-          report.table.length.should == 10
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 10
-          attrs[:user_filters]["managed"].should == [["/managed/environment/prod"], ["/managed/service_level/silver"]]
-          attrs[:total_count].should == 100
-
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {
-            :only     => ["name"],
-            :userid   => @user.userid,
-            :page     => 3,
-            :per_page => 2
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 2
-          results.data.first["name"].should == "Test Group 3 VM 50"
-          results.data.last["name"].should  == "Test Group 2 VM 40"
-          report.table.length.should == 2
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 10
-          attrs[:user_filters]["managed"].should == [["/managed/environment/prod"], ["/managed/service_level/silver"]]
-          attrs[:total_count].should == 100
         end
 
         it "works when page parameters and user filters are passed and sort column is in a sub-table" do
@@ -447,32 +401,6 @@ describe MiqReport do
           lambda { results, attrs = report.paged_view_search(options) }.should_not raise_error
           results.length.should == 20
           attrs[:total_count].should == 100
-        end
-      end
-
-      context "with a parent and an association" do
-        before(:each) do
-          @host = @hosts.first
-        end
-
-        it "returns the correct number of VMs under Host in the correct order" do
-          report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
-          options = {
-            :parent   => @host,
-            :association => "vms",
-            :only     => ["name"],
-            :page     => 2,
-            :per_page => 10
-          }
-          results, attrs = report.paged_view_search(options)
-          results.length.should == 10
-          results.data.first["name"].should == "Test Group 1 VM 21"
-          results.data.last["name"].should  == "Test Group 1 VM 13"
-          attrs[:apply_sortby_in_search].should be_true
-          attrs[:apply_limit_in_sql].should be_true
-          attrs[:auth_count].should == 25
-          attrs[:user_filters]["managed"].should be_empty
-          attrs[:total_count].should == 25
         end
       end
     end

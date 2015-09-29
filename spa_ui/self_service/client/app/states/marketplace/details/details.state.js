@@ -27,7 +27,9 @@
 
   /** @ngInject */
   function resolveServiceTemplate($stateParams, CollectionsApi) {
-    return CollectionsApi.get('service_templates', $stateParams.serviceTemplateId);
+    var options = {attributes: ['picture', 'picture.image_href']};
+
+    return CollectionsApi.get('service_templates', $stateParams.serviceTemplateId, options);
   }
 
   /** @ngInject */

@@ -168,27 +168,21 @@ class MiqWorker < ActiveRecord::Base
   # Convert the Models name from MiqGenericWorker to :generic_worker
   def self.settings_name
     @settings_name ||=
-      if parent == ManageIQ::Providers::BaseManager
-        normalized_type.to_sym
-      elsif parent.parent == ManageIQ::Providers
-        :"#{normalized_type}_#{parent.name.demodulize.sub(/Manager$/, '').underscore}"
-      elsif parent != Object
-        :"#{normalized_type}_#{parent.parent.name.demodulize.underscore}"
-      elsif self == MiqWorker
+      if self == MiqWorker
         :worker_base
+      elsif parent.try(:short_token)
+        # :generic_worker_infra, :generic_worker_vmware
+        :"#{normalized_type}_#{parent.short_token.underscore}"
       else
-        self.name.underscore[4..-1].to_sym
+        # :generic_worker
+        normalized_type.to_sym
       end
   end
 
-  def self.corresponding_runner
-    @corresponding_runner ||= self::Runner.name
-  end
-
-  # Grab all the classes in the hierarchy but ActiveRecord::Base and Object (and BasicObject on 1.9)
+  # Grab all the classes in the hierarchy below ActiveRecord::Base
   def self.path_to_my_worker_settings
-    excluded = %w(ActiveRecord::Base Object BasicObject)
-    @path_to_my_worker_settings ||= self.hierarchy.reject {|c| excluded.include?(c.name)}.reverse.collect(&:settings_name)
+    @path_to_my_worker_settings ||=
+      ancestors.grep(Class).select { |c| c < ActiveRecord::Base }.reverse.collect(&:settings_name)
   end
 
   def self.fetch_worker_settings_from_server(miq_server, options = {})
@@ -488,7 +482,11 @@ class MiqWorker < ActiveRecord::Base
   protected
 
   def self.normalized_type
-    @normalized_type ||= self.name[3..-1].underscore
+    @normalized_type ||= if parent == Object
+                           self.name.sub(/^Miq/, '').underscore
+                         else
+                           self.name.demodulize.underscore
+                         end
   end
 
   def self.nice_prefix
@@ -508,7 +506,7 @@ class MiqWorker < ActiveRecord::Base
 
     cl = "#{self.nice_prefix} #{Gem.ruby}"
     cl << " " << File.join(rr, "bin/rails runner")
-    cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self.corresponding_runner}")
+    cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self::Runner}")
     cl << " " << self.name
     params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
 

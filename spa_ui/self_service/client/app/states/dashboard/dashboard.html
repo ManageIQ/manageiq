@@ -1,109 +1,88 @@
-<div class="container-fluid container-cards-pf">
+<div class="container-fluid container-cards-pf ss-dashboard">
   <div class="row row-cards-pf">
     <div class="col-xs-6 col-sm-6 col-md-6">
-      <div class="card-pf card-pf-aggregate-status pf-card__primary" ui-sref="services.list">
-        <h2 class="card-pf-title">
-          Services
-        </h2>
-
+      <div class="card-pf card-pf-accented ss-dashboard__card-primary" ui-sref="services.list">
         <div class="card-pf-body">
-          <p class="card-pf-aggregate-status-notifications">
-            <span class="card-pf-aggregate-status-notification"><span
-              class="fa fa-file-o"></span></span>
-            <span class="card-pf-aggregate-status-notification">{{ ::vm.servicesCount }}</span>
-          </p>
+          <span class="fa fa-file-o"></span>
+          <div class="ss-dashboard__card-primary__count">
+            <h2>{{ ::vm.servicesCount }}</h2>
+            <h3>Total Services</h3>
+          </div>
         </div>
       </div>
     </div>
     <div class="col-xs-6 col-sm-6 col-md-6">
-      <div class="card-pf card-pf-aggregate-status card-pf-with-action pf-card__primary" ui-sref="order-history.list">
-        <h2 class="card-pf-title">
-          Requests
-        </h2>
-
+      <div class="card-pf card-pf-accented ss-dashboard__card-primary" ui-sref="order-history.list">
         <div class="card-pf-body">
-          <p class="card-pf-aggregate-status-notifications">
-            <span class="card-pf-aggregate-status-notification"><span
-              class="fa fa-file-text-o"></span></span>
-            <span class="card-pf-aggregate-status-notification">{{ ::vm.requestsCount}}</span>
-          </p>
+          <span class="fa fa-file-text-o"></span>
+          <div class="ss-dashboard__card-primary__count">
+            <h2>{{ ::vm.requestsCount}}</h2>
+            <h3>Total Requests</h3>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div class="row row-cards-pf">
     <div class="col-xs-6 col-sm-6 col-md-6">
-      <div pf-card head-title="My Services">
+      <div class="card-pf">
         <div class="row row-cards-pf">
-          <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="card-pf card-pf-aggregate-status card-pf-footer">
+            <div class="card-pf card-pf-aggregate-status card-divider">
+              <h2 class="card-pf-title">
+                <a ui-sref="services.list">Services Online</a>
+              </h2>
               <div class="card-pf-body">
-                <p class="card-pf-aggregate-status-notifications">
-            <span class="card-pf-aggregate-status-notification">
-              <span class="pficon pficon-ok"></span></span>
-                  <span class="card-pf-aggregate-status-notification"><a href="#">8</a></span>
-
-                <h2 class="card-pf-title">
-                  <a ui-sref="services.list">Online</a>
-                </h2>
+                <p class="card-pf-aggregate-status-notifications">    
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon pficon-ok"></span></span>
+                    <span class="card-pf-aggregate-status-notification"><a href="#">8</a>
+                  </span>
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="row row-cards-pf">
-          <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="card-pf card-pf-aggregate-status card-pf-footer">
+            <div class="card-pf card-pf-aggregate-status">
               <div class="card-pf-body">
-                <p class="card-pf-aggregate-status-notifications">
-            <span class="card-pf-aggregate-status-notification">
-              <span class="pficon  pficon-warning-triangle-o"></span></span>
-                  <span class="card-pf-aggregate-status-notification"><a href="#">1</a></span>
-
                 <h2 class="card-pf-title">
                   <a ui-sref="services.list">Expiring Soon</a>
                 </h2>
+                <p class="card-pf-aggregate-status-notifications">  
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon  pficon-warning-triangle-o"></span>
+                  </span>
+                  <span class="card-pf-aggregate-status-notification"><a href="#">1</a></span>
                 </p>
               </div>
             </div>
-          </div>
         </div>
-
       </div>
     </div>
     <div class="col-xs-6 col-sm-6 col-md-6">
-      <div pf-card head-title="My Requests">
+      <div class="card-pf">
         <div class="row row-cards-pf">
-          <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="card-pf card-pf-aggregate-status card-pf-footer">
-              <div class="card-pf-body">
-                <p class="card-pf-aggregate-status-notifications">
-            <span class="card-pf-aggregate-status-notification">
-              <span class="pficon pficon-error-circle-o"></span></span>
-                  <span class="card-pf-aggregate-status-notification"><a href="#">4</a></span>
-
-                <h2 class="card-pf-title">
-                  <a ui-sref="services.list">Denied</a>
-                </h2>
-                </p>
-              </div>
+          <div class="card-pf card-pf-aggregate-status card-divider">
+            <h2 class="card-pf-title">
+              <a ui-sref="services.list">Denied Requests</a>
+            </h2>
+            <div class="card-pf-body">
+              <p class="card-pf-aggregate-status-notifications">
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon pficon-error-circle-o"></span>
+                </span>
+                <span class="card-pf-aggregate-status-notification"><a href="#">4</a></span>
+              </p>
             </div>
           </div>
-        </div>
-        <div class="row row-cards-pf">
-          <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="card-pf card-pf-aggregate-status card-pf-footer">
-              <div class="card-pf-body">
-                <p class="card-pf-aggregate-status-notifications">
-            <span class="card-pf-aggregate-status-notification">
-              <span class="pficon  pficon-warning-triangle-o"></span></span>
-                  <span class="card-pf-aggregate-status-notification"><a href="#">2</a></span>
-
-                <h2 class="card-pf-title">
-                  <a ui-sref="services.list">Pending</a>
-                </h2>
-                </p>
-              </div>
+          <div class="card-pf card-pf-aggregate-status">
+            <div class="card-pf-body">
+              <h2 class="card-pf-title">
+                <a ui-sref="services.list">Pending Requests</a>
+              </h2>
+              <p class="card-pf-aggregate-status-notifications">  
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                </span>
+                <span class="card-pf-aggregate-status-notification"><a href="#">2</a></span>
+              </p>
             </div>
           </div>
         </div>

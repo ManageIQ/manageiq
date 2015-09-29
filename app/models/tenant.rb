@@ -64,6 +64,10 @@ class Tenant < ActiveRecord::Base
     self.class.descendants_of(self).where(:divisible => false)
   end
 
+  def accessible_tenant_ids(strategy = nil)
+    (strategy ? send(strategy) : []).append(id)
+  end
+
   def name
     tenant_attribute(:name, :company)
   end
@@ -188,9 +192,10 @@ class Tenant < ActiveRecord::Base
     roots.first
   end
 
+  # NOTE: returns the root tenant
   def self.seed
-    MiqRegion.my_region.lock do
-      Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => true)
+    root_tenant || create!(:use_config_for_attributes => true) do |_|
+      _log.info("Creating root tenant")
     end
   end
 

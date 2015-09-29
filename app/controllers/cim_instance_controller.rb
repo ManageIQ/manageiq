@@ -94,21 +94,7 @@ class CimInstanceController < ApplicationController
 
     if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new","#{pfx}_clone",
                                                 "#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
-      if @redirect_controller
-        if ["#{pfx}_clone","#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
-          render :update do |page|
-            page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :prov_type=>@prov_type, :prov_id=>@prov_id
-          end
-        else
-          render :update do |page|
-            page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id
-          end
-        end
-      else
-        render :update do |page|
-          page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
-        end
-      end
+      render_or_redirect_partial(pfx)
     else
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
@@ -161,7 +147,7 @@ class CimInstanceController < ApplicationController
     else
       whitelisted_key = associations.keys.find { |key| key == @display }
       if whitelisted_key.present?
-        model_name = whitelisted_key.singularize.classify.constantize
+        model_name = whitelisted_key.singularize.classify
         drop_breadcrumb( {:name=>@record.evm_display_name+" (All #{ui_lookup(:tables => @display.singularize)})", :url=>"/#{self.class.table_name}/show/#{@record.id}?display=#{@display}"} )
         @view, @pages = get_view(model_name, :parent=>@record, :parent_method => associations[@display])  # Get the records (into a view) and the paginator
         @showtype = @display

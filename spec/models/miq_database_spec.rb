@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe MiqDatabase do
   it "has a size" do
-    MiqDatabase.seed
-    db = MiqDatabase.first
+    db = MiqDatabase.seed
     expect(db.size).to be >= 0
   end
 

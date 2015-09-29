@@ -11,12 +11,12 @@
 
 %script{:type => "text/javascript"}
   - unless @parent.nil?
-    ManageIQ.record.parentId = "#{@parent.id}";
-    ManageIQ.record.parentClass = "#{@parent.class.base_class.to_s.underscore}";
+    ManageIQ.record.parentId = "#{raw j(@parent.id)}";
+    ManageIQ.record.parentClass = "#{raw j(@parent.class.base_class.to_s.underscore)}";
     if (ManageIQ.record.parentClass == "policy_set") { ManageIQ.record.parentClass = "policy"; }
-    else if (ManageIQ.record.parentClass == "ext_management_system") { ManageIQ.record.parentClass = "#{@layout}"; }
+    else if (ManageIQ.record.parentClass == "ext_management_system") { ManageIQ.record.parentClass = "#{raw j(@layout)}"; }
   - if options[:action_url]
-    ManageIQ.actionUrl = "#{options[:action_url].html_safe}";
-  ManageIQ.grids.grids['#{options[:grid_name].html_safe}'] = {g_id:'#{options[:grid_id].html_safe}', opts:#{options.to_json.html_safe}, xml:"#{escape_javascript(options[:grid_xml]).html_safe}", obj:null};
+    ManageIQ.actionUrl = "#{raw j(options[:action_url])}";
+  ManageIQ.grids.grids["#{raw j(options[:grid_name])}"] = {g_id:"#{raw j(options[:grid_id])}",opts:#{raw options.to_json},xml:"#{raw j(options[:grid_xml])}",obj:null};
   - if request.xml_http_request?
-    miqInitGrid('#{options[:grid_name]}');
+    miqInitGrid("#{raw j(options[:grid_name])}");

@@ -11,7 +11,7 @@ describe "Orchestration check_provisioned Method Validation" do
   let(:user)                    { FactoryGirl.create(:user) }
   let(:ws)                      { MiqAeEngine.instantiate(ws_url) }
   let(:ws_url)                  { "/Cloud/Orchestration/Provisioning/StateMachines/Methods/CheckProvisioned?MiqRequestTask::service_template_provision_task=#{miq_request_task.id}" }
-  let(:ws_with_refresh_started) { MiqAeEngine.instantiate("#{ws_url}&ae_state_data=#{URI.escape(YAML.dump('provider_last_refresh' => Time.now, 'deploy_result' => deploy_result))}") }
+  let(:ws_with_refresh_started) { MiqAeEngine.instantiate("#{ws_url}&ae_state_data=#{URI.escape(YAML.dump('provider_last_refresh' => Time.now.to_i, 'deploy_result' => deploy_result))}") }
 
   it "waits for the deployment to complete" do
     ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATING', nil] }

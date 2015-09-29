@@ -800,5 +800,4 @@ class DashboardController < ApplicationController
     session[:layout]          = @layout
     session[:vm_current_page] = @current_page
   end
-
 end

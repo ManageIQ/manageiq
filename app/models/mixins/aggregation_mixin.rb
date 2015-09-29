@@ -7,6 +7,7 @@ module AggregationMixin
     virtual_column :aggregate_memory,        :type => :integer, :uses => :all_relationships
     virtual_column :aggregate_vm_cpus,       :type => :integer, :uses => :all_relationships
     virtual_column :aggregate_vm_memory,     :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_disk_capacity, :type => :integer, :uses => :all_relationships
 
     # Helper method to override the virtual_column :uses definitions in the
     # event that the all_* methods are overridden
@@ -17,6 +18,7 @@ module AggregationMixin
         virtual_columns_hash["aggregate_logical_cpus"].uses  = new_uses
         virtual_columns_hash["aggregate_physical_cpus"].uses = new_uses
         virtual_columns_hash["aggregate_memory"].uses        = new_uses
+        virtual_columns_hash["aggregate_disk_capacity"].uses = new_uses
       when :all_vms_and_templates
         virtual_columns_hash["aggregate_vm_cpus"].uses       = new_uses
         virtual_columns_hash["aggregate_vm_memory"].uses     = new_uses
@@ -46,6 +48,10 @@ module AggregationMixin
 
   def aggregate_vm_memory(targets = nil)
     aggregate_hardware(:vms_and_templates, :memory_cpu, targets)
+  end
+
+  def aggregate_disk_capacity(targets = nil)
+    aggregate_hardware(:hosts, :disk_capacity, targets)
   end
 
   # Default implementations which can be overridden with something more optimized

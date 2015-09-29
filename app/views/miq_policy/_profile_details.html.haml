@@ -13,13 +13,13 @@
           %label.control-label.col-md-2
             = _("Description")
           - if @edit
-            .col-md-10
+            .col-md-8
               = text_field_tag("description", @edit[:new][:description],
                 :maxlength         => MAX_DESC_LEN,
                 "data-miq_observe" => observe_with_interval)
             = javascript_tag(javascript_focus('description'))
           - else
-            .col-md-10
+            .col-md-8
               = h(@profile.description)
       %hr
 

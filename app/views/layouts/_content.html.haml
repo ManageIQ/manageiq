@@ -5,9 +5,16 @@
     .row{:style => "height: 100%"}
       .col-md-12#center_div{:style => "height: 100%"}
 - else
+  -#.container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}ű
   .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
     .row.scrollable-sm#center_div{:style => "height: 100%"}
       - if layout_uses_listnav?
+        -# Helper variables for the sidebar
+          - session[:sidebar] ||= {}
+          - sidewidth = session[:sidebar][params[:controller]] ||= 2
+          - maindiv = 12 - sidewidth
+          - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
+        -# .max-height.resizable{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         .col-md-10.col-md-push-2.max-height
           - if taskbar_in_header?
             .row#main_taskbar
@@ -24,6 +31,15 @@
           .row{:style => "overflow: auto;height: calc(100% - 150px);"}
             .col-md-12
               = yield
+          -# Resizing buttons for the resizable sidebar
+            .resizer.hidden-xs
+              .resizer-box
+                .btn-group
+                  .btn.btn-default.resize-left
+                    %span.fa.fa-angle-left
+                  .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
+                    %span.fa.fa-angle-right
+        -#.sidebar-pf.sidebar-pf-left.scrollable-lg.resizable{:class => sidebar}
         .col-md-2.col-md-pull-10.sidebar-pf.sidebar-pf-left.scrollable-lg
           = render :partial => "layouts/listnav"
 

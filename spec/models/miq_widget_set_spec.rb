@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe MiqWidgetSet do
-  let(:group) { FactoryGirl.create(:miq_group, :description => 'dev group') }
-  let(:user)  { FactoryGirl.create(:user, :name => 'cloud', :userid => 'cloud', :miq_groups => [group]) }
+  let(:group) { user.current_group }
+  let(:user)  { FactoryGirl.create(:user_with_group) }
   before do
     @ws_group = FactoryGirl.create(:miq_widget_set, :name => 'Home', :owner => group)
   end

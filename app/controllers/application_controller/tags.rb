@@ -253,7 +253,7 @@ module ApplicationController::Tags
     else
       @edit = nil # clean out the saved info
       render :update do |page|
-        page.redirect_to(@breadcrumbs[-2][:url])                # Go to previous breadcrumb
+        page.redirect_to(previous_breadcrumb_url)
       end
     end
   end
@@ -272,7 +272,7 @@ module ApplicationController::Tags
     else
       @edit = nil
       render :update do |page|
-        page.redirect_to(@breadcrumbs[-2][:url])                # Go to previous breadcrumb
+        page.redirect_to(previous_breadcrumb_url)
       end
     end
   end

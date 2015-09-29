@@ -1,36 +1,49 @@
 language: ruby
 rvm:
-- "2.2"
+- '2.2'
 sudo: false
 cache: bundler
 env:
   global:
   - RUBY_GC_MALLOC_LIMIT=90000000
   matrix:
-  - "GEM=manageiq_foreman"
-  - "GEM=pending"
-  - "TEST_SUITE=vmdb"
-  - "TEST_SUITE=migrations"
-  - "TEST_SUITE=replication"
-  - "TEST_SUITE=automation"
-  - "TEST_SUITE=javascript"
-  - "TEST_SUITE=brakeman"
+  - TEST_SUITE=vmdb
+  - TEST_SUITE=automation
+  - TEST_SUITE=migrations
+  - TEST_SUITE=self_service SPA_UI=self_service
+  - TEST_SUITE=brakeman
+  - TEST_SUITE=replication
+  - GEM=pending
+  - TEST_SUITE=javascript
+  - GEM=manageiq_foreman
 matrix:
   fast_finish: true
 addons:
   postgresql: '9.4'
 before_install:
-- "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
+- '[[ -z "$SPA_UI" ]] || nvm install 0.12'
+- 'echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc'
 - travis_retry gem install bundler -v ">= 1.8.4"
 - "[[ -f certs/v2_key.dev ]] && cp certs/v2_key.dev certs/v2_key"
-- "[[ -n \"$GEM\" ]] || echo \"1\" > REGION"
-- "[[ -n \"$GEM\" ]] || cp config/database.pg.yml config/database.yml"
-- "[[ -n \"$GEM\" ]] || psql -c \"CREATE USER root SUPERUSER PASSWORD 'smartvm';\" -U postgres"
-- "[[ -z \"$GEM\" ]] || cd gems/$GEM"
-- "export BUNDLE_WITHOUT=qpid"
-- "[[ -n \"$GEM\" ]] || export BUNDLE_WITHOUT=development:$BUNDLE_WITHOUT"
-- "export BUNDLE_GEMFILE=$PWD/Gemfile"
+- '[[ -z "$GEM" ]] || cd gems/$GEM'
+- '[[ -n "$GEM" ]] || echo "1" > REGION'
+- '[[ -n "$GEM" ]] || cp config/database.pg.yml config/database.yml'
+- '[[ -n "$GEM" ]] || psql -c "CREATE USER root SUPERUSER PASSWORD ''smartvm'';" -U postgres'
+- '[[ -n "$GEM" ]] || export BUNDLE_WITHOUT=development'
+- export BUNDLE_GEMFILE=$PWD/Gemfile
 before_script:
-- "[[ -z \"$TEST_SUITE\" ]] || bundle exec rake test:$TEST_SUITE:setup"
+- '[[ -z "$SPA_UI" ]] || pushd spa_ui/$SPA_UI'
+- '[[ -z "$SPA_UI" ]] || npm install bower gulp -g'
+- '[[ -z "$SPA_UI" ]] || npm install'
+- '[[ -z "$SPA_UI" ]] || npm version'
+- '[[ -z "$SPA_UI" ]] || popd'
+- '[[ -z "$TEST_SUITE" ]] || bundle exec rake test:$TEST_SUITE:setup'
 script:
-- "bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}"
+- bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}
+notifications:
+  webhooks:
+    urls:
+    - https://webhooks.gitter.im/e/7af45001fe6b7a4039f2
+    on_success: change
+    on_failure: always
+    on_start: never

@@ -9,10 +9,10 @@
 - else
   - edit = !@edit.nil?
 
-%tr{:id => "field_#{field.id}_tr"}
-  %td.key{:title => field.description}
+.form-group{:id => "field_#{field.id}_tr"}
+  %label.control-label.col-md-2{:title => field.description}
     = field.label
-  %td{:title => field.description}
+  .col-md-8{:title => field.description}
     - locals = {:edit => edit, :field => field, :url => url, :wf => wf}
     - case field.type
     - when 'DialogFieldTextBox'

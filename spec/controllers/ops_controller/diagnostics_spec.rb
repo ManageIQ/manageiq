@@ -65,6 +65,7 @@ describe OpsController do
       set_user_privileges
       FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
+      MiqRegion.seed
 
       session[:sandboxes] = { "ops" => { :active_tree => :diagnostics_tree } }
       post :tree_select, :id => 'root', :format => :js
@@ -78,6 +79,7 @@ describe OpsController do
     let(:user) { FactoryGirl.create(:user) }
     before do
       set_user_privileges user
+      MiqRegion.seed
       _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
     end
 

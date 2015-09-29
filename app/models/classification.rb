@@ -175,14 +175,9 @@ class Classification < ActiveRecord::Base
   end
 
   def self.categories(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
-    result = []
-    if region_id
-      cats = Classification.in_region(region_id).where("classifications.parent_id = 0").includes(:tag, :children)
-    else
-      cats = Classification.where("classifications.parent_id = 0").includes(:tag, :children)
-    end
-    cats.each { |c| result.push(c) if c.tag2ns(c.tag.name) == ns }
-    result
+    cats = self.where(:classifications => {:parent_id => 0}).includes(:tag, :children)
+    cats = cats.in_region(region_id) if region_id
+    cats.select { |c| c.ns == ns }
   end
 
   def self.category_names_for_perf_by_tag(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
@@ -427,14 +422,12 @@ class Classification < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      YAML.load_file(FIXTURE_FILE).each do |c|
-        cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
-        next if cat
+    YAML.load_file(FIXTURE_FILE).each do |c|
+      cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
+      next if cat
 
-        _log.info("Creating #{c[:name]}")
-        add_entries_from_hash(create(c.except(:entries)), c[:entries])
-      end
+      _log.info("Creating #{c[:name]}")
+      add_entries_from_hash(create(c.except(:entries)), c[:entries])
     end
 
     # Fix categories that have a nill parent_id

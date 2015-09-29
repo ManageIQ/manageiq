@@ -21,10 +21,8 @@ class Dialog < ActiveRecord::Base
   def self.seed
     dialog_import_service = DialogImportService.new
 
-    MiqRegion.my_region.lock do
-      Dir.glob(ALL_YAML_FILES).each do |file|
-        dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
-      end
+    Dir.glob(ALL_YAML_FILES).each do |file|
+      dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
     end
   end
 

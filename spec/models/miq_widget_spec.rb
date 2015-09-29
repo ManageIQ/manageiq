@@ -2,7 +2,6 @@ require "spec_helper"
 
 describe MiqWidget do
   before(:each) do
-    MiqRegion.seed
     EvmSpecHelper.local_miq_server
   end
 
@@ -11,14 +10,13 @@ describe MiqWidget do
       MiqReport.seed_report("Vendor and Guest OS")
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
-      @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => feature1)
-      @group1  = FactoryGirl.create(:miq_group, :miq_user_role => @role1)
-      @user1   = FactoryGirl.create(:user, :miq_groups => [@group1], :name => "Administrator", :userid => "admin")
+      @user1   = FactoryGirl.create(:user, :role => "role1", :features => feature1)
+      @group1  = @user1.current_group
 
       feature2 = MiqProductFeature.find_all_by_identifier("everything")
-      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => feature2)
+      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :features => feature2)
       @group2  = FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
-      @user2   = FactoryGirl.create(:user, :userid => "user2", :miq_groups => [@group2])
+      @user2   = FactoryGirl.create(:user, :miq_groups => [@group2])
 
       @widget_report_vendor_and_guest_os = MiqWidget.sync_from_hash(YAML.load('
         description: report_vendor_and_guest_os
@@ -78,7 +76,7 @@ describe MiqWidget do
 
       it "with a task" do
         @widget.miq_task = MiqTask.new
-        @widget.queue_generate_content_for_users_or_group("admin")
+        @widget.queue_generate_content_for_users_or_group(@user1.userid)
         MiqQueue.exists?({:method_name => "generate_content"}.merge(@queue_conditions)).should be_true
       end
     end
@@ -103,7 +101,7 @@ describe MiqWidget do
         end
 
         it "returns non-empty array when widget has subscribers" do
-          user_temp = add_user("test", @group1)
+          user_temp = add_user(@group1)
           ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
           @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
           result = @widget_report_vendor_and_guest_os.grouped_subscribers
@@ -115,7 +113,7 @@ describe MiqWidget do
         it "with multiple groups and users" do
           users = []
           (1..3).each do |i|
-            user_i = add_user("user_#{i}", @group2)
+            user_i = add_user(@group2)
             ws_i   = add_dashboard_for_user("Home", user_i.userid, @group2.id)
             @widget_report_vendor_and_guest_os.make_memberof(ws_i)
             users << user_i
@@ -129,7 +127,7 @@ describe MiqWidget do
         end
 
         it 'ignores the user that does not exist any more' do
-          user_temp = add_user("test", @group1)
+          user_temp = add_user(@group1)
           ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
           @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
 
@@ -148,8 +146,8 @@ describe MiqWidget do
         end
       end
 
-      def add_user(userid, group)
-        FactoryGirl.create(:user, :miq_groups => [group], :name => userid, :userid => userid)
+      def add_user(group)
+        FactoryGirl.create(:user, :miq_groups => [group])
       end
 
       def add_dashboard_for_user(db_name, userid, group)
@@ -208,13 +206,13 @@ describe MiqWidget do
       subject { MiqWidget.available_for_user(@user) }
 
       it "by role" do
-        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:roles => "Role2"})
+        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:roles => @group2.miq_user_role.name})
         expect(MiqWidget.available_for_user(@user1).count).to eq(1)
         expect(MiqWidget.available_for_user(@user2).count).to eq(2)
       end
 
       it "by group" do
-        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:groups => "Group2"})
+        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:groups => @group2.description })
         expect(MiqWidget.available_for_user(@user1).count).to eq(1)
         expect(MiqWidget.available_for_user(@user2).count).to eq(2)
       end
@@ -258,8 +256,8 @@ describe MiqWidget do
         read_only: true
       ')
 
-      ws1 = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => "user1", :group_id => group1.id)
-      ws2 = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => "admin", :group_id => @group2.id)
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => user1.userid, :group_id => group1.id)
+      ws2 = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => @user2.userid, :group_id => @group2.id)
       @widget = MiqWidget.sync_from_hash(attrs)
       ws1.add_member(@widget)
       ws2.add_member(@widget)
@@ -373,8 +371,7 @@ describe MiqWidget do
       task.pct_complete.should eq(100)
 
       @widget.visibility[:roles] = "_ALL_"
-      new_group = FactoryGirl.create(:miq_group, :miq_user_role => FactoryGirl.create(:miq_user_role))
-      new_user  = FactoryGirl.create(:user, :userid => "test task", :miq_groups => [new_group])
+      new_user  = FactoryGirl.create(:user, :userid => "test task", :role => "random")
 
       @widget.create_initial_content_for_user(new_user)
       q = MiqQueue.first
@@ -432,19 +429,17 @@ describe MiqWidget do
 
       it "multiple" do
         @widget.visibility[:roles] = "_ALL_"
-        new_role1 = FactoryGirl.create(:miq_user_role, :name => 'EvmRole-Operator')
-        new_group1 = FactoryGirl.create(:miq_group, :description => "EvmGroup-operator", :miq_user_role => new_role1)
+        new_group1 = FactoryGirl.create(:miq_group, :role => "operator")
         new_ws1 = FactoryGirl.create(:miq_widget_set,
                                      :name     => "default",
-                                     :userid   => "admin",
+                                     :userid   => @user2.userid,
                                      :group_id => new_group1.id)
         new_ws1.add_member(@widget)
 
-        new_role2 = FactoryGirl.create(:miq_user_role, :name => 'EvmRole-Approver')
-        new_group2 = FactoryGirl.create(:miq_group, :description => "EvmGroup-approver", :miq_user_role => new_role2)
+        new_group2 = FactoryGirl.create(:miq_group, :role => "approver")
         new_ws2 = FactoryGirl.create(:miq_widget_set,
                                      :name     => "default",
-                                     :userid   => "admin",
+                                     :userid   => @user2.userid,
                                      :group_id => new_group2.id)
         new_ws2.add_member(@widget)
 
@@ -557,11 +552,9 @@ describe MiqWidget do
       @role   = FactoryGirl.create(:miq_user_role)
       @group  = FactoryGirl.create(:miq_group, :miq_user_role => @role)
       @user1  = FactoryGirl.create(:user,
-                                   :userid     => "user1",
                                    :settings   => {:display => {:timezone => "Eastern Time (US & Canada)"}},
                                    :miq_groups => [@group])
       @user2  = FactoryGirl.create(:user,
-                                   :userid     => "user2",
                                    :settings   => {:display => {:timezone => "Pacific Time (US & Canada)"}},
                                    :miq_groups => [@group])
 

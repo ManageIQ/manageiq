@@ -149,6 +149,7 @@ module EmsInfraHelper::TextualSummary
         case auth.authtype
         when "default"; "Default"
         when "metrics"; "C & U Database"
+        when "amqp";    "AMQP"
         else;           "<Unknown>"
         end
 

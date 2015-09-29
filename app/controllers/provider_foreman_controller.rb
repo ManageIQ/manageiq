@@ -10,7 +10,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "foreman_provider"
+    @table_name ||= "provider_foreman"
   end
 
   def index
@@ -18,7 +18,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def show_list
-    redirect_to :action => 'explorer'
+    redirect_to :action => 'explorer', :flash_msg => @flash_array ? @flash_array[0][:message] : nil
   end
 
   def new
@@ -37,7 +37,9 @@ class ProviderForemanController < ApplicationController
     else
       assert_privileges("provider_foreman_edit_provider")
       @provider_foreman = find_by_id_filtered(ManageIQ::Providers::Foreman::ConfigurationManager,
-                                              from_cid(params[:miq_grid_checks] || params[:id]))
+                                              from_cid(params[:miq_grid_checks] ||
+                                                       params[:id] ||
+                                                       find_checked_items[0]))
       render_form
     end
   end
@@ -628,9 +630,9 @@ class ProviderForemanController < ApplicationController
   end
 
   def update_title(presenter)
-    if params[:action] == "new"
+    if action_name == "new"
       @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "foreman")
-    elsif params[:pressed] == "provider_foreman_edit_provider"
+    elsif action_name == "edit"
       @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
     end
     presenter[:right_cell_text] = @right_cell_text

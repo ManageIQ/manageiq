@@ -718,29 +718,27 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      action_fixture_file = File.join(FIXTURE_DIR, "miq_alert_default_action.yml")
-      if File.exist?(action_fixture_file)
-        action_hash = YAML.load_file(action_fixture_file)
-        action = MiqAction.new(action_hash)
-      else
-        action = nil
-      end
+    action_fixture_file = File.join(FIXTURE_DIR, "miq_alert_default_action.yml")
+    if File.exist?(action_fixture_file)
+      action_hash = YAML.load_file(action_fixture_file)
+      action = MiqAction.new(action_hash)
+    else
+      action = nil
+    end
 
-      alert_fixture_file = File.join(FIXTURE_DIR, "miq_alerts.yml")
-      if File.exist?(alert_fixture_file)
-        alist = YAML.load_file(alert_fixture_file)
+    alert_fixture_file = File.join(FIXTURE_DIR, "miq_alerts.yml")
+    if File.exist?(alert_fixture_file)
+      alist = YAML.load_file(alert_fixture_file)
 
-        alist.each do |alert_hash|
-          guid = alert_hash["guid"] || alert_hash[:guid]
-          rec = self.find_by_guid(guid)
-          if rec.nil?
-            alert = self.create(alert_hash)
-            _log.info("Added sample Alert: #{alert.description}")
-            if action
-              alert.options = {:notifications => {action.action_type.to_sym => action.options}}
-              alert.save
-            end
+      alist.each do |alert_hash|
+        guid = alert_hash["guid"] || alert_hash[:guid]
+        rec = find_by_guid(guid)
+        if rec.nil?
+          alert = create(alert_hash)
+          _log.info("Added sample Alert: #{alert.description}")
+          if action
+            alert.options = {:notifications => {action.action_type.to_sym => action.options}}
+            alert.save
           end
         end
       end

@@ -1,20 +1,34 @@
 #ns_list_div
   - if !@in_a_form
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
-    .checkall
-      %input#Toggle1{:type => "checkbox", :name => "masterToggle", :onclick => "miqCheck_AE_All('center_tb', 'ns_list_grid');"}
-      (#{_('Check All')})
-    = render :partial => 'layouts/dhtmlxgrid',
-      :locals  => {:options => {:grid_id    => "ns_list_grid_div",
-        :grid_name                          => "ns_list_grid",
-        :grid_url                           => "/miq_ae_class/tree_select/",
-        :grid_xml                           => @grid_xml,
-        :autosize                           => true,
-        :set_sizes                          => true,
-        :no_resize                          => true,
-        :skin                               => "style3",
-        :alt_row                            => true,
-        :div_in_js                          => true}}
+    %table#ns_list_grid.table.table-striped.table-bordered.table-hover.table-clickable.table-checkable
+      %thead
+        %th.narrow
+          %input.checkall{:type => 'checkbox', :title => _('Check All')}
+        %th
+        %th= _('Name')
+        %th= _('Description')
+        %th= _('Enabled')
+      %tbody{'data-click-url' => '/miq_ae_class/tree_select/'}
+        - @grid_data.each do |record|
+          - next if record.name == '$'
+          - cls_cid = "#{class_prefix(record.class)}-#{ActiveRecord::Base.compress_id(record.id)}"
+          %tr{'data-click-id' => cls_cid}
+            %td.narrow.noclick
+              %input{:type => 'checkbox', :value => cls_cid}
+            %td.narrow
+              %i.fa.fa-2x.fa-globe
+            %td
+              = record_name(record)
+            %td
+              = record.description
+            %td
+              = record.enabled
+    :javascript
+      $(function () {
+        $('#ns_list_grid').miqGrid();
+      });
+
   - else
     - url = url_for(:action => 'form_ns_field_changed', :id => "#{@ae_ns.id || 'new'}")
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}

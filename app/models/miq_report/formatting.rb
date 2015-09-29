@@ -1,3 +1,5 @@
+# Note: when changing a formatter, please consider also changing the corresponding entry in miq_formatters.js
+
 module MiqReport::Formatting
   extend ActiveSupport::Concern
 
@@ -36,6 +38,19 @@ module MiqReport::Formatting
         sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
       FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_column][col] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
     end
+  end
+
+  def javascript_format(col, format_name)
+    format_name ||= self.class.get_default_format(col, nil)
+    return nil unless format_name && format_name != :_none_
+
+    format = FORMATS[format_name]
+    function_name = format[:function][:name]
+
+    options = format.merge(format[:function]).slice(
+      %i(delimiter separator precision length tz column format prefix suffix description unit))
+
+    [function_name, options]
   end
 
   def format(col, value, options = {})

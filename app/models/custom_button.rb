@@ -13,7 +13,15 @@ class CustomButton < ActiveRecord::Base
   include UuidMixin
   acts_as_miq_set_member
 
-  BUTTON_CLASSES = %w(Vm Host ExtManagementSystem Storage EmsCluster MiqTemplate Service)
+  BUTTON_CLASSES = [
+    Vm,
+    Host,
+    ExtManagementSystem,
+    Storage,
+    EmsCluster,
+    MiqTemplate,
+    Service
+  ]
 
   def self.buttons_for(other, applies_to_id=nil)
     if other.kind_of?(Class)
@@ -133,12 +141,16 @@ class CustomButton < ActiveRecord::Base
   end
 
   def self.button_classes
-    return BUTTON_CLASSES
+    BUTTON_CLASSES.collect(&:name)
+  end
+
+  def self.name_to_button_class(name)
+    BUTTON_CLASSES.find { |klass| klass.name == name }
   end
 
   def self.available_for_user(user,group)
     user = self.get_user(user)
-    role = user.miq_user_role_name || user.role.name
+    role = user.miq_user_role_name
     # Return all automation uri's that has his role or is allowed for all roles.
     self.all.to_a.select do |uri|
       uri.parent && uri.parent.name == group && uri.visibility.has_key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?("_ALL_"))

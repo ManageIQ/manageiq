@@ -66,7 +66,7 @@ module ApplicationController::PolicySupport
         replace_right_cell
       else
         @edit = nil                                       # Clear out the session :edit hash
-        redirect_to(@breadcrumbs[-2][:url])               # Go to previous breadcrumb
+        redirect_to(previous_breadcrumb_url)
       end
     else                                                  # First time in,
       protect_build_screen                                #    build the protect screen

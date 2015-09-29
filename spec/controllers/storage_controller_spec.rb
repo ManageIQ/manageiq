@@ -70,7 +70,7 @@ describe StorageController do
       "host_reset"    => "Reset"
     }.each do |button, description|
       it "when Host #{description} button is pressed" do
-        seed_specific_product_features(button)
+        login_as FactoryGirl.create(:user, :features => button)
 
         host = FactoryGirl.create(:host)
         controller.instance_variable_set(:@_params, {:pressed => button, :miq_grid_checks => "#{host.id}"})

@@ -359,16 +359,14 @@ class MiqPolicy < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      self.all.each do |p|
-        attrs = {}
-        attrs[:towhat] = "Vm"      if p.towhat.nil?
-        attrs[:active] = true      if p.active.nil?
-        attrs[:mode]   = "control" if p.mode.nil?
-        if attrs.empty?
-          _log.info("Updating [#{p.name}]")
-          p.update_attributes(attrs)
-        end
+    all.each do |p|
+      attrs = {}
+      attrs[:towhat] = "Vm"      if p.towhat.nil?
+      attrs[:active] = true      if p.active.nil?
+      attrs[:mode]   = "control" if p.mode.nil?
+      if attrs.empty?
+        _log.info("Updating [#{p.name}]")
+        p.update_attributes(attrs)
       end
     end
   end

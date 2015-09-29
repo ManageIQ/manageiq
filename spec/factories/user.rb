@@ -1,11 +1,5 @@
 FactoryGirl.define do
   factory :user do
-    # HACK: Due to password_digest callback needing infrastructure to write out
-    #       the new password to disk.
-    before(:create) do
-      MiqRegion.seed
-    end
-
     transient do
       # e.g. "super_administrtor"
       role nil
@@ -28,6 +22,10 @@ FactoryGirl.define do
 
   factory :user_with_email, :parent => :user do
     sequence(:email) { |s| "user#{s}@example.com" }
+  end
+
+  factory :user_with_group, :parent => :user do
+    miq_groups { FactoryGirl.create_list(:miq_group, 1) }
   end
 
   factory :user_admin, :parent => :user do

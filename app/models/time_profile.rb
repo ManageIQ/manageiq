@@ -26,17 +26,12 @@ class TimeProfile < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      utc_tp = default_time_profile
-
-      if utc_tp.nil?
-        TimeProfile.create!(
-          :description          => DEFAULT_TZ,
-          :tz                   => DEFAULT_TZ,
-          :profile_type         => "global",
-          :rollup_daily_metrics => true
-        )
-      end
+    default_time_profile || create!(
+        :description          => DEFAULT_TZ,
+        :tz                   => DEFAULT_TZ,
+        :profile_type         => "global",
+        :rollup_daily_metrics => true) do |_|
+      _log.info("Creating global time profile")
     end
   end
 

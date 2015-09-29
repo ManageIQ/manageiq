@@ -7,7 +7,7 @@
 - else
   - validate = "validateClicked('#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}')"
 
-%div{'ng-show' => ng_show}
+%div{"ng-show" => ng_show, "ng-controller" => "buttonGroupController"}
   = button_tag("Validate",
                  :class     => "btn btn-primary btn-xs btn-disabled",
                  :alt       => "Validate",

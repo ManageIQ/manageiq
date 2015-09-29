@@ -1,4 +1,5 @@
 require 'spec_helper'
+include ReportsSpecHelper
 
 describe ReportFormatter::JqplotFormatter do
   context '#build_reporting_chart_dim2' do
@@ -29,14 +30,7 @@ describe ReportFormatter::JqplotFormatter do
       )
 
       expect_any_instance_of(described_class).to receive(:build_reporting_chart_dim2).once.and_call_original
-
-      ReportFormatter::ReportRenderer.render(Charting.format) do |e|
-        e.options.mri           = report
-        e.options.show_title    = true
-        e.options.graph_options = MiqReport.graph_options(600, 400)
-        e.options.theme         = 'miq'
-      end
-
+      render_report(report)
       expect(report.chart[:data]).to eq([[2, 1], [0, 1]])
       expect(report.chart[:options][:seriesDefaults][:renderer]).to eq("jQuery.jqplot.BarRenderer")
       expect(report.chart[:options][:series]).to eq([{:label => "linux_centos"}, {:label => "linux_redhat"}])
@@ -71,14 +65,7 @@ describe ReportFormatter::JqplotFormatter do
       )
 
       expect_any_instance_of(described_class).to receive(:build_reporting_chart_other).once.and_call_original
-
-      ReportFormatter::ReportRenderer.render(Charting.format) do |e|
-        e.options.mri           = report
-        e.options.show_title    = true
-        e.options.graph_options = MiqReport.graph_options(600, 400)
-        e.options.theme         = 'miq'
-      end
-
+      render_report(report)
       expect(report.chart[:data][0]).to eq([["linux_esx: 3", 3], ["widloze: 1", 1]])
       expect(report.chart[:options][:seriesDefaults][:renderer]).to eq("jQuery.jqplot.PieRenderer")
       expect(report.chart[:options][:series][0][:label]).to eq("OS Name")

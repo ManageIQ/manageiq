@@ -1,7 +1,14 @@
 class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
-  def provider_object(connection = nil)
+  include_concern 'Operations'
+
+  def provider_service(connection = nil)
     connection ||= ext_management_system.connect
-    connection.instances[ems_ref]
+    ::Azure::Armrest::VirtualMachineService.new(connection)
+  end
+
+  # The resource group is stored as part of the uid_ems. This splits it out.
+  def resource_group
+    uid_ems.split('\\').first
   end
 
   #
@@ -25,10 +32,13 @@ class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudM
   end
 
   def self.calculate_power_state(raw_power_state)
-    case raw_power_state
-    when "VM running" then "on"
-    when "VM deallocated", "VM deallocating" then "off"
-    else "unknown"
+    case raw_power_state.downcase
+    when /running/, /starting/
+      "on"
+    when /stopped/, /stopping/, /dealloc/
+      "off"
+    else
+      "unknown"
     end
   end
 end
