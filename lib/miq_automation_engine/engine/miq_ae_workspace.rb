@@ -41,13 +41,9 @@ module MiqAeEngine
     include MiqAeStateInfo
 
     attr_reader :nodes
-    DEFAULTS = {
-      :readonly => false
-    }
 
     def initialize(options = {})
-      options            = DEFAULTS.merge(options)
-      @readonly          = options[:readonly]
+      @readonly          = options[:readonly] || false
       @nodes             = []
       @current           = Array.new
       @num_drb_methods   = 0
@@ -63,23 +59,11 @@ module MiqAeEngine
       @readonly
     end
 
-    def self.instantiate_readonly(uri, workspace = nil, root = nil)
-      workspace ||= MiqAeWorkspaceRuntime.new(:readonly => true)
-      self._instantiate(uri, workspace, root)
-    end
-
-    def self.instantiate(uri, workspace = nil, root = nil)
-      workspace ||= MiqAeWorkspaceRuntime.new
-      self._instantiate(uri, workspace, root)
-    end
-
-    def self._instantiate(uri, workspace, root)
-      begin
-        workspace.instantiate(uri, root)
-      rescue MiqAeException
-        return nil
-      end
-      return workspace
+    def self.instantiate(uri, attrs = {})
+      workspace = MiqAeWorkspaceRuntime.new(attrs)
+      workspace.instantiate(uri, nil)
+      workspace
+    rescue MiqAeException
     end
 
     DATASTORE_CACHE = true

@@ -18,11 +18,10 @@ module MiqAeEngine
   AE_DEFAULT_IMPORT_FILE = File.expand_path(File.join(AE_IMPORT_DIR, 'automate.xml'))
 
   def self.instantiate(uri)
-    workspace = MiqAeWorkspaceRuntime.new
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}")
-    dummy, t = Benchmark.realtime_block(:total_time) { MiqAeWorkspaceRuntime.instantiate(uri, workspace) }
+    workspace, t = Benchmark.realtime_block(:total_time) { MiqAeWorkspaceRuntime.instantiate(uri) }
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}...Complete - Counts: #{format_benchmark_counts(t)}, Timings: #{format_benchmark_times(t)}")
-    return workspace
+    workspace
   end
 
   def self.deliver_queue(args, options = {})
@@ -316,11 +315,13 @@ module MiqAeEngine
     ae_attrs
   end
 
+  # side effect in options, :uri is set
+  # returns workspace
   def self.resolve_automation_object(uri, attr = nil, options = {}, readonly = false)
     uri = create_automation_object(uri, attr, options) if attr
     options[:uri] = uri
-    ws = readonly ? MiqAeWorkspaceRuntime.instantiate_readonly(uri) : MiqAeWorkspaceRuntime.instantiate(uri)
-    $miq_ae_logger.debug(ws.to_expanded_xml) if $miq_ae_logger.debug?
-    return ws
+    MiqAeWorkspaceRuntime.instantiate(uri, :readonly => readonly).tap do
+      $miq_ae_logger.debug { ws.to_expanded_xml }
+    end
   end
 end
