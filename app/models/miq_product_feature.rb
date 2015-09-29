@@ -98,6 +98,15 @@ class MiqProductFeature < ActiveRecord::Base
     hash.delete(:parent_identifier)
 
     hash[:parent] = parent
+    feature = seed_feature(hash)
+    seen << hash[:identifier]
+
+    children.each do |child|
+      self.seed_from_hash(child, seen, feature)
+    end
+  end
+
+  def self.seed_feature(hash)
     feature = find_by_identifier(hash[:identifier])
     if feature
       feature.attributes = hash
@@ -110,11 +119,7 @@ class MiqProductFeature < ActiveRecord::Base
       feature = create(hash.except(:id))
       feature.seed_vm_explorer_for_custom_roles
     end
-    seen << hash[:identifier]
-
-    children.each do |child|
-      seed_from_hash(child, seen, feature)
-    end
+    feature
   end
 
   def seed_vm_explorer_for_custom_roles
