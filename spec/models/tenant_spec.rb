@@ -587,25 +587,17 @@ describe Tenant do
   end
 
   describe "assigning tenants" do
-    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
+    let(:tenant)       { FactoryGirl.build(:tenant, :parent => default_tenant) }
+    let(:tenant_users) { FactoryGirl.create(:miq_user_role, :name => "tenant-users") }
+    let(:tenant_group) { FactoryGirl.create(:miq_group, :miq_user_role => tenant_users, :tenant => tenant) }
 
     it "assigns owning group tenant" do
-      tenant_users = FactoryGirl.create(:miq_user_role, :name => "tenant-users")
-      tenant_group = FactoryGirl.create(:miq_group,
-                                        :miq_user_role => tenant_users,
-                                        :tenant => tenant
-      )
       vm = FactoryGirl.create(:vm_vmware, :miq_group => tenant_group)
 
       expect(vm.tenant).to eql tenant
     end
 
     it "assigns current user tenant" do
-      tenant_users = FactoryGirl.create(:miq_user_role, :name => "tenant-users")
-      tenant_group = FactoryGirl.create(:miq_group,
-                                        :miq_user_role => tenant_users,
-                                        :tenant => tenant
-      )
       user = FactoryGirl.create(:user, :userid => 'user', :miq_groups => [tenant_group])
       User.stub(:current_user => user)
       vm = FactoryGirl.create(:vm_vmware)
@@ -615,7 +607,7 @@ describe Tenant do
 
     it "assigns parent EMS tenant" do
       ems = FactoryGirl.create(:ems_vmware, :name => 'ems', :tenant => tenant)
-      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      vm  = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
 
       expect(vm.tenant).to eql tenant
     end
