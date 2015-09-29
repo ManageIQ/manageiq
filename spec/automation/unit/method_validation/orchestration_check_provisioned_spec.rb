@@ -34,14 +34,14 @@ describe "Orchestration check_provisioned Method Validation" do
   end
 
   it "considers rollback as provision error" do
-    ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['ROLLBACK_COMPLETE', nil] }
+    ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['ROLLBACK_COMPLETE', 'Stack was rolled back'] }
     ws.root['ae_result'].should == 'error'
     ws.root['ae_reason'].should == 'Stack was rolled back'
   end
 
   it "refreshes the provider and waits for it to complete" do
     ServiceOrchestration.any_instance.stub(:orchestration_stack_status) { ['CREATE_COMPLETE', nil] }
-    ServiceOrchestration.any_instance.stub(:stack_ems_ref) { stack_ems_ref }
+    ServiceOrchestration.any_instance.stub(:orchestration_stack) { FactoryGirl.create(:orchestration_stack_amazon) }
     ManageIQ::Providers::Amazon::CloudManager.any_instance.should_receive(:refresh_ems)
     ws.root['ae_result'].should == 'retry'
   end
@@ -51,8 +51,7 @@ describe "Orchestration check_provisioned Method Validation" do
   end
 
   it "completes check_provisioned step when refresh is done" do
-    ServiceOrchestration.any_instance.stub(:stack_ems_ref) { stack_ems_ref }
-    FactoryGirl.create(:orchestration_stack, :ems_ref => stack_ems_ref)
+    ems_amazon.update_attributes(:last_refresh_date => Time.now + 100)
     ws_with_refresh_started.root['ae_result'].should == deploy_result
   end
 end
