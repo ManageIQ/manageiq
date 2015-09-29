@@ -3,8 +3,10 @@ require "spec_helper"
 silence_warnings { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
+  include WorkflowSpecHelper
+
   let(:admin)    { FactoryGirl.create(:user_with_group) }
-  let(:vm_template) { FactoryGirl.create(:template_vmware) }
+  let(:template) { FactoryGirl.create(:template_vmware) }
 
   before do
     EvmSpecHelper.local_miq_server
@@ -12,42 +14,67 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
 
   describe "#new" do
     it "pass platform attributes to automate" do
-      MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-      MiqAeEngine::MiqAeWorkspaceRuntime.should_receive(:instantiate)
-      MiqAeEngine.should_receive(:create_automation_object) do |name, attrs, _options|
-        name.should eq("REQUEST")
-        attrs.should have_attributes(
-          'request'                   => 'UI_PROVISION_INFO',
-          'message'                   => 'get_pre_dialog_name',
-          'dialog_input_request_type' => 'template',
-          'dialog_input_target_type'  => 'vm',
-          'platform_category'         => 'infra',
-          'platform'                  => 'vmware'
-        )
-      end
+      stub_dialog(:get_dialogs)
+      assert_automate_dialog_lookup("infra", "vmware", "get_pre_dialog_name", nil)
 
       described_class.new({}, admin.userid)
+    end
+
+    it "sets up workflow" do
+      stub_dialog(:get_pre_dialogs)
+      stub_dialog(:get_dialogs)
+      workflow = described_class.new(values = {}, admin.userid)
+
+      expect(workflow.requester).to eq(admin)
+      expect(values).to eq({})
     end
   end
 
   describe "#make_request" do
+    let(:alt_user) { FactoryGirl.create(:user_with_group) }
     it "creates and update a request" do
-      MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-      MiqAeEngine::MiqAeWorkspaceRuntime.should_receive(:instantiate)
+      stub_dialog(:get_pre_dialogs)
+      stub_dialog(:get_dialogs)
 
-      workflow = described_class.new(values = {}, admin.userid)
+      # if running_pre_dialog is set, it will run 'continue_request'
+      workflow = described_class.new(values = {:running_pre_dialog => false}, admin.userid)
+
+      expect(AuditEvent).to receive(:success).with(
+        :event        => "vm_provision_request_updated",
+        :target_class => "Vm",
+        :userid       => admin.userid,
+        :message      => "VM Provision requested by [#{admin.userid}] for VM:#{template.id}"
+      )
 
       # creates a request
+      stub_get_next_vm_name
 
-      MiqAeEngine.stub(:resolve_automation_object => double(:root => "x"))
+      # the dialogs populate this
+      values.merge!(:src_vm_id => template.id, :vm_tags => [])
 
-      values.merge!(:src_vm_id => vm_template.id)
-      request = workflow.make_request(nil, values, admin.userid)
+      request = workflow.make_request(nil, values, admin.userid) # TODO: nil
 
       expect(request).to be_valid
+      expect(request).to be_a_kind_of(MiqProvisionRequest)
+      expect(request.request_type).to eq("template")
+      expect(request.description).to eq("Provision from [#{template.name}] to [New VM]")
+      expect(request.requester).to eq(admin)
+      expect(request.userid).to eq(admin.userid)
+      expect(request.requester_name).to eq(admin.name)
 
       # updates a request
-      workflow.make_request(request, values, admin.userid)
+
+      stub_get_next_vm_name
+
+      workflow = described_class.new(values, alt_user.userid)
+
+      expect(AuditEvent).to receive(:success).with(
+        :event        => "vm_migrate_request_updated",
+        :target_class => "Vm",
+        :userid       => alt_user.userid,
+        :message      => "VM Provision request was successfully updated by [#{alt_user.userid}] for VM:#{template.id}"
+      )
+      workflow.make_request(request, values, alt_user.userid)
     end
   end
 end
