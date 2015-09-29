@@ -85,7 +85,7 @@ module MiqProvisionDialogs
           :display     => :show,
           :fields      => {
       :number_of_cpus     => {:data_type => :integer, :display => :edit, :required =>false, :description => "Number of CPUs",:default => 1,:values  => {1    => "1",2		=> "2",4		=> "4",8    => "8"}},
-      :vm_memory          => {:data_type => :string, :display => :edit, :required => false, :description => "Memory (MB)",:default => "1024",:values  => {"1024"  => "1024","2048"  => "2048","4096"  => "4096",}},
+      :vm_memory          => {:data_type => :string, :display => :edit, :required => false, :description => "Memory (MB)",:default => "1024",:values  => {"1024"  => "1024","2048"  => "2048","4096"  => "4096"}},
       :network_adapters   => {:data_type => :integer, :display => :hide, :required => false, :description => "Network Adapters",:default => 1,:values  => {1    => "1",2		=> "2",3		=> "3",4		=> "4"}},
       :disk_format        => {:data_type => :string, :display => :edit, :required => false, :description => "Disk Format",:default => "unchanged",:values  => {"unchanged"    => "Default","thin"		=> "Thin","thick"		=> "Thick"}},
       :cpu_limit          => {:data_type => :integer, :display => :edit, :required => false, :description => "CPU (MHz)", :notes=>"(-1 = Unlimited)", :notes_display=>:show},

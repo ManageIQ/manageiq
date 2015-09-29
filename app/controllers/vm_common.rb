@@ -521,7 +521,7 @@ module VmCommon
       srow.add_element("cell", {"image" => "blank.gif", "title" => "Disk #{idx}"}).text = calculate_disk_name(disk)
       srow.add_element("cell", {"image" => "blank.gif", "title" => "#{disk.disk_type}"}).text = disk.disk_type
       srow.add_element("cell", {"image" => "blank.gif", "title" => "#{disk.mode}"}).text = disk.mode
-      srow.add_element("cell", {"image" => "blank.gif", "title" => "#{disk.partitions_aligned}",}).text = disk.partitions_aligned
+      srow.add_element("cell", {"image" => "blank.gif", "title" => "#{disk.partitions_aligned}"}).text = disk.partitions_aligned
       srow.add_element("cell", {"image" => "blank.gif", "title" => "#{calculate_size(disk.size)}"}).text = calculate_size(disk.size)
       srow.add_element("cell", {"image" => "blank.gif", "title" => "#{calculate_size(disk.size_on_disk)}"}).text = calculate_size(disk.size_on_disk)
       srow.add_element("cell", {"image" => "blank.gif", "title" => "#{disk.used_percent_of_provisioned}"}).text = disk.used_percent_of_provisioned

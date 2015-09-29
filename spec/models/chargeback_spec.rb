@@ -303,7 +303,7 @@ describe Chargeback do
 
         @options = { :interval_size => 4,
                      :owner         => @user.userid,
-                     :ext_options   => { :tz => "Eastern Time (US & Canada)", }
+                     :ext_options   => {:tz => "Eastern Time (US & Canada)"},
                    }
       end
 

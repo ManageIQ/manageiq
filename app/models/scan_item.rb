@@ -8,7 +8,7 @@ class ScanItem < ActiveRecord::Base
   YAML_DIR = File.expand_path(File.join(Rails.root, "product/scan_items"))
   Dir.mkdir YAML_DIR unless File.exist?(YAML_DIR)
 
-  SAMPLE_VM_PROFILE    = {:name => "sample",       :description => "VM Sample",       :mode => 'Vm',   :read_only => true, }.freeze
+  SAMPLE_VM_PROFILE    = {:name => "sample",       :description => "VM Sample",    :mode => 'Vm',   :read_only => true}.freeze
   SAMPLE_HOST_PROFILE  = {:name => "host sample",  :description => "Host Sample",  :mode => 'Host', :read_only => true}.freeze
   DEFAULT_HOST_PROFILE = {:name => "host default", :description => "Host Default", :mode => 'Host'}.freeze
 
