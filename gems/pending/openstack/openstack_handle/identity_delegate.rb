@@ -1,5 +1,8 @@
 module OpenstackHandle
   class IdentityDelegate < DelegateClass(Fog::Identity::OpenStack)
+    include OpenstackHandle::HandledList
+    include Vmdb::Logging
+
     SERVICE_NAME = "Identity"
 
     attr_reader :name

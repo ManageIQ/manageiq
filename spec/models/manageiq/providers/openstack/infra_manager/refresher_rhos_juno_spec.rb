@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
                               :ipaddress => "192.0.2.1", :port => 5000)
     @ems.update_authentication(
-        :default => {:userid => "admin", :password => "3182d1c220549bdfdb50777666cdb1a2caa8472b"})
+      :default => {:userid => "admin", :password => "1e4b5875bdd1a857e91d92d40f7082e607691986"})
   end
 
   it "will perform a full refresh" do
@@ -34,34 +34,36 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_table_counts
-    ExtManagementSystem.count.should         == 1
-    EmsFolder.count.should                   == 0 # HACK: Folder structure for UI a la VMware
-    EmsCluster.count.should                  == 3
-    Host.count.should                        == 5
-    OrchestrationStack.count.should          == 83
-    OrchestrationStackParameter.count.should == 780
-    OrchestrationStackResource.count.should  == 168
-    OrchestrationStackOutput.count.should    == 83
-    OrchestrationTemplate.count.should       == 56
-    ResourcePool.count.should                == 0
-    Vm.count.should                          == 0
-    VmOrTemplate.count.should                == 5
-    CustomAttribute.count.should             == 0
-    CustomizationSpec.count.should           == 0
-    Disk.count.should                        == 5
-    GuestDevice.count.should                 == 0
-    Hardware.count.should                    == 5
-    Lan.count.should                         == 0
-    MiqScsiLun.count.should                  == 0
-    MiqScsiTarget.count.should               == 0
-    Network.count.should                     == 0
-    OperatingSystem.count.should             == 5
-    Snapshot.count.should                    == 0
-    Switch.count.should                      == 0
-    SystemService.count.should               == 0
-    Relationship.count.should                == 0
-    MiqQueue.count.should                    == 8
-    Storage.count.should                     == 0
+    expect(ExtManagementSystem.count).to         eq 1
+    expect(EmsFolder.count).to                   eq 0 # HACK: Folder structure for UI a la VMware
+    expect(EmsCluster.count).to                  eq 2
+    expect(Host.count).to                        eq 3
+    expect(OrchestrationStack.count).to          eq 79
+    expect(OrchestrationStackParameter.count).to eq 708
+    expect(OrchestrationStackResource.count).to  eq 153
+    expect(OrchestrationStackOutput.count).to    eq 80
+    expect(OrchestrationTemplate.count).to       eq 53
+    expect(ResourcePool.count).to                eq 0
+    expect(Vm.count).to                          eq 0
+    expect(VmOrTemplate.count).to                eq 5
+    expect(CustomAttribute.count).to             eq 0
+    expect(CustomizationSpec.count).to           eq 0
+    expect(Disk.count).to                        eq 3
+    expect(GuestDevice.count).to                 eq 0
+    expect(Hardware.count).to                    eq 3
+    expect(Lan.count).to                         eq 0
+    expect(MiqScsiLun.count).to                  eq 0
+    expect(MiqScsiTarget.count).to               eq 0
+    expect(Network.count).to                     eq 0
+    expect(OperatingSystem.count).to             eq 3
+    expect(Snapshot.count).to                    eq 0
+    expect(Switch.count).to                      eq 0
+    expect(SystemService.count).to               eq 0
+    # TODO(lsmola) investigate if this should be filled or not, also why
+    # it behaves strangely, it has different values in CI then locally
+    # expect(Relationship.count).to                eq 0
+    # expect(MiqQueue.count).to                    eq 9
+    expect(Storage.count).to                     eq 0
   end
 
   def assert_ems
@@ -70,21 +72,21 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :uid_ems     => nil
     )
 
-    @ems.ems_folders.size.should                 == 0 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should                == 3
-    @ems.resource_pools.size.should              == 0
-    @ems.storages.size.should                    == 0
-    @ems.hosts.size.should                       == 5
-    @ems.orchestration_stacks.size.should        == 83
-    @ems.direct_orchestration_stacks.size.should == 1
-    @ems.vms_and_templates.size.should           == 5
-    @ems.vms.size.should                         == 0
-    @ems.miq_templates.size.should               == 5
-    @ems.customization_specs.size.should         == 0
+    expect(@ems.ems_folders.size).to                 eq 0 # HACK: Folder structure for UI a la VMware
+    expect(@ems.ems_clusters.size).to                eq 2
+    expect(@ems.resource_pools.size).to              eq 0
+    expect(@ems.storages.size).to                    eq 0
+    expect(@ems.hosts.size).to                       eq 3
+    expect(@ems.orchestration_stacks.size).to        eq 79
+    expect(@ems.direct_orchestration_stacks.size).to eq 1
+    expect(@ems.vms_and_templates.size).to           eq 5
+    expect(@ems.vms.size).to                         eq 0
+    expect(@ems.miq_templates.size).to               eq 5
+    expect(@ems.customization_specs.size).to         eq 0
   end
 
   def assert_specific_host
-    @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.select { |x| x.name.include?('(Controller)') }.first
+    @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.detect { |x| x.name.include?('(Controller)') }
 
     @host.ems_ref.should_not be nil
     @host.ems_ref_obj.should_not be nil
@@ -111,11 +113,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :cpu_type           => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
       :manufacturer       => "Red Hat",
       :model              => "KVM",
-      :memory_cpu         => 4096,  # MB
+      :memory_cpu         => 8192,  # MB
       :memory_console     => nil,
       :disk_capacity      => 40,
-      :numvcpus           => 1,
-      :logical_cpus       => 1,
+      :numvcpus           => 4,
+      :logical_cpus       => 4,
       :cores_per_socket   => 1,
       :guest_os           => nil,
       :guest_os_full_name => nil,
@@ -172,13 +174,12 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     )
     template.ems_ref.should be_guid
 
-    template.ext_management_system.should  == @ems
-    template.operating_system.should       be_nil # TODO: This should probably not be nil
-    template.custom_attributes.size.should == 0
-    template.snapshots.size.should         == 0
-    template.hardware.should               be_nil
-
-    template.parent.should                 be_nil
+    expect(template.ext_management_system).to  eq @ems
+    template.operating_system.should           be_nil # TODO: This should probably not be nil
+    expect(template.custom_attributes.size).to eq 0
+    expect(template.snapshots.size).to         eq 0
+    template.hardware.should                   be_nil
+    template.parent.should                     be_nil
     template
   end
 end

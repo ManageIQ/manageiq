@@ -4,6 +4,7 @@ require 'util/miq-exception'
 module OpenstackHandle
   class Handle
     attr_accessor :username, :password, :address, :port, :api_version, :connection_options
+    attr_reader :project_name
     attr_writer   :default_tenant_name
 
     SERVICE_FALL_BACK = {
@@ -124,17 +125,18 @@ module OpenstackHandle
       tenant   = opts.delete(:tenant_name)
       # TODO(lsmola) figure out from where to take the project name and domain name
       domain   = opts.delete(:domain_name) || 'admin_domain'
-      project  = tenant
 
       unless tenant
         tenant = "any_tenant" if service == "Identity"
         tenant ||= default_tenant_name
       end
-      opts[:openstack_tenant] = tenant unless service == "Identity"
-      # TODO(lsmola) for now we will scope to keystone v3 project, investigate if we need
-      # to scope to domains also, which would be done by omitting project_name
-      opts[:openstack_project_name] = project
-      opts[:openstack_domain_name] = domain
+
+      unless service == "Identity"
+        opts[:openstack_tenant] = tenant
+        # For identity ,there is only domain scope, with project_name nil
+        opts[:openstack_project_name] = @project_name = tenant
+      end
+      opts[:openstack_domain_name]  = domain
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
@@ -223,24 +225,7 @@ module OpenstackHandle
     end
 
     def detect_service(service, tenant_name = nil)
-      svc = connect(:service => service, :tenant_name => tenant_name)
-
-      #
-      # For non-admin users, if the Swift ACLs aren't set to permit
-      # read access for the user, we'll be able to connect to the
-      # service but it will fail on first access.
-      #
-      # We check for that situation here, and treat it as though the
-      # service isn't available when encountered.
-      #
-      if service == "Storage"
-        begin
-          svc.directories.length
-        rescue Excon::Errors::Forbidden
-          return nil
-        end
-      end
-      svc
+      connect(:service => service, :tenant_name => tenant_name)
     rescue MiqException::ServiceNotAvailable
       unless (fbs = SERVICE_FALL_BACK[service])
         return nil
@@ -302,7 +287,12 @@ module OpenstackHandle
         not_found_error = Fog.const_get(service)::OpenStack::NotFound
 
         rv = begin
-          array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
+          if accessor.kind_of?(Proc)
+            accessor.call(svc)
+          else
+            array_accessor ? svc.send(accessor).to_a : svc.send(accessor)
+          end
+
         rescue not_found_error => e
           $fog_log.warn("MIQ(#{self.class.name}.#{__method__}) HTTP 404 Error during OpenStack request. " \
                         "Skipping inventory item #{service} #{accessor}\n#{e}")
@@ -313,6 +303,14 @@ module OpenstackHandle
           array_accessor ? ra.concat(rv) : ra << rv
         end
       end
+
+      if uniq_id.blank? && array_accessor && !ra.blank?
+        # Take uniq ID from Fog::Model definition
+        last_object = ra.last
+        # TODO(lsmola) change to last_object.identity_name once the new fog-core is released
+        uniq_id = last_object.class.instance_variable_get("@identity") if last_object.kind_of?(Fog::Model)
+      end
+
       return ra unless uniq_id
       ra.uniq { |i| i.kind_of?(Hash) ? i[uniq_id] : i.send(uniq_id) }
     end
