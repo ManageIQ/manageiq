@@ -3,14 +3,14 @@ require "spec_helper"
 describe Rbac do
   context "tenant scoping" do
     before do
-      default_tenant = EvmSpecHelper.create_root_tenant
+      @default_tenant = EvmSpecHelper.create_root_tenant
       User.stub(:server_timezone => "UTC")
 
-      @owner_tenant  = FactoryGirl.create(:tenant, :divisible => false, :parent => default_tenant)
+      @owner_tenant  = FactoryGirl.create(:tenant, :divisible => false, :parent => @default_tenant)
       @owner_group   = FactoryGirl.create(:miq_group, :tenant => @owner_tenant)
       @owner_user    = FactoryGirl.create(:user, :userid => 'foo', :miq_groups => [@owner_group])
 
-      @other_tenant  = FactoryGirl.create(:tenant, :divisible => false, :parent => default_tenant)
+      @other_tenant  = FactoryGirl.create(:tenant, :divisible => false, :parent => @default_tenant)
       @other_group   = FactoryGirl.create(:miq_group, :tenant => @other_tenant)
       @other_user    = FactoryGirl.create(:user, :userid => 'bar', :miq_groups => [@other_group])
     end
@@ -153,6 +153,15 @@ describe Rbac do
           @owned_request_task.save
           results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => @owner_group.id)
           expect(results).to eq []
+        end
+      end
+
+      context "tenant 0" do
+        it "can see requests owned by any tenants" do
+          request_task = FactoryGirl.create(:miq_request_task, :tenant => @owner_tenant)
+          t0_group   = FactoryGirl.create(:miq_group, :tenant => @default_tenant)
+          results, = Rbac.search(:class => "MiqRequestTask", :results_format => :objects, :miq_group_id => t0_group)
+          expect(results).to eq [request_task]
         end
       end
     end
