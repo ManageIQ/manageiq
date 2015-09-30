@@ -22,5 +22,13 @@ object:
       value: '10240'
   - max_memory:
       value: '20480'
-  - meth:
+  - entity:
+      value: get_entity
+  - used:
+      value: calculate_used
+  - requested:
+      value: calculate_requested
+  - quota:
+      value: get_quota
+  - validate_quota:
       value: validate_quota
