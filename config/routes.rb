@@ -2055,7 +2055,7 @@ Vmdb::Application.routes.draw do
   end
 
   # pure-angular templates
-  get '/angular_template/*id' => 'angular_template#show', :format => false
+  get '/static/*id' => 'static#show', :format => false
 
   resources :ems_cloud, :as => :ems_clouds
 
