@@ -9,10 +9,11 @@ module MiqProvision::Automate
         return nil
       end
 
-      attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains'}
-      attrs[MiqAeEngine.create_automation_attribute_key(user)] = MiqAeEngine.create_automation_attribute_value(user) unless user.nil?
+      attrs = MiqAeEngine.set_automation_attributes_from_objects(
+        [user], 'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains')
 
       ws = MiqAeEngine.resolve_automation_object("REQUEST", user, attrs)
+
       if ws.root.nil?
         _log.warn "- Automate Failed (workspace empty)"
         return nil
@@ -33,11 +34,7 @@ module MiqProvision::Automate
   end
 
   def get_placement_via_automate
-    attrs = {
-      'request' => 'UI_PROVISION_INFO',
-      'message' => 'get_placement'
-    }
-    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
+    attrs = automate_attributes('get_placement')
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
 
@@ -49,22 +46,14 @@ module MiqProvision::Automate
   end
 
   def get_most_suitable_availability_zone
-    attrs = {
-      'request' => 'UI_PROVISION_INFO',
-      'message' => 'get_availability_zone'
-    }
-    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
+    attrs = automate_attributes('get_availability_zone')
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["availability_zone"])
   end
 
   def get_most_suitable_host_and_storage
-    attrs = {
-      'request' => 'UI_PROVISION_INFO',
-      'message' => 'get_host_and_storage'
-    }
-    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
+    attrs = automate_attributes('get_host_and_storage')
 
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
@@ -74,22 +63,14 @@ module MiqProvision::Automate
   end
 
   def get_most_suitable_cluster
-    attrs = {
-      'request' => 'UI_PROVISION_INFO',
-      'message' => 'get_cluster'
-    }
-    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
+    attrs = automate_attributes('get_cluster')
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["cluster"])
   end
 
   def get_most_suitable_host
-    attrs = {
-      'request' => 'UI_PROVISION_INFO',
-      'message' => 'get_host'
-    }
-    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
+    attrs = automate_attributes('get_host')
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
     reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
@@ -128,11 +109,7 @@ module MiqProvision::Automate
 
     _log.info "<< vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{get_user}>"
 
-    attrs = {
-      'request' => 'UI_PROVISION_INFO',
-      'message' => 'get_networks'
-    }
-    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
+    attrs = automate_attributes('get_networks')
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs)
 
     if ws.root.nil?
@@ -206,5 +183,10 @@ module MiqProvision::Automate
     end
 
     true
+  end
+
+  def automate_attributes(message, objects = [get_user])
+    MiqAeEngine.set_automation_attributes_from_objects(
+      objects, 'request' => 'UI_PROVISION_INFO', 'message' => message)
   end
 end

@@ -265,6 +265,7 @@ module MiqAeEngine
       value = create_automation_attribute_value(object)
       attrs_hash[key] = value
     end
+    attrs_hash
   end
 
   def self.create_automation_object(name, attrs, options = {})
