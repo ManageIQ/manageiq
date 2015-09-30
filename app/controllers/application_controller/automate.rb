@@ -17,6 +17,7 @@ module ApplicationController::Automate
       @resolve[:button_class] = @resolve[:new][:target_class]
       @resolve[:button_number] ||= 1
       @sb[:attrs][:request] = @resolve[:new][:object_request] # Add the request attribute value entered by the user
+      @sb[:attrs][:tenant_id] = current_tenant.id
       begin
         build_results
       rescue MiqAeException::Error => bang

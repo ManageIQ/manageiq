@@ -34,6 +34,10 @@ module MiqRequestMixin
     @user ||= User.find_by_userid(self.userid)
   end
 
+  def get_tenant
+    @tenant ||= get_user.current_tenant
+  end
+
   def tags
     self.tag_ids.to_miq_a.each do |tag_id|
       tag = Classification.find(tag_id)
