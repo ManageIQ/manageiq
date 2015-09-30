@@ -12,11 +12,15 @@
   %h3
     = _('Import Datastore classes (*.zip)')
   = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
-    = file_field("upload", "file")
-    = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload")
-
+    .form-horizontal
+      .form-group
+        .col-md-4
+          = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
+          :javascript
+            $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+        .col-md-6
+          = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload btn btn-default")
   %hr
-
   %h3
     = _('Export')
   = form_tag({:action => "export_datastore"}, :method => :get) do
@@ -24,7 +28,6 @@
                        :alt   => t = _("Export all classes and instances"),
                        :title => t)
   %hr
-
   %h3
     = (t = _('Reset all Datastore custom classes and instances to default'))
   = link_to(image_tag("/images/toolbars/reset.png",
