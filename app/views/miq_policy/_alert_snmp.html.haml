@@ -20,14 +20,17 @@
           .col-md-8
             = text_field_tag("host_1", @edit[:new][:snmp][:host][0],
               :maxlength         => MAX_DESC_LEN,
+              :class             => "form-control",
               "data-miq_observe" => observe_with_interval)
             %br
             = text_field_tag("host_2", @edit[:new][:snmp][:host][1],
               :maxlength => MAX_DESC_LEN,
+              :class             => "form-control",
               "data-miq_observe" => observe_with_interval)
             %br
             = text_field_tag("host_3", @edit[:new][:snmp][:host][2],
               :maxlength => MAX_DESC_LEN,
+              :class             => "form-control",
               "data-miq_observe" => {:interval => '.5',  :url => url}.to_json)
         .form-group
           %label.control-label.col-md-2
@@ -62,14 +65,17 @@
             %td
               = text_field_tag("oid__#{i + 1}", @edit[:new][:snmp][:variables][i][:oid],
                 :maxlength         => MAX_DESC_LEN,
+                :class             => "form-control",
                 "data-miq_observe" => observe_with_interval)
             %td
               = select_tag("var_type__#{i + 1}",
                 options_for_select(["<#{_('None')}>"] + @edit[:snmp_var_types].sort, @edit[:new][:snmp][:variables][i][:var_type]),
-                :style                 => "width:100px",
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
-                "data-miq_observe"     => observe)
+                :class    => "selectpicker")
+              :javascript
+                miqInitSelectPicker();
+                miqSelectPickerEvent("var_type__#{i + 1}", "#{url}")
             - if @edit[:new][:snmp][:variables][i][:var_type] == "Null" || @edit[:new][:snmp][:variables][i][:var_type] == "<None>"
               - val_disabled = true
             - else
@@ -78,5 +84,6 @@
               = text_field_tag("value__#{i + 1}", @edit[:new][:snmp][:variables][i][:value],
                 :disabled  => val_disabled,
                 :maxlength => MAX_DESC_LEN,
+                :class             => "form-control",
                 "data-miq_observe" => observe_with_interval)
   %hr
