@@ -23,39 +23,62 @@
                   <div class="col-sm-3">
                     {{ ::dialogField.label }}
                   </div>
+
                   <div ng-switch on="dialogField.type" class="col-sm-9">
                     <input
-                      ng-switch-when="DialogFieldTextBox"
-                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled}}"
-                      class="form-control"
-                      type="{{ dialogField.options.protected ? 'password' : 'text' }}"
-                      title="{{ ::inputTitle }}"
-                      value="{{ vm.options? vm.parsedOptions[dialogField.name] : dialogField.default_value }}">
+                    ng-switch-when="DialogFieldTextBox"
+                    ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                    class="form-control"
+                    type="{{ dialogField.options.protected ? 'password' : 'text' }}"
+                    title="{{ ::inputTitle }}"
+                    value="{{ vm.options? vm.parsedOptions[dialogField.name] : dialogField.default_value }}">
                     </input>
+
                     <textarea
                       ng-switch-when="DialogFieldTextAreaBox"
-                      ng-disabled="{{ ::dialogField.read_only  || vm.inputDisabled}}"
+                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
                       class="form-control"
                       title="{{ ::inputTitle }}"
-                      rows="4">{{ vm.options? vm.parsedOptions[dialogField.name] : dialogField.default_value }}</textarea>
+                      rows="4">{{ vm.options? vm.parsedOptions[dialogField.name] : dialogField.default_value }}
+                    </textarea>
+
                     <input
                       ng-switch-when="DialogFieldCheckBox"
-                      ng-disabled="{{ ::dialogField.read_only  || vm.inputDisabled}}"
+                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
                       class="form-control"
                       type="checkbox"
                       title="{{ ::inputTitle }}"
                       ng-checked="vm.parsedOptions[dialogField.name] == 't' || dialogField.default_value == 't'">
                     </input>
+
                     <select
                       ng-switch-when="DialogFieldDropDownList"
-                      ng-disabled="{{ ::dialogField.read_only  || vm.inputDisabled}}"
+                      ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled}}"
                       class="form-control">
                       <option ng-if="vm.options">{{vm.parsedOptions[dialogField.name]}}</option>
                       <option ng-if="!vm.options" ng-repeat="fieldValue in ::dialogField.values"
-                              value="{{ ::fieldValue[0] }}">
-                        {{ ::fieldValue[1] }}
+                      value="{{ ::fieldValue[0] }}">
+                      {{ ::fieldValue[1] }}
                       </option>
                     </select>
+
+                    <span
+                      ng-switch-when="DialogFieldRadioButton"
+                      class="btn-group">
+                      <label ng-if="vm.options">{{ vm.parsedOptions[dialogField.name] }}</label>
+                      <label
+                        ng-if="!vm.options"
+                        class="btn btn-primary"
+                        ng-repeat="fieldValue in dialogField.values">
+                        <input
+                          type="radio"
+                          name="{{ dialogField.name }}"
+                          ng-disabled="{{ ::dialogField.read_only || vm.inputDisabled }}"
+                          value="{{ ::fieldValue[0] }}"/>
+                        {{ ::fieldValue[1] }}
+                      </label>
+                    </span>
+
                     <span ng-switch-default ng-hide="true"></span>
                   </div>
                 </div>
