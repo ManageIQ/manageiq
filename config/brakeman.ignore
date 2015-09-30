@@ -207,24 +207,6 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "4f1d28a4adcaf2ea6e17e36f97a0dd5f48e0910b0166157717462c2c56659a49",
-      "message": "Render path contains parameter value",
-      "file": "app/views/shared/views/ems_common/_show.html.haml",
-      "line": 9,
-      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(partial => \"layouts/#{((((\"config\" or (params[:display] or \"main\")) or \"timeline\") or \"config\") or \"main\")}\", {})",
-      "render_path": [{"type":"controller","class":"EmsCloudController","method":"show","line":null,"file":"app/controllers/ems_common.rb"},{"type":"template","name":"ems_cloud/show","line":1,"file":"app/views/ems_cloud/show.html.haml"}],
-      "location": {
-        "type": "template",
-        "template": "shared/views/ems_common/_show"
-      },
-      "user_input": "params[:display]",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
       "fingerprint": "e95f7b494233d0543110961a8058f9fa42e06813db3579e54afa8adc9fbe62a7",
       "message": "Render path contains parameter value",
       "file": "app/views/shared/views/ems_common/_show.html.haml",
