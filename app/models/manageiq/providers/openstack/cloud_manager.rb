@@ -181,4 +181,27 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   def self.event_monitor_class
     ManageIQ::Providers::Openstack::CloudManager::EventCatcher
   end
+
+  #
+  # Statistics
+  #
+
+  def cinder_disk_usage
+    cinder_used = 0
+    cloud_volumes.each do |volume|
+      cinder_used += volume.size if volume.status != "error"
+    end
+    cloud_volume_snapshots.each do |volume|
+      cinder_used += volume.size if volume.status != "error"
+    end
+    cinder_used
+  end
+
+  def swift_disk_usage(replicas)
+    swift_used = 0
+    cloud_object_store_containers.each do |container|
+      swift_used += container.bytes * replicas
+    end
+    swift_used
+  end
 end
