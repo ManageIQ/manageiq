@@ -33,7 +33,7 @@ object:
       max_time: 
   - field:
       aetype: attribute
-      name: max_group_cpu
+      name: warn_vms
       display_name: 
       datatype: integer
       priority: 2
@@ -53,7 +53,7 @@ object:
       max_time: 
   - field:
       aetype: attribute
-      name: warn_group_storage
+      name: max_vms
       display_name: 
       datatype: integer
       priority: 3
@@ -73,7 +73,7 @@ object:
       max_time: 
   - field:
       aetype: attribute
-      name: warn_group_memory
+      name: warn_storage
       display_name: 
       datatype: integer
       priority: 4
@@ -93,7 +93,7 @@ object:
       max_time: 
   - field:
       aetype: attribute
-      name: max_group_memory
+      name: max_storage
       display_name: 
       datatype: integer
       priority: 5
@@ -113,7 +113,7 @@ object:
       max_time: 
   - field:
       aetype: attribute
-      name: max_group_storage
+      name: warn_cpu
       display_name: 
       datatype: integer
       priority: 6
@@ -133,7 +133,7 @@ object:
       max_time: 
   - field:
       aetype: attribute
-      name: warn_group_cpu
+      name: max_cpu
       display_name: 
       datatype: integer
       priority: 7
@@ -152,11 +152,131 @@ object:
       max_retries: 
       max_time: 
   - field:
+      aetype: attribute
+      name: warn_memory
+      display_name: 
+      datatype: integer
+      priority: 8
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: max_memory
+      display_name: 
+      datatype: integer
+      priority: 9
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
       aetype: method
-      name: meth
+      name: entity
       display_name: 
       datatype: string
-      priority: 8
+      priority: 10
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: method
+      name: used
+      display_name: 
+      datatype: string
+      priority: 11
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: method
+      name: requested
+      display_name: 
+      datatype: string
+      priority: 12
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: method
+      name: quota
+      display_name: 
+      datatype: string
+      priority: 13
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: method
+      name: validate_quota
+      display_name: 
+      datatype: string
+      priority: 14
       owner: 
       default_value: 
       substitute: true
