@@ -62,7 +62,7 @@ describe MiqHostProvisionWorkflow do
         :event        => "host_provision_request_created",
         :target_class => "Host",
         :userid       => admin.userid,
-        :message      => "Host Provision requested by [#{admin.userid}] for Host:#{[host.id].inspect}"
+        :message      => "Host Provisioning requested by <#{admin.userid}> for Host:#{[host.id].inspect}"
       )
 
       # creates a request
@@ -88,7 +88,7 @@ describe MiqHostProvisionWorkflow do
         :event        => "host_provision_request_updated",
         :target_class => "Host",
         :userid       => alt_user.userid,
-        :message      => "Host Provision request was successfully updated by [#{alt_user.userid}] for Host:#{[host.id].inspect}"
+        :message      => "Host Provisioning request updated by <#{alt_user.userid}> for Host:#{[host.id].inspect}"
       )
       workflow.make_request(request, values, alt_user.userid)
     end

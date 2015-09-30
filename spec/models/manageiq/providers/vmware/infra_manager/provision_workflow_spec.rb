@@ -40,10 +40,10 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       workflow = described_class.new(values = {:running_pre_dialog => false}, admin.userid)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_provision_request_updated",
+        :event        => "vm_provision_request_created",
         :target_class => "Vm",
         :userid       => admin.userid,
-        :message      => "VM Provision requested by [#{admin.userid}] for VM:#{template.id}"
+        :message      => "VM Provisioning requested by <#{admin.userid}> for Vm:#{template.id}"
       )
 
       # creates a request
@@ -69,10 +69,10 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       workflow = described_class.new(values, alt_user.userid)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_migrate_request_updated",
+        :event        => "vm_provision_request_updated",
         :target_class => "Vm",
         :userid       => alt_user.userid,
-        :message      => "VM Provision request was successfully updated by [#{alt_user.userid}] for VM:#{template.id}"
+        :message      => "VM Provisioning request updated by <#{alt_user.userid}> for Vm:#{template.id}"
       )
       workflow.make_request(request, values, alt_user.userid)
     end

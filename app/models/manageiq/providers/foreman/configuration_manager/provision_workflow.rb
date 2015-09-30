@@ -4,12 +4,12 @@ class ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow < Mi
   end
 
   def create_request(values, requester_id, auto_approve = false)
-    event_message = "Provision requested by [#{requester_id}] for Configured Systems:#{values[:src_configured_system_ids].inspect}"
+    event_message = "Configured System Provisioning requested by <#{requester_id}> for ConfiguredSystem:#{values[:src_configured_system_ids].inspect}"
     super(values, requester_id, 'ConfiguredSystem', 'configured_system_provision_request_created', event_message, auto_approve)
   end
 
   def update_request(request, values, requester_id)
-    event_message = "Provision request was successfully updated by [#{requester_id}] for Configured Systems:#{values[:src_configured_system_ids].inspect}"
+    event_message = "Configured System Provisioning request updated by <#{requester_id}> for ConfiguredSystem:#{values[:src_configured_system_ids].inspect}"
     super(request, values, requester_id, 'ConfiguredSystem', 'configured_system_provision_request_updated', event_message)
   end
 

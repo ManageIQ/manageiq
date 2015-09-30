@@ -35,7 +35,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
         :event        => "configured_system_provision_request_created",
         :target_class => "ConfiguredSystem",
         :userid       => admin.userid,
-        :message      => "Provision requested by [#{admin.userid}] for Configured Systems:#{[system.id].inspect}"
+        :message      => "Configured System Provisioning requested by <#{admin.userid}> for ConfiguredSystem:#{[system.id].inspect}"
       )
 
       # creates a request
@@ -60,7 +60,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
         :event        => "configured_system_provision_request_updated",
         :target_class => "ConfiguredSystem",
         :userid       => alt_user.userid,
-        :message      => "Provision request was successfully updated by [#{alt_user.userid}] for Configured Systems:#{[system.id].inspect}"
+        :message      => "Configured System Provisioning request updated by <#{alt_user.userid}> for ConfiguredSystem:#{[system.id].inspect}"
       )
       workflow.make_request(request, values, alt_user.userid)
     end

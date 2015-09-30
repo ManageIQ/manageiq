@@ -50,7 +50,7 @@ describe VmReconfigureRequest do
         :event        => "vm_reconfigure_request_created",
         :target_class => "VmOrTemplate",
         :userid       => admin.userid,
-        :message      => "VM Reconfigure requested by <#{admin.userid}>"
+        :message      => "VM Reconfigure requested by <#{admin.userid}> for Vm:#{[@vm.id].inspect}"
       )
 
       # creates a request
@@ -75,7 +75,7 @@ describe VmReconfigureRequest do
         :event        => "vm_reconfigure_request_updated",
         :target_class => "VmOrTemplate",
         :userid       => alt_user.userid,
-        :message      => "VM Reconfigure request was successfully updated by <#{alt_user.userid}>"
+        :message      => "VM Reconfigure request updated by <#{alt_user.userid}> for Vm:#{[@vm.id].inspect}"
       )
       described_class.make_request(request, values, alt_user.userid)
     end

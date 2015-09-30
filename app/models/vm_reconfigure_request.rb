@@ -8,12 +8,12 @@ class VmReconfigureRequest < MiqRequest
   validate               :must_have_user
 
   def self.create_request(values, requester_id, auto_approve=false)
-    event_message = "#{TASK_DESCRIPTION} requested by <#{requester_id}>"
+    event_message = "#{TASK_DESCRIPTION} requested by <#{requester_id}> for Vm:#{values[:src_ids].inspect}"
     super(values, requester_id, auto_approve, request_types.first, SOURCE_CLASS_NAME, event_message)
   end
 
   def self.update_request(request, values, requester_id)
-    event_message = "#{TASK_DESCRIPTION} request was successfully updated by <#{requester_id}>"
+    event_message = "#{TASK_DESCRIPTION} request updated by <#{requester_id}> for Vm:#{values[:src_ids].inspect}"
     super(request, values, requester_id, SOURCE_CLASS_NAME, event_message)
   end
 

@@ -119,7 +119,7 @@ describe ServiceTemplateProvisionRequest do
         :event        => "service_template_provision_request_created",
         :target_class => "ServiceTemplate",
         :userid       => admin.userid,
-        :message      => "Service_Template_Provisioning requested by <#{admin.userid}>"
+        :message      => "Service_Template_Provisioning requested by <#{admin.userid}> for ServiceTemplate:#{service_template.id}"
       )
 
       # creates a request
@@ -143,7 +143,7 @@ describe ServiceTemplateProvisionRequest do
         :event        => "service_template_provision_request_updated",
         :target_class => "ServiceTemplate",
         :userid       => alt_user.userid,
-        :message      => "Service_Template_Provisioning request was successfully updated by <#{alt_user.userid}>"
+        :message      => "Service_Template_Provisioning request updated by <#{alt_user.userid}> for ServiceTemplate:#{service_template.id}"
       )
       described_class.make_request(request, values, alt_user.userid)
     end

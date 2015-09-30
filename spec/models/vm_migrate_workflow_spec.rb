@@ -42,7 +42,7 @@ describe VmMigrateWorkflow do
         :event        => "vm_migrate_request_created",
         :target_class => "Vm",
         :userid       => admin.userid,
-        :message      => "VM Migrate requested by [#{admin.userid}] for VM:#{[vm.id].inspect}"
+        :message      => "VM Migrate requested by <#{admin.userid}> for Vm:#{[vm.id].inspect}"
       )
 
       # creates a request
@@ -68,7 +68,7 @@ describe VmMigrateWorkflow do
         :event        => "vm_migrate_request_updated",
         :target_class => "Vm",
         :userid       => alt_user.userid,
-        :message      => "VM Migrate request was successfully updated by [#{alt_user.userid}] for VM:#{[vm.id].inspect}"
+        :message      => "VM Migrate request updated by <#{alt_user.userid}> for Vm:#{[vm.id].inspect}"
       )
       workflow.make_request(request, values, alt_user.userid)
     end
