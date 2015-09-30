@@ -4,6 +4,7 @@
                :alt          => "Add",
                :title        => "Add",
                "ng-click"    => "disabledClick($event)",
+               :style        => "cursor:not-allowed",
                "ng-show"     => "newRecord && !saveable(angularForm)")
 
   = button_tag("Add",
@@ -18,6 +19,7 @@
                :alt          => "Save changes",
                :title        => "Save changes",
                "ng-click"    => "disabledClick($event)",
+               :style        => "cursor:not-allowed",
                "ng-show"     => "!newRecord && !saveable(angularForm)")
 
   = button_tag("Save",
