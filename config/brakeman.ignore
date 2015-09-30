@@ -39,63 +39,6 @@
       "note": ""
     },
     {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "13e52e9f85af116b5c860df8a46e2a3dd0f80b4796f865a32001fa33ed1570b4",
-      "message": "User controlled method execution",
-      "file": "app/controllers/application_controller/explorer.rb",
-      "line": 95,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "self.send(params[:pressed])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ApplicationController::Explorer",
-        "method": "x_button"
-      },
-      "user_input": "params[:pressed]",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "d6dfe1a980660196ab8703ce5edc7099563351b48cf08b2f875a9072b700db18",
-      "message": "User controlled method execution",
-      "file": "app/controllers/application_controller/explorer.rb",
-      "line": 103,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "self.send(params[:pressed], VmOrTemplate)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ApplicationController::Explorer",
-        "method": "x_button"
-      },
-      "user_input": "params[:pressed]",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "13e52e9f85af116b5c860df8a46e2a3dd0f80b4796f865a32001fa33ed1570b4",
-      "message": "User controlled method execution",
-      "file": "app/controllers/application_controller/explorer.rb",
-      "line": 105,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "self.send(params[:pressed])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ApplicationController::Explorer",
-        "method": "x_button"
-      },
-      "user_input": "params[:pressed]",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Remote Code Execution",
       "warning_code": 24,
       "fingerprint": "58fcf47340099025db0b33d410f05aa6594508dab67fe0ee04c47580e838d24e",

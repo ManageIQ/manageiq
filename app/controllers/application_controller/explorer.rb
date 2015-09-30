@@ -90,9 +90,11 @@ module ApplicationController::Explorer
 
     @explorer = true
 
+    method = "#{model}_#{action}"
+
     # Process model actions that are currently implemented
     if X_BUTTON_ALLOWED_ACTIONS[action] == :s1
-      self.send(params[:pressed])
+      self.send(method)
     elsif X_BUTTON_ALLOWED_ACTIONS[action] == :s2
       # don't need to set params[:id] and do find_checked_items for methods
       # like ownership, the code in those methods handle it
@@ -100,9 +102,9 @@ module ApplicationController::Explorer
         @_params[:id] = (params[:id] ? [params[:id]] : find_checked_items)[0]
       end
       if ['protect', 'tag'].include?(action)
-        self.send(params[:pressed], VmOrTemplate)
+        self.send(method, VmOrTemplate)
       else
-        self.send(params[:pressed])
+        self.send(method)
       end
       # if error rendered, do not render any further, do not record history
       # non-error rendering is done below through @refresh_partial
