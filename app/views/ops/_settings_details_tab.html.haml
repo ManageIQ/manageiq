@@ -17,11 +17,11 @@
                             :class             => "form-control",
                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             = javascript_tag(javascript_focus('region_description'))
-    = render(:partial => '/layouts/edit_form_buttons',
-              :locals => {:record_id => region.id,
-              :action_url => 'region_edit',
-              :force_cancel_button => true,
-              :ajax_buttons => true})
+      = render(:partial => '/layouts/edit_form_buttons',
+                :locals => {:record_id => region.id,
+                :action_url => 'region_edit',
+                :force_cancel_button => true,
+                :ajax_buttons => true})
 
     .spacer
 
