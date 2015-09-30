@@ -148,7 +148,7 @@ describe ExtManagementSystem do
         @same_host_name      = "us-east-1"
         @different_host_name = "us-west-1"
         @ems = FactoryGirl.create(:ems_vmware, :hostname => @same_host_name)
-        @zone = Zone.first || FactoryGirl.create(:zone)
+        @zone = Zone.seed
       end
 
       it "duplicate name" do

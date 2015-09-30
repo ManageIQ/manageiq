@@ -14,8 +14,8 @@ describe EmsCloudHelper do
     it "sets restful path for instances in summary for restful controllers" do
       controller.stub(:restful?).and_return(true)
       controller.stub(:controller_name).and_return("ems_cloud")
-      Zone.first || FactoryGirl.create(:zone)
-      FactoryGirl.create(:ems_openstack, :zone => Zone.first)
+
+      FactoryGirl.create(:ems_openstack, :zone => Zone.seed)
       FactoryGirl.create(:vm_openstack)
       @ems = ManageIQ::Providers::Openstack::CloudManager.first
       vms = ManageIQ::Providers::Openstack::CloudManager::Vm.first
@@ -33,8 +33,7 @@ describe EmsCloudHelper do
     it "sets restful path for images in summary for restful controllers" do
       controller.stub(:restful?).and_return(true)
       controller.stub(:controller_name).and_return("ems_cloud")
-      Zone.first || FactoryGirl.create(:zone)
-      FactoryGirl.create(:ems_openstack, :zone => Zone.first)
+      FactoryGirl.create(:ems_openstack, :zone => Zone.seed)
       FactoryGirl.create(:template_cloud)
       @ems = ManageIQ::Providers::Openstack::CloudManager.first
       template = MiqTemplate.first

@@ -3,7 +3,7 @@ require "spec_helper"
 describe "AR Nested Count By extension" do
   context "miq_queue with messages" do
     before(:each) do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @zone = EvmSpecHelper.local_miq_server.zone
 
       FactoryGirl.create(:miq_queue, :zone => @zone.name, :state => MiqQueue::STATE_DEQUEUE,  :role => "role1", :priority => 20)
       FactoryGirl.create(:miq_queue, :zone => @zone.name, :state => MiqQueue::STATE_DEQUEUE,  :role => "role1", :priority => 20)
@@ -22,19 +22,19 @@ describe "AR Nested Count By extension" do
     it "should count by state, zone and role" do
       expect(MiqQueue.nested_count_by(%w(state zone role))).to eq(
         MiqQueue::STATE_READY => {
-          "default" => { "role1" => 3 },
-          "west"    => { "role3" => 1 },
+          @zone.name => {"role1" => 3},
+          "west"     => {"role3" => 1},
         },
         MiqQueue::STATE_DEQUEUE => {
-          "default" => { "role1" => 2, "role2" => 1 },
-          "east"    => { "role1" => 2 },
+          @zone.name => {"role1" => 2, "role2" => 1},
+          "east"     => {"role1" => 2},
         },
         MiqQueue::STATE_WARN => {
-          "default" => { "role3" => 1 },
+          @zone.name => {"role3" => 1},
         },
         MiqQueue::STATE_ERROR => {
-          "default" => { "role1" => 1 },
-          "west"    => { "role2" => 1 },
+          @zone.name => {"role1" => 1},
+          "west"     => {"role2" => 1},
         }
       )
     end

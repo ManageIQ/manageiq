@@ -39,7 +39,7 @@ describe MiqHostProvisionRequest do
 
     context "when calling call_automate_event_queue" do
       before(:each) do
-        EvmSpecHelper.local_miq_server
+        EvmSpecHelper.local_miq_server(:zone => Zone.seed)
         @pr.miq_request.call_automate_event_queue("request_created")
       end
 

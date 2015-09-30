@@ -44,10 +44,8 @@ class Zone < ActiveRecord::Base
   end
 
   def self.seed
-    unless exists?(:name => 'default')
+    create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
       _log.info("Creating default zone...")
-      create(:name => "default", :description => "Default Zone")
-      _log.info("Creating default zone... Complete")
     end
   end
 
