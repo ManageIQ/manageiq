@@ -11,16 +11,15 @@
   %label.control-label.col-md-2
     = token_label
   .col-md-8
-    = password_field_tag("#{pfx}_token",
-                         '',
-                         :placeholder       => placeholder_if_present(@edit[:new]["#{pfx}_token".to_sym]),
-                         "class"            => "form-control",
-                         "data-miq_observe" => url_json)
-.form-group
-  %label.control-label.col-md-2
-  .col-md-8
-    = render(:partial => "/layouts/form_buttons_verify",
-             :locals  => {:validate_url => validate_url,
-                          :valtype      => "#{pfx}",
-                          :ujs_button   => ujs_button,
-                          :record       => record})
+    .input-group
+      = password_field_tag("#{pfx}_token",
+                           '',
+                           :placeholder       => placeholder_if_present(@edit[:new]["#{pfx}_token".to_sym]),
+                           "class"            => "form-control",
+                           "data-miq_observe" => url_json)
+      .input-group-btn
+        = render(:partial => "/layouts/form_buttons_verify",
+                 :locals  => {:validate_url => validate_url,
+                              :valtype      => "#{pfx}",
+                              :ujs_button   => ujs_button,
+                              :record       => record})
