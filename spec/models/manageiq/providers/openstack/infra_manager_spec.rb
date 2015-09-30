@@ -79,4 +79,40 @@ describe ManageIQ::Providers::Openstack::InfraManager do
       @ems_cloud.reload.provider.should be_nil
     end
   end
+
+  context "cloud disk usage" do
+    before do
+      @cloud = FactoryGirl.create(:ems_openstack)
+      @infra = FactoryGirl.create(:ems_openstack_infra_with_stack)
+      provider = FactoryGirl.create(:provider)
+      @cloud.provider_id = provider.id
+      @infra.provider_id = provider.id
+      @cloud.save
+      @infra.save
+    end
+
+    it "Cinder" do
+      expect(@infra.cloud_cinder_disk_usage).to eq(0)
+
+      volume = FactoryGirl.create(:cloud_volume_openstack)
+      volume.size = 11
+      @cloud.cloud_volumes << volume
+
+      expect(@infra.cloud_cinder_disk_usage).to eq(volume.size)
+    end
+
+    it "Swift" do
+      expect(@infra.cloud_swift_disk_usage).to eq(0)
+
+      container = FactoryGirl.create(:cloud_object_store_container)
+      container.bytes = 12
+      @cloud.cloud_object_store_containers << container
+
+      replicas = FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_swift_replicas).value.to_i
+      object_storage_count = FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_object_storage).value.to_i
+      actual_replicas = [replicas, object_storage_count].sort.first
+
+      expect(@infra.cloud_swift_disk_usage).to eq(container.bytes * actual_replicas)
+    end
+  end
 end

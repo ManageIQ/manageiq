@@ -15,6 +15,8 @@ FactoryGirl.define do
     after :create do |x|
       x.parameters << FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_compute)
       x.parameters << FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_controller)
+      x.parameters << FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_swift_replicas)
+      x.parameters << FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_object_storage)
     end
   end
 
@@ -32,6 +34,20 @@ FactoryGirl.define do
     after :create do |x|
       x.name = "controller-1::count"
       x.value = "1"
+    end
+  end
+
+  factory :orchestration_stack_parameter_openstack_infra_swift_replicas, :parent => :orchestration_stack_parameter_openstack_infra do
+    after :create do |x|
+      x.name = "SwiftReplicas"
+      x.value = "3"
+    end
+  end
+
+  factory :orchestration_stack_parameter_openstack_infra_object_storage, :parent => :orchestration_stack_parameter_openstack_infra do
+    after :create do |x|
+      x.name = "ObjectStorageCount"
+      x.value = "2"
     end
   end
 end
