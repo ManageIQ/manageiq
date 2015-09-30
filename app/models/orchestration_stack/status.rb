@@ -16,7 +16,7 @@ class OrchestrationStack
       false
     end
 
-    def rollbacked?
+    def rolled_back?
       false
     end
 
@@ -26,7 +26,7 @@ class OrchestrationStack
 
     # in a non-transient state
     def completed?
-      succeeded? || failed? || rollbacked? || deleted?
+      succeeded? || failed? || rolled_back? || deleted?
     end
 
     def normalized_status
@@ -34,7 +34,7 @@ class OrchestrationStack
 
       if succeeded?
         ['create_complete', reason || 'OK']
-      elsif rollbacked?
+      elsif rolled_back?
         ['rollback_complete', reason || 'Stack was rolled back']
       elsif deleted?
         ['delete_complete', reason || 'Stack was deleted']

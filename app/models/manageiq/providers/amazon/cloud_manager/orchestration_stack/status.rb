@@ -7,7 +7,7 @@ class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status < ::
     status.downcase =~ /failed$/
   end
 
-  def rollbacked?
+  def rolled_back?
     status.downcase == "rollback_complete"
   end
 

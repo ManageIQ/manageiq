@@ -40,8 +40,7 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack < ::Orche
       raw_stack = service.stacks.get(name, ems_ref)
       raise MiqException::MiqOrchestrationStackNotExistError, "#{name} does not exist on #{ems.name}" unless raw_stack
 
-      klass = ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Status
-      klass.new(raw_stack.stack_status, raw_stack.stack_status_reason)
+      Status.new(raw_stack.stack_status, raw_stack.stack_status_reason)
     end
   rescue MiqException::MiqOrchestrationStackNotExistError
     raise

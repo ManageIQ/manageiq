@@ -1,5 +1,4 @@
 require "spec_helper"
-require_dependency 'manageiq/providers/amazon/cloud_manager/orchestration_stack/status'
 
 describe ServiceTemplate do
   let(:manager_by_setter)  { FactoryGirl.create(:ems_amazon) }

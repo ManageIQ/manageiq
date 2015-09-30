@@ -31,8 +31,7 @@ class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ::Orchestr
   def raw_status
     ext_management_system.with_provider_connection(:service => "CloudFormation") do |service|
       raw_stack = service.stacks[name]
-      klass = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status
-      klass.new(raw_stack.status, raw_stack.status_reason)
+      Status.new(raw_stack.status, raw_stack.status_reason)
     end
   rescue => err
     if err.to_s =~ /[S|s]tack.+does not exist/
