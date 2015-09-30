@@ -58,6 +58,10 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
     true
   end
 
+  def supports_api_version?
+    true
+  end
+
   def supported_auth_types
     %w(default amqp ssh_keypair)
   end

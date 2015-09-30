@@ -692,6 +692,7 @@ module EmsCommon
     @edit[:new][:emstype] = @ems.emstype
     @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
     @edit[:new][:port] = @ems.port
+    @edit[:new][:api_version] = @ems.api_version
     @edit[:new][:provider_id] = @ems.provider_id
     @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]
     if @ems.id
@@ -706,11 +707,14 @@ module EmsCommon
     else
       @edit[:new][:zone] = @ems.my_zone
     end
+
     @edit[:server_zones] = Zone.order('lower(description)').collect { |z| [z.description, z.name] }
-    
+
     @edit[:openstack_infra_providers] = ManageIQ::Providers::Openstack::Provider.order('lower(name)').each_with_object([["---", nil]]) do |openstack_infra_provider, x|
       x.push([openstack_infra_provider.name, openstack_infra_provider.id])
     end
+
+    @edit[:openstack_api_versions] = [['Keystone v2', 'v2'], ['Keystone v3', 'v3']]
 
     @edit[:new][:default_userid] = @ems.authentication_userid
     @edit[:new][:default_password] = @ems.authentication_password
@@ -788,6 +792,7 @@ module EmsCommon
       @edit[:new][:emstype] = params[:server_emstype]
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
+        @edit[:new][:api_version] = @ems.api_version ? @ems.api_version : 'v2'
       elsif params[:server_emstype] == ManageIQ::Providers::Kubernetes::ContainerManager.ems_type
         @edit[:new][:port] = @ems.port ? @ems.port : ManageIQ::Providers::Kubernetes::ContainerManager::DEFAULT_PORT
       elsif params[:server_emstype] == ManageIQ::Providers::Openshift::ContainerManager.ems_type
@@ -797,6 +802,7 @@ module EmsCommon
       end
     end
     @edit[:new][:port] = params[:port] if params[:port]
+    @edit[:new][:api_version] = params[:api_version] if params[:api_version]
     @edit[:new][:provider_id] = params[:provider_id] if params[:provider_id]
     @edit[:new][:zone] = params[:server_zone] if params[:server_zone]
 
@@ -833,6 +839,7 @@ module EmsCommon
     ems.provider_region = @edit[:new][:provider_region]
     ems.hostname = @edit[:new][:hostname].strip unless @edit[:new][:hostname].nil?
     ems.port = @edit[:new][:port] if ems.supports_port?
+    ems.api_version = @edit[:new][:api_version] if ems.supports_api_version?
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
