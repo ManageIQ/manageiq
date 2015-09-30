@@ -40,7 +40,7 @@ class MiqWidget::ContentGenerator
   end
 
   def find_group_or_raise(group_description, widget)
-    group = MiqGroup.where(:description => group_description).first
+    group = MiqGroup.find_by(:description => group_description)
     if group.nil?
       error_message = "MiqGroup #{group_description} was not found"
       _log.error("#{widget.log_prefix} #{error_message}")

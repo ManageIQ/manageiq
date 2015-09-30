@@ -18,7 +18,7 @@ describe MiqWidget::ContentGenerator do
         User.stub(:where).with(:userid => 1).and_return([user1])
         User.stub(:where).with(:userid => 2).and_return([user2])
         record = group
-        MiqGroup.stub(:where).with(:description => "description").and_return([record])
+        MiqGroup.stub(:find_by).with(:description => "description").and_return(record)
       end
 
       context "when the group exists" do
@@ -66,7 +66,7 @@ describe MiqWidget::ContentGenerator do
 
       before {
         record = group
-        MiqGroup.stub(:where).with(:description => "EvmGroup-administrator").and_return([record])
+        MiqGroup.stub(:find_by).with(:description => "EvmGroup-administrator").and_return(record)
       }
 
       context "when the resulting length is equal to the expected count" do
