@@ -763,7 +763,7 @@ module ReportController::Menus
     x_tree_init(name, type, "MiqUserRole", :open_all => true)
     tree_nodes = x_build_dynatree(x_tree(name))
 
-    if current_user.super_admin_user?
+    if super_admin_user?
       title  = "All #{ui_lookup(:models=>"MiqGroup")}"
     else
       title  = "My #{ui_lookup(:model=>"MiqGroup")}"
@@ -778,13 +778,12 @@ module ReportController::Menus
   end
 
   def get_group_roles
-    user = current_user
-    if user.super_admin_user?
+    if super_admin_user?
       roles = MiqGroup.all
       title  = "All #{ui_lookup(:models=>"MiqGroup")}"
     else
       title  = "My #{ui_lookup(:model=>"MiqGroup")}"
-      roles = [user.current_group]
+      roles = [current_user.current_group]
     end
     return roles,title
   end
