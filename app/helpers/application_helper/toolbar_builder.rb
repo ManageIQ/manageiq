@@ -148,11 +148,9 @@ class ApplicationHelper::ToolbarBuilder
           button_hide = build_toolbar_hide_button(bgi[:button])
           if button_hide
             # These buttons need to be present even if hidden as we show/hide them dynamically
-            next unless ["perf_refresh", "perf_reload",
-                         "vm_perf_refresh", "vm_perf_reload",
-                         "timeline_txt", "timeline_csv", "timeline_pdf",
-                         "usage_txt", "usage_csv", "usage_pdf", "usage_reportonly"
-                        ].include?(bgi[:button])
+            next unless %w(perf_refresh perf_reload
+                           vm_perf_refresh vm_perf_reload
+                           timeline_txt timeline_csv timeline_pdf).include?(bgi[:button])
           end
           sep_needed = true unless button_hide
           props = {"id"     => bgi[:button],
@@ -849,14 +847,6 @@ class ApplicationHelper::ToolbarBuilder
         return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
       when "refresh_logs"
         return true if ["audit_logs", "evm_logs", "workers"].include?(@lastaction)
-      when "usage_txt"
-        return true if !@usage_options[:report] || (@usage_options[:report] && @usage_options[:report].table.data.length <= 0)
-      when "usage_csv"
-        return true if !@usage_options[:report] || (@usage_options[:report] && @usage_options[:report].table.data.length <= 0)
-      when "usage_pdf"
-        return true if !@usage_options[:report] || (@usage_options[:report] && @usage_options[:report].table.data.length <= 0)
-      when "usage_reportonly"
-        return true if !@usage_options[:report] || (@usage_options[:report] && @usage_options[:report].table.data.length <= 0)
       when "timeline_csv"
         return true unless @report
       when "timeline_pdf"

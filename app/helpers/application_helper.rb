@@ -323,7 +323,6 @@ module ApplicationHelper
       :settings              => @settings,
       :showtype              => @showtype,
       :tabform               => @tabform,
-      :usage_options         => @usage_options,
       :widget_running        => @widget_running,
       :widgetsets            => @widgetsets,
       :zgraph                => @zgraph,

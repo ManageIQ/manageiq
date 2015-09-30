@@ -89,6 +89,7 @@ module ReportController::Reports
       end
     else
       begin
+        raise StandardError, "Default %{model} \"%{name}\" cannot be deleted" % {:model => ui_lookup(:model => "MiqReport"), :name => rpt.name} if rpt.rpt_type == "Default"
         rpt_name = rpt.name
         audit = {:event => "report_record_delete", :message => "[#{rpt_name}] Record deleted", :target_id => rpt.id, :target_class => "MiqReport", :userid => session[:userid]}
         rpt.destroy

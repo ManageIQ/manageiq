@@ -1743,29 +1743,6 @@ describe ApplicationHelper do
         end
       end
 
-      ["usage_txt", "usage_csv", "usage_pdf", "usage_reportonly"].each do |id|
-        context "and id = #{id}" do
-          before { @id = id }
-
-          it "and !@usage_options[:report]" do
-            @usage_options = {:some => 'thing'}
-            subject.should == true
-          end
-
-          it "and @usage_options[:report].table.data is empty" do
-            table = double(:data => '')
-            @usage_options = {:report => double(:table => table)}
-            subject.should == true
-          end
-
-          it "and @usage_options[:report].table.data not empty" do
-            table = double(:data => 'something interesting')
-            @usage_options = {:report => double(:table => table)}
-            subject.should == false
-          end
-        end
-      end
-
       ["timeline_csv", "timeline_pdf", "timeline_txt"].each do |id|
         context "and id = #{id}" do
           before { @id = id }

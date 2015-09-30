@@ -6,7 +6,6 @@ class ReportController < ApplicationController
   include_concern 'Reports'
   include_concern 'SavedReports'
   include_concern 'Schedules'
-  include_concern 'Usage'
   include_concern 'Widgets'
 
   include ReportHelper
