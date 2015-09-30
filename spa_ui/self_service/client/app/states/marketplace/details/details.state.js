@@ -34,7 +34,7 @@
 
   /** @ngInject */
   function resolveDialogs($stateParams, CollectionsApi) {
-    var options = {expand: true, attributes: 'content'};
+    var options = {expand: 'resources', attributes: 'content'};
 
     return CollectionsApi.query('service_templates/' + $stateParams.serviceTemplateId + '/service_dialogs', options);
   }
