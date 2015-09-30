@@ -215,7 +215,7 @@ class MD5deep
     dHash = Hash.new
  	  @opts.digest.each do |h|
  	    begin
- 	      dHash[h.downcase] = eval("Digest::" + h.upcase).new
+ 	      dHash[h.downcase] = Digest.const_get(h.upcase).new
  	    rescue NameError
  	      # If we are unable to load a digest, skip it.
  	    end

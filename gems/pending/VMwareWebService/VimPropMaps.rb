@@ -2,18 +2,18 @@ module VimPropMaps
 	FullPropMap = {
 	    :VirtualMachine            => {
 	        :baseName   => "@virtualMachines",
-	        :keyPath    => "['summary']['config']['vmPathName']",
-			:keyPath2	=> "['summary']['config']['vmLocalPathName']",
+	        :keyPath    => ['summary', 'config', 'vmPathName'],
+			:keyPath2	=> ['summary', 'config', 'vmLocalPathName'],
 	        :props      => ["summary","config","guest","resourceConfig","parent","snapshot","datastore","resourcePool","availableField"]
 	    },
 	    :ComputeResource           => {
 	        :baseName   => "@computeResources",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => ["name","summary","parent","host","resourcePool"]
 	    },
 	    :ClusterComputeResource    => {
 	        :baseName   => "@clusterComputeResources",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => ["name","summary","parent","host","resourcePool","configuration"]
 	    },
 	    :ResourcePool              => {
@@ -23,17 +23,17 @@ module VimPropMaps
 	    },
 	    :Folder                    => {
 	        :baseName   => "@folders",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => nil
 	    },
 	    :Datacenter                => {
 	        :baseName   => "@datacenters",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => nil
 	    },
 	    :HostSystem                => {
 	        :baseName   => "@hostSystems",
-	        :keyPath    => "['summary']['config']['name']",
+	        :keyPath    => ['summary', 'config', 'name'],
 	        :props      => [
 					"summary",
 					"datastore",
@@ -59,7 +59,7 @@ module VimPropMaps
 	    },
 	    :Datastore                 => {
 	        :baseName   => "@dataStores",
-	        :keyPath    => "['summary']['name']",
+	        :keyPath    => ['summary', 'name'],
 	        :props      => ["summary", "info", "capability"]
 	    }
 	}
@@ -76,15 +76,15 @@ module VimPropMaps
 		{
 			:VirtualMachine            => {
 		        :baseName   => "@virtualMachines",
-		        :keyPath    => "['summary']['config']['vmPathName']",
-				:keyPath2	=> "['summary']['config']['vmLocalPathName']",
+		        :keyPath    => ['summary', 'config', 'vmPathName'],
+				:keyPath2	=> ['summary', 'config', 'vmLocalPathName'],
 		        :props      => ["summary","config","guest","resourceConfig","parent","snapshot","datastore","resourcePool","availableField"]
 		    }
 		},
 		{
 			:HostSystem                => {
 		        :baseName   => "@hostSystems",
-		        :keyPath    => "['summary']['config']['name']",
+		        :keyPath    => ['summary', 'config', 'name'],
 		        :props      => [
 						"summary",
 						"datastore",
@@ -110,12 +110,12 @@ module VimPropMaps
 		    },
 			:ComputeResource           => {
 		        :baseName   => "@computeResources",
-		        :keyPath    => "['name']",
+		        :keyPath    => ['name'],
 		        :props      => ["name","summary","parent","host","resourcePool"]
 		    },
 		    :ClusterComputeResource    => {
 		        :baseName   => "@clusterComputeResources",
-		        :keyPath    => "['name']",
+		        :keyPath    => ['name'],
 		        :props      => ["name","summary","parent","host","resourcePool","configuration"]
 		    }
 		},
@@ -127,17 +127,17 @@ module VimPropMaps
 		    },
 		    :Folder                    => {
 		        :baseName   => "@folders",
-		        :keyPath    => "['name']",
+		        :keyPath    => ['name'],
 		        :props      => nil
 		    },
 		    :Datacenter                => {
 		        :baseName   => "@datacenters",
-		        :keyPath    => "['name']",
+		        :keyPath    => ['name'],
 		        :props      => nil
 		    },
 		    :Datastore                 => {
 		        :baseName   => "@dataStores",
-		        :keyPath    => "['summary']['name']",
+		        :keyPath    => ['summary', 'name'],
 		        :props      => ["summary", "info", "capability"]
 		    }
 		}
@@ -146,8 +146,8 @@ module VimPropMaps
 	EmsRefreshPropMap = {
 	    :VirtualMachine            => {
 	        :baseName   => "@virtualMachines",
-	        :keyPath    => "['summary']['config']['vmPathName']",
-			:keyPath2	=> "['summary']['config']['vmLocalPathName']",
+	        :keyPath    => ['summary', 'config', 'vmPathName'],
+			:keyPath2	=> ['summary', 'config', 'vmLocalPathName'],
 	        :props      => [
 					"availableField",
 					"config.cpuAffinity.affinitySet",
@@ -193,7 +193,7 @@ module VimPropMaps
 	    },
 	    :ComputeResource           => {
 	        :baseName   => "@computeResources",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => [
 					"name",
 					"host",
@@ -203,7 +203,7 @@ module VimPropMaps
 	    },
 	    :ClusterComputeResource    => {
 	        :baseName   => "@clusterComputeResources",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => [
 					"configuration.dasConfig.admissionControlPolicy",
 					"configuration.dasConfig.admissionControlEnabled",
@@ -242,7 +242,7 @@ module VimPropMaps
 	    },
 	    :Folder                    => {
 	        :baseName   => "@folders",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => [
 					"childEntity",
 					"name",
@@ -251,7 +251,7 @@ module VimPropMaps
 	    },
 	    :Datacenter                => {
 	        :baseName   => "@datacenters",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => [
 					"hostFolder",
 					"name",
@@ -261,7 +261,7 @@ module VimPropMaps
 	    },
 	    :HostSystem                => {
 	        :baseName   => "@hostSystems",
-	        :keyPath    => "['summary']['config']['name']",
+	        :keyPath    => ['summary', 'config', 'name'],
 	        :props      => [
 					"config.adminDisabled",
 					"config.consoleReservation.serviceConsoleReserved",
@@ -302,7 +302,7 @@ module VimPropMaps
 	    },
 	    :Datastore                 => {
 	        :baseName   => "@dataStores",
-	        :keyPath    => "['summary']['name']",
+	        :keyPath    => ['summary', 'name'],
 	        :props      => [
 					"info",
 					"capability.directoryHierarchySupported",
@@ -324,8 +324,8 @@ module VimPropMaps
 	CorePropMap = {
 	    :VirtualMachine            => {
 	        :baseName   => "@virtualMachines",
-	        :keyPath    => "['summary']['config']['vmPathName']",
-			:keyPath2	=> "['summary']['config']['vmLocalPathName']",
+	        :keyPath    => ['summary', 'config', 'vmPathName'],
+			:keyPath2	=> ['summary', 'config', 'vmLocalPathName'],
 	        :props      => [
 					"availableField",
 					"snapshot",
@@ -341,7 +341,7 @@ module VimPropMaps
 	    },
 	    :ComputeResource           => {
 	        :baseName   => "@computeResources",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => [
 					"name",
 					"host",
@@ -351,7 +351,7 @@ module VimPropMaps
 	    },
 	    :ClusterComputeResource    => {
 	        :baseName   => "@clusterComputeResources",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => [
 					"configuration.dasConfig.admissionControlEnabled",
 					"configuration.dasConfig.enabled",
@@ -387,7 +387,7 @@ module VimPropMaps
 	    },
 	    :Folder                    => {
 	        :baseName   => "@folders",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => [
 					"childEntity",
 					"name",
@@ -396,7 +396,7 @@ module VimPropMaps
 	    },
 	    :Datacenter                => {
 	        :baseName   => "@datacenters",
-	        :keyPath    => "['name']",
+	        :keyPath    => ['name'],
 	        :props      => [
 					"hostFolder",
 					"name",
@@ -406,7 +406,7 @@ module VimPropMaps
 	    },
 	    :HostSystem                => {
 	        :baseName   => "@hostSystems",
-	        :keyPath    => "['summary']['config']['name']",
+	        :keyPath    => ['summary', 'config', 'name'],
 	        :props      => [
 					"capability",
 					"summary.config.name",
@@ -416,7 +416,7 @@ module VimPropMaps
 	    },
 	    :Datastore                 => {
 	        :baseName   => "@dataStores",
-	        :keyPath    => "['summary']['name']",
+	        :keyPath    => ['summary', 'name'],
 	        :props      => [
 					"info",
 					"summary.accessible",
@@ -435,7 +435,7 @@ module VimPropMaps
 	EventMonitorPropMap = {
 		:VirtualMachine			=> {
             :baseName   => "@virtualMachines",
-            :keyPath    => "['summary']['config']['vmPathName']",
+            :keyPath    => ['summary', 'config', 'vmPathName'],
             :props      => [
 					"summary.config.vmPathName",
 					"summary.runtime.host"
@@ -443,7 +443,7 @@ module VimPropMaps
         },
         :HostSystem				=> {
             :baseName   => "@hostSystems",
-            :keyPath    => "['summary']['config']['name']",
+            :keyPath    => ['summary', 'config', 'name'],
             :props      => [ "summary.config.name" ]
         }
     }
