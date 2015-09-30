@@ -2563,7 +2563,7 @@ describe ApplicationHelper do
   describe "#build_toolbar_hide_button_ops" do
     subject { build_toolbar_hide_button_ops(@id) }
     before do
-      @record = FactoryGirl.create(:tenant)
+      @record = FactoryGirl.create(:tenant, :parent => Tenant.seed)
       feature = EvmSpecHelper.specific_product_features(%w(ops_rbac rbac_group_add rbac_tenant_add rbac_tenant_delete))
       login_as FactoryGirl.create(:user, :features => feature)
       @sb = {:active_tree => :rbac_tree}
