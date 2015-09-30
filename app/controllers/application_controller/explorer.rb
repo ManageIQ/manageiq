@@ -409,11 +409,10 @@ module ApplicationController::Explorer
       end
       return objects
     when :roles
-      user = current_user
-      if user.super_admin_user?
+      if super_admin_user?
         roles = MiqGroup.all
       else
-        roles = [user.current_group]
+        roles = [current_user.current_group]
       end
       return options[:count_only] ? roles.count : roles.sort_by { |a| a.name.downcase }
     when :schedules
@@ -439,7 +438,7 @@ module ApplicationController::Explorer
     when :savedreports
       # Saving the unique folder id's that hold reports under them, to use them in view to generate link
       @sb[:folder_ids] = Hash.new
-      g = current_user.admin_user? ? nil : session[:group]
+      g = admin_user? ? nil : session[:group]
       MiqReport.having_report_results(:miq_group => g, :select => [:id, :name]).each do |r|
         @sb[:folder_ids][r.name] = to_cid(r.id.to_i)
       end
