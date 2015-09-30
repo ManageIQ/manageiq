@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   include Vmdb::Logging
 
   if Vmdb::Application.config.action_controller.allow_forgery_protection
-    protect_from_forgery :secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report
+    protect_from_forgery :secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report, :with => :exception
   end
 
   helper ChartingHelper
