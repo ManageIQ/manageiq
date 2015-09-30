@@ -48,7 +48,7 @@ describe VmReconfigureRequest do
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "vm_reconfigure_request_created",
-        :target_class => "VmOrTemplate",
+        :target_class => "Vm",
         :userid       => admin.userid,
         :message      => "VM Reconfigure requested by <#{admin.userid}> for Vm:#{[@vm.id].inspect}"
       )
@@ -73,7 +73,7 @@ describe VmReconfigureRequest do
 
       expect(AuditEvent).to receive(:success).with(
         :event        => "vm_reconfigure_request_updated",
-        :target_class => "VmOrTemplate",
+        :target_class => "Vm",
         :userid       => alt_user.userid,
         :message      => "VM Reconfigure request updated by <#{alt_user.userid}> for Vm:#{[@vm.id].inspect}"
       )

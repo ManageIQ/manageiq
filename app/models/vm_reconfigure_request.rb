@@ -1,7 +1,6 @@
 class VmReconfigureRequest < MiqRequest
-
   TASK_DESCRIPTION  = 'VM Reconfigure'
-  SOURCE_CLASS_NAME = 'VmOrTemplate'
+  SOURCE_CLASS_NAME = 'Vm'
   ACTIVE_STATES     = %w{ reconfigured } + self.base_class::ACTIVE_STATES
 
   validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
