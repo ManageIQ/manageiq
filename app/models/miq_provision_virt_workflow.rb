@@ -55,14 +55,16 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       password_helper(values, true)
       return nil
     else
-      event_message = "VM Provision requested by [#{requester_id}] for VM:#{values[:src_vm_id].inspect}"
-      super(values, requester_id, 'Vm', 'vm_provision_request_updated', event_message, auto_approve)
+      event_message = "VM Provisioning requested by <#{requester_id}> for Vm:#{values[:src_vm_id].inspect}"
+      super(values, requester_id, 'Vm', 'vm_provision_request_created', event_message, auto_approve)
     end
   end
 
   def update_request(request, values, requester_id)
-    event_message = "VM Provision request was successfully updated by [#{requester_id}] for VM:#{values[:src_vm_id].inspect}"
-    super(request, values, requester_id, 'Vm', 'vm_migrate_request_updated', event_message)
+    event_message = "VM Provisioning request updated by <#{requester_id}> for Vm:#{values[:src_vm_id].inspect}"
+    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+    request.src_vm_id = request.get_option(:src_vm_id)
+    super(request, values, requester_id, 'Vm', 'vm_provision_request_updated', event_message)
   end
 
   def refresh_field_values(values, _requester_id)

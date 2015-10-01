@@ -28,9 +28,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       end
 
       it "#workflow" do
-        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+        workflow_class = ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow
+        workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
 
-        @vm_prov.workflow.class.should eq ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow
+        expect(@vm_prov.workflow.class).to eq workflow_class
+        expect(@vm_prov.workflow_class).to eq workflow_class
       end
 
       it "disable_customization_spec" do

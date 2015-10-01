@@ -103,8 +103,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
                                  :state        => 'pending',
                                  :status       => 'Ok',
                                  :options      => options)
-    MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
 
-    vm_prov.workflow.class.should eq ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow
+    workflow_class = ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow
+    workflow_class.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
+
+    expect(vm_prov.workflow.class).to eq workflow_class
+    expect(vm_prov.workflow_class).to eq workflow_class
   end
 end
