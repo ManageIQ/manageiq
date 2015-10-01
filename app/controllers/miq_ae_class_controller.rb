@@ -362,7 +362,7 @@ class MiqAeClassController < ApplicationController
 
     if !@in_a_form || (params[:pressed] && params[:pressed].ends_with?("_delete"))
       presenter[:set_visible_elements][:params_div] =
-        @sb[:active_tab] == "methods" && @grid_methods_xml
+        @sb[:active_tab] == "methods" && !@record.inputs.blank?
     end
 
     # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
@@ -460,46 +460,6 @@ class MiqAeClassController < ApplicationController
       srow.add_element("cell").text = "0" # Checkbox column unchecked
       srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{cls}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<ul class='icons list-unstyled'><li><span class='#{glyphicon}' alt='#{cls}' title='#{cls}'></span></li></ul>")
       srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = rec_name
-    end
-    return xml.to_s
-  end
-
-  def build_methods_grid(view)
-    xml = REXML::Document.load("")
-    xml << REXML::XMLDecl.new(1.0, "UTF-8")
-
-    # Create root element
-    root = xml.add_element("rows")
-    # Build the header row
-    head = root.add_element("head")
-    new_column = head.add_element("column", {"width"=>"*","align"=>"left", "sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Input Name"
-    new_column = head.add_element("column", {"width"=>"*","align"=>"left", "sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Default Value"
-    new_column = head.add_element("column", {"width"=>"*","align"=>"left", "sort"=>"na"})
-    new_column.add_attribute("type", 'ro')
-    new_column.text = "Data Type"
-
-    view.flatten.sort_by{|a| [a.priority.to_i]}.each do |kids|
-      cls,glyphicon = set_cls(kids.class)
-      rec_name = get_rec_name(kids)
-      def_val = kids.default_value
-      data_type = kids.datatype ? kids.datatype : "string"
-      if kids.default_value && kids.datatype != "password"
-        def_val.gsub!(/\n/,"\\n")
-        def_val.gsub!(/\t/,"\\t")
-        def_val.gsub!(/"/,"'")
-        kids.default_value = CGI.escapeHTML(kids.default_value)
-        def_val.gsub!(/\\/,"&#92;")
-      elsif kids.default_value && kids.datatype == "password"
-        def_val = "********"
-      end
-      srow = root.add_element("row", {"id"=>"#{cls}-#{to_cid(kids.id)}", "style"=>"border-bottom: 1px solid #CCCCCC;color:black; text-align: center"})
-      srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = rec_name
-      srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{def_val}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = def_val
-      srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{kids.datatype}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = data_type
     end
     return xml.to_s
   end
@@ -2568,7 +2528,6 @@ private
     else
       @ae_class = @record.ae_class
       inputs = @record.inputs
-      @grid_methods_xml = inputs.blank? ? nil : build_methods_grid(inputs)
       @sb[:squash_state] = true
       @sb[:active_tab] = "methods"
       domain_overrides
