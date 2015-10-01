@@ -409,7 +409,7 @@ class TreeBuilder
     results = Rbac.filtered(objects, options)
 
     # If we are processing :match_via_descendants and user is filtered (i.e. not like admin/super-admin)
-    if check_vm_descendants && User.current_user_has_filters?
+    if check_vm_descendants && User.current_user.has_filters?
       filtered_objects = objects - results
       results = objects.select do |o|
         if o.is_a?(EmsFolder) || filtered_objects.include?(o)

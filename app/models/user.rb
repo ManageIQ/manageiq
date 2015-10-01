@@ -341,18 +341,15 @@ class User < ActiveRecord::Base
   def self.with_userid(userid)
     saved_user   = Thread.current[:user]
     saved_userid = Thread.current[:userid]
-    saved_filters = Thread.current[:user_has_filters]
     self.current_userid = userid
     yield
   ensure
     Thread.current[:user]   = saved_user
     Thread.current[:userid] = saved_userid
-    Thread.current[:user_has_filters] = saved_filters
   end
 
   def self.current_userid=(userid)
     Thread.current[:user]   = nil
-    Thread.current[:user_has_filters] = nil
     Thread.current[:userid] = userid
   end
 
@@ -363,15 +360,4 @@ class User < ActiveRecord::Base
   def self.current_user
     Thread.current[:user] ||= self.find_by_userid(self.current_userid)
   end
-
-  def self.current_user_has_filters?
-    if Thread.current[:user_has_filters].nil?
-      Thread.current[:user_has_filters] =
-        current_user.current_group.filters &&
-        !(current_user.current_group.filters["managed"].blank? &&
-          current_user.current_group.filters["belongs_to"].blank?)
-    end
-    return Thread.current[:user_has_filters]
-  end
-  #
 end
