@@ -309,9 +309,7 @@ module Rbac
       user.current_group = miq_group if user.miq_groups.include?(miq_group)
     end
     tz                        = user.get_timezone if user
-    user_filters              = miq_group.get_filters  if miq_group
-    user_filters              = user.get_filters       if user
-    user_filters            ||= {}
+    user_filters = user.try(:get_filters) || miq_group.try(:get_filters) || {}
     user_filters["managed"] ||= []
 
     return user, miq_group, user_filters, tz
