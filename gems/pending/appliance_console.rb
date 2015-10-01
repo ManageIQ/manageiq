@@ -133,7 +133,7 @@ module ApplianceConsole
 
     loop do
       begin
-        host     = Env["HOST"]
+        host     = LinuxAdmin::Hosts.new.hostname
         ip       = Env["IP"]
         mac      = Env["MAC"]
         mask     = Env["MASK"]
@@ -233,7 +233,11 @@ Static Network Configuration
 
           if new_host != host
             say("Applying new hostname...")
-            Env['HOST'] = new_host
+            system_hosts = LinuxAdmin::Hosts.new
+            system_hosts.hostname = new_host
+            system_hosts.update_entry(ip, new_host)
+            system_hosts.save
+            LinuxAdmin::Service.new("network").restart
           end
 
         when I18n.t("advanced_settings.datetime")
