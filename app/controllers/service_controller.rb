@@ -288,10 +288,8 @@ class ServiceController < ApplicationController
         typ = x_active_tree == :svcs_tree ? "Service" : "ServiceTemplate"
         process_show_list(:where_clause=>"service_id is null")
         @right_cell_text = _("All %s") % ui_lookup(:models=>typ)
-        sync_view_pictures_to_disk(@view) if ["grid", "tile"].include?(@gtl_type)
       else
         show_record(from_cid(id))
-        add_pictures_to_sync(@record.picture.id) if @record.picture
         typ = x_active_tree == :svcs_tree ? "Service" : TreeBuilder.get_model_for_prefix(@nodetype)
         @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
       end
