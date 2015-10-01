@@ -1399,9 +1399,9 @@ class CatalogController < ApplicationController
     end
   end
 
-  def default_entry_point
+  def default_entry_point(prov_type)
     edit_new = @edit[:new]
-    klass = class_service_template(edit_new[:st_prov_type])
+    klass = class_service_template(prov_type)
     edit_new[:fqname] = klass.default_provisioning_entry_point
     edit_new[:retire_fqname] = klass.default_retirement_entry_point if klass.respond_to?(:default_retirement_entry_point)
     edit_new[:reconfigure_fqname] = klass.default_reconfiguration_entry_point if klass.respond_to?(:default_reconfiguration_entry_point)
