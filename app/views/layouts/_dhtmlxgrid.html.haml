@@ -11,7 +11,7 @@
 
 %script{:type => "text/javascript"}
   - unless @parent.nil?
-    ManageIQ.record.parentId = "#{raw j(@parent.id)}";
+    ManageIQ.record.parentId = "#{@parent.id}";
     ManageIQ.record.parentClass = "#{raw j(@parent.class.base_class.to_s.underscore)}";
     if (ManageIQ.record.parentClass == "policy_set") { ManageIQ.record.parentClass = "policy"; }
     else if (ManageIQ.record.parentClass == "ext_management_system") { ManageIQ.record.parentClass = "#{raw j(@layout)}"; }
