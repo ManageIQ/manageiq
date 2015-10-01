@@ -10,7 +10,7 @@ describe MiqProvision do
     let(:u1) { FactoryGirl.create(:user) }
     let(:options) { {'domains' => [{:name => domain, :bind_password => enc_password}]} }
     let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspace", :root => options) }
-    let(:prov)  { FactoryGirl.build(:miq_provision, :tenant => t1) }
+    let(:prov) { FactoryGirl.build(:miq_provision, :tenant => t1) }
 
     def stub_method
       MiqAeEngine.should_receive(:resolve_automation_object).with do |uri, attr, _, _|
