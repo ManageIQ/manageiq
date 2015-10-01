@@ -1,4 +1,7 @@
 class MiqUserRole < ActiveRecord::Base
+  SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
+  ADMIN_ROLE_NAME       = "EvmRole-administrator"
+
   has_many                :miq_groups, :dependent => :restrict_with_exception
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
 
@@ -143,11 +146,11 @@ class MiqUserRole < ActiveRecord::Base
     end
   end
 
-  def self_service_role?
+  def self_service?
     [:user_or_group, :user].include?((self.settings || {}).fetch_path(:restrictions, :vms))
   end
 
-  def limited_self_service_role?
+  def limited_self_service?
     (self.settings || {}).fetch_path(:restrictions, :vms) == :user
   end
 
@@ -182,5 +185,13 @@ class MiqUserRole < ActiveRecord::Base
   def vm_restriction
     vmr = self.settings && self.settings.fetch_path(:restrictions, :vms)
     return vmr ? RESTRICTIONS[vmr] : "None"
+  end
+
+  def super_admin_user?
+    name == SUPER_ADMIN_ROLE_NAME
+  end
+
+  def admin_user?
+    name == SUPER_ADMIN_ROLE_NAME || name == ADMIN_ROLE_NAME
   end
 end

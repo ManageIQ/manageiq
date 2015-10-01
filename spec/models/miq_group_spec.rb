@@ -284,4 +284,24 @@ describe MiqGroup do
       expect(g2.all_users).to match_array([u_two])
     end
   end
+
+  describe "#self_service" do
+    it "detects role" do
+      role = FactoryGirl.create(
+        :miq_user_role,
+        :role => "self_service",
+        :settings => {:restrictions => {:vms => :user_or_group}}
+      )
+      group = FactoryGirl.create(:miq_group,
+        :description   => "MiqGroup-self_service",
+        :miq_user_role => role
+      )
+      expect(group).to be_self_service
+    end
+
+    it "detects non-role" do
+      group = FactoryGirl.create(:miq_group, :role => "abc")
+      expect(group).not_to be_self_service
+    end
+  end
 end

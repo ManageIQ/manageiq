@@ -16,6 +16,8 @@ class MiqGroup < ActiveRecord::Base
   virtual_column :read_only,          :type => :boolean
   virtual_column :user_count,         :type => :integer
 
+  delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
+
   validates_presence_of   :description, :guid
   validates_uniqueness_of :description, :guid
 
@@ -161,18 +163,6 @@ class MiqGroup < ActiveRecord::Base
   def miq_user_role_name
     self.miq_user_role.nil? ? nil : self.miq_user_role.name
   end
-
-  def self_service_group?
-    return false if self.miq_user_role.nil?
-    self.miq_user_role.self_service_role?
-  end
-  alias self_service? self_service_group?
-
-  def limited_self_service_group?
-    return false if self.miq_user_role.nil?
-    self.miq_user_role.limited_self_service_role?
-  end
-  alias limited_self_service? limited_self_service_group?
 
   def read_only
     self.group_type == "system"
