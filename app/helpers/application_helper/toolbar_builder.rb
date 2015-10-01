@@ -460,7 +460,7 @@ class ApplicationHelper::ToolbarBuilder
     case id
     when "service_reconfigure"
       ra = @record.service_template.resource_actions.find_by_action('Reconfigure') if @record.service_template
-      return true if ra.nil? || ra.fqname.blank?
+      return true if ra.nil? || ra.dialog_id.nil? || ra.fqname.blank?
     end
     false
   end
@@ -763,7 +763,7 @@ class ApplicationHelper::ToolbarBuilder
       when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
         return true
       end
-    when "Service"
+    when "Service", "ServiceOrchestration"
       return build_toolbar_hide_button_service(id)
     when "Vm"
       case id
