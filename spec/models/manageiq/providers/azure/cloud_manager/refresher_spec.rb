@@ -246,9 +246,10 @@ describe ManageIQ::Providers::Azure::CloudManager do
   def assert_specific_orchestration_stack
     @orch_stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.where(:name => "spec-deployment1-dont-delete").first
     @orch_stack.should have_attributes(
-      :status      => "Succeeded",
-      :description => 'spec-deployment1-dont-delete',
-      :ems_ref     => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups/ComputeVMs/deployments/spec-deployment1-dont-delete',
+      :status         => "Succeeded",
+      :description    => 'spec-deployment1-dont-delete',
+      :resource_group => 'ComputeVMs',
+      :ems_ref        => '/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485/resourceGroups/ComputeVMs/deployments/spec-deployment1-dont-delete',
     )
 
     assert_specific_orchestration_stack_parameters

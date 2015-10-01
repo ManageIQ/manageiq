@@ -5,6 +5,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
   require_dependency 'manageiq/providers/azure/cloud_manager/refresh_worker'
   require_dependency 'manageiq/providers/azure/cloud_manager/refresher'
   require_dependency 'manageiq/providers/azure/cloud_manager/vm'
+  require_dependency 'manageiq/providers/azure/cloud_manager/orchestration_stack'
 
   alias_attribute :azure_tenant_id, :uid_ems
 

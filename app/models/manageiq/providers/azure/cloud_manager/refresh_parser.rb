@@ -261,15 +261,16 @@ module ManageIQ::Providers
                            name)
         child_stacks, resources = stack_resources(deployment)
         new_result = {
-          :type        => ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.name,
-          :ems_ref     => deployment.fetch_path('id'),
-          :name        => name,
-          :description => name,
-          :status      => deployment.fetch_path('properties', 'provisioningState'),
-          :children    => child_stacks,
-          :resources   => resources,
-          :outputs     => stack_outputs(deployment),
-          :parameters  => stack_parameters(deployment),
+          :type           => ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.name,
+          :ems_ref        => deployment.fetch_path('id'),
+          :name           => name,
+          :description    => name,
+          :status         => deployment.fetch_path('properties', 'provisioningState'),
+          :children       => child_stacks,
+          :resources      => resources,
+          :outputs        => stack_outputs(deployment),
+          :parameters     => stack_parameters(deployment),
+          :resource_group => deployment.fetch_path('resourceGroup'),
 
           :orchestration_template => stack_template(deployment)
         }
