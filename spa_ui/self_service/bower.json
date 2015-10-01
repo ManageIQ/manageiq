@@ -30,8 +30,8 @@
     "angular-messages": "~1.4.0",
     "angular-ui-router": "~0.2.15",
     "angular-mocks": "~1.5.0",
-    "patternfly": "~2.2.0",
-    "angular-patternfly": "~2.2.1",
+    "patternfly": "~2.3.0",
+    "angular-patternfly": "~2.3",
     "angular-bootstrap": "~0.13.0",
     "angular-base64": "~2.0.5"
   },
