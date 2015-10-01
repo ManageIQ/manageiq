@@ -213,12 +213,12 @@ describe EmsCloudController do
 
   describe "the link to flavors in accordion to be restful" do
     before do
-      Zone.first || FactoryGirl.create(:zone)
+      Zone.seed
       described_class.any_instance.stub(:set_user_time_zone)
       controller.stub(:check_privileges).and_return(true)
       controller.stub(:assert_privileges).and_return(true)
     end
-    it 'gets the restful show flavors path' do
+    it 'gets the restful show link path' do
       MiqServer.stub(:my_zone).and_return("default")
       post :create,
            "button"           => "add",
