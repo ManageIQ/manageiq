@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-12 ">
+    <div class="col-md-12">
 	    <div pf-data-toolbar id="serviceToolbar" config="vm.toolbarConfig"></div>
     </div>
   </div>
@@ -21,6 +21,9 @@
           </span>
           {{ item.name }}
         </span>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <strong>ID: </strong> {{ item.id }}
       </div>
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
         <strong>Created: </strong> on {{ item.created_at | date }}</span>
