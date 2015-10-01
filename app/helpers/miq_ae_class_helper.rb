@@ -55,4 +55,8 @@ module MiqAeClassHelper
   def icon_class(cls)
     cls.to_s.split("::").last.underscore.sub('miq_', 'product product-')
   end
+
+  def nonblank(*items)
+    items.detect { |item| !item.blank? }
+  end
 end

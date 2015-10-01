@@ -464,99 +464,6 @@ class MiqAeClassController < ApplicationController
     return xml.to_s
   end
 
-  def grid_add_header(head)
-    col_width = 900 / 7
-    columns = ["Name", "Value", "On Entry", "On Exit", "On Error", "Collect", "Max Retries", "Max Time", "Message"]
-
-    columns.each do |column|
-      options = {"width" => "#{col_width}", "sort" => "na"}
-      options.merge!("align" => "left") if %w(Name Value).include?(column)
-      new_column = head.add_element("column", options)
-      new_column.add_attribute("type", 'ro')
-      new_column.text = column
-    end
-  end
-
-  def build_fields_grid(view,inst)
-    xml = REXML::Document.load("")
-    xml << REXML::XMLDecl.new(1.0, "UTF-8")
-
-    # Create root element
-    root = xml.add_element("rows")
-    # Build the header row
-    hrow = root.add_element("head")
-    grid_add_header(hrow)
-
-    view.flatten.sort_by{|a| [a.priority.to_i]}.each do |kids|
-      cls,glyphicon = set_cls(kids.class)
-      glyphicon = "ae_#{kids.aetype}"
-
-      if kids.substitute
-        substitute_glyphicon = "pficon pficon-ok"
-      else
-        substitute_glyphicon = "pficon pficon-ok-closed"
-      end
-
-      kids.datatype = kids.datatype == nil ? "string" : kids.datatype
-
-      val = MiqAeValue.find_by_instance_id_and_field_id(inst.id,kids.id)
-      val ||= MiqAeValue.new(:field_id => kids.id, :instance_id => inst.id)
-      field_val = val.value
-      rec_name = get_rec_name(kids)
-      def_val = kids.default_value
-      if kids.default_value && kids.datatype != "password"
-        def_val.gsub!(/\n/,"\\n")
-        def_val.gsub!(/\t/,"\\t")
-        def_val.gsub!(/"/,"'")
-        def_val = CGI.escapeHTML(kids.default_value)
-        def_val.gsub!(/\\/,"&#92;")
-      elsif kids.default_value && kids.datatype == "password"
-        def_val = "********"
-      end
-
-      if field_val && kids.datatype != "password"
-        field_val.gsub!(/\n/,"\\n")
-        field_val.gsub!(/\t/,"\\t")
-        field_val.gsub!(/"/,"'")
-        field_val = CGI.escapeHTML(field_val)
-        field_val.gsub!(/\\/,"&#92;")
-      elsif field_val && kids.datatype == "password"
-        field_val = "********"
-      end
-      if !def_val.blank? || !field_val.blank? || !kids.collect.blank? || !val.collect.blank?  || !kids.on_entry.blank? || !val.on_entry.blank? || !kids.on_exit.blank? || !val.on_exit.blank? || !kids.on_error.blank? || !val.on_error.blank? || !kids.max_retries.blank? || !val.max_retries.blank? || !kids.max_time.blank? || !val.max_time.blank?
-        srow = root.add_element("row", {"id"=>"#{cls}-#{to_cid(kids.id)}", "style"=>"border-bottom: 1px solid #CCCCCC;color:black; text-align: center"})
-        if kids.datatype != "string"
-          srow.add_element("cell", {"image"=>"blank.png", "title"=>"Type: #{kids.aetype}, Data Type: #{kids.datatype}, Substitution: #{kids.substitute}, #{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<ul class='icons list-unstyled pull-left'><li><span class='product product-#{glyphicon}' alt='Type: #{kids.aetype}' title='Type: #{kids.aetype}'></span></li></ul><ul class='icons list-unstyled pull-left'><li><span class='product product-#{kids.datatype}' alt='Data Type: #{kids.datatype}' title='Data Type: #{kids.datatype}'></span></li></ul><ul class='icons list-unstyled pull-left'><li><span class='#{substitute_glyphicon}' alt='Substitution: #{kids.substitute}' title='Substitution: #{kids.substitute}'></span></li></ul>#{rec_name}")
-        else
-          srow.add_element("cell", {"image"=>"blank.png", "title"=>"Type: #{kids.aetype}, Substitution: #{kids.substitute}, #{rec_name}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = REXML::CData.new("<ul class='icons list-unstyled pull-left'><li><span class='product product-#{glyphicon}' alt='Type: #{kids.aetype}' title='Type: #{kids.aetype}'></span></li></ul><ul class='icons list-unstyled pull-left'><li><span class='#{substitute_glyphicon}' alt='Substitution: #{kids.substitute}' title='Substitution: #{kids.substitute}'></span></li></ul>#{rec_name}")
-        end
-        clr = val.value.nil? || val.value == "" ? "#a8a8a8" : "#000000"
-        value = val.value.nil? || val.value == "" ? (kids.datatype == "password" ? "********" : kids.default_value) : (kids.datatype == "password" ? "********" : val.value)
-        srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{field_val}","style"=>"color: #{clr}; border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = value
-        clr = val.on_entry.nil? || val.on_entry == "" ? "#a8a8a8" : "#000000"
-        on_entry = val.on_entry.nil? || val.on_entry == "" ? kids.on_entry : val.on_entry
-        srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{val.on_entry}","style"=>"color: #{clr}; border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = on_entry
-        clr = val.on_exit.nil? || val.on_exit == "" ? "#a8a8a8" : "#000000"
-        on_exit = val.on_exit.nil? || val.on_exit == "" ? kids.on_exit : val.on_exit
-        srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{val.on_exit}","style"=>"color: #{clr}; border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = on_exit
-        clr = val.on_error.nil? || val.on_error == "" ? "#a8a8a8" : "#000000"
-        on_error = val.on_error.nil? || val.on_error == "" ? kids.on_error : val.on_error
-        srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{val.on_error}","style"=>"color: #{clr}; border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = on_error
-        clr = val.collect.nil? || val.collect == "" ? "#a8a8a8" : "#000000"
-        collect = val.collect.nil? || val.collect == "" ? kids.collect : val.collect
-        srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{val.collect}","style"=>"color: #{clr}; border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = collect
-        clr = val.max_retries.nil? || val.max_retries == "" ? "#a8a8a8" : "#000000"
-        max_retries = val.max_retries.nil? || val.max_retries == "" ? kids.max_retries : val.max_retries
-        srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{val.on_entry}","style"=>"color: #{clr}; border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = max_retries
-        clr = val.max_time.nil? || val.max_time == "" ? "#a8a8a8" : "#000000"
-        max_time = val.max_time.nil? || val.max_time == "" ? kids.max_time : val.max_time
-        srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{val.on_entry}","style"=>"color: #{clr}; border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = max_time
-        srow.add_element("cell", {"image"=>"blank.png", "title"=>"#{kids.message}","style"=>"border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;"}).text = kids.message
-      end
-    end
-    return xml.to_s
-  end
-
   def build_methods_grid(view)
     xml = REXML::Document.load("")
     xml << REXML::XMLDecl.new(1.0, "UTF-8")
@@ -2648,7 +2555,6 @@ private
       set_root_node
     else
       @ae_class             = @record.ae_class
-      @grid_inst_xml = build_fields_grid(@ae_class.ae_fields, @record)
       @sb[:active_tab]      = "instances"
       domain_overrides
       set_right_cell_text(x_node, @record)
