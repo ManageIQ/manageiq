@@ -685,6 +685,7 @@
     :description: Services
     :options:
     - :collection
+    - :custom_actions
     :methods: *70174834084700
     :klass: Service
     :subcollections:
