@@ -2,6 +2,19 @@ require "spec_helper"
 
 describe Metric::Processing do
   context ".process_derived_columns" do
+    context "on :derived_host_sockets" do
+      let(:hardware) { FactoryGirl.create(:hardware, :cpu_sockets => 2) }
+      let(:host) { FactoryGirl.create(:host, :hardware => hardware) }
+
+      it "adds the derived host sockets" do
+        m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => host)
+
+        derived_columns = described_class.process_derived_columns(host, m.attributes.symbolize_keys)
+
+        expect(derived_columns[:derived_host_sockets]).to eq(2)
+      end
+    end
+
     context "on :derived_vm_numvcpus" do
       let(:vm) do
         FactoryGirl.create(:vm_vmware, :hardware =>
