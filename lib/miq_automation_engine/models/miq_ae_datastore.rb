@@ -73,7 +73,7 @@ module MiqAeDatastore
     _log.info("Upload complete (size=#{File.size(filename)})")
 
     begin
-      import_yaml_zip(filename, domain_name, Tenant.current_tenant)
+      import_yaml_zip(filename, domain_name, User.current_tenant)
     ensure
       File.delete(filename)
     end
