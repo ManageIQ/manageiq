@@ -20,20 +20,20 @@
           = _("SmartProxy Server IP")
         .col-md-8
           %p.form-control-static
-            = @selected_zone.settings[:proxy_server_ip]
+            = @selected_zone.settings.key?(:proxy_server_ip) ? @selected_zone.settings[:proxy_server_ip] : ''
       .form-group
         %label.col-md-2.control-label
           = _("NTP Servers")
         .col-md-8
           %p.form-control-static
-            = @selected_zone.settings[:ntp][:server].join(", ")
+            = @selected_zone.settings[:ntp] ? @selected_zone.settings[:ntp][:server].join(", ") : ''
 
       .form-group
         %label.col-md-2.control-label
           = _("Max active VM Scans")
         .col-md-8
           %p.form-control-static
-            = @selected_zone.settings[:concurrent_vm_scans] > 0 ? @selected_zone.settings[:concurrent_vm_scans] : _("Unlimited")
+            = (@selected_zone.settings.key?(:concurrent_vm_scans) && @selected_zone.settings[:concurrent_vm_scans] > 0) ? @selected_zone.settings[:concurrent_vm_scans] : _("Unlimited")
 
     %h3= _("Relationships")
     .form-horizontal.static
