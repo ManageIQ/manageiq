@@ -5,9 +5,13 @@ class ApiController
     #
 
     def show_auth
-      auth_token = @api_token_mgr.gen_token(@module, :userid => @auth_user)
+      requester_type = fetch_and_validate_requester_type
+      auth_token = @api_token_mgr.gen_token(@module,
+                                            :userid           => @auth_user,
+                                            :token_ttl_config => REQUESTER_TTL_CONFIG[requester_type])
       res = {
         :auth_token => auth_token,
+        :token_ttl  => @api_token_mgr.token_get_info(@module, auth_token, :token_ttl),
         :expires_on => @api_token_mgr.token_get_info(@module, auth_token, :expires_on)
       }
       render_resource :auth, res
@@ -25,6 +29,7 @@ class ApiController
         else
           @auth_user     = @api_token_mgr.token_get_info(@module, @auth_token, :userid)
           @auth_user_obj = userid_to_userobj(@auth_user)
+          @api_token_mgr.reset_token(@module, @auth_token)
         end
       else
         authenticate_options = {
@@ -43,6 +48,16 @@ class ApiController
 
     def userid_to_userobj(userid)
       User.find_by_userid(userid)
+    end
+
+    def fetch_and_validate_requester_type
+      requester_type = params['requester_type']
+      return unless requester_type
+      REQUESTER_TTL_CONFIG.fetch(requester_type) do
+        requester_types = REQUESTER_TTL_CONFIG.keys.join(', ')
+        raise BadRequestError, "Invalid requester_type #{requester_type} specified, valid types are: #{requester_types}"
+      end
+      requester_type
     end
   end
 end
