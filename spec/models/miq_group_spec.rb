@@ -16,12 +16,34 @@ describe MiqGroup do
 
       it "when nil" do
         @miq_group.filters = nil
-        @miq_group.get_filters.should be_nil
+        expect(@miq_group.get_filters).to eq("managed" => [], "belongsto" => [])
       end
 
       it "when {}" do
         @miq_group.filters = {}
         @miq_group.get_filters.should == {}
+      end
+    end
+
+    context "#has_filters?" do
+      it "normal" do
+        @miq_group.filters = {"managed" => %w(a)}
+        expect(@miq_group).to be_has_filter
+      end
+
+      it "when other" do
+        @miq_group.filters = {"other" => %(x)}
+        expect(@miq_group).not_to be_has_filter
+      end
+
+      it "when nil" do
+        @miq_group.filters = nil
+        expect(@miq_group).not_to be_has_filter
+      end
+
+      it "when {}" do
+        @miq_group.filters = {}
+        expect(@miq_group).not_to be_has_filter
       end
     end
 

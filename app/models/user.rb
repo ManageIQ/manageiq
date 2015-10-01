@@ -22,8 +22,8 @@ class User < ActiveRecord::Base
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
 
-  delegate   :miq_user_role,  :to => :current_group, :allow_nil => true
-  delegate   :current_tenant, :to => :current_group, :allow_nil => true
+  delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
+             :to => :current_group, :allow_nil => true
   delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?,
              :to => :miq_user_role, :allow_nil => true
 
@@ -132,23 +132,6 @@ class User < ActiveRecord::Base
 
     self.password = newpwd
     self.save!
-  end
-
-  def get_filters
-    filters = self.current_group.get_filters if self.current_group
-    filters || {"managed" => [], "belongsto" => []}
-  end
-
-  def has_filters?
-    !(self.get_managed_filters.blank? && self.get_belongsto_filters.blank?)
-  end
-
-  def get_managed_filters
-    self.get_filters["managed"]
-  end
-
-  def get_belongsto_filters
-    self.get_filters["belongsto"]
   end
 
   def ldap_group

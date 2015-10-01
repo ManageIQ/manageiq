@@ -132,11 +132,15 @@ class MiqGroup < ActiveRecord::Base
   end
 
   def get_filters(type = nil)
-    f = self.filters
-    return f if type.nil?
+    if type
+      (filters.respond_to?(:key?) && filters[type.to_s]) || []
+    else
+      filters || {"managed" => [], "belongsto" => []}
+    end
+  end
 
-    type = type.to_s
-    return (f.respond_to?(:key) && f.key?(type)) ? f[type] : []
+  def has_filters?
+    get_managed_filters.present? || get_belongsto_filters.present?
   end
 
   def get_managed_filters
