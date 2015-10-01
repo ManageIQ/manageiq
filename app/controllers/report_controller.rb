@@ -674,7 +674,7 @@ class ReportController < ApplicationController
 
     trees                = {}
     rebuild              = @in_a_form ? false : rebuild_trees
-    trees[:reports]      = build_report_listnav    if replace_trees.include?(:reports)      || rebuild
+    trees[:reports]      = build_report_listnav    if replace_trees.include?(:reports) || rebuild
     trees[:schedules]    = build_schedules_tree    if replace_trees.include?(:schedules)
     trees[:savedreports] = build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild
     trees[:db]           = build_db_tree           if replace_trees.include?(:db) || rebuild
