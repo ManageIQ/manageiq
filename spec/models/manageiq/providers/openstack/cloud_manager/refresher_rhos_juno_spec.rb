@@ -1,12 +1,12 @@
 require "spec_helper"
-require "models/ems_refresh/refreshers/openstack/refresh_spec_common"
+require_relative "refresh_spec_common"
 
 describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   include Openstack::RefreshSpecCommon
 
   before(:each) do
     setup_ems('1.2.3.4', 'password_2WpEraURh')
-    @environment = :kilo
+    @environment = :juno
   end
 
   it "will perform a full refresh against RHOS #{@environment}" do
