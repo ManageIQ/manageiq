@@ -146,11 +146,11 @@ class MiqUserRole < ActiveRecord::Base
     end
   end
 
-  def self_service_role?
+  def self_service?
     [:user_or_group, :user].include?((self.settings || {}).fetch_path(:restrictions, :vms))
   end
 
-  def limited_self_service_role?
+  def limited_self_service?
     (self.settings || {}).fetch_path(:restrictions, :vms) == :user
   end
 

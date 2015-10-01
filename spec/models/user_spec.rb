@@ -129,26 +129,26 @@ describe User do
 
     it "should check Self Service Roles" do
       @user.current_group = @self_service_group
-      @user.self_service_user?.should be_true
+      @user.self_service?.should be_true
 
       @user.current_group = @limited_self_service_group
-      @user.self_service_user?.should be_true
+      @user.self_service?.should be_true
 
       @miq_group.miq_user_role = nil
       @user.current_group = @miq_group
-      @user.self_service_user?.should be_false
+      @user.self_service?.should be_false
 
       @user.current_group = nil
-      @user.self_service_user?.should be_false
+      @user.self_service?.should be_false
     end
 
     it "should check Limited Self Service Roles" do
       @user.current_group = @limited_self_service_group
-      @user.limited_self_service_user?.should be_true
+      @user.limited_self_service?.should be_true
 
       @user.current_group = nil
       @user.current_group = @miq_group
-      @user.limited_self_service_user?.should be_false
+      @user.limited_self_service?.should be_false
     end
 
     it "should check Super Admin Roles" do

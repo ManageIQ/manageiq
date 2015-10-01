@@ -24,7 +24,8 @@ class User < ActiveRecord::Base
 
   delegate   :miq_user_role,  :to => :current_group, :allow_nil => true
   delegate   :current_tenant, :to => :current_group, :allow_nil => true
-  delegate   :super_admin_user?, :admin_user?, :to => :miq_user_role, :allow_nil => true
+  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?,
+             :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid, :region
   validates_uniqueness_of :userid, :scope => :region
@@ -149,18 +150,6 @@ class User < ActiveRecord::Base
   def get_belongsto_filters
     self.get_filters["belongsto"]
   end
-
-  def self_service_user?
-    return false if self.current_group.nil?
-    self.current_group.self_service_group?
-  end
-  alias_method :self_service?, :self_service_user?
-
-  def limited_self_service_user?
-    return false if self.current_group.nil?
-    self.current_group.limited_self_service_group?
-  end
-  alias_method :limited_self_service?, :limited_self_service_user?
 
   def ldap_group
     current_group.try(:description)
@@ -298,9 +287,9 @@ class User < ActiveRecord::Base
   end
 
   def accessible_vms
-    if limited_self_service_user?
+    if limited_self_service?
       vms
-    elsif self_service_user?
+    elsif self_service?
       (vms + miq_groups.includes(:vms).collect(&:vms).flatten).uniq
     else
       Vm.all
