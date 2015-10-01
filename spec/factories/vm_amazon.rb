@@ -5,7 +5,6 @@ FactoryGirl.define do
   end
 
   factory :vm_perf_amazon, :parent => :vm_amazon do
-    ems_ref         "amazon-perf-vm"
+    ems_ref "amazon-perf-vm"
   end
-
 end
