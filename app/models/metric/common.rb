@@ -36,6 +36,7 @@ module Metric::Common
     attr_accessor :inside_time_profile, :time_profile_adjusted_timestamp
 
     virtual_column :v_date, :type => :datetime
+    virtual_column :v_month,:type => :string
     virtual_column :v_time, :type => :datetime
 
     virtual_column :v_derived_vm_count,            :type => :integer
@@ -112,6 +113,10 @@ module Metric::Common
 
   def v_date
     self.timestamp
+  end
+
+  def v_month
+    self.timestamp.strftime("%Y/%m")
   end
 
   def v_time

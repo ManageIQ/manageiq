@@ -4,12 +4,14 @@ module Metric::Processing
     :derived_cpu_reserved,
     :derived_host_count_off,
     :derived_host_count_on,
+    :derived_host_count_total,
     :derived_memory_available,
     :derived_memory_reserved,
     :derived_memory_used,
     :derived_vm_allocated_disk_storage,
     :derived_vm_count_off,
     :derived_vm_count_on,
+    :derived_vm_count_total,
     :derived_vm_numvcpus, # This is actually logical cpus, but needs to be renamed.
                           # See VimPerformanceState#capture_numvcpus
     :derived_vm_used_disk_storage,

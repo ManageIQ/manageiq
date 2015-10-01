@@ -33,8 +33,10 @@ class VimPerformanceState < ActiveRecord::Base
   # => reserve_cpu
   # => vm_count_on      (derive from assoc_ids)
   # => vm_count_off     (derive from assoc_ids)
+  # => vm_count_total   (derive from assoc_ids)
   # => host_count_on    (derive from assoc_ids)
   # => host_count_off   (derive from assoc_ids)
+  # => host_count_total (derive from assoc_ids)
 
   def self.capture(obj)
     ts = Time.now.utc
@@ -72,12 +74,20 @@ class VimPerformanceState < ActiveRecord::Base
     return get_assoc(:vms, :off).length
   end
 
+  def vm_count_total
+    return get_assoc(:vms).length
+  end
+
   def host_count_on
     return get_assoc(:hosts, :on).length
   end
 
   def host_count_off
     return get_assoc(:hosts, :off).length
+  end
+
+  def host_count_total
+    return get_assoc(:hosts).length
   end
 
   def storages
