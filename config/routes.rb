@@ -117,7 +117,7 @@ Vmdb::Application.routes.draw do
     x_show
   )
 
-  CONTROLLER_ACTIONS = {
+  controller_routes = {
     :alert                   => {
       :get  => %w(
         index
@@ -2045,7 +2045,7 @@ Vmdb::Application.routes.draw do
   match  '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#update',  :format => 'json', :via => [:post, :put, :patch], :version => apiver_regex
   delete '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#destroy', :format => 'json', :version => apiver_regex
 
-  CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
+  controller_routes.each do |controller_name, controller_actions|
 
     # Default route with no action to controller's index action
     unless controller_name == :ems_cloud
