@@ -76,16 +76,5 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       )
       workflow.make_request(request, values, alt_user.userid)
     end
-
-    it '#get_cpu_values_hash' do
-      template = FactoryGirl.create(:template_vmware, :name => "test_template")
-      FactoryGirl.create(:hardware, :vm_or_template => template, :cores_per_socket => 4, :logical_cpus => 8, :numvcpus => 2)
-      wf = described_class.new({}, admin.userid)
-      result = wf.get_cpu_values_hash(template)
-
-      expect(result[:number_of_cpus]).to    eq(8)
-      expect(result[:number_of_sockets]).to eq(2)
-      expect(result[:cores_per_socket]).to  eq(4)
-    end
   end
 end

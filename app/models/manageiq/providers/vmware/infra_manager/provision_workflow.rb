@@ -112,27 +112,6 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
     'vmware'
   end
 
-  def get_cpu_values_hash(vm)
-    result = {
-      :number_of_cpus    => vm.hardware.logical_cpus,
-      :number_of_sockets => vm.hardware.numvcpus,
-      :cores_per_socket  => vm.hardware.cores_per_socket
-    }
-
-    # Try to get coresPerSocket from advanced settings
-    if result[:cores_per_socket].nil?
-      cores_per_socket = vm.advanced_settings.detect { |ad| ad.name == 'cpuid.coresPerSocket' }
-      result[:cores_per_socket] = cores_per_socket.nil? ? 1 : cores_per_socket.value.to_i
-    end
-
-    if result[:number_of_sockets].nil?
-      result[:number_of_sockets] = (result[:number_of_cpus] / result[:cores_per_socket]).to_i
-      result[:number_of_sockets] = 1 if result[:number_of_sockets] < 1
-    end
-
-    result
-  end
-
   def update_field_visibility
     options = {}
     vm = load_ar_obj(get_source_vm)
