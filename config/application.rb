@@ -54,6 +54,9 @@ module Vmdb
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+    # Fix 4095 CSS rule limit by using the css_splitter gem on the application.css
+    config.assets.precompile += %w(application_split2.css)
+
     # Customize any additional options below...
 
     # HACK: By default, Rails.configuration.eager_load_paths contains all of the directories
