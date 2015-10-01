@@ -667,7 +667,7 @@ describe MiqAeDatastore do
                                   :name     => 'test1',
                                   :scope    => "instance",
                                   :language => "ruby",
-                                  :data     => "puts 1",
+                                  # Method with no data
                                   :location => "inline")
     FactoryGirl.create(:miq_ae_instance,  :name => "#{domain_name}_test_instance1", :class_id => n1_1_c1.id)
     FactoryGirl.create(:miq_ae_method,
