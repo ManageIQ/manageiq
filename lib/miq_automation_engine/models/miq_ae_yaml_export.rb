@@ -182,8 +182,10 @@ class MiqAeYamlExport
   def write_method_file(method_obj, export_file_hash)
     @counts['method_files'] += 1
     export_file_hash['output_filename'] = get_method_filename(method_obj)
-    method_obj.data += NEW_LINE unless method_obj.data.end_with?(NEW_LINE)
-    export_file_hash['export_data'] = method_obj.data
+    if method_obj.data
+      method_obj.data += NEW_LINE unless method_obj.data.end_with?(NEW_LINE)
+    end
+    export_file_hash['export_data'] = method_obj.data || ""
     write_export_file(export_file_hash)
   end
 

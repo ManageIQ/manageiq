@@ -705,7 +705,9 @@ class MiqRequestWorkflow
     return nil if self.class.automate_dialog_request.nil?
 
     _log.info "Querying Automate Profile for dialog name"
-    attrs = {'request' => self.class.automate_dialog_request, 'message' => message}
+    attrs = {'request'   => self.class.automate_dialog_request,
+             'message'   => message,
+             'tenant_id' => @requester.current_tenant.id}
     extra_attrs.each { |k, v| attrs[k] = v }
 
     @values.each_key do |k|
