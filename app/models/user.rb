@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
 
   delegate   :miq_user_role,  :to => :current_group, :allow_nil => true
   delegate   :current_tenant, :to => :current_group, :allow_nil => true
+  delegate   :super_admin_user?, :admin_user?, :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid, :region
   validates_uniqueness_of :userid, :scope => :region
@@ -45,8 +46,6 @@ class User < ActiveRecord::Base
 
   EVMROLE_SELF_SERVICE_ROLE_NAME         = "EvmRole-user_self_service"
   EVMROLE_LIMITED_SELF_SERVICE_ROLE_NAME = "EvmRole-user_limited_self_service"
-  EVMROLE_SUPER_ADMIN_ROLE_NAME          = "EvmRole-super_administrator"
-  EVMROLE_ADMIN_ROLE_NAME                = "EvmRole-administrator"
 
   serialize     :settings, Hash   #Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
@@ -162,16 +161,6 @@ class User < ActiveRecord::Base
     self.current_group.limited_self_service_group?
   end
   alias_method :limited_self_service?, :limited_self_service_user?
-
-  def super_admin_user?
-    self.miq_user_role_name == EVMROLE_SUPER_ADMIN_ROLE_NAME
-  end
-
-  def admin_user?
-    # Check for admin or super_admin
-    role_name = self.miq_user_role_name
-    role_name == EVMROLE_SUPER_ADMIN_ROLE_NAME || role_name == EVMROLE_ADMIN_ROLE_NAME
-  end
 
   def ldap_group
     current_group.try(:description)

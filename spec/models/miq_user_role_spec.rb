@@ -150,4 +150,35 @@ describe MiqUserRole do
     expect { role.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError)
     expect(MiqUserRole.count).to eq(1)
   end
+
+  # SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
+  # ADMIN_ROLE_NAME       = "EvmRole-administrator"
+
+  describe "#super_admin_user?" do
+    it "detects super admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_super_admin_user
+    end
+
+    it "detects admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).not_to be_super_admin_user
+    end
+
+    it "detects non-admin" do
+      expect(FactoryGirl.build(:miq_user_role)).not_to be_super_admin_user
+    end
+  end
+
+  describe "#admin_user?" do
+    it "detects super admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_admin_user
+    end
+
+    it "detects admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).to be_admin_user
+    end
+
+    it "detects non-admin" do
+      expect(FactoryGirl.build(:miq_user_role)).not_to be_admin_user
+    end
+  end
 end
