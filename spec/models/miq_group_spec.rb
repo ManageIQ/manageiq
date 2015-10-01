@@ -215,15 +215,13 @@ describe MiqGroup do
   end
 
   context "#seed" do
-    let(:root_tenant) { Tenant.root_tenant }
-
     it "has tenant for new records" do
-      [MiqRegion, Tenant, MiqUserRole, MiqGroup].each(&:seed)
-      expect(MiqGroup.where(:tenant => root_tenant).count).to eq(MiqGroup.count)
+      [Tenant, MiqUserRole, MiqGroup].each(&:seed)
+      expect(MiqGroup.where(:tenant => Tenant.root_tenant).count).to eq(MiqGroup.count)
     end
 
     it "adds new groups after initial seed" do
-      [MiqRegion, Tenant, MiqUserRole, MiqGroup].each(&:seed)
+      [Tenant, MiqUserRole, MiqGroup].each(&:seed)
 
       current_count = MiqGroup.count
       role_map_path = File.expand_path(File.join(Rails.root, "db/fixtures/role_map.yaml"))
