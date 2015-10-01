@@ -26,7 +26,19 @@
 
   /** @ngInject */
   function resolveService($stateParams, CollectionsApi) {
-    var options = {attributes: ['picture', 'picture.image_href']};
+    var requestAttributes = [
+      'picture', 
+      'picture.image_href',
+      'evm_owner.name',
+      'miq_group.description',
+      'aggregate_all_vm_cpus',
+      'aggregate_all_vm_memory',
+      'aggregate_all_vm_disk_count',
+      'aggregate_all_vm_disk_space_allocated',
+      'aggregate_all_vm_disk_space_used',
+      'aggregate_all_vm_memory_on_disk'
+    ];
+    var options = {attributes: requestAttributes};
 
     return CollectionsApi.get('services', $stateParams.serviceId, options);
   }

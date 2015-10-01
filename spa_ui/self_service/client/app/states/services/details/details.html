@@ -17,19 +17,22 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ss-details-header__actions">
             <button class="btn btn-danger" type="button" ng-click="vm.removeService()">Remove Service</button>
-            <button class="btn btn-primary"
-                    type="button"
-                    confirmation
+            <div class="btn-group" dropdown>
+              <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle>
+                Retire <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li role="menuitem"><a href="#" confirmation
                     confirmation-if="true"
                     confirmation-title="Retire Service Now"
                     confirmation-message="Confirm, would you like to retire this service?"
                     confirmation-ok-text="Yes, Retire Service Now"
                     confirmation-on-ok="vm.retireServiceNow()"
                     confirmation-ok-style="primary"
-                    confirmation-show-cancel="true">
-              Retire
-            </button>
-            <button class="btn btn-primary" type="button" ng-click="vm.retireServiceLater()">Schedule</button>
+                    confirmation-show-cancel="true">Retire Now</a></li>
+                <li role="menuitem"><a href="#" ng-click="vm.retireServiceLater()">Schedule Retirement</a></li>
+              </ul>
+            </div>
             <button class="btn btn-primary" type="button" ng-click="vm.editServiceModal()">Edit Service</button>
           </div>
          </div>
@@ -47,27 +50,34 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-4">Service Owner</label>
+                <label class="control-label col-sm-4">Owner</label>
                 <div class="col-sm-8">
-                  <input class="form-control" disabled value="{{ ::vm.service.author }}"/>
+                  <input class="form-control" disabled value="{{ ::vm.service.evm_owner.name }}"/>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-4">Service State</label>
+                <label class="control-label col-sm-4">Group</label>
                 <div class="col-sm-8">
-                  <input class="text-capitalize form-control" disabled value="Active"/>
+                  <input class="form-control" disabled value="{{ ::vm.service.miq_group.description }}"/>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-4">Service Date</label>
+                <label class="control-label col-sm-4">Created On</label>
                 <div class="col-sm-8">
-                  <input class="form-control" disabled value="Service Created On {{ ::vm.service.created_at | date }}" />
+                  <input class="form-control" disabled value="{{ ::vm.service.created_at | date:'medium' }}" />
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-4">Service Type</label>
+                <label class="control-label col-sm-4">Retirement Date</label>
                 <div class="col-sm-8">
-                  <input class="form-control" disabled value="{{ ::vm.service.service_type }}" />
+                  <input ng-if=(vm.service.retires_on) class="form-control" disabled value="{{ ::vm.service.retires_on | date }}" />
+                  <input ng-if=!(vm.service.retires_on) class="form-control" disabled value="No Retirement Date" />             
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Tags</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.tags }}" />
                 </div>
               </div>
             </div>
@@ -75,27 +85,39 @@
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <div class="form-horizontal">
               <div class="form-group">
-                <label class="control-label col-sm-4">Service Approval State</label>
+                <label class="control-label col-sm-4">CPU</label>
                 <div class="col-sm-8">
-                  <input class="form-control" disabled value="{{ ::vm.service.approval_state }}"/>
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_cpus }}"/>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-4">Service Adjudicator</label>
+                <label class="control-label col-sm-4">Memory</label>
                 <div class="col-sm-8">
-                  <input class="form-control" disabled value="N/A" />
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_memory }}" />
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-4">Last Message</label>
+                <label class="control-label col-sm-4">Disk Count</label>
                 <div class="col-sm-8">
-                  <input class="form-control" disabled value="{{ ::vm.service.message}}" />
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_disk_count}}" />
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-4">Last Updated</label>
+                <label class="control-label col-sm-4">Disk Space Allocated</label>
                 <div class="col-sm-8">
-                  <input class="form-control" disabled value="Service Updated On {{ ::vm.service.updated_at | date}}" />
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_disk_space_allocated}}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Disk Space Used</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_disk_space_used}}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4">Memory on Disk</label>
+                <div class="col-sm-8">
+                  <input class="form-control" disabled value="{{ ::vm.service.aggregate_all_vm_memory_on_disk}}" />
                 </div>
               </div>
             </div>
