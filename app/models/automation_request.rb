@@ -5,6 +5,7 @@ class AutomationRequest < MiqRequest
   DEFAULT_NAMESPACE = "SYSTEM"
   DEFAULT_CLASS     = "PROCESS"
   DEFAULT_INSTANCE  = "AUTOMATION_REQUEST"
+  SOURCE_CLASS_NAME = nil
 
   ##############################################
   # uri_parts:  instance=IIII|message=MMMM or any subset thereof
@@ -39,18 +40,6 @@ class AutomationRequest < MiqRequest
     self.create_request(options, userid, auto_approve)
   end
 
-  def self.create_request(options, userid, auto_approve=false)
-    request = self.create(:options => options, :userid => userid, :request_type => 'automation')
-    request.save!  # Force validation errors to raise now
-
-    request.set_description
-    request.create_request
-    request.call_automate_event_queue("request_created")
-    request.approve(userid, "Auto-Approved") if auto_approve == true
-
-    return request.reload # if approved, need to reload
-  end
-
   def self.zone(options)
     zone_name = options[:attrs][:miq_zone]
     return nil if zone_name.blank?
@@ -69,4 +58,7 @@ class AutomationRequest < MiqRequest
     'automate'
   end
 
+  def log_request_success(requester_id, mode)
+    # currently we do not log successful automation requests
+  end
 end

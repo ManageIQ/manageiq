@@ -6,16 +6,6 @@ class VmReconfigureRequest < MiqRequest
   validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
-  def self.create_request(values, requester_id, auto_approve=false)
-    event_message = "#{TASK_DESCRIPTION} requested by <#{requester_id}> for Vm:#{values[:src_ids].inspect}"
-    super(values, requester_id, auto_approve, request_types.first, SOURCE_CLASS_NAME, event_message)
-  end
-
-  def self.update_request(request, values, requester_id)
-    event_message = "#{TASK_DESCRIPTION} request updated by <#{requester_id}> for Vm:#{values[:src_ids].inspect}"
-    super(request, values, requester_id, SOURCE_CLASS_NAME, event_message)
-  end
-
   def self.request_limits(options)
     # Memory values are in megabytes
     default_max_vm_memory = 255.gigabyte / 1.megabyte
@@ -97,5 +87,4 @@ class VmReconfigureRequest < MiqRequest
   def my_role
     'ems_operations'
   end
-
 end
