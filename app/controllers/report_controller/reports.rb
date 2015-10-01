@@ -470,6 +470,8 @@ module ReportController::Reports
 
   #Build the main reports tree
   def build_reports_tree
+    @sb[:rpt_menu]  = populate_reports_menu
+    @sb[:grp_title] = reports_group_title
     TreeBuilderReportReports.new('reports_tree', 'reports', @sb)
   end
 

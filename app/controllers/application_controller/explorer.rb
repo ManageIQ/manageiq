@@ -700,32 +700,6 @@ module ApplicationController::Explorer
     when :old_dialogs # VMs & Templates tree has orphaned and archived nodes
       objects = MiqDialog.find_all_by_dialog_type(object[:id].split('_').last).sort_by { |a| a.description.downcase }
       return count_only ? objects.length : objects
-    when :reports
-      objects = []
-      nodes = object[:full_id] ? object[:full_id].split('-') : object[:id].to_s.split('-')
-      if nodes.length == 1 # && nodes.last.split('-').length <= 2 #|| nodes.length == 2
-        @sb[:rpt_menu][nodes.last.to_i][1].each_with_index do |r, i|
-          objects.push(:id => "#{nodes.last.split('-').last}-#{i}", :text => r[0], :image => "#{@sb[:grp_title] == @sb[:rpt_menu][nodes.last.to_i][0] ? "blue_folder" : "folder"}", :tip => r[0])
-        end
-      elsif nodes.length >= 2 # || (object[:full_id] && object[:full_id].split('_').length == 2)
-        el1 = nodes.length == 2 ?
-              nodes[0].split('_').first.to_i : nodes[1].split('_').first.to_i
-        @sb[:rpt_menu][el1][1][nodes.last.to_i][1].each_with_index do |r, _i|
-          report = MiqReport.find_by_name(r)
-          objects.push(report) if report
-          # break after adding 1 report for a count_only,
-          # don't need to go thru them all to determine if node has children
-          break if options[:count_only]
-        end
-      end
-      return options[:count_only] ? objects.count : objects
-    when :savedreports
-      view, pages = get_view(MiqReportResult, :where_clause => set_saved_reports_condition(from_cid(object[:id].split('-').last)), :all_pages => true)
-      objects = []
-      view.table.data.each do |s|
-        objects.push(MiqReportResult.find_by_id(s["id"]))
-      end
-      return options[:count_only] ? objects.count : objects.sort_by(&:name)
     when :vandt # VMs & Templates tree has orphaned and archived nodes
       case object[:id]
       when "orph" # Orphaned

@@ -1,6 +1,12 @@
 class TreeBuilderReportReports < TreeBuilderReportReportsClass
   private
 
+  def initialize(name, type, sandbox, build = true)
+    @rpt_menu  = sandbox[:rpt_menu]
+    @grp_title = sandbox[:grp_title]
+    super(name, type, sandbox, build = true)
+  end
+
   def tree_init_options(tree_name)
     {
       :leaf     => 'Reports',
@@ -19,11 +25,11 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
     objects = []
-    @sb[:rpt_menu].each_with_index do |r, i|
+    @rpt_menu.each_with_index do |r, i|
       objects.push(
         :id    => "#{i}",
         :text  => r[0],
-        :image => "#{@sb[:grp_title] == r[0] ? 'blue_folder' : 'folder'}",
+        :image => "#{@grp_title == r[0] ? 'blue_folder' : 'folder'}",
         :tip   => r[0]
       )
       # load next level of folders when building the tree
@@ -36,17 +42,17 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
     objects = []
     nodes = object[:full_id] ? object[:full_id].split('-') : object[:id].to_s.split('-')
     if nodes.length == 1 # && nodes.last.split('-').length <= 2 #|| nodes.length == 2
-      @sb[:rpt_menu][nodes.last.to_i][1].each_with_index do |r, i|
+      @rpt_menu[nodes.last.to_i][1].each_with_index do |r, i|
         objects.push(
           :id    => "#{nodes.last.split('-').last}-#{i}",
           :text  => r[0],
-          :image => "#{@sb[:grp_title] == @sb[:rpt_menu][nodes.last.to_i][0] ? 'blue_folder' : 'folder'}",
+          :image => "#{@grp_title == @rpt_menu[nodes.last.to_i][0] ? 'blue_folder' : 'folder'}",
           :tip   => r[0]
         )
       end
     elsif nodes.length >= 2 # || (object[:full_id] && object[:full_id].split('_').length == 2)
       el1 = nodes.length == 2 ? nodes[0].split('_').first.to_i : nodes[1].split('_').first.to_i
-      @sb[:rpt_menu][el1][1][nodes.last.to_i][1].each_with_index do |r|
+      @rpt_menu[el1][1][nodes.last.to_i][1].each_with_index do |r|
         objects.push(MiqReport.find_by_name(r))
         # break after adding 1 report for a count_only,
         # don't need to go thru them all to determine if node has children

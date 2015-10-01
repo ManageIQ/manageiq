@@ -4,7 +4,9 @@ class TreeBuilderReportExport < TreeBuilder
   def tree_init_options(tree_name)
     {
       :leaf     => 'Export',
-      :full_ids => true
+      :full_ids => true,
+      :add_root => nil,
+      :open_all => true
     }
   end
 
@@ -18,6 +20,10 @@ class TreeBuilderReportExport < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
-    count_only_or_objects(options[:count_only], [], nil)
+    export_children = [
+      {:id => 'exportcustomreports', :tree => 'export_tree', :text => 'Custom Reports', :image => 'report'},
+      {:id => 'exportwidgets', :tree => 'export_tree', :text => 'Widgets', :image => 'report'}
+    ]
+    count_only_or_objects(options[:count_only], export_children, nil)
   end
 end
