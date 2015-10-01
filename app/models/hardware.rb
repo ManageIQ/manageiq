@@ -29,6 +29,7 @@ class Hardware < ActiveRecord::Base
   alias_attribute :cpu_cores_per_socket, :cores_per_socket
   alias_attribute :cpu_sockets, :numvcpus
   alias_attribute :cpu_total_cores, :logical_cpus
+  alias_attribute :memory_mb, :memory_cpu
 
   include ReportableMixin
 
