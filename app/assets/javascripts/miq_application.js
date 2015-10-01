@@ -1252,7 +1252,8 @@ function miqSelectPickerEvent(element, url, options){
   $('#' + element).on('change', function(){
     var selected = $('#' + element).val();
     options =  typeof options !== 'undefined' ? options : {}
-    miqJqueryRequest(url + '?' + element + '=' + selected, options);
+    options['no_encoding'] = true;
+    miqJqueryRequest(url + '?' + element + '=' + escape(selected), options);
     return true;
   });
 }
