@@ -17,6 +17,7 @@
 //= require directives/autofocus
 //= require directives/miqrequired
 //= require directives/checkchange
+//= require directives/clear_field_set_focus
 //= require directives/datepicker
 //= require directives/required_if_existed
 //= require directives/verifypasswd
