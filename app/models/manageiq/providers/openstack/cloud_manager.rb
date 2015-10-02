@@ -186,22 +186,12 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   # Statistics
   #
 
-  def cinder_disk_usage
-    cinder_used = 0
-    cloud_volumes.each do |volume|
-      cinder_used += volume.size if volume.status != "error"
-    end
-    cloud_volume_snapshots.each do |volume|
-      cinder_used += volume.size if volume.status != "error"
-    end
-    cinder_used
+  def block_storage_disk_usage
+    cloud_volumes.where.not(:status => "error").sum(:size).to_f +
+      cloud_volume_snapshots.where.not(:status => "error").sum(:size).to_f
   end
 
-  def swift_disk_usage(replicas)
-    swift_used = 0
-    cloud_object_store_containers.each do |container|
-      swift_used += container.bytes * replicas
-    end
-    swift_used
+  def object_storage_disk_usage(swift_replicas = 1)
+    cloud_object_store_containers.sum(:bytes).to_f * swift_replicas
   end
 end

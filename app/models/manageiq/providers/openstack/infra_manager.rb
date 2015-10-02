@@ -1,4 +1,3 @@
-
 class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   require_dependency 'manageiq/providers/openstack/infra_manager/auth_key_pair'
   require_dependency 'manageiq/providers/openstack/infra_manager/ems_cluster'
@@ -77,37 +76,5 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
 
   def self.event_monitor_class
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
-  end
-
-  def clouds
-    overclouds = ManageIQ::Providers::Openstack::CloudManager.find(:all, :conditions => ["id != ? and provider_id = ?", id, provider_id])
-  end
-
-  #
-  # Statistics
-  #
-
-  def cloud_cinder_disk_usage
-    cinder_used = 0
-    clouds.each do |cloud|
-      cinder_used += cloud.cinder_disk_usage
-    end
-    cinder_used
-  end
-
-  def cloud_swift_disk_usage
-    replicas = OrchestrationStackParameter.joins(:stack).where("orchestration_stacks.ems_id = ? AND orchestration_stack_parameters.name = 'SwiftReplicas'", id).first.value.to_i
-    object_storage_count = OrchestrationStackParameter.joins(:stack).where("orchestration_stacks.ems_id = ? AND orchestration_stack_parameters.name = 'ObjectStorageCount'", id).first.value.to_i
-    # The number of replicas depends on what was configured in swift as replicas
-    # and the number of object storage nodes deployed. The actual number of replicas
-    # is the minimum between the configured replicas and object storage nodes.
-    # Note the controller node currently also serves as a swift storage node. So
-    # this doesn't reflect true disk usage over the entire overcloud.
-    actual_replicas = [replicas, object_storage_count].sort.first
-    swift_used = 0
-    clouds.each do |cloud|
-      swift_used += cloud.swift_disk_usage(actual_replicas)
-    end
-    swift_used
   end
 end
