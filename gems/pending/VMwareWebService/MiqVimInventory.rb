@@ -112,12 +112,12 @@ class MiqVimInventory < MiqVimClientBase
 				hn = pm[:baseName]
 				hnm = pm[:baseName] + "ByMor"
 
-				unless eval("#{hnm}.nil?")
-                	hnmc = eval("#{hnm}.keys.length")
+				unless instance_variable_get(hnm).nil?
+                	hnmc = instance_variable_get(hnm).keys.length
 					$vim_log.info "#{pref}#{hnm}: #{hnmc}"
 				end
-				unless eval("#{hn}.nil?")
-                	hnc = eval("#{hn}.keys.length")
+				unless instance_variable_get(hn).nil?
+                	hnc = instance_variable_get(hn).keys.length
 					$vim_log.info "#{pref}#{hn}: #{hnc}"
 				end
             end
@@ -357,8 +357,8 @@ class MiqVimInventory < MiqVimClientBase
             @inventoryHash                  = nil
 
             @propMap.each_value do |pm|
-                eval("#{pm[:baseName]}ByMor = nil")
-                eval("#{pm[:baseName]} = nil")
+                instance_variable_set("#{pm[:baseName]}ByMor", nil)
+                instance_variable_set(pm[:baseName], nil)
             end
 	    end
 	    $vim_log.info "MiqVimInventory.resetCache: cleared cache for #{@connId}"
@@ -409,13 +409,13 @@ class MiqVimInventory < MiqVimClientBase
 
 		mor = props['MOR']
 		if keyPath
-	    	key = eval("props#{keyPath}")
+	    	key = props.fetch_path(keyPath)
 			if !key
 				$vim_log.debug "hashObj: key is nil for #{mor}: #{keyPath}"
 			elsif key.empty?
 				$vim_log.debug "hashObj: key is empty for #{mor}: #{keyPath}"
 				key = nil
-				eval("props#{keyPath} = nil")
+				props.store_path(keyPath, nil)
 			end
 		else
 			key = nil
@@ -544,8 +544,8 @@ class MiqVimInventory < MiqVimClientBase
 	    return if !(props = objHash.delete(objMor))
 
 	    if keyPath
-	        key = eval("props#{keyPath}")
-			key2 = keyPath2 ? eval("props#{keyPath2}") : nil
+	        key = props.fetch_path(keyPath)
+			key2 = keyPath2 ? props.fetch_path(keyPath2) : nil
 	        objHash = self.instance_variable_get(baseName)
 	        objHash.delete(key)
 			objHash.delete(key2) if key2

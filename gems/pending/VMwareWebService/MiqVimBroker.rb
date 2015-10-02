@@ -46,7 +46,7 @@ class MiqVimBroker
 					alias new_with_original new_with
 					def new_with(uri, ref)
 						obj = new_with_original(uri, ref)
-						obj.instance_eval("extend MiqVimVdlVcConnectionMod") if obj.respond_to?(:vdlVcConnection)
+						obj.extend(MiqVimVdlVcConnectionMod) if obj.respond_to?(:vdlVcConnection)
 						obj.registerBrokerObj($$) if obj.respond_to?(:registerBrokerObj)
 						return(obj)
 					end
@@ -408,8 +408,8 @@ class MiqVimBroker
 	def getMiqVim(server, username, password)
         if @mode == :client
             vim = @broker.getMiqVim(server, username, password)
-            vim.instance_eval("extend MiqVimDump")
-			vim.instance_eval("extend MiqVimVdlConnectionMod")
+            vim.extend(MiqVimDump)
+			vim.extend(MiqVimVdlConnectionMod)
 			return(vim)
         else # :server
 			connSync(:EX, server, username) do |key, vim|

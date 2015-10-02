@@ -113,7 +113,7 @@ module Iso9660
 			@rr.extensions.each do |extension|
 				ext = extension.ext
 				begin
-					res = eval("ext.#{sym}")
+					res = ext.send(sym)
 				rescue
 					break unless res.nil?
 				end

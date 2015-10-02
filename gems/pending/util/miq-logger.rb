@@ -67,7 +67,7 @@ if $log.nil?
         log.add(Log4r::StdoutOutputter.new('stdout' , :formatter => MIQLoggerFormatter)) unless ENV["HOMEDRIVE"].nil?
 
         # Set default log level
-        log.level = eval('Log4r::' + logSettings[:level].upcase)
+        log.level = Log4r.const_get(logSettings[:level].upcase)
 
         # Logger header here which might product duplicates if running from the scripts
         log.miqLogHeader #unless Sys::Platform::OS == :windows

@@ -404,7 +404,7 @@ module MetakitFS
     end
     
     def fs_fileObjExtend(fo)
-        fo.instance_eval("extend MkFileMod")
+        fo.extend MkFileMod
     end
 	
 	private

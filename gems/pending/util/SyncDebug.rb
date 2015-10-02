@@ -124,28 +124,22 @@ module SyncDebug_m
   def SyncDebug_m.included(host_class)
     raise "Sync_m module must be included before SyncDebug_m" unless host_class < Sync_m
     host_class.extend(ClassMethods)
-    define_aliases(:module_eval, host_class) unless host_class.instance_of?(Module)
+    define_aliases(host_class) unless host_class.instance_of?(Module)
   end
 
   def SyncDebug_m.extended(host_obj)
     raise "Objects extended by SyncDebug_m must be descendants of Sync_m" unless host_obj.class < Sync_m
-    SyncDebug_m.define_aliases(:instance_eval, host_obj)
-    SyncDebug_m.init_common(host_obj)
-    host_obj.instance_eval %q{
-      @max_locked_time      = MAX_LOCKED_TIME
-      @watchdog_poll_period = WATCHDOG_POLL_PERIOD
-    }
+    define_aliases(host_obj.singleton_class)
+    host_obj.init_sync_debug(MAX_LOCKED_TIME, WATCHDOG_POLL_PERIOD)
   end
 
   #
   # Reset aliases to point to our debug stubs.
   #
-  def SyncDebug_m.define_aliases(eval_meth, obj)
-    obj.send(eval_meth, %q{
-      alias lock sync_lock
-      alias unlock sync_unlock
-      alias try_lock sync_try_lock
-    })
+  def SyncDebug_m.define_aliases(obj)
+    alias_method :lock, :sync_lock
+    alias_method :unlock, :sync_unlock
+    alias_method :try_lock, :sync_try_lock
   end
 
   #
@@ -255,8 +249,6 @@ module SyncDebug_m
     #
     # Get default values from class.
     #
-    @max_locked_time           = self.class.max_locked_time
-    @watchdog_poll_period      = self.class.watchdog_poll_period
     @try_lock_request_callback = self.class.try_lock_request_callback
     @try_lock_return_callback  = self.class.try_lock_return_callback
     @lock_request_callback     = self.class.lock_request_callback
@@ -264,16 +256,17 @@ module SyncDebug_m
     @unlock_request_callback   = self.class.unlock_request_callback
     @unlock_callback           = self.class.unlock_callback
 
-    SyncDebug_m.init_common(self)
+    init_sync_debug(self.class.max_locked_time, self.class.watchdog_poll_period)
   end
 
-  def SyncDebug_m.init_common(host_obj)
-    host_obj.instance_eval %q{
-      @sh_locker_info   = Hash.new { |h,k| h[k] = Array.new }
-      @ex_locker_info   = []
-      @watchdog_thread  = nil
-      @sync_debug_mutex = Mutex.new
-    }
+  def init_sync_debug(max_locked_time, watchdog_poll_period)
+    @max_locked_time = max_locked_time
+    @watchdog_poll_period = watchdog_poll_period
+
+    @sh_locker_info   = Hash.new { |h,k| h[k] = Array.new }
+    @ex_locker_info   = []
+    @watchdog_thread  = nil
+    @sync_debug_mutex = Mutex.new
   end
 
   #

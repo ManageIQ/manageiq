@@ -127,14 +127,14 @@ module Manageiq
     def loadXmlConfig
       begin
         data = readData(METADATA_CONFIG_FILE)
-        eval(data)
+        YAML.load(data)
       rescue
         []
       end
     end
 
     def saveXmlConfig()
-      writeData(METADATA_CONFIG_FILE, @xmlData.inspect)
+      writeData(METADATA_CONFIG_FILE, YAML.dump(@xmlData))
     end
 
     def getLastXmlFile(filename)

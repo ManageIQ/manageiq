@@ -203,12 +203,12 @@ module MiqVimUpdate
             #
             keyPath		= pm[:keyPath]
 			keyPath2	= pm[:keyPath2]
-            key0		= keyPath ? eval("obj#{keyPath}") : nil
-			key0b		= keyPath2 ? eval("obj#{keyPath2}") : nil
+            key0		= keyPath ? obj.fetch_path(keyPath) : nil
+			key0b		= keyPath2 ? obj.fetch_path(keyPath2) : nil
 
             changedProps = propUpdate(obj, objUpdate.changeSet, true)
 
-            key1    	= keyPath ? eval("obj#{keyPath}") : nil
+            key1    	= keyPath ? obj.fetch_path(keyPath) : nil
             
             #
             # If the property we use as a hash key has changed, re-hash the object.
@@ -258,8 +258,8 @@ module MiqVimUpdate
             $vim_log.debug err.backtrace.join("\n")
             dumpCache("#{pm[:baseName]}ByMor")
             
-            eval("#{pm[:baseName]}ByMor = nil")
-            eval("#{pm[:baseName]} = nil")
+            instance_variable_set("#{pm[:baseName]}ByMor", nil)
+            instance_variable_set(pm[:baseName], nil)
         end
         
     end
@@ -316,8 +316,8 @@ module MiqVimUpdate
             $vim_log.debug err.backtrace.join("\n")
             dumpCache("#{pm[:baseName]}ByMor")
             
-            eval("#{pm[:baseName]}ByMor = nil")
-            eval("#{pm[:baseName]} = nil")
+            instance_variable_set("#{pm[:baseName]}ByMor", nil)
+            instance_variable_set(pm[:baseName], nil)
         end
     end
     
@@ -357,8 +357,8 @@ module MiqVimUpdate
             $vim_log.debug err.backtrace.join("\n")
             dumpCache("#{pm[:baseName]}ByMor")
             
-            eval("#{pm[:baseName]}ByMor = nil")
-            eval("#{pm[:baseName]} = nil")
+            instance_variable_set("#{pm[:baseName]}ByMor", nil)
+            instance_variable_set(pm[:baseName], nil)
         end
     end
     
@@ -424,7 +424,7 @@ module MiqVimUpdate
     def dumpCache(cache)
         return if !@debugUpdates
         $vim_log.debug "**** Dumping #{cache} cache"
-        eval("dumpObj(#{cache})")
+        dumbObj(instance_variable_get(cache))
         $vim_log.debug "**** #{cache} dump end"
     end
     private :dumpCache
