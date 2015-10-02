@@ -51,6 +51,11 @@ describe Chargeback do
     Timecop.return
   end
 
+  it "succeeds without a userid" do
+    @options.delete(:userid)
+    expect { Chargeback.build_results_for_report_chargeback(@options) }.not_to raise_error
+  end
+
   context "Daily" do
     before  do
       @options[:interval] = "daily"
