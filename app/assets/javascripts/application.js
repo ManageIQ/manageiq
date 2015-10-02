@@ -18,6 +18,7 @@
 //= require directives/miqrequired
 //= require directives/checkchange
 //= require directives/datepicker
+//= require directives/required_if_existed
 //= require directives/verifypasswd
 //= require directives/selectpickerForSelectTag
 //= require directives/repository/valid_unc_path
