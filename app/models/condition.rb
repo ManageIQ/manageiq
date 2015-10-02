@@ -22,7 +22,10 @@ class Condition < ActiveRecord::Base
   attr_accessor :reserved
 
   def applies_to?(rec, inputs={})
-    return false if !self.towhat.nil? && rec.class.base_model.name != self.towhat
+    rec_model = rec.class.base_model.name
+    rec_model = "Vm" if rec_model.downcase.match("template")
+
+    return false if self.towhat && rec_model != self.towhat
     return true  if self.applies_to_exp.nil?
 
     Condition.evaluate(self, rec, inputs, :applies_to_exp)

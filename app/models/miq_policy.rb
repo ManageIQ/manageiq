@@ -282,7 +282,9 @@ class MiqPolicy < ActiveRecord::Base
       end
 
       p.conditions.each {|c|
-        next unless rec.class.base_model.to_s == c["towhat"]
+        rec_model = rec.class.base_model.name
+        rec_model = "Vm" if rec_model.downcase.match("template")
+        next unless rec_model == c["towhat"]
 
         cond_hash = {"id" => c.id}
         cond_hash["scope"] = MiqExpression.evaluate_atoms(c.applies_to_exp, rec) unless c.applies_to_exp.nil?
@@ -312,7 +314,10 @@ class MiqPolicy < ActiveRecord::Base
   end
 
   def applies_to?(rec, inputs={})
-    return false if !self.towhat.nil? && rec.class.base_model.name != self.towhat
+    rec_model = rec.class.base_model.name
+    rec_model = "Vm" if rec_model.downcase.match("template")
+
+    return false if self.towhat && rec_model != self.towhat
     return true  if self.expression.nil?
 
     Condition.evaluate(self, rec, inputs)
@@ -399,8 +404,11 @@ class MiqPolicy < ActiveRecord::Base
       }.compact.flatten).uniq
     }
 
+    towhat = target.class.base_model.name
+    towhat = "Vm" if towhat.downcase.match("template")
+
     # Filter out policies that are not for the target class or the requested mode
-    plist = plist.find_all { |p| p.mode == mode && p.towhat == target.class.base_model.name }
+    plist = plist.find_all { |p| p.mode == mode && p.towhat == towhat }
 
     # collect only policies that include event unless we're doing rsop
     plist.collect! {|p|

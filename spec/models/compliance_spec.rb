@@ -118,6 +118,48 @@ describe Compliance do
         Compliance.scan_and_check_compliance([@host1.class.name, @host1.id])
       end
     end
+
+    context ".check_compliance" do
+      before do
+        event = FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")
+        ps    = FactoryGirl.create(:miq_policy_set)
+        @p    = FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Vm', :active => true)
+        @p.sync_events([event]) 
+        @p.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new({"IS NOT EMPTY" => {"field" => "Vm-id"}}))
+        ps.add_member(@p)
+        @ems.add_policy(ps)  
+      end
+
+      context "VM" do
+        it "compliant" do
+          expect(MiqEvent).to receive(:raise_evm_event_queue).with(@vm1, "vm_compliance_passed")
+          expect(Compliance.check_compliance(@vm1)).to be_true
+        end
+
+        it "non-compliant" do
+          @p.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new(">=" => {"field" => "Vm-num_cpu", "value" => "2"}))
+
+          expect(MiqEvent).to receive(:raise_evm_event_queue).with(@vm1, "vm_compliance_failed")
+          expect(Compliance.check_compliance(@vm1)).to be_false
+        end
+      end
+
+      context "template" do
+        before { @template = FactoryGirl.create(:template_vmware, :name => "Template 1", :host => @host1, :ext_management_system => @ems) }
+
+        it "compliant" do
+          expect(MiqEvent).to receive(:raise_evm_event_queue).with(@template, "vm_compliance_passed")
+          expect(Compliance.check_compliance(@template)).to be_true
+        end
+
+        it "non-compliant" do
+          @p.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new(">=" => {"field" => "Vm-num_cpu", "value" => "2"}))
+
+          expect(MiqEvent).to receive(:raise_evm_event_queue).with(@template, "vm_compliance_failed")
+          expect(Compliance.check_compliance(@template)).to be_false
+        end
+      end
+    end
   end
 
   private
