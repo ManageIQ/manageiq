@@ -23,11 +23,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:14 GMT
+      - Thu, 17 Sep 2015 09:40:49 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:14.099603", "expires":
-        "2015-09-17T06:00:14Z", "id": "ca67b185dba94b7bbda9dd602f7236e7", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:40:49.135206", "expires":
+        "2015-09-18T09:40:49Z", "id": "40762dc0c1cf437d8c1578a20233a3bf", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -51,7 +51,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:14 GMT
+  recorded_at: Thu, 17 Sep 2015 09:40:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:5000/v2.0/tenants
@@ -66,7 +66,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - ca67b185dba94b7bbda9dd602f7236e7
+      - 40762dc0c1cf437d8c1578a20233a3bf
   response:
     status:
       code: 200
@@ -79,7 +79,7 @@ http_interactions:
       Content-Length:
       - '500'
       Date:
-      - Wed, 16 Sep 2015 06:00:15 GMT
+      - Thu, 17 Sep 2015 09:40:50 GMT
     body:
       encoding: UTF-8
       string: '{"tenants_links": [], "tenants": [{"description": "", "enabled": true,
@@ -90,7 +90,7 @@ http_interactions:
         "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:15 GMT
+  recorded_at: Thu, 17 Sep 2015 09:40:50 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -114,11 +114,11 @@ http_interactions:
       Content-Length:
       - '2114'
       Date:
-      - Wed, 16 Sep 2015 06:00:17 GMT
+      - Thu, 17 Sep 2015 09:40:53 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:17.883122", "expires":
-        "2015-09-17T06:00:17Z", "id": "7e28de4b95744e2092a92cd1f8290dce", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:40:53.210512", "expires":
+        "2015-09-18T09:40:53Z", "id": "3d90082a68e64572ab7d82763e12554f", "tenant":
         {"description": "", "enabled": true, "id": "393d8689f5a348cc9ec97ae918515a71",
         "name": "EmsRefreshSpec-Project-No-Admin-Role"}}, "serviceCatalog": [{"endpoints":
         [{"adminURL": "http://1.2.3.4:8776/v1/393d8689f5a348cc9ec97ae918515a71",
@@ -143,7 +143,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:18 GMT
+  recorded_at: Thu, 17 Sep 2015 09:40:53 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -167,11 +167,11 @@ http_interactions:
       Content-Length:
       - '2100'
       Date:
-      - Wed, 16 Sep 2015 06:00:19 GMT
+      - Thu, 17 Sep 2015 09:40:55 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:19.716212", "expires":
-        "2015-09-17T06:00:19Z", "id": "87c030417c0a45438481d38ef2dfebab", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:40:55.138618", "expires":
+        "2015-09-18T09:40:55Z", "id": "f1cccb9b59eb46f6ac6fb3384c21f9ea", "tenant":
         {"description": "", "enabled": true, "id": "568953d3e3914bc6910d93e3a854100f",
         "name": "EmsRefreshSpec-Project"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/568953d3e3914bc6910d93e3a854100f", "region": "RegionOne",
@@ -196,7 +196,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:19 GMT
+  recorded_at: Thu, 17 Sep 2015 09:40:55 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -220,11 +220,11 @@ http_interactions:
       Content-Length:
       - '2101'
       Date:
-      - Wed, 16 Sep 2015 06:00:21 GMT
+      - Thu, 17 Sep 2015 09:40:57 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:21.555579", "expires":
-        "2015-09-17T06:00:21Z", "id": "2066a9b57d43438a9e738ee70f11230b", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:40:57.041413", "expires":
+        "2015-09-18T09:40:56Z", "id": "ff8e6d0fc96e413698ac97a06ca3bdc4", "tenant":
         {"description": "", "enabled": true, "id": "6984d33ed4804097bac0999ddf2866b2",
         "name": "EmsRefreshSpec-Project2"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/6984d33ed4804097bac0999ddf2866b2", "region": "RegionOne",
@@ -249,7 +249,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:21 GMT
+  recorded_at: Thu, 17 Sep 2015 09:40:57 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -273,11 +273,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:23 GMT
+      - Thu, 17 Sep 2015 09:40:58 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:23.369418", "expires":
-        "2015-09-17T06:00:23Z", "id": "997cdc0ff0da4b0aa43449543fa8a8cb", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:40:58.911896", "expires":
+        "2015-09-18T09:40:58Z", "id": "81397c47dfdd4602a16c0d7dd04623bc", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -301,7 +301,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:23 GMT
+  recorded_at: Thu, 17 Sep 2015 09:40:59 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -325,11 +325,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:25 GMT
+      - Thu, 17 Sep 2015 09:41:01 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:25.499805", "expires":
-        "2015-09-17T06:00:25Z", "id": "2ac5c21feab645b3b4fe8bdc3283cb1c", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:01.044460", "expires":
+        "2015-09-18T09:41:00Z", "id": "bdb4ac40fba345459b63cdb9cb4f79f9", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -353,13 +353,13 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:25 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:01 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
       encoding: UTF-8
-      string: '{"auth":{"token":{"id":"2ac5c21feab645b3b4fe8bdc3283cb1c"},"tenantName":"admin"}}'
+      string: '{"auth":{"token":{"id":"bdb4ac40fba345459b63cdb9cb4f79f9"},"tenantName":"admin"}}'
     headers:
       User-Agent:
       - fog/1.34.0 fog-core/1.32.1
@@ -377,11 +377,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:26 GMT
+      - Thu, 17 Sep 2015 09:41:02 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:26.491002", "expires":
-        "2015-09-17T06:00:25Z", "id": "265479466b9944539a48858b6b2dcb1d", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:02.059506", "expires":
+        "2015-09-18T09:41:00Z", "id": "400cd62322814357a09594c5f80af624", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -405,7 +405,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:26 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:02 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -429,11 +429,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:28 GMT
+      - Thu, 17 Sep 2015 09:41:03 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:28.197301", "expires":
-        "2015-09-17T06:00:28Z", "id": "c40f4bc46e254910a2f10f6a91e5731d", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:03.854234", "expires":
+        "2015-09-18T09:41:03Z", "id": "585b62fd4e754ed88c531abb1267a144", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -457,7 +457,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:28 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:04 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -472,7 +472,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - c40f4bc46e254910a2f10f6a91e5731d
+      - 585b62fd4e754ed88c531abb1267a144
   response:
     status:
       code: 300
@@ -483,7 +483,7 @@ http_interactions:
       Content-Length:
       - '434'
       Date:
-      - Wed, 16 Sep 2015 06:00:28 GMT
+      - Thu, 17 Sep 2015 09:41:04 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -493,7 +493,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:28 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:04 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -517,11 +517,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:30 GMT
+      - Thu, 17 Sep 2015 09:41:06 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:30.693769", "expires":
-        "2015-09-17T06:00:30Z", "id": "86ed76680e09448281be467109727aa8", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:06.539520", "expires":
+        "2015-09-18T09:41:06Z", "id": "36279e0092404d208812ae89be74e9ea", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -545,7 +545,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:30 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:06 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -569,11 +569,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:32 GMT
+      - Thu, 17 Sep 2015 09:41:08 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:32.612018", "expires":
-        "2015-09-17T06:00:32Z", "id": "d47ae4483ac7423a9fc5895a7c1d502f", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:08.484895", "expires":
+        "2015-09-18T09:41:08Z", "id": "ac9fab7da892447bbda12d5c0a0520a2", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -597,13 +597,13 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:32 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:08 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
       encoding: UTF-8
-      string: '{"auth":{"token":{"id":"d47ae4483ac7423a9fc5895a7c1d502f"},"tenantName":"admin"}}'
+      string: '{"auth":{"token":{"id":"ac9fab7da892447bbda12d5c0a0520a2"},"tenantName":"admin"}}'
     headers:
       User-Agent:
       - fog/1.34.0 fog-core/1.32.1
@@ -621,11 +621,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:33 GMT
+      - Thu, 17 Sep 2015 09:41:09 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:33.672376", "expires":
-        "2015-09-17T06:00:32Z", "id": "2794f947e13a4b49920dd38024af5cec", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:09.525342", "expires":
+        "2015-09-18T09:41:08Z", "id": "358ed1bf42264330bf4e85222a9d7047", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -649,7 +649,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:33 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:09 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -673,11 +673,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:35 GMT
+      - Thu, 17 Sep 2015 09:41:11 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:35.512418", "expires":
-        "2015-09-17T06:00:35Z", "id": "bd8f7ce9acaa4df09070c79f607a35ee", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:11.479487", "expires":
+        "2015-09-18T09:41:11Z", "id": "ca238b2d7bbd41cbab69678a93951de4", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -701,13 +701,13 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:35 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:11 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:
       encoding: UTF-8
-      string: '{"auth":{"token":{"id":"bd8f7ce9acaa4df09070c79f607a35ee"},"tenantName":"admin"}}'
+      string: '{"auth":{"token":{"id":"ca238b2d7bbd41cbab69678a93951de4"},"tenantName":"admin"}}'
     headers:
       User-Agent:
       - fog/1.34.0 fog-core/1.32.1
@@ -725,11 +725,11 @@ http_interactions:
       Content-Length:
       - '2153'
       Date:
-      - Wed, 16 Sep 2015 06:00:36 GMT
+      - Thu, 17 Sep 2015 09:41:12 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:36.494128", "expires":
-        "2015-09-17T06:00:35Z", "id": "c1c5fe7c45fc4414932539de447cb186", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:12.632393", "expires":
+        "2015-09-18T09:41:11Z", "id": "9db63810c9e741e0ac87a534c85d52e2", "tenant":
         {"description": "admin tenant", "enabled": true, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "name": "admin"}}, "serviceCatalog": [{"endpoints": [{"adminURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
         "region": "RegionOne", "internalURL": "http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd",
@@ -753,7 +753,7 @@ http_interactions:
         [{"name": "_member_"}, {"name": "admin"}], "name": "admin"}, "metadata": {"is_admin":
         0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab", "46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:36 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:12 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/flavors/detail.json?limit=1000
@@ -768,20 +768,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-5023f7d3-50b7-44a9-8fae-f75659145192
+      - req-ab714c1c-659d-4a7f-b1a7-678dff21f427
       Content-Type:
       - application/json
       Content-Length:
       - '2503'
       Date:
-      - Wed, 16 Sep 2015 06:00:38 GMT
+      - Thu, 17 Sep 2015 09:41:13 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/flavors/1",
@@ -811,7 +811,7 @@ http_interactions:
         1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "6"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:38 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:13 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/flavors/detail.json?limit=1000&marker=6
@@ -826,25 +826,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-931e4d61-7a88-4d6c-b94b-1227578ef260
+      - req-b14b59a8-c013-497d-9967-2dd248822a31
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:39 GMT
+      - Thu, 17 Sep 2015 09:41:14 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:39 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:14 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/flavors/detail.json?limit=1000
@@ -859,20 +859,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-50bde3c4-1c9f-4693-9b5e-4e5efeda9997
+      - req-9ae6ee9e-697a-4212-ad4d-93a6f8a39577
       Content-Type:
       - application/json
       Content-Length:
       - '2503'
       Date:
-      - Wed, 16 Sep 2015 06:00:40 GMT
+      - Thu, 17 Sep 2015 09:41:14 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/flavors/1",
@@ -902,7 +902,7 @@ http_interactions:
         1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "6"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:40 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:14 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/flavors/detail.json?limit=1000&marker=6
@@ -917,25 +917,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-20115c24-86ca-4319-b07d-bce7ed915113
+      - req-ebd0d5c0-7b04-47d6-820f-5abd8c5dfa9a
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:40 GMT
+      - Thu, 17 Sep 2015 09:41:15 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:40 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:15 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/flavors/detail.json?limit=1000
@@ -950,20 +950,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-6e67755f-1dec-4d3a-8f4e-5341e9bf4613
+      - req-54770af6-3521-441c-8c47-15daa9b1fdb7
       Content-Type:
       - application/json
       Content-Length:
       - '2503'
       Date:
-      - Wed, 16 Sep 2015 06:00:41 GMT
+      - Thu, 17 Sep 2015 09:41:16 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/flavors/1",
@@ -993,7 +993,7 @@ http_interactions:
         1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "6"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:41 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:16 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/flavors/detail.json?limit=1000&marker=6
@@ -1008,25 +1008,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-92f5f7d8-e596-407a-b6c2-15728feb2806
+      - req-7372faf2-8028-4451-b6a1-0e1bfdf9b1f9
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:42 GMT
+      - Thu, 17 Sep 2015 09:41:17 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:42 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:17 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/flavors/detail.json?limit=1000
@@ -1041,20 +1041,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-e765b1e4-e108-45f8-9d34-5d095927729b
+      - req-480b699f-dac6-4c57-a508-a732ba9d049c
       Content-Type:
       - application/json
       Content-Length:
       - '2503'
       Date:
-      - Wed, 16 Sep 2015 06:00:42 GMT
+      - Thu, 17 Sep 2015 09:41:17 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": [{"name": "m1.tiny", "links": [{"href": "http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/flavors/1",
@@ -1084,7 +1084,7 @@ http_interactions:
         1, "swap": 512, "os-flavor-access:is_public": true, "rxtx_factor": 1.0, "OS-FLV-EXT-DATA:ephemeral":
         1, "disk": 1, "id": "6"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:43 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:17 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/flavors/detail.json?limit=1000&marker=6
@@ -1099,25 +1099,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-36f9cd6f-8ae8-4635-b204-355947a243eb
+      - req-76c7455a-c9a6-47b8-b260-a644a76c6e5d
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:43 GMT
+      - Thu, 17 Sep 2015 09:41:18 GMT
     body:
       encoding: UTF-8
       string: '{"flavors": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:43 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:18 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/servers/detail.json?limit=1000
@@ -1132,25 +1132,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-e37a0947-4d2d-42a6-997f-64edd5390db3
+      - req-291ea4c1-0ef9-4df4-b4ec-1841b25f1424
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:44 GMT
+      - Thu, 17 Sep 2015 09:41:19 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:44 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:19 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/servers/detail.json?limit=1000
@@ -1165,20 +1165,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a640400d-37c8-4269-9577-68996602eb16
+      - req-b0ac89e5-2ed2-41d2-8978-dd29d4e78a1a
       Content-Type:
       - application/json
       Content-Length:
       - '8471'
       Date:
-      - Wed, 16 Sep 2015 06:00:44 GMT
+      - Thu, 17 Sep 2015 09:41:20 GMT
     body:
       encoding: UTF-8
       string: '{"servers": [{"status": "ACTIVE", "updated": "2015-08-25T10:21:33Z",
@@ -1274,7 +1274,7 @@ http_interactions:
         "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state": 1, "config_drive":
         "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:45 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:20 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/servers/detail.json?limit=1000&marker=d5bc1ec3-dd63-47ff-8159-8b16b8f1b71c
@@ -1289,25 +1289,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-0cce75ad-9c8a-420a-99de-31b8e7de4235
+      - req-10967338-d029-4b03-b862-aca894a944c7
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:46 GMT
+      - Thu, 17 Sep 2015 09:41:21 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:46 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:21 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/servers/detail.json?limit=1000
@@ -1322,25 +1322,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-1669bd82-b1fc-495c-ab85-8c211cd69737
+      - req-184b5c9c-0090-4b01-8758-14e6f318c0ee
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:46 GMT
+      - Thu, 17 Sep 2015 09:41:22 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:46 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:22 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/servers/detail.json?limit=1000
@@ -1355,25 +1355,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-fe7e6c5e-62b2-475f-9a17-ea3a861e864f
+      - req-f3c51484-af27-477e-a09a-080c304e7f8e
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:47 GMT
+      - Thu, 17 Sep 2015 09:41:23 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:47 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:23 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -1397,11 +1397,11 @@ http_interactions:
       Content-Length:
       - '2114'
       Date:
-      - Wed, 16 Sep 2015 06:00:49 GMT
+      - Thu, 17 Sep 2015 09:41:24 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:49.422839", "expires":
-        "2015-09-17T06:00:49Z", "id": "043115026125452f8d867f03d3b0c8d3", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:24.814521", "expires":
+        "2015-09-18T09:41:24Z", "id": "511dac08ff9b4f9e8067bf6262fa1cba", "tenant":
         {"description": "", "enabled": true, "id": "393d8689f5a348cc9ec97ae918515a71",
         "name": "EmsRefreshSpec-Project-No-Admin-Role"}}, "serviceCatalog": [{"endpoints":
         [{"adminURL": "http://1.2.3.4:8776/v1/393d8689f5a348cc9ec97ae918515a71",
@@ -1426,7 +1426,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:49 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:24 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/393d8689f5a348cc9ec97ae918515a71/volumes/detail?limit=1000
@@ -1441,25 +1441,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 043115026125452f8d867f03d3b0c8d3
+      - 511dac08ff9b4f9e8067bf6262fa1cba
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-6f2e43a2-d0ee-4db0-9d98-c257993c8231
+      - req-e8a410ed-9a9c-46d0-bb1e-66f3c24f87b6
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:50 GMT
+      - Thu, 17 Sep 2015 09:41:25 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:51 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:25 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -1483,11 +1483,11 @@ http_interactions:
       Content-Length:
       - '2100'
       Date:
-      - Wed, 16 Sep 2015 06:00:52 GMT
+      - Thu, 17 Sep 2015 09:41:27 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:52.516871", "expires":
-        "2015-09-17T06:00:52Z", "id": "bd01d14c040e4618a4918e10e981c78a", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:27.599659", "expires":
+        "2015-09-18T09:41:27Z", "id": "baf92f6e0a4c47df8d48db5fd4cc8a03", "tenant":
         {"description": "", "enabled": true, "id": "568953d3e3914bc6910d93e3a854100f",
         "name": "EmsRefreshSpec-Project"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/568953d3e3914bc6910d93e3a854100f", "region": "RegionOne",
@@ -1512,7 +1512,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:52 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:27 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/568953d3e3914bc6910d93e3a854100f/volumes/detail?limit=1000
@@ -1527,20 +1527,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - bd01d14c040e4618a4918e10e981c78a
+      - baf92f6e0a4c47df8d48db5fd4cc8a03
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-72f149ca-71ba-41f2-90c9-abbe9c6fe025
+      - req-8a99e524-289f-4b87-a0d6-ec01b9a880c3
       Content-Type:
       - application/json
       Content-Length:
       - '1975'
       Date:
-      - Wed, 16 Sep 2015 06:00:53 GMT
+      - Thu, 17 Sep 2015 09:41:28 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": [{"status": "in-use", "display_name": "", "attachments":
@@ -1568,7 +1568,7 @@ http_interactions:
         null, "metadata": {}, "id": "d01c951b-31e3-4981-bdd4-ec36d405be94", "size":
         1}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:53 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:28 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/568953d3e3914bc6910d93e3a854100f/volumes/detail?limit=1000&marker=d01c951b-31e3-4981-bdd4-ec36d405be94
@@ -1583,25 +1583,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - bd01d14c040e4618a4918e10e981c78a
+      - baf92f6e0a4c47df8d48db5fd4cc8a03
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-36b74b59-c858-4359-8032-9f19c57fef3c
+      - req-dfcfdcdc-b16b-4542-ab56-6a84e1853147
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:54 GMT
+      - Thu, 17 Sep 2015 09:41:29 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:54 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:29 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -1625,11 +1625,11 @@ http_interactions:
       Content-Length:
       - '2101'
       Date:
-      - Wed, 16 Sep 2015 06:00:55 GMT
+      - Thu, 17 Sep 2015 09:41:31 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:00:55.742964", "expires":
-        "2015-09-17T06:00:55Z", "id": "3ffa3a34604143f8a98ad2d00975ac66", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:31.322616", "expires":
+        "2015-09-18T09:41:31Z", "id": "1c3c6ad0367140c39676c0076c38ef05", "tenant":
         {"description": "", "enabled": true, "id": "6984d33ed4804097bac0999ddf2866b2",
         "name": "EmsRefreshSpec-Project2"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/6984d33ed4804097bac0999ddf2866b2", "region": "RegionOne",
@@ -1654,7 +1654,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:55 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:31 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/6984d33ed4804097bac0999ddf2866b2/volumes/detail?limit=1000
@@ -1669,25 +1669,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 3ffa3a34604143f8a98ad2d00975ac66
+      - 1c3c6ad0367140c39676c0076c38ef05
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d9f7bb0c-a736-4147-9a9a-83843fb4c959
+      - req-3f37a307-aca1-4257-816b-d13ace98358a
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:56 GMT
+      - Thu, 17 Sep 2015 09:41:32 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:56 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:32 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd/volumes/detail?limit=1000
@@ -1702,25 +1702,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 86ed76680e09448281be467109727aa8
+      - 36279e0092404d208812ae89be74e9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-e626befa-12a0-48d3-9ef5-9221cbb23d63
+      - req-71049728-4f1c-4beb-9e5e-f0de90772f7a
       Content-Type:
       - application/json
       Content-Length:
       - '15'
       Date:
-      - Wed, 16 Sep 2015 06:00:57 GMT
+      - Thu, 17 Sep 2015 09:41:32 GMT
     body:
       encoding: UTF-8
       string: '{"volumes": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:57 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:33 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71//os-quota-sets/393d8689f5a348cc9ec97ae918515a71
@@ -1735,20 +1735,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-16352018-b5a5-41a6-861f-774d7729d43b
+      - req-7cc74367-a1ac-4023-a675-dd9fd8e0c270
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Wed, 16 Sep 2015 06:00:57 GMT
+      - Thu, 17 Sep 2015 09:41:33 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
@@ -1756,7 +1756,7 @@ http_interactions:
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:58 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:33 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f//os-quota-sets/568953d3e3914bc6910d93e3a854100f
@@ -1771,20 +1771,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-7641a1a3-c532-43de-828d-d4d2f55d8b8d
+      - req-c1901f8a-9e15-46a4-ada9-a4b34a7b099c
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Wed, 16 Sep 2015 06:00:58 GMT
+      - Thu, 17 Sep 2015 09:41:34 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
@@ -1792,7 +1792,7 @@ http_interactions:
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:58 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:34 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2//os-quota-sets/6984d33ed4804097bac0999ddf2866b2
@@ -1807,20 +1807,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-73475d5d-6ee3-4291-9ec4-7c2d72f923a7
+      - req-35e81bc2-7236-476b-918b-947bd5566b31
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Wed, 16 Sep 2015 06:00:59 GMT
+      - Thu, 17 Sep 2015 09:41:35 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
@@ -1828,7 +1828,7 @@ http_interactions:
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:00:59 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:35 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd//os-quota-sets/714ae63fad4e457d956f4e3048a16fcd
@@ -1843,20 +1843,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-6b7dfb8d-0194-48e5-813d-8e65385a15ad
+      - req-d81936d5-d50f-4651-9d81-eb846b627294
       Content-Type:
       - application/json
       Content-Length:
       - '322'
       Date:
-      - Wed, 16 Sep 2015 06:00:59 GMT
+      - Thu, 17 Sep 2015 09:41:35 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"injected_file_content_bytes": 10240, "metadata_items":
@@ -1864,7 +1864,7 @@ http_interactions:
         "instances": 10, "security_group_rules": 20, "injected_files": 5, "cores":
         20, "fixed_ips": -1, "injected_file_path_bytes": 255, "security_groups": 10}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:00 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:35 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/393d8689f5a348cc9ec97ae918515a71//os-quota-sets/393d8689f5a348cc9ec97ae918515a71
@@ -1879,26 +1879,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 043115026125452f8d867f03d3b0c8d3
+      - 511dac08ff9b4f9e8067bf6262fa1cba
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d8baa67a-0ef8-44b0-b3d5-dd3eda4a6e66
+      - req-a9c666db-ba7b-4b27-8f8b-d1599e70e585
       Content-Type:
       - application/json
       Content-Length:
       - '108'
       Date:
-      - Wed, 16 Sep 2015 06:01:00 GMT
+      - Thu, 17 Sep 2015 09:41:36 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"gigabytes": 1000, "volumes": 10, "id": "393d8689f5a348cc9ec97ae918515a71",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:00 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:36 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/568953d3e3914bc6910d93e3a854100f//os-quota-sets/568953d3e3914bc6910d93e3a854100f
@@ -1913,26 +1913,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - bd01d14c040e4618a4918e10e981c78a
+      - baf92f6e0a4c47df8d48db5fd4cc8a03
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-9e7e9c02-423f-4d87-9039-d5966625ba12
+      - req-0ba84046-f358-4658-834f-8766a043b47b
       Content-Type:
       - application/json
       Content-Length:
       - '108'
       Date:
-      - Wed, 16 Sep 2015 06:01:01 GMT
+      - Thu, 17 Sep 2015 09:41:37 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"gigabytes": 1000, "volumes": 10, "id": "568953d3e3914bc6910d93e3a854100f",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:01 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:37 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/6984d33ed4804097bac0999ddf2866b2//os-quota-sets/6984d33ed4804097bac0999ddf2866b2
@@ -1947,26 +1947,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 3ffa3a34604143f8a98ad2d00975ac66
+      - 1c3c6ad0367140c39676c0076c38ef05
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a05b3284-8d9d-4b0d-8288-da611e5ffd9f
+      - req-f3c9cf01-32a8-4baa-997a-e70fd5227e76
       Content-Type:
       - application/json
       Content-Length:
       - '108'
       Date:
-      - Wed, 16 Sep 2015 06:01:01 GMT
+      - Thu, 17 Sep 2015 09:41:37 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"gigabytes": 1000, "volumes": 10, "id": "6984d33ed4804097bac0999ddf2866b2",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:01 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:37 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd//os-quota-sets/714ae63fad4e457d956f4e3048a16fcd
@@ -1981,26 +1981,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 86ed76680e09448281be467109727aa8
+      - 36279e0092404d208812ae89be74e9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c0402630-4d61-48f8-bbcc-e31d93813aeb
+      - req-b2fb6643-f84e-4597-bd0e-7fefd9e2c15a
       Content-Type:
       - application/json
       Content-Length:
       - '108'
       Date:
-      - Wed, 16 Sep 2015 06:01:02 GMT
+      - Thu, 17 Sep 2015 09:41:38 GMT
     body:
       encoding: UTF-8
       string: '{"quota_set": {"gigabytes": 1000, "volumes": 10, "id": "714ae63fad4e457d956f4e3048a16fcd",
         "snapshots": 10}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:02 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:38 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/os-keypairs.json?limit=1000
@@ -2015,26 +2015,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-684aa486-de71-4b8b-ae71-80cbf3ae0ed4
+      - req-46d25c13-d2a5-4c49-ab64-e27f470059de
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Wed, 16 Sep 2015 06:01:03 GMT
+      - Thu, 17 Sep 2015 09:41:38 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7Sv6NXSAFwcWUkvMX8wBcQ/VqK5NoO2Y773uzkCGufEqjZEmxhbh+jV2qCBiEmKzauo6wXuyDIeEJvwtNU6nsmqm/1Mr5jZpQLROl15MU+U9kDVKuCLDC+EVp663XcbEye9EtJ6Zuy6coptxvq5RbrowHJ0CRkVRIYjPF1goHpVvXAG2ogtzjWYNloB0v6RC/52gM+ibJYJFwUvtxQjnRZ8mz7KPtVyDzQMbNZYD+q1Xwisn3W62dn/KPCCcZl+2UZcgng61cRToh/YkAyOHTaqh3bdkBKgYDqbX1Z7FNmOym3KZiR/+IO6GjoNJLgGC5SGQGaRrybLoEc4Xsdt23w==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "92:08:af:3f:b0:7d:01:58:fe:f7:b2:c7:d2:d2:2a:9c"}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:03 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:39 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/os-keypairs.json?limit=1000&marker=EmsRefreshSpec-KeyPair
@@ -2049,26 +2049,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3f2e065d-d82d-42f5-bae6-ffbc15321ffe
+      - req-d80f7060-a705-4209-8203-492e6ad457b6
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Wed, 16 Sep 2015 06:01:03 GMT
+      - Thu, 17 Sep 2015 09:41:39 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7Sv6NXSAFwcWUkvMX8wBcQ/VqK5NoO2Y773uzkCGufEqjZEmxhbh+jV2qCBiEmKzauo6wXuyDIeEJvwtNU6nsmqm/1Mr5jZpQLROl15MU+U9kDVKuCLDC+EVp663XcbEye9EtJ6Zuy6coptxvq5RbrowHJ0CRkVRIYjPF1goHpVvXAG2ogtzjWYNloB0v6RC/52gM+ibJYJFwUvtxQjnRZ8mz7KPtVyDzQMbNZYD+q1Xwisn3W62dn/KPCCcZl+2UZcgng61cRToh/YkAyOHTaqh3bdkBKgYDqbX1Z7FNmOym3KZiR/+IO6GjoNJLgGC5SGQGaRrybLoEc4Xsdt23w==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "92:08:af:3f:b0:7d:01:58:fe:f7:b2:c7:d2:d2:2a:9c"}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:03 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:39 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-keypairs.json?limit=1000
@@ -2083,26 +2083,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-54d45443-3701-4728-96ad-7a821d61ad65
+      - req-471d2aec-7847-4aed-ac1c-b6113de66fcc
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Wed, 16 Sep 2015 06:01:04 GMT
+      - Thu, 17 Sep 2015 09:41:40 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7Sv6NXSAFwcWUkvMX8wBcQ/VqK5NoO2Y773uzkCGufEqjZEmxhbh+jV2qCBiEmKzauo6wXuyDIeEJvwtNU6nsmqm/1Mr5jZpQLROl15MU+U9kDVKuCLDC+EVp663XcbEye9EtJ6Zuy6coptxvq5RbrowHJ0CRkVRIYjPF1goHpVvXAG2ogtzjWYNloB0v6RC/52gM+ibJYJFwUvtxQjnRZ8mz7KPtVyDzQMbNZYD+q1Xwisn3W62dn/KPCCcZl+2UZcgng61cRToh/YkAyOHTaqh3bdkBKgYDqbX1Z7FNmOym3KZiR/+IO6GjoNJLgGC5SGQGaRrybLoEc4Xsdt23w==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "92:08:af:3f:b0:7d:01:58:fe:f7:b2:c7:d2:d2:2a:9c"}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:04 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:40 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-keypairs.json?limit=1000&marker=EmsRefreshSpec-KeyPair
@@ -2117,26 +2117,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-5b6817c0-bc9e-4f04-a889-4f73db6d7255
+      - req-df8d28f9-b27b-40bc-a9d6-65476bb27e88
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Wed, 16 Sep 2015 06:01:04 GMT
+      - Thu, 17 Sep 2015 09:41:40 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7Sv6NXSAFwcWUkvMX8wBcQ/VqK5NoO2Y773uzkCGufEqjZEmxhbh+jV2qCBiEmKzauo6wXuyDIeEJvwtNU6nsmqm/1Mr5jZpQLROl15MU+U9kDVKuCLDC+EVp663XcbEye9EtJ6Zuy6coptxvq5RbrowHJ0CRkVRIYjPF1goHpVvXAG2ogtzjWYNloB0v6RC/52gM+ibJYJFwUvtxQjnRZ8mz7KPtVyDzQMbNZYD+q1Xwisn3W62dn/KPCCcZl+2UZcgng61cRToh/YkAyOHTaqh3bdkBKgYDqbX1Z7FNmOym3KZiR/+IO6GjoNJLgGC5SGQGaRrybLoEc4Xsdt23w==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "92:08:af:3f:b0:7d:01:58:fe:f7:b2:c7:d2:d2:2a:9c"}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:05 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:41 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/os-keypairs.json?limit=1000
@@ -2151,26 +2151,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-505ddd74-1494-4049-abb4-e2b569fcdab2
+      - req-230b0f39-f559-4ab2-825f-a5625af515b5
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Wed, 16 Sep 2015 06:01:05 GMT
+      - Thu, 17 Sep 2015 09:41:41 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7Sv6NXSAFwcWUkvMX8wBcQ/VqK5NoO2Y773uzkCGufEqjZEmxhbh+jV2qCBiEmKzauo6wXuyDIeEJvwtNU6nsmqm/1Mr5jZpQLROl15MU+U9kDVKuCLDC+EVp663XcbEye9EtJ6Zuy6coptxvq5RbrowHJ0CRkVRIYjPF1goHpVvXAG2ogtzjWYNloB0v6RC/52gM+ibJYJFwUvtxQjnRZ8mz7KPtVyDzQMbNZYD+q1Xwisn3W62dn/KPCCcZl+2UZcgng61cRToh/YkAyOHTaqh3bdkBKgYDqbX1Z7FNmOym3KZiR/+IO6GjoNJLgGC5SGQGaRrybLoEc4Xsdt23w==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "92:08:af:3f:b0:7d:01:58:fe:f7:b2:c7:d2:d2:2a:9c"}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:05 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:41 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/os-keypairs.json?limit=1000&marker=EmsRefreshSpec-KeyPair
@@ -2185,26 +2185,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-5c372ed5-35ea-4c41-9969-c03c9c4b368a
+      - req-2b91fc98-f4d7-483f-970e-25a2d5f814e0
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Wed, 16 Sep 2015 06:01:06 GMT
+      - Thu, 17 Sep 2015 09:41:42 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7Sv6NXSAFwcWUkvMX8wBcQ/VqK5NoO2Y773uzkCGufEqjZEmxhbh+jV2qCBiEmKzauo6wXuyDIeEJvwtNU6nsmqm/1Mr5jZpQLROl15MU+U9kDVKuCLDC+EVp663XcbEye9EtJ6Zuy6coptxvq5RbrowHJ0CRkVRIYjPF1goHpVvXAG2ogtzjWYNloB0v6RC/52gM+ibJYJFwUvtxQjnRZ8mz7KPtVyDzQMbNZYD+q1Xwisn3W62dn/KPCCcZl+2UZcgng61cRToh/YkAyOHTaqh3bdkBKgYDqbX1Z7FNmOym3KZiR/+IO6GjoNJLgGC5SGQGaRrybLoEc4Xsdt23w==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "92:08:af:3f:b0:7d:01:58:fe:f7:b2:c7:d2:d2:2a:9c"}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:06 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:42 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/os-keypairs.json?limit=1000
@@ -2219,26 +2219,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-cb150375-6cd2-47fd-874b-fadf27fcb3c3
+      - req-f44bf044-74ba-4c2f-aed3-3f8f6563d7eb
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Wed, 16 Sep 2015 06:01:06 GMT
+      - Thu, 17 Sep 2015 09:41:42 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7Sv6NXSAFwcWUkvMX8wBcQ/VqK5NoO2Y773uzkCGufEqjZEmxhbh+jV2qCBiEmKzauo6wXuyDIeEJvwtNU6nsmqm/1Mr5jZpQLROl15MU+U9kDVKuCLDC+EVp663XcbEye9EtJ6Zuy6coptxvq5RbrowHJ0CRkVRIYjPF1goHpVvXAG2ogtzjWYNloB0v6RC/52gM+ibJYJFwUvtxQjnRZ8mz7KPtVyDzQMbNZYD+q1Xwisn3W62dn/KPCCcZl+2UZcgng61cRToh/YkAyOHTaqh3bdkBKgYDqbX1Z7FNmOym3KZiR/+IO6GjoNJLgGC5SGQGaRrybLoEc4Xsdt23w==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "92:08:af:3f:b0:7d:01:58:fe:f7:b2:c7:d2:d2:2a:9c"}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:07 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:42 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/os-keypairs.json?limit=1000&marker=EmsRefreshSpec-KeyPair
@@ -2253,26 +2253,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-0244bb49-9183-42c1-b7e3-967083b56fd7
+      - req-0cc5428d-30a1-4e3f-aa8d-25101a97f264
       Content-Type:
       - application/json
       Content-Length:
       - '547'
       Date:
-      - Wed, 16 Sep 2015 06:01:07 GMT
+      - Thu, 17 Sep 2015 09:41:43 GMT
     body:
       encoding: UTF-8
       string: '{"keypairs": [{"keypair": {"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7Sv6NXSAFwcWUkvMX8wBcQ/VqK5NoO2Y773uzkCGufEqjZEmxhbh+jV2qCBiEmKzauo6wXuyDIeEJvwtNU6nsmqm/1Mr5jZpQLROl15MU+U9kDVKuCLDC+EVp663XcbEye9EtJ6Zuy6coptxvq5RbrowHJ0CRkVRIYjPF1goHpVvXAG2ogtzjWYNloB0v6RC/52gM+ibJYJFwUvtxQjnRZ8mz7KPtVyDzQMbNZYD+q1Xwisn3W62dn/KPCCcZl+2UZcgng61cRToh/YkAyOHTaqh3bdkBKgYDqbX1Z7FNmOym3KZiR/+IO6GjoNJLgGC5SGQGaRrybLoEc4Xsdt23w==
         Generated by Nova\n", "name": "EmsRefreshSpec-KeyPair", "fingerprint": "92:08:af:3f:b0:7d:01:58:fe:f7:b2:c7:d2:d2:2a:9c"}}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:07 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:43 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/os-security-groups.json?limit=1000
@@ -2287,26 +2287,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3d8b2d8c-f623-41dc-aa4c-e37b5a931b0b
+      - req-e47bce9c-1d33-4d35-b0a0-447720e2008a
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Wed, 16 Sep 2015 06:01:08 GMT
+      - Thu, 17 Sep 2015 09:41:44 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "393d8689f5a348cc9ec97ae918515a71",
         "id": 4, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:08 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/os-security-groups.json?limit=1000&marker=4
@@ -2321,26 +2321,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-deb9dcd5-68cb-485e-897f-762e4410eff9
+      - req-ace111e3-7a0a-4304-af94-940ef29efcfc
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Wed, 16 Sep 2015 06:01:13 GMT
+      - Thu, 17 Sep 2015 09:41:44 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "393d8689f5a348cc9ec97ae918515a71",
         "id": 4, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:13 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:44 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-security-groups.json?limit=1000
@@ -2355,20 +2355,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-c90bbfeb-cac7-499c-80fc-92ceb33e90d7
+      - req-765be7ee-3b2f-4de8-bfdb-8388b5c9805e
       Content-Type:
       - application/json
       Content-Length:
       - '2100'
       Date:
-      - Wed, 16 Sep 2015 06:01:14 GMT
+      - Thu, 17 Sep 2015 09:41:46 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -2398,7 +2398,7 @@ http_interactions:
         description"}, {"rules": [], "tenant_id": "568953d3e3914bc6910d93e3a854100f",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:14 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:46 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-security-groups.json?limit=1000&marker=1
@@ -2413,20 +2413,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-2e42d486-2d1d-4285-b44a-621dd26631a5
+      - req-4fa9fce9-279f-469b-8ead-90ee13cb6592
       Content-Type:
       - application/json
       Content-Length:
       - '2100'
       Date:
-      - Wed, 16 Sep 2015 06:01:15 GMT
+      - Thu, 17 Sep 2015 09:41:47 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -2456,7 +2456,7 @@ http_interactions:
         description"}, {"rules": [], "tenant_id": "568953d3e3914bc6910d93e3a854100f",
         "id": 1, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:16 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:47 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/os-security-groups.json?limit=1000
@@ -2471,26 +2471,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d27b1565-d103-4960-9b05-c8deafdbeb39
+      - req-e0abbc34-bbad-42b2-a04c-7465dd89298f
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Wed, 16 Sep 2015 06:01:16 GMT
+      - Thu, 17 Sep 2015 09:41:47 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "6984d33ed4804097bac0999ddf2866b2",
         "id": 5, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:16 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:48 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/os-security-groups.json?limit=1000&marker=5
@@ -2505,26 +2505,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-6f27cf81-242e-4ea6-b35d-2dff7793275a
+      - req-0b6ec767-2793-4753-a943-6d5ce4b62dba
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Wed, 16 Sep 2015 06:01:17 GMT
+      - Thu, 17 Sep 2015 09:41:48 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "6984d33ed4804097bac0999ddf2866b2",
         "id": 5, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:17 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:48 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/os-security-groups.json?limit=1000
@@ -2539,26 +2539,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3969dd2f-476d-4a92-a431-9ec0cd0b96ba
+      - req-d56daf2d-284c-4483-86ef-2f1bb32de4d8
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Wed, 16 Sep 2015 06:01:17 GMT
+      - Thu, 17 Sep 2015 09:41:49 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "714ae63fad4e457d956f4e3048a16fcd",
         "id": 6, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:18 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:49 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/os-security-groups.json?limit=1000&marker=6
@@ -2573,26 +2573,26 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-af4d65f5-ba19-4563-80ca-c1b9a5a61ab5
+      - req-d3a18e7f-2f7d-46fc-9f11-b80fb5278ac5
       Content-Type:
       - application/json
       Content-Length:
       - '139'
       Date:
-      - Wed, 16 Sep 2015 06:01:18 GMT
+      - Thu, 17 Sep 2015 09:41:50 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [], "tenant_id": "714ae63fad4e457d956f4e3048a16fcd",
         "id": 6, "name": "default", "description": "default"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:18 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:50 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -2616,11 +2616,11 @@ http_interactions:
       Content-Length:
       - '2114'
       Date:
-      - Wed, 16 Sep 2015 06:01:20 GMT
+      - Thu, 17 Sep 2015 09:41:52 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:01:20.328489", "expires":
-        "2015-09-17T06:01:20Z", "id": "6c64c969a82f4189bdcf332763e73a13", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:52.170020", "expires":
+        "2015-09-18T09:41:52Z", "id": "c67e009f10324d4c92304e41023a4ab0", "tenant":
         {"description": "", "enabled": true, "id": "393d8689f5a348cc9ec97ae918515a71",
         "name": "EmsRefreshSpec-Project-No-Admin-Role"}}, "serviceCatalog": [{"endpoints":
         [{"adminURL": "http://1.2.3.4:8776/v1/393d8689f5a348cc9ec97ae918515a71",
@@ -2645,7 +2645,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:20 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -2660,7 +2660,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 6c64c969a82f4189bdcf332763e73a13
+      - c67e009f10324d4c92304e41023a4ab0
   response:
     status:
       code: 300
@@ -2671,7 +2671,7 @@ http_interactions:
       Content-Length:
       - '434'
       Date:
-      - Wed, 16 Sep 2015 06:01:20 GMT
+      - Thu, 17 Sep 2015 09:41:52 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -2681,7 +2681,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:21 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:52 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000
@@ -2694,7 +2694,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 6c64c969a82f4189bdcf332763e73a13
+      - c67e009f10324d4c92304e41023a4ab0
   response:
     status:
       code: 200
@@ -2705,14 +2705,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-9a1d3dac-4e12-4acd-ae43-79f253e9a4fe
+      - req-69e55e79-2548-410c-b3b5-b307907f66c8
       Date:
-      - Wed, 16 Sep 2015 06:01:22 GMT
+      - Thu, 17 Sep 2015 09:41:53 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:22 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:53 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -2736,11 +2736,11 @@ http_interactions:
       Content-Length:
       - '2100'
       Date:
-      - Wed, 16 Sep 2015 06:01:24 GMT
+      - Thu, 17 Sep 2015 09:41:55 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:01:24.699844", "expires":
-        "2015-09-17T06:01:24Z", "id": "961152e905204ef8a5b2f24698fedf4a", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:55.595515", "expires":
+        "2015-09-18T09:41:55Z", "id": "392fac9195494e96bcfc348eb2b497a5", "tenant":
         {"description": "", "enabled": true, "id": "568953d3e3914bc6910d93e3a854100f",
         "name": "EmsRefreshSpec-Project"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/568953d3e3914bc6910d93e3a854100f", "region": "RegionOne",
@@ -2765,7 +2765,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:24 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:55 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -2780,7 +2780,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 961152e905204ef8a5b2f24698fedf4a
+      - 392fac9195494e96bcfc348eb2b497a5
   response:
     status:
       code: 300
@@ -2791,7 +2791,7 @@ http_interactions:
       Content-Length:
       - '434'
       Date:
-      - Wed, 16 Sep 2015 06:01:25 GMT
+      - Thu, 17 Sep 2015 09:41:56 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -2801,7 +2801,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:25 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:56 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000
@@ -2814,7 +2814,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 961152e905204ef8a5b2f24698fedf4a
+      - 392fac9195494e96bcfc348eb2b497a5
   response:
     status:
       code: 200
@@ -2825,9 +2825,9 @@ http_interactions:
       Content-Length:
       - '3105'
       X-Openstack-Request-Id:
-      - req-43f5f0d1-9a6d-49ac-8b62-ebad6f3ea4b0
+      - req-58761d3c-223d-4951-a125-80fe147ae8da
       Date:
-      - Wed, 16 Sep 2015 06:01:26 GMT
+      - Thu, 17 Sep 2015 09:41:57 GMT
     body:
       encoding: UTF-8
       string: '{"images": [{"status": "active", "name": "EmsRefreshSpec-PoweredOn-SnapShot",
@@ -2867,7 +2867,7 @@ http_interactions:
         "owner": "568953d3e3914bc6910d93e3a854100f", "is_public": false, "deleted_at":
         null, "properties": {}, "size": 4731440}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:26 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:57 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000&marker=e42857f5-9915-46f5-bf36-c66892c473cd
@@ -2880,7 +2880,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 961152e905204ef8a5b2f24698fedf4a
+      - 392fac9195494e96bcfc348eb2b497a5
   response:
     status:
       code: 200
@@ -2891,14 +2891,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-88f5917b-f122-464d-ab59-fed82c335cfa
+      - req-dfa70203-aeca-436c-8034-e6973bbbb4a7
       Date:
-      - Wed, 16 Sep 2015 06:01:27 GMT
+      - Thu, 17 Sep 2015 09:41:57 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:27 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:58 GMT
 - request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
@@ -2922,11 +2922,11 @@ http_interactions:
       Content-Length:
       - '2101'
       Date:
-      - Wed, 16 Sep 2015 06:01:29 GMT
+      - Thu, 17 Sep 2015 09:41:59 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-09-16T06:01:29.159123", "expires":
-        "2015-09-17T06:01:29Z", "id": "1277fca5766d41acacf2b510aed2c2d3", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-09-17T09:41:59.644020", "expires":
+        "2015-09-18T09:41:59Z", "id": "b03cc1578af04281a4b3da21a0393fc7", "tenant":
         {"description": "", "enabled": true, "id": "6984d33ed4804097bac0999ddf2866b2",
         "name": "EmsRefreshSpec-Project2"}}, "serviceCatalog": [{"endpoints": [{"adminURL":
         "http://1.2.3.4:8776/v1/6984d33ed4804097bac0999ddf2866b2", "region": "RegionOne",
@@ -2951,7 +2951,7 @@ http_interactions:
         [{"name": "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles":
         ["46aef6a60a374f98a27c473350dfe63b"]}}}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:29 GMT
+  recorded_at: Thu, 17 Sep 2015 09:41:59 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/
@@ -2966,7 +2966,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 1277fca5766d41acacf2b510aed2c2d3
+      - b03cc1578af04281a4b3da21a0393fc7
   response:
     status:
       code: 300
@@ -2977,7 +2977,7 @@ http_interactions:
       Content-Length:
       - '434'
       Date:
-      - Wed, 16 Sep 2015 06:01:29 GMT
+      - Thu, 17 Sep 2015 09:42:00 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.1", "links": [{"href":
@@ -2987,7 +2987,7 @@ http_interactions:
         "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
         "http://1.2.3.4:9292/v1/", "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:29 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:00 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000
@@ -3000,7 +3000,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 1277fca5766d41acacf2b510aed2c2d3
+      - b03cc1578af04281a4b3da21a0393fc7
   response:
     status:
       code: 200
@@ -3011,14 +3011,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-3d585dd0-59bf-4ea8-b677-3eaf26e8ea2a
+      - req-de0ae5aa-ff0c-4113-b1e0-65f9bc5a9aab
       Date:
-      - Wed, 16 Sep 2015 06:01:31 GMT
+      - Thu, 17 Sep 2015 09:42:01 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:31 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:01 GMT
 - request:
     method: get
     uri: http://1.2.3.4:9292/v1.1/images/detail?limit=1000
@@ -3031,7 +3031,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - c40f4bc46e254910a2f10f6a91e5731d
+      - 585b62fd4e754ed88c531abb1267a144
   response:
     status:
       code: 200
@@ -3042,14 +3042,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-3898a7ff-1e90-46c8-9529-b48aa451bfbc
+      - req-9a126f77-f8f0-46ce-9f18-8f387b9ec533
       Date:
-      - Wed, 16 Sep 2015 06:01:32 GMT
+      - Thu, 17 Sep 2015 09:42:02 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:32 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:02 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-floating-ips.json
@@ -3064,20 +3064,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-d2981604-3230-4dd2-b8cf-d57e337f9f4c
+      - req-a2ecfa7a-7be4-473f-8591-1a8fdf4878b4
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Wed, 16 Sep 2015 06:01:32 GMT
+      - Thu, 17 Sep 2015 09:42:03 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "23f293b4-5c60-47b6-823b-c2092294bfa9",
@@ -3088,7 +3088,7 @@ http_interactions:
         "f44c5665-2a40-43fe-b4d6-37ed0a4be5ef", "ip": "10.3.4.4", "fixed_ip": "192.168.32.4",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:33 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:03 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/servers/76e9d90f-4f63-4d58-965f-b018166ed2d3/os-security-groups.json
@@ -3103,20 +3103,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-1a6101a9-6576-4382-9d32-bb5bb6a71295
+      - req-6d47fe14-ece3-45dd-a116-2f38b22bc850
       Content-Type:
       - application/json
       Content-Length:
       - '1982'
       Date:
-      - Wed, 16 Sep 2015 06:01:34 GMT
+      - Thu, 17 Sep 2015 09:42:04 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3145,7 +3145,7 @@ http_interactions:
         "id": 3, "name": "EmsRefreshSpec-SecurityGroup2", "description": "EmsRefreshSpec-SecurityGroup2
         description"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:34 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:04 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-floating-ips.json
@@ -3160,20 +3160,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-05ca8652-7165-414e-bc52-c0a12c7e1cf3
+      - req-cb29c551-d1f9-4c7d-bfe6-3180e82addfe
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Wed, 16 Sep 2015 06:01:34 GMT
+      - Thu, 17 Sep 2015 09:42:04 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "23f293b4-5c60-47b6-823b-c2092294bfa9",
@@ -3184,7 +3184,7 @@ http_interactions:
         "f44c5665-2a40-43fe-b4d6-37ed0a4be5ef", "ip": "10.3.4.4", "fixed_ip": "192.168.32.4",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:35 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:05 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/servers/23f293b4-5c60-47b6-823b-c2092294bfa9/os-security-groups.json
@@ -3199,20 +3199,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-8c596c5b-6268-4664-86e9-1109ed49cf6a
+      - req-ffc3bb17-53ff-4168-b5d8-ff68edd55bc5
       Content-Type:
       - application/json
       Content-Length:
       - '1808'
       Date:
-      - Wed, 16 Sep 2015 06:01:36 GMT
+      - Thu, 17 Sep 2015 09:42:06 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3239,7 +3239,7 @@ http_interactions:
         "id": 2, "name": "EmsRefreshSpec-SecurityGroup", "description": "EmsRefreshSpec-SecurityGroup
         description"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:36 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:06 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-floating-ips.json
@@ -3254,20 +3254,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a93a9956-4048-4580-a1d0-1c525a9a144a
+      - req-7a56f01d-d8f6-4c19-87b6-64d876345bdb
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Wed, 16 Sep 2015 06:01:37 GMT
+      - Thu, 17 Sep 2015 09:42:07 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "23f293b4-5c60-47b6-823b-c2092294bfa9",
@@ -3278,7 +3278,7 @@ http_interactions:
         "f44c5665-2a40-43fe-b4d6-37ed0a4be5ef", "ip": "10.3.4.4", "fixed_ip": "192.168.32.4",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:37 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:07 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/servers/f44c5665-2a40-43fe-b4d6-37ed0a4be5ef/os-security-groups.json
@@ -3293,20 +3293,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-3ee54c41-0316-41f3-ad60-817e7abbd2ef
+      - req-7ef9d065-8253-4eca-b174-5abd048c93ae
       Content-Type:
       - application/json
       Content-Length:
       - '1808'
       Date:
-      - Wed, 16 Sep 2015 06:01:38 GMT
+      - Thu, 17 Sep 2015 09:42:08 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3333,7 +3333,7 @@ http_interactions:
         "id": 2, "name": "EmsRefreshSpec-SecurityGroup", "description": "EmsRefreshSpec-SecurityGroup
         description"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:39 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:08 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-floating-ips.json
@@ -3348,20 +3348,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-09acbb3c-6681-42f2-9d9b-59eccc36e653
+      - req-2fb4d848-b65c-457d-bb2e-7602ae381c7b
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Wed, 16 Sep 2015 06:01:39 GMT
+      - Thu, 17 Sep 2015 09:42:09 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "23f293b4-5c60-47b6-823b-c2092294bfa9",
@@ -3372,7 +3372,7 @@ http_interactions:
         "f44c5665-2a40-43fe-b4d6-37ed0a4be5ef", "ip": "10.3.4.4", "fixed_ip": "192.168.32.4",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:39 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:09 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/servers/0582df7f-ab97-42d2-98fa-81f5c149ae4e/os-security-groups.json
@@ -3387,20 +3387,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-59fab72e-3f69-416a-97ed-73f76f6e4716
+      - req-ee8a5ec5-535a-4a8c-8b21-a67861f01d2b
       Content-Type:
       - application/json
       Content-Length:
       - '1808'
       Date:
-      - Wed, 16 Sep 2015 06:01:40 GMT
+      - Thu, 17 Sep 2015 09:42:10 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3427,7 +3427,7 @@ http_interactions:
         "id": 2, "name": "EmsRefreshSpec-SecurityGroup", "description": "EmsRefreshSpec-SecurityGroup
         description"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:41 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:11 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-floating-ips.json
@@ -3442,20 +3442,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-8414a3fe-3935-46be-947c-fd36fa6b3714
+      - req-90c07286-dfc3-4814-a47c-ccc0d7828ae7
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Wed, 16 Sep 2015 06:01:41 GMT
+      - Thu, 17 Sep 2015 09:42:11 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "23f293b4-5c60-47b6-823b-c2092294bfa9",
@@ -3466,7 +3466,7 @@ http_interactions:
         "f44c5665-2a40-43fe-b4d6-37ed0a4be5ef", "ip": "10.3.4.4", "fixed_ip": "192.168.32.4",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:41 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:11 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/servers/d5bc1ec3-dd63-47ff-8159-8b16b8f1b71c/os-security-groups.json
@@ -3481,20 +3481,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-4f26697b-75b1-4be6-aae6-df736f8dfead
+      - req-e93953c9-c440-414d-871b-8da55b40539a
       Content-Type:
       - application/json
       Content-Length:
       - '1982'
       Date:
-      - Wed, 16 Sep 2015 06:01:42 GMT
+      - Thu, 17 Sep 2015 09:42:12 GMT
     body:
       encoding: UTF-8
       string: '{"security_groups": [{"rules": [{"from_port": 1, "group": {}, "ip_protocol":
@@ -3523,7 +3523,7 @@ http_interactions:
         "id": 3, "name": "EmsRefreshSpec-SecurityGroup2", "description": "EmsRefreshSpec-SecurityGroup2
         description"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:42 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:12 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/393d8689f5a348cc9ec97ae918515a71/snapshots/detail
@@ -3538,25 +3538,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 043115026125452f8d867f03d3b0c8d3
+      - 511dac08ff9b4f9e8067bf6262fa1cba
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-8b89557e-19f2-4efb-b8f8-fa221ab46fa8
+      - req-f25394f3-e3ed-41ba-a045-f4bae74be98c
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Wed, 16 Sep 2015 06:01:43 GMT
+      - Thu, 17 Sep 2015 09:42:13 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:43 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:13 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/393d8689f5a348cc9ec97ae918515a71/snapshots/detail?limit=1000
@@ -3571,25 +3571,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 043115026125452f8d867f03d3b0c8d3
+      - 511dac08ff9b4f9e8067bf6262fa1cba
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-5c2e551c-ef26-4562-9ab2-83cab8a60b73
+      - req-7318f716-5ede-40de-b4d7-c0b1bb75b787
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Wed, 16 Sep 2015 06:01:43 GMT
+      - Thu, 17 Sep 2015 09:42:13 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:44 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:14 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/568953d3e3914bc6910d93e3a854100f/snapshots/detail
@@ -3604,20 +3604,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - bd01d14c040e4618a4918e10e981c78a
+      - baf92f6e0a4c47df8d48db5fd4cc8a03
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-1416eb90-f7ed-4b9d-90b7-c75b12d29755
+      - req-7c883ed7-5428-4d98-8e3d-5fd308d800e8
       Content-Type:
       - application/json
       Content-Length:
       - '916'
       Date:
-      - Wed, 16 Sep 2015 06:01:44 GMT
+      - Thu, 17 Sep 2015 09:42:14 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": [{"status": "available", "display_name": "snapshot for
@@ -3632,7 +3632,7 @@ http_interactions:
         "568953d3e3914bc6910d93e3a854100f", "metadata": {}, "id": "c5dda24d-4733-4e3e-ae86-b43875451be2",
         "size": 1}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:44 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:14 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/568953d3e3914bc6910d93e3a854100f/snapshots/detail?limit=1000
@@ -3647,20 +3647,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - bd01d14c040e4618a4918e10e981c78a
+      - baf92f6e0a4c47df8d48db5fd4cc8a03
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-cb4d5248-3e62-49d1-885a-ecae7f05480d
+      - req-7a9b6b5a-d3f8-4d8f-ba31-b91e889ca968
       Content-Type:
       - application/json
       Content-Length:
       - '916'
       Date:
-      - Wed, 16 Sep 2015 06:01:45 GMT
+      - Thu, 17 Sep 2015 09:42:15 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": [{"status": "available", "display_name": "snapshot for
@@ -3675,7 +3675,7 @@ http_interactions:
         "568953d3e3914bc6910d93e3a854100f", "metadata": {}, "id": "c5dda24d-4733-4e3e-ae86-b43875451be2",
         "size": 1}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:45 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:15 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/6984d33ed4804097bac0999ddf2866b2/snapshots/detail
@@ -3690,25 +3690,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 3ffa3a34604143f8a98ad2d00975ac66
+      - 1c3c6ad0367140c39676c0076c38ef05
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-82a2d896-836e-458e-9402-5976c23ecfbe
+      - req-cddc38e4-01a7-4082-a9cb-323e0442e21c
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Wed, 16 Sep 2015 06:01:45 GMT
+      - Thu, 17 Sep 2015 09:42:15 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:46 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:16 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/6984d33ed4804097bac0999ddf2866b2/snapshots/detail?limit=1000
@@ -3723,25 +3723,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 3ffa3a34604143f8a98ad2d00975ac66
+      - 1c3c6ad0367140c39676c0076c38ef05
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-9376feb8-3009-45e8-8810-645ea00eacba
+      - req-f72531e7-6569-4901-a53c-4aab39a33119
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Wed, 16 Sep 2015 06:01:46 GMT
+      - Thu, 17 Sep 2015 09:42:16 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:46 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:16 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd/snapshots/detail
@@ -3756,25 +3756,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 86ed76680e09448281be467109727aa8
+      - 36279e0092404d208812ae89be74e9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-118ca400-e0d9-48ed-bc2f-6f69bda07d9b
+      - req-ecd80980-f32d-49f9-a580-ab23bb416fbf
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Wed, 16 Sep 2015 06:01:47 GMT
+      - Thu, 17 Sep 2015 09:42:17 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:47 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:17 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8776/v1/714ae63fad4e457d956f4e3048a16fcd/snapshots/detail?limit=1000
@@ -3789,25 +3789,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 86ed76680e09448281be467109727aa8
+      - 36279e0092404d208812ae89be74e9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-7f4b0e9f-0727-4b96-9253-b31cf76ef6d7
+      - req-fe286bd8-7afe-4fb8-acc5-cb5cf4adc240
       Content-Type:
       - application/json
       Content-Length:
       - '17'
       Date:
-      - Wed, 16 Sep 2015 06:01:47 GMT
+      - Thu, 17 Sep 2015 09:42:17 GMT
     body:
       encoding: UTF-8
       string: '{"snapshots": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:48 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:17 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/393d8689f5a348cc9ec97ae918515a71/os-floating-ips.json?limit=1000
@@ -3822,25 +3822,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 7e28de4b95744e2092a92cd1f8290dce
+      - 3d90082a68e64572ab7d82763e12554f
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-402a9b73-4800-4924-a6f2-6339ad7453f5
+      - req-3ff434f0-a1e8-47bf-a229-e180f94de534
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Wed, 16 Sep 2015 06:01:48 GMT
+      - Thu, 17 Sep 2015 09:42:18 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:48 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:18 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-floating-ips.json?limit=1000
@@ -3855,20 +3855,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-e05513a7-b1c1-4dda-82d2-02db8abbd334
+      - req-737f9830-ccde-4e8e-939a-bec29d8cee40
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Wed, 16 Sep 2015 06:01:49 GMT
+      - Thu, 17 Sep 2015 09:42:19 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "23f293b4-5c60-47b6-823b-c2092294bfa9",
@@ -3879,7 +3879,7 @@ http_interactions:
         "f44c5665-2a40-43fe-b4d6-37ed0a4be5ef", "ip": "10.3.4.4", "fixed_ip": "192.168.32.4",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:49 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:19 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/568953d3e3914bc6910d93e3a854100f/os-floating-ips.json?limit=1000&marker=4
@@ -3894,20 +3894,20 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 87c030417c0a45438481d38ef2dfebab
+      - f1cccb9b59eb46f6ac6fb3384c21f9ea
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-5b7ca752-8aef-4678-a1a4-94d6b50b68c6
+      - req-d9751077-1851-45d4-a338-36ec6e583944
       Content-Type:
       - application/json
       Content-Length:
       - '530'
       Date:
-      - Wed, 16 Sep 2015 06:01:50 GMT
+      - Thu, 17 Sep 2015 09:42:19 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": [{"instance_id": "23f293b4-5c60-47b6-823b-c2092294bfa9",
@@ -3918,7 +3918,7 @@ http_interactions:
         "f44c5665-2a40-43fe-b4d6-37ed0a4be5ef", "ip": "10.3.4.4", "fixed_ip": "192.168.32.4",
         "id": 4, "pool": "nova"}]}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:50 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:20 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/6984d33ed4804097bac0999ddf2866b2/os-floating-ips.json?limit=1000
@@ -3933,25 +3933,25 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2066a9b57d43438a9e738ee70f11230b
+      - ff8e6d0fc96e413698ac97a06ca3bdc4
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-a4074ffd-79a7-4877-8ede-788c9a0a569e
+      - req-d6762193-7e22-4761-865e-cb356cf17320
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Wed, 16 Sep 2015 06:01:50 GMT
+      - Thu, 17 Sep 2015 09:42:20 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:50 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:20 GMT
 - request:
     method: get
     uri: http://1.2.3.4:8774/v2/714ae63fad4e457d956f4e3048a16fcd/os-floating-ips.json?limit=1000
@@ -3966,23 +3966,23 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 997cdc0ff0da4b0aa43449543fa8a8cb
+      - 81397c47dfdd4602a16c0d7dd04623bc
   response:
     status:
       code: 200
       message: ''
     headers:
       X-Compute-Request-Id:
-      - req-cbb6290c-ade5-4c9d-9115-cdcad85f3484
+      - req-30d9838a-0e02-41d5-bd1a-ce0a92233690
       Content-Type:
       - application/json
       Content-Length:
       - '20'
       Date:
-      - Wed, 16 Sep 2015 06:01:51 GMT
+      - Thu, 17 Sep 2015 09:42:21 GMT
     body:
       encoding: UTF-8
       string: '{"floating_ips": []}'
     http_version: 
-  recorded_at: Wed, 16 Sep 2015 06:01:51 GMT
+  recorded_at: Thu, 17 Sep 2015 09:42:21 GMT
 recorded_with: VCR 2.9.3

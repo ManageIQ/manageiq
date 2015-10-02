@@ -4,6 +4,7 @@ require 'tools/environment_builders/openstack/services/identity/data/keystone_v3
 require 'tools/environment_builders/openstack/services/image/data'
 require 'tools/environment_builders/openstack/services/network/data/neutron'
 require 'tools/environment_builders/openstack/services/network/data/nova'
+require 'tools/environment_builders/openstack/services/orchestration/data'
 require 'tools/environment_builders/openstack/services/volume/data'
 
 require_relative 'refresh_spec_environments'
@@ -25,11 +26,13 @@ module Openstack
       expect(CloudVolume.count).to eq 0
 
       # .. but other things are still present:
-      expect(Disk.count).to       eq vms_count * 3
+      expect(Disk.count).to       eq disks_count
       expect(FloatingIp.count).to eq network_data.floating_ips.sum
     end
 
     def assert_common
+      assert_table_counts
+
       assert_ems
       assert_specific_flavor
       assert_specific_az
@@ -41,11 +44,13 @@ module Openstack
       assert_specific_volumes
       assert_specific_volume_snapshots
       assert_specific_templates
+      assert_specific_stacks
       assert_specific_vms
       assert_relationship_tree
 
       # Assert table counts as last, just for sure. First we compare Hashes of data, so we see the diffs
       assert_table_counts
+      assert_table_counts_orchestration
     end
 
     def snapshots_with_volumes
@@ -108,9 +113,38 @@ module Openstack
       image_data.images.count + image_data.servers_snapshots.count + 2
     end
 
+    def expected_stack_parameters_count
+      # We ignore AWS params added there by Heat
+      OrchestrationStackParameter.all.to_a.delete_if { |x| x.name.include?("AWS::") || x.name.include?("OS::") }.count
+    end
+
+    def stack_parameters_count
+      orchestration_data.stacks.count * orchestration_data.template_parameters.count
+    end
+
+    def stack_resources_count
+      orchestration_data.stacks.count * orchestration_data.template_resources.count
+    end
+
+    def stack_outputs_count
+      orchestration_data.stacks.count * orchestration_data.template_outputs.count
+    end
+
+    def stack_templates_count
+      # we have one template for now
+      1
+    end
+
     def vms_count
       # VMs + Vms created from snapshots
-      compute_data.servers.count + compute_data.servers_from_snapshot.count
+      vms_count = compute_data.servers.count + compute_data.servers_from_snapshot.count
+      vms_count += orchestration_data.stacks.count if orchestration_supported?
+      vms_count
+    end
+
+    def disks_count
+      # There are 3 disks per each vm: Root disk, Ephemeral disk and Swap disk
+      vms_count * 3
     end
 
     def availability_zones_count
@@ -118,7 +152,7 @@ module Openstack
     end
 
     def assert_table_counts
-      expect(ExtManagementSystem.count).to eq 1 # Can this be not hardcoded
+      expect(ExtManagementSystem.count).to eq 1 # Can this be not hardcoded?
       expect(Flavor.count).to              eq compute_data.flavors.count
       expect(AvailabilityZone.count).to    eq availability_zones_count
       expect(FloatingIp.count).to          eq network_data.floating_ips.sum
@@ -132,14 +166,12 @@ module Openstack
       expect(VmOrTemplate.count).to        eq vms_count + images_count
       expect(Vm.count).to                  eq vms_count
       expect(MiqTemplate.count).to         eq images_count
-      # There are 3 disks per each vm: Root disk, Ephemeral disk and Swap disk
-      expect(Disk.count).to                eq vms_count * 3
+      expect(Disk.count).to                eq disks_count
       # One hardware per each VM
       expect(Hardware.count).to            eq vms_count
       # TODO(lsmola) 2 networks per each floatingip assigned, it's kinda weird now, will replace with
       # neutron models, then the number of networks will fit the number of neutron networks
       # expect(Network.count).to           eq vms_count * 2
-
       expect(OperatingSystem.count).to     eq 0
       expect(Snapshot.count).to            eq 0
       expect(SystemService.count).to       eq 0
@@ -150,6 +182,16 @@ module Openstack
       expect(Relationship.count).to        be > 0
       # Just check that queue is not empty
       expect(MiqQueue.count).to            be > 0
+    end
+
+    def assert_table_counts_orchestration
+      if orchestration_supported?
+        expect(OrchestrationStack.count).to         eq orchestration_data.stacks.count
+        expect(expected_stack_parameters_count).to  eq stack_parameters_count
+        expect(OrchestrationStackResource.count).to eq stack_resources_count
+        expect(OrchestrationStackOutput.count).to   eq stack_outputs_count
+        expect(OrchestrationTemplate.count).to      eq stack_templates_count
+      end
     end
 
     def assert_ems
@@ -344,8 +386,30 @@ module Openstack
       end
     end
 
+    def assert_specific_stacks
+      return unless orchestration_supported?
+
+      stacks = OrchestrationStack.all
+
+      assert_objects_with_hashes(stacks,
+                                 orchestration_data.stacks,
+                                 orchestration_data.stack_translate_table,
+                                 {},
+                                 [:template, :parameters])
+    end
+
     def assert_specific_vms
-      assert_objects_with_hashes(ManageIQ::Providers::Openstack::CloudManager::Vm.all,
+      all_vms = ManageIQ::Providers::Openstack::CloudManager::Vm.all
+      if orchestration_supported?
+        # When there are orchestration stacks, we will delete them from vm comparing, vm name contains unique
+        # id, so it's hard to build it from stack
+        stack_vms     = OrchestrationStackResource.select { |x| x.resource_category == "OS::Nova::Server" }
+        stack_vms_ids = stack_vms.collect(&:physical_resource)
+
+        all_vms = all_vms.to_a.delete_if { |x| stack_vms_ids.include?(x.ems_ref) }
+      end
+
+      assert_objects_with_hashes(all_vms,
                                  compute_data.servers + compute_data.servers_from_snapshot,
                                  {},
                                  {},

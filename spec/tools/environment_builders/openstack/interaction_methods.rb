@@ -13,7 +13,7 @@ module InteractionMethods
         else
           if v.kind_of?(Hash)
             h = i.send(k)
-            v.all? { |key, value| h[key] == value }
+            v.all? { |key, value| h[key] == value || h[key.to_s] == value }
           else
             i.send(k) == v
           end
@@ -36,6 +36,7 @@ module InteractionMethods
 
   def find_or_create(collection, attributes)
     lookup_pairs = attributes.slice(:name)
+    lookup_pairs = attributes.slice(:stack_name) if lookup_pairs.blank?
     # By default look by name, if name is not available, look by whole Hash
     obj = lookup_pairs.blank? ? find(collection, attributes) : find(collection, lookup_pairs)
     obj || begin
