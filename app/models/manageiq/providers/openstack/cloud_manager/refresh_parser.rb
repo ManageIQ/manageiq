@@ -493,9 +493,9 @@ module ManageIQ::Providers
       end
       add_instance_disk(disks, sz, dev.dup, "Root disk")
       sz = flavor[:ephemeral_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk") unless sz.zero?
+      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk")
       sz = flavor[:swap_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk") unless sz.zero?
+      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")
 
       return uid, new_result
     end
