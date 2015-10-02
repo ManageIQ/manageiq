@@ -61,6 +61,10 @@ class MiqHostProvisionRequest < MiqRequest
     "host"
   end
 
+  def event_name(mode)
+    "host_provision_request_#{mode}"
+  end
+
   private
 
   def default_description
