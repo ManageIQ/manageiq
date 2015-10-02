@@ -507,7 +507,7 @@ module MiqAeEngine
       end
     end
 
-    def process_assertion(f, _message, _args)
+    def process_assertion(f, message, args)
       Benchmark.current_realtime[:assertion_count] += 1
       Benchmark.realtime_block(:assertion_time) do
         assertion = get_value(f)
@@ -516,6 +516,7 @@ module MiqAeEngine
         $miq_ae_logger.info("Evaluating substituted assertion [#{assertion}]")
 
         begin
+          _, _ = message, args # used by eval (?)
           assertion_result = eval(assertion)
         rescue SyntaxError => err
           $miq_ae_logger.error("Assertion had the following Syntax Error: '#{err.message}'")
