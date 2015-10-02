@@ -25,6 +25,7 @@
 //= require services/miq_service
 //= require services/timer_option_service
 //= require controllers/buttons/button_group_controller
+//= require controllers/credentials/credentials_controller
 //= require controllers/ems_common/ems_common_form_controller
 //= require controllers/host/host_form_controller
 //= require controllers/provider_foreman/provider_foreman_form_controller
