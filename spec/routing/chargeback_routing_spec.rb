@@ -55,6 +55,19 @@ describe 'routes for ChargebackController' do
     end
   end
 
+  describe '#cb_tier_show' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/cb_tier_show")).to route_to("#{controller_name}#cb_tier_show")
+    end
+  end
+
+  describe '#cb_tiers_list' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/cb_tiers_list")).to route_to("#{controller_name}#cb_tiers_list")
+    end
+  end
+
+
   describe '#explorer' do
     it 'routes with GET' do
       expect(get("/#{controller_name}/explorer")).to route_to("#{controller_name}#explorer")

@@ -49,7 +49,7 @@ class TreeBuilder
       end
       [title, title, icon]
     when :cb_assignments_tree           then [_("Assignments"),                    _("Assignments")]
-    when :cb_tiers_tree                 then [_("Tiers"),                          _("Tiers")]
+    when :cb_tiers_tree                 then [_("Saved Tiers"),                    _("Saved Tiers")]
     when :cb_rates_tree                 then [_("Rates"),                          _("Rates")]
     when :cb_reports_tree               then [_("Saved Chargeback Reports"),       _("Saved Chargeback Reports")]
     when :containers_tree               then [_("All Containers"),                 _("All Containers")]
@@ -505,6 +505,7 @@ class TreeBuilder
     "t"   => "MiqTemplate",
     "tb"  => "VmdbTable",
     "ti"  => "VmdbIndex",
+    "tier" => "ChargebackTier",
     "tn"  => "Tenant",
     "u"   => "User",
     "v"   => "Vm",

@@ -9,35 +9,26 @@
         = _('Description')
       .col-md-8
         %p.form-control-static
-          = h(@record.description)
+          = h(@record.name)
   %hr
   %h3= _('Tier Details')
   %table.table.table-bordered
     %thead
       %tr
-        %th= _('Tier')
         %th= _('Description')
         %th= _('Start')
         %th= _('End')
-        %th= _('Per Time')
-        %th= _('Per Unit')
+        %th= _('Tier rate')
     %tbody
       - @sb[:selected_tier_details].each do |r|
-        - @cur_group = r[:group] if @cur_group.nil?
-        - if @cur_group != r[:group]
-          - @cur_group = r[:group]
-          %tr
-            %td.active{:colspan => "6"} &nbsp;
+        %tr
+          %td.active{:colspan => "4"} &nbsp;
         %tr
           %td
-            = h(Dictionary.gettext(r[:group], :type => :tier_detail_group, :notfound => :titleize))
+            = r.description
           %td
-            = r[:description]
-          %td
-            = r[:chargeback_tier]
+            = r.start
           %td{:align => "right"}
-            = r[:tier]
+            = r.end
           %td
-            = r[:per_time]
-          %td
-            = r.per_unit_display
+            = r.tier_rate

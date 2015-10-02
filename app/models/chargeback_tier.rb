@@ -1,4 +1,9 @@
 class ChargebackTier < ActiveRecord::Base
+  include UuidMixin
+  include ReportableMixin
+
+  ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :storage, :ext_management_system, :my_enterprise]
+  include AssignmentMixin
   has_many :chargeback_tier_detail, :dependent => :destroy
 
   def rate(value)

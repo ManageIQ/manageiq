@@ -1,0 +1,14 @@
+#chargeback_tiers_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  - #if @sb[:tiers][:report]
+    %h3= _('Current Tiers')
+    .form-horizontal.static
+      - Chargeback.default_tiers().sort_by { |a| a.description.downcase }.each do |r|
+        .form-group
+          %label.col-md-2.control-label
+            = h(r.description)
+          .col-md-8
+            %p.form-control-static
+              = h(r.name)
+
+  - unless @sb[:chargeback][:report]
+    = render :partial => "chargeback_instructions"

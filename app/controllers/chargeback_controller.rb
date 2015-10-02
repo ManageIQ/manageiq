@@ -26,6 +26,13 @@ class ChargebackController < ApplicationController
       params[:id] = "xx-#{@record.rate_type}_#{nodeid}"
       params[:tree] = x_active_tree.to_s
       tree_select
+    elsif x_active_tree == :cb_tiers_tree
+      @record = identify_record(params[:id], ChargebackTier)
+      nodeid = x_build_node_id(@record)
+      params[:id] = "tier_#{nodeid}"
+      params[:tree] = x_active_tree.to_s
+      @record = identify_record(params[:id], ChargebackTier)
+      tree_select
     end
   end
 
@@ -64,7 +71,7 @@ class ChargebackController < ApplicationController
       @trees << cb_rates_build_tree
       @accords << {:name => "cb_rates", :title => "Rates", :container => "cb_rates_accord"}
     end
-    if true#role_allows(:feature => "chargeback_tiers")
+    if role_allows(:feature => "chargeback_rates")
       self.x_active_tree ||= 'cb_tiers_tree'
       self.x_active_accord ||= 'cb_tiers'
       @built_trees << cb_tiers_build_tree
@@ -228,7 +235,7 @@ class ChargebackController < ApplicationController
           detail.source = r[:source]
           detail.rate = r[:rate]
           detail.per_time = r[:per_time]
-          detail.chargeback_tier = r[:chargeback_tier]
+          detail.chargeback_tier_id = r[:chargeback_tier_id]
           detail.group = r[:group]
           detail.per_unit = r[:per_unit]
           detail.metric = r[:metric]
@@ -252,7 +259,7 @@ class ChargebackController < ApplicationController
                   # detail.rate = r[:rate]
                   # detail.per_time = r[:per_time]
                   detail.rate = ""
-                  detail.chargeback_tier = r[:chargeback_tier]
+                  detail.chargeback_tier_id = r[:chargeback_tier_id]
                   #detail.chargeback_tier = "Not tiered"
                   detail.per_time = "hourly"
                   detail.group = r[:group]
@@ -340,14 +347,14 @@ class ChargebackController < ApplicationController
       @items_per_page = params[:ppsetting].to_i                        # Set the new per page value
       @settings[:perpage][@gtl_type.to_sym] = @items_per_page          # Set the per page setting for this gtl type
     end
-    @sortcol = session[:rates_sortcol] == nil ? 0 : session[:rates_sortcol].to_i
-    @sortdir = session[:rates_sortdir] == nil ? "ASC" : session[:rates_sortdir]
+    @sortcol = session[:tiers_sortcol] == nil ? 0 : session[:tiers_sortcol].to_i
+    @sortdir = session[:tiers_sortdir] == nil ? "ASC" : session[:tiers_sortdir]
 
     @view, @pages = get_view(ChargebackTier)  # Get the records (into a view) and the paginator
 
     @current_page = @pages[:current] if @pages != nil  # save the current page number
-    session[:rates_sortcol] = @sortcol
-    session[:rates_sortdir] = @sortdir
+    session[:tiers_sortcol] = @sortcol
+    session[:tiers_sortdir] = @sortdir
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|                    # Use RJS to update the display
@@ -356,6 +363,19 @@ class ChargebackController < ApplicationController
         page << "miqSparkle(false)"
       end
     end
+  end
+
+  def cb_tier_show
+    @display = "main"
+    #@sb[:selected_tier_details] = ChargebackTierDetail.find_by_chargeback_tier_id(params[:id])
+    #@record = ChargebackTier.find_by_id(params[:id])
+    @sb[:selected_tier_details] = ChargebackTierDetail.where(chargeback_tier_id: @record.id).to_a
+    @sb[:selected_tier_details].sort_by! { |rd| [rd[:start], rd[:end]]}
+    if @record == nil
+      redirect_to :action=>"cb_tiers_list", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
+      return
+    end
+    #render :partial => "cb_tier_show"
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
@@ -483,13 +503,14 @@ class ChargebackController < ApplicationController
         @right_cell_text = _("All %s") % "Assignments"
       end
     elsif x_active_tree == :cb_tiers_tree
-      if node == "root"
+      if node == "root" || node == "xx-tiers"
         @sb[:tier] = @record = @sb[:selected_tier_details] = nil
         @right_cell_text = _("All %s") % ui_lookup(:models=>"ChargebackTier")
+        cb_tiers_list
       else
-        @record = ChargebackRate.find(from_cid(node.split('_').last.split('-').last))
+        @record = ChargebackTier.find_by_id(node.split('_').last.split('-').last)
         @sb[:action] = nil
-        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>@record.rate_type, :model=>ui_lookup(:model=>"ChargebackTier"), :name=>@record.description}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"ChargebackTier"), :name=>@record.description}
         cb_tier_show
       end
     elsif x_active_tree == :cb_reports_tree
@@ -571,7 +592,7 @@ class ChargebackController < ApplicationController
   end
 
   def cb_tiers_build_tree
-    TreeBuilderChargebackAssignments.new("cb_tiers_tree", "cb_tiers", @sb)
+    TreeBuilderChargebackTiers.new("cb_tiers_tree", "cb_tiers", @sb)
   end
 
   # Common Schedule button handler routines
@@ -598,7 +619,7 @@ class ChargebackController < ApplicationController
       temp = {}
       temp[:rate] = (!r.rate.nil? && r.rate != "") ? r.rate : 0
       temp[:per_time] = r.per_time ? r.per_time : "hourly"
-      temp[:chargeback_tier]= r.chargeback_tier ? r.chargeback_tier : "Not tiered"
+      temp[:chargeback_tier_id]= r.chargeback_tier_id ? r.chargeback_tier_id : "Not tiered"
       @edit[:new][:details].push(temp)
     end
 
@@ -628,7 +649,7 @@ class ChargebackController < ApplicationController
       @sb[:rate_details][i].rate               = @edit[:new][:details][i][:rate]
       @sb[:rate_details][i].per_time           = @edit[:new][:details][i][:per_time]
       @sb[:rate_details][i].chargeback_rate_id = @sb[:rate].id
-      @sb[:rate_details][i].chargeback_tier = ChargebackTier.find_by_id(@edit[:new][:details][i][:chargeback_tier]).id
+      @sb[:rate_details][i].chargeback_tier_id = ChargebackTier.find_by_id(@edit[:new][:details][i][:chargeback_tier_id]).id
     end
   end
 
@@ -790,6 +811,7 @@ class ChargebackController < ApplicationController
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
     chargeback_tree = cb_rates_build_tree if replace_trees.include?(:cb_rates)
+    chargeback_tree = cb_tiers_build_tree if replace_trees.include?(:cb_tiers)
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
 
     # Build a presenter to render the JS
@@ -806,6 +828,12 @@ class ChargebackController < ApplicationController
             :locals  => {:tree => chargeback_tree,
                          :name => chargeback_tree.name.to_s
             }
+        ]
+      when :cb_tiers
+        presenter[:replace_partials][:cb_tiers_tree_div] = r[
+          :partial => 'shared/tree',
+          :locals => {:tree => chargeback_tree,
+                      :name => chargeback_tree.name.to_s}
         ]
       end
     end
@@ -831,19 +859,10 @@ class ChargebackController < ApplicationController
       if c_buttons && c_xml
         presenter[:set_visible_elements][:center_buttons_div] = true
         presenter[:reload_toolbars][:center] = {:buttons => c_buttons, :xml => c_xml}
-        presenter[:expand_collapse_cells][:a] = 'expand'
-      else
-        presenter[:set_visible_elements][:center_buttons_div] = false
-        presenter[:expand_collapse_cells][:a] = 'collapse'
       end
-      presenter[:update_partials][:main_div] = r[:partial => 'tiers_list']
-      if @html
-        presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_tiers_paging_bar',
-                                                   :locals  => @sb[:pages]]
-        presenter[:set_visible_elements][:paging_div] = true
-      else
-        presenter[:set_visible_elements][:paging_div] = false
-      end
+      presenter[:expand_collapse_cells][:a] = c_buttons ? 'expand' : 'collapse'
+      presenter[:update_partials][:main_div] = r[:partial => 'tiers_tabs']
+      presenter[:update_partials][:paging_div] = r[:partial => 'layouts/x_pagingcontrols']
     when :cb_assignments_tree
       # Assignments accordion
       presenter[:update_partials][:main_div] = r[:partial => "assignments_tabs"]

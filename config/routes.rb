@@ -240,6 +240,11 @@ Vmdb::Application.routes.draw do
         cb_rate_show
         cb_rates_delete
         cb_rates_list
+        cb_tiers_list
+        cb_tier_show
+        cb_tier_edit
+        cb_tier_form_field_changed
+        cb_tiers_delete
         saved_report_paging
         tree_autoload_dynatree
         tree_select
