@@ -28,9 +28,9 @@ module ApplicationHelper
   end
 
   # Create a collapsed panel based on a condition
-  def patternfly_accordion_panel(title, condition, id, &block)
+  def miq_accordion_panel(title, condition, id, &block)
     content_tag(:div, :class => "panel panel-default") do
-      out  = content_tag(:div, :class => "panel-heading") do
+      out = content_tag(:div, :class => "panel-heading") do
         content_tag(:h4, :class => "panel-title") do
           link_to(title, "##{id}",
             'data-parent' => '#accordion',
