@@ -501,14 +501,17 @@ module OpsController::OpsRbac
 
   def rbac_group_user_lookup
     rbac_group_user_lookup_field_changed
+    auth = get_vmdb_config[:authentication]
     if @edit[:new][:user].nil? || @edit[:new][:user] == ""
       add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User", :error)
     end
-    if @edit[:new][:user_id].nil? || @edit[:new][:user_id] == ""
-      add_flash(_("%s must be entered to perform LDAP Group Look Up") % "Username", :error)
-    end
-    if @edit[:new][:user_pwd].nil? || @edit[:new][:user_pwd] == ""
-      add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User Password", :error)
+    if auth[:mode] != "httpd"
+      if @edit[:new][:user_id].nil? || @edit[:new][:user_id] == ""
+        add_flash(_("%s must be entered to perform LDAP Group Look Up") % "Username", :error)
+      end
+      if @edit[:new][:user_pwd].nil? || @edit[:new][:user_pwd] == ""
+        add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User Password", :error)
+      end
     end
     if @flash_array != nil
       render :update do |page|                    # Use JS to update the display
@@ -518,7 +521,13 @@ module OpsController::OpsRbac
       @record = MiqGroup.find_by_id(@edit[:group_id])
       @sb[:roles] = @edit[:roles]
       begin
-        @edit[:ldap_groups_by_user] = MiqGroup.get_ldap_groups_by_user(@edit[:new][:user],@edit[:new][:user_id],@edit[:new][:user_pwd]) # Get the users from the DB
+        if auth[:mode] == "httpd"
+          @edit[:ldap_groups_by_user] = MiqGroup.get_httpd_groups_by_user(@edit[:new][:user])
+        else
+          @edit[:ldap_groups_by_user] = MiqGroup.get_ldap_groups_by_user(@edit[:new][:user],
+                                                                         @edit[:new][:user_id],
+                                                                         @edit[:new][:user_pwd])
+        end
       rescue StandardError => bang
         @edit[:ldap_groups_by_user] = Array.new
         add_flash(_("Error during '%s': ") % "LDAP Group Look Up" << bang.message, :error)
