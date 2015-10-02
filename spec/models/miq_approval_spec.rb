@@ -47,6 +47,15 @@ describe MiqApproval do
 
       expect { approval.approve(user.userid, 'Why Not') }.to_not raise_error
     end
+
+    it "with an approver's object'" do
+      vm_template = FactoryGirl.create(:template_vmware)
+      user        = FactoryGirl.create(:user_miq_request_approver)
+      request     = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :userid => user.userid)
+      approval    = FactoryGirl.create(:miq_approval, :miq_request => request)
+
+      expect { approval.approve(user, 'Why Not') }.to_not raise_error
+    end
   end
 
   it "#deny" do
