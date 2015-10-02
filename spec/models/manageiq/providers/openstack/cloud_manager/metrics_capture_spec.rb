@@ -65,7 +65,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::MetricsCapture do
         },
         "disk.read.bytes"  => read_ts1 - read_ts_prev,
         "disk.write.bytes" => write_ts1 - write_ts_prev
-        )
+      )
 
       # 3. calculate the disk_usage_rate_average for the last API result
       read_ts2 = api_time_as_utc(read_bytes2)
@@ -79,7 +79,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::MetricsCapture do
         },
         "disk.read.bytes"  => read_ts2 - read_ts1,
         "disk.write.bytes" => write_ts2 - write_ts1
-        )
+      )
 
       # get the actual values from the method
       _, values_by_id_and_ts = @vm.perf_collect_metrics("realtime")
@@ -249,11 +249,11 @@ describe ManageIQ::Providers::Openstack::CloudManager::MetricsCapture do
     it "computes diffs of the first 4 values of disk_usage_rate_average values correctly" do
       # Make the computations os stats
       avg_stat1_manual = (
-      (35  - 20)  / (parse_datetime('2013-08-28T11:03:12') - parse_datetime('2013-08-28T11:01:09')).to_f +
+      (35 - 20) / (parse_datetime('2013-08-28T11:03:12') - parse_datetime('2013-08-28T11:01:09')).to_f +
           (691 - 500) / (parse_datetime('2013-08-28T11:02:12') - parse_datetime('2013-08-28T11:00:09')).to_f
       ) / 1024.0
       avg_stat4_manual = (
-      (69  - 53)  / (parse_datetime('2013-08-28T11:09:21') - parse_datetime('2013-08-28T11:07:18')).to_f +
+      (69 - 53) / (parse_datetime('2013-08-28T11:09:21') - parse_datetime('2013-08-28T11:07:18')).to_f +
           (935 - 836) / (parse_datetime('2013-08-28T11:08:21') - parse_datetime('2013-08-28T11:06:18')).to_f
       ) / 1024.0
 
@@ -920,7 +920,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::MetricsCapture do
                       api_duration_time_as_utc(write_stats[first_index])),
       counter_two => (api_duration_time_as_utc(read_stats[second_index]) -
                       api_duration_time_as_utc(read_stats[first_index]))
-      )
+    )
   end
 
   def api_time_as_utc(api_result)

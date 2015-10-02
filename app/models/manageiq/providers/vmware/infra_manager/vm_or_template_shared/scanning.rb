@@ -55,14 +55,14 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared::Scanning
           require 'miq_fault_tolerant_vim'
           # TODO: Should this move to the EMS?
           ost.miqVim = MiqFaultTolerantVim.new(:ip => miqVimHost[:address], :user => miqVimHost[:username], :pass => miqVimHost[:password_decrypt], :use_broker => use_broker, :vim_broker_drb_port => ost.scanData['ems'][:vim_broker_drb_port])
-          #ost.snapId = opts.snapId if opts.snapId
-          $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vmCfgFile}] in [#{Time.now-st}] seconds"
+          # ost.snapId = opts.snapId if opts.snapId
+          $log.info "Connection to [#{ems_display_text}] completed for VM:[#{@vmCfgFile}] in [#{Time.now - st}] seconds"
         rescue Timeout::Error => err
-          msg = "Connection to [#{ems_display_text}] timed out for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
+          msg = "Connection to [#{ems_display_text}] timed out for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now - st}] seconds"
           $log.error msg
           raise err, msg, err.backtrace
         rescue Exception => err
-          msg = "Connection to [#{ems_display_text}] failed for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now-st}] seconds"
+          msg = "Connection to [#{ems_display_text}] failed for VM:[#{@vmCfgFile}] with error [#{err}] after [#{Time.now - st}] seconds"
           $log.error msg
           raise err, msg, err.backtrace
         end

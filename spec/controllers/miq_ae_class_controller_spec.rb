@@ -8,11 +8,10 @@ describe MiqAeClassController do
       ns_id = cls.namespace_id
       new = {:name => "New Name", :description => "New Description", :display_name => "Display Name", :inherits => "Some_Class"}
       controller.instance_variable_set(:@sb,
-                                       {:trees => {
-                                           :ae_tree => {:active_node => "aec-#{cls.id}"}
+                                       :trees       => {
+                                         :ae_tree => {:active_node => "aec-#{cls.id}"}
                                        },
-                                        :active_tree => :ae_tree
-                                       })
+                                       :active_tree => :ae_tree)
       controller.instance_variable_set(:@edit, {:new => new})
       controller.send(:set_record_vars, cls)
       cls.namespace_id.should == ns_id
@@ -27,7 +26,7 @@ describe MiqAeClassController do
       id = "aec-#{cls.id}"
       fq_name = cls.fqname
       controller.send(:set_right_cell_text, id, cls)
-      assigns(:sb)[:namespace_path].should == fq_name.gsub!(/\//," / ")
+      assigns(:sb)[:namespace_path].should == fq_name.gsub!(/\//, " / ")
 
       id = "root"
       fq_name = ""
@@ -202,60 +201,64 @@ describe MiqAeClassController do
       assigns(:record).name.should eq('foo')
       assigns(:flash_array).first[:message].should include("Copy selected Automate Class was saved")
     end
-
   end
 
   context "get selected Class/Instance/Method record back" do
     let(:miq_ae_domain) { active_record_instance_double("MiqAeDomain", :name => "yet_another_fqname", :id => 1) }
     let(:miq_ae_domain2) { active_record_instance_double("MiqAeDomain", :name => "yet_another_fqname2", :id => 2) }
 
-    let(:miq_ae_class) { active_record_instance_double("MiqAeClass",
-                                                       :id           => 1,
-                                                       :fqname       => "cls_fqname",
-                                                       :display_name => "FOO",
-                                                       :name         => "foo",
-                                                       :ae_fields    => [],
-                                                       :ae_instances => [],
-                                                       :ae_methods   => [],
-                                                       :domain       => miq_ae_domain2
-      )
-    }
+    let(:miq_ae_class) do
+      active_record_instance_double("MiqAeClass",
+                                    :id           => 1,
+                                    :fqname       => "cls_fqname",
+                                    :display_name => "FOO",
+                                    :name         => "foo",
+                                    :ae_fields    => [],
+                                    :ae_instances => [],
+                                    :ae_methods   => [],
+                                    :domain       => miq_ae_domain2
+                                   )
+    end
 
-    let(:miq_ae_instance) { active_record_instance_double("MiqAeInstance",
-                                                          :id           => 123,
-                                                          :display_name => "some name",
-                                                          :name         => "some_name",
-                                                          :fqname       => "fqname",
-                                                          :created_on   => Time.now,
-                                                          :updated_by   => "some_user",
-                                                          :domain       => miq_ae_domain
-      )
-    }
+    let(:miq_ae_instance) do
+      active_record_instance_double("MiqAeInstance",
+                                    :id           => 123,
+                                    :display_name => "some name",
+                                    :name         => "some_name",
+                                    :fqname       => "fqname",
+                                    :created_on   => Time.now,
+                                    :updated_by   => "some_user",
+                                    :domain       => miq_ae_domain
+                                   )
+    end
 
-    let(:miq_ae_method) { active_record_instance_double("MiqAeMethod",
-                                                        :id           => 123,
-                                                        :display_name => "some name",
-                                                        :inputs       => [],
-                                                        :name         => "some_name",
-                                                        :fqname       => "fqname",
-                                                        :created_on   => Time.now,
-                                                        :updated_by   => "some_user",
-                                                        :domain       => miq_ae_domain
-      )
-    }
+    let(:miq_ae_method) do
+      active_record_instance_double("MiqAeMethod",
+                                    :id           => 123,
+                                    :display_name => "some name",
+                                    :inputs       => [],
+                                    :name         => "some_name",
+                                    :fqname       => "fqname",
+                                    :created_on   => Time.now,
+                                    :updated_by   => "some_user",
+                                    :domain       => miq_ae_domain
+                                   )
+    end
 
-    let(:override) { active_record_instance_double("MiqAeClass",
-                                                   :fqname => "another_fqname/fqname",
-                                                   :id     => 1,
-                                                   :domain => miq_ae_domain
-      )
-    }
-    let(:override2) { active_record_instance_double("MiqAeClass",
-                                                    :fqname => "another_fqname2/fqname",
-                                                    :id     => 2,
-                                                    :domain => miq_ae_domain2
-      )
-    }
+    let(:override) do
+      active_record_instance_double("MiqAeClass",
+                                    :fqname => "another_fqname/fqname",
+                                    :id     => 1,
+                                    :domain => miq_ae_domain
+                                   )
+    end
+    let(:override2) do
+      active_record_instance_double("MiqAeClass",
+                                    :fqname => "another_fqname2/fqname",
+                                    :id     => 2,
+                                    :domain => miq_ae_domain2
+                                   )
+    end
 
     before do
       MiqAeDomain.stub(:find_by_name).with("another_fqname").and_return(miq_ae_domain)
@@ -366,7 +369,7 @@ describe MiqAeClassController do
       domain2 = FactoryGirl.create(:miq_ae_domain_enabled, :system => false)
       controller.instance_variable_set(:@_params,
                                        :miq_grid_checks => "aen-#{domain1.id}, aen-#{domain2.id}, aen-someid"
-      )
+                                      )
       controller.stub(:replace_right_cell)
       controller.send(:delete_domain)
       flash_messages = assigns(:flash_array)

@@ -24,26 +24,25 @@ module CustomAttributeMixin
   end
 
   def miq_custom_keys
-    self.miq_custom_attributes.pluck(:name)
+    miq_custom_attributes.pluck(:name)
   end
 
   def miq_custom_get(key)
-    self.miq_custom_attributes.where(:name => key.to_s).first.try(:value)
+    miq_custom_attributes.find_by(:name => key.to_s).try(:value)
   end
 
   def miq_custom_set(key, value)
     return miq_custom_delete(key) if value.blank?
 
-    record = self.miq_custom_attributes.where(:name => key.to_s).first
+    record = miq_custom_attributes.find_by(:name => key.to_s)
     if record.nil?
-      self.miq_custom_attributes.create(:name => key.to_s, :value => value)
+      miq_custom_attributes.create(:name => key.to_s, :value => value)
     else
       record.update_attributes(:value => value)
     end
   end
 
   def miq_custom_delete(key)
-    self.miq_custom_attributes.where(:name => key.to_s).first.try(:delete)
+    miq_custom_attributes.find_by(:name => key.to_s).try(:delete)
   end
-
 end

@@ -31,7 +31,7 @@ module OpenstackHandle
 
     def images_for_accessible_tenants
       @os_handle.accessor_for_accessible_tenants(
-          SERVICE_NAME, :images_with_pagination_loop, :id)
+        SERVICE_NAME, :images_with_pagination_loop, :id)
     end
   end
 end

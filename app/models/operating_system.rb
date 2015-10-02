@@ -56,7 +56,7 @@ class OperatingSystem < ActiveRecord::Base
       nh[:name] = nh.delete(:machine_name)
       nh[:bitness] = nh.delete(:architecture)
       nh[:build_number] = nh.delete(:build)
-      nh[:system_type] = self.system_type(nh[:product_type])
+      nh[:system_type] = system_type(nh[:product_type])
     end
     nh
   end
@@ -76,7 +76,7 @@ class OperatingSystem < ActiveRecord::Base
         return a[0] unless findStr.index(n).nil?
       end
     end
-    return "unknown"
+    "unknown"
   end
 
   def self.image_name(obj)
@@ -92,7 +92,7 @@ class OperatingSystem < ActiveRecord::Base
       end
 
       # If the normalized name comes back as unknown, nil out the value so we can get it from another field
-      if osName.is_a?(String)
+      if osName.kind_of?(String)
         osName = nil if OperatingSystem.normalize_os_name(osName) == "unknown"
       else
         osName = nil
@@ -119,10 +119,10 @@ class OperatingSystem < ActiveRecord::Base
     osName = obj.name if osName.nil?
 
     # Normalize name to match existing icons
-    return OperatingSystem.normalize_os_name(osName)
+    OperatingSystem.normalize_os_name(osName)
   end
 
   def self.platform(obj)
-    return self.image_name(obj).split("_").first
+    image_name(obj).split("_").first
   end
 end

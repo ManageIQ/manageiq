@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe PidFile do
-
   before(:each) do
     @fname = 'foo.bar'
     @pid_file = PidFile.new(@fname)
@@ -106,12 +105,7 @@ describe PidFile do
         it "returns false with invalid Regexp as String" do
           @pid_file.running?('programme').should be_false
         end
-
       end
-
     end
-
   end
-
-
 end

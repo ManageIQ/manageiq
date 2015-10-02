@@ -4,19 +4,19 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
   COUNTER_INFO = [
     {
       :amazon_counters       => ["CPUUtilization"],
-      :calculation           => lambda { |stat, _| stat },
+      :calculation           => ->(stat, _) { stat },
       :vim_style_counter_key => "cpu_usage_rate_average"
     },
 
     {
       :amazon_counters       => ["DiskReadBytes", "DiskWriteBytes"],
-      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
+      :calculation           => ->(*stats, interval) { stats.compact.sum / 1024.0 / interval },
       :vim_style_counter_key => "disk_usage_rate_average"
     },
 
     {
       :amazon_counters       => ["NetworkIn", "NetworkOut"],
-      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
+      :calculation           => ->(*stats, interval) { stats.compact.sum / 1024.0 / interval },
       :vim_style_counter_key => "net_usage_rate_average"
     },
   ]
@@ -24,7 +24,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
   COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:amazon_counters] }.flatten.uniq
 
   VIM_STYLE_COUNTERS = {
-    "cpu_usage_rate_average" => {
+    "cpu_usage_rate_average"  => {
       :counter_key           => "cpu_usage_rate_average",
       :instance              => "",
       :capture_interval      => "20",
@@ -44,7 +44,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
       :capture_interval_name => "realtime"
     },
 
-    "net_usage_rate_average" => {
+    "net_usage_rate_average"  => {
       :counter_key           => "net_usage_rate_average",
       :instance              => "",
       :capture_interval      => "20",
@@ -58,7 +58,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
-    end_time   ||= Time.now
+    end_time ||= Time.now
     end_time     = end_time.utc
     start_time ||= end_time - 4.hours # 4 hours for symmetry with VIM
     start_time   = start_time.utc
@@ -85,7 +85,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
   def perf_init_amazon
     raise "No EMS defined" if target.ext_management_system.nil?
 
-    @perf_ems, _ = Benchmark.realtime_block(:connect) do
+    @perf_ems, = Benchmark.realtime_block(:connect) do
       # TODO: Fix connect timings.  Since Amazon is lazy connected, this is
       #       near instant, and is really reflected in the very first call
       target.ext_management_system.connect(:service => "CloudWatch")
@@ -102,7 +102,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
   #
 
   def perf_capture_data_amazon(start_time, end_time)
-    counters, _ = Benchmark.realtime_block(:capture_counters) do
+    counters, = Benchmark.realtime_block(:capture_counters) do
       filter = [{:name => "InstanceId", :value => target.ems_ref}]
       @perf_ems.metrics.filter(:dimensions, filter).select { |m| m.name.in?(COUNTER_NAMES) }
     end
@@ -121,7 +121,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
       #   of datapoints you are allowed to ask for from Amazon Cloudwatch.
       #   http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html
       (start_time..end_time).step_value(1.day).each_cons(2) do |st, et|
-        statistics, _ = Benchmark.realtime_block(:capture_counter_values) do
+        statistics, = Benchmark.realtime_block(:capture_counter_values) do
           c.statistics(:start_time => st, :end_time => et, :statistics => ["Average"]).to_a
         end
 

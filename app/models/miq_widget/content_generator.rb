@@ -9,7 +9,7 @@ class MiqWidget::ContentGenerator
 
     if result.length != expected_count
       name = klass == "MiqGroup" ? "Group: #{group_description}" : userids.inspect
-      error_message = "Expected #{expected_count} contents, received #{result.length} contents for #{name[0,256]}"
+      error_message = "Expected #{expected_count} contents, received #{result.length} contents for #{name[0, 256]}"
       _log.error("#{widget.log_prefix} #{error_message}")
       raise MiqException::Error, error_message
     end
@@ -30,7 +30,7 @@ class MiqWidget::ContentGenerator
     end
   end
 
-  def determine_expected_count(klass, group_description, userids, timezones)
+  def determine_expected_count(klass, _group_description, userids, timezones)
     case klass
     when "MiqGroup"
       timezones.length

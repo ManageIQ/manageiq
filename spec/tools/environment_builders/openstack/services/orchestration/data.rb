@@ -10,7 +10,7 @@ module Openstack
         end
 
         def template_loaded
-          YAML::load(template)
+          YAML.load(template)
         end
 
         def stack_translate_table

@@ -51,19 +51,19 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   #
 
   def self.raw_connect(access_key_id, secret_access_key, service, region = nil, proxy_uri = nil)
-    service   ||= "EC2"
+    service ||= "EC2"
     proxy_uri ||= VMDB::Util.http_proxy_uri
 
     require 'aws-sdk'
     AWS.const_get(service).new(
-      :access_key_id => access_key_id,
+      :access_key_id     => access_key_id,
       :secret_access_key => secret_access_key,
-      :region => region,
-      :proxy_uri => proxy_uri,
+      :region            => region,
+      :proxy_uri         => proxy_uri,
 
-      :logger        => $aws_log,
-      :log_level     => :debug,
-      :log_formatter => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp)
+      :logger            => $aws_log,
+      :log_level         => :debug,
+      :log_formatter     => AWS::Core::LogFormatter.new(AWS::Core::LogFormatter.default.pattern.chomp)
     )
   end
 
@@ -74,8 +74,8 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    username = options[:user] || self.authentication_userid(options[:auth_type])
-    password = options[:pass] || self.authentication_password(options[:auth_type])
+    username = options[:user] || authentication_userid(options[:auth_type])
+    password = options[:pass] || authentication_password(options[:auth_type])
 
     self.class.raw_connect(username, password, options[:service], provider_region, options[:proxy_uri])
   end
@@ -93,7 +93,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     end
   end
 
-  def verify_credentials(auth_type=nil, options={})
+  def verify_credentials(auth_type = nil, options = {})
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
 
     begin
@@ -130,25 +130,25 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   # Operations
   #
 
-  def vm_start(vm, options = {})
+  def vm_start(vm, _options = {})
     vm.start
   rescue => err
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
-  def vm_stop(vm, options = {})
+  def vm_stop(vm, _options = {})
     vm.stop
   rescue => err
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
-  def vm_destroy(vm, options = {})
+  def vm_destroy(vm, _options = {})
     vm.vm_destroy
   rescue => err
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
-  def vm_reboot_guest(vm, options = {})
+  def vm_reboot_guest(vm, _options = {})
     vm.reboot_guest
   rescue => err
     _log.error "vm=[#{vm.name}], error: #{err}"
@@ -181,8 +181,8 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     ec2 = raw_connect(access_key_id, secret_access_key, "EC2")
     ec2.regions.each do |region|
       next if known_ems_regions.include?(region.name)
-      next if region.instances.count == 0 &&                 # instances
-              region.images.with_owner(:self).count == 0 &&  # private images
+      next if region.instances.count == 0 && # instances
+              region.images.with_owner(:self).count == 0 && # private images
               region.images.executable_by(:self).count == 0  # shared  images
       new_emses << create_discovered_region(region.name, access_key_id, secret_access_key, all_ems_names)
     end
@@ -199,7 +199,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
   def self.discover_queue(access_key_id, secret_access_key)
     MiqQueue.put(
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => "discover_from_queue",
       :args        => [access_key_id, MiqPassword.encrypt(secret_access_key)]
     )
@@ -213,8 +213,8 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
   def self.create_discovered_region(region_name, access_key_id, secret_access_key, all_ems_names)
     name = region_name
-    name = "#{region_name} #{access_key_id}" if all_ems_names.has_key?(name)
-    while all_ems_names.has_key?(name)
+    name = "#{region_name} #{access_key_id}" if all_ems_names.key?(name)
+    while all_ems_names.key?(name)
       name_counter = name_counter.to_i + 1 if defined?(name_counter)
       name = "#{region_name} #{name_counter}"
     end

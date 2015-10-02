@@ -241,5 +241,5 @@ at_exit do
   AsConstMissingWithSti.save_cache!
 end
 
-#ActiveSupport::Dependencies.log_activity = true
-#ActiveSupport::Dependencies.logger = Logger.new($stdout)
+# ActiveSupport::Dependencies.log_activity = true
+# ActiveSupport::Dependencies.logger = Logger.new($stdout)

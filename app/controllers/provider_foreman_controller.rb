@@ -1,9 +1,9 @@
 class ProviderForemanController < ApplicationController
-  before_filter :check_privileges
-  before_filter :get_session_data
+  before_action :check_privileges
+  before_action :get_session_data
 
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def self.model
     ManageIQ::Providers::Foreman::Provider
@@ -111,7 +111,7 @@ class ProviderForemanController < ApplicationController
                                                                      :url        => params[:url],
                                                                      :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
                                                                      :verify_ssl => params[:verify_ssl].eql?("on"))
-        else
+    else
       config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find(params[:id])
       @provider_foreman = ManageIQ::Providers::Foreman::Provider.find(config_mgr.provider_id)
       @provider_foreman.update_attributes(:name       => params[:name],
@@ -349,7 +349,7 @@ class ProviderForemanController < ApplicationController
 
     if @record.nil?
       add_flash(_("Error: Record no longer exists in the database"), :error)
-      if request.xml_http_request?  && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
+      if request.xml_http_request? && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
         @delete_node = params[:id]                  # Set node to be removed from the tree
       end
       return
@@ -421,7 +421,7 @@ class ProviderForemanController < ApplicationController
     if role_allows(:feature => "providers_accord", :any => true)
       self.x_active_tree   = 'foreman_providers_tree'
       self.x_active_accord = 'foreman_providers'
-      default_active_tree   ||= x_active_tree
+      default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
       build_foreman_tree(:providers, :foreman_providers_tree)
       @trees.push("foreman_providers_tree")
@@ -430,7 +430,7 @@ class ProviderForemanController < ApplicationController
     if role_allows(:feature => "configured_systems_filter_accord", :any => true)
       self.x_active_tree   = 'cs_filter_tree'
       self.x_active_accord = 'cs_filter'
-      default_active_tree   ||= x_active_tree
+      default_active_tree ||= x_active_tree
       default_active_accord ||= x_active_accord
       build_foreman_tree(:filter, :cs_filter_tree)
       @trees.push("cs_filter_tree")
@@ -458,10 +458,10 @@ class ProviderForemanController < ApplicationController
   def set_active_elements
     # Set active tree and accord to first allowed feature
     if role_allows(:feature => "providers_accord")
-      self.x_active_tree   ||= 'foreman_providers_tree'
+      self.x_active_tree ||= 'foreman_providers_tree'
       self.x_active_accord ||= 'foreman_providers'
     elsif role_allows(:feature => "configured_systems_filter_accord")
-      self.x_active_tree   ||= 'cs_filter_tree'
+      self.x_active_tree ||= 'cs_filter_tree'
       self.x_active_accord ||= 'cs_filter'
     end
     get_node_info(x_node)
@@ -587,8 +587,8 @@ class ProviderForemanController < ApplicationController
 
   def rendering_objects
     presenter = ExplorerPresenter.new(
-        :active_tree => x_active_tree,
-        :delete_node => @delete_node,
+      :active_tree => x_active_tree,
+      :delete_node => @delete_node,
     )
     r = proc { |opts| render_to_string(opts) }
     return presenter, r
@@ -648,8 +648,8 @@ class ProviderForemanController < ApplicationController
 
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
-        :active_tree => x_active_tree,
-        :delete_node => @delete_node,      # Remove a new node from the tree
+      :active_tree => x_active_tree,
+      :delete_node => @delete_node,      # Remove a new node from the tree
     )
     r = proc { |opts| render_to_string(opts) }
 
@@ -796,14 +796,14 @@ class ProviderForemanController < ApplicationController
     h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
 
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons  && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons  && v_xml
+    presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml
+    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
+    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons && v_xml
     presenter[:set_visible_elements][:custom_buttons_div]  = cb_buttons && cb_xml
 
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
-    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
+    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
+    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
+    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
 
     presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
 

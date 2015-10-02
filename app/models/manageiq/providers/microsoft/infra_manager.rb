@@ -128,7 +128,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
         :realm           => realm,
         :basic_auth_only => false,
         :disable_sspi    => false
-    )
+      )
     end
 
     connect_params

@@ -4,7 +4,7 @@ describe VmInfraController do
   before(:each) do
     set_user_privileges
 
-    session[:settings] = {:quadicons => nil, :views => {:treesize => 20}   }
+    session[:settings] = {:quadicons => nil, :views => {:treesize => 20}}
 
     FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone

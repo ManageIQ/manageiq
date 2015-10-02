@@ -20,7 +20,7 @@ module MiqAeMethodService
     expose_eligible_resources :customization_templates
     expose_eligible_resources :iso_images
 
-    def set_customization_spec(name=nil, override=false)
+    def set_customization_spec(name = nil, override = false)
       object_send(:set_customization_spec, name, override)
     end
 
@@ -57,6 +57,5 @@ module MiqAeMethodService
         end
       end
     end
-
   end
 end

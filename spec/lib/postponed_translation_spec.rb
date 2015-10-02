@@ -9,7 +9,7 @@ describe PostponedTranslation do
       pt = PostponedTranslation.new("Test %s%d", "foo", 5)
       expect(pt.translate).to eq("Test foo5")
 
-      pt = PostponedTranslation.new("Test %{bar}", {:bar => "foo"})
+      pt = PostponedTranslation.new("Test %{bar}", :bar => "foo")
       expect(pt.translate).to eq("Test foo")
     end
   end

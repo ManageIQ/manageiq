@@ -152,13 +152,13 @@ describe ExtManagementSystem do
       end
 
       it "duplicate name" do
-        described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
+        described_class.leaf_subclasses.collect { |ems| ems.name.underscore.to_sym }.each do |t|
           expect { FactoryGirl.create(t, :name => @ems.name, :hostname => @different_host_name, :zone => @zone) }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Name has already been taken")
         end
       end
 
       it "duplicate hostname" do
-        described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
+        described_class.leaf_subclasses.collect { |ems| ems.name.underscore.to_sym }.each do |t|
           provider = FactoryGirl.build(t, :hostname => @same_host_name, :zone => @zone)
 
           if provider.hostname_required?

@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqAeInstanceCopy do
-
   before do
     @src_domain    = 'SPEC_DOMAIN'
     @dest_domain   = 'FRED'
@@ -62,7 +61,6 @@ describe MiqAeInstanceCopy do
       inst2  = MiqAeInstance.find_by_class_id_and_name(class2.id, @src_instance)
       validate_instance(@inst1, inst2, MiqAeInstanceCompareValues::CONGRUENT_INSTANCE)
     end
-
   end
 
   context 'incompatible schema' do
@@ -118,5 +116,4 @@ describe MiqAeInstanceCopy do
     obj.compare
     obj.status.should eq(status)
   end
-
 end

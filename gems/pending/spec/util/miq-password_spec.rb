@@ -182,9 +182,9 @@ describe MiqPassword do
 
   context "with missing v1_key" do
     it "should report decent error when decryption with missing an encryption key" do
-      expect {
+      expect do
         described_class.decrypt("v1:{KSOqhNiOWJbR0lz7v6PTJg==}")
-      }.to raise_error(MiqPassword::MiqPasswordError, /can not decrypt.*v1_key/)
+      end.to raise_error(MiqPassword::MiqPasswordError, /can not decrypt.*v1_key/)
     end
   end
 

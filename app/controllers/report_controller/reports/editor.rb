@@ -3,7 +3,7 @@ module ReportController::Reports::Editor
 
   def miq_report_new
     assert_privileges("miq_report_new")
-    @_params.delete :id #incase add button was pressed from report show screen.
+    @_params.delete :id # incase add button was pressed from report show screen.
     miq_report_edit
   end
 
@@ -27,108 +27,108 @@ module ReportController::Reports::Editor
   def miq_report_edit
     assert_privileges("miq_report_edit")
     case params[:button]
-      when "cancel"
+    when "cancel"
+      @edit[:rpt_id] ?
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqReport"), :name => @edit[:rpt_title]}) :
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "MiqReport"))
+      @edit = session[:edit] = nil # clean out the saved info
+      replace_right_cell
+    when "add", "save"
+      id = params[:id] ? params[:id] : "new"
+      return unless load_edit("report_edit__#{id}", "replace_cell__explorer")
+      get_form_vars
+      @changed = (@edit[:new] != @edit[:current])
+      @rpt = @edit[:rpt_id] ? find_by_id_filtered(MiqReport, params[:id]) :
+          MiqReport.new
+      set_record_vars(@rpt)
+      unless valid_report?(@rpt)
+        build_edit_screen
+        replace_right_cell
+        return
+      end
+      if @edit[:new][:graph_type] && (@edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING)
+        add_flash(_("Report can not be saved unless sort field has been configured for Charts"), :error)
+        @sb[:miq_tab] = "new_4"
+        build_edit_screen
+        replace_right_cell
+        return
+      end
+      if @rpt.save
+        # update report name in menu if name is edited
+        menu_repname_update(@edit[:current][:name], @edit[:new][:name]) if @edit[:current][:name] != @edit[:new][:name]
+        AuditEvent.success(build_saved_audit(@rpt, @edit))
         @edit[:rpt_id] ?
-          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>@edit[:rpt_title]}) :
-          add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqReport"))
+          add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqReport"), :name => @rpt.name}) :
+          add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqReport"), :name => @rpt.name})
+        # only do this for new reports
+        unless @edit[:rpt_id]
+          self.x_node = "xx-#{@sb[:rpt_menu].length}_xx-#{@sb[:rpt_menu].length}-0"
+          build_report_listnav
+          setnode_for_customreport
+        end
         @edit = session[:edit] = nil # clean out the saved info
-        replace_right_cell
-      when "add", "save"
-        id = params[:id] ? params[:id] : "new"
-        return unless load_edit("report_edit__#{id}","replace_cell__explorer")
-        get_form_vars
-        @changed = (@edit[:new] != @edit[:current])
-        @rpt = @edit[:rpt_id] ? find_by_id_filtered(MiqReport, params[:id]) :
-            MiqReport.new
-        set_record_vars(@rpt)
-        unless valid_report?(@rpt)
-          build_edit_screen
-          replace_right_cell
-          return
+        if role_allows(:feature => "miq_report_widget_editor")
+          # all widgets for this report
+          get_all_widgets("report", from_cid(x_node.split('_').last))
         end
-        if @edit[:new][:graph_type] && (@edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING)
-          add_flash(_("Report can not be saved unless sort field has been configured for Charts"), :error)
-          @sb[:miq_tab] = "new_4"
-          build_edit_screen
-          replace_right_cell
-          return
-        end
-        if @rpt.save
-          #update report name in menu if name is edited
-          menu_repname_update(@edit[:current][:name],@edit[:new][:name]) if @edit[:current][:name] != @edit[:new][:name]
-          AuditEvent.success(build_saved_audit(@rpt, @edit))
-          @edit[:rpt_id] ?
-            add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>@rpt.name}) :
-            add_flash(_("%{model} \"%{name}\" was added") % {:model=>ui_lookup(:model=>"MiqReport"), :name=>@rpt.name})
-          #only do this for new reports
-          if !@edit[:rpt_id]
-            self.x_node = "xx-#{@sb[:rpt_menu].length}_xx-#{@sb[:rpt_menu].length}-0"
-            build_report_listnav
-            setnode_for_customreport
-          end
-          @edit = session[:edit] = nil # clean out the saved info
-          if role_allows(:feature=>"miq_report_widget_editor")
-            # all widgets for this report
-            get_all_widgets("report",from_cid(x_node.split('_').last))
-          end
-          replace_right_cell(:replace_trees => [:reports])
-        else
-          rpt.errors.each do |field,msg|
-            add_flash("#{field.to_s.capitalize} #{msg}", :error)
-          end
-          @in_a_form = true
-          session[:changed] = @changed ? true : false
-          @changed = true
-          replace_right_cell
-        end
+        replace_right_cell(:replace_trees => [:reports])
       else
-        add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
-        @in_a_form = true
-        @report = nil     # Clear any saved report object
-        if params[:tab] # Came in to change the tab
-          @rpt = @edit[:rpt_id] ? MiqReport.find(@edit[:rpt_id]) :
-              MiqReport.new
-          check_tabs
-          build_edit_screen
-        else
-          @sb[:miq_tab] = "new_1"
-          @rpt = params[:id] && params[:id] != "new" ? MiqReport.find(params[:id]) :
-                  MiqReport.new
-          if @rpt.rpt_type == "Default"
-            flash = "Default reports can not be edited"
-            redirect_to :action=>"show", :id=>@rpt.id, :flash_msg=>flash, :flash_error=>true
-            return
-          end
-          set_form_vars
-          build_edit_screen
+        rpt.errors.each do |field, msg|
+          add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        @changed          = (@edit[:new] != @edit[:current])
-        session[:changed] = @changed
-        @lock_tree        = true
+        @in_a_form = true
+        session[:changed] = @changed ? true : false
+        @changed = true
         replace_right_cell
+      end
+    else
+      add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
+      @in_a_form = true
+      @report = nil     # Clear any saved report object
+      if params[:tab] # Came in to change the tab
+        @rpt = @edit[:rpt_id] ? MiqReport.find(@edit[:rpt_id]) :
+            MiqReport.new
+        check_tabs
+        build_edit_screen
+      else
+        @sb[:miq_tab] = "new_1"
+        @rpt = params[:id] && params[:id] != "new" ? MiqReport.find(params[:id]) :
+                MiqReport.new
+        if @rpt.rpt_type == "Default"
+          flash = "Default reports can not be edited"
+          redirect_to :action => "show", :id => @rpt.id, :flash_msg => flash, :flash_error => true
+          return
+        end
+        set_form_vars
+        build_edit_screen
+      end
+      @changed          = (@edit[:new] != @edit[:current])
+      session[:changed] = @changed
+      @lock_tree        = true
+      replace_right_cell
     end
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
   def form_field_changed
-    return unless load_edit("report_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("report_edit__#{params[:id]}", "replace_cell__explorer")
     get_form_vars
     build_edit_screen
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg") unless @refresh_div && @refresh_div != "column_lists"
-      page.replace(@refresh_div, :partial=>@refresh_partial) if @refresh_div
-      page.replace("chart_sample_div", :partial=>"form_chart_sample") if @refresh_div == "chart_div"
-      page.replace("tl_sample_div", :partial=>"form_tl_sample") if @refresh_div == "tl_settings_div"
-      page.replace_html("calc_#{@calc_div}_div", :text=>@calc_val) if @calc_div
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg") unless @refresh_div && @refresh_div != "column_lists"
+      page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
+      page.replace("chart_sample_div", :partial => "form_chart_sample") if @refresh_div == "chart_div"
+      page.replace("tl_sample_div", :partial => "form_tl_sample") if @refresh_div == "tl_settings_div"
+      page.replace_html("calc_#{@calc_div}_div", :text => @calc_val) if @calc_div
       page << "miqSparkle(false);"
       page << javascript_for_miq_button_visibility_changed(@changed)
       if @tl_changed  # Reload the screen if the timeline data was changed
-        page.replace_html("tl_sample_div", :partial=>"form_tl_sample") if @tl_field != NOTHING_STRING
+        page.replace_html("tl_sample_div", :partial => "form_tl_sample") if @tl_field != NOTHING_STRING
       elsif @formatting_changed   # Reload the screen if the formatting pulldowns need to be reset
-        page.replace_html("formatting_div", :partial=>"form_formatting")
+        page.replace_html("formatting_div", :partial => "form_formatting")
       elsif @tl_repaint
-        #page << "tl.paint();"
+        # page << "tl.paint();"
         page << javascript_hide("notification")
       end
     end
@@ -152,11 +152,11 @@ module ReportController::Reports::Editor
 
     case @sb[:miq_tab].split("_")[1]
     when "1"  # Select columns
-              # Add the blank choice if no table chosen yet
-              #     @edit[:models].insert(0,["<Choose>", "<Choose>"]) if @edit[:new][:model] == nil && @edit[:models][0][0] != "<Choose>"
+      # Add the blank choice if no table chosen yet
+      #     @edit[:models].insert(0,["<Choose>", "<Choose>"]) if @edit[:new][:model] == nil && @edit[:models][0][0] != "<Choose>"
       if @edit[:new][:model].nil?
         if @edit[:models][0][0] != "<Choose>"
-          @edit[:models].insert(0,["<Choose>", "<Choose>"])
+          @edit[:models].insert(0, ["<Choose>", "<Choose>"])
         end
       else
         if @edit[:models][0][0] == "<Choose>"
@@ -173,15 +173,15 @@ module ReportController::Reports::Editor
       @pivotby2 = @edit[:new][:pivotby2]
       @pivotby3 = @edit[:new][:pivotby3]
     when "2"  # Formatting
-              #     @edit[:calc_xml] = build_calc_combo_xml                                     # Get the combobox XML for any numeric fields
+    #     @edit[:calc_xml] = build_calc_combo_xml                                     # Get the combobox XML for any numeric fields
 
     when "3"  # Filter
-              # Build record filter expression
-      if @edit[:miq_exp] ||                                                       # Is this stored as an MiqExp object
-          ["new", "copy", "create"].include?(request.parameters["action"])        # or it's a new condition
+      # Build record filter expression
+      if @edit[:miq_exp] || # Is this stored as an MiqExp object
+         ["new", "copy", "create"].include?(request.parameters["action"])        # or it's a new condition
         @expkey = :record_filter
         @edit[@expkey][:exp_idx] ||= 0                                            # Start at first exp
-        @edit[@expkey][:expression] = copy_hash(@edit[:new][:record_filter]) if !@edit[:new][:record_filter].blank?
+        @edit[@expkey][:expression] = copy_hash(@edit[:new][:record_filter]) unless @edit[:new][:record_filter].blank?
         exp_array(:init, @edit[@expkey][:expression]) if @edit[@expkey][:exp_array].nil?  # Initialize the exp array
         @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
         exp_get_prefill_types                                                   # Build prefill lists
@@ -191,11 +191,11 @@ module ReportController::Reports::Editor
       # Build display filter expression
       @expkey = :display_filter
       @edit[@expkey][:exp_idx] ||= 0                                            # Start at first exp
-      @edit[@expkey][:expression] = copy_hash(@edit[:new][:display_filter]) if !@edit[:new][:display_filter].blank?
+      @edit[@expkey][:expression] = copy_hash(@edit[:new][:display_filter]) unless @edit[:new][:display_filter].blank?
       exp_array(:init, @edit[@expkey][:expression]) if @edit[@expkey][:exp_array].nil?  # Initialize the exp array
       @edit[@expkey][:exp_table]            = exp_build_table(@edit[@expkey][:expression])
-      @edit[@expkey][:exp_available_fields] = MiqReport::display_filter_details(@edit[:new][:field_order], :field)
-      @edit[@expkey][:exp_available_tags]   = MiqReport::display_filter_details(@edit[:new][:fields], :tag)
+      @edit[@expkey][:exp_available_fields] = MiqReport.display_filter_details(@edit[:new][:field_order], :field)
+      @edit[@expkey][:exp_available_tags]   = MiqReport.display_filter_details(@edit[:new][:fields], :tag)
       @edit[@expkey][:exp_model]            = "_display_filter_"                            # Set model for display filter
 
       @expkey = :record_filter                                                  # Start with Record Filter showing
@@ -218,7 +218,7 @@ module ReportController::Reports::Editor
       end
 
     when "6"  # Timeline
-      @tl_fields = Array.new
+      @tl_fields = []
       @edit[:new][:fields].each do |field|
         if MiqReport.get_col_type(field[1]) == :datetime
           @tl_fields.push(field)
@@ -233,7 +233,7 @@ module ReportController::Reports::Editor
       @timeline = true if @tl_field != NOTHING_STRING
       build_timeline_units
       @tl_last_time_choices = case @edit[:new][:tl_last_unit]
-                              when "Minutes" then Array.new(12) { |t| (t*5 + 5).to_s }
+                              when "Minutes" then Array.new(12) { |t| (t * 5 + 5).to_s }
                               when "Hours"   then Array.new(24) { |t| (t + 1).to_s }
                               when "Days"    then Array.new(31) { |t| (t + 1).to_s }
                               when "Weeks"   then Array.new(4)  { |t| (t + 1).to_s }
@@ -245,15 +245,15 @@ module ReportController::Reports::Editor
       end
 
     when "7"  # Preview
-              #generate preview report when
+      # generate preview report when
     end
 
     @in_a_form = true
     if ["new", "copy", "create"].include?(request.parameters["action"])
-      #drop_breadcrumb( {:name=>"Add Report", :url=>"/report/new"} )
+      # drop_breadcrumb( {:name=>"Add Report", :url=>"/report/new"} )
       @gtl_url = "/report/new/?"
     else
-      #drop_breadcrumb( {:name=>"Edit Report", :url=>"/report/edit"} )
+      # drop_breadcrumb( {:name=>"Edit Report", :url=>"/report/edit"} )
       @gtl_url = "/report/edit/?"
     end
   end
@@ -261,34 +261,34 @@ module ReportController::Reports::Editor
   # Create the arrays for the start/end interval pulldowns
   def build_perf_interval_arrays(interval)
     case interval
-      when "hourly"
-        end_array=[
-            ["Today", "0"],
-            ["Yesterday", 1.day.to_s]
-        ]
-        5.times{|i| end_array.push(["#{i+2} days ago", (i+2).days.to_s])}
-        4.times{|i| end_array.push(["#{pluralize(i+1,"week")} ago", (i+1).weeks.to_s])}
-        5.times{|i| end_array.push(["#{pluralize(i+2,"month")} ago", (i+1).months.to_s])}
-        start_array = Array.new
-        6.times{|i| start_array.push(["#{pluralize(i+1,"day")}", (i+1).days.to_s])}
-        4.times{|i| start_array.push(["#{pluralize(i+1,"week")}", (i+1).weeks.to_s])}
-        5.times{|i| start_array.push(["#{pluralize(i+2,"month")}", (i+1).months.to_s])}
-        @edit[:new][:perf_end]   ||= "0"
-        @edit[:new][:perf_start] ||= 1.day.to_s
-      when "daily"
-        end_array = [
-            ["Yesterday", "0"]    # Start with yesterday, since we only allow full 24 hour days in daily trending
-        ]
-        5.times  { |i| end_array.push(["#{i+2} days ago", (i+1).days.to_s]) }
-        3.times  { |i| end_array.push(["#{pluralize((i+1),"week")} ago", ((i+1).weeks - 1.day).to_s]) }
-        6.times  { |i| end_array.push(["#{pluralize((i+1),"month")} ago", ((i+1).months - 1.day).to_s]) }
-        start_array = Array.new
-        5.times  { |i| start_array.push(["#{pluralize(i+2,"day")}", (i+2).days.to_s]) }
-        3.times  { |i| start_array.push(["#{pluralize((i+1),"week")}", (i+1).weeks.to_s]) }
-        11.times { |i| start_array.push(["#{pluralize((i+1),"month")}", (i+1).months.to_s]) }
-        start_array.push(["1 year", 1.year.to_i.to_s])  # For some reason, 1.year is a float, so use to_i to get rid of decimals
-        @edit[:new][:perf_end] ||= "0"
-        @edit[:new][:perf_start] ||= 2.days.to_s
+    when "hourly"
+      end_array = [
+        ["Today", "0"],
+        ["Yesterday", 1.day.to_s]
+      ]
+      5.times { |i| end_array.push(["#{i + 2} days ago", (i + 2).days.to_s]) }
+      4.times { |i| end_array.push(["#{pluralize(i + 1, "week")} ago", (i + 1).weeks.to_s]) }
+      5.times { |i| end_array.push(["#{pluralize(i + 2, "month")} ago", (i + 1).months.to_s]) }
+      start_array = []
+      6.times { |i| start_array.push(["#{pluralize(i + 1, "day")}", (i + 1).days.to_s]) }
+      4.times { |i| start_array.push(["#{pluralize(i + 1, "week")}", (i + 1).weeks.to_s]) }
+      5.times { |i| start_array.push(["#{pluralize(i + 2, "month")}", (i + 1).months.to_s]) }
+      @edit[:new][:perf_end] ||= "0"
+      @edit[:new][:perf_start] ||= 1.day.to_s
+    when "daily"
+      end_array = [
+        ["Yesterday", "0"]    # Start with yesterday, since we only allow full 24 hour days in daily trending
+      ]
+      5.times  { |i| end_array.push(["#{i + 2} days ago", (i + 1).days.to_s]) }
+      3.times  { |i| end_array.push(["#{pluralize((i + 1), "week")} ago", ((i + 1).weeks - 1.day).to_s]) }
+      6.times  { |i| end_array.push(["#{pluralize((i + 1), "month")} ago", ((i + 1).months - 1.day).to_s]) }
+      start_array = []
+      5.times  { |i| start_array.push(["#{pluralize(i + 2, "day")}", (i + 2).days.to_s]) }
+      3.times  { |i| start_array.push(["#{pluralize((i + 1), "week")}", (i + 1).weeks.to_s]) }
+      11.times { |i| start_array.push(["#{pluralize((i + 1), "month")}", (i + 1).months.to_s]) }
+      start_array.push(["1 year", 1.year.to_i.to_s])  # For some reason, 1.year is a float, so use to_i to get rid of decimals
+      @edit[:new][:perf_end] ||= "0"
+      @edit[:new][:perf_start] ||= 2.days.to_s
     end
     @edit[:start_array] = start_array
     @edit[:end_array] = end_array
@@ -335,53 +335,53 @@ module ReportController::Reports::Editor
   end
 
   def build_tabs
-#   req = "new" if ["new", "copy", "create"].include?(request.parameters["action"])
-#   req = "edit" if ["edit", "update"].include?(request.parameters["action"])
+    #   req = "new" if ["new", "copy", "create"].include?(request.parameters["action"])
+    #   req = "edit" if ["edit", "update"].include?(request.parameters["action"])
     @edit[:request] ||= "new" if ["miq_report_new", "miq_report_copy"].include?(request.parameters["pressed"])
     @edit[:request] ||= "edit" if ["miq_report_edit"].include?(request.parameters["pressed"])
     req = @edit[:request]
     if @edit[:new][:model] == TREND_MODEL
       @tabs = [
-          ["#{req}_1", "Columns"],
-          #               ["#{req}_8", "Consolidation"],
-          #               ["#{req}_2", "Formatting"],
-          ["#{req}_3", "Filter"],
-          #               ["#{req}_4", "Summary"],
-          #               ["#{req}_5", "Charts"],
-          #               ["#{req}_6", "Timeline"],
-          ["#{req}_7", "Preview"]
+        ["#{req}_1", "Columns"],
+        #               ["#{req}_8", "Consolidation"],
+        #               ["#{req}_2", "Formatting"],
+        ["#{req}_3", "Filter"],
+        #               ["#{req}_4", "Summary"],
+        #               ["#{req}_5", "Charts"],
+        #               ["#{req}_6", "Timeline"],
+        ["#{req}_7", "Preview"]
       ]
     elsif @edit[:new][:model] == "Chargeback"
       @tabs = [
-          ["#{req}_1", "Columns"],
-          #               ["#{req}_8", "Consolidation"],
-          ["#{req}_2", "Formatting"],
-          ["#{req}_3", "Filter"],
-          #               ["#{req}_4", "Summary"],
-          #               ["#{req}_5", "Charts"],
-          #               ["#{req}_6", "Timeline"],
-          ["#{req}_7", "Preview"]
+        ["#{req}_1", "Columns"],
+        #               ["#{req}_8", "Consolidation"],
+        ["#{req}_2", "Formatting"],
+        ["#{req}_3", "Filter"],
+        #               ["#{req}_4", "Summary"],
+        #               ["#{req}_5", "Charts"],
+        #               ["#{req}_6", "Timeline"],
+        ["#{req}_7", "Preview"]
       ]
     else
       @tabs = [
-          ["#{req}_1", "Columns"],
-          ["#{req}_8", "Consolidation"],
-          ["#{req}_2", "Formatting"],
-          ["#{req}_9", "Styling"],
-          ["#{req}_3", "Filter"],
-          ["#{req}_4", "Summary"],
-          ["#{req}_5", "Charts"],
-          ["#{req}_6", "Timeline"],
-          ["#{req}_7", "Preview"]
+        ["#{req}_1", "Columns"],
+        ["#{req}_8", "Consolidation"],
+        ["#{req}_2", "Formatting"],
+        ["#{req}_9", "Styling"],
+        ["#{req}_3", "Filter"],
+        ["#{req}_4", "Summary"],
+        ["#{req}_5", "Charts"],
+        ["#{req}_6", "Timeline"],
+        ["#{req}_7", "Preview"]
       ]
     end
     tab = @sb[:miq_tab].split("_")[1]           # Get the tab number of the active tab
-    @tabs.insert(0,["#{req}_#{tab}",""])    # Set as the active tab in first @tabs element
+    @tabs.insert(0, ["#{req}_#{tab}", ""])    # Set as the active tab in first @tabs element
   end
 
   # Get variables from edit form
   def get_form_vars
-    @assigned_filters = Array.new
+    @assigned_filters = []
     gfv_report_fields             # Global report fields
     gfv_move_cols_buttons         # Move cols buttons
     gfv_model                     # Model changes
@@ -394,7 +394,7 @@ module ReportController::Reports::Editor
     gfv_timeline                  # Timeline fields
 
     # Check for key prefixes (params starting with certain keys)
-    params.each do |key,value|
+    params.each do |key, value|
       # See if any headers were sent in
       @edit[:new][:headers][key.split("_")[1..-1].join("_")] = value if key.split("_").first == "hdr"
 
@@ -442,62 +442,62 @@ module ReportController::Reports::Editor
     f = @edit[:new][:field_order][f_idx]  # Get the field element
     field_sub_type = MiqExpression.get_col_info(f.last)[:format_sub_type]
     field_data_type = MiqExpression.get_col_info(f.last)[:data_type]
-    field_name = f.last.include?(".") ? f.last.split(".").last.gsub("-", ".") : f.last.split("-").last
+    field_name = f.last.include?(".") ? f.last.split(".").last.tr("-", ".") : f.last.split("-").last
     case parm
-      when "style"  # New CSS class chosen
-        if value.blank?
-          @edit[:new][:col_options][field_name][:style].delete_at(s_idx)
-          @edit[:new][:col_options][field_name].delete(:style) if @edit[:new][:col_options][field_name][:style].empty?
-          @edit[:new][:col_options].delete(field_name) if @edit[:new][:col_options][field_name].empty?
-        else
-          @edit[:new][:col_options][field_name] ||= {}
-          @edit[:new][:col_options][field_name][:style] ||= []
-          @edit[:new][:col_options][field_name][:style][s_idx] ||= {}
-          @edit[:new][:col_options][field_name][:style][s_idx][:class] = value.to_sym
+    when "style"  # New CSS class chosen
+      if value.blank?
+        @edit[:new][:col_options][field_name][:style].delete_at(s_idx)
+        @edit[:new][:col_options][field_name].delete(:style) if @edit[:new][:col_options][field_name][:style].empty?
+        @edit[:new][:col_options].delete(field_name) if @edit[:new][:col_options][field_name].empty?
+      else
+        @edit[:new][:col_options][field_name] ||= {}
+        @edit[:new][:col_options][field_name][:style] ||= []
+        @edit[:new][:col_options][field_name][:style][s_idx] ||= {}
+        @edit[:new][:col_options][field_name][:style][s_idx][:class] = value.to_sym
 
-          ovs = case field_data_type
-                when :boolean
-                  ["DEFAULT", "true"]
-                when :integer, :float
-                  ["DEFAULT", "", FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units) ? FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units).first : nil]
-                else
-                  ["DEFAULT", ""]
-                end
-          op ||= ovs[0]
-          val ||= ovs[1]
-          suffix ||= ovs[2]
+        ovs = case field_data_type
+              when :boolean
+                ["DEFAULT", "true"]
+              when :integer, :float
+                ["DEFAULT", "", FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units) ? FORMAT_SUB_TYPES.fetch_path(field_sub_type, :units).first : nil]
+              else
+                ["DEFAULT", ""]
+              end
+        op ||= ovs[0]
+        val ||= ovs[1]
+        suffix ||= ovs[2]
 
-          @edit[:new][:col_options][field_name][:style][s_idx][:operator] ||= op
-          @edit[:new][:col_options][field_name][:style][s_idx][:value] ||= val
-          @edit[:new][:col_options][field_name][:style][s_idx][:value_suffix] ||= suffix if suffix
+        @edit[:new][:col_options][field_name][:style][s_idx][:operator] ||= op
+        @edit[:new][:col_options][field_name][:style][s_idx][:value] ||= val
+        @edit[:new][:col_options][field_name][:style][s_idx][:value_suffix] ||= suffix if suffix
+      end
+      @refresh_div = "styling_div"
+      @refresh_partial = "form_styling"
+    when "styleop"  # New operator chosen
+      @edit[:new][:col_options][field_name][:style][s_idx][:operator] = value
+      if value == "DEFAULT"
+        @edit[:new][:col_options][field_name][:style][s_idx].delete(:value) # Remove value key
+        # Remove all style array elements after this one
+        ((s_idx + 1)...@edit[:new][:col_options][field_name][:style].length).each_with_index do |_i, i_idx|
+          @edit[:new][:col_options][field_name][:style].delete_at(i_idx)
         end
-        @refresh_div = "styling_div"
-        @refresh_partial = "form_styling"
-      when "styleop"  # New operator chosen
-        @edit[:new][:col_options][field_name][:style][s_idx][:operator] = value
-        if value == "DEFAULT"
-          @edit[:new][:col_options][field_name][:style][s_idx].delete(:value) # Remove value key
-                                                                               # Remove all style array elements after this one
-          ((s_idx + 1)...@edit[:new][:col_options][field_name][:style].length).each_with_index do |i, i_idx|
-            @edit[:new][:col_options][field_name][:style].delete_at(i_idx)
-          end
-        elsif value.include?("NIL") || value.include?("EMPTY")
-          @edit[:new][:col_options][field_name][:style][s_idx].delete(:value) # Remove value key
-        elsif [:datetime, :date].include?(field_data_type)
-          @edit[:new][:col_options][field_name][:style][s_idx][:value] = EXP_TODAY  # Set default date value
-        elsif [:boolean].include?(field_data_type)
-          @edit[:new][:col_options][field_name][:style][s_idx][:value] = true       # Set default boolean value
-        else
-          @edit[:new][:col_options][field_name][:style][s_idx][:value] = "" # Set default value
-        end
-        @refresh_div = "styling_div"
-        @refresh_partial = "form_styling"
-      when "styleval" # New value chosen
-        @edit[:new][:col_options][field_name][:style][s_idx][:value] = value
-      when "stylesuffix"  # New suffix chosen
-        @edit[:new][:col_options][field_name][:style][s_idx][:value_suffix] = value.to_sym
-        @refresh_div = "styling_div"
-        @refresh_partial = "form_styling"
+      elsif value.include?("NIL") || value.include?("EMPTY")
+        @edit[:new][:col_options][field_name][:style][s_idx].delete(:value) # Remove value key
+      elsif [:datetime, :date].include?(field_data_type)
+        @edit[:new][:col_options][field_name][:style][s_idx][:value] = EXP_TODAY  # Set default date value
+      elsif [:boolean].include?(field_data_type)
+        @edit[:new][:col_options][field_name][:style][s_idx][:value] = true       # Set default boolean value
+      else
+        @edit[:new][:col_options][field_name][:style][s_idx][:value] = "" # Set default value
+      end
+      @refresh_div = "styling_div"
+      @refresh_partial = "form_styling"
+    when "styleval" # New value chosen
+      @edit[:new][:col_options][field_name][:style][s_idx][:value] = value
+    when "stylesuffix"  # New suffix chosen
+      @edit[:new][:col_options][field_name][:style][s_idx][:value_suffix] = value.to_sym
+      @refresh_div = "styling_div"
+      @refresh_partial = "form_styling"
     end
   end
 
@@ -523,8 +523,8 @@ module ReportController::Reports::Editor
   end
 
   def gfv_model
-    if params[:chosen_model] &&                             # Check for db table changed
-        params[:chosen_model] != @edit[:new][:model]
+    if params[:chosen_model] && # Check for db table changed
+       params[:chosen_model] != @edit[:new][:model]
       @edit[:new][:model] = params[:chosen_model]
       @edit[:new][:perf_interval] = nil                         # Clear performance interval setting
       @edit[:new][:tz] = nil
@@ -557,7 +557,7 @@ module ReportController::Reports::Editor
         @edit[:new][:perf_trend_col] = nil
       else
         @edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col] = params[:chosen_trend_col].split("-")
-        if MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).find{|af|af.last == params[:chosen_trend_col]}.first.include?("(%)")
+        if MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).find { |af| af.last == params[:chosen_trend_col] }.first.include?("(%)")
           @edit[:new][:perf_limit_val] = 100
           @edit[:new][:perf_limit_col] = nil
           @edit[:percent_col] = true
@@ -570,8 +570,8 @@ module ReportController::Reports::Editor
       end
       @refresh_div = "columns_div"
       @refresh_partial = "form_columns"
-      #build_perf_interval_arrays(@edit[:new][:perf_interval])  # Build the start and end arrays for the performance interval chooser
-      #@edit[:limit_cols] = VimPerformanceTrend.trend_limit_cols(@edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col], @edit[:new][:perf_interval])
+      # build_perf_interval_arrays(@edit[:new][:perf_interval])  # Build the start and end arrays for the performance interval chooser
+      # @edit[:limit_cols] = VimPerformanceTrend.trend_limit_cols(@edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col], @edit[:new][:perf_interval])
     elsif params[:chosen_limit_col]
       if params[:chosen_limit_col] == "<None>"
         @edit[:new][:perf_limit_col] = nil
@@ -609,7 +609,7 @@ module ReportController::Reports::Editor
       @edit[:new][:perf_end] = params[:chosen_end]
     elsif params[:chosen_tz]
       @edit[:new][:tz] = params[:chosen_tz]
-    elsif params.has_key?(:chosen_time_profile)
+    elsif params.key?(:chosen_time_profile)
       tp = TimeProfile.find(params[:chosen_time_profile]) unless params[:chosen_time_profile].blank?
       @edit[:new][:time_profile] = params[:chosen_time_profile].blank? ? nil : params[:chosen_time_profile].to_i
       @refresh_div = "filter_div"
@@ -619,11 +619,11 @@ module ReportController::Reports::Editor
 
   def gfv_chargeback
     # Chargeback options
-    if params.has_key?(:cb_show_typ)
+    if params.key?(:cb_show_typ)
       @edit[:new][:cb_show_typ] = params[:cb_show_typ].blank? ? nil : params[:cb_show_typ]
       @refresh_div = "filter_div"
       @refresh_partial = "form_filter"
-    elsif params.has_key?(:cb_tag_cat)
+    elsif params.key?(:cb_tag_cat)
       @refresh_div = "filter_div"
       @refresh_partial = "form_filter"
       if params[:cb_tag_cat].blank?
@@ -631,14 +631,14 @@ module ReportController::Reports::Editor
         @edit[:new][:cb_tag_value] = nil
       else
         @edit[:new][:cb_tag_cat] = params[:cb_tag_cat]
-        @edit[:cb_tags] = Hash.new
-        Classification.find_by_name(params[:cb_tag_cat]).entries.each{|e| @edit[:cb_tags][e.name] = e.description}
+        @edit[:cb_tags] = {}
+        Classification.find_by_name(params[:cb_tag_cat]).entries.each { |e| @edit[:cb_tags][e.name] = e.description }
       end
-    elsif params.has_key?(:cb_owner_id)
+    elsif params.key?(:cb_owner_id)
       @edit[:new][:cb_owner_id] = params[:cb_owner_id].blank? ? nil : params[:cb_owner_id]
-    elsif params.has_key?(:cb_tag_value)
+    elsif params.key?(:cb_tag_value)
       @edit[:new][:cb_tag_value] = params[:cb_tag_value].blank? ? nil : params[:cb_tag_value]
-    elsif params.has_key?(:cb_groupby)
+    elsif params.key?(:cb_groupby)
       @edit[:new][:cb_groupby] = params[:cb_groupby]
     elsif params[:cb_interval]
       @edit[:new][:cb_interval] = params[:cb_interval]
@@ -665,8 +665,8 @@ module ReportController::Reports::Editor
       else
         @edit[:new][:graph_other]  = true if @edit[:new][:graph_type].nil? # Reset other setting if choosing first chart
         @edit[:new][:graph_type]   = params[:chosen_graph] # Save graph type
-        @edit[:new][:graph_count]  ||= GRAPH_MAX_COUNT     # Reset graph count, if not set
-        @edit[:new][:chart_mode]   ||= 'counts'
+        @edit[:new][:graph_count] ||= GRAPH_MAX_COUNT     # Reset graph count, if not set
+        @edit[:new][:chart_mode] ||= 'counts'
         @edit[:new][:chart_column] ||= ''
       end
       @refresh_div     = "chart_div"
@@ -723,7 +723,7 @@ module ReportController::Reports::Editor
     end
     if params[:chosen_pivot1] || params[:chosen_pivot2] || params[:chosen_pivot3]
       if @edit[:new][:pivotby1] == NOTHING_STRING
-        @edit[:pivot_cols] = Hash.new                       # Clear pivot_cols if no pivot grouping fields selected
+        @edit[:pivot_cols] = {}                       # Clear pivot_cols if no pivot grouping fields selected
       else
         @edit[:pivot_cols].delete(@edit[:new][:pivotby1])   # Remove any pivot grouping fields from pivot cols
         @edit[:pivot_cols].delete(@edit[:new][:pivotby2])
@@ -762,7 +762,7 @@ module ReportController::Reports::Editor
       # Remove any col options for any existing sort + suffix
       @edit[:new][:col_options].delete(@edit[:new][:sortby1].split("-").last) if @edit[:new][:sortby1].split("__")[1]
       @edit[:new][:sortby1] = @edit[:new][:sortby1].split("__").first +
-          (params[:sort1_suffix].blank? ? "" : "__#{params[:sort1_suffix]}")
+                              (params[:sort1_suffix].blank? ? "" : "__#{params[:sort1_suffix]}")
 
     # Look at the 2nd sort suffix (ie. month, day_of_week, etc)
     elsif params[:sort2_suffix] && params[:sort2_suffix].to_s != @edit[:new][:sortby2].split("__")[1].to_s
@@ -770,21 +770,21 @@ module ReportController::Reports::Editor
       @edit[:new][:col_options].delete(@edit[:new][:sortby2].split("-").last) if @edit[:new][:sortby2].split("__")[1]
       @edit[:new][:sortby2] = @edit[:new][:sortby2].split("__").first + "__" + params[:sort2_suffix]
       @edit[:new][:sortby2] = @edit[:new][:sortby2].split("__").first +
-          (params[:sort2_suffix].blank? ? "" : "__#{params[:sort2_suffix]}")
+                              (params[:sort2_suffix].blank? ? "" : "__#{params[:sort2_suffix]}")
 
     # Look at the break format
     else
       co_key1 = @edit[:new][:sortby1].split("-").last
       if params[:break_format] &&
-          params[:break_format].to_s != @edit[:new].fetch_path(:col_options, co_key1)
+         params[:break_format].to_s != @edit[:new].fetch_path(:col_options, co_key1)
         if params[:break_format].blank? || # Remove format and col key (if empty)
-            params[:break_format].to_sym == MiqReport.get_col_info(@edit[:new][:sortby1])[:default_format]
+           params[:break_format].to_sym == MiqReport.get_col_info(@edit[:new][:sortby1])[:default_format]
           if @edit[:new][:col_options][co_key1]
             @edit[:new][:col_options][co_key1].delete(:break_format)
             @edit[:new][:col_options].delete(co_key1) if @edit[:new][:col_options][co_key1].empty?
           end
         else                            # Add col and format to col_options
-          @edit[:new][:col_options][co_key1] ||= Hash.new
+          @edit[:new][:col_options][co_key1] ||= {}
           @edit[:new][:col_options][co_key1][:break_format] = params[:break_format].to_sym
         end
       end
@@ -799,12 +799,12 @@ module ReportController::Reports::Editor
       end
     else  # Create a break label, if none there already
       unless @edit[:new].fetch_path(:col_options, sort1, :break_label)
-        @edit[:new][:col_options][sort1] ||= Hash.new
+        @edit[:new][:col_options][sort1] ||= {}
         sort, suffix = @edit[:new][:sortby1].split("__")
         @edit[:new][:col_options][sort1][:break_label] =
-            @edit[:new][:field_order].collect{|f| f.first if f.last == sort}.compact.join.strip +
-                (suffix ? " (#{MiqReport.date_time_break_suffixes.collect{|s| s.first if s.last == suffix}.compact.join})" : "") +
-                ": "
+            @edit[:new][:field_order].collect { |f| f.first if f.last == sort }.compact.join.strip +
+            (suffix ? " (#{MiqReport.date_time_break_suffixes.collect { |s| s.first if s.last == suffix }.compact.join})" : "") +
+            ": "
       end
     end
 
@@ -826,7 +826,7 @@ module ReportController::Reports::Editor
       end
       @edit[:new][:tl_field] = params[:chosen_tl]
       if params[:chosen_tl] == NOTHING_STRING   # If clearing the timeline field
-        @edit[:new][:tl_bands] = Array.new      # Clear the bands
+        @edit[:new][:tl_bands] = []      # Clear the bands
         @edit[:unit1] = NOTHING_STRING
         @edit[:unit2] = NOTHING_STRING
         @edit[:unit3] = NOTHING_STRING
@@ -834,7 +834,7 @@ module ReportController::Reports::Editor
         if @edit[:new][:tl_bands].blank?        # If the bands are blank
           @edit[:unit1] = BAND_UNITS[1]
           @edit[:new][:tl_bands] =  [           # Create default first band
-              {:width=>100, :gap=>0.0, :text=>true, :unit=>BAND_UNITS[1], :pixels=>100}
+            {:width => 100, :gap => 0.0, :text => true, :unit => BAND_UNITS[1], :pixels => 100}
           ]
         end
       end
@@ -866,7 +866,7 @@ module ReportController::Reports::Editor
         @edit[:new][:tl_bands][0][:width] = 100
       elsif @edit[:new][:tl_bands].length < 2
         @edit[:new][:tl_bands][0][:width] = 70
-        @edit[:new][:tl_bands].push({:width=>30, :height=>0.6, :gap=>0.1, :text=>false, :unit=>params[:chosen_unit2], :pixels=>200})
+        @edit[:new][:tl_bands].push(:width => 30, :height => 0.6, :gap => 0.1, :text => false, :unit => params[:chosen_unit2], :pixels => 200)
       else
         @edit[:new][:tl_bands][1][:unit] =  params[:chosen_unit2]
       end
@@ -881,7 +881,7 @@ module ReportController::Reports::Editor
       elsif @edit[:new][:tl_bands].length < 3
         @edit[:new][:tl_bands][0][:width] = 70
         @edit[:new][:tl_bands][1][:width] = 20
-        @edit[:new][:tl_bands].push({:width=>10, :height=>0.3, :gap=>0.1, :text=>false, :unit=>params[:chosen_unit3], :pixels=>200})
+        @edit[:new][:tl_bands].push(:width => 10, :height => 0.3, :gap => 0.1, :text => false, :unit => params[:chosen_unit3], :pixels => 200)
       else
         @edit[:new][:tl_bands][2][:unit] =  params[:chosen_unit3]
       end
@@ -892,7 +892,7 @@ module ReportController::Reports::Editor
     if !params[:available_fields] || params[:available_fields].length == 0 || params[:available_fields][0] == ""
       add_flash(_("No %s were selected to move down") % "fields", :error)
     elsif params[:available_fields].length + @edit[:new][:fields].length > MAX_REPORT_COLUMNS
-      add_flash(_("Fields not added: Adding the selected %{count} fields will exceed the maximum of %{max} fields") % {:count=>params[:available_fields].length + @edit[:new][:fields].length, :max=>MAX_REPORT_COLUMNS},
+      add_flash(_("Fields not added: Adding the selected %{count} fields will exceed the maximum of %{max} fields") % {:count => params[:available_fields].length + @edit[:new][:fields].length, :max => MAX_REPORT_COLUMNS},
                 :error)
     else
       MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).each do |af| # Go thru all available columns
@@ -929,9 +929,9 @@ module ReportController::Reports::Editor
 
           # Clear out headers and formatting
           @edit[:new][:headers].delete(nf.last)       # Delete the column name from the headers hash
-          @edit[:new][:headers].delete_if{|k,v| k.starts_with?("#{nf.last}__")} # Delete pivot calc keys
+          @edit[:new][:headers].delete_if { |k, _v| k.starts_with?("#{nf.last}__") } # Delete pivot calc keys
           @edit[:new][:col_formats].delete(nf.last)   # Delete the column name from the col_formats hash
-          @edit[:new][:col_formats].delete_if{|k,v| k.starts_with?("#{nf.last}__")} # Delete pivot calc keys
+          @edit[:new][:col_formats].delete_if { |k, _v| k.starts_with?("#{nf.last}__") } # Delete pivot calc keys
 
           # Clear out pivot field options
           if nf.last == @edit[:new][:pivotby1]              # Compress the pivotby fields if being moved left
@@ -970,13 +970,13 @@ module ReportController::Reports::Editor
             @edit[:unit1] = NOTHING_STRING
             @edit[:unit2] = NOTHING_STRING
             @edit[:unit3] = NOTHING_STRING
-            @edit[:new][:tl_bands] = Array.new
+            @edit[:new][:tl_bands] = []
           end
 
           @edit[:new][:col_options].delete(field_to_col(nf.last)) # Remove this column from the col_options hash
         end
       end
-      @edit[:new][:fields].delete_if{|nf| params[:selected_fields].include?(nf.last)} # Remove selected fields
+      @edit[:new][:fields].delete_if { |nf| params[:selected_fields].include?(nf.last) } # Remove selected fields
       @refresh_div = "column_lists"
       @refresh_partial = "column_lists"
       build_field_order
@@ -992,7 +992,7 @@ module ReportController::Reports::Editor
         add_flash(_("%s is currently being used in the Display Filter") % f.first, :error) if exp.include?(f.last)
       end
     end
-    return !@flash_array.nil?
+    !@flash_array.nil?
   end
 
   def move_cols_up
@@ -1001,11 +1001,11 @@ module ReportController::Reports::Editor
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
-    if ! consecutive
+    if !consecutive
       add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
     else
       if first_idx > 0
-        @edit[:new][:fields][first_idx..last_idx].reverse.each do |field|
+        @edit[:new][:fields][first_idx..last_idx].reverse_each do |field|
           pulled = @edit[:new][:fields].delete(field)
           @edit[:new][:fields].insert(first_idx - 1, pulled)
         end
@@ -1023,7 +1023,7 @@ module ReportController::Reports::Editor
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
-    if ! consecutive
+    if !consecutive
       add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
@@ -1047,11 +1047,11 @@ module ReportController::Reports::Editor
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
-    if ! consecutive
+    if !consecutive
       add_flash(_("Select only one or consecutive %s to move to the top") % "fields", :error)
     else
       if first_idx > 0
-        @edit[:new][:fields][first_idx..last_idx].reverse.each do |field|
+        @edit[:new][:fields][first_idx..last_idx].reverse_each do |field|
           pulled = @edit[:new][:fields].delete(field)
           @edit[:new][:fields].unshift(pulled)
         end
@@ -1069,7 +1069,7 @@ module ReportController::Reports::Editor
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
-    if ! consecutive
+    if !consecutive
       add_flash(_("Select only one or consecutive %s to move to the bottom") % "fields", :error)
     else
       if last_idx < @edit[:new][:fields].length - 1
@@ -1087,7 +1087,7 @@ module ReportController::Reports::Editor
 
   def selected_consecutive?
     first_idx = last_idx = 0
-    @edit[:new][:fields].each_with_index do |nf,idx|
+    @edit[:new][:fields].each_with_index do |nf, idx|
       first_idx = idx if nf[1] == params[:selected_fields].first
       if nf[1] == params[:selected_fields].last
         last_idx = idx
@@ -1128,7 +1128,7 @@ module ReportController::Reports::Editor
       end
       if @edit[:new][:chart_mode] == 'values' && @edit[:new][:chart_column].blank?
         options = chart_fields_options
-        @edit[:new][:chart_column] = options[0][1] if !options.empty?
+        @edit[:new][:chart_column] = options[0][1] unless options.empty?
       end
       rpt.graph = {
         :type   => @edit[:new][:graph_type],
@@ -1140,14 +1140,14 @@ module ReportController::Reports::Editor
     end
 
     # Set the conditions field (expression)
-    if @edit[:new][:record_filter] != nil && @edit[:new][:record_filter]["???"].nil?
+    if !@edit[:new][:record_filter].nil? && @edit[:new][:record_filter]["???"].nil?
       rpt.conditions = MiqExpression.new(@edit[:new][:record_filter])
     else
       rpt.conditions = nil
     end
 
     # Set the display_filter field (expression)
-    if @edit[:new][:display_filter] != nil && @edit[:new][:display_filter]["???"].nil?
+    if !@edit[:new][:display_filter].nil? && @edit[:new][:display_filter]["???"].nil?
       rpt.display_filter = MiqExpression.new(@edit[:new][:display_filter])
     else
       rpt.display_filter = nil
@@ -1169,13 +1169,13 @@ module ReportController::Reports::Editor
       rpt.db_options[:trend_col]    = @edit[:new][:perf_trend_col]
       rpt.db_options[:limit_col]    = @edit[:new][:perf_limit_col] if @edit[:new][:perf_limit_col]
       rpt.db_options[:limit_val]    = @edit[:new][:perf_limit_val] if @edit[:new][:perf_limit_val]
-      rpt.db_options[:target_pcts]  = Array.new
+      rpt.db_options[:target_pcts]  = []
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct1])
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct2]) if @edit[:new][:perf_target_pct2]
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct3]) if @edit[:new][:perf_target_pct3]
     elsif model_report_type(rpt.db) == :chargeback
       rpt.db_options[:rpt_type]     = "chargeback"
-      options                       = Hash.new  # CB options go in db_options[:options] key
+      options                       = {}  # CB options go in db_options[:options] key
       options[:interval]            = @edit[:new][:cb_interval]
       options[:interval_size]       = @edit[:new][:cb_interval_size]
       options[:end_interval_offset] = @edit[:new][:cb_end_interval_offset]
@@ -1216,12 +1216,12 @@ module ReportController::Reports::Editor
       rpt.group = nil               # Clear line break group
     else                            # Otherwise, check the setting
       case @edit[:new][:group]
-        when "Yes"
-          rpt.group = "y"
-        when "Counts"
-          rpt.group = "c"
-        else
-          rpt.group = nil
+      when "Yes"
+        rpt.group = "y"
+      when "Counts"
+        rpt.group = "c"
+      else
+        rpt.group = nil
       end
     end
 
@@ -1229,12 +1229,12 @@ module ReportController::Reports::Editor
     rpt.rpt_group ||= "Custom"
     rpt.rpt_type ||= "Custom"
 
-    rpt.cols = Array.new
-    rpt.col_order = Array.new
-    rpt.col_formats = Array.new
-    rpt.headers = Array.new
+    rpt.cols = []
+    rpt.col_order = []
+    rpt.col_formats = []
+    rpt.headers = []
     rpt.include = Hash.new
-    rpt.sortby = @edit[:new][:sortby1] == NOTHING_STRING ? nil : Array.new  # Clear sortby if sortby1 not present, else set up array
+    rpt.sortby = @edit[:new][:sortby1] == NOTHING_STRING ? nil : []  # Clear sortby if sortby1 not present, else set up array
 
     # Add in the chargeback static fields
     if rpt.db == "Chargeback" # For chargeback, add in static fields
@@ -1247,7 +1247,7 @@ module ReportController::Reports::Editor
         rpt.sortby = ["vm_name", "start_date"]
       end
       rpt.col_order.each do |c|
-        rpt.headers.push(Dictionary::gettext(c, :type=>:column, :notfound=>:titleize))
+        rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
         rpt.col_formats.push(nil) # No formatting needed on the static cols
       end
       rpt.col_options = Chargeback.report_col_options
@@ -1267,8 +1267,8 @@ module ReportController::Reports::Editor
     @edit[:new][:fields].each do |field_entry|          # Go thru all of the fields
       field = field_entry[1]                            # Get the encoded fully qualified field name
 
-      if @edit[:new][:pivotby1] != NOTHING_STRING &&    # If we are doing pivoting and
-          @edit[:pivot_cols].has_key?(field)              # this is a pivot calc column
+      if @edit[:new][:pivotby1] != NOTHING_STRING && # If we are doing pivoting and
+         @edit[:pivot_cols].key?(field)              # this is a pivot calc column
         @edit[:pivot_cols][field].each do |calc_typ|    # Add header/format/col_order for each calc type
           rpt.headers.push(@edit[:new][:headers][field + "__#{calc_typ}"])
           rpt.col_formats.push(@edit[:new][:col_formats][field + "__#{calc_typ}"])
@@ -1280,11 +1280,11 @@ module ReportController::Reports::Editor
         add_field_to_col_order(rpt, field)
       end
     end
-    rpt.rpt_options ||= Hash.new
+    rpt.rpt_options ||= {}
     rpt.rpt_options.delete(:pivot)
     unless @pg1.nil?                                    # Build the pivot group_cols array
-      rpt.rpt_options[:pivot] = Hash.new
-      rpt.rpt_options[:pivot][:group_cols] = Array.new
+      rpt.rpt_options[:pivot] = {}
+      rpt.rpt_options[:pivot][:group_cols] = []
       rpt.rpt_options[:pivot][:group_cols].push(@pg1)
       rpt.rpt_options[:pivot][:group_cols].push(@pg2) unless @pg2.nil?
       rpt.rpt_options[:pivot][:group_cols].push(@pg3) unless @pg3.nil?
@@ -1296,8 +1296,8 @@ module ReportController::Reports::Editor
     end
 
     # Add pdf page size to rpt_options
-    rpt.rpt_options ||= Hash.new
-    rpt.rpt_options[:pdf] ||= Hash.new
+    rpt.rpt_options ||= {}
+    rpt.rpt_options[:pdf] ||= {}
     rpt.rpt_options[:pdf][:page_size] = @edit[:new][:pdf_page_size] || DEFAULT_PDF_PAGE_SIZE
 
     rpt.rpt_options[:queue_timeout] = @edit[:new][:queue_timeout]
@@ -1306,7 +1306,7 @@ module ReportController::Reports::Editor
     if rpt.group.nil?
       rpt.rpt_options.delete(:summary)
     else
-      rpt.rpt_options[:summary] ||= Hash.new
+      rpt.rpt_options[:summary] ||= {}
       rpt.rpt_options[:summary][:hide_detail_rows] = @edit[:new][:hide_details]
     end
 
@@ -1328,9 +1328,9 @@ module ReportController::Reports::Editor
       tables = field.split("-")[0].split(".")[1..-1]  # Get the list of tables from before the hyphen
       inc_hash = rpt.include                          # Start at the main hash
       tables.each_with_index do |table, idx|
-        inc_hash[table] ||= Hash.new                  # Create hash for the table, if it's not there already
+        inc_hash[table] ||= {}                  # Create hash for the table, if it's not there already
         if idx == tables.length - 1                   # We're at the end of the field name, so add the column
-          inc_hash[table]["columns"] ||= Array.new    # Create the columns array for this table
+          inc_hash[table]["columns"] ||= []    # Create the columns array for this table
           f = field.split("-")[1].split("__").first   # Grab the field name after the hyphen, before the "__"
           inc_hash[table]["columns"].push(f) unless inc_hash[table]["columns"].include?(f) # Add the field to the columns, if not there
           rpt.col_order.push(table + "." + field.split("-")[1]) # Add the table.field to the col_order array
@@ -1347,7 +1347,7 @@ module ReportController::Reports::Editor
             @pg3 = table + "." + field.split("-")[1]
           end
         else                                          # Set up for the next embedded include hash
-          inc_hash[table]["include"] ||= Hash.new     # Create include hash for next level
+          inc_hash[table]["include"] ||= {}     # Create include hash for next level
           inc_hash = inc_hash[table]["include"]       # Point to the new hash
         end
       end
@@ -1376,7 +1376,7 @@ module ReportController::Reports::Editor
 
   # Set form variables for edit
   def set_form_vars
-    @edit = Hash.new
+    @edit = {}
 
     # Remember how this edit started
     @edit[:type] = ["copy", "new"].include?(params[:pressed]) ? "miq_report_new" : "miq_report_edit"
@@ -1384,7 +1384,7 @@ module ReportController::Reports::Editor
     @edit[:rpt_id] = @rpt.id  # Save a record id to use it later to look a record
     @edit[:rpt_title] = @rpt.title
     @edit[:rpt_name] = @rpt.name
-    @edit[:new] = Hash.new
+    @edit[:new] = {}
     @edit[:key] = "report_edit__#{@rpt.id || "new"}"
     if params[:pressed] == "miq_report_copy"
       @edit[:new][:rpt_group] = "Custom"
@@ -1401,9 +1401,9 @@ module ReportController::Reports::Editor
     @edit[:new][:priority] = @rpt.priority
     @edit[:new][:order] = @rpt.order.blank? ? "Ascending" : @rpt.order
 
-#   @edit[:new][:graph] = @rpt.graph
-# Replaced above line to handle new graph settings Hash
-    if @rpt.graph.is_a?(Hash)
+    #   @edit[:new][:graph] = @rpt.graph
+    # Replaced above line to handle new graph settings Hash
+    if @rpt.graph.kind_of?(Hash)
       @edit[:new][:graph_type]   = @rpt.graph[:type]
       @edit[:new][:graph_count]  = @rpt.graph[:count]
       @edit[:new][:chart_mode]   = @rpt.graph[:mode]
@@ -1419,9 +1419,9 @@ module ReportController::Reports::Editor
 
     @edit[:new][:dims] = @rpt.dims
     @edit[:new][:categories] = @rpt.categories
-    @edit[:new][:categories] ||= Array.new
+    @edit[:new][:categories] ||= []
 
-    @edit[:new][:col_options] = @rpt.col_options.blank? ? Hash.new : @rpt.col_options
+    @edit[:new][:col_options] = @rpt.col_options.blank? ? {} : @rpt.col_options
 
     # Initialize options
     @edit[:new][:perf_interval] = nil
@@ -1460,16 +1460,16 @@ module ReportController::Reports::Editor
     elsif model_report_type(@rpt.db) == :chargeback
       @edit[:new][:tz] = @rpt.tz ? @rpt.tz : session[:user_tz]    # Set the timezone, default to user's
       options = @rpt.db_options[:options]
-      if options.has_key?(:owner) # Get the owner options
+      if options.key?(:owner) # Get the owner options
         @edit[:new][:cb_show_typ] = "owner"
         @edit[:new][:cb_owner_id] = options[:owner]
-      elsif options.has_key?(:tag)  # Get the tag options
+      elsif options.key?(:tag)  # Get the tag options
         @edit[:new][:cb_show_typ] = "tag"
         @edit[:new][:cb_tag_cat] = options[:tag].split("/")[-2]
         @edit[:new][:cb_tag_value] = options[:tag].split("/")[-1]
-        @edit[:cb_tags] = Hash.new
+        @edit[:cb_tags] = {}
         cat = Classification.find_by_name(@edit[:new][:cb_tag_cat])
-        cat.entries.each{|e| @edit[:cb_tags][e.name] = e.description} if cat  # Collect the tags, if category is valid
+        cat.entries.each { |e| @edit[:cb_tags][e.name] = e.description } if cat  # Collect the tags, if category is valid
       end
       @edit[:new][:cb_interval] = options[:interval]
       @edit[:new][:cb_interval_size] = options[:interval_size]
@@ -1479,8 +1479,8 @@ module ReportController::Reports::Editor
 
     # Only show chargeback users choice if an admin
     if admin_user?
-      @edit[:cb_users] = Hash.new
-      User.all.each{|u| @edit[:cb_users][u.userid] = u.name}
+      @edit[:cb_users] = {}
+      User.all.each { |u| @edit[:cb_users][u.userid] = u.name }
     else
       @edit[:new][:cb_show_typ] = "owner"
       @edit[:new][:cb_owner_id] = session[:userid]
@@ -1488,10 +1488,10 @@ module ReportController::Reports::Editor
     end
 
     # Get chargeback tags
-    cats = Classification.categories.collect{|c| c unless !c.show}.compact  # Get categories, sort by name, remove nils
-    cats.delete_if{ |c| c.read_only? || c.entries.length == 0}  # Remove categories that are read only or have no entries
-    @edit[:cb_cats] = Hash.new
-    cats.each{|c| @edit[:cb_cats][c.name] = c.description}
+    cats = Classification.categories.collect { |c| c if c.show }.compact  # Get categories, sort by name, remove nils
+    cats.delete_if { |c| c.read_only? || c.entries.length == 0 }  # Remove categories that are read only or have no entries
+    @edit[:cb_cats] = {}
+    cats.each { |c| @edit[:cb_cats][c.name] = c.description }
 
     # Build trend limit cols array
     if model_report_type(@rpt.db) == :trend
@@ -1504,12 +1504,12 @@ module ReportController::Reports::Editor
     end
 
     expkey = :record_filter
-    @edit[expkey] ||= Hash.new                                                # Create hash for this expression, if needed
-    @edit[expkey][:record_filter] = Array.new                               # Store exps in an array
+    @edit[expkey] ||= {}                                                # Create hash for this expression, if needed
+    @edit[expkey][:record_filter] = []                               # Store exps in an array
     @edit[expkey][:exp_idx] ||= 0
-    @edit[expkey][:expression] = {"???"=>"???"}                           # Set as new exp element
+    @edit[expkey][:expression] = {"???" => "???"}                           # Set as new exp element
     # Get the conditions MiqExpression
-    if @rpt.conditions.is_a?(MiqExpression)
+    if @rpt.conditions.kind_of?(MiqExpression)
       @edit[:new][:record_filter] = @rpt.conditions.exp
       @edit[:miq_exp]             = true
     elsif @rpt.conditions.nil?
@@ -1521,15 +1521,15 @@ module ReportController::Reports::Editor
     # Get the display_filter MiqExpression
     @edit[:new][:display_filter] = @rpt.display_filter.nil? ? nil : @rpt.display_filter.exp
     expkey = :display_filter
-    @edit[expkey] ||= Hash.new                                                # Create hash for this expression, if needed
-    @edit[expkey][:expression] = Array.new                                    # Store exps in an array
+    @edit[expkey] ||= {}                                                # Create hash for this expression, if needed
+    @edit[expkey][:expression] = []                                    # Store exps in an array
     @edit[expkey][:exp_idx] ||= 0                                           # Start at first exp
-    @edit[expkey][:expression] = {"???"=>"???"}                           # Set as new exp element
+    @edit[expkey][:expression] = {"???" => "???"}                           # Set as new exp element
     # Build display filter expression
     @edit[:new][:display_filter] = @edit[expkey][:expression] if @edit[:new][:display_filter].nil?              # Copy to new exp
 
     # Get timeline fields
-    @edit[:tl_last_units] = Array.new
+    @edit[:tl_last_units] = []
     BAND_UNITS[1..-2].each { |u| @edit[:tl_last_units].push u.pluralize }
     @edit[:unit1]              = NOTHING_STRING # Default units and tl field to nothing
     @edit[:unit2]              = NOTHING_STRING
@@ -1538,7 +1538,7 @@ module ReportController::Reports::Editor
     @edit[:new][:tl_position]  = "Last"
     @edit[:new][:tl_last_unit] = SHOWALL_STRING
     @edit[:new][:tl_last_time] = nil
-    if @rpt.timeline.is_a?(Hash)    # Timeline has any data
+    if @rpt.timeline.kind_of?(Hash)    # Timeline has any data
       @edit[:new][:tl_field]     = @rpt.timeline[:field]     unless @rpt.timeline[:field].blank?
       @edit[:new][:tl_position]  = @rpt.timeline[:position]  unless @rpt.timeline[:position].blank?
       @edit[:new][:tl_last_unit] = @rpt.timeline[:last_unit] unless @rpt.timeline[:last_unit].blank?
@@ -1550,38 +1550,38 @@ module ReportController::Reports::Editor
         @edit[:unit3] = @rpt.timeline[:bands][2][:unit].capitalize if @rpt.timeline[:bands].length > 2
       end
     else
-      @edit[:new][:tl_bands] = Array.new
+      @edit[:new][:tl_bands] = []
     end
 
     # Get the pdf page size, if present
-    if @rpt.rpt_options.is_a?(Hash) && @rpt.rpt_options[:pdf]
+    if @rpt.rpt_options.kind_of?(Hash) && @rpt.rpt_options[:pdf]
       @edit[:new][:pdf_page_size] = @rpt.rpt_options[:pdf][:page_size] || DEFAULT_PDF_PAGE_SIZE
     else
       @edit[:new][:pdf_page_size] = DEFAULT_PDF_PAGE_SIZE
     end
 
     # Get the hide details setting, if present
-    if @rpt.rpt_options.is_a?(Hash) && @rpt.rpt_options[:summary]
+    if @rpt.rpt_options.kind_of?(Hash) && @rpt.rpt_options[:summary]
       @edit[:new][:hide_details] = @rpt.rpt_options[:summary][:hide_detail_rows]
     else
       @edit[:new][:hide_details] = false
     end
 
     # Get the timeout if present
-    if @rpt.rpt_options.is_a?(Hash) && @rpt.rpt_options[:queue_timeout]
+    if @rpt.rpt_options.kind_of?(Hash) && @rpt.rpt_options[:queue_timeout]
       @edit[:new][:queue_timeout] = @rpt.rpt_options[:queue_timeout]
     else
       @edit[:new][:queue_timeout] = nil
     end
 
     case @rpt.group
-      when "y"
-        @edit[:new][:group] = "Yes"
-      when "c"
-        @edit[:new][:group] = "Counts"
-      else
-        @edit[:new][:group] = "No"
-        @edit[:new][:row_limit] = @rpt.rpt_options[:row_limit].to_s if @rpt.rpt_options
+    when "y"
+      @edit[:new][:group] = "Yes"
+    when "c"
+      @edit[:new][:group] = "Counts"
+    else
+      @edit[:new][:group] = "No"
+      @edit[:new][:row_limit] = @rpt.rpt_options[:row_limit].to_s if @rpt.rpt_options
     end
 
     # build selected fields array from the report record
@@ -1593,15 +1593,15 @@ module ReportController::Reports::Editor
     if params[:pressed] == "miq_report_new"
       @edit[:new][:fields]      = []
       @edit[:new][:categories]  = []
-      @edit[:new][:headers]     = Hash.new
-      @edit[:new][:col_formats] = Hash.new
-      @edit[:pivot_cols]        = Hash.new
+      @edit[:new][:headers]     = {}
+      @edit[:new][:col_formats] = {}
+      @edit[:pivot_cols]        = {}
     else
       build_selected_fields(@rpt)           # Create the field related @edit arrays and hashes
     end
 
     # Rebuild the tag descriptions in the new fields array to match the ones in available fields
-    @edit[:new][:fields].each do | nf |
+    @edit[:new][:fields].each do |nf|
       tag = nf.first.split(':')
       if nf.first.include?("Managed :")
         entry = MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).find { |a| a.last == nf.last }
@@ -1609,19 +1609,19 @@ module ReportController::Reports::Editor
       end
     end
 
-    @edit[:current] = ["copy", "new"].include?(params[:action]) ? Hash.new : copy_hash(@edit[:new])
+    @edit[:current] = ["copy", "new"].include?(params[:action]) ? {} : copy_hash(@edit[:new])
 
     unless @edit[:models] # Only create once
-      @edit[:models] = Array.new
+      @edit[:models] = []
       MiqReport.reportable_models.each do |m|
-        @edit[:models].push([Dictionary::gettext(m, :type=>:model, :notfound=>:titleize).pluralize, m])
+        @edit[:models].push([Dictionary.gettext(m, :type => :model, :notfound => :titleize).pluralize, m])
       end
     end
 
     # Only show chargeback users choice if an admin
     if admin_user?
-      @edit[:cb_users] = Hash.new
-      User.all.each{|u| @edit[:cb_users][u.userid] = u.name}
+      @edit[:cb_users] = {}
+      User.all.each { |u| @edit[:cb_users][u.userid] = u.name }
     else
       @edit[:new][:cb_show_typ] = "owner"
       @edit[:new][:cb_owner_id] = session[:userid]
@@ -1629,24 +1629,26 @@ module ReportController::Reports::Editor
 
     # For trend reports, check for percent field chosen
     if @rpt.db && @rpt.db == TREND_MODEL &&
-        MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).find{|af|af.last ==
-            @edit[:new][:perf_trend_db] + "-" + @edit[:new][:perf_trend_col]}.first.include?("(%)")
+       MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).find do|af|
+         af.last ==
+         @edit[:new][:perf_trend_db] + "-" + @edit[:new][:perf_trend_col]
+       end.first.include?("(%)")
       @edit[:percent_col] = true
     end
   end
 
   # Build the :fields array and :headers hash from the rpt record cols and includes hashes
   def build_selected_fields(rpt)
-    fields = Array.new
-    headers = Hash.new
-    col_formats = Hash.new
-    pivot_cols = Hash.new
+    fields = []
+    headers = {}
+    col_formats = {}
+    pivot_cols = {}
     rpt.col_formats ||= Array.new(rpt.col_order.length)   # Create array of nils if col_formats not present (backward compat)
     rpt.col_order.each_with_index do |col, idx|
       unless col.include?(".")  # Main table field
         field_key = rpt.db + "-" + col
         field_value = friendly_model_name(rpt.db) +
-            Dictionary.gettext(rpt.db + "." + col.split("__").first, :type=>:column, :notfound=>:titleize)
+                      Dictionary.gettext(rpt.db + "." + col.split("__").first, :type => :column, :notfound => :titleize)
       else                      # Included table field
         inc_string = find_includes(col.split("__").first, rpt.include)  # Get the full include string
         field_key = rpt.db + "." + inc_string.to_s + "-" + col.split(".")[1]
@@ -1654,7 +1656,7 @@ module ReportController::Reports::Editor
           field_value = friendly_model_name(rpt.db + "." + inc_string.to_s) + col.split(".")[1]
         else
           field_value = friendly_model_name(rpt.db + "." + inc_string.to_s) +
-              Dictionary.gettext(col.split(".")[1].split("__").first, :type=>:column, :notfound=>:titleize)
+                        Dictionary.gettext(col.split(".")[1].split("__").first, :type => :column, :notfound => :titleize)
         end
       end
       if field_key.include?("__")                           # Check for calculated pivot column
@@ -1667,9 +1669,9 @@ module ReportController::Reports::Editor
       end
       # Create the groupby keys if groupby array is present
       if rpt.rpt_options &&
-          rpt.rpt_options[:pivot] &&
-          rpt.rpt_options[:pivot][:group_cols] &&
-          rpt.rpt_options[:pivot][:group_cols].is_a?(Array)
+         rpt.rpt_options[:pivot] &&
+         rpt.rpt_options[:pivot][:group_cols] &&
+         rpt.rpt_options[:pivot][:group_cols].kind_of?(Array)
         if rpt.rpt_options[:pivot][:group_cols].length > 0
           @edit[:new][:pivotby1] = field_key if col == rpt.rpt_options[:pivot][:group_cols][0]
         end
@@ -1681,7 +1683,7 @@ module ReportController::Reports::Editor
         end
       end
       # Create the sortby keys if sortby array is present
-      if rpt.sortby.is_a?(Array)
+      if rpt.sortby.kind_of?(Array)
         if rpt.sortby.length > 0
           # If first sortby field as a break suffix, set up sortby1 with a suffix
           if MiqReport.is_break_suffix?(rpt.sortby[0].split("__")[1])
@@ -1728,10 +1730,10 @@ module ReportController::Reports::Editor
 
   # Create the field_order hash from the fields and pivot_cols structures
   def build_field_order
-    @edit[:new][:field_order] = Array.new
+    @edit[:new][:field_order] = []
     @edit[:new][:fields].each do |f|
-      if @edit[:new][:pivotby1] != NOTHING_STRING &&    # If we are doing pivoting and
-          @edit[:pivot_cols].has_key?(f.last)             # this is a pivot calc column
+      if @edit[:new][:pivotby1] != NOTHING_STRING && # If we are doing pivoting and
+         @edit[:pivot_cols].key?(f.last)             # this is a pivot calc column
         MiqReport::PIVOTS.each do |c|
           calc_typ = c.first
           @edit[:new][:field_order].push([f.first + " (#{calc_typ.to_s.titleize})", f.last + "__" + calc_typ.to_s]) if @edit[:pivot_cols][f.last].include?(calc_typ)
@@ -1762,12 +1764,12 @@ module ReportController::Reports::Editor
         end
       end
     end
-    return nil
+    nil
   end
 
   def setnode_for_customreport
     @sb[:rpt_menu].each_with_index do |level1_nodes, i|
-      if level1_nodes[0]  == @sb[:grp_title]
+      if level1_nodes[0] == @sb[:grp_title]
         level1_nodes[1].each_with_index do |level2_nodes, k|
           # Check for the existence of the Custom folder in the Reports tree and
           # check if at least one report exists underneath it

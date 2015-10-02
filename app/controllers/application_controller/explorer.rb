@@ -23,7 +23,7 @@ module ApplicationController::Explorer
       params[:x_show] = @hist[:item]
       params[:action] = @hist[:action]  # Look like we came in with this action
       session[:view] = @hist[:view] if @hist[:view]
-      self.send(@hist[:action])
+      send(@hist[:action])
     else                        # Normal explorer tree/link click
       params[:id] = @hist[:id]
       tree_select
@@ -94,7 +94,7 @@ module ApplicationController::Explorer
 
     # Process model actions that are currently implemented
     if X_BUTTON_ALLOWED_ACTIONS[action] == :s1
-      self.send(method)
+      send(method)
     elsif X_BUTTON_ALLOWED_ACTIONS[action] == :s2
       # don't need to set params[:id] and do find_checked_items for methods
       # like ownership, the code in those methods handle it
@@ -102,9 +102,9 @@ module ApplicationController::Explorer
         @_params[:id] = (params[:id] ? [params[:id]] : find_checked_items)[0]
       end
       if ['protect', 'tag'].include?(action)
-        self.send(method, VmOrTemplate)
+        send(method, VmOrTemplate)
       else
-        self.send(method)
+        send(method)
       end
       # if error rendered, do not render any further, do not record history
       # non-error rendering is done below through @refresh_partial
@@ -133,14 +133,14 @@ module ApplicationController::Explorer
   def x_button_response(model, action)
     if @refresh_partial == "layouts/flash_msg"
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     elsif @refresh_partial
       replace_right_cell unless action == 'download_pdf' # no need to render anything when download_pdf button is pressed on summary screen
     else
       add_flash(_("Button not yet implemented") + " #{model}:#{action}", :error) unless @flash_array
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
   end
@@ -167,7 +167,7 @@ module ApplicationController::Explorer
     @object_ids = find_checked_items
     if params[:button] == "reset"
       id = params[:id] if params[:id]
-      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
+      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
       @object_ids = @edit[:object_ids]
       session[:tag_db] = @tagging = @edit[:tagging]
     else
@@ -186,8 +186,8 @@ module ApplicationController::Explorer
 
   # Set form vars for tag editor
   def x_tags_set_form_vars
-    @edit = Hash.new
-    @edit[:new] = Hash.new
+    @edit = {}
+    @edit[:new] = {}
     @edit[:key] = "#{session[:tag_db]}_edit_tags__#{@object_ids[0]}"
     @edit[:object_ids] = @object_ids
     @edit[:tagging] = @tagging
@@ -200,7 +200,7 @@ module ApplicationController::Explorer
 
   def x_edit_tags_cancel
     id = params[:id]
-    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
+    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
     add_flash(_("%s was cancelled by the user") % "Tag Edit")
     get_node_info(x_node)
     @edit = nil # clean out the saved info
@@ -220,16 +220,16 @@ module ApplicationController::Explorer
     # :add_root               # If true, put a root node at the top
     # :full_ids               # stack parent id on top of each node id
 
-    roots = x_get_tree_objects(options.merge({
-                                                 :userid=>session[:userid], # Userid for RBAC filtering
-                                                 :parent=>nil               # Asking for roots, no parent
-                                             }))
+    roots = x_get_tree_objects(options.merge(
+                                 :userid => session[:userid], # Userid for RBAC filtering
+                                 :parent => nil               # Asking for roots, no parent
+    ))
 
     if [:vandt].include?(options[:type]) # :vandt tree is built in a "new" full tree style
       root_nodes = roots[0...-2]
       roots      = roots[-2, 2] # but, still build the archive and orphan trees the old way
     else
-      root_nodes = Array.new
+      root_nodes = []
     end
 
     roots.each do |r|
@@ -237,7 +237,7 @@ module ApplicationController::Explorer
     end
 
     if options[:add_root]
-      node = Hash.new                         # Build the root node
+      node = {}                         # Build the root node
       node[:key] = "root"
       node[:children] = root_nodes
       node[:expand] = true
@@ -295,10 +295,10 @@ module ApplicationController::Explorer
 
     options[:is_current] =
       ((object.kind_of?(MiqServer) && @sb[:my_server_id] == object.id) ||
-       (object.kind_of?(Zone)      && @sb[:my_zone]      == object.name))
+       (object.kind_of?(Zone) && @sb[:my_zone] == object.name))
 
     options.merge!(:active_tree => x_active_tree)
-    options.merge!({:parent_id => pid}) if object.kind_of?(MiqEventDefinition) || object.kind_of?(MiqAction)
+    options.merge!(:parent_id => pid) if object.kind_of?(MiqEventDefinition) || object.kind_of?(MiqAction)
 
     # open nodes to show selected automate entry point
     x_tree(options[:tree])[:open_nodes] = @open_nodes.dup if @open_nodes
@@ -310,7 +310,7 @@ module ApplicationController::Explorer
       # loading nodes under event node incase these were cliked on policy details screen and not yet loaded in the tree
       x_tree(options[:tree])[:open_nodes].push("#{pid}_ev-#{to_cid(object.id)}") if [:policy_profile_tree, :policy_tree].include?(options[:tree])
     when Hash
-      @sb[:auto_select_node] = node['id']||node[:key] if options[:active_tree] == :vmdb_tree
+      @sb[:auto_select_node] = node['id'] || node[:key] if options[:active_tree] == :vmdb_tree
     end
 
     if [:policy_profile_tree, :policy_tree].include?(options[:tree])
@@ -320,12 +320,12 @@ module ApplicationController::Explorer
     # Process the node's children
     if x_tree(options[:tree])[:open_nodes].include?(node[:key]) || options[:open_all]
       kids = []
-      x_get_tree_objects(options.merge({:parent => object})).each do |o|
+      x_get_tree_objects(options.merge(:parent => object)).each do |o|
         kids += x_build_node(o, node[:key], options)
       end
       node[:children] = kids unless kids.empty?
     else
-      if x_get_tree_objects(options.merge({:parent => object, :count_only => true})) > 0
+      if x_get_tree_objects(options.merge(:parent => object, :count_only => true)) > 0
         node[:isLazy] = true  # set child flag if children exist
       end
     end
@@ -347,9 +347,9 @@ module ApplicationController::Explorer
     model, rec_id, prefix = TreeBuilder.extract_node_model_and_id(id)
 
     if model == "Hash"
-      object = {:type=>prefix, :id=>rec_id, :full_id=>id}
-    elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   #creating empty record to show items under unassigned catalog node
-      object = ServiceTemplateCatalog.new()   # Get the object from the DB
+      object = {:type => prefix, :id => rec_id, :full_id => id}
+    elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   # creating empty record to show items under unassigned catalog node
+      object = ServiceTemplateCatalog.new   # Get the object from the DB
     else
       object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
     end
@@ -375,36 +375,36 @@ module ApplicationController::Explorer
       ]
       return count_only ? export_children.length : export_children
     when :ab
-      @resolve[:target_classes] = Hash.new
-      CustomButton.button_classes.each{|db| @resolve[:target_classes][db] = ui_lookup(:model=>db)}
-      #deleting ServiceTemplate, don't need to show those in automate buttons tree
-      @resolve[:target_classes].delete_if {|key, value| key == "ServiceTemplate" }
+      @resolve[:target_classes] = {}
+      CustomButton.button_classes.each { |db| @resolve[:target_classes][db] = ui_lookup(:model => db) }
+      # deleting ServiceTemplate, don't need to show those in automate buttons tree
+      @resolve[:target_classes].delete_if { |key, _value| key == "ServiceTemplate" }
       @sb[:target_classes] = @resolve[:target_classes].invert
       @resolve[:target_classes] = Array(@resolve[:target_classes].invert).sort
-      @resolve[:target_classes].collect{|typ| {:id=>"ab_#{typ[1]}", :text=>typ[0], :image=>buttons_node_image(typ[1]), :tip=>typ[0]}}
-    when :ae,:automate
-      objects = MiqAeNamespace.all(:conditions => ["parent_id is null AND name<>?" ,"$"]).sort_by { |ns| [ns.display_name.to_s, ns.name.to_s] }
+      @resolve[:target_classes].collect { |typ| {:id => "ab_#{typ[1]}", :text => typ[0], :image => buttons_node_image(typ[1]), :tip => typ[0]} }
+    when :ae, :automate
+      objects = MiqAeNamespace.all(:conditions => ["parent_id is null AND name<>?", "$"]).sort_by { |ns| [ns.display_name.to_s, ns.name.to_s] }
       return count_only ? objects.length : objects
     when :db
-      objects = Array.new
+      objects = []
       @default_ws = MiqWidgetSet.where_unique_on("default").where(:read_only => true).first
       text = "#{@default_ws.description} (#{@default_ws.name})"
-      objects.push(:id=>to_cid(@default_ws.id),:text=>text, :image=>"dashboard", :tip=>text )
-      objects.push({:id=>"g", :text=>"All Groups", :image=>"folder", :tip=>"All Groups"})
+      objects.push(:id => to_cid(@default_ws.id), :text => text, :image => "dashboard", :tip => text)
+      objects.push(:id => "g", :text => "All Groups", :image => "folder", :tip => "All Groups")
       return objects
     when :dialog_edit
-      objects = params[:id] ? [Dialog.find_by_id(params[:id])] : [Dialog.new(:label=>"Dialog")]
+      objects = params[:id] ? [Dialog.find_by_id(params[:id])] : [Dialog.new(:label => "Dialog")]
       return count_only ? objects.length : objects
     when :dialogs
       objects = rbac_filtered_objects(Dialog.all).sort_by { |a| a.label.downcase }
       return count_only ? objects.length : objects
     when :old_dialogs
-      MiqDialog::DIALOG_TYPES.sort.collect{|typ| {:id=>"MiqDialog_#{typ[1]}", :text=>typ[0], :image=>"folder", :tip=>typ[0]}}
+      MiqDialog::DIALOG_TYPES.sort.collect { |typ| {:id => "MiqDialog_#{typ[1]}", :text => typ[0], :image => "folder", :tip => typ[0]} }
     when :reports
-      objects = Array.new
-      @sb[:rpt_menu].each_with_index do |r,i|
-        objects.push({:id=>"#{i}", :text=>r[0], :image=>"#{@sb[:grp_title] == r[0] ? "blue_folder" : "folder"}", :tip=>r[0]})
-        #load next level of folders when building the tree
+      objects = []
+      @sb[:rpt_menu].each_with_index do |r, i|
+        objects.push(:id => "#{i}", :text => r[0], :image => "#{@sb[:grp_title] == r[0] ? "blue_folder" : "folder"}", :tip => r[0])
+        # load next level of folders when building the tree
         x_tree(options[:tree])[:open_nodes].push("xx-#{i}")
       end
       return objects
@@ -417,9 +417,9 @@ module ApplicationController::Explorer
       return options[:count_only] ? roles.count : roles.sort_by { |a| a.name.downcase }
     when :schedules
       if super_admin_user? # Super admins see all report schedules
-        objects = MiqSchedule.all(:conditions=>["towhat=?", "MiqReport"])
+        objects = MiqSchedule.all(:conditions => ["towhat=?", "MiqReport"])
       else
-        objects = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])
+        objects = MiqSchedule.all(:conditions => ["towhat=? AND userid=?", "MiqReport", session[:userid]])
       end
       return options[:count_only] ? objects.count : objects.sort_by { |a| a.name.downcase }
     when :vandt, :images, :instances, :filter
@@ -431,20 +431,20 @@ module ApplicationController::Explorer
       else
         return objects +
           [
-            {:id=>"arch", :text=>"<Archived>", :image=>"currentstate-archived", :tip=>"Archived VMs and Templates"},
-            {:id=>"orph", :text=>"<Orphaned>", :image=>"currentstate-orphaned", :tip=>"Orphaned VMs and Templates"}
+            {:id => "arch", :text => "<Archived>", :image => "currentstate-archived", :tip => "Archived VMs and Templates"},
+            {:id => "orph", :text => "<Orphaned>", :image => "currentstate-orphaned", :tip => "Orphaned VMs and Templates"}
           ]
       end
     when :savedreports
       # Saving the unique folder id's that hold reports under them, to use them in view to generate link
-      @sb[:folder_ids] = Hash.new
+      @sb[:folder_ids] = {}
       g = admin_user? ? nil : session[:group]
       MiqReport.having_report_results(:miq_group => g, :select => [:id, :name]).each do |r|
         @sb[:folder_ids][r.name] = to_cid(r.id.to_i)
       end
-      objects = Array.new
-      @sb[:folder_ids].sort.each_with_index do |p,i|
-        objects.push({:id=>p[1], :text=>p[0], :image=>"report", :tip=>p[0]})
+      objects = []
+      @sb[:folder_ids].sort.each_with_index do |p, _i|
+        objects.push(:id => p[1], :text => p[0], :image => "report", :tip => p[0])
       end
       return objects
     when :stcat
@@ -452,11 +452,11 @@ module ApplicationController::Explorer
       return count_only ? objects.length : objects
     when :svccat
       objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort_by { |a| a.name.downcase }
-      filtered_objects = Array.new
-      #only show catalogs nodes that have any servicetemplate records under them
+      filtered_objects = []
+      # only show catalogs nodes that have any servicetemplate records under them
       objects.each do |object|
         items = rbac_filtered_objects(object.service_templates)
-        filtered_objects.push(object) if !items.empty?
+        filtered_objects.push(object) unless items.empty?
       end
       return count_only ? filtered_objects.length : filtered_objects
     when :bottlenecks, :utilization
@@ -464,9 +464,9 @@ module ApplicationController::Explorer
       objects = ent.miq_regions.sort_by { |a| a.description.to_s.downcase }
       return count_only ? objects.length : objects
     when :widgets
-      objects = Array.new
+      objects = []
       WIDGET_TYPES.keys.each do |w|
-        objects.push({:id=>w, :text=>WIDGET_TYPES[w], :image=>"folder", :tip=>WIDGET_TYPES[w]})
+        objects.push(:id => w, :text => WIDGET_TYPES[w], :image => "folder", :tip => WIDGET_TYPES[w])
       end
       return objects
     else
@@ -475,7 +475,7 @@ module ApplicationController::Explorer
   end
 
   # Get ems children count/array
-  def x_get_tree_ems_kids(object, options)
+  def x_get_tree_ems_kids(_object, options)
     raise "x_get_tree_ems_kids called for #{options[:type]} tree"
   end
 
@@ -517,11 +517,11 @@ module ApplicationController::Explorer
 
   def x_get_tree_cluster_kids(object, options)
     objects =  rbac_filtered_objects(object.hosts).sort_by { |a| a.name.downcase }
-    if ![:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
+    unless [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
       objects += rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }
       objects += rbac_filtered_objects(object.vms).sort_by { |a| a.name.downcase }
     end
-    return options[:count_only] ? objects.length : objects
+    options[:count_only] ? objects.length : objects
   end
 
   def x_get_tree_host_kids(object, options)
@@ -539,7 +539,7 @@ module ApplicationController::Explorer
   def x_get_tree_rp_kids(object, options)
     objects =  rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }
     objects += rbac_filtered_objects(object.vmss).sort_by { |a| a.name.downcase }
-    return options[:count_only] ? objects.length : objects
+    options[:count_only] ? objects.length : objects
   end
 
   def x_get_tree_zone_kids(object, options)
@@ -558,22 +558,22 @@ module ApplicationController::Explorer
     if options[:count_only]
       return emses.count + storages.count
     else
-      objects = Array.new
+      objects = []
       if emses.count > 0
-        objects.push({:id=>"folder_e_xx-#{to_cid(object.id)}", :text=>ui_lookup(:tables=>"ext_management_systems"), :image=>"folder", :tip=>"#{ui_lookup(:tables=>"ext_management_systems")} (Click to open)"})
+        objects.push(:id => "folder_e_xx-#{to_cid(object.id)}", :text => ui_lookup(:tables => "ext_management_systems"), :image => "folder", :tip => "#{ui_lookup(:tables => "ext_management_systems")} (Click to open)")
       end
       if storages.count > 0
-        objects.push({:id=>"folder_ds_xx-#{to_cid(object.id)}", :text=>ui_lookup(:tables=>"storages"), :image=>"folder", :tip=>"#{ui_lookup(:tables=>"storages")} (Click to open)"})
+        objects.push(:id => "folder_ds_xx-#{to_cid(object.id)}", :text => ui_lookup(:tables => "storages"), :image => "folder", :tip => "#{ui_lookup(:tables => "storages")} (Click to open)")
       end
       return objects
     end
   end
 
   def x_get_tree_g_kids(object, options)
-    objects = Array.new
-    #dashboard nodes under each group
-    widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup",object.id)
-    #if dashboard sequence was saved, build tree using that, else sort by name and build the tree
+    objects = []
+    # dashboard nodes under each group
+    widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup", object.id)
+    # if dashboard sequence was saved, build tree using that, else sort by name and build the tree
     if object.settings && object.settings[:dashboard_order]
       object.settings[:dashboard_order].each do |ws_id|
         widgetsets.each do |ws|
@@ -585,13 +585,13 @@ module ApplicationController::Explorer
     else
       objects = copy_array(widgetsets)
     end
-    return options[:count_only] ? widgetsets.count : widgetsets.sort_by { |a| a.name.to_s }
+    options[:count_only] ? widgetsets.count : widgetsets.sort_by { |a| a.name.to_s }
   end
 
   def x_get_tree_r_kids(object, options)
-    view, pages = get_view(MiqReportResult, :where_clause=>set_saved_reports_condition(object.id), :all_pages=>true)
+    view, pages = get_view(MiqReportResult, :where_clause => set_saved_reports_condition(object.id), :all_pages => true)
     saved_reps = view.table.data
-    objects = Array.new
+    objects = []
     saved_reps.each do |s|
       objects.push(MiqReportResult.find_by_id(s["id"]))
     end
@@ -602,11 +602,11 @@ module ApplicationController::Explorer
     end
   end
 
-  #get custombuttonset records to build uanssigned/assigned folder nodes
+  # get custombuttonset records to build uanssigned/assigned folder nodes
   def x_get_tree_aset_kids(object, options)
     if options[:count_only]
       if object.id.nil?
-        objects = Array.new
+        objects = []
         CustomButton.buttons_for(object.name.split('|').last.split('-').last).each do |uri|
           objects.push(uri) if uri.parent.nil?
         end
@@ -616,15 +616,15 @@ module ApplicationController::Explorer
       end
     else
       if object.id.nil?
-        objects = Array.new
+        objects = []
         CustomButton.buttons_for(object.name.split('|').last.split('-').last).each do |uri|
           objects.push(uri) if uri.parent.nil?
         end
         return objects.sort_by(&:name)
       else
-        #need to show button nodes in button order that they were saved in
+        # need to show button nodes in button order that they were saved in
         button_order = object[:set_data] && object[:set_data][:button_order] ? object[:set_data][:button_order] : nil
-        objects = Array.new
+        objects = []
         if button_order     # show assigned buttons in order they were saved
           button_order.each do |bidx|
             object.members.each do |b|
@@ -664,12 +664,12 @@ module ApplicationController::Explorer
   end
 
   def x_get_tree_st_kids(object, options)
-    #if options[:count_only]
+    # if options[:count_only]
     #  return options[:type] = :svccat ? 0 : (object.vms_and_templates.count + object.service_templates.count)
-    #else
+    # else
     #  return options[:type] = :svccat ? [] : (object.vms_and_templates.sort_by { |v| v.name.downcase } +
     #      object.service_templates.sort_by { |st| st.name.downcase })
-    #end
+    # end
     if options[:count_only]
       if options[:type] == :svccat
         return 0
@@ -685,7 +685,7 @@ module ApplicationController::Explorer
         if count > 0
           objects =
               [
-                  {:id=>object.id.to_s, :text=>"Actions", :image=>"folder", :tip=>"Actions"}
+                {:id => object.id.to_s, :text => "Actions", :image => "folder", :tip => "Actions"}
               ]
           return objects
         else
@@ -714,8 +714,8 @@ module ApplicationController::Explorer
     when :ab
       nodes = object[:id].split('_')
       objects = CustomButtonSet.find_all_by_class_name(nodes[1])
-      #add as first element of array
-      objects.unshift(CustomButtonSet.new(:name=>"[Unassigned Buttons]|ub-#{nodes[1]}",:description=>"[Unassigned Buttons]"))
+      # add as first element of array
+      objects.unshift(CustomButtonSet.new(:name => "[Unassigned Buttons]|ub-#{nodes[1]}", :description => "[Unassigned Buttons]"))
       return count_only ? objects.length : objects
     when :db
       if object[:id].split('-').first == "g"
@@ -728,16 +728,16 @@ module ApplicationController::Explorer
       objects = MiqDialog.find_all_by_dialog_type(object[:id].split('_').last).sort_by { |a| a.description.downcase }
       return count_only ? objects.length : objects
     when :reports
-      objects = Array.new
+      objects = []
       nodes = object[:full_id] ? object[:full_id].split('-') : object[:id].to_s.split('-')
-      if nodes.length == 1 #&& nodes.last.split('-').length <= 2 #|| nodes.length == 2
-        @sb[:rpt_menu][nodes.last.to_i][1].each_with_index do |r,i|
-          objects.push({:id=>"#{nodes.last.split('-').last}-#{i}", :text=>r[0], :image=>"#{@sb[:grp_title] == @sb[:rpt_menu][nodes.last.to_i][0] ? "blue_folder" : "folder"}", :tip=>r[0]})
+      if nodes.length == 1 # && nodes.last.split('-').length <= 2 #|| nodes.length == 2
+        @sb[:rpt_menu][nodes.last.to_i][1].each_with_index do |r, i|
+          objects.push(:id => "#{nodes.last.split('-').last}-#{i}", :text => r[0], :image => "#{@sb[:grp_title] == @sb[:rpt_menu][nodes.last.to_i][0] ? "blue_folder" : "folder"}", :tip => r[0])
         end
-      elsif nodes.length >= 2 #|| (object[:full_id] && object[:full_id].split('_').length == 2)
+      elsif nodes.length >= 2 # || (object[:full_id] && object[:full_id].split('_').length == 2)
         el1 = nodes.length == 2 ?
               nodes[0].split('_').first.to_i : nodes[1].split('_').first.to_i
-        @sb[:rpt_menu][el1][1][nodes.last.to_i][1].each_with_index do |r,i|
+        @sb[:rpt_menu][el1][1][nodes.last.to_i][1].each_with_index do |r, _i|
           report = MiqReport.find_by_name(r)
           objects.push(report) if report
           # break after adding 1 report for a count_only,
@@ -747,8 +747,8 @@ module ApplicationController::Explorer
       end
       return options[:count_only] ? objects.count : objects
     when :savedreports
-      view, pages = get_view(MiqReportResult, :where_clause=>set_saved_reports_condition(from_cid(object[:id].split('-').last)), :all_pages=>true)
-      objects = Array.new
+      view, pages = get_view(MiqReportResult, :where_clause => set_saved_reports_condition(from_cid(object[:id].split('-').last)), :all_pages => true)
+      objects = []
       view.table.data.each do |s|
         objects.push(MiqReportResult.find_by_id(s["id"]))
       end
@@ -757,28 +757,28 @@ module ApplicationController::Explorer
       case object[:id]
       when "orph" # Orphaned
         objects = rbac_filtered_objects(ManageIQ::Providers::InfraManager::Vm.all_orphaned) +
-            rbac_filtered_objects(ManageIQ::Providers::InfraManager::Template.all_orphaned)
+                  rbac_filtered_objects(ManageIQ::Providers::InfraManager::Template.all_orphaned)
       when "arch" # Archived
         objects = rbac_filtered_objects(ManageIQ::Providers::InfraManager::Vm.all_archived) +
-            rbac_filtered_objects(ManageIQ::Providers::InfraManager::Template.all_archived)
+                  rbac_filtered_objects(ManageIQ::Providers::InfraManager::Template.all_archived)
       end
       options[:count_only] ? objects.length : objects.sort_by { |a| a.name.downcase }
     when :images # Images by Provider tree has orphaned and archived nodes
       # FIXME: orphaned, archived
       case object[:id]
-        when "orph" # Orphaned
-          objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Template.all_orphaned).sort_by { |a| a.name.downcase }
-        when "arch" # Archived
-          objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Template.all_archived).sort_by { |a| a.name.downcase }
+      when "orph" # Orphaned
+        objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Template.all_orphaned).sort_by { |a| a.name.downcase }
+      when "arch" # Archived
+        objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Template.all_archived).sort_by { |a| a.name.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :instances # Instances by Provider tree has orphaned and archived nodes
       # FIXME: orphaned, archived
       case object[:id]
-        when "orph" # Orphaned
-          objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Vm.all_orphaned).sort_by { |a| a.name.downcase }
-        when "arch" # Archived
-          objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Vm.all_archived).sort_by { |a| a.name.downcase }
+      when "orph" # Orphaned
+        objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Vm.all_orphaned).sort_by { |a| a.name.downcase }
+      when "arch" # Archived
+        objects = rbac_filtered_objects(ManageIQ::Providers::CloudManager::Vm.all_archived).sort_by { |a| a.name.downcase }
       end
       return options[:count_only] ? objects.length : objects
     when :filter  # Filter trees have global and my filter nodes
@@ -793,8 +793,8 @@ module ApplicationController::Explorer
       return options[:count_only] ? objects.count : objects.sort_by { |a| a.description.downcase }
     when :bottlenecks, :utilization
       nodes = object[:id].split('_')
-      emses = Array.new
-      storages = Array.new
+      emses = []
+      storages = []
       if (nodes.length > 1 && nodes[1] == "e") || (object[:full_id] && object[:full_id].split('_')[1] == "e")
         rec = MiqRegion.find_by_id(from_cid(nodes.last.split('-').last))
         emses = rbac_filtered_objects(rec.ems_infras)
@@ -831,7 +831,7 @@ module ApplicationController::Explorer
   # FIXME: move partly to Tree once Trees are made from TreeBuilder
   def valid_active_node(treenodeid)
     modelname, rec_id, nodetype = TreeBuilder.extract_node_model_and_id(treenodeid)
-    return treenodeid if ["root",""].include?(nodetype) #incase node is root or doesn't have a prefix
+    return treenodeid if ["root", ""].include?(nodetype) # incase node is root or doesn't have a prefix
     raise _("No Class found for explorer tree node id '%s'") % treenodeid if modelname.nil?
     kls = modelname.constantize
     return treenodeid if kls == Hash

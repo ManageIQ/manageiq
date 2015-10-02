@@ -11,7 +11,6 @@ require 'memory_buffer'
 require 'rufus/lru'
 
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions. Linux 2.6.2 from Fedora Core 6.
 
@@ -80,7 +79,6 @@ module Ext4
   # // Class.
 
   class Superblock
-
     # Default cache sizes.
     DEF_BLOCK_CACHE_SIZE = 50
     DEF_INODE_CACHE_SIZE = 50
@@ -198,27 +196,27 @@ module Ext4
     end
 
     def isDynamic?
-      return @sb['ver_major'] == MV_DYNAMIC
+      @sb['ver_major'] == MV_DYNAMIC
     end
 
     def isNewDirEnt?
-      return gotBit?(@sb['incompat_flags'], ICF_FILE_TYPE)
+      gotBit?(@sb['incompat_flags'], ICF_FILE_TYPE)
     end
 
     def fragmentSize
-      return 1024 << @sb['fragment_size']
+      1024 << @sb['fragment_size']
     end
 
     def blocksPerGroup
-      return @sb['blocks_in_group']
+      @sb['blocks_in_group']
     end
 
     def fragmentsPerGroup
-      return @sb['fragments_in_group']
+      @sb['fragments_in_group']
     end
 
     def inodesPerGroup
-      return @sb['inodes_in_group']
+      @sb['inodes_in_group']
     end
 
     def inodeSize
@@ -226,7 +224,7 @@ module Ext4
     end
 
     def freeBytes
-      return @sb['unallocated_blocks'] * @blockSize
+      @sb['unallocated_blocks'] * @blockSize
     end
 
     def blockNumToGroupNum(block)
@@ -240,11 +238,11 @@ module Ext4
     end
 
     def firstGroupBlockNum(group)
-      return group * @sb['blocks_in_group'] + @sb['block_group_zero']
+      group * @sb['blocks_in_group'] + @sb['block_group_zero']
     end
 
     def inodeNumToGroupNum(inode)
-      return (inode - 1).divmod(inodesPerGroup)
+      (inode - 1).divmod(inodesPerGroup)
     end
 
     def blockToAddress(block)
@@ -256,40 +254,40 @@ module Ext4
     def isValidInode?(inode)
       group, offset = inodeNumToGroupNum(inode)
       gde = gdt[group]
-      return gde.inodeAllocBmp[offset]
+      gde.inodeAllocBmp[offset]
     end
 
     def isValidBlock?(block)
       group, offset = blockNumToGroupNum(block)
       gde = gdt[group]
-      return gde.blockAllocBmp[offset]
+      gde.blockAllocBmp[offset]
     end
 
     # Ignore allocation is for testing only.
-    def getInode(inode, ignore_alloc = false)
-      unless @inode_cache.has_key?(inode)
+    def getInode(inode, _ignore_alloc = false)
+      unless @inode_cache.key?(inode)
         group, offset = inodeNumToGroupNum(inode)
         gde = gdt[group]
-        #raise "Inode #{inode} is not allocated" if (not gde.inodeAllocBmp[offset] and not ignore_alloc)
+        # raise "Inode #{inode} is not allocated" if (not gde.inodeAllocBmp[offset] and not ignore_alloc)
         @stream.seek(blockToAddress(gde.inodeTable) + offset * inodeSize)
         @inode_cache[inode] = Inode.new(@stream.read(inodeSize), self, inode)
         $log.info "Inode num: #{inode}\n#{@inode_cache[inode].dump}\n\n" if $log && @@track_inodes
       end
 
-      return @inode_cache[inode]
+      @inode_cache[inode]
     end
 
     # Ignore allocation is for testing only.
-    def getBlock(block, ignore_alloc = false)
+    def getBlock(block, _ignore_alloc = false)
       raise "Ext4::Superblock.getBlock: block is nil" if block.nil?
 
-      unless @block_cache.has_key?(block)
+      unless @block_cache.key?(block)
         if block == 0
-          @block_cache[block] = MemoryBuffer.create(@blockSize) 
+          @block_cache[block] = MemoryBuffer.create(@blockSize)
         else
           group, offset = blockNumToGroupNum(block)
           gde = gdt[group]
-          #raise "Block #{block} is not allocated" if (not gde.blockAllocBmp[offset] and not ignore_alloc)
+          # raise "Block #{block} is not allocated" if (not gde.blockAllocBmp[offset] and not ignore_alloc)
 
           address = blockToAddress(block)  # This function will read the block into our cache
 
@@ -297,7 +295,7 @@ module Ext4
           @block_cache[block] = @stream.read(@blockSize)
         end
       end
-      return @block_cache[block]
+      @block_cache[block]
     end
 
     def getFeatureStrings
@@ -340,19 +338,19 @@ module Ext4
       extra = rof - (rof & ROF_FLAGS)
       out << "  Extra Flags: 0x%08X\n" % extra if extra != 0
 
-      return out
+      out
     end
 
     # ////////////////////////////////////////////////////////////////////////////
     # // Utility functions.
 
     def gotBit?(field, bit)
-      return field & bit == bit
+      field & bit == bit
     end
 
     # Dump object.
     def dump
-      out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
+      out = "\#<#{self.class}:0x#{'%08x' % object_id}>\n"
       out << "Number of inodes      : #{@sb['num_inodes']}\n"
       out << "Number of blocks      : #{@sb['num_blocks']}\n"
       out << "Reserved blocks       : #{@sb['reserved_blocks']}\n"
@@ -360,10 +358,10 @@ module Ext4
       out << "Unallocated inodes    : #{@sb['unallocated_inodes']}\n"
       out << "Block group 0         : #{@sb['block_group_zero']}\n"
       out << "Block size            : #{@sb['block_size']} (#{@blockSize} bytes)\n"
-      out << "Fragment size         : #{@sb['fragment_size']} (#{self.fragmentSize} bytes)\n"
-      out << "Blocks per group      : #{@sb['blocks_in_group']} (#{self.blocksPerGroup} blocks per group)\n"
-      out << "Fragments per group   : #{@sb['fragments_in_group']} (#{self.fragmentsPerGroup} fragments per group)\n"
-      out << "Inodes per group      : #{@sb['inodes_in_group']} (#{self.inodesPerGroup} inodes per group)\n"
+      out << "Fragment size         : #{@sb['fragment_size']} (#{fragmentSize} bytes)\n"
+      out << "Blocks per group      : #{@sb['blocks_in_group']} (#{blocksPerGroup} blocks per group)\n"
+      out << "Fragments per group   : #{@sb['fragments_in_group']} (#{fragmentsPerGroup} fragments per group)\n"
+      out << "Inodes per group      : #{@sb['inodes_in_group']} (#{inodesPerGroup} inodes per group)\n"
       out << "Last mount time       : #{Time.at(@sb['last_mount_time'])}\n"
       out << "Last write time       : #{Time.at(@sb['last_write_time'])}\n"
       out << "Current mount count   : #{@sb['mount_count']}\n"
@@ -399,7 +397,7 @@ module Ext4
       out << "Number of groups      : #{numGroups}\n"
       out << "Free bytes            : #{freeBytes}\n"
       out << getFeatureStrings
-      return out
+      out
     end
   end
-end #moule Ext4
+end # moule Ext4

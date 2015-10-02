@@ -24,6 +24,6 @@ describe "check_removed_from_provider Method Validation" do
                           :registered => true)
     Vm.any_instance.stub(:refresh_ems)
     ws.root['ae_result'].should         eql("retry")
-    ws.root['vm']['registered'].should  == true
+    ws.root['vm']['registered'].should == true
   end
 end

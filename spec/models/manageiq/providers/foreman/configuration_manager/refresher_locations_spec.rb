@@ -49,8 +49,8 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
 
   def test_system
     system = configuration_manager.configured_systems.where("hostname like 'providerrefreshspec%'").first
-    expect(system.configuration_organization).to eq(orgs.select { |h| h.name =~ /Child/ }.first)
-    expect(system.configuration_location).to     eq(locs.select { |h| h.name =~ /Child/ }.first)
+    expect(system.configuration_organization).to eq(orgs.find { |h| h.name =~ /Child/ })
+    expect(system.configuration_location).to     eq(locs.find { |h| h.name =~ /Child/ })
   end
 
   def test_orgs

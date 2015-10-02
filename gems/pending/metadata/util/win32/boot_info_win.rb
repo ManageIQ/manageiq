@@ -1,16 +1,16 @@
 require 'metadata/util/win32/remote-registry'
 
 module Win32
-	class SystemPath
-		def self.driveAssignment(fs)
+  class SystemPath
+    def self.driveAssignment(fs)
       log_header = "MIQ(SystemPath.driveAssignment)"
-			drives = []
-			regHnd = RemoteRegistry.new(fs, true)
-			xml = regHnd.loadHive("system", ["MountedDevices"])
+      drives = []
+      regHnd = RemoteRegistry.new(fs, true)
+      xml = regHnd.loadHive("system", ["MountedDevices"])
 
       # Find the MountedDevices node
       node = nil
-      xml.elements.each {|e| node = e if e.name == :key && e.attributes[:keyname] == 'MountedDevices'}
+      xml.elements.each { |e| node = e if e.name == :key && e.attributes[:keyname] == 'MountedDevices' }
 
       unless node.nil?
         node.each_element do |e|
@@ -30,12 +30,12 @@ module Win32
             # \??\Volume{...} = 16 3d 17 3d 00 d8 45 5b 05 00 00 00
             # \DosDevices\E:  = 16 3d 17 3d 00 d8 45 5b 05 00 00 00
 
-            drives << {:device=>e.attributes[:name],
-              :name=>e.attributes[:name].split("\\")[-1],
-              :raw_data=>e.text,
-              :serial_num => "0x#{data[3]}#{data[2]}#{data[1]}#{data[0]}".to_i(16),
-              :starting_sector => "0x#{data[8]}#{data[7]}#{data[6]}#{data[5]}".to_i(16) / 2}
-          elsif e.attributes[:name].include?("DosDevices")  && e.text.length <= 100
+            drives << {:device          => e.attributes[:name],
+                       :name            => e.attributes[:name].split("\\")[-1],
+                       :raw_data        => e.text,
+                       :serial_num      => "0x#{data[3]}#{data[2]}#{data[1]}#{data[0]}".to_i(16),
+                       :starting_sector => "0x#{data[8]}#{data[7]}#{data[6]}#{data[5]}".to_i(16) / 2}
+          elsif e.attributes[:name].include?("DosDevices") && e.text.length <= 100
             $log.warn "#{log_header} Skipping disk #{e.attributes[:name]} - (#{e.text.length})#{e.text}"
           end
         end
@@ -45,15 +45,15 @@ module Win32
       # This is a good sign that the OS is in a sysprep state and not fully installed.
       if drives.empty?
         $log.warn "#{log_header} The registry does not contain a mounted device list.  [Possible cause: The OS is in a pre-installed state.]"
-        xml.to_xml.write(xml_str='',0)
+        xml.to_xml.write(xml_str = '', 0)
         $log.warn "#{log_header} HKLM\\SYSTEM\\MountedDevices - START\n#{xml_str}"
         $log.warn "#{log_header} HKLM\\SYSTEM\\MountedDevices - END"
 
-        os_install_loc = Win32::SystemPath.systemIdentifier(fs, :debug=>true)
+        os_install_loc = Win32::SystemPath.systemIdentifier(fs, :debug => true)
         $log.warn "#{log_header} System Install location: <#{os_install_loc.inspect}>"
       end
 
-			return drives
-		end
+      drives
+    end
   end
 end

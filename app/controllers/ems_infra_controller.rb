@@ -1,10 +1,10 @@
 class EmsInfraController < ApplicationController
   include EmsCommon        # common methods for EmsInfra/Cloud controllers
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def self.model
     ManageIQ::Providers::InfraManager
@@ -78,7 +78,9 @@ class EmsInfraController < ApplicationController
     end
   end
 
-  private ############################
+  private
+
+  ############################
   def log_and_flash_message(message)
     add_flash(message, :error)
     $log.error(message)

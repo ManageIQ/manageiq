@@ -22,9 +22,9 @@ describe TreeNodeBuilder do
 
     it 'CustomButton node' do
       button = FactoryGirl.build(:custom_button,
-        :applies_to_class => 'bleugh',
-        :applies_to_id    => nil,
-      )
+                                 :applies_to_class => 'bleugh',
+                                 :applies_to_id    => nil,
+                                )
       node = TreeNodeBuilder.build(button, nil, {})
       node.should_not be_nil
     end
@@ -94,7 +94,7 @@ describe TreeNodeBuilder do
 
     it 'IsoDatastore node' do
       mgmt_system = FactoryGirl.build(:ems_redhat)
-      datastore = FactoryGirl.build(:iso_datastore, :ext_management_system => mgmt_system )
+      datastore = FactoryGirl.build(:iso_datastore, :ext_management_system => mgmt_system)
       node = TreeNodeBuilder.build(datastore, nil, {})
       node.should_not be_nil
     end

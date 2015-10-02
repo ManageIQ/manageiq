@@ -25,7 +25,7 @@ describe Hash do
 
     h.sort!
 
-    h.keys.should      == [:a, :b, :x, :y]
+    h.keys.should == [:a, :b, :x, :y]
     h.object_id.should == h_id
   end
 
@@ -35,7 +35,7 @@ describe Hash do
 
     h.sort_by! { |k, _v| k }
 
-    h.keys.should      == [:a, :b, :x, :y]
+    h.keys.should == [:a, :b, :x, :y]
     h.object_id.should == h_id
   end
 end

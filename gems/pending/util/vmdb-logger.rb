@@ -33,13 +33,13 @@ class VMDBLogger < Logger
     logdev.try(:filename)
   end
 
-  alias filename= logdev=
+  alias_method :filename=, :logdev=
 
   def self.contents(log, width = nil, last = 1000)
     return "" unless File.file?(log)
 
     if last.nil?
-      contents = File.open(log, "rb") { |fh| fh.read }.split("\n")
+      contents = File.open(log, "rb", &:read).split("\n")
     else
       require 'util/miq-system'
       contents = MiqSystem.tail(log, last)
@@ -77,12 +77,12 @@ class VMDBLogger < Logger
     end
 
     # Log the error text
-    self.send(level, "[#{err.class.name}]: #{err.message}  Method:[#{method_name}]")
+    send(level, "[#{err.class.name}]: #{err.message}  Method:[#{method_name}]")
 
     # Log the stack trace except for some specific exceptions
     unless (Object.const_defined?(:MiqException) && err.kind_of?(MiqException::Error)) ||
            (Object.const_defined?(:MiqAeException) && err.kind_of?(MiqAeException::Error))
-      self.send(level, err.backtrace.nil? || err.backtrace.empty? ? "Backtrace is not available" : err.backtrace.join("\n"))
+      send(level, err.backtrace.nil? || err.backtrace.empty? ? "Backtrace is not available" : err.backtrace.join("\n"))
     end
   end
 

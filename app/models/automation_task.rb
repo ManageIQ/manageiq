@@ -3,8 +3,8 @@ class AutomationTask < MiqRequestTask
 
   AUTOMATE_DRIVES = false
 
-  def self.get_description(request_obj)
-    return "Automation Task"
+  def self.get_description(_request_obj)
+    "Automation Task"
   end
 
   def self.base_model
@@ -14,13 +14,13 @@ class AutomationTask < MiqRequestTask
   def do_request
     args = {}
     args[:object_type]      = self.class.name
-    args[:object_id]        = self.id
-    args[:attrs]            = self.options[:attrs]
-    args[:namespace]        = self.options[:namespace]
-    args[:class_name]       = self.options[:class_name]
-    args[:instance_name]    = self.options[:instance_name]
-    args[:user_id]          = self.options[:user_id]
-    args[:automate_message] = self.options[:message]
+    args[:object_id]        = id
+    args[:attrs]            = options[:attrs]
+    args[:namespace]        = options[:namespace]
+    args[:class_name]       = options[:class_name]
+    args[:instance_name]    = options[:instance_name]
+    args[:user_id]          = options[:user_id]
+    args[:automate_message] = options[:message]
 
     MiqAeEngine.deliver(args)
   end
@@ -29,12 +29,12 @@ class AutomationTask < MiqRequestTask
     _log.info("ae_result=#{ae_result.inspect}")
 
     return if ae_result == 'retry'
-    return if self.miq_request.state == 'finished'
+    return if miq_request.state == 'finished'
 
     if ae_result == 'ok'
-      update_and_notify_parent(:state => "finished", :status => "Ok",    :message => "#{self.request_class::TASK_DESCRIPTION} completed")
+      update_and_notify_parent(:state => "finished", :status => "Ok",    :message => "#{request_class::TASK_DESCRIPTION} completed")
     else
-      update_and_notify_parent(:state => "finished", :status => "Error", :message => "#{self.request_class::TASK_DESCRIPTION} failed")
+      update_and_notify_parent(:state => "finished", :status => "Error", :message => "#{request_class::TASK_DESCRIPTION} failed")
     end
   end
 end

@@ -3,29 +3,29 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
 
   def workers_quiesced?
     # do a subset of the monitor_workers loop to allow for graceful exit
-    self.heartbeat
+    heartbeat
 
     self.class.monitor_class_names.each do |class_name|
-      self.check_not_responding(class_name)
-      self.check_pending_stop(class_name)
-      self.clean_worker_records(class_name)
+      check_not_responding(class_name)
+      check_pending_stop(class_name)
+      clean_worker_records(class_name)
     end
 
-    return true if self.miq_workers.all?(&:is_stopped?)
+    return true if miq_workers.all?(&:is_stopped?)
 
     if self.quiesce_workers_loop_timeout?
       killed_workers = []
-      self.miq_workers.each do |w|
+      miq_workers.each do |w|
         w.kill
         worker_delete(w.pid)
         killed_workers << w
       end
-      self.miq_workers.delete(*killed_workers) unless killed_workers.empty?
+      miq_workers.delete(*killed_workers) unless killed_workers.empty?
       return true
     end
 
-    self.kill_timed_out_worker_quiesce
-    return false
+    kill_timed_out_worker_quiesce
+    false
   end
 
   def quiesce_workers_loop
@@ -36,20 +36,20 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     @quiesce_loop_timeout = @worker_monitor_settings[:quiesce_loop_timeout] || 5.minutes
     worker_monitor_poll = (@worker_monitor_settings[:poll] || 1.seconds).to_i_with_method
 
-    self.miq_workers.each { |w| stop_worker(w) }
+    miq_workers.each { |w| stop_worker(w) }
     loop do
-      self.reload # Reload from SQL this MiqServer AND its miq_workers association
+      reload # Reload from SQL this MiqServer AND its miq_workers association
       break if self.workers_quiesced?
       sleep worker_monitor_poll
     end
   end
 
   def quiesce_all_workers
-    self.quiesce_workers_loop
+    quiesce_workers_loop
 
     # Mark all messages currently being worked on by the not responding server's workers as error
     _log.info("Cleaning all active messages being processed by MiqServer")
-    self.miq_workers.each(&:clean_active_messages)
+    miq_workers.each(&:clean_active_messages)
   end
 
   def quiesce_workers_loop_timeout?
@@ -57,7 +57,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
       _log.warn("Timed out after #{@quiesce_loop_timeout} seconds")
       return true
     end
-    return false
+    false
   end
 
   def quiesce_timed_out?(allowance)

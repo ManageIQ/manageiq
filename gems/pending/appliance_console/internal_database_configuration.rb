@@ -98,12 +98,12 @@ module ApplianceConsole
     end
 
     def create_partition_to_fill_disk
-      #FIXME when LinuxAdmin has this feature
+      # FIXME: when LinuxAdmin has this feature
       @disk.create_partition_table # LinuxAdmin::Disk.create_partition has this already...
       LinuxAdmin.run!("parted -s #{@disk.path} mkpart primary 0% 100%")
 
-      #FIXME: Refetch the disk after creating the partition
-      @disk = LinuxAdmin::Disk.local.select {|d| d.path == @disk.path}.first
+      # FIXME: Refetch the disk after creating the partition
+      @disk = LinuxAdmin::Disk.local.find { |d| d.path == @disk.path }
       @disk.partitions.first
     end
 
@@ -126,7 +126,7 @@ module ApplianceConsole
     end
 
     def mount_database_disk
-      #TODO: should this be moved into LinuxAdmin?
+      # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(PostgresAdmin.data_directory)
       FileUtils.mkdir_p(PostgresAdmin.data_directory)
       LinuxAdmin.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, PostgresAdmin.data_directory]})
@@ -134,7 +134,7 @@ module ApplianceConsole
 
     def update_fstab
       fstab = LinuxAdmin::FSTab.instance
-      return if fstab.entries.find {|e| e.mount_point == PostgresAdmin.data_directory}
+      return if fstab.entries.find { |e| e.mount_point == PostgresAdmin.data_directory }
 
       entry = LinuxAdmin::FSTabEntry.new(
         :device        => @logical_volume.path,
@@ -157,7 +157,7 @@ module ApplianceConsole
     end
 
     def run_initdb
-      LinuxAdmin.run!("service", :params => { nil => [PostgresAdmin.service_name, "initdb"]})
+      LinuxAdmin.run!("service", :params => {nil => [PostgresAdmin.service_name, "initdb"]})
     end
 
     def start_postgres

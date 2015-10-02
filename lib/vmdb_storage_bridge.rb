@@ -16,7 +16,7 @@ class VmdbStorageBridge
 
   def initialize
     @zone = MiqServer.my_server.zone.id
-    @agent  = CimVmdbAgent.find(:all, :conditions => { :agent_type => 'VMDB', :zone_id => @zone }).first
+    @agent  = CimVmdbAgent.find(:all, :conditions => {:agent_type => 'VMDB', :zone_id => @zone}).first
     @agent  = CimVmdbAgent.add(nil, nil, nil, 'VMDB', @zone, "VMDB-#{@zone}") unless @agent
   end
 
@@ -139,7 +139,7 @@ class VmdbStorageBridge
       last_conn_error.set_backtrace([])
       raise last_conn_error
     end
-    return nil
+    nil
   end
 
   def getNode(cimClassName, row)
@@ -149,10 +149,10 @@ class VmdbStorageBridge
     node = MiqCimInstance.find_by_obj_name_str(objNameStr)
 
     raise "Node not found: #{objNameStr}" if node.nil?
-    return node
+    node
   end
 
-  def newNode(row, cimClassName, additionalProperties={}, tsObj=nil)
+  def newNode(row, cimClassName, additionalProperties = {}, tsObj = nil)
     objName     = rowToObjName(row, cimClassName)
     objNameStr    = objName.to_s
     newCimInstance  = WBEM::CIMInstance.new(cimClassName, rowToHash(row).merge(additionalProperties))
@@ -162,7 +162,7 @@ class VmdbStorageBridge
     if node.nil?
       node = MiqCimInstance.new
       node.class_name       = cimClassName
-      node.class_hier       = [ cimClassName ]
+      node.class_hier       = [cimClassName]
       node.obj_name       = objName
       node.obj_name_str     = objNameStr
       node.source         = "VMDB"
@@ -202,7 +202,7 @@ class VmdbStorageBridge
       node.mark_associations_stale
     end
 
-    return(node)
+    (node)
   end
 
   def rowToObjName(row, cimClassName)
@@ -250,7 +250,7 @@ class VmdbStorageBridge
         end
       end
     end
-    return nil
+    nil
   end
 
   def getFileshareRefs
@@ -274,7 +274,7 @@ class VmdbStorageBridge
         end
       end
     end
-    return refs
+    refs
   end
 
   def getStorageVolumeRefs
@@ -283,12 +283,12 @@ class VmdbStorageBridge
     CimStorageVolume.find_each do |sv|
       svHash[sv.correlatable_id] = sv.id
     end
-    return svHash
+    svHash
   end
 
   def rowToHash(row)
     rv = {}
     row.class.column_names.each { |cn| rv[cn] = row[cn] if WBEM.valid_cimtype?(row[cn]) }
-    return rv
+    rv
   end
 end

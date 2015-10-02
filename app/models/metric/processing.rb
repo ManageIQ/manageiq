@@ -11,7 +11,7 @@ module Metric::Processing
     :derived_vm_count_off,
     :derived_vm_count_on,
     :derived_vm_numvcpus, # This is actually logical cpus, but needs to be renamed.
-                          # See VimPerformanceState#capture_numvcpus
+    # See VimPerformanceState#capture_numvcpus
     :derived_vm_used_disk_storage,
     # TODO(lsmola) as described below, this field should be named derived_cpu_used
     :cpu_usagemhz_rate_average
@@ -64,9 +64,9 @@ module Metric::Processing
           # needed, but perhaps should be added to normalize like is done for
           # memory.  The derivation here could then use cpu_usagemhz_rate_average
           # directly if avaiable, otherwise do the calculation below.
-          result[col] = ( attrs[:cpu_usage_rate_average]     / 100 * total_cpu ) unless (total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?)
+          result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu) unless total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?
         elsif group == "memory"
-          result[col] = ( attrs[:mem_usage_absolute_average] / 100 * total_mem ) unless (total_mem == 0  || attrs[:mem_usage_absolute_average].nil?)
+          result[col] = (attrs[:mem_usage_absolute_average] / 100 * total_mem) unless total_mem == 0 || attrs[:mem_usage_absolute_average].nil?
         else
           method = col.to_s.split("_")[1..-1].join("_")
           result[col] = state.send(method) if state.respond_to?(method)
@@ -76,7 +76,7 @@ module Metric::Processing
           # TODO(lsmola) for some reason, this column is used in chart, although from processing code above, it should
           # be named derived_cpu_used. Investigate what is the right solution and make it right. For now lets fill
           # the column shown in charts.
-          result[col] = ( attrs[:cpu_usage_rate_average] / 100 * total_cpu ) unless (total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?)
+          result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu) unless total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?
         end
       when "reserved"
         method = group == "cpu" ? :reserve_cpu : :reserve_mem
@@ -97,7 +97,7 @@ module Metric::Processing
     result[:parent_storage_id] = state.parent_storage_id
     result[:parent_ems_id] = state.parent_ems_id
     result[:parent_ems_cluster_id] = state.parent_ems_cluster_id
-    return result
+    result
   end
 
   def self.add_missing_intervals(obj, interval_name, start_time, end_time)
@@ -111,7 +111,7 @@ module Metric::Processing
 
     last_perf = {}
     obj.send(meth).all(:conditions => cond, :order => "timestamp, capture_interval_name").each do |perf|
-      interval = self.interval_name_to_interval(perf.capture_interval_name)
+      interval = interval_name_to_interval(perf.capture_interval_name)
       last_perf[interval] = perf if last_perf[interval].nil?
 
       if (perf.timestamp - last_perf[interval].timestamp) <= interval
@@ -130,9 +130,9 @@ module Metric::Processing
       unless perf.assoc_ids.nil?
         Metric::Rollup::ASSOC_KEYS.each do |assoc|
           next if new_perf.assoc_ids.nil? || new_perf.assoc_ids[assoc].blank? || perf.assoc_ids[assoc].blank?
-          new_perf.assoc_ids[assoc][:on]  ||= []
+          new_perf.assoc_ids[assoc][:on] ||= []
           new_perf.assoc_ids[assoc][:off] ||= []
-          new_perf.assoc_ids[assoc][:on]  = (new_perf.assoc_ids[assoc][:on]  + perf.assoc_ids[assoc][:on]).uniq!
+          new_perf.assoc_ids[assoc][:on]  = (new_perf.assoc_ids[assoc][:on] + perf.assoc_ids[assoc][:on]).uniq!
           new_perf.assoc_ids[assoc][:off] = (new_perf.assoc_ids[assoc][:off] + perf.assoc_ids[assoc][:off]).uniq!
         end
       end
@@ -144,9 +144,9 @@ module Metric::Processing
 
   def self.interval_name_to_interval(name)
     case name
-    when "realtime"; 20
-    when "hourly";   1.hour.to_i
-    when "daily";    1.day.to_i
+    when "realtime" then 20
+    when "hourly" then   1.hour.to_i
+    when "daily" then    1.day.to_i
     else             raise "unknown interval name: [#{name}]"
     end
   end

@@ -119,7 +119,7 @@ module ManageIQ::Providers::Kubernetes
       node_memory &&= parse_iec_number(node_memory) / 1.megabyte
 
       new_result[:computer_system] = {
-        :hardware => {
+        :hardware         => {
           :logical_cpus => node.status.capacity.cpu,
           :memory_cpu   => node_memory
         },
@@ -262,10 +262,10 @@ module ManageIQ::Providers::Kubernetes
         (subset.addresses || []).each do |address|
           next if address.targetRef.try(:kind) != 'Pod'
           cg = @data_index.fetch_path(
-              :container_groups, :by_namespace_and_name,
-              # namespace is overriden in more_core_extensions and hence needs
-              # a non method access
-              address.targetRef["table"][:namespace], address.targetRef.name)
+            :container_groups, :by_namespace_and_name,
+            # namespace is overriden in more_core_extensions and hence needs
+            # a non method access
+            address.targetRef["table"][:namespace], address.targetRef.name)
           new_result[:container_groups] << cg unless cg.nil?
         end
       end
@@ -342,7 +342,7 @@ module ManageIQ::Providers::Kubernetes
         :image_pull_policy => container_def.imagePullPolicy,
         :command           => container_def.command ? Shellwords.join(container_def.command) : nil,
         :memory            => container_def.memory,
-         # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
+        # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
         :cpu_cores         => container_def.cpu.to_f / 1000,
         :capabilities_add  => container_def.securityContext.try(:capabilities).try(:add).to_a.join(','),
         :capabilities_drop => container_def.securityContext.try(:capabilities).try(:drop).to_a.join(','),

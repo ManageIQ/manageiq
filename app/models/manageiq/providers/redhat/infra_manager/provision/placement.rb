@@ -21,15 +21,15 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Placement
   end
 
   def selected_placement_host
-    Host.where(:id => get_option(:placement_host_name)).first
+    Host.find_by(:id => get_option(:placement_host_name))
   end
 
   def selected_placement_ds
-    Storage.where(:id => get_option(:placement_ds_name)).first
+    Storage.find_by(:id => get_option(:placement_ds_name))
   end
 
   def selected_placement_cluster
-    EmsCluster.where(:id => get_option(:placement_cluster_name)).first.tap do |cluster|
+    EmsCluster.find_by(:id => get_option(:placement_cluster_name)).tap do |cluster|
       raise MiqException::MiqProvisionError, 'Destination cluster not provided' unless cluster
     end
   end

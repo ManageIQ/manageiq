@@ -16,7 +16,7 @@ module ReportFormatter
     def sum
       case @type
       when :flat then reduce(0.0) { |sum, value| sum + value }
-      when :pie  then reduce(0.0) { |sum, (label, value)| sum + value }
+      when :pie  then reduce(0.0) { |sum, (_label, value)| sum + value }
       end
     end
 
@@ -29,7 +29,7 @@ module ReportFormatter
 
     def add_to_value(index, addition)
       case @type
-      when :flat then self[index]    += addition
+      when :flat then self[index] += addition
       when :pie  then self[index][1] += addition
       end
     end

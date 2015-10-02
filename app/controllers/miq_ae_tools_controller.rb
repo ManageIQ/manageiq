@@ -1,9 +1,8 @@
 class MiqAeToolsController < ApplicationController
-
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
     resolve
@@ -26,7 +25,7 @@ class MiqAeToolsController < ApplicationController
       return
     end
 
-    if ! @refresh_partial # if no button handler ran, show not implemented msg
+    unless @refresh_partial # if no button handler ran, show not implemented msg
       add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
@@ -34,15 +33,15 @@ class MiqAeToolsController < ApplicationController
   end
 
   def log
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     @log = $miq_ae_logger.contents if $miq_ae_logger
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     @lastaction = "log"
     @layout = "miq_ae_logs"
     @msg_title = "AE"
     @download_action = "fetch_log"
-    drop_breadcrumb( {:name=>"Log", :url=>"/miq_ae_tools/log"} )
-    render :action=>"show"
+    drop_breadcrumb(:name => "Log", :url => "/miq_ae_tools/log")
+    render :action => "show"
   end
 
   def refresh_log
@@ -50,7 +49,7 @@ class MiqAeToolsController < ApplicationController
     @log = $miq_ae_logger.contents if $miq_ae_logger
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
     render :update do |page|                    # Use JS to update the display
-      page.replace_html("main_div", :partial=>"layouts/log_viewer", :locals=>{:legend_text=>"Last 1000 lines from the Automation log"})
+      page.replace_html("main_div", :partial => "layouts/log_viewer", :locals => {:legend_text => "Last 1000 lines from the Automation log"})
     end
   end
 
@@ -58,20 +57,20 @@ class MiqAeToolsController < ApplicationController
   def fetch_log
     assert_privileges("fetch_log")
     disable_client_cache
-    send_data($miq_ae_logger.contents(nil,nil),
-      :filename => "automation.log" ) if $miq_ae_logger
-    AuditEvent.success(:userid=>session[:userid],:event=>"download_automation_log",:message=>"Automation log downloaded")
+    send_data($miq_ae_logger.contents(nil, nil),
+              :filename => "automation.log") if $miq_ae_logger
+    AuditEvent.success(:userid => session[:userid], :event => "download_automation_log", :message => "Automation log downloaded")
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
   def form_field_changed
     get_form_vars
     render :update do |page|                    # Use JS to update the display
-      if params.has_key?(:instance_name) || params.has_key?(:starting_object) ||
-          params.has_key?(:target_class) || params.has_key?(:target_id) ||
-          params.has_key?(:other_name) || params.has_key?(:target_attr_name)
-        unless params.has_key?(:other_name) || params.has_key?(:target_attr_name)
-          page.replace("resolve_form_div", :partial=>"resolve_form")
+      if params.key?(:instance_name) || params.key?(:starting_object) ||
+         params.key?(:target_class) || params.key?(:target_id) ||
+         params.key?(:other_name) || params.key?(:target_attr_name)
+        unless params.key?(:other_name) || params.key?(:target_attr_name)
+          page.replace("resolve_form_div", :partial => "resolve_form")
         end
         if @resolve[:throw_ready]
           page << javascript_hide("throw_off")
@@ -86,15 +85,15 @@ class MiqAeToolsController < ApplicationController
 
   def import_export
     @in_a_form = true
-    @breadcrumbs = Array.new
-    drop_breadcrumb( {:name=>"Import / Export", :url=>"/miq_ae_tools/import_export"} )
+    @breadcrumbs = []
+    drop_breadcrumb(:name => "Import / Export", :url => "/miq_ae_tools/import_export")
     @lastaction = "import_export"
     @layout = "miq_ae_export"
     @importable_domain_options = [["<Same as import from>", nil]]
     MiqAeDomain.all_unlocked.collect do |domain|
       @importable_domain_options << [domain.name, domain.name]
     end
-    render :action=>"show"
+    render :action => "show"
   end
 
   def automate_json
@@ -187,15 +186,15 @@ Namespaces updated/added: %{namespace_stats}
 Classes updated/added: %{class_stats}
 Instances updated/added: %{instance_stats}
 Methods updated/added: %{method_stats}") % stat_options)
-        redirect_to :action => 'import_export', :flash_msg=>@flash_array[0][:message]         # redirect to build the retire screen
+        redirect_to :action => 'import_export', :flash_msg => @flash_array[0][:message]         # redirect to build the retire screen
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "upload" << bang.message, :error)
-        redirect_to :action => 'import_export', :flash_msg=>@flash_array[0][:message], :flash_error=>true         # redirect to build the retire screen
+        redirect_to :action => 'import_export', :flash_msg => @flash_array[0][:message], :flash_error => true         # redirect to build the retire screen
       end
     else
       @in_a_form = true
       add_flash(_("Use the Browse button to locate an Import file"), :error)
-#     render :action=>"import_export"
+      #     render :action=>"import_export"
       import_export
     end
   end
@@ -205,7 +204,7 @@ Methods updated/added: %{method_stats}") % stat_options)
     filename = "datastore_" + format_timezone(Time.now, Time.zone, "fname") + ".zip"
     disable_client_cache
     send_data(MiqAeDatastore.export,
-        :filename => filename)
+              :filename => filename)
   end
 
   # Reset all custom classes and instances to default
@@ -219,13 +218,13 @@ Methods updated/added: %{method_stats}") % stat_options)
     session[:ae_task_id] = params[:task_id]
 
     if miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(_("Error during %{task}: Status [%{status}] Message [%{message}]") % {:task=>"reset", :status=>miq_task.status, :message=>miq_task.message}, :error)
+      add_flash(_("Error during %{task}: Status [%{status}] Message [%{message}]") % {:task => "reset", :status => miq_task.status, :message => miq_task.message}, :error)
     else
       self.x_node = "root" if x_active_tree == :ae_tree && x_tree
       add_flash(_("All custom classes and instances have been reset to default"))
     end
     render :update do |page|          # Use RJS to update the display
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
   end
@@ -277,7 +276,7 @@ Methods updated/added: %{method_stats}") % stat_options)
     end
   end
 
-  def ws_text_from_xml(xml, depth=0)
+  def ws_text_from_xml(xml, depth = 0)
     txt = ""
     if depth == 0
       txt += "<#{xml.root.name}>\n"
@@ -291,34 +290,34 @@ Methods updated/added: %{method_stats}") % stat_options)
       txt += "<\\#{xml.root.name}>"
     else
       xml.each_element do |e|
-        depth.times{txt += "  "}
+        depth.times { txt += "  " }
         txt += e.inspect + "\n"
         txt += ws_text_from_xml(e, depth + 1)
-        depth.times{txt += "  "}
+        depth.times { txt += "  " }
         txt += "<\\#{e.name}>\n"
       end
     end
-    return txt
+    txt
   end
 
   def ws_tree_from_xml(xml_string)
     xml = MiqXml.load(xml_string)
-    top_nodes = Array.new
+    top_nodes = []
     @idx = 0
     xml.root.each_element do |e|
       top_nodes.push(ws_tree_add_node(e))
     end
-    return top_nodes.to_json
+    top_nodes.to_json
   end
 
   def ws_tree_add_node(el)
-    e_node = Hash.new
+    e_node = {}
     e_node[:key] = "e_#{@idx}"
     @idx += 1
-#   e_node['tooltip'] = "Host: #{@host.name}"
+    #   e_node['tooltip'] = "Host: #{@host.name}"
     e_node[:style] = "cursor:default"          # No cursor pointer
     e_node[:addClass] = "cfme-no-cursor-node"
-    e_kids = Array.new
+    e_kids = []
     if el.name == "MiqAeObject"
       e_node[:title] = "#{el.attributes["namespace"]} <b>/</b> #{el.attributes["class"]} <b>/</b> #{el.attributes["instance"]}"
       e_node[:icon] = "q.png"
@@ -331,8 +330,8 @@ Methods updated/added: %{method_stats}") % stat_options)
     else
       e_node[:title] = el.name
       e_node[:icon] = "#{e_node[:title].underscore}.png"
-      el.attributes.each_pair do |k,v|
-        a_node = Hash.new
+      el.attributes.each_pair do |k, v|
+        a_node = {}
         a_node[:key] = "a_#{@idx}"
         @idx += 1
         a_node[:title] = "#{k} <b>=</b> #{v}"
@@ -344,7 +343,7 @@ Methods updated/added: %{method_stats}") % stat_options)
       e_kids.push(ws_tree_add_node(e))
     end
     e_node[:children] = e_kids unless e_kids.empty?
-    return e_node
+    e_node
   end
 
   def valid_resolve_object?
@@ -352,35 +351,35 @@ Methods updated/added: %{method_stats}") % stat_options)
     add_flash(_("%s is required") % "Starting Process", :error) if @resolve[:new][:instance_name].blank? && @resolve[:new][:other_name].blank?
     add_flash(_("%s is required") % "Request", :error) if @resolve[:new][:object_request].blank?
     AE_MAX_RESOLUTION_FIELDS.times do |i|
-      f = ("attribute_" + (i+1).to_s)
-      v = ("value_" + (i+1).to_s)
-      add_flash(_("%{val} missing for %{field}") % {:val=>f.titleize, :field=>v.titleize}, :error) if @resolve[:new][:attrs][i][0].blank? && !@resolve[:new][:attrs][i][1].blank?
-      add_flash(_("%{val} missing for %{field}") % {:val=>v.titleize, :field=>f.titleize}, :error) if !@resolve[:new][:attrs][i][0].blank? && @resolve[:new][:attrs][i][1].blank?
+      f = ("attribute_" + (i + 1).to_s)
+      v = ("value_" + (i + 1).to_s)
+      add_flash(_("%{val} missing for %{field}") % {:val => f.titleize, :field => v.titleize}, :error) if @resolve[:new][:attrs][i][0].blank? && !@resolve[:new][:attrs][i][1].blank?
+      add_flash(_("%{val} missing for %{field}") % {:val => v.titleize, :field => f.titleize}, :error) if !@resolve[:new][:attrs][i][0].blank? && @resolve[:new][:attrs][i][1].blank?
     end
-    return !flash_errors?
+    !flash_errors?
   end
 
   def get_form_vars
-    if params.has_key?(:starting_object)
+    if params.key?(:starting_object)
       @resolve[:new][:starting_object] = params[:starting_object]
       @resolve[:new][:instance_name] = nil
     end
     if params[:readonly]
       @resolve[:new][:readonly] = (params[:readonly] != "1")
     end
-    @resolve[:new][:instance_name] = params[:instance_name] if params.has_key?(:instance_name)
-    @resolve[:new][:other_name] = params[:other_name] if params.has_key?(:other_name)
-    @resolve[:new][:object_message] = params[:object_message] if params.has_key?(:object_message)
-    @resolve[:new][:object_request] = params[:object_request] if params.has_key?(:object_request)
+    @resolve[:new][:instance_name] = params[:instance_name] if params.key?(:instance_name)
+    @resolve[:new][:other_name] = params[:other_name] if params.key?(:other_name)
+    @resolve[:new][:object_message] = params[:object_message] if params.key?(:object_message)
+    @resolve[:new][:object_request] = params[:object_request] if params.key?(:object_request)
     AE_MAX_RESOLUTION_FIELDS.times do |i|
-      f = ("attribute_" + (i+1).to_s)
-      v = ("value_" + (i+1).to_s)
+      f = ("attribute_" + (i + 1).to_s)
+      v = ("value_" + (i + 1).to_s)
       @resolve[:new][:attrs][i][0] = params[f] if params[f.to_sym]
       @resolve[:new][:attrs][i][1] = params[v] if params[v.to_sym]
     end
     @resolve[:new][:target_class] = params[:target_class] if params[:target_class]
-#   @resolve[:new][:target_attr_name] = params[:target_attr_name] if params.has_key?(:target_attr_name)
-    if params.has_key?(:target_class)
+    #   @resolve[:new][:target_attr_name] = params[:target_attr_name] if params.has_key?(:target_attr_name)
+    if params.key?(:target_class)
       @resolve[:new][:target_class] = params[:target_class]
       klass = CustomButton.name_to_button_class(params[:target_class])
       unless klass.nil?
@@ -390,9 +389,9 @@ Methods updated/added: %{method_stats}") % stat_options)
       end
     end
     @resolve[:new][:target_id] = nil if params[:target_class] == ""
-    @resolve[:new][:target_id] = params[:target_id] if params.has_key?(:target_id)
-    @resolve[:button_text] = params[:button_text] if params.has_key?(:button_text)
-    @resolve[:button_number] = params[:button_number] if params.has_key?(:button_number)
+    @resolve[:new][:target_id] = params[:target_id] if params.key?(:target_id)
+    @resolve[:button_text] = params[:button_text] if params.key?(:button_text)
+    @resolve[:button_number] = params[:button_number] if params.key?(:button_number)
     @resolve[:throw_ready] = ready_to_throw
   end
 
@@ -404,5 +403,4 @@ Methods updated/added: %{method_stats}") % stat_options)
   def set_session_data
     session[:resolve] = @resolve if @resolve
   end
-
 end

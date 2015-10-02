@@ -10,11 +10,11 @@ describe Module do
     before(:each) do
       @settings = 60
 
-      lambda { TestClass.cache_with_timeout(:default) {rand} }.should_not raise_error
-      lambda { TestClass.cache_with_timeout(:override, 60) {rand} }.should_not raise_error
-      lambda { TestClass.cache_with_timeout(:override_proc, lambda { @settings }) {rand} }.should_not raise_error
+      -> { TestClass.cache_with_timeout(:default) { rand } }.should_not raise_error
+      -> { TestClass.cache_with_timeout(:override, 60) { rand } }.should_not raise_error
+      -> { TestClass.cache_with_timeout(:override_proc, -> { @settings }) { rand } }.should_not raise_error
 
-      lambda { TestModule.cache_with_timeout(:default) {rand} }.should_not raise_error
+      -> { TestModule.cache_with_timeout(:default) { rand } }.should_not raise_error
     end
 
     after(:each) do

@@ -46,11 +46,11 @@ describe MiqHostProvisionRequest do
       it "should create proper MiqQueue item" do
         MiqQueue.count.should == 1
         q = MiqQueue.first
-        q.class_name.should  == @pr.miq_request.class.name
+        q.class_name.should == @pr.miq_request.class.name
         q.instance_id.should == @pr.miq_request.id
         q.method_name.should == "call_automate_event"
-        q.args.should        == %w(request_created)
-        q.zone.should        == "default"
+        q.args.should == %w(request_created)
+        q.zone.should == "default"
       end
     end
 
@@ -99,7 +99,7 @@ describe MiqHostProvisionRequest do
 
         child_names = t.children.collect(&:name)
         # Make sure each child name is yield from the tag method
-        @pr.tags { |tag_name, classification| child_names.delete(tag_name) }
+        @pr.tags { |tag_name, _classification| child_names.delete(tag_name) }
         child_names.should be_empty
 
         tags = @pr.get_classification(t.name)

@@ -77,7 +77,7 @@ def activate_paginations
     cmd = " ssh #{ssh_user}@#{env["ip"]} "\
           " 'curl http://file.brq.redhat.com/~lsmola/miq/#{file} | bash -x' "
     puts cmd
-    %x[ #{cmd} ]
+    ` #{cmd} `
   end
 end
 
@@ -91,20 +91,20 @@ def deactivate_paginations
 
     puts "-------------------------------------------------------------------------------------------------------------"
     case @environment
-      when :grizzly
-        puts " We don't support pagination for grizzly"
-        next
-      when :havana
-        file = "openstack-deactivate-pagination-rhel6"
-      else
-        file = "openstack-deactivate-pagination"
+    when :grizzly
+      puts " We don't support pagination for grizzly"
+      next
+    when :havana
+      file = "openstack-deactivate-pagination-rhel6"
+    else
+      file = "openstack-deactivate-pagination"
     end
 
     puts "Deactivate paginations in installed OpenStack #{env_name}"
     cmd = " ssh #{ssh_user}@#{env["ip"]} "\
           " 'curl http://file.brq.redhat.com/~lsmola/miq/#{file} | bash -x' "
     puts cmd
-    %x[ #{cmd} ]
+    ` #{cmd} `
   end
 end
 

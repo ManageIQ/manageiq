@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe "Server Role Management" do
-
   context "After Setup," do
     before(:each) do
       @csv = <<-CSV.gsub(/^\s+/, "")
@@ -65,7 +64,7 @@ describe "Server Role Management" do
 
         desired = 'ems_operations,ems_operations,scheduler'
         @miq_server.role = desired
-        @miq_server.server_role_names.should == %w{ ems_operations scheduler }
+        @miq_server.server_role_names.should == %w( ems_operations scheduler )
       end
 
       it "with duplicate new roles" do
@@ -73,12 +72,12 @@ describe "Server Role Management" do
 
         desired = 'ems_operations,scheduler,scheduler'
         @miq_server.role = desired
-        @miq_server.server_role_names.should == %w{ ems_operations scheduler }
+        @miq_server.server_role_names.should == %w( ems_operations scheduler )
       end
     end
 
     it "should assign role properly when requested" do
-      @roles = [ ['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 1], ['reporting', 1] ]
+      @roles = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 1], ['reporting', 1]]
       @roles.each do |role, priority|
         asr = @miq_server.assign_role(role, priority)
         asr.priority.should == priority

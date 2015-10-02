@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqGroup do
-
   context "set as Super Administrator" do
     before(:each) do
       @miq_group = FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator")
@@ -47,7 +46,7 @@ describe MiqGroup do
       end
     end
 
-    %w{managed belongsto}.each do |type|
+    %w(managed belongsto).each do |type|
       context "#get_#{type}_filters" do
         let(:method) { "get_#{type}_filters" }
 
@@ -91,7 +90,7 @@ describe MiqGroup do
     end
 
     it "should return user count" do
-      #TODO - add more users to check for proper user count...
+      # TODO: - add more users to check for proper user count...
       @miq_group.user_count.should == 0
     end
 
@@ -145,18 +144,18 @@ describe MiqGroup do
     it "should issue an error message when user name could not be bound to LDAP" do
       MiqLdap.new.stub(:bind => false)
       # darn, wanted a MiqException::MiqEVMLoginError
-      expect {
+      expect do
         MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
-      }.to raise_error(RuntimeError, "Bind failed for user bind_dn")
+      end.to raise_error(RuntimeError, "Bind failed for user bind_dn")
     end
 
     it "should issue an error message when user name does not exist in LDAP directory" do
       MiqLdap.new.stub(:get_user_object => nil)
 
       # darn, wanted a MiqException::MiqEVMLoginError
-      expect {
+      expect do
         MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
-      }.to raise_error(RuntimeError,"Unable to find user fred in directory")
+      end.to raise_error(RuntimeError, "Unable to find user fred in directory")
     end
   end
 
@@ -180,25 +179,25 @@ describe MiqGroup do
       @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryGirl.create(:vm_vmware,
-                                  :name => "Active VM",
-                                  :miq_group_id => @miq_group.id,
-                                  :ems_id => @ems.id,
-                                  :storage_id => @storage.id,
-                                  :hardware => @hw1)
+                                      :name         => "Active VM",
+                                      :miq_group_id => @miq_group.id,
+                                      :ems_id       => @ems.id,
+                                      :storage_id   => @storage.id,
+                                      :hardware     => @hw1)
       @archived_vm = FactoryGirl.create(:vm_vmware,
-                                    :name => "Archived VM",
-                                    :miq_group_id => @miq_group.id,
-                                    :hardware => @hw2)
+                                        :name         => "Archived VM",
+                                        :miq_group_id => @miq_group.id,
+                                        :hardware     => @hw2)
       @orphaned_vm = FactoryGirl.create(:vm_vmware,
-                                    :name => "Orphaned VM",
-                                    :miq_group_id => @miq_group.id,
-                                    :storage_id => @storage.id,
-                                    :hardware => @hw3)
+                                        :name         => "Orphaned VM",
+                                        :miq_group_id => @miq_group.id,
+                                        :storage_id   => @storage.id,
+                                        :hardware     => @hw3)
       @retired_vm = FactoryGirl.create(:vm_vmware,
-                                   :name => "Retired VM",
-                                   :miq_group_id => @miq_group.id,
-                                   :retired => true,
-                                   :hardware => @hw4)
+                                       :name         => "Retired VM",
+                                       :miq_group_id => @miq_group.id,
+                                       :retired      => true,
+                                       :hardware     => @hw4)
     end
 
     it "#active_vms" do
@@ -335,13 +334,13 @@ describe MiqGroup do
     it "detects role" do
       role = FactoryGirl.create(
         :miq_user_role,
-        :role => "self_service",
+        :role     => "self_service",
         :settings => {:restrictions => {:vms => :user_or_group}}
       )
       group = FactoryGirl.create(:miq_group,
-        :description   => "MiqGroup-self_service",
-        :miq_user_role => role
-      )
+                                 :description   => "MiqGroup-self_service",
+                                 :miq_user_role => role
+                                )
       expect(group).to be_self_service
     end
 

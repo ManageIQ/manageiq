@@ -18,26 +18,26 @@ describe Vm do
 
     it "false" do
       @vm.update_attribute(:template, false)
-      @vm.type.should     == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+      @vm.type.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
       @vm.template.should == false
-      @vm.state.should    == "on"
-      lambda { @vm.reload }.should_not raise_error
-      lambda { ManageIQ::Providers::Vmware::InfraManager::Template.find(@vm.id) }.should raise_error ActiveRecord::RecordNotFound
+      @vm.state.should == "on"
+      -> { @vm.reload }.should_not raise_error
+      -> { ManageIQ::Providers::Vmware::InfraManager::Template.find(@vm.id) }.should raise_error ActiveRecord::RecordNotFound
     end
 
     it "true" do
       @vm.update_attribute(:template, true)
-      @vm.type.should     == "ManageIQ::Providers::Vmware::InfraManager::Template"
+      @vm.type.should == "ManageIQ::Providers::Vmware::InfraManager::Template"
       @vm.template.should == true
-      @vm.state.should    == "never"
-      lambda { @vm.reload }.should raise_error ActiveRecord::RecordNotFound
-      lambda { ManageIQ::Providers::Vmware::InfraManager::Template.find(@vm.id) }.should_not raise_error
+      @vm.state.should == "never"
+      -> { @vm.reload }.should raise_error ActiveRecord::RecordNotFound
+      -> { ManageIQ::Providers::Vmware::InfraManager::Template.find(@vm.id) }.should_not raise_error
     end
   end
 
   it "#validate_remote_console_vmrc_support only suppored on vmware" do
     vm = FactoryGirl.create(:vm_redhat, :vendor => "redhat")
-    lambda { vm.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
+    -> { vm.validate_remote_console_vmrc_support }.should raise_error MiqException::RemoteConsoleNotSupportedError
   end
 
   context ".find_all_by_mac_address_and_hostname_and_ipaddress" do
@@ -115,23 +115,23 @@ describe Vm do
     end
 
     it "sets up standard callback for non Power Operations" do
-      options = { :task => "create_snapshot", :invoke_by => :task, :ids => [@vm.id] }
+      options = {:task => "create_snapshot", :invoke_by => :task, :ids => [@vm.id]}
       Vm.invoke_tasks_local(options)
       MiqTask.count.should == 1
       task = MiqTask.first
       MiqQueue.count.should == 1
       msg = MiqQueue.first
-      msg.miq_callback.should == {:class_name=>"MiqTask", :method_name=>:queue_callback, :instance_id=>task.id, :args=>["Finished"]}
+      msg.miq_callback.should == {:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id, :args => ["Finished"]}
     end
 
     it "sets up powerops callback for Power Operations" do
-      options = { :task => "start", :invoke_by => :task, :ids => [@vm.id] }
+      options = {:task => "start", :invoke_by => :task, :ids => [@vm.id]}
       Vm.invoke_tasks_local(options)
       MiqTask.count.should == 1
       task = MiqTask.first
       MiqQueue.count.should == 1
       msg = MiqQueue.first
-      msg.miq_callback.should == {:class_name=>@vm.class.base_class.name, :method_name=>:powerops_callback, :instance_id=>@vm.id, :args=>[task.id]}
+      msg.miq_callback.should == {:class_name => @vm.class.base_class.name, :method_name => :powerops_callback, :instance_id => @vm.id, :args => [task.id]}
 
       Vm.stub(:start).and_raise(MiqException::MiqVimBrokerUnavailable)
       msg.deliver
@@ -149,7 +149,6 @@ describe Vm do
                                   :instance_id => task.id, :args => ["Finished"]}
       msg.args.should == ["Freddy"]
     end
-
   end
 
   context "#start" do
@@ -158,7 +157,7 @@ describe Vm do
       @host = FactoryGirl.create(:host_vmware)
       @vm = FactoryGirl.create(:vm_vmware, :host => @host)
       @task = FactoryGirl.create(:miq_task)
-      callback = {:class_name=>@vm.class.base_class.name, :method_name=>:powerops_callback, :instance_id=>@vm.id, :args=>[@task.id]}
+      callback = {:class_name => @vm.class.base_class.name, :method_name => :powerops_callback, :instance_id => @vm.id, :args => [@task.id]}
       @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Vm', :instance_id => @vm.id, :method_name => 'start', :miq_callback => callback)
     end
 
@@ -180,7 +179,7 @@ describe Vm do
   end
 
   it "#save_drift_state" do
-    #TODO: Beef up with more data
+    # TODO: Beef up with more data
     vm = FactoryGirl.create(:vm_vmware)
     vm.save_drift_state
 
@@ -217,17 +216,17 @@ describe Vm do
     it "deletes VM via call to MiqTask#queue_callback and verifies message" do
       @vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :name => "VM-mini1")
 
-      @vm1.class.process_tasks(:task => "destroy", :userid=>"system", :ids => [@vm1.id])
+      @vm1.class.process_tasks(:task => "destroy", :userid => "system", :ids => [@vm1.id])
 
       MiqQueue.count.should == 1
       @msg1 = MiqQueue.first
       status, message, result = @msg1.deliver
 
-      @msg1.state.should      == "ready"
+      @msg1.state.should == "ready"
       @msg1.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
       @msg1.args.each do |h|
-        h[:task].should   == "destroy"
-        h[:ids].should    == [@vm1.id]
+        h[:task].should == "destroy"
+        h[:ids].should == [@vm1.id]
         h[:userid].should == "system"
       end
 
@@ -240,10 +239,9 @@ describe Vm do
     end
 
     it "deletes VM via call to MiqTask#queue_callback and successfully saves object image via YAML.dump" do
-        @vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :name => "VM-mini2")
-        @vm2.destroy
-        lambda { YAML.dump(@vm2) }.should_not raise_error
+      @vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :name => "VM-mini2")
+      @vm2.destroy
+      -> { YAML.dump(@vm2) }.should_not raise_error
     end
   end
-
 end

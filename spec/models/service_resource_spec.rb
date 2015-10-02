@@ -2,10 +2,10 @@ require "spec_helper"
 
 describe ServiceResource do
   it "default values" do
-    subject.group_idx.should       ==  0
-    subject.scaling_min.should     ==  1
-    subject.scaling_max.should     == -1
-    subject.provision_index.should ==  0
+    subject.group_idx.should == 0
+    subject.scaling_min.should == 1
+    subject.scaling_max.should == -1
+    subject.provision_index.should == 0
   end
 
   context "with a nil resource" do

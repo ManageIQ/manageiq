@@ -31,7 +31,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     @log_prefix ||= "EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
   end
 
-  def before_exit(message, exit_code)
+  def before_exit(message, _exit_code)
     @exit_requested = true
 
     #
@@ -45,7 +45,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     #
     unless @tid.nil?
       safe_log("#{message} Waiting for Event Monitor Thread to Stop.")
-      @tid.join(self.worker_settings[:ems_event_thread_shutdown_timeout]) rescue nil
+      @tid.join(worker_settings[:ems_event_thread_shutdown_timeout]) rescue nil
     end
 
     #
@@ -57,9 +57,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     end
   end
 
-  def filtered_events
-    @filtered_events
-  end
+  attr_reader :filtered_events
 
   # Called when there is any change in BlacklistedEvent
   def sync_blacklisted_events
@@ -98,14 +96,14 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     @exit_requested = false
 
     begin
-      _log.info("#{self.log_prefix} Validating Connection/Credentials")
+      _log.info("#{log_prefix} Validating Connection/Credentials")
       @ems.verify_credentials
     rescue => err
-      _log.warn("#{self.log_prefix} #{err.message}")
+      _log.warn("#{log_prefix} #{err.message}")
       return nil
     end
 
-    _log.info("#{self.log_prefix} Starting Event Monitor Thread")
+    _log.info("#{log_prefix} Starting Event Monitor Thread")
 
     tid = Thread.new do
       begin
@@ -113,15 +111,15 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
       rescue EventCatcherHandledException
         Thread.exit
       rescue => err
-        _log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
+        _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
         _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
       end
     end
 
-    _log.info("#{self.log_prefix} Started Event Monitor Thread")
+    _log.info("#{log_prefix} Started Event Monitor Thread")
 
-    return tid
+    tid
   end
 
   def drain_queue
@@ -140,7 +138,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
 
   def do_work
     if @tid.nil? || !@tid.alive?
-      _log.info("#{self.log_prefix} Event Monitor Thread gone. Restarting...")
+      _log.info("#{log_prefix} Event Monitor Thread gone. Restarting...")
       @tid = start_event_monitor
     end
 

@@ -10,9 +10,9 @@ describe PxeServer do
     it "should create a queue entry with the correct parameters" do
       msg = @pxe_server.sync_images_queue
       msg.method_name.should == "sync_images"
-      msg.priority.should    == 100
-      msg.queue_name.should  == "generic"
-      msg.class_name.should  == "PxeServer"
+      msg.priority.should == 100
+      msg.queue_name.should == "generic"
+      msg.class_name.should == "PxeServer"
     end
 
     it "should not create a new queue entry when one already exists" do
@@ -159,7 +159,6 @@ PXE
           File.delete(expected_ks_name) if File.exist?(expected_ks_name)
         end
       end
-
     end
   end
 
@@ -234,11 +233,11 @@ PXE
     context "#create_provisioning_files" do
       it "without kickstart" do
         image = FactoryGirl.create(:pxe_image_ipxe,
-          :pxe_server     => @pxe_server,
-          :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
-          :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
-          :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
-        )
+                                   :pxe_server     => @pxe_server,
+                                   :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
+                                   :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
+                                   :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
+                                  )
         expected_name = @pxe_server.test_full_path_to("#{@pxe_server.pxe_directory}/00-19-e3-d7-5b-0e")
         expected_contents = <<-PXE
 #!ipxe
@@ -264,11 +263,11 @@ PXE
         expected_ks_name = "#{expected_name}.ks.cfg"
 
         image = FactoryGirl.create(:pxe_image_ipxe,
-          :pxe_server     => @pxe_server,
-          :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
-          :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
-          :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
-        )
+                                   :pxe_server     => @pxe_server,
+                                   :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
+                                   :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
+                                   :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
+                                  )
 
         ks_contents = "FOO"
         kickstart = FactoryGirl.create(:customization_template_kickstart, :script => ks_contents)

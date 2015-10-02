@@ -24,10 +24,10 @@ module ActiveRecord
                        ORDER BY 1, 2
                       SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           spid
           number_waiting
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -112,7 +112,7 @@ module ActiveRecord
                     ORDER BY  1
                 SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           otta
           pages
           pagesize
@@ -120,11 +120,11 @@ module ActiveRecord
           wasted_bytes
           wasted_pages
           wasted_size
-        }
+        )
 
-        float_columns = %w{
+        float_columns = %w(
           percent_bloat
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -207,7 +207,7 @@ module ActiveRecord
                     ORDER BY  1, 2
                SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           otta
           pages
           pagesize
@@ -215,11 +215,11 @@ module ActiveRecord
           wasted_bytes
           wasted_pages
           wasted_size
-        }
+        )
 
-        float_columns = %w{
+        float_columns = %w(
           percent_bloat
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -366,7 +366,7 @@ module ActiveRecord
                   ORDER BY  1, 2
                SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           otta
           pages
           pagesize
@@ -374,11 +374,11 @@ module ActiveRecord
           wasted_bytes
           wasted_pages
           wasted_size
-        }
+        )
 
-        float_columns = %w{
+        float_columns = %w(
           percent_bloat
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -410,7 +410,7 @@ module ActiveRecord
                      ORDER BY relname ASC ;
                      SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           table_scans
           sequential_rows_read
           index_scans
@@ -421,14 +421,14 @@ module ActiveRecord
           rows_hot_updated
           rows_live
           rows_dead
-        }
+        )
 
-        timestamp_columns = %w{
+        timestamp_columns = %w(
           last_vacuum_date
           last_autovacuum_date
           last_analyze_date
           last_autoanalyze_date
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -500,7 +500,7 @@ module ActiveRecord
 
       # Returns an array of toast table indexes for the given toast table.
       def text_table_indexes(table_name, name = "Text Table Indexes")
-         result = query(<<-SQL, name)
+        result = query(<<-SQL, name)
            SELECT distinct i.relname, d.indisunique, d.indkey, i.oid
            FROM pg_class t
            INNER JOIN pg_index d ON t.oid = d.indrelid
@@ -513,7 +513,7 @@ module ActiveRecord
           ORDER BY i.relname
         SQL
 
-        return result.map do |row|
+        result.map do |row|
           index_name = row[0]
           unique     = row[1] == 't'
           indkey     = row[2].split(" ")
@@ -533,8 +533,8 @@ module ActiveRecord
 
       # Returns an array of primary-key indexes (indisprimary = true) for the given table.
       def primary_key_indexes(table_name, name = nil)
-         schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
-         result = query(<<-SQL, name)
+        schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
+        result = query(<<-SQL, name)
            SELECT distinct i.relname, d.indisunique, d.indkey, t.oid
            FROM pg_class t
            INNER JOIN pg_index d ON t.oid = d.indrelid
@@ -633,18 +633,18 @@ module ActiveRecord
                 ORDER BY  1
             SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           otta
           pages
           rows
           wasted_bytes
           wasted_pages
           wasted_size
-        }
+        )
 
-        float_columns = %w{
+        float_columns = %w(
           percent_bloat
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -676,7 +676,7 @@ module ActiveRecord
                    ORDER BY relname ASC ;
                 SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           table_scans
           sequential_rows_read
           index_scans
@@ -687,14 +687,14 @@ module ActiveRecord
           rows_hot_updated
           rows_live
           rows_dead
-        }
+        )
 
-        timestamp_columns = %w{
+        timestamp_columns = %w(
           last_vacuum_date
           last_autovacuum_date
           last_analyze_date
           last_autoanalyze_date
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -705,13 +705,13 @@ module ActiveRecord
       end
 
       def table_metrics_total_size(table_name)
-        return select_value(<<-SQL, "Table Metrics Total Size").to_i
+        select_value(<<-SQL, "Table Metrics Total Size").to_i
                 SELECT pg_total_relation_size('#{table_name}'::regclass) AS total_table_size;
                SQL
       end
 
       def number_of_db_connections
-        return select_value(<<-SQL, "DB Client Connections").to_i
+        select_value(<<-SQL, "DB Client Connections").to_i
                 SELECT count(*) as active_connections
                   FROM pg_stat_activity
                SQL
@@ -783,7 +783,7 @@ module ActiveRecord
                     ORDER BY  1, 2
                SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           otta
           pages
           pagesize
@@ -791,11 +791,11 @@ module ActiveRecord
           wasted_bytes
           wasted_pages
           wasted_size
-        }
+        )
 
-        float_columns = %w{
+        float_columns = %w(
           percent_bloat
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -820,13 +820,13 @@ module ActiveRecord
                      AND indexrelname = '#{index_name}' ;
                 SQL
 
-        integer_columns = %w{
+        integer_columns = %w(
           table_id
           index_id
           index_scans
           index_rows_read
           index_rows_fetched
-        }
+        )
 
         data.each do |datum|
           integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -835,8 +835,8 @@ module ActiveRecord
         data.to_a
       end
 
-      def index_metrics_total_size(index_name)
-        return select_value(<<-SQL, "Index Metrics -  Size").to_i
+      def index_metrics_total_size(_index_name)
+        select_value(<<-SQL, "Index Metrics -  Size").to_i
                 SELECT pg_total_relation_size('#{table_name}'::regclass) - pg_relation_size('#{table_name}') AS index_size;
                SQL
       end
@@ -877,9 +877,6 @@ module ActiveRecord
       def vacuum_full_analyze_table(table)
         execute("VACUUM FULL ANALYZE #{quote_table_name(table)}")
       end
-
     end
-
   end
-
 end

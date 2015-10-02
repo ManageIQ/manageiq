@@ -16,7 +16,6 @@ require_relative 'openstack/services/volume/builder'
 require_relative 'openstack/services/image/builder'
 require_relative 'openstack/services/orchestration/builder'
 
-
 def usage(s)
   $stderr.puts(s)
   $stderr.puts("Installs OpenStack on servers using packstack")
@@ -35,15 +34,15 @@ end
 loop do
   option = ARGV.shift
   case option
-    when '--only-environment'
-      argv      = ARGV.shift
-      supported = allowed_enviroments
-      raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv.to_sym)
-      @only_environment = argv.to_sym
-    when /^-/
-      usage("Unknown option: #{option}")
-    else
-      break
+  when '--only-environment'
+    argv      = ARGV.shift
+    supported = allowed_enviroments
+    raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv.to_sym)
+    @only_environment = argv.to_sym
+  when /^-/
+    usage("Unknown option: #{option}")
+  else
+    break
   end
 end
 
@@ -55,7 +54,7 @@ def install_environments
 
     cmd = "ssh-copy-id #{ssh_user}@#{env["ip"]}"
     puts "Executing: #{cmd}"
-    %x[ #{cmd} ]
+    ` #{cmd} `
   end
 
   openstack_environments.each do |env|
@@ -71,22 +70,21 @@ def install_environments
 
     cmd = ""
     case @environment
-      when :grizzly
-        cmd += "ssh #{ssh_user}@#{env["ip"]}"\
-               " 'curl http://file.brq.redhat.com/~mcornea/miq/openstack/openstack-install-grizzly | bash -x' "
-      when :havana
-        cmd += "ssh #{ssh_user}@#{env["ip"]}"\
-               " 'curl http://file.brq.redhat.com/~mcornea/miq/openstack/openstack-install-havana | bash -x' "
-      else
-        cmd += "ssh #{ssh_user}@#{env["ip"]}"\
-               " 'curl http://file.brq.redhat.com/~mcornea/miq/openstack/openstack-install > openstack-install; "\
-               "  chmod 755 openstack-install; "\
-               "  ./openstack-install #{environment_release_number} #{networking_service} #{identity_service};' "
+    when :grizzly
+      cmd += "ssh #{ssh_user}@#{env["ip"]}"\
+             " 'curl http://file.brq.redhat.com/~mcornea/miq/openstack/openstack-install-grizzly | bash -x' "
+    when :havana
+      cmd += "ssh #{ssh_user}@#{env["ip"]}"\
+             " 'curl http://file.brq.redhat.com/~mcornea/miq/openstack/openstack-install-havana | bash -x' "
+    else
+      cmd += "ssh #{ssh_user}@#{env["ip"]}"\
+             " 'curl http://file.brq.redhat.com/~mcornea/miq/openstack/openstack-install > openstack-install; "\
+             "  chmod 755 openstack-install; "\
+             "  ./openstack-install #{environment_release_number} #{networking_service} #{identity_service};' "
     end
 
     puts "Executing: #{cmd}"
-    %x[ #{cmd} ]
-
+    ` #{cmd} `
   end
 
   puts "---------------------------------------------------------------------------------------------------------------"
@@ -104,7 +102,7 @@ def install_environments
 
     puts "Obtaining credentials of installed OpenStack #{env_name}"
     cmd     = "ssh #{ssh_user}@#{env["ip"]} 'cat #{stackrc_name}'"
-    puts stackrc = %x[ #{cmd} ]
+    puts stackrc = ` #{cmd} `
 
     env["password"] = stackrc.match(/OS_PASSWORD=(.*?)$/)[1]
     env["user"]     = stackrc.match(/OS_USERNAME=(.*?)$/)[1]

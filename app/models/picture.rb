@@ -36,7 +36,7 @@ class Picture < ActiveRecord::Base
   end
 
   def content
-    self.binary_blob.try(:binary)
+    binary_blob.try(:binary)
   end
 
   def content=(value)
@@ -45,7 +45,7 @@ class Picture < ActiveRecord::Base
   end
 
   def size
-    self.content.try(:length).to_i
+    content.try(:length).to_i
   end
 
   def md5
@@ -63,8 +63,8 @@ class Picture < ActiveRecord::Base
 
   def basename
     @basename ||= begin
-      raise "must have a numeric id" unless self.id.kind_of?(Numeric)
-      "#{self.compressed_id}.#{extension}"
+      raise "must have a numeric id" unless id.kind_of?(Numeric)
+      "#{compressed_id}.#{extension}"
     end
   end
 
@@ -73,7 +73,7 @@ class Picture < ActiveRecord::Base
   end
 
   def url_path(basepath = URL_ROOT)
-    self.class.url_path(self.filename, basepath)
+    self.class.url_path(filename, basepath)
   end
 
   def image_href

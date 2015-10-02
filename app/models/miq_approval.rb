@@ -15,22 +15,22 @@ class MiqApproval < ActiveRecord::Base
   def approve(userid, reason)
     user = User.find_by_userid(userid)
     raise "not authorized" unless self.authorized?(user)
-    self.update_attributes(:state => "approved", :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
+    update_attributes(:state => "approved", :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
 
     # execute parent now that request is approved
-    _log.info("Request: [#{self.miq_request.description}] has been approved by [#{userid}]")
+    _log.info("Request: [#{miq_request.description}] has been approved by [#{userid}]")
     begin
-      self.miq_request.approval_approved
+      miq_request.approval_approved
     rescue => err
-      _log.warn("#{err.message}, attempting to approve request: [#{self.miq_request.description}]")
+      _log.warn("#{err.message}, attempting to approve request: [#{miq_request.description}]")
     end
   end
 
   def deny(userid, reason)
     user = User.find_by_userid(userid)
     raise "not authorized" unless self.authorized?(user)
-    self.update_attributes(:state => "denied", :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
-    self.miq_request.approval_denied
+    update_attributes(:state => "denied", :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
+    miq_request.approval_denied
   end
 
   def authorized?(userid)
@@ -38,8 +38,8 @@ class MiqApproval < ActiveRecord::Base
     return false unless user
 
     return true if user.role_allows?(:identifier => "miq_request_approval")
-    return true if self.approver.kind_of?(User) && self.approver == user
+    return true if approver.kind_of?(User) && approver == user
 
-    return false
+    false
   end
 end

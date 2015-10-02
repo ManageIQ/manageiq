@@ -103,12 +103,12 @@ describe ApplianceConsole::Cli do
       expect_any_instance_of(LinuxAdmin::Hosts).to receive(:hostname).and_return('client.domain.com')
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(false)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-          .with('client.domain.com',
-                :ipaserver => 'ipa.domain.com',
-                :principal => 'admin',
-                :domain    => 'domain.com',
-                :realm     => 'DOMAIN.COM',
-                :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
+        .with('client.domain.com',
+              :ipaserver => 'ipa.domain.com',
+              :principal => 'admin',
+              :domain    => 'domain.com',
+              :realm     => 'DOMAIN.COM',
+              :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --iparealm DOMAIN.COM --ipadomain domain.com)).run
     end
 
@@ -119,12 +119,12 @@ describe ApplianceConsole::Cli do
       expect_any_instance_of(LinuxAdmin::Hosts).to_not receive(:hostname)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:ipa_client_configured?).and_return(false)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-          .with('client.domain.com',
-                :ipaserver => 'ipa.domain.com',
-                :principal => 'admin',
-                :domain    => nil,
-                :realm     => nil,
-                :password  => 'pass').and_return(double(:activate => false))
+        .with('client.domain.com',
+              :ipaserver => 'ipa.domain.com',
+              :principal => 'admin',
+              :domain    => nil,
+              :realm     => nil,
+              :password  => 'pass').and_return(double(:activate => false))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com)).run
     end
 
@@ -182,7 +182,7 @@ describe ApplianceConsole::Cli do
       subject.should_receive(:say)
       ApplianceConsole::TempStorageConfiguration.should_receive(:new)
         .with(:disk      => '/dev/x')
-      .and_return(double(:activate => true))
+        .and_return(double(:activate => true))
 
       subject.parse(%w(--tmpdisk x)).run
     end
@@ -192,7 +192,7 @@ describe ApplianceConsole::Cli do
       subject.should_receive(:say)
       ApplianceConsole::TempStorageConfiguration.should_receive(:new)
         .with(:disk      => '/dev/x')
-      .and_return(double(:activate => true))
+        .and_return(double(:activate => true))
 
       subject.parse(%w(--tmpdisk auto)).run
     end

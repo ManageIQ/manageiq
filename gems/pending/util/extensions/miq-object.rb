@@ -6,7 +6,7 @@ class Object #:nodoc:
     arg = args.shift
     raise ArgumentError if arg.nil?
 
-    result = self.send(arg)
+    result = send(arg)
     return nil    if result.nil?
     return result if args.empty?
     result.deep_send(args)

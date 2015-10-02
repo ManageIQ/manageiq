@@ -35,5 +35,4 @@ describe ChangeOptionsInMiqAlertForEmailTo do
       alert.options.should == options
     end
   end
-
 end

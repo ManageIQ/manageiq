@@ -8,7 +8,7 @@ module ManageIQ::Providers
     include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
     def self.ems_inv_to_hashes(ems, options = nil)
-      self.new(ems, options).ems_inv_to_hashes
+      new(ems, options).ems_inv_to_hashes
     end
 
     def initialize(ems, options = nil)
@@ -99,7 +99,7 @@ module ManageIQ::Providers
     end
 
     def get_tenants
-      @tenants = @os_handle.accessible_tenants.select {|t| t.name != "services" }
+      @tenants = @os_handle.accessible_tenants.select { |t| t.name != "services" }
       process_collection(@tenants, :cloud_tenants) { |tenant| parse_tenant(tenant) }
     end
 
@@ -198,12 +198,12 @@ module ManageIQ::Providers
       uid = flavor.id
 
       new_result = {
-        :type    => "ManageIQ::Providers::Openstack::CloudManager::Flavor",
-        :ems_ref => uid,
-        :name    => flavor.name,
-        :enabled => !flavor.disabled,
-        :cpus    => flavor.vcpus,
-        :memory  => flavor.ram.megabytes,
+        :type           => "ManageIQ::Providers::Openstack::CloudManager::Flavor",
+        :ems_ref        => uid,
+        :name           => flavor.name,
+        :enabled        => !flavor.disabled,
+        :cpus           => flavor.vcpus,
+        :memory         => flavor.ram.megabytes,
         :disk_size      => flavor.disk.to_i.gigabytes,
         :disk_count     => flavor.disk.to_i.gigabytes > 0 ? 1 : 0,
         # Extra keys
@@ -450,15 +450,15 @@ module ManageIQ::Providers
       parent_image_uid = server.image["id"]
 
       new_result = {
-        :type             => "ManageIQ::Providers::Openstack::CloudManager::Vm",
-        :uid_ems          => uid,
-        :ems_ref          => uid,
-        :name             => server.name,
-        :vendor           => "openstack",
-        :raw_power_state  => raw_power_state,
-        :connection_state => "connected",
+        :type                => "ManageIQ::Providers::Openstack::CloudManager::Vm",
+        :uid_ems             => uid,
+        :ems_ref             => uid,
+        :name                => server.name,
+        :vendor              => "openstack",
+        :raw_power_state     => raw_power_state,
+        :connection_state    => "connected",
 
-        :hardware => {
+        :hardware            => {
           :numvcpus         => flavor[:cpus],
           :cores_per_socket => 1,
           :logical_cpus     => flavor[:cpus],

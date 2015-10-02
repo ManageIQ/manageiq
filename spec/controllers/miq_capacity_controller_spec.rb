@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe MiqCapacityController do
-  methods = ["util_get_node_info","bottleneck_get_node_info"]
+  methods = ["util_get_node_info", "bottleneck_get_node_info"]
   methods.each do |method|
     context "##{method}" do
       it "set correct right cell headers in #{method}" do
@@ -27,17 +27,15 @@ describe MiqCapacityController do
                                   :title_prefix => "Datastore",
                                   :title        => ds.name}
                       }
-        tree_nodes.each do |key,node|
+        tree_nodes.each do |_key, node|
           controller.instance_variable_set(:@breadcrumbs, [])
-          controller.instance_variable_set(:@sb, {
-                                                    :trees => {
-                                                                :utilization_tree => {:active_node => node[:active_node]},
-                                                                :bottlenecks_tree => {:active_node => node[:active_node]}
-                                                              },
-                                                    :active_tree => method == "util_get_node_info" ? :utilization_tree : :bottlenecks_tree,
-                                                    :bottlenecks => {:options => {}},
-                                                    :util => {:options => {}}
-                                                  }
+          controller.instance_variable_set(:@sb,                                                     :trees       => {
+                                             :utilization_tree => {:active_node => node[:active_node]},
+                                             :bottlenecks_tree => {:active_node => node[:active_node]}
+                                           },
+                                                                                                     :active_tree => method == "util_get_node_info" ? :utilization_tree : :bottlenecks_tree,
+                                                                                                     :bottlenecks => {:options => {}},
+                                                                                                     :util        => {:options => {}}
                                           )
           controller.should_not_receive(:render)
           controller.send(method.to_sym, node[:active_node])

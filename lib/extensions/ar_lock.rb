@@ -16,18 +16,18 @@ module ArLock
   #             Default is 60 seconds.
   def lock(mode = :exclusive, timeout = 60.seconds)
     lock = case mode
-    when :shared,    :SH then ActiveRecordQueryParts.shared_row_lock
-    when :exclusive, :EX then ActiveRecordQueryParts.update_row_lock
-    else raise "unknown lock mode <#{mode.inspect}>"
-    end
+           when :shared,    :SH then ActiveRecordQueryParts.shared_row_lock
+           when :exclusive, :EX then ActiveRecordQueryParts.update_row_lock
+           else raise "unknown lock mode <#{mode.inspect}>"
+           end
 
     transaction do
-      _log.debug "Acquiring lock on #{self.class.name}::#{self.id}..."
+      _log.debug "Acquiring lock on #{self.class.name}::#{id}..."
       lock!(lock)
       _log.debug "Acquired lock"
 
       begin
-        Timeout::timeout(timeout) { yield self }
+        Timeout.timeout(timeout) { yield self }
       ensure
         _log.debug "Releasing lock"
       end

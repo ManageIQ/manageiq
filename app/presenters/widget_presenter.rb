@@ -101,5 +101,4 @@ class WidgetPresenter
   def self.chart_data
     @@chart_data ||= []
   end
-
 end

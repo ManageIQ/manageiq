@@ -15,8 +15,8 @@ module ApplianceConsole
 
     def initialize(options = {})
       options.each { |k, v| public_send("#{k}=", v) }
-      @action   ||= :create
-      @login    ||= "root"
+      @action ||= :create
+      @login ||= "root"
       @key_path ||= KEY_FILE
     end
 

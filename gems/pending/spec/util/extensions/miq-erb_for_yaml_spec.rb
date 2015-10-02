@@ -10,7 +10,7 @@ describe MiqERBForYAML do
 
     it "leading %" do
       erb = MiqERBForYAML.new("--- \nname: <%= \"\%Joe\" %>")
-      YAML.load(erb.result).should == {'name' => "%Joe" }
+      YAML.load(erb.result).should == {'name' => "%Joe"}
     end
 
     it "backslash within" do
@@ -28,5 +28,4 @@ describe MiqERBForYAML do
       YAML.load(erb.result).should == {'name' => "Joe\"234"}
     end
   end
-
 end

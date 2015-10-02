@@ -4,18 +4,18 @@ describe MiqWidget do
   context ".import_from_hash" do
     before do
       @user       = FactoryGirl.create(:user_admin)
-      @old_report = FactoryGirl.create(:miq_report, 
+      @old_report = FactoryGirl.create(:miq_report,
                                        :name      => "Test Report",
                                        :rpt_type  => "Custom",
                                        :tz        => "Eastern Time (US & Canada)",
                                        :col_order => ["name", "boot_time", "disks_aligned"],
                                        :cols      => ["name", "boot_time", "disks_aligned"]
-      )
-      @old_widget = FactoryGirl.create(:miq_widget, 
-                                       :title      => "Test Widget", 
-                                       :visibility => { :roles => ["_ALL_"] },
+                                      )
+      @old_widget = FactoryGirl.create(:miq_widget,
+                                       :title      => "Test Widget",
+                                       :visibility => {:roles => ["_ALL_"]},
                                        :resource   => @old_report
-      )
+                                      )
 
       widget_string = MiqWidget.export_to_yaml([@old_widget.id], MiqWidget)
       @new_widget = YAML.load(widget_string).first["MiqWidget"]
@@ -29,7 +29,7 @@ describe MiqWidget do
     subject { MiqWidget.import_from_hash(@new_widget, @options) }
 
     context "new widget" do
-      before { @old_widget.destroy } 
+      before { @old_widget.destroy }
 
       context "with new report" do
         before { @old_report.destroy }
@@ -113,7 +113,7 @@ describe MiqWidget do
 
     context "existing widget" do
       before do
-        @old_widget.update_attributes(:visibility => { :roles => ["EvmRole-support"] })
+        @old_widget.update_attributes(:visibility => {:roles => ["EvmRole-support"]})
         @old_report.update_attributes(:tz => "UTC")
       end
 
@@ -131,7 +131,7 @@ describe MiqWidget do
             rep_status = status[:children]
 
             MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
+            MiqWidget.first.visibility.should == {:roles => ["EvmRole-support"]}
             status[:status].should == :update
             MiqReport.count.should == 0
             rep_status[:status].should == :add
@@ -143,7 +143,7 @@ describe MiqWidget do
             rep_status = status[:children]
 
             MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["_ALL_"] }
+            MiqWidget.first.visibility.should == {:roles => ["_ALL_"]}
             status[:status].should == :update
             MiqReport.count.should == 1
             rep_status[:status].should == :add
@@ -158,7 +158,7 @@ describe MiqWidget do
             rep_status = status[:children]
 
             MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
+            MiqWidget.first.visibility.should == {:roles => ["EvmRole-support"]}
             status[:status].should == :keep
             MiqReport.count.should == 0
             rep_status[:status].should == :add
@@ -170,7 +170,7 @@ describe MiqWidget do
             rep_status = status[:children]
 
             MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
+            MiqWidget.first.visibility.should == {:roles => ["EvmRole-support"]}
             status[:status].should == :keep
             MiqReport.count.should == 1
             rep_status[:status].should == :add
@@ -190,7 +190,7 @@ describe MiqWidget do
             rep_status = status[:children]
 
             MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
+            MiqWidget.first.visibility.should == {:roles => ["EvmRole-support"]}
             status[:status].should == :update
             MiqReport.count.should == 1
             MiqReport.first.tz.should == "UTC"
@@ -203,7 +203,7 @@ describe MiqWidget do
             rep_status = status[:children]
 
             MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["_ALL_"] }
+            MiqWidget.first.visibility.should == {:roles => ["_ALL_"]}
             status[:status].should == :update
             MiqReport.count.should == 1
             MiqReport.first.tz.should == "Eastern Time (US & Canada)"
@@ -218,7 +218,7 @@ describe MiqWidget do
             rep_status = status[:children]
 
             MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
+            MiqWidget.first.visibility.should == {:roles => ["EvmRole-support"]}
             status[:status].should == :keep
             MiqReport.count.should == 1
             MiqReport.first.tz.should == "UTC"
@@ -231,7 +231,7 @@ describe MiqWidget do
             rep_status = status[:children]
 
             MiqWidget.count.should == 1
-            MiqWidget.first.visibility.should == { :roles => ["EvmRole-support"]}
+            MiqWidget.first.visibility.should == {:roles => ["EvmRole-support"]}
             status[:status].should == :keep
             MiqReport.count.should == 1
             MiqReport.first.tz.should == "UTC"
@@ -256,7 +256,7 @@ describe MiqWidget do
                 - RssFeed:
                     name: host_alert_event
                     link: /alert/rss?feed=host_alert_event"
-           ).first["MiqWidget"]
+                                 ).first["MiqWidget"]
         end
 
         context "with new rss feed" do
@@ -292,7 +292,7 @@ describe MiqWidget do
                   :url: https://nvd.nist.gov/download/nvd-rss-analyzed.xml
                 resource_id:
                 resource_type:"
-           ).first["MiqWidget"]
+                                 ).first["MiqWidget"]
         end
 
         context "with new rss feed" do

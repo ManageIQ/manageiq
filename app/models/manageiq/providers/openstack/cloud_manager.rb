@@ -164,12 +164,12 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
     miq_openstack_instance.delete_evm_snapshot(image_id)
 
     # Remove from the snapshots table.
-    ar_snapshot = vm.snapshots.where(:ems_ref  => image_id).first
+    ar_snapshot = vm.snapshots.find_by(:ems_ref  => image_id)
     _log.debug "#{log_prefix}: ar_snapshot = #{ar_snapshot.class.name}"
     ar_snapshot.destroy if ar_snapshot
 
     # Remove from the vms table.
-    ar_template = miq_templates.where(:ems_ref  => image_id).first
+    ar_template = miq_templates.find_by(:ems_ref  => image_id)
     _log.debug "#{log_prefix}: ar_template = #{ar_template.class.name}"
     ar_template.destroy if ar_template
   rescue => err

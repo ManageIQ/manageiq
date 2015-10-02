@@ -9,8 +9,8 @@ module MiqAeMethodService
   class MiqAeService
     include Vmdb::Logging
     include DRbUndumped
-    @@id_hash = Hash.new
-    @@current = Array.new
+    @@id_hash = {}
+    @@current = []
 
     def self.current
       @@current.last
@@ -65,7 +65,7 @@ module MiqAeMethodService
       @preamble_raw = data
       @preamble = begin
         lines = []
-         @preamble_raw.each_line { |l| lines << l.rstrip }
+        @preamble_raw.each_line { |l| lines << l.rstrip }
         lines
       end
       @preamble_lines = @preamble.length
@@ -102,13 +102,9 @@ module MiqAeMethodService
       ActiveRecord::Base.connection_pool.release_connection
     end
 
-    def inputs=(hash)
-      @inputs = hash
-    end
+    attr_writer :inputs
 
-    def inputs
-      @inputs
-    end
+    attr_reader :inputs
 
     ####################################################
 
@@ -129,13 +125,11 @@ module MiqAeMethodService
     end
 
     def instantiate(uri)
-      begin
-        obj = @workspace.instantiate(uri, @workspace.current_object)
-        return nil if obj.nil?
-        drb_return(MiqAeServiceObject.new(obj, self))
-      rescue => e
-        return nil
-      end
+      obj = @workspace.instantiate(uri, @workspace.current_object)
+      return nil if obj.nil?
+      drb_return(MiqAeServiceObject.new(obj, self))
+    rescue => e
+      return nil
     end
 
     def drb_return(obj)
@@ -145,7 +139,7 @@ module MiqAeMethodService
       obj
     end
 
-    def object(path=nil)
+    def object(path = nil)
       obj = @workspace.get_obj_from_path(path)
       return nil if obj.nil?
       drb_return MiqAeServiceObject.new(obj, self)
@@ -188,18 +182,18 @@ module MiqAeMethodService
     end
 
     def root
-      @root_object    ||= self.object("/")
+      @root_object ||= object("/")
     end
 
     def parent
-      @parent_object  ||= self.object("..")
+      @parent_object ||= object("..")
     end
 
     def objects(aobj)
-      aobj.collect { |obj|
+      aobj.collect do |obj|
         obj = drb_return(MiqAeServiceObject.new(obj, self)) unless obj.kind_of?(MiqAeServiceObject)
         obj
-      }
+      end
     end
 
     def vmdb(type, *args)
@@ -240,11 +234,9 @@ module MiqAeMethodService
     end
 
     def execute(m, *args)
-      begin
-        drb_return MiqAeServiceMethods.send(m, *args)
-      rescue NoMethodError => err
-        raise MiqAeException::MethodNotFound, err.message
-      end
+      drb_return MiqAeServiceMethods.send(m, *args)
+    rescue NoMethodError => err
+      raise MiqAeException::MethodNotFound, err.message
     end
 
     def instance_exists?(path)
@@ -269,7 +261,7 @@ module MiqAeMethodService
       aei = MiqAeInstance.create(:name => instance, :class_id => aec.id)
       values_hash.each { |key, value| aei.set_field_value(key, value) }
 
-      return true
+      true
     end
 
     def instance_get_display_name(path)
@@ -284,7 +276,7 @@ module MiqAeMethodService
       return false if aei.nil?
 
       aei.update_attributes(:display_name => display_name)
-      return true
+      true
     end
 
     def instance_update(path, values_hash)
@@ -295,7 +287,7 @@ module MiqAeMethodService
       return false if aei.nil?
 
       values_hash.each { |key, value| aei.set_field_value(key, value) }
-      return true
+      true
     end
 
     def instance_find(path, options = {})
@@ -320,7 +312,7 @@ module MiqAeMethodService
         end
       end
 
-      return result
+      result
     end
 
     def instance_get(path)
@@ -339,7 +331,7 @@ module MiqAeMethodService
       return false if aei.nil?
 
       aei.destroy
-      return true
+      true
     end
 
     def __find_instance_from_path(path)
@@ -354,7 +346,7 @@ module MiqAeMethodService
     private
 
     def editable_instance?(path)
-      dom, _, _, _ = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
+      dom, = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
       domain = MiqAeDomain.find_by_fqname(dom, false)
       return false unless domain
       $log.warn "path=#{path.inspect} : is not editable" unless domain.editable?
@@ -365,7 +357,7 @@ module MiqAeMethodService
   module MiqAeServiceObjectCommon
     def attributes
       @object.attributes.each_with_object({}) do |(key, value), hash|
-        hash[key] = value.is_a?(MiqAePassword) ? value.to_s : value
+        hash[key] = value.kind_of?(MiqAePassword) ? value.to_s : value
       end
     end
 
@@ -431,15 +423,15 @@ module MiqAeMethodService
       @service = svc
     end
 
-    def children(name=nil)
+    def children(name = nil)
       objs = @object.children(name)
       return nil if objs.nil?
       objs = @service.objects([objs].flatten)
-      return objs.length == 1 ? objs.first : objs
+      objs.length == 1 ? objs.first : objs
     end
 
     def to_s
-      self.name
+      name
     end
 
     def inspect

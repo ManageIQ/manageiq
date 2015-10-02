@@ -22,7 +22,7 @@ module MiqPolicyController::Events
 
     # Reload @edit/vars for other buttons
     id = params[:id] ? params[:id] : "new"
-    return unless load_edit("event_edit__#{id}","replace_cell__explorer")
+    return unless load_edit("event_edit__#{id}", "replace_cell__explorer")
     @event = @edit[:event_id] ? MiqEventDefinition.find_by_id(@edit[:event_id]) : MiqEventDefinition.new
     policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"]))
     @policy = policy
@@ -30,8 +30,8 @@ module MiqPolicyController::Events
     case params[:button]
     when "save"
       event = MiqEventDefinition.find(@event.id)                        # Get event record
-      action_list = @edit[:new][:actions_true].collect{|a| [MiqAction.find(a.last), {:qualifier=>:success, :synchronous=>a[1]}]} +
-                    @edit[:new][:actions_false].collect{|a| [MiqAction.find(a.last), {:qualifier=>:failure, :synchronous=>a[1]}]}
+      action_list = @edit[:new][:actions_true].collect { |a| [MiqAction.find(a.last), {:qualifier => :success, :synchronous => a[1]}] } +
+                    @edit[:new][:actions_false].collect { |a| [MiqAction.find(a.last), {:qualifier => :failure, :synchronous => a[1]}] }
       policy.replace_actions_for_event(event, action_list)
       AuditEvent.success(build_saved_audit(event))
       add_flash(_("Actions for Policy Event \"%s\" were saved") % event.description)
@@ -53,9 +53,9 @@ module MiqPolicyController::Events
   private
 
   def event_build_edit_screen
-    @edit = Hash.new
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
+    @edit = {}
+    @edit[:new] = {}
+    @edit[:current] = {}
 
     @event = MiqEventDefinition.find(params[:id])                                         # Get event record
     policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"]))   # Get the policy above this event
@@ -65,33 +65,33 @@ module MiqPolicyController::Events
 
     @edit[:event_id] = @event.id
 
-    @edit[:new][:actions_true] = Array.new
+    @edit[:new][:actions_true] = []
     policy.actions_for_event(@event, :success).each do |as| # Build true actions array
-      sync = as.synchronous == nil || as.synchronous
+      sync = as.synchronous.nil? || as.synchronous
       @edit[:new][:actions_true].push([(sync ? "(S) " : "(A) ") + as.description, sync, as.id])
     end
 
-    @edit[:new][:actions_false] = Array.new
+    @edit[:new][:actions_false] = []
     policy.actions_for_event(@event, :failure).each do |af|                     # Build false actions array
-      sync = af.synchronous == nil || af.synchronous
+      sync = af.synchronous.nil? || af.synchronous
       @edit[:new][:actions_false].push([(sync ? "(S) " : "(A) ") + af.description, sync, af.id])
     end
 
-    @edit[:choices_true] = Hash.new                         # Build a new choices list for true actions
-    MiqAction.all.each { |a|                          # Build a hash for the true choices
+    @edit[:choices_true] = {}                         # Build a new choices list for true actions
+    MiqAction.all.each do |a|                          # Build a hash for the true choices
       @edit[:choices_true][a.description] =  a.id
-    }
-    @edit[:new][:actions_true].each { |as|
+    end
+    @edit[:new][:actions_true].each do |as|
       @edit[:choices_true].delete(as[0].slice(4..-1))       # Remove any choices already in the list (desc is first element, but has "(x) " in front)
-    }
+    end
 
-    @edit[:choices_false] = Hash.new                        # Build a new choices list for false actions
-    MiqAction.all.each { |a|                          # Build a hash for the false choices
+    @edit[:choices_false] = {}                        # Build a new choices list for false actions
+    MiqAction.all.each do |a|                          # Build a hash for the false choices
       @edit[:choices_false][a.description] =  a.id
-    }
-    @edit[:new][:actions_false].each { |as|
+    end
+    @edit[:new][:actions_false].each do |as|
       @edit[:choices_false].delete(as[0].slice(4..-1))      # Remove any choices already in the list (desc is first element, but has "(x) " in front)
-    }
+    end
 
     @edit[:current] = copy_hash(@edit[:new])
 
@@ -104,8 +104,8 @@ module MiqPolicyController::Events
   def event_get_all
     @events = MiqPolicy.all_policy_events.sort_by { |e| e.description.downcase }
     set_search_text
-    @events = apply_search_filter(@search_text, @events) if !@search_text.blank?
-    @right_cell_text = _("All %s") % ui_lookup(:tables=>"miq_event_definition")
+    @events = apply_search_filter(@search_text, @events) unless @search_text.blank?
+    @right_cell_text = _("All %s") % ui_lookup(:tables => "miq_event_definition")
     @right_cell_div = "event_list"
   end
 
@@ -113,7 +113,7 @@ module MiqPolicyController::Events
   def event_get_info(event)
     @record = @event = event
     @policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"])) unless x_active_tree == :event_tree
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:tables=>"miq_event_definition"), :name=>event.description}
+    @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:tables => "miq_event_definition"), :name => event.description}
     @right_cell_div = "event_details"
 
     if x_active_tree == :event_tree

@@ -99,7 +99,7 @@ module ManageIQ
           compute_hosts.each do |compute_host|
             # We need to take correct zone id from correct provider, since the zone name can be the same
             # across providers
-            availability_zone_id = cloud_ems.availability_zones.where(:name => compute_host.zone).first.try(:id)
+            availability_zone_id = cloud_ems.availability_zones.find_by(:name => compute_host.zone).try(:id)
             hosts_attributes << {:host_name => compute_host.host_name, :availability_zone_id => availability_zone_id}
           end
         end
@@ -119,7 +119,7 @@ module ManageIQ
         # Hosts ports contains MAC addresses of host interfaces. There can
         # be multiple interfaces for each host
         indexed_hosts_ports = {}
-        hosts_ports.each { |p|  (indexed_hosts_ports[p.uuid] ||= []) <<  p }
+        hosts_ports.each { |p|  (indexed_hosts_ports[p.uuid] ||= []) << p }
 
         # Indexed Heat resources, we are interested only in OS::Nova::Server
         indexed_resources = {}
@@ -319,10 +319,10 @@ module ManageIQ
         uid = cluster[:uid]
 
         new_result = {
-            :ems_ref => uid,
-            :uid_ems => uid,
-            :name    => name,
-            :type    => 'ManageIQ::Providers::Openstack::InfraManager::EmsCluster'
+          :ems_ref => uid,
+          :uid_ems => uid,
+          :name    => name,
+          :type    => 'ManageIQ::Providers::Openstack::InfraManager::EmsCluster'
         }
         return uid, new_result
       end

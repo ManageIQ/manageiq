@@ -1,13 +1,12 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', '..',
-'..', 'spec_helper'))
+                                   '..', 'spec_helper'))
 
 describe "unregister_from_provider Method Validation" do
-
   before(:each) do
     @zone       = FactoryGirl.create(:zone)
     @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @host       = FactoryGirl.create(:host)
-    @vm         = FactoryGirl.create(:vm_vmware, :host =>@host,
+    @vm         = FactoryGirl.create(:vm_vmware, :host => @host,
                  :ems_id => @ems.id, :name => "testVM", :raw_power_state => "poweredOn",
                  :registered => true)
   end
@@ -28,5 +27,4 @@ describe "unregister_from_provider Method Validation" do
 
     lambda { ws }.should raise_error
   end
-
 end

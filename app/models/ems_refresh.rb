@@ -29,23 +29,21 @@ module EmsRefresh
 
   def self.queue_refresh(target, id = nil)
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = self.get_ar_objects(target, id)
+    targets = get_ar_objects(target, id)
 
     # Group the target refs by zone and role
-    targets_by_ems = targets.each_with_object(Hash.new {|h, k| h[k] = Array.new}) do |t, h|
+    targets_by_ems = targets.each_with_object(Hash.new { |h, k| h[k] = [] }) do |t, h|
       e = if t.kind_of?(EmsRefresh::Manager)
-        t
-      elsif t.kind_of?(Storage)
-        t.ext_management_systems.first
-      elsif t.respond_to?(:ext_management_system) && t.ext_management_system
-        t.ext_management_system
-      elsif t.respond_to?(:manager) && t.manager
-        t.manager
-      elsif t.kind_of?(Host) && t.acts_as_ems?
-        t
-      else
-        nil
-      end
+            t
+          elsif t.kind_of?(Storage)
+            t.ext_management_systems.first
+          elsif t.respond_to?(:ext_management_system) && t.ext_management_system
+            t.ext_management_system
+          elsif t.respond_to?(:manager) && t.manager
+            t.manager
+          elsif t.kind_of?(Host) && t.acts_as_ems?
+            t
+          end
 
       h[e] << t unless e.nil?
     end
@@ -53,7 +51,7 @@ module EmsRefresh
     # Queue the refreshes
     targets_by_ems.each do |ems, ts|
       ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq
-      self.queue_merge(ts, ems)
+      queue_merge(ts, ems)
     end
   end
 
@@ -61,7 +59,7 @@ module EmsRefresh
     EmsRefresh.init_console if MiqEnvironment::Process.is_rails_console?
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = self.get_ar_objects(target, id)
+    targets = get_ar_objects(target, id)
 
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
@@ -117,7 +115,7 @@ module EmsRefresh
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'refresh',
       :role        => "ems_inventory",
       :zone        => ems.my_zone
@@ -142,7 +140,7 @@ module EmsRefresh
         $log.debug "#{log_header} #{k.inspect}=>#{v.inspect}"
       else
         $log.debug "#{log_header} #{k.inspect}=>"
-        self.log_inv_debug_trace(v, "#{log_header}  ", depth - 1)
+        log_inv_debug_trace(v, "#{log_header}  ", depth - 1)
       end
     end
   end
@@ -162,7 +160,7 @@ module EmsRefresh
       s
     end
 
-    return ret.join(", ")
+    ret.join(", ")
   end
 
   #
@@ -227,10 +225,10 @@ module EmsRefresh
 
     hashes.each do |h|
       found = if h[:location]
-        locs.detect { |s| s.location == h[:location] }
-      else
-        names.detect { |s| s.name == h[:name] }
-      end
+                locs.detect { |s| s.location == h[:location] }
+              else
+                names.detect { |s| s.name == h[:name] }
+              end
 
       h[:id] = found.id if found
     end

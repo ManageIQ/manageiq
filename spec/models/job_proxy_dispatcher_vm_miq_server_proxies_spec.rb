@@ -13,7 +13,7 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
       before(:each) do
-        @hosts, @proxies, @storages, @vms = self.build_hosts_proxies_storages_vms
+        @hosts, @proxies, @storages, @vms = build_hosts_proxies_storages_vms
         @vm = @vms.first
       end
 
@@ -102,7 +102,7 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
 
       context "with vm's host does not have scan affinity and main server has vm scan affinity for a different host, " do
         before(:each) do
-          host = @hosts.find {|h| h != @vm.host}
+          host = @hosts.find { |h| h != @vm.host }
           @server1.vm_scan_host_affinity = [host]
         end
 

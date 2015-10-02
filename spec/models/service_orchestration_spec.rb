@@ -137,7 +137,7 @@ describe ServiceTemplate do
   context '#orchestration_stack_status' do
     it 'returns an error if stack has never been deployed' do
       status, _message = service_mix_dialog_setter.orchestration_stack_status
-      status.should  == 'check_status_failed'
+      status.should == 'check_status_failed'
     end
 
     it 'returns current stack status through provider' do
@@ -145,7 +145,7 @@ describe ServiceTemplate do
       deployed_stack.stub(:raw_status).and_return(status_obj)
 
       status, message = service_with_deployed_stack.orchestration_stack_status
-      status.should  == 'create_complete'
+      status.should == 'create_complete'
       message.should == 'no error'
     end
 
@@ -153,7 +153,7 @@ describe ServiceTemplate do
       deployed_stack.stub(:raw_status).and_raise(MiqException::MiqOrchestrationStatusError, 'test failure')
 
       status, message = service_with_deployed_stack.orchestration_stack_status
-      status.should  == 'check_status_failed'
+      status.should == 'check_status_failed'
       message.should == 'test failure'
     end
   end

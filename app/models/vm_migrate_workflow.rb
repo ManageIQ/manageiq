@@ -11,10 +11,10 @@ class VmMigrateWorkflow < MiqRequestWorkflow
     'vm_migrate_dialogs'
   end
 
-  def get_source_and_targets(refresh=false)
+  def get_source_and_targets(refresh = false)
     return @target_resource if @target_resource && refresh == false
 
-    ems = @values[:src_ids].to_miq_a.collect {|v_id| v = Vm.find_by_id(v_id); v.ext_management_system}.uniq.compact
+    ems = @values[:src_ids].to_miq_a.collect { |v_id| v = Vm.find_by_id(v_id); v.ext_management_system }.uniq.compact
 
     # If all the selected VMs share the same EMS we can present a list of CIs.
     return @target_resource = {} if ems.length != 1
@@ -33,19 +33,19 @@ class VmMigrateWorkflow < MiqRequestWorkflow
       add_target(:placement_dc_name, :datacenter, EmsFolder, result)
     end
     rails_logger('get_source_and_targets', 1)
-    return @target_resource = result
+    @target_resource = result
   end
 
   def validate_placement(field, values, dlg, fld, value)
     # check the :placement_auto flag, then make sure the field is not blank
     return nil unless value.blank?
     return nil unless get_value(values[field]).blank?
-    return "#{required_description(dlg, fld)} is required"
+    "#{required_description(dlg, fld)} is required"
   end
 
   private
 
-  def allowed_ci(ci, relats, filtered_ids=nil)
+  def allowed_ci(ci, relats, filtered_ids = nil)
     sources = resources_for_ui
     return {} if sources.blank?
 

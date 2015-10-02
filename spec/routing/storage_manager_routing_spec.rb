@@ -9,5 +9,4 @@ describe StorageManagerController do
   it_behaves_like "A controller that has show list routes"
   it_behaves_like "A controller that has download_data routes"
   it_behaves_like "A controller that has CRUD routes"
-
 end

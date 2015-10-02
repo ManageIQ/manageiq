@@ -10,5 +10,4 @@ class OntapStorageVolume < CimStorageVolume
   def correlatable_id
     super.split(" ").last
   end
-
 end

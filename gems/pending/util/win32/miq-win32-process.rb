@@ -4,7 +4,7 @@ require 'binary_struct'
 module Process
   def self.suspend_resume_thread(thread_id, resume = true)
     hThread = OpenThread(THREAD_SUSPEND_RESUME, false, thread_id)
-    if (resume)
+    if resume
       ResumeThread(hThread)
     else
       SuspendThread(hThread)
@@ -13,17 +13,17 @@ module Process
   end
 
   WIN_THREAD_ENTRY32_STRUCT = BinaryStruct.new([
-    'L',			:dwSize,
-    'L',			:cntUsage,
-    'L',			:th32ThreadID,
-    'L',			:th32OwnerProcessID,
-    'L',			:tpBasePri,
-    'L',			:tpDeltaPri,
-    'L',			:dwFlags,
+    'L',      :dwSize,
+    'L',      :cntUsage,
+    'L',      :th32ThreadID,
+    'L',      :th32OwnerProcessID,
+    'L',      :tpBasePri,
+    'L',      :tpDeltaPri,
+    'L',      :dwFlags,
   ])
-  
+
   def self.process_thread_list
-    process_list = Hash.new {|h,k| h[k] = Array.new}
+    process_list = Hash.new { |h, k| h[k] = [] }
 
     handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0)
 

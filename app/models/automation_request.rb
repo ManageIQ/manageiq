@@ -23,11 +23,11 @@ class AutomationRequest < MiqRequest
     end
 
     uri_options = MiqRequestWorkflow.parse_ws_string(uri_parts)
-    [:namespace, :class, :instance, :message].each { |key| options[key] = uri_options.delete(key) if uri_options.has_key?(key) }
+    [:namespace, :class, :instance, :message].each { |key| options[key] = uri_options.delete(key) if uri_options.key?(key) }
     uri_options.keys.each { |key| _log.warn "invalid keyword <#{key}> specified in uri_parts" }
     options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, "")  # Strip blanks and slashes from beginning and end of string
-    options[:class_name]    = (options.delete(:class)     || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
-    options[:instance_name] = (options.delete(:instance)  || DEFAULT_INSTANCE).strip
+    options[:class_name]    = (options.delete(:class) || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
+    options[:instance_name] = (options.delete(:instance) || DEFAULT_INSTANCE).strip
 
     attrs = MiqRequestWorkflow.parse_ws_string(parameters)
     attrs[:userid] = userid
@@ -37,7 +37,7 @@ class AutomationRequest < MiqRequest
     options[:attrs]    = attrs
     options[:miq_zone] = zone(options) if options[:attrs].key?(:miq_zone)
 
-    self.create_request(options, userid, auto_approve)
+    create_request(options, userid, auto_approve)
   end
 
   def self.zone(options)
@@ -51,7 +51,7 @@ class AutomationRequest < MiqRequest
     [1]
   end
 
-  def customize_request_task_attributes(req_task_attrs, idx)
+  def customize_request_task_attributes(_req_task_attrs, _idx)
   end
 
   def my_role

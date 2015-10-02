@@ -82,7 +82,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].request_type"
       @ae_method.update_attributes(:data => method)
 
-      %w{ template clone_to_vm clone_to_template }.each do |provision_type|
+      %w( template clone_to_vm clone_to_template ).each do |provision_type|
         @miq_provision_request.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == @miq_provision_request.provision_type
       end
@@ -92,12 +92,12 @@ module MiqAeServiceMiqProvisionRequestSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].target_type"
       @ae_method.update_attributes(:data => method)
 
-      %w{ clone_to_template }.each do |provision_type|
+      %w( clone_to_template ).each do |provision_type|
         @miq_provision_request.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == 'template'
       end
 
-      %w{ template clone_to_vm }.each do |provision_type|
+      %w( template clone_to_vm ).each do |provision_type|
         @miq_provision_request.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == 'vm'
       end
@@ -110,7 +110,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       @miq_provision_request[:options][:callbacks].should be_nil
       @miq_provision_request.reload
       callback_hash = @miq_provision_request[:options][:callbacks]
-      callback_hash.count.should  == 1
+      callback_hash.count.should == 1
       callback_hash[:first_time_out].should == 'do_something_great'
     end
 
@@ -124,7 +124,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       invoke_ae.root(@ae_result_key).should be_true
       @miq_provision_request.reload
       callback_hash = @miq_provision_request[:options][:callbacks]
-      callback_hash.count.should  == 2
+      callback_hash.count.should == 2
       callback_hash[:first_time_out].should == 'do_something_great'
       callback_hash[:next_time_around].should == 'do_something_better_yet'
     end

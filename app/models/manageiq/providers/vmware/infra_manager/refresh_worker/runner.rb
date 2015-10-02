@@ -5,5 +5,4 @@ class ManageIQ::Providers::Vmware::InfraManager::RefreshWorker::Runner < ManageI
     # Override Standard EmsRefreshWorker's method of queueing up a Refresh
     # This will be done by the VimBrokerWorker, when he is ready.
   end
-
 end

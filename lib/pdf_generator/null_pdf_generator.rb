@@ -3,7 +3,7 @@ class NullPdfGenerator < PdfGenerator
     false
   end
 
-  def pdf_from_string(html_string, stylesheet)
+  def pdf_from_string(_html_string, _stylesheet)
     raise NotImplementedError, "pdf generation is not available"
   end
 end

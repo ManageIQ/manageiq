@@ -3,7 +3,7 @@ require "spec_helper"
 describe MiqServer do
   before do
     MiqDatabase.seed
-    _, @server, _ = EvmSpecHelper.create_guid_miq_server_zone
+    _, @server, = EvmSpecHelper.create_guid_miq_server_zone
   end
 
   let(:database)    { MiqDatabase.first }

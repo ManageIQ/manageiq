@@ -35,7 +35,7 @@ module ReportFormatter
     # create the graph object and add titles, fonts, and colors
     def build_document_header
       super
-      graph_type = mri.graph.is_a?(Hash) ? mri.graph[:type] : mri.graph
+      graph_type = mri.graph.kind_of?(Hash) ? mri.graph[:type] : mri.graph
       raise "Specified graph <#{graph_type}> is not a supported type" unless ZiyaCharting::CHARTS.include?(graph_type)
 
       build_html_title

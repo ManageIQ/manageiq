@@ -9,7 +9,7 @@ class MiqSearch < ActiveRecord::Base
   before_destroy :check_schedules_empty_on_destroy
 
   def check_schedules_empty_on_destroy
-    raise "Search is referenced in a schedule and cannot be deleted" unless self.miq_schedules.empty?
+    raise "Search is referenced in a schedule and cannot be deleted" unless miq_schedules.empty?
   end
 
   def search_type
@@ -31,7 +31,7 @@ class MiqSearch < ActiveRecord::Base
   end
 
   def self.get_expressions(options)
-    self.all(:conditions => options).each_with_object({}) do |r, hash|
+    all(:conditions => options).each_with_object({}) do |r, hash|
       hash[r.description] = r.id unless r.filter.nil?
     end
   end

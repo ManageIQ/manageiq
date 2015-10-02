@@ -8,7 +8,7 @@ describe Picture do
   end
 
   it "#content" do
-    subject.content.should == nil
+    subject.content.should.nil?
     expected = "FOOBAR"
     subject.content         = expected.dup
     subject.content.should == expected
@@ -16,7 +16,7 @@ describe Picture do
 
   context "#extension" do
     it "on new record" do
-      subject.extension.should == nil
+      subject.extension.should.nil?
       ext = "foo"
       subject.extension         = ext.dup
       subject.extension.should == ext
@@ -34,7 +34,7 @@ describe Picture do
       subject.save
 
       subject.reload
-      subject.extension.should == nil
+      subject.extension.should.nil?
       ext = "foo"
       subject.extension         = ext.dup
       subject.extension.should == ext
@@ -50,15 +50,15 @@ describe Picture do
   end
 
   it "#size" do
-    subject.size.should    == 0
+    subject.size.should == 0
     expected = "FOOBAR"
     subject.content         = expected.dup
-    subject.size.should    == expected.length
+    subject.size.should == expected.length
   end
 
   context "#basename" do
     it "fails when record is new" do
-      lambda { subject.filename }.should raise_error
+      -> { subject.filename }.should raise_error
     end
 
     context "works when record is saved" do

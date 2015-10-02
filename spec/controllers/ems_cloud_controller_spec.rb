@@ -28,48 +28,46 @@ describe EmsCloudController do
     end
 
     it 'creates on post' do
-      expect {
-        post :create, {
-          "button"               => "add",
-          "name"                 => "foo",
-          "emstype"              => "ec2",
-          "provider_region"      => "ap-southeast-1",
-          "port"                 => "",
-          "zone"                 => "default",
-          "default_userid"       => "foo",
-          "default_password"     => "[FILTERED]",
-          "default_verify"       => "[FILTERED]",
-          "metrics_userid"       => "",
-          "metrics_password"     => "[FILTERED]",
-          "metrics_verify"       => "[FILTERED]",
-          "amqp_userid"          => "",
-          "amqp_password"        => "[FILTERED]",
-          "amqp_verify"          => "[FILTERED]",
-          "ssh_keypair_userid"   => "",
-          "ssh_keypair_password" => "[FILTERED]"
-        }
-      }.to change { ManageIQ::Providers::Amazon::CloudManager.count }.by(1)
+      expect do
+        post :create,           "button"               => "add",
+                                "name"                 => "foo",
+                                "emstype"              => "ec2",
+                                "provider_region"      => "ap-southeast-1",
+                                "port"                 => "",
+                                "zone"                 => "default",
+                                "default_userid"       => "foo",
+                                "default_password"     => "[FILTERED]",
+                                "default_verify"       => "[FILTERED]",
+                                "metrics_userid"       => "",
+                                "metrics_password"     => "[FILTERED]",
+                                "metrics_verify"       => "[FILTERED]",
+                                "amqp_userid"          => "",
+                                "amqp_password"        => "[FILTERED]",
+                                "amqp_verify"          => "[FILTERED]",
+                                "ssh_keypair_userid"   => "",
+                                "ssh_keypair_password" => "[FILTERED]"
+      end.to change { ManageIQ::Providers::Amazon::CloudManager.count }.by(1)
     end
 
     it 'creates an authentication record on post' do
-      expect {
+      expect do
         post :create,
-          "button"           => "add",
-          "hostname"         => "host_openstack",
-          "name"             => "foo_openstack",
-          "emstype"          => "openstack",
-          "provider_region"  => "",
-          "port"             => "5000",
-          "zone"             => "default",
-          "default_userid"   => "foo",
-          "default_password" => "[FILTERED]",
-          "default_verify"   => "[FILTERED]"
+             "button"           => "add",
+             "hostname"         => "host_openstack",
+             "name"             => "foo_openstack",
+             "emstype"          => "openstack",
+             "provider_region"  => "",
+             "port"             => "5000",
+             "zone"             => "default",
+             "default_userid"   => "foo",
+             "default_password" => "[FILTERED]",
+             "default_verify"   => "[FILTERED]"
 
         expect(response.status).to eq(200)
         openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
         authentication = Authentication.where(:resource_id => openstack.to_a[0].id).first
         expect(authentication).not_to be_nil
-      }.to change { Authentication.count }.by(1)
+      end.to change { Authentication.count }.by(1)
     end
 
     it 'updates an authentication record on post' do
@@ -205,7 +203,7 @@ describe EmsCloudController do
            "default_userid"   => "foo",
            "default_password" => "[FILTERED]",
            "default_verify"   => "[FILTERED]"
-      
+
       expect(response.status).to eq(200)
       openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
       show_link_actual_path = controller.send(:show_link, openstack.to_a[0])

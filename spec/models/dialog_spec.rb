@@ -61,14 +61,14 @@ describe Dialog do
 
   context "#create" do
     it "validates_presence_of name" do
-      lambda { FactoryGirl.create(:dialog) }.should raise_error
-      lambda { FactoryGirl.create(:dialog, :label => 'dialog') }.should_not raise_error
+      -> { FactoryGirl.create(:dialog) }.should raise_error
+      -> { FactoryGirl.create(:dialog, :label => 'dialog') }.should_not raise_error
 
-      lambda { FactoryGirl.create(:dialog_tab) }.should raise_error
-      lambda { FactoryGirl.create(:dialog_tab, :label => 'tab') }.should_not raise_error
+      -> { FactoryGirl.create(:dialog_tab) }.should raise_error
+      -> { FactoryGirl.create(:dialog_tab, :label => 'tab') }.should_not raise_error
 
-      lambda { FactoryGirl.create(:dialog_group) }.should raise_error
-      lambda { FactoryGirl.create(:dialog_group, :label => 'group') }.should_not raise_error
+      -> { FactoryGirl.create(:dialog_group) }.should raise_error
+      -> { FactoryGirl.create(:dialog_group, :label => 'group') }.should_not raise_error
     end
   end
 
@@ -214,32 +214,31 @@ describe Dialog do
 
     it "dialog" do
       @dialog.destroy
-      Dialog.count.should      == 0
-      DialogTab.count.should   == 0
+      Dialog.count.should == 0
+      DialogTab.count.should == 0
       DialogGroup.count.should == 0
       DialogField.count.should == 0
     end
 
     it "dialog_tab" do
       @dialog_tab.destroy
-      Dialog.count.should      == 1
-      DialogTab.count.should   == 0
+      Dialog.count.should == 1
+      DialogTab.count.should == 0
       DialogGroup.count.should == 0
       DialogField.count.should == 0
     end
 
     it "dialog_group" do
       @dialog_group.destroy
-      Dialog.count.should      == 1
-      DialogTab.count.should   == 1
+      Dialog.count.should == 1
+      DialogTab.count.should == 1
       DialogGroup.count.should == 0
       DialogField.count.should == 0
 
       @dialog_tab.destroy
-      Dialog.count.should      == 1
-      DialogTab.count.should   == 0
+      Dialog.count.should == 1
+      DialogTab.count.should == 0
     end
-
   end
 
   context "#each_field" do
@@ -262,19 +261,19 @@ describe Dialog do
 
     it "dialog_group" do
       count = 0
-      @dialog_group.each_dialog_field {|df| count+=1}
+      @dialog_group.each_dialog_field { |_df| count += 1 }
       count.should == 2
     end
 
     it "dialog_tab" do
       count = 0
-      @dialog_tab.each_dialog_field {|df| count+=1}
+      @dialog_tab.each_dialog_field { |_df| count += 1 }
       count.should == 2
     end
 
     it "dialog" do
       count = 0
-      @dialog.each_dialog_field {|df| count+=1}
+      @dialog.each_dialog_field { |_df| count += 1 }
       count.should == 2
     end
   end
@@ -309,5 +308,4 @@ describe Dialog do
       @dialog.dialog_fields.count.should == 2
     end
   end
-
 end

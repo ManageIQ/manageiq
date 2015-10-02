@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'routes for DashboardController' do
-
   describe '#auth_error' do
     it 'routes with GET' do
       expect(get('/dashboard/auth_error')).to route_to('dashboard#auth_error')
@@ -191,5 +190,4 @@ describe 'routes for DashboardController' do
       expect(post("/dashboard/window_sizes")).to route_to("dashboard#window_sizes")
     end
   end
-
 end

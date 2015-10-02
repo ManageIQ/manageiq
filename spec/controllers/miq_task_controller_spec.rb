@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqTaskController do
-
   context "#tasks_condition" do
     subject { controller.send(:tasks_condition, @opts) }
     before do
@@ -225,7 +224,6 @@ describe MiqTaskController do
         expected += get_time_period(@opts[:time_period]) << "default" << "snapshot_delete"
         subject.should == expected
       end
-
     end
 
     describe "My Other UI Tasks" do
@@ -724,7 +722,7 @@ describe MiqTaskController do
                 "state=?"
         expected = [query, "waiting_to_start", "Queued", "Finished", "Ok", "Finished", "Error",
                     "Finished", "Warn", "Finished", "waiting_to_start", "Queued"]
-        expected += get_time_period(@opts[:time_period]) <<  "Finished"
+        expected += get_time_period(@opts[:time_period]) << "Finished"
         subject.should == expected
       end
 
@@ -831,7 +829,6 @@ describe MiqTaskController do
         expected += get_time_period(@opts[:time_period]) << "Initialized"
         subject.should == expected
       end
-
     end
 
     def get_time_period(period)

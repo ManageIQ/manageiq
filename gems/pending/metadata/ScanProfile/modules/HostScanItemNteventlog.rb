@@ -3,14 +3,14 @@ require 'metadata/util/event_log_filter'
 require 'digest/md5'
 
 module HostScanItemNteventlog
-  def parse_data(vim, data, &blk)
-    d = self.scan_definition
+  def parse_data(vim, data, &_blk)
+    d = scan_definition
     filter = d["content"][0][:filter]
     if filter.nil?
       $log.warn("MIQ(#{self.class.name}.parse_data) Unable to find hostd filter in scan profile [host default]")
       return
     end
-    
+
     data = vim.browseDiagnosticLogEx('hostd') if data.nil?
     d[:data] = hostd_log_to_hashes(data, filter)
   end
@@ -68,17 +68,17 @@ module HostScanItemNteventlog
 
       ret << {
         :generated => generated,
-        :name => name,
-        :level => level,
-        :source => source,
-        :message => message,
-        :uid => Digest::MD5.hexdigest("#{generated} #{name} #{level} #{source} #{message}")
+        :name      => name,
+        :level     => level,
+        :source    => source,
+        :message   => message,
+        :uid       => Digest::MD5.hexdigest("#{generated} #{name} #{level} #{source} #{message}")
       }
 
       rec_count += 1
       break if EventLogFilter.filter_by_rec_count?(rec_count, filter)
     end
 
-    return ret
+    ret
   end
 end

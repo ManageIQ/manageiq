@@ -588,8 +588,8 @@ class MiqRequestWorkflow
     class_tags = Classification.where(:show => true).includes(:tag).to_a
     class_tags.reject!(&:read_only?) # Can't do in query because column is a string.
 
-    exclude_list  = options[:exclude].blank?       ? [] : options[:exclude].collect(&:to_s)
-    include_list  = options[:include].blank?       ? [] : options[:include].collect(&:to_s)
+    exclude_list  = options[:exclude].blank? ? [] : options[:exclude].collect(&:to_s)
+    include_list  = options[:include].blank? ? [] : options[:include].collect(&:to_s)
     single_select = options[:single_select].blank? ? [] : options[:single_select].collect(&:to_s)
 
     cats, ents = class_tags.partition { |t| t.parent_id == 0 }
@@ -627,7 +627,7 @@ class MiqRequestWorkflow
                          tag[:children].sort_by { |_k, v| v[:name].to_i }
                        else
                          tag[:children].sort_by { |_k, v| v[:description] }
-      end
+                       end
     end
 
     rails_logger('allowed_tags', 1)
@@ -669,7 +669,7 @@ class MiqRequestWorkflow
     @values[:miq_request_dialog_name] ||= @values[:provision_dialog_name] || dialog_name_from_automate || self.class.default_dialog_file
     dp = @values[:miq_request_dialog_name] = File.basename(@values[:miq_request_dialog_name], ".rb")
     _log.info "Loading dialogs <#{dp}> for user <#{@requester.userid}>"
-    d = MiqDialog.where("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name).first
+    d = MiqDialog.find_by("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name)
     raise MiqException::Error, "Dialog cannot be found.  Name:[#{@values[:miq_request_dialog_name]}]  Type:[#{self.class.base_model.name}]" if d.nil?
     prov_dialogs = d.content
 
@@ -793,27 +793,25 @@ class MiqRequestWorkflow
   end
 
   def refresh_field_values(values, _requester_id)
-    begin
-      st = Time.now
+    st = Time.now
 
-      @values = values
+    @values = values
 
-      get_source_and_targets(true)
+    get_source_and_targets(true)
 
-      # @values gets modified during this call
-      get_all_dialogs
+    # @values gets modified during this call
+    get_all_dialogs
 
-      values.merge!(@values)
+    values.merge!(@values)
 
-      # Update the display flag for fields based on current settings
-      update_field_visibility
+    # Update the display flag for fields based on current settings
+    update_field_visibility
 
-      _log.info "refresh completed in [#{Time.now - st}] seconds"
-    rescue => err
-      _log.error "[#{err}]"
-      $log.error err.backtrace.join("\n")
-      raise err
-    end
+    _log.info "refresh completed in [#{Time.now - st}] seconds"
+  rescue => err
+    _log.error "[#{err}]"
+    $log.error err.backtrace.join("\n")
+    raise err
   end
 
   # Run the relationship methods and perform set intersections on the returned values.
@@ -1254,13 +1252,13 @@ class MiqRequestWorkflow
     dlg_field = dlg_fields[key]
     data_type = dlg_field[:data_type]
     set_value = case data_type
-    when :integer then value.to_i_with_method
-    when :float   then value.to_f
-    when :boolean then (value.to_s.downcase == 'true')
-    when :time    then Time.parse(value)
-    when :button  then value # Ignore
-    else value # Ignore
-    end
+                when :integer then value.to_i_with_method
+                when :float   then value.to_f
+                when :boolean then (value.to_s.downcase == 'true')
+                when :time    then Time.parse(value)
+                when :button  then value # Ignore
+                else value # Ignore
+                end
 
     result = nil
     if dlg_field.key?(:values)

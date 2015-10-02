@@ -99,7 +99,7 @@ class ApiController
 
       rclass = resource.class
       if collection_class(type) != rclass
-        matched_type, _ = collection_config.detect do |_collection, spec|
+        matched_type, = collection_config.detect do |_collection, spec|
           spec[:klass] && spec[:klass].constantize == rclass
         end
       end
@@ -247,7 +247,7 @@ class ApiController
       value = object_hash[base].public_send(attr)
       result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
       # set nil vtype above to "#{type}/#{resource.id}/#{base.tr('.', '/')}/#{attr}" to support id normalization
-      base.split(".").reverse.each { |level| result = {level => result} }
+      base.split(".").reverse_each { |level| result = {level => result} }
       [value, result]
     end
 

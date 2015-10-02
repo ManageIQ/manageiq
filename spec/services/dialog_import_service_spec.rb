@@ -123,9 +123,9 @@ describe DialogImportService do
       end
 
       it "re-raises" do
-        expect {
+        expect do
           dialog_import_service.import_from_file(filename)
-        }.to raise_error(DialogFieldImporter::InvalidDialogFieldTypeError, "Custom Message")
+        end.to raise_error(DialogFieldImporter::InvalidDialogFieldTypeError, "Custom Message")
       end
     end
 
@@ -135,9 +135,9 @@ describe DialogImportService do
       end
 
       it "raises a ParsedNonDialogYamlError" do
-        expect {
+        expect do
           dialog_import_service.import_from_file(filename)
-        }.to raise_error(DialogImportService::ParsedNonDialogYamlError)
+        end.to raise_error(DialogImportService::ParsedNonDialogYamlError)
       end
     end
   end
@@ -266,9 +266,9 @@ describe DialogImportService do
         it_behaves_like "DialogImportService#import_service_dialogs that destroys temporary data"
 
         it "does not error" do
-          expect {
+          expect do
             dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
-          }.to_not raise_error
+          end.to_not raise_error
         end
       end
     end
@@ -279,9 +279,9 @@ describe DialogImportService do
       end
 
       it "raises a ParsedNonDialogYamlError" do
-        expect {
+        expect do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
-        }.to raise_error(DialogImportService::ParsedNonDialogYamlError)
+        end.to raise_error(DialogImportService::ParsedNonDialogYamlError)
       end
     end
   end
@@ -330,9 +330,9 @@ describe DialogImportService do
       end
 
       it "reraises with the original error" do
-        expect {
+        expect do
           dialog_import_service.store_for_import("the data")
-        }.to raise_error(DialogImportValidator::InvalidDialogFieldTypeError, "Test message")
+        end.to raise_error(DialogImportValidator::InvalidDialogFieldTypeError, "Test message")
       end
 
       it "queues a deletion" do

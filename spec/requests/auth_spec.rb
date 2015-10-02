@@ -13,12 +13,12 @@ describe "Login process" do
   context "w/o a valid session" do
     it "redirects to 'login'" do
       get '/dashboard/show'
-      expect(response).to redirect_to(:controller => 'dashboard', :action => 'login', :timeout =>false)
+      expect(response).to redirect_to(:controller => 'dashboard', :action => 'login', :timeout => false)
     end
 
     it "redirects to 'login' and sets start_url for whitelisted entry point" do
       get '/host/show/10'
-      expect(response).to redirect_to(:controller => 'dashboard', :action => 'login', :timeout =>false)
+      expect(response).to redirect_to(:controller => 'dashboard', :action => 'login', :timeout => false)
       expect(session[:start_url]).to eq('http://www.example.com/host/show/10')
     end
 

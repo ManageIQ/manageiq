@@ -47,19 +47,19 @@ describe CustomAttributeMixin do
 
       key  = "foo"
       FactoryGirl.create(:miq_custom_attribute,
-                          :resource_type => object.class.base_class.name,
-                          :resource_id   => object.id,
-                          :name          => key,
-                          :value         => "bar")
+                         :resource_type => object.class.base_class.name,
+                         :resource_id   => object.id,
+                         :name          => key,
+                         :value         => "bar")
 
       object.reload.miq_custom_keys.should == [key]
 
       key2 = "foobar"
       FactoryGirl.create(:miq_custom_attribute,
-                          :resource_type => object.class.base_class.name,
-                          :resource_id   => object.id,
-                          :name          => key2,
-                          :value         => "bar")
+                         :resource_type => object.class.base_class.name,
+                         :resource_id   => object.id,
+                         :name          => key2,
+                         :value         => "bar")
       object.reload.miq_custom_keys.should match_array([key, key2])
     end
   end
@@ -112,14 +112,12 @@ describe CustomAttributeMixin do
       object.miq_custom_get(key).should be_nil
 
       FactoryGirl.create(:miq_custom_attribute,
-                          :resource_type => object.class.base_class.name,
-                          :resource_id   => object.id,
-                          :name          => key,
-                          :value         => value)
+                         :resource_type => object.class.base_class.name,
+                         :resource_id   => object.id,
+                         :name          => key,
+                         :value         => value)
 
       object.reload.miq_custom_get(key).should == value
     end
   end
-
-
 end

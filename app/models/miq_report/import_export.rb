@@ -2,7 +2,7 @@ module MiqReport::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def import_from_hash(report, options=nil)
+    def import_from_hash(report, options = nil)
       raise "No Report to Import" if report.nil?
 
       report = report["MiqReport"] if report.keys.first == "MiqReport"
@@ -41,7 +41,7 @@ module MiqReport::ImportExport
       end
       _log.info("#{msg}")
 
-      if options[:save] && result[:status].in?([:add, :update]) 
+      if options[:save] && result[:status].in?([:add, :update])
         rep.save!
         _log.info("- Completed.")
       end
@@ -51,9 +51,9 @@ module MiqReport::ImportExport
   end
 
   def export_to_array
-    h = self.attributes
+    h = attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
     h["menu_name"] = h.delete("name")
-    [{ self.class.to_s => h }]
+    [{self.class.to_s => h}]
   end
 end

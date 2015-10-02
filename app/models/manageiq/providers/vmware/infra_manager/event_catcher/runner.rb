@@ -2,11 +2,11 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
   def event_monitor_handle
     require 'VMwareWebService/MiqVimEventMonitor'
     @event_monitor_handle ||= MiqVimEventMonitor.new(
-                                @ems.hostname,
-                                @ems.authentication_userid,
-                                @ems.authentication_password,
-                                nil,
-                                self.worker_settings[:ems_event_page_size])
+      @ems.hostname,
+      @ems.authentication_userid,
+      @ems.authentication_password,
+      nil,
+      worker_settings[:ems_event_page_size])
   end
 
   def reset_event_monitor_handle
@@ -14,35 +14,31 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
   end
 
   def stop_event_monitor
-    begin
-      @event_monitor_handle.stop unless @event_monitor_handle.nil?
-    rescue Exception => err
-      _log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
-      _log.warn("#{self.log_prefix} Error details: [#{err.details}]")
-      _log.log_backtrace(err)
-    ensure
-      reset_event_monitor_handle
-    end
+    @event_monitor_handle.stop unless @event_monitor_handle.nil?
+  rescue Exception => err
+    _log.warn("#{log_prefix} Event Monitor Stop errored because [#{err.message}]")
+    _log.warn("#{log_prefix} Error details: [#{err.details}]")
+    _log.log_backtrace(err)
+  ensure
+    reset_event_monitor_handle
   end
 
   def monitor_events
-    begin
-      event_monitor_handle.monitorEvents do |ea|
-        @queue.enq(ea)
-        sleep_poll_normal
-      end
-    rescue Handsoap::Fault => err
-      if ( @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.") )
-        _log.info("#{self.log_prefix} Event Monitor Thread terminated normally")
-      else
-        _log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
-        _log.error("#{self.log_prefix} Error details: [#{err.details}]")
-        _log.log_backtrace(err)
-      end
-      raise EventCatcherHandledException
-    ensure
-      reset_event_monitor_handle
+    event_monitor_handle.monitorEvents do |ea|
+      @queue.enq(ea)
+      sleep_poll_normal
     end
+  rescue Handsoap::Fault => err
+    if  @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.")
+      _log.info("#{log_prefix} Event Monitor Thread terminated normally")
+    else
+      _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
+      _log.error("#{log_prefix} Error details: [#{err.details}]")
+      _log.log_backtrace(err)
+    end
+    raise EventCatcherHandledException
+  ensure
+    reset_event_monitor_handle
   end
 
   def process_event(event)
@@ -61,10 +57,10 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
       display_name   = event_type
     end
 
-    if self.filtered_events.include?(event_type) || self.filtered_events.include?(sub_event_type)
-      _log.info "#{self.log_prefix} Skipping caught event [#{display_name}] chainId [#{event['chainId']}]"
+    if filtered_events.include?(event_type) || filtered_events.include?(sub_event_type)
+      _log.info "#{log_prefix} Skipping caught event [#{display_name}] chainId [#{event['chainId']}]"
     else
-      _log.info "#{self.log_prefix} Queueing event [#{display_name}] chainId [#{event['chainId']}]"
+      _log.info "#{log_prefix} Queueing event [#{display_name}] chainId [#{event['chainId']}]"
       EmsEvent.add_queue('add_vc', @cfg[:ems_id], event)
     end
   end

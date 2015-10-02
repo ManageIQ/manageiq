@@ -29,7 +29,7 @@ describe Storage do
     Storage.stub(:vmdb_storage_config => {})
     Storage.scan_collection_timeout.should be_nil
 
-    Storage.stub(:vmdb_storage_config => { :collection => {:timeout => 3} } )
+    Storage.stub(:vmdb_storage_config => {:collection => {:timeout => 3}})
     Storage.scan_collection_timeout.should == 3
   end
 
@@ -43,14 +43,14 @@ describe Storage do
   end
 
   it "#vmdb_storage_config" do
-    config = { :foo => 1, :bar => 2 }
+    config = {:foo => 1, :bar => 2}
     stub_server_configuration(config, "storage")
     Storage.vmdb_storage_config.should == config
   end
 
   it "#scan_complete?" do
     miq_task = FactoryGirl.create(:miq_task)
-    miq_task.context_data = { :targets => [], :complete => [], :pending  => {} }
+    miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
     miq_task.context_data[:targets]  = [123, 456, 789]
     miq_task.context_data[:complete] = []
     Storage.scan_complete?(miq_task).should be_false
@@ -61,14 +61,14 @@ describe Storage do
 
   it "#scan_complete_message" do
     miq_task = FactoryGirl.create(:miq_task)
-    miq_task.context_data = { :targets => [], :complete => [], :pending  => {} }
+    miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
     miq_task.context_data[:targets]  = [123, 456, 789]
     Storage.scan_complete_message(miq_task).should == "SmartState Analysis for 3 storages complete"
   end
 
   it "#scan_update_message" do
     miq_task = FactoryGirl.create(:miq_task)
-    miq_task.context_data = { :targets => [], :complete => [], :pending  => {} }
+    miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
     miq_task.context_data[:targets]  = [123, 456, 789]
     miq_task.context_data[:complete] = [123]
     miq_task.context_data[:pending][789] = 98765
@@ -91,11 +91,11 @@ describe Storage do
     end
 
     it "#active_hosts_in_zone" do
-      @storage1.active_hosts_in_zone(@zone.name).should  == [@host1]
+      @storage1.active_hosts_in_zone(@zone.name).should == [@host1]
       @storage1.active_hosts_in_zone(@zone2.name).should == []
-      @storage2.active_hosts_in_zone(@zone.name).should  == []
+      @storage2.active_hosts_in_zone(@zone.name).should == []
       @storage2.active_hosts_in_zone(@zone2.name).should == [@host2]
-      @storage3.active_hosts_in_zone(@zone.name).should  == [@host1]
+      @storage3.active_hosts_in_zone(@zone.name).should == [@host1]
       @storage3.active_hosts_in_zone(@zone2.name).should == [@host2]
     end
 
@@ -118,19 +118,19 @@ describe Storage do
       miq_task = FactoryGirl.create(:miq_task)
       qitem = @storage1.scan_queue_item(miq_task.id)
 
-      qitem.class_name.should   == @storage1.class.name
-      qitem.instance_id.should  == @storage1.id
-      qitem.method_name.should  == 'smartstate_analysis'
-      qitem.args.should         == [miq_task.id]
-      qitem.msg_timeout.should  == scan_collection_timeout
-      qitem.zone.should         == @storage1.my_zone
-      qitem.role.should         == 'ems_operations'
-      qitem.miq_callback.should == { :class_name => @storage1.class.name, :instance_id => @storage1.id, :method_name => :scan_complete_callback, :args => [miq_task.id] }
+      qitem.class_name.should == @storage1.class.name
+      qitem.instance_id.should == @storage1.id
+      qitem.method_name.should == 'smartstate_analysis'
+      qitem.args.should == [miq_task.id]
+      qitem.msg_timeout.should == scan_collection_timeout
+      qitem.zone.should == @storage1.my_zone
+      qitem.role.should == 'ems_operations'
+      qitem.miq_callback.should == {:class_name => @storage1.class.name, :instance_id => @storage1.id, :method_name => :scan_complete_callback, :args => [miq_task.id]}
     end
 
     it "#scan_storages_unprocessed" do
       miq_task = FactoryGirl.create(:miq_task)
-      miq_task.context_data = { :targets => [], :complete => [], :pending  => {} }
+      miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
       miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
       miq_task.context_data[:complete] = []
       miq_task.context_data[:pending]  = {}
@@ -154,16 +154,16 @@ describe Storage do
       deliver_on = Time.now.utc + 1.hour
       Storage.stub(:scan_watchdog_deliver_on => deliver_on)
       watchdog = Storage.scan_queue_watchdog(miq_task.id)
-      watchdog.class_name.should  == 'Storage'
+      watchdog.class_name.should == 'Storage'
       watchdog.method_name.should == 'scan_watchdog'
-      watchdog.args.should        == [miq_task.id]
-      watchdog.zone.should        == MiqServer.my_zone
-      watchdog.deliver_on.should  == deliver_on
+      watchdog.args.should == [miq_task.id]
+      watchdog.zone.should == MiqServer.my_zone
+      watchdog.deliver_on.should == deliver_on
     end
 
     context "on a host without credentials" do
       it "#scan will raise error" do
-        lambda { @storage1.scan }.should raise_error(MiqException::MiqStorageError)
+        -> { @storage1.scan }.should raise_error(MiqException::MiqStorageError)
       end
     end
 
@@ -180,11 +180,11 @@ describe Storage do
       end
 
       it "#ext_management_systems_in_zone" do
-        @storage1.ext_management_systems_in_zone(@zone.name).should  == [@ems1]
+        @storage1.ext_management_systems_in_zone(@zone.name).should == [@ems1]
         @storage1.ext_management_systems_in_zone(@zone2.name).should == []
-        @storage2.ext_management_systems_in_zone(@zone.name).should  == []
+        @storage2.ext_management_systems_in_zone(@zone.name).should == []
         @storage2.ext_management_systems_in_zone(@zone2.name).should == [@ems2]
-        @storage3.ext_management_systems_in_zone(@zone.name).should  == [@ems1]
+        @storage3.ext_management_systems_in_zone(@zone.name).should == [@ems1]
         @storage3.ext_management_systems_in_zone(@zone2.name).should == [@ems2]
       end
 
@@ -195,16 +195,16 @@ describe Storage do
       end
 
       it "#active_hosts_with_authentication_status_ok_in_zone" do
-        @storage1.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should  == [@host1]
+        @storage1.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should == [@host1]
         @storage1.active_hosts_with_authentication_status_ok_in_zone(@zone2.name).should == []
-        @storage2.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should  == []
+        @storage2.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should == []
         @storage2.active_hosts_with_authentication_status_ok_in_zone(@zone2.name).should == []
-        @storage3.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should  == [@host1]
+        @storage3.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should == [@host1]
         @storage3.active_hosts_with_authentication_status_ok_in_zone(@zone2.name).should == []
       end
 
       it "#scan" do
-        lambda { @storage3.scan }.should raise_error(MiqException::MiqUnsupportedStorage)
+        -> { @storage3.scan }.should raise_error(MiqException::MiqUnsupportedStorage)
 
         MiqEvent.should_receive(:raise_evm_job_event).once
         @storage1.scan
@@ -236,10 +236,9 @@ describe Storage do
           Storage.should_receive(:scan_queue_watchdog).never
           miq_task  = Storage.scan_timer(nil)
           miq_task.should be_nil
-          MiqTask.count.should  == 0
+          MiqTask.count.should == 0
           MiqQueue.count.should == 0
         end
-
       end
 
       context "with performance capture enabled" do
@@ -251,7 +250,7 @@ describe Storage do
         it "#scan_eligible_storages" do
           Storage.scan_eligible_storages.should              match_array [@storage1, @storage2]
           Storage.scan_eligible_storages(nil).should         match_array [@storage1, @storage2]
-          Storage.scan_eligible_storages(@zone.name).should  == [@storage1]
+          Storage.scan_eligible_storages(@zone.name).should == [@storage1]
           Storage.scan_eligible_storages(@zone2.name).should == [@storage2]
         end
 
@@ -259,7 +258,7 @@ describe Storage do
           Storage.stub(:max_parallel_storage_scans => 1)
           bogus_id = @storage1.id - 1
           miq_task = FactoryGirl.create(:miq_task)
-          miq_task.context_data = { :targets => [], :complete => [], :pending  => {} }
+          miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
           miq_task.context_data[:targets]  = [bogus_id, @storage1.id, @storage2.id, @storage3.id]
           miq_task.context_data[:complete] = []
           miq_task.context_data[:pending]  = {}
@@ -269,8 +268,8 @@ describe Storage do
           Storage.any_instance.stub(:scan_queue_item => qitem1)
           Storage.scan_queue(miq_task)
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should       == []
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == []
           miq_task.context_data[:pending].length.should == 1
           miq_task.context_data[:pending][@storage1.id].should == qitem1.id
 
@@ -281,8 +280,8 @@ describe Storage do
           Storage.any_instance.stub(:scan_queue_item => qitem2)
           Storage.scan_queue(miq_task)
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should       == [@storage1.id]
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == [@storage1.id]
           miq_task.context_data[:pending].length.should == 1
           miq_task.context_data[:pending][@storage2.id].should == qitem2.id
 
@@ -292,8 +291,8 @@ describe Storage do
           Storage.any_instance.stub(:scan_queue_item).and_raise(MiqException::MiqUnsupportedStorage)
           Storage.scan_queue(miq_task)
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id]
-          miq_task.context_data[:complete].should       == [@storage1.id, @storage2.id]
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id]
+          miq_task.context_data[:complete].should == [@storage1.id, @storage2.id]
           miq_task.context_data[:pending].length.should == 0
         end
 
@@ -301,7 +300,7 @@ describe Storage do
           max_qitems_per_scan_request = 1
           Storage.stub(:max_qitems_per_scan_request => max_qitems_per_scan_request)
           miq_task = FactoryGirl.create(:miq_task)
-          miq_task.context_data = { :targets => [], :complete => [], :pending  => {} }
+          miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
           miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
           miq_task.context_data[:complete] = []
           miq_task.context_data[:pending]  = {}
@@ -310,8 +309,8 @@ describe Storage do
           Storage.should_receive(:scan_queue_watchdog).with(miq_task.id).once
           Storage.scan_watchdog(miq_task.id)
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should       == []
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == []
           miq_task.context_data[:pending].length.should == 0
 
           qitem1  = FactoryGirl.create(:miq_queue)
@@ -320,9 +319,9 @@ describe Storage do
           Storage.should_receive(:scan_queue_watchdog).with(miq_task.id).once
           Storage.scan_watchdog(miq_task.id)
           miq_task.reload
-          miq_task.context_data[:targets].should               == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should              == []
-          miq_task.context_data[:pending].length.should        == 1
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == []
+          miq_task.context_data[:pending].length.should == 1
           miq_task.context_data[:pending][@storage1.id].should == qitem1.id
 
           qitem1.destroy
@@ -330,8 +329,8 @@ describe Storage do
           Storage.should_receive(:scan_queue_watchdog).with(miq_task.id).once
           Storage.scan_watchdog(miq_task.id)
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should       == []
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == []
           miq_task.context_data[:pending].length.should == 0
 
           miq_task.context_data[:complete] = [@storage1.id, @storage2.id, @storage3.id]
@@ -340,14 +339,14 @@ describe Storage do
           Storage.should_receive(:scan_queue_watchdog).never
           Storage.scan_watchdog(miq_task.id)
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should       == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == [@storage1.id, @storage2.id, @storage3.id]
           miq_task.context_data[:pending].length.should == 0
         end
 
         it "#scan_complete_callback" do
           miq_task = FactoryGirl.create(:miq_task)
-          miq_task.context_data = { :targets => [], :complete => [], :pending  => {} }
+          miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
           miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
           miq_task.context_data[:complete] = []
           miq_task.context_data[:pending][@storage1.id] = 123
@@ -355,20 +354,20 @@ describe Storage do
           Storage.should_receive(:scan_queue).with(miq_task).once
           @storage1.scan_complete_callback(miq_task.id, 'status', 'message', 'result')
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should       == [@storage1.id]
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == [@storage1.id]
           miq_task.context_data[:pending].length.should == 0
-          miq_task.pct_complete.should                  == 33
+          miq_task.pct_complete.should == 33
 
           miq_task.context_data[:pending][@storage2.id] = 456
           miq_task.save!
           Storage.should_receive(:scan_queue).with(miq_task).once
           @storage2.scan_complete_callback(miq_task.id, 'status', 'message', 'result')
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should       == [@storage1.id, @storage2.id]
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == [@storage1.id, @storage2.id]
           miq_task.context_data[:pending].length.should == 0
-          miq_task.pct_complete.should                  == 66
+          miq_task.pct_complete.should == 66
 
           miq_task.context_data[:pending][@storage3.id] = 789
           miq_task.save!
@@ -376,10 +375,10 @@ describe Storage do
           MiqTask.any_instance.should_receive(:update_status).once
           @storage3.scan_complete_callback(miq_task.id, 'status', 'message', 'result')
           miq_task.reload
-          miq_task.context_data[:targets].should        == [@storage1.id, @storage2.id, @storage3.id]
-          miq_task.context_data[:complete].should       == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:targets].should == [@storage1.id, @storage2.id, @storage3.id]
+          miq_task.context_data[:complete].should == [@storage1.id, @storage2.id, @storage3.id]
           miq_task.context_data[:pending].length.should == 0
-          miq_task.pct_complete.should                  == 100
+          miq_task.pct_complete.should == 100
 
           miq_task.destroy
           Storage.should_receive(:scan_queue).never
@@ -393,11 +392,11 @@ describe Storage do
           miq_task  = Storage.scan_timer(nil)
           miq_tasks = MiqTask.all
           miq_tasks.length.should == 1
-          miq_task.should         == miq_tasks.first
+          miq_task.should == miq_tasks.first
           miq_task.should_not be_nil
-          miq_task.userid.should  == "system"
-          miq_task.name.should    == "SmartState Analysis for All Storages"
-          miq_task.state.should   == MiqTask::STATE_QUEUED
+          miq_task.userid.should == "system"
+          miq_task.name.should == "SmartState Analysis for All Storages"
+          miq_task.state.should == MiqTask::STATE_QUEUED
           cdata = miq_task.context_data
           cdata[:targets].should  match_array Storage.scan_eligible_storages.collect(&:id)
           cdata[:complete].should be_empty
@@ -409,7 +408,6 @@ describe Storage do
           miq_task.name.should == "SmartState Analysis for All Storages in Zone \"#{@zone.name}\""
           miq_task.context_data[:targets].should match_array Storage.scan_eligible_storages(@zone.name).collect(&:id)
         end
-
       end
     end
   end

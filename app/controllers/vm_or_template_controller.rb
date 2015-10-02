@@ -3,10 +3,10 @@ class VmOrTemplateController < ApplicationController
   include VmShowMixin
 
   # Exception due to open.window() in newer IE versions not sending request.referer
-  before_filter :check_privileges, :except => [:launch_vmware_console]
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges, :except => [:launch_vmware_console]
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   private
 
@@ -38,7 +38,7 @@ class VmOrTemplateController < ApplicationController
   end
 
   def set_elements_and_redirect_unauthorized_user
-    @nodetype, _ = params[:id].split("_").last.split("-")
+    @nodetype, = params[:id].split("_").last.split("-")
     prefix = prefix_by_nodetype(@nodetype)
 
     # Position in tree that matches selected record

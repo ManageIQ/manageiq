@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Classification do
-
   context ".hash_all_by_type_and_name" do
     it "with entries duped across categories should return both entries" do
       clergy        = FactoryGirl.create(:classification,     :name => "clergy", :single_value => 1)
@@ -315,7 +314,7 @@ describe Classification do
          :entries      => [{:description => "Cost Center 001", :name => "001"},
                            {:description => "Cost Center 002", :name => "002"}]
         }]
-      )
+                                      )
     end
 
     context "after seeding" do

@@ -30,15 +30,15 @@ class MiqRegion < ActiveRecord::Base
   include MiqPolicyMixin
   include Metric::CiMixin
 
-  alias all_vms_and_templates  vms_and_templates
-  alias all_vm_or_template_ids vm_or_template_ids
-  alias all_vms                vms
-  alias all_vm_ids             vm_ids
-  alias all_miq_templates      miq_templates
-  alias all_miq_template_ids   miq_template_ids
-  alias all_hosts              hosts
-  alias all_host_ids           host_ids
-  alias all_storages           storages
+  alias_method :all_vms_and_templates,  :vms_and_templates
+  alias_method :all_vm_or_template_ids, :vm_or_template_ids
+  alias_method :all_vms,                :vms
+  alias_method :all_vm_ids,             :vm_ids
+  alias_method :all_miq_templates,      :miq_templates
+  alias_method :all_miq_template_ids,   :miq_template_ids
+  alias_method :all_hosts,              :hosts
+  alias_method :all_host_ids,           :host_ids
+  alias_method :all_storages,           :storages
 
   PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages]
 
@@ -95,7 +95,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def name
-    self.description
+    description
   end
 
   def find_master_server
@@ -103,7 +103,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def self.my_region
-    self.where(:region => self.my_region_number).first
+    find_by(:region => my_region_number)
   end
 
   def self.seed
@@ -123,7 +123,7 @@ class MiqRegion < ActiveRecord::Base
   def self.sync_with_db_region(config = false)
     # Establish a connection to a different database so that we can sync with the new DB's region
     if config
-      raise "Failed to retrieve database configuration for Rails.env [#{Rails.env}] in config with keys: #{config.keys.inspect}" unless config.has_key?(Rails.env)
+      raise "Failed to retrieve database configuration for Rails.env [#{Rails.env}] in config with keys: #{config.keys.inspect}" unless config.key?(Rails.env)
       _log.info("establishing connection with #{config[Rails.env].merge("password" => "[PASSWORD]").inspect}")
       MiqDatabase.establish_connection(config[Rails.env])
     end
@@ -131,7 +131,7 @@ class MiqRegion < ActiveRecord::Base
     db = MiqDatabase.first
     return if db.nil?
 
-    my_region = self.my_region_number(true)
+    my_region = my_region_number(true)
     region = db.region_id
     if region != my_region
       _log.info("Changing region file from: [#{my_region}] to: [#{region}]... restart to use new region")
@@ -140,15 +140,15 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def self.sync_region_to_file(region)
-    File.open(File.join(Rails.root, "REGION"), "w") {|f| f.write region }
+    File.open(File.join(Rails.root, "REGION"), "w") { |f| f.write region }
   end
 
   def ems_clouds
-    self.ext_management_systems.select {|e| e.kind_of? EmsCloud }
+    ext_management_systems.select { |e| e.kind_of? EmsCloud }
   end
 
   def ems_infras
-    self.ext_management_systems.select {|e| e.kind_of? EmsInfra }
+    ext_management_systems.select { |e| e.kind_of? EmsInfra }
   end
 
   def ems_containers
@@ -156,58 +156,58 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def assigned_roles
-    self.miq_servers.collect(&:assigned_roles).flatten.uniq.compact
+    miq_servers.collect(&:assigned_roles).flatten.uniq.compact
   end
 
   def role_active?(role_name)
-    self.active_miq_servers.any? {|s| s.has_active_role?(role_name) }
+    active_miq_servers.any? { |s| s.has_active_role?(role_name) }
   end
 
   def role_assigned?(role_name)
-    self.active_miq_servers.any? {|s| s.has_assigned_role?(role_name) }
+    active_miq_servers.any? { |s| s.has_assigned_role?(role_name) }
   end
 
   def remote_ui_miq_server
-    MiqServer.in_region(self.region).where(:has_active_userinterface => true).first
+    MiqServer.in_region(region).find_by(:has_active_userinterface => true)
   end
 
   def remote_ui_ipaddress
-    server = self.remote_ui_miq_server
+    server = remote_ui_miq_server
     server.nil? ? nil : server.ipaddress
   end
 
   def remote_ui_hostname
-    server = self.remote_ui_miq_server
+    server = remote_ui_miq_server
     server.nil? ? nil : (server.hostname || server.ipaddress)
   end
 
   def remote_ui_url(contact_with = :hostname)
-    hostname = self.send("remote_ui_#{contact_with}")
-    return hostname.nil? ? nil : "https://#{hostname}"
+    hostname = send("remote_ui_#{contact_with}")
+    hostname.nil? ? nil : "https://#{hostname}"
   end
 
   def remote_ws_miq_server
-    MiqServer.in_region(self.region).where(:has_active_webservices => true).first
+    MiqServer.in_region(region).find_by(:has_active_webservices => true)
   end
 
   def remote_ws_address
     contact_with = VMDB::Config.new("vmdb").config.fetch_path(:webservices, :contactwith)
-    contact_with == 'hostname' ? self.remote_ws_hostname : self.remote_ws_ipaddress
+    contact_with == 'hostname' ? remote_ws_hostname : remote_ws_ipaddress
   end
 
   def remote_ws_ipaddress
-    miq_server = self.remote_ws_miq_server
+    miq_server = remote_ws_miq_server
     miq_server.nil? ? nil : miq_server.ipaddress
   end
 
   def remote_ws_hostname
-    miq_server = self.remote_ws_miq_server
+    miq_server = remote_ws_miq_server
     miq_server.nil? ? nil : (miq_server.hostname || miq_server.ipaddress)
   end
 
   def remote_ws_url
-    hostname = self.remote_ws_address
-    return hostname.nil? ? nil : "https://#{hostname}"
+    hostname = remote_ws_address
+    hostname.nil? ? nil : "https://#{hostname}"
   end
 
   #
@@ -215,10 +215,10 @@ class MiqRegion < ActiveRecord::Base
   #
 
   def self.atStartup
-    region = self.my_region
+    region = my_region
     prefix = "#{_log.prefix} Region: [#{region.region}], name: [#{region.name}]"
-    self.log_under_management(prefix)
-    self.log_not_under_management(prefix)
+    log_under_management(prefix)
+    log_not_under_management(prefix)
   end
 
   def self.log_under_management(prefix)
@@ -232,8 +232,8 @@ class MiqRegion < ActiveRecord::Base
       sockets = e.aggregate_physical_cpus
       $log.info("#{prefix}, EMS: [#{e.id}], Name: [#{e.name}], IP Address: [#{e.ipaddress}], Hostname: [#{e.hostname}], VMs: [#{vms}], Hosts: [#{hosts}], Sockets: [#{sockets}]")
 
-      total_vms     += vms
-      total_hosts   += hosts
+      total_vms += vms
+      total_hosts += hosts
       total_sockets += sockets
     end
     $log.info("#{prefix}, Under Management: VMs: [#{total_vms}], Hosts: [#{total_hosts}], Sockets: [#{total_sockets}]")
@@ -243,7 +243,7 @@ class MiqRegion < ActiveRecord::Base
     hosts_objs = Host.where(:ems_id => nil)
     hosts      = hosts_objs.count
     vms        = VmOrTemplate.count(:conditions =>  {:ems_id => nil})
-    sockets    = self.my_region.aggregate_physical_cpus(hosts_objs)
+    sockets    = my_region.aggregate_physical_cpus(hosts_objs)
     $log.info("#{prefix}, Not Under Management: VMs: [#{vms}], Hosts: [#{hosts}], Sockets: [#{sockets}]")
   end
 
@@ -266,7 +266,7 @@ class MiqRegion < ActiveRecord::Base
 
     options.each do |type, enable|
       ns = "/performance/#{type}"
-      enable ? self.tag_add('capture_enabled', :ns => ns) : self.tag_with('', :ns => ns)
+      enable ? tag_add('capture_enabled', :ns => ns) : tag_with('', :ns => ns)
     end
 
     # Clear tag association cache instead of full reload.

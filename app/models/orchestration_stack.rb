@@ -23,9 +23,9 @@ class OrchestrationStack < ActiveRecord::Base
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
 
-  alias orchestration_stack_parameters parameters
-  alias orchestration_stack_outputs    outputs
-  alias orchestration_stack_resources  resources
+  alias_method :orchestration_stack_parameters, :parameters
+  alias_method :orchestration_stack_outputs,    :outputs
+  alias_method :orchestration_stack_resources,  :resources
 
   virtual_column :total_vms,             :type => :integer
   virtual_column :total_security_groups, :type => :integer

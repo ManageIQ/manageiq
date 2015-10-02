@@ -4,8 +4,8 @@ describe EmsCloudController do
   context "::EmsCommon" do
     context "#get_form_vars" do
       it "check if the default port for openstack/openstack_infra/rhevm is set" do
-        controller.instance_variable_set(:@edit, {:new => {}})
-        controller.instance_variable_set(:@_params, {:server_emstype => "openstack"})
+        controller.instance_variable_set(:@edit, :new => {})
+        controller.instance_variable_set(:@_params, :server_emstype => "openstack")
         controller.send(:get_form_vars)
         assigns(:edit)[:new][:port].should == 5000
 
@@ -13,9 +13,9 @@ describe EmsCloudController do
         controller.send(:get_form_vars)
         assigns(:edit)[:new][:port].should == 5000
 
-        controller.instance_variable_set(:@_params, {:server_emstype => "ec2"})
+        controller.instance_variable_set(:@_params, :server_emstype => "ec2")
         controller.send(:get_form_vars)
-        assigns(:edit)[:new][:port].should == nil
+        assigns(:edit)[:new][:port].should.nil?
       end
     end
 
@@ -38,16 +38,16 @@ describe EmsCloudController do
       before :each do
         set_user_privileges
       end
-      
+
       it "form_div should be updated when server type is sent up" do
-        controller.instance_variable_set(:@edit, {:new => {}, :key => "ems_edit__new"})
+        controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
         post :form_field_changed, :server_emstype => "rhevm", :id => "new"
         response.body.should include("form_div")
       end
 
       it "form_div should not be updated when other fields are sent up" do
-        controller.instance_variable_set(:@edit, {:new => {}, :key => "ems_edit__new"})
+        controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
         post :form_field_changed, :name => "Test", :id => "new"
         response.body.should_not include("form_div")

@@ -24,11 +24,11 @@ module MiqAeServiceMethodsSpec
 
     it "#send_mail" do
       options = {
-        :to       => "wilma@bedrock.gov",
-        :from     => "fred@bedrock.gov",
-        :body     => "What are we having for dinner?",
+        :to           => "wilma@bedrock.gov",
+        :from         => "fred@bedrock.gov",
+        :body         => "What are we having for dinner?",
         :content_type => "text/fred",
-        :subject  => "Dinner"
+        :subject      => "Dinner"
       }
 
       method   = "$evm.root['#{@ae_result_key}'] = $evm.execute(:send_email, #{options[:to].inspect}, #{options[:from].inspect}, #{options[:subject].inspect}, #{options[:body].inspect}, #{options[:content_type].inspect})"
@@ -56,7 +56,7 @@ module MiqAeServiceMethodsSpec
     it "#snmp_trap_v1" do
       to      = "wilma@bedrock.gov"
       from    = "fred@bedrock.gov"
-      inputs  = { :to => to, :from => from }
+      inputs  = {:to => to, :from => from}
       method   = "$evm.root['#{@ae_result_key}'] = $evm.execute(:snmp_trap_v1, #{inputs.inspect})"
       @ae_method.update_attributes(:data => method)
 
@@ -81,7 +81,7 @@ module MiqAeServiceMethodsSpec
     it "#snmp_trap_v2" do
       to      = "wilma@bedrock.gov"
       from    = "fred@bedrock.gov"
-      inputs  = { :to => to, :from => from }
+      inputs  = {:to => to, :from => from}
       method   = "$evm.root['#{@ae_result_key}'] = $evm.execute(:snmp_trap_v2, #{inputs.inspect})"
       @ae_method.update_attributes(:data => method)
 
@@ -127,6 +127,5 @@ module MiqAeServiceMethodsSpec
       FactoryGirl.create(:classification, :name => category)
       invoke_ae.root(@ae_result_key).should be_true
     end
-
   end
 end

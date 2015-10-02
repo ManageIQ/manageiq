@@ -1,8 +1,7 @@
 class TreeBuilderPxeServers < TreeBuilder
-
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {:leaf => "PxeServer"}
   end
 
@@ -19,7 +18,7 @@ class TreeBuilderPxeServers < TreeBuilder
     count_only_or_objects(options[:count_only], PxeServer.all, "name")
   end
 
-  def x_get_tree_pxe_server_kids(object,options)
+  def x_get_tree_pxe_server_kids(object, options)
     pxe_images = object.pxe_images
     win_images = object.windows_images
     open_nodes = @tree_state.x_tree(@name)[:open_nodes]

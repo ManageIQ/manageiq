@@ -4,9 +4,9 @@ require_relative '../../MiqVm/MiqVm'
 class MiqOpenStackImage
   attr_reader :vmConfigFile
 
-  SUPPORTED_METHODS = [ :rootTrees, :extract, :diskInitErrors ]
+  SUPPORTED_METHODS = [:rootTrees, :extract, :diskInitErrors]
 
-	def initialize(image_id, args)
+  def initialize(image_id, args)
     @image_id     = image_id
     @fog_compute  = args[:fog_compute]
     @fog_image    = args[:fog_image]
@@ -53,7 +53,7 @@ class MiqOpenStackImage
 
     tf = MiqTempfile.new(iname, :encoding => 'ascii-8bit')
     $log.debug "#{log_pref}: saving image to #{tf.path}"
-    response_block = lambda do |buf, rem, sz|
+    response_block = lambda do |buf, _rem, sz|
       tf.write buf
       tot += buf.length
       $log.debug "#{log_pref}: response_block: #{tot} bytes written of #{sz}"
@@ -66,9 +66,9 @@ class MiqOpenStackImage
     # upstream and modify this code accordingly.
     #
     rv = @fog_image.request(
-      :expects => [200, 204],
-      :method  => 'GET',
-      :path    => "images/#{@image_id}",
+      :expects        => [200, 204],
+      :method         => 'GET',
+      :path           => "images/#{@image_id}",
       :response_block => response_block
     )
 
@@ -84,13 +84,12 @@ class MiqOpenStackImage
       raise "Image download failed"
     end
 
-    return tf
+    tf
   end
 
   def method_missing(sym, *args)
     super unless SUPPORTED_METHODS.include? sym
     return miq_vm.send(sym) if args.empty?
-    return miq_vm.send(sym, args)
+    miq_vm.send(sym, args)
   end
-
 end

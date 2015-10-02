@@ -27,4 +27,4 @@ else
 end
 
 $evm.log("info", "Root Object:<#{rootobj}> Detected")
-$evm.root['object_type'] = rootobj 
+$evm.root['object_type'] = rootobj

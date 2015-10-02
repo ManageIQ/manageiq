@@ -12,7 +12,7 @@ describe DialogFieldDropDownList do
       @df.sort_by.should == :none
       @df.sort_by = :value
       @df.sort_by.should == :value
-      lambda { @df.sort_by = :data }.should raise_error(RuntimeError)
+      -> { @df.sort_by = :data }.should raise_error(RuntimeError)
       @df.sort_by.should == :value
     end
 
@@ -20,7 +20,7 @@ describe DialogFieldDropDownList do
       @df.sort_order.should == :ascending
       @df.sort_order = :descending
       @df.sort_order.should == :descending
-      lambda { @df.sort_order = :mixed }.should raise_error(RuntimeError)
+      -> { @df.sort_order = :mixed }.should raise_error(RuntimeError)
       @df.sort_order.should == :descending
     end
 
@@ -69,7 +69,7 @@ describe DialogFieldDropDownList do
       it "no default value" do
         @df.default_value = nil
         @df.initialize_with_values({})
-        @df.value.should == nil
+        @df.value.should.nil?
       end
 
       it "with default value" do
@@ -81,7 +81,7 @@ describe DialogFieldDropDownList do
       it "with non-matching default value" do
         @df.default_value = "4"
         @df.initialize_with_values({})
-        @df.value.should == nil
+        @df.value.should.nil?
       end
     end
 

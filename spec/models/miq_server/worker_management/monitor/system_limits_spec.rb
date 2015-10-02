@@ -3,7 +3,7 @@ require 'spec_helper'
 describe MiqServer do
   context "WorkerManagement::Monitor::SystemLimits" do
     before do
-      _, @server, _ = EvmSpecHelper.create_guid_miq_server_zone
+      _, @server, = EvmSpecHelper.create_guid_miq_server_zone
       @monitor_settings = YAML.load(<<-EOS
         :kill_algorithm:
           :name: :used_swap_percent_gt_value
@@ -12,7 +12,7 @@ describe MiqServer do
           :name: :used_swap_percent_lt_value
           :value: 60
         EOS
-      )
+                                   )
 
       @server.stub(:worker_monitor_settings => @monitor_settings)
       @server.stub(:child_worker_settings => {:generic_worker => {}})
@@ -38,7 +38,7 @@ describe MiqServer do
                 :name: :used_swap_percent_lt_value
                 :value: 20
             EOS
-          )
+                           )
           @server.stub(:child_worker_settings => child)
 
           MiqSystem.stub(:memory => @memory_usage.merge(:SwapFree => 7.gigabytes))

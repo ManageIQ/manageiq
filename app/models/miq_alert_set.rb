@@ -1,18 +1,18 @@
 class MiqAlertSet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   before_validation :default_name_to_guid, :on => :create
 
   include AssignmentMixin
 
   def self.assigned_to_target(target, options = {})
-    self.get_assigned_for_target(target, options)
+    get_assigned_for_target(target, options)
   end
 
   def notes
-    return self.set_data.kind_of?(Hash) && self.set_data.has_key?(:notes) ? self.set_data[:notes] : nil
+    set_data.kind_of?(Hash) && set_data.key?(:notes) ? set_data[:notes] : nil
   end
 
   def notes=(data)
@@ -22,14 +22,14 @@ class MiqAlertSet < ActiveRecord::Base
   end
 
   def active?
-    !self.members.all? {|p| !p.active}
+    !members.all? { |p| !p.active }
   end
 
   def export_to_array
-    h = self.attributes
+    h = attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["MiqAlert"] = self.members.collect { |p| p.export_to_array.first["MiqAlert"] unless p.nil? }
-    return [ self.class.to_s => h ]
+    h["MiqAlert"] = members.collect { |p| p.export_to_array.first["MiqAlert"] unless p.nil? }
+    [self.class.to_s => h]
   end
 
   def export_to_yaml
@@ -37,16 +37,16 @@ class MiqAlertSet < ActiveRecord::Base
     a.to_yaml
   end
 
-  def self.import_from_hash(alert_profile, options={})
-    status = {:class => self.name, :description => alert_profile["description"], :children => []}
-    ap = alert_profile.delete("MiqAlert") { |k| raise "No Alerts for Alert Profile == #{alert_profile.inspect}" }
+  def self.import_from_hash(alert_profile, options = {})
+    status = {:class => name, :description => alert_profile["description"], :children => []}
+    ap = alert_profile.delete("MiqAlert") { |_k| raise "No Alerts for Alert Profile == #{alert_profile.inspect}" }
 
     alerts = []
-    ap.each { |a|
+    ap.each do |a|
       alert, s = MiqAlert.import_from_hash(a, options)
       status[:children].push(s)
       alerts.push(alert)
-    }
+    end
 
     aset = MiqAlertSet.find_by_guid(alert_profile["guid"])
     msg_pfx = "Importing Alert Profile: guid=[#{alert_profile["guid"]}] description=[#{alert_profile["description"]}]"
@@ -84,11 +84,11 @@ class MiqAlertSet < ActiveRecord::Base
 
     input = YAML.load(fd)
 
-    input.each { |e|
+    input.each do |e|
       _a, stat = import_from_hash(e["MiqAlertSet"])
       stats.push(stat)
-    }
+    end
 
-    return stats
+    stats
   end
 end

@@ -62,7 +62,6 @@ describe RequestRefererService do
   end
 
   describe '#access_whitelisted?' do
-
     it "allows only GET" do
       request_referer_service.access_whitelisted?(get_request,   controller_name, action_name).should be_true
       request_referer_service.access_whitelisted?(post_request,  controller_name, action_name).should be_false

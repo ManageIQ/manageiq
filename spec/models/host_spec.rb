@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Host do
   it "#save_drift_state" do
-    #TODO: Beef up with more data
+    # TODO: Beef up with more data
     host = FactoryGirl.create(:host_vmware)
     host.save_drift_state
 
@@ -34,7 +34,7 @@ describe Host do
     cluster1 = FactoryGirl.create(:ems_cluster)
     host = FactoryGirl.create(:host_vmware)
     host.ems_cluster = cluster1
-    MiqEvent.should_receive(:raise_evm_event).with(host, "host_add_to_cluster", anything())
+    MiqEvent.should_receive(:raise_evm_event).with(host, "host_add_to_cluster", anything)
     host.save
 
     # Existing host changes clusters
@@ -118,7 +118,7 @@ describe Host do
     context "#start" do
       before do
         described_class.any_instance.stub(:validate_start   => {})
-        described_class.any_instance.stub(:validate_ipmi    => {:available=>true, :message=>nil})
+        described_class.any_instance.stub(:validate_ipmi    => {:available => true, :message => nil})
         described_class.any_instance.stub(:run_ipmi_command => "off")
       end
 
@@ -143,7 +143,7 @@ describe Host do
       end
 
       it "#shutdown" do
-        lambda { @host.shutdown }.should_not raise_error
+        -> { @host.shutdown }.should_not raise_error
       end
     end
 
@@ -156,7 +156,7 @@ describe Host do
       end
 
       it "#reboot" do
-        lambda { @host.reboot }.should_not raise_error
+        -> { @host.reboot }.should_not raise_error
       end
     end
 
@@ -169,7 +169,7 @@ describe Host do
       end
 
       it "#standby" do
-        lambda { @host.standby }.should_not raise_error
+        -> { @host.standby }.should_not raise_error
       end
     end
 
@@ -182,7 +182,7 @@ describe Host do
       end
 
       it "#enter_maint_mode" do
-        lambda { @host.enter_maint_mode }.should_not raise_error
+        -> { @host.enter_maint_mode }.should_not raise_error
       end
     end
 
@@ -195,7 +195,7 @@ describe Host do
       end
 
       it "#exit_maint_mode" do
-        lambda { @host.exit_maint_mode }.should_not raise_error
+        -> { @host.exit_maint_mode }.should_not raise_error
       end
     end
   end
@@ -209,14 +209,14 @@ describe Host do
       mem_usage = @host.current_memory_usage
       mem_usage.should be_an(Integer)
 
-      lambda { @host.current_memory_usage }.should_not raise_error
+      -> { @host.current_memory_usage }.should_not raise_error
     end
 
     it "#current_cpu_usage" do
       cpu_usage = @host.current_cpu_usage
       cpu_usage.should be_an(Integer)
 
-      lambda { @host.current_cpu_usage }.should_not raise_error
+      -> { @host.current_cpu_usage }.should_not raise_error
     end
   end
 

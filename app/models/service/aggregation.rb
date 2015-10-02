@@ -17,7 +17,6 @@ module Service::Aggregation
     virtual_column :aggregate_all_vm_memory_on_disk,          :type => :integer
   end
 
-
   def aggregate_direct_vm_cpus
     direct_vms.inject(0) { |aggregate, vm| aggregate += vm.logical_cpus.to_i }
   end
@@ -42,7 +41,6 @@ module Service::Aggregation
     direct_vms.inject(0) { |aggregate, vm| aggregate += vm.ram_size_in_bytes_by_state.to_i }
   end
 
-
   def aggregate_all_vm_cpus
     all_vms.inject(0) { |aggregate, vm| aggregate += vm.logical_cpus.to_i }
   end
@@ -66,5 +64,4 @@ module Service::Aggregation
   def aggregate_all_vm_memory_on_disk
     all_vms.inject(0) { |aggregate, vm| aggregate += vm.ram_size_in_bytes_by_state.to_i }
   end
-
 end

@@ -96,9 +96,9 @@ describe DialogFieldImporter do
       let(:type) { "potato" }
 
       it "raises an InvalidDialogFieldTypeError" do
-        expect {
+        expect do
           dialog_field_importer.import_field(dialog_field)
-        }.to raise_error(DialogFieldImporter::InvalidDialogFieldTypeError)
+        end.to raise_error(DialogFieldImporter::InvalidDialogFieldTypeError)
       end
     end
   end

@@ -72,9 +72,9 @@ module Metric::Targets
     unless options[:exclude_vms]
       enabled_parents = targets.select do |t|
         t.kind_of?(parent_class) &&
-          t.kind_of?(Metric::CiMixin) &&
-          t.perf_capture_enabled? &&
-          t.respond_to?(:vms)
+        t.kind_of?(Metric::CiMixin) &&
+        t.perf_capture_enabled? &&
+        t.respond_to?(:vms)
       end
       MiqPreloader.preload(enabled_parents, :vms)
       vms = targets.collect { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }.flatten.compact
@@ -88,7 +88,7 @@ module Metric::Targets
   def self.capture_targets(zone = nil, options = {})
     zone = MiqServer.my_server.zone(true) if zone.nil?
     zone = Zone.find(zone) if zone.kind_of?(Integer)
-    return capture_infra_targets(zone, options) + \
+    capture_infra_targets(zone, options) + \
       capture_cloud_targets(zone, options) + \
       capture_container_targets(zone, options)
   end

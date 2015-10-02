@@ -1,7 +1,7 @@
 class EvmDatabase
   include Vmdb::Logging
 
-  PRIMORDIAL_CLASSES = %w{
+  PRIMORDIAL_CLASSES = %w(
     MiqDatabase
     MiqRegion
     MiqEnterprise
@@ -17,7 +17,7 @@ class EvmDatabase
     RssFeed
     MiqWidget
     VmdbDatabase
-  }
+  )
 
   RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
 
@@ -32,18 +32,18 @@ class EvmDatabase
   end
 
   def self.seed_primordial
-    self.seed(PRIMORDIAL_CLASSES)
+    seed(PRIMORDIAL_CLASSES)
   end
 
   def self.seed_last
-    self.seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
+    seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
   end
 
   def self.seed(classes = nil, exclude_list = [])
     _log.info("Seeding...")
 
     classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
-    classes  -= exclude_list
+    classes -= exclude_list
 
     # Only 1 machine can go through this at a time
     # Populating the DB takes 20 seconds

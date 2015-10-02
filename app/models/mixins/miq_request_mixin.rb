@@ -1,13 +1,12 @@
 module MiqRequestMixin
-
   def self.get_option(key, value, from)
     # Return value - Support array and non-array types
     data = value.nil? ? from[key] : value
     data.kind_of?(Array) ? data.first : data
   end
 
-  def get_option(key, value=nil)
-    MiqRequestMixin.get_option(key, value, self.options)
+  def get_option(key, value = nil)
+    MiqRequestMixin.get_option(key, value, options)
   end
 
   def display_message(default_msg = nil)
@@ -27,30 +26,30 @@ module MiqRequestMixin
   end
 
   def get_option_last(key)
-    MiqRequestMixin.get_option_last(key, self.options)
+    MiqRequestMixin.get_option_last(key, options)
   end
 
   def get_user
-    @user ||= User.find_by_userid(self.userid)
+    @user ||= User.find_by_userid(userid)
   end
 
   def tags
-    self.tag_ids.to_miq_a.each do |tag_id|
+    tag_ids.to_miq_a.each do |tag_id|
       tag = Classification.find(tag_id)
       yield(tag.name, tag.parent.name)  unless tag.nil?    # yield the tag's name and category
     end
   end
 
   def get_tag(category)
-    self.get_tags[category.to_sym]
+    get_tags[category.to_sym]
   end
 
   def get_tags
     vm_tags = {}
-    self.tags do |tag, cat|
+    tags do |tag, cat|
       cat = cat.to_sym
-      if vm_tags.has_key?(cat)
-        vm_tags[cat] = [ vm_tags[cat] ]   unless vm_tags[cat].kind_of?(Array)
+      if vm_tags.key?(cat)
+        vm_tags[cat] = [vm_tags[cat]]   unless vm_tags[cat].kind_of?(Array)
         vm_tags[cat] << tag
       else
         vm_tags[cat] = tag
@@ -59,12 +58,12 @@ module MiqRequestMixin
     vm_tags
   end
 
-  def clear_tag(category=nil, tag_name=nil)
+  def clear_tag(category = nil, tag_name = nil)
     if category.nil?
       self.tag_ids = nil
     else
       deletes = []
-      self.tag_ids.to_miq_a.each do |tag_id|
+      tag_ids.to_miq_a.each do |tag_id|
         tag = Classification.find(tag_id)
         next if category.to_s.casecmp(tag.parent.name) != 0
         next if !tag_name.blank? && tag_name.to_s.casecmp(tag.name) != 0
@@ -72,7 +71,7 @@ module MiqRequestMixin
       end
       unless deletes.blank?
         self.tag_ids -= deletes
-        self.update_attribute(:options, self.options)
+        update_attribute(:options, options)
       end
     end
   end
@@ -80,12 +79,12 @@ module MiqRequestMixin
   def add_tag(category, tag_name)
     cat = Classification.find_by_name(category.to_s)
     return if cat.nil?
-    tag = cat.children.detect {|t| t.name.casecmp(tag_name.to_s) == 0}
+    tag = cat.children.detect { |t| t.name.casecmp(tag_name.to_s) == 0 }
     return if tag.nil?
     self.tag_ids ||= []
     unless self.tag_ids.include?(tag.id)
       self.tag_ids << tag.id
-      self.update_attribute(:options, self.options)
+      update_attribute(:options, options)
     end
   end
 
@@ -97,16 +96,16 @@ module MiqRequestMixin
   end
 
   def get_classification(category)
-    self.get_classifications[category.to_sym]
+    get_classifications[category.to_sym]
   end
 
   def get_classifications
     vm_classifications = {}
-    self.classifications do |classification|
+    classifications do |classification|
       cat   = classification.parent.name.to_sym
-      tuple = { :name => classification.name, :description => classification.description }
-      if vm_classifications.has_key?(cat)
-        vm_classifications[cat] = [ vm_classifications[cat] ]   unless vm_classifications[cat].kind_of?(Array)
+      tuple = {:name => classification.name, :description => classification.description}
+      if vm_classifications.key?(cat)
+        vm_classifications[cat] = [vm_classifications[cat]]   unless vm_classifications[cat].kind_of?(Array)
         vm_classifications[cat] << tuple
       else
         vm_classifications[cat] = tuple
@@ -116,18 +115,18 @@ module MiqRequestMixin
   end
 
   def tag_ids(key = :tag_ids)
-    self.options[key]
+    options[key]
   end
 
   def tag_ids=(value, key = :tag_ids)
-    self.options[key] = value
+    options[key] = value
   end
 
   # Web-Service helper method
   def request_tags
     ws_tag_data = []
     ns = '/managed'
-    self.classifications do |c|
+    classifications do |c|
       tag_name = c.to_tag
       next unless tag_name.starts_with?(ns)
       tag_path = tag_name.split('/')[2..-1].join('/')
@@ -141,7 +140,6 @@ module MiqRequestMixin
                       :tag_path =>  File.join(ns, tag_path), :display_name => "#{cat_descript}: #{tag_descript}"
                      }
     end
-    return ws_tag_data
+    ws_tag_data
   end
-
 end

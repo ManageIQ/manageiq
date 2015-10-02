@@ -6,10 +6,10 @@ class CustomizationTemplate < ActiveRecord::Base
   has_many   :pxe_images, :through => :pxe_image_type
 
   validates :pxe_image_type, :presence => true, :unless => :system?
-  #validates :name,           :uniqueness => { :scope => :pxe_image_type }
+  # validates :name,           :uniqueness => { :scope => :pxe_image_type }
 
   def self.seed_file_name
-    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{self.table_name}.yml")
+    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
   end
 
   def self.seed_data
@@ -50,7 +50,7 @@ class CustomizationTemplate < ActiveRecord::Base
   #
   # Example of use in script:  <% if evm[:addr_mode].first == 'static' %>
   def script_with_substitution(evm)
-    self.class.substitute_erb(self.script, evm)
+    self.class.substitute_erb(script, evm)
   end
 
   def self.substitute_erb(erb_text, evm)

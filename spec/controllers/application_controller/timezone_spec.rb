@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ApplicationController, "#Timezone" do
   before do
-    _, @server, _ = EvmSpecHelper.create_guid_miq_server_zone
+    _, @server, = EvmSpecHelper.create_guid_miq_server_zone
   end
 
   context "#get_timezone_offset" do

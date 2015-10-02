@@ -13,7 +13,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
     described_class.any_instance.stub(:heartbeat_using_drb?).and_return(false)
     ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_check).and_return([true, ""])
 
-    @worker = MiqEmsRefreshCoreWorker::Runner.new({:guid => @worker_record.guid, :ems_id => @ems.id})
+    @worker = MiqEmsRefreshCoreWorker::Runner.new(:guid => @worker_record.guid, :ems_id => @ems.id)
   end
 
   context "#process_update" do
@@ -78,7 +78,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
         end
 
         it "unset, false" do
-          should_not_have_changed @vm, {"config.template" => "false"}
+          should_not_have_changed @vm, "config.template" => "false"
         end
       end
 
@@ -163,15 +163,15 @@ describe MiqEmsRefreshCoreWorker::Runner do
         end
 
         it "poweredOff, true" do
-          should_not_have_changed @template, {"runtime.powerState" => "poweredOff"}
+          should_not_have_changed @template, "runtime.powerState" => "poweredOff"
         end
 
         it "poweredOff, set" do
-          should_not_have_changed @template, {"runtime.powerState" => "poweredOff"}
+          should_not_have_changed @template, "runtime.powerState" => "poweredOff"
         end
 
         it "unset, true" do
-          should_not_have_changed @template, {"config.template" => "true"}
+          should_not_have_changed @template, "config.template" => "true"
         end
 
         it "unset, false" do
@@ -194,8 +194,8 @@ describe MiqEmsRefreshCoreWorker::Runner do
           obj.reload
         end
       end.should_not raise_error
-      obj.template.should         == expected_template
-      obj.state.should            == expected_state
+      obj.template.should == expected_template
+      obj.state.should == expected_state
       obj.state_changed_on.should be_same_time_as expected_time
     end
 
@@ -204,9 +204,9 @@ describe MiqEmsRefreshCoreWorker::Runner do
       expected_state    = obj.state
       expected_time     = obj.state_changed_on
       @worker.process_update([obj.ems_ref_obj, props])
-      lambda { obj.reload }.should_not raise_error
-      obj.template.should         == expected_template
-      obj.state.should            == expected_state
+      -> { obj.reload }.should_not raise_error
+      obj.template.should == expected_template
+      obj.state.should == expected_state
       obj.state_changed_on.should be_same_time_as expected_time
     end
   end

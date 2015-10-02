@@ -87,7 +87,6 @@ module MiqAeDatastoreConverter
         MiqAeClass.count.should eql(1)
         MiqAeInstance.count.should eql(2)
       end
-
     end
   end
 end

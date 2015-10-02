@@ -59,81 +59,81 @@ describe MiqUserRole do
     end
 
     it "should return the correct answer calling allows? when requested feature is directly assigned or a descendant of a feature in a role" do
-      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_admin").should  == true
+      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_admin").should == true
       MiqUserRole.allows?(@role1.name, :identifier => "dashboard_add").should == true
-      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_view").should   == false
-      MiqUserRole.allows?(@role1.name, :identifier => "policy").should           == false
+      MiqUserRole.allows?(@role1.name, :identifier => "dashboard_view").should == false
+      MiqUserRole.allows?(@role1.name, :identifier => "policy").should == false
 
-      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_admin").should  == true
+      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_admin").should == true
       MiqUserRole.allows?(@role2.name, :identifier => "dashboard_add").should == true
-      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_view").should   == true
-      MiqUserRole.allows?(@role2.name, :identifier => "policy").should           == true
+      MiqUserRole.allows?(@role2.name, :identifier => "dashboard_view").should == true
+      MiqUserRole.allows?(@role2.name, :identifier => "policy").should == true
 
       # Test calling with an id of a role
       ident = MiqProductFeature.find_by_identifier("dashboard_admin")
-      MiqUserRole.allows?(@role1.id, :identifier => ident).should  == true
+      MiqUserRole.allows?(@role1.id, :identifier => ident).should == true
     end
 
     it "should return the correct answer calling allows_*? with scope => :base)" do
-      MiqUserRole.allows_any?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == false
+      MiqUserRole.allows_any?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      MiqUserRole.allows_all?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == false
 
-      MiqUserRole.allows_any?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
+      MiqUserRole.allows_any?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      MiqUserRole.allows_all?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
 
-      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should  == true
-      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["host_view"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["host_view"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["everything"]).should  == false
+      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should == true
+      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["host_view"]).should == false
+      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["host_view"]).should == false
+      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["vm"]).should == false
+      MiqUserRole.allows_all?(@role3.name, :scope => :base, :identifiers => ["vm"]).should == false
+      MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["everything"]).should == false
     end
 
     it "should return the correct answer calling allows_*? with scope => :one)" do
-      MiqUserRole.allows_any?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == false
+      MiqUserRole.allows_any?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      MiqUserRole.allows_all?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == false
 
-      MiqUserRole.allows_any?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == false
+      MiqUserRole.allows_any?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      MiqUserRole.allows_all?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == false
 
-      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should  == false
-      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["host_view"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["host_view"]).should  == true
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["everything"]).should  == false
+      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should == false
+      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["host_view"]).should == false
+      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["host_view"]).should == true
+      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["vm"]).should == false
+      MiqUserRole.allows_all?(@role3.name, :scope => :one, :identifiers => ["vm"]).should == false
+      MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["everything"]).should == false
     end
 
     it "should return the correct answer calling allows_*? with default scope => :sub" do
-      MiqUserRole.allows_any?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == false
+      MiqUserRole.allows_any?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      MiqUserRole.allows_all?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == false
 
-      MiqUserRole.allows_any?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
-      MiqUserRole.allows_all?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should  == true
+      MiqUserRole.allows_any?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
+      MiqUserRole.allows_all?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"]).should == true
 
-      MiqUserRole.allows_all?(@role3.name, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should  == true
-      MiqUserRole.allows_all?(@role3.name, :identifiers => ["host_view"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["host_view"]).should  == true
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_all?(@role3.name, :identifiers => ["vm"]).should  == false
-      MiqUserRole.allows_any?(@role3.name, :identifiers => ["everything"]).should  == true
+      MiqUserRole.allows_all?(@role3.name, :identifiers => ["host_show_list", "host_scan", "host_edit"]).should == true
+      MiqUserRole.allows_all?(@role3.name, :identifiers => ["host_view"]).should == false
+      MiqUserRole.allows_any?(@role3.name, :identifiers => ["host_view"]).should == true
+      MiqUserRole.allows_any?(@role3.name, :identifiers => ["vm"]).should == false
+      MiqUserRole.allows_all?(@role3.name, :identifiers => ["vm"]).should == false
+      MiqUserRole.allows_any?(@role3.name, :identifiers => ["everything"]).should == true
     end
 
     it "should return the correct answer calling allows_*_children?" do
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard_admin").should  == true
-      MiqUserRole.allows_all_children?(@role1.name, :identifier => "dashboard_admin").should  == true
+      MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard_admin").should == true
+      MiqUserRole.allows_all_children?(@role1.name, :identifier => "dashboard_admin").should == true
 
-      MiqUserRole.allows_any_children?(@role2.name, :identifier => "dashboard_admin").should  == true
-      MiqUserRole.allows_all_children?(@role2.name, :identifier => "dashboard_admin").should  == true
+      MiqUserRole.allows_any_children?(@role2.name, :identifier => "dashboard_admin").should == true
+      MiqUserRole.allows_all_children?(@role2.name, :identifier => "dashboard_admin").should == true
 
-      MiqUserRole.allows_any_children?(@role2.name, :identifier => "everything").should  == true
-      MiqUserRole.allows_all_children?(@role2.name, :identifier => "everything").should  == true
+      MiqUserRole.allows_any_children?(@role2.name, :identifier => "everything").should == true
+      MiqUserRole.allows_all_children?(@role2.name, :identifier => "everything").should == true
 
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "everything").should  == true
-      MiqUserRole.allows_all_children?(@role1.name, :identifier => "everything").should  == false
+      MiqUserRole.allows_any_children?(@role1.name, :identifier => "everything").should == true
+      MiqUserRole.allows_all_children?(@role1.name, :identifier => "everything").should == false
 
-      MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard").should  == true
-      MiqUserRole.allows_all_children?(@role1.name, :identifier => "dashboard").should  == false
+      MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard").should == true
+      MiqUserRole.allows_all_children?(@role1.name, :identifier => "dashboard").should == false
     end
   end
 

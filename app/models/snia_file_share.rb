@@ -50,10 +50,10 @@ class SniaFileShare < MiqCimInstance
   FileShareToHostShortcut     = CimAssociations.SNIA_FileShare_TO_MIQ_CimHostSystem_SC
 
   SHORTCUT_DEFS = {
-    :base_storage_extents_long  => FileShareToBaseSeShortcut,
-    :cim_virtual_disks_long   => FileShareToVirtualDiskShortcut,
-    :cim_vms_long       => FileShareToVmShortcut,
-    :cim_hosts_long       => FileShareToHostShortcut
+    :base_storage_extents_long => FileShareToBaseSeShortcut,
+    :cim_virtual_disks_long    => FileShareToVirtualDiskShortcut,
+    :cim_vms_long              => FileShareToVmShortcut,
+    :cim_hosts_long            => FileShareToHostShortcut
   }
 
   ##########################
@@ -214,7 +214,7 @@ class SniaFileShare < MiqCimInstance
   end
 
   def zone_name
-    self.zone.nil? ? '' : self.zone.name
+    zone.nil? ? '' : zone.name
   end
 
   def element_name
@@ -265,32 +265,32 @@ class SniaFileShare < MiqCimInstance
     unless /^[a-zA-Z0-9\-]+$/ =~ ds_name
       message          = "#{ds_name} is not valid"
       _log.error("#{message}")
-      self.errors.add("name", message)
+      errors.add("name", message)
       return false
     end
 
     storage_system  = self.storage_system
     nrs       = storage_system.storage_managers.first
     if nrs.nil?
-      message   = "No available manager entry for NetApp filer: #{self.evm_display_name}"
+      message   = "No available manager entry for NetApp filer: #{evm_display_name}"
       _log.error("#{message}")
-      self.errors.add("netapp_filer", message)
+      errors.add("netapp_filer", message)
       return false
     end
 
     MiqQueue.put(
-      :class_name      => self.class.name,
-      :instance_id     => self.id,
-      :method_name     => 'create_datastore',
-      :args            => [ds_name, hosts],
-      :role            => 'ems_operations',
-      :zone            => self.zone.name
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'create_datastore',
+      :args        => [ds_name, hosts],
+      :role        => 'ems_operations',
+      :zone        => zone.name
     )
-    return true
+    true
   end
 
   def default_datastore_name
-    dname              = self.name.split("/").last
+    dname              = name.split("/").last
     return if dname.nil?
 
     dname.tr('_', '-')
@@ -302,16 +302,16 @@ class SniaFileShare < MiqCimInstance
     _log.info("Create Datastore: #{name} ...")
 
     hosts              = hosts.to_miq_a
-    nfs_path           = self.name
-    local_path         = ds_name || self.default_datastore_name
+    nfs_path           = name
+    local_path         = ds_name || default_datastore_name
     access_mode        = "readWrite"
 
     storage_system     = self.storage_system
     nrs                = storage_system.storage_managers.first
-    raise "Could not find manager entry for NetApp filer: #{self.evm_display_name}" if nrs.nil?
+    raise "Could not find manager entry for NetApp filer: #{evm_display_name}" if nrs.nil?
 
     # TODO: Log hostname, not ipaddress
-    _log.info("Found service entry for NetApp filer: #{self.evm_display_name} -> #{nrs.ipaddress}")
+    _log.info("Found service entry for NetApp filer: #{evm_display_name} -> #{nrs.ipaddress}")
 
     # Add the ESX hosts to the root hosts list for the NFS share.
     _log.info("Adding the following to the root hosts list for #{nfs_path}: [ #{hosts.join(', ')} ]")
@@ -380,5 +380,4 @@ class SniaFileShare < MiqCimInstance
     host_ids = hosts.collect { |id| [Host, id] }
     EmsRefresh.queue_refresh(host_ids)
   end
-
 end

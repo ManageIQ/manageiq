@@ -31,17 +31,17 @@ describe AuditEvent do
     ok  = ["fatal", "error", "warn", "info", "debug"]
     bad = ["bad", "worse"]
 
-    ok.each {|sev|
+    ok.each do|sev|
       event = AuditEvent.new(:event => "test_valid_severity", :message => "test_valid_severity - message",   :status => "success")
       event.severity = sev
       event.should be_valid
-    }
+    end
 
-    bad.each {|sev|
+    bad.each do|sev|
       event = AuditEvent.new(:event => "test_invalid_severity", :message => "test_invalid_severity - message",   :status => "success")
       event.severity = sev
       event.should_not be_valid
-    }
+    end
   end
 
   def test_valid_source(tmpl)

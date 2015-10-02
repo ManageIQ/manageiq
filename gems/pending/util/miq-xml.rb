@@ -33,7 +33,7 @@ class MiqXml
     newDoc
   end
 
-  def self.newNode(data=nil, xmlClass = DEFAULT_XML_TYPE)
+  def self.newNode(data = nil, xmlClass = DEFAULT_XML_TYPE)
     xml_document(xmlClass).newNode(data)
   end
 

@@ -45,8 +45,8 @@ class OpenstackConfigurationParser
     file.each_line do |line|
       line_indent = count_leading_spaces(line)
 
-      if ((match = line.match(CONTINUATION_LINE_REGEXP)) && last_attribute[:name] &&
-          line_indent > last_attribute_line_indent)
+      if (match = line.match(CONTINUATION_LINE_REGEXP)) && last_attribute[:name] &&
+         line_indent > last_attribute_line_indent
         # If value is set and line start with spaces, and indentation is bigger than indentation of attribute it's a
         # continued value
         next if line.match(COMMENTED_LINE_REGEXP) # ignore continuation lines that are comments

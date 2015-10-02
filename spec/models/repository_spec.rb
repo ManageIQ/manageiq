@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Repository do
-
   it "is not valid with empty attributes" do
     repo = Repository.new
     repo.should_not be_valid
@@ -45,7 +44,7 @@ describe Repository do
     repo = Repository.add("test_storage_created", File.join(sname, relpath))
 
     repo.storage.should_not be_nil
-    repo.storage.name.should  == sname
+    repo.storage.name.should == sname
     repo.relative_path.should == relpath
   end
 end

@@ -145,30 +145,30 @@ class MiqScheduleWorker::Jobs
 
   def storage_metrics_rollup_daily(time_profile_id)
     queue_work(
-      :class_name   => "StorageManager",
-      :method_name  => "metrics_rollup_daily",
-      :priority     => MiqQueue::HIGH_PRIORITY,
-      :state        => ["ready", "dequeue"],
-      :args         => [time_profile_id]
+      :class_name  => "StorageManager",
+      :method_name => "metrics_rollup_daily",
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :state       => ["ready", "dequeue"],
+      :args        => [time_profile_id]
     )
   end
 
   def miq_storage_metric_purge_all_timer
     queue_work(
-      :queue_name   => "storage_metrics_collector",
-      :class_name   => "MiqStorageMetric",
-      :method_name  => "purge_all_timer",
-      :priority     => MiqQueue::HIGH_PRIORITY,
-      :state        => ["ready", "dequeue"]
+      :queue_name  => "storage_metrics_collector",
+      :class_name  => "MiqStorageMetric",
+      :method_name => "purge_all_timer",
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :state       => ["ready", "dequeue"]
     )
   end
 
   def storage_refresh_inventory
     queue_work(
-      :class_name   => "StorageManager",
-      :method_name  => "refresh_inventory",
-      :priority     => MiqQueue::HIGH_PRIORITY,
-      :state        => ["ready", "dequeue"]
+      :class_name  => "StorageManager",
+      :method_name => "refresh_inventory",
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :state       => ["ready", "dequeue"]
     )
   end
 

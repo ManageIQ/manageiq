@@ -49,85 +49,97 @@ module SyncDebug_m
       @watchdog_poll_period || WATCHDOG_POLL_PERIOD
     end
 
-    def on_try_lock_request(call_back=nil, &block)
+    def on_try_lock_request(call_back = nil, &block)
       @try_lock_request_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_try_lock_return(call_back=nil, &block)
+    def on_try_lock_return(call_back = nil, &block)
       @try_lock_return_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_lock_request(call_back=nil, &block)
+    def on_lock_request(call_back = nil, &block)
       @lock_request_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_lock_acquire(call_back=nil, &block)
+    def on_lock_acquire(call_back = nil, &block)
       @lock_acquire_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_unlock_request(call_back=nil, &block)
+    def on_unlock_request(call_back = nil, &block)
       @unlock_request_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_unlock(call_back=nil, &block)
+    def on_unlock(call_back = nil, &block)
       @unlock_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_dead_locker(call_back=nil, &block)
+    def on_dead_locker(call_back = nil, &block)
       @dead_locker_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_lock_timeout(call_back=nil, &block)
+    def on_lock_timeout(call_back = nil, &block)
       @lock_timeout_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_watchdog_start(call_back=nil, &block)
+    def on_watchdog_start(call_back = nil, &block)
       @watchdog_start_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_watchdog_stop(call_back=nil, &block)
+    def on_watchdog_stop(call_back = nil, &block)
       @watchdog_stop_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_watchdog_heartbeat(call_back=nil, &block)
+    def on_watchdog_heartbeat(call_back = nil, &block)
       @watchdog_heartbeat_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_watchdog_acquire_mutex(call_back=nil, &block)
+    def on_watchdog_acquire_mutex(call_back = nil, &block)
       @watchdog_acquire_mutex_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
-    def on_watchdog_release_mutex(call_back=nil, &block)
+    def on_watchdog_release_mutex(call_back = nil, &block)
       @watchdog_release_mutex_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
     end
 
     def try_lock_request_callback;        @try_lock_request_callback;       end
+
     def try_lock_return_callback;         @try_lock_return_callback;        end
+
     def lock_request_callback;            @lock_request_callback;           end
+
     def lock_acquire_callback;            @lock_acquire_callback;           end
+
     def unlock_request_callback;          @unlock_request_callback;         end
+
     def unlock_callback;                  @unlock_callback;                 end
+
     def dead_locker_callback;             @dead_locker_callback;            end
+
     def lock_timeout_callback;            @lock_timeout_callback;           end
+
     def watchdog_start_callback;          @watchdog_start_callback;         end
+
     def watchdog_stop_callback;           @watchdog_stop_callback;          end
+
     def watchdog_heartbeat_callback;      @watchdog_heartbeat_callback;     end
+
     def watchdog_acquire_mutex_callback;  @watchdog_acquire_mutex_callback; end
+
     def watchdog_release_mutex_callback;  @watchdog_release_mutex_callback; end
   end
 
-  def SyncDebug_m.proc_or_block(method_name, call_back, block)
+  def self.proc_or_block(method_name, call_back, block)
     raise "#{method_name}: method_name arg and block are mutually exclusive." if call_back && block
-    return call_back || block
+    call_back || block
   end
 
-  def SyncDebug_m.included(host_class)
+  def self.included(host_class)
     raise "Sync_m module must be included before SyncDebug_m" unless host_class < Sync_m
     host_class.extend(ClassMethods)
     define_aliases(host_class) unless host_class.instance_of?(Module)
   end
 
-  def SyncDebug_m.extended(host_obj)
+  def self.extended(host_obj)
     raise "Objects extended by SyncDebug_m must be descendants of Sync_m" unless host_obj.class < Sync_m
     define_aliases(host_obj.singleton_class)
     host_obj.init_sync_debug(MAX_LOCKED_TIME, WATCHDOG_POLL_PERIOD)
@@ -136,7 +148,7 @@ module SyncDebug_m
   #
   # Reset aliases to point to our debug stubs.
   #
-  def SyncDebug_m.define_aliases(obj)
+  def self.define_aliases(_obj)
     alias_method :lock, :sync_lock
     alias_method :unlock, :sync_unlock
     alias_method :try_lock, :sync_try_lock
@@ -154,55 +166,55 @@ module SyncDebug_m
     val
   end
 
-  def on_try_lock_request(call_back=nil, &block)
+  def on_try_lock_request(call_back = nil, &block)
     @try_lock_request_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_try_lock_return(call_back=nil, &block)
+  def on_try_lock_return(call_back = nil, &block)
     @try_lock_return_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_lock_request(call_back=nil, &block)
+  def on_lock_request(call_back = nil, &block)
     @lock_request_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_lock_acquire(call_back=nil, &block)
+  def on_lock_acquire(call_back = nil, &block)
     @lock_acquire_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_unlock_request(call_back=nil, &block)
+  def on_unlock_request(call_back = nil, &block)
     @unlock_request_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_unlock(call_back=nil, &block)
+  def on_unlock(call_back = nil, &block)
     @unlock_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_dead_locker(call_back=nil, &block)
+  def on_dead_locker(call_back = nil, &block)
     @dead_locker_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_lock_timeout(call_back=nil, &block)
+  def on_lock_timeout(call_back = nil, &block)
     @lock_timeout_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_watchdog_start(call_back=nil, &block)
+  def on_watchdog_start(call_back = nil, &block)
     @watchdog_start_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_watchdog_stop(call_back=nil, &block)
+  def on_watchdog_stop(call_back = nil, &block)
     @watchdog_stop_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_watchdog_heartbeat(call_back=nil, &block)
+  def on_watchdog_heartbeat(call_back = nil, &block)
     @watchdog_heartbeat_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_watchdog_acquire_mutex(call_back=nil, &block)
+  def on_watchdog_acquire_mutex(call_back = nil, &block)
     @watchdog_acquire_mutex_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
-  def on_watchdog_release_mutex(call_back=nil, &block)
+  def on_watchdog_release_mutex(call_back = nil, &block)
     @watchdog_release_mutex_callback = SyncDebug_m.proc_or_block(__method__, call_back, block)
   end
 
@@ -218,7 +230,7 @@ module SyncDebug_m
       check_watchdog
     end
     fire_on_try_lock_return(li, have_lock)
-    return have_lock
+    have_lock
   end
 
   def sync_lock(m = Sync_m::EX)
@@ -228,17 +240,17 @@ module SyncDebug_m
     push_lock_info(li)
     check_watchdog
     fire_on_lock_acquire(li)
-    return rv
+    rv
   end
 
   def sync_unlock(m = Sync_m::EX)
-    pmode = self.sync_mode
+    pmode = sync_mode
     li = locker_info(pmode)
     fire_on_unlock_request(li)
     rv = super
     pop_lock_info(li)
     fire_on_unlock(li)
-    return rv
+    rv
   end
 
   private
@@ -263,7 +275,7 @@ module SyncDebug_m
     @max_locked_time = max_locked_time
     @watchdog_poll_period = watchdog_poll_period
 
-    @sh_locker_info   = Hash.new { |h,k| h[k] = Array.new }
+    @sh_locker_info   = Hash.new { |h, k| h[k] = [] }
     @ex_locker_info   = []
     @watchdog_thread  = nil
     @sync_debug_mutex = Mutex.new
@@ -336,12 +348,12 @@ module SyncDebug_m
   #
   def push_lock_info(li)
     @sync_debug_mutex.synchronize do
-      if self.sync_mode == Sync_m::EX
+      if sync_mode == Sync_m::EX
         lia = @ex_locker_info
-      elsif self.sync_mode == Sync_m::SH
+      elsif sync_mode == Sync_m::SH
         lia = @sh_locker_info[Thread.current]
       else
-        raise SyncDebugBug.new(self, "push_lock_info: Unexpected lock mode: #{self.sync_mode}")
+        raise SyncDebugBug.new(self, "push_lock_info: Unexpected lock mode: #{sync_mode}")
       end
       lia.push(li)
     end
@@ -358,9 +370,9 @@ module SyncDebug_m
       end
 
       if lia.empty?
-        msg = "pop_lock_info: stack underflow, " +
-              "pmode = #{li[:mode]}, " +
-              "exli# = #{@ex_locker_info.length}, " +
+        msg = "pop_lock_info: stack underflow, " \
+              "pmode = #{li[:mode]}, " \
+              "exli# = #{@ex_locker_info.length}, " \
               "shli# = #{@sh_locker_info[Thread.current].length}"
         raise SyncDebugBug.new(self, msg)
       end
@@ -389,7 +401,7 @@ module SyncDebug_m
       cs.shift
       cs0 = cs.first
     end
-    return cs
+    cs
   end
 
   def check_watchdog
@@ -463,5 +475,4 @@ module SyncDebug_m
       fire_on_watchdog_stop(self, err)
     end
   end
-
 end

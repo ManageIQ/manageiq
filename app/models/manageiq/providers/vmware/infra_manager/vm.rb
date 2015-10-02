@@ -5,13 +5,13 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'RemoteConsole'
 
   def add_miq_alarm
-    raise "VM has no EMS, unable to add alarm" unless self.ext_management_system
-    self.ext_management_system.vm_add_miq_alarm(self)
+    raise "VM has no EMS, unable to add alarm" unless ext_management_system
+    ext_management_system.vm_add_miq_alarm(self)
   end
-  alias addMiqAlarm add_miq_alarm
+  alias_method :addMiqAlarm, :add_miq_alarm
 
   def scan_on_registered_host_only?
-    self.state == "on"
+    state == "on"
   end
 
   # Show certain non-generic charts
@@ -54,7 +54,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     end
   end
 
-  def max_cores_per_socket(total_vcpus = nil)
+  def max_cores_per_socket(_total_vcpus = nil)
     case hardware.virtual_hw_version
     when "04"       then 1
     when "07"       then [1, 2, 4, 8].include?(max_total_vcpus) ? max_total_vcpus : 1

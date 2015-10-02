@@ -59,7 +59,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
           azs = workflow.allowed_availability_zones
           azs.length.should == 1
-          azs.first.should  == [az.id, az.name]
+          azs.first.should == [az.id, az.name]
         end
 
         it "#allowed_guest_access_key_pairs" do

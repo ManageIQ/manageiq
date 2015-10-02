@@ -11,6 +11,5 @@ describe Partition do
       partition.partition_type = partition_type
       partition.partition_type_name.should == name
     end
-
   end
 end
