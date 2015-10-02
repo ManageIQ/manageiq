@@ -376,7 +376,7 @@ module ApplicationController::MiqRequestMethods
       "name"                          => "Name",
       "operating_system.product_name" => "Operating System",
       "platform"                      => "Platform",
-      "num_cpu"                       => "CPUs",
+      "logical_cpus"                  => "CPUs",
       "mem_cpu"                       => "Memory",
       "allocated_disk_storage"        => "Disk Size",
       "ext_management_system.name"    => ui_lookup(:model => 'ExtManagementSystem'),
@@ -386,7 +386,7 @@ module ApplicationController::MiqRequestMethods
     # add tenant column header to cloud workflows only
     headers["cloud_tenant"] = "Tenant" if vms.any? { |vm| vm.respond_to?(:cloud_tenant) }
 
-    integer_fields = %w(allocated_disk_storage mem_cpu num_cpu v_total_snapshots)
+    integer_fields = %w(allocated_disk_storage mem_cpu logical_cpus v_total_snapshots)
 
     @vms = _build_whatever_grid('vm', vms, headers, sort_order, sort_by, integer_fields)
   end

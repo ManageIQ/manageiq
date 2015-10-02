@@ -19,7 +19,7 @@ module Service::Aggregation
 
 
   def aggregate_direct_vm_cpus
-    direct_vms.inject(0) { |aggregate, vm| aggregate += vm.num_cpu.to_i }
+    direct_vms.inject(0) { |aggregate, vm| aggregate += vm.logical_cpus.to_i }
   end
 
   def aggregate_direct_vm_memory
@@ -44,7 +44,7 @@ module Service::Aggregation
 
 
   def aggregate_all_vm_cpus
-    all_vms.inject(0) { |aggregate, vm| aggregate += vm.num_cpu.to_i }
+    all_vms.inject(0) { |aggregate, vm| aggregate += vm.logical_cpus.to_i }
   end
 
   def aggregate_all_vm_memory

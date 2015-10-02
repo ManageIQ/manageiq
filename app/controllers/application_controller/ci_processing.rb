@@ -1065,14 +1065,18 @@ module ApplicationController::CiProcessing
 
   def set_memory_cpu
     #set memory to nil if multiple items were selected with different mem_cpu values
-    @reconfigureitems.each_with_index do |vm, i|
-      @temp_memory = i == 0 || @temp_memory == vm.mem_cpu ? vm.mem_cpu : nil
-      @temp_cpu_count = i == 0 || @temp_cpu_count == vm.num_cpu ? vm.num_cpu : nil
-      @temp_cores_per_socket_count = (i == 0 || @temp_cores_per_socket_count == vm.cores_per_socket) ? vm.cores_per_socket : nil
-    end
-    @edit[:new][:old_memory], @edit[:new][:old_mem_typ] = reconfigure_calculations(@temp_memory)
-    @edit[:new][:old_cpu_count] = @edit[:new][:cpu_count] = @temp_cpu_count
-    @edit[:new][:old_cores_per_socket_count] = @edit[:new][:cores_per_socket_count] = @temp_cores_per_socket_count
+    memory = @reconfigureitems.first.mem_cpu
+    memory = nil unless @reconfigureitems.all? { |vm| vm.mem_cpu == memory }
+
+    cpu_count = @reconfigureitems.first.logical_cpus
+    cpu_count = nil unless @reconfigureitems.all? { |vm| vm.logical_cpus == cpu_count }
+
+    cores_per_socket = @reconfigureitems.first.cores_per_socket
+    cores_per_socket = nil unless @reconfigureitems.all? { |vm| vm.cores_per_socket == cores_per_socket }
+
+    @edit[:new][:old_memory], @edit[:new][:old_mem_typ] = reconfigure_calculations(memory)
+    @edit[:new][:old_cpu_count] = @edit[:new][:cpu_count] = cpu_count
+    @edit[:new][:old_cores_per_socket_count] = @edit[:new][:cores_per_socket_count] = cores_per_socket
   end
 
   # Build the ownership assignment screen
