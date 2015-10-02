@@ -27,31 +27,31 @@ class Dialog < ActiveRecord::Base
   end
 
   def each_dialog_field
-    self.dialog_tabs.each {|dt| dt.each_dialog_field {|df| yield(df)}}
+    dialog_tabs.each { |dt| dt.each_dialog_field { |df| yield(df) } }
   end
 
   def dialog_fields
-    self.dialog_tabs.collect(&:dialog_fields).flatten!
+    dialog_tabs.collect(&:dialog_fields).flatten!
   end
 
   def field_name_exist?(name)
-    self.each_dialog_field {|df| return true if df.name == name }
-    return false
+    each_dialog_field { |df| return true if df.name == name }
+    false
   end
 
   def dialog_resources
-    self.dialog_tabs
+    dialog_tabs
   end
 
   def automate_values_hash
     result = {}
-    self.each_dialog_field {|df| result[df.automate_key_name] = df.automate_output_value}
+    each_dialog_field { |df| result[df.automate_key_name] = df.automate_output_value }
     result
   end
 
   def validate
     result = []
-    self.dialog_tabs.each do |dt|
+    dialog_tabs.each do |dt|
       dt.dialog_groups.each do |dg|
         dg.dialog_fields.each do |df|
           err_msg = df.validate(dt, dg)
@@ -67,8 +67,8 @@ class Dialog < ActiveRecord::Base
       values[key] = field.value
       field.dialog   = self
     end
-    dialog_field_hash.each {|key, field| values[key] = field.initialize_with_values(values)}
-    dialog_field_hash.each {|key, field| field.update_values(values)}
+    dialog_field_hash.each { |key, field| values[key] = field.initialize_with_values(values) }
+    dialog_field_hash.each { |_key, field| field.update_values(values) }
   end
 
   def field(name)
@@ -84,12 +84,12 @@ class Dialog < ActiveRecord::Base
   def dialog_field_hash
     @dialog_field_hash ||= begin
       hash = {}
-      self.each_dialog_field { |df| hash[df.name] = df }
+      each_dialog_field { |df| hash[df.name] = df }
       hash
     end
   end
 
   def reject_if_has_resource_actions
-    raise "Dialog cannot be deleted because it is connected to other components." if self.resource_actions.length > 0
+    raise "Dialog cannot be deleted because it is connected to other components." if resource_actions.length > 0
   end
 end

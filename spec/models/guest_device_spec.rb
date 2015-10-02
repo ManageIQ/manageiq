@@ -13,13 +13,13 @@ describe GuestDevice do
   end
 
   it "#vm_or_template" do
-    @vm_gd.vm_or_template.should       == @vm
+    @vm_gd.vm_or_template.should == @vm
     @template_gd.vm_or_template.should == @template
     @host_gd.vm_or_template.should     be_nil
   end
 
   it "#vm" do
-    @vm_gd.vm.should       == @vm
+    @vm_gd.vm.should == @vm
     @template_gd.vm.should be_nil
     @host_gd.vm.should     be_nil
   end
@@ -33,6 +33,6 @@ describe GuestDevice do
   it "#host" do
     @vm_gd.host.should       be_nil
     @template_gd.host.should be_nil
-    @host_gd.host.should     == @host
+    @host_gd.host.should == @host
   end
 end

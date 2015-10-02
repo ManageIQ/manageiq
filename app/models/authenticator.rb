@@ -249,7 +249,7 @@ module Authenticator
       internal_groups.select { |g| external_group_names.include?(g.description.downcase) }
     end
 
-    def autocreate_user(username)
+    def autocreate_user(_username)
       nil
     end
 

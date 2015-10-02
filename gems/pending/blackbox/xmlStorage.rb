@@ -2,9 +2,9 @@ module Manageiq
   class BlackBox
     METADATA_CONFIG_FILE = "/metadata/xmldata.yml"
 
-    def saveXmlData(xml, filename, options={})
+    def saveXmlData(xml, filename, options = {})
       filename.downcase!
-      options = {:saveDiff=>true}.merge(options)
+      options = {:saveDiff => true}.merge(options)
 
       xml.root.add_attribute("original_filename", filename)
       scanTime = xml.root.attributes['created_on']
@@ -18,10 +18,10 @@ module Manageiq
       xml = xml.to_xml if xml.kind_of?(Hash)  # XmlHash
       if xml.kind_of?(Hash)  # XmlHash
         writeData(path, xml.to_xml.to_s)
-        #TODO: Change to store xml ask Marshal dump file
-        #path = get_dump_name(path)
-        #data = Marshal.dump(xml)
-        #File.open(path, "wb") {|f| f.write(data)}
+        # TODO: Change to store xml ask Marshal dump file
+        # path = get_dump_name(path)
+        # data = Marshal.dump(xml)
+        # File.open(path, "wb") {|f| f.write(data)}
       else
         writeData(path, xml.to_s)
       end
@@ -32,23 +32,23 @@ module Manageiq
 
     def get_dump_name(filename)
       filepath = File.join(File.dirname(filename), "#{File.basename(filename, '.*')}.dmp")
-      filepath.gsub!('\\','/')
-      return filepath
+      filepath.tr!('\\', '/')
+      filepath
     end
 
-    def loadXmlData(filename, ost=nil)
+    def loadXmlData(filename, ost = nil)
       # Make sure we have a valid openstruct handle and "from_time" is in a valid format
-      ost = OpenStruct.new() if ost.nil?
+      ost = OpenStruct.new if ost.nil?
       # Check 'from_time' value and possible remove from the open struct
       validate_from_time(ost)
-      ret = OpenStruct.new(:items_selected=>0, :items_total=>0)
+      ret = OpenStruct.new(:items_selected => 0, :items_total => 0)
 
       ret.xml = MiqXml.createDoc("<vmmetadata/>")
-      ret.xml.root.add_attributes({"original_filename"=>filename, "from_time"=>ost.from_time.to_s, "taskid"=>ost.taskid})
+      ret.xml.root.add_attributes("original_filename" => filename, "from_time" => ost.from_time.to_s, "taskid" => ost.taskid)
       if filename == "vmevents"
         # Change the name of the root element so the data does not go through state data processing.
         ret.xml.root.name = "vmevents"
-        #ret.xml.root << @mk.view("events").find_range_by_hash(ost.from_time.nil? ? nil : {:timestamp=>ost.from_time}).to_xml.root
+        # ret.xml.root << @mk.view("events").find_range_by_hash(ost.from_time.nil? ? nil : {:timestamp=>ost.from_time}).to_xml.root
       else
         @xmlData.each do |x|
           if x[:docs].include?(filename.downcase)
@@ -73,16 +73,16 @@ module Manageiq
             next if ost.from_time && xml_type == "full"
 
             # Create a new "item" element for the xml and record the scan type
-            e = ret.xml.root.add_element("item", {"scanType"=>xml_type})
+            e = ret.xml.root.add_element("item", {"scanType" => xml_type})
             e << xmlNode
             # Keep count of the number of items we add
             ret.items_selected += 1
           end
         end
       end
-      ret.xml.root.add_attributes({"items_selected"=>ret.items_selected, "items_total"=>ret.items_total,
-                  "last_scan"=>ret.last_scan, "last_diff_scan"=>ret.last_diff_scan})
-      return ret
+      ret.xml.root.add_attributes("items_selected" => ret.items_selected, "items_total" => ret.items_total,
+                  "last_scan" => ret.last_scan, "last_diff_scan" => ret.last_diff_scan)
+      ret
     end
 
     private
@@ -102,50 +102,48 @@ module Manageiq
       item = findXmlConfigItem(time)
       if item.nil?
         # prepend new object to array
-        @xmlData.unshift({:time=>time, :docs=>[filename]})
-        saveXmlConfig()
+        @xmlData.unshift(:time => time, :docs => [filename])
+        saveXmlConfig
       else
         # Update existing array item
         unless item[:docs].include?(filename)
           item[:docs] << filename
-          saveXmlConfig()
+          saveXmlConfig
         end
       end
     end
 
     def findXmlConfigItem(time)
       item = nil
-      @xmlData.each {|x|
+      @xmlData.each do|x|
         if x[:time] == time
           item = x
           break
         end
-      }
-      return item
+      end
+      item
     end
 
     def loadXmlConfig
-      begin
-        data = readData(METADATA_CONFIG_FILE)
-        YAML.load(data)
-      rescue
-        []
-      end
+      data = readData(METADATA_CONFIG_FILE)
+      YAML.load(data)
+    rescue
+      []
     end
 
-    def saveXmlConfig()
+    def saveXmlConfig
       writeData(METADATA_CONFIG_FILE, YAML.dump(@xmlData))
     end
 
     def getLastXmlFile(filename)
       item = nil
       # This is a sorted list with the newest items on top
-      @xmlData.each {|x|
+      @xmlData.each do|x|
         if x[:docs].include?(filename)
           item = x
           break
         end
-      }
+      end
       return nil if item.nil?
 
       xml = getXmlFile(filename, item[:time])
@@ -153,16 +151,14 @@ module Manageiq
 
       type = getXmlType(xml)
       return nil if type == "diff"
-      return xml
+      xml
     end
 
     def getXmlFile(filename, time)
-      begin
-        MiqXml.load(readData(getXmlFileName(filename, time)))
-      rescue
-        # Return nil if we fail to read the xml file
-        nil
-      end
+      MiqXml.load(readData(getXmlFileName(filename, time)))
+    rescue
+      # Return nil if we fail to read the xml file
+      nil
     end
 
     def getXmlFileName(filename, time)
@@ -172,7 +168,7 @@ module Manageiq
 
     def getXmlType(xml)
       return "diff" if xml.root.name.downcase == "xmldiff"
-      return "full"
+      "full"
     end
 
     def validate_from_time(ost)

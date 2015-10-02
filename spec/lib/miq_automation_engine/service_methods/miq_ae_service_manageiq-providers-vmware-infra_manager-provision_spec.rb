@@ -74,7 +74,6 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
       ae_object = invoke_ae.root(@ae_result_key)
       ae_object.should be_kind_of(MiqAeMethodService::MiqAeServiceVm)
       [:id, :name, :location].each { |meth| ae_object.send(meth).should == vm.send(meth) }
-
     end
 
     it "#vm_template" do
@@ -97,7 +96,7 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].request_type"
       @ae_method.update_attributes(:data => method)
 
-      %w{ template clone_to_vm clone_to_template }.each do |provision_type|
+      %w( template clone_to_vm clone_to_template ).each do |provision_type|
         @miq_provision.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == @miq_provision.provision_type
       end
@@ -105,7 +104,7 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
 
     it "#register_automate_callback - no previous callbacks" do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision']"
-      method  += ".register_automate_callback(:first_time_out, 'do_something_great')"
+      method += ".register_automate_callback(:first_time_out, 'do_something_great')"
       @ae_method.update_attributes(:data => method)
       invoke_ae.root(@ae_result_key).should be_true
       @miq_provision[:options][:callbacks].should be_nil
@@ -117,7 +116,7 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
 
     it "#register_automate_callback - with previous callbacks" do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision']"
-      method  += ".register_automate_callback(:first_time_out, 'do_something_great')"
+      method += ".register_automate_callback(:first_time_out, 'do_something_great')"
       @ae_method.update_attributes(:data => method)
       @miq_provision[:options][:callbacks].should be_nil
       opts = @miq_provision.options.dup
@@ -135,12 +134,12 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].target_type"
       @ae_method.update_attributes(:data => method)
 
-      %w{ clone_to_template }.each do |provision_type|
+      %w( clone_to_template ).each do |provision_type|
         @miq_provision.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == 'template'
       end
 
-      %w{ template clone_to_vm }.each do |provision_type|
+      %w( template clone_to_vm ).each do |provision_type|
         @miq_provision.update_attributes(:provision_type => provision_type)
         invoke_ae.root(@ae_result_key).should == 'vm'
       end
@@ -150,9 +149,9 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
       before(:each) do
         @iso_image = FactoryGirl.create(:iso_image, :name => "Test ISO Image")
         iso_image_struct = [MiqHashStruct.new(
-                            :id               => "IsoImage::#{@iso_image.id}",
-                            :name             => @iso_image.name,
-                            :evm_object_class => @iso_image.class.base_class.name.to_sym)
+          :id               => "IsoImage::#{@iso_image.id}",
+          :name             => @iso_image.name,
+          :evm_object_class => @iso_image.class.base_class.name.to_sym)
                            ]
         MiqProvisionWorkflow.any_instance.stub(:allowed_iso_images).and_return(iso_image_struct)
       end

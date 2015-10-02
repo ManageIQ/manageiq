@@ -64,10 +64,10 @@ describe MiqWidget::ContentGenerator do
       let(:group_description) { "EvmGroup-administrator" }
       let(:group) { active_record_instance_double("MiqGroup") }
 
-      before {
+      before do
         record = group
         MiqGroup.stub(:find_by).with(:description => "EvmGroup-administrator").and_return(record)
-      }
+      end
 
       context "when the resulting length is equal to the expected count" do
         before do

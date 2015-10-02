@@ -10,7 +10,7 @@ class MiqUiWorker < MiqWorker
       # done when the UI worker is debugged externally, such as in Netbeans.
       MiqServer.minimal_env_options.include?("noui") ? 0 : 1
     else
-      self.worker_settings[:count]
+      worker_settings[:count]
     end
   end
 

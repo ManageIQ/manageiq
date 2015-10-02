@@ -5,7 +5,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     ResourceActionWorkflow
   end
 
-  def initialize(values, requester, resource_action, options={})
+  def initialize(values, requester, resource_action, options = {})
     @settings        = {}
     @requester       = requester
     @target          = options[:target]
@@ -22,7 +22,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     dialog
   end
 
-  def submit_request(requester_id, auto_approve=false)
+  def submit_request(requester_id, auto_approve = false)
     result = {}
 
     result[:errors] = @dialog.validate
@@ -47,14 +47,14 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def has_request_class?
-    !self.request_class.nil? rescue false
+    !request_class.nil? rescue false
   end
 
   def request_type
     @target.request_type
   end
 
-  def load_resource_action(values=nil)
+  def load_resource_action(values = nil)
     if values.nil?
       ResourceAction.find_by_id(@settings[:resource_action_id])
     else
@@ -110,7 +110,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     @dialog.field(name)
   end
 
-  def validate(values=nil)
+  def validate(_values = nil)
     @dialog.try(:validate)
   end
 

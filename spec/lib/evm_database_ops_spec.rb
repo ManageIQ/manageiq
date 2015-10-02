@@ -29,7 +29,7 @@ describe EvmDatabaseOps do
       EvmSpecHelper.create_guid_miq_server_zone
       EvmDatabaseOps.stub(:backup_destination_free_space).and_return(100.megabytes)
       EvmDatabaseOps.stub(:database_size).and_return(200.megabytes)
-      lambda { EvmDatabaseOps.backup(@db_opts, @connect_opts)}.should raise_error(MiqException::MiqDatabaseBackupInsufficientSpace)
+      -> { EvmDatabaseOps.backup(@db_opts, @connect_opts) }.should raise_error(MiqException::MiqDatabaseBackupInsufficientSpace)
       expect(MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event").count).to eq(1)
     end
 

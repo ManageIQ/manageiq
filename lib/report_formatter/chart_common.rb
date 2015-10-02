@@ -8,20 +8,16 @@ module ReportFormatter
       value.blank? ? BLANK_VALUE : value.to_s
     end
 
-    def mri
-      options.mri
-    end
+    delegate :mri, :to => :options
 
     def build_document_header
       raise "Can't create a graph without a sortby column" if mri.sortby.nil? &&
-          mri.db != "MiqReport" # MiqReport based charts are already sorted
+                                                              mri.db != "MiqReport" # MiqReport based charts are already sorted
       raise "Graph type not specified" if mri.graph.nil? ||
-          (mri.graph.kind_of?(Hash) && mri.graph[:type].nil?)
+                                          (mri.graph.kind_of?(Hash) && mri.graph[:type].nil?)
     end
 
-    def graph_options
-      options.graph_options
-    end
+    delegate :graph_options, :to => :options
 
     def build_document_body
       return no_records_found_chart if mri.table.nil? || mri.table.data.blank?
@@ -72,15 +68,15 @@ module ReportFormatter
       tz = mri.get_time_zone(Time.zone.name)
       nils2zero = false # Allow gaps in charts for nil values
 
-  #### To do - Uncomment to handle long term averages
-  #   if mri.extras && mri.extras[:long_term_averages]  # If averages are present
-  #     mri.extras[:long_term_averages].keys.each do |avg_col|
-  #       if mri.graph[:columns].include?(avg_col.to_s)
-  #         mri.graph[:columns].push("avg__#{avg_col.to_s}")
-  #       end
-  #     end
-  #   end
-  ####
+      #### To do - Uncomment to handle long term averages
+      #   if mri.extras && mri.extras[:long_term_averages]  # If averages are present
+      #     mri.extras[:long_term_averages].keys.each do |avg_col|
+      #       if mri.graph[:columns].include?(avg_col.to_s)
+      #         mri.graph[:columns].push("avg__#{avg_col.to_s}")
+      #       end
+      #     end
+      #   end
+      ####
 
       mri.graph[:columns].each_with_index do |col, col_idx|
         next if col_idx >= maxcols
@@ -89,7 +85,6 @@ module ReportFormatter
         categories = []                      # Store categories and series counts in an array of arrays
         series = series_class.new
         mri.table.data.each_with_index do |r, d_idx|
-
           # Use timestamp or statistic_time (metrics vs ontap)
           rec_time = (r["timestamp"] || r["statistic_time"]).in_time_zone(tz)
 
@@ -100,15 +95,15 @@ module ReportFormatter
           else
             categories.push(rec_time.hour.to_s + ":00")
           end
-  #           r[col] = nil if rec_time.day == 12  # Test code, uncomment to skip 12th day of the month
+          #           r[col] = nil if rec_time.day == 12  # Test code, uncomment to skip 12th day of the month
 
-  #### To do - Uncomment to handle long term averages
-  #       if col.starts_with?("avg__")
-  #         val = mri.extras[:long_term_averages][col.split("__").last.to_sym]
-  #       else
-            val = r[col].nil? && (nils2zero) ? 0 : r[col]
-  #       end
-  ####
+          #### To do - Uncomment to handle long term averages
+          #       if col.starts_with?("avg__")
+          #         val = mri.extras[:long_term_averages][col.split("__").last.to_sym]
+          #       else
+          val = r[col].nil? && (nils2zero) ? 0 : r[col]
+          #       end
+          ####
 
           val /= divider.to_f unless val.nil? || divider == 1
           if d_idx == mri.table.data.length - 1 && !tip.nil?
@@ -121,13 +116,13 @@ module ReportFormatter
         series[-1] = 0 if allnil                    # XML/SWF Charts can't handle all nils, set the last value to 0
         add_axis_category_text(categories)
 
-  #### To do - Uncomment to handle long term averages
-  #     if col.starts_with?("avg__")
-  #       head = "#{col.split("__").last.titleize}"
-  #     else
-          head = mri.graph[:legends] ? mri.graph[:legends][col_idx] : mri.headers[mri.col_order.index(col)] # Use legend overrides, if present
-  #     end
-  ####
+        #### To do - Uncomment to handle long term averages
+        #     if col.starts_with?("avg__")
+        #       head = "#{col.split("__").last.titleize}"
+        #     else
+        head = mri.graph[:legends] ? mri.graph[:legends][col_idx] : mri.headers[mri.col_order.index(col)] # Use legend overrides, if present
+        #     end
+        ####
 
         add_series(slice_legend(head), series)
       end
@@ -190,15 +185,15 @@ module ReportFormatter
           end
         end
 
-  #     # Remove categories (and associated series values) that have all zero or nil values
-  #     (categories.length - 1).downto(0) do |i|            # Go thru all cats
-  #       t = 0.0
-  #       series.each{|s| t += s[:data][i][:value].to_f}    # Add up the values for this cat across all series
-  #       next if t != 0                                    # Not zero, keep this cat
-  #       categories.delete_at(i)                           # Remove this cat
-  #       series.each{|s| s[:data].delete_at(i)}            # Remove the data for this cat across all series
-  #     end
-  #
+        #     # Remove categories (and associated series values) that have all zero or nil values
+        #     (categories.length - 1).downto(0) do |i|            # Go thru all cats
+        #       t = 0.0
+        #       series.each{|s| t += s[:data][i][:value].to_f}    # Add up the values for this cat across all series
+        #       next if t != 0                                    # Not zero, keep this cat
+        #       categories.delete_at(i)                           # Remove this cat
+        #       series.each{|s| s[:data].delete_at(i)}            # Remove the data for this cat across all series
+        #     end
+        #
         # Remove any series where all values are zero or nil
         series.delete_if { |s| s[:data].sum == 0 }
 
@@ -238,10 +233,10 @@ module ReportFormatter
             tip = case r[0] # Override the formatting for certain column groups on single day percent utilization chart
                   when "CPU"
                     mri.format(tip_key, r[tip_key], :format => {
-                      :function => {
-                        :name      => "mhz_to_human_size",
-                        :precision => "1"
-                      }})
+                                 :function => {
+                                   :name      => "mhz_to_human_size",
+                                   :precision => "1"
+                                 }})
                   when "Memory"
                     mri.format(tip_key, r[tip_key].to_f * 1024 * 1024, :format => format_bytes_human_size_1)
                   when "Disk"

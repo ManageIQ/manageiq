@@ -26,18 +26,18 @@ describe AutomationRequest do
       ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "")
       ar.should be_kind_of(AutomationRequest)
 
-      ar.should                           == AutomationRequest.first
-      ar.request_state.should             == "pending"
-      ar.status.should                    == "Ok"
-      ar.approval_state.should            == "pending_approval"
-      ar.userid.should                    == admin.userid
-      ar.options[:message].should         == @ae_message
-      ar.options[:instance_name].should   == @ae_instance
-      ar.options[:user_id].should         == admin.id
-      ar.options[:attrs][:var1].should    == @ae_var1
-      ar.options[:attrs][:var2].should    == @ae_var2
-      ar.options[:attrs][:var3].should    == @ae_var3
-      ar.options[:attrs][:userid].should  == admin.userid
+      ar.should == AutomationRequest.first
+      ar.request_state.should == "pending"
+      ar.status.should == "Ok"
+      ar.approval_state.should == "pending_approval"
+      ar.userid.should == admin.userid
+      ar.options[:message].should == @ae_message
+      ar.options[:instance_name].should == @ae_instance
+      ar.options[:user_id].should == admin.id
+      ar.options[:attrs][:var1].should == @ae_var1
+      ar.options[:attrs][:var2].should == @ae_var2
+      ar.options[:attrs][:var3].should == @ae_var3
+      ar.options[:attrs][:userid].should == admin.userid
     end
 
     it "with requester string overriding userid who is NOT in the database" do
@@ -45,54 +45,54 @@ describe AutomationRequest do
       ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "user_name=#{user_name}")
       ar.should be_kind_of(AutomationRequest)
 
-      ar.should                           == AutomationRequest.first
-      ar.request_state.should             == "pending"
-      ar.status.should                    == "Ok"
-      ar.approval_state.should            == "pending_approval"
-      ar.userid.should                    == user_name
-      ar.options[:message].should         == @ae_message
-      ar.options[:instance_name].should   == @ae_instance
+      ar.should == AutomationRequest.first
+      ar.request_state.should == "pending"
+      ar.status.should == "Ok"
+      ar.approval_state.should == "pending_approval"
+      ar.userid.should == user_name
+      ar.options[:message].should == @ae_message
+      ar.options[:instance_name].should == @ae_instance
       ar.options[:user_id].should         be_nil
-      ar.options[:attrs][:var1].should    == @ae_var1
-      ar.options[:attrs][:var2].should    == @ae_var2
-      ar.options[:attrs][:var3].should    == @ae_var3
-      ar.options[:attrs][:userid].should  == user_name
+      ar.options[:attrs][:var1].should == @ae_var1
+      ar.options[:attrs][:var2].should == @ae_var2
+      ar.options[:attrs][:var3].should == @ae_var3
+      ar.options[:attrs][:userid].should == user_name
     end
 
     it "with requester string overriding userid who is in the database" do
       ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "user_name=#{@approver.userid}")
       ar.should be_kind_of(AutomationRequest)
 
-      ar.should                           == AutomationRequest.first
-      ar.request_state.should             == "pending"
-      ar.status.should                    == "Ok"
-      ar.approval_state.should            == "pending_approval"
-      ar.userid.should                    == @approver.userid
-      ar.options[:message].should         == @ae_message
-      ar.options[:instance_name].should   == @ae_instance
-      ar.options[:user_id].should         == @approver.id
-      ar.options[:attrs][:var1].should    == @ae_var1
-      ar.options[:attrs][:var2].should    == @ae_var2
-      ar.options[:attrs][:var3].should    == @ae_var3
-      ar.options[:attrs][:userid].should  == @approver.userid
+      ar.should == AutomationRequest.first
+      ar.request_state.should == "pending"
+      ar.status.should == "Ok"
+      ar.approval_state.should == "pending_approval"
+      ar.userid.should == @approver.userid
+      ar.options[:message].should == @ae_message
+      ar.options[:instance_name].should == @ae_instance
+      ar.options[:user_id].should == @approver.id
+      ar.options[:attrs][:var1].should == @ae_var1
+      ar.options[:attrs][:var2].should == @ae_var2
+      ar.options[:attrs][:var3].should == @ae_var3
+      ar.options[:attrs][:userid].should == @approver.userid
     end
 
     it "with requester string overriding userid AND auto_approval" do
       ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "user_name=#{@approver.userid}|auto_approve=true")
       ar.should be_kind_of(AutomationRequest)
 
-      ar.should                           == AutomationRequest.first
-      ar.request_state.should             == "pending"
-      ar.status.should                    == "Ok"
-      ar.approval_state.should            == "approved"
-      ar.userid.should                    == @approver.userid
-      ar.options[:message].should         == @ae_message
-      ar.options[:instance_name].should   == @ae_instance
-      ar.options[:user_id].should         == @approver.id
-      ar.options[:attrs][:var1].should    == @ae_var1
-      ar.options[:attrs][:var2].should    == @ae_var2
-      ar.options[:attrs][:var3].should    == @ae_var3
-      ar.options[:attrs][:userid].should  == @approver.userid
+      ar.should == AutomationRequest.first
+      ar.request_state.should == "pending"
+      ar.status.should == "Ok"
+      ar.approval_state.should == "approved"
+      ar.userid.should == @approver.userid
+      ar.options[:message].should == @ae_message
+      ar.options[:instance_name].should == @ae_instance
+      ar.options[:user_id].should == @approver.id
+      ar.options[:attrs][:var1].should == @ae_var1
+      ar.options[:attrs][:var2].should == @ae_var2
+      ar.options[:attrs][:var3].should == @ae_var3
+      ar.options[:attrs][:userid].should == @approver.userid
     end
   end
 
@@ -117,7 +117,6 @@ describe AutomationRequest do
         AutomationRequest.any_instance.should_receive(:execute).once
         @ar.approve(@approver.userid, @reason)
       end
-
     end
   end
 
@@ -142,7 +141,7 @@ describe AutomationRequest do
   context "#create_request_tasks" do
     before(:each) do
       @ar = AutomationRequest.create_from_ws(@version, admin.userid, @uri_parts, @parameters, "")
-      root = { 'ae_result' => 'ok' }
+      root = {'ae_result' => 'ok'}
       ws = double('ws')
       ws.stub(:root => root)
       AutomationRequest.any_instance.stub(:call_automate_event).and_return(ws)
@@ -156,7 +155,6 @@ describe AutomationRequest do
       AutomationTask.count.should == 1
       AutomationTask.first.should == @ar.automation_tasks.first
     end
-
   end
 
   context "validate zone" do

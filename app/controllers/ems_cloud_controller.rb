@@ -1,10 +1,10 @@
 class EmsCloudController < ApplicationController
   include EmsCommon        # common methods for EmsInfra/Cloud controllers
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def self.model
     ManageIQ::Providers::CloudManager
@@ -274,7 +274,7 @@ class EmsCloudController < ApplicationController
 
   def construct_edit_for_audit(ems)
     @edit ||= {}
-    ems.kind_of?(ManageIQ::Providers::Azure::CloudManager) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil;
+    ems.kind_of?(ManageIQ::Providers::Azure::CloudManager) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil
     @edit[:current] = {:name            => ems.name,
                        :provider_region => ems.provider_region,
                        :hostname        => ems.hostname,

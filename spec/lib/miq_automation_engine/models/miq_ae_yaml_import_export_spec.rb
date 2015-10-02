@@ -2,7 +2,6 @@ require "spec_helper"
 include MiqAeYamlImportExportMixin
 
 describe MiqAeDatastore do
-
   before do
     @additional_columns = {'on_error'    => "call great gazoo",
                            'on_entry'    => "call fred flintstone",
@@ -110,7 +109,6 @@ describe MiqAeDatastore do
       check_counts('dom'  => 1,  'ns'   => 3, 'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
     end
-
   end
 
   context "yaml import" do
@@ -134,7 +132,7 @@ describe MiqAeDatastore do
     it "a non existing folder should fail" do
       import_options = {'import_dir' => "no_such_folder", 'preview' => true, 'mode' => 'add'}
       expect { MiqAeImport.new("fred", import_options).import }
-      .to raise_error(MiqAeException::DirectoryNotFound)
+        .to raise_error(MiqAeException::DirectoryNotFound)
     end
 
     it "a non existing zip file should fail" do
@@ -150,18 +148,16 @@ describe MiqAeDatastore do
     def assert_existing_domain_fails(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       expect { reset_and_import(@export_dir, @manageiq_domain.name, import_options) }
-      .to raise_error(MiqAeException::InvalidDomain)
+        .to raise_error(MiqAeException::InvalidDomain)
     end
 
     def assert_import_failure_with_missing_file(import_options)
       expect { MiqAeImport.new("fred", import_options).import }
-      .to raise_error(MiqAeException::FileNotFound)
+        .to raise_error(MiqAeException::FileNotFound)
     end
-
   end
 
   context "export import roundtrip" do
-
     context "export all domains" do
       before do
         create_factory_data("customer", 1)
@@ -558,7 +554,6 @@ describe MiqAeDatastore do
       cust_domain.should be_enabled
       MiqAeNamespace.find_by_fqname('$', false).should_not be_nil
     end
-
   end
 
   def reset_and_import(import_dir, domain, options = {})

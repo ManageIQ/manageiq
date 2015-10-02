@@ -175,7 +175,7 @@ module ManageIQ::Providers
       # produce temporary hash of all the tags
       def tag_hash(record)
         record.slice(*%w(architecture_id compute_profile_id
-                          domain_id environment_id realm_id)).delete_if { |_n, v| v.nil? }
+                         domain_id environment_id realm_id)).delete_if { |_n, v| v.nil? }
       end
 
       # walk collection returning [ancestor, grand parent, parent, child_record]

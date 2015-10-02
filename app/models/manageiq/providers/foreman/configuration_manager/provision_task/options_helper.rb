@@ -22,6 +22,6 @@ module ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask::Option
   end
 
   def dest_configuration_profile
-    @dest_configuration_profile ||= ::ConfigurationProfile.where(:id => get_option(:src_configuration_profile_id)).first
+    @dest_configuration_profile ||= ::ConfigurationProfile.find_by(:id => get_option(:src_configuration_profile_id))
   end
 end

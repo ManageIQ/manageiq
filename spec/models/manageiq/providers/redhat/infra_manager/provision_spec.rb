@@ -77,9 +77,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
         it "with default options" do
           clone_options = @vm_prov.prepare_for_clone_task
 
-          clone_options[:name].should       == @target_vm_name
+          clone_options[:name].should == @target_vm_name
           clone_options[:clone_type].should == :full
-          clone_options[:cluster].should    == @ems_cluster.ems_ref
+          clone_options[:cluster].should == @ems_cluster.ems_ref
         end
 
         it "with linked-clone true" do

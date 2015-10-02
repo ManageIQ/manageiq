@@ -20,7 +20,6 @@ require 'net/http'
 require 'fs/MiqFS/modules/WebDAVFile'
 
 module WebDAV
-
   attr_reader :guestOS
 
   def fs_init

@@ -32,7 +32,7 @@ class MiqServer < ActiveRecord::Base
 
   virtual_column :zone_description, :type => :string
 
-  RUN_AT_STARTUP  = %w{ MiqRegion MiqWorker MiqQueue MiqReportResult VmdbTable }
+  RUN_AT_STARTUP  = %w( MiqRegion MiqWorker MiqQueue MiqReportResult VmdbTable )
 
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze
@@ -56,7 +56,7 @@ class MiqServer < ActiveRecord::Base
     configuration  = VMDB::Config.new("vmdb")
     starting_roles = configuration.config.fetch_path(:server, :role)
 
-    monitor_class_names.each { |class_name| class_name.constantize.validate_config_settings(configuration)}
+    monitor_class_names.each { |class_name| class_name.constantize.validate_config_settings(configuration) }
 
     EmsInfra.merge_config_settings(configuration)
 
@@ -112,7 +112,7 @@ class MiqServer < ActiveRecord::Base
     self.version    = Vmdb::Appliance.VERSION
     self.is_master  = false
     self.sql_spid   = ActiveRecord::Base.connection.spid
-    self.save
+    save
   end
 
   def self.setup_data_directory
@@ -126,7 +126,7 @@ class MiqServer < ActiveRecord::Base
   end
 
   def self.running?
-    p = PidFile.new(self.pidfile)
+    p = PidFile.new(pidfile)
     p.running?(/evm_server\.rb/) ? p.pid : false
   end
 
@@ -146,7 +146,7 @@ class MiqServer < ActiveRecord::Base
     puts "** #{msg}"
 
     @vmdb_config = VMDB::Config.new("vmdb")
-    self.starting_server_record
+    starting_server_record
 
     #############################################################
     # Server Role Assignment
@@ -157,36 +157,36 @@ class MiqServer < ActiveRecord::Base
     # 4. Role activation should happen inside monitor_servers
     # 5. Synchronize active roles to monitor for role changes
     #############################################################
-    self.deactivate_all_roles
-    self.set_assigned_roles
-    self.set_database_owner_role(EvmDatabase.local?)
-    self.monitor_servers
-    self.monitor_server_roles if self.is_master?
-    self.sync_active_roles
-    self.set_active_role_flags
+    deactivate_all_roles
+    set_assigned_roles
+    set_database_owner_role(EvmDatabase.local?)
+    monitor_servers
+    monitor_server_roles if self.is_master?
+    sync_active_roles
+    set_active_role_flags
 
     #############################################################
     # Clear the MiqQueue for server and its workers
     #############################################################
-    self.clean_stop_worker_queue_items
-    self.clear_miq_queue_for_this_server
+    clean_stop_worker_queue_items
+    clear_miq_queue_for_this_server
 
     #############################################################
     # Call all the startup methods only NOW, since some check roles
     #############################################################
     self.class.atStartup
 
-    self.delete_active_log_collections_queue
+    delete_active_log_collections_queue
 
     #############################################################
     # Start all the configured workers
     #############################################################
-    self.sync_config
-    self.start_drb_server
-    self.sync_workers
-    self.wait_for_started_workers
+    sync_config
+    start_drb_server
+    sync_workers
+    wait_for_started_workers
 
-    self.update_attributes(:status => "started")
+    update_attributes(:status => "started")
   end
 
   def self.seed
@@ -200,26 +200,26 @@ class MiqServer < ActiveRecord::Base
   end
 
   def self.start
-    self.validate_database
+    validate_database
 
     EvmDatabase.seed_primordial
 
-    self.setup_data_directory
-    cfg = self.activate_configuration
+    setup_data_directory
+    cfg = activate_configuration
 
-    svr = self.my_server(true)
+    svr = my_server(true)
     svr_hash = {}
 
-    ipaddr, hostname, mac_address = self.get_network_information
+    ipaddr, hostname, mac_address = get_network_information
 
     if ipaddr =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
       svr_hash[:ipaddress] = ipaddr
-      self.update_server_config(cfg, :host, ipaddr)
+      update_server_config(cfg, :host, ipaddr)
     end
 
     unless hostname.empty?
       svr_hash[:hostname] = hostname
-      self.update_server_config(cfg, :hostname, hostname)
+      update_server_config(cfg, :hostname, hostname)
     end
 
     unless mac_address.empty?
@@ -246,17 +246,17 @@ class MiqServer < ActiveRecord::Base
     end
 
     svr.update_attributes(svr_hash)
-    self.my_server_clear_cache
+    my_server_clear_cache
 
     _log.info("Server IP Address: #{svr.ipaddress}")    unless svr.ipaddress.blank?
     _log.info("Server Hostname: #{svr.hostname}")       unless svr.hostname.blank?
     _log.info("Server MAC Address: #{svr.mac_address}") unless svr.mac_address.blank?
-    _log.info "Server GUID: #{self.my_guid}"
-    _log.info "Server Zone: #{self.my_zone}"
-    _log.info "Server Role: #{self.my_role}"
+    _log.info "Server GUID: #{my_guid}"
+    _log.info "Server Zone: #{my_zone}"
+    _log.info "Server Role: #{my_role}"
     region = MiqRegion.my_region
     _log.info "Server Region number: #{region.region}, name: #{region.name}" unless region.nil?
-    _log.info "Database Latency: #{self.db_ping} ms"
+    _log.info "Database Latency: #{db_ping} ms"
 
     Vmdb::Appliance.log_config_on_startup
 
@@ -266,8 +266,8 @@ class MiqServer < ActiveRecord::Base
 
     EvmDatabase.seed_last
 
-    self.start_memcached(cfg)
-    self.prep_apache_proxying
+    start_memcached(cfg)
+    prep_apache_proxying
     svr.start
     svr.monitor_loop
   end
@@ -285,16 +285,16 @@ class MiqServer < ActiveRecord::Base
     # Heartbeat the server
     t = Time.now.utc
     _log.info("Heartbeat [#{t}]...")
-    self.reload
+    reload
     self.last_heartbeat = t
-    self.status = "started" if self.status == "not responding"
-    self.save
+    self.status = "started" if status == "not responding"
+    save
     _log.info("Heartbeat [#{t}]...Complete")
   end
 
   def log_active_servers
-    MiqRegion.my_region.active_miq_servers.sort_by { |s| [ s.my_zone, s.name ] }.each do |s|
-      local  = s.is_local?  ? 'Y' : 'N'
+    MiqRegion.my_region.active_miq_servers.sort_by { |s| [s.my_zone, s.name] }.each do |s|
+      local  = s.is_local? ? 'Y' : 'N'
       master = s.is_master? ? 'Y' : 'N'
       $log.info "MiqServer: local=#{local}, master=#{master}, status=#{'%08s' % s.status}, id=#{'%05d' % s.id}, pid=#{'%05d' % s.pid}, guid=#{s.guid}, name=#{s.name}, zone=#{s.my_zone}, hostname=#{s.hostname}, ipaddress=#{s.ipaddress}, version=#{s.version}, build=#{s.build}, active roles=#{s.active_role_names.join(':')}"
     end
@@ -342,95 +342,89 @@ class MiqServer < ActiveRecord::Base
 
   def threshold_exceeded?(name, now = Time.now.utc)
     @thresholds ||= Hash.new(1.day.ago.utc)
-    exceeded = now > (@thresholds[name] + self.send(name))
+    exceeded = now > (@thresholds[name] + send(name))
     @thresholds[name] = now if exceeded
     exceeded
   end
 
   def monitor
+    now = Time.now.utc
+    Benchmark.realtime_block(:heartbeat)               { heartbeat }                        if threshold_exceeded?(:heartbeat_frequency, now)
+    Benchmark.realtime_block(:server_dequeue)          { process_miq_queue }                if threshold_exceeded?(:server_dequeue_frequency, now)
+
+    Benchmark.realtime_block(:server_monitor) do
+      monitor_servers
+      monitor_server_roles if self.is_master?
+    end if threshold_exceeded?(:server_monitor_frequency, now)
+
+    Benchmark.realtime_block(:log_active_servers)      { log_active_servers }               if threshold_exceeded?(:server_log_frequency, now)
+    Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
+    Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
+  rescue SystemExit
+    raise
+  rescue Exception => err
+    _log.error("#{err.message}")
+    _log.log_backtrace(err)
+
     begin
-      now = Time.now.utc
-      Benchmark.realtime_block(:heartbeat)               { heartbeat }                        if threshold_exceeded?(:heartbeat_frequency, now)
-      Benchmark.realtime_block(:server_dequeue)          { process_miq_queue }                if threshold_exceeded?(:server_dequeue_frequency, now)
-
-      Benchmark.realtime_block(:server_monitor) do
-        monitor_servers
-        monitor_server_roles if self.is_master?
-      end if threshold_exceeded?(:server_monitor_frequency, now)
-
-      Benchmark.realtime_block(:log_active_servers)      { log_active_servers }               if threshold_exceeded?(:server_log_frequency, now)
-      Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
-      Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
-    rescue SystemExit
-      raise
+      _log.info("Reconnecting to database after error...")
+      ActiveRecord::Base.connection.reconnect!
     rescue Exception => err
-      _log.error("#{err.message}")
-      _log.log_backtrace(err)
-
-      begin
-        _log.info("Reconnecting to database after error...")
-        ActiveRecord::Base.connection.reconnect!
-      rescue Exception => err
-        _log.error("#{err.message}, during reconnect!")
-      else
-        _log.info("Reconnecting to database after error...Successful")
-      end
+      _log.error("#{err.message}, during reconnect!")
+    else
+      _log.info("Reconnecting to database after error...Successful")
     end
   end
 
   def monitor_loop
     loop do
-      _dummy, timings = Benchmark.realtime_block(:total_time) { self.monitor }
+      _dummy, timings = Benchmark.realtime_block(:total_time) { monitor }
       _log.info "Server Monitoring Complete - Timings: #{timings.inspect}" unless timings[:total_time] < server_log_timings_threshold
       sleep monitor_poll
     end
   end
 
   def stop(sync = false)
-    begin
-      return if self.stopped?
+    return if self.stopped?
 
-      self.shutdown_and_exit_queue
-      self.wait_for_stopped if sync
-    rescue Exception => err
-      _log.error "#{err}"
-    end
+    shutdown_and_exit_queue
+    wait_for_stopped if sync
+  rescue Exception => err
+    _log.error "#{err}"
   end
 
   def wait_for_stopped
     loop do
-      self.reload
+      reload
       break if self.stopped?
       sleep stop_poll
     end
   end
 
   def self.stop(sync = false)
-    svr = self.my_server(true) rescue nil
+    svr = my_server(true) rescue nil
     svr.stop(sync) unless svr.nil?
-    PidFile.new(self.pidfile).remove
+    PidFile.new(pidfile).remove
   end
 
   def kill
-    begin
-      # Kill all the workers of this server
-      self.kill_all_workers
+    # Kill all the workers of this server
+    kill_all_workers
 
-      # Then kill this server
-      _log.info("initiated for #{format_full_log_msg}")
-      self.update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
-      (self.pid == Process.pid) ? self.shutdown_and_exit : Process.kill(9, self.pid)
-    rescue SystemExit
-      raise
-    rescue Exception => err
-      _log.error "#{err}"
-    end
+    # Then kill this server
+    _log.info("initiated for #{format_full_log_msg}")
+    update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
+    (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
+  rescue SystemExit
+    raise
+  rescue Exception => err
+    _log.error "#{err}"
   end
 
   def self.kill
-    svr = self.my_server(true)
+    svr = my_server(true)
     svr.kill unless svr.nil?
-    PidFile.new(self.pidfile).remove
+    PidFile.new(pidfile).remove
   end
 
   def shutdown
@@ -444,20 +438,20 @@ class MiqServer < ActiveRecord::Base
       _log.error "#{err}"
     end
 
-    self.quiesce
+    quiesce
   end
 
   def shutdown_and_exit(exit_status = 0)
-    self.shutdown
+    shutdown
     exit exit_status
   end
 
   def quiesce
-    self.update_attribute(:status, 'quiesce')
+    update_attribute(:status, 'quiesce')
     begin
-      self.deactivate_all_roles
-      self.quiesce_all_workers
-      self.update_attributes(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
+      deactivate_all_roles
+      quiesce_all_workers
+      update_attributes(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
     rescue => err
       puts "#{err}"
       puts "#{err.backtrace.join("\n")}"
@@ -470,7 +464,7 @@ class MiqServer < ActiveRecord::Base
     # XXX
 
     # When the vmdb is reset, need to check the ntp settings, and apply them
-    self.ntp_reload_queue
+    ntp_reload_queue
   end
 
   # Restart the local server
@@ -478,29 +472,29 @@ class MiqServer < ActiveRecord::Base
     raise "Server reset is only supported on Linux" unless MiqEnvironment::Command.is_linux?
 
     _log.info("Server restart initiating...")
-    self.update_attribute(:status, "restarting")
+    update_attribute(:status, "restarting")
 
     shutdown_and_exit(RESTART_EXIT_STATUS)
   end
 
   def format_full_log_msg
-    "MiqServer [#{self.name}] with ID: [#{self.id}], PID: [#{self.pid}], GUID: [#{self.guid}]"
+    "MiqServer [#{name}] with ID: [#{id}], PID: [#{pid}], GUID: [#{guid}]"
   end
 
   def format_short_log_msg
-    "MiqServer [#{self.name}] with ID: [#{self.id}]"
+    "MiqServer [#{name}] with ID: [#{id}]"
   end
 
   def friendly_name
-    "EVM Server (#{self.pid})"
+    "EVM Server (#{pid})"
   end
 
   def who_am_i
-    @who_am_i ||= "#{self.name} #{self.my_zone} #{self.class.name} #{self.id}"
+    @who_am_i ||= "#{name} #{my_zone} #{self.class.name} #{id}"
   end
 
   def is_local?
-    self.guid == MiqServer.my_guid
+    guid == MiqServer.my_guid
   end
 
   def is_remote?
@@ -508,7 +502,7 @@ class MiqServer < ActiveRecord::Base
   end
 
   def is_recently_active?
-    self.last_heartbeat && (self.last_heartbeat >= 10.minutes.ago.utc)
+    last_heartbeat && (last_heartbeat >= 10.minutes.ago.utc)
   end
 
   def is_deleteable?
@@ -523,7 +517,7 @@ class MiqServer < ActiveRecord::Base
       return false
     end
 
-    return true
+    true
   end
 
   def state
@@ -531,11 +525,11 @@ class MiqServer < ActiveRecord::Base
   end
 
   def started?
-    self.status == "started"
+    status == "started"
   end
 
   def stopped?
-    STATUSES_STOPPED.include?(self.status)
+    STATUSES_STOPPED.include?(status)
   end
 
   def active?
@@ -543,22 +537,22 @@ class MiqServer < ActiveRecord::Base
   end
 
   def alive?
-    STATUSES_ALIVE.include?(self.status)
+    STATUSES_ALIVE.include?(status)
   end
 
   def logon_status
     return :ready if self.started?
-    return self.started_on < (Time.now.utc - get_config("vmdb").config[:server][:startup_timeout]) ? :timed_out_starting : self.status.to_sym
+    started_on < (Time.now.utc - get_config("vmdb").config[:server][:startup_timeout]) ? :timed_out_starting : status.to_sym
   end
 
   def logon_status_details
-    result = {:status => self.logon_status}
+    result = {:status => logon_status}
     return result if result[:status] == :ready
 
     wcnt = MiqWorker.find_starting.length
     workers = wcnt == 1 ? "worker" : "workers"
     message = "Waiting for #{wcnt} #{workers} to start"
-    return result.merge(:message => message)
+    result.merge(:message => message)
   end
 
   def self.config_updated
@@ -566,21 +560,21 @@ class MiqServer < ActiveRecord::Base
     cfg.save
   end
 
-  def config_updated(data, mode="activate")
+  def config_updated(data, _mode = "activate")
     # Check that the column exists in the table and we are passed data that does not match
     # the current vaule.  The first check allows this code to run if we migrate down then
     # back up again.
-    if self.respond_to?(:name) && data.name && self.name != data.name
+    if self.respond_to?(:name) && data.name && name != data.name
       self.name = data.name
     end
 
     unless data.zone.nil?
-      self.zone = Zone.where(:name => data.zone).first
-      self.save
+      self.zone = Zone.find_by(:name => data.zone)
+      save
     end
-    self.update_capabilities
+    update_capabilities
 
-    self.save
+    save
   end
 
   #
@@ -591,78 +585,78 @@ class MiqServer < ActiveRecord::Base
       guid_file = File.join(File.expand_path(Rails.root), "GUID")
       unless File.exist?(guid_file)
         new_guid = MiqUUID.new_guid
-        File.open(guid_file, "w") {|f| f.write(new_guid)}
+        File.open(guid_file, "w") { |f| f.write(new_guid) }
       end
       File.read(guid_file).strip
     end
   end
 
-  cache_with_timeout(:my_server) { self.where(:guid => self.my_guid).first }
+  cache_with_timeout(:my_server) { find_by(:guid => my_guid) }
 
   def self.my_zone(force_reload = false)
-    self.my_server(force_reload).my_zone
+    my_server(force_reload).my_zone
   end
 
   def zone_description
-    self.zone ? self.zone.description : nil
+    zone ? zone.description : nil
   end
 
   def self.my_roles(force_reload = false)
-    self.my_server(force_reload).my_roles
+    my_server(force_reload).my_roles
   end
 
   def self.my_role(force_reload = false)
-    self.my_server(force_reload).my_role
+    my_server(force_reload).my_role
   end
 
   def self.my_active_roles(force_reload = false)
-    self.my_server(force_reload).active_role_names
+    my_server(force_reload).active_role_names
   end
 
   def self.my_active_role(force_reload = false)
-    self.my_server(force_reload).active_role
+    my_server(force_reload).active_role
   end
 
   def self.licensed_roles(force_reload = false)
-    self.my_server(force_reload).licensed_roles
+    my_server(force_reload).licensed_roles
   end
 
   def my_zone
-    self.zone.name
+    zone.name
   end
 
   def has_zone?(zone_name)
-    self.my_zone == zone_name
+    my_zone == zone_name
   end
 
   CONDITION_CURRENT = {:status => ["starting", "started"]}
   def self.find_started_in_my_region
-    self.in_my_region.where(CONDITION_CURRENT)
+    in_my_region.where(CONDITION_CURRENT)
   end
 
   def self.find_all_started_servers
-    self.where(CONDITION_CURRENT)
+    where(CONDITION_CURRENT)
   end
 
   def find_other_started_servers_in_region
-    MiqRegion.my_region.active_miq_servers.to_a.delete_if { |s| s.id == self.id }
+    MiqRegion.my_region.active_miq_servers.to_a.delete_if { |s| s.id == id }
   end
 
   def find_other_servers_in_region
-    MiqRegion.my_region.miq_servers.to_a.delete_if { |s| s.id == self.id }
+    MiqRegion.my_region.miq_servers.to_a.delete_if { |s| s.id == id }
   end
 
   def find_other_started_servers_in_zone
-    self.zone.active_miq_servers.to_a.delete_if { |s| s.id == self.id }
+    zone.active_miq_servers.to_a.delete_if { |s| s.id == id }
   end
 
   def find_other_servers_in_zone
-    self.zone.miq_servers.to_a.delete_if { |s| s.id == self.id }
+    zone.miq_servers.to_a.delete_if { |s| s.id == id }
   end
 
   # Determines the average time to the database in milliseconds
   def self.db_ping
-    EvmDatabase.ping(self.connection)
+    EvmDatabase.ping(connection)
   end
 
   def log_prefix
@@ -683,4 +677,4 @@ class MiqServer < ActiveRecord::Base
   def server_timezone
     get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
   end
-end #class MiqServer
+end # class MiqServer

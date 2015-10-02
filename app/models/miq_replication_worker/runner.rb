@@ -11,21 +11,21 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
     check_replicate
   end
 
-  def before_exit(message, exit_code)
+  def before_exit(_message, _exit_code)
     stop_rubyrep
   end
 
-  def message_reset_replication(args=nil)
+  def message_reset_replication(_args = nil)
     stop_rubyrep
 
     unless valid_destination_settings?
-      _log.error("#{self.log_prefix} Replication configuration is invalid.")
+      _log.error("#{log_prefix} Replication configuration is invalid.")
       return
     end
 
     start_uninstall
 
-    dest_conf = self.worker_settings.fetch_path(:replication, :destination)
+    dest_conf = worker_settings.fetch_path(:replication, :destination)
     MiqRegionRemote.destroy_entire_region(MiqRegion.my_region_number, *dest_conf.values_at(:host, :port, :username, :password, :database, :adapter))
 
     wait_on_rubyrep # Wait on the uninstall in case it takes longer than the destroy
@@ -33,22 +33,22 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
   end
 
   def valid_destination_settings?
-    dest_conf = self.worker_settings.fetch_path(:replication, :destination)
+    dest_conf = worker_settings.fetch_path(:replication, :destination)
     dest_conf[:adapter] ||= "postgresql"
     region = MiqRegion.my_region
     host_user_pass = dest_conf.values_at(:host, :port, :username, :password, :database, :adapter)
-    return host_user_pass.none?(&:blank?) && MiqRegionRemote.region_valid?(region.guid, region.region, *host_user_pass)
+    host_user_pass.none?(&:blank?) && MiqRegionRemote.region_valid?(region.guid, region.region, *host_user_pass)
   end
 
   def log_status_interval
-    (self.worker_settings[:log_status_interval] || 1.minute).to_i_with_method
+    (worker_settings[:log_status_interval] || 1.minute).to_i_with_method
   end
 
   def log_status
     if @last_log_status.nil? || Time.now.utc > (@last_log_status + log_status_interval)
       @last_log_status = Time.now.utc
       count, added, deleted = @worker.class.check_status
-      _log.info("#{self.log_prefix} Replication Status: Current Backlog=[#{count}], Added=[#{added}], Deleted=[#{deleted}]")
+      _log.info("#{log_prefix} Replication Status: Current Backlog=[#{count}], Added=[#{added}], Deleted=[#{deleted}]")
     end
   end
 
@@ -58,7 +58,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
 
   def start_replicate
     unless self.valid_destination_settings?
-      _log.error("#{self.log_prefix} Replication configuration is invalid.")
+      _log.error("#{log_prefix} Replication configuration is invalid.")
       return
     end
 
@@ -70,7 +70,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
       @stdout.readpartial(1.megabyte).split("\n").each { |msg| $log.info  "rubyrep: #{msg.rstrip}" } if @stdout && @stdout.ready?
       @stderr.readpartial(1.megabyte).split("\n").each { |msg| $log.error "rubyrep: #{msg.rstrip}" } if @stderr && @stderr.ready?
     else
-      _log.info("#{self.log_prefix} Replicate Process gone. Restarting...")
+      _log.info("#{log_prefix} Replicate Process gone. Restarting...")
       start_replicate
     end
   end
@@ -81,26 +81,24 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
 
   def start_rubyrep(verb)
     raise "Cannot call start_rubyrep if a process already exists" if rubyrep_alive?
-    _log.info("#{self.log_prefix} Starting #{verb.to_s.humanize} Process")
+    _log.info("#{log_prefix} Starting #{verb.to_s.humanize} Process")
     start_rubyrep_process(verb)
-    _log.info("#{self.log_prefix} Started  #{verb.to_s.humanize} Process")
+    _log.info("#{log_prefix} Started  #{verb.to_s.humanize} Process")
   end
 
   def start_rubyrep_process(verb)
-    begin
-      @pid, @stdout, @stderr = rubyrep_run(verb)
-    rescue => err
-      _log.error("#{self.log_prefix} #{verb.to_s.humanize} Process aborted because [#{err.message}]")
-      _log.log_backtrace(err)
-    end
+    @pid, @stdout, @stderr = rubyrep_run(verb)
+  rescue => err
+    _log.error("#{log_prefix} #{verb.to_s.humanize} Process aborted because [#{err.message}]")
+    _log.log_backtrace(err)
   end
 
   def stop_rubyrep
     if rubyrep_alive?
-      _log.info("#{self.log_prefix} Shutting down replication process...pid=#{@pid}")
+      _log.info("#{log_prefix} Shutting down replication process...pid=#{@pid}")
       Process.kill("INT", @pid)
       wait_on_rubyrep
-      _log.info("#{self.log_prefix} Shutting down replication process...Complete")
+      _log.info("#{log_prefix} Shutting down replication process...Complete")
     end
   end
 
@@ -115,13 +113,13 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
         end
       end
     rescue TimeoutError
-      _log.info("#{self.log_prefix} Killing replication process with pid=#{@pid}")
+      _log.info("#{log_prefix} Killing replication process with pid=#{@pid}")
       Process.kill(9, @pid)
     end
 
-    $log.info("#{self.log_prefix} rubyrep Waiting for process with pid=#{@pid}")
+    $log.info("#{log_prefix} rubyrep Waiting for process with pid=#{@pid}")
     pid, status = Process.waitpid2(@pid)
-    _log.info("#{self.log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
+    _log.info("#{log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
 
     @pid = @stdout = @stderr = nil
   end
@@ -132,7 +130,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
 
   def stop_active_replication_processes
     find_rubyrep_processes.each do |pid|
-      _log.info("#{self.log_prefix} Killing active replication process with pid=#{pid}")
+      _log.info("#{log_prefix} Killing active replication process with pid=#{pid}")
       Process.kill(9, pid)
     end
   end
@@ -141,7 +139,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
     begin
       pid_state = MiqProcess.state(@pid) unless @pid.nil?
     rescue SystemCallError => err
-      $log.error("#{self.log_prefix} rubyrep Process with pid=#{@pid} SystemCallError '#{err.message}' while checking process state")
+      $log.error("#{log_prefix} rubyrep Process with pid=#{@pid} SystemCallError '#{err.message}' while checking process state")
       return false
     end
 
@@ -152,11 +150,11 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
 
     if pid_state == :zombie
       pid, status = Process.waitpid2(@pid)
-      _log.info("#{self.log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
+      _log.info("#{log_prefix} rubyrep Process with pid=#{pid} exited with a status=#{status}")
     end
 
-    $log.info("#{self.log_prefix} rubyrep Process with pid=#{@pid} is not alive pid_state=#{pid_state}")
-    return false
+    $log.info("#{log_prefix} rubyrep Process with pid=#{@pid} is not alive pid_state=#{pid_state}")
+    false
   end
 
   def child_process_heartbeat_file_init
@@ -186,7 +184,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
   def rubyrep_run(verb)
     verb = :local_uninstall if verb == :uninstall
 
-    $log.info("#{self.log_prefix} rubyrep process for verb=#{verb} starting")
+    $log.info("#{log_prefix} rubyrep process for verb=#{verb} starting")
 
     child_process_heartbeat_file_init
 
@@ -194,7 +192,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
     pid, stdin, stdout, stderr = Open4.popen4(*(MiqEnvironment::Command.rake_command).split, "evm:dbsync:#{verb}")
     stdin.close
 
-    _log.info("#{self.log_prefix} rubyrep process for verb=#{verb} started - pid=#{pid}")
+    _log.info("#{log_prefix} rubyrep process for verb=#{verb} started - pid=#{pid}")
     return pid, stdout, stderr
   end
 end

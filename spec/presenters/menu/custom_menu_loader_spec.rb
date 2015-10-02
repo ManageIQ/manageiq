@@ -38,4 +38,3 @@ describe Menu::CustomLoader do
     end
   end
 end
-

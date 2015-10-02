@@ -18,7 +18,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Provision::Configuration 
                                    :src_vm_id     => @template.id,
                                    :cloud_network => [@net1.id, @net1.name]
                                  }
-      )
+                                )
       @task.stub(:miq_request => double("MiqRequest").as_null_object)
     end
 

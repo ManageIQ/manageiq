@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe OrchestrationTemplate do
-
   describe ".find_or_create_by_contents" do
     context "when the template does not exist" do
       let(:query_hash) { FactoryGirl.build(:orchestration_template).as_json.symbolize_keys }
@@ -10,8 +9,8 @@ describe OrchestrationTemplate do
         OrchestrationTemplate.count.should == 0
         record = OrchestrationTemplate.find_or_create_by_contents(query_hash)[0]
         OrchestrationTemplate.count.should == 1
-        record.name.should        == query_hash[:name]
-        record.content.should     == query_hash[:content]
+        record.name.should == query_hash[:name]
+        record.content.should == query_hash[:content]
         record.description.should == query_hash[:description]
         record.md5.should_not be_nil
       end

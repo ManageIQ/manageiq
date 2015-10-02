@@ -2,9 +2,9 @@ require "spec_helper"
 
 describe MiqReport do
   it "attr_accessors are serializable via yaml" do
-    result = [{"id"=>5, "vmm_vendor"=>"VMware", "vmm_product"=>"ESXi", "ipaddress"=>"192.168.252.13", "vmm_buildnumber"=>"260247", "vmm_version"=>"4.1.0", "name"=>"VI4ESXM1.manageiq.com"}, {"id"=>3, "vmm_vendor"=>"VMware", "vmm_product"=>"ESXi", "ipaddress"=>"192.168.252.9", "vmm_buildnumber"=>"348481", "vmm_version"=>"4.1.0", "name"=>"vi4esxm2.manageiq.com"}, {"id"=>4, "vmm_vendor"=>"VMware", "vmm_product"=>"ESX", "ipaddress"=>"192.168.252.10", "vmm_buildnumber"=>"502767", "vmm_version"=>"4.1.0", "name"=>"vi4esxm3.manageiq.com"}, {"id"=>1, "vmm_vendor"=>"VMware", "vmm_product"=>"ESXi", "ipaddress"=>"192.168.252.4", "vmm_buildnumber"=>"504850", "vmm_version"=>"4.0.0", "name"=>"per410a-t5.manageiq.com"}]
+    result = [{"id" => 5, "vmm_vendor" => "VMware", "vmm_product" => "ESXi", "ipaddress" => "192.168.252.13", "vmm_buildnumber" => "260247", "vmm_version" => "4.1.0", "name" => "VI4ESXM1.manageiq.com"}, {"id" => 3, "vmm_vendor" => "VMware", "vmm_product" => "ESXi", "ipaddress" => "192.168.252.9", "vmm_buildnumber" => "348481", "vmm_version" => "4.1.0", "name" => "vi4esxm2.manageiq.com"}, {"id" => 4, "vmm_vendor" => "VMware", "vmm_product" => "ESX", "ipaddress" => "192.168.252.10", "vmm_buildnumber" => "502767", "vmm_version" => "4.1.0", "name" => "vi4esxm3.manageiq.com"}, {"id" => 1, "vmm_vendor" => "VMware", "vmm_product" => "ESXi", "ipaddress" => "192.168.252.4", "vmm_buildnumber" => "504850", "vmm_version" => "4.0.0", "name" => "per410a-t5.manageiq.com"}]
     column_names = ["name", "ipaddress", "vmm_vendor", "vmm_product", "vmm_version", "vmm_buildnumber", "id"]
-    fake_ruport_data_table = { :data => result, :column_names => column_names }
+    fake_ruport_data_table = {:data => result, :column_names => column_names}
     before = MiqReport.new
     before.table = fake_ruport_data_table
     after = YAML.load(YAML.dump(before))
@@ -57,15 +57,15 @@ describe MiqReport do
   end
 
   context "#paged_view_search" do
-    OS_LIST = %w{_none_ windows ubuntu windows ubuntu}
+    OS_LIST = %w(_none_ windows ubuntu windows ubuntu)
 
     before(:each) do
       # TODO: Move this setup to the examples that need it.
       @tags = {
-        2  => "/managed/environment/prod",
-        3  => "/managed/environment/dev",
-        4  => "/managed/service_level/gold",
-        5  => "/managed/service_level/silver"
+        2 => "/managed/environment/prod",
+        3 => "/managed/environment/dev",
+        4 => "/managed/service_level/gold",
+        5 => "/managed/service_level/silver"
       }
 
       @group = FactoryGirl.create(:miq_group)
@@ -91,13 +91,13 @@ describe MiqReport do
 
       report = MiqReport.new(:db => "Vm")
 
-      results, _ = report.paged_view_search(:parent => usa)
+      results, = report.paged_view_search(:parent => usa)
       expect(results.data.collect { |rec| rec.data['id'] }).to eq [vm1.id]
 
-      results, _ = report.paged_view_search(:parent => root)
+      results, = report.paged_view_search(:parent => root)
       expect(results.data.collect { |rec| rec.data['id'] }).to eq []
 
-      results, _ = report.paged_view_search(:parent => root, :association => :all_vms)
+      results, = report.paged_view_search(:parent => root, :association => :all_vms)
       expect(results.data.collect { |rec| rec.data['id'] }).to match_array [vm1.id, vm2.id]
     end
 
@@ -188,12 +188,12 @@ describe MiqReport do
           end
           vm = FactoryGirl.build(:vm_vmware, :name => "Test Group #{group} VM #{i}")
           vm.hardware = FactoryGirl.build(:hardware, :numvcpus => (group * 2), :memory_cpu => (group * 1.megabytes), :guest_os => OS_LIST[group])
-          vm.host = @hosts[group-1]
+          vm.host = @hosts[group - 1]
           vm.evm_owner_id = @user.id  if ((i % 5) == 0)
           vm.miq_group_id = @group.id if ((i % 7) == 0)
           vm.save
           tags = []
-          @tags.each { |n,t| tags << t if (i % n) == 0 }
+          @tags.each { |n, t| tags << t if (i % n) == 0 }
           vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
         end
       end
@@ -201,19 +201,19 @@ describe MiqReport do
       context "group has managed filters" do
         before(:each) do
           User.stub(:server_timezone => "UTC")
-          @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto"=>[]})
+          @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
         end
 
         it "works when page parameters and user filters are passed and sort column is in a sub-table" do
-          report = MiqReport.new(:db => "Vm", :sortby => ["storage.name", "name"], :order => "Descending", :include => {"storage"=>{"columns"=>["name"]}})
+          report = MiqReport.new(:db => "Vm", :sortby => ["storage.name", "name"], :order => "Descending", :include => {"storage" => {"columns" => ["name"]}})
           options = {
-            :only     => ["name", "storage.name"],
-            :userid   => @user.userid,
+            :only   => ["name", "storage.name"],
+            :userid => @user.userid,
           }
           results, attrs = report.paged_view_search(options)
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 90"
-          results.data.last["name"].should  == "Test Group 1 VM 0"
+          results.data.last["name"].should == "Test Group 1 VM 0"
           report.table.length.should == 10
           attrs[:apply_sortby_in_search].should be_true
           attrs[:apply_limit_in_sql].should be_true
@@ -223,7 +223,7 @@ describe MiqReport do
         end
 
         it "works when sorting on a virtual column" do
-          @group.update_attributes(:filters => {"managed"=>[["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto"=>[]})
+          @group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
           report = MiqReport.new(:db => "Vm", :sortby => ["v_total_snapshots", "name"], :order => "Descending")
           options = {
             :only     => ["name", "v_total_snapshots"],
@@ -233,10 +233,10 @@ describe MiqReport do
           results, attrs = report.paged_view_search(options)
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should  == "Test Group 4 VM 80"
+          results.data.last["name"].should == "Test Group 4 VM 80"
           report.table.length.should == 10
           report.table.data.first["name"].should == "Test Group 4 VM 89"
-          report.table.data.last["name"].should  == "Test Group 4 VM 80"
+          report.table.data.last["name"].should == "Test Group 4 VM 80"
           attrs[:apply_sortby_in_search].should be_false
           attrs[:apply_limit_in_sql].should be_true
           attrs[:auth_count].should == 100
@@ -245,7 +245,7 @@ describe MiqReport do
         end
 
         it "works when sorting on a column in a sub-table" do
-          report = MiqReport.new(:db => "Vm", :cols => ["name", "host.name"], :include => {"host"=>{"columns"=>["name"]}}, :sortby => ["host.name", "name"], :order => "Descending")
+          report = MiqReport.new(:db => "Vm", :cols => ["name", "host.name"], :include => {"host" => {"columns" => ["name"]}}, :sortby => ["host.name", "name"], :order => "Descending")
           options = {
             :only     => ["name", "host.name"],
             :page     => 2,
@@ -254,14 +254,14 @@ describe MiqReport do
           results, attrs = report.paged_view_search(options)
           results.length.should == 10
           results.data.first["name"].should == "Test Group 1 VM 21"
-          results.data.last["name"].should  == "Test Group 1 VM 13"
+          results.data.last["name"].should == "Test Group 1 VM 13"
           attrs[:apply_sortby_in_search].should be_true
           attrs[:apply_limit_in_sql].should be_true
           attrs[:auth_count].should == 100
           attrs[:user_filters]["managed"].should be_empty
           attrs[:total_count].should == 100
 
-          report = MiqReport.new(:db => "Vm", :include_for_find => {:hardware => {}}, :include => {"hardware"=>{"columns"=>["guest_os"]}}, :sortby => ["hardware.guest_os", "name"], :order => "Descending")
+          report = MiqReport.new(:db => "Vm", :include_for_find => {:hardware => {}}, :include => {"hardware" => {"columns" => ["guest_os"]}}, :sortby => ["hardware.guest_os", "name"], :order => "Descending")
           options = {
             :only     => ["name", "hardware.guest_os"],
             :page     => 2,
@@ -270,7 +270,7 @@ describe MiqReport do
           results, attrs = report.paged_view_search(options)
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should  == "Test Group 4 VM 80"
+          results.data.last["name"].should == "Test Group 4 VM 80"
           attrs[:apply_sortby_in_search].should be_true
           attrs[:apply_limit_in_sql].should be_true
           attrs[:auth_count].should == 100
@@ -304,7 +304,7 @@ describe MiqReport do
           results, attrs = report.paged_view_search(options)
           results.length.should == 10
           results.data.first["name"].should == "Test Group 1 VM 18"
-          results.data.last["name"].should  == "Test Group 1 VM 4"
+          results.data.last["name"].should == "Test Group 1 VM 4"
           attrs[:apply_sortby_in_search].should be_true
           attrs[:apply_limit_in_sql].should be_false
           attrs[:auth_count].should == 100
@@ -339,7 +339,7 @@ describe MiqReport do
           results, attrs = report.paged_view_search(options)
           results.length.should == 2
           results.data.first["name"].should == "Test Group 3 VM 50"
-          results.data.last["name"].should  == "Test Group 2 VM 40"
+          results.data.last["name"].should == "Test Group 2 VM 40"
           attrs[:apply_sortby_in_search].should be_true
           attrs[:apply_limit_in_sql].should be_false
           attrs[:auth_count].should == 10
@@ -370,7 +370,7 @@ describe MiqReport do
           results, attrs = report.paged_view_search(options)
           results.length.should == 10
           results.data.first["name"].should == "Test Group 4 VM 89"
-          results.data.last["name"].should  == "Test Group 4 VM 80"
+          results.data.last["name"].should == "Test Group 4 VM 80"
           attrs[:apply_sortby_in_search].should be_true
           attrs[:apply_limit_in_sql].should be_false
           attrs[:auth_count].should == 100
@@ -380,25 +380,25 @@ describe MiqReport do
 
         it "does not raise errors when virtual columns are included in cols" do
           report = MiqReport.new(
-            :name       => "VMs",
-            :title      => "Virtual Machines",
-            :db         => "Vm",
-            :cols       => ["name", "ems_cluster_name", "last_compliance_status", "v_total_snapshots", "last_scan_on"],
-            :include    => {"storage"=>{"columns"=>["name"]}, "host"=>{"columns"=>["name"]}},
-            :col_order  => ["name", "ems_cluster_name", "host.name", "storage.name", "last_compliance_status", "v_total_snapshots", "last_scan_on"],
-            :headers    => ["Name", "Cluster", "Host", "Datastore", "Compliant", "Total Snapshots", "Last Analysis Time"],
-            :order      => "Ascending",
-            :sortby     => ["name"],
-            :group      => "n"
+            :name      => "VMs",
+            :title     => "Virtual Machines",
+            :db        => "Vm",
+            :cols      => ["name", "ems_cluster_name", "last_compliance_status", "v_total_snapshots", "last_scan_on"],
+            :include   => {"storage" => {"columns" => ["name"]}, "host" => {"columns" => ["name"]}},
+            :col_order => ["name", "ems_cluster_name", "host.name", "storage.name", "last_compliance_status", "v_total_snapshots", "last_scan_on"],
+            :headers   => ["Name", "Cluster", "Host", "Datastore", "Compliant", "Total Snapshots", "Last Analysis Time"],
+            :order     => "Ascending",
+            :sortby    => ["name"],
+            :group     => "n"
           )
           options = {
-           :per_page    =>20,
-           :page        =>1,
-           :targets_hash=>true,
-           :userid      =>"admin"
+            :per_page     => 20,
+            :page         => 1,
+            :targets_hash => true,
+            :userid       => "admin"
           }
           results = attrs = nil
-          lambda { results, attrs = report.paged_view_search(options) }.should_not raise_error
+          -> { results, attrs = report.paged_view_search(options) }.should_not raise_error
           results.length.should == 20
           attrs[:total_count].should == 100
         end

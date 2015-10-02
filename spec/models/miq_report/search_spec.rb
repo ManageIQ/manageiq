@@ -42,28 +42,27 @@ describe MiqReport do
           order.should == "LOWER(vms.name),LOWER(system_services.name),LOWER(users.name)"
         end
       end
-
     end
   end
 
   context "paged_view_search" do
     it "should not call get_cached_page to load cached results if target class does not respond to id" do
       report = MiqReport.new(
-          :name => "VmdbDatabaseSetting",
-          :title => "VmdbDatabaseSetting",
-          :db => "VmdbDatabaseSetting",
-          :cols       => ["name", "description", "value", "minimum_value", "maximum_value", "unit"],
-          :col_order  => ["name", "description", "value", "minimum_value", "maximum_value", "unit"],
-          :headers    => ["Name", "Description", "Value", "Minimum", "Maximum", "Unit"],
-          :order      => "Ascending",
-          :sortby     => ["name"],
-          :group      => "n"
+        :name      => "VmdbDatabaseSetting",
+        :title     => "VmdbDatabaseSetting",
+        :db        => "VmdbDatabaseSetting",
+        :cols      => ["name", "description", "value", "minimum_value", "maximum_value", "unit"],
+        :col_order => ["name", "description", "value", "minimum_value", "maximum_value", "unit"],
+        :headers   => ["Name", "Description", "Value", "Minimum", "Maximum", "Unit"],
+        :order     => "Ascending",
+        :sortby    => ["name"],
+        :group     => "n"
       )
       options = {
-          :per_page    =>20,
-          :page        =>1,
-          :targets_hash=>true,
-          :userid      =>"admin"
+        :per_page     => 20,
+        :page         => 1,
+        :targets_hash => true,
+        :userid       => "admin"
       }
 
       expect(report).to_not receive(:get_cached_page)

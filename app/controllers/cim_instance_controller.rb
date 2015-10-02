@@ -1,9 +1,8 @@
 class CimInstanceController < ApplicationController
-
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter  :cleanup_action
-  after_filter  :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action  :cleanup_action
+  after_action  :set_session_data
 
   private
 
@@ -20,13 +19,13 @@ class CimInstanceController < ApplicationController
 
   def process_button
     @edit = session[:edit]                          # Restore @edit for adv search box
-    params[:display] = @display if ["host","vms","storages"].include?(@display) # Were we displaying vms/storages
+    params[:display] = @display if ["host", "vms", "storages"].include?(@display) # Were we displaying vms/storages
 
-    if params[:pressed].starts_with?("vm_") ||        # Handle buttons from sub-items screen
-        params[:pressed].starts_with?("miq_template_") ||
-        params[:pressed].starts_with?("guest_") ||
-        params[:pressed].starts_with?("storage_") ||
-        params[:pressed].starts_with?("host_")
+    if params[:pressed].starts_with?("vm_") || # Handle buttons from sub-items screen
+       params[:pressed].starts_with?("miq_template_") ||
+       params[:pressed].starts_with?("guest_") ||
+       params[:pressed].starts_with?("storage_") ||
+       params[:pressed].starts_with?("host_")
 
       scanhosts if params[:pressed] == "host_scan"
       analyze_check_compliance_hosts if params[:pressed] == "host_analyze_check_compliance"
@@ -44,18 +43,18 @@ class CimInstanceController < ApplicationController
 
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       # Handle Host power buttons
-      if ["host_shutdown","host_reboot","host_standby","host_enter_maint_mode","host_exit_maint_mode",
-          "host_start","host_stop","host_reset"].include?(params[:pressed])
+      if ["host_shutdown", "host_reboot", "host_standby", "host_enter_maint_mode", "host_exit_maint_mode",
+          "host_start", "host_stop", "host_reset"].include?(params[:pressed])
         powerbutton_hosts(params[:pressed].split("_")[1..-1].join("_")) # Handle specific power button
       else
         process_vm_buttons(pfx)
 
         # Control transferred to another screen, so return
         return if ["host_tag", "#{pfx}_policy_sim", "host_scan", "host_refresh",
-                   "host_protect","host_compare","#{pfx}_compare", "#{pfx}_tag",
-                   "#{pfx}_retire","#{pfx}_protect","#{pfx}_ownership","#{pfx}_right_size",
+                   "host_protect", "host_compare", "#{pfx}_compare", "#{pfx}_tag",
+                   "#{pfx}_retire", "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_right_size",
                    "#{pfx}_refresh", "#{pfx}_reconfigure", "storage_tag"].include?(params[:pressed]) &&
-                    @flash_array == nil
+                  @flash_array.nil?
       end
       params[:page] = @current_page if @current_page.present?                     # Save current page for list refresh
       unless ["host_edit",
@@ -74,12 +73,11 @@ class CimInstanceController < ApplicationController
       create_datastore if params[:pressed] == button_name("create_datastore")
       @refresh_div = "main_div" # Default div for button.rjs to refresh
 
-
       return if [
-                  button_name("tag"),
-                  button_name("create_logical_disk"),
-                  button_name("create_datastore")
-                ].include?(params[:pressed]) && @flash_array == nil # Sub screen showing, so return
+        button_name("tag"),
+        button_name("create_logical_disk"),
+        button_name("create_datastore")
+      ].include?(params[:pressed]) && @flash_array.nil? # Sub screen showing, so return
 
       if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented message
         add_flash(_("Button not yet implemented"), :error)
@@ -92,31 +90,30 @@ class CimInstanceController < ApplicationController
       end
     end
 
-    if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new","#{pfx}_clone",
-                                                "#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
+    if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+                                                "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
         render :update do |page|                    # Use RJS to update the display
-          if @refresh_partial != nil
+          unless @refresh_partial.nil?
             if @refresh_div == "flash_msg_div"
-              page.replace(@refresh_div, :partial=>@refresh_partial)
+              page.replace(@refresh_div, :partial => @refresh_partial)
             else
-              if ["vms","hosts","storages"].include?(@display)  # If displaying vms, action_url s/b show
+              if ["vms", "hosts", "storages"].include?(@display)  # If displaying vms, action_url s/b show
                 page << "miqReinitToolbar('center_tb');"
                 page.replace_html("main_div", :partial => "layouts/gtl",
                                               :locals  => {:action_url => "show/#{@record.id}"})
               else
-                page.replace_html(@refresh_div, :partial=>@refresh_partial)
+                page.replace_html(@refresh_div, :partial => @refresh_partial)
               end
             end
           end
         end
       end
     end
-
   end
 
   def process_show(associations = {})
@@ -134,28 +131,28 @@ class CimInstanceController < ApplicationController
     case @display
     when "download_pdf", "main", "summary_only"
       get_tagdata(@record)
-      drop_breadcrumb( { :name => ui_lookup(:tables=>self.class.table_name), :url => "/#{self.class.table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb( { :name => @record.evm_display_name + " (Summary)",   :url => "/#{self.class.table_name}/show/#{@record.id}"} )
+      drop_breadcrumb({:name => ui_lookup(:tables => self.class.table_name), :url => "/#{self.class.table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
+      drop_breadcrumb(:name => @record.evm_display_name + " (Summary)",   :url => "/#{self.class.table_name}/show/#{@record.id}")
       @showtype = "main"
-      set_summary_pdf_data if ["download_pdf","summary_only"].include?(@display)
+      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
       @showtype = "performance"
-      drop_breadcrumb( {:name=>"#{@record.evm_display_name} Capacity & Utilization", :url=>"/#{self.class.table_name}/show/#{@record.id}?display=#{@display}&refresh=n"} )
+      drop_breadcrumb(:name => "#{@record.evm_display_name} Capacity & Utilization", :url => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}&refresh=n")
       perf_gen_init_options               # Intialize perf chart options, charts will be generated async
 
     else
       whitelisted_key = associations.keys.find { |key| key == @display }
       if whitelisted_key.present?
         model_name = whitelisted_key.singularize.classify
-        drop_breadcrumb( {:name=>@record.evm_display_name+" (All #{ui_lookup(:tables => @display.singularize)})", :url=>"/#{self.class.table_name}/show/#{@record.id}?display=#{@display}"} )
-        @view, @pages = get_view(model_name, :parent=>@record, :parent_method => associations[@display])  # Get the records (into a view) and the paginator
+        drop_breadcrumb(:name => @record.evm_display_name + " (All #{ui_lookup(:tables => @display.singularize)})", :url => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
+        @view, @pages = get_view(model_name, :parent => @record, :parent_method => associations[@display])  # Get the records (into a view) and the paginator
         @showtype = @display
       end
     end
 
     # Came in from outside show_list partial
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
   end
@@ -175,5 +172,4 @@ class CimInstanceController < ApplicationController
     session["#{prefix}_showtype".to_sym]   = @showtype
     session["#{prefix}_display".to_sym]    = @display unless @display.nil?
   end
-
 end

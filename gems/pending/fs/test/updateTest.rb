@@ -6,11 +6,11 @@ require 'fs/MiqFsUtil'
 require 'fs/MetakitFS/MetakitFS'
 require 'fs/MiqFS/modules/LocalFS'
 
-SRC_DIR		= "../../../.."
-DST_DIR		= "copy_dst"
-REF_DIR		= "copy_dst_ref"
-MK_FILE		= "mkfs"
-MK_FILE_NC	= "mkfs_nc"
+SRC_DIR   = "../../../.."
+DST_DIR   = "copy_dst"
+REF_DIR   = "copy_dst_ref"
+MK_FILE   = "mkfs"
+MK_FILE_NC  = "mkfs_nc"
 
 #
 # Formatter to output log messages to the console.
@@ -18,19 +18,19 @@ MK_FILE_NC	= "mkfs_nc"
 $stderr.sync = true
 $stdout.sync = true
 class ConsoleFormatter < Log4r::Formatter
-	def format(event)
-		t = Time.now
-		"#{t.hour}:#{t.min}:#{t.sec}: " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
-	end
+  def format(event)
+    t = Time.now
+    "#{t.hour}:#{t.min}:#{t.sec}: " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+  end
 end
 $log = Log4r::Logger.new 'toplog'
-Log4r::StderrOutputter.new('err_console', :level=>Log4r::DEBUG, :formatter=>ConsoleFormatter)
+Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
-fromFs	= MiqFS.new(LocalFS, nil)
-toFs	= MiqFS.new(LocalFS, nil)
+fromFs  = MiqFS.new(LocalFS, nil)
+toFs  = MiqFS.new(LocalFS, nil)
 
-cf		= MiqFsUtil.new(fromFs, toFs, "collect_files_direct.yaml")
+cf    = MiqFsUtil.new(fromFs, toFs, "collect_files_direct.yaml")
 cf.verbose = true
 
 #
@@ -89,10 +89,10 @@ puts
 puts "*** Collecting files from #{SRC_DIR} to /vmdb (mkfs compressed)"
 cf.update
 
-mkFileNcSize	= File.size(MK_FILE_NC).to_f
-mkFileSize		= File.size(MK_FILE).to_f
+mkFileNcSize  = File.size(MK_FILE_NC).to_f
+mkFileSize    = File.size(MK_FILE).to_f
 
-puts "Metakit file size: #{mkFileNcSize}, Compressed: #{mkFileSize}, #{(mkFileNcSize-mkFileSize)/mkFileNcSize*100}% cpmpression"
+puts "Metakit file size: #{mkFileNcSize}, Compressed: #{mkFileSize}, #{(mkFileNcSize - mkFileSize) / mkFileNcSize * 100}% cpmpression"
 
 #
 # Now set up to reverse the copy, copying out of the mkfs to the local fs.
@@ -118,10 +118,10 @@ cf.update
 puts "Comparing #{REF_DIR} to #{DST_DIR}"
 system("diff", "-qr", REF_DIR, DST_DIR)
 if $?.exitstatus != 0
-	puts "FAIL: Directory contents are not the same"
-	exit($?.exitstatus)
+  puts "FAIL: Directory contents are not the same"
+  exit($?.exitstatus)
 else
-	puts "SUCCESS: Directory contents match"
+  puts "SUCCESS: Directory contents match"
 end
 
 #
@@ -147,10 +147,10 @@ cf.update
 puts "Comparing #{REF_DIR} to #{DST_DIR}"
 system("diff", "-qr", REF_DIR, DST_DIR)
 if $?.exitstatus != 0
-	puts "FAIL: Directory contents are not the same"
-	exit($?.exitstatus)
+  puts "FAIL: Directory contents are not the same"
+  exit($?.exitstatus)
 else
-	puts "SUCCESS: Directory contents match"
+  puts "SUCCESS: Directory contents match"
 end
 
 #
@@ -169,10 +169,10 @@ puts
 puts "Comparing #{REF_DIR} to #{DST_DIR}"
 system("diff", "-qr", REF_DIR, DST_DIR)
 if $?.exitstatus == 0
-	puts "FAIL: Directory contents are the same"
-	exit($?.exitstatus)
+  puts "FAIL: Directory contents are the same"
+  exit($?.exitstatus)
 else
-	puts "SUCCESS: Directory contents don't match"
+  puts "SUCCESS: Directory contents don't match"
 end
 
 #

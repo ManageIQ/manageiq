@@ -6,10 +6,10 @@ class VimPerformanceOperatingRange < ActiveRecord::Base
 
   DEFAULT_STD_DEV_MULT = 1
 
-  def values_to_metrics(options={})
+  def values_to_metrics(options = {})
     options[:std_dev_mult] ||= DEFAULT_STD_DEV_MULT
 
-    results = self.values.dup.merge(:low => {}, :high => {})
+    results = values.dup.merge(:low => {}, :high => {})
     results[:avg].each_key do |c|
       dev = (results[:dev][c] * options[:std_dev_mult])
       results[:low][c]  = results[:avg][c] - dev
@@ -22,6 +22,6 @@ class VimPerformanceOperatingRange < ActiveRecord::Base
       metrics[meth.to_s] = results.fetch_path(info[:type], info[:column])
     end
 
-    return metrics
+    metrics
   end
 end

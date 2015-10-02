@@ -6,9 +6,9 @@ class TreeNodeBuilder
   def self.generic_tree_node(key, text, image, tip = nil, options = {})
     text = ERB::Util.html_escape(text) unless text.html_safe?
     node = {
-        :key   => key,
-        :title => text,
-        :icon  => image,
+      :key   => key,
+      :title => text,
+      :icon  => image,
     }
     node[:addClass]     = options[:style_class]      if options[:style_class]
     node[:cfmeNoClick]  = true                       if options[:cfme_no_click]
@@ -26,12 +26,12 @@ class TreeNodeBuilder
   #   FIXME: fill in missing docs
   #
   def self.build(object, parent_id, options)
-    builder = self.new(object, parent_id, options)
+    builder = new(object, parent_id, options)
     builder.build
   end
 
   def self.build_id(object, parent_id, options)
-    builder = self.new(object, parent_id, options)
+    builder = new(object, parent_id, options)
     builder.build_id
   end
 
@@ -64,7 +64,7 @@ class TreeNodeBuilder
     when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")
     when Container            then generic_node(object.name, "container.png")
     when CustomButton         then generic_node(object.name, object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
-      "Button: #{object.description}")
+                                                "Button: #{object.description}")
     when CustomButtonSet      then custom_button_set_node
     when CustomizationTemplate then generic_node(object.name, "customizationtemplate.png")
     when Dialog               then generic_node(object.label, "dialog.png")
@@ -72,8 +72,8 @@ class TreeNodeBuilder
     when DialogGroup          then generic_node(object.label, "dialog_group.png")
     when DialogField          then generic_node(object.label, "dialog_field.png")
     when EmsFolder            then ems_folder_node
-    when EmsCluster           then generic_node(object.name, "cluster.png", "#{ui_lookup(:table=>"ems_cluster")}: #{object.name}")
-    when Host                 then generic_node(object.name, "host.png",    "#{ui_lookup(:table=>"host")}: #{object.name}")
+    when EmsCluster           then generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}")
+    when Host                 then generic_node(object.name, "host.png",    "#{ui_lookup(:table => "host")}: #{object.name}")
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
     when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
@@ -106,9 +106,9 @@ class TreeNodeBuilder
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
     when PxeServer            then generic_node(object.name, "pxeserver.png")
     when ScanItemSet          then generic_node(object.name, "scan_item_set.png")
-    when Service              then generic_node(object.name, object.picture ?  "../../../pictures/#{object.picture.basename}" : "service.png")
+    when Service              then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service.png")
     when ServiceResource      then generic_node(object.resource_name, object.resource_type == "VmOrTemplate" ? "vm.png" : "service_template.png")
-    when ServiceTemplate      then generic_node(object.name, object.picture ?  "../../../pictures/#{object.picture.basename}" : "service_template.png")
+    when ServiceTemplate      then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service_template.png")
     when ServiceTemplateCatalog then generic_node(object.name, "service_template_catalog.png")
     when Storage              then generic_node(object.name, "storage.png")
     when User                 then generic_node(object.name, "user.png")
@@ -127,6 +127,7 @@ class TreeNodeBuilder
   end
 
   private
+
   def get_rr_status_image(rec)
     case rec.status.downcase
     when 'error'    then 'report_result_error.png'

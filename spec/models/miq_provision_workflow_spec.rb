@@ -17,7 +17,7 @@ describe MiqProvisionWorkflow do
 
       context "Without a Valid Template," do
         it "should not create an MiqRequest when calling from_ws" do
-          lambda { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "")}.should raise_error(RuntimeError)
+          -> { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws("1.0", "admin", "template", "target", false, "cc|001|environment|test", "") }.should raise_error(RuntimeError)
         end
       end
 
@@ -44,7 +44,7 @@ describe MiqProvisionWorkflow do
             "owner_email=admin|owner_first_name=test|owner_last_name=test", nil, nil, nil, nil)
 
           MiqPassword.encrypted?(request.options[:root_password]).should be_true
-          MiqPassword.decrypt(request.options[:root_password]).should    == password_input
+          MiqPassword.decrypt(request.options[:root_password]).should == password_input
         end
       end
 

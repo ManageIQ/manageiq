@@ -14,7 +14,6 @@ describe MiqRegion do
     end
 
     context "with cloud and infra EMSes" do
-
       before :each do
         guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
         ems_vmware = FactoryGirl.create(:ems_vmware, :zone => zone)
@@ -67,7 +66,7 @@ describe MiqRegion do
     it "raises Exception if db region_id doesn't match my_region_number" do
       @db = FactoryGirl.create(:miq_database)
       MiqRegion.stub(:my_region_number => @region_number + 1)
-      lambda { MiqRegion.seed }.should raise_error(Exception)
+      -> { MiqRegion.seed }.should raise_error(Exception)
     end
   end
 end

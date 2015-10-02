@@ -10,7 +10,7 @@ describe MiqBulkImport do
       ati = AssetTagImport.upload('VmOrTemplate', @file)
       ati.stats[:bad].should == 1
       ati.stats[:good].should == 0
-      ati.errors.all? { |attr,| attr.to_s.should == 'vmortemplatenotfound'}
+      ati.errors.all? { |attr,| attr.to_s.should == 'vmortemplatenotfound' }
     end
 
     it ".upload" do

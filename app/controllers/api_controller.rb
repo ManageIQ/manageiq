@@ -1,14 +1,14 @@
 class ApiController < ApplicationController
-  class AuthenticationError       < StandardError; end
-  class Forbidden                 < StandardError; end
-  class BadRequestError           < StandardError; end
+  class AuthenticationError < StandardError; end
+  class Forbidden < StandardError; end
+  class BadRequestError < StandardError; end
   class UnsupportedMediaTypeError < StandardError; end
 
   def handle_options_request
     head(:ok) if request.request_method == "OPTIONS"
   end
 
-  after_filter :set_access_control_headers
+  after_action :set_access_control_headers
   def set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Headers'] = 'origin, content-type, authorization, x-auth-token'
@@ -79,7 +79,7 @@ class ApiController < ApplicationController
   extend ErrorHandler::ClassMethods
   respond_to :json
   rescue_from_api_errors
-  before_filter :require_api_user_or_token, :except => [:handle_options_request]
+  before_action :require_api_user_or_token, :except => [:handle_options_request]
 
   TAG_NAMESPACE = "/managed"
 
@@ -111,7 +111,7 @@ class ApiController < ApplicationController
   # not have these. They would instead dealing with the /api/auth
   # mechanism.
   #
-  skip_before_filter :verify_authenticity_token, :only => [:show, :update, :destroy, :handle_options_request]
+  skip_before_action :verify_authenticity_token, :only => [:show, :update, :destroy, :handle_options_request]
 
   delegate :base_config, :version_config, :collection_config, :to => self
 

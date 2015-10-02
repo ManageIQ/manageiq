@@ -3,21 +3,21 @@ module ReportController::Menus
 
   def get_tree_data
     # build tree for selected role in left div of the right cell
-    session[:role_choice]   = MiqGroup.find(from_cid(x_node(:roles_tree).split('-').last)).description if !x_node(:roles_tree).split('-').last.blank?
+    session[:role_choice]   = MiqGroup.find(from_cid(x_node(:roles_tree).split('-').last)).description unless x_node(:roles_tree).split('-').last.blank?
     session[:node_selected] = "" if params[:action] != "menu_field_changed"
     @sb[:menu_default] = false
     if @changed || @menu_lastaction == "discard_changes"
       @rpt_menu = copy_array(@edit[:new])
     elsif @menu_lastaction == "default"
     else
-      build_report_listnav("reports","menu")
+      build_report_listnav("reports", "menu")
     end
     @menu_lastaction     = "menu_editor" if @menu_lastaction != "commit" && @menu_lastaction != "discard_changes" && params[:action] == "get_tree_data"
     menu_editor
   end
 
   def menu_editor
-    menu_set_form_vars if ["explorer","tree_select","x_history"].include?(params[:action])
+    menu_set_form_vars if ["explorer", "tree_select", "x_history"].include?(params[:action])
     @in_a_form = true
     if @menu_lastaction != "menu_editor"
       @menu_roles_tree = build_menu_tree(@edit[:new])
@@ -33,8 +33,8 @@ module ReportController::Menus
     end
     @sb[:node_clicked] = (params[:node_clicked] == "1")
 
-    @breadcrumbs = Array.new
-    drop_breadcrumb( {:name=>"Edit Report menus for '#{session[:role_choice]}'"} )
+    @breadcrumbs = []
+    drop_breadcrumb(:name => "Edit Report menus for '#{session[:role_choice]}'")
     @lock_tree = true
     if session[:node_selected].index(':').nil? || params[:button] == "reset"
       edit_folder
@@ -46,21 +46,21 @@ module ReportController::Menus
 
   def menu_folder_message_display
     params[:typ] == "delete" ?
-      add_flash(_("Can not delete folder, one or more reports in the selected folder are not owned by your group"),:warning) :
+      add_flash(_("Can not delete folder, one or more reports in the selected folder are not owned by your group"), :warning) :
       add_flash(_("Double Click on 'New Folder' to edit"), :warning)
     render :update do |page|                    # Use JS to update the display
-      page.replace("flash_msg_div_menu_list", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_menu_list"})
+      page.replace("flash_msg_div_menu_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"})
     end
   end
 
   # AJAX driven routine to check for changes in ANY field on the user form
   def menu_field_changed
-    return unless load_edit("menu_edit__#{session[:role_choice] ? session[:role_choice] : "new"}","replace_cell__explorer")
+    return unless load_edit("menu_edit__#{session[:role_choice] ? session[:role_choice] : "new"}", "replace_cell__explorer")
     menu_get_form_vars
     @in_a_form = true
-    @edit[:tree_arr]  = Array.new
-    @edit[:tree_hash] = Hash.new
-    @edit[:temp_new]  = Array.new
+    @edit[:tree_arr]  = []
+    @edit[:tree_hash] = {}
+    @edit[:temp_new]  = []
 
     if params[:tree]
       @menu_lastaction = "commit"
@@ -72,7 +72,7 @@ module ReportController::Menus
             add_flash(_("%s is required") % "Folder name", :error)
           elsif @edit[:tree_arr].include?(c.text)
             @sb[:tree_err] = true
-            add_flash(_("%{field} '%{value}' is already in use") % {:field=>"Folder name", :value=>c.text}, :error)
+            add_flash(_("%{field} '%{value}' is already in use") % {:field => "Folder name", :value => c.text}, :error)
           else
             @sb[:tree_err] = false
             @edit[:tree_arr].push(c.text)
@@ -81,23 +81,23 @@ module ReportController::Menus
         end
       end
 
-      @edit[:temp_new] = Array.new
+      @edit[:temp_new] = []
       if @edit[:tree_arr].blank?
-        #if all subfolders were deleted
-        @edit[:temp_new].push(@edit[:temp_arr][0],"")
+        # if all subfolders were deleted
+        @edit[:temp_new].push(@edit[:temp_arr][0], "")
       else
         @edit[:tree_arr].each do |el|
           old_folder = @edit[:tree_hash].key(el)
           @edit[:temp_arr].each do |arr|
             arr = arr.to_miq_a
-            temp = Array.new
+            temp = []
             if session[:node_selected].split('__')[1] == "Report Menus for #{session[:role_choice]}"
               if arr[0] == old_folder
                 temp.push(el)
                 temp.push(arr[1])
               elsif old_folder.nil?
-                temp.push(el) if !temp.include?(el)
-                temp.push([]) if !temp.include?([])
+                temp.push(el) unless temp.include?(el)
+                temp.push([]) unless temp.include?([])
               end
               @edit[:temp_new].push(temp) if !temp.empty? && !@edit[:temp_new].include?(temp)
             else
@@ -107,10 +107,10 @@ module ReportController::Menus
                   temp.push(el)
                   temp.push(a[1])
                 elsif old_folder.nil?
-                  temp.push(el) if !temp.include?(el)
-                  temp.push([]) if !temp.include?([])
+                  temp.push(el) unless temp.include?(el)
+                  temp.push([]) unless temp.include?([])
                 end
-                @edit[:temp_new][1] = Array.new if @edit[:temp_new][1].nil?
+                @edit[:temp_new][1] = [] if @edit[:temp_new][1].nil?
                 @edit[:temp_new][1].push(temp) if !temp.empty? && !@edit[:temp_new][1].include?(temp)
               end
             end
@@ -131,10 +131,10 @@ module ReportController::Menus
       old_val          = val.split(':')
       idx              = @edit[:new].index(@edit[:temp_arr])            # index of temp_array that being worked on, in set_data
       idx2             = @edit[:temp_arr].index(old_val[0])             # index of parent folder in temp_array
-      if !@edit[:user_typ]
-        #remove * at the starting of report names, before saving them for user
-        @edit[:selected_reports].each_with_index do |rep,i|
-          @edit[:selected_reports][i] = rep[1..rep.length-1].strip! if rep.starts_with?('* ')
+      unless @edit[:user_typ]
+        # remove * at the starting of report names, before saving them for user
+        @edit[:selected_reports].each_with_index do |rep, i|
+          @edit[:selected_reports][i] = rep[1..rep.length - 1].strip! if rep.starts_with?('* ')
         end
       end
       @edit[:temp_arr].each do |arr|
@@ -143,7 +143,7 @@ module ReportController::Menus
             if a[0] == old_val[1]
               @edit[:temp] = a
               idx3 = @edit[:temp].index(old_val[1])         # index of subfolder in temp that's part of temp_array
-              idx4 = @edit[:temp_arr][idx2+1].index(@edit[:temp])       # index of temp in temp_array
+              idx4 = @edit[:temp_arr][idx2 + 1].index(@edit[:temp])       # index of temp in temp_array
               if a[1].nil?
                 @edit[:temp].push(@edit[:selected_reports])
               else
@@ -151,7 +151,7 @@ module ReportController::Menus
                 idx5 = @edit[:temp].index(@edit[:reports])        # index of reports array in temp
                 @edit[:temp][idx5] = @edit[:selected_reports]
               end
-              @edit[:temp_arr][idx2+1][idx4] = @edit[:temp].dup
+              @edit[:temp_arr][idx2 + 1][idx4] = @edit[:temp].dup
               @edit[:new][idx] = @edit[:temp_arr].dup
             end
           end
@@ -188,9 +188,9 @@ module ReportController::Menus
 
   def menu_update
     menu_get_form_vars
-  # @changed = (@edit[:new] != @edit[:current])
+    # @changed = (@edit[:new] != @edit[:current])
     if params[:button] == "cancel"
-      add_flash(_("Edit of %{model} for role \"%{role}\" was cancelled by the user") % {:model=>"Report Menu", :role=>session[:role_choice]})
+      add_flash(_("Edit of %{model} for role \"%{role}\" was cancelled by the user") % {:model => "Report Menu", :role => session[:role_choice]})
       session[:node_selected]   = ""
       session[:role_choice]     = nil
       @new_menu_node            = "roleroot"
@@ -208,30 +208,30 @@ module ReportController::Menus
       get_tree_data
       replace_right_cell(:menu_edit_action => "menu_reset")
     elsif params[:button] == "default"
-      @menu_roles_tree = build_report_listnav("reports","menu","default")
+      @menu_roles_tree = build_report_listnav("reports", "menu", "default")
       @edit[:new]               = copy_array(@rpt_menu)
       @menu_lastaction          = "default"
       add_flash(_("%s set to default") % "Report Menu", :warning)
       get_tree_data
-      #set menu_default flag to true
+      # set menu_default flag to true
       @sb[:menu_default] = true
       replace_right_cell(:menu_edit_action => "menu_default")
     elsif params[:button] == "save"
       @menu_lastaction = "save"
       role             = session[:role_choice] unless session[:role_choice].nil?
       rec              = MiqGroup.find_by_description(role)
-      rec.settings ||= Hash.new
+      rec.settings ||= {}
       if @sb[:menu_default]
-        #delete report_menus from settings if menu set to default
+        # delete report_menus from settings if menu set to default
         rec.settings.delete(:report_menus)
       else
-        rec.settings[:report_menus] ||= Hash.new
+        rec.settings[:report_menus] ||= {}
         rec.settings[:report_menus]  = copy_array(@edit[:new])
       end
 
       if rec.save
         session[:edit] = nil  # clean out the saved info
-        add_flash(_("%{model} for role \"%{role}\" was saved") % {:model=>"Report Menu", :role=>session[:role_choice]})
+        add_flash(_("%{model} for role \"%{role}\" was saved") % {:model => "Report Menu", :role => session[:role_choice]})
         get_tree_data
         session[:node_selected]   = ""
         session[:role_choice]     = nil
@@ -244,7 +244,7 @@ module ReportController::Menus
         @in_a_form = false
         replace_right_cell(:replace_trees => [:reports])
       else
-        rec.errors.each do |field,msg|
+        rec.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @in_a_form              = true
@@ -257,36 +257,37 @@ module ReportController::Menus
   private
 
   def edit_reports
-    @edit[:selected_reports] = Array.new
-    @edit[:available_reports] = Array.new
+    @edit[:selected_reports] = []
+    @edit[:available_reports] = []
     current_group_id = current_user.current_group.try(:id).to_i
     id = session[:node_selected].split('__')
     @selected = id[1].split(':')
     all = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
-    @all_reports = Array.new
+    @all_reports = []
     all.each do |r|
-      next if r.template_type != "report" && ! r.template_type.blank?
+      next if r.template_type != "report" && !r.template_type.blank?
       @all_reports.push(r.name)
     end
 
-    @selected_reports = Array.new
-    @available_reports = Array.new
-    @assigned_reports = Array.new
+    @selected_reports = []
+    @available_reports = []
+    @assigned_reports = []
 
-    #calculating selected reports for selected folder
+    # calculating selected reports for selected folder
     @edit[:new].each do |arr|
       if arr[0] == @selected[0]
-      if arr.class == Array
-        arr.each do |a|
-          if a.class == Array
-            a.each do |r|
-              if r[0] == @selected[1]
-                r.each do |rep|
-                  if rep.class == Array
-                    rep.each do |r|
-                      report = MiqReport.find_by_name(r.strip)
-                      r_name = (@edit[:user_typ] || report.miq_group_id.to_i == current_group_id) ? r : "* #{r}"
-                      @selected_reports.push(r_name)
+        if arr.class == Array
+          arr.each do |a|
+            if a.class == Array
+              a.each do |r|
+                if r[0] == @selected[1]
+                  r.each do |rep|
+                    if rep.class == Array
+                      rep.each do |r|
+                        report = MiqReport.find_by_name(r.strip)
+                        r_name = (@edit[:user_typ] || report.miq_group_id.to_i == current_group_id) ? r : "* #{r}"
+                        @selected_reports.push(r_name)
+                      end
                     end
                   end
                 end
@@ -295,10 +296,9 @@ module ReportController::Menus
           end
         end
       end
-      end
     end
 
-    #Calculating reports that are asigned to any of the folders
+    # Calculating reports that are asigned to any of the folders
     @edit[:new].each do |arr|
       if arr.class == Array
         arr.each do |a|
@@ -318,7 +318,7 @@ module ReportController::Menus
     end
 
     @all_reports.each do |rep|
-      if !@assigned_reports.include?(rep)
+      unless @assigned_reports.include?(rep)
         r = MiqReport.find_by_name(rep.strip)
         @available_reports.push(rep) if @edit[:user_typ] || r.miq_group_id.to_i == current_group_id
       end
@@ -330,17 +330,17 @@ module ReportController::Menus
     @edit[:available_reports] = @available_reports.dup
 
     # reload grid if folder node was clicked for report management
-    #if params[:action] == "menu_editor" && @menu_lastaction != "commit" && @menu_lastaction != "discard_changes"
+    # if params[:action] == "menu_editor" && @menu_lastaction != "commit" && @menu_lastaction != "discard_changes"
     if params[:pressed] != "commit" && params[:pressed] != "discard_reports" && params[:button] != "default" && params[:action] != "menu_field_changed"
       replace_right_cell(:menu_edit_action => "menu_edit_reports")
     end
   end
 
-  #menus tree for the group selected in the roles tree on left
-  def build_menu_tree(rpt_menu,tree_type="reports")
-    @rpt_menu = Array.new
+  # menus tree for the group selected in the roles tree on left
+  def build_menu_tree(rpt_menu, _tree_type = "reports")
+    @rpt_menu = []
     @menu_roles_tree = nil
-    menus = Array.new
+    menus = []
     rpt_menu.each do |r|
       # create/modify new array that doesn't have custom reports folder, dont need custom folder in menu_editor
       # add any new empty folders that were added
@@ -349,22 +349,22 @@ module ReportController::Menus
     @tree_type = "menu"
     @rpt_menu = menus
     base_node = {
-        :key    => "b__Report Menus for #{session[:role_choice]}", # Added divider '|' in case DHTMLX adds something
-        :title  => 'Top Level',
-        :icon   => 'folder.png',
-        :expand => true,
-        :style  => 'background: #fff;
+      :key    => "b__Report Menus for #{session[:role_choice]}", # Added divider '|' in case DHTMLX adds something
+      :title  => 'Top Level',
+      :icon   => 'folder.png',
+      :expand => true,
+      :style  => 'background: #fff;
                     padding: 2px 0 6px 2px;
                     color:#4b4b4b;
                     font-size:12px;
                     font-weight:bold;'
     }
 
-    @tree = Array.new
-    @branch = Array.new
-    @parent_node = Hash.new
+    @tree = []
+    @branch = []
+    @parent_node = {}
     menus.each do |r|
-      r.each_slice(2) do |menu,section|
+      r.each_slice(2) do |menu, section|
         @parent_node = {
           :key     => "p__#{menu}",
           :title   => menu,
@@ -386,14 +386,14 @@ module ReportController::Menus
           section.each do |s|
             if s.class == Array
               s.each do |rec|
-                @branch_node = Array.new
+                @branch_node = []
                 if rec.class == String
                   @menu_node = {
-                      :key     => "s__#{menu}:#{rec}",
-                      :title   => rec,
-                      :tooltip => "Menu: #{rec}",
-                      :style   => 'cursor:default;', # No cursor pointer
-                      :icon    => 'folder.png'
+                    :key     => "s__#{menu}:#{rec}",
+                    :title   => rec,
+                    :tooltip => "Menu: #{rec}",
+                    :style   => 'cursor:default;', # No cursor pointer
+                    :icon    => 'folder.png'
                   }
                 else
                   rec.each do |r|
@@ -412,25 +412,25 @@ module ReportController::Menus
         end
         @parent_node[:children] = @branch unless @branch.nil? || @parent_node.include?(@branch)
         @tree.push(@parent_node) unless @parent_node.nil?
-        @branch = Array.new
+        @branch = []
       end
     end
     base_node[:children] = @tree
     menu_roles_tree = base_node.to_json unless base_node.nil? || base_node.empty?
-    return menu_roles_tree
+    menu_roles_tree
   end
 
   def rep_kids_menutree(rec)
     rpt = MiqReport.find_by_name(rec.strip)
-    @tag_node = Hash.new
-    if !rpt.nil?
+    @tag_node = {}
+    unless rpt.nil?
       @tag_node[:key]     = "r__#{rpt.id}_#{rpt.name}"
       @tag_node[:title]   = rpt.name
       @tag_node[:tooltip] =  "Report: " + rpt.name
       @tag_node[:icon]    = "report.png"
       @tag_node[:style]   = "padding-bottom: 2px; padding-left: 0px;" # No cursor pointer
     end
-    return @tag_node
+    @tag_node
   end
 
   def move_menu_cols_left
@@ -442,7 +442,7 @@ module ReportController::Menus
           @edit[:selected_reports].push(af)                   # Add it to the new fields list
         end
       end
-      @edit[:available_reports].delete_if{|af| params[:available_reports].include?(af)} # Remove selected fields
+      @edit[:available_reports].delete_if { |af| params[:available_reports].include?(af) } # Remove selected fields
       @refresh_div = "menu_div2"
       @refresh_partial = "/report/menu_form2"
     end
@@ -461,8 +461,8 @@ module ReportController::Menus
           r = MiqReport.find_by_name(field.length == 1 ? field[0].strip : field[1].strip)
           if !user.admin_user? && r.miq_group_id.to_i != user.current_group.id.to_i && flg == 0
             flg = 1
-            #only show this flash message once for all reports
-            add_flash(_("One or more selected reports are not owned by your group, they cannot be moved", :field=>"fields"), :warning)
+            # only show this flash message once for all reports
+            add_flash(_("One or more selected reports are not owned by your group, they cannot be moved", :field => "fields"), :warning)
           end
           if user.admin_user? || r.miq_group_id.to_i == user.current_group.id.to_i
             @edit[:available_reports].push(nf) if @edit[:user_typ] || r.miq_group_id.to_i == user.current_group.id.to_i             # Add to the available fields list
@@ -470,7 +470,7 @@ module ReportController::Menus
           end
         end
       end
-      #@edit[:selected_reports].delete_if{|nf| params[:selected_reports].include?(nf)} # Remove selected fields
+      # @edit[:selected_reports].delete_if{|nf| params[:selected_reports].include?(nf)} # Remove selected fields
       @edit[:available_reports].sort!                 # Sort the available fields array
       @refresh_div = "menu_div2"
       @refresh_partial = "/report/menu_form2"
@@ -483,11 +483,11 @@ module ReportController::Menus
       return
     end
     consecutive, first_idx, last_idx = selected_menu_consecutive?
-    if ! consecutive
+    if !consecutive
       add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
     else
       if first_idx > 0
-        @edit[:selected_reports][first_idx..last_idx].reverse.each do |field|
+        @edit[:selected_reports][first_idx..last_idx].reverse_each do |field|
           pulled = @edit[:selected_reports].delete(field)
           @edit[:selected_reports].insert(first_idx - 1, pulled)
         end
@@ -504,7 +504,7 @@ module ReportController::Menus
       return
     end
     consecutive, first_idx, last_idx = selected_menu_consecutive?
-    if ! consecutive
+    if !consecutive
       add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
     else
       if last_idx < @edit[:selected_reports].length - 1
@@ -527,11 +527,11 @@ module ReportController::Menus
       return
     end
     consecutive, first_idx, last_idx = selected_menu_consecutive?
-    if ! consecutive
+    if !consecutive
       add_flash(_("Select only one or consecutive %s to move up") % "fields", :error)
     else
       if first_idx > 0
-        @edit[:selected_reports][first_idx..last_idx].reverse.each do |field|
+        @edit[:selected_reports][first_idx..last_idx].reverse_each do |field|
           pulled = @edit[:selected_reports].delete(field)
           @edit[:selected_reports].unshift(pulled)
         end
@@ -548,7 +548,7 @@ module ReportController::Menus
       return
     end
     consecutive, first_idx, last_idx = selected_menu_consecutive?
-    if ! consecutive
+    if !consecutive
       add_flash(_("Select only one or consecutive %s to move down") % "fields", :error)
     else
       if last_idx < @edit[:selected_reports].length - 1
@@ -565,7 +565,7 @@ module ReportController::Menus
 
   def selected_menu_consecutive?
     first_idx = last_idx = 0
-    @edit[:selected_reports].each_with_index do |nf,idx|
+    @edit[:selected_reports].each_with_index do |nf, idx|
       first_idx = idx if nf == params[:selected_reports].first
       if nf == params[:selected_reports].last
         last_idx = idx
@@ -582,10 +582,10 @@ module ReportController::Menus
   def menu_get_form_vars
     @edit[:form_vars][:selected_reports] = params[:selected_reports] if params[:selected_reports]
     @edit[:form_vars][:available_reports] = params[:available_reports] if params[:available_reports]
-    @edit[:temp_arr] = Array.new
+    @edit[:temp_arr] = []
     id = session[:node_selected].split('__')
     selected = id[1].split(':')
-    @edit[:new].each do |a1,a2|
+    @edit[:new].each do |a1, a2|
       if a1 == selected[0]
         @edit[:temp_arr].push(a1)
         @edit[:temp_arr].push(a2)
@@ -606,28 +606,28 @@ module ReportController::Menus
   end
 
   def menu_set_form_vars
-    #session[:changed] = @changed = false
-    @edit = Hash.new
-    @edit[:new] = Array.new
+    # session[:changed] = @changed = false
+    @edit = {}
+    @edit[:new] = []
     @edit[:key] = "menu_edit__#{session[:role_choice] ? session[:role_choice] : "new"}"
 
-    @edit[:temp_arr] = Array.new
-    @edit[:form_vars] = Hash.new
-    @edit[:current] = Array.new
-    @edit[:new] = @rpt_menu if !@rpt_menu.nil?
+    @edit[:temp_arr] = []
+    @edit[:form_vars] = {}
+    @edit[:current] = []
+    @edit[:new] = @rpt_menu unless @rpt_menu.nil?
     user = current_user
     @edit[:user_typ] = user.admin_user?
     @edit[:user_group] = user.current_group.id
-    @edit[:group_reports] = Array.new
+    @edit[:group_reports] = []
     menu_set_reports_for_group
-    @edit[:current] = copy_hash(@edit[:new]) if !@edit[:new].nil?
+    @edit[:current] = copy_hash(@edit[:new]) unless @edit[:new].nil?
     session[:edit] = @edit
   end
 
   def menu_set_reports_for_group
     @edit[:new].each do |r|
-      r.each_slice(2) do |menu,section|
-      title = "#{menu}/"
+      r.each_slice(2) do |menu, section|
+        title = "#{menu}/"
         if !section.nil? && section.class != String
           section.each do |s|
             if s.class == Array
@@ -655,64 +655,64 @@ module ReportController::Menus
     root = xml.add_element("rows")
     # Added header properties
     head = root.add_element("head")
-    new_column = head.add_element("column", {"width"=>"200", "align"=>"left", "sort"=>"na"})
+    new_column = head.add_element("column", "width" => "200", "align" => "left", "sort" => "na")
     new_column.add_attribute("type", 'edtxt')
-    new_column.text = header.gsub(/&/n, '&amp;') if !header.blank?
-    view.each_with_index do |row,i|
-      if row      #don't add if row came in a nil
+    new_column.text = header.gsub(/&/n, '&amp;') unless header.blank?
+    view.each_with_index do |row, _i|
+      if row      # don't add if row came in a nil
         if @edit[:user_typ]
           # if user is admin/super admin, no need to add special characters in id
-          new_row = root.add_element("row", {"id"=>"i_#{row.gsub(/&/n, '&amp;')}"})
-          new_row.add_element("cell",{"align"=>"left"}).text = row  # Checkbox column unchecked
+          new_row = root.add_element("row", "id" => "i_#{row.gsub(/&/n, '&amp;')}")
+          new_row.add_element("cell", "align" => "left").text = row  # Checkbox column unchecked
         else
           if @edit[:group_reports].empty?
             # if group does not own any reports then add special characters in id, they cannot delete any folders.
-            new_row = root.add_element("row", {"id"=>"__|i_#{row.gsub(/&/n, '&amp;')}"})
-            new_row.add_element("cell",{"align"=>"left"}).text = row  # Checkbox column unchecked
+            new_row = root.add_element("row", {"id" => "__|i_#{row.gsub(/&/n, '&amp;')}"})
+            new_row.add_element("cell", "align" => "left").text = row  # Checkbox column unchecked
           else
             prefix = "|-|"
             @edit[:group_reports].each do |rep|
-              #need to check if report is not owned by user add special character to the row id so it can be tracked in JS and folder cannnot be deleted in menu editor
+              # need to check if report is not owned by user add special character to the row id so it can be tracked in JS and folder cannnot be deleted in menu editor
               nodes = rep.split('/')
               val = session[:node_selected].split('__')[0]
               if val == "b"
                 # if top node
                 if nodes[0] == row
-                  #if report belongs to group
+                  # if report belongs to group
                   @row_id = "i_#{row.gsub(/&/n, '&amp;')}"
-                  #break
+                  # break
                 else
-                  #if report is owned by other group
+                  # if report is owned by other group
                   @row_id = "#{prefix}i_#{row.gsub(/&/n, '&amp;')}"
                 end
               else
-                #if second level folder node
+                # if second level folder node
                 if nodes[1] == row
-                  #if report belongs to group
+                  # if report belongs to group
                   @row_id = "i_#{row.gsub(/&/n, '&amp;')}"
-                  #break
+                  # break
                 else
-                  #if report is owned by other group
+                  # if report is owned by other group
                   @row_id = "#{prefix}i_#{row.gsub(/&/n, '&amp;')}"
                 end
               end
             end
-            new_row = root.add_element("row", {"id"=>@row_id})
-            new_row.add_element("cell",{"align"=>"left"}).text = row  # Checkbox column unchecked
+            new_row = root.add_element("row", "id" => @row_id)
+            new_row.add_element("cell", "align" => "left").text = row  # Checkbox column unchecked
           end
         end
       end
     end
-    return xml.to_s
+    xml.to_s
   end
 
   def edit_folder
     session[:node_selected] = "b__Report Menus for #{session[:role_choice]}" if params[:button] == "reset" || params[:button] == "default"  # resetting node in case reset button is pressed
     @selected = session[:node_selected].split('__')
-    @folders = Array.new
-    @edit[:folders] = Array.new
+    @folders = []
+    @edit[:folders] = []
 
-    #calculating selected reports for selected folder
+    # calculating selected reports for selected folder
     if session[:node_selected] == "b__Report Menus for #{session[:role_choice]}"
       @edit[:new].each do |arr|
         if arr[0] != @sb[:grp_title]
@@ -735,38 +735,38 @@ module ReportController::Menus
       end
     end
     @edit[:folders] = @folders.dup
-    @grid_xml = menu_to_xml(@edit[:folders],@selected[1])
+    @grid_xml = menu_to_xml(@edit[:folders], @selected[1])
   end
 
   def menu_get_all
-    roles,title = get_group_roles
-    @sb[:menu] = Hash.new
+    roles, title = get_group_roles
+    @sb[:menu] = {}
     roles.sort_by { |a| a.name.downcase }.each do |r|
       @sb[:menu][r.id] = r.name
     end
-    @right_cell_text = title == "My #{ui_lookup(:model=>"MiqGroup")}" ?
+    @right_cell_text = title == "My #{ui_lookup(:model => "MiqGroup")}" ?
       _("%s") % title :
-      _("All %s") % ui_lookup(:models=>"MiqGroup")
+      _("All %s") % ui_lookup(:models => "MiqGroup")
     @right_cell_div = "role_list"
     @menu_roles_tree = nil
   end
 
-  def get_menu(nodeid)
+  def get_menu(_nodeid)
     # build menu for selected role
     get_tree_data
     @right_cell_div  = "role_list"
-    @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>session[:role_choice], :model=>ui_lookup(:model=>"MiqGroup")}
+    @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => session[:role_choice], :model => ui_lookup(:model => "MiqGroup")}
   end
 
-  #Build the main roles/menu editor tree
+  # Build the main roles/menu editor tree
   def build_roles_tree(type, name)
     x_tree_init(name, type, "MiqUserRole", :open_all => true)
     tree_nodes = x_build_dynatree(x_tree(name))
 
     if super_admin_user?
-      title  = "All #{ui_lookup(:models=>"MiqGroup")}"
+      title  = "All #{ui_lookup(:models => "MiqGroup")}"
     else
-      title  = "My #{ui_lookup(:model=>"MiqGroup")}"
+      title  = "My #{ui_lookup(:model => "MiqGroup")}"
     end
     # Fill in root node details
     root           = tree_nodes.first
@@ -780,12 +780,11 @@ module ReportController::Menus
   def get_group_roles
     if super_admin_user?
       roles = MiqGroup.all
-      title  = "All #{ui_lookup(:models=>"MiqGroup")}"
+      title  = "All #{ui_lookup(:models => "MiqGroup")}"
     else
-      title  = "My #{ui_lookup(:model=>"MiqGroup")}"
+      title  = "My #{ui_lookup(:model => "MiqGroup")}"
       roles = [current_user.current_group]
     end
-    return roles,title
+    return roles, title
   end
-
 end

@@ -46,7 +46,7 @@ class MiqTask < ActiveRecord::Base
 
   def update_status(state, status, message)
     status = STATUS_ERROR if status == STATUS_EXPIRED
-    _log.info("Task: [#{self.id}] [#{state}] [#{status}] [#{message}]")
+    _log.info("Task: [#{id}] [#{state}] [#{status}] [#{message}]")
     self.update_attributes!(:state => state, :status => status, :message => self.class.trim_message(message))
   end
 
@@ -56,7 +56,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def update_message(message)
-    _log.info("Task: [#{self.id}] [#{message}]")
+    _log.info("Task: [#{id}] [#{message}]")
     self.update_attributes!(:message => self.class.trim_message(message))
   end
 
@@ -81,11 +81,11 @@ class MiqTask < ActiveRecord::Base
   end
 
   def info(message, pct_complete)
-    self.update_attributes(:message => message, :pct_complete => pct_complete, :status => STATUS_OK)
+    update_attributes(:message => message, :pct_complete => pct_complete, :status => STATUS_OK)
   end
 
   def warn(message)
-    self.update_attributes(:message => message, :status => STATUS_WARNING)
+    update_attributes(:message => message, :status => STATUS_WARNING)
   end
 
   def self.warn(taskid, message)
@@ -94,7 +94,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def error(message)
-    self.update_attributes(:message => message, :status => STATUS_ERROR)
+    update_attributes(:message => message, :status => STATUS_ERROR)
   end
 
   def self.error(taskid, message)
@@ -108,7 +108,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def state_initialized
-    self.update_attributes(:state => STATE_INITIALIZED)
+    update_attributes(:state => STATE_INITIALIZED)
   end
 
   def self.state_queued(taskid)
@@ -117,7 +117,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def state_queued
-    self.update_attributes(:state => STATE_QUEUED)
+    update_attributes(:state => STATE_QUEUED)
   end
 
   def self.state_active(taskid)
@@ -126,7 +126,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def state_active
-    self.update_attributes(:state => STATE_ACTIVE)
+    update_attributes(:state => STATE_ACTIVE)
   end
 
   def self.state_finished(taskid)
@@ -135,7 +135,7 @@ class MiqTask < ActiveRecord::Base
   end
 
   def state_finished
-    self.update_attributes(:state => STATE_FINISHED)
+    update_attributes(:state => STATE_FINISHED)
   end
 
   def queue_callback(state, status, message, result)
@@ -146,33 +146,33 @@ class MiqTask < ActiveRecord::Base
     end
 
     self.task_results = result unless result.nil?
-    self.update_status(state, status.titleize, message)
+    update_status(state, status.titleize, message)
   end
 
   def queue_callback_on_exceptions(state, status, message, result)
     # Only callback if status is not "ok"
     unless status.casecmp(STATUS_OK) == 0
       self.task_results = result unless result.nil?
-      self.update_status(state, STATUS_ERROR, message)
+      update_status(state, STATUS_ERROR, message)
     end
   end
 
   def task_results
     # support legacy task that saved results in the results column
-    return Marshal.load(Base64.decode64(self.results.split("\n").join)) unless self.results.nil?
-    return self.miq_report_result.report_results unless self.miq_report_result.nil?
-    unless self.binary_blob.nil?
-      serializer_name = self.binary_blob.data_type
+    return Marshal.load(Base64.decode64(results.split("\n").join)) unless results.nil?
+    return miq_report_result.report_results unless miq_report_result.nil?
+    unless binary_blob.nil?
+      serializer_name = binary_blob.data_type
       serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
       serializer = serializer_name.constantize
-      return serializer.load(self.binary_blob.binary)
+      return serializer.load(binary_blob.binary)
     end
-    return nil
+    nil
   end
 
   def task_results=(value)
     self.binary_blob        = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
-    self.binary_blob.binary = YAML.dump(value)
+    binary_blob.binary = YAML.dump(value)
   end
 
   def self.generic_action_with_callback(options, queue_options)
@@ -215,7 +215,7 @@ class MiqTask < ActiveRecord::Base
   def self.wait_for_taskid(task_id, options = {})
     options = options.dup
     options[:sleep_time] ||= 1
-    options[:timeout]    ||= 0
+    options[:timeout] ||= 0
     task = MiqTask.find(task_id)
     return nil if task.nil?
     begin
@@ -247,14 +247,14 @@ class MiqTask < ActiveRecord::Base
     _log.info("cond.flatten: #{cond.flatten.inspect}")
     ids = where(cond.flatten).select("id").collect(&:id)
 
-    self.delete_by_id(ids)
+    delete_by_id(ids)
   end
 
   def self.delete_by_id(ids)
     ids = [ids].flatten
     _log.info("Queuing deletion of tasks with the following ids: #{ids.inspect}")
     MiqQueue.put(
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => "destroy_all",
       :args        => [["id in (?)", ids]],
       :zone        => MiqServer.my_zone
@@ -264,9 +264,9 @@ class MiqTask < ActiveRecord::Base
   private
 
   def initialize_attributes
-    self.state   ||= STATE_INITIALIZED
-    self.status  ||= STATUS_OK
+    self.state ||= STATE_INITIALIZED
+    self.status ||= STATUS_OK
     self.message ||= DEFAULT_MESSAGE
-    self.userid  ||= DEFAULT_USERID
+    self.userid ||= DEFAULT_USERID
   end
 end

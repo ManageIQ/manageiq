@@ -1,7 +1,7 @@
 module WorkflowSpecHelper
   def stub_dialog(method = :get_dialogs)
     allow_any_instance_of(described_class).to receive(method).and_return(:dialogs => {})
-  end  
+  end
 
   def stub_get_next_vm_name(vm_name = "New VM")
     allow(MiqProvision).to receive(:get_next_vm_name).and_return(vm_name)

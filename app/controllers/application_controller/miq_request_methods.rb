@@ -9,24 +9,24 @@ module ApplicationController::MiqRequestMethods
     if params[:tab_id]
       @edit = session[:edit]
     else
-      return unless load_edit("prov_edit__#{params[:id]}","show_list")
+      return unless load_edit("prov_edit__#{params[:id]}", "show_list")
     end
     if @edit.nil? || @edit.try(:[], :stamp_typ)  # load tab for show screen
       if params[:tab_id]
         @options[:current_tab_key] = params[:tab_id].split('_')[0].to_sym
-        @options[:wf].refresh_field_values(@options,session[:userid])
+        @options[:wf].refresh_field_values(@options, session[:userid])
       end
       prov_load_tab
     else
       if params[:tab_id]
         @edit[:new][:current_tab_key] = params[:tab_id].split('_')[0].to_sym
-        @edit[:wf].refresh_field_values(@edit[:new],session[:userid])
+        @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
       end
       refresh_divs = prov_get_form_vars  # Get changed option, returns true if divs need refreshing
       build_grid if refresh_divs
       changed = (@edit[:new] != @edit[:current])
       render :update do |page|                    # Use JS to update the display
-        #Going thru all dialogs to see if model has set any of the dialog display to hide/ignore
+        # Going thru all dialogs to see if model has set any of the dialog display to hide/ignore
         all_dialogs = @edit[:wf].get_all_dialogs
         all_dialogs.each do |dialog_name, dialog|
           page << "miq_tabs_show_hide('#{dialog_name}_tab', #{dialog[:display] == :show});"
@@ -46,7 +46,7 @@ module ApplicationController::MiqRequestMethods
           session[:changed] = changed
           page << javascript_for_miq_button_visibility(changed)
         end
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       end
     end
@@ -73,11 +73,11 @@ module ApplicationController::MiqRequestMethods
       else
         render :update do |page|
           if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
-            page.redirect_to :action =>"show_list", :controller=>"vm"
+            page.redirect_to :action => "show_list", :controller => "vm"
           else
-            #had to get id from breadcrumbs url, because there is no params[:id] when cancel is pressed on copy Request screen.
+            # had to get id from breadcrumbs url, because there is no params[:id] when cancel is pressed on copy Request screen.
             url = @breadcrumbs.last[:url].split('/')
-            page.redirect_to :controller=>url[1], :action =>url[2], :id=>url[3]
+            page.redirect_to :controller => url[1], :action => url[2], :id => url[3]
           end
         end
       end
@@ -124,10 +124,10 @@ module ApplicationController::MiqRequestMethods
         @edit[:vm_sortdir] = "ASC"
       end
       @edit[:vm_sortcol] = params[:sort_choice]
-      templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by {|a| a.name.downcase}
+      templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
       build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
       render :update do |page|                        # Use RJS to update the display
-        page.replace("pre_prov_div", :partial=>"miq_request/pre_prov")
+        page.replace("pre_prov_div", :partial => "miq_request/pre_prov")
         page << "miqSparkle(false);"
       end
     elsif params[:sel_id]
@@ -141,33 +141,33 @@ module ApplicationController::MiqRequestMethods
       end
     else                                                        # First time in, build pre-provision screen
       @layout = "miq_request_vm"
-      @edit = Hash.new
+      @edit = {}
       @edit[:explorer] = @explorer
       @edit[:vm_sortdir] ||= "ASC"
       @edit[:vm_sortcol] ||= "name"
       @edit[:prov_type] = "VM Provision"
       @edit[:template_kls] = get_template_kls
-      templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by {|a| a.name.downcase}
-      build_vm_grid(templates, @edit[:vm_sortdir],@edit[:vm_sortcol])
+      templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
+      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
       session[:changed] = false                                 # Turn off the submit button
       @edit[:explorer] = true if @explorer
       @in_a_form = true
     end
   end
-  alias instance_pre_prov pre_prov
-  alias vm_pre_prov pre_prov
+  alias_method :instance_pre_prov, :pre_prov
+  alias_method :vm_pre_prov, :pre_prov
 
   def get_template_kls
     # when clone/migrate buttons are pressed from a sub list view,
     # these buttons are only available on Infra side
     return ManageIQ::Providers::InfraManager::Template if params[:prov_type]
     case request.parameters[:controller]
-      when "vm_cloud"
-        return ManageIQ::Providers::CloudManager::Template
-      when "vm_infra"
-        return ManageIQ::Providers::InfraManager::Template
-      else
-        return MiqTemplate
+    when "vm_cloud"
+      return ManageIQ::Providers::CloudManager::Template
+    when "vm_infra"
+      return ManageIQ::Providers::InfraManager::Template
+    else
+      return MiqTemplate
     end
   end
 
@@ -175,7 +175,7 @@ module ApplicationController::MiqRequestMethods
   def prov_edit
     if params[:button] == "cancel"
       req = MiqRequest.find_by_id(from_cid(session[:edit][:req_id])) if session[:edit] && session[:edit][:req_id]
-      add_flash(req && req.id ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"#{session[:edit][:prov_type]} Request", :name=>req.description} : _("Provision %s was cancelled by the user") % "#{session[:edit][:prov_type]} Request")
+      add_flash(req && req.id ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "#{session[:edit][:prov_type]} Request", :name => req.description} : _("Provision %s was cancelled by the user") % "#{session[:edit][:prov_type]} Request")
       session[:flash_msgs] = @flash_array.dup unless session[:edit][:explorer]  # Put msg in session for next transaction to display
       @explorer = session[:edit][:explorer] ? session[:edit][:explorer] : false
       @edit = session[:edit] =  nil                                               # Clear out session[:edit]
@@ -199,28 +199,28 @@ module ApplicationController::MiqRequestMethods
         @edit[:explorer] = true if @explorer
         @tabactive = @edit[:new][:current_tab_key]
       end
-      drop_breadcrumb( {:name=>"#{params[:req_id] ? "Edit" : "Add"} #{@edit[:prov_type]} Request", :url=>"/vm/provision"} )
+      drop_breadcrumb(:name => "#{params[:req_id] ? "Edit" : "Add"} #{@edit[:prov_type]} Request", :url => "/vm/provision")
       @in_a_form = true
-#     render :action=>"show"
+      #     render :action=>"show"
     end
   end
 
   # get the sort column that was clicked on, else use the current one
   def sort_ds_grid
-    return unless load_edit("prov_edit__#{params[:id]}","show_list")
-    field = ["miq_template","vm","service_template"].include?(@edit[:org_controller]) ? :placement_ds_name : :attached_ds
-    sort_grid('ds', @edit[:wf].get_field(field,:environment)[:values])
+    return unless load_edit("prov_edit__#{params[:id]}", "show_list")
+    field = ["miq_template", "vm", "service_template"].include?(@edit[:org_controller]) ? :placement_ds_name : :attached_ds
+    sort_grid('ds', @edit[:wf].get_field(field, :environment)[:values])
   end
 
   # get the sort column that was clicked on, else use the current one
   def sort_vm_grid
-    return unless load_edit("prov_edit__#{params[:id]}","show_list")
-    sort_grid('vm', @edit[:wf].get_field(:src_vm_id,:service)[:values])
+    return unless load_edit("prov_edit__#{params[:id]}", "show_list")
+    sort_grid('vm', @edit[:wf].get_field(:src_vm_id, :service)[:values])
   end
 
   # get the sort column that was clicked on, else use the current one
   def sort_host_grid
-    return unless load_edit("prov_edit__#{params[:id]}","show_list")
+    return unless load_edit("prov_edit__#{params[:id]}", "show_list")
     @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? sort_grid('host', @edit[:wf].get_field(:src_host_ids, :service)[:values]) : sort_grid('host', @edit[:wf].get_field(:placement_host_name, :environment)[:values])
   end
 
@@ -232,31 +232,31 @@ module ApplicationController::MiqRequestMethods
 
   # get the sort column that was clicked on, else use the current one
   def sort_pxe_img_grid
-    return unless load_edit("prov_edit__#{params[:id]}","show_list")
-    sort_grid('pxe_img', @edit[:wf].get_field(:pxe_image_id,:service)[:values])
+    return unless load_edit("prov_edit__#{params[:id]}", "show_list")
+    sort_grid('pxe_img', @edit[:wf].get_field(:pxe_image_id, :service)[:values])
   end
 
   # get the sort column that was clicked on, else use the current one
   def sort_iso_img_grid
-    return unless load_edit("prov_edit__#{params[:id]}","show_list")
-    sort_grid('iso_img', @edit[:wf].get_field(:iso_image_id,:service)[:values])
+    return unless load_edit("prov_edit__#{params[:id]}", "show_list")
+    sort_grid('iso_img', @edit[:wf].get_field(:iso_image_id, :service)[:values])
   end
 
   def sort_windows_image_grid
-    return unless load_edit("prov_edit__#{params[:id]}","show_list")
-    sort_grid('windows_image', @edit[:wf].get_field(:windows_image_id,:service)[:values])
+    return unless load_edit("prov_edit__#{params[:id]}", "show_list")
+    sort_grid('windows_image', @edit[:wf].get_field(:windows_image_id, :service)[:values])
   end
 
   # get the sort column that was clicked on, else use the current one
   def sort_vc_grid
     @edit = session[:edit]
-    sort_grid('vc', @edit[:wf].get_field(:sysprep_custom_spec,:customize)[:values])
+    sort_grid('vc', @edit[:wf].get_field(:sysprep_custom_spec, :customize)[:values])
   end
 
   # get the sort column that was clicked on, else use the current one
   def sort_template_grid
     @edit = session[:edit]
-    sort_grid('script', @edit[:wf].get_field(:customization_template_id,:customize)[:values])
+    sort_grid('script', @edit[:wf].get_field(:customization_template_id, :customize)[:values])
   end
 
   private ############################
@@ -273,7 +273,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_configured_system_grid(configured_systems, sort_order = nil, sort_by = nil)
-    sort_by    ||= "hostname"
+    sort_by ||= "hostname"
     sort_order ||= "ASC"
 
     headers = {
@@ -288,7 +288,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_pxe_img_grid(pxe_imgs, sort_order = nil, sort_by = nil)
-    sort_by    ||= "name"
+    sort_by ||= "name"
     sort_order ||= "ASC"
 
     headers = {
@@ -300,7 +300,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_iso_img_grid(iso_imgs, sort_order = nil, sort_by = nil)
-    sort_by    ||= "name"
+    sort_by ||= "name"
     sort_order ||= "ASC"
 
     headers = {
@@ -311,7 +311,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_windows_image_grid(windows_images, sort_order = nil, sort_by = nil)
-    sort_by    ||= "name"
+    sort_by ||= "name"
     sort_order ||= "ASC"
 
     headers = {
@@ -323,7 +323,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_ds_grid(datastores, sort_order = nil, sort_by = nil)
-    sort_by    ||= "free_space"
+    sort_by ||= "free_space"
     sort_order ||= "DESC"
 
     headers = {
@@ -339,7 +339,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_vc_grid(vcs, sort_order = nil, sort_by = nil)
-    sort_by    ||= "name"
+    sort_by ||= "name"
     sort_order ||= "DESC"
 
     headers = {
@@ -354,7 +354,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_template_grid(templates, sort_order = nil, sort_by = nil)
-    sort_by    ||= "name"
+    sort_by ||= "name"
     sort_order ||= "DESC"
 
     headers = {
@@ -369,7 +369,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_vm_grid(vms, sort_order = nil, sort_by = nil)
-    sort_by    ||= "name"
+    sort_by ||= "name"
     sort_order ||= "ASC"
 
     headers = {
@@ -392,28 +392,28 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_host_grid(hosts, sort_order = nil, sort_by = nil)
-    sort_by    ||= "name"
+    sort_by ||= "name"
     sort_order ||= "ASC"
 
     # need to set options from @edit/@option based upon calling screen: show/edit
     options = @edit || @options
 
     headers = if options[:wf].kind_of?(MiqHostProvisionWorkflow)
-      # non-editable grid for host prov to display hosts being provisioned
-      {
-        "name"        => "Name",
-        "mac_address" => "MAC Address",
-      }
-    else
-      # editable grid for vm/migrate prov screens
-      {
-        "name"        => "Name",
-        "v_total_vms" => "Total VMs",
-        "vmm_product" => "Platform",
-        "vmm_version" => "Version",
-        "state"       => "State",
-      }
-    end
+                # non-editable grid for host prov to display hosts being provisioned
+                {
+                  "name"        => "Name",
+                  "mac_address" => "MAC Address",
+                }
+              else
+                # editable grid for vm/migrate prov screens
+                {
+                  "name"        => "Name",
+                  "v_total_vms" => "Total VMs",
+                  "vmm_product" => "Platform",
+                  "vmm_version" => "Version",
+                  "state"       => "State",
+                }
+              end
 
     integer_fields = %w(v_total_vms)
 
@@ -427,48 +427,48 @@ module ApplicationController::MiqRequestMethods
     when MiqProvisionVirtWorkflow
       if @edit[:new][:current_tab_key] == :service
         if @edit[:new][:st_prov_type]
-          build_vm_grid(@edit[:wf].get_field(:src_vm_id,:service)[:values],@edit[:vm_sortdir],@edit[:vm_sortcol])
+          build_vm_grid(@edit[:wf].get_field(:src_vm_id, :service)[:values], @edit[:vm_sortdir], @edit[:vm_sortcol])
         else
           @vm = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
         end
         if @edit[:wf].supports_pxe?
-          build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
+          build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
         end
         if @edit[:wf].supports_iso?
-          build_iso_img_grid(@edit[:wf].send("allowed_iso_images"),@edit[:iso_img_sortdir],@edit[:iso_img_sortcol])
+          build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
         end
       elsif @edit[:new][:current_tab_key] == :environment
-        build_host_grid(@edit[:wf].get_field(:placement_host_name,:environment)[:values],@edit[:host_sortdir],@edit[:host_sortcol]) if !@edit[:wf].get_field(:placement_host_name,:environment).blank?
-        build_ds_grid(@edit[:wf].get_field(:placement_ds_name,:environment)[:values],@edit[:ds_sortdir],@edit[:ds_sortcol]) if !@edit[:wf].get_field(:placement_ds_name,:environment).blank?
+        build_host_grid(@edit[:wf].get_field(:placement_host_name, :environment)[:values], @edit[:host_sortdir], @edit[:host_sortcol]) unless @edit[:wf].get_field(:placement_host_name, :environment).blank?
+        build_ds_grid(@edit[:wf].get_field(:placement_ds_name, :environment)[:values], @edit[:ds_sortdir], @edit[:ds_sortcol]) unless @edit[:wf].get_field(:placement_ds_name, :environment).blank?
       elsif @edit[:new][:current_tab_key] == :customize
         @edit[:template_sortdir] ||= "ASC"
         @edit[:template_sortcol] ||= "name"
         if @edit[:wf].supports_customization_template?
-          build_template_grid(@edit[:wf].send("allowed_customization_templates"),@edit[:template_sortdir],@edit[:template_sortcol])
+          build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
         else
-          build_vc_grid(@edit[:wf].get_field(:sysprep_custom_spec,:customize)[:values],@edit[:vc_sortdir],@edit[:vc_sortcol])
+          build_vc_grid(@edit[:wf].get_field(:sysprep_custom_spec, :customize)[:values], @edit[:vc_sortdir], @edit[:vc_sortcol])
         end
-        build_ous_tree(@edit[:wf],@edit[:new][:ldap_ous])
+        build_ous_tree(@edit[:wf], @edit[:new][:ldap_ous])
         @sb[:vm_os] = VmOrTemplate.find_by_id(@edit.fetch_path(:new, :src_vm_id, 0)).platform if @edit.fetch_path(:new, :src_vm_id, 0)
       elsif @edit[:new][:current_tab_key] == :purpose
-        build_tags_tree(@edit[:wf],@edit[:new][:vm_tags],true)
+        build_tags_tree(@edit[:wf], @edit[:new][:vm_tags], true)
       end
     when VmMigrateWorkflow
       if @edit[:new][:current_tab_key] == :environment
-        build_host_grid(@edit[:wf].get_field(:placement_host_name,:environment)[:values],@edit[:host_sortdir],@edit[:host_sortcol]) if !@edit[:wf].get_field(:placement_host_name,:environment).blank?
-        build_ds_grid(@edit[:wf].get_field(:placement_ds_name,:environment)[:values],@edit[:ds_sortdir],@edit[:ds_sortcol]) if !@edit[:wf].get_field(:placement_ds_name,:environment).blank?
+        build_host_grid(@edit[:wf].get_field(:placement_host_name, :environment)[:values], @edit[:host_sortdir], @edit[:host_sortcol]) unless @edit[:wf].get_field(:placement_host_name, :environment).blank?
+        build_ds_grid(@edit[:wf].get_field(:placement_ds_name, :environment)[:values], @edit[:ds_sortdir], @edit[:ds_sortcol]) unless @edit[:wf].get_field(:placement_ds_name, :environment).blank?
       end
     else
       if @edit[:new][:current_tab_key] == :service
-        build_host_grid(@edit[:wf].get_field(:src_host_ids,:service)[:values],@edit[:host_sortdir],@edit[:host_sortcol])
-        build_pxe_img_grid(@edit[:wf].get_field(:pxe_image_id,:service)[:values],@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
-        build_iso_img_grid(@edit[:wf].get_field(:iso_image_id,:service)[:values],@edit[:iso_img_sortdir],@edit[:iso_img_sortcol]) if @edit[:wf].supports_iso?
+        build_host_grid(@edit[:wf].get_field(:src_host_ids, :service)[:values], @edit[:host_sortdir], @edit[:host_sortcol])
+        build_pxe_img_grid(@edit[:wf].get_field(:pxe_image_id, :service)[:values], @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
+        build_iso_img_grid(@edit[:wf].get_field(:iso_image_id, :service)[:values], @edit[:iso_img_sortdir], @edit[:iso_img_sortcol]) if @edit[:wf].supports_iso?
       elsif @edit[:new][:current_tab_key] == :purpose
         build_tags_tree(@edit[:wf], @edit.fetch_path(:new, tag_symbol_for_workflow), true)
       elsif @edit[:new][:current_tab_key] == :environment
-        build_ds_grid(@edit[:wf].get_field(:attached_ds,:environment)[:values],@edit[:ds_sortdir],@edit[:ds_sortcol])
+        build_ds_grid(@edit[:wf].get_field(:attached_ds, :environment)[:values], @edit[:ds_sortdir], @edit[:ds_sortcol])
       elsif @edit[:new][:current_tab_key] == :customize
-        build_template_grid(@edit[:wf].get_field(:customization_template_id,:customize)[:values],@edit[:template_sortdir],@edit[:template_sortcol])
+        build_template_grid(@edit[:wf].get_field(:customization_template_id, :customize)[:values], @edit[:template_sortdir], @edit[:template_sortcol])
       end
     end
   end
@@ -511,9 +511,9 @@ module ApplicationController::MiqRequestMethods
       @edit[sortcol] = params[:sort_choice]
     end
 
-    self.send("build_#{what}_grid", values, @edit[sortdir], @edit[sortcol])
+    send("build_#{what}_grid", values, @edit[sortdir], @edit[sortcol])
     render :update do |page|                        # Use RJS to update the display
-      page.replace("prov_#{what}_div", :partial=>"miq_request/prov_#{what}_grid",:locals=>{:field_id=>params[:field_id]})
+      page.replace("prov_#{what}_div", :partial => "miq_request/prov_#{what}_grid", :locals => {:field_id => params[:field_id]})
       page << "miqSparkle(false);"
     end
   end
@@ -527,7 +527,7 @@ module ApplicationController::MiqRequestMethods
     @edit[:wf].get_dialog_order.each do |d|                           # Go thru all dialogs, in order that they are displayed
       @edit[:wf].get_all_fields(d).keys.each do |f|                 # Go thru all field
         field = @edit[:wf].get_field(f, d)
-        if !field[:error].blank?
+        unless field[:error].blank?
           @error_div ||= "#{d}"
           add_flash(field[:error], :error)
         end
@@ -568,7 +568,7 @@ module ApplicationController::MiqRequestMethods
 
   def prov_req_submit
     id = session[:edit][:req_id] || "new"
-    return unless load_edit("prov_edit__#{id}","show_list")
+    return unless load_edit("prov_edit__#{id}", "show_list")
     @edit[:new][:schedule_time] = @edit[:new][:schedule_time].in_time_zone("Etc/UTC") if @edit[:new][:schedule_time]
     request = @edit[:wf].make_request(@edit[:req_id], @edit[:new], session[:userid])
     validate_fields
@@ -583,7 +583,7 @@ module ApplicationController::MiqRequestMethods
       else
         title = "Hosts"
       end
-      flash = @edit[:req_id] == nil ? _("%{typ} Request was Submitted, you will be notified when your %{title} are ready") % {:typ=>@edit[:prov_type], :title=>title} : _("%{typ} Request was re-submitted, you will be notified when your %{title} are ready") % {:typ=>@edit[:prov_type], :title=>title}
+      flash = @edit[:req_id].nil? ? _("%{typ} Request was Submitted, you will be notified when your %{title} are ready") % {:typ => @edit[:prov_type], :title => title} : _("%{typ} Request was re-submitted, you will be notified when your %{title} are ready") % {:typ => @edit[:prov_type], :title => title}
       @explorer = @edit[:explorer] ? @edit[:explorer] : false
       @sb[:action] = @edit = session[:edit] =  nil                                                # Clear out session[:edit]
       if role_allows(:feature => "miq_request_show_list", :any => true)
@@ -599,11 +599,11 @@ module ApplicationController::MiqRequestMethods
       end
     else
       @edit[:new][:current_tab_key] = @error_div.split('_')[0].to_sym if @error_div
-      @edit[:wf].refresh_field_values(@edit[:new],session[:userid])
+      @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
       build_grid
       render :update do |page|                    # Use JS to update the display
-        page.replace("prov_wf_div", :partial=>"/miq_request/prov_wf") if @error_div
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("prov_wf_div", :partial => "/miq_request/prov_wf") if @error_div
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
   end
@@ -615,7 +615,7 @@ module ApplicationController::MiqRequestMethods
       # for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
       @edit.store_path(:new, tag_symbol_for_workflow, ids.select(&:present?).collect(&:to_i))
     end
-    id = params[:ou_id].gsub(/_-_/,",") if params[:ou_id]
+    id = params[:ou_id].gsub(/_-_/, ",") if params[:ou_id]
     @edit[:new][:ldap_ous] = id.match(/(.*)\,(.*)/)[1..2] if id                       # ou selected in a tree
 
     @edit[:new][:start_date]    = params[:miq_date_1] if params[:miq_date_1]
@@ -639,12 +639,12 @@ module ApplicationController::MiqRequestMethods
 
       if field[:values]                                                         # If a choice was made
         if field[:values].kind_of?(Hash)
-          #set an array of selected ids for security groups field
+          # set an array of selected ids for security groups field
           if f == "security_groups"
             if params[key] == ""
               @edit[:new][f.to_sym] = [nil]
             else
-              @edit[:new][f.to_sym] = Array.new
+              @edit[:new][f.to_sym] = []
               params[key].split(",").each { |v| @edit[:new][f.to_sym].push(v.to_i) }
             end
           else
@@ -653,7 +653,7 @@ module ApplicationController::MiqRequestMethods
         else
           field[:values].each do |v|
             if v.class.name == "MiqHashStruct" && v.evm_object_class == :Storage
-              if ["miq_template","service_template","vm"].include?(@edit[:org_controller])
+              if ["miq_template", "service_template", "vm"].include?(@edit[:org_controller])
                 if params[key] == "__DS__NONE__"                                  # Added this to deselect datastore in grid
                   @edit[:new][f.to_sym] = [nil, nil]                              # Save [value, description]
                 elsif v.id.to_i == val.to_i
@@ -661,10 +661,10 @@ module ApplicationController::MiqRequestMethods
                 end
               else
                 if params[key] == "__DS__NONE__"                                  # Added this to deselect datastore in grid
-                  @edit[:new][f.to_sym] = Array.new                           # Save [value, description]
+                  @edit[:new][f.to_sym] = []                           # Save [value, description]
                 elsif v.id.to_i == val.to_i
                   if @edit[:new][f.to_sym].include?(val)
-                    @edit[:new][f.to_sym].delete_if {|x| x == val }
+                    @edit[:new][f.to_sym].delete_if { |x| x == val }
                   else
                     @edit[:new][f.to_sym].push(val)                             # Save [value, description]
                   end
@@ -714,7 +714,7 @@ module ApplicationController::MiqRequestMethods
           end
         end
         begin
-          @edit[:wf].refresh_field_values(@edit[:new],session[:userid])           # Refresh the workflow with new field values based on options, need to pass userid there
+          @edit[:wf].refresh_field_values(@edit[:new], session[:userid])           # Refresh the workflow with new field values based on options, need to pass userid there
         rescue StandardError => bang
           add_flash(bang.message, :error)
           @edit[:new][f.to_sym] = val                                             # Save value
@@ -734,22 +734,22 @@ module ApplicationController::MiqRequestMethods
     @options = @miq_request.get_options                         # Get the provision options from the request record
     @options[:org_controller] = @miq_request.resource_type == "MiqHostProvisionRequest" ? "host" : "vm"
     if @options[:schedule_time]
-      @options[:schedule_time] = format_timezone(@options[:schedule_time],Time.zone,"raw")
+      @options[:schedule_time] = format_timezone(@options[:schedule_time], Time.zone, "raw")
       @options[:start_date] = "#{@options[:schedule_time].month}/#{@options[:schedule_time].day}/#{@options[:schedule_time].year}"  # Set the start date
       @options[:start_hour] = "#{@options[:schedule_time].hour}"
       @options[:start_min] = "#{@options[:schedule_time].min}"
     end
-    drop_breadcrumb( {:name=>@miq_request.description.to_s.split(' submitted')[0], :url=>"/miq_request/show/#{@miq_request.id}"} )
+    drop_breadcrumb(:name => @miq_request.description.to_s.split(' submitted')[0], :url => "/miq_request/show/#{@miq_request.id}")
     if @miq_request.workflow_class
-      options = Hash.new
+      options = {}
       begin
-        options[:wf] = @miq_request.workflow_class.new(@options,session[:userid])                # Create a new provision workflow for this edit session
+        options[:wf] = @miq_request.workflow_class.new(@options, session[:userid])                # Create a new provision workflow for this edit session
       rescue MiqException::MiqVmError => bang
         @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
       end
       if options[:wf]
         options[:wf].init_from_dialog(@options)  # Create a new provision workflow for this edit session
-        #setting active tab to first visible tab
+        # setting active tab to first visible tab
         options[:wf].get_dialog_order.each do |d|
           if options[:wf].get_dialog(d)[:display] == :show
             @options[:current_tab_key] = d
@@ -758,8 +758,8 @@ module ApplicationController::MiqRequestMethods
         end
         @options[tag_symbol_for_workflow] ||= []  # Initialize if came back nil from record
         build_tags_tree(options[:wf], @options[tag_symbol_for_workflow], false) if @miq_request.resource_type != "VmMigrateRequest"
-        if !["MiqHostProvisionRequest", "VmMigrateRequest"].include?(@miq_request.resource_type)
-          build_ous_tree(options[:wf],@options[:ldap_ous])
+        unless ["MiqHostProvisionRequest", "VmMigrateRequest"].include?(@miq_request.resource_type)
+          build_ous_tree(options[:wf], @options[:ldap_ous])
           svm = VmOrTemplate.where(:id => @options[:src_vm_id][0]).first if @options[:src_vm_id] && @options[:src_vm_id][0]
           @sb[:vm_os] = svm.platform if svm
         end
@@ -769,14 +769,14 @@ module ApplicationController::MiqRequestMethods
       @options = @miq_request.options
       @options[:memory], @options[:mem_typ] = reconfigure_calculations(@options[:vm_memory][0]) if @options[:vm_memory]
       @force_no_grid_xml   = true
-      @view, @pages = get_view(Vm, :view_suffix=>"VmReconfigureRequest", :where_clause=>["vms.id IN (?)",@miq_request.options[:src_ids]]) # Get the records (into a view) and the paginator
+      @view, @pages = get_view(Vm, :view_suffix => "VmReconfigureRequest", :where_clause => ["vms.id IN (?)", @miq_request.options[:src_ids]]) # Get the records (into a view) and the paginator
     end
     @user = User.find_by_userid(@miq_request.stamped_by)
   end
 
   # Set form variables for provision request
   def prov_set_form_vars(req = nil)
-    @edit                     ||= {}
+    @edit ||= {}
     session[:prov_options]      = @options = nil  # Clearing out options that were set on show screen
     @edit[:req_id]              = req.try(:id)    # Save existing request record id, if passed in
     @edit[:key]                 = "prov_edit__#{@edit[:req_id] || "new"}"
@@ -811,7 +811,7 @@ module ApplicationController::MiqRequestMethods
       @edit[:current] ||= {}
       @edit[:current] = copy_hash(@edit[:new])
       # Give the model a change to modify the dialog based on the default settings
-      #common grids
+      # common grids
       @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
       if pre_prov_values
         @edit[:new] = @edit[:new].delete_nils
@@ -937,12 +937,12 @@ module ApplicationController::MiqRequestMethods
     nil
   end
 
-  def build_ous_tree(wf,ldap_ous)
+  def build_ous_tree(wf, ldap_ous)
     dcs = wf.send("allowed_ous_tree")
     @curr_dc = nil
     # Build the default filters tree for the search views
     all_dcs = []                        # Array to hold all CIs
-    dcs.each_with_index do |dc,i| # Go thru all of the Searches
+    dcs.each_with_index do |dc, i| # Go thru all of the Searches
       @curr_tag = dc[0]
       @ci_node = {
         :key         => dc[0],
@@ -954,9 +954,9 @@ module ApplicationController::MiqRequestMethods
         :expand      => true
       }
       @ci_kids = []
-      dc[1].each_with_index do |ou,j|
+      dc[1].each_with_index do |ou, _j|
         id = ou[1][:ou].join(",")
-        id.gsub!(/,/,"_-_")         # Workaround for save/load openstates, replacing commas in ou array
+        id.gsub!(/,/, "_-_")         # Workaround for save/load openstates, replacing commas in ou array
         temp = {
           :key     => id,
           :tooltip => ou[0],
@@ -964,7 +964,7 @@ module ApplicationController::MiqRequestMethods
           :icon    => "group.png"
         }
         if ldap_ous == ou[1][:ou]
-          #expand selected nodes parents when editing existing record
+          # expand selected nodes parents when editing existing record
           @expand_parent_nodes = id
           temp[:addClass] = "cfme-blue-bold-node"
         else
@@ -973,14 +973,14 @@ module ApplicationController::MiqRequestMethods
         @ou_kids = []
         ou[1].each do |lvl1|
           if lvl1.kind_of?(Array) && lvl1[0] != :ou && lvl1[0] != :path
-            kids = get_ou_kids(lvl1,ldap_ous)
+            kids = get_ou_kids(lvl1, ldap_ous)
             @ou_kids.push(kids) unless @ou_kids.include?(kids)
           end
         end
         temp[:children] = @ou_kids unless @ou_kids.blank?
         @ci_kids.push(temp) unless @ci_kids.include?(temp)
       end
-      if i == dcs.length-1            # Adding last node
+      if i == dcs.length - 1            # Adding last node
         @ci_node[:children] = @ci_kids unless @ci_kids.blank?
         all_dcs.push(@ci_node)
       end
@@ -993,14 +993,14 @@ module ApplicationController::MiqRequestMethods
     session[:tree_name] = "ldap_ous_tree"
   end
 
-  def get_ou_kids(node,ldap_ous)
+  def get_ou_kids(node, ldap_ous)
     id = node[1][:ou].join(",")
-    id.gsub!(/,/,"_-_")       # Workaround for save/load openstates, replacing commas in ou array
+    id.gsub!(/,/, "_-_")       # Workaround for save/load openstates, replacing commas in ou array
     kids = {
-      :key      => id,
-      :title    => node[0],
-      :tooltip  => node[0],
-      :icon     => "group.png"
+      :key     => id,
+      :title   => node[0],
+      :tooltip => node[0],
+      :icon    => "group.png"
     }
 
     if ldap_ous == node[1][:ou]
@@ -1013,7 +1013,7 @@ module ApplicationController::MiqRequestMethods
     ou_kids = []
     node[1].each do |k|
       if k.kind_of?(Array) && k[0] != :ou && k[0] != :path
-        ou = get_ou_kids(k,ldap_ous)
+        ou = get_ou_kids(k, ldap_ous)
         ou_kids.push(ou) unless ou_kids.include?(ou)
       end
       kids[:children] = ou_kids unless ou_kids.blank?
@@ -1021,13 +1021,13 @@ module ApplicationController::MiqRequestMethods
     kids
   end
 
-  def build_tags_tree(wf,vm_tags,edit_mode)
+  def build_tags_tree(wf, vm_tags, edit_mode)
     tags = wf.send("allowed_tags")
     @curr_tag = nil
     # Build the default filters tree for the search views
     all_tags = []                          # Array to hold all CIs
     kids_checked = false
-    tags.each_with_index do |t,i| # Go thru all of the Searches
+    tags.each_with_index do |t, i| # Go thru all of the Searches
       if @curr_tag.blank? || @curr_tag != t[:name]
         if @curr_tag != t[:name] && @ci_node
           @ci_node[:expand] = true if kids_checked
@@ -1051,12 +1051,12 @@ module ApplicationController::MiqRequestMethods
         t[:children].each do |c|
           temp = {}
           temp[:key] = c[0].to_s
-          #only add cfme_parent_key for single value tags, need to use in JS onclick handler
+          # only add cfme_parent_key for single value tags, need to use in JS onclick handler
           temp[:cfme_parent_key] = t[:id].to_s if t[:single_value]
           temp[:title] = temp[:tooltip] = c[1][:description]
           temp[:addClass] = "cfme-no-cursor-node"
           temp[:icon] = "tag.png"
-          if edit_mode              #Don't show checkboxes/radio buttons in non-edit mode
+          if edit_mode              # Don't show checkboxes/radio buttons in non-edit mode
             if vm_tags && vm_tags.include?(c[0].to_i)
               temp[:select] = true
               kids_checked = true
@@ -1064,9 +1064,9 @@ module ApplicationController::MiqRequestMethods
               temp[:select] = false
             end
             if @edit && @edit[:current][tag_symbol_for_workflow] != @edit[:new][tag_symbol_for_workflow]
-              #checking to see if id is in current but not in new, change them to blue OR if id is in current but deleted from new
+              # checking to see if id is in current but not in new, change them to blue OR if id is in current but deleted from new
               if (!@edit[:current][tag_symbol_for_workflow].include?(c[0].to_i) && @edit[:new][tag_symbol_for_workflow].include?(c[0].to_i)) ||
-                  (!@edit[:new][tag_symbol_for_workflow].include?(c[0].to_i) && @edit[:current][tag_symbol_for_workflow].include?(c[0].to_i))
+                 (!@edit[:new][tag_symbol_for_workflow].include?(c[0].to_i) && @edit[:current][tag_symbol_for_workflow].include?(c[0].to_i))
                 temp[:addClass] = "cfme-blue-bold-node"
               end
             end
@@ -1077,7 +1077,7 @@ module ApplicationController::MiqRequestMethods
           end
         end
       end
-      if i == tags.length-1           # Adding last node
+      if i == tags.length - 1           # Adding last node
         @ci_node[:expand] = true if kids_checked
         kids_checked = false
         @ci_node[:children] = @ci_kids unless @ci_kids.blank?

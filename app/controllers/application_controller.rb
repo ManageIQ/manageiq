@@ -48,7 +48,7 @@ class ApplicationController < ActionController::Base
   before_action :get_global_session_data, :except => [:window_sizes, :authenticate]
   before_action :set_user_time_zone, :except => [:window_sizes]
   before_action :set_gettext_locale, :except => [:window_sizes]
-  after_filter :set_global_session_data, :except => [:window_sizes]
+  after_action :set_global_session_data, :except => [:window_sizes]
 
   ensure_security_headers
 
@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
   #   CimBaseStorageExtentController => cim_base_storage_extent
   #   OntapFileShareController        => ontap_file_share
   def self.table_name
-    @table_name ||= self.model.name.underscore
+    @table_name ||= model.name.underscore
   end
 
   # Examples:
@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
   #   OntapFileShareController        => snia_fs
   def self.session_key_prefix
     @session_key_prefix ||= begin
-      parts = self.table_name.split('_')
+      parts = table_name.split('_')
       "#{parts[0]}_#{parts[1..-1].join('_')}"
     end
   end
@@ -88,13 +88,13 @@ class ApplicationController < ActionController::Base
     logger.fatal "Error caught: [#{e.class.name}] #{e.message}\n#{e.backtrace.join("\n")}"
 
     msg = case e
-    when ::ActionController::RoutingError
-      "Action not implemented"
-    when ::AbstractController::ActionNotFound # Prevent Rails showing all known controller actions
-      "Unknown Action"
-    else
-      e.message
-    end
+          when ::ActionController::RoutingError
+            "Action not implemented"
+          when ::AbstractController::ActionNotFound # Prevent Rails showing all known controller actions
+            "Unknown Action"
+          else
+            e.message
+          end
 
     render_exception(msg)
   end
@@ -112,7 +112,7 @@ class ApplicationController < ActionController::Base
       format.html do                # HTML, send error screen
         @layout = "exception"
         response.status = 500
-        render(:template => "layouts/exception", :locals => { :message => msg })
+        render(:template => "layouts/exception", :locals => {:message => msg})
       end
       format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
     end
@@ -123,11 +123,11 @@ class ApplicationController < ActionController::Base
   def auth_error
     add_flash(_("The user is not authorized for this task or item."), :error)
     add_flash(_("Press your browser's Back button or click a tab to continue"))
-#   render(:text=>"User is not authorized for this task . . . press your browser's Back button to continue")
+    #   render(:text=>"User is not authorized for this task . . . press your browser's Back button to continue")
   end
 
   def change_tab
-    redirect_to(:action=>params[:tab], :id=>params[:id])
+    redirect_to(:action => params[:tab], :id => params[:id])
   end
 
   def resize_layout
@@ -140,9 +140,9 @@ class ApplicationController < ActionController::Base
     render :nothing => true # No response required
   end
 
-  def build_targets_hash(items,typ=true)
-    @targets_hash ||= Hash.new
-    #if array of objects came in
+  def build_targets_hash(items, typ = true)
+    @targets_hash ||= {}
+    # if array of objects came in
     if typ
       items.each do |item|
         @targets_hash[item.id.to_i] = item
@@ -211,10 +211,10 @@ class ApplicationController < ActionController::Base
       @report = rr.report_results
       @report.report_run_time = rr.last_run_on
     end
-    filename = @report.title + "_" + format_timezone(Time.now,Time.zone,"fname")
+    filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
     disable_client_cache
     send_data(@report.to_text,
-      :filename => "#{filename}.txt" )
+              :filename => "#{filename}.txt")
   end
 
   # Send the current report in csv format
@@ -226,10 +226,10 @@ class ApplicationController < ActionController::Base
       rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
       @report = rr.report_results
     end
-    filename = @report.title + "_" + format_timezone(Time.now,Time.zone,"fname")
+    filename = @report.title + "_" + format_timezone(Time.now, Time.zone, "fname")
     disable_client_cache
     send_data(@report.to_csv,
-      :filename => "#{filename}.csv" )
+              :filename => "#{filename}.csv")
   end
 
   # Send the current report in pdf format
@@ -243,7 +243,7 @@ class ApplicationController < ActionController::Base
     end
     if report || @report
       userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
-      rr =  (report || @report).build_create_results(:userid=>userid) # Create rr from the report object
+      rr =  (report || @report).build_create_results(:userid => userid) # Create rr from the report object
     end
 
     # Use rr frorm paging, if present
@@ -293,9 +293,9 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  alias render_report_txt render_report_data
-  alias render_report_csv render_report_data
-  alias render_report_pdf render_report_data
+  alias_method :render_report_txt, :render_report_data
+  alias_method :render_report_csv, :render_report_data
+  alias_method :render_report_pdf, :render_report_data
 
   # Send rendered report data
   def send_report_data
@@ -366,7 +366,7 @@ class ApplicationController < ActionController::Base
     @edit = session[:edit]  # If in edit, need to preserve @edit object
     session[:async] ||= {}
     session[:async][:interval] ||= 1000 # Default interval to 1 second
-    session[:async][:params]   ||= {}
+    session[:async][:params] ||= {}
 
     if MiqTask.find(params[:task_id].to_i).state != "Finished" # Task not done --> retry
       browser_refresh_task(params[:task_id])
@@ -389,7 +389,7 @@ class ApplicationController < ActionController::Base
     task_id = options[:task_id]
     session[:async] ||= {}
     session[:async][:interval] ||= 1000 # Default interval to 1 second
-    session[:async][:params]   ||= {}
+    session[:async][:params] ||= {}
 
     session[:async][:interval]         = options[:retry_seconds] * 1000 if options[:retry_seconds].kind_of?(Numeric)
     session[:async][:params]           = copy_hash(params)  # Save the incoming parms
@@ -409,16 +409,16 @@ class ApplicationController < ActionController::Base
     bc_text = @record.kind_of?(Vm) ? "Event Logs" : "ESX Logs"
     @sb[:action] = params[:action]
     @explorer = true if @record.kind_of?(VmOrTemplate)
-    if params[:show] != nil || params[:x_show] != nil
+    if !params[:show].nil? || !params[:x_show].nil?
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.event_logs.find(from_cid(id))
-      drop_breadcrumb( {:name=>@record.name+" (#{bc_text})", :url=>"/#{obj}/event_logs/#{@record.id}?page=#{@current_page}"} )
-      drop_breadcrumb( {:name=>@item.name, :url=>"/#{obj}/show/#{@record.id}?show=#{@item.id}"} )
+      drop_breadcrumb(:name => @record.name + " (#{bc_text})", :url => "/#{obj}/event_logs/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => @item.name, :url => "/#{obj}/show/#{@record.id}?show=#{@item.id}")
       show_item
     else
-      drop_breadcrumb( {:name=>@record.name+" (#{bc_text})", :url=>"/#{obj}/event_logs/#{@record.id}"} )
+      drop_breadcrumb(:name => @record.name + " (#{bc_text})", :url => "/#{obj}/event_logs/#{@record.id}")
       @listicon = "event_logs"
-      show_details(EventLog, :association=>"event_logs")
+      show_details(EventLog, :association => "event_logs")
     end
   end
 
@@ -437,12 +437,12 @@ class ApplicationController < ActionController::Base
 
     rr = MiqReportResult.find(@sb[:pages][:rr_id])
     @html = report_build_html_table(rr.report_results,
-                                    rr.html_rows(:page=>@sb[:pages][:current],
-                                                :per_page=>@sb[:pages][:perpage]).join)
+                                    rr.html_rows(:page     => @sb[:pages][:current],
+                                                 :per_page => @sb[:pages][:perpage]).join)
 
     render :update do |page|
-      page.replace("report_html_div", :partial=>"layouts/report_html")
-      page.replace_html("paging_div",:partial=>'layouts/saved_report_paging_bar', :locals=>{:pages=>@sb[:pages]})
+      page.replace("report_html_div", :partial => "layouts/report_html")
+      page.replace_html("paging_div", :partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
       page << javascript_hide_if_exists("form_buttons_div")
       page << javascript_show_if_exists("rpb_div_1")
       page << "miqSparkle(false)"
@@ -451,12 +451,12 @@ class ApplicationController < ActionController::Base
 
   def build_vm_host_array
     @tree_hosts = Host.where(:id => (@sb[:tree_hosts_hash] || {}).keys)
-    @tree_vms   = Vm.where(  :id => (@sb[:tree_vms_hash]   || {}).keys)
+    @tree_vms   = Vm.where(:id => (@sb[:tree_vms_hash] || {}).keys)
   end
 
   # Show the current widget report in pdf format
   def widget_to_pdf
-    @report = nil   #setting report to nil in case full screen mode was opened first, to make sure the one in report_result is used for download
+    @report = nil   # setting report to nil in case full screen mode was opened first, to make sure the one in report_result is used for download
     session[:report_result_id] = params[:rr_id]
     render_pdf
   end
@@ -507,15 +507,15 @@ class ApplicationController < ActionController::Base
 
     # Need to use paged_view_search code, once the relationship is working. Following is workaround for the demo
     @stats = @record.derived_metrics
-    drop_breadcrumb( {:name=>"Utilization", :url=>"/#{db}/show_statistics/#{@record.id}?refresh=n"} )
-    render :action=>"show"
+    drop_breadcrumb(:name => "Utilization", :url => "/#{db}/show_statistics/#{@record.id}?refresh=n")
+    render :action => "show"
 
-#   generate the grid/tile/list url to come back here when gtl buttons are pressed
-#   @gtl_url = "/#{controller_name}/show_statistics/" + @record.id.to_s + "?"#
-#    @showtype = "details"#
-#   @view, @pages = get_view(db, :parent=>@record, :parent_method => :miq_cim_derived_stats)  # Get the records (into a view) and the paginator
-#   @no_checkboxes = true
-#   @showlinks = false
+    #   generate the grid/tile/list url to come back here when gtl buttons are pressed
+    #   @gtl_url = "/#{controller_name}/show_statistics/" + @record.id.to_s + "?"#
+    #    @showtype = "details"#
+    #   @view, @pages = get_view(db, :parent=>@record, :parent_method => :miq_cim_derived_stats)  # Get the records (into a view) and the paginator
+    #   @no_checkboxes = true
+    #   @showlinks = false
   end
 
   # moved this method here so it can be accessed from pxe_server controller as well
@@ -524,17 +524,17 @@ class ApplicationController < ActionController::Base
     # if zone is selected in tree replace tab#3
     if x_active_tree == :diagnostics_tree
       if @sb[:active_tab] == "diagnostics_database"
-        #coming from diagnostics/database tab
+        # coming from diagnostics/database tab
         pfx = "dbbackup"
         flash_div_num = "database"
       end
     else
       if session[:edit] && session[:edit].key?(:pxe_id)
-        #add/edit pxe server
+        # add/edit pxe server
         pfx = "pxe"
         flash_div_num = ""
       else
-        #add/edit dbbackup schedule
+        # add/edit dbbackup schedule
         pfx = "schedule"
         flash_div_num = ""
       end
@@ -567,11 +567,11 @@ class ApplicationController < ActionController::Base
 
     @changed = (@edit[:new] != @edit[:current]) if pfx == "pxe"
     render :update do |page|
-      page.replace("flash_msg_div#{flash_div_num}", :partial=>"layouts/flash_msg", :locals=>{:div_num=>flash_div_num})
+      page.replace("flash_msg_div#{flash_div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => flash_div_num})
     end
   end
 
-  #to reload currently displayed summary screen in explorer
+  # to reload currently displayed summary screen in explorer
   def reload
     @_params[:id] = x_node
     tree_select
@@ -624,17 +624,17 @@ class ApplicationController < ActionController::Base
     # build the ae tree to show the tree select box for entry point
     if x_active_tree == :automate_tree && @edit && @edit[:new][:fqname]
       nodes = @edit[:new][:fqname].split("/")
-      @open_nodes = Array.new
-      #if there are more than one nested namespaces
-      nodes.each_with_index do |node,i|
-        if i == nodes.length-1
-          #check if @cls is there, to make sure the class/instance still exists in Automate db
-          inst = @cls ? MiqAeInstance.find_by_class_id_and_name(@cls.id,nodes[i]) : nil
-          #show this as selected/expanded node when tree loads
+      @open_nodes = []
+      # if there are more than one nested namespaces
+      nodes.each_with_index do |_node, i|
+        if i == nodes.length - 1
+          # check if @cls is there, to make sure the class/instance still exists in Automate db
+          inst = @cls ? MiqAeInstance.find_by_class_id_and_name(@cls.id, nodes[i]) : nil
+          # show this as selected/expanded node when tree loads
           @open_nodes.push("aei-#{inst.id}") if inst
           @active_node = "aei-#{to_cid(inst.id)}" if inst
-        elsif i == nodes.length-2
-          @cls = MiqAeClass.find_by_namespace_id_and_name(@ns.id,nodes[i])
+        elsif i == nodes.length - 2
+          @cls = MiqAeClass.find_by_namespace_id_and_name(@ns.id, nodes[i])
           @open_nodes.push("aec-#{to_cid(@cls.id)}") if @cls
         else
           @ns = MiqAeNamespace.find_by_name(nodes[i])
@@ -680,16 +680,16 @@ class ApplicationController < ActionController::Base
       html_string = render_to_string(:template => "/layouts/show_pdf", :layout => false)
       pdf_data = PdfGenerator.pdf_from_string(html_string, "pdf_summary")
       send_data(pdf_data,
-        :type     => "application/pdf",
-        :filename => "#{klass}_#{@record.name}_summary_#{format_timezone(run_time, Time.zone, "fname")}.pdf"
-      )
+                :type     => "application/pdf",
+                :filename => "#{klass}_#{@record.name}_summary_#{format_timezone(run_time, Time.zone, "fname")}.pdf"
+               )
     end
   end
 
   # moved this method here so it can be accessed from pxe_server controller as well
   def log_depot_set_verify_status
     if (@edit[:new][:log_password] == @edit[:new][:log_verify]) && @edit[:new][:uri_prefix] != "nfs" &&
-      (!@edit[:new][:uri].blank? && !@edit[:new][:log_userid].blank? && !@edit[:new][:log_password].blank? && !@edit[:new][:log_verify].blank?)
+       (!@edit[:new][:uri].blank? && !@edit[:new][:log_userid].blank? && !@edit[:new][:log_password].blank? && !@edit[:new][:log_verify].blank?)
       @edit[:log_verify_status] = true
     elsif @edit[:new][:uri_prefix] == "nfs" && !@edit[:new][:uri].blank?
       @edit[:log_verify_status] = true
@@ -707,9 +707,9 @@ class ApplicationController < ActionController::Base
       msg = "VMDB config updated"
     end
 
-    { :event   => "vmdb_config_update",
-      :userid  => session[:userid],
-      :message => build_audit_msg(new, current, msg)
+    {:event   => "vmdb_config_update",
+     :userid  => session[:userid],
+     :message => build_audit_msg(new, current, msg)
     }
   end
 
@@ -731,13 +731,13 @@ class ApplicationController < ActionController::Base
   def build_audit_msg(new, current, msg_in)
     msg_arr = []
     new.each_key do |k|
-      if (!(k.to_s.ends_with?("password2") || k.to_s.ends_with?("verify")) &&
-          (current.nil? || (new[k] != current[k])))
+      if !(k.to_s.ends_with?("password2") || k.to_s.ends_with?("verify")) &&
+         (current.nil? || (new[k] != current[k]))
         if password_field?(k) # Asterisk out password fields
           msg_arr << "#{k}:[*]#{' to [*]' unless current.nil?}"
-        elsif new[k].is_a?(Hash)       # If the field is a hash,
+        elsif new[k].kind_of?(Hash)       # If the field is a hash,
           # Make current a blank hash for following comparisons
-          current[k] = Hash.new if (!current.nil? && current[k].nil?)
+          current[k] = {} if !current.nil? && current[k].nil?
           #   process keys of the current and new hashes
           (new[k].keys | (current.nil? ? [] : current[k].keys)).each do |hk|
             if current.nil? || (new[k][hk] != current[k][hk])
@@ -784,10 +784,10 @@ class ApplicationController < ActionController::Base
 
   # Build the user_emails hash for edit screens needing the edit_email view
   def build_user_emails_for_edit
-    @edit[:user_emails] = Hash.new
+    @edit[:user_emails] = {}
     User.all.sort_by { |u| u.name.downcase }.each do |u|
       unless u.email.blank? ||
-              (@edit[:new][:email][:to] && @edit[:new][:email][:to].include?(u.email))
+             (@edit[:new][:email][:to] && @edit[:new][:email][:to].include?(u.email))
         @edit[:user_emails][u.email] = "#{u.name} (#{u.email})"
       end
     end
@@ -798,7 +798,7 @@ class ApplicationController < ActionController::Base
     rr.build_html_rows_for_legacy # Create the report result details for legacy reports
     @report = rr.report # Grab the report, not including table
 
-    @sb[:pages] ||= Hash.new
+    @sb[:pages] ||= {}
     @sb[:pages][:rr_id] = rr.id
     @sb[:pages][:items] = @report.extras[:total_html_rows]
     @sb[:pages][:perpage] = @settings[:perpage][:reports]
@@ -813,10 +813,10 @@ class ApplicationController < ActionController::Base
       html = nil
     else
       html = report_build_html_table(@report,
-                                    rr.html_rows(:page=>@sb[:pages][:current],
-                                                :per_page=>@sb[:pages][:perpage]).join)
+                                     rr.html_rows(:page     => @sb[:pages][:current],
+                                                  :per_page => @sb[:pages][:perpage]).join)
     end
-    return html
+    html
   end
 
   def calculate_lastaction(lastaction)
@@ -863,7 +863,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Put all time profiles for the current user in session[:time_profiles] for pulldowns
-  def get_time_profiles(obj=nil)
+  def get_time_profiles(obj = nil)
     session[:time_profiles] = {}
     region_id = obj ? obj.region_id : MiqRegion.my_region_number
     time_profiles = TimeProfile.profiles_for_user(session[:userid], region_id)
@@ -896,7 +896,7 @@ class ApplicationController < ActionController::Base
 
   # Create a time in a timezone
   def create_time_in_tz(datetime, tz = nil)               # tz = nil means use user's session timzone
-    if tz && (Time.zone == nil  || tz != Time.zone.name)  # If tz passed in and not default tz
+    if tz && (Time.zone.nil? || tz != Time.zone.name)  # If tz passed in and not default tz
       saved_tz = Time.zone
       Time.zone = tz                                      # Temporarily convert to new tz and create the time object
       t = Time.zone.parse(datetime)                       # Create the time object
@@ -904,17 +904,17 @@ class ApplicationController < ActionController::Base
     else                                                  # tz not passed in or matches current tz
       t = Time.zone.parse(datetime)                       # Create the time object
     end
-    return t
+    t
   end
 
   # Create a time in a timezone, return in UTC
   def create_time_in_utc(datetime, tz = nil)                        # tz = nil means use user's session timzone
-    return create_time_in_tz(datetime, tz).in_time_zone("Etc/UTC")  # Return the time in UTC
+    create_time_in_tz(datetime, tz).in_time_zone("Etc/UTC")  # Return the time in UTC
   end
 
   # convert time from utc to server timezone
   def convert_time_from_utc(datetime)
-    return datetime.in_time_zone(server_timezone)
+    datetime.in_time_zone(server_timezone)
   end
 
   # if authenticating or past login screen
@@ -925,9 +925,9 @@ class ApplicationController < ActionController::Base
 
   # Initialize the options for server selection
   def init_server_options(show_all = true)
-    @server_options ||= Hash.new
-    @server_options[:zones] = Array.new
-    @server_options[:zone_servers] = Hash.new
+    @server_options ||= {}
+    @server_options[:zones] = []
+    @server_options[:zone_servers] = {}
     MiqServer.all.each do |ms|
       if show_all || ms.started?                                                          # Collect all or only started servers
         if ms.id == MiqServer.my_server.id                                                # This is the current server
@@ -936,7 +936,7 @@ class ApplicationController < ActionController::Base
         end
         name = "#{ms.name} [#{ms.id}]"
         @server_options[:zones].push(ms.my_zone) unless @server_options[:zones].include?(ms.my_zone)  # Collect all of the zones
-        @server_options[:zone_servers][ms.my_zone] ||= Array.new                                # Initialize zone servers array
+        @server_options[:zone_servers][ms.my_zone] ||= []                                # Initialize zone servers array
         @server_options[:zone_servers][ms.my_zone].push(ms.id)                                # Add server to the zone
       end
     end
@@ -946,33 +946,33 @@ class ApplicationController < ActionController::Base
     @server_options[:ipaddress] = ""
   end
 
-  #Gather information for the report accordians
-  def build_report_listnav(tree_type="reports",tree="listnav",mode="menu")
-    #checking to see if group (used to be role) was selected in menu editor tree, or came in from reports/timeline tree calls
+  # Gather information for the report accordians
+  def build_report_listnav(tree_type = "reports", tree = "listnav", mode = "menu")
+    # checking to see if group (used to be role) was selected in menu editor tree, or came in from reports/timeline tree calls
     group = !session[:role_choice].blank? ? MiqGroup.find_by_description(session[:role_choice]) : current_group
-    @sb[:rpt_menu] = get_reports_menu(group,tree_type,mode)
+    @sb[:rpt_menu] = get_reports_menu(group, tree_type, mode)
     if tree == "listnav"
       if tree_type == "timeline"
-        build_timeline_tree(@sb[:rpt_menu],tree_type)
+        build_timeline_tree(@sb[:rpt_menu], tree_type)
       else
-        build_reports_tree(:reports,:reports_tree)
+        build_reports_tree(:reports, :reports_tree)
       end
     else
-      build_menu_tree(@sb[:rpt_menu],tree_type)
+      build_menu_tree(@sb[:rpt_menu], tree_type)
     end
   end
 
   def get_reports_menu(group = current_group, tree_type = "reports", mode = "menu")
-    rptmenu = Array.new
-    reports = Array.new
-    folders = Array.new
+    rptmenu = []
+    reports = []
+    folders = []
     user = current_user
     @sb[:grp_title] = user.admin_user? ?
       "#{current_tenant.name} (#{_("All %s") % ui_lookup(:models => "MiqGroup")})" :
       "#{current_tenant.name} (#{_("%s") % "#{ui_lookup(:model => "MiqGroup")}: #{user.current_group.description}"})"
-    @data = Array.new
+    @data = []
     if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
-      #array of all reports if menu not configured
+      # array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
         @data = @rep.reject { |r| r.timeline.nil? }
@@ -982,45 +982,45 @@ class ApplicationController < ActionController::Base
         end
       end
       @data.each do |r|
-        next if r.template_type != "report" && ! r.template_type.blank?
+        next if r.template_type != "report" && !r.template_type.blank?
         r_group = r.rpt_group == "Custom" ? "#{@sb[:grp_title]} - Custom" : r.rpt_group # Get the report group
         title = r_group.split('-').collect(&:strip)
         if @temp_title != title[0]
           @temp_title = title[0]
-          reports = Array.new
-          folders = Array.new
+          reports = []
+          folders = []
         end
 
         if title[1].nil?
           if title[0] == @temp_title
             reports.push(r.name) unless reports.include?(r.name)
-            rptmenu.push([title[0],reports]) unless rptmenu.include?([title[0],reports])
+            rptmenu.push([title[0], reports]) unless rptmenu.include?([title[0], reports])
           end
         else
           if @temp_title1 != title[1]
-            reports = Array.new
+            reports = []
             @temp_title1 = title[1]
           end
-          rptmenu.push([title[0],folders]) unless rptmenu.include?([title[0],folders])
+          rptmenu.push([title[0], folders]) unless rptmenu.include?([title[0], folders])
           if user.admin_user?
-            #for admin user show all the reports
+            # for admin user show all the reports
             reports.push(r.name) unless reports.include?(r.name)
           else
-            #for non admin users, only show custom reports for their group
+            # for non admin users, only show custom reports for their group
             if title[1] == "Custom"
               reports.push(r.name) if !reports.include?(r.name) && (r.miq_group && user.current_group.id == r.miq_group.id)
             else
               reports.push(r.name) unless reports.include?(r.name)
             end
           end
-          folders.push([title[1],reports]) unless folders.include?([title[1],reports])
+          folders.push([title[1], reports]) unless folders.include?([title[1], reports])
         end
       end
     else
       # Building custom reports array for super_admin/admin roles, it doesnt show up on menu if their menu was set which didnt contain custom folder in it
-      temp = Array.new
-      subfolder = %w{ Custom }
-      @custom_folder = [ @sb[:grp_title] ]
+      temp = []
+      subfolder = %w( Custom )
+      @custom_folder = [@sb[:grp_title]]
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
 
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
@@ -1033,17 +1033,17 @@ class ApplicationController < ActionController::Base
       if tree_type == "timeline"
         temp2 = []
         group.settings[:report_menus].each do |menu|
-          folder_arr = Array.new
+          folder_arr = []
           menu_name = menu[0]
-          menu[1].each_with_index do |reports,i|
-            reports_arr = Array.new
+          menu[1].each_with_index do |reports, _i|
+            reports_arr = []
             folder_name = reports[0]
             reports[1].each do |rpt|
               r = MiqReport.find_by_name(rpt)
-              if r && r.timeline != nil
-                temp2.push([menu_name,folder_arr]) unless temp2.include?([menu_name,folder_arr])
+              if r && !r.timeline.nil?
+                temp2.push([menu_name, folder_arr]) unless temp2.include?([menu_name, folder_arr])
                 reports_arr.push(rpt) unless reports_arr.include?(rpt)
-                folder_arr.push([folder_name,reports_arr]) unless folder_arr.include?([folder_name,reports_arr])
+                folder_arr.push([folder_name, reports_arr]) unless folder_arr.include?([folder_name, reports_arr])
               end
             end
           end
@@ -1053,21 +1053,21 @@ class ApplicationController < ActionController::Base
       end
       rptmenu = temp.concat(temp2)
     end
-    #move Customs folder as last item in tree
+    # move Customs folder as last item in tree
     rptmenu[0].each do |r|
       if r.class == String && r == @sb[:grp_title]
         @custom_folder = copy_array(rptmenu[0]) if @custom_folder.nil?
-        #Keeping My Company Reports folder on top of the menu tree only if user is on edit tab, else delete it from tree
-        #only add custom folder if it has any reports
-        rptmenu.push(rptmenu[0]) if !rptmenu[0][1][0][1].empty?
+        # Keeping My Company Reports folder on top of the menu tree only if user is on edit tab, else delete it from tree
+        # only add custom folder if it has any reports
+        rptmenu.push(rptmenu[0]) unless rptmenu[0][1][0][1].empty?
         rptmenu.delete_at(0)
       end
     end
-    return rptmenu
+    rptmenu
   end
 
   # Render the view data to xml for the grid view
-  def view_to_xml(view, from_idx = 0, to_idx = -1, options = {})
+  def view_to_xml(view, from_idx = 0, to_idx = -1, _options = {})
     # Get the time zone in effect for this view
     tz = (view.db.downcase == 'miqschedule') ? server_timezone : Time.zone
 
@@ -1089,7 +1089,7 @@ class ApplicationController < ActionController::Base
     end
 
     cols_key = create_cols_key(view)
-    view.headers.each_with_index do |h,i|
+    view.headers.each_with_index do |h, i|
       col_width = 900 / view.headers.length # Set default column width
       col_width = 100 if h.downcase == 'cost' && view.db.to_s == 'ServiceTemplate'
 
@@ -1158,7 +1158,7 @@ class ApplicationController < ActionController::Base
 
     # Use write method with -1 so the xml string is not indented
     xml.write(xml_str = '', -1)
-    return xml_str
+    xml_str
   end
 
   # Create a hash key to store a views column widths
@@ -1233,7 +1233,7 @@ class ApplicationController < ActionController::Base
   def add_flash(msg, level = :success, reset = false)
     @flash_array = [] if reset
     @flash_array ||= []
-    @flash_array.push({:message => msg, :level => level})
+    @flash_array.push(:message => msg, :level => level)
 
     case level
     when :error
@@ -1249,7 +1249,7 @@ class ApplicationController < ActionController::Base
   helper_method(:flash_errors?)
 
   # Handle the breadcrumb array by either adding, or resetting to, the passed in breadcrumb
-  def drop_breadcrumb(new_bc, onlyreplace=false) # if replace = true, only add this bc if it was already there
+  def drop_breadcrumb(new_bc, onlyreplace = false) # if replace = true, only add this bc if it was already there
     # if the breadcrumb is in the array, remove it and all below by counting how many to pop
     return if skip_breadcrumb?
     remove = 0
@@ -1258,13 +1258,13 @@ class ApplicationController < ActionController::Base
         remove += 1       #   increment pop counter
       else
         # Check for a name match BEFORE the first left paren "(" or a url match BEFORE the last slash "/"
-        if bc[:name].to_s.gsub(/\(.*/,"").rstrip == new_bc[:name].to_s.gsub(/\(.*/,"").rstrip ||
-            bc[:url].to_s.gsub(/\/.?$/,"") == new_bc[:url].to_s.gsub(/\/.?$/,"")
+        if bc[:name].to_s.gsub(/\(.*/, "").rstrip == new_bc[:name].to_s.gsub(/\(.*/, "").rstrip ||
+           bc[:url].to_s.gsub(/\/.?$/, "") == new_bc[:url].to_s.gsub(/\/.?$/, "")
           remove = 1
         end
       end
     end
-    remove.times {@breadcrumbs.pop} # remove found element and any lower elements
+    remove.times { @breadcrumbs.pop } # remove found element and any lower elements
     if onlyreplace                                              # if replacing,
       @breadcrumbs.push(new_bc) if remove > 0 # only add it if something was removed
     else
@@ -1377,7 +1377,7 @@ class ApplicationController < ActionController::Base
 
   # get the sort column that was clicked on, else use the current one
   def get_sort_col
-    unless params[:sortby] == nil
+    unless params[:sortby].nil?
       if @sortcol == params[:sortby].to_i                       # if same column was selected
         @sortdir = flip_sort_direction(@sortdir)
       else
@@ -1386,16 +1386,16 @@ class ApplicationController < ActionController::Base
       @sortcol = params[:sortby].to_i
     end
     # in case sort column is not set, set the defaults
-    if @sortcol == nil
+    if @sortcol.nil?
       @sortcol = 0
       @sortdir = "ASC"
     end
-    return @sortcol
+    @sortcol
   end
 
   # set up info for the _config partial
   def set_config(db_record) # pass in the db record, either @host or @vm
-    @devices = Array.new    # This will be an array of hashes to allow the rhtml to pull out each device field by name
+    @devices = []    # This will be an array of hashes to allow the rhtml to pull out each device field by name
     unless db_record.hardware.nil?
       db_notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
 
@@ -1423,7 +1423,7 @@ class ApplicationController < ActionController::Base
                     :icon        => "memory") if db_record.hardware.memory_cpu
 
       # Add disks to the device array
-      if !db_record.hardware.disks.nil?
+      unless db_record.hardware.disks.nil?
         db_record.hardware.disks.each do |disk|
           loc = disk.location.nil? ? "" : disk.location
           dev = disk.controller_type ? disk.controller_type << " " << loc : ""  # default device is controller_type
@@ -1448,23 +1448,23 @@ class ApplicationController < ActionController::Base
               dev = "Hard Disk (SCSI " << loc << ")"
               icon = "scsi"
             end
-            dev << ", Size: " + number_to_human_size(disk.size,:precision=>2) if disk.size != nil
-            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk,:precision=>2) if disk.size_on_disk != nil
-            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" if disk.used_percent_of_provisioned != nil
-            desc << ", Mode: " + disk.mode if disk.mode != nil
+            dev << ", Size: " + number_to_human_size(disk.size, :precision => 2) unless disk.size.nil?
+            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk, :precision => 2) unless disk.size_on_disk.nil?
+            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" unless disk.used_percent_of_provisioned.nil?
+            desc << ", Mode: " + disk.mode unless disk.mode.nil?
           elsif disk.device_type == "ide"
             dev = "Hard Disk (IDE " << loc << ")"
-            dev << ", Size: " + number_to_human_size(disk.size,:precision=>2) if disk.size != nil
-            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk,:precision=>2) if disk.size_on_disk != nil
-            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" if disk.used_percent_of_provisioned != nil
-            desc << ", Mode: " + disk.mode if disk.mode != nil
+            dev << ", Size: " + number_to_human_size(disk.size, :precision => 2) unless disk.size.nil?
+            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk, :precision => 2) unless disk.size_on_disk.nil?
+            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" unless disk.used_percent_of_provisioned.nil?
+            desc << ", Mode: " + disk.mode unless disk.mode.nil?
             icon = "disk"
           elsif ["scsi", "scsi-hardDisk"].include?(disk.device_type)
             dev = "Hard Disk (SCSI " << loc << ")"
-            dev << ", Size: " + number_to_human_size(disk.size,:precision=>2) if disk.size != nil
-            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk,:precision=>2) if disk.size_on_disk != nil
-            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" if disk.used_percent_of_provisioned != nil
-            desc << ", Mode: " + disk.mode if disk.mode != nil
+            dev << ", Size: " + number_to_human_size(disk.size, :precision => 2) unless disk.size.nil?
+            dev << ", Size on disk: " + number_to_human_size(disk.size_on_disk, :precision => 2) unless disk.size_on_disk.nil?
+            dev << ", Percent Used Provisioned Space: " + disk.used_percent_of_provisioned.to_s + "%" unless disk.used_percent_of_provisioned.nil?
+            desc << ", Mode: " + disk.mode unless disk.mode.nil?
             icon = "scsi"
           elsif disk.device_type == "scsi-passthru"
             dev = "Generic SCSI (" << loc << ")"
@@ -1477,14 +1477,14 @@ class ApplicationController < ActionController::Base
           dev = dev[0..0].upcase + dev[1..-1]
           desc = desc.nil? ? "" : desc[0..0].upcase + desc[1..-1].to_s
 
-          @devices.push({ :device => dev,
-                          :description => desc,
-                          :icon => icon })
+          @devices.push(:device      => dev,
+                        :description => desc,
+                        :icon        => icon)
         end
       end
 
       # Add ports to the device array
-      if !db_record.hardware.ports.nil?
+      unless db_record.hardware.ports.nil?
         db_record.hardware.ports.each do |port|
           loc = port.location.nil? ? "" : port.location
           loc = loc.strip == "0" ? "" : loc.next
@@ -1499,97 +1499,74 @@ class ApplicationController < ActionController::Base
           # uppercase the first character of the device name and description
           dev = dev[0..0].upcase + dev[1..-1]
           desc = desc[0..0].upcase + desc[1..-1] if desc.length > 0
-          @devices.push({ :device => dev,
-                          :description => desc,
-                          :icon => icon })
+          @devices.push(:device      => dev,
+                        :description => desc,
+                        :icon        => icon)
         end
       end
     end
 
     unless db_record.operating_system.nil?
-      @osinfo = Array.new   # This will be an array of hashes to allow the rhtml to pull out each field by name
-      @account_policy = Array.new   # This will be an array of hashes to allow the rhtml to pull out each field by name for account policy
+      @osinfo = []   # This will be an array of hashes to allow the rhtml to pull out each field by name
+      @account_policy = []   # This will be an array of hashes to allow the rhtml to pull out each field by name for account policy
       # add OS entry to the array
-      @osinfo.push({  :osinfo => "Operating System",
-                            :description => db_record.operating_system.product_name
-                        }) unless db_record.operating_system.product_name.nil?
-      @osinfo.push({  :osinfo => "Service Pack",
-                            :description => db_record.operating_system.service_pack
-                        }) unless db_record.operating_system.service_pack.nil?
-      @osinfo.push({  :osinfo => "Product ID",
-                            :description => db_record.operating_system.productid
-                        }) unless db_record.operating_system.productid.nil?
-      @osinfo.push({  :osinfo => "Version",
-                            :description => db_record.operating_system.version
-                        }) unless db_record.operating_system.version.nil?
-      @osinfo.push({  :osinfo => "Build Number",
-                            :description => db_record.operating_system.build_number
-                        }) unless db_record.operating_system.build_number.nil?
-      @osinfo.push({  :osinfo => "System Type",
-                            :description => db_record.operating_system.bitness.to_s + "-bit OS"
-                        }) unless db_record.operating_system.bitness.nil?
-      @account_policy.push({ :field => "Password History",
-                              :description => db_record.operating_system.pw_hist
-                            }) unless db_record.operating_system.pw_hist.nil?
-      @account_policy.push({ :field => "Max Password Age",
-                              :description => db_record.operating_system.max_pw_age
-                            }) unless db_record.operating_system.max_pw_age.nil?
-      @account_policy.push({ :field => "Min Password Age",
-                              :description => db_record.operating_system.min_pw_age
-                            }) unless db_record.operating_system.min_pw_age.nil?
-      @account_policy.push({ :field => "Min Password Length",
-                              :description => db_record.operating_system.min_pw_len
-                            }) unless db_record.operating_system.min_pw_len.nil?
-      @account_policy.push({ :field => "Password Complex",
-                              :description => db_record.operating_system.pw_complex
-                            }) unless db_record.operating_system.pw_complex.nil?
-      @account_policy.push({ :field => "Password Encrypt",
-                              :description => db_record.operating_system.pw_encrypt
-                            }) unless db_record.operating_system.pw_encrypt.nil?
-      @account_policy.push({ :field => "Lockout Threshold",
-                              :description => db_record.operating_system.lockout_threshold
-                            }) unless db_record.operating_system.lockout_threshold.nil?
-      @account_policy.push({ :field => "Lockout Duration",
-                              :description => db_record.operating_system.lockout_duration
-                            }) unless db_record.operating_system.lockout_duration.nil?
-      @account_policy.push({ :field => "Reset Lockout Counter",
-                              :description => db_record.operating_system.reset_lockout_counter
-                            }) unless db_record.operating_system.reset_lockout_counter.nil?
-      end
+      @osinfo.push(:osinfo      => "Operating System",
+                   :description => db_record.operating_system.product_name) unless db_record.operating_system.product_name.nil?
+      @osinfo.push(:osinfo      => "Service Pack",
+                   :description => db_record.operating_system.service_pack) unless db_record.operating_system.service_pack.nil?
+      @osinfo.push(:osinfo      => "Product ID",
+                   :description => db_record.operating_system.productid) unless db_record.operating_system.productid.nil?
+      @osinfo.push(:osinfo      => "Version",
+                   :description => db_record.operating_system.version) unless db_record.operating_system.version.nil?
+      @osinfo.push(:osinfo      => "Build Number",
+                   :description => db_record.operating_system.build_number) unless db_record.operating_system.build_number.nil?
+      @osinfo.push(:osinfo      => "System Type",
+                   :description => db_record.operating_system.bitness.to_s + "-bit OS") unless db_record.operating_system.bitness.nil?
+      @account_policy.push(:field       => "Password History",
+                           :description => db_record.operating_system.pw_hist) unless db_record.operating_system.pw_hist.nil?
+      @account_policy.push(:field       => "Max Password Age",
+                           :description => db_record.operating_system.max_pw_age) unless db_record.operating_system.max_pw_age.nil?
+      @account_policy.push(:field       => "Min Password Age",
+                           :description => db_record.operating_system.min_pw_age) unless db_record.operating_system.min_pw_age.nil?
+      @account_policy.push(:field       => "Min Password Length",
+                           :description => db_record.operating_system.min_pw_len) unless db_record.operating_system.min_pw_len.nil?
+      @account_policy.push(:field       => "Password Complex",
+                           :description => db_record.operating_system.pw_complex) unless db_record.operating_system.pw_complex.nil?
+      @account_policy.push(:field       => "Password Encrypt",
+                           :description => db_record.operating_system.pw_encrypt) unless db_record.operating_system.pw_encrypt.nil?
+      @account_policy.push(:field       => "Lockout Threshold",
+                           :description => db_record.operating_system.lockout_threshold) unless db_record.operating_system.lockout_threshold.nil?
+      @account_policy.push(:field       => "Lockout Duration",
+                           :description => db_record.operating_system.lockout_duration) unless db_record.operating_system.lockout_duration.nil?
+      @account_policy.push(:field       => "Reset Lockout Counter",
+                           :description => db_record.operating_system.reset_lockout_counter) unless db_record.operating_system.reset_lockout_counter.nil?
+    end
     if db_record.respond_to?("vmm_vendor") # For Host table, this will pull the VMM fields
-      @vmminfo = Array.new    # This will be an array of hashes to allow the rhtml to pull out each field by name
+      @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
-      @vmminfo.push({:vmminfo => "Vendor",
-                              :description => db_record.vmm_vendor
-                          }) unless db_record.vmm_vendor.nil?
-      @vmminfo.push({:vmminfo => "Product",
-                              :description => db_record.vmm_product
-                          }) unless db_record.vmm_product.nil?
-      @vmminfo.push({:vmminfo => "Version",
-                              :description => db_record.vmm_version
-                          }) unless db_record.vmm_version.nil?
-      @vmminfo.push({:vmminfo => "Build Number",
-                             :description => db_record.vmm_buildnumber
-                            }) unless db_record.vmm_buildnumber.nil?
+      @vmminfo.push(:vmminfo     => "Vendor",
+                    :description => db_record.vmm_vendor) unless db_record.vmm_vendor.nil?
+      @vmminfo.push(:vmminfo     => "Product",
+                    :description => db_record.vmm_product) unless db_record.vmm_product.nil?
+      @vmminfo.push(:vmminfo     => "Version",
+                    :description => db_record.vmm_version) unless db_record.vmm_version.nil?
+      @vmminfo.push(:vmminfo     => "Build Number",
+                    :description => db_record.vmm_buildnumber) unless db_record.vmm_buildnumber.nil?
     end
 
     if db_record.respond_to?("vendor") # For Vm table, this will pull the vendor and notes fields
-      @vmminfo = Array.new    # This will be an array of hashes to allow the rhtml to pull out each field by name
+      @vmminfo = []    # This will be an array of hashes to allow the rhtml to pull out each field by name
 
-      @vmminfo.push({:vmminfo => "Vendor",
-                              :description => db_record.vendor
-                          }) unless db_record.vendor.nil?
-      @vmminfo.push({:vmminfo => "Format",
-                              :description => db_record.format
-                          }) unless db_record.format.nil?
-      @vmminfo.push({:vmminfo => "Version",
-                              :description => db_record.version
-                          }) unless db_record.version.nil?
+      @vmminfo.push(:vmminfo     => "Vendor",
+                    :description => db_record.vendor) unless db_record.vendor.nil?
+      @vmminfo.push(:vmminfo     => "Format",
+                    :description => db_record.format) unless db_record.format.nil?
+      @vmminfo.push(:vmminfo     => "Version",
+                    :description => db_record.version) unless db_record.version.nil?
       unless db_record.hardware.nil?
         notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
-        @vmminfo.push({:vmminfo => "Notes",
-                                :description => notes
-                              })
+        @vmminfo.push(:vmminfo     => "Notes",
+                      :description => notes)
       end
     end
   end # set_config
@@ -1597,14 +1574,14 @@ class ApplicationController < ActionController::Base
   # Common routine to find checked items on a page (checkbox ids are "check_xxx" where xxx is the item id or index)
   def find_checked_items(prefix = nil)
     unless params[:miq_grid_checks].blank?
-      return params[:miq_grid_checks].split(",").collect{|c| from_cid(c)}
+      return params[:miq_grid_checks].split(",").collect { |c| from_cid(c) }
     else
-      prefix = "check" if prefix == nil
-      items = Array.new
+      prefix = "check" if prefix.nil?
+      items = []
       params.each do |var, val|
         vars = var.to_s.split("_")
-        if vars[0]==prefix && val=="1"
-          ids = vars[1..-1].collect{|v| v = from_cid(v)}  # Decompress any compressed ids
+        if vars[0] == prefix && val == "1"
+          ids = vars[1..-1].collect { |v| v = from_cid(v) }  # Decompress any compressed ids
           items.push(ids.join("_"))
         end
       end
@@ -1620,7 +1597,7 @@ class ApplicationController < ActionController::Base
       id = rep.id
       rep_name = rep.name
       if task == "destroy"
-        audit = {:event=>"rep_record_delete", :message=>"[#{rep_name}] Record deleted", :target_id=>id, :target_class=>"MiqReportResult", :userid => session[:userid]}
+        audit = {:event => "rep_record_delete", :message => "[#{rep_name}] Record deleted", :target_id => id, :target_class => "MiqReportResult", :userid => session[:userid]}
       end
       begin
         rep.public_send(task.to_sym) if rep.respond_to?(task)    # Run the task
@@ -1631,15 +1608,15 @@ class ApplicationController < ActionController::Base
           AuditEvent.success(audit)
           success_count += 1
         else
-          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record=>rep_name, :task=>task})
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => rep_name, :task => task})
         end
       end
     end
     if success_count > 0
-      add_flash(_("Successfully deleted %s from the CFME Database") % pluralize(success_count,"Saved Report"))
+      add_flash(_("Successfully deleted %s from the CFME Database") % pluralize(success_count, "Saved Report"))
     end
     if failure_count > 0
-      add_flash(_("Error during %s delete from the CFME Database") % pluralize(failure_count,"Saved Report"))
+      add_flash(_("Error during %s delete from the CFME Database") % pluralize(failure_count, "Saved Report"))
     end
   end
 
@@ -1663,7 +1640,7 @@ class ApplicationController < ActionController::Base
   end
 
   def minify_ar_object(object)
-    { :class => object.class.name, :id => object.id }
+    {:class => object.class.name, :id => object.id}
   end
 
   def get_view_calculate_gtl_type(db_sym)
@@ -1678,7 +1655,7 @@ class ApplicationController < ActionController::Base
     # Check for new search by name text entered
     if params[:search] &&
        # Disabled search for Storage CIs until backend is fixed to handle evm_display_name field
-       !["CimBaseStorageExtent","OntapStorageSystem","OntapLogicalDisk","OntapStorageVolume","OntapFileShare","SniaLocalFileSystem"].include?(view.db)
+       !["CimBaseStorageExtent", "OntapStorageSystem", "OntapLogicalDisk", "OntapStorageVolume", "OntapFileShare", "SniaLocalFileSystem"].include?(view.db)
       @search_text = params[:search][:text].blank? ? nil : params[:search][:text].strip
     elsif params[:search_text] && @explorer
       @search_text = params[:search_text].blank? ? nil : params[:search_text].strip
@@ -1706,8 +1683,8 @@ class ApplicationController < ActionController::Base
       if MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :case_sensitive_name_search)
         sub_filter = ["#{view.db_class.table_name}.#{view.col_order.first} like ? escape '`'", stxt]
       else
-        #don't apply sub_filter when viewing sub-list view of a CI
-        sub_filter = ["lower(#{view.db_class.table_name}.#{view.col_order.first}) like ? escape '`'", stxt.downcase] if !@display
+        # don't apply sub_filter when viewing sub-list view of a CI
+        sub_filter = ["lower(#{view.db_class.table_name}.#{view.col_order.first}) like ? escape '`'", stxt.downcase] unless @display
       end
     end
     sub_filter
@@ -1727,13 +1704,13 @@ class ApplicationController < ActionController::Base
     refresh_view = false
 
     # Determine if the view should be refreshed or use the existing view
-    unless session[:view] &&                          # A view exists and
-            session[:view].db.downcase == dbname &&   # the DB matches and
-            params[:refresh] != "y" &&                # refresh not being forced and
-            (
-              params[:ppsetting] || params[:page] ||  # changed paging or
-              params[:type]                           # gtl type
-            )
+    unless session[:view] && # A view exists and
+           session[:view].db.downcase == dbname && # the DB matches and
+           params[:refresh] != "y" && # refresh not being forced and
+           (
+             params[:ppsetting] || params[:page] || # changed paging or
+             params[:type]                           # gtl type
+           )
       refresh_view = true
       session[:menu_click] = params[:menu_click]      # Creating a new view, remember if came from a menu_click
       session[:bc]         = params[:bc]              # Remember incoming breadcrumb as well
@@ -1744,13 +1721,13 @@ class ApplicationController < ActionController::Base
        (action_name == "show_list" && !session[:menu_click])
       adv_search_build(db)
     end
-    if @edit && !@edit[:selected] &&                  # Load default search if search @edit hash exists
+    if @edit && !@edit[:selected] && # Load default search if search @edit hash exists
        @settings.fetch_path(:default_search, db.to_sym) # and item in listnav not selected
       load_default_search(@settings[:default_search][db.to_sym])
     end
 
     parent      = options[:parent] || nil             # Get passed in parent object
-    @parent     = parent if parent != nil             # Save the parent object for the views to use
+    @parent     = parent unless parent.nil?             # Save the parent object for the views to use
     association = options[:association] || nil        # Get passed in association (i.e. "users")
     view_suffix = options[:view_suffix] || nil        # Get passed in view_suffix (i.e. "VmReconfigureRequest")
 
@@ -1826,7 +1803,7 @@ class ApplicationController < ActionController::Base
 
     # Set up the grid variables for list view, with exception models below
     if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
-      !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
+       !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
       @grid_xml = view_to_xml(view, 0, -1, :association => association)
     end
 
@@ -1844,15 +1821,15 @@ class ApplicationController < ActionController::Base
       data_idx      = menu_click_last[-2].to_i - 1
       chart_idx     = menu_click_last.last.to_i
       _, model, typ = menu_click_parts.first.split('-')
-      report        = chart_reports.is_a?(Array) ? chart_reports[chart_idx] : chart_reports
+      report        = chart_reports.kind_of?(Array) ? chart_reports[chart_idx] : chart_reports
       data_row      = report.table.data[data_idx]
 
       if typ == "bytag"
         ["\"#{model.downcase.pluralize}\".id IN (?)",
-          data_row["assoc_ids_#{report.extras[:group_by_tags][legend_idx]}"][model.downcase.to_sym][:on]]
+         data_row["assoc_ids_#{report.extras[:group_by_tags][legend_idx]}"][model.downcase.to_sym][:on]]
       else
         ["\"#{model.downcase.pluralize}\".id IN (?)",
-          data_row["assoc_ids"][model.downcase.to_sym][typ.to_sym]]
+         data_row["assoc_ids"][model.downcase.to_sym][typ.to_sym]]
       end
     elsif options[:where_clause]
       options[:where_clause]
@@ -1901,16 +1878,16 @@ class ApplicationController < ActionController::Base
   # This routine is called recursively (passes in the include hash)
   def make_include_string(include)
     rt_string = "{"                                                 # Add the :include prefix
-    include.keys.each_with_index do |table,idx|                               # Go thru all of the tables in the include
+    include.keys.each_with_index do |table, idx|                               # Go thru all of the tables in the include
       rt_string << "," if idx > 0                                             # Need a comma for second and higher tables
       rt_string << "'" + table << "'" << "=>{"                                # Add the :only prefix
-      if include[table]["columns"] != nil                                     # If there are columns
+      unless include[table]["columns"].nil?                                     # If there are columns
         rt_string << ":only=>["                                               # Add the :only prefix
-        rt_string << include[table]["columns"].dup.collect!{|col| "'" << col << "'"}.join(",")  # Get all the column name strings
+        rt_string << include[table]["columns"].dup.collect! { |col| "'" << col << "'" }.join(",")  # Get all the column name strings
         rt_string << "]"                                                      # Add final bracket for the cols array
       end
-      if include[table]["include"] != nil
-        rt_string << "," if include[table]["columns"] != nil
+      unless include[table]["include"].nil?
+        rt_string << "," unless include[table]["columns"].nil?
         rt_string << make_include_string(include[table]["include"])           # Check for an embedded include
       end
       rt_string << "}"                                                        # Add final bracket for the table hash
@@ -1918,7 +1895,7 @@ class ApplicationController < ActionController::Base
     rt_string << "}"                                                          # Add final bracket for the include hash
   end
 
-  def get_db_view(db, options={})
+  def get_db_view(db, options = {})
     view_yaml = view_yaml_filename(db, options)
     view      = MiqReport.new(get_db_view_yaml(view_yaml))
     view.db   = db if view_yaml.ends_with?("Vm__restricted.yaml")
@@ -1971,7 +1948,7 @@ class ApplicationController < ActionController::Base
 
   def render_or_redirect_partial(pfx)
     if @redirect_controller
-      if ["#{pfx}_clone","#{pfx}_migrate","#{pfx}_publish"].include?(params[:pressed])
+      if ["#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
         render :update do |page|
           if flash_errors?
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -2002,23 +1979,23 @@ class ApplicationController < ActionController::Base
   end
 
   # RJS code to show tag box effects and replace the main list view area
-  def replace_gtl_main_div(options={})
+  def replace_gtl_main_div(options = {})
     action_url = options[:action_url] || @lastaction
     return if params[:action] == "button" && @lastaction == "show"
     render :update do |page|                        # Use RJS to update the display
-#     page.visual_effect(:blind_up,"tag_box_div") if session[:applied_tags] != nil && @applied_tags == nil      # Hide div if removing all tags
-#     page.replace_html("tag_box_div", :partial=>"layouts/tag_box")                                             # Replace the tag box contents
-#     page.visual_effect(:blind_down, "tag_box_div")  if session[:applied_tags] == nil && @applied_tags != nil  # Show div if not shown already
-      page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")           # Replace the flash message
+      #     page.visual_effect(:blind_up,"tag_box_div") if session[:applied_tags] != nil && @applied_tags == nil      # Hide div if removing all tags
+      #     page.replace_html("tag_box_div", :partial=>"layouts/tag_box")                                             # Replace the tag box contents
+      #     page.visual_effect(:blind_down, "tag_box_div")  if session[:applied_tags] == nil && @applied_tags != nil  # Show div if not shown already
+      page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
       page << "if (ManageIQ.toolbars !== null){"; # Make sure toolbars exist on the screen before resetting buttons
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
-      page << "}";
-      if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
-        %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
-           miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export
-           miq_policy_logs miq_request_ae miq_request_configured_system miq_request_host
-           miq_request_vm my_tasks my_ui_tasks report rss server_build).include?(@layout))
-        page.replace(:listnav_div, :partial=>"layouts/listnav")               # Replace accordion, if list_nav_div is there
+      page << "}"
+      unless @layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(@controller.action_name) ||
+             %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
+                miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export
+                miq_policy_logs miq_request_ae miq_request_configured_system miq_request_host
+                miq_request_vm my_tasks my_ui_tasks report rss server_build).include?(@layout)
+        page.replace(:listnav_div, :partial => "layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_xml                                  # Replacing a grid
         page << "xml = \"#{j_str(@grid_xml)}\";"            # Set the XML data
@@ -2029,10 +2006,10 @@ class ApplicationController < ActionController::Base
           page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
         end
         page << "miqGridOnCheck(null, null, null);" # Reset the center buttons
-        page.replace("pc_div_1", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>action_url, :db=>@view.db, :headers=>@view.headers})
-        page.replace("pc_div_2", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>action_url})
+        page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url, :db => @view.db, :headers => @view.headers})
+        page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => action_url})
       else                                          # No grid, replace the gtl div
-        page.replace_html("main_div", :partial=>"layouts/gtl")                                                  # Replace the main div area contents
+        page.replace_html("main_div", :partial => "layouts/gtl")                                                  # Replace the main div area contents
         page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
     end
@@ -2041,24 +2018,24 @@ class ApplicationController < ActionController::Base
   # Build the audit object when a record is created, including all of the new fields
   #   params - rec = db record, eh = edit hash containing new values
   def build_created_audit(rec, eh)
-    { :event        => "#{rec.class.to_s.downcase}_record_add",
-      :target_id    => rec.id,
-      :target_class => rec.class.base_class.name,
-      :userid       => session[:userid],
-      :message      => build_audit_msg(eh[:new], nil,
-                                  "[#{eh[:new][:name]}] Record created")
+    {:event        => "#{rec.class.to_s.downcase}_record_add",
+     :target_id    => rec.id,
+     :target_class => rec.class.base_class.name,
+     :userid       => session[:userid],
+     :message      => build_audit_msg(eh[:new], nil,
+                                      "[#{eh[:new][:name]}] Record created")
     }
   end
 
   # Build the audit object when a record is saved, including all of the changed fields
   #   params - rec = db record, eh = edit hash containing current and new values
   def build_saved_audit(rec, eh)
-    { :event        => "#{rec.class.to_s.downcase}_record_update",
-      :target_id    => rec.id,
-      :target_class => rec.class.base_class.name,
-      :userid       => session[:userid],
-      :message      => build_audit_msg(eh[:new], eh[:current],
-        "[#{eh[:new][:name] ? eh[:new][:name] : rec[:name]}] Record updated")
+    {:event        => "#{rec.class.to_s.downcase}_record_update",
+     :target_id    => rec.id,
+     :target_class => rec.class.base_class.name,
+     :userid       => session[:userid],
+     :message      => build_audit_msg(eh[:new], eh[:current],
+                                      "[#{eh[:new][:name] ? eh[:new][:name] : rec[:name]}] Record updated")
     }
   end
 
@@ -2088,7 +2065,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def prov_redirect(typ=nil)
+  def prov_redirect(typ = nil)
     assert_privileges(params[:pressed])
     # we need to do this check before doing anything to prevent
     # history being updated
@@ -2108,7 +2085,7 @@ class ApplicationController < ActionController::Base
         @prov_id = find_checked_items.map(&:to_i).uniq
         res = Host.ready_for_provisioning?(@prov_id)
         if res != true
-          res.each do |field,msg|
+          res.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           @redirect_controller = "host"
@@ -2116,7 +2093,7 @@ class ApplicationController < ActionController::Base
         end
       end
     else
-      @org_controller = "vm"                                      #request originated from controller
+      @org_controller = "vm"                                      # request originated from controller
       @refresh_partial = typ ? "prov_edit" : "pre_prov"
     end
     if typ
@@ -2145,21 +2122,21 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  alias image_miq_request_new prov_redirect
-  alias instance_miq_request_new prov_redirect
-  alias vm_miq_request_new prov_redirect
+  alias_method :image_miq_request_new, :prov_redirect
+  alias_method :instance_miq_request_new, :prov_redirect
+  alias_method :vm_miq_request_new, :prov_redirect
 
   def vm_clone
     prov_redirect("clone")
   end
-  alias image_clone vm_clone
-  alias instance_clone vm_clone
-  alias miq_template_clone vm_clone
+  alias_method :image_clone, :vm_clone
+  alias_method :instance_clone, :vm_clone
+  alias_method :miq_template_clone, :vm_clone
 
   def vm_migrate
     prov_redirect("migrate")
   end
-  alias miq_template_migrate vm_migrate
+  alias_method :miq_template_migrate, :vm_migrate
 
   def vm_publish
     prov_redirect("publish")
@@ -2171,16 +2148,16 @@ class ApplicationController < ActionController::Base
 
     # Get/init sandbox (@sb) per controller in the session object
     session[:sandboxes] ||= HashWithIndifferentAccess.new
-    @sb = session[:sandboxes][controller_name].blank? ? Hash.new : copy_hash(session[:sandboxes][controller_name])
+    @sb = session[:sandboxes][controller_name].blank? ? {} : copy_hash(session[:sandboxes][controller_name])
 
     # Init view sandbox variables
     @current_page = @sb[:current_page]                                              # current page number
     @search_text = @sb[:search_text]                                                # search text
-    @detail_sortcol = @sb[:detail_sortcol] == nil ? 0 : @sb[:detail_sortcol].to_i   # sort column for detail lists
-    @detail_sortdir = @sb[:detail_sortdir] == nil ? "ASC" : @sb[:detail_sortdir]    # sort column for detail lists
+    @detail_sortcol = @sb[:detail_sortcol].nil? ? 0 : @sb[:detail_sortcol].to_i   # sort column for detail lists
+    @detail_sortdir = @sb[:detail_sortdir].nil? ? "ASC" : @sb[:detail_sortdir]    # sort column for detail lists
 
     # Get performance hash, if it is in the sandbox for the running controller
-    @perf_options = @sb[:perf_options] ? copy_hash(@sb[:perf_options]) : Hash.new
+    @perf_options = @sb[:perf_options] ? copy_hash(@sb[:perf_options]) : {}
 
     # Set window width/height for views to use
     @winW = session[:winW] ? session[:winW].to_i : 1330
@@ -2190,13 +2167,13 @@ class ApplicationController < ActionController::Base
     @expkey = session[:expkey] ? session[:expkey] : :expression
 
     # Get server hash, if it is in the session for supported controllers
-    @server_options = session[:server_options] if ["configuration","support"].include?(controller_name)
+    @server_options = session[:server_options] if ["configuration", "support"].include?(controller_name)
 
     # Get timelines hash, if it is in the session for the running controller
     @tl_options = session["#{controller_name}_tl".to_sym]
 
-    session[:host_url] = request.env["HTTP_HOST"]   unless request.env["HTTP_HOST"] == nil
-    session[:tab_url] ||= Hash.new
+    session[:host_url] = request.env["HTTP_HOST"]   unless request.env["HTTP_HOST"].nil?
+    session[:tab_url] ||= {}
 
     unless request.xml_http_request?  # Don't capture ajax URLs
       # Capture current top tab bar URLs as they come in
@@ -2204,7 +2181,7 @@ class ApplicationController < ActionController::Base
         inbound_url = {
           :controller => controller_name,
           :action     => action_name,
-          :id         => nil }
+          :id         => nil}
       else
         inbound_url = {
           :controller  => controller_name,
@@ -2222,18 +2199,18 @@ class ApplicationController < ActionController::Base
 
       # Customize URLs for controllers that don't use breadcrumbs
       case controller_name
-      when "dashboard", "report", "alert","chargeback"
-        session[:tab_url][:vi] = inbound_url if ["show", "show_list", "timeline", "jobs","ui_jobs","usage","chargeback","explorer"].include?(action_name)
+      when "dashboard", "report", "alert", "chargeback"
+        session[:tab_url][:vi] = inbound_url if ["show", "show_list", "timeline", "jobs", "ui_jobs", "usage", "chargeback", "explorer"].include?(action_name)
       when "support"
         session[:tab_url][:set] = inbound_url if ["index"].include?(action_name)
       when "configuration", "miq_task", "ops"
-        session[:tab_url][:set] = inbound_url if ["explorer","index"].include?(action_name)
+        session[:tab_url][:set] = inbound_url if ["explorer", "index"].include?(action_name)
       when "miq_ae_tools", "miq_ae_class", "miq_ae_customization"
-        session[:tab_url][:aut] = inbound_url if ["explorer","resolve","index","explorer","log","import_export","automate_button"].include?(action_name)
+        session[:tab_url][:aut] = inbound_url if ["explorer", "resolve", "index", "explorer", "log", "import_export", "automate_button"].include?(action_name)
       when "miq_policy" # Only grab controller and action for policy URLs
-        session[:tab_url][:con] = {:controller => controller_name, :action => action_name} if ["explorer","rsop","export","log"].include?(action_name)
+        session[:tab_url][:con] = {:controller => controller_name, :action => action_name} if ["explorer", "rsop", "export", "log"].include?(action_name)
       when "miq_capacity"
-        session[:tab_url][:opt] = inbound_url if ["utilization","planning","bottlenecks","waste"].include?(action_name)
+        session[:tab_url][:opt] = inbound_url if ["utilization", "planning", "bottlenecks", "waste"].include?(action_name)
       when "catalog", "vm", "vm_or_template", "miq_template", "service"
         session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "availability_zone", "ems_cloud", "flavor", "security_group", "vm_cloud", "orchestration_stack"
@@ -2254,18 +2231,18 @@ class ApplicationController < ActionController::Base
 
     # Get all of the global variables used by most of the controllers
     @pp_choices = PPCHOICES
-    @panels = session[:panels] == nil ? Hash.new : session[:panels]
-    @breadcrumbs = session[:breadcrumbs] == nil ? Array.new : session[:breadcrumbs]
-    @panels["icon"] = true if @panels["icon"] == nil                # Default icon panels to be open
-    @panels["tag_filters"] = true if @panels["tag_filters"] == nil  # Default tag filters panels to be open
-    @panels["sections"] = true if @panels["sections"] == nil        # Default sections(compare) panel to be open
+    @panels = session[:panels].nil? ? {} : session[:panels]
+    @breadcrumbs = session[:breadcrumbs].nil? ? [] : session[:breadcrumbs]
+    @panels["icon"] = true if @panels["icon"].nil?                # Default icon panels to be open
+    @panels["tag_filters"] = true if @panels["tag_filters"].nil?  # Default tag filters panels to be open
+    @panels["sections"] = true if @panels["sections"].nil?        # Default sections(compare) panel to be open
 
-#   if params[:flash_msgs] && session[:flash_msgs]    # Incoming flash msg array is present
+    #   if params[:flash_msgs] && session[:flash_msgs]    # Incoming flash msg array is present
     if session[:flash_msgs]       # Incoming flash msg array is present
       @flash_array = session[:flash_msgs].dup
       session[:flash_msgs] = nil
     elsif params[:flash_msg]      # Add incoming flash msg, with/without error flag
-      #params coming in from redirect are strings and being sent up even when value is false
+      # params coming in from redirect are strings and being sent up even when value is false
       if params[:flash_error] == "true"
         add_flash(params[:flash_msg], :error)
       elsif params[:flash_warning]
@@ -2282,14 +2259,14 @@ class ApplicationController < ActionController::Base
     # Get edit hash from the session
     # Commented following line in sprint 39. . . controllers should load @edit if they need it and we will
     # automatically save it in the session if it's present when the transaction ends
-#   @edit = session[:edit] ? session[:edit] : nil
-    return true     # If we don't return true, the entire session stops cold
+    #   @edit = session[:edit] ? session[:edit] : nil
+    true     # If we don't return true, the entire session stops cold
   end
 
   # Check for session threshold limits and write log messages if exceeded
   def get_data_size(data, indent = 0)
     begin
-      #TODO: (FB 9144) Determine how the session store handles singleton object so it does not throw errors.
+      # TODO: (FB 9144) Determine how the session store handles singleton object so it does not throw errors.
       data_size = Marshal.dump(data).size
     rescue => err
       data_size = 0
@@ -2326,7 +2303,7 @@ class ApplicationController < ActionController::Base
   # Dump the entire session contents to the evm.log
   def dump_session_data(data, indent = 0)
     begin
-      #TODO: (FB 9144) Determine how the session store handles singleton object so it does not throw errors.
+      # TODO: (FB 9144) Determine how the session store handles singleton object so it does not throw errors.
       data_size = Marshal.dump(data).size
     rescue => err
       data_size = 0
@@ -2360,7 +2337,7 @@ class ApplicationController < ActionController::Base
   def log_data_size(el, value, indent)
     indentation = "  " * indent
     if value.kind_of?(Hash) || value.kind_of?(Array) || value.kind_of?(ActiveRecord::Base) ||
-        !value.respond_to?("size")
+       !value.respond_to?("size")
       val_size = Marshal.dump(value).size
     else
       val_size = value.size
@@ -2376,15 +2353,15 @@ class ApplicationController < ActionController::Base
   end
 
   def set_global_session_data
-    @sb ||= Hash.new
+    @sb ||= {}
     # Set all of the global variables used by most of the controllers
     session[:layout] = @layout
     session[:panels] = @panels
     session[:breadcrumbs] = @breadcrumbs
     session[:applied_tags] = @applied_tags  # Search box applied tags for the current list view
     session[:miq_compare] = @compare.nil? ? (@keep_compare ? session[:miq_compare] : nil) : Marshal.dump(@compare)
-    session[:miq_compressed] = @compressed if @compressed != nil
-    session[:miq_exists_mode] = @exists_mode if @exists_mode != nil
+    session[:miq_compressed] = @compressed unless @compressed.nil?
+    session[:miq_exists_mode] = @exists_mode unless @exists_mode.nil?
     session[:last_trans_time] = Time.now
 
     # Save @edit key for the expression editor to use
@@ -2394,19 +2371,19 @@ class ApplicationController < ActionController::Base
     session[:server_options] = @server_options
 
     # Set timelines hash, if it is in the session for the running controller
-    session["#{controller_name}_tl".to_sym] = @tl_options if @tl_options != nil
+    session["#{controller_name}_tl".to_sym] = @tl_options unless @tl_options.nil?
 
     # Capture breadcrumbs by main tab
-    session[:tab_bc] ||= Hash.new
+    session[:tab_bc] ||= {}
     unless session[:menu_click]   # Don't save breadcrumbs after a chart menu click
       case controller_name
 
       # These controllers don't use breadcrumbs, see above get method to store URL
-      when "dashboard","report","support","alert","jobs","ui_jobs","miq_ae_tools","miq_policy","miq_action","miq_capacity","chargeback"
+      when "dashboard", "report", "support", "alert", "jobs", "ui_jobs", "miq_ae_tools", "miq_policy", "miq_action", "miq_capacity", "chargeback"
 
       when "service"
         session[:tab_bc][:vs] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
-      when "ontap_storage_system","ontap_logical_disk","cim_base_storage_extent","ontap_storage_volume","ontap_file_share","snia_local_file_system","storage_manager"
+      when "ontap_storage_system", "ontap_logical_disk", "cim_base_storage_extent", "ontap_storage_volume", "ontap_file_share", "snia_local_file_system", "storage_manager"
         session[:tab_bc][:sto] = @breadcrumbs.dup if ["show", "show_list", "index"].include?(action_name)
       when "ems_cloud", "availability_zone", "flavor"
         session[:tab_bc][:clo] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
@@ -2421,20 +2398,20 @@ class ApplicationController < ActionController::Base
           session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
         end
       when "vm"
-        session[:tab_bc][:vms] = @breadcrumbs.dup if %w{
-                                                          show
-                                                          show_list
-                                                          usage
-                                                          guest_applications
-                                                          registry_items
-                                                          vmtree
-                                                          users
-                                                          groups
-                                                          linuxinitprocesses
-                                                          win32services
-                                                          kerneldrivers
-                                                          filesystemdrivers
-                                                          }.include?(action_name)
+        session[:tab_bc][:vms] = @breadcrumbs.dup if %w(
+          show
+          show_list
+          usage
+          guest_applications
+          registry_items
+          vmtree
+          users
+          groups
+          linuxinitprocesses
+          win32services
+          kerneldrivers
+          filesystemdrivers
+        ).include?(action_name)
       end
     end
 
@@ -2470,10 +2447,10 @@ class ApplicationController < ActionController::Base
     @sb[:detail_sortcol] = @detail_sortcol
     @sb[:detail_sortdir] = @detail_sortdir
 
-    @sb[:tree_hosts_hash] = nil if (!%w{ems_folders descendant_vms}.include?(params[:display]) &&
-        !%w{treesize tree_autoload_dynatree tree_autoload_quads}.include?(params[:action]))
-    @sb[:tree_vms_hash] = nil if (!%w{ems_folders descendant_vms}.include?(params[:display]) &&
-        !%w{treesize tree_autoload_dynatree tree_autoload_quads}.include?(params[:action]))
+    @sb[:tree_hosts_hash] = nil if !%w(ems_folders descendant_vms).include?(params[:display]) &&
+                                   !%w(treesize tree_autoload_dynatree tree_autoload_quads).include?(params[:action])
+    @sb[:tree_vms_hash] = nil if !%w(ems_folders descendant_vms).include?(params[:display]) &&
+                                 !%w(treesize tree_autoload_dynatree tree_autoload_quads).include?(params[:action])
 
     # Set/clear sandbox (@sb) per controller in the session object
     session[:sandboxes] ||= HashWithIndifferentAccess.new
@@ -2487,11 +2464,11 @@ class ApplicationController < ActionController::Base
 
     # Clearing out session objects that are no longer needed
     session[:myco_tree] = session[:hac_tree] = session[:vat_tree] = nil if controller_name != "ops"
-    session[:dc_tree] = nil if (!["ems_folders","descendant_vms"].include?(params[:display]) && !["treesize","tree_autoload"].include?(params[:action]))
+    session[:dc_tree] = nil if !["ems_folders", "descendant_vms"].include?(params[:display]) && !["treesize", "tree_autoload"].include?(params[:action])
     session[:ch_tree] = nil if !["compliance_history"].include?(params[:display]) && params[:action] != "treesize" && params[:action] != "squash_toggle"
     session[:vm_tree] = nil if !["vmtree_info"].include?(params[:display]) && params[:action] != "treesize"
     session[:policy_tree] = nil if params[:action] != "policies" && params[:pressed] != "vm_protect" && params[:action] != "treesize"
-    session[:resolve] = session[:resolve_object] = nil if !["catalog","miq_ae_customization","miq_ae_tools"].include?(request.parameters[:controller])
+    session[:resolve] = session[:resolve_object] = nil unless ["catalog", "miq_ae_customization", "miq_ae_tools"].include?(request.parameters[:controller])
     session[:report_menu] = session[:report_folders] = session[:menu_roles_tree] = nil if controller_name != "report"
     session[:rsop_tree] = nil if controller_name != "miq_policy"
     if session.class != Hash
@@ -2508,11 +2485,11 @@ class ApplicationController < ActionController::Base
     userid     = session[:userid]
 
     unless db.where(:id => from_cid(id)).exists?
-      msg = _("Selected %s no longer exists") %  ui_lookup(:model => db.to_s)
+      msg = _("Selected %s no longer exists") % ui_lookup(:model => db.to_s)
       raise msg
     end
 
-    msg = "User '#{userid}' is not authorized to access '#{ui_lookup(:model=>db.to_s)}' record id '#{id}'"
+    msg = "User '#{userid}' is not authorized to access '#{ui_lookup(:model => db.to_s)}' record id '#{id}'"
     conditions = ["#{db.table_name}.id = ?", id]
     result = Rbac.search(:class => db, :conditions => conditions, :userid => userid, :results_format => :objects).first.first
     raise msg if result.nil?
@@ -2520,18 +2497,18 @@ class ApplicationController < ActionController::Base
     result
   end
 
-  def find_filtered(db, count, options={})
+  def find_filtered(db, count, options = {})
     user     = current_user
-    mfilters = user ? user.get_managed_filters   : []
+    mfilters = user ? user.get_managed_filters : []
     bfilters = user ? user.get_belongsto_filters : []
 
     if db.respond_to?(:find_filtered) && !mfilters.empty?
-      result = db.find_tags_by_grouping(mfilters, :conditions => options[:conditions], :ns=>"*")
+      result = db.find_tags_by_grouping(mfilters, :conditions => options[:conditions], :ns => "*")
     else
       result = db.find(count, options)
     end
 
-    result = MiqFilter.apply_belongsto_filters(result, bfilters) if db.respond_to?(:find_filtered) &&  result
+    result = MiqFilter.apply_belongsto_filters(result, bfilters) if db.respond_to?(:find_filtered) && result
 
     result
   end
@@ -2581,14 +2558,14 @@ class ApplicationController < ActionController::Base
       end
     end
     if rec.nil?
-      record_name = resource_name ? "#{ui_lookup(:model=>model)} '#{resource_name}'" : "The selected record"
+      record_name = resource_name ? "#{ui_lookup(:model => model)} '#{resource_name}'" : "The selected record"
       add_flash(_("%s no longer exists in the database") % record_name,
                 :error)
     elsif authrec.nil?
-      add_flash(_("You are not authorized to view %s") % "#{ui_lookup(:model=>rec.class.base_model.to_s)} '#{resource_name}'",
+      add_flash(_("You are not authorized to view %s") % "#{ui_lookup(:model => rec.class.base_model.to_s)} '#{resource_name}'",
                 :error)
     end
-    return rec
+    rec
   end
 
   def get_record_display_name(record)
@@ -2597,7 +2574,7 @@ class ApplicationController < ActionController::Base
     return record.description                if record.respond_to?("description") && !record.description.nil?
     return record.title                      if record.respond_to?("title")
     return record.name                       if record.respond_to?("name")
-    return "<Record ID #{record.id}>"
+    "<Record ID #{record.id}>"
   end
 
   def identify_tl_or_perf_record
@@ -2641,8 +2618,8 @@ class ApplicationController < ActionController::Base
   def set_gettext_locale
     user_settings =  current_user.try(:settings)
     user_locale = user_settings[:display][:locale] if user_settings &&
-                                                 user_settings.key?(:display) &&
-                                                 user_settings[:display].key?(:locale)
+                                                      user_settings.key?(:display) &&
+                                                      user_settings[:display].key?(:locale)
     if user_locale == 'default' || user_locale.nil?
       unless MiqServer.my_server.nil?
         server_locale = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :locale)

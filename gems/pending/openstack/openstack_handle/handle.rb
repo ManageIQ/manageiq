@@ -32,11 +32,11 @@ module OpenstackHandle
       # attempt to connect with SSL
       yield "https", {:ssl_verify_peer => false}
     rescue Excon::Errors::SocketError => err
-      # TODO recognizing something in exception message is not very reliable. But somebody would need to go to excon gem
+      # TODO: recognizing something in exception message is not very reliable. But somebody would need to go to excon gem
       # and do proper exceptions like Excon::Errors::SocketError::UnknownProtocolSSL,
       # Excon::Errors::SocketError::BadCertificate, etc. all of them inheriting from Excon::Errors::SocketError
-      raise unless (err.message.include?("end of file reached (EOFError)") ||
-                    err.message.include?("unknown protocol (OpenSSL::SSL::SSLError)"))
+      raise unless err.message.include?("end of file reached (EOFError)") ||
+                   err.message.include?("unknown protocol (OpenSSL::SSL::SSLError)")
       # attempt the same connection without SSL
       yield "http", {}
     end
@@ -96,19 +96,19 @@ module OpenstackHandle
       uri.to_s
     end
 
-    def self.connection_options=(hash)
-      @connection_options = hash
+    class << self
+      attr_writer :connection_options
     end
 
-    def self.connection_options
-      @connection_options
+    class << self
+      attr_reader :connection_options
     end
 
     def initialize(username, password, address, port = nil, api_version = nil)
       @username    = username
       @password    = password
       @address     = address
-      @port        = port        || 5000
+      @port        = port || 5000
       @api_version = api_version || 'v2'
 
       @connection_cache   = {}

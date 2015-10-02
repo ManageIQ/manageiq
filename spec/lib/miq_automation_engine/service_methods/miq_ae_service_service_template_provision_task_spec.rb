@@ -68,6 +68,5 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
         invoke_ae.root(@ae_result_key).should == 'retry'
       end
     end
-
   end
 end

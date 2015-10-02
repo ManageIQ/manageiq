@@ -7,7 +7,7 @@ module FixAuth
     def parse(args, env = {})
       args.shift if args.first == "--" # Handle when called through script/runner
       self.options = Trollop.options(args) do
-        banner "Usage: ruby #{$PROGRAM_NAME} [options] [database1] [database2] [...]\n" +
+        banner "Usage: ruby #{$PROGRAM_NAME} [options] [database1] [database2] [...]\n" \
                "       ruby #{$PROGRAM_NAME} [options] -P new_password [database1] [...] to replace all passwords"
 
         opt :verbose,  "Verbose",           :short => "v"
@@ -20,7 +20,7 @@ module FixAuth
         opt :key,      "Generate key",      :type => :boolean, :short => "k"
         opt :v2,       "ignored, available for backwards compatibility", :type => :boolean, :short => "f"
         opt :root,     "Rails Root",        :type => :string,  :short => "r",
-            :default => (env['RAILS_ROOT'] || File.expand_path(File.join(File.dirname(__FILE__), %w{.. ..})))
+            :default => (env['RAILS_ROOT'] || File.expand_path(File.join(File.dirname(__FILE__), %w(.. ..))))
         opt :databaseyml, "Rewrite database.yml", :type => :boolean, :short => "y", :default => false
         opt :db,       "Upgrade database",  :type => :boolean, :short => 'x', :default => false
         opt :legacy_key, "Legacy Key",      :type => :string, :short => "K", :multi => true
@@ -29,7 +29,7 @@ module FixAuth
       options[:databases] = args.presence || %w(vmdb_production)
       # default to updating the db
       options[:db] = true if !options[:key] && !options[:databaseyml]
-      self.options = options.delete_if { |n, v| v.blank? }
+      self.options = options.delete_if { |_n, v| v.blank? }
       self
     end
 

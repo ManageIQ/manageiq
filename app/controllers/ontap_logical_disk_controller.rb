@@ -1,5 +1,4 @@
 class OntapLogicalDiskController < CimInstanceController
-
   def index
     process_index
   end

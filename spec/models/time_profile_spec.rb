@@ -9,7 +9,7 @@ describe TimeProfile do
 
   it "will default to the correct profile values" do
     t = TimeProfile.new
-    t.days.should  == TimeProfile::ALL_DAYS
+    t.days.should == TimeProfile::ALL_DAYS
     t.hours.should == TimeProfile::ALL_HOURS
     t.tz.should    be_nil
   end
@@ -21,9 +21,9 @@ describe TimeProfile do
 
     it do
       t = TimeProfile.first
-      t.days.should  == TimeProfile::ALL_DAYS
+      t.days.should == TimeProfile::ALL_DAYS
       t.hours.should == TimeProfile::ALL_HOURS
-      t.tz.should    == TimeProfile::DEFAULT_TZ
+      t.tz.should == TimeProfile::DEFAULT_TZ
       t.entire_tz?.should be_true
     end
 
@@ -31,9 +31,9 @@ describe TimeProfile do
       TimeProfile.seed
       TimeProfile.count.should == 1
       t = TimeProfile.first
-      t.days.should  == TimeProfile::ALL_DAYS
+      t.days.should == TimeProfile::ALL_DAYS
       t.hours.should == TimeProfile::ALL_HOURS
-      t.tz.should    == TimeProfile::DEFAULT_TZ
+      t.tz.should == TimeProfile::DEFAULT_TZ
       t.entire_tz?.should be_true
     end
   end
@@ -153,7 +153,7 @@ describe TimeProfile do
   def assert_rebuild_daily_queued
     q_all = MiqQueue.all
     q_all.length.should == 1
-    q_all[0].class_name.should  == "TimeProfile"
+    q_all[0].class_name.should == "TimeProfile"
     q_all[0].instance_id.should == @tp.id
     q_all[0].method_name.should == "rebuild_daily_metrics"
   end
@@ -161,7 +161,7 @@ describe TimeProfile do
   def assert_destroy_queued
     q_all = MiqQueue.all
     q_all.length.should == 1
-    q_all[0].class_name.should  == "TimeProfile"
+    q_all[0].class_name.should == "TimeProfile"
     q_all[0].instance_id.should == @tp.id
     q_all[0].method_name.should == "destroy_metric_rollups"
   end

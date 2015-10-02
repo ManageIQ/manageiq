@@ -1,34 +1,32 @@
 class MiqAction < ActiveRecord::Base
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
   before_destroy    :check_policy_contents_empty_on_destroy
   before_save       :round_if_memory_reconfigured
 
-  silence_warnings {
+  silence_warnings do
     const_set("TYPES",
-      {
-        "create_snapshot"         => "Create a Snapshot",
-        "email"                   => "Send an E-mail",
-        "snmp_trap"               => "Send an SNMP Trap",
-        "tag"                     => "Tag",
-        "reconfigure_memory"      => "Reconfigure Memory",
-        "reconfigure_cpus"        => "Reconfigure CPUs",
-        "custom_automation"       => "Invoke a Custom Automation",
-        "evaluate_alerts"         => "Evaluate Alerts",
-        "assign_scan_profile"     => "Assign Profile to Analysis Task",
-        "set_custom_attribute"    => "Set a Custom Attribute in vCenter",
-        "inherit_parent_tags"     => "Inherit Parent Tags",
-        "remove_tags"             => "Remove Tags",
-        "delete_snapshots_by_age" => "Delete Snapshots by Age"
-      }
-    )
-  }
+              "create_snapshot"         => "Create a Snapshot",
+              "email"                   => "Send an E-mail",
+              "snmp_trap"               => "Send an SNMP Trap",
+              "tag"                     => "Tag",
+              "reconfigure_memory"      => "Reconfigure Memory",
+              "reconfigure_cpus"        => "Reconfigure CPUs",
+              "custom_automation"       => "Invoke a Custom Automation",
+              "evaluate_alerts"         => "Evaluate Alerts",
+              "assign_scan_profile"     => "Assign Profile to Analysis Task",
+              "set_custom_attribute"    => "Set a Custom Attribute in vCenter",
+              "inherit_parent_tags"     => "Inherit Parent Tags",
+              "remove_tags"             => "Remove Tags",
+              "delete_snapshots_by_age" => "Delete Snapshots by Age"
+             )
+  end
 
   validates_presence_of     :name, :description, :action_type
   validates_uniqueness_of   :name, :description
-  validates_format_of       :name, :with => %r{\A[a-z0-9_\-]+\z}i,
+  validates_format_of       :name, :with => /\A[a-z0-9_\-]+\z/i,
     :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen chatacters without spaces"
 
   acts_as_miq_taggable
@@ -58,7 +56,7 @@ class MiqAction < ActiveRecord::Base
 
   SH_PREAMBLE = begin
     preamble = "\#!/bin/sh\n"
-    RC_HASH.each {|k, v| preamble += "#{v}=#{k}\n" }
+    RC_HASH.each { |k, v| preamble += "#{v}=#{k}\n" }
     preamble
   end
 
@@ -71,25 +69,25 @@ class MiqAction < ActiveRecord::Base
   virtual_column :action_type_description, :type => :string
 
   def v_synchronicity
-    return self.synchronous ? "Synchronous" : "Asynchronous"
+    synchronous ? "Synchronous" : "Asynchronous"
   end
 
   def action_type_description
-    TYPES[self.action_type] || self.description
+    TYPES[action_type] || description
   end
 
   def validate
-    case self.action_type
+    case action_type
     when "email"
       self.options ||= {}
       self.options[:to] ||= ""
-      [:from, :to].each {|k|
+      [:from, :to].each do|k|
         if self.options && self.options[k]
           next if k == :from && self.options[k].blank? # allow blank from addres, we use the default.
-          match = self.options[k] =~ %r{^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$}i
+          match = self.options[k] =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
           errors.add(k, "must be a valid email address") unless match
         end
-      }
+      end
     when "tag"
       errors.add("tag", "no tags provided") unless self.options && self.options[:tags]
     when "snapshot_create"
@@ -102,7 +100,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def miq_policies
-    self.miq_policy_contents.collect(&:miq_policy).uniq
+    miq_policy_contents.collect(&:miq_policy).uniq
   end
 
   def self.invoke_actions(apply_policies_to, inputs, succeeded, failed)
@@ -113,14 +111,14 @@ class MiqAction < ActiveRecord::Base
     results = {}
 
     begin
-      failed.each {|p|
+      failed.each do|p|
         actions = case p
-        when MiqPolicy; p.actions_for_event(inputs[:event], :failure).uniq
-        else            p.actions_for_event
-        end
+                  when MiqPolicy then p.actions_for_event(inputs[:event], :failure).uniq
+                  else            p.actions_for_event
+                  end
 
         #        _log.debug("actions on failure: #{actions.inspect}")
-        actions.each {|a|
+        actions.each do|a|
           # merge in the synchronous flag and possibly the sequence if not already sorted by this
           inputs = inputs.merge(:policy => p, :result => false, :sequence => a.sequence, :synchronous => a.synchronous)
           _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
@@ -133,14 +131,14 @@ class MiqAction < ActiveRecord::Base
           name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
           results[name] ||= []
           results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :failure, :result => a.invoke(apply_policies_to, inputs)}
-        }
-      }
+        end
+      end
 
-      succeeded.each {|p|
-        next unless p.is_a?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on failure
+      succeeded.each do|p|
+        next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on failure
         actions = p.actions_for_event(inputs[:event], :success).uniq
         # _log.info("actions on success: #{actions.inspect}")
-        actions.each {|a|
+        actions.each do|a|
           inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
           _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
 
@@ -152,13 +150,13 @@ class MiqAction < ActiveRecord::Base
           name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
           results[name] ||= []
           results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
-        }
-      }
+        end
+      end
 
-      deferred.each {|arr|
+      deferred.each do|arr|
         a, apply_policies_to, inputs = arr
         a.invoke(apply_policies_to, inputs)
-      }
+      end
     rescue MiqException::StopAction => err
       MiqPolicy.logger.error("MIQ(action-invoke) Stopping action invocation [#{err.message}]")
       return
@@ -170,15 +168,15 @@ class MiqAction < ActiveRecord::Base
       raise
     end
 
-    return results
+    results
   end
 
   def invoke(rec, inputs)
-    atype = self.action_type
-    atype = self.name if atype.nil? || atype == "default"
+    atype = action_type
+    atype = name if atype.nil? || atype == "default"
     method = "action_" + atype
     unless self.respond_to?(method)
-      MiqPolicy.logger.info("MIQ(action-invoke) '#{self.name}', not supported")
+      MiqPolicy.logger.info("MIQ(action-invoke) '#{name}', not supported")
       return
     end
 
@@ -187,29 +185,29 @@ class MiqAction < ActiveRecord::Base
     else
       phrase = "for failed policy"
     end
-    MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{self.description}] #{phrase} [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}], sequence: [#{inputs[:sequence]}], synchronous? [#{inputs[:synchronous]}]")
-    self.send(method.to_sym, self, rec, inputs)
+    MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{description}] #{phrase} [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}], sequence: [#{inputs[:sequence]}], synchronous? [#{inputs[:synchronous]}]")
+    send(method.to_sym, self, rec, inputs)
   end
 
   def invoke_action_for_built_in_policy(rec, inputs)
-    atype = self.action_type
-    atype ||= self.name
+    atype = action_type
+    atype ||= name
     method = "action_" + atype
     unless self.respond_to?(method)
-      MiqPolicy.logger.info("MIQ(action-invoke) '#{self.name}', not supported")
+      MiqPolicy.logger.info("MIQ(action-invoke) '#{name}', not supported")
       return
     end
 
-    MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{self.description}] for built-in policy [#{inputs[:built_in_policy]}], event: [#{inputs[:event]}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}]")
-    self.send(method.to_sym, self, rec, inputs)
+    MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{description}] for built-in policy [#{inputs[:built_in_policy]}], event: [#{inputs[:event]}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}]")
+    send(method.to_sym, self, rec, inputs)
   end
 
-  def action_prevent(action, rec, inputs)
+  def action_prevent(_action, _rec, _inputs)
     #    MiqPolicy.logger.warn("MIQ(action_prevent): Invoking action [prevent] for policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type=>:model)}]")
     raise MiqException::PolicyPreventAction, "preventing current process from proceeding due to policy failure"
   end
 
-  def action_log(action, rec, inputs)
+  def action_log(_action, rec, inputs)
     if inputs[:result]
       MiqPolicy.logger.info("MIQ(action-log): Policy success: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}]")
     else
@@ -217,13 +215,13 @@ class MiqAction < ActiveRecord::Base
     end
   end
 
-  def action_audit(action, rec, inputs)
+  def action_audit(_action, rec, inputs)
     msg = inputs[:result] ? "success" : "failure"
     AuditEvent.send(msg,
-      :event => inputs[:event].name,
-      :target_id => rec.id,
-      :target_class => rec.class.base_class.name,
-      :message => "Policy #{msg}: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}]")
+                    :event        => inputs[:event].name,
+                    :target_id    => rec.id,
+                    :target_class => rec.class.base_class.name,
+                    :message      => "Policy #{msg}: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}]")
   end
 
   def action_snmp_trap(action, rec, inputs)
@@ -231,7 +229,7 @@ class MiqAction < ActiveRecord::Base
     snmp_version = action.options[:snmp_version]
     snmp_version = 2 if action.options[:snmp_version] == "v2"
     snmp_version = 1 if action.options[:snmp_version] == "v1"
-    snmp_version = 1 unless [1,2].include?(snmp_version)
+    snmp_version = 1 unless [1, 2].include?(snmp_version)
     method_name = "trap_v#{snmp_version}"
 
     snmp_inputs = {}
@@ -240,10 +238,10 @@ class MiqAction < ActiveRecord::Base
     snmp_inputs[trap_id_key]  = action.options[:trap_id]
 
     vars = []
-    action.options[:variables].each { |h|
+    action.options[:variables].each do |h|
       value = h[:value]
 
-      value = value.gsub(RE_SUBST) { |s|
+      value = value.gsub(RE_SUBST) do |_s|
         # s  is ${anything_in_between}
         # $1 is   anything_in_between
         subst = ""
@@ -272,11 +270,11 @@ class MiqAction < ActiveRecord::Base
         end
 
         subst
-      } unless value.nil?
+      end unless value.nil?
 
       h[:value] = value
       vars << h
-    } unless action.options[:variables].nil?
+    end unless action.options[:variables].nil?
 
     snmp_inputs[:object_list] = vars
 
@@ -294,7 +292,6 @@ class MiqAction < ActiveRecord::Base
         :zone        => nil
       )
     end
-
   end
 
   def action_email(action, rec, inputs)
@@ -303,27 +300,27 @@ class MiqAction < ActiveRecord::Base
     action.options[:from] = smtp[:from] if action.options[:from].blank?
 
     email_options = {
-      :to => action.options[:to],
+      :to   => action.options[:to],
       :from => action.options[:from],
     }
     if inputs[:policy].kind_of?(MiqPolicy)
       presult = inputs[:result] ? "Succeeded" : "Failed"
       email_options[:subject] = "Policy #{presult}: #{inputs[:policy].description}, for (#{rec.class.to_s.upcase}) #{rec.name}"
       email_options[:miq_action_hash] = {
-        :header => inputs[:result] ? "Policy Succeeded" : "Policy Failed",
-        :policy_detail => "Policy '#{inputs[:policy].description}', #{presult}",
+        :header            => inputs[:result] ? "Policy Succeeded" : "Policy Failed",
+        :policy_detail     => "Policy '#{inputs[:policy].description}', #{presult}",
         :event_description => inputs[:event].description,
-        :entity_type => rec.class.to_s,
-        :entity_name => rec.name
+        :entity_type       => rec.class.to_s,
+        :entity_name       => rec.name
       }
     elsif inputs[:policy].kind_of?(MiqAlert)
       email_options[:subject] = "Alert Triggered: #{inputs[:policy].description}, for (#{rec.class.to_s.upcase}) #{rec.name}"
       email_options[:miq_action_hash] = {
-        :header => "Alert Triggered",
-        :policy_detail => "Alert '#{inputs[:policy].description}', triggered",
+        :header            => "Alert Triggered",
+        :policy_detail     => "Alert '#{inputs[:policy].description}', triggered",
         :event_description => inputs[:event].description,
-        :entity_type => rec.class.to_s,
-        :entity_name => rec.name
+        :entity_type       => rec.class.to_s,
+        :entity_name       => rec.name
       }
     end
 
@@ -344,11 +341,9 @@ class MiqAction < ActiveRecord::Base
   end
 
   def self.queue_email(options)
-    begin
-      GenericMailer.deliver_queue(:policy_action_email, options)
-    rescue Exception => err
-      MiqPolicy.logger.log_backtrace(err)
-    end
+    GenericMailer.deliver_queue(:policy_action_email, options)
+  rescue Exception => err
+    MiqPolicy.logger.log_backtrace(err)
   end
 
   def action_evm_event(action, rec, inputs)
@@ -383,7 +378,7 @@ class MiqAction < ActiveRecord::Base
     EmsEvent.create(opts)
   end
 
-  def action_compliance_failed(action, rec, inputs)
+  def action_compliance_failed(action, rec, _inputs)
     # Nothing to do here. This action will get added to the :actions list in results and will be acted on by the Compliance.check_compliance methods
     MiqPolicy.logger.info("MIQ(action_compliance_failed): Now executing [#{action.description}] of #{rec.class.name} [#{rec.name}]")
   end
@@ -403,21 +398,21 @@ class MiqAction < ActiveRecord::Base
     end
   end
 
-  def action_tag(action, rec, inputs)
+  def action_tag(action, rec, _inputs)
     MiqPolicy.logger.info("MIQ(action_tag): Applying tags [#{action.options[:tags].inspect}] to [(#{rec.class}) #{rec.name}]")
-    action.options[:tags].each {|t| Classification.classify_by_tag(rec, t)}
+    action.options[:tags].each { |t| Classification.classify_by_tag(rec, t) }
   end
 
-  def action_tag_inherit(action, rec, inputs)
+  def action_tag_inherit(_action, rec, inputs)
     get_policies_from = inputs[:get_policies_from]
     MiqPolicy.logger.info("MIQ(action_tag_inherit): Applying tags from [(#{get_policies_from.class}) #{get_policies_from.name}] to [(#{rec.class}) #{rec.name}]")
     tags = get_policies_from.tag_list(:ns => "/managed").split
-    tags.delete_if {|t| t =~ /^power_state/} # omit power state since this is assigned by the system
+    tags.delete_if { |t| t =~ /^power_state/ } # omit power state since this is assigned by the system
 
-    tags.each {|t| Classification.classify_by_tag(rec, File.join("/managed", t))}
+    tags.each { |t| Classification.classify_by_tag(rec, File.join("/managed", t)) }
   end
 
-  def action_inherit_parent_tags(action, rec, inputs)
+  def action_inherit_parent_tags(_action, rec, _inputs)
     # options = {
     #   :parent_type => host | ems_cluster | storage
     #   :cats        => [array of categories]
@@ -443,7 +438,7 @@ class MiqAction < ActiveRecord::Base
     end
   end
 
-  def action_remove_tags(action, rec, inputs)
+  def action_remove_tags(_action, rec, _inputs)
     # options = {
     #   :cats        => [array of categories]
     # }
@@ -457,7 +452,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def self.inheritable_cats
-    Classification.in_my_region.categories.inject([]) do |arr,c|
+    Classification.in_my_region.categories.inject([]) do |arr, c|
       next(arr) if c.name.starts_with?("folder_path_")
       next(arr) if c.entries.size == 0
       arr << c
@@ -513,12 +508,12 @@ class MiqAction < ActiveRecord::Base
       action.run_script(rec)
     else
       MiqPolicy.logger.info("MIQ(action_script): Queueing Action Script [#{rec[:name]}]")
-      MiqQueue.put(:class_name => "MiqAction",
-        :method_name => "run_script",
-        :priority => MiqQueue::HIGH_PRIORITY,
-        :args => [rec],
-        :instance_id => action.id
-      )
+      MiqQueue.put(:class_name  => "MiqAction",
+                   :method_name => "run_script",
+                   :priority    => MiqQueue::HIGH_PRIORITY,
+                   :args        => [rec],
+                   :instance_id => action.id
+                  )
     end
   end
 
@@ -542,9 +537,9 @@ class MiqAction < ActiveRecord::Base
     "action_vm_collect_running_processes" => "collect_running_processes",
   }
 
-  VM_ACTIONS_WITH_NO_ARGS.each { |action_method, vm_method|
-    define_method(action_method) { |action, rec, inputs|
-      unless rec.is_a?(VmOrTemplate)
+  VM_ACTIONS_WITH_NO_ARGS.each do |action_method, vm_method|
+    define_method(action_method) do |action, rec, inputs|
+      unless rec.kind_of?(VmOrTemplate)
         MiqPolicy.logger.error("MIQ(#{action_method}): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
         return
       end
@@ -564,11 +559,11 @@ class MiqAction < ActiveRecord::Base
           :role        => role
         )
       end
-    }
-  }
+    end
+  end
 
   def action_vm_mark_as_vm(action, rec, inputs)
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("MIQ(action_vm_mark_as_vm): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -591,7 +586,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def action_vm_migrate(action, rec, inputs)
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("MIQ(action_vm_migrate): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -614,7 +609,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def action_vm_clone(action, rec, inputs)
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("MIQ(action_vm_clone): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -642,7 +637,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def action_vm_retire(action, rec, inputs)
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("MIQ(action_vm_retire): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -663,7 +658,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def action_create_snapshot(action, rec, inputs)
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("MIQ(action_create_snapshot): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -686,9 +681,9 @@ class MiqAction < ActiveRecord::Base
     end
   end
 
-  def action_delete_snapshots_by_age(action, rec, inputs)
+  def action_delete_snapshots_by_age(action, rec, _inputs)
     log_prefix = "MIQ(action_delete_snapshots_by_age):"
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("#{log_prefix} Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -696,7 +691,7 @@ class MiqAction < ActiveRecord::Base
 
     age_threshold = (Time.now.utc - action.options[:age])
     has_ch = false
-    snaps_to_delete = rec.snapshots.each_with_object([]) do |s,arr|
+    snaps_to_delete = rec.snapshots.each_with_object([]) do |s, arr|
       has_ch = true if s.is_a_type?(:consolidate_helper)
       next          if s.is_a_type?(:evm_snapshot)
       next          if s.is_a_type?(:vcb_snapshot)
@@ -715,15 +710,15 @@ class MiqAction < ActiveRecord::Base
     end
 
     task_id = "action_#{action.id}_vm_#{rec.id}"
-    snaps_to_delete.sort {|a,b| b.create_time <=> a.create_time}.each do |s| # Delete newest to oldest
+    snaps_to_delete.sort { |a, b| b.create_time <=> a.create_time }.each do |s| # Delete newest to oldest
       MiqPolicy.logger.info("#{log_prefix} Deleting Snapshot: Name: [#{s.name}] Id: [#{s.id}] Create Time: [#{s.create_time}]")
       rec.remove_snapshot_queue(s.id, task_id)
     end
   end
 
-  def action_delete_most_recent_snapshot(action, rec, inputs)
+  def action_delete_most_recent_snapshot(action, rec, _inputs)
     log_prefix = "MIQ(action_delete_most_recent_snapshot):"
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("#{log_prefix} Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -739,7 +734,7 @@ class MiqAction < ActiveRecord::Base
       next if s.is_a_type?(:evm_snapshot)
       next if s.is_a_type?(:vcb_snapshot)
 
-      snap ||= s #Take the first eligable snapshot
+      snap ||= s # Take the first eligable snapshot
     end
 
     if snap.nil?
@@ -757,7 +752,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def action_reconfigure_memory(action, rec, inputs)
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("MIQ(action_reconfigure_memory): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -785,7 +780,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def action_reconfigure_cpus(action, rec, inputs)
-    unless rec.is_a?(VmOrTemplate)
+    unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("MIQ(action_reconfigure_cpus): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
       return
     end
@@ -834,7 +829,7 @@ class MiqAction < ActiveRecord::Base
       return
     end
 
-    unless rec.is_a?(Host)
+    unless rec.kind_of?(Host)
       MiqPolicy.logger.error("MIQ(#{action_method}): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a Host")
       return
     end
@@ -846,12 +841,12 @@ class MiqAction < ActiveRecord::Base
       role = "smartstate"
       MiqPolicy.logger.info("MIQ(#{action_method}): Queueing [#{action.description}] of Host [#{rec.name}]")
       MiqQueue.put(
-      :class_name  => "Host",
-      :method_name => "scan_from_queue",
-      :instance_id => rec.id,
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :zone        => rec.my_zone,
-      :role        => role
+        :class_name  => "Host",
+        :method_name => "scan_from_queue",
+        :instance_id => rec.id,
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :zone        => rec.my_zone,
+        :role        => role
       )
     end
   end
@@ -878,7 +873,7 @@ class MiqAction < ActiveRecord::Base
 
   def action_custom_automation(action, rec, inputs)
     ae_hash = action.options[:ae_hash] || {}
-    automate_attrs = ae_hash.reject { |key, value| MiqAeEngine::DEFAULT_ATTRIBUTES.include?(key) }
+    automate_attrs = ae_hash.reject { |key, _value| MiqAeEngine::DEFAULT_ATTRIBUTES.include?(key) }
     automate_attrs[MiqAeEngine.create_automation_attribute_key(inputs[:policy])]    = MiqAeEngine.create_automation_attribute_value(inputs[:policy]) unless inputs[:policy].nil?
     automate_attrs[MiqAeEngine.create_automation_attribute_key(inputs[:ems_event])] = MiqAeEngine.create_automation_attribute_value(inputs[:ems_event]) unless inputs[:ems_event].nil?
     automate_attrs[:request] = action.options[:ae_request]
@@ -906,7 +901,7 @@ class MiqAction < ActiveRecord::Base
     end
   end
 
-  def action_raise_automation_event(action, rec, inputs)
+  def action_raise_automation_event(_action, rec, inputs)
     event = inputs[:event].name
     aevent = {}
     aevent[:vm]     = inputs[:vm]
@@ -947,7 +942,7 @@ class MiqAction < ActiveRecord::Base
         next
       end
 
-     if inputs[:synchronous]
+      if inputs[:synchronous]
         MiqPolicy.logger.info("MIQ(action_evaluate_alert): Now executing Evaluate Alert, Alert: [#{alert.description}]")
         alert.evaluate(rec, inputs)
       else
@@ -964,7 +959,7 @@ class MiqAction < ActiveRecord::Base
     end
   end
 
-  def action_assign_scan_profile(action, rec, inputs)
+  def action_assign_scan_profile(action, _rec, _inputs)
     ScanItem  # Cause the ScanItemSet class to load, if not already loaded
     profile = ScanItemSet.find_by_name(action.options[:scan_item_set_name])
     unless profile
@@ -977,7 +972,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def action_set_custom_attribute(action, rec, inputs)
-    unless rec.is_a?(VmOrTemplate) || rec.is_a?(Host)
+    unless rec.kind_of?(VmOrTemplate) || rec.kind_of?(Host)
       MiqPolicy.logger.error("MIQ(action_set_custom_attribute): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM or a Host")
       return
     end
@@ -1000,13 +995,13 @@ class MiqAction < ActiveRecord::Base
   end
 
   def export_to_array
-    h = self.attributes
+    h = attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    return [ self.class.to_s => h ]
+    [self.class.to_s => h]
   end
 
-  def self.import_from_hash(action, options={})
-    status = {:class => self.name, :description => action["description"]}
+  def self.import_from_hash(action, options = {})
+    status = {:class => name, :description => action["description"]}
     a = MiqAction.find_by_description(action["description"])
     msg_pfx = "Importing Action: description=[#{action["description"]}]"
 
@@ -1038,15 +1033,15 @@ class MiqAction < ActiveRecord::Base
   def self.create_script_actions_from_directory
     Dir.glob(SCRIPT_DIR + "/*").sort.each do |f|
       rec = {}
-      rec[:name]        = File.basename(f).gsub(".", "_")
+      rec[:name]        = File.basename(f).tr(".", "_")
       rec[:description] = "Execute script: #{File.basename(f)}"
       rec[:action_type] = "script"
       rec[:options]     = {:filename => f}
 
-      action = self.find_by_name(rec[:name])
+      action = find_by_name(rec[:name])
       if action.nil?
         _log.info("Creating [#{rec[:name]}]")
-        action = self.create(rec)
+        action = create(rec)
       else
         action.attributes = rec
         if action.changed? || action.options_was != actions.options
@@ -1058,12 +1053,12 @@ class MiqAction < ActiveRecord::Base
   end
 
   def check_policy_contents_empty_on_destroy
-    raise "Action is referenced in at least one policy and connot be deleted" unless self.miq_policy_contents.empty?
+    raise "Action is referenced in at least one policy and connot be deleted" unless miq_policy_contents.empty?
   end
 
   def round_if_memory_reconfigured
     # round memory value to the nearest 4mb
-    self.options[:value] = round_to_nearest_4mb(self.options[:value]) if self.action_type == "reconfigure_memory"
+    self.options[:value] = round_to_nearest_4mb(self.options[:value]) if action_type == "reconfigure_memory"
   end
 
   def round_to_nearest_4mb(num)
@@ -1082,7 +1077,7 @@ class MiqAction < ActiveRecord::Base
   end
 
   def self.create_default_actions
-    fname = File.join(FIXTURE_DIR, "#{self.to_s.pluralize.underscore}.csv")
+    fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
     data  = File.read(fname).split("\n")
     cols  = data.shift.split(",")
 
@@ -1092,12 +1087,12 @@ class MiqAction < ActiveRecord::Base
       arr = a.split(",")
 
       action = {}
-      cols.each_index {|i| action[cols[i].to_sym] = arr[i]}
+      cols.each_index { |i| action[cols[i].to_sym] = arr[i] }
 
-      rec = self.find_by_name(action[:name])
+      rec = find_by_name(action[:name])
       if rec.nil?
         _log.info("Creating [#{action[:name]}]")
-        rec = self.create(action.merge(:action_type => "default"))
+        rec = create(action.merge(:action_type => "default"))
       else
         rec.attributes = action.merge(:action_type => "default")
         if rec.changed? || (rec.options_was != rec.options)

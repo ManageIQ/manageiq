@@ -22,9 +22,9 @@ describe DialogImportValidator do
       let(:uploaded_content) { "-\nbad yaml" }
 
       it "raises a DialogImportValidator::ImportNonYamlError" do
-        expect {
+        expect do
           dialog_import_validator.determine_validity(import_file_upload)
-        }.to raise_error(DialogImportValidator::ImportNonYamlError)
+        end.to raise_error(DialogImportValidator::ImportNonYamlError)
       end
     end
 
@@ -45,9 +45,9 @@ describe DialogImportValidator do
         let(:field_type) { "test" }
 
         it "raises a DialogImportValidator::InvalidDialogFieldTypeError" do
-          expect {
+          expect do
             dialog_import_validator.determine_validity(import_file_upload)
-          }.to raise_error(DialogImportValidator::InvalidDialogFieldTypeError)
+          end.to raise_error(DialogImportValidator::InvalidDialogFieldTypeError)
         end
       end
 
@@ -63,9 +63,9 @@ describe DialogImportValidator do
     context "when the yaml does not represent dialogs" do
       shared_examples_for "DialogImportValidator#determine_validity parsing non dialog yaml content" do
         it "raises a ParsedNonDialogYamlError" do
-          expect {
+          expect do
             dialog_import_validator.determine_validity(import_file_upload)
-          }.to raise_error(DialogImportValidator::ParsedNonDialogYamlError)
+          end.to raise_error(DialogImportValidator::ParsedNonDialogYamlError)
         end
       end
 

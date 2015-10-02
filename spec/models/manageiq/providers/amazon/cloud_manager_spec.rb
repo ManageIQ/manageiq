@@ -26,24 +26,23 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     end
 
     def recorded_discover(example)
-      cassette_name = example.description.tr(" ", "_").gsub(",", "").underscore
+      cassette_name = example.description.tr(" ", "_").delete(",").underscore
       VCR.use_cassette("#{described_class.name.underscore}/discover/#{cassette_name}") do
         ManageIQ::Providers::Amazon::CloudManager.discover(@ec2_user, @ec2_pass)
       end
     end
 
     def assert_region(ems, name)
-      ems.name.should            == name
+      ems.name.should == name
       ems.provider_region.should == name.split(" ").first
-      ems.auth_user_pwd.should   == [@ec2_user, @ec2_pass]
+      ems.auth_user_pwd.should == [@ec2_user, @ec2_pass]
     end
 
     def assert_region_on_another_account(ems, name)
-      ems.name.should            == name
+      ems.name.should == name
       ems.provider_region.should == name.split(" ").first
-      ems.auth_user_pwd.should   == [@ec2_user2, @ec2_pass2]
+      ems.auth_user_pwd.should == [@ec2_user2, @ec2_pass2]
     end
-
 
     it "with no existing records" do
       found = recorded_discover(example)
@@ -135,7 +134,6 @@ describe ManageIQ::Providers::Amazon::CloudManager do
         assert_region(emses[4], "us-west-1 2")
       end
     end
-
   end
 
   it "#description" do

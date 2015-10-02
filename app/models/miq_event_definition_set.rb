@@ -1,7 +1,7 @@
 class MiqEventDefinitionSet < ActiveRecord::Base
   acts_as_miq_set
 
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
 

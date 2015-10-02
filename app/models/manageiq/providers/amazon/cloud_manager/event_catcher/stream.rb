@@ -149,7 +149,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
     return change_type if change_type == "CREATE"
 
     state_changed = event.fetch_path("configurationItemDiff", "changedProperties", "Configuration.State.Name")
-    return state_changed ? state_changed["updatedValue"] : change_type
+    state_changed ? state_changed["updatedValue"] : change_type
   end
 
   def sns

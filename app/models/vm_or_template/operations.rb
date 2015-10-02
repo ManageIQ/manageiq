@@ -5,10 +5,10 @@ module VmOrTemplate::Operations
   include_concern 'Snapshot'
   include_concern 'SmartState'
 
-  alias ruby_clone clone
+  alias_method :ruby_clone, :clone
 
-  def raw_clone(name, folder, pool=nil, host=nil, datastore=nil, powerOn=false, template_flag=false, transform=nil, config=nil, customization=nil, disk=nil)
-    raise "VM has no EMS, unable to clone" unless self.ext_management_system
+  def raw_clone(name, folder, pool = nil, host = nil, datastore = nil, powerOn = false, template_flag = false, transform = nil, config = nil, customization = nil, disk = nil)
+    raise "VM has no EMS, unable to clone" unless ext_management_system
     folder_mor    = folder.ems_ref_obj    if folder.respond_to?(:ems_ref_obj)
     pool_mor      = pool.ems_ref_obj      if pool.respond_to?(:ems_ref_obj)
     host_mor      = host.ems_ref_obj      if host.respond_to?(:ems_ref_obj)
@@ -16,12 +16,12 @@ module VmOrTemplate::Operations
     run_command_via_parent(:vm_clone, :name => name, :folder => folder_mor, :pool => pool_mor, :host => host_mor, :datastore => datastore_mor, :powerOn => powerOn, :template => template_flag, :transform => transform, :config => config, :customization => customization, :disk => disk)
   end
 
-  def clone(name, folder, pool=nil, host=nil, datastore=nil, powerOn=false, template_flag=false, transform=nil, config=nil, customization=nil, disk=nil)
+  def clone(name, folder, pool = nil, host = nil, datastore = nil, powerOn = false, template_flag = false, transform = nil, config = nil, customization = nil, disk = nil)
     raw_clone(name, folder, pool, host, datastore, powerOn, template_flag, transform, config, customization, disk)
   end
 
   def raw_mark_as_template
-    raise "VM has no EMS, unable to mark as template" unless self.ext_management_system
+    raise "VM has no EMS, unable to mark as template" unless ext_management_system
     run_command_via_parent(:vm_mark_as_template)
   end
 
@@ -30,7 +30,7 @@ module VmOrTemplate::Operations
   end
 
   def raw_mark_as_vm(pool, host = nil)
-    raise "VM has no EMS, unable to mark as vm" unless self.ext_management_system
+    raise "VM has no EMS, unable to mark as vm" unless ext_management_system
     pool_mor = pool.ems_ref_obj if pool.respond_to?(:ems_ref_obj)
     host_mor = host.ems_ref_obj if host.respond_to?(:ems_ref_obj)
     run_command_via_parent(:vm_mark_as_vm, :pool => pool_mor, :host => host_mor)
@@ -41,7 +41,7 @@ module VmOrTemplate::Operations
   end
 
   def raw_unregister
-    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to unregister VM" unless self.ext_management_system
+    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to unregister VM" unless ext_management_system
     run_command_via_parent(:vm_unregister)
   end
 
@@ -50,7 +50,7 @@ module VmOrTemplate::Operations
   end
 
   def raw_destroy
-    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to destroy VM" unless self.ext_management_system
+    raise "VM has no #{ui_lookup(:table => "ext_management_systems")}, unable to destroy VM" unless ext_management_system
     run_command_via_parent(:vm_destroy)
   end
 
@@ -67,15 +67,15 @@ module VmOrTemplate::Operations
   def validate_vm_control_shelve_action
     msg = validate_vm_control
     return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    return {:available => true,   :message => nil}  if %w(on off suspended paused).include?(self.current_state)
-    return {:available => false,  :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused"}
+    return {:available => true,   :message => nil}  if %w(on off suspended paused).include?(current_state)
+    {:available => false,  :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused"}
   end
 
   def validate_vm_control_shelve_offload_action
     msg = validate_vm_control
     return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    return {:available => true,   :message => nil}  if %w(shelved).include?(self.current_state)
-    return {:available => false,  :message => "The VM can't be shelved offload, current state has to be shelved"}
+    return {:available => true,   :message => nil}  if %w(shelved).include?(current_state)
+    {:available => false,  :message => "The VM can't be shelved offload, current state has to be shelved"}
   end
 
   def validate_vm_control
@@ -83,9 +83,9 @@ module VmOrTemplate::Operations
     return [false, 'The VM is retired'] if self.retired?
     return [false, 'The VM is a template'] if self.template?
     return [true,  'The VM is not connected to a Host'] unless self.has_required_host?
-    return [true,  'The VM does not have a valid connection state'] if !self.connection_state.nil? && !self.connected_to_ems?
+    return [true,  'The VM does not have a valid connection state'] if !connection_state.nil? && !self.connected_to_ems?
     return [true,  "The VM is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"] unless self.has_active_ems?
-    return nil
+    nil
   end
 
   def validate_vm_control_powered_on
@@ -99,7 +99,7 @@ module VmOrTemplate::Operations
   def validate_vm_control_power_state(check_powered_on)
     msg = validate_vm_control
     return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    return {:available => true,   :message => nil}  if self.current_state.send(check_powered_on ? "==" : "!=", "on")
-    return {:available => false,  :message => "The VM is#{" not" if check_powered_on} powered on"}
+    return {:available => true,   :message => nil}  if current_state.send(check_powered_on ? "==" : "!=", "on")
+    {:available => false,  :message => "The VM is#{" not" if check_powered_on} powered on"}
   end
 end

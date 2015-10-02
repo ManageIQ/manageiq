@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe ResourceActionWorkflow do
-
   context "#create" do
     before(:each) do
       @admin = FactoryGirl.create(:user_admin)

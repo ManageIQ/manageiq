@@ -18,7 +18,7 @@ describe Authenticator::Amazon do
       _connect *connect_args
     end
 
-    def _connect(username, password, service = nil)
+    def _connect(username, password, _service = nil)
       if @user_data[username] && @user_data[username][:password] == password
         @user = username
       else

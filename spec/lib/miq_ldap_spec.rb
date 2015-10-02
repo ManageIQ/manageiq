@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe MiqLdap do
-
   before(:each) do
     @host     = 'mycompany.com'
 
@@ -32,7 +31,7 @@ describe MiqLdap do
     if @userid
       wrong_ip = 'bugz.mycompany.com'
 
-      lambda{ ldap_wrong = MiqLdap.new(:host => wrong_ip) }.should raise_error
+      -> { ldap_wrong = MiqLdap.new(:host => wrong_ip) }.should raise_error
       ldap_right = MiqLdap.new(:host => @host)
 
       wrong_userid = 'wrong'
@@ -59,11 +58,11 @@ describe MiqLdap do
         udata = ldap.get_user_info(u)
         next if udata.nil?
         # puts "\nUser Data for #{udata[:display_name]}:"
-        udata.sort_by { |k,v| k.to_s }.each { |k,v| puts "\t#{k}: #{v}" }
+        udata.sort_by { |k, _v| k.to_s }.each { |k, v| puts "\t#{k}: #{v}" }
 
         # ruby-net-ldap adds singleton methods to String/Array object it creates
         # which can lead to 'singleton can't be dumped'  errors
-        lambda { Marshal.dump(udata) }.should_not raise_error
+        -> { Marshal.dump(udata) }.should_not raise_error
       end
     end
   end
@@ -80,7 +79,7 @@ describe MiqLdap do
         memberships = ldap.get_memberships(user)
         # puts "XXX: Memberships=[#{memberships.inspect}]"
 
-        lambda { Marshal.dump(memberships) }.should_not raise_error
+        -> { Marshal.dump(memberships) }.should_not raise_error
       end
     end
   end
@@ -107,11 +106,11 @@ describe MiqLdap do
 
   it "uses the correct IP Address when multiple hosts are passed" do
     if @userid
-      ldap = MiqLdap.new(:host=>["localhost", "dummy", @host])
+      ldap = MiqLdap.new(:host => ["localhost", "dummy", @host])
       ldap.ldap.host.should == "192.168.252.20"
       ldap.bind(@userid, @password)
 
-      ldap = MiqLdap.new(:host=>["192.168.254.15", "localhost", "dummy", @host])
+      ldap = MiqLdap.new(:host => ["192.168.254.15", "localhost", "dummy", @host])
       ldap.ldap.host.should == "192.168.254.15"
       ldap.bind(@userid, @password)
 

@@ -4,10 +4,10 @@ describe ActsAsArModel do
   before(:each) do
     class TestClass1 < ActsAsArModel
       set_columns_hash(
-        :str => :string,
-        :int => :integer,
-        :flt => :float,
-        :dt  => :datetime,
+        :str              => :string,
+        :int              => :integer,
+        :flt              => :float,
+        :dt               => :datetime,
         :str_with_options => {:type => :string, :some_opt => 'opt_value'}
       )
     end

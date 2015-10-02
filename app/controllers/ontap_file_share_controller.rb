@@ -1,5 +1,4 @@
 class OntapFileShareController < CimInstanceController
-
   def index
     process_index
   end
@@ -31,7 +30,6 @@ class OntapFileShareController < CimInstanceController
     else  # First time in
       create_ds_init
     end
-
   end
 
   # Handle create datastore field changes
@@ -53,34 +51,34 @@ class OntapFileShareController < CimInstanceController
     @record = OntapFileShare.find(params[:id])
     render :update do |page|
       area = request.parameters["controller"]
-      if role_allows(:feature=>"#{area}_tag")
+      if role_allows(:feature => "#{area}_tag")
         page.redirect_to :action => 'create_ds'
       else
         add_flash(_("The user is not authorized for this task or item."), :error)
-        page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
       end
     end
   end
 
   def create_ds_init
     @sfs = OntapFileShare.find(@sb[:sfs_id])
-    drop_breadcrumb( {:name=>"Create Datastore", :url=>"/#{session[:controller]}/create_ds"} )
+    drop_breadcrumb(:name => "Create Datastore", :url => "/#{session[:controller]}/create_ds")
 
     @gtl_type = "list"
     create_ds_set_form_vars
     @in_a_form = true
     session[:changed] = false
     @create_ds = true
-    render :action=>"show"
+    render :action => "show"
   end
 
   def create_ds_submit
     return unless load_edit("ontap_file_share_create_ds__#{params[:id]}")
     sfs = OntapFileShare.find(@sb[:sfs_id])
     if create_ds_valid? &&
-        sfs.queue_create_datastore(@edit[:new][:ds_name],
-                            Host.find(@edit[:new][:host_id]))
-      add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>ui_lookup(:model=>"OntapFileShare"), :name=>sfs.name, :task=>"Create Datastore"})
+       sfs.queue_create_datastore(@edit[:new][:ds_name],
+                                  Host.find(@edit[:new][:host_id]))
+      add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "OntapFileShare"), :name => sfs.name, :task => "Create Datastore"})
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -91,7 +89,7 @@ class OntapFileShareController < CimInstanceController
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
       render :update do |page|
-        page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
       end
     end
   end
@@ -108,8 +106,8 @@ class OntapFileShareController < CimInstanceController
 
   # Set form vars for create_ds
   def create_ds_set_form_vars
-    @edit = Hash.new
-    @edit[:new] = Hash.new
+    @edit = {}
+    @edit[:new] = {}
     @edit[:key] = "ontap_file_share_create_ds__#{@sfs.id}"
     @edit[:new][:ds_name] = @sfs.default_datastore_name
     @edit[:hosts] = @sfs.applicable_hosts
@@ -118,7 +116,6 @@ class OntapFileShareController < CimInstanceController
   def create_ds_valid?
     add_flash(_("%s is required") % "Name", :error) if @edit[:new][:ds_name].blank?
     add_flash(_("%s is required") % "Host", :error) if @edit[:new][:host_id].blank?
-    return @flash_array.nil?
+    @flash_array.nil?
   end
-
 end

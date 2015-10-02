@@ -1,6 +1,6 @@
 module VmOrTemplate::Operations::Relocation
   def raw_migrate(host, pool = nil, priority = "defaultPriority", state = nil)
-    raise "VM has no EMS, unable to migrate VM" unless self.ext_management_system
+    raise "VM has no EMS, unable to migrate VM" unless ext_management_system
     raise "Host not specified, unable to migrate VM" unless host.kind_of?(Host)
 
     if pool.nil?
@@ -19,8 +19,8 @@ module VmOrTemplate::Operations::Relocation
     raw_migrate(host, pool, priority, state)
   end
 
-  def raw_relocate(host, pool=nil, datastore=nil, disk_move_type=nil, transform=nil, priority="defaultPriority", disk=nil)
-    raise "VM has no EMS, unable to relocate VM" unless self.ext_management_system
+  def raw_relocate(host, pool = nil, datastore = nil, disk_move_type = nil, transform = nil, priority = "defaultPriority", disk = nil)
+    raise "VM has no EMS, unable to relocate VM" unless ext_management_system
     raise "Unable to relocate VM: Specified Host is not a valid object" if host && !host.kind_of?(Host)
     raise "Unable to relocate VM: Specified Resource Pool is not a valid object" if pool && !pool.kind_of?(ResourcePool)
     raise "Unable to relocate VM: Specified Datastore is not a valid object" if datastore && !datastore.kind_of?(Storage)
@@ -41,7 +41,7 @@ module VmOrTemplate::Operations::Relocation
     run_command_via_parent(:vm_relocate, :host => host_mor, :pool => pool_mor, :datastore => datastore_mor, :disk_move_type => disk_move_type, :transform => transform, :priority => priority, :disk => disk)
   end
 
-  def relocate(host, pool=nil, datastore=nil, disk_move_type=nil, transform=nil, priority="defaultPriority", disk=nil)
+  def relocate(host, pool = nil, datastore = nil, disk_move_type = nil, transform = nil, priority = "defaultPriority", disk = nil)
     raw_relocate(host, pool, datastore, disk_move_type, transform, priority, disk)
   end
 

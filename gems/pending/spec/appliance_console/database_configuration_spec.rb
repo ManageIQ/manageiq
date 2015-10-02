@@ -41,7 +41,7 @@ describe ApplianceConsole::DatabaseConfiguration do
     end
 
     it "raises ArgumentError on unknown attributes" do
-      lambda { described_class.new(:unknown => "test")}.should raise_error(ArgumentError)
+      -> { described_class.new(:unknown => "test") }.should raise_error(ArgumentError)
     end
   end
 
@@ -230,7 +230,7 @@ describe ApplianceConsole::DatabaseConfiguration do
     @config.should_receive(:say).with(expected_message)
     @config.interactive = true
     @config.should_receive(:press_any_key)
-    lambda {@config.say_error(:create_region, error)}.should raise_error MiqSignalError
+    -> { @config.say_error(:create_region, error) }.should raise_error MiqSignalError
   end
 
   it "#say_error interactive=> false" do
@@ -250,7 +250,7 @@ describe ApplianceConsole::DatabaseConfiguration do
 
     it "raises ArgumentError with no block_given" do
       @config.logger = nil
-      lambda {@config.log_and_feedback(:some_method)}.should raise_error(ArgumentError)
+      -> { @config.log_and_feedback(:some_method) }.should raise_error(ArgumentError)
     end
 
     it "normal case" do
@@ -259,7 +259,7 @@ describe ApplianceConsole::DatabaseConfiguration do
       @config.logger = expected_logging
       @config.should_receive(:say_info).with(:some_method, "starting")
       @config.should_receive(:say_info).with(:some_method, "complete")
-      @config.log_and_feedback(:some_method) {:result}.should == :result
+      @config.log_and_feedback(:some_method) { :result }.should == :result
     end
 
     context "raising exception:" do

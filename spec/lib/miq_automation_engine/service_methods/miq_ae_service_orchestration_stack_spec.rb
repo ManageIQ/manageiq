@@ -10,7 +10,7 @@ module MiqAeServiceOrchestrationStackSpec
     context "#add_to_service" do
       it "adds a stack to service_resources of a valid service" do
         service_stack.add_to_service(service_service)
-        service.service_resources[0].resource_id.should   == stack.id
+        service.service_resources[0].resource_id.should == stack.id
         service.service_resources[0].resource_type.should == stack.class.name
       end
 

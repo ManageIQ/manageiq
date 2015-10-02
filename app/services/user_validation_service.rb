@@ -49,8 +49,8 @@ class UserValidationService
 
     # Start super admin at the main db if the main db has no records yet
     return validate_user_handle_no_records if db_user.super_admin_user? &&
-                                                get_vmdb_config[:product][:maindb] &&
-                                                  !get_vmdb_config[:product][:maindb].constantize.first
+                                              get_vmdb_config[:product][:maindb] &&
+                                              !get_vmdb_config[:product][:maindb].constantize.first
 
     startpage = start_url_for_user(start_url)
     unless startpage
@@ -63,11 +63,11 @@ class UserValidationService
 
   def validate_user_handle_no_records
     ValidateResult.new(:pass, nil, url_for(
-      :controller    => "ems_infra",
-      :action        => 'show_list',
-      :flash_warning => true,
-      :flash_msg     => _("Non-admin users can not access the system until at least 1 VM/Instance has been discovered"))
-    )
+                                     :controller    => "ems_infra",
+                                     :action        => 'show_list',
+                                     :flash_warning => true,
+                                     :flash_msg     => _("Non-admin users can not access the system until at least 1 VM/Instance has been discovered"))
+                      )
   end
 
   def missing_user_features(db_user)
@@ -83,13 +83,13 @@ class UserValidationService
   def validate_user_handle_not_ready(db_user)
     if db_user.super_admin_user?
       ValidateResult.new(:pass, nil, url_for(
-        :controller    => "ops",
-        :action        => 'explorer',
-        :flash_warning => true,
-        :no_refresh    => true,
-        :flash_msg     => _("The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination"),
-        :escape        => false)
-      )
+                                       :controller    => "ops",
+                                       :action        => 'explorer',
+                                       :flash_warning => true,
+                                       :no_refresh    => true,
+                                       :flash_msg     => _("The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination"),
+                                       :escape        => false)
+                        )
     else
       ValidateResult.new(:fail, _("The CFME Server is still starting. If this message persists, please contact your CFME administrator."))
     end

@@ -7,14 +7,14 @@ describe OpenstackRabbitEventMonitor do
     $log = double.as_null_object
 
     @nova_events = [{:name => "nova 1", :description => "first nova event"},
-               {:name => "nova 2", :description => "second nova event"}]
+                    {:name => "nova 2", :description => "second nova event"}]
     @glance_events = [{:name => "glance 1", :description => "first glance event"},
-               {:name => "glance 2", :description => "second glance event"}]
+                      {:name => "glance 2", :description => "second glance event"}]
     @all_events = @nova_events + @glance_events
 
     @topics = {"nova" => "nova_topic", "glance" => "glance_topic"}
     @receiver_options = {:capacity => 1, :duration => 1}
-    @options = @receiver_options.merge({:topics => @topics, :client_ip => "10.11.12.13"})
+    @options = @receiver_options.merge(:topics => @topics, :client_ip => "10.11.12.13")
 
     @rabbit_connection = double
     OpenstackRabbitEventMonitor.stub(:connect).and_return(@rabbit_connection)

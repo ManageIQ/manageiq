@@ -8,7 +8,7 @@ module AuthenticationMixin
 
     def self.authentication_check_schedule
       zone = MiqServer.my_server.zone
-      assoc = self.name.tableize
+      assoc = name.tableize
       assocs = zone.respond_to?(assoc) ? zone.send(assoc) : []
       assocs.each(&:authentication_check_types_queue)
     end
@@ -100,15 +100,15 @@ module AuthenticationMixin
   def update_authentication(data, options = {})
     return if data.blank?
 
-    options.reverse_merge!({:save => true})
+    options.reverse_merge!(:save => true)
 
-    @orig_credentials ||= self.auth_user_pwd || "none"
+    @orig_credentials ||= auth_user_pwd || "none"
 
     # Invoke before callback
-    self.before_update_authentication if self.respond_to?(:before_update_authentication) && options[:save]
+    before_update_authentication if self.respond_to?(:before_update_authentication) && options[:save]
 
     data.each_pair do |type, value|
-      cred = self.authentication_type(type)
+      cred = authentication_type(type)
       current = {:new => nil, :old => nil}
 
       if value[:auth_key] && !self.kind_of?(ManageIQ::Providers::ContainerManager)
@@ -143,15 +143,15 @@ module AuthenticationMixin
       if cred.nil?
         if self.kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
           # TODO(lsmola) investigate why build throws an exception, that it needs to be subclass of AuthUseridPassword
-          cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
+          cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
-          self.authentications << cred
+          authentications << cred
         elsif self.kind_of?(ManageIQ::Providers::ContainerManager) && value[:auth_key]
-          cred = AuthToken.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
+          cred = AuthToken.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
-          self.authentications << cred
+          authentications << cred
         else
-          cred = self.authentications.build(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
+          cred = authentications.build(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
                                             :type => "AuthUseridPassword")
         end
       end
@@ -163,13 +163,13 @@ module AuthenticationMixin
     end
 
     # Invoke callback
-    self.after_update_authentication if self.respond_to?(:after_update_authentication) && options[:save]
+    after_update_authentication if self.respond_to?(:after_update_authentication) && options[:save]
     @orig_credentials = nil if options[:save]
   end
 
   def credentials_changed?
-    @orig_credentials ||= self.auth_user_pwd || "none"
-    new_credentials = self.auth_user_pwd || "none"
+    @orig_credentials ||= auth_user_pwd || "none"
+    new_credentials = auth_user_pwd || "none"
     @orig_credentials != new_credentials
   end
 
@@ -183,15 +183,15 @@ module AuthenticationMixin
   def authentication_check_types_queue(*args)
     options = args.extract_options!
     types = args.first
-    role = self.authentication_check_role if self.respond_to?(:authentication_check_role)
-    zone = self.my_zone if self.respond_to?(:my_zone)
+    role = authentication_check_role if self.respond_to?(:authentication_check_role)
+    zone = my_zone if self.respond_to?(:my_zone)
 
-    #FIXME: Via schedule, a message is created with args = [], so all authentications will be checked,
+    # FIXME: Via schedule, a message is created with args = [], so all authentications will be checked,
     # while an authentication change will create a message with args [:default] or whatever
     # authentication is changed, so you can end up with two messages for the same ci
     options = {
       :class_name  => self.class.base_class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => 'authentication_check_types',
       :args        => [types.to_miq_a, options]
     }
@@ -200,11 +200,11 @@ module AuthenticationMixin
     options[:zone] = zone if zone
 
     MiqQueue.put_unless_exists(options) do |msg|
-      #TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
+      # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
       help = "Check for a running server"
       help << " in zone: [#{options[:zone]}]"   if options[:zone]
       help << " with role: [#{options[:role]}]" if options[:role]
-      _log.warn("Previous authentication_check_types for [#{self.name}] [#{self.id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
+      _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
     end
   end
 
@@ -213,9 +213,9 @@ module AuthenticationMixin
     types = args.first
 
     # Let the individual classes determine what authentication(s) need to be checked
-    types = self.authentications_to_validate if self.respond_to?(:authentications_to_validate) && types.nil?
+    types = authentications_to_validate if self.respond_to?(:authentications_to_validate) && types.nil?
     types = [nil] if types.blank?
-    types.to_miq_a.each { |t| self.authentication_check(t, options)}
+    types.to_miq_a.each { |t| authentication_check(t, options) }
   end
 
   # Returns [boolean check_result, string details]
@@ -249,8 +249,8 @@ module AuthenticationMixin
   private
 
   def authentication_check_no_validation(type, options)
-    header  = "type: [#{type.inspect}] for [#{self.id}] [#{self.name}]"
-    verify_args = self.is_a?(Host) ? [type, options] : type
+    header  = "type: [#{type.inspect}] for [#{id}] [#{name}]"
+    verify_args = self.kind_of?(Host) ? [type, options] : type
 
     status, details =
       if self.missing_credentials?(type)
@@ -283,7 +283,7 @@ module AuthenticationMixin
     return nil if cred.nil?
 
     value = cred.public_send(method)
-    return value.blank? ? nil : value
+    value.blank? ? nil : value
   end
 
   def available_authentications
@@ -296,7 +296,7 @@ module AuthenticationMixin
 
   def authentication_delete(type)
     a = authentication_type(type)
-    self.authentications.destroy(a) unless a.nil?
-    return a
+    authentications.destroy(a) unless a.nil?
+    a
   end
 end

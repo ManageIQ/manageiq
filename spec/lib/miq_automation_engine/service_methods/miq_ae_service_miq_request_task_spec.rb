@@ -35,11 +35,10 @@ module MiqAeServiceMiqRequestTaskSpec
       result.id.should == miq_request.id
     end
 
-
     it "#options" do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request_task'].options"
       @ae_method.update_attributes(:data => method)
-      options = { :a => 1, :b => 'two' }
+      options = {:a => 1, :b => 'two'}
       MiqRequestTask.any_instance.should_receive(:options).once.and_return(options)
       invoke_ae.root(@ae_result_key).should == options
     end
@@ -63,7 +62,7 @@ module MiqAeServiceMiqRequestTaskSpec
     end
 
     it "#set_option" do
-      options = { :a => 1, :b => 'two' }
+      options = {:a => 1, :b => 'two'}
       @miq_request_task.update_attributes(:options => options)
       key     = 'foo'
       value   = 'bar'
@@ -136,6 +135,5 @@ module MiqAeServiceMiqRequestTaskSpec
       MiqRequestTask.any_instance.should_receive(:update_and_notify_parent).with(:state => 'finished', :message => message).once
       invoke_ae
     end
-
   end
 end

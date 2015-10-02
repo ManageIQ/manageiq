@@ -422,28 +422,29 @@ module PrototypeHelper
   #  periodically_call_remote(:url => 'update', :frequency => '20', :update => 'news_block')
   #
   def periodically_call_remote(options = {})
-     deprecate_prototype_method :periodically_call_remote
-     frequency = options[:frequency] || 10 # every ten seconds by default
-     code = "new PeriodicalExecuter(function() {#{remote_function(options)}}, #{frequency})"
-     javascript_tag(code)
+    deprecate_prototype_method :periodically_call_remote
+    frequency = options[:frequency] || 10 # every ten seconds by default
+    code = "new PeriodicalExecuter(function() {#{remote_function(options)}}, #{frequency})"
+    javascript_tag(code)
   end
 
   protected
-    def build_observer(klass, name, options = {})
-      if options[:with] && (options[:with] !~ /[\{=(.]/)
-        options[:with] = "'#{options[:with]}=' + encodeURIComponent(value)"
-      else
-        options[:with] ||= 'value' unless options[:function]
-      end
 
-      callback = options[:function] || remote_function(options)
-      javascript  = "new #{klass}('#{name}', "
-      javascript << "#{options[:frequency]}, " if options[:frequency]
-      javascript << "function(element, value) {"
-      javascript << "#{callback}}"
-      javascript << ")"
-      javascript_tag(javascript)
+  def build_observer(klass, name, options = {})
+    if options[:with] && (options[:with] !~ /[\{=(.]/)
+      options[:with] = "'#{options[:with]}=' + encodeURIComponent(value)"
+    else
+      options[:with] ||= 'value' unless options[:function]
     end
+
+    callback = options[:function] || remote_function(options)
+    javascript  = "new #{klass}('#{name}', "
+    javascript << "#{options[:frequency]}, " if options[:frequency]
+    javascript << "function(element, value) {"
+    javascript << "#{callback}}"
+    javascript << ")"
+    javascript_tag(javascript)
+  end
 end
 
 ActionController::Base.helper PrototypeHelper

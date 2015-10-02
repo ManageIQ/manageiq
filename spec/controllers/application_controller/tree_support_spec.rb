@@ -2,9 +2,7 @@ require "spec_helper"
 include UiConstants
 
 describe ApplicationController do
-
   context "#tree_autoload_dynatree" do
-
     describe "verify @edit object" do
       before :each do
         controller.should_receive(:tree_add_child_nodes)
@@ -12,7 +10,7 @@ describe ApplicationController do
         controller.instance_variable_set(:@sb,
                                          :trees       => {:foo_tree => {:active_node => "root"}},
                                          :active_tree => :foo_tree
-        )
+                                        )
       end
 
       it "reloads from session" do
@@ -27,6 +25,5 @@ describe ApplicationController do
         assigns(:edit).should be_nil
       end
     end
-
   end
 end

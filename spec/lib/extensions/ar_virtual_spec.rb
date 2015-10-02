@@ -2,21 +2,21 @@ require "spec_helper"
 
 describe VirtualColumn do
   context ".new" do
-    it("with invalid parameters") { lambda { VirtualColumn.new :vcol1 }.should raise_error(ArgumentError) }
+    it("with invalid parameters") { -> { VirtualColumn.new :vcol1 }.should raise_error(ArgumentError) }
     it("with symbol name") { VirtualColumn.new(:vcol1,  :type => :string).name.should == "vcol1" }
     it("with string name") { VirtualColumn.new("vcol1", :type => :string).name.should == "vcol1" }
   end
 
   context ".type" do
-    it("with string type on .new")       { VirtualColumn.new(:vcol1, :type => :string).type.should      == :string }
-    it("with symbol type on .new")       { VirtualColumn.new(:vcol1, :type => :symbol).type.should      == :symbol }
-    it("with string_set type on .new")   { VirtualColumn.new(:vcol1, :type => :string_set).type.should  == :string_set }
+    it("with string type on .new")       { VirtualColumn.new(:vcol1, :type => :string).type.should == :string }
+    it("with symbol type on .new")       { VirtualColumn.new(:vcol1, :type => :symbol).type.should == :symbol }
+    it("with string_set type on .new")   { VirtualColumn.new(:vcol1, :type => :string_set).type.should == :string_set }
     it("with numeric_type type on .new") { VirtualColumn.new(:vcol1, :type => :numeric_set).type.should == :numeric_set }
   end
 
   context ".klass" do
-    it("with string type on .new")      { VirtualColumn.new(:vcol1, :type => :string).klass.should      == String }
-    it("with symbol type on .new")      { VirtualColumn.new(:vcol1, :type => :symbol).klass.should      == Symbol }
+    it("with string type on .new")      { VirtualColumn.new(:vcol1, :type => :string).klass.should == String }
+    it("with symbol type on .new")      { VirtualColumn.new(:vcol1, :type => :symbol).klass.should == Symbol }
     it("with string_set type on .new")  { VirtualColumn.new(:vcol1, :type => :string_set).klass.should  be_nil }
     it("with numeric_set type on .new") { VirtualColumn.new(:vcol1, :type => :numeric_set).klass.should be_nil }
   end
@@ -34,14 +34,14 @@ describe VirtualColumn do
   it ".uses=" do
     c = VirtualColumn.new(:vcol1, :type => :string)
     c.uses = :col1
-    c.uses.should           == :col1
+    c.uses.should == :col1
     c.options[:uses].should == :col1
   end
 
   it ".options[:uses]=" do
     c =  VirtualColumn.new(:vcol1, :type => :string)
     c.options[:uses] = :col1
-    c.uses.should           == :col1
+    c.uses.should == :col1
     c.options[:uses].should == :col1
   end
 end
@@ -100,7 +100,7 @@ describe VirtualReflection do
   it ".uses=" do
     c = model_with_virtual_fields { virtual_has_one :vref1 }.virtual_field(:vref1)
     c.uses = :ref1
-    c.uses.should           == :ref1
+    c.uses.should == :ref1
   end
 
   it ".options[:uses]=" do
@@ -119,19 +119,25 @@ describe VirtualFields do
         # HACK: Simulate a real model by defining some methods expected by
         # ActiveRecord::Associations::Builder::Association.build
         def self.dangerous_attribute_method?(_); false; end
-        def self.generated_association_methods(*args); []; end
-        def self.add_autosave_association_callbacks(*args); end
+
+        def self.generated_association_methods(*_args); []; end
+
+        def self.add_autosave_association_callbacks(*_args); end
         extend VirtualFields
       end
 
       require 'ostruct'
       class TestClass < TestClassBase
         def self.columns_hash;         {"col1" => OpenStruct.new(:name => "col1")}; end
+
         def self.reflections;          {:ref1  => OpenStruct.new(:name => :ref1, :options => {}, :klass => TestClass)};  end
+
         def self.reflect_on_association(name); reflections[name]; end
 
         def self.columns;              columns_hash.values; end
+
         def self.column_names;         ["col1"]; end
+
         def self.column_names_symbols; [:col1];  end
       end
     end
@@ -147,15 +153,15 @@ describe VirtualFields do
       TestClass.virtual_column_names.should         be_empty
       TestClass.virtual_column_names_symbols.should be_empty
 
-      TestClass.columns_hash_with_virtual.should         == TestClass.columns_hash
-      TestClass.columns_with_virtual.should              == TestClass.columns
-      TestClass.column_names_with_virtual.should         == TestClass.column_names
+      TestClass.columns_hash_with_virtual.should == TestClass.columns_hash
+      TestClass.columns_with_virtual.should == TestClass.columns
+      TestClass.column_names_with_virtual.should == TestClass.column_names
       TestClass.column_names_symbols_with_virtual.should == TestClass.column_names_symbols
     end
 
     context ".virtual_column" do
       it "with invalid parameters" do
-        lambda { TestClass.virtual_column :vcol1 }.should raise_error(ArgumentError)
+        -> { TestClass.virtual_column :vcol1 }.should raise_error(ArgumentError)
       end
 
       it "with symbol name" do
@@ -172,25 +178,25 @@ describe VirtualFields do
 
       it "with string type" do
         c = TestClass.virtual_column :vcol1, :type => :string
-        c.type.should  == :string
+        c.type.should == :string
         c.klass.should == String
       end
 
       it "with symbol type" do
         c = TestClass.virtual_column :vcol1, :type => :symbol
-        c.type.should  == :symbol
+        c.type.should == :symbol
         c.klass.should == Symbol
       end
 
       it "with string_set type" do
         c = TestClass.virtual_column :vcol1, :type => :string_set
-        c.type.should  == :string_set
+        c.type.should == :string_set
         c.klass.should be_nil
       end
 
       it "with numeric_set type" do
         c = TestClass.virtual_column :vcol1, :type => :numeric_set
-        c.type.should  == :numeric_set
+        c.type.should == :numeric_set
         c.klass.should be_nil
       end
 
@@ -202,7 +208,7 @@ describe VirtualFields do
 
       it "with uses" do
         c = TestClass.virtual_column :vcol1, :type => :string, :uses => :col1
-        c.uses.should           == :col1
+        c.uses.should == :col1
         c.options[:uses].should == :col1
       end
     end
@@ -289,11 +295,11 @@ describe VirtualFields do
 
         it ".remove_virtual_fields" do
           TestClass.remove_virtual_fields(:vcol1).should          be_nil
-          TestClass.remove_virtual_fields(:ref1).should           == :ref1
-          TestClass.remove_virtual_fields([:vcol1]).should        == []
+          TestClass.remove_virtual_fields(:ref1).should == :ref1
+          TestClass.remove_virtual_fields([:vcol1]).should == []
           TestClass.remove_virtual_fields([:vcol1, :ref1]).should == [:ref1]
-          TestClass.remove_virtual_fields({:vcol1 => {}}).should  == {}
-          TestClass.remove_virtual_fields({:vcol1 => {}, :ref1 => {}}).should == {:ref1 => {}}
+          TestClass.remove_virtual_fields(:vcol1 => {}).should == {}
+          TestClass.remove_virtual_fields(:vcol1 => {}, :ref1 => {}).should == {:ref1 => {}}
         end
       end
     end
@@ -351,13 +357,13 @@ describe VirtualFields do
         it ".remove_virtual_fields" do
           TestSubclass.remove_virtual_fields(:vcol1).should             be_nil
           TestSubclass.remove_virtual_fields(:vcolsub1).should          be_nil
-          TestSubclass.remove_virtual_fields(:ref1).should              == :ref1
-          TestSubclass.remove_virtual_fields([:vcol1]).should           == []
-          TestSubclass.remove_virtual_fields([:vcolsub1]).should        == []
+          TestSubclass.remove_virtual_fields(:ref1).should == :ref1
+          TestSubclass.remove_virtual_fields([:vcol1]).should == []
+          TestSubclass.remove_virtual_fields([:vcolsub1]).should == []
           TestSubclass.remove_virtual_fields([:vcolsub1, :vcol1, :ref1]).should == [:ref1]
-          TestSubclass.remove_virtual_fields({:vcol1    => {}}).should  == {}
-          TestSubclass.remove_virtual_fields({:vcolsub1 => {}}).should  == {}
-          TestSubclass.remove_virtual_fields({:vcolsub1 => {}, :volsub1 => {}, :ref1 => {}}).should == {:ref1 => {}}
+          TestSubclass.remove_virtual_fields({:vcol1    => {}}).should == {}
+          TestSubclass.remove_virtual_fields({:vcolsub1 => {}}).should == {}
+          TestSubclass.remove_virtual_fields(:vcolsub1 => {}, :volsub1 => {}, :ref1 => {}).should == {:ref1 => {}}
         end
       end
     end
@@ -403,7 +409,7 @@ describe VirtualFields do
 
     context "add_virtual_reflection integration" do
       it "with invalid parameters" do
-        lambda { TestClass.virtual_has_one }.should raise_error(ArgumentError)
+        -> { TestClass.virtual_has_one }.should raise_error(ArgumentError)
       end
 
       it "with symbol name" do
@@ -412,8 +418,8 @@ describe VirtualFields do
         c.name.should == :vref1
       end
 
-      it("with has_one macro")    { TestClass.virtual_has_one(:vref1).macro.should    == :has_one }
-      it("with has_many macro")   { TestClass.virtual_has_many(:vref1).macro.should   == :has_many }
+      it("with has_one macro")    { TestClass.virtual_has_one(:vref1).macro.should == :has_one }
+      it("with has_many macro")   { TestClass.virtual_has_many(:vref1).macro.should == :has_many }
       it("with belongs_to macro") { TestClass.virtual_belongs_to(:vref1).macro.should == :belongs_to }
 
       it "without uses" do
@@ -424,11 +430,11 @@ describe VirtualFields do
 
       it "with uses" do
         c = TestClass.virtual_has_one :vref1, :uses => :ref1
-        c.uses.should           == :ref1
+        c.uses.should == :ref1
       end
     end
 
-    %w{has_one has_many belongs_to}.each do |macro|
+    %w(has_one has_many belongs_to).each do |macro|
       virtual_method = "virtual_#{macro}"
 
       context ".#{virtual_method}" do
@@ -445,7 +451,7 @@ describe VirtualFields do
 
         it "with uses" do
           c = TestClass.send(virtual_method, :vref1, :uses => :ref1)
-          c.uses.should           == :ref1
+          c.uses.should == :ref1
         end
       end
     end
@@ -453,8 +459,8 @@ describe VirtualFields do
     context "virtual_reflection assignment" do
       it "" do
         {
-          :vref1  => {:macro => :has_one},
-          :vref2  => {:macro => :has_many},
+          :vref1 => {:macro => :has_one},
+          :vref2 => {:macro => :has_many},
         }.each do |name, options|
           TestClass.send "virtual_#{options[:macro]}", name
         end
@@ -468,8 +474,8 @@ describe VirtualFields do
         TestClass.virtual_has_one :existing_vref
 
         {
-          :vref1  => {:macro => :has_one},
-          :vref2  => {:macro => :has_many},
+          :vref1 => {:macro => :has_one},
+          :vref2 => {:macro => :has_many},
         }.each do |name, options|
           TestClass.send "virtual_#{options[:macro]}", name
         end
@@ -507,11 +513,11 @@ describe VirtualFields do
 
         it ".remove_virtual_fields" do
           TestClass.remove_virtual_fields(:vref1).should          be_nil
-          TestClass.remove_virtual_fields(:ref1).should           == :ref1
-          TestClass.remove_virtual_fields([:vref1]).should        == []
+          TestClass.remove_virtual_fields(:ref1).should == :ref1
+          TestClass.remove_virtual_fields([:vref1]).should == []
           TestClass.remove_virtual_fields([:vref1, :ref1]).should == [:ref1]
-          TestClass.remove_virtual_fields({:vref1 => {}}).should  == {}
-          TestClass.remove_virtual_fields({:vref1 => {}, :ref1 => {}}).should == {:ref1 => {}}
+          TestClass.remove_virtual_fields(:vref1 => {}).should == {}
+          TestClass.remove_virtual_fields(:vref1 => {}, :ref1 => {}).should == {:ref1 => {}}
         end
       end
     end
@@ -544,13 +550,13 @@ describe VirtualFields do
         it ".remove_virtual_fields" do
           TestSubclass.remove_virtual_fields(:vref1).should             be_nil
           TestSubclass.remove_virtual_fields(:vrefsub1).should          be_nil
-          TestSubclass.remove_virtual_fields(:ref1).should              == :ref1
-          TestSubclass.remove_virtual_fields([:vref1]).should           == []
-          TestSubclass.remove_virtual_fields([:vrefsub1]).should        == []
+          TestSubclass.remove_virtual_fields(:ref1).should == :ref1
+          TestSubclass.remove_virtual_fields([:vref1]).should == []
+          TestSubclass.remove_virtual_fields([:vrefsub1]).should == []
           TestSubclass.remove_virtual_fields([:vrefsub1, :vref1, :ref1]).should == [:ref1]
-          TestSubclass.remove_virtual_fields({:vref1    => {}}).should  == {}
-          TestSubclass.remove_virtual_fields({:vrefsub1 => {}}).should  == {}
-          TestSubclass.remove_virtual_fields({:vrefsub1 => {}, :vref1 => {}, :ref1 => {}}).should == {:ref1 => {}}
+          TestSubclass.remove_virtual_fields({:vref1    => {}}).should == {}
+          TestSubclass.remove_virtual_fields({:vrefsub1 => {}}).should == {}
+          TestSubclass.remove_virtual_fields(:vrefsub1 => {}, :vref1 => {}, :ref1 => {}).should == {:ref1 => {}}
         end
       end
     end
@@ -620,58 +626,58 @@ describe VirtualFields do
   context "preloading" do
     before(:each) do
       FactoryGirl.create(:vm_vmware,
-        :hardware         => FactoryGirl.create(:hardware),
-        :operating_system => FactoryGirl.create(:operating_system),
-        :host => FactoryGirl.create(:host,
-          :hardware         => FactoryGirl.create(:hardware),
-          :operating_system => FactoryGirl.create(:operating_system)
-        )
-      )
+                         :hardware         => FactoryGirl.create(:hardware),
+                         :operating_system => FactoryGirl.create(:operating_system),
+                         :host             => FactoryGirl.create(:host,
+                                                                 :hardware         => FactoryGirl.create(:hardware),
+                                                                 :operating_system => FactoryGirl.create(:operating_system)
+                                                                )
+                        )
     end
 
     context "virtual column" do
       it "as Symbol" do
-        lambda { Vm.includes(:platform).load }.should_not raise_error
+        -> { Vm.includes(:platform).load }.should_not raise_error
       end
 
       it "as Array" do
-        lambda { Vm.includes([:platform]).load }.should_not raise_error
-        lambda { Vm.includes([:platform, :host]).load }.should_not raise_error
+        -> { Vm.includes([:platform]).load }.should_not raise_error
+        -> { Vm.includes([:platform, :host]).load }.should_not raise_error
       end
 
       it "as Hash" do
-        lambda { Vm.includes(:platform => {}).load }.should_not raise_error
-        lambda { Vm.includes(:platform => {}, :host => :hardware).load }.should_not raise_error
+        -> { Vm.includes(:platform => {}).load }.should_not raise_error
+        -> { Vm.includes(:platform => {}, :host => :hardware).load }.should_not raise_error
       end
     end
 
     context "virtual reflection" do
       it "as Symbol" do
-        lambda { Vm.includes(:lans).load }.should_not raise_error
+        -> { Vm.includes(:lans).load }.should_not raise_error
       end
 
       it "as Array" do
-        lambda { Vm.includes([:lans]).load }.should_not raise_error
-        lambda { Vm.includes([:lans, :host]).load }.should_not raise_error
+        -> { Vm.includes([:lans]).load }.should_not raise_error
+        -> { Vm.includes([:lans, :host]).load }.should_not raise_error
       end
 
       it "as Hash" do
-        lambda { Vm.includes(:lans => :switch).load }.should_not raise_error
-        lambda { Vm.includes(:lans => :switch, :host => :hardware).load }.should_not raise_error
+        -> { Vm.includes(:lans => :switch).load }.should_not raise_error
+        -> { Vm.includes(:lans => :switch, :host => :hardware).load }.should_not raise_error
       end
     end
 
     it "nested virtual fields" do
-      lambda { Vm.includes(:host => :ems_cluster).load }.should_not raise_error
+      -> { Vm.includes(:host => :ems_cluster).load }.should_not raise_error
     end
 
     it "virtual field that has nested virtual fields in its :uses clause" do
-      lambda { Vm.includes(:ems_cluster).load }.should_not raise_error
+      -> { Vm.includes(:ems_cluster).load }.should_not raise_error
     end
 
     it "should handle virtual fields in :include when :conditions are also present in calculations" do
-      lambda { Vm.includes([:platform, :host]).references(:host).where("hosts.name = 'test'").count }.should_not raise_error
-      lambda { Vm.includes([:platform, :host]).references(:host).where("hosts.id IS NOT NULL").count }.should_not raise_error
+      -> { Vm.includes([:platform, :host]).references(:host).where("hosts.name = 'test'").count }.should_not raise_error
+      -> { Vm.includes([:platform, :host]).references(:host).where("hosts.id IS NOT NULL").count }.should_not raise_error
     end
   end
 end

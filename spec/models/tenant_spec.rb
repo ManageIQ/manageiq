@@ -354,9 +354,9 @@ describe Tenant do
       described_class.destroy_all
       root_tenant # create a root tenant
 
-      expect {
+      expect do
         described_class.create!
-      }.to raise_error
+      end.to raise_error
     end
   end
 
@@ -388,7 +388,7 @@ describe Tenant do
       FactoryGirl.create(:miq_group,
                          :miq_user_role => admin_with_brand,
                          :tenant        => tenant1
-                         )
+                        )
     end
     let(:tenant1_users) do
       FactoryGirl.create(:miq_group,
@@ -400,7 +400,7 @@ describe Tenant do
     let(:user2) { FactoryGirl.create(:user, :userid => 'user2') }
 
     it "has users" do
-      admin ; user1 ; user2
+      admin; user1; user2
       expect(tenant1.users).to include(admin)
       expect(tenant1.users).to include(user1)
       expect(tenant1.users).not_to include(user2)
@@ -472,7 +472,7 @@ describe Tenant do
   end
 
   describe ".set_quotas" do
-    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
+    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
 
     it "can set quotas" do
       tenant.set_quotas(:vms_allocated => {:value => 20})
@@ -527,7 +527,7 @@ describe Tenant do
 
       tq = default_tenant.tenant_quotas
       expect(tq.length).to eql 2
-      expect(tq.map(&:name).sort).to eql %w{mem_allocated vms_allocated}
+      expect(tq.map(&:name).sort).to eql %w(mem_allocated vms_allocated)
     end
 
     it "deletes existing quotas when nil value is passed" do
@@ -544,7 +544,7 @@ describe Tenant do
   end
 
   describe ".get_quotas" do
-    let(:tenant)  {FactoryGirl.build(:tenant, :parent => default_tenant)}
+    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
 
     it "can get quotas" do
       expect(tenant.get_quotas).not_to be_empty
@@ -554,30 +554,30 @@ describe Tenant do
       default_tenant.set_quotas(:vms_allocated => {:value => 20}, :mem_allocated => {:value => 4096})
 
       expected = {
-          :vms_allocated => {
-              :unit          => "fixnum",
-              :value         => 20.0,
-              :warn_value    => nil,
-              :format        => "general_number_precision_0",
-              :text_modifier => "Count",
-              :description   => "Allocated Number of Virtual Machines"
-          },
-          :mem_allocated => {
-              :unit          => "bytes",
-              :value         => 4096.0,
-              :warn_value    => nil,
-              :format        => "gigabytes_human",
-              :text_modifier => "GB",
-              :description   => "Allocated Memory in GB"
-          },
-          :storage_allocated => {
-              :unit          => :bytes,
-              :value         => nil,
-              :warn_value    => nil,
-              :format        => :gigabytes_human,
-              :text_modifier => "GB",
-              :description   => "Allocated Storage in GB"
-          }
+        :vms_allocated     => {
+          :unit          => "fixnum",
+          :value         => 20.0,
+          :warn_value    => nil,
+          :format        => "general_number_precision_0",
+          :text_modifier => "Count",
+          :description   => "Allocated Number of Virtual Machines"
+        },
+        :mem_allocated     => {
+          :unit          => "bytes",
+          :value         => 4096.0,
+          :warn_value    => nil,
+          :format        => "gigabytes_human",
+          :text_modifier => "GB",
+          :description   => "Allocated Memory in GB"
+        },
+        :storage_allocated => {
+          :unit          => :bytes,
+          :value         => nil,
+          :warn_value    => nil,
+          :format        => :gigabytes_human,
+          :text_modifier => "GB",
+          :description   => "Allocated Storage in GB"
+        }
       }
 
       expect(default_tenant.get_quotas[:vms_allocated]).to     eql expected[:vms_allocated]

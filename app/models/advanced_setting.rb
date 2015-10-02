@@ -22,6 +22,6 @@ class AdvancedSetting < ActiveRecord::Base
 
       el.each_element { |e| result << e.attributes.to_h }
     end
-    return result
+    result
   end
 end

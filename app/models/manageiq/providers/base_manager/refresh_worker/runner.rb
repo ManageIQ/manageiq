@@ -14,8 +14,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::MiqQueueWorker
   end
 
   def do_before_work_loop
-    _log.info("#{self.log_prefix} Queueing initial refresh for EMS.")
+    _log.info("#{log_prefix} Queueing initial refresh for EMS.")
     EmsRefresh.queue_refresh(@ems)
   end
-
 end

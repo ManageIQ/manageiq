@@ -1,5 +1,4 @@
 module EmsClusterHelper::TextualSummary
-
   #
   # Groups
   #
@@ -21,8 +20,8 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_group_configuration
-    return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? &&  @record.drs_enabled.nil? &&
-        @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
+    return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? && @record.drs_enabled.nil? &&
+                  @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
     %i(ha_enabled ha_admit_control drs_enabled drs_automation_level drs_migration_threshold)
   end
 
@@ -161,7 +160,7 @@ module EmsClusterHelper::TextualSummary
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
     textual_link(@record.resource_pools,
-                 :as => EmsCluster,
+                 :as   => EmsCluster,
                  :link => url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'resource_pools'))
   end
 

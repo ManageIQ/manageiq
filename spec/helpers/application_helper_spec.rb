@@ -91,23 +91,23 @@ describe ApplicationHelper do
     context "when with :feature" do
       context "and :any" do
         it "and entitled" do
-          role_allows(:feature=>"miq_report", :any=>true).should be_true
+          role_allows(:feature => "miq_report", :any => true).should be_true
         end
 
         it "and not entitled" do
           @user.stub(:role_allows_any? => false)
-          role_allows(:feature=>"miq_report", :any=>true).should be_false
+          role_allows(:feature => "miq_report", :any => true).should be_false
         end
       end
 
       context "and no :any" do
         it "and entitled" do
-          role_allows(:feature=>"miq_report").should be_true
+          role_allows(:feature => "miq_report").should be_true
         end
 
         it "and not entitled" do
           @user.stub(:role_allows? => false)
-          role_allows(:feature=>"miq_report").should be_false
+          role_allows(:feature => "miq_report").should be_false
         end
       end
     end
@@ -138,16 +138,16 @@ describe ApplicationHelper do
     end
 
     it "when record is nil" do
-      lambda { model_to_controller(nil) }.should raise_error(NoMethodError)
+      -> { model_to_controller(nil) }.should raise_error(NoMethodError)
     end
   end
 
   describe "#object_types_for_flash_message" do
     before do
-      @record_1 = FactoryGirl.create(:vm_openstack, :type => ManageIQ::Providers::Openstack::CloudManager::Vm.name,       :template => false )
-      @record_2 = FactoryGirl.create(:vm_openstack, :type => ManageIQ::Providers::Openstack::CloudManager::Vm.name,       :template => false )
-      @record_3 = FactoryGirl.create(:vm_openstack, :type => ManageIQ::Providers::Openstack::CloudManager::Template.name, :template => true )
-      @record_4 = FactoryGirl.create(:vm_openstack, :type => ManageIQ::Providers::Openstack::CloudManager::Template.name, :template => true )
+      @record_1 = FactoryGirl.create(:vm_openstack, :type => ManageIQ::Providers::Openstack::CloudManager::Vm.name,       :template => false)
+      @record_2 = FactoryGirl.create(:vm_openstack, :type => ManageIQ::Providers::Openstack::CloudManager::Vm.name,       :template => false)
+      @record_3 = FactoryGirl.create(:vm_openstack, :type => ManageIQ::Providers::Openstack::CloudManager::Template.name, :template => true)
+      @record_4 = FactoryGirl.create(:vm_openstack, :type => ManageIQ::Providers::Openstack::CloudManager::Template.name, :template => true)
       @record_5 = FactoryGirl.create(:vm_redhat,    :type => ManageIQ::Providers::Redhat::InfraManager::Vm.name)
       @record_6 = FactoryGirl.create(:vm_vmware,    :type => ManageIQ::Providers::Vmware::InfraManager::Vm.name)
     end
@@ -158,47 +158,47 @@ describe ApplicationHelper do
       end
 
       it "with one Instance" do
-        record_ids = [ @record_1.id ]
+        record_ids = [@record_1.id]
         object_types_for_flash_message(@klass, record_ids).should == "Instance"
       end
 
       it "with multiple Instances" do
-        record_ids = [ @record_1.id, @record_2.id ]
+        record_ids = [@record_1.id, @record_2.id]
         object_types_for_flash_message(@klass, record_ids).should == "Instances"
       end
 
       it "with one Instance and one Image" do
-        record_ids = [ @record_1.id, @record_3.id ]
+        record_ids = [@record_1.id, @record_3.id]
         object_types_for_flash_message(@klass, record_ids).should == "Image and Instance"
       end
 
       it "with one Instance and multiple Images" do
-        record_ids = [ @record_1.id, @record_3.id, @record_4.id ]
+        record_ids = [@record_1.id, @record_3.id, @record_4.id]
         object_types_for_flash_message(@klass, record_ids).should == "Images and Instance"
       end
 
       it "with multiple Instances and multiple Images" do
-        record_ids = [ @record_1.id, @record_2.id, @record_3.id, @record_4.id ]
+        record_ids = [@record_1.id, @record_2.id, @record_3.id, @record_4.id]
         object_types_for_flash_message(@klass, record_ids).should == "Images and Instances"
       end
 
       it "with multiple Instances and one Virtual Machine" do
-        record_ids = [ @record_1.id, @record_2.id, @record_5.id ]
+        record_ids = [@record_1.id, @record_2.id, @record_5.id]
         object_types_for_flash_message(@klass, record_ids).should == "Instances and Virtual Machine"
       end
 
       it "with multiple Instances and multiple Virtual Machines" do
-        record_ids = [ @record_1.id, @record_2.id, @record_5.id, @record_6.id ]
+        record_ids = [@record_1.id, @record_2.id, @record_5.id, @record_6.id]
         object_types_for_flash_message(@klass, record_ids).should == "Instances and Virtual Machines"
       end
 
       it "with multiple Instances, one Image and multiple Virtual Machines" do
-        record_ids = [ @record_5.id, @record_6.id, @record_1.id, @record_2.id, @record_4.id ]
+        record_ids = [@record_5.id, @record_6.id, @record_1.id, @record_2.id, @record_4.id]
         object_types_for_flash_message(@klass, record_ids).should == "Image, Instances, and Virtual Machines"
       end
 
       it "with multiple Instances, multiple Images and multiple Virtual Machines" do
-        record_ids = [ @record_5.id, @record_6.id, @record_1.id, @record_2.id, @record_3.id, @record_4.id ]
+        record_ids = [@record_5.id, @record_6.id, @record_1.id, @record_2.id, @record_3.id, @record_4.id]
         object_types_for_flash_message(@klass, record_ids).should == "Images, Instances, and Virtual Machines"
       end
     end
@@ -209,16 +209,15 @@ describe ApplicationHelper do
       end
 
       it "with one Service" do
-        record_ids = [ @record_1.id ]
+        record_ids = [@record_1.id]
         object_types_for_flash_message(@klass, record_ids).should == "Service"
       end
 
       it "with multiple Services" do
-        record_ids = [ @record_1.id, @record_2.id ]
+        record_ids = [@record_1.id, @record_2.id]
         object_types_for_flash_message(@klass, record_ids).should == "Services"
       end
     end
-
   end
 
   describe "#url_for_record" do
@@ -260,7 +259,7 @@ describe ApplicationHelper do
       it "otherwise" do
         db = "vm"
         c, a = db_to_controller(db, @action)
-        url_for_db(db, @action).should == url_for(:controller=>c, :action=>a, :id=>@id)
+        url_for_db(db, @action).should == url_for(:controller => c, :action => a, :id => @id)
       end
     end
 
@@ -270,17 +269,17 @@ describe ApplicationHelper do
         @lastaction = "list"
       end
 
-       ["Patch", "GuestApplication"].each do |d|
-         it "and db = #{d}" do
-           db = d
-           url_for_db(db, @action).should == url_for(:controller=>"host", :action=>@lastaction, :id=>@host, :show=>@id)
-         end
-       end
+      ["Patch", "GuestApplication"].each do |d|
+        it "and db = #{d}" do
+          db = d
+          url_for_db(db, @action).should == url_for(:controller => "host", :action => @lastaction, :id => @host, :show => @id)
+        end
+      end
 
-       it "otherwise" do
-         db = "vm"
-         c, a = db_to_controller(db, @action)
-         url_for_db(db, @action).should == url_for(:controller=>c, :action=>a, :id=>@id)
+      it "otherwise" do
+        db = "vm"
+        c, a = db_to_controller(db, @action)
+        url_for_db(db, @action).should == url_for(:controller => c, :action => a, :id => @id)
       end
     end
 
@@ -409,7 +408,7 @@ describe ApplicationHelper do
 
     ["User", "Group", "Patch", "GuestApplication"].each do |db|
       context "when with #{db}" do
-        before { @db = db ; @lastaction = "some_action"}
+        before { @db = db; @lastaction = "some_action" }
 
         it "and @explorer" do
           @explorer = true
@@ -635,14 +634,14 @@ describe ApplicationHelper do
 
     it "when layout likes 'cim_*' or 'snia_*'" do
       @layout = "cim_base_storage_extent"
-      subject.should == title  + ": Storage - #{ui_lookup(:tables=>@layout)}"
+      subject.should == title + ": Storage - #{ui_lookup(:tables => @layout)}"
     end
 
     it "otherwise" do
       @layout = "xxx"
-      subject.should == title  + ": #{ui_lookup(:tables=>@layout)}"
+      subject.should == title + ": #{ui_lookup(:tables => @layout)}"
     end
- end
+  end
 
   context "#controller_model_name" do
     it "returns the model's title" do
@@ -680,12 +679,12 @@ describe ApplicationHelper do
   context "#is_browser?" do
     it "when browser's name is in the list" do
       ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, :name).and_return('safari')
-      is_browser?(["firefox","opera","safari"]).should be_true
+      is_browser?(["firefox", "opera", "safari"]).should be_true
     end
 
     it "when browser's name is NOT in the list" do
       ActionController::TestSession.any_instance.stub(:fetch_path).with(:browser, :name).and_return('explorer')
-      is_browser?(["firefox","opera","safari"]).should be_false
+      is_browser?(["firefox", "opera", "safari"]).should be_false
     end
   end
 
@@ -772,10 +771,10 @@ describe ApplicationHelper do
   end
 
   context "#javascript_for_toolbar_reload" do
-    let(:test_tab)    {"some_center_tb"}
-    let(:test_buttons) {"x_button"}
-    let(:test_xml)    {"x_xml"}
-    subject { javascript_for_toolbar_reload(test_tab, test_buttons, test_xml)}
+    let(:test_tab)    { "some_center_tb" }
+    let(:test_buttons) { "x_button" }
+    let(:test_xml)    { "x_xml" }
+    subject { javascript_for_toolbar_reload(test_tab, test_buttons, test_xml) }
 
     it { should include("ManageIQ.toolbars.#{test_tab}.obj.unload();") }
     it { should include("#{test_tab} = new dhtmlXToolbarObject('#{test_tab}', 'miq_blue');") }
@@ -785,23 +784,23 @@ describe ApplicationHelper do
   end
 
   context "#javascript_set_value" do
-    let(:element_id)    {"text_field"}
-    let(:element_value) {"something"}
-    subject { javascript_set_value(element_id, element_value)}
+    let(:element_id)    { "text_field" }
+    let(:element_value) { "something" }
+    subject { javascript_set_value(element_id, element_value) }
 
     it { should eq("$('#text_field').val('something');") }
   end
 
   context "#set_edit_timer_from_schedule" do
     before(:each) do
-      @edit = {:tz => 'Eastern Time (US & Canada)', :new => Hash.new}
+      @edit = {:tz => 'Eastern Time (US & Canada)', :new => {}}
       @interval = '3'
       @date = "6/28/2012"
-      @hour = "0#{11-4}"
+      @hour = "0#{11 - 4}"
       @min = "14"
       @run_at = {:start_time => "2012-06-28 11:14:00".to_time(:utc),
                  :interval   => {:value => @interval}}
-      @schedule = double( :run_at => @run_at )
+      @schedule = double(:run_at => @run_at)
     end
 
     describe "when schedule.run_at == nil" do
@@ -809,9 +808,9 @@ describe ApplicationHelper do
         schedule = double(:run_at => nil)
         set_edit_timer_from_schedule schedule
         @edit[:new].should include(
-          :timer_typ => "Once",
+          :timer_typ  => "Once",
           :start_hour => "00",
-          :start_min => "00"
+          :start_min  => "00"
         )
       end
     end
@@ -821,52 +820,52 @@ describe ApplicationHelper do
         @run_at[:interval][:unit] = 'monthly'
         set_edit_timer_from_schedule @schedule
         @edit[:new].should include(
-          :timer_typ => 'Monthly',
+          :timer_typ    => 'Monthly',
           :timer_months => @interval,
-          :start_hour => @hour,
-          :start_min => @min,
-          :start_date => @date
+          :start_hour   => @hour,
+          :start_min    => @min,
+          :start_date   => @date
         )
-        @edit[:new].should_not include( :timer_months => '1' )
+        @edit[:new].should_not include(:timer_months => '1')
       end
 
       it "sets values as weekly" do
         @run_at[:interval][:unit] = 'weekly'
         set_edit_timer_from_schedule @schedule
         @edit[:new].should include(
-          :timer_typ => 'Weekly',
+          :timer_typ   => 'Weekly',
           :timer_weeks => @interval,
-          :start_hour => @hour,
-          :start_min => @min,
-          :start_date => @date
+          :start_hour  => @hour,
+          :start_min   => @min,
+          :start_date  => @date
         )
-        @edit[:new].should_not include( :timer_weeks => '1' )
+        @edit[:new].should_not include(:timer_weeks => '1')
       end
 
       it "sets values as daily" do
         @run_at[:interval][:unit] = 'daily'
         set_edit_timer_from_schedule @schedule
         @edit[:new].should include(
-          :timer_typ => 'Daily',
+          :timer_typ  => 'Daily',
           :timer_days => @interval,
           :start_hour => @hour,
-          :start_min => @min,
+          :start_min  => @min,
           :start_date => @date
         )
-        @edit[:new].should_not include( :timer_days => '1' )
+        @edit[:new].should_not include(:timer_days => '1')
       end
 
       it "sets values as hourly" do
         @run_at[:interval][:unit] = 'hourly'
         set_edit_timer_from_schedule @schedule
         @edit[:new].should include(
-          :timer_typ => 'Hourly',
+          :timer_typ   => 'Hourly',
           :timer_hours => @interval,
-          :start_hour => @hour,
-          :start_min => @min,
-          :start_date => @date
+          :start_hour  => @hour,
+          :start_min   => @min,
+          :start_date  => @date
         )
-        @edit[:new].should_not include( :timer_hours => '1' )
+        @edit[:new].should_not include(:timer_hours => '1')
       end
     end
   end
@@ -946,8 +945,8 @@ describe ApplicationHelper do
 
   context "tree related methods" do
     before do
-      @sb = { :active_tree => :svcs_tree,
-              :trees => { :svcs_tree => { :tree => :svcs_tree }}}
+      @sb = {:active_tree => :svcs_tree,
+             :trees       => {:svcs_tree => {:tree => :svcs_tree}}}
     end
 
     it "#x_node_set" do
@@ -955,15 +954,15 @@ describe ApplicationHelper do
       @sb[:trees][:vm_filter_tree] = {:active_node => 'abc'}
 
       x_node_set('def', :vm_filter_tree)
-      @sb[:trees][:svcs_tree][:active_node].should      == 'root'
+      @sb[:trees][:svcs_tree][:active_node].should == 'root'
       @sb[:trees][:vm_filter_tree][:active_node].should == 'def'
 
       x_node_set(nil, :vm_filter_tree)
-      @sb[:trees][:svcs_tree][:active_node].should      == 'root'
+      @sb[:trees][:svcs_tree][:active_node].should == 'root'
       @sb[:trees][:vm_filter_tree][:active_node].should be_nil
 
       x_node_set('', :vm_filter_tree)
-      @sb[:trees][:svcs_tree][:active_node].should      == 'root'
+      @sb[:trees][:svcs_tree][:active_node].should == 'root'
       @sb[:trees][:vm_filter_tree][:active_node].should == ''
     end
 
@@ -994,7 +993,7 @@ describe ApplicationHelper do
         @sb[:trees][:svcs_tree]      = {:active_node => 'root'}
         @sb[:trees][:vm_filter_tree] = {:active_node => 'abc'}
 
-        x_node(:svcs_tree).should      == "root"
+        x_node(:svcs_tree).should == "root"
         x_node(:vm_filter_tree).should == "abc"
       end
     end
@@ -1012,7 +1011,7 @@ describe ApplicationHelper do
         @sb[:trees][:vm_filter_tree] = {:tree => :vm_filter_tree}
         @sb[:trees][:svcs_tree]      = {:tree => :svcs_tree}
 
-        x_tree(:svcs_tree).should      == @sb[:trees][:svcs_tree]
+        x_tree(:svcs_tree).should == @sb[:trees][:svcs_tree]
         x_tree(:vm_filter_tree).should == @sb[:trees][:vm_filter_tree]
       end
     end
@@ -1035,7 +1034,7 @@ describe ApplicationHelper do
       it "does not replace existing trees" do
         x_tree_init(:svcs_tree, :xxx, "XXX")
 
-        @sb[:trees][:svcs_tree].should == { :tree => :svcs_tree }
+        @sb[:trees][:svcs_tree].should == {:tree => :svcs_tree}
       end
 
       it "has default values" do
@@ -1052,11 +1051,11 @@ describe ApplicationHelper do
 
       it "can override default values" do
         x_tree_init(:vm_filter_tree, :vm_filter, "Vm",
-          :add_root   => false,
-          :open_nodes => [:a],
-          :open_all   => true,
-          :full_ids   => true
-        )
+                    :add_root   => false,
+                    :open_nodes => [:a],
+                    :open_all   => true,
+                    :full_ids   => true
+                   )
 
         @sb[:trees][:vm_filter_tree].should == {
           :tree       => :vm_filter_tree,
@@ -1071,20 +1070,17 @@ describe ApplicationHelper do
     end
 
     it "#x_tree_history" do
-      @sb = { :history => { :svcs_tree => %w(service1 service2 service3) },
-              :active_tree => :svcs_tree }
+      @sb = {:history     => {:svcs_tree => %w(service1 service2 service3)},
+             :active_tree => :svcs_tree}
       x_tree_history.should == %w(service1 service2 service3)
     end
   end
 
   describe "truncate text for quad icons" do
-
     ["front", "middle", "back"].each do |trunc|
-
       context "remove #{trunc} of text" do
-
         before(:each) do
-          @settings = {:display=>{:quad_truncate=>trunc[0]}}
+          @settings = {:display => {:quad_truncate => trunc[0]}}
         end
 
         it "when value is nil" do
@@ -1105,115 +1101,95 @@ describe ApplicationHelper do
         it "when value is 13 long" do
           text = truncate_for_quad("ABCDEooo12345")
           text.should == case trunc[0]
-                           when "f"; "...DEooo12345"
-                           when "m"; "ABCDE...12345"
-                           when "b"; "ABCDEooo12..."
+                         when "f" then "...DEooo12345"
+                         when "m" then "ABCDE...12345"
+                         when "b" then "ABCDEooo12..."
                          end
         end
 
         it "when value is 25 long" do
           text = truncate_for_quad("ABCDEooooooooooooooo12345")
           text.should == case trunc[0]
-                           when "f"; "...ooooo12345"
-                           when "m"; "ABCDE...12345"
-                           when "b"; "ABCDEooooo..."
+                         when "f" then "...ooooo12345"
+                         when "m" then "ABCDE...12345"
+                         when "b" then "ABCDEooooo..."
                          end
         end
       end
-
     end
-
   end
 
   describe "generate custom toolbar file names" do
-
     context "for classic (non-explorer) CI main summary screens" do
-
       before(:each) do
         @lastaction = "show"
         @record = true
       end
 
-      ["miq_template","ems_cloud","ems_cluster","ems_infra","host","storage"].each do |table|
-
+      ["miq_template", "ems_cloud", "ems_cluster", "ems_infra", "host", "storage"].each do |table|
         it "for table #{table}" do
           @layout = table
           @display = "main"
           text = custom_toolbar_filename
           text.should == "custom_buttons_tb"
         end
-
       end
 
       # Just a few tables that don't have custom toolbars
-      ["ems_events","storage_managers"].each do |table|
-
+      ["ems_events", "storage_managers"].each do |table|
         it "for table #{table}" do
           @layout = table
           text = custom_toolbar_filename
           text.should be_nil
         end
-
       end
-
     end
 
     context "for classic (non-explorer) CI non-main summary screens" do
-
       before(:each) do
         @lastaction = "show"
         @record = true
       end
 
-      ["miq_template","ems_cluster","host","storage","management_system"].each do |table|
-
+      ["miq_template", "ems_cluster", "host", "storage", "management_system"].each do |table|
         it "for table #{table}" do
           @layout = table
           @display = "not_main"
           text = custom_toolbar_filename
           text.should be_nil
         end
-
       end
-
     end
 
     context "for classic (non-explorer) CI list view screens" do
-
       before(:each) do
         @lastaction = "show_list"
         @record = true
       end
 
-      ["miq_template","ems_cluster","host","storage","management_system"].each do |table|
-
+      ["miq_template", "ems_cluster", "host", "storage", "management_system"].each do |table|
         it "for table #{table}" do
           @layout = table
           text = custom_toolbar_filename
           text.should be_nil
         end
-
       end
 
       # Just a few tables that don't have custom toolbars
-      ["ems_events","storage_managers"].each do |table|
-
+      ["ems_events", "storage_managers"].each do |table|
         it "for table #{table}" do
           @layout = table
           text = custom_toolbar_filename
           text.should be_nil
         end
-
       end
-
     end
 
     context "for explorer-based screens" do
-
       before(:each) do
         @explorer = true
         @sb = {:active_tree => "my_tree",
-               :trees       => {"my_tree" => {:active_node=>nil}}
+               :trees       => {"my_tree" => {:active_node => nil}}
               }
       end
 
@@ -1223,8 +1199,7 @@ describe ApplicationHelper do
         text.should be_nil
       end
 
-      ["vm_or_template","service"].each do |table|
-
+      ["vm_or_template", "service"].each do |table|
         it "for #{table} controller on root node" do
           @sb[:trees][@sb[:active_tree]][:active_node] = "root"
           helper.stub(:params) { {:controller => table} }
@@ -1249,9 +1224,7 @@ describe ApplicationHelper do
           text = helper.custom_toolbar_filename
           text.should == "blank_view_tb"
         end
-
       end
-
     end
 
     context "#center_div_height" do
@@ -1279,7 +1252,7 @@ describe ApplicationHelper do
       'boo_far_bar'      => ['boo', 'far_bar'],
     }
 
-    examples.each_pair do |input,output|
+    examples.each_pair do |input, output|
       it "gives '#{output}' on '#{input}'" do
         helper.pressed2model_action(input).should == output
       end
@@ -1287,7 +1260,6 @@ describe ApplicationHelper do
   end
 
   describe "update_paging_url_parms", :type => :request do
-
     context "when the given parameter is a hash" do
       before do
         get("/vm/show_list/100", "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\

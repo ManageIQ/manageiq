@@ -34,7 +34,7 @@ module ApplicationController::PolicySupport
         @sb[:action] = nil
       elsif params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
-        @explorer = true if @edit && @edit[:explorer]       #resetting @explorer from @edit incase reset button was pressed with explorer
+        @explorer = true if @edit && @edit[:explorer]       # resetting @explorer from @edit incase reset button was pressed with explorer
         protect_build_screen                                #    build the protect screen
         if @edit[:explorer]
           @sb[:action] = "protect"
@@ -70,7 +70,7 @@ module ApplicationController::PolicySupport
       end
     else                                                  # First time in,
       protect_build_screen                                #    build the protect screen
-      if !@edit[:explorer]
+      unless @edit[:explorer]
         render "shared/views/protect"
       end
     end
@@ -80,15 +80,15 @@ module ApplicationController::PolicySupport
   def policy_sim
     if request.xml_http_request?  # Ajax request means in explorer
       @explorer = true
-      @edit ||= Hash.new
-      @edit[:explorer] = true       #since there is no @edit, create @edit and save explorer to use while building url for vms in policy sim grid
+      @edit ||= {}
+      @edit[:explorer] = true       # since there is no @edit, create @edit and save explorer to use while building url for vms in policy sim grid
       session[:edit] = @edit
     end
     @lastaction = "policy_sim"
-    drop_breadcrumb( {:name=>"Policy Simulation", :url=>"/#{request.parameters["controller"]}/policy_sim?continue=true"} )
-    session[:policies] = Hash.new unless params[:continue]  # Clear current policies, unless continuing previous simulation
+    drop_breadcrumb(:name => "Policy Simulation", :url => "/#{request.parameters["controller"]}/policy_sim?continue=true")
+    session[:policies] = {} unless params[:continue]  # Clear current policies, unless continuing previous simulation
     policy_sim_build_screen
-    @tabs = [ ["polsim", nil], ["polsim", "Policy Simulation"] ]
+    @tabs = [["polsim", nil], ["polsim", "Policy Simulation"]]
     if @explorer
       @record = @tagitems.first
       @in_a_form = true
@@ -158,16 +158,16 @@ module ApplicationController::PolicySupport
   private ############################
 
   # Assign policies to selected records of db
-  def assign_policies(db=nil)
+  def assign_policies(db = nil)
     assert_privileges(params[:pressed])
     session[:pol_db] = db                               # Remember the DB
-    recs = Array.new
+    recs = []
     recs = find_checked_items
     if recs.blank?
       recs = [params[:id]]
     end
     if recs.length < 1
-      add_flash(_("One or more %{model} must be selected to %{task}") % {:model=>Dictionary::gettext(db.to_s, :type=>:model, :notfound=>:titleize).pluralize, :task=>"Policy assignment"}, :error)
+      add_flash(_("One or more %{model} must be selected to %{task}") % {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize).pluralize, :task => "Policy assignment"}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
       return
@@ -184,23 +184,23 @@ module ApplicationController::PolicySupport
       end
     end
   end
-  alias image_protect assign_policies
-  alias instance_protect assign_policies
-  alias vm_protect assign_policies
-  alias miq_template_protect assign_policies
+  alias_method :image_protect, :assign_policies
+  alias_method :instance_protect, :assign_policies
+  alias_method :vm_protect, :assign_policies
+  alias_method :miq_template_protect, :assign_policies
 
   # Build the policy assignment screen
   def protect_build_screen
     drop_breadcrumb(
-      {:name=>"'#{Dictionary::gettext(session[:pol_db].to_s, :type=>:model, :notfound=>:titleize)}' Policy Assignment",
-      :url=>"/#{request.parameters["controller"]}/protecting"}
+      :name => "'#{Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize)}' Policy Assignment",
+      :url  => "/#{request.parameters["controller"]}/protecting"
     )
-    #session[:pol_db] = session[:pol_db] == Vm ? VmOrTemplate : session[:pol_db]
+    # session[:pol_db] = session[:pol_db] == Vm ? VmOrTemplate : session[:pol_db]
     @politems = session[:pol_db].find(session[:pol_items]).sort_by(&:name)  # Get the db records
     @view = get_db_view(session[:pol_db])             # Instantiate the MIQ Report view object
-    @view.table = MiqFilter.records2table(@politems, :only=>@view.cols + ['id'])
+    @view.table = MiqFilter.records2table(@politems, :only => @view.cols + ['id'])
 
-    @edit = Hash.new
+    @edit = {}
     @edit[:explorer] = true if @explorer
     @edit[:new] = Hash.new(0)                         # Hash to hold new policy assignment counts
     @politems.each do |i|
@@ -220,45 +220,45 @@ module ApplicationController::PolicySupport
     msg = "[#{pp.name}] Policy Profile #{mode} (db:[#{db}]"
     msg += ", ids:[#{recs.sort_by(&:to_i).join(',')}])"
     event = "policyset_" + mode
-    audit = {:event=>event, :target_id=>pp.id, :target_class=>pp.class.base_class.name, :userid => session[:userid], :message=>msg}
+    audit = {:event => event, :target_id => pp.id, :target_class => pp.class.base_class.name, :userid => session[:userid], :message => msg}
   end
 
   def assigned_filters
-    assigned_filters = Array.new
-    #adding assigned filters for a user into hash to display categories bold and gray out subcategory if checked
+    assigned_filters = []
+    # adding assigned filters for a user into hash to display categories bold and gray out subcategory if checked
     @get_filters = [current_user.get_managed_filters].flatten
     h = Hash[*@get_filters.collect { |v| [@get_filters.index(v), v] }.flatten]
     @get_filters = h.invert
-    h.invert.each do | val, key |
-      categories = Classification.categories.collect {|c| c unless !c.show}.compact
+    h.invert.each do |val, _key|
+      categories = Classification.categories.collect { |c| c if c.show }.compact
       categories.each do |category|
-        entries = Hash.new
+        entries = {}
         category.entries.each do |entry|
           entries[entry.description] = entry.tag.name # Get the fully qual tag name
           if val == entry.tag.name
             @get_filters[entry.tag.name] = "cats_#{category.description}:#{entry.description}"
             assigned_filters.push(category.description.downcase)
             session[category.description.downcase] = [] if session[category.description.downcase].nil?
-            session[category.description.downcase].push(entry.description) if ! session[category.description.downcase].include?(entry.description)
+            session[category.description.downcase].push(entry.description) unless session[category.description.downcase].include?(entry.description)
           end
         end
       end
     end
-    return assigned_filters
+    assigned_filters
   end
 
   # Build the policy simulation screen
   def policy_sim_build_screen
     @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged
-    @catinfo = Hash.new
+    @catinfo = {}
     @lastaction = "policy_sim"
     @pol_view = get_db_view(session[:tag_db])       # Instantiate the MIQ Report view object
-    @pol_view.table = MiqFilter.records2table(@tagitems, :only=>@pol_view.cols + ['id'])
+    @pol_view.table = MiqFilter.records2table(@tagitems, :only => @pol_view.cols + ['id'])
 
     # Build the profiles selection list
-    @all_profs = Hash.new
+    @all_profs = {}
     MiqPolicySet.all.each do |ps|
-      unless session[:policies].has_key?(ps.id)
+      unless session[:policies].key?(ps.id)
         @all_profs[ps.id] = ps.description
       end
     end
@@ -269,5 +269,4 @@ module ApplicationController::PolicySupport
     end
     build_targets_hash(@tagitems)
   end
-
 end

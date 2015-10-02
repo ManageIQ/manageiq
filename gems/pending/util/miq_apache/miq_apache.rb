@@ -22,7 +22,7 @@ module MiqApache
       #
       # Command line: apachectl start
       ###################################################################
-      self.run_apache_cmd 'start'
+      run_apache_cmd 'start'
     end
 
     def self.restart(graceful = true)
@@ -39,16 +39,16 @@ module MiqApache
         # Command line: apachectl graceful
         ###################################################################
         #
-        #FIXME: apache doesn't re-read the proxy balancer members on a graceful restart, so do a graceful stop and start
+        # FIXME: apache doesn't re-read the proxy balancer members on a graceful restart, so do a graceful stop and start
         #        system('apachectl graceful')
-        #http://www.gossamer-threads.com/lists/apache/users/383770
-        #https://issues.apache.org/bugzilla/show_bug.cgi?id=45950
-        #https://issues.apache.org/bugzilla/show_bug.cgi?id=39811
-        #https://issues.apache.org/bugzilla/show_bug.cgi?id=44736
-        #https://issues.apache.org/bugzilla/show_bug.cgi?id=42621
+        # http://www.gossamer-threads.com/lists/apache/users/383770
+        # https://issues.apache.org/bugzilla/show_bug.cgi?id=45950
+        # https://issues.apache.org/bugzilla/show_bug.cgi?id=39811
+        # https://issues.apache.org/bugzilla/show_bug.cgi?id=44736
+        # https://issues.apache.org/bugzilla/show_bug.cgi?id=42621
 
-        self.stop(graceful)
-        self.start
+        stop(graceful)
+        start
       else
         ###################################################################
         # Restarts the Apache httpd daemon. If the daemon is not running, it is started. This
@@ -57,7 +57,7 @@ module MiqApache
         #
         # Command line: apachectl restart
         ###################################################################
-        self.run_apache_cmd 'restart'
+        run_apache_cmd 'restart'
       end
     end
 
@@ -70,14 +70,14 @@ module MiqApache
         #
         # Command line: apachectl graceful-stop
         ###################################################################
-        self.run_apache_cmd 'graceful-stop'
+        run_apache_cmd 'graceful-stop'
       else
         ###################################################################
         # Stops the Apache httpd daemon
         #
         # Command line: apachectl stop
         ###################################################################
-        self.run_apache_cmd 'stop'
+        run_apache_cmd 'stop'
       end
     end
 
@@ -95,13 +95,11 @@ module MiqApache
     end
 
     def self.kill_all
-      begin
-        MiqUtil.runcmd('killall -9 httpd')
-      rescue => err
-        raise unless err.to_s =~ /httpd: no process found/
-      else
-        MiqUtil.runcmd("for i in `ipcs -s | awk '/apache/ {print $2}'`; do (ipcrm -s $i); done")
-      end
+      MiqUtil.runcmd('killall -9 httpd')
+    rescue => err
+      raise unless err.to_s =~ /httpd: no process found/
+    else
+      MiqUtil.runcmd("for i in `ipcs -s | awk '/apache/ {print $2}'`; do (ipcrm -s $i); done")
     end
 
     def self.status(full = true)
@@ -114,18 +112,11 @@ module MiqApache
         #
         # Command line: apachectl fullstatus
         ###################################################################
-      else
-        ###################################################################
-        # Displays a brief status report. Similar to the fullstatus option, except that
-        # the list of requests currently being served is omitted.
-        #
-        # Command line: apachectl status
-        ###################################################################
       end
     end
 
     def self.version
-       MiqUtil.runcmd("rpm -qa --queryformat '%{VERSION}' httpd")
+      MiqUtil.runcmd("rpm -qa --queryformat '%{VERSION}' httpd")
     end
 
     def self.config_ok?
@@ -144,10 +135,11 @@ module MiqApache
       return true if res =~ /Syntax OK/
       $log.warn("MIQ(MiqApache::Control.config_ok?) Configuration syntax failed with error: #{res}") if $log
 
-      return false
+      false
     end
 
     private
+
     def self.run_apache_cmd(command)
       Dir.mkdir(File.dirname(APACHE_CONTROL_LOG)) unless File.exist?(File.dirname(APACHE_CONTROL_LOG))
       begin
@@ -164,7 +156,7 @@ module MiqApache
   # Control Exceptions Definition
   #
   ###################################################################
-  class ControlError             < Error; end
+  class ControlError < Error; end
 
   ###################################################################
   #
@@ -184,29 +176,29 @@ module MiqApache
       raise ConfFileNotFound     unless File.file?(filename)
       @fname     = filename
       self.class.instance_cache = self
-      self.reload
+      reload
     end
 
     def self.instance(filename)
-      if self.instance_cache && self.instance_cache.fname == filename
-        self.instance_cache.reload
+      if instance_cache && instance_cache.fname == filename
+        instance_cache.reload
       else
-        self.instance_cache = self.new(filename)
+        self.instance_cache = new(filename)
       end
-      return self.instance_cache
+      instance_cache
     end
 
     def self.install_default_config(opts = {})
-      File.write(opts[:member_file],    self.create_balancer_config(opts))
-      File.write(opts[:redirects_file], self.create_redirects_config(opts))
+      File.write(opts[:member_file],    create_balancer_config(opts))
+      File.write(opts[:redirects_file], create_redirects_config(opts))
     end
 
     def self.create_balancer_config(opts = {})
       lbmethod = case opts[:lbmethod]
-      when :busy;     :bybusyness
-      when :traffic;  :bytraffic
-      else            :byrequests
-      end
+                 when :busy then     :bybusyness
+                 when :traffic then  :bytraffic
+                 else            :byrequests
+                 end
 
       "<Proxy balancer://#{opts[:cluster]}/ lbmethod=#{lbmethod}>\n</Proxy>\n"
     end
@@ -224,7 +216,7 @@ module MiqApache
       raise ConfFileAlreadyExists if File.exist?(filename)
 
       FileUtils.touch(filename)
-      file = self.new(filename)
+      file = new(filename)
       file.add_content(content, :update_raw_lines => true)
       file.save
     end
@@ -291,9 +283,8 @@ module MiqApache
         FileUtils.cp(backup, @fname)
         return false
       end
-      return true
+      true
     end
-
   end
 
   ###################################################################
@@ -301,10 +292,9 @@ module MiqApache
   # Configuration Exceptions Definition
   #
   ##################################################################
-  class ConfError             <     Error; end
+  class ConfError < Error; end
   class ConfFileAlreadyExists < ConfError; end
-  class ConfFileNotSpecified  < ConfError; end
-  class ConfFileNotFound      < ConfError; end
-  class ConfFileInvalid       < ConfError; end
-
+  class ConfFileNotSpecified < ConfError; end
+  class ConfFileNotFound < ConfError; end
+  class ConfFileInvalid < ConfError; end
 end

@@ -1,62 +1,60 @@
 module MiqProvisionMixin
   RESOURCE_CLASS_KEY_MAP = {
     # Infrastructure
-    "Host"                  => [:hosts,                   :placement_host_name],
-    "Storage"               => [:storages,                :placement_ds_name],
-    "EmsCluster"            => [:clusters,                :placement_cluster_name],
-    "ResourcePool"          => [:resource_pools,          :placement_rp_name],
-    "EmsFolder"             => [:folders,                 :placement_folder_name],
-    "PxeServer"             => [:pxe_servers,             :pxe_server_id],
-    "PxeImage"              => [:pxe_images,              :pxe_image_id],
-    "WindowsImage"          => [:windows_images,          :pxe_image_id],
-    "CustomizationTemplate" => [:customization_templates, :customization_template_id],
-    "IsoImage"              => [:iso_images,              :iso_image_id],
+    "Host"                                           => [:hosts,                   :placement_host_name],
+    "Storage"                                        => [:storages,                :placement_ds_name],
+    "EmsCluster"                                     => [:clusters,                :placement_cluster_name],
+    "ResourcePool"                                   => [:resource_pools,          :placement_rp_name],
+    "EmsFolder"                                      => [:folders,                 :placement_folder_name],
+    "PxeServer"                                      => [:pxe_servers,             :pxe_server_id],
+    "PxeImage"                                       => [:pxe_images,              :pxe_image_id],
+    "WindowsImage"                                   => [:windows_images,          :pxe_image_id],
+    "CustomizationTemplate"                          => [:customization_templates, :customization_template_id],
+    "IsoImage"                                       => [:iso_images,              :iso_image_id],
 
     # Cloud
-    "AvailabilityZone"      => [:availability_zones,      :placement_availability_zone],
-    "CloudTenant"           => [:cloud_tenants,           :cloud_tenant],
-    "CloudNetwork"          => [:cloud_networks,          :cloud_network],
-    "CloudSubnet"           => [:cloud_subnets,           :cloud_subnet],
-    "SecurityGroup"         => [:security_groups,         :security_groups],
-    "FloatingIp"            => [:floating_ip_addresses,   :floating_ip_address],
-    "Flavor"                => [:instance_types,          :instance_type],
-    "ManageIQ::Providers::CloudManager::AuthKeyPair"      => [:guest_access_key_pairs,  :guest_access_key_pair]
+    "AvailabilityZone"                               => [:availability_zones,      :placement_availability_zone],
+    "CloudTenant"                                    => [:cloud_tenants,           :cloud_tenant],
+    "CloudNetwork"                                   => [:cloud_networks,          :cloud_network],
+    "CloudSubnet"                                    => [:cloud_subnets,           :cloud_subnet],
+    "SecurityGroup"                                  => [:security_groups,         :security_groups],
+    "FloatingIp"                                     => [:floating_ip_addresses,   :floating_ip_address],
+    "Flavor"                                         => [:instance_types,          :instance_type],
+    "ManageIQ::Providers::CloudManager::AuthKeyPair" => [:guest_access_key_pairs,  :guest_access_key_pair]
   }.freeze
 
   def tag_ids
-    self.options[:vm_tags]
+    options[:vm_tags]
   end
 
   def tag_ids=(value)
-    self.options[:vm_tags] = value
+    options[:vm_tags] = value
   end
 
   def register_automate_callback(callback_name, automate_uri)
     _log.info("Registering callback: [#{callback_name}] with Automate entry point: [#{automate_uri}]")
-    self.options[:callbacks] ||= {}
-    self.options[:callbacks][callback_name.to_sym] = automate_uri
-    self.update_attribute(:options, self.options)
+    options[:callbacks] ||= {}
+    options[:callbacks][callback_name.to_sym] = automate_uri
+    update_attribute(:options, options)
   end
 
   def set_vm_notes(notes)
-    self.update_attribute(:options, self.options.merge(:vm_notes => notes))
+    update_attribute(:options, options.merge(:vm_notes => notes))
   end
 
   def call_automate_event(event_name, continue_on_error = true)
-    begin
-      _log.info("Raising event [#{event_name}] to Automate")
-      ws = MiqAeEvent.raise_evm_event(event_name, self)
-      _log.info("Raised  event [#{event_name}] to Automate")
-      return ws
-    rescue MiqAeException::Error => err
-      message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
-      if continue_on_error
-        _log.warn("[#{message}] encountered during provisioning - continuing")
-      else
-        _log.error("[#{message}] encountered during provisioning")
-      end
-      return nil
+    _log.info("Raising event [#{event_name}] to Automate")
+    ws = MiqAeEvent.raise_evm_event(event_name, self)
+    _log.info("Raised  event [#{event_name}] to Automate")
+    return ws
+  rescue MiqAeException::Error => err
+    message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
+    if continue_on_error
+      _log.warn("[#{message}] encountered during provisioning - continuing")
+    else
+      _log.error("[#{message}] encountered during provisioning")
     end
+    return nil
   end
 
   def get_owner
@@ -87,7 +85,7 @@ module MiqProvisionMixin
     raise MiqException::MiqProvisionError, "Provision workflow does not contain the expected method <#{allowed_method}>" unless prov_wf.respond_to?(allowed_method)
 
     result = prov_wf.send(allowed_method)
-    result = result.collect {|rsc| eligible_resource_lookup(klass, rsc)}
+    result = result.collect { |rsc| eligible_resource_lookup(klass, rsc) }
 
     data = result.collect { |rsc| "#{rsc.id}:#{resource_display_name(rsc)}" }
     _log.info("returning <#{rsc_type}>:<#{data.join(', ')}>")
@@ -105,7 +103,7 @@ module MiqProvisionMixin
   end
   private :eligible_resource_lookup
 
-  def set_resource(rsc, options={})
+  def set_resource(rsc, _options = {})
     return if rsc.nil?
 
     rsc_class = resource_class(rsc)
@@ -118,20 +116,20 @@ module MiqProvisionMixin
 
     value = construct_value(key, rsc_class, rsc.id, rsc_name)
     _log.info("option <#{key}> being set to <#{value.inspect}>")
-    self.options[key] = value
+    options[key] = value
 
     post_customization_templates(rsc.id) if rsc_type == :customization_templates
 
-    self.update_attribute(:options, self.options)
+    update_attribute(:options, options)
   end
 
   def post_customization_templates(template_id)
-    self.options[:customization_template_script] = CustomizationTemplate.where(:id => template_id).first.try(:script)
+    options[:customization_template_script] = CustomizationTemplate.find_by(:id => template_id).try(:script)
   end
 
   def set_folder(folder)
     return nil  if folder.blank?
-    return self.set_resource(folder) if folder.kind_of?(MiqAeMethodService::MiqAeServiceEmsFolder)
+    return set_resource(folder) if folder.kind_of?(MiqAeMethodService::MiqAeServiceEmsFolder)
 
     result = nil
     begin
@@ -140,13 +138,13 @@ module MiqProvisionMixin
         result = [result.id, result.name] unless result.nil?
       else
         find_path = folder.to_miq_a.join('/')
-        result = self.get_folder_paths.detect {|key, path| path.casecmp(find_path) == 0}
+        result = get_folder_paths.detect { |_key, path| path.casecmp(find_path) == 0 }
       end
-      self.update_attribute(:options, self.options.merge({:placement_folder_name => result})) unless result.nil?
+      update_attribute(:options, options.merge(:placement_folder_name => result)) unless result.nil?
     rescue => err
       _log.error "#{err}\n#{err.backtrace.join("\n")}"
     end
-    return result
+    result
   end
 
   def get_folder_paths
@@ -154,10 +152,10 @@ module MiqProvisionMixin
     # the host is in.  Otherwise we return all folders in all data-centers.
     host = get_option(:placement_host_name)
     if host.nil?
-      self.vm_template.ext_management_system.get_folder_paths()
+      vm_template.ext_management_system.get_folder_paths
     else
       dest_host = Host.find(host)
-      self.vm_template.ext_management_system.get_folder_paths(dest_host.owning_datacenter)
+      vm_template.ext_management_system.get_folder_paths(dest_host.owning_datacenter)
     end
   end
 
@@ -166,26 +164,26 @@ module MiqProvisionMixin
     raise "Source VM not provided" if vm_id.nil?
     svm = VmOrTemplate.find_by_id(vm_id)
     raise "Unable to find VM with Id: [#{vm_id}]" if svm.nil?
-    return svm
+    svm
   end
 
   def get_source_name
-    self.get_option_last(:src_vm_id)
+    get_option_last(:src_vm_id)
   end
 
-  def get_new_disks()
-    new_disks_req = self.options[:disk_scsi]
+  def get_new_disks
+    new_disks_req = options[:disk_scsi]
     return [] if new_disks_req.blank?
 
     svm = get_source_vm
-    scsi_idx = svm.hardware.disks.collect {|d| d.location if d.controller_type == "scsi"}.compact
+    scsi_idx = svm.hardware.disks.collect { |d| d.location if d.controller_type == "scsi" }.compact
 
     # Add any disk that does not already exist at the same location
-    new_disks_req.reject {|d| scsi_idx.include?("#{d[:bus]}:#{d[:pos]}")}
+    new_disks_req.reject { |d| scsi_idx.include?("#{d[:bus]}:#{d[:pos]}") }
   end
 
-  def set_customization_spec(custom_spec_name, override=false)
-    if !self.source.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+  def set_customization_spec(custom_spec_name, override = false)
+    unless source.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
       _log.info "Specifying a Customization spec is not valid for provision type #{self.class.name}.  Spec name: <#{custom_spec_name.inspect}>"
       return false
     end
@@ -200,8 +198,8 @@ module MiqProvisionMixin
       prov_wf.get_all_dialogs
       prov_wf.allowed_customization_specs
       prov_wf.get_timezones
-      prov_wf.refresh_field_values(options, self.userid)
-      custom_spec = prov_wf.allowed_customization_specs.detect {|cs| cs.name == custom_spec_name}
+      prov_wf.refresh_field_values(options, userid)
+      custom_spec = prov_wf.allowed_customization_specs.detect { |cs| cs.name == custom_spec_name }
       raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] does not exist." if custom_spec.nil?
 
       options[:sysprep_custom_spec]   = [custom_spec.id, custom_spec.name]
@@ -209,7 +207,7 @@ module MiqProvisionMixin
       options[:sysprep_spec_override] = override_value
       # Call refresh_field_values a second time so it recognizes the config change
       # and loads the defaults the customization spec settings
-      prov_wf.refresh_field_values(options, self.userid)
+      prov_wf.refresh_field_values(options, userid)
 
       self.options.keys.each do |key|
         v_old = self.options[key]
@@ -217,59 +215,57 @@ module MiqProvisionMixin
         _log.info "option <#{key}> was changed from <#{v_old.inspect}> to <#{v_new.inspect}>" unless v_old == v_new
       end
 
-      self.update_attribute(:options, options)
+      update_attribute(:options, options)
     end
 
-    return true
+    true
   end
 
   def disable_customization_spec
-    self.options[:sysprep_enabled] = ['disabled', '(Do not customize)']
-    self.update_attribute(:options, self.options)
+    options[:sysprep_enabled] = ['disabled', '(Do not customize)']
+    update_attribute(:options, options)
   end
 
   def target_type
-    return 'template' if self.provision_type == 'clone_to_template'
-    return 'vm'
+    return 'template' if provision_type == 'clone_to_template'
+    'vm'
   end
 
   def source_type
-    self.vm_template.kind_of?(MiqTemplate) ? 'template' : 'vm'
+    vm_template.kind_of?(MiqTemplate) ? 'template' : 'vm'
   end
 
-  def set_nic_settings(idx, nic_hash, value=nil)
+  def set_nic_settings(idx, nic_hash, value = nil)
     if idx.to_i > 0
-      self.set_options_config_array(:nic_settings, idx, nic_hash, value)
+      set_options_config_array(:nic_settings, idx, nic_hash, value)
     else
       # if the index is 0 then we need to merge the hash directly into the options hash
-      nic_hash.kind_of?(Hash) ? self.options.merge!(nic_hash) : self.options[nic_hash] = value
-      self.update_attribute(:options, self.options)
+      nic_hash.kind_of?(Hash) ? options.merge!(nic_hash) : options[nic_hash] = value
+      update_attribute(:options, options)
     end
   end
 
-  def set_network_adapter(idx, net_hash, value=nil)
-    self.set_options_config_array(:networks, idx, net_hash, value)
+  def set_network_adapter(idx, net_hash, value = nil)
+    set_options_config_array(:networks, idx, net_hash, value)
   end
 
-  def set_options_config_array(key, idx, hash, value=nil)
+  def set_options_config_array(key, idx, hash, value = nil)
     idx = idx.to_i
-    items = self.options[key] || []
+    items = options[key] || []
     items[idx] = {} if items[idx].nil?
     hash.kind_of?(Hash) ? items[idx].merge!(hash) : items[idx][hash] = value
-    self.options[key] = items
-    self.update_attribute(:options, self.options)
+    options[key] = items
+    update_attribute(:options, options)
   end
 
   def request_options
     skip_keys = [:vm_tags]
-    self.options.collect do |k,v|
+    options.collect do |k, v|
       if skip_keys.include?(k)
         nil
       elsif v.kind_of?(Array)
         if v.length == 2
           format_web_service_property(k, v[0])
-        else
-          nil
         end
       elsif v.kind_of?(Hash)
         nil

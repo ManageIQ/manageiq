@@ -48,6 +48,6 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Statu
     status.failed?.should      be_false
     status.deleted?.should     be_false
     status.rolled_back?.should be_false
-    status.normalized_status.should == %w[transient CREATING]
+    status.normalized_status.should == %w(transient CREATING)
   end
 end

@@ -12,7 +12,8 @@ FactoryGirl.define do
     enabled true
     trait :with_methods do
       transient do
-        ae_methods do {'method1' => {:scope => 'instance', :location => 'inline',
+        ae_methods do
+          {'method1' => {:scope => 'instance', :location => 'inline',
                                       'params' => {'name' => {:aetype        => 'attribute',
                                                               :datatype      => 'string',
                                                               :default_value => 'abc'},
@@ -20,7 +21,7 @@ FactoryGirl.define do
                                                               :datatype      => 'password',
                                                               :default_value => 'secret'}},
                                       :data => 'puts "Hello World"', :language => 'ruby'},
-                       'method2' => {:scope => 'instance', :location => 'builtin',
+           'method2' => {:scope => 'instance', :location => 'builtin',
                                       :language => 'ruby', 'params' => {}}}
         end
       end
@@ -28,19 +29,21 @@ FactoryGirl.define do
 
     trait :with_instances do
       transient do
-        ae_fields do {'field1' => {:aetype => 'state', :datatype => 'string'},
-                      'field2' => {:aetype => 'relationship', :datatype => 'string'},
-                      'field3' => {:aetype => 'method', :datatype => 'string'},
-                      'field4' => {:aetype => 'attribute', :datatype => 'password',
+        ae_fields do
+          {'field1' => {:aetype => 'state', :datatype => 'string'},
+           'field2' => {:aetype => 'relationship', :datatype => 'string'},
+           'field3' => {:aetype => 'method', :datatype => 'string'},
+           'field4' => {:aetype => 'attribute', :datatype => 'password',
                                    :default_value => 'abcd'}}
         end
-        ae_instances do {'instance1' => {'field1' => {:value => 'hello world', :on_entry => 'abc'},
-                                         'field2' => {:value => 'a/b/c', :collect => 'nothing'},
-                                         'field3' => {:value => "puts 'simple method'"},
-                                         'field4' => {:value => 'October16'}},
-                         'instance2' => {'field1' => {:value => 'hello barney', :on_entry => 'abc'},
-                                         'field2' => {:value => 'x/y/z', :collect => 'nothing'},
-                                         'field3' => {:value => "puts 'simple method'"}}}
+        ae_instances do
+          {'instance1' => {'field1' => {:value => 'hello world', :on_entry => 'abc'},
+                           'field2' => {:value => 'a/b/c', :collect => 'nothing'},
+                           'field3' => {:value => "puts 'simple method'"},
+                           'field4' => {:value => 'October16'}},
+           'instance2' => {'field1' => {:value => 'hello barney', :on_entry => 'abc'},
+                           'field2' => {:value => 'x/y/z', :collect => 'nothing'},
+                           'field3' => {:value => "puts 'simple method'"}}}
         end
       end
     end
@@ -62,5 +65,4 @@ FactoryGirl.define do
       end
     end
   end
-
 end

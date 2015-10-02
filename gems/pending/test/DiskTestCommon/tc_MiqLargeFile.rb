@@ -19,12 +19,12 @@ module DiskTestCommon
     SIZE_5GB = 0x0000000140000000
 
     def setup
-#     unless $log
-#       require 'util/miq-logger'
-#
-#       # Setup console logging
-#       $log = MIQLogger.get_log(nil, nil)
-#     end
+      #     unless $log
+      #       require 'util/miq-logger'
+      #
+      #       # Setup console logging
+      #       $log = MIQLogger.get_log(nil, nil)
+      #     end
     end
 
     def teardown
@@ -90,9 +90,9 @@ module DiskTestCommon
       # Copy the file to another file, and compare the file size and the file hash
       params = [
         FILE_1MB, SIZE_1MB, 'd43d86094a3671190422ce5e44aec95c',
-        #FILE_1GB, SIZE_1GB, '329246b563db06a656c7c88a19e40588',
-        #FILE_4GB, SIZE_4GB, 'b7fb96822fef719280ee9625966a10fb',
-        #FILE_5GB, SIZE_5GB, '5c5bcb1e258ffdf69faadc5ae4c09ac4',
+        # FILE_1GB, SIZE_1GB, '329246b563db06a656c7c88a19e40588',
+        # FILE_4GB, SIZE_4GB, 'b7fb96822fef719280ee9625966a10fb',
+        # FILE_5GB, SIZE_5GB, '5c5bcb1e258ffdf69faadc5ae4c09ac4',
       ]
 
       Dir.mktmpdir do |file_write_path|
@@ -107,7 +107,7 @@ module DiskTestCommon
           #   (using an "off" amount to validate that partial reads return properly)
           f = MiqLargeFile.open(filename, "r")
           f2 = MiqLargeFile.open(file_write, "+")
-          while (f.getFilePos < filesize)
+          while f.getFilePos < filesize
             buf = f.read(0x06400123)
             f2.write(buf, buf.length)
             buf = nil

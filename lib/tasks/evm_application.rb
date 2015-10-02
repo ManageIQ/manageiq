@@ -4,9 +4,9 @@ class EvmApplication
   include Vmdb::Logging
 
   def self.start
-    if self.server_state == :no_db
+    if server_state == :no_db
       puts "EVM has no Database connection"
-      File.open(Rails.root.join("tmp", "pids", "evm.pid"), "w") {|f| f.write("no_db")}
+      File.open(Rails.root.join("tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
       exit
     end
 
@@ -44,11 +44,9 @@ class EvmApplication
   end
 
   def self.server_state
-    begin
-      MiqServer.my_server.status
-    rescue => error
-      :no_db if error.message =~ /Connection refused/i
-    end
+    MiqServer.my_server.status
+  rescue => error
+    :no_db if error.message =~ /Connection refused/i
   end
 
   def self.status
@@ -65,16 +63,16 @@ class EvmApplication
 
   def self.output_servers_status(servers)
     data = servers.collect do |s|
-      [ s.zone.name,
-        s.name,
-        s.status,
-        s.id,
-        s.pid,
-        s.sql_spid,
-        s.drb_uri,
-        s.started_on && s.started_on.iso8601,
-        s.last_heartbeat && s.last_heartbeat.iso8601,
-        s.active_role_names.join(':')
+      [s.zone.name,
+       s.name,
+       s.status,
+       s.id,
+       s.pid,
+       s.sql_spid,
+       s.drb_uri,
+       s.started_on && s.started_on.iso8601,
+       s.last_heartbeat && s.last_heartbeat.iso8601,
+       s.active_role_names.join(':')
       ]
     end
     header = ["Zone", "Server Name", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "Active Roles"]
@@ -83,14 +81,14 @@ class EvmApplication
 
   def self.output_workers_status(workers)
     data = workers.sort_by(&:type).collect do |w|
-      [ w.type,
-        w.status,
-        w.id,
-        w.pid,
-        w.sql_spid,
-        w.queue_name || w.uri,
-        w.started_on && w.started_on.iso8601,
-        w.last_heartbeat && w.last_heartbeat.iso8601
+      [w.type,
+       w.status,
+       w.id,
+       w.pid,
+       w.sql_spid,
+       w.queue_name || w.uri,
+       w.started_on && w.started_on.iso8601,
+       w.last_heartbeat && w.last_heartbeat.iso8601
       ]
     end
     header = ["Worker Type", "Status", "ID", "PID", "SPID", "Queue Name / URL", "Started On", "Last Heartbeat"]
@@ -113,6 +111,6 @@ class EvmApplication
     tempfile = "#{MiqServer.pidfile}.yum"
     FileUtils.mkdir_p(File.dirname(tempfile))
     File.write(tempfile, " ")
-    self.stop
+    stop
   end
 end

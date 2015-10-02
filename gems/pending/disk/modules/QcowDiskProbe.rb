@@ -3,7 +3,7 @@ module QcowDiskProbe
   QCOW_MAGIC   = "QFI\xfb"
   QCOW_DISK    = "QcowDisk"
 
-  def QcowDiskProbe.probe(ostruct)
+  def self.probe(ostruct)
     return nil if ostruct.fileName.nil?
 
     size  = File.size(ostruct.fileName)
@@ -12,23 +12,23 @@ module QcowDiskProbe
     rv = doProbe(f)
     f.close
 
-    return rv
+    rv
   end
 
-  def QcowDiskProbe.probeByDisk(disk)
+  def self.probeByDisk(disk)
     doProbe(disk)
   end
 
-  def QcowDiskProbe.doProbe(io)
+  def self.doProbe(io)
     io.seek(0)
     magic = io.read(4)
 
     return QCOW_DISK if magic == QCOW_MAGIC
     $log.debug "QcowDiskProbe.doProbe: returning nil, #{magic.dump} != #{QCOW_MAGIC.dump}"
-    return nil
+    nil
   end
 
-  def QcowDiskProbe.stackable?
+  def self.stackable?
     true
   end
 end

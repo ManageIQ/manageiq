@@ -14,7 +14,7 @@ class ApplicationController
         rescue StandardError => bang
           @edit[:new][:sysprep_upload_text] = nil
           msg = _("Error during Sysprep \"%s\" file upload: ") % params[:upload][:file].original_filename <<
-            bang.message
+                bang.message
           add_flash(msg, :error)
         end
       else

@@ -124,7 +124,7 @@ describe MiqApache::Conf do
     it "remove_ports should remove the only two port lines" do
       before = @conf.raw_lines.dup
       @conf.raw_lines = ["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "BalancerMember http://0.0.0.0:3001\n", "</Proxy>\n"]
-      @conf.remove_ports([3000,3001])
+      @conf.remove_ports([3000, 3001])
       @conf.raw_lines.should == before
     end
 
@@ -162,28 +162,28 @@ describe MiqApache::Conf do
       content_in = [
         "## CFME SSL Virtual Host Context",
         "",
-        { :directive => "VirtualHost",
-          :attribute => "*:443",
-          :configurations => [
-            "ProxyPreserveHost on",
-            "RequestHeader set X_FORWARDED_PROTO 'https'",
-            "ErrorLog /var/log/apache/ssl_error.log",
-            "SSLEngine on",
-            { :directive => "Directory",
-              :attribute => "\"/var/www/cgi-bin\"",
-              :configurations => [
-                "Options +Indexes",
-                "Order allow,deny",
-                "Allow from all",
-              ]
-            },
-            { :directive => "something",
-              :configurations => "My test"
-            }
-          ]
+        {:directive      => "VirtualHost",
+         :attribute      => "*:443",
+         :configurations => [
+           "ProxyPreserveHost on",
+           "RequestHeader set X_FORWARDED_PROTO 'https'",
+           "ErrorLog /var/log/apache/ssl_error.log",
+           "SSLEngine on",
+           {:directive      => "Directory",
+            :attribute      => "\"/var/www/cgi-bin\"",
+            :configurations => [
+              "Options +Indexes",
+              "Order allow,deny",
+              "Allow from all",
+            ]
+           },
+           {:directive      => "something",
+            :configurations => "My test"
+           }
+         ]
         }
       ]
-      expected_output =<<EOF
+      expected_output = <<EOF
 ## CFME SSL Virtual Host Context
 
 
@@ -221,8 +221,8 @@ EOF
       content_in = [
         "## CFME SSL Virtual Host Context",
         "",
-        { :attribute => "*:443",
-          :configurations => ["ProxyPreserveHost on"]
+        {:attribute      => "*:443",
+         :configurations => ["ProxyPreserveHost on"]
         },
       ]
 

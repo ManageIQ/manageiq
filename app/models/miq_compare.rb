@@ -20,7 +20,7 @@ class MiqCompare
     @report = report
     @model = Object.const_get(report.db)
 
-    @include = options.has_key?(:include) ? options[:include] : self.class.sections(report)
+    @include = options.key?(:include) ? options[:include] : self.class.sections(report)
 
     case @mode
     when :compare
@@ -50,7 +50,7 @@ class MiqCompare
 
   # Adds the specified section to the results, fetching the data if necessary
   def add_section(section)
-    return unless @include.has_key?(section)
+    return unless @include.key?(section)
 
     @include[section][:fetch] = @include[section][:checked] = true
     fetch_section(section)
@@ -58,7 +58,7 @@ class MiqCompare
 
   # Removes the specified section from the results, but retains the fetched data
   def remove_section(section)
-    return unless @include.has_key?(section)
+    return unless @include.key?(section)
 
     @include[section][:checked] = false
     calculate_all
@@ -117,24 +117,24 @@ class MiqCompare
 
   # Determines whether or not the specified section is a tag section
   def self.tag_section?(section)
-    return section.to_s[0..TAG_PREFIX.length - 1] == TAG_PREFIX
+    section.to_s[0..TAG_PREFIX.length - 1] == TAG_PREFIX
   end
 
   # Get the tag name from the specified section
   def self.section_to_tag(section)
-    return section.to_s[TAG_PREFIX.length..-1]
+    section.to_s[TAG_PREFIX.length..-1]
   end
 
   # Recursively extracts the set of include sections from the report
   def self.sections(report)
     ret = {}
-    self.build_sections({'include' => report.include}, ret)
+    build_sections({'include' => report.include}, ret)
 
     # Also add the default section as checked and to be fetched
-    self.build_section(ret, :_model_, nil, "Properties")
+    build_section(ret, :_model_, nil, "Properties")
     ret[:_model_][:fetch] = ret[:_model_][:checked] = true
 
-    return ret
+    ret
   end
 
   private
@@ -143,32 +143,32 @@ class MiqCompare
   # flattening the path as we go.  For example, a 'hardware' section with an
   # 'guest_devices' section below it, would create a 'hardware.guest_devices'
   # section in the resultant include.
-  def self.build_sections(section, all_sections, full_name='')
-    return unless section.has_key?('include') && !section['include'].blank?
+  def self.build_sections(section, all_sections, full_name = '')
+    return unless section.key?('include') && !section['include'].blank?
 
     section['include'].each do |name, data|
       group = data['group']
 
       if name == 'categories'
-        data['columns'].each { |c| self.build_section(all_sections, "#{TAG_PREFIX}#{c}", nil, group) }
+        data['columns'].each { |c| build_section(all_sections, "#{TAG_PREFIX}#{c}", nil, group) }
       else
         name = "#{full_name}.#{name}" unless full_name.empty?
-        if data.has_key?('key')
+        if data.key?('key')
           key = data['key'][0]
           key = '' if key.nil?
         else
           key = nil
         end
-        self.build_section(all_sections, name, key, group)
-        self.build_sections(data, all_sections, name)
+        build_section(all_sections, name, key, group)
+        build_sections(data, all_sections, name)
       end
     end
   end
 
   # Add an include section to the final collected all_sections hash provided
-  def self.build_section(all_sections, name, key=nil, group=nil)
+  def self.build_section(all_sections, name, key = nil, group = nil)
     name = name.to_sym
-    all_sections[name] = { :fetch => false, :fetched => false, :checked => false }
+    all_sections[name] = {:fetch => false, :fetched => false, :checked => false}
     all_sections[name][:key] = key.empty? ? key : key.to_sym unless key.nil?
     all_sections[name][:group] = group unless group.blank?
   end
@@ -192,7 +192,7 @@ class MiqCompare
 
       # See if this section has a key
       if section == :_model_
-        section_header = Dictionary::gettext(@model.to_s, :type => :compare, :notfound => :titleize)
+        section_header = Dictionary.gettext(@model.to_s, :type => :compare, :notfound => :titleize)
         key = nil
       elsif section == :categories
         column = column.to_s
@@ -202,19 +202,19 @@ class MiqCompare
         column = nil # columns will be filled in dynamically when we fetch the section data
         key = nil
       else
-        section_header = Dictionary::gettext(section.to_s, :type => :table, :notfound => :titleize)
+        section_header = Dictionary.gettext(section.to_s, :type => :table, :notfound => :titleize)
         key = @include[section][:key]
       end
 
       # Add this section/column to the master list
-      if !@include[section].has_key?(:master_index)
+      unless @include[section].key?(:master_index)
         @include[section][:master_index] = @master_list.length
 
-        @master_list << { :name => section, :header => section_header, :group => @include[section][:group] } << (key.nil? ? nil : []) << []
+        @master_list << {:name => section, :header => section_header, :group => @include[section][:group]} << (key.nil? ? nil : []) << []
       end
 
       # Don't add in any columns that are nil, the key, or start with '_'
-      @master_list[@include[section][:master_index] + 2] << { :name => column, :header => header } unless column.nil? || column == key || column.to_s[0, 1] == '_'
+      @master_list[@include[section][:master_index] + 2] << {:name => column, :header => header} unless column.nil? || column == key || column.to_s[0, 1] == '_'
     end
   end
 
@@ -224,7 +224,7 @@ class MiqCompare
 
     @master_list.each_slice(3) do |section, sub_sections, columns|
       section = section[:name]
-      next if !@include[section][:fetched]
+      next unless @include[section][:fetched]
 
       if self.class.tag_section?(section)
         # Get just the tag names from the results
@@ -232,16 +232,16 @@ class MiqCompare
         columns.uniq!
 
         # Remove unused tags from the results
-        @results.each_value { |result| result[section].delete_if { |k, v| !columns.include?(k) && k.to_s[0, 1] != '_' } }
+        @results.each_value { |result| result[section].delete_if { |k, _v| !columns.include?(k) && k.to_s[0, 1] != '_' } }
 
         # Get all of the tag headers
         cat = Classification.find_by_name(self.class.section_to_tag(section))
-        columns.collect! { |c| { :name => c, :header => cat.find_entry_by_name(c.to_s).description } }
+        columns.collect! { |c| {:name => c, :header => cat.find_entry_by_name(c.to_s).description} }
 
         columns.sort! { |x, y| x[:header].to_s.downcase <=> y[:header].to_s.downcase }
       elsif !sub_sections.nil?
-        @results.each_value { |result| sub_sections.concat(result[section].keys.reject { |k| k.to_s[0, 1] == '_'}) }
-        sub_sections.uniq! #uniq! returns nil if no action taken, so can't chain with sort
+        @results.each_value { |result| sub_sections.concat(result[section].keys.reject { |k| k.to_s[0, 1] == '_' }) }
+        sub_sections.uniq! # uniq! returns nil if no action taken, so can't chain with sort
         sub_sections.sort! { |x, y| x.to_s.downcase <=> y.to_s.downcase }
       end
     end
@@ -250,7 +250,7 @@ class MiqCompare
   # Fetch the results from a particular record for all sections marked as
   # :fetch => true in the include
   def fetch_record(id)
-    return if @results.has_key?(id)
+    return if @results.key?(id)
 
     @results[id] = {}
     @master_list.each_slice(3) do |section, sub_sections, columns|
@@ -262,7 +262,7 @@ class MiqCompare
   # Fetch the results from all records for a particular section if marked as
   # :fetch => true
   def fetch_section(section)
-    return if !@include[section][:fetch]
+    return unless @include[section][:fetch]
 
     unless @include[section][:fetched]
       section_parts = get_master_list_section(section)
@@ -285,11 +285,11 @@ class MiqCompare
 
       # Get the tag entry name and description from the source
       new_columns = case @mode
-      when :compare
-        Classification.find_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
-      when :drift
-        rec.tags.to_miq_a.collect { |tag| [tag.entry_name, tag.entry_description] if tag.category_name == tag_name }
-      end
+                    when :compare
+                      Classification.find_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
+                    when :drift
+                      rec.tags.to_miq_a.collect { |tag| [tag.entry_name, tag.entry_description] if tag.category_name == tag_name }
+                    end
       new_columns.compact!
 
       # Add any new columns to the full set of columns
@@ -297,7 +297,7 @@ class MiqCompare
         name = name.to_sym
         result_section[name] ||= {}
         result_section[name][:_value_] = true
-        columns << { :name => name, :header => header } unless columns.find { |c| c[:name] == name }
+        columns << {:name => name, :header => header} unless columns.find { |c| c[:name] == name }
       end
 
       columns.sort! { |x, y| x[:header].to_s.downcase <=> y[:header].to_s.downcase }
@@ -306,7 +306,7 @@ class MiqCompare
       columns.each do |c|
         c = c[:name]
         @results.each_value do |result|
-          if result.has_key?(section) && !result[section].has_key?(c)
+          if result.key?(section) && !result[section].key?(c)
             result[section][c] ||= {}
             result[section][c][:_value_] = false
           end
@@ -319,7 +319,7 @@ class MiqCompare
         col = col[:name]
         value = sub_rec.nil? ? nil : eval_column(sub_rec, col, id)
         value = EMPTY if value.nil?
-        result_section[col] = { :_value_ => value }
+        result_section[col] = {:_value_ => value}
       end
     else
       # Build a section with subsections by collecting all of the subsections
@@ -340,7 +340,7 @@ class MiqCompare
             if key.nil?
               _log.warn "No value was found for the key [#{key_name}] in section [#{section}] for record [#{id}]"
               next
-            elsif result_section.has_key?(key)
+            elsif result_section.key?(key)
               _log.warn "A duplicate key value [#{key}] for the key [#{key_name}] was found in section [#{section}] for record [#{id}]"
               next
             end
@@ -351,7 +351,7 @@ class MiqCompare
             col = col[:name]
             value = r.send(col)
             value = EMPTY if value.nil?
-            result_section[key][col] = { :_value_ => value }
+            result_section[key][col] = {:_value_ => value}
           end
 
           sub_sections << key unless sub_sections.include?(key)
@@ -373,7 +373,7 @@ class MiqCompare
         return nil
       end
     end
-    return rec
+    rec
   end
 
   def eval_column(rec, column, id)
@@ -387,7 +387,7 @@ class MiqCompare
         return nil
       end
     end
-    return rec
+    rec
   end
 
   # Calculate and store the matches for all results
@@ -405,9 +405,9 @@ class MiqCompare
 
     # Determine the base and result records
     base_id = case @mode
-    when :compare; @ids[0]                                         # For compare, we are comparing to the first record
-    when :drift;   @ids.each_cons(2) { |x, y| break(x) if y == id }  # For drift, we are comparing to the previous timestamp
-    end
+              when :compare then @ids[0]                                         # For compare, we are comparing to the first record
+              when :drift then   @ids.each_cons(2) { |x, y| break(x) if y == id }  # For drift, we are comparing to the previous timestamp
+              end
     base = @results[base_id]
     result = @results[id]
 
@@ -415,7 +415,7 @@ class MiqCompare
     count = total = count_exists = total_exists = 0
     @master_list.each_slice(3) do |section, sub_sections, columns|
       section_name = section[:name]
-      next unless @include[section_name][:checked] && result.has_key?(section_name)
+      next unless @include[section_name][:checked] && result.key?(section_name)
 
       sub_count, sub_total, sub_count_exists, sub_total_exists = calculate_section(base, result, section, sub_sections, columns)
 
@@ -454,8 +454,8 @@ class MiqCompare
       total = sub_sections.length * sub_total
       total_exists = sub_sections.length
       sub_sections.each do |sub_section|
-        result_has_key = result[section].has_key?(sub_section)
-        base_has_key = base[section].has_key?(sub_section)
+        result_has_key = result[section].key?(sub_section)
+        base_has_key = base[section].key?(sub_section)
 
         if !result_has_key && !base_has_key
           count += sub_total
@@ -495,20 +495,20 @@ class MiqCompare
 
   # Recursively clear all match calculations for this result or id
   def clear_calculations(result)
-    result = @results[result] unless result.is_a?(Hash)
+    result = @results[result] unless result.kind_of?(Hash)
     result.delete(:_match_)
     result.delete(:_match_exists_)
-    result.each_value { |v| clear_calculations(v) if v.is_a?(Hash) }
+    result.each_value { |v| clear_calculations(v) if v.kind_of?(Hash) }
   end
 
   # Retrieve all records from the source for the set of ids (mode agnostic)
   def get_records
-    self.send("get_#{@mode}_records")
+    send("get_#{@mode}_records")
   end
 
   # Retrieve the record from the source (mode agnostic)
   def get_record(id)
-    self.send("get_#{@mode}_record", id)
+    send("get_#{@mode}_record", id)
   end
 
   # Find the record for the specified id
@@ -540,7 +540,7 @@ class MiqCompare
     return unless @mode == :compare
     new_rec = @model.find_by_id(id)
     _log.error "No record was found for compare object #{@model}, id: [#{id}]" if new_rec.nil?
-    return new_rec
+    new_rec
   end
 
   ### Drift specific methods
@@ -556,7 +556,7 @@ class MiqCompare
     return unless @mode == :drift
     new_rec = drift_model_record.drift_states.find_by_timestamp(ts).data_obj
     _log.error "No data was found for drift object #{@model} [#{@model_record_id}] at [#{ts}]" if new_rec.nil?
-    return new_rec
+    new_rec
   end
 
   def drift_model_record
@@ -573,12 +573,12 @@ class MiqCompare
   IVS_TO_REMOVE_ON_DUMP = [:@records, :@model_record]
 
   def marshal_dump
-    ivs = self.instance_variables.reject { |iv| iv.in?(IVS_TO_REMOVE_ON_DUMP) }
-    ivs.each_with_object({}) { |iv, h| h[iv] = self.instance_variable_get(iv) }
+    ivs = instance_variables.reject { |iv| iv.in?(IVS_TO_REMOVE_ON_DUMP) }
+    ivs.each_with_object({}) { |iv, h| h[iv] = instance_variable_get(iv) }
   end
 
   def marshal_load(data)
-    data.each { |iv, value| self.instance_variable_set(iv, value) }
+    data.each { |iv, value| instance_variable_set(iv, value) }
     get_records
   end
 end

@@ -8,19 +8,19 @@ class MiqPolicyController < ApplicationController
   include_concern 'PolicyProfiles'
   include_concern 'Rsop'
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
     redirect_to :action => 'explorer'
   end
 
   def export
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     @layout = "miq_policy_export"
-    drop_breadcrumb( {:name=>"Import / Export", :url=>"miq_policy/export"} )
+    drop_breadcrumb(:name => "Import / Export", :url => "miq_policy/export")
     case params[:button]
     when "cancel"
       @sb = nil
@@ -28,50 +28,50 @@ class MiqPolicyController < ApplicationController
         add_flash(_("%s cancelled by user") % "Export")
       end
       render :update do |page|                    # Use JS to update the display
-        page.redirect_to :action=>"explorer"
+        page.redirect_to :action => "explorer"
       end
     when "export"
       if params[:choices_chosen]
         @sb[:new][:choices_chosen] = params[:choices_chosen]
       else
-        @sb[:new][:choices_chosen] = Array.new
+        @sb[:new][:choices_chosen] = []
       end
       if @sb[:new][:choices_chosen].length == 0 # At least one member is required
-        add_flash(_("At least %{num} %{model} must be selected for %{action}") % {:num=>1, :model=>"item", :action=>"export"}, :error)
+        add_flash(_("At least %{num} %{model} must be selected for %{action}") % {:num => 1, :model => "item", :action => "export"}, :error)
         render :update do |page|                    # Use JS to update the display
-          page.replace_html("profile_export_div", :partial=>"export")
+          page.replace_html("profile_export_div", :partial => "export")
           page << "miqSparkle(false);"
         end
       else
         begin
           case @sb[:dbtype]
-            when "pp"
-              db = MiqPolicySet
-              filename = "Profiles"
-            when "p"
-              db = MiqPolicy
-              filename = "Policies"
-            when "al"
-              db = MiqAlert
-              filename = "Alerts"
+          when "pp"
+            db = MiqPolicySet
+            filename = "Profiles"
+          when "p"
+            db = MiqPolicy
+            filename = "Policies"
+          when "al"
+            db = MiqAlert
+            filename = "Alerts"
           end
           session[:export_data] = MiqPolicy.export_to_yaml(@sb[:new][:choices_chosen], db)
           render :update do |page|          # Use RJS to update the display
-            page.redirect_to :action=>'fetch_yaml', :fname=>filename, :escape=>false
+            page.redirect_to :action => 'fetch_yaml', :fname => filename, :escape => false
           end
         rescue StandardError => bang
           add_flash(_("Error during '%s': ") % "export" << bang.message, :error)
           render :update do |page|                    # Use JS to update the display
-            page.replace_html("profile_export_div", :partial=>"export")
+            page.replace_html("profile_export_div", :partial => "export")
             page << "miqSparkle(false);"
           end
         end
       end
     when "reset", nil # Reset or first time in
-      dbtype = params[:dbtype] == nil ? "pp" : params[:dbtype]
-      type = params[:typ] == nil ? "export" : params[:typ]
+      dbtype = params[:dbtype].nil? ? "pp" : params[:dbtype]
+      type = params[:typ].nil? ? "export" : params[:typ]
 
-      export_chooser(dbtype,type)
+      export_chooser(dbtype, type)
     end
   end
 
@@ -88,7 +88,7 @@ class MiqPolicyController < ApplicationController
       return
     end
 
-    if ! @refresh_partial # if no button handler ran, show not implemented msg
+    unless @refresh_partial # if no button handler ran, show not implemented msg
       add_flash(_("Button not yet implemented"), :error)
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
@@ -96,33 +96,33 @@ class MiqPolicyController < ApplicationController
   end
 
   POLICY_X_BUTTON_ALLOWED_ACTIONS = {
-    'action_delete'           => :action_delete,
-    'action_edit'             => :action_edit,
-    'action_new'              => :action_edit,
-    'alert_delete'            => :alert_delete,
-    'alert_edit'              => :alert_edit,
-    'alert_copy'              => :alert_edit,
-    'alert_new'               => :alert_edit,
-    'alert_profile_assign'    => :alert_profile_assign,
-    'alert_profile_delete'    => :alert_profile_delete,
-    'alert_profile_edit'      => :alert_profile_edit,
-    'alert_profile_new'       => :alert_profile_edit,
-    'condition_delete'        => :condition_delete,
-    'condition_edit'          => :condition_edit,
-    'condition_copy'          => :condition_edit,
-    'condition_policy_copy'   => :condition_edit,
-    'condition_new'           => :condition_edit,
-    'condition_remove'        => :condition_remove,
-    'event_edit'              => :event_edit,
-    'profile_delete'          => :profile_delete,
-    'profile_edit'            => :profile_edit,
-    'profile_new'             => :profile_edit,
-    'policy_copy'             => :policy_copy,
-    'policy_delete'           => :policy_delete,
-    'policy_edit'             => :policy_edit,
-    'policy_new'              => :policy_edit,
-    'policy_edit_conditions'  => :policy_edit,
-    'policy_edit_events'      => :policy_edit,
+    'action_delete'          => :action_delete,
+    'action_edit'            => :action_edit,
+    'action_new'             => :action_edit,
+    'alert_delete'           => :alert_delete,
+    'alert_edit'             => :alert_edit,
+    'alert_copy'             => :alert_edit,
+    'alert_new'              => :alert_edit,
+    'alert_profile_assign'   => :alert_profile_assign,
+    'alert_profile_delete'   => :alert_profile_delete,
+    'alert_profile_edit'     => :alert_profile_edit,
+    'alert_profile_new'      => :alert_profile_edit,
+    'condition_delete'       => :condition_delete,
+    'condition_edit'         => :condition_edit,
+    'condition_copy'         => :condition_edit,
+    'condition_policy_copy'  => :condition_edit,
+    'condition_new'          => :condition_edit,
+    'condition_remove'       => :condition_remove,
+    'event_edit'             => :event_edit,
+    'profile_delete'         => :profile_delete,
+    'profile_edit'           => :profile_edit,
+    'profile_new'            => :profile_edit,
+    'policy_copy'            => :policy_copy,
+    'policy_delete'          => :policy_delete,
+    'policy_edit'            => :policy_edit,
+    'policy_new'             => :policy_edit,
+    'policy_edit_conditions' => :policy_edit,
+    'policy_edit_events'     => :policy_edit,
   }.freeze
 
   def x_button
@@ -131,15 +131,15 @@ class MiqPolicyController < ApplicationController
     raise ActionController::RoutingError.new('invalid button action') unless
       POLICY_X_BUTTON_ALLOWED_ACTIONS.key?(action)
 
-    self.send(POLICY_X_BUTTON_ALLOWED_ACTIONS[action])
+    send(POLICY_X_BUTTON_ALLOWED_ACTIONS[action])
   end
 
   # Send the zipped up logs and zip files
   def fetch_yaml
     @lastaction = "fetch_yaml"
-    file_name = "#{params[:fname]}_#{format_timezone(Time.now,Time.zone,"export_filename")}.yaml"
+    file_name = "#{params[:fname]}_#{format_timezone(Time.now, Time.zone, "export_filename")}.yaml"
     disable_client_cache
-    send_data(session[:export_data], :filename =>file_name)
+    send_data(session[:export_data], :filename => file_name)
     session[:export_data] = nil
   end
 
@@ -154,14 +154,14 @@ class MiqPolicyController < ApplicationController
 
         redirect_options.merge!(:import_file_upload_id => import_file_upload.id)
       rescue => err
-        redirect_options.merge!(:flash_msg => _("Error during '%s': ") %  "Policy Import" + err.message,
+        redirect_options.merge!(:flash_msg   => _("Error during '%s': ") % "Policy Import" + err.message,
                                 :flash_error => true,
-                                :action => "export")
+                                :action      => "export")
       end
     else
-      redirect_options.merge!(:flash_msg => _("Use the Browse button to locate an Import file"),
+      redirect_options.merge!(:flash_msg   => _("Use the Browse button to locate an Import file"),
                               :flash_error => true,
-                              :action => "export")
+                              :action      => "export")
     end
 
     redirect_to redirect_options
@@ -180,7 +180,7 @@ class MiqPolicyController < ApplicationController
     @breadcrumbs = []
     @layout = "miq_policy_export"
     @import_file_upload_id = params[:import_file_upload_id]
-    drop_breadcrumb( {:name=>"Import / Export", :url=>"miq_policy/export"} )
+    drop_breadcrumb(:name => "Import / Export", :url => "miq_policy/export")
 
     if params[:commit] == "import"
       begin
@@ -193,39 +193,39 @@ class MiqPolicyController < ApplicationController
       end
 
       render :update do |page|
-        page.replace_html("profile_export_div", :partial=>"export")
+        page.replace_html("profile_export_div", :partial => "export")
         page << "miqSparkle(false);"
       end
     elsif params[:commit] == "cancel"
       miq_policy_import_service.cancel_import(params[:import_file_upload_id])
 
       render :update do |page|
-        page.redirect_to :action => 'export', :flash_msg=>_("%s cancelled by user") % "Import"
+        page.redirect_to :action => 'export', :flash_msg => _("%s cancelled by user") % "Import"
       end
 
-    #init import
+    # init import
     else
       if @sb[:conflict]
-        add_flash(_("Import not available due to conflicts"),:error)
+        add_flash(_("Import not available due to conflicts"), :error)
       else
-        add_flash(_("Press commit to Import")) if !@flash_array
+        add_flash(_("Press commit to Import")) unless @flash_array
       end
-      render :action=>"import", :layout=> true
+      render :action => "import", :layout => true
     end
   end
 
   def export_field_changed
     prev_dbtype = @sb[:dbtype]
-    export_chooser(params[:dbtype],"export") if params[:dbtype]
+    export_chooser(params[:dbtype], "export") if params[:dbtype]
     if params[:choices_chosen]
       @sb[:new][:choices_chosen] = params[:choices_chosen]
     else
-      @sb[:new][:choices_chosen] = Array.new
+      @sb[:new][:choices_chosen] = []
     end
     render :update do |page|                    # Use JS to update the display
       if prev_dbtype != @sb[:dbtype]    # If any export db type has changed
-      # page.redirect_to :action=>"export", :dbtype=>params[:dbtype], :typ=>"export"
-        page.replace_html("profile_export_div", :partial=>"export")
+        # page.redirect_to :action=>"export", :dbtype=>params[:dbtype], :typ=>"export"
+        page.replace_html("profile_export_div", :partial => "export")
       end
     end
   end
@@ -233,12 +233,12 @@ class MiqPolicyController < ApplicationController
   # Show/Unshow out of scope items
   def policy_options
     @record = identify_record(params[:id])
-    @policy_options ||= Hash.new
+    @policy_options ||= {}
     @policy_options[:out_of_scope] = (params[:out_of_scope] == "1")
     build_policy_tree(@polArr)
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("main_div", :partial=>"vm/policies")
+      page.replace("main_div", :partial => "vm/policies")
     end
   end
 
@@ -248,8 +248,8 @@ class MiqPolicyController < ApplicationController
     session[:export_data] = nil
 
     @sb[:open_tree_nodes] ||= [] # Create array to keep open tree nodes (only for autoload trees)
-    self.x_active_tree    ||= 'policy_profile_tree'
-    self.x_active_accord  ||= 'policy_profile'
+    self.x_active_tree ||= 'policy_profile_tree'
+    self.x_active_accord ||= 'policy_profile'
 
     trees = features.collect { |feature| [feature.tree_name, feature.build_tree(@sb)] }
     @trees = Hash[* trees.flatten] # trees.to_h in Ruby 2.2
@@ -284,7 +284,7 @@ class MiqPolicyController < ApplicationController
   end
 
   def tree_select
-    #set these when a link on one of the summary screen was pressed
+    # set these when a link on one of the summary screen was pressed
     self.x_active_accord = params[:accord]           if params[:accord]
     self.x_active_tree   = "#{params[:accord]}_tree" if params[:accord]
     self.x_active_tree   = params[:tree]             if params[:tree]
@@ -301,7 +301,7 @@ class MiqPolicyController < ApplicationController
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use RJS to update the display
-      page.replace("form_options_div", :partial=>"form_options")
+      page.replace("form_options_div", :partial => "form_options")
       if changed != session[:changed]
         session[:changed] = changed
         page << javascript_for_miq_button_visibility(changed)
@@ -320,35 +320,35 @@ class MiqPolicyController < ApplicationController
   end
 
   def log
-    @breadcrumbs = Array.new
-    @log = $policy_log.contents(nil,1000)
+    @breadcrumbs = []
+    @log = $policy_log.contents(nil, 1000)
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     @lastaction = "policy_logs"
     @layout = "miq_policy_logs"
     @msg_title = "Policy"
     @download_action = "fetch_log"
-    @server_options ||= Hash.new
+    @server_options ||= {}
     @server_options[:server_id] ||= MiqServer.my_server.id
     @server = MiqServer.my_server
-    drop_breadcrumb( {:name=>"Log", :url=>"/miq_ae_policy/log"} )
-    render :action=>"show"
+    drop_breadcrumb(:name => "Log", :url => "/miq_ae_policy/log")
+    render :action => "show"
   end
 
   def refresh_log
-    @log = $policy_log.contents(nil,1000)
+    @log = $policy_log.contents(nil, 1000)
     @server = MiqServer.my_server
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
-      page.replace_html("main_div", :partial=>"layouts/log_viewer")
+      page.replace_html("main_div", :partial => "layouts/log_viewer")
     end
   end
 
   # Send the log in text format
   def fetch_log
     disable_client_cache
-    send_data($policy_log.contents(nil,nil),
-      :filename => "policy.log" )
-    AuditEvent.success(:userid=>session[:userid],:event=>"download_policy_log",:message=>"Policy log downloaded")
+    send_data($policy_log.contents(nil, nil),
+              :filename => "policy.log")
+    AuditEvent.success(:userid => session[:userid], :event => "download_policy_log", :message => "Policy log downloaded")
   end
 
   private
@@ -360,7 +360,7 @@ class MiqPolicyController < ApplicationController
   def iterate_status(items = nil, result = [], parent_id = nil, indent = nil)
     items.each do |item|
       entry = {"id"          => result.count.to_s,
-               "title"       => "<b>#{Dictionary.gettext(item[:class].underscore, :type => :model_name, :notfound => :titleize)}:</b>" +
+               "title"       => "<b>#{Dictionary.gettext(item[:class].underscore, :type => :model_name, :notfound => :titleize)}:</b>" \
                               " #{item[:description]}",
                "parent"      => parent_id,
                "status_icon" => get_status_icon(item[:status]),
@@ -373,9 +373,9 @@ class MiqPolicyController < ApplicationController
         messages = item[:messages]
 
         if messages.count > 1
-          messages.each {|msg| entry["msg"] += msg + ', '}
+          messages.each { |msg| entry["msg"] += msg + ', ' }
         else
-          messages.each {|msg| entry["msg"] += msg}
+          messages.each { |msg| entry["msg"] += msg }
         end
 
         @sb[:conflict] = true
@@ -394,10 +394,10 @@ class MiqPolicyController < ApplicationController
 
   def get_status_icon(status)
     icon = case status
-      when :update then "checkmark"
-      when :add then "equal-green"
-      when :conflict then "x"
-    end
+           when :update then "checkmark"
+           when :add then "equal-green"
+           when :conflict then "x"
+           end
 
     "/images/icons/16/#{icon}.png"
   end
@@ -426,15 +426,15 @@ class MiqPolicyController < ApplicationController
     @sortcol    = (session[sortcol_key] || 0).to_i
     @sortdir    =  session[sortdir_key] || 'ASC'
     set_search_text
-    @_params[:search_text] = @search_text if @search_text && @_params[:search_text]             #Added to pass search text to get_view method
+    @_params[:search_text] = @search_text if @search_text && @_params[:search_text]             # Added to pass search text to get_view method
     @view, @pages            = get_view.call # Get the records (into a view) and the paginator
-    @current_page            = @pages[:current] if @pages != nil  # save the current page number
+    @current_page            = @pages[:current] unless @pages.nil?  # save the current page number
     session[sortcol_key]     = @sortcol
     session[sortdir_key]     = @sortdir
 
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|                    # Use RJS to update the display
-        page.replace("gtl_div", :partial => "layouts/gtl", :locals => { :action_url=>"#{what}_get_all",:button_div=>'policy_bar' } )
+        page.replace("gtl_div", :partial => "layouts/gtl", :locals => {:action_url => "#{what}_get_all", :button_div => 'policy_bar'})
         page << "miqSparkleOff();"
       end
     end
@@ -464,15 +464,15 @@ class MiqPolicyController < ApplicationController
       condition_get_info(Condition.find(from_cid(nodeid)))
     when "ev" # Event
       event_get_info(MiqEventDefinition.find(from_cid(nodeid)))
-    when "a","ta","fa"  # Action or True/False Action
+    when "a", "ta", "fa"  # Action or True/False Action
       action_get_info(MiqAction.find(from_cid(nodeid)))
     when "ap" # Alert Profile
       alert_profile_get_info(MiqAlertSet.find(from_cid(nodeid)))
     when "al" # Alert
       alert_get_info(MiqAlert.find(from_cid(nodeid)))
     end
-    @show_adv_search = (@nodetype == "xx" && !@folders) || (@nodetype == "root" && ![:alert_profile_tree,:condition_tree,:policy_tree].include?(x_active_tree))
-    x_history_add_item(:id=>treenodeid, :text=>@right_cell_text)
+    @show_adv_search = (@nodetype == "xx" && !@folders) || (@nodetype == "root" && ![:alert_profile_tree, :condition_tree, :policy_tree].include?(x_active_tree))
+    x_history_add_item(:id => treenodeid, :text => @right_cell_text)
   end
 
   # Fetches right side info if a tree root is selected
@@ -489,7 +489,7 @@ class MiqPolicyController < ApplicationController
     when :action_tree
       action_get_all
     when :alert_profile_tree
-#     alert_profile_get_all
+      #     alert_profile_get_all
       alert_profile_get_all_folders
     when :alert_tree
       alert_get_all
@@ -504,9 +504,9 @@ class MiqPolicyController < ApplicationController
     parents = nodes.collect { |node| {:id => node.split('xx-').last} }
 
     # Go up thru the parents and find the highest level unopened, mark all as opened along the way
-    unless parents.empty? ||  # Skip if no parents or parent already open
-        x_tree[:open_nodes].include?(x_build_node_id(parents.last))
-      parents.reverse.each do |p|
+    unless parents.empty? || # Skip if no parents or parent already open
+           x_tree[:open_nodes].include?(x_build_node_id(parents.last))
+      parents.reverse_each do |p|
         p_node = x_build_node_id(p)
         # some of the folder nodes are not autoloaded
         # that's why they already exist in open_nodes
@@ -517,7 +517,7 @@ class MiqPolicyController < ApplicationController
 
     add_nodes = tree_add_child_nodes(existing_node) if existing_node # Build the new nodes hash
     self.x_node = params[:id]
-    return add_nodes
+    add_nodes
   end
 
   # replace_trees can be an array of tree symbols to be replaced
@@ -583,8 +583,8 @@ class MiqPolicyController < ApplicationController
     end
 
     if params[:action].ends_with?('_delete') &&
-        !x_node.starts_with?('p') &&
-        !x_node.starts_with?('co')
+       !x_node.starts_with?('p') &&
+       !x_node.starts_with?('co')
       nodes = x_node.split('_')
       nodes.pop
       self.x_node = nodes.join("_")
@@ -598,25 +598,25 @@ class MiqPolicyController < ApplicationController
     when 'root'
       partial_name, model =
       case x_active_tree
-      when :policy_profile_tree then ['profile_list',          ui_lookup(:models=>'MiqPolicySet')]
-      when :policy_tree         then ['policy_folders',        ui_lookup(:models=>'MiqPolicy')]
-      when :event_tree          then ['event_list',            ui_lookup(:tables=>'miq_event_definition')]
-      when :condition_tree      then ['condition_folders',     ui_lookup(:models=>'Condition')]
-      when :action_tree         then ['action_list',           ui_lookup(:models=>'MiqAction')]
-      when :alert_profile_tree  then ['alert_profile_folders', ui_lookup(:models=>'MiqAlertSet')]
-      when :alert_tree          then ['alert_list',            ui_lookup(:models=>'MiqAlert')]
+      when :policy_profile_tree then ['profile_list',          ui_lookup(:models => 'MiqPolicySet')]
+      when :policy_tree         then ['policy_folders',        ui_lookup(:models => 'MiqPolicy')]
+      when :event_tree          then ['event_list',            ui_lookup(:tables => 'miq_event_definition')]
+      when :condition_tree      then ['condition_folders',     ui_lookup(:models => 'Condition')]
+      when :action_tree         then ['action_list',           ui_lookup(:models => 'MiqAction')]
+      when :alert_profile_tree  then ['alert_profile_folders', ui_lookup(:models => 'MiqAlertSet')]
+      when :alert_tree          then ['alert_list',            ui_lookup(:models => 'MiqAlert')]
       end
 
       presenter[:update_partials][:main_div] = r[:partial => partial_name]
-      right_cell_text = _("All %s") %  model
+      right_cell_text = _("All %s") % model
     when 'pp'
       presenter[:update_partials][:main_div] = r[:partial => 'profile_details']
       right_cell_text =
         if @profile && @profile.id.blank?
-          _("Adding a new %s") % ui_lookup(:model=>'MiqPolicySet')
+          _("Adding a new %s") % ui_lookup(:model => 'MiqPolicySet')
         else
-          @edit ? _("Editing %{model} \"%{name}\"") % {:name=>@profile.description.gsub(/'/,"\\'"), :model=>ui_lookup(:model=>"MiqPolicySet")} :
-                  _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqPolicySet"), :name=>@profile.description.gsub(/'/,"\\'")}
+          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @profile.description.gsub(/'/, "\\'"), :model => ui_lookup(:model => "MiqPolicySet")} :
+                  _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description.gsub(/'/, "\\'")}
         end
     when 'xx'
       presenter[:update_partials][:main_div] =
@@ -635,15 +635,15 @@ class MiqPolicyController < ApplicationController
           r[:partial => 'alert_profile_list']
         end
     when 'p'
-      presenter[:update_partials][:main_div] = r[:partial => 'policy_details', :locals=>{:read_only=>true}]
+      presenter[:update_partials][:main_div] = r[:partial => 'policy_details', :locals => {:read_only => true}]
       if @policy.id.blank?
-        right_cell_text = _("Adding a new %s") %  "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy"
+        right_cell_text = _("Adding a new %s") % "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy"
       else
         right_cell_text = @edit ?
-            _("Editing %{model} \"%{name}\"") % {:model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/,"\\'")} :
-            _("%{model} \"%{name}\"") % {:model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/,"\\'")}
-        right_cell_text += _(" %s Assignments") % ui_lookup(:model=>'Condition') if @edit && @edit[:typ] == 'conditions'
-        right_cell_text += _(" %s Assignments") % ui_lookup(:model=>'Event')     if @edit && @edit[:typ] == 'events'
+            _("Editing %{model} \"%{name}\"") % {:model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/, "\\'")} :
+            _("%{model} \"%{name}\"") % {:model => "#{ui_lookup(:model => @sb[:nodeid])} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy", :name => @policy.description.gsub(/'/, "\\'")}
+        right_cell_text += _(" %s Assignments") % ui_lookup(:model => 'Condition') if @edit && @edit[:typ] == 'conditions'
+        right_cell_text += _(" %s Assignments") % ui_lookup(:model => 'Event')     if @edit && @edit[:typ] == 'events'
       end
     when 'co'
       # Set the JS types and titles vars if value fields are showing (needed because 2 expression editors are present)
@@ -658,50 +658,50 @@ class MiqPolicyController < ApplicationController
         set_exp_val.call(:val1)
         set_exp_val.call(:val2)
       end
-      presenter[:update_partials][:main_div] = r[:partial => 'condition_details', :locals=>{:read_only=>true}]
+      presenter[:update_partials][:main_div] = r[:partial => 'condition_details', :locals => {:read_only => true}]
       right_cell_text = if @condition.id.blank?
-        _("Adding a new %s") % ui_lookup(:model=>'Condition')
-      else
-        @right_cell_text = @edit ?
-          _("Editing %{model} \"%{name}\"") % {:name=>@condition.description.gsub(/'/,"\\'"), :model=>"#{ui_lookup(:model=>@edit[:new][:towhat])} Condition"} :
-          _("%{model} \"%{name}\"") % {:name=>@condition.description.gsub(/'/,"\\'"), :model=>"#{ui_lookup(:model=>@condition.towhat)} Condition"}
-      end
+                          _("Adding a new %s") % ui_lookup(:model => 'Condition')
+                        else
+                          @right_cell_text = @edit ?
+                            _("Editing %{model} \"%{name}\"") % {:name => @condition.description.gsub(/'/, "\\'"), :model => "#{ui_lookup(:model => @edit[:new][:towhat])} Condition"} :
+                            _("%{model} \"%{name}\"") % {:name => @condition.description.gsub(/'/, "\\'"), :model => "#{ui_lookup(:model => @condition.towhat)} Condition"}
+                        end
     when 'ev'
-      presenter[:update_partials][:main_div] = r[:partial => 'event_details', :locals=>{:read_only=>true}]
+      presenter[:update_partials][:main_div] = r[:partial => 'event_details', :locals => {:read_only => true}]
       options = {:name => @event.description.gsub(/'/, "\\\\'"), :model => ui_lookup(:table => 'miq_event_definition')}
       right_cell_text = @edit ? _("Editing %{model} \"%{name}\"") % options : _("%{model} \"%{name}\"") % options
     when 'a', 'ta', 'fa'
-      presenter[:update_partials][:main_div] = r[:partial => 'action_details', :locals=>{:read_only=>true}]
+      presenter[:update_partials][:main_div] = r[:partial => 'action_details', :locals => {:read_only => true}]
       right_cell_text = if @action.id.blank?
                           _("Adding a new %s") % ui_lookup(:model => 'MiqAction')
                         else
                           if @edit
                             _("Editing %{model} \"%{name}\"") %
-                              {:name  => @action.description.gsub(/'/, "\\\\'"),
-                               :model => ui_lookup(:model => 'MiqAction')}
+                            {:name  => @action.description.gsub(/'/, "\\\\'"),
+                             :model => ui_lookup(:model => 'MiqAction')}
                           else
                             _("%{model} \"%{name}\"") %
-                              {:name  => @action.description.gsub(/'/, "\\\\'"),
-                               :model => ui_lookup(:model => 'MiqAction')}
+                            {:name  => @action.description.gsub(/'/, "\\\\'"),
+                             :model => ui_lookup(:model => 'MiqAction')}
                           end
                         end
     when 'ap'
-      presenter[:update_partials][:main_div] = r[:partial => 'alert_profile_details', :locals=>{:read_only=>true}]
+      presenter[:update_partials][:main_div] = r[:partial => 'alert_profile_details', :locals => {:read_only => true}]
       right_cell_text = if @alert_profile.id.blank?
-        _("Adding a new %s") % ui_lookup(:model=>'MiqAlertSet')
-      else
-        @edit ? _("Editing %{model} \"%{name}\"") % {:name=>@alert_profile.description.gsub(/'/,"\\'"), :model=>"#{ui_lookup(:model=>@edit[:new][:mode])} #{ui_lookup(:model=>'MiqAlertSet')}"} :
-                _("%{model} \"%{name}\"") % {:name=>@alert_profile.description.gsub(/'/,"\\'"), :model=>ui_lookup(:model=>'MiqAlertSet')}
-      end
+                          _("Adding a new %s") % ui_lookup(:model => 'MiqAlertSet')
+                        else
+                          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @alert_profile.description.gsub(/'/, "\\'"), :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"} :
+                                  _("%{model} \"%{name}\"") % {:name => @alert_profile.description.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'MiqAlertSet')}
+                        end
     when 'al'
-      presenter[:update_partials][:main_div] = r[:partial => 'alert_details', :locals=>{:read_only=>true}]
+      presenter[:update_partials][:main_div] = r[:partial => 'alert_details', :locals => {:read_only => true}]
       right_cell_text = if @alert.id.blank?
-        _("Adding a new %s") % ui_lookup(:model=>'MiqAlert')
-      else
-        pfx = @assign ? ' assignments for ' : ''
-        msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
-        msg % {:name => @alert.description.gsub(/'/, "\\\\'"), :model => "#{pfx} #{ui_lookup(:model => "MiqAlert")}"}
-      end
+                          _("Adding a new %s") % ui_lookup(:model => 'MiqAlert')
+                        else
+                          pfx = @assign ? ' assignments for ' : ''
+                          msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
+                          msg % {:name => @alert.description.gsub(/'/, "\\\\'"), :model => "#{pfx} #{ui_lookup(:model => "MiqAlert")}"}
+                        end
     end
     presenter[:right_cell_text] = right_cell_text
 
@@ -761,23 +761,23 @@ class MiqPolicyController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       if @edit
         if @action_type_changed || @snmp_trap_refresh
-          page.replace("action_options_div", :partial=>"action_options")
+          page.replace("action_options_div", :partial => "action_options")
         elsif @alert_refresh
-          page.replace("alert_details_div",  :partial=>"alert_details")
+          page.replace("alert_details_div",  :partial => "alert_details")
         elsif @to_email_refresh
           page.replace("edit_to_email_div",
-                        :partial=>"layouts/edit_to_email",
-                        :locals=>{:action_url=>"alert_field_changed", :record=>@alert})
+                       :partial => "layouts/edit_to_email",
+                       :locals  => {:action_url => "alert_field_changed", :record => @alert})
         elsif @alert_snmp_refresh
-          page.replace("alert_snmp_div", :partial=>"alert_snmp")
+          page.replace("alert_snmp_div", :partial => "alert_snmp")
         elsif @alert_mgmt_event_refresh
-          page.replace("alert_mgmt_event_div", :partial=>"alert_mgmt_event")
+          page.replace("alert_mgmt_event_div", :partial => "alert_mgmt_event")
         elsif @tag_selected
           page.replace_html("tag_selected", @tag_selected)
         end
       elsif @assign
-        if params.has_key?(:chosen_assign_to) || params.has_key?(:chosen_cat)
-          page.replace("alert_profile_assign_div", :partial=>"alert_profile_assign")
+        if params.key?(:chosen_assign_to) || params.key?(:chosen_cat)
+          page.replace("alert_profile_assign_div", :partial => "alert_profile_assign")
         end
       end
       page << javascript_for_miq_button_visibility_changed(@changed)
@@ -787,19 +787,19 @@ class MiqPolicyController < ApplicationController
 
   # Handle the middle buttons on the add/edit forms
   # pass in member list symbols (i.e. :policies)
-  def handle_selection_buttons( members,
+  def handle_selection_buttons(members,
                                 members_chosen = :members_chosen,
                                 choices = :choices,
                                 choices_chosen = :choices_chosen)
     if params[:button].ends_with?("_left")
-      if params[members_chosen] == nil
+      if params[members_chosen].nil?
         add_flash(_("No %s were selected to move left") % members.to_s.split("_").first.titleize, :error)
       else
         if @edit[:event_id]                                           # Handle Actions for an Event
           params[members_chosen].each do |mc|
             idx = nil
-            @edit[:new][members].each_with_index {|mem,i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index of the new members array
-            next if idx == nil
+            @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index of the new members array
+            next if idx.nil?
             desc = @edit[:new][members][idx][0].slice(4..-1)        # Remove (x) prefix from the chosen item
             @edit[choices][desc] = mc.to_i                          # Add item back into the choices hash
             @edit[:new][members].delete_at(idx)                     # Remove item from the array
@@ -813,7 +813,7 @@ class MiqPolicyController < ApplicationController
         end
       end
     elsif params[:button].ends_with?("_right")
-      if params[choices_chosen] == nil
+      if params[choices_chosen].nil?
         add_flash(_("No %s were selected to move right") % members.to_s.split("_").first.titleize, :error)
       else
         mems = @edit[choices].invert
@@ -845,7 +845,7 @@ class MiqPolicyController < ApplicationController
         @edit[:new][members].clear
       end
     elsif params[:button].ends_with?("_up")
-      if params[members_chosen] == nil || params[members_chosen].length != 1
+      if params[members_chosen].nil? || params[members_chosen].length != 1
         add_flash(_("Select only one or consecutive %s to move up") % members.to_s.split("_").first.singularize.titleize, :error)
       else
         if params[:button].starts_with?("true")
@@ -855,13 +855,13 @@ class MiqPolicyController < ApplicationController
         end
         idx = nil
         mc = params[members_chosen][0]
-        @edit[:new][members].each_with_index {|mem,i| idx = mem[-1] == mc.to_i ? i : idx }  # Find item index in new members array
-        return if idx == nil || idx == 0
+        @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find item index in new members array
+        return if idx.nil? || idx == 0
         pulled = @edit[:new][members].delete_at(idx)
         @edit[:new][members].insert(idx - 1, pulled)
       end
     elsif params[:button].ends_with?("_down")
-      if params[members_chosen] == nil || params[members_chosen].length != 1
+      if params[members_chosen].nil? || params[members_chosen].length != 1
         add_flash(_("Select only one or consecutive %s to move down") % members.to_s.split("_").first.singularize.titleize, :error)
       else
         if params[:button].starts_with?("true")
@@ -871,13 +871,13 @@ class MiqPolicyController < ApplicationController
         end
         idx = nil
         mc = params[members_chosen][0]
-        @edit[:new][members].each_with_index {|mem,i| idx = mem[-1] == mc.to_i ? i : idx }  # Find item index in new members array
-        return if idx == nil || idx >= @edit[:new][members].length - 1
+        @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find item index in new members array
+        return if idx.nil? || idx >= @edit[:new][members].length - 1
         pulled = @edit[:new][members].delete_at(idx)
         @edit[:new][members].insert(idx + 1, pulled)
       end
     elsif params[:button].ends_with?("_sync")
-      if params[members_chosen] == nil
+      if params[members_chosen].nil?
         add_flash(_("No %s selected to set to Synchronous") % members.to_s.split("_").first.titleize, :error)
       else
         if params[:button].starts_with?("true")
@@ -887,14 +887,14 @@ class MiqPolicyController < ApplicationController
         end
         params[members_chosen].each do |mc|
           idx = nil
-          @edit[:new][members].each_with_index {|mem,i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index in the new members array
-          next if idx == nil
+          @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index in the new members array
+          next if idx.nil?
           @edit[:new][members][idx][0] = "(S) " + @edit[:new][members][idx][0].slice(4..-1)   # Change prefix to (S)
           @edit[:new][members][idx][1] = true                     # Set synch to true
         end
       end
     elsif params[:button].ends_with?("_async")
-      if params[members_chosen] == nil
+      if params[members_chosen].nil?
         add_flash(_("No %s selected to set to Asynchronous") % members.to_s.split("_").first.titleize, :error)
       else
         if params[:button].starts_with?("true")
@@ -904,8 +904,8 @@ class MiqPolicyController < ApplicationController
         end
         params[members_chosen].each do |mc|
           idx = nil
-          @edit[:new][members].each_with_index {|mem,i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index in the new members array
-          next if idx == nil
+          @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index in the new members array
+          next if idx.nil?
           @edit[:new][members][idx][0] = "(A) " + @edit[:new][members][idx][0].slice(4..-1)   # Change prefix to (A)
           @edit[:new][members][idx][1] = false                    # Set synch to false
         end
@@ -913,21 +913,21 @@ class MiqPolicyController < ApplicationController
     end
   end
 
-  def apply_search_filter(search_str,results)
+  def apply_search_filter(search_str, results)
     if search_str.first == "*"
-      results.delete_if{|r|!r.description.downcase.ends_with?(search_str[1..-1].downcase)}
+      results.delete_if { |r| !r.description.downcase.ends_with?(search_str[1..-1].downcase) }
     elsif search_str.last == "*"
-      results.delete_if{|r|!r.description.downcase.starts_with?(search_str[0..-2].downcase)}
+      results.delete_if { |r| !r.description.downcase.starts_with?(search_str[0..-2].downcase) }
     else
-      results.delete_if{|r|!r.description.downcase.include?(search_str.downcase)}
+      results.delete_if { |r| !r.description.downcase.include?(search_str.downcase) }
     end
   end
 
   def set_search_text
-    @sb[:pol_search_text] ||= Hash.new
+    @sb[:pol_search_text] ||= {}
     if params[:search_text]
       @search_text = params[:search_text].strip
-      @sb[:pol_search_text][x_active_tree] = @search_text if !@search_text.nil?
+      @sb[:pol_search_text][x_active_tree] = @search_text unless @search_text.nil?
     else
       @search_text = @sb[:pol_search_text][x_active_tree]
     end
@@ -940,38 +940,38 @@ class MiqPolicyController < ApplicationController
     @sb[:nodeid] = nil
     @sb[:folder] = nodeid.nil? ? nodetype.split("-").last : nodeid
     if x_active_tree == :policy_tree
-      if nodeid.nil? && ["compliance","control"].include?(nodetype.split('-').last)
+      if nodeid.nil? && ["compliance", "control"].include?(nodetype.split('-').last)
         @folders = ["Host #{nodetype.split('-').last.titleize}", "Vm #{nodetype.split('-').last.titleize}"]
-        @right_cell_text = _("%{typ} %{model}") % {:typ=>nodetype.split('-').last.titleize, :model=>ui_lookup(:models=>"MiqPolicy")}
+        @right_cell_text = _("%{typ} %{model}") % {:typ => nodetype.split('-').last.titleize, :model => ui_lookup(:models => "MiqPolicy")}
       else
         @sb[:mode] = nodeid.split("-")[1]
         @sb[:nodeid] = nodeid.split("-").last
         @sb[:folder] = "#{nodeid.split("-")[1]}-#{nodeid.split("-")[2]}"
         set_search_text
         policy_get_all if folder_node.split("_").length <= 2
-        @right_cell_text = _("All %{typ} %{model}") % {:typ=>ui_lookup(:model=>@sb[:nodeid]), :model=>ui_lookup(:models=>"MiqPolicy")}
+        @right_cell_text = _("All %{typ} %{model}") % {:typ => ui_lookup(:model => @sb[:nodeid]), :model => ui_lookup(:models => "MiqPolicy")}
         @right_cell_div = "policy_list"
       end
     elsif x_active_tree == :condition_tree
       @conditions = Condition.find_all_by_towhat(@sb[:folder].titleize).sort_by { |c| c.description.downcase }
       set_search_text
-      @conditions = apply_search_filter(@search_text, @conditions) if !@search_text.blank?
-      @right_cell_text = "All #{ui_lookup(:model=>@sb[:folder])} Conditions"
-      @right_cell_text = _("All %{typ} %{model}") % {:typ=>ui_lookup(:model=>@sb[:folder]), :model=>ui_lookup(:models=>"Condition")}
+      @conditions = apply_search_filter(@search_text, @conditions) unless @search_text.blank?
+      @right_cell_text = "All #{ui_lookup(:model => @sb[:folder])} Conditions"
+      @right_cell_text = _("All %{typ} %{model}") % {:typ => ui_lookup(:model => @sb[:folder]), :model => ui_lookup(:models => "Condition")}
       @right_cell_div = "condition_list"
     elsif x_active_tree == :alert_profile_tree
       @alert_profiles = MiqAlertSet.where(:mode => @sb[:folder]).sort_by { |as| as.description.downcase }
       set_search_text
-      @alert_profiles = apply_search_filter(@search_text, @alert_profiles) if !@search_text.blank?
-      @right_cell_text = "All #{ui_lookup(:model=>@sb[:folder])} Alert Profiles"
-      @right_cell_text = _("All %{typ} %{model}") % {:typ=>ui_lookup(:model=>@sb[:folder]), :model=>ui_lookup(:models=>"MiqAlertSet")}
+      @alert_profiles = apply_search_filter(@search_text, @alert_profiles) unless @search_text.blank?
+      @right_cell_text = "All #{ui_lookup(:model => @sb[:folder])} Alert Profiles"
+      @right_cell_text = _("All %{typ} %{model}") % {:typ => ui_lookup(:model => @sb[:folder]), :model => ui_lookup(:models => "MiqAlertSet")}
       @right_cell_div = "alert_profile_list"
     end
   end
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
   def tree_add_child_nodes(id)
-    return x_get_child_nodes_dynatree(x_active_tree, id)
+    x_get_child_nodes_dynatree(x_active_tree, id)
   end
 
   # Build the audit object when a profile is saved
@@ -982,26 +982,26 @@ class MiqPolicyController < ApplicationController
     i = 0
     @edit[:new].each_key do |k|
       if @edit[:new][k] != @edit[:current][k]
-        msg = msg + ", " if i > 0
+        msg += ", " if i > 0
         i += 1
         if k == :members
-          msg = msg +  k.to_s + ":[" + @edit[:current][k].keys.join(",") + "] to [" + @edit[:new][k].keys.join(",") + "]"
+          msg = msg + k.to_s + ":[" + @edit[:current][k].keys.join(",") + "] to [" + @edit[:new][k].keys.join(",") + "]"
         else
-          msg = msg +  k.to_s + ":[" + @edit[:current][k].to_s + "] to [" + @edit[:new][k].to_s + "]"
+          msg = msg + k.to_s + ":[" + @edit[:current][k].to_s + "] to [" + @edit[:new][k].to_s + "]"
         end
       end
     end
-    msg = msg + ")"
-    audit = {:event=>event, :target_id=>record.id, :target_class=>record.class.base_class.name, :userid => session[:userid], :message=>msg}
+    msg += ")"
+    audit = {:event => event, :target_id => record.id, :target_class => record.class.base_class.name, :userid => session[:userid], :message => msg}
   end
 
-  def export_chooser(dbtype="pp",type="export")
-    @sb[:new] = Hash.new
+  def export_chooser(dbtype = "pp", type = "export")
+    @sb[:new] = {}
     @sb[:dbtype] = dbtype
     @sb[:hide] = false
     if type == "export"
-      @sb[:new][:choices_chosen] = Array.new
-      @sb[:new][:choices] = Array.new
+      @sb[:new][:choices_chosen] = []
+      @sb[:new][:choices] = []
       chooser_class =
         case dbtype
         when "pp" then MiqPolicySet
@@ -1022,21 +1022,21 @@ class MiqPolicyController < ApplicationController
     if options[:trap_id].nil? || options[:trap_id] == ""
       add_flash(_("%s is required") % "#{trap_text}", :error)
     end
-    options[:variables].each_with_index do |var,i|
+    options[:variables].each_with_index do |var, _i|
       if var[:oid].blank? || var[:value].blank? || var[:var_type] == "<None>"
         if !var[:oid].blank? && var[:var_type] != "<None>" && var[:var_type] != "Null" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val=>"Value", :field=>var[:oid]}, :error)
+          add_flash(_("%{val} missing for %{field}") % {:val => "Value", :field => var[:oid]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "<None>" && var[:var_type] != "Null" && !var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val=>"Object ID", :field=>var[:value]}, :error)
+          add_flash(_("%{val} missing for %{field}") % {:val => "Object ID", :field => var[:value]}, :error)
         elsif !var[:oid].blank? && var[:var_type] == "<None>" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val=>"Type", :field=>var[:oid]}, :error)
-          add_flash(_("%{val} missing for %{field}") % {:val=>"Value", :field=>var[:oid]}, :error)
+          add_flash(_("%{val} missing for %{field}") % {:val => "Type", :field => var[:oid]}, :error)
+          add_flash(_("%{val} missing for %{field}") % {:val => "Value", :field => var[:oid]}, :error)
         elsif var[:oid].blank? && var[:var_type] == "Null" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val=>"Object ID", :field=>var[:var_type]}, :error)
+          add_flash(_("%{val} missing for %{field}") % {:val => "Object ID", :field => var[:var_type]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "<None>" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val=>"Object ID and Values", :field=>var[:var_type]}, :error)
+          add_flash(_("%{val} missing for %{field}") % {:val => "Object ID and Values", :field => var[:var_type]}, :error)
         elsif var[:oid].blank? && var[:var_type] != "Null" && var[:var_type] != "<None>" && var[:value].blank?
-          add_flash(_("%{val} missing for %{field}") % {:val=>"Object ID", :field=>var[:var_type]}, :error)
+          add_flash(_("%{val} missing for %{field}") % {:val => "Object ID", :field => var[:var_type]}, :error)
         end
       end
     end
@@ -1052,13 +1052,13 @@ class MiqPolicyController < ApplicationController
     @edit[:new][subkey][:trap_id]      = params[:trap_id] if params[:trap_id]
     refresh = true if params[:snmp_version]
     if process_variables
-      params.each do |var, val|
+      params.each do |var, _val|
         vars = var.split("__")
-        if (vars[0] == "oid" || vars[0] == "var_type" || vars[0] == "value")
+        if vars[0] == "oid" || vars[0] == "var_type" || vars[0] == "value"
           10.times do |i|
-            f = ("oid__" + (i+1).to_s)
-            t = ("var_type__" + (i+1).to_s)
-            v = ("value__" + (i+1).to_s)
+            f = ("oid__" + (i + 1).to_s)
+            t = ("var_type__" + (i + 1).to_s)
+            v = ("value__" + (i + 1).to_s)
             @edit[:new][subkey][:variables][i][:oid] = params[f] if params[f.to_s]
             @edit[:new][subkey][:variables][i][:var_type] = params[t] if params[t.to_s]
             if params[t.to_s] == "<None>" || params[t.to_s] == "Null"
@@ -1077,18 +1077,18 @@ class MiqPolicyController < ApplicationController
   end
 
   def build_expression(parent, model)
-    @edit[:new][:expression] = parent.expression.is_a?(MiqExpression) ? parent.expression.exp : nil
+    @edit[:new][:expression] = parent.expression.kind_of?(MiqExpression) ? parent.expression.exp : nil
     # Populate exp editor fields for the expression column
-    @edit[:expression] ||= Hash.new                                     # Create hash for this expression, if needed
-    @edit[:expression][:expression] = Array.new                         # Store exps in an array
+    @edit[:expression] ||= {}                                     # Create hash for this expression, if needed
+    @edit[:expression][:expression] = []                         # Store exps in an array
     @edit[:expression][:exp_idx] = 0                                    # Start at first exp
     if @edit[:new][:expression].blank?
-      @edit[:expression][:expression] = {"???"=>"???"}                  # Set as new exp element
+      @edit[:expression][:expression] = {"???" => "???"}                  # Set as new exp element
       @edit[:new][:expression] = copy_hash(@edit[:expression][:expression])   # Copy to new exp
     else
       @edit[:expression][:expression] = copy_hash(@edit[:new][:expression])
     end
-    @edit[:expression_table] = @edit[:expression][:expression] == {"???"=>"???"} ? nil : exp_build_table(@edit[:expression][:expression])
+    @edit[:expression_table] = @edit[:expression][:expression] == {"???" => "???"} ? nil : exp_build_table(@edit[:expression][:expression])
 
     @expkey = :expression                                               # Set expression key to expression
     exp_array(:init, @edit[:expression][:expression])                   # Initialize the exp array

@@ -25,7 +25,7 @@ describe 'routes for VmInfra' do
   describe '#dialog_form_button_pressed' do
     it 'routes with POST' do
       expect(
-          post("/#{controller_name}/dialog_form_button_pressed")
+        post("/#{controller_name}/dialog_form_button_pressed")
       ).to route_to("#{controller_name}#dialog_form_button_pressed")
     end
   end
@@ -87,7 +87,7 @@ describe 'routes for VmInfra' do
   describe '#reconfigure_field_changed' do
     it 'routes with POST' do
       expect(
-          post("/#{controller_name}/reconfigure_field_changed")
+        post("/#{controller_name}/reconfigure_field_changed")
       ).to route_to("#{controller_name}#reconfigure_field_changed")
     end
   end

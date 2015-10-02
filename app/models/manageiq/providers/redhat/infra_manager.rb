@@ -67,10 +67,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    server   = options[:ip]      || self.address
-    port     = options[:port]    || self.port
-    username = options[:user]    || self.authentication_userid(options[:auth_type])
-    password = options[:pass]    || self.authentication_password(options[:auth_type])
+    server   = options[:ip] || address
+    port     = options[:port] || self.port
+    username = options[:user] || authentication_userid(options[:auth_type])
+    password = options[:pass] || authentication_password(options[:auth_type])
     service  = options[:service] || "Service"
 
     self.class.raw_connect(server, port, username, password, service)
@@ -86,30 +86,28 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
-    _log.info("Connecting through #{self.class.name}: [#{self.name}]")
+    _log.info("Connecting through #{self.class.name}: [#{name}]")
     begin
-      connection = self.connect(options)
+      connection = connect(options)
       yield connection
     ensure
       connection.try(:disconnect) rescue nil
     end
   end
 
-  def verify_credentials_for_rhevm(options={})
-    begin
-      connect(options).api
-    rescue URI::InvalidURIError
-      raise "Invalid URI specified for RHEV server."
-    rescue => err
-      err = err.to_s.split('<html>').first.strip.chomp(':')
-      raise MiqException::MiqEVMLoginError, err
-    end
+  def verify_credentials_for_rhevm(options = {})
+    connect(options).api
+  rescue URI::InvalidURIError
+    raise "Invalid URI specified for RHEV server."
+  rescue => err
+    err = err.to_s.split('<html>').first.strip.chomp(':')
+    raise MiqException::MiqEVMLoginError, err
   end
 
   def rhevm_metrics_connect_options(options = {})
     server   = options[:hostname] || hostname
-    username = options[:user]     || authentication_userid(:metrics)
-    password = options[:pass]     || authentication_password(:metrics)
+    username = options[:user] || authentication_userid(:metrics)
+    password = options[:pass] || authentication_password(:metrics)
     database = options[:database]
 
     {
@@ -121,28 +119,26 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def verify_credentials_for_rhevm_metrics(options = {})
-    begin
-      require 'ovirt_metrics'
-      OvirtMetrics.connect(rhevm_metrics_connect_options(options))
-      OvirtMetrics.connected?
-    rescue PGError => e
-      message = (e.message.starts_with?("FATAL:") ? e.message[6..-1] : e.message).strip
+    require 'ovirt_metrics'
+    OvirtMetrics.connect(rhevm_metrics_connect_options(options))
+    OvirtMetrics.connected?
+  rescue PGError => e
+    message = (e.message.starts_with?("FATAL:") ? e.message[6..-1] : e.message).strip
 
-      case message
-      when /database \".*\" does not exist/
-        if database.nil? && (conn_info[:database] != OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0)
-          conn_info[:database] = OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0
-          retry
-        end
+    case message
+    when /database \".*\" does not exist/
+      if database.nil? && (conn_info[:database] != OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0)
+        conn_info[:database] = OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0
+        retry
       end
-
-      _log.warn("PGError: #{message}")
-      raise MiqException::MiqEVMLoginError, message
-    rescue Exception => e
-      raise MiqException::MiqEVMLoginError, e.to_s
-    ensure
-      OvirtMetrics.disconnect rescue nil
     end
+
+    _log.warn("PGError: #{message}")
+    raise MiqException::MiqEVMLoginError, message
+  rescue Exception => e
+    raise MiqException::MiqEVMLoginError, e.to_s
+  ensure
+    OvirtMetrics.disconnect rescue nil
   end
 
   def authentications_to_validate
@@ -151,12 +147,12 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     at
   end
 
-  def verify_credentials(auth_type=nil, options={})
+  def verify_credentials(auth_type = nil, options = {})
     auth_type ||= 'default'
 
     case auth_type.to_s
-    when 'default'; verify_credentials_for_rhevm(options)
-    when 'metrics'; verify_credentials_for_rhevm_metrics(options)
+    when 'default' then verify_credentials_for_rhevm(options)
+    when 'metrics' then verify_credentials_for_rhevm_metrics(options)
     else;          raise "Invalid Authentication Type: #{auth_type.inspect}"
     end
   end
@@ -183,10 +179,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   def version_3_0?
     if @version_3_0.nil?
       @version_3_0 =
-        if self.api_version.nil?
-          self.with_provider_connection(&:version_3_0?)
+        if api_version.nil?
+          with_provider_connection(&:version_3_0?)
         else
-          self.api_version.starts_with?("3.0")
+          api_version.starts_with?("3.0")
         end
     end
 

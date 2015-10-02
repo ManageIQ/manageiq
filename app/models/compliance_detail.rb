@@ -8,6 +8,6 @@ class ComplianceDetail < ActiveRecord::Base
   virtual_column :resource_name, :type => :string, :uses => {:compliance => :resource}
 
   def resource_name
-    self.compliance.resource.name
+    compliance.resource.name
   end
 end

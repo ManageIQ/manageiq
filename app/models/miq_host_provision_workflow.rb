@@ -27,21 +27,21 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     super(request, values, requester_id) { update_selected_storage_names(values) }
   end
 
-  def get_source_and_targets(refresh=false)
+  def get_source_and_targets(_refresh = false)
   end
 
-  def update_field_visibility()
+  def update_field_visibility
     # Determine the visibility of fields based on current values and collect the fields
     # together so we can update the dialog in one pass
 
     # Show/Hide Fields
-    f = Hash.new { |h, k| h[k] = Array.new }
+    f = Hash.new { |h, k| h[k] = [] }
 
     show_flag = get_value(@values[:addr_mode]) == 'static' ? :edit : :hide
     f[show_flag] += [:hostname, :ip_addr, :subnet_mask, :gateway]
 
     # Update field :display value
-    f.each {|k,v| show_fields(k, v)}
+    f.each { |k, v| show_fields(k, v) }
   end
 
   def set_default_values
@@ -57,7 +57,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   # => New methods can be added as as needed
   #
 
-  def allowed_hosts(options={})
+  def allowed_hosts(_options = {})
     return @allowed_hosts_cache unless @allowed_hosts_cache.nil?
 
     rails_logger('allowed_hosts', 0)
@@ -68,31 +68,31 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     @allowed_hosts_cache  = hosts.collect do |h|
       build_ci_hash_struct(h, [:name, :guid, :uid_ems, :ipmi_address, :mac_address])
     end
-    return @allowed_hosts_cache
+    @allowed_hosts_cache
   end
 
-  def allowed_ws_hosts(options={})
+  def allowed_ws_hosts(_options = {})
     Host.where("mac_address is not NULL").select(&:ipmi_enabled)
   end
 
-  def allowed_ems(options={})
+  def allowed_ems(_options = {})
     result = {}
 
     ManageIQ::Providers::Vmware::InfraManager.select("id, name").each do |e|
       result[e.id] = e.name
     end
-    return result
+    result
   end
 
-  def allowed_clusters(options={})
+  def allowed_clusters(_options = {})
     ems = ExtManagementSystem.find_by_id(get_value(@values[:placement_ems_name]))
     result = {}
     return result if ems.nil?
-    ems.ems_clusters.each {|c| result[c.id] = "#{c.v_parent_datacenter} / #{c.name}"}
-    return result
+    ems.ems_clusters.each { |c| result[c.id] = "#{c.v_parent_datacenter} / #{c.name}" }
+    result
   end
 
-  def allowed_storages(options={})
+  def allowed_storages(_options = {})
     result = []
     ems = ExtManagementSystem.find_by_id(get_value(@values[:placement_ems_name]))
     return result if ems.nil?
@@ -100,7 +100,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
       next unless s.store_type == "NFS"
       result << build_ci_hash_struct(s, [:name, :free_space, :total_space])
     end
-    return result
+    result
   end
 
   # This is for summary screen display purposes only
@@ -108,18 +108,18 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     values[:attached_ds_names] = Storage.where(:id => values[:attached_ds]).pluck(:name)
   end
 
-  def ws_template_fields(values, fields)
+  def ws_template_fields(_values, fields)
     data = parse_ws_string(fields)
     _log.info "data:<#{data.inspect}>"
 
-    name         =     data[:name].blank?         ? nil : data[:name].downcase
-    mac_address  =     data[:mac_address].blank?  ? nil : data[:mac_address].downcase
+    name         =     data[:name].blank? ? nil : data[:name].downcase
+    mac_address  =     data[:mac_address].blank? ? nil : data[:mac_address].downcase
     ipmi_address =     data[:ipmi_address].blank? ? nil : data[:ipmi_address].downcase
 
     raise "No host search criteria values were passed.  input data:<#{data.inspect}>" if name.nil? && mac_address.nil? && ipmi_address.nil?
 
     _log.info "Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>"
-    srcs = allowed_ws_hosts({:include_datacenter => true}).find_all do |v|
+    srcs = allowed_ws_hosts(:include_datacenter => true).find_all do |v|
       _log.info "Host Detected: <#{v.name.downcase}> <#{v.mac_address}> <#{v.ipmi_address}>"
       (name.nil? || name == v.name.downcase) && (mac_address.nil? || mac_address == v.mac_address.to_s.downcase) && (ipmi_address.nil? || ipmi_address == v.ipmi_address.to_s)
     end
@@ -128,7 +128,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
     raise "No target host was found from input data:<#{data.inspect}>" if src.nil?
     _log.info "Host Found: <#{src.name}> MAC:<#{src.mac_address}> IPMI:<#{src.ipmi_address}>"
-    return src
+    src
   end
 
   def ws_host_fields(values, fields, userid)
@@ -137,14 +137,14 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     _log.info "data:<#{data.inspect}>"
     ws_service_fields(values, fields, data)
     ws_environment_fields(values, fields, data)
-    self.refresh_field_values(values, userid)
+    refresh_field_values(values, userid)
     ws_customize_fields(values, fields, data)
     ws_schedule_fields(values, fields, data)
 
-    data.each {|k, v| _log.warn "Unprocessed key <#{k}> with value <#{v.inspect}>"}
+    data.each { |k, v| _log.warn "Unprocessed key <#{k}> with value <#{v.inspect}>" }
   end
 
-  def ws_service_fields(values, fields, data)
+  def ws_service_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :service)).nil?
     dlg_keys = dlg_fields.keys
 
@@ -153,10 +153,10 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
       values[dlg_key] = result.kind_of?(Array) ? result : [result.id, result.name] unless result.nil?
     end
 
-    data.keys.each {|key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key)}
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
   end
 
-  def ws_environment_fields(values, fields, data)
+  def ws_environment_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :service)).nil?
     dlg_keys = dlg_fields.keys
 
@@ -167,12 +167,12 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
     dlg_key = :placement_cluster_name
     search_value = data.delete(dlg_key).to_s.downcase
-    values[dlg_key] = self.allowed_clusters.detect {|idx, fq_name| fq_name.to_s.downcase == search_value}
+    values[dlg_key] = allowed_clusters.detect { |_idx, fq_name| fq_name.to_s.downcase == search_value }
 
-    data.keys.each {|key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key)}
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
   end
 
-  def ws_customize_fields(values, fields, data)
+  def ws_customize_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :customize)).nil?
     dlg_keys = dlg_fields.keys
 
@@ -187,18 +187,18 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
       values[pwd_key] = MiqPassword.try_encrypt(root_pwd)
     end
 
-    data.keys.each {|key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key)}
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
   end
 
   def ws_find_matching_ci(allowed_method, keys, match_str, klass)
     return nil if match_str.blank?
     match_str = match_str.to_s.downcase
 
-    self.send(allowed_method).detect do |item|
+    send(allowed_method).detect do |item|
       ci = item.kind_of?(Array) ? klass.find_by_id(item[0]) : item
       keys.any? do |key|
         value = ci.send(key).to_s.downcase
-        #_log.warn "<#{allowed_method}> - comparing <#{value}> to <#{match_str}>"
+        # _log.warn "<#{allowed_method}> - comparing <#{value}> to <#{match_str}>"
         value.include?(match_str)
       end
     end
@@ -208,7 +208,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     version = args.first.to_f
 
     # Move optional arguments into the MiqHashStruct object
-    prov_args = args[0,6]
+    prov_args = args[0, 6]
     prov_options = MiqHashStruct.new(:values => args[6], :ems_custom_attributes => args[7], :miq_custom_attributes => args[8])
     prov_args << prov_options
     MiqHostProvisionWorkflow.from_ws_ver_1_x(*prov_args)
@@ -219,41 +219,38 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
-    begin
-      options = MiqHashStruct.new if options.nil?
-      _log.warn "Web-service host provisioning starting with interface version <#{version}> by requester <#{userid}>"
+    options = MiqHashStruct.new if options.nil?
+    _log.warn "Web-service host provisioning starting with interface version <#{version}> by requester <#{userid}>"
 
-      init_options = {:use_pre_dialog => false, :request_type => self.request_type(parse_ws_string(template_fields)[:request_type])}
-      data = parse_ws_string(requester)
-      unless data[:user_name].blank?
-        userid = data[:user_name]
-        _log.warn "Web-service requester changed to <#{userid}>"
-      end
-
-      p = self.new(values = {}, userid, init_options)
-      userid = p.requester.userid
-      src = p.ws_template_fields(values, template_fields)
-
-      # Populate required fields
-      p.init_from_dialog(values)
-      values[:src_host_ids] = [src.id]
-      p.refresh_field_values(values, userid)
-      values[:placement_auto] = [true, 1]
-
-      p.ws_host_fields(values, vm_fields, userid)
-      p.ws_requester_fields(values, requester)
-      p.set_ws_tags(values, tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
-      p.set_ws_values(values, :ws_values, options.values)
-      p.set_ws_values(values, :ws_ems_custom_attributes, options.ems_custom_attributes, :parse_ws_string, {:modify_key_name => false})
-      p.set_ws_values(values, :ws_miq_custom_attributes, options.miq_custom_attributes, :parse_ws_string, {:modify_key_name => false})
-
-      p.validate_values(values)
-
-      p.create_request(values, userid, values[:auto_approve])
-    rescue => err
-      _log.error "<#{err}>"
-      raise err
+    init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type])}
+    data = parse_ws_string(requester)
+    unless data[:user_name].blank?
+      userid = data[:user_name]
+      _log.warn "Web-service requester changed to <#{userid}>"
     end
-  end
 
-end #class MiqHostProvisionWorkflow
+    p = new(values = {}, userid, init_options)
+    userid = p.requester.userid
+    src = p.ws_template_fields(values, template_fields)
+
+    # Populate required fields
+    p.init_from_dialog(values)
+    values[:src_host_ids] = [src.id]
+    p.refresh_field_values(values, userid)
+    values[:placement_auto] = [true, 1]
+
+    p.ws_host_fields(values, vm_fields, userid)
+    p.ws_requester_fields(values, requester)
+    p.set_ws_tags(values, tags)    # Tags are passed as category=value|cat2=value2...  Example: cc=001|environment=test
+    p.set_ws_values(values, :ws_values, options.values)
+    p.set_ws_values(values, :ws_ems_custom_attributes, options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
+    p.set_ws_values(values, :ws_miq_custom_attributes, options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
+
+    p.validate_values(values)
+
+    p.create_request(values, userid, values[:auto_approve])
+  rescue => err
+    _log.error "<#{err}>"
+    raise err
+  end
+end # class MiqHostProvisionWorkflow

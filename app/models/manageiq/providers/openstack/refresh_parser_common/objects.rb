@@ -3,7 +3,7 @@ module ManageIQ::Providers
     module RefreshParserCommon
       module Objects
         def get_object_store
-          return if (@storage_service.blank? || @storage_service.name != :swift)
+          return if @storage_service.blank? || @storage_service.name != :swift
           # TODO(lsmola) convert to handled_list, we will probably need tenant setter on Fog::Model, so we can pass it
           # in object
           @os_handle.service_for_each_accessible_tenant('Storage') do |svc, tenant|

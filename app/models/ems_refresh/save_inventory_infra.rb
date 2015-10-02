@@ -43,7 +43,7 @@ module EmsRefresh::SaveInventoryInfra
       return
     end
 
-    prev_relats = self.vmdb_relats(target)
+    prev_relats = vmdb_relats(target)
 
     _log.info("#{log_header} Saving EMS Inventory...")
     if debug_trace
@@ -62,10 +62,10 @@ module EmsRefresh::SaveInventoryInfra
 
     _log.info("#{log_header} Saving EMS Inventory...Complete")
 
-    new_relats = self.hashes_relats(hashes)
-    self.link_ems_inventory(ems, target, prev_relats, new_relats)
+    new_relats = hashes_relats(hashes)
+    link_ems_inventory(ems, target, prev_relats, new_relats)
 
-    return ems
+    ems
   end
 
   def save_storages_inventory(ems, hashes, target = nil)
@@ -81,10 +81,10 @@ module EmsRefresh::SaveInventoryInfra
 
     hashes.each do |h|
       found = if h[:location]
-        locs.detect { |s| s.location == h[:location] }
-      else
-        names.detect { |s| s.name == h[:name] }
-      end
+                locs.detect { |s| s.location == h[:location] }
+              else
+                names.detect { |s| s.name == h[:name] }
+              end
 
       if found.nil?
         _log.info("#{log_header} Creating Storage [#{h[:name]}] location: [#{h[:location]}]")
@@ -103,12 +103,12 @@ module EmsRefresh::SaveInventoryInfra
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if (target == ems)
-      target.hosts(true).to_a.dup
-    elsif target.kind_of?(Host)
-      [target.clone]
-    else
-      []
-    end
+                    target.hosts(true).to_a.dup
+                  elsif target.kind_of?(Host)
+                    [target.clone]
+                  else
+                    []
+                  end
 
     child_keys = [:operating_system, :switches, :hardware, :system_services]
     extra_keys = [:ems_cluster, :storages, :vms, :power_state, :ems_children]
@@ -150,8 +150,8 @@ module EmsRefresh::SaveInventoryInfra
           h[:ems_id] = ems.id  # Steal this host from the previous EMS
 
           # Adjust the names so they do not keep changing in the event of DNS problems
-          ip_part  =  %r{[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+}
-          ip_whole = %r{^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$}
+          ip_part  =  /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
+          ip_whole = /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/
 
           # Keep the previous ip address if we don't have a new one or the new one is not an ip address
           h[:ipaddress] = found.ipaddress if h[:ipaddress].nil? || (h[:ipaddress] !~ ip_whole)
@@ -206,9 +206,9 @@ module EmsRefresh::SaveInventoryInfra
 
     unless disconnects.empty?
       if invalids_found
-        _log.warn("#{log_header} Since failures occurred, not disconnecting for Hosts #{self.log_format_deletes(disconnects)}")
+        _log.warn("#{log_header} Since failures occurred, not disconnecting for Hosts #{log_format_deletes(disconnects)}")
       else
-        _log.info("#{log_header} Disconnecting Hosts #{self.log_format_deletes(disconnects)}")
+        _log.info("#{log_header} Disconnecting Hosts #{log_format_deletes(disconnects)}")
         disconnects.each(&:disconnect_inv)
       end
     end
@@ -219,13 +219,13 @@ module EmsRefresh::SaveInventoryInfra
 
     ems.ems_folders(true)
     deletes = if (target == ems)
-      ems.ems_folders.dup
-    else
-      []
-    end
+                ems.ems_folders.dup
+              else
+                []
+              end
 
     save_inventory_multi(:ems_folders, ems, hashes, deletes, [:uid_ems], nil, :ems_children)
-    self.store_ids_for_new_records(ems.ems_folders, hashes, :uid_ems)
+    store_ids_for_new_records(ems.ems_folders, hashes, :uid_ems)
   end
   alias_method :save_ems_folders_inventory, :save_folders_inventory
 
@@ -234,13 +234,13 @@ module EmsRefresh::SaveInventoryInfra
 
     ems.ems_clusters(true)
     deletes = if (target == ems)
-      ems.ems_clusters.dup
-    else
-      []
-    end
+                ems.ems_clusters.dup
+              else
+                []
+              end
 
     save_inventory_multi(:ems_clusters, ems, hashes, deletes, [:uid_ems], nil, :ems_children)
-    self.store_ids_for_new_records(ems.ems_clusters, hashes, :uid_ems)
+    store_ids_for_new_records(ems.ems_clusters, hashes, :uid_ems)
   end
   alias_method :save_ems_clusters_inventory, :save_clusters_inventory
 
@@ -249,18 +249,18 @@ module EmsRefresh::SaveInventoryInfra
 
     ems.resource_pools(true)
     deletes = if (target == ems)
-      ems.resource_pools.dup
-    elsif target.kind_of?(Host)
-      target.all_resource_pools_with_default.dup
-    else
-      []
-    end
+                ems.resource_pools.dup
+              elsif target.kind_of?(Host)
+                target.all_resource_pools_with_default.dup
+              else
+                []
+              end
 
     save_inventory_multi(:resource_pools, ems, hashes, deletes, [:uid_ems], nil, :ems_children)
-    self.store_ids_for_new_records(ems.resource_pools, hashes, :uid_ems)
+    store_ids_for_new_records(ems.resource_pools, hashes, :uid_ems)
   end
 
-  def save_customization_specs_inventory(ems, hashes, target = nil)
+  def save_customization_specs_inventory(ems, hashes, _target = nil)
     deletes = ems.customization_specs(true).dup
     save_inventory_multi(:customization_specs, ems, hashes, deletes, [:name])
   end

@@ -9,16 +9,16 @@ module MiqReport::Generator::Async
       MiqQueue.put(
         :queue_name  => "generic",
         :role        => "reporting",
-        :class_name  => self.to_s,
+        :class_name  => to_s,
         :method_name => "_async_generate_tables",
         :args        => [task.id, options],
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :msg_timeout => self.default_queue_timeout.to_i_with_method
+        :msg_timeout => default_queue_timeout.to_i_with_method
       ) unless sync # Only queued if sync reporting disabled (default)
-      AuditEvent.success(:event => "generate_tables", :target_class => self.base_class.name, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
+      AuditEvent.success(:event => "generate_tables", :target_class => base_class.name, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
       task.update_status("Queued", "Ok", "Task has been queued")
-      self._async_generate_tables(task.id, options) if sync # Only runs if sync reporting enabled
-      return task.id
+      _async_generate_tables(task.id, options) if sync # Only runs if sync reporting enabled
+      task.id
     end
 
     def _async_generate_tables(taskid, options = {})
@@ -47,7 +47,7 @@ module MiqReport::Generator::Async
     options[:userid] ||= "system"
     sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
 
-    task = MiqTask.create(:name => "Generate Report: '#{self.name}'")
+    task = MiqTask.create(:name => "Generate Report: '#{name}'")
     unless sync # Only queued if sync reporting disabled (default)
       cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
       unless self.new_record?
@@ -55,12 +55,12 @@ module MiqReport::Generator::Async
           :queue_name   => "generic",
           :role         => "reporting",
           :class_name   => self.class.to_s,
-          :instance_id  => self.id,
+          :instance_id  => id,
           :method_name  => "_async_generate_table",
           :args         => [task.id, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => cb,
-          :msg_timeout  => self.queue_timeout
+          :msg_timeout  => queue_timeout
         )
       else
         MiqQueue.put(
@@ -71,14 +71,14 @@ module MiqReport::Generator::Async
           :args         => [task.id, self, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => cb,
-          :msg_timeout  => self.queue_timeout
+          :msg_timeout  => queue_timeout
         )
       end
     end
-    AuditEvent.success(:event => "generate_table", :target_class => self.class.base_class.name, :target_id => self.id, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
+    AuditEvent.success(:event => "generate_table", :target_class => self.class.base_class.name, :target_id => id, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
     task.update_status("Queued", "Ok", "Task has been queued")
-    self._async_generate_table(task.id, options) if sync # Only runs if sync reporting enabled
-    return task.id
+    _async_generate_table(task.id, options) if sync # Only runs if sync reporting enabled
+    task.id
   end
 
   def _async_generate_table(taskid, options = {})
@@ -88,9 +88,9 @@ module MiqReport::Generator::Async
     # }
     task = MiqTask.find_by_id(taskid)
     task.update_status("Active", "Ok", "Generating report") if task
-    audit = {:event => "generate_table", :target_class => self.class.base_class.name, :userid => options[:userid], :target_id => self.id}
+    audit = {:event => "generate_table", :target_class => self.class.base_class.name, :userid => options[:userid], :target_id => id}
     begin
-      self.generate_table(options)
+      generate_table(options)
       options[:mode] ||= "adhoc"
       if options[:mode] == "adhoc" || options[:session_id]
         userid = "#{options[:userid]}|#{options[:session_id]}|#{options[:mode]}"
@@ -99,7 +99,7 @@ module MiqReport::Generator::Async
       else
         userid = options[:userid]
       end
-      task.miq_report_result = self.build_create_results(options.merge(:userid => userid), taskid)
+      task.miq_report_result = build_create_results(options.merge(:userid => userid), taskid)
       task.save
       task.update_status("Finished", "Ok", "Generating report complete")
     rescue Exception => err
@@ -110,5 +110,4 @@ module MiqReport::Generator::Async
       raise
     end
   end
-
 end

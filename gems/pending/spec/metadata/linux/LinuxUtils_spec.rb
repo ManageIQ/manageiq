@@ -66,13 +66,13 @@ EOS
 
     %w(Nova Glance Keystone Swift neutron Ceilometer Heat Support).map do |service|
       it "should have contain correct OpenStack #{service} service" do
-        subject.select { |service_hash| service_hash['name'].include?(service) }.count.should be_equal 1
+        subject.count { |service_hash| service_hash['name'].include?(service) }.should be_equal 1
       end
     end
 
     describe "Nova services" do
       let(:subject) do
-        MiqLinux::Utils.parse_openstack_status(text).select { |service| service['name'].include?('Nova') }.first['services']
+        MiqLinux::Utils.parse_openstack_status(text).find { |service| service['name'].include?('Nova') }['services']
       end
 
       it "should have 6 services total" do
@@ -80,11 +80,11 @@ EOS
       end
 
       it "should have 4 active services" do
-        subject.select { |service| service['active'] }.count.should be_equal 4
+        subject.count { |service| service['active'] }.should be_equal 4
       end
 
       it "should have 2 inactive services" do
-        subject.select { |service| !service['active'] }.count.should be_equal 2
+        subject.count { |service| !service['active'] }.should be_equal 2
       end
     end
   end

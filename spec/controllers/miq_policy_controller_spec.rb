@@ -112,7 +112,7 @@ describe MiqPolicyController do
           context "when there is an error while importing" do
             before do
               miq_policy_import_service.stub(:store_for_import)
-              .with(file_contents).and_raise(StandardError.new("message"))
+                .with(file_contents).and_raise(StandardError.new("message"))
             end
 
             it "redirects to export with an error message" do
@@ -204,7 +204,7 @@ describe MiqPolicyController do
 
   describe '#replace_right_cell' do
     it 'should replace policy_tree_div when replace_trees contains :policy' do
-      controller.stub(:params).and_return({:action => 'whatever'})
+      controller.stub(:params).and_return(:action => 'whatever')
       controller.instance_eval { @sb = {:active_tree => :policy_tree} }
       controller.stub(:render).and_return(nil)
       presenter = ExplorerPresenter.new(:active_tree => :policy_tree)

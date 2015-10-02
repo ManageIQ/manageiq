@@ -12,20 +12,20 @@ module VMDB
       def validate
         @errors = {}
         valid = true
-        @config.each_key {|k|
+        @config.each_key do|k|
           if respond_to?(k.to_s, true)
             ost = OpenStruct.new(@config[k].stringify_keys)
             section_valid, errors = send(k.to_s, ost)
 
-            if !section_valid
-              errors.each {|e|
+            unless section_valid
+              errors.each do|e|
                 key, msg = e
                 @errors[[k, key].join("_")] = msg
-              }
+              end
               valid = false
             end
           end
-        }
+        end
         return valid, @errors
       end
 
@@ -34,19 +34,19 @@ module VMDB
       def webservices(data)
         valid, errors = true, []
 
-        if !["invoke", "disable"].include?(data.mode)
+        unless ["invoke", "disable"].include?(data.mode)
           valid = false; errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke or disable"]
         end
 
-        if !["ipaddress", "hostname"].include?(data.contactwith)
+        unless ["ipaddress", "hostname"].include?(data.contactwith)
           valid = false; errors << [:contactwith, "webservices contactwith, \"#{data.contactwith}\", invalid. Should be one of: ipaddress or hostname"]
         end
 
-        if ![true, false].include?(data.nameresolution)
+        unless [true, false].include?(data.nameresolution)
           valid = false; errors << [:nameresolution, "webservices nameresolution, \"#{data.nameresolution}\", invalid. Should be one of: true or false"]
         end
 
-        unless data.timeout.is_a?(Fixnum)
+        unless data.timeout.kind_of?(Fixnum)
           valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
         end
 
@@ -66,16 +66,6 @@ module VMDB
         if data.mode == "ldap"
           if data.ldaphost.blank?
             valid = false; errors << [:ldaphost, "ldaphost can't be blank"]
-          else
-            # # XXXX Test connection to ldap host
-            # # ldap=Net::LDAP.new( {:host => data.ldaphost, :port => 389} )
-            # begin
-            #   # ldap.bind
-            #   sock = TCPSocket.new(data.ldaphost, 389)
-            #   sock.close
-            # rescue => err
-            #   valid = false; errors << [:ldaphost, "unable to establish an ldap connection to host \"#{data.ldaphost}\", \"#{err}\""]
-            # end
           end
         elsif data.mode == "amazon"
           if data.amazon_key.blank?
@@ -98,11 +88,11 @@ module VMDB
       def session(data)
         valid, errors = true, []
 
-        unless data.timeout.is_a?(Fixnum)
+        unless data.timeout.kind_of?(Fixnum)
           valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
         end
 
-        unless data.interval.is_a?(Fixnum)
+        unless data.interval.kind_of?(Fixnum)
           valid, key, message = [false, :interval, "interval, \"#{data.interval}\", invalid.  invalid. Should be numeric"]
         end
 
@@ -134,7 +124,7 @@ module VMDB
       def smtp(data)
         valid, errors = true, []
 
-        if !["login", "plain", "none"].include?(data.authentication)
+        unless ["login", "plain", "none"].include?(data.authentication)
           valid = false; errors << [:mode, "authentication, \"#{data.mode}\", invalid. Should be one of: login, plain, or none"]
         end
 
@@ -146,7 +136,7 @@ module VMDB
           valid = false; errors << [:port, "\"#{data.port}\", invalid. Should be numeric"]
         end
 
-        unless data.from =~ %r{^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$}i
+        unless data.from =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
           valid = false; errors << [:from, "\"#{data.from}\", invalid. Should be a valid email address"]
         end
 

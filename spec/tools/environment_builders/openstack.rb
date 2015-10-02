@@ -16,7 +16,6 @@ require_relative 'openstack/services/volume/builder'
 require_relative 'openstack/services/image/builder'
 require_relative 'openstack/services/orchestration/builder'
 
-
 def usage(s)
   $stderr.puts(s)
   $stderr.puts("Run on a VM with at least 8GB of RAM!!!")

@@ -68,7 +68,7 @@ describe Service do
 
       @service     = FactoryGirl.create(:service)
       @service_c1  = FactoryGirl.create(:service, :service => @service)
-      @service    << @vm
+      @service << @vm
       @service_c1 << @vm_1
       @service.save
       @service_c1.save
@@ -162,7 +162,7 @@ describe Service do
 
     context "with VM resources" do
       before(:each) do
-        Vm.all.each {|vm| @service.add_resource(vm)}
+        Vm.all.each { |vm| @service.add_resource(vm) }
       end
 
       it "should iterate over each service resource" do
@@ -200,16 +200,16 @@ describe Service do
         @service.service_resources.first.start_delay = Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS - 1
         @service.delay_for_action(0, :start).should equal(Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS)
 
-        @service.each_group_resource {|r| r.start_delay = Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS - 1}
+        @service.each_group_resource { |r| r.start_delay = Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS - 1 }
         @service.delay_for_action(0, :start).should equal(Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS - 1)
 
         @service.service_resources.first.start_delay = Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS + 1
         @service.delay_for_action(0, :start).should equal(Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS + 1)
 
-        @service.each_group_resource {|r| r.start_delay = Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS + 1}
+        @service.each_group_resource { |r| r.start_delay = Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS + 1 }
         @service.delay_for_action(0, :start).should equal(Service::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS + 1)
 
-        @service.each_group_resource {|r| r.start_delay = 30}
+        @service.each_group_resource { |r| r.start_delay = 30 }
         @service.delay_for_action(0, :start).should equal(30)
       end
 
@@ -258,8 +258,8 @@ describe Service do
         @service.save
         vm.service.should_not be_nil
         service2 = FactoryGirl.create(:service)
-        lambda { service2.add_resource(vm) }.should raise_error(MiqException::Error)
-        lambda { service2 << vm            }.should raise_error(MiqException::Error)
+        -> { service2.add_resource(vm) }.should raise_error(MiqException::Error)
+        -> { service2 << vm            }.should raise_error(MiqException::Error)
       end
 
       it "#remove_resource" do

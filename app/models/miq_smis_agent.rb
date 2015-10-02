@@ -10,12 +10,12 @@ class MiqSmisAgent < StorageManager
   include MiqSmisClient
 
   has_many  :top_managed_elements,
-        :class_name   => "MiqCimInstance",
-        :foreign_key  => "agent_top_id"
+            :class_name  => "MiqCimInstance",
+            :foreign_key => "agent_top_id"
 
   has_many  :managed_elements,
-        :class_name   => "MiqCimInstance",
-        :foreign_key  => "agent_id"
+            :class_name  => "MiqCimInstance",
+            :foreign_key => "agent_id"
 
   virtual_column  :last_update_status_str,  :type => :string
 
@@ -24,8 +24,8 @@ class MiqSmisAgent < StorageManager
 
   def connect
     # TODO: Use hostname, not ipaddress
-    @conn = SmisClient.new(ipaddress, *self.auth_user_pwd(:default))
-    return @conn
+    @conn = SmisClient.new(ipaddress, *auth_user_pwd(:default))
+    @conn
   end
 
   def disconnect
@@ -34,12 +34,12 @@ class MiqSmisAgent < StorageManager
     @conn = nil
   end
 
-  def self.remove(ipaddress, username, password, agent_type)
+  def self.remove(_ipaddress, _username, _password, _agent_type)
   end
 
   def self.update_smis(extProf)
     zoneId = MiqServer.my_server.zone.id
-    agents = self.where(:agent_type => "SMIS", :zone_id => zoneId)
+    agents = where(:agent_type => "SMIS", :zone_id => zoneId)
 
     agents.each do |agent|
       agent.last_update_status = STORAGE_UPDATE_PENDING
@@ -108,17 +108,17 @@ class MiqSmisAgent < StorageManager
         agent.disconnect
       end
     end
-    return updated
+    updated
   end
 
-  def verify_credentials(auth_type=nil)
+  def verify_credentials(auth_type = nil)
     # Verification of creds for other SMA types is handled though mixinx.
-    raise "Credential validation requires the SMIS Agent type be set." if self.agent_type.blank?
+    raise "Credential validation requires the SMIS Agent type be set." if agent_type.blank?
     raise "no credentials defined" if self.missing_credentials?(auth_type)
 
     begin
-      self.connect
-      self.disconnect
+      connect
+      disconnect
     rescue NameError, Errno::ETIMEDOUT, Errno::ENETUNREACH, WBEM::CIMError
       #
       # We never get here.
@@ -142,7 +142,7 @@ class MiqSmisAgent < StorageManager
   end
 
   def update_stats
-    self.top_managed_elements.each do |topMe|
+    top_managed_elements.each do |topMe|
       @conn.default_namespace = topMe.namespace
       $log.debug "\tMiqSmisAgent top managed element: #{topMe.obj_name_str}"
       smgr = SmisStatManager.new(topMe, @conn)
@@ -151,7 +151,7 @@ class MiqSmisAgent < StorageManager
   end
 
   def self.update_stats
-    self.find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
+    find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
       # TODO: Log hostname, not ipaddress
       _log.info "Agent: #{agent.ipaddress}"
 
@@ -169,7 +169,7 @@ class MiqSmisAgent < StorageManager
   end
 
   def update_status
-    self.managed_elements.each do |me|
+    managed_elements.each do |me|
       changed = false
       obj = me.obj
       begin
@@ -187,7 +187,7 @@ class MiqSmisAgent < StorageManager
         end
       end
       if (os = spRn['OperationalStatus'])
-        unless os  == obj['OperationalStatus']
+        unless os == obj['OperationalStatus']
           obj['OperationalStatus'] = os
           me.obj = obj
           changed = true
@@ -198,7 +198,7 @@ class MiqSmisAgent < StorageManager
   end
 
   def self.update_status
-    self.find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
+    find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
       # TODO: Log hostname, not ipaddress
       _log.info "Agent: #{agent.ipaddress}"
 
@@ -215,14 +215,14 @@ class MiqSmisAgent < StorageManager
     end
   end
 
-  def self.refresh_inventory_by_subclass(ids, args={})
+  def self.refresh_inventory_by_subclass(ids, args = {})
     _log.info "queueing refresh requests for [ #{ids.join(', ')} ]"
     request_smis_update(ids, args)
   end
 
-  def self.request_smis_update(ids, args={})
+  def self.request_smis_update(ids, _args = {})
     zoneHash = {}
-    self.find(ids).each { |a| zoneHash[a.zone_id] = true }
+    find(ids).each { |a| zoneHash[a.zone_id] = true }
     zoneHash.each_key do |zid|
       if (rw = MiqSmisRefreshWorker.find_current_in_zone(zid).first).nil?
         _log.warn "no active SmisRefreshWorker found for zone #{zid}"
@@ -234,14 +234,14 @@ class MiqSmisAgent < StorageManager
   end
 
   def request_smis_update
-    rw = MiqSmisRefreshWorker.find_current_in_zone(self.zone_id).first
-    raise "#{self.name}.request_smis_update: no active SmisRefreshWorker found for zone #{self.zone_id}" if rw.nil?
+    rw = MiqSmisRefreshWorker.find_current_in_zone(zone_id).first
+    raise "#{name}.request_smis_update: no active SmisRefreshWorker found for zone #{zone_id}" if rw.nil?
     rw.send_message_to_worker_monitor("request_smis_update")
   end
 
   def request_status_update
-    rw = MiqSmisRefreshWorker.find_current_in_zone(self.zone_id).first
-    raise "#{self.name}.request_status_update: no active SmisRefreshWorker found for zone #{self.zone_id}" if rw.nil?
+    rw = MiqSmisRefreshWorker.find_current_in_zone(zone_id).first
+    raise "#{name}.request_status_update: no active SmisRefreshWorker found for zone #{zone_id}" if rw.nil?
     rw.send_message_to_worker_monitor("request_status_update")
   end
 
@@ -263,7 +263,6 @@ class MiqSmisAgent < StorageManager
       _log.info "deleting SMI-S instance #{inst.class_name} (#{inst.id}) - #{inst.evm_display_name}, last_update_status = #{inst.last_update_status}"
       inst.destroy
     end
-    return nil
+    nil
   end
-
 end

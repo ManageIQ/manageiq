@@ -34,7 +34,7 @@ class TreeBuilder
 
   # FIXME: need to move this to a subclass (#root_options)
   def self.root_options(tree_name)
-    #returns title, tooltip, root icon
+    # returns title, tooltip, root icon
     case tree_name
     when :ab_tree                       then [_("Object Types"),                 _("Object Types")]
     when :ae_tree                       then [_("Datastore"),                    _("Datastore")]
@@ -145,7 +145,7 @@ class TreeBuilder
   end
 
   def self.get_prefix_for_model(model)
-    model = model.to_s unless model.is_a?(String)
+    model = model.to_s unless model.kind_of?(String)
     X_TREE_NODE_PREFIXES_INVERTED[model]
   end
 
@@ -193,12 +193,12 @@ class TreeBuilder
   def add_to_sandbox
     @tree_state.add_tree(
       @options.reverse_merge(
-          :tree       => @name,
-          :type       => type,
-          :klass_name => self.class.name,
-          :leaf       => @options[:leaf],
-          :add_root   => true,
-          :open_nodes => []
+        :tree       => @name,
+        :type       => type,
+        :klass_name => self.class.name,
+        :leaf       => @options[:leaf],
+        :add_root   => true,
+        :open_nodes => []
       )
     )
   end
@@ -211,17 +211,17 @@ class TreeBuilder
 
   def set_locals_for_render
     {
-      :tree_id        => "#{@name}box",
-      :tree_name      => @name.to_s,
-      :json_tree      => @tree_nodes,
-      :onclick        => "miqOnClickSelectTreeNode",
-      :id_prefix      => "#{@name}_",
-      :base_id        => "root",
-      :no_base_exp    => true,
-      :exp_tree       => false,
-      :highlighting   => true,
-      :tree_state     => true,
-      :multi_lines    => true
+      :tree_id      => "#{@name}box",
+      :tree_name    => @name.to_s,
+      :json_tree    => @tree_nodes,
+      :onclick      => "miqOnClickSelectTreeNode",
+      :id_prefix    => "#{@name}_",
+      :base_id      => "root",
+      :no_base_exp  => true,
+      :exp_tree     => false,
+      :highlighting => true,
+      :tree_state   => true,
+      :multi_lines  => true
     }
   end
 
@@ -309,7 +309,7 @@ class TreeBuilder
 
                         when MiqSearch           then nil
                         when ManageIQ::Providers::Openstack::CloudManager::Vm         then nil
-                        else                          nil end
+                        end
     children_or_count || (count_only ? 0 : [])
   end
 
@@ -319,7 +319,7 @@ class TreeBuilder
 
     options[:is_current] =
         ((object.kind_of?(MiqServer) && MiqServer.my_server(true).id == object.id) ||
-         (object.kind_of?(Zone)      && MiqServer.my_server(true).my_zone == object.name))
+         (object.kind_of?(Zone) && MiqServer.my_server(true).my_zone == object.name))
 
     # # open nodes to show selected automate entry point
     # x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
@@ -358,7 +358,7 @@ class TreeBuilder
   end
 
   # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, options)
+  def x_get_tree_custom_kids(_object, options)
     options[:count_only] ? 0 : []
   end
 
@@ -412,7 +412,7 @@ class TreeBuilder
     if check_vm_descendants && User.current_user.has_filters?
       filtered_objects = objects - results
       results = objects.select do |o|
-        if o.is_a?(EmsFolder) || filtered_objects.include?(o)
+        if o.kind_of?(EmsFolder) || filtered_objects.include?(o)
           rbac_has_visible_vm_descendants?(o)
         else
           true

@@ -12,24 +12,23 @@ describe MiqAeCustomizationController do
       end
 
       it "flash message displays Dialog Label being deleted" do
-        dialog = FactoryGirl.create(:dialog, :label            => "Test Label",
-                                             :description      => "Test Description",
-                                             :buttons          => "submit,reset,cancel"
+        dialog = FactoryGirl.create(:dialog, :label       => "Test Label",
+                                             :description => "Test Description",
+                                             :buttons     => "submit,reset,cancel"
                                    )
 
         controller.instance_variable_set(:@sb,
-                                         {:trees => {
-                                          :dlg_tree => {:active_node => "#{dialog.id}"}
+                                         :trees       => {
+                                           :dlg_tree => {:active_node => "#{dialog.id}"}
                                          },
-                                          :active_tree => :dlg_tree
-                                         })
+                                         :active_tree => :dlg_tree)
         session[:settings] = {:display   => {:locale => 'default'}}
 
         controller.instance_variable_set(:@settings, :display => {:locale => 'default'})
         controller.stub(:replace_right_cell)
 
         # Now delete the Dialog
-        controller.instance_variable_set(:@_params, {:id => dialog.id})
+        controller.instance_variable_set(:@_params, :id => dialog.id)
         controller.send(:dialog_delete)
 
         # Check for Dialog Label to be part of flash message displayed
@@ -42,8 +41,8 @@ describe MiqAeCustomizationController do
 
     context "#prepare_move_field_value" do
       it "Find ID of a button" do
-        controller.instance_variable_set(:@_params, {:entry_id => 1 })
-        controller.instance_variable_set(:@edit, {:field_values => [['test',100], ['test1',101], ['test2',102]]})
+        controller.instance_variable_set(:@_params, :entry_id => 1)
+        controller.instance_variable_set(:@edit, {:field_values => [['test', 100], ['test1', 101], ['test2', 102]]})
         controller.send(:prepare_move_field_value)
         expect(controller.instance_variable_get(:@idx)).to eq(1)
       end
@@ -55,7 +54,7 @@ describe MiqAeCustomizationController do
         @dialog = FactoryGirl.create(:dialog,
                                      :label       => "Test Label",
                                      :description => "Test Description"
-        )
+                                    )
         tree_hash = {
           :active_tree => :dialog_edit_tree,
           :trees       => {

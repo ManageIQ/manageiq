@@ -67,7 +67,7 @@ describe OpsController do
       EvmSpecHelper.create_guid_miq_server_zone
       MiqRegion.seed
 
-      session[:sandboxes] = { "ops" => { :active_tree => :diagnostics_tree } }
+      session[:sandboxes] = {"ops" => {:active_tree => :diagnostics_tree}}
       post :tree_select, :id => 'root', :format => :js
 
       response.should render_template('ops/_diagnostics_zones_tab')

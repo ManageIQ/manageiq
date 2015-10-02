@@ -70,11 +70,11 @@ describe Openstack::InteractionMethods do
 
     context "#find_all" do
       it "should find one host with unique attribute value" do
-        expect(subject.find_all(data, {:name => "name1"})).to eq([host1])
+        expect(subject.find_all(data, :name => "name1")).to eq([host1])
       end
 
       it "should find all hosts with not unique attribute value" do
-        expect(subject.find_all(data, {:connection_state => "connection_state"})).to eq([host3, host4])
+        expect(subject.find_all(data, :connection_state => "connection_state")).to eq([host3, host4])
       end
 
       it "should find all hosts with nested hash in lookup pairs" do

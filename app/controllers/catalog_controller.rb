@@ -1,10 +1,10 @@
 class CatalogController < ApplicationController
   include AutomateTreeHelper
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def self.model
     @model ||= ServiceTemplate
@@ -52,7 +52,7 @@ class CatalogController < ApplicationController
     raise ActionController::RoutingError.new('invalid button action') unless
       CATALOG_X_BUTTON_ALLOWED_ACTIONS.key?(action)
 
-    self.send(CATALOG_X_BUTTON_ALLOWED_ACTIONS[action])
+    send(CATALOG_X_BUTTON_ALLOWED_ACTIONS[action])
   end
 
   def servicetemplate_edit
@@ -69,7 +69,7 @@ class CatalogController < ApplicationController
         atomic_st_edit
       end
     else
-      #check for service_type incase add/cancel button was pressed to direct to correct method
+      # check for service_type incase add/cancel button was pressed to direct to correct method
       if params[:pressed] == "atomic_catalogitem_new" || (params[:button] && session[:edit][:new][:service_type] == "atomic")
         atomic_st_edit
       else
@@ -79,19 +79,19 @@ class CatalogController < ApplicationController
   end
 
   def atomic_st_edit
-    #reset the active tree back to :sandt_tree, it was changed temporairly to display automate entry point tree in a popup div
+    # reset the active tree back to :sandt_tree, it was changed temporairly to display automate entry point tree in a popup div
     self.x_active_tree = 'sandt_tree'
     case params[:button]
     when "cancel"
       if session[:edit][:rec_id]
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"#{ui_lookup(:model=>'ServiceTemplate')}", :name=>session[:edit][:new][:description]})
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "#{ui_lookup(:model => 'ServiceTemplate')}", :name => session[:edit][:new][:description]})
       else
-        add_flash(_("Add of new %s was cancelled by the user") % "#{ui_lookup(:model=>'ServiceTemplate')}")
+        add_flash(_("Add of new %s was cancelled by the user") % "#{ui_lookup(:model => 'ServiceTemplate')}")
       end
       @edit = @record = nil
       @in_a_form = false
       replace_right_cell
-    when "save","add"
+    when "save", "add"
       assert_privileges("atomic_catalogitem_#{params[:button] == "save" ? "edit" : "new"}")
       atomic_req_submit
     when "reset", nil  # Reset or first time in
@@ -103,16 +103,16 @@ class CatalogController < ApplicationController
         prov_set_form_vars(MiqRequest.find(@record.service_resources[0].resource_id))      # Set vars from existing request
         @edit[:new][:st_prov_type] = @record.prov_type
       else
-        #prov_set_form_vars
-        @edit ||= Hash.new                                    # Set default vars
-        @edit[:new] ||= Hash.new
-        @edit[:current] ||= Hash.new
+        # prov_set_form_vars
+        @edit ||= {}                                    # Set default vars
+        @edit[:new] ||= {}
+        @edit[:current] ||= {}
         @edit[:key] = "prov_edit__new"
         @edit[:new][:st_prov_type] = @record.prov_type if @record.try(:id)
         @edit[:st_prov_types] = catalog_item_types
       end
 
-      #set name and description for ServiceTemplate record
+      # set name and description for ServiceTemplate record
       set_form_vars
       @edit[:new][:service_type] = "atomic"
       @edit[:rec_id] = @record.try(:id)
@@ -138,14 +138,14 @@ class CatalogController < ApplicationController
   end
 
   def atomic_form_field_changed
-    #need to check req_id in session since we are using common code for prov requests and atomic ST screens
+    # need to check req_id in session since we are using common code for prov requests and atomic ST screens
     id = session[:edit][:req_id] || "new"
-    return unless load_edit("prov_edit__#{id}","replace_cell__explorer")
+    return unless load_edit("prov_edit__#{id}", "replace_cell__explorer")
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
     # Build Catalog Items tree unless @edit[:ae_tree_select]
     build_ae_tree(:automate, :automate_tree) if params[:display] || params[:template_id]
-    if params[:st_prov_type] #build request screen for selected item type
+    if params[:st_prov_type] # build request screen for selected item type
       @_params[:org_controller] = "service_template"
       prov_set_form_vars if need_prov_dialogs?(params[:st_prov_type])
       @record = class_service_template(params[:st_prov_type]).new
@@ -157,7 +157,7 @@ class CatalogController < ApplicationController
       @tabactive = @edit[:new][:current_tab_key]
     end
     render :update do |page|                    # Use JS to update the display
-      page.replace_html("form_div", :partial=>"st_form") if params[:st_prov_type]
+      page.replace_html("form_div", :partial => "st_form") if params[:st_prov_type]
       page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:display] || params[:template_id]
       if params[:display]
         page << "miq_tabs_show_hide('#details_tab', '#{(params[:display] == "1")}')"
@@ -181,7 +181,7 @@ class CatalogController < ApplicationController
                   :id         => tree_node_id
       return
     else
-      redirect_to :action => 'show', :controller=>record.class.base_model.to_s.underscore, :id=>record.id
+      redirect_to :action => 'show', :controller => record.class.base_model.to_s.underscore, :id => record.id
     end
   end
 
@@ -205,16 +205,16 @@ class CatalogController < ApplicationController
     if role_allows(:feature => "svc_catalog_accord", :any => true)
       self.x_active_tree   = 'svccat_tree'
       self.x_active_accord = 'svccat'
-      default_active_tree   ||= self.x_active_tree
-      default_active_accord ||= self.x_active_accord
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
       @built_trees << build_svccat_tree
       @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_tree_div")
     end
     if role_allows(:feature => "catalog_items_accord", :any => true)
       self.x_active_tree   = 'sandt_tree'
       self.x_active_accord = 'sandt'
-      default_active_tree   ||= self.x_active_tree
-      default_active_accord ||= self.x_active_accord
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
       @built_trees << build_st_tree
       @accords.push(:name => "sandt", :title => "Catalog Items", :container => "sandt_tree_div")
     end
@@ -229,8 +229,8 @@ class CatalogController < ApplicationController
     if role_allows(:feature => "st_catalog_accord", :any => true)
       self.x_active_tree   = 'stcat_tree'
       self.x_active_accord = 'stcat'
-      default_active_tree   ||= self.x_active_tree
-      default_active_accord ||= self.x_active_accord
+      default_active_tree ||= x_active_tree
+      default_active_accord ||= x_active_accord
       @built_trees << build_stcat_tree
       @accords.push(:name => "stcat", :title => "Catalogs", :container => "stcat_tree_div")
     end
@@ -283,14 +283,14 @@ class CatalogController < ApplicationController
     @explorer = true
     if x_active_tree == :stcat_tree
       if params[:rec_id]
-        #link to Catalog Item clicked on catalog summary screen
+        # link to Catalog Item clicked on catalog summary screen
         self.x_active_tree = 'sandt_tree'
         self.x_active_accord = 'sandt'
         @record = ServiceTemplate.find_by_id(from_cid(params[:rec_id]))
-        params[:id] = x_build_node_id(@record,nil,x_tree(:sandt_tree))  # Get the tree node id
+        params[:id] = x_build_node_id(@record, nil, x_tree(:sandt_tree))  # Get the tree node id
       else
         @record = ServiceTemplateCatalog.find_by_id(from_cid(params[:id]))
-        params[:id] = x_build_node_id(@record,nil,x_tree(:stcat_tree))  # Get the tree node id
+        params[:id] = x_build_node_id(@record, nil, x_tree(:stcat_tree))  # Get the tree node id
       end
     elsif x_active_tree == :ot_tree
       @record = OrchestrationTemplate.find_by_id(from_cid(params[:id])) if @record.nil?
@@ -323,39 +323,39 @@ class CatalogController < ApplicationController
 
   def st_delete
     assert_privileges("catalogitem_delete")
-    elements = Array.new
+    elements = []
     if params[:id]
       elements.push(params[:id])
       process_sts(elements, 'destroy') unless elements.empty?
-      add_flash(_("The selected %s was deleted") % ui_lookup(:table=>"service_template")) if @flash_array.nil?
+      add_flash(_("The selected %s was deleted") % ui_lookup(:table => "service_template")) if @flash_array.nil?
       self.x_node = "root"
     else # showing 1 element, delete it
       elements = find_checked_items
       if elements.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"service_template"), :task=>"deletion"}, :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "service_template"), :task => "deletion"}, :error)
       end
       process_sts(elements, 'destroy') unless elements.empty?
-      add_flash(_("The selected %s were deleted") % pluralize(elements.length,ui_lookup(:table=>"service_template"))) unless flash_errors?
+      add_flash(_("The selected %s were deleted") % pluralize(elements.length, ui_lookup(:table => "service_template"))) unless flash_errors?
     end
     params[:id] = nil
     replace_right_cell(nil, trees_to_replace([:sandt, :svccat]))
   end
 
   def st_edit
-    #reset the active tree back to :sandt_tree, it was changed temporairly to display automate entry point tree in a popup div
+    # reset the active tree back to :sandt_tree, it was changed temporairly to display automate entry point tree in a popup div
     self.x_active_tree = 'sandt_tree'
     case params[:button]
     when "cancel"
       if session[:edit][:rec_id]
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"Catalog Bundle", :name=>session[:edit][:new][:description]})
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "Catalog Bundle", :name => session[:edit][:new][:description]})
       else
         add_flash(_("Add of new %s was cancelled by the user") % "Catalog Bundle")
       end
       @edit = @record = nil
       @in_a_form = false
       replace_right_cell
-    when "save","add"
-      return unless load_edit("st_edit__#{params[:id] || "new"}","replace_cell__explorer")
+    when "save", "add"
+      return unless load_edit("st_edit__#{params[:id] || "new"}", "replace_cell__explorer")
       get_form_vars
       if @edit[:new][:name].blank?
         add_flash(_("%s is required") % "Name", :error)
@@ -370,7 +370,7 @@ class CatalogController < ApplicationController
 
       if @flash_array
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
@@ -387,7 +387,7 @@ class CatalogController < ApplicationController
           @edit = session[:edit] = @record = nil
           replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
         else
-          @st.errors.each do |field,msg|
+          @st.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
@@ -397,7 +397,7 @@ class CatalogController < ApplicationController
         end
       else
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
@@ -414,15 +414,15 @@ class CatalogController < ApplicationController
 
   # AJAX driven routine to check for changes in ANY field on the form
   def st_form_field_changed
-    return unless load_edit("st_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("st_edit__#{params[:id]}", "replace_cell__explorer")
     @group_idx = false
     default_entry_point("generic") if params[:display]
     st_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
     render :update do |page|                    # Use JS to update the display
-      page.replace_html("basic_info_div", :partial=>"form_basic_info") if params[:resource_id] || params[:display]
-      page.replace_html("resources_info_div", :partial=>"form_resources_info") if params[:resource_id] || @group_idx
+      page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:resource_id] || params[:display]
+      page.replace_html("resources_info_div", :partial => "form_resources_info") if params[:resource_id] || @group_idx
       if params[:display]
         page << "miq_tabs_show_hide('#details_tab', '#{(params[:display] == "1")}')"
       end
@@ -443,7 +443,7 @@ class CatalogController < ApplicationController
       @record.save
       msg = _("Custom Image successfully removed")
     elsif params[:upload] && params[:upload][:image] &&
-        params[:upload][:image].respond_to?(:read)
+          params[:upload][:image].respond_to?(:read)
       ext = params[:upload][:image].original_filename.split(".").last.downcase
       if !["png", "jpg"].include?(ext)
         msg = _("Custom Image must be a %s file") % ".png or .jpg"
@@ -462,33 +462,33 @@ class CatalogController < ApplicationController
     end
     add_flash(msg, err == true ? :error : nil)
     respond_to do |format|
-      format.js {replace_right_cell}
+      format.js { replace_right_cell }
       format.html do                # HTML, send error screen
         explorer
         render(:action => "explorer")
       end
-      format.any {render :nothing=>true, :status=>404}  # Anything else, just send 404
+      format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
     end
   end
 
   def resource_delete
-    return unless load_edit("st_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("st_edit__#{params[:id]}", "replace_cell__explorer")
     @edit[:new][:rsc_groups][params[:grp_id].to_i].each do |r|
       if r[:id].to_s == params[:rec_id]
-        @edit[:new][:available_resources][r[:resource_id]] = r[:name]       #add it back to available resources pulldown
-        @edit[:new][:selected_resources].delete(r[:resource_id])            #delete it from to selected resources
-        @edit[:new][:rsc_groups][params[:grp_id].to_i].delete(r)            #delete element from group
+        @edit[:new][:available_resources][r[:resource_id]] = r[:name]       # add it back to available resources pulldown
+        @edit[:new][:selected_resources].delete(r[:resource_id])            # delete it from to selected resources
+        @edit[:new][:rsc_groups][params[:grp_id].to_i].delete(r)            # delete element from group
         rearrange_provision_order(@edit[:new][:rsc_groups], r[:provision_index])
       end
     end
 
-    #if resource has been deleted from group, rearrange groups incase group is now empty.
+    # if resource has been deleted from group, rearrange groups incase group is now empty.
     rearrange_groups_array
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
-      page.replace_html("basic_info_div", :partial=>"form_basic_info")
-      page.replace_html("resources_info_div", :partial=>"form_resources_info")
+      page.replace_html("basic_info_div", :partial => "form_basic_info")
+      page.replace_html("resources_info_div", :partial => "form_resources_info")
       if changed != session[:changed]
         session[:changed] = changed
         page << "ManageIQ.changes = true;"
@@ -544,7 +544,7 @@ class CatalogController < ApplicationController
     @edit = session[:edit]
     @edit[:new][params[:typ]] = nil
     @edit[:new][ae_tree_key] = ''
-    #build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree unless @edit[:ae_tree_select]
+    # build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree unless @edit[:ae_tree_select]
     render :update do |page|
       @changed = (@edit[:new] != @edit[:current])
       x_node_set(@edit[:active_id], :automate_tree)
@@ -572,24 +572,24 @@ class CatalogController < ApplicationController
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
     st = find_by_id_filtered(ServiceTemplate, checked[0])
-    @right_cell_text = _("%{task} %{model} \"%{name}\"") % {:task=>"Order", :name=>st.name, :model=>ui_lookup(:model=>"Service")}
+    @right_cell_text = _("%{task} %{model} \"%{name}\"") % {:task => "Order", :name => st.name, :model => ui_lookup(:model => "Service")}
     ra = nil
     st.resource_actions.each do |r|
       if r.action.downcase == "provision" && r.dialog_id
-        #find the first provision action, run the dialog
+        # find the first provision action, run the dialog
         ra = r
         break
       end
     end
     if ra
       @explorer = true
-      options = Hash.new
+      options = {}
       options[:header] = @right_cell_text
       options[:target_id] = st.id
       options[:target_kls] = st.class.name
-      dialog_initialize(ra,options)
+      dialog_initialize(ra, options)
     else
-      #if catalog item has no dialog and provision button was pressed from list view
+      # if catalog item has no dialog and provision button was pressed from list view
       add_flash(_("No Ordering Dialog is available"), :warning)
       replace_right_cell
     end
@@ -597,79 +597,79 @@ class CatalogController < ApplicationController
 
   def st_catalog_edit
     case params[:button]
-      when "cancel"
-        if session[:edit][:rec_id]
-          add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>"ServiceTemplateCatalog", :name=>session[:edit][:new][:name]})
-        else
-          add_flash(_("Add of new %s was cancelled by the user") % "ServiceTemplateCatalog")
-        end
-        @edit = nil
-        @in_a_form = false
-        replace_right_cell
-      when "save","add"
-        assert_privileges("st_catalog_#{params[:id] ? "edit" : "new"}")
-        return unless load_edit("st_catalog_edit__#{params[:id] || "new"}","replace_cell__explorer")
+    when "cancel"
+      if session[:edit][:rec_id]
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "ServiceTemplateCatalog", :name => session[:edit][:new][:name]})
+      else
+        add_flash(_("Add of new %s was cancelled by the user") % "ServiceTemplateCatalog")
+      end
+      @edit = nil
+      @in_a_form = false
+      replace_right_cell
+    when "save", "add"
+      assert_privileges("st_catalog_#{params[:id] ? "edit" : "new"}")
+      return unless load_edit("st_catalog_edit__#{params[:id] || "new"}", "replace_cell__explorer")
 
-        @stc = @edit[:rec_id] ? ServiceTemplateCatalog.find_by_id(@edit[:rec_id]) : ServiceTemplateCatalog.new
-        st_catalog_set_record_vars(@stc)
-        begin
-          @stc.save
-        rescue StandardError => bang
-          add_flash(_("Error during '%s': ") % "Catalog Edit" << bang.message, :error)
+      @stc = @edit[:rec_id] ? ServiceTemplateCatalog.find_by_id(@edit[:rec_id]) : ServiceTemplateCatalog.new
+      st_catalog_set_record_vars(@stc)
+      begin
+        @stc.save
+      rescue StandardError => bang
+        add_flash(_("Error during '%s': ") % "Catalog Edit" << bang.message, :error)
+      else
+        if @stc.errors.empty?
+          add_flash(_("%{model} \"%{name}\" was saved") %
+                      {:model => "#{ui_lookup(:model => 'ServiceTemplateCatalog')}",
+                       :name  => @edit[:new][:name]
+                      }
+                   )
         else
-          if @stc.errors.empty?
-            add_flash(_("%{model} \"%{name}\" was saved") %
-                        {:model => "#{ui_lookup(:model => 'ServiceTemplateCatalog')}",
-                         :name  => @edit[:new][:name]
-                        }
-            )
-          else
-            @stc.errors.each do |field, msg|
-              add_flash("#{field.to_s.capitalize} #{msg}", :error)
-            end
-            render :update do |page|
-              page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-            end
-            return
+          @stc.errors.each do |field, msg|
+            add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
+          render :update do |page|
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          end
+          return
         end
-        @changed = session[:changed] = false
-        @in_a_form = false
-        @edit = session[:edit] = nil
-        replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
-      when "reset", nil  # Reset or first time in
-        st_catalog_set_form_vars
-        if params[:button] == "reset"
-          add_flash(_("All changes have been reset"), :warning)
-        end
-        @changed = session[:changed] = false
-        replace_right_cell("st_catalog_edit")
-        return
+      end
+      @changed = session[:changed] = false
+      @in_a_form = false
+      @edit = session[:edit] = nil
+      replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
+    when "reset", nil  # Reset or first time in
+      st_catalog_set_form_vars
+      if params[:button] == "reset"
+        add_flash(_("All changes have been reset"), :warning)
+      end
+      @changed = session[:changed] = false
+      replace_right_cell("st_catalog_edit")
+      return
     end
   end
 
   def st_catalog_form_field_changed
     id = session[:edit][:rec_id] || "new"
-    return unless load_edit("st_catalog_edit__#{id}","replace_cell__explorer")
+    return unless load_edit("st_catalog_edit__#{id}", "replace_cell__explorer")
     st_catalog_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|                    # Use JS to update the display
-      page.replace(@refresh_div, :partial=>@refresh_partial) if @refresh_div
+      page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << javascript_for_miq_button_visibility(changed)
       page << "miqSparkle(false);"
     end
   end
 
-  def process_sts(sts, task, display_name = nil)
+  def process_sts(sts, task, _display_name = nil)
     ServiceTemplate.find_all_by_id(sts, :order => "lower(name)").each do |st|
       id = st.id
       st_name = st.name
-      audit = {:event=>"st_record_delete", :message=>"[#{st_name}] Record deleted", :target_id=>id, :target_class=>"ServiceTemplate", :userid => session[:userid]}
-      model_name = ui_lookup(:model=>"ServiceTemplate")  # Lookup friendly model name in dictionary
+      audit = {:event => "st_record_delete", :message => "[#{st_name}] Record deleted", :target_id => id, :target_class => "ServiceTemplate", :userid => session[:userid]}
+      model_name = ui_lookup(:model => "ServiceTemplate")  # Lookup friendly model name in dictionary
       begin
         st.public_send(task.to_sym) if st.respond_to?(task)    # Run the task
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>model_name, :name=>st_name, :task=>task} << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => model_name, :name => st_name, :task => task} << bang.message,
                   :error)
       else
         AuditEvent.success(audit)
@@ -816,7 +816,7 @@ class CatalogController < ApplicationController
     ot_type = ot.type == "OrchestrationTemplateHot" ? "othot" : "otcfn"
     x_tree[:open_nodes].push("xx-#{ot_type}") unless x_tree[:open_nodes].include?("xx-#{ot_type}")
     self.x_node = "ot-#{to_cid(ot.id)}"
-    x_tree[:open_nodes].push(self.x_node)
+    x_tree[:open_nodes].push(x_node)
     explorer
   end
 
@@ -830,7 +830,7 @@ class CatalogController < ApplicationController
 
   def atomic_req_submit
     id = session[:edit][:req_id] || "new"
-    return unless load_edit("prov_edit__#{id}","show_list")
+    return unless load_edit("prov_edit__#{id}", "show_list")
     if @edit[:new][:name].blank?
       # check for service template required fields before creating a request
       add_flash(_("%s is required") % "Name", :error)
@@ -858,7 +858,7 @@ class CatalogController < ApplicationController
       end
     end
 
-    #set request for non generic ST
+    # set request for non generic ST
     if @edit[:wf] && need_prov_dialogs?(@edit[:new][:st_prov_type])
       request = @edit[:wf].make_request(@edit[:req_id], @edit[:new], session[:userid])
       if request && request.errors.present?
@@ -872,11 +872,11 @@ class CatalogController < ApplicationController
 
     if @flash_array
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
       return
     end
-    get_form_vars   #need to get long_description
+    get_form_vars   # need to get long_description
     st = @edit[:rec_id] ?
       ServiceTemplate.find_by_id(@edit[:rec_id]) :
       class_service_template(@edit[:new][:st_prov_type]).new
@@ -908,7 +908,7 @@ class CatalogController < ApplicationController
       @edit = session[:edit] = @record = nil
       replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
     else
-      st.errors.each do |field,msg|
+      st.errors.each do |field, msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
@@ -918,10 +918,10 @@ class CatalogController < ApplicationController
     end
   end
 
-  def service_template_list(condition, options={})
+  def service_template_list(condition, options = {})
     @no_checkboxes = x_active_tree == :svccat_tree
     if x_active_tree == :svccat_tree
-      @gtl_buttons = ["view_list","view_tile"]
+      @gtl_buttons = ["view_list", "view_tile"]
       @gtl_small_tiles = true
       if role_allows(:feature => 'svc_catalog_provision')
         @row_button = {:image    => "Order",
@@ -929,7 +929,7 @@ class CatalogController < ApplicationController
                        :title    => "Order this Service"} # Show a button instead of the checkbox
       end
     end
-    options[:model] = "ServiceCatalog" if !options[:model]
+    options[:model] = "ServiceCatalog" unless options[:model]
     options[:where_clause] = condition
     process_show_list(options)
   end
@@ -1043,7 +1043,7 @@ class CatalogController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                      :name  => @edit[:new][:name]})
-        x_node_elems = self.x_node.split('-')
+        x_node_elems = x_node.split('-')
         x_node_elems[2] = to_cid(ot.id)
         self.x_node = x_node_elems.join('-')
         ot_action_submit_flash
@@ -1088,10 +1088,10 @@ class CatalogController < ApplicationController
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                      :name  => @edit[:new][:name]})
         subtree = ot.type == "OrchestrationTemplateHot" ? "xx-othot" : "xx-otcfn"
-        self.x_tree[:open_nodes].push(subtree) unless self.x_tree[:open_nodes].include?(subtree)
+        x_tree[:open_nodes].push(subtree) unless x_tree[:open_nodes].include?(subtree)
         self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot.type == "OrchestrationTemplateHot" ? "othot" : "otcfn",
                                                 :cid  => to_cid(ot.id)}
-        self.x_tree[:open_nodes].push(self.x_node)
+        x_tree[:open_nodes].push(x_node)
         ot_action_submit_flash
         @changed = session[:changed] = false
         @in_a_form = false
@@ -1149,21 +1149,21 @@ class CatalogController < ApplicationController
 
     @record = checked[0] ? find_by_id_filtered(ServiceTemplateCatalog, checked[0]) : ServiceTemplateCatalog.new
     @right_cell_text = @record.id ?
-        _("Editing %{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>"ServiceTemplateCatalog")} :
-        _("Adding a new %s") % ui_lookup(:model=>"ServiceTemplateCatalog")
-    @edit = Hash.new
+        _("Editing %{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => "ServiceTemplateCatalog")} :
+        _("Adding a new %s") % ui_lookup(:model => "ServiceTemplateCatalog")
+    @edit = {}
     @edit[:key] = "st_catalog_edit__#{@record.id || "new"}"
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
+    @edit[:new] = {}
+    @edit[:current] = {}
     @edit[:rec_id] = @record.id
     @edit[:new][:name] = @record.name
     @edit[:new][:description]  = @record.description
     @edit[:new][:fields] = @record.service_templates.collect { |st| [st.name, st.id] }.sort
 
     @edit[:new][:available_fields] = ServiceTemplate.all
-                                                    .select  { |st| st.service_template_catalog.nil? && st.display }
-                                                    .collect { |st| [st.name, st.id] }
-                                                    .sort
+                                     .select  { |st| st.service_template_catalog.nil? && st.display }
+                                     .collect { |st| [st.name, st.id] }
+                                     .sort
 
     @edit[:current] = copy_hash(@edit[:new])
     @in_a_form = true
@@ -1177,7 +1177,7 @@ class CatalogController < ApplicationController
 
   def st_catalog_delete
     assert_privileges("st_catalog_delete")
-    elements = Array.new
+    elements = []
     if params[:id]
       elements.push(params[:id])
       process_elements(elements, ServiceTemplateCatalog, "destroy") unless elements.empty?
@@ -1185,7 +1185,7 @@ class CatalogController < ApplicationController
     else # showing 1 element, delete it
       elements = find_checked_items
       if elements.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:models=>"ServiceTemplateCatalog"), :task=>"deletion"}, :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => "ServiceTemplateCatalog"), :task => "deletion"}, :error)
       end
       process_elements(elements, ServiceTemplateCatalog, "destroy") unless elements.empty?
     end
@@ -1239,12 +1239,12 @@ class CatalogController < ApplicationController
     st.prov_type = @edit[:new][:st_prov_type]
     st.remove_all_resources
     @add_rsc = true
-    if !@edit[:new][:selected_resources].empty?
+    unless @edit[:new][:selected_resources].empty?
       @edit[:new][:selected_resources].each do |r|
         rsc = ServiceTemplate.find_by_id(r)
-        @edit[:new][:rsc_groups].each_with_index do |groups,i|
+        @edit[:new][:rsc_groups].each_with_index do |groups, i|
           groups.each do |sr|
-            options = Hash.new
+            options = {}
             options[:group_idx] = i
             options[:provision_index] = sr[:provision_index]
             options[:start_action] = sr[:start_action]
@@ -1255,7 +1255,7 @@ class CatalogController < ApplicationController
             options[:scaling_max] = sr[:scaling_max].to_i
             if sr[:resource_id].to_s == rsc.id.to_s
               begin
-                st.add_resource(rsc,options)
+                st.add_resource(rsc, options)
               rescue MiqException::MiqServiceCircularReferenceError => bang
                 @add_rsc = false
                 add_flash(_("Error during '%s': ") % "Resource Add" << bang.message, :error)
@@ -1269,7 +1269,7 @@ class CatalogController < ApplicationController
     end
   end
 
-  #common code for both st/at get_form_vars
+  # common code for both st/at get_form_vars
   def set_form_vars
     @edit[:new][:name] = @record.name
     @edit[:new][:description]  = @record.description
@@ -1278,8 +1278,8 @@ class CatalogController < ApplicationController
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
     @edit[:new][:available_catalogs] = ServiceTemplateCatalog.all
-                                                             .collect { |stc| [stc.name, stc.id] }
-                                                             .sort
+                                       .collect { |stc| [stc.name, stc.id] }
+                                       .sort
     available_templates if @record.kind_of?(ServiceTemplateOrchestration)
 
     # initialize fqnames
@@ -1296,33 +1296,33 @@ class CatalogController < ApplicationController
     end
     get_available_dialogs
     if @record.id.blank?
-      @right_cell_text = _("Adding a new %s") % ui_lookup(:model=>"ServiceTemplate")
+      @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "ServiceTemplate")
     else
-      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>"ServiceTemplate")}
+      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => "ServiceTemplate")}
     end
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
   end
 
   def st_set_form_vars
-    @edit = Hash.new
+    @edit = {}
     @edit[:rec_id]   = @record.id
     @edit[:key]     = "st_edit__#{@record.id || "new"}"
     @edit[:url] = "servicetemplate_edit"
-    @edit[:new]     = Hash.new
-    @edit[:current] = Hash.new
+    @edit[:new]     = {}
+    @edit[:current] = {}
     set_form_vars
     @edit[:new][:service_type] = "composite"
-    @edit[:new][:rsc_groups] = Array.new
-    @edit[:new][:selected_resources] = Array.new
+    @edit[:new][:rsc_groups] = []
+    @edit[:new][:selected_resources] = []
 
     len = @record.service_resources.size
     len.times do |l|
       if @record.group_has_resources?(l)
-        @edit[:new][:rsc_groups][l] ||= Array.new
+        @edit[:new][:rsc_groups][l] ||= []
         @record.each_group_resource(l) do |sr|
           @edit[:new][:selected_resources].push(sr.resource_id)
-          #storing keys that are needed in ui in hash instead of storing an object
-          r = Hash.new
+          # storing keys that are needed in ui in hash instead of storing an object
+          r = {}
           r[:name] = sr.resource_name
           r[:id] = sr.id
           r[:resource_id] = sr.resource_id
@@ -1337,46 +1337,46 @@ class CatalogController < ApplicationController
         end
       end
     end
-    #add one extra group to show in pulldown so resources can be moved into it.
-    @edit[:new][:rsc_groups].push(Array.new) if @edit[:new][:selected_resources].length > 1
+    # add one extra group to show in pulldown so resources can be moved into it.
+    @edit[:new][:rsc_groups].push([]) if @edit[:new][:selected_resources].length > 1
     @edit[:new][:provision_order] = recalculate_provision_order
 
-    @edit[:new][:available_resources] = Hash.new
+    @edit[:new][:available_resources] = {}
     get_available_resources("ServiceTemplate")
     get_available_dialogs
     @edit[:current] = copy_hash(@edit[:new])
     if @record.id.blank?
       @right_cell_text = _("Adding a new %s") % "Catalog Bundle"
     else
-      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name=>@record.name, :model=>"Catalog Bundle"}
+      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @record.name, :model => "Catalog Bundle"}
     end
 
     @in_a_form = true
   end
 
   def rearrange_groups_array
-    #delete any empty groups, break if found a populated group
+    # delete any empty groups, break if found a populated group
     len = @edit[:new][:rsc_groups].length
-    #keep count of how many groups are deleted
+    # keep count of how many groups are deleted
     g_idx = 0
-    #flag to check whether an empty group was deleted so next group elements can be moved up
+    # flag to check whether an empty group was deleted so next group elements can be moved up
     arr_delete = false
 
-    @edit[:new][:rsc_groups].each_with_index do |group,i|
+    @edit[:new][:rsc_groups].each_with_index do |group, i|
       if group.empty?
         g_idx = i
         arr_delete = true
       else
-        #update group_idx of resources in group incase previous one got deleted
+        # update group_idx of resources in group incase previous one got deleted
         @edit[:new][:rsc_groups].delete_at(g_idx) if arr_delete
         arr_delete = false
         g_idx = 0
       end
     end
-    #delete any empty groups at the end of the groups array and leave only 1 empty group
-    #i.e if on screen resources were assigned to group 1 & 2, pulldown had 1,2,3 in it, now if all resources were moved to group 1, get rid of 3 from pulldown
+    # delete any empty groups at the end of the groups array and leave only 1 empty group
+    # i.e if on screen resources were assigned to group 1 & 2, pulldown had 1,2,3 in it, now if all resources were moved to group 1, get rid of 3 from pulldown
     prev = 0
-    @edit[:new][:rsc_groups].each_with_index do |g,i|
+    @edit[:new][:rsc_groups].each_with_index do |g, i|
       if i == 0
         prev = g
       end
@@ -1386,15 +1386,15 @@ class CatalogController < ApplicationController
       prev = g
     end
 
-    #add another empty element to groups array if it doesn't exist to keep one extra in group pulldown
-    @edit[:new][:rsc_groups].push(Array.new) if @edit[:new][:selected_resources].length > 1 && !@edit[:new][:rsc_groups][@edit[:new][:rsc_groups].length-1].empty?
+    # add another empty element to groups array if it doesn't exist to keep one extra in group pulldown
+    @edit[:new][:rsc_groups].push([]) if @edit[:new][:selected_resources].length > 1 && !@edit[:new][:rsc_groups][@edit[:new][:rsc_groups].length - 1].empty?
   end
 
   def get_available_resources(kls)
-    @edit[:new][:available_resources] = Hash.new
+    @edit[:new][:available_resources] = {}
     kls.constantize.all.each do |r|
       @edit[:new][:available_resources][r.id] = r.name if  r.id.to_s != @edit[:rec_id].to_s &&
-              !@edit[:new][:selected_resources].include?(r.id)  #don't add the servicetemplate record that's being edited, or add all vm templates
+                                                           !@edit[:new][:selected_resources].include?(r.id)  # don't add the servicetemplate record that's being edited, or add all vm templates
     end
   end
 
@@ -1413,7 +1413,7 @@ class CatalogController < ApplicationController
     @edit[:new][:display]  = params[:display] == "1" if params[:display]
     @edit[:new][:catalog_id] = params[:catalog_id] if params[:catalog_id]
     @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
-    #saving it in @edit as well, to use it later because prov_set_form_vars resets @edit[:new]
+    # saving it in @edit as well, to use it later because prov_set_form_vars resets @edit[:new]
     @edit[:st_prov_type] = @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
     @edit[:new][:long_description] = params[:long_description] if params[:long_description]
     @edit[:new][:long_description] = @edit[:new][:long_description].to_s + "..." if params[:transOne]
@@ -1433,15 +1433,15 @@ class CatalogController < ApplicationController
 
   def available_managers(template_id)
     @edit[:new][:available_managers] = OrchestrationTemplate.find_by_id(template_id)
-                                                            .eligible_managers
-                                                            .collect { |m| [m.name, m.id] }
-                                                            .sort
+                                       .eligible_managers
+                                       .collect { |m| [m.name, m.id] }
+                                       .sort
   end
 
   def available_templates
     @edit[:new][:available_templates] = OrchestrationTemplate.available
-                                                             .collect { |t| [t.name.to_s, t.id] }
-                                                             .sort
+                                        .collect { |t| [t.name.to_s, t.id] }
+                                        .sort
     @edit[:new][:template_id] = @record.orchestration_template.try(:id)
     @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
     available_managers(@record.orchestration_template.id) if @record.orchestration_template
@@ -1457,10 +1457,10 @@ class CatalogController < ApplicationController
   def st_get_form_vars
     get_form_vars
     if params[:resource_id]
-      #adding new service resource, so need to lookup actual vm or service template record and set defaults
+      # adding new service resource, so need to lookup actual vm or service template record and set defaults
       sr = ServiceTemplate.find_by_id(params[:resource_id])
-      #storing keys that are needed in ui in hash instead of storing an object
-      r = Hash.new
+      # storing keys that are needed in ui in hash instead of storing an object
+      r = {}
       r[:name] = sr.name
       r[:id] = sr.id
       r[:resource_id] = sr.id
@@ -1472,32 +1472,32 @@ class CatalogController < ApplicationController
       r[:scaling_max] = r[:scaling_min]
       r[:provision_index] = 0
       @edit[:new][:selected_resources].push(sr.id) unless @edit[:new][:selected_resources].include?(sr.id)
-      @edit[:new][:rsc_groups][0] ||= Array.new #initialize array is adding new record
+      @edit[:new][:rsc_groups][0] ||= [] # initialize array is adding new record
 
-      #add another empty element to groups array if it doesn't exist to keep one extra in group pulldown
-      @edit[:new][:rsc_groups].push(Array.new) if @edit[:new][:selected_resources].length > 1 && !@edit[:new][:rsc_groups][@edit[:new][:rsc_groups].length-1].empty?
+      # add another empty element to groups array if it doesn't exist to keep one extra in group pulldown
+      @edit[:new][:rsc_groups].push([]) if @edit[:new][:selected_resources].length > 1 && !@edit[:new][:rsc_groups][@edit[:new][:rsc_groups].length - 1].empty?
 
-      #push a new resource into highest existing/populated group
-      @edit[:new][:rsc_groups].each_with_index do |g,i|
+      # push a new resource into highest existing/populated group
+      @edit[:new][:rsc_groups].each_with_index do |g, i|
         if g.empty?
-          id = i == 0 ? 0 : i-1
+          id = i == 0 ? 0 : i - 1
           @edit[:new][:rsc_groups][id].push(r) unless @edit[:new][:rsc_groups][id].include?(r)
           break
         end
       end
       @edit[:new][:provision_order] = recalculate_provision_order
     else
-      #check if group idx change transaction came in
+      # check if group idx change transaction came in
       params.each do |var, val|
-        vars=var.split("_")
+        vars = var.split("_")
         if vars[0] == "gidx"
           rid = from_cid(vars[1])
-          #push a new resource into highest existing/populated group
+          # push a new resource into highest existing/populated group
           @group_changed = false
-          @edit[:new][:rsc_groups].each_with_index do |groups,i|
+          @edit[:new][:rsc_groups].each_with_index do |groups, i|
             groups.each do |g|
               if g[:id] == rid
-                @edit[:new][:rsc_groups][val.to_i-1].push(g)
+                @edit[:new][:rsc_groups][val.to_i - 1].push(g)
                 @edit[:new][:rsc_groups][i].delete(g)
                 @group_changed = true
                 break
@@ -1508,27 +1508,27 @@ class CatalogController < ApplicationController
 
           rearrange_groups_array
 
-          #setting flag to check whether to refresh screen
+          # setting flag to check whether to refresh screen
           @group_idx = true
         else
-          param_name = [vars[0],vars[1]].join('_')
+          param_name = [vars[0], vars[1]].join('_')
           keys = ["provision_index", "scaling_max", "scaling_min", "start_action",
                   "start_delay", "stop_action", "stop_delay"]
           if keys.include?(param_name)
-            @edit[:new][:rsc_groups].each_with_index do |groups,i|
-              groups.sort_by { | gr | gr[:name].downcase }.each_with_index do |g,k|
+            @edit[:new][:rsc_groups].each_with_index do |groups, i|
+              groups.sort_by { |gr| gr[:name].downcase }.each_with_index do |g, k|
                 keys.each do |key|
                   param_key   = "#{key}_#{i}_#{k}".to_sym
                   param_value = params[param_key]
                   key         = key.to_sym
 
-                  #convert start/stop delay into seconds, need to convert other values to_i
+                  # convert start/stop delay into seconds, need to convert other values to_i
                   case key
                   when :start_delay, :stop_delay
                     g[key] = param_value.to_i * 60 if param_value
                   when :scaling_min
                     g[key] = param_value.to_i if param_value
-                    #set flag to true so screen can be refreshed to adjust scaling_max pull down
+                    # set flag to true so screen can be refreshed to adjust scaling_max pull down
                     g[:scaling_max] = g[:scaling_min] if g[:scaling_max] < g[:scaling_min]
                     @group_idx = true
                   when :scaling_max
@@ -1564,7 +1564,7 @@ class CatalogController < ApplicationController
       end
     end
 
-    #recalculate available resources, if resource id selected
+    # recalculate available resources, if resource id selected
     get_available_resources("ServiceTemplate") if params[:resource_id]
     @in_a_form = true
   end
@@ -1586,11 +1586,11 @@ class CatalogController < ApplicationController
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
     @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
-    #saving this so it can be used while adding buttons/groups in buttons editor
+    # saving this so it can be used while adding buttons/groups in buttons editor
     @sb[:applies_to_id] = from_cid(id)
     tree_nodes = treenodeid.split('_')
     if tree_nodes.length >= 3 && tree_nodes[2].split('-').first == "xx"
-      #buttons folder or nodes under that were clicked
+      # buttons folder or nodes under that were clicked
       build_resolve_screen
       buttons_get_node_info(treenodeid)
     else
@@ -1598,7 +1598,7 @@ class CatalogController < ApplicationController
       case TreeBuilder.get_model_for_prefix(@nodetype)
       when "Vm", "MiqTemplate", "ServiceResource"  # VM or Template record, show the record
         show_record(from_cid(id))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>TreeBuilder.get_model_for_prefix(@nodetype))}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => TreeBuilder.get_model_for_prefix(@nodetype))}
       else      # Get list of child Catalog Items/Services of this node
         if x_node == "root"
           types = {
@@ -1611,7 +1611,7 @@ class CatalogController < ApplicationController
           @no_checkboxes = true if x_active_tree == :svcs_tree
           if x_active_tree == :svccat_tree
             condition = ["display=? and service_template_catalog_id IS NOT NULL", true]
-            service_template_list(condition, {:no_checkboxes => true})
+            service_template_list(condition, :no_checkboxes => true)
           else
             process_show_list(:model => typ.constantize)
           end
@@ -1625,7 +1625,7 @@ class CatalogController < ApplicationController
             @record = ServiceTemplateCatalog.find_by_id(from_cid(id))
             @record_service_templates = rbac_filtered_objects(@record.service_templates)
             typ = x_active_tree == :svccat_tree ? "Service" : TreeBuilder.get_model_for_prefix(@nodetype)
-            @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
+            @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => typ)}
           elsif x_active_tree == :ot_tree
             @record = OrchestrationTemplate.find_by_id(from_cid(id))
             @right_cell_text = _("%{model} \"%{name}\"") % {:name  => @record.name,
@@ -1635,13 +1635,13 @@ class CatalogController < ApplicationController
               model = x_active_tree == :svccat_tree ? "ServiceCatalog" : "ServiceTemplate"
               if id == "Unassigned"
                 condition = ["service_template_catalog_id IS NULL"]
-                service_template_list(condition,{:model => model, :no_order_button => true})
-                @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name=>"Unassigned", :typ=>ui_lookup(:models=>"Service"), :model=>ui_lookup(:model=>"ServiceTemplateCatalog")}
+                service_template_list(condition, :model => model, :no_order_button => true)
+                @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name => "Unassigned", :typ => ui_lookup(:models => "Service"), :model => ui_lookup(:model => "ServiceTemplateCatalog")}
               else
-                condition = ["display=? and service_template_catalog_id=? and service_template_catalog_id IS NOT NULL", true,from_cid(id)]
-                service_template_list(condition,{:model => model, :no_order_button => true})
+                condition = ["display=? and service_template_catalog_id=? and service_template_catalog_id IS NOT NULL", true, from_cid(id)]
+                service_template_list(condition, :model => model, :no_order_button => true)
                 stc = ServiceTemplateCatalog.find_by_id(from_cid(id))
-                @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name=>stc.name, :typ=>ui_lookup(:models=>"Service"), :model=>ui_lookup(:model=>"ServiceTemplateCatalog")}
+                @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name => stc.name, :typ => ui_lookup(:models => "Service"), :model => ui_lookup(:model => "ServiceTemplateCatalog")}
               end
             else
               show_record(from_cid(id))
@@ -1665,24 +1665,24 @@ class CatalogController < ApplicationController
                   @sb[:retire_fqname] = ra.fqname
                 end
               end
-              #saving values of ServiceTemplate catalog id and resource that are needed in view to build the link
-              @sb[:stc_nodes] = Hash.new
+              # saving values of ServiceTemplate catalog id and resource that are needed in view to build the link
+              @sb[:stc_nodes] = {}
               @record.service_resources.each do |r|
                 st = ServiceTemplate.find_by_id(r.resource_id)
-                @sb[:stc_nodes][r.resource_id] = st.service_template_catalog_id ? st.service_template_catalog_id : "Unassigned" if !st.nil?
+                @sb[:stc_nodes][r.resource_id] = st.service_template_catalog_id ? st.service_template_catalog_id : "Unassigned" unless st.nil?
               end
               if params[:action] == "x_show"
                 prefix = @record.service_template_catalog_id ? "stc-#{to_cid(@record.service_template_catalog_id)}" : "-Unassigned"
                 self.x_node = "#{prefix}_#{params[:id]}"
               end
               typ = x_active_tree == :svccat_tree ? "Service" : TreeBuilder.get_model_for_prefix(@nodetype)
-              @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
+              @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => typ)}
             end
           end
         end
       end
     end
-    x_history_add_item(:id=>treenodeid, :text=>@right_cell_text)
+    x_history_add_item(:id => treenodeid, :text => @right_cell_text)
   end
 
   def open_parent_nodes(record)
@@ -1704,9 +1704,9 @@ class CatalogController < ApplicationController
       end
     end
     # Go up thru the parents and find the highest level unopened, mark all as opened along the way
-    unless parents.empty? ||  # Skip if no parents or parent already open
-        x_tree[:open_nodes].include?(parents.last[:id])
-      parents.reverse.each do |p|
+    unless parents.empty? || # Skip if no parents or parent already open
+           x_tree[:open_nodes].include?(parents.last[:id])
+      parents.reverse_each do |p|
         unless p.nil?
           p_node = x_build_node_id(p, nil, :full_ids => true)
           unless x_tree[:open_nodes].include?(p_node)
@@ -1727,7 +1727,7 @@ class CatalogController < ApplicationController
                   else
                     "#{parents.last[:id]}_#{params[:id]}"
                   end
-    return add_nodes
+    add_nodes
   end
 
   # Replace the right cell of the explorer
@@ -1753,8 +1753,8 @@ class CatalogController < ApplicationController
                      params[:action] == "x_show"
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
     if params[:action] == "x_show" && x_active_tree != :stcat_tree &&
-        @record &&                                # Showing a record
-        !@in_a_form                               # Not in a form
+       @record && # Showing a record
+       !@in_a_form                               # Not in a form
       add_nodes = open_parent_nodes(@record)      # Open the parent nodes of selected record, if not open
     end
 
@@ -1798,11 +1798,11 @@ class CatalogController < ApplicationController
     if @sb[:buttons_node]
       if action == "button_edit"
         right_cell_text = @custom_button && @custom_button.id ?
-            _("Editing %{model} \"%{name}\"") % {:name=>@custom_button.name, :model=>"Button"} :
+            _("Editing %{model} \"%{name}\"") % {:name => @custom_button.name, :model => "Button"} :
             _("Adding a new %s") % "Button"
       elsif action == "group_edit"
         right_cell_text = @custom_button_set && @custom_button_set.id ?
-            _("Editing %{model} \"%{name}\"") % {:name=>@custom_button_set.name.split('|').first, :model=>"Button Group"} :
+            _("Editing %{model} \"%{name}\"") % {:name => @custom_button_set.name.split('|').first, :model => "Button Group"} :
             _("Adding a new %s") % "Button Group"
       elsif action == "group_reorder"
         right_cell_text = _("%s Group Reorder") % "Buttons"
@@ -1816,26 +1816,26 @@ class CatalogController < ApplicationController
         action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
         r[:partial => "layouts/x_tagging", :locals => {:action_url => action_url}]
       elsif action && ["at_st_new", "st_new"].include?(action)
-        r[:partial=>"st_form"]
+        r[:partial => "st_form"]
       elsif action && ["st_catalog_new", "st_catalog_edit"].include?(action)
-        r[:partial=>"stcat_form"]
+        r[:partial => "stcat_form"]
       elsif action == "dialog_provision"
-        r[:partial=>"shared/dialogs/dialog_provision"]
+        r[:partial => "shared/dialogs/dialog_provision"]
       elsif %w(ot_add ot_copy ot_edit service_dialog_from_ot).include?(action)
         r[:partial => action]
       elsif record_showing
         if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
-          r[:partial=>"vm_common/main", :locals=>{:controller=>"vm"}]
+          r[:partial => "vm_common/main", :locals => {:controller => "vm"}]
         elsif @sb[:buttons_node]
-          r[:partial=>"shared/buttons/ab_list"]
+          r[:partial => "shared/buttons/ab_list"]
         else
-          r[:partial=>"catalog/#{x_active_tree}_show", :locals=>{:controller=>"catalog"}]
+          r[:partial => "catalog/#{x_active_tree}_show", :locals => {:controller => "catalog"}]
         end
       elsif @sb[:buttons_node]
-        r[:partial=>"shared/buttons/ab_list"]
+        r[:partial => "shared/buttons/ab_list"]
       else
-        presenter[:update_partials][:paging_div] = r[:partial=>"layouts/x_pagingcontrols"]
-        r[:partial=>"layouts/x_gtl"]
+        presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+        r[:partial => "layouts/x_gtl"]
       end
 
     # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
@@ -1859,7 +1859,7 @@ class CatalogController < ApplicationController
       presenter[:set_visible_elements][:pc_div_1] = false
       presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
     elsif record_showing || @in_a_form || @sb[:buttons_node] ||
-       (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
+          (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
       if ['button_edit', 'group_edit', 'group_reorder', 'at_st_new',
           'st_new', 'st_catalog_new', 'st_catalog_edit'].include?(action)
         presenter[:show_hide_layout][:toolbar] = 'hide'
@@ -1875,7 +1875,7 @@ class CatalogController < ApplicationController
           locals[:multi_record] = true
         when 'button_edit'
           locals[:action_url] = @edit[:rec_id] ? 'button_update' : 'button_create'
-        when 'st_catalog_new','st_catalog_edit'
+        when 'st_catalog_new', 'st_catalog_edit'
           locals[:action_url] = 'st_catalog_edit'
         else
           locals[:action_url] = 'servicetemplate_edit'
@@ -1894,7 +1894,7 @@ class CatalogController < ApplicationController
             }
           end
         end
-        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url =>"dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
+        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url => "dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
       elsif %w(ot_edit ot_copy ot_add service_dialog_from_ot).include?(action)
         presenter[:show_hide_layout][:toolbar] = 'hide'
         presenter[:show_hide_layout][:paginator] = 'show'
@@ -1924,12 +1924,12 @@ class CatalogController < ApplicationController
     end
 
     # Rebuild the toolbars
-    presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
-    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons  && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons  && v_xml
-    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
-    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
-    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
+    presenter[:set_visible_elements][:history_buttons_div] = h_buttons && h_xml
+    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons && c_xml
+    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons && v_xml
+    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons && h_xml
+    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons && c_xml
+    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons && v_xml
     presenter[:show_hide_layout][:toolbar] = h_buttons || c_buttons || v_buttons ? 'show' : 'hide'
 
     if @record && !@in_a_form

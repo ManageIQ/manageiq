@@ -13,27 +13,27 @@ class MiqScvmm
     @connected = false
     @psd = nil
     @stdout = $stdout   # Used by druby to redirect stdout to the client process
-                        # puts calls become @stdout.puts 'text'
+    # puts calls become @stdout.puts 'text'
   end
 
-  def connect()
-    @psd = MiqPowerShell::Daemon.new()
+  def connect
+    @psd = MiqPowerShell::Daemon.new
     @psd.connect
 
-    ps_script = self.ps_cache_server_command() +
-    <<-EOL
+    ps_script = ps_cache_server_command +
+                <<-EOL
 
     #
     # Return SCVMM Server object
     #
     $scvmm['#{@server}']
     EOL
-    xml = self.run_command(ps_script, :xml)
+    xml = run_command(ps_script, :xml)
     @connected = true
-    return xml
+    xml
   end
 
-  def disconnect()
+  def disconnect
     if @connected == true
       ps_script = <<-EOL
 
@@ -42,7 +42,7 @@ class MiqScvmm
       #
       $scvmm.remove('#{@server}')
       EOL
-      self.run_command(ps_script, :string)
+      run_command(ps_script, :string)
     end
     @psd.disconnect unless @psd.nil?
     @connected = false
@@ -50,7 +50,7 @@ class MiqScvmm
 
   def start(uuid)
     ps_script = ps_find_vm_by_uuid(uuid) +
-    <<-EOL
+                <<-EOL
 
     #
     # Start VM
@@ -59,12 +59,12 @@ class MiqScvmm
     ElseIf ($vm.status -ne 'running') {Start-VM $vm}
     $vm
     EOL
-    return self.run_command(ps_script, :object)
+    run_command(ps_script, :object)
   end
 
-  def stop(uuid, force=true)
+  def stop(uuid, _force = true)
     ps_script = ps_find_vm_by_uuid(uuid) +
-    <<-EOL
+                <<-EOL
 
     #
     # Shutdown or Stop VM
@@ -74,12 +74,12 @@ class MiqScvmm
     }
     $vm
     EOL
-    self.run_command(ps_script, :object)
+    run_command(ps_script, :object)
   end
 
   def shutdownGuest(uuid)
     ps_script = ps_find_vm_by_uuid(uuid) +
-    <<-EOL
+                <<-EOL
 
     #
     # Stop VM
@@ -87,12 +87,12 @@ class MiqScvmm
     if ($vm.status -ne 'PowerOff') {Shutdown-VM $vm}
     $vm
     EOL
-    self.run_command(ps_script, :object)
+    run_command(ps_script, :object)
   end
 
   def suspend(uuid)
     ps_script = ps_find_vm_by_uuid(uuid) +
-    <<-EOL
+                <<-EOL
 
     #
     # Suspend VM (SaveState)
@@ -100,12 +100,12 @@ class MiqScvmm
     SaveState-VM $vm
     $vm
     EOL
-    self.run_command(ps_script, :object)
+    run_command(ps_script, :object)
   end
 
   def pause(uuid)
     ps_script = ps_find_vm_by_uuid(uuid) +
-    <<-EOL
+                <<-EOL
 
     #
     # Pause VM
@@ -113,16 +113,16 @@ class MiqScvmm
     Suspend-VM $vm
     $vm
     EOL
-    self.run_command(ps_script, :object)
+    run_command(ps_script, :object)
   end
 
-  def ps_cache_server_command()
+  def ps_cache_server_command
     MiqScvmm.ps_cache_server_command(@server, @username, @password)
   end
 
   def getVm(path)
     local_path = File.uri_to_local_path(path)
-    local_path.gsub!("/","\\")
+    local_path.tr!("/", "\\")
     ps_script = <<-EOL
 
     #
@@ -131,11 +131,11 @@ class MiqScvmm
     Get-VM | ForEach-Object {if ($_.vmcpath -eq '#{local_path}') {$vm = $_}}
     $vm
     EOL
-    vmh = self.run_command(ps_script, :object)
+    vmh = run_command(ps_script, :object)
     ost = MiqHashStruct.new(:vmService => self)
-    return MiqScvmmVm.new(ost, vmh)
+    MiqScvmmVm.new(ost, vmh)
   end
-  
+
   def get_vm_by_uuid(uuid)
     ps_script = <<-EOL
 
@@ -145,13 +145,13 @@ class MiqScvmm
     Get-VM | ForEach-Object {if ($_.vmid -eq '#{uuid}') {$vm = $_}}
     $vm
     EOL
-    vmh = self.run_command(ps_script, :object)
+    vmh = run_command(ps_script, :object)
     ost = MiqHashStruct.new(:vmService => self)
-    return MiqScvmmVm.new(ost, vmh)
+    MiqScvmmVm.new(ost, vmh)
   end
 
   def self.ps_cache_server_command(server, username, password)
-    b64_pwd = MIQEncode.encode(password, false).chomp()
+    b64_pwd = MIQEncode.encode(password, false).chomp
     <<-EOL
 
     #
@@ -180,7 +180,7 @@ class MiqScvmm
     EOL
   end
 
-  def run_command(ps_script, return_type=:xml)
+  def run_command(ps_script, return_type = :xml)
     @psd.run_script(ps_script, return_type)
   end
 

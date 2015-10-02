@@ -29,8 +29,8 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     @openstack_handle ||= begin
       raise MiqException::MiqInvalidCredentialsError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
-      username = options[:user] || self.authentication_userid(options[:auth_type])
-      password = options[:pass] || self.authentication_password(options[:auth_type])
+      username = options[:user] || authentication_userid(options[:auth_type])
+      password = options[:pass] || authentication_password(options[:auth_type])
 
       osh = OpenstackHandle::Handle.new(username, password, address, port, api_version)
       osh.connection_options = {:instrumentor => $fog_log}
@@ -56,13 +56,13 @@ module ManageIQ::Providers::Openstack::ManagerMixin
 
   def event_monitor_options
     @event_monitor_options ||= begin
-      opts = {:hostname => self.hostname}
+      opts = {:hostname => hostname}
       opts[:port] = event_monitor_class.worker_settings[:amqp_port]
       if self.has_authentication_type? :amqp
         # authentication_userid/password will happily return the "default"
         # userid/password if this ems has no amqp auth configured
-        opts[:username] = self.authentication_userid(:amqp)
-        opts[:password] = self.authentication_password(:amqp)
+        opts[:username] = authentication_userid(:amqp)
+        opts[:password] = authentication_password(:amqp)
       end
       opts
     end
@@ -72,7 +72,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     require 'openstack/openstack_event_monitor'
     OpenstackEventMonitor.available?(event_monitor_options)
   rescue => e
-    _log.error("Exeption trying to find openstack event monitor for #{self.name}(#{self.hostname}). #{e.message}")
+    _log.error("Exeption trying to find openstack event monitor for #{name}(#{hostname}). #{e.message}")
     false
   end
 
@@ -91,7 +91,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     end
   end
 
-  def verify_api_credentials(options={})
+  def verify_api_credentials(options = {})
     options[:service] = "Identity"
     with_provider_connection(options) {}
     true
@@ -104,7 +104,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   end
   private :verify_api_credentials
 
-  def verify_amqp_credentials(options={})
+  def verify_amqp_credentials(_options = {})
     require 'openstack/openstack_event_monitor'
     OpenstackEventMonitor.test_amqp_connection(event_monitor_options)
     true
@@ -117,15 +117,15 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   end
   private :verify_amqp_credentials
 
-  def verify_credentials(auth_type=nil, options={})
+  def verify_credentials(auth_type = nil, options = {})
     auth_type ||= 'default'
 
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
 
     options.merge!(:auth_type => auth_type)
     case auth_type.to_s
-    when 'default'; verify_api_credentials(options)
-    when 'amqp';    verify_amqp_credentials(options)
+    when 'default' then verify_api_credentials(options)
+    when 'amqp' then    verify_amqp_credentials(options)
     else;           raise "Invalid OpenStack Authentication Type: #{auth_type.inspect}"
     end
   end

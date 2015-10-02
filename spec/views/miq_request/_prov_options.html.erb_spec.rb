@@ -5,7 +5,7 @@ describe 'miq_request/_prov_options.html.haml' do
   context 'requester dropdown select box is visible' do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
-      view.stub(:get_vmdb_config).and_return({:server => {}, :session => {}})
+      view.stub(:get_vmdb_config).and_return(:server => {}, :session => {})
 
       # Create roles/groups
       role1   = FactoryGirl.create(:miq_user_role, :name    => 'EvmRole-super_administrator')
@@ -32,17 +32,17 @@ describe 'miq_request/_prov_options.html.haml' do
 
       # Set instance variables
       sb = {:prov_options => {
-          :resource_type => :MiqProvisionRequest,
-          :MiqProvisionRequest => {
-              :users => {
-                  @admin.id    => @admin.name,
-                  @vm_user.id  => @vm_user.name,
-                  @desktop.id  => @desktop.name,
-                  @approver.id => @approver.name
-              },
-              :states => {:pending_approval => 'Pending'},
-              :types  => {:template => 'VM Provision'}
-          }
+        :resource_type       => :MiqProvisionRequest,
+        :MiqProvisionRequest => {
+          :users  => {
+            @admin.id    => @admin.name,
+            @vm_user.id  => @vm_user.name,
+            @desktop.id  => @desktop.name,
+            @approver.id => @approver.name
+          },
+          :states => {:pending_approval => 'Pending'},
+          :types  => {:template => 'VM Provision'}
+        }
       }}
       sb[:def_prov_options] = sb[:prov_options]
       sb[:def_prov_options][:MiqProvisionRequest][:applied_states] = %w(pending_approval)
@@ -69,7 +69,7 @@ describe 'miq_request/_prov_options.html.haml' do
   context 'requester dropdown select box is not visible' do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
-      view.stub(:get_vmdb_config).and_return({:server => {}, :session => {}})
+      view.stub(:get_vmdb_config).and_return(:server => {}, :session => {})
     end
 
     it 'for desktop' do
@@ -79,14 +79,14 @@ describe 'miq_request/_prov_options.html.haml' do
       FactoryGirl.create(:vm_migrate_request, :userid => desktop.userid)
 
       sb = {:prov_options => {
-          :resource_type => :MiqProvisionRequest,
-          :MiqProvisionRequest => {
-              :users => {
-                  desktop.id  => desktop.name,
-              },
-              :states => {:pending_approval => 'Pending'},
-              :types  => {:template => 'VM Provision'}
-          }
+        :resource_type       => :MiqProvisionRequest,
+        :MiqProvisionRequest => {
+          :users  => {
+            desktop.id  => desktop.name,
+          },
+          :states => {:pending_approval => 'Pending'},
+          :types  => {:template => 'VM Provision'}
+        }
       }}
       sb[:def_prov_options] = sb[:prov_options]
       sb[:def_prov_options][:MiqProvisionRequest][:applied_states] = %w(pending_approval)
@@ -106,14 +106,14 @@ describe 'miq_request/_prov_options.html.haml' do
 
       # Set instance variables
       sb = {:prov_options => {
-          :resource_type => :MiqProvisionRequest,
-          :MiqProvisionRequest => {
-              :users => {
-                  vm_user.id  => vm_user.name,
-              },
-              :states => {:pending_approval => 'Pending'},
-              :types  => {:template         => 'VM Provision'}
-          }
+        :resource_type       => :MiqProvisionRequest,
+        :MiqProvisionRequest => {
+          :users  => {
+            vm_user.id  => vm_user.name,
+          },
+          :states => {:pending_approval => 'Pending'},
+          :types  => {:template         => 'VM Provision'}
+        }
       }}
       sb[:def_prov_options] = sb[:prov_options]
       sb[:def_prov_options][:MiqProvisionRequest][:applied_states] = %w(pending_approval)

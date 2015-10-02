@@ -22,9 +22,9 @@ begin
   puts "Done."
 
   puts "vim.class: #{vim.class}"
-    puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
-    puts "API version: #{vim.apiVersion}"
-    puts
+  puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
+  puts "API version: #{vim.apiVersion}"
+  puts
 
   vim.virtualMachinesByMor.each_value do |vm|
     miqVm = vim.getVimVmByMor(vm['MOR'])
@@ -41,8 +41,8 @@ begin
     end
   end
 rescue => err
-    puts err.to_s
-    puts err.backtrace.join("\n")
+  puts err.to_s
+  puts err.backtrace.join("\n")
 ensure
-    vim.disconnect
+  vim.disconnect
 end

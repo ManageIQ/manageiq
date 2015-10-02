@@ -70,7 +70,7 @@ class ApiController
 
     def delete_resource(type, id = nil, _data = nil)
       klass = collection_class(type)
-      id  ||= @req[:c_id]
+      id ||= @req[:c_id]
       raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
       api_log_info("Deleting #{type} id #{id}")
       resource_search(id, type, klass)

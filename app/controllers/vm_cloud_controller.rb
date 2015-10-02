@@ -2,10 +2,10 @@ class VmCloudController < ApplicationController
   include VmCommon        # common methods for vm controllers
   include VmShowMixin
 
-  before_filter :check_privileges
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def self.table_name
     @table_name ||= "vm_cloud"
@@ -74,7 +74,7 @@ class VmCloudController < ApplicationController
       set_active_elements_authorized_user("#{prefix}_filter_tree", "#{prefix}_filter", false, nil, nil)
     else
       if (prefix == "vms" && role_allows(:feature => "vms_instances_filter_accord")) ||
-        (prefix == "templates" && role_allows(:feature => "templates_images_filter_accord"))
+         (prefix == "templates" && role_allows(:feature => "templates_images_filter_accord"))
         redirect_to(:controller => 'vm_or_template', :action => "explorer", :id => params[:id])
       else
         redirect_to(:controller => 'dashboard', :action => "auth_error")

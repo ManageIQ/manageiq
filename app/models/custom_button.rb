@@ -1,5 +1,5 @@
 class CustomButton < ActiveRecord::Base
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
   has_one       :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
   serialize :options
@@ -23,7 +23,7 @@ class CustomButton < ActiveRecord::Base
     Service
   ]
 
-  def self.buttons_for(other, applies_to_id=nil)
+  def self.buttons_for(other, applies_to_id = nil)
     if other.kind_of?(Class)
       applies_to_class = other.base_model.name
       applies_to_id    = applies_to_id
@@ -40,8 +40,8 @@ class CustomButton < ActiveRecord::Base
   end
 
   def applies_to
-    klass = self.applies_to_class.constantize
-    self.applies_to_id.nil? ? klass : klass.find_by_id(self.applies_to_id)
+    klass = applies_to_class.constantize
+    applies_to_id.nil? ? klass : klass.find_by_id(applies_to_id)
   end
 
   def applies_to=(other)
@@ -59,7 +59,7 @@ class CustomButton < ActiveRecord::Base
   end
 
   def invoke(target)
-    args = self.resource_action.automate_queue_hash({:object_type => target.class.base_class.name, :object_id => target.id})
+    args = resource_action.automate_queue_hash({:object_type => target.class.base_class.name, :object_id => target.id})
     args[:user_id] ||= User.current_user.try(:id)
     zone = target.respond_to?(:my_zone) ? target.my_zone : nil
     MiqQueue.put(
@@ -73,65 +73,65 @@ class CustomButton < ActiveRecord::Base
   end
 
   def self.save_as_button(opts)
-    [:uri, :userid, :target_attr_name].each {|a| raise "no value given for '#{a}'" if opts[a].nil?}
+    [:uri, :userid, :target_attr_name].each { |a| raise "no value given for '#{a}'" if opts[a].nil? }
 
     opts[:options] = {:target_attr_name => opts.delete(:target_attr_name)}
-    opts[:uri_path], opts[:uri_attributes], opts[:uri_message] = self.parse_uri(opts.delete(:uri))
+    opts[:uri_path], opts[:uri_attributes], opts[:uri_message] = parse_uri(opts.delete(:uri))
 
-    rec = self.new(opts)
+    rec = new(opts)
     if opts[:description].nil? && !rec.new_record?
       rec.destroy
       return nil
     end
 
     rec.new_record? ? rec.save! : rec.update_attributes!(opts)
-    return rec
+    rec
   end
 
   def to_export_xml(_options)
   end
 
   # Helper methods to support moving automate columns to resource_actions table
-  def uri=(value)
+  def uri=(_value)
   end
 
   def uri
-    self.resource_action.try(:ae_uri)
+    resource_action.try(:ae_uri)
   end
 
   def uri_path=(value)
-    ra = self.get_resource_action
+    ra = get_resource_action
     ra.ae_namespace, ra.ae_class, ra.ae_instance, _attr_name = MiqAeEngine::MiqAePath.split(value)
   end
 
   def uri_path
-    self.get_resource_action.try(:ae_path)
+    get_resource_action.try(:ae_path)
   end
 
   def uri_message=(value)
-    self.get_resource_action.ae_message = value
+    get_resource_action.ae_message = value
   end
 
   def uri_message
-    self.get_resource_action.ae_message
+    get_resource_action.ae_message
   end
 
   def uri_attributes=(value)
-    attrs = value.reject { |k,v| MiqAeEngine::DEFAULT_ATTRIBUTES.include?(k) }
-    self.get_resource_action.ae_attributes = attrs
+    attrs = value.reject { |k, _v| MiqAeEngine::DEFAULT_ATTRIBUTES.include?(k) }
+    get_resource_action.ae_attributes = attrs
   end
 
   def uri_attributes
-    self.get_resource_action.ae_attributes
+    get_resource_action.ae_attributes
   end
 
   def uri_object_name
-    self.get_resource_action.ae_instance
+    get_resource_action.ae_instance
   end
 
   def get_resource_action
-    return self.resource_action unless self.resource_action.nil?
-    self.build_resource_action()
+    return resource_action unless resource_action.nil?
+    build_resource_action
   end
   # End - Helper methods to support moving automate columns to resource_actions table
 
@@ -148,19 +148,18 @@ class CustomButton < ActiveRecord::Base
     BUTTON_CLASSES.find { |klass| klass.name == name }
   end
 
-  def self.available_for_user(user,group)
-    user = self.get_user(user)
+  def self.available_for_user(user, group)
+    user = get_user(user)
     role = user.miq_user_role_name
     # Return all automation uri's that has his role or is allowed for all roles.
-    self.all.to_a.select do |uri|
-      uri.parent && uri.parent.name == group && uri.visibility.has_key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?("_ALL_"))
+    all.to_a.select do |uri|
+      uri.parent && uri.parent.name == group && uri.visibility.key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?("_ALL_"))
     end
   end
 
   def self.get_user(user)
     user = User.in_region.find_by_userid(user) if user.kind_of?(String)
     raise "Unable to find user '#{user}'" if user.nil?
-    return user
+    user
   end
-
 end

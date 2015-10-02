@@ -11,17 +11,17 @@ module MiqServer::WorkerManagement
 
   module ClassMethods
     def kill_all_workers
-      svr = self.my_server(true)
+      svr = my_server(true)
       svr.kill_all_workers unless svr.nil?
     end
   end
 
   def setup_drb_variables
     @workers_lock        = Sync.new
-    @workers             = Hash.new
+    @workers             = {}
 
     @queue_messages_lock = Sync.new
-    @queue_messages      = Hash.new
+    @queue_messages      = {}
   end
 
   def start_drb_server
@@ -30,11 +30,11 @@ module MiqServer::WorkerManagement
 
     setup_drb_variables
 
-    acl = ACL.new( %w[ deny all allow 127.0.0.1/32 ] )
+    acl = ACL.new(%w( deny all allow 127.0.0.1/32 ))
     DRb.install_acl(acl)
 
     drb = DRb.start_service("druby://127.0.0.1:0", self)
-    self.update_attributes(:drb_uri => DRb.uri)
+    update_attributes(:drb_uri => DRb.uri)
   end
 
   def worker_add(worker_pid)
@@ -44,5 +44,4 @@ module MiqServer::WorkerManagement
   def worker_delete(worker_pid)
     @workers_lock.synchronize(:EX) { @workers.delete(worker_pid) } unless @workers_lock.nil?
   end
-
 end

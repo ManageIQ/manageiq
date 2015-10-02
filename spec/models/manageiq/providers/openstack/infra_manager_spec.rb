@@ -27,7 +27,7 @@ describe ManageIQ::Providers::Openstack::InfraManager do
 
       creds = {}
       creds[:amqp] = {:userid => "amqp_user", :password => "amqp_password"}
-      @ems.update_authentication(creds, { :save => false })
+      @ems.update_authentication(creds, :save => false)
       @ems.verify_credentials(:amqp).should be_true
     end
 
