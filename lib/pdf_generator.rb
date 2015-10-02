@@ -37,8 +37,8 @@ class PdfGenerator
 
   def self.sanitize_html(html_string)
     # strip out bad attachment_fu URLs
+    # and remove asset ids on images
     html_string.gsub('.com:/', '.com/')
-      # remove asset ids on images
       .gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
   end
 
