@@ -5,17 +5,21 @@ describe ManageIQ::Providers::Amazon::CloudManager::MetricsCapture do
     _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
     @ems_amazon = FactoryGirl.create(:ems_amazon, :zone => @zone)
-    @vm = FactoryGirl.build(:vm_perf_amazon, :ext_management_system => @ems_amazon)
   end
 
-  context "With no EMS defined" do
-    it "#perf_collect_metrics raises an error" do
+  context "#perf_collect_metrics" do
+    it "raises an error when no EMS is defined" do
+      @vm = FactoryGirl.build(:vm_perf_amazon, :ext_management_system => nil)
       expect { @vm.perf_collect_metrics('interval_name') }.to raise_error
     end
-  end
 
-  context "With an EMS defined" do
-    it "#perf_collect_metrics should handle nothing collected" do
+    it "raises an error with no EMS credentials defined" do
+      @vm = FactoryGirl.build(:vm_perf_amazon, :ext_management_system => @ems_amazon)
+      expect { @vm.perf_collect_metrics('interval_name') }.to raise_error
+    end
+
+    it "handles when nothing is collected" do
+      @vm = FactoryGirl.build(:vm_perf_amazon, :ext_management_system => @ems_amazon)
       mc = described_class.new(@vm)
 
       expect(@vm.ext_management_system).to receive(:connect).and_return(double(:metrics => double(:filter => [])))
