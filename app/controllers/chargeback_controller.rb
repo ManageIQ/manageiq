@@ -260,7 +260,6 @@ class ChargebackController < ApplicationController
                   # detail.per_time = r[:per_time]
                   detail.rate = ""
                   detail.chargeback_tier_id = r[:chargeback_tier_id]
-                  #detail.chargeback_tier = "Not tiered"
                   detail.per_time = "hourly"
                   detail.group = r[:group]
                   detail.per_unit = r[:per_unit]
@@ -367,15 +366,12 @@ class ChargebackController < ApplicationController
 
   def cb_tier_show
     @display = "main"
-    #@sb[:selected_tier_details] = ChargebackTierDetail.find_by_chargeback_tier_id(params[:id])
-    #@record = ChargebackTier.find_by_id(params[:id])
     @sb[:selected_tier_details] = ChargebackTierDetail.where(chargeback_tier_id: @record.id).to_a
     @sb[:selected_tier_details].sort_by! { |rd| [rd[:start], rd[:end]]}
     if @record == nil
       redirect_to :action=>"cb_tiers_list", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
       return
     end
-    #render :partial => "cb_tier_show"
   end
 
   # AJAX driven routine to check for changes in ANY field on the form

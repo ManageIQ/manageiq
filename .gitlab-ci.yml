@@ -1,3 +1,0 @@
-test:
-  script:
-  - ssh miqbuilder@test.rhus.cloud "cd rhus-chargeback && git checkout tiered-rating && git pull origin tiered-rating && sh testenv.sh"
