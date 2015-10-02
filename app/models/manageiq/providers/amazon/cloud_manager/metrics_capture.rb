@@ -133,7 +133,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
     COUNTER_INFO.each do |i|
       timestamps = i[:amazon_counters].collect do |c|
         metrics_by_counter_name[c].keys unless metrics_by_counter_name[c].nil?
-      end.flatten.uniq.sort
+      end.flatten.uniq.sort.compact
 
       # If we are unable to determine if a datapoint is a 1-minute (detailed)
       #   or 5-minute (basic) interval, we will throw it away.  This includes
