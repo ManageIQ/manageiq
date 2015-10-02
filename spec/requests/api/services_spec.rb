@@ -18,6 +18,10 @@ require 'spec_helper'
 describe ApiController do
   include Rack::Test::Methods
 
+  let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
+  let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
+  let(:svc2) { FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description") }
+
   before(:each) do
     init_api_spec_env
   end
@@ -30,7 +34,6 @@ describe ApiController do
     it "rejects requests without appropriate role" do
       api_basic_authorize
 
-      svc = FactoryGirl.create(:service, :name => "svc")
       run_post(services_url(svc.id), gen_request(:edit, "name" => "sample service"))
 
       expect_request_forbidden
@@ -39,7 +42,6 @@ describe ApiController do
     it "supports edits of single resource" do
       api_basic_authorize collection_action_identifier(:services, :edit)
 
-      svc = FactoryGirl.create(:service, :name => "svc1")
       run_post(services_url(svc.id), gen_request(:edit, "name" => "updated svc1"))
 
       expect_single_resource_query("id" => svc.id, "href" => services_url(svc.id), "name" => "updated svc1")
@@ -49,7 +51,6 @@ describe ApiController do
     it "supports edits of single resource via PUT" do
       api_basic_authorize collection_action_identifier(:services, :edit)
 
-      svc = FactoryGirl.create(:service, :name => "svc1")
       run_put(services_url(svc.id), "name" => "updated svc1")
 
       expect_single_resource_query("id" => svc.id, "href" => services_url(svc.id), "name" => "updated svc1")
@@ -59,7 +60,6 @@ describe ApiController do
     it "supports edits of single resource via PATCH" do
       api_basic_authorize collection_action_identifier(:services, :edit)
 
-      svc = FactoryGirl.create(:service, :name => "svc1", :description => "desc1")
       run_patch(services_url(svc.id), [{"action" => "edit",   "path" => "name",        "value" => "updated svc1"},
                                        {"action" => "remove", "path" => "description"},
                                        {"action" => "add",    "path" => "display",     "value" => true}])
@@ -73,9 +73,6 @@ describe ApiController do
     it "supports edits of multiple resources" do
       api_basic_authorize collection_action_identifier(:services, :edit)
 
-      svc1 = FactoryGirl.create(:service, :name => "svc1")
-      svc2 = FactoryGirl.create(:service, :name => "svc2")
-
       run_post(services_url, gen_request(:edit,
                                          [{"href" => services_url(svc1.id), "name" => "updated svc1"},
                                           {"href" => services_url(svc2.id), "name" => "updated svc2"}]))
@@ -86,6 +83,115 @@ describe ApiController do
                                     {"id" => svc2.id, "name" => "updated svc2"}])
       expect(svc1.reload.name).to eq("updated svc1")
       expect(svc2.reload.name).to eq("updated svc2")
+    end
+  end
+
+  context "Service set_ownership action" do
+    it "to an invalid service" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(999_999), gen_request(:set_ownership, "owner" => {"id" => 1}))
+
+      expect_resource_not_found
+    end
+
+    it "without appropriate action role" do
+      api_basic_authorize
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"id" => 1}))
+
+      expect_request_forbidden
+    end
+
+    it "with missing owner or group" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership))
+
+      expect_bad_request("Must specify an owner or group")
+    end
+
+    it "with invalid owner" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"id" => 999_999}))
+
+      expect_single_action_result(:success => false, :message => /.*/, :href => services_url(svc.id))
+    end
+
+    it "to a service" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"userid" => api_config(:user)}))
+
+      expect_single_action_result(:success => true, :message => "setting ownership", :href => services_url(svc.id))
+      expect(svc.reload.evm_owner).to eq(@user)
+    end
+
+    it "by owner name to a service" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"name" => @user.name}))
+
+      expect_single_action_result(:success => true, :message => "setting ownership", :href => services_url(svc.id))
+      expect(svc.reload.evm_owner).to eq(@user)
+    end
+
+    it "by owner href to a service" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"href" => users_url(@user.id)}))
+
+      expect_single_action_result(:success => true, :message => "setting ownership", :href => services_url(svc.id))
+      expect(svc.reload.evm_owner).to eq(@user)
+    end
+
+    it "by owner id to a service" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"id" => @user.id}))
+
+      expect_single_action_result(:success => true, :message => "setting ownership", :href => services_url(svc.id))
+      expect(svc.reload.evm_owner).to eq(@user)
+    end
+
+    it "by group id to a service" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "group" => {"id" => @group.id}))
+
+      expect_single_action_result(:success => true, :message => "setting ownership", :href => services_url(svc.id))
+      expect(svc.reload.miq_group).to eq(@group)
+    end
+
+    it "by group description to a service" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "group" => {"description" => @group.description}))
+
+      expect_single_action_result(:success => true, :message => "setting ownership", :href => services_url(svc.id))
+      expect(svc.reload.miq_group).to eq(@group)
+    end
+
+    it "with owner and group to a service" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"userid" => api_config(:user)}))
+
+      expect_single_action_result(:success => true, :message => "setting ownership", :href => services_url(svc.id))
+      expect(svc.reload.evm_owner).to eq(@user)
+    end
+
+    it "to multiple services" do
+      api_basic_authorize action_identifier(:services, :set_ownership)
+
+      svc_urls = [services_url(svc1.id), services_url(svc2.id)]
+      run_post(services_url, gen_request(:set_ownership, {"owner" => {"userid" => api_config(:user)}}, *svc_urls))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", svc_urls)
+      expect(svc1.reload.evm_owner).to eq(@user)
+      expect(svc2.reload.evm_owner).to eq(@user)
     end
   end
 
@@ -117,8 +223,6 @@ describe ApiController do
     it "supports single resource deletes" do
       api_basic_authorize collection_action_identifier(:services, :delete)
 
-      svc = FactoryGirl.create(:service, :name => "svc", :description => "svc description")
-
       run_delete(services_url(svc.id))
 
       expect_request_success_with_no_content
@@ -127,9 +231,6 @@ describe ApiController do
 
     it "supports multiple resource deletes" do
       api_basic_authorize collection_action_identifier(:services, :delete)
-
-      svc1 = FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description")
-      svc2 = FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description")
 
       run_post(services_url, gen_request(:delete,
                                          [{"href" => services_url(svc1.id)},
@@ -166,8 +267,6 @@ describe ApiController do
     it "supports single service retirement now" do
       api_basic_authorize collection_action_identifier(:services, :retire)
 
-      svc = FactoryGirl.create(:service, :name => "svc1")
-
       expect(MiqAeEvent).to receive(:raise_evm_event).once
 
       run_post(services_url(svc.id), gen_request(:retire))
@@ -178,7 +277,6 @@ describe ApiController do
     it "supports single service retirement in future" do
       api_basic_authorize collection_action_identifier(:services, :retire)
 
-      svc = FactoryGirl.create(:service, :name => "svc")
       ret_date = format_retirement_date(Time.now + 5.days)
 
       run_post(services_url(svc.id), gen_request(:retire, "date" => ret_date, "warn" => 2))
@@ -190,9 +288,6 @@ describe ApiController do
 
     it "supports multiple service retirement now" do
       api_basic_authorize collection_action_identifier(:services, :retire)
-
-      svc1 = FactoryGirl.create(:service, :name => "svc1")
-      svc2 = FactoryGirl.create(:service, :name => "svc2")
 
       expect(MiqAeEvent).to receive(:raise_evm_event).twice
 
@@ -206,8 +301,6 @@ describe ApiController do
     it "supports multiple service retirement in future" do
       api_basic_authorize collection_action_identifier(:services, :retire)
 
-      svc1 = FactoryGirl.create(:service, :name => "svc1")
-      svc2 = FactoryGirl.create(:service, :name => "svc2")
       ret_date = format_retirement_date(Time.now + 2.days)
 
       run_post(services_url, gen_request(:retire,
