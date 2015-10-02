@@ -196,7 +196,7 @@ private
 	        # The directory relative to which the files will be collected.
 	        #
 	        @fromFs.chdir(cs.basedir)
-        
+
 	        #
 	        # Loop through the files and directories that are to be included in the collection.
 	        #

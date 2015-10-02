@@ -72,8 +72,7 @@ EOS
 
     describe "Nova services" do
       let(:subject) do
-        MiqLinux::Utils.parse_openstack_status(text).select { |service| service['name'].include?('Nova') }
-          .first['services']
+        MiqLinux::Utils.parse_openstack_status(text).select { |service| service['name'].include?('Nova') }.first['services']
       end
 
       it "should have 6 services total" do

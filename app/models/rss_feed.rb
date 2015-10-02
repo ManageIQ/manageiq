@@ -76,6 +76,7 @@ class RssFeed < ActiveRecord::Base
 
   private
   def self.eval_item_attr(script, rec)
+    _ = rec # used by eval
     if script.starts_with?("<script>") || script.starts_with?("<SCRIPT>")
       code = script.sub(/<script>|<SCRIPT>/, "").sub(/<\/script>|<\/SCRIPT>/, "").strip
       result = eval(code)
