@@ -127,7 +127,8 @@ module Vmdb
 
     def self.get_network
       retVal = {}
-      retVal[:hostname] = LinuxAdmin::Hosts.new.hostname
+      retVal[:hostname]  = LinuxAdmin::Hosts.new.hostname
+      retVal[:ipaddress] = LinuxAdmin::IpAddress.new.address
 
       miqnet = "/bin/miqnet.sh"
 
@@ -136,7 +137,6 @@ module Vmdb
         cmd     = "#{miqnet} -GET"
 
         retVal[:macaddress]    = `#{cmd} MAC`
-        retVal[:ipaddress]     = `#{cmd} IP`
         retVal[:netmask]       = `#{cmd} MASK`
         retVal[:gateway]       = `#{cmd} GW`
         retVal[:primary_dns]   = `#{cmd} DNS1`

@@ -95,7 +95,7 @@ require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
 
 module ApplianceConsole
-  ip = Env["IP"]
+  ip = LinuxAdmin::IpAddress.new.address
   # Because it takes a few seconds, get the database information once in the outside loop
   configured = ApplianceConsole::DatabaseConfiguration.configured?
   dbhost, dbtype, database = ApplianceConsole::Utilities.db_host_type_database if configured
@@ -112,7 +112,7 @@ module ApplianceConsole
   loop do
     begin
       host     = LinuxAdmin::Hosts.new.hostname
-      ip       = Env["IP"]
+      ip       = LinuxAdmin::IpAddress.new.address
       mac      = Env["MAC"]
       mask     = Env["MASK"]
       gw       = Env["GW"]
