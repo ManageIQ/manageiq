@@ -19,19 +19,17 @@ describe JsHelper do
 
   context '#tree_lock' do
     it 'returns js to lock tree' do
-      tree_lock('bar', true).should eq(
-        "
-          $('#barbox').dynatree('disable');
-          miqDimDiv('\#bar_div', true);
-        ")
+      tree_lock('bar', true).gsub(/^\s+/, '').should eq(<<-JS.strip_heredoc)
+        $('#barbox').dynatree('disable');
+        miqDimDiv('\#bar_div', true);
+      JS
     end
 
     it 'returns js to unlock tree' do
-      tree_lock('bar', false).should eq(
-        "
-          $('#barbox').dynatree('enable');
-          miqDimDiv('\#bar_div', false);
-        ")
+      tree_lock('bar', false).gsub(/^\s+/, '').should eq(<<-JS.strip_heredoc)
+        $('#barbox').dynatree('enable');
+        miqDimDiv('\#bar_div', false);
+      JS
     end
   end
 
