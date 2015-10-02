@@ -67,18 +67,23 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
           $scope.hostModel.operating_system = data.operating_system;
           $scope.hostModel.mac_address = data.mac_address;
           $scope.hostModel.default_userid = data.default_userid;
-          $scope.hostModel.default_password = data.default_password;
-          $scope.hostModel.default_verify = data.default_verify;
           $scope.hostModel.remote_userid = data.remote_userid;
-          $scope.hostModel.remote_password = data.remote_password;
-          $scope.hostModel.remote_verify = data.remote_verify;
           $scope.hostModel.ws_userid = data.ws_userid;
-          $scope.hostModel.ws_password = data.ws_password;
-          $scope.hostModel.ws_verify = data.ws_verify;
           $scope.hostModel.ipmi_userid = data.ipmi_userid;
-          $scope.hostModel.ipmi_password = data.ipmi_password;
-          $scope.hostModel.ipmi_verify = data.ipmi_verify;
           $scope.hostModel.validate_id = data.validate_id;
+
+          if($scope.hostModel.default_userid != '') {
+            $scope.hostModel.default_password = $scope.hostModel.default_verify = miqService.savedPasswordPlaceholder;
+          }
+          if($scope.hostModel.remote_userid != '') {
+            $scope.hostModel.remote_password = $scope.hostModel.remote_verify = miqService.savedPasswordPlaceholder;
+          }
+          if($scope.hostModel.ws_userid != '') {
+            $scope.hostModel.ws_password = $scope.hostModel.ws_verify = miqService.savedPasswordPlaceholder;
+          }
+          if($scope.hostModel.ipmi_userid != '') {
+            $scope.hostModel.ipmi_password = $scope.hostModel.ipmi_verify = miqService.savedPasswordPlaceholder;
+          }
 
           $scope.afterGet = true;
 
