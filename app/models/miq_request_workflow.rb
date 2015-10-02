@@ -88,10 +88,10 @@ class MiqRequestWorkflow
     request.set_description
     request.create_request
 
-    request.log_request_success(@requester.userid, :created)
+    request.log_request_success(@requester, :created)
 
     request.call_automate_event_queue("request_created")
-    request.approve(@requester.userid, "Auto-Approved") if auto_approve == true
+    request.approve(@requester, "Auto-Approved") if auto_approve == true
     request.reload if auto_approve
     request
   end
