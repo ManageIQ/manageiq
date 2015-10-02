@@ -12,24 +12,22 @@
               = select_tag('widget',
                   options_for_select(@widgets_options, @edit[:new][:widget].to_s),
                   :class => "selectpicker")
-  #modules
-    .yui-b
-      .yui-gb
-        #col1.yui-u.first{:style => "position: relative; min-height: 50px;"}
-          - edit[:new][:col1].each do |w|
-            - widget = MiqWidget.find_by_id(w)
-            - if widget && widget.enabled
-              = render :partial => 'db_widget', :locals => {:widget => widget}
-        #col2.yui-u{:style => "position: relative; min-height: 50px;"}
-          - edit[:new][:col2].each do |w|
-            - widget = MiqWidget.find_by_id(w)
-            - if widget && widget.enabled
-              = render :partial => 'db_widget', :locals => {:widget => widget}
-        #col3.yui-u{:style => "position: relative; min-height: 50px;"}
-          - edit[:new][:col3].each do |w|
-            - widget = MiqWidget.find_by_id(w)
-            - if widget && widget.enabled
-              = render :partial => 'db_widget', :locals => {:widget => widget}
+  .row#modules
+    .col-md-4#col1
+      - edit[:new][:col1].each do |w|
+        - widget = MiqWidget.find_by_id(w)
+        - if widget && widget.enabled
+          = render :partial => 'db_widget', :locals => {:widget => widget}
+    .col-md-4#col2
+      - edit[:new][:col2].each do |w|
+        - widget = MiqWidget.find_by_id(w)
+        - if widget && widget.enabled
+          = render :partial => 'db_widget', :locals => {:widget => widget}
+    .col-md-4#col3
+      - edit[:new][:col3].each do |w|
+        - widget = MiqWidget.find_by_id(w)
+        - if widget && widget.enabled
+          = render :partial => 'db_widget', :locals => {:widget => widget}
 :javascript
   miqInitSelectPicker();
   miqSelectPickerEvent("widget", "#{combo_url}")
