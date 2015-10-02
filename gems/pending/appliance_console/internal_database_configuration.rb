@@ -2,6 +2,7 @@ require "appliance_console/database_configuration"
 require "appliance_console/service_group"
 require "pathname"
 require "util/postgres_admin"
+require "pg"
 
 RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
 
@@ -171,7 +172,9 @@ module ApplianceConsole
     end
 
     def create_postgres_root_user
-      run_as_postgres("psql -c 'CREATE ROLE #{username} WITH LOGIN CREATEDB SUPERUSER PASSWORD '\\'#{password}\\';")
+      conn = PG.connect(:user => "postgres", :dbname => "postgres")
+      esc_pass = conn.escape_string(password)
+      conn.exec("CREATE ROLE #{username} WITH LOGIN CREATEDB SUPERUSER PASSWORD '#{esc_pass}'")
     end
 
     def create_postgres_database
