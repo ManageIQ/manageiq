@@ -150,26 +150,26 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
     if(($scope.currentTab == "default") &&
       ($scope.hostModel.hostname || $scope.hostModel.validate_id) &&
       ($scope.hostModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
-       $scope.hostModel.default_password != '' && $scope.angularForm.default_password.$valid &&
-      $scope.hostModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
-        return true;
+      $scope.angularForm.default_password.$valid &&
+      $scope.angularForm.default_verify.$valid)) {
+      return true;
     } else if(($scope.currentTab == "remote") &&
       ($scope.hostModel.hostname || $scope.hostModel.validate_id) &&
       ($scope.hostModel.remote_userid != '' && $scope.angularForm.remote_userid.$valid &&
-       $scope.hostModel.remote_password != '' && $scope.angularForm.remote_password.$valid &&
-      $scope.hostModel.remote_verify != '' && $scope.angularForm.remote_verify.$valid)) {
+      $scope.angularForm.remote_password.$valid &&
+      $scope.angularForm.remote_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "ws") &&
       ($scope.hostModel.hostname || $scope.hostModel.validate_id) &&
       ($scope.hostModel.ws_userid != '' && $scope.angularForm.ws_userid.$valid &&
-       $scope.hostModel.ws_password != '' && $scope.angularForm.ws_password.$valid &&
-      $scope.hostModel.ws_verify != '' && $scope.angularForm.ws_verify.$valid)) {
+      $scope.angularForm.ws_password.$valid &&
+      $scope.angularForm.ws_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "ipmi") &&
       ($scope.hostModel.ipmi_address) &&
       ($scope.hostModel.ipmi_userid != '' && $scope.angularForm.ipmi_userid.$valid &&
-       $scope.hostModel.ipmi_password != '' && $scope.angularForm.ipmi_password.$valid &&
-      $scope.hostModel.ipmi_verify != '' && $scope.angularForm.ipmi_verify.$valid)) {
+      $scope.angularForm.ipmi_password.$valid &&
+      $scope.angularForm.ipmi_verify.$valid)) {
       return true;
     } else
       return false;
