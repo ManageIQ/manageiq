@@ -76,6 +76,8 @@ TZ_AREAS_MAP     = Hash.new { |_h, k| k }.merge!(
 )
 TZ_AREAS_MAP_REV = Hash.new { |_h, k| k }.merge!(TZ_AREAS_MAP.invert)
 
+NETWORK_INTERFACE = "eth0"
+
 require 'util/miq-password'
 MiqPassword.key_root = "#{RAILS_ROOT}/certs"
 
@@ -113,9 +115,9 @@ module ApplianceConsole
     begin
       host     = LinuxAdmin::Hosts.new.hostname
       ip       = Env["IP"]
-      mac      = Env["MAC"]
-      mask     = Env["MASK"]
-      gw       = Env["GW"]
+      mac      = LinuxAdmin::IpAddress.new.mac_address(NETWORK_INTERFACE)
+      mask     = LinuxAdmin::IpAddress.new.netmask(NETWORK_INTERFACE)
+      gw       = LinuxAdmin::IpAddress.new.gateway
       dns1     = Env["DNS1"]
       dns2     = Env["DNS2"]
       order    = Env["SEARCHORDER"]
