@@ -8,9 +8,8 @@ class MiqAeYamlImport
     @domain_name = domain
     @options     = options
     @restore     = @options.fetch('restore', false)
-    tenant_id    = @options.fetch('tenant_id', Tenant.root_tenant.try(:id))
-    tenant_obj   = Tenant.find_by!(:id => tenant_id) if tenant_id
-    @tenant      = @options.fetch('tenant', tenant_obj)
+    tenant_id    = @options['tenant_id']
+    @tenant      = @options['tenant'] || (tenant_id ? Tenant.find_by!(tenant_id) : Tenant.root_tenant)
     raise "Tenant object is needed to import automate models" unless @tenant
   end
 
