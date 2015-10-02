@@ -18,7 +18,8 @@ class MiqAeNamespace < ActiveRecord::Base
     fqname   = fqname.downcase
     last     = fqname.split('/').last
     low_name = arel_table[:name].lower
-    query = include_classes ? includes(:parent, :ae_classes) : all
+    query    = includes(:parent)
+    query    = query.includes(:ae_classes) if include_classes
     query.where(low_name.eq(last)).detect { |namespace| namespace.fqname.downcase == fqname }
   end
 
