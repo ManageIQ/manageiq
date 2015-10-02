@@ -138,6 +138,7 @@ ManageIQ.angularApplication.controller('hostFormController', ['$http', '$scope',
   };
 
   $scope.resetClicked = function() {
+    $scope.$broadcast ('resetClicked');
     $scope.hostModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);

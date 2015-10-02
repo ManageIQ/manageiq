@@ -1,6 +1,10 @@
 ManageIQ.angularApplication.controller('credentialsController', ['$http', '$scope', '$attrs', 'miqService', function($http, $scope, $attrs, miqService) {
   var init = function() {
 
+    $scope.$on('resetClicked', function(e) {
+      $scope.resetClicked();
+    });
+
     ManageIQ.angularApplication.$credentialsScope = $scope;
 
     if ($scope.$parent.formId == 'new') {
@@ -31,6 +35,10 @@ ManageIQ.angularApplication.controller('credentialsController', ['$http', '$scop
 
   $scope.showChangePasswordLinks = function(userid) {
     return !$scope.newRecord && userid != '';
+  };
+
+  $scope.resetClicked = function() {
+    $scope.cancelPasswordChange();
   };
 
   init();
