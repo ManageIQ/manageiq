@@ -1,9 +1,26 @@
 - if big_iframe
   = yield
 - elsif inner_layout_present?
-  .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
-    .row{:style => "height: 100%"}
-      .col-md-12#center_div{:style => "height: 100%"}
+  - rsop = controller.controller_name == 'miq_policy' && controller.action_name == 'rsop'
+  - resolve = controller.controller_name == 'miq_ae_tools' && controller.action_name == 'resolve'
+  - simulate =  rsop || resolve
+  - session[:sidebar] ||= {}
+  - sidewidth = simulate ? 5 : session[:sidebar][params[:controller]] ||= 2
+  - maindiv = 12 - sidewidth
+  - sidebar = sidewidth == 0 ? 'hidden-md hidden-lg col-md-0' : "col-md-#{sidewidth} col-md-pull-#{maindiv}"
+  .container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}
+    .row#center_div{:style => "height: 100%"}
+      #right_div.resizable.scrollable-sm{:style => "height: 100%", :class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
+        -# Remove the 'ops' part when the PatternFly accordions are in
+        - unless simulate
+          .resizer.hidden-xs
+            .resizer-box
+              .btn-group
+                .btn.btn-default.resize-left
+                  %span.fa.fa-angle-left
+                .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
+                  %span.fa.fa-angle-right
+      #left_div.resizable.sidebar-pf.sidebar-pf-left.scrollable-lg{:style => "height: 100%", :class => sidebar}
 - else
   -#.container-fluid.resizable-sidebar{:style => "overflow: hidden; height: 100%; background: #fff;"}ű
   .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}

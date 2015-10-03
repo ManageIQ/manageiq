@@ -33,6 +33,16 @@ class DashboardController < ApplicationController
     render :nothing => true
   end
 
+  def resize_layout
+    if params[:sidebar]
+      session[:sidebar] ||= {}
+      session[:sidebar][params[:context]] ||= 2
+      sidebar = params[:sidebar].to_i
+      session[:sidebar][params[:context]] = sidebar if [0, 2, 3, 4, 5].include?(sidebar)
+    end
+    render :nothing => true # No response required
+  end
+
   # Accept window sizes from the client
   def window_sizes
     session[:winH] = params[:height] if params[:height]

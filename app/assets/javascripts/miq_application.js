@@ -82,6 +82,7 @@ function miqPrepRightCellForm(tree) {
 function miqOnResize() {
   if (typeof dhxLayout != "undefined") {
     dhxLayout.setSizes();
+    dhxLayoutB.setSizes();
   }
   miqBrowserSizeTimeout();
 }
