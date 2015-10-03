@@ -154,7 +154,7 @@ class Condition < ActiveRecord::Base
     result
   end
 
-  def self._subst_find(rec, _inputs, expr)
+  def self._subst_find(rec, inputs, expr)
     MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression before substitution: [#{expr}]")
     searchexp = /<search>(.+)<\/search>/im
     expr =~ searchexp
@@ -193,6 +193,7 @@ class Condition < ActiveRecord::Base
     if checkmode == "count"
       e = check.gsub(/<count>/i, list.length.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
+      _ = inputs # used by eval (presumably?)
       result = !!proc { $SAFE = 3; eval(e) }.call
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression result: [#{result}]")
       return result
