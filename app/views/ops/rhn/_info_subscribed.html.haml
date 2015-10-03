@@ -1,7 +1,7 @@
 %p
   = _("Appliances in this region can be registered with:")
 
-.form-horizontal
+.form-horizontal.static
   .form-group
     %label.control-label.col-md-2
       = _("Service")
@@ -33,6 +33,13 @@
     .col-md-10
       %p.form-control-static
         = @customer.update_repo_name
+
+  .form-group
+    .col-md-8
+      = button_tag(_('Edit Registration'),
+                  :id      => 'settings_rhn_edit',
+                  :class   => 'btn btn-default',
+                  :onclick => "miqAjaxButton('#{url_for(:action => 'edit_rhn')}');")
 -#
   to be enabled later
   %tr

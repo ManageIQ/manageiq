@@ -1,6 +1,9 @@
 - if edit
   - select_values = field.values.collect(&:reverse)
   = select_tag(field.name, options_for_select(select_values, field.default_value), drop_down_options(field, url))
+  :javascript
+    miqInitSelectPicker();
+    miqSelectPickerEvent('#{field.name}', '#{url}')
 
 - else
   = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))

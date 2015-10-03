@@ -12,10 +12,6 @@ class ContainerImageController < ApplicationController
 
   private ############################
 
-  def controller_name
-    "container_image"
-  end
-
   def display_name
     "Container Images"
   end

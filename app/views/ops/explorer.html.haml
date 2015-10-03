@@ -10,7 +10,7 @@
                         :active_accord          => @sb[:active_accord],
                         :accord_select_function => "miqAccordOpsSelect"})
 #main_div.main_div
-  - if role_allows(:feature => "ops_settings") || role_allows(:feature => "ops_rbac") || role_allows(:feature => "ops_diagnostics") || role_allows(:feature => "ops_db")
+  - if role_allows(:feature => "ops_settings") || role_allows(:feature => "ops_rbac", :any => true) || role_allows(:feature => "ops_diagnostics") || role_allows(:feature => "ops_db")
     #tab_all_tabs_div= render :partial => "all_tabs"
   %br/
   %br/
@@ -36,12 +36,12 @@
   = javascript_dim("settings_tree_div", false) if role_allows(:feature => "ops_settings")
   = javascript_dim("diagnostics_tree_div", false) if role_allows(:feature => "ops_diagnostics")
   = javascript_dim("vmdb_tree_div", false) if role_allows(:feature => "ops_db")
-  = javascript_dim("rbac_tree_div", false) if role_allows(:feature => "ops_rbac")
+  = javascript_dim("rbac_tree_div", false) if role_allows(:feature => "ops_rbac", :any => true)
   = javascript_dim("analytics_tree_div", false) if get_vmdb_config[:product][:analytics]
   - if @sb[:active_tab] == "db_utilization"
     miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');
   - if @sb[:center_tb_filename].nil? || @sb[:center_tb_filename] == "blank_view_tb"
-    dhxLayoutB.cells('a').collapse();
+    ManageIQ.layout.toolbar.hide();
   };
   var miq_after_onload = "miqOpsAfterOnload();"
 

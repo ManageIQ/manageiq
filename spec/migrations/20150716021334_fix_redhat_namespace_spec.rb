@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150716021334_fix_redhat_namespace")
+require_migration
 
 describe FixRedhatNamespace do
   class FixRedhatNamespace::ExtManagementSystem < ActiveRecord::Base

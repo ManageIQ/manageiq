@@ -18,8 +18,8 @@ module VmdbTableEvm::Seeding
   end
 
   def seed_texts
-    mine   = self.text_tables.index_by(&:name)
-    actual = self.class.connection.respond_to?(:text_tables) ? self.class.connection.text_tables(self.name) : []
+    mine   = text_tables.index_by(&:name)
+    actual = self.class.connection.respond_to?(:text_tables) ? self.class.connection.text_tables(name) : []
 
     actual.sort.each do |table_name|
       table = mine.delete(table_name)
@@ -27,7 +27,7 @@ module VmdbTableEvm::Seeding
     end
 
     mine.each do |name, t|
-      _log.info("Text Table <#{name}> for Table <#{self.name}> is no longer in Database <#{self.vmdb_database.name}> - deleting")
+      _log.info("Text Table <#{name}> for Table <#{self.name}> is no longer in Database <#{vmdb_database.name}> - deleting")
       t.destroy
     end
   end

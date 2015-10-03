@@ -3,44 +3,53 @@
 
   = render :partial => "layouts/flash_msg"
 
-  %h3= _('Basic Information')
-  %table.style1
-    %tr
-      %td.key= _('Custom Identifier')
-      %td.wide
+  %h3
+    = _('Basic Information')
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Custom Identifier')
+      .col-md-8
         = text_field_tag("custom_1",
-          @edit[:new][:custom_1],
-          :maxlength => 50,
-          "data-miq_focus" => true,
-          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    %tr
-      %td.key
+                          @edit[:new][:custom_1],
+                          :maxlength => 50,
+                          :class => "form-control",
+                          "data-miq_focus" => true,
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    .form-group
+      %label.col-md-2.control-label
         = _('Description')
         (
         %span#description_count>= @edit[:new][:description] ? @edit[:new][:description].length : 0
         \/100)
-      %td
+      .col-md-8
         %div
           = text_area_tag("description",
-            @edit[:new][:description],
-            :rows => 4,
-            :maxlength => "100",
-            :counter => "description_count",
-            "data-miq_check_max_length" => true,
-            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+                          @edit[:new][:description],
+                          :rows => 4,
+                          :maxlength => "100",
+                          :class => "form-control",
+                          :counter => "description_count",
+                          "data-miq_check_max_length" => true,
+                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %hr
-  %h3= _('Parent VM Selection')
-  %table.style1
-    %tr
-      %td.key= _('Parent VM')
-      %td
+  %h3
+    = _('Parent VM Selection')
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Parent VM')
+      .col-md-8
         = select_tag("chosen_parent",
-          options_for_select(@edit[:pchoices].sort, @edit[:new][:parent]),
-          :multiple => false,
-          :class => "widthed",
-          "data-miq_sparkle_on" => true,
-          "data-miq_sparkle_off" => true,
-          "data-miq_observe" => {:url => url}.to_json)
+                      options_for_select(@edit[:pchoices].sort, @edit[:new][:parent]),
+                      :multiple => false,
+                      :class => "widthed",
+                      "data-miq_sparkle_on" => true,
+                      "data-miq_sparkle_off" => true,
+                      :class    => "selectpicker")
+    :javascript
+       miqInitSelectPicker();
+       miqSelectPickerEvent("chosen_parent", "#{url}")
 
   %hr
   %h3= _('Child VM Selection')

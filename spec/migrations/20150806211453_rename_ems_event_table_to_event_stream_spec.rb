@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join('db/migrate/20150806211453_rename_ems_event_table_to_event_stream')
+require_migration
 
 describe RenameEmsEventTableToEventStream do
   let(:ems_event_stub)      { migration_stub(:EmsEvent) }

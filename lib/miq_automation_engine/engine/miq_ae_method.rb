@@ -8,11 +8,11 @@ module MiqAeEngine
     Dir.mkdir(AE_METHODS_DIR) unless File.directory?(AE_METHODS_DIR)
 
     def self.invoke_inline(aem, obj, inputs)
-      return self.invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
+      return invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
       raise  MiqAeException::InvalidMethod, "Inline Method Language [#{aem.language}] not supported"
     end
 
-    def self.invoke_uri(aem, obj, inputs)
+    def self.invoke_uri(aem, obj, _inputs)
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(aem.data)
       raise  MiqAeException::MethodNotFound, "Specified URI [#{aem.data}] in Method [#{aem.name}] has unsupported scheme of #{scheme}; supported scheme is file" unless scheme.downcase == "file"
       raise  MiqAeException::MethodNotFound, "Invalid file specification -- #{aem.data}" if path.nil?
@@ -20,7 +20,7 @@ module MiqAeEngine
       fname = File.join(AE_METHODS_DIR, path)
       raise  MiqAeException::MethodNotFound, "Method [#{aem.data}] Not Found (fname=#{fname})" unless File.exist?(fname)
       cmd = "#{aem.language} #{fname}"
-      return MiqAeEngine::MiqAeMethod.invoke_external(cmd, obj.workspace)
+      MiqAeEngine::MiqAeMethod.invoke_external(cmd, obj.workspace)
     end
 
     def self.invoke_builtin(aem, obj, inputs)
@@ -41,9 +41,9 @@ module MiqAeEngine
     end
 
     def self.invoke(obj, aem, args)
-      inputs = Hash.new
+      inputs = {}
 
-      aem.inputs.each { |f|
+      aem.inputs.each do |f|
         key   = f.name
         value = args[key]
         value = obj.attributes[key] || f.default_value if value.nil?
@@ -57,7 +57,7 @@ module MiqAeEngine
         end
 
         raise MiqAeException::MethodParmMissing, "Method [#{aem.fqname}] requires parameter [#{f.name}]" if inputs[key].nil?
-      }
+      end
 
       if obj.workspace.readonly?
         $miq_ae_logger.info("Workspace Instantiation is READONLY -- skipping method [#{aem.fqname}] with inputs [#{inputs.inspect}]")
@@ -66,7 +66,7 @@ module MiqAeEngine
         return MiqAeEngine::MiqAeMethod.send("invoke_#{aem.location.downcase.strip}", aem, obj, inputs)
       end
 
-      return nil
+      nil
     end
 
     private
@@ -86,30 +86,12 @@ module MiqAeEngine
 
       ENV['MIQ_TOKEN'] = ws.guid unless ws.nil?
 
-      rc = nil
-      final_stderr = nil
-      begin
-        require 'open4'
-        status = Open4.popen4(*cmd) do |pid, stdin, stdout, stderr|
-          stdin.close
-          final_stderr = stderr.each_line.map(&:strip)
-          stdout.each_line { |msg| $miq_ae_logger.info  "Method STDOUT: #{msg.strip}" }
-          final_stderr.each { |msg| $miq_ae_logger.error "Method STDERR: #{msg}" }
-        end
-
-        unless ws.nil?
-          ws.reload unless ws.nil?
-          ws.setters.each { |uri, value| workspace.varset(uri, value) } unless ws.setters.nil?
-          ws.delete
-        end
-        rc  = status.exitstatus
-        msg = "Method exited with rc=#{verbose_rc(rc)}"
-      rescue => err
-        $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
-        rc = MIQ_ABORT
-        msg = "Method execution failed"
+      rc, msg, final_stderr = run_method(*cmd)
+      if ws
+        ws.reload
+        ws.setters.each { |uri, value| workspace.varset(uri, value) } unless ws.setters.nil?
+        ws.delete
       end
-
       process_ruby_method_results(rc, msg, final_stderr)
     end
 
@@ -198,34 +180,14 @@ RUBY
     end
 
     def self.run_ruby_method(body, preamble = nil)
-      begin
-        require 'open4'
-        ActiveRecord::Base.connection_pool.release_connection
-
-        rc = nil
-        final_stderr = nil
-        Bundler.with_clean_env do
-          status = Open4.popen4(Gem.ruby) do |pid, stdin, stdout, stderr|
-            stdin.puts(preamble.to_s)
-            stdin.puts(body)
-            stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
-            stdin.close
-
-            final_stderr = stderr.each_line.map(&:strip)
-            stdout.each_line { |msg| $miq_ae_logger.info  "Method STDOUT: #{msg.strip}" }
-            final_stderr.each { |msg| $miq_ae_logger.error "Method STDERR: #{msg}" }
-          end
-
-          rc = status.exitstatus
+      ActiveRecord::Base.connection_pool.release_connection
+      Bundler.with_clean_env do
+        run_method(Gem.ruby) do |stdin|
+          stdin.puts(preamble.to_s)
+          stdin.puts(body)
+          stdin.puts(RUBY_METHOD_POSTSCRIPT) unless preamble.blank?
         end
-
-        msg = "Method exited with rc=#{verbose_rc(rc)}"
-      rescue => err
-        $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
-        rc = MIQ_ABORT
-        msg = "Method execution failed"
       end
-      return rc, msg, final_stderr
     end
 
     def self.process_ruby_method_results(rc, msg, stderr)
@@ -241,7 +203,7 @@ RUBY
       else
         raise MiqAeException::UnknownMethodRc, msg, stderr
       end
-      return rc
+      rc
     end
 
     def self.method_preamble(miq_uri, miq_id)
@@ -254,9 +216,9 @@ RUBY
     def self.ruby_method_runnable?(aem)
       return false if aem.data.blank?
 
-      raise MiqAeException::Error, "Unable to launch Automate Method because currently in SQL transaction" if ActiveRecord::Base.connection.open_transactions > self.open_transactions_threshold
+      raise MiqAeException::Error, "Unable to launch Automate Method because currently in SQL transaction" if ActiveRecord::Base.connection.open_transactions > open_transactions_threshold
 
-      return true
+      true
     end
 
     def self.setup_drb_for_ruby_method
@@ -288,6 +250,56 @@ RUBY
           teardown_drb_for_ruby_method if obj.workspace.num_drb_methods == 0
         end
       end
+    end
+
+    def self.run_method(cmd)
+      require 'open4'
+      rc = nil
+      final_stderr = []
+      threads = []
+      method_pid = nil
+      begin
+        status = Open4.popen4(*cmd) do |pid, stdin, stdout, stderr|
+          method_pid = pid
+          yield stdin if block_given?
+          stdin.close
+          threads << Thread.new do
+            stdout.each_line { |msg| $miq_ae_logger.info "Method STDOUT: #{msg.strip}" }
+          end
+          threads << Thread.new do
+            stderr.each_line do |msg|
+              msg = msg.chomp
+              final_stderr << msg
+              $miq_ae_logger.error "Method STDERR: #{msg}"
+            end
+          end
+          threads.each(&:join)
+        end
+        rc  = status.exitstatus
+        msg = "Method exited with rc=#{verbose_rc(rc)}"
+        method_pid = nil
+        threads = []
+      rescue => err
+        $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
+        rc = MIQ_ABORT
+        msg = "Method execution failed"
+      ensure
+        cleanup(method_pid, threads)
+      end
+      return rc, msg, final_stderr.presence
+    end
+
+    def self.cleanup(method_pid, threads)
+      if method_pid
+        begin
+          $miq_ae_logger.error("Terminating non responsive method with pid #{method_pid.inspect}")
+          Process.kill("TERM", method_pid)
+          Process.wait(method_pid)
+        rescue Errno::ESRCH, RangeError => err
+          $miq_ae_logger.error("Error terminating #{method_pid.inspect} exception #{err}")
+        end
+      end
+      threads.each(&:exit)
     end
   end
 end

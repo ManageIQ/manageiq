@@ -16,6 +16,7 @@ describe "SCVMM microsoft_best_fit_least_utilized" do
     FactoryGirl.create(:miq_provision_microsoft,
                        :options => {:src_vm_id      => vm_template.id,
                                     :placement_auto => [true, 1]},
+                       :userid  => FactoryGirl.create(:user).userid,
                        :state   => 'active',
                        :status  => 'Ok')
   end

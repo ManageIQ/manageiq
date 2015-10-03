@@ -23,7 +23,7 @@ describe MiqApproval do
       reason   = "Why Not?"
 
       approval.stub(:authorized?).and_return(false)
-      lambda { approval.approve(approver.userid, reason) }.should raise_error("not authorized")
+      -> { approval.approve(approver.userid, reason) }.should raise_error("not authorized")
 
       miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
       approval.miq_request = miq_request
@@ -31,11 +31,11 @@ describe MiqApproval do
       Timecop.freeze do
         miq_request.should_receive(:approval_approved).once
         approval.approve(approver.userid, reason)
-        approval.state.should        == 'approved'
-        approval.reason.should       == reason
-        approval.stamper.should      == approver
+        approval.state.should == 'approved'
+        approval.reason.should == reason
+        approval.stamper.should == approver
         approval.stamper_name.should == approver.name
-        approval.stamped_on.should   == Time.now.utc
+        approval.stamped_on.should == Time.now.utc
       end
     end
 
@@ -57,7 +57,7 @@ describe MiqApproval do
     reason   = "Why Not?"
 
     approval.stub(:authorized?).and_return(false)
-    lambda { approval.deny(approver.userid, reason) }.should raise_error("not authorized")
+    -> { approval.deny(approver.userid, reason) }.should raise_error("not authorized")
 
     miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
     approval.miq_request = miq_request
@@ -65,11 +65,11 @@ describe MiqApproval do
     Timecop.freeze do
       miq_request.should_receive(:approval_denied).once
       approval.deny(approver.userid, reason)
-      approval.state.should        == 'denied'
-      approval.reason.should       == reason
-      approval.stamper.should      == approver
+      approval.state.should == 'denied'
+      approval.reason.should == reason
+      approval.stamper.should == approver
       approval.stamper_name.should == approver.name
-      approval.stamped_on.should   == Time.now.utc
+      approval.stamped_on.should == Time.now.utc
     end
   end
 

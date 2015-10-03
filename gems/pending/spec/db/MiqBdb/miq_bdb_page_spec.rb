@@ -4,7 +4,6 @@ require 'db/MiqBdb/MiqBdb'
 require "#{__dir__}/test_files"
 
 describe MiqBerkeleyDB::MiqBdbPage do
-
   before do
     bdb = MiqBerkeleyDB::MiqBdb.new(MiqBdb::TestFiles::RPM_PROVIDE_VERSION)
     bdb.pages { |p| @page = p }
@@ -25,5 +24,4 @@ Page 1
 
 DUMP
   end
-
 end

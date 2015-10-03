@@ -10,7 +10,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_vm_cloud_relationships
-    %i(ems ems_infra cluster host availability_zone cloud_tenant flavor drift scan_history security_groups
+    %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history security_groups
        service cloud_network cloud_subnet orchestration_stack)
   end
 
@@ -64,26 +64,24 @@ module VmCloudHelper::TextualSummary
     reg = @record.miq_region
     url = reg.remote_ui_url
     h[:value] = if url
-      # TODO: Why is this link different than the others?
-      link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
-    else
-      reg.description
-    end
+                  # TODO: Why is this link different than the others?
+                  link_to(reg.description, url_for(:host => url, :action => 'show', :id => @record), :title => "Connect to this VM in its Region", :onclick => "return miqClickAndPop(this);")
+                else
+                  reg.description
+                end
     h
   end
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_server
-    return nil if @record.miq_server.nil?
-    {:label => "Server", :value => "#{@record.miq_server.name} [#{@record.miq_server.id}]"}
+    @record.miq_server && "#{@record.miq_server.name} [#{@record.miq_server.id}]"
   end
 
   def textual_description
-    return nil if @record.description.blank?
-    {:label => "Description", :value => @record.description}
+    @record.description
   end
 
   def textual_ipaddress
@@ -142,11 +140,11 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_ems
-    textual_link(@record.ext_management_system, :as => EmsCloud)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_ems_infra
-    textual_link(@record.ext_management_system.try(:provider).try(:infra_ems), :as => EmsInfra)
+    textual_link(@record.ext_management_system.try(:provider).try(:infra_ems))
   end
 
   def textual_cluster
@@ -189,6 +187,17 @@ module VmCloudHelper::TextualSummary
     if flavor && role_allows(:feature => "flavor_show")
       h[:title] = "Show this VM's #{label}"
       h[:link]  = url_for(:controller => 'flavor', :action => 'show', :id => flavor)
+    end
+    h
+  end
+
+  def textual_vm_template
+    vm_template = @record.genealogy_parent
+    label = ui_lookup(:table => "miq_template")
+    h = {:label => label, :image => "template", :value => (vm_template.nil? ? "None" : vm_template.name)}
+    if vm_template && role_allows(:feature => "miq_template_show")
+      h[:title] = "Show this VM's #{label}"
+      h[:link]  = url_for(:controller => 'miq_template', :action => 'show', :id => vm_template)
     end
     h
   end

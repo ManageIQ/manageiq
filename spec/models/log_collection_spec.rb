@@ -11,9 +11,9 @@ describe "LogCollection" do
       @log_file = FactoryGirl.create(:log_file, :state => "collecting")
       @miq_server.log_files << @log_file
       @task = FactoryGirl.create(:miq_task,
-        :miq_server_id => @miq_server.id,
-        :name          => "Zipped log retrieval for #{@miq_server.name}"
-      )
+                                 :miq_server_id => @miq_server.id,
+                                 :name          => "Zipped log retrieval for #{@miq_server.name}"
+                                )
     end
 
     it { expect(@miq_server).to be_log_collection_active }

@@ -5,34 +5,33 @@ require 'wbem'
 require 'net_app_manageability/types'
 
 class MiqCimInstance < ActiveRecord::Base
-
   has_many  :miq_cim_associations,
-        :dependent    => :destroy
+            :dependent    => :destroy
 
   has_many  :associations_we_are_result_of,
-        :class_name   => "MiqCimAssociation",
-        :foreign_key  => "result_instance_id",
-        :dependent    => :destroy
+            :class_name  => "MiqCimAssociation",
+            :foreign_key => "result_instance_id",
+            :dependent   => :destroy
 
   has_many  :elements_with_metrics,
-        :class_name   => "MiqCimInstance",
-        :foreign_key  => "metric_top_id"
+            :class_name  => "MiqCimInstance",
+            :foreign_key => "metric_top_id"
 
   belongs_to  :metrics,
-        :class_name   => "MiqStorageMetric",
-        :foreign_key  => "metric_id",
-        :dependent    => :destroy
+              :class_name  => "MiqStorageMetric",
+              :foreign_key => "metric_id",
+              :dependent   => :destroy
 
   belongs_to  :agent,
-        :class_name   => "StorageManager",
-        :foreign_key  => "agent_id"
+              :class_name  => "StorageManager",
+              :foreign_key => "agent_id"
 
   belongs_to  :top_managed_element,
-        :class_name   => "MiqCimInstance",
-        :foreign_key  => "top_managed_element_id"
+              :class_name  => "MiqCimInstance",
+              :foreign_key => "top_managed_element_id"
 
   belongs_to  :vmdb_obj,
-        :polymorphic  => true
+              :polymorphic  => true
 
   belongs_to  :zone
 
@@ -64,15 +63,15 @@ class MiqCimInstance < ActiveRecord::Base
   ]
 
   def self.topManagedElements
-    self.where(:is_top_managed_element => true).to_a
+    where(:is_top_managed_element => true).to_a
   end
 
   def self.find_kinda(cimClass, zoneId)
-    self.where("class_hier LIKE ? AND zone_id = ?", "%/#{cimClass}/%", zoneId).to_a
+    where("class_hier LIKE ? AND zone_id = ?", "%/#{cimClass}/%", zoneId).to_a
   end
 
   def evm_display_name
-    return property('ElementName') || property('Name') || property('DeviceID')
+    property('ElementName') || property('Name') || property('DeviceID')
   end
 
   def last_update_status_str
@@ -96,7 +95,7 @@ class MiqCimInstance < ActiveRecord::Base
       return "Failed"     if agent.last_update_status == STORAGE_UPDATE_FAILED
       return "No Instance"
     end
-    return "Unknown"
+    "Unknown"
   end
 
   #
@@ -109,50 +108,50 @@ class MiqCimInstance < ActiveRecord::Base
       return rv
     end
 
-    return @has_perf_data[interval_name] = false if self.metrics.nil?
+    return @has_perf_data[interval_name] = false if metrics.nil?
 
     if interval_name == "realtime"
-      return @has_perf_data[interval_name] = self.metrics.miq_derived_metrics.exists?
+      return @has_perf_data[interval_name] = metrics.miq_derived_metrics.exists?
     end
-    return @has_perf_data[interval_name] = self.metrics.miq_metrics_rollups.exists?(:rollup_type => interval_name)
+    @has_perf_data[interval_name] = metrics.miq_metrics_rollups.exists?(:rollup_type => interval_name)
   end
 
   def last_capture(interval_name = "hourly")
     return nil unless has_metrics?
     if interval_name == "realtime"
-      perf = self.metrics.miq_derived_metrics.first(
-        :select     => "statistic_time",
-        :order      => "statistic_time DESC"
+      perf = metrics.miq_derived_metrics.first(
+        :select => "statistic_time",
+        :order  => "statistic_time DESC"
       )
     else
-      perf = self.metrics.miq_metrics_rollups.first(
+      perf = metrics.miq_metrics_rollups.first(
         :select     => "statistic_time",
         :conditions => {:rollup_type => interval_name},
         :order      => "statistic_time DESC"
       )
     end
-    return perf.nil? ? nil : perf.statistic_time
+    perf.nil? ? nil : perf.statistic_time
   end
 
   def first_capture(interval_name = "hourly")
     return nil unless has_metrics?
     if interval_name == "realtime"
-      perf = self.metrics.miq_derived_metrics.first(
-        :select     => "statistic_time",
-        :order      => "statistic_time ASC"
+      perf = metrics.miq_derived_metrics.first(
+        :select => "statistic_time",
+        :order  => "statistic_time ASC"
       )
     else
-      perf = self.metrics.miq_metrics_rollups.first(
+      perf = metrics.miq_metrics_rollups.first(
         :select     => "statistic_time",
         :conditions => {:rollup_type => interval_name},
         :order      => "statistic_time ASC"
       )
     end
-    return perf.nil? ? nil : perf.statistic_time
+    perf.nil? ? nil : perf.statistic_time
   end
 
   def first_and_last_capture(interval_name = "hourly")
-    return [first_capture(interval_name), last_capture(interval_name)].compact
+    [first_capture(interval_name), last_capture(interval_name)].compact
   end
 
   #
@@ -199,14 +198,14 @@ class MiqCimInstance < ActiveRecord::Base
 
   def vendor
     return "NetApp" if class_name =~ /^ONTAP_/
-    return "Unknown"
+    "Unknown"
   end
 
   def class_hier
     chs = read_attribute(:class_hier)
     chs = chs[1..-2] if chs
     return chs.split('/') if chs
-    return []
+    []
   end
 
   def class_hier=(val)
@@ -228,7 +227,7 @@ class MiqCimInstance < ActiveRecord::Base
     query = miq_cim_associations.scoped.includes(:result_instance).select(:result_instance_id)
     query = query.where_association(association)
     query.find_each { |a| results << a.result_instance }
-    return results.uniq
+    results.uniq
   end
 
   def getAssociatedVmdbObjs(association)
@@ -236,7 +235,7 @@ class MiqCimInstance < ActiveRecord::Base
     query = miq_cim_associations.scoped.includes(:result_instance => :vmdb_obj).select(:result_instance_id)
     query = query.where_association(association)
     query.find_each { |a| results << a.result_instance.vmdb_obj }
-    return results.uniq
+    results.uniq
   end
 
   #
@@ -250,11 +249,11 @@ class MiqCimInstance < ActiveRecord::Base
   # Return the number of associations from this node that match the given association.
   #
   def getAssociationSize(association)
-    return miq_cim_associations.scoped.where_association(association).size
+    miq_cim_associations.scoped.where_association(association).size
   end
 
   def mark_associations_stale
-    self.miq_cim_associations.update_all(:status => MiqCimAssociation::STATUS_STALE)
+    miq_cim_associations.update_all(:status => MiqCimAssociation::STATUS_STALE)
   end
 
   def addNewMetric(metric)
@@ -264,8 +263,8 @@ class MiqCimInstance < ActiveRecord::Base
   end
 
   def updateStats(metricObj)
-    self.metrics.metric_obj = metricObj
-    self.metrics.save
+    metrics.metric_obj = metricObj
+    metrics.save
   end
 
   def kinda?(className)
@@ -274,11 +273,11 @@ class MiqCimInstance < ActiveRecord::Base
 
   def typeFromClassHier
     class_hier.each { |c| return typeFromClassName(c) if SUPER_CLASSES.include?(c) }
-    return nil
+    nil
   end
 
   def typeFromClassName(className)
-    return className.underscore.camelize
+    className.underscore.camelize
   end
 
   def operational_status_to_str(val)
@@ -313,29 +312,29 @@ class MiqCimInstance < ActiveRecord::Base
     return "Issue Detected"   if val > 5 && val <= 10
     return "Attention Required" if val > 10 && val < 30
     return "Major Failure"    if val >= 30
-    return "Unknown (#{val})"
+    "Unknown (#{val})"
   end
 
-  def getLeafNodes(prof, node, retHash, level=0, visited={})
+  def getLeafNodes(prof, node, retHash, level = 0, visited = {})
     objName = node.obj_name_str
 
     return if visited[objName]
 
     unless prof
-      if !retHash.has_key?(objName)
+      unless retHash.key?(objName)
         retHash[objName] = node
       end
       visited[objName] = true
       return
     end
 
-    prof = [ prof ] unless prof.kind_of?(Array)
+    prof = [prof] unless prof.kind_of?(Array)
 
     children = false
 
     prof.each do |p|
       associations = p[:association]
-      associations = [ associations ] unless associations.kind_of?(Array)
+      associations = [associations] unless associations.kind_of?(Array)
 
       associations.each do |a|
         node.getAssociators(a).each do |an|
@@ -350,8 +349,8 @@ class MiqCimInstance < ActiveRecord::Base
     visited[objName] = true
 
     if children
-      retHash.delete(objName) if retHash.has_key?(objName)
-    elsif !retHash.has_key?(objName)
+      retHash.delete(objName) if retHash.key?(objName)
+    elsif !retHash.key?(objName)
       retHash[objName] = node
     end
   end
@@ -366,7 +365,7 @@ class MiqCimInstance < ActiveRecord::Base
     end
   end
 
-  def dumpInstance(globalIndent="", level=0, io=$stdout)
+  def dumpInstance(globalIndent = "", level = 0, io = $stdout)
     obj.properties.each do |k, v|
       unless v.value.kind_of?(Array)
         indentedPrint("  #{k} => #{v.value} (#{v.value.class})", globalIndent, level, io)
@@ -377,9 +376,9 @@ class MiqCimInstance < ActiveRecord::Base
     end
   end
 
-  def indentedPrint(s, globalIndent, i, io=$stdout)
-        io.print globalIndent + "  " * i
-        io.puts s
+  def indentedPrint(s, globalIndent, i, io = $stdout)
+    io.print globalIndent + "  " * i
+    io.puts s
   end
 
   private
@@ -390,7 +389,6 @@ class MiqCimInstance < ActiveRecord::Base
     return val.value if val.kind_of?(WBEM::Uint32)
     return val.value if val.kind_of?(WBEM::Uint64)
     return val.value if val.kind_of?(WBEM::Boolean)
-    return val
+    val
   end
-
 end

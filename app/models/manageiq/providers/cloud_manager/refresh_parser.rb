@@ -39,7 +39,7 @@ class ManageIQ::Providers::CloudManager::RefreshParser
   end
 
   def add_instance_disk(disks, size, location, name, controller_type)
-    if size > 0
+    if size >= 0
       disk = {
         :device_name     => name,
         :device_type     => "disk",

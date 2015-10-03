@@ -5,10 +5,10 @@
     = render(:partial => "layouts/flash_msg", :locals => {:click_remove => false})
     %hr/
     %h3
-      = _("Upload #{h(current_tenant.name)} Tag Assignments for VMs")
-    %table.style1
-      %tr
-        %td
+      = _("Upload #{h(session[:customer_name])} Tag Assignments for VMs")
+    .form-horizontal.static
+      .form-group
+        .col-md-8
           = form_tag({:action => "upload_csv", :typ => "tag"}, :multipart => true) do
             = file_field("upload", "file")
             = submit_tag("Upload", :id => "upload_tags")

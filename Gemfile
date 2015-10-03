@@ -19,12 +19,17 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git"
 gem "lodash-rails",                   "~>3.10.0"
-gem "momentjs-rails",                 "~>2.10.3"
-gem "patternfly-sass",                "~>2.0.0"
+gem "patternfly-sass",                "~>2.2.0"
 gem "sass-rails"
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
+
+# HACK: Force color to be required before azure-armrest. color is lazy required
+#   by ruport.  However, due to a bug in color, it detects the top level
+#   constant "Azure" and fails.
+#   See https://github.com/halostatue/color/pull/24
+gem "color"
 
 # Vendored but not required
 gem "net-ldap",                       "~>0.7.0",   :require => false
@@ -41,7 +46,7 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-gem "bcrypt",                         "3.1.10"
+gem "azure-armrest",                  :git => "git://github.com/ManageIQ/azure-armrest.git"
 gem "default_value_for",              "~>3.0.1"
 gem "hamlit-rails",                   "~>0.1.0"
 gem "mime-types"
@@ -59,6 +64,9 @@ gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
 
+# Needed by External Auth
+gem "ruby-dbus"
+
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",   :require => false
 gem "aws-sdk",                        "~>1.56.0",  :require => false
@@ -72,7 +80,6 @@ gem "net-ping",                       "~>1.7.4",   :require => false
 gem "net-ssh",                        "~>2.9.2",   :require => false
 gem "open4",                          "~>1.3.0",   :require => false
 gem "ovirt_metrics",                  "~>1.1.0",   :require => false
-gem "pg",                             "~>0.18.2",  :require => false
 gem "ruby_parser",                    "~>3.7",     :require => false
 gem "ruby-progressbar",               "~>1.7.0",   :require => false
 gem "rufus-scheduler",                "~>3.1.3",   :require => false
@@ -93,7 +100,7 @@ unless ENV['APPLIANCE']
   end
 
   group :test do
-    gem "brakeman",         "~>3.0",    :require => false
+    gem "brakeman",         "~>3.1.0",  :require => false
     gem "capybara",         "~>2.1.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "shoulda-matchers", "~>1.0.0",  :require => false
@@ -103,18 +110,24 @@ unless ENV['APPLIANCE']
 
   group :development, :test do
     gem "rspec-rails",      "~>2.14.0"
-    gem "coveralls"
   end
 end
 
 # Assets from rails-assets.org
 source "https://rails-assets.org" do
-  gem "rails-assets-c3",                       "~>0.4.10"
-  gem "rails-assets-angular",                  "~>1.4.3"
-  gem "rails-assets-angular-mocks",            "~>1.4.3"
-  gem "rails-assets-bootstrap-datepicker",     "~>1.4.0"
-  gem "rails-assets-bootstrap-hover-dropdown", "~>2.0.11"
-  gem "rails-assets-bootstrap-select",         "~>1.7.3"
+  gem "rails-assets-c3",                              "~>0.4.10"
+  gem "rails-assets-angular",                         "~>1.4.3"
+  gem "rails-assets-angular-mocks",                   "~>1.4.3"
+  gem "rails-assets-bootstrap-datepicker",            "~>1.4.0"
+  gem "rails-assets-markusslima--bootstrap-filestyle","~>1.2.1"
+  gem "rails-assets-bootstrap-hover-dropdown",        "~>2.0.11"
+  gem "rails-assets-bootstrap-select",                "~>1.7.3"
+  gem "rails-assets-kubernetes-topology-graph",       "=0.0.17"
+  gem "rails-assets-moment",                          "~>2.10.3"
+  gem "rails-assets-moment-strftime",                 "~>0.1.5"
+  gem "rails-assets-moment-timezone",                 "~>0.4.0"
+  gem "rails-assets-sprintf",                         "~>1.0.3"
+  gem "rails-assets-numeral",                         "~>1.5.3"
 end
 
 #

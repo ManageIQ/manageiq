@@ -39,20 +39,20 @@ describe EmsCluster::CapacityPlanning do
   context "#capacity_profile_method" do
     it "with invalid values" do
       EmsCluster.capacity_settings.delete_path(:profile, :"1", :vcpu_method)
-      lambda { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
+      -> { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "")
-      lambda { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
+      -> { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "invalidresource_average")
-      lambda { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
+      -> { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "vcpu_invalidalgorithm")
-      lambda { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
+      -> { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "mem_average") # resource does not match profile key
-      lambda { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
+      -> { @cluster.capacity_profile_method(1, :vcpu) }.should raise_error
     end
 
     it "with valid values" do
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "vcpu_high_norm")
-      @cluster.capacity_profile_method(1, :vcpu).should   == :vcpu_high_norm
+      @cluster.capacity_profile_method(1, :vcpu).should == :vcpu_high_norm
 
       EmsCluster.capacity_settings.store_path(:profile, :"1", :memory_method, "mem_average")
       @cluster.capacity_profile_method(1, :memory).should == :memory_average
@@ -60,7 +60,7 @@ describe EmsCluster::CapacityPlanning do
 
     it "with alternate valid values" do
       EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "cpu_average")
-      @cluster.capacity_profile_method(1, :vcpu).should   == :vcpu_average
+      @cluster.capacity_profile_method(1, :vcpu).should == :vcpu_average
 
       EmsCluster.capacity_settings.store_path(:profile, :"1", :memory_method, "memory_high_norm")
       @cluster.capacity_profile_method(1, :memory).should == :memory_high_norm
@@ -87,9 +87,9 @@ describe EmsCluster::CapacityPlanning do
 
   context "#capacity_commitment_ratio" do
     it "with default settings" do
-      @cluster.capacity_commitment_ratio(1, :vcpu).should   == 2.0
+      @cluster.capacity_commitment_ratio(1, :vcpu).should == 2.0
       @cluster.capacity_commitment_ratio(1, :memory).should == 1.2
-      @cluster.capacity_commitment_ratio(2, :vcpu).should   == 1.0
+      @cluster.capacity_commitment_ratio(2, :vcpu).should == 1.0
       @cluster.capacity_commitment_ratio(2, :memory).should == 1.0
     end
 
@@ -99,9 +99,9 @@ describe EmsCluster::CapacityPlanning do
       EmsCluster.capacity_settings.delete_path(:profile, :"2", :vcpu_commitment_ratio)
       EmsCluster.capacity_settings.delete_path(:profile, :"2", :memory_commitment_ratio)
 
-      @cluster.capacity_commitment_ratio(1, :vcpu).should   == 1.0
+      @cluster.capacity_commitment_ratio(1, :vcpu).should == 1.0
       @cluster.capacity_commitment_ratio(1, :memory).should == 1.0
-      @cluster.capacity_commitment_ratio(2, :vcpu).should   == 1.0
+      @cluster.capacity_commitment_ratio(2, :vcpu).should == 1.0
       @cluster.capacity_commitment_ratio(2, :memory).should == 1.0
     end
   end
@@ -154,7 +154,7 @@ describe EmsCluster::CapacityPlanning do
   context "#capacity_peak_usage_percentage" do
     it "with normal data" do
       @cluster.stub(:max_cpu_usage_rate_average_high_over_time_period_without_overhead).and_return(11.32)
-      @cluster.capacity_peak_usage_percentage(:vcpu).should   == 11.32
+      @cluster.capacity_peak_usage_percentage(:vcpu).should == 11.32
 
       @cluster.stub(:max_mem_usage_absolute_average_high_over_time_period_without_overhead).and_return(35.23)
       @cluster.capacity_peak_usage_percentage(:memory).should == 35.23
@@ -162,7 +162,7 @@ describe EmsCluster::CapacityPlanning do
 
     it "with missing data" do
       @cluster.stub(:max_cpu_usage_rate_average_high_over_time_period_without_overhead).and_return(nil)
-      @cluster.capacity_peak_usage_percentage(:vcpu).should   == 100.0
+      @cluster.capacity_peak_usage_percentage(:vcpu).should == 100.0
 
       @cluster.stub(:max_mem_usage_absolute_average_high_over_time_period_without_overhead).and_return(nil)
       @cluster.capacity_peak_usage_percentage(:memory).should == 100.0

@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140421150958_create_miq_groups_users_join_table.rb")
+require_migration
 
 describe CreateMiqGroupsUsersJoinTable do
   migration_context :up do
@@ -12,7 +12,7 @@ describe CreateMiqGroupsUsersJoinTable do
       reserve_stub.create!(:resource_type => "User",
                            :resource_id   => user.id,
                            :reserved      => {:eligible_miq_group_ids => [101, 108, 111]}
-      )
+                          )
       reserve_stub.count.should eq(1)
 
       migrate

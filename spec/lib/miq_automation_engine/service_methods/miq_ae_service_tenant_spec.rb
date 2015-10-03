@@ -3,11 +3,10 @@ require "spec_helper"
 module MiqAeServiceTenantSpec
   describe MiqAeMethodService::MiqAeServiceTenant do
     let(:settings) { {} }
-    let(:tenant) { Tenant.create(:name => 'fred', :domain => 'a.b', :parent => def_tenant, :description => "Krueger") }
+    let(:tenant) { FactoryGirl.create(:tenant, :name => 'fred', :domain => 'a.b', :parent => root_tenant, :description => "Krueger") }
 
-    let(:def_tenant) do
-      Tenant.seed
-      Tenant.default_tenant
+    let(:root_tenant) do
+      EvmSpecHelper.create_root_tenant
     end
 
     let(:service_tenant) { MiqAeMethodService::MiqAeServiceTenant.find(tenant.id) }
@@ -26,6 +25,12 @@ module MiqAeServiceTenantSpec
 
     it "#description" do
       expect(service_tenant.description).to eq('Krueger')
+    end
+
+    it "#tenant_quotas" do
+      cpu_quota = FactoryGirl.create(:tenant_quota_cpu, :tenant_id => tenant.id)
+      ids = [cpu_quota.id]
+      expect(service_tenant.tenant_quotas.collect(&:id)).to match_array(ids)
     end
   end
 end

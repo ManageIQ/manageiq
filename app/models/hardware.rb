@@ -29,45 +29,45 @@ class Hardware < ActiveRecord::Base
   include ReportableMixin
 
   def ipaddresses
-    @ipaddresses ||= self.networks.collect(&:ipaddress).compact.uniq
+    @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
   end
 
   def hostnames
-    @hostnames ||= self.networks.collect(&:hostname).compact.uniq
+    @hostnames ||= networks.collect(&:hostname).compact.uniq
   end
 
   def mac_addresses
-    @mac_addresses ||= self.nics.collect(&:address).compact.uniq
+    @mac_addresses ||= nics.collect(&:address).compact.uniq
   end
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
     "filename" => "filename", "startconnected" => "start_connected", "autodetect" => "auto_detect", "mode" => "mode",
-    "connectiontype" => "mode", "size" => "size","free_space" => "free_space","size_on_disk" => "size_on_disk",
+    "connectiontype" => "mode", "size" => "size", "free_space" => "free_space", "size_on_disk" => "size_on_disk",
     "generatedaddress" => "address", "disk_type" => "disk_type"}
 
   def self.add_elements(parent, xmlNode)
     _log.info("Adding Hardware XML elements for VM[id]=[#{parent.id}] from XML doc [#{xmlNode.root.name}]")
-    parent.hardware = Hardware.new if parent.hardware == nil
+    parent.hardware = Hardware.new if parent.hardware.nil?
     # Record guest_devices so we can delete any removed items.
     deletes = {:gd => [], :disk => []}
 
     # Excluding ethernet devices from deletes because the refresh is the master of the data and it will handle the deletes.
     deletes[:gd] = parent.hardware.guest_devices.find(:all,
-      :conditions => ["device_type != ?", "ethernet"],
-      :select => "id, device_type, location, address"
-    ).collect {|rec| [rec.id, [rec.device_type, rec.location, rec.address]]}
+                                                      :conditions => ["device_type != ?", "ethernet"],
+                                                      :select     => "id, device_type, location, address"
+                                                     ).collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
 
     deletes[:disk] = parent.hardware.disks.find(:all,
-      :select => "id, device_type, location"
-    ).collect {|rec| [rec.id, [rec.device_type, rec.location]]}
+                                                :select => "id, device_type, location"
+                                               ).collect { |rec| [rec.id, [rec.device_type, rec.location]] }
 
-    xmlNode.root.each_recursive { |e|
+    xmlNode.root.each_recursive do |e|
       begin
         parent.hardware.send("m_#{e.name}", parent, e, deletes) if parent.hardware.respond_to?("m_#{e.name}")
       rescue => err
         _log.warn "#{err}"
       end
-    }
+    end
 
     GuestDevice.delete(deletes[:gd].transpose[0])
     Disk.delete(deletes[:disk].transpose[0])
@@ -79,23 +79,23 @@ class Hardware < ActiveRecord::Base
   end
 
   def aggregate_cpu_speed
-    return nil if self.logical_cpus.blank? || self.cpu_speed.blank?
-    return (self.logical_cpus * self.cpu_speed)
+    return nil if logical_cpus.blank? || cpu_speed.blank?
+    (logical_cpus * cpu_speed)
   end
 
-  def m_controller(parent, xmlNode, deletes)
-    #$log.info("Adding controller XML elements for [#{xmlNode.attributes["type"]}]")
-    xmlNode.each_element { |e|
+  def m_controller(_parent, xmlNode, deletes)
+    # $log.info("Adding controller XML elements for [#{xmlNode.attributes["type"]}]")
+    xmlNode.each_element do |e|
       next if e.attributes['present'].to_s.downcase == "false"
       da = {"device_type" => xmlNode.attributes["type"].to_s.downcase, "controller_type" => xmlNode.attributes["type"]}
       # Loop over the device mapping table and add attributes
-      @@dh.each_pair { |k, v|  da.merge!({v => e.attributes[k]}) if e.attributes[k] }
+      @@dh.each_pair { |k, v|  da.merge!(v => e.attributes[k]) if e.attributes[k] }
 
       if da["device_name"] == 'disk'
-        target = self.disks
+        target = disks
         target_type = :disk
       else
-        target = self.guest_devices
+        target = guest_devices
         target_type = :gd
       end
 
@@ -111,15 +111,15 @@ class Hardware < ActiveRecord::Base
       end
 
       # Remove the devices from the delete list if it matches on device_type and either location or address
-      deletes[target_type].delete_if {|ele| (ele[1][0] == da["device_type"]) && (ele[1][1] == da["location"] || (!da["address"].nil? && ele[1][2] == da["address"]))}
-    }
+      deletes[target_type].delete_if { |ele| (ele[1][0] == da["device_type"]) && (ele[1][1] == da["location"] || (!da["address"].nil? && ele[1][2] == da["address"])) }
+    end
   end
 
-  def m_memory(parent, xmlNode, deletes)
+  def m_memory(_parent, xmlNode, _deletes)
     self.memory_cpu = xmlNode.attributes["memsize"]
   end
 
-  def m_bios(parent, xmlNode, deletes)
+  def m_bios(_parent, xmlNode, _deletes)
     new_bios = MiqUUID.clean_guid(xmlNode.attributes["bios"])
     self.bios = new_bios.nil? ? xmlNode.attributes["bios"] : new_bios
 
@@ -127,8 +127,8 @@ class Hardware < ActiveRecord::Base
     self.bios_location = new_bios.nil? ? xmlNode.attributes["location"] : new_bios
   end
 
-  def m_vm(parent, xmlNode, deletes)
-    xmlNode.each_element { |e|
+  def m_vm(parent, xmlNode, _deletes)
+    xmlNode.each_element do |e|
       self.guest_os = e.attributes["guestos"] if e.name == "guestos"
       self.config_version = e.attributes["version"] if e.name == "config"
       self.virtual_hw_version = e.attributes["version"] if e.name == "virtualhw"
@@ -138,20 +138,20 @@ class Hardware < ActiveRecord::Base
       self.cpu_type = e.attributes["cputype"] if e.name == "cputype"
       parent.autostart = e.attributes["autostart"] if e.name == "autostart"
       self.numvcpus = e.attributes["numvcpus"] if e.name == "numvcpus"
-    }
+    end
   end
 
-  def m_files(parent, xmlNode, deletes)
+  def m_files(_parent, xmlNode, _deletes)
     self.size_on_disk = xmlNode.attributes["size_on_disk"]
     self.disk_free_space = xmlNode.attributes["disk_free_space"]
     self.disk_capacity = xmlNode.attributes["disk_capacity"]
   end
 
-  def m_snapshots(parent, xmlNode, deletes)
+  def m_snapshots(parent, xmlNode, _deletes)
     Snapshot.add_elements(parent, xmlNode)
   end
 
-  def m_volumes(parent, xmlNode, deletes)
+  def m_volumes(parent, xmlNode, _deletes)
     Volume.add_elements(parent, xmlNode)
   end
 end

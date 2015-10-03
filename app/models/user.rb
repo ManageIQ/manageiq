@@ -22,11 +22,14 @@ class User < ActiveRecord::Base
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
 
-  delegate   :miq_user_role, :to => :current_group, :allow_nil => true
+  delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
+             :to => :current_group, :allow_nil => true
+  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?,
+             :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid, :region
   validates_uniqueness_of :userid, :scope => :region
-  validates_format_of     :email, :with => %r{\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z}i,
+  validates_format_of     :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
     :allow_nil => true, :message => "must be a valid email address"
   validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
 
@@ -44,10 +47,8 @@ class User < ActiveRecord::Base
 
   EVMROLE_SELF_SERVICE_ROLE_NAME         = "EvmRole-user_self_service"
   EVMROLE_LIMITED_SELF_SERVICE_ROLE_NAME = "EvmRole-user_limited_self_service"
-  EVMROLE_SUPER_ADMIN_ROLE_NAME          = "EvmRole-super_administrator"
-  EVMROLE_ADMIN_ROLE_NAME                = "EvmRole-administrator"
 
-  serialize     :settings, Hash   #Implement settings column as a hash
+  serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
   def self.in_region
@@ -59,11 +60,18 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_userid(userid)
-    self.in_region.where(:userid => userid).first
+    in_region.find_by(:userid => userid)
   end
 
   def self.find_by_email(email)
-    self.in_region.where(:email => email).first
+    in_region.find_by(:email => email)
+  end
+
+  # find a user by lowercase email
+  # often we have the most probably user object onhand. so use that if possible
+  def self.find_by_lower_email(email, cache = [])
+    email = email.downcase
+    Array.wrap(cache).detect { |u| u.email.try(:downcase) == email } || find_by(['lower(email) = ?', email])
   end
 
   virtual_column :ldap_group, :type => :string, :uses => :current_group
@@ -72,7 +80,7 @@ class User < ActiveRecord::Base
   virtual_column :miq_user_role_name, :type => :string, :uses => {:current_group => :miq_user_role}
 
   def validate
-    errors.add(:userid, "'system' is reserved for EVM internal operations") unless (self.userid =~ /^system$/i).nil?
+    errors.add(:userid, "'system' is reserved for EVM internal operations") unless (userid =~ /^system$/i).nil?
   end
 
   before_validation :nil_email_field_if_blank
@@ -99,13 +107,20 @@ class User < ActiveRecord::Base
     self.current_group = group
   end
 
+  def miq_group_description=(group_description)
+    if group_description
+      desired_group = miq_groups.detect { |g| g.description == group_description }
+      self.current_group = desired_group if desired_group
+    end
+  end
+
   def nil_email_field_if_blank
-    self.email = nil if self.email.blank?
+    self.email = nil if email.blank?
   end
 
   def dummy_password_for_external_auth
-    if self.password.blank? && self.password_digest.blank? &&
-        !self.class.authenticator(userid).uses_stored_password?
+    if password.blank? && password_digest.blank? &&
+       !self.class.authenticator(userid).uses_stored_password?
       self.password = "dummy"
     end
   end
@@ -113,58 +128,19 @@ class User < ActiveRecord::Base
   def change_password(oldpwd, newpwd)
     auth = self.class.authenticator(userid)
     raise MiqException::MiqEVMLoginError, "password change not allowed when authentication mode is #{auth.class.proper_name}" unless auth.uses_stored_password?
-    raise MiqException::MiqEVMLoginError, "old password does not match current password" unless User.authenticate(self.userid, oldpwd)
+    raise MiqException::MiqEVMLoginError, "old password does not match current password" unless User.authenticate(userid, oldpwd)
 
     self.password = newpwd
     self.save!
   end
 
-  def get_filters
-    filters = self.current_group.get_filters if self.current_group
-    filters || {"managed" => [], "belongsto" => []}
-  end
-
-  def has_filters?
-    !(self.get_managed_filters.blank? && self.get_belongsto_filters.blank?)
-  end
-
-  def get_managed_filters
-    self.get_filters["managed"]
-  end
-
-  def get_belongsto_filters
-    self.get_filters["belongsto"]
-  end
-
-  def self_service_user?
-    return false if self.current_group.nil?
-    self.current_group.self_service_group?
-  end
-  alias_method :self_service?, :self_service_user?
-
-  def limited_self_service_user?
-    return false if self.current_group.nil?
-    self.current_group.limited_self_service_group?
-  end
-  alias_method :limited_self_service?, :limited_self_service_user?
-
-  def super_admin_user?
-    self.miq_user_role_name == EVMROLE_SUPER_ADMIN_ROLE_NAME
-  end
-
-  def admin_user?
-    # Check for admin or super_admin
-    role_name = self.miq_user_role_name
-    role_name == EVMROLE_SUPER_ADMIN_ROLE_NAME || role_name == EVMROLE_ADMIN_ROLE_NAME
-  end
-
   def ldap_group
     current_group.try(:description)
   end
-  alias miq_group_description ldap_group
+  alias_method :miq_group_description, :ldap_group
 
-  def role_allows?(options={})
-    return false if self.miq_user_role.nil?
+  def role_allows?(options = {})
+    return false if miq_user_role.nil?
     feature = MiqProductFeature.find_by_identifier(options[:identifier])
     identifiers = {:identifiers => [options[:identifier]]}
     if feature.try(:hidden)
@@ -176,21 +152,21 @@ class User < ActiveRecord::Base
     end
   end
 
-  def role_allows_any?(options={})
-    return false if self.miq_user_role.nil?
-    self.miq_user_role.allows_any?(options)
+  def role_allows_any?(options = {})
+    return false if miq_user_role.nil?
+    miq_user_role.allows_any?(options)
   end
 
-  def role_allows_all?(options={})
-    return false if self.miq_user_role.nil?
-    self.miq_user_role.allows_all?(options)
+  def role_allows_all?(options = {})
+    return false if miq_user_role.nil?
+    miq_user_role.allows_all?(options)
   end
 
   def miq_user_role_name
-    self.miq_user_role.try(:name)
+    miq_user_role.try(:name)
   end
 
-  def self.authenticator(username=nil)
+  def self.authenticator(username = nil)
     Authenticator.for(VMDB::Config.new("vmdb").config[:authentication], username)
   end
 
@@ -208,14 +184,14 @@ class User < ActiveRecord::Base
 
   def logoff
     self.lastlogoff = Time.now.utc
-    self.save
+    save
     AuditEvent.success(:event => "logoff", :message => "User #{userid} has logged off", :userid => userid)
   end
 
-  def get_expressions(db=nil)
+  def get_expressions(db = nil)
     sql = ["((search_type=? and search_key is null) or (search_type=? and search_key is null) or (search_type=? and search_key=?))",
-           'default', 'global', 'user', self.userid
-    ]
+           'default', 'global', 'user', userid
+          ]
     unless db.nil?
       sql[0] += "and db=?"
       sql << db.to_s
@@ -224,11 +200,11 @@ class User < ActiveRecord::Base
   end
 
   def with_my_timezone(&block)
-    self.with_a_timezone(self.get_timezone, &block)
+    with_a_timezone(get_timezone, &block)
   end
 
   def get_timezone
-    self.settings.fetch_path(:display, :timezone) || self.class.server_timezone
+    settings.fetch_path(:display, :timezone) || self.class.server_timezone
   end
 
   def current_group=(group)
@@ -262,7 +238,7 @@ class User < ActiveRecord::Base
   end
 
   def admin?
-    self.userid == "admin"
+    userid == "admin"
   end
 
   def subscribed_widget_sets
@@ -294,9 +270,9 @@ class User < ActiveRecord::Base
   end
 
   def accessible_vms
-    if limited_self_service_user?
+    if limited_self_service?
       vms
-    elsif self_service_user?
+    elsif self_service?
       (vms + miq_groups.includes(:vms).collect(&:vms).flatten).uniq
     else
       Vm.all
@@ -306,37 +282,35 @@ class User < ActiveRecord::Base
   private
 
   def self.seed
-    MiqRegion.my_region.lock do
-      user = self.in_my_region.find_by_userid("admin")
-      if user.nil?
-        _log.info("Creating default admin user...")
-        user = self.create(:userid => "admin", :name => "Administrator", :password => "smartvm")
-        _log.info("Creating default admin user... Complete")
-      end
-
-      admin_group     = MiqGroup.in_my_region.find_by_description("EvmGroup-super_administrator")
-      user.miq_groups = [admin_group] if admin_group
-      user.save
-
+    user = in_my_region.find_by_userid("admin")
+    if user.nil?
+      _log.info("Creating default admin user...")
+      user = create(:userid => "admin", :name => "Administrator", :password => "smartvm")
+      _log.info("Creating default admin user... Complete")
     end
+
+    admin_group     = MiqGroup.in_my_region.find_by_description("EvmGroup-super_administrator")
+    user.miq_groups = [admin_group] if admin_group
+    user.save
+  end
+
+  def self.current_tenant
+    current_user.try(:current_tenant)
   end
 
   # Save the current user from the session object as a thread variable to allow lookup from other areas of the code
   def self.with_userid(userid)
     saved_user   = Thread.current[:user]
     saved_userid = Thread.current[:userid]
-    saved_filters = Thread.current[:user_has_filters]
     self.current_userid = userid
     yield
   ensure
     Thread.current[:user]   = saved_user
     Thread.current[:userid] = saved_userid
-    Thread.current[:user_has_filters] = saved_filters
   end
 
   def self.current_userid=(userid)
     Thread.current[:user]   = nil
-    Thread.current[:user_has_filters] = nil
     Thread.current[:userid] = userid
   end
 
@@ -345,17 +319,6 @@ class User < ActiveRecord::Base
   end
 
   def self.current_user
-    Thread.current[:user] ||= self.find_by_userid(self.current_userid)
+    Thread.current[:user] ||= find_by_userid(current_userid)
   end
-
-  def self.current_user_has_filters?
-    if Thread.current[:user_has_filters].nil?
-      Thread.current[:user_has_filters] =
-        current_user.current_group.filters &&
-        !(current_user.current_group.filters["managed"].blank? &&
-          current_user.current_group.filters["belongs_to"].blank?)
-    end
-    return Thread.current[:user_has_filters]
-  end
-  #
 end

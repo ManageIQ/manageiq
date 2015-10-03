@@ -22,11 +22,9 @@ class BlacklistedEvent < ActiveRecord::Base
   end
 
   def self.seed
-    MiqRegion.my_region.lock do
-      ExtManagementSystem.descendants.each do |ems|
-        missing_events = ems.default_blacklisted_event_names - where(:provider_model => ems.name, :ems_id => nil).pluck(:event_name)
-        create(missing_events.collect { |e| {:event_name => e, :provider_model => ems.name, :system => true} })
-      end
+    ExtManagementSystem.descendants.each do |ems|
+      missing_events = ems.default_blacklisted_event_names - where(:provider_model => ems.name, :ems_id => nil).pluck(:event_name)
+      create!(missing_events.collect { |e| {:event_name => e, :provider_model => ems.name, :system => true} })
     end
   end
 

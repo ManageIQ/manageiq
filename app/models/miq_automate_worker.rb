@@ -1,4 +1,6 @@
 class MiqAutomateWorker < MiqQueueWorkerBase
+  require_dependency 'miq_automate_worker/runner'
+
   self.default_queue_name     = 'automate'
   self.check_for_minimal_role = false
   self.required_roles         = ['automate']

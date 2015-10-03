@@ -2,19 +2,14 @@ require "spec_helper"
 
 describe MiqReportResult do
   before(:each) do
-    MiqRegion.seed
-    guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid => guid)
-    FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone), :guid => guid, :status => "started")
-    MiqServer.my_server(true)
+    EvmSpecHelper.local_miq_server
 
-    @group = FactoryGirl.create(:miq_group)
-    @user  = FactoryGirl.create(:user, :miq_groups => [@group])
+    user = FactoryGirl.create(:user_with_group)
 
     5.times do |i|
       vm = FactoryGirl.build(:vm_vmware)
-      vm.evm_owner_id = @user.id           if i > 2
-      vm.miq_group_id = @user.current_group.id if vm.evm_owner_id || (i > 1)
+      vm.evm_owner_id = user.id               if i > 2
+      vm.miq_group_id = user.current_group.id if vm.evm_owner_id || (i > 1)
       vm.save
     end
 

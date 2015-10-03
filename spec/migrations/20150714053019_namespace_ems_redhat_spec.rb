@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150714053019_namespace_ems_redhat")
+require_migration
 
 describe NamespaceEmsRedhat do
   class NamespaceEmsRedhat::ExtManagementSystem < ActiveRecord::Base

@@ -17,7 +17,6 @@ describe ConfigurationController do
 
   context "#set_form_vars" do
     before do
-      MiqRegion.seed
       MiqSearch.seed
     end
 

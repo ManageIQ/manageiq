@@ -17,7 +17,7 @@ class TreeBuilderContainersFilter < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(_options)
     objects =
       [
         {:id          => "global",

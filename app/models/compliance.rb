@@ -7,7 +7,7 @@ class Compliance < ActiveRecord::Base
   def self.check_compliance_queue(targets, inputs = {})
     targets.to_miq_a.each do |target|
       MiqQueue.put(
-        :class_name  => self.name,
+        :class_name  => name,
         :method_name => 'check_compliance',
         :args        => [[target.class.name, target.id], inputs]
       )
@@ -19,7 +19,7 @@ class Compliance < ActiveRecord::Base
       if target.kind_of?(Host)
         # Queue this with the vc-refresher taskid, so that any concurrent ems_refreshes don't clash with this one.
         MiqQueue.put(
-          :class_name  => self.name,
+          :class_name  => name,
           :method_name => 'scan_and_check_compliance',
           :args        => [[target.class.name, target.id], inputs],
           :task_id     => 'vc-refresher',
@@ -53,7 +53,7 @@ class Compliance < ActiveRecord::Base
     Compliance.check_compliance(target, inputs)
   end
 
-  def self.check_compliance(target, inputs = {})
+  def self.check_compliance(target, _inputs = {})
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
@@ -61,6 +61,7 @@ class Compliance < ActiveRecord::Base
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
     target_class = target.class.base_model.name.downcase
+    target_class = "vm" if target_class.match("template")
 
     raise "Compliance check not supported for #{target.class.name} objects" unless target.respond_to?(:compliances)
     check_event = "#{target_class}_compliance_check"
@@ -72,22 +73,22 @@ class Compliance < ActiveRecord::Base
       return
     end
 
-    compliance_result = results[:actions].nil? ? true : !results[:actions].has_key?(:compliance_failed)
-    self.set_compliancy(compliance_result, target, check_event, results[:details])
+    compliance_result = results[:actions].nil? ? true : !results[:actions].key?(:compliance_failed)
+    set_compliancy(compliance_result, target, check_event, results[:details])
 
     # Raise EVM event for result asynchronously
     event = results[:result] ? "#{target_class}_compliance_passed" : "#{target_class}_compliance_failed"
     _log.info("Raising EVM Event: #{event}")
     MiqEvent.raise_evm_event_queue(target, event)
     #
-    return results[:result]
+    results[:result]
   end
 
   def self.set_compliancy(compliant, target, event, details)
     name = target.respond_to?(:name) ? target.name : "NA"
     _log.info("Marking as #{compliant ? "" : "Non-"}Compliant Object with Class: [#{target.class}], Id: [#{target.id}], Name: [#{name}]")
 
-    comp  = self.create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
+    comp  = create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
 
     details.each do |p|
       dhash = {

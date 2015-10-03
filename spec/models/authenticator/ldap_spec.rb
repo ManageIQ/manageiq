@@ -21,7 +21,7 @@ describe Authenticator::Ldap do
     end
 
     def fqusername(username)
-      username.gsub(/x/i, '')
+      username.delete('X')
     end
 
     def get_user_object(username)

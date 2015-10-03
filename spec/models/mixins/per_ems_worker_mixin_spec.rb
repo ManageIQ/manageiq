@@ -12,7 +12,7 @@ describe PerEmsWorkerMixin do
   end
 
   it ".queue_name_for_ems" do
-    @worker_class.queue_name_for_ems(nil).should == nil
+    @worker_class.queue_name_for_ems(nil).should.nil?
     @worker_class.queue_name_for_ems("foo").should == "foo"
     @worker_class.queue_name_for_ems(@ems).should == @ems_queue_name
   end
@@ -25,10 +25,9 @@ describe PerEmsWorkerMixin do
     end
 
     it "works when ems is passed" do
-      @worker_class.should_receive(:start_worker).with({:queue_name => @ems_queue_name})
+      @worker_class.should_receive(:start_worker).with(:queue_name => @ems_queue_name)
       @worker_class.start_worker_for_ems(@ems)
     end
-
   end
 
   context ".stop_worker_for_ems" do
@@ -87,7 +86,5 @@ describe PerEmsWorkerMixin do
         @worker_class.stop_worker_for_ems(@ems)
       end
     end
-
   end
-
 end

@@ -2,7 +2,6 @@
 require "spec_helper"
 
 describe "Widget RSS Content" do
-
   CNN_XML = <<-EOF
   <?xml version="1.0" encoding="ISO-8859-1"?>
   <?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/rss2full.xsl"?><?xml-stylesheet type="text/css" media="screen" href="http://rss.cnn.com/~d/styles/itemcontent.css"?><rss xmlns:media="http://search.yahoo.com/mrss/" xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" version="2.0"><channel>
@@ -60,13 +59,9 @@ describe "Widget RSS Content" do
   EOF
 
   before(:each) do
-    MiqRegion.seed
     RssFeed.sync_from_yml_dir
 
-    guid = MiqUUID.new_guid
-    MiqServer.stub(:my_guid => guid)
-    FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone), :guid => guid, :status => "started")
-    MiqServer.my_server(true)
+    EvmSpecHelper.local_miq_server
 
     @admin       = FactoryGirl.create(:user_admin)
     @admin_group = @admin.current_group
@@ -102,7 +97,6 @@ describe "Widget RSS Content" do
       read_only: true
     '))
   end
-
 
   it "#generate_content external rss for user" do
     widget = MiqWidget.find_by_description("rss_cnn")
@@ -147,5 +141,4 @@ describe "Widget RSS Content" do
     content.contents.scan("VmVmware").length.should == widget.options[:row_count]
     widget.contents_for_user(@admin).should == content
   end
-
 end

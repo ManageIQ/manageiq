@@ -38,5 +38,11 @@ class ApiController
       add_task_to_result(res, options[:task_id]) if options[:task_id].present?
       res
     end
+
+    def import_resource_reports(_type, _id, data)
+      options = data.fetch("options", {}).symbolize_keys.merge(:userid => @auth_user)
+      result, meta = MiqReport.import_from_hash(data["report"], options)
+      action_result(meta[:level] == :info, meta[:message], :result => result)
+    end
   end
 end

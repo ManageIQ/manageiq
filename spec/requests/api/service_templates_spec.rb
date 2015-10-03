@@ -11,12 +11,63 @@ require 'spec_helper'
 describe ApiController do
   include Rack::Test::Methods
 
+  let(:dialog1)    { FactoryGirl.create(:dialog, :label => "ServiceDialog1") }
+  let(:dialog2)    { FactoryGirl.create(:dialog, :label => "ServiceDialog2") }
+
+  let(:ra1)        { FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog1) }
+  let(:ra2)        { FactoryGirl.create(:resource_action, :action => "Retirement", :dialog => dialog2) }
+
+  let(:picture)    { FactoryGirl.create(:picture, :extension => "jpg") }
+  let(:template)   { FactoryGirl.create(:service_template, :name => "ServiceTemplate") }
+
   before(:each) do
     init_api_spec_env
   end
 
   def app
     Vmdb::Application
+  end
+
+  describe "Service Templates query" do
+    before do
+      template.resource_actions = [ra1, ra2]
+      template.picture = picture
+      api_basic_authorize
+    end
+
+    it "queries all resource actions of a Service Template" do
+      run_get "#{service_templates_url(template.id)}/resource_actions", :expand => "resources"
+
+      resource_actions = template.resource_actions
+      expect_query_result(:resource_actions, resource_actions.count, resource_actions.count)
+      expect_result_resources_to_include_data("resources", "action" => resource_actions.pluck(:action))
+    end
+
+    it "queries a specific resource action of a Service Template" do
+      run_get "#{service_templates_url(template.id)}/resource_actions",
+              :expand => "resources",
+              :filter => ["action='Provision'"]
+
+      expect_query_result(:resource_actions, 1, 2)
+      expect_result_resources_to_match_hash(["id" => ra1.id, "action" => ra1.action, "dialog_id" => dialog1.id])
+    end
+
+    it "allows queries of the related picture" do
+      run_get service_templates_url(template.id), :attributes => "picture"
+
+      expect_result_to_have_keys(%w(id href picture))
+      expect_result_to_match_hash(@result, "id" => template.id, "href" => service_templates_url(template.id))
+    end
+
+    it "allows queries of the related picture and image_href" do
+      run_get service_templates_url(template.id), :attributes => "picture,picture.image_href"
+
+      expect_result_to_have_keys(%w(id href picture))
+      expect_result_to_match_hash(@result["picture"],
+                                  "id"          => picture.id,
+                                  "resource_id" => template.id,
+                                  "image_href"  => /^http:.*#{picture.image_href}$/)
+    end
   end
 
   describe "Service Templates edit" do

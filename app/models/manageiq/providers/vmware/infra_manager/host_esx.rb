@@ -136,7 +136,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
 
   def refresh_logs
     if self.missing_credentials?
-      _log.warn "No credentials defined for Host [#{self.name}]"
+      _log.warn "No credentials defined for Host [#{name}]"
       return
     end
 
@@ -153,7 +153,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
       MiqVimBrokerWorker.broker_unavailable(err.class.name,  err.to_s)
       _log.warn("Reported the broker unavailable")
     rescue TimeoutError
-      _log.warn "Timeout encountered during log collection for Host [#{self.name}]"
+      _log.warn "Timeout encountered during log collection for Host [#{name}]"
     ensure
       vim.disconnect rescue nil
     end
@@ -176,4 +176,3 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     AdvancedSetting.add_elements(self, ash) unless ash.nil?
   end
 end
-

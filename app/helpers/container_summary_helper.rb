@@ -1,7 +1,6 @@
 module ContainerSummaryHelper
   def textual_ems
-    textual_link(@record.ext_management_system, :as         => ManageIQ::Providers::ContainerManager,
-                                                :controller => 'ems_container')
+    textual_link(@record.ext_management_system)
   end
 
   def textual_container_project
@@ -60,6 +59,10 @@ module ContainerSummaryHelper
     textual_key_value_group(@record.selector_parts.to_a)
   end
 
+  def textual_container_node_selectors
+    textual_key_value_group(@record.node_selector_parts.to_a)
+  end
+
   def textual_container_image
     textual_link(@record.container_image)
   end
@@ -75,7 +78,7 @@ module ContainerSummaryHelper
       {
         :label => ui_lookup(:model => ContainerImageRegistry.name),
         :image => "container_image_registry_unknown",
-        :value => "Unknown image source"
+        :value => @record.display_registry
       }
     else
       textual_link(@record.container_image_registry)
@@ -90,10 +93,7 @@ module ContainerSummaryHelper
     label = "#{session[:customer_name]} Tags"
     h = {:label => label}
     tags = session[:assigned_filters]
-    if tags.empty?
-      h[:image] = "smarttag"
-      h[:value] = "No #{label} have been assigned"
-    else
+    if tags.present?
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }.collect do |category, assigned|
         {
           :image => "smarttag",
@@ -101,7 +101,11 @@ module ContainerSummaryHelper
           :value => assigned
         }
       end
+    else
+      h[:image] = "smarttag"
+      h[:value] = "No #{label} have been assigned"
     end
+
     h
   end
 

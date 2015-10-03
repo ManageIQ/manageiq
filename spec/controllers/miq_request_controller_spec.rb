@@ -143,4 +143,21 @@ describe MiqRequestController do
       expect(response.body).to_not be_empty
     end
   end
+
+  context "#layout_from_tab_name" do
+    before do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      session[:settings] = {:display   => {:quad_truncate => 'f'},
+                            :quadicons => {:host => 'foo'},
+                            :views     => {:miq_request => 'grid'}}
+    end
+
+    it "miq_request/show_list sets @layout='miq_request_vm' when redirected via foreman provisioning" do
+      post :show_list, :typ => "configured_systems"
+      layout = controller.instance_variable_get(:@layout)
+      expect(layout).to eq("miq_request_vm")
+    end
+  end
 end

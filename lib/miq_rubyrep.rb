@@ -50,15 +50,15 @@ class MiqRubyrep
     config.options[:sync_conflict_handling]        = :left_wins
     config.options[:heartbeat_file]                = heartbeat_file
 
-    rp_conf[:include_tables] ||= %w{.+}
+    rp_conf[:include_tables] ||= %w(.+)
     include_tables = rp_conf[:include_tables].to_a.join("|")
     include_tables = "^(#{include_tables})$"
-    config.include_tables %r{#{include_tables}}
+    config.include_tables /#{include_tables}/
 
-    rp_conf[:exclude_tables] ||= %w{.+}
+    rp_conf[:exclude_tables] ||= %w(.+)
     exclude_tables = rp_conf[:exclude_tables].to_a.join("|")
     exclude_tables = "^(#{exclude_tables})$"
-    config.exclude_tables %r{#{exclude_tables}}
+    config.exclude_tables /#{exclude_tables}/
 
     filters.each do |table, klass|
       config.add_table_option table, :event_filter => klass.new
@@ -72,12 +72,12 @@ class MiqRubyrep
 
     $log.info("Replication Settings:")
     $log.log_hashes({
-        :source         => config.left,
-        :destination    => config.right,
-        :include_tables => include_tables,
-        :exclude_tables => exclude_tables,
-        :options        => config.options
-      })
+                      :source         => config.left,
+                      :destination    => config.right,
+                      :include_tables => include_tables,
+                      :exclude_tables => exclude_tables,
+                      :options        => config.options
+                    })
   end
 
   def self.heartbeat_file

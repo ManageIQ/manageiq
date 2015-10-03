@@ -158,7 +158,7 @@ class SniaLocalFileSystem < MiqCimInstance
   end
 
   def zone_name
-    self.zone.nil? ? '' : self.zone.name
+    zone.nil? ? '' : zone.name
   end
 
   def name
@@ -232,5 +232,4 @@ class SniaLocalFileSystem < MiqCimInstance
   def case_preserved?
     property('CasePreserved')
   end
-
 end

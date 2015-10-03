@@ -17,13 +17,13 @@ class OsProcess < ActiveRecord::Base
   def self.xml_to_hashes(xmlNode, findPath)
     result = []
     if xmlNode.kind_of?(Hash)
-      xmlNode.each_pair {|k,v| result << v}
+      xmlNode.each_pair { |_k, v| result << v }
     else
       el = XmlFind.findElement(findPath, xmlNode.root)
       return nil unless MiqXml.isXmlElement?(el)
 
       el.each_element { |e| result << e.attributes.to_h }
     end
-    return result
+    result
   end
 end

@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150405141637_remove_port_config_from_container_service.rb")
+require_migration
 
 describe RemovePortConfigFromContainerService do
   let(:container_service_stub)             { migration_stub(:ContainerService) }
@@ -14,10 +14,9 @@ describe RemovePortConfigFromContainerService do
                                                :container_port => 2222)
       migrate
       pconfig = container_service_port_config_stub.where(:container_service_id => service.id).first
-      pconfig.protocol.should    == "TCP"
-      pconfig.port.should        == 1111
+      pconfig.protocol.should == "TCP"
+      pconfig.port.should == 1111
       pconfig.target_port.should == "2222" # container_port:integer turns into target_port:string
-
     end
   end
 
@@ -31,8 +30,8 @@ describe RemovePortConfigFromContainerService do
                                                  :target_port          => "2222")
       migrate
       service.reload
-      service.protocol.should       == "TCP"
-      service.port.should           == 1111
+      service.protocol.should == "TCP"
+      service.port.should == 1111
       service.container_port.should == 2222
     end
   end

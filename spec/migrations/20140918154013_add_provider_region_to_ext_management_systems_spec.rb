@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140918154013_add_provider_region_to_ext_management_systems")
+require_migration
 
 describe AddProviderRegionToExtManagementSystems do
   let(:ems_stub) { migration_stub(:ExtManagementSystem) }

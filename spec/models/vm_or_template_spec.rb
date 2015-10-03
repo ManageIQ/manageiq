@@ -1,9 +1,7 @@
 require "spec_helper"
 
 describe VmOrTemplate do
-
   context ".event_by_property" do
-
     context "should add an EMS event" do
       before(:each) do
         Timecop.freeze(Time.now)
@@ -39,12 +37,11 @@ describe VmOrTemplate do
 
     it "should raise an error" do
       err = "Unsupported property type [foo]"
-      lambda {VmOrTemplate.event_by_property('foo', '', '', '')}.should raise_error(err)
+      -> { VmOrTemplate.event_by_property('foo', '', '', '') }.should raise_error(err)
     end
   end
 
   context "#add_ems_event" do
-
     before(:each) do
       @host            = FactoryGirl.create(:host, :name => "host 1")
       @vm              = FactoryGirl.create(:vm_vmware, :name => "vm 1", :location => "/local/path", :host => @host, :uid_ems => "1", :ems_id => 101)
@@ -52,15 +49,14 @@ describe VmOrTemplate do
       @source          = "EVM"
       @event_timestamp = Time.now.utc.iso8601
       @event_hash = {
-          :event_type  => @event_type,
-          :is_task     => false,
-          :source      => @source,
-          :timestamp   => @event_timestamp,
-        }
+        :event_type => @event_type,
+        :is_task    => false,
+        :source     => @source,
+        :timestamp  => @event_timestamp,
+      }
     end
 
     context "should add an EMS Event" do
-
       before(:each) do
         @ipaddress       = "192.268.20.1"
         @hardware        = FactoryGirl.create(:hardware, :vm_or_template_id => @vm.id)
@@ -131,9 +127,7 @@ describe VmOrTemplate do
         EmsEvent.should_receive(:add).with(nil, @event_hash)
         vm_no_host_no_ems.add_ems_event(@event_type, event_msg, @event_timestamp)
       end
-
     end
-
   end
 
   context "#reconfigured_hardware_value?" do
@@ -218,19 +212,13 @@ describe VmOrTemplate do
                                  :storages => [@storage1, @storage2])
         @zone = FactoryGirl.create(:zone, :name => 'zone')
 
-        @svr1 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr1', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
-        @svr2 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr2', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
-        @svr3 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr3', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
+        @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
+        @svr2 = FactoryGirl.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
+        @svr3 = FactoryGirl.create(:miq_server, :name => 'svr3', :zone => @svr1.zone)
 
         @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host1, :name => 'svr1_vm', :miq_server => @svr1)
         @svr2_vm = FactoryGirl.create(:vm_redhat, :host => @host2, :name => 'svr2_vm', :miq_server => @svr2)
         @svr3_vm = FactoryGirl.create(:vm_redhat, :host => @host3, :name => 'svr3_vm', :miq_server => @svr3)
-
-        MiqServer.stub(:my_zone => @zone.name)
-        Vm.stub(:miq_servers_for_scan => [@svr1, @svr2, @svr3])
       end
 
       it "should select SmartProxies with matching VM host affinity" do
@@ -279,17 +267,11 @@ describe VmOrTemplate do
                                  :storage  => @storage1,
                                  :storages => [@storage1])
 
-        @zone = FactoryGirl.create(:zone, :name => 'zone1')
-
-        @svr1 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr1', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
-        @svr2 = FactoryGirl.create(:miq_server,
-                                   :name => 'svr2', :status => 'started', :zone => @zone, :guid => MiqUUID.new_guid)
+        @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
+        @svr2 = FactoryGirl.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
 
         @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host1, :name => 'svr1_vm', :miq_server => @svr1)
         @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host2, :name => 'svr2_vm', :miq_server => @svr2)
-
-        MiqServer.stub(:my_zone => @zone.name)
       end
 
       it "should select SmartProxies with access to the same NFS storage" do
@@ -343,7 +325,6 @@ describe VmOrTemplate do
 
   describe ".cloneable?" do
     context "when the vm_or_template does not exist" do
-
       it "returns false" do
         expect(VmOrTemplate.cloneable?(111)).to eq(false)
       end
@@ -396,9 +377,9 @@ describe VmOrTemplate do
   end
 
   context "Status Methods" do
-    let(:vm)      {FactoryGirl.create(:vm_or_template)}
-    let(:ems)     {FactoryGirl.create(:ext_management_system)}
-    let(:storage) {FactoryGirl.create(:storage)}
+    let(:vm)      { FactoryGirl.create(:vm_or_template) }
+    let(:ems)     { FactoryGirl.create(:ext_management_system) }
+    let(:storage) { FactoryGirl.create(:storage) }
 
     context "with EMS" do
       before { vm.ext_management_system = ems }
@@ -416,7 +397,7 @@ describe VmOrTemplate do
 
   context ".refresh_ems queues refresh for proper class" do
     [:template_vmware, :vm_vmware].each do |vm_or_template|
-      let(:instance) {FactoryGirl.create(vm_or_template)}
+      let(:instance) { FactoryGirl.create(vm_or_template) }
 
       it "#{vm_or_template.to_s.classify}" do
         EmsRefresh.should_receive(:queue_refresh).with([[VmOrTemplate, instance.id]])
@@ -426,11 +407,11 @@ describe VmOrTemplate do
     end
   end
 
-  context "#tenant_owner" do
+  context "#tenant" do
     let(:tenant) { FactoryGirl.create(:tenant) }
-    it "has a tenant owner" do
-      vm = FactoryGirl.create(:vm_vmware, :tenant_owner => tenant)
-      expect(tenant.owned_vm_or_templates).to include(vm)
+    it "has a tenant" do
+      vm = FactoryGirl.create(:vm_vmware, :tenant => tenant)
+      expect(tenant.vm_or_templates).to include(vm)
     end
   end
 
@@ -469,6 +450,36 @@ describe VmOrTemplate do
       vm1 =  FactoryGirl.create(:vm_vmware)
       vm2 =  FactoryGirl.create(:vm_vmware)
       expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
+    end
+  end
+
+  context ".set_tenant_from_group" do
+    before { EvmSpecHelper.create_root_tenant }
+    let(:tenant1) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
+    let(:tenant2) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant) }
+    let(:group1) { FactoryGirl.create(:miq_group, :tenant => tenant1) }
+    let(:group2) { FactoryGirl.create(:miq_group, :tenant => tenant2) }
+
+    it "assigns the tenant from the group" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group => group1).tenant).to eq(tenant1)
+    end
+
+    it "assigns the tenant from the group_id" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group_id => group1.id).tenant).to eq(tenant1)
+    end
+
+    it "assigns the tenant from the group over the tenant" do
+      expect(FactoryGirl.create(:vm_vmware, :miq_group => group1, :tenant => tenant2).tenant).to eq(tenant1)
+    end
+
+    it "uses default tenant via tenancy_mixin" do
+      expect(FactoryGirl.create(:vm_vmware).tenant).to eq(Tenant.root_tenant)
+    end
+
+    it "changes the tenant after changing the group" do
+      vm = FactoryGirl.create(:vm_vmware, :miq_group => group1)
+      vm.update_attributes(:miq_group_id => group2.id)
+      expect(vm.tenant).to eq(tenant2)
     end
   end
 end

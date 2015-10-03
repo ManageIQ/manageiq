@@ -21,11 +21,11 @@
 
   %h3
     = _('Export')
-  %table.style1
-    %tr
-      %td.key
+  .form-horizontal
+    .form-group
+      %label.control-label.col-md-2
         = _('Available Widgets:')
-      %td
+      .col-md-8
         .export-choices
           = form_tag({:action => "export_widgets"}, :id => "export-widgets-form", :method => :get) do
             = select_tag("widgets[]",
@@ -71,11 +71,8 @@
     listenForWidgetPostMessages();
     setUpImportWidgetClickHandlers();
 
-    setTimeout(function() {
-      if (typeof(dhxLayoutB) !== 'undefined') {
-        dhxLayoutB.cells('c').collapse();
-        $(dhxLayoutB.cells('c')).height(1);
-        $('.widget-export-buttons').show();
-      }
-    }, 100);
+    if (typeof(ManageIQ.layout.toolbar.hide) !== 'undefined') {
+      ManageIQ.layout.toolbar.hide();
+      $('.widget-export-buttons').show();
+    }
   });

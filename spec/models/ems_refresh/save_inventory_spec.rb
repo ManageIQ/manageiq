@@ -21,10 +21,10 @@ describe EmsRefresh::SaveInventory do
         vms.length.should == 2
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
+        v1.id.should == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
 
-        v2.id.should      == @vm2.id
+        v2.id.should == @vm2.id
         v2.uid_ems.should == @vm2.uid_ems
       end
 
@@ -37,19 +37,19 @@ describe EmsRefresh::SaveInventory do
 
         disconnected, connected = vms.partition { |v| v.ems_id.nil? }
         disconnected.length.should == 1
-        connected.length.should    == 2
+        connected.length.should == 2
 
         d      = disconnected.first
         c1, c2 = connected.sort_by(&:id)
 
-        d.id.should      == @vm2.id
+        d.id.should == @vm2.id
         d.uid_ems.should == @vm2.uid_ems
 
-        c1.id.should      == @vm1.id
+        c1.id.should == @vm1.id
         c1.uid_ems.should == @vm1.uid_ems
 
-        c2.id.should_not  == @vm1.id
-        c2.id.should_not  == @vm2.id
+        c2.id.should_not == @vm1.id
+        c2.id.should_not == @vm2.id
         c2.uid_ems.should == @vm1.uid_ems
       end
     end
@@ -70,19 +70,19 @@ describe EmsRefresh::SaveInventory do
 
         disconnected, connected = vms.partition { |v| v.ems_id.nil? }
         disconnected.length.should == 1
-        connected.length.should    == 2
+        connected.length.should == 2
 
         d      = disconnected.first
         c1, c2 = connected.sort_by(&:id)
 
-        d.id.should           == @vm2.id
-        d.uid_ems.should      == @vm2.uid_ems
+        d.id.should == @vm2.id
+        d.uid_ems.should == @vm2.uid_ems
 
-        c1.id.should          == @vm1.id
-        c1.uid_ems.should     == @vm1.uid_ems
+        c1.id.should == @vm1.id
+        c1.uid_ems.should == @vm1.uid_ems
 
-        c2.id.should_not      == @vm1.id
-        c2.id.should_not      == @vm2.id
+        c2.id.should_not == @vm1.id
+        c2.id.should_not == @vm2.id
         c2.uid_ems.should_not == @vm1.uid_ems
       end
 
@@ -94,10 +94,10 @@ describe EmsRefresh::SaveInventory do
         vms.length.should == 2
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
+        v1.id.should == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
 
-        v2.id.should      == @vm2.id
+        v2.id.should == @vm2.id
         v2.uid_ems.should == @vm2.uid_ems
       end
     end
@@ -118,19 +118,19 @@ describe EmsRefresh::SaveInventory do
 
         disconnected, connected = vms.partition { |v| v.ems_id.nil? }
         disconnected.length.should == 1
-        connected.length.should    == 2
+        connected.length.should == 2
 
         d      = disconnected.first
         c1, c2 = connected.sort_by(&:id)
 
-        d.id.should           == @vm2.id
-        d.uid_ems.should      == @vm2.uid_ems
+        d.id.should == @vm2.id
+        d.uid_ems.should == @vm2.uid_ems
 
-        c1.id.should          == @vm1.id
-        c1.uid_ems.should     == @vm1.uid_ems
+        c1.id.should == @vm1.id
+        c1.uid_ems.should == @vm1.uid_ems
 
-        c2.id.should_not      == @vm1.id
-        c2.id.should_not      == @vm2.id
+        c2.id.should_not == @vm1.id
+        c2.id.should_not == @vm2.id
         c2.uid_ems.should_not == @vm1.uid_ems
       end
 
@@ -142,11 +142,11 @@ describe EmsRefresh::SaveInventory do
         vms.length.should == 2
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
+        v1.id.should == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
         v1.ems_id.should_not be_nil
 
-        v2.id.should      == @vm2.id
+        v2.id.should == @vm2.id
         v2.uid_ems.should == @vm2.uid_ems
       end
     end
@@ -167,13 +167,13 @@ describe EmsRefresh::SaveInventory do
         vms.length.should == 2
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
+        v1.id.should == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
-        v1.ems_id.should  == @ems2.id
+        v1.ems_id.should == @ems2.id
 
-        v2.id.should_not  == @vm1.id
+        v2.id.should_not == @vm1.id
         v2.uid_ems.should == @vm1.uid_ems
-        v2.ems_id.should  == @ems.id
+        v2.ems_id.should == @ems.id
       end
     end
 
@@ -192,7 +192,7 @@ describe EmsRefresh::SaveInventory do
         vms.length.should == 1
         v = vms.first
 
-        v.id.should      == @vm1.id
+        v.id.should == @vm1.id
         v.uid_ems.should == @vm1.uid_ems
       end
     end
@@ -220,10 +220,10 @@ describe EmsRefresh::SaveInventory do
         vms.length.should == 2
         v1, v2 = vms.sort_by(&:id)
 
-        v1.id.should      == @vm1.id
+        v1.id.should == @vm1.id
         v1.uid_ems.should == @vm1.uid_ems
 
-        v2.id.should      == @vm2.id
+        v2.id.should == @vm2.id
         v2.uid_ems.should == @vm2.uid_ems
       end
 
@@ -238,19 +238,19 @@ describe EmsRefresh::SaveInventory do
 
         disconnected, connected = vms.partition { |v| v.ems_id.nil? }
         disconnected.length.should == 1
-        connected.length.should    == 2
+        connected.length.should == 2
 
         d      = disconnected.first
         c1, c2 = connected.sort_by(&:id)
 
-        d.id.should       == @vm2.id
-        d.uid_ems.should  == @vm2.uid_ems
+        d.id.should == @vm2.id
+        d.uid_ems.should == @vm2.uid_ems
 
-        c1.id.should      == @vm1.id
+        c1.id.should == @vm1.id
         c1.uid_ems.should == @vm1.uid_ems
 
-        c2.id.should_not  == @vm1.id
-        c2.id.should_not  == @vm2.id
+        c2.id.should_not == @vm1.id
+        c2.id.should_not == @vm2.id
         c2.uid_ems.should == @vm1.uid_ems
       end
     end
@@ -269,13 +269,13 @@ describe EmsRefresh::SaveInventory do
   def raw_data_with_dups(*args)
     data = raw_data_process(*args)
     data[1][:uid_ems] = data[0][:uid_ems]
-    return data
+    data
   end
 
   def raw_data_without_dups(*args)
     data = raw_data_process(*args)
     data[1][:uid_ems] = MiqUUID.new_guid if data[0][:uid_ems] == data[1][:uid_ems]
-    return data
+    data
   end
 
   def dump_before(data)

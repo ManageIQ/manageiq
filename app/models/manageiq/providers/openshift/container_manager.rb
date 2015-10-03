@@ -1,14 +1,14 @@
 class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::ContainerManager
   require_dependency 'manageiq/providers/openshift/container_manager/event_catcher'
   require_dependency 'manageiq/providers/openshift/container_manager/event_parser'
+  require_dependency 'manageiq/providers/openshift/container_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/openshift/container_manager/refresh_parser'
   require_dependency 'manageiq/providers/openshift/container_manager/refresh_worker'
   require_dependency 'manageiq/providers/openshift/container_manager/refresher'
 
   include ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
-  has_many :container_routes,                      :foreign_key => :ems_id, :dependent => :destroy
-  has_many :container_projects,                    :foreign_key => :ems_id, :dependent => :destroy
+  has_many :container_routes, :foreign_key => :ems_id, :dependent => :destroy
 
   DEFAULT_PORT = 8443
   default_value_for :port, DEFAULT_PORT
@@ -20,14 +20,6 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   # our specific code in ManageIQ.
   def api_version
     self.class.api_version
-  end
-
-  def supported_auth_types
-    %w(default password bearer)
-  end
-
-  def supports_authentication?(authtype)
-    supported_auth_types.include?(authtype.to_s)
   end
 
   def api_version=(_value)
@@ -53,12 +45,13 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
 
   def self.openshift_connect(hostname, port, options)
     require 'openshift_client'
-    api_endpoint = raw_api_endpoint(hostname, port)
-    osclient = OpenshiftClient::Client.new(api_endpoint, api_version)
-    # TODO: support real authentication using certificates
-    osclient.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
-    osclient.bearer_token(options[:bearer]) if options[:bearer]
-    osclient
+
+    OpenshiftClient::Client.new(
+      raw_api_endpoint(hostname, port),
+      api_version,
+      :ssl_options  => {:verify_ssl => verify_ssl_mode},
+      :auth_options => kubernetes_auth_options(options),
+    )
   end
 
   def self.event_monitor_class

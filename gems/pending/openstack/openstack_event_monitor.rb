@@ -3,11 +3,12 @@
 # subclass
 require 'more_core_extensions/core_ext/hash'
 require 'util/extensions/miq-module'
+require 'active_support/core_ext/class/subclasses'
 
 class OpenstackEventMonitor
   DEFAULT_AMQP_PORT = 5672
 
-  def self.new(options={})
+  def self.new(options = {})
     # plugin initializer
     self == OpenstackEventMonitor ? event_monitor(options) : super
   end
@@ -41,7 +42,7 @@ class OpenstackEventMonitor
   end
 
   # See OpenstackEventMonitor.new for details on event monitor selection
-  def initialize(options = {})
+  def initialize(_options = {})
     # See OpenstackEventMonitor.new
     raise NotImplementedError, "Cannot instantiate OpenstackEventMonitor directly."
   end
@@ -60,7 +61,7 @@ class OpenstackEventMonitor
 
   def each
     each_batch do |events|
-      events.each {|e| yield e}
+      events.each { |e| yield e }
     end
   end
 
@@ -93,6 +94,7 @@ class OpenstackEventMonitor
 
   # this private marker is really here for looks
   # private_class_methods are marked below
+
   private
 
   def self.event_monitor_key(options)

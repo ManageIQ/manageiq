@@ -22,9 +22,13 @@ cols:
 - name
 - tag
 - image_ref
+- display_registry
 
 # Included tables (joined, has_one, has_many) and columns
 include:
+  ext_management_system:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
@@ -32,14 +36,18 @@ include_for_find:
 # Order of columns (from all tables)
 col_order: 
 - name
+- ext_management_system.name
 - tag
 - image_ref
+- display_registry
 
 # Column titles, in order
 headers:
 - Name
+- Provider
 - Tag
 - Id
+- Image Registry
 
 # Condition(s) string for the SQL query
 conditions: 

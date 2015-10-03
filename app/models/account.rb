@@ -25,7 +25,7 @@ class Account < ActiveRecord::Base
 
       found = parent.accounts.find_by_name_and_accttype(nh[:name], typeName)
       found.nil? ? new_accts << nh : found.update_attributes(nh)
-      deletes.delete_if {|ele| ele[1] == nh[:name]}
+      deletes.delete_if { |ele| ele[1] == nh[:name] }
     end
 
     parent.accounts.create(new_accts)
@@ -81,54 +81,54 @@ class Account < ActiveRecord::Base
 
   def self.accttype_opposite(accttype)
     case accttype
-      when 'group' then 'user'
-      when 'user' then 'group'
+    when 'group' then 'user'
+    when 'user' then 'group'
     end
   end
 
   def accttype_opposite
-    Account.accttype_opposite(self.accttype)
+    Account.accttype_opposite(accttype)
   end
 
   def with_valid_account_type(valid_account_type, &block)
-    if self.accttype == valid_account_type
+    if accttype == valid_account_type
       block.call
     else
-      raise "Cannot call method '#{caller[0][/`.*'/][1..-2]}' on an Account of type '#{self.accttype}'"
+      raise "Cannot call method '#{caller[0][/`.*'/][1..-2]}' on an Account of type '#{accttype}'"
     end
   end
 
   # Relationship mapped methods
   def users
-    with_valid_account_type('group') { self.children }
+    with_valid_account_type('group') { children }
   end
 
   def add_user(owns)
-    with_valid_account_type('group') { self.set_child(owns) }
+    with_valid_account_type('group') { set_child(owns) }
   end
 
   def remove_user(owns)
-    with_valid_account_type('group') { self.remove_child(owns) }
+    with_valid_account_type('group') { remove_child(owns) }
   end
 
   def remove_all_users
-    with_valid_account_type('group') { self.remove_all_children(:of_type => self.class.name) }
+    with_valid_account_type('group') { remove_all_children(:of_type => self.class.name) }
   end
 
   def groups
-    with_valid_account_type('user') { self.parents }
+    with_valid_account_type('user') { parents }
   end
 
   def add_group(owner)
-    with_valid_account_type('user') { self.set_parent(owner) }
+    with_valid_account_type('user') { set_parent(owner) }
   end
 
   def remove_group(owner)
-    with_valid_account_type('user') { self.remove_parent(owner) }
+    with_valid_account_type('user') { remove_parent(owner) }
   end
 
   def remove_all_groups
-    with_valid_account_type('user') { self.remove_all_parents(:of_type => self.class.name) }
+    with_valid_account_type('user') { remove_all_parents(:of_type => self.class.name) }
   end
 
   # Type ambivalent relationship methods
@@ -136,18 +136,18 @@ class Account < ActiveRecord::Base
   # FIXME: Why not use .pluralize?
   #
   def members
-    self.send("#{self.accttype_opposite}s")
+    send("#{accttype_opposite}s")
   end
 
   def add_member(member)
-    self.send("add_#{self.accttype_opposite}", member)
+    send("add_#{accttype_opposite}", member)
   end
 
   def remove_member(member)
-    self.send("remove_#{self.accttype_opposite}", member)
+    send("remove_#{accttype_opposite}", member)
   end
 
   def remove_all_members
-    self.send("remove_all_#{self.accttype_opposite}s")
+    send("remove_all_#{accttype_opposite}s")
   end
 end

@@ -1,7 +1,6 @@
 require 'util/miq-xml'
 
 module MiqLinux
-    
   class OSInfo
     attr_reader :os, :networks
 
@@ -10,8 +9,8 @@ module MiqLinux
     DHCLIENTFILE = "/var/lib/dhclient/"
     DEBIANDHCLIENTFILE = "/var/lib/dhcp3/"
     DEBIANIFCFGILE = "/etc/network"
-    DISTRIBUTIONS = [ "mandriva", "mandrake", "mandrakelinux", "gentoo", "SuSE", "fedora", "redhat", "knoppix", "debian", "lsb", "distro" ]
-        
+    DISTRIBUTIONS = ["mandriva", "mandrake", "mandrakelinux", "gentoo", "SuSE", "fedora", "redhat", "knoppix", "debian", "lsb", "distro"]
+
     def initialize(fs)
       @fs = fs
       @os_type = "Linux"
@@ -23,10 +22,10 @@ module MiqLinux
       version_file = nil
       @networks = []
       @os = {}
-            
+
       DISTRIBUTIONS.each do |dist|
         release_file = File.join(ETC, dist + "-release")
-                
+
         if fs.fileExists?(release_file)
           @distribution = dist
           break
@@ -56,11 +55,11 @@ module MiqLinux
         @distribution = "CentOS" if @distribution == "redhat" && @description.include?("CentOS")
         @distribution = "rPath"  if @distribution == "distro"
       end
-            
-      if !@distribution
+
+      unless @distribution
         DISTRIBUTIONS.each do |distrib|
           version_file = File.join(ETC, distrib + "-release")
-                
+
           if fs.fileExists?(version_file)
             @distribution = distrib
             break
@@ -68,31 +67,31 @@ module MiqLinux
         end
         fs.fileOpen(version_file) { |fo| @description = fo.read.chomp } if @distribution
       end
-            
-      if !@distribution
-        read_file(fs,File.join(ETC, "issue")) do |line|
+
+      unless @distribution
+        read_file(fs, File.join(ETC, "issue")) do |line|
           case line
-            when /\s*Hercules\s*/
-              @distribution = "hercules"
-              @description =  "Hercules"
-              break
+          when /\s*Hercules\s*/
+            @distribution = "hercules"
+            @description =  "Hercules"
+            break
           end
         end
       end
 
-      @distribution = "" if !@distribution
-      @description  = "" if !@description
-      @description  = @description.gsub(/^"/,"").gsub(/"$/,"")
-            
-      [ "/etc/hostname", "/etc/HOSTNAME" ].each do |hnf|
-        next if !fs.fileExists?(hnf)
+      @distribution = "" unless @distribution
+      @description  = "" unless @description
+      @description  = @description.gsub(/^"/, "").gsub(/"$/, "")
+
+      ["/etc/hostname", "/etc/HOSTNAME"].each do |hnf|
+        next unless fs.fileExists?(hnf)
         fs.fileOpen(hnf) { |fo| @hostname = fo.read.chomp } if fs.fileExists?(hnf)
       end
-            
-      #return if @hostname
-            
-      [ "/etc/conf.d/hostname", "/etc/sysconfig/network" ].each do |hnf|
-        next if !fs.fileExists?(hnf)
+
+      # return if @hostname
+
+      ["/etc/conf.d/hostname", "/etc/sysconfig/network"].each do |hnf|
+        next unless fs.fileExists?(hnf)
         next if fs.fileDirectory?(hnf)
         hnfd = ""
         fs.fileOpen(hnf) { |fo| hnfd = fo.read }
@@ -104,13 +103,13 @@ module MiqLinux
         end
       end
 
-      @hostname = "" if !@hostname
+      @hostname = "" unless @hostname
       attrs[:hostname] = @hostname
 
       # Collect network settings
       case @distribution.downcase
       when "ubuntu" then networking_debian(fs, attrs)
-      when "redhat","fedora" then networking_redhat(fs, attrs)
+      when "redhat", "fedora" then networking_redhat(fs, attrs)
       when "hercules" then networking_hercules(fs, attrs)
       end
 
@@ -119,8 +118,7 @@ module MiqLinux
     end
 
     def networking_debian(fs, attrs)
-
-      read_file(fs,File.join(DEBIANIFCFGILE, "interfaces")) do |line|
+      read_file(fs, File.join(DEBIANIFCFGILE, "interfaces")) do |line|
         case line
         when /^\s*iface eth0 inet dhcp\s*(.*)$/ then attrs[:dhcp_enabled] = 1
         when /^\s*iface eth0 inet static\s*(.*)$/ then attrs[:dhcp_enabled] = 0
@@ -132,7 +130,7 @@ module MiqLinux
       end
 
       if attrs[:dhcp_enabled] == 1
-        read_file(fs,File.join(DEBIANDHCLIENTFILE, "dhclient.eth0.leases")) do |line|
+        read_file(fs, File.join(DEBIANDHCLIENTFILE, "dhclient.eth0.leases")) do |line|
           case line
           when /^\s*fixed-address\s*(.*)\;$/                 then attrs[:ipaddress] = $1
           when /^\s*option subnet-mask\s*(.*)\;$/            then attrs[:subnet_mask] = $1
@@ -148,12 +146,10 @@ module MiqLinux
 
       fix_attr_values(attrs)
       @networks << attrs
-
     end
 
     def networking_redhat(fs, attrs)
-
-      read_file(fs,File.join(IFCFGFILE, "ifcfg-eth0")) do |line|
+      read_file(fs, File.join(IFCFGFILE, "ifcfg-eth0")) do |line|
         case line
         when  /^\s*BOOTPROTO=dhcp\s*(.*)$/    then attrs[:dhcp_enabled] = 1
         when  /^\s*BOOTPROTO=static\s*(.*)$/  then attrs[:dhcp_enabled] = 0
@@ -169,7 +165,7 @@ module MiqLinux
       end
 
       if attrs[:dhcp_enabled] == 1
-        read_file(fs,File.join(DHCLIENTFILE, "dhclient-eth0.leases")) do |line|
+        read_file(fs, File.join(DHCLIENTFILE, "dhclient-eth0.leases")) do |line|
           case line
           when /^\s*fixed-address\s*(.*)\;$/                 then attrs[:ipaddress] = $1
           when /^\s*option subnet-mask\s*(.*)\;$/            then attrs[:subnet_mask] = $1
@@ -185,12 +181,10 @@ module MiqLinux
 
       fix_attr_values(attrs)
       @networks << attrs
-
     end
 
     def networking_hercules(fs, attrs)
-
-      read_file(fs,File.join(DEBIANIFCFGILE, "interfaces")) do |line|
+      read_file(fs, File.join(DEBIANIFCFGILE, "interfaces")) do |line|
         case line
         when /^\s*iface eth0 inet dhcp\s*(.*)$/ then attrs[:dhcp_enabled] = 1
         when /^\s*iface eth0 inet static\s*(.*)$/ then attrs[:dhcp_enabled] = 0
@@ -199,22 +193,21 @@ module MiqLinux
 
       fix_attr_values(attrs)
       @networks << attrs
-
     end
 
-    def toXml(doc=nil)
-      doc = MiqXml.createDoc(nil) if !doc
+    def toXml(doc = nil)
+      doc = MiqXml.createDoc(nil) unless doc
       doc.add_element(:os, @os)
       networksToXml(doc)
       doc
     end
 
-    def networksToXml(doc=nil)
-      doc = MiqXml.createDoc(nil) if !doc
+    def networksToXml(doc = nil)
+      doc = MiqXml.createDoc(nil) unless doc
       unless @networks.empty?
         node = doc.add_element(:networks)
         @networks.each do |n|
-          [:hwaddr, :network, :device, :broadcast].each {|key| n.delete(key)}
+          [:hwaddr, :network, :device, :broadcast].each { |key| n.delete(key) }
           node.add_element(:network, n)
         end
       end
@@ -226,13 +219,12 @@ module MiqLinux
         file_content = ""
         fs.fileOpen(filename) { |fo| file_content = fo.read }
         unless file_content.nil?
-          file_content.each_line {|line| yield(line.chomp)}
+          file_content.each_line { |line| yield(line.chomp) }
         end
       end
     end
 
     def fix_attr_values(attrs)
-
       # Clean the lease times and check they are in a reasonable range
       [:lease_obtained, :lease_expires].each do |t|
         if attrs[t] && attrs[t].to_i >= 0 && attrs[t].to_i < 0x80000000
@@ -241,11 +233,8 @@ module MiqLinux
           attrs.delete(t)
         end
       end
-             
-      attrs[:dns_server].gsub!(/(,)/){(' ')} unless attrs[:dns_server].nil?
 
+      attrs[:dns_server].gsub!(/(,)/) { (' ') } unless attrs[:dns_server].nil?
     end
-
   end # class OSInfo
-
 end # module MiqLinux

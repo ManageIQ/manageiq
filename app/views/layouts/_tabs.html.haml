@@ -41,4 +41,7 @@
       - if (@default_search && @default_search.name != @edit[:adv_search_applied][:name]) || !@default_search
         (#{link_to("clear", {:action => 'adv_search_clear'}, :method => :post, :class => 'active')})
     - else
-      = @title
+      - if @layout == "container_topology"
+        = ''
+      - else
+        = @title

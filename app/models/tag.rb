@@ -11,14 +11,14 @@ class Tag < ActiveRecord::Base
   def self.add(list, options = {})
     ns = Tag.get_namespace(options)
     Tag.parse(list).each do |name|
-      Tag.find_or_create_by_name(File.join(ns ,name))
+      Tag.find_or_create_by_name(File.join(ns, name))
     end
   end
 
   def self.remove(list, options = {})
     ns = Tag.get_namespace(options)
     Tag.parse(list).each do |name|
-      tag = Tag.find_by_name(File.join(ns ,name))
+      tag = Tag.find_by_name(File.join(ns, name))
       tag.destroy unless tag.nil?
     end
   end
@@ -42,7 +42,7 @@ class Tag < ActiveRecord::Base
     tag = find_by_name(File.join(ns, name))
     return 0 if tag.nil?
 
-    if olist.is_a?(MIQ_Report) # support for ruport
+    if olist.kind_of?(MIQ_Report) # support for ruport
       klass        = olist.db
       taggable_ids = olist.table.data.collect { |o| o.data["id"].to_i }
     else
@@ -60,10 +60,10 @@ class Tag < ActiveRecord::Base
       tag_names = []
 
       # first, pull out the quoted tags
-      list.gsub!(/\"(.*?)\"\s*/ ) { tag_names << $1; "" }
+      list.gsub!(/\"(.*?)\"\s*/) { tag_names << $1; "" }
 
       # then, replace all commas with a space
-      list.gsub!(/,/, " ")
+      list.tr!(',', " ")
 
       # then, get whatever's left
       tag_names.concat list.split(/\s/)
@@ -76,7 +76,7 @@ class Tag < ActiveRecord::Base
 
       return tag_names.uniq
     else
-      tag_names = list.collect {|tag| tag.nil? ? nil : tag.to_s}
+      tag_names = list.collect { |tag| tag.nil? ? nil : tag.to_s }
       return tag_names.compact
     end
   end

@@ -9,16 +9,17 @@
         %a{:href => "#"}
           = _('Server: %s') % appliance_name
 
-      - if eligible_groups.length > 1
+      - if current_user.miq_groups.length > 1
         %li.dropdown-submenu
           %a{:href => "#"}
             = _('Change Group:')
             %ul.dropdown-menu
-              - eligible_groups.each do |group, id|
+              - current_user.miq_groups.sort_by_desc.each do |group|
                 %li
                   %a{:title => _("Select to change to another Group"), :href => "#",
-                        :onclick => "miqSparkle(true);miqToggleUserOptions(#{id})"}
-                    = id == current_groupid ? "#{group} (#{_('Current Group')})" : group
+                        :onclick => "miqSparkle(true);miqToggleUserOptions(#{group.id})"}
+                    = group.description
+                    = "(#{_('Current Group')})" if group == current_group
       - else
         %li.disabled
           %a{:href => "#"}

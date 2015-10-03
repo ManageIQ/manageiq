@@ -22,9 +22,9 @@ module ApplianceConsole
       just_ask(prompt, nil, nil, 'a valid URI') do |q|
         q.validate = lambda do |a|
           # Convert all backslashes in the URI to forward slashes and strip whitespace
-          a.gsub!('\\', '/')
+          a.tr!('\\', '/')
           a.strip!
-          scheme, _, host, _, _, path, _, _, _ = URI.split(URI.encode(a))
+          scheme, _, host, _, _, path, = URI.split(URI.encode(a))
           # validate it has a hostname/ip and a share
           scheme == expected_scheme && (host.to_s =~ HOSTNAME_REGEXP || host.to_s =~ IP_REGEXP) && path.to_s.length > 0
         end
@@ -149,7 +149,7 @@ module ApplianceConsole
     # ensure default is a string
     def default_to_index(default, options)
       return unless default
-      default_index = if options.is_a?(Hash)
+      default_index = if options.kind_of?(Hash)
                         options.values.index(default) || options.keys.index(default)
                       else
                         options.index(default)

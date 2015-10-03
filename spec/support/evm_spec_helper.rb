@@ -10,7 +10,6 @@ $log.level = env_level
 Rails.logger.level = env_level
 
 module EvmSpecHelper
-
   # Clear all EVM caches
   def self.clear_caches
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
@@ -39,27 +38,42 @@ module EvmSpecHelper
     instance.instance_variable_set(ivar, nil)
   end
 
-  def self.local_guid_miq_server_zone
-    guid, server, zone = remote_guid_miq_server_zone
-    MiqServer.stub(:my_guid).and_return(guid)
+  def self.create_root_tenant
+    Tenant.seed
+  end
 
-    return guid, server, zone
+  def self.local_miq_server(attrs = {})
+    remote_miq_server(attrs).tap do |server|
+      MiqServer.stub(:my_guid).and_return(server.guid)
+      MiqServer.my_server_clear_cache
+    end
+  end
+
+  def self.local_guid_miq_server_zone
+    server = local_miq_server
+    [server.guid, server, server.zone]
   end
 
   class << self
     alias_method :create_guid_miq_server_zone, :local_guid_miq_server_zone
   end
 
+  def self.remote_miq_server(attrs = {})
+    create_root_tenant
+
+    server = FactoryGirl.create(:miq_server, attrs)
+    server
+  end
+
   def self.remote_guid_miq_server_zone
-    Tenant.seed
-    guid   = MiqUUID.new_guid
-    zone   = FactoryGirl.create(:zone)
-    server = FactoryGirl.create(:miq_server_master, :guid => guid, :zone => zone)
+    server = remote_miq_server
+    [server.guid, server, server.zone]
+  end
 
-    MiqServer.my_server_clear_cache
-    zone.clear_association_cache
-
-    return guid, server, zone
+  def self.specific_product_features(*features)
+    features.flatten!
+    seed_specific_product_features(*features)
+    MiqProductFeature.find_all_by_identifier(features)
   end
 
   def self.seed_specific_product_features(*features)
@@ -78,33 +92,19 @@ module EvmSpecHelper
   private_class_method :filter_specific_features
 
   def self.seed_admin_user_and_friends
-    guid, server, zone = create_guid_miq_server_zone
+    create_guid_miq_server_zone
 
-    admin_role = FactoryGirl.create(:miq_user_role,
-      #:name       => "EvmRole-administrator",
-      :name       => "EvmRole-super_administrator",
-      :read_only  => true,
-      :settings   => nil
-    )
-
-    admin_group = FactoryGirl.create(:miq_group,
-      :description   => "EvmGroup-super_administrator",
-      :miq_user_role => admin_role
-    )
-
-    admin_user = FactoryGirl.create(:user,
-      :name           => "Administrator",
-      :email          => "admin@example.com",
-      :password       => "smartvm",
-      :userid         => "admin",
-      :settings       => {"Setting1"  => 1, "Setting2"  => 2, "Setting3"  => 3 },
-      :filters        => {"Filter1"   => 1, "Filter2"   => 2, "Filter3"   => 3 },
-      :miq_groups     => [admin_group],
-      :first_name     => "Bob",
-      :last_name      => "Smith"
-    )
-
-    return guid, server, zone, admin_user, admin_group, admin_role
+    FactoryGirl.create(:user,
+                       :name       => "Administrator",
+                       :email      => "admin@example.com",
+                       :password   => "smartvm",
+                       :userid     => "admin",
+                       :settings   => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
+                       :filters    => {"Filter1" => 1, "Filter2" => 2, "Filter3" => 3},
+                       :first_name => "Bob",
+                       :last_name  => "Smith",
+                       :role       => "super_administrator",
+                      )
   end
 
   def self.ruby_object_usage
@@ -115,21 +115,17 @@ module EvmSpecHelper
     types
   end
 
-  def self.log_ruby_object_usage(top=20)
+  def self.log_ruby_object_usage(top = 20)
     if top > 0
       types = ruby_object_usage
-      puts("Ruby Object Usage: #{types.sort_by { |klass, h| h[:count] }.reverse[0,top].inspect}")
+      puts("Ruby Object Usage: #{types.sort_by { |_klass, h| h[:count] }.reverse[0, top].inspect}")
     end
   end
 
-  def self.stub_qpid_natives
-    require 'openstack/amqp/openstack_qpid_connection'
-    OpenstackQpidConnection.stub(:available?).and_return(true)
-    qsession = RSpec::Mocks::Mock.new("qpid session")
-    qconnection = RSpec::Mocks::Mock.new("qpid connection", :create_session => qsession)
-    OpenstackQpidConnection.any_instance.stub(:create_connection).and_return(qconnection)
-
-    return qsession, qconnection
+  def self.stub_amqp_support
+    require 'openstack/amqp/openstack_rabbit_event_monitor'
+    OpenstackRabbitEventMonitor.stub(:available?).and_return(true)
+    OpenstackRabbitEventMonitor.stub(:test_connection).and_return(true)
   end
 
   def self.import_yaml_model(dirname, domain, attrs = {})

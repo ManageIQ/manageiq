@@ -5,8 +5,8 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   belongs_to :cloud_tenant
 
   def provider_object(connection = nil)
-    connection ||= self.ext_management_system.connect
-    connection.servers.get(self.ems_ref)
+    connection ||= ext_management_system.connect
+    connection.servers.get(ems_ref)
   end
 
   def self.calculate_power_state(raw_power_state)
@@ -48,7 +48,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
 
   def remove_evm_snapshot(snapshot_ci_id)
     # need vm_ci and os_id of snapshot
-    unless (snapshot_ci = ::Snapshot.where(:id => snapshot_ci_id).first)
+    unless (snapshot_ci = ::Snapshot.find_by(:id => snapshot_ci_id))
       _log.warn "snapshot with id #{snapshot_ci_id}, not found"
       return
     end

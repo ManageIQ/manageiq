@@ -6,17 +6,17 @@ module RetirementMixin
   ERROR_RETIRING = 'error'
 
   module ClassMethods
-    def retire(ids, options={})
+    def retire(ids, options = {})
       ids.each do |id|
-        object = self.find_by_id(id)
+        object = find_by_id(id)
         object.retire(options) if object.respond_to?(:retire)
       end
-      MiqQueue.put(:class_name => self.base_model.name, :method_name => "retirement_check")
+      MiqQueue.put(:class_name => base_model.name, :method_name => "retirement_check")
     end
   end
 
   def retirement_warn=(days)
-    if self.retirement_warn != days
+    if retirement_warn != days
       self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
       write_attribute(:retirement_warn, days)
       self.retirement_requester = nil
@@ -24,19 +24,19 @@ module RetirementMixin
   end
 
   def retirement_warned?
-    !self.retirement_last_warn.nil?
+    !retirement_last_warn.nil?
   end
 
   def retirement_warning_due?
-    self.retirement_warn && self.retires_on && self.retirement_warn.days.from_now.to_date >= self.retires_on.to_date
+    retirement_warn && retires_on && retirement_warn.days.from_now.to_date >= retires_on.to_date
   end
 
   def retirement_due?
-    self.retires_on && (Date.today >= retires_on_date)
+    retires_on && (Date.today >= retires_on_date)
   end
 
   def retires_on=(timestamp)
-    if self.retires_on != timestamp
+    if retires_on != timestamp
       self.retired              = false if timestamp.nil? || (timestamp.to_date > Date.today)
       self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
       write_attribute(:retires_on, timestamp)
@@ -45,7 +45,7 @@ module RetirementMixin
   end
 
   def retires_on_date
-    self.retires_on.nil? ? nil : self.retires_on.to_date
+    retires_on.nil? ? nil : retires_on.to_date
   end
 
   def retire(options = {})
@@ -70,7 +70,7 @@ module RetirementMixin
       warn = options[:warn]
       self.retirement_warn = warn
       if warn
-        message += " has a value for retirement warning days of: [#{self.retirement_warn}]"
+        message += " has a value for retirement warning days of: [#{retirement_warn}]"
       else
         message += " has no value for retirement warning days"
       end
@@ -106,7 +106,7 @@ module RetirementMixin
   def retire_now(requester = nil)
     if retired
       return if retired_validated?
-      _log.info("#{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
+      _log.info("#{retirement_object_title}: [#{name}], Retires On Date: [#{retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
     else
       update_attributes(:retirement_requester => requester)
       event_name = "request_#{retirement_event_prefix}_retire"

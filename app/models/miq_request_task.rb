@@ -8,6 +8,7 @@ class MiqRequestTask < ActiveRecord::Base
   belongs_to :destination,       :polymorphic => true
   has_many   :miq_request_tasks, :dependent   => :destroy
   belongs_to :miq_request_task
+  belongs_to :tenant
 
   serialize   :phase_context, Hash
   serialize   :options,       Hash
@@ -17,9 +18,10 @@ class MiqRequestTask < ActiveRecord::Base
 
   delegate :request_class, :task_description, :to => :class
 
-  validates_inclusion_of :status, :in => %w{ Ok Warn Error Timeout }
+  validates_inclusion_of :status, :in => %w( Ok Warn Error Timeout )
 
   include MiqRequestMixin
+  include TenancyMixin
 
   def approved?
     if miq_request.class.name.include?('Template') && miq_request_task
@@ -87,9 +89,9 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def self.request_class
-    if self.is_or_subclass_of?(MiqProvision)
+    if self <= MiqProvision
       MiqProvisionRequest
-    elsif self.is_or_subclass_of?(MiqHostProvision)
+    elsif self <= MiqHostProvision
       MiqHostProvisionRequest
     else
       name.underscore.gsub(/_task$/, "_request").camelize.constantize

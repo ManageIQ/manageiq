@@ -212,7 +212,7 @@ module XFS
     end
 
     def inode_format
-      if @format    == XFS_DINODE_FMT_LOCAL
+      if @format == XFS_DINODE_FMT_LOCAL
         data_method    = :local
       elsif @format == XFS_DINODE_FMT_EXTENTS
         data_method    = :extents
@@ -255,7 +255,7 @@ module XFS
              when IO::SEEK_SET then offset
              when IO::SEEK_CUR then @pos + offset
              when IO::SEEK_END then @length - offset
-      end
+             end
       @pos = 0           if @pos < 0
       @pos = @length if @pos > @length
       @pos
@@ -323,7 +323,7 @@ module XFS
     end
 
     def user_permissions
-      @user_permissions  ||= @in['file_mode'] & MSK_PERM_USER
+      @user_permissions ||= @in['file_mode'] & MSK_PERM_USER
     end
 
     # ////////////////////////////////////////////////////////////////////////////
@@ -334,7 +334,7 @@ module XFS
     end
 
     def mode_set?(bit)
-      (@mode  & bit) == bit
+      (@mode & bit) == bit
     end
 
     def flag_set?(bit)
@@ -422,7 +422,7 @@ module XFS
     def expected_blocks
       @expected_blocks ||= begin
         quotient, remainder = @length.divmod(@sb.block_size)
-        quotient + ( (remainder > 0) ? 1 : 0)
+        quotient + ((remainder > 0) ? 1 : 0)
       end
     end
 
@@ -489,7 +489,7 @@ module XFS
 
     def extent_to_block_pointers(extent, bplen)
       block_pointers = []
-# Fill in the missing blocks with 0-blocks
+      # Fill in the missing blocks with 0-blocks
       block_pointers << 0 while (bplen + block_pointers.length) < extent.start_offset
       1.upto(extent.block_count) { |i| block_pointers << extent.start_block + i - 1 }
       @block_offset += extent.block_count

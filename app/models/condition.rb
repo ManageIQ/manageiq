@@ -1,12 +1,12 @@
 class Condition < ActiveRecord::Base
-  default_scope { where self.conditions_for_my_region_default_scope }
+  default_scope { where conditions_for_my_region_default_scope }
 
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
 
   validates_presence_of     :name, :description, :guid, :modifier, :expression, :towhat
   validates_uniqueness_of   :name, :description, :guid
-  validates_inclusion_of    :modifier, :in => %w{ allow deny }
+  validates_inclusion_of    :modifier, :in => %w( allow deny )
 
   acts_as_miq_taggable
   acts_as_miq_set_member
@@ -21,9 +21,12 @@ class Condition < ActiveRecord::Base
 
   attr_accessor :reserved
 
-  def applies_to?(rec, inputs={})
-    return false if !self.towhat.nil? && rec.class.base_model.name != self.towhat
-    return true  if self.applies_to_exp.nil?
+  def applies_to?(rec, inputs = {})
+    rec_model = rec.class.base_model.name
+    rec_model = "Vm" if rec_model.downcase.match("template")
+
+    return false if towhat && rec_model != towhat
+    return true  if applies_to_exp.nil?
 
     Condition.evaluate(self, rec, inputs, :applies_to_exp)
   end
@@ -32,10 +35,10 @@ class Condition < ActiveRecord::Base
     pluck(:expression)
   end
 
-  def self.evaluate(cond, rec, inputs={}, attr=:expression)
+  def self.evaluate(cond, rec, inputs = {}, attr = :expression)
     expression = cond.send(attr)
     name = cond.respond_to?(:description) ? cond.description : cond.respond_to?(:name) ? cond.name : nil
-    if expression.is_a?(MiqExpression)
+    if expression.kind_of?(MiqExpression)
       mode = "object"
     else
       mode = expression["mode"]
@@ -55,14 +58,14 @@ class Condition < ActiveRecord::Base
       end
 
       result = expression["include"] != "any"
-      expression["tag"].split.each {|tag|
+      expression["tag"].split.each do|tag|
         if rec.is_tagged_with?(tag, :ns => expression["ns"])
           result = true if expression["include"] == "any"
           result = false if expression["include"] == "none"
         else
           result = false if expression["include"] == "all"
         end
-      }
+      end
     when "tag_expr", "tag_expr_v2", "object"
       case mode
       when "tag_expr"
@@ -78,7 +81,7 @@ class Condition < ActiveRecord::Base
       subst(expr, rec, inputs)
 
       MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression after substitution: [#{expr.gsub(/\n/, " ")}]")
-      result = self.do_eval(expr)
+      result = do_eval(expr)
       MiqPolicy.logger.info("MIQ(condition-eval): Name: #{name}, Expression evaluation result: [#{result}]")
     end
     result
@@ -97,7 +100,7 @@ class Condition < ActiveRecord::Base
   def self.subst(expr, rec, inputs)
     findexp = /<find>(.+?)<\/find>/im
     if expr =~ findexp
-      expr = expr.gsub!(findexp) {|s| _subst_find(rec, inputs, $1.strip)}
+      expr = expr.gsub!(findexp) { |_s| _subst_find(rec, inputs, $1.strip) }
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression after substitution: [#{expr}]")
     end
 
@@ -106,16 +109,16 @@ class Condition < ActiveRecord::Base
 
     # <mode>/virtual/operating_system/product_name</mode>
     # <mode ref=host>/managed/environment/prod</mode>
-    expr.gsub!(/<(value|exist|count|registry)([^>]*)>([^<]+)<\/(value|exist|count|registry)>/im) {|s| _subst(rec, inputs, $2.strip, $3.strip, $1.strip)}
+    expr.gsub!(/<(value|exist|count|registry)([^>]*)>([^<]+)<\/(value|exist|count|registry)>/im) { |_s| _subst(rec, inputs, $2.strip, $3.strip, $1.strip) }
 
     # <mode /virtual/operating_system/product_name />
-    expr.gsub!(/<(value|exist|count|registry)([^>]+)\/>/im) {|s| _subst(rec, inputs, nil, $2.strip, $1.strip)}
+    expr.gsub!(/<(value|exist|count|registry)([^>]+)\/>/im) { |_s| _subst(rec, inputs, nil, $2.strip, $1.strip) }
 
     expr
   end
 
-  def self._subst(rec, inputs, opts, tag, mode)
-    ohash, ref, _object = self.options2hash(opts, rec)
+  def self._subst(rec, _inputs, opts, tag, mode)
+    ohash, ref, _object = options2hash(opts, rec)
 
     case mode.downcase
     when "exist"
@@ -130,7 +133,7 @@ class Condition < ActiveRecord::Base
     when "count"
       ref.nil? ? value = 0 : value = ref.tag_list(:ns => tag).length
     when "registry"
-      ref.nil? ? value = "" : value = self.registry_data(ref, tag, ohash)
+      ref.nil? ? value = "" : value = registry_data(ref, tag, ohash)
       value = MiqExpression.quote(value, ohash[:type] || "string")
     end
     value
@@ -144,14 +147,14 @@ class Condition < ActiveRecord::Base
 
     result = []
     result = list if methods.empty?
-    list = [list] unless list.is_a?(Array)
-    list.each {|obj|
+    list = [list] unless list.kind_of?(Array)
+    list.each do|obj|
       result.concat(collect_children(obj, methods)) unless methods.empty?
-    }
+    end
     result
   end
 
-  def self._subst_find(rec, inputs, expr)
+  def self._subst_find(rec, _inputs, expr)
     MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression before substitution: [#{expr}]")
     searchexp = /<search>(.+)<\/search>/im
     expr =~ searchexp
@@ -160,7 +163,7 @@ class Condition < ActiveRecord::Base
 
     listexp = /<value([^>]*)>(.+)<\/value>/im
     search =~ listexp
-    opts, ref, object = self.options2hash($1, rec)
+    opts, ref, object = options2hash($1, rec)
     methods = $2.split("/")
     methods.shift
     methods.shift
@@ -169,12 +172,12 @@ class Condition < ActiveRecord::Base
 
     return false if l.empty?
 
-    list = l.collect {|obj|
+    list = l.collect do|obj|
       value = MiqExpression.quote(obj.send(attr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = search.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
-      obj if self.do_eval(e)
-    }.compact
+      obj if do_eval(e)
+    end.compact
 
     MiqPolicy.logger.debug("MIQ(condition-_subst_find): Search Expression returned: [#{list.length}] records")
 
@@ -203,18 +206,18 @@ class Condition < ActiveRecord::Base
     checkattr = tag.split("/").last.strip
 
     result = true
-    list.each {|obj|
-      opts, ref, object = self.options2hash(raw_opts, obj)
+    list.each do|obj|
+      opts, ref, object = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
 
-      result = self.do_eval(e)
+      result = do_eval(e)
 
       return true if result && checkmode == "any"
       return false if !result && checkmode == "all"
-    }
+    end
     MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression result: [#{result}]")
     result
   end
@@ -224,10 +227,10 @@ class Condition < ActiveRecord::Base
     ohash = {}
     unless opts.blank?
       val = nil
-      opts.split(",").each {|o|
+      opts.split(",").each do|o|
         attr, val = o.split("=")
         ohash[attr.strip.downcase.to_sym] = val.strip.downcase
-      }
+      end
       if ohash[:ref] != rec.class.to_s.downcase
         ref = rec.send(val) if val && rec.respond_to?(val)
       end
@@ -258,13 +261,13 @@ class Condition < ActiveRecord::Base
   end
 
   def export_to_array
-    h = self.attributes
+    h = attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    return [ self.class.to_s => h ]
+    [self.class.to_s => h]
   end
 
-  def self.import_from_hash(condition, options={})
-    status = {:class => self.name, :description => condition["description"]}
+  def self.import_from_hash(condition, options = {})
+    status = {:class => name, :description => condition["description"]}
     c = Condition.find_by_guid(condition["guid"])
     msg_pfx = "Importing Condition: guid=[#{condition["guid"]}] description=[#{condition["description"]}]"
 

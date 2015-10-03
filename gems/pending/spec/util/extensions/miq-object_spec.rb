@@ -43,9 +43,9 @@ describe Object do
     end
 
     it "with invalid" do
-      lambda { 10.deep_send }.should raise_error(ArgumentError)
-      lambda { 10.deep_send(nil) }.should raise_error(ArgumentError)
-      lambda { 10.deep_send("") }.should raise_error(ArgumentError)
+      -> { 10.deep_send }.should raise_error(ArgumentError)
+      -> { 10.deep_send(nil) }.should raise_error(ArgumentError)
+      -> { 10.deep_send("") }.should raise_error(ArgumentError)
     end
 
     it "does not damage args" do

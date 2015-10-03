@@ -89,15 +89,15 @@ describe ApiController do
       run_get tags_url(tag.id), :attributes => "categorization"
 
       expect_single_resource_query(
-       "href"           => tags_url(tag.id),
-       "id"             => tag.id,
-       "name"           => tag.name,
-       "categorization" => {
-         "name"         => tag.classification.name,
-         "description"  => tag.classification.description,
-         "display_name" => "#{tag.category.description}: #{tag.classification.description}",
-         "category"     => {"name" => tag.category.name, "description" => tag.category.description}
-       }
+        "href"           => tags_url(tag.id),
+        "id"             => tag.id,
+        "name"           => tag.name,
+        "categorization" => {
+          "name"         => tag.classification.name,
+          "description"  => tag.classification.description,
+          "display_name" => "#{tag.category.description}: #{tag.classification.description}",
+          "category"     => {"name" => tag.category.name, "description" => tag.category.description}
+        }
       )
     end
 

@@ -8,7 +8,7 @@ module ManageIQ::Providers
     include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
     def self.ems_inv_to_hashes(ems, options = nil)
-      self.new(ems, options).ems_inv_to_hashes
+      new(ems, options).ems_inv_to_hashes
     end
 
     def initialize(ems, options = nil)
@@ -63,25 +63,25 @@ module ManageIQ::Providers
     private
 
     def servers
-      @servers ||= @connection.servers_for_accessible_tenants
+      @servers ||= @connection.handled_list(:servers)
     end
 
     def security_groups
-      @security_groups ||= @network_service.security_groups_for_accessible_tenants
+      @security_groups ||= @network_service.handled_list(:security_groups)
     end
 
     def networks
-      @networks ||= @network_service.networks_for_accessible_tenants
+      @networks ||= @network_service.handled_list(:networks)
     end
 
     def volumes
       # TODO: support volumes through :nova as well?
       return [] unless @volume_service.name == :cinder
-      @volumes ||= @volume_service.volumes_for_accessible_tenants
+      @volumes ||= @volume_service.handled_list(:volumes)
     end
 
     def get_flavors
-      flavors = @connection.flavors_for_accessible_tenants
+      flavors = @connection.handled_list(:flavors)
       process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
     end
 
@@ -99,7 +99,7 @@ module ManageIQ::Providers
     end
 
     def get_tenants
-      @tenants = @os_handle.accessible_tenants.select {|t| t.name != "services" }
+      @tenants = @os_handle.accessible_tenants.select { |t| t.name != "services" }
       process_collection(@tenants, :cloud_tenants) { |tenant| parse_tenant(tenant) }
     end
 
@@ -112,7 +112,7 @@ module ManageIQ::Providers
     end
 
     def get_key_pairs
-      kps = @connection.key_pairs
+      kps = @connection.handled_list(:key_pairs)
       process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
     end
 
@@ -149,9 +149,9 @@ module ManageIQ::Providers
     end
 
     def get_snapshots
-      # TODO: support snapshots through :nova as well?
       return unless @volume_service.name == :cinder
-      process_collection(@volume_service.snapshots_for_accessible_tenants,
+      process_collection(@volume_service.handled_list(:list_snapshots_detailed,
+                                                      :__request_body_index => "snapshots"),
                          :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
     end
 
@@ -166,12 +166,12 @@ module ManageIQ::Providers
     end
 
     def floating_ips_neutron
-      @network_service.floating_ips
+      @network_service.handled_list(:floating_ips)
     end
 
     # maintained for legacy nova network support
     def floating_ips_nova
-      @network_service.addresses_for_accessible_tenants
+      @connection.handled_list(:addresses)
     end
 
     def link_vm_genealogy
@@ -198,15 +198,15 @@ module ManageIQ::Providers
       uid = flavor.id
 
       new_result = {
-        :type    => "ManageIQ::Providers::Openstack::CloudManager::Flavor",
-        :ems_ref => uid,
-        :name    => flavor.name,
-        :enabled => !flavor.disabled,
-        :cpus    => flavor.vcpus,
-        :memory  => flavor.ram.megabytes,
-
+        :type           => "ManageIQ::Providers::Openstack::CloudManager::Flavor",
+        :ems_ref        => uid,
+        :name           => flavor.name,
+        :enabled        => !flavor.disabled,
+        :cpus           => flavor.vcpus,
+        :memory         => flavor.ram.megabytes,
+        :disk_size      => flavor.disk.to_i.gigabytes,
+        :disk_count     => flavor.disk.to_i.gigabytes > 0 ? 1 : 0,
         # Extra keys
-        :root_disk      => flavor.disk.to_i.gigabytes,
         :ephemeral_disk => flavor.ephemeral.to_i.gigabytes,
         :swap_disk      => flavor.swap.to_i.megabytes
       }
@@ -450,20 +450,20 @@ module ManageIQ::Providers
       parent_image_uid = server.image["id"]
 
       new_result = {
-        :type             => "ManageIQ::Providers::Openstack::CloudManager::Vm",
-        :uid_ems          => uid,
-        :ems_ref          => uid,
-        :name             => server.name,
-        :vendor           => "openstack",
-        :raw_power_state  => raw_power_state,
-        :connection_state => "connected",
+        :type                => "ManageIQ::Providers::Openstack::CloudManager::Vm",
+        :uid_ems             => uid,
+        :ems_ref             => uid,
+        :name                => server.name,
+        :vendor              => "openstack",
+        :raw_power_state     => raw_power_state,
+        :connection_state    => "connected",
 
-        :hardware => {
+        :hardware            => {
           :numvcpus         => flavor[:cpus],
           :cores_per_socket => 1,
           :logical_cpus     => flavor[:cpus],
           :memory_cpu       => flavor[:memory] / (1024 * 1024), # memory_cpu is in megabytes
-          :disk_capacity    => flavor[:root_disk] + flavor[:ephemeral_disk] + flavor[:swap_disk],
+          :disk_capacity    => flavor[:disk_size] + flavor[:ephemeral_disk] + flavor[:swap_disk],
           :disks            => [], # Filled in later conditionally on flavor
           :networks         => [], # Filled in later conditionally on what's available
         },
@@ -484,15 +484,14 @@ module ManageIQ::Providers
       disks = new_result[:hardware][:disks]
       dev = "vda"
 
-      # TODO: flavor[:root_disk] == 0 should take root disk size from image size.
-      if (sz = flavor[:root_disk]) == 0
+      if (sz = flavor[:disk_size]) == 0
         sz = 1.gigabytes
       end
       add_instance_disk(disks, sz, dev.dup,       "Root disk")
       sz = flavor[:ephemeral_disk]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk") unless sz.zero?
+      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk")
       sz = flavor[:swap_disk]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")      unless sz.zero?
+      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")
 
       return uid, new_result
     end
@@ -551,7 +550,6 @@ module ManageIQ::Providers
 
     def clean_up_extra_flavor_keys
       @data[:flavors].each do |f|
-        f.delete(:root_disk)
         f.delete(:ephemeral_disk)
         f.delete(:swap_disk)
       end

@@ -1,5 +1,4 @@
 module FlavorHelper::TextualSummary
-
   #
   # Groups
   #
@@ -31,7 +30,7 @@ module FlavorHelper::TextualSummary
   #
 
   def textual_memory
-    {:label => "Memory", :value => @record.memory ? number_to_human_size(@record.memory, :precision=>1) : ""}
+    @record.memory && number_to_human_size(@record.memory, :precision => 1)
   end
 
   def textual_cpus
@@ -68,16 +67,15 @@ module FlavorHelper::TextualSummary
   end
 
   def textual_cloud_subnet_required
-    return nil if @record.cloud_subnet_required.nil?
-    {:label => "Cloud Subnet Required", :value => @record.cloud_subnet_required?}
+    @record.cloud_subnet_required?
   end
 
   def textual_ems_cloud
-    textual_link(@record.ext_management_system, :as => EmsCloud)
+    textual_link(@record.ext_management_system)
   end
 
   def textual_instances
-    label = ui_lookup(:tables=>"vm_cloud")
+    label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")

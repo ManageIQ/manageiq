@@ -5,7 +5,7 @@ module ContainerNodeHelper::TextualSummary
 
   def textual_group_properties
     %i(name creation_timestamp resource_version num_cpu_cores memory
-       identity_system identity_machine identity_infra runtime_version
+       max_container_groups identity_system identity_machine identity_infra runtime_version
        kubelet_version proxy_version os_distribution kernel_version)
   end
 
@@ -37,15 +37,15 @@ module ContainerNodeHelper::TextualSummary
   #
 
   def textual_name
-    {:label => "Name", :value => @record.name}
+    @record.name
   end
 
   def textual_creation_timestamp
-    {:label => "Creation Timestamp", :value => format_timezone(@record.creation_timestamp)}
+    format_timezone(@record.creation_timestamp)
   end
 
   def textual_resource_version
-    {:label => "Resource Version", :value => @record.resource_version}
+    @record.resource_version
   end
 
   def textual_num_cpu_cores
@@ -63,6 +63,11 @@ module ContainerNodeHelper::TextualSummary
     {:label => "Memory", :value => memory}
   end
 
+  def textual_max_container_groups
+    {:label => "Max Pods Capacity",
+     :value => @record.max_container_groups.nil? ? "N/A" : @record.max_container_groups}
+  end
+
   def textual_identity_system
     {:label => "System BIOS UUID",
      :value => @record.identity_system.nil? ? "N/A" : @record.identity_system}
@@ -75,7 +80,7 @@ module ContainerNodeHelper::TextualSummary
 
   def textual_identity_infra
     {:label => "Infrastructure Machine ID", :value =>
-      @record.identity_infra.nil?  ? "N/A" : @record.identity_infra}
+      @record.identity_infra.nil? ? "N/A" : @record.identity_infra}
   end
 
   def textual_lives_on
@@ -96,18 +101,15 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_runtime_version
-    {:label => "Runtime Version", :value =>
-        @record.container_runtime_version.nil?  ? "N/A" : @record.container_runtime_version}
+    @record.container_runtime_version || "N/A"
   end
 
   def textual_kubelet_version
-    {:label => "Kubelet Version", :value =>
-        @record.kubernetes_kubelet_version.nil?  ? "N/A" : @record.kubernetes_kubelet_version}
+    @record.kubernetes_kubelet_version || "N/A"
   end
 
   def textual_proxy_version
-    {:label => "Proxy Version", :value =>
-        @record.kubernetes_proxy_version.nil?  ? "N/A" : @record.kubernetes_proxy_version}
+    @record.kubernetes_proxy_version || "N/A"
   end
 
   def textual_os_distribution
@@ -120,11 +122,6 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_kernel_version
-    if @record.computer_system.nil? || @record.computer_system.operating_system.nil?
-      version = "N/A"
-    else
-      version = @record.computer_system.operating_system.kernel_version
-    end
-    {:label => "Kernel Version", :value => version}
+    @record.computer_system.try(:operating_system).try(:kernel_version) || "N/A"
   end
 end

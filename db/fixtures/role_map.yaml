@@ -11,3 +11,5 @@
   - EvmGroup-desktop: desktop
   - EvmGroup-user_self_service: user_self_service
   - EvmGroup-user_limited_self_service: user_limited_self_service
+  - EvmGroup-tenant_administrator: tenant_administrator
+  - EvmGroup-tenant_quota_administrator: tenant_quota_administrator

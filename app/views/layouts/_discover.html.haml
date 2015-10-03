@@ -1,60 +1,63 @@
 - url = url_for :action => 'discover_field_changed'
 = render :partial => 'layouts/flash_msg'
-= form_tag({:action => 'discover'}, :id => 'discover_form') do
-  %h3= _("Discover")
-  %table.style1
-    - i = 0
-    - while i < @discover_type.length
-      %tr
-        - if @discover_type.length == 1
-          %td.key
-            = check_box_tag("discover_type_#{@discover_type[i]}",
-                            "1",
-                            true,
-                            :id       => "discover_type_#{@discover_type[i]}",
-                            :disabled => "disabled")
-        - else
-          %td.key
-            = check_box_tag("discover_type_#{@discover_type[i]}",
-                            "1",
-                            @discover_type_checked.include?(@discover_type[i]),
-                            "data-miq_observe_checkbox" => {:url => url}.to_json)
-        %td= h(Dictionary.gettext(@discover_type[i], :type     => :discover_types,
-                                                      :notfound => :titleize))
-      - i += 1
+= form_tag({:action => 'discover'}, :id => 'discover_form', :class => "form-horizontal") do
+  %h3
+    = _("Discover")
+  - i = 0
+  - while i < @discover_type.length
+    .form-group
+      - if @discover_type.length == 1
+        %label.col-md-2.control-label
+          = check_box_tag("discover_type_#{@discover_type[i]}",
+                          "1",
+                          true,
+                          :id       => "discover_type_#{@discover_type[i]}",
+                          :disabled => "disabled")
+      - else
+        %label.col-md-2.control-label
+          = check_box_tag("discover_type_#{@discover_type[i]}",
+                          "1",
+                          @discover_type_checked.include?(@discover_type[i]),
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+      .col-md-8
+        = h(Dictionary.gettext(@discover_type[i], :type     => :discover_types,
+                                                  :notfound => :titleize))
+    - i += 1
   %hr
   #discover_credentials{:style => ("display:none" unless @discover_type_checked.include?("ipmi"))}
     = render :partial => "layouts/discover_credentials",
-             :locals  => {:label => "IPMI Credentials"}
-  %h3= _("Subnet Range")
-  %table.style1
-    %tr
-      %td.key= _("From Address")
-      %td
-        - %w(first second third fourth).each_with_index do |order, index|
-          = text_field_tag("from_#{order}",
-                           @from[order.to_sym],
-                           :size              => "3",
-                           :maxlength         => 3,
-                           "data-miq_focus"   => (index == 0),
-                           "data-miq_observe" => {:interval => '.5',
-                                                  :url      => url}.to_json)
-    %tr
-      %td.key= _("To Address")
-      %td
-        - %w(first second third).each do |order|
-          = text_field('to', order,
-                       :readonly  => "readonly",
-                       :size      => "3",
-                       :maxlength => 3,
-                       :value     => @to[order.to_sym],
-                       :disabled  => "disabled")
-        = text_field_tag("to_fourth",
-                         @to[:fourth],
+             :locals  => {:label => _("IPMI Credentials")}
+  %h3
+    = _("Subnet Range")
+  .form-group
+    %label.col-md-2.control-label
+      = _("From Address")
+    .col-md-8
+      - %w(first second third fourth).each_with_index do |order, index|
+        = text_field_tag("from_#{order}",
+                         @from[order.to_sym],
                          :size              => "3",
                          :maxlength         => 3,
+                         "data-miq_focus"   => (index == 0),
                          "data-miq_observe" => {:interval => '.5',
                                                 :url      => url}.to_json)
+  .form-group
+    %label.col-md-2.control-label
+      = _("To Address")
+    .col-md-8
+      - %w(first second third).each do |order|
+        = text_field('to', order,
+                     :readonly  => "readonly",
+                     :size      => "3",
+                     :maxlength => 3,
+                     :value     => @to[order.to_sym],
+                     :disabled  => "disabled")
+      = text_field_tag("to_fourth",
+                       @to[:fourth],
+                       :size              => "3",
+                       :maxlength         => 3,
+                       "data-miq_observe" => {:interval => '.5',
+                                              :url      => url}.to_json)
   #formbuttonplacement
     = button_tag(_("Start"),
                  :class => "btn btn-primary",

@@ -1,9 +1,8 @@
 class TreeBuilderPxeImageTypes < TreeBuilder
-
   private
 
-  def tree_init_options(tree_name)
-   {:full_ids => true, :leaf => "PxeImageType"}
+  def tree_init_options(_tree_name)
+    {:full_ids => true, :leaf => "PxeImageType"}
   end
 
   def set_locals_for_render

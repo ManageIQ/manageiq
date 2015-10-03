@@ -6,6 +6,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::C
   require_dependency 'manageiq/providers/kubernetes/container_manager/event_catcher_mixin'
   require_dependency 'manageiq/providers/kubernetes/container_manager/event_parser'
   require_dependency 'manageiq/providers/kubernetes/container_manager/event_parser_mixin'
+  require_dependency 'manageiq/providers/kubernetes/container_manager/metrics_capture'
+  require_dependency 'manageiq/providers/kubernetes/container_manager/metrics_collector_worker'
   require_dependency 'manageiq/providers/kubernetes/container_manager/refresh_parser'
   require_dependency 'manageiq/providers/kubernetes/container_manager/refresh_worker'
   require_dependency 'manageiq/providers/kubernetes/container_manager/refresher'
@@ -38,14 +40,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::C
 
   def self.description
     @description ||= "Kubernetes".freeze
-  end
-
-  def supported_auth_types
-    %w(default password bearer)
-  end
-
-  def supports_authentication?(authtype)
-    supported_auth_types.include?(authtype.to_s)
   end
 
   def self.raw_connect(hostname, port, options)

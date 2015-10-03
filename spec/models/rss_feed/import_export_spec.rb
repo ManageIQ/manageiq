@@ -2,7 +2,6 @@ require "spec_helper"
 
 describe RssFeed::ImportExport do
   before do
-    MiqRegion.seed
     @user = FactoryGirl.create(:user_admin)
   end
 

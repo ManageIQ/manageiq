@@ -9,9 +9,9 @@ class MiqAeValue < ActiveRecord::Base
   def to_export_xml(options = {})
     require 'builder'
     xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
-    xml_attrs = { :name => self.ae_field.name }
+    xml_attrs = {:name => ae_field.name}
 
-    self.class.column_names.each { |cname|
+    self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
       next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
 
@@ -19,12 +19,12 @@ class MiqAeValue < ActiveRecord::Base
       next if %w(name value).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = self.send(cname)   unless self.send(cname).blank?
-    }
+      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+    end
 
-    xml.MiqAeField(xml_attrs) {
-      self.value.blank? ? xml.cdata!(self.value.to_s) : xml.text!(self.value)
-    }
+    xml.MiqAeField(xml_attrs) do
+      value.blank? ? xml.cdata!(value.to_s) : xml.text!(value)
+    end
   end
 
   def to_export_yaml
@@ -35,5 +35,4 @@ class MiqAeValue < ActiveRecord::Base
   def value=(value)
     write_attribute(:value, (ae_field.datatype == "password") ? MiqAePassword.encrypt(value) : value)
   end
-
 end

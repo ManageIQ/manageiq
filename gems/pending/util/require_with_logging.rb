@@ -5,7 +5,7 @@ $req_log_file ||= ENV["REQUIRE_LOG"] unless ENV["REQUIRE_LOG"].nil? || ENV["REQU
 $req_log_file ||= "requires_#{Time.now.utc.strftime("%Y%m%d%H%M%S")}.log"
 
 $req_log ||= File.open(File.join($req_log_path, $req_log_file), "w")
-#$req_log = $stdout
+# $req_log = $stdout
 $req_log.sync = true
 
 $req_depth = 0
@@ -16,8 +16,8 @@ module Kernel
   REQ_LOG_OPERS = {
     :enter   => '> ',  # Enter require method
     :reenter => '>2',  # Reenter of require method that rubygems does when a
-                       # failure occurs and it determines it may need to search
-                       # the Gem paths
+    # failure occurs and it determines it may need to search
+    # the Gem paths
     :fail    => '<!',  # Failure
     true     => '<+',  # Successfully required
     false    => '<-'   # Already required
@@ -40,18 +40,17 @@ module Kernel
       raise
     end
     log_require(path, ret, Time.now - t)
-    return ret
+    ret
   end
 
-
-  alias rubygems_original_require require
+  alias_method :rubygems_original_require, :require
 
   if Gem::VERSION >= '1.5.0'
 
     def require(path) # :doc:
       with_require_logging(path) { gem_original_require(path) }
     rescue LoadError => load_error
-      if load_error.message.end_with?(path) and Gem.try_activate(path) then
+      if load_error.message.end_with?(path) && Gem.try_activate(path)
         return with_require_logging(path, :reenter) { gem_original_require(path) }
       end
 
@@ -63,8 +62,8 @@ module Kernel
     def require(path) # :doc:
       with_require_logging(path) { gem_original_require(path) }
     rescue LoadError => load_error
-      if load_error.message =~ /#{Regexp.escape path}\z/ and
-          spec = Gem.searcher.find(path) then
+      if load_error.message =~ /#{Regexp.escape path}\z/ &&
+         spec = Gem.searcher.find(path)
         Gem.activate(spec.name, "= #{spec.version}")
         with_require_logging(path, :reenter) { gem_original_require(path) }
       else
@@ -74,10 +73,9 @@ module Kernel
 
   end
 
+  alias_method :original_load, :load
 
-  alias original_load load
-
-  def load(path, wrap=false) # :doc:
+  def load(path, wrap = false) # :doc:
     with_require_logging(path) { original_load(path, wrap) }
   end
 
@@ -87,4 +85,3 @@ module Kernel
     with_require_logging(name) { yield; true }
   end
 end
-

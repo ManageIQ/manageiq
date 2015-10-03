@@ -1,7 +1,3 @@
-# %w{small_environment}.each do |m|
-#   require File.join(File.dirname(__FILE__), m) unless Factory.factories.has_key?(m.to_sym)
-# end
-
 FactoryGirl.define do
   factory :small_environment_with_storages, :parent => :small_environment do
     after(:create) do |x|
@@ -10,7 +6,7 @@ FactoryGirl.define do
 
       ems  = x.ext_management_systems.first
       host = ems.hosts.first
-      [ems, host].each {|ci| storages.each{|s| ci.storages << s}}
+      [ems, host].each { |ci| storages.each { |s| ci.storages << s } }
 
       ems.vms.each_with_index do |vm, idx|
         vm.update_attribute(:storage_id, storages[idx].id)
@@ -27,7 +23,7 @@ FactoryGirl.define do
 
       ems.resource_pools << default_res_pool
       default_res_pool.set_parent(host)
-      ems.vms.each {|vm| default_res_pool.add_vm(vm)}
+      ems.vms.each { |vm| default_res_pool.add_vm(vm) }
     end
   end
 

@@ -14,10 +14,12 @@ class Network < ActiveRecord::Base
     hashes = xml_to_hashes(xmlNode, findPath)
     return if hashes.nil?
 
-    # it's possible that the hardware for this vm does not exist, so create it
-    parent.hardware = Hardware.new if parent.hardware.nil?
+    if parent.respond_to?(:hardware)
+      # it's possible that the hardware for this vm does not exist, so create it
+      parent.hardware = Hardware.new if parent.hardware.nil?
 
-    EmsRefresh.save_networks_inventory(parent.hardware, hashes, :scan)
+      EmsRefresh.save_networks_inventory(parent.hardware, hashes, :scan)
+    end
   end
 
   def self.xml_to_hashes(xmlNode, findPath)

@@ -29,19 +29,12 @@ module MiqAeServiceModelSpec
 
     it "ae_vm should have a special inspect method" do
       inspect = @ae_vm.inspect
-      inspect[0,2].should == '#<'
-      inspect[-1,1].should == '>'
-#      puts "INSPECT: #{inspect}"
+      inspect[0, 2].should == '#<'
+      inspect[-1, 1].should == '>'
     end
 
     it "ae_vm should have an associations method" do
       @ae_vm.associations.should be_kind_of(Array)
-      # methods = (@ae_vm.methods - Object.methods).sort.inspect
-      # puts "METHODS on INSTANCE: #{methods}"
-      # methods = (MiqAeMethodService::MiqAeServiceVm.methods - Object.methods).sort.inspect
-      # puts "METHODS on CLASS: #{methods}"
-      # puts "ASSOCIATION on INSTANCE: #{@ae_vm.associations.inspect}"
-      # puts "ASSOCIATION on CLASS: #{MiqAeMethodService::MiqAeServiceVm.associations.inspect}"
     end
 
     describe "#tag_assign" do
@@ -88,109 +81,3 @@ module MiqAeServiceModelSpec
     end
   end
 end
-
-# NOTE: Old style testing against EMS, Vm, Host, EmsEvent, and MiqServer service
-#   models.  These tests test the basic service model methods and can be removed
-#   in favor of the same tests against any single one of those classes.
-#
-#  require "#{File.dirname(__FILE__)}/../lib/engine/miq_ae_service"
-#  require "#{File.dirname(__FILE__)}/../lib/engine/miq_ae_service_model_base"
-#  Dir.new("#{File.dirname(__FILE__)}/../lib/service_models").each { |fname|
-#    require File.join(File.dirname(__FILE__), "../lib/service_models", fname) if File.extname(fname) == ".rb"
-#  }
-#
-#  # Group of common tests for all service models
-#  %w{ExtManagementSystem Vm Host EmsEvent MiqServer}.each do |m|
-#    Kernel.const_set("MiqAeService#{m}Test",
-#      Class.new(Test::Unit::TestCase) do
-#        include MiqAeEngine
-#
-#        def setup
-#          /(MiqAeService(.+))Test/ =~ self.class.name
-#          @klass = MiqAeMethodService.const_get($1)
-#          @model = Kernel.const_get($2)
-#
-#          recs = @model.find(:all, :limit => 2)
-#          raise "Can't run test unless 2 records are in the #{@model.name.underscore.pluralize} table" if recs.length < 2
-#          @o1, @o2 = *recs[0..1]
-#          @ids = [@o1.id, @o2.id]
-#        end
-#
-#        def teardown
-#        end
-#
-#        def test_find_by_id
-#          o = nil
-#          assert_nothing_raised { o = @klass.find(@o1.id) }
-#          assert_kind_of @klass, o
-#          assert_equal @o1, o.instance_variable_get("@object")
-#
-#          assert_raise(MiqAeException::ServiceNotFound) { o = @klass.find(-1) }
-#        end
-#
-#        def test_find_by_multiple_ids
-#          objs = nil
-#          assert_nothing_raised { objs = @klass.find(@ids) }
-#          assert_kind_of Array, objs
-#          objs.each { |o| assert_kind_of @klass, o }
-#
-#          objs = objs.collect { |o| o.instance_variable_get("@object") }
-#          assert objs.include?(@o1)
-#          assert objs.include?(@o2)
-#        end
-#
-#        def test_find_by_multiple_ids_with_arguments
-#          objs = nil
-#          assert_nothing_raised { objs = @klass.find(@ids, :order => "id DESC") }
-#          ids_rev = objs.collect { |o| o['id'] }
-#          assert_equal @ids.sort.reverse, ids_rev
-#        end
-#
-#        def test_new_by_id
-#          o = nil
-#          assert_nothing_raised { o = @klass.find(@o1.id) }
-#          assert_kind_of @klass, o
-#          assert_equal @o1, o.instance_variable_get("@object")
-#
-#          assert_raise(MiqAeException::ServiceNotFound) { o = @klass.new(-1) }
-#        end
-#
-#        def test_new_by_obj
-#          o = nil
-#          assert_nothing_raised { o = @klass.new(@o1) }
-#          assert_kind_of @klass, o
-#          assert_equal @o1, o.instance_variable_get("@object")
-#        end
-#
-#        def test_attributes
-#          o = @klass.new(@o1)
-#          assert_equal @o1.attributes, o.attributes
-#
-#          a = 'name'
-#          a = 'event_type' if @model == EmsEvent
-#          a_val = "TEST_ATTRS"
-#
-#          assert_equal @o1.send(a), o[a]
-#          o[a] = a_val
-#          assert_equal a_val, o[a]
-#          o.reload
-#          assert_equal @o1.send(a), o[a]
-#        end
-#      end
-#    )
-#  end
-#
-#  # Add another test to the EmsEvent test
-#  class MiqAeServiceEmsEventTest < MiniTest::Unit::TestCase
-#
-#    def test_wrap_object_call
-#      e = @klass.new(@o1)
-#
-#      %w{vm src_vm dest_vm host src_host dest_host ext_management_system}.each do |m|
-#        o = e.send(m)
-#        o = o.instance_variable_get("@object") unless o.nil?
-#        assert_equal @o1.send(m), o
-#      end
-#    end
-#
-#  end

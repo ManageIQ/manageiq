@@ -1,6 +1,5 @@
 require "spec_helper"
 
-
 # this is basically copied from miq_report_result/purging.rb
 describe DriftState do
   context "::Purging" do
@@ -8,8 +7,8 @@ describe DriftState do
       @vmdb_config = {
         :drift_states => {
           :history => {
-            :keep_drift_states      => "6.months",
-            :purge_window_size      => 100
+            :keep_drift_states => "6.months",
+            :purge_window_size => 100
           }
         }
       }
@@ -96,15 +95,15 @@ describe DriftState do
     context "#purge" do
       it "by remaining" do
         described_class.purge(:remaining, 1)
-        described_class.where(:resource_id => 1).should   == [@rr1.last]
-        described_class.where(:resource_id => 2).should   == [@rr2.last]
+        described_class.where(:resource_id => 1).should == [@rr1.last]
+        described_class.where(:resource_id => 2).should == [@rr2.last]
         described_class.where(:resource_id => nil).should == @rr_orphaned
       end
 
       it "by date" do
         described_class.purge(:date, 6.months.to_i.seconds.ago.utc)
-        described_class.where(:resource_id => 1).should   == [@rr1.last]
-        described_class.where(:resource_id => 2).should   == [@rr2.last]
+        described_class.where(:resource_id => 1).should == [@rr1.last]
+        described_class.where(:resource_id => 2).should == [@rr2.last]
         described_class.where(:resource_id => nil).should == @rr_orphaned
       end
     end

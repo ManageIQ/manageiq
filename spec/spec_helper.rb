@@ -1,6 +1,14 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+
+if ENV["CI"]
+  require 'coveralls'
+  Coveralls.wear!('rails') { add_filter("/spec/") }
+end
+
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
+require 'application_helper'
+
 require 'rspec/autorun'
 require 'rspec/rails'
 require 'rspec/fire'
@@ -8,16 +16,9 @@ require 'vcr'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # include the gems/pending matchers
 Dir[File.join(GEMS_PENDING_ROOT, "spec/support/custom_matchers/*.rb")].each { |f| require f }
-
-begin
-  require 'simplecov'
-  SimpleCov.start "rails"
-rescue LoadError
-  # won't run coverage if gem not loaded
-end
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -47,7 +48,7 @@ RSpec.configure do |config|
 
   # Preconfigure and auto-tag specs in the automation subdirectory a la rspec-rails
   config.include AutomationExampleGroup, :type => :automation, :example_group => {
-    :file_path => config.escaped_path(%w[spec automation])
+    :file_path => config.escaped_path(%w(spec automation))
   }
   config.include RSpec::Fire
 
@@ -71,7 +72,7 @@ RSpec.configure do |config|
 
   config.include AutomationSpecHelper, :type => :automation
   config.include PresenterSpecHelper, :type => :presenter, :example_group => {
-    :file_path => config.escaped_path(%w[spec presenters])
+    :file_path => config.escaped_path(%w(spec presenters))
   }
   config.include RakeTaskExampleGroup, :type => :rake_task
 
@@ -81,9 +82,14 @@ RSpec.configure do |config|
   config.after(:each) do
     EvmSpecHelper.clear_caches
   end
+  if ENV["CI"] && ENV["TEST_SUITE"] == "vmdb"
+    config.after(:suite) do
+      require Rails.root.join("spec/coverage_helper.rb")
+    end
+  end
 
   if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/}) ||
-      config.backtrace_exclusion_patterns.delete(%r{/gems/})
+     config.backtrace_exclusion_patterns.delete(%r{/gems/})
     config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
     config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
   end
@@ -107,11 +113,5 @@ VCR.configure do |c|
     :allow_unused_http_interactions => false
   }
 
-  #c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")
-end
-
-begin
-  require 'coveralls'
-  Coveralls.wear!
-rescue LoadError
+  # c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")
 end

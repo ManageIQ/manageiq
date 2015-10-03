@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20140409134713_move_log_collection_depot_settings_to_file_depot")
+require_migration
 
 describe MoveLogCollectionDepotSettingsToFileDepot do
   let(:configuration_stub) { migration_stub(:Configuration) }

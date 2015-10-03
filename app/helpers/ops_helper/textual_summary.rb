@@ -1,5 +1,4 @@
 module OpsHelper::TextualSummary
-
   #
   # Groups
   #
@@ -94,35 +93,34 @@ module OpsHelper::TextualSummary
   end
 
   def textual_vmdb_tables_most_rows
-    h = {:label => "Tables with the Most Rows", :headers => ["Name","Rows"], :col_order => ["name","value"]}
-    h[:value] = vmdb_table_top_rows(:rows,TOP_TABLES_BY_ROWS_COUNT)
+    h = {:label => "Tables with the Most Rows", :headers => ["Name", "Rows"], :col_order => ["name", "value"]}
+    h[:value] = vmdb_table_top_rows(:rows, TOP_TABLES_BY_ROWS_COUNT)
     h
   end
 
   def textual_vmdb_tables_largest_size
-    h = {:label => "Largest Tables", :headers => ["Name","Size"], :col_order => ["name","value"]}
-    h[:value] = vmdb_table_top_rows(:size,TOP_TABLES_BY_SIZE_COUNT)
+    h = {:label => "Largest Tables", :headers => ["Name", "Size"], :col_order => ["name", "value"]}
+    h[:value] = vmdb_table_top_rows(:size, TOP_TABLES_BY_SIZE_COUNT)
     h
   end
 
   def textual_vmdb_tables_most_wasted_space
-    h = {:label => "Tables with Most Wasted Space", :headers => ["Name","Wasted"], :col_order => ["name","value"]}
-    h[:value] = vmdb_table_top_rows(:wasted_bytes,TOP_TABLES_BY_WASTED_SPACE_COUNT)
+    h = {:label => "Tables with Most Wasted Space", :headers => ["Name", "Wasted"], :col_order => ["name", "value"]}
+    h[:value] = vmdb_table_top_rows(:wasted_bytes, TOP_TABLES_BY_WASTED_SPACE_COUNT)
     h
   end
 
-  def vmdb_table_top_rows(typ,limit)
+  def vmdb_table_top_rows(typ, limit)
     rows = VmdbDatabase.my_database.top_tables_by(typ, limit)
-    return rows.collect { |row|
+    rows.collect do |row|
       {
-        :title => row.name,
-        :name => row.name,
-        :value => typ == :rows ? number_with_delimiter(row.latest_hourly_metric.send(typ.to_s), :delimeter => ',') :
+        :title    => row.name,
+        :name     => row.name,
+        :value    => typ == :rows ? number_with_delimiter(row.latest_hourly_metric.send(typ.to_s), :delimeter => ',') :
                                  number_to_human_size(row.latest_hourly_metric.send(typ.to_s), :precision => 1),
         :explorer => true,
-        :link => "miqDynatreeActivateNode('vmdb_tree', 'tb-#{to_cid(@sb[:vmdb_tables][row.name])}');"
+        :link     => "miqDynatreeActivateNode('vmdb_tree', 'tb-#{to_cid(@sb[:vmdb_tables][row.name])}');"
       }
-    }
+    end
   end
-
 end

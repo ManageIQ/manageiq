@@ -3,9 +3,7 @@ require 'fs/ext4/hash_tree_header'
 require 'fs/ext4/hash_tree_entry'
 
 module Ext4
-
   class Directory
-
     ROOT_DIRECTORY = 2
 
     attr_reader :inodeNum
@@ -26,7 +24,7 @@ module Ext4
     end
 
     def findEntry(name, type = nil)
-      return nil unless globEntries.has_key?(name)
+      return nil unless globEntries.key?(name)
 
       globEntries[name].each do |ent|
         unless @sb.isNewDirEnt?
@@ -36,7 +34,7 @@ module Ext4
 
         return ent if (ent.fileType == type) || type.nil?
       end
-      return nil
+      nil
     end
 
     private
@@ -52,18 +50,18 @@ module Ext4
       p = 0
       loop do
         break if p > @data.length - 4
-        break if @data[p, 4] == nil
+        break if @data[p, 4].nil?
         de = DirectoryEntry.new(@data[p..-1], newEnt)
         raise "Ext4::Directory.globEntriesByLinkedList: DirectoryEntry length cannot be 0" if de.len == 0
         ents_by_name[de.name] ||= []
         ents_by_name[de.name] << de
         p += de.len
       end
-      return ents_by_name
+      ents_by_name
     end
 
     #
-    # If the inode has the IF_HASH_INDEX bit set, 
+    # If the inode has the IF_HASH_INDEX bit set,
     # then the first directory block is to be interpreted as the root of an HTree index.
     def globEntriesByHashTree
       ents_by_name = {}
@@ -75,16 +73,15 @@ module Ext4
         ents_by_name[de.name] << de
         offset += 12
       end
-      
-$log.info("Ext4::Directory.globEntriesByHashTree (inode=#{@inodeNum}) >>\n#{@data[0,256].hex_dump}")
+
+      $log.info("Ext4::Directory.globEntriesByHashTree (inode=#{@inodeNum}) >>\n#{@data[0, 256].hex_dump}")
       header = HashTreeHeader.new(@data[offset..-1])
-$log.info("Ext4::Directory.globEntriesByHashTree --\n#{header.dump}")
-$log.info("Ext4::Directory.globEntriesByHashTree (inode=#{@inodeNum}) <<#{ents_by_name.inspect}")
+      $log.info("Ext4::Directory.globEntriesByHashTree --\n#{header.dump}")
+      $log.info("Ext4::Directory.globEntriesByHashTree (inode=#{@inodeNum}) <<#{ents_by_name.inspect}")
       offset += header.length
       root = HashTreeEntry.new(@data[offset..-1], true)
-$log.info("Ext4::Directory.globEntriesByHashTree --\n#{root.dump}")
-      return ents_by_name
+      $log.info("Ext4::Directory.globEntriesByHashTree --\n#{root.dump}")
+      ents_by_name
     end
-
-  end #class
-end #module
+  end # class
+end # module

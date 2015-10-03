@@ -31,7 +31,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
                     cores = cores.to_i
                     cores = 1 if cores < 1
                     sockets * cores
-        end
+                  end
         set_spec_option(vmcs, :numCPUs, nil, nil, :to_i, numCpus)
 
         if cores.to_i >= 1

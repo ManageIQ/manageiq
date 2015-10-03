@@ -6,7 +6,7 @@ module ReportFormatter
     # create the graph object and add titles, fonts, and colors
     def build_document_header
       mri = options.mri
-      raise "No settings configured for Timeline" if mri.timeline == nil
+      raise "No settings configured for Timeline" if mri.timeline.nil?
     end
 
     # Generates the body of the timeline
@@ -14,18 +14,18 @@ module ReportFormatter
       mri = options.mri
       tz = mri.get_time_zone(Time.zone.name)
       # Calculate the earliest time of events to show
-      if mri.timeline[:last_unit] != nil
-#       START of TIMELINE TIMEZONE Code
-        @start_time = format_timezone(Time.now,tz,'raw') - mri.timeline[:last_time].to_i.send(mri.timeline[:last_unit].downcase)
-#       END of TIMELINE TIMEZONE Code
+      unless mri.timeline[:last_unit].nil?
+        #       START of TIMELINE TIMEZONE Code
+        @start_time = format_timezone(Time.now, tz, 'raw') - mri.timeline[:last_time].to_i.send(mri.timeline[:last_unit].downcase)
+        #       END of TIMELINE TIMEZONE Code
       end
 
-      mri.extras ||= Hash.new # Create hash to store :tl_position setting
+      mri.extras ||= {} # Create hash to store :tl_position setting
 
       if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
         tl_xml = MiqXml.load("<data/>")
       else
-        @events = Array.new
+        @events = []
       end
       tlfield = mri.timeline[:field].split("-") # Split the table and field
       if tlfield.first.include?(".")                    # If table has a period (from a sub table)
@@ -33,16 +33,16 @@ module ReportFormatter
       else
         col = tlfield.last                             # Not a subtable, just grab the field name
       end
-      mri.table.data.each_with_index do |row,d_idx|
+      mri.table.data.each_with_index do |row, _d_idx|
         tl_event(tl_xml ? tl_xml : nil, row, col)   # Add this row to the tl event xml
       end
-#     START of TIMELINE TIMEZONE Code
-      mri.extras[:tl_position] ||= format_timezone(Time.now,tz,'raw') # If position not set, default to now
-#     END of TIMELINE TIMEZONE Code
+      #     START of TIMELINE TIMEZONE Code
+      mri.extras[:tl_position] ||= format_timezone(Time.now, tz, 'raw') # If position not set, default to now
+      #     END of TIMELINE TIMEZONE Code
       if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
         output << tl_xml.to_s
       else
-        output << { :events => @events }.to_json
+        output << {:events => @events}.to_json
       end
     end
 
@@ -52,44 +52,44 @@ module ReportFormatter
       ActiveRecord::Base.compress_id(id)
     end
 
-    def tl_event(tl_xml,row, col)
+    def tl_event(tl_xml, row, col)
       mri = options.mri
       tz = mri.get_time_zone(Time.zone.name)
       etime = row[col]
-      return if etime == nil                              # Skip nil dates - Sprint 41
-      return if @start_time != nil && etime < @start_time # Skip if before start time limit
-#     START of TIMELINE TIMEZONE Code
-      mri.extras[:tl_position] ||= format_timezone(etime.to_time,tz,'raw')
+      return if etime.nil?                              # Skip nil dates - Sprint 41
+      return if !@start_time.nil? && etime < @start_time # Skip if before start time limit
+      #     START of TIMELINE TIMEZONE Code
+      mri.extras[:tl_position] ||= format_timezone(etime.to_time, tz, 'raw')
       if mri.timeline[:position] && mri.timeline[:position] == "First"
-        mri.extras[:tl_position] = format_timezone(etime.to_time,tz,'raw') if format_timezone(etime.to_time,tz,'raw') < format_timezone(mri.extras[:tl_position],tz,'raw')
+        mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw') if format_timezone(etime.to_time, tz, 'raw') < format_timezone(mri.extras[:tl_position], tz, 'raw')
       elsif mri.timeline[:position] && mri.timeline[:position] == "Current"
         # if there is item with current time or greater then use that else, use right most one.
-        if format_timezone(etime.to_time,tz,'raw') >= format_timezone(Time.now,tz,'raw') && format_timezone(etime.to_time,tz,'raw') <= format_timezone(mri.extras[:tl_position],tz,'raw')
-          mri.extras[:tl_position] = format_timezone(etime.to_time,tz,'raw')
+        if format_timezone(etime.to_time, tz, 'raw') >= format_timezone(Time.now, tz, 'raw') && format_timezone(etime.to_time, tz, 'raw') <= format_timezone(mri.extras[:tl_position], tz, 'raw')
+          mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw')
         else
-          mri.extras[:tl_position] = format_timezone(etime.to_time,tz,'raw') if format_timezone(etime.to_time,tz,'raw') > format_timezone(mri.extras[:tl_position],tz,'raw')
+          mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw') if format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
         end
       else
-        mri.extras[:tl_position] = format_timezone(etime.to_time,tz,'raw') if format_timezone(etime.to_time,tz,'raw') > format_timezone(mri.extras[:tl_position],tz,'raw')
+        mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw') if format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
       end
-#     mri.extras[:tl_position] ||= etime.to_time
-#     if mri.timeline[:position] && mri.timeline[:position] == "First"
-#       mri.extras[:tl_position] = etime.to_time if etime.to_time < mri.extras[:tl_position]
-#     else
-#       mri.extras[:tl_position] = etime.to_time if etime.to_time > mri.extras[:tl_position]
-#     end
-#     END of TIMELINE TIMEZONE Code
+      #     mri.extras[:tl_position] ||= etime.to_time
+      #     if mri.timeline[:position] && mri.timeline[:position] == "First"
+      #       mri.extras[:tl_position] = etime.to_time if etime.to_time < mri.extras[:tl_position]
+      #     else
+      #       mri.extras[:tl_position] = etime.to_time if etime.to_time > mri.extras[:tl_position]
+      #     end
+      #     END of TIMELINE TIMEZONE Code
       if row["id"]  # Make sure id column is present
         rec = mri.db.constantize.find_by_id(row['id'])
       end
-      unless rec == nil
+      unless rec.nil?
         case mri.db
         when "BottleneckEvent"
-#         e_title = "#{ui_lookup(:model=>rec[:resource_type])}: #{rec[:resource_name]}"
+          #         e_title = "#{ui_lookup(:model=>rec[:resource_type])}: #{rec[:resource_name]}"
           e_title = rec[:resource_name]
           e_image = "/images/icons/new/#{bubble_icon(rec[:resource_type])}.png"
           e_icon = "/images/icons/timeline/#{rec.event_type.downcase}_#{rec[:severity]}.png"
-#         e_text = e_title # Commented out since name is showing in the columns anyway
+        #         e_text = e_title # Commented out since name is showing in the columns anyway
         when "Vm"
           e_title = rec[:name]
           e_icon = "/images/icons/timeline/vendor-#{rec.vendor.downcase}.png"
@@ -143,22 +143,22 @@ module ReportFormatter
           e_icon =  "/images/icons/new/event-" +
                     rec.event_type.downcase +
                     ".png"
-          #e_icon = "/images/icons/new/vendor-ec2.png"
+          # e_icon = "/images/icons/new/vendor-ec2.png"
           e_text = e_title
-          if rec.target_id != nil
-            e_text += "<br/>&lt;a href='/#{Dictionary::gettext(rec.target_class, :type=>:model, :notfound=>:titleize).downcase}/show/#{to_cid(rec.target_id)}'&gt;<b> #{Dictionary::gettext(rec.target_class, :type=>:model, :notfound=>:titleize)}:</b> #{rec.target_name}&lt;/a&gt;"
+          unless rec.target_id.nil?
+            e_text += "<br/>&lt;a href='/#{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize).downcase}/show/#{to_cid(rec.target_id)}'&gt;<b> #{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize)}:</b> #{rec.target_name}&lt;/a&gt;"
           end
 
-          assigned_profiles = Hash.new
+          assigned_profiles = {}
           profile_sets = rec.miq_policy_sets
 
           profile_sets.each do |profile|
-            assigned_profiles[profile.id] = profile.description if !profile.description.nil?
+            assigned_profiles[profile.id] = profile.description unless profile.description.nil?
           end
 
-          if rec.event_type != nil
+          unless rec.event_type.nil?
             e_text += "<br/><b>Assigned Profiles:</b> "
-            assigned_profiles.each_with_index do |p,i|
+            assigned_profiles.each_with_index do |p, i|
               e_text += "&lt;a href='/miq_policy/explorer?profile=#{p[0]}'&gt;<b> #{p[1]}&lt;/a&gt;"
               if assigned_profiles.length > 1 && i < assigned_profiles.length
                 e_text += ", "
@@ -175,7 +175,7 @@ module ReportFormatter
       # manipulating column order to display timestamp at the end of the bubble.
       field = mri.timeline[:field].split("-")
       if ems && ems_cloud
-        #Remove Infra specific fields
+        # Remove Infra specific fields
         host_name_idx = mri.col_order.index("host_name")
         if host_name_idx
           mri.col_order.delete_at(host_name_idx)
@@ -194,7 +194,7 @@ module ReportFormatter
           mri.headers.delete_at(dest_host_name_idx)
         end
 
-        #Change labels to be cloud specific
+        # Change labels to be cloud specific
         vm_name_idx = mri.col_order.index("vm_name")
         mri.headers[vm_name_idx] = "Source Instance"
         vm_location_idx = mri.col_order.index("vm_location")
@@ -211,7 +211,7 @@ module ReportFormatter
       headers = copy_array(mri.headers)
       i = col_order.rindex(field.last)
       if i.nil?
-        #Adding a check incase timeline field came in with model/table in front of them i.e. PolicyEvent.miq_policy_sets-created_on
+        # Adding a check incase timeline field came in with model/table in front of them i.e. PolicyEvent.miq_policy_sets-created_on
         field_with_prefix = "#{field.first.split('.').last}.#{field.last}"
         i = col_order.rindex(field_with_prefix)
         col_order.delete(field_with_prefix)
@@ -232,21 +232,21 @@ module ReportFormatter
             e_text += "<br/><b>" + headers[co_idx] + ":</b> "
           end
           # Look for fields that have matching link fields and put in the link
-          if co == "vm_name" && rec.vm_or_template_id != nil
+          if co == "vm_name" && !rec.vm_or_template_id.nil?
             e_text += "&lt;a href='/vm/show/#{to_cid(rec.vm_or_template_id)}'&gt;#{row[co]}&lt;/a&gt;"
-          elsif co == "src_vm_name" && rec.src_vm_id != nil
+          elsif co == "src_vm_name" && !rec.src_vm_id.nil?
             e_text += "&lt;a href='/vm/show/#{to_cid(rec.src_vm__id)}'&gt;#{row[co]}&lt;/a&gt;"
-          elsif co == "dest_vm_name" && rec.dest_vm_or_template_id != nil
+          elsif co == "dest_vm_name" && !rec.dest_vm_or_template_id.nil?
             e_text += "&lt;a href='/vm/show/#{to_cid(rec.dest_vm_or_template_id)}'&gt;#{row[co]}&lt;/a&gt;"
-          elsif co == "host_name" && rec.host_id != nil
+          elsif co == "host_name" && !rec.host_id.nil?
             e_text += "&lt;a href='/host/show/#{to_cid(rec.host_id)}'&gt;#{row[co]}&lt;/a&gt;"
-          elsif co == "dest_host_name" && rec.dest_host_id != nil
+          elsif co == "dest_host_name" && !rec.dest_host_id.nil?
             e_text += "&lt;a href='/host/show/#{to_cid(rec.dest_host_id)}'&gt;#{row[co]}&lt;/a&gt;"
-          elsif co == "ems_cluster_name" && rec.ems_cluster_id != nil
+          elsif co == "ems_cluster_name" && !rec.ems_cluster_id.nil?
             e_text += "&lt;a href='/ems_cluster/show/#{to_cid(rec.ems_cluster_id)}'&gt;#{row[co]}&lt;/a&gt;"
-          elsif co == "ext_management_system.name" && rec.ext_management_system && rec.ext_management_system.id != nil
+          elsif co == "ext_management_system.name" && rec.ext_management_system && !rec.ext_management_system.id.nil?
             e_text += "&lt;a href='/#{ems_cloud ? "ems_cloud" : "ems_infra"}/show/#{to_cid(rec.ext_management_system.id)}'&gt;#{row[co]}&lt;/a&gt;"
-          elsif co == "availability_zone.name" && rec.availability_zone_id != nil
+          elsif co == "availability_zone.name" && !rec.availability_zone_id.nil?
             e_text += "&lt;a href='/availability_zone/show/#{to_cid(rec.availability_zone_id)}'&gt;#{row[co]}&lt;/a&gt;"
           elsif mri.db == "BottleneckEvent" && co == "resource_name"
             case rec.resource_type
@@ -258,39 +258,35 @@ module ReportFormatter
             e_text += "&lt;a href='/#{db}/show/#{to_cid(rec.resource_id)}'&gt;#{rec.resource_name}&lt;/a&gt;"
           else  # Not a link field, just put in the text
             # START of TIMELINE TIMEZONE Code
-            if row[co].is_a?(Time)
-              e_text += format_timezone(row[co],tz,"gtl")
+            if row[co].kind_of?(Time)
+              e_text += format_timezone(row[co], tz, "gtl")
             elsif TIMELINE_TIME_COLUMNS.include?(co)
-              e_text += format_timezone(Time.parse(row[co].to_s),tz,"gtl")
+              e_text += format_timezone(Time.parse(row[co].to_s), tz, "gtl")
             else
               e_text += row[co].to_s
             end
             # END of TIMELINE TIMEZONE Code
-#           e_text += row[co].to_s
+            #           e_text += row[co].to_s
           end
         end
       end
 
       # Add the event to the timeline
       if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
-        event = tl_xml.root.add_element("event", {
-          "start"=>format_timezone(row[col], "UTC", nil),
-#         "end" => Time.now,
-#         "isDuration" => "true",
-          "title"=>CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
-          "icon"=>e_icon,
-#         "color"=>tl_color
-          "image"=>e_image
-        })
+        event = tl_xml.root.add_element("event",           "start" => format_timezone(row[col], "UTC", nil),
+                                                           #         "end" => Time.now,
+                                                           #         "isDuration" => "true",
+                                                           "title" => CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
+                                                           "icon"  => e_icon,
+                                                           #         "color"=>tl_color
+                                                           "image" => e_image)
         event.text = e_text
       else
-        @events.push({
-            "start"=>format_timezone(row[col],tz,'view').to_time,
-            "title"=>CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
-            "icon"=>e_icon,
-            "image"=>e_image,
-            "description"=> e_text
-          })
+        @events.push("start"       => format_timezone(row[col], tz, 'view').to_time,
+                     "title"       => CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
+                     "icon"        => e_icon,
+                     "image"       => e_image,
+                     "description" => e_text)
       end
     end
 
@@ -317,14 +313,14 @@ module ReportFormatter
         rescue
           return table    # If we can't read the file, return the table name as the icon name
         end
-        @icon_hash = Hash.new
+        @icon_hash = {}
         data.each do |rec|
           evt, txt = rec.split(",")
           @icon_hash[evt] = txt
         end
       end
       return @icon_hash[event_text] if @icon_hash[event_text]
-      return table
+      table
     end
   end
 end

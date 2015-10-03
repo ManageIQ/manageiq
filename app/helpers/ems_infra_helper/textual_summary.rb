@@ -24,7 +24,7 @@ module EmsInfraHelper::TextualSummary
   #
 
   def textual_hostname
-    {:label => "Hostname", :value => @ems.hostname}
+    @ems.hostname
   end
 
   def textual_ipaddress
@@ -32,7 +32,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_type
-    {:label => "Type", :value => @ems.emstype_description}
+    @ems.emstype_description
   end
 
   def textual_port
@@ -137,9 +137,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_templates
-    label = "Templates"
-
-    textual_link(@ems.miq_templates)
+    @ems.miq_templates
   end
 
   def textual_authentications
@@ -149,8 +147,9 @@ module EmsInfraHelper::TextualSummary
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default"; "Default"
-        when "metrics"; "C & U Database"
+        when "default" then "Default"
+        when "metrics" then "C & U Database"
+        when "amqp" then    "AMQP"
         else;           "<Unknown>"
         end
 
@@ -168,9 +167,9 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_orchestration_stacks
-    return nil if !@ems.respond_to?(:orchestration_stacks) || !@ems.orchestration_stacks
+    return nil unless @ems.respond_to?(:orchestration_stacks)
 
-    textual_link(@ems.orchestration_stacks)
+    @ems.orchestration_stacks
   end
 
   def textual_refresh_status
@@ -192,11 +191,10 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_host_default_vnc_port_range
-    return nil unless @ems.is_a?(ManageIQ::Providers::Vmware::InfraManager)
+    return nil unless @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     value = @ems.host_default_vnc_port_start.blank? ?
         "" :
         "#{@ems.host_default_vnc_port_start} - #{@ems.host_default_vnc_port_end}"
     {:label => "#{title_for_host} Default VNC Port Range", :value => value}
   end
-
 end

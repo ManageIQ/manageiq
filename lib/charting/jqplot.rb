@@ -3,29 +3,29 @@ class Jqplot
   class << self
     def default_legend(chart)
       chart[:options].update(:legend => {
-        :show     => true,
-        :location => 'e',
-        :renderer => 'jQuery.jqplot.EnhancedLegendRenderer'
-      })
+                               :show     => true,
+                               :location => 'e',
+                               :renderer => 'jQuery.jqplot.EnhancedLegendRenderer'
+                             })
       chart
     end
 
     def horizontal_legend(chart)
       chart[:options].update(:legend => {
-        :renderer        => 'jQuery.jqplot.EnhancedLegendRenderer',
-        :show            => true,
-        :location        => 'n',
-        :rendererOptions => {:numberColumns => 3}
-      })
+                               :renderer        => 'jQuery.jqplot.EnhancedLegendRenderer',
+                               :show            => true,
+                               :location        => 'n',
+                               :rendererOptions => {:numberColumns => 3}
+                             })
       chart
     end
 
     def horizontal_line_cursor(chart)
       chart[:options].update(:cursor => {
-          :show               => true,
-          :showVerticalLine   => false,
-          :showHorizontalLine => true,
-      })
+                               :show               => true,
+                               :showVerticalLine   => false,
+                               :showHorizontalLine => true,
+                             })
       chart
     end
 
@@ -40,7 +40,7 @@ class Jqplot
           :options => {
             :seriesDefaults => {
               :renderer        => 'jQuery.jqplot.BarRenderer',
-              :rendererOptions => {:barDirection => 'horizontal'},
+              :rendererOptions => {:barDirection => 'horizontal', :barWidth => 5},
             },
             :series         => []
           },
@@ -52,7 +52,7 @@ class Jqplot
             :stackSeries    => true,
             :seriesDefaults => {
               :renderer        => 'jQuery.jqplot.BarRenderer',
-              :rendererOptions => {:barDirection => 'horizontal'},
+              :rendererOptions => {:barDirection => 'horizontal', :barWidth => 5},
             },
             :series         => []
           },
@@ -63,7 +63,7 @@ class Jqplot
           :options => {
             :seriesDefaults => {
               :renderer        => 'jQuery.jqplot.BarRenderer',
-              :rendererOptions => {:barDirection => 'vertical'},
+              :rendererOptions => {:barDirection => 'vertical', :barWidth => 5},
             },
             :series         => []
           },
@@ -75,7 +75,7 @@ class Jqplot
             :stackSeries    => true,
             :seriesDefaults => {
               :renderer        => 'jQuery.jqplot.BarRenderer',
-              :rendererOptions => {:barDirection => 'vertical'},
+              :rendererOptions => {:barDirection => 'vertical', :barWidth => 5},
             },
             :series         => []
           },

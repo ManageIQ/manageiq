@@ -25,5 +25,4 @@ describe "rendering quadicons of ext_management_system" do
                         :item => @item}
     expect(rendered).to match(/Hostname/)
   end
-
 end

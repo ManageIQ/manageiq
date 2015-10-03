@@ -10,7 +10,7 @@
 
   .tab-content
     = miq_tab_content('default', 'default') do
-      %form.form-horizontal
+      .form-horizontal
         = render(:partial => "/layouts/auth_bearer_token",
                  :locals  => {:pfx          => "bearer",
                               :change_url   => change_url,

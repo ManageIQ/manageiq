@@ -1,5 +1,4 @@
 class MiqWidget::ContentGeneration
-
   def initialize(options)
     raise "Must call .new with an options hash." unless options.kind_of?(Hash)
 

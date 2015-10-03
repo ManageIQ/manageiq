@@ -1,5 +1,5 @@
 require "spec_helper"
-require Rails.root.join("db/migrate/20150731025210_namespace_ems_openstack")
+require_migration
 
 describe NamespaceEmsOpenstack do
   class NamespaceEmsOpenstack::ExtManagementSystem < ActiveRecord::Base

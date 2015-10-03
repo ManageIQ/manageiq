@@ -19,7 +19,7 @@ describe MiqPolicyController do
       end
 
       it "Test reset button" do
-        controller.instance_variable_set(:@_params, {:id => @action.id, :button => "reset"})
+        controller.instance_variable_set(:@_params, :id => @action.id, :button => "reset")
         controller.action_edit
         assigns(:flash_array).first[:message].should include("reset")
         controller.send(:flash_errors?).should_not be_true
@@ -27,20 +27,20 @@ describe MiqPolicyController do
 
       it "Test cancel button" do
         controller.instance_variable_set(:@sb, {:trees => {:action_tree => {:active_node => "a-#{@action.id}"}}, :active_tree => :action_tree})
-        controller.instance_variable_set(:@_params, {:id => @action.id, :button => "cancel"})
+        controller.instance_variable_set(:@_params, :id => @action.id, :button => "cancel")
         controller.action_edit
         assigns(:flash_array).first[:message].should include("cancelled")
         controller.send(:flash_errors?).should_not be_true
       end
 
       it "Test saving an action without selecting a Tag" do
-        controller.instance_variable_set(:@_params, {:id => @action.id})
+        controller.instance_variable_set(:@_params, :id => @action.id)
         controller.action_edit
         controller.send(:flash_errors?).should_not be_true
         edit = controller.instance_variable_get(:@edit)
         edit[:new][:action_type] = "tag"
         session[:edit] = assigns(:edit)
-        controller.instance_variable_set(:@_params, {:id => @action.id, :button => "save"})
+        controller.instance_variable_set(:@_params, :id => @action.id, :button => "save")
         controller.should_receive(:render)
         controller.action_edit
         assigns(:flash_array).first[:message].should include("At least one Tag")
@@ -49,15 +49,15 @@ describe MiqPolicyController do
       end
 
       it "Test saving an action after selecting a Tag" do
-        controller.instance_variable_set(:@_params, {:id => @action.id})
+        controller.instance_variable_set(:@_params, :id => @action.id)
         controller.action_edit
         controller.send(:flash_errors?).should_not be_true
         edit = controller.instance_variable_get(:@edit)
         edit[:new][:action_type] = "tag"
-        edit[:new][:options] = Hash.new
+        edit[:new][:options] = {}
         edit[:new][:options][:tags] = "Some Tag"
         session[:edit] = assigns(:edit)
-        controller.instance_variable_set(:@_params, {:id => @action.id, :button => "save"})
+        controller.instance_variable_set(:@_params, :id => @action.id, :button => "save")
         controller.action_edit
         assigns(:flash_array).first[:message].should_not include("At least one Tag")
         assigns(:flash_array).first[:message].should include("saved")

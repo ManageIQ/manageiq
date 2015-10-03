@@ -27,7 +27,7 @@ class VmdbDatabase < ActiveRecord::Base
   end
 
   def my_metrics
-    self.vmdb_database_metrics
+    vmdb_database_metrics
   end
 
   def size
@@ -38,17 +38,16 @@ class VmdbDatabase < ActiveRecord::Base
     # latest_hourly_metric via includes causes too many rows to come back.
     #   Instead we will manually query for the MAX(id), which is simpler than
     #   MAX(timestamp).
-    table_ids  = self.evm_tables.collect(&:id)
+    table_ids  = evm_tables.collect(&:id)
     latest_ids = VmdbMetric.where(:resource_type => "VmdbTable", :resource_id => table_ids, :capture_interval_name => "hourly").select("MAX(id) AS id").group(:resource_type, :resource_id).collect(&:id)
     metrics    = VmdbMetric.where(:id => latest_ids).to_a
 
     metrics = metrics.sort_by { |m| m.send(sorted_by) }.reverse
     metrics = metrics[0, limit] if limit.kind_of?(Numeric)
 
-    tables_by_id = self.evm_tables.index_by(&:id)
+    tables_by_id = evm_tables.index_by(&:id)
     metrics.collect { |m| tables_by_id[m.resource_id] }
   end
-
 
   #
   # Report database statistics and bloat...
@@ -77,5 +76,4 @@ class VmdbDatabase < ActiveRecord::Base
   def self.report_client_connections
     connection.client_connections if connection.respond_to?(:client_connections)
   end
-
 end

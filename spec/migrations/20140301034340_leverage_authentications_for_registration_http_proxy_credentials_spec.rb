@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join("db/migrate/20140301034340_leverage_authentications_for_registration_http_proxy_credentials.rb")
+require_migration
 
 describe LeverageAuthenticationsForRegistrationHttpProxyCredentials do
   let(:auth_stub) { migration_stub(:Authentication) }

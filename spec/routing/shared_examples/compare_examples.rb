@@ -8,14 +8,14 @@ shared_examples_for "A controller that has compare routes" do
   describe "#compare_choose_base" do
     it "routes with POST" do
       expect(post("/#{controller_name}/compare_choose_base")).to route_to(
-                                                                    "#{controller_name}#compare_choose_base")
+        "#{controller_name}#compare_choose_base")
     end
   end
 
   describe "#compare_remove" do
     it "routes with POST" do
       expect(post("/#{controller_name}/compare_remove")).to route_to(
-                                                                "#{controller_name}#compare_remove")
+        "#{controller_name}#compare_remove")
     end
   end
 

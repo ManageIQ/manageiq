@@ -50,7 +50,7 @@ describe OntapStorageSystemController do
   describe "#sections_field_changed" do
     it "routes with POST" do
       expect(post("/#{controller_name}/sections_field_changed")).to route_to(
-                                                                        "#{controller_name}#sections_field_changed")
+        "#{controller_name}#sections_field_changed")
     end
   end
 

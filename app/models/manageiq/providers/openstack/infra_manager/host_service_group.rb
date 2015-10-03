@@ -10,11 +10,11 @@ class ManageIQ::Providers::Openstack::InfraManager::HostServiceGroup < ::HostSer
   end
 
   def host_service_group_system_services_condition
-    SystemService.host_service_group_condition(self.id)
+    SystemService.host_service_group_condition(id)
   end
 
   def host_service_group_filesystems_condition
-    Filesystem.host_service_group_condition(self.id)
+    Filesystem.host_service_group_condition(id)
   end
 
   def running_system_services

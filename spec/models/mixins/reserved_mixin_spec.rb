@@ -21,7 +21,7 @@ describe ReservedMixin do
       t.should respond_to(:some_field=)
 
       t.some_field = "test"
-      t.some_field.should  == "test"
+      t.some_field.should == "test"
       t.some_field?.should be_true
 
       t.some_field = nil
@@ -148,7 +148,7 @@ describe ReservedMixin do
       FactoryGirl.create(:reserve, :resource => @t, :reserved => {:some_field => "test"})
       @t.reload
 
-      @t.reserved_hash_get(:some_field).should    == "test"
+      @t.reserved_hash_get(:some_field).should == "test"
       @t.reserved_hash_get(:another_field).should be_nil
     end
   end
@@ -253,7 +253,7 @@ describe ReservedMixin do
         @t.reserved_hash_migrate(:name)
 
         Reserve.count.should == 0
-        @t.name.should       == "test"
+        @t.name.should == "test"
       end
 
       it "with multiple keys" do
@@ -262,8 +262,8 @@ describe ReservedMixin do
 
         @t.reserved_hash_migrate(:name, :description)
 
-        Reserve.count.should  == 0
-        @t.name.should        == "test"
+        Reserve.count.should == 0
+        @t.name.should == "test"
         @t.description.should == "test2"
       end
     end
@@ -276,7 +276,7 @@ describe ReservedMixin do
         @t.reserved_hash_migrate(:some_field => :name)
 
         Reserve.count.should == 0
-        @t.name.should       == "test"
+        @t.name.should == "test"
       end
 
       it "with multiple keys" do
@@ -285,8 +285,8 @@ describe ReservedMixin do
 
         @t.reserved_hash_migrate(:some_field => :name, :another_field => :description)
 
-        Reserve.count.should  == 0
-        @t.name.should        == "test"
+        Reserve.count.should == 0
+        @t.name.should == "test"
         @t.description.should == "test2"
       end
     end

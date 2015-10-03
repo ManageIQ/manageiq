@@ -8,31 +8,27 @@ class AssignedServerRole < ActiveRecord::Base
   MEDIUM_PRIORITY      = 2
   LOW_PRIORITY         = 3
   DEFAULT_PRIORITY     = MEDIUM_PRIORITY
-  AVAILABLE_PRIORITIES = [ HIGH_PRIORITY,  MEDIUM_PRIORITY, LOW_PRIORITY ]
+  AVAILABLE_PRIORITIES = [HIGH_PRIORITY,  MEDIUM_PRIORITY, LOW_PRIORITY]
   validates_inclusion_of :priority, :in => AVAILABLE_PRIORITIES, :allow_nil => true
 
   def massage_active_field
-    self.active = false if self.active.nil?
+    self.active = false if active.nil?
   end
 
-  def name
-    self.server_role.name
-  end
+  delegate :name, :to => :server_role
 
   def reset
-    self.update_attributes(:priority => DEFAULT_PRIORITY, :active => false)
+    update_attributes(:priority => DEFAULT_PRIORITY, :active => false)
   end
 
-  def master_supported?
-    self.server_role.master_supported?
-  end
+  delegate :master_supported?, :to => :server_role
 
   def database_owner?
-    self.server_role == ServerRole.database_owner
+    server_role == ServerRole.database_owner
   end
 
   def is_master?
-    self.miq_server.is_master_for_role?(self.server_role)
+    miq_server.is_master_for_role?(server_role)
   end
 
   def inactive?
@@ -40,112 +36,111 @@ class AssignedServerRole < ActiveRecord::Base
   end
 
   def set_master
-    self.miq_server.set_master_for_role(self.server_role)
-    self.reload
+    miq_server.set_master_for_role(server_role)
+    reload
   end
 
   def remove_master
-    self.miq_server.remove_master_for_role(self.server_role)
-    self.reload
+    miq_server.remove_master_for_role(server_role)
+    reload
   end
 
   def set_priority(val)
     # Only allow 1 Primary in the RoleScope
-    if val == HIGH_PRIORITY && self.server_role.master_supported?
-      if ['zone', 'region'].include?(self.server_role.role_scope)
-        method = "find_other_servers_in_#{self.server_role.role_scope}"
-        other_servers = self.miq_server.send(method)
+    if val == HIGH_PRIORITY && server_role.master_supported?
+      if ['zone', 'region'].include?(server_role.role_scope)
+        method = "find_other_servers_in_#{server_role.role_scope}"
+        other_servers = miq_server.send(method)
         other_servers.each do |server|
-          assigned = server.assigned_server_roles.where(:server_role_id => self.server_role_id).first
+          assigned = server.assigned_server_roles.find_by(:server_role_id => server_role_id)
           next if assigned.nil?
           assigned.update_attribute(:priority, DEFAULT_PRIORITY)  if assigned.priority == HIGH_PRIORITY
         end
       end
     end
 
-    self.update_attribute(:priority, val)
+    update_attribute(:priority, val)
   end
 
   def activate_in_region(override = false)
-    return unless self.server_role.role_scope == 'region'
+    return unless server_role.role_scope == 'region'
 
     if override || self.inactive?
       MiqRegion.my_region.lock do
-        if self.server_role.master_supported?
+        if server_role.master_supported?
           servers = MiqRegion.my_region.active_miq_servers
-          self.class.where(:server_role_id => self.server_role.id).each do |asr|
+          self.class.where(:server_role_id => server_role.id).each do |asr|
             asr.deactivate if servers.include?(asr.miq_server)
           end
         end
 
-        self.activate(override)
+        activate(override)
       end
     end
   end
 
   def deactivate_in_region(override = false)
-    return unless self.server_role.role_scope == 'region'
+    return unless server_role.role_scope == 'region'
 
     if override || self.active?
       MiqRegion.my_region.lock do
-        self.deactivate(override)
+        deactivate(override)
       end
     end
   end
 
   def activate_in_zone(override = false)
-    return unless self.server_role.role_scope == 'zone'
+    return unless server_role.role_scope == 'zone'
 
     if override || self.inactive?
-      self.miq_server.zone.lock do |zone|
-        if self.server_role.master_supported?
-          servers = self.miq_server.zone.active_miq_servers
-          self.class.where(:server_role_id => self.server_role.id).each do |asr|
+      miq_server.zone.lock do |_zone|
+        if server_role.master_supported?
+          servers = miq_server.zone.active_miq_servers
+          self.class.where(:server_role_id => server_role.id).each do |asr|
             asr.deactivate if servers.include?(asr.miq_server)
           end
         end
 
-        self.activate(override)
+        activate(override)
       end
     end
   end
 
   def deactivate_in_zone(override = false)
-    return unless self.server_role.role_scope == 'zone'
+    return unless server_role.role_scope == 'zone'
 
     if override || self.active?
-      self.miq_server.zone.lock do |zone|
-        self.deactivate(override)
+      miq_server.zone.lock do |_zone|
+        deactivate(override)
       end
     end
   end
 
   def activate_in_role_scope
-    case self.server_role.role_scope
-    when 'zone'   then self.activate_in_zone
-    when 'region' then self.activate_in_region
+    case server_role.role_scope
+    when 'zone'   then activate_in_zone
+    when 'region' then activate_in_region
     end
   end
 
   def deactivate_in_role_scope
-    case self.server_role.role_scope
-    when 'zone'   then self.deactivate_in_zone
-    when 'region' then self.deactivate_in_region
+    case server_role.role_scope
+    when 'zone'   then deactivate_in_zone
+    when 'region' then deactivate_in_region
     end
   end
 
   def activate(override = false)
     if override || self.inactive?
-      _log.info("Activating Role <#{self.server_role.name}> on Server <#{self.miq_server.name}>")
-      self.update_attributes(:active => true)
+      _log.info("Activating Role <#{server_role.name}> on Server <#{miq_server.name}>")
+      update_attributes(:active => true)
     end
   end
 
   def deactivate(override = false)
     if override || self.active?
-      _log.info("Deactivating Role <#{self.server_role.name}> on Server <#{self.miq_server.name}>")
-      self.update_attributes(:active => false)
+      _log.info("Deactivating Role <#{server_role.name}> on Server <#{miq_server.name}>")
+      update_attributes(:active => false)
     end
   end
-
 end

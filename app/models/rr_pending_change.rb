@@ -11,10 +11,10 @@ class RrPendingChange < ActiveRecord::Base
     is_called ? details["last_value"].to_i : details["start_value"].to_i - 1
   end
 
-  class << self; alias backlog count; end
+  class << self; alias_method :backlog, :count; end
 
   def self.backlog_details
-    counts = self.all(
+    counts = all(
       :select => "change_table, COUNT(id) AS count_all",
       :group  => "change_table"
     )

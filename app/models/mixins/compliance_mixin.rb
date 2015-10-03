@@ -13,19 +13,19 @@ module ComplianceMixin
   def last_compliance
     return @last_compliance unless @last_compliance.nil?
     @last_compliance = if association_cache.include?(:compliances)
-      self.compliances.sort_by(&:timestamp).last
-    else
-      self.compliances.order("timestamp DESC").first
-    end
+                         compliances.sort_by(&:timestamp).last
+                       else
+                         compliances.order("timestamp DESC").first
+                       end
   end
 
   def last_compliance_status
-    lc = self.last_compliance
+    lc = last_compliance
     lc.nil? ? nil : lc.compliant
   end
 
   def last_compliance_timestamp
-    lc = self.last_compliance
+    lc = last_compliance
     lc.nil? ? nil : lc.timestamp
   end
 
@@ -40,5 +40,4 @@ module ComplianceMixin
   def scan_and_check_compliance_queue
     Compliance.scan_and_check_compliance_queue(self)
   end
-
 end

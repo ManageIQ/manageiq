@@ -137,18 +137,15 @@
                   %br
                 = ws.description
             - else
-              #modules
-                .yui-b
-                  .yui-gb
-                    #col1.yui-u.first{:style => "position: relative; min-height: 50px;"}
-                      - @widget.miq_widget_shortcuts.each do |ws|
-                        %div
-                          .modbox
-                            %h2.modtitle
-                              %a{:class => "#{@widget.content_type}box"}
-                              %div
-                                %span.modtitle_text
-                                  = ws.description
+              .row#modules
+                .col-md-4#col1
+                  - @widget.miq_widget_shortcuts.each do |ws|
+                    %div
+                      .panel.panel-default
+                        .panel-header
+                          %h3.panel-title
+                            %a{:class => "#{@widget.content_type}box"}
+                            = ws.description
     - if @sb[:wtype] == "r"
       - @sb[:col_order].each_with_index do |col, idx|
         .form-group

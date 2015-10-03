@@ -25,12 +25,7 @@ describe MiqHostProvision do
 
   context "with default server and zone" do
     before(:each) do
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-
-      @zone       = FactoryGirl.create(:zone)
-      @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
-      MiqServer.stub(:my_server).and_return(@miq_server)
+      @miq_server = EvmSpecHelper.local_miq_server
     end
 
     context "with host and miq_host_provision" do
@@ -43,7 +38,7 @@ describe MiqHostProvision do
         mhp.should_receive(:signal).with(:create_pxe_configuration_files)
         mhp.reset_host_credentials
         mhp.host.authentications.length.should == 1
-        mhp.host.authentication_userid(:default).should   == 'root'
+        mhp.host.authentication_userid(:default).should == 'root'
         mhp.host.authentication_password(:default).should == password
       end
 
@@ -57,8 +52,8 @@ describe MiqHostProvision do
         ipmi_address     = '123.211.21.1'
 
         host.update_attributes(:ipmi_address => ipmi_address, :operating_system => FactoryGirl.create(:operating_system))
-        host.update_authentication(:ipmi    => { :userid => ipmi_userid,    :password => ipmi_password    })
-        host.update_authentication(:default => { :userid => default_userid, :password => default_password })
+        host.update_authentication(:ipmi    => {:userid => ipmi_userid,    :password => ipmi_password})
+        host.update_authentication(:default => {:userid => default_userid, :password => default_password})
 
         mhp.host.should be_kind_of(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
         mhp.stub(:get_option).with(:root_password).and_return(dialog_password)
@@ -69,10 +64,10 @@ describe MiqHostProvision do
         mhp.host.operating_system.should be_nil
 
         mhp.host.authentications.length.should == 2
-        mhp.host.authentication_userid(:ipmi).should   == ipmi_userid
+        mhp.host.authentication_userid(:ipmi).should == ipmi_userid
         mhp.host.authentication_password(:ipmi).should == ipmi_password
 
-        mhp.host.authentication_userid(:default).should   == dialog_userid
+        mhp.host.authentication_userid(:default).should == dialog_userid
         mhp.host.authentication_password(:default).should == dialog_password
       end
 
@@ -88,5 +83,4 @@ describe MiqHostProvision do
       end
     end
   end
-
 end

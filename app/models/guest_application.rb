@@ -1,6 +1,7 @@
 class GuestApplication < ActiveRecord::Base
   belongs_to :vm_or_template
   belongs_to :host
+  belongs_to :container_image
 
   include ReportableMixin
 
@@ -25,7 +26,7 @@ class GuestApplication < ActiveRecord::Base
   end
 
   def v_unique_name
-    return self.name if self.arch.blank? || self.arch == "noarch"
-    return "#{self.name} (#{self.arch})"
+    return name if arch.blank? || arch == "noarch"
+    "#{name} (#{arch})"
   end
 end

@@ -120,17 +120,18 @@ class OrchestrationTemplateDialogService
   def create_parameter_dropdown_list(parameter, group, position, dropdown)
     dropdown_list = dropdown.allowed_values.collect { |v| [v, v] }
     group.dialog_fields.build(
-      :type          => "DialogFieldDropDownList",
-      :name          => "param_#{parameter.name}",
-      :data_type     => "string",
-      :display       => "edit",
-      :required      => true,
-      :values        => dropdown_list,
-      :default_value => parameter.default_value || dropdown_list.first,
-      :label         => parameter.label,
-      :description   => parameter.description,
-      :position      => position,
-      :dialog_group  => group
+      :type           => "DialogFieldDropDownList",
+      :name           => "param_#{parameter.name}",
+      :data_type      => "string",
+      :display        => "edit",
+      :required       => true,
+      :values         => dropdown_list,
+      :default_value  => parameter.default_value || dropdown_list.first,
+      :label          => parameter.label,
+      :description    => parameter.description,
+      :reconfigurable => true,
+      :position       => position,
+      :dialog_group   => group
     )
   end
 
@@ -151,6 +152,7 @@ class OrchestrationTemplateDialogService
       :validator_rule => pattern.try(:pattern),
       :label          => parameter.label,
       :description    => parameter.description,
+      :reconfigurable => true,
       :position       => position,
       :dialog_group   => group
     )

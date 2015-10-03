@@ -41,7 +41,7 @@ module MiqHostProvision::Pxe
   def cidr
     subnet_mask = get_option(:subnet_mask)
     require 'ipaddr'
-    Integer(32 - Math.log2((IPAddr.new(subnet_mask.to_s,Socket::AF_INET).to_i ^ 0xffffffff) + 1))
+    Integer(32 - Math.log2((IPAddr.new(subnet_mask.to_s, Socket::AF_INET).to_i ^ 0xffffffff) + 1))
   rescue ArgumentError => err
     _log.warn "Cannot convert subnet #{subnet_mask.inspect} to CIDR because #{err.message}"
     return nil
@@ -49,14 +49,14 @@ module MiqHostProvision::Pxe
 
   def create_pxe_files
     pxe_image, windows_image = pxe_and_windows_image
-    mac_address = self.host.mac_address
+    mac_address = host.mac_address
 
     raise "MAC Address is nil" if mac_address.nil?
 
     substitution_options = nil
     if customization_template
-      substitution_options = self.options.dup
-      substitution_options[:miq_host_provision_id]        = self.id
+      substitution_options = options.dup
+      substitution_options[:miq_host_provision_id]        = id
       substitution_options[:mac_address]                  = mac_address
       substitution_options[:post_install_callback_url] = post_install_callback_url
       substitution_options[:cidr]                         = cidr
@@ -67,12 +67,10 @@ module MiqHostProvision::Pxe
 
   def delete_pxe_files
     pxe_image, windows_image = pxe_and_windows_image
-    mac_address = self.host.mac_address
+    mac_address = host.mac_address
 
     raise "MAC Address is nil" if mac_address.nil?
 
     pxe_server.delete_provisioning_files(pxe_image, mac_address, windows_image, customization_template)
   end
-
-
 end

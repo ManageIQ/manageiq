@@ -1,12 +1,29 @@
 /* jshint -W117, -W030 */
 describe('Dashboard', function() {
+  beforeEach(function() {
+    module('app.states', 'app.config', bard.fakeToastr);
+    bard.inject('$location', '$rootScope', '$state', '$templateCache', 'Session', '$httpBackend', '$q');
+  });
+
+  beforeEach(function() {
+    var d = new Date();
+    d.setMinutes(d.getMinutes() + 30);
+    d = d.toISOString();
+    d = d.substring(0, d.indexOf('.'));
+
+    Session.create({
+      auth_token: 'b10ee568ac7b5d4efbc09a6b62cb99b8',
+      expires_on: d + 'Z'
+    });
+    $httpBackend.whenGET('').respond(200);
+  });
+
   describe('route', function() {
     var views = {
       dashboard: 'app/states/dashboard/dashboard.html'
     };
 
     beforeEach(function() {
-      module('app.states');
       bard.inject('$location', '$rootScope', '$state', '$templateCache');
     });
 
@@ -17,28 +34,15 @@ describe('Dashboard', function() {
     });
   });
 
-  describe('navigation', function() {
-    beforeEach(function() {
-      module('app.states', bard.fakeToastr);
-      bard.inject('navigationHelper', '$rootScope');
-    });
-
-    it('should exist in the sidebar', function() {
-      expect(navigationHelper.sidebarItems('dashboard')).to.be.defined;
-    });
-
-    it('should add profile to the navigation', function() {
-      expect(navigationHelper.navItems('profile')).to.be.defined;
-    });
-  });
-
   describe('controller', function() {
     var controller;
+    var services = {};
+    var requests = {};
 
     beforeEach(function() {
-      module('app.states', bard.fakeToastr);
       bard.inject('$controller', '$log', '$state', '$rootScope');
-      controller = $controller($state.get('dashboard').controller);
+
+      controller = $controller($state.get('dashboard').controller, {services: services, requests: requests});
       $rootScope.$apply();
     });
 
@@ -49,10 +53,6 @@ describe('Dashboard', function() {
     describe('after activate', function() {
       it('should have title of Dashboard', function() {
         expect(controller.title).to.equal('Dashboard');
-      });
-
-      it('should have logged "Activated Dashboard"', function() {
-        expect($log.info.logs).to.match(/Activated Dashboard/);
       });
     });
   });

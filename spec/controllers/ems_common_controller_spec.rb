@@ -4,8 +4,8 @@ describe EmsCloudController do
   context "::EmsCommon" do
     context "#get_form_vars" do
       it "check if the default port for openstack/openstack_infra/rhevm is set" do
-        controller.instance_variable_set(:@edit, {:new => {}})
-        controller.instance_variable_set(:@_params, {:server_emstype => "openstack"})
+        controller.instance_variable_set(:@edit, :new => {})
+        controller.instance_variable_set(:@_params, :server_emstype => "openstack")
         controller.send(:get_form_vars)
         assigns(:edit)[:new][:port].should == 5000
 
@@ -13,9 +13,9 @@ describe EmsCloudController do
         controller.send(:get_form_vars)
         assigns(:edit)[:new][:port].should == 5000
 
-        controller.instance_variable_set(:@_params, {:server_emstype => "ec2"})
+        controller.instance_variable_set(:@_params, :server_emstype => "ec2")
         controller.send(:get_form_vars)
-        assigns(:edit)[:new][:port].should == nil
+        assigns(:edit)[:new][:port].should.nil?
       end
     end
 
@@ -38,45 +38,19 @@ describe EmsCloudController do
       before :each do
         set_user_privileges
       end
-      
+
       it "form_div should be updated when server type is sent up" do
-        controller.instance_variable_set(:@edit, {:new => {}, :key => "ems_edit__new"})
+        controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
         post :form_field_changed, :server_emstype => "rhevm", :id => "new"
         response.body.should include("form_div")
       end
 
       it "form_div should not be updated when other fields are sent up" do
-        controller.instance_variable_set(:@edit, {:new => {}, :key => "ems_edit__new"})
+        controller.instance_variable_set(:@edit, :new => {}, :key => "ems_edit__new")
         session[:edit] = assigns(:edit)
         post :form_field_changed, :name => "Test", :id => "new"
         response.body.should_not include("form_div")
-      end
-    end
-
-    context "#create" do
-      it "displays correct attribute name in error message when adding cloud EMS" do
-        set_user_privileges
-        controller.instance_variable_set(:@edit, {:new => {:name => "EMS 1", :emstype => "ec2"},
-                                                  :key => "ems_edit__new"})
-        session[:edit] = assigns(:edit)
-        controller.stub(:drop_breadcrumb)
-        post :create, :button => "add"
-        flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Region is not included in the list")
-        flash_messages.first[:level].should == :error
-      end
-
-      it "displays correct attribute name in error message when adding infra EMS" do
-        set_user_privileges
-        controller.instance_variable_set(:@edit, {:new => {:name => "EMS 2", :emstype => "rhevm"},
-                                                  :key => "ems_edit__new"})
-        session[:edit] = assigns(:edit)
-        controller.stub(:drop_breadcrumb)
-        post :create, :button => "add"
-        flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Host Name can't be blank")
-        flash_messages.first[:level].should == :error
       end
     end
 
@@ -155,6 +129,47 @@ describe EmsContainerController do
         response.status.should == 200
         ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer").should == "valid-token"
       end
+    end
+
+    context "#button" do
+      before(:each) do
+        set_user_privileges
+        FactoryGirl.create(:vmdb_database)
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it "when VM Migrate is pressed for unsupported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_microsoft)
+        post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should be_true
+        assigns(:flash_array).first[:message].should include('does not apply')
+      end
+
+      it "when VM Migrate is pressed for supported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_vmware)
+        post :button, :pressed => "vm_migrate", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should_not be_true
+      end
+
+      it "when VM Migrate is pressed for supported type" do
+        controller.stub(:role_allows).and_return(true)
+        vm = FactoryGirl.create(:vm_vmware)
+        post :button, :pressed => "vm_edit", :format => :js, "check_#{vm.id}" => "1"
+        controller.send(:flash_errors?).should_not be_true
+      end
+    end
+  end
+end
+
+describe EmsInfraController do
+  context "#show_link" do
+    let(:ems) { mock_model(EmsInfra) }
+    it "sets relative url" do
+      controller.instance_variable_set(:@table_name, "ems_infra")
+      link = controller.send(:show_link, ems, :display => "vms")
+      link.should eq("/ems_infra/show/#{ems.id}?display=vms")
     end
   end
 end

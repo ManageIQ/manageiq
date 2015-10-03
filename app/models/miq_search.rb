@@ -9,7 +9,7 @@ class MiqSearch < ActiveRecord::Base
   before_destroy :check_schedules_empty_on_destroy
 
   def check_schedules_empty_on_destroy
-    raise "Search is referenced in a schedule and cannot be deleted" unless self.miq_schedules.empty?
+    raise "Search is referenced in a schedule and cannot be deleted" unless miq_schedules.empty?
   end
 
   def search_type
@@ -31,33 +31,31 @@ class MiqSearch < ActiveRecord::Base
   end
 
   def self.get_expressions(options)
-    self.all(:conditions => options).each_with_object({}) do |r, hash|
+    all(:conditions => options).each_with_object({}) do |r, hash|
       hash[r.description] = r.id unless r.filter.nil?
     end
   end
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
   def self.seed
-    MiqRegion.my_region.lock do
-      fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")
-      slist        = YAML.load_file(fixture_file) if File.exist?(fixture_file)
-      slist      ||= []
+    fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")
+    slist        = YAML.load_file(fixture_file) if File.exist?(fixture_file)
+    slist ||= []
 
-      slist.each do |search|
-        attrs = search['attributes']
-        name  = attrs['name']
-        db    = attrs['db']
+    slist.each do |search|
+      attrs = search['attributes']
+      name  = attrs['name']
+      db    = attrs['db']
 
-        rec = self.find_by_name_and_db(name, db)
-        if rec.nil?
-          _log.info("Creating [#{name}]")
-          self.create(attrs)
-        else
-          # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column
-          attrs.delete('search_key')
-          rec.attributes = attrs
-          rec.save
-        end
+      rec = find_by_name_and_db(name, db)
+      if rec.nil?
+        _log.info("Creating [#{name}]")
+        create!(attrs)
+      else
+        # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column
+        attrs.delete('search_key')
+        rec.attributes = attrs
+        rec.save!
       end
     end
   end

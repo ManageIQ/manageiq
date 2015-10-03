@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqAeNamespace do
-
   it { should validate_presence_of(:name) }
 
   it { should allow_value("name.space1").for(:name) }

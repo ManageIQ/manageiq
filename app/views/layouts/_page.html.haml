@@ -1,9 +1,0 @@
-- if inner_layout_present?
-  -# Explorer type layouts will attach directly to outer layout
-  = yield
-- else                     
-  -# Classic HTML type layouts will live inside this div
-
-  = render :partial => "layouts/page_header" 
-  = render :partial => "layouts/page_center"
-  = render :partial => "layouts/page_footer"

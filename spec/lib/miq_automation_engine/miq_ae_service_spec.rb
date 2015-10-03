@@ -12,16 +12,15 @@ module MiqAeServiceSpec
 
     context "#attributes" do
       before do
-        @object.stub(:attributes).and_return({
-          'true'     => true,
-          'false'    => false,
-          'time'     => Time.parse('Aug 30, 2013'),
-          'symbol'   => :symbol,
-          'int'      => 1,
-          'float'    => 1.1,
-          'string'   => 'hello',
-          'array'    => [1,2,3,4],
-          'password' => MiqAePassword.new('test')})
+        @object.stub(:attributes).and_return('true'     => true,
+                                             'false'    => false,
+                                             'time'     => Time.parse('Aug 30, 2013'),
+                                             'symbol'   => :symbol,
+                                             'int'      => 1,
+                                             'float'    => 1.1,
+                                             'string'   => 'hello',
+                                             'array'    => [1, 2, 3, 4],
+                                             'password' => MiqAePassword.new('test'))
       end
 
       it "obscures passwords" do

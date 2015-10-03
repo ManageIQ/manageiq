@@ -65,8 +65,8 @@ module MiqLinux
        :wanted_by   => wanted_by,
        :required_by => required_by}
 
-      rescue
-        warn "Error parsing: #{file}"
+    rescue
+      warn "Error parsing: #{file}"
     end
 
     def parse_description(inif)
@@ -97,8 +97,8 @@ module MiqLinux
        :name        => name,
        :path        => file,
        :description => desc}
-      rescue
-        warn "Error parsing: #{file}"
+    rescue
+      warn "Error parsing: #{file}"
     end
 
     def service_xml(service)

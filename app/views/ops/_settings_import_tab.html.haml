@@ -4,19 +4,23 @@
   = render(:partial => "layouts/flash_msg", :locals => {:click_remove => false})
   %hr/
   %h3= _("Upload Custom Variable Values")
-  = form_tag({:action => "upload_csv", :typ => "asset_tag"}, :multipart => true) do
-    %table.style1
-      %tr
-        %td.key= _("Type")
-        %td
-          = select_tag('upload_type',
-            options_for_select([["<#{_('Choose')}>", nil], [title_for_host, "host"], [_("Vm"), "vm"]],
-            @edit[:new][:upload_type]),
-            "data-miq_observe" => {:url => url}.to_json)
-      - if @edit[:new][:upload_type]
-        %tr
-          %td.key= _("File")
-          %td
-            = file_field("upload", "file")
-            = submit_tag("Upload", :id => "upload_atags")
-            = _("* Requirements: CSV formatted file.")
+  = form_tag({:action => "upload_csv", :typ => "asset_tag"}, :class => "form-horizontal", :multipart => true) do
+    .form-group
+      %label.col-md-2.control-label
+        = _("Type")
+      .col-md-8
+        = select_tag('upload_type',
+                    options_for_select([["<#{_('Choose')}>", nil], [title_for_host, "host"], [_("Vm"), "vm"]],
+                    @edit[:new][:upload_type]),
+                    :class    => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('upload_type', "#{url}")
+    - if @edit[:new][:upload_type]
+      .form-group
+        %label.col-md-2.control-label
+          = _("File")
+        .col-md-8
+          = file_field("upload", "file")
+          = submit_tag("Upload", :id => "upload_atags")
+          = _("* Requirements: CSV formatted file.")
