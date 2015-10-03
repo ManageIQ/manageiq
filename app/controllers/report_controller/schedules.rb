@@ -183,14 +183,15 @@ module ReportController::Schedules
 
       javascript_for_timer_type(params[:timer_typ]).each { |js| page << js }
 
+      # same code in widget_form_field_changed
       if params[:time_zone]
-        page << "ManageIQ.calendar.calDateFrom = new Date(#{(Time.zone.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
-        page << "miqBuildCalendar();"
+        page << js_build_calendar(:date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]))
         page << "$('#miq_date_1').val('#{@edit[:new][:start_date]}');"
         page << "$('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"
         page << "$('#start_min').val('#{@edit[:new][:start_min].to_i}');"
         page.replace_html("tz_span", @timezone_abbr)
       end
+
       if @email_refresh
         page.replace("edit_email_div",
                      :partial => "layouts/edit_email",

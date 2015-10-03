@@ -120,7 +120,7 @@ module ApplicationController::Filter
 
         if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
            [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
-          page << "miqBuildCalendar();"
+          page << js_build_calendar
         end
 
         if @edit[@expkey][:exp_key] && @edit[@expkey][:exp_field]
@@ -427,7 +427,7 @@ module ApplicationController::Filter
 
           if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
              [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
-            page << "miqBuildCalendar();"
+            page << js_build_calendar
           end
           if @edit.fetch_path(@expkey, :val1, :type)
             page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
@@ -464,7 +464,7 @@ module ApplicationController::Filter
         page << "$('#adv_search_img').prop('src', '/images/toolbars/squashed-false.png')"
         if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
            [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
-          page << "miqBuildCalendar();"
+          page << js_build_calendar
         end
         if @edit.fetch_path(@expkey, :val1, :type)
           page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"

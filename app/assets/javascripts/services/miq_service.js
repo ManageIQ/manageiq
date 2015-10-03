@@ -7,9 +7,8 @@ ManageIQ.angularApplication.service('miqService', function() {
     miqButtons('hide');
   };
 
-  this.buildCalendar = function(year, month, date) {
-    ManageIQ.calendar.calDateFrom = new Date(year, month, date);
-    miqBuildCalendar(true);
+  this.buildCalendar = function(year, month, day) {
+    miqBuildCalendar({ dateFrom: new Date(year, month, day) });
   };
 
   this.miqAjaxButton = function(url, serializeFields) {

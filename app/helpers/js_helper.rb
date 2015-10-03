@@ -110,4 +110,16 @@ module JsHelper
     "if ($('##{j_str(element)}').prop('type') == 'checkbox') {$('##{j_str(element)}').prop('checked', false);}"
       .html_safe
   end
+
+  def js_build_calendar(options = {})
+    skip_days = options[:skip_days].nil? ? 'undefined' : options[:skip_days].to_a.to_json
+
+    <<EOD
+miqBuildCalendar({ dateFrom: #{js_format_date(options[:date_from])}, dateTo: #{js_format_date(options[:date_to])}, skipDays: #{skip_days} });
+EOD
+  end
+
+  def js_format_date(value)
+    value.nil? ? 'undefined' : "new Date('#{value.iso8601}')"
+  end
 end
