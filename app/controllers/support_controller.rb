@@ -17,7 +17,7 @@ class SupportController < ApplicationController
   end
 
   def about
-    #   @tabs ||= [ ["1", ""] ]
+    #   @active_tab ||= "1"
     #   @tabs.push( ["1", "Help"] )
     @vmdb = {:version => Vmdb::Appliance.VERSION, :build => Vmdb::Appliance.BUILD}
     @user_role = User.current_user.miq_user_role_name

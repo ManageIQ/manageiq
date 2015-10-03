@@ -8,10 +8,11 @@ module ApplicationController::Tags
     session[:cat] = nil                 # Clear current category
     tagging_build_screen
     area = request.parameters["controller"]
+    @active_tab = "tagging"
     if role_allows(:feature => "#{area}_tag")
-      @tabs = [["tagging", nil], ["classifying", "#{current_tenant.name} Tags"], %w(tagging MyTags)]
+      @tabs = [["classifying", "#{current_tenant.name} Tags"], %w(tagging MyTags)]
     else
-      @tabs = [["tagging", nil], %w(tagging MyTags)]
+      @tabs = [%w(tagging MyTags)]
     end
     render(:action => "show")
   end
@@ -88,7 +89,8 @@ module ApplicationController::Tags
     drop_breadcrumb(:name => "Tag Assignment", :url => "/#{request.parameters["controller"]}/tagging")
     session[:cat] = nil                 # Clear current category
     classify_build_screen
-    @tabs = [["classifying", nil], ["classifying", "#{current_tenant.name} Tags"], %w(tagging MyTags)]
+    @active_tab = "classifying"
+    @tabs = [["classifying", "#{current_tenant.name} Tags"], %w(tagging MyTags)]
     @in_a_form = true
     render :action => "show"
   end

@@ -88,7 +88,8 @@ module ApplicationController::PolicySupport
     drop_breadcrumb(:name => "Policy Simulation", :url => "/#{request.parameters["controller"]}/policy_sim?continue=true")
     session[:policies] = {} unless params[:continue]  # Clear current policies, unless continuing previous simulation
     policy_sim_build_screen
-    @tabs = [["polsim", nil], ["polsim", "Policy Simulation"]]
+    @active_tab = "polsim"
+    @tabs = [["polsim", "Policy Simulation"]]
     if @explorer
       @record = @tagitems.first
       @in_a_form = true
