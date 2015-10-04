@@ -23,23 +23,9 @@ matrix:
 addons:
   postgresql: '9.4'
 before_install:
-- '[[ -z "$SPA_UI" ]] || nvm install 0.12'
-- 'echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc'
-- travis_retry gem install bundler -v ">= 1.8.4"
-- "[[ -f certs/v2_key.dev ]] && cp certs/v2_key.dev certs/v2_key"
-- '[[ -z "$GEM" ]] || cd gems/$GEM'
-- '[[ -n "$GEM" ]] || echo "1" > REGION'
-- '[[ -n "$GEM" ]] || cp config/database.pg.yml config/database.yml'
-- '[[ -n "$GEM" ]] || psql -c "CREATE USER root SUPERUSER PASSWORD ''smartvm'';" -U postgres'
-- '[[ -n "$GEM" ]] || export BUNDLE_WITHOUT=development'
-- export BUNDLE_GEMFILE=$PWD/Gemfile
+- source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
-- '[[ -z "$SPA_UI" ]] || pushd spa_ui/$SPA_UI'
-- '[[ -z "$SPA_UI" ]] || npm install bower gulp -g'
-- '[[ -z "$SPA_UI" ]] || npm install'
-- '[[ -z "$SPA_UI" ]] || npm version'
-- '[[ -z "$SPA_UI" ]] || popd'
-- '[[ -z "$TEST_SUITE" ]] || bundle exec rake test:$TEST_SUITE:setup'
+- source ${TRAVIS_BUILD_DIR}/tools/ci/before_script.sh
 script:
 - bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}
 notifications:
