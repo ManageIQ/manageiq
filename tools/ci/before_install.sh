@@ -4,10 +4,19 @@
 #   BUNDLE_WITHOUT
 #   PWD
 
+ruby ${TRAVIS_BUILD_DIR}/build_tools/johnny_five.rb
+
 echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc
 travis_retry gem install bundler -v ">= 1.8.4"
 
-if [[ -n "${GEM}" ]] ; then
+if [[ -f ${TRAVIS_BUILD_DIR}/.skip-ci ]] ; then
+  echo "skipping before_install"
+  cat ${TRAVIS_BUILD_DIR}/.skip-ci
+
+  # change into a directory with minimal environment
+  # this will NOP the rest of the build
+  cd build_tools
+elif [[ -n "${GEM}" ]] ; then
   cd gems/${GEM}
 else
   [[ -z "${SPA_UI}" ]] || nvm install 0.12
