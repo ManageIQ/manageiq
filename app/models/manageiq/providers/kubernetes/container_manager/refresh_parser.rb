@@ -504,7 +504,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def parse_volumes(volumes)
-      volumes.collect do |volume|
+      volumes.to_a.collect do |volume|
         {
           :type                    => 'ContainerVolumeKubernetes',
           :name                    => volume.name,
