@@ -3,25 +3,6 @@
     {
       "warning_type": "Command Injection",
       "warning_code": 14,
-      "fingerprint": "bc7c2597ac891e83c66cb97cdbc860e550907de13b45dc33c64e121719df9486",
-      "message": "Possible command injection",
-      "file": "lib/vmdb/appliance.rb",
-      "line": 103,
-      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code": "`#{diag[:cmd]}`",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Vmdb::Appliance",
-        "method": "s(:self).log_diagnostics"
-      },
-      "user_input": "diag[:cmd]",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Command Injection",
-      "warning_code": 14,
       "fingerprint": "9671d8f31067984959a7340e73928b3d7f3aafccdc16aa4c6cb08105e7093e98",
       "message": "Possible command injection",
       "file": "app/models/miq_action.rb",
