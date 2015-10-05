@@ -827,14 +827,18 @@ class HostController < ApplicationController
 
   def set_credentials(host, mode)
     creds = {}
+    default_password = params[:default_password] ? params[:default_password] : host.authentication_password
+    remote_password = params[:remote_password] ? params[:remote_password] : host.authentication_password(:remote)
+    ws_password = params[:ws_password] ? params[:ws_password] : host.authentication_password(:ws)
+    ipmi_password = params[:ipmi_password] ? params[:ipmi_password] : host.authentication_password(:ipmi)
     creds[:default] = {:userid   => params[:default_userid],
-                       :password => params[:default_password]} unless params[:default_userid].blank?
+                       :password => default_password} unless params[:default_userid].blank?
     creds[:remote]  = {:userid   => params[:remote_userid],
-                       :password => params[:remote_password]}  unless params[:remote_userid].blank?
+                       :password => remote_password}  unless params[:remote_userid].blank?
     creds[:ws]      = {:userid   => params[:ws_userid],
-                       :password => params[:ws_password]}      unless params[:ws_userid].blank?
+                       :password => ws_password}      unless params[:ws_userid].blank?
     creds[:ipmi]    = {:userid   => params[:ipmi_userid],
-                       :password => params[:ipmi_password]}    unless params[:ipmi_userid].blank?
+                       :password => ipmi_password}    unless params[:ipmi_userid].blank?
     host.update_authentication(creds, :save => (mode != :validate))
     creds
   end
