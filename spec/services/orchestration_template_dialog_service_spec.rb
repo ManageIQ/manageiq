@@ -2,14 +2,13 @@ require "spec_helper"
 
 describe OrchestrationTemplateDialogService do
   let(:dialog_service) { described_class.new }
-
-  let(:template) { FactoryGirl.create(:orchestration_template_hot_with_content) }
-
+  let(:template_hot)   { FactoryGirl.create(:orchestration_template_hot_with_content) }
+  let(:template_azure) { FactoryGirl.create(:orchestration_template_azure_with_content) }
   let(:empty_template) { FactoryGirl.create(:orchestration_template_cfn) }
 
   describe "#create_dialog" do
-    it "creates a dialog with stack basic info and parameters" do
-      dialog = dialog_service.create_dialog("test", template)
+    it "creates a dialog from hot template with stack basic info and parameters" do
+      dialog = dialog_service.create_dialog("test", template_hot)
 
       dialog.should have_attributes(
         :label   => "test",
@@ -21,12 +20,20 @@ describe OrchestrationTemplateDialogService do
       assert_stack_tab(tabs[0])
     end
 
+    it "creates a dialog from azure template with stack basic info and parameters" do
+      dialog = dialog_service.create_dialog("test", template_azure)
+
+      tabs = dialog.dialog_tabs
+      assert_tab_attributes(tabs[0])
+      assert_azure_stack_group(tabs[0].dialog_groups[0])
+    end
+
     it "creates a dialog from a template without parameters" do
       dialog = dialog_service.create_dialog("test", empty_template)
 
       tabs = dialog.dialog_tabs
       assert_tab_attributes(tabs[0])
-      assert_stack_group(tabs[0].dialog_groups[0])
+      assert_aws_openstack_stack_group(tabs[0].dialog_groups[0])
     end
   end
 
@@ -36,7 +43,7 @@ describe OrchestrationTemplateDialogService do
     groups = tab.dialog_groups
     groups.size.should == 3
 
-    assert_stack_group(groups[0])
+    assert_aws_openstack_stack_group(groups[0])
     assert_parameter_group1(groups[1])
     assert_parameter_group2(groups[2])
   end
@@ -48,7 +55,7 @@ describe OrchestrationTemplateDialogService do
     )
   end
 
-  def assert_stack_group(group)
+  def assert_aws_openstack_stack_group(group)
     group.should have_attributes(
       :label   => "Options",
       :display => "edit",
@@ -59,9 +66,25 @@ describe OrchestrationTemplateDialogService do
 
     fields[0].resource_action.fqname.should == "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
     assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",     :dynamic => true)
-    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",      :validator_rule => '^[A-Za-z][A-Za-z0-9|-]*$')
+    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",      :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
     assert_field(fields[2], DialogFieldDropDownList, :name => "stack_onfailure", :values => [%w(DO_NOTHING Do\ nothing), %w(ROLLBACK Rollback)])
     assert_field(fields[3], DialogFieldTextBox,      :name => "stack_timeout",   :validator_rule => '^[1-9][0-9]*$')
+  end
+
+  def assert_azure_stack_group(group)
+    group.should have_attributes(
+      :label   => "Options",
+      :display => "edit",
+    )
+
+    fields = group.dialog_fields
+    fields.size.should == 4
+
+    fields[0].resource_action.fqname.should == "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
+    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",    :dynamic => true)
+    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",     :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
+    assert_field(fields[2], DialogFieldTextBox,      :name => "resource_group", :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$')
+    assert_field(fields[3], DialogFieldDropDownList, :name => "deploy_mode",    :values => [%w(Complete Complete), %w(Incremental Incremental)])
   end
 
   def assert_field(field, clss, attributes)
