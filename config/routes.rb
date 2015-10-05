@@ -142,7 +142,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         panel_control
-        resize_layout
         quick_search
         save_col_widths
         sections_field_changed
@@ -263,7 +262,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         protect
-        resize_layout
         sections_field_changed
         show
         show_list
@@ -608,7 +606,6 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
-        resize_layout
         save_col_widths
         sections_field_changed
         show
@@ -647,9 +644,7 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         protect
-        resize_layout
         quick_search
-        resize_layout
         sections_field_changed
         show
         show_list
@@ -692,7 +687,6 @@ Vmdb::Application.routes.draw do
         panel_control
         protect
         quick_search
-        resize_layout
         save_col_widths
         sections_field_changed
         show
@@ -767,7 +761,6 @@ Vmdb::Application.routes.draw do
         button
         quick_search
         panel_control
-        resize_layout
         save_col_widths
         sections_field_changed
         show
@@ -799,7 +792,6 @@ Vmdb::Application.routes.draw do
         patches
         perf_top_chart
         protect
-        resize_layout
         show
         show_association
         show_details
@@ -832,7 +824,6 @@ Vmdb::Application.routes.draw do
         panel_control
         patches
         protect
-        resize_layout
         sections_field_changed
         show
         show_list
@@ -1384,7 +1375,6 @@ Vmdb::Application.routes.draw do
         panel_control
         parameters
         quick_search
-        resize_layout
         resources
         retire
         save_col_widths
@@ -1562,7 +1552,6 @@ Vmdb::Application.routes.draw do
         quick_search
         panel_control
         protect
-        resize_layout
         show
         show_list
         tag_edit_form_field_changed
@@ -1590,7 +1579,6 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         protect
-        resize_layout
         save_col_widths
         sections_field_changed
         show
@@ -1618,7 +1606,6 @@ Vmdb::Application.routes.draw do
         button
         quick_search
         panel_control
-        resize_layout
         save_col_widths
         show
         show_list
@@ -1676,7 +1663,6 @@ Vmdb::Application.routes.draw do
         index
         perf_chart_chooser
         protect
-        resize_layout
         show
         show_list
         snapshot_files
