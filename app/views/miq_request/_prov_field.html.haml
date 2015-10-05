@@ -384,7 +384,7 @@
               = options[:attached_ds_names].to_miq_a.join(",")
             - elsif options[field]
               -# Description is in the second, last, array element
-              = options[field].last
+              = options[field].last 
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]
