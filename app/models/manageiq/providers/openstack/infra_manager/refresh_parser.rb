@@ -187,7 +187,7 @@ module ManageIQ
         # Get Cpu speed in Mhz
         cpu_speed        = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency').to_i / 10**6
         {
-          :memory_cpu         => host.properties['memory_mb'],
+          :memory_mb          => host.properties['memory_mb'],
           :disk_capacity      => host.properties['local_gb'],
           :logical_cpus       => logical_cpus,
           :numvcpus           => numvcpus,

@@ -14202,8 +14202,8 @@ msgstr "locale_name"
 msgid "m"
 msgstr "m"
 
-msgid "memory_cpu"
-msgstr "memory_cpu"
+msgid "memory_mb"
+msgstr "memory_mb"
 
 msgid "none"
 msgstr "なし"

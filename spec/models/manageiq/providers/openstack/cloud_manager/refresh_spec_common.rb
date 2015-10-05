@@ -220,7 +220,7 @@ module Openstack
       assert_objects_with_hashes(ManageIQ::Providers::Openstack::CloudManager::Flavor.all,
                                  compute_data.flavors,
                                  compute_data.flavor_translate_table,
-                                 {:ram => -> (x) { x * 1_024 * 1_024 }},
+                                 {:ram => -> (x) { x * 1.megabyte }},
                                  [:is_public, :disk, :ephemeral, :swap]) # TODO(lsmola) model blacklisted attrs
 
       ManageIQ::Providers::Openstack::CloudManager::Flavor.all.each do |flavor|
@@ -488,7 +488,7 @@ module Openstack
 
       vm.hardware.should have_attributes(
         :numvcpus      => vm.flavor.cpus,
-        :memory_cpu    => vm.flavor.memory / (1_024 * 1_024), # MB
+        :memory_mb     => vm.flavor.memory / 1.megabyte,
         :disk_capacity => 2.5.gigabytes # TODO(lsmola) Where is this coming from?
       )
 

@@ -29,7 +29,6 @@ class Hardware < ActiveRecord::Base
   alias_attribute :cores_per_socket, :cpu_cores_per_socket
   alias_attribute :numvcpus, :cpu_sockets
   alias_attribute :logical_cpus, :cpu_total_cores
-  alias_attribute :memory_cpu, :memory_mb
 
   include ReportableMixin
 
@@ -121,7 +120,7 @@ class Hardware < ActiveRecord::Base
   end
 
   def m_memory(_parent, xmlNode, _deletes)
-    self.memory_cpu = xmlNode.attributes["memsize"]
+    self.memory_mb = xmlNode.attributes["memsize"]
   end
 
   def m_bios(_parent, xmlNode, _deletes)

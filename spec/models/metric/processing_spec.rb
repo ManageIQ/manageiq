@@ -137,13 +137,7 @@ describe Metric::Processing do
     end
 
     context "on :derived_memory_available" do
-      let(:vm) do
-        FactoryGirl.create(:vm_vmware, :hardware =>
-          FactoryGirl.create(:hardware,
-                             :memory_cpu => 4_096
-                            )
-                          )
-      end
+      let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :memory_mb => 4_096)) }
 
       it "with usage values" do
         m = FactoryGirl.create(:metric_rollup_vm_hr,

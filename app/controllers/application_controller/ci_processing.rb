@@ -1054,7 +1054,7 @@ module ApplicationController::CiProcessing
   alias_method :vm_reconfigure, :reconfigurevms
   alias_method :miq_template_reconfigure, :reconfigurevms
 
-  def set_memory_cpu
+  def set_memory_mb
     # set memory to nil if multiple items were selected with different mem_cpu values
     memory = @reconfigureitems.first.mem_cpu
     memory = nil unless @reconfigureitems.all? { |vm| vm.mem_cpu == memory }
@@ -1074,7 +1074,7 @@ module ApplicationController::CiProcessing
   def reconfigure_build_screen
     @reconfigureitems = Vm.find(@edit[:reconfigure_items]).sort_by(&:name)  # Get the db records that are being tagged
     if !@edit[:req_id]
-      set_memory_cpu
+      set_memory_mb
       @edit[:new][:memory] = @edit[:new][:old_memory]
       @edit[:new][:mem_typ] = @edit[:new][:old_mem_typ]
     else

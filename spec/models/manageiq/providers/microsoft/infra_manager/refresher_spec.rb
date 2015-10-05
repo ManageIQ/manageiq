@@ -128,7 +128,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :cpu_type           => "Intel Xeon 179",
       :manufacturer       => "Intel",
       :model              => "Xeon",
-      :memory_cpu         => 131_059,  # MB
+      :memory_mb          => 131_059,
       :memory_console     => nil,
       :numvcpus           => 2,
       :logical_cpus       => 16,
@@ -185,7 +185,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :bios               => "67b7b7ae-34aa-474e-9050-02ed3c633f6c",
       :logical_cpus       => 1,
       :annotation         => nil,
-      :memory_cpu         => 512   # MB
+      :memory_mb          => 512
     )
 
     v.hardware.disks.size.should == 1

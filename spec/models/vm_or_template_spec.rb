@@ -133,8 +133,8 @@ describe VmOrTemplate do
   context "#reconfigured_hardware_value?" do
     before do
       @vm       =  FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:hardware, :vm_or_template_id => @vm.id, :memory_cpu => 1024)
-      @options  = {:hdw_attr => :memory_cpu}
+      FactoryGirl.create(:hardware, :vm_or_template_id => @vm.id, :memory_mb => 1024)
+      @options = {:hdw_attr => :memory_mb}
     end
 
     it "with no drift states" do
@@ -154,14 +154,14 @@ describe VmOrTemplate do
         end
 
         it "with a lower memory value" do
-          @vm.hardware.memory_cpu = 512
+          @vm.hardware.memory_mb = 512
           @vm.save_drift_state
 
           @vm.reconfigured_hardware_value?(@options).should be_false
         end
 
         it "with a higher memory value" do
-          @vm.hardware.memory_cpu = 2048
+          @vm.hardware.memory_mb = 2048
           @vm.save_drift_state
 
           @vm.reconfigured_hardware_value?(@options).should be_true
@@ -178,14 +178,14 @@ describe VmOrTemplate do
         end
 
         it "with a lower memory value" do
-          @vm.hardware.memory_cpu = 512
+          @vm.hardware.memory_mb = 512
           @vm.save_drift_state
 
           @vm.reconfigured_hardware_value?(@options).should be_true
         end
 
         it "with a higher memory value" do
-          @vm.hardware.memory_cpu = 2048
+          @vm.hardware.memory_mb = 2048
           @vm.save_drift_state
 
           @vm.reconfigured_hardware_value?(@options).should be_false

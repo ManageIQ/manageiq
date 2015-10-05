@@ -26,7 +26,7 @@ class VmReconfigureRequest < MiqRequest
       all_vcpus            << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_vcpus].min : vm.max_vcpus)
       all_cores_per_socket << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_cores_per_socket].min : vm.max_cores_per_socket)
       all_total_vcpus      << (vm.host ? [vm.host.hardware.logical_cpus, vm.max_total_vcpus].min : vm.max_total_vcpus)
-      all_memory << (vm.respond_to?(:max_memory_cpu) ? vm.max_memory_cpu : default_max_vm_memory)
+      all_memory           << (vm.respond_to?(:max_memory_mb) ? vm.max_memory_mb : default_max_vm_memory)
     end
 
     result[:max__number_of_sockets] = all_vcpus.min

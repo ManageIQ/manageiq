@@ -188,7 +188,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :manufacturer       => "",
       :model              => "",
       :number_of_nics     => nil,
-      :memory_cpu         => 7806,
+      :memory_mb          => 7806,
       :memory_console     => nil,
       :numvcpus           => 1,
       :logical_cpus       => 4,
@@ -297,7 +297,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :bios               => nil,
       :numvcpus           => 2,
       :annotation         => "Powered On VM for EmsRefresh testing",
-      :memory_cpu         => 1024 # TODO: Should this be in bytes?
+      :memory_mb          => 1024
     )
 
     v.hardware.disks.size.should == 2
@@ -454,7 +454,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :bios               => nil,
       :numvcpus           => 2,
       :annotation         => "Powered Off VM for EmsRefresh testing",
-      :memory_cpu         => 1024 # TODO: Should this be in bytes?
+      :memory_mb          => 1024
     )
 
     v.hardware.disks.size.should == 2
@@ -570,7 +570,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :cores_per_socket   => 1,
       :logical_cpus       => 2,
       :annotation         => "Template for EmsRefresh testing",
-      :memory_cpu         => 1024 # TODO: Should this be in bytes?
+      :memory_mb          => 1024
     )
 
     v.hardware.disks.size.should == 2

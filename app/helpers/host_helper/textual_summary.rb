@@ -229,7 +229,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_memory
-    {:label => "Memory", :value => (@record.hardware.nil? || !@record.hardware.memory_cpu.kind_of?(Numeric)) ? "N/A" : number_to_human_size(@record.hardware.memory_cpu.to_i * 1.megabyte, :precision => 0)}
+    {:label => "Memory", :value => (@record.hardware.nil? || !@record.hardware.memory_mb.kind_of?(Numeric)) ? "N/A" : number_to_human_size(@record.hardware.memory_mb.to_i * 1.megabyte, :precision => 0)}
   end
 
   def textual_guid

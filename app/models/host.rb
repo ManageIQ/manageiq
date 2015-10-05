@@ -1381,7 +1381,7 @@ class Host < ActiveRecord::Base
 
   def ram_size
     return 0 if hardware.nil?
-    hardware.memory_cpu.to_i
+    hardware.memory_mb.to_i
   end
 
   def firewall_rules

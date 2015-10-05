@@ -14187,7 +14187,7 @@ msgstr "Nederlands"
 msgid "m"
 msgstr ""
 
-msgid "memory_cpu"
+msgid "memory_mb"
 msgstr ""
 
 msgid "none"

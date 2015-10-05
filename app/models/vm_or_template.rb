@@ -1579,7 +1579,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def ram_size(check_state = false)
-    hardware.nil? || (check_state && state != 'on') ? 0 : hardware.memory_cpu
+    hardware.nil? || (check_state && state != 'on') ? 0 : hardware.memory_mb
   end
 
   def ram_size_by_state

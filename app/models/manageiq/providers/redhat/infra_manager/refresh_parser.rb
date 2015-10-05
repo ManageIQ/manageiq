@@ -185,7 +185,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
       # Value provided by VC is in bytes, need to convert to MB
       memory_total = inv[:statistics].to_miq_a.detect { |stat| stat[:name] == 'memory.total' }
-      result[:memory_cpu] = memory_total.nil? ? 0 : memory_total[:values].first.to_i / 1048576  # in MB
+      result[:memory_mb] = memory_total.nil? ? 0 : memory_total[:values].first.to_i / 1.megabyte
 
       result[:cores_per_socket] = hdw.fetch_path(:topology, :cores) || 1        # Number of cores per socket
       result[:numvcpus]         = hdw.fetch_path(:topology, :sockets) || 1      # Number of physical sockets
@@ -411,7 +411,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     result[:numvcpus]         = hdw.fetch_path(:topology, :sockets) || 1      # Number of sockets
     result[:logical_cpus]     = result[:numvcpus] * result[:cores_per_socket] # Number of cores multiplied by sockets
 
-    result[:memory_cpu] = inv[:memory] / 1048576  # in MB
+    result[:memory_mb] = inv[:memory] / 1.megabyte
 
     result
   end

@@ -66,7 +66,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     max_total_vcpus
   end
 
-  def max_memory_cpu
+  def max_memory_mb
     case hardware.virtual_hw_version
     when "04"             then   64.gigabyte / 1.megabyte
     when "07"             then  255.gigabyte / 1.megabyte

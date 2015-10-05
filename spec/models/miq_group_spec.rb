@@ -169,10 +169,10 @@ describe MiqGroup do
       @ems = FactoryGirl.create(:ems_vmware, :name => "test_vcenter")
       @storage  = FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
 
-      @hw1 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_cpu => @ram_size)
-      @hw2 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_cpu => @ram_size)
-      @hw3 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_cpu => @ram_size)
-      @hw4 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_cpu => @ram_size)
+      @hw1 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_mb => @ram_size)
+      @hw2 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_mb => @ram_size)
+      @hw3 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_mb => @ram_size)
+      @hw4 = FactoryGirl.create(:hardware, :logical_cpus => @num_cpu, :memory_mb => @ram_size)
       @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
       @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
       @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
@@ -227,7 +227,7 @@ describe MiqGroup do
     end
 
     it "when the virtual column is nil" do
-      hw = FactoryGirl.create(:hardware, :numvcpus => @num_cpu, :memory_cpu => @ram_size)
+      hw = FactoryGirl.create(:hardware, :numvcpus => @num_cpu, :memory_mb => @ram_size)
       FactoryGirl.create(:vm_vmware,
                          :name         => "VM with no disk",
                          :miq_group_id => @miq_group.id,

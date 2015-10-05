@@ -44,7 +44,7 @@ include:
     - guest_os_full_name
     - guest_os
     - numvcpus
-    - memory_cpu
+    - memory_mb
     - bios
     - config_version
     - annotation
@@ -225,7 +225,7 @@ col_order:
 - hardware.guest_os_full_name
 - hardware.guest_os
 - hardware.numvcpus
-- hardware.memory_cpu
+- hardware.memory_mb
 - hardware.bios
 - hardware.config_version
 - hardware.annotation
