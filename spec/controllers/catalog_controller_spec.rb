@@ -9,9 +9,9 @@ describe CatalogController do
   # some methods should not be accessible through the legacy routes
   # either by being private or through the hide_action mechanism
   it 'should not allow call of hidden/private actions' do
-    expect {
+    expect do
       post :process_sts
-    }.to raise_error AbstractController::ActionNotFound
+    end.to raise_error AbstractController::ActionNotFound
   end
 
   describe 'x_button' do
@@ -33,7 +33,7 @@ describe CatalogController do
   context "#atomic_st_edit" do
     it "Atomic Service Template and it's valid Resource Actions are saved" do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, {:button => "save"})
+      controller.instance_variable_set(:@_params, :button => "save")
       st = FactoryGirl.create(:service_template)
       3.times.each_with_index do |i|
         ns = FactoryGirl.create(:miq_ae_namespace, :name => "ns#{i}")
@@ -100,19 +100,19 @@ describe CatalogController do
   context "#st_edit" do
     it "@record is cleared out after Service Template is added" do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, {:button => "add"})
+      controller.instance_variable_set(:@_params, :button => "add")
       st = FactoryGirl.create(:service_template)
       controller.instance_variable_set(:@record, st)
       edit = {
-          :new => {:name => "New Name", :description => "New Description", :selected_resources => [st.id], :rsc_groups => [[{:name => "Some name"}]]},
-          :key => "st_edit__new",
-          :rec_id => st.id,
+        :new    => {:name => "New Name", :description => "New Description", :selected_resources => [st.id], :rsc_groups => [[{:name => "Some name"}]]},
+        :key    => "st_edit__new",
+        :rec_id => st.id,
       }
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
       controller.stub(:replace_right_cell)
       controller.send(:st_edit)
-      assigns(:record).should == nil
+      assigns(:record).should.nil?
     end
   end
 
@@ -337,11 +337,11 @@ describe CatalogController do
       @tag1 = FactoryGirl.create(:classification_tag,
                                  :name   => "tag1",
                                  :parent => classification
-      )
+                                )
       @tag2 = FactoryGirl.create(:classification_tag,
                                  :name   => "tag2",
                                  :parent => classification
-      )
+                                )
       Classification.stub(:find_assigned_entries).with(@ot).and_return([@tag1, @tag2])
       controller.instance_variable_set(:@sb,
                                        :trees       => {:ot_tree => {:active_node => "root"}},
@@ -456,7 +456,7 @@ describe CatalogController do
                                   :label       => "Test Label",
                                   :description => "Test Description",
                                   :buttons     => "submit,reset,cancel"
-      )
+                                 )
       retire_fqname    = 'ns0/cls0/inst0'
       provision_fqname = 'ns1/cls1/inst1'
       recon_fqname     = 'ns2/cls2/inst2'

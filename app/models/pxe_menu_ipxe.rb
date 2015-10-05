@@ -65,5 +65,4 @@ class PxeMenuIpxe < PxeMenu
     end
     items
   end
-
 end

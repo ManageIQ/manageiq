@@ -45,21 +45,21 @@ module ApplicationController::TreeSupport
 
   # Build a compliance history tree
   def compliance_history_tree(rec, count)
-    t_kids = Array.new                          # Array to hold node children
-    rec.compliances.all(:limit=>count, :order=>"timestamp DESC").each do |c|
+    t_kids = []                          # Array to hold node children
+    rec.compliances.all(:limit => count, :order => "timestamp DESC").each do |c|
       c_node = TreeNodeBuilder.generic_tree_node(
-          "c_#{c.id}",
-          format_timezone(c.timestamp, Time.zone, 'gtl'),
-          "#{c.compliant ? "check" : "x"}.png",
-          nil,
-          {:style_class => "cfme-no-cursor-node"}
+        "c_#{c.id}",
+        format_timezone(c.timestamp, Time.zone, 'gtl'),
+        "#{c.compliant ? "check" : "x"}.png",
+        nil,
+        :style_class => "cfme-no-cursor-node"
       )
       c_node[:title] = "<b>Compliance Check on:</b> #{c_node[:title]}"
       c_kids = []
       temp_pol_id = nil
       p_node = {}
       p_kids = []
-      c.compliance_details.all(:order=>"miq_policy_desc, condition_desc").each do |d|
+      c.compliance_details.all(:order => "miq_policy_desc, condition_desc").each do |d|
         if d.miq_policy_id != temp_pol_id
           unless p_node.empty?
             p_node[:children] = p_kids unless p_kids.empty?
@@ -71,7 +71,7 @@ module ApplicationController::TreeSupport
             d.miq_policy_desc,
             "#{d.miq_policy_result ? "check" : "x"}.png",
             nil,
-            {:style_class => "cfme-no-cursor-node"}
+            :style_class => "cfme-no-cursor-node"
           )
           p_node[:title] = "<b>Policy:</b> #{p_node[:title]}"
           p_kids = []
@@ -81,7 +81,7 @@ module ApplicationController::TreeSupport
           d.condition_desc,
           "#{d.condition_result ? "check" : "x"}.png",
           nil,
-          {:style_class => "cfme-no-cursor-node"}
+          :style_class => "cfme-no-cursor-node"
         )
         cn_node[:title] = "<b>Condition:</b> #{cn_node[:title]}"
         p_kids.push(cn_node)
@@ -95,7 +95,7 @@ module ApplicationController::TreeSupport
           "No Compliance Policies Found",
           "#{c_node[:key]}-nopol",
           nil,
-          {:style_class => "cfme-no-cursor-node"}
+          :style_class => "cfme-no-cursor-node"
         )
         c_node[:children] = [np_node]
       end
@@ -115,13 +115,13 @@ module ApplicationController::TreeSupport
 
   def policy_profile_nodes
     profiles = []
-    MiqPolicySet.all.sort_by{|profile| profile.description.downcase}.each do |profile|
+    MiqPolicySet.all.sort_by { |profile| profile.description.downcase }.each do |profile|
       policy_profile_node = TreeNodeBuilder.generic_tree_node(
-          "policy_profile_#{profile.id}",
-          profile.description,
-          "policy_profile#{profile.active? ? "" : "_inactive"}.png",
-          nil,
-          {:style_class => "cfme-no-cursor-node"}
+        "policy_profile_#{profile.id}",
+        profile.description,
+        "policy_profile#{profile.active? ? "" : "_inactive"}.png",
+        nil,
+        :style_class => "cfme-no-cursor-node"
       )
       unless @edit[:new][profile.id] == 0              # If some have this policy: set check if all, set mixed check if some
         policy_profile_node[:select] = true if @edit[:new][profile.id] == session[:pol_items].length
@@ -138,15 +138,14 @@ module ApplicationController::TreeSupport
 
   def policy_profile_branch_nodes(profile)
     policy_profile_children = []
-    profile.members.sort_by{|policy| [policy.towhat, policy.mode, policy.description.downcase]}.each do |policy|
+    profile.members.sort_by { |policy| [policy.towhat, policy.mode, policy.description.downcase] }.each do |policy|
       policy_node = TreeNodeBuilder.generic_tree_node(
-          "policy_#{policy.id}",
-          policy.description,
-          "miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}.png",
-          nil,
-          {:style_class  => "cfme-no-cursor-node",
-           :hideCheckbox => true
-          }
+        "policy_#{policy.id}",
+        policy.description,
+        "miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}.png",
+        nil,
+        :style_class  => "cfme-no-cursor-node",
+        :hideCheckbox => true
       )
       policy_node[:title] = "<b>#{ui_lookup(:model => policy.towhat)} #{policy.mode.capitalize}:</b> #{policy_node[:title]}"
       policy_profile_children.push(policy_node)
@@ -155,11 +154,11 @@ module ApplicationController::TreeSupport
   end
 
   # Return datacenter tree node(s) for the passed in folder/datacenter/host/vm/cluster/resource pool
-  def get_dc_node(folder, pid, vat=false)       # Called with folder node, parent tree node id, VM & Templates flag
-    @sb[:tree_vms_hash]   ||= {}
+  def get_dc_node(folder, pid, vat = false)       # Called with folder node, parent tree node id, VM & Templates flag
+    @sb[:tree_vms_hash] ||= {}
     @sb[:tree_hosts_hash] ||= {}
 
-    @tree_vms   ||= []
+    @tree_vms ||= []
     @tree_hosts ||= []
     @sb[:vat] = vat
     kids = []                            # Return node(s) as an array
@@ -191,7 +190,7 @@ module ApplicationController::TreeSupport
         end
       else
         node[:isLazy] = true if folder.folders.size > 0 ||
-          folder.clusters.size > 0
+                                folder.clusters.size > 0
       end
       node[:children] = dc_kids unless dc_kids.empty?
       kids.push(node)
@@ -224,7 +223,7 @@ module ApplicationController::TreeSupport
       end
 
     # Handle folder named "Discovered Virtual Machine"
-    #elsif folder.kind_of?(EmsFolder) && folder.name == "Discovered Virtual Machine"
+    # elsif folder.kind_of?(EmsFolder) && folder.name == "Discovered Virtual Machine"
     # Commented this out to handle like any other blue folder, for now
 
     # Handle normal Folders
@@ -237,7 +236,7 @@ module ApplicationController::TreeSupport
         "Folder: #{folder.name}",
         :style_class   => "cfme-no-cursor-node"
       )
-      f_kids = Array.new
+      f_kids = []
       if @sb[:open_tree_nodes].include?(node[:key]) # If not open, set child flag
         folder.folders_only.each do |f|           # Get other folders
           f_kids += get_dc_node(f, node[:key], vat)
@@ -256,8 +255,8 @@ module ApplicationController::TreeSupport
         end
       else
         node[:isLazy] = true if folder.folders_only.count > 0 ||
-          folder.datacenters_only.count > 0 || folder.clusters.count > 0 ||
-          folder.vms.count > 0 || folder.hosts.count > 0
+                                folder.datacenters_only.count > 0 || folder.clusters.count > 0 ||
+                                folder.vms.count > 0 || folder.hosts.count > 0
       end
       node[:children] = f_kids unless f_kids.empty?
       kids.push(node)
@@ -289,7 +288,7 @@ module ApplicationController::TreeSupport
                                      folder.resource_pools.count > 0 ||
                                        (folder.default_resource_pool &&
                                          folder.default_resource_pool.vms.count > 0)
-        )
+                                    )
       end
       node[:children] = h_kids unless h_kids.empty?
       kids.push(node)
@@ -326,7 +325,7 @@ module ApplicationController::TreeSupport
         "VM: #{folder.name} (Click to view)",
         :style_class   => "cfme-no-cursor-node"
       )
-      cl_kids = Array.new
+      cl_kids = []
       if @sb[:open_tree_nodes].include?(node[:key]) # If not open, set child flag
         folder.hosts.each do |h|                  # Get hosts
           cl_kids += get_dc_node(h, node[:key], vat)
@@ -343,7 +342,7 @@ module ApplicationController::TreeSupport
                                      folder.resource_pools.count > 0 ||
                                        folder.vms.count > 0 ||
                                        folder.hosts.count > 0
-        )
+                                    )
       end
       node[:children] = cl_kids unless cl_kids.empty?
       kids.push(node)
@@ -360,7 +359,7 @@ module ApplicationController::TreeSupport
 
     # Handle non-default Resource Pools
     elsif folder.kind_of?(ResourcePool)         # Resource Pool
-      f_name = folder.name.gsub(/'/,"&apos;")
+      f_name = folder.name.gsub(/'/, "&apos;")
       node = TreeNodeBuilder.generic_tree_node(
         "#{pid}_rp-#{to_cid(folder.id)}",
         f_name,
@@ -380,7 +379,7 @@ module ApplicationController::TreeSupport
         set_node_tooltip_and_is_lazy(node,
                                      "Resource Pool: #{f_name} (Click to view)",
                                      folder.resource_pools.count > 0 || folder.vms.count > 0
-        )
+                                    )
       end
       node[:children] = rp_kids unless rp_kids.empty?
       kids.push(node)
@@ -431,11 +430,11 @@ module ApplicationController::TreeSupport
       end
       folder.datacenters_only.each do |d|       # Get datacenters
         n_node = get_dc_node(d, id, vat)
-          t_kids += n_node
+        t_kids += n_node
       end
       folder.clusters.each do |c|               # Get the cluster nodes
         n_node = get_dc_node(c, id, vat)
-          t_kids += n_node
+        t_kids += n_node
       end
       folder.hosts.each do |h|                  # Get hosts
         n_node = get_dc_node(h, id, vat)
@@ -446,7 +445,7 @@ module ApplicationController::TreeSupport
         t_kids += n_node
       end
     when "rp" # ResourcePool
-      f_name = folder.name.gsub(/'/,"&apos;")
+      f_name = folder.name.gsub(/'/, "&apos;")
       @sb[:node_text] = f_name
       @sb[:node_tooltip] = "Resource Pool: #{f_name} (Click to view)"
       folder.resource_pools.each do |rp|        # Get the resource pool nodes
@@ -494,7 +493,7 @@ module ApplicationController::TreeSupport
   def build_belongsto_tree(selected_ids, vat = false, save_tree_in_session = true, rp_only = false)
     @selected_ids = selected_ids
     @vat = true if vat
-    #for Alert profile assignments where checkboxes are only required on Resource Pools
+    # for Alert profile assignments where checkboxes are only required on Resource Pools
     @rp_only  = true if rp_only
     providers = []                          # Array to hold all providers
     ExtManagementSystem.all.each do |ems| # Go thru all of the providers
@@ -510,7 +509,7 @@ module ApplicationController::TreeSupport
           ems_node[:hideCheckbox] = true
         else
           if @edit &&
-            @edit[:new][:belongsto][ems_node[:key]] != @edit[:current][:belongsto][ems_node[:key]]
+             @edit[:new][:belongsto][ems_node[:key]] != @edit[:current][:belongsto][ems_node[:key]]
             ems_node[:addClass] = "cfme-blue-bold-node"  # Show node as different
           end
         end
@@ -537,12 +536,12 @@ module ApplicationController::TreeSupport
   end
 
   # Return tree node(s) for the passed in folder/datacenter/host/vm/cluster/resource pool
-  def user_get_tree_node(folder, pid, vat=false)  # Called with folder node, parent tree node id, VM & Templates flag
+  def user_get_tree_node(folder, pid, vat = false)  # Called with folder node, parent tree node id, VM & Templates flag
     kids          = []                            # Return node(s) as an array
     kids_checked  = false
     node = {
-      :key    => "#{folder.class.name}_#{folder.id}",
-      :title  => folder.name
+      :key   => "#{folder.class.name}_#{folder.id}",
+      :title => folder.name
     }
     node[:select] = true if @selected_ids.include?(node[:key]) # Check if tag is assigned
 
@@ -570,11 +569,11 @@ module ApplicationController::TreeSupport
       else
         # Check for @edit as alert profile assignment uses this method, but uses @assign object
         if @edit &&
-          @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]
+           @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]
           node[:addClass] = "cfme-blue-bold-node"  # Show node as different
         end
       end
-      dc_kids = Array.new
+      dc_kids = []
       folder.folders.each do |f|                # Get folders
         kid_node, kid_checked = user_get_tree_node(f, node[:key])
         dc_kids += kid_node
@@ -622,8 +621,8 @@ module ApplicationController::TreeSupport
       end
 
     # Handle folder named "Discovered Virtual Machine"
-    #elsif folder.class == EmsFolder && folder.name == "Discovered Virtual Machine"
-      # Commented this out to handle like any other blue folder, for now
+    # elsif folder.class == EmsFolder && folder.name == "Discovered Virtual Machine"
+    # Commented this out to handle like any other blue folder, for now
 
     # Handle normal Folders
     elsif folder.kind_of?(EmsFolder)
@@ -644,7 +643,7 @@ module ApplicationController::TreeSupport
           end
         end
       end
-      f_kids = Array.new
+      f_kids = []
       folder.folders_only.each do |f|           # Get other folders
         kid_node, kid_checked = user_get_tree_node(f, node[:key], vat)
         f_kids += kid_node
@@ -681,7 +680,7 @@ module ApplicationController::TreeSupport
           node[:hideCheckbox] = true
         end
         node[:icon] = "host.png"
-        h_kids = Array.new
+        h_kids = []
         folder.resource_pools.sort_by { |rp| rp.name.downcase }.each do |rp|
           kid_node, kid_checked = user_get_tree_node(rp, node[:key], vat)
           h_kids += kid_node
@@ -703,8 +702,8 @@ module ApplicationController::TreeSupport
         node[:icon] = "cluster.png"
         node[:hideCheckbox] = true if @vat || @rp_only
         node[:addClass] = "cfme-blue-bold-node" if @edit &&
-          @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]
-        cl_kids = Array.new
+                                                   @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]
+        cl_kids = []
         folder.hosts.each do |h|                  # Get hosts
           kid_node, kid_checked = user_get_tree_node(h, node[:key])
           cl_kids += kid_node
@@ -737,7 +736,7 @@ module ApplicationController::TreeSupport
         node[:addClass] = "cfme-blue-bold-node"  # Show node as different
       end
       node[:icon] = folder.vapp ? "vapp.png" : "resource_pool.png"
-      rp_kids = Array.new
+      rp_kids = []
       folder.resource_pools.each do |rp|        # Get the resource pool nodes
         kid_node, kid_checked = user_get_tree_node(rp, node[:key])
         rp_kids += kid_node
@@ -749,5 +748,4 @@ module ApplicationController::TreeSupport
     end
     return kids, kids_checked || node[:select] == true
   end
-
 end

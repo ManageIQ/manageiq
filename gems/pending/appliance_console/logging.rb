@@ -4,7 +4,6 @@ require 'active_support/all'
 RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
 
 module ApplianceConsole
-
   module Logging
     LOGFILE = File.join(RAILS_ROOT, "log", "appliance_console.log")
 
@@ -98,11 +97,11 @@ module ApplianceConsole
 
     def log_and_feedback_exception(error, failed_method)
       feedback_error, logging = case error
-      when AwesomeSpawn::CommandResultError
-        error_and_logging_from_command_result_error(error)
-      else
-        error_and_logging_from_standard_error(error)
-      end
+                                when AwesomeSpawn::CommandResultError
+                                  error_and_logging_from_command_result_error(error)
+                                else
+                                  error_and_logging_from_standard_error(error)
+                                end
 
       log_error(failed_method, logging)
       say_error(failed_method, feedback_error)

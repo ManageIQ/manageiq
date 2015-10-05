@@ -6,7 +6,7 @@ module Vm::Operations
     s = {:available => false, :message => nil}
 
     # Report reasons why collection is not available for this VM
-    unless ['windows'].include?(self.platform)
+    unless ['windows'].include?(platform)
       s[:message] = 'VM Process collection is only available for Windows VMs.'
       return s
     end
@@ -17,29 +17,27 @@ module Vm::Operations
 
     # From here on out collection is possible, but may not be currently available.
     s[:available] = true
-    unless self.state == "on"
+    unless state == "on"
       s[:message] = 'VM Process collection is only available while the VM is powered on.'
       return s
     end
 
-    if self.my_zone.nil? || self.my_zone_obj.auth_user_pwd(:windows_domain).nil?
+    if my_zone.nil? || my_zone_obj.auth_user_pwd(:windows_domain).nil?
       s[:message] = 'VM Process collection requires credentials set at the Zone level.'
       return s
     end
 
-    if self.ipaddresses.blank?
+    if ipaddresses.blank?
       s[:message] = 'VM Process collection requires an IP address for the VM.'
       return s
     end
 
-    return s
+    s
   end
 
   private
 
   def validate_unsupported(message_prefix)
-    { :available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} VM." }
+    {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} VM."}
   end
-
-
 end

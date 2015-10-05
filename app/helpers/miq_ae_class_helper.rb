@@ -32,7 +32,7 @@ module MiqAeClassHelper
                end
     rec_name = rec_name.gsub(/\n/, "\\n")
     rec_name = rec_name.gsub(/\t/, "\\t")
-    rec_name = rec_name.gsub(/"/, "'")
+    rec_name = rec_name.tr('"', "'")
     rec_name = CGI.escapeHTML(rec_name)
     rec_name.gsub(/\\/, "&#92;")
   end
@@ -54,5 +54,9 @@ module MiqAeClassHelper
 
   def icon_class(cls)
     cls.to_s.split("::").last.underscore.sub('miq_', 'product product-')
+  end
+
+  def nonblank(*items)
+    items.detect { |item| !item.blank? }
   end
 end

@@ -11,19 +11,19 @@ class MiqAeField < ActiveRecord::Base
   validates_format_of     :name, :with => /\A[A-Za-z0-9_]+\z/i
 
   validates_inclusion_of  :substitute, :in => [true, false]
-  AVAILABLE_SCOPES    = [ "class", "instance", "local" ]
+  AVAILABLE_SCOPES    = ["class", "instance", "local"]
   validates_inclusion_of  :scope,      :in => AVAILABLE_SCOPES,    :allow_nil => true  # nil => instance
-  AVAILABLE_AETYPES   = [ "assertion", "attribute", "method", "relationship", "state" ]
+  AVAILABLE_AETYPES   = ["assertion", "attribute", "method", "relationship", "state"]
   validates_inclusion_of  :aetype,     :in => AVAILABLE_AETYPES,   :allow_nil => true  # nil => attribute
-  AVAILABLE_DATATYPES_FOR_UI = [ "string", "symbol", "integer", "float", "boolean", "time", "array", "password"]
-  AVAILABLE_DATATYPES        = AVAILABLE_DATATYPES_FOR_UI + [ "host", "vm", "storage", "ems", "policy", "server", "request", "provision" ]
+  AVAILABLE_DATATYPES_FOR_UI = ["string", "symbol", "integer", "float", "boolean", "time", "array", "password"]
+  AVAILABLE_DATATYPES        = AVAILABLE_DATATYPES_FOR_UI + ["host", "vm", "storage", "ems", "policy", "server", "request", "provision"]
   validates_inclusion_of  :datatype,   :in => AVAILABLE_DATATYPES, :allow_nil => true  # nil => string
 
   include ReportableMixin
 
   before_save        :set_message_and_default_value
 
-  DEFAULTS = {:substitute => true, :datatype => "string", :aetype => "attribute", :scope => "instance", :message => "create" }
+  DEFAULTS = {:substitute => true, :datatype => "string", :aetype => "attribute", :scope => "instance", :message => "create"}
 
   def self.available_aetypes
     AVAILABLE_AETYPES
@@ -46,7 +46,7 @@ class MiqAeField < ActiveRecord::Base
   end
 
   def self.find_by_name(name)
-    self.where("lower(name) = ?", name.downcase).first
+    where("lower(name) = ?", name.downcase).first
   end
 
   def default_value=(value)
@@ -61,9 +61,9 @@ class MiqAeField < ActiveRecord::Base
     require 'builder'
     xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
 
-    xml_attrs = { :name => self.name, :substitute => self.substitute.to_s }
+    xml_attrs = {:name => name, :substitute => substitute.to_s}
 
-    self.class.column_names.each { |cname|
+    self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
       next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
 
@@ -71,12 +71,12 @@ class MiqAeField < ActiveRecord::Base
       next if %w(name default_value substitute).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = self.send(cname)   unless self.send(cname).blank?
-    }
+      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+    end
 
-    xml.MiqAeField(xml_attrs) {
-      xml.text!(self.default_value)   unless self.default_value.blank?
-    }
+    xml.MiqAeField(xml_attrs) do
+      xml.text!(default_value)   unless default_value.blank?
+    end
   end
 
   def substitute=(value)
@@ -91,7 +91,7 @@ class MiqAeField < ActiveRecord::Base
 
   def set_message_and_default_value
     self.message ||= DEFAULTS[:message]
-    set_default_value(self.default_value)
+    set_default_value(default_value)
   end
 
   def editable?
@@ -101,6 +101,6 @@ class MiqAeField < ActiveRecord::Base
   private
 
   def set_default_value(value)
-    write_attribute(:default_value, (self.datatype == "password") ? MiqAePassword.encrypt(value) : value)
+    write_attribute(:default_value, (datatype == "password") ? MiqAePassword.encrypt(value) : value)
   end
 end

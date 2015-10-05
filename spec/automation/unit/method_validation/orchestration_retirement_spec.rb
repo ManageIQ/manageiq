@@ -53,17 +53,24 @@ describe "Orchestration retirement state machine Methods Validation" do
     let(:method_name) { "CheckRemovedFromProvider" }
 
     it "completes the step when stack is removed from provider" do
-      OrchestrationStack.any_instance.stub(:raw_status) { ['DELETE_COMPLETE', nil] }
+      status = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status.new('DELETE_COMPLETE', nil)
+      OrchestrationStack.any_instance.stub(:raw_status) { status }
       ws.root['ae_result'].should == 'ok'
     end
 
+    it "completes the step when stack no longer exists" do
+      OrchestrationStack.any_instance.stub(:raw_status) { raise MiqException::MiqOrchestrationStackNotExistError, 'stack not exist' }
+      ws.root['ae_result'].should == "ok"
+    end
+
     it "retries if stack has not been removed from provider" do
-      OrchestrationStack.any_instance.stub(:raw_status) { ['DELETING', nil] }
+      status = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status.new('DELETING', nil)
+      OrchestrationStack.any_instance.stub(:raw_status) { status }
       ws.root['ae_result'].should == 'retry'
     end
 
     it "reports error if cannot get stack status" do
-      OrchestrationStack.any_instance.stub(:raw_status) { [nil, nil] }
+      OrchestrationStack.any_instance.stub(:raw_status) { raise "an error" }
       ws.root['ae_result'].should == 'error'
     end
   end

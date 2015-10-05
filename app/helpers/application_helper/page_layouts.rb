@@ -1,7 +1,6 @@
 module ApplicationHelper::PageLayouts
-
   def layout_uses_listnav?
-    if !(@layout == "dashboard" && ["show","change_tab","auth_error"].include?(controller.action_name) ||
+    if !(@layout == "dashboard" && ["show", "change_tab", "auth_error"].include?(controller.action_name) ||
          @layout == "report" ||
          @layout == "exception" ||
          @layout == "chargeback" ||
@@ -22,12 +21,12 @@ module ApplicationHelper::PageLayouts
        ["login", "authenticate", "auth_error"].include?(controller.action_name) ||
        @layout == "exception" ||
        (@layout == 'vm' && controller.action_name == 'edit') ||
-       (@layout == "report" && ["new","create","edit","copy","update","explorer"].include?(controller.action_name))
+       (@layout == "report" && ["new", "create", "edit", "copy", "update", "explorer"].include?(controller.action_name))
       return false
     elsif @layout == "dashboard" # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
       return false
     end
-    return true
+    true
   end
 
   def layout_uses_breadcrumbs?
@@ -41,5 +40,4 @@ module ApplicationHelper::PageLayouts
       "all_tasks",
       "all_ui_tasks"].include?(@layout)
   end
-
 end

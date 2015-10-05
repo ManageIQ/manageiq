@@ -1,20 +1,19 @@
 class MiqRequestController < ApplicationController
-
-  before_filter :check_privileges, :except => :post_install_callback
-  before_filter :get_session_data
-  after_filter :cleanup_action
-  after_filter :set_session_data
+  before_action :check_privileges, :except => :post_install_callback
+  before_action :get_session_data
+  after_action :cleanup_action
+  after_action :set_session_data
 
   def index
-#   show_list
-#   render :action=>"show_list"
+    #   show_list
+    #   render :action=>"show_list"
     @request_tab = params[:typ] if params[:typ]                       # set this to be used to identify which Requests subtab was clicked
     redirect_to :action => 'show_list'
   end
 
   # handle buttons pressed on the button bar
   def button
-    params[:page] = @current_page if @current_page != nil # Save current page for list refresh
+    params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
     @refresh_div = "main_div" # Default div for button.rjs to refresh
     deleterequests if params[:pressed] == "miq_request_delete"
     request_edit if params[:pressed] == "miq_request_edit"
@@ -28,9 +27,9 @@ class MiqRequestController < ApplicationController
     return if params[:pressed] == "miq_request_edit" && @refresh_partial == "reconfigure"
     if !@flash_array.nil? && params[:pressed] == "miq_request_delete"
       render :update do |page|
-        page.redirect_to :action => 'show_list', :flash_msg=>@flash_array[0][:message]  # redirect to build the retire screen
+        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
-    elsif ["miq_request_copy","miq_request_edit"].include?(params[:pressed])
+    elsif ["miq_request_copy", "miq_request_edit"].include?(params[:pressed])
       render :update do |page|
         page.redirect_to :controller     => @redirect_controller,
                          :action         => @refresh_partial,
@@ -43,11 +42,11 @@ class MiqRequestController < ApplicationController
     elsif params[:pressed].ends_with?("_edit")
       if @refresh_partial == "show_list"
         render :update do |page|
-          page.redirect_to :action =>@refresh_partial, :flash_msg=>"Default Requests can not be edited", :flash_error=>true
+          page.redirect_to :action => @refresh_partial, :flash_msg => "Default Requests can not be edited", :flash_error => true
         end
       else
         render :update do |page|
-          page.redirect_to :action=>@refresh_partial, :id=>@redirect_id
+          page.redirect_to :action => @refresh_partial, :id => @redirect_id
         end
       end
     elsif params[:pressed] == "miq_request_reload"
@@ -62,27 +61,27 @@ class MiqRequestController < ApplicationController
       elsif @display == "miq_provisions"
         show
         render :update do |page|
-          page.replace("gtl_div", :partial=>"layouts/gtl")  # Replace the provisioned vms list
+          page.replace("gtl_div", :partial => "layouts/gtl")  # Replace the provisioned vms list
         end
       else
-        #forcing to refresh the view when reload button is pressed
+        # forcing to refresh the view when reload button is pressed
         @_params[:refresh] = "y"
         show_list
         render :update do |page|
-          page.replace("prov_options_div", :partial=>"prov_options")
-          page.replace("gtl_div", :partial=>"layouts/gtl")
+          page.replace("prov_options_div", :partial => "prov_options")
+          page.replace("gtl_div", :partial => "layouts/gtl")
         end
       end
     else
       render :update do |page|                    # Use RJS to update the display
-        if @refresh_partial != nil
+        unless @refresh_partial.nil?
           if @refresh_div == "flash_msg_div"
-            page.replace(@refresh_div, :partial=>@refresh_partial)
+            page.replace(@refresh_div, :partial => @refresh_partial)
           else
-            page.replace_html(@refresh_div, :partial=>@refresh_partial)
+            page.replace_html(@refresh_div, :partial => @refresh_partial)
           end
         end
-        page.replace_html(@refresh_div, :action=>@render_action) if @render_action != nil
+        page.replace_html(@refresh_div, :action => @render_action) unless @render_action.nil?
       end
     end
   end
@@ -109,12 +108,12 @@ class MiqRequestController < ApplicationController
 
   # Show the main Requests list view
   def show_list
-    @breadcrumbs = Array.new
+    @breadcrumbs = []
     bc_name = "Requests"
     @request_tab = params[:typ] if params[:typ]                       # set this to be used to identify which Requests subtab was clicked
     @layout = layout_from_tab_name(@request_tab)
 
-    drop_breadcrumb( {:name=>bc_name, :url=>"/miq_request/show_list?typ=#{@request_tab}"} )
+    drop_breadcrumb(:name => bc_name, :url => "/miq_request/show_list?typ=#{@request_tab}")
     @lastaction = "show_list"
     @gtl_url = "/miq_request/show_list/?"
 
@@ -125,20 +124,20 @@ class MiqRequestController < ApplicationController
       @items_per_page = params[:ppsetting].to_i                       # Set the new per page value
       @settings[:perpage][PERPAGE_TYPES[@gtl_type]] = @items_per_page # Set the per page setting for this gtl type
     end
-    @sortcol = session[:request_sortcol] == nil ? 0 : session[:request_sortcol].to_i
-    @sortdir = session[:request_sortdir] == nil ? "ASC" : session[:request_sortdir]
+    @sortcol = session[:request_sortcol].nil? ? 0 : session[:request_sortcol].to_i
+    @sortdir = session[:request_sortdir].nil? ? "ASC" : session[:request_sortdir]
     @listicon = "miq_request"
     @no_checkboxes = true   # Don't show checkboxes, read_only
-#   @showlinks = true
+    #   @showlinks = true
     time_period = 7
     resource_type = get_request_tab_type        # storing resource type in local variable so dont have to call method everytime
     kls = @layout == "miq_request_ae" ? AutomationRequest : MiqRequest
-    if is_approver && (!@sb[:prov_options] || (@sb[:prov_options] && !@sb[:prov_options].has_key?(resource_type.to_sym)))
-      gv_options = {:filter=>prov_condition({:resource_type=>resource_type,:time_period=>time_period})}
+    if is_approver && (!@sb[:prov_options] || (@sb[:prov_options] && !@sb[:prov_options].key?(resource_type.to_sym)))
+      gv_options = {:filter => prov_condition(:resource_type => resource_type, :time_period => time_period)}
       @view, @pages = get_view(kls, gv_options)                 # Get all requests
-    elsif @sb[:prov_options] && @sb[:prov_options].has_key?(resource_type.to_sym) # added this here so grid can be drawn when page redraws, when there were no records on initial load.
+    elsif @sb[:prov_options] && @sb[:prov_options].key?(resource_type.to_sym) # added this here so grid can be drawn when page redraws, when there were no records on initial load.
       prov_set_default_options if @sb[:def_prov_options][:applied_states].blank? && !params[:button] == "apply" # no filter statuses selected, setting to default
-      gv_options = {:filter=>prov_condition(@sb[:def_prov_options][resource_type.to_sym])}
+      gv_options = {:filter => prov_condition(@sb[:def_prov_options][resource_type.to_sym])}
       @view, @pages = get_view(kls, gv_options) # Get view and paginator, based on the selected options
     else
       gv_options = {:filter => prov_condition(:resource_type => resource_type,
@@ -146,17 +145,17 @@ class MiqRequestController < ApplicationController
                                               :requester_id  => current_user.try(:id))}
       @view, @pages = get_view(kls, gv_options)     # Get requests for this user
     end
-    @sb[:prov_options] ||= Hash.new
-    @sb[:def_prov_options] ||= Hash.new
+    @sb[:prov_options] ||= {}
+    @sb[:def_prov_options] ||= {}
     @sb[:prov_options][:resource_type] = resource_type.to_sym                   # storing current resource type
-    #prov_set_default_options if !@sb[:prov_options] || (@sb[:prov_options] && @sb[:prov_options][:req_typ] != get_request_tab_type)    # reset default options if requests sub tab has changed
-    prov_set_default_options if !@sb[:prov_options] || (@sb[:prov_options] && !@sb[:prov_options].has_key?(resource_type.to_sym))   # reset default options if requests sub tab has changed
+    # prov_set_default_options if !@sb[:prov_options] || (@sb[:prov_options] && @sb[:prov_options][:req_typ] != get_request_tab_type)    # reset default options if requests sub tab has changed
+    prov_set_default_options if !@sb[:prov_options] || (@sb[:prov_options] && !@sb[:prov_options].key?(resource_type.to_sym))   # reset default options if requests sub tab has changed
 
-    @current_page = @pages[:current] if @pages != nil # save the current page number
+    @current_page = @pages[:current] unless @pages.nil? # save the current page number
     session[:request_sortcol] = @sortcol
     session[:request_sortdir] = @sortdir
 
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
   end
@@ -173,10 +172,10 @@ class MiqRequestController < ApplicationController
       @listicon = "miq_request"
       @no_checkboxes = true
       @showlinks = true
-      @view, @pages = get_view(MiqProvision, :conditions=>["miq_request_id=?", @miq_request.id])  # Get all requests
-      drop_breadcrumb( {:name=>"Provisioned VMs [#{@miq_request.description}]", :url=>"/miq_request/show/#{@miq_request.id}?display=#{@display}"} )
+      @view, @pages = get_view(MiqProvision, :conditions => ["miq_request_id=?", @miq_request.id])  # Get all requests
+      drop_breadcrumb(:name => "Provisioned VMs [#{@miq_request.description}]", :url => "/miq_request/show/#{@miq_request.id}?display=#{@display}")
     end
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
     @lastaction = "show"
@@ -190,39 +189,39 @@ class MiqRequestController < ApplicationController
       session[:flash_msgs] = @flash_array.dup
       @edit = nil
       render :update do |page|
-        page.redirect_to :action=>@lastaction, :id=>session[:edit][:request].id
+        page.redirect_to :action => @lastaction, :id => session[:edit][:request].id
       end
     elsif params[:button] == "submit"
-      return unless load_edit("stamp_edit__#{params[:id]}","show")
+      return unless load_edit("stamp_edit__#{params[:id]}", "show")
       stamp_request = MiqRequest.find(@edit[:request].id)         # Get the current request record
       if @edit[:stamp_typ] == "a"
         stamp_request.approve(session[:userid], @edit[:reason])
       else
         stamp_request.deny(session[:userid], @edit[:reason])
       end
-#     AuditEvent.success(build_saved_audit(request, @edit))
-      add_flash(_("Request \"%{name}\" was %{task}") % {:name=>stamp_request.description, :task=>(session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approved" : "denied"})
+      #     AuditEvent.success(build_saved_audit(request, @edit))
+      add_flash(_("Request \"%{name}\" was %{task}") % {:name => stamp_request.description, :task => (session[:edit] && session[:edit][:stamp_typ]) == "a" ? "approved" : "denied"})
       session[:flash_msgs] = @flash_array.dup                     # Put msg in session for next transaction to display
       @edit = nil
       render :update do |page|
-        page.redirect_to :action=>"show_list"
+        page.redirect_to :action => "show_list"
       end
     else  # First time in, set up @edit hash
       identify_request
-      @edit = Hash.new
+      @edit = {}
       @edit[:dialog_mode] = :review
       @edit[:request] = @miq_request
       @edit[:key] = "stamp_edit__#{@miq_request.id}"
       @edit[:stamp_typ] = params[:typ]
       show
-      drop_breadcrumb( {:name=>"Request #{@edit[:stamp_typ] == "a" ? "Approval" : "Denial"}", :url=>"/miq_request/stamp"} )
-      render :action=>"show"
+      drop_breadcrumb(:name => "Request #{@edit[:stamp_typ] == "a" ? "Approval" : "Denial"}", :url => "/miq_request/stamp")
+      render :action => "show"
     end
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
   def stamp_field_changed
-    return unless load_edit("stamp_edit__#{params[:id]}","show")
+    return unless load_edit("stamp_edit__#{params[:id]}", "show")
     render :update do |page|                    # Use JS to update the display
       if @edit[:reason].blank?
         @edit[:reason] = params[:reason] if params[:reason]
@@ -257,27 +256,27 @@ class MiqRequestController < ApplicationController
     session[:changed] = true                                # Turn on the submit button
     drop_breadcrumb(:name => "Copy of #{org_req.request_type_display} Request")
     @in_a_form = true
-    render :action=>"prov_edit"
+    render :action => "prov_edit"
   end
 
   # To handle Continue button
   def prov_continue
     if params[:button] == "continue"                            # Continue the request from the workflow with the new options
       id = params[:id] ? params[:id] : "new"
-      return unless load_edit("prov_edit__#{id}","show_list")
+      return unless load_edit("prov_edit__#{id}", "show_list")
       @edit[:wf].continue_request(@edit[:new])    # Continue the workflow with new field values based on options, need to pass userid there
       @edit[:wf].init_from_dialog(@edit[:new])    # Create a new provision workflow for this edit session
       @edit[:buttons] = @edit[:wf].get_buttons
       @edit[:wf].get_dialog_order.each do |d|                           # Go thru all dialogs, in order that they are displayed
         @edit[:wf].get_all_fields(d).keys.each do |f|                 # Go thru all field
           field = @edit[:wf].get_field(f, d)
-          if !field[:error].blank?
+          unless field[:error].blank?
             @error_div ||= "#{d}_div"
             add_flash(field[:error], :error)
           end
         end
       end
-      #setting active tab to first visible tab
+      # setting active tab to first visible tab
       @edit[:wf].get_dialog_order.each do |d|
         if @edit[:wf].get_dialog(d)[:display] == :show
           @edit[:new][:current_tab_key] = d
@@ -287,11 +286,11 @@ class MiqRequestController < ApplicationController
       end
       render :update do |page|
         if @error_div
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         else
-          page.replace("prov_wf_div", :partial=>"prov_wf")
+          page.replace("prov_wf_div", :partial => "prov_wf")
         end
-        page.replace("buttons_div", :partial=>"miq_request/prov_form_buttons")
+        page.replace("buttons_div", :partial => "miq_request/prov_form_buttons")
       end
     end
   end
@@ -299,13 +298,13 @@ class MiqRequestController < ApplicationController
   def prov_load_tab
     if @options && @options[:current_tab_key] == :purpose # Need to build again for purpose tab
       fld = @options[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-      build_tags_tree(@options[:wf],@options["#{fld}".to_sym],false)
+      build_tags_tree(@options[:wf], @options["#{fld}".to_sym], false)
     end
-    #need to build host list view, to display on show screen
+    # need to build host list view, to display on show screen
     @options[:host_sortdir] = "ASC"
     @options[:host_sortcol] = "name"
-    #only build host grid if that field is visible/exists in dialog
-    build_host_grid(@options[:wf].allowed_hosts, @options[:host_sortdir], @options[:host_sortcol]) if !@options[:wf].get_field(:src_host_ids,:service).blank? || !@options[:wf].get_field(:placement_host_name,:environment).blank?
+    # only build host grid if that field is visible/exists in dialog
+    build_host_grid(@options[:wf].allowed_hosts, @options[:host_sortdir], @options[:host_sortcol]) if !@options[:wf].get_field(:src_host_ids, :service).blank? || !@options[:wf].get_field(:placement_host_name, :environment).blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@options[:current_tab_key],
                         :partial => dialog_partial_for_workflow,
@@ -343,9 +342,9 @@ class MiqRequestController < ApplicationController
     @sb[:def_prov_options][resource_type][:user_choice] = params[:user_choice] if params[:user_choice]
     @sb[:def_prov_options][resource_type][:type_choice] = params[:type_choice] if params[:type_choice]
     @sb[:def_prov_options][resource_type][:time_period] = params[:time_period].to_i if params[:time_period]
-    @sb[:def_prov_options][resource_type][:reason_text] = params[:reason_text] if params[:reason_text] #&& params[:reason][:text] != ""
+    @sb[:def_prov_options][resource_type][:reason_text] = params[:reason_text] if params[:reason_text] # && params[:reason][:text] != ""
     res_type = @sb[:prov_options][resource_type]
-    res_type[:states].sort.each do |(state, display_name)|
+    res_type[:states].sort.each do |(state, _display_name)|
       if params["state_choice__#{state}"] == "1"
         @sb[:def_prov_options][resource_type][:applied_states].push(state) unless @sb[:def_prov_options][resource_type][:applied_states].include?(state)
       elsif params["state_choice__#{state}"] == "null"
@@ -380,7 +379,7 @@ class MiqRequestController < ApplicationController
     end
     show_list
     render :update do |page|
-      page.replace("prov_options_div", :partial=>"prov_options")
+      page.replace("prov_options_div", :partial => "prov_options")
       if @view.table.data.length >= 1
         page << javascript_hide("no_records_div")
         page << javascript_show("records_div")
@@ -396,8 +395,8 @@ class MiqRequestController < ApplicationController
         page << "ManageIQ.grids.grids['gtl_list_grid'].obj.setSortImgState(true, #{@sortcol + 2}, '#{dir}');"
       end
       page << "miqGridOnCheck(null, null, null);"           # Reset the center buttons
-      page.replace("pc_div_1", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>"show_list", :db=>@view.db, :headers=>@view.headers})
-      page.replace("pc_div_2", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>"show_list"})
+      page.replace("pc_div_1", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list", :db => @view.db, :headers => @view.headers})
+      page.replace("pc_div_2", :partial => '/layouts/pagingcontrols', :locals => {:pages => @pages, :action_url => "show_list"})
     end
   end
 
@@ -421,7 +420,7 @@ class MiqRequestController < ApplicationController
   def prov_condition(opts)
     cond = [{"AFTER" => {"value" => "#{opts[:time_period].to_i} Days Ago", "field" => "MiqRequest-created_on"}}]  # Start with setting time
 
-    if !is_approver
+    unless is_approver
       cond.push("=" => {"value" => current_user.try(:id), "field" => "MiqRequest-requester_id"})
     end
 
@@ -475,7 +474,7 @@ class MiqRequestController < ApplicationController
   # Set all task options to default
   def prov_set_default_options
     resource_type = get_request_tab_type
-    opts = @sb[:prov_options][resource_type.to_sym] = Hash.new
+    opts = @sb[:prov_options][resource_type.to_sym] = {}
     opts[:states] = PROV_STATES
     opts[:reason_text] = nil
     opts[:types] = request_types_for_dropdown
@@ -495,14 +494,14 @@ class MiqRequestController < ApplicationController
     opts[:type_choice] = "all"
     opts[:user_choice] ||= "all"
     opts[:time_period] ||= 7
-    @sb[:def_prov_options][resource_type.to_sym] = Hash.new
+    @sb[:def_prov_options][resource_type.to_sym] = {}
     @sb[:prov_options][resource_type.to_sym] = @sb[:def_prov_options][resource_type.to_sym] = copy_hash(opts)
   end
 
   # Find the request that was chosen
   def identify_request
     klass = @layout == "miq_request_ae" ? AutomationRequest : MiqRequest
-    return @miq_request = @record = identify_record(params[:id], klass)
+    @miq_request = @record = identify_record(params[:id], klass)
   end
 
   def is_approver
@@ -513,23 +512,23 @@ class MiqRequestController < ApplicationController
   # Delete all selected or single displayed action(s)
   def deleterequests
     assert_privileges("miq_request_delete")
-    miq_requests = Array.new
+    miq_requests = []
     if @lastaction == "show_list" # showing a list
       miq_requests = find_checked_items
       if miq_requests.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>"miq_request"), :task=>"deletion"}, :error)
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "miq_request"), :task => "deletion"}, :error)
       end
       process_requests(miq_requests, "destroy") unless miq_requests.empty?
-      add_flash(_("The selected %s were deleted") % ui_lookup(:tables=>"miq_request")) if ! flash_errors?
+      add_flash(_("The selected %s were deleted") % ui_lookup(:tables => "miq_request")) unless flash_errors?
     else # showing 1 request, delete it
-      if params[:id] == nil || MiqRequest.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:table=>"miq_request"), :error)
+      if params[:id].nil? || MiqRequest.find_by_id(params[:id]).nil?
+        add_flash(_("%s no longer exists") % ui_lookup(:table => "miq_request"), :error)
       else
         miq_requests.push(params[:id])
       end
       @single_delete = true
-      process_requests(miq_requests, "destroy") if ! miq_requests.empty?
-      add_flash(_("The selected %s was deleted") % ui_lookup(:table=>"miq_request")) if ! flash_errors?
+      process_requests(miq_requests, "destroy") unless miq_requests.empty?
+      add_flash(_("The selected %s was deleted") % ui_lookup(:table => "miq_request")) unless flash_errors?
     end
     show_list
     @refresh_partial = "layouts/gtl"
@@ -541,19 +540,19 @@ class MiqRequestController < ApplicationController
       id = miq_request.id
       request_name = miq_request.description
       if task == "destroy"
-        audit = {:event=>"MiqRequest_record_delete", :message=>"[#{request_name}] Record deleted", :target_id=>id, :target_class=>"MiqRequest", :userid => session[:userid]}
+        audit = {:event => "MiqRequest_record_delete", :message => "[#{request_name}] Record deleted", :target_id => id, :target_class => "MiqRequest", :userid => session[:userid]}
       end
       begin
         miq_request.public_send(task.to_sym) if miq_request.respond_to?(task)    # Run the task
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name, :task=>task} << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model => ui_lookup(:model => "MiqRequest"), :name => request_name, :task => task} << bang.message,
                   :error)
       else
         if task == "destroy"
           AuditEvent.success(audit)
-          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name})
+          add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "MiqRequest"), :name => request_name})
         else
-          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>ui_lookup(:model=>"MiqRequest"), :name=>request_name, :task=>task})
+          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "MiqRequest"), :name => request_name, :task => task})
         end
       end
     end
@@ -581,7 +580,7 @@ class MiqRequestController < ApplicationController
     @display      = session[:request_display]
     @current_page = session[:request_current_page]
     @options      = session[:prov_options]
-    #@edit = session[:edit] if session[:edit]
+    # @edit = session[:edit] if session[:edit]
   end
 
   def set_session_data
@@ -594,5 +593,4 @@ class MiqRequestController < ApplicationController
     session[:request_current_page] = @current_page
     session[:prov_options]         = @options if @options
   end
-
 end

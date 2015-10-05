@@ -20,9 +20,9 @@ describe MiqScheduleWorker::Runner do
     context "with a stuck dispatch in each zone" do
       before(:each) do
         @cond = {:class_name => 'JobProxyDispatcher', :method_name => 'dispatch'}
-        @opts = @cond.merge({:state => 'dequeue', :updated_on => Time.now.utc })
+        @opts = @cond.merge({:state => 'dequeue', :updated_on => Time.now.utc})
         @stale_timeout = 2.minutes
-        @schedule_worker.stub(:worker_settings).and_return({:job_proxy_dispatcher_stale_message_timeout => @stale_timeout} )
+        @schedule_worker.stub(:worker_settings).and_return(:job_proxy_dispatcher_stale_message_timeout => @stale_timeout)
 
         @zone1 = @zone
         @worker1 = FactoryGirl.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
@@ -61,15 +61,15 @@ describe MiqScheduleWorker::Runner do
 
       it "check_for_dispatch calls check_for_timeout with triple threshold for active worker" do
         @worker1.update_attribute(:status, MiqWorker::STATUS_STARTED)
-        MiqQueue.any_instance.should_receive(:check_for_timeout).once do |prefix, grace, timeout|
+        MiqQueue.any_instance.should_receive(:check_for_timeout).once do |_prefix, _grace, timeout|
           timeout.should == @stale_timeout * 3
         end
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
       end
 
       it "check_for_dispatch calls check_for_timeout with threshold for inactive worker" do
-        MiqQueue.any_instance.should_receive(:check_for_timeout).once do |prefix, grace, timeout|
-            timeout.should == @stale_timeout
+        MiqQueue.any_instance.should_receive(:check_for_timeout).once do |_prefix, _grace, timeout|
+          timeout.should == @stale_timeout
         end
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
       end
@@ -121,7 +121,7 @@ describe MiqScheduleWorker::Runner do
         it "monthly schedule scheduled for 5 years will be unscheduled by tag" do
           first_at = Time.utc(2011, 1, 1, 8, 30)
           tag = "miq_schedules_1"
-          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => { :unit => "monthly", :value => "1" }})
+          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
           @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => tag)
           @schedule_worker.queue_length.should == 0
 
@@ -132,7 +132,7 @@ describe MiqScheduleWorker::Runner do
 
         it "monthly creates a schedule each month for 5 years" do
           first_at = Time.utc(2011, 1, 1, 8, 30)
-          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => { :unit => "monthly", :value => "1" }})
+          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
 
           Timecop.freeze(first_at - 1.minute) do
             @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => "miq_schedules_1")
@@ -143,7 +143,7 @@ describe MiqScheduleWorker::Runner do
 
         it "monthly schedule starting Jan 31 will next run Feb 28" do
           first_at = Time.utc(2011, 1, 31, 8, 30)
-          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-31 08:30:00 Z", :interval => { :unit => "monthly", :value => "1" }})
+          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
 
           Timecop.freeze(first_at + 1.minute) do
             schedules = @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => "miq_schedules_1")
@@ -193,7 +193,7 @@ describe MiqScheduleWorker::Runner do
           before(:each) do
             # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
             @schedule_worker.stub(:worker_settings).and_return(Hash.new(5.minutes))
-            @schedule_worker.instance_variable_set(:@schedules, {:scheduler => []})
+            @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
 
             @sch1 = FactoryGirl.create(:miq_schedule)
             @sch2 = FactoryGirl.create(:miq_schedule)
@@ -281,8 +281,8 @@ describe MiqScheduleWorker::Runner do
             MiqRegion.stub(:my_region).and_return(@region)
             @schedule_worker.instance_variable_set(:@active_roles, ["ldap_synchronization"])
 
-            @ldap_synchronization_collection = { :ldap_synchronization_schedule => "0 2 * * *" }
-            config                           = { :ldap_synchronization => @ldap_synchronization_collection }
+            @ldap_synchronization_collection = {:ldap_synchronization_schedule => "0 2 * * *"}
+            config                           = {:ldap_synchronization => @ldap_synchronization_collection}
 
             stub_server_configuration(config)
           end
@@ -341,9 +341,9 @@ describe MiqScheduleWorker::Runner do
             MiqRegion.stub(:my_region).and_return(@region)
             @schedule_worker.instance_variable_set(:@active_roles, ["database_operations"])
 
-            @metrics_collection = { :collection_schedule => "1 * * * *", :daily_rollup_schedule => "23 0 * * *" }
-            @metrics_history    = { :purge_schedule => "50 * * * *" }
-            database_config     = { :metrics_collection => @metrics_collection, :metrics_history => @metrics_history }
+            @metrics_collection = {:collection_schedule => "1 * * * *", :daily_rollup_schedule => "23 0 * * *"}
+            @metrics_history    = {:purge_schedule => "50 * * * *"}
+            database_config     = {:metrics_collection => @metrics_collection, :metrics_history => @metrics_history}
             stub_server_configuration(:database => database_config)
           end
 
@@ -536,7 +536,7 @@ describe MiqScheduleWorker::Runner do
           before(:each) do
             @schedule_worker.stub(:heartbeat)
             @schedule_worker.instance_variable_set(:@active_roles, ["event"])
-            @schedule_worker.stub(:worker_settings).and_return({:ems_events_purge_interval => 1.day})
+            @schedule_worker.stub(:worker_settings).and_return(:ems_events_purge_interval => 1.day)
             Zone.any_instance.stub(:role_active?).with("event").and_return(true)
           end
 

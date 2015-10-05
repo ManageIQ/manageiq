@@ -64,6 +64,9 @@ gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                                                     :git => "git://github.com/svenfuchs/rails-i18n.git", :branch => "master"
 
+# Needed by External Auth
+gem "ruby-dbus"
+
 # Not vendored and not required
 gem "ancestry",                       "~>2.1.0",   :require => false
 gem "aws-sdk",                        "~>1.56.0",  :require => false
@@ -77,7 +80,6 @@ gem "net-ping",                       "~>1.7.4",   :require => false
 gem "net-ssh",                        "~>2.9.2",   :require => false
 gem "open4",                          "~>1.3.0",   :require => false
 gem "ovirt_metrics",                  "~>1.1.0",   :require => false
-gem "pg",                             "~>0.18.2",  :require => false
 gem "ruby_parser",                    "~>3.7",     :require => false
 gem "ruby-progressbar",               "~>1.7.0",   :require => false
 gem "rufus-scheduler",                "~>3.1.3",   :require => false

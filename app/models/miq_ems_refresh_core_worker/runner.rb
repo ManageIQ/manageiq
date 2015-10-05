@@ -26,7 +26,7 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
     @log_prefix ||= "EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
   end
 
-  def before_exit(message, exit_code)
+  def before_exit(message, _exit_code)
     @exit_requested = true
 
     unless @vim.nil?
@@ -36,7 +36,7 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
 
     unless @tid.nil?
       safe_log("#{message} Waiting for thread to stop.")
-      @tid.join(self.worker_settings[:thread_shutdown_timeout] || 10.seconds) rescue nil
+      @tid.join(worker_settings[:thread_shutdown_timeout] || 10.seconds) rescue nil
     end
 
     if @queue
@@ -50,14 +50,14 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
     @exit_requested = false
 
     begin
-      _log.info("#{self.log_prefix} Validating Connection/Credentials")
+      _log.info("#{log_prefix} Validating Connection/Credentials")
       @ems.verify_credentials
     rescue => err
-      _log.warn("#{self.log_prefix} #{err.message}")
+      _log.warn("#{log_prefix} #{err.message}")
       return nil
     end
 
-    _log.info("#{self.log_prefix} Starting thread")
+    _log.info("#{log_prefix} Starting thread")
     require 'MiqVimCoreUpdater'
 
     tid = Thread.new do
@@ -65,29 +65,29 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
         @vim = MiqVimCoreUpdater.new(@ems.hostname, @ems.authentication_userid, @ems.authentication_password)
         @vim.monitorUpdates { |*u| @queue.enq(u) }
       rescue Handsoap::Fault => err
-        if ( @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.") )
-          _log.info("#{self.log_prefix} Thread terminated normally")
+        if  @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.")
+          _log.info("#{log_prefix} Thread terminated normally")
         else
-          _log.error("#{self.log_prefix} Thread aborted because [#{err.message}]")
-          _log.error("#{self.log_prefix} Error details: [#{err.details}]")
+          _log.error("#{log_prefix} Thread aborted because [#{err.message}]")
+          _log.error("#{log_prefix} Error details: [#{err.details}]")
           _log.log_backtrace(err)
         end
         Thread.exit
       rescue => err
-        _log.error("#{self.log_prefix} Thread aborted because [#{err.message}]")
+        _log.error("#{log_prefix} Thread aborted because [#{err.message}]")
         _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
       end
     end
 
-    _log.info("#{self.log_prefix} Started thread")
+    _log.info("#{log_prefix} Started thread")
 
-    return tid
+    tid
   end
 
   def do_work
     if @tid.nil? || !@tid.alive?
-      _log.info("#{self.log_prefix} Thread gone. Restarting...")
+      _log.info("#{log_prefix} Thread gone. Restarting...")
       @tid = start_updater
     end
 
@@ -137,7 +137,7 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
     new_attrs.delete(:raw_power_state) if new_attrs[:template] || (new_attrs[:template].nil? && vm.template?)
 
     unless new_attrs.blank?
-      _log.info("#{self.log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following attributes: #{new_attrs.inspect}")
+      _log.info("#{log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following attributes: #{new_attrs.inspect}")
       vm.update_attributes(new_attrs)
     end
   end
@@ -158,7 +158,7 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
 
     inv.each do |i|
       uid = i['macAddress']
-      next unless nics_by_uid.has_key?(uid)
+      next unless nics_by_uid.key?(uid)
 
       ipv4, ipv6 = i['ipAddress'].to_miq_a.compact.collect(&:to_s).partition(&:ipv4?)
       ipv4 = ipv4.first
@@ -172,7 +172,7 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
     end
 
     unless new_attrs_by_nic_uid.empty?
-      _log.info("#{self.log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following network attributes: #{new_attrs_by_nic_uid.inspect}")
+      _log.info("#{log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following network attributes: #{new_attrs_by_nic_uid.inspect}")
       new_attrs_by_nic_uid.each { |uid, new_attrs| nics_by_uid[uid].network.update_attributes(new_attrs) }
     end
   end

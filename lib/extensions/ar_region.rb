@@ -19,7 +19,7 @@ module ArRegion
     end
 
     def my_region_number(force_reload = false)
-      self.clear_region_cache if force_reload
+      clear_region_cache if force_reload
       @@my_region_number ||= File.read(File.join(Rails.root, "REGION")).to_i rescue 0
     end
 
@@ -28,11 +28,11 @@ module ArRegion
     end
 
     def rails_sequence_start
-      @@rails_sequence_start ||= self.my_region_number * self.rails_sequence_factor
+      @@rails_sequence_start ||= my_region_number * rails_sequence_factor
     end
 
     def rails_sequence_end
-      @@rails_sequence_end ||= self.rails_sequence_start + self.rails_sequence_factor - 1
+      @@rails_sequence_end ||= rails_sequence_start + rails_sequence_factor - 1
     end
 
     def clear_region_cache
@@ -40,19 +40,19 @@ module ArRegion
     end
 
     def id_to_region(id)
-      return id.to_i / self.rails_sequence_factor
+      id.to_i / rails_sequence_factor
     end
 
     def region_to_range(region_number)
-      (region_number * self.rails_sequence_factor)..(region_number * self.rails_sequence_factor + self.rails_sequence_factor - 1)
+      (region_number * rails_sequence_factor)..(region_number * rails_sequence_factor + rails_sequence_factor - 1)
     end
 
-    def region_to_conditions(region_number, col="id")
-      ["#{col} >= ? AND #{col} <= ?", *self.region_to_array(region_number)]
+    def region_to_conditions(region_number, col = "id")
+      ["#{col} >= ? AND #{col} <= ?", *region_to_array(region_number)]
     end
 
     def region_to_array(region_number)
-      range = self.region_to_range(region_number)
+      range = region_to_range(region_number)
       [range.first, range.last]
     end
 
@@ -65,22 +65,22 @@ module ArRegion
     end
 
     def with_region(region_number)
-      where(:id => self.region_to_range(region_number)).scoping { yield }
+      where(:id => region_to_range(region_number)).scoping { yield }
     end
 
     def without_scope(&blk)
-      self.with_exclusive_scope(&blk)
+      with_exclusive_scope(&blk)
     end
 
     def conditions_for_my_region_default_scope
       # NOTE: These conditions MUST NOT be specified in Hash format because they are used for defining default_scope in models
       #       and would be applied for the creation of objects in addition to finds. Since :id is used in the condition this
       #       would result in all instances getting the the same id .
-      ["#{self.quoted_table_name}.id >= ? AND #{self.quoted_table_name}.id <= ?", self.rails_sequence_start, self.rails_sequence_end]
+      ["#{quoted_table_name}.id >= ? AND #{quoted_table_name}.id <= ?", rails_sequence_start, rails_sequence_end]
     end
 
     def id_in_current_region?(id)
-      self.id_to_region(id) == self.my_region_number
+      id_to_region(id) == my_region_number
     end
 
     def split_id(id)
@@ -135,17 +135,17 @@ module ArRegion
   end
 
   def in_current_region?
-    self.region_number == self.my_region_number
+    region_number == my_region_number
   end
 
   def region_number
     return my_region_number if self.new_record?
-    self.id ? (self.id / self.class.rails_sequence_factor) : nil
+    id ? (id / self.class.rails_sequence_factor) : nil
   end
-  alias region_id region_number
+  alias_method :region_id, :region_number
 
   def region_description
-    self.miq_region.description if self.miq_region
+    miq_region.description if miq_region
   end
 
   def miq_region

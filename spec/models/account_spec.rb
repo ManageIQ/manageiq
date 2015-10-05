@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Account do
-
   before(:each) do
     @user = FactoryGirl.create(:account_user)
     @group = FactoryGirl.create(:account_group)
@@ -34,5 +33,4 @@ describe Account do
     @group.add_user(@user).should be_empty
     @group.users.should include(@user)
   end
-
 end

@@ -51,10 +51,8 @@ module XFS
     end
 
     def device?
-      @file_type == Inode::FT_CHAR  ||
-      @file_type == Inode::FT_BLOCK ||
-      @file_type == Inode::FT_FIFO  ||
-      @file_type == Inode::FT_SOCKET
+      @file_type == Inode::FT_CHAR || @file_type == Inode::FT_BLOCK ||
+        @file_type == Inode::FT_FIFO || @file_type == Inode::FT_SOCKET
     end
 
     def round_up(num, base)
@@ -87,7 +85,7 @@ module XFS
       @de          = DIRECTORY2_DATA_ENTRY.decode(data[start..(start + size)])
       @inode       = @de['inumber']
       @name_length = @de['name_len']
-      start        += size
+      start += size
       # If there's a name get it.
       unless @name_length == 0
         @name     = data[start, @name_length]

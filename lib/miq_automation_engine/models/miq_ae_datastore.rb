@@ -50,7 +50,7 @@ module MiqAeDatastore
   end
 
   def self.upload(fd, name = nil, domain_name = ALL_DOMAINS)
-    name     ||= fd.original_filename
+    name ||= fd.original_filename
     ext        = File.extname(name)
     basename   = File.basename(name, ext)
     name       = "#{basename}.zip"
@@ -210,7 +210,7 @@ module MiqAeDatastore
   end
 
   def self.get_domain_priority_object(obj, klass, ns, enabled, options)
-    domain, nsd, klass_name, _ = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(obj.fqname, options)
+    domain, nsd, klass_name, = ::MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(obj.fqname, options)
     return if !klass_name.casecmp(klass).zero? || !nsd.casecmp(ns).zero?
     domain_obj = get_domain_object(domain, enabled)
     {:obj => obj, :priority => domain_obj.priority} if domain_obj
@@ -234,7 +234,7 @@ module MiqAeDatastore
   end
 
   def self.path_includes_domain?(path, options = {})
-    nsd, _, _ = ::MiqAeEngine::MiqAePath.split(path, options)
+    nsd, = ::MiqAeEngine::MiqAePath.split(path, options)
     MiqAeNamespace.find_by_fqname(nsd, false) != nil
   end
 end # module MiqAeDatastore

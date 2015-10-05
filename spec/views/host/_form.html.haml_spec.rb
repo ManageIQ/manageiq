@@ -19,4 +19,3 @@ describe "rendering fields in host new/edit form" do
     expect(rendered).not_to match(/\AIP\ Address/)
   end
 end
-

@@ -2,8 +2,8 @@ require "spec_helper"
 
 describe "Server Environment Management" do
   context ".spartan_mode" do
-    before(:each) { MiqServer.class_eval {instance_variable_set :@spartan_mode, nil } }
-    after(:each) { MiqServer.class_eval {instance_variable_set :@spartan_mode, nil } }
+    before(:each) { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
+    after(:each) { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
 
     it "when ENV['MIQ_SPARTAN'] is not set" do
       ENV.stub(:[]).with('MIQ_SPARTAN').and_return(nil)
@@ -47,8 +47,8 @@ describe "Server Environment Management" do
   end
 
   context ".minimal_env_options" do
-    before(:each) { MiqServer.class_eval {instance_variable_set :@minimal_env_options, nil } }
-    after(:each) { MiqServer.class_eval {instance_variable_set :@minimal_env_options, nil } }
+    before(:each) { MiqServer.class_eval { instance_variable_set :@minimal_env_options, nil } }
+    after(:each) { MiqServer.class_eval { instance_variable_set :@minimal_env_options, nil } }
 
     it "when spartan_mode is 'minimal'" do
       MiqServer.stub(:spartan_mode).and_return("minimal")
@@ -57,12 +57,12 @@ describe "Server Environment Management" do
 
     it "when spartan_mode starts with 'minimal' and has various roles" do
       MiqServer.stub(:spartan_mode).and_return("minimal:foo:bar")
-      MiqServer.minimal_env_options.should == %w{foo bar}
+      MiqServer.minimal_env_options.should == %w(foo bar)
     end
 
     it "when spartan_mode starts with 'minimal' and has various roles, including netbeans" do
       MiqServer.stub(:spartan_mode).and_return("minimal:foo:netbeans:bar")
-      MiqServer.minimal_env_options.should == %w{foo schedule reporting noui bar}
+      MiqServer.minimal_env_options.should == %w(foo schedule reporting noui bar)
     end
 
     it "when spartan_mode does not start with 'minimal'" do
@@ -81,7 +81,7 @@ describe "Server Environment Management" do
       end
 
       it "when minimal_env_options is not empty" do
-        minimal_env_options = %w{foo bar}
+        minimal_env_options = %w(foo bar)
         MiqServer.stub(:minimal_env_options).and_return(minimal_env_options)
         MiqServer.startup_mode.should == "Minimal [#{minimal_env_options.join(', ')}]"
       end
@@ -93,10 +93,9 @@ describe "Server Environment Management" do
     end
   end
 
-
   context "#check_disk_usage" do
     before do
-      _, @miq_server, _ = EvmSpecHelper.create_guid_miq_server_zone
+      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
       @miq_server.stub(:disk_usage_threshold => 70)
     end
 

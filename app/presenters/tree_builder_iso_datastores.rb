@@ -1,8 +1,7 @@
 class TreeBuilderIsoDatastores < TreeBuilder
-
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {:leaf => "IsoDatastore"}
   end
 
@@ -19,7 +18,7 @@ class TreeBuilderIsoDatastores < TreeBuilder
     count_only_or_objects(options[:count_only], IsoDatastore.all, "name")
   end
 
-  def x_get_tree_iso_datastore_kids(object,options)
+  def x_get_tree_iso_datastore_kids(object, options)
     iso_images = object.iso_images
     if options[:count_only]
       @tree_state.x_tree(@name)[:open_nodes].push("xx-isd_xx-#{to_cid(object.id)}")

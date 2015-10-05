@@ -6,9 +6,9 @@ describe ReportHelper do
       @edit = {
         :new => {
           :group       => "Yes",
-          :col_options => {"name" => {:break_label => "Cloud/Infrastructure Provider : Name: "}, "mem_cpu"=>{:grouping=>[:total]}, "allocated_disk_storage" => {:grouping => [:total]}},
+          :col_options => {"name" => {:break_label => "Cloud/Infrastructure Provider : Name: "}, "mem_cpu" => {:grouping => [:total]}, "allocated_disk_storage" => {:grouping => [:total]}},
           :model       => "Vm",
-          :headers     => {"Vm.ext_management_system-name" => "Cloud/Infrastructure Provider Name", "Vm-os_image_name"=>"OS Name", "Vm-mem_cpu"=>"Memory", "Vm-allocated_disk_storage" => "Allocated Disk Storage"},
+          :headers     => {"Vm.ext_management_system-name" => "Cloud/Infrastructure Provider Name", "Vm-os_image_name" => "OS Name", "Vm-mem_cpu" => "Memory", "Vm-allocated_disk_storage" => "Allocated Disk Storage"},
           :field_order => [
             ["Cloud/Infrastructure Provider : Name", "Vm.ext_management_system-name"],
             [" OS Name", "Vm-os_image_name"],

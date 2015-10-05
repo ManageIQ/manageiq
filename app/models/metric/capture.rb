@@ -17,14 +17,14 @@ module Metric::Capture
   end
 
   def self.historical_start_time
-    self.historical_days.days.ago.utc.beginning_of_day
+    historical_days.days.ago.utc.beginning_of_day
   end
 
   def self.concurrent_requests(interval_name)
     requests = VMDB::Config.new("vmdb").config.fetch_path(:performance, :concurrent_requests, interval_name.to_sym)
     requests ||= interval_name == 'realtime' ? 20 : 1
     requests = 20 if requests < 20 && interval_name == 'realtime'
-    return requests
+    requests
   end
 
   def self.capture_threshold(target)
@@ -36,7 +36,7 @@ module Metric::Capture
             else
               value.to_i_with_method.seconds.ago.utc unless value.nil?
             end
-    return value
+    value
   end
 
   #
@@ -57,7 +57,7 @@ module Metric::Capture
   end
 
   def self.perf_capture_timer(zone = nil)
-    self.perf_capture_health_check(zone)
+    perf_capture_health_check(zone)
 
     _log.info "Queueing performance capture..."
 
@@ -67,7 +67,7 @@ module Metric::Capture
     targets_by_rollup_parent = targets.inject({}) do |h, target|
       next(h) unless target.kind_of?(Host) && target.perf_capture_now?
 
-      interval_name = self.perf_target_to_interval_name(target)
+      interval_name = perf_target_to_interval_name(target)
       next unless interval_name == "realtime"
 
       target.perf_rollup_parents(interval_name).to_a.compact.each do |parent|
@@ -89,11 +89,11 @@ module Metric::Capture
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
 
       task = MiqTask.create(
-        :name       => name,
-        :identifier => pkey,
-        :state      => MiqTask::STATE_QUEUED,
-        :status     => MiqTask::STATUS_OK,
-        :message    => "Task has been queued",
+        :name         => name,
+        :identifier   => pkey,
+        :state        => MiqTask::STATE_QUEUED,
+        :status       => MiqTask::STATUS_OK,
+        :message      => "Task has been queued",
         :context_data => {
           :start    => task_start_time,
           :end      => task_end_time,
@@ -110,7 +110,7 @@ module Metric::Capture
 
     # Queue the captures for each target
     targets.each do |target|
-      interval_name = self.perf_target_to_interval_name(target)
+      interval_name = perf_target_to_interval_name(target)
 
       options = {}
       target.perf_rollup_parents(interval_name).to_a.compact.each do |parent|
@@ -126,7 +126,7 @@ module Metric::Capture
       end
       target.perf_capture_queue(interval_name, options)
 
-      if !target.kind_of?(Storage) && target.last_perf_capture_on.nil? && self.historical_days != 0
+      if !target.kind_of?(Storage) && target.last_perf_capture_on.nil? && historical_days != 0
         target.perf_capture_queue('historical')
       end
     end
@@ -139,9 +139,9 @@ module Metric::Capture
 
   def self.perf_target_to_interval_name(target)
     case target
-    when Host, VmOrTemplate;                       "realtime"
-    when ContainerNode, Container, ContainerGroup; "realtime"
-    when Storage;                                  "hourly"
+    when Host, VmOrTemplate then                       "realtime"
+    when ContainerNode, Container, ContainerGroup then "realtime"
+    when Storage then                                  "hourly"
     end
   end
 
@@ -156,7 +156,7 @@ module Metric::Capture
 
   def self.perf_capture_gap_queue(start_time, end_time, zone = nil)
     item = {
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => "perf_capture_gap",
       :role        => "ems_metrics_coordinator",
       :priority    => MiqQueue::HIGH_PRIORITY,

@@ -37,8 +37,8 @@ class MiqAeMethodCompare
 
   def congruent?
     @adds.empty? && @incompatibilities.empty? &&
-    @compatibilities.empty? && @fields_in_use.empty? &&
-    @deletes.empty?
+      @compatibilities.empty? && @fields_in_use.empty? &&
+      @deletes.empty?
   end
 
   def compatible?
@@ -93,7 +93,7 @@ class MiqAeMethodCompare
               'old_data'   => data,
               'new_data'   => new_value[property],
               'field_name' => field_name}
-      @compatibilities   << hash if WARNING_PROPERTY_NAMES.include?(property)
+      @compatibilities << hash if WARNING_PROPERTY_NAMES.include?(property)
       @incompatibilities << hash if ERROR_PROPERTY_NAMES.include?(property)
     end
   end

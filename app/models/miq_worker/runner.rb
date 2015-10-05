@@ -16,17 +16,17 @@ class MiqWorker::Runner
     cfg = {}
     opts = OptionParser.new
     self::OPTIONS_PARSER_SETTINGS.each do |key, desc, type|
-      opts.on("--#{key} VAL", desc, type) {|v| cfg[key] = v}
+      opts.on("--#{key} VAL", desc, type) { |v| cfg[key] = v }
     end
     opts.parse(*args)
 
     # Start the worker object
-    self.new(cfg).start
+    new(cfg).start
   end
 
   def poll_method
     return @poll_method unless @poll_method.nil?
-    self.poll_method = self.worker_settings[:poll_method]
+    self.poll_method = worker_settings[:poll_method]
   end
 
   def poll_method=(val)
@@ -69,11 +69,11 @@ class MiqWorker::Runner
 
   def set_connection_pool_size
     cur_size = ActiveRecord::Base.connection_pool.instance_variable_get(:@size)
-    new_size = self.worker_settings[:connection_pool_size] || cur_size
+    new_size = worker_settings[:connection_pool_size] || cur_size
     return if cur_size == new_size
 
     ActiveRecord::Base.connection_pool.instance_variable_set(:@size, new_size)
-    _log.info("#{self.log_prefix} Changed connection_pool size from #{cur_size} to #{new_size}")
+    _log.info("#{log_prefix} Changed connection_pool size from #{cur_size} to #{new_size}")
   end
 
   ###############################
@@ -85,8 +85,8 @@ class MiqWorker::Runner
     @wait_for_worker_monitor
   end
 
-  def self.wait_for_worker_monitor=(val)
-    @wait_for_worker_monitor = val
+  class << self
+    attr_writer :wait_for_worker_monitor
   end
 
   def my_monitor_started?
@@ -97,10 +97,10 @@ class MiqWorker::Runner
   end
 
   def worker_monitor_drb
-    raise "#{self.log_prefix} No MiqServer found to establishing DRb Connection to" if server.nil?
+    raise "#{log_prefix} No MiqServer found to establishing DRb Connection to" if server.nil?
     drb_uri = server.reload.drb_uri
-    raise "#{self.log_prefix} Blank DRb_URI for MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}]"    if drb_uri.blank?
-    _log.info("#{self.log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
+    raise "#{log_prefix} Blank DRb_URI for MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}]"    if drb_uri.blank?
+    _log.info("#{log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
     require 'drb'
     DRbObject.new(nil, drb_uri)
   end
@@ -114,8 +114,8 @@ class MiqWorker::Runner
     @require_vim_broker
   end
 
-  def self.require_vim_broker=(val)
-    @require_vim_broker = val
+  class << self
+    attr_writer :require_vim_broker
   end
 
   def start
@@ -188,10 +188,10 @@ class MiqWorker::Runner
   # Worker exit methods
   #
 
-  def safe_log(message=nil, exit_code=0)
+  def safe_log(message = nil, exit_code = 0)
     meth = (exit_code == 0) ? :info : :error
 
-    prefix = "#{self.log_prefix} "      rescue ""
+    prefix = "#{log_prefix} "      rescue ""
     pid    = "PID [#{Process.pid}] "    rescue ""
     guid   = @worker.nil? ? '' : "GUID [#{@worker.guid}] "  rescue ""
     id     = @worker.nil? ? '' : "ID [#{@worker.id}] "      rescue ""
@@ -216,59 +216,57 @@ class MiqWorker::Runner
     @worker.log_status
   end
 
-  def do_exit(message=nil, exit_code=0)
+  def do_exit(message = nil, exit_code = 0)
+    return if @exiting # Prevent running the do_exit logic more than one time
+    @exiting = true
+
     begin
-      return if @exiting # Prevent running the do_exit logic more than one time
-      @exiting = true
-
-      begin
-        before_exit(message, exit_code)
-      rescue Exception => e
-        safe_log("Error in before_exit: #{e.message}", :error)
-      end
-
-      begin
-        update_worker_record_at_exit(exit_code)
-      rescue Exception => e
-        safe_log("Error in update_worker_record_at_exit: #{e.message}", :error)
-      end
-
-      begin
-        MiqWorker.release_db_connection
-      rescue Exception => e
-        safe_log("Error in releasing database connection: #{e.message}", :error)
-      end
-
-      safe_log("#{message} Worker exiting.", exit_code)
-    ensure
-      exit exit_code
+      before_exit(message, exit_code)
+    rescue Exception => e
+      safe_log("Error in before_exit: #{e.message}", :error)
     end
+
+    begin
+      update_worker_record_at_exit(exit_code)
+    rescue Exception => e
+      safe_log("Error in update_worker_record_at_exit: #{e.message}", :error)
+    end
+
+    begin
+      MiqWorker.release_db_connection
+    rescue Exception => e
+      safe_log("Error in releasing database connection: #{e.message}", :error)
+    end
+
+    safe_log("#{message} Worker exiting.", exit_code)
+  ensure
+    exit exit_code
   end
 
   #
   # Message handling methods
   #
 
-  def message_exit(*args)
+  def message_exit(*_args)
     do_exit("Exit request received.")
   end
 
-  def message_restarted(*args)
+  def message_restarted(*_args)
     # just consume the restarted message
   end
 
   def message_sync_active_roles(*args)
-    _log.info("#{self.log_prefix} Synchronizing active roles...")
+    _log.info("#{log_prefix} Synchronizing active roles...")
     opts = args.extract_options!
     sync_active_roles(opts[:roles])
-    _log.info("#{self.log_prefix} Synchronizing active roles complete...")
+    _log.info("#{log_prefix} Synchronizing active roles complete...")
   end
 
   def message_sync_config(*args)
-    _log.info("#{self.log_prefix} Synchronizing configuration...")
+    _log.info("#{log_prefix} Synchronizing configuration...")
     opts = args.extract_options!
     sync_config(opts[:config])
-    _log.info("#{self.log_prefix} Synchronizing configuration complete...")
+    _log.info("#{log_prefix} Synchronizing configuration complete...")
   end
 
   def sync_config(config = nil)
@@ -290,9 +288,9 @@ class MiqWorker::Runner
   end
 
   def sync_worker_settings
-    @worker_settings = self.class.corresponding_model.worker_settings( { :config => @vmdb_config } )
+    @worker_settings = self.class.corresponding_model.worker_settings(:config => @vmdb_config)
     @poll = @worker_settings[:poll]
-    self.poll_method
+    poll_method
   end
 
   def sync_active_roles(role_names = nil)
@@ -309,13 +307,13 @@ class MiqWorker::Runner
   end
 
   def do_wait_for_worker_monitor
-    _log.info("#{self.log_prefix} Checking that worker monitor has started before doing work")
+    _log.info("#{log_prefix} Checking that worker monitor has started before doing work")
     loop do
       break if self.my_monitor_started?
       heartbeat
       sleep 3
     end
-    _log.info("#{self.log_prefix} Starting work since worker monitor has started")
+    _log.info("#{log_prefix} Starting work since worker monitor has started")
   end
 
   def do_work_loop
@@ -330,38 +328,36 @@ class MiqWorker::Runner
       end
 
       do_gc
-      self.send(self.poll_method)
+      send(poll_method)
     end
   end
 
   def heartbeat
-    begin
-      now = Time.now.utc
-      # Heartbeats can be expensive, so do them only when needed
-      return if @last_hb.kind_of?(Time) && (@last_hb + self.worker_settings[:heartbeat_freq]) >= now
-      @worker_monitor_drb ||= worker_monitor_drb
-      messages = @worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
-      @last_hb = now
-      log_ruby_object_usage(self.worker_settings[:log_top_ruby_objects_on_heartbeat].to_i)
-      messages.each { |msg, *args| process_message(msg, *args) }
-      do_heartbeat_work
-    rescue DRb::DRbError => err
-      do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
-    rescue SystemExit, SignalException
-      raise
-    rescue Exception => err
-      do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
-    end
+    now = Time.now.utc
+    # Heartbeats can be expensive, so do them only when needed
+    return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
+    @worker_monitor_drb ||= worker_monitor_drb
+    messages = @worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
+    @last_hb = now
+    log_ruby_object_usage(worker_settings[:log_top_ruby_objects_on_heartbeat].to_i)
+    messages.each { |msg, *args| process_message(msg, *args) }
+    do_heartbeat_work
+  rescue DRb::DRbError => err
+    do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
+  rescue SystemExit, SignalException
+    raise
+  rescue Exception => err
+    do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
   end
 
   def do_gc
     t = Time.now.utc
-    interval = self.worker_settings[:gc_interval] || 15.minutes
+    interval = worker_settings[:gc_interval] || 15.minutes
     interval = 1.minute if interval < 1.minute
     if @last_gc.nil? || @last_gc + interval < t
       gc_time = Benchmark.realtime { ObjectSpace.garbage_collect }
       gc_meth = gc_time >= 5 ? :warn : :debug
-      $log.send(gc_meth, "#{self.log_prefix} Garbage collection took #{gc_time} seconds")
+      $log.send(gc_meth, "#{log_prefix} Garbage collection took #{gc_time} seconds")
       @last_gc = t
     end
   end
@@ -384,7 +380,7 @@ class MiqWorker::Runner
   def after_sync_active_roles
   end
 
-  def before_exit(message, exit_code)
+  def before_exit(_message, _exit_code)
   end
 
   def sync_blacklisted_events
@@ -400,7 +396,7 @@ class MiqWorker::Runner
 
   def sleep_poll_escalate
     @poll_escalate = @poll_escalate.nil? ? @poll : @poll_escalate * 2
-    @poll_escalate = self.worker_settings[:poll_escalate_max] if @poll_escalate > self.worker_settings[:poll_escalate_max]
+    @poll_escalate = worker_settings[:poll_escalate_max] if @poll_escalate > worker_settings[:poll_escalate_max]
     sleep(@poll_escalate)
   end
 
@@ -413,21 +409,19 @@ class MiqWorker::Runner
   def process_message(message, *args)
     meth = "message_#{message}"
     if self.respond_to?(meth)
-      self.send(meth, *args)
+      send(meth, *args)
     else
-      _log.warn("#{self.log_prefix} Message [#{message}] is not recognized, ignoring")
+      _log.warn("#{log_prefix} Message [#{message}] is not recognized, ignoring")
     end
   end
 
   def clean_broker_connection
-    begin
-      if $vim_broker_client
-        $vim_broker_client.releaseSession(Process.pid)
-        $vim_broker_client = nil
-      end
-    rescue => err
-      _log.info("#{self.log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
+    if $vim_broker_client
+      $vim_broker_client.releaseSession(Process.pid)
+      $vim_broker_client = nil
     end
+  rescue => err
+    _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
   end
 
   def ruby_object_usage
@@ -446,10 +440,10 @@ class MiqWorker::Runner
     types
   end
 
-  def log_ruby_object_usage(top=20)
+  def log_ruby_object_usage(top = 20)
     if top > 0
       types = ruby_object_usage
-      $log.info("Ruby Object Usage: #{types.sort_by { |klass, h| h[:count] }.reverse[0,top].inspect}")
+      $log.info("Ruby Object Usage: #{types.sort_by { |_klass, h| h[:count] }.reverse[0, top].inspect}")
     end
   end
 end

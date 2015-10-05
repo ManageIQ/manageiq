@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqAeMethodCopy do
-
   before do
     @src_domain     = 'SPEC_DOMAIN'
     @dest_domain    = 'FRED'
@@ -73,7 +72,6 @@ describe MiqAeMethodCopy do
       meth2  = MiqAeMethod.find_by_class_id_and_name(class2.id, @src_method)
       validate_method(@meth1, meth2, MiqAeMethodCompare::CONGRUENT_METHOD)
     end
-
   end
 
   context 'copy onto itself' do
@@ -84,7 +82,6 @@ describe MiqAeMethodCopy do
     it 'copy with the same name' do
       expect { MiqAeMethodCopy.new(@src_fqname).as(@src_method, nil, true) }.to raise_error(RuntimeError)
     end
-
   end
 
   context 'copy multiple' do
@@ -108,5 +105,4 @@ describe MiqAeMethodCopy do
     obj.compare
     obj.status.should eq(status)
   end
-
 end

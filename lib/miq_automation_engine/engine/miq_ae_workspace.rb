@@ -10,7 +10,7 @@ module MiqAeEngine
     end
 
     def evmget(uri)
-      self.workspace.varget(uri)
+      workspace.varget(uri)
     end
 
     def self.evmset(token, uri, value)
@@ -18,8 +18,8 @@ module MiqAeEngine
     end
 
     def evmset(uri, value)
-      if self.workspace.varset(uri, value)
-        self.setters ||= Array.new
+      if workspace.varset(uri, value)
+        self.setters ||= []
         self.setters << [uri, value]
         self.save!
       end
@@ -32,7 +32,6 @@ module MiqAeEngine
       raise MiqAeException::WorkspaceNotFound, "Workspace Not Found for token=[#{token}]" if ws.nil?
       ws
     end
-
   end
 
   class MiqAeWorkspaceRuntime
@@ -45,10 +44,10 @@ module MiqAeEngine
     def initialize(options = {})
       @readonly          = options[:readonly] || false
       @nodes             = []
-      @current           = Array.new
+      @current           = []
       @num_drb_methods   = 0
-      @datastore_cache   = Hash.new
-      @class_methods     = Hash.new
+      @datastore_cache   = {}
+      @class_methods     = {}
       @dom_search        = MiqAeDomainSearch.new
       @persist_state_hash = HashWithIndifferentAccess.new
       @current_state_info = {}
@@ -69,8 +68,8 @@ module MiqAeEngine
     DATASTORE_CACHE = true
     def datastore(klass, key)
       if DATASTORE_CACHE
-        @datastore_cache[klass]    ||= Hash.new
-        @datastore_cache[klass][key] = yield      unless @datastore_cache[klass].has_key?(key)
+        @datastore_cache[klass] ||= {}
+        @datastore_cache[klass][key] = yield      unless @datastore_cache[klass].key?(key)
         @datastore_cache[klass][key]
       else
         yield
@@ -91,10 +90,10 @@ module MiqAeEngine
         o[fragment] = value
         return true
       end
-      return false
+      false
     end
 
-    def instantiate(uri, root=nil)
+    def instantiate(uri, root = nil)
       $miq_ae_logger.info("Instantiating [#{uri}]") if root.nil?
 
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri, "miqaedb")
@@ -114,7 +113,7 @@ module MiqAeEngine
       ns, klass, instance = MiqAePath.split(path)
       ns = overlay_namespace(scheme, uri, ns, klass, instance)
       current = @current.last
-      ns    ||= current[:ns]    if current
+      ns ||= current[:ns]    if current
       klass ||= current[:klass] if current
 
       pushed = false
@@ -124,7 +123,7 @@ module MiqAeEngine
         if scheme == "miqaedb"
           obj = MiqAeObject.new(self, ns, klass, instance)
 
-          @current.push( {:ns => ns, :klass => klass, :instance => instance, :object => obj, :message => message} )
+          @current.push({:ns => ns, :klass => klass, :instance => instance, :object => obj, :message => message})
           pushed = true
           @nodes << obj
           link_parent_child(root, obj) if root
@@ -164,7 +163,7 @@ module MiqAeEngine
         pop_state_machine_info if obj && obj.state_machine? && self.root
       end
 
-      return obj
+      obj
     end
 
     def pop_state_machine_info
@@ -178,32 +177,32 @@ module MiqAeEngine
       reset_state_info(@state_machine_objects.last) unless @state_machine_objects.empty?
     end
 
-    def to_expanded_xml(path=nil)
+    def to_expanded_xml(path = nil)
       objs = path.nil? ? roots : get_obj_from_path(path)
       objs = [objs] unless objs.kind_of?(Array)
 
       require 'builder'
       xml = Builder::XmlMarkup.new(:indent => 2)
-      xml.MiqAeWorkspace {
+      xml.MiqAeWorkspace do
         objs.each { |obj| obj.to_xml(:builder => xml) }
-      }
+      end
     end
 
-    def to_xml(path=nil)
+    def to_xml(path = nil)
       objs = path.nil? ? roots : get_obj_from_path(path)
       result = objs.collect { |obj| to_hash(obj) }.compact
       s = ""
-      XmlHash.from_hash({"MiqAeObject" => result}, :rootname=>"MiqAeWorkspace").to_xml.write(s,2)
-      return s
+      XmlHash.from_hash({"MiqAeObject" => result}, :rootname => "MiqAeWorkspace").to_xml.write(s, 2)
+      s
     end
 
-    def to_dot(path=nil)
+    def to_dot(path = nil)
       require "rubygems"
       require "graphviz"
 
       objs = path.nil? ? roots : get_obj_from_path(path)
 
-      g = GraphViz::new( "MiqAeWorkspace", :type => "digraph", :output => "dot")
+      g = GraphViz.new("MiqAeWorkspace", :type => "digraph", :output => "dot")
       objs.each { |obj| obj_to_dot(g, obj) }
       s = g.output(:output => "none")
     end
@@ -215,11 +214,11 @@ module MiqAeEngine
       # o["MiqAeNamespace"] = obj.namespace
       # o["MiqAeInstance"]  = obj.instance
       # obj.attributes
-      obj.children.each { |child|
+      obj.children.each do |child|
         c = obj_to_dot(g, child)
         g.add_edge(o, c) unless c.nil?
-      }
-      return o
+      end
+      o
     end
 
     def to_hash(obj)
@@ -227,19 +226,19 @@ module MiqAeEngine
         "namespace"   => obj.namespace,
         "class"       => obj.klass,
         "instance"    => obj.instance,
-        "attributes"  => obj.attributes.delete_if {|k, v| v.nil?}.inspect,
+        "attributes"  => obj.attributes.delete_if { |_k, v| v.nil? }.inspect,
         "MiqAeObject" => obj.children.collect { |c| to_hash(c) }
       }
-      return result.delete_if {|k, v| v.nil?}
+      result.delete_if { |_k, v| v.nil? }
     end
 
     def cyclical?(ns, klass, instance, message)
       # check for cyclical references
       @current.each do |c|
-        hash = { :ns => ns, :klass => klass, :instance => instance, :message => message }
+        hash = {:ns => ns, :klass => klass, :instance => instance, :message => message}
         return true if hash.all? { |key, value| value.casecmp(c[key]).zero? rescue false }
       end
-      return false
+      false
     end
 
     def current_object
@@ -297,18 +296,18 @@ module MiqAeEngine
 
       return obj if path.nil? || path.blank?
 
-      path = path[1..-1] if path[0,2] == "/."
+      path = path[1..-1] if path[0, 2] == "/."
 
       if path == "/"
         return roots[0] if obj.nil?
-        while true
+        loop do
           parent = obj.node_parent
           return obj if parent.nil?
           obj = parent
         end
-      elsif path[0,1] == "."
+      elsif path[0, 1] == "."
         plist = path.split("/")
-        until plist.empty? do
+        until plist.empty?
           part = plist.shift
           next if part.blank? || part == "."
           raise MiqAeException::InvalidPathFormat, "bad part [#{part}] in path [#{path}]" if (part != "..")
@@ -317,7 +316,7 @@ module MiqAeEngine
       else
         obj = find_named_ancestor(path)
       end
-      return obj
+      obj
     end
 
     def find_named_ancestor(path)
@@ -327,14 +326,14 @@ module MiqAeEngine
       ns    = (plist.length == 0) ? "*" : plist.join('/')
 
       obj = current_object
-      while(obj = obj.node_parent)
+      while (obj = obj.node_parent)
         next unless klass.casecmp(obj.klass).zero?
         break if ns == "*"
         ns_split = obj.namespace.split('/')
         ns_split.shift # sans domain
         break if ns.casecmp(ns_split.join('/')).zero?
       end
-      return obj
+      obj
     end
 
     def overlay_namespace(scheme, uri, ns, klass, instance)

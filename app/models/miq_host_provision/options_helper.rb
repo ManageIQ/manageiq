@@ -1,6 +1,6 @@
 module MiqHostProvision::OptionsHelper
   def storage_ids
-    @attached_ds ||= self.options[:attached_ds] || []
+    @attached_ds ||= options[:attached_ds] || []
   end
 
   def storages_to_attach
@@ -12,7 +12,7 @@ module MiqHostProvision::OptionsHelper
   end
 
   def description
-    @description ||= "PXE install on [#{self.host_name}] from image [#{get_option(:pxe_image_id)}]"
+    @description ||= "PXE install on [#{host_name}] from image [#{get_option(:pxe_image_id)}]"
   end
 
   def ip_address

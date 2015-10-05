@@ -13,7 +13,7 @@
 module ManageIQ::Providers::Amazon::InstanceTypes
   # Types that are currently advertised for use
   AVAILABLE_TYPES = {
-    "t2.micro" => {
+    "t2.micro"    => {
       :default                 => true,
       :name                    => "t2.micro",
       :family                  => "General Purpose",
@@ -38,7 +38,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "t2.small" => {
+    "t2.small"    => {
       :name                    => "t2.small",
       :family                  => "General Purpose",
       :description             => "T2 Small",
@@ -62,7 +62,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "t2.medium" => {
+    "t2.medium"   => {
       :name                    => "t2.medium",
       :family                  => "General Purpose",
       :description             => "T2 Medium",
@@ -86,7 +86,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "t2.large" => {
+    "t2.large"    => {
       :name                    => "t2.large",
       :family                  => "General Purpose",
       :description             => "T2 Large",
@@ -110,7 +110,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m3.medium" => {
+    "m3.medium"   => {
       :name                    => "m3.medium",
       :family                  => "General Purpose",
       :description             => "M3 General Purpose Medium",
@@ -134,7 +134,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m3.large" => {
+    "m3.large"    => {
       :name                    => "m3.large",
       :family                  => "General Purpose",
       :description             => "M3 General Purpose Large",
@@ -158,7 +158,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m3.xlarge" => {
+    "m3.xlarge"   => {
       :name                    => "m3.xlarge",
       :family                  => "General Purpose",
       :description             => "M3 General Purpose Extra Large",
@@ -182,7 +182,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m3.2xlarge" => {
+    "m3.2xlarge"  => {
       :name                    => "m3.2xlarge",
       :family                  => "General Purpose",
       :description             => "M3 General Purpose Double Extra Large",
@@ -206,7 +206,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m4.large" => {
+    "m4.large"    => {
       :name                    => "m4.large",
       :family                  => "General Purpose",
       :description             => "M4 General Purpose Large",
@@ -230,7 +230,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m4.xlarge" => {
+    "m4.xlarge"   => {
       :name                    => "m4.xlarge",
       :family                  => "General Purpose",
       :description             => "M4 General Purpose Extra Large",
@@ -254,7 +254,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m4.2xlarge" => {
+    "m4.2xlarge"  => {
       :name                    => "m4.2xlarge",
       :family                  => "General Purpose",
       :description             => "M4 General Purpose Double Extra Large",
@@ -278,7 +278,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m4.4xlarge" => {
+    "m4.4xlarge"  => {
       :name                    => "m4.4xlarge",
       :family                  => "General Purpose",
       :description             => "M4 General Purpose Quadruple Extra Large",
@@ -326,7 +326,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c3.large" => {
+    "c3.large"    => {
       :name                    => "c3.large",
       :family                  => "Compute Optimized",
       :description             => "C3 High-CPU Large",
@@ -350,7 +350,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c3.xlarge" => {
+    "c3.xlarge"   => {
       :name                    => "c3.xlarge",
       :family                  => "Compute Optimized",
       :description             => "C3 High-CPU Extra Large",
@@ -374,7 +374,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c3.2xlarge" => {
+    "c3.2xlarge"  => {
       :name                    => "c3.2xlarge",
       :family                  => "Compute Optimized",
       :description             => "C3 High-CPU Double Extra Large",
@@ -398,7 +398,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c3.4xlarge" => {
+    "c3.4xlarge"  => {
       :name                    => "c3.4xlarge",
       :family                  => "Compute Optimized",
       :description             => "C3 High-CPU Quadruple Extra Large",
@@ -422,7 +422,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c3.8xlarge" => {
+    "c3.8xlarge"  => {
       :name                    => "c3.8xlarge",
       :family                  => "Compute Optimized",
       :description             => "C3 High-CPU Eight Extra Large",
@@ -446,7 +446,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c4.large" => {
+    "c4.large"    => {
       :name                    => "c4.large",
       :family                  => "Compute Optimized",
       :description             => "C4 High-CPU Large",
@@ -470,7 +470,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c4.xlarge" => {
+    "c4.xlarge"   => {
       :name                    => "c4.xlarge",
       :family                  => "Compute Optimized",
       :description             => "C4 High-CPU Extra Large",
@@ -494,7 +494,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c4.2xlarge" => {
+    "c4.2xlarge"  => {
       :name                    => "c4.2xlarge",
       :family                  => "Compute Optimized",
       :description             => "C4 High-CPU Double Extra Large",
@@ -518,7 +518,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c4.4xlarge" => {
+    "c4.4xlarge"  => {
       :name                    => "c4.4xlarge",
       :family                  => "Compute Optimized",
       :description             => "C4 High-CPU Quadruple Extra Large",
@@ -542,7 +542,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c4.8xlarge" => {
+    "c4.8xlarge"  => {
       :name                    => "c4.8xlarge",
       :family                  => "Compute Optimized",
       :description             => "C4 High-CPU Eight Extra Large",
@@ -566,7 +566,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "g2.2xlarge" => {
+    "g2.2xlarge"  => {
       :name                    => "g2.2xlarge",
       :family                  => "GPU Instances",
       :description             => "G2 Double Extra Large",
@@ -590,7 +590,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "g2.8xlarge" => {
+    "g2.8xlarge"  => {
       :name                    => "g2.8xlarge",
       :family                  => "GPU Instances",
       :description             => "G2 Eight Extra Large",
@@ -614,7 +614,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.large" => {
+    "r3.large"    => {
       :name                    => "r3.large",
       :family                  => "Memory Optimized",
       :description             => "R3 High-Memory Large",
@@ -638,7 +638,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.xlarge" => {
+    "r3.xlarge"   => {
       :name                    => "r3.xlarge",
       :family                  => "Memory Optimized",
       :description             => "R3 High-Memory Extra Large",
@@ -662,7 +662,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.2xlarge" => {
+    "r3.2xlarge"  => {
       :name                    => "r3.2xlarge",
       :family                  => "Memory Optimized",
       :description             => "R3 High-Memory Double Extra Large",
@@ -686,7 +686,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.4xlarge" => {
+    "r3.4xlarge"  => {
       :name                    => "r3.4xlarge",
       :family                  => "Memory Optimized",
       :description             => "R3 High-Memory Quadruple Extra Large",
@@ -710,7 +710,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.8xlarge" => {
+    "r3.8xlarge"  => {
       :name                    => "r3.8xlarge",
       :family                  => "Memory Optimized",
       :description             => "R3 High-Memory Eight Extra Large",
@@ -734,7 +734,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "i2.xlarge" => {
+    "i2.xlarge"   => {
       :name                    => "i2.xlarge",
       :family                  => "Storage Optimized",
       :description             => "I2 Extra Large",
@@ -758,7 +758,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "i2.2xlarge" => {
+    "i2.2xlarge"  => {
       :name                    => "i2.2xlarge",
       :family                  => "Storage Optimized",
       :description             => "I2 Double Extra Large",
@@ -782,7 +782,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "i2.4xlarge" => {
+    "i2.4xlarge"  => {
       :name                    => "i2.4xlarge",
       :family                  => "Storage Optimized",
       :description             => "I2 Quadruple Extra Large",
@@ -806,7 +806,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "i2.8xlarge" => {
+    "i2.8xlarge"  => {
       :name                    => "i2.8xlarge",
       :family                  => "Storage Optimized",
       :description             => "I2 Eight Extra Large",
@@ -830,7 +830,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "d2.xlarge" => {
+    "d2.xlarge"   => {
       :name                    => "d2.xlarge",
       :family                  => "Storage Optimized",
       :description             => "D2 Extra Large",
@@ -854,7 +854,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "d2.2xlarge" => {
+    "d2.2xlarge"  => {
       :name                    => "d2.2xlarge",
       :family                  => "Storage Optimized",
       :description             => "D2 Double Extra Large",
@@ -878,7 +878,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "d2.4xlarge" => {
+    "d2.4xlarge"  => {
       :name                    => "d2.4xlarge",
       :family                  => "Storage Optimized",
       :description             => "D2 Quadruple Extra Large",
@@ -902,7 +902,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "d2.8xlarge" => {
+    "d2.8xlarge"  => {
       :name                    => "d2.8xlarge",
       :family                  => "Storage Optimized",
       :description             => "D2 Eight Extra Large",
@@ -929,7 +929,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
 
   # Types that are still advertised, but not recommended for new instances.
   DEPRECATED_TYPES = {
-    "t1.micro" => {
+    "t1.micro"    => {
       :name                    => "t1.micro",
       :family                  => "Micro Instances",
       :description             => "T1 Micro",
@@ -953,7 +953,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m1.small" => {
+    "m1.small"    => {
       :name                    => "m1.small",
       :family                  => "General Purpose",
       :description             => "M1 General Purpose Small",
@@ -977,7 +977,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m1.medium" => {
+    "m1.medium"   => {
       :name                    => "m1.medium",
       :family                  => "General Purpose",
       :description             => "M1 General Purpose Medium",
@@ -1001,7 +1001,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m1.large" => {
+    "m1.large"    => {
       :name                    => "m1.large",
       :family                  => "General Purpose",
       :description             => "M1 General Purpose Large",
@@ -1025,7 +1025,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m1.xlarge" => {
+    "m1.xlarge"   => {
       :name                    => "m1.xlarge",
       :family                  => "General Purpose",
       :description             => "M1 General Purpose Extra Large",
@@ -1049,7 +1049,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c1.medium" => {
+    "c1.medium"   => {
       :name                    => "c1.medium",
       :family                  => "Compute Optimized",
       :description             => "C1 High-CPU Medium",
@@ -1073,7 +1073,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c1.xlarge" => {
+    "c1.xlarge"   => {
       :name                    => "c1.xlarge",
       :family                  => "Compute Optimized",
       :description             => "C1 High-CPU Extra Large",
@@ -1145,7 +1145,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m2.xlarge" => {
+    "m2.xlarge"   => {
       :name                    => "m2.xlarge",
       :family                  => "Memory Optimized",
       :description             => "M2 High-Memory Extra Large",
@@ -1169,7 +1169,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m2.2xlarge" => {
+    "m2.2xlarge"  => {
       :name                    => "m2.2xlarge",
       :family                  => "Memory Optimized",
       :description             => "M2 High-Memory Double Extra Large",
@@ -1193,7 +1193,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m2.4xlarge" => {
+    "m2.4xlarge"  => {
       :name                    => "m2.4xlarge",
       :family                  => "Memory Optimized",
       :description             => "M2 High-Memory Quadruple Extra Large",
@@ -1292,7 +1292,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
 
   # Types that are no longer advertised
   DISCONTINUED_TYPES = {
-    "unknown" => {
+    "unknown"     => {
       :disabled                => true,
       :name                    => "unknown",
       :family                  => "unknown",

@@ -67,7 +67,7 @@ class VDDKFactory
   def wait_for_status(status, secs_to_wait)
     start_time = Time.now
     sleep_secs = 2
-    until (status == "started") ?  @started : @running
+    until (status == "started") ? @started : @running
       sleep sleep_secs
       #
       # Specifically check the shutdown flag in case we've been asked
@@ -118,7 +118,7 @@ begin
   trap('INT') { vddk.shut_down_service("Interrupt Signal received"); exit }
   trap('TERM') { vddk.shut_down_service("Termination Signal received"); exit }
 
-  Thread.new do 
+  Thread.new do
     $vim_log.info "Monitoring Thread"
     #
     # This will block until the SmartProxyWorker (our parent) exits

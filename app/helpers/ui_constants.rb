@@ -1,5 +1,4 @@
 module UiConstants
-
   # Session data size logging constants
   case Rails.env
   when "test"
@@ -13,9 +12,9 @@ module UiConstants
     SESSION_ELEMENT_THRESHOLD = 10.kilobytes
   end
 
-  #MAX_NAME_LEN = 20      # Default maximum name length
-  #MAX_DESC_LEN = 50      # Default maximum description length
-  #MAX_HOSTNAME_LEN = 50  # Default maximum host name length
+  # MAX_NAME_LEN = 20      # Default maximum name length
+  # MAX_DESC_LEN = 50      # Default maximum description length
+  # MAX_HOSTNAME_LEN = 50  # Default maximum host name length
   # dac - Changed to allow up to 255 characters for all text fields on 1/11/07
   MAX_NAME_LEN = 255        # Default maximum name length
   MAX_DESC_LEN = 255        # Default maximum description length
@@ -65,23 +64,23 @@ module UiConstants
 
   # Per page choices and default
   PPCHOICES = [
-    [5,5],
-    [10,10],
-    [20,20],
-    [50,50],
-    [100,100],
-    [200,200],
-    [500,500],
-    [1000,1000]
+    [5, 5],
+    [10, 10],
+    [20, 20],
+    [50, 50],
+    [100, 100],
+    [200, 200],
+    [500, 500],
+    [1000, 1000]
   ]
 
   # Per page choices for task/jobs
   PPCHOICES2 = [
-    [5,5],
-    [10,10],
-    [20,20],
-    [50,50],
-    [100,100],
+    [5, 5],
+    [10, 10],
+    [20, 20],
+    [50, 50],
+    [100, 100],
   ]
 
   # Setting high number incase we don't want to display paging controls on list views
@@ -89,18 +88,18 @@ module UiConstants
 
   # RSS Feeds
   RSS_FEEDS = {
-    "Microsoft Security"        => "http://www.microsoft.com/protect/rss/rssfeed.aspx",
-    "CNN Top Stories"           => "http://rss.cnn.com/rss/cnn_topstories.rss",
-    "Gartner Latest Research"   => "http://www.gartner.com/it/rss/leaders/latest_research_itoperations.jsp#",
-    "Google News"               => "http://news.google.com/?output=rss",
-    "SlashDot"                  => "http://slashdot.org/index.rdf",
-    "VM Etc."                   => "http://feeds.feedburner.com/vmetc?format=xml",
-    "Virtualization Pro"        => "http://itknowledgeexchange.techtarget.com/virtualization-pro/feed/",
-    "Virtualization Information"  => "http://virtualizationinformation.com/?feed=rss2",
-    "Vmware Tips & Tricks"      => "http://rss.techtarget.com/840.xml",
-    "DABCC - News & Support"    => "http://feeds.dabcc.com/AllArticles",
-    "VmwareWolf"                => "http://feeds.feedburner.com/vmwarewolf",
-    "Vmware RSS Feeds"          => "http://vmware.simplefeed.net/rss?f=995b0290-01dc-11dc-3032-0019bbc54f6f"
+    "Microsoft Security"         => "http://www.microsoft.com/protect/rss/rssfeed.aspx",
+    "CNN Top Stories"            => "http://rss.cnn.com/rss/cnn_topstories.rss",
+    "Gartner Latest Research"    => "http://www.gartner.com/it/rss/leaders/latest_research_itoperations.jsp#",
+    "Google News"                => "http://news.google.com/?output=rss",
+    "SlashDot"                   => "http://slashdot.org/index.rdf",
+    "VM Etc."                    => "http://feeds.feedburner.com/vmetc?format=xml",
+    "Virtualization Pro"         => "http://itknowledgeexchange.techtarget.com/virtualization-pro/feed/",
+    "Virtualization Information" => "http://virtualizationinformation.com/?feed=rss2",
+    "Vmware Tips & Tricks"       => "http://rss.techtarget.com/840.xml",
+    "DABCC - News & Support"     => "http://feeds.dabcc.com/AllArticles",
+    "VmwareWolf"                 => "http://feeds.feedburner.com/vmwarewolf",
+    "Vmware RSS Feeds"           => "http://vmware.simplefeed.net/rss?f=995b0290-01dc-11dc-3032-0019bbc54f6f"
   }
 
   # UI Themes
@@ -175,7 +174,7 @@ module UiConstants
       :storage      => true,
       :vm           => true
     },
-    :views => { # List view setting, by resource type
+    :views     => { # List view setting, by resource type
       :availabilityzone                         => "list",
       :catalog                                  => "list",
       :cm_providers                             => "list",
@@ -244,33 +243,33 @@ module UiConstants
       :vmortemplate                             => "grid",
       :vmcompare                                => "compressed",
     },
-    :perpage => { # Items per page, by view setting
-      :grid => 20,
-      :tile => 20,
-      :list => 20,
-      :reports  => 20
+    :perpage   => { # Items per page, by view setting
+      :grid    => 20,
+      :tile    => 20,
+      :list    => 20,
+      :reports => 20
     },
-    :display => {
-      :startpage      =>  "/dashboard/show",
-      :reporttheme    =>  "MIQ",
-      :quad_truncate  =>  "m",
-      :theme          =>  "red",            # Luminescent Blue
-      :bg_color       =>  BG_COLORS.first,  # Background color
-      :taskbartext    =>  true,             # Show button text on taskbar
-      :vmcompare      =>  "Compressed",     # Start VM compare and drift in compressed mode
-      :hostcompare    =>  "Compressed",     # Start Host compare in compressed mode
-      :nav_style      => NAV_STYLES.first,  # Navigation style
-      :timezone       =>  nil               # This will be set when the user logs in
+    :display   => {
+      :startpage     => "/dashboard/show",
+      :reporttheme   => "MIQ",
+      :quad_truncate => "m",
+      :theme         => "red",            # Luminescent Blue
+      :bg_color      => BG_COLORS.first,  # Background color
+      :taskbartext   => true,             # Show button text on taskbar
+      :vmcompare     => "Compressed",     # Start VM compare and drift in compressed mode
+      :hostcompare   => "Compressed",     # Start Host compare in compressed mode
+      :nav_style     => NAV_STYLES.first,  # Navigation style
+      :timezone      => nil               # This will be set when the user logs in
     },
-# Commented in sprint 67 - new widget based dashboards
-#    :dashboard => {
-#      :col_1   =>  ["rss1", "chart1"],               # Column 1 contents
-#      :col_2   =>  ["chart2", "rss2"],               # Column 2 contents
-#      :col_3   =>  ["report1", "report2", "rss3"],   # Column 3 contents
-#      :rssshow =>  false,                            # Show external rss feed
-#      :rssfeed =>  "Microsoft Security"              # External rss feed choice
-#    },
-#    :db_item_min => Hash.new # Start with blank hash to hold dashboard item minimized flags
+    # Commented in sprint 67 - new widget based dashboards
+    #    :dashboard => {
+    #      :col_1   =>  ["rss1", "chart1"],               # Column 1 contents
+    #      :col_2   =>  ["chart2", "rss2"],               # Column 2 contents
+    #      :col_3   =>  ["report1", "report2", "rss3"],   # Column 3 contents
+    #      :rssshow =>  false,                            # Show external rss feed
+    #      :rssfeed =>  "Microsoft Security"              # External rss feed choice
+    #    },
+    #    :db_item_min => Hash.new # Start with blank hash to hold dashboard item minimized flags
   }
 
   VIEW_RESOURCES = DEFAULT_SETTINGS[:views].keys.each_with_object({}) { |value, acc| acc[value.to_s] = value }.freeze
@@ -324,7 +323,7 @@ module UiConstants
 
   # Choices for trend and C&U days back pulldowns
   WEEK_CHOICES = {
-    7 => "1 Week",
+    7  => "1 Week",
     14 => "2 Weeks",
     21 => "3 Weeks",
     28 => "4 Weeks"
@@ -339,13 +338,13 @@ module UiConstants
     15.minutes => "15 Minutes",
     30.minutes => "30 Minutes",
     45.minutes => "45 Minutes",
-    1.hour => "1 Hour"
+    1.hour     => "1 Hour"
   }
 
   # Choices for Target options show pulldown
   TARGET_TYPE_CHOICES = {
     "EmsCluster" => "Clusters",
-    "Host" => "Hosts"
+    "Host"       => "Hosts"
   }
 
   # Choices for the trend limit percent pulldowns
@@ -361,34 +360,34 @@ module UiConstants
     120 => "120%",
     110 => "110%",
     100 => "100%",
-    95 => "95%",
-    90 => "90%",
-    85 => "85%",
-    80 => "80%",
-    75 => "75%",
-    70 => "70%",
-    65 => "65%",
-    60 => "60%",
-    55 => "55%",
-    50 => "50%"
+    95  => "95%",
+    90  => "90%",
+    85  => "85%",
+    80  => "80%",
+    75  => "75%",
+    70  => "70%",
+    65  => "65%",
+    60  => "60%",
+    55  => "55%",
+    50  => "50%"
   }
 
   # Report Controller constants
   NOTHING_STRING = "<<< Nothing >>>"
   SHOWALL_STRING = "<<< Show All >>>"
   MAX_REPORT_COLUMNS = 100      # Default maximum number of columns in a report
-  SQL_FILTER_OPERATORS = [ "=", "!=", "<", "<=", ">=", ">", "LIKE", "NOT LIKE", "IS NULL", "IS NOT NULL" ]
-  BAND_UNITS = ["Second","Minute","Hour","Day","Week","Month","Year","Decade"]
+  SQL_FILTER_OPERATORS = ["=", "!=", "<", "<=", ">=", ">", "LIKE", "NOT LIKE", "IS NULL", "IS NOT NULL"]
+  BAND_UNITS = ["Second", "Minute", "Hour", "Day", "Week", "Month", "Year", "Decade"]
   GRAPH_MAX_COUNT = 10
 
   TREND_MODEL = "VimPerformanceTrend"   # Performance trend model name requiring special processing
 
   # Source pulldown in VM Options
   PLANNING_VM_MODES = {
-    :allocated=>"Allocation",
-    :reserved=>"Reservation",
-    :used=>"Usage",
-    :manual=>"Manual Input"
+    :allocated => "Allocation",
+    :reserved  => "Reservation",
+    :used      => "Usage",
+    :manual    => "Manual Input"
   }
   VALID_PLANNING_VM_MODES = PLANNING_VM_MODES.keys.index_by(&:to_s)
 
@@ -401,25 +400,25 @@ module UiConstants
     5 => "5 Days Ago",
     6 => "6 Days Ago"
   }
-  SP_STATES = [["Initializing","initializing"], ["Waiting to Start","waiting_to_start"], ["Cancelling","cancelling"], ["Aborting","aborting"],
-    ["Finished","finished"],["Snapshot Create","snapshot_create"], ["Scanning","scanning"], ["Snapshot Delete","snapshot_delete"],
-    ["Synchronizing","synchronizing"], ["Deploy Smartproxy","deploy_smartproxy"]]
-  UI_STATES = [["Initialized","Initialized"], ["Queued","Queued"],["Active","Active"],["Finished","Finished"]]
+  SP_STATES = [["Initializing", "initializing"], ["Waiting to Start", "waiting_to_start"], ["Cancelling", "cancelling"], ["Aborting", "aborting"],
+               ["Finished", "finished"], ["Snapshot Create", "snapshot_create"], ["Scanning", "scanning"], ["Snapshot Delete", "snapshot_delete"],
+               ["Synchronizing", "synchronizing"], ["Deploy Smartproxy", "deploy_smartproxy"]]
+  UI_STATES = [["Initialized", "Initialized"], ["Queued", "Queued"], ["Active", "Active"], ["Finished", "Finished"]]
 
   PROV_STATES = {
-                  "pending_approval"  => "Pending Approval",
-                  "approved"          => "Approved",
-                  "denied"            => "Denied"
-                }
+    "pending_approval" => "Pending Approval",
+    "approved"         => "Approved",
+    "denied"           => "Denied"
+  }
   PROV_TIME_PERIODS = {
-    1 => "Last 24 Hours",
-    7 => "Last 7 Days",
+    1  => "Last 24 Hours",
+    7  => "Last 7 Days",
     30 => "Last 30 Days"
   }
 
-  ALL_TIMEZONES = ActiveSupport::TimeZone.all.collect{|tz|["(GMT#{tz.formatted_offset}) #{tz.name}",tz.name]}
+  ALL_TIMEZONES = ActiveSupport::TimeZone.all.collect { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.name] }
   # Following line does not include timezones with partial hour offsets
-  #ALL_TIMEZONES = ActiveSupport::TimeZone.all.collect{|tz| tz.utc_offset % 3600 == 0 ? ["(GMT#{tz.formatted_offset}) #{tz.name}",tz.name] : nil}.compact
+  # ALL_TIMEZONES = ActiveSupport::TimeZone.all.collect{|tz| tz.utc_offset % 3600 == 0 ? ["(GMT#{tz.formatted_offset}) #{tz.name}",tz.name] : nil}.compact
 
   CATEGORY_CHOICES = {}
   CATEGORY_CHOICES["services"] = "Services"
@@ -427,8 +426,7 @@ module UiConstants
   CATEGORY_CHOICES["system"] = "System"
   CATEGORY_CHOICES["accounts"] = "User Accounts"
   CATEGORY_CHOICES["vmconfig"] = "VM Configuration"
-  #CATEGORY_CHOICES["vmevents"] = "VM Events"
-
+  # CATEGORY_CHOICES["vmevents"] = "VM Events"
 
   # Policy Root nodes
   PROROOT = "PR"
@@ -440,35 +438,35 @@ module UiConstants
   ALTROOT = "AL"
 
   # Assignment choices
-  ASSIGN_TOS = Hash.new
+  ASSIGN_TOS = {}
 
   # This set of assignments was created for miq_alerts
   ASSIGN_TOS["ExtManagementSystem"] = {
-    "enterprise"=>" The Enterprise",
-    "ext_management_system"=>"Selected #{ui_lookup(:tables=>"ems_infra")}",
-    "ext_management_system-tags"=>"Tagged #{ui_lookup(:tables=>"ems_infra")}"
+    "enterprise"                 => " The Enterprise",
+    "ext_management_system"      => "Selected #{ui_lookup(:tables => "ems_infra")}",
+    "ext_management_system-tags" => "Tagged #{ui_lookup(:tables => "ems_infra")}"
   }
   ASSIGN_TOS["EmsCluster"] = {
-    "ems_cluster"=>"Selected #{ui_lookup(:tables=>"ems_cluster")}",
-    "ems_cluster-tags"=>"Tagged #{ui_lookup(:tables=>"ems_cluster")}"
+    "ems_cluster"      => "Selected #{ui_lookup(:tables => "ems_cluster")}",
+    "ems_cluster-tags" => "Tagged #{ui_lookup(:tables => "ems_cluster")}"
   }.merge(ASSIGN_TOS["ExtManagementSystem"])
   ASSIGN_TOS["Host"] = {
-    "host"=>"Selected #{ui_lookup(:tables=>"host")}",
-    "host-tags"=>"Tagged #{ui_lookup(:tables=>"host")}"
+    "host"      => "Selected #{ui_lookup(:tables => "host")}",
+    "host-tags" => "Tagged #{ui_lookup(:tables => "host")}"
   }.merge(ASSIGN_TOS["EmsCluster"])
   ASSIGN_TOS["Vm"] = {
-    "ems_folder"=>"Selected #{ui_lookup(:tables=>"ems_folder")}",
-    "resource_pool"=>"Selected #{ui_lookup(:tables=>"resource_pool")}",
-    "resource_pool-tags"=>"Tagged #{ui_lookup(:tables=>"resource_pool")}",
-    "vm-tags"=>"Tagged #{ui_lookup(:tables=>"vm")}"
+    "ems_folder"         => "Selected #{ui_lookup(:tables => "ems_folder")}",
+    "resource_pool"      => "Selected #{ui_lookup(:tables => "resource_pool")}",
+    "resource_pool-tags" => "Tagged #{ui_lookup(:tables => "resource_pool")}",
+    "vm-tags"            => "Tagged #{ui_lookup(:tables => "vm")}"
   }.merge(ASSIGN_TOS["Host"])
   ASSIGN_TOS["Storage"] = {
-    "enterprise"=>" The Enterprise",
-    "storage"=>"Selected #{ui_lookup(:tables=>"storage")}",
-    "storage-tags"=>"Tagged #{ui_lookup(:tables=>"storage")}"
+    "enterprise"   => " The Enterprise",
+    "storage"      => "Selected #{ui_lookup(:tables => "storage")}",
+    "storage-tags" => "Tagged #{ui_lookup(:tables => "storage")}"
   }
   ASSIGN_TOS["MiqServer"] = {
-    "miq_server"=>"Selected #{ui_lookup(:tables=>"miq_server")}",
+    "miq_server" => "Selected #{ui_lookup(:tables => "miq_server")}",
   }
 
   # This set of assignments was created for chargeback_rates
@@ -486,20 +484,20 @@ module UiConstants
   EXP_COUNT_TYPE = ["Count of", "count"]  # Selection for count based filters
   EXP_FIND_TYPE = ["Find", "find"]        # Selection for find/check filters
   EXP_TYPES = [                           # All normal filters
-                ["Field", "field"],
-                EXP_COUNT_TYPE,
-                ["Tag", "tag"],
-                EXP_FIND_TYPE
-              ]
+    ["Field", "field"],
+    EXP_COUNT_TYPE,
+    ["Tag", "tag"],
+    EXP_FIND_TYPE
+  ]
   VM_EXP_TYPES = [                        # Special VM registry filter
-                  ["Registry", "regkey"]
-                ]
+    ["Registry", "regkey"]
+  ]
 
   # Snapshot ages for delete_snapshots_by_age action type
-  SNAPSHOT_AGES = Hash.new
-  (1..23).each{|a| SNAPSHOT_AGES[a.hours.to_i] = (a.to_s + " Hour" + (a < 2 ? "" : "s"))}
-  (1..6).each{|a| SNAPSHOT_AGES[a.days.to_i] = (a.to_s + " Day" + (a < 2 ? "" : "s"))}
-  (1..4).each{|a| SNAPSHOT_AGES[a.weeks.to_i] = (a.to_s + " Week" + (a < 2 ? "" : "s"))}
+  SNAPSHOT_AGES = {}
+  (1..23).each { |a| SNAPSHOT_AGES[a.hours.to_i] = (a.to_s + " Hour" + (a < 2 ? "" : "s")) }
+  (1..6).each { |a| SNAPSHOT_AGES[a.days.to_i] = (a.to_s + " Day" + (a < 2 ? "" : "s")) }
+  (1..4).each { |a| SNAPSHOT_AGES[a.weeks.to_i] = (a.to_s + " Week" + (a < 2 ? "" : "s")) }
 
   # Expression constants
   EXP_TODAY = "Today"
@@ -510,7 +508,7 @@ module UiConstants
   FROM_HOURS = [
     "This Hour",
     "Last Hour",
-  ] + Array.new(22){|i| "#{i + 2} Hours Ago"}
+  ] + Array.new(22) { |i| "#{i + 2} Hours Ago" }
   FROM_DAYS = [
     "Today",
     "Yesterday",
@@ -554,17 +552,17 @@ module UiConstants
 
   # Need this for display purpose to map with id
   WIDGET_TYPES = {
-      "r" => "Reports",
-      "c" => "Charts",
-      "rf" => "RSS Feeds",
-      "m" => "Menus"
+    "r"  => "Reports",
+    "c"  => "Charts",
+    "rf" => "RSS Feeds",
+    "m"  => "Menus"
   }
   # Need this for mapping with MiqWidget record content_type field
   WIDGET_CONTENT_TYPE = {
-      "r" => "report",
-      "c" => "chart",
-      "rf" => "rss",
-      "m" => "menu"
+    "r"  => "report",
+    "c"  => "chart",
+    "rf" => "rss",
+    "m"  => "menu"
   }
 
   VALID_PERF_PARENTS = {

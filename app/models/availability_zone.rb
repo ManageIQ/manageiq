@@ -36,11 +36,11 @@ class AvailabilityZone < ActiveRecord::Base
   end
 
   def my_zone
-    ems = self.ext_management_system
+    ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
   end
 
-  def event_where_clause(assoc=:ems_events)
+  def event_where_clause(assoc = :ems_events)
     ["#{events_table_name(assoc)}.availability_zone_id = ?", id]
   end
 end

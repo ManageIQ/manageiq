@@ -106,5 +106,3 @@ appliance ||= $evm.root['miq_server'].ipaddress
 
 # Email Requester
 emailrequester(miq_request, appliance)
-
-

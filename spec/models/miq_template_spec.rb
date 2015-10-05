@@ -18,20 +18,20 @@ describe MiqTemplate do
 
     it "true" do
       @template.update_attribute(:template, true)
-      @template.type.should     == "ManageIQ::Providers::Vmware::InfraManager::Template"
+      @template.type.should == "ManageIQ::Providers::Vmware::InfraManager::Template"
       @template.template.should == true
-      @template.state.should    == "never"
-      lambda { @template.reload }.should_not raise_error
-      lambda { ManageIQ::Providers::Vmware::InfraManager::Vm.find(@template.id) }.should raise_error ActiveRecord::RecordNotFound
+      @template.state.should == "never"
+      -> { @template.reload }.should_not raise_error
+      -> { ManageIQ::Providers::Vmware::InfraManager::Vm.find(@template.id) }.should raise_error ActiveRecord::RecordNotFound
     end
 
     it "false" do
       @template.update_attribute(:template, false)
-      @template.type.should     == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+      @template.type.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
       @template.template.should == false
-      @template.state.should    == "unknown"
-      lambda { @template.reload }.should raise_error ActiveRecord::RecordNotFound
-      lambda { ManageIQ::Providers::Vmware::InfraManager::Vm.find(@template.id) }.should_not raise_error
+      @template.state.should == "unknown"
+      -> { @template.reload }.should raise_error ActiveRecord::RecordNotFound
+      -> { ManageIQ::Providers::Vmware::InfraManager::Vm.find(@template.id) }.should_not raise_error
     end
   end
 
@@ -46,5 +46,4 @@ describe MiqTemplate do
     ManageIQ::Providers::Redhat::InfraManager::Template.new.supports_kickstart_provisioning?.should be_true
     ManageIQ::Providers::Vmware::InfraManager::Template.new.supports_kickstart_provisioning?.should be_false
   end
-
 end

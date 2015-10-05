@@ -12,16 +12,16 @@ describe ServiceController do
 
       controller.instance_variable_set(:@record, svc)
       controller.instance_variable_set(:@sb,
-        :trees => {
-          :svcs_tree => {:active_node => "#{svc.id}"}
-        },
-        :active_tree => :svcs_tree
-      )
+                                       :trees       => {
+                                         :svcs_tree => {:active_node => "#{svc.id}"}
+                                       },
+                                       :active_tree => :svcs_tree
+                                      )
 
       controller.stub(:replace_right_cell)
 
       # Now delete the Service
-      controller.instance_variable_set(:@_params, {:id => svc.id})
+      controller.instance_variable_set(:@_params, :id => svc.id)
       controller.send(:service_delete)
 
       # Check for Service Description to be part of flash message displayed

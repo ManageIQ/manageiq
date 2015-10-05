@@ -1,5 +1,4 @@
 module Ext4
-
   # ////////////////////////////////////////////////////////////////////////////
   # // Data definitions.
 
@@ -14,13 +13,11 @@ module Ext4
   # Here follows the value name in ASCII.
 
   class ExAttribName
-
     AT_USER           = 1 # User space attribute.
     AT_POSIX_ACL      = 2 # POSIX ACL.
     AT_POSIX_ACL_DEF  = 3 # POSIX ACL default (directories only).
     AT_TRUSTED        = 4 # Trusted space attribute.
     AT_LUSTRE         = 5 # Not currently used.
     AT_SECURITY       = 6 # Security space attribute.
-
   end
 end

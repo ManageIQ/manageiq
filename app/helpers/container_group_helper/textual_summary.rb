@@ -62,7 +62,7 @@ module ContainerGroupHelper::TextualSummary
       # Set the volume name only  for the first item in the list
       volume_values[0][0] = volume.name if volume_values.length > 0
       h[:values] += volume_values
-      end
+    end
     h
   end
 

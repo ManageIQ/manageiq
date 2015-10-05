@@ -133,7 +133,39 @@ class ApiController
       resource["id"].kind_of?(Integer) ? resource["id"] : nil
     end
 
+    def resource_can_have_custom_actions(type, cspec = nil)
+      cspec ||= collection_config[type.to_sym] if collection_config.key?(type.to_sym)
+      cspec && cspec[:options].include?(:custom_actions)
+    end
+
+    def parse_by_attr(resource, type, attr_list)
+      klass = collection_class(type)
+      objs = attr_list.map { |attr| klass.send("find_by_#{attr}", resource[attr]) if resource[attr] }.compact
+      objs.collect(&:id).first
+    end
+
+    def parse_ownership(data)
+      {
+        :owner => collection_class(:users).find_by_id(parse_owner(data)),
+        :group => collection_class(:groups).find_by_id(parse_group(data))
+      }.compact if data.present?
+    end
+
     private
+
+    def parse_owner(data)
+      owner_resource = data["owner"]
+      return nil if owner_resource.blank?
+      owner_id = parse_id(owner_resource, :users)
+      owner_id ? owner_id : parse_by_attr(owner_resource, :users, %w(name userid))
+    end
+
+    def parse_group(data)
+      group_resource = data["group"]
+      return nil if group_resource.blank?
+      group_id = parse_id(group_resource, :groups)
+      group_id ? group_id : parse_by_attr(group_resource, :groups, %w(description))
+    end
 
     #
     # For Posts we need to support actions, let's validate those
@@ -189,9 +221,16 @@ class ApiController
 
       aspec = cspec[aspecnames.to_sym]
       action_hash = fetch_action_hash(aspec, mname, aname)
-      raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified" if action_hash.blank?
-      raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
-      raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
+      if action_hash.blank?
+        unless type == :resource && resource_can_have_custom_actions(cname, cspec)
+          raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified"
+        end
+      end
+
+      if action_hash.present?
+        raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
+        raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
+      end
 
       validate_post_api_action_as_subcollection(cname, mname, aname)
     end

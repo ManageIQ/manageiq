@@ -8,11 +8,11 @@ module MiqAeEngine
     Dir.mkdir(AE_METHODS_DIR) unless File.directory?(AE_METHODS_DIR)
 
     def self.invoke_inline(aem, obj, inputs)
-      return self.invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
+      return invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
       raise  MiqAeException::InvalidMethod, "Inline Method Language [#{aem.language}] not supported"
     end
 
-    def self.invoke_uri(aem, obj, inputs)
+    def self.invoke_uri(aem, obj, _inputs)
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(aem.data)
       raise  MiqAeException::MethodNotFound, "Specified URI [#{aem.data}] in Method [#{aem.name}] has unsupported scheme of #{scheme}; supported scheme is file" unless scheme.downcase == "file"
       raise  MiqAeException::MethodNotFound, "Invalid file specification -- #{aem.data}" if path.nil?
@@ -20,7 +20,7 @@ module MiqAeEngine
       fname = File.join(AE_METHODS_DIR, path)
       raise  MiqAeException::MethodNotFound, "Method [#{aem.data}] Not Found (fname=#{fname})" unless File.exist?(fname)
       cmd = "#{aem.language} #{fname}"
-      return MiqAeEngine::MiqAeMethod.invoke_external(cmd, obj.workspace)
+      MiqAeEngine::MiqAeMethod.invoke_external(cmd, obj.workspace)
     end
 
     def self.invoke_builtin(aem, obj, inputs)
@@ -41,9 +41,9 @@ module MiqAeEngine
     end
 
     def self.invoke(obj, aem, args)
-      inputs = Hash.new
+      inputs = {}
 
-      aem.inputs.each { |f|
+      aem.inputs.each do |f|
         key   = f.name
         value = args[key]
         value = obj.attributes[key] || f.default_value if value.nil?
@@ -57,7 +57,7 @@ module MiqAeEngine
         end
 
         raise MiqAeException::MethodParmMissing, "Method [#{aem.fqname}] requires parameter [#{f.name}]" if inputs[key].nil?
-      }
+      end
 
       if obj.workspace.readonly?
         $miq_ae_logger.info("Workspace Instantiation is READONLY -- skipping method [#{aem.fqname}] with inputs [#{inputs.inspect}]")
@@ -66,7 +66,7 @@ module MiqAeEngine
         return MiqAeEngine::MiqAeMethod.send("invoke_#{aem.location.downcase.strip}", aem, obj, inputs)
       end
 
-      return nil
+      nil
     end
 
     private
@@ -203,7 +203,7 @@ RUBY
       else
         raise MiqAeException::UnknownMethodRc, msg, stderr
       end
-      return rc
+      rc
     end
 
     def self.method_preamble(miq_uri, miq_id)
@@ -216,9 +216,9 @@ RUBY
     def self.ruby_method_runnable?(aem)
       return false if aem.data.blank?
 
-      raise MiqAeException::Error, "Unable to launch Automate Method because currently in SQL transaction" if ActiveRecord::Base.connection.open_transactions > self.open_transactions_threshold
+      raise MiqAeException::Error, "Unable to launch Automate Method because currently in SQL transaction" if ActiveRecord::Base.connection.open_transactions > open_transactions_threshold
 
-      return true
+      true
     end
 
     def self.setup_drb_for_ruby_method

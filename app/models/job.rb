@@ -14,16 +14,14 @@ class Job < ActiveRecord::Base
   DEFAULT_USERID  = 'system'.freeze
 
   def self.get_job_class(process_type)
-    begin
-      return Object.const_get(process_type)
-    rescue NameError
-      raise "Cannot Find Job Class=<#{process_type}> because it is not defined"
-    end
+    return Object.const_get(process_type)
+  rescue NameError
+    raise "Cannot Find Job Class=<#{process_type}> because it is not defined"
   end
 
   def self.create_job(process_type, options = {})
-    klass = self.get_job_class(process_type)
-    ar_options = options.dup.delete_if { |k,v| !Job.column_names.include?(k.to_s) }
+    klass = get_job_class(process_type)
+    ar_options = options.dup.delete_if { |k, _v| !Job.column_names.include?(k.to_s) }
     job = klass.new(ar_options)
     job.options = options
     job.initialize_attributes
@@ -42,8 +40,8 @@ class Job < ActiveRecord::Base
   end
 
   def initialize_attributes
-    self.name    ||= "#{self.type} created on #{Time.now.utc}"
-    self.userid  ||= DEFAULT_USERID
+    self.name ||= "#{type} created on #{Time.now.utc}"
+    self.userid ||= DEFAULT_USERID
     self.context ||= {}
     self.options ||= {}
     self.status   = "ok"
@@ -53,34 +51,32 @@ class Job < ActiveRecord::Base
 
   def check_active_on_destroy
     if self.is_active?
-      _log.warn "Job is active, delete not allowed - guid: [#{self.guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{self.target_class}], target id: [#{self.target_id}], process type: [#{self.type}], agent class: [#{self.agent_class}], agent id: [#{self.agent_id}], zone: [#{self.zone}]"
+      _log.warn "Job is active, delete not allowed - guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent class: [#{agent_class}], agent id: [#{agent_id}], zone: [#{zone}]"
       return false
     end
 
-    _log.info "Job deleted: guid: [#{self.guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{self.target_class}], target id: [#{self.target_id}], process type: [#{self.type}], agent class: [#{self.agent_class}], agent id: [#{self.agent_id}], zone: [#{self.zone}]"
-    return true
+    _log.info "Job deleted: guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent class: [#{agent_class}], agent id: [#{agent_id}], zone: [#{zone}]"
+    true
   end
 
-  def self.agent_state_update_queue(jobid, state, message=nil)
-    begin
-      job = Job.where("guid = ?", jobid).select("id, state, guid").first
-      unless job.nil?
-        job.agent_state_update(state, message)
-      else
-        _log.warn "jobid: [#{jobid}] not found"
-      end
-    rescue => err
-      _log.warn "Error '#{err.message}', updating jobid: [#{jobid}]"
-      _log.log_backtrace(err)
+  def self.agent_state_update_queue(jobid, state, message = nil)
+    job = Job.where("guid = ?", jobid).select("id, state, guid").first
+    unless job.nil?
+      job.agent_state_update(state, message)
+    else
+      _log.warn "jobid: [#{jobid}] not found"
     end
+  rescue => err
+    _log.warn "Error '#{err.message}', updating jobid: [#{jobid}]"
+    _log.log_backtrace(err)
   end
 
-  def agent_state_update(agent_state, agent_message=nil)
+  def agent_state_update(agent_state, agent_message = nil)
     # Handle a single array parm coming from the queue
     agent_state, agent_message = agent_state if agent_state.kind_of?(Array)
 
-    $log.info("JOB([#{self.guid}] Agent state update: state: [#{agent_state}], message: [#{agent_message}]")
-    self.update_attributes(:agent_state => agent_state, :agent_message => agent_message)
+    $log.info("JOB([#{guid}] Agent state update: state: [#{agent_state}], message: [#{agent_message}]")
+    update_attributes(:agent_state => agent_state, :agent_message => agent_message)
 
     return unless self.is_active?
 
@@ -94,7 +90,7 @@ class Job < ActiveRecord::Base
 
     _log.info("Guid: [#{guid}], Signal: [#{signal}]")
 
-    job = self.find_by_guid(guid)
+    job = find_by_guid(guid)
     return if job.nil?
 
     begin
@@ -104,18 +100,18 @@ class Job < ActiveRecord::Base
     end
   end
 
-  def set_status(message, status="ok", code = 0)
+  def set_status(message, status = "ok", code = 0)
     self.message = message
     self.status  = status
     self.code    = code
 
-    self.save
+    save
   end
 
   def dispatch_start
     _log.info "Dispatch Status is 'pending'"
     self.dispatch_status = "pending"
-    self.save
+    save
     @storage_dispatcher_process_finish_flag = false
   end
 
@@ -123,7 +119,7 @@ class Job < ActiveRecord::Base
     return if @storage_dispatcher_process_finish_flag
     _log.info "Dispatch Status is 'finished'"
     self.dispatch_status = "finished"
-    self.save
+    save
     @storage_dispatcher_process_finish_flag = true
   end
 
@@ -160,10 +156,10 @@ class Job < ActiveRecord::Base
       :class_name    => self.class.base_class.name,
       :instance_id   => id,
       :method_name   => "signal",
-      :args_selector => lambda {|args| args.kind_of?(Array) && args.first == :abort},
+      :args_selector => ->(args) { args.kind_of?(Array) && args.first == :abort },
       :role          => "smartstate",
       :zone          => MiqServer.my_zone
-    ) do |msg, find_options|
+    ) do |_msg, find_options|
       message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
       _log.warn("Job: guid: [#{guid}], #{message}, aborting")
       find_options.merge(:args => [:abort, message, "error"])
@@ -208,10 +204,10 @@ class Job < ActiveRecord::Base
       timestamp = timestamp.to_time rescue nil
     end
     return false if timestamp.nil?
-    return (timestamp >= job_not_found_delay.seconds.ago)
+    (timestamp >= job_not_found_delay.seconds.ago)
   end
 
-  def self.extend_timeout(host_id, jobs)
+  def self.extend_timeout(_host_id, jobs)
     jobs = Marshal.load(jobs)
     job_guids = jobs.collect { |j| j[:taskid] }
     unless job_guids.empty?
@@ -224,7 +220,7 @@ class Job < ActiveRecord::Base
   end
 
   def is_active?
-    !["finished", "waiting_to_start"].include?(self.state)
+    !["finished", "waiting_to_start"].include?(state)
   end
 
   def self.delete_older(ts, condition)
@@ -238,9 +234,9 @@ class Job < ActiveRecord::Base
     cond[1] << ts.utc
 
     _log.info("cond.flatten: #{cond.flatten.inspect}")
-    ids = self.where(cond.flatten).pluck(:id)
+    ids = where(cond.flatten).pluck(:id)
 
-    self.delete_by_id(ids)
+    delete_by_id(ids)
   end
 
   def self.delete_by_id(ids)

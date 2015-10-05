@@ -685,6 +685,7 @@
     :description: Services
     :options:
     - :collection
+    - :custom_actions
     :methods: *70174834084700
     :klass: Service
     :subcollections:
@@ -696,6 +697,8 @@
         :identifier: service_edit
       - :name: retire
         :identifier: service_retire
+      - :name: set_ownership
+        :identifier: service_ownership
       - :name: delete
         :identifier: service_delete
     :resource_actions:
@@ -704,6 +707,8 @@
         :identifier: service_edit
       - :name: retire
         :identifier: service_retire
+      - :name: set_ownership
+        :identifier: service_ownership
       :delete:
       - :name: delete
         :identifier: service_delete
@@ -809,7 +814,7 @@
     :description: Users
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: User
     :subcollections:
     - :tags
@@ -817,10 +822,12 @@
       :post:
       - :name: add
         :identifier: rbac_user_add
+        :disabled: true
       - :name: edit
         :identifier: rbac_user_edit
       - :name: delete
         :identifier: rbac_user_delete
+        :disabled: true
     :resource_actions:
       :post:
       - :name: edit
@@ -828,6 +835,7 @@
       :delete:
       - :name: delete
         :identifier: rbac_user_delete
+        :disabled: true
     :tags_subcollection_actions:
       :post:
       - :name: assign

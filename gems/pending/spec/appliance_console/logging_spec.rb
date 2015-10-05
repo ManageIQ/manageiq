@@ -32,7 +32,6 @@ describe ApplianceConsole::Logging do
   end
 
   context "log_and_feedback" do
-
     it "should log_and_feedback when successful" do
       subject.should_receive(:say).with("Method starting")
       subject.should_receive(:say).with("Method complete")
@@ -95,7 +94,7 @@ describe ApplianceConsole::Logging do
 
         subject.logger.should_receive(:info)
         subject.logger.should_receive(:error)
-               .with("MIQ(#some_method)  #{debugging}. Failed at: #{@backtrace.first}")
+          .with("MIQ(#some_method)  #{debugging}. Failed at: #{@backtrace.first}")
 
         subject.should_receive(:say).with("Some method starting")
         subject.should_receive(:say).with(/Some method.*error.*#{debugging}/)

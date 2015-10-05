@@ -13,16 +13,16 @@ describe LdapDomain do
 
   it "should create proper AR relationships" do
     @ldap_server.ldap_domain.should == @ldap_domain
-    @ldap_user.ldap_domain.should   == @ldap_domain
-    @ldap_group.ldap_domain.should  == @ldap_domain
+    @ldap_user.ldap_domain.should == @ldap_domain
+    @ldap_group.ldap_domain.should == @ldap_domain
 
     @ldap_domain.ldap_region.should == @ldap_region
-    @ldap_region.zone.should        == @zone
+    @ldap_region.zone.should == @zone
 
-    @zone.ldap_regions.count.should  == 1
+    @zone.ldap_regions.count.should == 1
     @ldap_region.ldap_domains.count.should == 1
     @ldap_domain.ldap_servers.count.should == 1
-    @ldap_domain.ldap_users.count.should   == 1
-    @ldap_domain.ldap_groups.count.should  == 1
+    @ldap_domain.ldap_users.count.should == 1
+    @ldap_domain.ldap_groups.count.should == 1
   end
 end

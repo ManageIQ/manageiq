@@ -22,39 +22,39 @@ module OntapMetricsRollupMixin
 
   module ClassMethods
     def init
-      @counterNames   = self.column_names - NON_COUNTER_COLS + self.additional_counters
+      @counterNames   = column_names - NON_COUNTER_COLS + additional_counters
       @minCounterNames  = @counterNames.dup.delete_if { |cn| !(cn =~ /.*_min$/) }
-      @counterNames    -= @minCounterNames
+      @counterNames -= @minCounterNames
       @maxCounterNames  = @counterNames.dup.delete_if { |cn| !(cn =~ /.*_max$/) }
-      @counterNames    -= @maxCounterNames
+      @counterNames -= @maxCounterNames
       @rateCounterNames = nil
       @basedCounterNames  = nil
       @baseCounterNames = nil
-      @metadataClass    = (self.name + "Metadata").constantize
+      @metadataClass    = (name + "Metadata").constantize
     end
 
     def metadataClass
-      return @metadataClass
+      @metadataClass
     end
 
     def counterNames
-      return @counterNames
+      @counterNames
     end
 
     def minCounterNames
-      return @minCounterNames
+      @minCounterNames
     end
 
     def maxCounterNames
-      return @maxCounterNames
+      @maxCounterNames
     end
 
     def rateCounterNames(counterInfo)
-      @rateCounterNames ||= self.counterNames.dup.delete_if { |c| counterInfo[c].properties != "rate" }
+      @rateCounterNames ||= counterNames.dup.delete_if { |c| counterInfo[c].properties != "rate" }
     end
 
     def basedCounterNames(counterInfo)
-      @basedCounterNames ||= self.counterNames.dup.delete_if { |c| counterInfo[c]['base-counter'].nil? }
+      @basedCounterNames ||= counterNames.dup.delete_if { |c| counterInfo[c]['base-counter'].nil? }
     end
 
     def baseCounterNames(counterInfo)
@@ -65,23 +65,23 @@ module OntapMetricsRollupMixin
           bca << bcn
         end
       end
-      @baseCounterNames = self.counterNames & bca
+      @baseCounterNames = counterNames & bca
     end
 
     def find_all_by_interval_and_time_range(interval, start_time, end_time = nil, count = :all, options = {})
       my_cond = ["rollup_type = ? and statistic_time > ? and statistic_time <= ?", interval, start_time, end_time]
 
       passed_cond = options.delete(:conditions)
-      options[:conditions] = passed_cond.nil? ? my_cond : "( #{self.send(:sanitize_sql_for_conditions, my_cond)} ) AND ( #{self.send(:sanitize_sql, passed_cond)} )"
+      options[:conditions] = passed_cond.nil? ? my_cond : "( #{send(:sanitize_sql_for_conditions, my_cond)} ) AND ( #{send(:sanitize_sql, passed_cond)} )"
 
       _log.debug("Find options: #{options.inspect}")
-      self.find(count, options)
+      find(count, options)
     end
   end # module ClassMethods
 
   def counter_info
-    return nil if self.storage_metrics_metadata.nil?
-    return self.storage_metrics_metadata.counter_info
+    return nil if storage_metrics_metadata.nil?
+    storage_metrics_metadata.counter_info
   end
 
   #
@@ -89,14 +89,14 @@ module OntapMetricsRollupMixin
   # of the same class.
   #
   def counter_info=(val)
-    return self.counter_info unless self.counter_info.nil?
+    return counter_info unless counter_info.nil?
     begin
       smm = self.class.metadataClass.create!(:counter_info => val)
     rescue ActiveRecord::RecordInvalid => err
       smm = self.class.metadataClass.first
     end
     self.storage_metrics_metadata = smm
-    return smm.counter_info
+    smm.counter_info
   end
 
   def counterNames
@@ -112,25 +112,25 @@ module OntapMetricsRollupMixin
   end
 
   def rateCounterNames
-    self.class.rateCounterNames(self.counter_info)
+    self.class.rateCounterNames(counter_info)
   end
 
   def basedCounterNames
-    self.class.basedCounterNames(self.counter_info)
+    self.class.basedCounterNames(counter_info)
   end
 
   def baseCounterNames
-    self.class.baseCounterNames(self.counter_info)
+    self.class.baseCounterNames(counter_info)
   end
 
   def counter_unit(counterName)
-    raise "#{self.class.name}.counter_unit: counter #{counterName} not found" if (ci = self.counter_info[counterName]).nil?
-    return ci['unit']
+    raise "#{self.class.name}.counter_unit: counter #{counterName} not found" if (ci = counter_info[counterName]).nil?
+    ci['unit']
   end
 
   def counter_desc(counterName)
-    raise "#{self.class.name}.counter_desc: counter #{counterName} not found" if (ci = self.counter_info[counterName]).nil?
-    return ci['desc']
+    raise "#{self.class.name}.counter_desc: counter #{counterName} not found" if (ci = counter_info[counterName]).nil?
+    ci['desc']
   end
 
   def hourly_rollup(rollup_time, metric_list)
@@ -144,7 +144,7 @@ module OntapMetricsRollupMixin
     baseCounterNames  = m1.baseCounterNames
     counterInfo     = m1.counter_info
 
-    bcHash  = Hash.new { |h,k| h[k] = 0 }
+    bcHash  = Hash.new { |h, k| h[k] = 0 }
 
     totInterval = 0
     metric_list.each do |metrics|
@@ -203,7 +203,7 @@ module OntapMetricsRollupMixin
     counterInfo     = m1.counter_info
     self.counter_info = counterInfo
 
-    bcHash  = Hash.new { |h,k| h[k] = 0 }
+    bcHash  = Hash.new { |h, k| h[k] = 0 }
 
     totInterval = 0
     metric_list.each do |metrics|
@@ -260,25 +260,24 @@ module OntapMetricsRollupMixin
     cnMax = cn + "_max"
     ci = counterInfo[cn]
 
-    counterInfo[cnMin] = NetAppManageability::NAMHash.new {
+    counterInfo[cnMin] = NetAppManageability::NAMHash.new do
       name  cnMin
       unit  ci.unit
       desc  "Minimum value over rollup period - " + ci.desc
-    }
-    counterInfo[cnMax] = NetAppManageability::NAMHash.new {
+    end
+    counterInfo[cnMax] = NetAppManageability::NAMHash.new do
       name  cnMax
       unit  ci.unit
       desc  "Maximum value over rollup period - " + ci.desc
-    }
+    end
   end
 
   # Virtual columns for timestamp formatting as just Date or just Time
   def v_statistic_date
-    self.statistic_time
+    statistic_time
   end
 
   def v_statistic_time
-    self.statistic_time
+    statistic_time
   end
-
 end

@@ -16,10 +16,10 @@ module JobProxyDispatcherEmbeddedScanSpec
       vms_in_embedded_scanning.length.should > 0
 
       method = case y_resource
-      when :ems then 'ems_id'
-      when :host then 'host_id'
-      when :miq_server then 'target_id'
-      end
+               when :ems then 'ems_id'
+               when :host then 'host_id'
+               when :miq_server then 'target_id'
+               end
 
       if y_resource == :miq_server
         resource_hsh = vms_in_embedded_scanning.inject({}) do |hsh, target_id|
@@ -36,8 +36,8 @@ module JobProxyDispatcherEmbeddedScanSpec
         end
       end
 
-      resource_hsh.values.detect {|count| count > 0 }.should be_true, "Expected at least one #{y_resource} resource with more than 0 scan jobs. resource_hash: #{resource_hsh.inspect}"
-      resource_hsh.values.detect {|count| count > x_scans}.should be_nil, "Expected no #{y_resource} resource with more than #{x_scans} scan jobs. resource_hash: #{resource_hsh.inspect}"
+      resource_hsh.values.detect { |count| count > 0 }.should be_true, "Expected at least one #{y_resource} resource with more than 0 scan jobs. resource_hash: #{resource_hsh.inspect}"
+      resource_hsh.values.detect { |count| count > x_scans }.should be_nil, "Expected no #{y_resource} resource with more than #{x_scans} scan jobs. resource_hash: #{resource_hsh.inspect}"
     end
 
     context "With a zone, server, ems, hosts, vmware vms" do
@@ -47,20 +47,20 @@ module JobProxyDispatcherEmbeddedScanSpec
           FactoryGirl.create(:miq_server, :zone => server.zone, :name => "test_server_#{i}")
         end
 
-        #TODO: We should be able to set values so we don't need to stub behavior
+        # TODO: We should be able to set values so we don't need to stub behavior
         MiqServer.any_instance.stub(:is_vix_disk? => true)
         MiqServer.any_instance.stub(:is_a_proxy? => true)
         MiqServer.any_instance.stub(:has_active_role? => true)
         ManageIQ::Providers::Vmware::InfraManager.any_instance.stub(:authentication_status_ok? => true)
         Host.any_instance.stub(:authentication_status_ok? => true)
 
-        @hosts, @proxies, @storages, @vms, @repo_vms = self.build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
+        @hosts, @proxies, @storages, @vms, @repo_vms = build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
       end
 
       context "and a scan job for each vm" do
         before(:each) do
           MiqVimBrokerWorker.stub(:available_in_zone?).and_return(true)
-          #JobProxyDispatcher.stub(:start_job_on_proxy).and_return(nil)
+          # JobProxyDispatcher.stub(:start_job_on_proxy).and_return(nil)
 
           @jobs = @vms.collect(&:scan)
         end
@@ -78,7 +78,7 @@ module JobProxyDispatcherEmbeddedScanSpec
 
             it "should dispatch only 2 scan jobs per ems"  do
               JobProxyDispatcher.dispatch
-              self.assert_at_most_x_scan_jobs_per_y_resource(2, :ems)
+              assert_at_most_x_scan_jobs_per_y_resource(2, :ems)
             end
 
             it "should signal 2 jobs to start" do
@@ -95,7 +95,7 @@ module JobProxyDispatcherEmbeddedScanSpec
 
             it "should dispatch only 4 scan jobs per ems"  do
               JobProxyDispatcher.dispatch
-              self.assert_at_most_x_scan_jobs_per_y_resource(4, :ems)
+              assert_at_most_x_scan_jobs_per_y_resource(4, :ems)
             end
           end
 
@@ -107,8 +107,8 @@ module JobProxyDispatcherEmbeddedScanSpec
 
             it "should dispatch up to 4 per ems and 2 per miqserver"  do
               JobProxyDispatcher.dispatch
-              self.assert_at_most_x_scan_jobs_per_y_resource(4, :ems)
-              self.assert_at_most_x_scan_jobs_per_y_resource(2, :miq_server)
+              assert_at_most_x_scan_jobs_per_y_resource(4, :ems)
+              assert_at_most_x_scan_jobs_per_y_resource(2, :miq_server)
             end
           end
         end
@@ -126,7 +126,7 @@ module JobProxyDispatcherEmbeddedScanSpec
 
             it "should dispatch only 2 scan jobs per host"  do
               JobProxyDispatcher.dispatch
-              self.assert_at_most_x_scan_jobs_per_y_resource(2, :host)
+              assert_at_most_x_scan_jobs_per_y_resource(2, :host)
             end
           end
 
@@ -138,7 +138,7 @@ module JobProxyDispatcherEmbeddedScanSpec
 
             it "should dispatch only 4 scan jobs per host"  do
               JobProxyDispatcher.dispatch
-              self.assert_at_most_x_scan_jobs_per_y_resource(4, :host)
+              assert_at_most_x_scan_jobs_per_y_resource(4, :host)
             end
           end
 
@@ -150,8 +150,8 @@ module JobProxyDispatcherEmbeddedScanSpec
 
             it "should dispatch up to 4 per host and 2 per miqserver"  do
               JobProxyDispatcher.dispatch
-              self.assert_at_most_x_scan_jobs_per_y_resource(4, :host)
-              self.assert_at_most_x_scan_jobs_per_y_resource(2, :miq_server)
+              assert_at_most_x_scan_jobs_per_y_resource(4, :host)
+              assert_at_most_x_scan_jobs_per_y_resource(2, :miq_server)
             end
           end
         end

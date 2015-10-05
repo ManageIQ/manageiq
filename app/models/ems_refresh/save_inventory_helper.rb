@@ -4,7 +4,7 @@ module EmsRefresh::SaveInventoryHelper
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
 
-    record_index, record_index_columns = self.save_inventory_prep_record_index(parent.send(type), find_key)
+    record_index, record_index_columns = save_inventory_prep_record_index(parent.send(type), find_key)
 
     new_records = []
     hashes.each do |h|
@@ -14,7 +14,7 @@ module EmsRefresh::SaveInventoryHelper
 
     # Delete the items no longer found
     unless deletes.blank?
-      _log.info("[#{type}] Deleting #{self.log_format_deletes(deletes)}")
+      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
       parent.send(type).delete(deletes)
     end
 
@@ -85,11 +85,11 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def backup_keys(hash, keys)
-    keys.each_with_object({}) { |k, backup| backup[k] = hash.delete(k) if hash.has_key?(k) }
+    keys.each_with_object({}) { |k, backup| backup[k] = hash.delete(k) if hash.key?(k) }
   end
 
   def restore_keys(hash, keys, backup)
-    keys.each { |k| hash[k] = backup.delete(k) if backup.has_key?(k) }
+    keys.each { |k| hash[k] = backup.delete(k) if backup.key?(k) }
   end
 
   def save_child_inventory(obj, hashes, child_keys, *args)

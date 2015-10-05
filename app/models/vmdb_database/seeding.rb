@@ -9,15 +9,15 @@ module VmdbDatabase::Seeding
     end
 
     def seed_self
-      db = my_database || self.new
+      db = my_database || new
 
       db.name            = connection.current_database
       db.vendor          = connection.adapter_name
       db.version         = connection.database_version
-      db.ipaddress       = self.db_server_ipaddress
+      db.ipaddress       = db_server_ipaddress
       db.data_directory  = connection.data_directory            if connection.respond_to?(:data_directory)
       db.last_start_time = connection.last_start_time           if connection.respond_to?(:last_start_time)
-      db.data_disk       = self.db_disk_size(db.data_directory) if EvmDatabase.local? && db.data_directory
+      db.data_disk       = db_disk_size(db.data_directory) if EvmDatabase.local? && db.data_directory
 
       db.save!
       db
@@ -41,7 +41,7 @@ module VmdbDatabase::Seeding
   end
 
   def seed
-    mine = self.evm_tables.index_by(&:name)
+    mine = evm_tables.includes(:text_tables, :vmdb_indexes).index_by(&:name)
 
     self.class.connection.tables.sort.each do |table_name|
       table = mine.delete(table_name)

@@ -54,7 +54,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
       signal :poll_destination_powered_off_in_provider
     else
       phase_context[:power_on_wait_count] ||= 0
-      phase_context[:power_on_wait_count]  += 1
+      phase_context[:power_on_wait_count] += 1
       requeue_phase
     end
   end

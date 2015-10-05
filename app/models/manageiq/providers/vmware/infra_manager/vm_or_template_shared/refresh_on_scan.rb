@@ -4,9 +4,9 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared::RefreshOnS
   end
 
   def refresh_advanced_settings
-    return if self.ext_management_system.nil?
+    return if ext_management_system.nil?
 
-    extra_config = self.with_provider_object(&:extraConfig)
+    extra_config = with_provider_object(&:extraConfig)
     return if extra_config.nil?
 
     hashes = extra_config.collect do |k, v|

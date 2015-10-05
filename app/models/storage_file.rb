@@ -13,7 +13,7 @@ class StorageFile < ActiveRecord::Base
     basename = File.basename(file.name, ".vmdk")
     i = basename.rindex('-')
     test_str = i.nil? ? basename : basename[i + 1..-1]
-    return test_str == "delta" || test_str =~ /^\d{6}$/
+    test_str == "delta" || test_str =~ /^\d{6}$/
   end
 
   def self.split_file_types(files)
@@ -27,14 +27,14 @@ class StorageFile < ActiveRecord::Base
         else
           ret[:disk] << f
         end
-      when 'vmsd','vmsn'
+      when 'vmsd', 'vmsn'
         ret[:snapshot] << f
       when 'nvram', 'vswp'
         ret[:vm_ram] << f
       when 'vmx', 'vmtx', 'vmxf', 'log', 'hlog'
         ret[:vm_misc] << f
       else
-        if f.ext_name[0,5] == "redo_"
+        if f.ext_name[0, 5] == "redo_"
           ret[:snapshot] << f
         else
           ret[:debris] << f
@@ -42,7 +42,7 @@ class StorageFile < ActiveRecord::Base
       end
     end
 
-    return ret
+    ret
   end
 
   def self.link_storage_files_to_vms(files, vm_ids_by_path, update = true)
@@ -62,14 +62,14 @@ class StorageFile < ActiveRecord::Base
   end
 
   def is_file?
-    return self.rsc_type == "file"
+    rsc_type == "file"
   end
 
   def is_directory?
-    return self.rsc_type == "dir"
+    rsc_type == "dir"
   end
 
   def v_size_numeric
-    return self.size.to_i
+    size.to_i
   end
 end

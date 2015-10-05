@@ -336,9 +336,9 @@ describe WidgetImportService do
       end
 
       it "reraises with the original error" do
-        expect {
+        expect do
           widget_import_service.store_for_import("the data")
-        }.to raise_error(WidgetImportValidator::NonYamlError, "Test message")
+        end.to raise_error(WidgetImportValidator::NonYamlError, "Test message")
       end
 
       it "queues a deletion" do

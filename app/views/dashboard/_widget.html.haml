@@ -1,20 +1,20 @@
 -# Parameters:
 -# widget MiqWidget object
 %div{:id => "w_#{presenter.widget.id}"}
-  #test.modbox
-    %h2.modtitle{:style => "cursor:move"}
-      %a{:class => "#{presenter.widget.content_type}box"}
-      - if role_allows(:feature => "dashboard_add")
-        = presenter.button_close
-      = presenter.button_minmax
-      - if presenter.widget.contents_for_user(current_user).present?
-        - if %(report chart).include?(presenter.widget.content_type)
-          = presenter.button_fullscreen
-          = presenter.button_pdf
-        - if %(chart).include?(presenter.widget.content_type)
-          = presenter.button_zoom
-      %div
-        %span.modtitle_text= h(presenter.widget.title)
+  .panel.panel-default#test
+    .panel-heading
+      %h3.panel-title{:style => "cursor:move"}
+        %a{:class => "#{presenter.widget.content_type}box"}
+        - if role_allows(:feature => "dashboard_add")
+          = presenter.button_close
+        = presenter.button_minmax
+        - if presenter.widget.contents_for_user(current_user).present?
+          - if %(report chart).include?(presenter.widget.content_type)
+            = presenter.button_fullscreen
+            = presenter.button_pdf
+          - if %(chart).include?(presenter.widget.content_type)
+            = presenter.button_zoom
+        = h(presenter.widget.title)
     - if presenter.widget.content_type == "menu"
       = render :partial => 'widget_menu', :locals => {:widget => presenter.widget}
     - elsif presenter.widget.contents_for_user(current_user).blank?

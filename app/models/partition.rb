@@ -2,13 +2,13 @@ class Partition < ActiveRecord::Base
   belongs_to :disk
   belongs_to :hardware
   has_many :volumes,
-    lambda { |_|
-      p = Partition.quoted_table_name
-      v = Volume.quoted_table_name
-      Volume.select("DISTINCT #{v}.*").
-        joins("JOIN #{p} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group").
-        where("#{p}.id" => id)
-    }, :foreign_key => :volume_group
+           lambda { |_|
+             p = Partition.quoted_table_name
+             v = Volume.quoted_table_name
+             Volume.select("DISTINCT #{v}.*")
+               .joins("JOIN #{p} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group")
+               .where("#{p}.id" => id)
+           }, :foreign_key => :volume_group
 
   include ReportableMixin
 
@@ -18,7 +18,7 @@ class Partition < ActiveRecord::Base
     # Override volume_group getter to prevent the special physical linkage from coming through
     vg = read_attribute(:volume_group)
     return nil if vg.respond_to?(:starts_with?) && vg.starts_with?(Volume::PHYSICAL_VOLUME_GROUP)
-    return vg
+    vg
   end
 
   # Derived from linux fdisk "list known partition types"
@@ -124,12 +124,12 @@ class Partition < ActiveRecord::Base
   UNKNOWN_PARTITION_TYPE = "UNKNOWN".freeze
 
   def self.partition_type_name(partition_type)
-    return PARTITION_TYPE_NAMES[partition_type] if PARTITION_TYPE_NAMES.has_key?(partition_type)
-    return UNKNOWN_PARTITION_TYPE
+    return PARTITION_TYPE_NAMES[partition_type] if PARTITION_TYPE_NAMES.key?(partition_type)
+    UNKNOWN_PARTITION_TYPE
   end
 
   def partition_type_name
-    self.class.partition_type_name(self.partition_type)
+    self.class.partition_type_name(partition_type)
   end
 
   def self.alignment_boundary
@@ -142,12 +142,11 @@ class Partition < ActiveRecord::Base
   end
 
   def aligned?
-    return nil if self.start_address.nil?
+    return nil if start_address.nil?
 
     # We check all of physical volumes of the VM. This Includes visible and hidden volumes, but excludes logical volumes.
     # The alignment of hidden volumes affects the performance of the logical volumes that are based on them.
-    self.start_address % self.alignment_boundary == 0
+    start_address % alignment_boundary == 0
   end
-  alias aligned aligned?
-
+  alias_method :aligned, :aligned?
 end

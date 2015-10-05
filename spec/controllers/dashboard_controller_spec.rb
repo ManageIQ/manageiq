@@ -77,7 +77,7 @@ describe DashboardController do
     it "returns url for the user and sets user's group/role id in session" do
       user = FactoryGirl.create(:user, :role => "test")
       User.stub(:authenticate).and_return(user)
-      controller.stub(:get_vmdb_config).and_return({:product => {}})
+      controller.stub(:get_vmdb_config).and_return(:product => {})
       skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
       expect(controller.current_groupid).to eq(user.current_group_id)
@@ -88,19 +88,19 @@ describe DashboardController do
 
   context "Create Dashboard" do
     it "dashboard show" do
-      #create dashboard for a group
-      ws = FactoryGirl.create(:miq_widget_set, :name => "default",
-                              :set_data => {:last_group_db_updated => Time.now.utc,
-                              :col1 => [1], :col2 => [], :col3 =>[]})
+      # create dashboard for a group
+      ws = FactoryGirl.create(:miq_widget_set, :name     => "default",
+                                               :set_data => {:last_group_db_updated => Time.now.utc,
+                              :col1 => [1], :col2 => [], :col3 => []})
 
       ur = FactoryGirl.create(:miq_user_role)
       group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => {:dashboard_order => [ws.id]})
       user = FactoryGirl.create(:user, :miq_groups => [group])
 
-      controller.instance_variable_set(:@sb, {:active_db => ws.name})
+      controller.instance_variable_set(:@sb, :active_db => ws.name)
       controller.instance_variable_set(:@tabs, [])
       login_as user
-      #create a user's dashboard using group dashboard name.
+      # create a user's dashboard using group dashboard name.
       FactoryGirl.create(:miq_widget_set,
                          :name     => "#{user.userid}|#{group.id}|#{ws.name}",
                          :set_data => {:last_group_db_updated => Time.now.utc, :col1 => [1], :col2 => [], :col3 => []})

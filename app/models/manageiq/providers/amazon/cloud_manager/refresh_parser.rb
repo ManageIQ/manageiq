@@ -2,7 +2,7 @@
 
 class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
   def self.ems_inv_to_hashes(ems, options = nil)
-    self.new(ems, options).ems_inv_to_hashes
+    new(ems, options).ems_inv_to_hashes
   end
 
   def initialize(ems, options = nil)
@@ -15,9 +15,9 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
     @options    = options || {}
     # Default the collection of images unless explicitly declined
-    @options["get_private_images"] = true  unless @options.has_key?("get_private_images")
-    @options["get_shared_images"]  = true  unless @options.has_key?("get_shared_images")
-    @options["get_public_images"]  = false unless @options.has_key?("get_public_images")
+    @options["get_private_images"] = true  unless @options.key?("get_private_images")
+    @options["get_shared_images"]  = true  unless @options.key?("get_shared_images")
+    @options["get_public_images"]  = false unless @options.key?("get_public_images")
   end
 
   def ems_inv_to_hashes
@@ -216,11 +216,11 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     cloud_subnets = vpc.subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.id) }
 
     new_result = {
-      :ems_ref => uid,
-      :name    => name,
-      :cidr    => vpc.cidr_block,
-      :status  => status,
-      :enabled => true,
+      :ems_ref             => uid,
+      :name                => name,
+      :cidr                => vpc.cidr_block,
+      :status              => status,
+      :enabled             => true,
 
       :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, vpc.tags["aws:cloudformation:stack-id"]),
       :cloud_subnets       => cloud_subnets,
@@ -235,10 +235,10 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     name ||= uid
 
     new_result = {
-      :ems_ref => uid,
-      :name    => name,
-      :cidr    => subnet.cidr_block,
-      :status  => subnet.state.try(:to_s),
+      :ems_ref           => uid,
+      :name              => name,
+      :cidr              => subnet.cidr_block,
+      :status            => subnet.state.try(:to_s),
 
       :availability_zone => @data_index.fetch_path(:availability_zones, subnet.availability_zone_name)
     }
@@ -265,10 +265,10 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     ret = []
 
     common = {
-      :direction      => direction,
-      :host_protocol  => perm[:ip_protocol].to_s.upcase,
-      :port           => perm[:from_port],
-      :end_port       => perm[:to_port],
+      :direction     => direction,
+      :host_protocol => perm[:ip_protocol].to_s.upcase,
+      :port          => perm[:from_port],
+      :end_port      => perm[:to_port],
     }
 
     perm[:groups].each do |g|
@@ -291,24 +291,24 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     guest_os = (image.platform == "windows") ? "windows" : "linux"
 
     name     = get_name_from_tags(image)
-    name   ||= image.name
-    name   ||= $1 if location =~ /^(.+?)(\.(image|img))?\.manifest\.xml$/
-    name   ||= uid
+    name ||= image.name
+    name ||= $1 if location =~ /^(.+?)(\.(image|img))?\.manifest\.xml$/
+    name ||= uid
 
     new_result = {
-      :type            => ManageIQ::Providers::Amazon::CloudManager::Template.name,
-      :uid_ems         => uid,
-      :ems_ref         => uid,
-      :name            => name,
-      :location        => location,
-      :vendor          => "amazon",
-      :raw_power_state => "never",
-      :template        => true,
+      :type               => ManageIQ::Providers::Amazon::CloudManager::Template.name,
+      :uid_ems            => uid,
+      :ems_ref            => uid,
+      :name               => name,
+      :location           => location,
+      :vendor             => "amazon",
+      :raw_power_state    => "never",
+      :template           => true,
       # the is_public flag here avoids having to make an additional API call
       # per image, since we already know whether it's a public image
       :publicly_available => is_public,
 
-      :hardware    => {
+      :hardware           => {
         :guest_os            => guest_os,
         :bitness             => ARCHITECTURE_TO_BITNESS[image.architecture],
         :virtualization_type => image.virtualization_type,
@@ -330,7 +330,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     flavor_uid = instance.instance_type
     @known_flavors << flavor_uid
     flavor = @data_index.fetch_path(:flavors, flavor_uid) ||
-      @data_index.fetch_path(:flavors, "unknown")
+             @data_index.fetch_path(:flavors, "unknown")
 
     private_network = {
       :ipaddress => instance.private_ip_address,
@@ -349,14 +349,14 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     end
 
     new_result = {
-      :type            => ManageIQ::Providers::Amazon::CloudManager::Vm.name,
-      :uid_ems         => uid,
-      :ems_ref         => uid,
-      :name            => name,
-      :vendor          => "amazon",
-      :raw_power_state => status.to_s,
+      :type                => ManageIQ::Providers::Amazon::CloudManager::Vm.name,
+      :uid_ems             => uid,
+      :ems_ref             => uid,
+      :name                => name,
+      :vendor              => "amazon",
+      :raw_power_state     => status.to_s,
 
-      :hardware    => {
+      :hardware            => {
         :bitness             => ARCHITECTURE_TO_BITNESS[instance.architecture],
         :virtualization_type => virtualization_type,
         :root_device_type    => root_device_type,
@@ -412,7 +412,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :address            => address,
       :cloud_network_only => ip.vpc?,
 
-      :vm => associated_vm
+      :vm                 => associated_vm
     }
 
     return uid, new_result
@@ -422,16 +422,16 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     uid = stack.stack_id.to_s
     child_stacks, resources = find_stack_resources(stack)
     new_result = {
-      :type          => ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.name,
-      :ems_ref       => uid,
-      :name          => stack.name,
-      :description   => stack.description,
-      :status        => stack.status,
-      :status_reason => stack.status_reason,
-      :children      => child_stacks,
-      :resources     => resources,
-      :outputs       => find_stack_outputs(stack),
-      :parameters    => find_stack_parameters(stack),
+      :type                   => ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack.name,
+      :ems_ref                => uid,
+      :name                   => stack.name,
+      :description            => stack.description,
+      :status                 => stack.status,
+      :status_reason          => stack.status_reason,
+      :children               => child_stacks,
+      :resources              => resources,
+      :outputs                => find_stack_outputs(stack),
+      :parameters             => find_stack_parameters(stack),
 
       :orchestration_template => find_stack_template(stack)
     }

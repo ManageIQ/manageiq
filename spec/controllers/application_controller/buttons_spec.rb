@@ -10,10 +10,10 @@ describe ApplicationController do
 
     context "with a resource_action dialog" do
       it "Vm button" do
-        controller.instance_variable_set(:@_params, {:id => vm.id, :button_id => button.id})
+        controller.instance_variable_set(:@_params, :id => vm.id, :button_id => button.id)
         controller.should_receive(:dialog_initialize).with do |action, options|
           action.should == resource_action
-          options[:target_id].should  == vm.id
+          options[:target_id].should == vm.id
           options[:target_kls].should == vm.class.name
         end
 
@@ -24,11 +24,11 @@ describe ApplicationController do
       it "MiqTemplate button" do
         # TODO: change to update_attribute once CustomButton is fixed:  https://github.com/ManageIQ/cfme/issues/335
         button.update_attributes(:applies_to_class => "MiqTemplate")
-        controller.instance_variable_set(:@_params, {:id => template.id, :button_id => button.id})
+        controller.instance_variable_set(:@_params, :id => template.id, :button_id => button.id)
 
         controller.should_receive(:dialog_initialize).with do |action, options|
           action.should == resource_action
-          options[:target_id].should  == template.id
+          options[:target_id].should == template.id
           options[:target_kls].should == template.class.name
         end
 
@@ -44,7 +44,7 @@ describe ApplicationController do
       end
 
       it "Vm button" do
-        controller.instance_variable_set(:@_params, {:id => vm.id, :button_id => button.id})
+        controller.instance_variable_set(:@_params, :id => vm.id, :button_id => button.id)
         CustomButton.any_instance.should_receive(:invoke).with(vm)
 
         controller.send(:custom_buttons)
@@ -53,7 +53,7 @@ describe ApplicationController do
 
       it "MiqTemplate" do
         button.update_attributes(:applies_to_class => "MiqTemplate")
-        controller.instance_variable_set(:@_params, {:id => template.id, :button_id => button.id})
+        controller.instance_variable_set(:@_params, :id => template.id, :button_id => button.id)
         CustomButton.any_instance.should_receive(:invoke).with(template)
 
         controller.send(:custom_buttons)
@@ -64,24 +64,23 @@ describe ApplicationController do
     context "#button_create_update" do
       it "no need to set @record when add/cancel form buttons are pressed" do
         custom_button = FactoryGirl.create(:custom_button, :applies_to_class => "Host")
-        controller.instance_variable_set(:@_params, {:button => "cancel", :id => custom_button.id})
+        controller.instance_variable_set(:@_params, :button => "cancel", :id => custom_button.id)
         edit = {
-                  :new => {},
-                  :current => {},
-                  :custom_button => custom_button
-                }
+          :new           => {},
+          :current       => {},
+          :custom_button => custom_button
+        }
         controller.instance_variable_set(:@edit, edit)
         session[:edit] = edit
         controller.instance_variable_set(:@sb,
-                                           {:trees => {
-                                                        :ab_tree => {:active_node => "-ub-Host"}
-                                                      },
-                                            :active_tree => :ab_tree
-                                           }
+                                         :trees       => {
+                                           :ab_tree => {:active_node => "-ub-Host"}
+                                         },
+                                         :active_tree => :ab_tree
                                         )
         controller.stub(:ab_get_node_info)
         controller.stub(:replace_right_cell)
-        controller.send(:button_create_update,"add")
+        controller.send(:button_create_update, "add")
         @record.should be_nil
       end
     end
@@ -97,27 +96,25 @@ describe ApplicationController do
       custom_button.uri_path, custom_button.uri_attributes, custom_button.uri_message = CustomButton.parse_uri("/test/")
       custom_button.uri_attributes["request"] = "req"
       custom_button.save
-      controller.instance_variable_set(:@_params, {:id => custom_button.id})
+      controller.instance_variable_set(:@_params, :id => custom_button.id)
       controller.instance_variable_set(:@custom_button, custom_button)
       controller.instance_variable_set(:@sb,
-                                       {:trees => {
-                                           :ab_tree => {:active_node => "-ub-Vm_cb-10r51"}
+                                       :trees       => {
+                                         :ab_tree => {:active_node => "-ub-Vm_cb-10r51"}
                                        },
-                                        :active_tree => :ab_tree
-                                       }
-      )
+                                       :active_tree => :ab_tree
+                                      )
       controller.send(:button_set_form_vars)
-      assigns(:edit)[:new][:target_class].should == ui_lookup(:model=>"Vm")
+      assigns(:edit)[:new][:target_class].should == ui_lookup(:model => "Vm")
 
       controller.instance_variable_set(:@sb,
-                                       {:trees => {
-                                           :ab_tree => {:active_node => "xx-ab_Vm_cbg-10r96_cb-10r7"}
+                                       :trees       => {
+                                         :ab_tree => {:active_node => "xx-ab_Vm_cbg-10r96_cb-10r7"}
                                        },
-                                        :active_tree => :ab_tree
-                                       }
-      )
+                                       :active_tree => :ab_tree
+                                      )
       controller.send(:button_set_form_vars)
-      assigns(:edit)[:new][:target_class].should == ui_lookup(:model=>"Vm")
+      assigns(:edit)[:new][:target_class].should == ui_lookup(:model => "Vm")
     end
   end
 end

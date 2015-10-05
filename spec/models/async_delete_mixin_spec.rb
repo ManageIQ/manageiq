@@ -37,9 +37,9 @@ describe AsyncDeleteMixin do
 
   def self.should_queue_destroy_on_instance
     it "should queue up destroy on instance" do
-      cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "destroy" ]
+      cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "destroy"]
 
-      lambda { @obj.destroy_queue }.should_not raise_error
+      -> { @obj.destroy_queue }.should_not raise_error
       MiqQueue.where(cond).count.should == 1
       @obj.class.any_instance.should_receive(:destroy).once
 
@@ -53,9 +53,9 @@ describe AsyncDeleteMixin do
   def self.should_queue_destroy_on_class_with_many_ids
     it "should queue up destroy on class method with many ids" do
       ids = @objects.collect(&:id)
-      cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "destroy" ]
+      cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "destroy"]
 
-      lambda {@obj.class.destroy_queue(ids) }.should_not raise_error
+      -> { @obj.class.destroy_queue(ids) }.should_not raise_error
       MiqQueue.where(cond).count.should == ids.length
       count = @obj.class.count
 
@@ -71,9 +71,9 @@ describe AsyncDeleteMixin do
 
   def self.should_queue_delete_on_instance
     it "should queue up delete on instance" do
-      cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "delete" ]
+      cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "delete"]
 
-      lambda {@obj.delete_queue }.should_not raise_error
+      -> { @obj.delete_queue }.should_not raise_error
       MiqQueue.where(cond).count.should == 1
       @obj.class.any_instance.should_receive(:delete).once
 
@@ -87,9 +87,9 @@ describe AsyncDeleteMixin do
   def self.should_queue_delete_on_class_with_many_ids
     it "should queue up delete on class method with many ids" do
       ids = @objects.collect(&:id)
-      cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "delete" ]
+      cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "delete"]
 
-      lambda {@obj.class.delete_queue(ids) }.should_not raise_error
+      -> { @obj.class.delete_queue(ids) }.should_not raise_error
       MiqQueue.where(cond).count.should == ids.length
       count = @obj.class.count
 
@@ -110,100 +110,98 @@ describe AsyncDeleteMixin do
 
     context "with 3 ems clusters" do
       before(:each) do
-        @objects, @obj = self.common_setup(:ems_cluster)
+        @objects, @obj = common_setup(:ems_cluster)
       end
 
-      self.should_define_destroy_queue_instance_method
-      self.should_define_destroy_queue_class_method
-      self.should_queue_destroy_on_instance
-      self.should_queue_destroy_on_class_with_many_ids
+      should_define_destroy_queue_instance_method
+      should_define_destroy_queue_class_method
+      should_queue_destroy_on_instance
+      should_queue_destroy_on_class_with_many_ids
 
-      self.should_define_delete_queue_instance_method
-      self.should_define_delete_queue_class_method
-      self.should_queue_delete_on_instance
-      self.should_queue_delete_on_class_with_many_ids
+      should_define_delete_queue_instance_method
+      should_define_delete_queue_class_method
+      should_queue_delete_on_instance
+      should_queue_delete_on_class_with_many_ids
     end
 
     context "with 3 ems" do
       before(:each) do
-        @objects, @obj = self.common_setup(:ems_vmware)
+        @objects, @obj = common_setup(:ems_vmware)
       end
 
-      self.should_define_destroy_queue_instance_method
-      self.should_define_destroy_queue_class_method
-      self.should_queue_destroy_on_instance
-      self.should_queue_destroy_on_class_with_many_ids
+      should_define_destroy_queue_instance_method
+      should_define_destroy_queue_class_method
+      should_queue_destroy_on_instance
+      should_queue_destroy_on_class_with_many_ids
 
-      self.should_define_delete_queue_instance_method
-      self.should_define_delete_queue_class_method
-      self.should_queue_delete_on_instance
-      self.should_queue_delete_on_class_with_many_ids
+      should_define_delete_queue_instance_method
+      should_define_delete_queue_class_method
+      should_queue_delete_on_instance
+      should_queue_delete_on_class_with_many_ids
     end
 
     context "with 3 hosts" do
       before(:each) do
-        @objects, @obj = self.common_setup(:host)
+        @objects, @obj = common_setup(:host)
       end
 
-      self.should_define_destroy_queue_instance_method
-      self.should_define_destroy_queue_class_method
-      self.should_queue_destroy_on_instance
-      self.should_queue_destroy_on_class_with_many_ids
+      should_define_destroy_queue_instance_method
+      should_define_destroy_queue_class_method
+      should_queue_destroy_on_instance
+      should_queue_destroy_on_class_with_many_ids
 
-      self.should_define_delete_queue_instance_method
-      self.should_define_delete_queue_class_method
-      self.should_queue_delete_on_instance
-      self.should_queue_delete_on_class_with_many_ids
+      should_define_delete_queue_instance_method
+      should_define_delete_queue_class_method
+      should_queue_delete_on_instance
+      should_queue_delete_on_class_with_many_ids
     end
 
     context "with 3 repositories" do
       before(:each) do
-        @objects, @obj = self.common_setup(:repository)
+        @objects, @obj = common_setup(:repository)
       end
 
-      self.should_define_destroy_queue_instance_method
-      self.should_define_destroy_queue_class_method
-      self.should_queue_destroy_on_instance
-      self.should_queue_destroy_on_class_with_many_ids
+      should_define_destroy_queue_instance_method
+      should_define_destroy_queue_class_method
+      should_queue_destroy_on_instance
+      should_queue_destroy_on_class_with_many_ids
 
-      self.should_define_delete_queue_instance_method
-      self.should_define_delete_queue_class_method
-      self.should_queue_delete_on_instance
-      self.should_queue_delete_on_class_with_many_ids
+      should_define_delete_queue_instance_method
+      should_define_delete_queue_class_method
+      should_queue_delete_on_instance
+      should_queue_delete_on_class_with_many_ids
     end
 
     context "with 3 resource pools" do
       before(:each) do
-        @objects, @obj = self.common_setup(:resource_pool)
+        @objects, @obj = common_setup(:resource_pool)
       end
 
-      self.should_define_destroy_queue_instance_method
-      self.should_define_destroy_queue_class_method
-      self.should_queue_destroy_on_instance
-      self.should_queue_destroy_on_class_with_many_ids
+      should_define_destroy_queue_instance_method
+      should_define_destroy_queue_class_method
+      should_queue_destroy_on_instance
+      should_queue_destroy_on_class_with_many_ids
 
-      self.should_define_delete_queue_instance_method
-      self.should_define_delete_queue_class_method
-      self.should_queue_delete_on_instance
-      self.should_queue_delete_on_class_with_many_ids
+      should_define_delete_queue_instance_method
+      should_define_delete_queue_class_method
+      should_queue_delete_on_instance
+      should_queue_delete_on_class_with_many_ids
     end
 
     context "with 3 storages" do
       before(:each) do
-        @objects, @obj = self.common_setup(:storage)
+        @objects, @obj = common_setup(:storage)
       end
 
-      self.should_define_destroy_queue_instance_method
-      self.should_define_destroy_queue_class_method
-      self.should_queue_destroy_on_instance
-      self.should_queue_destroy_on_class_with_many_ids
+      should_define_destroy_queue_instance_method
+      should_define_destroy_queue_class_method
+      should_queue_destroy_on_instance
+      should_queue_destroy_on_class_with_many_ids
 
-      self.should_define_delete_queue_instance_method
-      self.should_define_delete_queue_class_method
-      self.should_queue_delete_on_instance
-      self.should_queue_delete_on_class_with_many_ids
+      should_define_delete_queue_instance_method
+      should_define_delete_queue_class_method
+      should_queue_delete_on_instance
+      should_queue_delete_on_class_with_many_ids
     end
-
   end
-
 end

@@ -20,15 +20,15 @@ class PxeServer < ActiveRecord::Base
   has_many :windows_images, :dependent => :destroy
 
   def images
-    self.pxe_images + self.windows_images
+    pxe_images + windows_images
   end
 
   def advertised_images
-    self.advertised_pxe_images + self.windows_images
+    advertised_pxe_images + windows_images
   end
 
   def discovered_images
-    self.discovered_pxe_images + self.windows_images
+    discovered_pxe_images + windows_images
   end
 
   def default_pxe_image_for_windows=(image)
@@ -37,20 +37,20 @@ class PxeServer < ActiveRecord::Base
   end
 
   def default_pxe_image_for_windows
-    self.pxe_images.where(:default_for_windows => true).first
+    pxe_images.find_by(:default_for_windows => true)
   end
 
   def synchronize_advertised_images
-    self.pxe_menus.each(&:synchronize)
+    pxe_menus.each(&:synchronize)
     sync_windows_images
     clear_association_cache
-    self.update_attribute(:last_refresh_on, Time.now.utc)
+    update_attribute(:last_refresh_on, Time.now.utc)
   end
 
   def synchronize_advertised_images_queue
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => "synchronize_advertised_images"
     )
   end
@@ -59,31 +59,31 @@ class PxeServer < ActiveRecord::Base
     sync_pxe_images
     sync_windows_images
     clear_association_cache
-    self.update_attribute(:last_refresh_on, Time.now.utc)
+    update_attribute(:last_refresh_on, Time.now.utc)
   end
 
   def sync_images_queue
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => "sync_images"
     )
   end
 
   def sync_pxe_images
-    _log.info("Synchronizing PXE images on PXE Server [#{self.name}]...")
+    _log.info("Synchronizing PXE images on PXE Server [#{name}]...")
 
     stats = {:adds => 0, :updates => 0, :deletes => 0}
-    current = self.pxe_images.where(:pxe_menu_id => nil).index_by { |i| [i.path, i.name] }
+    current = pxe_images.where(:pxe_menu_id => nil).index_by { |i| [i.path, i.name] }
 
     with_depot do
       begin
-        self.file_glob("#{self.pxe_directory}/*").each do |f|
+        file_glob("#{pxe_directory}/*").each do |f|
           next unless self.file_file?(f)
 
-          relative_path = Pathname.new(f).relative_path_from(Pathname.new(self.pxe_directory)).to_s
+          relative_path = Pathname.new(f).relative_path_from(Pathname.new(pxe_directory)).to_s
 
-          contents    = self.file_read(f)
+          contents    = file_read(f)
           menu_class  = PxeMenu.class_from_contents(contents)
           image_class = menu_class.corresponding_image
           image_list  = image_class.parse_contents(contents, File.basename(f))
@@ -96,11 +96,11 @@ class PxeServer < ActiveRecord::Base
             incoming[name] = array.first
           end
 
-          incoming.each do |name, ihash|
+          incoming.each do |_name, ihash|
             image = current.delete([relative_path, ihash[:label]])
             if image.nil?
               image = image_class.new
-              self.pxe_images << image
+              pxe_images << image
             end
             stats[image.new_record? ? :adds : :updates] += 1
 
@@ -116,31 +116,31 @@ class PxeServer < ActiveRecord::Base
     end
 
     stats[:deletes] = current.length
-    self.pxe_images.delete(current.values) unless current.empty?
+    pxe_images.delete(current.values) unless current.empty?
 
     _log.info("Synchronizing PXE images on PXE Server [#{self.name}]... Complete - #{stats.inspect}")
   end
 
   def sync_windows_images
-    return if self.windows_images_directory.nil?
+    return if windows_images_directory.nil?
 
-    _log.info("Synchronizing Windows images on PXE Server [#{self.name}]...")
+    _log.info("Synchronizing Windows images on PXE Server [#{name}]...")
 
     stats = {:adds => 0, :updates => 0, :deletes => 0}
-    current = self.windows_images.index_by { |i| [i.path, i.index] }
+    current = windows_images.index_by { |i| [i.path, i.index] }
 
     with_depot do
       begin
-        self.file_glob("#{self.windows_images_directory}/*.wim").each do |f|
+        file_glob("#{windows_images_directory}/*.wim").each do |f|
           next unless self.file_file?(f)
 
-          path = Pathname.new(f).relative_path_from(Pathname.new(self.windows_images_directory)).to_s
+          path = Pathname.new(f).relative_path_from(Pathname.new(windows_images_directory)).to_s
 
           wim_parser = WimParser.new(File.join(depot_root, f))
           wim_parser.xml_data["images"].each do |image_hash|
             index   = image_hash["index"]
 
-            image   = current.delete([path, index]) || self.windows_images.build
+            image   = current.delete([path, index]) || windows_images.build
             stats[image.new_record? ? :adds : :updates] += 1
 
             image.update_attributes(
@@ -152,31 +152,31 @@ class PxeServer < ActiveRecord::Base
           end
         end
       rescue => err
-        _log.error("Synchronizing Windows images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
+        _log.error("Synchronizing Windows images on PXE Server [#{name}]: #{err.class.name}: #{err}")
         _log.log_backtrace(err)
       end
     end
 
     stats[:deletes] = current.length
-    self.windows_images.delete(current.values) unless current.empty?
+    windows_images.delete(current.values) unless current.empty?
 
-    _log.info("Synchronizing Windows images on PXE Server [#{self.name}]...Complete - #{stats.inspect}")
+    _log.info("Synchronizing Windows images on PXE Server [#{name}]...Complete - #{stats.inspect}")
   end
 
   def read_file(filename)
-    with_depot { self.file_read(filename) }
+    with_depot { file_read(filename) }
   end
 
   def write_file(filename, contents)
-    with_depot { self.file_write(filename, contents) }
+    with_depot { file_write(filename, contents) }
   end
 
   def delete_file(filename)
-    with_depot { self.file_delete(filename) }
+    with_depot { file_delete(filename) }
   end
 
   def delete_directory(directory)
-    with_depot { self.directory_delete(directory) }
+    with_depot { directory_delete(directory) }
   end
 
   def create_provisioning_files(pxe_image, mac_address, windows_image = nil, customization_template = nil, substitution_options = nil)

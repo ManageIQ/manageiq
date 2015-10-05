@@ -21,7 +21,7 @@ class PdfGenerator
   # @param [String] stylesheet File name (without extension) of the css
   #   stylesheet to be used
   # @return [String] The pdf file contents
-  def pdf_from_string(html_string, stylesheet)
+  def pdf_from_string(_html_string, _stylesheet)
     raise NotImplementedError, "must be implemented in a subclass"
   end
 
@@ -37,9 +37,9 @@ class PdfGenerator
 
   def self.sanitize_html(html_string)
     # strip out bad attachment_fu URLs
-    html_string.gsub('.com:/', '.com/').
-      # remove asset ids on images
-      gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
+    # and remove asset ids on images
+    html_string.gsub('.com:/', '.com/')
+      .gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
   end
 
   def self.stylesheet_file_path(stylesheet)

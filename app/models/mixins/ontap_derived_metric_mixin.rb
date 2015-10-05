@@ -1,5 +1,5 @@
 module OntapDerivedMetricMixin
-    extend ActiveSupport::Concern
+  extend ActiveSupport::Concern
   NON_COUNTER_COLS = [
     "id",
     "statistic_time",
@@ -18,18 +18,18 @@ module OntapDerivedMetricMixin
 
   module ClassMethods
     def init
-      @counterNames   = self.column_names - NON_COUNTER_COLS + self.additional_counters
+      @counterNames   = column_names - NON_COUNTER_COLS + additional_counters
       @rateCounterNames = nil
       @basedCounterNames  = nil
       @baseCounterNames = nil
-      @metadataClass    = (self.name + "Metadata").constantize
+      @metadataClass    = (name + "Metadata").constantize
 
-      cfg_base = [ :storage, :metrics_collection ]
-      storage_metrics_collection_interval = cfg_base + [ :collection_interval ]
-      storage_metrics_max_gap_to_fill   = cfg_base + [ :max_gap_to_fill ]
+      cfg_base = [:storage, :metrics_collection]
+      storage_metrics_collection_interval = cfg_base + [:collection_interval]
+      storage_metrics_max_gap_to_fill   = cfg_base + [:max_gap_to_fill]
       cfg = VMDB::Config.new("vmdb")
-        # TODO: change to merge_from_template_if_missing() after beta.
-        cfg.merge_from_template(*storage_metrics_collection_interval)
+      # TODO: change to merge_from_template_if_missing() after beta.
+      cfg.merge_from_template(*storage_metrics_collection_interval)
       @storageMetricsCollectionInterval = cfg.config.fetch_path(*storage_metrics_collection_interval)
       @storageMetricsCollectionInterval = @storageMetricsCollectionInterval.to_i_with_method
       cfg.merge_from_template(*storage_metrics_max_gap_to_fill)
@@ -38,19 +38,19 @@ module OntapDerivedMetricMixin
     end
 
     def metadataClass
-      return @metadataClass
+      @metadataClass
     end
 
     def counterNames
-      return @counterNames
+      @counterNames
     end
 
     def rateCounterNames(counterInfo)
-      @rateCounterNames ||= self.counterNames.dup.delete_if { |c| counterInfo[c].properties != "rate" }
+      @rateCounterNames ||= counterNames.dup.delete_if { |c| counterInfo[c].properties != "rate" }
     end
 
     def basedCounterNames(counterInfo)
-      @basedCounterNames ||= self.counterNames.dup.delete_if { |c| counterInfo[c]['base-counter'].nil? }
+      @basedCounterNames ||= counterNames.dup.delete_if { |c| counterInfo[c]['base-counter'].nil? }
     end
 
     def baseCounterNames(counterInfo)
@@ -61,7 +61,7 @@ module OntapDerivedMetricMixin
           bca << bcn
         end
       end
-      @baseCounterNames = self.counterNames & bca
+      @baseCounterNames = counterNames & bca
     end
 
     def derive_metrics_common(prevMetric, curMetric, counterInfo, objectName)
@@ -92,19 +92,19 @@ module OntapDerivedMetricMixin
       ra = []
 
       for i in 0...nInterval
-        dmInst = self.new
+        dmInst = new
         dmInst.derive_metrics_common(statisticTime, deltaSecs, deltaVals, counterInfo)
         ra << dmInst
         statisticTime = Time.at(statisticTime.to_i + interval)
       end
 
-      return ra
+      ra
     end
   end
 
   def counter_info
-    return nil if self.storage_metrics_metadata.nil?
-    return self.storage_metrics_metadata.counter_info
+    return nil if storage_metrics_metadata.nil?
+    storage_metrics_metadata.counter_info
   end
 
   #
@@ -112,43 +112,43 @@ module OntapDerivedMetricMixin
   # of the same class.
   #
   def counter_info=(val)
-    return self.counter_info unless self.counter_info.nil?
+    return counter_info unless counter_info.nil?
     begin
       smm = self.class.metadataClass.create!(:counter_info => val)
     rescue ActiveRecord::RecordInvalid => err
       smm = self.class.metadataClass.first
     end
     self.storage_metrics_metadata = smm
-    return smm.counter_info
+    smm.counter_info
   end
 
   def counterNames
     self.class.counterNames
   end
 
-  def rateCounterNames(counterInfo=nil)
-    counterInfo = self.counter_info if counterInfo.nil?
+  def rateCounterNames(counterInfo = nil)
+    counterInfo = counter_info if counterInfo.nil?
     self.class.rateCounterNames(counterInfo)
   end
 
-  def basedCounterNames(counterInfo=nil)
-    counterInfo = self.counter_info if counterInfo.nil?
+  def basedCounterNames(counterInfo = nil)
+    counterInfo = counter_info if counterInfo.nil?
     self.class.basedCounterNames(counterInfo)
   end
 
-  def baseCounterNames(counterInfo=nil)
-    counterInfo = self.counter_info if counterInfo.nil?
+  def baseCounterNames(counterInfo = nil)
+    counterInfo = counter_info if counterInfo.nil?
     self.class.baseCounterNames(counterInfo)
   end
 
   def counter_unit(counterName)
-    raise "#{self.class.name}.counter_unit: counter #{counterName} not found" if (ci = self.counter_info[counterName]).nil?
-    return ci['unit']
+    raise "#{self.class.name}.counter_unit: counter #{counterName} not found" if (ci = counter_info[counterName]).nil?
+    ci['unit']
   end
 
   def counter_desc(counterName)
-    raise "#{self.class.name}.counter_desc: counter #{counterName} not found" if (ci = self.counter_info[counterName]).nil?
-    return ci['desc']
+    raise "#{self.class.name}.counter_desc: counter #{counterName} not found" if (ci = counter_info[counterName]).nil?
+    ci['desc']
   end
 
   def derive_metrics_common(statisticTime, deltaSecs, deltaVals, counterInfo)

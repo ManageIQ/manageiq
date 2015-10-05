@@ -12,11 +12,11 @@ describe ApplicationController do
     end
 
     it "Verify Invalid input flash error message when invalid id is passed in" do
-      lambda { controller.send(:find_by_id_filtered, ExtManagementSystem, "invalid") }.should raise_error(RuntimeError, "Invalid input")
+      -> { controller.send(:find_by_id_filtered, ExtManagementSystem, "invalid") }.should raise_error(RuntimeError, "Invalid input")
     end
 
     it "Verify flash error message when passed in id no longer exists in database" do
-      lambda { controller.send(:find_by_id_filtered, ExtManagementSystem, "1") }.should raise_error(RuntimeError, "Selected Provider no longer exists")
+      -> { controller.send(:find_by_id_filtered, ExtManagementSystem, "1") }.should raise_error(RuntimeError, "Selected Provider no longer exists")
     end
 
     it "Verify record gets set when valid id is passed in" do

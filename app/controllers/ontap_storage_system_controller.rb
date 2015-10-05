@@ -1,5 +1,4 @@
 class OntapStorageSystemController < CimInstanceController
-
   def index
     process_index
   end
@@ -35,7 +34,6 @@ class OntapStorageSystemController < CimInstanceController
     else  # First time in
       create_ld_init
     end
-
   end
 
   # Handle create logical disk field changes
@@ -58,35 +56,35 @@ class OntapStorageSystemController < CimInstanceController
     @record = OntapStorageSystem.find(params[:id])
     render :update do |page|
       area = request.parameters["controller"]
-      if role_allows(:feature=>"#{area}_tag")
+      if role_allows(:feature => "#{area}_tag")
         page.redirect_to :action => 'create_ld'
       else
         add_flash(_("The user is not authorized for this task or item."), :error)
-        page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
       end
     end
   end
 
   def create_ld_init
     @ccs = OntapStorageSystem.find(@sb[:ccs_id])
-    drop_breadcrumb( {:name=>"Create Logical Disk", :url=>"/#{session[:controller]}/create_ds"} )
+    drop_breadcrumb(:name => "Create Logical Disk", :url => "/#{session[:controller]}/create_ds")
 
     @gtl_type = "list"
     create_ld_set_form_vars
     @in_a_form = true
     session[:changed] = false
     @create_ld = true
-    render :action=>"show"
+    render :action => "show"
   end
 
   def create_ld_submit
     return unless load_edit("ontap_storage_system_create_ld__#{params[:id]}")
     ccs = OntapStorageSystem.find(@sb[:ccs_id])
     if create_ld_valid? &&
-        ccs.create_logical_disk(@edit[:new][:ld_name],
-                                @edit[:new][:aggregate_name],
-                                @edit[:new][:ld_size].to_i)
-      add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>ui_lookup(:model=>"OntapStorageSystem"), :name=>ccs.name, :task=>"Create Logical Disk"})
+       ccs.create_logical_disk(@edit[:new][:ld_name],
+                               @edit[:new][:aggregate_name],
+                               @edit[:new][:ld_size].to_i)
+      add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "OntapStorageSystem"), :name => ccs.name, :task => "Create Logical Disk"})
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -97,7 +95,7 @@ class OntapStorageSystemController < CimInstanceController
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
       render :update do |page|
-        page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
       end
     end
   end
@@ -114,12 +112,12 @@ class OntapStorageSystemController < CimInstanceController
 
   # Set form vars for create_ld
   def create_ld_set_form_vars
-    @edit = Hash.new
-    @edit[:new] = Hash.new
+    @edit = {}
+    @edit[:new] = {}
     @edit[:key] = "ontap_storage_system_create_ld__#{@ccs.id}"
     aggregates = @ccs.available_aggregates
-    @edit[:aggregates] = aggregates ? aggregates : Hash.new
-#   @edit[:aggregates] = {"one"=>"One (1 GB)", "two"=>"Two (2 GB)"}
+    @edit[:aggregates] = aggregates ? aggregates : {}
+    #   @edit[:aggregates] = {"one"=>"One (1 GB)", "two"=>"Two (2 GB)"}
   end
 
   def create_ld_valid?
@@ -127,6 +125,6 @@ class OntapStorageSystemController < CimInstanceController
     add_flash(_("%s is required") % "Aggregate", :error) if @edit[:new][:aggregate_name].blank?
     add_flash(_("%s is required") % "Size", :error) if @edit[:new][:ld_size].blank?
     add_flash(_("%s must be an integer") % "Size", :error) if @edit[:new][:ld_size] && (@edit[:new][:ld_size] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
-    return @flash_array.nil?
+    @flash_array.nil?
   end
 end

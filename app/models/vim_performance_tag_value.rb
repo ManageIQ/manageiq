@@ -38,14 +38,14 @@ class VimPerformanceTagValue < ActiveRecord::Base
     "ContainerGroup"      => [],
   }
 
-  def self.build_from_performance_record(parent_perf, options={:save => true})
-    RESOURCE_TYPE_TO_ASSOCIATIONS[parent_perf.resource_type].collect {|assoc| self.build_for_association(parent_perf, assoc, options)}.flatten
+  def self.build_from_performance_record(parent_perf, options = {:save => true})
+    RESOURCE_TYPE_TO_ASSOCIATIONS[parent_perf.resource_type].collect { |assoc| build_for_association(parent_perf, assoc, options) }.flatten
   end
 
   cache_with_timeout(:eligible_categories, 5.minutes) { Classification.category_names_for_perf_by_tag }
 
-  def self.build_for_association(parent_perf, assoc, options={:save => true})
-    eligible_cats = self.eligible_categories
+  def self.build_for_association(parent_perf, assoc, options = {:save => true})
+    eligible_cats = eligible_categories
     return [] if eligible_cats.empty?
 
     ts = parent_perf.timestamp
@@ -56,7 +56,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
     counts = {}
     assoc = nil
     association_type = nil
-    tag_cols = TAG_COLS.has_key?(parent_perf.resource_type.to_sym) ? TAG_COLS[parent_perf.resource_type.to_sym] : TAG_COLS[:default]
+    tag_cols = TAG_COLS.key?(parent_perf.resource_type.to_sym) ? TAG_COLS[parent_perf.resource_type.to_sym] : TAG_COLS[:default]
 
     if parent_perf.kind_of?(VimPerformanceDaily)
       klass = MetricRollup
@@ -78,7 +78,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
     perf_data = {}
     perf_data[:perf_recs] = klass.where(conditions)
     perf_data[:categories] = perf_data[:perf_recs].collect do |perf|
-      perf.tag_names.split(TAG_SEP).collect {|t| t.split("/").first} unless perf.tag_names.nil?
+      perf.tag_names.split(TAG_SEP).collect { |t| t.split("/").first } unless perf.tag_names.nil?
     end.flatten.compact.uniq
 
     cats_to_process = (eligible_cats & perf_data[:categories]) # Process subset of perf_data[:categories] that are eligible for tag grouping
@@ -89,7 +89,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
 
       cats_to_process.each do |category|
         if !perf.tag_names.nil? && perf.tag_names.include?(category)
-          tag_names = perf.tag_names.split(TAG_SEP).select {|t| t.starts_with?(category)}
+          tag_names = perf.tag_names.split(TAG_SEP).select { |t| t.starts_with?(category) }
         else
           tag_names = ["#{category}/_none_"]
         end
@@ -103,7 +103,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
             unless c.to_s.starts_with?("assoc_ids")
               result[c] ||= 0
               counts[c] ||= 0
-              value = value * 1.0 unless value.nil?
+              value *= 1.0 unless value.nil?
               Metric::Aggregation::Aggregate.average(c, nil, result, counts, value)
             else
               assoc = perf.resource.class.table_name.to_sym
@@ -120,7 +120,7 @@ class VimPerformanceTagValue < ActiveRecord::Base
       h
     end
 
-    result.keys.inject([]) do |a,key|
+    result.keys.inject([]) do |a, key|
       col, tag = key.to_s.split(TAG_SEP)
       category = tag.split("/").first
       tag_name = tag.split("/").last
@@ -138,14 +138,14 @@ class VimPerformanceTagValue < ActiveRecord::Base
         tag_value_rec ||= parent_perf_tag_value_recs.store_path(association_type, category, tag_name, col, parent_perf.vim_performance_tag_values.build)
         tag_value_rec.update_attributes(new_rec)
       else
-        tag_value_rec = self.new(new_rec)
+        tag_value_rec = new(new_rec)
       end
       a << tag_value_rec
     end
   end
 
   def self.tag_cols(name)
-    return TAG_COLS[name.to_sym] if TAG_COLS.has_key?(name.to_sym)
-    return TAG_COLS[:default]
+    return TAG_COLS[name.to_sym] if TAG_COLS.key?(name.to_sym)
+    TAG_COLS[:default]
   end
-end #class VimPerformanceTagValue
+end # class VimPerformanceTagValue

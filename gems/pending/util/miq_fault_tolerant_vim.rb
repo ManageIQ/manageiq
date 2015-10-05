@@ -3,17 +3,17 @@ require 'VMwareWebService/MiqVimBroker'
 
 class MiqFaultTolerantVim
   def initialize(*options)
-    options = options.first if options.first.is_a?(Hash)
+    options = options.first if options.first.kind_of?(Hash)
     @vim = nil
 
     @erec     = options[:ems]
     auth_type = options[:auth_type] || :ws
-    ip        = options[:ip]        || @erec.address
-    user      = options[:user]      || @erec.authentication_userid(auth_type)
-    pass      = options[:pass]      || @erec.authentication_password(auth_type)
+    ip        = options[:ip] || @erec.address
+    user      = options[:user] || @erec.authentication_userid(auth_type)
+    pass      = options[:pass] || @erec.authentication_password(auth_type)
     @ems      = [ip, user, pass]
 
-    @use_broker = options.has_key?(:use_broker) ? options[:use_broker] : true
+    @use_broker = options.key?(:use_broker) ? options[:use_broker] : true
     if @use_broker
       if options[:vim_broker_drb_port].respond_to?(:call)
         @vim_broker_drb_port_method = options[:vim_broker_drb_port]
@@ -37,7 +37,7 @@ class MiqFaultTolerantVim
   end
 
   def method_missing(m, *args)
-    _execute(m == :disconnect ? :on_disconnect : :on_execute) {|vim| vim.send(m, *args) unless vim.nil? }
+    _execute(m == :disconnect ? :on_disconnect : :on_execute) { |vim| vim.send(m, *args) unless vim.nil? }
   end
 
   def _ems_name
@@ -71,10 +71,10 @@ class MiqFaultTolerantVim
     return unless block_given?
     $log.warn("MIQ(#{self.class.name}._execute) @vim handle is nil.") if $log && @vim.nil? && state != :on_connect
     meth = @use_broker ? :_execute_with_broker : :_execute_without_broker
-    self.send(meth, state, &block)
+    send(meth, state, &block)
   end
 
-  def _execute_without_broker(state)
+  def _execute_without_broker(_state)
     yield @vim
   end
 
@@ -86,7 +86,7 @@ class MiqFaultTolerantVim
     rescue RangeError, DRb::DRbConnError, Handsoap::Fault, Errno::EMFILE => err
       modified_exception = nil
 
-      if err.is_a?(Handsoap::Fault) 
+      if err.kind_of?(Handsoap::Fault)
         #
         # Raise all SOAP Errors, if executing
         #
@@ -105,7 +105,7 @@ class MiqFaultTolerantVim
       #   'RangeError: 0xdb1bbe8e is recycled object occurs'
       #   'RangeError: 0xdb4f902e is not id value'
       #
-      if err.is_a?(RangeError)
+      if err.kind_of?(RangeError)
         raise unless err.to_s =~ /is recycled object/i || err.to_s =~ /is not id value/i
         modified_exception = MiqException::MiqVimBrokerStaleHandle
       end
@@ -225,7 +225,7 @@ class MiqFaultTolerantVim
       end
     end
 
-    return err.to_s
+    err.to_s
   end
 
   def _handle_broker_port_change
@@ -240,6 +240,6 @@ class MiqFaultTolerantVim
         return (new_port.blank? ? false : true)
       end
     end
-    return false
+    false
   end
 end

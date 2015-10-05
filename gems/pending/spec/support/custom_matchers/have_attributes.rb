@@ -28,11 +28,11 @@ RSpec::Matchers.define :have_attributes do |attrs|
     @err_msg.nil?
   end
 
-  failure_message_for_should do |obj|
+  failure_message_for_should do |_obj|
     @err_msg
   end
 
-  failure_message_for_should_not do |obj|
+  failure_message_for_should_not do |_obj|
     @err_msg
   end
 

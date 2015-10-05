@@ -6,9 +6,9 @@ describe VmdbMetric do
   end
 
   it "should purge" do
-    expect {
+    expect do
       VmdbMetric.purge_daily_timer
       VmdbMetric.purge_daily_timer
-    }.to change { MiqQueue.count }.by(1)
+    end.to change { MiqQueue.count }.by(1)
   end
 end

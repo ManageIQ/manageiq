@@ -37,7 +37,7 @@ module Openstack
 
           def subnets(network_name = nil)
             subnets = {
-              public_network_name => [{
+              public_network_name  => [{
                 :name             => "EmsRefreshSpec-SubnetPublic",
                 :cidr             => "10.8.96.0/22",
                 :gateway_ip       => "10.8.99.254",

@@ -7,14 +7,14 @@ BROKER_SERVER_LOG = "./broker.log"
 BROKER_SERVER_CMD = "ruby #{BROKER_SERVER} > #{BROKER_SERVER_LOG} 2>&1 &"
 
 TESTS = [
-	"MiqVimBrokerClient.rb",
+  "MiqVimBrokerClient.rb",
   "browserTest.rb",
   "brokerObjCountTest.rb",
   "logTest.rb",
   "virtualDiskPerf.rb",
   "virtualApp.rb",
   "selectionSpecVimTest.rb",
-	"MiqVimPerfTest.rb"
+  "MiqVimPerfTest.rb"
 ]
 
 ERROR_STRINGS = [
@@ -23,7 +23,7 @@ ERROR_STRINGS = [
   "VimSyncDebug - Watchdog ERROR:"
 ]
 
-def client_count()
+def client_count
   `ps -o command | grep ".rb" | wc -l`.to_i - 4
 end
 
@@ -31,10 +31,10 @@ def get_broker_pid
   rva = `ps -Ao pid,command | grep #{BROKER_SERVER}`.split("\n")
   ri = rva.find_index { |ai|  ai["ruby #{BROKER_SERVER}"] }
   raise "Could not determine server's PID." unless ri
-  return rva[ri].split(" ")[0]
+  rva[ri].split(" ")[0]
 end
 
-def error_count(str="ERROR")
+def error_count(str = "ERROR")
   `grep "#{str}" #{BROKER_SERVER_LOG} | wc -l`.to_i
 end
 
@@ -81,11 +81,11 @@ end
 begin
 
   broker = MiqVimBroker.new(:client)
-  if !broker.serverAlive?
+  unless broker.serverAlive?
     puts "Broker server isn't running"
     exit(1)
   end
-  
+
   srand Time.now.to_i
 
   while run

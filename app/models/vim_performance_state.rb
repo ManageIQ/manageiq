@@ -43,66 +43,66 @@ class VimPerformanceState < ActiveRecord::Base
     return state unless state.nil?
 
     state = obj.vim_performance_states.build
-    state.state_data ||= Hash.new
+    state.state_data ||= {}
     state.timestamp = ts
     state.capture_interval = 3600
-    state.assoc_ids = self.capture_assoc_ids(obj)
-    state.parent_host_id = self.capture_parent_host(obj)
-    state.parent_storage_id = self.capture_parent_storage(obj)
-    state.parent_ems_id = self.capture_parent_ems(obj)
-    state.parent_ems_cluster_id = self.capture_parent_cluster(obj)
-    state.numvcpus = self.capture_numvcpus(obj)
-    state.total_cpu = self.capture_total(obj, :cpu_speed)
-    state.total_mem = self.capture_total(obj, :memory)
-    state.reserve_cpu = self.capture_reserve(obj, :cpu_reserve)
-    state.reserve_mem = self.capture_reserve(obj, :memory_reserve)
-    state.vm_used_disk_storage = self.capture_vm_disk_storage(obj, :used_disk)
-    state.vm_allocated_disk_storage = self.capture_vm_disk_storage(obj, :allocated_disk)
-    state.tag_names = self.capture_tag_names(obj)
+    state.assoc_ids = capture_assoc_ids(obj)
+    state.parent_host_id = capture_parent_host(obj)
+    state.parent_storage_id = capture_parent_storage(obj)
+    state.parent_ems_id = capture_parent_ems(obj)
+    state.parent_ems_cluster_id = capture_parent_cluster(obj)
+    state.numvcpus = capture_numvcpus(obj)
+    state.total_cpu = capture_total(obj, :cpu_speed)
+    state.total_mem = capture_total(obj, :memory)
+    state.reserve_cpu = capture_reserve(obj, :cpu_reserve)
+    state.reserve_mem = capture_reserve(obj, :memory_reserve)
+    state.vm_used_disk_storage = capture_vm_disk_storage(obj, :used_disk)
+    state.vm_allocated_disk_storage = capture_vm_disk_storage(obj, :allocated_disk)
+    state.tag_names = capture_tag_names(obj)
     state.save
 
-    return state
+    state
   end
 
   def vm_count_on
-    return get_assoc(:vms, :on).length
+    get_assoc(:vms, :on).length
   end
 
   def vm_count_off
-    return get_assoc(:vms, :off).length
+    get_assoc(:vms, :off).length
   end
 
   def host_count_on
-    return get_assoc(:hosts, :on).length
+    get_assoc(:hosts, :on).length
   end
 
   def host_count_off
-    return get_assoc(:hosts, :off).length
+    get_assoc(:hosts, :off).length
   end
 
   def storages
     ids = get_assoc(:storages, :on)
-    return ids.empty? ? [] : Storage.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : Storage.where(:id => ids).order(:id).to_a
   end
 
   def ext_management_systems
     ids = get_assoc(:ext_management_systems, :on)
-    return ids.empty? ? [] : ExtManagementSystem.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : ExtManagementSystem.where(:id => ids).order(:id).to_a
   end
 
   def ems_clusters
     ids = get_assoc(:ems_clusters, :on)
-    return ids.empty? ? [] : EmsCluster.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : EmsCluster.where(:id => ids).order(:id).to_a
   end
 
   def hosts
     ids = get_assoc(:hosts)
-    return ids.empty? ? [] : Host.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : Host.where(:id => ids).order(:id).to_a
   end
 
   def vms
     ids = get_assoc(:vms)
-    return ids.empty? ? [] : VmOrTemplate.where(:id => ids).order(:id).to_a
+    ids.empty? ? [] : VmOrTemplate.where(:id => ids).order(:id).to_a
   end
 
   def get_assoc(relat, mode = nil)
@@ -110,13 +110,13 @@ class VimPerformanceState < ActiveRecord::Base
     return [] if assoc.nil?
 
     ids = mode.nil? ? (assoc[:on] || []) + (assoc[:off] || []) : assoc[mode.to_sym]
-    return ids.nil? ? [] : ids.uniq.sort
+    ids.nil? ? [] : ids.uniq.sort
   end
 
   def self.capture_total(obj, field)
     return obj.send("aggregate_#{field}") if obj.respond_to?("aggregate_#{field}")
     return nil unless obj.respond_to?(:hardware) && obj.hardware
-    return field == :memory ? obj.hardware.memory_cpu : obj.hardware.aggregate_cpu_speed
+    field == :memory ? obj.hardware.memory_cpu : obj.hardware.aggregate_cpu_speed
   end
 
   def self.capture_assoc_ids(obj)
@@ -144,33 +144,33 @@ class VimPerformanceState < ActiveRecord::Base
       r_off.uniq!
       r_off.sort!
     end
-    return result.blank? ? nil : result
+    result.blank? ? nil : result
   end
 
   def self.capture_parent_cluster(obj)
-    return unless obj.is_a?(Host) || obj.is_a?(VmOrTemplate)
+    return unless obj.kind_of?(Host) || obj.kind_of?(VmOrTemplate)
     c = obj.parent_cluster
-    return c ? c.id : nil
+    c ? c.id : nil
   end
 
   def self.capture_parent_host(obj)
-    return unless obj.is_a?(VmOrTemplate)
-    return obj.host_id
+    return unless obj.kind_of?(VmOrTemplate)
+    obj.host_id
   end
 
   def self.capture_parent_storage(obj)
-    return unless obj.is_a?(VmOrTemplate)
-    return obj.storage_id
+    return unless obj.kind_of?(VmOrTemplate)
+    obj.storage_id
   end
 
   def self.capture_parent_ems(obj)
     return unless obj.respond_to?(:ems_id)
-    return obj.ems_id
+    obj.ems_id
   end
 
   def self.capture_reserve(obj, field)
     return unless obj.respond_to?(field)
-    return obj.send(field)
+    obj.send(field)
   end
 
   def self.capture_tag_names(obj)
@@ -178,8 +178,8 @@ class VimPerformanceState < ActiveRecord::Base
   end
 
   def self.capture_vm_disk_storage(obj, field)
-    return unless obj.is_a?(VmOrTemplate)
-    return obj.send("#{field}_storage")
+    return unless obj.kind_of?(VmOrTemplate)
+    obj.send("#{field}_storage")
   end
 
   def self.capture_numvcpus(obj)
@@ -189,6 +189,6 @@ class VimPerformanceState < ActiveRecord::Base
     # match the actual column being read, however, there are several reports
     # depending on the name :numvcpus
     # A larger patch should be done outside of a z-stream release
-    return obj.hardware.logical_cpus
+    obj.hardware.logical_cpus
   end
 end

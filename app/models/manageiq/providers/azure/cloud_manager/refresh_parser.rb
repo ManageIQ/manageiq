@@ -142,7 +142,7 @@ module ManageIQ::Providers
 
       def guest_os(instance)
         image_reference = instance.fetch_path('properties', 'storageProfile', 'imageReference')
-        image_reference['offer'] + " " + image_reference['sku'].gsub('-', ' ')
+        image_reference['offer'] + " " + image_reference['sku'].tr('-', ' ')
       end
 
       def populate_hardware_hash_with_disks(hardware_disks_array, instance)

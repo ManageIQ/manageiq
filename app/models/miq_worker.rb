@@ -10,9 +10,9 @@ class MiqWorker < ActiveRecord::Base
 
   belongs_to :miq_server
   has_many   :messages,           :as => :handler, :class_name => 'MiqQueue'
-  has_many   :active_messages,    -> { where [ "state = ?", "dequeue"] }, :as => :handler, :class_name => 'MiqQueue'
-  has_many   :ready_messages,     -> { where [ "state = ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue'
-  has_many   :processed_messages, -> { where [ "state != ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
+  has_many   :active_messages,    -> { where ["state = ?", "dequeue"] }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :ready_messages,     -> { where ["state = ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :processed_messages, -> { where ["state != ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
 
   virtual_column :friendly_name, :type => :string
   virtual_column :uri_or_queue_name, :type => :string
@@ -35,43 +35,43 @@ class MiqWorker < ActiveRecord::Base
 
   def self.atStartup
     # Delete and Kill all workers that were running previously
-    self.clean_all_workers
+    clean_all_workers
 
     # Clean queue of any worker startup entries
     MiqQueue.destroy_all(:method_name => "start_event_monitor", :server_guid => MiqServer.my_guid)
   end
 
   def self.atShutdown
-    self.stop_all_workers
+    stop_all_workers
   end
 
-  def self.workers=(val)
-    @workers = val
+  class << self
+    attr_writer :workers
   end
 
   def self.workers
-    return (self.has_minimal_env_option? ? 1 : 0) if MiqServer.minimal_env? && self.check_for_minimal_role
+    return (self.has_minimal_env_option? ? 1 : 0) if MiqServer.minimal_env? && check_for_minimal_role
     return @workers.call if @workers.kind_of?(Proc)
     return @workers unless @workers.nil?
-    return self.workers_configured_count
+    workers_configured_count
   end
 
   def self.workers_configured_count
-    count = self.worker_settings[:count]
-    if self.maximum_workers_count.kind_of?(Integer)
-      count = self.maximum_workers_count if self.maximum_workers_count < count
+    count = worker_settings[:count]
+    if maximum_workers_count.kind_of?(Integer)
+      count = maximum_workers_count if maximum_workers_count < count
     end
     count
   end
 
   def self.has_minimal_env_option?
-    return false if MiqServer.minimal_env_options.empty? || self.required_roles.blank?
+    return false if MiqServer.minimal_env_options.empty? || required_roles.blank?
 
-    case self.required_roles
+    case required_roles
     when String
-      MiqServer.minimal_env_options.include?(self.required_roles)
+      MiqServer.minimal_env_options.include?(required_roles)
     when Array
-      self.required_roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
+      required_roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
     else
       raise "Unexpected type: <self.required_roles.class.name>"
     end
@@ -93,45 +93,45 @@ class MiqWorker < ActiveRecord::Base
 
   CONDITION_CURRENT = {:status => STATUSES_CURRENT}
   def self.find_current(server_id = nil)
-    self.server_scope(server_id).where(CONDITION_CURRENT)
+    server_scope(server_id).where(CONDITION_CURRENT)
   end
 
   def self.find_current_in_region(region)
-    self.in_region(region).where(CONDITION_CURRENT)
+    in_region(region).where(CONDITION_CURRENT)
   end
 
   def self.find_current_in_my_region
-    self.in_my_region.where(CONDITION_CURRENT)
+    in_my_region.where(CONDITION_CURRENT)
   end
 
   def self.find_current_in_zone(zone_id)
-    self.where(CONDITION_CURRENT.merge(:miq_server_id => Zone.find(zone_id).miq_servers)).to_a
+    where(CONDITION_CURRENT.merge(:miq_server_id => Zone.find(zone_id).miq_servers)).to_a
   end
 
   def self.find_current_in_my_zone
-    self.where(CONDITION_CURRENT.merge(:miq_server_id => MiqServer.my_server.zone.miq_servers)).to_a
+    where(CONDITION_CURRENT.merge(:miq_server_id => MiqServer.my_server.zone.miq_servers)).to_a
   end
 
   def self.find_starting(server_id = nil)
-    self.server_scope(server_id).where(:status => STATUSES_STARTING)
+    server_scope(server_id).where(:status => STATUSES_STARTING)
   end
 
   def self.find_current_or_starting(server_id = nil)
-    self.server_scope(server_id).where(:status => STATUSES_CURRENT_OR_STARTING)
+    server_scope(server_id).where(:status => STATUSES_CURRENT_OR_STARTING)
   end
 
   def self.find_alive(server_id = nil)
-    self.server_scope(server_id).where(:status => STATUSES_ALIVE)
+    server_scope(server_id).where(:status => STATUSES_ALIVE)
   end
 
   def self.has_required_role?
-    return true if self.required_roles.blank?
+    return true if required_roles.blank?
 
-    case self.required_roles
+    case required_roles
     when String
-      MiqServer.my_server.has_active_role?(self.required_roles)
+      MiqServer.my_server.has_active_role?(required_roles)
     when Array
-      self.required_roles.any? { |role| MiqServer.my_server.has_active_role?(role) }
+      required_roles.any? { |role| MiqServer.my_server.has_active_role?(role) }
     else
       raise "Unexpected type: <self.required_roles.class.name>"
     end
@@ -142,16 +142,16 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.sync_workers
-    w       = self.include_stopping_workers_on_synchronize ? self.find_alive : self.find_current_or_starting
+    w       = include_stopping_workers_on_synchronize ? find_alive : find_current_or_starting
     current = w.length
-    desired = self.has_required_role? ? self.workers : 0
-    result  = { :adds => [], :deletes => [] }
+    desired = self.has_required_role? ? workers : 0
+    result  = {:adds => [], :deletes => []}
 
     if current != desired
       _log.info("Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
 
       if desired > current && enough_resource_to_start_worker?
-        (desired - current).times { result[:adds] << self.start_worker.pid }
+        (desired - current).times { result[:adds] << start_worker.pid }
       elsif desired < current
         w = w.to_a
         (current - desired).times do
@@ -194,7 +194,7 @@ class MiqWorker < ActiveRecord::Base
       # Get the configuration values
       section = server_config[:workers]
       unless section.nil?
-        classes = self.path_to_my_worker_settings
+        classes = path_to_my_worker_settings
         classes.each do |c|
           section = section[c]
           raise "Missing config section #{c}" if section.nil?
@@ -220,29 +220,29 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def worker_settings(options = {})
-    self.class.fetch_worker_settings_from_server(self.miq_server, options)
+    self.class.fetch_worker_settings_from_server(miq_server, options)
   end
 
   def self.worker_settings(options = {})
-    self.fetch_worker_settings_from_server(MiqServer.my_server, options)
+    fetch_worker_settings_from_server(MiqServer.my_server, options)
   end
 
   def self.start_workers
     return unless self.has_required_role?
-    self.workers.times { self.start_worker }
+    workers.times { start_worker }
   end
 
   def self.stop_workers(server_id = nil)
-    self.server_scope(server_id).each(&:stop)
+    server_scope(server_id).each(&:stop)
   end
 
   def self.restart_workers(server_id = nil)
-    self.find_current(server_id).each(&:restart)
+    find_current(server_id).each(&:restart)
   end
 
   def self.clean_workers
     time_threshold = 1.hour
-    self.server_scope.each do |w|
+    server_scope.each do |w|
       Process.kill(9, w.pid) if w.pid && w.is_alive? rescue nil
       # if w.last_heartbeat && (time_threshold.ago.utc < w.last_heartbeat)
       #   ActiveRecord::Base.connection.kill(w.sql_spid)
@@ -252,27 +252,27 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.status_update
-    self.find_current.each(&:status_update)
+    find_current.each(&:status_update)
   end
 
   def self.log_status(level = :info)
-    self.find_current.each { |w| w.log_status(level) }
+    find_current.each { |w| w.log_status(level) }
   end
 
   def self.create_worker_record(*params)
     params                  = params.first
     params                  = {} unless params.kind_of?(Hash)
-    params[:queue_name]     = self.default_queue_name unless params.has_key?(:queue_name) || self.default_queue_name.nil?
+    params[:queue_name]     = default_queue_name unless params.key?(:queue_name) || default_queue_name.nil?
     params[:status]         = STATUS_CREATING
     params[:last_heartbeat] = Time.now.utc
 
-    self.server_scope.create(params)
+    server_scope.create(params)
   end
 
   def self.start_worker(*params)
-    w = self.create_worker_record(*params)
+    w = create_worker_record(*params)
     w.start
-    return w
+    w
   end
 
   def self.find_all_current(server_id = nil)
@@ -308,53 +308,53 @@ class MiqWorker < ActiveRecord::Base
   def send_message_to_worker_monitor(message, *args)
     MiqQueue.put(
       :class_name  => 'MiqServer',
-      :instance_id => self.miq_server.id,
+      :instance_id => miq_server.id,
       :method_name => 'message_for_worker',
-      :args        => [self.id, message, *args],
+      :args        => [id, message, *args],
       :queue_name  => 'miq_server',
-      :zone        => self.miq_server.zone.name,
-      :server_guid => self.miq_server.guid
+      :zone        => miq_server.zone.name,
+      :server_guid => miq_server.guid
     )
   end
 
   def start
-    msg = "Worker started: ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}]"
-    MiqEvent.raise_evm_event_queue(self.miq_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
+    msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
+    MiqEvent.raise_evm_event_queue(miq_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
 
-    ENV['MIQ_GUID'] = self.guid
-    self.pid = Kernel.spawn(self.command_line, :out => "/dev/null", :err => [ Rails.root.join("log", "evm.log"), "a" ])
+    ENV['MIQ_GUID'] = guid
+    self.pid = Kernel.spawn(command_line, :out => "/dev/null", :err => [Rails.root.join("log", "evm.log"), "a"])
     Process.detach(pid)
-    self.save
+    save
 
     _log.info("#{msg}")
   end
 
   def stop
-    self.miq_server.stop_worker_queue(self)
+    miq_server.stop_worker_queue(self)
   end
 
   # Let the worker monitor start a new worker
-  alias restart stop
+  alias_method :restart, :stop
 
   def kill
-    unless self.pid.nil?
+    unless pid.nil?
       begin
-        _log.info("Killing worker: ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], status [#{self.status}]")
-        Process.kill(9, self.pid)
+        _log.info("Killing worker: ID [#{id}], PID [#{pid}], GUID [#{guid}], status [#{status}]")
+        Process.kill(9, pid)
       rescue Errno::ESRCH
-        _log.warn("Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed")
+        _log.warn("Worker ID [#{id}] PID [#{pid}] GUID [#{guid}] has been killed")
       rescue => err
-        _log.warn("Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed, but with the following error: #{err}")
+        _log.warn("Worker ID [#{id}] PID [#{pid}] GUID [#{guid}] has been killed, but with the following error: #{err}")
       end
     end
 
     # ActiveRecord::Base.connection.kill(self.sql_spid)
-    self.destroy
+    destroy
   end
 
   def quiesce_time_allowance
     allowance = self.class.worker_settings[:quiesce_time_allowance]
-    @quiesce_time_allowance ||= allowance || self.current_timeout || 5.minutes
+    @quiesce_time_allowance ||= allowance || current_timeout || 5.minutes
   end
 
   def is_current?
@@ -378,58 +378,58 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def validate_active_messages
-    self.active_messages.each { |msg| msg.check_for_timeout(_log.prefix) }
+    active_messages.each { |msg| msg.check_for_timeout(_log.prefix) }
   end
 
   def clean_active_messages
-    self.active_messages.each do |m|
+    active_messages.each do |m|
       _log.warn("Message id: [#{m.id}] Setting state to 'error'")
       m.delivered_in_error('Clean Active Messages')
     end
   end
 
   def log_destroy_of_worker_messages
-    self.ready_messages.each do |m|
+    ready_messages.each do |m|
       _log.warn("Nullifying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
       m.update_attributes(:handler_id => nil, :handler_type => nil) rescue nil
     end
 
-    self.processed_messages.each do |m|
+    processed_messages.each do |m|
       _log.warn("Destroying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
     end
   end
 
   def status_update
     begin
-      pinfo = MiqProcess.processInfo(self.pid)
+      pinfo = MiqProcess.processInfo(pid)
     rescue => err
       # Calling ps on Linux with a pid that does not exist fails with a RuntimeError containing an empty message.
       # We will ignore this since we may be asking for the status of a worker who has exited.
-      _log.warn("#{self.class.name}: #{err.message}, while requesting process info for [#{self.friendly_name}] with PID=[#{self.pid}]") unless err.message.blank?
+      _log.warn("#{self.class.name}: #{err.message}, while requesting process info for [#{friendly_name}] with PID=[#{pid}]") unless err.message.blank?
       return
     end
 
     # Ensure the hash only contains the values we want to store in the table
-    pinfo.delete_if {|k,v| ![:priority, :memory_usage, :percent_memory, :percent_cpu, :memory_size, :cpu_time].include?(k)}
+    pinfo.delete_if { |k, _v| ![:priority, :memory_usage, :percent_memory, :percent_cpu, :memory_size, :cpu_time].include?(k) }
     pinfo[:os_priority] = pinfo.delete(:priority)
-    self.update_attributes(pinfo)
+    update_attributes(pinfo)
   end
 
-  def log_status(level=:info)
-    _log.send(level, "[#{self.friendly_name}] Worker ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], Last Heartbeat [#{self.last_heartbeat}], Process Info: Memory Usage [#{self.memory_usage}], Memory Size [#{self.memory_size}], Memory % [#{self.percent_memory}], CPU Time [#{self.cpu_time}], CPU % [#{self.percent_cpu}], Priority [#{self.os_priority}]")
+  def log_status(level = :info)
+    _log.send(level, "[#{friendly_name}] Worker ID [#{id}], PID [#{pid}], GUID [#{guid}], Last Heartbeat [#{last_heartbeat}], Process Info: Memory Usage [#{memory_usage}], Memory Size [#{memory_size}], Memory % [#{percent_memory}], CPU Time [#{cpu_time}], CPU % [#{percent_cpu}], Priority [#{os_priority}]")
   end
 
   def current_timeout
-    msg = self.active_messages.first
-    return msg.nil? ? nil : msg.msg_timeout
+    msg = active_messages.first
+    msg.nil? ? nil : msg.msg_timeout
   end
 
   def uri_or_queue_name
-    self.uri || self.queue_name
+    uri || queue_name
   end
 
   def friendly_name
-    self.normalized_type.titleize
+    normalized_type.titleize
   end
 
   def normalized_type
@@ -437,11 +437,11 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def format_full_log_msg
-    "Worker [#{self.class}] with ID: [#{self.id}], PID: [#{self.pid}], GUID: [#{self.guid}]"
+    "Worker [#{self.class}] with ID: [#{id}], PID: [#{pid}], GUID: [#{guid}]"
   end
 
   def format_short_log_msg
-    "Worker ID: [#{self.id}]"
+    "Worker ID: [#{id}]"
   end
 
   def self.release_db_connection
@@ -449,19 +449,19 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def update_heartbeat
-    self.update_attribute(:last_heartbeat, Time.now.utc)
+    update_attribute(:last_heartbeat, Time.now.utc)
   end
 
   def is_current_process?
-    Process.pid == self.pid
+    Process.pid == pid
   end
 
   def self.config_settings_path
-    @config_settings_path ||= [:workers] + self.path_to_my_worker_settings
+    @config_settings_path ||= [:workers] + path_to_my_worker_settings
   end
 
-  def self.config_settings_path=(val)
-    @config_settings_path = val
+  class << self
+    attr_writer :config_settings_path
   end
 
   def self.validate_config_settings(configuration = VMDB::Config.new("vmdb"))
@@ -473,9 +473,9 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def update_spid!(spid = ActiveRecord::Base.connection.spid)
-    if self.sql_spid != spid
+    if sql_spid != spid
       self.sql_spid = spid
-      self.save
+      save
     end
   end
 
@@ -483,41 +483,41 @@ class MiqWorker < ActiveRecord::Base
 
   def self.normalized_type
     @normalized_type ||= if parent == Object
-                           self.name.sub(/^Miq/, '').underscore
+                           name.sub(/^Miq/, '').underscore
                          else
-                           self.name.demodulize.underscore
+                           name.demodulize.underscore
                          end
   end
 
   def self.nice_prefix
-    @nice_prefix ||= "nice -n #{self.nice_increment}"
+    @nice_prefix ||= "nice -n #{nice_increment}"
   end
 
   def self.nice_increment
-    delta = self.worker_settings[:nice_delta]
+    delta = worker_settings[:nice_delta]
     delta.kind_of?(Integer) ? delta.to_s : "+10"
   end
 
   def self.build_command_line(*params)
     params = params.first || {}
-    raise ArgumentError, "params must contain :guid" unless params.has_key?(:guid)
+    raise ArgumentError, "params must contain :guid" unless params.key?(:guid)
 
     rr = File.expand_path(Rails.root)
 
-    cl = "#{self.nice_prefix} #{Gem.ruby}"
+    cl = "#{nice_prefix} #{Gem.ruby}"
     cl << " " << File.join(rr, "bin/rails runner")
     cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self::Runner}")
-    cl << " " << self.name
+    cl << " " << name
     params.each { |k, v| cl << " --#{k} \"#{v}\"" unless v.blank? }
 
-    return cl
+    cl
   end
 
   def command_line_params
-    { :guid => self.guid }
+    {:guid => guid}
   end
 
   def set_command_line
-    self.command_line = self.class.build_command_line(self.command_line_params)
+    self.command_line = self.class.build_command_line(command_line_params)
   end
 end

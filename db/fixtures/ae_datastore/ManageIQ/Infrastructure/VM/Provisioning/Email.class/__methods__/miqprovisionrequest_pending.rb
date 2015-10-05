@@ -72,7 +72,7 @@ def emailapprover(miq_request, appliance, msg, provisionRequestApproval)
 
   # Override to email address below or get to_email_address from from model
   to = nil
-  to  ||= $evm.object['to_email_address']
+  to ||= $evm.object['to_email_address']
 
   # Override from_email_address below or get from_email_address from model
   from = nil

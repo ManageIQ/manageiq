@@ -258,7 +258,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
           :common_secret         => example[:common_secret],
           :common_volume_id      => example[:common_volume_id],
           :common_partition      => example[:common_partition]
-      )
+        )
       end
     end
   end

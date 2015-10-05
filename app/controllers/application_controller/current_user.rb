@@ -40,9 +40,7 @@ module ApplicationController::CurrentUser
     session[:userid]
   end
 
-  def current_group
-    current_user.current_group
-  end
+  delegate :current_group, :to => :current_user
 
   def current_groupid
     current_user.current_group.id

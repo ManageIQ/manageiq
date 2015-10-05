@@ -1,5 +1,4 @@
 module AutomationSpecHelper
-
   # Find fields in automation XML file
   def sanitize_miq_ae_fields(fields)
     unless fields.nil?

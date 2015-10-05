@@ -52,7 +52,7 @@ class ApiController
 
     def parse_filter(filter, operators)
       logical_or = filter.gsub!(/^or /i, '').present?
-      operator, methods  = operators.select { |op, _methods| filter.partition(op).second == op }.first
+      operator, methods  = operators.find { |op, _methods| filter.partition(op).second == op }
 
       raise BadRequestError,
             "Unknown operator specified in filter #{filter}" if operator.blank?

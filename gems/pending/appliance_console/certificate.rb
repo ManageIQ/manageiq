@@ -35,7 +35,7 @@ module ApplianceConsole
       options.each { |n, v| public_send("#{n}=", v) }
       @ca_name ||= "ipa"
       @extensions ||= %w(server client)
-      @realm   ||= hostname.split(".")[1..-1].join(".").upcase if hostname
+      @realm ||= hostname.split(".")[1..-1].join(".").upcase if hostname
     end
 
     def request

@@ -12,8 +12,8 @@ class EvmDatabaseOps
 
   DEFAULT_OPTS = {:dbname => 'vmdb_production'}
 
-  LOGFILE = File.expand_path(File.join(__dir__, "../log/evm.log") )
-  $log ||=  VMDBLogger.new(LOGFILE)
+  LOGFILE = File.expand_path(File.join(__dir__, "../log/evm.log"))
+  $log ||= VMDBLogger.new(LOGFILE)
 
   def self.backup_destination_free_space(file_location)
     require 'fileutils'
@@ -49,7 +49,7 @@ class EvmDatabaseOps
 
     begin
       if db_opts[:local_file].nil?
-        connect_opts[:remote_file_name] ||= File.basename(self.backup_file_name)
+        connect_opts[:remote_file_name] ||= File.basename(backup_file_name)
 
         session = MiqGenericMountSession.new_session(connect_opts)
 
@@ -57,8 +57,8 @@ class EvmDatabaseOps
         db_opts[:local_file] = session.uri_to_local_path(uri)
       end
 
-      free_space = self.backup_destination_free_space(db_opts[:local_file])
-      db_size = self.database_size(db_opts)
+      free_space = backup_destination_free_space(db_opts[:local_file])
+      db_size = database_size(db_opts)
       if free_space > db_size
         _log.info("[#{db_opts[:dbname]}] with database size: [#{db_size} bytes], free space at [#{db_opts[:local_file]}]: [#{free_space} bytes]")
       else
@@ -129,6 +129,7 @@ class EvmDatabaseOps
   end
 
   private
+
   def self.upload(connect_opts, local_file, destination_file)
     MiqGenericMountSession.in_depot_session(connect_opts) { |session| session.upload(local_file, destination_file) }
     destination_file
@@ -141,6 +142,6 @@ class EvmDatabaseOps
 
   def self.backup_file_name
     time_suffix  = Time.now.utc.strftime("%Y%m%d_%H%M%S")
-    return "#{BACKUP_TMP_FILE}_#{time_suffix}"
+    "#{BACKUP_TMP_FILE}_#{time_suffix}"
   end
 end

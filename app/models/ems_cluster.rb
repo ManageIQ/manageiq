@@ -43,7 +43,7 @@ class EmsCluster < ActiveRecord::Base
   include FilterableMixin
 
   include DriftStateMixin
-  alias last_scan_on last_drift_state_timestamp
+  alias_method :last_scan_on, :last_drift_state_timestamp
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
@@ -65,12 +65,12 @@ class EmsCluster < ActiveRecord::Base
   # TODO: Vmware specific - Fix when we subclass EmsCluster
 
   def provider_object(connection)
-    raise NotImplementedError unless self.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-    connection.getVimClusterByMor(self.ems_ref_obj)
+    raise NotImplementedError unless ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+    connection.getVimClusterByMor(ems_ref_obj)
   end
 
   def provider_object_release(handle)
-    raise NotImplementedError unless self.ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+    raise NotImplementedError unless ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     handle.release if handle rescue nil
   end
 
@@ -79,73 +79,71 @@ class EmsCluster < ActiveRecord::Base
   #
 
   def v_ram_vr_ratio
-    total_memory = self.aggregate_memory.to_f
-    return total_memory == 0 ? 0 : (self.aggregate_vm_memory / total_memory * 10).round * 0.1
+    total_memory = aggregate_memory.to_f
+    total_memory == 0 ? 0 : (aggregate_vm_memory / total_memory * 10).round * 0.1
   end
 
   def v_cpu_vr_ratio
-    total_cpus = self.aggregate_logical_cpus.to_f
-    return total_cpus == 0 ? 0 : (self.aggregate_vm_cpus / total_cpus * 10).round * 0.1
+    total_cpus = aggregate_logical_cpus.to_f
+    total_cpus == 0 ? 0 : (aggregate_vm_cpus / total_cpus * 10).round * 0.1
   end
 
   def v_parent_datacenter
-    dc = self.parent_datacenter
+    dc = parent_datacenter
     dc.nil? ? "" : dc.name
   end
 
   def v_qualified_desc
-    dc = self.parent_datacenter
-    dc.nil? ? self.name : "#{self.name} in #{dc.name}"
+    dc = parent_datacenter
+    dc.nil? ? name : "#{name} in #{dc.name}"
   end
 
-  def my_zone
-    self.ext_management_system.my_zone
-  end
+  delegate :my_zone, :to => :ext_management_system
 
   def total_vcpus
-    self.hosts.inject(0) {|c,h| c + (h.total_vcpus || 0)}
+    hosts.inject(0) { |c, h| c + (h.total_vcpus || 0) }
   end
 
   #
   # Relationship methods
   #
 
-  alias storages               all_storages
-  alias datastores             all_storages    # Used by web-services to return datastores as the property name
+  alias_method :storages,               :all_storages
+  alias_method :datastores,             :all_storages    # Used by web-services to return datastores as the property name
 
-  alias all_hosts              hosts
-  alias all_host_ids           host_ids
-  alias all_vms_and_templates  vms_and_templates
-  alias all_vm_or_template_ids vm_or_template_ids
-  alias all_vms                vms
-  alias all_vm_ids             vm_ids
-  alias all_miq_templates      miq_templates
-  alias all_miq_template_ids   miq_template_ids
+  alias_method :all_hosts,              :hosts
+  alias_method :all_host_ids,           :host_ids
+  alias_method :all_vms_and_templates,  :vms_and_templates
+  alias_method :all_vm_or_template_ids, :vm_or_template_ids
+  alias_method :all_vms,                :vms
+  alias_method :all_vm_ids,             :vm_ids
+  alias_method :all_miq_templates,      :miq_templates
+  alias_method :all_miq_template_ids,   :miq_template_ids
 
   # Host relationship methods
   def total_hosts
-    self.hosts.size
+    hosts.size
   end
 
-  def failover_hosts(options = {})
-    self.hosts.select(&:failover)
+  def failover_hosts(_options = {})
+    hosts.select(&:failover)
   end
 
   def failover_host_ids
-    self.failover_hosts.collect(&:id)
+    failover_hosts.collect(&:id)
   end
 
   # Direct Vm relationship methods
   def direct_vm_rels
     # Look for only the Vms at the second depth (default RP + 1)
-    self.descendant_rels(:of_type => 'VmOrTemplate').select { |r| (r.depth - self.depth) == 2 }
+    descendant_rels(:of_type => 'VmOrTemplate').select { |r| (r.depth - depth) == 2 }
   end
 
   def direct_vms
     Relationship.resources(direct_vm_rels).sort_by { |v| v.name.downcase }
   end
 
-  alias direct_miq_templates miq_templates
+  alias_method :direct_miq_templates, :miq_templates
 
   def direct_vms_and_templates
     (direct_vms + direct_miq_templates).sort_by { |v| v.name.downcase }
@@ -155,7 +153,7 @@ class EmsCluster < ActiveRecord::Base
     Relationship.resource_ids(direct_vm_rels)
   end
 
-  alias direct_miq_template_ids miq_template_ids
+  alias_method :direct_miq_template_ids, :miq_template_ids
 
   def direct_vm_or_template_ids
     direct_vm_ids + direct_miq_template_ids
@@ -188,12 +186,12 @@ class EmsCluster < ActiveRecord::Base
 
   # Resource Pool relationship methods
   def default_resource_pool
-    Relationship.resource(self.child_rels(:of_type => 'ResourcePool').first)
+    Relationship.resource(child_rels(:of_type => 'ResourcePool').first)
   end
 
   def resource_pools
     # Look for only the resource_pools at the second depth (default depth + 1)
-    rels = self.descendant_rels(:of_type => 'ResourcePool')
+    rels = descendant_rels(:of_type => 'ResourcePool')
     min_depth = rels.collect(&:depth).min
     rels = rels.select { |r| r.depth == min_depth + 1 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
@@ -201,35 +199,35 @@ class EmsCluster < ActiveRecord::Base
 
   def resource_pools_with_default
     # Look for only the resource_pools up to the second depth (default depth + 1)
-    rels = self.descendant_rels(:of_type => 'ResourcePool')
+    rels = descendant_rels(:of_type => 'ResourcePool')
     min_depth = rels.collect(&:depth).min
     rels = rels.select { |r| r.depth <= min_depth + 1 }
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
   end
 
-  alias add_resource_pool set_child
-  alias remove_resource_pool remove_child
+  alias_method :add_resource_pool, :set_child
+  alias_method :remove_resource_pool, :remove_child
 
   def remove_all_resource_pools
-    self.remove_all_children(:of_type => 'ResourcePool')
+    remove_all_children(:of_type => 'ResourcePool')
   end
 
   # All RPs under this Cluster and all child RPs
   def all_resource_pools
-    self.descendants(:of_type => 'ResourcePool')[1..-1].sort_by { |r| r.name.downcase }
+    descendants(:of_type => 'ResourcePool')[1..-1].sort_by { |r| r.name.downcase }
   end
 
   def all_resource_pools_with_default
-    self.descendants(:of_type => 'ResourcePool').sort_by { |r| r.name.downcase }
+    descendants(:of_type => 'ResourcePool').sort_by { |r| r.name.downcase }
   end
 
   # Parent relationship methods
   def parent_folder
-    self.detect_ancestor(:of_type => "EmsFolder") { |a| !a.is_datacenter && !["host", "vm"].include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.is_datacenter && !["host", "vm"].include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
   end
 
   def parent_datacenter
-    self.detect_ancestor(:of_type => 'EmsFolder') { |a| a.is_datacenter }
+    detect_ancestor(:of_type => 'EmsFolder', &:is_datacenter)
   end
 
   def base_storage_extents
@@ -248,41 +246,41 @@ class EmsCluster < ActiveRecord::Base
     all_hosts.collect(&:file_shares).flatten.uniq
   end
 
-  def event_where_clause(assoc=:ems_events)
-    return ["ems_cluster_id = ?", self.id] if assoc.to_sym == :policy_events
+  def event_where_clause(assoc = :ems_events)
+    return ["ems_cluster_id = ?", id] if assoc.to_sym == :policy_events
 
     cond = ["ems_cluster_id = ?"]
-    cond_params = [self.id]
+    cond_params = [id]
 
-    ids = self.all_host_ids
+    ids = all_host_ids
     unless ids.empty?
       cond << "host_id IN (?) OR dest_host_id IN (?)"
       cond_params += [ids, ids]
     end
 
-    ids = self.all_vm_or_template_ids
+    ids = all_vm_or_template_ids
     unless ids.empty?
       cond << "vm_or_template_id IN (?) OR dest_vm_or_template_id IN (?)"
       cond_params += [ids, ids]
     end
 
     cond_params.unshift(cond.join(" OR ")) unless cond.empty?
-    return cond_params
+    cond_params
   end
 
   def ems_events
-    ewc = self.event_where_clause
+    ewc = event_where_clause
     return [] if ewc.blank?
     EmsEvent.where(ewc).order("timestamp").to_a
   end
 
   def scan
-    zone = self.ext_management_system ? self.ext_management_system.my_zone : nil
-    MiqQueue.put(:class_name => self.class.to_s, :method_name => "save_drift_state", :instance_id => self.id, :zone => zone, :role => "smartstate")
+    zone = ext_management_system ? ext_management_system.my_zone : nil
+    MiqQueue.put(:class_name => self.class.to_s, :method_name => "save_drift_state", :instance_id => id, :zone => zone, :role => "smartstate")
   end
 
   def get_reserve(field)
-    rp = self.default_resource_pool
+    rp = default_resource_pool
     rp.nil? ? nil : rp.send(field)
   end
 
@@ -296,9 +294,9 @@ class EmsCluster < ActiveRecord::Base
 
   def effective_resource(resource)
     resource = resource.to_s
-    raise ArgumentError, "Unknown resource #{resource.inspect}" unless %w{cpu vcpu memory}.include?(resource)
+    raise ArgumentError, "Unknown resource #{resource.inspect}" unless %w(cpu vcpu memory).include?(resource)
     resource = "cpu" if resource == "vcpu"
-    self.send("effective_#{resource}")
+    send("effective_#{resource}")
   end
 
   #
@@ -313,15 +311,15 @@ class EmsCluster < ActiveRecord::Base
 
   def self.get_perf_collection_object_list
     # cl_hash = self.in_my_region.all(:include => [:tags, :taggings, :ext_management_system], :select => "name, id, ems_id").inject({}) do |h,c|
-      cl_hash = self.in_my_region.all(:include => [:tags, :taggings], :select => "name, id").inject({}) do |h,c|
+    cl_hash = in_my_region.all(:include => [:tags, :taggings], :select => "name, id").inject({}) do |h, c|
       h[c.id] = {:cl_rec => c, :ho_ids => c.host_ids}
       h
     end
 
     hids = cl_hash.values.flat_map { |v| v[:ho_ids] }.compact.uniq
-    hosts_by_id = Host.find_all_by_id(hids, :include => [:tags, :taggings], :select => "name, id").inject({}) { |h,host| h[host.id] = host; h }
+    hosts_by_id = Host.find_all_by_id(hids, :include => [:tags, :taggings], :select => "name, id").inject({}) { |h, host| h[host.id] = host; h }
 
-    cl_hash.each do |k,v|
+    cl_hash.each do |_k, v|
       hosts = hosts_by_id.values_at(*v[:ho_ids]).compact
       unless hosts.empty?
         v[:ho_enabled], v[:ho_disabled] = hosts.partition(&:perf_capture_enabled?)
@@ -330,11 +328,11 @@ class EmsCluster < ActiveRecord::Base
       end
     end
 
-    return cl_hash
+    cl_hash
   end
 
   def get_perf_collection_object_list
-    hosts = self.hosts_enabled_for_perf_capture
+    hosts = hosts_enabled_for_perf_capture
     self.perf_capture_enabled? ? [self] + hosts : hosts
   end
 
@@ -344,7 +342,7 @@ class EmsCluster < ActiveRecord::Base
   end
 
   def hosts_enabled_for_perf_capture
-    self.hosts(:include => [:taggings, :tags]).select(&:perf_capture_enabled?)
+    hosts(:include => [:taggings, :tags]).select(&:perf_capture_enabled?)
   end
 
   # Vmware specific
@@ -370,9 +368,9 @@ class EmsCluster < ActiveRecord::Base
 
       host.ems_ref                = host_mor
       host.ems_ref_obj            = host_mor
-      host.ext_management_system  = self.ext_management_system
+      host.ext_management_system  = ext_management_system
       host.save!
-      self.hosts << host
+      hosts << host
       host.refresh_ems
     end
   end

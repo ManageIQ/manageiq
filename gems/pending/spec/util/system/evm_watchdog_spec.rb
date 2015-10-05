@@ -19,7 +19,6 @@ describe EvmWatchdog do
   end
 
   context ".check_evm" do
-
     it "No Pid File. (EVM normal stopped state)" do
       described_class.stub(:read_pid_file => nil, :get_ps_pids => nil)
       described_class.check_evm
@@ -75,5 +74,4 @@ describe EvmWatchdog do
       described_class.check_evm
     end
   end
-
 end

@@ -2,22 +2,22 @@ class TenantQuota < ActiveRecord::Base
   belongs_to :tenant
 
   QUOTA_BASE = {
-    :cpu_allocated => {
+    :cpu_allocated       => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
       :text_modifier => "Count".freeze
     },
-    :mem_allocated => {
+    :mem_allocated       => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
       :text_modifier => "GB".freeze
     },
-    :storage_allocated => {
+    :storage_allocated   => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
       :text_modifier => "GB".freeze
     },
-    :vms_allocated => {
+    :vms_allocated       => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
       :text_modifier => "Count".freeze

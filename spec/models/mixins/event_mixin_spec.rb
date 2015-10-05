@@ -74,5 +74,4 @@ describe EventMixin do
       TestClass.new.should_not have_events
     end
   end
-
 end

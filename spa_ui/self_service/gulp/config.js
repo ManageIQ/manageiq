@@ -287,7 +287,7 @@ module.exports = (function() {
       add: true,
       single_quotes: true
     },
-    devHost: 'http://localhost:4000'
+    devHost: 'http://localhost:3000'
   };
 
   config.build = {

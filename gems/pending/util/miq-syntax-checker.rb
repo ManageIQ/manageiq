@@ -31,13 +31,9 @@ class MiqSyntaxCheckResult
     end
   end
 
-  def error_line
-    @error_line
-  end
+  attr_reader :error_line
 
-  def error_text
-    @error_text
-  end
+  attr_reader :error_text
 
   def valid?
     @valid

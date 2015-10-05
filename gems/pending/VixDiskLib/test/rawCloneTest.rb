@@ -7,11 +7,11 @@ to_vmdk = "/vmfs/volumes/47dade33-4f4a4875-3951-00188b404015/rpo-test2/rpo-test2
 temp_vmdk = File.join(File.dirname(__FILE__), "fii.vmdk")
 
 conParms = {
-    :serverName => "",
-    :port       => 902,
-    :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
-    :userName   => "",
-    :password   => "",
+  :serverName => "",
+  :port       => 902,
+  :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
+  :userName   => "",
+  :password   => "",
 }
 
 VixDiskLib_raw.init(lambda { |s| puts "INFO: #{s}" },
@@ -26,15 +26,15 @@ dHandle = VixDiskLib_raw.open(rconnection, from_vmdk, VixDiskLib_raw::VIXDISKLIB
 dinfo = VixDiskLib_raw.getInfo(dHandle)
 puts
 puts "Disk info:"
-dinfo.each { |k, v| puts "\t#{k} => #{v}"}
+dinfo.each { |k, v| puts "\t#{k} => #{v}" }
 puts
 
 VixDiskLib_raw.close(dHandle)
 
 createParms = {
-    :diskType    => VixDiskLib_raw::VIXDISKLIB_DISK_MONOLITHIC_SPARSE,
-    :adapterType => dinfo[:adapterType],
-    :capacity    => dinfo[:capacity]
+  :diskType    => VixDiskLib_raw::VIXDISKLIB_DISK_MONOLITHIC_SPARSE,
+  :adapterType => dinfo[:adapterType],
+  :capacity    => dinfo[:capacity]
 }
 
 t0 = Time.now
@@ -46,4 +46,4 @@ VixDiskLib_raw.disconnect(rconnection)
 VixDiskLib_raw.disconnect(lconnection)
 VixDiskLib_raw.exit
 
-puts "Clone ET: #{t1-t0}"
+puts "Clone ET: #{t1 - t0}"

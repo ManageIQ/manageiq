@@ -1,6 +1,6 @@
 class RegistryItem < ActiveRecord::Base
   belongs_to :vm_or_template
-  belongs_to :miq_set    #ScanItemSet
+  belongs_to :miq_set    # ScanItemSet
   belongs_to :scan_item
 
   include ReportableMixin
@@ -23,14 +23,13 @@ class RegistryItem < ActiveRecord::Base
       else
         found.update_attributes(nh) if nh[:data] != found[:data]
       end
-      deletes.delete_if {|ele| ele[1] == nh[:name]}
+      deletes.delete_if { |ele| ele[1] == nh[:name] }
     end
 
     vm.registry_items.build(new_reg)
     # Delete the IDs that correspond to the remaining names in the current list.
     _log.info("RegistryItem deletes: #{deletes.inspect}") unless deletes.empty?
     RegistryItem.delete(deletes.transpose[0])
-
   end
 
   def self.xml_to_hashes(xmlNode)
@@ -67,11 +66,11 @@ class RegistryItem < ActiveRecord::Base
 
   def key_name
     # Remove the value plus the ' : ' separator from the name
-    self.name[0...-self.value_name.length - 3]
+    name[0...-value_name.length - 3]
   end
 
   def image_name
-    return "registry_string_items" if !self.format.blank? && self.format.include?("_SZ")
-    return "registry_binary_items"
+    return "registry_string_items" if !format.blank? && format.include?("_SZ")
+    "registry_binary_items"
   end
 end

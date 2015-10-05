@@ -1,15 +1,14 @@
 require 'net_app_manageability/types'
 
 class NetappRemoteService < StorageManager
-
   has_many  :top_managed_elements,
-        :class_name   => "MiqCimInstance",
-        :foreign_key  => "agent_top_id"
+            :class_name  => "MiqCimInstance",
+            :foreign_key => "agent_top_id"
 
   has_many  :managed_elements,
-        :class_name   => "MiqCimInstance",
-        :foreign_key  => "agent_id",
-        :dependent    => :destroy # here, but not for SMI-S
+            :class_name  => "MiqCimInstance",
+            :foreign_key => "agent_id",
+            :dependent   => :destroy # here, but not for SMI-S
 
   DEFAULT_AGENT_TYPE = 'NRS'
   default_value_for :agent_type, DEFAULT_AGENT_TYPE
@@ -29,9 +28,9 @@ class NetappRemoteService < StorageManager
     self.class.initialize_class_for_client
 
     # TODO: Use hostname, not ipaddress
-    @ontapClient = OntapClient.new(ipaddress, *self.auth_user_pwd(:default))
+    @ontapClient = OntapClient.new(ipaddress, *auth_user_pwd(:default))
     @namClient = @ontapClient.conn
-    return @ontapClient
+    @ontapClient
   end
 
   def disconnect
@@ -41,17 +40,17 @@ class NetappRemoteService < StorageManager
 
   def ontap_client
     return @ontapClient unless @ontapClient.nil?
-    self.connect
+    connect
     @ontapClient || (raise "NetappRemoteService: not connected.")
   end
 
   def nma_client
     return @namClient unless @namClient.nil?
-    self.connect
+    connect
     @namClient || (raise "NetappRemoteService: not connected.")
   end
 
-  def self.refresh_inventory_by_subclass(ids, args={})
+  def self.refresh_inventory_by_subclass(ids, args = {})
     _log.info "queueing refresh requests for [ #{ids.join(', ')} ]"
     queue_refresh(ids, args)
   end
@@ -73,25 +72,25 @@ class NetappRemoteService < StorageManager
 
   def self.agent_ids_by_zone(ids)
     if ids.empty?
-      agents = self.where(:agent_type => DEFAULT_AGENT_TYPE)
+      agents = where(:agent_type => DEFAULT_AGENT_TYPE)
     else
-      agents = self.find(ids)
+      agents = find(ids)
     end
 
     agentIdsByZone = Hash.new { |h, k| h[k] = [] }
     agents.each { |a| agentIdsByZone[a.zone.name] << a.id }
 
-    return agentIdsByZone
+    agentIdsByZone
   end
 
-  def self.queue_refresh(nrsIds=[], args={})
+  def self.queue_refresh(nrsIds = [], _args = {})
     agent_ids_by_zone(nrsIds).each do |z, ids|
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
-        :zone     => z,
-        :queue_name   => "netapp_refresh",
-        :class_name   => self.name,
-        :method_name  => 'update_ontap'
+        :zone        => z,
+        :queue_name  => "netapp_refresh",
+        :class_name  => name,
+        :method_name => 'update_ontap'
       ) do |msg, queue_options|
         merged_ids = ids
         if msg
@@ -103,16 +102,16 @@ class NetappRemoteService < StorageManager
     end
   end
 
-  def self.queue_metrics_refresh(statistic_time=nil, nrsIds=[])
+  def self.queue_metrics_refresh(statistic_time = nil, nrsIds = [])
     statistic_time ||= Time.now.utc
     agent_ids_by_zone(nrsIds).each do |z, ids|
       _log.info "statistic_time = #{statistic_time}, zone = #{z}"
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
-        :zone     => z,
-        :queue_name   => "storage_metrics_collector",
-        :class_name   => self.name,
-        :method_name  => 'update_metrics'
+        :zone        => z,
+        :queue_name  => "storage_metrics_collector",
+        :class_name  => name,
+        :method_name => 'update_metrics'
       ) do |msg, queue_options|
         merged_ids = ids
         unless msg.nil?
@@ -125,15 +124,15 @@ class NetappRemoteService < StorageManager
     end
   end
 
-  def self.queue_metrics_rollup_hourly(rollup_time, nrsIds=[])
+  def self.queue_metrics_rollup_hourly(rollup_time, nrsIds = [])
     agent_ids_by_zone(nrsIds).each do |z, ids|
       _log.info "rollup_time = #{rollup_time}, zone = #{z}"
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
-        :zone     => z,
-        :queue_name   => "storage_metrics_collector",
-        :class_name   => self.name,
-        :method_name  => 'rollup_hourly_metrics'
+        :zone        => z,
+        :queue_name  => "storage_metrics_collector",
+        :class_name  => name,
+        :method_name => 'rollup_hourly_metrics'
       ) do |msg, queue_options|
         merged_ids = ids
         unless msg.nil?
@@ -146,16 +145,16 @@ class NetappRemoteService < StorageManager
     end
   end
 
-  def self.queue_metrics_rollup_daily(rollup_time, time_profile_id, nrsIds=[])
+  def self.queue_metrics_rollup_daily(rollup_time, time_profile_id, nrsIds = [])
     agent_ids_by_zone(nrsIds).each do |z, ids|
       _log.info "rollup_time = #{rollup_time}, zone = #{z}, time_profile_id = #{time_profile_id}"
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
-        :zone         => z,
-        :queue_name   => "storage_metrics_collector",
-        :class_name   => self.name,
-        :method_name  => 'rollup_daily_metrics',
-        :args_selector  => lambda { |a| a[1] == time_profile_id }
+        :zone          => z,
+        :queue_name    => "storage_metrics_collector",
+        :class_name    => name,
+        :method_name   => 'rollup_daily_metrics',
+        :args_selector => ->(a) { a[1] == time_profile_id }
       ) do |msg, queue_options|
         merged_ids = ids
         unless msg.nil?
@@ -169,15 +168,15 @@ class NetappRemoteService < StorageManager
   end
 
   def queue_refresh
-    self.class.queue_refresh([self.id])
+    self.class.queue_refresh([id])
   end
 
   def self.agent_query(nrsIds)
-    return self.where(:conditions => {:agent_type => DEFAULT_AGENT_TYPE, :zone_id => MiqServer.my_server.zone.id}) if nrsIds.empty?
-    return self.where(:id => nrsIds)
+    return where(:conditions => {:agent_type => DEFAULT_AGENT_TYPE, :zone_id => MiqServer.my_server.zone.id}) if nrsIds.empty?
+    where(:id => nrsIds)
   end
 
-  def self.update_ontap(nrsIds=[])
+  def self.update_ontap(nrsIds = [])
     agent_query = self.agent_query(nrsIds)
 
     agent_query.update_all(:last_update_status => STORAGE_UPDATE_PENDING)
@@ -214,21 +213,21 @@ class NetappRemoteService < StorageManager
         agent.disconnect
       end
 
-      self.cleanup_by_agent(agent)
+      cleanup_by_agent(agent)
     end
 
     StorageManager.queue_refresh_vmdb_cim(MiqServer.my_server.zone.name)
-    return nil
+    nil
   end
 
   def update_ontap
     ontap_client.updateOntap
   end
 
-  def self.update_metrics(statistic_time=nil, nrsIds=[])
+  def self.update_metrics(statistic_time = nil, nrsIds = [])
     statistic_time ||= Time.now.utc
 
-    self.agent_query(nrsIds).find_each do |agent|
+    agent_query(nrsIds).find_each do |agent|
       # TODO: Log hostname, not ipaddress
       _log.info "Agent: #{agent.ipaddress} Start..."
 
@@ -250,8 +249,8 @@ class NetappRemoteService < StorageManager
     ontap_client.updateMetrics(statistic_time)
   end
 
-  def self.rollup_hourly_metrics(rollup_time, nrsIds=[])
-    self.agent_query(nrsIds).find_each do |agent|
+  def self.rollup_hourly_metrics(rollup_time, nrsIds = [])
+    agent_query(nrsIds).find_each do |agent|
       # TODO: Log hostname, not ipaddress
       _log.info "Agent: #{agent.ipaddress} Start..."
 
@@ -269,8 +268,8 @@ class NetappRemoteService < StorageManager
 
   def rollup_hourly_metrics(rollup_time)
     # TODO: Log hostname, not ipaddress
-    _log.info "Agent: #{self.ipaddress}, rollup_time: #{rollup_time}"
-    topMe = self.top_managed_elements.first
+    _log.info "Agent: #{ipaddress}, rollup_time: #{rollup_time}"
+    topMe = top_managed_elements.first
     topMe.elements_with_metrics.each do |se|
       rollup_hourly_metrics_for_node(se, rollup_time)
     end unless topMe.nil?
@@ -283,13 +282,13 @@ class NetappRemoteService < StorageManager
     node.metrics.rollup_hourly(rollup_time)
   end
 
-  def self.rollup_daily_metrics(rollup_time, time_profile_id, nrsIds=[])
+  def self.rollup_daily_metrics(rollup_time, time_profile_id, nrsIds = [])
     unless (time_profile = TimeProfile.find(time_profile_id))
       _log.info "no TimeProfile found with id = #{time_profile_id}"
       return
     end
 
-    self.agent_query(nrsIds).find_each do |agent|
+    agent_query(nrsIds).find_each do |agent|
       # TODO: Log hostname, not ipaddress
       _log.info "Agent: #{agent.ipaddress}, TZ: #{time_profile.tz} Start..."
 
@@ -307,8 +306,8 @@ class NetappRemoteService < StorageManager
 
   def rollup_daily_metrics(rollup_time, time_profile)
     # TODO: Log hostname, not ipaddress
-    _log.info "Agent: #{self.ipaddress}, rollup_time: #{rollup_time}, TZ: #{time_profile.tz}"
-    topMe = self.top_managed_elements.first
+    _log.info "Agent: #{ipaddress}, rollup_time: #{rollup_time}, TZ: #{time_profile.tz}"
+    topMe = top_managed_elements.first
     topMe.elements_with_metrics.each do |se|
       rollup_daily_metrics_for_node(se, rollup_time, time_profile)
     end unless topMe.nil?
@@ -331,46 +330,46 @@ class NetappRemoteService < StorageManager
 
   def self.aggregate_names(oss)
     ocea = MiqCimInstance.find(:all,  :conditions => {
-      :class_name => "ONTAP_ConcreteExtent",
-      :top_managed_element_id => oss.id
-    })
-    return ocea.collect { |oce| oce.property('name') }
+                                 :class_name             => "ONTAP_ConcreteExtent",
+                                 :top_managed_element_id => oss.id
+                               })
+    ocea.collect { |oce| oce.property('name') }
   end
 
   def self.volume_names(oss)
     olda = MiqCimInstance.find(:all,  :conditions => {
-      :class_name => "ONTAP_LogicalDisk",
-      :top_managed_element_id => oss.id
-    })
-    return olda.collect { |old| old.property('name') }
+                                 :class_name             => "ONTAP_LogicalDisk",
+                                 :top_managed_element_id => oss.id
+                               })
+    olda.collect { |old| old.property('name') }
   end
 
   def self.remote_service_ips(oss)
     rsapa = MiqCimInstance.find(:all,  :conditions => {
-      :class_name => "ONTAP_RemoteServiceAccessPoint",
-      :top_managed_element_id => oss.id
-    })
-    return rsapa.collect { |rsap| rsap.property('name').split(':').first }
+                                  :class_name             => "ONTAP_RemoteServiceAccessPoint",
+                                  :top_managed_element_id => oss.id
+                                })
+    rsapa.collect { |rsap| rsap.property('name').split(':').first }
   end
 
   def self.find_controller_by_ip(ip)
     find_controllers.each do |c|
       remote_service_ips(c).each { |cip| return c if cip == ip }
     end
-    return nil
+    nil
   end
 
   def self.remote_service_info(oss)
-    return {
-      :evm_display_name => oss.evm_display_name,
+    {
+      :evm_display_name   => oss.evm_display_name,
       :remote_service_ips => remote_service_ips(oss),
-      :aggregates     => aggregate_names(oss),
-      :volumes      => volume_names(oss)
+      :aggregates         => aggregate_names(oss),
+      :volumes            => volume_names(oss)
     }
   end
 
   def self.all_remote_service_info
-    return find_controllers.collect { |c| remote_service_info(c) }
+    find_controllers.collect { |c| remote_service_info(c) }
   end
 
   def self.dump_controllers
@@ -380,75 +379,71 @@ class NetappRemoteService < StorageManager
       puts "\tAggregates: #{rsi[:aggregates].join(', ')}"
       puts "\tVolumes: #{rsi[:volumes].join(', ')}"
     end
-    return nil
+    nil
   end
 
   #####################
 
   def has_volume?(volumeName)
-    begin
-      nma_client.volume_list_info(:volume, volumeName)
-      return true
-    rescue
-      return false
-    end
+    nma_client.volume_list_info(:volume, volumeName)
+    return true
+  rescue
+    return false
   end
 
-  def volume_list_info(volName=nil)
+  def volume_list_info(volName = nil)
     return nma_client.volume_list_info.volumes.volume_info.to_ary if volName.nil?
-    return nma_client.volume_list_info(:volume, volName).volumes.volume_info
+    nma_client.volume_list_info(:volume, volName).volumes.volume_info
   end
 
   def has_aggr?(aggrName)
-    begin
-      nma_client.aggr_list_info(:aggregate, aggrName)
-      return true
-    rescue
-      return false
-    end
+    nma_client.aggr_list_info(:aggregate, aggrName)
+    return true
+  rescue
+    return false
   end
 
-  def aggr_list_info(aggrName=nil)
+  def aggr_list_info(aggrName = nil)
     return nma_client.aggr_list_info.aggregates.aggr_info.to_ary if aggrName.nil?
-    return nma_client.aggr_list_info(:aggregate, aggrName).aggregates.aggr_info
+    nma_client.aggr_list_info(:aggregate, aggrName).aggregates.aggr_info
   end
 
   def options_get(optName)
     rv = nma_client.options_get(:name, optName)
-    return rv.value
+    rv.value
   end
 
   def options_set(optName, optValue)
-    nma_client.options_set {
+    nma_client.options_set do
       name  optName
       value optValue
-    }
+    end
   end
 
-  def queue_volume_create_callback(*args)
-    smis_agent = MiqSmisAgent.where(:zone_id => self.zone_id).first
+  def queue_volume_create_callback(*_args)
+    smis_agent = MiqSmisAgent.find_by(:zone_id => zone_id)
     if smis_agent.nil?
-      _log.error("Unable to find an SMIS agant for zone: #{self.zone}, skipping SMIS refresh")
+      _log.error("Unable to find an SMIS agant for zone: #{zone}, skipping SMIS refresh")
       return
     end
 
     smis_agent.request_smis_update
   end
 
-  def queue_volume_create(volName, aggrName, volSize, spaceReserve="none")
-    cb = {:class_name => self.class.name, :instance_id => self.id, :method_name => :queue_volume_create_callback}
+  def queue_volume_create(volName, aggrName, volSize, spaceReserve = "none")
+    cb = {:class_name => self.class.name, :instance_id => id, :method_name => :queue_volume_create_callback}
     MiqQueue.put(
       :class_name   => self.class.name,
-      :instance_id  => self.id,
+      :instance_id  => id,
       :method_name  => 'volume_create',
       :args         => [volName, aggrName, volSize, spaceReserve],
       :role         => 'ems_operations',
-      :zone         => self.zone.name,
+      :zone         => zone.name,
       :miq_callback => cb
     )
   end
 
-  def volume_create(volName, aggrName, volSize, spaceReserve="none")
+  def volume_create(volName, aggrName, volSize, spaceReserve = "none")
     #
     # The creation of the volume will result in the creation a qtree entry for its root.
     # If we want to base a VMware datastore on the volume's NFS share, the security style of
@@ -462,16 +457,16 @@ class NetappRemoteService < StorageManager
       options_set('wafl.default_security_style', 'mixed')
     end
 
-    nma_client.volume_create {
+    nma_client.volume_create do
       containing_aggr_name  aggrName
       volume          volName
       space_reserve     spaceReserve
       size          volSize
-    }
+    end
   end
 
   def nfs_add_root_hosts(path, hosts)
-    hostNames =  (hosts.kind_of?(Array) ? hosts : [ hosts ])
+    hostNames =  (hosts.kind_of?(Array) ? hosts : [hosts])
 
     rv = nma_client.nfs_exportfs_list_rules(:pathname, path)
     raise "NetappRemoteService.nfs_add_root_hosts: No export rules found for path #{path}" unless rv.kind_of?(NetAppManageability::NAMHash)
@@ -502,24 +497,24 @@ class NetappRemoteService < StorageManager
     end
 
     if changed
-      nma_client.nfs_exportfs_modify_rule {
+      nma_client.nfs_exportfs_modify_rule do
         persistent  true
         rule    rules
-      }
+      end
     end
   end
 
   def get_addresses
     rv = nma_client.net_config_get_active
     ia = rv.net_config_info.interfaces.interface_config_info
-    ia = [ ia ] unless ia.kind_of?(Array)
+    ia = [ia] unless ia.kind_of?(Array)
 
     addresses = []
     ia.each do |i|
       next unless (pa = i.v4_primary_address)
       addresses << pa.ip_address_info.address
     end
-    return addresses
+    addresses
   end
 
   #####################
@@ -530,15 +525,15 @@ class NetappRemoteService < StorageManager
 
   def set_ts_data(type, data)
     type_spec_data[type] = data
-    self.save
+    save
   end
 
-  def verify_credentials(auth_type=nil)
+  def verify_credentials(auth_type = nil)
     raise "no credentials defined" if self.missing_credentials?(auth_type)
 
     begin
-      self.volume_list_info
-      self.disconnect
+      volume_list_info
+      disconnect
     rescue NetAppManageability::Error, NameError, Errno::ETIMEDOUT, Errno::ENETUNREACH
       _log.warn("#{$!.inspect}")
       raise $!.message
@@ -549,5 +544,4 @@ class NetappRemoteService < StorageManager
       true
     end
   end
-
 end

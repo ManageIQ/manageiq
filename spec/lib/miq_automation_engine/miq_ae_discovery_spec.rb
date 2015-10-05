@@ -21,6 +21,5 @@ module MiqAeDiscoverySpec
       ws = MiqAeEngine.instantiate("/EVM/VMSCAN/foo?target_vm_id=#{@vm.id}")
       ws.should_not be_nil
     end
-
   end
 end

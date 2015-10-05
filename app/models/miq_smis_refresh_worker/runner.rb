@@ -7,9 +7,9 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
   def after_initialize
     _log.info "starting"
 
-    @smis_update_period   = self.worker_settings[:smis_update_period]   || 60 * 30
-    @status_update_period = self.worker_settings[:status_update_period] || 60 * 5
-    @stats_update_period  = self.worker_settings[:stats_update_period]  || 60 * 10
+    @smis_update_period   = worker_settings[:smis_update_period] || 60 * 30
+    @status_update_period = worker_settings[:status_update_period] || 60 * 5
+    @stats_update_period  = worker_settings[:stats_update_period] || 60 * 10
 
     _log.info "smis_update_period:   #{@smis_update_period}"
     _log.info "status_update_period: #{@status_update_period}"
@@ -106,7 +106,7 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
             @flagLock.sync_unlock
             _log.info "update_smis sleeping #{@smis_update_period}"
             slept = 0
-            while slept < @smis_update_period do
+            while slept < @smis_update_period
               sv = sleep @smis_update_period
               if @smis_update_requested
                 @flagLock.sync_lock(:EX)
@@ -181,7 +181,7 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
             @flagLock.sync_unlock
             _log.info "STATUS sleeping #{@status_update_period}"
             slept = 0
-            while slept < @status_update_period do
+            while slept < @status_update_period
               sv = sleep @status_update_period
               if @status_update_requested
                 @flagLock.sync_lock(:EX)
@@ -264,7 +264,7 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
     end
   end
 
-  def message_request_smis_update(*args)
+  def message_request_smis_update(*_args)
     _log.info "."
     @flagLock.synchronize(:EX) do
       return if @smis_update_in_progress || @smis_update_requested
@@ -276,7 +276,7 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
     #
   end
 
-  def message_request_status_update(*args)
+  def message_request_status_update(*_args)
     _log.info "."
     @flagLock.synchronize(:EX) do
       return if @smis_update_in_progress || @smis_update_requested  # Includes status information.
@@ -294,6 +294,6 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
     @exiting = true
     @smis_update_thread.run   while @smis_update_thread && @smis_update_thread.alive?
     @status_update_thread.run while @status_update_thread && @status_update_thread.alive?
-    @stats_update_thread.run  while @stats_update_thread  && @stats_update_thread.alive?
+    @stats_update_thread.run  while @stats_update_thread && @stats_update_thread.alive?
   end
 end

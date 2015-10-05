@@ -6,9 +6,9 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(options)
+  def x_get_tree_roots(_options)
     resolve = {}
-    CustomButton.button_classes.each{ |db| resolve[db] = ui_lookup(:model => db) }
+    CustomButton.button_classes.each { |db| resolve[db] = ui_lookup(:model => db) }
     @sb[:target_classes] = resolve.invert
     resolve = Array(resolve.invert).sort
     resolve.collect { |typ| {:id => "ab_#{typ[1]}", :text => typ[0], :image => buttons_node_image(typ[1]), :tip => typ[0]} }
@@ -17,7 +17,7 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
   def x_get_tree_custom_kids(object, options)
     nodes = object[:id].split('_')
     objects = CustomButtonSet.find_all_by_class_name(nodes[1])
-    #add as first element of array
+    # add as first element of array
     objects.unshift(CustomButtonSet.new(:name => "[Unassigned Buttons]|ub-#{nodes[1]}", :description => "[Unassigned Buttons]"))
     count_only_or_objects(options[:count_only], objects, nil)
   end
@@ -37,7 +37,7 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
       if object.id.nil?
         get_custom_buttons(object).sort_by { |a| a.name.downcase }
       else
-        #need to show button nodes in button order that they were saved in
+        # need to show button nodes in button order that they were saved in
         button_order = object[:set_data] && object[:set_data][:button_order] ? object[:set_data][:button_order] : nil
         objects = []
         Array(button_order).each do |bidx|

@@ -38,7 +38,7 @@ module MiqPolicyController::Rsop
       end
       c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
       render :update do |page|
-        page.replace_html("main_div", :partial=>"rsop_results")
+        page.replace_html("main_div", :partial => "rsop_results")
         if c_buttons && c_xml
           page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
           page << javascript_show("center_buttons_div")
@@ -48,22 +48,22 @@ module MiqPolicyController::Rsop
         page << "miqSparkle(false);"
       end
     elsif params[:button] == "reset"
-      @sb[:rsop] = Hash.new     # Reset all RSOP stored values
+      @sb[:rsop] = {}     # Reset all RSOP stored values
       session[:changed] = session[:rsop_tree] = nil
       render :update do |page|  # Redraw the screen
         page.redirect_to :action => 'rsop'
       end
     else  # No params, first time in
-      @breadcrumbs = Array.new
-      @accords = [{:name=>"rsop", :title=>"Options", :container=>"rsop_options_div"}]
-      @sb[:rsop] ||= Hash.new   # Leave exising values
+      @breadcrumbs = []
+      @accords = [{:name => "rsop", :title => "Options", :container => "rsop_options_div"}]
+      @sb[:rsop] ||= {}   # Leave exising values
       rsop_put_objects_in_sb(find_filtered(ExtManagementSystem, :all), :emss)
       rsop_put_objects_in_sb(find_filtered(EmsCluster, :all), :clusters)
       rsop_put_objects_in_sb(find_filtered(Host, :all), :hosts)
       rsop_put_objects_in_sb(find_filtered(Vm, :all), :vms)
       rsop_put_objects_in_sb(find_filtered(Storage, :all), :datastores)
-      @rsop_events = MiqEventDefinitionSet.all.collect{|e|[e.description, e.id.to_s]}.sort
-      @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_event_definitions.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
+      @rsop_events = MiqEventDefinitionSet.all.collect { |e| [e.description, e.id.to_s] }.sort
+      @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_event_definitions.collect { |e| [e.description, e.id.to_s] }.sort unless @sb[:rsop][:event].nil?
       render :layout => "application"
     end
   end
@@ -83,11 +83,11 @@ module MiqPolicyController::Rsop
     if params[:filter_value]
       @sb[:rsop][:filter_value] = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
     end
-    @rsop_events = MiqEventDefinitionSet.all.collect{|e|[e.description, e.id.to_s]}.sort
-    @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_event_definitions.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
+    @rsop_events = MiqEventDefinitionSet.all.collect { |e| [e.description, e.id.to_s] }.sort
+    @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_event_definitions.collect { |e| [e.description, e.id.to_s] }.sort unless @sb[:rsop][:event].nil?
     render :update do |page|                    # Use JS to update the display
       session[:changed] = @sb[:rsop][:filter_value] && @sb[:rsop][:event_value] ? true : false
-      page.replace("rsop_form_div", :partial=>"rsop_form")
+      page.replace("rsop_form_div", :partial => "rsop_form")
       if session[:changed]
         page << javascript_hide("form_buttons_off")
         page << javascript_show("form_buttons_on")
@@ -106,7 +106,7 @@ module MiqPolicyController::Rsop
 
   def rsop_show_options
     @explorer = true
-    if params.has_key?(:passed)
+    if params.key?(:passed)
       if params[:passed] == "null" || params[:passed] == ""
         @sb[:rsop][:passed] = false
         @sb[:rsop][:failed] = true
@@ -114,7 +114,7 @@ module MiqPolicyController::Rsop
         @sb[:rsop][:passed] = true
       end
     end
-    if params.has_key?(:failed)
+    if params.key?(:failed)
       if params[:failed] == "null" || params[:failed] == ""
         @sb[:rsop][:passed] = true
         @sb[:rsop][:failed] = false
@@ -125,7 +125,7 @@ module MiqPolicyController::Rsop
     if params[:out_of_scope]
       @sb[:rsop][:out_of_scope] = (params[:out_of_scope] == "1")
     end
-    @sb[:rsop][:open] = false           #reset the open state to select correct button in toolbar, need to replace partial to update checkboxes in form
+    @sb[:rsop][:open] = false           # reset the open state to select correct button in toolbar, need to replace partial to update checkboxes in form
     session[:rsop_tree] = rsop_build_tree
     rsop_button_pressed
   end
@@ -154,7 +154,7 @@ module MiqPolicyController::Rsop
         end
       else
         # if rsop_show_options came in
-        page.replace_html("main_div", :partial=>"rsop_results")
+        page.replace_html("main_div", :partial => "rsop_results")
       end
       if c_buttons && c_xml
         page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
@@ -185,9 +185,9 @@ module MiqPolicyController::Rsop
   end
 
   # Build add tree node
-  def rsop_tree_add_node(node, pid, nodetype="v")
+  def rsop_tree_add_node(node, pid, nodetype = "v")
     unless ["v", "s", "e"].include?(nodetype) # Always show VMs, scopes, and expressions
-      return nil if @sb[:rsop][:out_of_scope] == false  && node['result'] == "N/A"  # Skip out of scope item
+      return nil if @sb[:rsop][:out_of_scope] == false && node['result'] == "N/A"  # Skip out of scope item
       if nodetype == "p"  # Skip unchecked policies
         return nil if @sb[:rsop][:passed] == false && node['result'] != "deny"
         return nil if @sb[:rsop][:failed] == false && node['result'] == "deny"
@@ -223,11 +223,11 @@ module MiqPolicyController::Rsop
       title = "<strong>Policy#{active_caption}:</strong> #{node[:description]}"
       expand = false
       t_kids.push(rsop_tree_add_node(node[:scope], key, "s")) if node[:scope]
-      node[:conditions].sort_by { |a| a[:description].downcase }.each_with_index do |c, i|
+      node[:conditions].sort_by { |a| a[:description].downcase }.each_with_index do |c, _i|
         nn = rsop_tree_add_node(c, key, "c")
         t_kids.push(nn) unless nn.nil?
       end
-      node[:actions].each_with_index do |a, i|
+      node[:actions].each_with_index do |a, _i|
         nn = rsop_tree_add_node(a, key, "a")
         t_kids.push(nn) unless nn.nil?
       end
@@ -267,5 +267,4 @@ module MiqPolicyController::Rsop
     t_node[:children] = t_kids unless t_kids.empty?              # Add in the node's children, if any
     t_node
   end
-
 end

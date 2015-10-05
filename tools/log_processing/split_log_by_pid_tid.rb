@@ -19,7 +19,7 @@ t = Time.now
 puts "Splitting files..."
 
 pidtid_to_file = {}
-pidtid_to_info = Hash.new { |h, k| h[k] = Hash.new }
+pidtid_to_info = Hash.new { |h, k| h[k] = {} }
 
 MiqLoggerProcessor.new(logfile).each do |line|
   pidtid = "#{line.pid}-#{line.tid}"
@@ -36,8 +36,8 @@ MiqLoggerProcessor.new(logfile).each do |line|
   outfile.write(line)
 
   info = pidtid_to_info[pidtid]
-  info[:name] = $1 if !info.has_key?(:name) && (line.message =~ /^MIQ\(([A-Za-z]+Worker(?=\))|EventCatcher(?=\))|(?:Ems)?EventHandler(?=\))|WorkerMonitor|Server(?=\.))/ || line.message =~ /^<(VIM|AutomationEngine)>/)
-  info[:time] = line.time unless info.has_key?(:time)
+  info[:name] = $1 if !info.key?(:name) && (line.message =~ /^MIQ\(([A-Za-z]+Worker(?=\))|EventCatcher(?=\))|(?:Ems)?EventHandler(?=\))|WorkerMonitor|Server(?=\.))/ || line.message =~ /^<(VIM|AutomationEngine)>/)
+  info[:time] = line.time unless info.key?(:time)
 end
 
 pidtid_to_file.values.each { |f| f.close unless f.closed? }

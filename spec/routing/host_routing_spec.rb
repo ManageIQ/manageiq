@@ -23,7 +23,6 @@ describe "routes for HostController" do
     it "routes with POST" do
       expect(post("/host/advanced_settings")).to route_to("host#advanced_settings")
     end
-
   end
 
   describe "#button" do
@@ -106,7 +105,6 @@ describe "routes for HostController" do
     it "routes with POST" do
       expect(post("/host/filesystems")).to route_to("host#filesystems")
     end
-
   end
 
   describe "#firewall_rules" do

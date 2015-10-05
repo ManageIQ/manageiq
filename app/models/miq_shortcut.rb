@@ -36,6 +36,6 @@ class MiqShortcut < ActiveRecord::Base
   end
 
   def self.start_pages
-    self.where(:startup => true).sort_by { |s| s.sequence.to_i }.collect { |s| [s.url, s.description, s.rbac_feature_name] }
+    where(:startup => true).sort_by { |s| s.sequence.to_i }.collect { |s| [s.url, s.description, s.rbac_feature_name] }
   end
 end

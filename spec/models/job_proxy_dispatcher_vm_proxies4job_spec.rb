@@ -13,7 +13,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
       before(:each) do
-        @hosts, @proxies, @storages, @vms = self.build_hosts_proxies_storages_vms
+        @hosts, @proxies, @storages, @vms = build_hosts_proxies_storages_vms
         @vm = @vms.first
       end
 
@@ -75,12 +75,12 @@ describe "JobProxyDispatcherVmProxies4Job" do
         end
 
         it "should accept an instance of a job and call log proxies with a job" do
-          @vm.should_receive(:log_proxies).with([],[],(instance_of(String)),(instance_of(VmScan)))
+          @vm.should_receive(:log_proxies).with([], [], (instance_of(String)), (instance_of(VmScan)))
           @vm.proxies4job(@job)[:proxies].should be_empty
         end
 
         it "should accept a job guid and call log proxies with a job" do
-          @vm.should_receive(:log_proxies).with([],[],(instance_of(String)),(instance_of(VmScan)))
+          @vm.should_receive(:log_proxies).with([], [], (instance_of(String)), (instance_of(VmScan)))
           @vm.proxies4job(@job.guid)[:proxies].should be_empty
         end
 

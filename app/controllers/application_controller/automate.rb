@@ -11,8 +11,6 @@ module ApplicationController::Automate
       end
       @sb[:obj] = if @resolve[:new][:target_id] && @resolve[:new][:target_class]
                     @resolve[:new][:target_class].constantize.find(@resolve[:new][:target_id])
-                  else
-                    nil
                   end
       @resolve[:button_class] = @resolve[:new][:target_class]
       @resolve[:button_number] ||= 1
@@ -54,10 +52,10 @@ module ApplicationController::Automate
         :userid           => session[:userid]
       )
     rescue StandardError => bang
-      add_flash(_("Error during '%s': ") %  "save" << bang.message, :error)
+      add_flash(_("Error during '%s': ") % "save" << bang.message, :error)
     else
       if @resolve[:button_text].blank?
-        add_flash(_("Automate button %s has been cleared") %  @resolve[:button_number])
+        add_flash(_("Automate button %s has been cleared") % @resolve[:button_number])
       else
         add_flash(_("Automate button %{btn_num} has been set to %{btn_txt}") % {:btn_num => @resolve[:button_number], :btn_txt => @resolve[:button_text]})
       end

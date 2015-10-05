@@ -35,7 +35,6 @@ describe MiqAeDomain do
       domain = MiqAeDomain.create!(:name => 'Fred')
       domain.update_attributes!(:priority => 10, :system => false).should be_true
     end
-
   end
 
   context "Domain Overlays" do

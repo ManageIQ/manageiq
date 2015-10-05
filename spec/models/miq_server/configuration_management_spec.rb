@@ -24,7 +24,7 @@ describe MiqServer do
 
       context "remote server" do
         before do
-          _, @remote_server, _ = EvmSpecHelper.remote_guid_miq_server_zone
+          _, @remote_server, = EvmSpecHelper.remote_guid_miq_server_zone
         end
 
         it "with no changes in the database" do

@@ -10,7 +10,7 @@ module AssignmentMixin
     cache_with_timeout(:assignments_cached, 1.minute) { assignments }
   end
 
-  def assign_to_objects(objects, klass=nil)
+  def assign_to_objects(objects, klass = nil)
     # objects => A single item or array of items
     #   item  => A CI instance (not classification) or a CI id of klass
     # klass   => The class of the object that self is to be assigned to - (Takes both forms - Host or host, EmsCluster or ems_cluster)
@@ -21,9 +21,9 @@ module AssignmentMixin
         raise "Class must be specified when object is an integer" if klass.nil?
         tag = "#{klass.underscore}/id/#{obj}"
       end
-      self.tag_add(tag, :ns => self.namespace)
+      tag_add(tag, :ns => namespace)
     end
-    self.reload
+    reload
   end
 
   def assign_to_tags(objects, klass)
@@ -40,15 +40,15 @@ module AssignmentMixin
         end
       end
       tag = "#{klass.underscore}/tag#{obj.ns}/#{obj.parent.name}/#{obj.name}"
-      self.tag_add(tag, :ns => self.namespace)
+      tag_add(tag, :ns => namespace)
     end
-    self.reload
+    reload
   end
 
   def get_assigned_tos
     # Returns: {:objects => [obj, obj, ...], :tags => [[Classification.entry_object, klass], ...]}
     result = {:objects => [], :tags => []}
-    tags = self.tag_list(:ns => self.namespace).split
+    tags = tag_list(:ns => namespace).split
     tags.each do |t|
       parts = t.split("/")
       klass = parts.shift
@@ -64,7 +64,7 @@ module AssignmentMixin
       end
     end
 
-    return result
+    result
   end
 
   def remove_all_assigned_tos(cat = nil)
@@ -74,8 +74,8 @@ module AssignmentMixin
     # => cat = "host" will remove all the host assignments - both host/id/n and host/tag/...
     # => cat = "host/tag" will remove only the host tag assignments.
     # => cat = nil will remove all assignments from object
-    self.tag_with("", :ns => self.namespace, :cat => cat)
-    self.reload
+    tag_with("", :ns => namespace, :cat => cat)
+    reload
   end
 
   def namespace
@@ -124,7 +124,7 @@ module AssignmentMixin
 
       if options[:associations_preloaded]
         # Collect tags directly from association from parent objects if they were already preloaded by the caller
-        tags = parents.collect {|p| p.tags.select {|t| t.name.starts_with?("/managed/")}}.flatten.uniq
+        tags = parents.collect { |p| p.tags.select { |t| t.name.starts_with?("/managed/") } }.flatten.uniq
       else
         # Collect tags from all parent objects in a single query if they were NOT already preloaded by the caller
         tcond = []; targs = []
@@ -136,10 +136,10 @@ module AssignmentMixin
         cond = ["(#{tcond.join(" OR ")}) AND (name like '/managed/%')", *targs]
         tags = Tag.where(cond).joins(:taggings)
       end
-                                                                                # Assigned to parent tags
+      # Assigned to parent tags
       # TODO: we may need to change taggings-related code to use base_model too
-      parent_ids_by_type = parents.inject({}) {|h,p|  h[p.class.base_class.name] ||= []; h[p.class.base_class.name] << p.id; h}
-      tlist += tags.inject([]) do |arr,tag|
+      parent_ids_by_type = parents.inject({}) { |h, p|  h[p.class.base_class.name] ||= []; h[p.class.base_class.name] << p.id; h }
+      tlist += tags.inject([]) do |arr, tag|
         tag.taggings.each do |t|
           # Only collect taggings for parent objects
           klass = t.taggable_type
@@ -154,16 +154,16 @@ module AssignmentMixin
         arr
       end
 
-      result = alist.inject([]) do |arr,a|
+      result = alist.inject([]) do |arr, a|
         arr << a[:assigned] if tlist.include?(a[:assigned_to])
         arr
       end
 
-      return result.uniq
+      result.uniq
     end
 
     def namespace
-      "/#{self.base_model.name.underscore}/assigned_to"
+      "/#{base_model.name.underscore}/assigned_to"
     end
   end # module ClassMethods
 end # module AssignmentMixin

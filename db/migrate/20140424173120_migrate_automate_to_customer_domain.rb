@@ -23,7 +23,6 @@ class MigrateAutomateToCustomerDomain < ActiveRecord::Migration
 
   def up
     say_with_time("Migrate Automate root namespaces to Customer domain") do
-
       if MiqAeNamespace.root_namespaces.count > 0
         domain = MiqAeNamespace.create!(:name => CUSTOMER_DOMAIN, :priority => 1, :enabled => true, :updated_by => "system")
         MiqAeNamespace.root_namespaces.update_all(:parent_id => domain.id)
@@ -45,7 +44,7 @@ class MigrateAutomateToCustomerDomain < ActiveRecord::Migration
     end
   end
 
-  def inherited_miq_ae_classes(&block)
+  def inherited_miq_ae_classes(&_block)
     MiqAeClass.where(MiqAeClass.arel_table[:inherits].not_eq(nil)).where("inherits NOT LIKE '$/%'")
   end
 

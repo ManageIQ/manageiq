@@ -14,7 +14,7 @@ module MiqReport::Formatting
       sfx = col.to_s.split("__").last
       is_break_sfx = (sfx && self.is_break_suffix?(sfx))
       sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
-      FORMATS.keys.inject({}) do |h,k|
+      FORMATS.keys.inject({}) do |h, k|
         # Ignore formats that don't include suffix if the column name has a break suffix
         next(h) if is_break_sfx && (FORMATS[k][:suffixes].nil? || !FORMATS[k][:suffixes].include?(sfx.to_sym))
 
@@ -33,9 +33,9 @@ module MiqReport::Formatting
 
     def get_default_format(path, dt)
       col = path.split("-").last.to_sym
-        sfx = col.to_s.split("__").last
-        sfx = sfx.to_sym if sfx
-        sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
+      sfx = col.to_s.split("__").last
+      sfx = sfx.to_sym if sfx
+      sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
       FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_column][col] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
     end
   end
@@ -54,11 +54,11 @@ module MiqReport::Formatting
   end
 
   def format(col, value, options = {})
-    if self.db.to_s == "VimPerformanceTrend"
+    if db.to_s == "VimPerformanceTrend"
       if col == "limit_col_value"
-        col = self.db_options[:limit_col] || col
+        col = db_options[:limit_col] || col
       elsif col.to_s.ends_with?("_value")
-        col = self.db_options[:trend_col] || col
+        col = db_options[:trend_col] || col
       end
     end
     format = options.delete(:format)
@@ -71,22 +71,22 @@ module MiqReport::Formatting
     # Look in this report object for column format
     self.col_formats ||= []
     if format.nil?
-      idx = col.is_a?(String) ? self.col_order.index(col) : col
+      idx = col.kind_of?(String) ? col_order.index(col) : col
       if idx
-        col = self.col_order[idx]
+        col = col_order[idx]
         format = FORMATS[self.col_formats[idx]]
       end
     end
 
     # Use default format for column stil nil
     if format.nil? || format == :_default_
-      expression_col = self.col_to_expression_col(col)
+      expression_col = col_to_expression_col(col)
       dt = self.class.get_col_type(expression_col)
       dt = value.class.to_s.downcase.to_sym if dt.nil?
       dt = dt.to_sym unless dt.nil?
       format = FORMATS[self.class.get_default_format(expression_col, dt)]
       format = format.deep_clone if format # Make sure we don't taint the original
-      format[:precision] = FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column][col.to_sym] if format && FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column].has_key?(col.to_sym)
+      format[:precision] = FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column][col.to_sym] if format && FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column].key?(col.to_sym)
     else
       format = format.deep_clone # Make sure we don't taint the original
     end
@@ -95,7 +95,7 @@ module MiqReport::Formatting
     format.merge!(options) if format # Merge additional options that were passed in as overrides
     value = apply_format_function(value, format) if format && !format[:function].nil?
 
-    return String.new(value.to_s) # Generate value as a string in case it is a SafeBuffer
+    String.new(value.to_s) # Generate value as a string in case it is a SafeBuffer
   end
 
   def apply_format_precision(value, precision)
@@ -108,20 +108,20 @@ module MiqReport::Formatting
     method = "format_#{function[:name]}"
     raise "Unknown format function '#{function[:name]}'" unless self.respond_to?(method)
 
-    self.send(method, value, function.merge(options))
+    send(method, value, function.merge(options))
   end
 
   def apply_prefix_and_suffix(val, options)
     val = options[:prefix] + val if options[:prefix]
-    val = val + options[:suffix] if options[:suffix]
+    val += options[:suffix] if options[:suffix]
 
-    return val
+    val
   end
 
   def format_number_with_delimiter(val, options = {})
     av_options = {}
-    av_options[:delimiter] = options[:delimiter] if options.has_key?(:delimiter)
-    av_options[:separator] = options[:separator] if options.has_key?(:separator)
+    av_options[:delimiter] = options[:delimiter] if options.key?(:delimiter)
+    av_options[:separator] = options[:separator] if options.key?(:separator)
     val = apply_format_precision(val, options[:precision])
     val = ActionView::Base.new.number_with_delimiter(val, av_options)
     apply_prefix_and_suffix(val, options)
@@ -129,8 +129,8 @@ module MiqReport::Formatting
 
   def format_currency_with_delimiter(val, options = {})
     av_options = {}
-    av_options[:delimiter] = options[:delimiter] if options.has_key?(:delimiter)
-    av_options[:separator] = options[:separator] if options.has_key?(:separator)
+    av_options[:delimiter] = options[:delimiter] if options.key?(:delimiter)
+    av_options[:separator] = options[:separator] if options.key?(:separator)
     val = apply_format_precision(val, options[:precision])
     val = ActionView::Base.new.number_to_currency(val, av_options)
     apply_prefix_and_suffix(val, options)
@@ -193,7 +193,7 @@ module MiqReport::Formatting
     col = options[:column]
     col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
 
-    val = val.in_time_zone(self.get_time_zone("UTC"))
+    val = val.in_time_zone(get_time_zone("UTC"))
     if val.respond_to?("beginning_of_#{sfx}")
       stime = val.send("beginning_of_#{sfx}")
       etime = val.send("end_of_#{sfx}")
@@ -215,18 +215,18 @@ module MiqReport::Formatting
   end
 
   def format_datetime_ordinal(val, options)
-    val = self.format_datetime(val, options)
-    self.format_number_ordinal(val, options)
+    val = format_datetime(val, options)
+    format_number_ordinal(val, options)
   end
 
-  def format_number_ordinal(val, options)
+  def format_number_ordinal(val, _options)
     val.to_i.ordinalize
   end
 
-  def format_elapsed_time_human(val, options)
+  def format_elapsed_time_human(val, _options)
     val = val.to_i
 
-    names = %w{day hour minute second}
+    names = %w(day hour minute second)
     arr = []
 
     days    = (val / 86400)
@@ -235,9 +235,9 @@ module MiqReport::Formatting
     seconds = (val % 60)
 
     arr = [days, hours, minutes, seconds]
-    return if arr.all? {|a| a == 0}
+    return if arr.all? { |a| a == 0 }
 
-    sidx = arr.index {|a| a > 0}
+    sidx = arr.index { |a| a > 0 }
     values = arr[sidx..(sidx + 1)]
     result = ''
     sep    = ''
@@ -256,7 +256,7 @@ module MiqReport::Formatting
     result.length > options[:length] ? result[0..(options[:length] - 1)] + "..." : val
   end
 
-  def format_large_number_to_exponential_form(val, options = {})
+  def format_large_number_to_exponential_form(val, _options = {})
     return val if val.to_f < 1.0e+15
     val.to_f.to_s
   end
