@@ -1,8 +1,8 @@
 - if @record.try(:name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon")
+    = miq_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon")
 
-    = patternfly_accordion_panel(_("Properties"), false, "miqaeclass_prop") do
+    = miq_accordion_panel(_("Properties"), false, "miqaeclass_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'),
