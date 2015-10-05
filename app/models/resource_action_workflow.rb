@@ -22,7 +22,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     dialog
   end
 
-  def submit_request(requester_id, auto_approve = false)
+  def submit_request(_requester_id = nil)
     result = {}
 
     result[:errors] = @dialog.validate
@@ -32,9 +32,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     values[:src_id] = @target.id
 
     if create_request?(values)
-      event_message = "Request by [#{requester_id}] for #{@target.class.name}:#{@target.id}"
-      result[:request] = create_request(values, requester_id, @target.class.name,
-                                        'resource_action_request_created', event_message, auto_approve)
+      create_request(values, @requester.userid)
     else
       ra = load_resource_action(values)
       ra.deliver_to_automate_from_dialog(values, @target)

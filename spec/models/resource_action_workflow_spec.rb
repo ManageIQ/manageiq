@@ -1,10 +1,9 @@
 require "spec_helper"
 
 describe ResourceActionWorkflow do
+  let(:admin) { FactoryGirl.create(:user_with_group) }
   context "#create" do
     before(:each) do
-      @admin = FactoryGirl.create(:user_admin)
-
       @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
       @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
       @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
@@ -20,7 +19,7 @@ describe ResourceActionWorkflow do
     end
 
     it "new from resource_action" do
-      @wf = ResourceActionWorkflow.new({}, @admin, @resource_action)
+      @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
       values = @wf.create_values_hash
       values.fetch_path(:workflow_settings, :resource_action_id).should == @resource_action.id
       @wf.dialog.id.should == @dialog.id
@@ -28,7 +27,7 @@ describe ResourceActionWorkflow do
 
     it "new from hash" do
       nh = {:workflow_settings => {:resource_action_id => @resource_action.id}}
-      @wf = ResourceActionWorkflow.new(nh, @admin, nil)
+      @wf = ResourceActionWorkflow.new(nh, admin, nil)
       values = @wf.create_values_hash
       values.fetch_path(:workflow_settings, :resource_action_id).should == @resource_action.id
       @wf.dialog.id.should == @dialog.id
@@ -36,7 +35,7 @@ describe ResourceActionWorkflow do
 
     it "load default_value" do
       @dialog_field.update_attribute(:default_value, "testing default")
-      @wf = ResourceActionWorkflow.new({}, @admin, @resource_action)
+      @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
       @wf.value(@dialog_field.name).should == "testing default"
       df = @wf.dialog_field(@dialog_field.name)
       df.value.should == "testing default"
@@ -51,7 +50,7 @@ describe ResourceActionWorkflow do
 
     context "with workflow" do
       before(:each) do
-        @wf = ResourceActionWorkflow.new({}, @admin, @resource_action)
+        @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
       end
 
       it "set_value" do
@@ -65,27 +64,40 @@ describe ResourceActionWorkflow do
     end
 
     context "#submit_request" do
-      subject { ResourceActionWorkflow.new({}, @admin, resource_action, :target => target) }
+      subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
       let(:resource_action) { @resource_action }
 
       context "with request class" do
-        let(:target) { FactoryGirl.build(:service) }
+        let(:target) { FactoryGirl.create(:service) }
 
         it "creates requests" do
-          expect(subject).to receive(:create_request)
-
-          subject.submit_request(@admin.name)
+          EvmSpecHelper.local_miq_server
+          expect(subject).to receive(:create_request).and_call_original
+          expect(AuditEvent).to receive(:success).with(
+            :event        => "service_reconfigure_request_created",
+            :target_class => "Service",
+            :userid       => admin.userid,
+            :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
+          )
+          response = subject.submit_request
+          expect(response).to eq(:errors => [])
         end
       end
 
       context "without request class" do
-        let(:target) { FactoryGirl.build(:vm_vmware) }
+        subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
+        let(:resource_action) { @resource_action }
+
+        let(:target) { FactoryGirl.create(:vm_vmware) }
 
         it "calls automate" do
+          EvmSpecHelper.local_miq_server
           expect(subject).not_to receive(:create_request)
-          expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
-
-          subject.submit_request(@admin.name)
+          expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
+          expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
+          expect(AuditEvent).not_to receive(:success)
+          response = subject.submit_request
+          expect(response).to eq(:errors => [])
         end
       end
 
@@ -101,7 +113,7 @@ describe ResourceActionWorkflow do
           expect(subject).not_to receive(:create_request)
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
 
-          subject.submit_request(@admin.name)
+          subject.submit_request
         end
       end
     end
