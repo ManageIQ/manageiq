@@ -322,6 +322,38 @@ describe MiqPassword do
     end
   end
 
+  describe "#recrypt" do
+    context "#with ambigious keys" do
+      let(:old_key) { EzCrypto::Key.decode("JZjTdiuOzWlTHUkBZSGj9BmWEoswxvImWuwD/xN87s0=", :algorithm => "aes-256-cbc") }
+      let(:v2_key)  { EzCrypto::Key.decode("5ysYUd3Qrjj7DDplmEJHmnrFBEPS887JwOQv0jFYq2g=", :algorithm => "aes-256-cbc") }
+      let(:v1_key)  { MiqPassword.generate_symmetric }
+
+      before do
+        MiqPassword.v2_key = v2_key
+        MiqPassword.add_legacy_key(v1_key, :v1)
+        MiqPassword.add_legacy_key(old_key)
+      end
+
+      it "recrypts legacy v2 encrypted password" do
+        expect(MiqPassword.new.recrypt(MiqPassword.new.encrypt("password", "v2", old_key))).to be_encrypted("password")
+      end
+
+      it "recrypts legacy v1 encrypted password" do
+        expect(MiqPassword.new.recrypt(MiqPassword.new.encrypt("password", "v1"))).to be_encrypted("password")
+      end
+
+      it "recrypts regular v2 encrypted password" do
+        expect(MiqPassword.new.recrypt(MiqPassword.new.encrypt("password"))).to be_encrypted("password")
+      end
+    end
+
+    context "#with no legacy v2 key" do
+      it "recrypts regular v2 encrypted password" do
+        expect(MiqPassword.new.recrypt(MiqPassword.new.encrypt("password"))).to be_encrypted("password")
+      end
+    end
+  end
+
   private
 
   def with_key

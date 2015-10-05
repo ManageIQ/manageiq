@@ -18,12 +18,12 @@ class MiqPassword
     @encStr = encrypt(str)
   end
 
-  def encrypt(str, ver = "v2", key = self.class.v2_key)
+  def encrypt(str, ver = "v2", key = self.class.keys[ver])
     value = key.encrypt64(str).delete("\n") unless str.nil? || str.empty?
     "#{ver}:{#{value}}"
   end
 
-  def decrypt(str)
+  def decrypt(str, legacy = false)
     if str.nil? || str.empty?
       str
     else
@@ -31,19 +31,10 @@ class MiqPassword
       return "" if enc.empty?
 
       ver ||= "0" # if we don't know what it is, just assume legacy
+      key_name = (ver == "2" && legacy) ? "alt" : "v#{ver}"
 
-      self.class.all_keys.each do |key|
-        begin
-          return key.decrypt64(enc)
-        rescue OpenSSL::Cipher::CipherError
-          # this key doesnt work, try the next one
-        end
-      end
-
-      # will only come here if system is not configured with an encryption key
-      # so throw an exception with as much information as possible (including a cause)
       begin
-        self.class.all_keys.first.decrypt64(enc)
+        self.class.keys[key_name].decrypt64(enc)
       rescue
         raise MiqPasswordError, "can not decrypt v#{ver}_key encrypted string"
       end
@@ -54,11 +45,14 @@ class MiqPassword
     return str if str.nil? || str.empty?
     decrypted_str =
       begin
-        decrypt(str)
+        # if a legacy v2 key exists, give decrypt the option to use that
+        decrypt(str, self.class.keys["alt"])
       rescue
         source_version = self.class.split(str).first || "0"
         if source_version == "0" # it probably wasn't encrypted
           return str
+        elsif source_version == "2" # tried with an alt key, see if regular v2 key works
+          decrypt(str)
         else
           raise
         end
@@ -132,19 +126,23 @@ class MiqPassword
   end
 
   def self.clear_keys
-    @@v2_key = @@all_keys = nil
+    @@all_keys = nil
   end
 
   def self.all_keys
-    @@all_keys ||= [v2_key].compact
+    keys.values
   end
 
-  def self.encryption_key
-    @@all_keys.first
+  def self.keys
+    @@all_keys ||= {"v2" => load_v2_key}.delete_if { |_n, v| v.nil? }
   end
 
   def self.v2_key
-    @@v2_key ||= ez_load("v2_key") || begin
+    keys["v2"]
+  end
+
+  def self.load_v2_key
+    ez_load("v2_key") || begin
       key_file = File.expand_path("v2_key", key_root)
       msg = <<-EOS
 #{key_file} doesn't exist!
@@ -159,18 +157,15 @@ EOS
     end
   end
 
-  def self.add_legacy_key(filename, type = :v2)
+  def self.add_legacy_key(filename, type = "alt")
     key = ez_load(filename, type != :v0)
-    all_keys << key if key && !all_keys.include?(key)
+    keys[type.to_s] = key if key
     key
   end
 
-  class << self
-    def v2_key=(key)
-      @@all_keys.delete(@@v2_key)
-      @@all_key.unshift(key)
-      @@v2_key = key
-    end
+  # used by tests only
+  def self.v2_key=(key)
+    (@@all_keys ||= {})["v2"] = key
   end
 
   def self.generate_symmetric(filename = nil)
