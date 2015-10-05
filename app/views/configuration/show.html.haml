@@ -1,1 +1,13 @@
-#main_div= render :partial => @tabform
+#main_div
+  - case @tabform
+  - when 'ui_1'
+    = render :partial => 'ui_1'
+  - when 'ui_2'
+    = render :partial => 'ui_2'
+  - when 'ui_3'
+    = render :partial => 'ui_3'
+  - when 'ui_4'
+    = render :partial => 'ui_4'
+  - when 'ui_5'
+    = render :partial => 'ui_5'
+
