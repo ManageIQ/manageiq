@@ -34,7 +34,7 @@ class MiqPassword
       key_name = (ver == "2" && legacy) ? "alt" : "v#{ver}"
 
       begin
-        self.class.keys[key_name].decrypt64(enc)
+        self.class.keys[key_name].decrypt64(enc).force_encoding('UTF-8')
       rescue
         raise MiqPasswordError, "can not decrypt v#{ver}_key encrypted string"
       end
