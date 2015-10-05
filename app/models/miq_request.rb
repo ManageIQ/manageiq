@@ -413,6 +413,7 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def self.create_request(values, requester_id, auto_approve = false, request_type = request_types.first)
+    requester = requester_id.kind_of?(User) ? requester_id : User.find_by_userid(requester_id)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
     request          = create(:options => values, :userid => requester_id, :request_type => request_type)
     request.save!  # Force validation errors to raise now
@@ -423,7 +424,7 @@ class MiqRequest < ActiveRecord::Base
     request.log_request_success(requester_id, :created)
 
     request.call_automate_event_queue("request_created")
-    request.approve(requester_id, "Auto-Approved") if auto_approve
+    request.approve(requester, "Auto-Approved") if auto_approve
     request.reload if auto_approve
     request
   end
