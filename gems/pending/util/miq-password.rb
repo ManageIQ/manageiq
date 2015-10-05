@@ -159,7 +159,7 @@ EOS
     end
   end
 
-  def self.add_legacy_key(filename, type = :v1)
+  def self.add_legacy_key(filename, type = :v2)
     key = ez_load(filename, type != :v0)
     all_keys << key if key && !all_keys.include?(key)
     key

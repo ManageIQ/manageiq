@@ -76,7 +76,7 @@ describe MiqPassword do
     context "with #{pass.inspect}" do
       before do
         MiqPassword.add_legacy_key("v0_key", :v0)
-        MiqPassword.add_legacy_key("v1_key")
+        MiqPassword.add_legacy_key("v1_key", :v1)
       end
 
       it(".encrypt")        { expect(MiqPassword.encrypt(pass)).to             be_encrypted(pass) }
@@ -194,7 +194,7 @@ describe MiqPassword do
     end
 
     it "with an encrypted string" do
-      MiqPassword.add_legacy_key("v1_key")
+      MiqPassword.add_legacy_key("v1_key", :v1)
       expect(MiqPassword.md5crypt("v1:{Wv/+DC0XBqnIbRCIAI+CSQ==}")).to eq("$1$miq$Ho9GNOzRsxMpJSsgwG/y01")
     end
   end
@@ -206,7 +206,7 @@ describe MiqPassword do
     end
 
     it "with an encrypted string" do
-      MiqPassword.add_legacy_key("v1_key")
+      MiqPassword.add_legacy_key("v1_key", :v1)
       expect(MiqPassword.sysprep_crypt("v1:{Wv/+DC0XBqnIbRCIAI+CSQ==}")).to eq(
         "cABhAHMAcwB3AG8AcgBkAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==")
     end
@@ -238,7 +238,7 @@ describe MiqPassword do
 
     it "clears all_keys" do
       v0 = MiqPassword.add_legacy_key("v0_key", :v0)
-      v1 = MiqPassword.add_legacy_key("v1_key")
+      v1 = MiqPassword.add_legacy_key("v1_key", :v1)
       v2 = MiqPassword.v2_key
 
       expect(MiqPassword.all_keys).to match_array([v2, v1, v0])
@@ -253,7 +253,7 @@ describe MiqPassword do
   describe ".clear_keys" do
     it "removes legacy keys from all_keys" do
       v0 = MiqPassword.add_legacy_key("v0_key", :v0)
-      v1 = MiqPassword.add_legacy_key("v1_key")
+      v1 = MiqPassword.add_legacy_key("v1_key", :v1)
       v2 = MiqPassword.v2_key
 
       expect(MiqPassword.all_keys).to match_array([v2, v1, v0])
@@ -289,7 +289,7 @@ describe MiqPassword do
 
     it "supports raw key" do
       expect(MiqPassword.all_keys.size).to eq(1)
-      MiqPassword.add_legacy_key(v1_key)
+      MiqPassword.add_legacy_key(v1_key, :v1)
       expect(MiqPassword.all_keys.size).to eq(2)
     end
 
