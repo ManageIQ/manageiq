@@ -209,5 +209,35 @@ describe EmsCloudController do
       show_link_actual_path = controller.send(:show_link, openstack.to_a[0])
       expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}")
     end
+
+    it 'gets the restful timeline link path' do
+      MiqServer.stub(:my_zone).and_return("default")
+      session[:settings] = {:views =>{:vm_summary_cool => ""}}
+      post :create,
+           "button"           => "add",
+           "hostname"         => "host_openstack",
+           "name"             => "foo_openstack",
+           "emstype"          => "openstack",
+           "provider_region"  => "",
+           "port"             => "5000",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
+      show_link_actual_path = controller.send(:show_link, openstack.to_a[0])
+      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}")
+
+      post :show,
+           "button"           => "timeline",
+           "display"          => "timeline",
+           "id"               => openstack.to_a[0].id
+
+      expect(response.status).to eq(200)
+      show_link_actual_path = controller.send(:show_link, openstack.to_a[0], :display=>"timeline")
+      expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}?display=timeline")
+    end
   end
 end
