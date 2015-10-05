@@ -28,6 +28,8 @@ class ExtManagementSystem < ActiveRecord::Base
   belongs_to :provider
   belongs_to :tenant
 
+  has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
+
   has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
@@ -93,6 +95,18 @@ class ExtManagementSystem < ActiveRecord::Base
   include AuthenticationMixin
   include Metric::CiMixin
   include AsyncDeleteMixin
+
+  delegate :ipaddress,
+           :ipaddress=,
+           :hostname,
+           :hostname=,
+           :port,
+           :port=,
+           :to => :default_endpoint
+
+  virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
+  virtual_column :hostname,                :type => :string,  :uses => :endpoints
+  virtual_column :port,                    :type => :integer, :uses => :endpoints
 
   virtual_column :emstype,                 :type => :string
   virtual_column :emstype_description,     :type => :string
@@ -217,6 +231,11 @@ class ExtManagementSystem < ActiveRecord::Base
   # UI method for determining which icon to show for a particular EMS
   def image_name
     emstype.downcase
+  end
+
+  def default_endpoint
+    default = endpoints.detect { |e| e.role == "default" }
+    default || endpoints.build(:role => "default")
   end
 
   def authentication_check_role
