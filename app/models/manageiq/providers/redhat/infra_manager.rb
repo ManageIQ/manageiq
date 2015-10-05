@@ -188,4 +188,21 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
     @version_3_0
   end
+
+  def vm_reconfigure(vm, options = {})
+    log_header = "EMS: [#{name}] #{vm.class.name}: id [#{vm.id}], name [#{vm.name}], ems_ref [#{vm.ems_ref}]"
+    spec       = options[:spec]
+
+    vm.with_provider_object do |rhevm_vm|
+      _log.info("#{log_header} Started...")
+      rhevm_vm.memory = spec["memoryMB"] * 1.megabyte   if spec["memoryMB"]
+
+      cpu_options = {}
+      cpu_options[:cores]   = spec["numCoresPerSocket"] if spec["numCoresPerSocket"]
+      cpu_options[:sockets] = spec["numCPUs"] / (cpu_options[:cores] || vm.cores_per_socket) if spec["numCPUs"]
+
+      rhevm_vm.cpu_topology = cpu_options if cpu_options.present?
+    end
+    _log.info("#{log_header} Completed.")
+  end
 end

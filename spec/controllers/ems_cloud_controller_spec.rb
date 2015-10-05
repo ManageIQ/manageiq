@@ -210,4 +210,60 @@ describe EmsCloudController do
       expect(show_link_actual_path).to eq("/ems_cloud/#{openstack.to_a[0].id}")
     end
   end
+
+  describe "the link to flavors in accordion to be restful" do
+    before do
+      Zone.seed
+      described_class.any_instance.stub(:set_user_time_zone)
+      controller.stub(:check_privileges).and_return(true)
+      controller.stub(:assert_privileges).and_return(true)
+    end
+    it 'gets the restful show link path' do
+      MiqServer.stub(:my_zone).and_return("default")
+      post :create,
+           "button"           => "add",
+           "hostname"         => "host_openstack",
+           "name"             => "foo_openstack",
+           "emstype"          => "openstack",
+           "provider_region"  => "",
+           "port"             => "5000",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
+      show_link_actual_path = controller.send(:show_link, openstack.to_a[0])
+      expect(response.body).to contain( "<a href='/ems_cloud/#{openstack.to_a[0].id}?display=flavors onclick='return miqCheckForChanges()' title='Show all Flavors'>Flavors")
+    end
+  end
+
+  describe "Timeline link is restful" do
+    before do
+      Zone.first || FactoryGirl.create(:zone)
+      described_class.any_instance.stub(:set_user_time_zone)
+      controller.stub(:check_privileges).and_return(true)
+      controller.stub(:assert_privileges).and_return(true)
+    end
+    it 'gets the restful show flavors path' do
+      MiqServer.stub(:my_zone).and_return("default")
+      post :create,
+           "button"           => "add",
+           "hostname"         => "host_openstack",
+           "name"             => "foo_openstack",
+           "emstype"          => "openstack",
+           "provider_region"  => "",
+           "port"             => "5000",
+           "zone"             => "default",
+           "default_userid"   => "foo",
+           "default_password" => "[FILTERED]",
+           "default_verify"   => "[FILTERED]"
+
+      expect(response.status).to eq(200)
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack")
+      show_link_actual_path = controller.send(:show_link, openstack.to_a[0])
+      expect(response.body).to contain( "<a href='/ems_cloud/#{openstack.to_a[0].id}?display=flavors onclick='return miqCheckForChanges()' title='Show all Flavors'>Flavors")
+    end
+  end
 end
