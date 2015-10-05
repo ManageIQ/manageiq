@@ -9,7 +9,7 @@
       %label.control-label.col-md-2
         = _('Name')
       .col-md-8
-        = text_field_tag("name", @ems.name,
+        = text_field_tag("name", @edit[:new][:name],
         :maxlength         => MAX_NAME_LEN,
         "class"            => "form-control",
         "data-miq_focus"   => true,
