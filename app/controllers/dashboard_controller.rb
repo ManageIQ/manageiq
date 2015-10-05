@@ -34,7 +34,7 @@ class DashboardController < ApplicationController
   end
 
   def resize_layout
-    if params[:sidebar]
+    if params[:sidebar] && params[:context] && !params[:context].blank?
       session[:sidebar] ||= {}
       session[:sidebar][params[:context]] ||= 2
       sidebar = params[:sidebar].to_i
