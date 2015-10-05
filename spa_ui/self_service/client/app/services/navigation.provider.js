@@ -18,8 +18,8 @@
         desktop: 1024
       },
       items: {
-        primary: [],
-        secondary: []
+        primary: {},
+        secondary: {}
       },
       state: {
         isCollapsed: false,
@@ -36,7 +36,7 @@
     }
 
     /** @ngInject */
-    function Navigation($rootScope, $window, lodash) {
+    function Navigation($rootScope, $window, lodash, NavCounts) {
       var service = {
         items: model.items,
         state: model.state
@@ -48,9 +48,10 @@
       return service;
 
       // Private
-
       function init() {
         win = angular.element($window);
+        // Set item counts
+        service.items.primary = NavCounts.getCounts(service.items.primary);
         // Throttle firing of resize checks to reduce application digests
         win.bind('resize', lodash.throttle(onResize, model.resizeThrottle));
         $rootScope.$watch(windowWidth, processWindowWidth, true);
