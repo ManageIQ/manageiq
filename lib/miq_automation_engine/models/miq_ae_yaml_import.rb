@@ -10,7 +10,6 @@ class MiqAeYamlImport
     @restore     = @options.fetch('restore', false)
     tenant_id    = @options['tenant_id']
     @tenant      = @options['tenant'] || (tenant_id ? Tenant.find_by!(:id => tenant_id) : Tenant.root_tenant)
-    raise "Tenant object is needed to import automate models" unless @tenant
   end
 
   def import
