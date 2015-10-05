@@ -590,6 +590,7 @@ Vmdb::Application.routes.draw do
         download_data
         ems_cloud_form_fields
         protect
+        show
         show_list
         tagging_edit
       ) +
