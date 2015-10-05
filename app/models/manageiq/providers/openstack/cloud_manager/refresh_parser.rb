@@ -55,7 +55,6 @@ module ManageIQ::Providers
       link_vm_genealogy
       link_storage_associations
       filter_unused_disabled_flavors
-      clean_up_extra_flavor_keys
 
       @data
     end
@@ -198,17 +197,22 @@ module ManageIQ::Providers
       uid = flavor.id
 
       new_result = {
-        :type           => "ManageIQ::Providers::Openstack::CloudManager::Flavor",
-        :ems_ref        => uid,
-        :name           => flavor.name,
-        :enabled        => !flavor.disabled,
-        :cpus           => flavor.vcpus,
-        :memory         => flavor.ram.megabytes,
-        :disk_size      => flavor.disk.to_i.gigabytes,
-        :disk_count     => flavor.disk.to_i.gigabytes > 0 ? 1 : 0,
-        # Extra keys
-        :ephemeral_disk => flavor.ephemeral.to_i.gigabytes,
-        :swap_disk      => flavor.swap.to_i.megabytes
+        :type                 => "ManageIQ::Providers::Openstack::CloudManager::Flavor",
+        :ems_ref              => uid,
+        :name                 => flavor.name,
+        :enabled              => !flavor.disabled,
+        :cpus                 => flavor.vcpus,
+        :memory               => flavor.ram.megabytes,
+        :root_disk_size       => flavor.disk.to_i.gigabytes,
+        :swap_disk_size       => flavor.swap.to_i.megabytes,
+        :ephemeral_disk_size  => flavor.ephemeral.nil? ? nil : flavor.ephemeral.to_i.gigabytes,
+        :ephemeral_disk_count => if flavor.ephemeral.nil?
+                                   nil
+                                 elsif flavor.ephemeral.to_i > 0
+                                   1
+                                 else
+                                   0
+                                 end
       }
 
       return uid, new_result
@@ -463,7 +467,7 @@ module ManageIQ::Providers
           :cores_per_socket => 1,
           :logical_cpus     => flavor[:cpus],
           :memory_cpu       => flavor[:memory] / (1024 * 1024), # memory_cpu is in megabytes
-          :disk_capacity    => flavor[:disk_size] + flavor[:ephemeral_disk] + flavor[:swap_disk],
+          :disk_capacity    => flavor[:root_disk_size] + flavor[:ephemeral_disk_size] + flavor[:swap_disk_size],
           :disks            => [], # Filled in later conditionally on flavor
           :networks         => [], # Filled in later conditionally on what's available
         },
@@ -484,13 +488,13 @@ module ManageIQ::Providers
       disks = new_result[:hardware][:disks]
       dev = "vda"
 
-      if (sz = flavor[:disk_size]) == 0
+      if (sz = flavor[:root_disk_size]) == 0
         sz = 1.gigabytes
       end
-      add_instance_disk(disks, sz, dev.dup,       "Root disk")
-      sz = flavor[:ephemeral_disk]
+      add_instance_disk(disks, sz, dev.dup, "Root disk")
+      sz = flavor[:ephemeral_disk_size]
       add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk")
-      sz = flavor[:swap_disk]
+      sz = flavor[:swap_disk_size]
       add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")
 
       return uid, new_result
@@ -545,13 +549,6 @@ module ManageIQ::Providers
         v.fetch_path(:hardware, :networks).to_miq_a.detect do |n|
           n[:description] == "public" && n[:ipaddress] == ip_address
         end
-      end
-    end
-
-    def clean_up_extra_flavor_keys
-      @data[:flavors].each do |f|
-        f.delete(:ephemeral_disk)
-        f.delete(:swap_disk)
       end
     end
 
