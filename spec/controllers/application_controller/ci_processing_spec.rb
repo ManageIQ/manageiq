@@ -77,7 +77,7 @@ describe ApplicationController do
       edit_new = assigns(:edit)[:new]
       edit_new[:old_memory].should == ""
       edit_new[:old_mem_typ].should == "MB"
-      edit_new[:old_cpu_count] == 1
+      edit_new[:old_socket_count] == 1
     end
 
     it "set_memory_cpu should use vms value to set old values when both vms have same memory/cpu values" do
@@ -91,7 +91,7 @@ describe ApplicationController do
       edit_new = assigns(:edit)[:new]
       edit_new[:old_memory].should == "2"
       edit_new[:old_mem_typ].should == "GB"
-      edit_new[:old_cpu_count] == 2
+      edit_new[:old_socket_count] == 2
     end
 
     it "check reconfigure_calculations returns memory in string format" do
@@ -151,11 +151,10 @@ describe ApplicationController do
       vm = FactoryGirl.create(:vm_vmware)
       edit = {}
       edit[:key] = "reconfigure__new"
-      edit[:new] = {}
-      edit[:new][:new_cpu_count] = "4"
+      edit[:new] = Hash.new
+      edit[:new][:new_socket_count] = "4"
       edit[:new][:new_cores_per_socket_count] = "4"
       edit[:new][:cb_cpu] = true
-      edit[:new][:cb_cores_per_socket] = true
       edit[:errors] = []
       controller.instance_variable_set(:@_params, :id => vm.id)
       controller.instance_variable_set(:@edit, edit)
@@ -172,11 +171,10 @@ describe ApplicationController do
       vm = FactoryGirl.create(:vm_vmware)
       edit = {}
       edit[:key] = "reconfigure__new"
-      edit[:new] = {}
-      edit[:new][:new_cpu_count] = "15"
+      edit[:new] = Hash.new
+      edit[:new][:new_socket_count] = "15"
       edit[:new][:new_cores_per_socket_count] = "15"
       edit[:new][:cb_cpu] = true
-      edit[:new][:cb_cores_per_socket] = true
       edit[:errors] = []
       controller.instance_variable_set(:@_params, :id => vm.id)
       controller.instance_variable_set(:@edit, edit)
