@@ -425,7 +425,7 @@ module ApplicationController::CiProcessing
       end
 
       if @edit[:new][:cb_cpu] && @edit[:new][:old_cpu_count].to_s == @edit[:new][:cpu_count].to_s
-        add_flash(_("Change %s value to submit reconfigure request") % "Processor Sockets", :error)
+        add_flash(_("Change %s value to submit reconfigure request") % "Processors", :error)
       end
 
       if @edit[:new][:cb_cores_per_socket] && @edit[:new][:old_cores_per_socket_count].to_s == @edit[:new][:cores_per_socket_count].to_s
@@ -444,8 +444,8 @@ module ApplicationController::CiProcessing
       }
       # Convert memory to MB before passing on to model, don't multiply by 1024, if value is not numeric
       options[:vm_memory] = @edit[:new][:mem_typ] == "MB" ? @edit[:new][:memory] : (@edit[:new][:memory].to_i.zero? ? @edit[:new][:memory] : @edit[:new][:memory].to_i * 1024) if @edit[:new][:cb_memory]
-      options[:cores_per_socket]  = @edit[:new][:cores_per_socket_count].to_i if @edit[:new][:cb_cores_per_socket]
-      options[:number_of_cpus]    = @edit[:new][:cpu_count].to_i * @edit[:new][:cores_per_socket_count].to_i if @edit[:new][:cb_cpu] || @edit[:new][:cb_cores_per_socket]
+      options[:number_of_cpus] = @edit[:new][:cpu_count] if @edit[:new][:cb_cpu]
+      options[:cores_per_socket] = @edit[:new][:cores_per_socket_count] if @edit[:new][:cb_cores_per_socket]
       valid = VmReconfigureRequest.validate_request(options)
       if valid
         valid.each do |v|
@@ -1080,15 +1080,15 @@ module ApplicationController::CiProcessing
   # Build the ownership assignment screen
   def reconfigure_build_screen
     @reconfigureitems = Vm.find(@edit[:reconfigure_items]).sort_by(&:name)  # Get the db records that are being tagged
-    set_memory_cpu
     if !@edit[:req_id]
+      set_memory_cpu
       @edit[:new][:memory] = @edit[:new][:old_memory]
       @edit[:new][:mem_typ] = @edit[:new][:old_mem_typ]
     else
       @req = MiqRequest.find_by_id(@edit[:req_id])
       @edit[:new][:memory], @edit[:new][:mem_typ] = reconfigure_calculations(@req.options[:vm_memory]) if @req.options[:vm_memory]
-      @edit[:new][:cores_per_socket_count] = @req.options[:cores_per_socket] if @req.options[:cores_per_socket]
-      @edit[:new][:cpu_count] = @req.options[:number_of_cpus] / @edit[:new][:cores_per_socket_count] if @req.options[:number_of_cpus]
+      @edit[:new][:cpu_count] = @req.options[:number_of_cpus]
+      @edit[:new][:cores_per_socket_count] = @req.options[:cores_per_socket]
     end
 
     @edit[:new][:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request
