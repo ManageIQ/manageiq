@@ -18,6 +18,7 @@ describe EmsCloudController do
     dialog_load
     ems_cloud_form_fields
     new
+    show
     show_list
   ).each do |task|
     describe "##{task}" do
