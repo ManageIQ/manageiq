@@ -527,16 +527,15 @@ module EmsCommon
         drop_breadcrumb(:name => "Timelines", :url => show_link(@record, :refresh => "n", :display => "timeline"))
         session[:tl_record_id] = @record.id
         render :update do |page|
-          page.redirect_to  polymorphic_path( @record, :display => 'timeline')
+          page.redirect_to  polymorphic_path(@record, :display => 'timeline')
         end
         return
       end
       custom_buttons if params[:pressed] == "custom_button"
 
       return if ["custom_button"].include?(params[:pressed])    # custom button screen, so return, let custom_buttons method handle everything
-      return if ["#{@table_name}_tag", "#{@table_name}_protect"].include?(params[:pressed]) &&
+      return if ["#{@table_name}_tag", "#{@table_name}_protect", "#{@table_name}_tineline"].include?(params[:pressed]) &&
                 @flash_array.nil? # Tag screen showing, so return
-
       check_if_button_is_implemented
     end
 
