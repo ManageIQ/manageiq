@@ -108,7 +108,7 @@
       if (vm.toolbarConfig.sortConfig.currentField.id === 'name') {
         compValue = item1.name.localeCompare(item2.name);
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'id') {
-        compValue =  compValue = item1.id - item2.id;
+        compValue = item1.id - item2.id;
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'created') {
         compValue = new Date(item1.created_at) - new Date(item2.created_at);
       }

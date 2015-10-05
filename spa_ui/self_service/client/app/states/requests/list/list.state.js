@@ -70,17 +70,17 @@
         fields: [
           {
             id: 'description',
-            title:  'Name',
+            title: 'Name',
             sortType: 'alpha'
           },
           {
             id: 'id',
-            title:  'ID',
+            title: 'ID',
             sortType: 'numeric'
           },
           {
             id: 'requested',
-            title:  'Requested',
+            title: 'Requested',
             sortType: 'numeric'
           }
         ],
@@ -101,7 +101,7 @@
       if (vm.toolbarConfig.sortConfig.currentField.id === 'description') {
         compValue = item1.description.localeCompare(item2.description);
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'id') {
-        compValue =  compValue = item1.id - item2.id;
+        compValue = item1.id - item2.id;
       } else if (vm.toolbarConfig.sortConfig.currentField.id === 'requested') {
         compValue = new Date(item1.created_on) - new Date(item2.created_on);
       }
